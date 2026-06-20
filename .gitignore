@@ -1,0 +1,13 @@
+# Secrets
+.env
+**/.env
+
+# Local Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Local schema export temp output (use airtable/schema/snapshots/ instead)
+_schema/
