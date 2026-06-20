@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-06-20T12:47:15",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "_schema\\schema_raw_appn84sqPw03zEbTT_20260620_124713.json",
+    "enhancedSchema": "_schema\\schema_enhanced_appn84sqPw03zEbTT_20260620_124713.json",
+    "dependencies": "_schema\\dependencies_appn84sqPw03zEbTT_20260620_124713.json",
+    "viewsBasicJson": "_schema\\views_basic_appn84sqPw03zEbTT_20260620_124713.json",
+    "viewsDetailedJson": "_schema\\views_detailed_appn84sqPw03zEbTT_20260620_124713.json",
+    "viewsMarkdown": "_schema\\views_appn84sqPw03zEbTT_20260620_124713.md",
+    "baseSummary": "_schema\\base_summary_appn84sqPw03zEbTT_20260620_124713.json",
+    "healthReport": "_schema\\export_health_report_appn84sqPw03zEbTT_20260620_124713.json",
+    "fieldIndex": "_schema\\field_index_appn84sqPw03zEbTT_20260620_124713.json",
+    "invalidFields": "_schema\\invalid_fields_appn84sqPw03zEbTT_20260620_124713.json",
+    "complexFormulas": "_schema\\complex_formulas_appn84sqPw03zEbTT_20260620_124713.json",
+    "schemaMarkdown": "_schema\\schema_doc_appn84sqPw03zEbTT_20260620_124713.md",
+    "mermaidERD": "_schema\\schema_erd_appn84sqPw03zEbTT_20260620_124713.mmd",
+    "workflowCompanion": "_schema\\workflow_companion_appn84sqPw03zEbTT_20260620_124713.md"
+  }
+}
