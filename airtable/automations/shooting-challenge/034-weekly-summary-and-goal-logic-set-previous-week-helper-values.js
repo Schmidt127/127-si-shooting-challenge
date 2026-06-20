@@ -26,9 +26,9 @@ Airtable is the deployed/running copy.
  * 034 - WEEKLY SUMMARY AND GOAL LOGIC
  * Set Previous Week Helper Values
  *
- * Version: v3.3
+ * Version: v3.4
  * Date Written: 2026-05-20
- * Last Updated: 2026-06-17
+ * Last Updated: 2026-06-20
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
@@ -43,6 +43,7 @@ Airtable is the deployed/running copy.
  * - Total Shots This Week is read-only and must not be written by script.
  * - Total XP After Week is read-only and must not be written by script.
  * - Week Start Date comes from the linked Weeks record.
+ * - Weeks.Start Date is a dateTime field using America/Denver (same parsing as automation 005).
  * - The previous summary must belong to the same Enrollment.
  * - The previous summary must have a Week with Start Date before the current Week Start Date.
  * - If no previous weekly summary exists, Previous Week Shots and Previous Total XP are set to 0.
@@ -56,7 +57,9 @@ Airtable is the deployed/running copy.
 async function main() {
   const CONFIG = {
     scriptName: "034 - Weekly Summary and Goal Logic - Set Previous Week Helper Values",
-    version: "v3.3",
+    version: "v3.4",
+
+    timeZone: "America/Denver",
 
     tables: {
       weeklySummary: "Weekly Athlete Summary",
@@ -237,30 +240,44 @@ async function main() {
     return getLinkedRecordIds(record, table, fieldName)[0] || "";
   }
 
-  function parseDateValue(value) {
-    if (!value) return null;
+  function toDateKeyFromText(textValue) {
+    const text = String(textValue || "").trim();
+    if (!text) return "";
 
-    if (value instanceof Date && !Number.isNaN(value.getTime())) {
-      return value;
+    const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) {
+      return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
     }
 
-    if (typeof value === "string") {
-      const parsed = new Date(value);
-      if (!Number.isNaN(parsed.getTime())) {
-        return parsed;
-      }
+    const localMatch = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (localMatch) {
+      const month = localMatch[1].padStart(2, "0");
+      const day = localMatch[2].padStart(2, "0");
+      const year = localMatch[3];
+      return `${year}-${month}-${day}`;
     }
 
-    return null;
+    return "";
   }
 
-  function dateKeyFromValue(value) {
-    const date = parseDateValue(value);
-    if (!date) return "";
+  function toDateKeyFromDateObject(value, timeZone = CONFIG.timeZone) {
+    if (!value) return "";
 
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const dateValue = value instanceof Date ? value : new Date(value);
+    if (Number.isNaN(dateValue.getTime())) return "";
+
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).formatToParts(dateValue);
+
+    const year = parts.find((part) => part.type === "year")?.value || "";
+    const month = parts.find((part) => part.type === "month")?.value || "";
+    const day = parts.find((part) => part.type === "day")?.value || "";
+
+    if (!year || !month || !day) return "";
 
     return `${year}-${month}-${day}`;
   }
@@ -268,13 +285,13 @@ async function main() {
   function getDateKey(record, table, fieldName) {
     if (!record || !fieldExists(table, fieldName)) return "";
 
-    const raw = record.getCellValue(fieldName);
-    const rawKey = dateKeyFromValue(raw);
+    const raw = getRaw(record, table, fieldName);
+    const text = getText(record, table, fieldName);
 
-    if (rawKey) return rawKey;
+    const fromText = toDateKeyFromText(text);
+    if (fromText) return fromText;
 
-    const display = record.getCellValueAsString(fieldName);
-    return dateKeyFromValue(display);
+    return toDateKeyFromDateObject(raw, CONFIG.timeZone);
   }
 
   function buildSingleSelectValue(table, fieldName, optionName) {
