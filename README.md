@@ -24,16 +24,29 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 
 ```
 .
-├── README.md            # Project introduction (this file)
-├── CHANGELOG.md         # Notable changes to scripts, schema, and docs
-├── SYSTEM_OVERVIEW.md   # App modules, data flow, and architecture goals
-├── airtable/            # Automation scripts and schema notes (as added)
-├── make/                # Make.com blueprints and workflow notes (as added)
-├── audit/               # Audit and recovery scripts (as added)
-└── docs/                # Additional documentation (as added)
+├── README.md                 # Project introduction (this file)
+├── CHANGELOG.md              # Notable changes to scripts, schema, and docs
+├── SYSTEM_OVERVIEW.md        # App modules, data flow, and architecture goals
+├── airtable/
+│   ├── schema/               # Schema notes, table/field maps, snapshots
+│   ├── automations/          # Native Airtable automation scripts
+│   ├── extension-scripts/
+│   │   ├── audits/           # Dry-run audit extension scripts
+│   │   └── safe-backfills/   # Controlled backfill extension scripts
+│   └── formulas/             # Formula and rollup documentation
+├── make/
+│   ├── blueprints/           # Exported Make.com scenario blueprints
+│   ├── documentation/        # Scenario notes and webhook standards
+│   └── test-payloads/        # Sample JSON for webhook testing
+├── docs/
+│   ├── architecture/         # Architecture review checklist
+│   ├── data-flow/            # Submission, homework, weekly summary flows
+│   ├── recovery/             # Emergency recovery runbook
+│   └── checklists/           # Weekly maintenance checklist
+└── cursor/                   # Cursor AI project rules
 ```
 
-Folder names and structure will evolve as content is added. See [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
+See [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
 
 ## Development Workflow
 
