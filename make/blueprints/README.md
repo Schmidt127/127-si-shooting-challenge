@@ -6,7 +6,7 @@ Export and document **Make.com scenarios** that support the shooting challenge (
 
 | Blueprint file | Scenario name (Make) | Trigger | Airtable / external |
 |----------------|----------------------|---------|---------------------|
-| *(add)*.json | Homework video → Drive | Webhook | Airtable + Google Drive |
+| [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive |
 | *(add)*.json | Weekly summary email | Webhook / schedule | Airtable + Gmail |
 | *(add)*.json | Parent notification | Webhook | Gmail |
 
