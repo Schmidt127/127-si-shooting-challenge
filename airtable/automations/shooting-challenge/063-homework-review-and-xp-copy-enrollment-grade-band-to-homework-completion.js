@@ -39,7 +39,7 @@ Airtable is the deployed/running copy.
  * - 06 - Homework Review and XP
  *
  * AUTOMATION NAME
- * - 061 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion
+ * - 063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion
  *
  * TRIGGER TABLE
  * - Homework Completions
@@ -289,7 +289,7 @@ setOutputSafe("enrollmentIdOut", enrollmentId);
 setOutputSafe("gradeBandIdsOut", enrollmentGradeBandIds.join(","));
 
 console.log(JSON.stringify({
-    automation: "061 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
+    automation: "063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
     statusOut: STATUS_SUCCESS,
     recordIdOut: recordId,
     homeworkCompletionIdOut: recordId,
