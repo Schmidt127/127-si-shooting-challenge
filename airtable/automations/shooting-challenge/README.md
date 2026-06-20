@@ -29,6 +29,10 @@ See [../../schema/current/automation-trigger-map.md](../../schema/current/automa
 | `submission-xp.js` | *(add)* | Main automation script |
 | `README.md` | Active | This document |
 
+## Script format standard
+
+All automation scripts must follow [../AUTOMATION_SCRIPT_STANDARD.md](../AUTOMATION_SCRIPT_STANDARD.md) (also enforced by `.cursor/rules/airtable-automation-scripts.mdc`).
+
 ## Development Workflow
 
 1. **Edit in Cursor** — Scripts live in GitHub first.

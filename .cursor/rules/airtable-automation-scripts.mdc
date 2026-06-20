@@ -1,0 +1,62 @@
+---
+description: Required format for Airtable automation scripts in this repo
+globs: airtable/automations/**/*.js
+alwaysApply: true
+---
+
+# Airtable Automation Script Standard
+
+Full doc: `airtable/automations/AUTOMATION_SCRIPT_STANDARD.md`
+
+When creating or editing `airtable/automations/**/*.js`, follow that standard and existing production patterns (114, 034, 005, 063, 101, 072, 074).
+
+## File and metadata
+
+- Name: `{number}-{kebab-case}.js` in `shooting-challenge/`
+- GitHub header at top (GitHub only); production docblock after it
+- Docblock: Version, Date Written (preserve earliest), Last Updated (today on logic edits)
+- Docblock sections: PURPOSE, IMPORTANT DESIGN RULES, INPUT, OUTPUTS, TRIGGER, AUTOMATION NAME, FOLDER; add RECOMMENDED/OPTIONAL/DO NOT USE triggers, "This is not…", FIELD RENAME FIX when relevant
+- `// @ts-nocheck` after docblock
+- `CONFIG` for all field/table/status names; `CONFIG.scriptName` + `CONFIG.version` match docblock
+
+## Structure
+
+- **Wrap in `async function main()`** — new scripts and substantive edits only; legacy 009/013/020/021/057/058/063/072/074/075/111/112 exempt until touched
+- End with `try { await main(); } catch` (114) or `await main()` with catch inside main (034)
+- Numbered `SECTION N:` blocks for scripts over ~150 lines
+- **`debugStep`** — update and `setOutputSafe("debugStep", ...)` before each major step
+
+## Inputs / outputs
+
+- `input.config()`; validate `recordId` non-empty and `startsWith("rec")`
+- **Required outputs:** `statusOut` (success|skipped|error), `errorOut`, `debugStep`
+- **`actionOut`** — created, updated, skipped_*, error (document in docblock)
+- **Skip** = set skipped outputs + return; **Error** = set outputs + throw
+- `setOutputSafe` for all `output.set`; final `console.log(JSON.stringify({ automation, version, ... }))`
+
+## Schema and fields
+
+- Validate schema early: requireField, requireFieldType, requireWritableField, requireSingleSelectOption
+- fieldCache + getFieldSafe on larger scripts; unloadData() after large selectRecordsAsync
+- Reads: getRaw, getText, getNumber (display fallback), getCheckbox/getBooleanish, getLinkedIds
+- Writes: addIfWritable, updateRecordSafe, updateRecordBestEffort; skip if value unchanged
+- Single-select (new edits): validate option, write `{ id: match.id }` (114 pattern)
+- Never write formula, rollup, lookup, count, or other computed fields
+
+## Dates
+
+- Weeks Start/End Date: dateTime, America/Denver — use 005/034 toDateKeyFromText + toDateKeyFromDateObject; not raw `new Date("M/D/YYYY")` alone
+
+## Domain rules
+
+- **XP:** Source Key in docblock; one source record → one XP Event; guard against stealing; Reason Public + Reason Debug; recheck before create (114)
+- **Email/Make:** build package then send; webhook from input; fetch with error body; don't clear send trigger on webhook failure (074)
+- **Copy/link:** skip if already matches; "This is not…" scope in docblock (063, 111)
+- **Weekly summary:** don't write rollup/formula weekly totals; 034 chain uses Week Start Date order
+- **General:** idempotent, append-only XP Events, skip vs error distinction
+
+## Deploy
+
+GitHub first → paste docblock through end into Airtable (skip GitHub header) → CHANGELOG if production-impacting
+
+Do not change script logic when only updating headers unless user asked for a fix.

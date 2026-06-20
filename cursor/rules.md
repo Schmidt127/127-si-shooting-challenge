@@ -35,8 +35,16 @@ Project-specific guidance for AI-assisted editing in Cursor. This is a **youth b
 
 ## Airtable Script Conventions
 
-- Use `selectRecordsAsync` with views/filters; batch updates.
-- Field names must match [field-map.md](../airtable/schema/current/field-map.md).
+**Full standard:** [airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)  
+**Cursor rule:** `.cursor/rules/airtable-automation-scripts.mdc` (always applied)
+
+Covers: `main` wrapper, docblock metadata, CONFIG, numbered sections, debugStep, statusOut/actionOut/errorOut, schema validation, field helpers, XP/email/copy/weekly patterns, dateTime parsing, deploy workflow.
+
+- Wrap runtime logic in `async function main()` (new scripts and substantive edits).
+- Docblock must include Version, Date Written (preserve earliest date), Last Updated, Purpose, Inputs, Outputs, Design Rules.
+- Use `CONFIG` for field/table names; no magic strings in logic.
+- Use `selectRecordsAsync` with views/filters; batch updates; `unloadData()` after large queries.
+- Field names must match schema snapshot or [field-map.md](../airtable/schema/current/field-map.md).
 - Prefer creating XP Events over mutating Athlete XP totals directly.
 
 ## Make Conventions
