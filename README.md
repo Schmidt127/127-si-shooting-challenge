@@ -1,0 +1,59 @@
+# 127 SI Shooting Challenge
+
+Documentation and automation source for the **127 Sports Intensity Shooting Challenge** — an Airtable-based youth basketball shooting challenge system.
+
+## Purpose
+
+This repository is the source of truth for Airtable automation scripts, Airtable schema notes, Airtable extension audit scripts, Make.com blueprints, documentation, and recovery procedures.
+
+The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, homework, video feedback, Zoom attendance, weekly summaries, and parent/coach communication.
+
+**This is not the Team Shot Tracker repo.** That is a separate project with its own repository and scope.
+
+## Main Systems and Tools
+
+| System | Role |
+|--------|------|
+| **Airtable** | Live production environment — data, automations, and extensions |
+| **Make.com** | External workflows (Google Drive, Gmail, webhooks, and related scenarios) |
+| **GitHub** | Versioned scripts, schema notes, blueprints, docs, and recovery procedures |
+| **Cursor** | Local code and documentation editor |
+| **ChatGPT** | Architecture review, script review, debugging, audit design, and documentation support |
+
+## Repository Layout
+
+```
+.
+├── README.md            # Project introduction (this file)
+├── CHANGELOG.md         # Notable changes to scripts, schema, and docs
+├── SYSTEM_OVERVIEW.md   # App modules, data flow, and architecture goals
+├── airtable/            # Automation scripts and schema notes (as added)
+├── make/                # Make.com blueprints and workflow notes (as added)
+├── audit/               # Audit and recovery scripts (as added)
+└── docs/                # Additional documentation (as added)
+```
+
+Folder names and structure will evolve as content is added. See [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
+
+## Development Workflow
+
+1. **Edit locally in Cursor** — Scripts, schema notes, and documentation live in this repo.
+2. **Review with ChatGPT** — Use for architecture, script review, debugging, and audit design before deploying changes.
+3. **Deploy to Airtable** — Copy or sync automation scripts and schema updates into the live Airtable base.
+4. **Update Make.com** — Apply blueprint changes and test external workflows (Drive, Gmail, webhooks).
+5. **Document changes** — Update `CHANGELOG.md` and schema notes for any production-impacting change.
+6. **Run audit scripts** — Use dry-run audit scripts to verify data integrity before and after changes.
+
+## Source-of-Truth Rule
+
+- **GitHub** holds the canonical version of scripts, schema documentation, Make.com blueprints, and recovery procedures.
+- **Airtable** is the live production database and automation runtime.
+- **Make.com** runs external integrations defined by blueprints stored here.
+
+When production and GitHub diverge, treat GitHub as the target state and reconcile Airtable/Make.com to match after review.
+
+## Getting Started
+
+1. Clone this repository.
+2. Read [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for modules, data flow, and architecture goals.
+3. Review [CHANGELOG.md](./CHANGELOG.md) before pulling updates or deploying changes.
