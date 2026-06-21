@@ -2,31 +2,31 @@
 Automation: 114 - Video Review and XP - Create or Update Video XP Event
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
 
 Purpose:
-To be confirmed from production script.
+Creates or updates Video Submission XP Events from Video Feedback records.
 
 Trigger:
-To be confirmed from Airtable automation.
+Video Feedback when feedback is posted, XP is positive, and Ready for XP Automation? is checked.
 
 Important Tables:
-To be confirmed from production script.
+Video Feedback, Submissions, XP Events, Weekly Athlete Summary
 
 Important Fields:
-To be confirmed from production script.
+Total Video XP Awarded, Submission, Enrollment, XP Events, Weekly Athlete Summary, Award Status
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.5
+ * Version: v5.6
  * Date Written: 2026-05-23
  * Last Updated: 2026-06-21
  *
@@ -81,6 +81,14 @@ Airtable is the deployed/running copy.
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = Airtable record ID from the triggering Video Feedback record
+ *
+ * REQUIRED OUTPUTS
+ * - statusOut = created | updated | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
+ * - xpEventIdOut
+ * - weeklySummaryIdOut
  ************************************************************/
 
 // @ts-nocheck
@@ -91,7 +99,7 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v5.5",
+  version: "v5.6",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -486,6 +494,28 @@ async function resolveWeeklySummaryId({
   return findWeeklySummaryId(enrollmentId, weekId);
 }
 
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+  if (!xpEventId || !weeklySummaryId) {
+    return false;
+  }
+
+  const payload = {};
+
+  addIfWritable(
+    payload,
+    xpEventsTable,
+    CONFIG.xpEvents.weeklySummary,
+    [{ id: weeklySummaryId }]
+  );
+
+  if (Object.keys(payload).length === 0) {
+    return false;
+  }
+
+  await xpEventsTable.updateRecordAsync(xpEventId, payload);
+  return true;
+}
+
 function addIfWritable(payload, table, fieldName, value) {
   if (!fieldExists(table, fieldName)) {
     log(`Skipped missing field: ${table?.name || "unknown"}.${fieldName}`);
@@ -678,8 +708,8 @@ async function findExistingXpEventOrThrow(linkedXpEventIds = []) {
     return existingXpEvent;
   } finally {
     if (xpQuery && typeof xpQuery.unloadData === "function") {
-  xpQuery.unloadData();
-}
+      xpQuery.unloadData();
+    }
   }
 }
 
@@ -700,6 +730,8 @@ function validateRequiredSchema() {
   const requiredXpFields = [
     CONFIG.xpEvents.enrollment,
     CONFIG.xpEvents.submission,
+    CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary,
     CONFIG.xpEvents.videoFeedback,
     CONFIG.xpEvents.xpSource,
     CONFIG.xpEvents.xpBucketKey,
@@ -724,12 +756,16 @@ function validateRequiredSchema() {
 
   requireFieldType(xpEventsTable, CONFIG.xpEvents.enrollment, ["multipleRecordLinks"]);
   requireFieldType(xpEventsTable, CONFIG.xpEvents.submission, ["multipleRecordLinks"]);
+  requireFieldType(xpEventsTable, CONFIG.xpEvents.week, ["multipleRecordLinks"]);
+  requireFieldType(xpEventsTable, CONFIG.xpEvents.weeklySummary, ["multipleRecordLinks"]);
   requireFieldType(xpEventsTable, CONFIG.xpEvents.videoFeedback, ["multipleRecordLinks"]);
   requireFieldType(xpEventsTable, CONFIG.xpEvents.xpSource, ["singleSelect"]);
   requireFieldType(xpEventsTable, CONFIG.xpEvents.xpBucketKey, ["singleSelect"]);
 
   requireWritableField(xpEventsTable, CONFIG.xpEvents.enrollment);
   requireWritableField(xpEventsTable, CONFIG.xpEvents.submission);
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.week);
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary);
   requireWritableField(xpEventsTable, CONFIG.xpEvents.videoFeedback);
   requireWritableField(xpEventsTable, CONFIG.xpEvents.xpSource);
   requireWritableField(xpEventsTable, CONFIG.xpEvents.xpBucketKey);
@@ -954,6 +990,7 @@ async function main() {
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
   weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+  weeklySummaryQueryCache = null;
 
   /* ---------------------------------------------------------
      5.3 Validate Required Fields / Field Types / Select Options
@@ -1249,6 +1286,8 @@ async function main() {
     }
   }
 
+  await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
+
   /* ---------------------------------------------------------
      5.11 Writeback to Video Feedback
   --------------------------------------------------------- */
@@ -1283,7 +1322,9 @@ async function main() {
   debugStep = "12 - Outputs";
   setOutputSafe("debugStep", debugStep);
 
-  setOutputSafe("statusOut", "success");
+  const statusOut = actionOut === "created" ? "created" : "updated";
+
+  setOutputSafe("statusOut", statusOut);
   setOutputSafe("actionOut", actionOut);
   setOutputSafe("xpEventIdOut", xpEventId);
   setOutputSafe("sourceKeyOut", sourceKey);
@@ -1300,9 +1341,10 @@ async function main() {
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
     version: CONFIG.version,
-    statusOut: "success",
+    statusOut,
     actionOut,
     xpEventIdOut: xpEventId,
+    weeklySummaryIdOut: weeklySummaryId || "",
     sourceKeyOut: sourceKey,
     videoFeedbackDisplayKeyOut: videoFeedbackDisplayKey,
     xpPointsOut: xpPoints,
@@ -1318,6 +1360,7 @@ async function main() {
     xpSourceDateWritten: xpSourceDate ? "yes" : "no",
     xpDateSourceWritten: xpSourceDate ? CONFIG.values.xpDateSource : "",
     videoUpdateFieldsWritten: Object.keys(videoUpdateFields),
+    debugStep,
   }, null, 2));
 }
 
@@ -1340,6 +1383,7 @@ try {
   setOutputSafe("enrollmentIdOut", enrollmentId || "");
   setOutputSafe("weekIdOut", weekId || "");
   setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
+  setOutputSafe("weeklySummaryIdOut", "");
   setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
   setOutputSafe("errorOut", message);
 
@@ -1354,6 +1398,7 @@ try {
     submissionIdOut: submissionId || "",
     enrollmentIdOut: enrollmentId || "",
     weekIdOut: weekId || "",
+    weeklySummaryIdOut: "",
     xpSourceDateOut: xpSourceDateText || "",
     errorOut: message,
   }, null, 2));

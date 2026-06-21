@@ -10,6 +10,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Changed
 - **010** — Rewritten to production script standard (v10.3): `async function main()`, schema validation inside `main()`, required outputs, and final JSON console log.
+- **114** — Hardened Weekly Athlete Summary linking (v5.6): schema validation for link field, `ensureXpEventWeeklySummaryLink` repair pass, standard `statusOut` values.
 
 ## 2026-06-20
 
