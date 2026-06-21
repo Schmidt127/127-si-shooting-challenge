@@ -26,7 +26,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.6
+ * Version: v5.7
  * Date Written: 2026-05-23
  * Last Updated: 2026-06-21
  *
@@ -94,12 +94,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 // @ts-nocheck
 
 /* =========================================================
-   SECTION 1: EASY-EDIT CONFIG
+   SECTION 1 — CONFIGURATION
 ========================================================= */
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v5.6",
+  version: "v5.7",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -161,35 +161,18 @@ const CONFIG = {
   },
 };
 
-/* =========================================================
-   SECTION 2: RUNTIME CONTEXT
-========================================================= */
-
-let recordId = "";
-let sourceKey = "";
-let videoFeedbackDisplayKey = "";
-let xpPoints = 0;
-let submissionId = "";
-let enrollmentId = "";
-let weekId = "";
-let xpSourceDateText = "";
 
 let videoTable = null;
 let submissionsTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
-
 let weeklySummaryQueryCache = null;
-
-/* =========================================================
-   SECTION 3: FIELD CACHE
-========================================================= */
 
 const fieldCache = new Map();
 
-/* =========================================================
-   SECTION 4: HELPER FUNCTIONS
-========================================================= */
+/************************************************************************************************
+ * SECTION 2 — HELPERS
+ ************************************************************************************************/
 
 function log(message, data = null) {
   if (data === null || data === undefined) {
@@ -565,15 +548,20 @@ function setSkippedOutputs(actionOut, errorOut, details = {}) {
   setOutputSafe("statusOut", "skipped");
   setOutputSafe("actionOut", actionOut || "skipped");
   setOutputSafe("xpEventIdOut", "");
-  setOutputSafe("sourceKeyOut", details.sourceKey || sourceKey || "");
-  setOutputSafe("videoFeedbackDisplayKeyOut", details.videoFeedbackDisplayKey || videoFeedbackDisplayKey || "");
-  setOutputSafe("xpPointsOut", details.xpPoints || xpPoints || 0);
-  setOutputSafe("submissionIdOut", details.submissionId || submissionId || "");
-  setOutputSafe("enrollmentIdOut", details.enrollmentId || enrollmentId || "");
-  setOutputSafe("weekIdOut", details.weekId || weekId || "");
-  setOutputSafe("weekWrittenOut", details.weekId || weekId ? "yes" : "no");
-  setOutputSafe("xpSourceDateOut", details.xpSourceDate || xpSourceDateText || "");
+  setOutputSafe("sourceKeyOut", details.sourceKey || "");
+  setOutputSafe("videoFeedbackDisplayKeyOut", details.videoFeedbackDisplayKey || "");
+  setOutputSafe("xpPointsOut", details.xpPoints ?? "");
+  setOutputSafe("submissionIdOut", details.submissionId || "");
+  setOutputSafe("enrollmentIdOut", details.enrollmentId || "");
+  setOutputSafe("weekIdOut", details.weekId || "");
+  setOutputSafe("weekWrittenOut", details.weekId ? "yes" : "no");
+  setOutputSafe("weeklySummaryIdOut", details.weeklySummaryId || "");
+  setOutputSafe("xpSourceDateOut", details.xpSourceDate || "");
   setOutputSafe("errorOut", errorOut || "");
+
+  if (details.debugStep) {
+    setOutputSafe("debugStep", details.debugStep);
+  }
 
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
@@ -682,7 +670,7 @@ function guardAgainstXpEventStealing(existingXpEvent, currentRecordId) {
   }
 }
 
-async function findExistingXpEventOrThrow(linkedXpEventIds = []) {
+async function findExistingXpEventOrThrow(linkedXpEventIds = [], currentRecordId, currentSourceKey) {
   const xpQuery = await xpEventsTable.selectRecordsAsync({
     fields: buildXpMatchFieldsToLoad(),
   });
@@ -690,20 +678,20 @@ async function findExistingXpEventOrThrow(linkedXpEventIds = []) {
   try {
     const matches = findMatchingXpEvents(
       xpQuery.records,
-      recordId,
-      sourceKey,
+      currentRecordId,
+      currentSourceKey,
       linkedXpEventIds
     );
 
     if (matches.length > 1) {
       throw new Error(
-        `Duplicate XP Events found for Video Feedback ${recordId} / Source Key ${sourceKey}: ${matches.map(record => record.id).join(", ")}. One Video Feedback record must have exactly one XP Event.`
+        `Duplicate XP Events found for Video Feedback ${currentRecordId} / Source Key ${currentSourceKey}: ${matches.map(record => record.id).join(", ")}. One Video Feedback record must have exactly one XP Event.`
       );
     }
 
     const existingXpEvent = matches[0] || null;
 
-    guardAgainstXpEventStealing(existingXpEvent, recordId);
+    guardAgainstXpEventStealing(existingXpEvent, currentRecordId);
 
     return existingXpEvent;
   } finally {
@@ -713,7 +701,7 @@ async function findExistingXpEventOrThrow(linkedXpEventIds = []) {
   }
 }
 
-function validateRequiredSchema() {
+function assertRequiredSchema() {
   const requiredVideoFields = [
     CONFIG.videoFeedback.submission,
     CONFIG.videoFeedback.enrollment,
@@ -799,6 +787,14 @@ function buildXpPayload({
   existingXpEvent,
   xpSourceDate,
   weeklySummaryId,
+  recordId,
+  videoFeedbackDisplayKey,
+  submissionId,
+  enrollmentId,
+  weekId,
+  xpSourceDateText,
+  sourceKey,
+  xpPoints,
 }) {
   const xpReasonPublic = CONFIG.values.xpReasonPublic;
 
@@ -948,16 +944,22 @@ function buildXpPayload({
 }
 
 /* =========================================================
-   SECTION 5: MAIN
+   SECTION 3 — MAIN
 ========================================================= */
 
 async function main() {
-  let debugStep = "Start";
-  setOutputSafe("debugStep", debugStep);
+  let debugStep = "1 - Start";
+  let recordId = "";
+  let sourceKey = "";
+  let videoFeedbackDisplayKey = "";
+  let xpPoints = 0;
+  let submissionId = "";
+  let enrollmentId = "";
+  let weekId = "";
+  let xpSourceDateText = "";
 
-  /* ---------------------------------------------------------
-     5.1 Inputs
-  --------------------------------------------------------- */
+  try {
+    setOutputSafe("debugStep", debugStep);
 
   debugStep = "1 - Read Input";
   setOutputSafe("debugStep", debugStep);
@@ -999,7 +1001,7 @@ async function main() {
   debugStep = "3 - Validate Required Schema";
   setOutputSafe("debugStep", debugStep);
 
-  validateRequiredSchema();
+  assertRequiredSchema();
 
   /* ---------------------------------------------------------
      5.4 Load Video Feedback Record
@@ -1083,6 +1085,7 @@ async function main() {
 
   if (!videoActive) {
     setSkippedOutputs("skipped_inactive", "Active? is unchecked.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1094,6 +1097,7 @@ async function main() {
 
   if (!feedbackPosted) {
     setSkippedOutputs("skipped_feedback_not_posted", "Feedback Posted? is not checked.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1105,6 +1109,7 @@ async function main() {
 
   if (doNotAward) {
     setSkippedOutputs("skipped_do_not_award", "Do Not Award XP? is checked.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1116,6 +1121,7 @@ async function main() {
 
   if (!readyForXpAutomation) {
     setSkippedOutputs("skipped_not_ready_for_xp_automation", "Ready for XP Automation? is not checked.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1127,6 +1133,7 @@ async function main() {
 
   if (!(xpPoints > 0)) {
     setSkippedOutputs("skipped_zero_xp", "Total Video XP Awarded is blank or 0.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1138,6 +1145,7 @@ async function main() {
 
   if (!submissionId) {
     setSkippedOutputs("skipped_missing_submission", "Submission is blank.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1148,6 +1156,7 @@ async function main() {
 
   if (!enrollmentId) {
     setSkippedOutputs("skipped_missing_enrollment", "Enrollment is blank.", {
+      debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
       xpPoints,
@@ -1207,7 +1216,11 @@ async function main() {
   debugStep = "8 - Find Existing XP Event";
   setOutputSafe("debugStep", debugStep);
 
-  let existingXpEvent = await findExistingXpEventOrThrow(existingLinkedXpEventIds);
+  let existingXpEvent = await findExistingXpEventOrThrow(
+    existingLinkedXpEventIds,
+    recordId,
+    sourceKey
+  );
 
   /* ---------------------------------------------------------
      5.9 Build XP Event Payload
@@ -1247,6 +1260,14 @@ async function main() {
     existingXpEvent,
     xpSourceDate,
     weeklySummaryId,
+    recordId,
+    videoFeedbackDisplayKey,
+    submissionId,
+    enrollmentId,
+    weekId,
+    xpSourceDateText,
+    sourceKey,
+    xpPoints,
   });
 
   /* ---------------------------------------------------------
@@ -1269,7 +1290,11 @@ async function main() {
     debugStep = "10a - Last-Chance XP Event Recheck Before Create";
     setOutputSafe("debugStep", debugStep);
 
-    existingXpEvent = await findExistingXpEventOrThrow(existingLinkedXpEventIds);
+    existingXpEvent = await findExistingXpEventOrThrow(
+      existingLinkedXpEventIds,
+      recordId,
+      sourceKey
+    );
 
     if (existingXpEvent) {
       guardAgainstXpEventStealing(existingXpEvent, recordId);
@@ -1362,47 +1387,54 @@ async function main() {
     videoUpdateFieldsWritten: Object.keys(videoUpdateFields),
     debugStep,
   }, null, 2));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+
+    log("Automation 114 error", {
+      recordId,
+      debugStep,
+      error: message,
+    });
+
+    setOutputSafe("statusOut", "error");
+    setOutputSafe("actionOut", "error");
+    setOutputSafe("xpEventIdOut", "");
+    setOutputSafe("sourceKeyOut", sourceKey || "");
+    setOutputSafe("videoFeedbackDisplayKeyOut", videoFeedbackDisplayKey || "");
+    setOutputSafe("xpPointsOut", xpPoints || 0);
+    setOutputSafe("submissionIdOut", submissionId || "");
+    setOutputSafe("enrollmentIdOut", enrollmentId || "");
+    setOutputSafe("weekIdOut", weekId || "");
+    setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
+    setOutputSafe("weeklySummaryIdOut", "");
+    setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
+    setOutputSafe("errorOut", message);
+    setOutputSafe("debugStep", debugStep);
+
+    console.log(JSON.stringify({
+      automation: CONFIG.scriptName,
+      version: CONFIG.version,
+      statusOut: "error",
+      actionOut: "error",
+      sourceKeyOut: sourceKey || "",
+      videoFeedbackDisplayKeyOut: videoFeedbackDisplayKey || "",
+      xpPointsOut: xpPoints || 0,
+      submissionIdOut: submissionId || "",
+      enrollmentIdOut: enrollmentId || "",
+      weekIdOut: weekId || "",
+      weeklySummaryIdOut: "",
+      xpSourceDateOut: xpSourceDateText || "",
+      errorOut: message,
+      debugStep,
+    }, null, 2));
+
+    throw error;
+  }
 }
 
-/* =========================================================
-   SECTION 6: RUN
-========================================================= */
 
-try {
-  await main();
-} catch (error) {
-  const message = error instanceof Error ? error.message : String(error);
+/************************************************************************************************
+ * SECTION 4 — RUN
+ ************************************************************************************************/
 
-  setOutputSafe("statusOut", "error");
-  setOutputSafe("actionOut", "error");
-  setOutputSafe("xpEventIdOut", "");
-  setOutputSafe("sourceKeyOut", sourceKey || "");
-  setOutputSafe("videoFeedbackDisplayKeyOut", videoFeedbackDisplayKey || "");
-  setOutputSafe("xpPointsOut", xpPoints || 0);
-  setOutputSafe("submissionIdOut", submissionId || "");
-  setOutputSafe("enrollmentIdOut", enrollmentId || "");
-  setOutputSafe("weekIdOut", weekId || "");
-  setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
-  setOutputSafe("weeklySummaryIdOut", "");
-  setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
-  setOutputSafe("errorOut", message);
-
-  console.log(JSON.stringify({
-    automation: CONFIG.scriptName,
-    version: CONFIG.version,
-    statusOut: "error",
-    actionOut: "error",
-    sourceKeyOut: sourceKey || "",
-    videoFeedbackDisplayKeyOut: videoFeedbackDisplayKey || "",
-    xpPointsOut: xpPoints || 0,
-    submissionIdOut: submissionId || "",
-    enrollmentIdOut: enrollmentId || "",
-    weekIdOut: weekId || "",
-    weeklySummaryIdOut: "",
-    xpSourceDateOut: xpSourceDateText || "",
-    errorOut: message,
-  }, null, 2));
-
-  throw error;
-}
-
+await main();
