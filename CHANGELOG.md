@@ -13,6 +13,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **114** — Rewritten to production script standard (v5.7): runtime state inside `main()`, try/catch inside `main()`, `await main()` runner; Weekly Athlete Summary linking hardened with schema validation and repair pass.
 - **101** — Rewritten to production script standard (v5.2): `main()` wrapper, `assertRequiredSchema()`, Weekly Athlete Summary repair pass, `XP Bucket` field fix, standard `statusOut` values.
 - **065** — Rewritten to production script standard (v9.2): runtime inside `main()`, `assertRequiredSchema()`, Weekly Athlete Summary schema validation and repair pass, standard outputs.
+- **054** — Rewritten to production script standard (v5.4): module CONFIG/helpers, `assertRequiredSchema()`, Weekly Athlete Summary repair pass, standard outputs.
+- **059** — Rewritten to production script standard (v3.5): module CONFIG/helpers, `assertRequiredSchema()`, Weekly Athlete Summary repair on create/duplicate paths, standard outputs.
 
 ## 2026-06-20
 

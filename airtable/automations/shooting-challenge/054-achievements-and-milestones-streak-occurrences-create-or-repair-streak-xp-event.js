@@ -2,35 +2,32 @@
 Automation: 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
 
 Purpose:
-To be confirmed from production script.
+Creates or repairs Streak XP Events from Streak Occurrence records.
 
 Trigger:
-To be confirmed from Airtable automation.
+Streak Occurrences when Source Status is Ready for XP.
 
 Important Tables:
-To be confirmed from production script.
+Streak Occurrences, Achievements, XP Events, XP Reward Rules, Weekly Athlete Summary
 
 Important Fields:
-To be confirmed from production script.
+Enrollment, Achievement, Week, Source Status, XP Events, Weekly Athlete Summary
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************************************************
  * 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
- * Version: 5.3
+ *
+ * Version: v5.4
  * Date Written: 2026-06-09
  * Last Updated: 2026-06-21
- *
- * SCRIPT TYPE
- * - Airtable Automation Script
- * - Required input variable: recordId
  *
  * CURRENT SCHEMA FIXES
  * - Does NOT use XP Bucket Key.
@@ -46,385 +43,450 @@ Airtable is the deployed/running copy.
  * - Links XP Event back to Streak Occurrence.
  * - Links XP Event to Weekly Athlete Summary by Enrollment + Week when resolvable.
  * - Marks Streak Occurrence Source Status = Awarded.
+ *
+ * FOLDER
+ * - 05 - Achievements and Milestones
+ *
+ * AUTOMATION NAME
+ * - 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
+ *
+ * TRIGGER TABLE
+ * - Streak Occurrences
+ *
+ * TRIGGER TYPE
+ * - When record matches conditions
+ *
+ * REQUIRED INPUT
+ * - recordId = triggering Streak Occurrences record ID
+ *
+ * REQUIRED OUTPUTS
+ * - statusOut = created | updated | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
  ************************************************************************************************/
 
-async function main() {
-    const CONFIG = {
-        tables: {
-            streakOccurrences: "Streak Occurrences",
-            achievements: "Achievements",
-            xpEvents: "XP Events",
-            xpRules: "XP Reward Rules",
-            weeklySummary: "Weekly Athlete Summary",
-        },
+// @ts-nocheck
 
-        streakOccurrences: {
-            active: "Active?",
-            enrollment: "Enrollment",
-            achievement: "Achievement",
-            streakDays: "Streak Days",
-            streakEndDate: "Streak End Date",
-            week: "Week",
-            sourceStatus: "Source Status",
-            xpEvents: "XP Events",
-            occurrenceKey: "Streak Occurrence Key",
-            lastEvaluatedAt: "Last Evaluated At",
-            notes: "Notes",
-        },
+/************************************************************************************************
+ * SECTION 1 — CONFIGURATION
+ ************************************************************************************************/
 
-        achievements: {
-            achievementName: "Achievement Name",
-            fallbackName: "Name",
-            triggerThreshold: "Trigger Threshold",
-            rewardRuleKey: "Reward Rule Key",
-        },
+const CONFIG = {
+    scriptName: "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
+    version: "v5.4",
 
-        xpRules: {
-            active: "Active?",
-            ruleKey: "Rule Key",
-            xpAmount: "XP Amount",
-        },
+    tables: {
+        streakOccurrences: "Streak Occurrences",
+        achievements: "Achievements",
+        xpEvents: "XP Events",
+        xpRules: "XP Reward Rules",
+        weeklySummary: "Weekly Athlete Summary",
+    },
 
-        xpEvents: {
-            enrollment: "Enrollment",
-            week: "Week",
-            weeklySummary: "Weekly Athlete Summary",
-            streakOccurrence: "Streak Occurrence",
-            xpSource: "XP Source",
-            xpBucket: "XP Bucket",
-            xpPoints: "XP Points",
-            xpReasonPublic: "XP Reason Public",
-            active: "Active?",
-            sourceKey: "Source Key",
-            xpActivityDate: "XP Activity Date",
-            xpActivityDateSource: "XP Activity Date Source",
-            awardMode: "Award Mode",
-            processed: "Processed",
-            xpAwardStatus: "XP Award Status",
-        },
+    streakOccurrences: {
+        active: "Active?",
+        enrollment: "Enrollment",
+        achievement: "Achievement",
+        streakDays: "Streak Days",
+        streakEndDate: "Streak End Date",
+        week: "Week",
+        sourceStatus: "Source Status",
+        xpEvents: "XP Events",
+        occurrenceKey: "Streak Occurrence Key",
+        lastEvaluatedAt: "Last Evaluated At",
+        notes: "Notes",
+    },
 
-        values: {
-            statusReady: "Ready for XP",
-            statusAwarded: "Awarded",
-            statusError: "Error",
+    achievements: {
+        achievementName: "Achievement Name",
+        fallbackName: "Name",
+        triggerThreshold: "Trigger Threshold",
+        rewardRuleKey: "Reward Rule Key",
+    },
 
-            xpBucket: "Streak",
-            xpActivityDateSource: "Streak End Date",
-            awardModeAutomatic: "Automatic",
-            xpAwardStatusAwarded: "Awarded",
+    xpRules: {
+        active: "Active?",
+        ruleKey: "Rule Key",
+        xpAmount: "XP Amount",
+    },
 
-            sourceKeyPrefix: "STREAK_XP|",
-        },
+    xpEvents: {
+        enrollment: "Enrollment",
+        week: "Week",
+        weeklySummary: "Weekly Athlete Summary",
+        streakOccurrence: "Streak Occurrence",
+        xpSource: "XP Source",
+        xpBucket: "XP Bucket",
+        xpPoints: "XP Points",
+        xpReasonPublic: "XP Reason Public",
+        active: "Active?",
+        sourceKey: "Source Key",
+        xpActivityDate: "XP Activity Date",
+        xpActivityDateSource: "XP Activity Date Source",
+        awardMode: "Award Mode",
+        processed: "Processed",
+        xpAwardStatus: "XP Award Status",
+    },
 
-        weeklySummary: {
-            enrollment: "Enrollment",
-            week: "Week",
-        },
-    };
+    values: {
+        statusReady: "Ready for XP",
+        statusAwarded: "Awarded",
+        statusError: "Error",
 
-    const inputConfig = input.config();
-    const recordId = String(inputConfig.recordId || "").trim();
+        xpBucket: "Streak",
+        xpActivityDateSource: "Streak End Date",
+        awardModeAutomatic: "Automatic",
+        xpAwardStatusAwarded: "Awarded",
 
-    if (!recordId) {
-        throw new Error("Missing required input variable: recordId");
+        sourceKeyPrefix: "STREAK_XP|",
+    },
+
+    weeklySummary: {
+        enrollment: "Enrollment",
+        week: "Week",
+    },
+
+    outputStatuses: {
+        created: "created",
+        updated: "updated",
+        skipped: "skipped",
+        error: "error",
+    },
+};
+
+
+let streakOccurrencesTable = null;
+let achievementsTable = null;
+let xpEventsTable = null;
+let xpRulesTable = null;
+let weeklySummaryTable = null;
+let weeklySummaryQueryCache = null;
+
+
+/************************************************************************************************
+ * SECTION 2 — HELPERS
+ ************************************************************************************************/
+
+function setOutputSafe(key, value) {
+    try {
+        output.set(key, value);
+    } catch {
+        // Ignore output mapping errors.
     }
+}
 
-    const streakOccurrencesTable = base.getTable(CONFIG.tables.streakOccurrences);
-    const achievementsTable = base.getTable(CONFIG.tables.achievements);
-    const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-    const xpRulesTable = base.getTable(CONFIG.tables.xpRules);
-    const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+function fieldExists(table, fieldName) {
+    return !!fieldName && table.fields.some((field) => field.name === fieldName);
+}
 
-    let weeklySummaryQueryCache = null;
+function getField(table, fieldName) {
+    return table.fields.find((field) => field.name === fieldName) || null;
+}
 
-    function fieldExists(table, fieldName) {
-        return !!fieldName && table.fields.some((field) => field.name === fieldName);
+function fieldType(table, fieldName) {
+    const field = getField(table, fieldName);
+    return field ? field.type : null;
+}
+
+function isWritableField(table, fieldName) {
+    const type = fieldType(table, fieldName);
+
+    if (!type) return false;
+
+    return !new Set([
+        "formula",
+        "rollup",
+        "count",
+        "lookup",
+        "multipleLookupValues",
+        "createdTime",
+        "lastModifiedTime",
+        "createdBy",
+        "lastModifiedBy",
+        "autoNumber",
+        "button",
+        "aiText",
+        "externalSyncSource",
+    ]).has(type);
+}
+
+function requireField(table, fieldName) {
+    if (!fieldExists(table, fieldName)) {
+        throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
     }
+}
 
-    function getField(table, fieldName) {
-        return table.fields.find((field) => field.name === fieldName) || null;
+function requireWritableField(table, fieldName) {
+    requireField(table, fieldName);
+
+    if (!isWritableField(table, fieldName)) {
+        throw new Error(`Field ${table.name}.${fieldName} exists but is not writable.`);
     }
+}
 
-    function fieldType(table, fieldName) {
-        const field = getField(table, fieldName);
-        return field ? field.type : null;
-    }
+function optionalFields(table, fieldNames) {
+    return [...new Set(fieldNames.filter((fieldName) => fieldExists(table, fieldName)))];
+}
 
-    function isWritableField(table, fieldName) {
-        const type = fieldType(table, fieldName);
+function getLinkedIds(record, table, fieldName) {
+    if (!fieldExists(table, fieldName)) return [];
+    const value = record.getCellValue(fieldName);
+    return Array.isArray(value) ? value.map((item) => item.id).filter(Boolean) : [];
+}
 
-        if (!type) return false;
+function getFirstLinkedId(record, table, fieldName) {
+    const ids = getLinkedIds(record, table, fieldName);
+    return ids.length ? ids[0] : "";
+}
 
-        return !new Set([
-            "formula",
-            "rollup",
-            "count",
-            "lookup",
-            "multipleLookupValues",
-            "createdTime",
-            "lastModifiedTime",
-            "createdBy",
-            "lastModifiedBy",
-            "autoNumber",
-            "button",
-            "aiText",
-            "externalSyncSource",
-        ]).has(type);
-    }
-
-    function requireField(table, fieldName) {
-        if (!fieldExists(table, fieldName)) {
-            throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
-        }
-    }
-
-    function optionalFields(table, fieldNames) {
-        return [...new Set(fieldNames.filter((fieldName) => fieldExists(table, fieldName)))];
-    }
-
-    function getLinkedIds(record, table, fieldName) {
-        if (!fieldExists(table, fieldName)) return [];
-        const value = record.getCellValue(fieldName);
-        return Array.isArray(value) ? value.map((item) => item.id).filter(Boolean) : [];
-    }
-
-    function getFirstLinkedId(record, table, fieldName) {
-        const ids = getLinkedIds(record, table, fieldName);
-        return ids.length ? ids[0] : "";
-    }
-
-    async function loadWeeklySummaryQuery() {
-        if (weeklySummaryQueryCache) {
-            return weeklySummaryQueryCache;
-        }
-
-        weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
-            fields: [
-                CONFIG.weeklySummary.enrollment,
-                CONFIG.weeklySummary.week,
-            ],
-        });
-
+async function loadWeeklySummaryQuery() {
+    if (weeklySummaryQueryCache) {
         return weeklySummaryQueryCache;
     }
 
-    async function findWeeklySummaryId(enrollmentId, weekId) {
-        const cleanEnrollmentId = String(enrollmentId || "").trim();
-        const cleanWeekId = String(weekId || "").trim();
+    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+        fields: [
+            CONFIG.weeklySummary.enrollment,
+            CONFIG.weeklySummary.week,
+        ],
+    });
 
-        if (!cleanEnrollmentId || !cleanWeekId) {
-            return "";
-        }
+    return weeklySummaryQueryCache;
+}
 
-        const query = await loadWeeklySummaryQuery();
+async function findWeeklySummaryId(enrollmentId, weekId) {
+    const cleanEnrollmentId = String(enrollmentId || "").trim();
+    const cleanWeekId = String(weekId || "").trim();
 
-        const matches = query.records.filter((record) => {
-            const summaryEnrollmentId = getFirstLinkedId(
-                record,
-                weeklySummaryTable,
-                CONFIG.weeklySummary.enrollment
-            );
-            const summaryWeekId = getFirstLinkedId(
-                record,
-                weeklySummaryTable,
-                CONFIG.weeklySummary.week
-            );
-
-            return (
-                summaryEnrollmentId === cleanEnrollmentId &&
-                summaryWeekId === cleanWeekId
-            );
-        });
-
-        if (matches.length > 1) {
-            throw new Error(
-                `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
-            );
-        }
-
-        return matches.length === 1 ? matches[0].id : "";
+    if (!cleanEnrollmentId || !cleanWeekId) {
+        return "";
     }
 
-    async function resolveWeeklySummaryId({
-        sourceWeeklySummaryIds = [],
-        enrollmentId = "",
-        weekId = "",
-    }) {
-        const fromSource = [...new Set((sourceWeeklySummaryIds || []).filter(Boolean))];
+    const query = await loadWeeklySummaryQuery();
 
-        if (fromSource.length === 1) {
-            return fromSource[0];
-        }
+    const matches = query.records.filter((record) => {
+        const summaryEnrollmentId = getFirstLinkedId(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.enrollment
+        );
+        const summaryWeekId = getFirstLinkedId(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.week
+        );
 
-        if (fromSource.length > 1) {
-            throw new Error(
-                `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
-            );
-        }
+        return (
+            summaryEnrollmentId === cleanEnrollmentId &&
+            summaryWeekId === cleanWeekId
+        );
+    });
 
-        return findWeeklySummaryId(enrollmentId, weekId);
+    if (matches.length > 1) {
+        throw new Error(
+            `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+        );
     }
 
-    function getText(record, table, fieldName) {
-        if (!record || !fieldExists(table, fieldName)) return "";
+    return matches.length === 1 ? matches[0].id : "";
+}
 
-        const value = record.getCellValue(fieldName);
+async function resolveWeeklySummaryId({
+    sourceWeeklySummaryIds = [],
+    enrollmentId = "",
+    weekId = "",
+}) {
+    const fromSource = [...new Set((sourceWeeklySummaryIds || []).filter(Boolean))];
 
-        if (value === null || value === undefined) return "";
-        if (typeof value === "string") return value.trim();
-        if (typeof value === "number") return String(value);
-
-        if (value && value.name) return String(value.name).trim();
-
-        if (Array.isArray(value)) {
-            return value
-                .map((item) => {
-                    if (item && item.name) return item.name;
-                    if (item !== null && item !== undefined) return String(item);
-                    return "";
-                })
-                .filter(Boolean)
-                .join(", ")
-                .trim();
-        }
-
-        return String(value).trim();
+    if (fromSource.length === 1) {
+        return fromSource[0];
     }
 
-    function getSelectName(record, table, fieldName) {
-        if (!fieldExists(table, fieldName)) return "";
-        const value = record.getCellValue(fieldName);
-        return value && value.name ? value.name : "";
+    if (fromSource.length > 1) {
+        throw new Error(
+            `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+        );
     }
 
-    function getNumber(record, table, fieldName) {
-        if (!fieldExists(table, fieldName)) return 0;
+    return findWeeklySummaryId(enrollmentId, weekId);
+}
 
-        const value = record.getCellValue(fieldName);
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+    if (!xpEventId || !weeklySummaryId) {
+        return false;
+    }
 
-        if (typeof value === "number") {
-            return Number.isFinite(value) ? value : 0;
-        }
+    const fields = {};
+    addWritableRaw(fields, xpEventsTable, CONFIG.xpEvents.weeklySummary, [{ id: weeklySummaryId }]);
 
-        if (Array.isArray(value) && value.length > 0) {
-            const parsed = Number(value[0]);
-            return Number.isFinite(parsed) ? parsed : 0;
-        }
+    if (Object.keys(fields).length === 0) {
+        return false;
+    }
 
-        const parsed = Number(value);
+    await xpEventsTable.updateRecordAsync(xpEventId, fields);
+    return true;
+}
+
+function getText(record, table, fieldName) {
+    if (!record || !fieldExists(table, fieldName)) return "";
+
+    const value = record.getCellValue(fieldName);
+
+    if (value === null || value === undefined) return "";
+    if (typeof value === "string") return value.trim();
+    if (typeof value === "number") return String(value);
+
+    if (value && value.name) return String(value.name).trim();
+
+    if (Array.isArray(value)) {
+        return value
+            .map((item) => {
+                if (item && item.name) return item.name;
+                if (item !== null && item !== undefined) return String(item);
+                return "";
+            })
+            .filter(Boolean)
+            .join(", ")
+            .trim();
+    }
+
+    return String(value).trim();
+}
+
+function getSelectName(record, table, fieldName) {
+    if (!fieldExists(table, fieldName)) return "";
+    const value = record.getCellValue(fieldName);
+    return value && value.name ? value.name : "";
+}
+
+function getNumber(record, table, fieldName) {
+    if (!fieldExists(table, fieldName)) return 0;
+
+    const value = record.getCellValue(fieldName);
+
+    if (typeof value === "number") {
+        return Number.isFinite(value) ? value : 0;
+    }
+
+    if (Array.isArray(value) && value.length > 0) {
+        const parsed = Number(value[0]);
         return Number.isFinite(parsed) ? parsed : 0;
     }
 
-    function isChecked(record, table, fieldName) {
-        if (!fieldExists(table, fieldName)) return false;
-        return record.getCellValue(fieldName) === true;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function isChecked(record, table, fieldName) {
+    if (!fieldExists(table, fieldName)) return false;
+    return record.getCellValue(fieldName) === true;
+}
+
+function toDateKey(value) {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return "";
+    return date.toISOString().slice(0, 10);
+}
+
+function dateValue(dateKey) {
+    return dateKey ? `${dateKey}T12:00:00.000Z` : null;
+}
+
+function makeSourceKey(enrollmentId, achievementId, streakEndDateKey) {
+    return `${CONFIG.values.sourceKeyPrefix}${enrollmentId}|${achievementId}|${streakEndDateKey}`;
+}
+
+function makeFallbackRuleKey(streakDays) {
+    return `STREAK_${streakDays}DAY`;
+}
+
+function makeReason(achievementName, streakDays, streakEndDateKey) {
+    return `${achievementName}: ${streakDays}-day shooting streak reached on ${streakEndDateKey}.`;
+}
+
+function coerceValueForField(table, fieldName, value) {
+    const type = fieldType(table, fieldName);
+
+    if (type === "singleSelect") {
+        return { name: String(value) };
     }
 
-    function toDateKey(value) {
-        if (!value) return "";
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return "";
-        return date.toISOString().slice(0, 10);
+    return value;
+}
+
+function addWritable(fields, table, fieldName, value) {
+    if (value === undefined || value === null) return;
+    if (!fieldExists(table, fieldName)) return;
+    if (!isWritableField(table, fieldName)) return;
+
+    fields[fieldName] = coerceValueForField(table, fieldName, value);
+}
+
+function addWritableRaw(fields, table, fieldName, value) {
+    if (value === undefined || value === null) return;
+    if (!fieldExists(table, fieldName)) return;
+    if (!isWritableField(table, fieldName)) return;
+
+    fields[fieldName] = value;
+}
+
+function validateSingleSelectChoice(table, fieldName, choiceName) {
+    const field = getField(table, fieldName);
+
+    if (!field || field.type !== "singleSelect") {
+        return true;
     }
 
-    function dateValue(dateKey) {
-        return dateKey ? `${dateKey}T12:00:00.000Z` : null;
+    const choices = field.options && Array.isArray(field.options.choices)
+        ? field.options.choices.map((choice) => choice.name)
+        : [];
+
+    return choices.includes(choiceName);
+}
+
+function appendNote(existingNote, newNote) {
+    const existing = String(existingNote || "").trim();
+    if (!existing) return newNote;
+    return `${existing}\n${newNote}`;
+}
+
+async function markOccurrenceError(streakOccurrenceId, reason, debugStep, extraOutputs = {}) {
+    const occurrenceForError = await streakOccurrencesTable.selectRecordAsync(streakOccurrenceId);
+
+    const existingNote = occurrenceForError
+        ? getText(occurrenceForError, streakOccurrencesTable, CONFIG.streakOccurrences.notes)
+        : "";
+
+    const updateFields = {};
+
+    addWritable(updateFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
+    addWritable(updateFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, new Date().toISOString());
+    addWritable(
+        updateFields,
+        streakOccurrencesTable,
+        CONFIG.streakOccurrences.notes,
+        appendNote(existingNote, `054 error: ${reason}`)
+    );
+
+    if (Object.keys(updateFields).length > 0 && occurrenceForError) {
+        await streakOccurrencesTable.updateRecordAsync(streakOccurrenceId, updateFields);
     }
 
-    function makeSourceKey(enrollmentId, achievementId, streakEndDateKey) {
-        return `${CONFIG.values.sourceKeyPrefix}${enrollmentId}|${achievementId}|${streakEndDateKey}`;
+    setOutputSafe("ok", false);
+    setOutputSafe("statusOut", CONFIG.outputStatuses.error);
+    setOutputSafe("actionOut", "error");
+    setOutputSafe("errorOut", reason);
+    setOutputSafe("debugStep", debugStep);
+    setOutputSafe("streakOccurrenceId", streakOccurrenceId);
+
+    for (const [key, value] of Object.entries(extraOutputs)) {
+        setOutputSafe(key, value);
     }
+}
 
-    function makeFallbackRuleKey(streakDays) {
-        return `STREAK_${streakDays}DAY`;
-    }
-
-    function makeReason(achievementName, streakDays, streakEndDateKey) {
-        return `${achievementName}: ${streakDays}-day shooting streak reached on ${streakEndDateKey}.`;
-    }
-
-    function coerceValueForField(table, fieldName, value) {
-        const type = fieldType(table, fieldName);
-
-        if (type === "singleSelect") {
-            return { name: String(value) };
-        }
-
-        return value;
-    }
-
-    function addWritable(fields, table, fieldName, value) {
-        if (value === undefined || value === null) return;
-        if (!fieldExists(table, fieldName)) return;
-        if (!isWritableField(table, fieldName)) return;
-
-        fields[fieldName] = coerceValueForField(table, fieldName, value);
-    }
-
-    function addWritableRaw(fields, table, fieldName, value) {
-        if (value === undefined || value === null) return;
-        if (!fieldExists(table, fieldName)) return;
-        if (!isWritableField(table, fieldName)) return;
-
-        fields[fieldName] = value;
-    }
-
-    function validateSingleSelectChoice(table, fieldName, choiceName) {
-        const field = getField(table, fieldName);
-
-        if (!field || field.type !== "singleSelect") {
-            return true;
-        }
-
-        const choices = field.options && Array.isArray(field.options.choices)
-            ? field.options.choices.map((choice) => choice.name)
-            : [];
-
-        return choices.includes(choiceName);
-    }
-
-    function appendNote(existingNote, newNote) {
-        const existing = String(existingNote || "").trim();
-        if (!existing) return newNote;
-        return `${existing}\n${newNote}`;
-    }
-
-    async function markOccurrenceError(reason, extraOutputs = {}) {
-        const occurrenceForError = await streakOccurrencesTable.selectRecordAsync(recordId);
-
-        const existingNote = occurrenceForError
-            ? getText(occurrenceForError, streakOccurrencesTable, CONFIG.streakOccurrences.notes)
-            : "";
-
-        const updateFields = {};
-
-        addWritable(updateFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
-        addWritable(updateFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, new Date().toISOString());
-        addWritable(
-            updateFields,
-            streakOccurrencesTable,
-            CONFIG.streakOccurrences.notes,
-            appendNote(existingNote, `054 error: ${reason}`)
-        );
-
-        if (Object.keys(updateFields).length > 0 && occurrenceForError) {
-            await streakOccurrencesTable.updateRecordAsync(recordId, updateFields);
-        }
-
-        output.set("ok", false);
-        output.set("actionOut", "error");
-        output.set("errorOut", reason);
-        output.set("streakOccurrenceId", recordId);
-
-        for (const [key, value] of Object.entries(extraOutputs)) {
-            output.set(key, value);
-        }
-    }
-
-    /************************************************************************************************
-     * REQUIRED FIELDS
-     ************************************************************************************************/
-
+function assertRequiredSchema() {
     requireField(streakOccurrencesTable, CONFIG.streakOccurrences.active);
     requireField(streakOccurrencesTable, CONFIG.streakOccurrences.enrollment);
     requireField(streakOccurrencesTable, CONFIG.streakOccurrences.achievement);
@@ -441,301 +503,403 @@ async function main() {
     requireField(xpRulesTable, CONFIG.xpRules.ruleKey);
     requireField(xpRulesTable, CONFIG.xpRules.xpAmount);
 
-    requireField(xpEventsTable, CONFIG.xpEvents.enrollment);
-    requireField(xpEventsTable, CONFIG.xpEvents.streakOccurrence);
-    requireField(xpEventsTable, CONFIG.xpEvents.xpSource);
-    requireField(xpEventsTable, CONFIG.xpEvents.xpBucket);
-    requireField(xpEventsTable, CONFIG.xpEvents.xpPoints);
-    requireField(xpEventsTable, CONFIG.xpEvents.active);
-    requireField(xpEventsTable, CONFIG.xpEvents.sourceKey);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.enrollment);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.streakOccurrence);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.xpSource);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.xpBucket);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.xpPoints);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.active);
+    requireWritableField(xpEventsTable, CONFIG.xpEvents.sourceKey);
 
-    /************************************************************************************************
-     * LOAD AND VALIDATE STREAK OCCURRENCE
-     ************************************************************************************************/
-
-    const occurrence = await streakOccurrencesTable.selectRecordAsync(recordId);
-
-    if (!occurrence) {
-        output.set("ok", false);
-        output.set("actionOut", "skipped_missing_streak_occurrence");
-        output.set("errorOut", `Streak Occurrence not found: ${recordId}`);
-        return;
+    if (fieldExists(xpEventsTable, CONFIG.xpEvents.week)) {
+        requireWritableField(xpEventsTable, CONFIG.xpEvents.week);
     }
 
-    const active = isChecked(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.active);
-    const sourceStatus = getSelectName(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus);
-
-    if (!active) {
-        output.set("ok", true);
-        output.set("actionOut", "skipped_inactive_streak_occurrence");
-        output.set("streakOccurrenceId", recordId);
-        return;
+    if (fieldExists(xpEventsTable, CONFIG.xpEvents.weeklySummary)) {
+        requireWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary);
     }
+}
 
-    if (sourceStatus !== CONFIG.values.statusReady) {
-        output.set("ok", true);
-        output.set("actionOut", "skipped_not_ready_for_xp");
-        output.set("streakOccurrenceId", recordId);
-        output.set("sourceStatus", sourceStatus);
-        return;
-    }
 
-    const enrollmentId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.enrollment);
-    const achievementId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.achievement);
-    const weekId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.week);
-    const existingLinkedXpEventIds = getLinkedIds(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.xpEvents);
+/************************************************************************************************
+ * SECTION 3 — MAIN
+ ************************************************************************************************/
 
-    const streakEndDateKey = toDateKey(occurrence.getCellValue(CONFIG.streakOccurrences.streakEndDate));
-    const streakDays = getNumber(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.streakDays);
-
-    if (!enrollmentId || !achievementId || !streakEndDateKey || streakDays <= 0) {
-        await markOccurrenceError("Missing Enrollment, Achievement, Streak End Date, or Streak Days.", {
-            enrollmentId,
-            achievementId,
-            streakEndDateKey,
-            streakDays,
-        });
-        return;
-    }
-
-    /************************************************************************************************
-     * ACHIEVEMENT AND XP RULE
-     ************************************************************************************************/
-
-    const achievement = await achievementsTable.selectRecordAsync(achievementId);
-
-    if (!achievement) {
-        await markOccurrenceError(`Achievement not found: ${achievementId}`);
-        return;
-    }
-
-    const achievementName =
-        getText(achievement, achievementsTable, CONFIG.achievements.achievementName) ||
-        getText(achievement, achievementsTable, CONFIG.achievements.fallbackName);
-
-    const achievementThreshold = getNumber(achievement, achievementsTable, CONFIG.achievements.triggerThreshold);
-    const configuredRuleKey = getText(achievement, achievementsTable, CONFIG.achievements.rewardRuleKey);
-    const fallbackRuleKey = makeFallbackRuleKey(achievementThreshold || streakDays);
-
-    const allowedRuleKeys = [configuredRuleKey, fallbackRuleKey].filter(Boolean);
-
-    if (!achievementName) {
-        await markOccurrenceError(`Achievement has no usable name: ${achievementId}`);
-        return;
-    }
-
-    if (!validateSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpSource, achievementName)) {
-        await markOccurrenceError(`XP Events → XP Source is missing this option: ${achievementName}`, {
-            achievementName,
-        });
-        return;
-    }
-
-    if (!validateSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucket)) {
-        await markOccurrenceError(`XP Events → XP Bucket is missing this option: ${CONFIG.values.xpBucket}`);
-        return;
-    }
-
-    const xpRulesQuery = await xpRulesTable.selectRecordsAsync({
-        fields: optionalFields(xpRulesTable, [
-            CONFIG.xpRules.active,
-            CONFIG.xpRules.ruleKey,
-            CONFIG.xpRules.xpAmount,
-        ]),
-    });
-
-    const matchingRule = xpRulesQuery.records.find((rule) => {
-        const ruleActive = isChecked(rule, xpRulesTable, CONFIG.xpRules.active);
-        const ruleKey = getText(rule, xpRulesTable, CONFIG.xpRules.ruleKey);
-        return ruleActive && allowedRuleKeys.includes(ruleKey);
-    });
-
-    if (!matchingRule) {
-        await markOccurrenceError(`No active XP Reward Rule found. Tried: ${allowedRuleKeys.join(", ")}`, {
-            achievementName,
-            allowedRuleKeys: allowedRuleKeys.join(", "),
-        });
-        return;
-    }
-
-    const xpAmount = getNumber(matchingRule, xpRulesTable, CONFIG.xpRules.xpAmount);
-
-    if (xpAmount <= 0) {
-        await markOccurrenceError(`XP Reward Rule has no positive XP Amount: ${matchingRule.id}`, {
-            xpRuleId: matchingRule.id,
-            achievementName,
-        });
-        return;
-    }
-
-    /************************************************************************************************
-     * FIND EXISTING XP EVENT
-     ************************************************************************************************/
-
-    const sourceKey = makeSourceKey(enrollmentId, achievementId, streakEndDateKey);
-
-    const xpEventsQuery = await xpEventsTable.selectRecordsAsync({
-        fields: optionalFields(xpEventsTable, [
-            CONFIG.xpEvents.enrollment,
-            CONFIG.xpEvents.week,
-            CONFIG.xpEvents.streakOccurrence,
-            CONFIG.xpEvents.xpSource,
-            CONFIG.xpEvents.xpBucket,
-            CONFIG.xpEvents.xpPoints,
-            CONFIG.xpEvents.xpReasonPublic,
-            CONFIG.xpEvents.active,
-            CONFIG.xpEvents.sourceKey,
-            CONFIG.xpEvents.xpActivityDate,
-            CONFIG.xpEvents.xpActivityDateSource,
-            CONFIG.xpEvents.awardMode,
-            CONFIG.xpEvents.processed,
-            CONFIG.xpEvents.xpAwardStatus,
-        ]),
-    });
-
-    const existingMap = new Map();
-
-    for (const xpEvent of xpEventsQuery.records) {
-        const existingSourceKey = getText(xpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey);
-        const linkedOccurrenceIds = getLinkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.streakOccurrence);
-
-        const matchesSourceKey = existingSourceKey === sourceKey;
-        const matchesOccurrenceLink = linkedOccurrenceIds.includes(recordId);
-        const matchesLinkedFromOccurrence = existingLinkedXpEventIds.includes(xpEvent.id);
-
-        if (matchesSourceKey || matchesOccurrenceLink || matchesLinkedFromOccurrence) {
-            existingMap.set(xpEvent.id, xpEvent);
-        }
-    }
-
-    const existingXpEvents = [...existingMap.values()].sort((a, b) => a.id.localeCompare(b.id));
-    const canonicalXpEvent = existingXpEvents.length > 0 ? existingXpEvents[0] : null;
-    const duplicateXpEvents = existingXpEvents.slice(1);
-
-    /************************************************************************************************
-     * CREATE OR REPAIR XP EVENT
-     ************************************************************************************************/
-
-    const xpDateIso = dateValue(streakEndDateKey);
-    const xpReason = makeReason(achievementName, streakDays, streakEndDateKey);
-
-    const weeklySummaryId = weekId
-        ? await resolveWeeklySummaryId({
-            sourceWeeklySummaryIds: [],
-            enrollmentId,
-            weekId,
-        })
-        : "";
-
-    const xpFields = {};
-
-    addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.enrollment, [{ id: enrollmentId }]);
-    addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.streakOccurrence, [{ id: recordId }]);
-
-    if (weekId) {
-        addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.week, [{ id: weekId }]);
-    }
-
-    if (weeklySummaryId) {
-        addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.weeklySummary, [{ id: weeklySummaryId }]);
-    }
-
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpSource, achievementName);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucket);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpPoints, xpAmount);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpReasonPublic, xpReason);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.active, true);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.sourceKey, sourceKey);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpActivityDate, xpDateIso);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpActivityDateSource, CONFIG.values.xpActivityDateSource);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.awardMode, CONFIG.values.awardModeAutomatic);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.processed, true);
-    addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpAwardStatus, CONFIG.values.xpAwardStatusAwarded);
-
-    let xpEventId = "";
-    let actionOut = "";
+async function main() {
+    let debugStep = "1 - Start";
+    let recordId = "";
 
     try {
-        if (canonicalXpEvent) {
-            await xpEventsTable.updateRecordAsync(canonicalXpEvent.id, xpFields);
-            xpEventId = canonicalXpEvent.id;
-            actionOut = "updated_xp_event";
-        } else {
-            xpEventId = await xpEventsTable.createRecordAsync(xpFields);
-            actionOut = "created_xp_event";
+        setOutputSafe("debugStep", debugStep);
+
+        debugStep = "2 - Read Input";
+        setOutputSafe("debugStep", debugStep);
+
+        const inputConfig = input.config();
+        recordId = String(inputConfig.recordId || "").trim();
+
+        if (!recordId) {
+            throw new Error("Missing required input variable: recordId");
         }
-    } catch (error) {
-        await markOccurrenceError(`Failed to create/update XP Event: ${error.message || error}`, {
-            achievementName,
-            sourceKey,
+
+        if (!recordId.startsWith("rec")) {
+            throw new Error(`Invalid Streak Occurrences recordId input: ${recordId}`);
+        }
+
+        debugStep = "3 - Load Tables";
+        setOutputSafe("debugStep", debugStep);
+
+        streakOccurrencesTable = base.getTable(CONFIG.tables.streakOccurrences);
+        achievementsTable = base.getTable(CONFIG.tables.achievements);
+        xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+        xpRulesTable = base.getTable(CONFIG.tables.xpRules);
+        weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+        weeklySummaryQueryCache = null;
+
+        debugStep = "4 - Validate Schema";
+        setOutputSafe("debugStep", debugStep);
+        assertRequiredSchema();
+
+        debugStep = "5 - Load Streak Occurrence";
+        setOutputSafe("debugStep", debugStep);
+
+        const occurrence = await streakOccurrencesTable.selectRecordAsync(recordId);
+
+        if (!occurrence) {
+            setOutputSafe("ok", false);
+            setOutputSafe("statusOut", CONFIG.outputStatuses.error);
+            setOutputSafe("actionOut", "skipped_missing_streak_occurrence");
+            setOutputSafe("errorOut", `Streak Occurrence not found: ${recordId}`);
+            setOutputSafe("debugStep", debugStep);
+            setOutputSafe("streakOccurrenceId", recordId);
+            return;
+        }
+
+        debugStep = "6 - Validate Streak Occurrence";
+        setOutputSafe("debugStep", debugStep);
+
+        const active = isChecked(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.active);
+        const sourceStatus = getSelectName(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus);
+
+        if (!active) {
+            setOutputSafe("ok", true);
+            setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+            setOutputSafe("actionOut", "skipped_inactive_streak_occurrence");
+            setOutputSafe("errorOut", "");
+            setOutputSafe("debugStep", debugStep);
+            setOutputSafe("streakOccurrenceId", recordId);
+            return;
+        }
+
+        if (sourceStatus !== CONFIG.values.statusReady) {
+            setOutputSafe("ok", true);
+            setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+            setOutputSafe("actionOut", "skipped_not_ready_for_xp");
+            setOutputSafe("errorOut", "");
+            setOutputSafe("debugStep", debugStep);
+            setOutputSafe("streakOccurrenceId", recordId);
+            setOutputSafe("sourceStatus", sourceStatus);
+            return;
+        }
+
+        const enrollmentId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.enrollment);
+        const achievementId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.achievement);
+        const weekId = getFirstLinkedId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.week);
+        const existingLinkedXpEventIds = getLinkedIds(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.xpEvents);
+
+        const streakEndDateKey = toDateKey(occurrence.getCellValue(CONFIG.streakOccurrences.streakEndDate));
+        const streakDays = getNumber(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.streakDays);
+
+        if (!enrollmentId || !achievementId || !streakEndDateKey || streakDays <= 0) {
+            await markOccurrenceError(recordId, "Missing Enrollment, Achievement, Streak End Date, or Streak Days.", debugStep, {
+                enrollmentId,
+                achievementId,
+                streakEndDateKey,
+                streakDays,
+            });
+            return;
+        }
+
+        debugStep = "7 - Load Achievement and XP Rule";
+        setOutputSafe("debugStep", debugStep);
+
+        const achievement = await achievementsTable.selectRecordAsync(achievementId);
+
+        if (!achievement) {
+            await markOccurrenceError(recordId, `Achievement not found: ${achievementId}`, debugStep);
+            return;
+        }
+
+        const achievementName =
+            getText(achievement, achievementsTable, CONFIG.achievements.achievementName) ||
+            getText(achievement, achievementsTable, CONFIG.achievements.fallbackName);
+
+        const achievementThreshold = getNumber(achievement, achievementsTable, CONFIG.achievements.triggerThreshold);
+        const configuredRuleKey = getText(achievement, achievementsTable, CONFIG.achievements.rewardRuleKey);
+        const fallbackRuleKey = makeFallbackRuleKey(achievementThreshold || streakDays);
+
+        const allowedRuleKeys = [configuredRuleKey, fallbackRuleKey].filter(Boolean);
+
+        if (!achievementName) {
+            await markOccurrenceError(recordId, `Achievement has no usable name: ${achievementId}`, debugStep);
+            return;
+        }
+
+        if (!validateSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpSource, achievementName)) {
+            await markOccurrenceError(recordId, `XP Events → XP Source is missing this option: ${achievementName}`, debugStep, {
+                achievementName,
+            });
+            return;
+        }
+
+        if (!validateSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucket)) {
+            await markOccurrenceError(recordId, `XP Events → XP Bucket is missing this option: ${CONFIG.values.xpBucket}`, debugStep);
+            return;
+        }
+
+        const xpRulesQuery = await xpRulesTable.selectRecordsAsync({
+            fields: optionalFields(xpRulesTable, [
+                CONFIG.xpRules.active,
+                CONFIG.xpRules.ruleKey,
+                CONFIG.xpRules.xpAmount,
+            ]),
         });
-        return;
-    }
 
-    /************************************************************************************************
-     * MARK DUPLICATE XP EVENTS INACTIVE
-     ************************************************************************************************/
+        const matchingRule = xpRulesQuery.records.find((rule) => {
+            const ruleActive = isChecked(rule, xpRulesTable, CONFIG.xpRules.active);
+            const ruleKey = getText(rule, xpRulesTable, CONFIG.xpRules.ruleKey);
+            return ruleActive && allowedRuleKeys.includes(ruleKey);
+        });
 
-    let duplicateXpEventsMarkedInactive = 0;
+        if (!matchingRule) {
+            await markOccurrenceError(recordId, `No active XP Reward Rule found. Tried: ${allowedRuleKeys.join(", ")}`, debugStep, {
+                achievementName,
+                allowedRuleKeys: allowedRuleKeys.join(", "),
+            });
+            return;
+        }
 
-    for (const duplicate of duplicateXpEvents) {
-        const duplicateFields = {};
+        const xpAmount = getNumber(matchingRule, xpRulesTable, CONFIG.xpRules.xpAmount);
 
-        addWritable(duplicateFields, xpEventsTable, CONFIG.xpEvents.active, false);
+        if (xpAmount <= 0) {
+            await markOccurrenceError(recordId, `XP Reward Rule has no positive XP Amount: ${matchingRule.id}`, debugStep, {
+                xpRuleId: matchingRule.id,
+                achievementName,
+            });
+            return;
+        }
+
+        debugStep = "8 - Find Existing XP Event";
+        setOutputSafe("debugStep", debugStep);
+
+        const sourceKey = makeSourceKey(enrollmentId, achievementId, streakEndDateKey);
+
+        const xpEventsQuery = await xpEventsTable.selectRecordsAsync({
+            fields: optionalFields(xpEventsTable, [
+                CONFIG.xpEvents.enrollment,
+                CONFIG.xpEvents.week,
+                CONFIG.xpEvents.weeklySummary,
+                CONFIG.xpEvents.streakOccurrence,
+                CONFIG.xpEvents.xpSource,
+                CONFIG.xpEvents.xpBucket,
+                CONFIG.xpEvents.xpPoints,
+                CONFIG.xpEvents.xpReasonPublic,
+                CONFIG.xpEvents.active,
+                CONFIG.xpEvents.sourceKey,
+                CONFIG.xpEvents.xpActivityDate,
+                CONFIG.xpEvents.xpActivityDateSource,
+                CONFIG.xpEvents.awardMode,
+                CONFIG.xpEvents.processed,
+                CONFIG.xpEvents.xpAwardStatus,
+            ]),
+        });
+
+        const existingMap = new Map();
+
+        for (const xpEvent of xpEventsQuery.records) {
+            const existingSourceKey = getText(xpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey);
+            const linkedOccurrenceIds = getLinkedIds(xpEvent, xpEventsTable, CONFIG.xpEvents.streakOccurrence);
+
+            const matchesSourceKey = existingSourceKey === sourceKey;
+            const matchesOccurrenceLink = linkedOccurrenceIds.includes(recordId);
+            const matchesLinkedFromOccurrence = existingLinkedXpEventIds.includes(xpEvent.id);
+
+            if (matchesSourceKey || matchesOccurrenceLink || matchesLinkedFromOccurrence) {
+                existingMap.set(xpEvent.id, xpEvent);
+            }
+        }
+
+        const existingXpEvents = [...existingMap.values()].sort((a, b) => a.id.localeCompare(b.id));
+        const canonicalXpEvent = existingXpEvents.length > 0 ? existingXpEvents[0] : null;
+        const duplicateXpEvents = existingXpEvents.slice(1);
+
+        debugStep = "9 - Create or Repair XP Event";
+        setOutputSafe("debugStep", debugStep);
+
+        const xpDateIso = dateValue(streakEndDateKey);
+        const xpReason = makeReason(achievementName, streakDays, streakEndDateKey);
+
+        const weeklySummaryId = weekId
+            ? await resolveWeeklySummaryId({
+                sourceWeeklySummaryIds: [],
+                enrollmentId,
+                weekId,
+            })
+            : "";
+
+        const xpFields = {};
+
+        addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.enrollment, [{ id: enrollmentId }]);
+        addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.streakOccurrence, [{ id: recordId }]);
+
+        if (weekId) {
+            addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.week, [{ id: weekId }]);
+        }
+
+        if (weeklySummaryId) {
+            addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.weeklySummary, [{ id: weeklySummaryId }]);
+        }
+
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpSource, achievementName);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucket);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpPoints, xpAmount);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpReasonPublic, xpReason);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.active, true);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.sourceKey, sourceKey);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpActivityDate, xpDateIso);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpActivityDateSource, CONFIG.values.xpActivityDateSource);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.awardMode, CONFIG.values.awardModeAutomatic);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.processed, true);
+        addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpAwardStatus, CONFIG.values.xpAwardStatusAwarded);
+
+        let xpEventId = "";
+        let actionOut = "";
+
+        try {
+            if (canonicalXpEvent) {
+                await xpEventsTable.updateRecordAsync(canonicalXpEvent.id, xpFields);
+                xpEventId = canonicalXpEvent.id;
+                actionOut = "updated_xp_event";
+            } else {
+                xpEventId = await xpEventsTable.createRecordAsync(xpFields);
+                actionOut = "created_xp_event";
+            }
+        } catch (error) {
+            await markOccurrenceError(recordId, `Failed to create/update XP Event: ${error.message || error}`, debugStep, {
+                achievementName,
+                sourceKey,
+            });
+            return;
+        }
+
+        await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
+
+        debugStep = "10 - Mark Duplicate XP Events Inactive";
+        setOutputSafe("debugStep", debugStep);
+
+        let duplicateXpEventsMarkedInactive = 0;
+
+        for (const duplicate of duplicateXpEvents) {
+            const duplicateFields = {};
+
+            addWritable(duplicateFields, xpEventsTable, CONFIG.xpEvents.active, false);
+            addWritable(
+                duplicateFields,
+                xpEventsTable,
+                CONFIG.xpEvents.xpReasonPublic,
+                `Duplicate streak XP event. Canonical XP Event: ${xpEventId}. Source Key: ${sourceKey}`
+            );
+
+            if (Object.keys(duplicateFields).length > 0) {
+                await xpEventsTable.updateRecordAsync(duplicate.id, duplicateFields);
+                duplicateXpEventsMarkedInactive++;
+            }
+        }
+
+        debugStep = "11 - Link Streak Occurrence and Mark Awarded";
+        setOutputSafe("debugStep", debugStep);
+
+        const occurrenceFields = {};
+
+        addWritableRaw(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.xpEvents, [{ id: xpEventId }]);
+        addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusAwarded);
+        addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, new Date().toISOString());
+
+        const existingOccurrenceNote = getText(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.notes);
+
         addWritable(
-            duplicateFields,
-            xpEventsTable,
-            CONFIG.xpEvents.xpReasonPublic,
-            `Duplicate streak XP event. Canonical XP Event: ${xpEventId}. Source Key: ${sourceKey}`
+            occurrenceFields,
+            streakOccurrencesTable,
+            CONFIG.streakOccurrences.notes,
+            appendNote(existingOccurrenceNote, `054 awarded/repaired streak XP through XP Event ${xpEventId}. Source Key: ${sourceKey}.`)
         );
 
-        if (Object.keys(duplicateFields).length > 0) {
-            await xpEventsTable.updateRecordAsync(duplicate.id, duplicateFields);
-            duplicateXpEventsMarkedInactive++;
-        }
+        await streakOccurrencesTable.updateRecordAsync(recordId, occurrenceFields);
+
+        debugStep = "12 - Complete";
+        setOutputSafe("debugStep", debugStep);
+
+        const statusOut = actionOut === "created_xp_event"
+            ? CONFIG.outputStatuses.created
+            : CONFIG.outputStatuses.updated;
+
+        setOutputSafe("ok", true);
+        setOutputSafe("statusOut", statusOut);
+        setOutputSafe("actionOut", actionOut);
+        setOutputSafe("errorOut", "");
+        setOutputSafe("debugStep", debugStep);
+        setOutputSafe("streakOccurrenceId", recordId);
+        setOutputSafe("xpEventId", xpEventId);
+        setOutputSafe("enrollmentId", enrollmentId);
+        setOutputSafe("achievementId", achievementId);
+        setOutputSafe("achievementName", achievementName);
+        setOutputSafe("streakDays", streakDays);
+        setOutputSafe("streakEndDateKey", streakEndDateKey);
+        setOutputSafe("weekId", weekId || "");
+        setOutputSafe("weeklySummaryId", weeklySummaryId || "");
+        setOutputSafe("xpAmount", xpAmount);
+        setOutputSafe("xpRuleId", matchingRule.id);
+        setOutputSafe("sourceKey", sourceKey);
+        setOutputSafe("duplicateXpEventsMarkedInactive", duplicateXpEventsMarkedInactive);
+
+        console.log(JSON.stringify({
+            automation: CONFIG.scriptName,
+            version: CONFIG.version,
+            statusOut,
+            actionOut,
+            streakOccurrenceId: recordId,
+            xpEventId,
+            weeklySummaryId: weeklySummaryId || "",
+            sourceKey,
+            debugStep,
+        }));
+    } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+
+        setOutputSafe("ok", false);
+        setOutputSafe("statusOut", CONFIG.outputStatuses.error);
+        setOutputSafe("actionOut", "error");
+        setOutputSafe("errorOut", message);
+        setOutputSafe("debugStep", debugStep);
+        setOutputSafe("streakOccurrenceId", recordId);
+
+        console.log(JSON.stringify({
+            automation: CONFIG.scriptName,
+            version: CONFIG.version,
+            statusOut: CONFIG.outputStatuses.error,
+            actionOut: "error",
+            errorOut: message,
+            streakOccurrenceId: recordId,
+            debugStep,
+        }));
+
+        throw error;
     }
-
-    /************************************************************************************************
-     * LINK SOURCE RECORD AND MARK AWARDED
-     ************************************************************************************************/
-
-    const occurrenceFields = {};
-
-    addWritableRaw(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.xpEvents, [{ id: xpEventId }]);
-    addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusAwarded);
-    addWritable(occurrenceFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, new Date().toISOString());
-
-    const existingOccurrenceNote = getText(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.notes);
-
-    addWritable(
-        occurrenceFields,
-        streakOccurrencesTable,
-        CONFIG.streakOccurrences.notes,
-        appendNote(existingOccurrenceNote, `054 awarded/repaired streak XP through XP Event ${xpEventId}. Source Key: ${sourceKey}.`)
-    );
-
-    await streakOccurrencesTable.updateRecordAsync(recordId, occurrenceFields);
-
-    /************************************************************************************************
-     * OUTPUTS
-     ************************************************************************************************/
-
-    output.set("ok", true);
-    output.set("actionOut", actionOut);
-    output.set("errorOut", "");
-    output.set("streakOccurrenceId", recordId);
-    output.set("xpEventId", xpEventId);
-    output.set("enrollmentId", enrollmentId);
-    output.set("achievementId", achievementId);
-    output.set("achievementName", achievementName);
-    output.set("streakDays", streakDays);
-    output.set("streakEndDateKey", streakEndDateKey);
-    output.set("weekId", weekId || "");
-    output.set("weeklySummaryId", weeklySummaryId || "");
-    output.set("xpAmount", xpAmount);
-    output.set("xpRuleId", matchingRule.id);
-    output.set("sourceKey", sourceKey);
-    output.set("duplicateXpEventsMarkedInactive", duplicateXpEventsMarkedInactive);
 }
+
+
+/************************************************************************************************
+ * SECTION 4 — RUN
+ ************************************************************************************************/
 
 await main();
