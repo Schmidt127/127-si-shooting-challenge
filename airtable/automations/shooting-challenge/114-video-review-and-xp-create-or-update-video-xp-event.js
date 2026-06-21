@@ -3,7 +3,7 @@ Automation: 114 - Video Review and XP - Create or Update Video XP Event
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -26,9 +26,9 @@ Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.4
+ * Version: v5.5
  * Date Written: 2026-05-23
- * Last Updated: 2026-06-17
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -41,6 +41,8 @@ Airtable is the deployed/running copy.
  * - Writes XP Reason Public and XP Reason Debug.
  * - Optionally writes XP Source Date and XP Date Source when those fields exist and are writable.
  * - Links the XP Event back to the Video Feedback record.
+ * - Links the XP Event to Weekly Athlete Summary when resolvable from Submission
+ *   or by Enrollment + Week lookup.
  * - Marks the Video Feedback record as Awarded after XP Event creation/update.
  *
  * IMPORTANT DESIGN RULE
@@ -89,12 +91,13 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v5.4",
+  version: "v5.5",
 
   tables: {
     videoFeedback: "Video Feedback",
     submissions: "Submissions",
     xpEvents: "XP Events",
+    weeklySummary: "Weekly Athlete Summary",
   },
 
   videoFeedback: {
@@ -113,12 +116,19 @@ const CONFIG = {
   submissions: {
     week: "Week",
     activityDate: "Activity Date",
+    weeklySummary: "Weekly Athlete Summary",
+  },
+
+  weeklySummary: {
+    enrollment: "Enrollment",
+    week: "Week",
   },
 
   xpEvents: {
     enrollment: "Enrollment",
     submission: "Submission",
     week: "Week",
+    weeklySummary: "Weekly Athlete Summary",
     videoFeedback: "Video Feedback",
     xpSource: "XP Source",
     xpBucketKey: "XP Bucket",
@@ -159,6 +169,9 @@ let xpSourceDateText = "";
 let videoTable = null;
 let submissionsTable = null;
 let xpEventsTable = null;
+let weeklySummaryTable = null;
+
+let weeklySummaryQueryCache = null;
 
 /* =========================================================
    SECTION 3: FIELD CACHE
@@ -395,6 +408,82 @@ function getLinkedIds(record, table, fieldName) {
 function getFirstLinkedId(record, table, fieldName) {
   const ids = getLinkedIds(record, table, fieldName);
   return ids[0] || "";
+}
+
+function uniqueIds(ids) {
+  return [...new Set((ids || []).filter(Boolean))];
+}
+
+async function loadWeeklySummaryQuery() {
+  if (weeklySummaryQueryCache) {
+    return weeklySummaryQueryCache;
+  }
+
+  weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+    fields: [
+      CONFIG.weeklySummary.enrollment,
+      CONFIG.weeklySummary.week,
+    ],
+  });
+
+  return weeklySummaryQueryCache;
+}
+
+async function findWeeklySummaryId(enrollmentId, weekId) {
+  const cleanEnrollmentId = String(enrollmentId || "").trim();
+  const cleanWeekId = String(weekId || "").trim();
+
+  if (!cleanEnrollmentId || !cleanWeekId) {
+    return "";
+  }
+
+  const query = await loadWeeklySummaryQuery();
+
+  const matches = query.records.filter((record) => {
+    const summaryEnrollmentId = getFirstLinkedId(
+      record,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.enrollment
+    );
+    const summaryWeekId = getFirstLinkedId(
+      record,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.week
+    );
+
+    return (
+      summaryEnrollmentId === cleanEnrollmentId &&
+      summaryWeekId === cleanWeekId
+    );
+  });
+
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+    );
+  }
+
+  return matches.length === 1 ? matches[0].id : "";
+}
+
+async function resolveWeeklySummaryId({
+  sourceWeeklySummaryIds = [],
+  enrollmentId = "",
+  weekId = "",
+}) {
+  const fromSource = uniqueIds(sourceWeeklySummaryIds);
+
+  if (fromSource.length === 1) {
+    return fromSource[0];
+  }
+
+  if (fromSource.length > 1) {
+    throw new Error(
+      `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+    );
+  }
+
+  return findWeeklySummaryId(enrollmentId, weekId);
 }
 
 function addIfWritable(payload, table, fieldName, value) {
@@ -673,6 +762,7 @@ function validateRequiredSchema() {
 function buildXpPayload({
   existingXpEvent,
   xpSourceDate,
+  weeklySummaryId,
 }) {
   const xpReasonPublic = CONFIG.values.xpReasonPublic;
 
@@ -801,6 +891,15 @@ function buildXpPayload({
     }
   }
 
+  if (weeklySummaryId) {
+    addIfWritable(
+      xpPayload,
+      xpEventsTable,
+      CONFIG.xpEvents.weeklySummary,
+      [{ id: weeklySummaryId }]
+    );
+  }
+
   if (Object.keys(xpPayload).length === 0) {
     throw new Error("No writable fields were found for XP Event payload.");
   }
@@ -854,6 +953,7 @@ async function main() {
   videoTable = base.getTable(CONFIG.tables.videoFeedback);
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+  weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
 
   /* ---------------------------------------------------------
      5.3 Validate Required Fields / Field Types / Select Options
@@ -1079,6 +1179,29 @@ async function main() {
   debugStep = "9 - Build XP Event Payload";
   setOutputSafe("debugStep", debugStep);
 
+  const submissionWeeklySummaryIds =
+    submissionRecord &&
+    fieldExists(submissionsTable, CONFIG.submissions.weeklySummary)
+      ? getLinkedIds(
+          submissionRecord,
+          submissionsTable,
+          CONFIG.submissions.weeklySummary
+        )
+      : [];
+
+  const weeklySummaryId = await resolveWeeklySummaryId({
+    sourceWeeklySummaryIds: submissionWeeklySummaryIds,
+    enrollmentId,
+    weekId,
+  });
+
+  log("Weekly Athlete Summary resolution", {
+    submissionWeeklySummaryIds,
+    weeklySummaryId: weeklySummaryId || "",
+    enrollmentId,
+    weekId,
+  });
+
   const {
     xpPayload,
     xpReasonPublic,
@@ -1086,6 +1209,7 @@ async function main() {
   } = buildXpPayload({
     existingXpEvent,
     xpSourceDate,
+    weeklySummaryId,
   });
 
   /* ---------------------------------------------------------
@@ -1169,6 +1293,7 @@ async function main() {
   setOutputSafe("enrollmentIdOut", enrollmentId);
   setOutputSafe("weekIdOut", weekId || "");
   setOutputSafe("weekWrittenOut", weekId ? "yes" : "no");
+  setOutputSafe("weeklySummaryIdOut", weeklySummaryId || "");
   setOutputSafe("xpSourceDateOut", xpSourceDateText || "");
   setOutputSafe("errorOut", "");
 

@@ -3,7 +3,7 @@ Automation: 010 - Submission Intake - Create XP Event from Submission
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 Creates a Submission Base XP Event from a valid shooting submission.
@@ -27,9 +27,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
- * Version: 10.1
+ * Version: 10.2
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-17
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Reads one Submission record.
@@ -46,6 +46,8 @@ Airtable is the deployed/running copy.
  * - Writes the XP activity/source date when a writable date field exists.
  * - Writes the XP activity/source date label when a writable select/text field exists.
  * - Links the XP Event back to the Submission.
+ * - Links the XP Event to Weekly Athlete Summary when resolvable from the Submission
+ *   or by Enrollment + Week lookup.
  * - Marks Submission XP Award Status as Awarded.
  * - Re-arms Shot Milestone checking on the linked Enrollment after successful counted-shot XP processing.
  *
@@ -81,11 +83,13 @@ const CONFIG = {
         xpEvents: "XP Events",
         xpRules: "XP Reward Rules",
         enrollments: "Enrollments",
+        weeklySummary: "Weekly Athlete Summary",
     },
 
     submissions: {
         enrollment: "Enrollment",
         week: "Week",
+        weeklySummary: "Weekly Athlete Summary",
         submissionKey: "Submission Key",
         activityDate: "Activity Date",
 
@@ -94,6 +98,11 @@ const CONFIG = {
 
         xpAwardStatus: "XP Award Status",
         xpEvents: "XP Events",
+    },
+
+    weeklySummary: {
+        enrollment: "Enrollment",
+        week: "Week",
     },
 
     enrollments: {
@@ -110,6 +119,7 @@ const CONFIG = {
         enrollment: "Enrollment",
         submission: "Submission",
         week: "Week",
+        weeklySummary: "Weekly Athlete Summary",
 
         xpSource: "XP Source",
         xpBucket: "XP Bucket",
@@ -190,6 +200,9 @@ const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
 const xpRulesTable = base.getTable(CONFIG.tables.xpRules);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+let weeklySummaryQueryCache = null;
 
 
 /************************************************************************************************
@@ -412,6 +425,91 @@ function linkedCell(ids) {
     return uniqueIds(ids).map((id) => ({ id }));
 }
 
+async function loadWeeklySummaryQuery() {
+    if (weeklySummaryQueryCache) {
+        return weeklySummaryQueryCache;
+    }
+
+    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+        fields: [
+            CONFIG.weeklySummary.enrollment,
+            CONFIG.weeklySummary.week,
+        ],
+    });
+
+    return weeklySummaryQueryCache;
+}
+
+async function findWeeklySummaryId(enrollmentId, weekId) {
+    const cleanEnrollmentId = String(enrollmentId || "").trim();
+    const cleanWeekId = String(weekId || "").trim();
+
+    if (!cleanEnrollmentId || !cleanWeekId) {
+        return "";
+    }
+
+    const query = await loadWeeklySummaryQuery();
+
+    const matches = query.records.filter((record) => {
+        const summaryEnrollmentId = getFirstLinkedRecordId(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.enrollment
+        );
+        const summaryWeekId = getFirstLinkedRecordId(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.week
+        );
+
+        return (
+            summaryEnrollmentId === cleanEnrollmentId &&
+            summaryWeekId === cleanWeekId
+        );
+    });
+
+    if (matches.length > 1) {
+        throw new Error(
+            `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+        );
+    }
+
+    return matches.length === 1 ? matches[0].id : "";
+}
+
+async function resolveWeeklySummaryId({
+    sourceWeeklySummaryIds = [],
+    enrollmentId = "",
+    weekId = "",
+}) {
+    const fromSource = uniqueIds(sourceWeeklySummaryIds);
+
+    if (fromSource.length === 1) {
+        return fromSource[0];
+    }
+
+    if (fromSource.length > 1) {
+        throw new Error(
+            `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+        );
+    }
+
+    return findWeeklySummaryId(enrollmentId, weekId);
+}
+
+function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
+    if (!weeklySummaryId) {
+        return payload;
+    }
+
+    if (!fieldExists(table, fieldName) || !isWritableField(table, fieldName)) {
+        return payload;
+    }
+
+    payload[fieldName] = linkedCell([weeklySummaryId]);
+    return payload;
+}
+
 function buildCellValueForField(table, fieldName, value) {
     const field = getFieldSafe(table, fieldName);
 
@@ -497,7 +595,7 @@ function buildDebugReason({
 }
 
 function buildSubmissionFieldsToLoad() {
-    return [
+    const fields = [
         CONFIG.submissions.enrollment,
         CONFIG.submissions.week,
         CONFIG.submissions.submissionKey,
@@ -507,6 +605,12 @@ function buildSubmissionFieldsToLoad() {
         CONFIG.submissions.xpAwardStatus,
         CONFIG.submissions.xpEvents,
     ];
+
+    if (fieldExists(submissionsTable, CONFIG.submissions.weeklySummary)) {
+        fields.push(CONFIG.submissions.weeklySummary);
+    }
+
+    return fields;
 }
 
 function buildXpRuleFieldsToLoad() {
@@ -995,6 +1099,30 @@ async function main() {
         debugStep = "8 - Build XP Event Values";
         setOutputSafe("debugStep", debugStep);
 
+        const submissionWeeklySummaryIds = fieldExists(
+            submissionsTable,
+            CONFIG.submissions.weeklySummary
+        )
+            ? getLinkedRecordIds(
+                submission,
+                submissionsTable,
+                CONFIG.submissions.weeklySummary
+            )
+            : [];
+
+        const weeklySummaryId = await resolveWeeklySummaryId({
+            sourceWeeklySummaryIds: submissionWeeklySummaryIds,
+            enrollmentId,
+            weekId,
+        });
+
+        log("Weekly Athlete Summary resolution", {
+            submissionWeeklySummaryIds,
+            weeklySummaryId: weeklySummaryId || "",
+            enrollmentId,
+            weekId,
+        });
+
         const publicReason = buildPublicReason();
 
         const debugReason = buildDebugReason({
@@ -1048,6 +1176,13 @@ async function main() {
                 CONFIG.values.xpDateSourceSubmissionActivity
             );
         }
+
+        addWeeklySummaryLink(
+            xpEventFields,
+            xpEventsTable,
+            CONFIG.xpEvents.weeklySummary,
+            weeklySummaryId
+        );
 
         debugStep = "9 - Create or Update XP Event";
         setOutputSafe("debugStep", debugStep);
@@ -1117,6 +1252,7 @@ async function main() {
             xpPoints,
 
             xpEventId,
+            weeklySummaryId: weeklySummaryId || "",
             sourceKey,
             dedupeKey,
             normalizedDedupeKey,

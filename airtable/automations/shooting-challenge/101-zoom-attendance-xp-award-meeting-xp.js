@@ -3,7 +3,7 @@ Automation: 101 - Zoom Attendance XP - Award Meeting XP
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -24,8 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.0
+ * Version: v5.1
  * Date Revised: 2026-05-28
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -64,7 +65,7 @@ Airtable is the deployed/running copy.
  * - recordId = Airtable record ID from the triggering Zoom Meetings record
  *
  * WRITES
- * - XP Events records
+ * - XP Events records linked to Weekly Athlete Summary when resolvable by Enrollment + Week
  * - Zoom Meetings.XP Award Status = Awarded
  * - Zoom Meetings.Create XP Events = unchecked
  * - Zoom Meetings.XP Awarded At, if field exists
@@ -80,7 +81,7 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v5.0",
+  version: "v5.1",
 
   timeZone: "America/Denver",
 
@@ -89,6 +90,7 @@ const CONFIG = {
     enrollments: "Enrollments",
     xpRewardRules: "XP Reward Rules",
     xpEvents: "XP Events",
+    weeklySummary: "Weekly Athlete Summary",
   },
 
   zoom: {
@@ -124,6 +126,7 @@ const CONFIG = {
   xpEvents: {
     enrollment: "Enrollment",
     week: "Week",
+    weeklySummary: "Weekly Athlete Summary",
     xpSource: "XP Source",
     xpBucketKey: "XP Bucket Key",
     xpPoints: "XP Points",
@@ -179,6 +182,11 @@ const CONFIG = {
   debug: {
     logToConsole: true,
   },
+
+  weeklySummary: {
+    enrollment: "Enrollment",
+    week: "Week",
+  },
 };
 
 
@@ -202,6 +210,9 @@ const zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
 const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+let weeklySummaryQueryCache = null;
 
 
 /* =========================================================
@@ -376,6 +387,78 @@ function getFirstLinkedRecordId(record, table, fieldName) {
 
 function linkedCell(ids) {
   return [...new Set((ids || []).filter(Boolean))].map(id => ({ id }));
+}
+
+async function loadWeeklySummaryQuery() {
+  if (weeklySummaryQueryCache) {
+    return weeklySummaryQueryCache;
+  }
+
+  weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+    fields: [
+      CONFIG.weeklySummary.enrollment,
+      CONFIG.weeklySummary.week,
+    ],
+  });
+
+  return weeklySummaryQueryCache;
+}
+
+async function findWeeklySummaryId(enrollmentId, weekId) {
+  const cleanEnrollmentId = String(enrollmentId || "").trim();
+  const cleanWeekId = String(weekId || "").trim();
+
+  if (!cleanEnrollmentId || !cleanWeekId) {
+    return "";
+  }
+
+  const query = await loadWeeklySummaryQuery();
+
+  const matches = query.records.filter((record) => {
+    const summaryEnrollmentId = getFirstLinkedRecordId(
+      record,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.enrollment
+    );
+    const summaryWeekId = getFirstLinkedRecordId(
+      record,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.week
+    );
+
+    return (
+      summaryEnrollmentId === cleanEnrollmentId &&
+      summaryWeekId === cleanWeekId
+    );
+  });
+
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+    );
+  }
+
+  return matches.length === 1 ? matches[0].id : "";
+}
+
+async function resolveWeeklySummaryId({
+  sourceWeeklySummaryIds = [],
+  enrollmentId = "",
+  weekId = "",
+}) {
+  const fromSource = [...new Set((sourceWeeklySummaryIds || []).filter(Boolean))];
+
+  if (fromSource.length === 1) {
+    return fromSource[0];
+  }
+
+  if (fromSource.length > 1) {
+    throw new Error(
+      `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+    );
+  }
+
+  return findWeeklySummaryId(enrollmentId, weekId);
 }
 
 function normalizeText(value) {
@@ -603,6 +686,7 @@ function buildXpReason({
 function buildXpEventPayload({
   enrollmentId,
   weekId,
+  weeklySummaryId,
   source,
   bucketKey,
   points,
@@ -613,6 +697,9 @@ function buildXpEventPayload({
   const payload = {
     [CONFIG.xpEvents.enrollment]: linkedCell([enrollmentId]),
     [CONFIG.xpEvents.week]: weekId ? linkedCell([weekId]) : undefined,
+    [CONFIG.xpEvents.weeklySummary]: weeklySummaryId
+      ? linkedCell([weeklySummaryId])
+      : undefined,
     [CONFIG.xpEvents.xpSource]: buildSingleSelectValueOptional(
       xpEventsTable,
       CONFIG.xpEvents.xpSource,
@@ -654,9 +741,16 @@ async function createOrUpdateXpEvent({
   reason,
   zoomMeetingId,
 }) {
+  const weeklySummaryId = await resolveWeeklySummaryId({
+    sourceWeeklySummaryIds: [],
+    enrollmentId,
+    weekId,
+  });
+
   const payload = buildXpEventPayload({
     enrollmentId,
     weekId,
+    weeklySummaryId,
     source,
     bucketKey,
     points,

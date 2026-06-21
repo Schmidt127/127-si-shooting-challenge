@@ -3,7 +3,7 @@ Automation: 072 - Email, Notifications, and External Handoffs - Build Weekly Sum
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -69,7 +69,7 @@ Airtable is the deployed/running copy.
  * - Build Weekly Email Now? = unchecked
  * - Weekly Email Ready? = checked
  * - Weekly Email Sent? = unchecked
- * - Send to Make? = checked
+ * - Send to Make? = unchecked
  * - Weekly Email Sent At = cleared
  * - Weekly Email Error = cleared
  * - Weekly Email Subject = generated subject
@@ -85,6 +85,7 @@ Airtable is the deployed/running copy.
  * - This is NOT a Video Feedback trigger script.
  * - This is NOT the Make/Gmail send script.
  * - This script only prepares the weekly email package.
+ * - Send to Make? is left unchecked so staff can review HTML before manually arming send.
  * - A separate automation should send the prepared package to Make/Gmail.
  ************************************************************/
 
@@ -96,9 +97,9 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-    version: "v3.6",
+    version: "v3.7",
     dateWritten: "2026-05-19",
-    lastUpdated: "2026-06-17",
+    lastUpdated: "2026-06-21",
 
     timeZone: "America/Denver",
 
@@ -2276,7 +2277,7 @@ if (fieldExists(summaryTable, CONFIG.summaryFields.emailSent)) {
 }
 
 if (fieldExists(summaryTable, CONFIG.summaryFields.sendToMake)) {
-    updateFields[CONFIG.summaryFields.sendToMake] = true;
+    updateFields[CONFIG.summaryFields.sendToMake] = false;
 }
 
 if (fieldExists(summaryTable, CONFIG.summaryFields.emailSentAt)) {

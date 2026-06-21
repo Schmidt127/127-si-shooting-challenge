@@ -3,7 +3,7 @@ Automation: 065 - Homework Review and XP - Create Homework XP Event
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -24,7 +24,8 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 065 - Homework Review and XP - Create Homework XP Event
- * Version: 2026-06-06 v9.0
+ * Version: 2026-06-06 v9.1
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Reads one Homework Completions record after 064 prepares it.
@@ -37,6 +38,7 @@ Airtable is the deployed/running copy.
  *      Award Status = Pending
  *      XP Events is empty
  * - Creates exactly one XP Event for the Homework Completion.
+ * - Links the XP Event to Weekly Athlete Summary from Homework Completion or Enrollment + Week lookup.
  * - Links the XP Event back to the Homework Completion.
  * - Sets Award Status = Awarded.
  *
@@ -60,6 +62,7 @@ const CONFIG = {
     tables: {
         homeworkCompletions: "Homework Completions",
         xpEvents: "XP Events",
+        weeklySummary: "Weekly Athlete Summary",
     },
 
     homework: {
@@ -85,6 +88,11 @@ const CONFIG = {
         submissionDate: "Submission Date",
 
         automationError: "Automation Error",
+    },
+
+    weeklySummary: {
+        enrollment: "Enrollment",
+        week: "Week",
     },
 
     xpEvents: {
@@ -154,6 +162,9 @@ if (!recordId) {
 
 const homeworkTable = base.getTable(CONFIG.tables.homeworkCompletions);
 const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+let weeklySummaryQueryCache = null;
 
 
 /************************************************************************************************
@@ -322,6 +333,116 @@ function getLinkedRecordName(record, table, fieldName) {
 
 function linkedCell(ids) {
     return [...new Set((ids || []).filter(Boolean))].map((id) => ({ id }));
+}
+
+function uniqueIds(ids) {
+    return [...new Set((ids || []).filter(Boolean))];
+}
+
+async function loadWeeklySummaryQuery() {
+    if (weeklySummaryQueryCache) {
+        return weeklySummaryQueryCache;
+    }
+
+    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+        fields: [
+            CONFIG.weeklySummary.enrollment,
+            CONFIG.weeklySummary.week,
+        ],
+    });
+
+    return weeklySummaryQueryCache;
+}
+
+async function findWeeklySummaryId(enrollmentId, weekId) {
+    const cleanEnrollmentId = String(enrollmentId || "").trim();
+    const cleanWeekId = String(weekId || "").trim();
+
+    if (!cleanEnrollmentId || !cleanWeekId) {
+        return "";
+    }
+
+    const query = await loadWeeklySummaryQuery();
+
+    const matches = query.records.filter((record) => {
+        const summaryEnrollmentIds = getLinkedRecordIds(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.enrollment
+        );
+        const summaryWeekIds = getLinkedRecordIds(
+            record,
+            weeklySummaryTable,
+            CONFIG.weeklySummary.week
+        );
+
+        return (
+            summaryEnrollmentIds.includes(cleanEnrollmentId) &&
+            summaryWeekIds.includes(cleanWeekId)
+        );
+    });
+
+    if (matches.length > 1) {
+        throw new Error(
+            `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+        );
+    }
+
+    return matches.length === 1 ? matches[0].id : "";
+}
+
+async function resolveWeeklySummaryId({
+    sourceWeeklySummaryIds = [],
+    enrollmentId = "",
+    weekId = "",
+}) {
+    const fromSource = uniqueIds(sourceWeeklySummaryIds);
+
+    if (fromSource.length === 1) {
+        return fromSource[0];
+    }
+
+    if (fromSource.length > 1) {
+        throw new Error(
+            `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+        );
+    }
+
+    return findWeeklySummaryId(enrollmentId, weekId);
+}
+
+function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
+    if (!weeklySummaryId) {
+        return payload;
+    }
+
+    if (!fieldExists(table, fieldName) || !isWritableField(table, fieldName)) {
+        return payload;
+    }
+
+    payload[fieldName] = linkedCell([weeklySummaryId]);
+    return payload;
+}
+
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+    if (!xpEventId || !weeklySummaryId) {
+        return false;
+    }
+
+    const payload = {};
+    addWeeklySummaryLink(
+        payload,
+        xpEventsTable,
+        CONFIG.xpEvents.weeklySummary,
+        weeklySummaryId
+    );
+
+    if (Object.keys(payload).length === 0) {
+        return false;
+    }
+
+    await xpEventsTable.updateRecordAsync(xpEventId, payload);
+    return true;
 }
 
 function buildCellValueForField(table, fieldName, value) {
@@ -688,6 +809,14 @@ async function main() {
             xpEventId = existingXpEventIds[0];
             actionOut = "existing_linked_xp_event";
 
+            const weeklySummaryId = await resolveWeeklySummaryId({
+                sourceWeeklySummaryIds: weeklySummaryIds,
+                enrollmentId: enrollmentIds[0] || "",
+                weekId: weekIds[0] || "",
+            });
+
+            await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
+
             await homeworkTable.updateRecordAsync(recordId, {
                 [CONFIG.homework.awardStatus]: buildCellValueForField(
                     homeworkTable,
@@ -711,6 +840,14 @@ async function main() {
         if (existingXpEventBySourceKey) {
             xpEventId = existingXpEventBySourceKey.id;
             actionOut = "linked_existing_xp_event_by_source_key";
+
+            const weeklySummaryId = await resolveWeeklySummaryId({
+                sourceWeeklySummaryIds: weeklySummaryIds,
+                enrollmentId: enrollmentIds[0] || "",
+                weekId: weekIds[0] || "",
+            });
+
+            await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
 
             await homeworkTable.updateRecordAsync(recordId, {
                 [CONFIG.homework.xpEvents]: linkedCell([xpEventId]),
@@ -759,6 +896,12 @@ async function main() {
             `XP Activity Date: ${activityDate.toISOString()}`,
         ].join("\n");
 
+        const weeklySummaryId = await resolveWeeklySummaryId({
+            sourceWeeklySummaryIds: weeklySummaryIds,
+            enrollmentId: enrollmentIds[0] || "",
+            weekId: weekIds[0] || "",
+        });
+
         const createFields = {
             [CONFIG.xpEvents.enrollment]: linkedCell(enrollmentIds),
             [CONFIG.xpEvents.week]: linkedCell(weekIds),
@@ -788,9 +931,12 @@ async function main() {
             ),
         };
 
-        if (fieldExists(xpEventsTable, CONFIG.xpEvents.weeklySummary) && isWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary) && weeklySummaryIds.length) {
-            createFields[CONFIG.xpEvents.weeklySummary] = linkedCell(weeklySummaryIds);
-        }
+        addWeeklySummaryLink(
+            createFields,
+            xpEventsTable,
+            CONFIG.xpEvents.weeklySummary,
+            weeklySummaryId
+        );
 
         if (fieldExists(xpEventsTable, CONFIG.xpEvents.submission) && isWritableField(xpEventsTable, CONFIG.xpEvents.submission) && submissionIds.length) {
             createFields[CONFIG.xpEvents.submission] = linkedCell([submissionIds[0]]);

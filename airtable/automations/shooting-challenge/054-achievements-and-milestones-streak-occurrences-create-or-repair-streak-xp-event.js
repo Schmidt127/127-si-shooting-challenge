@@ -3,7 +3,7 @@ Automation: 054 - Achievements and Milestones - Streak Occurrences - Create or R
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -24,8 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
- * Version: 5.2
+ * Version: 5.3
  * Date Written: 2026-06-09
+ * Last Updated: 2026-06-21
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -43,6 +44,7 @@ Airtable is the deployed/running copy.
  * - Prevents duplicate streak XP using Source Key:
  *      STREAK_XP|Enrollment ID|Achievement ID|Streak End Date
  * - Links XP Event back to Streak Occurrence.
+ * - Links XP Event to Weekly Athlete Summary by Enrollment + Week when resolvable.
  * - Marks Streak Occurrence Source Status = Awarded.
  ************************************************************************************************/
 
@@ -53,6 +55,7 @@ async function main() {
             achievements: "Achievements",
             xpEvents: "XP Events",
             xpRules: "XP Reward Rules",
+            weeklySummary: "Weekly Athlete Summary",
         },
 
         streakOccurrences: {
@@ -85,6 +88,7 @@ async function main() {
         xpEvents: {
             enrollment: "Enrollment",
             week: "Week",
+            weeklySummary: "Weekly Athlete Summary",
             streakOccurrence: "Streak Occurrence",
             xpSource: "XP Source",
             xpBucket: "XP Bucket",
@@ -111,6 +115,11 @@ async function main() {
 
             sourceKeyPrefix: "STREAK_XP|",
         },
+
+        weeklySummary: {
+            enrollment: "Enrollment",
+            week: "Week",
+        },
     };
 
     const inputConfig = input.config();
@@ -124,6 +133,9 @@ async function main() {
     const achievementsTable = base.getTable(CONFIG.tables.achievements);
     const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
     const xpRulesTable = base.getTable(CONFIG.tables.xpRules);
+    const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+    let weeklySummaryQueryCache = null;
 
     function fieldExists(table, fieldName) {
         return !!fieldName && table.fields.some((field) => field.name === fieldName);
@@ -179,6 +191,78 @@ async function main() {
     function getFirstLinkedId(record, table, fieldName) {
         const ids = getLinkedIds(record, table, fieldName);
         return ids.length ? ids[0] : "";
+    }
+
+    async function loadWeeklySummaryQuery() {
+        if (weeklySummaryQueryCache) {
+            return weeklySummaryQueryCache;
+        }
+
+        weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+            fields: [
+                CONFIG.weeklySummary.enrollment,
+                CONFIG.weeklySummary.week,
+            ],
+        });
+
+        return weeklySummaryQueryCache;
+    }
+
+    async function findWeeklySummaryId(enrollmentId, weekId) {
+        const cleanEnrollmentId = String(enrollmentId || "").trim();
+        const cleanWeekId = String(weekId || "").trim();
+
+        if (!cleanEnrollmentId || !cleanWeekId) {
+            return "";
+        }
+
+        const query = await loadWeeklySummaryQuery();
+
+        const matches = query.records.filter((record) => {
+            const summaryEnrollmentId = getFirstLinkedId(
+                record,
+                weeklySummaryTable,
+                CONFIG.weeklySummary.enrollment
+            );
+            const summaryWeekId = getFirstLinkedId(
+                record,
+                weeklySummaryTable,
+                CONFIG.weeklySummary.week
+            );
+
+            return (
+                summaryEnrollmentId === cleanEnrollmentId &&
+                summaryWeekId === cleanWeekId
+            );
+        });
+
+        if (matches.length > 1) {
+            throw new Error(
+                `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+            );
+        }
+
+        return matches.length === 1 ? matches[0].id : "";
+    }
+
+    async function resolveWeeklySummaryId({
+        sourceWeeklySummaryIds = [],
+        enrollmentId = "",
+        weekId = "",
+    }) {
+        const fromSource = [...new Set((sourceWeeklySummaryIds || []).filter(Boolean))];
+
+        if (fromSource.length === 1) {
+            return fromSource[0];
+        }
+
+        if (fromSource.length > 1) {
+            throw new Error(
+                `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+            );
+        }
+
+        return findWeeklySummaryId(enrollmentId, weekId);
     }
 
     function getText(record, table, fieldName) {
@@ -535,6 +619,14 @@ async function main() {
     const xpDateIso = dateValue(streakEndDateKey);
     const xpReason = makeReason(achievementName, streakDays, streakEndDateKey);
 
+    const weeklySummaryId = weekId
+        ? await resolveWeeklySummaryId({
+            sourceWeeklySummaryIds: [],
+            enrollmentId,
+            weekId,
+        })
+        : "";
+
     const xpFields = {};
 
     addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.enrollment, [{ id: enrollmentId }]);
@@ -542,6 +634,10 @@ async function main() {
 
     if (weekId) {
         addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.week, [{ id: weekId }]);
+    }
+
+    if (weeklySummaryId) {
+        addWritableRaw(xpFields, xpEventsTable, CONFIG.xpEvents.weeklySummary, [{ id: weeklySummaryId }]);
     }
 
     addWritable(xpFields, xpEventsTable, CONFIG.xpEvents.xpSource, achievementName);
@@ -635,6 +731,7 @@ async function main() {
     output.set("streakDays", streakDays);
     output.set("streakEndDateKey", streakEndDateKey);
     output.set("weekId", weekId || "");
+    output.set("weeklySummaryId", weeklySummaryId || "");
     output.set("xpAmount", xpAmount);
     output.set("xpRuleId", matchingRule.id);
     output.set("sourceKey", sourceKey);

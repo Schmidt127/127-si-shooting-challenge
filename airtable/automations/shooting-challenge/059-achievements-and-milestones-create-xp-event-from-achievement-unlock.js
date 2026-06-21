@@ -3,7 +3,7 @@ Automation: 059 - Achievements and Milestones - Create XP Event from Achievement
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Last Synced From Airtable: 2026-06-21
 
 Purpose:
 To be confirmed from production script.
@@ -24,10 +24,12 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 059 - Achievements and Milestones - Create XP Event from Achievement Unlock
- * Version: 2026-06-05 v3.3
+ * Version: 2026-06-05 v3.4
+ * Last Updated: 2026-06-21
  *
  * Purpose:
  * Creates one XP Event from one Athlete Achievement Unlock.
+ * Links XP Event to Weekly Athlete Summary from unlock or Enrollment + Week lookup.
  *
  * Supports:
  * - Shot Milestone
@@ -58,6 +60,7 @@ async function main() {
       xpEvents: "XP Events",
       shotMilestones: "Shot Milestones",
       weeks: "Weeks",
+      weeklySummary: "Weekly Athlete Summary",
     },
 
     statuses: {
@@ -138,6 +141,11 @@ async function main() {
       fallbackEndDate: "End Date",
     },
 
+    weeklySummaryFields: {
+      enrollment: "Enrollment",
+      week: "Week",
+    },
+
     xpEventFields: {
       enrollment: "Enrollment",
       week: "Week",
@@ -211,6 +219,85 @@ async function main() {
   function getFirstLinkedId(record, field) {
     const ids = getLinkedIds(record, field);
     return ids.length > 0 ? ids[0] : null;
+  }
+
+  let weeklySummaryQueryCache = null;
+
+  async function loadWeeklySummaryQuery(weeklySummaryTable, summaryEnrollmentField, summaryWeekField) {
+    if (weeklySummaryQueryCache) {
+      return weeklySummaryQueryCache;
+    }
+
+    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
+      fields: fieldNames([summaryEnrollmentField, summaryWeekField]),
+    });
+
+    return weeklySummaryQueryCache;
+  }
+
+  async function findWeeklySummaryId(
+    weeklySummaryTable,
+    summaryEnrollmentField,
+    summaryWeekField,
+    enrollmentId,
+    weekId
+  ) {
+    const cleanEnrollmentId = String(enrollmentId || "").trim();
+    const cleanWeekId = String(weekId || "").trim();
+
+    if (!cleanEnrollmentId || !cleanWeekId || !summaryEnrollmentField || !summaryWeekField) {
+      return "";
+    }
+
+    const query = await loadWeeklySummaryQuery(
+      weeklySummaryTable,
+      summaryEnrollmentField,
+      summaryWeekField
+    );
+
+    const matches = query.records.filter((record) => {
+      const summaryEnrollmentId = getFirstLinkedId(record, summaryEnrollmentField);
+      const summaryWeekId = getFirstLinkedId(record, summaryWeekField);
+
+      return summaryEnrollmentId === cleanEnrollmentId && summaryWeekId === cleanWeekId;
+    });
+
+    if (matches.length > 1) {
+      throw new Error(
+        `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
+      );
+    }
+
+    return matches.length === 1 ? matches[0].id : "";
+  }
+
+  async function resolveWeeklySummaryId({
+    weeklySummaryTable,
+    summaryEnrollmentField,
+    summaryWeekField,
+    sourceWeeklySummaryIds = [],
+    enrollmentId = "",
+    weekId = "",
+  }) {
+    const fromSource = [...new Set((sourceWeeklySummaryIds || []).filter(Boolean))];
+
+    if (fromSource.length === 1) {
+      return fromSource[0];
+    }
+
+    if (fromSource.length > 1) {
+      throw new Error(
+        `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
+      );
+    }
+
+    return findWeeklySummaryId(
+      weeklySummaryTable,
+      summaryEnrollmentField,
+      summaryWeekField,
+      enrollmentId,
+      weekId
+    );
   }
 
   function getText(record, field) {
@@ -432,6 +519,16 @@ async function main() {
   const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
   const shotMilestonesTable = base.getTable(CONFIG.tables.shotMilestones);
   const weeksTable = base.getTable(CONFIG.tables.weeks);
+  const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+  const summaryEnrollmentField = optionalField(
+    weeklySummaryTable,
+    CONFIG.weeklySummaryFields.enrollment
+  );
+  const summaryWeekField = optionalField(
+    weeklySummaryTable,
+    CONFIG.weeklySummaryFields.week
+  );
 
   /*************************************************************************************************
    * 4. Field References
@@ -975,6 +1072,15 @@ async function main() {
    * 12. Build XP Event Payload
    *************************************************************************************************/
 
+  const weeklySummaryId = await resolveWeeklySummaryId({
+    weeklySummaryTable,
+    summaryEnrollmentField,
+    summaryWeekField,
+    sourceWeeklySummaryIds: weeklySummaryIds,
+    enrollmentId,
+    weekId,
+  });
+
   const xpPayload = {};
 
   addToPayload(xpPayload, xp.enrollment, [{ id: enrollmentId }]);
@@ -989,8 +1095,8 @@ async function main() {
     addToPayload(xpPayload, xp.shotMilestones, [{ id: linkedShotMilestoneId }]);
   }
 
-  if (weeklySummaryIds.length > 0) {
-    addToPayload(xpPayload, xp.weeklySummary, weeklySummaryIds.map((id) => ({ id })));
+  if (weeklySummaryId) {
+    addToPayload(xpPayload, xp.weeklySummary, [{ id: weeklySummaryId }]);
   }
 
   addToPayload(xpPayload, xp.xpPoints, xpAmount);
@@ -1067,6 +1173,7 @@ async function main() {
   output.set("xpSource", xpSourceValue);
   output.set("xpPoints", xpAmount);
   output.set("sourceKey", sourceKey);
+  output.set("weeklySummaryId", weeklySummaryId || "");
   output.set("xpActivityDate", xpActivityDate ? xpActivityDate.toISOString() : "");
   output.set("xpActivityDateSource", xpActivityDateSourceValue);
 }
