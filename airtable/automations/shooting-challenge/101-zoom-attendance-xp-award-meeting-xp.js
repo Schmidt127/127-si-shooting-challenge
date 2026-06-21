@@ -2,30 +2,30 @@
 Automation: 101 - Zoom Attendance XP - Award Meeting XP
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
 
 Purpose:
-To be confirmed from production script.
+Awards Zoom attendance XP to all linked attendees for one completed meeting.
 
 Trigger:
-To be confirmed from Airtable automation.
+Zoom Meetings when Create XP Events is checked and meeting is ready to award.
 
 Important Tables:
-To be confirmed from production script.
+Zoom Meetings, Enrollments, XP Reward Rules, XP Events, Weekly Athlete Summary
 
 Important Fields:
-To be confirmed from production script.
+Create XP Events, Attendees, Week, XP Award Status, Weekly Athlete Summary
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.1
- * Date Revised: 2026-05-28
+ * Version: v5.2
+ * Date Written: 2026-05-28
  * Last Updated: 2026-06-21
  *
  * PURPOSE
@@ -49,6 +49,18 @@ Airtable is the deployed/running copy.
  *      Base Zoom XP rule not found for Grade Band "3-4".
  *      Expected Rule Key: ZOOM_ATTEND_BASE_34
  *
+ * FOLDER
+ * - 10 - Zoom Attendance XP
+ *
+ * AUTOMATION NAME
+ * - 101 - Zoom Attendance XP - Award Meeting XP
+ *
+ * TRIGGER TABLE
+ * - Zoom Meetings
+ *
+ * TRIGGER TYPE
+ * - When record matches conditions
+ *
  * CORRECT TRIGGER SETUP
  * Table: Zoom Meetings
  * Trigger: When record matches conditions
@@ -64,6 +76,12 @@ Airtable is the deployed/running copy.
  * REQUIRED INPUT VARIABLE
  * - recordId = Airtable record ID from the triggering Zoom Meetings record
  *
+ * REQUIRED OUTPUTS
+ * - statusOut = created | updated | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
+ *
  * WRITES
  * - XP Events records linked to Weekly Athlete Summary when resolvable by Enrollment + Week
  * - Zoom Meetings.XP Award Status = Awarded
@@ -76,12 +94,12 @@ Airtable is the deployed/running copy.
 
 
 /* =========================================================
-   SECTION 1: EASY-EDIT CONFIG
+   SECTION 1 — CONFIGURATION
 ========================================================= */
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v5.1",
+  version: "v5.2",
 
   timeZone: "America/Denver",
 
@@ -128,7 +146,7 @@ const CONFIG = {
     week: "Week",
     weeklySummary: "Weekly Athlete Summary",
     xpSource: "XP Source",
-    xpBucketKey: "XP Bucket Key",
+    xpBucketKey: "XP Bucket",
     xpPoints: "XP Points",
     xpReason: "XP Reason Public",
     active: "Active?",
@@ -174,7 +192,11 @@ const CONFIG = {
   values: {
     awardModeAutomatic: "Automatic",
     awardedBy: "Airtable Automation 101",
-    success: "success",
+  },
+
+  outputStatuses: {
+    created: "created",
+    updated: "updated",
     skipped: "skipped",
     error: "error",
   },
@@ -190,34 +212,17 @@ const CONFIG = {
 };
 
 
-/* =========================================================
-   SECTION 2: INPUTS
-========================================================= */
-
-const inputConfig = input.config();
-const recordId = String(inputConfig.recordId || "").trim();
-
-if (!recordId) {
-  throw new Error("Missing required input variable: recordId");
-}
-
-
-/* =========================================================
-   SECTION 3: TABLE REFERENCES
-========================================================= */
-
-const zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
-const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-const rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
-const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-
+let zoomTable = null;
+let enrollmentsTable = null;
+let rulesTable = null;
+let xpEventsTable = null;
+let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
+let zoomStartField = "";
 
-
-/* =========================================================
-   SECTION 4: HELPER FUNCTIONS
-========================================================= */
+/************************************************************************************************
+ * SECTION 2 — HELPERS
+ ************************************************************************************************/
 
 function log(message, data = null) {
   if (!CONFIG.debug.logToConsole) return;
@@ -242,7 +247,8 @@ function setFinalOutputs({
   actionOut,
   statusOut,
   errorOut = "",
-  zoomMeetingId = recordId,
+  debugStep = "",
+  zoomMeetingId = "",
   meetingName = "",
   zoomMeetingKey = "",
   weekId = "",
@@ -258,6 +264,9 @@ function setFinalOutputs({
   setOutputSafe("actionOut", actionOut || "");
   setOutputSafe("statusOut", statusOut || "");
   setOutputSafe("errorOut", errorOut || "");
+  if (debugStep) {
+    setOutputSafe("debugStep", debugStep);
+  }
   setOutputSafe("zoomMeetingId", zoomMeetingId || "");
   setOutputSafe("meetingNameOut", meetingName || "");
   setOutputSafe("zoomMeetingKeyOut", zoomMeetingKey || "");
@@ -459,6 +468,23 @@ async function resolveWeeklySummaryId({
   }
 
   return findWeeklySummaryId(enrollmentId, weekId);
+}
+
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+  if (!xpEventId || !weeklySummaryId) {
+    return false;
+  }
+
+  const payload = safeUpdatePayload(xpEventsTable, {
+    [CONFIG.xpEvents.weeklySummary]: linkedCell([weeklySummaryId]),
+  });
+
+  if (Object.keys(payload).length === 0) {
+    return false;
+  }
+
+  await xpEventsTable.updateRecordAsync(xpEventId, payload);
+  return true;
 }
 
 function normalizeText(value) {
@@ -768,14 +794,17 @@ async function createOrUpdateXpEvent({
 
   if (existingRecord) {
     await xpEventsTable.updateRecordAsync(existingRecord.id, payload);
+    await ensureXpEventWeeklySummaryLink(existingRecord.id, weeklySummaryId);
 
     return {
       action: "updated",
       recordId: existingRecord.id,
+      weeklySummaryId,
     };
   }
 
   const createdRecordId = await xpEventsTable.createRecordAsync(payload);
+  await ensureXpEventWeeklySummaryLink(createdRecordId, weeklySummaryId);
 
   sourceKeyIndex.set(normalizedSourceKey, {
     id: createdRecordId,
@@ -786,47 +815,49 @@ async function createOrUpdateXpEvent({
   return {
     action: "created",
     recordId: createdRecordId,
+    weeklySummaryId,
   };
 }
 
 
-/* =========================================================
-   SECTION 5: SCHEMA VALIDATION
-========================================================= */
-
-const zoomStartField = firstExistingField(
-  zoomTable,
-  CONFIG.zoom.startFieldCandidates
-);
-
-if (!zoomStartField) {
-  throw new Error(
-    `Missing Zoom Meetings date/start field. Expected one of: ${CONFIG.zoom.startFieldCandidates.join(", ")}`
+function assertRequiredSchema() {
+  zoomStartField = firstExistingField(
+    zoomTable,
+    CONFIG.zoom.startFieldCandidates
   );
+
+  if (!zoomStartField) {
+    throw new Error(
+      `Missing Zoom Meetings date/start field. Expected one of: ${CONFIG.zoom.startFieldCandidates.join(", ")}`
+    );
+  }
+
+  requireField(zoomTable, CONFIG.zoom.week, "Zoom Meetings -> Week");
+  requireField(zoomTable, CONFIG.zoom.attendees, "Zoom Meetings -> Attendees");
+  requireField(zoomTable, CONFIG.zoom.createXpEvents, "Zoom Meetings -> Create XP Events");
+  requireField(zoomTable, CONFIG.zoom.xpAwardStatus, "Zoom Meetings -> XP Award Status");
+  requireField(zoomTable, CONFIG.zoom.zoomMeetingKey, "Zoom Meetings -> Zoom Meeting Key");
+
+  requireField(rulesTable, CONFIG.xpRewardRules.ruleKey, "XP Reward Rules -> Rule Key");
+  requireField(rulesTable, CONFIG.xpRewardRules.xpAmount, "XP Reward Rules -> XP Amount");
+
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.enrollment, "XP Events -> Enrollment");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.week, "XP Events -> Week");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary, "XP Events -> Weekly Athlete Summary");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpPoints, "XP Events -> XP Points");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.xpReason, "XP Events -> XP Reason Public");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.active, "XP Events -> Active?");
+  requireWritableField(xpEventsTable, CONFIG.xpEvents.sourceKey, "XP Events -> Source Key");
 }
 
-requireField(zoomTable, CONFIG.zoom.week, "Zoom Meetings -> Week");
-requireField(zoomTable, CONFIG.zoom.attendees, "Zoom Meetings -> Attendees");
-requireField(zoomTable, CONFIG.zoom.createXpEvents, "Zoom Meetings -> Create XP Events");
-requireField(zoomTable, CONFIG.zoom.xpAwardStatus, "Zoom Meetings -> XP Award Status");
-requireField(zoomTable, CONFIG.zoom.zoomMeetingKey, "Zoom Meetings -> Zoom Meeting Key");
-
-requireField(rulesTable, CONFIG.xpRewardRules.ruleKey, "XP Reward Rules -> Rule Key");
-requireField(rulesTable, CONFIG.xpRewardRules.xpAmount, "XP Reward Rules -> XP Amount");
-
-requireWritableField(xpEventsTable, CONFIG.xpEvents.enrollment, "XP Events -> Enrollment");
-requireWritableField(xpEventsTable, CONFIG.xpEvents.xpPoints, "XP Events -> XP Points");
-requireWritableField(xpEventsTable, CONFIG.xpEvents.xpReason, "XP Events -> XP Reason");
-requireWritableField(xpEventsTable, CONFIG.xpEvents.active, "XP Events -> Active?");
-requireWritableField(xpEventsTable, CONFIG.xpEvents.sourceKey, "XP Events -> Source Key");
-
 
 /* =========================================================
-   SECTION 6: MAIN
+   SECTION 3 — MAIN
 ========================================================= */
 
 async function main() {
-  let debugStep = "start";
+  let debugStep = "1 - Start";
+  let recordId = "";
 
   let meetingName = "";
   let zoomMeetingKey = "";
@@ -840,7 +871,37 @@ async function main() {
   let bonusEventsUpdated = 0;
 
   try {
-    debugStep = "load_zoom_meeting";
+    setOutputSafe("debugStep", debugStep);
+
+    debugStep = "2 - Read Input";
+    setOutputSafe("debugStep", debugStep);
+
+    const inputConfig = input.config();
+    recordId = String(inputConfig.recordId || "").trim();
+
+    if (!recordId) {
+      throw new Error("Missing required input variable: recordId");
+    }
+
+    if (!recordId.startsWith("rec")) {
+      throw new Error(`Invalid Zoom Meetings recordId input: ${recordId}`);
+    }
+
+    debugStep = "3 - Load Tables";
+    setOutputSafe("debugStep", debugStep);
+
+    zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
+    enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+    rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
+    xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+    weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+    weeklySummaryQueryCache = null;
+
+    debugStep = "4 - Validate Schema";
+    setOutputSafe("debugStep", debugStep);
+    assertRequiredSchema();
+
+    debugStep = "5 - Load Zoom Meeting";
     setOutputSafe("debugStep", debugStep);
 
     const zoomRecord = await zoomTable.selectRecordAsync(recordId, {
@@ -896,7 +957,9 @@ async function main() {
       setFinalOutputs({
         ok: true,
         actionOut: "skipped_create_xp_events_not_checked",
-        statusOut: CONFIG.values.skipped,
+        statusOut: CONFIG.outputStatuses.skipped,
+        debugStep,
+        zoomMeetingId: recordId,
         meetingName,
         zoomMeetingKey,
         weekId,
@@ -909,7 +972,9 @@ async function main() {
       setFinalOutputs({
         ok: true,
         actionOut: "skipped_already_awarded",
-        statusOut: CONFIG.values.skipped,
+        statusOut: CONFIG.outputStatuses.skipped,
+        debugStep,
+        zoomMeetingId: recordId,
         meetingName,
         zoomMeetingKey,
         weekId,
@@ -925,7 +990,9 @@ async function main() {
       setFinalOutputs({
         ok: true,
         actionOut: "skipped_meeting_not_completed",
-        statusOut: CONFIG.values.skipped,
+        statusOut: CONFIG.outputStatuses.skipped,
+        debugStep,
+        zoomMeetingId: recordId,
         errorOut: `Skipped: Meeting Status is "${meetingStatus}", not "${CONFIG.statuses.completed}".`,
         meetingName,
         zoomMeetingKey,
@@ -973,6 +1040,7 @@ async function main() {
         fields: buildFieldsToLoad(xpEventsTable, [
           CONFIG.xpEvents.enrollment,
           CONFIG.xpEvents.week,
+          CONFIG.xpEvents.weeklySummary,
           CONFIG.xpEvents.xpSource,
           CONFIG.xpEvents.xpBucketKey,
           CONFIG.xpEvents.xpPoints,
@@ -1218,7 +1286,7 @@ async function main() {
       throw new Error("No attendees were processed. Check Attendees and Enrollment Active? values.");
     }
 
-    debugStep = "write_zoom_success";
+    debugStep = "12 - Write Zoom Success";
     setOutputSafe("debugStep", debugStep);
 
     await updateRecordSafe(zoomTable, recordId, {
@@ -1232,11 +1300,18 @@ async function main() {
       [CONFIG.zoom.xpAwardError]: "",
     });
 
+    const totalUpdated = baseEventsUpdated + bonusEventsUpdated;
+    const statusOut = totalUpdated > 0
+      ? CONFIG.outputStatuses.updated
+      : CONFIG.outputStatuses.created;
+
     setFinalOutputs({
       ok: true,
       actionOut: "awarded_zoom_attendance_xp",
-      statusOut: CONFIG.values.success,
+      statusOut,
       errorOut: "",
+      debugStep,
+      zoomMeetingId: recordId,
       meetingName,
       zoomMeetingKey,
       weekId,
@@ -1248,6 +1323,25 @@ async function main() {
       bonusEventsCreated,
       bonusEventsUpdated,
     });
+
+    console.log(JSON.stringify({
+      automation: CONFIG.scriptName,
+      version: CONFIG.version,
+      statusOut,
+      actionOut: "awarded_zoom_attendance_xp",
+      zoomMeetingId: recordId,
+      meetingName,
+      zoomMeetingKey,
+      weekId,
+      attendeeCount,
+      attendeesProcessed,
+      attendeesSkipped,
+      baseEventsCreated,
+      baseEventsUpdated,
+      bonusEventsCreated,
+      bonusEventsUpdated,
+      debugStep,
+    }));
 
     log("Automation 101 complete", {
       scriptName: CONFIG.scriptName,
@@ -1281,8 +1375,10 @@ async function main() {
     setFinalOutputs({
       ok: false,
       actionOut: "error",
-      statusOut: CONFIG.values.error,
+      statusOut: CONFIG.outputStatuses.error,
       errorOut: message,
+      debugStep,
+      zoomMeetingId: recordId,
       meetingName,
       zoomMeetingKey,
       weekId,
@@ -1294,6 +1390,16 @@ async function main() {
       bonusEventsCreated,
       bonusEventsUpdated,
     });
+
+    console.log(JSON.stringify({
+      automation: CONFIG.scriptName,
+      version: CONFIG.version,
+      statusOut: CONFIG.outputStatuses.error,
+      actionOut: "error",
+      errorOut: message,
+      zoomMeetingId: recordId,
+      debugStep,
+    }));
 
     log("Automation 101 failed", {
       scriptName: CONFIG.scriptName,
@@ -1308,8 +1414,8 @@ async function main() {
 }
 
 
-/* =========================================================
-   SECTION 7: RUN
-========================================================= */
+/************************************************************************************************
+ * SECTION 4 — RUN
+ ************************************************************************************************/
 
 await main();

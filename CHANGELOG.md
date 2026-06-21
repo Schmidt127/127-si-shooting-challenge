@@ -11,6 +11,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Changed
 - **010** — Rewritten to production script standard (v10.3): `async function main()`, schema validation inside `main()`, required outputs, and final JSON console log.
 - **114** — Rewritten to production script standard (v5.7): runtime state inside `main()`, try/catch inside `main()`, `await main()` runner; Weekly Athlete Summary linking hardened with schema validation and repair pass.
+- **101** — Rewritten to production script standard (v5.2): `main()` wrapper, `assertRequiredSchema()`, Weekly Athlete Summary repair pass, `XP Bucket` field fix, standard `statusOut` values.
 
 ## 2026-06-20
 
