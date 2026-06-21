@@ -63,7 +63,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - recordId = Airtable record ID from the triggering Weekly Athlete Summary record
  *
  * OPTIONAL INPUT VARIABLES
- * - sendModeInput = Send Mode from the triggering Weekly Athlete Summary record
+ * - sendModeInput = sendMode from the triggering Weekly Athlete Summary record
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Build Weekly Email Now? = unchecked
@@ -137,7 +137,7 @@ const CONFIG = {
         homeworkDisplay: "Homework Display",
 
         buildNow: "Build Weekly Email Now?",
-        sendMode: "Send Mode",
+        sendMode: "sendMode",
 
         emailReady: "Weekly Email Ready?",
         emailSent: "Weekly Email Sent?",
@@ -213,9 +213,9 @@ const CONFIG = {
         videoFeedback: "Video Feedback",
         achievementUnlock: "Achievement Unlock",
         source: "XP Source",
-        bucketKey: "XP Bucket Key",
+        bucketKey: "XP Bucket",
         points: "XP Points",
-        reason: "XP Reason",
+        reason: "XP Reason Public",
         active: "Active?",
         sourceKey: "Source Key",
     },
@@ -239,7 +239,7 @@ const CONFIG = {
     },
 
     xpRuleFields: {
-        nameCandidates: ["Rule Name", "Name"],
+        nameCandidates: ["Reward Rule", "Rule Name", "Name"],
         ruleKey: "Rule Key",
         sourceLabel: "XP Source Label",
         xpAmount: "XP Amount",
@@ -2256,7 +2256,7 @@ async function main() {
                 "This script builds email output only.",
                 "It does not create missing XP Events.",
                 "Homework assignments come from Week -> FBC Curriculum - SYNC.",
-                "XP bucket classification uses XP Bucket Key.",
+                "XP bucket classification uses XP Bucket.",
                 "Date keys are used to prevent Saturday submissions from being dropped.",
                 "Email summary totals use the same calculated rows displayed in the email table.",
                 "Streaks and thresholds display XP Earned / Possible.",
