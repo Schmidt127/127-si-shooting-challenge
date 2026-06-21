@@ -2,29 +2,31 @@
 Automation: 065 - Homework Review and XP - Create Homework XP Event
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
 
 Purpose:
-To be confirmed from production script.
+Creates Homework Completion XP Events from reviewed homework records.
 
 Trigger:
-To be confirmed from Airtable automation.
+Homework Completions when review is complete, satisfactory, and XP is pending.
 
 Important Tables:
-To be confirmed from production script.
+Homework Completions, XP Events, Weekly Athlete Summary
 
 Important Fields:
-To be confirmed from production script.
+Satisfactory?, Review Complete, Total Homework XP Awarded, Weekly Athlete Summary Link, XP Events
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************************************************
  * 065 - Homework Review and XP - Create Homework XP Event
- * Version: 2026-06-06 v9.1
+ *
+ * Version: v9.2
+ * Date Written: 2026-06-06
  * Last Updated: 2026-06-21
  *
  * PURPOSE
@@ -49,16 +51,38 @@ Airtable is the deployed/running copy.
  * - This script does NOT mark Parent Feedback Sent?.
  * - This script does NOT fill Parent Feedback Sent On.
  *
+ * FOLDER
+ * - 06 - Homework Review and XP
+ *
+ * AUTOMATION NAME
+ * - 065 - Homework Review and XP - Create Homework XP Event
+ *
+ * TRIGGER TABLE
+ * - Homework Completions
+ *
+ * TRIGGER TYPE
+ * - When record matches conditions
+ *
  * REQUIRED INPUT
  * - recordId = triggering Homework Completions record ID
+ *
+ * REQUIRED OUTPUTS
+ * - statusOut = created | updated | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
  ************************************************************************************************/
 
+// @ts-nocheck
 
 /************************************************************************************************
  * SECTION 1 — CONFIGURATION
  ************************************************************************************************/
 
 const CONFIG = {
+    scriptName: "065 - Homework Review and XP - Create Homework XP Event",
+    version: "v9.2",
+
     tables: {
         homeworkCompletions: "Homework Completions",
         xpEvents: "XP Events",
@@ -138,37 +162,29 @@ const CONFIG = {
         sourceKeyPrefix: "HOMEWORK_XP|",
     },
 
+    outputStatuses: {
+        created: "created",
+        updated: "updated",
+        skipped: "skipped",
+        error: "error",
+    },
+
     debug: {
         logToConsole: true,
     },
 };
 
 
-/************************************************************************************************
- * SECTION 2 — INPUT
- ************************************************************************************************/
-
-const inputConfig = input.config();
-const recordId = String(inputConfig.recordId || "").trim();
-
-if (!recordId) {
-    throw new Error("Missing required input variable: recordId");
-}
-
-
-/************************************************************************************************
- * SECTION 3 — TABLES
- ************************************************************************************************/
-
-const homeworkTable = base.getTable(CONFIG.tables.homeworkCompletions);
-const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-
+let homeworkTable = null;
+let xpEventsTable = null;
+let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
+let writableXpActivityDateField = "";
+let writableXpActivityDateSourceField = "";
 
 
 /************************************************************************************************
- * SECTION 4 — HELPERS
+ * SECTION 2 — HELPERS
  ************************************************************************************************/
 
 function log(message, data = null) {
@@ -552,7 +568,7 @@ function buildXpEventFieldsToLoad() {
     ]);
 }
 
-async function markHomeworkError(message) {
+async function markHomeworkError(homeworkRecordId, message) {
     const fields = {};
 
     if (fieldExists(homeworkTable, CONFIG.homework.awardStatus) && isWritableField(homeworkTable, CONFIG.homework.awardStatus)) {
@@ -568,127 +584,153 @@ async function markHomeworkError(message) {
     }
 
     if (Object.keys(fields).length > 0) {
-        await homeworkTable.updateRecordAsync(recordId, fields);
+        await homeworkTable.updateRecordAsync(homeworkRecordId, fields);
+    }
+}
+
+
+function assertRequiredSchema() {
+    for (const fieldName of [
+        CONFIG.homework.enrollment,
+        CONFIG.homework.homework,
+        CONFIG.homework.week,
+
+        CONFIG.homework.satisfactory,
+        CONFIG.homework.reviewComplete,
+        CONFIG.homework.coachFeedback,
+
+        CONFIG.homework.baseXp,
+        CONFIG.homework.extraXp,
+        CONFIG.homework.totalXp,
+
+        CONFIG.homework.awardStatus,
+        CONFIG.homework.xpEvents,
+        CONFIG.homework.completionKey,
+    ]) {
+        requireField(homeworkTable, fieldName);
+    }
+
+    for (const fieldName of [
+        CONFIG.homework.awardStatus,
+        CONFIG.homework.xpEvents,
+    ]) {
+        requireWritableField(homeworkTable, fieldName);
+    }
+
+    for (const fieldName of [
+        CONFIG.xpEvents.enrollment,
+        CONFIG.xpEvents.week,
+        CONFIG.xpEvents.weeklySummary,
+        CONFIG.xpEvents.homeworkCompletion,
+
+        CONFIG.xpEvents.xpBucket,
+        CONFIG.xpEvents.xpSource,
+        CONFIG.xpEvents.xpPoints,
+
+        CONFIG.xpEvents.sourceKey,
+    ]) {
+        requireWritableField(xpEventsTable, fieldName);
+    }
+
+    writableXpActivityDateField = getFirstWritableFieldName(
+        xpEventsTable,
+        CONFIG.xpEvents.xpActivityDateCandidates
+    );
+
+    writableXpActivityDateSourceField = getFirstWritableFieldName(
+        xpEventsTable,
+        CONFIG.xpEvents.xpActivityDateSourceCandidates
+    );
+
+    if (!writableXpActivityDateField) {
+        throw new Error(
+            `Missing writable XP activity date field. Expected one of: ${CONFIG.xpEvents.xpActivityDateCandidates.join(", ")}`
+        );
+    }
+
+    if (!writableXpActivityDateSourceField) {
+        throw new Error(
+            `Missing writable XP activity date source field. Expected one of: ${CONFIG.xpEvents.xpActivityDateSourceCandidates.join(", ")}`
+        );
+    }
+
+    if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.pendingStatus)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.pendingStatus}" on Homework Completions -> Award Status.`
+        );
+    }
+
+    if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.awardedStatus)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.awardedStatus}" on Homework Completions -> Award Status.`
+        );
+    }
+
+    if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.errorStatus)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.errorStatus}" on Homework Completions -> Award Status.`
+        );
+    }
+
+    if (!hasSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucketName)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.xpBucketName}" on XP Events -> XP Bucket.`
+        );
+    }
+
+    if (!hasSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpSource, CONFIG.values.xpSourceName)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.xpSourceName}" on XP Events -> XP Source.`
+        );
+    }
+
+    if (!hasSingleSelectChoice(xpEventsTable, writableXpActivityDateSourceField, CONFIG.values.xpActivityDateSourceName)) {
+        throw new Error(
+            `Missing single-select option "${CONFIG.values.xpActivityDateSourceName}" on XP Events -> ${writableXpActivityDateSourceField}.`
+        );
     }
 }
 
 
 /************************************************************************************************
- * SECTION 5 — FIELD VALIDATION
- ************************************************************************************************/
-
-for (const fieldName of [
-    CONFIG.homework.enrollment,
-    CONFIG.homework.homework,
-    CONFIG.homework.week,
-
-    CONFIG.homework.satisfactory,
-    CONFIG.homework.reviewComplete,
-    CONFIG.homework.coachFeedback,
-
-    CONFIG.homework.baseXp,
-    CONFIG.homework.extraXp,
-    CONFIG.homework.totalXp,
-
-    CONFIG.homework.awardStatus,
-    CONFIG.homework.xpEvents,
-    CONFIG.homework.completionKey,
-]) {
-    requireField(homeworkTable, fieldName);
-}
-
-for (const fieldName of [
-    CONFIG.homework.awardStatus,
-    CONFIG.homework.xpEvents,
-]) {
-    requireWritableField(homeworkTable, fieldName);
-}
-
-for (const fieldName of [
-    CONFIG.xpEvents.enrollment,
-    CONFIG.xpEvents.week,
-    CONFIG.xpEvents.homeworkCompletion,
-
-    CONFIG.xpEvents.xpBucket,
-    CONFIG.xpEvents.xpSource,
-    CONFIG.xpEvents.xpPoints,
-
-    CONFIG.xpEvents.sourceKey,
-]) {
-    requireWritableField(xpEventsTable, fieldName);
-}
-
-const writableXpActivityDateField = getFirstWritableFieldName(
-    xpEventsTable,
-    CONFIG.xpEvents.xpActivityDateCandidates
-);
-
-const writableXpActivityDateSourceField = getFirstWritableFieldName(
-    xpEventsTable,
-    CONFIG.xpEvents.xpActivityDateSourceCandidates
-);
-
-if (!writableXpActivityDateField) {
-    throw new Error(
-        `Missing writable XP activity date field. Expected one of: ${CONFIG.xpEvents.xpActivityDateCandidates.join(", ")}`
-    );
-}
-
-if (!writableXpActivityDateSourceField) {
-    throw new Error(
-        `Missing writable XP activity date source field. Expected one of: ${CONFIG.xpEvents.xpActivityDateSourceCandidates.join(", ")}`
-    );
-}
-
-if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.pendingStatus)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.pendingStatus}" on Homework Completions -> Award Status.`
-    );
-}
-
-if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.awardedStatus)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.awardedStatus}" on Homework Completions -> Award Status.`
-    );
-}
-
-if (!hasSingleSelectChoice(homeworkTable, CONFIG.homework.awardStatus, CONFIG.values.errorStatus)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.errorStatus}" on Homework Completions -> Award Status.`
-    );
-}
-
-if (!hasSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucketName)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.xpBucketName}" on XP Events -> XP Bucket.`
-    );
-}
-
-if (!hasSingleSelectChoice(xpEventsTable, CONFIG.xpEvents.xpSource, CONFIG.values.xpSourceName)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.xpSourceName}" on XP Events -> XP Source.`
-    );
-}
-
-if (!hasSingleSelectChoice(xpEventsTable, writableXpActivityDateSourceField, CONFIG.values.xpActivityDateSourceName)) {
-    throw new Error(
-        `Missing single-select option "${CONFIG.values.xpActivityDateSourceName}" on XP Events -> ${writableXpActivityDateSourceField}.`
-    );
-}
-
-
-/************************************************************************************************
- * SECTION 6 — MAIN
+ * SECTION 3 — MAIN
  ************************************************************************************************/
 
 async function main() {
     let homeworkRecord = null;
     let debugStep = "1 - Start";
+    let recordId = "";
 
     try {
         setOutputSafe("debugStep", debugStep);
 
-        debugStep = "2 - Load Homework Completion";
+        debugStep = "2 - Read Input";
+        setOutputSafe("debugStep", debugStep);
+
+        const inputConfig = input.config();
+        recordId = String(inputConfig.recordId || "").trim();
+
+        if (!recordId) {
+            throw new Error("Missing required input variable: recordId");
+        }
+
+        if (!recordId.startsWith("rec")) {
+            throw new Error(`Invalid Homework Completions recordId input: ${recordId}`);
+        }
+
+        debugStep = "3 - Load Tables";
+        setOutputSafe("debugStep", debugStep);
+
+        homeworkTable = base.getTable(CONFIG.tables.homeworkCompletions);
+        xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+        weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+        weeklySummaryQueryCache = null;
+
+        debugStep = "4 - Validate Schema";
+        setOutputSafe("debugStep", debugStep);
+        assertRequiredSchema();
+
+        debugStep = "5 - Load Homework Completion";
         setOutputSafe("debugStep", debugStep);
 
         homeworkRecord = await homeworkTable.selectRecordAsync(recordId, {
@@ -699,7 +741,7 @@ async function main() {
             throw new Error(`Homework Completion not found: ${recordId}`);
         }
 
-        debugStep = "3 - Read Homework Completion Values";
+        debugStep = "6 - Read Homework Completion Values";
         setOutputSafe("debugStep", debugStep);
 
         const enrollmentIds = getLinkedRecordIds(homeworkRecord, homeworkTable, CONFIG.homework.enrollment);
@@ -754,7 +796,7 @@ async function main() {
             sourceKey,
         });
 
-        debugStep = "4 - Validate Homework Completion";
+        debugStep = "7 - Validate Homework Completion";
         setOutputSafe("debugStep", debugStep);
 
         if (!enrollmentIds.length) throw new Error("Missing Enrollment.");
@@ -769,6 +811,9 @@ async function main() {
         if (awardStatus !== CONFIG.values.pendingStatus) {
             setOutputs({
                 ok: true,
+                statusOut: CONFIG.outputStatuses.skipped,
+                actionOut: "skipped_award_status_not_pending",
+                errorOut: "",
                 result: `Skipped: Award Status is "${awardStatus || "blank"}", not Pending.`,
                 homeworkCompletionId: recordId,
                 awardStatus,
@@ -785,7 +830,7 @@ async function main() {
             throw new Error(`Total Homework XP Awarded must be greater than 0. Current value: ${totalXp}`);
         }
 
-        debugStep = "5 - Load Existing XP Events";
+        debugStep = "8 - Load Existing XP Events";
         setOutputSafe("debugStep", debugStep);
 
         const xpEventQuery = await xpEventsTable.selectRecordsAsync({
@@ -827,10 +872,13 @@ async function main() {
 
             setOutputs({
                 ok: true,
-                result: "Skipped: XP Event already linked. Marked Awarded.",
+                statusOut: CONFIG.outputStatuses.updated,
                 actionOut,
+                errorOut: "",
+                result: "Skipped: XP Event already linked. Marked Awarded.",
                 homeworkCompletionId: recordId,
                 xpEventId,
+                weeklySummaryId: weeklySummaryId || "",
                 sourceKey,
                 debugStep,
             });
@@ -861,17 +909,20 @@ async function main() {
 
             setOutputs({
                 ok: true,
-                result: "Existing XP Event found by Source Key. Linked and marked Awarded.",
+                statusOut: CONFIG.outputStatuses.updated,
                 actionOut,
+                errorOut: "",
+                result: "Existing XP Event found by Source Key. Linked and marked Awarded.",
                 homeworkCompletionId: recordId,
                 xpEventId,
+                weeklySummaryId: weeklySummaryId || "",
                 sourceKey,
                 debugStep,
             });
             return;
         }
 
-        debugStep = "6 - Build XP Event";
+        debugStep = "9 - Build XP Event";
         setOutputSafe("debugStep", debugStep);
 
         const athleteName = getLinkedRecordName(homeworkRecord, homeworkTable, CONFIG.homework.enrollment) || "Athlete";
@@ -962,13 +1013,14 @@ async function main() {
             createFields[CONFIG.xpEvents.processed] = true;
         }
 
-        debugStep = "7 - Create XP Event";
+        debugStep = "10 - Create XP Event";
         setOutputSafe("debugStep", debugStep);
 
         xpEventId = await xpEventsTable.createRecordAsync(createFields);
         actionOut = "created_new_xp_event";
+        await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
 
-        debugStep = "8 - Write Back to Homework Completion";
+        debugStep = "11 - Write Back to Homework Completion";
         setOutputSafe("debugStep", debugStep);
 
         const homeworkUpdateFields = {
@@ -987,15 +1039,18 @@ async function main() {
 
         await homeworkTable.updateRecordAsync(recordId, homeworkUpdateFields);
 
-        debugStep = "9 - Complete";
+        debugStep = "12 - Complete";
         setOutputSafe("debugStep", debugStep);
 
         setOutputs({
             ok: true,
-            result: "Homework XP Event created and Homework Completion marked Awarded.",
+            statusOut: CONFIG.outputStatuses.created,
             actionOut,
+            errorOut: "",
+            result: "Homework XP Event created and Homework Completion marked Awarded.",
             homeworkCompletionId: recordId,
             xpEventId,
+            weeklySummaryId: weeklySummaryId || "",
             sourceKey,
 
             athlete: athleteName,
@@ -1013,6 +1068,18 @@ async function main() {
 
             debugStep,
         });
+
+        console.log(JSON.stringify({
+            automation: CONFIG.scriptName,
+            version: CONFIG.version,
+            statusOut: CONFIG.outputStatuses.created,
+            actionOut,
+            homeworkCompletionId: recordId,
+            xpEventId,
+            weeklySummaryId: weeklySummaryId || "",
+            sourceKey,
+            debugStep,
+        }));
     } catch (error) {
         log("065 error", {
             recordId,
@@ -1022,7 +1089,7 @@ async function main() {
 
         if (homeworkRecord) {
             try {
-                await markHomeworkError(error.message);
+                await markHomeworkError(recordId, error.message);
             } catch (markErrorProblem) {
                 log("Could not mark error on Homework Completion", {
                     recordId,
@@ -1033,6 +1100,8 @@ async function main() {
 
         setOutputs({
             ok: false,
+            statusOut: CONFIG.outputStatuses.error,
+            actionOut: "error",
             result: "Error",
             errorOut: error.message,
             homeworkCompletionId: recordId,
@@ -1045,7 +1114,7 @@ async function main() {
 
 
 /************************************************************************************************
- * SECTION 7 — RUN
+ * SECTION 4 — RUN
  ************************************************************************************************/
 
 await main();
