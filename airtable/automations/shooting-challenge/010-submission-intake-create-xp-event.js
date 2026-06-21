@@ -1,33 +1,31 @@
 /*
-Automation: 010 - Submission Intake - Create XP Event from Submission
+Automation: 010 - Submission Intake and Asset Creation - Create XP Event from Submission
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
 
 Purpose:
-Creates a Submission Base XP Event from a valid shooting submission.
+Creates or repairs Submission Base XP Events from counted shooting submissions.
 
 Trigger:
-Submissions table automation trigger.
+Submissions when Count This Submission? is checked and XP should be awarded.
 
 Important Tables:
-- Submissions
-- XP Events
-- Enrollments
-- Weeks
+Submissions, XP Events, XP Reward Rules, Enrollments, Weekly Athlete Summary
 
 Important Fields:
-To be confirmed from production script.
+Count This Submission?, Total Shots Counted, XP Events, Weekly Athlete Summary, XP Award Status
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************************************************
  * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
- * Version: 10.2
+ *
+ * Version: 10.3
  * Date Written: 2026-06-06
  * Last Updated: 2026-06-21
  *
@@ -51,6 +49,18 @@ Airtable is the deployed/running copy.
  * - Marks Submission XP Award Status as Awarded.
  * - Re-arms Shot Milestone checking on the linked Enrollment after successful counted-shot XP processing.
  *
+ * FOLDER
+ * - 01 - Submission Intake and Asset Creation
+ *
+ * AUTOMATION NAME
+ * - 010 - Submission Intake and Asset Creation - Create XP Event from Submission
+ *
+ * TRIGGER TABLE
+ * - Submissions
+ *
+ * TRIGGER TYPE
+ * - When record matches conditions
+ *
  * REQUIRED INPUT
  * - recordId = triggering Submission record ID
  *
@@ -67,17 +77,34 @@ Airtable is the deployed/running copy.
  * IMPORTANT DATE STANDARD
  * - Daily shooting submission XP uses Submissions -> Activity Date.
  *
+ * OUTPUT / WRITEBACK FIELDS
+ * - Submissions -> XP Events = linked XP Event
+ * - Submissions -> XP Award Status = Awarded
+ * - XP Events -> Enrollment, Week, Submission, Weekly Athlete Summary, XP Source, XP Bucket,
+ *   XP Points, XP Reason Public, XP Reason Debug, Active?, Source Key, optional date fields
+ * - Enrollments -> Run Shot Milestone Check? = checked after successful XP processing
+ *
+ * REQUIRED OUTPUTS
+ * - statusOut = created | updated | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
+ *
  * IMPORTANT
  * - This script does not skip a record solely because XP Award Status is already Awarded.
  *   This allows a manual rerun to repair an existing XP Event.
  ************************************************************************************************/
 
+// @ts-nocheck
 
 /************************************************************************************************
  * SECTION 1 — CONFIGURATION
  ************************************************************************************************/
 
 const CONFIG = {
+    scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+    version: "10.3",
+
     tables: {
         submissions: "Submissions",
         xpEvents: "XP Events",
@@ -176,37 +203,18 @@ const CONFIG = {
 };
 
 
-/************************************************************************************************
- * SECTION 2 — INPUT
- ************************************************************************************************/
-
-const inputConfig = input.config();
-const recordId = String(inputConfig.recordId || "").trim();
-
-if (!recordId) {
-    throw new Error("Missing required input variable: recordId");
-}
-
-if (!recordId.startsWith("rec")) {
-    throw new Error(`Invalid Submission recordId input: ${recordId}`);
-}
-
-
-/************************************************************************************************
- * SECTION 3 — TABLES
- ************************************************************************************************/
-
-const submissionsTable = base.getTable(CONFIG.tables.submissions);
-const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-const xpRulesTable = base.getTable(CONFIG.tables.xpRules);
-const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-
+let submissionsTable = null;
+let xpEventsTable = null;
+let xpRulesTable = null;
+let enrollmentsTable = null;
+let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
+let writableXpDateField = "";
+let writableXpDateSourceField = "";
 
 
 /************************************************************************************************
- * SECTION 4 — HELPERS
+ * SECTION 2 — HELPERS
  ************************************************************************************************/
 
 function log(message, data = null) {
@@ -695,12 +703,12 @@ async function rearmShotMilestoneCheck(enrollmentId) {
     return true;
 }
 
-async function markSubmissionStatus(statusName) {
+async function markSubmissionStatus(submissionRecordId, statusName) {
     if (!isWritableField(submissionsTable, CONFIG.submissions.xpAwardStatus)) {
         return;
     }
 
-    await submissionsTable.updateRecordAsync(recordId, {
+    await submissionsTable.updateRecordAsync(submissionRecordId, {
         [CONFIG.submissions.xpAwardStatus]: buildCellValueForField(
             submissionsTable,
             CONFIG.submissions.xpAwardStatus,
@@ -710,77 +718,104 @@ async function markSubmissionStatus(statusName) {
 }
 
 
-/************************************************************************************************
- * SECTION 5 — FIELD VALIDATION
- ************************************************************************************************/
+function assertRequiredSchema() {
+    for (const fieldName of buildSubmissionFieldsToLoad()) {
+        requireField(submissionsTable, fieldName);
+    }
 
-for (const fieldName of buildSubmissionFieldsToLoad()) {
-    requireField(submissionsTable, fieldName);
+    requireWritableField(
+        submissionsTable,
+        CONFIG.submissions.xpAwardStatus
+    );
+
+    requireWritableField(
+        submissionsTable,
+        CONFIG.submissions.xpEvents
+    );
+
+    requireWritableField(
+        enrollmentsTable,
+        CONFIG.enrollments.runShotMilestoneCheck,
+        "Run Shot Milestone Check?"
+    );
+
+    for (const fieldName of buildXpRuleFieldsToLoad()) {
+        requireField(xpRulesTable, fieldName);
+    }
+
+    for (const fieldName of [
+        CONFIG.xpEvents.enrollment,
+        CONFIG.xpEvents.submission,
+        CONFIG.xpEvents.week,
+        CONFIG.xpEvents.xpSource,
+        CONFIG.xpEvents.xpBucket,
+        CONFIG.xpEvents.xpPoints,
+        CONFIG.xpEvents.xpReasonPublic,
+        CONFIG.xpEvents.xpReasonDebug,
+        CONFIG.xpEvents.active,
+        CONFIG.xpEvents.sourceKey,
+    ]) {
+        requireWritableField(xpEventsTable, fieldName);
+    }
+
+    writableXpDateField = getFirstWritableFieldName(
+        xpEventsTable,
+        CONFIG.xpEvents.xpDateFieldCandidates
+    );
+
+    writableXpDateSourceField = getFirstWritableFieldName(
+        xpEventsTable,
+        CONFIG.xpEvents.xpDateSourceFieldCandidates
+    );
+
+    log("Resolved optional XP date fields", {
+        writableXpDateField: writableXpDateField || "none",
+        writableXpDateSourceField: writableXpDateSourceField || "none",
+    });
 }
-
-requireWritableField(
-    submissionsTable,
-    CONFIG.submissions.xpAwardStatus
-);
-
-requireWritableField(
-    submissionsTable,
-    CONFIG.submissions.xpEvents
-);
-
-requireWritableField(
-    enrollmentsTable,
-    CONFIG.enrollments.runShotMilestoneCheck,
-    "Run Shot Milestone Check?"
-);
-
-for (const fieldName of buildXpRuleFieldsToLoad()) {
-    requireField(xpRulesTable, fieldName);
-}
-
-for (const fieldName of [
-    CONFIG.xpEvents.enrollment,
-    CONFIG.xpEvents.submission,
-    CONFIG.xpEvents.week,
-    CONFIG.xpEvents.xpSource,
-    CONFIG.xpEvents.xpBucket,
-    CONFIG.xpEvents.xpPoints,
-    CONFIG.xpEvents.xpReasonPublic,
-    CONFIG.xpEvents.xpReasonDebug,
-    CONFIG.xpEvents.active,
-    CONFIG.xpEvents.sourceKey,
-]) {
-    requireWritableField(xpEventsTable, fieldName);
-}
-
-const writableXpDateField = getFirstWritableFieldName(
-    xpEventsTable,
-    CONFIG.xpEvents.xpDateFieldCandidates
-);
-
-const writableXpDateSourceField = getFirstWritableFieldName(
-    xpEventsTable,
-    CONFIG.xpEvents.xpDateSourceFieldCandidates
-);
-
-log("Resolved optional XP date fields", {
-    writableXpDateField: writableXpDateField || "none",
-    writableXpDateSourceField: writableXpDateSourceField || "none",
-});
 
 
 /************************************************************************************************
- * SECTION 6 — MAIN
+ * SECTION 3 — MAIN
  ************************************************************************************************/
 
 async function main() {
     let submission = null;
     let debugStep = "1 - Start";
+    let recordId = "";
 
     try {
         setOutputSafe("debugStep", debugStep);
 
-        debugStep = "2 - Load Submission";
+        debugStep = "2 - Read Input";
+        setOutputSafe("debugStep", debugStep);
+
+        const inputConfig = input.config();
+        recordId = String(inputConfig.recordId || "").trim();
+
+        if (!recordId) {
+            throw new Error("Missing required input variable: recordId");
+        }
+
+        if (!recordId.startsWith("rec")) {
+            throw new Error(`Invalid Submission recordId input: ${recordId}`);
+        }
+
+        debugStep = "3 - Load Tables";
+        setOutputSafe("debugStep", debugStep);
+
+        submissionsTable = base.getTable(CONFIG.tables.submissions);
+        xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+        xpRulesTable = base.getTable(CONFIG.tables.xpRules);
+        enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+        weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+        weeklySummaryQueryCache = null;
+
+        debugStep = "4 - Validate Schema";
+        setOutputSafe("debugStep", debugStep);
+        assertRequiredSchema();
+
+        debugStep = "5 - Load Submission";
         setOutputSafe("debugStep", debugStep);
 
         submission = await submissionsTable.selectRecordAsync(recordId, {
@@ -791,7 +826,7 @@ async function main() {
             throw new Error(`Submission not found: ${recordId}`);
         }
 
-        debugStep = "3 - Read Submission Values";
+        debugStep = "6 - Read Submission Values";
         setOutputSafe("debugStep", debugStep);
 
         const enrollmentId = getFirstLinkedRecordId(
@@ -869,7 +904,7 @@ async function main() {
             expectedRuleKey: CONFIG.values.ruleKeyDailyShootingBase,
         });
 
-        debugStep = "4 - Validate Submission";
+        debugStep = "7 - Validate Submission";
         setOutputSafe("debugStep", debugStep);
 
         if (!enrollmentId) {
@@ -922,7 +957,7 @@ async function main() {
             return;
         }
 
-        debugStep = "5 - Load XP Reward Rule";
+        debugStep = "8 - Load XP Reward Rule";
         setOutputSafe("debugStep", debugStep);
 
         const xpRuleQuery = await xpRulesTable.selectRecordsAsync({
@@ -978,14 +1013,14 @@ async function main() {
             );
         }
 
-        debugStep = "6 - Load XP Events";
+        debugStep = "9 - Load XP Events";
         setOutputSafe("debugStep", debugStep);
 
         const xpEventQuery = await xpEventsTable.selectRecordsAsync({
             fields: buildXpEventFieldsToLoad(),
         });
 
-        debugStep = "7 - Find Existing Daily Shooting XP Event";
+        debugStep = "10 - Find Existing Daily Shooting XP Event";
         setOutputSafe("debugStep", debugStep);
 
         const existingXpEventIdSet = new Set(existingXpEventIds);
@@ -1096,7 +1131,7 @@ async function main() {
             );
         }
 
-        debugStep = "8 - Build XP Event Values";
+        debugStep = "11 - Build XP Event Values";
         setOutputSafe("debugStep", debugStep);
 
         const submissionWeeklySummaryIds = fieldExists(
@@ -1184,7 +1219,7 @@ async function main() {
             weeklySummaryId
         );
 
-        debugStep = "9 - Create or Update XP Event";
+        debugStep = "12 - Create or Update XP Event";
         setOutputSafe("debugStep", debugStep);
 
         let xpEventId = "";
@@ -1210,7 +1245,7 @@ async function main() {
             statusOut = CONFIG.outputStatuses.created;
         }
 
-        debugStep = "10 - Link XP Event to Submission";
+        debugStep = "13 - Link XP Event to Submission";
         setOutputSafe("debugStep", debugStep);
 
         const mergedXpEventIds = uniqueIds([
@@ -1228,12 +1263,12 @@ async function main() {
             ),
         });
 
-        debugStep = "11 - Re-arm Shot Milestone Check";
+        debugStep = "14 - Re-arm Shot Milestone Check";
         setOutputSafe("debugStep", debugStep);
 
         const shotMilestoneRearmed = await rearmShotMilestoneCheck(enrollmentId);
 
-        debugStep = "12 - Complete";
+        debugStep = "15 - Complete";
         setOutputSafe("debugStep", debugStep);
 
         setOutputs({
@@ -1270,6 +1305,18 @@ async function main() {
             candidateEventCount: candidateEvents.length,
             shotMilestoneRearmed,
         });
+
+        console.log(JSON.stringify({
+            automation: CONFIG.scriptName,
+            version: CONFIG.version,
+            statusOut,
+            actionOut,
+            submissionId: recordId,
+            xpEventId,
+            weeklySummaryId: weeklySummaryId || "",
+            sourceKey,
+            debugStep,
+        }));
     } catch (error) {
         log("Automation 010 error", {
             submissionId: recordId,
@@ -1279,7 +1326,7 @@ async function main() {
 
         if (submission) {
             try {
-                await markSubmissionStatus(CONFIG.values.statusError);
+                await markSubmissionStatus(recordId, CONFIG.values.statusError);
             } catch (statusError) {
                 log("Could not mark Submission XP Award Status as Error", {
                     submissionId: recordId,
@@ -1303,7 +1350,7 @@ async function main() {
 
 
 /************************************************************************************************
- * SECTION 7 — RUN
+ * SECTION 4 — RUN
  ************************************************************************************************/
 
 await main();
