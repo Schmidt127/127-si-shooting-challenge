@@ -64,6 +64,7 @@ GitHub blueprint has this fix. Re-import or manually update those two Airtable m
 ## Deploy workflow
 
 1. Fix scenario in Make (or import blueprint from GitHub)
-2. Test one homework asset + one video asset
-3. Confirm Submission Assets / Video Feedback show Uploaded and valid Drive File ID
-4. Note change in `CHANGELOG.md`
+2. Apply [error writeback guide](./upload-asset-engine-error-handling.md)
+3. Test one homework asset + one video asset
+4. Confirm Submission Assets / Video Feedback show Uploaded and valid Drive File ID
+5. Note change in `CHANGELOG.md`
