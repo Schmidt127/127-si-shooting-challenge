@@ -30,7 +30,10 @@ Airtable is the deployed/running copy.
  * Send Homework Submission Asset Payload to Make
  *
  * VERSION:
- * 2026-06-19 v2.1
+ * v2.2
+ *
+ * LAST UPDATED:
+ * 2026-06-22
  *
  * SYSTEM:
  * Shooting Challenge App
@@ -66,7 +69,7 @@ Airtable is the deployed/running copy.
  *
  * - Send to Make Trigger is checked
  * - Ready to Send to Make? contains READY_TO_SEND
- * - Upload Status is Ready
+ * - Upload Status is Pending Link
  * - Upload Destination is Homework Completions
  * - Google Drive File URL is empty
  * - Google Drive File ID is empty
@@ -138,7 +141,7 @@ async function main() {
         values: {
             uploadDestinationHomework: "Homework Completions",
 
-            statusReady: "Ready",
+            statusPendingLink: "Pending Link",
             statusProcessing: "Processing",
             statusError: "Error",
         },
@@ -541,6 +544,15 @@ async function main() {
 
     if (!String(readyToSendToMake || "").includes("READY_TO_SEND")) {
         await failAndStop(`070a cannot send: Ready to Send to Make? is "${readyToSendToMake || "blank"}", not READY_TO_SEND.`, {
+            uploadDestination,
+            readyToSendToMake,
+            whyNotReadyForMake,
+            uploadStatus,
+        });
+    }
+
+    if (normalizeRouteValue(uploadStatus) !== normalizeRouteValue(CONFIG.values.statusPendingLink)) {
+        await failAndStop(`070a cannot send: Upload Status must be Pending Link. Current value: ${uploadStatus || "[blank]"}.`, {
             uploadDestination,
             readyToSendToMake,
             whyNotReadyForMake,

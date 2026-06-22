@@ -37,7 +37,7 @@ Airtable is the deployed/running copy.
  *   - Grade Band, when available from Enrollment
  * - Link the Video Feedback record back to the Submission Asset.
  * - Mark the Submission Asset ready for Make:
- *   - Upload Status = Ready / Ready for Upload / Pending Upload / Pending
+ *   - Upload Status = Pending Link (Make send gate; same as homework path)
  *   - Send to Make Trigger = checked
  *
  * IMPORTANT
@@ -472,15 +472,12 @@ const currentAssetUploadStatus = text(asset, CONFIG.assets.uploadStatus);
 const currentSendTrigger = cell(asset, CONFIG.assets.sendToMakeTrigger);
 const currentUploadError = text(asset, CONFIG.assets.uploadError);
 
-const assetReadyChoice = firstExistingChoice(assetsTable, CONFIG.assets.uploadStatus, [
-    "Ready",
-    "Ready for Upload",
-    "Pending Upload",
-    "Pending",
+const assetMakeReadyChoice = firstExistingChoice(assetsTable, CONFIG.assets.uploadStatus, [
+    "Pending Link",
 ]);
 
-if (assetReadyChoice && currentAssetUploadStatus !== assetReadyChoice) {
-    setSingleSelect(assetUpdateFields, assetsTable, CONFIG.assets.uploadStatus, assetReadyChoice);
+if (assetMakeReadyChoice && currentAssetUploadStatus !== assetMakeReadyChoice) {
+    setSingleSelect(assetUpdateFields, assetsTable, CONFIG.assets.uploadStatus, assetMakeReadyChoice);
 }
 
 if (currentSendTrigger !== true) {

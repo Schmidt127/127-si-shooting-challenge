@@ -565,15 +565,15 @@ if (!selectName(asset, CONFIG.assets.assetSlot)) {
 
 /*
  * After the correction record exists, the asset can be sent to Make.
+ * Keep Pending Link — same Make send gate as video (070b) and 009.
  */
 const currentUploadStatus = selectName(asset, CONFIG.assets.uploadStatus);
 
 if (
     !currentUploadStatus ||
-    currentUploadStatus === "Pending Link" ||
     currentUploadStatus === "Error"
 ) {
-    setSingleSelect(assetUpdateFields, assetsTable, CONFIG.assets.uploadStatus, "Ready");
+    setSingleSelect(assetUpdateFields, assetsTable, CONFIG.assets.uploadStatus, "Pending Link");
 }
 
 setCheckbox(assetUpdateFields, assetsTable, CONFIG.assets.sendToMakeTrigger, true);

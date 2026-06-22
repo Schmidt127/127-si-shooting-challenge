@@ -4,6 +4,26 @@
 **Blueprint:** [../blueprints/upload-asset-engine-v1.json](../blueprints/upload-asset-engine-v1.json)  
 **Webhook:** Shooting Challenge UPLOAD ENGINE (hook id 2673043 in export — live URL stays in Make only)
 
+## Upload status contract (Submission Assets + Video Feedback)
+
+All prep and send automations use the **same ladder**. Do not introduce alternate gates (for example homework `Ready` vs video `Pending Link`).
+
+| Status | Meaning | Who sets it |
+|--------|---------|-------------|
+| **Pending Link** | Prep complete; eligible for Make send (070a/070b) | 009, 013, 020 (after link/create) |
+| **Processing** | Payload sent to Make; awaiting Drive writeback | 070a, 070b (before webhook) |
+| **Uploaded** | Make succeeded; Drive IDs/URLs written | Make Upload Engine |
+| **Error** | Make or validation failed | Make or Airtable send scripts |
+
+**Flow**
+
+1. **009** creates assets at `Pending Link` (not `Ready`).
+2. **020** (homework) or **013** (video) links child record, keeps **`Pending Link`**, checks **Send to Make Trigger**.
+3. **070a** / **070b** require **`Pending Link`**, set **`Processing`**, POST webhook.
+4. **Make** writes **`Uploaded`** or **`Error`** (+ Drive fields).
+
+**Airtable automation triggers** for 070a and 070b must use **`Upload Status = Pending Link`** (not `Ready`).
+
 ## Trigger
 
 Custom webhook from Airtable automations **070a** (homework assets) and **070b** (video assets).

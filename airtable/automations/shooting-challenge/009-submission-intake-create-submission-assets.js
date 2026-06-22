@@ -355,7 +355,7 @@ for (const source of assetSources) {
          * Do not check Send to Make Trigger here.
          *
          * 020 must link/create the Homework Completion first.
-         * Then 020 marks homework assets Ready and checks Send to Make Trigger.
+         * 020 keeps homework assets at Pending Link and checks Send to Make Trigger.
          */
         setSingleSelect(fields, assetsTable, CONFIG.assets.uploadStatus, "Pending Link");
         setCheckbox(fields, assetsTable, CONFIG.assets.sendToMakeTrigger, false);
