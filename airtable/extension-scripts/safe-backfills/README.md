@@ -19,6 +19,8 @@ When audits find gaps (missing XP Events, unset flags, incomplete weekly summari
 
 | Script file | Use case |
 |-------------|----------|
+| `backfill-xp-event-weekly-summary-links.js` | Link orphan XP Events to Weekly Athlete Summary when Enrollment + Week match |
+| `dedupe-zoom-meeting-xp-events.js` | Remove duplicate Zoom attendance XP Events after Automation 101 re-run |
 | `backfill-xp-from-submissions.js` | Create missing XP Events for submissions with `XP Awarded` false |
 | `backfill-homework-xp.js` | Award XP for reviewed homework without events |
 | `backfill-weekly-summary-records.js` | Generate missing Weekly Summary rows for a week |
