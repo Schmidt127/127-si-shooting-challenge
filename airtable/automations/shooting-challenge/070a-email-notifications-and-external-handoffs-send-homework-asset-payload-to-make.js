@@ -2,71 +2,53 @@
 Automation: 070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-06-22
+Last GitHub Update: 2026-06-22
 
 Purpose:
-To be confirmed from production script.
+Sends one homework Submission Asset to the Make Upload Engine when Upload Status is Pending Link.
 
 Trigger:
-To be confirmed from Airtable automation.
+Submission Assets when Send to Make Trigger is checked and homework asset is ready.
 
 Important Tables:
-To be confirmed from production script.
+Submission Assets
 
 Important Fields:
-To be confirmed from production script.
+Upload Status, Send to Make Trigger, Airtable Attachment, Homework Completions, Google Drive File URL
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
-/********************************************************************
- * AUTOMATION:
+/************************************************************
  * 070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make
  *
- * SCRIPT NAME:
- * Send Homework Submission Asset Payload to Make
- *
- * VERSION:
- * v2.2
- *
- * LAST UPDATED:
- * 2026-06-22
- *
- * SYSTEM:
- * Shooting Challenge App
- *
- * PLATFORM:
- * Airtable
+ * Version: v2.2
+ * Date Written: 2026-06-19
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
- * - Sends one ready homework Submission Assets record to Make.com.
- * - Only processes assets where Upload Destination = Homework Completions.
- * - Requires the asset to already be linked to a Homework Completion.
- * - Requires the Airtable Attachment field to contain at least one file URL.
- * - Marks Upload Status as Processing before sending.
- * - Sends a clean Make.com payload with:
- *      attachment.url
- *      firstAttachment.url
- *      primaryAttachment.url
- * - On successful webhook handoff:
- *      Send to Make Trigger = unchecked
- *      Upload Error = cleared
- *      Upload Status remains Processing until Make writes back Uploaded/Error.
+ * - Sends one homework Submission Assets record to Make.com Upload Engine.
+ * - Requires Upload Destination = Homework Completions and Upload Status = Pending Link.
+ * - Marks Upload Status Processing before webhook; Make writes Uploaded or Error.
  *
- * REQUIRED AUTOMATION INPUT VARIABLES
- * - recordId = Airtable record ID from the triggering Submission Assets record
- * - webhookUrl = Make.com webhook URL
+ * IMPORTANT DESIGN RULES
+ * - Make send gate is Pending Link (same ladder as 009, 013, 020, 070b).
+ * - Does not set final Uploaded status; Make owns writeback.
+ * - Payload must include attachment.url for Make HTTP download.
  *
- * IMPORTANT MAKE.COM MAPPING
- * - HTTP > Download a file > URL should use:
- *      {{1.attachment.url}}
+ * FOLDER
+ * - 07 - Email, Notifications, and External Handoffs
+ *
+ * AUTOMATION NAME
+ * - 070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make
+ *
+ * TRIGGER TABLE
+ * - Submission Assets
  *
  * RECOMMENDED TRIGGER CONDITIONS
- * Table: Submission Assets
- *
  * - Send to Make Trigger is checked
  * - Ready to Send to Make? contains READY_TO_SEND
  * - Upload Status is Pending Link
@@ -77,7 +59,19 @@ Airtable is the deployed/running copy.
  * - Enrollment - Linked is not empty
  * - Airtable Attachment is not empty
  * - Homework Completions is not empty
- ********************************************************************/
+ *
+ * REQUIRED INPUT VARIABLES
+ * - recordId = Airtable record ID from the triggering Submission Assets record
+ * - webhookUrl = Make.com webhook URL
+ *
+ * OUTPUTS (automation script action outputs)
+ * - statusOut, actionOut, errorOut, debugStep (when mapped)
+ * - ok, skipped, message, submissionAssetRecordId, makeStatus, makeResponse
+ *
+ * IMPORTANT NOTES
+ * - Map Make HTTP Download URL to {{1.attachment.url}}.
+ * - This is not the video upload automation (070b).
+ ************************************************************/
 
 // @ts-nocheck
 
@@ -87,6 +81,9 @@ async function main() {
      ************************************************************/
 
     const CONFIG = {
+        scriptName: "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+        version: "v2.2",
+
         automation: {
             number: "070a",
             name: "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",

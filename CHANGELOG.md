@@ -7,7 +7,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Changed
 - **Upload pipeline** — Standardized Make send gate to **`Pending Link`** across 009/013/020/070a/070b; documented ladder in `make/documentation/upload-asset-engine.md`.
 - **070a (v2.2)** — Requires `Pending Link` before send (matches 070b).
-- **013, 020** — Prep scripts keep assets at `Pending Link` instead of promoting to `Ready`.
+- **013 (v2.0), 020 (v2.0)** — Rewritten to production script standard: `main()` wrapper, CONFIG.version, standard outputs, docblock metadata (`Date Written` preserved, `Last Updated: 2026-06-22`).
+- **070a (v2.2)** — Production docblock/GitHub header aligned to automation script standard.
 
 ### Added
 - **`audit-stuck-upload-processing.js`** — Read-only extension audit for Processing-without-Drive and Ready gate mismatches.
