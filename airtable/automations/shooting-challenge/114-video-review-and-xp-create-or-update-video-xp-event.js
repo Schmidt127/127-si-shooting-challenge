@@ -26,7 +26,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.7
+ * Version: v5.8
  * Date Written: 2026-05-23
  * Last Updated: 2026-06-21
  *
@@ -47,8 +47,19 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * IMPORTANT DESIGN RULE
  * - One Video Feedback record = one XP Event.
- * - Do NOT dedupe video feedback by Enrollment + Submission + XP Source only.
+ * - Do NOT dedupe video feedback by Enrollment or Enrollment + XP Source only.
  * - Source Key must remain: VIDEO_SUBMISSION|recordId
+ *
+ * XP EVENT MATCH ORDER (safest first)
+ * 1. XP Event already linked to this exact Video Feedback record ID.
+ * 2. XP Event Source Key / XP Dedupe Key Normalized for this exact Video Feedback record ID.
+ * 3. Same Enrollment + Submission + Week + XP Bucket = Video Feedback, and the candidate
+ *    is not linked to a different Video Feedback record.
+ *
+ * CONFLICT GUARD
+ * - If a candidate XP Event has a different Submission or Week than the current Video
+ *   Feedback submission/week, do not reuse it. Throw a clear manual-review error when
+ *   the Video Feedback record is already linked to that conflicting XP Event.
  *
  * FIELD RENAME FIX
  * - Old field removed/renamed: XP Reason
@@ -99,7 +110,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v5.7",
+  version: "v5.8",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -605,54 +616,124 @@ function buildXpReasonDebug({
 function buildXpMatchFieldsToLoad() {
   return [
     CONFIG.xpEvents.sourceKey,
+    CONFIG.xpEvents.xpDedupeKeyNormalized,
     CONFIG.xpEvents.videoFeedback,
+    CONFIG.xpEvents.enrollment,
+    CONFIG.xpEvents.submission,
+    CONFIG.xpEvents.week,
+    CONFIG.xpEvents.xpBucketKey,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 }
 
-function findMatchingXpEvents(xpRecords, currentRecordId, currentSourceKey, linkedXpEventIds = []) {
-  const matchesById = new Map();
+function extractVideoFeedbackIdFromSourceKey(sourceKey) {
+  const raw = String(sourceKey || "").trim();
+  const marker = "video_submission|";
 
-  for (const linkedXpEventId of linkedXpEventIds) {
-    const linkedRecord = xpRecords.find(record => record.id === linkedXpEventId);
-    if (!linkedRecord) continue;
-
-    const linkedVideoFeedbackIds = getLinkedIds(
-      linkedRecord,
-      xpEventsTable,
-      CONFIG.xpEvents.videoFeedback
-    );
-
-    if (linkedVideoFeedbackIds.includes(currentRecordId)) {
-      matchesById.set(linkedRecord.id, linkedRecord);
-    }
+  if (!normalizeText(raw).startsWith(marker)) {
+    return "";
   }
 
-  for (const record of xpRecords) {
-    const existingSourceKey = getText(
-      record,
-      xpEventsTable,
-      CONFIG.xpEvents.sourceKey
-    );
-
-    const linkedVideoFeedbackIds = getLinkedIds(
-      record,
-      xpEventsTable,
-      CONFIG.xpEvents.videoFeedback
-    );
-
-    if (
-      normalizeText(existingSourceKey) === normalizeText(currentSourceKey) ||
-      linkedVideoFeedbackIds.includes(currentRecordId)
-    ) {
-      matchesById.set(record.id, record);
-    }
-  }
-
-  return Array.from(matchesById.values());
+  return raw.slice(raw.indexOf("|") + 1).trim();
 }
 
-function guardAgainstXpEventStealing(existingXpEvent, currentRecordId) {
-  if (!existingXpEvent) return;
+function xpEventLinksVideoFeedback(record, videoFeedbackId) {
+  return getLinkedIds(
+    record,
+    xpEventsTable,
+    CONFIG.xpEvents.videoFeedback
+  ).includes(videoFeedbackId);
+}
+
+function getXpEventSubmissionId(record) {
+  return getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.submission);
+}
+
+function getXpEventWeekId(record) {
+  return getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.week);
+}
+
+function getXpEventBucketName(record) {
+  return getText(record, xpEventsTable, CONFIG.xpEvents.xpBucketKey);
+}
+
+function sourceKeyMatchesCurrentVideoFeedback(record, currentRecordId, currentSourceKey) {
+  const existingSourceKey = getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey);
+  const existingDedupeKey = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    ? getText(record, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    : "";
+
+  if (normalizeText(existingSourceKey) === normalizeText(currentSourceKey)) {
+    return true;
+  }
+
+  if (existingDedupeKey && normalizeText(existingDedupeKey) === normalizeText(currentSourceKey)) {
+    return true;
+  }
+
+  const sourceKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingSourceKey);
+  if (sourceKeyVideoFeedbackId && sourceKeyVideoFeedbackId === currentRecordId) {
+    return true;
+  }
+
+  const dedupeKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingDedupeKey);
+  if (dedupeKeyVideoFeedbackId && dedupeKeyVideoFeedbackId === currentRecordId) {
+    return true;
+  }
+
+  return false;
+}
+
+function compositeContextMatches(record, matchContext) {
+  const {
+    currentRecordId,
+    enrollmentId,
+    submissionId,
+    weekId,
+  } = matchContext;
+
+  const linkedVideoFeedbackIds = getLinkedIds(
+    record,
+    xpEventsTable,
+    CONFIG.xpEvents.videoFeedback
+  );
+
+  if (
+    linkedVideoFeedbackIds.length > 0 &&
+    !linkedVideoFeedbackIds.includes(currentRecordId)
+  ) {
+    return false;
+  }
+
+  if (normalizeText(getXpEventBucketName(record)) !== normalizeText(CONFIG.values.xpBucketKey)) {
+    return false;
+  }
+
+  if (getFirstLinkedId(record, xpEventsTable, CONFIG.xpEvents.enrollment) !== enrollmentId) {
+    return false;
+  }
+
+  if (getXpEventSubmissionId(record) !== submissionId) {
+    return false;
+  }
+
+  if (!weekId) {
+    return false;
+  }
+
+  return getXpEventWeekId(record) === weekId;
+}
+
+function assertXpEventCompatibleOrThrow(existingXpEvent, matchContext) {
+  if (!existingXpEvent) {
+    return;
+  }
+
+  const {
+    currentRecordId,
+    submissionId,
+    weekId,
+    currentSourceKey,
+  } = matchContext;
 
   const linkedVideoFeedbackIds = getLinkedIds(
     existingXpEvent,
@@ -665,35 +746,165 @@ function guardAgainstXpEventStealing(existingXpEvent, currentRecordId) {
     !linkedVideoFeedbackIds.includes(currentRecordId)
   ) {
     throw new Error(
-      `XP Event ${existingXpEvent.id} is already linked to another Video Feedback record: ${linkedVideoFeedbackIds.join(", ")}. Refusing to overwrite.`
+      `XP Event ${existingXpEvent.id} is already linked to another Video Feedback record: ${linkedVideoFeedbackIds.join(", ")}. Refusing to reuse for Video Feedback ${currentRecordId}.`
     );
+  }
+
+  const xpSubmissionId = getXpEventSubmissionId(existingXpEvent);
+  if (xpSubmissionId && xpSubmissionId !== submissionId) {
+    throw new Error(
+      `XP Event ${existingXpEvent.id} belongs to Submission ${xpSubmissionId}, not current Submission ${submissionId}. Refusing to reuse for Video Feedback ${currentRecordId}. Manual review required.`
+    );
+  }
+
+  const xpWeekId = getXpEventWeekId(existingXpEvent);
+  if (weekId && xpWeekId && xpWeekId !== weekId) {
+    throw new Error(
+      `XP Event ${existingXpEvent.id} belongs to Week ${xpWeekId}, not current Week ${weekId}. Refusing to reuse for Video Feedback ${currentRecordId}. Manual review required.`
+    );
+  }
+
+  const existingSourceKey = getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.sourceKey);
+  const sourceKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingSourceKey);
+
+  if (sourceKeyVideoFeedbackId && sourceKeyVideoFeedbackId !== currentRecordId) {
+    throw new Error(
+      `XP Event ${existingXpEvent.id} Source Key references Video Feedback ${sourceKeyVideoFeedbackId}, not current Video Feedback ${currentRecordId}. Refusing to reuse. Manual review required.`
+    );
+  }
+
+  const existingDedupeKey = fieldExists(xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    ? getText(existingXpEvent, xpEventsTable, CONFIG.xpEvents.xpDedupeKeyNormalized)
+    : "";
+
+  if (
+    existingDedupeKey &&
+    normalizeText(existingDedupeKey) !== normalizeText(currentSourceKey)
+  ) {
+    const dedupeKeyVideoFeedbackId = extractVideoFeedbackIdFromSourceKey(existingDedupeKey);
+
+    if (dedupeKeyVideoFeedbackId && dedupeKeyVideoFeedbackId !== currentRecordId) {
+      throw new Error(
+        `XP Event ${existingXpEvent.id} XP Dedupe Key Normalized references Video Feedback ${dedupeKeyVideoFeedbackId}, not current Video Feedback ${currentRecordId}. Refusing to reuse. Manual review required.`
+      );
+    }
   }
 }
 
-async function findExistingXpEventOrThrow(linkedXpEventIds = [], currentRecordId, currentSourceKey) {
+function guardAgainstXpEventStealing(existingXpEvent, matchContext) {
+  assertXpEventCompatibleOrThrow(existingXpEvent, matchContext);
+}
+
+function findMatchingXpEvents(xpRecords, matchContext) {
+  const {
+    currentRecordId,
+    currentSourceKey,
+    linkedXpEventIds = [],
+    enrollmentId,
+    submissionId,
+    weekId,
+  } = matchContext;
+
+  const tier1Matches = [];
+  const tier2Matches = [];
+  const tier3Matches = [];
+  const seenIds = new Set();
+
+  function addMatch(targetTier, record) {
+    if (!record || seenIds.has(record.id)) {
+      return;
+    }
+
+    seenIds.add(record.id);
+    targetTier.push(record);
+  }
+
+  for (const record of xpRecords) {
+    if (xpEventLinksVideoFeedback(record, currentRecordId)) {
+      addMatch(tier1Matches, record);
+    }
+  }
+
+  for (const linkedXpEventId of linkedXpEventIds) {
+    const linkedRecord = xpRecords.find(record => record.id === linkedXpEventId);
+
+    if (!linkedRecord) {
+      continue;
+    }
+
+    try {
+      assertXpEventCompatibleOrThrow(linkedRecord, matchContext);
+    } catch (error) {
+      throw new Error(
+        `Video Feedback ${currentRecordId} is linked to XP Event ${linkedXpEventId}, but that XP Event conflicts with the current submission/week/video feedback context: ${error.message}`
+      );
+    }
+
+    const isDirectVideoFeedbackLink = xpEventLinksVideoFeedback(linkedRecord, currentRecordId);
+    const isSourceKeyMatch = sourceKeyMatchesCurrentVideoFeedback(
+      linkedRecord,
+      currentRecordId,
+      currentSourceKey
+    );
+    const isCompositeMatch = compositeContextMatches(linkedRecord, matchContext);
+
+    if (!isDirectVideoFeedbackLink && !isSourceKeyMatch && !isCompositeMatch) {
+      throw new Error(
+        `Video Feedback ${currentRecordId} is linked to XP Event ${linkedXpEventId}, but that XP Event does not belong to this Video Feedback record, Source Key, or Enrollment + Submission + Week + Video Feedback bucket context. Manual review required.`
+      );
+    }
+
+    addMatch(tier1Matches, linkedRecord);
+  }
+
+  for (const record of xpRecords) {
+    if (seenIds.has(record.id)) {
+      continue;
+    }
+
+    if (sourceKeyMatchesCurrentVideoFeedback(record, currentRecordId, currentSourceKey)) {
+      addMatch(tier2Matches, record);
+    }
+  }
+
+  for (const record of xpRecords) {
+    if (seenIds.has(record.id)) {
+      continue;
+    }
+
+    if (compositeContextMatches(record, matchContext)) {
+      addMatch(tier3Matches, record);
+    }
+  }
+
+  const selectedTier = tier1Matches.length
+    ? tier1Matches
+    : tier2Matches.length
+      ? tier2Matches
+      : tier3Matches;
+
+  for (const record of selectedTier) {
+    assertXpEventCompatibleOrThrow(record, matchContext);
+  }
+
+  return selectedTier;
+}
+
+async function findExistingXpEventOrThrow(matchContext) {
   const xpQuery = await xpEventsTable.selectRecordsAsync({
     fields: buildXpMatchFieldsToLoad(),
   });
 
   try {
-    const matches = findMatchingXpEvents(
-      xpQuery.records,
-      currentRecordId,
-      currentSourceKey,
-      linkedXpEventIds
-    );
+    const matches = findMatchingXpEvents(xpQuery.records, matchContext);
 
     if (matches.length > 1) {
       throw new Error(
-        `Duplicate XP Events found for Video Feedback ${currentRecordId} / Source Key ${currentSourceKey}: ${matches.map(record => record.id).join(", ")}. One Video Feedback record must have exactly one XP Event.`
+        `Duplicate XP Events found for Video Feedback ${matchContext.currentRecordId} / Source Key ${matchContext.currentSourceKey}: ${matches.map(record => record.id).join(", ")}. One Video Feedback record must have exactly one XP Event.`
       );
     }
 
-    const existingXpEvent = matches[0] || null;
-
-    guardAgainstXpEventStealing(existingXpEvent, currentRecordId);
-
-    return existingXpEvent;
+    return matches[0] || null;
   } finally {
     if (xpQuery && typeof xpQuery.unloadData === "function") {
       xpQuery.unloadData();
@@ -1216,11 +1427,16 @@ async function main() {
   debugStep = "8 - Find Existing XP Event";
   setOutputSafe("debugStep", debugStep);
 
-  let existingXpEvent = await findExistingXpEventOrThrow(
-    existingLinkedXpEventIds,
-    recordId,
-    sourceKey
-  );
+  const xpMatchContext = {
+    currentRecordId: recordId,
+    currentSourceKey: sourceKey,
+    linkedXpEventIds: existingLinkedXpEventIds,
+    enrollmentId,
+    submissionId,
+    weekId,
+  };
+
+  let existingXpEvent = await findExistingXpEventOrThrow(xpMatchContext);
 
   /* ---------------------------------------------------------
      5.9 Build XP Event Payload
@@ -1281,7 +1497,7 @@ async function main() {
   let actionOut = "";
 
   if (existingXpEvent) {
-    guardAgainstXpEventStealing(existingXpEvent, recordId);
+    guardAgainstXpEventStealing(existingXpEvent, xpMatchContext);
 
     await xpEventsTable.updateRecordAsync(existingXpEvent.id, xpPayload);
     xpEventId = existingXpEvent.id;
@@ -1290,14 +1506,10 @@ async function main() {
     debugStep = "10a - Last-Chance XP Event Recheck Before Create";
     setOutputSafe("debugStep", debugStep);
 
-    existingXpEvent = await findExistingXpEventOrThrow(
-      existingLinkedXpEventIds,
-      recordId,
-      sourceKey
-    );
+    existingXpEvent = await findExistingXpEventOrThrow(xpMatchContext);
 
     if (existingXpEvent) {
-      guardAgainstXpEventStealing(existingXpEvent, recordId);
+      guardAgainstXpEventStealing(existingXpEvent, xpMatchContext);
 
       await xpEventsTable.updateRecordAsync(existingXpEvent.id, xpPayload);
       xpEventId = existingXpEvent.id;

@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.2
+ * Version: v5.3
  * Date Written: 2026-05-28
  * Last Updated: 2026-06-21
  *
@@ -35,6 +35,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Awards base attendance XP for each qualifying attendee.
  * - Awards one-time bonus XP when an attendee reaches meeting #2.
  * - Awards one-time bonus XP when an attendee reaches meeting #3.
+ * - Supports supplemental re-runs when Create XP Events is checked again after
+ *   XP Award Status is already Awarded (for example, add recording watchers).
+ * - Supplemental re-runs only create XP for attendees who do not already have
+ *   base attendance XP for this exact Zoom Meeting.
  *
  * IMPORTANT DESIGN RULES
  * - Uses shared XP Reward Rules only:
@@ -67,7 +71,6 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Recommended Conditions:
  * - Create XP Events is checked
- * - XP Award Status is not Awarded
  * - Attendees is not empty
  * - Week is not empty
  * - Zoom Meeting Key is not empty
@@ -88,6 +91,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Zoom Meetings.Create XP Events = unchecked
  * - Zoom Meetings.XP Awarded At, if field exists
  * - Zoom Meetings.XP Award Error, if field exists
+ *
+ * SUPPLEMENTAL RE-RUN (recording watchers)
+ * - Leave XP Award Status = Awarded
+ * - Add new Attendees links
+ * - Check Create XP Events again
+ * - Script awards only attendees missing base XP for this meeting
  ************************************************************/
 
 // @ts-nocheck
@@ -99,7 +108,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v5.2",
+  version: "v5.3",
 
   timeZone: "America/Denver",
 
@@ -257,8 +266,10 @@ function setFinalOutputs({
   attendeesSkipped = 0,
   baseEventsCreated = 0,
   baseEventsUpdated = 0,
+  baseEventsSkippedExisting = 0,
   bonusEventsCreated = 0,
   bonusEventsUpdated = 0,
+  supplementalAwardMode = false,
 }) {
   setOutputSafe("ok", ok);
   setOutputSafe("actionOut", actionOut || "");
@@ -276,8 +287,10 @@ function setFinalOutputs({
   setOutputSafe("attendeesSkipped", attendeesSkipped || 0);
   setOutputSafe("baseEventsCreated", baseEventsCreated || 0);
   setOutputSafe("baseEventsUpdated", baseEventsUpdated || 0);
+  setOutputSafe("baseEventsSkippedExisting", baseEventsSkippedExisting || 0);
   setOutputSafe("bonusEventsCreated", bonusEventsCreated || 0);
   setOutputSafe("bonusEventsUpdated", bonusEventsUpdated || 0);
+  setOutputSafe("supplementalAwardMode", supplementalAwardMode ? "yes" : "no");
 }
 
 function getFieldSafe(table, fieldName) {
@@ -686,6 +699,93 @@ function buildBonus3SourceKey(enrollmentId) {
   return `${CONFIG.sourceKeys.bonus3Prefix}|${enrollmentId}`;
 }
 
+function buildMeetingEnrollmentIndexKey(zoomMeetingId, enrollmentId) {
+  return `${String(zoomMeetingId || "").trim()}|${String(enrollmentId || "").trim()}`;
+}
+
+function buildXpEventIndexes(xpRecords) {
+  const sourceKeyIndex = new Map();
+  const meetingEnrollmentIndex = new Map();
+
+  for (const xpRecord of xpRecords) {
+    const existingSourceKey = getText(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.sourceKey
+    );
+
+    if (existingSourceKey) {
+      sourceKeyIndex.set(normalizeKey(existingSourceKey), xpRecord);
+    }
+
+    const linkedZoomMeetingId = getFirstLinkedRecordId(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.zoomMeeting
+    );
+    const linkedEnrollmentId = getFirstLinkedRecordId(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.enrollment
+    );
+
+    if (linkedZoomMeetingId && linkedEnrollmentId) {
+      meetingEnrollmentIndex.set(
+        buildMeetingEnrollmentIndexKey(linkedZoomMeetingId, linkedEnrollmentId),
+        xpRecord
+      );
+    }
+  }
+
+  return {
+    sourceKeyIndex,
+    meetingEnrollmentIndex,
+  };
+}
+
+function findExistingXpEventForSourceKey({
+  sourceKey,
+  sourceKeyIndex,
+  meetingEnrollmentIndex,
+  zoomMeetingId = "",
+  enrollmentId = "",
+  allowMeetingEnrollmentFallback = false,
+}) {
+  const normalizedSourceKey = normalizeKey(sourceKey);
+  const bySourceKey = sourceKeyIndex.get(normalizedSourceKey) || null;
+
+  if (bySourceKey) {
+    return bySourceKey;
+  }
+
+  if (!allowMeetingEnrollmentFallback || !zoomMeetingId || !enrollmentId) {
+    return null;
+  }
+
+  return meetingEnrollmentIndex.get(
+    buildMeetingEnrollmentIndexKey(zoomMeetingId, enrollmentId)
+  ) || null;
+}
+
+function attendeeAlreadyHasBaseXpForMeeting({
+  enrollmentId,
+  zoomMeetingId,
+  zoomMeetingKey,
+  sourceKeyIndex,
+  meetingEnrollmentIndex,
+}) {
+  const baseSourceKey = buildBaseSourceKey(zoomMeetingKey, enrollmentId);
+
+  return Boolean(findExistingXpEventForSourceKey({
+    sourceKey: baseSourceKey,
+    sourceKeyIndex,
+    meetingEnrollmentIndex,
+    zoomMeetingId,
+    enrollmentId,
+    allowMeetingEnrollmentFallback: true,
+  }));
+}
+
 function buildXpReason({
   meetingName,
   zoomMeetingKey,
@@ -758,6 +858,7 @@ function buildXpEventPayload({
 
 async function createOrUpdateXpEvent({
   sourceKeyIndex,
+  meetingEnrollmentIndex,
   sourceKey,
   enrollmentId,
   weekId,
@@ -766,12 +867,31 @@ async function createOrUpdateXpEvent({
   points,
   reason,
   zoomMeetingId,
+  allowMeetingEnrollmentFallback = false,
+  skipIfExists = false,
 }) {
   const weeklySummaryId = await resolveWeeklySummaryId({
     sourceWeeklySummaryIds: [],
     enrollmentId,
     weekId,
   });
+
+  const existingRecord = findExistingXpEventForSourceKey({
+    sourceKey,
+    sourceKeyIndex,
+    meetingEnrollmentIndex,
+    zoomMeetingId,
+    enrollmentId,
+    allowMeetingEnrollmentFallback,
+  });
+
+  if (existingRecord && skipIfExists) {
+    return {
+      action: "skipped_existing",
+      recordId: existingRecord.id,
+      weeklySummaryId,
+    };
+  }
 
   const payload = buildXpEventPayload({
     enrollmentId,
@@ -789,12 +909,15 @@ async function createOrUpdateXpEvent({
     throw new Error(`No writable XP Event fields available for Source Key: ${sourceKey}`);
   }
 
-  const normalizedSourceKey = normalizeKey(sourceKey);
-  const existingRecord = sourceKeyIndex.get(normalizedSourceKey) || null;
-
   if (existingRecord) {
     await xpEventsTable.updateRecordAsync(existingRecord.id, payload);
     await ensureXpEventWeeklySummaryLink(existingRecord.id, weeklySummaryId);
+
+    sourceKeyIndex.set(normalizeKey(sourceKey), existingRecord);
+    meetingEnrollmentIndex.set(
+      buildMeetingEnrollmentIndexKey(zoomMeetingId, enrollmentId),
+      existingRecord
+    );
 
     return {
       action: "updated",
@@ -806,11 +929,17 @@ async function createOrUpdateXpEvent({
   const createdRecordId = await xpEventsTable.createRecordAsync(payload);
   await ensureXpEventWeeklySummaryLink(createdRecordId, weeklySummaryId);
 
-  sourceKeyIndex.set(normalizedSourceKey, {
+  const createdRecordStub = {
     id: createdRecordId,
     getCellValue: () => null,
     getCellValueAsString: () => "",
-  });
+  };
+
+  sourceKeyIndex.set(normalizeKey(sourceKey), createdRecordStub);
+  meetingEnrollmentIndex.set(
+    buildMeetingEnrollmentIndexKey(zoomMeetingId, enrollmentId),
+    createdRecordStub
+  );
 
   return {
     action: "created",
@@ -867,8 +996,10 @@ async function main() {
   let attendeesSkipped = 0;
   let baseEventsCreated = 0;
   let baseEventsUpdated = 0;
+  let baseEventsSkippedExisting = 0;
   let bonusEventsCreated = 0;
   let bonusEventsUpdated = 0;
+  let supplementalAwardMode = false;
 
   try {
     setOutputSafe("debugStep", debugStep);
@@ -969,18 +1100,7 @@ async function main() {
     }
 
     if (normalizeText(currentAwardStatus) === normalizeText(CONFIG.statuses.awarded)) {
-      setFinalOutputs({
-        ok: true,
-        actionOut: "skipped_already_awarded",
-        statusOut: CONFIG.outputStatuses.skipped,
-        debugStep,
-        zoomMeetingId: recordId,
-        meetingName,
-        zoomMeetingKey,
-        weekId,
-        attendeeCount,
-      });
-      return;
+      supplementalAwardMode = true;
     }
 
     if (
@@ -1091,19 +1211,9 @@ async function main() {
       "Bonus 3"
     );
 
-    const sourceKeyIndex = new Map();
-
-    for (const xpRecord of xpEventsQuery.records) {
-      const existingSourceKey = getText(
-        xpRecord,
-        xpEventsTable,
-        CONFIG.xpEvents.sourceKey
-      );
-
-      if (!existingSourceKey) continue;
-
-      sourceKeyIndex.set(normalizeKey(existingSourceKey), xpRecord);
-    }
+    const { sourceKeyIndex, meetingEnrollmentIndex } = buildXpEventIndexes(
+      xpEventsQuery.records
+    );
 
     debugStep = "process_attendees";
     setOutputSafe("debugStep", debugStep);
@@ -1137,6 +1247,29 @@ async function main() {
       const attendeeName = fieldExists(enrollmentsTable, CONFIG.enrollments.fullName)
         ? getText(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.fullName)
         : enrollmentRecord.name;
+
+      if (
+        supplementalAwardMode &&
+        attendeeAlreadyHasBaseXpForMeeting({
+          enrollmentId,
+          zoomMeetingId: recordId,
+          zoomMeetingKey,
+          sourceKeyIndex,
+          meetingEnrollmentIndex,
+        })
+      ) {
+        baseEventsSkippedExisting += 1;
+        attendeesSkipped += 1;
+
+        log("Supplemental re-run skipped attendee with existing base XP for this meeting", {
+          enrollmentId,
+          attendeeName,
+          zoomMeetingKey,
+          zoomMeetingId: recordId,
+        });
+
+        continue;
+      }
 
       const qualifyingMeetingKeys = new Set();
 
@@ -1192,6 +1325,7 @@ async function main() {
 
       const baseResult = await createOrUpdateXpEvent({
         sourceKeyIndex,
+        meetingEnrollmentIndex,
         sourceKey: baseSourceKey,
         enrollmentId,
         weekId,
@@ -1206,14 +1340,17 @@ async function main() {
           attendanceCount,
           ruleKey: baseRule.ruleKey,
           xpPoints: baseRule.xpAmount,
-          xpType: "Base Attendance",
+          xpType: supplementalAwardMode
+            ? "Base Attendance (Supplemental)"
+            : "Base Attendance",
         }),
         zoomMeetingId: recordId,
+        allowMeetingEnrollmentFallback: true,
       });
 
       if (baseResult.action === "created") {
         baseEventsCreated += 1;
-      } else {
+      } else if (baseResult.action === "updated") {
         baseEventsUpdated += 1;
       }
 
@@ -1222,6 +1359,7 @@ async function main() {
 
         const bonus2Result = await createOrUpdateXpEvent({
           sourceKeyIndex,
+          meetingEnrollmentIndex,
           sourceKey: bonus2SourceKey,
           enrollmentId,
           weekId,
@@ -1239,11 +1377,13 @@ async function main() {
             xpType: "Meeting Count 2 Bonus",
           }),
           zoomMeetingId: recordId,
+          allowMeetingEnrollmentFallback: false,
+          skipIfExists: supplementalAwardMode,
         });
 
         if (bonus2Result.action === "created") {
           bonusEventsCreated += 1;
-        } else {
+        } else if (bonus2Result.action === "updated") {
           bonusEventsUpdated += 1;
         }
       }
@@ -1253,6 +1393,7 @@ async function main() {
 
         const bonus3Result = await createOrUpdateXpEvent({
           sourceKeyIndex,
+          meetingEnrollmentIndex,
           sourceKey: bonus3SourceKey,
           enrollmentId,
           weekId,
@@ -1270,11 +1411,13 @@ async function main() {
             xpType: "Meeting Count 3 Bonus",
           }),
           zoomMeetingId: recordId,
+          allowMeetingEnrollmentFallback: false,
+          skipIfExists: supplementalAwardMode,
         });
 
         if (bonus3Result.action === "created") {
           bonusEventsCreated += 1;
-        } else {
+        } else if (bonus3Result.action === "updated") {
           bonusEventsUpdated += 1;
         }
       }
@@ -1283,6 +1426,25 @@ async function main() {
     }
 
     if (attendeesProcessed === 0) {
+      if (supplementalAwardMode && baseEventsSkippedExisting > 0) {
+        setFinalOutputs({
+          ok: true,
+          actionOut: "skipped_supplemental_no_new_attendees",
+          statusOut: CONFIG.outputStatuses.skipped,
+          debugStep,
+          zoomMeetingId: recordId,
+          meetingName,
+          zoomMeetingKey,
+          weekId,
+          attendeeCount,
+          attendeesProcessed,
+          attendeesSkipped,
+          baseEventsSkippedExisting,
+          supplementalAwardMode,
+        });
+        return;
+      }
+
       throw new Error("No attendees were processed. Check Attendees and Enrollment Active? values.");
     }
 
@@ -1301,13 +1463,16 @@ async function main() {
     });
 
     const totalUpdated = baseEventsUpdated + bonusEventsUpdated;
-    const statusOut = totalUpdated > 0
-      ? CONFIG.outputStatuses.updated
-      : CONFIG.outputStatuses.created;
+    const totalCreated = baseEventsCreated + bonusEventsCreated;
+    const statusOut = totalCreated > 0
+      ? CONFIG.outputStatuses.created
+      : CONFIG.outputStatuses.updated;
 
     setFinalOutputs({
       ok: true,
-      actionOut: "awarded_zoom_attendance_xp",
+      actionOut: supplementalAwardMode
+        ? "awarded_supplemental_zoom_attendance_xp"
+        : "awarded_zoom_attendance_xp",
       statusOut,
       errorOut: "",
       debugStep,
@@ -1320,15 +1485,20 @@ async function main() {
       attendeesSkipped,
       baseEventsCreated,
       baseEventsUpdated,
+      baseEventsSkippedExisting,
       bonusEventsCreated,
       bonusEventsUpdated,
+      supplementalAwardMode,
     });
 
     console.log(JSON.stringify({
       automation: CONFIG.scriptName,
       version: CONFIG.version,
       statusOut,
-      actionOut: "awarded_zoom_attendance_xp",
+      actionOut: supplementalAwardMode
+        ? "awarded_supplemental_zoom_attendance_xp"
+        : "awarded_zoom_attendance_xp",
+      supplementalAwardMode,
       zoomMeetingId: recordId,
       meetingName,
       zoomMeetingKey,
@@ -1338,6 +1508,7 @@ async function main() {
       attendeesSkipped,
       baseEventsCreated,
       baseEventsUpdated,
+      baseEventsSkippedExisting,
       bonusEventsCreated,
       bonusEventsUpdated,
       debugStep,
