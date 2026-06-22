@@ -9,6 +9,8 @@ Safety:
   - DRY_RUN defaults to true (report only)
   - Set CONFIRM_WRITE = true to apply links
   - BATCH_LIMIT caps writes per run (default 50); re-run until remainingCount is 0
+  - Links only when exactly one Weekly Athlete Summary exists for Enrollment + Week
+  - Skips when zero or multiple summaries match (reported as ambiguousSummaryMatch)
   - Optional filters: CONFIG.enrollmentRecordId and/or CONFIG.weekRecordId
 
 Setup:
@@ -134,12 +136,19 @@ async function main() {
 
     if (!enrollmentId || !weekId) continue;
 
-    summaryIndex.set(buildSummaryIndexKey(enrollmentId, weekId), summaryRecord.id);
+    const key = buildSummaryIndexKey(enrollmentId, weekId);
+
+    if (!summaryIndex.has(key)) {
+      summaryIndex.set(key, []);
+    }
+
+    summaryIndex.get(key).push(summaryRecord.id);
   }
 
   const toLink = [];
   const alreadyLinked = [];
   const missingSummaryRecord = [];
+  const ambiguousSummaryMatch = [];
   const skippedFilter = [];
 
   for (const xpRecord of xpQuery.records) {
@@ -165,7 +174,8 @@ async function main() {
       continue;
     }
 
-    const expectedSummaryId = summaryIndex.get(buildSummaryIndexKey(enrollmentId, weekId)) || "";
+    const expectedSummaryIds = summaryIndex.get(buildSummaryIndexKey(enrollmentId, weekId)) || [];
+    const expectedSummaryId = expectedSummaryIds.length === 1 ? expectedSummaryIds[0] : "";
 
     const baseFinding = {
       id: xpRecord.id,
@@ -180,6 +190,16 @@ async function main() {
 
     if (weeklySummaryId) {
       alreadyLinked.push(baseFinding);
+      continue;
+    }
+
+    if (expectedSummaryIds.length > 1) {
+      ambiguousSummaryMatch.push({
+        ...baseFinding,
+        expectedSummaryIds,
+        issue: "multiple_weekly_summary_records_for_enrollment_week",
+        recommendedAction: "Review duplicate Weekly Athlete Summary records before linking XP Events",
+      });
       continue;
     }
 
@@ -234,6 +254,7 @@ async function main() {
     alreadyLinkedCount: alreadyLinked.length,
     missingLinkCount: toLink.length,
     missingSummaryRecordCount: missingSummaryRecord.length,
+    ambiguousSummaryMatchCount: ambiguousSummaryMatch.length,
     skippedByFilterCount: skippedFilter.length,
     batchPlannedCount: batch.length,
     batchAppliedCount: linkedRecords.length,
@@ -241,6 +262,7 @@ async function main() {
     batchPlanned: batch,
     linkedRecords,
     missingSummaryRecord,
+    ambiguousSummaryMatch,
   };
 
   console.log("===== XP EVENT WEEKLY SUMMARY LINK BACKFILL =====");
