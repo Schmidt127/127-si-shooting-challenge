@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-06-21
 
 Purpose:
 Links or creates a Homework Completion for one homework Submission Asset and marks the asset Pending Link for Make.
@@ -25,9 +25,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v2.0
+ * Version: v2.1
  * Date Written: 2026-05-20
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Runs from one Submission Assets record.
@@ -41,6 +41,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Upload Status Make send gate is Pending Link (same ladder as 009, 013, 070a, 070b).
  * - Asset-driven: does not stop because the parent Submission already has another Homework Completion.
  * - Does not write Homework Completions → Airtable Attachment (files stay on Submission Assets).
+ * - When asset is already linked, syncs upload writeback fields from the asset (022 also runs post-Make).
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation
@@ -63,7 +64,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
- * - actionOut = created_new | linked_existing | skipped_already_linked | error
+ * - actionOut = created_new | linked_existing | synced_upload_writeback | skipped_already_linked | error
  * - errorOut
  * - debugStep
  * - submissionAssetId, homeworkCompletionId, slot
@@ -90,7 +91,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v2.0",
+  version: "v2.1",
 
   tables: {
     assets: "Submission Assets",
@@ -155,6 +156,7 @@ const CONFIG = {
     itemType: "Item Type",
     itemSlot: "Item Slot",
     reviewStatus: "Review Status",
+    writebackComplete: "Writeback Complete?",
   },
 
   values: {
@@ -322,6 +324,61 @@ function mapAssetUploadStatusToHomeworkStatus(assetStatus) {
   return "Pending";
 }
 
+function datesEqual(a, b) {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+
+  const left = a instanceof Date ? a.getTime() : new Date(a).getTime();
+  const right = b instanceof Date ? b.getTime() : new Date(b).getTime();
+
+  return left === right;
+}
+
+function syncTextFromAsset(fields, childTable, childField, childRecord, asset, assetField) {
+  if (!isWritable(childTable, childField) || !fieldExists(assetsTable, assetField)) return;
+
+  const assetValue = text(asset, assetField);
+  const childValue = text(childRecord, childField);
+
+  if (assetValue !== childValue) {
+    fields[childField] = assetValue;
+  }
+}
+
+function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
+  const fields = {};
+  const assetUploadStatus = selectName(asset, CONFIG.assets.uploadStatus);
+  const targetStatus = mapAssetUploadStatusToHomeworkStatus(assetUploadStatus);
+  const currentStatus = selectName(homeworkRecord, CONFIG.homework.uploadStatus);
+
+  if (targetStatus && targetStatus !== currentStatus) {
+    setSingleSelect(fields, homeworkTable, CONFIG.homework.uploadStatus, targetStatus);
+  }
+
+  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFileUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFileUrl);
+  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFileId, homeworkRecord, asset, CONFIG.assets.googleDriveFileId);
+  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFolderId, homeworkRecord, asset, CONFIG.assets.googleDriveFolderId);
+  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFolderUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFolderUrl);
+
+  const assetError = text(asset, CONFIG.assets.uploadError);
+  const currentError = text(homeworkRecord, CONFIG.homework.uploadError);
+  if (assetError !== currentError && isWritable(homeworkTable, CONFIG.homework.uploadError)) {
+    fields[CONFIG.homework.uploadError] = assetError;
+  }
+
+  const assetUploadedAt = cell(asset, CONFIG.assets.uploadedAt);
+  const currentUploadedAt = cell(homeworkRecord, CONFIG.homework.uploadedAt);
+  if (!datesEqual(assetUploadedAt, currentUploadedAt)) {
+    setDate(fields, homeworkTable, CONFIG.homework.uploadedAt, assetUploadedAt);
+  }
+
+  if (assetUploadStatus === "Uploaded" && cell(homeworkRecord, CONFIG.homework.writebackComplete) !== true) {
+    setCheckbox(fields, homeworkTable, CONFIG.homework.writebackComplete, true);
+  }
+
+  return fields;
+}
+
 function setFinalOutputs({
   statusOut,
   actionOut,
@@ -405,11 +462,29 @@ async function main() {
   const existingHomeworkIds = linkedIds(asset, CONFIG.assets.homeworkCompletions);
 
   if (existingHomeworkIds.length > 0) {
+    const homeworkQuery = await homeworkTable.selectRecordsAsync({
+      fields: safeFields(homeworkTable, Object.values(CONFIG.homework)),
+    });
+
+    const homeworkRecord = homeworkQuery.getRecord(existingHomeworkIds[0]);
+    let actionOut = "skipped_already_linked";
+    let statusOut = CONFIG.outputStatuses.skipped;
+
+    if (homeworkRecord) {
+      const syncFields = buildHomeworkUploadSyncFields(homeworkRecord, asset);
+
+      if (Object.keys(syncFields).length > 0) {
+        await homeworkTable.updateRecordAsync(homeworkRecord.id, syncFields);
+        actionOut = "synced_upload_writeback";
+        statusOut = CONFIG.outputStatuses.success;
+      }
+    }
+
     setFinalOutputs({
-      statusOut: CONFIG.outputStatuses.skipped,
-      actionOut: "skipped_already_linked",
+      statusOut,
+      actionOut,
       errorOut: "",
-      debugStep: "skipped_already_linked",
+      debugStep: actionOut === "synced_upload_writeback" ? "synced_upload_writeback" : "skipped_already_linked",
       submissionAssetId: asset.id,
       homeworkCompletionId: existingHomeworkIds[0],
       slot: selectName(asset, CONFIG.assets.assetSlot),
@@ -614,6 +689,11 @@ async function main() {
       );
     }
 
+    Object.assign(
+      updateFields,
+      buildHomeworkUploadSyncFields(homeworkCompletion, asset)
+    );
+
     if (Object.keys(updateFields).length > 0) {
       await homeworkTable.updateRecordAsync(homeworkCompletion.id, updateFields);
     }
@@ -664,6 +744,10 @@ async function main() {
     setTextField(createFields, homeworkTable, CONFIG.homework.uploadError, text(asset, CONFIG.assets.uploadError));
 
     setDate(createFields, homeworkTable, CONFIG.homework.uploadedAt, cell(asset, CONFIG.assets.uploadedAt));
+
+    if (selectName(asset, CONFIG.assets.uploadStatus) === "Uploaded") {
+      setCheckbox(createFields, homeworkTable, CONFIG.homework.writebackComplete, true);
+    }
 
     homeworkCompletionId = await homeworkTable.createRecordAsync(createFields);
   }
