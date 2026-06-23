@@ -34,6 +34,7 @@ const CONFIG = {
     week: "Week",
     xpPoints: "XP Points",
     xpSource: "XP Source",
+    xpBucket: "XP Bucket",
     active: "Active?",
   },
 
@@ -41,8 +42,23 @@ const CONFIG = {
     sourceKeyPrefix: "SUBMISSION_XP|",
     xpAwarded: "Awarded",
     xpSourceSubmissionBase: "Submission Base",
+    xpBucketShootingBase: "Shooting Base",
   },
 };
+
+function isSubmissionBaseXpEvent(xpRecord, xpEventsTable, submissionId) {
+  const sourceKey = getText(xpRecord, xpEventsTable, CONFIG.xpEvents.sourceKey);
+  const xpSource = getSelectName(xpRecord, xpEventsTable, CONFIG.xpEvents.xpSource);
+  const xpBucket = getSelectName(xpRecord, xpEventsTable, CONFIG.xpEvents.xpBucket);
+  const expectedKey = `${CONFIG.values.sourceKeyPrefix}${submissionId}`;
+
+  return (
+    sourceKey === expectedKey ||
+    sourceKey.startsWith(CONFIG.values.sourceKeyPrefix) ||
+    xpSource === CONFIG.values.xpSourceSubmissionBase ||
+    xpBucket === CONFIG.values.xpBucketShootingBase
+  );
+}
 
 function fieldExists(table, fieldName) {
   try {
@@ -96,7 +112,6 @@ async function main() {
   ]);
 
   const xpBySourceKey = new Map();
-  const xpBySubmissionId = new Map();
 
   for (const xp of xpQuery.records) {
     const sourceKey = getText(xp, xpEventsTable, CONFIG.xpEvents.sourceKey);
@@ -104,11 +119,22 @@ async function main() {
       if (!xpBySourceKey.has(sourceKey)) xpBySourceKey.set(sourceKey, []);
       xpBySourceKey.get(sourceKey).push(xp.id);
     }
+  }
 
-    for (const submissionId of getLinkedIds(xp, xpEventsTable, CONFIG.xpEvents.submission)) {
-      if (!xpBySubmissionId.has(submissionId)) xpBySubmissionId.set(submissionId, []);
-      xpBySubmissionId.get(submissionId).push(xp.id);
+  function getSubmissionBaseXpIds(submissionId) {
+    const expectedKey = `${CONFIG.values.sourceKeyPrefix}${submissionId}`;
+    const ids = new Set(xpBySourceKey.get(expectedKey) || []);
+
+    for (const xp of xpQuery.records) {
+      if (!getLinkedIds(xp, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId)) {
+        continue;
+      }
+      if (isSubmissionBaseXpEvent(xp, xpEventsTable, submissionId)) {
+        ids.add(xp.id);
+      }
     }
+
+    return [...ids];
   }
 
   const missingXp = [];
@@ -125,11 +151,10 @@ async function main() {
     const submissionId = submission.id;
     const expectedKey = `${CONFIG.values.sourceKeyPrefix}${submissionId}`;
     const byKey = xpBySourceKey.get(expectedKey) || [];
-    const byLink = xpBySubmissionId.get(submissionId) || [];
+    const submissionBaseXpIds = getSubmissionBaseXpIds(submissionId);
     const linkedXpIds = getLinkedIds(submission, submissionsTable, CONFIG.submissions.xpEvents);
+    const totalLinkedXpCount = linkedXpIds.length;
     const xpAwardStatus = getSelectName(submission, submissionsTable, CONFIG.submissions.xpAwardStatus);
-
-    const allXpIds = [...new Set([...byKey, ...byLink, ...linkedXpIds])];
 
     const base = {
       submissionId,
@@ -137,30 +162,31 @@ async function main() {
       enrollmentId: getLinkedIds(submission, submissionsTable, CONFIG.submissions.enrollment)[0] || "",
       weekId: getLinkedIds(submission, submissionsTable, CONFIG.submissions.week)[0] || "",
       expectedSourceKey: expectedKey,
-      xpEventIds: allXpIds,
+      submissionBaseXpEventIds: submissionBaseXpIds,
+      totalLinkedXpCount,
       xpAwardStatus,
     };
 
-    if (allXpIds.length === 0) {
+    if (submissionBaseXpIds.length === 0) {
       missingXp.push({
         ...base,
         issue: "missing_submission_xp",
-        recommendedAction: "Re-run 010 or backfill-submission-xp-events (planned)",
+        recommendedAction: "Re-run 010 or backfill-submission-xp-events",
       });
       continue;
     }
 
-    if (allXpIds.length > 1 || byKey.length > 1 || byLink.length > 1) {
+    if (submissionBaseXpIds.length > 1 || byKey.length > 1) {
       duplicateXp.push({
         ...base,
-        issue: "duplicate_submission_xp",
+        issue: "duplicate_submission_base_xp",
         byKeyCount: byKey.length,
-        byLinkCount: byLink.length,
-        recommendedAction: "Manual dedupe: keep one XP Event with canonical Source Key",
+        submissionBaseXpCount: submissionBaseXpIds.length,
+        recommendedAction: "Manual dedupe: keep one Submission Base XP Event with canonical Source Key",
       });
     }
 
-    if (byKey.length === 0 && allXpIds.length > 0) {
+    if (byKey.length === 0 && submissionBaseXpIds.length > 0) {
       sourceKeyMismatch.push({
         ...base,
         issue: "legacy_source_key_or_missing_prefix",
@@ -172,12 +198,12 @@ async function main() {
       awardStatusGap.push({
         ...base,
         issue: "xp_award_status_not_awarded",
-        recommendedAction: "Re-run 010 repair or backfill-submission-pipeline-links",
+        recommendedAction: "Re-run 010 repair or backfill-submission-xp-events",
       });
     }
 
     if (
-      allXpIds.length === 1 &&
+      submissionBaseXpIds.length === 1 &&
       byKey.length === 1 &&
       xpAwardStatus === CONFIG.values.xpAwarded
     ) {
