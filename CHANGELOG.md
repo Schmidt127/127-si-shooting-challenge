@@ -4,6 +4,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Added
+- **`audit-submission-pipeline-integrity.js`** — End-to-end read-only check from counted Submissions through WAS, XP, assets, and homework/video links.
+- **`audit-xp-vs-submissions.js`** — Submission ↔ XP Event parity (missing, duplicate, Source Key drift, Award Status gaps).
+- **`audit-field-coverage-report.js`** — Fill-rate report on canonical pipeline fields to surface legacy/unused fields after backfills.
+- **Extension script READMEs** — Full pipeline audit/backfill map and recommended run order (Submissions → end).
+
 ### Changed
 - **Upload pipeline** — Standardized Make send gate to **`Pending Link`** across 009/013/020/070a/070b; documented ladder in `make/documentation/upload-asset-engine.md`.
 - **070a (v2.2)** — Requires `Pending Link` before send (matches 070b).
