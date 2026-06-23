@@ -173,6 +173,106 @@ function inferSlotFromCurriculum(submission, homeworkRecord, submissionsTable, h
   return "";
 }
 
+function slotFromAssetRecord(asset, assetsTable) {
+  const assetSlot = getSelectName(asset, assetsTable, CONFIG.assets.assetSlot);
+  if (assetSlot === "HW1" || assetSlot === "HW2") return assetSlot;
+
+  const purpose = getSelectName(asset, assetsTable, CONFIG.assets.assetPurpose);
+  if (purpose === "Homework 1") return "HW1";
+  if (purpose === "Homework 2") return "HW2";
+  return "";
+}
+
+function inferSlotFromLinkedAssets(homeworkRecord, homeworkTable, assetsTable, allAssets) {
+  const linkedAssetIds = getLinkedIds(homeworkRecord, homeworkTable, CONFIG.homework.submissionAssets);
+  for (const assetId of linkedAssetIds) {
+    const asset = allAssets.find(row => row.id === assetId);
+    if (!asset) continue;
+    const slot = slotFromAssetRecord(asset, assetsTable);
+    if (slot) return slot;
+  }
+
+  for (const asset of allAssets) {
+    const hwLinks = getLinkedIds(asset, assetsTable, CONFIG.assets.homeworkCompletions);
+    if (!hwLinks.includes(homeworkRecord.id)) continue;
+    const slot = slotFromAssetRecord(asset, assetsTable);
+    if (slot) return slot;
+  }
+
+  return "";
+}
+
+function inferSlotFromSubmissionHomeworkRows(
+  homeworkRecord,
+  homeworkTable,
+  homeworkRowsOnSubmission,
+  submissionId,
+  allAssets,
+  assetsTable
+) {
+  const rowsNeedingSlot = homeworkRowsOnSubmission.filter(row => !getHomeworkSlot(row, homeworkTable));
+  if (!rowsNeedingSlot.some(row => row.id === homeworkRecord.id)) return "";
+
+  const usedSlots = new Set(
+    homeworkRowsOnSubmission
+      .map(row => getHomeworkSlot(row, homeworkTable))
+      .filter(slot => slot === "HW1" || slot === "HW2")
+  );
+
+  if (submissionId && allAssets && assetsTable) {
+    const submissionAssets = allAssets.filter(asset => {
+      if (getFirstLinkedId(asset, assetsTable, CONFIG.assets.submission) !== submissionId) return false;
+      return (
+        getText(asset, assetsTable, CONFIG.assets.uploadDestination) ===
+        CONFIG.values.uploadDestinationHomework
+      );
+    });
+
+    const reverseLinked = submissionAssets.filter(asset =>
+      getLinkedIds(asset, assetsTable, CONFIG.assets.homeworkCompletions).includes(homeworkRecord.id)
+    );
+    for (const asset of reverseLinked) {
+      const slot = slotFromAssetRecord(asset, assetsTable);
+      if (slot) return slot;
+    }
+
+    const unlinkedSlotted = submissionAssets.filter(asset => {
+      const hwLinks = getLinkedIds(asset, assetsTable, CONFIG.assets.homeworkCompletions);
+      return hwLinks.length === 0 && slotFromAssetRecord(asset, assetsTable);
+    });
+
+    if (unlinkedSlotted.length === 1) {
+      return slotFromAssetRecord(unlinkedSlotted[0], assetsTable);
+    }
+
+    if (rowsNeedingSlot.length === unlinkedSlotted.length && unlinkedSlotted.length > 1) {
+      const sortedRows = [...rowsNeedingSlot].sort((a, b) => a.id.localeCompare(b.id));
+      const sortedAssets = [...unlinkedSlotted].sort((a, b) => a.id.localeCompare(b.id));
+      const idx = sortedRows.findIndex(row => row.id === homeworkRecord.id);
+      if (idx >= 0 && sortedAssets[idx]) {
+        return slotFromAssetRecord(sortedAssets[idx], assetsTable);
+      }
+    }
+  }
+
+  if (rowsNeedingSlot.length === 1) {
+    if (!usedSlots.has("HW1")) return "HW1";
+    if (!usedSlots.has("HW2")) return "HW2";
+    return "";
+  }
+
+  const sortedNeeding = [...rowsNeedingSlot].sort((a, b) => a.id.localeCompare(b.id));
+  const idx = sortedNeeding.findIndex(row => row.id === homeworkRecord.id);
+  if (idx === 0 && !usedSlots.has("HW1")) return "HW1";
+  if (idx === 1 && !usedSlots.has("HW2")) return "HW2";
+  if (idx >= 0 && sortedNeeding.length === 2) {
+    if (!usedSlots.has("HW1")) return "HW1";
+    if (!usedSlots.has("HW2")) return "HW2";
+  }
+
+  return "";
+}
+
 function getHomeworkSlot(homeworkRecord, homeworkTable) {
   return (
     getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.assetSlot) ||
@@ -384,7 +484,25 @@ async function main() {
       let slot = getHomeworkSlot(homeworkRecord, homeworkTable);
 
       if (!slot) {
-        const inferred = inferSlotFromCurriculum(submission, homeworkRecord, submissionsTable, homeworkTable);
+        let inferred = inferSlotFromCurriculum(submission, homeworkRecord, submissionsTable, homeworkTable);
+        if (!inferred) {
+          inferred = inferSlotFromLinkedAssets(
+            homeworkRecord,
+            homeworkTable,
+            assetsTable,
+            assetQuery.records
+          );
+        }
+        if (!inferred) {
+          inferred = inferSlotFromSubmissionHomeworkRows(
+            homeworkRecord,
+            homeworkTable,
+            homeworkRows,
+            submissionId,
+            assetQuery.records,
+            assetsTable
+          );
+        }
         if (!inferred) {
           skip("skipped_cannot_infer_homework_slot", {
             submissionId,
