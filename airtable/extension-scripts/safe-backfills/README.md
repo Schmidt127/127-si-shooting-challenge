@@ -19,6 +19,7 @@ When audits find gaps (missing XP Events, unset flags, incomplete weekly summari
 
 | Script file | Use case |
 |-------------|----------|
+| `repair-video-feedback-xp-link.js` | Clear wrong Video Feedback → XP Event link, restore old XP Event, create/link correct video XP |
 | `backfill-missing-weekly-summaries-and-xp-links.js` | Create missing Weekly Athlete Summary rows, then link orphan XP Events (no summary existed) |
 | `backfill-xp-event-weekly-summary-links.js` | Link orphan XP Events to Weekly Athlete Summary when Enrollment + Week match |
 | `dedupe-zoom-meeting-xp-events.js` | Remove duplicate Zoom attendance XP Events after Automation 101 re-run |
