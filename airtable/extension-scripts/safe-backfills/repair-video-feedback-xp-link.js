@@ -264,6 +264,7 @@ async function findExistingCorrectXpEvent(sourceKey, videoFeedbackRecordId) {
     CONFIG.xpEvents.videoFeedback,
     CONFIG.xpEvents.submission,
     CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary,
   ].filter(name => fieldExists(xpEventsTable, name));
 
   const query = await xpEventsTable.selectRecordsAsync({ fields });
@@ -603,11 +604,11 @@ async function main() {
 
     targetXpEventId = await xpEventsTable.createRecordAsync(createFields);
   } else if (weeklySummaryId && fieldExists(xpEventsTable, CONFIG.xpEvents.weeklySummary)) {
-    const existingSummaryId = getFirstLinkedId(
-      existingCorrectXp,
-      xpEventsTable,
-      CONFIG.xpEvents.weeklySummary
-    );
+    const xpRecordForSummary = await xpEventsTable.selectRecordAsync(targetXpEventId);
+
+    const existingSummaryId = xpRecordForSummary
+      ? getFirstLinkedId(xpRecordForSummary, xpEventsTable, CONFIG.xpEvents.weeklySummary)
+      : "";
 
     if (!existingSummaryId) {
       await xpEventsTable.updateRecordAsync(
