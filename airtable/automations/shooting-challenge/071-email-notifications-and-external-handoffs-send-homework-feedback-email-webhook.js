@@ -2,20 +2,21 @@
 Automation: 071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-06-22
+Last GitHub Update: 2026-06-22
 
 Purpose:
-To be confirmed from production script.
+Sends homework parent feedback email payload to Make when homework is awarded and ready; skips gracefully if already sent.
 
 Trigger:
-To be confirmed from Airtable automation.
+Homework Completions when parent feedback is ready and not yet sent.
 
 Important Tables:
-To be confirmed from production script.
+Homework Completions, Enrollments, FBC Curriculum - SYNC, Submission Assets
 
 Important Fields:
-To be confirmed from production script.
+Parent Feedback Ready?, Parent Feedback Sent?, Coach Feedback, XP Events, Award Status
 
 Notes:
 GitHub is the source-of-truth copy.
@@ -26,7 +27,9 @@ Airtable is the deployed/running copy.
  * 071 - Email, Notifications, and External Handoffs
  * Send Homework Feedback Email Webhook
  *
- * Version: 2026-06-06 v3.2
+ * Version: v3.3
+ * Date Written: 2026-06-06
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
  * - Reads one Homework Completions record.
@@ -50,9 +53,18 @@ Airtable is the deployed/running copy.
  *
  * IMPORTANT SEND RULE
  * - This script only confirms that Airtable handed the email payload to Make.com.
- * - This script does NOT check Parent Feedback Sent?.
- * - This script does NOT fill Parent Feedback Sent On.
  * - Make.com should update Parent Feedback Sent? and Parent Feedback Sent On only after Gmail succeeds.
+ * - If Parent Feedback Sent? is already checked, skip gracefully (no webhook, no error).
+ *   This prevents automation failures when unrelated field updates re-trigger the run
+ *   (for example upload writeback backfills on already-emailed homework rows).
+ *
+ * RECOMMENDED TRIGGER CONDITIONS
+ * - Parent Feedback Ready? is checked
+ * - Parent Feedback Sent? is unchecked
+ * - Satisfactory? is checked
+ * - Coach Feedback is not empty
+ * - Award Status is Awarded
+ * - XP Events is not empty
  *
  * REQUIRED INPUT VARIABLES
  * - recordId
@@ -70,6 +82,8 @@ Airtable is the deployed/running copy.
    ========================================================= */
 
 const CONFIG = {
+    version: "v3.3",
+
     tables: {
         homeworkCompletions: "Homework Completions",
         enrollments: "Enrollments",
@@ -841,7 +855,19 @@ async function main() {
         }
 
         if (parentFeedbackSent) {
-            throw new Error("Parent Feedback Sent? is already checked. Duplicate send blocked.");
+            logDebug("071 skipped - parent feedback already sent", { recordId, sendMode });
+
+            setOutputs({
+                ok: true,
+                skipped: true,
+                recordId,
+                sendMode,
+                statusOut: "skipped",
+                actionOut: "skipped_already_sent",
+                errorOut: "",
+            });
+
+            return;
         }
 
         if (!satisfactory) {
@@ -1121,8 +1147,7 @@ async function main() {
         IMPORTANT:
         - This Airtable script only confirms that the payload was handed to Make.com.
         - Make.com should mark Parent Feedback Sent? only after the Gmail module succeeds.
-        - Do NOT check Parent Feedback Sent? here.
-        - Do NOT fill Parent Feedback Sent On here.
+        - This script does not set Parent Feedback Sent? or Parent Feedback Sent On.
         */
 
         if (
