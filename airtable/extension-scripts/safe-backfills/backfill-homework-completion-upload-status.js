@@ -274,7 +274,6 @@ async function main() {
   };
 
   console.log(JSON.stringify(summary, null, 2));
-  output.set("summary", summary);
 }
 
 await main();
