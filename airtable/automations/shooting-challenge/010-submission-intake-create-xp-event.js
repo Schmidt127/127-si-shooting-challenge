@@ -25,7 +25,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
  *
- * Version: 10.3
+ * Version: 10.4
  * Date Written: 2026-06-06
  * Last Updated: 2026-06-21
  *
@@ -45,7 +45,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Writes the XP activity/source date label when a writable select/text field exists.
  * - Links the XP Event back to the Submission.
  * - Links the XP Event to Weekly Athlete Summary when resolvable from the Submission
- *   or by Enrollment + Week lookup.
+ *   or by Enrollment + Week lookup, with a repair pass after create/update.
  * - Marks Submission XP Award Status as Awarded.
  * - Re-arms Shot Milestone checking on the linked Enrollment after successful counted-shot XP processing.
  *
@@ -103,7 +103,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-    version: "10.3",
+    version: "10.4",
 
     tables: {
         submissions: "Submissions",
@@ -516,6 +516,27 @@ function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
 
     payload[fieldName] = linkedCell([weeklySummaryId]);
     return payload;
+}
+
+async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
+    if (!xpEventId || !weeklySummaryId) {
+        return false;
+    }
+
+    const payload = {};
+    addWeeklySummaryLink(
+        payload,
+        xpEventsTable,
+        CONFIG.xpEvents.weeklySummary,
+        weeklySummaryId
+    );
+
+    if (Object.keys(payload).length === 0) {
+        return false;
+    }
+
+    await xpEventsTable.updateRecordAsync(xpEventId, payload);
+    return true;
 }
 
 function buildCellValueForField(table, fieldName, value) {
@@ -1244,6 +1265,8 @@ async function main() {
             actionOut = "created_new_xp_event";
             statusOut = CONFIG.outputStatuses.created;
         }
+
+        await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
 
         debugStep = "13 - Link XP Event to Submission";
         setOutputSafe("debugStep", debugStep);

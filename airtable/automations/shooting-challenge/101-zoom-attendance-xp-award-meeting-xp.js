@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-06-21
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
@@ -24,9 +24,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.3
+ * Version: v5.4
  * Date Written: 2026-05-28
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -86,6 +86,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - debugStep
  *
  * WRITES
+ * - Creates Weekly Athlete Summary when none exists for attendee Enrollment + Week
  * - XP Events records linked to Weekly Athlete Summary when resolvable by Enrollment + Week
  * - Zoom Meetings.XP Award Status = Awarded
  * - Zoom Meetings.Create XP Events = unchecked
@@ -108,7 +109,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v5.3",
+  version: "v5.4",
 
   timeZone: "America/Denver",
 
@@ -217,6 +218,11 @@ const CONFIG = {
   weeklySummary: {
     enrollment: "Enrollment",
     week: "Week",
+    summaryCalculationStatus: "Summary Calculation Status",
+  },
+
+  summaryStatusValues: {
+    complete: "Complete",
   },
 };
 
@@ -481,6 +487,60 @@ async function resolveWeeklySummaryId({
   }
 
   return findWeeklySummaryId(enrollmentId, weekId);
+}
+
+function buildSingleSelectValue(table, fieldName, optionName) {
+  if (!fieldExists(table, fieldName)) return undefined;
+
+  const field = getFieldSafe(table, fieldName);
+  if (!field || field.type !== "singleSelect") return optionName;
+
+  const cleanOptionName = String(optionName || "").trim();
+  const choices = field?.options?.choices || [];
+  const match = choices.find(
+    choice => String(choice.name || "").trim().toLowerCase() === cleanOptionName.toLowerCase()
+  );
+
+  return match ? { id: match.id } : undefined;
+}
+
+function buildSummaryCreateFields(enrollmentId, weekId) {
+  const fields = {
+    [CONFIG.weeklySummary.enrollment]: linkedCell([enrollmentId]),
+    [CONFIG.weeklySummary.week]: linkedCell([weekId]),
+  };
+
+  const statusValue = buildSingleSelectValue(
+    weeklySummaryTable,
+    CONFIG.weeklySummary.summaryCalculationStatus,
+    CONFIG.summaryStatusValues.complete
+  );
+
+  if (statusValue !== undefined) {
+    fields[CONFIG.weeklySummary.summaryCalculationStatus] = statusValue;
+  }
+
+  return safeUpdatePayload(weeklySummaryTable, fields);
+}
+
+async function findOrCreateWeeklySummaryId({ enrollmentId = "", weekId = "" }) {
+  const existingId = await findWeeklySummaryId(enrollmentId, weekId);
+  if (existingId) {
+    return existingId;
+  }
+
+  const createFields = buildSummaryCreateFields(enrollmentId, weekId);
+
+  if (Object.keys(createFields).length === 0) {
+    throw new Error(
+      `No writable fields available to create Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekId}.`
+    );
+  }
+
+  const createdId = await weeklySummaryTable.createRecordAsync(createFields);
+  weeklySummaryQueryCache = null;
+
+  return createdId;
 }
 
 async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
@@ -870,8 +930,7 @@ async function createOrUpdateXpEvent({
   allowMeetingEnrollmentFallback = false,
   skipIfExists = false,
 }) {
-  const weeklySummaryId = await resolveWeeklySummaryId({
-    sourceWeeklySummaryIds: [],
+  const weeklySummaryId = await findOrCreateWeeklySummaryId({
     enrollmentId,
     weekId,
   });

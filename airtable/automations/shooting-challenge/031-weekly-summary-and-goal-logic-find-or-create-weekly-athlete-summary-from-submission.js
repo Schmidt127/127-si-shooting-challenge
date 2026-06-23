@@ -26,9 +26,9 @@ Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Find or Create Weekly Athlete Summary from Submission
  *
- * Version: v3.0
+ * Version: v3.1
  * Date Written: 2026-05-20
- * Last Updated: 2026-05-27
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -38,6 +38,7 @@ Airtable is the deployed/running copy.
  * - Creates a Weekly Athlete Summary if one does not exist.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
+ * - Repairs orphan XP Events for the same Enrollment + Week missing summary links.
  *
  * IMPORTANT DESIGN RULES
  * - Weekly Athlete Summary is the weekly reporting / rollup table.
@@ -95,6 +96,7 @@ const CONFIG = {
     enrollments: "Enrollments",
     weeks: "Weeks",
     summaries: "Weekly Athlete Summary",
+    xpEvents: "XP Events",
   },
 
   submissions: {
@@ -120,6 +122,12 @@ const CONFIG = {
     submissions: "Submissions",
     summaryCalculationStatus: "Summary Calculation Status",
     created: "Created", // formula/read-only
+  },
+
+  xpEvents: {
+    enrollment: "Enrollment",
+    week: "Week",
+    weeklySummary: "Weekly Athlete Summary",
   },
 
   statusValues: {
@@ -165,6 +173,7 @@ const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
 const summariesTable = base.getTable(CONFIG.tables.summaries);
+const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
 
 /* =========================================================
    SECTION 4: HELPERS
@@ -397,6 +406,74 @@ function buildSummaryStatusUpdate() {
   return updates;
 }
 
+async function linkOrphanXpEventsForEnrollmentWeek(enrollmentId, weekId, weeklySummaryId) {
+  if (!enrollmentId || !weekId || !weeklySummaryId) {
+    return { linkedCount: 0, linkedIds: [] };
+  }
+
+  if (
+    !fieldExists(xpEventsTable, CONFIG.xpEvents.weeklySummary) ||
+    !isWritableField(xpEventsTable, CONFIG.xpEvents.weeklySummary)
+  ) {
+    return { linkedCount: 0, linkedIds: [] };
+  }
+
+  const xpFields = [
+    CONFIG.xpEvents.enrollment,
+    CONFIG.xpEvents.week,
+    CONFIG.xpEvents.weeklySummary,
+  ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
+
+  const xpQuery = await xpEventsTable.selectRecordsAsync({ fields: xpFields });
+  const toLink = [];
+
+  for (const xpRecord of xpQuery.records) {
+    const xpEnrollmentId = getFirstLinkedRecordId(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.enrollment
+    );
+    const xpWeekId = getFirstLinkedRecordId(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.week
+    );
+    const xpSummaryId = getFirstLinkedRecordId(
+      xpRecord,
+      xpEventsTable,
+      CONFIG.xpEvents.weeklySummary
+    );
+
+    if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
+    if (xpSummaryId) continue;
+
+    toLink.push(xpRecord.id);
+  }
+
+  if (typeof xpQuery.unloadData === "function") {
+    xpQuery.unloadData();
+  }
+
+  const linkedIds = [];
+
+  for (let index = 0; index < toLink.length; index += 50) {
+    const batch = toLink.slice(index, index + 50);
+
+    await xpEventsTable.updateRecordsAsync(
+      batch.map(id => ({
+        id,
+        fields: {
+          [CONFIG.xpEvents.weeklySummary]: [{ id: weeklySummaryId }],
+        },
+      }))
+    );
+
+    linkedIds.push(...batch);
+  }
+
+  return { linkedCount: linkedIds.length, linkedIds };
+}
+
 function buildSummaryFieldsToLoad() {
   return [
     CONFIG.summaries.summaryKey,
@@ -487,6 +564,7 @@ async function main() {
   let weeklySummaryId = "";
   let actionTaken = "";
   let updatedFields = [];
+  let orphanXpLinkedCount = 0;
 
   setOutputSafe("debugStep", debugStep);
 
@@ -698,6 +776,19 @@ async function main() {
       [CONFIG.submissions.weeklySummary]: [{ id: weeklySummaryId }],
     });
 
+    debugStep = "10b - Link Orphan XP Events";
+    setOutputSafe("debugStep", debugStep);
+
+    const orphanLinkResult = await linkOrphanXpEventsForEnrollmentWeek(
+      submissionEnrollmentId,
+      submissionWeekId,
+      weeklySummaryId
+    );
+
+    orphanXpLinkedCount = orphanLinkResult.linkedCount || 0;
+
+    log("Orphan XP Event summary links repaired", orphanLinkResult);
+
     debugStep = "11 - Validate Final Summary";
     setOutputSafe("debugStep", debugStep);
 
@@ -767,6 +858,7 @@ async function main() {
       summaryKeyOut: targetSummaryKey,
       actionTaken,
       updatedFields,
+      orphanXpLinkedCount,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);

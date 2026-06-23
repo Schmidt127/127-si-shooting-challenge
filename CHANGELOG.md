@@ -17,6 +17,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **`upload-asset-engine-error-handling.md`** — Make scenario guide for Error writeback and fresh attachment URL fetch.
 
 ### Fixed
+- **101 (v5.4)** — Creates Weekly Athlete Summary when missing before Zoom XP award so zoom-only weeks no longer produce orphan XP Events.
+- **010 (v10.4)** — Adds Weekly Athlete Summary repair pass after XP Event create/update.
+- **031 (v3.1)** — After find/create summary, links orphan XP Events for the same Enrollment + Week.
 - **072** — Build Weekly Summary Email Package no longer auto-checks `Send to Make?` after building email HTML; send is now manual.
 - **010, 114, 101, 065, 054, 059** — XP Event create/update scripts now link `XP Events → Weekly Athlete Summary` using source-record link when available, with Enrollment + Week lookup fallback.
 - **114 (v5.8)** — Video XP matching hardened with tiered lookup and submission/week conflict guards so a Video Feedback record cannot steal or reuse the wrong XP Event.
