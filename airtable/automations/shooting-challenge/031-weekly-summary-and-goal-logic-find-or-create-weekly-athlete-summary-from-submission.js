@@ -850,6 +850,8 @@ async function main() {
     setOutputSafe("weekId", submissionWeekId);
     setOutputSafe("weekName", resolvedWeekName);
     setOutputSafe("actionTaken", actionTaken);
+    setOutputSafe("actionOut", actionTaken || "");
+    setOutputSafe("orphanXpLinkedCount", orphanXpLinkedCount);
     setOutputSafe(
       "statusOut",
       actionTaken === "created_new_summary"
