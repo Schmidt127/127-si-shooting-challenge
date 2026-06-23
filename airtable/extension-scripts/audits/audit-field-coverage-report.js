@@ -170,8 +170,11 @@ function passesFilter(record, table, profile) {
   if (profile.filterField && profile.filterEquals !== undefined) {
     if (!fieldExists(table, profile.filterField)) return true;
     const raw = record.getCellValue(profile.filterField);
-    const num = typeof raw === "number" ? raw : Number(record.getCellValueAsString(profile.filterField));
-    return num === profile.filterEquals;
+    if (typeof raw === "number" && Number.isFinite(raw)) {
+      return raw === profile.filterEquals;
+    }
+    const num = Number(String(record.getCellValueAsString(profile.filterField) || "").replace(/,/g, "").trim());
+    return Number.isFinite(num) && num === profile.filterEquals;
   }
 
   if (profile.filterField && profile.filterText) {
@@ -189,8 +192,14 @@ async function main() {
     const table = base.getTable(profile.table);
     const existingFields = profile.fields.filter(name => fieldExists(table, name));
     const missingFieldDefs = profile.fields.filter(name => !fieldExists(table, name));
+    const fieldsToLoad = [
+      ...new Set([
+        ...existingFields,
+        ...(profile.filterField && fieldExists(table, profile.filterField) ? [profile.filterField] : []),
+      ]),
+    ];
 
-    const query = await table.selectRecordsAsync({ fields: existingFields });
+    const query = await table.selectRecordsAsync({ fields: fieldsToLoad });
     const scoped = query.records.filter(record => passesFilter(record, table, profile));
 
     const fieldStats = [];
