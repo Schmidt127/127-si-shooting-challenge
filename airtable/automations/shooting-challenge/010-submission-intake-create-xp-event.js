@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-06-22
 
 Purpose:
 Creates or repairs Submission Base XP Events from counted shooting submissions.
@@ -27,7 +27,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Version: 10.4
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
  * - Reads one Submission record.

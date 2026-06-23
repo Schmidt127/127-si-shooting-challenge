@@ -2,24 +2,24 @@
 Automation: 031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
+Last GitHub Update: 2026-06-22
 
 Purpose:
-To be confirmed from production script.
+Finds or creates Weekly Athlete Summary from counted submissions and repairs orphan XP links.
 
 Trigger:
-To be confirmed from Airtable automation.
+Submissions when Count This Submission? is checked and Weekly Athlete Summary is empty.
 
 Important Tables:
-To be confirmed from production script.
+Submissions, Enrollments, Weeks, Weekly Athlete Summary, XP Events
 
 Important Fields:
-To be confirmed from production script.
+Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key
 
 Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
@@ -28,7 +28,7 @@ Airtable is the deployed/running copy.
  *
  * Version: v3.1
  * Date Written: 2026-05-20
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -71,6 +71,10 @@ Airtable is the deployed/running copy.
  * - recordId = Airtable record ID from the triggering Submission record
  *
  * OUTPUTS
+ * - statusOut = created | found | skipped | error
+ * - actionOut
+ * - errorOut
+ * - debugStep
  * - ok
  * - recordId
  * - weeklySummaryId
@@ -78,9 +82,7 @@ Airtable is the deployed/running copy.
  * - weekId
  * - weekName
  * - actionTaken
- * - statusOut
- * - errorOut
- * - debugStep
+ * - orphanXpLinkedCount
  ************************************************************/
 
 /// <reference path="../../Welcome Email/airtable-automation-script.d.ts" />
@@ -91,6 +93,10 @@ Airtable is the deployed/running copy.
 ========================================================= */
 
 const CONFIG = {
+  scriptName:
+    "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+  version: "v3.1",
+
   tables: {
     submissions: "Submissions",
     enrollments: "Enrollments",

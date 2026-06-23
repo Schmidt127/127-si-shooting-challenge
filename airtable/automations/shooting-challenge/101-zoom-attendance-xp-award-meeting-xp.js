@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-06-22
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
@@ -26,7 +26,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 101 - Zoom Attendance XP - Award Meeting XP
  * Version: v5.4
  * Date Written: 2026-05-28
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
