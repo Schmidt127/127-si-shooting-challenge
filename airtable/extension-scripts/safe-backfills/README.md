@@ -25,10 +25,10 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 
 | Order | Backfill | Fixes | Prerequisite audit |
 |-------|----------|-------|-------------------|
-| 1 | `backfill-submission-pipeline-links.js` *(planned)* | Enrollment, Week, WAS links on Submissions | `audit-submission-pipeline-integrity.js` |
+| 1 | `backfill-submission-pipeline-links.js` | WAS links, HW Asset Slot, asset links + upload sync | `audit-submission-pipeline-integrity.js` |
 | 2 | `backfill-missing-weekly-summaries-and-xp-links.js` | Create missing WAS + link XP | `audit-orphan-xp-events.js` |
 | 3 | `backfill-xp-event-weekly-summary-links.js` | Link XP → WAS when summary exists | `audit-orphan-xp-events.js` |
-| 4 | `backfill-submission-xp-events.js` *(planned)* | Missing submission XP (010 logic) | `audit-xp-vs-submissions.js` |
+| 4 | `backfill-submission-xp-events.js` | Missing submission XP (010 logic) | `audit-xp-vs-submissions.js` |
 | 5 | `backfill-homework-completion-upload-edge-cases.js` | Asset links, multi-file sync, slots | `audit-homework-completion-upload-edge-cases.js` |
 | 6 | `backfill-homework-completion-upload-status.js` | Upload status writeback from assets | `audit-stuck-upload-processing.js` |
 | 7 | `backfill-homework-xp-from-reviewed.js` *(planned)* | XP for reviewed homework missing events | `audit-homework-pipeline-integrity.js` *(planned)* |
@@ -49,7 +49,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-xp-event-weekly-summary-links.js` | XP missing WAS link | Ready |
 | `repair-video-feedback-xp-link.js` | Wrong video XP link | Ready |
 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
-| `backfill-submission-pipeline-links.js` | Submission intake links | **Planned** |
+| `backfill-submission-pipeline-links.js` | WAS links, HW slots, asset links | **Ready** |
 | `backfill-submission-xp-events.js` | Missing 010 XP events | **Ready** |
 | `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Planned** |
 | `backfill-video-pipeline-links.js` | 013-style VF links | **Planned** |

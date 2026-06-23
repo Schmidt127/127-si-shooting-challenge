@@ -26,7 +26,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 
 | Stage | Automations | Audit script | Backfill script |
 |-------|-------------|--------------|-----------------|
-| **A. Submission intake** | 023, 005, 007, 006, 021 | `audit-submission-pipeline-integrity.js` | `backfill-submission-pipeline-links.js` *(planned)* |
+| **A. Submission intake** | 023, 005, 007, 006, 021 | `audit-submission-pipeline-integrity.js` | `backfill-submission-pipeline-links.js` |
 | **B. Submission XP** | 010 | `audit-xp-vs-submissions.js` | `backfill-submission-xp-events.js` |
 | **C. Weekly summary link** | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` | `backfill-missing-weekly-summaries-and-xp-links.js`, `backfill-xp-event-weekly-summary-links.js` |
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
