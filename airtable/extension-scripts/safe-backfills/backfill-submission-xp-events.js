@@ -25,6 +25,8 @@ Setup:
 const DRY_RUN = true;
 const CONFIRM_WRITE = false;
 const BATCH_LIMIT = 50;
+// Set to a submission record id (e.g. recvI5lgjVK7wFxok) to log why that row was skipped.
+const DEBUG_SUBMISSION_ID = "";
 
 const CONFIG = {
   tables: {
@@ -43,6 +45,7 @@ const CONFIG = {
     activityDate: "Activity Date",
     totalShotsCounted: "Total Shots Counted",
     countThisSubmission: "Count This Submission?",
+    duplicateReviewStatus: "Duplicate Review Status",
     xpAwardStatus: "XP Award Status",
     xpEvents: "XP Events",
   },
@@ -133,6 +136,14 @@ function getBooleanish(record, table, fieldName) {
   if (raw === false || raw === 0 || raw === null || raw === undefined) return false;
   const text = String(record.getCellValueAsString(fieldName) || "").trim().toLowerCase();
   return ["1", "true", "yes", "checked", "active"].includes(text);
+}
+
+function getNumberish(record, table, fieldName) {
+  if (!fieldExists(table, fieldName)) return 0;
+  const raw = getRaw(record, table, fieldName);
+  if (typeof raw === "number" && Number.isFinite(raw)) return raw;
+  const parsed = Number(String(record.getCellValueAsString(fieldName) || "").replace(/,/g, "").trim());
+  return Number.isFinite(parsed) ? parsed : 0;
 }
 
 function getLinkedIds(record, table, fieldName) {
@@ -273,10 +284,15 @@ function validateSubmissionForXp(submission, submissionsTable) {
   const submissionKey = getText(submission, submissionsTable, CONFIG.submissions.submissionKey);
   const activityDate = getRaw(submission, submissionsTable, CONFIG.submissions.activityDate);
   const totalShotsCounted = getNumber(submission, submissionsTable, CONFIG.submissions.totalShotsCounted);
-  const countThisSubmission = getBooleanish(submission, submissionsTable, CONFIG.submissions.countThisSubmission);
+  const countThisSubmission = getNumberish(submission, submissionsTable, CONFIG.submissions.countThisSubmission);
 
-  if (!countThisSubmission) {
-    return { ok: false, reason: "skipped_not_counted" };
+  if (countThisSubmission !== 1) {
+    return {
+      ok: false,
+      reason: "skipped_not_counted",
+      countThisSubmission,
+      duplicateReviewStatus: getText(submission, submissionsTable, CONFIG.submissions.duplicateReviewStatus),
+    };
   }
   if (totalShotsCounted === null || totalShotsCounted <= 0) {
     return { ok: false, reason: "skipped_zero_shots" };
@@ -324,6 +340,7 @@ async function main() {
     CONFIG.submissions.activityDate,
     CONFIG.submissions.totalShotsCounted,
     CONFIG.submissions.countThisSubmission,
+    CONFIG.submissions.duplicateReviewStatus,
     CONFIG.submissions.xpAwardStatus,
     CONFIG.submissions.xpEvents,
   ].filter(name => fieldExists(submissionsTable, name));
@@ -398,6 +415,7 @@ async function main() {
   const candidates = [];
   const skipped = [];
   const skipCounts = {};
+  const debugChecks = [];
 
   for (const submission of submissionQuery.records) {
     const submissionId = submission.id;
@@ -406,6 +424,14 @@ async function main() {
     const validation = validateSubmissionForXp(submission, submissionsTable);
     if (!validation.ok) {
       skipCounts[validation.reason] = (skipCounts[validation.reason] || 0) + 1;
+      if (DEBUG_SUBMISSION_ID && submissionId === DEBUG_SUBMISSION_ID) {
+        debugChecks.push({
+          submissionId,
+          name: submission.name,
+          stage: "validation_failed",
+          ...validation,
+        });
+      }
       continue;
     }
 
@@ -443,7 +469,18 @@ async function main() {
       awardStatus === CONFIG.values.statusAwarded &&
       submissionLinked;
 
-    if (fullySynced) continue;
+    if (fullySynced) {
+      if (DEBUG_SUBMISSION_ID && submissionId === DEBUG_SUBMISSION_ID) {
+        debugChecks.push({
+          submissionId,
+          name: submission.name,
+          stage: "fully_synced",
+          matchedXpEventId: matchedXp?.id || "",
+          awardStatus,
+        });
+      }
+      continue;
+    }
 
     const needsCreate = !matchedXp && !xpByCanonicalKey.has(canonicalKey);
     const needsRepair = !needsCreate;
@@ -469,7 +506,7 @@ async function main() {
       summaryMatches[0] ||
       "";
 
-    candidates.push({
+    const candidateRow = {
       submissionId,
       name: submission.name,
       action: needsCreate ? "create_xp_event" : "repair_xp_event",
@@ -482,7 +519,13 @@ async function main() {
       submissionKey: validation.submissionKey,
       activityDate: validation.activityDate,
       fromAwardStatus: awardStatus,
-    });
+    };
+
+    if (DEBUG_SUBMISSION_ID && submissionId === DEBUG_SUBMISSION_ID) {
+      debugChecks.push({ submissionId, name: submission.name, stage: "candidate", ...candidateRow });
+    }
+
+    candidates.push(candidateRow);
   }
 
   const batch = candidates.slice(0, BATCH_LIMIT);
@@ -596,6 +639,7 @@ async function main() {
     }, {}),
     errors,
     skippedSample: skipped.slice(0, 10),
+    debugChecks: DEBUG_SUBMISSION_ID ? debugChecks : [],
     sample: applied.slice(0, 15),
   };
 
