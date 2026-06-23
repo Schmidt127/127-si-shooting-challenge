@@ -146,19 +146,64 @@ function pickUploadedAssets(assetRecords, assetsTable) {
   });
 }
 
+function purposeForSlot(slot) {
+  if (slot === "HW1") return "Homework 1";
+  if (slot === "HW2") return "Homework 2";
+  return "";
+}
+
+function isExclusiveHomeworkLink(assetRecord, assetsTable, homeworkId) {
+  const homeworkIds = getLinkedIds(assetRecord, assetsTable, CONFIG.assets.homeworkCompletions);
+  return homeworkIds.length === 1 && homeworkIds[0] === homeworkId;
+}
+
+function pickAssetsBySlotOrPurpose(assetRecords, assetsTable, slot) {
+  if (!slot) return [];
+
+  const slotMatches = pickAssetsBySlot(assetRecords, assetsTable, slot);
+  if (slotMatches.length > 0) return slotMatches;
+
+  const purpose = purposeForSlot(slot);
+  if (!purpose) return [];
+
+  return assetRecords.filter(
+    asset => getSelectName(asset, assetsTable, CONFIG.assets.assetPurpose) === purpose
+  );
+}
+
+function pickBestCanonicalAsset(assetRecords, assetsTable, homeworkId) {
+  if (!assetRecords.length) return null;
+  if (assetRecords.length === 1) return assetRecords[0];
+
+  const exclusive = assetRecords.filter(asset =>
+    isExclusiveHomeworkLink(asset, assetsTable, homeworkId)
+  );
+  const exclusivePool = exclusive.length > 0 ? exclusive : assetRecords;
+
+  const uploaded = pickUploadedAssets(exclusivePool, assetsTable);
+  const pool = uploaded.length > 0 ? uploaded : exclusivePool;
+
+  if (pool.length === 1) return pool[0];
+
+  return [...pool].sort((left, right) => left.id.localeCompare(right.id))[0];
+}
+
 function findAssetsBySubmissionAndSlot(allAssets, assetsTable, submissionId, slot) {
   if (!submissionId || !slot) return [];
 
   return allAssets.filter(asset => {
     const assetSubmissionId = getFirstLinkedId(asset, assetsTable, CONFIG.assets.submission);
-    const assetSlot = getSelectName(asset, assetsTable, CONFIG.assets.assetSlot);
     const destination = getText(asset, assetsTable, CONFIG.assets.uploadDestination);
 
-    return (
-      assetSubmissionId === submissionId &&
-      assetSlot === slot &&
-      destination === CONFIG.values.uploadDestinationHomework
-    );
+    if (assetSubmissionId !== submissionId || destination !== CONFIG.values.uploadDestinationHomework) {
+      return false;
+    }
+
+    const assetSlot = getSelectName(asset, assetsTable, CONFIG.assets.assetSlot);
+    if (assetSlot === slot) return true;
+
+    const purpose = purposeForSlot(slot);
+    return purpose && getSelectName(asset, assetsTable, CONFIG.assets.assetPurpose) === purpose;
   });
 }
 
@@ -171,6 +216,7 @@ function resolveCanonicalAsset({
   submissionLookupAssets,
   assetsTable,
 }) {
+  const homeworkId = homeworkRecord.id;
   const homeworkSlot = getHomeworkSlot(homeworkRecord, homeworkTable);
   const linkedAssets = linkedAssetIds.map(id => assetById.get(id)).filter(Boolean);
   const edgeCase = linkedAssetIds.length === 0 ? "no_asset" : "multiple_assets";
@@ -181,38 +227,43 @@ function resolveCanonicalAsset({
     }
 
     if (reverseLinkedAssets.length > 1) {
-      const slotMatches = pickAssetsBySlot(reverseLinkedAssets, assetsTable, homeworkSlot);
-      if (slotMatches.length === 1) {
-        return { action: "link_slot_match_and_sync", asset: slotMatches[0] };
-      }
-
-      const uploaded = pickUploadedAssets(reverseLinkedAssets, assetsTable);
-      if (uploaded.length === 1) {
-        return { action: "link_only_uploaded_reverse_asset_and_sync", asset: uploaded[0] };
+      const slotMatches = pickAssetsBySlotOrPurpose(reverseLinkedAssets, assetsTable, homeworkSlot);
+      const best = pickBestCanonicalAsset(slotMatches.length ? slotMatches : reverseLinkedAssets, assetsTable, homeworkId);
+      if (best) {
+        return {
+          action: slotMatches.length ? "link_slot_match_and_sync" : "link_reverse_asset_tiebreak_and_sync",
+          asset: best,
+        };
       }
 
       return { action: "manual_review_no_homework_link", asset: null };
     }
 
-    if (submissionLookupAssets.length === 1) {
-      return { action: "link_submission_slot_asset_and_sync", asset: submissionLookupAssets[0] };
-    }
-
-    if (submissionLookupAssets.length > 1) {
-      const uploaded = pickUploadedAssets(submissionLookupAssets, assetsTable);
-      if (uploaded.length === 1) {
-        return { action: "link_submission_slot_uploaded_and_sync", asset: uploaded[0] };
+    if (submissionLookupAssets.length >= 1) {
+      const best = pickBestCanonicalAsset(submissionLookupAssets, assetsTable, homeworkId);
+      if (best) {
+        return {
+          action: submissionLookupAssets.length === 1
+            ? "link_submission_slot_asset_and_sync"
+            : "link_submission_slot_tiebreak_and_sync",
+          asset: best,
+        };
       }
-
-      return { action: "manual_review_submission_slot_ambiguous", asset: null };
     }
 
     return { action: "manual_review_no_asset_found", asset: null };
   }
 
-  const slotMatches = pickAssetsBySlot(linkedAssets, assetsTable, homeworkSlot);
+  const slotMatches = pickAssetsBySlotOrPurpose(linkedAssets, assetsTable, homeworkSlot);
   if (slotMatches.length === 1) {
     return { action: "sync_from_slot_match", asset: slotMatches[0] };
+  }
+
+  if (slotMatches.length > 1) {
+    return {
+      action: "sync_from_slot_match_tiebreak",
+      asset: pickBestCanonicalAsset(slotMatches, assetsTable, homeworkId),
+    };
   }
 
   const uploaded = pickUploadedAssets(linkedAssets, assetsTable);
@@ -220,12 +271,11 @@ function resolveCanonicalAsset({
     return { action: "sync_from_only_uploaded_asset", asset: uploaded[0] };
   }
 
-  if (slotMatches.length > 1) {
-    return { action: "manual_review_multiple_slot_matches", asset: null };
-  }
-
   if (uploaded.length > 1) {
-    return { action: "manual_review_multiple_uploaded_assets", asset: null };
+    return {
+      action: "sync_from_uploaded_tiebreak",
+      asset: pickBestCanonicalAsset(uploaded, assetsTable, homeworkId),
+    };
   }
 
   return { action: "manual_review_ambiguous_assets", asset: null };
