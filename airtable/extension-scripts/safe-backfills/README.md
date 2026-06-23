@@ -50,7 +50,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `repair-video-feedback-xp-link.js` | Wrong video XP link | Ready |
 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
 | `backfill-submission-pipeline-links.js` | Submission intake links | **Planned** |
-| `backfill-submission-xp-events.js` | Missing 010 XP events | **Planned** |
+| `backfill-submission-xp-events.js` | Missing 010 XP events | **Ready** |
 | `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Planned** |
 | `backfill-video-pipeline-links.js` | 013-style VF links | **Planned** |
 
