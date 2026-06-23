@@ -3,7 +3,7 @@ Automation: 020 - Homework - Link or Create Homework Completion
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-06-22
+Last Synced From Airtable: 2026-06-21
 Last GitHub Update: 2026-06-21
 
 Purpose:
@@ -25,7 +25,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v2.1
+ * Version: v2.2
  * Date Written: 2026-05-20
  * Last Updated: 2026-06-21
  *
@@ -91,7 +91,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v2.1",
+  version: "v2.2",
 
   tables: {
     assets: "Submission Assets",
@@ -462,11 +462,9 @@ async function main() {
   const existingHomeworkIds = linkedIds(asset, CONFIG.assets.homeworkCompletions);
 
   if (existingHomeworkIds.length > 0) {
-    const homeworkQuery = await homeworkTable.selectRecordsAsync({
+    const homeworkRecord = await homeworkTable.selectRecordAsync(existingHomeworkIds[0], {
       fields: safeFields(homeworkTable, Object.values(CONFIG.homework)),
     });
-
-    const homeworkRecord = homeworkQuery.getRecord(existingHomeworkIds[0]);
     let actionOut = "skipped_already_linked";
     let statusOut = CONFIG.outputStatuses.skipped;
 

@@ -23,9 +23,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
- * 022 - Submission Intake - Sync Child Upload Writeback from Submission Asset
+ * 022 - SUBMISSION INTAKE
+ * Sync Child Upload Writeback from Submission Asset
  *
- * Version: v1.0
+ * Version: v1.1
  * Date Written: 2026-06-21
  * Last Updated: 2026-06-21
  *
@@ -72,9 +73,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - submissionAssetId, childRecordId, childTable, uploadDestination
  *
  * PRIMARY TABLES USED
- * - Submission Assets
- * - Homework Completions
- * - Video Feedback
+ * - Submission Assets (trigger / read)
+ * - Homework Completions (write when Upload Destination = Homework Completions)
+ * - Video Feedback (write when Upload Destination = Video Feedback)
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Homework Completions → Upload Status, Drive fields, Upload Error, Uploaded At, Writeback Complete?
@@ -94,7 +95,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "022 - Submission Intake - Sync Child Upload Writeback from Submission Asset",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     assets: "Submission Assets",
@@ -157,9 +158,11 @@ const CONFIG = {
   },
 };
 
-let assetsTable;
-let homeworkTable;
-let videoTable;
+let assetsTable = null;
+let homeworkTable = null;
+let videoTable = null;
+
+const fieldCache = new Map();
 
 /* =========================================================
    SECTION 2 — HELPERS
@@ -173,19 +176,62 @@ function setOutputSafe(name, value) {
   }
 }
 
-function getField(table, fieldName) {
-  return table.fields.find(field => field.name === fieldName);
+function getFieldSafe(table, fieldName) {
+  if (!table || !fieldName) return null;
+
+  const tableName = table.name || "unknown-table";
+  const cacheKey = `${tableName}:${fieldName}`;
+
+  if (fieldCache.has(cacheKey)) {
+    return fieldCache.get(cacheKey);
+  }
+
+  try {
+    const field = table.getField(fieldName);
+    fieldCache.set(cacheKey, field);
+    return field;
+  } catch {
+    fieldCache.set(cacheKey, null);
+    return null;
+  }
 }
 
 function fieldExists(table, fieldName) {
-  return Boolean(getField(table, fieldName));
+  return !!getFieldSafe(table, fieldName);
 }
 
-function isWritable(table, fieldName) {
-  const field = getField(table, fieldName);
+function requireField(table, fieldName) {
+  if (!fieldExists(table, fieldName)) {
+    throw new Error(`Missing required field on ${table.name}: ${fieldName}`);
+  }
+}
+
+function fieldHasType(table, fieldName, allowedTypes) {
+  const field = getFieldSafe(table, fieldName);
+  return !!field && allowedTypes.includes(field.type);
+}
+
+function requireFieldType(table, fieldName, allowedTypes) {
+  requireField(table, fieldName);
+
+  const field = getFieldSafe(table, fieldName);
+
+  if (!allowedTypes.includes(field.type)) {
+    throw new Error(
+      `Field ${table.name}.${fieldName} has type "${field.type}" but expected one of: ${allowedTypes.join(", ")}`
+    );
+  }
+}
+
+function isWritableField(table, fieldName) {
+  const field = getFieldSafe(table, fieldName);
   if (!field) return false;
 
-  const readOnlyTypes = new Set([
+  if (field.isComputed === true) {
+    return false;
+  }
+
+  const nonWritableTypes = new Set([
     "formula",
     "rollup",
     "count",
@@ -193,84 +239,89 @@ function isWritable(table, fieldName) {
     "multipleLookupValues",
     "createdTime",
     "lastModifiedTime",
-    "autoNumber",
     "createdBy",
     "lastModifiedBy",
+    "autoNumber",
     "button",
+    "aiText",
     "externalSyncSource",
   ]);
 
-  return !readOnlyTypes.has(field.type);
+  return !nonWritableTypes.has(field.type);
 }
 
-function safeFields(table, fieldNames) {
-  return [...new Set(fieldNames)].filter(name => fieldExists(table, name));
-}
+function requireWritableField(table, fieldName) {
+  requireField(table, fieldName);
 
-function cell(record, fieldName) {
-  try {
-    return record.getCellValue(fieldName);
-  } catch {
-    return null;
+  if (!isWritableField(table, fieldName)) {
+    throw new Error(`Field ${table.name}.${fieldName} exists but is not writable.`);
   }
 }
 
-function text(record, fieldName) {
-  try {
-    return String(record.getCellValueAsString(fieldName) || "").trim();
-  } catch {
-    return "";
+function normalizeText(value) {
+  return String(value || "").trim().toLowerCase();
+}
+
+function singleSelectOptionExists(table, fieldName, optionName) {
+  const field = getFieldSafe(table, fieldName);
+
+  if (!field || field.type !== "singleSelect") {
+    return true;
   }
+
+  return field.options?.choices?.some(
+    choice => normalizeText(choice?.name) === normalizeText(optionName)
+  ) === true;
 }
 
-function selectName(record, fieldName) {
-  const value = cell(record, fieldName);
-  return value?.name ? String(value.name).trim() : "";
-}
+function buildSingleSelectValue(table, fieldName, optionName) {
+  const field = getFieldSafe(table, fieldName);
 
-function linkedIds(record, fieldName) {
-  const value = cell(record, fieldName);
-  if (!Array.isArray(value)) return [];
-  return value.map(item => item?.id).filter(Boolean);
-}
+  if (!field || field.type !== "singleSelect") {
+    return optionName;
+  }
 
-function choiceExists(table, fieldName, choiceName) {
-  const field = getField(table, fieldName);
-  if (!field?.options?.choices) return false;
-  return field.options.choices.some(choice => choice.name === choiceName);
+  const choices = field?.options?.choices || [];
+  const match = choices.find(choice =>
+    normalizeText(choice?.name) === normalizeText(optionName)
+  );
+
+  if (!match) {
+    const available = choices.map(choice => choice.name).join(", ");
+    throw new Error(
+      `Missing single-select option "${optionName}" in ${table.name}.${fieldName}. Available options: ${available}`
+    );
+  }
+
+  return { id: match.id };
 }
 
 function firstExistingChoice(table, fieldName, preferredNames) {
   for (const name of preferredNames || []) {
-    if (choiceExists(table, fieldName, name)) return name;
+    if (singleSelectOptionExists(table, fieldName, name)) return name;
   }
   return "";
 }
 
-function setSingleSelect(fields, table, fieldName, choiceName) {
-  if (!isWritable(table, fieldName) || !choiceName) return;
-  if (!choiceExists(table, fieldName, choiceName)) return;
-
-  fields[fieldName] = { name: choiceName };
+function getRaw(record, table, fieldName) {
+  if (!record || !fieldExists(table, fieldName)) return null;
+  return record.getCellValue(fieldName);
 }
 
-function setCheckbox(fields, table, fieldName, value) {
-  if (!isWritable(table, fieldName)) return;
-  fields[fieldName] = Boolean(value);
+function getText(record, table, fieldName) {
+  if (!record || !fieldExists(table, fieldName)) return "";
+  return String(record.getCellValueAsString(fieldName) || "").trim();
 }
 
-function setTextField(fields, table, fieldName, value) {
-  if (!isWritable(table, fieldName)) return;
-  if (value === undefined || value === null) return;
-
-  fields[fieldName] = String(value);
+function getSelectName(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+  return raw?.name ? String(raw.name).trim() : "";
 }
 
-function setDate(fields, table, fieldName, value) {
-  if (!isWritable(table, fieldName)) return;
-  if (!value) return;
-
-  fields[fieldName] = value;
+function getLinkedIds(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+  if (!Array.isArray(raw)) return [];
+  return raw.map(item => item?.id).filter(Boolean);
 }
 
 function datesEqual(a, b) {
@@ -283,15 +334,27 @@ function datesEqual(a, b) {
   return left === right;
 }
 
-function syncTextFromAsset(fields, childTable, childField, childRecord, asset, assetField) {
-  if (!isWritable(childTable, childField) || !fieldExists(assetsTable, assetField)) return;
+function addIfWritable(fields, table, fieldName, value) {
+  if (value === undefined || !isWritableField(table, fieldName)) return;
+  fields[fieldName] = value;
+}
 
-  const assetValue = text(asset, assetField);
-  const childValue = text(childRecord, childField);
+function addTextIfChanged(fields, childTable, childField, childRecord, asset, assetField) {
+  if (!isWritableField(childTable, childField) || !fieldExists(assetsTable, assetField)) return;
+
+  const assetValue = getText(asset, assetsTable, assetField);
+  const childValue = getText(childRecord, childTable, childField);
 
   if (assetValue !== childValue) {
     fields[childField] = assetValue;
   }
+}
+
+function addSingleSelectIfChanged(fields, table, fieldName, currentName, newName) {
+  if (!newName || normalizeText(currentName) === normalizeText(newName)) return;
+  if (!isWritableField(table, fieldName)) return;
+
+  fields[fieldName] = buildSingleSelectValue(table, fieldName, newName);
 }
 
 function mapAssetUploadStatusToHomeworkStatus(assetStatus) {
@@ -321,33 +384,40 @@ function mapAssetUploadStatusToVideoStatus(assetStatus) {
 
 function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
   const fields = {};
-  const assetUploadStatus = selectName(asset, CONFIG.assets.uploadStatus);
+  const assetUploadStatus = getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus);
   const targetStatus = mapAssetUploadStatusToHomeworkStatus(assetUploadStatus);
-  const currentStatus = selectName(homeworkRecord, CONFIG.homework.uploadStatus);
+  const currentStatus = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus);
 
-  if (targetStatus && targetStatus !== currentStatus) {
-    setSingleSelect(fields, homeworkTable, CONFIG.homework.uploadStatus, targetStatus);
+  addSingleSelectIfChanged(
+    fields,
+    homeworkTable,
+    CONFIG.homework.uploadStatus,
+    currentStatus,
+    targetStatus
+  );
+
+  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFileUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFileUrl);
+  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFileId, homeworkRecord, asset, CONFIG.assets.googleDriveFileId);
+  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFolderId, homeworkRecord, asset, CONFIG.assets.googleDriveFolderId);
+  addTextIfChanged(fields, homeworkTable, CONFIG.homework.googleDriveFolderUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFolderUrl);
+
+  const assetError = getText(asset, assetsTable, CONFIG.assets.uploadError);
+  const currentError = getText(homeworkRecord, homeworkTable, CONFIG.homework.uploadError);
+  if (assetError !== currentError) {
+    addIfWritable(fields, homeworkTable, CONFIG.homework.uploadError, assetError);
   }
 
-  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFileUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFileUrl);
-  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFileId, homeworkRecord, asset, CONFIG.assets.googleDriveFileId);
-  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFolderId, homeworkRecord, asset, CONFIG.assets.googleDriveFolderId);
-  syncTextFromAsset(fields, homeworkTable, CONFIG.homework.googleDriveFolderUrl, homeworkRecord, asset, CONFIG.assets.googleDriveFolderUrl);
-
-  const assetError = text(asset, CONFIG.assets.uploadError);
-  const currentError = text(homeworkRecord, CONFIG.homework.uploadError);
-  if (assetError !== currentError && isWritable(homeworkTable, CONFIG.homework.uploadError)) {
-    fields[CONFIG.homework.uploadError] = assetError;
-  }
-
-  const assetUploadedAt = cell(asset, CONFIG.assets.uploadedAt);
-  const currentUploadedAt = cell(homeworkRecord, CONFIG.homework.uploadedAt);
+  const assetUploadedAt = getRaw(asset, assetsTable, CONFIG.assets.uploadedAt);
+  const currentUploadedAt = getRaw(homeworkRecord, homeworkTable, CONFIG.homework.uploadedAt);
   if (!datesEqual(assetUploadedAt, currentUploadedAt)) {
-    setDate(fields, homeworkTable, CONFIG.homework.uploadedAt, assetUploadedAt);
+    addIfWritable(fields, homeworkTable, CONFIG.homework.uploadedAt, assetUploadedAt);
   }
 
-  if (assetUploadStatus === "Uploaded" && cell(homeworkRecord, CONFIG.homework.writebackComplete) !== true) {
-    setCheckbox(fields, homeworkTable, CONFIG.homework.writebackComplete, true);
+  if (
+    assetUploadStatus === "Uploaded" &&
+    getRaw(homeworkRecord, homeworkTable, CONFIG.homework.writebackComplete) !== true
+  ) {
+    addIfWritable(fields, homeworkTable, CONFIG.homework.writebackComplete, true);
   }
 
   return fields;
@@ -355,43 +425,47 @@ function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
 
 function buildVideoUploadSyncFields(videoRecord, asset) {
   const fields = {};
-  const assetUploadStatus = selectName(asset, CONFIG.assets.uploadStatus);
+  const assetUploadStatus = getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus);
   const targetStatus = mapAssetUploadStatusToVideoStatus(assetUploadStatus);
-  const currentStatus = selectName(videoRecord, CONFIG.video.uploadStatus);
+  const currentStatus = getSelectName(videoRecord, videoTable, CONFIG.video.uploadStatus);
 
-  if (targetStatus && targetStatus !== currentStatus) {
-    setSingleSelect(fields, videoTable, CONFIG.video.uploadStatus, targetStatus);
-  }
+  addSingleSelectIfChanged(
+    fields,
+    videoTable,
+    CONFIG.video.uploadStatus,
+    currentStatus,
+    targetStatus
+  );
 
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveFileUrl, videoRecord, asset, CONFIG.assets.googleDriveFileUrl);
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveFileId, videoRecord, asset, CONFIG.assets.googleDriveFileId);
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveFolderId, videoRecord, asset, CONFIG.assets.googleDriveFolderId);
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveFolderUrl, videoRecord, asset, CONFIG.assets.googleDriveFolderUrl);
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveViewUrl, videoRecord, asset, CONFIG.assets.googleDriveViewUrl);
-  syncTextFromAsset(fields, videoTable, CONFIG.video.googleDriveDownloadUrl, videoRecord, asset, CONFIG.assets.googleDriveDownloadUrl);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFileUrl, videoRecord, asset, CONFIG.assets.googleDriveFileUrl);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFileId, videoRecord, asset, CONFIG.assets.googleDriveFileId);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFolderId, videoRecord, asset, CONFIG.assets.googleDriveFolderId);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveFolderUrl, videoRecord, asset, CONFIG.assets.googleDriveFolderUrl);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveViewUrl, videoRecord, asset, CONFIG.assets.googleDriveViewUrl);
+  addTextIfChanged(fields, videoTable, CONFIG.video.googleDriveDownloadUrl, videoRecord, asset, CONFIG.assets.googleDriveDownloadUrl);
 
-  const driveUrl = text(asset, CONFIG.assets.googleDriveFileUrl);
-  const currentVideoUrl = text(videoRecord, CONFIG.video.videoUrlOrDriveLink);
+  const driveUrl = getText(asset, assetsTable, CONFIG.assets.googleDriveFileUrl);
+  const currentVideoUrl = getText(videoRecord, videoTable, CONFIG.video.videoUrlOrDriveLink);
   if (driveUrl && driveUrl !== currentVideoUrl) {
-    setTextField(fields, videoTable, CONFIG.video.videoUrlOrDriveLink, driveUrl);
+    addIfWritable(fields, videoTable, CONFIG.video.videoUrlOrDriveLink, driveUrl);
   }
 
-  const assetFileName = text(asset, CONFIG.assets.originalFileName);
-  const currentFileName = text(videoRecord, CONFIG.video.videoAssetFileName);
+  const assetFileName = getText(asset, assetsTable, CONFIG.assets.originalFileName);
+  const currentFileName = getText(videoRecord, videoTable, CONFIG.video.videoAssetFileName);
   if (assetFileName && assetFileName !== currentFileName) {
-    setTextField(fields, videoTable, CONFIG.video.videoAssetFileName, assetFileName);
+    addIfWritable(fields, videoTable, CONFIG.video.videoAssetFileName, assetFileName);
   }
 
-  const assetError = text(asset, CONFIG.assets.uploadError);
-  const currentError = text(videoRecord, CONFIG.video.uploadError);
-  if (assetError !== currentError && isWritable(videoTable, CONFIG.video.uploadError)) {
-    fields[CONFIG.video.uploadError] = assetError;
+  const assetError = getText(asset, assetsTable, CONFIG.assets.uploadError);
+  const currentError = getText(videoRecord, videoTable, CONFIG.video.uploadError);
+  if (assetError !== currentError) {
+    addIfWritable(fields, videoTable, CONFIG.video.uploadError, assetError);
   }
 
-  const assetUploadedAt = cell(asset, CONFIG.assets.uploadedAt);
-  const currentUploadedAt = cell(videoRecord, CONFIG.video.videoAssetUploadedAt);
+  const assetUploadedAt = getRaw(asset, assetsTable, CONFIG.assets.uploadedAt);
+  const currentUploadedAt = getRaw(videoRecord, videoTable, CONFIG.video.videoAssetUploadedAt);
   if (!datesEqual(assetUploadedAt, currentUploadedAt)) {
-    setDate(fields, videoTable, CONFIG.video.videoAssetUploadedAt, assetUploadedAt);
+    addIfWritable(fields, videoTable, CONFIG.video.videoAssetUploadedAt, assetUploadedAt);
   }
 
   return fields;
@@ -430,6 +504,16 @@ function setFinalOutputs({
   }));
 }
 
+function assertRequiredSchema() {
+  requireField(assetsTable, CONFIG.assets.uploadDestination);
+  requireFieldType(assetsTable, CONFIG.assets.uploadStatus, ["singleSelect"]);
+  requireField(assetsTable, CONFIG.assets.homeworkCompletions);
+  requireField(assetsTable, CONFIG.assets.videoFeedback);
+
+  requireWritableField(homeworkTable, CONFIG.homework.uploadStatus);
+  requireWritableField(videoTable, CONFIG.video.uploadStatus);
+}
+
 /* =========================================================
    SECTION 3 — MAIN
 ========================================================= */
@@ -450,25 +534,44 @@ async function main() {
 
   setOutputSafe("debugStep", debugStep);
 
+  debugStep = "load_tables";
+  setOutputSafe("debugStep", debugStep);
+
   assetsTable = base.getTable(CONFIG.tables.assets);
   homeworkTable = base.getTable(CONFIG.tables.homework);
   videoTable = base.getTable(CONFIG.tables.video);
 
+  debugStep = "validate_schema";
+  setOutputSafe("debugStep", debugStep);
+  assertRequiredSchema();
+
   debugStep = "load_submission_asset";
   setOutputSafe("debugStep", debugStep);
 
-  const assetQuery = await assetsTable.selectRecordsAsync({
-    fields: safeFields(assetsTable, Object.values(CONFIG.assets)),
+  const asset = await assetsTable.selectRecordAsync(recordId, {
+    fields: [
+      CONFIG.assets.uploadDestination,
+      CONFIG.assets.uploadStatus,
+      CONFIG.assets.uploadError,
+      CONFIG.assets.uploadedAt,
+      CONFIG.assets.originalFileName,
+      CONFIG.assets.googleDriveFileUrl,
+      CONFIG.assets.googleDriveFileId,
+      CONFIG.assets.googleDriveFolderId,
+      CONFIG.assets.googleDriveFolderUrl,
+      CONFIG.assets.googleDriveViewUrl,
+      CONFIG.assets.googleDriveDownloadUrl,
+      CONFIG.assets.homeworkCompletions,
+      CONFIG.assets.videoFeedback,
+    ].filter(name => fieldExists(assetsTable, name)),
   });
-
-  const asset = assetQuery.getRecord(recordId);
 
   if (!asset) {
     throw new Error(`Submission Asset not found: ${recordId}`);
   }
 
-  const uploadDestination = text(asset, CONFIG.assets.uploadDestination);
-  const assetUploadStatus = selectName(asset, CONFIG.assets.uploadStatus);
+  const uploadDestination = getText(asset, assetsTable, CONFIG.assets.uploadDestination);
+  const assetUploadStatus = getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus);
 
   if (assetUploadStatus === CONFIG.values.pendingLinkStatus || !assetUploadStatus) {
     setFinalOutputs({
@@ -498,7 +601,7 @@ async function main() {
     debugStep = "sync_homework_completion";
     setOutputSafe("debugStep", debugStep);
 
-    const homeworkIds = linkedIds(asset, CONFIG.assets.homeworkCompletions);
+    const homeworkIds = getLinkedIds(asset, assetsTable, CONFIG.assets.homeworkCompletions);
 
     if (homeworkIds.length === 0) {
       setFinalOutputs({
@@ -518,11 +621,9 @@ async function main() {
       );
     }
 
-    const homeworkQuery = await homeworkTable.selectRecordsAsync({
-      fields: safeFields(homeworkTable, Object.values(CONFIG.homework)),
+    const homeworkRecord = await homeworkTable.selectRecordAsync(homeworkIds[0], {
+      fields: Object.values(CONFIG.homework).filter(name => fieldExists(homeworkTable, name)),
     });
-
-    const homeworkRecord = homeworkQuery.getRecord(homeworkIds[0]);
 
     if (!homeworkRecord) {
       throw new Error(`Linked Homework Completion not found: ${homeworkIds[0]}`);
@@ -544,6 +645,8 @@ async function main() {
       return;
     }
 
+    debugStep = "update_homework_completion";
+    setOutputSafe("debugStep", debugStep);
     await homeworkTable.updateRecordAsync(homeworkRecord.id, syncFields);
 
     setFinalOutputs({
@@ -563,7 +666,7 @@ async function main() {
     debugStep = "sync_video_feedback";
     setOutputSafe("debugStep", debugStep);
 
-    const videoIds = linkedIds(asset, CONFIG.assets.videoFeedback);
+    const videoIds = getLinkedIds(asset, assetsTable, CONFIG.assets.videoFeedback);
 
     if (videoIds.length === 0) {
       setFinalOutputs({
@@ -583,11 +686,9 @@ async function main() {
       );
     }
 
-    const videoQuery = await videoTable.selectRecordsAsync({
-      fields: safeFields(videoTable, Object.values(CONFIG.video)),
+    const videoRecord = await videoTable.selectRecordAsync(videoIds[0], {
+      fields: Object.values(CONFIG.video).filter(name => fieldExists(videoTable, name)),
     });
-
-    const videoRecord = videoQuery.getRecord(videoIds[0]);
 
     if (!videoRecord) {
       throw new Error(`Linked Video Feedback not found: ${videoIds[0]}`);
@@ -609,6 +710,8 @@ async function main() {
       return;
     }
 
+    debugStep = "update_video_feedback";
+    setOutputSafe("debugStep", debugStep);
     await videoTable.updateRecordAsync(videoRecord.id, syncFields);
 
     setFinalOutputs({
