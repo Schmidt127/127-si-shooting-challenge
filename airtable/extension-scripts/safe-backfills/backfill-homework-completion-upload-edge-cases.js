@@ -3,15 +3,17 @@ Extension Script: Backfill Homework Completion Upload Edge Cases
 System: 127 SI Shooting Challenge
 Purpose:
   Fixes Homework Completions skipped by backfill-homework-completion-upload-status.js:
-  - multiple linked Submission Assets (sync from slot-matched or only-uploaded asset)
   - zero linked Submission Assets (link canonical asset from reverse lookup or submission+slot)
+  - multiple linked Submission Assets (EXPECTED for multi-file HW1/HW2 uploads — one assignment,
+    several files; derives Upload Status from ALL linked assets, keeps all links)
 
 Safety:
   - DRY_RUN defaults to true (report only)
   - Set CONFIRM_WRITE = true to apply updates
   - BATCH_LIMIT caps writes per run (default 50)
-  - Skips manual_review_* actions from audit logic
-  - REPAIR_LINKS=false by default; set true to replace multi-asset links with one canonical asset
+  - Skips manual_review_* actions
+  - REPAIR_LINKS=false by default and NOT recommended — multi-file homework should keep all asset links.
+    Only set REPAIR_LINKS=true if you intentionally want to drop extra file links (usually wrong).
 
 Setup:
   1. Run audit-homework-completion-upload-edge-cases.js and review actionCounts
@@ -288,6 +290,88 @@ function mapAssetUploadStatusToHomeworkStatus(assetStatus) {
   return "Pending";
 }
 
+function deriveAggregateUploadStatus(assetRecords, assetsTable) {
+  if (!assetRecords.length) return "";
+
+  const statuses = assetRecords.map(asset =>
+    getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus)
+  );
+
+  if (statuses.every(status => status === "Uploaded")) return "Uploaded";
+  if (statuses.some(status => status === "Error")) return "Error";
+  if (statuses.some(status => status === "Processing")) return "Processing";
+  if (statuses.some(status => status === "Uploaded")) return "Processing";
+  return "Pending";
+}
+
+function latestUploadedAt(assetRecords, assetsTable) {
+  let latest = null;
+
+  for (const asset of assetRecords) {
+    const value = getCell(asset, assetsTable, CONFIG.assets.uploadedAt);
+    if (!value) continue;
+
+    const time = value instanceof Date ? value.getTime() : new Date(value).getTime();
+    if (!latest || time > latest.time) {
+      latest = { time, value };
+    }
+  }
+
+  return latest?.value || null;
+}
+
+function buildMultiAssetSyncFields(homeworkTable, homeworkRecord, assetRecords, assetsTable) {
+  const aggregateStatus = deriveAggregateUploadStatus(assetRecords, assetsTable);
+
+  if (!["Uploaded", "Processing", "Error"].includes(aggregateStatus)) {
+    return null;
+  }
+
+  const fields = {};
+  const currentStatus = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus);
+
+  if (
+    aggregateStatus &&
+    aggregateStatus !== currentStatus &&
+    isWritableField(homeworkTable, CONFIG.homework.uploadStatus)
+  ) {
+    fields[CONFIG.homework.uploadStatus] = { name: aggregateStatus };
+  }
+
+  if (isWritableField(homeworkTable, CONFIG.homework.uploadError)) {
+    const errors = assetRecords
+      .map(asset => getText(asset, assetsTable, CONFIG.assets.uploadError))
+      .filter(Boolean);
+    const combinedError = [...new Set(errors)].join(" | ");
+    const currentError = getText(homeworkRecord, homeworkTable, CONFIG.homework.uploadError);
+
+    if (combinedError !== currentError) {
+      fields[CONFIG.homework.uploadError] = combinedError;
+    }
+  }
+
+  const aggregateUploadedAt = latestUploadedAt(assetRecords, assetsTable);
+  const homeworkUploadedAt = getCell(homeworkRecord, homeworkTable, CONFIG.homework.uploadedAt);
+
+  if (
+    aggregateUploadedAt &&
+    !datesEqual(aggregateUploadedAt, homeworkUploadedAt) &&
+    isWritableField(homeworkTable, CONFIG.homework.uploadedAt)
+  ) {
+    fields[CONFIG.homework.uploadedAt] = aggregateUploadedAt;
+  }
+
+  if (
+    aggregateStatus === "Uploaded" &&
+    getCell(homeworkRecord, homeworkTable, CONFIG.homework.writebackComplete) !== true &&
+    isWritableField(homeworkTable, CONFIG.homework.writebackComplete)
+  ) {
+    fields[CONFIG.homework.writebackComplete] = true;
+  }
+
+  return Object.keys(fields).length > 0 ? fields : null;
+}
+
 function buildSyncFields(homeworkTable, homeworkRecord, assetRecord, assetsTable) {
   const fields = {};
   const assetUploadStatus = getSelectName(assetRecord, assetsTable, CONFIG.assets.uploadStatus);
@@ -422,6 +506,39 @@ async function main() {
       homeworkSlot
     );
 
+    if (linkedAssetIds.length > 1) {
+      const allLinkedAssets = linkedAssetIds.map(id => assetById.get(id)).filter(Boolean);
+      const syncFields = buildMultiAssetSyncFields(
+        homeworkTable,
+        homeworkRecord,
+        allLinkedAssets,
+        assetsTable
+      );
+
+      if (!syncFields) {
+        skippedAlreadySynced.push({
+          homeworkId: homeworkRecord.id,
+          action: "sync_from_all_linked_assets",
+          linkedAssetCount: linkedAssetIds.length,
+        });
+        continue;
+      }
+
+      candidates.push({
+        homeworkId: homeworkRecord.id,
+        edgeCase: "multiple_assets",
+        action: "sync_from_all_linked_assets",
+        canonicalAssetId: linkedAssetIds.join(","),
+        linkedAssetCount: linkedAssetIds.length,
+        homeworkSlot,
+        homeworkStatus: getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus),
+        assetStatus: deriveAggregateUploadStatus(allLinkedAssets, assetsTable),
+        fieldCount: Object.keys(syncFields).length,
+        fields: syncFields,
+      });
+      continue;
+    }
+
     const resolution = resolveCanonicalAsset({
       linkedAssetIds,
       homeworkRecord,
@@ -443,7 +560,7 @@ async function main() {
       continue;
     }
 
-    const syncFields = buildSyncFields(
+    let syncFields = buildSyncFields(
       homeworkTable,
       homeworkRecord,
       resolution.asset,
@@ -455,7 +572,7 @@ async function main() {
       homeworkTable,
       resolution.asset.id,
       linkedAssetIds,
-      REPAIR_LINKS
+      false
     );
 
     const updateFields = {
@@ -474,9 +591,10 @@ async function main() {
 
     candidates.push({
       homeworkId: homeworkRecord.id,
-      edgeCase: linkedAssetIds.length === 0 ? "no_asset" : "multiple_assets",
+      edgeCase: "no_asset",
       action: resolution.action,
       canonicalAssetId: resolution.asset.id,
+      linkedAssetCount: 0,
       homeworkSlot,
       homeworkStatus: getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus),
       assetStatus: getSelectName(resolution.asset, assetsTable, CONFIG.assets.uploadStatus),

@@ -3,8 +3,9 @@ Extension Script: Audit Homework Completion Upload Edge Cases
 System: 127 SI Shooting Challenge
 Purpose:
   Read-only report of Homework Completions skipped by backfill-homework-completion-upload-status.js:
-  - zero linked Submission Assets
-  - multiple linked Submission Assets
+  - zero linked Submission Assets (true edge case)
+  - multiple linked Submission Assets (often EXPECTED — athletes may upload several files
+    for one HW1/HW2 assignment; all files link to one Homework Completion)
 
 Default: read-only (no writes)
 */
@@ -167,6 +168,20 @@ function findAssetsBySubmissionAndSlot(allAssets, assetsTable, submissionId, slo
   });
 }
 
+function deriveAggregateUploadStatus(assetRecords, assetsTable) {
+  if (!assetRecords.length) return "";
+
+  const statuses = assetRecords.map(asset =>
+    getSelectName(asset, assetsTable, CONFIG.assets.uploadStatus)
+  );
+
+  if (statuses.every(status => status === "Uploaded")) return "Uploaded";
+  if (statuses.some(status => status === "Error")) return "Error";
+  if (statuses.some(status => status === "Processing")) return "Processing";
+  if (statuses.some(status => status === "Uploaded")) return "Processing";
+  return "Pending";
+}
+
 function resolveRecommendedAction({
   edgeCase,
   homeworkId,
@@ -228,6 +243,24 @@ function resolveRecommendedAction({
   }
 
   const slotMatches = pickAssetsBySlotOrPurpose(linkedAssets, assetsTable, homeworkSlot);
+  const aggregateStatus = deriveAggregateUploadStatus(linkedAssets, assetsTable);
+
+  if (linkedAssets.length > 1) {
+    if (!["Uploaded", "Processing", "Error"].includes(aggregateStatus)) {
+      return {
+        action: "expected_multi_file_pending_upload",
+        canonicalAssetId: linkedAssets.map(asset => asset.id).join(","),
+        reason: "Multiple files linked to one homework assignment; not all assets are uploaded yet",
+      };
+    }
+
+    return {
+      action: "sync_from_all_linked_assets",
+      canonicalAssetId: linkedAssets.map(asset => asset.id).join(","),
+      reason: `Multi-file homework: derive Upload Status from all ${linkedAssets.length} linked assets (${aggregateStatus})`,
+    };
+  }
+
   if (slotMatches.length === 1) {
     return {
       action: "sync_from_slot_match",
@@ -362,6 +395,8 @@ async function main() {
     row.recommendedAction.startsWith("manual_review")
   ).length;
 
+  const expectedMultiFileCount = multipleAssetRows.length;
+
   const report = {
     script: "audit-homework-completion-upload-edge-cases",
     dryRun: true,
@@ -369,6 +404,8 @@ async function main() {
     noAssetCount: noAssetRows.length,
     multipleAssetCount: multipleAssetRows.length,
     edgeCaseTotal: noAssetRows.length + multipleAssetRows.length,
+    expectedMultiFileCount,
+    note: "Multiple Submission Assets per Homework Completion is expected when athletes upload several files for one HW1/HW2 assignment. Do not remove extra asset links.",
     autoFixableCount,
     manualReviewCount,
     actionCounts,

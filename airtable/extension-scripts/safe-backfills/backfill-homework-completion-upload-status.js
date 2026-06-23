@@ -10,6 +10,7 @@ Safety:
   - Set CONFIRM_WRITE = true to apply updates
   - BATCH_LIMIT caps writes per run (default 50); re-run until remainingCount is 0
   - Only updates rows with exactly one linked Submission Asset
+  - Skips multi-asset rows (expected when athletes upload several files for one HW1/HW2 assignment)
   - Skips when asset and homework upload fields already match
 
 Setup:
