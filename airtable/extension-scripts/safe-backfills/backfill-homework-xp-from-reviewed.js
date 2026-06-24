@@ -27,7 +27,7 @@ const DEBUG_HOMEWORK_ID = "";
 
 const CONFIG = {
   scriptName: "backfill-homework-xp-from-reviewed",
-  version: "v1.0",
+  version: "v1.3",
 
   tables: {
     homework: "Homework Completions",
@@ -81,6 +81,7 @@ const CONFIG = {
 
   values: {
     sourceKeyPrefix: "HOMEWORK_XP|",
+    legacySourceKeyPrefix: "HOMEWORK_COMPLETION|",
     awardPending: "Pending",
     awardAwarded: "Awarded",
     xpBucketHomework: "Homework Completion",
@@ -261,10 +262,31 @@ function validateHomeworkFor065(homeworkRecord, homeworkTable) {
 }
 
 function findXpMatches(homeworkId, linkedXpIds, xpQuery, xpEventsTable, xpBySourceKey) {
-  const ids = new Set(linkedXpIds);
-  for (const xpId of xpBySourceKey.get(buildSourceKey(homeworkId)) || []) {
-    ids.add(xpId);
+  const ids = new Set();
+
+  for (const xpId of linkedXpIds) {
+    const xp = xpQuery.getRecord(xpId);
+    if (!xp) continue;
+    const sourceKey = getText(xp, xpEventsTable, CONFIG.xpEvents.sourceKey);
+    const linkedHomework = getLinkedIds(xp, xpEventsTable, CONFIG.xpEvents.homeworkCompletion);
+    if (
+      sourceKey === buildSourceKey(homeworkId) ||
+      sourceKey === `${CONFIG.values.legacySourceKeyPrefix}${homeworkId}` ||
+      linkedHomework.includes(homeworkId)
+    ) {
+      ids.add(xpId);
+    }
   }
+
+  for (const sourceKey of [
+    buildSourceKey(homeworkId),
+    `${CONFIG.values.legacySourceKeyPrefix}${homeworkId}`,
+  ]) {
+    for (const xpId of xpBySourceKey.get(sourceKey) || []) {
+      ids.add(xpId);
+    }
+  }
+
   return [...ids];
 }
 
@@ -344,13 +366,13 @@ async function main() {
     );
 
     if (xpIds.length > 1) {
-      const reason = "skipped_duplicate_xp";
-      skipCounts[reason] = (skipCounts[reason] || 0) + 1;
+      skipCounts.skipped_duplicate_xp = (skipCounts.skipped_duplicate_xp || 0) + 1;
       skipped.push({
         homeworkId,
         name: homeworkRecord.name,
-        reason,
+        reason: "skipped_duplicate_xp",
         xpEventIds: xpIds,
+        recommendedAction: "Run dedupe-homework-xp-events.js first",
       });
       continue;
     }
@@ -385,9 +407,14 @@ async function main() {
       ? getLinkedIds(existingXp, xpEventsTable, CONFIG.xpEvents.weeklySummary)[0] || ""
       : "";
 
+    const existingPoints = existingXp
+      ? getNumberish(existingXp, xpEventsTable, CONFIG.xpEvents.xpPoints)
+      : 0;
+
     const fullySynced =
       existingXp &&
       existingSourceKey === sourceKey &&
+      existingPoints === validation.totalXp &&
       validation.awardStatus === CONFIG.values.awardAwarded &&
       validation.linkedXpIds.includes(existingXpId) &&
       (!weeklySummaryId || existingWasId === weeklySummaryId);
@@ -419,7 +446,9 @@ async function main() {
       action = "mark_awarded_existing_link";
     } else if (weeklySummaryId && !existingWasId) {
       action = "repair_weekly_summary_link";
-    } else if (existingSourceKey && existingSourceKey !== sourceKey) {
+    } else if (existingXp && existingPoints !== validation.totalXp) {
+      action = "repair_xp_points";
+    } else if (existingSourceKey !== sourceKey) {
       action = "repair_source_key";
     } else {
       skipCounts.skipped_no_action = (skipCounts.skipped_no_action || 0) + 1;
@@ -534,6 +563,9 @@ async function main() {
         }
         if (row.action === "repair_source_key") {
           updateFields[CONFIG.xpEvents.sourceKey] = row.sourceKey;
+        }
+        if (row.action === "repair_xp_points") {
+          updateFields[CONFIG.xpEvents.xpPoints] = row.totalXp;
         }
         if (Object.keys(updateFields).length && !DRY_RUN && CONFIRM_WRITE) {
           await xpEventsTable.updateRecordAsync(xpEventId, updateFields);

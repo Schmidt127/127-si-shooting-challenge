@@ -9,6 +9,7 @@ Purpose:
 Default: read-only (no writes)
 
 Recommended follow-up:
+  dedupe-homework-xp-events.js (if duplicate_xp_event > 0)
   backfill-homework-xp-from-reviewed.js (dry run first)
 */
 
@@ -18,7 +19,7 @@ const SAMPLE_LIMIT = 25;
 
 const CONFIG = {
   scriptName: "audit-homework-pipeline-integrity",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     homework: "Homework Completions",
@@ -65,10 +66,9 @@ const CONFIG = {
 
   values: {
     sourceKeyPrefix: "HOMEWORK_XP|",
+    legacySourceKeyPrefix: "HOMEWORK_COMPLETION|",
     awardPending: "Pending",
     awardAwarded: "Awarded",
-    xpSourceHomework: "Homework Completion",
-    xpBucketHomework: "Homework Completion",
   },
 };
 
@@ -131,21 +131,39 @@ function buildSourceKey(homeworkId) {
   return `${CONFIG.values.sourceKeyPrefix}${homeworkId}`;
 }
 
-function isHomeworkXpEvent(xpRecord, xpEventsTable, homeworkId) {
+function buildLegacySourceKey(homeworkId) {
+  return `${CONFIG.values.legacySourceKeyPrefix}${homeworkId}`;
+}
+
+function getSourceKeysForHomework(homeworkId) {
+  return [buildSourceKey(homeworkId), buildLegacySourceKey(homeworkId)];
+}
+
+function xpBelongsToHomework(xpRecord, xpEventsTable, homeworkId) {
   const sourceKey = getText(xpRecord, xpEventsTable, CONFIG.xpEvents.sourceKey);
-  const expectedKey = buildSourceKey(homeworkId);
-  if (sourceKey === expectedKey) return true;
+  if (getSourceKeysForHomework(homeworkId).includes(sourceKey)) {
+    return true;
+  }
+  return getLinkedIds(xpRecord, xpEventsTable, CONFIG.xpEvents.homeworkCompletion).includes(homeworkId);
+}
 
-  const xpSource = getSelectName(xpRecord, xpEventsTable, CONFIG.xpEvents.xpSource);
-  const xpBucket = getSelectName(xpRecord, xpEventsTable, CONFIG.xpEvents.xpBucket);
-  const linkedHomework = getLinkedIds(xpRecord, xpEventsTable, CONFIG.xpEvents.homeworkCompletion);
+function pickPrimaryXpId(xpIds, homeworkId, linkedXpIds, xpQuery, xpEventsTable) {
+  const scored = xpIds
+    .map(xpId => {
+      const xp = xpQuery.getRecord(xpId);
+      if (!xp) return { xpId, score: -1 };
+      const sourceKey = getText(xp, xpEventsTable, CONFIG.xpEvents.sourceKey);
+      let score = 0;
+      if (sourceKey === buildSourceKey(homeworkId)) score = 4;
+      else if (sourceKey === buildLegacySourceKey(homeworkId)) score = 3;
+      else if (linkedXpIds.includes(xpId)) score = 2;
+      else if (xpBelongsToHomework(xp, xpEventsTable, homeworkId)) score = 1;
+      return { xpId, score };
+    })
+    .filter(row => row.score >= 0)
+    .sort((a, b) => b.score - a.score);
 
-  return (
-    linkedHomework.includes(homeworkId) ||
-    sourceKey.startsWith(CONFIG.values.sourceKeyPrefix) ||
-    xpSource === CONFIG.values.xpSourceHomework ||
-    xpBucket === CONFIG.values.xpBucketHomework
-  );
+  return scored[0]?.xpId || xpIds[0] || "";
 }
 
 function buildSummaryIndexKey(enrollmentId, weekId) {
@@ -198,16 +216,18 @@ function assessReviewReadiness(homeworkRecord, homeworkTable) {
 }
 
 function getHomeworkXpIds(homeworkId, linkedXpIds, xpQuery, xpEventsTable, xpBySourceKey) {
-  const ids = new Set(linkedXpIds);
-  const expectedKey = buildSourceKey(homeworkId);
+  const ids = new Set();
 
-  for (const xpId of xpBySourceKey.get(expectedKey) || []) {
-    ids.add(xpId);
+  for (const xpId of linkedXpIds) {
+    const xp = xpQuery.getRecord(xpId);
+    if (xp && xpBelongsToHomework(xp, xpEventsTable, homeworkId)) {
+      ids.add(xpId);
+    }
   }
 
-  for (const xp of xpQuery.records) {
-    if (isHomeworkXpEvent(xp, xpEventsTable, homeworkId)) {
-      ids.add(xp.id);
+  for (const sourceKey of getSourceKeysForHomework(homeworkId)) {
+    for (const xpId of xpBySourceKey.get(sourceKey) || []) {
+      ids.add(xpId);
     }
   }
 
@@ -320,7 +340,14 @@ async function main() {
       });
     }
 
-    const primaryXp = xpQuery.getRecord(xpIds[0]);
+    const primaryXpId = pickPrimaryXpId(
+      xpIds,
+      homeworkId,
+      linkedXpIds,
+      xpQuery,
+      xpEventsTable
+    );
+    const primaryXp = primaryXpId ? xpQuery.getRecord(primaryXpId) : null;
     const primarySourceKey = primaryXp
       ? getText(primaryXp, xpEventsTable, CONFIG.xpEvents.sourceKey)
       : "";
@@ -336,10 +363,10 @@ async function main() {
       pushSample("source_key_mismatch", {
         homeworkId,
         name: homeworkRecord.name,
-        xpEventId: xpIds[0],
+        xpEventId: primaryXpId,
         expectedSourceKey: expectedKey,
         actualSourceKey: primarySourceKey,
-        recommendedAction: "Repair Source Key on XP Event",
+        recommendedAction: "Repair Source Key on XP Event (run backfill repair_source_key)",
       });
       hasIssue = true;
     }
@@ -349,7 +376,7 @@ async function main() {
       pushSample("xp_points_mismatch", {
         homeworkId,
         name: homeworkRecord.name,
-        xpEventId: xpIds[0],
+        xpEventId: primaryXpId,
         homeworkTotalXp: totalXp,
         xpEventPoints: primaryPoints,
         recommendedAction: "Align XP Points with Total Homework XP Awarded",
@@ -363,7 +390,7 @@ async function main() {
         homeworkId,
         name: homeworkRecord.name,
         awardStatus,
-        xpEventId: xpIds[0],
+        xpEventId: primaryXpId,
         recommendedAction: "Set Award Status = Awarded after XP exists",
       });
       hasIssue = true;
@@ -374,7 +401,7 @@ async function main() {
       pushSample("missing_weekly_summary_on_xp", {
         homeworkId,
         name: homeworkRecord.name,
-        xpEventId: xpIds[0],
+        xpEventId: primaryXpId,
         expectedWeeklySummaryId: weeklySummaryId,
         recommendedAction: "Link XP Event to Weekly Athlete Summary",
       });
@@ -384,7 +411,7 @@ async function main() {
     if (!hasIssue) {
       bump("ok");
       if (buckets.ok.length < 5) {
-        pushSample("ok", { homeworkId, name: homeworkRecord.name, xpEventId: xpIds[0] });
+        pushSample("ok", { homeworkId, name: homeworkRecord.name, xpEventId: primaryXpId });
       }
     }
   }
