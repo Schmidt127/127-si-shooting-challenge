@@ -66,6 +66,17 @@ After `audit-xp-linkage-coverage.js`:
 - **~78% Submission link** on XP Events is normal — Zoom, Streak, Perfect Week, Shot Milestone, and Manual Bonus XP do not require Submission.
 - **~97% Week + WAS** — remaining gaps should be fixed via `audit-orphan-xp-events.js` + WAS backfills.
 
+### Legacy streak XP (68 rows as of 2026-06-24)
+
+`audit-orphan-xp-events.js` reports `missingEnrollmentOrWeekCount: 68` — all legacy `STREAK_OCCURRENCE|` streak XP with Enrollment but **no Week**. Week exists on the Streak Occurrence; it was never copied to XP.
+
+**Fix:**
+
+1. `backfill-legacy-streak-xp-week-and-was.js` — `DRY_RUN=true` first, then `CONFIRM_WRITE=true` in batches of 25  
+2. Re-run `audit-orphan-xp-events.js` until `issueTotal` is 0  
+
+Do **not** delete these rows — repair links and optionally migrate Source Key to `STREAK_XP|`.
+
 ---
 
 ## Stage I
@@ -75,7 +86,7 @@ Achievement parity audit: `audit-achievement-xp-pipeline-integrity.js`
 - **Unlocks** — `XP Award Status = Awarded` vs 059 source keys (`PERFECT_WEEK|`, `SHOT_MILESTONE|`)
 - **Streaks** — `Source Status = Awarded` vs 054 keys (`STREAK_XP|`)
 
-Backfill scripts for achievement XP are **planned** if audit finds issues.
+Legacy `STREAK_OCCURRENCE|` XP missing Week: `backfill-legacy-streak-xp-week-and-was.js`.
 
 ---
 
