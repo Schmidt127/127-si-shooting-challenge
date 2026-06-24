@@ -27,7 +27,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Version: v3.5
  * Date Written: 2026-06-05
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-06-24
  *
  * PURPOSE
  * - Creates one XP Event from one Athlete Achievement Unlock.
@@ -54,6 +54,19 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * TRIGGER TYPE
  * - When record matches conditions
+ *
+ * RECOMMENDED TRIGGER (Airtable UI - 2026-06-24)
+ * - When a record is **created** (not "matches conditions" on formula fields)
+ * - Table: Athlete Achievement Unlocks
+ * - Shot Milestone is not empty
+ * - XP Award Status is Pending
+ * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires
+ *   empty XP Events; creating XP auto-links back and flips the formula to 0 mid-run.
+ * - Script handles existing XP (marks Awarded) and duplicate protection.
+ *
+ * STUCK ROW REPAIR
+ * - Pending + XP Events linked + Ready for 059 XP? = 0 → run extension script
+ *   backfill-shot-milestone-unlock-mark-awarded.js
  *
  * REQUIRED INPUT
  * - recordId = Airtable record ID from triggering Athlete Achievement Unlock

@@ -56,6 +56,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
 | `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
 | `audit-achievement-xp-pipeline-integrity.js` | Awarded unlocks (059) + streaks (054) → XP parity | **Ready** |
+| `audit-pending-shot-milestone-unlocks.js` | Why 059/view misses Pending shot-milestone unlocks | **Ready** |
 | `audit-legacy-cleanup-candidates.js` | LEGACY/ZZZ fields + orphan streak unlock inventory | **Ready** |
 
 ---
