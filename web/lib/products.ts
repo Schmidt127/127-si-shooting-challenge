@@ -9,14 +9,37 @@ export type ProductDefinition = {
   description: string;
   href: string;
   status: ProductStatus;
-  accent: string;
+  /** Short feature bullets for landing cards */
+  highlights: string[];
+  /** Shown on coming-soon cards, e.g. "December 2026" */
+  launchLabel?: string;
 };
 
 export const HUB_BRAND = {
   title: "Hoop Challenges",
   parentOrg: "127 Sports Intensity",
   tagline: "Train with purpose. Compete with clarity.",
+  description:
+    "Structured basketball training programs for athletes, schools, and clubs — built to track reps, reward consistency, and put real competition on the board.",
 } as const;
+
+export const HUB_PILLARS = [
+  {
+    label: "Train",
+    title: "Structured reps",
+    body: "Clear daily and weekly targets so every session has a purpose — not random gym time.",
+  },
+  {
+    label: "Track",
+    title: "Progress you can see",
+    body: "XP, levels, and shot counts that reflect the work — visible to athletes and coaches.",
+  },
+  {
+    label: "Compete",
+    title: "Leaderboards that matter",
+    body: "School and program-wide standings that keep intensity high all season long.",
+  },
+] as const;
 
 export const PRODUCTS: ProductDefinition[] = [
   {
@@ -24,20 +47,21 @@ export const PRODUCTS: ProductDefinition[] = [
     name: "Shooting Challenge",
     tagline: "Volume, XP, and season-long progression",
     description:
-      "Track makes and attempts, climb levels, and compete on the live leaderboard — built for serious reps.",
+      "Track makes and attempts, climb levels, and compete on the live leaderboard — built for serious shooting reps.",
     href: "/shooting-challenge",
     status: "live",
-    accent: "from-orange-500/20 via-accent/10 to-transparent",
+    highlights: ["Live leaderboard", "XP & levels", "Shot tracking"],
   },
   {
     id: "dribbling-challenge",
     name: "Dribbling Challenge",
     tagline: "Ball-handling intensity, same competitive format",
     description:
-      "A parallel challenge structure for dribbling work — launching when the season opens.",
+      "A parallel challenge structure for dribbling work — same progression model, new skill focus.",
     href: "/dribbling-challenge",
     status: "coming-soon",
-    accent: "from-sky-500/15 via-cyan-500/5 to-transparent",
+    launchLabel: "December 2026",
+    highlights: ["Skill tiers", "XP progression", "Program standings"],
   },
   {
     id: "kids-ref-now",
@@ -47,7 +71,7 @@ export const PRODUCTS: ProductDefinition[] = [
       "Resources and pathways for young referees — integrated here as the program expands.",
     href: "/kids-ref-now",
     status: "coming-soon",
-    accent: "from-violet-500/15 via-purple-500/5 to-transparent",
+    highlights: ["Youth pathways", "Training resources", "Program tools"],
   },
 ];
 

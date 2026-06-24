@@ -1,18 +1,28 @@
 @import "tailwindcss";
 
 /**
- * Global styles for the 127 SI Shooting Challenge web app.
- * Component-level styling uses Tailwind utility classes.
+ * Global styles — tokens aligned with 127_SI_Brand_Kit.
+ * See web/docs/brand-guide.md
  */
 
 :root {
-  --background: #0b1220;
-  --foreground: #f4f7fb;
-  --muted: #94a3b8;
-  --accent: #f97316;
-  --accent-soft: #fb923c;
-  --card: #111827;
-  --border: #1f2937;
+  --brand-blue: #0034b7;
+  --brand-orange: #ff8b00;
+  --brand-dark: #262626;
+  --brand-gray: #c4c4c4;
+  --brand-light: #f2f2f2;
+
+  /* Near-black sporty base — blue & orange are accents only */
+  --background: #0a0a0a;
+  --foreground: #ffffff;
+  --muted: #9ca3af;
+  --muted-subtle: #6b7280;
+  --accent: var(--brand-orange);
+  --accent-soft: #ffb347;
+  --card: #141414;
+  --card-elevated: #1a1a1a;
+  --border: #2a2a2a;
+  --border-subtle: #1f1f1f;
 }
 
 @theme inline {
@@ -22,8 +32,16 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-card: var(--card);
+  --color-card-elevated: var(--card-elevated);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
+  --color-border-subtle: var(--border-subtle);
+  --color-muted-subtle: var(--muted-subtle);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-orange: var(--brand-orange);
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-gray: var(--brand-gray);
+  --color-brand-light: var(--brand-light);
+  --font-sans: var(--font-maven-pro);
   --font-mono: var(--font-geist-mono);
 }
 

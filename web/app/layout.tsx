@@ -1,11 +1,15 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono } from "next/font/google";
+import { Maven_Pro } from "next/font/google";
+
+import { BRAND_LOGOS } from "@/lib/brand";
 
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const mavenPro = Maven_Pro({
+  variable: "--font-maven-pro",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const geistMono = Geist_Mono({
@@ -24,6 +28,10 @@ export const metadata: Metadata = {
   },
   description:
     "127 Sports Intensity training programs — Shooting Challenge, Dribbling Challenge, and Kids Ref Now.",
+  icons: {
+    icon: BRAND_LOGOS.circle,
+    apple: BRAND_LOGOS.circle,
+  },
   robots: {
     index: false,
     follow: false,
@@ -37,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${mavenPro.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

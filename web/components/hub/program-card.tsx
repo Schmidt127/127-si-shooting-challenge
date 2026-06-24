@@ -5,58 +5,85 @@ import type { ProductDefinition } from "@/lib/products";
 type ProgramCardProps = {
   product: ProductDefinition;
   index: number;
+  featured?: boolean;
 };
 
-function StatusBadge({ status }: { status: ProductDefinition["status"] }) {
+function StatusBadge({
+  status,
+  launchLabel,
+}: {
+  status: ProductDefinition["status"];
+  launchLabel?: string;
+}) {
   if (status === "live") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300">
-        <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" aria-hidden />
+      <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-orange/30 bg-brand-orange/10 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-brand-orange">
+        <span className="h-1.5 w-1.5 rounded-full bg-brand-orange" aria-hidden />
         Live
       </span>
     );
   }
 
   return (
-    <span className="inline-flex rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-muted">
-      Coming Soon
+    <span className="inline-flex flex-col items-end gap-0.5">
+      <span className="inline-flex rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-muted">
+        Coming soon
+      </span>
+      {launchLabel ? (
+        <span className="text-[10px] font-medium text-muted-subtle">{launchLabel}</span>
+      ) : null}
     </span>
   );
 }
 
-export function ProgramCard({ product, index }: ProgramCardProps) {
+export function ProgramCard({ product, index, featured = false }: ProgramCardProps) {
   const isLive = product.status === "live";
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-card/60 backdrop-blur-xl transition duration-300 hover:border-white/20 hover:bg-card/80">
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${product.accent} opacity-80 transition group-hover:opacity-100`}
-        aria-hidden
-      />
-      <div
-        className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent via-accent-soft to-transparent opacity-0 transition group-hover:opacity-100"
-        aria-hidden
-      />
+    <article
+      className={`group relative flex flex-col overflow-hidden rounded-2xl border bg-card transition duration-300 ${
+        featured
+          ? "border-brand-orange/25 shadow-[0_0_0_1px_rgba(255,139,0,0.08)] hover:border-brand-orange/40"
+          : "border-white/[0.08] hover:border-white/15 hover:bg-card-elevated"
+      }`}
+    >
+      {featured ? (
+        <div
+          className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand-orange/60 to-transparent"
+          aria-hidden
+        />
+      ) : null}
 
       <div className="relative flex flex-1 flex-col p-6 sm:p-8">
         <div className="flex items-start justify-between gap-4">
-          <span className="font-mono text-xs text-muted/60">
+          <span className="font-mono text-xs text-muted-subtle">
             {String(index + 1).padStart(2, "0")}
           </span>
-          <StatusBadge status={product.status} />
+          <StatusBadge status={product.status} launchLabel={product.launchLabel} />
         </div>
 
         <h2 className="mt-6 text-xl font-bold tracking-tight text-foreground sm:text-2xl">
           {product.name}
         </h2>
-        <p className="mt-2 text-sm font-medium text-accent-soft">{product.tagline}</p>
+        <p className="mt-2 text-sm font-medium text-foreground/80">{product.tagline}</p>
         <p className="mt-4 flex-1 text-sm leading-relaxed text-muted">{product.description}</p>
+
+        <ul className="mt-6 flex flex-wrap gap-2" aria-label={`${product.name} features`}>
+          {product.highlights.map((item) => (
+            <li
+              key={item}
+              className="rounded-md border border-white/[0.06] bg-white/[0.02] px-2.5 py-1 text-[11px] font-medium text-muted"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
 
         <div className="mt-8">
           {isLive ? (
             <Link
               href={product.href}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-accent to-orange-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/20 transition hover:brightness-110 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-brand-orange px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 sm:w-auto"
             >
               Enter program
               <span className="ml-2 transition group-hover:translate-x-0.5" aria-hidden>
@@ -66,7 +93,7 @@ export function ProgramCard({ product, index }: ProgramCardProps) {
           ) : (
             <Link
               href={product.href}
-              className="inline-flex w-full items-center justify-center rounded-xl border border-white/15 bg-white/5 px-5 py-3 text-sm font-semibold text-foreground transition hover:border-white/25 hover:bg-white/10 sm:w-auto"
+              className="inline-flex w-full items-center justify-center rounded-xl border border-white/12 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition hover:border-white/20 hover:bg-white/[0.04] sm:w-auto"
             >
               View preview
             </Link>

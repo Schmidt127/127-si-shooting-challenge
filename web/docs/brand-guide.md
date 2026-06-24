@@ -1,88 +1,136 @@
-# Hoop Challenges — Web Brand Guide
+# 127 Sports Intensity — Web Brand Guide
 
-Reference for all UI work under `web/`. Update this file when brand decisions change.
+Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the kit changes.
+
+**Source assets (local):** `Desktop/Branding Kit (1)/`  
+**Web assets:** `web/public/brand/`
+
+---
 
 ## Brand hierarchy
 
 | Level | Name | Usage |
 |-------|------|--------|
-| Hub | **Hoop Challenges** | `hoopchallenges.com` landing, program picker |
-| Parent org | **127 Sports Intensity** | Subtitle, footer, trust line |
-| Products | Shooting Challenge, Dribbling Challenge, Kids Ref Now | Each has its own path and nav shell |
+| Hub | **Hoop Challenges** | `hoopchallenges.com` program picker |
+| Parent brand | **127 Sports Intensity** | Logo, footer, org line |
+| Products | Shooting Challenge, Dribbling Challenge, Kids Ref Now | Own path + nav shell |
 
-## Voice & tone
+---
 
-- Professional, athletic, motivating — not childish or playful
-- Direct labels: "Leaderboard", "Levels", "Live" — not cute nicknames
-- Youth program: energetic but **never** cartoonish
+## Official color palette
 
-## Visual principles
+| Name | Hex | Web token | Use |
+|------|-----|-----------|-----|
+| Primary Blue | `#0034B7` | `--brand-blue` | Headers, nav bars, trust blocks |
+| Primary Orange | `#FF8B00` | `--accent` | CTAs, highlights, XP accents |
+| Dark | `#262626` | `--brand-dark` | Text on light surfaces |
+| Light Gray | `#C4C4C4` | `--brand-gray` | Borders, secondary UI |
+| Off White | `#F2F2F2` | `--brand-light` | Light section backgrounds |
 
-### Do
+**Dark UI (current web default):** Near-black base (`#0A0A0A`), white headlines, gray body text. Use **blue and orange as accents only** — not full-page color washes or rainbow product cards.
 
-- Dark surfaces (`#0b1220` background, `#111827` cards)
-- Orange accent (`#f97316`) for CTAs, rank highlights, active states
-- Generous whitespace, strong typography hierarchy
-- Subtle grid lines, soft glows, thin borders (`border-white/10`)
-- Uppercase tracking on **small labels only** (e.g. `text-xs tracking-[0.2em]`)
-- Geometric accents: lines, gradients, corner brackets — not illustrations
-- Status chips: `Live`, `Coming Soon` (neutral slate for upcoming)
-
-### Don't
-
-- Emoji as icons (🏀 🥇 etc.) on hub or product chrome
-- Cartoon mascots, clip art, or bubbly rounded "app store" illustration style
-- Mixed product navigation on one bar
-- Bright rainbow palettes or neon overload
-- Comic Sans–style playfulness
-
-## Color tokens
-
-Defined in `app/globals.css` — use Tailwind theme names:
-
-| Token | Use |
-|-------|-----|
-| `background` | Page base |
-| `card` | Elevated panels |
-| `foreground` | Primary text |
-| `muted` | Secondary text |
-| `accent` / `accent-soft` | CTAs, XP, highlights |
-| `border` | Dividers |
+---
 
 ## Typography
 
-- **Sans:** Geist (via `font-sans`) — UI, headings, body
-- **Mono:** Geist Mono (`font-mono`) — stats, XP, shot counts, ranks
-- Headlines: bold, tight tracking; avoid all-caps on full titles
+| Role | Font | Web implementation |
+|------|------|-------------------|
+| Display / headlines | **Magistral** | Licensed desktop font — use **Maven Pro 700–800** on web until Magistral web files are added |
+| Body / UI | **Maven Pro** | `next/font/google` in `app/layout.tsx` |
 
-## Layout patterns
+- Headlines: bold, slightly tracked; avoid all-caps on long titles  
+- Stats (XP, rank, shots): `font-mono` or Maven Pro tabular nums  
+
+---
+
+## Logo (primary — production)
+
+These are the **main logos** used across 127 Sports Intensity:
+
+| Asset | Local path | Source URL |
+|-------|------------|------------|
+| **Circle stamp** | `/brand/logo-circle-blue-orange.png` | [BlueOrangeCircleLogo.png](https://make-021891587263-us-east-2-an.s3.us-east-2.amazonaws.com/BlueOrangeCircleLogo.png) |
+| **Horizontal V1** | `/brand/logo-v1-blue-orange.png` | [Logo_V1_Blue_Orange.png](https://make-021891587263-us-east-2-an.s3.us-east-2.amazonaws.com/Logo_V1_Blue_Orange.png) |
+
+| When to use | Logo |
+|-------------|------|
+| Hub hero, wide headers | **Horizontal V1** |
+| Compact nav, footer, favicon | **Circle stamp** |
+
+Code constants: `lib/brand.ts` → `BRAND_LOGOS`
+
+**Kit archive (additional variants):** `Desktop/Branding Kit (1)/Logos (1)/`
+
+- Do not stretch, recolor, or add effects to the logo  
+- Minimum clear space: height of the orange circle in the mark  
+- Logos are designed for dark backgrounds — use on navy/black UI or brand-blue bands  
+
+---
+
+## Iconography (from brand kit)
+
+- **Style:** Thin white line art in blue circles — professional, not cartoon  
+- **Kit categories:** Golf, Basketball, Practice, Tournaments, Competitions, Challenges, Field Trips, Education, Contact, FAQs  
+- **Web:** Do not use emoji as UI icons. Use SVG line icons or typography-only cards until custom icons are exported from the kit  
+
+---
+
+## Patterns
+
+- Geometric line patterns (`Pattern_1`–`Pattern_5` in kit) may be used as **subtle backgrounds** (low opacity)  
+- Do not overpower content  
+
+---
+
+## Voice & tone
+
+- Professional, athletic, motivating  
+- Youth program: energetic, never childish  
+- Direct labels: Leaderboard, Levels, Live  
+
+---
+
+## Layout rules (Hoop Challenges web)
 
 | Pattern | Where |
 |---------|--------|
-| Hub landing | `/` — no product nav |
-| Product shell | `/shooting-challenge`, `/dribbling-challenge`, `/kids-ref-now` — own header + nav |
-| Back link | One link: **All Programs** → `/` |
+| Hub `/` | Program cards only — no product nav |
+| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/kids-ref-now` |
+| Back link | **All Programs** → `/` |
 
-## Product URLs
+---
 
-```
-/                      Hub
-/shooting-challenge      Shooting app shell
-/dribbling-challenge     Dribbling app shell (phased)
-/kids-ref-now            Kids Ref Now shell (phased)
-```
+## Contact (from brand kit — public-facing only when intended)
 
-Legacy `/leaderboard` redirects to `/shooting-challenge/leaderboard`.
+| Field | Value |
+|-------|--------|
+| Coordinator | Mike Schmidt |
+| Phone | 406.590.2677 |
+| Web | fairfieldeagles.com |
+| Email | mschmidt@fairfield.k12.mt.us |
 
-## Imagery
+Do not publish personal email on youth-facing pages unless explicitly approved.
 
-- Prefer typography and layout over stock photos for v1
-- If photos are added later: real athletes/courts, high contrast, desaturated overlays
-- School logos only when explicitly approved for public display
+---
 
-## When to update this doc
+## Don't
 
-- New product added to hub
-- Logo or color change
-- Decision to allow emoji anywhere (default: no)
-- New hub domain (e.g. 127sportsintensity.com)
+- Emoji as icons on hub or product chrome  
+- Cartoon mascots or clip art  
+- Mixed product navigation  
+- Off-palette oranges/blues without reason  
+
+---
+
+## Adding assets to the repo
+
+1. Copy approved PNG/SVG from `Branding Kit (1)/` → `web/public/brand/`  
+2. Note filename and usage in this doc  
+3. Prefer **Blue + Orange** logo on dark UI  
+
+---
+
+## Related
+
+- Cursor rule: `.cursor/rules/web-ui-brand.mdc`  
+- CSS tokens: `app/globals.css`  

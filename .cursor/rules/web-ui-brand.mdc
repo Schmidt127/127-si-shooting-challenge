@@ -16,18 +16,22 @@ Full guide: `web/docs/brand-guide.md`
 
 ## Visual rules
 
-- Use theme tokens from `app/globals.css` (`background`, `card`, `accent`, `muted`, `border`)
-- Professional sports aesthetic: dark UI, orange accent, subtle grids/glows
+- Use tokens from `app/globals.css` — official kit: blue `#0034B7`, orange `#FF8B00`
+- **Base UI:** near-black `#0A0A0A`, white headlines, gray body — blue/orange as **accents only**, not full-page color washes
+- Full guide: `web/docs/brand-guide.md` (127_SI_Brand_Kit)
+- Logo: `BRAND_LOGOS` in `lib/brand.ts` — horizontal V1 on hub hero + product headers; circle for nav/footer/favicon
+- **Maven Pro** for UI type; Magistral when web license available
 - **No emoji** as icons on hub or product chrome
 - **No cartoon** mascots, clip art, or playful illustration style
+- **No per-product rainbow accents** (sky/violet/etc.) on hub cards — monochrome cards + brand orange/blue highlights
 - Stats/XP/ranks: `font-mono`
 - Small labels only: uppercase + letter-spacing
 
 ## Tailwind
 
 - Prefer existing tokens; extend `globals.css` for new semantic colors
-- Glass panels: `bg-card/80 backdrop-blur-xl border border-white/10`
-- CTAs: `bg-gradient-to-r from-accent to-orange-600` sparingly
+- Panels: `bg-card border border-white/[0.08]` on dark base
+- CTAs: solid `bg-brand-orange` or white-outline secondary — avoid orange gradients everywhere
 
 ## Incremental delivery
 
