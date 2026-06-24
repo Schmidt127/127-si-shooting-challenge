@@ -13,10 +13,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://hoopchallenges.com";
+
 export const metadata: Metadata = {
-  title: "127 Sports Intensity Shooting Challenge",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "127 Sports Intensity Shooting Challenge",
+    template: "%s | Hoop Challenges",
+  },
   description:
-    "Private development site for the 127 Sports Intensity Shooting Challenge participant portal.",
+    "Live rankings, levels, and progress for the 127 Sports Intensity Shooting Challenge.",
   robots: {
     index: false,
     follow: false,

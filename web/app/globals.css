@@ -33,3 +33,12 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
 }
+
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(320%);
+  }
+}

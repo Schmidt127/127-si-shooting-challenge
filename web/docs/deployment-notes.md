@@ -11,7 +11,7 @@
 |----------|-------|
 | `AIRTABLE_API_TOKEN` | Personal access token with `data.records:read` |
 | `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` (confirm in Airtable URL) |
-| `NEXT_PUBLIC_SITE_URL` | `https://your-project.vercel.app` |
+| `NEXT_PUBLIC_SITE_URL` | `https://hoopchallenges.com` |
 | `SITE_ACCESS_TOKEN` | Optional random string for preview-only gate |
 
 5. Deploy from `master` branch
@@ -23,11 +23,22 @@
 - [ ] Placeholder routes load (`/leaderboard`, `/levels`, etc.)
 - [ ] No Airtable token in browser Network tab
 
-## Custom domain (later)
+## Custom domain — hoopchallenges.com
 
-- Point subdomain (e.g. `challenge.127sports.com`) to Vercel
-- Update `NEXT_PUBLIC_SITE_URL`
-- Enable HTTPS (automatic on Vercel)
+1. In **Vercel** → your project → **Settings** → **Domains**
+2. Add `hoopchallenges.com` and `www.hoopchallenges.com`
+3. At your domain registrar (where you bought the name), add the DNS records Vercel shows you — usually:
+   - **A record** `@` → `76.76.21.21` (Vercel’s IP), or
+   - **CNAME** `www` → `cname.vercel-dns.com`
+4. Wait for DNS to propagate (minutes to a few hours)
+5. Set `NEXT_PUBLIC_SITE_URL` to `https://hoopchallenges.com` in Vercel env vars and redeploy
+6. HTTPS is automatic on Vercel once DNS is verified
+
+**Live URLs after cutover:**
+
+- Homepage: `https://hoopchallenges.com`
+- Leaderboard: `https://hoopchallenges.com/leaderboard`
+- Health check: `https://hoopchallenges.com/api/airtable`
 
 ## Preview vs production
 

@@ -1,14 +1,18 @@
-/** Leaderboard row types. */
+/** Leaderboard row mapped from Airtable Enrollments. */
 
 export type LeaderboardEntry = {
+  id: string;
   rank: number;
-  athleteId: string;
-  slug: string;
   displayName: string;
-  totalXp: number;
-  currentLevel?: string;
-  weeklyXp?: number;
-  streak?: number;
+  school: string;
+  grade: string;
+  level: string;
+  xp: number;
+  totalShots: number;
 };
 
-export type LeaderboardScope = "season" | "week" | "grade-band";
+export type LeaderboardData = {
+  entries: LeaderboardEntry[];
+  updatedAt: string;
+  seasonLabel: string;
+};

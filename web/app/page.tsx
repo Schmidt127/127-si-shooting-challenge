@@ -24,6 +24,13 @@ export default function HomePage() {
           Placeholder routes are scaffolded. Data fetching and public pages will ship in later
           phases.
         </p>
+
+        <a
+          href="/leaderboard"
+          className="mt-8 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition hover:brightness-110"
+        >
+          View Live Leaderboard →
+        </a>
       </div>
     </main>
   );

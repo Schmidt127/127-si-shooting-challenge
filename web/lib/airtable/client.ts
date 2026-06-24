@@ -40,12 +40,19 @@ function requireAirtableConfig(): { token: string; baseId: string } {
   return { token, baseId };
 }
 
+export type AirtableSort = {
+  field: string;
+  direction?: "asc" | "desc";
+};
+
 export type AirtableListParams = {
   tableName: string;
   view?: string;
   filterByFormula?: string;
   maxRecords?: number;
   fields?: string[];
+  sort?: AirtableSort[];
+  revalidateSeconds?: number;
 };
 
 /**
@@ -65,6 +72,12 @@ export async function listAirtableRecords<TFields extends Record<string, unknown
       searchParams.append("fields[]", field);
     }
   }
+  if (params.sort?.length) {
+    params.sort.forEach((sort, index) => {
+      searchParams.set(`sort[${index}][field]`, sort.field);
+      searchParams.set(`sort[${index}][direction]`, sort.direction ?? "asc");
+    });
+  }
 
   const query = searchParams.toString();
   const url = `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}${query ? `?${query}` : ""}`;
@@ -74,8 +87,7 @@ export async function listAirtableRecords<TFields extends Record<string, unknown
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
-    // Revalidate on each request during early dev; tune per route later.
-    next: { revalidate: 60 },
+    next: { revalidate: params.revalidateSeconds ?? 60 },
   });
 
   if (!response.ok) {
