@@ -32,8 +32,8 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` | `backfill-homework-xp-from-reviewed.js` |
-| **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` *(planned)* | `repair-video-feedback-xp-link.js` |
-| **H. Video XP + email** | 113, 114, 073 | *(planned)* | `repair-video-feedback-xp-link.js` |
+| **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
+| **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js` *(planned)*, `repair-video-feedback-xp-link.js` |
 | **I. Achievements / streaks** | 053–059, 066 | *(planned)* | *(planned)* |
 | **J. Field cleanup discovery** | — | `audit-field-coverage-report.js` | — |
 
@@ -52,8 +52,8 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
 | `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
-| `audit-video-pipeline-integrity.js` | Video asset → VF → XP chain | Planned |
-| `audit-weekly-summary-coverage.js` | WAS rows vs active enrollments by week | Planned |
+| `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
+| `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
 
 ---
 
@@ -78,6 +78,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 5. audit-stuck-upload-processing.js
    → run matching backfills (see safe-backfills README)
 6. audit-field-coverage-report.js   ← shows what is still empty
+7. audit-video-pipeline-integrity.js ← Stage G baseline before video backfills
 ```
 
 ---

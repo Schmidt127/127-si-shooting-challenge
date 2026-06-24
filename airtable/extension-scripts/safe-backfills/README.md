@@ -56,7 +56,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-submission-pipeline-links.js` | WAS links, HW slots, asset links | **Ready** |
 | `backfill-submission-xp-events.js` | Missing 010 XP events | **Ready** |
 | `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Ready** |
-| `backfill-video-pipeline-links.js` | 013-style VF links | **Planned** |
+| `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | **Ready** |
 
 ---
 
