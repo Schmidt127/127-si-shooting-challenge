@@ -9,8 +9,7 @@ Purpose:
 Default: read-only (no writes)
 
 Recommended follow-up:
-  dedupe-video-xp-events.js (if duplicate_xp_event > 0; planned)
-  backfill-video-xp-from-posted-feedback.js (dry run first; planned)
+  backfill-video-xp-from-posted-feedback.js (dry run first)
   repair-video-feedback-xp-link.js (single-record manual repair)
 */
 

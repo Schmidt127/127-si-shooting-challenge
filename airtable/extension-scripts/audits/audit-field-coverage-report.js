@@ -19,6 +19,9 @@ Interpretation:
 const SAMPLE_EMPTY_RECORDS = 5;
 
 const CONFIG = {
+  scriptName: "audit-field-coverage-report",
+  version: "v1.1",
+
   profiles: [
     {
       profileId: "counted_submissions",
@@ -81,6 +84,43 @@ const CONFIG = {
       ],
     },
     {
+      profileId: "submission_assets_video",
+      table: "Submission Assets",
+      filterField: "Upload Destination",
+      filterText: "Video Feedback",
+      fields: [
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Asset Purpose",
+        "Asset Slot",
+        "Airtable Attachment",
+        "Google Drive File URL",
+        "Upload Status",
+        "Video Feedback",
+        "Send to Make Trigger",
+        "Original File Name",
+      ],
+    },
+    {
+      profileId: "video_feedback",
+      table: "Video Feedback",
+      fields: [
+        "Submission",
+        "Enrollment",
+        "Submission Asset",
+        "Grade Band",
+        "Upload Status",
+        "Google Drive File URL",
+        "Video Feedback Key",
+        "Feedback Posted?",
+        "Award Status",
+        "Total Video XP Awarded",
+        "XP Events",
+        "Active?",
+        "Do Not Award XP?",
+      ],
+    },
+    {
       profileId: "xp_events",
       table: "XP Events",
       fields: [
@@ -90,6 +130,8 @@ const CONFIG = {
         "Submission",
         "Homework Completion",
         "Video Feedback",
+        "Achievement Unlock",
+        "Streak Occurrence",
         "Source Key",
         "XP Points",
         "XP Bucket",
@@ -107,10 +149,42 @@ const CONFIG = {
         "Summary Key",
         "Summary Calculation Status",
         "Homework Completions Link",
-        "Submissions Link",
+        "Submissions",
         "XP Events",
         "Send to Make?",
-        "Email Sent?",
+        "Weekly Email Sent?",
+        "Weekly Email Sent At",
+      ],
+    },
+    {
+      profileId: "achievement_unlocks",
+      table: "Athlete Achievement Unlocks",
+      fields: [
+        "Achievement",
+        "Enrollment",
+        "Week",
+        "Shot Milestone",
+        "Source Key",
+        "Unlock Key",
+        "XP Award Status",
+        "XP Awarded",
+        "XP Events",
+        "Weekly Athlete Summary",
+      ],
+    },
+    {
+      profileId: "streak_occurrences",
+      table: "Streak Occurrences",
+      fields: [
+        "Enrollment",
+        "Achievement",
+        "Week",
+        "Streak End Date",
+        "Streak Days",
+        "Source Status",
+        "XP Events",
+        "Streak Occurrence Key",
+        "Active?",
       ],
     },
   ],
@@ -173,7 +247,9 @@ function passesFilter(record, table, profile) {
     if (typeof raw === "number" && Number.isFinite(raw)) {
       return raw === profile.filterEquals;
     }
-    const num = Number(String(record.getCellValueAsString(profile.filterField) || "").replace(/,/g, "").trim());
+    const num = Number(
+      String(record.getCellValueAsString(profile.filterField) || "").replace(/,/g, "").trim()
+    );
     return Number.isFinite(num) && num === profile.filterEquals;
   }
 
@@ -241,7 +317,8 @@ async function main() {
   }
 
   const report = {
-    script: "audit-field-coverage-report",
+    script: CONFIG.scriptName,
+    version: CONFIG.version,
     dryRun: true,
     note: "Fields with 0% fill after backfills are legacy/unused candidates — confirm in automations before delete.",
     profiles: profilesOut,

@@ -33,9 +33,9 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` | `backfill-homework-xp-from-reviewed.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
-| **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js` *(planned)*, `repair-video-feedback-xp-link.js` |
-| **I. Achievements / streaks** | 053–059, 066 | *(planned)* | *(planned)* |
-| **J. Field cleanup discovery** | — | `audit-field-coverage-report.js` | — |
+| **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
+| **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` | *(planned)* |
+| **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js` | — |
 
 Run stages **A → J** in order when doing a full historical repair pass.
 
@@ -47,13 +47,15 @@ Run stages **A → J** in order when doing a full historical repair pass.
 |--------|--------|--------|
 | `audit-submission-pipeline-integrity.js` | Counted submissions: Enrollment, Week, WAS, XP, assets, homework/video links | **Ready** |
 | `audit-xp-vs-submissions.js` | Submission ↔ XP Event parity, Source Key, duplicates | **Ready** |
-| `audit-field-coverage-report.js` | Fill % on canonical fields per table profile | **Ready** |
-| `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link | Ready |
+| `audit-field-coverage-report.js` | Fill % on canonical fields per table profile (v1.1: video + achievement profiles) | **Ready** |
+| `audit-xp-linkage-coverage.js` | XP Events classified by source type and link completeness | **Ready** |
+| `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link (v1.1 samples) | **Ready** |
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
 | `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
 | `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
+| `audit-achievement-xp-pipeline-integrity.js` | Awarded unlocks (059) + streaks (054) → XP parity | **Ready** |
 
 ---
 
@@ -68,7 +70,19 @@ Run stages **A → J** in order when doing a full historical repair pass.
 
 ---
 
-## Recommended first full pass
+## Recommended perfection pass (after Stages A–H backfills)
+
+```text
+1. audit-field-coverage-report.js        (v1.1)
+2. audit-xp-linkage-coverage.js
+3. audit-orphan-xp-events.js             (v1.1)
+4. audit-achievement-xp-pipeline-integrity.js
+   → run matching backfills if issueTotal > 0
+```
+
+Full doc: [docs/airtable/stage-j-legacy-cleanup.md](../../../docs/airtable/stage-j-legacy-cleanup.md)
+
+## Recommended first full pass (historical repair)
 
 ```text
 1. audit-submission-pipeline-integrity.js
