@@ -6,10 +6,11 @@ Stage J runs **after** pipeline audits and backfills (Stages A–H). Goal: prove
 
 | Check | Result |
 |-------|--------|
-| Stage H video XP audit | **PASS** — `issueTotal: 0`, 99/99 XP-ready rows OK |
-| Field coverage (v1.0 profiles) | **PASS** — no `likelyUnusedFields` in canonical pipeline |
-| WAS field name drift | Fixed in audit v1.1 (`Submissions`, `Weekly Email Sent?`) |
-| Video + achievement profiles | Added in audit v1.1 |
+| Stage H video XP audit | **PASS** — `issueTotal: 0` |
+| Orphan XP / WAS linkage | **PASS** — 2,285/2,285 |
+| Stage I achievement/streak XP | **PASS** — `issueTotal: 0`, `streak_ok: 324` |
+| Field coverage (v1.1 profiles) | **PASS** — no `likelyUnusedFields` in canonical pipeline |
+| **Legacy cleanup** | **In progress** — runbook below |
 
 ## Run order (perfection pass)
 
@@ -47,15 +48,71 @@ Re-run safe backfills only when an audit reports `issueTotal > 0`.
 
 ## Known LEGACY fields (manual cleanup list)
 
-From schema snapshot — **hide from views first**, delete only after season review:
+From schema snapshot — **no production automations reference these fields**.
+
+### Phase 1 — Audit (extension script)
+
+```text
+audit-legacy-cleanup-candidates.js
+```
+
+Reports legacy-named fields/tables + orphan streak unlock delete count.
+
+### Phase 2 — Delete orphan streak unlock rows (~208)
+
+Legacy **Athlete Achievement Unlock** rows for **Streak Length** achievements (blank/`Skipped`/`Pending`, no XP). Streak XP uses **Streak Occurrences + 054** now — not this table.
+
+```text
+1. archive-legacy-streak-unlock-records.js   DRY_RUN=true
+2. CONFIRM_DELETE=true — batches of 25 until remainingCount=0
+3. audit-achievement-xp-pipeline-integrity.js → unlock_not_ready drops sharply
+```
+
+**Never deletes** Awarded unlocks or unlocks with linked XP (Perfect Week / Shot Milestone safe).
+
+### Phase 3 — Hide then delete fields (Airtable UI)
+
+For each field: remove from **all views + interfaces**, then delete the field.
+
+| Order | Table | Field | Safe? |
+|-------|-------|-------|-------|
+| 1 | **Achievements** | `LEGACY - XP Reward - DO NOT USE` | Yes — 0% fill, no automation refs |
+| 2 | **Weekly Athlete Summary** | `Weekly Bonus XP Earned - LEGACY DO NOT USE` | Yes — formula only, superseded by XP Events rollup |
+
+**UI steps (per field):**
+
+1. Open table → hide field from every grid view  
+2. Check Interfaces / extensions — remove field if present  
+3. Field menu → **Delete field** → confirm  
+
+### Phase 4 — Legacy tables (Airtable UI)
+
+Search base for tables matching `ZZZ` or `LEGACY`:
+
+| Candidate | Action |
+|-----------|--------|
+| `ZZZ LEGACY - Homework` (if still present) | Hide table → confirm **0 records** and no live links from Homework Completions / Submissions → delete table |
+
+Active homework source is **FBC Curriculum - SYNC** — not the ZZZ table.
+
+### Phase 5 — Verify
+
+```text
+audit-legacy-cleanup-candidates.js     → legacyFieldCount trends to 0
+audit-field-coverage-report.js         → still PASS on canonical profiles
+```
+
+---
+
+## Legacy field reference (schema snapshot)
 
 | Table | Field | Notes |
 |-------|-------|-------|
-| XP Reward Rules | `LEGACY - XP Reward - DO NOT USE` | Old reward config |
+| Achievements | `LEGACY - XP Reward - DO NOT USE` | Old reward config |
 | Weekly Athlete Summary | `Weekly Bonus XP Earned - LEGACY DO NOT USE` | Superseded rollup |
 | (table) | `ZZZ LEGACY - Homework` | Do not link new records |
 
-Search Airtable for: `LEGACY`, `DO NOT USE`, `ZZZ` to find others.
+Search Airtable for: `LEGACY`, `DO NOT USE`, `ZZZ` to find others added since last schema export.
 
 ---
 

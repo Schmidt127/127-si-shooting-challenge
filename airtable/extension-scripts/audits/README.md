@@ -35,7 +35,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
 | **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
 | **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-legacy-streak-xp-source-keys.js`, `backfill-shot-milestone-xp-week-and-was.js` |
-| **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js` | — |
+| **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js`, `audit-legacy-cleanup-candidates.js` | `archive-legacy-streak-unlock-records.js` + manual field delete |
 
 Run stages **A → J** in order when doing a full historical repair pass.
 
@@ -56,6 +56,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
 | `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
 | `audit-achievement-xp-pipeline-integrity.js` | Awarded unlocks (059) + streaks (054) → XP parity | **Ready** |
+| `audit-legacy-cleanup-candidates.js` | LEGACY/ZZZ fields + orphan streak unlock inventory | **Ready** |
 
 ---
 

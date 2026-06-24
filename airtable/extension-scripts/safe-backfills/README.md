@@ -41,6 +41,7 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 | 12 | `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| canonical keys | **Ready** |
 | 13 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP → Week + WAS from unlock | **Ready** |
 | 14 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
+| 15 | `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | **Ready** |
 
 Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
@@ -66,6 +67,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy streak XP Week/WAS + STREAK_XP key | **Ready** |
 | `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| source keys only | **Ready** |
 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP Week/WAS from unlock | **Ready** |
+| `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | **Ready** |
 
 ---
 
