@@ -31,7 +31,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **C. Weekly summary link** | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` | `backfill-missing-weekly-summaries-and-xp-links.js`, `backfill-xp-event-weekly-summary-links.js` |
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
-| **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` *(planned)* | `backfill-homework-xp-from-reviewed.js` *(planned)* |
+| **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` | `backfill-homework-xp-from-reviewed.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` *(planned)* | `repair-video-feedback-xp-link.js` |
 | **H. Video XP + email** | 113, 114, 073 | *(planned)* | `repair-video-feedback-xp-link.js` |
 | **I. Achievements / streaks** | 053–059, 066 | *(planned)* | *(planned)* |
@@ -51,7 +51,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link | Ready |
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
-| `audit-homework-pipeline-integrity.js` | Reviewed homework → XP → email readiness | Planned |
+| `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
 | `audit-video-pipeline-integrity.js` | Video asset → VF → XP chain | Planned |
 | `audit-weekly-summary-coverage.js` | WAS rows vs active enrollments by week | Planned |
 

@@ -32,9 +32,7 @@ const ARCHIVE_IF_NO_FILE = true;
 const BATCH_LIMIT = 50;
 
 /** Optional filter — null scans all orphans with zero linked Submission Assets */
-const TARGET_HOMEWORK_IDS = [
-  "recosswni7z7MuKuQ", // Allie Heidema Week 3
-];
+const TARGET_HOMEWORK_IDS = null;
 
 /** Coach override: mark upload fields complete without Submission Assets or Drive files */
 const MANUAL_ACCEPT_AS_UPLOADED_IDS = [

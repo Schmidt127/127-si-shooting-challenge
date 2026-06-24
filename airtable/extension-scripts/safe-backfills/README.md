@@ -33,7 +33,7 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 | 5b | `backfill-homework-completion-was-links.js` | Homework → Weekly Athlete Summary Link | `audit-field-coverage-report.js` |
 | 5c | `backfill-homework-completion-orphan-resolve.js` | Link repair or archive no-upload orphans | `audit-homework-completion-upload-edge-cases.js` |
 | 6 | `backfill-homework-completion-upload-status.js` | Upload status writeback from assets | `audit-stuck-upload-processing.js` |
-| 7 | `backfill-homework-xp-from-reviewed.js` *(planned)* | XP for reviewed homework missing events | `audit-homework-pipeline-integrity.js` *(planned)* |
+| 7 | `backfill-homework-xp-from-reviewed.js` | XP for reviewed homework missing events | `audit-homework-pipeline-integrity.js` |
 | 8 | `repair-video-feedback-xp-link.js` | Video Feedback ↔ XP Event repair | Manual / video audit |
 | 9 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Manual review |
 
@@ -55,7 +55,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
 | `backfill-submission-pipeline-links.js` | WAS links, HW slots, asset links | **Ready** |
 | `backfill-submission-xp-events.js` | Missing 010 XP events | **Ready** |
-| `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Planned** |
+| `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Ready** |
 | `backfill-video-pipeline-links.js` | 013-style VF links | **Planned** |
 
 ---
