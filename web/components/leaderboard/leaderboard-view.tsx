@@ -43,7 +43,7 @@ function LeaderboardStats({ data }: LeaderboardViewProps) {
 
 export function LeaderboardView({ data }: LeaderboardViewProps) {
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative overflow-hidden">
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-orange-500/10 blur-3xl" />
@@ -62,13 +62,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       <div className="relative mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
         {/* Header */}
         <header className="mb-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <Link
-              href="/"
-              className="text-sm text-muted transition hover:text-accent-soft"
-            >
-              ← Home
-            </Link>
+          <div className="flex flex-wrap items-center justify-end gap-4">
             <p className="text-xs uppercase tracking-[0.25em] text-muted">
               Updated {formatRelativeUpdate(data.updatedAt)}
             </p>
@@ -111,18 +105,18 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
 
 export function LeaderboardEmptyState() {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6">
+    <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
-        <p className="text-4xl">🏀</p>
-        <h1 className="mt-4 text-2xl font-bold text-foreground">Leaderboard warming up</h1>
+        <div className="mx-auto h-px w-12 bg-gradient-to-r from-transparent via-accent to-transparent" />
+        <h1 className="mt-6 text-2xl font-bold text-foreground">Leaderboard warming up</h1>
         <p className="mt-3 text-muted">
           No active athletes with XP yet. Check back soon as submissions roll in.
         </p>
         <Link
-          href="/"
+          href="/shooting-challenge"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
-          ← Back to home
+          ← Shooting Challenge
         </Link>
       </div>
     </div>
@@ -131,16 +125,16 @@ export function LeaderboardEmptyState() {
 
 export function LeaderboardErrorState({ message }: { message: string }) {
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center px-6">
+    <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className="max-w-md rounded-2xl border border-red-500/20 bg-card/80 p-8 text-center backdrop-blur-xl">
-        <p className="text-4xl">⚠️</p>
-        <h1 className="mt-4 text-2xl font-bold text-foreground">Could not load leaderboard</h1>
+        <div className="mx-auto h-px w-12 bg-gradient-to-r from-transparent via-red-400/80 to-transparent" />
+        <h1 className="mt-6 text-2xl font-bold text-foreground">Could not load leaderboard</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
         <Link
-          href="/"
+          href="/shooting-challenge"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
-          ← Back to home
+          ← Shooting Challenge
         </Link>
       </div>
     </div>

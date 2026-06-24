@@ -23,7 +23,9 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
         aria-hidden
       />
 
-      <div className="relative mb-3 text-4xl drop-shadow-lg">{accent.medal}</div>
+      <div className="relative mb-3 font-mono text-2xl font-bold tracking-widest text-accent-soft/90">
+        {accent.medal}
+      </div>
 
       <div
         className={`relative w-full overflow-hidden rounded-2xl border border-white/10 bg-card/80 p-5 backdrop-blur-xl ${

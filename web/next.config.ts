@@ -6,6 +6,15 @@ import type { NextConfig } from "next";
  */
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  async redirects() {
+    return [
+      {
+        source: "/leaderboard",
+        destination: "/shooting-challenge/leaderboard",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

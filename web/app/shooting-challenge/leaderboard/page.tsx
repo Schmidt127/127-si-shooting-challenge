@@ -8,7 +8,7 @@ import {
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
-  title: "Leaderboard | 127 SI Shooting Challenge",
+  title: "Leaderboard",
   description:
     "Live season rankings for the 127 Sports Intensity Shooting Challenge — XP, levels, and total shots.",
 };

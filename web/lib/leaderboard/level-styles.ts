@@ -121,7 +121,7 @@ export function getPodiumAccent(rank: number): {
 } {
   if (rank === 1) {
     return {
-      medal: "🥇",
+      medal: "I",
       bar: "from-amber-300 via-yellow-400 to-amber-600",
       halo: "shadow-[0_0_60px_rgba(251,191,36,0.35)]",
       label: "1st",
@@ -129,14 +129,14 @@ export function getPodiumAccent(rank: number): {
   }
   if (rank === 2) {
     return {
-      medal: "🥈",
+      medal: "II",
       bar: "from-slate-300 via-slate-200 to-slate-400",
       halo: "shadow-[0_0_50px_rgba(148,163,184,0.28)]",
       label: "2nd",
     };
   }
   return {
-    medal: "🥉",
+    medal: "III",
     bar: "from-orange-400 via-amber-600 to-orange-800",
     halo: "shadow-[0_0_50px_rgba(251,146,60,0.28)]",
     label: "3rd",

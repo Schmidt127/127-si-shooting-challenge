@@ -1,0 +1,35 @@
+---
+description: UI and CSS standards for the Hoop Challenges Next.js web app
+globs: web/**/*.{tsx,css}
+alwaysApply: false
+---
+
+# Web UI & Brand
+
+Full guide: `web/docs/brand-guide.md`
+
+## Structure
+
+- **Hub** (`app/page.tsx`, `components/hub/`): program picker only — no product nav
+- **Products** (`app/{product}/layout.tsx`): isolated nav per product; one **All Programs** link to `/`
+- Products: `shooting-challenge`, `dribbling-challenge`, `kids-ref-now`
+
+## Visual rules
+
+- Use theme tokens from `app/globals.css` (`background`, `card`, `accent`, `muted`, `border`)
+- Professional sports aesthetic: dark UI, orange accent, subtle grids/glows
+- **No emoji** as icons on hub or product chrome
+- **No cartoon** mascots, clip art, or playful illustration style
+- Stats/XP/ranks: `font-mono`
+- Small labels only: uppercase + letter-spacing
+
+## Tailwind
+
+- Prefer existing tokens; extend `globals.css` for new semantic colors
+- Glass panels: `bg-card/80 backdrop-blur-xl border border-white/10`
+- CTAs: `bg-gradient-to-r from-accent to-orange-600` sparingly
+
+## Incremental delivery
+
+- Ship hub + one product at a time; **Coming Soon** placeholders for unfinished apps
+- Do not mix nav items across products
