@@ -11,7 +11,7 @@ export function HubFooter() {
     <footer className="relative mt-24 border-t border-white/[0.06] pt-12 sm:mt-32 sm:pt-16">
       <div className="grid gap-10 sm:grid-cols-[1fr_auto] sm:items-start">
         <div className="flex flex-col gap-4">
-          <BrandLogo variant="circle" className="h-12 w-12 object-contain opacity-90" />
+          <BrandLogo variant="circle" className="h-16 w-16 object-contain sm:h-20 sm:w-20" />
           <p className="text-sm font-semibold text-foreground">{BRAND_ORG_NAME}</p>
           <p className="max-w-sm text-sm leading-relaxed text-muted">
             Structured training challenges for athletes, schools, and clubs.

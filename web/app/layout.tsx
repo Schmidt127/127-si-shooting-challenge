@@ -2,8 +2,6 @@ import type { Metadata } from "next";
 import { Geist_Mono } from "next/font/google";
 import { Maven_Pro } from "next/font/google";
 
-import { BRAND_LOGOS } from "@/lib/brand";
-
 import "./globals.css";
 
 const mavenPro = Maven_Pro({
@@ -28,10 +26,6 @@ export const metadata: Metadata = {
   },
   description:
     "127 Sports Intensity training programs — Shooting Challenge, Dribbling Challenge, and Kids Ref Now.",
-  icons: {
-    icon: BRAND_LOGOS.circle,
-    apple: BRAND_LOGOS.circle,
-  },
   robots: {
     index: false,
     follow: false,
