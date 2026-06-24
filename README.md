@@ -4,7 +4,7 @@ Documentation and automation source for the **127 Sports Intensity Shooting Chal
 
 ## Purpose
 
-This repository is the source of truth for Airtable automation scripts, Airtable schema notes, Airtable extension audit scripts, Make.com blueprints, documentation, and recovery procedures.
+This repository is the source of truth for Airtable automation scripts, Airtable schema notes, Airtable extension audit scripts, the Next.js participant website (`web/`), Make.com blueprints, documentation, and recovery procedures.
 
 The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, homework, video feedback, Zoom attendance, weekly summaries, and parent/coach communication.
 
@@ -18,6 +18,7 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 | **Make.com** | External workflows (Google Drive, Gmail, webhooks, and related scenarios) |
 | **GitHub** | Versioned scripts, schema notes, blueprints, docs, and recovery procedures |
 | **Cursor** | Local code and documentation editor |
+| **Next.js / Vercel** | Participant website (Softr replacement) — see [`web/`](./web/) |
 | **ChatGPT** | Architecture review, script review, debugging, audit design, and documentation support |
 
 ## Repository Layout
@@ -43,6 +44,7 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 │   ├── data-flow/            # Submission, homework, weekly summary flows
 │   ├── recovery/             # Emergency recovery runbook
 │   └── checklists/           # Weekly maintenance checklist
+├── web/                      # Next.js app (leaderboard, profiles, public display)
 └── cursor/                   # Cursor AI project rules
 ```
 

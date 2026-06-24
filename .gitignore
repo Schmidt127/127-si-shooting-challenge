@@ -11,3 +11,9 @@ venv/
 
 # Local schema export temp output (use airtable/schema/snapshots/ instead)
 _schema/
+
+# Next.js web app
+web/node_modules/
+web/.next/
+web/out/
+web/.vercel/
