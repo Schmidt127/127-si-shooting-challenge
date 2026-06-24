@@ -20,7 +20,7 @@ const SAMPLE_LIMIT = 25;
 
 const CONFIG = {
   scriptName: "audit-video-xp-pipeline-integrity",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     video: "Video Feedback",
@@ -204,6 +204,20 @@ function resolveWeeklySummaryId({ sourceWeeklySummaryIds, enrollmentId, weekId, 
 
 function assessVideoXpReadiness(videoRecord, videoTable) {
   const missing = [];
+  const awardStatus = getSelectName(videoRecord, videoTable, CONFIG.video.awardStatus);
+  const totalXp = getNumberish(videoRecord, videoTable, CONFIG.video.totalVideoXp);
+  const feedbackPosted = fieldExists(videoTable, CONFIG.video.feedbackPosted)
+    ? getBooleanish(videoRecord, videoTable, CONFIG.video.feedbackPosted)
+    : true;
+  const doNotAward =
+    fieldExists(videoTable, CONFIG.video.doNotAwardXp) &&
+    getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp);
+  const hasSubmission = getLinkedIds(videoRecord, videoTable, CONFIG.video.submission).length > 0;
+  const hasEnrollment = getLinkedIds(videoRecord, videoTable, CONFIG.video.enrollment).length > 0;
+
+  if (doNotAward || awardStatus === "Do Not Award") {
+    missing.push("do_not_award_xp");
+  }
 
   if (
     fieldExists(videoTable, CONFIG.video.active) &&
@@ -212,18 +226,23 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
     missing.push("inactive");
   }
 
-  if (
-    fieldExists(videoTable, CONFIG.video.feedbackPosted) &&
-    !getBooleanish(videoRecord, videoTable, CONFIG.video.feedbackPosted)
-  ) {
-    missing.push("feedback_not_posted");
+  // 114 clears Ready for XP Automation? after a successful award — do not require it
+  // on rows that are already Awarded with positive XP (historical parity audit path).
+  if (awardStatus === CONFIG.values.awardAwarded && totalXp > 0 && !doNotAward) {
+    if (!hasSubmission) missing.push("submission");
+    if (!hasEnrollment) missing.push("enrollment");
+    return {
+      ready: missing.length === 0,
+      missing,
+      auditMode: "awarded_parity",
+    };
   }
 
   if (
-    fieldExists(videoTable, CONFIG.video.doNotAwardXp) &&
-    getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp)
+    fieldExists(videoTable, CONFIG.video.feedbackPosted) &&
+    !feedbackPosted
   ) {
-    missing.push("do_not_award_xp");
+    missing.push("feedback_not_posted");
   }
 
   if (
@@ -233,21 +252,22 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
     missing.push("not_ready_for_xp_automation");
   }
 
-  if (!getLinkedIds(videoRecord, videoTable, CONFIG.video.submission).length) {
+  if (!hasSubmission) {
     missing.push("submission");
   }
 
-  if (!getLinkedIds(videoRecord, videoTable, CONFIG.video.enrollment).length) {
+  if (!hasEnrollment) {
     missing.push("enrollment");
   }
 
-  if (getNumberish(videoRecord, videoTable, CONFIG.video.totalVideoXp) <= 0) {
+  if (totalXp <= 0) {
     missing.push("zero_xp");
   }
 
   return {
     ready: missing.length === 0,
     missing,
+    auditMode: "trigger_ready",
   };
 }
 
@@ -395,13 +415,18 @@ async function main() {
 
     if (primarySourceKey !== expectedKey) {
       bump("source_key_mismatch");
+      const looksLikeAssetId =
+        primarySourceKey.startsWith("rec") &&
+        !normalizeText(primarySourceKey).startsWith("video_submission|");
       pushSample("source_key_mismatch", {
         videoFeedbackId,
         name: videoRecord.name,
         xpEventId: primaryXpId,
         expectedSourceKey: expectedKey,
         actualSourceKey: primarySourceKey,
-        recommendedAction: "Repair Source Key on XP Event (run backfill repair_source_key)",
+        recommendedAction: looksLikeAssetId
+          ? "Wrong XP Event linked (asset ID as key) — run repair-video-feedback-xp-link.js"
+          : "Repair Source Key on XP Event (run backfill repair_source_key)",
       });
       hasIssue = true;
     }
