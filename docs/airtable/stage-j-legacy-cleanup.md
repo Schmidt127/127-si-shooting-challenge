@@ -77,6 +77,8 @@ After `audit-xp-linkage-coverage.js`:
 
 Do **not** delete these rows — repair links and optionally migrate Source Key to `STREAK_XP|`.
 
+**Shot Milestone XP (14 rows):** `backfill-shot-milestone-xp-week-and-was.js` — copies Week/WAS from Athlete Achievement Unlock.
+
 ---
 
 ## Stage I

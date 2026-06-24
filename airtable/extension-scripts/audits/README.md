@@ -34,7 +34,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` | `backfill-homework-xp-from-reviewed.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
 | **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
-| **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` | `backfill-legacy-streak-xp-week-and-was.js` (legacy Week/WAS) |
+| **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-shot-milestone-xp-week-and-was.js` |
 | **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js` | — |
 
 Run stages **A → J** in order when doing a full historical repair pass.
