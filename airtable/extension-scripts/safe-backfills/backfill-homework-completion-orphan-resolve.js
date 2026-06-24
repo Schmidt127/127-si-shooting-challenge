@@ -9,9 +9,8 @@ Purpose:
 
   Known manual exceptions (2026-06-23):
   - rec2zZneEiNzXfJlP / recUyVb0l5B9XR7ZA — Davison, accept-as-uploaded override
-  - rectbtMV34S0AuDAV — Tracen Heidema Week 3 Char33, accept-as-uploaded override
+  - rectbtMV34S0AuDAV / recosswni7z7MuKuQ — Tracen / Allie Heidema Week 3 Char33, accept-as-uploaded override
   - recOzuFYHazBth8Eg / rec7nSabIJO1WfRJx — Dayton Fox Week 4 HW1/HW2, accept-as-uploaded override
-  - recosswni7z7MuKuQ — Allie Heidema Week 3 (archive if no file, or add to accept list)
 
 Safety:
   - DRY_RUN defaults to true
@@ -34,18 +33,17 @@ const BATCH_LIMIT = 50;
 
 /** Optional filter — null scans all orphans with zero linked Submission Assets */
 const TARGET_HOMEWORK_IDS = [
-  "rectbtMV34S0AuDAV", // Tracen Heidema Week 3
-  "recOzuFYHazBth8Eg", // Dayton Fox Week 4 HW1
-  "rec7nSabIJO1WfRJx", // Dayton Fox Week 4 HW2
+  "recosswni7z7MuKuQ", // Allie Heidema Week 3
 ];
 
 /** Coach override: mark upload fields complete without Submission Assets or Drive files */
 const MANUAL_ACCEPT_AS_UPLOADED_IDS = [
   "rec2zZneEiNzXfJlP", // Nora Davison (done)
   "recUyVb0l5B9XR7ZA", // Charlotte Davison (done)
-  "rectbtMV34S0AuDAV", // Tracen Heidema Week 3
-  "recOzuFYHazBth8Eg", // Dayton Fox Week 4 HW1
-  "rec7nSabIJO1WfRJx", // Dayton Fox Week 4 HW2
+  "rectbtMV34S0AuDAV", // Tracen Heidema Week 3 (done)
+  "recosswni7z7MuKuQ", // Allie Heidema Week 3
+  "recOzuFYHazBth8Eg", // Dayton Fox Week 4 HW1 (done)
+  "rec7nSabIJO1WfRJx", // Dayton Fox Week 4 HW2 (done)
 ];
 
 const CONFIG = {
