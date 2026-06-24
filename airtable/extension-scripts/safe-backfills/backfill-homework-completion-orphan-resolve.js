@@ -4,11 +4,14 @@ System: 127 SI Shooting Challenge
 Purpose:
   Resolves Homework Completions with no linked Submission Assets (orphans):
   - Repair: infer HW1/HW2 slot, link matching submission assets, sync upload fields
+  - Accept as uploaded: coach override for known rows (no file required)
   - Archive: when no homework asset on the submission has a file (never uploaded)
 
   Known manual exceptions (2026-06-23):
-  - rec2zZneEiNzXfJlP / recUyVb0l5B9XR7ZA — Davison sisters, no upload files
-  - recosswni7z7MuKuQ / rectbtMV34S0AuDAV — Heidema Week 3 Char33, slot/link gaps
+  - rec2zZneEiNzXfJlP / recUyVb0l5B9XR7ZA — Davison, accept-as-uploaded override
+  - rectbtMV34S0AuDAV — Tracen Heidema Week 3 Char33, accept-as-uploaded override
+  - recOzuFYHazBth8Eg / rec7nSabIJO1WfRJx — Dayton Fox Week 4 HW1/HW2, accept-as-uploaded override
+  - recosswni7z7MuKuQ — Allie Heidema Week 3 (archive if no file, or add to accept list)
 
 Safety:
   - DRY_RUN defaults to true
@@ -30,11 +33,24 @@ const ARCHIVE_IF_NO_FILE = true;
 const BATCH_LIMIT = 50;
 
 /** Optional filter — null scans all orphans with zero linked Submission Assets */
-const TARGET_HOMEWORK_IDS = null;
+const TARGET_HOMEWORK_IDS = [
+  "rectbtMV34S0AuDAV", // Tracen Heidema Week 3
+  "recOzuFYHazBth8Eg", // Dayton Fox Week 4 HW1
+  "rec7nSabIJO1WfRJx", // Dayton Fox Week 4 HW2
+];
+
+/** Coach override: mark upload fields complete without Submission Assets or Drive files */
+const MANUAL_ACCEPT_AS_UPLOADED_IDS = [
+  "rec2zZneEiNzXfJlP", // Nora Davison (done)
+  "recUyVb0l5B9XR7ZA", // Charlotte Davison (done)
+  "rectbtMV34S0AuDAV", // Tracen Heidema Week 3
+  "recOzuFYHazBth8Eg", // Dayton Fox Week 4 HW1
+  "rec7nSabIJO1WfRJx", // Dayton Fox Week 4 HW2
+];
 
 const CONFIG = {
   scriptName: "backfill-homework-completion-orphan-resolve",
-  version: "v1.0",
+  version: "v1.3",
 
   tables: {
     submissions: "Submissions",
@@ -86,6 +102,8 @@ const CONFIG = {
     syncableAssetStatuses: ["Uploaded", "Processing", "Error"],
     archiveReviewStatus: "Archived",
     archiveCompletionStatus: "Not Accepted",
+    acceptUploadStatus: "Uploaded",
+    acceptCompletionStatus: "Submitted",
   },
 };
 
@@ -392,6 +410,44 @@ function buildHomeworkSyncFields(homeworkRecord, homeworkTable, assetRecords, as
   return fields;
 }
 
+function buildAcceptAsUploadedFields(homeworkRecord, homeworkTable, slot) {
+  const fields = {};
+  const currentUpload = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus);
+  const currentCompletion = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.completionStatus);
+
+  if (slot && !getHomeworkSlot(homeworkRecord, homeworkTable)) {
+    if (isWritableField(homeworkTable, CONFIG.homework.assetSlot)) {
+      fields[CONFIG.homework.assetSlot] = { name: slot };
+    }
+    if (isWritableField(homeworkTable, CONFIG.homework.itemSlot)) {
+      fields[CONFIG.homework.itemSlot] = { name: slot };
+    }
+  }
+
+  if (
+    currentUpload !== CONFIG.values.acceptUploadStatus &&
+    isWritableField(homeworkTable, CONFIG.homework.uploadStatus)
+  ) {
+    fields[CONFIG.homework.uploadStatus] = { name: CONFIG.values.acceptUploadStatus };
+  }
+
+  if (
+    getCell(homeworkRecord, homeworkTable, CONFIG.homework.writebackComplete) !== true &&
+    isWritableField(homeworkTable, CONFIG.homework.writebackComplete)
+  ) {
+    fields[CONFIG.homework.writebackComplete] = true;
+  }
+
+  if (
+    currentCompletion !== CONFIG.values.acceptCompletionStatus &&
+    isWritableField(homeworkTable, CONFIG.homework.completionStatus)
+  ) {
+    fields[CONFIG.homework.completionStatus] = { name: CONFIG.values.acceptCompletionStatus };
+  }
+
+  return fields;
+}
+
 function buildArchiveFields(homeworkRecord, homeworkTable) {
   const fields = {};
   const currentReview = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.reviewStatus);
@@ -412,6 +468,36 @@ function buildArchiveFields(homeworkRecord, homeworkTable) {
   }
 
   return fields;
+}
+
+function needsAcceptAsUploaded(homeworkRecord, homeworkTable) {
+  const upload = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.uploadStatus);
+  const writeback = getCell(homeworkRecord, homeworkTable, CONFIG.homework.writebackComplete);
+  const completion = getSelectName(homeworkRecord, homeworkTable, CONFIG.homework.completionStatus);
+
+  return (
+    upload !== CONFIG.values.acceptUploadStatus ||
+    writeback !== true ||
+    completion !== CONFIG.values.acceptCompletionStatus
+  );
+}
+
+function inferHomeworkSlot(homeworkRecord, homeworkTable, submission, submissionsTable, homeworkRows, submissionId, allAssets, assetsTable) {
+  let slot = getHomeworkSlot(homeworkRecord, homeworkTable);
+  if (slot) return slot;
+
+  return (
+    inferSlotFromCurriculum(submission, homeworkRecord, submissionsTable, homeworkTable) ||
+    inferSlotFromSubmissionHomeworkRows(
+      homeworkRecord,
+      homeworkTable,
+      homeworkRows,
+      submissionId,
+      allAssets,
+      assetsTable
+    ) ||
+    "HW1"
+  );
 }
 
 function submissionHasFileAssetForSlot(allAssets, assetsTable, submissionId, slot) {
@@ -454,12 +540,6 @@ async function main() {
       if (!TARGET_HOMEWORK_IDS.includes(homeworkId)) continue;
     }
 
-    const linkedAssetIds = getLinkedIds(homeworkRecord, homeworkTable, CONFIG.homework.submissionAssets);
-    if (linkedAssetIds.length > 0) {
-      skipped.push({ reason: "skipped_has_linked_assets", homeworkId, name: homeworkRecord.name });
-      continue;
-    }
-
     const submissionId = getFirstLinkedId(homeworkRecord, homeworkTable, CONFIG.homework.submission);
     if (!submissionId) {
       skipped.push({ reason: "skipped_missing_submission_link", homeworkId, name: homeworkRecord.name });
@@ -473,19 +553,38 @@ async function main() {
     }
 
     const homeworkRows = homeworkBySubmission.get(submissionId) || [];
-    let slot = getHomeworkSlot(homeworkRecord, homeworkTable);
+    const slot = inferHomeworkSlot(
+      homeworkRecord,
+      homeworkTable,
+      submission,
+      submissionsTable,
+      homeworkRows,
+      submissionId,
+      assetQuery.records,
+      assetsTable
+    );
 
-    if (!slot) {
-      slot =
-        inferSlotFromCurriculum(submission, homeworkRecord, submissionsTable, homeworkTable) ||
-        inferSlotFromSubmissionHomeworkRows(
-          homeworkRecord,
-          homeworkTable,
-          homeworkRows,
-          submissionId,
-          assetQuery.records,
-          assetsTable
-        );
+    if (MANUAL_ACCEPT_AS_UPLOADED_IDS.includes(homeworkId)) {
+      if (!needsAcceptAsUploaded(homeworkRecord, homeworkTable)) {
+        skipped.push({ reason: "skipped_already_accepted", homeworkId, name: homeworkRecord.name });
+        continue;
+      }
+
+      planned.push({
+        action: "accept_as_uploaded",
+        homeworkId,
+        name: homeworkRecord.name,
+        submissionId,
+        slot,
+        reason: "Coach override — count as uploaded (linked assets OK)",
+      });
+      continue;
+    }
+
+    const linkedAssetIds = getLinkedIds(homeworkRecord, homeworkTable, CONFIG.homework.submissionAssets);
+    if (linkedAssetIds.length > 0) {
+      skipped.push({ reason: "skipped_has_linked_assets", homeworkId, name: homeworkRecord.name });
+      continue;
     }
 
     const matchingAssets = slot
@@ -559,6 +658,15 @@ async function main() {
         continue;
       }
 
+      if (row.action === "accept_as_uploaded") {
+        const fields = buildAcceptAsUploadedFields(homeworkRecord, homeworkTable, row.slot);
+        if (!DRY_RUN && CONFIRM_WRITE && Object.keys(fields).length > 0) {
+          await homeworkTable.updateRecordAsync(row.homeworkId, fields);
+        }
+        applied.push(row);
+        continue;
+      }
+
       const matchingAssets = row.assetIds
         .map(id => assetQuery.getRecord(id))
         .filter(Boolean);
@@ -622,6 +730,7 @@ async function main() {
     dryRun: DRY_RUN,
     confirmWrite: CONFIRM_WRITE,
     archiveIfNoFile: ARCHIVE_IF_NO_FILE,
+    manualAcceptAsUploadedIds: MANUAL_ACCEPT_AS_UPLOADED_IDS,
     batchLimit: BATCH_LIMIT,
     plannedCount: planned.length,
     batchCount: batch.length,
