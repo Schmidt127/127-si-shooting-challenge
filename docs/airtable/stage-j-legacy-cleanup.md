@@ -88,7 +88,11 @@ Achievement parity audit: `audit-achievement-xp-pipeline-integrity.js`
 - **Unlocks** — `XP Award Status = Awarded` vs 059 source keys (`PERFECT_WEEK|`, `SHOT_MILESTONE|`)
 - **Streaks** — `Source Status = Awarded` vs 054 keys (`STREAK_XP|`)
 
-Legacy `STREAK_OCCURRENCE|` XP missing Week: `backfill-legacy-streak-xp-week-and-was.js`.
+Legacy streak XP repairs (Stage I):
+
+1. `backfill-legacy-streak-xp-week-and-was.js` — Week/WAS for `STREAK_OCCURRENCE|` rows missing Week  
+2. `backfill-legacy-streak-xp-source-keys.js` — migrate remaining `STREAK_OCC|` / `STREAK_OCCURRENCE|` keys → `STREAK_XP|` (~167 rows)  
+3. `backfill-shot-milestone-xp-week-and-was.js` v1.1 — shot milestone Week/WAS from activity date  
 
 ---
 

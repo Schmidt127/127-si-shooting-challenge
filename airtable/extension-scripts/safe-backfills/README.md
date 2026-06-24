@@ -38,8 +38,9 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 | 9 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | **Ready** |
 | 10 | `repair-video-feedback-xp-link.js` | Video Feedback ↔ XP Event repair | Ready |
 | 11 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy STREAK_OCCURRENCE XP → Week + WAS + key | **Ready** |
-| 12 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP → Week + WAS from unlock | **Ready** |
-| 13 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
+| 12 | `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| canonical keys | **Ready** |
+| 13 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP → Week + WAS from unlock | **Ready** |
+| 14 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
 
 Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
@@ -63,6 +64,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | **Ready** |
 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | **Ready** |
 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy streak XP Week/WAS + STREAK_XP key | **Ready** |
+| `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| source keys only | **Ready** |
 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP Week/WAS from unlock | **Ready** |
 
 ---
