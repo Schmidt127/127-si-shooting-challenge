@@ -3,8 +3,11 @@ Extension Script: Backfill Shot Milestone XP Week and WAS Links
 System: 127 SI Shooting Challenge
 Purpose:
   Repairs Shot Milestone XP Events (SHOT_MILESTONE|{enrollment}|{milestoneId})
-  that have Enrollment but no Week / Weekly Athlete Summary. Copies Week from the
-  linked Athlete Achievement Unlock and links WAS when exactly one summary exists.
+  that have Enrollment but no Week / Weekly Athlete Summary.
+
+  Shot Milestone unlocks from 066 do not populate Week — only Milestone Activity Date.
+  This script resolves Week from that activity date (053 week-range logic), links XP,
+  and optionally backfills Week on the unlock record.
 
 Safety:
   - DRY_RUN defaults to true
@@ -23,16 +26,18 @@ Setup:
 const DRY_RUN = true;
 const CONFIRM_WRITE = false;
 const BATCH_LIMIT = 25;
+const WRITE_UNLOCK_WEEK = true;
 const DEBUG_XP_EVENT_ID = "";
 
 const CONFIG = {
   scriptName: "backfill-shot-milestone-xp-week-and-was",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     xpEvents: "XP Events",
     unlocks: "Athlete Achievement Unlocks",
     weeklySummary: "Weekly Athlete Summary",
+    weeks: "Weeks",
   },
 
   xpEvents: {
@@ -49,6 +54,7 @@ const CONFIG = {
     week: "Week",
     shotMilestone: "Shot Milestone",
     milestoneSourceKey: "Milestone Source Key",
+    milestoneActivityDate: "Milestone Activity Date",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
   },
@@ -56,6 +62,11 @@ const CONFIG = {
   weeklySummary: {
     enrollment: "Enrollment",
     week: "Week",
+  },
+
+  weeks: {
+    startDate: "Start Date",
+    endDate: "End Date",
   },
 
   values: {
@@ -126,6 +137,74 @@ function buildShotMilestoneSourceKey(enrollmentId, shotMilestoneId) {
   return `${CONFIG.values.sourceKeyPrefix}${enrollmentId}|${shotMilestoneId}`;
 }
 
+function toDateKey(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toISOString().slice(0, 10);
+}
+
+function findWeekForDate(weekRecords, weeksTable, dateKey) {
+  if (!dateKey) return null;
+
+  const target = new Date(`${dateKey}T12:00:00.000Z`);
+
+  for (const week of weekRecords) {
+    const startRaw = fieldExists(weeksTable, CONFIG.weeks.startDate)
+      ? week.getCellValue(CONFIG.weeks.startDate)
+      : null;
+    const endRaw = fieldExists(weeksTable, CONFIG.weeks.endDate)
+      ? week.getCellValue(CONFIG.weeks.endDate)
+      : null;
+
+    if (!startRaw || !endRaw) continue;
+
+    const start = new Date(startRaw);
+    const end = new Date(endRaw);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) continue;
+
+    const startDateOnly = new Date(
+      Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), 0, 0, 0, 0)
+    );
+    const endDateOnly = new Date(
+      Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), 23, 59, 59, 999)
+    );
+
+    if (target >= startDateOnly && target <= endDateOnly) {
+      return week;
+    }
+  }
+
+  return null;
+}
+
+function resolveWeekForUnlock(unlock, unlocksTable, weeksTable, weekRecords) {
+  const linkedWeekId = getFirstLinkedId(unlock, unlocksTable, CONFIG.unlocks.week);
+  if (linkedWeekId) {
+    return { weekId: linkedWeekId, weekResolveSource: "unlock_week_link" };
+  }
+
+  const activityDate = fieldExists(unlocksTable, CONFIG.unlocks.milestoneActivityDate)
+    ? unlock.getCellValue(CONFIG.unlocks.milestoneActivityDate)
+    : null;
+  const dateKey = toDateKey(activityDate);
+  const weekRecord = findWeekForDate(weekRecords, weeksTable, dateKey);
+
+  if (weekRecord) {
+    return {
+      weekId: weekRecord.id,
+      weekResolveSource: "milestone_activity_date",
+      activityDateKey: dateKey,
+    };
+  }
+
+  return {
+    weekId: "",
+    weekResolveSource: "",
+    activityDateKey: dateKey,
+  };
+}
+
 function addIfWritable(update, table, fieldName, value) {
   if (value === undefined || value === null) return;
   if (fieldName === "" || !isWritableField(table, fieldName)) return;
@@ -137,17 +216,20 @@ async function main() {
   const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
   const unlocksTable = base.getTable(CONFIG.tables.unlocks);
   const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+  const weeksTable = base.getTable(CONFIG.tables.weeks);
 
   const xpFields = Object.values(CONFIG.xpEvents).filter(name => fieldExists(xpEventsTable, name));
   const unlockFields = Object.values(CONFIG.unlocks).filter(name => fieldExists(unlocksTable, name));
   const summaryFields = Object.values(CONFIG.weeklySummary).filter(name =>
     fieldExists(weeklySummaryTable, name)
   );
+  const weekFields = Object.values(CONFIG.weeks).filter(name => fieldExists(weeksTable, name));
 
-  const [xpQuery, unlockQuery, summaryQuery] = await Promise.all([
+  const [xpQuery, unlockQuery, summaryQuery, weeksQuery] = await Promise.all([
     xpEventsTable.selectRecordsAsync({ fields: xpFields }),
     unlocksTable.selectRecordsAsync({ fields: unlockFields }),
     weeklySummaryTable.selectRecordsAsync({ fields: summaryFields }),
+    weeksTable.selectRecordsAsync({ fields: weekFields }),
   ]);
 
   const summaryIndex = new Map();
@@ -261,16 +343,27 @@ async function main() {
     }
 
     const unlock = unlockQuery.getRecord(unlockId);
-    const unlockWeekId = getFirstLinkedId(unlock, unlocksTable, CONFIG.unlocks.week);
+    const { weekId: unlockWeekId, weekResolveSource, activityDateKey } = resolveWeekForUnlock(
+      unlock,
+      unlocksTable,
+      weeksTable,
+      weeksQuery.records
+    );
 
     if (!unlockWeekId) {
-      skip("unlock_missing_week", {
+      skip(activityDateKey ? "week_not_found_for_activity_date" : "unlock_missing_activity_date", {
         xpEventId: xpRecord.id,
         unlockId,
         sourceKey,
+        activityDateKey: activityDateKey || "",
       });
       continue;
     }
+
+    const needsUnlockWeek =
+      WRITE_UNLOCK_WEEK &&
+      weekResolveSource === "milestone_activity_date" &&
+      !getFirstLinkedId(unlock, unlocksTable, CONFIG.unlocks.week);
 
     const summaryIds = summaryIndex.get(buildSummaryIndexKey(enrollmentId, unlockWeekId)) || [];
     const unlockSummaryId = getFirstLinkedId(unlock, unlocksTable, CONFIG.unlocks.weeklySummary);
@@ -305,6 +398,9 @@ async function main() {
     if (enrollmentId !== getFirstLinkedId(xpRecord, xpEventsTable, CONFIG.xpEvents.enrollment)) {
       actions.push("link_enrollment");
     }
+    if (needsUnlockWeek) {
+      actions.push("link_unlock_week");
+    }
 
     candidates.push({
       xpEventId: xpRecord.id,
@@ -312,6 +408,8 @@ async function main() {
       sourceKey,
       unlockId,
       unlockResolveSource,
+      weekResolveSource,
+      activityDateKey: activityDateKey || "",
       enrollmentId,
       weekId: unlockWeekId,
       shotMilestoneId,
@@ -366,9 +464,27 @@ async function main() {
 
       if (!DRY_RUN && CONFIRM_WRITE) {
         await xpEventsTable.updateRecordAsync(row.xpEventId, update);
+
+        if (row.actions.includes("link_unlock_week")) {
+          const unlockUpdate = {};
+          addIfWritable(
+            unlockUpdate,
+            unlocksTable,
+            CONFIG.unlocks.week,
+            linkedCell([row.weekId])
+          );
+          if (Object.keys(unlockUpdate).length > 0) {
+            await unlocksTable.updateRecordAsync(row.unlockId, unlockUpdate);
+          }
+        }
       }
 
-      applied.push({ ...row, dryRun: DRY_RUN || !CONFIRM_WRITE, updateFields: Object.keys(update) });
+      applied.push({
+        ...row,
+        dryRun: DRY_RUN || !CONFIRM_WRITE,
+        updateFields: Object.keys(update),
+        unlockUpdate: row.actions.includes("link_unlock_week") ? ["Week"] : [],
+      });
     } catch (error) {
       errors.push({
         xpEventId: row.xpEventId,
@@ -392,6 +508,7 @@ async function main() {
         version: CONFIG.version,
         dryRun: DRY_RUN,
         confirmWrite: CONFIRM_WRITE,
+        writeUnlockWeek: WRITE_UNLOCK_WEEK,
         batchLimit: BATCH_LIMIT,
         xpEventsChecked: xpQuery.records.length,
         candidateCount: candidates.length,
