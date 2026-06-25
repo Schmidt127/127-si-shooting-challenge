@@ -31,7 +31,7 @@ Softr-era fields to honor until renamed:
 
 | View name | Table | Filter |
 |-----------|-------|--------|
-| `Web - Leaderboard` | Enrollments | Active, has Total XP, sort by XP desc |
+| `Web - Leaderboard` | Enrollments | Active; app sorts by level → XP → shots |
 | `Web - Public Profiles` | Enrollments | Publishable slug present |
 | `Web - Levels` | Levels | Active / ordered by Sort Order |
 | `Web - Achievements Catalog` | Achievements | OK to Publish |

@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { formatGrade, formatShots, formatXp } from "@/lib/formatters";
 import { getPodiumAccent } from "@/lib/leaderboard/level-styles";
 import type { LeaderboardEntry } from "@/types/leaderboard";
@@ -8,6 +10,56 @@ type LeaderboardPodiumProps = {
   entries: LeaderboardEntry[];
 };
 
+function podiumInitials(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
+}
+
+function PodiumHeadshot({
+  entry,
+  isFirst,
+}: {
+  entry: LeaderboardEntry;
+  isFirst: boolean;
+}) {
+  const sizeClass = isFirst
+    ? "h-28 w-28 sm:h-36 sm:w-36"
+    : "h-24 w-24 sm:h-28 sm:w-28";
+  const ringClass =
+    entry.rank === 1
+      ? "ring-amber-300/70"
+      : entry.rank === 2
+        ? "ring-slate-300/60"
+        : "ring-orange-400/60";
+
+  return (
+    <div
+      className={`relative mb-4 overflow-hidden rounded-full bg-gradient-to-br from-white/10 to-white/5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.8)] ring-4 ${ringClass} ${sizeClass}`}
+    >
+      {entry.headshot ? (
+        <Image
+          src={entry.headshot.url}
+          alt={entry.displayName}
+          fill
+          className="object-cover"
+          sizes={isFirst ? "144px" : "112px"}
+          unoptimized
+        />
+      ) : (
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-blue/30 to-accent/20">
+          <span
+            className={`font-black text-white/80 ${isFirst ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"}`}
+          >
+            {podiumInitials(entry.displayName)}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
   const accent = getPodiumAccent(entry.rank);
   const isFirst = entry.rank === 1;
@@ -15,21 +67,27 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
   return (
     <article
       className={`group relative flex flex-col items-center text-center transition-transform duration-500 hover:-translate-y-1 ${
-        isFirst ? "order-2 z-10 sm:-mt-6" : entry.rank === 2 ? "order-1" : "order-3"
+        isFirst
+          ? "order-1 sm:order-2 z-10 sm:-mt-6"
+          : entry.rank === 2
+            ? "order-2 sm:order-1"
+            : "order-3"
       }`}
     >
       <div
-        className={`absolute inset-x-4 top-8 h-32 rounded-full blur-3xl opacity-60 ${accent.halo}`}
+        className={`absolute inset-x-4 top-16 h-32 rounded-full blur-3xl opacity-60 ${accent.halo}`}
         aria-hidden
       />
 
-      <div className="relative mb-3 font-mono text-2xl font-bold tracking-widest text-accent-soft/90">
+      <PodiumHeadshot entry={entry} isFirst={isFirst} />
+
+      <div className="relative mb-2 font-mono text-xl font-bold tracking-widest text-accent-soft/90 sm:text-2xl">
         {accent.medal}
       </div>
 
       <div
         className={`relative w-full overflow-hidden rounded-2xl border border-white/10 bg-card/80 p-5 backdrop-blur-xl ${
-          isFirst ? "min-h-[280px] sm:min-h-[320px]" : "min-h-[240px] sm:min-h-[260px]"
+          isFirst ? "min-h-[240px] sm:min-h-[260px]" : "min-h-[220px] sm:min-h-[240px]"
         }`}
       >
         <div

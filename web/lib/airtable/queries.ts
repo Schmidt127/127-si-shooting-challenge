@@ -61,6 +61,8 @@ export const LEADERBOARD_FIELDS = [
   "School Name Lookup",
   "Grade",
   "Current Level - Public Facing Display",
+  "Level Sort Order - For Softr",
+  "Athlete Headshot",
   "Lifetime XP Total",
   "Total Shots Counted",
   "School Year",
@@ -166,15 +168,14 @@ const ZOOM_MEETING_FIELDS = [
 const LEADERBOARD_FALLBACK_FILTER = "AND({Active?}, {Lifetime XP Total} >= 0)";
 
 /**
- * Public season leaderboard — active enrollments sorted by lifetime XP.
- * Prefer the `Web - Leaderboard` view when present; falls back only on missing view.
+ * Public season leaderboard — active enrollments ranked level → XP → shots.
+ * Prefer the `Web - Leaderboard` view when present; sort is applied in app code.
  */
 export async function fetchLeaderboard(): Promise<LeaderboardData> {
   const baseParams = {
     tableName: AIRTABLE_TABLES.enrollments,
     maxRecords: LEADERBOARD_MAX_RECORDS,
     fields: [...LEADERBOARD_FIELDS],
-    sort: [{ field: "Lifetime XP Total", direction: "desc" as const }],
     revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
   };
 
