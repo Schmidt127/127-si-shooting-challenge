@@ -33,6 +33,20 @@ export default function ShootingChallengeHomePage() {
         </Link>
 
         <Link
+          href="/homework"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-accent/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-soft">
+            Curriculum
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Homework</h2>
+          <p className="mt-2 text-sm text-muted">Published assignments by week — film, faith, and skills.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-accent-soft transition group-hover:translate-x-0.5">
+            Open →
+          </span>
+        </Link>
+
+        <Link
           href="/levels"
           className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-white/20 hover:bg-card/80"
         >
