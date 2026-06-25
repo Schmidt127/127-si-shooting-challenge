@@ -5,6 +5,8 @@
  * or Server Actions. Never expose AIRTABLE_API_TOKEN to the browser.
  */
 
+import { AirtableApiError } from "@/lib/airtable/errors";
+
 const AIRTABLE_API_BASE = "https://api.airtable.com/v0";
 
 export type AirtableConfigStatus = {
@@ -55,18 +57,20 @@ export type AirtableListParams = {
   revalidateSeconds?: number;
 };
 
-/**
- * Minimal list-records fetch. Expand with pagination and caching as queries grow.
- */
-export async function listAirtableRecords<TFields extends Record<string, unknown>>(
+type AirtableListResponse<TFields extends Record<string, unknown>> = {
+  records: Array<{ id: string; fields: TFields }>;
+  offset?: string;
+};
+
+function buildListUrl(
+  baseId: string,
   params: AirtableListParams,
-): Promise<{ records: Array<{ id: string; fields: TFields }> }> {
-  const { token, baseId } = requireAirtableConfig();
+  offset?: string,
+): string {
   const searchParams = new URLSearchParams();
 
   if (params.view) searchParams.set("view", params.view);
   if (params.filterByFormula) searchParams.set("filterByFormula", params.filterByFormula);
-  if (params.maxRecords) searchParams.set("maxRecords", String(params.maxRecords));
   if (params.fields?.length) {
     for (const field of params.fields) {
       searchParams.append("fields[]", field);
@@ -78,22 +82,60 @@ export async function listAirtableRecords<TFields extends Record<string, unknown
       searchParams.set(`sort[${index}][direction]`, sort.direction ?? "asc");
     });
   }
+  if (offset) searchParams.set("offset", offset);
+
+  const pageSize = params.maxRecords ? Math.min(params.maxRecords, 100) : 100;
+  searchParams.set("pageSize", String(pageSize));
 
   const query = searchParams.toString();
-  const url = `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}${query ? `?${query}` : ""}`;
+  return `${AIRTABLE_API_BASE}/${baseId}/${encodeURIComponent(params.tableName)}?${query}`;
+}
 
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    next: { revalidate: params.revalidateSeconds ?? 60 },
-  });
+/**
+ * List records with automatic pagination until maxRecords or Airtable has no more pages.
+ */
+export async function listAirtableRecords<TFields extends Record<string, unknown>>(
+  params: AirtableListParams,
+): Promise<{ records: Array<{ id: string; fields: TFields }> }> {
+  const { token, baseId } = requireAirtableConfig();
+  const records: Array<{ id: string; fields: TFields }> = [];
+  let offset: string | undefined;
 
-  if (!response.ok) {
-    const body = await response.text();
-    throw new Error(`Airtable request failed (${response.status}): ${body}`);
+  do {
+    const remaining =
+      params.maxRecords !== undefined ? params.maxRecords - records.length : undefined;
+    if (remaining !== undefined && remaining <= 0) break;
+
+    const url = buildListUrl(
+      baseId,
+      {
+        ...params,
+        maxRecords: remaining !== undefined ? Math.min(remaining, 100) : params.maxRecords,
+      },
+      offset,
+    );
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      next: { revalidate: params.revalidateSeconds ?? 60 },
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      throw new AirtableApiError(response.status, body);
+    }
+
+    const page = (await response.json()) as AirtableListResponse<TFields>;
+    records.push(...page.records);
+    offset = page.offset;
+  } while (offset);
+
+  if (params.maxRecords !== undefined && records.length > params.maxRecords) {
+    return { records: records.slice(0, params.maxRecords) };
   }
 
-  return response.json();
+  return { records };
 }

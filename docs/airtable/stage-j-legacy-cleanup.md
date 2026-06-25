@@ -2,15 +2,51 @@
 
 Stage J runs **after** pipeline audits and backfills (Stages A–H). Goal: prove canonical fields are in use and identify legacy cruft.
 
-## Stage J status (2026-06-24)
+## Pipeline status (Stages A–J)
+
+| Stage | Focus | Audit | Status |
+|-------|--------|-------|--------|
+| **A** | Submission intake | `audit-submission-pipeline-integrity.js` | Re-run to confirm |
+| **B** | Submission XP (010) | `audit-xp-vs-submissions.js` | Re-run to confirm |
+| **C** | Weekly summary / WAS | `audit-orphan-xp-events.js` | **PASS** (2,285/2,285) — re-run to confirm |
+| **D** | Assets created | `audit-submission-pipeline-integrity.js` | Re-run to confirm |
+| **E** | Homework upload | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | Re-run to confirm |
+| **F** | Homework XP (065) | `audit-homework-pipeline-integrity.js` | Re-run to confirm |
+| **G** | Video upload | `audit-video-pipeline-integrity.js` | Re-run to confirm |
+| **H** | Video XP (114) | `audit-video-xp-pipeline-integrity.js` | **PASS** — `issueTotal: 0` |
+| **I** | Achievements / streaks | `audit-achievement-xp-pipeline-integrity.js` | **PASS** — 114 unlocks, 324 streaks, `issueTotal: 0` |
+| **J** | Legacy cleanup | `audit-legacy-cleanup-candidates.js`, `audit-field-coverage-report.js` | **In progress** — manual field delete |
+
+### Stage I repairs completed (2026-06-24)
+
+- `backfill-legacy-streak-xp-week-and-was.js` — legacy streak XP Week/WAS
+- `backfill-legacy-streak-xp-source-keys.js` — `STREAK_OCC*` → `STREAK_XP|`
+- `backfill-shot-milestone-xp-week-and-was.js` v1.1 — shot milestone Week/WAS
+- `backfill-shot-milestone-unlock-mark-awarded.js` — 52 Pending unlocks with XP linked → Awarded
+- `archive-legacy-streak-unlock-records.js` — 156 orphan Streak Length unlock rows deleted
+- `audit-pending-shot-milestone-unlocks.js` — 059 readiness diagnostic
+- 059 automation trigger fixed (matches conditions; no `Ready for 059 XP?` formula)
+
+## Stage J status (2026-06-25)
 
 | Check | Result |
 |-------|--------|
 | Stage H video XP audit | **PASS** — `issueTotal: 0` |
 | Orphan XP / WAS linkage | **PASS** — 2,285/2,285 |
-| Stage I achievement/streak XP | **PASS** — `issueTotal: 0`, `streak_ok: 324` |
+| Stage I achievement/streak XP | **PASS** — `issueTotal: 0`, `unlock_ok: 114`, `streak_ok: 324` |
 | Field coverage (v1.1 profiles) | **PASS** — no `likelyUnusedFields` in canonical pipeline |
 | **Legacy cleanup** | **In progress** — runbook below |
+
+### What to run next (in Airtable)
+
+```text
+1. audit-legacy-cleanup-candidates.js     ← start here (Stage J)
+2. audit-orphan-xp-events.js              ← confirm still 0
+3. audit-field-coverage-report.js         ← confirm canonical fields
+4. audit-xp-linkage-coverage.js           ← optional linkage sanity
+```
+
+Then manual UI: delete legacy fields (Phase 3 below). Re-run step 1 until `legacyFieldCount` trends to 0.
 
 ## Run order (perfection pass)
 
@@ -78,6 +114,8 @@ For each field: remove from **all views + interfaces**, then delete the field.
 |-------|-------|-------|-------|
 | 1 | **Achievements** | `LEGACY - XP Reward - DO NOT USE` | Yes — 0% fill, no automation refs |
 | 2 | **Weekly Athlete Summary** | `Weekly Bonus XP Earned - LEGACY DO NOT USE` | Yes — formula only, superseded by XP Events rollup |
+| 3 | **Submissions** | `Legacy - Ready for Daily Email Build?` | Yes — superseded by current email pipeline |
+| 4 | **Submissions** | `Legacy - Daily Email Build Status` | Yes — superseded by current email pipeline |
 
 **UI steps (per field):**
 
@@ -110,6 +148,8 @@ audit-field-coverage-report.js         → still PASS on canonical profiles
 |-------|-------|-------|
 | Achievements | `LEGACY - XP Reward - DO NOT USE` | Old reward config |
 | Weekly Athlete Summary | `Weekly Bonus XP Earned - LEGACY DO NOT USE` | Superseded rollup |
+| Submissions | `Legacy - Ready for Daily Email Build?` | Old daily email gate |
+| Submissions | `Legacy - Daily Email Build Status` | Old daily email status |
 | (table) | `ZZZ LEGACY - Homework` | Do not link new records |
 
 Search Airtable for: `LEGACY`, `DO NOT USE`, `ZZZ` to find others added since last schema export.

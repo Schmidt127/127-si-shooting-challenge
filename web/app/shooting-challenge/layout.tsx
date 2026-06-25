@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { ProductShell } from "@/components/layout/product-shell";
 import { getProductById } from "@/lib/products";
 

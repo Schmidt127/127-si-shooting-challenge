@@ -23,7 +23,7 @@ const LEGACY_NAME_PATTERN = /(LEGACY|DO NOT USE|ZZZ)/i;
 
 const CONFIG = {
   scriptName: "audit-legacy-cleanup-candidates",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     unlocks: "Athlete Achievement Unlocks",
@@ -51,6 +51,14 @@ const CONFIG = {
     unlockPending: "Pending",
     deleteableStatuses: ["", "Skipped"],
   },
+
+  /** Documented manual UI deletes — see docs/airtable/stage-j-legacy-cleanup.md Phase 3 */
+  documentedManualFieldDeletes: [
+    { table: "Achievements", field: "LEGACY - XP Reward - DO NOT USE" },
+    { table: "Weekly Athlete Summary", field: "Weekly Bonus XP Earned - LEGACY DO NOT USE" },
+    { table: "Submissions", field: "Legacy - Ready for Daily Email Build?" },
+    { table: "Submissions", field: "Legacy - Daily Email Build Status" },
+  ],
 };
 
 function fieldExists(table, fieldName) {
@@ -100,8 +108,26 @@ function isFieldNonEmpty(record, field) {
   return text !== "";
 }
 
+function fieldExistsOnTable(tableName, fieldName) {
+  try {
+    const table = base.getTable(tableName);
+    table.getField(fieldName);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function matchesLegacyName(name) {
   return LEGACY_NAME_PATTERN.test(String(name || ""));
+}
+
+function buildManualDeleteReport() {
+  return CONFIG.documentedManualFieldDeletes.map(item => ({
+    ...item,
+    stillPresent: fieldExistsOnTable(item.table, item.field),
+    action: "Hide from all views, then delete field in Airtable UI",
+  }));
 }
 
 async function scanLegacyFields() {
@@ -279,6 +305,8 @@ async function main() {
 
   const legacyFieldCount = legacyFields.filter(item => item.kind === "field").length;
   const legacyTableCount = legacyFields.filter(item => item.kind === "table").length;
+  const manualFieldDeletes = buildManualDeleteReport();
+  const manualFieldsStillPresent = manualFieldDeletes.filter(item => item.stillPresent).length;
 
   console.log("===== LEGACY CLEANUP CANDIDATES AUDIT =====");
   console.log(
@@ -289,9 +317,15 @@ async function main() {
         legacyTableCount,
         legacyFieldCount,
         legacyFields,
+        manualFieldDeletes,
+        manualFieldsStillPresent,
         streakUnlocks: streakUnlockReport,
         recommendedAction:
-          "Run archive-legacy-streak-unlock-records.js for delete candidates; hide/delete legacy fields in Airtable UI per docs/airtable/stage-j-legacy-cleanup.md",
+          streakUnlockReport.deleteCandidateCount > 0
+            ? "Run archive-legacy-streak-unlock-records.js for delete candidates."
+            : manualFieldsStillPresent > 0
+              ? "Delete manualFieldDeletes rows still present in Airtable UI (Phase 3 in stage-j-legacy-cleanup.md)."
+              : "Stage J legacy cleanup looks complete. Re-run audit-field-coverage-report.js.",
       },
       null,
       2
