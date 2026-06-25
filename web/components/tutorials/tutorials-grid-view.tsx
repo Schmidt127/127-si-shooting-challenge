@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
@@ -18,7 +19,7 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
 
   return (
     <Link href={`/tutorials/${tutorial.id}`} className="group block">
-      <article className="overflow-hidden rounded-2xl border border-white/10 bg-card/50 transition duration-300 hover:-translate-y-0.5 hover:border-accent/25 hover:shadow-[0_20px_60px_-24px_rgba(255,139,0,0.35)]">
+      <article className={catalogCardClass()}>
         <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${accent}`}>
           {tutorial.thumbnail ? (
             <Image
@@ -108,7 +109,7 @@ export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
 export function TutorialsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">No tutorials published yet</h1>
         <p className="mt-3 text-muted">Mark tutorials OK to Publish on Softr and they will appear here.</p>
         <Link href="/shooting-challenge" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
@@ -122,7 +123,7 @@ export function TutorialsEmptyState() {
 export function TutorialsErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-red-500/20 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass(true)}>
         <h1 className="text-2xl font-bold text-foreground">Could not load tutorials</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>

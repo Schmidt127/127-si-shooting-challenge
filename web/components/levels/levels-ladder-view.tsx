@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
@@ -12,11 +13,19 @@ type LevelsLadderViewProps = {
   data: LevelLadderData;
 };
 
-function XpMeter({ xp, maxXp }: { xp: number; maxXp: number }) {
+function XpMeter({
+  xp,
+  maxXp,
+  className = "",
+}: {
+  xp: number;
+  maxXp: number;
+  className?: string;
+}) {
   const width = maxXp > 0 ? Math.max(8, Math.round((xp / maxXp) * 100)) : 8;
 
   return (
-    <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10">
+    <div className={`h-1.5 overflow-hidden rounded-full bg-white/10 ${className}`}>
       <div
         className="h-full rounded-full bg-gradient-to-r from-brand-blue via-accent to-amber-300"
         style={{ width: `${width}%` }}
@@ -42,49 +51,43 @@ function LevelLadderCard({
   return (
     <Link href={`/levels/${level.id}`} className="group relative block">
       <article
-        className={`relative overflow-hidden rounded-2xl border transition duration-300 ${
-          isPinnacle
-            ? "border-amber-400/35 bg-gradient-to-br from-amber-500/10 via-card/80 to-violet-900/20 shadow-[0_0_50px_-12px_rgba(251,191,36,0.4)]"
-            : "border-white/10 bg-card/55 hover:border-white/20 hover:bg-card/75"
-        }`}
+        className={catalogCardClass(isPinnacle ? { featured: "amber" } : undefined)}
       >
-        <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
-          <div className="flex items-center gap-4 sm:w-56">
-            <div
-              className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br font-mono text-lg font-black ${style.gradient} ${style.text} ring-1 ${style.ring}`}
-            >
-              {level.sortOrder || level.rank || "—"}
-            </div>
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-muted">{tierLabel}</p>
-              <LevelBadge level={level.displayName} size="lg" />
-            </div>
+        <div className="flex items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
+          <div
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-mono text-base font-black sm:h-12 sm:w-12 sm:rounded-2xl sm:text-lg ${style.gradient} ${style.text} ring-1 ${style.ring}`}
+          >
+            {level.sortOrder || level.rank || "—"}
           </div>
 
-          <div className="min-w-0 flex-1">
-            <h3 className="text-xl font-bold text-foreground transition group-hover:text-accent-soft">
+          <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 sm:gap-1">
+            <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted">{tierLabel}</p>
+              <LevelBadge level={level.displayName} />
+            </div>
+            <h3 className="text-base font-bold leading-tight text-foreground transition group-hover:text-accent-soft sm:text-lg">
               {level.name}
             </h3>
-            <p className="mt-1 text-sm text-muted">
+            <p className="text-xs leading-snug text-muted sm:text-sm">
               {formatXp(level.xpRequired)} lifetime XP
               {level.xpFromPrevious > 0 ? ` · +${formatXp(level.xpFromPrevious)} from prior tier` : ""}
             </p>
-            <XpMeter xp={level.xpRequired} maxXp={maxXp} />
+            <XpMeter xp={level.xpRequired} maxXp={maxXp} className="mt-1" />
           </div>
 
           {level.coverImage ? (
-            <div className="flex shrink-0 items-center justify-center self-center rounded-xl border border-white/5 bg-black/20 p-2 sm:ml-1">
+            <div className="flex shrink-0 items-center justify-center rounded-lg border border-white/5 bg-black/20 p-1.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}
                 alt=""
-                className="max-h-32 max-w-44 object-contain sm:max-h-40 sm:max-w-52"
+                className="max-h-24 max-w-32 object-contain sm:max-h-28 sm:max-w-36"
               />
             </div>
           ) : null}
         </div>
 
-        <div className="border-t border-white/5 px-5 py-3 sm:px-6">
+        <div className="border-t border-white/5 px-4 py-2 sm:px-5">
           <span className="text-sm font-semibold text-accent-soft opacity-80 transition group-hover:translate-x-0.5 group-hover:opacity-100">
             Unlock requirements & details →
           </span>
@@ -117,7 +120,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
           {data.levels.map((level, index) => (
             <div key={level.id} className="relative sm:pl-14">
               <span
-                className="absolute left-4 top-8 hidden h-3 w-3 rounded-full border-2 border-accent/50 bg-background sm:block"
+                className="absolute left-4 top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-accent/50 bg-background sm:block"
                 aria-hidden
               />
               <LevelLadderCard
@@ -137,7 +140,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
 export function LevelsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">Levels coming soon</h1>
         <p className="mt-3 text-muted">Active level tiers will appear here once marked Active in Airtable.</p>
         <Link href="/shooting-challenge" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
@@ -151,7 +154,7 @@ export function LevelsEmptyState() {
 export function LevelsErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-red-500/20 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass(true)}>
         <h1 className="text-2xl font-bold text-foreground">Could not load levels</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>

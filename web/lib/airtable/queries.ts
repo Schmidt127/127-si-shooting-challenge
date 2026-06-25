@@ -108,7 +108,6 @@ const LEVEL_FIELDS = [
   "XP From Previous Level",
   "Previous Level",
   "Next Level",
-  "Unlock Message",
   "Sort Order",
   "Rank",
   "Public Gate Criteria",

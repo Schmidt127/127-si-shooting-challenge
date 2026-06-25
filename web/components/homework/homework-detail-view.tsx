@@ -1,8 +1,15 @@
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import {
+  catalogHeroClass,
+  catalogInsetClass,
+  catalogPanelClass,
+  catalogStatePanelClass,
+} from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
+import { cn } from "@/lib/utils";
 import type { HomeworkAssignment } from "@/types/homework";
 
 type HomeworkDetailViewProps = {
@@ -39,7 +46,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
           <span aria-hidden>←</span> All homework
         </Link>
 
-        <header className="relative mt-8 overflow-hidden rounded-3xl border border-white/10 bg-card/60 backdrop-blur-md">
+        <header className={cn(catalogHeroClass(), "relative mt-8")}>
           {assignment.coverImage ? (
             <div className="relative aspect-[21/9] w-full overflow-hidden bg-black/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -92,7 +99,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
               {assignment.topics.map((topic) => (
                 <span
                   key={topic}
-                  className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-1.5 text-sm text-foreground"
+                  className={cn(catalogInsetClass(), "px-3 py-1.5 text-sm text-foreground")}
                 >
                   {topic}
                 </span>
@@ -102,21 +109,21 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
         ) : null}
 
         {description ? (
-          <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+          <section className={cn(catalogPanelClass(), "mt-10")}>
             <SectionHeading label="Overview" title="The full assignment" />
             <RichContent text={description} className="text-foreground/90" />
           </section>
         ) : null}
 
         {assignment.specificSteps ? (
-          <section className="mt-8 rounded-2xl border border-accent/15 bg-accent/5 p-6 sm:p-8">
+          <section className={cn(catalogPanelClass({ tint: "accent" }), "mt-8")}>
             <SectionHeading label="Action plan" title="Specific steps" />
             <RichContent text={assignment.specificSteps} className="text-foreground/90" />
           </section>
         ) : null}
 
         {assignment.assignmentRationale ? (
-          <section className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+          <section className={cn(catalogPanelClass(), "mt-8")}>
             <SectionHeading label="Coaching lens" title="Why this matters" />
             <RichContent text={assignment.assignmentRationale} className="text-foreground/90" />
           </section>
@@ -132,7 +139,10 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
                     href={doc.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between rounded-xl border border-white/10 bg-card/50 px-4 py-3 text-sm transition hover:border-accent/30 hover:text-accent-soft"
+                    className={cn(
+                      catalogInsetClass(),
+                      "flex items-center justify-between px-4 py-3 text-sm transition hover:border-accent/30 hover:text-accent-soft",
+                    )}
                   >
                     <span>{doc.filename}</span>
                     <span aria-hidden>↓</span>
@@ -150,7 +160,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
 export function HomeworkNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">Assignment not found</h1>
         <p className="mt-3 text-muted">
           This homework may be unpublished or the link is incorrect.

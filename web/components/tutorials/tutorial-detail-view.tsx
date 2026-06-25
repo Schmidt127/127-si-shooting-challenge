@@ -2,9 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import {
+  catalogHeroClass,
+  catalogPanelClass,
+  catalogStatePanelClass,
+} from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
 import { getVideoEmbedUrl, isDirectVideoUrl } from "@/lib/formatters/video";
+import { cn } from "@/lib/utils";
 import type { TutorialItem } from "@/types/tutorials";
 
 type TutorialDetailViewProps = {
@@ -16,7 +22,7 @@ function VideoPanel({ url }: { url: string }) {
 
   if (embedUrl) {
     return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-white/10 bg-black shadow-2xl">
+      <div className="aspect-video overflow-hidden rounded-2xl border border-white/[0.14] bg-black shadow-[0_12px_40px_-10px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
         <iframe
           src={embedUrl}
           title="Tutorial video"
@@ -96,7 +102,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
           </div>
 
           {tutorial.athleteHeadshot ? (
-            <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-3xl border border-white/10">
+            <div className={cn(catalogHeroClass(), "relative mx-auto aspect-square w-full max-w-xs")}>
               <Image
                 src={tutorial.athleteHeadshot.url}
                 alt={tutorial.athlete || "Athlete"}
@@ -122,7 +128,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
         ) : null}
 
         {tutorial.detailedDescription ? (
-          <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+          <section className={cn(catalogPanelClass(), "mt-10")}>
             <SectionHeading label="Deep dive" title="Full breakdown" />
             <RichContent text={tutorial.detailedDescription} className="text-foreground/90" />
           </section>
@@ -148,7 +154,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
 export function TutorialNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">Tutorial not found</h1>
         <p className="mt-3 text-muted">This clip may be unpublished or the link is incorrect.</p>
         <Link href="/tutorials" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">

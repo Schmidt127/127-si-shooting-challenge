@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
@@ -27,11 +28,9 @@ function HomeworkCard({
       className="group relative block"
     >
       <article
-        className={`overflow-hidden rounded-2xl border transition duration-300 ${
-          isLatestWeek && index === 0
-            ? "border-accent/35 bg-gradient-to-br from-accent/10 via-card/80 to-card/40 shadow-[0_0_40px_-12px_rgba(255,139,0,0.35)]"
-            : "border-white/10 bg-card/50 hover:border-accent/25 hover:bg-card/70"
-        }`}
+        className={catalogCardClass(
+          isLatestWeek && index === 0 ? { featured: "accent" } : undefined,
+        )}
       >
         <div className="flex flex-col sm:flex-row">
           {assignment.coverImage ? (
@@ -172,7 +171,7 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
 export function HomeworkEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <div className="mx-auto h-px w-12 bg-gradient-to-r from-transparent via-accent to-transparent" />
         <h1 className="mt-6 text-2xl font-bold text-foreground">No homework published yet</h1>
         <p className="mt-3 text-muted">
@@ -192,7 +191,7 @@ export function HomeworkEmptyState() {
 export function HomeworkErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-red-500/20 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass(true)}>
         <h1 className="text-2xl font-bold text-foreground">Could not load homework</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
         <Link

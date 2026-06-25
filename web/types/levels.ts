@@ -13,7 +13,6 @@ export type LevelDefinition = {
   xpRequired: number;
   xpFromPrevious: number;
   coverImage: CatalogAttachment | null;
-  unlockMessage: string;
   gateCriteria: string;
   previousLevelId: string;
   nextLevelId: string;

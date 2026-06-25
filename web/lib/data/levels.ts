@@ -11,7 +11,6 @@ export type LevelFields = {
   "XP From Previous Level"?: unknown;
   "Previous Level"?: unknown;
   "Next Level"?: unknown;
-  "Unlock Message"?: unknown;
   "Sort Order"?: unknown;
   Rank?: unknown;
   "Public Gate Criteria"?: unknown;
@@ -33,7 +32,6 @@ export function mapLevelRecord(record: { id: string; fields: LevelFields }): Lev
     xpRequired: asNumber(fields["XP Required (Cumulative)"]),
     xpFromPrevious: asNumber(fields["XP From Previous Level"]),
     coverImage: coverImages[0] ?? null,
-    unlockMessage: asText(fields["Unlock Message"], ""),
     gateCriteria: asText(fields["Public Gate Criteria"], ""),
     previousLevelId: getFirstLinkedId(fields["Previous Level"]),
     nextLevelId: getFirstLinkedId(fields["Next Level"]),

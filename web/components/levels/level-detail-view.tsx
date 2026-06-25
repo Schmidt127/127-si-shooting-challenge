@@ -1,6 +1,14 @@
 import Link from "next/link";
 
+import { cn } from "@/lib/utils";
+
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import {
+  catalogHeroClass,
+  catalogInsetClass,
+  catalogPanelClass,
+  catalogStatePanelClass,
+} from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
 import { formatXp } from "@/lib/formatters";
@@ -15,7 +23,7 @@ type LevelDetailViewProps = {
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 backdrop-blur-sm">
+    <div className={cn(catalogInsetClass(), "rounded-2xl px-4 py-3")}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{label}</p>
       <p className="mt-1 font-mono text-xl font-bold text-foreground">{value}</p>
     </div>
@@ -35,7 +43,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           <span aria-hidden>←</span> Level ladder
         </Link>
 
-        <div className="relative mt-8 overflow-hidden rounded-3xl border border-white/10">
+        <div className={cn(catalogHeroClass(), "relative mt-8")}>
           {level.coverImage ? (
             <div className="flex w-full items-center justify-center bg-black/25 px-4 py-6 sm:px-8 sm:py-8">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -77,15 +85,8 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           </div>
         </div>
 
-        {level.unlockMessage ? (
-          <section className="mt-10 rounded-2xl border border-accent/20 bg-gradient-to-br from-accent/10 to-transparent p-6 sm:p-8">
-            <SectionHeading label="Unlock moment" title="What athletes earn here" />
-            <RichContent text={level.unlockMessage} className="text-foreground/90" />
-          </section>
-        ) : null}
-
         {level.gateCriteria ? (
-          <section className="mt-8 rounded-2xl border border-brand-blue/25 bg-brand-blue/5 p-6 sm:p-8">
+          <section className={cn(catalogPanelClass({ tint: "blue" }), "mt-10")}>
             <SectionHeading
               label="Gate checklist"
               title="What it takes to advance"
@@ -99,7 +100,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           {level.previousLevelId ? (
             <Link
               href={`/levels/${level.previousLevelId}`}
-              className="rounded-xl border border-white/10 px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft"
+              className={cn(catalogInsetClass(), "px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft")}
             >
               ← Previous tier
             </Link>
@@ -107,7 +108,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           {level.nextLevelId ? (
             <Link
               href={`/levels/${level.nextLevelId}`}
-              className="rounded-xl border border-white/10 px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft"
+              className={cn(catalogInsetClass(), "px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft")}
             >
               Next tier →
             </Link>
@@ -121,7 +122,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
 export function LevelNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
+      <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">Level not found</h1>
         <p className="mt-3 text-muted">This tier may be inactive or the link is incorrect.</p>
         <Link href="/levels" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
