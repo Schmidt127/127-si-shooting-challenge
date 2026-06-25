@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
@@ -11,6 +12,35 @@ type HomeworkCatalogViewProps = {
   data: HomeworkCatalogData;
 };
 
+function HomeworkCardLink({
+  assignment,
+  children,
+}: {
+  assignment: HomeworkAssignment;
+  children: ReactNode;
+}) {
+  const externalUrl = assignment.url.trim();
+
+  if (externalUrl) {
+    return (
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative block"
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={`/homework/${assignment.id}`} className="group relative block">
+      {children}
+    </Link>
+  );
+}
+
 function HomeworkCard({
   assignment,
   index,
@@ -21,12 +51,10 @@ function HomeworkCard({
   isLatestWeek: boolean;
 }) {
   const hwLabel = assignment.homeworkNumber || `Assignment ${assignment.assignmentNumber || index + 1}`;
+  const hasExternalUrl = Boolean(assignment.url.trim());
 
   return (
-    <Link
-      href={`/homework/${assignment.id}`}
-      className="group relative block"
-    >
+    <HomeworkCardLink assignment={assignment}>
       <article
         className={catalogCardClass(
           isLatestWeek && index === 0 ? { featured: "accent" } : undefined,
@@ -85,13 +113,13 @@ function HomeworkCard({
             ) : null}
 
             <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft opacity-80 transition group-hover:translate-x-0.5 group-hover:opacity-100">
-              View details
-              <span aria-hidden>→</span>
+              {hasExternalUrl ? "Open assignment" : "View details"}
+              <span aria-hidden>{hasExternalUrl ? "↗" : "→"}</span>
             </span>
           </div>
         </div>
       </article>
-    </Link>
+    </HomeworkCardLink>
   );
 }
 

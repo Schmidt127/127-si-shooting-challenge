@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+
+import {
+  TutorialMediaDetailView,
+  TutorialMediaErrorState,
+  TutorialMediaNotFoundState,
+} from "@/components/tutorial-media/tutorial-media-views";
+import { fetchShoutoutItem } from "@/lib/airtable/queries";
+import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
+
+type ShoutoutDetailPageProps = {
+  params: Promise<{ id: string }>;
+};
+
+export const revalidate = 300;
+
+export async function generateMetadata({ params }: ShoutoutDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+
+  try {
+    const item = await fetchShoutoutItem(id);
+    if (!item) return { title: "Shout-out not found" };
+
+    return {
+      title: item.name,
+      description: item.briefDescription || "Shooting Challenge athlete shout-out.",
+    };
+  } catch {
+    return { title: "Shout-out" };
+  }
+}
+
+export default async function ShoutoutDetailPage({ params }: ShoutoutDetailPageProps) {
+  const { id } = await params;
+
+  if (!/^rec[a-zA-Z0-9]{14}$/.test(id)) {
+    notFound();
+  }
+
+  try {
+    const item = await fetchShoutoutItem(id);
+    if (!item) return <TutorialMediaNotFoundState config={SHOUTOUTS_SECTION} />;
+    return <TutorialMediaDetailView item={item} config={SHOUTOUTS_SECTION} />;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    return <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />;
+  }
+}

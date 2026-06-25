@@ -5,7 +5,7 @@ import type {
   HomeworkWeekGroup,
 } from "@/types/homework";
 
-import { asNumber, asText } from "./airtable-values";
+import { asNumber, asText, asUrl } from "./airtable-values";
 
 export type FbcCurriculumFields = {
   "Assignment Full Name"?: unknown;
@@ -125,8 +125,8 @@ export function mapCurriculumToAssignment(
     bookAbbreviation: asText(fields["Book Abbreviation"], ""),
     topics: mapSelectOptions(fields["Assignment Topic"]),
     coverImage: coverImages[0] ?? null,
-    url: asText(fields.URL, ""),
-    urlAdditional: asText(fields["URL Additional"], ""),
+    url: asUrl(fields.URL),
+    urlAdditional: asUrl(fields["URL Additional"]),
     gradeBandLabel: asText(fields["Grade Band"], ""),
     fullDescription: asText(fields["Full Assignment Description"], ""),
     assignmentDescription: asText(fields["Assignment Description"], ""),

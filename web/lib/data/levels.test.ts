@@ -37,6 +37,7 @@ describe("tutorial catalog", () => {
         id: "recT1",
         fields: {
           Name: "Form shooting",
+          "Tutorial Type": ["Tutorial"],
           "Tutorial - Category": ["Shoot"],
           "Sort Order": 1,
         },
@@ -45,6 +46,7 @@ describe("tutorial catalog", () => {
         id: "recT2",
         fields: {
           Name: "Ball handling",
+          "Tutorial Type": ["Tutorial"],
           "Tutorial - Category": ["Dribble"],
           "Sort Order": 2,
         },

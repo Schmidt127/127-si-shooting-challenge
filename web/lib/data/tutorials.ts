@@ -22,6 +22,39 @@ export type TutorialFields = {
 const SHOOTING_CHALLENGE_PROGRAM = "Shooting Challenge";
 const UNCATEGORIZED = "More to explore";
 
+export type TutorialContentKind = "tutorial" | "shoutout" | "article";
+
+function normalizeTutorialType(value: string): string {
+  return value.toLowerCase().replace(/[\s-]+/g, "");
+}
+
+export function matchesTutorialContentKind(
+  types: string[],
+  kind: TutorialContentKind,
+): boolean {
+  return types.some((type) => {
+    const normalized = normalizeTutorialType(type);
+    if (kind === "tutorial") return normalized === "tutorial";
+    if (kind === "shoutout") return normalized.includes("shout");
+    return normalized.includes("article") || normalized.includes("fbcarticlebook");
+  });
+}
+
+export function hasTutorialContentKind(
+  fields: TutorialFields,
+  kind: TutorialContentKind,
+): boolean {
+  const types = mapSelectOptions(fields["Tutorial Type"]);
+  return matchesTutorialContentKind(types, kind);
+}
+
+export function isPublishedTutorialMedia(
+  fields: TutorialFields,
+  kind: TutorialContentKind,
+): boolean {
+  return isShootingChallengeTutorial(fields) && hasTutorialContentKind(fields, kind);
+}
+
 export function mapTutorialRecord(record: { id: string; fields: TutorialFields }): TutorialItem {
   const fields = record.fields;
   const resolvedImage = mapAttachments(fields["Website Image Resolved"]);
@@ -75,8 +108,12 @@ export function groupTutorialsByCategory(tutorials: TutorialItem[]): TutorialCat
 
 export function buildTutorialCatalog(
   records: Array<{ id: string; fields: TutorialFields }>,
+  kind: TutorialContentKind = "tutorial",
 ): TutorialCatalogData {
-  const tutorials = records.map(mapTutorialRecord).sort(compareTutorials);
+  const tutorials = records
+    .filter((record) => hasTutorialContentKind(record.fields, kind))
+    .map(mapTutorialRecord)
+    .sort(compareTutorials);
 
   return {
     categoryGroups: groupTutorialsByCategory(tutorials),

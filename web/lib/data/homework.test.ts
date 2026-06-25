@@ -55,6 +55,28 @@ describe("homework catalog grouping", () => {
     expect(groups[1].weekName).toBe("Week 1");
   });
 
+  it("maps aiText brief descriptions and assignment URLs", () => {
+    const assignment = mapCurriculumToAssignment(
+      {
+        id: "recHW10",
+        fields: {
+          "Assignment Full Name - Display": "Film Study",
+          "Brief Description - Display": {
+            state: "generated",
+            value: "Watch the game film and take notes.",
+            isStale: false,
+          },
+          URL: "https://example.com/homework/week-10",
+          Week: ["recWEEK10"],
+        },
+      },
+      weekIndex,
+    );
+
+    expect(assignment.briefDescription).toBe("Watch the game film and take notes.");
+    expect(assignment.url).toBe("https://example.com/homework/week-10");
+  });
+
   it("builds catalog metadata", () => {
     const catalog = buildHomeworkCatalog(
       [

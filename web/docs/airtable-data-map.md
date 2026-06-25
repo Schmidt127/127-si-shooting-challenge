@@ -37,6 +37,9 @@ Softr-era fields to honor until renamed:
 | `Web - Achievements Catalog` | Achievements | OK to Publish |
 | `Web - Homework Catalog` | FBC Curriculum - SYNC | Published? |
 | `Web - Tutorials Catalog` | Tutorials | OK to Publish on Softr + Shooting Challenge |
+| `Web - Shoutouts Catalog` | Tutorials | OK to Publish + Tutorial Type = Shout-out |
+| `Web - Articles Catalog` | Tutorials | OK to Publish + Tutorial Type = FBC Article Book |
+| `Web - Zoom Meetings` | Zoom Meetings | Not Cancelled, sorted by Start Time |
 
 ## API access pattern
 

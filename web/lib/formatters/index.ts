@@ -27,3 +27,18 @@ export function formatRelativeUpdate(iso: string): string {
     minute: "2-digit",
   });
 }
+
+export function formatMeetingDateTime(iso: string | null): string {
+  if (!iso) return "Date TBD";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return "Date TBD";
+
+  return date.toLocaleString("en-US", {
+    timeZone: "America/Denver",
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}

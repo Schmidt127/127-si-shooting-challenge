@@ -12,10 +12,17 @@ import {
 } from "@/lib/data/levels";
 import {
   buildTutorialCatalog,
-  isShootingChallengeTutorial,
+  type TutorialContentKind,
+  isPublishedTutorialMedia,
   type TutorialFields,
   mapTutorialRecord,
 } from "@/lib/data/tutorials";
+import {
+  buildZoomMeetingCatalog,
+  type ZoomMeetingFields,
+  mapZoomMeetingRecord,
+  type WeekFields as ZoomWeekFields,
+} from "@/lib/data/zoom-meetings";
 import {
   buildLeaderboardData,
   inferSeasonLabel,
@@ -25,6 +32,7 @@ import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 import type { LeaderboardData } from "@/types/leaderboard";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
+import type { ZoomMeeting, ZoomMeetingCatalogData } from "@/types/zoom-meetings";
 import {
   buildHomeworkCatalog,
   type FbcCurriculumFields,
@@ -43,6 +51,7 @@ export const AIRTABLE_TABLES = {
   homeworkCurriculum: "FBC Curriculum - SYNC",
   weeks: "Weeks",
   tutorials: "Tutorials",
+  zoomMeetings: "Zoom Meetings",
   videoFeedback: "Video Feedback",
 } as const;
 
@@ -131,6 +140,26 @@ const TUTORIAL_FIELDS = [
   "Detailed Description",
   "OK to Publish on Softr",
   "Sort Order",
+] as const;
+
+const ZOOM_MEETINGS_VIEW = "Web - Zoom Meetings";
+const ZOOM_MEETINGS_FILTER = "NOT({Meeting Status} = 'Cancelled')";
+const ZOOM_MEETING_FIELDS = [
+  "Meeting Name",
+  "Cover Media",
+  "Week",
+  "Start Time",
+  "End Time",
+  "Brief Description",
+  "Full Description",
+  "Zoom Link",
+  "Host Name",
+  "Meeting Agenda",
+  "Meeting Agenda Link",
+  "Recording Link - Video",
+  "Recording Link - Audio Only",
+  "Meeting Summary",
+  "Meeting Status",
 ] as const;
 
 /** Fallback when the Web view is missing — mirrors view intent in docs/airtable-data-map.md. */
@@ -340,12 +369,28 @@ async function listPublishedTutorialRecords(): Promise<
 /** Published tutorials for Shooting Challenge, grouped by category. */
 export async function fetchTutorialCatalog(): Promise<TutorialCatalogData> {
   const records = await listPublishedTutorialRecords();
-  const filtered = records.filter((record) => isShootingChallengeTutorial(record.fields));
-  return buildTutorialCatalog(filtered);
+  const filtered = records.filter((record) => isPublishedTutorialMedia(record.fields, "tutorial"));
+  return buildTutorialCatalog(filtered, "tutorial");
 }
 
-/** Single published tutorial for the detail page. */
-export async function fetchTutorialItem(recordId: string): Promise<TutorialItem | null> {
+/** Published athlete shout-outs from the Tutorials table. */
+export async function fetchShoutoutCatalog(): Promise<TutorialCatalogData> {
+  const records = await listPublishedTutorialRecords();
+  const filtered = records.filter((record) => isPublishedTutorialMedia(record.fields, "shoutout"));
+  return buildTutorialCatalog(filtered, "shoutout");
+}
+
+/** Published FBC article book entries from the Tutorials table. */
+export async function fetchArticleCatalog(): Promise<TutorialCatalogData> {
+  const records = await listPublishedTutorialRecords();
+  const filtered = records.filter((record) => isPublishedTutorialMedia(record.fields, "article"));
+  return buildTutorialCatalog(filtered, "article");
+}
+
+async function fetchPublishedTutorialItem(
+  recordId: string,
+  kind: TutorialContentKind,
+): Promise<TutorialItem | null> {
   if (!isAirtableRecordId(recordId)) return null;
 
   const response = await listAirtableRecords<TutorialFields>({
@@ -357,6 +402,103 @@ export async function fetchTutorialItem(recordId: string): Promise<TutorialItem 
   });
 
   const record = response.records[0];
-  if (!record || !isShootingChallengeTutorial(record.fields)) return null;
+  if (!record || !isPublishedTutorialMedia(record.fields, kind)) return null;
   return mapTutorialRecord(record);
+}
+
+/** Single published tutorial for the detail page. */
+export async function fetchTutorialItem(recordId: string): Promise<TutorialItem | null> {
+  return fetchPublishedTutorialItem(recordId, "tutorial");
+}
+
+/** Single published shout-out for the detail page. */
+export async function fetchShoutoutItem(recordId: string): Promise<TutorialItem | null> {
+  return fetchPublishedTutorialItem(recordId, "shoutout");
+}
+
+/** Single published article for the detail page. */
+export async function fetchArticleItem(recordId: string): Promise<TutorialItem | null> {
+  return fetchPublishedTutorialItem(recordId, "article");
+}
+
+async function listPublicZoomMeetingRecords(): Promise<
+  Array<{ id: string; fields: ZoomMeetingFields }>
+> {
+  const baseParams = {
+    tableName: AIRTABLE_TABLES.zoomMeetings,
+    maxRecords: 100,
+    fields: [...ZOOM_MEETING_FIELDS],
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  };
+
+  try {
+    const response = await listAirtableRecords<ZoomMeetingFields>({
+      ...baseParams,
+      view: ZOOM_MEETINGS_VIEW,
+    });
+    return response.records;
+  } catch (error) {
+    if (!isMissingAirtableViewError(error)) {
+      throw error;
+    }
+
+    const response = await listAirtableRecords<ZoomMeetingFields>({
+      ...baseParams,
+      filterByFormula: ZOOM_MEETINGS_FILTER,
+      sort: [{ field: "Start Time", direction: "desc" as const }],
+    });
+    return response.records;
+  }
+}
+
+/** Public zoom meetings grouped by challenge week. */
+export async function fetchZoomMeetingCatalog(): Promise<ZoomMeetingCatalogData> {
+  const [records, weeksResponse] = await Promise.all([
+    listPublicZoomMeetingRecords(),
+    listAirtableRecords<ZoomWeekFields>({
+      tableName: AIRTABLE_TABLES.weeks,
+      maxRecords: 100,
+      fields: [...WEEK_FIELDS],
+      revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+    }),
+  ]);
+
+  return buildZoomMeetingCatalog(records, weeksResponse.records);
+}
+
+/** Single public zoom meeting for the detail page. */
+export async function fetchZoomMeeting(recordId: string): Promise<ZoomMeeting | null> {
+  if (!isAirtableRecordId(recordId)) return null;
+
+  const [response, weeksResponse] = await Promise.all([
+    listAirtableRecords<ZoomMeetingFields>({
+      tableName: AIRTABLE_TABLES.zoomMeetings,
+      maxRecords: 1,
+      fields: [...ZOOM_MEETING_FIELDS],
+      filterByFormula: `AND(NOT({Meeting Status} = 'Cancelled'), RECORD_ID()='${recordId}')`,
+      revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+    }),
+    listAirtableRecords<ZoomWeekFields>({
+      tableName: AIRTABLE_TABLES.weeks,
+      maxRecords: 100,
+      fields: [...WEEK_FIELDS],
+      revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+    }),
+  ]);
+
+  const record = response.records[0];
+  if (!record) return null;
+
+  const weekIndex = new Map(
+    weeksResponse.records.map((week) => [
+      week.id,
+      {
+        name: String(week.fields["Week Name"] ?? "Week"),
+        startDate:
+          typeof week.fields["Start Date"] === "string" ? week.fields["Start Date"] : null,
+      },
+    ]),
+  );
+
+  return mapZoomMeetingRecord(record, weekIndex);
 }

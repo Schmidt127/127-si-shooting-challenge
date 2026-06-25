@@ -61,6 +61,48 @@ export default function ShootingChallengeHomePage() {
         </Link>
 
         <Link
+          href="/shoutouts"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-pink-400/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-300/80">
+            Spotlight
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Shout-outs</h2>
+          <p className="mt-2 text-sm text-muted">Athlete features, highlights, and encouragement.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
+            Open →
+          </span>
+        </Link>
+
+        <Link
+          href="/articles"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-emerald-400/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-300/80">
+            Reading
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Articles</h2>
+          <p className="mt-2 text-sm text-muted">FBC article book faith and character readings.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
+            Open →
+          </span>
+        </Link>
+
+        <Link
+          href="/zoom-meetings"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-cyan-400/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-cyan-300/80">
+            Live
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Zoom Meetings</h2>
+          <p className="mt-2 text-sm text-muted">Schedules, agendas, join links, and recordings.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
+            Open →
+          </span>
+        </Link>
+
+        <Link
           href="/levels"
           className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-violet-400/30 hover:bg-card/80"
         >
