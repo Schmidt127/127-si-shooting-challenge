@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { AmbientPage } from "@/components/catalog/ambient-page";
+import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 
@@ -139,39 +141,20 @@ function WeekSection({
 
 export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-brand-blue/12 blur-3xl" />
-        <div className="absolute -right-20 top-32 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute bottom-0 left-1/4 h-72 w-72 rounded-full bg-amber-500/8 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-      </div>
-
-      <div className="relative mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <header className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-accent-soft">
-            127 Sports Intensity
-          </p>
-          <h1 className="mt-3 bg-gradient-to-br from-white via-white to-orange-200 bg-clip-text text-4xl font-black tracking-tight text-transparent sm:text-5xl">
-            Homework HQ
-          </h1>
-          <p className="mx-auto mt-4 max-w-xl text-base text-muted sm:text-lg">
-            Film study, faith, and basketball assignments — published from the challenge curriculum.
-            Newest week at the top.
-          </p>
+    <AmbientPage>
+      <div className="mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
+        <DisplayHeading
+          eyebrow="Curriculum drop"
+          title="Homework"
+          titleAccent="HQ"
+          subtitle="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
+        >
           <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
             {data.totalAssignments} published · Updated {formatRelativeUpdate(data.updatedAt)}
           </p>
-        </header>
+        </DisplayHeading>
 
-        <div className="space-y-14">
+        <div className="mt-14 space-y-14">
           {data.weekGroups.map((group, groupIndex) => (
             <WeekSection
               key={group.weekId || group.weekName}
@@ -182,7 +165,7 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
           ))}
         </div>
       </div>
-    </div>
+    </AmbientPage>
   );
 }
 

@@ -47,11 +47,28 @@ export default function ShootingChallengeHomePage() {
         </Link>
 
         <Link
-          href="/levels"
-          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-white/20 hover:bg-card/80"
+          href="/tutorials"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-accent/30 hover:bg-card/80"
         >
-          <h2 className="text-lg font-bold text-foreground">Levels</h2>
-          <p className="mt-2 text-sm text-muted">Progression tiers and requirements.</p>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent-soft">
+            Film room
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Tutorials</h2>
+          <p className="mt-2 text-sm text-muted">Technique videos, breakdowns, and athlete features.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-accent-soft transition group-hover:translate-x-0.5">
+            Open →
+          </span>
+        </Link>
+
+        <Link
+          href="/levels"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-violet-400/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-violet-300/80">
+            Progression
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Levels</h2>
+          <p className="mt-2 text-sm text-muted">XP ladder from Beginner to G.O.A.T.</p>
           <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
             Open →
           </span>

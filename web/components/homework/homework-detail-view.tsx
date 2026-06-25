@@ -1,28 +1,9 @@
 import Link from "next/link";
 
-import { splitRichTextBlocks } from "@/lib/formatters/rich-text";
-import { formatRelativeUpdate } from "@/lib/formatters";
+import { AmbientPage } from "@/components/catalog/ambient-page";
+import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
+import { RichContent } from "@/components/catalog/rich-content";
 import type { HomeworkAssignment } from "@/types/homework";
-
-type HomeworkRichTextProps = {
-  text: string;
-  className?: string;
-};
-
-export function HomeworkRichText({ text, className = "" }: HomeworkRichTextProps) {
-  const blocks = splitRichTextBlocks(text);
-  if (blocks.length === 0) return null;
-
-  return (
-    <div className={`space-y-4 text-sm leading-relaxed text-muted sm:text-base ${className}`}>
-      {blocks.map((block) => (
-        <p key={block.slice(0, 48)} className="whitespace-pre-wrap">
-          {block}
-        </p>
-      ))}
-    </div>
-  );
-}
 
 type HomeworkDetailViewProps = {
   assignment: HomeworkAssignment;
@@ -49,20 +30,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
     assignment.briefDescription;
 
   return (
-    <div className="relative overflow-hidden">
-      <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -left-32 top-0 h-96 w-96 rounded-full bg-brand-blue/15 blur-3xl" />
-        <div className="absolute -right-20 top-40 h-80 w-80 rounded-full bg-accent/10 blur-3xl" />
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
-            backgroundSize: "48px 48px",
-          }}
-        />
-      </div>
-
+    <AmbientPage>
       <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
         <Link
           href="/homework"
@@ -71,7 +39,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
           <span aria-hidden>←</span> All homework
         </Link>
 
-        <header className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-card/60 backdrop-blur-md">
+        <header className="relative mt-8 overflow-hidden rounded-3xl border border-white/10 bg-card/60 backdrop-blur-md">
           {assignment.coverImage ? (
             <div className="relative aspect-[21/9] w-full overflow-hidden bg-black/40">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -101,20 +69,15 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
               ) : null}
             </div>
 
-            <h1 className="mt-5 text-3xl font-black tracking-tight text-foreground sm:text-4xl">
-              {assignment.displayName}
-            </h1>
-
-            {assignment.briefDescription ? (
-              <p className="mt-4 max-w-2xl text-base text-muted sm:text-lg">
-                {assignment.briefDescription}
-              </p>
-            ) : null}
+            <DetailTitle
+              className="mt-5"
+              overline="Assignment brief"
+              title={assignment.displayName}
+              accent={assignment.briefDescription || undefined}
+            />
 
             <div className="mt-6 flex flex-wrap gap-3">
-              {assignment.url ? (
-                <ResourceLink href={assignment.url} label="Open assignment" />
-              ) : null}
+              {assignment.url ? <ResourceLink href={assignment.url} label="Open assignment" /> : null}
               {assignment.urlAdditional ? (
                 <ResourceLink href={assignment.urlAdditional} label="Additional resource" />
               ) : null}
@@ -124,10 +87,8 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
 
         {assignment.topics.length > 0 ? (
           <section className="mt-8">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.22em] text-accent-soft">
-              Topics
-            </h2>
-            <div className="mt-3 flex flex-wrap gap-2">
+            <SectionHeading label="Focus areas" title="What you'll work on" />
+            <div className="flex flex-wrap gap-2">
               {assignment.topics.map((topic) => (
                 <span
                   key={topic}
@@ -142,34 +103,28 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
 
         {description ? (
           <section className="mt-10 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-foreground">Assignment overview</h2>
-            <div className="mt-4">
-              <HomeworkRichText text={description} />
-            </div>
+            <SectionHeading label="Overview" title="The full assignment" />
+            <RichContent text={description} className="text-foreground/90" />
           </section>
         ) : null}
 
         {assignment.specificSteps ? (
-          <section className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-foreground">Specific steps</h2>
-            <div className="mt-4">
-              <HomeworkRichText text={assignment.specificSteps} />
-            </div>
+          <section className="mt-8 rounded-2xl border border-accent/15 bg-accent/5 p-6 sm:p-8">
+            <SectionHeading label="Action plan" title="Specific steps" />
+            <RichContent text={assignment.specificSteps} className="text-foreground/90" />
           </section>
         ) : null}
 
         {assignment.assignmentRationale ? (
           <section className="mt-8 rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-foreground">Why this assignment</h2>
-            <div className="mt-4">
-              <HomeworkRichText text={assignment.assignmentRationale} />
-            </div>
+            <SectionHeading label="Coaching lens" title="Why this matters" />
+            <RichContent text={assignment.assignmentRationale} className="text-foreground/90" />
           </section>
         ) : null}
 
         {assignment.docs.length > 0 ? (
           <section className="mt-8">
-            <h2 className="text-lg font-bold text-foreground">Downloads</h2>
+            <SectionHeading label="Resources" title="Downloads" />
             <ul className="mt-4 space-y-2">
               {assignment.docs.map((doc) => (
                 <li key={doc.id}>
@@ -187,12 +142,8 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
             </ul>
           </section>
         ) : null}
-
-        <p className="mt-12 text-center text-xs text-muted">
-          Catalog sync {formatRelativeUpdate(new Date().toISOString())}
-        </p>
       </div>
-    </div>
+    </AmbientPage>
   );
 }
 

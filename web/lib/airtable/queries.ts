@@ -6,18 +6,31 @@
 import { isMissingAirtableViewError } from "@/lib/airtable/errors";
 import { listAirtableRecords } from "@/lib/airtable/client";
 import {
-  buildHomeworkCatalog,
-  type FbcCurriculumFields,
-  mapCurriculumToAssignment,
-  type WeekFields,
-} from "@/lib/data/homework";
+  buildLevelLadder,
+  type LevelFields,
+  mapLevelRecord,
+} from "@/lib/data/levels";
+import {
+  buildTutorialCatalog,
+  isShootingChallengeTutorial,
+  type TutorialFields,
+  mapTutorialRecord,
+} from "@/lib/data/tutorials";
 import {
   buildLeaderboardData,
   inferSeasonLabel,
   type EnrollmentLeaderboardFields,
 } from "@/lib/data/leaderboard";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
+import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 import type { LeaderboardData } from "@/types/leaderboard";
+import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
+import {
+  buildHomeworkCatalog,
+  type FbcCurriculumFields,
+  mapCurriculumToAssignment,
+  type WeekFields,
+} from "@/lib/data/homework";
 
 /** Airtable table names — update as views and publish rules are finalized. */
 export const AIRTABLE_TABLES = {
@@ -29,6 +42,7 @@ export const AIRTABLE_TABLES = {
   homeworkCompletions: "Homework Completions",
   homeworkCurriculum: "FBC Curriculum - SYNC",
   weeks: "Weeks",
+  tutorials: "Tutorials",
   videoFeedback: "Video Feedback",
 } as const;
 
@@ -81,6 +95,44 @@ const HOMEWORK_DETAIL_FIELDS = [
 ] as const;
 
 const WEEK_FIELDS = ["Week Name", "Start Date"] as const;
+
+const CATALOG_REVALIDATE_SECONDS = 300;
+
+const LEVELS_VIEW = "Web - Levels";
+const LEVELS_ACTIVE_FILTER = "{Active?} = 1";
+const LEVEL_FIELDS = [
+  "Level Name",
+  "Level Name with Color",
+  "Cover Image",
+  "XP Required (Cumulative)",
+  "XP From Previous Level",
+  "Previous Level",
+  "Next Level",
+  "Unlock Message",
+  "Sort Order",
+  "Rank",
+  "Public Gate Criteria",
+  "Active?",
+] as const;
+
+const TUTORIALS_VIEW = "Web - Tutorials Catalog";
+const TUTORIALS_PUBLISH_FILTER =
+  'AND({OK to Publish on Softr}, OR({Associated Program} = "", FIND("Shooting Challenge", ARRAYJOIN({Associated Program}))))';
+const TUTORIAL_FIELDS = [
+  "Name",
+  "Link to Video",
+  "Athlete",
+  "Athlete Headshot - Lkp",
+  "Thumbnail",
+  "Website Image Resolved",
+  "Tutorial Type",
+  "Tutorial - Category",
+  "Associated Program",
+  "Brief Description",
+  "Detailed Description",
+  "OK to Publish on Softr",
+  "Sort Order",
+] as const;
 
 /** Fallback when the Web view is missing — mirrors view intent in docs/airtable-data-map.md. */
 const LEADERBOARD_FALLBACK_FILTER = "AND({Active?}, {Lifetime XP Total} >= 0)";
@@ -204,4 +256,108 @@ export async function fetchHomeworkAssignment(recordId: string): Promise<Homewor
   );
 
   return mapCurriculumToAssignment(record, weekIndex);
+}
+
+async function listActiveLevelRecords(): Promise<Array<{ id: string; fields: LevelFields }>> {
+  const baseParams = {
+    tableName: AIRTABLE_TABLES.levels,
+    maxRecords: 50,
+    fields: [...LEVEL_FIELDS],
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  };
+
+  try {
+    const response = await listAirtableRecords<LevelFields>({
+      ...baseParams,
+      view: LEVELS_VIEW,
+    });
+    return response.records;
+  } catch (error) {
+    if (!isMissingAirtableViewError(error)) {
+      throw error;
+    }
+
+    const response = await listAirtableRecords<LevelFields>({
+      ...baseParams,
+      filterByFormula: LEVELS_ACTIVE_FILTER,
+      sort: [{ field: "Sort Order", direction: "asc" as const }],
+    });
+    return response.records;
+  }
+}
+
+/** Active level ladder — highest tier first. */
+export async function fetchLevelLadder(): Promise<LevelLadderData> {
+  const records = await listActiveLevelRecords();
+  return buildLevelLadder(records);
+}
+
+/** Single active level for the detail page. */
+export async function fetchLevelDefinition(recordId: string): Promise<LevelDefinition | null> {
+  if (!isAirtableRecordId(recordId)) return null;
+
+  const response = await listAirtableRecords<LevelFields>({
+    tableName: AIRTABLE_TABLES.levels,
+    maxRecords: 1,
+    fields: [...LEVEL_FIELDS],
+    filterByFormula: `AND({Active?}, RECORD_ID()='${recordId}')`,
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  });
+
+  const record = response.records[0];
+  return record ? mapLevelRecord(record) : null;
+}
+
+async function listPublishedTutorialRecords(): Promise<
+  Array<{ id: string; fields: TutorialFields }>
+> {
+  const baseParams = {
+    tableName: AIRTABLE_TABLES.tutorials,
+    maxRecords: 200,
+    fields: [...TUTORIAL_FIELDS],
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  };
+
+  try {
+    const response = await listAirtableRecords<TutorialFields>({
+      ...baseParams,
+      view: TUTORIALS_VIEW,
+    });
+    return response.records;
+  } catch (error) {
+    if (!isMissingAirtableViewError(error)) {
+      throw error;
+    }
+
+    const response = await listAirtableRecords<TutorialFields>({
+      ...baseParams,
+      filterByFormula: TUTORIALS_PUBLISH_FILTER,
+      sort: [{ field: "Sort Order", direction: "asc" as const }],
+    });
+    return response.records;
+  }
+}
+
+/** Published tutorials for Shooting Challenge, grouped by category. */
+export async function fetchTutorialCatalog(): Promise<TutorialCatalogData> {
+  const records = await listPublishedTutorialRecords();
+  const filtered = records.filter((record) => isShootingChallengeTutorial(record.fields));
+  return buildTutorialCatalog(filtered);
+}
+
+/** Single published tutorial for the detail page. */
+export async function fetchTutorialItem(recordId: string): Promise<TutorialItem | null> {
+  if (!isAirtableRecordId(recordId)) return null;
+
+  const response = await listAirtableRecords<TutorialFields>({
+    tableName: AIRTABLE_TABLES.tutorials,
+    maxRecords: 1,
+    fields: [...TUTORIAL_FIELDS],
+    filterByFormula: `AND({OK to Publish on Softr}, RECORD_ID()='${recordId}')`,
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  });
+
+  const record = response.records[0];
+  if (!record || !isShootingChallengeTutorial(record.fields)) return null;
+  return mapTutorialRecord(record);
 }

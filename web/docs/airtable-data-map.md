@@ -36,6 +36,7 @@ Softr-era fields to honor until renamed:
 | `Web - Levels` | Levels | Active / ordered by Sort Order |
 | `Web - Achievements Catalog` | Achievements | OK to Publish |
 | `Web - Homework Catalog` | FBC Curriculum - SYNC | Published? |
+| `Web - Tutorials Catalog` | Tutorials | OK to Publish on Softr + Shooting Challenge |
 
 ## API access pattern
 
