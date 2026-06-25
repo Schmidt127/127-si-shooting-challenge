@@ -1,0 +1,11 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-06-25T06:04:06",
+    "baseId": "appn84sqPw03zEbTT",
+    "available": false,
+    "reason": "Views endpoint unavailable or not permitted for this token/base.",
+    "viewCount": 0
+  },
+  "views": []
+}

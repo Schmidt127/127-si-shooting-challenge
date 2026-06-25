@@ -1,0 +1,206 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-06-25T06:04:06",
+    "baseId": "appn84sqPw03zEbTT",
+    "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+    "warningCount": 29
+  },
+  "warnings": [
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Enrollments",
+      "message": "Table 'Enrollments' has 75 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Submissions",
+      "message": "Table 'Submissions' has 54 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Submission Assets",
+      "message": "Table 'Submission Assets' has 33 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "XP Events",
+      "message": "Table 'XP Events' has 22 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Weekly Athlete Summary",
+      "message": "Table 'Weekly Athlete Summary' has 45 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Homework Completions",
+      "message": "Table 'Homework Completions' has 26 computed fields."
+    },
+    {
+      "severity": "info",
+      "category": "missing_description",
+      "table": "Tutorials",
+      "message": "Table 'Tutorials' has no description."
+    },
+    {
+      "severity": "info",
+      "category": "missing_description",
+      "table": "Tutorials & Assets",
+      "message": "Table 'Tutorials & Assets' has no description."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Levels",
+      "field": "Previous Level",
+      "message": "Self-link detected on 'Levels' via field 'Previous Level'."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Levels",
+      "field": "Next Level",
+      "message": "Self-link detected on 'Levels' via field 'Next Level'."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Enrollments",
+      "field": "Welcome Email Ready?",
+      "message": "Field 'Welcome Email Ready?' depends on many fields (7)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Enrollments",
+      "field": "Gate Debug Summary",
+      "message": "Field 'Gate Debug Summary' depends on many fields (12)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Enrollments",
+      "field": "Public Gate Missing Reason",
+      "message": "Field 'Public Gate Missing Reason' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Level Gate Rules",
+      "field": "Public Gate Criteria",
+      "message": "Field 'Public Gate Criteria' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Submission Stat Mode",
+      "message": "Field 'Submission Stat Mode' depends on many fields (7)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Submission Has Detailed Stats?",
+      "message": "Field 'Submission Has Detailed Stats?' depends on many fields (7)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Detailed Stats Valid?",
+      "message": "Field 'Detailed Stats Valid?' depends on many fields (7)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Duplicate Key",
+      "message": "Field 'Duplicate Key' depends on many fields (10)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Homework Completion Ready?",
+      "message": "Field 'Homework Completion Ready?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Ready for Homework Completion Automation?",
+      "message": "Field 'Ready for Homework Completion Automation?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Perfect Week Countable Submission?",
+      "message": "Field 'Perfect Week Countable Submission?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Ready for 009 Asset Creation?",
+      "message": "Field 'Ready for 009 Asset Creation?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submissions",
+      "field": "Why Not Ready for 009?",
+      "message": "Field 'Why Not Ready for 009?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Ready for Homework Completion Script?",
+      "message": "Field 'Ready for Homework Completion Script?' depends on many fields (8)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Create Google Drive File Name",
+      "message": "Field 'Create Google Drive File Name' depends on many fields (8)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Workflow Next Step",
+      "message": "Field 'Workflow Next Step' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "XP Events",
+      "field": "XP Date Resolved",
+      "message": "Field 'XP Date Resolved' depends on many fields (10)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Weekly Athlete Summary",
+      "field": "Threshold XP Ready?",
+      "message": "Field 'Threshold XP Ready?' depends on many fields (6)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Video Feedback",
+      "field": "Writeback Complete?",
+      "message": "Field 'Writeback Complete?' depends on many fields (6)."
+    }
+  ]
+}

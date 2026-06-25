@@ -1,0 +1,125 @@
+{
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "generatedAt": "2026-06-25T06:04:06",
+  "tableCount": 28,
+  "viewCountBasic": 0,
+  "viewCountDetailed": 0,
+  "linkCount": 124,
+  "dependencyCount": 325,
+  "tables": [
+    "Automations",
+    "Enrollments",
+    "Athletes",
+    "Level Gate Rules",
+    "Grade Bands",
+    "Target Goal Shots",
+    "Submissions",
+    "Submission Assets",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Achievements",
+    "Weeks",
+    "Program Instance - Synced",
+    "School - Synced",
+    "Weekly Athlete Summary",
+    "Levels",
+    "Shot Milestones",
+    "FBC Curriculum - SYNC",
+    "Homework Completions",
+    "Video Feedback",
+    "Tutorials",
+    "Tutorials & Assets",
+    "Zoom Meetings",
+    "XP Reward Rules",
+    "Config",
+    "Awards",
+    "Award Recipients"
+  ],
+  "topHubTables": [
+    {
+      "table": "Enrollments",
+      "degree": 34
+    },
+    {
+      "table": "Submissions",
+      "degree": 20
+    },
+    {
+      "table": "Weeks",
+      "degree": 20
+    },
+    {
+      "table": "XP Events",
+      "degree": 20
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "degree": 18
+    },
+    {
+      "table": "Homework Completions",
+      "degree": 16
+    },
+    {
+      "table": "Grade Bands",
+      "degree": 14
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "degree": 12
+    },
+    {
+      "table": "FBC Curriculum - SYNC",
+      "degree": 12
+    },
+    {
+      "table": "Levels",
+      "degree": 10
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Enrollments",
+      "computedFieldCount": 75
+    },
+    {
+      "table": "Submissions",
+      "computedFieldCount": 54
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "computedFieldCount": 45
+    },
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 33
+    },
+    {
+      "table": "Homework Completions",
+      "computedFieldCount": 26
+    },
+    {
+      "table": "XP Events",
+      "computedFieldCount": 22
+    },
+    {
+      "table": "Award Recipients",
+      "computedFieldCount": 14
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "computedFieldCount": 10
+    },
+    {
+      "table": "Shot Milestones",
+      "computedFieldCount": 8
+    },
+    {
+      "table": "Streak Occurrences",
+      "computedFieldCount": 7
+    }
+  ],
+  "viewsPerTable": {}
+}

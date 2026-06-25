@@ -82,19 +82,25 @@ _HEADERS_CACHE: Optional[Dict[str, str]] = None
 # -----------------------------
 def init_env() -> None:
     """
-    Load .env from the same folder as this script.
+    Load credentials from tools/airtable/.env, then web/.env.local (web wins).
     """
     env_path = Path(__file__).with_name(".env")
+    web_env = REPO_ROOT / "web" / ".env.local"
+
     if env_path.exists():
         load_dotenv(env_path, override=True)
+    if web_env.exists():
+        load_dotenv(web_env, override=True)
 
 def get_token() -> str:
-    token = os.getenv("AIRTABLE_TOKEN")
+    token = os.getenv("AIRTABLE_TOKEN") or os.getenv("AIRTABLE_API_TOKEN")
     if not token:
         raise SystemExit(
             "ERROR: Missing AIRTABLE_TOKEN.\n"
             "Create a .env file next to this script with:\n"
             "  AIRTABLE_TOKEN=pat...<dot>...\n"
+            "  BASE_ID=app...\n"
+            "The PAT must include schema.bases:read for this base (data.records:read optional for audits).\n"
         )
 
     if len(token) < 50 or "." not in token or not token.startswith("pat"):
