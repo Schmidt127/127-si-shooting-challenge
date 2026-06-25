@@ -8,53 +8,15 @@ import {
   catalogStatePanelClass,
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
+import { MediaPanel } from "@/components/catalog/media-panel";
 import { RichContent } from "@/components/catalog/rich-content";
-import { getVideoEmbedUrl, isDirectVideoUrl } from "@/lib/formatters/video";
+import { shouldOpenExternally } from "@/lib/formatters/external-media";
 import { cn } from "@/lib/utils";
 import type { TutorialItem } from "@/types/tutorials";
 
 type TutorialDetailViewProps = {
   tutorial: TutorialItem;
 };
-
-function VideoPanel({ url }: { url: string }) {
-  const embedUrl = getVideoEmbedUrl(url);
-
-  if (embedUrl) {
-    return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-white/[0.14] bg-black shadow-[0_12px_40px_-10px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
-        <iframe
-          src={embedUrl}
-          title="Tutorial video"
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    );
-  }
-
-  if (isDirectVideoUrl(url)) {
-    return (
-      <video
-        src={url}
-        controls
-        className="aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black"
-      />
-    );
-  }
-
-  return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex aspect-video items-center justify-center rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/15 to-brand-blue/10 text-lg font-bold text-accent-soft transition hover:border-accent/50"
-    >
-      Open video ↗
-    </a>
-  );
-}
 
 export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
   const hasVideo = Boolean(tutorial.videoUrl.trim());
@@ -123,7 +85,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
         {hasVideo ? (
           <section className="mt-10">
             <SectionHeading label="Watch" title="Technique in motion" />
-            <VideoPanel url={tutorial.videoUrl} />
+            <MediaPanel url={tutorial.videoUrl} title={tutorial.name} openLabel="Open video" />
           </section>
         ) : null}
 
@@ -134,7 +96,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
           </section>
         ) : null}
 
-        {hasVideo ? (
+        {hasVideo && !shouldOpenExternally(tutorial.videoUrl) ? (
           <div className="mt-8">
             <a
               href={tutorial.videoUrl}

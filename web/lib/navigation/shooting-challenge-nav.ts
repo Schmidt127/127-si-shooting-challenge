@@ -1,14 +1,18 @@
 import type { ProductNavItem } from "@/components/layout/product-shell";
 
-/** Shared top nav for Shooting Challenge public pages (Softr-style). */
+/**
+ * Shooting Challenge section nav — all catalog pages share ProductShell + this list.
+ * See docs/site-hierarchy.md for the full site map.
+ */
 export const SHOOTING_CHALLENGE_NAV: ProductNavItem[] = [
   { label: "Overview", href: "/shooting-challenge" },
   { label: "Leaderboard", href: "/shooting-challenge/leaderboard" },
-  { label: "Homework", href: "/homework" },
   { label: "Tutorials", href: "/tutorials" },
-  { label: "Shout-outs", href: "/shoutouts" },
+  { label: "Homework", href: "/homework" },
+  { label: "Shoutouts", href: "/shoutouts" },
   { label: "Articles", href: "/articles" },
-  { label: "Zoom", href: "/zoom-meetings" },
+  { label: "Zoom Meetings", href: "/zoom-meetings" },
+  { label: "Game Manual", href: "/game-manual" },
   { label: "Levels", href: "/levels" },
   { label: "Achievements", href: "/achievements" },
   { label: "Display", href: "/public-display" },

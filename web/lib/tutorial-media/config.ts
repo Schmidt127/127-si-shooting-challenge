@@ -18,6 +18,7 @@ export type TutorialMediaSectionConfig = {
     deepDiveLabel: string;
     deepDiveTitle: string;
     openVideoLabel: string;
+    externalDocumentHint?: string;
   };
   empty: {
     title: string;
@@ -39,28 +40,28 @@ export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
     eyebrow: "Athlete spotlight",
     title: "Shout",
     titleAccent: "outs",
-    subtitle: "Celebrate athletes in the challenge — quick features, highlights, and encouragement.",
-    itemCountLabel: "features",
-    cardCta: "Read shout-out",
+    subtitle: "Celebrate athletes in the challenge — features, highlights, and encouragement.",
+    itemCountLabel: "shoutouts",
+    cardCta: "Read shoutout",
   },
   detail: {
-    backLabel: "All shout-outs",
+    backLabel: "All shoutouts",
     watchLabel: "Watch",
     watchTitle: "Featured clip",
     deepDiveLabel: "Story",
-    deepDiveTitle: "Full shout-out",
+    deepDiveTitle: "Full shoutout",
     openVideoLabel: "Open video in new tab",
   },
   empty: {
-    title: "No shout-outs published yet",
-    message: "Mark shout-outs OK to Publish on Softr and they will appear here.",
+    title: "No shoutouts published yet",
+    message: "Mark shoutouts OK to Publish on Softr and they will appear here.",
   },
   error: {
-    title: "Could not load shout-outs",
+    title: "Could not load shoutouts",
   },
   notFound: {
-    title: "Shout-out not found",
-    message: "This feature may be unpublished or the link is incorrect.",
+    title: "Shoutout not found",
+    message: "This shoutout may be unpublished or the link is incorrect.",
   },
 };
 
@@ -77,11 +78,13 @@ export const ARTICLES_SECTION: TutorialMediaSectionConfig = {
   },
   detail: {
     backLabel: "All articles",
-    watchLabel: "Watch",
-    watchTitle: "Companion video",
+    watchLabel: "Read",
+    watchTitle: "Article",
     deepDiveLabel: "Reading",
     deepDiveTitle: "Full article",
-    openVideoLabel: "Open companion video",
+    openVideoLabel: "Open article",
+    externalDocumentHint:
+      "This article is hosted on Adobe. Open it in a new tab for the full reading experience.",
   },
   empty: {
     title: "No articles published yet",

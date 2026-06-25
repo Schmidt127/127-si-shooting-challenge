@@ -54,7 +54,7 @@ export const PRODUCTS: ProductDefinition[] = [
   },
   {
     id: "dribbling-challenge",
-    name: "Dribbling Challenge",
+    name: "Dribble Challenge",
     tagline: "Ball-handling intensity, same competitive format",
     description:
       "A parallel challenge structure for dribbling work — same progression model, new skill focus.",
@@ -64,14 +64,14 @@ export const PRODUCTS: ProductDefinition[] = [
     highlights: ["Skill tiers", "XP progression", "Program standings"],
   },
   {
-    id: "kids-ref-now",
-    name: "Kids Ref Now",
+    id: "referee-clinics",
+    name: "Referee Clinics",
     tagline: "Youth officiating, structured for growth",
     description:
-      "Resources and pathways for young referees — integrated here as the program expands.",
-    href: "/kids-ref-now",
+      "Resources and pathways for young referees — clinics, training, and program tools.",
+    href: "/referee-clinics",
     status: "coming-soon",
-    highlights: ["Youth pathways", "Training resources", "Program tools"],
+    highlights: ["Youth pathways", "Training resources", "Clinic schedules"],
   },
 ];
 

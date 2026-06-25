@@ -20,14 +20,14 @@ export async function generateMetadata({ params }: ShoutoutDetailPageProps): Pro
 
   try {
     const item = await fetchShoutoutItem(id);
-    if (!item) return { title: "Shout-out not found" };
+    if (!item) return { title: "Shoutout not found" };
 
     return {
       title: item.name,
-      description: item.briefDescription || "Shooting Challenge athlete shout-out.",
+      description: item.briefDescription || "Shooting Challenge athlete shoutout.",
     };
   } catch {
-    return { title: "Shout-out" };
+    return { title: "Shoutout" };
   }
 }
 

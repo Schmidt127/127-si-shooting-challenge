@@ -95,7 +95,7 @@ Code constants: `lib/brand.ts` → `BRAND_LOGOS`
 | Pattern | Where |
 |---------|--------|
 | Hub `/` | Program cards only — no product nav |
-| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/kids-ref-now` |
+| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/referee-clinics` |
 | Back link | **All Programs** → `/` |
 
 ---

@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,9 +10,10 @@ import {
   catalogStatePanelClass,
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, DisplayHeading, SectionHeading } from "@/components/catalog/display-heading";
+import { MediaPanel } from "@/components/catalog/media-panel";
 import { RichContent } from "@/components/catalog/rich-content";
 import { formatRelativeUpdate } from "@/lib/formatters";
-import { getVideoEmbedUrl, isDirectVideoUrl } from "@/lib/formatters/video";
+import { shouldOpenExternally } from "@/lib/formatters/external-media";
 import type { TutorialMediaSectionConfig } from "@/lib/tutorial-media/config";
 import { cn } from "@/lib/utils";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
@@ -23,42 +25,34 @@ const CATEGORY_ACCENTS: Record<string, string> = {
   Freethrow: "from-emerald-500/20 to-teal-700/5",
 };
 
-function VideoPanel({ url, title }: { url: string; title: string }) {
-  const embedUrl = getVideoEmbedUrl(url);
+function MediaCardLink({
+  item,
+  config,
+  children,
+}: {
+  item: TutorialItem;
+  config: TutorialMediaSectionConfig;
+  children: ReactNode;
+}) {
+  const externalUrl = item.videoUrl.trim();
 
-  if (embedUrl) {
+  if (shouldOpenExternally(externalUrl)) {
     return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-white/[0.14] bg-black shadow-[0_12px_40px_-10px_rgba(0,0,0,0.85),inset_0_1px_0_0_rgba(255,255,255,0.06)]">
-        <iframe
-          src={embedUrl}
-          title={title}
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-    );
-  }
-
-  if (isDirectVideoUrl(url)) {
-    return (
-      <video
-        src={url}
-        controls
-        className="aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black"
-      />
+      <a
+        href={externalUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group block"
+      >
+        {children}
+      </a>
     );
   }
 
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex aspect-video items-center justify-center rounded-2xl border border-accent/30 bg-gradient-to-br from-accent/15 to-brand-blue/10 text-lg font-bold text-accent-soft transition hover:border-accent/50"
-    >
-      Open video ↗
-    </a>
+    <Link href={`${config.basePath}/${item.id}`} className="group block">
+      {children}
+    </Link>
   );
 }
 
@@ -72,7 +66,7 @@ function MediaCard({
   const accent = CATEGORY_ACCENTS[item.categories[0] ?? ""] ?? "from-white/5 to-white/[0.02]";
 
   return (
-    <Link href={`${config.basePath}/${item.id}`} className="group block">
+    <MediaCardLink item={item} config={config}>
       <article className={catalogCardClass()}>
         <div className={`relative aspect-[16/10] overflow-hidden bg-gradient-to-br ${accent}`}>
           {item.thumbnail ? (
@@ -117,7 +111,7 @@ function MediaCard({
           </span>
         </div>
       </article>
-    </Link>
+    </MediaCardLink>
   );
 }
 
@@ -233,7 +227,12 @@ export function TutorialMediaDetailView({
         {hasVideo ? (
           <section className="mt-10">
             <SectionHeading label={config.detail.watchLabel} title={config.detail.watchTitle} />
-            <VideoPanel url={item.videoUrl} title={item.name} />
+            <MediaPanel
+              url={item.videoUrl}
+              title={item.name}
+              openLabel={config.detail.openVideoLabel}
+              externalHint={config.detail.externalDocumentHint}
+            />
           </section>
         ) : null}
 
@@ -247,7 +246,7 @@ export function TutorialMediaDetailView({
           </section>
         ) : null}
 
-        {hasVideo ? (
+        {hasVideo && shouldOpenExternally(item.videoUrl) ? null : hasVideo ? (
           <div className="mt-8">
             <a
               href={item.videoUrl}

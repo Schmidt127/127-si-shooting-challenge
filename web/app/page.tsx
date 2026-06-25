@@ -6,7 +6,7 @@ import { HUB_BRAND } from "@/lib/products";
 export const metadata: Metadata = {
   title: HUB_BRAND.title,
   description:
-    "127 Sports Intensity training programs — Shooting Challenge, Dribbling Challenge, and Kids Ref Now.",
+    "127 Sports Intensity training programs — Shooting Challenge, Dribble Challenge, and Referee Clinics.",
 };
 
 export default function HomePage() {

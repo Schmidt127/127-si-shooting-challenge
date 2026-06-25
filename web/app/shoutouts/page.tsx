@@ -9,8 +9,8 @@ import { fetchShoutoutCatalog } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
 
 export const metadata: Metadata = {
-  title: "Shout-outs",
-  description: "Athlete shout-outs and highlights from the Shooting Challenge.",
+  title: "Shoutouts",
+  description: "Athlete shoutouts and highlights from the Shooting Challenge.",
 };
 
 export const revalidate = 300;

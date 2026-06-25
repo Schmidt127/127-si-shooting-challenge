@@ -67,7 +67,7 @@ export default function ShootingChallengeHomePage() {
           <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-pink-300/80">
             Spotlight
           </p>
-          <h2 className="mt-2 text-lg font-bold text-foreground">Shout-outs</h2>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Shoutouts</h2>
           <p className="mt-2 text-sm text-muted">Athlete features, highlights, and encouragement.</p>
           <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
             Open →
@@ -97,6 +97,20 @@ export default function ShootingChallengeHomePage() {
           </p>
           <h2 className="mt-2 text-lg font-bold text-foreground">Zoom Meetings</h2>
           <p className="mt-2 text-sm text-muted">Schedules, agendas, join links, and recordings.</p>
+          <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
+            Open →
+          </span>
+        </Link>
+
+        <Link
+          href="/game-manual"
+          className="group rounded-2xl border border-white/10 bg-card/50 p-6 backdrop-blur-sm transition hover:border-amber-400/30 hover:bg-card/80"
+        >
+          <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-amber-300/80">
+            Reference
+          </p>
+          <h2 className="mt-2 text-lg font-bold text-foreground">Game Manual</h2>
+          <p className="mt-2 text-sm text-muted">Rules, scoring, XP, and how the challenge works.</p>
           <span className="mt-4 inline-block text-sm font-medium text-muted transition group-hover:text-foreground">
             Open →
           </span>

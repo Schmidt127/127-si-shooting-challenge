@@ -75,7 +75,7 @@ export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
           eyebrow="Film room"
           title="Skills &"
           titleAccent="storytelling"
-          subtitle="Shooting tutorials, technique breakdowns, and athlete shout-outs — curated for the challenge."
+          subtitle="Shooting tutorials and technique breakdowns — curated for the challenge."
         >
           <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
             {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
