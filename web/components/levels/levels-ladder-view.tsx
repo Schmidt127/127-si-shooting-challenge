@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
@@ -74,14 +73,12 @@ function LevelLadderCard({
           </div>
 
           {level.coverImage ? (
-            <div className="relative h-24 w-full shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-32">
-              <Image
+            <div className="flex shrink-0 items-center justify-center self-center rounded-xl border border-white/5 bg-black/20 p-2 sm:ml-1">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={level.coverImage.url}
                 alt=""
-                fill
-                className="object-cover transition duration-500 group-hover:scale-105"
-                sizes="128px"
-                unoptimized
+                className="max-h-32 max-w-44 object-contain sm:max-h-40 sm:max-w-52"
               />
             </div>
           ) : null}

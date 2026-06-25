@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
@@ -38,9 +37,13 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
 
         <div className="relative mt-8 overflow-hidden rounded-3xl border border-white/10">
           {level.coverImage ? (
-            <div className="relative aspect-[21/9] w-full">
-              <Image src={level.coverImage.url} alt="" fill className="object-cover" unoptimized />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/50 to-transparent" />
+            <div className="flex w-full items-center justify-center bg-black/25 px-4 py-6 sm:px-8 sm:py-8">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={level.coverImage.url}
+                alt=""
+                className="max-h-72 w-auto max-w-full object-contain sm:max-h-96"
+              />
             </div>
           ) : (
             <div className={`h-32 bg-gradient-to-br ${style.gradient}`} />
