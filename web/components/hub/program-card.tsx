@@ -38,6 +38,48 @@ function StatusBadge({
 
 export function ProgramCard({ product, index, featured = false }: ProgramCardProps) {
   const isLive = product.status === "live";
+  const isExternal = product.external || /^https?:\/\//i.test(product.href);
+  const canNavigate = Boolean(product.href) && product.href !== "#";
+
+  const liveClassName =
+    "inline-flex w-full items-center justify-center rounded-xl bg-brand-orange px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 sm:w-auto";
+  const previewClassName =
+    "inline-flex w-full items-center justify-center rounded-xl border border-white/12 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition hover:border-white/20 hover:bg-white/[0.04] sm:w-auto";
+
+  function renderCta(label: string, className: string) {
+    if (!canNavigate) {
+      return (
+        <span className={`${className} cursor-not-allowed opacity-60`} aria-disabled="true">
+          {label}
+        </span>
+      );
+    }
+
+    if (isExternal) {
+      return (
+        <a
+          href={product.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={className}
+        >
+          {label}
+          <span className="ml-2 transition group-hover:translate-x-0.5" aria-hidden>
+            ↗
+          </span>
+        </a>
+      );
+    }
+
+    return (
+      <Link href={product.href} className={className}>
+        {label}
+        <span className="ml-2 transition group-hover:translate-x-0.5" aria-hidden>
+          →
+        </span>
+      </Link>
+    );
+  }
 
   return (
     <article
@@ -80,24 +122,9 @@ export function ProgramCard({ product, index, featured = false }: ProgramCardPro
         </ul>
 
         <div className="mt-8">
-          {isLive ? (
-            <Link
-              href={product.href}
-              className="inline-flex w-full items-center justify-center rounded-xl bg-brand-orange px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 sm:w-auto"
-            >
-              Enter program
-              <span className="ml-2 transition group-hover:translate-x-0.5" aria-hidden>
-                →
-              </span>
-            </Link>
-          ) : (
-            <Link
-              href={product.href}
-              className="inline-flex w-full items-center justify-center rounded-xl border border-white/12 bg-transparent px-5 py-3 text-sm font-semibold text-foreground transition hover:border-white/20 hover:bg-white/[0.04] sm:w-auto"
-            >
-              View preview
-            </Link>
-          )}
+          {isLive
+            ? renderCta("Enter program", liveClassName)
+            : renderCta("View preview", previewClassName)}
         </div>
       </div>
     </article>

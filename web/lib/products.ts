@@ -9,6 +9,8 @@ export type ProductDefinition = {
   description: string;
   href: string;
   status: ProductStatus;
+  /** Opens in a new tab (external host) */
+  external?: boolean;
   /** Short feature bullets for landing cards */
   highlights: string[];
   /** Shown on coming-soon cards, e.g. "December 2026" */
@@ -73,8 +75,23 @@ export const PRODUCTS: ProductDefinition[] = [
     status: "coming-soon",
     highlights: ["Youth pathways", "Training resources", "Clinic schedules"],
   },
+  {
+    id: "tournament-brackets",
+    name: "Tournament Brackets",
+    tagline: "MHSA-style layouts, print-ready SVG",
+    description:
+      "State tournament bracket formatter — Montana 8-team basketball with loser-side routing. Preview online or download SVG.",
+    href: "/tournament-brackets",
+    status: "live",
+    highlights: ["8-team Montana format", "SVG download", "Airtable-ready"],
+  },
 ];
 
 export function getProductById(id: string): ProductDefinition | undefined {
   return PRODUCTS.find((product) => product.id === id);
+}
+
+/** Landing-page program cards */
+export function getHubProducts(): ProductDefinition[] {
+  return PRODUCTS;
 }
