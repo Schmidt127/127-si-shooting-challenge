@@ -21,11 +21,11 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Hoop Challenges | 127 Sports Intensity",
-    template: "%s | Hoop Challenges",
+    default: "Shooting Challenge | 127 Sports Intensity",
+    template: "%s | Shooting Challenge",
   },
   description:
-    "127 Sports Intensity training programs — Shooting Challenge, JR Referee Clinics, Dribbling Challenge, and more.",
+    "127 Sports Intensity Shooting Challenge — leaderboard, homework, tutorials, levels, and more.",
   robots: {
     index: false,
     follow: false,

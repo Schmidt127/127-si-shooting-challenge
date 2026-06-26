@@ -1,7 +1,8 @@
 import Link from "next/link";
 
-import { BrandLogo } from "@/components/brand/brand-logo";
 import { BackToHubLink } from "@/components/layout/back-to-hub-link";
+import { BrandLogo } from "@/components/brand/brand-logo";
+import { LANDING_URL } from "@/lib/app-config";
 
 export type ProductNavItem = {
   label: string;
@@ -32,16 +33,16 @@ export function ProductShell({
         <div className="mx-auto flex max-w-6xl flex-col gap-5 px-4 py-5 sm:px-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <BackToHubLink />
-            <Link
-              href="/"
+            <a
+              href={LANDING_URL}
               className="transition-opacity hover:opacity-90"
-              aria-label="127 Sports Intensity — all programs"
+              aria-label="127 Sports Intensity — Hoop Challenges home"
             >
               <BrandLogo
                 variant="horizontal"
                 className="h-8 w-auto max-w-[10rem] object-contain object-right sm:h-9 sm:max-w-[11rem]"
               />
-            </Link>
+            </a>
           </div>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

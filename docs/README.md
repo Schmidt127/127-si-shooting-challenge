@@ -2,7 +2,7 @@
 
 Central map for all documentation in this monorepo. **Start here** when you are not sure which file to open.
 
-> **Repo name vs product:** GitHub repo is `127-si-shooting-challenge` (historical). The public website in `web/` is the **Hoop Challenges** hub; Shooting Challenge is one program under it.
+> **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on hoopchallenges.com. Landing is `hoopchallenges-landing`.
 
 ---
 
@@ -61,15 +61,11 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 ## JR Referee Clinics
 
-| Doc | Purpose |
-|-----|---------|
-| [jr-ref/README.md](./jr-ref/README.md) | **JR Ref program index** |
-| [jr-ref/getting-started.md](./jr-ref/getting-started.md) | Cursor, GitHub, Vercel, schema export |
-| [jr-ref/state-wide-expansion.md](./jr-ref/state-wide-expansion.md) | Fairfield → statewide plan |
-| [../airtable/schema/jr-ref/current/table-map.md](../airtable/schema/jr-ref/current/table-map.md) | JR REF table relationships |
-| [../tools/airtable/jr-ref/README.md](../tools/airtable/jr-ref/README.md) | Pull JR REF schema |
-| [../web/docs/jr-ref/airtable-data-map.md](../web/docs/jr-ref/airtable-data-map.md) | Tables → web routes |
-| [../web/docs/jr-ref/project-roadmap.md](../web/docs/jr-ref/project-roadmap.md) | Build phases |
+Separate repo: `127-si-jr-ref` (public path `/refclinic`).
+
+## Multi-repo map
+
+See [../STRUCTURE.md](../STRUCTURE.md) at the GitHub folder root.
 
 ## Tools
 
@@ -95,5 +91,4 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | Deploy the website | [deployment-notes](../web/docs/deployment-notes.md) |
 | Add a new public page | [site-hierarchy](../web/docs/site-hierarchy.md) |
 | Export Shooting Challenge schema | [tools/airtable](../tools/airtable/README.md) |
-| Export JR REF schema | [tools/airtable/jr-ref](../tools/airtable/jr-ref/README.md) |
-| JR Ref program setup | [jr-ref/getting-started](./jr-ref/getting-started.md) |
+| Multi-repo program map | [../STRUCTURE.md](../../STRUCTURE.md) |

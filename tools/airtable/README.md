@@ -22,16 +22,9 @@ Writes timestamped files to `airtable/schema/snapshots/`:
 python export_airtable_schema.py -v
 ```
 
-### JR Referee Clinics base
+### Other programs
 
-Separate folder and env — see [jr-ref/README.md](./jr-ref/README.md):
-
-```bash
-cd jr-ref
-python export_schema.py -v
-```
-
-Outputs go to `airtable/schema/jr-ref/snapshots/`.
+JR Referee Clinics, Tournament Brackets, and Dribble Challenge each have their own repo and `tools/airtable/` exporter. See [docs/MULTI-REPO-ARCHITECTURE.md](../../docs/MULTI-REPO-ARCHITECTURE.md).
 
 Subset of tables:
 
