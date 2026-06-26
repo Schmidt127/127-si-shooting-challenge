@@ -113,7 +113,7 @@ export function LeaderboardEmptyState() {
           No active athletes with XP yet. Check back soon as submissions roll in.
         </p>
         <Link
-          href="/shooting-challenge"
+          href="/"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge
@@ -131,7 +131,7 @@ export function LeaderboardErrorState({ message }: { message: string }) {
         <h1 className="mt-6 text-2xl font-bold text-foreground">Could not load leaderboard</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
         <Link
-          href="/shooting-challenge"
+          href="/"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge

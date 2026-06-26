@@ -94,9 +94,9 @@ Code constants: `lib/brand.ts` → `BRAND_LOGOS`
 
 | Pattern | Where |
 |---------|--------|
-| Hub `/` | Program cards only — no product nav |
-| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/jr-referee-clinics` |
-| Back link | **All Programs** → `/` |
+| Landing hub | `hoopchallenges-landing` at https://www.hoopchallenges.com |
+| Shooting Challenge shell | `/shoot` (`basePath`; all catalog pages share `ProductShell` nav) |
+| Back link | **Hoop Challenges** → landing URL (`NEXT_PUBLIC_LANDING_URL`) |
 
 ---
 

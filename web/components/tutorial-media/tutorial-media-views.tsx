@@ -270,7 +270,7 @@ export function TutorialMediaEmptyState({ config }: { config: TutorialMediaSecti
         <h1 className="text-2xl font-bold text-foreground">{config.empty.title}</h1>
         <p className="mt-3 text-muted">{config.empty.message}</p>
         <Link
-          href="/shooting-challenge"
+          href="/"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge

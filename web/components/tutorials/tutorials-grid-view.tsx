@@ -112,7 +112,7 @@ export function TutorialsEmptyState() {
       <div className={catalogStatePanelClass()}>
         <h1 className="text-2xl font-bold text-foreground">No tutorials published yet</h1>
         <p className="mt-3 text-muted">Mark tutorials OK to Publish on Softr and they will appear here.</p>
-        <Link href="/shooting-challenge" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <Link href="/" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
           ← Shooting Challenge
         </Link>
       </div>

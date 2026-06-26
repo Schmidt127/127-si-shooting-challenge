@@ -61,6 +61,5 @@ See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 
 ## Cleanup backlog
 
-- Remove legacy duplicate routes outside `(program)/` — see [site-hierarchy.md](./site-hierarchy.md#legacy--duplicate-routes-remove-in-cleanup-pass)
 - Wire achievements page to Airtable
 - Add landing-site rewrites for any old bookmarked URLs if needed

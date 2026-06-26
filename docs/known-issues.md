@@ -4,7 +4,6 @@
 
 ### Web app
 
-- **Legacy duplicate routes** — Pre-rebuild pages exist outside `web/app/(program)/` (`leaderboard/`, `shooting-challenge/`, `referee-clinics/`, etc.). Canonical routes are under `(program)/` with `basePath` `/shoot`. See [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md).
 - **No URL redirects** — `next.config.ts` has no redirects. Old paths like `/shooting-challenge/leaderboard` will not work unless the landing site adds rewrites.
 - **Achievements page** — Shell only; Airtable reads not wired yet.
 - **Athlete profiles** — Route exists; slug resolution and data not complete.
@@ -22,7 +21,8 @@
 
 ## Resolved
 
-- Hub and multi-program routes removed from active app (2026 rebuild → `/shoot` only).
+- Hub and multi-program routes removed (2026 rebuild → `/shoot` only; routes under `web/app/(program)/`).
+- Stale `/shooting-challenge` back-links in components updated to `/`.
 - Stages F–H pipeline audits clean after backfill pass (re-run after bulk imports).
 - Broken `STRUCTURE.md` link removed from docs index (replaced by `PROJECT_STATE.md`).
 

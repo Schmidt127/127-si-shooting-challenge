@@ -206,7 +206,7 @@ export function HomeworkEmptyState() {
           Check back soon — new assignments appear here when marked Published in Airtable.
         </p>
         <Link
-          href="/shooting-challenge"
+          href="/"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge
@@ -223,7 +223,7 @@ export function HomeworkErrorState({ message }: { message: string }) {
         <h1 className="text-2xl font-bold text-foreground">Could not load homework</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
         <Link
-          href="/shooting-challenge"
+          href="/"
           className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge

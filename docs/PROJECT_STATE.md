@@ -92,7 +92,7 @@ Upload ladder: [make/documentation/upload-asset-engine.md](../make/documentation
 
 - **Video / homework `not_ready_for_xp`** — Sophia retakes, pending review, do-not-award, testing rows (not data bugs).
 - **Automation names in Airtable** — may differ from GitHub filenames; confirm in Airtable UI when debugging.
-- **`referee-clinics/` route** — legacy stub in `web/app/`; JR Ref belongs in `127-si-jr-ref`.
+- **`referee-clinics/` route** — removed; JR Ref belongs in `127-si-jr-ref`.
 
 ---
 

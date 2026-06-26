@@ -18,7 +18,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **`web/docs/airtable-views.md`** — Views and fallback filters from `queries.ts`.
 
 #### Changed
-- **`airtable/schema/current/automation-trigger-map.md`** — Populated pipeline trigger map.
+- **Legacy web routes** — Removed leftover `referee-clinics/` stub; component back-links use `/` instead of `/shooting-challenge`.
+- **`web/docs/site-hierarchy.md`**, **`known-issues.md`**, **`page-plan.md`**, **`brand-guide.md`** — Reflect single `(program)/` route tree.
 - **`airtable/automations/shooting-challenge/README.md`** — Points to automation index (removed placeholder `submission-xp.js`).
 - **`docs/README.md`** — PROJECT_STATE, AGENTS, automation-index links; fixed broken STRUCTURE.md reference.
 - **`docs/known-issues.md`**, **`docs/checklists/weekly-maintenance-checklist.md`**, **`web/docs/page-plan.md`** — Aligned with `/shoot` rebuild.

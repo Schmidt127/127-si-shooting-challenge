@@ -68,23 +68,14 @@ Order from `SHOOTING_CHALLENGE_NAV`:
 | Public URL | Handler | Purpose |
 |------------|---------|---------|
 | `/shoot/api/airtable` | `app/api/airtable/route.ts` | PAT configured check, future BFF |
-| `/shoot/api/tournament-brackets/svg` | `app/api/tournament-brackets/svg/route.ts` | Legacy — not in nav |
 
 ---
 
-## Legacy / duplicate routes (remove in cleanup pass)
+## Route layout
 
-These folders exist **outside** `(program)/` from pre-rebuild hub layout. They are **not** the canonical Shooting Challenge routes:
+All public pages live under `web/app/(program)/`. Root `web/app/` contains only layout, error handling, and the API health route.
 
-| Path | Notes |
-|------|-------|
-| `web/app/leaderboard/`, `homework/`, `tutorials/`, etc. | Duplicate catalog pages without `(program)` shell |
-| `web/app/shooting-challenge/` | Old `/shooting-challenge` prefix — superseded by basePath `/shoot` |
-| `web/app/referee-clinics/`, `jr-referee-clinics/`, `kids-ref-now/` | JR Ref belongs in repo `127-si-jr-ref` |
-| `web/app/dribbling-challenge/`, `tournament-brackets/` | Other programs — not in scope |
-| `web/app/page.tsx` (root) | May redirect or stub — canonical entry is `(program)/page.tsx` |
-
-**No redirects** are configured in `next.config.ts` today. Old bookmarked URLs (`/shooting-challenge/leaderboard`, `/leaderboard` without basePath) will not resolve unless the landing site adds rewrites.
+**No redirects** in `next.config.ts`. Old bookmarked URLs from the pre-rebuild hub (`/shooting-challenge/*`) will not resolve unless the landing site adds rewrites.
 
 ---
 

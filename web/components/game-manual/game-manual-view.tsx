@@ -43,7 +43,7 @@ export function GameManualView({ manualUrl }: GameManualViewProps) {
               documentcloud.adobe.com or acrobat.adobe.com.
             </p>
             <Link
-              href="/shooting-challenge"
+              href="/"
               className="mt-8 inline-block text-sm font-medium text-accent-soft transition hover:text-accent"
             >
               ← Back to Shooting Challenge
