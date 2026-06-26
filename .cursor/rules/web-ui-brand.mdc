@@ -12,7 +12,7 @@ Full guide: `web/docs/brand-guide.md`
 
 - **Hub** (`app/page.tsx`, `components/hub/`): program picker only — no product nav
 - **Products** (`app/{product}/layout.tsx`): isolated nav per product; one **All Programs** link to `/`
-- Products: `shooting-challenge`, `dribbling-challenge`, `kids-ref-now`
+- Products: `shooting-challenge`, `dribbling-challenge`, `jr-referee-clinics`, `tournament-brackets`
 
 ## Visual rules
 

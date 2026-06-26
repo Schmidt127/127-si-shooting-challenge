@@ -8,10 +8,29 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
-      // Scaffold-era URL → canonical Shooting Challenge leaderboard
       {
         source: "/leaderboard",
         destination: "/shooting-challenge/leaderboard",
+        permanent: true,
+      },
+      {
+        source: "/referee-clinics",
+        destination: "/jr-referee-clinics",
+        permanent: true,
+      },
+      {
+        source: "/referee-clinics/:path*",
+        destination: "/jr-referee-clinics/:path*",
+        permanent: true,
+      },
+      {
+        source: "/kids-ref-now",
+        destination: "/jr-referee-clinics",
+        permanent: true,
+      },
+      {
+        source: "/kids-ref-now/:path*",
+        destination: "/jr-referee-clinics/:path*",
         permanent: true,
       },
     ];

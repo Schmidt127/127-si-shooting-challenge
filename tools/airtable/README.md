@@ -22,6 +22,17 @@ Writes timestamped files to `airtable/schema/snapshots/`:
 python export_airtable_schema.py -v
 ```
 
+### JR Referee Clinics base
+
+Separate folder and env — see [jr-ref/README.md](./jr-ref/README.md):
+
+```bash
+cd jr-ref
+python export_schema.py -v
+```
+
+Outputs go to `airtable/schema/jr-ref/snapshots/`.
+
 Subset of tables:
 
 ```bash

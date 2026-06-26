@@ -6,6 +6,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### JR Ref / Airtable
+
+#### Added
+- Program infrastructure for **JR Referee Clinics** — docs (`docs/jr-ref/`), schema paths (`airtable/schema/jr-ref/`), automations folder, extension-scripts, `tools/airtable/jr-ref/export_schema.py`.
+- Cursor rule `.cursor/rules/jr-referee-clinics.mdc`.
+- Web docs under `web/docs/jr-ref/` (data map, roadmap, public rules, cursor instructions).
+
 ### Airtable
 
 #### Added

@@ -11,6 +11,7 @@
 |----------|-------|
 | `AIRTABLE_API_TOKEN` | Personal access token with `data.records:read` |
 | `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` (confirm in Airtable URL) |
+| `JR_REF_AIRTABLE_BASE_ID` | Base ID for **127SI - JR REF** (JR Referee Clinics) |
 | `NEXT_PUBLIC_SITE_URL` | `https://hoopchallenges.com` |
 | `SITE_ACCESS_TOKEN` | Optional random string for preview-only gate |
 
@@ -19,7 +20,8 @@
 ## Pipeline verification checklist
 
 - [ ] Homepage shows three-line dev message
-- [ ] `GET /api/airtable` returns `{ ok: true, airtable: { configured: true } }`
+- [ ] `GET /api/airtable` returns `{ ok: true }` (Shooting Challenge base)
+- [ ] `GET /api/jr-ref/airtable` returns `{ ok: true }` when JR REF base ID is set
 - [ ] Placeholder routes load (`/leaderboard`, `/levels`, etc.)
 - [ ] No Airtable token in browser Network tab
 

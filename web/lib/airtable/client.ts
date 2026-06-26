@@ -29,17 +29,39 @@ export function getAirtableConfigStatus(): AirtableConfigStatus {
   };
 }
 
-function requireAirtableConfig(): { token: string; baseId: string } {
+function requireAirtableToken(): string {
   const token = process.env.AIRTABLE_API_TOKEN?.trim();
+  if (!token) {
+    throw new Error(
+      "Missing Airtable configuration. Set AIRTABLE_API_TOKEN in environment variables.",
+    );
+  }
+  return token;
+}
+
+function requireAirtableConfig(): { token: string; baseId: string } {
+  const token = requireAirtableToken();
   const baseId = process.env.AIRTABLE_BASE_ID?.trim();
 
-  if (!token || !baseId) {
+  if (!baseId) {
     throw new Error(
-      "Missing Airtable configuration. Set AIRTABLE_API_TOKEN and AIRTABLE_BASE_ID in environment variables.",
+      "Missing Airtable configuration. Set AIRTABLE_BASE_ID in environment variables.",
     );
   }
 
   return { token, baseId };
+}
+
+export function getAirtableBaseConfigStatus(baseIdEnvKey: string): AirtableConfigStatus {
+  const token = process.env.AIRTABLE_API_TOKEN?.trim() ?? "";
+  const baseId = process.env[baseIdEnvKey]?.trim() ?? "";
+
+  return {
+    configured: Boolean(token && baseId),
+    hasToken: Boolean(token),
+    hasBaseId: Boolean(baseId),
+    baseIdPreview: baseId ? `${baseId.slice(0, 6)}…` : null,
+  };
 }
 
 export type AirtableSort = {
@@ -94,10 +116,11 @@ function buildListUrl(
 /**
  * List records with automatic pagination until maxRecords or Airtable has no more pages.
  */
-export async function listAirtableRecords<TFields extends Record<string, unknown>>(
+export async function listAirtableRecordsForBase<TFields extends Record<string, unknown>>(
+  baseId: string,
   params: AirtableListParams,
 ): Promise<{ records: Array<{ id: string; fields: TFields }> }> {
-  const { token, baseId } = requireAirtableConfig();
+  const token = requireAirtableToken();
   const records: Array<{ id: string; fields: TFields }> = [];
   let offset: string | undefined;
 
@@ -138,4 +161,12 @@ export async function listAirtableRecords<TFields extends Record<string, unknown
   }
 
   return { records };
+}
+
+/** List records from the Shooting Challenge base (default env). */
+export async function listAirtableRecords<TFields extends Record<string, unknown>>(
+  params: AirtableListParams,
+): Promise<{ records: Array<{ id: string; fields: TFields }> }> {
+  const { baseId } = requireAirtableConfig();
+  return listAirtableRecordsForBase<TFields>(baseId, params);
 }

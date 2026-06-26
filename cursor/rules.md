@@ -6,10 +6,12 @@
 |-----------|--------|
 | `airtable-automation-scripts.mdc` | `airtable/automations/**/*.js` — production automation standard |
 | `web-ui-brand.mdc` | `web/**` — UI, brand, Next.js conventions |
+| `jr-referee-clinics.mdc` | JR Ref program — Airtable, docs, `web/app/jr-referee-clinics/**` |
 
 ## Quick links
 
 - [Documentation index](../docs/README.md)
+- [JR Referee Clinics program docs](../docs/jr-ref/README.md)
 - [Airtable automation standard](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
 - [Web site hierarchy](../web/docs/site-hierarchy.md)
 - [Pipeline audits (A–J)](../airtable/extension-scripts/audits/README.md)

@@ -2,7 +2,7 @@
 
 Documentation and automation source for the **127 Sports Intensity Shooting Challenge** — an Airtable-based youth basketball shooting challenge system.
 
-> **Repo name vs product:** This GitHub repo is named for the Shooting Challenge backend. The Next.js app in [`web/`](./web/) is the **Hoop Challenges** hub (Shooting Challenge, Dribble Challenge, Referee Clinics, etc.) and will replace Softr.io over time.
+> **Repo name vs product:** This GitHub repo is named for the Shooting Challenge backend. The Next.js app in [`web/`](./web/) is the **Hoop Challenges** hub (Shooting Challenge, JR Referee Clinics, Dribble Challenge, Tournament Brackets, etc.) and will replace Softr.io over time.
 
 ## Purpose
 
@@ -31,9 +31,12 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 ├── CHANGELOG.md              # Notable changes (Airtable / Web / Make sections)
 ├── SYSTEM_OVERVIEW.md        # App modules, data flow, and architecture goals
 ├── docs/                     # Ops docs — start at docs/README.md (index)
+│   └── jr-ref/               # JR Referee Clinics program docs
 ├── airtable/
-│   ├── schema/               # Schema notes, table/field maps, snapshots
+│   ├── schema/               # Schema notes, snapshots (shooting-challenge + jr-ref/)
 │   ├── automations/          # Native Airtable automation scripts
+│   │   ├── shooting-challenge/
+│   │   └── jr-referee-clinics/
 │   ├── extension-scripts/
 │   │   ├── audits/           # Dry-run audit extension scripts (Stages A–J)
 │   │   ├── safe-backfills/   # Controlled backfill extension scripts

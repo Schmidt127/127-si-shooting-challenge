@@ -21,7 +21,7 @@ Each program has its own overview page and (when live) a `ProductShell` nav.
 |-----|---------|--------|
 | `/shooting-challenge` | Shooting Challenge | Live |
 | `/dribbling-challenge` | Dribble Challenge | Coming soon |
-| `/referee-clinics` | Referee Clinics | Coming soon |
+| `/jr-referee-clinics` | JR Referee Clinics | In progress — see `docs/jr-ref/` |
 
 Program cards on the hub come from `PRODUCTS` in `lib/products.ts`.
 

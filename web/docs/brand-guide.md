@@ -13,7 +13,7 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 |-------|------|--------|
 | Hub | **Hoop Challenges** | `hoopchallenges.com` program picker |
 | Parent brand | **127 Sports Intensity** | Logo, footer, org line |
-| Products | Shooting Challenge, Dribbling Challenge, Kids Ref Now | Own path + nav shell |
+| Products | Shooting Challenge, Dribbling Challenge, JR Referee Clinics | Own path + nav shell |
 
 ---
 
@@ -95,7 +95,7 @@ Code constants: `lib/brand.ts` → `BRAND_LOGOS`
 | Pattern | Where |
 |---------|--------|
 | Hub `/` | Program cards only — no product nav |
-| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/referee-clinics` |
+| Product shells | `/shooting-challenge`, `/dribbling-challenge`, `/jr-referee-clinics` |
 | Back link | **All Programs** → `/` |
 
 ---

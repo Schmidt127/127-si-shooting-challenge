@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-/** Legacy URL — program renamed to Referee Clinics. */
+/** Legacy URL — redirects to JR Referee Clinics. */
 export default function KidsRefNowRedirectPage() {
-  redirect("/referee-clinics");
+  redirect("/jr-referee-clinics");
 }

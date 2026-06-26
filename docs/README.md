@@ -59,6 +59,18 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | [../make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md) | Upload asset engine |
 | [../make/blueprints/README.md](../make/blueprints/README.md) | Exported scenario blueprints |
 
+## JR Referee Clinics
+
+| Doc | Purpose |
+|-----|---------|
+| [jr-ref/README.md](./jr-ref/README.md) | **JR Ref program index** |
+| [jr-ref/getting-started.md](./jr-ref/getting-started.md) | Cursor, GitHub, Vercel, schema export |
+| [jr-ref/state-wide-expansion.md](./jr-ref/state-wide-expansion.md) | Fairfield → statewide plan |
+| [../airtable/schema/jr-ref/current/table-map.md](../airtable/schema/jr-ref/current/table-map.md) | JR REF table relationships |
+| [../tools/airtable/jr-ref/README.md](../tools/airtable/jr-ref/README.md) | Pull JR REF schema |
+| [../web/docs/jr-ref/airtable-data-map.md](../web/docs/jr-ref/airtable-data-map.md) | Tables → web routes |
+| [../web/docs/jr-ref/project-roadmap.md](../web/docs/jr-ref/project-roadmap.md) | Build phases |
+
 ## Tools
 
 | Doc | Purpose |
@@ -82,4 +94,6 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | Repair historical data | [safe-backfills README](../airtable/extension-scripts/safe-backfills/README.md) |
 | Deploy the website | [deployment-notes](../web/docs/deployment-notes.md) |
 | Add a new public page | [site-hierarchy](../web/docs/site-hierarchy.md) |
-| Export schema from Airtable | [extension schema README](../airtable/extension-scripts/schema/README.md) or [tools/airtable](../tools/airtable/README.md) |
+| Export Shooting Challenge schema | [tools/airtable](../tools/airtable/README.md) |
+| Export JR REF schema | [tools/airtable/jr-ref](../tools/airtable/jr-ref/README.md) |
+| JR Ref program setup | [jr-ref/getting-started](./jr-ref/getting-started.md) |

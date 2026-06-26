@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     template: "%s | Hoop Challenges",
   },
   description:
-    "127 Sports Intensity training programs — Shooting Challenge, Dribbling Challenge, and Kids Ref Now.",
+    "127 Sports Intensity training programs — Shooting Challenge, JR Referee Clinics, Dribbling Challenge, and more.",
   robots: {
     index: false,
     follow: false,

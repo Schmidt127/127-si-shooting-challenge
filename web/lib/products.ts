@@ -66,14 +66,14 @@ export const PRODUCTS: ProductDefinition[] = [
     highlights: ["Skill tiers", "XP progression", "Program standings"],
   },
   {
-    id: "referee-clinics",
-    name: "Referee Clinics",
+    id: "jr-referee-clinics",
+    name: "JR Referee Clinics",
     tagline: "Youth officiating, structured for growth",
     description:
-      "Resources and pathways for young referees — clinics, training, and program tools.",
-    href: "/referee-clinics",
+      "JR ref participants, Mentor Montana officials, and clinic teams — registered via Fillout and powered by the 127SI - JR REF Airtable base.",
+    href: "/jr-referee-clinics",
     status: "coming-soon",
-    highlights: ["Youth pathways", "Training resources", "Clinic schedules"],
+    highlights: ["Fillout registration", "Participant roster", "Mentor pairing"],
   },
   {
     id: "tournament-brackets",
