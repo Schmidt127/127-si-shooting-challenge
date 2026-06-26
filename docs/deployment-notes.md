@@ -20,3 +20,14 @@ Open http://localhost:3001/shoot
 ## Health check
 
 `GET /shoot/api/airtable` → `{ ok: true }`
+
+## Root URL (`/`)
+
+The app uses `basePath` `/shoot`, so it does **not** serve a page at `https://www.hoopchallenges.com/` by itself.
+
+| Situation | Fix |
+|-----------|-----|
+| Domain on **this** Vercel project | `web/vercel.json` redirects `/` → `/shoot` |
+| Domain on a **landing** Vercel project | Deploy `hoopchallenges-landing` with a home page, or add the same redirect there |
+
+Until a multi-program landing hub exists, `/` → `/shoot` is the expected behavior.

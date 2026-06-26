@@ -4,7 +4,7 @@
 
 ### Web app
 
-- **No URL redirects** — `next.config.ts` has no redirects. Old paths like `/shooting-challenge/leaderboard` will not work unless the landing site adds rewrites.
+- **Root URL 404** — `www.hoopchallenges.com/` 404 until landing hub exists or `vercel.json` redirect `/` → `/shoot` is deployed. `/shoot` works.
 - **Achievements page** — Shell only; Airtable reads not wired yet.
 - **Athlete profiles** — Route exists; slug resolution and data not complete.
 - **Pre-launch SEO** — `noindex` on sensitive routes until Softr cutover.
