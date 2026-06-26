@@ -1,6 +1,8 @@
-# 127 SI Shooting Challenge — Web App
+# Hoop Challenges — Web App
 
-Private Next.js development site for the **127 Sports Intensity Shooting Challenge**. This app will eventually replace the Softr.io public athlete portal.
+Next.js site for **127 Sports Intensity** programs. The **Shooting Challenge** is the first live program; this hub will replace Softr.io over time.
+
+> Repo: `127-si-shooting-challenge` (monorepo). Vercel **Root Directory** = `web`.
 
 ## Stack
 
@@ -50,9 +52,10 @@ web/
 
 ## Related repo docs
 
+- [Documentation index](../docs/README.md)
+- [Site hierarchy (canonical routes)](./docs/site-hierarchy.md)
 - [Airtable schema notes](../airtable/schema/current/table-map.md)
 - [System overview](../SYSTEM_OVERVIEW.md)
-- [Web docs](./docs/project-roadmap.md)
 
 ## Security
 

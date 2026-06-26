@@ -23,6 +23,7 @@ Give youth athletes a structured shooting challenge experience: enroll, submit s
 | **Parent/Coach Communication** | Email and notification flows to parents and coaches |
 | **Make.com Workflows** | External automation (Google Drive, Gmail, webhooks, and related scenarios) |
 | **Audit and Recovery Scripts** | Dry-run audits, integrity checks, and recovery procedures |
+| **Public Website (`web/`)** | Hoop Challenges hub — leaderboard, catalogs, public display (Next.js / Vercel) |
 
 ## Main Data Flow
 
@@ -40,7 +41,7 @@ Weekly Athlete Summary
     │
     ├──► Levels
     ├──► Emails (parent/coach communication via Make.com)
-    └──► Softr display (athlete-facing portal)
+    └──► Public website (`web/` on Vercel — replaces Softr.io over time)
 ```
 
 Supporting modules (Achievements, Streaks, Homework, Video Feedback, Zoom Attendance) attach to athletes and/or submissions and feed into summaries, XP, and communication where applicable.
@@ -54,6 +55,11 @@ Supporting modules (Achievements, Streaks, Homework, Video Feedback, Zoom Attend
 | **Cursor** | Local editing of scripts and documentation |
 | **ChatGPT** | Architecture review, script review, debugging, audit design, documentation support |
 | **Make.com** | External workflow execution (Drive, Gmail, webhooks) |
+| **Next.js / Vercel** | Public participant website (`web/` — Hoop Challenges hub) |
+
+## Documentation
+
+Start at [docs/README.md](./docs/README.md) for the full index (Airtable pipeline, web routes, Make, recovery).
 
 ## Architecture Goals
 

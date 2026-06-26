@@ -51,6 +51,16 @@ Detail pages: `/[section]/[airtableRecordId]` (e.g. `/homework/rec…`).
 
 Catalog routes currently live at the **site root** (`/homework`, not `/shooting-challenge/homework`) for shorter URLs. They are **logically** under Shooting Challenge via shared nav and `ProductShell`. Nesting under `/shooting-challenge/…` is a future option if desired.
 
+### Legacy redirects
+
+Configured in `web/next.config.ts` for old scaffold URLs:
+
+| From | To |
+|------|-----|
+| `/leaderboard` | `/shooting-challenge/leaderboard` |
+
+Add new redirects here when renaming routes; prefer **permanent** redirects once Softr cutover is live.
+
 ---
 
 ## Style rule

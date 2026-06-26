@@ -34,15 +34,16 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 | 5c | `backfill-homework-completion-orphan-resolve.js` | Link repair or archive no-upload orphans | `audit-homework-completion-upload-edge-cases.js` |
 | 6 | `backfill-homework-completion-upload-status.js` | Upload status writeback from assets | `audit-stuck-upload-processing.js` |
 | 7 | `backfill-homework-xp-from-reviewed.js` | XP for reviewed homework missing events | `audit-homework-pipeline-integrity.js` |
-| 8 | `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | **Ready** |
-| 9 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | **Ready** |
-| 10 | `repair-video-feedback-xp-link.js` | Video Feedback ↔ XP Event repair | Ready |
-| 11 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy STREAK_OCCURRENCE XP → Week + WAS + key | **Ready** |
-| 12 | `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| canonical keys | **Ready** |
-| 13 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP → Week + WAS from unlock | **Ready** |
-| 14 | `backfill-shot-milestone-unlock-mark-awarded.js` | Pending unlocks with XP already linked → Awarded | **Ready** |
-| 15 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Ready |
-| 16 | `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | **Ready** |
+| 7b | `dedupe-homework-xp-events.js` | Remove duplicate HW XP (legacy + canonical keys) | `audit-homework-pipeline-integrity.js` |
+| 8 | `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | `audit-video-pipeline-integrity.js` |
+| 9 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | `audit-video-xp-pipeline-integrity.js` |
+| 10 | `repair-video-feedback-xp-link.js` | Video Feedback ↔ wrong XP Event repair | `audit-video-xp-pipeline-integrity.js` |
+| 11 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy STREAK_OCCURRENCE XP → Week + WAS + key | `audit-achievement-xp-pipeline-integrity.js` |
+| 12 | `backfill-legacy-streak-xp-source-keys.js` | STREAK_OCC* → STREAK_XP\| canonical keys | `audit-achievement-xp-pipeline-integrity.js` |
+| 13 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP → Week + WAS from unlock | `audit-achievement-xp-pipeline-integrity.js` |
+| 14 | `backfill-shot-milestone-unlock-mark-awarded.js` | Pending unlocks with XP already linked → Awarded | `audit-pending-shot-milestone-unlocks.js` |
+| 15 | `dedupe-zoom-meeting-xp-events.js` | Duplicate Zoom XP | Manual / zoom audit |
+| 16 | `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | `audit-legacy-cleanup-candidates.js` |
 
 Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
@@ -63,6 +64,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-submission-pipeline-links.js` | WAS links, HW slots, asset links | **Ready** |
 | `backfill-submission-xp-events.js` | Missing 010 XP events | **Ready** |
 | `backfill-homework-xp-from-reviewed.js` | Missing 065 XP events | **Ready** |
+| `dedupe-homework-xp-events.js` | Duplicate Homework XP Events | **Ready** |
 | `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | **Ready** |
 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | **Ready** |
 | `backfill-legacy-streak-xp-week-and-was.js` | Legacy streak XP Week/WAS + STREAK_XP key | **Ready** |
@@ -90,6 +92,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 
 ## Related
 
-- [Audits](../audits/README.md)  
+- [Audits](../audits/README.md) — Stages A–J pipeline map  
+- [Documentation index](../../../docs/README.md)  
 - [Emergency recovery](../../../docs/recovery/emergency-recovery.md)  
 - [Homework flow](../../../docs/data-flow/homework-flow.md)

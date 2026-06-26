@@ -111,5 +111,6 @@ Full doc: [docs/airtable/stage-j-legacy-cleanup.md](../../../docs/airtable/stage
 ## Related
 
 - [Safe backfills](../safe-backfills/README.md)  
+- [Documentation index](../../../docs/README.md)  
 - [Weekly maintenance checklist](../../../docs/checklists/weekly-maintenance-checklist.md)  
 - [Emergency recovery](../../../docs/recovery/emergency-recovery.md)

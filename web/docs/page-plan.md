@@ -1,47 +1,59 @@
 # Page Plan
 
-## Routes
+> **Canonical routing and nav:** [site-hierarchy.md](./site-hierarchy.md) — update that file first when URLs or nav labels change. This doc tracks **phases** and **component ownership** only.
 
-| Route | Purpose | Phase | Data source |
-|-------|---------|-------|-------------|
-| `/` | Dev landing / future marketing home | 0 | Static |
-| `/leaderboard` | Season XP rankings | 1 | Enrollments view |
-| `/athletes/[slug]` | Public athlete profile | 2 | Enrollment + rollups |
-| `/levels` | Level ladder reference | 1 | Levels table |
-| `/achievements` | Achievement catalog | 1–2 | Achievements table |
-| `/homework` | Homework progress overview | 2–3 | Homework Completions |
-| `/public-display` | Gym / lobby full-screen mode | 1 | Leaderboard + featured |
-| `/admin` | Staff tools | 5 | TBD + auth |
-| `/api/airtable` | Health + future BFF endpoints | 0+ | Env config |
+---
 
-## Homepage (Phase 0)
+## Route summary (current)
 
-Current content:
+See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 
-- **127 Sports Intensity Shooting Challenge**
-- **Private Development Site**
-- **Pipeline Test: Cursor → GitHub → Vercel → Airtable**
+| URL | Role | Status |
+|-----|------|--------|
+| `/` | Hoop Challenges hub (program picker) | Live |
+| `/shooting-challenge` | Shooting Challenge overview | Live |
+| `/shooting-challenge/leaderboard` | Season XP rankings | Live |
+| `/homework`, `/tutorials`, `/shoutouts`, `/articles`, `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Shooting Challenge catalog (root URLs, shared nav) | Live / partial |
+| `/athletes/[slug]` | Public athlete profile | Planned |
+| `/admin` | Staff tools | Planned |
+| `/api/airtable` | Health + future BFF | Scaffold |
+
+**Legacy redirect:** `/leaderboard` → `/shooting-challenge/leaderboard` (see `next.config.ts`).
+
+---
+
+## Phases
+
+| Phase | Scope |
+|-------|--------|
+| **0** | Pipeline scaffold, hub, catalog shells, CI | Done |
+| **1** | Leaderboard + levels + public display with live Airtable reads | In progress |
+| **2** | Athlete profiles, homework/video progress widgets | Planned |
+| **3** | Participant dashboard (auth) | Planned |
+| **4** | Achievements polish, charts | Planned |
+| **5** | Admin | Planned |
+| **6** | Softr cutover, SEO, custom domain | Planned |
+
+---
 
 ## Component ownership
 
 | Area | Folder |
 |------|--------|
+| Hub landing | `components/hub/` |
 | Shell, nav, footer | `components/layout/` |
-| Leaderboard table/cards | `components/leaderboard/` |
-| Profile header, stats | `components/athlete/` |
+| Leaderboard | `components/leaderboard/` |
+| Profile | `components/athlete/` |
+| Catalog cards / lists | `components/catalog/` |
 | Generic stat cards | `components/cards/` |
 | XP trend charts | `components/charts/` |
-| Level ladder UI | `components/levels/` |
-| Badge grid | `components/achievements/` |
-| Placeholders, buttons | `components/shared/` |
+| Level ladder | `components/levels/` |
+| Achievement grid | `components/achievements/` |
+| Shared UI | `components/shared/` |
 
-## Layout notes
-
-- Dark sports theme on homepage (brand colors in `globals.css`)
-- Public display route will use a separate minimal layout (no nav)
-- Admin route will use auth wrapper when implemented
+---
 
 ## SEO / robots
 
-- Phase 0: `robots: noindex` on root layout
-- Phase 6: allow index on public marketing + leaderboard pages only
+- Pre-launch: `noindex` on sensitive routes where configured
+- Post–Softr cutover: allow index on hub, program pages, and public leaderboard only

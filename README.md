@@ -2,6 +2,8 @@
 
 Documentation and automation source for the **127 Sports Intensity Shooting Challenge** — an Airtable-based youth basketball shooting challenge system.
 
+> **Repo name vs product:** This GitHub repo is named for the Shooting Challenge backend. The Next.js app in [`web/`](./web/) is the **Hoop Challenges** hub (Shooting Challenge, Dribble Challenge, Referee Clinics, etc.) and will replace Softr.io over time.
+
 ## Purpose
 
 This repository is the source of truth for Airtable automation scripts, Airtable schema notes, Airtable extension audit scripts, the Next.js participant website (`web/`), Make.com blueprints, documentation, and recovery procedures.
@@ -26,29 +28,34 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 ```
 .
 ├── README.md                 # Project introduction (this file)
-├── CHANGELOG.md              # Notable changes to scripts, schema, and docs
+├── CHANGELOG.md              # Notable changes (Airtable / Web / Make sections)
 ├── SYSTEM_OVERVIEW.md        # App modules, data flow, and architecture goals
+├── docs/                     # Ops docs — start at docs/README.md (index)
 ├── airtable/
 │   ├── schema/               # Schema notes, table/field maps, snapshots
 │   ├── automations/          # Native Airtable automation scripts
 │   ├── extension-scripts/
-│   │   ├── audits/           # Dry-run audit extension scripts
-│   │   └── safe-backfills/   # Controlled backfill extension scripts
+│   │   ├── audits/           # Dry-run audit extension scripts (Stages A–J)
+│   │   ├── safe-backfills/   # Controlled backfill extension scripts
+│   │   └── schema/           # In-base schema export (Scripting extension)
 │   └── formulas/             # Formula and rollup documentation
+├── web/                      # Next.js Hoop Challenges site (Vercel root directory)
+│   ├── app/                  # App Router pages
+│   ├── components/           # UI by feature
+│   ├── lib/                  # Airtable client, data mappers, nav
+│   └── docs/                 # Web-specific planning (site-hierarchy.md)
 ├── make/
 │   ├── blueprints/           # Exported Make.com scenario blueprints
 │   ├── documentation/        # Scenario notes and webhook standards
 │   └── test-payloads/        # Sample JSON for webhook testing
-├── docs/
-│   ├── architecture/         # Architecture review checklist
-│   ├── data-flow/            # Submission, homework, weekly summary flows
-│   ├── recovery/             # Emergency recovery runbook
-│   └── checklists/           # Weekly maintenance checklist
-├── web/                      # Next.js app (leaderboard, profiles, public display)
-└── cursor/                   # Cursor AI project rules
+├── tools/
+│   └── airtable/             # Python schema export and PAT verify scripts
+├── .cursor/rules/            # Canonical Cursor AI rules
+├── .github/workflows/        # CI (web.yml)
+└── cursor/rules.md           # Pointer to .cursor/rules/
 ```
 
-See [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
+See [docs/README.md](./docs/README.md) for the full documentation map and [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for module-level detail.
 
 ## Development Workflow
 
@@ -70,5 +77,7 @@ When production and GitHub diverge, treat GitHub as the target state and reconci
 ## Getting Started
 
 1. Clone this repository.
-2. Read [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for modules, data flow, and architecture goals.
-3. Review [CHANGELOG.md](./CHANGELOG.md) before pulling updates or deploying changes.
+2. Read [docs/README.md](./docs/README.md) for the documentation index.
+3. Read [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) for modules, data flow, and architecture goals.
+4. Review [CHANGELOG.md](./CHANGELOG.md) before pulling updates or deploying changes.
+5. **Website:** `cd web && npm install && npm run dev` — see [web/README.md](./web/README.md).
