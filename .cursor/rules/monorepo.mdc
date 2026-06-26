@@ -1,0 +1,46 @@
+---
+description: Monorepo navigation and cross-cutting rules for 127 SI Shooting Challenge
+alwaysApply: true
+---
+
+# Monorepo — Shooting Challenge
+
+## Scope
+
+This repo (`127-si-shooting-challenge`) is **Shooting Challenge only**:
+
+| Path | Purpose |
+|------|---------|
+| `airtable/automations/shooting-challenge/` | Production Airtable automation scripts (numbered `001`–`114`) |
+| `airtable/extension-scripts/audits/` | Dry-run pipeline audits (Stages A–J) |
+| `airtable/extension-scripts/safe-backfills/` | Controlled repair/backfill extensions |
+| `airtable/schema/` | Schema notes + dated snapshots |
+| `web/` | Next.js app — deployed at **`/shoot`** on hoopchallenges.com |
+| `make/` | Make.com blueprints and upload/email docs |
+| `tools/airtable/` | Python schema export CLI |
+| `docs/` | Ops docs — **start at `docs/PROJECT_STATE.md`** |
+
+**Not in this repo:** Hoop landing (`hoopchallenges-landing`), JR Ref (`127-si-jr-ref`).
+
+## AI session startup
+
+1. Read `docs/PROJECT_STATE.md` for live base IDs, audit status, Vercel settings.
+2. Use `docs/README.md` to find the right doc.
+3. For automations → `docs/automation-index.md` + `.cursor/rules/airtable-automation-scripts.mdc`.
+4. For web routes → `web/docs/site-hierarchy.md` + `.cursor/rules/web-ui-brand.mdc`.
+
+## Deploy paths
+
+| Target | Workflow |
+|--------|----------|
+| **Airtable** | Edit `airtable/automations/shooting-challenge/*.js` → commit → paste into Airtable automation (skip GitHub header) |
+| **Vercel** | Push `master`; project Root Directory = `web`; env vars in Vercel dashboard |
+| **Make** | Export blueprint to `make/blueprints/`; document in `make/documentation/` |
+
+## Secrets
+
+Never commit or log: `AIRTABLE_API_TOKEN`, `.env`, `.env.local`, Make webhook secrets.
+
+## Changelog
+
+Production-impacting changes → `CHANGELOG.md` under `### Airtable`, `### Web`, or `### Make`.

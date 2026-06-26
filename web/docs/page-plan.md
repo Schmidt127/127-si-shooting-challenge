@@ -8,17 +8,17 @@
 
 See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 
-| URL | Role | Status |
-|-----|------|--------|
-| `/` | Hoop Challenges hub (program picker) | Live |
-| `/shooting-challenge` | Shooting Challenge overview | Live |
-| `/shooting-challenge/leaderboard` | Season XP rankings | Live |
-| `/homework`, `/tutorials`, `/shoutouts`, `/articles`, `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Shooting Challenge catalog (root URLs, shared nav) | Live / partial |
-| `/athletes/[slug]` | Public athlete profile | Planned |
-| `/admin` | Staff tools | Planned |
-| `/api/airtable` | Health + future BFF | Scaffold |
+| Public URL | Role | Status |
+|------------|------|--------|
+| `/shoot` | Shooting Challenge overview | Live |
+| `/shoot/leaderboard` | Season XP rankings | Live |
+| `/shoot/homework`, `/shoot/tutorials`, `/shoot/shoutouts`, `/shoot/articles`, `/shoot/zoom-meetings`, `/shoot/levels` | Catalog pages (shared nav) | Live |
+| `/shoot/achievements`, `/shoot/game-manual`, `/shoot/public-display` | Shell / partial | In progress |
+| `/shoot/athletes/[slug]` | Public athlete profile | Planned |
+| `/shoot/admin` | Staff tools | Planned |
+| `/shoot/api/airtable` | Health + future BFF | Live |
 
-**Legacy redirect:** `/leaderboard` → `/shooting-challenge/leaderboard` (see `next.config.ts`).
+**basePath:** `/shoot` via `NEXT_PUBLIC_BASE_PATH` in `next.config.ts`. No legacy redirects configured.
 
 ---
 
@@ -26,8 +26,8 @@ See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 
 | Phase | Scope |
 |-------|--------|
-| **0** | Pipeline scaffold, hub, catalog shells, CI | Done |
-| **1** | Leaderboard + levels + public display with live Airtable reads | In progress |
+| **0** | Pipeline scaffold, catalog shells, CI, `/shoot` basePath | Done |
+| **1** | Leaderboard + levels + catalogs with live Airtable reads | In progress |
 | **2** | Athlete profiles, homework/video progress widgets | Planned |
 | **3** | Participant dashboard (auth) | Planned |
 | **4** | Achievements polish, charts | Planned |
@@ -40,7 +40,6 @@ See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 
 | Area | Folder |
 |------|--------|
-| Hub landing | `components/hub/` |
 | Shell, nav, footer | `components/layout/` |
 | Leaderboard | `components/leaderboard/` |
 | Profile | `components/athlete/` |
@@ -56,4 +55,12 @@ See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 ## SEO / robots
 
 - Pre-launch: `noindex` on sensitive routes where configured
-- Post–Softr cutover: allow index on hub, program pages, and public leaderboard only
+- Post–Softr cutover: allow index on program pages and public leaderboard only
+
+---
+
+## Cleanup backlog
+
+- Remove legacy duplicate routes outside `(program)/` — see [site-hierarchy.md](./site-hierarchy.md#legacy--duplicate-routes-remove-in-cleanup-pass)
+- Wire achievements page to Airtable
+- Add landing-site rewrites for any old bookmarked URLs if needed

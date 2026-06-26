@@ -6,6 +6,23 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Added
+- **`docs/PROJECT_STATE.md`** — Live ops snapshot (bases, audit status, Vercel, Softr, Make).
+- **`AGENTS.md`** — AI assistant entry point and hard constraints.
+- **`.cursor/rules/monorepo.mdc`** — Repo scope and session startup for Cursor.
+- **`.cursorignore`** — Exclude node_modules, .next, large schema JSON exports.
+- **`docs/automation-index.md`** — Full index of 46 production automations by domain.
+- **`web/docs/site-hierarchy.md`** — Canonical `/shoot` routes, nav, legacy route notes.
+- **`web/docs/airtable-views.md`** — Views and fallback filters from `queries.ts`.
+
+#### Changed
+- **`airtable/schema/current/automation-trigger-map.md`** — Populated pipeline trigger map.
+- **`airtable/automations/shooting-challenge/README.md`** — Points to automation index (removed placeholder `submission-xp.js`).
+- **`docs/README.md`** — PROJECT_STATE, AGENTS, automation-index links; fixed broken STRUCTURE.md reference.
+- **`docs/known-issues.md`**, **`docs/checklists/weekly-maintenance-checklist.md`**, **`web/docs/page-plan.md`** — Aligned with `/shoot` rebuild.
+
 ### JR Ref / Airtable
 
 #### Added

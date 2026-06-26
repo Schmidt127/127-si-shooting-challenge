@@ -4,14 +4,19 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 > **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on hoopchallenges.com. Landing is `hoopchallenges-landing`.
 
+**New session?** Read [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [../AGENTS.md](../AGENTS.md) for AI conventions.
+
 ---
 
 ## Operations and architecture
 
 | Doc | Purpose |
 |-----|---------|
+| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, Softr |
+| [../AGENTS.md](../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Repo introduction and layout |
 | [../SYSTEM_OVERVIEW.md](../SYSTEM_OVERVIEW.md) | Modules, data flow, architecture goals |
+| [automation-index.md](./automation-index.md) | **All 46 production automations** |
 | [../CHANGELOG.md](../CHANGELOG.md) | Production-impacting changes (sections: Airtable / Web / Make) |
 | [architecture/architecture-review.md](./architecture/architecture-review.md) | Architecture review checklist |
 | [recovery/emergency-recovery.md](./recovery/emergency-recovery.md) | Incident recovery runbook |
@@ -45,6 +50,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | [../web/README.md](../web/README.md) | Next.js app quick start |
 | [../web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) | **Canonical routes and nav** |
 | [../web/docs/page-plan.md](../web/docs/page-plan.md) | Page phases (links to site-hierarchy) |
+| [../web/docs/airtable-views.md](../web/docs/airtable-views.md) | **Views and filters** used by queries.ts |
 | [../web/docs/airtable-data-map.md](../web/docs/airtable-data-map.md) | Airtable tables → web features |
 | [../web/docs/public-data-rules.md](../web/docs/public-data-rules.md) | What may appear on public pages |
 | [../web/docs/deployment-notes.md](../web/docs/deployment-notes.md) | Vercel deploy and env vars |
@@ -65,7 +71,13 @@ Separate repo: `127-si-jr-ref` (public path `/refclinic`).
 
 ## Multi-repo map
 
-See [../STRUCTURE.md](../STRUCTURE.md) at the GitHub folder root.
+| Program | Repo | Public path |
+|---------|------|-------------|
+| Hoop landing | `hoopchallenges-landing` | https://www.hoopchallenges.com |
+| Shooting Challenge | this repo | `/shoot` |
+| JR Referee Clinics | `127-si-jr-ref` | `/refclinic` |
+
+Details: [PROJECT_STATE.md](./PROJECT_STATE.md)
 
 ## Tools
 
@@ -91,4 +103,5 @@ See [../STRUCTURE.md](../STRUCTURE.md) at the GitHub folder root.
 | Deploy the website | [deployment-notes](../web/docs/deployment-notes.md) |
 | Add a new public page | [site-hierarchy](../web/docs/site-hierarchy.md) |
 | Export Shooting Challenge schema | [tools/airtable](../tools/airtable/README.md) |
-| Multi-repo program map | [../STRUCTURE.md](../../STRUCTURE.md) |
+| Multi-repo program map | [PROJECT_STATE.md](./PROJECT_STATE.md) |
+| Look up an automation | [automation-index.md](./automation-index.md) |

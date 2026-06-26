@@ -2,9 +2,31 @@
 
 ## Active
 
-- Catalog routes live under `/shoot/*` (e.g. `/shoot/homework`).
-- Site not yet public — safe to rename routes and restructure.
+### Web app
+
+- **Legacy duplicate routes** — Pre-rebuild pages exist outside `web/app/(program)/` (`leaderboard/`, `shooting-challenge/`, `referee-clinics/`, etc.). Canonical routes are under `(program)/` with `basePath` `/shoot`. See [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md).
+- **No URL redirects** — `next.config.ts` has no redirects. Old paths like `/shooting-challenge/leaderboard` will not work unless the landing site adds rewrites.
+- **Achievements page** — Shell only; Airtable reads not wired yet.
+- **Athlete profiles** — Route exists; slug resolution and data not complete.
+- **Pre-launch SEO** — `noindex` on sensitive routes until Softr cutover.
+
+### Airtable / ops
+
+- **Automation header placeholders** — Many scripts still say *confirm in Airtable* for trigger text in GitHub headers. Verify live trigger in Airtable UI when debugging.
+- **Stage I/J** — Achievement XP and legacy field cleanup in progress. See [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md).
+- **`OK to Publish on Softr`** — Still used as public publish gate in web queries despite Softr replacement in progress.
+
+### Documentation
+
+- **JR Ref docs in repo** — Some `docs/jr-ref/` and `web/docs/jr-ref/` paths may remain from earlier monorepo work; JR Ref production app is `127-si-jr-ref`.
 
 ## Resolved
 
-- Hub and other programs removed from this repo (2026 rebuild).
+- Hub and multi-program routes removed from active app (2026 rebuild → `/shoot` only).
+- Stages F–H pipeline audits clean after backfill pass (re-run after bulk imports).
+- Broken `STRUCTURE.md` link removed from docs index (replaced by `PROJECT_STATE.md`).
+
+## Accepted data exceptions
+
+- Video / homework `not_ready_for_xp` rows — retakes, pending review, do-not-award, testing (not bugs).
+- Riley W8 video XP at 25 points — correct per program rules.

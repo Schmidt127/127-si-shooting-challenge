@@ -1,0 +1,26 @@
+﻿# Dependencies and build output
+web/node_modules/
+web/.next/
+web/out/
+web/.vercel/
+
+# Large schema exports (use airtable/schema/current/ and snapshots/*.md instead)
+airtable/schema/snapshots/**/*.json
+airtable/schema/snapshots/**/field_index_*.json
+airtable/schema/snapshots/**/schema_raw_*.json
+airtable/schema/snapshots/**/schema_enhanced_*.json
+airtable/schema/snapshots/**/views_detailed_*.json
+airtable/schema/snapshots/**/views_basic_*.json
+
+# Python
+tools/airtable/__pycache__/
+**/__pycache__/
+.venv/
+venv/
+
+# Secrets
+**/.env
+**/.env.local
+
+# TypeScript build info
+**/*.tsbuildinfo

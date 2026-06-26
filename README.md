@@ -30,7 +30,8 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 ├── README.md                 # Project introduction (this file)
 ├── CHANGELOG.md              # Notable changes (Airtable / Web / Make sections)
 ├── SYSTEM_OVERVIEW.md        # App modules, data flow, and architecture goals
-├── docs/                     # Ops docs — start at docs/README.md (index)
+├── AGENTS.md                 # AI assistant instructions
+├── docs/                     # Ops docs — start at docs/PROJECT_STATE.md
 ├── airtable/
 │   ├── schema/               # Schema notes and snapshots (Shooting Challenge only)
 │   ├── automations/          # Native Airtable automation scripts
