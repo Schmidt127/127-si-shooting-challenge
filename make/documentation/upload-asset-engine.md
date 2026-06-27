@@ -19,7 +19,7 @@ All prep and send automations use the **same ladder**. Do not introduce alternat
 
 1. **009** creates assets at `Pending Link` (not `Ready`).
 2. **020** (homework) or **013** (video) links child record, keeps **`Pending Link`**, checks **Send to Make Trigger**.
-3. **070a** / **070b** require **`Pending Link`**, set **`Processing`**, POST webhook.
+3. **070a** / **070b** require **`Pending Link`**, POST minimal webhook (v4.0), then set **`Processing`** only after Make accepts the webhook.
 4. **Make** writes **`Uploaded`** or **`Error`** (+ Drive fields).
 
 **Airtable automation triggers** for 070a and 070b must use **`Upload Status = Pending Link`** (not `Ready`).
@@ -27,6 +27,8 @@ All prep and send automations use the **same ladder**. Do not introduce alternat
 ## Trigger
 
 Custom webhook from Airtable automations **070a** (homework assets) and **070b** (video assets).
+
+**v4.0 payload (2026-06-27):** `submissionAssetRecordId`, `routeKey`, `uploadDestination`, `targetTable`, `targetRecordId`, `automationNumber`, `sentAtIso`, `sourceName`, `sourceTable`. Make Module 2 re-fetches the Submission Asset; do not send attachment URLs in the webhook.
 
 ## Flow (high level)
 
