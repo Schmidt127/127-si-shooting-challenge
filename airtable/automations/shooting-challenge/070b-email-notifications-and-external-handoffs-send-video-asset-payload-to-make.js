@@ -1,4 +1,4 @@
-/*
+﻿/*
 Automation: 070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
@@ -7,7 +7,7 @@ Last Synced From Airtable: 2026-06-27
 Last GitHub Update: 2026-06-27
 
 Purpose:
-Sends one video Submission Asset to the shared Make Upload Engine (minimal v4.0 payload).
+Sends one video Submission Asset to the shared Make Upload Engine (v4.1 minimal payload).
 
 Trigger:
 Submission Assets when Send to Make Trigger is checked and video asset is ready.
@@ -19,7 +19,7 @@ Important Fields:
 Upload Status, Send to Make Trigger, Video Feedback, Google Drive File URL
 
 Notes:
-Same script body as 070a — set input automationNumber to 070b in Airtable.
+Same script body as 070b â€” set input automationNumber to 070b in Airtable.
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
@@ -37,7 +37,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.0 - Minimal Canonical Webhook Payload
+ * v4.1 - Minimal Canonical Webhook Payload, routeKey corrected
  *
  * CREATED:
  * 2026-06-27
@@ -46,46 +46,56 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 2026-06-27
  *
  * CHANGE HISTORY:
+ * 2026-06-27 - v4.1
+ * - Corrected homework routeKey from "homework" to "homework_completion".
+ * - Kept one shared script body for 070a and 070b.
+ * - Kept minimal canonical webhook payload.
+ * - Sends only submissionAssetRecordId and targetRecordId for Make routing.
+ * - Prevents duplicate uploads if Google Drive File URL or File ID already exists.
+ * - Stops safely with Pending Link if target Homework Completion or Video Feedback record is missing.
+ *
  * 2026-06-27 - v4.0
  * - Rewritten to use one shared script for both 070a and 070b.
- * - Removed duplicate webhook fields such as singular/plural homework and video IDs.
- * - Sends only the minimum Make needs:
- *      submissionAssetRecordId
- *      routeKey
- *      uploadDestination
- *      targetTable
- *      targetRecordId
- *      automationNumber
- *      sentAtIso
- * - Uses targetRecordId as the single canonical destination record.
- * - Supports both Homework Completions and Video Feedback assets.
- * - Stops safely with Pending Link if the target Homework Completion or Video Feedback record is missing.
- * - Stops safely with Error if required Submission Asset fields are missing.
- * - Stops safely if Google Drive File URL or File ID already exists to prevent duplicate uploads.
- * - Sends webhook first, then marks the Submission Asset as Processing only after Make responds successfully.
- * - Clears Upload Error and unchecks Send to Make Trigger after successful webhook delivery.
+ * - Removed duplicate webhook fields from payload.
+ * - Sends webhook first; sets Processing only after Make responds successfully.
  *
  * PURPOSE:
  * Sends one Submission Asset record to the shared Make Upload Engine.
  *
  * WORKS FOR:
- * - 070a: Homework Completions assets
- * - 070b: Video Feedback assets
+ * - 070a: Homework Completions assets (automationNumber input = "070a")
+ * - 070b: Video Feedback assets (automationNumber input = "070b")
  *
  * REQUIRED AIRTABLE INPUT VARIABLES:
- * - recordId
- * - makeWebhookUrl (or webhookUrl)
- * - automationNumber — "070a" or "070b"
+ * - recordId â€” Submission Assets record ID from trigger
+ * - makeWebhookUrl â€” Make Upload Engine webhook URL
+ * - automationNumber â€” "070a" or "070b"
  *
- * OUTPUTS:
- * - statusOut = success | skipped | error
- * - actionOut
- * - errorOut
- * - debugStep
+ * OPTIONAL INPUT ALIAS:
+ * - webhookUrl â€” fallback for makeWebhookUrl
  *
- * IMPORTANT:
- * Do not add duplicate fields back into the webhook payload.
- * The Make scenario gets all fresh Airtable details from Module 2.
+ * MINIMAL WEBHOOK PAYLOAD:
+ * {
+ *   "sourceName": "Airtable Upload Engine",
+ *   "automationNumber": "070a" | "070b",
+ *   "sentAtIso": "ISO timestamp",
+ *   "routeKey": "homework_completion" | "video_feedback",
+ *   "uploadDestination": "Homework Completions" | "Video Feedback",
+ *   "sourceTable": "Submission Assets",
+ *   "submissionAssetRecordId": "rec...",
+ *   "targetTable": "Homework Completions" | "Video Feedback",
+ *   "targetRecordId": "rec..."
+ * }
+ *
+ * MAKE MAPPING EXPECTATIONS:
+ * - Module 2 Get Submission Asset: Record ID = {{1.submissionAssetRecordId}}
+ * - Submission Assets writeback: Record ID = {{1.submissionAssetRecordId}}
+ * - Homework Completion / Video Feedback writeback: Record ID = {{1.targetRecordId}}
+ *
+ * ROUTING (from Upload Destination on Submission Asset):
+ * - Homework Completions â†’ routeKey homework_completion, targetTable Homework Completions
+ * - Video Feedback â†’ routeKey video_feedback, targetTable Video Feedback
+ * - targetRecordId = first linked record on Homework Completions or Video Feedback field
  ********************************************************************/
 
 // @ts-nocheck
@@ -97,7 +107,7 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.0",
+        version: "v4.1",
 
         tables: {
             submissionAssets: "Submission Assets",
@@ -106,8 +116,6 @@ async function main() {
         fields: {
             uploadDestination: "Upload Destination",
             sendToMakeTrigger: "Send to Make Trigger",
-            readyToSendToMake: "Ready to Send to Make?",
-            whyNotReadyForMake: "Why Not Ready for Make?",
             uploadStatus: "Upload Status",
             uploadError: "Upload Error",
 
@@ -116,9 +124,6 @@ async function main() {
             enrollmentLinked: "Enrollment - Linked",
 
             homeworkCompletions: "Homework Completions",
-            homeworkCompletionsRid: "Homework Completions RID",
-            homeworkCompletionRecordId: "Homework Completion Record ID",
-
             videoFeedback: "Video Feedback",
 
             googleDriveFileId: "Google Drive File ID",
@@ -126,42 +131,31 @@ async function main() {
         },
 
         values: {
-            readyToSendToken: "READY_TO_SEND",
             statusPendingLink: "Pending Link",
             statusProcessing: "Processing",
             statusError: "Error",
+            statusUploaded: "Uploaded",
+            sourceName: "Airtable Upload Engine",
         },
 
         routes: {
-            "070a": {
-                automationNumber: "070a",
-                automationName:
-                    "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
-                routeKey: "homework",
+            homework: {
                 uploadDestination: "Homework Completions",
+                routeKey: "homework_completion",
                 targetTable: "Homework Completions",
                 targetLinkField: "Homework Completions",
-                targetRecordIdField: "Homework Completion Record ID",
-                targetRidField: "Homework Completions RID",
-                sourceName: "Airtable Homework Submission Asset Automation",
             },
-            "070b": {
-                automationNumber: "070b",
-                automationName:
-                    "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
-                routeKey: "video_feedback",
+            video: {
                 uploadDestination: "Video Feedback",
+                routeKey: "video_feedback",
                 targetTable: "Video Feedback",
                 targetLinkField: "Video Feedback",
-                targetRecordIdField: "",
-                targetRidField: "",
-                sourceName: "Airtable Video Submission Asset Automation",
             },
         },
     };
 
     /************************************************************
-     * SECTION 2: OUTPUT HELPERS
+     * SECTION 2: HELPERS
      ************************************************************/
 
     let debugStep = "1 - Start";
@@ -201,7 +195,10 @@ async function main() {
     }
 
     function comparable(value) {
-        return normalizeText(value).replace(/\u00A0/g, " ").toLowerCase();
+        return normalizeText(value)
+            .replace(/\u00A0/g, " ")
+            .replace(/\s+/g, " ")
+            .toLowerCase();
     }
 
     function fieldExists(table, fieldName) {
@@ -230,10 +227,6 @@ async function main() {
     function getText(record, table, fieldName) {
         if (!record || !fieldExists(table, fieldName)) return "";
         return normalizeText(record.getCellValueAsString(fieldName));
-    }
-
-    function getCheckbox(record, table, fieldName) {
-        return getRaw(record, table, fieldName) === true;
     }
 
     function getSingleSelectName(record, table, fieldName) {
@@ -326,34 +319,61 @@ async function main() {
         throw new Error("No supported HTTP method is available in this Airtable environment.");
     }
 
-    function resolveTargetRecordId(assetRecord, table, route) {
-        const linkedIds = getLinkedIds(assetRecord, table, route.targetLinkField);
+    function resolveRoute(uploadDestination) {
+        const normalized = comparable(uploadDestination);
 
-        if (route.targetRecordIdField) {
-            const explicit = getText(assetRecord, table, route.targetRecordIdField);
-            if (explicit) return explicit;
+        if (normalized === comparable(CONFIG.routes.homework.uploadDestination)) {
+            return CONFIG.routes.homework;
         }
 
-        if (route.targetRidField) {
-            const rid = getText(assetRecord, table, route.targetRidField);
-            if (rid) return rid;
+        if (normalized === comparable(CONFIG.routes.video.uploadDestination)) {
+            return CONFIG.routes.video;
         }
 
-        return linkedIds[0] || "";
+        return null;
     }
 
-    async function finishSkipped(message, extra = {}) {
-        const result = {
-            ok: true,
-            skipped: true,
-            statusOut: "skipped",
-            actionOut: "skipped_pending_link",
-            errorOut: "",
+    async function stopWithAssetUpdate(options) {
+        const {
+            statusOut,
+            actionOut,
+            uploadStatus,
+            uploadError,
+            uncheckTrigger = true,
             message,
+            extra = {},
+        } = options;
+
+        const fields = {};
+
+        if (uploadStatus) {
+            setStatus(fields, assetsTable, uploadStatus);
+        }
+
+        if (uploadError !== undefined) {
+            setWritable(fields, assetsTable, CONFIG.fields.uploadError, uploadError);
+        }
+
+        if (uncheckTrigger) {
+            setWritable(fields, assetsTable, CONFIG.fields.sendToMakeTrigger, false);
+        }
+
+        await updateAsset(assetsTable, recordId, fields);
+
+        const result = {
+            ok: statusOut !== "error",
+            skipped: statusOut === "skipped",
+            statusOut,
+            actionOut,
+            errorOut: uploadError || "",
+            message,
+            submissionAssetRecordId: recordId,
+            automationNumber,
             ...extra,
         };
 
         setStandardOutputs(result);
+
         console.log(
             JSON.stringify({
                 automation: CONFIG.scriptName,
@@ -363,35 +383,6 @@ async function main() {
         );
 
         return result;
-    }
-
-    async function finishError(table, recordId, message, extra = {}) {
-        const fields = {};
-        setStatus(fields, table, CONFIG.values.statusError);
-        setWritable(fields, table, CONFIG.fields.uploadError, message);
-        await updateAsset(table, recordId, fields);
-
-        const result = {
-            ok: false,
-            skipped: false,
-            statusOut: "error",
-            actionOut: "error",
-            errorOut: message,
-            message,
-            submissionAssetRecordId: recordId,
-            ...extra,
-        };
-
-        setStandardOutputs(result);
-        console.log(
-            JSON.stringify({
-                automation: CONFIG.scriptName,
-                version: CONFIG.version,
-                ...result,
-            }),
-        );
-
-        throw new Error(message);
     }
 
     /************************************************************
@@ -423,9 +414,7 @@ async function main() {
         throw new Error('Missing required input variable: automationNumber ("070a" or "070b")');
     }
 
-    const route = CONFIG.routes[automationNumber];
-
-    if (!route) {
+    if (automationNumber !== "070a" && automationNumber !== "070b") {
         throw new Error(
             `Invalid automationNumber "${automationNumber}". Expected "070a" or "070b".`,
         );
@@ -455,187 +444,141 @@ async function main() {
     setDebug("3 - Read Asset State");
 
     const uploadDestination = getText(assetRecord, assetsTable, CONFIG.fields.uploadDestination);
-    const sendToMakeTrigger = getCheckbox(assetRecord, assetsTable, CONFIG.fields.sendToMakeTrigger);
-    const readyToSendToMake = getText(assetRecord, assetsTable, CONFIG.fields.readyToSendToMake);
-    const uploadStatus = getSingleSelectName(assetRecord, assetsTable, CONFIG.fields.uploadStatus);
-    const googleDriveFileId = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileId);
-    const googleDriveFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileUrl);
     const submissionRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.submissionLinked);
     const enrollmentRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.enrollmentLinked);
+    const googleDriveFileId = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileId);
+    const googleDriveFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileUrl);
     const attachments = getRaw(assetRecord, assetsTable, CONFIG.fields.airtableAttachment);
     const attachmentCount = Array.isArray(attachments) ? attachments.length : 0;
-    const targetRecordId = resolveTargetRecordId(assetRecord, assetsTable, route);
+
+    const route = resolveRoute(uploadDestination);
+
+    if (!route) {
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_unsupported_destination",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: `Unsupported Upload Destination: "${uploadDestination || "[blank]"}".`,
+            message: "Unsupported Upload Destination.",
+            extra: { uploadDestination },
+        });
+        return;
+    }
+
+    const targetRecordId = getLinkedIds(assetRecord, assetsTable, route.targetLinkField)[0] || "";
 
     /************************************************************
-     * SECTION 6: VALIDATE ROUTE + REQUIRED FIELDS
+     * SECTION 6: SAFETY CHECKS
      ************************************************************/
 
-    setDebug("4 - Validate Route");
-
-    if (comparable(uploadDestination) !== comparable(route.uploadDestination)) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} route mismatch: expected Upload Destination = ${route.uploadDestination}, got "${uploadDestination || "[blank]"}".`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
-                uploadDestination,
-                targetTable: route.targetTable,
-            },
-        );
-    }
-
-    if (!sendToMakeTrigger) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Send to Make Trigger is not checked.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
-                uploadDestination,
-                targetTable: route.targetTable,
-            },
-        );
-    }
-
-    if (!readyToSendToMake.includes(CONFIG.values.readyToSendToken)) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Ready to Send to Make? is "${readyToSendToMake || "[blank]"}", not ${CONFIG.values.readyToSendToken}.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
-                uploadDestination,
-                targetTable: route.targetTable,
-            },
-        );
-    }
-
-    if (comparable(uploadStatus) !== comparable(CONFIG.values.statusPendingLink)) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Upload Status must be Pending Link. Current value: ${uploadStatus || "[blank]"}.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
-                uploadDestination,
-                targetTable: route.targetTable,
-                uploadStatus,
-            },
-        );
-    }
+    setDebug("4 - Safety Checks");
 
     if (googleDriveFileId || googleDriveFileUrl) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Google Drive File ID or URL already exists. Duplicate upload blocked.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
+        await stopWithAssetUpdate({
+            statusOut: "skipped",
+            actionOut: "skipped_already_uploaded",
+            uploadStatus: CONFIG.values.statusUploaded,
+            uploadError:
+                "Upload stopped: Google Drive File URL or File ID already exists. Duplicate upload prevented.",
+            message: "Duplicate upload blocked â€” Drive file already present.",
+            extra: {
                 uploadDestination,
+                routeKey: route.routeKey,
                 targetTable: route.targetTable,
+                targetRecordId,
                 googleDriveFileId,
                 googleDriveFileUrl,
             },
-        );
+        });
+        return;
     }
 
     if (submissionRecordIds.length === 0) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Submission - Linked is missing.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
-                uploadDestination,
-                targetTable: route.targetTable,
-            },
-        );
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_missing_submission",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: "Submission - Linked is missing.",
+            message: "Missing Submission - Linked.",
+            extra: { uploadDestination, routeKey: route.routeKey, targetTable: route.targetTable },
+        });
+        return;
     }
 
     if (enrollmentRecordIds.length === 0) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Enrollment - Linked is missing.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_missing_enrollment",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: "Enrollment - Linked is missing.",
+            message: "Missing Enrollment - Linked.",
+            extra: { uploadDestination, routeKey: route.routeKey, targetTable: route.targetTable },
+        });
+        return;
+    }
+
+    if (!targetRecordId) {
+        await stopWithAssetUpdate({
+            statusOut: "skipped",
+            actionOut: "skipped_pending_link",
+            uploadStatus: CONFIG.values.statusPendingLink,
+            uploadError: `Waiting for linked ${route.targetTable} record before Make upload.`,
+            message: `Missing target ${route.targetTable} link.`,
+            extra: {
                 uploadDestination,
+                routeKey: route.routeKey,
                 targetTable: route.targetTable,
+                targetRecordId: "",
             },
-        );
+        });
+        return;
     }
 
     if (attachmentCount === 0) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} cannot send: Airtable Attachment is empty.`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_missing_attachment",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: "Airtable Attachment is missing.",
+            message: "Missing Airtable Attachment.",
+            extra: {
                 uploadDestination,
-                targetTable: route.targetTable,
-            },
-        );
-    }
-
-    /************************************************************
-     * SECTION 7: TARGET RECORD CHECK
-     ************************************************************/
-
-    setDebug("5 - Resolve Target Record");
-
-    if (!targetRecordId) {
-        await finishSkipped(
-            `${route.automationNumber} waiting for ${route.targetTable} link. Upload Status remains Pending Link.`,
-            {
-                automationNumber: route.automationNumber,
                 routeKey: route.routeKey,
-                uploadDestination,
                 targetTable: route.targetTable,
-                targetRecordId: "",
-                submissionAssetRecordId: recordId,
+                targetRecordId,
             },
-        );
+        });
         return;
     }
 
     /************************************************************
-     * SECTION 8: BUILD MINIMAL PAYLOAD
+     * SECTION 7: BUILD MINIMAL PAYLOAD
      ************************************************************/
 
-    setDebug("6 - Build Payload");
+    setDebug("5 - Build Payload");
 
     const sentAtIso = new Date().toISOString();
 
     const payload = {
-        sourceName: route.sourceName,
-        automationNumber: route.automationNumber,
+        sourceName: CONFIG.values.sourceName,
+        automationNumber,
         sentAtIso,
         routeKey: route.routeKey,
-        uploadDestination,
+        uploadDestination: route.uploadDestination,
         sourceTable: CONFIG.tables.submissionAssets,
         submissionAssetRecordId: recordId,
         targetTable: route.targetTable,
         targetRecordId,
     };
 
-    console.log(`${route.automationNumber} payload`);
+    console.log(`${automationNumber} payload`);
     console.log(JSON.stringify(payload, null, 2));
 
     /************************************************************
-     * SECTION 9: SEND WEBHOOK (before Processing)
+     * SECTION 8: SEND WEBHOOK
      ************************************************************/
 
-    setDebug("7 - Send Webhook");
+    setDebug("6 - Send Webhook");
 
     let response = null;
     let responseText = "";
@@ -644,42 +587,50 @@ async function main() {
         response = await postJson(makeWebhookUrl, payload);
         responseText = await response.text();
     } catch (error) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} Make webhook request failed: ${error.message || error}`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
+        const message = `${automationNumber} Make webhook request failed: ${error.message || error}`;
+
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_webhook_request",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: message,
+            message,
+            extra: {
                 uploadDestination,
+                routeKey: route.routeKey,
                 targetTable: route.targetTable,
                 targetRecordId,
             },
-        );
+        });
+        return;
     }
 
     if (!response || !response.ok) {
-        await finishError(
-            assetsTable,
-            recordId,
-            `${route.automationNumber} Make webhook returned HTTP ${response?.status || "unknown"}: ${getResponsePreview(responseText)}`,
-            {
-                automationNumber: route.automationNumber,
-                routeKey: route.routeKey,
+        const message = `${automationNumber} Make webhook returned HTTP ${response?.status || "unknown"}: ${getResponsePreview(responseText)}`;
+
+        await stopWithAssetUpdate({
+            statusOut: "error",
+            actionOut: "error_webhook_response",
+            uploadStatus: CONFIG.values.statusError,
+            uploadError: message,
+            message,
+            extra: {
                 uploadDestination,
+                routeKey: route.routeKey,
                 targetTable: route.targetTable,
                 targetRecordId,
                 makeStatus: String(response?.status || ""),
                 makeResponse: getResponsePreview(responseText),
             },
-        );
+        });
+        return;
     }
 
     /************************************************************
-     * SECTION 10: SUCCESS WRITEBACK
+     * SECTION 9: SUCCESS WRITEBACK
      ************************************************************/
 
-    setDebug("8 - Success Writeback");
+    setDebug("7 - Success Writeback");
 
     const successFields = {};
 
@@ -690,10 +641,10 @@ async function main() {
     await updateAsset(assetsTable, recordId, successFields);
 
     /************************************************************
-     * SECTION 11: OUTPUTS
+     * SECTION 10: OUTPUTS
      ************************************************************/
 
-    setDebug("9 - Done");
+    setDebug("8 - Done");
 
     const result = {
         ok: true,
@@ -701,13 +652,13 @@ async function main() {
         statusOut: "success",
         actionOut: "sent_to_make",
         errorOut: "",
-        message: `${route.automationNumber} asset sent to Make successfully.`,
+        message: `${automationNumber} asset sent to Make successfully.`,
         submissionAssetRecordId: recordId,
         targetRecordId,
         targetTable: route.targetTable,
         routeKey: route.routeKey,
-        uploadDestination,
-        automationNumber: route.automationNumber,
+        uploadDestination: route.uploadDestination,
+        automationNumber,
         makeStatus: String(response.status),
         makeResponse: getResponsePreview(responseText),
     };

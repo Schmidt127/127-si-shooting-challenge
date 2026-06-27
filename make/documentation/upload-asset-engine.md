@@ -28,7 +28,7 @@ All prep and send automations use the **same ladder**. Do not introduce alternat
 
 Custom webhook from Airtable automations **070a** (homework assets) and **070b** (video assets).
 
-**v4.0 payload (2026-06-27):** `submissionAssetRecordId`, `routeKey`, `uploadDestination`, `targetTable`, `targetRecordId`, `automationNumber`, `sentAtIso`, `sourceName`, `sourceTable`. Make Module 2 re-fetches the Submission Asset; do not send attachment URLs in the webhook.
+**v4.1 payload (2026-06-27):** `sourceName`, `automationNumber`, `sentAtIso`, `routeKey` (`homework_completion` | `video_feedback`), `uploadDestination`, `sourceTable`, `submissionAssetRecordId`, `targetTable`, `targetRecordId`. Make Module 2 re-fetches the Submission Asset; do not send attachment URLs or Drive folder/file names in the webhook.
 
 ## Flow (high level)
 
