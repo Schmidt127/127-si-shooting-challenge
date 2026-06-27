@@ -1,7 +1,8 @@
 # Upload Asset Engine (Make.com)
 
 **Scenario name:** Shooting Challenge - GAME - Upload Engine - April 2026  
-**Blueprint:** [../blueprints/upload-asset-engine-v1.json](../blueprints/upload-asset-engine-v1.json)  
+**Blueprint:** [../blueprints/upload-asset-engine-v1.json](../blueprints/upload-asset-engine-v1.json) (legacy April 2026)  
+**Blueprint (Fresh Airtable + hash duplicate check):** [../blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json](../blueprints/upload-asset-engine-v2-with-file-hash-duplicate-check.json) — see [upload-asset-engine-v2-hash-duplicate-check.md](./upload-asset-engine-v2-hash-duplicate-check.md)  
 **Webhook:** Shooting Challenge UPLOAD ENGINE (hook id 2673043 in export — live URL stays in Make only)
 
 ## Upload status contract (Submission Assets + Video Feedback)

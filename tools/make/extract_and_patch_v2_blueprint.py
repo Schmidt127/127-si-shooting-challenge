@@ -36,8 +36,11 @@ def extract_blueprint() -> str:
             if "<user_query>" in body:
                 body = body.split("<user_query>", 1)[1].strip()
             start = body.find("{")
-            if start >= 0 and BODY_MARKER in body:
-                return body[start:].strip()
+            if start < 0 or BODY_MARKER not in body:
+                continue
+            decoder = json.JSONDecoder()
+            blueprint, _end = decoder.raw_decode(body, start)
+            return json.dumps(blueprint, indent=4, ensure_ascii=False) + "\n"
     raise SystemExit(f"Could not find v2 blueprint in {TRANSCRIPT}")
 
 
@@ -51,10 +54,10 @@ def load_patch_module():
 
 def main() -> None:
     raw = extract_blueprint()
-    json.loads(raw)  # validate
+    blueprint = json.loads(raw)
     BASE.write_text(raw, encoding="utf-8")
     patch_mod = load_patch_module()
-    patched = patch_mod.patch_blueprint(json.loads(raw))
+    patched = patch_mod.patch_blueprint(blueprint)
     OUT.write_text(json.dumps(patched, indent=4, ensure_ascii=False) + "\n", encoding="utf-8")
 
     content = OUT.read_text(encoding="utf-8")
