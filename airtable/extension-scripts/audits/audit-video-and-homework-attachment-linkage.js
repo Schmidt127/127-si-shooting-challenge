@@ -641,7 +641,7 @@ function buildSafeCleanupRecommendations(issueCounts) {
     issueCounts.TARGET_AND_ASSET_DRIVE_FILE_MISMATCH
   ) {
     recommendations.push(
-      "Upload writeback drift: re-run Automation 022 on the Submission Asset or use backfill-video-pipeline-links.js / backfill-homework-completion-upload-status.js (dry run first)."
+      "Upload writeback drift: re-run Automation 022 on the Submission Asset, run repair-audit-linkage-full.js, or use backfill-video-pipeline-links.js / backfill-homework-completion-upload-status.js (dry run first)."
     );
   }
 
@@ -653,7 +653,7 @@ function buildSafeCleanupRecommendations(issueCounts) {
 
   if (issueCounts.HOMEWORK_COMPLETION_LINKED_TO_MULTIPLE_ASSETS) {
     recommendations.push(
-      "Homework Completions linked to multiple Submission Assets: keep the asset with the latest successful upload; unlink or archive the extra asset after confirming parent feedback and Drive file."
+      "Homework Completions linked to multiple Submission Assets: run repair-audit-linkage-full.js (dry run first). Keep latest successful upload; script unlinks stale assets, clears Send to Make Trigger, and updates Submission asset list."
     );
   }
 
