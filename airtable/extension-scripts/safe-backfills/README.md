@@ -72,6 +72,19 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-shot-milestone-xp-week-and-was.js` | Shot Milestone XP Week/WAS from unlock | **Ready** |
 | `backfill-shot-milestone-unlock-mark-awarded.js` | 059 repair: Pending + XP linked → Awarded | **Ready** |
 | `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | **Ready** |
+| `repair-audit-linkage-full.js` | All v1.2 linkage audit issues (multi-asset HW, send trigger, VF flags, orphans) | **Ready** |
+| `repair-audit-001` … `009` | Single-record targeted repairs (use linkage-full for batch) | **Ready** |
+
+### Linkage audit repair (v1.2)
+
+After `audit-video-and-homework-attachment-linkage.js`:
+
+1. Run `repair-audit-linkage-full.js` with `DRY_RUN = true`
+2. Review `plannedActions` and `manualReview` rows
+3. Set `CONFIRM_WRITE = true`, `DRY_RUN = false`; re-run until `remainingCount` is 0
+4. Re-run audit
+
+Use `repair-audit-001` … `009` only for one-off spot fixes with explicit record IDs.
 
 ---
 

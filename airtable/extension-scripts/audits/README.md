@@ -31,9 +31,9 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **C. Weekly summary link** | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` | `backfill-missing-weekly-summaries-and-xp-links.js`, `backfill-xp-event-weekly-summary-links.js` |
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
-| **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js` | `backfill-homework-xp-from-reviewed.js` |
+| **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-homework-xp-from-reviewed.js`, `dedupe-homework-xp-events.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
-| **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
+| **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
 | **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js`, `audit-pending-shot-milestone-unlocks.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-legacy-streak-xp-source-keys.js`, `backfill-shot-milestone-xp-week-and-was.js`, `backfill-shot-milestone-unlock-mark-awarded.js` |
 | **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js`, `audit-legacy-cleanup-candidates.js` | `archive-legacy-streak-unlock-records.js` + manual field delete |
 
@@ -53,6 +53,9 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
 | `audit-video-and-homework-attachment-linkage.js` | Video/homework upload linkage + writeback drift only (v1.2); Brayden Elders focus section | **Ready** |
+| `audit-submission-asset-pipeline-duplicate-xp.js` | Submission Assets → homework/video → XP Events duplicate XP (Source Key + chain) | **Ready** |
+
+**Repair:** `repair-audit-linkage-full.js` in [safe-backfills](../safe-backfills/README.md#linkage-audit-repair-v12)
 | `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
 | `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |
