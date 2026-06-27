@@ -5,6 +5,7 @@ Purpose:
   Read-only audit of Submission Assets, Video Feedback, and Homework Completions
   linkage, Google Drive upload fields, parent feedback, and grading workflow status.
   Highlights duplicate/mismatched rows (e.g. parent email sent but empty Coach Feedback).
+  v1.1: suppresses expected Asset↔target Drive linkage; flags MULTIPLE_SUBMISSIONS_SAME_WEEK.
 
 Default: read-only (no writes, no creates, no deletes)
 
@@ -23,7 +24,7 @@ const FOCUS_NAME_PATTERNS = ["brayden", "elders"];
 const CONFIG = {
   scriptName: "audit-video-and-homework-attachment-linkage",
   displayName: "AUDIT - Video and Homework Attachment Linkage",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     assets: "Submission Assets",
@@ -103,6 +104,7 @@ const CONFIG = {
   submissions: {
     name: "Submission Full Name",
     enrollment: "Enrollment",
+    week: "Week",
     activityDate: "Activity Date",
     submissionAssets: "Submission Assets",
     videoFeedback: "Video Feedback",
@@ -492,12 +494,51 @@ function describeHomeworkCompletion(record, table) {
   };
 }
 
+function extractWeekNumberFromText(text) {
+  const match = String(text || "").match(/\bweek\s*(\d+)\b/i);
+  return match ? match[1] : "";
+}
+
+function buildSubmissionWeekGroupKey(enrollmentId, weekLinkedIds, submissionName) {
+  if (!enrollmentId) return "";
+  const weekId = weekLinkedIds[0] || "";
+  if (weekId) return `${enrollmentId}|weekId:${weekId}`;
+  const weekNum = extractWeekNumberFromText(submissionName);
+  if (weekNum) return `${enrollmentId}|weekNum:${weekNum}`;
+  return "";
+}
+
+function isUnexpectedDriveDuplication(uniqueRecords) {
+  if (uniqueRecords.length <= 1) return false;
+
+  const byTable = new Map();
+  for (const entry of uniqueRecords) {
+    if (!byTable.has(entry.table)) byTable.set(entry.table, []);
+    byTable.get(entry.table).push(entry);
+  }
+
+  for (const entries of byTable.values()) {
+    if (entries.length >= 2) return true;
+  }
+
+  if (uniqueRecords.length === 2) {
+    const tables = new Set(uniqueRecords.map(entry => entry.table));
+    const expectedPair =
+      tables.has(CONFIG.tables.assets) &&
+      (tables.has(CONFIG.tables.video) || tables.has(CONFIG.tables.homework));
+    if (expectedPair) return false;
+  }
+
+  return uniqueRecords.length >= 3;
+}
+
 function describeSubmission(record, table) {
   return {
     recordId: record.id,
     submissionName:
       getText(record, table, CONFIG.submissions.name, CONFIG.tables.submissions) || record.name,
     enrollment: getLinkedIds(record, table, CONFIG.submissions.enrollment, CONFIG.tables.submissions),
+    week: getLinkedIds(record, table, CONFIG.submissions.week, CONFIG.tables.submissions),
     activityDate: getText(record, table, CONFIG.submissions.activityDate, CONFIG.tables.submissions),
     submissionAssets: getLinkedIds(
       record,
@@ -615,9 +656,24 @@ function buildSafeCleanupRecommendations(issueCounts, focusSection) {
     );
   }
 
-  if (focusSection.submissionAssets.length > 0 || focusSection.videoFeedback.length > 0) {
+  if (issueCounts.MULTIPLE_SUBMISSIONS_SAME_WEEK) {
     recommendations.push(
-      "Brayden Elders focus: compare all Video Feedback rows sharing the same Submission or Google Drive File ID. The grading UI row with empty Coach Feedback is likely a duplicate of the row that already emailed parents."
+      "Multiple Submissions for the same Enrollment + Week: compare activity dates and linked Video Feedback. The newer submission is often a re-upload/correction — grade the row with empty Coach Feedback. Rows with Parent Feedback Sent? on a different submission are already complete, not duplicates."
+    );
+  }
+
+  if (issueCounts.GOOGLE_DRIVE_ID_DUPLICATED || issueCounts.GOOGLE_DRIVE_URL_DUPLICATED) {
+    recommendations.push(
+      "Unexpected Google Drive duplicates (same table or 3+ records): verify only one canonical Submission Asset or Video Feedback owns each file before unlinking or archiving."
+    );
+  }
+
+  if (
+    (focusSection.submissionAssets.length > 0 || focusSection.videoFeedback.length > 0) &&
+    !issueCounts.MULTIPLE_SUBMISSIONS_SAME_WEEK
+  ) {
+    recommendations.push(
+      "Focus athlete: compare Video Feedback rows per submission. Empty Coach Feedback on an Uploaded row with Parent Feedback Sent? false is an active grading-queue item unless DUPLICATE_VIDEO_FEEDBACK is also flagged."
     );
   }
 
@@ -1049,7 +1105,7 @@ async function main() {
 
   for (const [driveId, entries] of driveIdIndex.entries()) {
     const uniqueRecords = [...new Map(entries.map(entry => [`${entry.table}:${entry.recordId}`, entry])).values()];
-    if (uniqueRecords.length <= 1) continue;
+    if (!isUnexpectedDriveDuplication(uniqueRecords)) continue;
     bump("GOOGLE_DRIVE_ID_DUPLICATED", {
       googleDriveFileId: driveId,
       records: uniqueRecords,
@@ -1059,11 +1115,41 @@ async function main() {
 
   for (const [driveUrl, entries] of driveUrlIndex.entries()) {
     const uniqueRecords = [...new Map(entries.map(entry => [`${entry.table}:${entry.recordId}`, entry])).values()];
-    if (uniqueRecords.length <= 1) continue;
+    if (!isUnexpectedDriveDuplication(uniqueRecords)) continue;
     bump("GOOGLE_DRIVE_URL_DUPLICATED", {
       googleDriveFileUrl: driveUrl,
       records: uniqueRecords,
       count: uniqueRecords.length,
+    });
+  }
+
+  const submissionsByEnrollmentWeek = new Map();
+  for (const submissionRecord of submissionQuery.records) {
+    const submissionReport = describeSubmission(submissionRecord, submissionsTable);
+    const groupKey = buildSubmissionWeekGroupKey(
+      submissionReport.enrollment[0] || "",
+      submissionReport.week,
+      submissionReport.submissionName
+    );
+    if (!groupKey) continue;
+    if (!submissionsByEnrollmentWeek.has(groupKey)) submissionsByEnrollmentWeek.set(groupKey, []);
+    submissionsByEnrollmentWeek.get(groupKey).push(submissionReport);
+  }
+
+  for (const [groupKey, submissionReports] of submissionsByEnrollmentWeek.entries()) {
+    if (submissionReports.length <= 1) continue;
+    bump("MULTIPLE_SUBMISSIONS_SAME_WEEK", {
+      groupKey,
+      count: submissionReports.length,
+      submissions: submissionReports.map(submission => ({
+        recordId: submission.recordId,
+        submissionName: submission.submissionName,
+        activityDate: submission.activityDate,
+        weekLinked: submission.week,
+        submissionAssetsCount: submission.submissionAssets.length,
+        videoFeedbackCount: submission.videoFeedback.length,
+        homeworkCompletionsCount: submission.homeworkCompletions.length,
+      })),
     });
   }
 
