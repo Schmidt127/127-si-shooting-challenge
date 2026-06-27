@@ -3,9 +3,8 @@ Extension Script: AUDIT - Video and Homework Attachment Linkage
 System: 127 SI Shooting Challenge
 Purpose:
   Read-only audit of Submission Assets, Video Feedback, and Homework Completions
-  linkage, Google Drive upload fields, parent feedback, and grading workflow status.
-  Highlights duplicate/mismatched rows (e.g. parent email sent but empty Coach Feedback).
-  v1.1: suppresses expected Asset↔target Drive linkage; flags MULTIPLE_SUBMISSIONS_SAME_WEEK.
+  upload linkage, writeback drift, and grading/parent-feedback workflow gaps.
+  v1.2: upload/linkage issues only; no multiple-submissions or Drive-dupe noise.
 
 Default: read-only (no writes, no creates, no deletes)
 
@@ -18,20 +17,31 @@ Recommended follow-up:
 
 // @ts-nocheck
 
-const PROCESSING_TOO_LONG_MINUTES = 30;
-const FOCUS_NAME_PATTERNS = ["brayden", "elders"];
+const FOCUS_NAME_PATTERNS = ["brayden"];
+
+const ALLOWED_ISSUE_TYPES = [
+  "SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED",
+  "UPLOAD_STATUS_MISMATCH",
+  "HOMEWORK_COMPLETION_WITHOUT_SUBMISSION_ASSET",
+  "VIDEO_FEEDBACK_WITHOUT_SUBMISSION_ASSET",
+  "SEND_TRIGGER_STILL_CHECKED_AFTER_UPLOAD",
+  "VIDEO_FEEDBACK_WITH_COACH_FEEDBACK_BUT_NOT_POSTED",
+  "VIDEO_FEEDBACK_WITHOUT_COACH_FEEDBACK_BUT_PARENT_SENT",
+  "HOMEWORK_COMPLETION_LINKED_TO_MULTIPLE_ASSETS",
+  "ASSET_HAS_UPLOAD_ERROR_BUT_STATUS_UPLOADED",
+  "TARGET_AND_ASSET_DRIVE_FILE_MISMATCH",
+];
 
 const CONFIG = {
   scriptName: "audit-video-and-homework-attachment-linkage",
   displayName: "AUDIT - Video and Homework Attachment Linkage",
-  version: "v1.1",
+  version: "v1.2",
 
   tables: {
     assets: "Submission Assets",
     video: "Video Feedback",
     homework: "Homework Completions",
     submissions: "Submissions",
-    xpEvents: "XP Events",
   },
 
   assets: {
@@ -104,7 +114,6 @@ const CONFIG = {
   submissions: {
     name: "Submission Full Name",
     enrollment: "Enrollment",
-    week: "Week",
     activityDate: "Activity Date",
     submissionAssets: "Submission Assets",
     videoFeedback: "Video Feedback",
@@ -116,11 +125,6 @@ const CONFIG = {
     uploadDestVideo: "Video Feedback",
     syncableStatuses: ["Uploaded", "Processing", "Error"],
     uploadedStatus: "Uploaded",
-    processingStatus: "Processing",
-    errorStatus: "Error",
-    pendingLinkStatus: "Pending Link",
-    workflowNeedsReview: "Needs Review",
-    workflowFeedbackGiven: "Feedback Given",
     videoKeyPrefix: "VIDEO_FEEDBACK|",
   },
 };
@@ -168,10 +172,6 @@ function getLinkedIds(record, table, fieldName, tableName = "") {
   const raw = record.getCellValue(fieldName);
   if (!Array.isArray(raw)) return [];
   return raw.map(item => item?.id).filter(Boolean);
-}
-
-function getFirstLinkedId(record, table, fieldName, tableName = "") {
-  return getLinkedIds(record, table, fieldName, tableName)[0] || "";
 }
 
 function getCheckbox(record, table, fieldName, tableName = "") {
@@ -222,11 +222,21 @@ function normalizeDriveUrl(value) {
   return text.replace(/\/+$/, "").toLowerCase();
 }
 
-function minutesSince(isoTime) {
-  if (!isoTime) return null;
-  const ms = Date.now() - new Date(isoTime).getTime();
-  if (!Number.isFinite(ms)) return null;
-  return Math.max(0, Math.round(ms / 60000));
+function extractDriveFileId(value) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  const match = text.match(/\/d\/([^/?#]+)/) || text.match(/[?&]id=([^&]+)/);
+  return match ? match[1] : text;
+}
+
+function driveFilesMismatch(assetFileId, assetFileUrl, targetFileId, targetFileUrl) {
+  const assetId = extractDriveFileId(assetFileId) || extractDriveFileId(assetFileUrl);
+  const targetId = extractDriveFileId(targetFileId) || extractDriveFileId(targetFileUrl);
+  if (assetId && targetId) return assetId !== targetId;
+
+  const assetUrl = normalizeDriveUrl(assetFileUrl);
+  const targetUrl = normalizeDriveUrl(targetFileUrl);
+  return Boolean(assetUrl && targetUrl && assetUrl !== targetUrl);
 }
 
 function containsFocusName(...values) {
@@ -306,11 +316,8 @@ function getVideoDriveUrl(videoRecord, videoTable) {
   );
 }
 
-function buildGroupKey(parts) {
-  return parts.map(part => normalizeKey(part)).join("|");
-}
-
 function pushIssue(issues, issueCounts, issueType, row) {
+  if (!ALLOWED_ISSUE_TYPES.includes(issueType)) return;
   issueCounts[issueType] = (issueCounts[issueType] || 0) + 1;
   issues.push({ issueType, ...row });
 }
@@ -494,51 +501,12 @@ function describeHomeworkCompletion(record, table) {
   };
 }
 
-function extractWeekNumberFromText(text) {
-  const match = String(text || "").match(/\bweek\s*(\d+)\b/i);
-  return match ? match[1] : "";
-}
-
-function buildSubmissionWeekGroupKey(enrollmentId, weekLinkedIds, submissionName) {
-  if (!enrollmentId) return "";
-  const weekId = weekLinkedIds[0] || "";
-  if (weekId) return `${enrollmentId}|weekId:${weekId}`;
-  const weekNum = extractWeekNumberFromText(submissionName);
-  if (weekNum) return `${enrollmentId}|weekNum:${weekNum}`;
-  return "";
-}
-
-function isUnexpectedDriveDuplication(uniqueRecords) {
-  if (uniqueRecords.length <= 1) return false;
-
-  const byTable = new Map();
-  for (const entry of uniqueRecords) {
-    if (!byTable.has(entry.table)) byTable.set(entry.table, []);
-    byTable.get(entry.table).push(entry);
-  }
-
-  for (const entries of byTable.values()) {
-    if (entries.length >= 2) return true;
-  }
-
-  if (uniqueRecords.length === 2) {
-    const tables = new Set(uniqueRecords.map(entry => entry.table));
-    const expectedPair =
-      tables.has(CONFIG.tables.assets) &&
-      (tables.has(CONFIG.tables.video) || tables.has(CONFIG.tables.homework));
-    if (expectedPair) return false;
-  }
-
-  return uniqueRecords.length >= 3;
-}
-
 function describeSubmission(record, table) {
   return {
     recordId: record.id,
     submissionName:
       getText(record, table, CONFIG.submissions.name, CONFIG.tables.submissions) || record.name,
     enrollment: getLinkedIds(record, table, CONFIG.submissions.enrollment, CONFIG.tables.submissions),
-    week: getLinkedIds(record, table, CONFIG.submissions.week, CONFIG.tables.submissions),
     activityDate: getText(record, table, CONFIG.submissions.activityDate, CONFIG.tables.submissions),
     submissionAssets: getLinkedIds(
       record,
@@ -595,40 +563,109 @@ function buildVideoByKeyIndex(videoQuery, videoTable) {
   return videoByKey;
 }
 
-function buildSafeCleanupRecommendations(issueCounts, focusSection) {
+function auditAssetTargetWriteback(bump, assetReport, uploadStatus, targetTable, targetRecordId, targetRecord, targetTableObj, targetFields) {
+  const targetStatus = getSelectName(
+    targetRecord,
+    targetTableObj,
+    targetFields.uploadStatus,
+    targetTable
+  );
+  const targetDriveUrl = targetFields.getDriveUrl(targetRecord, targetTableObj);
+  const targetDriveId = targetFields.getDriveId
+    ? targetFields.getDriveId(targetRecord, targetTableObj)
+    : "";
+
+  const assetUploaded = normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.uploadedStatus);
+  const targetUploaded = normalizeKey(targetStatus) === normalizeKey(CONFIG.values.uploadedStatus);
+
+  if (assetUploaded && assetReport.googleDriveFileUrl && !targetUploaded) {
+    bump("SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED", {
+      table: CONFIG.tables.assets,
+      recordId: assetReport.recordId,
+      name: assetReport.submissionAssetsFullName,
+      targetTable,
+      targetRecordId,
+      assetUploadStatus: uploadStatus,
+      targetUploadStatus: targetStatus,
+    });
+  }
+
+  if (
+    CONFIG.values.syncableStatuses.includes(uploadStatus) &&
+    targetStatus &&
+    uploadStatus !== targetStatus
+  ) {
+    bump("UPLOAD_STATUS_MISMATCH", {
+      table: CONFIG.tables.assets,
+      recordId: assetReport.recordId,
+      name: assetReport.submissionAssetsFullName,
+      targetTable,
+      targetRecordId,
+      assetUploadStatus: uploadStatus,
+      targetUploadStatus: targetStatus,
+    });
+  }
+
+  if (
+    assetUploaded &&
+    targetUploaded &&
+    (assetReport.googleDriveFileId || assetReport.googleDriveFileUrl) &&
+    (targetDriveId || targetDriveUrl) &&
+    driveFilesMismatch(
+      assetReport.googleDriveFileId,
+      assetReport.googleDriveFileUrl,
+      targetDriveId,
+      targetDriveUrl
+    )
+  ) {
+    bump("TARGET_AND_ASSET_DRIVE_FILE_MISMATCH", {
+      table: CONFIG.tables.assets,
+      recordId: assetReport.recordId,
+      name: assetReport.submissionAssetsFullName,
+      targetTable,
+      targetRecordId,
+      assetGoogleDriveFileId: assetReport.googleDriveFileId,
+      assetGoogleDriveFileUrl: assetReport.googleDriveFileUrl,
+      targetGoogleDriveFileId: targetDriveId,
+      targetGoogleDriveFileUrl: targetDriveUrl,
+    });
+  }
+}
+
+function buildSafeCleanupRecommendations(issueCounts) {
   const recommendations = [];
 
-  if (issueCounts.DUPLICATE_VIDEO_FEEDBACK || issueCounts.DUPLICATE_SUBMISSION_ASSET) {
+  if (
+    issueCounts.UPLOAD_STATUS_MISMATCH ||
+    issueCounts.SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED ||
+    issueCounts.TARGET_AND_ASSET_DRIVE_FILE_MISMATCH
+  ) {
     recommendations.push(
-      "Review duplicate groups manually before deleting. Keep the row with Parent Feedback Sent?, posted Coach Feedback, and canonical Video Feedback Key (VIDEO_FEEDBACK|{assetId}). Archive or unlink stale duplicates."
+      "Upload writeback drift: re-run Automation 022 on the Submission Asset or use backfill-video-pipeline-links.js / backfill-homework-completion-upload-status.js (dry run first)."
+    );
+  }
+
+  if (issueCounts.ASSET_HAS_UPLOAD_ERROR_BUT_STATUS_UPLOADED) {
+    recommendations.push(
+      "Assets marked Uploaded with a non-empty Upload Error: confirm Drive has the correct file, then clear the stale error or re-run 070a/070b + 022 if the upload did not finish cleanly."
+    );
+  }
+
+  if (issueCounts.HOMEWORK_COMPLETION_LINKED_TO_MULTIPLE_ASSETS) {
+    recommendations.push(
+      "Homework Completions linked to multiple Submission Assets: keep the asset with the latest successful upload; unlink or archive the extra asset after confirming parent feedback and Drive file."
     );
   }
 
   if (issueCounts.VIDEO_FEEDBACK_WITHOUT_COACH_FEEDBACK_BUT_PARENT_SENT) {
     recommendations.push(
-      "For Video Feedback with Parent Feedback Sent? but empty Coach Feedback: identify which row received the email vs which row still appears in grading. Likely a duplicate Video Feedback — unlink or archive the stale grading-queue row after confirming the sent row."
+      "Video Feedback with Parent Feedback Sent? but empty Coach Feedback: identify which row received the email vs which row still appears in grading. Unlink or archive the stale grading-queue row after confirming the sent row."
     );
   }
 
-  if (issueCounts.VIDEO_FEEDBACK_IN_GRADING_QUEUE_ALREADY_SENT) {
+  if (issueCounts.VIDEO_FEEDBACK_WITH_COACH_FEEDBACK_BUT_NOT_POSTED) {
     recommendations.push(
-      "Rows still in Needs Review / Feedback Given after parent email was sent are grading-queue noise. Compare Submission Asset links and Drive IDs; retire the stale Video Feedback or mark Feedback Posted? on the canonical row only after coach review is complete."
-    );
-  }
-
-  if (issueCounts.SUBMISSION_ASSET_LINKED_TO_MULTIPLE_VIDEO_FEEDBACK_RECORDS) {
-    recommendations.push(
-      "Pick one canonical Video Feedback per Submission Asset (prefer VIDEO_FEEDBACK|{assetId} key). Run backfill-video-pipeline-links.js dry-run or repair links manually; do not delete until parent email and XP rows are verified."
-    );
-  }
-
-  if (
-    issueCounts.UPLOAD_STATUS_MISMATCH ||
-    issueCounts.SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED ||
-    issueCounts.TARGET_UPDATED_BUT_SUBMISSION_ASSET_NOT_UPDATED
-  ) {
-    recommendations.push(
-      "Upload writeback drift: re-run Automation 022 on the Submission Asset or use backfill-video-pipeline-links.js / backfill-homework-completion-upload-status.js (dry run first)."
+      "Coach feedback filled but Feedback Posted? is false: complete the posting workflow so parent email and XP can proceed."
     );
   }
 
@@ -638,42 +675,15 @@ function buildSafeCleanupRecommendations(issueCounts, focusSection) {
     );
   }
 
-  if (issueCounts.PENDING_LINK_BUT_TARGET_LINK_EXISTS) {
-    recommendations.push(
-      "Pending Link with an existing target link usually means 013/020 linked the child but status was not advanced. Re-trigger 022 writeback or manually set Upload Status to Uploaded if Drive fields are complete."
-    );
-  }
-
-  if (issueCounts.PROCESSING_TOO_LONG) {
-    recommendations.push(
-      "Processing rows older than 30 minutes: check Make Upload Engine run history, then audit-stuck-upload-processing.js. Do not reset to Ready without checking Drive for a partial upload."
-    );
-  }
-
   if (issueCounts.HOMEWORK_COMPLETION_WITHOUT_SUBMISSION_ASSET) {
     recommendations.push(
       "Homework Completions without assets may be pre-upload placeholders. Run audit-homework-completion-upload-edge-cases.js and backfill-homework-completion-orphan-resolve.js if files exist elsewhere."
     );
   }
 
-  if (issueCounts.MULTIPLE_SUBMISSIONS_SAME_WEEK) {
+  if (issueCounts.VIDEO_FEEDBACK_WITHOUT_SUBMISSION_ASSET) {
     recommendations.push(
-      "Multiple Submissions for the same Enrollment + Week: compare activity dates and linked Video Feedback. The newer submission is often a re-upload/correction — grade the row with empty Coach Feedback. Rows with Parent Feedback Sent? on a different submission are already complete, not duplicates."
-    );
-  }
-
-  if (issueCounts.GOOGLE_DRIVE_ID_DUPLICATED || issueCounts.GOOGLE_DRIVE_URL_DUPLICATED) {
-    recommendations.push(
-      "Unexpected Google Drive duplicates (same table or 3+ records): verify only one canonical Submission Asset or Video Feedback owns each file before unlinking or archiving."
-    );
-  }
-
-  if (
-    (focusSection.submissionAssets.length > 0 || focusSection.videoFeedback.length > 0) &&
-    !issueCounts.MULTIPLE_SUBMISSIONS_SAME_WEEK
-  ) {
-    recommendations.push(
-      "Focus athlete: compare Video Feedback rows per submission. Empty Coach Feedback on an Uploaded row with Parent Feedback Sent? false is an active grading-queue item unless DUPLICATE_VIDEO_FEEDBACK is also flagged."
+      "Video Feedback without a linked Submission Asset: verify Video Feedback Key points to a valid asset; run backfill-video-pipeline-links.js (dry run first) or link manually."
     );
   }
 
@@ -685,7 +695,11 @@ function buildSafeCleanupRecommendations(issueCounts, focusSection) {
 }
 
 function printIssueCountsTable(issueCounts) {
-  const rows = Object.entries(issueCounts).sort((left, right) => right[1] - left[1]);
+  const rows = ALLOWED_ISSUE_TYPES.map(issueType => [issueType, issueCounts[issueType] || 0]).filter(
+    ([, count]) => count > 0
+  );
+  rows.sort((left, right) => right[1] - left[1]);
+
   console.log("\n----- ISSUE COUNTS -----");
   if (rows.length === 0) {
     console.log("(none)");
@@ -735,78 +749,34 @@ async function main() {
   const issues = [];
   const scopedAssets = [];
   const videoFeedbackReports = [];
+  const homeworkReports = [];
   const homeworkById = new Map(homeworkQuery.records.map(record => [record.id, record]));
   const submissionById = new Map(submissionQuery.records.map(record => [record.id, record]));
-
-  const assetDuplicateGroups = new Map();
-  const videoDuplicateGroups = new Map();
-  const driveIdIndex = new Map();
-  const driveUrlIndex = new Map();
 
   function bump(issueType, row) {
     pushIssue(issues, issueCounts, issueType, row);
   }
 
   for (const assetRecord of assetQuery.records) {
-    const driveId = getText(assetRecord, assetsTable, CONFIG.assets.googleDriveFileId, CONFIG.tables.assets);
-    const driveUrl = getText(assetRecord, assetsTable, CONFIG.assets.googleDriveFileUrl, CONFIG.tables.assets);
-
-    if (driveId) {
-      if (!driveIdIndex.has(driveId)) driveIdIndex.set(driveId, []);
-      driveIdIndex.get(driveId).push({ table: CONFIG.tables.assets, recordId: assetRecord.id });
-    }
-    if (driveUrl) {
-      const normalized = normalizeDriveUrl(driveUrl);
-      if (!driveUrlIndex.has(normalized)) driveUrlIndex.set(normalized, []);
-      driveUrlIndex.get(normalized).push({ table: CONFIG.tables.assets, recordId: assetRecord.id });
-    }
-
     if (!isScopedSubmissionAsset(assetRecord, assetsTable)) continue;
 
     const assetReport = describeSubmissionAsset(assetRecord, assetsTable);
     scopedAssets.push(assetReport);
 
-    const duplicateKey = buildGroupKey([
-      assetReport.enrollmentLinked[0] || "",
-      assetReport.submissionLinked[0] || "",
-      assetReport.uploadDestination,
-      assetReport.assetSlot,
-      assetReport.assetPurpose,
-      assetReport.sourceAttachmentId,
-      assetReport.originalFileName,
-      assetReport.googleDriveFileId,
-    ]);
-    if (!assetDuplicateGroups.has(duplicateKey)) assetDuplicateGroups.set(duplicateKey, []);
-    assetDuplicateGroups.get(duplicateKey).push(assetReport.recordId);
-
     const uploadStatus = assetReport.uploadStatus;
     const uploadError = assetReport.uploadError;
     const sendTrigger = assetReport.sendToMakeTrigger;
-    const ageMinutes = minutesSince(assetReport.lastModifiedTime);
 
     if (
-      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.errorStatus) &&
-      !uploadError
+      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.uploadedStatus) &&
+      uploadError
     ) {
-      bump("ERROR_STATUS_WITH_EMPTY_ERROR_MESSAGE", {
+      bump("ASSET_HAS_UPLOAD_ERROR_BUT_STATUS_UPLOADED", {
         table: CONFIG.tables.assets,
         recordId: assetReport.recordId,
         name: assetReport.submissionAssetsFullName,
         uploadStatus,
-      });
-    }
-
-    if (
-      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.processingStatus) &&
-      ageMinutes !== null &&
-      ageMinutes >= PROCESSING_TOO_LONG_MINUTES
-    ) {
-      bump("PROCESSING_TOO_LONG", {
-        table: CONFIG.tables.assets,
-        recordId: assetReport.recordId,
-        name: assetReport.submissionAssetsFullName,
-        uploadStatus,
-        ageMinutes,
+        uploadError,
       });
     }
 
@@ -822,28 +792,6 @@ async function main() {
       });
     }
 
-    if (
-      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.pendingLinkStatus) &&
-      (assetReport.videoFeedback.length > 0 || assetReport.homeworkCompletions.length > 0)
-    ) {
-      bump("PENDING_LINK_BUT_TARGET_LINK_EXISTS", {
-        table: CONFIG.tables.assets,
-        recordId: assetReport.recordId,
-        name: assetReport.submissionAssetsFullName,
-        uploadStatus,
-        videoFeedbackIds: assetReport.videoFeedback,
-        homeworkCompletionIds: assetReport.homeworkCompletions,
-      });
-    }
-
-    if (isHomeworkAsset(assetRecord, assetsTable) && assetReport.homeworkCompletions.length === 0) {
-      bump("HOMEWORK_ASSET_WITHOUT_HOMEWORK_COMPLETION", {
-        table: CONFIG.tables.assets,
-        recordId: assetReport.recordId,
-        name: assetReport.submissionAssetsFullName,
-      });
-    }
-
     if (isVideoAsset(assetRecord, assetsTable)) {
       const linkedVideoIds = findVideoFeedbackIdsForAsset(
         assetReport.recordId,
@@ -853,67 +801,16 @@ async function main() {
         videoByKey
       );
 
-      if (linkedVideoIds.length > 1) {
-        bump("SUBMISSION_ASSET_LINKED_TO_MULTIPLE_VIDEO_FEEDBACK_RECORDS", {
-          table: CONFIG.tables.assets,
-          recordId: assetReport.recordId,
-          name: assetReport.submissionAssetsFullName,
-          videoFeedbackIds: linkedVideoIds,
-        });
-      }
-
       for (const videoId of linkedVideoIds) {
         const videoRecord = videoQuery.getRecord(videoId);
         if (!videoRecord) continue;
 
-        const targetStatus = getSelectName(
-          videoRecord,
-          videoTable,
-          CONFIG.video.uploadStatus,
-          CONFIG.tables.video
-        );
-        const targetDrive = getVideoDriveUrl(videoRecord, videoTable);
-        const assetUploaded =
-          normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.uploadedStatus);
-        const targetUploaded =
-          normalizeKey(targetStatus) === normalizeKey(CONFIG.values.uploadedStatus);
-
-        if (assetUploaded && assetReport.googleDriveFileUrl && !targetUploaded) {
-          bump("SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.video,
-            targetRecordId: videoId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
-
-        if (targetUploaded && targetDrive && !assetUploaded) {
-          bump("TARGET_UPDATED_BUT_SUBMISSION_ASSET_NOT_UPDATED", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.video,
-            targetRecordId: videoId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
-
-        if (
-          CONFIG.values.syncableStatuses.includes(uploadStatus) &&
-          targetStatus &&
-          uploadStatus !== targetStatus
-        ) {
-          bump("UPLOAD_STATUS_MISMATCH", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.video,
-            targetRecordId: videoId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
+        auditAssetTargetWriteback(bump, assetReport, uploadStatus, CONFIG.tables.video, videoId, videoRecord, videoTable, {
+          uploadStatus: CONFIG.video.uploadStatus,
+          getDriveUrl: getVideoDriveUrl,
+          getDriveId: (record, table) =>
+            getText(record, table, CONFIG.video.googleDriveFileId, CONFIG.tables.video),
+        });
       }
     }
 
@@ -922,108 +819,31 @@ async function main() {
         const homeworkRecord = homeworkById.get(homeworkId);
         if (!homeworkRecord) continue;
 
-        const targetStatus = getSelectName(
+        auditAssetTargetWriteback(
+          bump,
+          assetReport,
+          uploadStatus,
+          CONFIG.tables.homework,
+          homeworkId,
           homeworkRecord,
           homeworkTable,
-          CONFIG.homework.uploadStatus,
-          CONFIG.tables.homework
+          {
+            uploadStatus: CONFIG.homework.uploadStatus,
+            getDriveUrl: (record, table) =>
+              getText(record, table, CONFIG.homework.googleDriveFileUrl, CONFIG.tables.homework),
+          }
         );
-        const targetDrive = getText(
-          homeworkRecord,
-          homeworkTable,
-          CONFIG.homework.googleDriveFileUrl,
-          CONFIG.tables.homework
-        );
-        const assetUploaded =
-          normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.uploadedStatus);
-        const targetUploaded =
-          normalizeKey(targetStatus) === normalizeKey(CONFIG.values.uploadedStatus);
-
-        if (assetUploaded && assetReport.googleDriveFileUrl && !targetUploaded) {
-          bump("SUBMISSION_ASSET_UPLOAD_COMPLETE_BUT_TARGET_NOT_UPDATED", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.homework,
-            targetRecordId: homeworkId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
-
-        if (targetUploaded && targetDrive && !assetUploaded) {
-          bump("TARGET_UPDATED_BUT_SUBMISSION_ASSET_NOT_UPDATED", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.homework,
-            targetRecordId: homeworkId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
-
-        if (
-          CONFIG.values.syncableStatuses.includes(uploadStatus) &&
-          targetStatus &&
-          uploadStatus !== targetStatus
-        ) {
-          bump("UPLOAD_STATUS_MISMATCH", {
-            table: CONFIG.tables.assets,
-            recordId: assetReport.recordId,
-            targetTable: CONFIG.tables.homework,
-            targetRecordId: homeworkId,
-            assetUploadStatus: uploadStatus,
-            targetUploadStatus: targetStatus,
-          });
-        }
       }
     }
-  }
-
-  for (const [groupKey, recordIds] of assetDuplicateGroups.entries()) {
-    if (recordIds.length <= 1 || !groupKey.replace(/\|/g, "").trim()) continue;
-    bump("DUPLICATE_SUBMISSION_ASSET", {
-      groupKey,
-      recordIds,
-      count: recordIds.length,
-    });
   }
 
   for (const videoRecord of videoQuery.records) {
     const videoReport = describeVideoFeedback(videoRecord, videoTable);
     videoFeedbackReports.push(videoReport);
 
-    const driveId = videoReport.googleDriveFileId;
-    const driveUrl = videoReport.googleDriveFileUrl || videoReport.videoUrlOrDriveLink;
-
-    if (driveId) {
-      if (!driveIdIndex.has(driveId)) driveIdIndex.set(driveId, []);
-      driveIdIndex.get(driveId).push({ table: CONFIG.tables.video, recordId: videoReport.recordId });
-    }
-    if (driveUrl) {
-      const normalized = normalizeDriveUrl(driveUrl);
-      if (!driveUrlIndex.has(normalized)) driveUrlIndex.set(normalized, []);
-      driveUrlIndex.get(normalized).push({ table: CONFIG.tables.video, recordId: videoReport.recordId });
-    }
-
-    const duplicateKey = buildGroupKey([
-      videoReport.enrollment[0] || "",
-      videoReport.submission[0] || "",
-      videoReport.submissionAsset[0] || "",
-      videoReport.googleDriveFileId,
-      videoReport.googleDriveFileUrl,
-      videoReport.videoUrlOrDriveLink,
-      videoReport.activityDateLkp,
-    ]);
-    if (!videoDuplicateGroups.has(duplicateKey)) videoDuplicateGroups.set(duplicateKey, []);
-    videoDuplicateGroups.get(duplicateKey).push(videoReport.recordId);
-
     const coachFeedback = videoReport.coachFeedback;
     const parentSent = videoReport.parentFeedbackSent;
     const feedbackPosted = videoReport.feedbackPosted;
-    const workflowStatus = videoReport.videoFeedbackWorkflowStatus;
-    const uploadStatus = videoReport.uploadStatus;
-    const uploadError = videoReport.uploadError;
-    const ageMinutes = minutesSince(videoReport.lastModifiedTime);
 
     if (parentSent && !coachFeedback) {
       bump("VIDEO_FEEDBACK_WITHOUT_COACH_FEEDBACK_BUT_PARENT_SENT", {
@@ -1043,21 +863,6 @@ async function main() {
       });
     }
 
-    if (
-      parentSent &&
-      (workflowStatus === CONFIG.values.workflowNeedsReview ||
-        workflowStatus === CONFIG.values.workflowFeedbackGiven) &&
-      !feedbackPosted
-    ) {
-      bump("VIDEO_FEEDBACK_IN_GRADING_QUEUE_ALREADY_SENT", {
-        table: CONFIG.tables.video,
-        recordId: videoReport.recordId,
-        name: videoReport.videoFeedbackName,
-        workflowStatus,
-        parentFeedbackSentOn: videoReport.parentFeedbackSentOn,
-      });
-    }
-
     if (videoReport.submissionAsset.length === 0) {
       bump("VIDEO_FEEDBACK_WITHOUT_SUBMISSION_ASSET", {
         table: CONFIG.tables.video,
@@ -1066,101 +871,13 @@ async function main() {
         videoFeedbackKey: videoReport.videoFeedbackKey,
       });
     }
-
-    if (
-      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.errorStatus) &&
-      !uploadError
-    ) {
-      bump("ERROR_STATUS_WITH_EMPTY_ERROR_MESSAGE", {
-        table: CONFIG.tables.video,
-        recordId: videoReport.recordId,
-        name: videoReport.videoFeedbackName,
-        uploadStatus,
-      });
-    }
-
-    if (
-      normalizeKey(uploadStatus) === normalizeKey(CONFIG.values.processingStatus) &&
-      ageMinutes !== null &&
-      ageMinutes >= PROCESSING_TOO_LONG_MINUTES
-    ) {
-      bump("PROCESSING_TOO_LONG", {
-        table: CONFIG.tables.video,
-        recordId: videoReport.recordId,
-        name: videoReport.videoFeedbackName,
-        uploadStatus,
-        ageMinutes,
-      });
-    }
   }
 
-  for (const [groupKey, recordIds] of videoDuplicateGroups.entries()) {
-    if (recordIds.length <= 1 || !groupKey.replace(/\|/g, "").trim()) continue;
-    bump("DUPLICATE_VIDEO_FEEDBACK", {
-      groupKey,
-      recordIds,
-      count: recordIds.length,
-    });
-  }
-
-  for (const [driveId, entries] of driveIdIndex.entries()) {
-    const uniqueRecords = [...new Map(entries.map(entry => [`${entry.table}:${entry.recordId}`, entry])).values()];
-    if (!isUnexpectedDriveDuplication(uniqueRecords)) continue;
-    bump("GOOGLE_DRIVE_ID_DUPLICATED", {
-      googleDriveFileId: driveId,
-      records: uniqueRecords,
-      count: uniqueRecords.length,
-    });
-  }
-
-  for (const [driveUrl, entries] of driveUrlIndex.entries()) {
-    const uniqueRecords = [...new Map(entries.map(entry => [`${entry.table}:${entry.recordId}`, entry])).values()];
-    if (!isUnexpectedDriveDuplication(uniqueRecords)) continue;
-    bump("GOOGLE_DRIVE_URL_DUPLICATED", {
-      googleDriveFileUrl: driveUrl,
-      records: uniqueRecords,
-      count: uniqueRecords.length,
-    });
-  }
-
-  const submissionsByEnrollmentWeek = new Map();
-  for (const submissionRecord of submissionQuery.records) {
-    const submissionReport = describeSubmission(submissionRecord, submissionsTable);
-    const groupKey = buildSubmissionWeekGroupKey(
-      submissionReport.enrollment[0] || "",
-      submissionReport.week,
-      submissionReport.submissionName
-    );
-    if (!groupKey) continue;
-    if (!submissionsByEnrollmentWeek.has(groupKey)) submissionsByEnrollmentWeek.set(groupKey, []);
-    submissionsByEnrollmentWeek.get(groupKey).push(submissionReport);
-  }
-
-  for (const [groupKey, submissionReports] of submissionsByEnrollmentWeek.entries()) {
-    if (submissionReports.length <= 1) continue;
-    bump("MULTIPLE_SUBMISSIONS_SAME_WEEK", {
-      groupKey,
-      count: submissionReports.length,
-      submissions: submissionReports.map(submission => ({
-        recordId: submission.recordId,
-        submissionName: submission.submissionName,
-        activityDate: submission.activityDate,
-        weekLinked: submission.week,
-        submissionAssetsCount: submission.submissionAssets.length,
-        videoFeedbackCount: submission.videoFeedback.length,
-        homeworkCompletionsCount: submission.homeworkCompletions.length,
-      })),
-    });
-  }
-
-  const scopedHomeworkReports = [];
   for (const homeworkRecord of homeworkQuery.records) {
     const homeworkReport = describeHomeworkCompletion(homeworkRecord, homeworkTable);
+    homeworkReports.push(homeworkReport);
 
     const linkedAssets = homeworkReport.submissionAssets;
-    const hasScopedAsset = linkedAssets.some(assetId =>
-      scopedAssets.some(asset => asset.recordId === assetId)
-    );
     const inPipeline =
       homeworkReport.uploadStatus ||
       homeworkReport.googleDriveFileUrl ||
@@ -1175,8 +892,14 @@ async function main() {
       });
     }
 
-    if (hasScopedAsset || containsFocusName(homeworkReport.homeworkCompletionName)) {
-      scopedHomeworkReports.push(homeworkReport);
+    if (linkedAssets.length > 1) {
+      bump("HOMEWORK_COMPLETION_LINKED_TO_MULTIPLE_ASSETS", {
+        table: CONFIG.tables.homework,
+        recordId: homeworkReport.recordId,
+        name: homeworkReport.homeworkCompletionName,
+        submissionAssetIds: linkedAssets,
+        count: linkedAssets.length,
+      });
     }
   }
 
@@ -1187,7 +910,7 @@ async function main() {
     videoFeedback: videoFeedbackReports.filter(video =>
       containsFocusName(video.videoFeedbackName)
     ),
-    homeworkCompletions: scopedHomeworkReports.filter(hw =>
+    homeworkCompletions: homeworkReports.filter(hw =>
       containsFocusName(hw.homeworkCompletionName)
     ),
     submissions: [],
@@ -1220,43 +943,14 @@ async function main() {
     }
   }
 
-  const safeCleanupRecommendations = buildSafeCleanupRecommendations(issueCounts, focusSection);
-  const issueTotal = issues.length;
-
-  const report = {
-    script: CONFIG.scriptName,
-    displayName: CONFIG.displayName,
-    version: CONFIG.version,
-    dryRun: true,
-    readOnly: true,
-    scopedSubmissionAssets: scopedAssets.length,
-    videoFeedbackReported: videoFeedbackReports.length,
-    homeworkCompletionsInScope: scopedHomeworkReports.length,
-    issueTotal,
-    issueCounts,
-    missingFields,
-    submissionAssets: scopedAssets,
-    videoFeedback: videoFeedbackReports,
-    issues,
-    focusAthlete: {
-      patterns: FOCUS_NAME_PATTERNS,
-      ...focusSection,
-    },
-    safeCleanupRecommendations,
-  };
+  const safeCleanupRecommendations = buildSafeCleanupRecommendations(issueCounts);
 
   console.log(`===== ${CONFIG.displayName} =====`);
   console.log(`Script: ${CONFIG.scriptName} ${CONFIG.version}`);
   console.log("Mode: READ-ONLY (no record changes)");
-  console.log("");
-  console.log("----- SUMMARY -----");
-  console.log(`Scoped Submission Assets: ${scopedAssets.length}`);
-  console.log(`Video Feedback rows reported: ${videoFeedbackReports.length}`);
-  console.log(`Homework Completions (linked to scoped assets or focus name): ${scopedHomeworkReports.length}`);
-  console.log(`Total issues flagged: ${issueTotal}`);
-  if (missingFields.length > 0) {
-    console.log(`Missing fields (skipped safely): ${missingFields.length}`);
-  }
+
+  console.log("\n----- BRAYDEN ELDERS -----");
+  console.log(JSON.stringify(focusSection, null, 2));
 
   printIssueCountsTable(issueCounts);
 
@@ -1269,23 +963,10 @@ async function main() {
     }
   }
 
-  console.log("\n----- BRAYDEN ELDERS / FOCUS ATHLETE -----");
-  console.log(JSON.stringify(focusSection, null, 2));
-
   console.log("\n----- SAFE CLEANUP RECOMMENDATIONS (manual only) -----");
   for (const recommendation of safeCleanupRecommendations) {
     console.log(`- ${recommendation}`);
   }
-
-  if (missingFields.length > 0) {
-    console.log("\n----- MISSING FIELDS -----");
-    for (const field of missingFields) {
-      console.log(field);
-    }
-  }
-
-  console.log("\n----- FULL JSON REPORT -----");
-  console.log(JSON.stringify(report, null, 2));
 }
 
 await main();
