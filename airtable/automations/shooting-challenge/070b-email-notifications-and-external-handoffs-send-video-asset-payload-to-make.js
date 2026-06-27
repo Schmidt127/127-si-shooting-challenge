@@ -19,7 +19,7 @@ Important Fields:
 Upload Status, Send to Make Trigger, Video Feedback, Google Drive File URL
 
 Notes:
-Same script body as 070b â€” set input automationNumber to 070b in Airtable.
+Same script body as 070a — set input automationNumber to 070b in Airtable.
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
@@ -67,12 +67,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - 070b: Video Feedback assets (automationNumber input = "070b")
  *
  * REQUIRED AIRTABLE INPUT VARIABLES:
- * - recordId â€” Submission Assets record ID from trigger
- * - makeWebhookUrl â€” Make Upload Engine webhook URL
- * - automationNumber â€” "070a" or "070b"
+ * - recordId — Submission Assets record ID from trigger
+ * - makeWebhookUrl — Make Upload Engine webhook URL
+ * - automationNumber — "070a" or "070b"
  *
  * OPTIONAL INPUT ALIAS:
- * - webhookUrl â€” fallback for makeWebhookUrl
+ * - webhookUrl — fallback for makeWebhookUrl
  *
  * MINIMAL WEBHOOK PAYLOAD:
  * {
@@ -93,8 +93,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Homework Completion / Video Feedback writeback: Record ID = {{1.targetRecordId}}
  *
  * ROUTING (from Upload Destination on Submission Asset):
- * - Homework Completions â†’ routeKey homework_completion, targetTable Homework Completions
- * - Video Feedback â†’ routeKey video_feedback, targetTable Video Feedback
+ * - Homework Completions → routeKey homework_completion, targetTable Homework Completions
+ * - Video Feedback → routeKey video_feedback, targetTable Video Feedback
  * - targetRecordId = first linked record on Homework Completions or Video Feedback field
  ********************************************************************/
 
@@ -480,7 +480,7 @@ async function main() {
             uploadStatus: CONFIG.values.statusUploaded,
             uploadError:
                 "Upload stopped: Google Drive File URL or File ID already exists. Duplicate upload prevented.",
-            message: "Duplicate upload blocked â€” Drive file already present.",
+            message: "Duplicate upload blocked — Drive file already present.",
             extra: {
                 uploadDestination,
                 routeKey: route.routeKey,
