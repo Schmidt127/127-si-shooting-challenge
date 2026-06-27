@@ -6,6 +6,7 @@ type DisplayHeadingProps = {
   titleAccent?: string;
   subtitle?: string;
   align?: "center" | "left";
+  icon?: ReactNode;
   children?: ReactNode;
 };
 
@@ -18,12 +19,22 @@ export function DisplayHeading({
   titleAccent,
   subtitle,
   align = "center",
+  icon,
   children,
 }: DisplayHeadingProps) {
   const alignClass = align === "center" ? "text-center mx-auto" : "text-left";
 
   return (
     <header className={alignClass}>
+      {icon ? (
+        <div
+          className={`mb-4 inline-flex rounded-2xl border border-white/10 bg-white/5 p-3 text-accent-soft ${
+            align === "center" ? "mx-auto" : ""
+          }`}
+        >
+          {icon}
+        </div>
+      ) : null}
       <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.38em] text-accent-soft">
         <span className="h-px w-6 bg-gradient-to-r from-transparent via-accent/70 to-transparent" aria-hidden />
         {eyebrow}

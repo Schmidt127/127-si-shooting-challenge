@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { IconMegaphone, IconPlay } from "@/components/icons/shoot-icons";
 import {
   catalogCardClass,
   catalogHeroClass,
@@ -80,9 +81,14 @@ function MediaCard({
             />
           ) : (
             <div className="flex h-full items-center justify-center">
-              <span className="font-mono text-5xl font-black text-white/10">★</span>
+              <IconMegaphone size={56} className="text-white/15" />
             </div>
           )}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
+            <span className="rounded-full border border-white/20 bg-black/50 p-3 text-white backdrop-blur-sm">
+              <IconPlay size={28} />
+            </span>
+          </div>
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
           {item.categories[0] ? (
             <div className="absolute bottom-3 left-3 right-3">
@@ -129,6 +135,13 @@ export function TutorialMediaGridView({
           eyebrow={config.catalog.eyebrow}
           title={config.catalog.title}
           titleAccent={config.catalog.titleAccent}
+          icon={
+            config.ambientVariant === "shoutouts" ? (
+              <IconMegaphone size={32} />
+            ) : (
+              <IconPlay size={32} />
+            )
+          }
           subtitle={config.catalog.subtitle}
         >
           <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">

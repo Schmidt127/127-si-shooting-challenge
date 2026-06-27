@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { IconBook } from "@/components/icons/shoot-icons";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
@@ -168,12 +169,13 @@ function WeekSection({
 
 export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
   return (
-    <AmbientPage>
+    <AmbientPage variant="homework">
       <div className="mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
         <DisplayHeading
           eyebrow="Curriculum drop"
           title="Homework"
           titleAccent="HQ"
+          icon={<IconBook size={32} />}
           subtitle="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
         >
           <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">

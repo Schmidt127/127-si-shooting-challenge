@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { IconLevel } from "@/components/icons/shoot-icons";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatXp } from "@/lib/formatters";
@@ -105,6 +106,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
           eyebrow="Progression path"
           title="Climb the"
           titleAccent="level ladder"
+          icon={<IconLevel size={32} />}
           subtitle="From first shots to G.O.A.T. — every tier shows the XP threshold and what it takes to break through."
         >
           <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">

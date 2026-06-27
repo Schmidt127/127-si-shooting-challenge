@@ -1,64 +1,14 @@
-import Image from "next/image";
-
+import { IconCrown } from "@/components/icons/shoot-icons";
 import { formatGrade, formatShots, formatXp } from "@/lib/formatters";
 import { getPodiumAccent } from "@/lib/leaderboard/level-styles";
 import type { LeaderboardEntry } from "@/types/leaderboard";
 
+import { AthleteAvatar } from "./athlete-avatar";
 import { LevelBadge } from "./level-badge";
 
 type LeaderboardPodiumProps = {
   entries: LeaderboardEntry[];
 };
-
-function podiumInitials(name: string): string {
-  const parts = name.trim().split(/\s+/).filter(Boolean);
-  if (parts.length === 0) return "?";
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return `${parts[0][0] ?? ""}${parts[parts.length - 1][0] ?? ""}`.toUpperCase();
-}
-
-function PodiumHeadshot({
-  entry,
-  isFirst,
-}: {
-  entry: LeaderboardEntry;
-  isFirst: boolean;
-}) {
-  const sizeClass = isFirst
-    ? "h-28 w-28 sm:h-36 sm:w-36"
-    : "h-24 w-24 sm:h-28 sm:w-28";
-  const ringClass =
-    entry.rank === 1
-      ? "ring-amber-300/70"
-      : entry.rank === 2
-        ? "ring-slate-300/60"
-        : "ring-orange-400/60";
-
-  return (
-    <div
-      className={`relative mb-4 overflow-hidden rounded-full bg-gradient-to-br from-white/10 to-white/5 shadow-[0_12px_40px_-12px_rgba(0,0,0,0.8)] ring-4 ${ringClass} ${sizeClass}`}
-    >
-      {entry.headshot ? (
-        <Image
-          src={entry.headshot.url}
-          alt={entry.displayName}
-          fill
-          className="object-cover"
-          sizes={isFirst ? "144px" : "112px"}
-          unoptimized
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-brand-blue/30 to-accent/20">
-          <span
-            className={`font-black text-white/80 ${isFirst ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl"}`}
-          >
-            {podiumInitials(entry.displayName)}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
   const accent = getPodiumAccent(entry.rank);
@@ -68,7 +18,7 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
     <article
       className={`group relative flex flex-col items-center text-center transition-transform duration-500 hover:-translate-y-1 ${
         isFirst
-          ? "order-1 sm:order-2 z-10 sm:-mt-6"
+          ? "order-1 z-10 sm:order-2 sm:-mt-8"
           : entry.rank === 2
             ? "order-2 sm:order-1"
             : "order-3"
@@ -79,15 +29,33 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
         aria-hidden
       />
 
-      <PodiumHeadshot entry={entry} isFirst={isFirst} />
+      {isFirst ? (
+        <div className="relative mb-2 flex items-center justify-center text-amber-300">
+          <IconCrown size={32} className="drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]" />
+        </div>
+      ) : (
+        <div className="relative mb-2 font-mono text-xl font-bold tracking-widest text-accent-soft/90 sm:text-2xl">
+          {accent.medal}
+        </div>
+      )}
 
-      <div className="relative mb-2 font-mono text-xl font-bold tracking-widest text-accent-soft/90 sm:text-2xl">
-        {accent.medal}
-      </div>
+      <AthleteAvatar
+        name={entry.displayName}
+        headshotUrl={entry.headshot?.url}
+        size={isFirst ? "xl" : "lg"}
+        rank={isFirst ? 1 : undefined}
+        ringClass={
+          entry.rank === 1
+            ? "ring-amber-300/70"
+            : entry.rank === 2
+              ? "ring-slate-300/60"
+              : "ring-orange-400/60"
+        }
+      />
 
       <div
-        className={`relative w-full overflow-hidden rounded-2xl border border-white/10 bg-card/80 p-5 backdrop-blur-xl ${
-          isFirst ? "min-h-[240px] sm:min-h-[260px]" : "min-h-[220px] sm:min-h-[240px]"
+        className={`relative mt-4 w-full overflow-hidden rounded-2xl border border-white/10 bg-card/80 p-5 backdrop-blur-xl ${
+          isFirst ? "min-h-[240px] sm:min-h-[260px] shadow-[0_0_40px_-8px_rgba(251,191,36,0.25)]" : "min-h-[220px] sm:min-h-[240px]"
         }`}
       >
         <div
@@ -132,7 +100,7 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
 
       <div
         className={`mt-3 w-full rounded-t-xl bg-gradient-to-t ${accent.bar} opacity-90 ${
-          isFirst ? "h-16" : entry.rank === 2 ? "h-10" : "h-12"
+          isFirst ? "h-20" : entry.rank === 2 ? "h-10" : "h-12"
         }`}
         aria-hidden
       />
