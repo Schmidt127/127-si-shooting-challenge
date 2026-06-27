@@ -11,7 +11,7 @@ Last updated: **2026-06-23**
 | Program | GitHub repo | Public URL | Vercel root |
 |---------|-------------|------------|-------------|
 | **Hoop Challenges landing** | `hoopchallenges-landing` (local: `127si-landing-page`) | https://www.hoopchallenges.com | landing project |
-| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` (local: `127si-shooting-challenge`) | https://www.hoopchallenges.com/shoot | `web/` |
+| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` (local: `127-si-shooting-challenge`) | https://www.hoopchallenges.com/shoot | `web/` |
 | **JR Referee Clinics** | `127-si-jr-ref` (separate) | `/refclinic` on landing | separate project |
 
 This repo is **Shooting Challenge only** — not the multi-program hub.
@@ -54,7 +54,7 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
 | `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
 | `NEXT_PUBLIC_SITE_URL` | Production shoot URL (set in Vercel) |
-| Local dev | `http://localhost:3000/shoot` (or port from `npm run dev`) |
+| Local dev | `http://localhost:3001/shoot` |
 | Health check | `GET /shoot/api/airtable` → `{ ok: true, airtable: { configured: true } }` |
 | CI | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |
 
