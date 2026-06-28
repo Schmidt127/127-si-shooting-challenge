@@ -19,7 +19,9 @@ Open http://localhost:3001/shoot
 
 ## Health check
 
-`GET /shoot/api/airtable` → `{ ok: true }`
+`GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }`
+
+If `tokenValid` is `false`, the PAT is missing or rejected (pages will load but show “Invalid authentication token”). Create a token at [airtable.com/create/tokens](https://airtable.com/create/tokens) with **`data.records:read`** on base `appn84sqPw03zEbTT`, paste into Vercel **without quotes**, then **Redeploy**.
 
 ## Root URL (`/`)
 

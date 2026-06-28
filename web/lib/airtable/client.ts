@@ -16,6 +16,39 @@ export type AirtableConfigStatus = {
   baseIdPreview: string | null;
 };
 
+export type AirtableTokenValidation = {
+  valid: boolean;
+  error: string | null;
+};
+
+/** Live check that the PAT is accepted by Airtable (not just present in env). */
+export async function validateAirtableToken(): Promise<AirtableTokenValidation> {
+  const token = process.env.AIRTABLE_API_TOKEN?.trim();
+  if (!token) {
+    return { valid: false, error: "AIRTABLE_API_TOKEN is not set." };
+  }
+
+  try {
+    const response = await fetch("https://api.airtable.com/v0/meta/whoami", {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+
+    if (response.ok) {
+      return { valid: true, error: null };
+    }
+
+    const body = await response.text();
+    return {
+      valid: false,
+      error: `Airtable rejected the token (${response.status}): ${body}`,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown network error.";
+    return { valid: false, error: message };
+  }
+}
+
 /** Returns whether required env vars are present (no network call). */
 export function getAirtableConfigStatus(): AirtableConfigStatus {
   const token = process.env.AIRTABLE_API_TOKEN?.trim() ?? "";

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-import { getAirtableConfigStatus } from "@/lib/airtable/client";
+import { getAirtableConfigStatus, validateAirtableToken } from "@/lib/airtable/client";
 import { isSiteAccessAuthorized } from "@/lib/security";
 
 /** Always read env at request time (not from a stale static build). */
@@ -17,14 +17,22 @@ export async function GET(request: NextRequest) {
   }
 
   const config = getAirtableConfigStatus();
+  const tokenCheck = config.hasToken ? await validateAirtableToken() : null;
+  const tokenValid = tokenCheck?.valid ?? false;
 
   return NextResponse.json({
-    ok: true,
+    ok: config.configured && tokenValid,
     service: "127-si-shooting-challenge-web",
     phase: "leaderboard-live",
-    airtable: config,
-    message: config.configured
-      ? "Airtable configuration is present."
-      : "Add AIRTABLE_API_TOKEN and AIRTABLE_BASE_ID in environment variables, then redeploy.",
+    airtable: {
+      ...config,
+      tokenValid,
+      tokenError: tokenCheck?.error ?? null,
+    },
+    message: !config.configured
+      ? "Add AIRTABLE_API_TOKEN and AIRTABLE_BASE_ID in environment variables, then redeploy."
+      : !tokenValid
+        ? "Airtable token is present but rejected. Create a new PAT at airtable.com/create/tokens with data.records:read for this base, update Vercel, and redeploy."
+        : "Airtable configuration is valid.",
   });
 }
