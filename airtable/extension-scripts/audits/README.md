@@ -52,10 +52,12 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link (v1.1 samples) | **Ready** |
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
+| `audit-make-upload-engine-test-submission.js` | **Fillout test trace:** Schmist/Testing submission through 009→070→022 + submission XP (stage pass/fail/wait) | **Ready** |
 | `audit-video-and-homework-attachment-linkage.js` | Video/homework upload linkage + writeback drift only (v1.2); Brayden Elders focus section | **Ready** |
+| `audit-orphan-asset-homework-submission-repair-planner.js` | Dry-run planner: orphan Submission Assets + Homework Completions missing Submission link; proposes safe parent matches | **Ready** |
 | `audit-submission-asset-pipeline-duplicate-xp.js` | Submission Assets → homework/video → XP Events duplicate XP (Source Key + chain) | **Ready** |
 
-**Repair:** `repair-audit-linkage-full.js` in [safe-backfills](../safe-backfills/README.md#linkage-audit-repair-v12)
+**Repair:** `repair-audit-linkage-full.js` in [safe-backfills](../safe-backfills/README.md#linkage-audit-repair-v12); orphan asset links → `repair-orphan-asset-submission-links.js` after `audit-orphan-asset-homework-submission-repair-planner.js`
 | `audit-homework-pipeline-integrity.js` | Reviewed homework → XP parity, Award Status, WAS on XP | **Ready** |
 | `audit-video-pipeline-integrity.js` | Video asset → Video Feedback chain (013/022/111 parity) | **Ready** |
 | `audit-video-xp-pipeline-integrity.js` | Posted Video Feedback → VIDEO_SUBMISSION XP parity (114 logic) | **Ready** |

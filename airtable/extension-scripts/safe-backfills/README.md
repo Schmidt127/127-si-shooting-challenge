@@ -73,6 +73,8 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-shot-milestone-unlock-mark-awarded.js` | 059 repair: Pending + XP linked → Awarded | **Ready** |
 | `archive-legacy-streak-unlock-records.js` | Delete orphan Streak Length unlock rows | **Ready** |
 | `repair-audit-linkage-full.js` | All v1.2 linkage audit issues (multi-asset HW, send trigger, VF flags, orphans) | **Ready** |
+| `repair-orphan-asset-submission-links.js` | Orphan Submission Assets → Submission - Linked (planner follow-up) | **Ready** |
+| `repair-audit-010-linkage-drive-writeback-and-hw-credit.js` | Ryder/Maizee/Clara HW Drive writeback + XP credit after linkage-full | **Ready** |
 | `repair-audit-001` … `009` | Single-record targeted repairs (use linkage-full for batch) | **Ready** |
 
 ### Linkage audit repair (v1.2)

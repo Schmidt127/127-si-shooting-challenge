@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-06-28
 
 Purpose:
 Links or creates a Homework Completion for one homework Submission Asset and marks the asset Pending Link for Make.
@@ -25,9 +25,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v2.2
+ * Version: v2.3
  * Date Written: 2026-05-20
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-06-28
  *
  * PURPOSE
  * - Runs from one Submission Assets record.
@@ -42,6 +42,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Asset-driven: does not stop because the parent Submission already has another Homework Completion.
  * - Does not write Homework Completions → Airtable Attachment (files stay on Submission Assets).
  * - When asset is already linked, syncs upload writeback fields from the asset (022 also runs post-Make).
+ * - Re-queries Homework Completions immediately before create to avoid duplicate rows when 009
+ *   creates multiple assets for the same HW slot in parallel (020 race guard).
+ * - When multiple matching Homework Completions exist, links to the preferred row instead of erroring.
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation
@@ -64,7 +67,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
- * - actionOut = created_new | linked_existing | synced_upload_writeback | skipped_already_linked | error
+ * - actionOut = created_new | linked_existing | linked_existing_duplicate_resolved | synced_upload_writeback | skipped_already_linked | error
  * - errorOut
  * - debugStep
  * - submissionAssetId, homeworkCompletionId, slot
@@ -91,7 +94,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v2.2",
+  version: "v2.3",
 
   tables: {
     assets: "Submission Assets",
@@ -315,6 +318,73 @@ function homeworkFieldForSlot(slot) {
   if (slot === "HW1") return CONFIG.submissions.homeworkName1;
   if (slot === "HW2") return CONFIG.submissions.homeworkName2;
   return "";
+}
+
+function getHomeworkSlot(homeworkRecord) {
+  return (
+    selectName(homeworkRecord, CONFIG.homework.assetSlot) ||
+    selectName(homeworkRecord, CONFIG.homework.itemSlot)
+  );
+}
+
+function pickPreferredHomeworkCompletion(candidates) {
+  if (!candidates || candidates.length === 0) return null;
+  if (candidates.length === 1) return candidates[0];
+
+  const ranked = [...candidates].sort((a, b) => {
+    const aAssets = linkedIds(a, CONFIG.homework.submissionAssets).length;
+    const bAssets = linkedIds(b, CONFIG.homework.submissionAssets).length;
+    if (bAssets !== aAssets) return bAssets - aAssets;
+    return a.id.localeCompare(b.id);
+  });
+
+  console.log(
+    JSON.stringify({
+      automation: CONFIG.scriptName,
+      version: CONFIG.version,
+      warning: "multiple_homework_completion_candidates_resolved",
+      chosenId: ranked[0].id,
+      candidateIds: candidates.map(record => record.id),
+    })
+  );
+
+  return ranked[0];
+}
+
+function findHomeworkCompletionMatch(homeworkRecords, submissionId, homeworkId, slot) {
+  const exactCandidates = homeworkRecords.filter(hw => {
+    const hwSubmissionId = firstLinkedId(hw, CONFIG.homework.submission);
+    const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
+    const hwSlot = getHomeworkSlot(hw);
+
+    return hwSubmissionId === submissionId && hwHomeworkId === homeworkId && hwSlot === slot;
+  });
+
+  if (exactCandidates.length > 0) {
+    return {
+      homeworkCompletion: pickPreferredHomeworkCompletion(exactCandidates),
+      matchType: "exact",
+      candidateCount: exactCandidates.length,
+    };
+  }
+
+  const blankSlotCandidates = homeworkRecords.filter(hw => {
+    const hwSubmissionId = firstLinkedId(hw, CONFIG.homework.submission);
+    const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
+    const hwSlot = getHomeworkSlot(hw);
+
+    return hwSubmissionId === submissionId && hwHomeworkId === homeworkId && !hwSlot;
+  });
+
+  if (blankSlotCandidates.length > 0) {
+    return {
+      homeworkCompletion: pickPreferredHomeworkCompletion(blankSlotCandidates),
+      matchType: "blank_slot",
+      candidateCount: blankSlotCandidates.length,
+    };
+  }
+
+  return { homeworkCompletion: null, matchType: "", candidateCount: 0 };
 }
 
 function mapAssetUploadStatusToHomeworkStatus(assetStatus) {
@@ -562,54 +632,49 @@ async function main() {
   debugStep = "find_homework_completion";
   setOutputSafe("debugStep", debugStep);
 
+  const homeworkFieldsToLoad = safeFields(homeworkTable, Object.values(CONFIG.homework));
+
   const homeworkQuery = await homeworkTable.selectRecordsAsync({
-    fields: safeFields(homeworkTable, Object.values(CONFIG.homework)),
+    fields: homeworkFieldsToLoad,
   });
 
-  const exactCandidates = homeworkQuery.records.filter(hw => {
-    const hwSubmissionId = firstLinkedId(hw, CONFIG.homework.submission);
-    const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
-    const hwSlot =
-      selectName(hw, CONFIG.homework.assetSlot) ||
-      selectName(hw, CONFIG.homework.itemSlot);
+  let matchResult = findHomeworkCompletionMatch(
+    homeworkQuery.records,
+    submission.id,
+    homeworkId,
+    slot
+  );
+  let homeworkCompletion = matchResult.homeworkCompletion;
 
-    return (
-      hwSubmissionId === submission.id &&
-      hwHomeworkId === homeworkId &&
-      hwSlot === slot
+  if (!homeworkCompletion) {
+    debugStep = "recheck_homework_completion_before_create";
+    setOutputSafe("debugStep", debugStep);
+
+    const recheckQuery = await homeworkTable.selectRecordsAsync({
+      fields: homeworkFieldsToLoad,
+    });
+
+    matchResult = findHomeworkCompletionMatch(
+      recheckQuery.records,
+      submission.id,
+      homeworkId,
+      slot
     );
-  });
+    homeworkCompletion = matchResult.homeworkCompletion;
 
-  const blankSlotCandidates = homeworkQuery.records.filter(hw => {
-    const hwSubmissionId = firstLinkedId(hw, CONFIG.homework.submission);
-    const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
-    const hwSlot =
-      selectName(hw, CONFIG.homework.assetSlot) ||
-      selectName(hw, CONFIG.homework.itemSlot);
-
-    return (
-      hwSubmissionId === submission.id &&
-      hwHomeworkId === homeworkId &&
-      !hwSlot
-    );
-  });
-
-  let homeworkCompletion = null;
-
-  if (exactCandidates.length === 1) {
-    homeworkCompletion = exactCandidates[0];
-  } else if (exactCandidates.length > 1) {
-    await markAssetError(
-      asset,
-      `Multiple exact Homework Completions found for Submission + Homework + Slot. Count: ${exactCandidates.length}`
-    );
-  } else if (blankSlotCandidates.length === 1) {
-    homeworkCompletion = blankSlotCandidates[0];
-  } else if (blankSlotCandidates.length > 1) {
-    await markAssetError(
-      asset,
-      `Multiple blank-slot Homework Completions found for Submission + Homework. Count: ${blankSlotCandidates.length}`
-    );
+    if (homeworkCompletion) {
+      console.log(
+        JSON.stringify({
+          automation: CONFIG.scriptName,
+          version: CONFIG.version,
+          action: "recheck_found_existing_before_create",
+          homeworkCompletionId: homeworkCompletion.id,
+          submissionAssetId: asset.id,
+          slot,
+          matchType: matchResult.matchType,
+        })
+      );
+    }
   }
 
   debugStep = "create_or_link_homework_completion";
@@ -619,15 +684,16 @@ async function main() {
   let actionOut = "";
 
   if (homeworkCompletion) {
-    actionOut = "linked_existing";
+    actionOut =
+      matchResult.matchType === "exact" && matchResult.candidateCount > 1
+        ? "linked_existing_duplicate_resolved"
+        : "linked_existing";
 
     const updateFields = {};
     const existingAssetIds = linkedIds(homeworkCompletion, CONFIG.homework.submissionAssets);
+    const mergedAssetIds = [...new Set([...existingAssetIds, asset.id])];
 
-    setLink(updateFields, homeworkTable, CONFIG.homework.submissionAssets, [
-      ...existingAssetIds,
-      asset.id,
-    ]);
+    setLink(updateFields, homeworkTable, CONFIG.homework.submissionAssets, mergedAssetIds);
 
     if (!selectName(homeworkCompletion, CONFIG.homework.assetSlot)) {
       setSingleSelect(updateFields, homeworkTable, CONFIG.homework.assetSlot, slot);
