@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 type AmbientPageProps = {
   children: ReactNode;
-  variant?: "default" | "leaderboard" | "levels" | "tutorials" | "homework" | "zoom" | "shoutouts" | "articles";
+  variant?: "default" | "leaderboard" | "levels" | "tutorials" | "homework" | "zoom" | "shoutouts" | "articles" | "achievements";
 };
 
 export type { AmbientPageProps };
@@ -55,6 +55,12 @@ const VARIANT_GLOWS: Record<NonNullable<AmbientPageProps["variant"]>, ReactNode>
     <>
       <div className="absolute -left-16 top-20 h-80 w-80 rounded-full bg-emerald-500/10 blur-3xl" />
       <div className="absolute bottom-16 right-10 h-72 w-72 rounded-full bg-violet-600/10 blur-3xl" />
+    </>
+  ),
+  achievements: (
+    <>
+      <div className="absolute -left-20 top-0 h-96 w-96 rounded-full bg-violet-600/12 blur-3xl" />
+      <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-amber-500/10 blur-3xl" />
     </>
   ),
 };

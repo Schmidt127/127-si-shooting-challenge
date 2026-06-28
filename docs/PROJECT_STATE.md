@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-06-23**
+Last updated: **2026-06-28**
 
 ---
 
@@ -24,7 +24,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 |------|--------|
 | Base name | 127 SI Shooting Challenge |
 | Base ID | `appn84sqPw03zEbTT` |
-| Schema snapshot (latest) | `airtable/schema/snapshots/2026-06-25/` |
+| Schema snapshot (latest) | `airtable/schema/snapshots/` — `20260628_082345` files + `manifest_appn84sqPw03zEbTT_latest.json` |
 | Hand-maintained maps | `airtable/schema/current/` |
 
 **Web PAT env vars (Vercel + local):** `AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID` — never commit values.

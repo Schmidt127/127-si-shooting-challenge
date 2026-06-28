@@ -39,3 +39,7 @@ export function asNumber(value: unknown): number {
   if (Array.isArray(value) && value.length > 0) return asNumber(value[0]);
   return 0;
 }
+
+export function asBoolean(value: unknown): boolean {
+  return value === true || value === 1 || String(value).toLowerCase() === "true";
+}

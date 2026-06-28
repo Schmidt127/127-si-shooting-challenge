@@ -1,17 +1,31 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/shared/placeholder-page";
+import {
+  AchievementsEmptyState,
+  AchievementsErrorState,
+  AchievementsGridView,
+} from "@/components/achievements/achievements-grid-view";
+import { fetchAchievementCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
-  title: "Achievements | 127 SI Shooting Challenge",
+  title: "Achievements | Shooting Challenge",
+  description: "Milestones, streaks, and unlock badges for the 127 SI Shooting Challenge.",
 };
 
-/** Achievements — milestones, streaks, and unlocks. */
-export default function AchievementsPage() {
-  return (
-    <PlaceholderPage
-      title="Achievements"
-      description="Shot milestones, perfect weeks, and streak achievements will appear here."
-    />
-  );
+export const revalidate = 300;
+
+export default async function AchievementsPage() {
+  try {
+    const data = await fetchAchievementCatalog();
+
+    if (data.totalAchievements === 0) {
+      return <AchievementsEmptyState />;
+    }
+
+    return <AchievementsGridView data={data} />;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    return <AchievementsErrorState message={message} />;
+  }
 }

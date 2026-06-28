@@ -6,6 +6,13 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Added
+- **Overview hub** — all 10 program pages linked from `/shoot` (articles, zoom, achievements, game manual, display, etc.).
+- **Achievements page** — live Airtable catalog (`Active?` + `Visible?`) with rarity-styled badge grid.
+- **Public display page** — gym/lobby fullscreen leaderboard view (top 10 + podium).
+
 ### Airtable
 
 #### Changed

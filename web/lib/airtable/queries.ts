@@ -28,6 +28,7 @@ import {
   inferSeasonLabel,
   type EnrollmentLeaderboardFields,
 } from "@/lib/data/leaderboard";
+import type { AchievementCatalogData } from "@/types/achievements";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 import type { LeaderboardData } from "@/types/leaderboard";
@@ -39,6 +40,10 @@ import {
   mapCurriculumToAssignment,
   type WeekFields,
 } from "@/lib/data/homework";
+import {
+  buildAchievementCatalog,
+  type AchievementFields,
+} from "@/lib/data/achievements";
 
 /** Airtable table names — update as views and publish rules are finalized. */
 export const AIRTABLE_TABLES = {
@@ -146,6 +151,25 @@ const TUTORIAL_FIELDS = [
 
 const ZOOM_MEETINGS_VIEW = "Web - Zoom Meetings";
 const ZOOM_MEETINGS_FILTER = "NOT({Meeting Status} = 'Cancelled')";
+
+const ACHIEVEMENTS_VIEW = "Web - Achievements";
+const ACHIEVEMENTS_ACTIVE_FILTER = "AND({Active?}, {Visible?})";
+const ACHIEVEMENT_FIELDS = [
+  "Achievement Name",
+  "Description",
+  "Achievement Type",
+  "Category",
+  "Rarity",
+  "Trigger Type",
+  "Trigger Threshold",
+  "Sort Order",
+  "Badge Icon Name",
+  "Repeatable?",
+  "One-Time Unlock?",
+  "Week-Specific?",
+  "Active?",
+  "Visible?",
+] as const;
 const ZOOM_MEETING_FIELDS = [
   "Meeting Name",
   "Cover Media",
@@ -502,4 +526,40 @@ export async function fetchZoomMeeting(recordId: string): Promise<ZoomMeeting | 
   );
 
   return mapZoomMeetingRecord(record, weekIndex);
+}
+
+async function listVisibleAchievementRecords(): Promise<
+  Array<{ id: string; fields: AchievementFields }>
+> {
+  const baseParams = {
+    tableName: AIRTABLE_TABLES.achievements,
+    maxRecords: 100,
+    fields: [...ACHIEVEMENT_FIELDS],
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  };
+
+  try {
+    const response = await listAirtableRecords<AchievementFields>({
+      ...baseParams,
+      view: ACHIEVEMENTS_VIEW,
+    });
+    return response.records;
+  } catch (error) {
+    if (!isMissingAirtableViewError(error)) {
+      throw error;
+    }
+
+    const response = await listAirtableRecords<AchievementFields>({
+      ...baseParams,
+      filterByFormula: ACHIEVEMENTS_ACTIVE_FILTER,
+      sort: [{ field: "Sort Order", direction: "asc" as const }],
+    });
+    return response.records;
+  }
+}
+
+/** Public achievement definitions — milestones, streaks, and unlocks. */
+export async function fetchAchievementCatalog(): Promise<AchievementCatalogData> {
+  const records = await listVisibleAchievementRecords();
+  return buildAchievementCatalog(records);
 }

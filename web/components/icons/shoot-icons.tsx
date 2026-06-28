@@ -136,3 +136,57 @@ export function IconRank(props: IconProps) {
     </svg>
   );
 }
+
+export function IconMedal(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <circle cx="12" cy="8" r="5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M8.5 11 6 20l6-3 6 3-2.5-9"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function IconNews(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <path d="M6 4h12v16H6V4Z" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M9 8h6M9 12h6M9 16h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconVideoCall(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <rect x="3" y="7" width="13" height="10" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="m16 10 5-3v10l-5-3v-4Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconScroll(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <path
+        d="M8 4h8a2 2 0 0 1 2 2v14H8a2 2 0 0 0-2 2V6a2 2 0 0 1 2-2Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path d="M10 9h6M10 13h6M10 17h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function IconMonitor(props: IconProps) {
+  return (
+    <svg {...base(props)} aria-hidden>
+      <rect x="3" y="4" width="18" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M8 20h8M12 16v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}

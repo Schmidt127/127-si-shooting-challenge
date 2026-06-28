@@ -19,6 +19,7 @@ When a named view is missing, the app falls back to an equivalent `filterByFormu
 | Levels | Levels | `Web - Levels` | `{Active?} = 1` | 300 |
 | Tutorials / shoutouts / articles | Tutorials | `Web - Tutorials Catalog` | See publish filter below | 300 |
 | Zoom meetings | Zoom Meetings | `Web - Zoom Meetings` | `NOT({Meeting Status} = 'Cancelled')` | 300 |
+| Achievements | Achievements | `Web - Achievements` | `AND({Active?}, {Visible?})` | 300 |
 
 ---
 

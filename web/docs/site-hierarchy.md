@@ -34,9 +34,9 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot/zoom-meetings/[id]` | `/zoom-meetings/[id]` | Meeting detail | Zoom Meetings + Weeks | Live |
 | `/shoot/levels` | `/levels` | Level ladder | Levels (`Web - Levels`) | Live |
 | `/shoot/levels/[id]` | `/levels/[id]` | Level detail | Levels | Live |
-| `/shoot/achievements` | `/achievements` | Achievements | *(planned — Achievements table)* | Shell |
-| `/shoot/game-manual` | `/game-manual` | Game manual | Static / CMS TBD | Shell |
-| `/shoot/public-display` | `/public-display` | TV / kiosk display | Leaderboard subset | Partial |
+| `/shoot/achievements` | `/achievements` | Achievements | Achievements (`Web - Achievements` or active+visible filter) | Live |
+| `/shoot/game-manual` | `/game-manual` | Game manual | Static / CMS TBD | Live |
+| `/shoot/public-display` | `/public-display` | TV / kiosk display | Leaderboard subset | Live |
 | `/shoot/athletes/[slug]` | `/athletes/[slug]` | Athlete profile | Enrollments + XP | Planned |
 | `/shoot/admin` | `/admin` | Staff tools | — | Planned |
 | `/shoot/api/airtable` | `/api/airtable` | Health check | — | Live |

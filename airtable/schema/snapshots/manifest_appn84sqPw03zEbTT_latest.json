@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-06-28T08:23:46",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\schema_raw_appn84sqPw03zEbTT_20260628_082345.json",
+    "enhancedSchema": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\schema_enhanced_appn84sqPw03zEbTT_20260628_082345.json",
+    "dependencies": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\dependencies_appn84sqPw03zEbTT_20260628_082345.json",
+    "viewsBasicJson": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\views_basic_appn84sqPw03zEbTT_20260628_082345.json",
+    "viewsDetailedJson": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\views_detailed_appn84sqPw03zEbTT_20260628_082345.json",
+    "viewsMarkdown": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\views_appn84sqPw03zEbTT_20260628_082345.md",
+    "baseSummary": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\base_summary_appn84sqPw03zEbTT_20260628_082345.json",
+    "healthReport": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\export_health_report_appn84sqPw03zEbTT_20260628_082345.json",
+    "fieldIndex": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\field_index_appn84sqPw03zEbTT_20260628_082345.json",
+    "invalidFields": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\invalid_fields_appn84sqPw03zEbTT_20260628_082345.json",
+    "complexFormulas": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\complex_formulas_appn84sqPw03zEbTT_20260628_082345.json",
+    "schemaMarkdown": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\schema_doc_appn84sqPw03zEbTT_20260628_082345.md",
+    "mermaidERD": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\schema_erd_appn84sqPw03zEbTT_20260628_082345.mmd",
+    "workflowCompanion": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\schema\\snapshots\\workflow_companion_appn84sqPw03zEbTT_20260628_082345.md"
+  }
+}

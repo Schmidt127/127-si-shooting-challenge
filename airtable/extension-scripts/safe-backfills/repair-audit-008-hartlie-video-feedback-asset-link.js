@@ -1,5 +1,5 @@
 /*
-Extension Script: Repair Audit 008 — Hartlie Video Feedback Asset Link
+Extension Script: Repair Audit 008 - Hartlie Video Feedback Asset Link
 System: 127 SI Shooting Challenge
 Purpose:
   Fix #8 in the audit repair sequence (v1.2 linkage audit).
@@ -220,12 +220,12 @@ async function main() {
     issuesAddressed: ["VIDEO_FEEDBACK_WITHOUT_SUBMISSION_ASSET"],
   };
 
-  console.log("===== Repair Audit 008 — Hartlie Video Feedback Asset Link =====");
+  console.log("===== Repair Audit 008 - Hartlie Video Feedback Asset Link =====");
   console.log(`Mode: ${DRY_RUN ? "DRY RUN" : "LIVE WRITE"}`);
   console.log(JSON.stringify(plan, null, 2));
 
   if (Object.keys(videoFieldsUpdate).length === 0 && Object.keys(assetFieldsUpdate).length === 0) {
-    console.log("\nNo changes needed — Video Feedback and asset links already match.");
+    console.log("\nNo changes needed - Video Feedback and asset links already match.");
     return;
   }
 

@@ -2,74 +2,13 @@ import Link from "next/link";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { AmbientPage } from "@/components/catalog/ambient-page";
-import {
-  IconBasketball,
-  IconBook,
-  IconChevronRight,
-  IconLevel,
-  IconMegaphone,
-  IconPlay,
-  IconTrophy,
-} from "@/components/icons/shoot-icons";
+import { IconBasketball, IconChevronRight } from "@/components/icons/shoot-icons";
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
 import { SHOOTING_CHALLENGE } from "@/lib/app-config";
 import { formatXp } from "@/lib/formatters";
+import { PROGRAM_HUB_LINKS, type ProgramHubLink } from "@/lib/navigation/program-hub-links";
 import type { LeaderboardEntry } from "@/types/leaderboard";
-
-type HubLink = {
-  href: string;
-  label: string;
-  title: string;
-  description: string;
-  eyebrow: string;
-  icon: typeof IconTrophy;
-  featured?: boolean;
-};
-
-const HUB_LINKS: HubLink[] = [
-  {
-    href: "/leaderboard",
-    label: "Primary",
-    title: "Leaderboard",
-    description: "Live season rankings — level, XP, and total shots decide who leads.",
-    eyebrow: "Compete",
-    icon: IconTrophy,
-    featured: true,
-  },
-  {
-    href: "/homework",
-    label: "Curriculum",
-    title: "Homework",
-    description: "Weekly assignments from the challenge curriculum.",
-    eyebrow: "Study",
-    icon: IconBook,
-  },
-  {
-    href: "/tutorials",
-    label: "Film room",
-    title: "Tutorials",
-    description: "Technique videos and shooting breakdowns.",
-    eyebrow: "Watch",
-    icon: IconPlay,
-  },
-  {
-    href: "/shoutouts",
-    label: "Spotlight",
-    title: "Shoutouts",
-    description: "Celebrate athletes with features and highlights.",
-    eyebrow: "Celebrate",
-    icon: IconMegaphone,
-  },
-  {
-    href: "/levels",
-    label: "Progression",
-    title: "Levels",
-    description: "Climb from Beginner to G.O.A.T. — XP thresholds for every tier.",
-    eyebrow: "Level up",
-    icon: IconLevel,
-  },
-];
 
 function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
   if (entries.length === 0) return null;
@@ -118,7 +57,7 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
   );
 }
 
-function HubCard({ link }: { link: HubLink }) {
+function HubCard({ link }: { link: ProgramHubLink }) {
   const Icon = link.icon;
 
   return (
@@ -182,8 +121,8 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
           <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-blue">
             Explore the challenge
           </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {HUB_LINKS.map((link) => (
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {PROGRAM_HUB_LINKS.map((link) => (
               <HubCard key={link.href} link={link} />
             ))}
           </div>
