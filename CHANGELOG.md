@@ -6,6 +6,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **Schema snapshot** — Fresh export `20260628_130208` (29 tables; field-level diff vs `20260628_082345`: none). Updated `manifest_appn84sqPw03zEbTT_latest.json`.
+
+### Docs
+
+#### Changed
+- **`web/docs/airtable-data-map.md`** — View names aligned with `queries.ts` (`Web - Achievements`, publish flags, Vercel env vars, health check).
+- **`docs/PROJECT_STATE.md`** — Latest snapshot id, base UI name, production Airtable status, env var checklist.
+- **`web/docs/airtable-views.md`** — Health check documents `tokenValid` and correct env var name.
+
 ### Web
 
 #### Added

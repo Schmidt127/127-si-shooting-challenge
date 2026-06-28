@@ -1,6 +1,15 @@
 # Airtable Data Map (Web App)
 
-Maps Airtable tables and fields to web app features. Align with [table-map.md](../../airtable/schema/current/table-map.md) and schema snapshots in the parent repo.
+Maps Airtable tables and fields to web app features.
+
+**Canonical sources:**
+
+| Doc | Purpose |
+|-----|---------|
+| This file | Table → feature map, env vars |
+| [airtable-views.md](./airtable-views.md) | View names + fallback filters (matches `queries.ts`) |
+| [../../airtable/schema/snapshots/](../../airtable/schema/snapshots/) | Dated schema exports — latest: `20260628_130208` |
+| [../../airtable/schema/current/](../../airtable/schema/current/) | Hand-maintained change notes |
 
 ## Primary tables
 
@@ -10,7 +19,10 @@ Maps Airtable tables and fields to web app features. Align with [table-map.md](.
 | **Weekly Athlete Summary** | Weekly XP rollups, profile charts | Link via Enrollment + Week |
 | **XP Events** | Activity feed, XP breakdown | Read-only; respect Active? |
 | **Levels** | Levels page, profile badge | Use Sort Order for display |
-| **Achievements** | Achievements page, profile badges | Filter publishable rows |
+| **Achievements** | Achievements page, profile badges | Filter `Active?` + `Visible?` |
+| **FBC Curriculum - SYNC** | Homework catalog + detail | Filter `Published?` |
+| **Tutorials** | Tutorials, shoutouts, articles | Split by `Tutorial Type` in app |
+| **Zoom Meetings** | Zoom meetings catalog + detail | Exclude cancelled |
 | **Homework Completions** | Homework progress widget | Reviewed / upload status only |
 | **Video Feedback** | Video progress widget | Awarded rows only for public |
 | **Athletes** | Display name, photo | Linked from Enrollment |
@@ -22,24 +34,28 @@ Softr-era fields to honor until renamed:
 
 | Field | Table | Use |
 |-------|-------|-----|
-| `OK to Publish on Softr` | Achievements, Tutorials, etc. | Public page inclusion |
+| `Active?` + `Visible?` | Achievements | Achievements page (`Web - Achievements` or formula fallback) |
+| `Published?` | FBC Curriculum - SYNC | Homework catalog |
+| `OK to Publish on Softr` | Tutorials | Tutorials / shoutouts / articles |
+| `Active?` | Enrollments, Levels | Leaderboard and levels ladder |
 | `Level Sort Order - For Softr` | Enrollments (lookup) | Leaderboard / level ordering |
 
 **Rule:** Public routes must filter on publish flags. Never expose parent email, phone, or internal debug fields.
 
-## Suggested Airtable views (create in base)
+## Airtable views used by the web app
 
-| View name | Table | Filter |
-|-----------|-------|--------|
-| `Web - Leaderboard` | Enrollments | Active; app sorts by level → XP → shots |
-| `Web - Public Profiles` | Enrollments | Publishable slug present |
-| `Web - Levels` | Levels | Active / ordered by Sort Order |
-| `Web - Achievements Catalog` | Achievements | OK to Publish |
-| `Web - Homework Catalog` | FBC Curriculum - SYNC | Published? |
-| `Web - Tutorials Catalog` | Tutorials | OK to Publish on Softr + Shooting Challenge |
-| `Web - Shoutouts Catalog` | Tutorials | OK to Publish + Tutorial Type = Shout-out |
-| `Web - Articles Catalog` | Tutorials | OK to Publish + Tutorial Type = FBC Article Book |
-| `Web - Zoom Meetings` | Zoom Meetings | Not Cancelled, sorted by Start Time |
+These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [airtable-views.md](./airtable-views.md).
+
+| View name | Table | Used for | Fallback if view missing |
+|-----------|-------|----------|--------------------------|
+| `Web - Leaderboard` | Enrollments | Leaderboard, public display | `AND({Active?}, {Lifetime XP Total} >= 0)` |
+| `Web - Homework Catalog` | FBC Curriculum - SYNC | Homework list | `{Published?} = 1` |
+| `Web - Levels` | Levels | Levels ladder | `{Active?} = 1` |
+| `Web - Tutorials Catalog` | Tutorials | Tutorials, shoutouts, articles | Softr publish + Shooting Challenge program filter |
+| `Web - Zoom Meetings` | Zoom Meetings | Zoom list | `NOT({Meeting Status} = 'Cancelled')` |
+| `Web - Achievements` | Achievements | Achievements grid | `AND({Active?}, {Visible?})` |
+
+**Not wired yet:** `Web - Public Profiles` (future athlete slug routes).
 
 ## API access pattern
 
@@ -65,10 +81,14 @@ Document the chosen field here before Phase 2 ships.
 
 | Variable | Purpose |
 |----------|---------|
-| `AIRTABLE_API_TOKEN` | Personal access token (data.records:read) |
-| `AIRTABLE_BASE_ID` | Production base ID |
-| `NEXT_PUBLIC_SITE_URL` | Canonical URL for metadata |
+| `AIRTABLE_API_TOKEN` | Personal access token (`data.records:read` on `appn84sqPw03zEbTT`) — **not** `AIRTABLE_API_KEY` |
+| `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` |
+| `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
+| `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.hoopchallenges.com/shoot` |
 | `SITE_ACCESS_TOKEN` | Optional gate for preview deployments |
+
+**Health check:** `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }`
 
 ## Related automation scripts
 

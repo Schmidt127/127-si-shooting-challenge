@@ -116,7 +116,9 @@ All three content types read from the **Tutorials** table and split by `Tutorial
 
 **Route:** `GET /shoot/api/airtable`
 
-Verifies `AIRTABLE_API_TOKEN` and `AIRTABLE_BASE_ID` are set — does not hit a specific view.
+Verifies env vars are set **and** calls Airtable `whoami` to validate the PAT (`tokenValid: true`). Does not test individual views.
+
+**Vercel env name:** `AIRTABLE_API_TOKEN` (not `AIRTABLE_API_KEY`).
 
 ---
 
