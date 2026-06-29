@@ -89,6 +89,7 @@ Read-only — run in Airtable Scripting Extension, save JSON output, approve fix
 
 | Script | Use when |
 |--------|----------|
+| `repair-final-090e-xp-rollup-duplicate-status.js` | 090E `lifetime_xp_mismatch` — XP Events marked `Duplicate - Remove` but still `Active?` |
 | `repair-final-090f-unlock-week-from-source.js` | Empty Week on shot-milestone unlocks |
 | `repair-final-090g-build-final-challenge-summary-email.js` | One final family summary (no send) |
 
