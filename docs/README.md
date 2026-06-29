@@ -21,6 +21,8 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | [architecture/architecture-review.md](./architecture/architecture-review.md) | Architecture review checklist |
 | [recovery/emergency-recovery.md](./recovery/emergency-recovery.md) | Incident recovery runbook |
 | [checklists/weekly-maintenance-checklist.md](./checklists/weekly-maintenance-checklist.md) | Weekly ops checklist |
+| [close-out-considerations.md](./close-out-considerations.md) | **Watchlist** — open items to consider during close-out / review |
+| [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) | **Deferred** XP / levels / streak tuning (C-014) |
 
 ## Data flows
 
