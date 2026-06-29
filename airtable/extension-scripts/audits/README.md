@@ -32,6 +32,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
 | **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-homework-xp-from-reviewed.js`, `dedupe-homework-xp-events.js` |
+| **F2. HW17 Fillout test intake** | 067 | `audit-homework17-reflection-quiz-pipeline.js` | `backfill-homework17-completions-from-reflection-quiz.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
 | **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
 | **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js`, `audit-pending-shot-milestone-unlocks.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-legacy-streak-xp-source-keys.js`, `backfill-shot-milestone-xp-week-and-was.js`, `backfill-shot-milestone-unlock-mark-awarded.js` |
@@ -53,6 +54,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-homework-completion-upload-edge-cases.js` | HW completions with 0 or many assets | Ready |
 | `audit-stuck-upload-processing.js` | Assets stuck Processing / gate mismatches | Ready |
 | `audit-make-upload-engine-test-submission.js` | **Fillout test trace:** Schmist/Testing submission through 009→070→022 + submission XP (stage pass/fail/wait) | **Ready** |
+| `audit-homework17-reflection-quiz-pipeline.js` | **HW17 Fillout test:** quiz rows → Homework Completion link/create readiness (Enrollment match, HW17+Week resolution, dedupe, would-create/update preview) | **Ready** |
 | `audit-video-and-homework-attachment-linkage.js` | Video/homework upload linkage + writeback drift only (v1.2); Brayden Elders focus section | **Ready** |
 | `audit-orphan-asset-homework-submission-repair-planner.js` | Dry-run planner: orphan Submission Assets + Homework Completions missing Submission link; proposes safe parent matches | **Ready** |
 | `audit-submission-asset-pipeline-duplicate-xp.js` | Submission Assets → homework/video → XP Events duplicate XP (Source Key + chain) | **Ready** |

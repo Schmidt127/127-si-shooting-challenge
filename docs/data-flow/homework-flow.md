@@ -49,6 +49,32 @@ When Status = Complete and `{XP Awarded}` is false:
 
 Same idempotency rules as [submission → XP](./submission-to-xp-flow.md).
 
+## Homework 17 — Fillout Test Intake
+
+Homework 17 is completed through a Fillout test form, not a video/file upload. The Fillout
+response lands in **`Final Reflection Quiz Submissions`** (auto-scored: `Score` /18,
+`Target Score Met?` = `Score >= 10`). That row is **intake only** — it must become a normal
+`Homework Completion` so HW17 gets the same grading / satisfactory / feedback / XP flow.
+
+```
+Fillout HW17 test → Final Reflection Quiz Submissions (auto-scored)
+    → 067 (or one-time backfill) matches the row's Enrollment link
+    → resolves the single active HW 17 in FBC Curriculum - SYNC + its Week
+    → link-or-create ONE Homework Completion (Enrollment | Week | Homework dedupe)
+       Source System = Fillout, Completion Status = Submitted, Review Status = Ready for Review
+    → coach reviews like any homework (Coach Feedback + Satisfactory? + Review Complete)
+    → 064 → 065 award XP (no special path, no direct/duplicate XP)
+```
+
+Key rules:
+- Matching uses the quiz row's `Enrollment` link only. Blank/ambiguous → `Processing Status = Needs Review` (never guesses the child).
+- Week comes from the HW 17 curriculum record; if it cannot be resolved the row is reported, not created.
+- `067` and the backfill **never** create or modify XP Events and **never** mark Satisfactory — XP stays gated behind normal coach review.
+
+Scripts: automation `067-homework-link-or-create-completion-from-reflection-quiz.js`;
+one-time backfill `airtable/extension-scripts/safe-backfills/backfill-homework17-completions-from-reflection-quiz.js`;
+audit `airtable/extension-scripts/audits/audit-homework17-reflection-quiz-pipeline.js`.
+
 ## Coach Workflow (Airtable)
 
 - View: homework due this week / awaiting review

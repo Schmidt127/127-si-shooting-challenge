@@ -35,6 +35,7 @@ Run **audits** before and after each stage. Only enable writes when dry-run samp
 | 6 | `backfill-homework-completion-upload-status.js` | Upload status writeback from assets | `audit-stuck-upload-processing.js` |
 | 7 | `backfill-homework-xp-from-reviewed.js` | XP for reviewed homework missing events | `audit-homework-pipeline-integrity.js` |
 | 7b | `dedupe-homework-xp-events.js` | Remove duplicate HW XP (legacy + canonical keys) | `audit-homework-pipeline-integrity.js` |
+| 7c | `backfill-homework17-completions-from-reflection-quiz.js` | Link/create Homework Completion from HW17 Fillout test rows (no XP writes) | `audit-homework17-reflection-quiz-pipeline.js` |
 | 8 | `backfill-video-pipeline-links.js` | 013-style VF create/link + 022 upload sync | `audit-video-pipeline-integrity.js` |
 | 9 | `backfill-video-xp-from-posted-feedback.js` | Missing/repair Video XP (114 logic) | `audit-video-xp-pipeline-integrity.js` |
 | 10 | `repair-video-feedback-xp-link.js` | Video Feedback ↔ wrong XP Event repair | `audit-video-xp-pipeline-integrity.js` |
@@ -56,6 +57,7 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `backfill-homework-completion-upload-status.js` | HW Pending while asset Uploaded | Ready |
 | `backfill-homework-completion-upload-edge-cases.js` | Multi-file HW, missing links | Ready |
 | `backfill-homework-completion-was-links.js` | HW missing WAS link | **Ready** |
+| `backfill-homework17-completions-from-reflection-quiz.js` | HW17 Fillout test → Homework Completion (link/create, no XP) | **Ready** |
 | `backfill-homework-completion-orphan-resolve.js` | Orphan HW link or archive | **Ready** |
 | `backfill-missing-weekly-summaries-and-xp-links.js` | No WAS for enrollment+week | Ready |
 | `backfill-xp-event-weekly-summary-links.js` | XP missing WAS link | Ready |
