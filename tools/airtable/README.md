@@ -12,7 +12,17 @@ pip install -r requirements.txt
 copy .env.example .env
 ```
 
-Edit `.env` with your Personal Access Token and base ID. The token needs schema (and record) read scopes for the target base.
+Edit `.env` with your Personal Access Token and base ID. The token needs **`schema.bases:read`** on this base (and `data.records:read` only if using `--include-record-audits`).
+
+## Views (not exported — expected)
+
+**Airtable view metadata is not exported** for this base. Do not treat empty `views_*.json` or a views API 404 as a problem to fix.
+
+- Snapshots include **tables, fields, formulas, and links** only.
+- View names and filters for the web app live in [`web/docs/airtable-views.md`](../../web/docs/airtable-views.md).
+- Use `--skip-views` if you want slightly faster runs (default full export already skips meaningful view data).
+
+See [`airtable/schema/snapshots/README.md`](../../airtable/schema/snapshots/README.md).
 
 ## Schema export (default)
 
@@ -32,7 +42,7 @@ Subset of tables:
 python export_airtable_schema.py -v --only "Enrollments,Submissions,Weeks"
 ```
 
-Skip views (faster):
+Skip views (optional; views are not exported anyway — see **Views (not exported)** above):
 
 ```bash
 python export_airtable_schema.py -v --skip-views

@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-06-28**
+Last updated: **2026-06-29**
 
 ---
 
@@ -24,10 +24,10 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 |------|--------|
 | Base name (Airtable UI) | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` |
 | Base ID | `appn84sqPw03zEbTT` |
-| Tables (schema export) | **29** (see `base_summary_*_20260628_130208.json`) |
-| Schema snapshot (latest) | `airtable/schema/snapshots/` — **`20260628_130208`** + `manifest_appn84sqPw03zEbTT_latest.json` |
+| Tables (schema export) | **29** (see `base_summary_*_20260629_045741.json`) |
+| Schema snapshot (latest) | `airtable/schema/snapshots/` — **`20260629_045741`** + `manifest_appn84sqPw03zEbTT_latest.json` |
 | Hand-maintained maps | `airtable/schema/current/` |
-| Web view docs | [web/docs/airtable-views.md](../web/docs/airtable-views.md) (views API not in snapshot — PAT/views endpoint 404) |
+| Web view docs | [web/docs/airtable-views.md](../web/docs/airtable-views.md) — **views are not exported from Airtable** (by policy); see [snapshots/README.md](../airtable/schema/snapshots/README.md) |
 
 **Web env vars (Vercel project `127-si-shooting-challenge`, never commit values):**
 

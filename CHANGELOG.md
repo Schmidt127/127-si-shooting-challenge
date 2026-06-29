@@ -14,6 +14,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **`backfill-homework17-completions-from-reflection-quiz.js`** — One-time backfill mirroring `067` (DRY_RUN + CONFIRM_WRITE gates, BATCH_LIMIT). Never creates/modifies XP Events.
 
 #### Changed
+- **Schema snapshot** — Fresh export `20260629_045741` (29 tables; new field `Final Reflection Quiz Submissions 2` on Homework Completions). Updated manifest.
+- **Views policy** — Document that Airtable views are not exported (expected); see `airtable/schema/snapshots/README.md`, `tools/airtable/README.md`.
 - **Schema snapshot** — Fresh export `20260628_130208` (29 tables; field-level diff vs `20260628_082345`: none). Updated `manifest_appn84sqPw03zEbTT_latest.json`.
 
 ### Docs
