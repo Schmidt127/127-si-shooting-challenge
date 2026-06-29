@@ -48,6 +48,7 @@ Last verified clean on historical repair pass (re-run after bulk imports):
 | H — Video XP | `audit-video-xp-pipeline-integrity.js` | **96 OK / 0 issues** (38 `not_ready` expected) |
 | I — Achievements | `audit-achievement-xp-pipeline-integrity.js` | Run perfection pass — see [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
 | J — Legacy cleanup | `audit-field-coverage-report.js`, `audit-legacy-cleanup-candidates.js` | In progress |
+| **Final 090** | `audit-final-090a` … `090g` (Active enrollments) | **Ready to run** |
 
 Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md)
 

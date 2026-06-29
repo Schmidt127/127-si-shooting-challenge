@@ -69,6 +69,33 @@ Run stages **A → J** in order when doing a full historical repair pass.
 
 ---
 
+## Final Pre-Close pass (090A–090G)
+
+**When:** Before challenge close (Active? enrollments only). **Schema gate:** `20260629_045741`.
+
+Read-only — run in Airtable Scripting Extension, save JSON output, approve fixes before any backfill.
+
+| Order | Script | Areas |
+|-------|--------|-------|
+| 1 | `audit-final-090a-submission-base-xp.js` | Submission Base XP (010) |
+| 2 | `audit-final-090b-homework-xp.js` | Homework XP (065), HW17 quiz link |
+| 3 | `audit-final-090c-streaks-milestones-perfect-week-xp.js` | Streaks (054), unlock XP (059), empty Week |
+| 4 | `audit-final-090d-video-zoom-xp.js` | Video XP (114), Zoom XP (101) |
+| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | Unlock workflow + Week 9 root cause |
+| 6 | `audit-final-090g-weekly-summary-email-workflow.js` | Weekly email (072 → 074 → Make) |
+| 7 | `audit-final-090e-xp-events-enrollment-totals.js` | XP Events integrity + enrollment rollup (run last) |
+
+**Phase 2 backfills** (after audit review, `DRY_RUN` first):
+
+| Script | Use when |
+|--------|----------|
+| `repair-final-090f-unlock-week-from-source.js` | Empty Week on shot-milestone unlocks |
+| `repair-final-090g-build-final-challenge-summary-email.js` | One final family summary (no send) |
+
+Re-use existing stage backfills (`backfill-submission-xp-events.js`, etc.) for issue types flagged in 090A–090D.
+
+---
+
 ## Script conventions
 
 | Rule | Detail |
