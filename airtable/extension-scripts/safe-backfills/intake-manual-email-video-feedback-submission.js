@@ -35,9 +35,10 @@ const CONFIRM_WRITE = false;
 const SKIP_FILE_PROMPT = false;
 
 const ACTIVITY_DATE_ISO = "2026-06-30";
-// If the activity date is outside every Week Start/End range (e.g. program end day),
-// the script falls back to this week name. Set WEEK_ID_OVERRIDE to pin a record id.
-const FALLBACK_WEEK_NAME = "Week 10";
+// Week pinning for June 30 close-out (date may be outside Week 10 End Date in Airtable).
+// TARGET_WEEK_NUMBER is tried first. Set WEEK_ID_OVERRIDE to pin an exact Weeks record id.
+const TARGET_WEEK_NUMBER = 10;
+const TARGET_WEEK_NAME = "Week 10";
 const WEEK_ID_OVERRIDE = "";
 const VIDEO_UPLOAD_NOTE =
   "Manual intake: parent emailed video (Fillout file too large). Coach uploaded via extension script.";
@@ -57,7 +58,7 @@ const ATHLETE_ROWS = [
 
 const CONFIG = {
   scriptName: "intake-manual-email-video-feedback-submission",
-  version: "v1.1",
+  version: "v1.2",
   timeZone: "America/Denver",
 
   tables: {
@@ -297,7 +298,32 @@ function findWeekForDateKey(weekRecords, weeksTable, activityDateKey) {
   return { week: matches[0].week, source: "activity_date" };
 }
 
-function findWeekByName(weekRecords, weeksTable, weekName) {
+function extractWeekNumber(value) {
+  const match = String(value || "").match(/\bweek\s*0*(\d{1,2})\b/i);
+  return match ? Number(match[1]) : null;
+}
+
+function findWeekByNumber(weekRecords, weeksTable, weekNumber) {
+  if (!weekNumber) return null;
+
+  const matches = weekRecords.filter(week => {
+    const name = getText(week, weeksTable, CONFIG.weeks.name);
+    return extractWeekNumber(name) === weekNumber;
+  });
+
+  if (matches.length === 0) return null;
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple weeks match week number ${weekNumber}: ${matches
+        .map(week => getText(week, weeksTable, CONFIG.weeks.name) || week.id)
+        .join(", ")}`
+    );
+  }
+
+  return { week: matches[0], source: "target_week_number" };
+}
+
+function findWeekByName(weekRecords, weeksTable, weekName, source = "target_week_name") {
   const target = normalizeWeekName(weekName);
   if (!target) return null;
 
@@ -315,7 +341,7 @@ function findWeekByName(weekRecords, weeksTable, weekName) {
     );
   }
 
-  return { week: matches[0], source: "fallback_week_name" };
+  return { week: matches[0], source };
 }
 
 function resolveWeek(weekRecords, weeksTable) {
@@ -327,23 +353,21 @@ function resolveWeek(weekRecords, weeksTable) {
     return { week: byId, source: "week_id_override" };
   }
 
+  const byNumber = findWeekByNumber(weekRecords, weeksTable, TARGET_WEEK_NUMBER);
+  if (byNumber) return byNumber;
+
+  if (TARGET_WEEK_NAME) {
+    const byName = findWeekByName(weekRecords, weeksTable, TARGET_WEEK_NAME, "target_week_name");
+    if (byName) return byName;
+  }
+
   const byDate = findWeekForDateKey(weekRecords, weeksTable, ACTIVITY_DATE_ISO);
   if (byDate) return byDate;
 
-  if (FALLBACK_WEEK_NAME) {
-    const byName = findWeekByName(weekRecords, weeksTable, FALLBACK_WEEK_NAME);
-    if (byName) {
-      console.log(
-        `No active week date range contains ${ACTIVITY_DATE_ISO}. Using fallback week "${FALLBACK_WEEK_NAME}".`
-      );
-      return byName;
-    }
-  }
-
   const summary = summarizeWeeks(weekRecords, weeksTable);
   throw new Error(
-    `No Week resolved for activity date ${ACTIVITY_DATE_ISO}. ` +
-      `Set FALLBACK_WEEK_NAME or WEEK_ID_OVERRIDE. Known weeks: ${JSON.stringify(summary)}`
+    `${CONFIG.version}: No Week resolved. Set TARGET_WEEK_NUMBER, TARGET_WEEK_NAME, or WEEK_ID_OVERRIDE. ` +
+      `Activity date ${ACTIVITY_DATE_ISO}. Known weeks: ${JSON.stringify(summary)}`
   );
 }
 
@@ -444,6 +468,11 @@ async function buildSubmissionFields({
 }
 
 async function main() {
+  console.log(`${CONFIG.scriptName} ${CONFIG.version}`);
+  console.log(
+    "If you see the error 'No Week record contains activity date', replace the entire script — that text is from v1.0."
+  );
+
   if (CONFIRM_WRITE && DRY_RUN) {
     throw new Error("CONFIRM_WRITE is true but DRY_RUN is still true. Set DRY_RUN = false to apply writes.");
   }
@@ -494,7 +523,8 @@ async function main() {
     );
 
     let pickedFile = null;
-    if (!SKIP_FILE_PROMPT) {
+    const promptForFiles = !SKIP_FILE_PROMPT && !DRY_RUN;
+    if (promptForFiles) {
       pickedFile = await input.fileAsync(`Pick video file for ${row.label}`);
     }
 
