@@ -58,13 +58,24 @@ Airtable is the deployed/running copy.
  *   This prevents automation failures when unrelated field updates re-trigger the run
  *   (for example upload writeback backfills on already-emailed homework rows).
  *
- * RECOMMENDED TRIGGER CONDITIONS
+ * RECOMMENDED TRIGGER CONDITIONS (Airtable automation UI)
  * - Parent Feedback Ready? is checked
  * - Parent Feedback Sent? is unchecked
  * - Satisfactory? is checked
  * - Coach Feedback is not empty
  * - Award Status is Awarded
  * - XP Events is not empty
+ *
+ * DO NOT add these to the 071 trigger (blocks HW17 quiz / Fillout rows):
+ * - Upload Ready? = 1
+ * - Writeback Complete? is checked
+ * - Upload Status is Uploaded / Writeback Complete
+ * - Submission Assets is not empty
+ * - Airtable Attachment is not empty
+ *
+ * Parent Feedback Ready? is set by automation 065 when XP is awarded.
+ * For already-graded rows: fix trigger above, deploy v3.4, then uncheck/recheck
+ * Parent Feedback Ready? (or run repair-homework17-retrigger-parent-email.js).
  *
  * REQUIRED INPUT VARIABLES
  * - recordId

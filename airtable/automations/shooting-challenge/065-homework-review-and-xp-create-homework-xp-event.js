@@ -43,6 +43,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Links the XP Event to Weekly Athlete Summary from Homework Completion or Enrollment + Week lookup.
  * - Links the XP Event back to the Homework Completion.
  * - Sets Award Status = Awarded.
+ * - Sets Parent Feedback Ready? = checked (arms automation 071).
  *
  * IMPORTANT
  * - This script uses XP Events -> XP Bucket only.
@@ -106,6 +107,7 @@ const CONFIG = {
 
         awardStatus: "Award Status",
         xpEvents: "XP Events",
+        parentFeedbackReady: "Parent Feedback Ready?",
         completionKey: "Homework Completion Key",
 
         submissionDateDateOnly: "Submission Date - Date Only",
@@ -1035,6 +1037,13 @@ async function main() {
 
         if (fieldExists(homeworkTable, CONFIG.homework.automationError) && isWritableField(homeworkTable, CONFIG.homework.automationError)) {
             homeworkUpdateFields[CONFIG.homework.automationError] = "";
+        }
+
+        if (
+            fieldExists(homeworkTable, CONFIG.homework.parentFeedbackReady) &&
+            isWritableField(homeworkTable, CONFIG.homework.parentFeedbackReady)
+        ) {
+            homeworkUpdateFields[CONFIG.homework.parentFeedbackReady] = true;
         }
 
         await homeworkTable.updateRecordAsync(recordId, homeworkUpdateFields);

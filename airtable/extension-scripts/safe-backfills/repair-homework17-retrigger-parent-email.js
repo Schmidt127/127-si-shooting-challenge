@@ -8,7 +8,11 @@ Purpose:
   This script finds graded quiz homework that is ready but not yet emailed,
   then toggles Parent Feedback Ready? off/on so automation 071 re-fires.
 
-  Run AFTER deploying 071 v3.4 to the live Airtable automation.
+  Run AFTER:
+  1) Deploying 071 v3.4 to the live Airtable automation script action.
+  2) Fixing the 071 Airtable TRIGGER — remove Upload Ready?, Writeback Complete?,
+     Submission Assets, and Airtable Attachment from trigger conditions (see
+     airtable/schema/current/automation-trigger-map.md).
 
 Default: dry run (no writes). Set CONFIRM_WRITE = true to apply.
 */

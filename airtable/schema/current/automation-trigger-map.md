@@ -49,7 +49,20 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 | 064 | Homework Completions | *confirm* | `064-...-prepare-homework-xp-award.js` | XP prep fields |
 | **065** | Homework Completions | Reviewed, satisfactory, XP pending | `065-...-create-homework-xp-event.js` | **XP Events** (HOMEWORK) |
 | **070a** | Submission Assets | Send to Make + homework ready | `070a-...-send-homework-asset-payload-to-make.js` | **Make** upload engine |
-| **071** | Homework Completions | Parent feedback ready, not sent | `071-...-send-homework-feedback-email-webhook.js` | **Make** parent email |
+| **071** | Homework Completions | Parent feedback ready, not sent, awarded (see below) | `071-...-send-homework-feedback-email-webhook.js` | **Make** parent email |
+
+**071 trigger (live Airtable UI — must match script v3.4):**
+
+| Include | Exclude (blocks HW17 quiz) |
+|---------|----------------------------|
+| Parent Feedback Ready? checked | Upload Ready? = 1 |
+| Parent Feedback Sent? unchecked | Writeback Complete? checked |
+| Satisfactory? checked | Submission Assets not empty |
+| Coach Feedback not empty | Airtable Attachment not empty |
+| Award Status = Awarded | Upload Status = Uploaded |
+| XP Events not empty | |
+
+`Parent Feedback Ready?` is written by **065** when homework XP is awarded. Manual checkbox toggles only fire 071 if the trigger does **not** require upload fields.
 
 ### Video pipeline (013, 070b, 022, 111–114, 073)
 
