@@ -35,6 +35,10 @@ const CONFIRM_WRITE = false;
 const SKIP_FILE_PROMPT = false;
 
 const ACTIVITY_DATE_ISO = "2026-06-30";
+// If the activity date is outside every Week Start/End range (e.g. program end day),
+// the script falls back to this week name. Set WEEK_ID_OVERRIDE to pin a record id.
+const FALLBACK_WEEK_NAME = "Week 10";
+const WEEK_ID_OVERRIDE = "";
 const VIDEO_UPLOAD_NOTE =
   "Manual intake: parent emailed video (Fillout file too large). Coach uploaded via extension script.";
 
@@ -53,7 +57,8 @@ const ATHLETE_ROWS = [
 
 const CONFIG = {
   scriptName: "intake-manual-email-video-feedback-submission",
-  version: "v1.0",
+  version: "v1.1",
+  timeZone: "America/Denver",
 
   tables: {
     submissions: "Submissions",
@@ -86,6 +91,7 @@ const CONFIG = {
     name: "Week Name",
     startDate: "Start Date",
     endDate: "End Date",
+    active: "Active Week?",
   },
 
   values: {
@@ -129,12 +135,64 @@ function getLinkedIds(record, table, fieldName) {
   return raw.map(item => item?.id).filter(Boolean);
 }
 
-function getDateValue(record, table, fieldName) {
+function getRaw(record, table, fieldName) {
   if (!fieldExists(table, fieldName)) return null;
-  const value = record.getCellValue(fieldName);
-  if (!value) return null;
-  if (value instanceof Date && !isNaN(value)) return value;
-  return null;
+  return record.getCellValue(fieldName);
+}
+
+function toDateKeyFromText(text) {
+  const value = String(text || "").trim();
+  if (!value) return "";
+
+  const isoMatch = value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+  }
+
+  const localMatch = value.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (localMatch) {
+    const month = localMatch[1].padStart(2, "0");
+    const day = localMatch[2].padStart(2, "0");
+    const year = localMatch[3];
+    return `${year}-${month}-${day}`;
+  }
+
+  return "";
+}
+
+function toDateKeyFromDateObject(value, timeZone = CONFIG.timeZone) {
+  if (!value) return "";
+
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+
+  const year = parts.find(part => part.type === "year")?.value || "";
+  const month = parts.find(part => part.type === "month")?.value || "";
+  const day = parts.find(part => part.type === "day")?.value || "";
+
+  if (!year || !month || !day) return "";
+
+  return `${year}-${month}-${day}`;
+}
+
+function toSafeDateKey(record, table, fieldName) {
+  const fromText = toDateKeyFromText(getText(record, table, fieldName));
+  if (fromText) return fromText;
+  return toDateKeyFromDateObject(getRaw(record, table, fieldName), CONFIG.timeZone);
+}
+
+function compareDateKeys(a, b) {
+  if (!a && !b) return 0;
+  if (!a) return -1;
+  if (!b) return 1;
+  return String(a).localeCompare(String(b));
 }
 
 function linkedCell(ids) {
@@ -180,36 +238,112 @@ function parseActivityDate(isoDate) {
   return new Date(parts[0], parts[1] - 1, parts[2]);
 }
 
-function dateOnlyMs(value) {
-  if (!(value instanceof Date) || isNaN(value)) return null;
-  return new Date(value.getFullYear(), value.getMonth(), value.getDate()).getTime();
+function normalizeWeekName(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function findWeekForDate(weekRecords, weeksTable, activityDate) {
-  const targetMs = dateOnlyMs(activityDate);
-  const matches = [];
+function summarizeWeeks(weekRecords, weeksTable) {
+  return weekRecords.map(week => ({
+    id: week.id,
+    name: getText(week, weeksTable, CONFIG.weeks.name),
+    startKey: toSafeDateKey(week, weeksTable, CONFIG.weeks.startDate),
+    endKey: toSafeDateKey(week, weeksTable, CONFIG.weeks.endDate),
+    active: fieldExists(weeksTable, CONFIG.weeks.active)
+      ? getBooleanish(week, weeksTable, CONFIG.weeks.active)
+      : true,
+  }));
+}
 
-  for (const week of weekRecords) {
-    const start = getDateValue(week, weeksTable, CONFIG.weeks.startDate);
-    const end = getDateValue(week, weeksTable, CONFIG.weeks.endDate);
-    if (!start || !end) continue;
+function findWeekForDateKey(weekRecords, weeksTable, activityDateKey) {
+  if (!activityDateKey) return null;
 
-    const startMs = dateOnlyMs(start);
-    const endMs = dateOnlyMs(end);
-    if (startMs === null || endMs === null) continue;
+  const matches = weekRecords
+    .map(week => ({
+      week,
+      weekName: getText(week, weeksTable, CONFIG.weeks.name),
+      startKey: toSafeDateKey(week, weeksTable, CONFIG.weeks.startDate),
+      endKey: toSafeDateKey(week, weeksTable, CONFIG.weeks.endDate),
+      isActive: fieldExists(weeksTable, CONFIG.weeks.active)
+        ? getBooleanish(week, weeksTable, CONFIG.weeks.active)
+        : true,
+    }))
+    .filter(item => {
+      return (
+        item.isActive &&
+        item.startKey &&
+        item.endKey &&
+        compareDateKeys(activityDateKey, item.startKey) >= 0 &&
+        compareDateKeys(activityDateKey, item.endKey) <= 0
+      );
+    })
+    .sort((a, b) => {
+      const startCompare = compareDateKeys(a.startKey, b.startKey);
+      if (startCompare !== 0) return startCompare;
+      return String(a.weekName || "").localeCompare(String(b.weekName || ""));
+    });
 
-    if (targetMs >= startMs && targetMs <= endMs) {
-      matches.push(week);
+  if (matches.length === 0) return null;
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple active weeks match ${activityDateKey}: ${matches
+        .map(item => item.weekName || item.week.id)
+        .join(", ")}`
+    );
+  }
+
+  return { week: matches[0].week, source: "activity_date" };
+}
+
+function findWeekByName(weekRecords, weeksTable, weekName) {
+  const target = normalizeWeekName(weekName);
+  if (!target) return null;
+
+  const matches = weekRecords.filter(week => {
+    const name = normalizeWeekName(getText(week, weeksTable, CONFIG.weeks.name));
+    return name === target || name.includes(target) || target.includes(name);
+  });
+
+  if (matches.length === 0) return null;
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple weeks match name "${weekName}": ${matches
+        .map(week => getText(week, weeksTable, CONFIG.weeks.name) || week.id)
+        .join(", ")}`
+    );
+  }
+
+  return { week: matches[0], source: "fallback_week_name" };
+}
+
+function resolveWeek(weekRecords, weeksTable) {
+  if (WEEK_ID_OVERRIDE) {
+    const byId = weekRecords.find(week => week.id === WEEK_ID_OVERRIDE);
+    if (!byId) {
+      throw new Error(`WEEK_ID_OVERRIDE not found: ${WEEK_ID_OVERRIDE}`);
+    }
+    return { week: byId, source: "week_id_override" };
+  }
+
+  const byDate = findWeekForDateKey(weekRecords, weeksTable, ACTIVITY_DATE_ISO);
+  if (byDate) return byDate;
+
+  if (FALLBACK_WEEK_NAME) {
+    const byName = findWeekByName(weekRecords, weeksTable, FALLBACK_WEEK_NAME);
+    if (byName) {
+      console.log(
+        `No active week date range contains ${ACTIVITY_DATE_ISO}. Using fallback week "${FALLBACK_WEEK_NAME}".`
+      );
+      return byName;
     }
   }
 
-  if (matches.length === 1) return matches[0];
-  if (matches.length === 0) return null;
-
+  const summary = summarizeWeeks(weekRecords, weeksTable);
   throw new Error(
-    `Multiple weeks match ${ACTIVITY_DATE_ISO}: ${matches
-      .map(week => getText(week, weeksTable, CONFIG.weeks.name) || week.id)
-      .join(", ")}`
+    `No Week resolved for activity date ${ACTIVITY_DATE_ISO}. ` +
+      `Set FALLBACK_WEEK_NAME or WEEK_ID_OVERRIDE. Known weeks: ${JSON.stringify(summary)}`
   );
 }
 
@@ -239,14 +373,12 @@ function findEnrollment(enrollmentRecords, enrollmentsTable, row) {
   );
 }
 
-function findExistingVideoSubmission(submissionRecords, submissionsTable, enrollmentId, activityDate) {
-  const targetKey = activityDate.toISOString().slice(0, 10);
+function findExistingVideoSubmission(submissionRecords, submissionsTable, enrollmentId, activityDateKey) {
   return submissionRecords.filter(record => {
     const enrollmentIds = getLinkedIds(record, submissionsTable, CONFIG.submissions.enrollment);
     if (!enrollmentIds.includes(enrollmentId)) return false;
-    const activity = getDateValue(record, submissionsTable, CONFIG.submissions.activityDate);
-    if (!activity) return false;
-    if (activity.toISOString().slice(0, 10) !== targetKey) return false;
+    const activityKey = toSafeDateKey(record, submissionsTable, CONFIG.submissions.activityDate);
+    if (!activityKey || activityKey !== activityDateKey) return false;
     const videoCount = getText(record, submissionsTable, CONFIG.submissions.videoUpload);
     return Boolean(videoCount) || getBooleanish(record, submissionsTable, CONFIG.submissions.hasVideo);
   });
@@ -329,14 +461,16 @@ async function main() {
     ].filter(name => fieldExists(enrollmentsTable, name)),
   });
 
-  const weekQuery = await weeksTable.selectRecordsAsync({
-    fields: [CONFIG.weeks.name, CONFIG.weeks.startDate, CONFIG.weeks.endDate],
-  });
+  const weekFields = [
+    CONFIG.weeks.name,
+    CONFIG.weeks.startDate,
+    CONFIG.weeks.endDate,
+    CONFIG.weeks.active,
+  ].filter(name => fieldExists(weeksTable, name));
 
-  const weekRecord = findWeekForDate(weekQuery.records, weeksTable, activityDate);
-  if (!weekRecord) {
-    throw new Error(`No Week record contains activity date ${ACTIVITY_DATE_ISO}`);
-  }
+  const weekQuery = await weeksTable.selectRecordsAsync({ fields: weekFields });
+  const weekResolution = resolveWeek(weekQuery.records, weeksTable);
+  const weekRecord = weekResolution.week;
 
   const submissionQuery = await submissionsTable.selectRecordsAsync({
     fields: [
@@ -356,7 +490,7 @@ async function main() {
       submissionQuery.records,
       submissionsTable,
       enrollmentRecord.id,
-      activityDate
+      ACTIVITY_DATE_ISO
     );
 
     let pickedFile = null;
@@ -387,8 +521,14 @@ async function main() {
     });
   }
 
-  console.log(`Week: ${getText(weekRecord, weeksTable, CONFIG.weeks.name)} (${weekRecord.id})`);
+  console.log(
+    `Week: ${getText(weekRecord, weeksTable, CONFIG.weeks.name)} (${weekRecord.id}) via ${weekResolution.source}`
+  );
   console.log(`Activity date: ${ACTIVITY_DATE_ISO}`);
+  if (weekResolution.source !== "activity_date") {
+    console.log("Week calendar (for reference):");
+    console.log(JSON.stringify(summarizeWeeks(weekQuery.records, weeksTable), null, 2));
+  }
   console.log(`Plans: ${plans.length}`);
   console.log(JSON.stringify(plans, null, 2));
 
