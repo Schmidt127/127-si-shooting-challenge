@@ -27,9 +27,9 @@ Airtable is the deployed/running copy.
  * 071 - Email, Notifications, and External Handoffs
  * Send Homework Feedback Email Webhook
  *
- * Version: v3.3
+ * Version: v3.4
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-06-30
  *
  * PURPOSE
  * - Reads one Homework Completions record.
@@ -82,13 +82,14 @@ Airtable is the deployed/running copy.
    ========================================================= */
 
 const CONFIG = {
-    version: "v3.3",
+    version: "v3.4",
 
     tables: {
         homeworkCompletions: "Homework Completions",
         enrollments: "Enrollments",
         homework: "FBC Curriculum - SYNC",
         submissionAssets: "Submission Assets",
+        reflectionQuiz: "Final Reflection Quiz Submissions",
     },
 
     homeworkFields: {
@@ -96,6 +97,7 @@ const CONFIG = {
         homework: "Homework",
         week: "Week",
         submissionDate: "Submission Date",
+        sourceSystem: "Source System",
 
         satisfactory: "Satisfactory?",
         completionStatus: "Completion Status",
@@ -109,6 +111,7 @@ const CONFIG = {
         coachFeedback: "Coach Feedback",
 
         submissionAssets: "Submission Assets",
+        reflectionQuiz: "Final Reflection Quiz Submissions",
 
         parentReady: "Parent Feedback Ready?",
         parentSent: "Parent Feedback Sent?",
@@ -136,10 +139,16 @@ const CONFIG = {
         assetLabel: "Asset Label",
     },
 
+    quizFields: {
+        quizResultSummary: "Quiz Result Summary",
+        score: "Score",
+    },
+
     values: {
         awardedStatus: "Awarded",
         sendType: "homework_feedback",
         sendTag: "HOMEWORK_FEEDBACK_PARENT",
+        filloutSource: "Fillout",
     },
 
     defaults: {
@@ -205,6 +214,18 @@ const homeworkCompletionsTable = base.getTable(CONFIG.tables.homeworkCompletions
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const homeworkTable = base.getTable(CONFIG.tables.homework);
 const submissionAssetsTable = base.getTable(CONFIG.tables.submissionAssets);
+const reflectionQuizTable = fieldExistsTable(CONFIG.tables.reflectionQuiz)
+    ? base.getTable(CONFIG.tables.reflectionQuiz)
+    : null;
+
+function fieldExistsTable(tableName) {
+    try {
+        base.getTable(tableName);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 
 /* =========================================================
@@ -297,6 +318,15 @@ function getText(record, table, fieldName) {
     }
 
     return String(record.getCellValueAsString(fieldName) || "").trim();
+}
+
+function getSelectName(record, table, fieldName) {
+    if (!record || !fieldExists(table, fieldName)) {
+        return "";
+    }
+
+    const raw = record.getCellValue(fieldName);
+    return raw?.name ? String(raw.name).trim() : "";
 }
 
 function getCheckboxValue(record, table, fieldName) {
@@ -416,21 +446,14 @@ function summaryRow(label, value) {
     `;
 }
 
-function buildFileListHtml(assetFiles) {
+function buildFileListHtml(assetFiles, quizResultSummary = "") {
     const filesWithUrls = assetFiles.filter(file => file.url);
 
-    if (!filesWithUrls.length) {
-        return `
-            <p style="margin:0; line-height:1.4;">
-                The homework feedback has been posted, but no file link was included on this record.
-            </p>
-        `;
-    }
+    if (filesWithUrls.length) {
+        const rows = filesWithUrls.map((file, index) => {
+            const label = firstNonBlank(file.label, file.fileName, `Homework File ${index + 1}`);
 
-    const rows = filesWithUrls.map((file, index) => {
-        const label = firstNonBlank(file.label, file.fileName, `Homework File ${index + 1}`);
-
-        return `
+            return `
             <tr>
                 <td style="padding:6px 0; line-height:1.3;">
                     <a href="${escapeHtml(file.url)}"
@@ -440,14 +463,32 @@ function buildFileListHtml(assetFiles) {
                 </td>
             </tr>
         `;
-    }).join("");
+        }).join("");
 
-    return `
+        return `
         <p style="margin:0 0 8px 0; line-height:1.4;">You can review the linked homework file(s) here:</p>
         <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:collapse;">
             ${rows}
         </table>
     `;
+    }
+
+    if (String(quizResultSummary || "").trim()) {
+        return `
+            <p style="margin:0 0 8px 0; line-height:1.4;">
+                This homework was completed as the Final Reflection Quiz (no file upload).
+            </p>
+            <p style="margin:0; line-height:1.4;">
+                ${escapeHtml(quizResultSummary)}
+            </p>
+        `;
+    }
+
+    return `
+            <p style="margin:0; line-height:1.4;">
+                The homework feedback has been posted, but no file link was included on this record.
+            </p>
+        `;
 }
 
 async function postJson(url, payload) {
@@ -528,6 +569,7 @@ function buildEmailHtml({
     weekText,
     coachFeedback,
     assetFiles,
+    quizResultSummary,
     completionStatusText,
     satisfactoryText,
     baseXpText,
@@ -585,7 +627,7 @@ function buildEmailHtml({
         ? `<div style="line-height:1.45;">${nlToBr(coachFeedback)}</div>`
         : `<div style="line-height:1.45;">No coach feedback text was included on this record.</div>`;
 
-    const actionHtml = buildFileListHtml(assetFiles);
+    const actionHtml = buildFileListHtml(assetFiles, quizResultSummary);
 
     const closingHtml = `
         <p style="margin:0 0 10px 0; line-height:1.4;">
@@ -829,6 +871,21 @@ async function main() {
             CONFIG.homeworkFields.submissionAssets
         );
 
+        const sourceSystem = getSelectName(
+            homeworkCompletionRecord,
+            homeworkCompletionsTable,
+            CONFIG.homeworkFields.sourceSystem
+        );
+
+        const reflectionQuizIds = getLinkedIds(
+            homeworkCompletionRecord,
+            homeworkCompletionsTable,
+            CONFIG.homeworkFields.reflectionQuiz
+        );
+
+        const isReflectionQuizCompletion =
+            sourceSystem === CONFIG.values.filloutSource && reflectionQuizIds.length > 0;
+
         logDebug("071 pre-send validation", {
             recordId,
             sendMode,
@@ -844,6 +901,9 @@ async function main() {
             enrollmentId,
             homeworkId,
             submissionAssetIds,
+            sourceSystem,
+            reflectionQuizIds,
+            isReflectionQuizCompletion,
         });
 
         /************************************************************
@@ -902,7 +962,7 @@ async function main() {
             throw new Error("Homework Completion record is missing linked Homework.");
         }
 
-        if (!submissionAssetIds.length) {
+        if (!submissionAssetIds.length && !isReflectionQuizCompletion) {
             throw new Error("Homework Completion record is missing linked Submission Assets.");
         }
 
@@ -920,6 +980,21 @@ async function main() {
 
         if (!homeworkRecord) {
             throw new Error(`Linked Homework record not found: ${homeworkId}`);
+        }
+
+        let quizResultSummary = "";
+
+        if (isReflectionQuizCompletion && reflectionQuizTable) {
+            const quizRecord = await reflectionQuizTable.selectRecordAsync(reflectionQuizIds[0]);
+
+            if (quizRecord) {
+                quizResultSummary = firstNonBlank(
+                    getText(quizRecord, reflectionQuizTable, CONFIG.quizFields.quizResultSummary),
+                    getText(quizRecord, reflectionQuizTable, CONFIG.quizFields.score)
+                        ? `Quiz score: ${getText(quizRecord, reflectionQuizTable, CONFIG.quizFields.score)}/18`
+                        : ""
+                );
+            }
         }
 
         const assetFiles = [];
@@ -958,15 +1033,19 @@ async function main() {
             });
         }
 
-        if (!assetFiles.length) {
-            throw new Error("No readable Submission Asset records were found.");
+        if (!isReflectionQuizCompletion) {
+            if (!assetFiles.length) {
+                throw new Error("No readable Submission Asset records were found.");
+            }
+
+            const assetFilesWithUrls = assetFiles.filter(file => file.url);
+
+            if (!assetFilesWithUrls.length) {
+                throw new Error("No Google Drive File URL or View URL was found on linked Submission Assets.");
+            }
         }
 
         const assetFilesWithUrls = assetFiles.filter(file => file.url);
-
-        if (!assetFilesWithUrls.length) {
-            throw new Error("No Google Drive File URL or View URL was found on linked Submission Assets.");
-        }
 
         /************************************************************
          * READ / NORMALIZE DATA
@@ -1050,6 +1129,7 @@ async function main() {
             weekText,
             coachFeedback,
             assetFiles,
+            quizResultSummary,
             completionStatusText: firstNonBlank(completionStatusText, awardStatusText),
             satisfactoryText,
             baseXpText,
@@ -1095,6 +1175,8 @@ async function main() {
             assetFiles,
             assetFileCount: assetFiles.length,
             assetFileUrlCount: assetFilesWithUrls.length,
+            isReflectionQuizCompletion,
+            quizResultSummary,
 
             makeWriteback: {
                 tableName: CONFIG.tables.homeworkCompletions,
