@@ -76,7 +76,69 @@ Each run writes files such as:
 
 After a meaningful schema change, commit the dated snapshot folder and note it in `CHANGELOG.md`.
 
+## Season close-out — Award Recipients cleanup (2025–2026)
+
+Read-only Python helpers for end-of-season award fulfillment. They use `airtable_read.py` and a PAT with **`data.records:read`** (`tools/airtable/.env` or `web/.env.local`).
+
+### Problem we fixed
+
+During award catalog rename/cleanup, many **Award Recipients** rows kept the same athlete, week, and date but had the **Award** link pointed at the wrong catalog record. The June 29 grid export is the fulfillment truth for weekly cards sent through that date.
+
+### Reference snapshot (Git)
+
+| File | Purpose |
+|------|---------|
+| `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) | Grid export before award name changes — **124 Sent/Pending rows** |
+| `_preview/june29-snapshot-crossmatch-report.md` | Internal consistency check on that CSV (duplicates, Conquered Goal, etc.) |
+
+### Scripts and reports
+
+| Script | Output | Purpose |
+|--------|--------|---------|
+| `compare_award_recipients_snapshot.py` | `_preview/award-recipients-snapshot-vs-live.md` | Compare snapshot vs live; **done when** wrong links = 0, manual = 0, dupes = 0 |
+| `audit_goal_conquer_reconciliation.py` | `_preview/goal-conquer-reconciliation.md` | **Separate** from award-link fix: Enrollment `Goal Met?` vs Conquered Goal recipient rows |
+| `audit_awards_catalog_and_connections.py` | `_preview/awards-catalog-audit-report.md` | Awards catalog + recipient connection audit |
+| `audit_final_awards.py` | `_preview/final-awards-audit-report.md` | End-of-challenge cart + grade-band standings |
+| `preview_final_email.py` | `_preview/geraghty-final-email.html` | Per-athlete final summary email preview (dedupe/collapse weekly awards) |
+| `generate_final_awards_email.py` | `_preview/final-awards-end-of-season-email.html` | Public broadcast email from **In Amazon Cart** rows only |
+
+Run from `tools/airtable/`:
+
+```bash
+set PYTHONPATH=.
+python compare_award_recipients_snapshot.py
+python audit_goal_conquer_reconciliation.py
+```
+
+### Cleanup workflow (plain English)
+
+1. **Award link cleanup** — For each row in the snapshot, open the live row (same athlete + week + date). Change only the **Award** linked field to the current catalog name (cheat sheet in the comparison report). Do **not** delete Sent rows for cards already emailed.
+2. **Duplicates** — Cancel/delete exact duplicate rows (same athlete + award + week + date).
+3. **Manual review** — When two awards went out the same day, assign each live row to the correct award from the snapshot.
+4. **Re-run** `compare_award_recipients_snapshot.py` until the report shows **0** wrong links, **0** manual review, **0** duplicates. **70** new Post Challenge / In Amazon Cart rows since June 29 is expected.
+5. **Goal Met / Conquered Goal** — Run `audit_goal_conquer_reconciliation.py` separately. Athletes conquer the full shot target **once**; the Conquered Goal recipient row is the permanent gift-card log even if `Goal Met?` rollup moves later.
+
+**Status (2026-07-02):** Award Recipients historical cleanup and Goal Met / Conquered Goal reconciliation both passed (14/14 aligned).
+
+### Old award name → current catalog (snapshot era)
+
+| June 29 export label | Link this award today |
+|----------------------|------------------------|
+| Homework - Submitted & Satisfactory | Homework Recognition Award |
+| Level Leaders | Level Leader Award |
+| Video Submission - Submitted | Video Submission Recognition Award |
+| Video Submission - Make the Shout out Page | Shout-Out Video Award |
+| Zoom - Attendance | Zoom Attendance/Participation Award |
+| Zoom - Random Drawing Winner | Zoom Drawing — Winner |
+| Zoom - Random Drawing Runner Up | Zoom Drawing — Runner-Up |
+| Zoom - Random Drawing Third Place | Zoom Drawing — Third Place |
+| Shots - Conquered Goal | Conquered Goal Award |
+| Grade Band Award - Overall Achievement | Grade Band Achievement Award |
+| Special Awards - Dedication | Dedication Award |
+| Special Award - Random for Incentive | Random Drawing Incentive Award |
+
 ## Related docs
 
 - Hand-maintained schema notes: `airtable/schema/current/`
 - Airtable extension audits (in-base JS): `airtable/extension-scripts/audits/`
+- Live ops snapshot: [docs/PROJECT_STATE.md](../../docs/PROJECT_STATE.md)

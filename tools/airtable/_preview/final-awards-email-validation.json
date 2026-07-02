@@ -1,0 +1,109 @@
+{
+  "ok": true,
+  "total_cards": 70,
+  "total_value": 595.0,
+  "count_by_key": {
+    "keep_shooting": 15,
+    "thanks_for_playing": 12,
+    "grade_band_runner_up": 5,
+    "conquered_goal": 3,
+    "grade_band_third": 5,
+    "random_drawing": 22,
+    "grade_band_champion": 5,
+    "daily_shot": 3
+  },
+  "total_by_key": {
+    "keep_shooting": 105.0,
+    "thanks_for_playing": 60.0,
+    "grade_band_runner_up": 75.0,
+    "conquered_goal": 15.0,
+    "grade_band_third": 50.0,
+    "random_drawing": 154.0,
+    "grade_band_champion": 100.0,
+    "daily_shot": 36.0
+  },
+  "section_checks": [
+    {
+      "key": "conquered_goal",
+      "title": "Conquered Goal Award",
+      "amount": 5,
+      "expected_count": 3,
+      "expected_total": 15,
+      "actual_count": 3,
+      "actual_total": 15.0,
+      "ok": true
+    },
+    {
+      "key": "grade_band_champion",
+      "title": "Grade Band Champion Award",
+      "amount": 20,
+      "expected_count": 5,
+      "expected_total": 100,
+      "actual_count": 5,
+      "actual_total": 100.0,
+      "ok": true
+    },
+    {
+      "key": "grade_band_runner_up",
+      "title": "Grade Band Runner-Up Award",
+      "amount": 15,
+      "expected_count": 5,
+      "expected_total": 75,
+      "actual_count": 5,
+      "actual_total": 75.0,
+      "ok": true
+    },
+    {
+      "key": "grade_band_third",
+      "title": "Grade Band Third Place Award",
+      "amount": 10,
+      "expected_count": 5,
+      "expected_total": 50,
+      "actual_count": 5,
+      "actual_total": 50.0,
+      "ok": true
+    },
+    {
+      "key": "daily_shot",
+      "title": "Daily Shot Submission Award",
+      "amount": 12,
+      "expected_count": 3,
+      "expected_total": 36,
+      "actual_count": 3,
+      "actual_total": 36.0,
+      "ok": true
+    },
+    {
+      "key": "keep_shooting",
+      "title": "Keep Shooting Incentive Award",
+      "amount": 7,
+      "expected_count": 15,
+      "expected_total": 105,
+      "actual_count": 15,
+      "actual_total": 105.0,
+      "ok": true
+    },
+    {
+      "key": "random_drawing",
+      "title": "Random Drawing Incentive Award",
+      "amount": 7,
+      "expected_count": 22,
+      "expected_total": 154,
+      "actual_count": 22,
+      "actual_total": 154.0,
+      "ok": true
+    },
+    {
+      "key": "thanks_for_playing",
+      "title": "Thanks for Playing Award \u2014 Every Bit Counts",
+      "amount": 5,
+      "expected_count": 12,
+      "expected_total": 60,
+      "actual_count": 12,
+      "actual_total": 60.0,
+      "ok": true
+    }
+  ],
+  "warnings": [],
+  "unknown_awards": []
+}

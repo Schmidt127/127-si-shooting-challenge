@@ -1,0 +1,22 @@
+{
+  "enrollmentId": "recNe84xp4corSBmm",
+  "enrollmentName": "Riley Geraghty",
+  "recipientsCsv": "shelljo_@hotmail.com",
+  "subject": "Final Shooting Challenge Summary \u2014 Riley Geraghty",
+  "counts": {
+    "challengeDayCount": 91,
+    "daysShot": 62,
+    "daysMissed": 29,
+    "homeworkDone": 18,
+    "homeworkExpected": 18,
+    "streakCount": 9,
+    "milestoneCount": 6,
+    "videoSubmitted": 17,
+    "videoExpected": 12,
+    "awardsWon": 11,
+    "zoomAttended": 2,
+    "zoomExpected": 2,
+    "lifetimeXp": 3158.0
+  },
+  "seasonLabel": "Week 0 \u2013 Post Challenge"
+}

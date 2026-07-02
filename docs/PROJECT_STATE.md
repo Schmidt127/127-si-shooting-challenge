@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-06-29**
+Last updated: **2026-07-02**
 
 ---
 
@@ -51,6 +51,17 @@ Last verified clean on historical repair pass (re-run after bulk imports):
 | **Final 090** | `audit-final-090a` … `090g` (Active enrollments) | **Ready to run** |
 
 Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md)
+
+### Award Recipients close-out (2026-07-02)
+
+| Check | Status |
+|-------|--------|
+| June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0; 70 new Post Challenge / In Amazon Cart rows (expected) |
+| Goal Met vs Conquered Goal (`audit_goal_conquer_reconciliation.py`) | **Done** — 14/14 aligned |
+| Reference CSV | `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) |
+| Tooling docs | [tools/airtable/README.md](../tools/airtable/README.md) — Season close-out section |
+
+**Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
 
 ---
 

@@ -77,13 +77,13 @@
     "problemCount": 365,
     "sendStatusCategoryCounts": {
       "clean_and_sent": 92,
-      "should_have_sent_never_built": 314,
+      "should_have_sent_never_built": 293,
       "package_built_not_sent": 48,
       "missing_recipient": 0,
       "missing_enrollment_or_week": 0,
       "not_eligible": 0,
       "error_blocked": 1,
-      "needs_manual_review": 2
+      "needs_manual_review": 23
     },
     "scoped": 457,
     "skippedInactive": 0,
@@ -179,11 +179,6 @@
           "weekId": "recEYLwDOOYMMsDNf"
         },
         {
-          "wasId": "rec19UW2BSOGBi3FU",
-          "enrollmentId": "recvY4UwL5udPp0CW",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
           "wasId": "rec1KuqIodTVaIaYP",
           "enrollmentId": "recJsYuNK6HY0tUku",
           "weekId": "recZwSGoAiERDdTMr"
@@ -242,6 +237,88 @@
           "wasId": "rec338h6s132lD802",
           "enrollmentId": "recIh9oF3NYfMzkoS",
           "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "rec357v0QLIeJhAdC",
+          "enrollmentId": "recUeFkUrOC5JRuNn",
+          "weekId": "recUPkXtsDOHnY5q7"
+        }
+      ],
+      "needs_manual_review": [
+        {
+          "wasId": "rec19UW2BSOGBi3FU",
+          "enrollmentId": "recvY4UwL5udPp0CW",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "rec9RX9Yl9iBtfiMK",
+          "enrollmentId": "recbJ71DHseETAQRP",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recAEvwojVbWGNR7r",
+          "enrollmentId": "recK2dzcWqj5oFGHc",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recAeruJswYBunfhi",
+          "enrollmentId": "recKDTHpQrZOu0YN5",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recEBQf86ra3nLvNY",
+          "enrollmentId": "rec0BF7hSTCKRlfQk",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recEOs8k9LI2AFdKM",
+          "enrollmentId": "recaLZCSGUgF5PCrC",
+          "weekId": "recbw58r8MlnhbBx7"
+        },
+        {
+          "wasId": "recHMEXOR54jDyNte",
+          "enrollmentId": "recs4r7UjEsHlIjM7",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recHtVafZESTmulFi",
+          "enrollmentId": "recMiAeCmaYHd4OjI",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recI5r1cQ4lgONZwO",
+          "enrollmentId": "recn212vBAeMDpXco",
+          "weekId": "recZwSGoAiERDdTMr"
+        },
+        {
+          "wasId": "recIvmSmuWI8rFzKb",
+          "enrollmentId": "rectgE3U9zZkfbqQ4",
+          "weekId": "recd1V4C5KDJm87b1"
+        },
+        {
+          "wasId": "recNTmbuj14bhQcAn",
+          "enrollmentId": "recBKEOo6MqTWBsv8",
+          "weekId": "recd1V4C5KDJm87b1"
+        },
+        {
+          "wasId": "recPmFw0MYLm2frEg",
+          "enrollmentId": "rec8Z5KzsNif6mtpG",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recQXX9QN8vhSiK1N",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recR1n4yzP9p4a7FX",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "recS0rvX53T2TMdWz",
+          "enrollmentId": "rec0Mop60efVsJ5sV",
+          "weekId": "recd1V4C5KDJm87b1"
         }
       ],
       "package_built_not_sent": [
@@ -318,18 +395,6 @@
         {
           "wasId": "recIzKUNwFL9pNALO",
           "enrollmentId": "recho64Y69r6DvwFL",
-          "weekId": "recaX4EyJ7BWWKfSq"
-        }
-      ],
-      "needs_manual_review": [
-        {
-          "wasId": "recEBQf86ra3nLvNY",
-          "enrollmentId": "rec0BF7hSTCKRlfQk",
-          "weekId": "recaX4EyJ7BWWKfSq"
-        },
-        {
-          "wasId": "recHMEXOR54jDyNte",
-          "enrollmentId": "recs4r7UjEsHlIjM7",
           "weekId": "recaX4EyJ7BWWKfSq"
         }
       ],
