@@ -79,8 +79,9 @@ Finish with **`audit-field-coverage-report.js`** to identify unused fields.
 | `repair-audit-010-linkage-drive-writeback-and-hw-credit.js` | Ryder/Maizee/Clara HW Drive writeback + XP credit after linkage-full | **Ready** |
 | `repair-audit-001` … `009` | Single-record targeted repairs (use linkage-full for batch) | **Ready** |
 | `repair-final-090e-xp-rollup-duplicate-status.js` | Final close: clear false Duplicate - Remove on XP Events blocking Lifetime XP Earned rollup | **Ready** |
+| `repair-kimm-lyle-restore-excluded-submissions.js` | Close-out: Lyle Kimm — Count It on two excluded duplicate submissions (+340 shots) | **Ready** |
 | `repair-final-090f-unlock-week-from-source.js` | Final close: fill empty Week on unlocks from milestone activity date | **Stub — DRY_RUN** |
-| `repair-final-090g-build-final-challenge-summary-email.js` | Final close: build final summary package per family (no send) | **Stub — DRY_RUN** |
+| `repair-final-090g-build-final-challenge-summary-email.js` | Final close: one-page season recap email (days, HW, streaks, milestones, videos, awards) | **Ready — DRY_RUN** |
 
 ### Linkage audit repair (v1.2)
 

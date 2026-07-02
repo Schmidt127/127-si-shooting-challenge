@@ -1,0 +1,361 @@
+[
+  {
+    "id": "090A",
+    "name": "Submission Base XP",
+    "pass": true,
+    "issueTotal": 0,
+    "issueCounts": {
+      "clean": 1712
+    },
+    "scoped": 1712,
+    "samples": []
+  },
+  {
+    "id": "090B",
+    "name": "Homework XP",
+    "pass": true,
+    "issueTotal": 0,
+    "issueCounts": {
+      "clean": 134,
+      "excluded_not_ready": 8
+    },
+    "scoped": 142,
+    "samples": []
+  },
+  {
+    "id": "090C",
+    "name": "Streaks / Milestones / Perfect Week XP",
+    "pass": true,
+    "issueTotal": 0,
+    "issueCounts": {
+      "clean": 490,
+      "excluded_not_ready": 1
+    },
+    "unlocksChecked": 132,
+    "streaksChecked": 359,
+    "samples": []
+  },
+  {
+    "id": "090D",
+    "name": "Video + Zoom XP",
+    "pass": true,
+    "video": {
+      "issueTotal": 0,
+      "issueCounts": {
+        "video_not_ready_for_xp": 24,
+        "video_ok": 117
+      },
+      "checked": 141
+    },
+    "zoom": {
+      "issueTotal": 0,
+      "issueCounts": {
+        "zoom_ok": 32
+      },
+      "checkedRows": 32
+    },
+    "samples": {
+      "video": [],
+      "zoom": []
+    }
+  },
+  {
+    "id": "090F",
+    "name": "Achievement Unlocks Workflow",
+    "pass": false,
+    "issueTotal": 9,
+    "issueCounts": {
+      "duplicate_unlock_key_enrollment_achievement_week": 9
+    },
+    "scoped": 132,
+    "samples": []
+  },
+  {
+    "id": "090G",
+    "name": "Weekly Summary Email Workflow",
+    "pass": false,
+    "problemCount": 365,
+    "sendStatusCategoryCounts": {
+      "clean_and_sent": 92,
+      "should_have_sent_never_built": 314,
+      "package_built_not_sent": 48,
+      "missing_recipient": 0,
+      "missing_enrollment_or_week": 0,
+      "not_eligible": 0,
+      "error_blocked": 1,
+      "needs_manual_review": 2
+    },
+    "scoped": 457,
+    "skippedInactive": 0,
+    "trigger072Eligible": 0,
+    "trigger074Eligible": 0,
+    "samples": {
+      "clean_and_sent": [
+        {
+          "wasId": "rec0Gj0pkZFzeabGi",
+          "enrollmentId": "recZ3iTqlI1EfsghD",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec0cDFGMa6cdLO2a",
+          "enrollmentId": "recqWdm2T1iay663o",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec0guAvJXDxvCqEC",
+          "enrollmentId": "recUeFkUrOC5JRuNn",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec1cjc7WRg9YenUF",
+          "enrollmentId": "recSie4tYfSbfhwly",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec3N4Uaf6ApSQGK4",
+          "enrollmentId": "reck0urggYN376kXO",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec3gGNNTZueuArdC",
+          "enrollmentId": "rec83ku1pTHmPNwRo",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec3tlMhFYIvHk6xB",
+          "enrollmentId": "recj7jNMunEfS5qm1",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec42WxlIY3r8E7bK",
+          "enrollmentId": "recOSUwW9lXQx6nWL",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec47zSWSeB504CSx",
+          "enrollmentId": "recmhY61iU2AwEiMI",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec4ruzk4oPIZwyhd",
+          "enrollmentId": "rec2gnfAuY1xTodO6",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec6NZjdxltBgAW5Y",
+          "enrollmentId": "rec7WoCM2GYcc0E8p",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec6V6fgVAPSZLF2C",
+          "enrollmentId": "recvY4UwL5udPp0CW",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec8Gnzk2FZlhHEzU",
+          "enrollmentId": "rechBG2hMV5qXLSsb",
+          "weekId": "reciDzF3dUk32AoeD"
+        },
+        {
+          "wasId": "rec9nOt57b41uhrqR",
+          "enrollmentId": "recJsYuNK6HY0tUku",
+          "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec9rWztlK9NXLuU9",
+          "enrollmentId": "recNe84xp4corSBmm",
+          "weekId": "reciDzF3dUk32AoeD"
+        }
+      ],
+      "should_have_sent_never_built": [
+        {
+          "wasId": "rec0HRLlnHJ3LGpi3",
+          "enrollmentId": "recmhY61iU2AwEiMI",
+          "weekId": "recUPkXtsDOHnY5q7"
+        },
+        {
+          "wasId": "rec0ULsAZWwJMz23s",
+          "enrollmentId": "recHUNHzjPGGz5wxX",
+          "weekId": "recEYLwDOOYMMsDNf"
+        },
+        {
+          "wasId": "rec19UW2BSOGBi3FU",
+          "enrollmentId": "recvY4UwL5udPp0CW",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
+          "wasId": "rec1KuqIodTVaIaYP",
+          "enrollmentId": "recJsYuNK6HY0tUku",
+          "weekId": "recZwSGoAiERDdTMr"
+        },
+        {
+          "wasId": "rec1LoWx2AmP7eNHB",
+          "enrollmentId": "recsr9OFwwiECnoOu",
+          "weekId": "recnMGC2JBHjO0ay6"
+        },
+        {
+          "wasId": "rec1Y9HHAH2NDnOuz",
+          "enrollmentId": "rec85c7i6Bhjo1DO4",
+          "weekId": "recd1V4C5KDJm87b1"
+        },
+        {
+          "wasId": "rec1ZfzfaxmR8o8f9",
+          "enrollmentId": "recBKEOo6MqTWBsv8",
+          "weekId": "recZwSGoAiERDdTMr"
+        },
+        {
+          "wasId": "rec1ia0Tgn4whakDY",
+          "enrollmentId": "rec9seL0OMuCTsnt5",
+          "weekId": "recnMGC2JBHjO0ay6"
+        },
+        {
+          "wasId": "rec2El9mG1stdysfd",
+          "enrollmentId": "recSOk6N8RL3j5fzg",
+          "weekId": "recbw58r8MlnhbBx7"
+        },
+        {
+          "wasId": "rec2bq61QUswb5oZW",
+          "enrollmentId": "recK2dzcWqj5oFGHc",
+          "weekId": "recUPkXtsDOHnY5q7"
+        },
+        {
+          "wasId": "rec2iK0ewst2Im19J",
+          "enrollmentId": "rec0dGkRWt6Tdpd76",
+          "weekId": "recUPkXtsDOHnY5q7"
+        },
+        {
+          "wasId": "rec2kgkADGQzxYpMs",
+          "enrollmentId": "rec7WoCM2GYcc0E8p",
+          "weekId": "recnMGC2JBHjO0ay6"
+        },
+        {
+          "wasId": "rec2tx58PRhMM5NOn",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "weekId": "recUPkXtsDOHnY5q7"
+        },
+        {
+          "wasId": "rec2uPqvW4sfyaFLJ",
+          "enrollmentId": "reckmWHcaHxhD09yd",
+          "weekId": "recZwSGoAiERDdTMr"
+        },
+        {
+          "wasId": "rec338h6s132lD802",
+          "enrollmentId": "recIh9oF3NYfMzkoS",
+          "weekId": "recrTwxqXz31fNZ7e"
+        }
+      ],
+      "package_built_not_sent": [
+        {
+          "wasId": "rec1BkBJNZVk1Ldjs",
+          "enrollmentId": "recsr9OFwwiECnoOu",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec2aP2gTCkXFtPDs",
+          "enrollmentId": "reckmWHcaHxhD09yd",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec3Fj9QUX28Je31b",
+          "enrollmentId": "recl3rKx9k2659J4c",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec5AVlAjEKa9t5nA",
+          "enrollmentId": "recUeFkUrOC5JRuNn",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec6LNbSdtQshvjEW",
+          "enrollmentId": "recZZ4Op05Hg0FpQq",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec7aaXNyukVgSyQZ",
+          "enrollmentId": "recOLIVrnOS57dH04",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec8Jl19vyFRgTebB",
+          "enrollmentId": "recOSUwW9lXQx6nWL",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec9V9GZuLHZFSrbG",
+          "enrollmentId": "rec6xBAporVRLslcn",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec9Yace1TObNDawm",
+          "enrollmentId": "reciYiOQh8ytqaKKh",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "rec9ua0euw680abqH",
+          "enrollmentId": "recQiRUbTKZ5Wiz7B",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recAv1Rf8CK57gT1u",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recDOhPBSLN6KmPI2",
+          "enrollmentId": "rectgE3U9zZkfbqQ4",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recFOovFWUOXfrCn0",
+          "enrollmentId": "rec8Z5KzsNif6mtpG",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recGNjqs1UPdwdSZA",
+          "enrollmentId": "recIh9oF3NYfMzkoS",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recIzKUNwFL9pNALO",
+          "enrollmentId": "recho64Y69r6DvwFL",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        }
+      ],
+      "needs_manual_review": [
+        {
+          "wasId": "recEBQf86ra3nLvNY",
+          "enrollmentId": "rec0BF7hSTCKRlfQk",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recHMEXOR54jDyNte",
+          "enrollmentId": "recs4r7UjEsHlIjM7",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        }
+      ],
+      "error_blocked": [
+        {
+          "wasId": "recm6tgXXN4pYgjxf",
+          "enrollmentId": "recRMktT2fGDup8sm",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        }
+      ]
+    }
+  },
+  {
+    "id": "090E",
+    "name": "XP Events Enrollment Totals",
+    "pass": true,
+    "issueTotal": 0,
+    "issueCounts": {
+      "clean": 91,
+      "orphan_xp_not_linked_on_enrollment": 0,
+      "duplicate_source_key_events": 0,
+      "duplicate_source_keys": 0
+    },
+    "samples": {
+      "mismatches": [],
+      "orphans": []
+    }
+  }
+]

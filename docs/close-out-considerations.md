@@ -11,7 +11,7 @@
 
 **Status key:** `open` · `monitoring` · `blocked` · `resolved` · `wont-fix`
 
-Last updated: **2026-06-29** (C-014 XP / levels / streaks — deferred)
+Last updated: **2026-07-01** (C-001 Lyle restore — benefit of doubt)
 
 ---
 
@@ -53,7 +53,7 @@ If a Submission / Homework Completion / XP row is **already linked** to an inact
 
 | ID | Added | Area | Summary | Detail | Next step | Status |
 |----|-------|------|---------|--------|-----------|--------|
-| C-001 | 2026-06-29 | Submissions / Lyle Kimm | Parent dispute ~300 missing shots | Enrollment `rec83ku1pTHmPNwRo`. Official total 9,700 shots is internally consistent. **340 shots** on 2 rows with `Exclude It` + identical Duplicate Key to counted siblings: `rec8dui4l30DYGUgx` (5/7, 140) and `recBI4Np85t5X9Z8u` (5/19, 200). If real sessions: set **Count It** + re-trigger **010** → 10,040 shots. Audit script: `audit-target-enrollment-full-integrity.js`. | Await parent confirmation; restore only if they confirm two real sessions | blocked |
+| C-001 | 2026-06-29 | Submissions / Lyle Kimm | Parent dispute ~300 missing shots | Enrollment `rec83ku1pTHmPNwRo`. **Close-out decision:** benefit of the doubt — **not duplicates**; restore **Count It** on `rec8dui4l30DYGUgx` (5/7, 140) and `recBI4Np85t5X9Z8u` (5/19, 200). Repair: `repair-kimm-lyle-restore-excluded-submissions.js` → then `backfill-submission-xp-events.js` or 010; re-run **090A** + **090E**. | Run repair script (CONFIRM_WRITE), XP backfill, then close-out audits | open |
 | C-002 | 2026-06-29 | Close-out | Final audit + email sequence not run | After form off and automations settle: **090A → 090D → 090E** (E last). Spot-check leaderboard vs Airtable. Then `repair-final-090g-build-final-challenge-summary-email.js` dry-run → test 1 via **074** → ~65 per-athlete emails. `CONFIRM_BUILD` not applied yet. | Run after midnight Denver close | open |
 | C-003 | 2026-06-29 | Homework / Koen Kimm | Week 10 Final Reflection not coach-reviewed | `recKmhET7B097SKli` — quiz may show `Completion Status = Satisfactory` from auto-pass, but **Satisfactory?** and **Review Complete** not set. Enrollment `recZZ4Op05Hg0FpQq`. Symptom of C-009 attachment-less quiz path. | Coach review before close-out email if we want it in summary; fix properly in C-009 | open |
 | C-004 | 2026-06-29 | Homework / Koen Kimm | Week 7 Thank You Note — multiple completion rows | **3** Homework Completion records for same assignment key (re-submits 6/9, 6/10, 6/11). All marked satisfactory + XP awarded. Not 4 in current data. IDs: `recbICOMuZiPx5QBh`, `recIP78dmNeFIVEP7`, `recvkicBA6buq9wAM`. | Decide if duplicate rows stay for history or get archived after close; no action required for XP if 090B passes | monitoring |
