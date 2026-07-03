@@ -5,11 +5,15 @@
   "entireChallengeAwardsShown": 2,
   "officialChallengeWindowDays": 61,
   "shootingDaysLogged": 62,
+  "longestConsecutiveStreakDays": 62,
+  "enrollmentStreakRollupDays": 60,
   "missingOrUnclearFeedback": [
     "Homework Week 5 \u2014 Week 5 |  HW 8 | 5 Spot Shooting Locations"
   ],
   "notes": [
-    "Awards display: removed 1 exact duplicate row(s); collapsed 3 repeated weekly award(s) (9 raw weekly -> 5 shown)"
+    "Longest streak: using 62 consecutive shooting day(s) from submissions (enrollment rollup was 60)",
+    "Excluded junk video feedback: Week 6",
+    "Awards display: removed 0 exact duplicate row(s); collapsed 3 repeated weekly award(s) (8 raw weekly -> 5 shown)"
   ],
   "uncertainFields": []
 }

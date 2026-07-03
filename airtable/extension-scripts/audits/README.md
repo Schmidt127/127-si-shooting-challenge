@@ -97,6 +97,32 @@ Re-use existing stage backfills (`backfill-submission-xp-events.js`, etc.) for i
 
 ---
 
+## Season close-out in Airtable (extension scripts)
+
+Run these in the **Scripting** extension (copy from GitHub). Default is read-only — copy JSON from the console.
+
+| Order | Script | Pass when |
+|-------|--------|-----------|
+| 1 | [`audit-final-award-recipients-closeout.js`](audit-final-award-recipients-closeout.js) — **one file**, copy all, run. Pass: `wrongAwardLinked: 0`, `manualReviewNeeded: 0`, `duplicateGroups: 0` |
+| 2 | `audit-final-goal-conquer-reconciliation.js` | `needManualRow: 0`, `trustExistingRow: 0` |
+| 3 | `audit-final-awards-catalog-quick.js` | No duplicate rows; `needConqueredRow: 0` |
+| 4 | `audit-final-awards-cart-summary.js` | Review `cartRowCount` and `estimatedGiftCardTotal` (expect **70** / **$595**) |
+| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | Fix or accept duplicate unlock keys |
+| 6 | `audit-final-090g-weekly-summary-email-workflow.js` | Review before sending final family emails |
+
+**Regenerate snapshot data** after changing the June 29 CSV:
+
+```bash
+cd tools/airtable
+python generate_june29_snapshot_data.py
+```
+
+Python equivalents (same checks, markdown reports): see [tools/airtable/README.md](../../../tools/airtable/README.md) — Season close-out section.
+
+**After close-out:** Post-season cleanup backlog (unlock dedupe, automation 066, scope/catalog) → [docs/post-close-hygiene-2025-26.md](../../../docs/post-close-hygiene-2025-26.md)
+
+---
+
 ## Script conventions
 
 | Rule | Detail |

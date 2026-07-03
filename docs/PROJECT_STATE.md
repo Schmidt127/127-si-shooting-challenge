@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-02**
+Last updated: **2026-07-03**
 
 ---
 
@@ -56,12 +56,25 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 
 | Check | Status |
 |-------|--------|
-| June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0; 70 new Post Challenge / In Amazon Cart rows (expected) |
-| Goal Met vs Conquered Goal (`audit_goal_conquer_reconciliation.py`) | **Done** — 14/14 aligned |
+| Extension scripts 1–6 (Airtable) | **Done** — recipients, goal/conquer, catalog, cart **70/$595**, 090F hygiene, **090G reviewed** |
+| June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0 |
+| Goal Met vs Conquered Goal | **Done** — 14/14 aligned |
 | Reference CSV | `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) |
-| Tooling docs | [tools/airtable/README.md](../tools/airtable/README.md) — Season close-out section |
+| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — H-001 unlock dedupe, H-002 automation 066, scope/catalog cleanup |
 
 **Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
+
+### Individual final summary emails (2026-07-03)
+
+| Step | Status |
+|------|--------|
+| Template revision | **`final-summary-2026-07-03-v2`** (`preview_final_email.py`; Riley Geraghty reference) |
+| Staged to WAS | **65** enrollments (`stage_final_emails_to_was.py --confirm-write`) |
+| Skipped (≤ 50 shots) | **26** |
+| Armed + sent via **074** | **53** families (`arm_final_emails_send.py --confirm-arm`) |
+| Blocked (prior `Weekly Email Sent?`) | **12** — uncheck **Weekly Email Sent?** on WAS, re-arm if needed |
+
+Reports: `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`. Do **not** paste JSON into Airtable Scripting (use Python staging).
 
 ---
 

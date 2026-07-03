@@ -1,0 +1,337 @@
+{
+  "revision": "final-summary-2026-07-03-v2",
+  "dryRun": false,
+  "candidateCount": 65,
+  "armedCount": 53,
+  "eligibleCount": 53,
+  "skippedCount": 12,
+  "eligible": [
+    {
+      "weeklySummaryId": "recBEas9mJhRhdwPw",
+      "subject": "Final Shooting Challenge Summary \u2014 Allie Heidema",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recmSxKnuXYdavc3E",
+      "subject": "Final Shooting Challenge Summary \u2014 Alyna Keyser",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recwkV4DRuv1DPk5x",
+      "subject": "Final Shooting Challenge Summary \u2014 Andrew Brady",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recKat90f9au0tzXR",
+      "subject": "Final Shooting Challenge Summary \u2014 Aspyn Bogart",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recR1n4yzP9p4a7FX",
+      "subject": "Final Shooting Challenge Summary \u2014 Benny Brady",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rec19UW2BSOGBi3FU",
+      "subject": "Final Shooting Challenge Summary \u2014 Blake Hubers",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recHtVafZESTmulFi",
+      "subject": "Final Shooting Challenge Summary \u2014 Brayden  Elders",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recS1Q3eUesue6fwg",
+      "subject": "Final Shooting Challenge Summary \u2014 Camden Clark",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recUdQwHQTMbGCgMr",
+      "subject": "Final Shooting Challenge Summary \u2014 Carson Hubers",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recedCV5YuoS50za9",
+      "subject": "Final Shooting Challenge Summary \u2014 Clara Hardy",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recEOs8k9LI2AFdKM",
+      "subject": "Final Shooting Challenge Summary \u2014 Colbie Schwenk",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recismjwdkhpVp9hB",
+      "subject": "Final Shooting Challenge Summary \u2014 Colton  Dahl",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recSUlXzVz9kyWDl0",
+      "subject": "Final Shooting Challenge Summary \u2014 Conley Dahl",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recZfoPB86PE5gUb9",
+      "subject": "Final Shooting Challenge Summary \u2014 Daniel Costa",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recEsiaPSSOOmECQs",
+      "subject": "Final Shooting Challenge Summary \u2014 Dayton Fox",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recnivTKoYmmLsYfX",
+      "subject": "Final Shooting Challenge Summary \u2014 Easton Hill",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rechJZTl6m3yAyR4b",
+      "subject": "Final Shooting Challenge Summary \u2014 Eli Cowgill",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recFZH7Lh1utRH2wo",
+      "subject": "Final Shooting Challenge Summary \u2014 Emmet  Gustafson",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recmQJ9rmHtqe25wO",
+      "subject": "Final Shooting Challenge Summary \u2014 Hadley Hill",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recS0rvX53T2TMdWz",
+      "subject": "Final Shooting Challenge Summary \u2014 Hartlie  Ehrlich",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recwLDbgiaMmaz1wG",
+      "subject": "Final Shooting Challenge Summary \u2014 Jack  Nelson",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rec9RX9Yl9iBtfiMK",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson  Elders",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recvb983QymqrWt0j",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson Newcomer",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recSFKUYhZKydkBOC",
+      "subject": "Final Shooting Challenge Summary \u2014 Jacob Schwenk",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recYC5KrPc4JBadUn",
+      "subject": "Final Shooting Challenge Summary \u2014 Jensen Klimkiewicz",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recRYCf6MjqQTdfdt",
+      "subject": "Final Shooting Challenge Summary \u2014 Jordyn Nelson",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rec2El9mG1stdysfd",
+      "subject": "Final Shooting Challenge Summary \u2014 KayDe VandenBos",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recrI6O4hYK9Rcnvp",
+      "subject": "Final Shooting Challenge Summary \u2014 Kenady Bogart",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recNEPsPAPSGCGxet",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley  Heidema",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recpb4Ma0BDmgSEDH",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley Heggen",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "reccSQuSSRDgi0ggM",
+      "subject": "Final Shooting Challenge Summary \u2014 Koen Kimm",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recmISPIi6o0zkO2c",
+      "subject": "Final Shooting Challenge Summary \u2014 Leiko Judisch",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rec4F335DEOcG3OPp",
+      "subject": "Final Shooting Challenge Summary \u2014 Lewis Talbitzer",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recQXX9QN8vhSiK1N",
+      "subject": "Final Shooting Challenge Summary \u2014 Leyton  Bakken",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "rec338h6s132lD802",
+      "subject": "Final Shooting Challenge Summary \u2014 Liam Kimm",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recPmFw0MYLm2frEg",
+      "subject": "Final Shooting Challenge Summary \u2014 Lincoln Newcomer",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recUNQnPith6LShhK",
+      "subject": "Final Shooting Challenge Summary \u2014 Lolo Judisch",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recGDIfKkml55e7Zz",
+      "subject": "Final Shooting Challenge Summary \u2014 Lyle Kimm",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recIvmSmuWI8rFzKb",
+      "subject": "Final Shooting Challenge Summary \u2014 Matthew Brady",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "reclriBpm9kfRUN6o",
+      "subject": "Final Shooting Challenge Summary \u2014 McKinley Clark",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recdsP57oMwKerExM",
+      "subject": "Final Shooting Challenge Summary \u2014 Mckinley Hubers",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recAeruJswYBunfhi",
+      "subject": "Final Shooting Challenge Summary \u2014 Milton Costa",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recOAU3GIWwRn3cgs",
+      "subject": "Final Shooting Challenge Summary \u2014 Monroe Mailey",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recwd7VNI2pTFQovE",
+      "subject": "Final Shooting Challenge Summary \u2014 Myla Mailey",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recWftLhFFcj65a7K",
+      "subject": "Final Shooting Challenge Summary \u2014 Raya Keyser",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recEN02NkJgKwT9fE",
+      "subject": "Final Shooting Challenge Summary \u2014 Remington (Remi) Hill",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recepn2rbiH2s7hlg",
+      "subject": "Final Shooting Challenge Summary \u2014 Riley Geraghty",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recAEvwojVbWGNR7r",
+      "subject": "Final Shooting Challenge Summary \u2014 Ryder  Elders",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recNTmbuj14bhQcAn",
+      "subject": "Final Shooting Challenge Summary \u2014 Seyler  Ehrlich",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recXNmVMi9lS88eTw",
+      "subject": "Final Shooting Challenge Summary \u2014 Sophia Ricker",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recI5r1cQ4lgONZwO",
+      "subject": "Final Shooting Challenge Summary \u2014 Tayin Harsha",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recLpZtohuhyUHsg3",
+      "subject": "Final Shooting Challenge Summary \u2014 Tracen  Heidema",
+      "status": "eligible"
+    },
+    {
+      "weeklySummaryId": "recj7MyOU3YOaVBVY",
+      "subject": "Final Shooting Challenge Summary \u2014 Tristan Schutter",
+      "status": "eligible"
+    }
+  ],
+  "skipped": [
+    {
+      "weeklySummaryId": "rec4ruzk4oPIZwyhd",
+      "subject": "Final Shooting Challenge Summary \u2014 Alec  Helvik",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recz9t9PhpR4yVHYX",
+      "subject": "Final Shooting Challenge Summary \u2014 Cash Wieler",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recKO0dx0ZlsTzDcX",
+      "subject": "Final Shooting Challenge Summary \u2014 Charlotte Davison",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "reccTO7lVTsEzEYNQ",
+      "subject": "Final Shooting Challenge Summary \u2014 Connor Judisch",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recYYviUf9rOdknHs",
+      "subject": "Final Shooting Challenge Summary \u2014 Dawson Schutter",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "rechA1BNxSuuei3WH",
+      "subject": "Final Shooting Challenge Summary \u2014 Jamesy Helvik",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recDhRU0NWdc9l5c5",
+      "subject": "Final Shooting Challenge Summary \u2014 Jolie Helvik",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "reccMGiNBrdbSvM3R",
+      "subject": "Final Shooting Challenge Summary \u2014 Josalin Helvik",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recaSQ9CAGjJCzzd8",
+      "subject": "Final Shooting Challenge Summary \u2014 Maizee Mitchell",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recanbQbE3OTeRpl4",
+      "subject": "Final Shooting Challenge Summary \u2014 Nora Davison",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "recwT0hRq9enTw7Kq",
+      "subject": "Final Shooting Challenge Summary \u2014 Sam Tingley",
+      "status": "blocked_already_sent"
+    },
+    {
+      "weeklySummaryId": "reco3aNKfcKYGs7ec",
+      "subject": "Final Shooting Challenge Summary \u2014 William  Buresh",
+      "status": "blocked_already_sent"
+    }
+  ]
+}

@@ -99,8 +99,13 @@ During award catalog rename/cleanup, many **Award Recipients** rows kept the sam
 | `audit_goal_conquer_reconciliation.py` | `_preview/goal-conquer-reconciliation.md` | **Separate** from award-link fix: Enrollment `Goal Met?` vs Conquered Goal recipient rows |
 | `audit_awards_catalog_and_connections.py` | `_preview/awards-catalog-audit-report.md` | Awards catalog + recipient connection audit |
 | `audit_final_awards.py` | `_preview/final-awards-audit-report.md` | End-of-challenge cart + grade-band standings |
-| `preview_final_email.py` | `_preview/geraghty-final-email.html` | Per-athlete final summary email preview (dedupe/collapse weekly awards) |
+| `preview_final_email.py` | `_preview/geraghty-final-email.html` | Per-athlete final summary email preview (revision `final-summary-2026-07-03-v2`) |
+| `generate_final_summary_preview.py` | `_preview/final-emails/` | Batch HTML for all qualifying enrollments (`--all`) |
+| `stage_final_emails_to_was.py` | `_preview/final-emails/stage-report-v2.json` | Write approved HTML to latest **Weekly Athlete Summary** (dry-run; `--confirm-write` to update Airtable) |
+| `arm_final_emails_send.py` | `_preview/final-emails/arm-send-report.json` | Check **Send to Make?** on staged WAS rows → automation **074** (`--confirm-arm`) |
 | `generate_final_awards_email.py` | `_preview/final-awards-end-of-season-email.html` | Public broadcast email from **In Amazon Cart** rows only |
+
+**Individual final emails (2025–26 close-out):** Build with `preview_final_email.py`, stage with `stage_final_emails_to_was.py`, send via **074** only (not **072**). Skips enrollments with **Total Shots Counted ≤ 50**. Regenerate batch previews: `python generate_final_summary_preview.py --all`.
 
 Run from `tools/airtable/`:
 
@@ -108,6 +113,23 @@ Run from `tools/airtable/`:
 set PYTHONPATH=.
 python compare_award_recipients_snapshot.py
 python audit_goal_conquer_reconciliation.py
+```
+
+### Same checks inside Airtable (Scripting extension)
+
+| Order | Extension script |
+|-------|------------------|
+| 1 | [`audit-final-award-recipients-closeout.js`](../../airtable/extension-scripts/audits/audit-final-award-recipients-closeout.js) — **one file**, copy all |
+| 2 | `audit-final-goal-conquer-reconciliation.js` |
+| 3 | `audit-final-awards-catalog-quick.js` |
+| 4 | `audit-final-awards-cart-summary.js` |
+
+Full list: [airtable/extension-scripts/audits/README.md](../../airtable/extension-scripts/audits/README.md) — Season close-out section.
+
+Regenerate embedded snapshot after CSV changes:
+
+```bash
+python generate_june29_snapshot_data.py
 ```
 
 ### Cleanup workflow (plain English)

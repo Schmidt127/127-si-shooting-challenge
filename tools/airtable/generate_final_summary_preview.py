@@ -164,6 +164,41 @@ def build_challenge_date_keys(weeks: list[dict]) -> set[str]:
     return keys
 
 
+def longest_consecutive_run_from_date_keys(date_keys: set[str]) -> tuple[int, str, str]:
+    """Longest calendar run of consecutive counted submission days (not XP milestone length)."""
+    if not date_keys:
+        return 0, "", ""
+    keys = sorted(k for k in date_keys if k)
+    if not keys:
+        return 0, "", ""
+
+    best_len = 1
+    best_start = keys[0]
+    best_end = keys[0]
+    cur_start = keys[0]
+    cur_len = 1
+
+    for i in range(1, len(keys)):
+        prev = datetime.fromisoformat(keys[i - 1]).date()
+        cur = datetime.fromisoformat(keys[i]).date()
+        if (cur - prev).days == 1:
+            cur_len += 1
+        else:
+            if cur_len > best_len:
+                best_len = cur_len
+                best_start = cur_start
+                best_end = keys[i - 1]
+            cur_start = keys[i]
+            cur_len = 1
+
+    if cur_len > best_len:
+        best_len = cur_len
+        best_start = cur_start
+        best_end = keys[-1]
+
+    return best_len, best_start, best_end
+
+
 def esc(value) -> str:
     return html.escape(str(value or ""))
 
@@ -478,6 +513,13 @@ def build_context(session: requests.Session, enrollment_id: str) -> dict:
         streak_lines.append(f"{name} ({days} days, ended {end})" if end else f"{name} ({days} days)")
     streak_lines.sort(reverse=True)
 
+    longest_streak, streak_run_start, streak_run_end = longest_consecutive_run_from_date_keys(shot_date_keys)
+    if longest_streak > 0 and streak_run_start and streak_run_end:
+        streak_lines.insert(
+            0,
+            f"Longest consecutive shooting run — {longest_streak} days ({streak_run_start} – {streak_run_end})",
+        )
+
     milestone_lines = []
     for u in tables["unlocks"]:
         uf = u.get("fields", {})
@@ -564,7 +606,6 @@ def build_context(session: requests.Session, enrollment_id: str) -> dict:
     total_hw = num_field(ef, "Total Homework Completions", 0)
     total_vid = num_field(ef, "Total Video Submissions", 0)
     total_zoom = num_field(ef, "Total Zoom Attendances", 0)
-    longest_streak = num_field(ef, "Longest Streak Days", 0)
     gate_min_hw = num_field(ef, "Gate Minimum: Homework", 0)
     gate_min_subs = num_field(ef, "Gate Minimum: Submissions", 0)
     gate_min_vid = num_field(ef, "Gate Minimum: Videos", 0)

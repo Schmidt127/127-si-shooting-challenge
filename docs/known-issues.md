@@ -12,7 +12,7 @@
 ### Airtable / ops
 
 - **Automation header placeholders** — Many scripts still say *confirm in Airtable* for trigger text in GitHub headers. Verify live trigger in Airtable UI when debugging.
-- **Stage I/J** — Achievement XP and legacy field cleanup in progress. See [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md).
+- **Stage I/J** — Achievement XP and legacy field cleanup in progress. Post-close unlock dedupe + automation 066 Week write: [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md). See [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md).
 - **`OK to Publish on Softr`** — Still used as public publish gate in web queries despite Softr replacement in progress.
 
 ### Documentation

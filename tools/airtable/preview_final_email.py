@@ -14,12 +14,56 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from airtable_read import BASE_ID, f, first_id, linked_ids, list_table, session, txt
+from airtable_read import BASE_ID, athlete_label, f, first_id, is_active, linked_ids, list_table, session, txt
 
 DENVER = ZoneInfo("America/Denver")
 PREVIEW_DIR = Path(__file__).resolve().parent / "_preview"
+FINAL_EMAILS_DIR = PREVIEW_DIR / "final-emails"
 DEFAULT_ENROLLMENT = "recNe84xp4corSBmm"  # Riley Geraghty
 OFFICIAL_CHALLENGE_DAYS = 61
+MIN_SHOTS_FOR_FINAL_EMAIL = 50  # skip final email when Total Shots Counted is not > 50
+FINAL_EMAIL_REVISION = "final-summary-2026-07-03-v2"
+
+JUNK_FEEDBACK_PHRASES = (
+    "test email",
+    "please disregard",
+    "pelase disregard",
+)
+
+FEEDBACK_TYPO_FIXES: list[tuple[str, str]] = [
+    (r"\bpelase\b", "please"),
+    (r"\bPerefect\b", "Perfect"),
+    (r"\biti\b", "it"),
+    (r"\bsumbmissions\b", "submissions"),
+    (r"\bhomeowrk\b", "homework"),
+    (r"\bfeecdback\b", "feedback"),
+    (r"\bYOu\b", "You"),
+    (r"\bgest\b", "gets"),
+    (r"\battened\b", "attended"),
+    (r"\bachie3ve\b", "achieve"),
+    (r"\byourvcoaches\b", "your coaches"),
+    (r"\bwhqat\b", "what"),
+    (r"\bYouare\b", "You are"),
+    (r"\bcorreclty\b", "correctly"),
+    (r"\bactiviites\b", "activities"),
+    (r"\bimaginattion\b", "imagination"),
+    (r"\bAccomplisment\b", "Accomplishment"),
+]
+
+CORRECTION_NOTE = "If anything in this final summary looks incorrect, please let me know and I will review it."
+
+_TABLE_CACHE: dict[tuple[str, tuple[str, ...]], list[dict]] = {}
+
+
+def clear_table_cache() -> None:
+    _TABLE_CACHE.clear()
+
+
+def get_table(sess: requests.Session, table: str, fields: list[str]) -> list[dict]:
+    key = (table, tuple(fields))
+    if key not in _TABLE_CACHE:
+        _TABLE_CACHE[key] = list_table(sess, table, fields)
+    return _TABLE_CACHE[key]
 
 BRAND = {
     "brandName": "127 Sports Intensity",
@@ -81,6 +125,52 @@ def flat_field(value) -> str:
 
 def norm(value: str) -> str:
     return re.sub(r"\s+", " ", str(value or "").strip().lower())
+
+
+def is_junk_feedback(text: str) -> bool:
+    n = norm(text)
+    return any(phrase in n for phrase in JUNK_FEEDBACK_PHRASES)
+
+
+def clean_coach_feedback(text: str) -> str:
+    if not text:
+        return ""
+    out = text
+    for pattern, replacement in FEEDBACK_TYPO_FIXES:
+        flags = re.I if pattern.startswith(r"\b") and pattern[2].islower() else 0
+        out = re.sub(pattern, replacement, out, flags=flags)
+    return re.sub(r"\s+", " ", out).strip()
+
+
+def prepare_coach_feedback(text: str) -> str | None:
+    """Return cleaned feedback, or None if the row should be excluded."""
+    cleaned = clean_coach_feedback(plain_text(text))
+    if not cleaned:
+        return ""
+    if is_junk_feedback(cleaned):
+        return None
+    return cleaned
+
+
+def format_logged_shooting_days(days_shot: int, challenge_days: int = OFFICIAL_CHALLENGE_DAYS) -> str:
+    n = int(days_shot)
+    if n > challenge_days:
+        return f"{fmt_num(n)} logged shooting dates"
+    return f"{fmt_num(n)} logged shooting days"
+
+
+def format_shooting_days_requirement_result(days_shot: int, challenge_days: int = OFFICIAL_CHALLENGE_DAYS) -> str:
+    n = int(days_shot)
+    if n > challenge_days:
+        return f"{fmt_num(n)} logged shooting dates"
+    return f"{fmt_num(n)} logged shooting days"
+
+
+def format_shooting_days_requirement_goal(days_shot: int, challenge_days: int = OFFICIAL_CHALLENGE_DAYS) -> str:
+    n = int(days_shot)
+    if n > challenge_days:
+        return f"{challenge_days}-day challenge window ({fmt_num(n)} unique dates)"
+    return f"{challenge_days} challenge days"
 
 
 def fmt_num(value) -> str:
@@ -149,6 +239,14 @@ def num_field(fields: dict, name: str, default: float = 0) -> float:
         return default
 
 
+def enrollment_total_shots(enrollment_fields: dict) -> int:
+    return int(num_field(enrollment_fields, "Total Shots Counted", 0))
+
+
+def qualifies_for_final_email(enrollment_fields: dict) -> bool:
+    return enrollment_total_shots(enrollment_fields) > MIN_SHOTS_FOR_FINAL_EMAIL
+
+
 def boolish(fields: dict, name: str) -> bool:
     raw = fields.get(name)
     return raw is True or raw == 1 or str(raw).lower() == "true"
@@ -204,8 +302,41 @@ def build_challenge_date_keys(weeks: list[dict]) -> set[str]:
     return keys
 
 
+def longest_consecutive_run_from_date_keys(date_keys: set[str]) -> tuple[int, date | None, date | None]:
+    """Longest calendar run of consecutive counted submission days (not XP milestone length)."""
+    if not date_keys:
+        return 0, None, None
+    dates = sorted(datetime.strptime(key, "%Y-%m-%d").date() for key in date_keys if key)
+    if not dates:
+        return 0, None, None
+
+    best_len = 1
+    best_start = dates[0]
+    best_end = dates[0]
+    cur_start = dates[0]
+    cur_len = 1
+
+    for i in range(1, len(dates)):
+        if (dates[i] - dates[i - 1]).days == 1:
+            cur_len += 1
+        else:
+            if cur_len > best_len:
+                best_len = cur_len
+                best_start = cur_start
+                best_end = dates[i - 1]
+            cur_start = dates[i]
+            cur_len = 1
+
+    if cur_len > best_len:
+        best_len = cur_len
+        best_start = cur_start
+        best_end = dates[-1]
+
+    return best_len, best_start, best_end
+
+
 def records_for_enrollment(sess: requests.Session, table: str, fields: list[str], enrollment_id: str) -> list[dict]:
-    return [row for row in list_table(sess, table, fields) if first_id(f(row).get("Enrollment")) == enrollment_id]
+    return [row for row in get_table(sess, table, fields) if first_id(f(row).get("Enrollment")) == enrollment_id]
 
 
 def is_final_award_type(name: str) -> bool:
@@ -318,8 +449,10 @@ def render_section_title(title: str) -> str:
 
 def render_table(headers: list[str], rows: list[list[str]], right_align_cols: set[int] | None = None) -> str:
     right_align_cols = right_align_cols or set()
+    week_cols = {i for i, h in enumerate(headers) if h.strip().lower() == "week"}
+    week_col_style = "white-space:nowrap;width:1%;min-width:128px;"
     head = "".join(
-        f'<th style="padding:8px 10px;text-align:{"right" if i in right_align_cols else "left"};font-size:11px;color:#fff;background:{BRAND["blue"]};border:1px solid {BRAND["border"]};">{esc(h)}</th>'
+        f'<th style="padding:8px 10px;text-align:{"right" if i in right_align_cols else "left"};font-size:11px;color:#fff;background:{BRAND["blue"]};border:1px solid {BRAND["border"]};{week_col_style if i in week_cols else ""}">{esc(h)}</th>'
         for i, h in enumerate(headers)
     )
     body_rows = []
@@ -328,7 +461,7 @@ def render_table(headers: list[str], rows: list[list[str]], right_align_cols: se
         for i, cell in enumerate(row):
             align = "right" if i in right_align_cols else "left"
             cells.append(
-                f'<td style="padding:7px 10px;font-size:11px;border:1px solid {BRAND["border"]};vertical-align:top;text-align:{align};">{esc(cell)}</td>'
+                f'<td style="padding:7px 10px;font-size:11px;border:1px solid {BRAND["border"]};vertical-align:top;text-align:{align};{week_col_style if i in week_cols else ""}">{esc(cell)}</td>'
             )
         body_rows.append(f"<tr>{''.join(cells)}</tr>")
     if not body_rows:
@@ -355,9 +488,10 @@ def render_kv_table(rows: list[tuple[str, str]]) -> str:
 def build_html(ctx: dict) -> tuple[str, str]:
     athlete_name = ctx["athleteName"]
     subject = f"Final Shooting Challenge Summary — {athlete_name}"
+    shooting_days_summary = format_logged_shooting_days(ctx["daysShot"])
     snapshot_rows = [
         ("Official challenge window", f"{OFFICIAL_CHALLENGE_DAYS} days"),
-        ("Shooting days logged", f"{fmt_num(ctx['daysShot'])} total logged days"),
+        ("Logged shooting days", shooting_days_summary),
         ("Shots counted", fmt_num(ctx["totalShots"])),
         ("Lifetime XP", fmt_num(ctx["lifetimeXp"])),
         ("Final level", ctx.get("currentLevel") or "—"),
@@ -372,7 +506,13 @@ def build_html(ctx: dict) -> tuple[str, str]:
         [r["requirement"], r["result"], r["goal"], r["status"]]
         for r in ctx["requirementRows"]
     ]
-    hw_rows = [[r["week"], r["assignment"], r["status"], r["feedback"]] for r in ctx["homeworkRows"]]
+    hw_rows = []
+    for row in ctx["homeworkRows"]:
+        if row.get("complete", True):
+            hw_rows.append([row["week"], row["assignment"], row["feedback"]])
+        else:
+            hw_rows.append([row["week"], row["assignment"], row.get("status", "Not completed")])
+    hw_headers = ["Week", "Assignment", "Feedback"]
     streak_milestone_rows = [[s, m] for s, m in zip(ctx["streakLines"], ctx["milestoneLines"], strict=False)]
     if len(ctx["streakLines"]) > len(ctx["milestoneLines"]):
         for s in ctx["streakLines"][len(ctx["milestoneLines"]) :]:
@@ -380,7 +520,7 @@ def build_html(ctx: dict) -> tuple[str, str]:
     elif len(ctx["milestoneLines"]) > len(ctx["streakLines"]):
         for m in ctx["milestoneLines"][len(ctx["streakLines"]) :]:
             streak_milestone_rows.append(["", m])
-    video_rows = [[r["week"], r["video"], r["status"], r["feedback"]] for r in ctx["videoRows"]]
+    video_rows = [[r["week"], r["feedback"]] for r in ctx["videoRows"]]
     zoom_rows = [[r["week"], r["meeting"], r["covered"]] for r in ctx["zoomRows"]]
     weekly_award_rows = [[r["award"], r["week"], r["date"], r["amount"]] for r in ctx["weeklyAwards"]]
     entire_award_rows = [[r["award"], r["period"], r["date"], r["amount"]] for r in ctx["entireAwards"]]
@@ -402,7 +542,8 @@ def build_html(ctx: dict) -> tuple[str, str]:
       </div>
 
       <div style="background:{BRAND['card']};border:1px solid {BRAND['border']};border-radius:10px;padding:14px 16px;margin:0 0 12px 0;font-size:11px;line-height:1.55;">
-        <p style="margin:0;">Here is your final 2025–2026 Shooting Challenge summary.</p>
+        <p style="margin:0 0 8px 0;">Here is your final 2025–2026 Shooting Challenge summary.</p>
+        <p style="margin:8px 0 0 0;">{esc(CORRECTION_NOTE)}</p>
       </div>
 
       {render_section_title("Snapshot")}
@@ -412,13 +553,13 @@ def build_html(ctx: dict) -> tuple[str, str]:
       {render_table(["Requirement", "Result", "Goal / Requirement", "Status"], req_rows)}
 
       {render_section_title("Homework")}
-      {render_table(["Week", "Assignment", "Status", "Feedback"], hw_rows)}
+      {render_table(hw_headers, hw_rows)}
 
       {render_section_title("Streaks and Milestones")}
       {render_table(["Streaks Earned", "Milestones Earned"], streak_milestone_rows)}
 
       {render_section_title("Video Feedback")}
-      {render_table(["Week", "Video / Review", "Status", "Feedback"], video_rows)}
+      {render_table(["Week", "Feedback"], video_rows)}
 
       {render_section_title("Zoom Meetings")}
       {render_table(["Week", "Meeting", "What It Covered"], zoom_rows)}
@@ -449,8 +590,8 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
     enroll = sess.get(url, timeout=60).json()
     ef = f(enroll)
 
-    weeks = sorted(list_table(sess, "Weeks", ["Week Name", "Start Date", "End Date", "Week Number"]), key=lambda w: week_sort_ts(f(w)))
-    config_rows = list_table(sess, "Config", ["Challenge Week Count"])
+    weeks = sorted(get_table(sess, "Weeks", ["Week Name", "Start Date", "End Date", "Week Number"]), key=lambda w: week_sort_ts(f(w)))
+    config_rows = get_table(sess, "Config", ["Challenge Week Count"])
     challenge_week_count = int(num_field(f(config_rows[0]) if config_rows else {}, "Challenge Week Count", 12) or 12)
     challenge_weeks = weeks[:challenge_week_count] if challenge_week_count else weeks
     challenge_week_ids = {w["id"] for w in challenge_weeks}
@@ -460,7 +601,7 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
     grade_band_id = first_id(ef.get("Grade Band"))
     grade_band_label = plain_text(ef.get("Grade Band Label"))
     if not grade_band_label and grade_band_id:
-        for band in list_table(sess, "Grade Bands", ["Grade Band Name"]):
+        for band in get_table(sess, "Grade Bands", ["Grade Band Name"]):
             if band["id"] == grade_band_id:
                 grade_band_label = plain_text(txt(f(band).get("Grade Band Name")))
                 break
@@ -473,7 +614,7 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
     total_subs = num_field(ef, "Total Submissions")
     total_vid = num_field(ef, "Total Video Submissions")
     total_zoom = num_field(ef, "Total Zoom Attendances")
-    longest_streak = num_field(ef, "Longest Streak Days")
+    enrollment_streak_rollup = num_field(ef, "Longest Streak Days")
 
     submissions = records_for_enrollment(
         sess,
@@ -498,8 +639,14 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
 
     days_shot = len(shot_date_keys)
     days_missed = max(0, OFFICIAL_CHALLENGE_DAYS - days_shot)
+    longest_streak, streak_run_start, streak_run_end = longest_consecutive_run_from_date_keys(shot_date_keys)
+    if enrollment_streak_rollup and int(enrollment_streak_rollup) != int(longest_streak):
+        validation_notes.append(
+            f"Longest streak: using {int(longest_streak)} consecutive shooting day(s) from submissions "
+            f"(enrollment rollup was {int(enrollment_streak_rollup)})"
+        )
 
-    curriculum = list_table(
+    curriculum = get_table(
         sess,
         "FBC Curriculum - SYNC",
         ["Week", "Grade Band", "Assignment Title", "Assignment Full Name", "Assignment Full Name - Display", "Assignment Number", "Order", "Active?", "Published?"],
@@ -548,34 +695,50 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
             hw_by_curriculum[hw_id] = hw
 
     homework_rows = []
+    homework_done_count = 0
     for exp in expected_hw:
         completion = hw_by_curriculum.get(exp["id"])
         if not completion:
+            homework_rows.append(
+                {
+                    "week": exp["weekLabel"],
+                    "assignment": exp["title"],
+                    "feedback": "",
+                    "status": "Not completed",
+                    "complete": False,
+                    "weekSort": exp["weekSort"],
+                }
+            )
             continue
         hf = f(completion)
-        feedback = plain_text(txt(hf.get("Coach Feedback")))
+        feedback = prepare_coach_feedback(txt(hf.get("Coach Feedback")))
+        if feedback is None:
+            validation_notes.append(f"Excluded junk homework feedback: {exp['weekLabel']} — {exp['title']}")
+            homework_done_count += 1
+            continue
         if not feedback:
             missing_feedback.append(f"Homework {exp['weekLabel']} — {exp['title']}")
             feedback = "—"
-        status = "Completed" if boolish(hf, "Satisfactory?") or norm(txt(hf.get("Completion Status"))) == "satisfactory" else "Completed"
+        homework_done_count += 1
         homework_rows.append(
             {
                 "week": exp["weekLabel"],
                 "assignment": exp["title"],
-                "status": status,
                 "feedback": feedback,
+                "status": "",
+                "complete": True,
                 "weekSort": exp["weekSort"],
             }
         )
     homework_rows.sort(key=lambda r: (r["weekSort"], r["assignment"]))
 
-    achievements = {a["id"]: txt(f(a).get("Achievement Name")) for a in list_table(sess, "Achievements", ["Achievement Name"])}
+    achievements = {a["id"]: txt(f(a).get("Achievement Name")) for a in get_table(sess, "Achievements", ["Achievement Name"])}
     shot_milestones = {
         m["id"]: {
             "label": txt(f(m).get("Milestone Label")),
             "percent": num_field(f(m), "Milestone Percent"),
         }
-        for m in list_table(sess, "Shot Milestones", ["Milestone Label", "Milestone Percent"])
+        for m in get_table(sess, "Shot Milestones", ["Milestone Label", "Milestone Percent"])
     }
 
     streaks = records_for_enrollment(
@@ -594,6 +757,13 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         days = int(num_field(sf, "Streak Days"))
         end_date = fmt_date_safe(sf.get("Streak End Date"))
         streak_lines.append(f"{name} — {days} days (ended {end_date})" if end_date != "—" else f"{name} — {days} days")
+
+    if longest_streak > 0 and streak_run_start and streak_run_end:
+        run_label = (
+            f"Longest consecutive shooting run — {int(longest_streak)} days "
+            f"({fmt_date_safe(streak_run_start.isoformat())} – {fmt_date_safe(streak_run_end.isoformat())})"
+        )
+        streak_lines.insert(0, run_label)
 
     unlocks = records_for_enrollment(
         sess,
@@ -628,9 +798,9 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
     seen_video_keys: set[str] = set()
     for vid in videos:
         vf = f(vid)
-        feedback = plain_text(txt(vf.get("Coach Feedback")))
+        feedback_raw = plain_text(txt(vf.get("Coach Feedback")))
         posted = boolish(vf, "Feedback Posted?") or norm(txt(vf.get("Award Status"))) in {"awarded", "reviewed", "complete"}
-        if not posted and not feedback:
+        if not posted and not feedback_raw:
             continue
         sub_id = first_id(vf.get("Submission"))
         week_id = submission_week_by_id.get(sub_id, "")
@@ -638,7 +808,10 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         if not week_label:
             match = re.search(r"Week\s*\d+", txt(vf.get("Video Feedback Name")), re.I)
             week_label = match.group(0) if match else "Video"
-        video_name = week_label
+        feedback = prepare_coach_feedback(feedback_raw)
+        if feedback is None:
+            validation_notes.append(f"Excluded junk video feedback: {week_label}")
+            continue
         if not feedback:
             missing_feedback.append(f"Video {week_label}")
             feedback = "—"
@@ -646,19 +819,16 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         if dedupe_key in seen_video_keys:
             continue
         seen_video_keys.add(dedupe_key)
-        status = "Reviewed" if posted else "Submitted"
         video_rows.append(
             {
                 "week": week_label,
-                "video": video_name,
-                "status": status,
                 "feedback": feedback,
                 "weekSort": week_number_from_label(week_label),
             }
         )
-    video_rows.sort(key=lambda r: (r["weekSort"], r["video"]))
+    video_rows.sort(key=lambda r: (r["weekSort"], r["feedback"]))
 
-    zoom_meetings = list_table(sess, "Zoom Meetings", ["Meeting Name", "Week", "Attendees", "Brief Description", "Meeting Summary", "Meeting Agenda"])
+    zoom_meetings = get_table(sess, "Zoom Meetings", ["Meeting Name", "Week", "Attendees", "Brief Description", "Meeting Summary", "Meeting Agenda"])
     zoom_rows = []
     for meeting in zoom_meetings:
         mf = f(meeting)
@@ -684,7 +854,7 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         )
     zoom_rows.sort(key=lambda r: (r["weekSort"], r["meeting"]))
 
-    awards_meta = list_table(sess, "Awards", ["Award Name", "Email Display Name", "Email Display Short Name", "Prize Value"])
+    awards_meta = get_table(sess, "Awards", ["Award Name", "Email Display Name", "Email Display Short Name", "Prize Value"])
     award_display = {}
     for aw in awards_meta:
         af = f(aw)
@@ -749,9 +919,9 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
 
     requirement_rows = [
         {
-            "requirement": "Shooting days logged",
-            "result": f"{fmt_num(days_shot)} days",
-            "goal": f"{OFFICIAL_CHALLENGE_DAYS} challenge days",
+            "requirement": "Logged shooting days",
+            "result": format_shooting_days_requirement_result(days_shot),
+            "goal": format_shooting_days_requirement_goal(days_shot),
             "status": status_label(days_shot >= OFFICIAL_CHALLENGE_DAYS),
         },
         {
@@ -762,9 +932,9 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         },
         {
             "requirement": "Homework completed",
-            "result": f"{len(homework_rows)} of {len(expected_hw)}",
+            "result": f"{homework_done_count} of {len(expected_hw)}",
             "goal": "Complete season homework",
-            "status": status_label(len(homework_rows) >= len(expected_hw)),
+            "status": status_label(homework_done_count >= len(expected_hw)),
         },
         {
             "requirement": "Video work",
@@ -801,7 +971,7 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         "daysMissed": days_missed,
         "totalShots": total_shots,
         "longestStreak": longest_streak,
-        "homeworkDoneCount": len(homework_rows),
+        "homeworkDoneCount": homework_done_count,
         "videoReviewedCount": len(video_rows),
         "zoomAttendedCount": len(zoom_rows),
         "awardsWonCount": awards_won_count,
@@ -823,6 +993,8 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         "entireChallengeAwardsShown": len(entire_awards),
         "officialChallengeWindowDays": OFFICIAL_CHALLENGE_DAYS,
         "shootingDaysLogged": days_shot,
+        "longestConsecutiveStreakDays": int(longest_streak),
+        "enrollmentStreakRollupDays": int(enrollment_streak_rollup),
         "missingOrUnclearFeedback": missing_feedback,
         "notes": validation_notes,
         "uncertainFields": [],
@@ -841,7 +1013,7 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
         "counts": {
             "daysShot": days_shot,
             "daysMissed": days_missed,
-            "homeworkDone": len(homework_rows),
+            "homeworkDone": homework_done_count,
             "homeworkExpected": len(expected_hw),
             "videoReviewed": len(video_rows),
             "zoomAttended": len(zoom_rows),
@@ -850,6 +1022,128 @@ def build_preview(sess: requests.Session, enrollment_id: str) -> dict:
             "lifetimeXp": lifetime_xp,
         },
     }
+
+
+def safe_filename(athlete_name: str, enrollment_id: str) -> str:
+    slug = re.sub(r"[^\w\s-]", "", athlete_name.lower())
+    slug = re.sub(r"[\s_]+", "-", slug).strip("-")[:48] or "athlete"
+    return f"{slug}-{enrollment_id[-6:]}.html"
+
+
+def html_to_text(html_body: str) -> str:
+    text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", html_body, flags=re.I | re.S)
+    text = re.sub(r"<br\s*/?>", "\n", text, flags=re.I)
+    text = re.sub(r"</p>", "\n", text, flags=re.I)
+    text = re.sub(r"<[^>]+>", " ", text)
+    text = html.unescape(text)
+    return re.sub(r"[ \t]+\n", "\n", re.sub(r"\n{3,}", "\n\n", re.sub(r"[ \t]{2,}", " ", text))).strip()
+
+
+def list_active_enrollments(sess: requests.Session) -> list[dict]:
+    rows = get_table(
+        sess,
+        "Enrollments",
+        [
+            "Active?",
+            "Full Athlete Name",
+            "Full Athlete Name - Backward",
+            "Athlete First Name",
+            "Parent Email - Cleaned",
+            "Athlete Email - Cleaned",
+            "Total Shots Counted",
+        ],
+    )
+    return [row for row in rows if is_active(f(row).get("Active?"))]
+
+
+def build_all_previews(sess: requests.Session, out_dir: Path) -> dict:
+    clear_table_cache()
+    out_dir.mkdir(parents=True, exist_ok=True)
+    enrollments = list_active_enrollments(sess)
+    manifest: dict = {
+        "revision": FINAL_EMAIL_REVISION,
+        "generatedAt": datetime.now(DENVER).isoformat(),
+        "activeEnrollmentCount": len(enrollments),
+        "builtCount": 0,
+        "skippedCount": 0,
+        "errorCount": 0,
+        "packages": [],
+        "skipped": [],
+        "errors": [],
+    }
+
+    for index, enrollment in enumerate(sorted(enrollments, key=lambda r: athlete_label(f(r), r["id"]).lower()), 1):
+        enrollment_id = enrollment["id"]
+        athlete_name = athlete_label(f(enrollment), enrollment_id)
+        ef = f(enrollment)
+        if not qualifies_for_final_email(ef):
+            manifest["skippedCount"] += 1
+            manifest["skipped"].append(
+                {
+                    "enrollmentId": enrollment_id,
+                    "athleteName": athlete_name,
+                    "reason": "shots_at_or_below_minimum",
+                    "totalShotsCounted": enrollment_total_shots(ef),
+                    "minimumRequired": MIN_SHOTS_FOR_FINAL_EMAIL,
+                }
+            )
+            print(
+                f"[{index}/{len(enrollments)}] SKIP {athlete_name} "
+                f"({enrollment_total_shots(ef)} shots, need > {MIN_SHOTS_FOR_FINAL_EMAIL})"
+            )
+            continue
+        try:
+            preview = build_preview(sess, enrollment_id)
+            filename = safe_filename(preview["enrollmentName"], enrollment_id)
+            html_path = out_dir / filename
+            html_path.write_text(preview["htmlOut"], encoding="utf-8")
+            validation_path = out_dir / filename.replace(".html", ".validation.json")
+            validation_path.write_text(json.dumps(preview["validation"], indent=2), encoding="utf-8")
+            manifest["packages"].append(
+                {
+                    "enrollmentId": enrollment_id,
+                    "athleteName": preview["enrollmentName"],
+                    "subject": preview["subject"],
+                    "htmlFile": filename,
+                    "counts": preview["counts"],
+                    "missingFeedback": preview["validation"].get("missingOrUnclearFeedback", []),
+                    "notes": preview["validation"].get("notes", []),
+                }
+            )
+            manifest["builtCount"] += 1
+            print(f"[{index}/{len(enrollments)}] {preview['enrollmentName']} -> {filename}")
+        except Exception as exc:
+            manifest["errorCount"] += 1
+            manifest["errors"].append({"enrollmentId": enrollment_id, "athleteName": athlete_name, "error": str(exc)})
+            print(f"[{index}/{len(enrollments)}] ERROR {athlete_name}: {exc}")
+
+    manifest_path = out_dir / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+    index_lines = [
+        "<!doctype html><html><head><meta charset='utf-8'><title>Final Email Packages</title>",
+        "<style>body{font-family:Arial,sans-serif;margin:24px;} table{border-collapse:collapse;width:100%;}",
+        "th,td{border:1px solid #ccc;padding:8px;text-align:left;font-size:13px;} th{background:#0034B7;color:#fff;}</style>",
+        "</head><body>",
+        f"<h1>Final Challenge Summary Emails ({manifest['builtCount']})</h1>",
+        "<table><thead><tr><th>Athlete</th><th>Subject</th><th>HTML</th><th>Flags</th></tr></thead><tbody>",
+    ]
+    for pkg in manifest["packages"]:
+        flags = []
+        if pkg["missingFeedback"]:
+            flags.append(f"missing feedback ({len(pkg['missingFeedback'])})")
+        if pkg["notes"]:
+            flags.append(f"notes ({len(pkg['notes'])})")
+        flag_text = "; ".join(flags) if flags else "—"
+        index_lines.append(
+            f"<tr><td>{html.escape(pkg['athleteName'])}</td>"
+            f"<td>{html.escape(pkg['subject'])}</td>"
+            f'<td><a href="{html.escape(pkg["htmlFile"])}">open</a></td>'
+            f"<td>{html.escape(flag_text)}</td></tr>"
+        )
+    index_lines.append("</tbody></table></body></html>")
+    (out_dir / "index.html").write_text("".join(index_lines), encoding="utf-8")
+    return manifest
 
 
 def print_validation_summary(validation: dict) -> None:
@@ -878,11 +1172,24 @@ def print_validation_summary(validation: dict) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Preview personalized final challenge summary email for one athlete.")
     parser.add_argument("enrollment_id", nargs="?", default=DEFAULT_ENROLLMENT)
+    parser.add_argument("--all", action="store_true", help="Build HTML packages for every Active? enrollment.")
     parser.add_argument("--html-out", default=str(PREVIEW_DIR / "geraghty-final-email.html"))
     parser.add_argument("--json-out", default=str(PREVIEW_DIR / "geraghty-final-email-validation.json"))
+    parser.add_argument("--out-dir", default=str(FINAL_EMAILS_DIR), help="Output folder for --all.")
     args = parser.parse_args()
 
     sess = session()
+    if args.all:
+        manifest = build_all_previews(sess, Path(args.out_dir))
+        print("===== BATCH FINAL EMAIL BUILD =====")
+        print(f"Active enrollments: {manifest['activeEnrollmentCount']}")
+        print(f"Built: {manifest['builtCount']}")
+        print(f"Skipped: {manifest['skippedCount']} (need > {MIN_SHOTS_FOR_FINAL_EMAIL} shots counted)")
+        print(f"Errors: {manifest['errorCount']}")
+        print(f"Manifest: {Path(args.out_dir) / 'manifest.json'}")
+        print(f"Index: {Path(args.out_dir) / 'index.html'}")
+        return
+
     preview = build_preview(sess, args.enrollment_id)
     print_validation_summary(preview["validation"])
 

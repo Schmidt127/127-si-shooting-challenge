@@ -22,6 +22,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | [recovery/emergency-recovery.md](./recovery/emergency-recovery.md) | Incident recovery runbook |
 | [checklists/weekly-maintenance-checklist.md](./checklists/weekly-maintenance-checklist.md) | Weekly ops checklist |
 | [close-out-considerations.md](./close-out-considerations.md) | **Watchlist** — open items to consider during close-out / review |
+| [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) | **Post-close backlog** — 2025–26 audit hygiene (unlock dedupe, 066, scope, catalog) |
 | [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) | **Deferred** XP / levels / streak tuning (C-014) |
 
 ## Data flows

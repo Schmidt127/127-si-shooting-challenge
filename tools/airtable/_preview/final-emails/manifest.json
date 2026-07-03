@@ -1,0 +1,1610 @@
+{
+  "revision": "final-summary-2026-07-03-v2",
+  "generatedAt": "2026-07-03T06:45:02.507282-06:00",
+  "activeEnrollmentCount": 91,
+  "builtCount": 65,
+  "skippedCount": 26,
+  "errorCount": 0,
+  "packages": [
+    {
+      "enrollmentId": "rec2gnfAuY1xTodO6",
+      "athleteName": "Alec  Helvik",
+      "subject": "Final Shooting Challenge Summary \u2014 Alec  Helvik",
+      "htmlFile": "alec-helvik-xTodO6.html",
+      "counts": {
+        "daysShot": 18,
+        "daysMissed": 43,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 480.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 11 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "43 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recOSUwW9lXQx6nWL",
+      "athleteName": "Allie Heidema",
+      "subject": "Final Shooting Challenge Summary \u2014 Allie Heidema",
+      "htmlFile": "allie-heidema-Qx6nWL.html",
+      "counts": {
+        "daysShot": 44,
+        "daysMissed": 17,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 5,
+        "zoomAttended": 2,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 1505.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 17 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "17 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recs4r7UjEsHlIjM7",
+      "athleteName": "Alyna Keyser",
+      "subject": "Final Shooting Challenge Summary \u2014 Alyna Keyser",
+      "htmlFile": "alyna-keyser-HlIjM7.html",
+      "counts": {
+        "daysShot": 22,
+        "daysMissed": 39,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 495.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "39 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recQiRUbTKZ5Wiz7B",
+      "athleteName": "Andrew Brady",
+      "subject": "Final Shooting Challenge Summary \u2014 Andrew Brady",
+      "htmlFile": "andrew-brady-5Wiz7B.html",
+      "counts": {
+        "daysShot": 20,
+        "daysMissed": 41,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 690.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "41 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recnzAYu9GMTDZpsd",
+      "athleteName": "Aspyn Bogart",
+      "subject": "Final Shooting Challenge Summary \u2014 Aspyn Bogart",
+      "htmlFile": "aspyn-bogart-TDZpsd.html",
+      "counts": {
+        "daysShot": 4,
+        "daysMissed": 57,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 80.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "57 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rechgOSWWFsOivzhX",
+      "athleteName": "Benny Brady",
+      "subject": "Final Shooting Challenge Summary \u2014 Benny Brady",
+      "htmlFile": "benny-brady-OivzhX.html",
+      "counts": {
+        "daysShot": 38,
+        "daysMissed": 23,
+        "homeworkDone": 2,
+        "homeworkExpected": 18,
+        "videoReviewed": 4,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1435.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 16 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (3 raw weekly -> 2 shown)",
+        "23 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recvY4UwL5udPp0CW",
+      "athleteName": "Blake Hubers",
+      "subject": "Final Shooting Challenge Summary \u2014 Blake Hubers",
+      "htmlFile": "blake-hubers-dPp0CW.html",
+      "counts": {
+        "daysShot": 44,
+        "daysMissed": 17,
+        "homeworkDone": 5,
+        "homeworkExpected": 18,
+        "videoReviewed": 5,
+        "zoomAttended": 1,
+        "weeklyAwards": 4,
+        "entireAwards": 1,
+        "lifetimeXp": 1490.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 21 consecutive shooting day(s) from submissions (enrollment rollup was 20)",
+        "17 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recMiAeCmaYHd4OjI",
+      "athleteName": "Brayden  Elders",
+      "subject": "Final Shooting Challenge Summary \u2014 Brayden  Elders",
+      "htmlFile": "brayden-elders-Hd4OjI.html",
+      "counts": {
+        "daysShot": 38,
+        "daysMissed": 23,
+        "homeworkDone": 5,
+        "homeworkExpected": 18,
+        "videoReviewed": 6,
+        "zoomAttended": 2,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1420.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 17 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "23 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recRMktT2fGDup8sm",
+      "athleteName": "Camden Clark",
+      "subject": "Final Shooting Challenge Summary \u2014 Camden Clark",
+      "htmlFile": "camden-clark-Dup8sm.html",
+      "counts": {
+        "daysShot": 49,
+        "daysMissed": 12,
+        "homeworkDone": 11,
+        "homeworkExpected": 18,
+        "videoReviewed": 5,
+        "zoomAttended": 1,
+        "weeklyAwards": 5,
+        "entireAwards": 1,
+        "lifetimeXp": 2097.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 15 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (6 raw weekly -> 5 shown)",
+        "12 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rectcrS99Yt4H6gMs",
+      "athleteName": "Carson Hubers",
+      "subject": "Final Shooting Challenge Summary \u2014 Carson Hubers",
+      "htmlFile": "carson-hubers-4H6gMs.html",
+      "counts": {
+        "daysShot": 35,
+        "daysMissed": 26,
+        "homeworkDone": 3,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 1,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 1005.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "26 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recho64Y69r6DvwFL",
+      "athleteName": "Cash Wieler",
+      "subject": "Final Shooting Challenge Summary \u2014 Cash Wieler",
+      "htmlFile": "cash-wieler-6DvwFL.html",
+      "counts": {
+        "daysShot": 9,
+        "daysMissed": 52,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 205.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "52 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "reckmWHcaHxhD09yd",
+      "athleteName": "Charlotte Davison",
+      "subject": "Final Shooting Challenge Summary \u2014 Charlotte Davison",
+      "htmlFile": "charlotte-davison-hD09yd.html",
+      "counts": {
+        "daysShot": 14,
+        "daysMissed": 47,
+        "homeworkDone": 4,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 582.0
+      },
+      "missingFeedback": [
+        "Homework Week 1 \u2014 Week 1 |  HW 2 | Website Exploration"
+      ],
+      "notes": [
+        "47 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recFP1260v2qDmmMx",
+      "athleteName": "Clara Hardy",
+      "subject": "Final Shooting Challenge Summary \u2014 Clara Hardy",
+      "htmlFile": "clara-hardy-qDmmMx.html",
+      "counts": {
+        "daysShot": 25,
+        "daysMissed": 36,
+        "homeworkDone": 2,
+        "homeworkExpected": 18,
+        "videoReviewed": 2,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 830.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "36 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recaLZCSGUgF5PCrC",
+      "athleteName": "Colbie Schwenk",
+      "subject": "Final Shooting Challenge Summary \u2014 Colbie Schwenk",
+      "htmlFile": "colbie-schwenk-F5PCrC.html",
+      "counts": {
+        "daysShot": 33,
+        "daysMissed": 28,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 1,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 945.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 13 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "28 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "reck0urggYN376kXO",
+      "athleteName": "Colton  Dahl",
+      "subject": "Final Shooting Challenge Summary \u2014 Colton  Dahl",
+      "htmlFile": "colton-dahl-376kXO.html",
+      "counts": {
+        "daysShot": 27,
+        "daysMissed": 34,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 1,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 685.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "34 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recqWdm2T1iay663o",
+      "athleteName": "Conley Dahl",
+      "subject": "Final Shooting Challenge Summary \u2014 Conley Dahl",
+      "htmlFile": "conley-dahl-ay663o.html",
+      "counts": {
+        "daysShot": 24,
+        "daysMissed": 37,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 1,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 645.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "37 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rece6aNuQn0A8xJye",
+      "athleteName": "Connor Judisch",
+      "subject": "Final Shooting Challenge Summary \u2014 Connor Judisch",
+      "htmlFile": "connor-judisch-A8xJye.html",
+      "counts": {
+        "daysShot": 5,
+        "daysMissed": 56,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 170.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "56 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recA7nvO5gq9e08pm",
+      "athleteName": "Daniel Costa",
+      "subject": "Final Shooting Challenge Summary \u2014 Daniel Costa",
+      "htmlFile": "daniel-costa-9e08pm.html",
+      "counts": {
+        "daysShot": 5,
+        "daysMissed": 56,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 120.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "56 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recHUNHzjPGGz5wxX",
+      "athleteName": "Dawson Schutter",
+      "subject": "Final Shooting Challenge Summary \u2014 Dawson Schutter",
+      "htmlFile": "dawson-schutter-Gz5wxX.html",
+      "counts": {
+        "daysShot": 43,
+        "daysMissed": 18,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 1160.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 22 consecutive shooting day(s) from submissions (enrollment rollup was 20)",
+        "18 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recAHTFTFc2q4y59i",
+      "athleteName": "Dayton Fox",
+      "subject": "Final Shooting Challenge Summary \u2014 Dayton Fox",
+      "htmlFile": "dayton-fox-q4y59i.html",
+      "counts": {
+        "daysShot": 64,
+        "daysMissed": 0,
+        "homeworkDone": 8,
+        "homeworkExpected": 18,
+        "videoReviewed": 3,
+        "zoomAttended": 1,
+        "weeklyAwards": 4,
+        "entireAwards": 2,
+        "lifetimeXp": 2615.0
+      },
+      "missingFeedback": [],
+      "notes": []
+    },
+    {
+      "enrollmentId": "recl3rKx9k2659J4c",
+      "athleteName": "Easton Hill",
+      "subject": "Final Shooting Challenge Summary \u2014 Easton Hill",
+      "htmlFile": "easton-hill-659J4c.html",
+      "counts": {
+        "daysShot": 12,
+        "daysMissed": 49,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 240.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "49 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec85c7i6Bhjo1DO4",
+      "athleteName": "Eli Cowgill",
+      "subject": "Final Shooting Challenge Summary \u2014 Eli Cowgill",
+      "htmlFile": "eli-cowgill-jo1DO4.html",
+      "counts": {
+        "daysShot": 31,
+        "daysMissed": 30,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 2,
+        "lifetimeXp": 795.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "30 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recUeFkUrOC5JRuNn",
+      "athleteName": "Emmet  Gustafson",
+      "subject": "Final Shooting Challenge Summary \u2014 Emmet  Gustafson",
+      "htmlFile": "emmet-gustafson-5JRuNn.html",
+      "counts": {
+        "daysShot": 37,
+        "daysMissed": 24,
+        "homeworkDone": 2,
+        "homeworkExpected": 18,
+        "videoReviewed": 7,
+        "zoomAttended": 2,
+        "weeklyAwards": 4,
+        "entireAwards": 1,
+        "lifetimeXp": 1340.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 12 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (5 raw weekly -> 4 shown)",
+        "24 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recZ3iTqlI1EfsghD",
+      "athleteName": "Hadley Hill",
+      "subject": "Final Shooting Challenge Summary \u2014 Hadley Hill",
+      "htmlFile": "hadley-hill-EfsghD.html",
+      "counts": {
+        "daysShot": 11,
+        "daysMissed": 50,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 250.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "50 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec0Mop60efVsJ5sV",
+      "athleteName": "Hartlie  Ehrlich",
+      "subject": "Final Shooting Challenge Summary \u2014 Hartlie  Ehrlich",
+      "htmlFile": "hartlie-ehrlich-VsJ5sV.html",
+      "counts": {
+        "daysShot": 11,
+        "daysMissed": 50,
+        "homeworkDone": 3,
+        "homeworkExpected": 18,
+        "videoReviewed": 5,
+        "zoomAttended": 2,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 685.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (3 raw weekly -> 2 shown)",
+        "50 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recywNFrlxXLhPRfQ",
+      "athleteName": "Jack  Nelson",
+      "subject": "Final Shooting Challenge Summary \u2014 Jack  Nelson",
+      "htmlFile": "jack-nelson-LhPRfQ.html",
+      "counts": {
+        "daysShot": 19,
+        "daysMissed": 42,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 445.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 4 consecutive shooting day(s) from submissions (enrollment rollup was 3)",
+        "42 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recbJ71DHseETAQRP",
+      "athleteName": "Jackson  Elders",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson  Elders",
+      "htmlFile": "jackson-elders-ETAQRP.html",
+      "counts": {
+        "daysShot": 49,
+        "daysMissed": 12,
+        "homeworkDone": 6,
+        "homeworkExpected": 18,
+        "videoReviewed": 7,
+        "zoomAttended": 2,
+        "weeklyAwards": 4,
+        "entireAwards": 3,
+        "lifetimeXp": 2020.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 37 consecutive shooting day(s) from submissions (enrollment rollup was 30)",
+        "12 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recmhY61iU2AwEiMI",
+      "athleteName": "Jackson Newcomer",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson Newcomer",
+      "htmlFile": "jackson-newcomer-AwEiMI.html",
+      "counts": {
+        "daysShot": 49,
+        "daysMissed": 12,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 5,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 1500.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 12 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "12 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec70Gpi5PSfvpIl9",
+      "athleteName": "Jacob Schwenk",
+      "subject": "Final Shooting Challenge Summary \u2014 Jacob Schwenk",
+      "htmlFile": "jacob-schwenk-fvpIl9.html",
+      "counts": {
+        "daysShot": 34,
+        "daysMissed": 27,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 1085.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "27 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recOLIVrnOS57dH04",
+      "athleteName": "Jamesy Helvik",
+      "subject": "Final Shooting Challenge Summary \u2014 Jamesy Helvik",
+      "htmlFile": "jamesy-helvik-57dH04.html",
+      "counts": {
+        "daysShot": 21,
+        "daysMissed": 40,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 505.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 4 consecutive shooting day(s) from submissions (enrollment rollup was 3)",
+        "40 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "reccmhhwoS6Tfxkf1",
+      "athleteName": "Jensen Klimkiewicz",
+      "subject": "Final Shooting Challenge Summary \u2014 Jensen Klimkiewicz",
+      "htmlFile": "jensen-klimkiewicz-Tfxkf1.html",
+      "counts": {
+        "daysShot": 2,
+        "daysMissed": 59,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 40.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "59 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rechBG2hMV5qXLSsb",
+      "athleteName": "Jolie Helvik",
+      "subject": "Final Shooting Challenge Summary \u2014 Jolie Helvik",
+      "htmlFile": "jolie-helvik-qXLSsb.html",
+      "counts": {
+        "daysShot": 18,
+        "daysMissed": 43,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 425.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "43 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec7WoCM2GYcc0E8p",
+      "athleteName": "Jordyn Nelson",
+      "subject": "Final Shooting Challenge Summary \u2014 Jordyn Nelson",
+      "htmlFile": "jordyn-nelson-cc0E8p.html",
+      "counts": {
+        "daysShot": 26,
+        "daysMissed": 35,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 695.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+        "35 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec0dGkRWt6Tdpd76",
+      "athleteName": "Josalin Helvik",
+      "subject": "Final Shooting Challenge Summary \u2014 Josalin Helvik",
+      "htmlFile": "josalin-helvik-Tdpd76.html",
+      "counts": {
+        "daysShot": 15,
+        "daysMissed": 46,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 355.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 4 consecutive shooting day(s) from submissions (enrollment rollup was 3)",
+        "46 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recSOk6N8RL3j5fzg",
+      "athleteName": "KayDe VandenBos",
+      "subject": "Final Shooting Challenge Summary \u2014 KayDe VandenBos",
+      "htmlFile": "kayde-vandenbos-3j5fzg.html",
+      "counts": {
+        "daysShot": 10,
+        "daysMissed": 51,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 210.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "51 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recvMhReNktxj1Txk",
+      "athleteName": "Kenady Bogart",
+      "subject": "Final Shooting Challenge Summary \u2014 Kenady Bogart",
+      "htmlFile": "kenady-bogart-xj1Txk.html",
+      "counts": {
+        "daysShot": 14,
+        "daysMissed": 47,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 480.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "47 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recLt8puScXPL3sjF",
+      "athleteName": "Kinsley  Heidema",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley  Heidema",
+      "htmlFile": "kinsley-heidema-PL3sjF.html",
+      "counts": {
+        "daysShot": 45,
+        "daysMissed": 16,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 6,
+        "zoomAttended": 2,
+        "weeklyAwards": 4,
+        "entireAwards": 1,
+        "lifetimeXp": 1590.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 13 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "16 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recBfc7Oa5hvWIJd8",
+      "athleteName": "Kinsley Heggen",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley Heggen",
+      "htmlFile": "kinsley-heggen-vWIJd8.html",
+      "counts": {
+        "daysShot": 11,
+        "daysMissed": 50,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 265.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+        "50 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recZZ4Op05Hg0FpQq",
+      "athleteName": "Koen Kimm",
+      "subject": "Final Shooting Challenge Summary \u2014 Koen Kimm",
+      "htmlFile": "koen-kimm-g0FpQq.html",
+      "counts": {
+        "daysShot": 32,
+        "daysMissed": 29,
+        "homeworkDone": 6,
+        "homeworkExpected": 18,
+        "videoReviewed": 2,
+        "zoomAttended": 2,
+        "weeklyAwards": 5,
+        "entireAwards": 1,
+        "lifetimeXp": 1780.0
+      },
+      "missingFeedback": [
+        "Homework Week 10 \u2014 Week 10 |  HW 17 | Shooting Challenge Final Reflection Quiz"
+      ],
+      "notes": [
+        "Longest streak: using 14 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "29 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recfvpnQrBXvCbVhH",
+      "athleteName": "Leiko Judisch",
+      "subject": "Final Shooting Challenge Summary \u2014 Leiko Judisch",
+      "htmlFile": "leiko-judisch-vCbVhH.html",
+      "counts": {
+        "daysShot": 2,
+        "daysMissed": 59,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 40.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "59 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rechd9F0RV9Gs4n0j",
+      "athleteName": "Lewis Talbitzer",
+      "subject": "Final Shooting Challenge Summary \u2014 Lewis Talbitzer",
+      "htmlFile": "lewis-talbitzer-Gs4n0j.html",
+      "counts": {
+        "daysShot": 2,
+        "daysMissed": 59,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 40.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "59 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recZm4wl6E5ePN2rb",
+      "athleteName": "Leyton  Bakken",
+      "subject": "Final Shooting Challenge Summary \u2014 Leyton  Bakken",
+      "htmlFile": "leyton-bakken-ePN2rb.html",
+      "counts": {
+        "daysShot": 13,
+        "daysMissed": 48,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 455.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "48 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recIh9oF3NYfMzkoS",
+      "athleteName": "Liam Kimm",
+      "subject": "Final Shooting Challenge Summary \u2014 Liam Kimm",
+      "htmlFile": "liam-kimm-fMzkoS.html",
+      "counts": {
+        "daysShot": 7,
+        "daysMissed": 54,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 2,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 350.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "54 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec8Z5KzsNif6mtpG",
+      "athleteName": "Lincoln Newcomer",
+      "subject": "Final Shooting Challenge Summary \u2014 Lincoln Newcomer",
+      "htmlFile": "lincoln-newcomer-f6mtpG.html",
+      "counts": {
+        "daysShot": 53,
+        "daysMissed": 8,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1520.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "8 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recJsYuNK6HY0tUku",
+      "athleteName": "Lolo Judisch",
+      "subject": "Final Shooting Challenge Summary \u2014 Lolo Judisch",
+      "htmlFile": "lolo-judisch-Y0tUku.html",
+      "counts": {
+        "daysShot": 19,
+        "daysMissed": 42,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 455.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+        "42 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec83ku1pTHmPNwRo",
+      "athleteName": "Lyle Kimm",
+      "subject": "Final Shooting Challenge Summary \u2014 Lyle Kimm",
+      "htmlFile": "lyle-kimm-mPNwRo.html",
+      "counts": {
+        "daysShot": 49,
+        "daysMissed": 12,
+        "homeworkDone": 7,
+        "homeworkExpected": 18,
+        "videoReviewed": 4,
+        "zoomAttended": 2,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 2145.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 21 consecutive shooting day(s) from submissions (enrollment rollup was 20)",
+        "12 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec9seL0OMuCTsnt5",
+      "athleteName": "Maizee Mitchell",
+      "subject": "Final Shooting Challenge Summary \u2014 Maizee Mitchell",
+      "htmlFile": "maizee-mitchell-CTsnt5.html",
+      "counts": {
+        "daysShot": 33,
+        "daysMissed": 28,
+        "homeworkDone": 5,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1075.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "28 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rectgE3U9zZkfbqQ4",
+      "athleteName": "Matthew Brady",
+      "subject": "Final Shooting Challenge Summary \u2014 Matthew Brady",
+      "htmlFile": "matthew-brady-kfbqQ4.html",
+      "counts": {
+        "daysShot": 15,
+        "daysMissed": 46,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 420.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 4 consecutive shooting day(s) from submissions (enrollment rollup was 3)",
+        "46 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recj7jNMunEfS5qm1",
+      "athleteName": "McKinley Clark",
+      "subject": "Final Shooting Challenge Summary \u2014 McKinley Clark",
+      "htmlFile": "mckinley-clark-fS5qm1.html",
+      "counts": {
+        "daysShot": 42,
+        "daysMissed": 19,
+        "homeworkDone": 2,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 1,
+        "weeklyAwards": 4,
+        "entireAwards": 1,
+        "lifetimeXp": 1340.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 15 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+        "19 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec6xBAporVRLslcn",
+      "athleteName": "Mckinley Hubers",
+      "subject": "Final Shooting Challenge Summary \u2014 Mckinley Hubers",
+      "htmlFile": "mckinley-hubers-RLslcn.html",
+      "counts": {
+        "daysShot": 20,
+        "daysMissed": 41,
+        "homeworkDone": 2,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 1,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 600.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "41 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recKDTHpQrZOu0YN5",
+      "athleteName": "Milton Costa",
+      "subject": "Final Shooting Challenge Summary \u2014 Milton Costa",
+      "htmlFile": "milton-costa-Ou0YN5.html",
+      "counts": {
+        "daysShot": 26,
+        "daysMissed": 35,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 710.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+        "35 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recVWVlDZMqhsUNhy",
+      "athleteName": "Monroe Mailey",
+      "subject": "Final Shooting Challenge Summary \u2014 Monroe Mailey",
+      "htmlFile": "monroe-mailey-hsUNhy.html",
+      "counts": {
+        "daysShot": 30,
+        "daysMissed": 31,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 2,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 845.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "31 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recSie4tYfSbfhwly",
+      "athleteName": "Myla Mailey",
+      "subject": "Final Shooting Challenge Summary \u2014 Myla Mailey",
+      "htmlFile": "myla-mailey-bfhwly.html",
+      "counts": {
+        "daysShot": 30,
+        "daysMissed": 31,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 2,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 770.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "31 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "reckt5NMDf1YoK28l",
+      "athleteName": "Nora Davison",
+      "subject": "Final Shooting Challenge Summary \u2014 Nora Davison",
+      "htmlFile": "nora-davison-YoK28l.html",
+      "counts": {
+        "daysShot": 14,
+        "daysMissed": 47,
+        "homeworkDone": 4,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 582.0
+      },
+      "missingFeedback": [
+        "Homework Week 1 \u2014 Week 1 |  HW 2 | Website Exploration"
+      ],
+      "notes": [
+        "47 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rec0BF7hSTCKRlfQk",
+      "athleteName": "Raya Keyser",
+      "subject": "Final Shooting Challenge Summary \u2014 Raya Keyser",
+      "htmlFile": "raya-keyser-KRlfQk.html",
+      "counts": {
+        "daysShot": 22,
+        "daysMissed": 39,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 535.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "39 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recsr9OFwwiECnoOu",
+      "athleteName": "Remington (Remi) Hill",
+      "subject": "Final Shooting Challenge Summary \u2014 Remington (Remi) Hill",
+      "htmlFile": "remington-remi-hill-ECnoOu.html",
+      "counts": {
+        "daysShot": 11,
+        "daysMissed": 50,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 220.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "50 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recNe84xp4corSBmm",
+      "athleteName": "Riley Geraghty",
+      "subject": "Final Shooting Challenge Summary \u2014 Riley Geraghty",
+      "htmlFile": "riley-geraghty-orSBmm.html",
+      "counts": {
+        "daysShot": 62,
+        "daysMissed": 0,
+        "homeworkDone": 18,
+        "homeworkExpected": 18,
+        "videoReviewed": 16,
+        "zoomAttended": 2,
+        "weeklyAwards": 5,
+        "entireAwards": 2,
+        "lifetimeXp": 3158.0
+      },
+      "missingFeedback": [
+        "Homework Week 5 \u2014 Week 5 |  HW 8 | 5 Spot Shooting Locations"
+      ],
+      "notes": [
+        "Longest streak: using 62 consecutive shooting day(s) from submissions (enrollment rollup was 60)",
+        "Excluded junk video feedback: Week 6",
+        "Awards display: removed 0 exact duplicate row(s); collapsed 3 repeated weekly award(s) (8 raw weekly -> 5 shown)"
+      ]
+    },
+    {
+      "enrollmentId": "recK2dzcWqj5oFGHc",
+      "athleteName": "Ryder  Elders",
+      "subject": "Final Shooting Challenge Summary \u2014 Ryder  Elders",
+      "htmlFile": "ryder-elders-5oFGHc.html",
+      "counts": {
+        "daysShot": 45,
+        "daysMissed": 16,
+        "homeworkDone": 4,
+        "homeworkExpected": 18,
+        "videoReviewed": 3,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1400.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 27 consecutive shooting day(s) from submissions (enrollment rollup was 20)",
+        "16 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "rechAjemFdhY48rSB",
+      "athleteName": "Sam Tingley",
+      "subject": "Final Shooting Challenge Summary \u2014 Sam Tingley",
+      "htmlFile": "sam-tingley-Y48rSB.html",
+      "counts": {
+        "daysShot": 14,
+        "daysMissed": 47,
+        "homeworkDone": 5,
+        "homeworkExpected": 18,
+        "videoReviewed": 4,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 625.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (3 raw weekly -> 2 shown)",
+        "47 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recBKEOo6MqTWBsv8",
+      "athleteName": "Seyler  Ehrlich",
+      "subject": "Final Shooting Challenge Summary \u2014 Seyler  Ehrlich",
+      "htmlFile": "seyler-ehrlich-TWBsv8.html",
+      "counts": {
+        "daysShot": 14,
+        "daysMissed": 47,
+        "homeworkDone": 3,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 2,
+        "weeklyAwards": 3,
+        "entireAwards": 1,
+        "lifetimeXp": 580.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (4 raw weekly -> 3 shown)",
+        "47 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "reciYiOQh8ytqaKKh",
+      "athleteName": "Sophia Ricker",
+      "subject": "Final Shooting Challenge Summary \u2014 Sophia Ricker",
+      "htmlFile": "sophia-ricker-tqaKKh.html",
+      "counts": {
+        "daysShot": 9,
+        "daysMissed": 52,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 17,
+        "zoomAttended": 0,
+        "weeklyAwards": 1,
+        "entireAwards": 1,
+        "lifetimeXp": 495.0
+      },
+      "missingFeedback": [
+        "Video Week 2"
+      ],
+      "notes": [
+        "52 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recn212vBAeMDpXco",
+      "athleteName": "Tayin Harsha",
+      "subject": "Final Shooting Challenge Summary \u2014 Tayin Harsha",
+      "htmlFile": "tayin-harsha-MDpXco.html",
+      "counts": {
+        "daysShot": 1,
+        "daysMissed": 60,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 20.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "60 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recKlYEzTwrMaau6B",
+      "athleteName": "Tracen  Heidema",
+      "subject": "Final Shooting Challenge Summary \u2014 Tracen  Heidema",
+      "htmlFile": "tracen-heidema-Maau6B.html",
+      "counts": {
+        "daysShot": 35,
+        "daysMissed": 26,
+        "homeworkDone": 1,
+        "homeworkExpected": 18,
+        "videoReviewed": 4,
+        "zoomAttended": 1,
+        "weeklyAwards": 5,
+        "entireAwards": 1,
+        "lifetimeXp": 1270.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+        "26 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recxpqGYtXRRjvP7Z",
+      "athleteName": "Tristan Schutter",
+      "subject": "Final Shooting Challenge Summary \u2014 Tristan Schutter",
+      "htmlFile": "tristan-schutter-RjvP7Z.html",
+      "counts": {
+        "daysShot": 2,
+        "daysMissed": 59,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 0,
+        "zoomAttended": 0,
+        "weeklyAwards": 0,
+        "entireAwards": 1,
+        "lifetimeXp": 40.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "59 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    },
+    {
+      "enrollmentId": "recnu4CWGYrotdywM",
+      "athleteName": "William  Buresh",
+      "subject": "Final Shooting Challenge Summary \u2014 William  Buresh",
+      "htmlFile": "william-buresh-otdywM.html",
+      "counts": {
+        "daysShot": 37,
+        "daysMissed": 24,
+        "homeworkDone": 0,
+        "homeworkExpected": 18,
+        "videoReviewed": 1,
+        "zoomAttended": 0,
+        "weeklyAwards": 2,
+        "entireAwards": 1,
+        "lifetimeXp": 1000.0
+      },
+      "missingFeedback": [],
+      "notes": [
+        "Longest streak: using 9 consecutive shooting day(s) from submissions (enrollment rollup was 7)",
+        "24 challenge days without a logged shot (not shown as a separate section)"
+      ]
+    }
+  ],
+  "skipped": [
+    {
+      "enrollmentId": "recvVqEifmNUg8nLb",
+      "athleteName": "Arley Olson",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec8ZOqCFhFKeant7",
+      "athleteName": "Beau Venhuizen",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec4wDqsX26rQ89Wd",
+      "athleteName": "Beau Venhuzen",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec8Xu77Ajip6o8rZ",
+      "athleteName": "Bryson Bush",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec11RQhEVd1xFyCr",
+      "athleteName": "Charley Parsons",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recKhlvg9FTDItu4Z",
+      "athleteName": "Chase McAlpine",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recDL1eCpDaXXWS23",
+      "athleteName": "Courtney  Kuhbacher",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recjZRA5cKZDKGPWK",
+      "athleteName": "Denver Kuhbacher",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec5Ls1Uo1azqBI6L",
+      "athleteName": "Easton  Fleming",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recVoEAwWW9nJjTdl",
+      "athleteName": "Easton  Frick",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recYXkG64KW52XUnn",
+      "athleteName": "Garrett Kimm",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recrrzzvrGQPy84l0",
+      "athleteName": "Hadley Collins",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recoFImntr15FZs8s",
+      "athleteName": "Kale Hinderager",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recSZ6zSEAHfqQnHT",
+      "athleteName": "KoBurn  Hoge",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec7QihLmXjg2kmcv",
+      "athleteName": "Lennix Johnson",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec9BtAJQaMI8vvva",
+      "athleteName": "Logan Simmons",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recahqqjJkdH7YrEz",
+      "athleteName": "Lucas Costa",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recRS91blnZQSDmzt",
+      "athleteName": "Madison Keel",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recqgdy5jKEsw8q5k",
+      "athleteName": "Margaret Klimkiewicz",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "rec9qcTu0pCgYTrYf",
+      "athleteName": "Mark Felsman",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recr6b1ezhyNiw1Rj",
+      "athleteName": "Presley Stainer",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recMNxAO2VDYWlFol",
+      "athleteName": "Randy Olson",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recnoylx9ZlM5SNbw",
+      "athleteName": "Ryan Olson",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recpnW9pwwlvAAm43",
+      "athleteName": "Ryder  Vanek",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recs1pQc82WuViW6a",
+      "athleteName": "Ryder  Vanek",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    },
+    {
+      "enrollmentId": "recMitxQYpqfcVeMW",
+      "athleteName": "Teo Astudillo",
+      "reason": "shots_at_or_below_minimum",
+      "totalShotsCounted": 0,
+      "minimumRequired": 50
+    }
+  ],
+  "errors": []
+}

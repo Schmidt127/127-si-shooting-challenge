@@ -17,6 +17,8 @@ Staging:
   - Staff reviews HTML, then arms Send to Make? and uses automation 074
 
 Schema gate: 20260629_045741
+Version: v2.0.3
+Last Updated: 2026-07-03 — skip final email when Total Shots Counted ≤ 50
 */
 
 // @ts-nocheck
@@ -25,6 +27,7 @@ const DRY_RUN = true;
 const CONFIRM_BUILD = false;
 const BATCH_LIMIT = 25;
 const SAMPLE_LIMIT = 10;
+const MIN_SHOTS_FOR_FINAL_EMAIL = 50;
 
 /** Set to rec... to build only one enrollment (dry-run testing). */
 const PREVIEW_ENROLLMENT_RECORD_ID = "";
@@ -34,7 +37,7 @@ const TIME_ZONE = "America/Denver";
 
 const CONFIG = {
   scriptName: "repair-final-090g-build-final-challenge-summary-email",
-  version: "v2.0.1",
+  version: "v2.0.3",
   schemaSnapshot: SCHEMA_SNAPSHOT,
 
   branding: {
@@ -361,6 +364,43 @@ function formatRatio(actual, expected) {
   const e = Number(expected || 0);
   if (!e) return `${formatNumber(a)}`;
   return `${formatNumber(a)}/${formatNumber(e)}`;
+}
+
+/** Longest calendar run of consecutive counted submission days (not XP milestone rollup). */
+function longestConsecutiveRunFromDateKeys(dateKeys) {
+  const keys = [...dateKeys].filter(Boolean).sort();
+  if (!keys.length) return { days: 0, startKey: "", endKey: "" };
+
+  let bestLen = 1;
+  let bestStart = keys[0];
+  let bestEnd = keys[0];
+  let curStart = keys[0];
+  let curLen = 1;
+
+  for (let i = 1; i < keys.length; i++) {
+    const prev = parseIsoDateOnly(keys[i - 1]);
+    const cur = parseIsoDateOnly(keys[i]);
+    const gapDays = prev && cur ? Math.round((cur.getTime() - prev.getTime()) / 86400000) : NaN;
+    if (gapDays === 1) {
+      curLen += 1;
+    } else {
+      if (curLen > bestLen) {
+        bestLen = curLen;
+        bestStart = curStart;
+        bestEnd = keys[i - 1];
+      }
+      curStart = keys[i];
+      curLen = 1;
+    }
+  }
+
+  if (curLen > bestLen) {
+    bestLen = curLen;
+    bestStart = curStart;
+    bestEnd = keys[keys.length - 1];
+  }
+
+  return { days: bestLen, startKey: bestStart, endKey: bestEnd };
 }
 
 function normalizeText(value) {
@@ -990,6 +1030,17 @@ async function main() {
       continue;
     }
 
+    const totalShotsEarly = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.totalShotsCounted, 0);
+    if (totalShotsEarly <= MIN_SHOTS_FOR_FINAL_EMAIL) {
+      exclude("shots_at_or_below_minimum", {
+        enrollmentId,
+        enrollmentName: athleteName,
+        totalShotsCounted: totalShotsEarly,
+        minimumRequired: MIN_SHOTS_FOR_FINAL_EMAIL,
+      });
+      continue;
+    }
+
     const gradeBandId = getFirstLinkedId(enrollment, tables.enrollments, CONFIG.enrollments.gradeBand);
     const currentLevel = levelField ? getText(enrollment, tables.enrollments, levelField) : "";
     const lifetimeXp = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.lifetimeXpTotal, 0);
@@ -1045,6 +1096,14 @@ async function main() {
       const endDate = getText(record, tables.streaks, CONFIG.streaks.streakEndDate);
       return endDate ? `${name} (${days} days, ended ${endDate})` : `${name} (${days} days)`;
     });
+
+    const consecutiveRun = longestConsecutiveRunFromDateKeys(shotDateKeys);
+    const longestStreak = consecutiveRun.days;
+    if (longestStreak > 0 && consecutiveRun.startKey && consecutiveRun.endKey) {
+      streakLines.unshift(
+        `Longest consecutive shooting run — ${longestStreak} days (${consecutiveRun.startKey} – ${consecutiveRun.endKey})`
+      );
+    }
 
     const enrollmentUnlocks = (unlocksByEnrollment.get(enrollmentId) || []).filter(record => {
       if (fieldExists(tables.unlocks, CONFIG.unlocks.active)) {
@@ -1127,7 +1186,6 @@ async function main() {
     const totalHw = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.totalHomeworkCompletions, 0);
     const totalVid = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.totalVideoSubmissions, 0);
     const totalZoom = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.totalZoomAttendances, 0);
-    const longestStreak = getNumber(enrollment, tables.enrollments, CONFIG.enrollments.longestStreakDays, 0);
 
     const expectedHw = expectedHomework.length;
     const expectedVid = challengeWeeks.length;
