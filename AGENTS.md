@@ -4,9 +4,13 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 
 ## Start here
 
-1. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
-2. [docs/README.md](./docs/README.md) — documentation index
-3. [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) — domain modules and data flow
+1. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
+2. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
+3. [docs/shooting-challenge-v2-master-direction.md](./docs/shooting-challenge-v2-master-direction.md) — full master direction (linked from `v2/02`)
+3. [docs/shooting-challenge-v2-config-vs-code.md](./docs/shooting-challenge-v2-config-vs-code.md) — config tables vs script changes
+4. [docs/shooting-challenge-v2-base-cutover.md](./docs/shooting-challenge-v2-base-cutover.md) — archive + clone strategy for 2026–27
+5. [docs/README.md](./docs/README.md) — documentation index
+6. [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) — domain modules and data flow
 
 ## Repo scope
 

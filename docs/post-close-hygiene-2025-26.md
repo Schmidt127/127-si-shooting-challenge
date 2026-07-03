@@ -159,7 +159,7 @@ These overlap with hygiene but are **separate projects** — start after July 20
 | C-011 | Automate weekly parent emails | [weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) |
 | C-012 | Stage K — field ownership pass | [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
 | C-013 | Drive-only assets (no Airtable attachments) | [close-out-considerations.md](./close-out-considerations.md) |
-| C-014 | XP / levels / streak game design | [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) |
+| C-014 | XP / levels / streaks game design | [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) — **decided 2026-07-03:** one ladder, spread gates, no dual-track for 2026–27 |
 
 ---
 

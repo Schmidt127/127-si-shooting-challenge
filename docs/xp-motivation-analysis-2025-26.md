@@ -1,8 +1,18 @@
 # XP & level motivation analysis — 2025–26 season (deferred)
 
-**Status:** Draft for post–close-out review. **Do not change XP, levels, gates, or streak rules until after the 2025–26 challenge ends** (target review start: **2026-07-01**).
+> ## V2 decision (2026-07-03) — supersedes dual-track recommendations below
+>
+> **For 2026–27 we are keeping one ladder:** XP + **Level Gate Rules** (same philosophy as V1). **No dual-track / two paths.**
+>
+> **Fix for V1:** spread gates early in **Level Gate Rules** (e.g. 1 homework to leave level 1) + **game manual and platform before Day 1** — not a second progression system.
+>
+> **If friction remains after 2026–27,** revisit architecture then. Until then, treat the dual-track sections below as **historical brainstorm only**.
+>
+> **Governed by:** [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) · [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md)
 
-**Watchlist:** [close-out-considerations.md](./close-out-considerations.md) → **C-014**
+**Status:** Draft for post–close-out review. **Do not change XP, levels, gates, or streak rules in production until an approved V2 config pass.** (Target tuning: Q1 2027 in config tables.)
+
+**Watchlist:** [close-out-considerations.md](./close-out-considerations.md) → **C-014** (decision recorded 2026-07-03)
 
 **Data snapshot:** 91 active enrollments, pulled **2026-06-29** (pre–final close-out audits).
 
@@ -394,3 +404,4 @@ Gate at level L (rough) ≈ scale homework ~(L−6)×2 for levels 7– constella
 | 2026-06-29 | Initial draft from season-close data pull + ops review. Deferred until post–challenge. User context: first XP/level year, mid-stream rollout, last-year shot culture. |
 | 2026-06-29 | Dual player model brainstorm — shooting-only vs all-encompassing; parent workload; parallel rank options. |
 | 2026-06-29 | Game manual first + graduated gates spread across season; Week 0 comms checklist. |
+| 2026-07-03 | **V2 decision:** one ladder + spread gates in config; dual-track **not** adopted for 2026–27. See master direction plan. |
