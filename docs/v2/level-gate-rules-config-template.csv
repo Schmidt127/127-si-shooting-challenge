@@ -1,0 +1,13 @@
+Learning_Tier,Level_Order,Level_Name,Gate_Applies_When_Advancing_To,Gate_Enabled,Min_Submissions,Min_Homework,Min_Videos,Min_Zoom_Meetings,Min_Streak_Days,Version_Active,Purpose_Notes,Status
+Teach the system,1,Beginner,,FALSE,TBD,TBD,TBD,TBD,TBD,2026-2027,Starting level — no gate to enter,TBD
+Teach the system,2,Rookie Shooter,Rookie Shooter,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,First gate — introduce homework early,TBD
+Teach the system,3,Developing Shooter,Developing Shooter,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Introduce video,TBD
+Teach the system,4,Consistent Shooter,Consistent Shooter,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Reinforce rhythm,TBD
+Teach the system,5,Dangerous Shooter,Dangerous Shooter,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Complete teach-the-system tier,TBD
+Build habits,6,Hot Hand,Hot Hand,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Habit tier begins,TBD
+Build habits,7,Deadeye,Deadeye,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,V1 cliff was here — spread requirements,TBD
+Build habits,8,Sharpshooter,Sharpshooter,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,End habit-building tier,TBD
+Educational Athletics depth,9,Pro,Pro,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Sustained full-program participation,TBD
+Educational Athletics depth,10,All-Star,All-Star,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Sustained full-program participation,TBD
+Educational Athletics depth,11,Legend,Legend,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Sustained full-program participation,TBD
+Complete development,12,G.O.A.T.,G.O.A.T.,TBD,TBD,TBD,TBD,TBD,TBD,2026-2027,Highest program expectations,TBD

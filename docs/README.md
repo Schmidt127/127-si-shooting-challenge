@@ -18,7 +18,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 |---|------|--------|
 | 01 | [v2/01-constitution.md](./v2/01-constitution.md) | Shell |
 | 02 | [v2/02-master-direction.md](./v2/02-master-direction.md) | Shell |
-| 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Next full write** |
+| 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Draft** — §8.3 gate spread under review |
 | 04–09 | [v2/](./v2/) | Shell |
 
 Legacy long-form docs below remain canonical until each v2 file is fully expanded.
