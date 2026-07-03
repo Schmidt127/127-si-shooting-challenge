@@ -16,9 +16,10 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 | # | File | Status |
 |---|------|--------|
-| 01 | [v2/01-constitution.md](./v2/01-constitution.md) | Shell |
+| 01 | [v2/01-constitution.md](./v2/01-constitution.md) | **Active** — configurable game engine + four layers |
 | 02 | [v2/02-master-direction.md](./v2/02-master-direction.md) | Shell |
-| 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Draft** — §8.3 gate spread under review |
+| 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Engine contract** — platform behavior only |
+| — | [v2/season-configuration-design.md](./v2/season-configuration-design.md) | Season gate design (Layer 2, DRAFT) |
 | 04–09 | [v2/](./v2/) | Shell |
 
 Legacy long-form docs below remain canonical until each v2 file is fully expanded.
@@ -29,7 +30,9 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 | Doc | Purpose |
 |-----|---------|
-| [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) | **Constitution** — mission, vision, philosophies, locked 2026–27 decisions |
+| [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) | **Season direction** — mission, locked 2026–27 decisions |
+| [v2/01-constitution.md](./v2/01-constitution.md) | **Constitution** — configurable game engine + four layers |
+| [v2/03-business-rules.md](./v2/03-business-rules.md) | **Engine contract** — how the system behaves (not season numbers) |
 | [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) | **Config vs code** — what lives in Levels / Level Gate Rules / XP Reward Rules vs scripts |
 | [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) | **Archive + clone** — scrub season data, keep config; GitHub tag (no fork) |
 

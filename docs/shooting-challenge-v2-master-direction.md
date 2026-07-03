@@ -4,6 +4,8 @@
 **Target season:** May 1, 2027 – June 30, 2027 (`2026-2027`)  
 **Last updated:** 2026-07-03
 
+**Architecture:** The platform is a **configurable game engine** — see [v2/01-constitution.md](./v2/01-constitution.md) (four layers) and [v2/03-business-rules.md](./v2/03-business-rules.md) (engine contract). This document covers **season direction** and locked 2026–27 decisions, not engine behavior.
+
 **Related planning docs:** [v2/README.md](./v2/README.md) (numbered pack) · [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) · [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) · [close-out-considerations.md](./close-out-considerations.md) · [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) · [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) · [PROJECT_STATE.md](./PROJECT_STATE.md)
 
 ---

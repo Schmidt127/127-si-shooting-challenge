@@ -1,6 +1,6 @@
 # Shooting Challenge v2 — Documentation pack
 
-**Status:** Numbered pack. **03 Business Rules** is the first full standalone doc; others are thin shells until expanded.
+**Status:** Numbered pack. **01 Constitution** and **03 Engine contract** are active; others are thin shells until expanded.
 
 **Source of truth:** GitHub. Re-upload `docs/v2/*.md` to ChatGPT Project Sources after meaningful commits.
 
@@ -8,10 +8,11 @@
 
 | # | File | Status |
 |---|------|--------|
-| 01 | [01-constitution.md](./01-constitution.md) | Shell — links to master direction |
+| 01 | [01-constitution.md](./01-constitution.md) | **Active** — configurable game engine + four layers |
 | 02 | [02-master-direction.md](./02-master-direction.md) | Shell — links to master direction |
-| 03 | [03-business-rules.md](./03-business-rules.md) | **Draft** — full doc; **§8.3 gate spread under review** |
-| — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | **DRAFT** — gate numbers worksheet (after §8.3 approval) |
+| 03 | [03-business-rules.md](./03-business-rules.md) | **Engine contract** (Layer 1) — platform behavior only |
+| — | [season-configuration-design.md](./season-configuration-design.md) | **DRAFT** — gate spread / season tuning (Layer 2) |
+| — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Worksheet — example level names; numbers TBD |
 | 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | Shell |
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
 | 06 | [06-automation-standards.md](./06-automation-standards.md) | Shell |
@@ -30,7 +31,7 @@
 
 ## Workflow: ChatGPT + Cursor
 
-1. **ChatGPT** — Draft or expand numbered docs (03 done; 04+ next).
+1. **ChatGPT** — Draft or expand numbered docs (03 engine contract done; 04+ next).
 2. **GitHub** — Save markdown in this folder; commit.
 3. **ChatGPT Project Sources** — Re-upload updated `docs/v2/` files.
 4. **Cursor** — Apply repo changes, code, audits when credits allow.

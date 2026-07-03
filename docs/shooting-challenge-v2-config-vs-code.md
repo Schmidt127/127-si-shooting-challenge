@@ -1,8 +1,21 @@
 # Shooting Challenge v2 — Config vs code
 
-**Purpose:** Clarify what you can change in **Airtable tables** vs what requires **script or schema** work.  
-**Governed by:** [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md)  
+**Purpose:** Clarify what you can change in **Airtable tables** (Layer 2 — Configuration) vs what requires **script or schema** work (Layer 1 — Engine).  
+**Governed by:** [v2/01-constitution.md](./v2/01-constitution.md) · [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md)  
 **Last updated:** 2026-07-03
+
+---
+
+## Four layers (constitutional)
+
+| Layer | Changes | Examples |
+|-------|---------|----------|
+| **1 — Engine** | Never (behavior contract) | XP Event creation, level/gate evaluation, automations — see [v2/03-business-rules.md](./v2/03-business-rules.md) |
+| **2 — Configuration** | Every season | **This doc** — Levels, Level Gate Rules, XP Reward Rules, Achievements, Weeks |
+| **3 — Content** | Constantly | Homework, videos, Zoom, email copy, awards catalog |
+| **4 — Presentation** | Generated from 1–3 | Game manual, website, guides |
+
+**Season launch rule:** A new season should require Configuration + Presentation updates only — not engine/script changes for gameplay tuning.
 
 ---
 
@@ -22,10 +35,13 @@
 
 | Layer | Role |
 |-------|------|
-| **Airtable config tables** | Game math and rules (XP amounts, level thresholds, gate minimums) |
-| **Automations** | Read config → award XP, assign levels, send emails |
-| **Game manual + website** | Parent-facing copy **published from** config before Day 1 |
-| **GitHub scripts** | Logic only — not a place to hide tunable numbers |
+| **Engine (Layer 1)** | Stable behavior — [v2/03-business-rules.md](./v2/03-business-rules.md) |
+| **Configuration design (Layer 2)** | Season tuning guidance — [v2/season-configuration-design.md](./v2/season-configuration-design.md) |
+| **Configuration (Layer 2)** | Game math and rules per season — tables below |
+| **Content (Layer 3)** | Homework, videos, messages, catalog entries |
+| **Presentation (Layer 4)** | Parent-facing copy **published from** config before Day 1 |
+| **Automations** | Read Configuration → execute Engine behavior |
+| **GitHub scripts** | Engine logic only — not a place to hide tunable numbers |
 
 ---
 

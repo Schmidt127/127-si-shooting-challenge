@@ -21,7 +21,7 @@
 |-----|--------|
 | [../shooting-challenge-v2-config-vs-code.md](../shooting-challenge-v2-config-vs-code.md) | Config tables vs script changes |
 | [../shooting-challenge-v2-base-cutover.md](../shooting-challenge-v2-base-cutover.md) | Archive 2025–26 base; clone for 2026–27 |
-| [03-business-rules.md](./03-business-rules.md) | Game rules (next full write) |
+| [03-business-rules.md](./03-business-rules.md) | **Engine contract** (Layer 1) — not season numbers |
 
 ## Historical analysis (not adopted for 2026–27)
 

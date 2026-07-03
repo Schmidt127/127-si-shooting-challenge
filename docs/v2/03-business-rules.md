@@ -1,7 +1,7 @@
-# 03 — Business Rules
+# 03 — Business Rules (Engine Contract)
 
-**127 Sports Intensity Shooting Challenge — 2026–27 season**  
-**Status:** Foundational draft. **Section 8.3 (gate spread) is under active review — not finalized.**  
+**127 Sports Intensity Shooting Challenge — platform**  
+**Status:** Engine contract (Layer 1). Describes **how the platform works**, not how any season is configured.  
 **Last updated:** 2026-07-03  
 **Governed by:** [01-constitution.md](./01-constitution.md) · [02-master-direction.md](./02-master-direction.md)
 
@@ -9,25 +9,62 @@
 
 ## 1. Purpose of this document
 
-This is the **rule book for how the game works** — for coaches, operators, parents, and (in plain language) athletes.
+This document describes **how the engine behaves** — the stable contract between software, operators, and participants.
+
+It should still be correct five years from now even if every XP value, level threshold, gate requirement, and the **number of levels** has changed.
 
 It answers:
 
-- What earns XP
-- How levels work
-- What “gates” mean and when they apply
-- What full-program participation requires for the highest levels
-- Where the **official numbers** live (Airtable config tables, not this file)
+- How XP is created and counted
+- How levels are calculated
+- How gates are evaluated
+- What participants should always be able to see and verify
+- Which Configuration tables hold season-specific values (not defined here)
 
-**This document is not the database.** At launch, the live rule set is whatever is in **Levels**, **Level Gate Rules**, and **XP Reward Rules** for season `2026-2027`. This doc explains the **design**; those tables hold the **values**.
+**This document is not:**
 
-If we invest time now to get these rules right, every future automation, website feature, parent guide, and AI recommendation has a stable source of truth to build from.
+- A rulebook for one season
+- The live database
+- Parent-facing copy (**Presentation**, generated from Configuration + Content)
+
+**Platform vs season configuration:**
+
+| Good (platform — say this) | Not appropriate here (season config) |
+|----------------------------|--------------------------------------|
+| Athletes progress through a single progression system using Lifetime XP and Level Gate evaluation | Homework is worth 35 XP |
+| XP awards are determined by the active **XP Reward Rules** configuration | Level 2 requires one homework assignment |
+| Level requirements are determined by the active **Level Gate Rules** configuration | Early levels are Levels 1–5 |
+| **Active season configuration** determines gameplay values; the engine reads and applies it | Streak XP is 15 points |
+| Level names and thresholds come from the active **Levels** table | Rookie Shooter requires 200 XP |
+
+Season tuning for a specific year lives in Airtable Configuration, [season-configuration-design.md](./season-configuration-design.md), and [02-master-direction.md](./02-master-direction.md) — not here.
 
 ---
 
-## 2. Design philosophy
+## 2. Engine vs configuration
 
-This section is the **lens** for interpreting every other rule in this document.
+**Constitutional principle** ([01-constitution.md](./01-constitution.md)):
+
+> The Shooting Challenge is a **configurable game engine**. Season-specific rules are defined through **configuration data**, not software logic. A new season launches by changing Configuration tables and Presentation — not by rewriting automations or application architecture.
+
+The platform must operate correctly regardless of XP values, level count, level names, gate requirements, activity requirements, award thresholds, week definitions, season dates, or future rule changes. Those belong in **Configuration** (Layer 2).
+
+### Four layers
+
+| Layer | Role | This doc |
+|-------|------|----------|
+| **1 — Engine** | Stable behavior: create XP, assign levels, evaluate gates, send summaries | **You are here** |
+| **2 — Configuration** | Per-season gameplay values | Referenced, never specified |
+| **3 — Content** | Homework, videos, Zoom, messages, catalog entries | Activity definitions only |
+| **4 — Presentation** | Game manual, website, guides | Generated from 1–3 |
+
+**For developers and AI assistants:** Before adding a number, level name, date, or threshold to this file, stop — it belongs in Layer 2.
+
+---
+
+## 3. Design philosophy
+
+Platform intent — applies every season regardless of Configuration.
 
 - The system rewards **habits** over talent.
 - The system rewards **consistency** over intensity.
@@ -36,391 +73,285 @@ This section is the **lens** for interpreting every other rule in this document.
 - Every athlete should experience **success early**.
 - The **highest achievements** should require commitment across the entire program.
 
-**Educational Athletics:** Basketball is the vehicle. Shooting is the foundation. Homework, video, Zoom, reading, and character work exist because they develop better players and responsible young people — not as unrelated “extra school.”
+**Educational Athletics:** Basketball is the vehicle. Shooting is the foundation. Homework, video, Zoom, reading, and character work develop better players and responsible young people.
 
-**One ladder (2026–27):** Every athlete climbs the same level progression. There is no separate shots-only path this season. Highest levels represent **complete athletes**.
+**Progression model:** Each enrollment follows **one level ladder**. The engine does not hardcode how many levels exist or what they are named. Highest positions on that ladder represent athletes who engaged with the full program — not volume shooting alone.
+
+### 3.1 Progression phases (platform concepts)
+
+The platform does **not** assume a fixed number of levels. Operators map the active **Levels** ladder onto four **progression phases** when tuning Configuration and writing Presentation. These are design concepts — not engine fields, not fixed level ranges.
+
+| Phase | Platform intent |
+|-------|-----------------|
+| **Early progression** | Athletes learn every activity type; gates introduce program components gradually |
+| **Mid progression** | Habits form across shooting and educational activities |
+| **Advanced progression** | Sustained full-program participation is expected |
+| **Highest achievement** | Top of the ladder recognizes complete program engagement |
+
+How many **Levels** rows fall into each phase, and what each gate requires, is **Configuration** — see [season-configuration-design.md](./season-configuration-design.md).
 
 ---
 
-## 3. How we review this document (process)
-
-Before polishing prose, we validate **content** in this order:
+## 4. How we review this document
 
 1. Read top to bottom.
-2. For each rule, ask only:
-   - **Is this rule correct?**
-   - **Is it permanent or configurable?** (see section 6.3)
+2. For each statement, ask:
+   - **Is this platform behavior** (Layer 1)?
+   - **Or did we embed season Configuration** (Layer 2)?
    - **Does it match the [Constitution](./01-constitution.md)?**
-3. After content is agreed, polish wording for parents and operators.
+3. After content is agreed, polish wording.
 
-**Current focus:** Section **8.3 (gate spread)** — this will shape parent experience more than almost anything else. Do not finalize gate numbers here; finalize the **learning tiers** first, then tune **Level Gate Rules** in Airtable.
-
----
-
-## 4. Season calendar
-
-**Season configuration** for dates and week rows; **permanent principles** for when rules take effect.
-
-| Item | Rule type | Rule |
-|------|-----------|------|
-| **Season dates** | Season configuration | May 1, 2027 – June 30, 2027 (`2026-2027` in program config) |
-| **Week boundaries** | Season configuration | **Weeks** table; timezone **America/Denver** |
-| **When rules apply** | Permanent principle | All config for this season is **live on Day 1** — no mid-season introduction of levels/gates (2025–26 lesson) |
-| **Enrollment** | Permanent principle | One **Enrollment** per athlete per season; must be **Active?** for leaderboard, XP, and emails |
+Gate spread tuning and numeric worksheets belong in [season-configuration-design.md](./season-configuration-design.md) — not here.
 
 ---
 
-## 5. One progression system (locked for 2026–27)
+## 5. Progression engine
 
-**Permanent principle** for how progression works; **season policy (2026–27)** for one ladder only.
+Every active **Enrollment** exposes:
 
-Every athlete has:
+| Field / concept | Engine behavior |
+|-----------------|-----------------|
+| **Lifetime XP** | Sum of qualifying **XP Events** |
+| **Current Level** | Highest active **Levels** row the athlete qualifies for (XP + gates) |
+| **Next Level** | Next row in active level order |
+| **Level Status** | e.g. Assigned, **Gate Blocked**, Error |
 
-1. **Lifetime XP** — total experience points from all qualifying activities  
-2. **Current Level** — title from the **Levels** table, driven by XP **and** gates  
-3. **Next Level** — the next level they are working toward  
-4. **Level Status** — e.g. Assigned, **Gate Blocked**, or Error  
+**Gate Blocked:** Lifetime XP meets the threshold for the next level, but the athlete has not yet met the active **Level Gate Rules** for that level.
 
-**Gate Blocked** means: the athlete has enough **XP** for the next level but has not yet met the **program requirements** defined for that level in **Level Gate Rules**.
-
-**Season policy (2026–27):** We are **not** using a separate shooter track vs program track. If parent friction remains after this season, architecture may be revisited **next year** — not during 2026–27.
+**Recalculation:** Automation **041** marks enrollments for recalc; **042** assigns current/next level and gate rule link.
 
 ---
 
-## 6. Experience points (XP)
+## 6. XP engine
 
-### 6.1 Separate XP buckets (activity types)
+### 6.1 Activity buckets
 
-**Permanent principle:** XP is one lifetime total on the enrollment, earned from **distinct activity types** (“buckets”). Each bucket has its own meaning; shooting remains the largest share in normal play.
+XP is one lifetime total per enrollment, earned from **distinct activity types**. Each type is governed by active **XP Reward Rules** and/or **Achievements**.
 
-| Bucket | Typical source | Where configured |
-|--------|----------------|------------------|
-| **Daily shooting** | One counted submission day | **XP Reward Rules** (e.g. `SHOOTING_BASE`) |
-| **Homework** | Coach-marked satisfactory homework | **XP Reward Rules** + automation 065 |
-| **Video** | Posted coach video feedback | **XP Reward Rules** + automation 114 |
-| **Zoom** | Attendance / participation | **XP Reward Rules** + automation 101 |
-| **Streaks** | Consecutive counted shooting days | **Achievements** + **XP Reward Rules** |
-| **Shot milestones** | Shot count milestones | **Achievements** + **XP Reward Rules** |
-| **Perfect week** | Perfect week unlock | **Achievements** + automation 059 |
-| **Manual / bonus** | Coach-issued exceptions | Documented separately |
+| Bucket | Engine source | Configuration |
+|--------|---------------|---------------|
+| Daily shooting | Counted submission day → XP Event | **XP Reward Rules** |
+| Homework | Satisfactory completion → XP Event | **XP Reward Rules** |
+| Video | Posted feedback → XP Event | **XP Reward Rules** |
+| Zoom | Attendance → XP Event | **XP Reward Rules** |
+| Streaks | Milestone unlock → XP Event | **Achievements** + **XP Reward Rules** |
+| Shot milestones | Unlock → XP Event | **Achievements** + **XP Reward Rules** |
+| Perfect week | Unlock → XP Event | **Achievements** |
+| Manual / bonus | Operator-documented exception | Outside standard rules |
+
+Under typical Configuration, shooting contributes the largest share of XP — that is design intent, not a hardcoded ratio in code.
 
 ### 6.2 One source → one XP event
 
-**Permanent principle:** Each qualifying action creates **at most one** row in **XP Events**, linked to its source. Duplicates are prevented by **Source Key** patterns in automations.
+Each qualifying action creates **at most one** **XP Events** row, linked to its source record. Duplicates are prevented by **Source Key** patterns in automations.
 
-Families should trust: *if the activity counted, the XP is there once.*
+### 6.3 Awarding rule
 
-### 6.3 Permanent vs configurable vs historical
+> **XP is awarded according to the active XP Reward Rules** (and achievement-linked rules where applicable).
 
-Use this distinction everywhere in this document and in parent-facing copy.
-
-| Type | Meaning | Example |
-|------|---------|---------|
-| **Permanent principle** | Design truth — rarely changes | “One counted shooting day can earn at most one shooting XP event.” |
-| **Season configuration** | **Official values for 2026–27** — live in Airtable tables | XP amount for `SHOOTING_BASE`; cumulative XP for Rookie Shooter; homework minimum on a gate row |
-| **Historical reference** | Past season data for planning only — **not** a rule for 2026–27 unless copied into config | 2025–26: ~20 XP per shooting day; gates clustered at Deadeye |
-
-**Rule:** If a number is not exported from **XP Reward Rules**, **Levels**, or **Level Gate Rules** for `2026-2027`, it is **not** the live rule — even if it appears in this doc as history or example.
-
-### 6.4 Historical reference — XP amounts (2025–26 only)
-
-**Not season configuration. Not permanent principles.**
-
-| Activity | Historical reference (2025–26) |
-|----------|--------------------------------|
-| Counted shooting day | 20 XP |
-| Satisfactory homework | 35 XP |
-| Video (posted feedback) | 25 XP |
-| Zoom (attendance / participation) | 60 XP (+ bonuses per rules) |
-| Streak milestones | 10–105 depending on length (see **Achievements**) |
-
-2026–27 amounts are set in **XP Reward Rules** during Q1 2027 tuning and exported into the parent game manual at launch.
+Amounts, rule keys, and active flags are **Configuration** — never engine constants in scripts.
 
 ---
 
-## 7. Levels
+## 7. Level engine
 
-### 7.1 How level assignment works
+### 7.1 Assignment algorithm
 
-**Permanent principle:**
+1. Read active **Levels** rows (`Active?`) in progression order.  
+2. For each level, compare enrollment **Lifetime XP** to **XP Required (Cumulative)**.  
+3. If XP qualifies, evaluate linked **Level Gate Rules** (`Version Active?`, `Gate Enabled?`).  
+4. **Current Level** = highest level where XP and all enabled gates pass.  
+5. If XP qualifies for next level but gates fail → **Gate Blocked** at current level.
 
-1. Automation **041** marks an enrollment for recalculation when XP or gate-related stats change.  
-2. Automation **042** reads **Levels** (cumulative XP thresholds) and **Level Gate Rules** (requirements).  
-3. **Current Level** is the highest level the athlete qualifies for — XP sufficient **and** all enabled gates for that level met.  
-4. If XP qualifies for the next level but gates are not met, status is **Gate Blocked** until requirements are met.
+### 7.2 Level ladder
 
-### 7.2 Level ladder (names)
+> **Level names, count, and XP thresholds are defined in the active Levels table.**
 
-**Season configuration:** Level **names** and **XP Required (Cumulative)** live in the **Levels** table.
+The engine does not hardcode level count or titles. Operators may add, rename, or remove levels in **Configuration** as long as progression order remains consistent.
 
-The program uses **twelve** level titles (2025–26 reference names):
+### 7.3 Participant visibility
 
-| Order | Level name |
-|-------|------------|
-| 1 | Beginner |
-| 2 | Rookie Shooter |
-| 3 | Developing Shooter |
-| 4 | Consistent Shooter |
-| 5 | Dangerous Shooter |
-| 6 | Hot Hand |
-| 7 | Deadeye |
-| 8 | Sharpshooter |
-| 9 | Pro |
-| 10 | All-Star |
-| 11 | Legend |
-| 12 | G.O.A.T. |
+The engine and **Presentation** layer must always expose:
 
-**Historical reference (2025–26):** ~200 XP per level step if only shooting days drive XP. **2026–27 thresholds are tuned in the Levels table** — verify config at launch.
+- Current level name (from active **Levels**)  
+- Lifetime XP  
+- XP required for next level (from active **Levels**)  
+- Remaining gate requirements (from active **Level Gate Rules** for next level)  
 
-### 7.3 What families see
-
-**Permanent principle:** Athletes and parents should always see current level, lifetime XP, XP to next level, and **what program activity unlocks the next level** — in plain language, from **Level Gate Rules**.
-
-**Illustrative example only:** *“You’re ready on XP for the next level — complete one more satisfactory homework assignment to advance.”* (Exact counts come from config, not from this sentence.)
+Copy is generated from live Configuration — e.g. *“You’re ready on XP — complete [N] more [activity] to advance.”*
 
 ---
 
-## 8. Level gates
+## 8. Activity definitions
 
-### 8.1 Guiding principle
+Engine terms — what counts toward XP, gates, and rollups. Requirements *how many* of each activity are **Configuration**.
 
-> **The purpose of Level Gates is not to prevent advancement. Their purpose is to encourage balanced participation and ensure that athletes experience every important component of the Educational Athletics program.**
-
-Gates optimize for **learning**, not for **difficulty**. They introduce homework, video, Zoom, streaks, and submissions in a rhythm that teaches the whole program — not a surprise wall after weeks of shooting-only play.
-
-### 8.2 What gates are
-
-**Permanent principle:** A **gate** is a minimum count of program activities (submissions, homework, videos, zoom, streak days) stored in **Level Gate Rules**. Automation **042** compares enrollment rollups to these minimums before assigning a level, even when XP is already high enough.
-
-**Configurable per season:** Each field below on each gate row.
-
-| Field | Meaning |
-|-------|---------|
-| `Gate Enabled?` | If off, XP alone controls this level |
-| `Minimum Submissions` | Counted submission days (lifetime on enrollment) |
-| `Minimum Homework` | Satisfactory homework completions |
-| `Minimum Videos` | Video submissions with posted feedback |
-| `Minimum Zoom Meetings` | Zoom attendance records |
-| `Minimum Streak Days` | Longest streak days (enrollment rollup) |
-| `Version Active?` | Which rule set applies (e.g. `2026-2027`) |
-
-### 8.3 Gate spread — learning tiers (DRAFT — under review)
-
-**Status: NOT FINALIZED.** Do not enter these ideas into **Level Gate Rules** as numbers until this section is approved. Exact minimums belong **only** in Airtable config after review.
-
-We optimize gate design for **what the athlete learns at each stage**, not how hard we can make advancement.
-
-**Conceptual bands vs level rows:** The four tiers below are **learning bands** — design intent, not Airtable rows. The 2026–27 ladder has **twelve** named levels in the **Levels** table. If a future season adds more level rows, bands can span more rows without changing the philosophy (e.g. “build habits” might cover levels 6–15 on a longer ladder). For 2026–27, map bands to the twelve levels in the table.
-
-| Tier | Levels (12-level ladder) | Purpose |
-|------|--------------------------|---------|
-| **Teach the system** | 1–5 — Beginner through Dangerous Shooter | Introduce **every part** of the program: shooting, first homework, first video, first Zoom, streaks. Small gate steps so families learn early that levels use XP **and** program activities. |
-| **Build habits** | 6–8 — Hot Hand through Sharpshooter | Reinforce **repeat** engagement: homework rhythm, video cadence, Zoom participation, consistency. Gates rise gradually; shooting still drives most XP. |
-| **Educational Athletics depth** | 9–11 — Pro through Legend | Expect **sustained** participation across all components — not one-off checkboxes. Athletes demonstrate they are living the full program, not only logging shots. |
-| **Complete development** | 12 — G.O.A.T. | Recognize athletes who met the **highest** program expectations across shooting and educational components for the season. |
-
-**Illustrative examples only (not rules):**
-
-- *Advancing from an early level might require one completed satisfactory homework assignment* — so homework is in mind from the start.  
-- *A mid ladder level might expect athletes to have experienced video feedback more than once* — habit, not a single token submission.  
-- *Upper tiers might expect regular Zoom participation over the season* — community and coaching relationship, not punishment.
-
-**What we are avoiding (2025–26 lesson):** Zero homework/video gates for many levels, then a large jump at Deadeye (~1,000 XP). That taught “shots only” until mid-season.
-
-**Review checklist (rule correctness only — before approving §8.3):**
-
-| # | Question | Answer when approved |
-|---|----------|----------------------|
-| 1 | Are tier boundaries correct for 2026–27 (1–5 / 6–8 / 9–11 / 12)? | |
-| 2 | Does each tier teach the right *purpose* (system → habits → depth → complete)? | |
-| 3 | Should any level move to a different tier? | |
-| 4 | Which activity types should **first appear** in gates in the “Teach the system” tier? | |
-| 5 | Does this match [Design philosophy](#2-design-philosophy) and the [Constitution](./01-constitution.md)? | |
-
-**Next step after approval:** Fill [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) (numbers only — not in this doc), then load **Level Gate Rules** on the 2026–27 clone base in Q1 2027.
-
-### 8.4 Gate Blocked — parent messaging
-
-**Permanent principle:**
-
-| Do not say | Say instead |
-|------------|-------------|
-| “You’re blocked.” | “You’re ready on XP — here’s what unlocks the next level…” |
-| “You failed homework.” | “Complete [N] more satisfactory homework — see your progress page.” |
-| “Shooting doesn’t matter.” | “Shooting got you here; the next level also needs [activity].” |
-
-Use **[N]** and activity names from live config / enrollment display — not from this document.
-
----
-
-## 9. Activity definitions
-
-Permanent definitions unless the pipeline changes in a documented way.
-
-### 9.1 Shooting / submissions
+### 8.1 Shooting / submissions
 
 | Term | Definition |
 |------|------------|
-| **Submission** | Daily log via Fillout (makes, attempts, date) |
-| **Counted submission** | Submission marked to count (`Count This Submission?`) with valid enrollment |
-| **Counted submission day** | At most one shooting XP event per enrollment per calendar day (automation 010) |
-| **Shots counted** | Rollup for milestones and stats — separate from the daily XP award |
+| **Submission** | Daily log via configured intake channel |
+| **Counted submission** | Submission with `Count This Submission?` and valid enrollment link |
+| **Counted submission day** | At most one shooting XP event per enrollment per calendar day |
+| **Shots counted** | Rollup for milestones/stats — separate from daily XP award |
 
-### 9.2 Homework
-
-| Term | Definition |
-|------|------------|
-| **Homework Completion** | Row linked to enrollment + week + homework assignment |
-| **Satisfactory** | Coach review complete + satisfactory — used for **gates** and homework XP |
-| **HW17 (Final Reflection)** | Week 10 quiz — must follow same satisfactory path (V2 intake fix planned) |
-
-### 9.3 Video
+### 8.2 Homework
 
 | Term | Definition |
 |------|------------|
-| **Video submission** | Athlete submits per program schedule |
-| **Posted feedback** | Coach posted feedback — used for video XP and gate counts |
+| **Homework Completion** | Row linked to enrollment, program period, and assignment |
+| **Satisfactory** | Coach review complete + satisfactory — gates and homework XP use this state |
 
-### 9.4 Zoom
+### 8.3 Video
 
 | Term | Definition |
 |------|------------|
-| **Attendance** | Record linked to enrollment and meeting; XP per **XP Reward Rules** |
+| **Video submission** | Athlete submission per program schedule |
+| **Posted feedback** | Coach posted feedback — video XP and gate counts use this state |
 
-### 9.5 Streaks
+### 8.4 Zoom
+
+| Term | Definition |
+|------|------------|
+| **Attendance** | Record linked to enrollment and meeting; XP per active **XP Reward Rules** |
+
+### 8.5 Streaks
 
 | Term | Definition |
 |------|------------|
 | **Streak block** | Consecutive calendar days with counted submissions; gaps break the block |
-| **Streak milestone** | Defined in **Achievements**; XP per **XP Reward Rules** |
-| **Longest streak** | Enrollment rollup; may be used in gate minimums |
+| **Streak milestone** | Defined in active **Achievements** |
+| **Longest streak** | Enrollment rollup; may be referenced in gate minimums |
 
-**Configurable / under review for 2026–27:** Streak **economics** (repeat-after-break vs long continuous runs) — tune in **Achievements** / **053** during Q1 2027.
+Milestone values and repeat-after-break economics are **Configuration**.
 
-### 9.6 Shot milestones & perfect week
+### 8.6 Shot milestones & perfect week
 
-Unlock rows in **Athlete Achievement Unlocks**; XP via **059**. Separate from gates unless a gate row references a rollup.
-
----
-
-## 10. Awards and recognition
-
-| Concept | Rule type |
-|---------|-----------|
-| **Awards catalog** | Season configuration (**Awards** table) |
-| **Award Recipients** | Season data (per fulfillment) |
-| **Weekly / end-of-season awards** | Permanent principle: awards **recognize**; levels **structure** progression |
+**Athlete Achievement Unlocks** award XP via achievement automations. Separate from gates unless a gate row references a rollup.
 
 ---
 
-## 11. Parent expectations
+## 9. Gate engine
 
-### 11.1 Time (honest guide)
+### 9.1 Guiding principle
 
-**Permanent principle** — rough guide, not a gate requirement.
+> **The purpose of Level Gates is not to prevent advancement. Their purpose is to encourage balanced participation and ensure that athletes experience every important component of the Educational Athletics program.**
 
-| Commitment | Rough time |
-|------------|------------|
-| **Shooting (foundation)** | ~5 minutes/day to log shots |
-| **Full program** | Above + homework, periodic video, scheduled Zoom |
+Gate spread and pacing are **Configuration** choices. The engine evaluates whatever minimums are in active **Level Gate Rules**.
 
-### 11.2 Communication
+### 9.2 Evaluation rule
 
-**Permanent principle** for timing; **season configuration** for exact copy and links.
+> **An athlete progresses by satisfying the currently active Level Gate Rules** for each level, in addition to meeting XP thresholds in **Levels**.
 
-| When | What |
-|------|------|
-| **Before Day 1** | Game manual from **exported config** + this doc’s principles |
-| **Each week** | Automated email: progress, level, next gate item, rules link |
-| **End of season** | Individual family summary |
+Automation **042** compares enrollment rollups to gate fields:
 
-### 11.3 Transparency
+| Field | Compared to enrollment rollup |
+|-------|------------------------------|
+| `Gate Enabled?` | If false, XP alone controls this level |
+| `Minimum Submissions` | Total Submissions |
+| `Minimum Homework` | Total Homework Completions (satisfactory) |
+| `Minimum Videos` | Total Video Submissions (posted feedback) |
+| `Minimum Zoom Meetings` | Total Zoom Attendances |
+| `Minimum Streak Days` | Longest Streak Days |
+| `Version Active?` | Selects which Configuration rule set is live |
 
-**Permanent principle:** Families can verify XP, level, gate status, and activity completion. Operators run audits when numbers disagree.
+### 9.3 Gate Blocked — messaging pattern
+
+| Avoid | Prefer |
+|-------|--------|
+| “You’re blocked.” | “You’re ready on XP — here’s what unlocks the next level…” |
+| “You failed homework.” | “Complete [N] more satisfactory homework.” |
+| “Shooting doesn’t matter.” | “Shooting got you here; the next level also needs [activity].” |
+
+**[N]** and activity names come from live Configuration / enrollment display.
 
 ---
 
-## 12. Config tables — source of truth (operators)
+## 10. Awards engine
 
-**Season configuration** for 2026–27 lives here:
+| Concept | Layer |
+|---------|-------|
+| **Awards** catalog metadata | Configuration + Content |
+| **Award Recipients** | Season operational data |
+| Awards **recognize**; levels **structure** progression | Engine principle |
 
-| Table | Contents |
-|-------|----------|
-| **Levels** | Names, cumulative XP thresholds, `Active?` |
+Recognition rules and thresholds are **Configuration** — not hardcoded in progression automations.
+
+---
+
+## 11. Communication & transparency
+
+| Principle | Engine expectation |
+|-----------|-------------------|
+| **Before season start** | Presentation publishes rules derived from active Configuration |
+| **On summary schedule** | Summary engine delivers progress, level, and next gate item per active **Weeks** / program cadence |
+| **End of season** | Individual family summary (not generic bulk) |
+| **Transparency** | XP Events, level, gate status, and activity completion are verifiable |
+| **Mid-season stability** | Do not change Configuration gameplay values mid-season without documented migration and family notice |
+
+Exact dates, copy, channels, and summary frequency are **Configuration / Content / Presentation**.
+
+---
+
+## 12. Configuration tables (Layer 2)
+
+> **Active season configuration determines gameplay values; the engine reads and applies it.**
+
+Operators edit these per season. Automations **read** them; they should not duplicate tunable values in script `CONFIG`.
+
+| Table | Holds |
+|-------|--------|
+| **Levels** | Names, count, cumulative XP thresholds, `Active?` |
 | **Level Gate Rules** | Gate minimums, `Gate Enabled?`, `Version Active?` |
 | **XP Reward Rules** | Rule keys, XP amounts, `Active?` |
-| **Achievements** | Milestone definitions |
-| **Weeks** | Season week dates |
-| **Awards** | Catalog |
+| **Achievements** | Milestone definitions, streak lengths |
+| **Weeks** | Program period boundaries |
+| **Awards** | Catalog metadata |
 
 See [../shooting-challenge-v2-config-vs-code.md](../shooting-challenge-v2-config-vs-code.md).
 
----
-
-## 13. What we are fixing from 2025–26
-
-**Historical reference** — V1 problems that motivate V2 rules (not live 2026–27 config).
-
-| V1 problem | V2 response |
-|------------|-------------|
-| Gates clustered late | Learning tiers + spread gates in config |
-| Rules not explained Week 1 | Manual + website before first submission |
-| Homework felt optional for months | Early-tier gates **teach** homework’s role |
-| Dual-track debated | **Rejected for 2026–27** — one ladder + communication |
+**Season launch:** Update Configuration → export → update Presentation. No engine deploy required if this contract is unchanged.
 
 ---
 
-## 14. Launch workflow (Q1 2027)
+## Appendix A — Layer classification by section
 
-**Operator process** — numbers loaded from [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv), not from this doc.
-
-1. Finalize **section 8.3** (this doc) — learning tiers approved via review checklist.  
-2. Map tiers → **Level Gate Rules** spreadsheet (numbers in CSV / Airtable only).  
-3. Clone base; clear season data; load config ([base cutover](../shooting-challenge-v2-base-cutover.md)).  
-4. Test enrollments; run **041** → **042**; run audits.  
-5. Export config → parent game manual + `/shoot` rules.  
-6. Week 0 email; open Fillout May 1, 2027.
-
----
-
-## 15. Mid-season changes
-
-**Permanent principle:** Do not change XP amounts or gate thresholds mid-season without a documented migration and family notice.
+| Section | Layer |
+|---------|-------|
+| 1–4 Purpose, engine vs config, philosophy, review | Engine |
+| 5 Progression | Engine |
+| 6 XP | Engine |
+| 7 Levels | Engine |
+| 8 Activities | Engine |
+| 9 Gates | Engine |
+| 10 Awards | Engine + Configuration pointer |
+| 11 Communication | Engine principles |
+| 12 Config tables | Configuration pointer |
+| Appendix B | External references only |
 
 ---
 
-## Appendix A — Rule classification by section
+## Appendix B — Where season-specific material lives
 
-Use during the [review process](#3-how-we-review-this-document-process) (content before prose).
+**Not part of this document.**
 
-| Section | Primary rule type | Notes |
-|---------|-------------------|-------|
-| 1 Purpose | Permanent principle | Doc role vs Airtable config |
-| 2 Design philosophy | Permanent principle | Lens for all rules |
-| 3 Review process | Permanent principle | How we validate this doc |
-| 4 Season calendar | Mixed | Dates = config; Day 1 / enrollment = permanent |
-| 5 One progression | Mixed | Mechanics = permanent; one ladder = 2026–27 policy |
-| 6 XP | Mixed | Buckets + idempotency = permanent; amounts = config / §6.4 historical |
-| 7 Levels | Mixed | Assignment logic = permanent; names/thresholds = config |
-| 8 Level gates | Mixed | Philosophy + fields = permanent; minimums = config after §8.3 approval |
-| 9 Activities | Permanent principle | Definitions unless pipeline changes |
-| 10 Awards | Mixed | Catalog = config; recognize vs structure = permanent |
-| 11 Parent expectations | Permanent principle | Communication timing and transparency |
-| 12 Config tables | Season configuration | Source of truth for launch numbers |
-| 13 V1 fixes | Historical reference | Why V2 exists |
-| 14 Launch workflow | Operator process | Not athlete-facing rules |
-| 15 Mid-season | Permanent principle | Stability during season |
+| Topic | Document |
+|-------|----------|
+| Gate spread design and numeric worksheet | [season-configuration-design.md](./season-configuration-design.md) |
+| Locked decisions for a target season | [02-master-direction.md](./02-master-direction.md) · [master direction](../shooting-challenge-v2-master-direction.md) |
+| Base cutover and launch checklist | [base cutover](../shooting-challenge-v2-base-cutover.md) |
+| Historical season analysis | [xp-motivation-analysis](../xp-motivation-analysis-2025-26.md) |
 
 ---
 
-## 16. Related documents
+## Related documents
 
-| Doc | Purpose |
-|-----|---------|
-| [02-master-direction.md](./02-master-direction.md) | Mission, vision, constitution test |
-| [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Gate numbers worksheet (DRAFT — load to Airtable after §8.3 approval) |
+| Doc | Layer |
+|-----|-------|
+| [01-constitution.md](./01-constitution.md) | Engine principle + four layers |
+| [season-configuration-design.md](./season-configuration-design.md) | Configuration design (not engine) |
+| [02-master-direction.md](./02-master-direction.md) | Season direction |
 | [../shooting-challenge-v2-config-vs-code.md](../shooting-challenge-v2-config-vs-code.md) | Config vs script |
-| [../xp-motivation-analysis-2025-26.md](../xp-motivation-analysis-2025-26.md) | V1 historical data |
 
 ---
 
@@ -428,6 +359,5 @@ Use during the [review process](#3-how-we-review-this-document-process) (content
 
 | Date | Notes |
 |------|-------|
-| 2026-07-03 | Full business rules v1 |
-| 2026-07-03 | v2 — Design philosophy, review process, permanent/config/historical XP split; gate guiding principle; learning tiers (8.3 draft, not finalized); removed hard-coded gate number table |
-| 2026-07-03 | v3 — §8.3 review checklist + conceptual bands; Appendix A rule classification; gate config CSV template |
+| 2026-07-03 | v4 — reframed as Engine Contract; four layers |
+| 2026-07-03 | **v5** — progression phases without fixed level counts; season design moved to separate doc; removed automation IDs from activity table; cadence language generalized |
