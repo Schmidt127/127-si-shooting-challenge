@@ -59,6 +59,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [checklists/weekly-maintenance-checklist.md](./checklists/weekly-maintenance-checklist.md) | Weekly ops checklist |
 | [close-out-considerations.md](./close-out-considerations.md) | **Watchlist** — open items to consider during close-out / review |
 | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) | **Post-close backlog** — 2025–26 audit hygiene (unlock dedupe, 066, scope, catalog) |
+| [media-kits.md](./media-kits.md) | **End-of-season publicity** — `media/` layout, builders, V2-028 roadmap |
 | [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) | V1 XP / levels / streak data; dual-track brainstorm **not** adopted — see V2 master direction |
 
 ## Data flows

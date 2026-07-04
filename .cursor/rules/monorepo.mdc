@@ -18,6 +18,7 @@ This repo (`127-si-shooting-challenge`) is **Shooting Challenge only**:
 | `web/` | Next.js app — deployed at **`/shoot`** on hoopchallenges.com |
 | `make/` | Make.com blueprints and upload/email docs |
 | `tools/airtable/` | Python schema export CLI |
+| `media/` | Season publicity assets (newspapers, radio, social) — see [media/README.md](../media/README.md) |
 | `docs/` | Ops docs — **start at `docs/PROJECT_STATE.md`** |
 
 **Not in this repo:** Hoop landing (`hoopchallenges-landing`), JR Ref (`127-si-jr-ref`).

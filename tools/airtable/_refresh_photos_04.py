@@ -2,7 +2,9 @@
 from pathlib import Path
 from airtable_read import f, list_table, session
 
-BASE = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+BASE = NEWSPAPER_PREP
 folder, zip_name, outlets = "04-billings-yellowstone-bridger-wibaux", "04-billings-yellowstone-bridger-wibaux-SEND-READY.zip", {"Billings Gazette", "Wibaux County Pioneer"}
 
 def norm(s):

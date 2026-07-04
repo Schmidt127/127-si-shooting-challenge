@@ -1,0 +1,231 @@
+{
+  "generated_at": "2026-07-04T15:01:03.049334+00:00",
+  "output_directory": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits",
+  "kits": [
+    {
+      "id": "01",
+      "title": "KSEN Radio (Shelby)",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\01-ksen-shelby",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\01-ksen-shelby\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 8,
+      "athlete_count_resolved": 8,
+      "athletes": [
+        "Leyton  Bakken",
+        "Eli Cowgill",
+        "Colton  Dahl",
+        "Conley Dahl",
+        "Emmet  Gustafson",
+        "Lolo Judisch",
+        "Connor Judisch",
+        "Leiko Judisch"
+      ],
+      "errors": []
+    },
+    {
+      "id": "02",
+      "title": "Great Falls Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\02-great-falls",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\02-great-falls\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 12,
+      "athlete_count_resolved": 12,
+      "athletes": [
+        "Benny Brady",
+        "Jackson Newcomer",
+        "Andrew Brady",
+        "Lincoln Newcomer",
+        "Kenady Bogart",
+        "Clara Hardy",
+        "Matthew Brady",
+        "Milton Costa",
+        "Nora Davison",
+        "Aspyn Bogart",
+        "Daniel Costa",
+        "Charlotte Davison"
+      ],
+      "errors": []
+    },
+    {
+      "id": "03",
+      "title": "Helena Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\03-helena",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\03-helena\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 2,
+      "athlete_count_resolved": 2,
+      "athletes": [
+        "William  Buresh",
+        "Kinsley Heggen"
+      ],
+      "errors": []
+    },
+    {
+      "id": "04",
+      "title": "Lewistown Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\04-lewistown",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\04-lewistown\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 1,
+      "athlete_count_resolved": 1,
+      "athletes": [
+        "KayDe VandenBos"
+      ],
+      "errors": []
+    },
+    {
+      "id": "05",
+      "title": "Bozeman / Manhattan Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\05-bozeman-manhattan",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\05-bozeman-manhattan\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 14,
+      "athlete_count_resolved": 14,
+      "athletes": [
+        "Lyle Kimm",
+        "Kinsley  Heidema",
+        "Allie Heidema",
+        "Blake Hubers",
+        "Ryder  Elders",
+        "Jackson  Elders",
+        "Dawson Schutter",
+        "Koen Kimm",
+        "Tracen  Heidema",
+        "Carson Hubers",
+        "Mckinley Hubers",
+        "Brayden  Elders",
+        "Tristan Schutter",
+        "Liam Kimm"
+      ],
+      "errors": []
+    },
+    {
+      "id": "06",
+      "title": "Missoula Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\06-missoula",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\06-missoula\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 9,
+      "athlete_count_resolved": 9,
+      "athletes": [
+        "Camden Clark",
+        "Riley Geraghty",
+        "McKinley Clark",
+        "Jacob Schwenk",
+        "Colbie Schwenk",
+        "Sam Tingley",
+        "Cash Wieler",
+        "Lewis Talbitzer",
+        "Jensen Klimkiewicz"
+      ],
+      "errors": []
+    },
+    {
+      "id": "07",
+      "title": "Billings Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\07-billings",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\07-billings\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 8,
+      "athlete_count_resolved": 8,
+      "athletes": [
+        "Seyler  Ehrlich",
+        "Easton Hill",
+        "Hartlie  Ehrlich",
+        "Alyna Keyser",
+        "Raya Keyser",
+        "Hadley Hill",
+        "Remington (Remi) Hill",
+        "Tayin Harsha"
+      ],
+      "errors": []
+    },
+    {
+      "id": "08",
+      "title": "Butte / Anaconda Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\08-butte-anaconda",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\08-butte-anaconda\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 1,
+      "athlete_count_resolved": 1,
+      "athletes": [
+        "Maizee Mitchell"
+      ],
+      "errors": []
+    },
+    {
+      "id": "09",
+      "title": "Madison County Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\09-madison-county",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\09-madison-county\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 2,
+      "athlete_count_resolved": 2,
+      "athletes": [
+        "Monroe Mailey",
+        "Myla Mailey"
+      ],
+      "errors": []
+    },
+    {
+      "id": "10",
+      "title": "Wibaux Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\10-wibaux",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\10-wibaux\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 6,
+      "athlete_count_resolved": 6,
+      "athletes": [
+        "Jack  Nelson",
+        "Alec  Helvik",
+        "Jordyn Nelson",
+        "Jamesy Helvik",
+        "Josalin Helvik",
+        "Jolie Helvik"
+      ],
+      "errors": []
+    },
+    {
+      "id": "11",
+      "title": "Wolf Point Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\11-wolf-point",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\11-wolf-point\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 1,
+      "athlete_count_resolved": 1,
+      "athletes": [
+        "Sophia Ricker"
+      ],
+      "errors": []
+    },
+    {
+      "id": "12",
+      "title": "Magic Valley Radio",
+      "folder": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\12-magic-valley",
+      "media_kit": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\tools\\airtable\\_preview\\radio-media-kits\\12-magic-valley\\RADIO-MEDIA-KIT.md",
+      "athlete_count_requested": 1,
+      "athlete_count_resolved": 1,
+      "athletes": [
+        "Dayton Fox"
+      ],
+      "errors": []
+    }
+  ],
+  "missing_information": [],
+  "manual_review": [
+    "Verify station contact emails before sending \u2014 most targets in potential-radio-targets.csv show 'not found'.",
+    "Lewis Talbitzer (Darby) is assigned to Missoula radio per sprint spec; Darby is Bitterroot geography.",
+    "Eli Cowgill: school Greenfield, community Power \u2014 listed as Fairfield/Greenfield in sprint spec.",
+    "Paste final reads on-air only after station-specific legal/id review."
+  ],
+  "qualifying_athletes_total": 65,
+  "qualifying_athletes_assigned": 65,
+  "all_qualifying_included": true,
+  "unassigned_athletes": [],
+  "statewide_stats_public": {
+    "enrolled_active": 91,
+    "qualifying_athletes": 65,
+    "schools": 28,
+    "communities": 23,
+    "total_shots": 304322,
+    "total_submissions": 1712,
+    "homework_completions_public": 122,
+    "videos_reviewed_public": 129,
+    "homework_completions_rollup_not_used_publicly": 142,
+    "videos_rollup_not_used_publicly": 277,
+    "lifetime_xp": 54049,
+    "zoom_meetings_held": 2,
+    "zoom_attendances": 32,
+    "gift_card_awards_june29": 125,
+    "goat": "Riley Geraghty (only statewide)"
+  }
+}

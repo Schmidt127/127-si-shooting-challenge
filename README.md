@@ -48,6 +48,7 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 │   └── test-payloads/        # Sample JSON for webhook testing
 ├── tools/
 │   └── airtable/             # Python schema export and PAT verify scripts
+├── media/                    # Season publicity assets (newspapers, radio, social)
 ├── .cursor/rules/            # Canonical Cursor AI rules
 ├── .github/workflows/        # CI (web.yml)
 └── cursor/rules.md           # Pointer to .cursor/rules/

@@ -2,7 +2,9 @@
 from pathlib import Path
 from airtable_read import f, list_table, session
 
-BASE = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+BASE = NEWSPAPER_PREP
 PACKETS = [
     ("05-butte-anaconda", "05-butte-anaconda-SEND-READY.zip", {"Montana Standard"}),
     ("06-madison-county", "06-madison-county-SEND-READY.zip", {"Madisonian"}),

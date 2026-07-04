@@ -2,7 +2,9 @@
 from collections import defaultdict
 from pathlib import Path
 from airtable_read import f, first_id, list_table, session
-PREVIEW = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+PREVIEW = NEWSPAPER_PREP
 
 def norm(s):
     return re.sub(r"\s+", " ", str(s or "").strip().lower())

@@ -3,7 +3,9 @@ from collections import defaultdict
 from pathlib import Path
 from airtable_read import f, first_id, list_table, session
 
-PREVIEW = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+PREVIEW = NEWSPAPER_PREP
 athletes = json.loads((PREVIEW / "athlete-master-export.json").read_text(encoding="utf-8"))
 eids = {a["enrollment_id"] for a in athletes}
 by_name = {a["enrollment_id"]: a for a in athletes}

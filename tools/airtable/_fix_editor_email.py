@@ -1,7 +1,9 @@
 ﻿import io, zipfile
 from pathlib import Path
 
-PACKET = Path("_preview/newspaper-radio-prep/final-packets/01-belgrade-bozeman-manhattan-christian")
+from media_paths import newspaper_packets
+
+PACKET = newspaper_packets() / "01-belgrade-bozeman-manhattan-christian"
 EMAIL_LINES = [
     "Subject: Local Manhattan Christian athletes recognized in 2025–2026 Shooting Challenge",
     "",

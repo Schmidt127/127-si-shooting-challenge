@@ -2,7 +2,9 @@
 from pathlib import Path
 import requests
 
-BASE = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+BASE = NEWSPAPER_PREP
 PACKET = BASE / "final-packets" / "01-belgrade-bozeman-manhattan-christian"
 PHOTOS = PACKET / "Photos"
 PHOTOS.mkdir(parents=True, exist_ok=True)

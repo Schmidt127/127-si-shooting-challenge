@@ -3,7 +3,9 @@ from collections import defaultdict
 from pathlib import Path
 from airtable_read import athlete_label, f, first_id, is_active, list_table, session
 
-PREVIEW = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+PREVIEW = NEWSPAPER_PREP
 PREVIEW.mkdir(parents=True, exist_ok=True)
 MIN_SHOTS = 10
 

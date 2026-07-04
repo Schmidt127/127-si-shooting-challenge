@@ -2,8 +2,10 @@
 from pathlib import Path
 import requests
 
-BASE = Path("_preview/newspaper-radio-prep")
-PACKET = Path("_preview/newspaper-radio-prep/final-packets/04-billings-yellowstone-bridger-wibaux")
+from media_paths import NEWSPAPER_PREP, newspaper_packets
+
+BASE = NEWSPAPER_PREP
+PACKET = newspaper_packets() / "04-billings-yellowstone-bridger-wibaux"
 ZIP_NAME = "04-billings-yellowstone-bridger-wibaux-SEND-READY.zip"
 PHOTOS = PACKET / "Photos"
 PHOTOS.mkdir(parents=True, exist_ok=True)

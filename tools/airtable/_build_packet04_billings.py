@@ -2,8 +2,12 @@
 from pathlib import Path
 import requests
 
-BASE = Path("_preview/newspaper-radio-prep")
-PACKET = Path("_preview/newspaper-radio-prep/final-packets/04-billings-yellowstone-bridger-wibaux")
+from airtable_read import f, list_table, session
+
+from media_paths import NEWSPAPER_PREP, newspaper_packets
+
+BASE = NEWSPAPER_PREP
+PACKET = newspaper_packets() / "04-billings-yellowstone-bridger-wibaux"
 ZIP_NAME = "04-billings-yellowstone-bridger-wibaux-SEND-READY.zip"
 PHOTOS = PACKET / "Photos"
 PHOTOS.mkdir(parents=True, exist_ok=True)
@@ -89,6 +93,22 @@ for pr in plan_rows:
 enrollment_ids = {a["enrollment_id"] for a in athletes}
 athletes.sort(key=lambda a: (-int(a["total_shots_counted"]), norm(a["athlete_name"]).lower()))
 
+
+def head_url(value):
+    if not value:
+        return ""
+    for item in value if isinstance(value, list) else [value]:
+        if isinstance(item, dict) and item.get("url"):
+            return str(item["url"])
+    return ""
+
+
+fresh_urls = {
+    row["id"]: head_url(f(row).get("Athlete Headshot"))
+    for row in list_table(session(), "Enrollments", ["Athlete Headshot"])
+    if row["id"] in enrollment_ids
+}
+
 head_by_id = {}
 with open(BASE / "headshot-inventory.csv", newline="", encoding="utf-8") as fh:
     for row in csv.DictReader(fh):
@@ -104,7 +124,7 @@ for a in athletes:
     slug = school_slug(a["school_name"])
     new_name = f"{last}_{first}_{slug}_Grade-{grade}.jpg"
     h = head_by_id.get(eid, {})
-    url = h.get("headshot_url", "")
+    url = fresh_urls.get(eid) or h.get("headshot_url", "")
     orig = h.get("headshot_filename", "")
     dest = PHOTOS / new_name
     status, err, size = "failed", "", 0

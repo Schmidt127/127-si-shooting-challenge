@@ -3,7 +3,9 @@ from pathlib import Path
 import requests
 
 folder, zip_name, outlet, coverage = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
-BASE = Path("_preview/newspaper-radio-prep")
+from media_paths import NEWSPAPER_PREP
+
+BASE = NEWSPAPER_PREP
 PACKET = BASE / "final-packets" / folder
 PHOTOS = PACKET / "Photos"
 PHOTOS.mkdir(parents=True, exist_ok=True)

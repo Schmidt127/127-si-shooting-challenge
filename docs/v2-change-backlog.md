@@ -159,6 +159,7 @@ flowchart TD
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
 | **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **Today:** Python scripts in `tools/airtable/` write to `media/{season}/` (newspapers, radio); manual article paste + coach outlet picks. **Target:** after awards finalized, one ops action produces newspaper packets, radio kits, social copy, captions, and season stats from verified Award Recipients — config-driven markets/outlets, no CSV export. | C-013, C-022, Wave 0 close-out | in-progress |
 
 ### Wave 11 — Launch gate
 
@@ -264,6 +265,7 @@ flowchart TD
 | — | Plan if kid misses live Zoom but watches recording — partial attendance/XP so gates stay fair | **C-025** |
 | — | Two duplicate tables: **Tutorials** and **Tutorials & Assets** — pick one, delete the other | **C-026** |
 | — | Notify kids immediately on level up / milestones (not daily submissions); maybe SMS via cell number | **C-027** |
+| — | Publicity / media kits as permanent platform feature; `media/` folder + Generate Media Kits | **V2-028** |
 
 ---
 
@@ -278,6 +280,7 @@ flowchart TD
 | Locked season decisions | [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) |
 | Config vs code | [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) |
 | Post-close hygiene H-001–H-004 | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| Media kits V2-028 | [media-kits.md](./media-kits.md), [../media/2025-2026/future-enhancements/ROADMAP.md](../media/2025-2026/future-enhancements/ROADMAP.md) |
 
 ---
 

@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-03**
+Last updated: **2026-07-04**
 
 ---
 
@@ -75,6 +75,16 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 | Blocked (prior `Weekly Email Sent?`) | **12** — uncheck **Weekly Email Sent?** on WAS, re-arm if needed |
 
 Reports: `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`. Do **not** paste JSON into Airtable Scripting (use Python staging).
+
+### Media & publicity (2026-07-04)
+
+| Item | Status |
+|------|--------|
+| Top-level `media/` folder | **Done** — season layout under `media/2025-2026/` |
+| 2025–26 newspapers | **10** regional packets in `media/2025-2026/newspapers/final-packets/` |
+| 2025–26 radio | **12** kits in `media/2025-2026/radio/` |
+| Build scripts | `tools/airtable/_build_*.py` → `media_paths.py` |
+| Platform roadmap | **V2-028** — [media-kits.md](./media-kits.md), [ROADMAP](../media/2025-2026/future-enhancements/ROADMAP.md) |
 
 ---
 

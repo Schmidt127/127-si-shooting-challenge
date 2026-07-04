@@ -2,8 +2,10 @@
 from pathlib import Path
 import requests
 
-BASE = Path("_preview/newspaper-radio-prep")
-PACKET = Path(r"_preview/newspaper-radio-prep/final-packets/02-missoula-county-st-joes-frenchtown")
+from media_paths import NEWSPAPER_PREP, newspaper_packets
+
+BASE = NEWSPAPER_PREP
+PACKET = newspaper_packets() / "02-missoula-area-st-joes-frenchtown"
 PHOTOS = PACKET / "Photos"
 PHOTOS.mkdir(parents=True, exist_ok=True)
 

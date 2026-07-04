@@ -43,3 +43,4 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 | Web routes | `web/docs/site-hierarchy.md` |
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
+| Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
