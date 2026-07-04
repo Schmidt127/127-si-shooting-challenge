@@ -1,0 +1,16 @@
+{
+  "previewAthlete": "Seyler  Ehrlich",
+  "enrollmentId": "recBKEOo6MqTWBsv8",
+  "weeklyAwardsShown": 3,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 14,
+  "longestConsecutiveStreakDays": 5,
+  "enrollmentStreakRollupDays": 5,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (4 raw weekly -> 3 shown)",
+    "47 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

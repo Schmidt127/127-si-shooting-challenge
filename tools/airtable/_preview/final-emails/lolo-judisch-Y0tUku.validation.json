@@ -1,0 +1,16 @@
+{
+  "previewAthlete": "Lolo Judisch",
+  "enrollmentId": "recJsYuNK6HY0tUku",
+  "weeklyAwardsShown": 1,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 19,
+  "longestConsecutiveStreakDays": 5,
+  "enrollmentStreakRollupDays": 5,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+    "42 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

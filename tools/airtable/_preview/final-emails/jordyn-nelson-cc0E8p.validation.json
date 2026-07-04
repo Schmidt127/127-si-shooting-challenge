@@ -1,0 +1,16 @@
+{
+  "previewAthlete": "Jordyn Nelson",
+  "enrollmentId": "rec7WoCM2GYcc0E8p",
+  "weeklyAwardsShown": 1,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 26,
+  "longestConsecutiveStreakDays": 3,
+  "enrollmentStreakRollupDays": 3,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+    "35 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

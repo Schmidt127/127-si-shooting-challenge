@@ -1,0 +1,17 @@
+{
+  "previewAthlete": "Benny Brady",
+  "enrollmentId": "rechgOSWWFsOivzhX",
+  "weeklyAwardsShown": 2,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 38,
+  "longestConsecutiveStreakDays": 16,
+  "enrollmentStreakRollupDays": 10,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Longest streak: using 16 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+    "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (3 raw weekly -> 2 shown)",
+    "23 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

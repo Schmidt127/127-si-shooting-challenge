@@ -1,0 +1,16 @@
+{
+  "previewAthlete": "McKinley Clark",
+  "enrollmentId": "recj7jNMunEfS5qm1",
+  "weeklyAwardsShown": 4,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 42,
+  "longestConsecutiveStreakDays": 15,
+  "enrollmentStreakRollupDays": 10,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Longest streak: using 15 consecutive shooting day(s) from submissions (enrollment rollup was 10)",
+    "19 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

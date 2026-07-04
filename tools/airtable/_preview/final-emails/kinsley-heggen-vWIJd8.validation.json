@@ -1,0 +1,17 @@
+{
+  "previewAthlete": "Kinsley Heggen",
+  "enrollmentId": "recBfc7Oa5hvWIJd8",
+  "weeklyAwardsShown": 1,
+  "entireChallengeAwardsShown": 1,
+  "officialChallengeWindowDays": 61,
+  "shootingDaysLogged": 11,
+  "longestConsecutiveStreakDays": 6,
+  "enrollmentStreakRollupDays": 5,
+  "missingOrUnclearFeedback": [],
+  "notes": [
+    "Longest streak: using 6 consecutive shooting day(s) from submissions (enrollment rollup was 5)",
+    "Awards display: removed 0 exact duplicate row(s); collapsed 1 repeated weekly award(s) (2 raw weekly -> 1 shown)",
+    "50 challenge days without a logged shot (not shown as a separate section)"
+  ],
+  "uncertainFields": []
+}

@@ -1,0 +1,598 @@
+{
+  "revision": "final-summary-2026-07-03",
+  "dryRun": false,
+  "activeEnrollmentCount": 91,
+  "stagedCount": 65,
+  "skippedCount": 26,
+  "errorCount": 0,
+  "staged": [
+    {
+      "enrollmentId": "rec0BF7hSTCKRlfQk",
+      "athleteName": "Raya Keyser",
+      "weeklySummaryId": "recWftLhFFcj65a7K",
+      "subject": "Final Shooting Challenge Summary \u2014 Raya Keyser",
+      "recipientsCsv": "alyssamarie22@msn.com"
+    },
+    {
+      "enrollmentId": "rec0Mop60efVsJ5sV",
+      "athleteName": "Hartlie  Ehrlich",
+      "weeklySummaryId": "recS0rvX53T2TMdWz",
+      "subject": "Final Shooting Challenge Summary \u2014 Hartlie  Ehrlich",
+      "recipientsCsv": "kesellsmt@gmail.com"
+    },
+    {
+      "enrollmentId": "rec0dGkRWt6Tdpd76",
+      "athleteName": "Josalin Helvik",
+      "weeklySummaryId": "reccMGiNBrdbSvM3R",
+      "subject": "Final Shooting Challenge Summary \u2014 Josalin Helvik",
+      "recipientsCsv": "plainstwopeaks@gmail.com"
+    },
+    {
+      "enrollmentId": "rec2gnfAuY1xTodO6",
+      "athleteName": "Alec  Helvik",
+      "weeklySummaryId": "rec4ruzk4oPIZwyhd",
+      "subject": "Final Shooting Challenge Summary \u2014 Alec  Helvik",
+      "recipientsCsv": "plainstwopeaks@gmail.com, ahelvik72@outlook.com"
+    },
+    {
+      "enrollmentId": "rec6xBAporVRLslcn",
+      "athleteName": "Mckinley Hubers",
+      "weeklySummaryId": "recdsP57oMwKerExM",
+      "subject": "Final Shooting Challenge Summary \u2014 Mckinley Hubers",
+      "recipientsCsv": "tvhubers@gmail.com"
+    },
+    {
+      "enrollmentId": "rec70Gpi5PSfvpIl9",
+      "athleteName": "Jacob Schwenk",
+      "weeklySummaryId": "recSFKUYhZKydkBOC",
+      "subject": "Final Shooting Challenge Summary \u2014 Jacob Schwenk",
+      "recipientsCsv": "erschwenk@yahoo.com"
+    },
+    {
+      "enrollmentId": "rec7WoCM2GYcc0E8p",
+      "athleteName": "Jordyn Nelson",
+      "weeklySummaryId": "recRYCf6MjqQTdfdt",
+      "subject": "Final Shooting Challenge Summary \u2014 Jordyn Nelson",
+      "recipientsCsv": "juebegs@hotmail.com"
+    },
+    {
+      "enrollmentId": "rec83ku1pTHmPNwRo",
+      "athleteName": "Lyle Kimm",
+      "weeklySummaryId": "recGDIfKkml55e7Zz",
+      "subject": "Final Shooting Challenge Summary \u2014 Lyle Kimm",
+      "recipientsCsv": "e.kimm81@gmail.com"
+    },
+    {
+      "enrollmentId": "rec85c7i6Bhjo1DO4",
+      "athleteName": "Eli Cowgill",
+      "weeklySummaryId": "rechJZTl6m3yAyR4b",
+      "subject": "Final Shooting Challenge Summary \u2014 Eli Cowgill",
+      "recipientsCsv": "jacob.cowgill@gmail.com"
+    },
+    {
+      "enrollmentId": "rec8Z5KzsNif6mtpG",
+      "athleteName": "Lincoln Newcomer",
+      "weeklySummaryId": "recPmFw0MYLm2frEg",
+      "subject": "Final Shooting Challenge Summary \u2014 Lincoln Newcomer",
+      "recipientsCsv": "atn@uazh.com"
+    },
+    {
+      "enrollmentId": "rec9seL0OMuCTsnt5",
+      "athleteName": "Maizee Mitchell",
+      "weeklySummaryId": "recaSQ9CAGjJCzzd8",
+      "subject": "Final Shooting Challenge Summary \u2014 Maizee Mitchell",
+      "recipientsCsv": "amitchell@anacondaschools.org"
+    },
+    {
+      "enrollmentId": "recA7nvO5gq9e08pm",
+      "athleteName": "Daniel Costa",
+      "weeklySummaryId": "recZfoPB86PE5gUb9",
+      "subject": "Final Shooting Challenge Summary \u2014 Daniel Costa",
+      "recipientsCsv": "tyler_costa@yahoo.com"
+    },
+    {
+      "enrollmentId": "recAHTFTFc2q4y59i",
+      "athleteName": "Dayton Fox",
+      "weeklySummaryId": "recEsiaPSSOOmECQs",
+      "subject": "Final Shooting Challenge Summary \u2014 Dayton Fox",
+      "recipientsCsv": "foxjacob@cassiaschools.org"
+    },
+    {
+      "enrollmentId": "recBKEOo6MqTWBsv8",
+      "athleteName": "Seyler  Ehrlich",
+      "weeklySummaryId": "recNTmbuj14bhQcAn",
+      "subject": "Final Shooting Challenge Summary \u2014 Seyler  Ehrlich",
+      "recipientsCsv": "kesellsmt@gmail.com"
+    },
+    {
+      "enrollmentId": "recBfc7Oa5hvWIJd8",
+      "athleteName": "Kinsley Heggen",
+      "weeklySummaryId": "recpb4Ma0BDmgSEDH",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley Heggen",
+      "recipientsCsv": "sheggen21@hotmail.com"
+    },
+    {
+      "enrollmentId": "recFP1260v2qDmmMx",
+      "athleteName": "Clara Hardy",
+      "weeklySummaryId": "recedCV5YuoS50za9",
+      "subject": "Final Shooting Challenge Summary \u2014 Clara Hardy",
+      "recipientsCsv": "csprout22@gmail.com"
+    },
+    {
+      "enrollmentId": "recHUNHzjPGGz5wxX",
+      "athleteName": "Dawson Schutter",
+      "weeklySummaryId": "recYYviUf9rOdknHs",
+      "subject": "Final Shooting Challenge Summary \u2014 Dawson Schutter",
+      "recipientsCsv": "jonrobinschutter@gmail.com"
+    },
+    {
+      "enrollmentId": "recIh9oF3NYfMzkoS",
+      "athleteName": "Liam Kimm",
+      "weeklySummaryId": "rec338h6s132lD802",
+      "subject": "Final Shooting Challenge Summary \u2014 Liam Kimm",
+      "recipientsCsv": "e.kimm81@gmail.com"
+    },
+    {
+      "enrollmentId": "recJsYuNK6HY0tUku",
+      "athleteName": "Lolo Judisch",
+      "weeklySummaryId": "recUNQnPith6LShhK",
+      "subject": "Final Shooting Challenge Summary \u2014 Lolo Judisch",
+      "recipientsCsv": "lonijudisch@gmail.com"
+    },
+    {
+      "enrollmentId": "recK2dzcWqj5oFGHc",
+      "athleteName": "Ryder  Elders",
+      "weeklySummaryId": "recAEvwojVbWGNR7r",
+      "subject": "Final Shooting Challenge Summary \u2014 Ryder  Elders",
+      "recipientsCsv": "mndydrg@gmail.com"
+    },
+    {
+      "enrollmentId": "recKDTHpQrZOu0YN5",
+      "athleteName": "Milton Costa",
+      "weeklySummaryId": "recAeruJswYBunfhi",
+      "subject": "Final Shooting Challenge Summary \u2014 Milton Costa",
+      "recipientsCsv": "tyler_costa@yahoo.com"
+    },
+    {
+      "enrollmentId": "recKlYEzTwrMaau6B",
+      "athleteName": "Tracen  Heidema",
+      "weeklySummaryId": "recLpZtohuhyUHsg3",
+      "subject": "Final Shooting Challenge Summary \u2014 Tracen  Heidema",
+      "recipientsCsv": "kndrhdm@gmail.com"
+    },
+    {
+      "enrollmentId": "recLt8puScXPL3sjF",
+      "athleteName": "Kinsley  Heidema",
+      "weeklySummaryId": "recNEPsPAPSGCGxet",
+      "subject": "Final Shooting Challenge Summary \u2014 Kinsley  Heidema",
+      "recipientsCsv": "kndrhdm@gmail.com"
+    },
+    {
+      "enrollmentId": "recMiAeCmaYHd4OjI",
+      "athleteName": "Brayden  Elders",
+      "weeklySummaryId": "recHtVafZESTmulFi",
+      "subject": "Final Shooting Challenge Summary \u2014 Brayden  Elders",
+      "recipientsCsv": "mndydrg@gmail.com"
+    },
+    {
+      "enrollmentId": "recNe84xp4corSBmm",
+      "athleteName": "Riley Geraghty",
+      "weeklySummaryId": "recepn2rbiH2s7hlg",
+      "subject": "Final Shooting Challenge Summary \u2014 Riley Geraghty",
+      "recipientsCsv": "shelljo_@hotmail.com"
+    },
+    {
+      "enrollmentId": "recOLIVrnOS57dH04",
+      "athleteName": "Jamesy Helvik",
+      "weeklySummaryId": "rechA1BNxSuuei3WH",
+      "subject": "Final Shooting Challenge Summary \u2014 Jamesy Helvik",
+      "recipientsCsv": "plainstwopeaks@gmail.com"
+    },
+    {
+      "enrollmentId": "recOSUwW9lXQx6nWL",
+      "athleteName": "Allie Heidema",
+      "weeklySummaryId": "recBEas9mJhRhdwPw",
+      "subject": "Final Shooting Challenge Summary \u2014 Allie Heidema",
+      "recipientsCsv": "kndrhdm@gmail.com"
+    },
+    {
+      "enrollmentId": "recQiRUbTKZ5Wiz7B",
+      "athleteName": "Andrew Brady",
+      "weeklySummaryId": "recwkV4DRuv1DPk5x",
+      "subject": "Final Shooting Challenge Summary \u2014 Andrew Brady",
+      "recipientsCsv": "kirstenbrady31@gmail.com"
+    },
+    {
+      "enrollmentId": "recRMktT2fGDup8sm",
+      "athleteName": "Camden Clark",
+      "weeklySummaryId": "recS1Q3eUesue6fwg",
+      "subject": "Final Shooting Challenge Summary \u2014 Camden Clark",
+      "recipientsCsv": "jamieclark4030@gmail.com"
+    },
+    {
+      "enrollmentId": "recSOk6N8RL3j5fzg",
+      "athleteName": "KayDe VandenBos",
+      "weeklySummaryId": "rec2El9mG1stdysfd",
+      "subject": "Final Shooting Challenge Summary \u2014 KayDe VandenBos",
+      "recipientsCsv": "jklvbos2@gmail.com, kdvbos2013@gmail.com"
+    },
+    {
+      "enrollmentId": "recSie4tYfSbfhwly",
+      "athleteName": "Myla Mailey",
+      "weeklySummaryId": "recwd7VNI2pTFQovE",
+      "subject": "Final Shooting Challenge Summary \u2014 Myla Mailey",
+      "recipientsCsv": "s.mailey20@yahoo.com"
+    },
+    {
+      "enrollmentId": "recUeFkUrOC5JRuNn",
+      "athleteName": "Emmet  Gustafson",
+      "weeklySummaryId": "recFZH7Lh1utRH2wo",
+      "subject": "Final Shooting Challenge Summary \u2014 Emmet  Gustafson",
+      "recipientsCsv": "yodelking59425@yahoo.com"
+    },
+    {
+      "enrollmentId": "recVWVlDZMqhsUNhy",
+      "athleteName": "Monroe Mailey",
+      "weeklySummaryId": "recOAU3GIWwRn3cgs",
+      "subject": "Final Shooting Challenge Summary \u2014 Monroe Mailey",
+      "recipientsCsv": "s.mailey20@yahoo.com"
+    },
+    {
+      "enrollmentId": "recZ3iTqlI1EfsghD",
+      "athleteName": "Hadley Hill",
+      "weeklySummaryId": "recmQJ9rmHtqe25wO",
+      "subject": "Final Shooting Challenge Summary \u2014 Hadley Hill",
+      "recipientsCsv": "tobandcourt@gmail.com"
+    },
+    {
+      "enrollmentId": "recZZ4Op05Hg0FpQq",
+      "athleteName": "Koen Kimm",
+      "weeklySummaryId": "reccSQuSSRDgi0ggM",
+      "subject": "Final Shooting Challenge Summary \u2014 Koen Kimm",
+      "recipientsCsv": "e.kimm81@gmail.com"
+    },
+    {
+      "enrollmentId": "recZm4wl6E5ePN2rb",
+      "athleteName": "Leyton  Bakken",
+      "weeklySummaryId": "recQXX9QN8vhSiK1N",
+      "subject": "Final Shooting Challenge Summary \u2014 Leyton  Bakken",
+      "recipientsCsv": "rkbakken3@gmail.com, 29lbakken@fairfield.k12.mt.us"
+    },
+    {
+      "enrollmentId": "recaLZCSGUgF5PCrC",
+      "athleteName": "Colbie Schwenk",
+      "weeklySummaryId": "recEOs8k9LI2AFdKM",
+      "subject": "Final Shooting Challenge Summary \u2014 Colbie Schwenk",
+      "recipientsCsv": "erschwenk@yahoo.com"
+    },
+    {
+      "enrollmentId": "recbJ71DHseETAQRP",
+      "athleteName": "Jackson  Elders",
+      "weeklySummaryId": "rec9RX9Yl9iBtfiMK",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson  Elders",
+      "recipientsCsv": "mndydrg@gmail.com"
+    },
+    {
+      "enrollmentId": "reccmhhwoS6Tfxkf1",
+      "athleteName": "Jensen Klimkiewicz",
+      "weeklySummaryId": "recYC5KrPc4JBadUn",
+      "subject": "Final Shooting Challenge Summary \u2014 Jensen Klimkiewicz",
+      "recipientsCsv": "mklimkiewicz@yahoo.com, jtklimkiewicz@gmail.com"
+    },
+    {
+      "enrollmentId": "rece6aNuQn0A8xJye",
+      "athleteName": "Connor Judisch",
+      "weeklySummaryId": "reccTO7lVTsEzEYNQ",
+      "subject": "Final Shooting Challenge Summary \u2014 Connor Judisch",
+      "recipientsCsv": "lonijudisch@gmail.com"
+    },
+    {
+      "enrollmentId": "recfvpnQrBXvCbVhH",
+      "athleteName": "Leiko Judisch",
+      "weeklySummaryId": "recmISPIi6o0zkO2c",
+      "subject": "Final Shooting Challenge Summary \u2014 Leiko Judisch",
+      "recipientsCsv": "lonijudisch@gmail.com"
+    },
+    {
+      "enrollmentId": "rechAjemFdhY48rSB",
+      "athleteName": "Sam Tingley",
+      "weeklySummaryId": "recwT0hRq9enTw7Kq",
+      "subject": "Final Shooting Challenge Summary \u2014 Sam Tingley",
+      "recipientsCsv": "mollymontana79@gmail.com"
+    },
+    {
+      "enrollmentId": "rechBG2hMV5qXLSsb",
+      "athleteName": "Jolie Helvik",
+      "weeklySummaryId": "recDhRU0NWdc9l5c5",
+      "subject": "Final Shooting Challenge Summary \u2014 Jolie Helvik",
+      "recipientsCsv": "plainstwopeaks@gmail.com"
+    },
+    {
+      "enrollmentId": "rechd9F0RV9Gs4n0j",
+      "athleteName": "Lewis Talbitzer",
+      "weeklySummaryId": "rec4F335DEOcG3OPp",
+      "subject": "Final Shooting Challenge Summary \u2014 Lewis Talbitzer",
+      "recipientsCsv": "arianatalbitzer@gmail.com"
+    },
+    {
+      "enrollmentId": "rechgOSWWFsOivzhX",
+      "athleteName": "Benny Brady",
+      "weeklySummaryId": "recR1n4yzP9p4a7FX",
+      "subject": "Final Shooting Challenge Summary \u2014 Benny Brady",
+      "recipientsCsv": "kirstenbrady31@gmail.com"
+    },
+    {
+      "enrollmentId": "recho64Y69r6DvwFL",
+      "athleteName": "Cash Wieler",
+      "weeklySummaryId": "recz9t9PhpR4yVHYX",
+      "subject": "Final Shooting Challenge Summary \u2014 Cash Wieler",
+      "recipientsCsv": "michelle.wieler@mcsmt.org"
+    },
+    {
+      "enrollmentId": "reciYiOQh8ytqaKKh",
+      "athleteName": "Sophia Ricker",
+      "weeklySummaryId": "recXNmVMi9lS88eTw",
+      "subject": "Final Shooting Challenge Summary \u2014 Sophia Ricker",
+      "recipientsCsv": "erin.ricker@yahoo.com, sricker@wolfpoint.k12.mt.us"
+    },
+    {
+      "enrollmentId": "recj7jNMunEfS5qm1",
+      "athleteName": "McKinley Clark",
+      "weeklySummaryId": "reclriBpm9kfRUN6o",
+      "subject": "Final Shooting Challenge Summary \u2014 McKinley Clark",
+      "recipientsCsv": "jamieclark4030@gmail.com"
+    },
+    {
+      "enrollmentId": "reck0urggYN376kXO",
+      "athleteName": "Colton  Dahl",
+      "weeklySummaryId": "recismjwdkhpVp9hB",
+      "subject": "Final Shooting Challenge Summary \u2014 Colton  Dahl",
+      "recipientsCsv": "lcpl@3rivers.net"
+    },
+    {
+      "enrollmentId": "reckmWHcaHxhD09yd",
+      "athleteName": "Charlotte Davison",
+      "weeklySummaryId": "recKO0dx0ZlsTzDcX",
+      "subject": "Final Shooting Challenge Summary \u2014 Charlotte Davison",
+      "recipientsCsv": "saraleojojo@gmail.com"
+    },
+    {
+      "enrollmentId": "reckt5NMDf1YoK28l",
+      "athleteName": "Nora Davison",
+      "weeklySummaryId": "recanbQbE3OTeRpl4",
+      "subject": "Final Shooting Challenge Summary \u2014 Nora Davison",
+      "recipientsCsv": "saraleojojo@gmail.com"
+    },
+    {
+      "enrollmentId": "recl3rKx9k2659J4c",
+      "athleteName": "Easton Hill",
+      "weeklySummaryId": "recnivTKoYmmLsYfX",
+      "subject": "Final Shooting Challenge Summary \u2014 Easton Hill",
+      "recipientsCsv": "tobandcourt@gmail.com"
+    },
+    {
+      "enrollmentId": "recmhY61iU2AwEiMI",
+      "athleteName": "Jackson Newcomer",
+      "weeklySummaryId": "recvb983QymqrWt0j",
+      "subject": "Final Shooting Challenge Summary \u2014 Jackson Newcomer",
+      "recipientsCsv": "atn@uazh.com"
+    },
+    {
+      "enrollmentId": "recn212vBAeMDpXco",
+      "athleteName": "Tayin Harsha",
+      "weeklySummaryId": "recI5r1cQ4lgONZwO",
+      "subject": "Final Shooting Challenge Summary \u2014 Tayin Harsha",
+      "recipientsCsv": "mglory12@hotmail.com"
+    },
+    {
+      "enrollmentId": "recnu4CWGYrotdywM",
+      "athleteName": "William  Buresh",
+      "weeklySummaryId": "reco3aNKfcKYGs7ec",
+      "subject": "Final Shooting Challenge Summary \u2014 William  Buresh",
+      "recipientsCsv": "ashlieburesh@gmail.com"
+    },
+    {
+      "enrollmentId": "recnzAYu9GMTDZpsd",
+      "athleteName": "Aspyn Bogart",
+      "weeklySummaryId": "recKat90f9au0tzXR",
+      "subject": "Final Shooting Challenge Summary \u2014 Aspyn Bogart",
+      "recipientsCsv": "jonnabogart@gmail.com, aspyn.bogart@gmail.com"
+    },
+    {
+      "enrollmentId": "recqWdm2T1iay663o",
+      "athleteName": "Conley Dahl",
+      "weeklySummaryId": "recSUlXzVz9kyWDl0",
+      "subject": "Final Shooting Challenge Summary \u2014 Conley Dahl",
+      "recipientsCsv": "lcpl@3rivers.net"
+    },
+    {
+      "enrollmentId": "recs4r7UjEsHlIjM7",
+      "athleteName": "Alyna Keyser",
+      "weeklySummaryId": "recmSxKnuXYdavc3E",
+      "subject": "Final Shooting Challenge Summary \u2014 Alyna Keyser",
+      "recipientsCsv": "alyssamarie22@msn.com"
+    },
+    {
+      "enrollmentId": "recsr9OFwwiECnoOu",
+      "athleteName": "Remington (Remi) Hill",
+      "weeklySummaryId": "recEN02NkJgKwT9fE",
+      "subject": "Final Shooting Challenge Summary \u2014 Remington (Remi) Hill",
+      "recipientsCsv": "tobandcourt@gmail.com"
+    },
+    {
+      "enrollmentId": "rectcrS99Yt4H6gMs",
+      "athleteName": "Carson Hubers",
+      "weeklySummaryId": "recUdQwHQTMbGCgMr",
+      "subject": "Final Shooting Challenge Summary \u2014 Carson Hubers",
+      "recipientsCsv": "tvhubers@gmail.com"
+    },
+    {
+      "enrollmentId": "rectgE3U9zZkfbqQ4",
+      "athleteName": "Matthew Brady",
+      "weeklySummaryId": "recIvmSmuWI8rFzKb",
+      "subject": "Final Shooting Challenge Summary \u2014 Matthew Brady",
+      "recipientsCsv": "kirstenbrady31@gmail.com"
+    },
+    {
+      "enrollmentId": "recvMhReNktxj1Txk",
+      "athleteName": "Kenady Bogart",
+      "weeklySummaryId": "recrI6O4hYK9Rcnvp",
+      "subject": "Final Shooting Challenge Summary \u2014 Kenady Bogart",
+      "recipientsCsv": "kenady.bogart@gmail.com"
+    },
+    {
+      "enrollmentId": "recvY4UwL5udPp0CW",
+      "athleteName": "Blake Hubers",
+      "weeklySummaryId": "rec19UW2BSOGBi3FU",
+      "subject": "Final Shooting Challenge Summary \u2014 Blake Hubers",
+      "recipientsCsv": "tvhubers@gmail.com"
+    },
+    {
+      "enrollmentId": "recxpqGYtXRRjvP7Z",
+      "athleteName": "Tristan Schutter",
+      "weeklySummaryId": "recj7MyOU3YOaVBVY",
+      "subject": "Final Shooting Challenge Summary \u2014 Tristan Schutter",
+      "recipientsCsv": "tristanschutter@gmail.com, jonrobinschutter@gmail.com"
+    },
+    {
+      "enrollmentId": "recywNFrlxXLhPRfQ",
+      "athleteName": "Jack  Nelson",
+      "weeklySummaryId": "recwLDbgiaMmaz1wG",
+      "subject": "Final Shooting Challenge Summary \u2014 Jack  Nelson",
+      "recipientsCsv": "juebegs@hotmail.com"
+    }
+  ],
+  "skipped": [
+    {
+      "enrollmentId": "rec11RQhEVd1xFyCr",
+      "athleteName": "Charley Parsons",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec4wDqsX26rQ89Wd",
+      "athleteName": "Beau Venhuzen",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec5Ls1Uo1azqBI6L",
+      "athleteName": "Easton  Fleming",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec7QihLmXjg2kmcv",
+      "athleteName": "Lennix Johnson",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec8Xu77Ajip6o8rZ",
+      "athleteName": "Bryson Bush",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec8ZOqCFhFKeant7",
+      "athleteName": "Beau Venhuizen",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec9BtAJQaMI8vvva",
+      "athleteName": "Logan Simmons",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "rec9qcTu0pCgYTrYf",
+      "athleteName": "Mark Felsman",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recDL1eCpDaXXWS23",
+      "athleteName": "Courtney  Kuhbacher",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recKhlvg9FTDItu4Z",
+      "athleteName": "Chase McAlpine",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recMNxAO2VDYWlFol",
+      "athleteName": "Randy Olson",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recMitxQYpqfcVeMW",
+      "athleteName": "Teo Astudillo",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recRS91blnZQSDmzt",
+      "athleteName": "Madison Keel",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recSZ6zSEAHfqQnHT",
+      "athleteName": "KoBurn  Hoge",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recVoEAwWW9nJjTdl",
+      "athleteName": "Easton  Frick",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recYXkG64KW52XUnn",
+      "athleteName": "Garrett Kimm",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recahqqjJkdH7YrEz",
+      "athleteName": "Lucas Costa",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recjZRA5cKZDKGPWK",
+      "athleteName": "Denver Kuhbacher",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recnoylx9ZlM5SNbw",
+      "athleteName": "Ryan Olson",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recoFImntr15FZs8s",
+      "athleteName": "Kale Hinderager",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recpnW9pwwlvAAm43",
+      "athleteName": "Ryder  Vanek",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recqgdy5jKEsw8q5k",
+      "athleteName": "Margaret Klimkiewicz",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recr6b1ezhyNiw1Rj",
+      "athleteName": "Presley Stainer",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recrrzzvrGQPy84l0",
+      "athleteName": "Hadley Collins",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recs1pQc82WuViW6a",
+      "athleteName": "Ryder  Vanek",
+      "reason": "missing_weekly_summary"
+    },
+    {
+      "enrollmentId": "recvVqEifmNUg8nLb",
+      "athleteName": "Arley Olson",
+      "reason": "missing_weekly_summary"
+    }
+  ],
+  "errors": []
+}
