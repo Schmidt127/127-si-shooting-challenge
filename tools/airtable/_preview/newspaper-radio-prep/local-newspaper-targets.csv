@@ -1,0 +1,16 @@
+outlet_id,outlet_name,outlet_city,coverage_area,website,contact_email,sports_contact,source_url,outlet_subtype,schools_towns_covered,athlete_count
+NP-BEL-NEWS,Belgrade News,Belgrade,"Belgrade, Manhattan, Amsterdam-Churchill",https://www.belgrade-news.com,not found,not found,https://www.belgrade-news.com/site/about_us.html,local weekly,Manhattan Christian; Bozeman; Manhattan,14
+NP-BZN-CHRON,Bozeman Daily Chronicle,Bozeman,Gallatin County,https://www.bozemandailychronicle.com,not found,not found,https://www.bozemandailychronicle.com,regional daily,Manhattan Christian; Bozeman; Manhattan,14
+NP-GF-TRIB,Great Falls Tribune,Great Falls,North-central Montana,https://www.greatfallstribune.com,not found,not found,https://www.greatfallstribune.com,regional daily,Belt; Broadwater; Cascade; Centerville School; Conrad; Fairfield; Fort Benton; Greenfield; Highwood; Jefferson; Meadowlark; Stanford; Cascade; Clancy; Conrad; Fairfield; Fort Benton; Great Falls; Highwood; Ledger; Power; Stanford; Townsend,23
+NP-MIS-MISS,Missoulian,Missoula,Missoula County,https://missoulian.com,not found,not found,https://missoulian.com,regional daily,Frenchtown; Hellgate; Loyola Sacred Heart; St. Joe's; Missoula,8
+NP-BIL-GAZ,Billings Gazette,Billings,Yellowstone County,https://billingsgazette.com,not found,not found,https://billingsgazette.com,regional daily,Bridger; Bridger Elementary School; Highland; Lewis & Clark Middle School; Will James; Billings; Bridger,8
+NP-CCD-NEWS,Carbon County News,Red Lodge,Carbon County,https://www.carboncountynews.com,not found,not found,https://www.carboncountynews.com,local weekly,Bridger; Bridger Elementary School; Bridger,4
+NP-ANA-STD,Montana Standard,Butte,Butte-Anaconda,https://mtstandard.com,not found,not found,https://mtstandard.com,regional daily,Anaconda; Anaconda,1
+NP-TWN-MAD,Madisonian,Virginia City,Madison County,https://www.madisoniannews.com,not found,not found,https://www.madisoniannews.com,local weekly,Broadwater; Sheridan; Sheridan; Townsend,3
+NP-CFD-IND,Conrad Independent,Conrad,Pondera County,https://www.conradindependent.com,not found,not found,https://www.conradindependent.com,local weekly,Conrad; Meadowlark; Conrad; Ledger,4
+NP-FB-PRESS,River Press,Fort Benton,Fort Benton area,https://www.riverpressnews.com,not found,not found,https://www.riverpressnews.com,local weekly,Fort Benton; Fort Benton,2
+NP-RAV-REP,Ravalli Republic,Hamilton,Bitterroot Valley,https://ravallirepublic.com,not found,not found,https://ravallirepublic.com,regional daily,Darby; Darby,1
+NP-DEC-TIMES,Times-News,Twin Falls,Magic Valley Idaho,https://magicvalley.com,not found,not found,https://magicvalley.com,regional daily,Declo; Declo,1
+NP-STAN-JBP,Judith Basin Press,Stanford,Judith Basin County,https://www.judithbasinpress.com,not found,not found,https://www.judithbasinpress.com,local weekly,Stanford; Stanford,1
+NP-WIB-PION,Wibaux County Pioneer,Wibaux,Wibaux County,https://www.wibauxpioneer.com,not found,not found,https://www.wibauxpioneer.com,local weekly,Wibaux; WIbaux; Wibaux,6
+NP-WP-HERALD,Wolf Point Herald-News,Wolf Point,Roosevelt County,https://www.wolfpointherald.com,not found,not found,https://www.wolfpointherald.com,local weekly,Wolf Point; Wolf Point,1
