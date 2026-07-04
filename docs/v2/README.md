@@ -2,7 +2,9 @@
 
 **Status:** Numbered pack. **01 Constitution** and **03 Engine contract** are active; others are thin shells until expanded.
 
-**Source of truth:** GitHub. Re-upload `docs/v2/*.md` to ChatGPT Project Sources after meaningful commits.
+**Source of truth:** GitHub. Re-upload after meaningful commits.
+
+**ChatGPT import:** Use **[../chatgpt-sources/](../chatgpt-sources/)** — select all files in that folder for Project Sources. Refresh with `.\tools\docs\sync-chatgpt-sources.ps1` from repo root.
 
 ## Read order
 
@@ -33,7 +35,7 @@
 
 1. **ChatGPT** — Draft or expand numbered docs (03 engine contract done; 04+ next).
 2. **GitHub** — Save markdown in this folder; commit.
-3. **ChatGPT Project Sources** — Re-upload updated `docs/v2/` files.
+3. **ChatGPT Project Sources** — Import all files from [chatgpt-sources/](./chatgpt-sources/) (run `tools/docs/sync-chatgpt-sources.ps1` after doc commits).
 4. **Cursor** — Apply repo changes, code, audits when credits allow.
 
 Existing long-form docs under `docs/` are **not renamed or removed** until each v2 file is fully written.

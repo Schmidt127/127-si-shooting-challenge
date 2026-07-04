@@ -6,13 +6,15 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 **New session?** Read [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [../AGENTS.md](../AGENTS.md) for AI conventions.
 
-**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md) (numbered pack `01`–`09`), then [PROJECT_STATE.md](./PROJECT_STATE.md).
+**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
 
 ---
 
 ## Shooting Challenge v2 — numbered doc pack
 
 **[v2/README.md](./v2/README.md)** — read order, ChatGPT + Cursor workflow.
+
+**[chatgpt-sources/](./chatgpt-sources/)** — **import this entire folder** into ChatGPT Project Sources (18 synced files + `00-START-HERE.md`).
 
 | # | File | Status |
 |---|------|--------|
