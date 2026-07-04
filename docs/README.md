@@ -40,6 +40,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [asset-storage-migration.md](./asset-storage-migration.md) | **AWS S3 + canonical URLs** — retire Drive/Airtable attachments (C-013) |
 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) | Fillout validation, flexible Weeks, test sandbox, Test Intake (C-017–C-020) |
 | [platform-config-improvements.md](./platform-config-improvements.md) | Grade bands + public display fields (C-021, C-022) |
+| [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, append new items here |
 
 ---
 

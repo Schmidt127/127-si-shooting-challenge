@@ -6,7 +6,7 @@
 
 **Architecture:** The platform is a **configurable game engine** — see [v2/01-constitution.md](./v2/01-constitution.md) (four layers) and [v2/03-business-rules.md](./v2/03-business-rules.md) (engine contract). This document covers **season direction** and locked 2026–27 decisions, not engine behavior.
 
-**Related planning docs:** [v2/README.md](./v2/README.md) (numbered pack) · [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) · [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) · [close-out-considerations.md](./close-out-considerations.md) · [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) · [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) · [PROJECT_STATE.md](./PROJECT_STATE.md)
+**Related planning docs:** [v2/README.md](./v2/README.md) (numbered pack) · [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) · [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) · [close-out-considerations.md](./close-out-considerations.md) · [v2-change-backlog.md](./v2-change-backlog.md) (owner request list + build order) · [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) · [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) · [PROJECT_STATE.md](./PROJECT_STATE.md)
 
 ---
 
@@ -300,6 +300,8 @@ Build as though the program will eventually support **thousands of athletes** �
 
 **Fix the machine before tuning the game.** **Tune the game in config tables before writing the parent manual.**
 
+**Living backlog:** All owner requests, wave order, and dependencies → [v2-change-backlog.md](./v2-change-backlog.md). Add new requests there first.
+
 | Phase | Focus |
 |-------|--------|
 | **1** | Stable architecture — **archive 2025–26 base; clone for 2026–27** (see [base cutover](./shooting-challenge-v2-base-cutover.md)); Dribble base decision if applicable |
@@ -350,6 +352,11 @@ Version 2 is successful when:
 | Fillout data quality | **Fillout validation + Athlete field cleanup** (C-017) |
 | Grade band renames break XP/emails | **Link-based grade bands** (C-021) |
 | Email shows long formula primary | **Public display fields** (C-022) |
+| Same file re-uploaded under new name | **File content hash dedup** (C-023) |
+| Backfill scripts risky to rerun | **Idempotent dedupe keys** (C-024) |
+| Missed live Zoom blocks gates | **Recording watch partial credit** (C-025) |
+| Duplicate Tutorials tables | **Merge to one canonical table** (C-026) |
+| No instant celebration on level/milestone | **Major-event SMS/alerts** (C-027) |
 | Fixed week calendar | **Flexible date-driven Weeks** config (C-018) |
 | Duplicate milestone badges | Dedupe + fix 066 |
 

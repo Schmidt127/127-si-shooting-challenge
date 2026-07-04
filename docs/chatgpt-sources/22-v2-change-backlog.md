@@ -1,0 +1,288 @@
+# V2 change backlog — owner request list
+
+**Purpose:** Living list of **everything you want changed** before and during 2026–27 build. Use this to plan **order of work** — some items block others.
+
+**How to use**
+
+1. **Add requests here first** — one row per request, even if rough.
+2. Each item gets an **ID** (`C-0xx` from [close-out-considerations.md](./close-out-considerations.md) or new `V2-0xx` below).
+3. Note **Depends on** so sequencing stays honest.
+4. When ready to implement, pull from this list into a phase — do not start Airtable/production until you approve that phase.
+5. AI sessions: read this file + [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) before planning work.
+
+**Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
+
+Last updated: **2026-07-04** (C-023–C-027 tutorials merge, achievement SMS)
+
+---
+
+## Dependency waves (suggested build order)
+
+Higher waves assume lower waves are stable. **Nothing ships to production until you approve the wave.**
+
+```mermaid
+flowchart TD
+    W0[Wave 0: 2025-26 close-out]
+    W1[Wave 1: Base cutover + hygiene]
+    W2[Wave 2: Schema ownership Stage K]
+    W3[Wave 3: Config engine — grade bands C-021]
+    W4[Wave 4: Presentation fields C-022]
+    W5[Wave 5: Reliability — Active? C-010, weekly email C-011]
+    W6[Wave 6: Test harness C-019 C-020]
+    W7[Wave 7: Asset storage S3 C-013]
+    W8[Wave 8: Intake C-017 C-018 C-009]
+    W9[Wave 9: Season config tuning]
+    W10[Wave 10: Comms — manual + website]
+    W11[Wave 11: Pre-season audit pack]
+
+    W0 --> W1
+    W1 --> W2
+    W2 --> W3
+    W2 --> W4
+    W3 --> W9
+    W4 --> W5
+    W4 --> W11
+    W5 --> W6
+    W6 --> W7
+    W7 --> W8
+    W8 --> W9
+    W9 --> W10
+    W10 --> W11
+```
+
+| Wave | Focus | Why this order |
+|------|--------|----------------|
+| **0** | Finish 2025–26 | Don't mix close-out repairs with V2 architecture |
+| **1** | Archive base, clone 2026–27, H-001/H-002 | Clean workspace before schema changes |
+| **2** | **C-012** Stage K; **C-024** dedupe standard; **C-026** Tutorials table merge | Schema cleanup before new fields or storage |
+| **3** | **C-021** grade bands — link-based matching | Must work before tuning **XP Reward Rules** (Wave 9) |
+| **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
+| **5** | **C-010**, **C-011**, **066** Week write | Production safety + automation before heavy testing |
+| **6** | **C-019**, **C-020** test sandbox + Test Intake | Validate pipeline without Fillout; needed before S3 cutover |
+| **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | Hash at upload; one URL per asset; duplicate files caught by **SHA-256**, not filename |
+| **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
+| **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
+| **10** | Game manual, `/shoot` hub; **C-027** major-event notifications (SMS TBD) | Comms + optional real-time athlete alerts |
+| **11** | Full audit pack + dry-run season | Gate before May 2027 |
+
+---
+
+## Full backlog (all owner requests)
+
+### Wave 0 — 2025–26 close-out (do not defer to V2)
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-001** | Restore Lyle Kimm excluded shots | ~300 shots; restore Count It on two submissions; XP backfill | — | open |
+| **C-002** | Final summary emails | 090G repair → test 074 → ~91 families | C-001 optional | open |
+| **C-003** | Koen HW10 reflection coach review | Symptom of C-009; optional for close-out email | — | open |
+| **C-008** | Turn off Fillout daily form | Midnight Denver after contest end | — | open |
+
+### Wave 1 — Base cutover + post-close hygiene
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **V2-001** | Archive 2025–26 base; clone for 2026–27 | Scrub season data; keep config tables. [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | queued |
+| **H-001** | Dedupe 090F achievement unlock rows | 9 duplicate groups; manual | Wave 0 | queued |
+| **H-002** | **066** writes Week on shot-milestone unlocks | Match **058** pattern | Wave 0 | queued |
+| **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
+| **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
+
+### Wave 2 — Schema, field ownership & dedupe engine
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-001 | queued |
+| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | Two tables with overlapping purpose (~same fields: video link, type, program, descriptions, thumbnails, publish flag). **Repo today:** **`Tutorials`** is live — web `/tutorials`, `/shoutouts`, `/articles` reads `Web - Tutorials Catalog` (`web/lib/airtable/queries.ts`). **`Tutorials & Assets`** is **not** referenced in automations or web; weaker schema (e.g. `Athlete` as hardcoded single-select, multiline video link vs URL). **Work:** row-count + field diff audit → migrate any unique rows → repoint views/interfaces → delete orphan table on 2026–27 clone. Relates to **C-012**, **C-013** (attachments on tutorial images). | C-012 | queued |
+| **C-024** | Rock-solid dedupe keys + safe backfill reruns | **Duplicates caught instantly** at every layer — Submissions (**007**), Submission Assets, Homework Completions, XP Events (**Source Key** / **XP Dedupe Key**), achievements. One canonical key per source record; automations + extension backfills **idempotent** — rerunning a repair/backfill must **never** create doubles or corrupt rollups. Audit all writers; document key patterns in engine contract. | C-012 | queued |
+| **C-014** | One ladder, spread gates early | **DECIDED** — tune in config Q1 2027, not in docs | C-021, Wave 9 | resolved |
+
+### Wave 3 — Configuration engine (grade bands)
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-021** | Grade bands propagate automatically | Grade Bands table = source of truth; **no hardcoded band strings** in scripts; match XP rules by **linked Grade Band**, not `normalizeGradeBandForRule()`. Renaming bands must not break automations or XP Reward Rules. | C-012 (field map) | queued |
+| **V2-002** | Config-over-scripts audit | Grep all automations for hardcoded XP amounts, level names, band strings; move to tables per [config-vs-code](./shooting-challenge-v2-config-vs-code.md) | C-021 | queued |
+
+### Wave 4 — Presentation layer (public display)
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-022** | Public display fields — not primary/formula | Parents/emails/web use **short Presentation labels only** — never `record.name` / primary field fallback. Example: homework email col 2 should be **Assignment Title**, not **Assignment Full Name** formula. Extend to Weeks (`Week Label - Public`), video/zoom titles. | C-012 | queued |
+| **V2-003** | Homework email column fix (**071**) | Remove `homeworkRecord.name` fallback; use Presentation field only | C-022 | queued |
+| **V2-004** | Weekly email homework table (**072**) | Same Presentation rule for homework name column | C-022 | queued |
+
+### Wave 5 — Reliability & automation
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-010** | Harden `Active?` on Enrollments | Inactive = fully out of XP, emails, summaries, streaks — not just leaderboard | V2-001 | queued |
+| **C-011** | Fully automatic weekly parent emails | No `Build Weekly Email Now?` / `Send to Make?`; scheduled 072→074 | C-010, C-022 | queued |
+| **C-006** | 090F duplicate unlock prevention | Fix root cause in **066** + dedupe H-001 | H-002 | monitoring |
+
+### Wave 6 — Testing & sandbox
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
+| **C-020** | Test Intake harness | Table + extension; `Run Test?` → Submission with pre-linked Enrollment; multi-file video parity | C-019, V2-001 | queued |
+
+### Wave 7 — Asset storage
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset for all consumers | C-012, C-020 | queued |
+| **C-023** | File dedup by **content hash**, not title/filename | **Today:** **007** uses **Duplicate Key** on submission **stats** (date + shots), not file bytes; **009** dedupes assets by **source attachment ID** only — same file re-uploaded under new name can slip through. Schema already has **`File Content Hash`** + **`File Hash Algorithm`** on Submission Assets (incl. SHA-256 option) — **not wired end-to-end**. **Target:** compute hash at intake/upload (Make or script); block or flag duplicate hash per enrollment/week; never rely on filename alone. | C-013, C-024 | queued |
+
+### Wave 8 — Intake & calendar
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **C-017** | Fillout → Athletes validation | Stronger Fillout rules; Athletes field hygiene; trust identity before pipeline | C-012 | queued |
+| **C-018** | Intake open vs challenge run | Two calendars in **Weeks** table; **005** maps by date range | V2-001 | queued |
+| **C-009** | Redo HW17 Fillout quiz intake (no attachment today) | **067** creates Homework Completion **without** Submission Asset / attachment — breaks coach views, **020**, **070**, **071**, satisfactory path (see C-003). **Owner:** pursuing Fillout.com **attachment export** for quiz PDF. **V2 paths:** (A) PDF attachment → normal file pipeline (preferred if Fillout delivers); (B) attachment-less dual path with explicit schema + automation redesign. Fix **Final Reflection Quiz Submissions** table + **067** + related views regardless. | C-013, C-024 | queued |
+
+### Wave 9 — Season config (numbers)
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-001 | queued |
+| **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
+| **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
+| **C-025** | Zoom **recording** attendance — partial credit path | Legitimate misses happen; kids should not be **fully blocked** from higher levels for one missed live Zoom. **Today:** **101** awards live **Attendees** only; docblock mentions supplemental re-run when staff manually add attendees after live award — **no parent-facing recording-watch flow**, no separate XP amount for recording. **Target:** defined alternative when athlete watches **Zoom recording** — e.g. lower XP via **XP Reward Rules**, counts toward **Level Gate Rules** zoom requirement at reduced weight (config, not script constants). Needs intake/attestation (form or coach confirm) + **Source Key** so live + recording cannot double-award. | C-024, V2-006, V2-005 | queued |
+
+### Wave 10 — Communication & website
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **V2-008** | Game manual | Published from config tables before Day 1 | Wave 9 | queued |
+| **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
+| **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
+| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+
+### Wave 11 — Launch gate
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **V2-011** | Full pre-season audit pack | Stages A–J + new audits (grade bands, Presentation fields, S3) | All above | queued |
+| **V2-012** | Dry-run season on Schmidt test | Full pipeline on clone before enrollment wave | C-020, Wave 7–9 | queued |
+
+---
+
+## Engine principles — deduplication & idempotency (C-023, C-024)
+
+**Owner intent:** Duplicates are caught **instantly** at intake — not repaired weeks later. Backfills are **safe to rerun**.
+
+### Today vs target
+
+| Layer | Today | Gap | Target (C-023 / C-024) |
+|-------|--------|-----|------------------------|
+| **Submissions** | **007** — `Duplicate Key` from enrollment + date + shot stats | Same stats, different intent; no file awareness | Keep stat key; add file-hash cross-check when attachments present |
+| **Submission Assets** | **009** — skip if same `sourceAttachmentId` on same submission | Re-upload same bytes, new attachment id / filename passes | **`File Content Hash` (SHA-256)** required; reject or `Needs Review` on hash match per enrollment+week |
+| **Homework Completions** | Partial keys / manual duplicates (C-004) | Re-submits create multiple rows | One completion key per enrollment + assignment + week |
+| **XP Events** | **Source Key** + **XP Dedupe Key** formula | Some paths weak; backfills risky | Document every **Source Key** pattern; create = recheck key first (**010**, **065**, **101**, **114**) |
+| **Achievements** | **066** duplicate unlocks (H-001) | Week not always written | Milestone **Source Key** + idempotent **066** |
+| **Backfill extensions** | Mixed — some `CONFIRM_WRITE`, uneven idempotency | Fear of re-running | Standard: dry-run default; writes skip unchanged; **Source Key** guard on every create |
+
+### File hash (C-023)
+
+- Fields exist on **Submission Assets**: `File Content Hash`, `File Hash Algorithm` (incl. **Exact SHA-256 Hash**).
+- Wire hash computation at **Make upload** or **009** (post–S3); store algorithm on row.
+- **Never** dedupe on filename/title alone for homework/video assets.
+
+### Safe backfills (C-024)
+
+- Every repair/backfill extension: **find-by-key → skip if exists → create if missing**.
+- Rerunning after partial failure must be **boring** — no double XP, no duplicate assets, no duplicate emails.
+- Add audit: `audit-dedupe-key-coverage.js` (dry-run) before 2026–27 launch.
+
+### HW17 quiz / no attachment (C-009)
+
+- **067** path bypasses asset pipeline — tables/views assume attachment.
+- **Preferred:** Fillout exports **PDF attachment** → normal **009 → 020 → 070** path.
+- **Fallback:** explicit attachment-less schema (bigger change); do not leave hybrid broken state.
+
+### Zoom recording attendance (C-025)
+
+- Live path: **101** + `Attendees` link → full zoom XP + gate credit.
+- Recording path (design TBD): attest watch → partial XP (config in **XP Reward Rules**) + partial gate credit (**Level Gate Rules**).
+- **101** already supports supplemental attendee add after live award — extend into **first-class recording workflow**, not manual-only ops.
+- **Source Key** must distinguish `ZOOM_LIVE` vs `ZOOM_RECORDING` for same meeting + enrollment.
+
+---
+
+## New components — content & notifications (C-026, C-027)
+
+### Tutorials table consolidation (C-026)
+
+| Table | Status in repo | Recommendation (pending audit) |
+|-------|----------------|--------------------------------|
+| **Tutorials** | **Production** — web catalog, 13 fields, `Tutorial Type` multi-select | **Keep** as canonical content table |
+| **Tutorials & Assets** | Schema only — no code references; duplicate field set | **Candidate to retire** after row migration |
+
+**Decision checklist:** Which table has more/current rows? Any Softr/interface views still on `Tutorials & Assets`? After **C-013**, consolidate image fields to canonical URL pattern on the surviving table.
+
+### Major-event notifications (C-027)
+
+**In scope (discuss):**
+
+| Event | Likely trigger | Not in scope |
+|-------|----------------|--------------|
+| Level up / gate cleared | **042** level assignment change | Daily shooting XP (**010**) |
+| Shot milestone unlock | **066** → **059** | Homework submitted |
+| Streak milestone | **054** | Routine coach feedback |
+| Perfect week | **058** | Weekly summary email (stays email) |
+
+**Open questions for owner:**
+
+1. Text **athlete** cell, **parent** cell, or both?
+2. Provider: Twilio, Make SMS module, other?
+3. Opt-in on enrollment form?
+4. Same message for test enrollment (**C-019**)?
+
+---
+
+## Owner requests — append new rows here
+
+*Copy a blank row when you think of something new. We'll assign an ID and slot it into a wave.*
+
+| ID | Wave | Request (your words) | Detail | Depends on | Added | Status |
+|----|------|----------------------|--------|------------|-------|--------|
+| *(new)* | ? | | | | | queued |
+
+### Recent captures (2026-07-04)
+
+| ID | Your request | Captured as |
+|----|--------------|-------------|
+| — | Grade bands should auto-propagate; changing bands may break automations + XP Reward Rules | **C-021** |
+| — | Public display should use exactly what you need — not primary/formula (homework email) | **C-022**, **V2-003**, **V2-004** |
+| — | Keep adding to fix list before start so order of change is right | **This document** |
+| — | Duplication checking on file **HASH**, not just title | **C-023** |
+| — | Fix HW17 quiz table / **067** — no attachment; trying to get Fillout to add attachment | **C-009** (updated) |
+| — | Dedupe keys rock solid beginning to end; duplicates caught instantly | **C-024** |
+| — | No danger rerunning backfill scripts | **C-024** |
+| — | Plan if kid misses live Zoom but watches recording — partial attendance/XP so gates stay fair | **C-025** |
+| — | Two duplicate tables: **Tutorials** and **Tutorials & Assets** — pick one, delete the other | **C-026** |
+| — | Notify kids immediately on level up / milestones (not daily submissions); maybe SMS via cell number | **C-027** |
+
+---
+
+## Cross-reference index
+
+| Topic | Primary doc |
+|-------|-------------|
+| Watchlist IDs C-001–C-027 | [close-out-considerations.md](./close-out-considerations.md) |
+| Grade bands + public display detail | [platform-config-improvements.md](./platform-config-improvements.md) |
+| Testing / intake C-017–C-020 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
+| S3 assets C-013 | [asset-storage-migration.md](./asset-storage-migration.md) |
+| Locked season decisions | [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) |
+| Config vs code | [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) |
+| Post-close hygiene H-001–H-004 | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+
+---
+
+## Revision log
+
+| Date | Notes |
+|------|-------|
+| 2026-07-04 | C-026 Tutorials table merge; C-027 major-event SMS notifications (discussion) |

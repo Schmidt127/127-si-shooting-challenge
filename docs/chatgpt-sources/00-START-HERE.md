@@ -35,6 +35,7 @@
 | 19 | `19-asset-storage-migration.md` | AWS S3 + canonical URL architecture (C-013) |
 | 20 | `20-testing-and-intake-architecture.md` | Fillout validation, Weeks, test sandbox, Test Intake (C-017–C-020) |
 | 21 | `21-platform-config-improvements.md` | Grade bands + public display (C-021, C-022) |
+| 22 | `22-v2-change-backlog.md` | **Owner change list** — all fixes/components, waves, dependencies (C-001–C-027) |
 
 ---
 
@@ -74,4 +75,4 @@ From repo root (PowerShell):
 
 ---
 
-*Last synced: 2026-07-03 18:26 (local)*
+*Last synced: 2026-07-03 18:50 (local)*

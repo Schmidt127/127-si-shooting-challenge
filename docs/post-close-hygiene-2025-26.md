@@ -154,7 +154,7 @@ These overlap with hygiene but are **separate projects** — start after July 20
 
 | ID | Topic | Doc |
 |----|-------|-----|
-| C-009 | Redo Fillout HW17 quiz intake | [homework-flow.md](./data-flow/homework-flow.md) |
+| C-009 | Redo Fillout HW17 quiz intake | [homework-flow.md](./data-flow/homework-flow.md) — **owner pursuing Fillout attachment export** |
 | C-010 | Harden `Active?` on all XP/email automations | [close-out-considerations.md](./close-out-considerations.md) |
 | C-011 | Automate weekly parent emails | [weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) |
 | C-012 | Stage K — field ownership pass | [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |

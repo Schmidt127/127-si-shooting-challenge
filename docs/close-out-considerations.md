@@ -2,6 +2,8 @@
 
 **Purpose:** Running list of things noticed during ops / review that need a decision, follow-up, or monitoring. Not a substitute for [PROJECT_STATE.md](./PROJECT_STATE.md) (live snapshot) or [CHANGELOG.md](../CHANGELOG.md) (what shipped).
 
+**V2 build order:** For sequencing all change requests (including new ones), see **[v2-change-backlog.md](./v2-change-backlog.md)**.
+
 **How to use**
 
 - Add a row when something comes up in review, parent email, or audit — even if we defer action.
@@ -11,7 +13,7 @@
 
 **Status key:** `open` · `monitoring` · `blocked` · `resolved` · `wont-fix`
 
-Last updated: **2026-07-04** (C-018 intake vs challenge dates; C-019/C-020 no test flags, full pipeline parity)
+Last updated: **2026-07-04** (C-023–C-027)
 
 ---
 
@@ -75,6 +77,11 @@ If a Submission / Homework Completion / XP row is **already linked** to an inact
 | C-020 | 2026-07-03 | Testing / intake | **Test Intake harness (production-identical)** | **Test Intake** table + extension: fill scenario (incl. **multiple video attachments**), check **`Run Test?`** → creates Submission with Enrollment pre-linked → **unchecks trigger**. No test metadata on pipeline rows. Verify e.g. 3 files → 3 S3 URLs → 3 Video Feedback rows. | Design table + extension script; Testing views on all submission tables. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 | open |
 | C-021 | 2026-07-04 | Grade Bands / config | **Grade bands propagate from Configuration** | Grade Bands table is source of truth, but **072 hardcodes** band name strings (`K2`, `34`, …); **010** ignores grade-band link on XP Reward Rules. Renaming/restructuring bands can break XP display and rule matching. | Audit scripts; match XP rules by **Grade Band link** not strings; web reads linked labels. See [platform-config-improvements.md](./platform-config-improvements.md) § C-021 | open |
 | C-022 | 2026-07-04 | Presentation / emails | **Public display fields — no primary-field fallback** | Homework emails (071) use Week + assignment name but fall back to **primary/formula** (`Assignment Full Name`) — too much detail for parents. Need explicit **Presentation** fields (`Assignment Title`, `Week Label - Public`); emails/web never use `record.name`. | Schema + 071/072 field sources; document Presentation field standard. See [platform-config-improvements.md](./platform-config-improvements.md) § C-022 | open |
+| C-023 | 2026-07-04 | Assets / dedup | **File dedup by content hash (SHA-256), not title/filename** | **007** dedupes submissions by stat formula; **009** by attachment id only. `File Content Hash` exists on Submission Assets but not enforced end-to-end. Same file re-uploaded under new name can pass. | Wire hash at upload (C-013); block/flag duplicates; see [v2-change-backlog.md](./v2-change-backlog.md) § dedupe | open |
+| C-024 | 2026-07-04 | Data integrity / engine | **Rock-solid dedupe keys + idempotent backfills** | **Source Key** / dedupe keys must be consistent intake → XP → achievements. Backfill/repair scripts safe to **rerun** without double-creates. Duplicates caught at intake, not in close-out audits. | Document all key patterns; audit 007/009/010/065/101/114; backfill standard; extension `audit-dedupe-key-coverage` | open |
+| C-025 | 2026-07-04 | Zoom / gates / fairness | **Recording watch = partial attendance + XP** | Missed live Zoom should not block higher levels. **101** = live attendees only; manual supplemental re-run exists but no recording workflow. Need config-driven partial credit (smaller XP) + gate credit when kid watches **Zoom recording**; distinct Source Key from live. | Design attestation path; XP Reward Rule + Level Gate Rule rows; extend **101** or sibling automation | open |
+| C-026 | 2026-07-04 | Schema / content | **Consolidate Tutorials vs Tutorials & Assets** | Duplicate tables with overlapping fields. **Web uses `Tutorials` only** (`/tutorials`, shoutouts, articles). `Tutorials & Assets` not in repo code — likely legacy duplicate. Audit rows, migrate unique content, delete one table on clone. | Extension audit row counts; Stage K ownership; see [v2-change-backlog.md](./v2-change-backlog.md) § C-026 | open |
+| C-027 | 2026-07-04 | Notifications / new component | **Instant alerts on major events (SMS TBD)** | Level up (**042**), milestones (**066**/**059**), etc. — **not** daily submissions. Email today is batch/parent-focused. Cell numbers on Enrollments/Athletes. Discuss Twilio/Make, consent, templates, idempotent send keys. | Design session; prototype after C-024; see [v2-change-backlog.md](./v2-change-backlog.md) § C-027 | open |
 
 ---
 
@@ -95,6 +102,11 @@ Items intentionally deferred until the contest is closed and final emails/audits
 | **C-018** | **Medium** | **Intake open vs challenge run** — date-driven **Weeks** config. |
 | **C-021** | **High** | **Grade bands** — link-based matching; remove hardcoded band strings in scripts. |
 | **C-022** | **High** | **Public display fields** — emails/web use Presentation labels, not primary field. |
+| **C-023** | **High** | **File hash dedup** — SHA-256 content hash, not filename/title. |
+| **C-024** | **High** | **Dedupe keys + idempotent backfills** — safe to rerun repairs. |
+| **C-025** | **High** | **Zoom recording attendance** — partial XP/gate credit when live missed. |
+| **C-026** | **Medium** | **Tutorials table merge** — keep `Tutorials` (web uses it); retire `Tutorials & Assets` after audit. |
+| **C-027** | **Medium** | **Major-event notifications** — level up / milestones; SMS via cell number TBD (not daily XP). |
 | **C-014** | **Medium** | **XP / levels / streaks game design** — **DECIDED 2026-07-03:** one ladder, spread gates in config, comms-first; no dual-track for 2026–27. Streak economics may still need **053** review. See [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md). |
 | **H-001** | **Medium** | **Dedupe 090F unlock rows** — 9 duplicate groups, manual cleanup. Full ID table: [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md). |
 | **H-002** | **High** | **Automation 066 writes Week** on shot-milestone unlocks (match 058). Before 2026–27 season. |
