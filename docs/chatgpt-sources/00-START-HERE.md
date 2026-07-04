@@ -32,6 +32,9 @@
 | 11 | `11-level-gate-rules-config-template.csv` | Gate numbers worksheet (TBD) |
 | 12–17 | `12`–`17` | V2 doc shells (standards — expand over time) |
 | 18 | `18-close-out-considerations.md` | Open items and resolved decisions (C-014, etc.) |
+| 19 | `19-asset-storage-migration.md` | AWS S3 + canonical URL architecture (C-013) |
+| 20 | `20-testing-and-intake-architecture.md` | Fillout validation, Weeks, test sandbox, Test Intake (C-017–C-020) |
+| 21 | `21-platform-config-improvements.md` | Grade bands + public display (C-021, C-022) |
 
 ---
 
@@ -71,4 +74,4 @@ From repo root (PowerShell):
 
 ---
 
-*Last synced: 2026-07-03 18:00 (local)*
+*Last synced: 2026-07-03 18:26 (local)*

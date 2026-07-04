@@ -252,7 +252,7 @@ If families cannot trust XP, levels, shots, achievements, and summaries, they wi
 
 **V1 wins to protect:** One source → one XP event; pipeline audits; close-out audits; award reconciliation.
 
-**V1 problems to fix before V2 launch:** Duplicate badges; inactive enrollments still in some paths; Airtable file storage; legacy fields.
+**V1 problems to fix before V2 launch:** Duplicate badges; inactive enrollments still in some paths; **Airtable attachments + personal Google Drive** (migrate to S3 canonical URLs); legacy fields.
 
 ---
 
@@ -306,9 +306,9 @@ Build as though the program will eventually support **thousands of athletes** �
 | **2** | Remove technical debt (badge dedupe, Stage J legacy fields) |
 | **3** | Standardize automations; **move tunable values toward config tables** |
 | **4** | Data ownership map (Stage K) |
-| **5** | Reliability (`Active?` gates, 066 Week write, automatic weekly emails) |
-| **6** | Scalability (Google Drive–only files) |
-| **7** | Intake fixes (HW17 quiz, etc.) |
+| **5** | Reliability (`Active?` gates, **Schmidt test sandbox C-019**, **Test Intake C-020**, 066 Week write, automatic weekly emails) |
+| **6** | Scalability — **AWS S3 canonical assets** (retire Google Drive + Airtable attachments). See [asset-storage-migration.md](./asset-storage-migration.md). |
+| **7** | Intake fixes — **Fillout validation C-017**, HW17 quiz (C-009), **flexible Weeks C-018** |
 | **8** | **Config tuning** — Levels, Level Gate Rules, XP Reward Rules for 2026–27 (spread gates) |
 | **9** | Game manual + website rules (published from config) |
 | **10** | Website features (leaderboard, achievements, profiles) |
@@ -344,8 +344,13 @@ Version 2 is successful when:
 | Numbers in scripts | **Config-first** — XP Reward Rules, Levels, gates |
 | Streak break beats continuity | Tune Achievements / rules; may need **053** logic review |
 | Week 10 quiz | Redo HW17 intake |
-| Airtable storage full | Drive-only assets |
-| Inactive kids not fully off | Harden `Active?` |
+| Airtable storage full / Drive retiring | **AWS S3 + canonical URL** — [asset-storage-migration.md](./asset-storage-migration.md) |
+| Inactive kids not fully off | Harden `Active?` + **Schmidt test sandbox** (C-019) |
+| Slow manual pipeline testing | **Test Intake harness** (C-020) |
+| Fillout data quality | **Fillout validation + Athlete field cleanup** (C-017) |
+| Grade band renames break XP/emails | **Link-based grade bands** (C-021) |
+| Email shows long formula primary | **Public display fields** (C-022) |
+| Fixed week calendar | **Flexible date-driven Weeks** config (C-018) |
 | Duplicate milestone badges | Dedupe + fix 066 |
 
 Detail: [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) · [close-out-considerations.md](./close-out-considerations.md)

@@ -7,7 +7,7 @@
 | Layer | Role |
 |-------|------|
 | **Airtable** | Data, formulas, native automations, extension scripts |
-| **Make.com** | Google Drive, Gmail, webhooks |
+| **Make.com** | S3 upload (target), Gmail, webhooks — today still Google Drive in upload engine |
 | **GitHub** | Versioned scripts, schema, blueprints, docs |
 | **Next.js (`web/`)** | Public app at `/shoot` on hoopchallenges.com |
 | **Fillout** | Submission and quiz intake |
@@ -32,7 +32,7 @@ Enrollment → Submission → XP Event → Weekly Athlete Summary
 | [../data-flow/homework-flow.md](../data-flow/homework-flow.md) | Homework pipeline |
 | [../data-flow/weekly-summary-flow.md](../data-flow/weekly-summary-flow.md) | Weekly email chain |
 | [../shooting-challenge-v2-base-cutover.md](../shooting-challenge-v2-base-cutover.md) | Archive + clone for 2026–27 |
-| [../shooting-challenge-v2-config-vs-code.md](../shooting-challenge-v2-config-vs-code.md) | Config vs code |
+| [../asset-storage-migration.md](../asset-storage-migration.md) | **AWS S3 + canonical URL** asset architecture (C-013) |
 | [../../airtable/schema/current/table-map.md](../../airtable/schema/current/table-map.md) | Tables and links |
 | [../../airtable/schema/current/automation-trigger-map.md](../../airtable/schema/current/automation-trigger-map.md) | Automation triggers |
 | [../PROJECT_STATE.md](../PROJECT_STATE.md) | Live base IDs, Vercel, audit status |

@@ -11,7 +11,7 @@
 
 **Status key:** `open` · `monitoring` · `blocked` · `resolved` · `wont-fix`
 
-Last updated: **2026-07-03** (C-014 V2 progression decision recorded)
+Last updated: **2026-07-04** (C-018 intake vs challenge dates; C-019/C-020 no test flags, full pipeline parity)
 
 ---
 
@@ -43,7 +43,7 @@ If a Submission / Homework Completion / XP row is **already linked** to an inact
 | **053** streak occurrences | Still rebuilds from counted submissions |
 | **072 / 076** parent emails | No enrollment `Active?` gate today |
 
-**Practical rule for safe testing:** Use a **dedicated test Athlete** whose only enrollment is **inactive**. Do not share the same Athlete record with a live enrollment. Avoid manually setting Enrollment on test rows to an inactive record if you want the pipeline to stay idle — and never link test rows to a **production** enrollment.
+**Practical rule for safe testing:** Use a **dedicated Schmidt test Athlete** (**C-019**) with one Enrollment where **`Active?` is unchecked** — hidden from leaderboard and audits, but pipeline runs **identically** to production (no test flags on rows). Test Intake (**C-020**) pre-links that Enrollment. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md).
 
 **Post–July 1:** See **C-010** — harden `Active?` as a global gate in XP, weekly summary, homework, streak, and email automations.
 
@@ -65,10 +65,16 @@ If a Submission / Homework Completion / XP row is **already linked** to an inact
 | C-010 | 2026-06-29 | Enrollments / `Active?` | **Harden inactive enrollment sandbox** | User wants `Active?` unchecked = fully out of production (leaderboards, audits, XP, emails). **Already works** for web leaderboard, 090 audits, 090G, **023** auto-link, **056**, **066**, **101**. **Gaps:** **010**, **031**, **065**, **053**, **072**, **076** do not skip inactive enrollments if rows are already linked. See section **Using Active? on Enrollments** above. | After July 1: add early `Enrollment.Active?` guard (skip, no error) to intake/XP/email automations; extension audit for inactive enrollment leakage; document test-athlete pattern | open |
 | C-011 | 2026-06-29 | Weekly email / WAS | **Fully automatic weekly parent email (no manual steps)** | User wants Weekly Athlete Summary emails every week in a fixed format with **no manual checkboxes**. **Today:** (1) WAS rows created ad hoc via **031** when submissions happen — not guaranteed one per active enrollment per week; (2) **072** builds HTML only when staff checks **`Build Weekly Email Now?`**; (3) **072 deliberately leaves `Send to Make?` unchecked** for review (see CHANGELOG); (4) **074** sends only when staff checks **`Send to Make?`**; (5) `docs/data-flow/weekly-summary-flow.md` describes a scheduled build but **no scheduled automation exists in repo**. Close-out **090G** audit simulates 072/074 triggers; final one-time email is separate (`repair-final-090g`). | **Start after 2026-07-01:** define schedule (e.g. Monday AM Denver, prior week ended); batch extension or scheduled automation: for each Active? enrollment + ended week → ensure WAS → run 072 package build → auto-handoff to 074/Make (or merge 072+074 with idempotency); skip if `Weekly Email Sent?`; optional test mode; lock HTML template in 072; update weekly-summary-flow + weekly checklist | open |
 | C-012 | 2026-06-29 | Schema / all tables | **Post-close field ownership & lineage pass (“Stage K”)** | After challenge: go **table by table** and prove every field is (a) needed, (b) filled by the **correct** writer — automation script, Make writeback, Fillout intake, or formula/rollup — and (c) delete or archive unused / low-value fields. **Already started** as **Stage J** in repo: `audit-field-coverage-report.js` (fill rates on canonical fields), `audit-legacy-cleanup-candidates.js` (LEGACY/ZZZ names), `docs/airtable/stage-j-legacy-cleanup.md` (hide → delete runbook). **Not done yet:** full per-table **field ownership matrix** (field → sole writer automation #), cross-check that no two automations fight over same field, verify formulas only depend on live fields, export fresh schema after deletes, update `field-map.md` + automation-index. User goal: confidence that “everything always gets written correctly” without mystery blanks. | **Start after 2026-07-01:** fresh schema export → table-by-table checklist → extend audits or add `audit-field-ownership-matrix.js` → Phase 3–5 from stage-j doc → update `airtable/schema/current/` | open |
-| C-013 | 2026-06-29 | Storage / assets | **Google Drive–only assets (no Airtable file storage)** | User over Airtable attachment limit; deletes early-week assets to free space → **breaks audits/history**. **Today = triple storage:** (1) Fillout → `Submissions.HW Sub 1/2`, `Video Upload` attachments; (2) **009** **copies** each file → `Submission Assets.Airtable Attachment`; (3) after Make upload, Drive URLs exist **but attachments often remain**. Homework Completions also has `Airtable Attachment` + `Upload Ready?` formula requires it. Enrollment **`Athlete Headshot`** attachment feeds web leaderboard. Many gates (`Ready to Send to Make?`, **020**, **070a**, **013**) require `Airtable Attachment` not empty. **Target:** Google Drive File URL (+ File ID, folder) = **canonical asset**; Airtable holds **metadata + links only**; optional transient intake URL until Make confirms upload, then **clear** submission/asset attachment fields. Relates to **C-009** (quiz PDF path) and **C-012** (retire attachment fields). | **Start after 2026-07-01:** (1) document current copy chain; (2) rewrite formulas/views to `Google Drive File URL` / `Upload Status = Uploaded`; (3) update **009**/**070a**/**020**/**013**/**022** + Make engine; (4) headshot → Drive URL on Enrollment/Athletes + web `queries.ts`; (5) post-upload **clear attachment** automation; (6) update audits (`audit-stuck-upload-processing`, field coverage) to never require stored binaries | open |
+| C-013 | 2026-06-29 | Storage / assets | **AWS S3 canonical assets (no Airtable file storage; retire Google Drive)** | User over Airtable attachment limit; deletes early-week assets to free space → **breaks audits/history**. **Today = triple storage:** (1) Fillout → `Submissions.HW Sub 1/2`, `Video Upload` attachments; (2) **009** **copies** each file → `Submission Assets.Airtable Attachment`; (3) after Make upload, Drive URLs exist **but attachments often remain**. Homework Completions also has `Airtable Attachment` + `Upload Ready?` formula requires it. Enrollment **`Athlete Headshot`** attachment feeds web leaderboard. Many gates (`Ready to Send to Make?`, **020**, **070a**, **013**) require `Airtable Attachment` not empty. **Personal Google Drive will not remain available** after retirement — Drive is not a viable long-term canonical store. **Target:** Program-owned **AWS S3** (+ CloudFront for public headshots); **one canonical HTTPS URL per asset** used by *every* consumer (automations, Make, web, emails, coach views, audits) — URL is the asset; Airtable holds metadata + URL only; clear attachment fields after `Upload Status = Uploaded`. Full architecture: [asset-storage-migration.md](./asset-storage-migration.md). Relates to **C-009**, **C-012**. | **Start after 2026-07-01:** see [asset-storage-migration.md](./asset-storage-migration.md) implementation phases — S3 buckets, Make engine rewrite, field rename (`Canonical File URL`), automation/formula/web pass, attachment clear | open |
 | C-014 | 2026-06-29 | XP / levels / streaks | **Post-season game design review (no changes until challenge ends)** | **First year of levels + XP.** Many kids still on last-year “shots only” mental model; **gates/levels not live first two weeks** — mid-stream transition likely hurt adoption. **2025–26 snapshot (91 active):** shooting ~64% of XP; median HW **0**; 16 gate-blocked at 1,000+ XP; participation cliff at Deadeye. **Streak economics:** 053 awards 3/5/7/… on **each new block after a break** — e.g. **3×7-day streaks (135 XP) beat 1×20-day (125 XP)**; needs explicit review so continuity is not under-incentivized vs stop-start. Full write-up: [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md). | **DECIDED 2026-07-03:** **One ladder** for 2026–27 (XP + gates in **Level Gate Rules**). **Spread gates early** (e.g. 1 HW past level 1). **No dual-track.** Better comms + platform before May 2027. Revisit dual-track **only if** friction remains after 2026–27. Tune numbers in config tables Q1 2027 — see [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md). | resolved |
 | C-015 | 2026-07-02 | Award Recipients | Scope field vs catalog (49 rows) | `recipient_scope_vs_catalog_scope`: catalog **Overall/Both**, recipient row **Weekly** on historical **Sent** rows. Close-out audit **passed** (`needConqueredRow: 0`). | **Do not bulk-fix** for 2025–26. Optional row-by-row post-season. See **H-003** | monitoring |
 | C-016 | 2026-07-02 | Awards catalog | Duplicate `thanks_for_playing` class bucket | Three awards share bucket: Participation Award, Thanks for Playing, Zoom Attendance/Participation. | Post-season catalog cleanup. See **H-004** | open |
+| C-017 | 2026-07-03 | Fillout / Athletes intake | **Validate Fillout → Athletes path; clean Athlete fields** | Enrollment intake via Fillout → **001** find/create Athlete. Need stronger **Fillout validation rules** (email, names, required fields) and Athletes/Enrollments **field hygiene** (Stage K subset). Document test matrix for new vs returning athletes. Minimum bar: trust Athlete identity before downstream pipeline. | Audit Fillout forms + field map; tighten Fillout validation; extend **001** guards; Athletes field cleanup. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-017 | open |
+| C-018 | 2026-07-03 | Weeks / calendar | **Intake open vs challenge run (date-driven Weeks)** | **Two calendars in config:** (1) **Intake open** — e.g. early bird partial week; setting start date = day app/Fillout accepts input; (2) **Challenge run** — official Week 1+ from challenge start date. All date ranges in **Weeks** table; **005** maps by range only. Optional per-row flags (`Intake Open?`, XP/leaderboard counts). | Design Weeks schema; 2026–27 rows in clone; Fillout/web open gate on intake-open date. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-018 | open |
+| C-019 | 2026-07-03 | Testing / sandbox | **Schmidt test enrollment (visibility only)** | Dedicated Schmidt Athlete + Enrollment; **`Active?` = false** for leaderboard/audits/emails only. **No test flags** — base runs pipeline **identically** to production. Testing views filter by Schmidt Enrollment link. | Document test enrollment on 2026–27 clone; add **Testing** views per pipeline table. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-019 | open |
+| C-020 | 2026-07-03 | Testing / intake | **Test Intake harness (production-identical)** | **Test Intake** table + extension: fill scenario (incl. **multiple video attachments**), check **`Run Test?`** → creates Submission with Enrollment pre-linked → **unchecks trigger**. No test metadata on pipeline rows. Verify e.g. 3 files → 3 S3 URLs → 3 Video Feedback rows. | Design table + extension script; Testing views on all submission tables. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 | open |
+| C-021 | 2026-07-04 | Grade Bands / config | **Grade bands propagate from Configuration** | Grade Bands table is source of truth, but **072 hardcodes** band name strings (`K2`, `34`, …); **010** ignores grade-band link on XP Reward Rules. Renaming/restructuring bands can break XP display and rule matching. | Audit scripts; match XP rules by **Grade Band link** not strings; web reads linked labels. See [platform-config-improvements.md](./platform-config-improvements.md) § C-021 | open |
+| C-022 | 2026-07-04 | Presentation / emails | **Public display fields — no primary-field fallback** | Homework emails (071) use Week + assignment name but fall back to **primary/formula** (`Assignment Full Name`) — too much detail for parents. Need explicit **Presentation** fields (`Assignment Title`, `Week Label - Public`); emails/web never use `record.name`. | Schema + 071/072 field sources; document Presentation field standard. See [platform-config-improvements.md](./platform-config-improvements.md) § C-022 | open |
 
 ---
 
@@ -82,7 +88,13 @@ Items intentionally deferred until the contest is closed and final emails/audits
 | **C-010** | **High** | **Harden `Active?` on Enrollments** — inactive must mean fully out of XP, emails, weekly summaries, streaks (not just leaderboard + audits). See **Using Active? on Enrollments** section. |
 | **C-011** | **High** | **Automate weekly parent emails end-to-end** — remove `Build Weekly Email Now?` / `Send to Make?` manual gates; scheduled build+send every week in 072 format. See C-011 in Active table. |
 | **C-012** | **High** | **Stage K — field ownership & lineage pass** — every table: who writes each field, delete cruft. Builds on [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md). |
-| **C-013** | **High** | **Drive-only assets** — stop storing files/headshots in Airtable; URLs + metadata only; clear attachments after upload. See C-013 + diagram below. |
+| **C-013** | **High** | **AWS S3 + canonical URL assets** — retire personal Google Drive; no files in Airtable; every consumer uses the same HTTPS URL. See [asset-storage-migration.md](./asset-storage-migration.md). |
+| **C-017** | **High** | **Fillout → Athletes validation** + field cleanup. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md). |
+| **C-019** | **High** | **Schmidt test enrollment** — `Active?` false for standings only; **no test flags**; full pipeline parity. |
+| **C-020** | **High** | **Test Intake harness** — production-identical runs; multi-file video example; Testing views by Enrollment. |
+| **C-018** | **Medium** | **Intake open vs challenge run** — date-driven **Weeks** config. |
+| **C-021** | **High** | **Grade bands** — link-based matching; remove hardcoded band strings in scripts. |
+| **C-022** | **High** | **Public display fields** — emails/web use Presentation labels, not primary field. |
 | **C-014** | **Medium** | **XP / levels / streaks game design** — **DECIDED 2026-07-03:** one ladder, spread gates in config, comms-first; no dual-track for 2026–27. Streak economics may still need **053** review. See [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md). |
 | **H-001** | **Medium** | **Dedupe 090F unlock rows** — 9 duplicate groups, manual cleanup. Full ID table: [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md). |
 | **H-002** | **High** | **Automation 066 writes Week** on shot-milestone unlocks (match 058). Before 2026–27 season. |
@@ -91,24 +103,29 @@ Items intentionally deferred until the contest is closed and final emails/audits
 
 ### C-013 — Current vs target asset flow
 
-**Today (same bytes stored multiple times):**
+Full architecture: **[asset-storage-migration.md](./asset-storage-migration.md)**
+
+**Today (same bytes stored multiple times; Drive tied to personal account):**
 
 ```
 Fillout → Submissions (HW Sub 1/2, Video Upload)     ← attachment #1
     → 009 copies file → Submission Assets            ← attachment #2
-    → 070a/070b → Make downloads attachment.url → Google Drive
+    → 070a/070b → Make downloads attachment.url → Google Drive (personal)
     → 022 writeback → Drive URL on Asset (+ sometimes Homework Completion attachment)
     → attachments often NEVER cleared → storage limit
+    → web/coach/email paths sometimes read attachment, sometimes URL — dual truth
 ```
 
-**Target (next season):**
+**Target (2026–27):**
 
 ```
-Fillout → brief intake (URL or one-hop temp) → Make → Google Drive (canonical file)
-    → Airtable: Submission Assets row = metadata + Google Drive File URL only
+Fillout → transient intake only (optional one-hop)
+    → Make Upload Engine → AWS S3 (program-owned bucket)
+    → writeback: Canonical File URL on Submission Assets (+ metadata)
     → clear any intake attachment after Upload Status = Uploaded
-    → formulas/automations gate on Drive URL + status, NOT Airtable Attachment
-    → headshots: Drive URL on Enrollment (web leaderboard reads URL field)
+    → formulas/automations/views gate on Canonical File URL + status — NOT attachment
+    → headshots: Canonical File URL on Enrollment; web/emails use that URL exactly
+    → EVERY consumer (coach UI, Make emails, /shoot, audits) uses the same URL string
 ```
 
 ---
@@ -135,7 +152,9 @@ Fillout → brief intake (URL or one-hop temp) → Make → Google Drive (canoni
 
 - [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **2025–26 post-close cleanup backlog (H-001–H-006)**
 - [PROJECT_STATE.md](./PROJECT_STATE.md) — bases, audit index, deploy paths
-- [data-flow/homework-flow.md](./data-flow/homework-flow.md) — file-based homework path; HW17 Fillout section needs rework (C-009)
+- [asset-storage-migration.md](./asset-storage-migration.md) — AWS S3 + canonical URL assets (C-013)
+- [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — Fillout validation, flexible Weeks, Schmidt sandbox, Test Intake harness (C-017–C-020)
+- [platform-config-improvements.md](./platform-config-improvements.md) — Grade bands + public display (C-021, C-022)
 - [data-flow/weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) — **aspirational** scheduled flow; production still manual (C-011)
 - [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) — Stage J field cleanup; extends to **Stage K** (C-012)
 - [extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md) — 090A–090G

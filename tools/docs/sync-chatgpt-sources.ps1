@@ -27,7 +27,10 @@ $maps = @(
     @{ Src = "docs\v2\07-ui-standards.md"; Dst = "15-ui-standards.md" },
     @{ Src = "docs\v2\08-testing-standards.md"; Dst = "16-testing-standards.md" },
     @{ Src = "docs\v2\09-release-notes.md"; Dst = "17-release-notes.md" },
-    @{ Src = "docs\close-out-considerations.md"; Dst = "18-close-out-considerations.md" }
+    @{ Src = "docs\close-out-considerations.md"; Dst = "18-close-out-considerations.md" },
+    @{ Src = "docs\asset-storage-migration.md"; Dst = "19-asset-storage-migration.md" },
+    @{ Src = "docs\testing-and-intake-architecture.md"; Dst = "20-testing-and-intake-architecture.md" },
+    @{ Src = "docs\platform-config-improvements.md"; Dst = "21-platform-config-improvements.md" }
 )
 
 $copied = 0

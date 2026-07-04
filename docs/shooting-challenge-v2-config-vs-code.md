@@ -128,7 +128,7 @@
 | **Streak “repeat 3/5/7 after every break”** | **053** logic; amounts are config, repeat behavior is code |
 | **Automatic weekly emails** | New or merged **072** / **074** schedule |
 | **`Active?` on all automations** | Guard clause in each script |
-| **Google Drive–only files** | **009**, **070**, **020**, formulas, Make |
+| **Google Drive–only files** | **009**, **070**, **020**, formulas, Make — **migrate to AWS S3 + canonical URL** ([asset-storage-migration.md](./asset-storage-migration.md)) |
 | **HW17 quiz as normal file path** | **067** + intake redesign |
 | **More data in config tables** | Per-script refactor to read rules instead of literals |
 
