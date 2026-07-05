@@ -1,10 +1,49 @@
 # V2-015 — Development Airtable Base Architecture
 
 **Backlog ID:** V2-015  
-**Status:** **Live** — `appTetnuCZlCZdTCT`; complete webhook isolation per runbook  
+**Status:** **Ready — in progress** — `appTetnuCZlCZdTCT`; **not complete** until **066 v3.1** tested in DEV  
 **Last updated:** 2026-07-05
 
 **Setup runbook:** [development-base-setup.md](./development-base-setup.md)
+
+---
+
+## DEV base readiness (2026-07-05)
+
+| Item | Status |
+|------|--------|
+| Base exists | **Yes** — `appTetnuCZlCZdTCT` |
+| Production changed | **No** — scrub and enrollment removal **DEV only** |
+| Test enrollments | **6 retained** — Schmidt/testing + **5** additional test enrollments |
+| Other enrollments | **Removed from DEV** — all other registered athlete/enrollment records deleted |
+| V2-015 complete | **No** — pending **066 v3.1** dev paste + test |
+
+### First testing location (DEV before PROD)
+
+| Work type | DEV first? |
+|-----------|------------|
+| Automation **066 v3.1** paste | **Yes** — next step (H-002) |
+| Automation merge testing | **Yes** |
+| Schema changes | **Yes** |
+| Extension backfills | **Yes** |
+| Test Intake / Schmidt sandbox (C-019, C-020) | **Yes** |
+| Make dry-runs | **Yes** — when dev scenarios configured |
+
+Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke tests only — see [testing-and-intake-architecture.md](./testing-and-intake-architecture.md).
+
+### V2-015 completion criteria
+
+| # | Criterion | Status |
+|---|-----------|--------|
+| 1 | DEV base ID recorded in docs | **Done** |
+| 2 | DEV scrubbed to test enrollments only | **Done** (2026-07-05) |
+| 3 | Production unchanged | **Confirmed** |
+| 4 | **066 v3.1** pasted and tested in DEV | **Pending** |
+| 5 | Webhook / Make isolation verified | Verify per [development-base-setup.md](./development-base-setup.md) Step 3 |
+
+**Do not mark V2-015 `done` in backlog until criterion 4 passes.**
+
+---
 
 **Related:**
 
@@ -265,15 +304,15 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 
 | # | Task | Owner |
 |---|------|-------|
-| 1 | Duplicate production base → rename `127SI - SHOOTING CHALLENGE - DEV` | Mike |
-| 2 | Record dev base ID in [PROJECT_STATE.md](./PROJECT_STATE.md) | Cursor |
-| 3 | Add dev base to PAT scopes | Mike |
-| 4 | Scrub dev: remove real parent PII where possible; keep config + Schmidt test rows | Mike / OMNI |
-| 5 | Clone Make scenarios → dev webhooks; document in `make/blueprints/` | Mike |
-| 6 | Paste current automations to dev (parity with prod) | Mike |
-| 7 | Add **Testing** views + Test Intake table (C-020) on dev first | Cursor / Mike |
-| 8 | Update doc 04 + doc 08 promote workflow | Cursor |
-| 9 | First use: **066 v3.1** dev paste + audit before prod | Cursor |
+| 1 | Duplicate production base → rename `127SI - SHOOTING CHALLENGE - DEV` | Mike | **Done** |
+| 2 | Record dev base ID in [PROJECT_STATE.md](./PROJECT_STATE.md) | Cursor | **Done** — `appTetnuCZlCZdTCT` |
+| 3 | Add dev base to PAT scopes | Mike | |
+| 4 | Scrub dev: Schmidt + 5 test enrollments; remove all other enrollments | Mike / OMNI | **Done** — prod unchanged |
+| 5 | Clone Make scenarios → dev webhooks; document in `make/blueprints/` | Mike | |
+| 6 | Paste current automations to dev (parity with prod) | Mike | |
+| 7 | Add **Testing** views + Test Intake table (C-020) on dev first | Cursor / Mike | |
+| 8 | Update doc 04 + doc 08 promote workflow | Cursor | **Done** |
+| 9 | First use: **066 v3.1** dev paste + audit before prod | Cursor | **Pending** — **blocks V2-015 done** |
 
 ---
 
@@ -292,3 +331,4 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 |------|-------|
 | 2026-07-05 | V2-015 initial architecture evaluation and recommendation |
 | 2026-07-05 | Dev base ID recorded: `appTetnuCZlCZdTCT` |
+| 2026-07-05 | DEV ready — 6 test enrollments retained; all other enrollments removed; prod unchanged; 066 dev test pending |
