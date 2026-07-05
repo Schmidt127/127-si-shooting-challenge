@@ -1,0 +1,126 @@
+{
+  "baseId": "appTetnuCZlCZdTCT",
+  "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+  "generatedAt": "2026-07-05T17:51:35",
+  "tableCount": 29,
+  "viewCountBasic": 119,
+  "viewCountDetailed": 119,
+  "linkCount": 132,
+  "dependencyCount": 365,
+  "tables": [
+    "Automations",
+    "Enrollments",
+    "Athletes",
+    "Grade Bands",
+    "Target Goal Shots",
+    "Submissions",
+    "Submission Assets",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Achievements",
+    "Weeks",
+    "Level Gate Rules",
+    "Program Instance - Synced",
+    "School - Synced",
+    "Weekly Athlete Summary",
+    "Levels",
+    "Shot Milestones",
+    "FBC Curriculum - SYNC",
+    "Homework Completions",
+    "Video Feedback",
+    "Tutorials",
+    "Tutorials & Assets",
+    "Zoom Meetings",
+    "XP Reward Rules",
+    "Config",
+    "Awards",
+    "Award Recipients",
+    "Final Reflection Quiz Submissions"
+  ],
+  "topHubTables": [
+    {
+      "table": "Enrollments",
+      "degree": 36
+    },
+    {
+      "table": "Weeks",
+      "degree": 22
+    },
+    {
+      "table": "Submissions",
+      "degree": 20
+    },
+    {
+      "table": "XP Events",
+      "degree": 20
+    },
+    {
+      "table": "Homework Completions",
+      "degree": 18
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "degree": 18
+    },
+    {
+      "table": "Grade Bands",
+      "degree": 14
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "degree": 12
+    },
+    {
+      "table": "FBC Curriculum - SYNC",
+      "degree": 12
+    },
+    {
+      "table": "Submission Assets",
+      "degree": 12
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Enrollments",
+      "computedFieldCount": 75
+    },
+    {
+      "table": "Submissions",
+      "computedFieldCount": 54
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "computedFieldCount": 45
+    },
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 35
+    },
+    {
+      "table": "Homework Completions",
+      "computedFieldCount": 32
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "computedFieldCount": 25
+    },
+    {
+      "table": "XP Events",
+      "computedFieldCount": 22
+    },
+    {
+      "table": "Award Recipients",
+      "computedFieldCount": 15
+    },
+    {
+      "table": "Video Feedback",
+      "computedFieldCount": 12
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "computedFieldCount": 10
+    }
+  ],
+  "viewsPerTable": {}
+}
