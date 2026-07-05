@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; **V2-014** active; V2-013 queued)
+Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; **V2-014** active; **V2-015** dev base approved)
 
 ---
 
@@ -16,6 +16,7 @@ Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; **V2-014** ac
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Current** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation inventory + capacity roadmap |
+| **V2-015 — Development base** | **Approved** — clone prod → DEV; [setup runbook](./development-base-setup.md) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
 **Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
@@ -36,10 +37,30 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 ## Airtable — Shooting Challenge
 
+### Production
+
 | Item | Value |
 |------|--------|
 | Base name (Airtable UI) | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` |
 | Base ID | `appn84sqPw03zEbTT` |
+| Role | **Live season** — system of record; V2-013 multi-year history |
+
+### Development (V2-015)
+
+| Item | Value |
+|------|--------|
+| Base name (recommended) | `127SI - SHOOTING CHALLENGE - DEV` |
+| Base ID | **`(set after clone)`** — duplicate production base, then record ID here |
+| Role | Automation paste test, schema experiments, extension backfills, Make dry-runs |
+| Setup runbook | [development-base-setup.md](./development-base-setup.md) |
+| Architecture | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
+
+**Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
+
+### Schema (production export)
+
+| Item | Value |
+|------|--------|
 | Tables (schema export) | **29** (see `base_summary_*_20260629_045741.json`) |
 | Schema snapshot (latest) | `airtable/schema/snapshots/` — **`20260629_045741`** + `manifest_appn84sqPw03zEbTT_latest.json` |
 | Hand-maintained maps | `airtable/schema/current/` |
@@ -47,7 +68,9 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **Web env vars (Vercel project `127-si-shooting-challenge`, never commit values):**
 
-`AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID`, `NEXT_PUBLIC_BASE_PATH` (`/shoot`), `NEXT_PUBLIC_LANDING_URL`, `NEXT_PUBLIC_SITE_URL`
+`AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID` (**production only on Vercel**), `NEXT_PUBLIC_BASE_PATH` (`/shoot`), `NEXT_PUBLIC_LANDING_URL`, `NEXT_PUBLIC_SITE_URL`
+
+**Local / tools:** optional dev base via `web/.env.local` or `tools/airtable/.env` — see [development-base-setup.md](./development-base-setup.md).
 
 **Schema export PAT (`tools/airtable/.env`):** `AIRTABLE_TOKEN` or `AIRTABLE_API_TOKEN` with **`schema.bases:read`** (optional `data.records:read` for audits).
 
@@ -130,6 +153,7 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
 | **066 deploy** | GitHub v3.1 ready; **Airtable paste pending** Mike approval |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
+| **Dev base (V2-015)** | **Approved** — clone in progress; [development-base-setup.md](./development-base-setup.md) |
 
 ### Multi-year architecture (2026-07-05 decision)
 
