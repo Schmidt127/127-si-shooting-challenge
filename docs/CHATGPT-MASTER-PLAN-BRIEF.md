@@ -164,8 +164,8 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **V2-014** | Automation Modernization Roadmap | Master inventory of all 46 production automations; disposition; ~12 slot recovery plan; **066 v3.1** reference; **112 OFF**; **013** production | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
-| **V2-014a** | Wave 2a — capacity quick wins | Delete **112** after monitor; retire **043**; merge **006+021**; OMNI live count | V2-014 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+| **V2-014** | Automation Modernization Roadmap | Category A–F inventory; four-axis evaluation; Complexity Score; complexity-first (capacity secondary); **066 v3.1** reference; **112 OFF** | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+| **V2-014a** | Wave 2a — classify everything | Category + Complexity Score for all 46; OMNI triggers; no unapproved production changes | V2-014 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014b** | Email Message Center | Replace 7 email automations with builder + sender | V2-014, C-011 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 
 ### Wave 2 — Schema, field ownership & dedupe engine

@@ -2,7 +2,46 @@
 
 **Status:** **Active** — V2 rewrite pattern defined; **066 v3.1** is the reference implementation.
 
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (Automation Complexity Score added)
+
+---
+
+## Automation Complexity Score
+
+Every production automation gets a **Complexity Score** during Phase 2 inventory (see [V2-014](../v2-014-automation-modernization-roadmap.md)). Use the score to answer: *Which automation should we modernize next?*
+
+### Scoring factors
+
+| Factor | Points |
+|--------|-------:|
+| Each table touched (read or write) | 1 |
+| Each table written to | 2 |
+| External API call (Make webhook, fetch, etc.) | 3 |
+| Creates records | 2 |
+| Deletes records | 3 |
+| Script length > 300 lines | 2 |
+| Script length > 700 lines | 4 |
+
+Count each factor once per script (not per occurrence). Line count from GitHub file at inventory time.
+
+### Complexity tiers
+
+| Tier | Score | Guidance |
+|------|------:|----------|
+| **Simple** | 0–6 | Category A candidate — leave alone unless V2 format missing |
+| **Medium** | 7–14 | Rewrite when touched; low modernization urgency |
+| **Complex** | 15–22 | Plan V2 rewrite carefully; audit before deploy |
+| **Critical** | 23+ | Modernize only in approved wave; full audit + sandbox test required |
+
+**066 v3.1** scores **Critical** by line count alone — that is expected for domain-heavy scripts. Complexity score drives **priority and test rigor**, not “must merge to save slots.”
+
+### How to use the score
+
+1. Compute during Wave 2a per-automation review ([V2-014](../v2-014-automation-modernization-roadmap.md)).
+2. Record score + tier in the roadmap inventory row.
+3. Sort modernization queue by: **still needed?** → **understandable?** → **V2 standard?** → complexity tier → slot savings (lowest weight).
+
+Slot recovery is a **secondary benefit** of reducing complexity — never merge solely to save a slot if readability suffers.
 
 ---
 
@@ -72,6 +111,7 @@ Do not deliver partial line-change patches for planned V2 upgrades.
 | [../../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md) | **Full automation script standard** |
 | [../../.cursor/rules/airtable-automation-scripts.mdc](../../.cursor/rules/airtable-automation-scripts.mdc) | Cursor rule summary |
 | [../automation-index.md](../automation-index.md) | All production automations (001–114) |
+| [../v2-014-automation-modernization-roadmap.md](../v2-014-automation-modernization-roadmap.md) | Phase 2 inventory, categories, complexity scores |
 | [../../airtable/schema/current/automation-trigger-map.md](../../airtable/schema/current/automation-trigger-map.md) | Trigger map |
 
 ---

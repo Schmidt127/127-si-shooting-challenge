@@ -19,7 +19,7 @@
 | — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Worksheet — example level names; numbers TBD |
 | 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | **Active** — three-role workflow, five phases, task classification, **workspace guardrails** |
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
-| 06 | [06-automation-standards.md](./06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference |
+| 06 | [06-automation-standards.md](./06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference; **Automation Complexity Score** |
 | 07 | [07-ui-standards.md](./07-ui-standards.md) | Shell |
 | 08 | [08-testing-standards.md](./08-testing-standards.md) | **Active** — audit-first workflow; **fix the audit, not the data** |
 | 09 | [09-release-notes.md](./09-release-notes.md) | Shell — points to CHANGELOG |

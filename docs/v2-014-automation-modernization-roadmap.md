@@ -15,6 +15,55 @@
 
 **Do not rewrite automations from this document alone.** Each row is a planning classification until Mike approves a modernization wave.
 
+**Phase 2 goal:** Reduce platform complexity while recovering automation capacity — **not** slot-chasing. Readability and maintainability outrank squeezing automations together.
+
+---
+
+## Modernization philosophy
+
+### Four-axis evaluation (use for every automation)
+
+| Question | Weight |
+|----------|--------|
+| Is it still needed? | **High** |
+| Is it understandable? | **High** |
+| Does it follow the V2 standard? | **High** |
+| Does it save a slot if merged? | **Medium** |
+
+If merge would reduce slots but hurt readability, **keep separate** (Category A or B).
+
+### Category taxonomy (every automation ends here)
+
+| Cat | Name | Meaning | Examples |
+|-----|------|---------|----------|
+| **A** | Production — leave alone | Simple, easy to understand, working | **041** (level recalc flag), **066** after deploy |
+| **B** | Production — V2 rewrite only | Needed; needs V2 formatting when scheduled | **010**, **042**, **114** |
+| **C** | Production — merge candidate | Two+ automations should become one **when clarity allows** | **006+021**, **030+032+033**, **111→013** |
+| **D** | Extension Script | Repair, backfill, one-time cleanup — not production triggers | Pipeline audits, safe-backfills |
+| **E** | Make / external handoff | Gmail, webhooks, third-party APIs | **070a/b**, **074**, **077**; email via Make today |
+| **F** | Retire | Duplicate, obsolete, or superseded | **012** (done), **112**, **043** |
+
+### Automation Complexity Score
+
+Defined in [v2/06-automation-standards.md](./v2/06-automation-standards.md). Record **Score** and **Tier** (Simple / Medium / Complex / Critical) on each inventory row during Wave 2a.
+
+Scripts **>700 lines** (preliminary): **072**, **076**, **101**, **114**, **059**, **010**, **071**, **066**, **075**, **065**, **053**, **054**, **031**, **020** — prioritize understanding before rewriting.
+
+### Platform stack (no Lambda yet)
+
+Current ecosystem is sufficient for Phase 2:
+
+| Tool | Role |
+|------|------|
+| **Airtable** | Production data + automations |
+| **OMNI** | In-base queries, views, live automation audit |
+| **Cursor + GitHub** | Script source of truth, docs, audits |
+| **Make** | Email send, upload webhooks |
+| **Python** | Schema export, media kit builders |
+| **S3** (planned) | Canonical asset URLs (C-013) |
+
+**Lambda is deferred.** Introduce only if a clear need emerges that none of the above handle well (e.g. high-volume S3 media processing). Finish simplifying the current stack first.
+
 ---
 
 ## Product lifecycle context
@@ -34,23 +83,20 @@ Phase 2 workstreams: (1) Automation inventory, (2) Capacity, (3) V2 standard, (4
 
 Counts as of **2026-07-05** (GitHub + Mike confirmations). Reconcile live count in Airtable OMNI after each retirement.
 
+**Primary metric:** platform complexity reduction (classification complete, duplicates removed, legacy marked).  
+**Secondary metric:** automation capacity recovered (side effect of good merges and retirements).
+
 | Metric | Count | Notes |
 |--------|------:|-------|
 | **Airtable automation limit** | 50 | Hard cap per base |
 | **GitHub production scripts** | 46 | `001`–`114` numbered files (excludes 012) |
-| **Airtable-only legacy (012)** | 0 | **Deleted** — Mike confirmed unused |
-| **Estimated live automations** | ~49 | Before 012 delete was ~50 |
-| **Active (production)** | ~47 | After 012 delete, 112 OFF |
-| **Disabled — monitor** | 1 | **112** (legacy duplicate of 013) |
-| **Deleted / retired** | 1 | **012** |
+| **Classified (Category A–F)** | 0 / 46 | **Wave 2a goal** — assign category + complexity to every row |
+| **Duplicate paths documented** | 2 | 013/112, 042/043 |
+| **Legacy marked** | 3 | 012 deleted, 112 OFF, 043 retire candidate |
 | **V2 compliant (SCRIPT + CONFIG + sections)** | 1 | **066 v3.1** |
 | **Partial standard** | ~28 | `main()`, CONFIG, outputs — not full V2 |
 | **Legacy standard** | ~17 | No `main()`, stub header, or top-level-only |
-| **Rewrite candidates** | ~40 | All except 066 until rewritten |
-| **Merge candidates** | 8 | See merge table below |
-| **Retirement candidates** | 3 | 012 done, 112, 043 |
-| **Move to EMC (Email Message Center)** | 7 | 071, 072, 073, 074, 075, 076, 077 |
-| **Estimated slots recoverable (full plan)** | **~12** | See capacity section |
+| **Estimated capacity recoverable** | **~12** | Secondary — only when merge/retire improves clarity |
 
 ---
 
@@ -62,19 +108,22 @@ Counts as of **2026-07-05** (GitHub + Mike confirmations). Reconcile live count 
 | **Partial** | `async function main()`, CONFIG, try/catch, `statusOut`/`debugStep` — good patterns but missing SCRIPT block or full section layout |
 | **Legacy** | Top-level execution (no `main`), placeholder GitHub header, or minimal docblock |
 
-| Disposition | Meaning |
-|-------------|---------|
-| **Keep** | Production path; rewrite later for V2 compliance only |
-| **Rewrite** | Full V2 rewrite when scheduled (full script, not line patches) |
-| **Merge** | Combine with related automation(s); net −1 slot per merge |
-| **Retire** | Disable → monitor → delete automation slot |
-| **Move** | Relocate logic (EMC, extension script, Make, OMNI) — automation slot freed |
+| Category | Meaning |
+|----------|---------|
+| **A** | Production — simple; leave alone |
+| **B** | Production — V2 rewrite when scheduled |
+| **C** | Production — merge candidate (clarity first) |
+| **D** | Move to Extension Script (repair/backfill) |
+| **E** | Make / external handoff |
+| **F** | Retire |
+
+Legacy **Disposition** column in inventory tables maps to categories; Wave 2a adds explicit **Cat** + **Cx Score** columns.
 
 | Priority | Meaning |
 |----------|---------|
-| **P0** | Capacity / duplicate path — do first |
-| **P1** | High-traffic production path or blocks other work |
-| **P2** | Medium — merge or V2 rewrite when pipeline touched |
+| **P0** | Duplicate path or retire — approved production change only |
+| **P1** | High-traffic path or blocks other work |
+| **P2** | Medium — when pipeline touched |
 | **P3** | Low — keep running until scheduled |
 
 | Effort | Meaning |
@@ -86,20 +135,39 @@ Counts as of **2026-07-05** (GitHub + Mike confirmations). Reconcile live count 
 
 ---
 
-## Capacity plan — slot recovery
+## Wave 2a — success criteria
 
-| Action | Automation(s) | Status | Slots | Priority |
-|--------|---------------|--------|------:|----------|
-| Delete legacy automation | **012** | **Done** (Mike) | +1 | P0 |
-| Retire duplicate video create | **112** | **OFF — monitor** | +1 | P0 |
-| Disable superseded level helper | **043** | Pending verify 042 | +1 | P0 |
-| Merge submission prep | **006 + 021** | Planned | +1 | P1 |
-| Email Message Center | **072, 074, 076, 077, 071, 073, 075** → 2 automations | Planned Phase 2b | +5 net | P1 |
-| Merge WAS bootstrap | **030 + 032 + 033** | Planned | +2 | P2 |
-| Merge grade band copy | **111 → 013**, **063 → 020** | Planned | +1–2 | P2 |
-| **Total potential** | | | **~12** | |
+Wave 2a is **classification and documentation**, not bulk rewrites.
 
-Target after Phase 2 capacity work: **~37–38 automations** (~12 headroom below limit).
+| # | Criterion | Status |
+|---|-----------|--------|
+| 1 | Every production automation has **Category A–F** | Pending |
+| 2 | Every automation has **Complexity Score + tier** ([doc 06](./v2/06-automation-standards.md)) | Pending |
+| 3 | Every duplicate path identified and documented | **Partial** (013/112, 042/043) |
+| 4 | Every legacy automation marked | **Partial** (012, 112, 043) |
+| 5 | Every automation has **modernization priority** (P0–P3) | Preliminary in inventory |
+| 6 | **No production behavior changes** except Mike-approved (e.g. **112** OFF, future **112** delete) | In progress |
+
+When Wave 2a is complete, work proceeds **one approved wave at a time** — no wondering what to do next.
+
+---
+
+## Complexity reduction plan (capacity is secondary)
+
+Apply four-axis evaluation before any merge. Slot savings are recorded but not the primary driver.
+
+| Action | Automation(s) | Category | Clarity benefit | Slots (secondary) | Status |
+|--------|---------------|----------|-----------------|------------------:|--------|
+| Delete legacy automation | **012** | F | Remove dead path | +1 | **Done** |
+| Retire duplicate video create | **112** | F | Single VF path (**013**) | +1 | **OFF — monitor** |
+| Retire superseded level helper | **043** | F | **042** owns gate assignment | +1 | Pending verify |
+| Merge submission prep (if clear) | **006 + 021** | C | One submission status pass | +1 | Planned |
+| Email Message Center | **071–077** (7 → 2) | C/E | Centralize email build/send | +5 net | Planned |
+| Merge WAS bootstrap (if clear) | **030 + 032 + 033** | C | One WAS bootstrap script | +2 | Planned — **do not merge if timing differs** |
+| Merge grade band copy | **111 → 013**, **063 → 020** | C | Copy at create time | +1–2 | Planned |
+| **Do not merge** | 041↔010, 064↔065, 113↔114, 057↔058 | — | Formula/timing separation | 0 | **Keep separate** |
+
+Target after Phase 2: **lower average complexity tier** and **~37–38 automations** (~12 headroom) — headroom is a consequence, not the goal.
 
 ---
 
@@ -238,32 +306,36 @@ Target after Phase 2 capacity work: **~37–38 automations** (~12 headroom below
 
 | Wave | Focus | Automations | Goal |
 |------|-------|-------------|------|
-| **2a — Capacity quick wins** | Slots + duplicates | 012 delete ✓, 112 monitor→delete, 043 retire, 006+021 merge | **+4 slots** |
-| **2b — Deploy V2 reference** | Paste **066 v3.1** | 066 | Production parity; no new slot |
-| **2c — EMC design** | Schema + Email Key registry | — (doc only) | Unblocks C-011 |
-| **2d — EMC pilot** | Weekly email | 072+074 → EMC | **+2 slots**; C-011 path |
-| **2e — Pipeline merges** | WAS + video helpers | 030+032+033, 111 | **+3 slots** |
-| **2f — EMC remaining** | Daily + feedback + welcome | 076+077, 071, 073, 075 | **+3 slots** |
-| **2g — V2 rewrites by priority** | XP + intake core | 010, 009, 020, 065, 114, 042… | Standard compliance |
-| **3 — Features** | Parent UX, reports, media | *after 2g* | New work only |
+| **2a — Classify everything** | Category A–F + Complexity Score for all 46 | All | Wave 2a success criteria; OMNI trigger confirm; **no unapproved production changes** |
+| **2b — Deploy V2 reference** | Paste **066 v3.1** | 066 | Production parity; Category A after deploy |
+| **2c — Approved retirements** | Duplicates + superseded | 112 delete, 043 retire | Reduce complexity; slots secondary |
+| **2d — EMC design** | Schema + Email Key registry | — (doc only) | Unblocks C-011 |
+| **2e — EMC pilot** | Weekly email | 072+074 → EMC | Simpler email architecture |
+| **2f — Pipeline merges (if clarity allows)** | WAS + video helpers | 006+021, 030+032+033, 111 | Merge only after four-axis pass |
+| **2g — EMC remaining** | Daily + feedback + welcome | 076+077, 071, 073, 075 | Simpler email architecture |
+| **2h — V2 rewrites by priority** | XP + intake core | 010, 009, 020, 065, 114, 042… | Category B — complexity tier order |
+| **3 — Features** | Parent UX, reports, media | *after 2h* | New work only |
 
 ---
 
 ## Per-automation review workflow (repeat for each #)
 
 1. Confirm live trigger in Airtable OMNI (match docblock).
-2. Classify disposition in this doc (Keep / Rewrite / Merge / Retire / Move).
-3. If Rewrite: full script to **066 v3.1** structure — [06-automation-standards.md](./v2/06-automation-standards.md).
-4. Dry-run matching audit extension.
-5. Test one sandbox record.
-6. GitHub commit → paste to Airtable → `CHANGELOG.md`.
-7. Update this roadmap row + [automation-index.md](./automation-index.md).
+2. **Four-axis evaluation** — still needed? understandable? V2 standard? slot savings if merged?
+3. Assign **Category A–F** and **Complexity Score + tier** ([doc 06](./v2/06-automation-standards.md)).
+4. Set **modernization priority** (P0–P3).
+5. If Category B rewrite: full script to **066 v3.1** structure.
+6. If Category C merge: confirm clarity benefit before combining.
+7. Dry-run matching audit extension.
+8. Test one sandbox record (Complex/Critical tiers required).
+9. GitHub commit → paste to Airtable → `CHANGELOG.md`.
+10. Update this roadmap row + [automation-index.md](./automation-index.md).
 
 ---
 
 ## OMNI verification checklist (Wave 2a — Mike)
 
-Run in Airtable OMNI before capacity quick wins. Record results in this doc revision log.
+Run in Airtable OMNI to complete Wave 2a classification. Record results in this doc revision log.
 
 | # | Check | Expected | Actual (fill in OMNI) |
 |---|-------|----------|----------------------|
@@ -273,8 +345,10 @@ Run in Airtable OMNI before capacity quick wins. Record results in this doc revi
 | 4 | **013** status | ON — production Video Feedback | |
 | 5 | **043** status + **042** docblock note | 043 can retire if 042 assigns gate rule | |
 | 6 | Rows with *confirm in Airtable* in [automation-index.md](./automation-index.md) | Triggers match docblocks | |
+| 7 | Every automation assigned **Category A–F** | 46/46 in inventory below | |
+| 8 | Every automation has **Complexity Score + tier** | Per [doc 06](./v2/06-automation-standards.md) | |
 
-**After monitor period:** delete **112** automation (+1 slot) → update dashboard in this doc.
+**After monitor period:** delete **112** automation (Category F) — Mike-approved production change only.
 
 ---
 
@@ -284,3 +358,4 @@ Run in Airtable OMNI before capacity quick wins. Record results in this doc revi
 |------|-------|
 | 2026-07-05 | V2-014 created — Phase 2 Platform Modernization master inventory; 012 deleted; 112 OFF; 066 V2 reference |
 | 2026-07-05 | Cross-linked from backlog, PROJECT_STATE, automation-index, ChatGPT brief |
+| 2026-07-05 | Philosophy update — complexity-first framing; Category A–F; four-axis evaluation; Complexity Score in doc 06; Wave 2a = classify everything; Lambda deferred |
