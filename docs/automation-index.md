@@ -73,7 +73,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 057 | Achievements — Calculate Perfect Week Eligibility | *confirm in Airtable* | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
 | **059** | Achievements — Create XP Event from Achievement Unlock | Athlete Achievement Unlocks when XP Award Status Pending and Ready for 059 XP | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.0 V2 standard — review, not pasted**) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.1 V2 reference — review, not pasted**) |
 
 ## Email and Make handoffs (070b, 072–077)
 

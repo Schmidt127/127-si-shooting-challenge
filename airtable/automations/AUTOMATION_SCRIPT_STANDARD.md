@@ -6,6 +6,8 @@ GitHub is the source of truth. Airtable is the deployed copy.
 
 Enforced by `.cursor/rules/airtable-automation-scripts.mdc`.
 
+**V2 reference implementation:** [066-achievements-and-milestones-create-shot-milestone-unlocks.js](./shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js) **v3.1** — see [docs/v2/06-automation-standards.md](../../docs/v2/06-automation-standards.md).
+
 ---
 
 ## File layout (top to bottom)
@@ -13,7 +15,7 @@ Enforced by `.cursor/rules/airtable-automation-scripts.mdc`.
 1. **GitHub header** (GitHub only — skip when pasting into Airtable)
 2. **Production docblock** (`/** ... */`)
 3. `// @ts-nocheck`
-4. **SECTION 1: CONFIG** (and helpers)
+4. **SECTION 1: SCRIPT metadata** + **SECTION 2: CONFIG** (and helpers)
 5. **`async function main()`** — all runtime logic
 6. **Run wrapper** — `try { await main(); } catch ...` or `await main();`
 
@@ -119,9 +121,9 @@ Match the style of automations **114** (XP) and **034** (weekly summary).
 
 | Field | Rule |
 |-------|------|
-| **Version** | `vMAJOR.MINOR` in docblock and `CONFIG.version`. Bump **minor** for logic/behavior changes. |
-| **Date Written** | Earliest known date the script was first written. **Preserve on edits.** Only fix if the date was wrong. |
-| **Last Updated** | Set to **today** whenever script logic changes. |
+| **Version** | `vMAJOR.MINOR` in docblock and **`SCRIPT.version`**. Bump **minor** for logic/behavior changes. |
+| **Date Written** | Earliest known date — **`SCRIPT.originalWrittenDate`**. **Preserve on edits.** |
+| **Last Updated** | Set to **today** whenever script logic changes — **`SCRIPT.lastUpdated`**. |
 
 ### Docblock extras (encouraged)
 
@@ -171,23 +173,36 @@ await main();
 
 **Legacy:** Scripts without `main` (009, 013, 020, 021, 057, 058, 063, 072, 074, 075, 111, 112) may stay as-is until edited for other reasons. **All new scripts and substantive edits** must use `main`.
 
-### 2. CONFIG object
+### 2. SCRIPT metadata + CONFIG object
+
+**V2 pattern (066 v3.1+):** separate script identity from business configuration.
 
 ```js
-const CONFIG = {
-  scriptName: "### - [Exact Name]",
-  version: "v1.0",
+const SCRIPT = {
+  scriptName: "### - [Exact Automation Name]",
+  version: "v3.1",
+  versionDate: "2026-07-05",
+  originalWrittenDate: "2026-06-17",
+  lastUpdated: "2026-07-05",
+  folder: "## - [Category Name]",
+  automationName: "### - [Exact Airtable automation name]",
+};
 
+const CONFIG = {
+  timeZone: "America/Denver",
+  batchSize: 50, /* when using createRecordsAsync / updateRecordsAsync */
   tables: { /* ... */ },
-  /* field name maps, status values */
-  timeZone: "America/Denver", /* when touching Weeks / activity dates */
-  debug: { logToConsole: true },
+  /* field name maps, status values, business keys only */
 };
 ```
 
+- Use **`SCRIPT.scriptName`** and **`SCRIPT.version`** in logs and notes — not `CONFIG`.
+- **`CONFIG`** holds tables, fields, statuses, actions, and domain constants only.
 - Exact Airtable field names only (match schema snapshot / `field_index`).
 - Status single-select values in `CONFIG.values`, `CONFIG.statusValues`, or `CONFIG.statuses`.
 - No magic strings for field names in runtime logic.
+
+**Legacy scripts** may still use `CONFIG.scriptName` / `CONFIG.version` until rewritten to V2.
 
 ### 3. Numbered sections
 
@@ -463,6 +478,20 @@ Apply to 053–066, 101.
 
 ---
 
+## V2 rewrite rule
+
+When upgrading an automation to V2 standard:
+
+| Scope | Approach |
+|-------|----------|
+| One section changes | Rewrite the **full section** |
+| Multiple sections change | Rewrite the **full script** |
+| Emergency hotfix | Isolated line patch — **only when Mike explicitly requests** |
+
+Do not deliver partial patches for planned rewrites. **066 v3.1** is the structural template.
+
+---
+
 ## What not to force retroactively
 
 - Do not rewrap legacy scripts in `main` only for style
@@ -487,6 +516,7 @@ Apply to 053–066, 101.
 
 | Pattern | Example file |
 |---------|----------------|
+| **V2 reference — SCRIPT + CONFIG + sections + batch writes** | **`066-achievements-and-milestones-create-shot-milestone-unlocks.js` (v3.1)** |
 | Full docblock + CONFIG + try/catch + XP guards | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
 | Weekly logic + main + dateTime parsing | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 | Week dateTime + America/Denver | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` |

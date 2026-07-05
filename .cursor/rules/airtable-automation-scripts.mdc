@@ -8,7 +8,7 @@ alwaysApply: true
 
 Full doc: `airtable/automations/AUTOMATION_SCRIPT_STANDARD.md`
 
-When creating or editing `airtable/automations/**/*.js`, follow that standard and existing production patterns (114, 034, 005, 063, 101, 072, 074).
+When creating or editing `airtable/automations/**/*.js`, follow that standard and existing production patterns (**066 v3.1 V2 reference**, 114, 034, 005, 063, 101, 072, 074).
 
 ## File and metadata
 
@@ -17,7 +17,9 @@ When creating or editing `airtable/automations/**/*.js`, follow that standard an
 - Docblock: Version, Date Written (preserve earliest), Last Updated (today on logic edits)
 - Docblock sections: PURPOSE, IMPORTANT DESIGN RULES, INPUT, OUTPUTS, TRIGGER, AUTOMATION NAME, FOLDER; add RECOMMENDED/OPTIONAL/DO NOT USE triggers, "This is not…", FIELD RENAME FIX when relevant
 - `// @ts-nocheck` after docblock
-- `CONFIG` for all field/table/status names; `CONFIG.scriptName` + `CONFIG.version` match docblock
+- **`SCRIPT`** metadata block: `scriptName`, `version`, `versionDate`, `originalWrittenDate`, `lastUpdated`, `folder`, `automationName` — must match docblock
+- **`CONFIG`** for tables, fields, statuses, actions, and business configuration only (no script identity)
+- V2 rewrites: one section changes → rewrite full section; multiple sections → rewrite full script (no isolated patches unless emergency hotfix)
 
 ## Structure
 

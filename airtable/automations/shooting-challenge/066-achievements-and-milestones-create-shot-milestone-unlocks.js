@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-07-05
+Last GitHub Update: 2026-07-05 (v3.1 SCRIPT/CONFIG split)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,11 +27,12 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.0
+ * Version: v3.1
  * Date Written: 2026-06-17
  * Last Updated: 2026-07-05
  *
  * VERSION HISTORY
+ * - v3.1 (2026-07-05): SCRIPT metadata block separated from CONFIG; batched create/update (50).
  * - v3.0 (2026-07-05): V2 standard rewrite — Week write from Milestone Activity Date;
  *   CONFIG/scriptName/version alignment; required outputs; numbered sections; schema gates.
  * - v2.1 (2026-06-17): Writable-field protection; skip computed Unlock Key writes.
@@ -99,13 +100,26 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 // @ts-nocheck
 
 /* =========================================================
-   SECTION 1 — CONFIGURATION
+   SECTION 1 — SCRIPT METADATA
+========================================================= */
+
+const SCRIPT = {
+  scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+  version: "v3.1",
+  versionDate: "2026-07-05",
+  originalWrittenDate: "2026-06-17",
+  lastUpdated: "2026-07-05",
+  folder: "06 - Achievements and Milestones",
+  automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+};
+
+/* =========================================================
+   SECTION 2 — CONFIGURATION (tables, fields, statuses only)
 ========================================================= */
 
 const CONFIG = {
-  scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.0",
   timeZone: "America/Denver",
+  batchSize: 50,
 
   tables: {
     enrollments: "Enrollments",
@@ -193,7 +207,7 @@ const CONFIG = {
 const fieldCache = new Map();
 
 /* =========================================================
-   SECTION 2 — OUTPUT HELPERS
+   SECTION 3 — OUTPUT HELPERS
 ========================================================= */
 
 function setOutputSafe(key, value) {
@@ -229,7 +243,7 @@ function setErrorOutputs({ errorOut, debugStep, enrollmentId = "" }) {
 }
 
 /* =========================================================
-   SECTION 3 — FIELD / SCHEMA HELPERS
+   SECTION 4 — FIELD / SCHEMA HELPERS
 ========================================================= */
 
 function getFieldSafe(table, fieldName) {
@@ -342,7 +356,7 @@ function validateRequiredSchema(tables) {
 }
 
 /* =========================================================
-   SECTION 4 — DATA HELPERS
+   SECTION 5 — DATA HELPERS
 ========================================================= */
 
 function getLinkedIds(record, fieldName) {
@@ -456,7 +470,7 @@ function buildMilestoneSourceKey(enrollmentId, shotMilestoneId) {
 }
 
 /* =========================================================
-   SECTION 5 — WEEK RESOLUTION
+   SECTION 6 — WEEK RESOLUTION
 ========================================================= */
 
 function findWeekForDate(weekRecords, weeksTable, dateKey) {
@@ -504,7 +518,39 @@ function resolveWeekIdForActivityDate(weekRecords, weeksTable, activityDate) {
 }
 
 /* =========================================================
-   SECTION 6 — MAIN
+   SECTION 7 — BATCH WRITE HELPERS
+========================================================= */
+
+async function createRecordsInBatches(table, payloads) {
+  const batchSize = CONFIG.batchSize || 50;
+  if (!payloads.length) return;
+
+  for (let i = 0; i < payloads.length; i += batchSize) {
+    const batch = payloads.slice(i, i + batchSize);
+    if (batch.length === 1) {
+      await table.createRecordAsync(batch[0]);
+    } else {
+      await table.createRecordsAsync(batch);
+    }
+  }
+}
+
+async function updateRecordsInBatches(table, updates) {
+  const batchSize = CONFIG.batchSize || 50;
+  if (!updates.length) return;
+
+  for (let i = 0; i < updates.length; i += batchSize) {
+    const batch = updates.slice(i, i + batchSize);
+    if (batch.length === 1) {
+      await table.updateRecordAsync(batch[0].id, batch[0].fields);
+    } else {
+      await table.updateRecordsAsync(batch);
+    }
+  }
+}
+
+/* =========================================================
+   SECTION 8 — MAIN
 ========================================================= */
 
 async function main() {
@@ -582,8 +628,8 @@ async function main() {
     });
     console.log(
       JSON.stringify({
-        automation: CONFIG.scriptName,
-        version: CONFIG.version,
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
         statusOut: CONFIG.statuses.skipped,
         actionOut: CONFIG.actions.skippedInactive,
         enrollmentId,
@@ -853,6 +899,9 @@ async function main() {
   let missingCrossingDateCount = 0;
   let weekWriteCount = 0;
 
+  const unlockCreatesPending = [];
+  const unlockUpdatesPending = [];
+
   for (const milestone of eligibleMilestones) {
     const crossing = crossingByMilestoneId.get(milestone.record.id);
 
@@ -903,7 +952,7 @@ async function main() {
           CONFIG.unlockFields.notes,
           [
             getText(existingUnlock, CONFIG.unlockFields.notes),
-            `Updated by ${CONFIG.scriptName} ${CONFIG.version}. Milestone Activity Date: ${formatDateForNotes(crossing.activityDate)}. Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}. Crossing Submission: ${crossing.submissionRecordId}.`,
+            `Updated by ${SCRIPT.scriptName} ${SCRIPT.version}. Milestone Activity Date: ${formatDateForNotes(crossing.activityDate)}. Week: ${weekResolved.weekName || weekResolved.weekId || "unresolved"}. Crossing Submission: ${crossing.submissionRecordId}.`,
           ]
             .filter(Boolean)
             .join("\n")
@@ -911,7 +960,7 @@ async function main() {
       }
 
       if (Object.keys(updatePayload).length > 0) {
-        await unlocksTable.updateRecordAsync(existingUnlock.id, updatePayload);
+        unlockUpdatesPending.push({ id: existingUnlock.id, fields: updatePayload });
         updatedExistingCount += 1;
       } else {
         skippedExistingCount += 1;
@@ -960,7 +1009,7 @@ async function main() {
       unlockPayload,
       CONFIG.unlockFields.notes,
       [
-        `Created by ${CONFIG.scriptName} ${CONFIG.version}.`,
+        `Created by ${SCRIPT.scriptName} ${SCRIPT.version}.`,
         `Calculated total shots from Submissions: ${calculatedTotalShots}.`,
         `Enrollment reported total shots: ${enrollmentReportedTotalShots || 0}.`,
         `Milestone: ${milestone.label || milestone.shotCount}.`,
@@ -978,9 +1027,15 @@ async function main() {
       throw new Error("No writable fields available to create Athlete Achievement Unlock.");
     }
 
-    await unlocksTable.createRecordAsync(unlockPayload);
+    unlockCreatesPending.push(unlockPayload);
     createdCount += 1;
   }
+
+  debugStep = "9b - Apply batched unlock writes";
+  setOutputSafe("debugStep", debugStep);
+
+  await createRecordsInBatches(unlocksTable, unlockCreatesPending);
+  await updateRecordsInBatches(unlocksTable, unlockUpdatesPending);
 
   debugStep = "10 - Clear run check and finish";
   setOutputSafe("debugStep", debugStep);
@@ -1010,8 +1065,8 @@ async function main() {
   console.log(
     JSON.stringify(
       {
-        automation: CONFIG.scriptName,
-        version: CONFIG.version,
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
         statusOut: CONFIG.statuses.success,
         actionOut,
         enrollmentId,
@@ -1032,7 +1087,7 @@ async function main() {
 }
 
 /* =========================================================
-   SECTION 7 — RUN
+   SECTION 9 — RUN
 ========================================================= */
 
 try {
@@ -1045,8 +1100,8 @@ try {
   console.log(
     JSON.stringify(
       {
-        automation: CONFIG.scriptName,
-        version: CONFIG.version,
+        automation: SCRIPT.scriptName,
+        version: SCRIPT.version,
         statusOut: CONFIG.statuses.error,
         errorOut: message,
       },
