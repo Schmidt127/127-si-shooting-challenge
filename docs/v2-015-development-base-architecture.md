@@ -2,7 +2,7 @@
 
 **Backlog ID:** V2-015  
 **Status:** **Ready — in progress** — `appTetnuCZlCZdTCT`; **not complete** until **066 v3.1** tested in DEV  
-**Last updated:** 2026-07-05 (structural promote-as-you-go — DEV first, Production soon after approval)
+**Last updated:** 2026-07-05 (C-020 Test Intake — next DEV build after 066)
 
 **Setup runbook:** [development-base-setup.md](./development-base-setup.md)
 
@@ -40,8 +40,20 @@ Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke
 | 3 | Production unchanged | **Confirmed** |
 | 4 | **066 v3.1** pasted and tested in DEV | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
 | 5 | Webhook / Make isolation verified | Verify per [development-base-setup.md](./development-base-setup.md) Step 3 |
+| 6 | **C-020** Test Intake harness built and tested in DEV | **Next** — after criterion 4 passes — [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
 
-**Do not mark V2-015 `done` in backlog until criterion 4 passes.**
+**Do not mark V2-015 `done` in backlog until criterion 4 passes.** Criterion 6 is the **next priority DEV build** after 066.
+
+### DEV build sequence (Phase 2 testing priority)
+
+| Order | Work | Status |
+|-------|------|--------|
+| 1 | **066 v3.1** — paste, audit, sandbox test | **In progress** (H-002) |
+| 2 | **C-020** — Test Intake table + automation/extension + Testing views | **Next** — priority testing feature |
+| 3 | Promotion doc → mirror Test Intake structure to Production | After DEV pass + Mike approval |
+| 4 | **C-019** — document enrollment IDs; prod Schmidt smoke optional | With or after C-020 |
+
+See [C-020 requirements](./testing-and-intake-architecture.md#c-020--test-intake-harness-production-identical) — **DEV first**, no `Is Test Record?` on pipeline rows, **`Run Test?`** auto-uncheck, downstream automation map documented.
 
 ---
 
@@ -367,9 +379,10 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 4 | Scrub dev: Schmidt + 5 test enrollments; remove all other enrollments | Mike / OMNI | **Done** — prod unchanged |
 | 5 | Clone Make scenarios → dev webhooks; document in `make/blueprints/` | Mike | |
 | 6 | Paste current automations to dev (parity with prod) | Mike | |
-| 7 | Add **Testing** views + Test Intake table (C-020) on dev first | Cursor / Mike | |
+| 7 | **C-020** Test Intake table + script + Testing views on **DEV** | Cursor / Mike | **Next** — after item 9 (066 DEV test) |
 | 8 | Update doc 04 + doc 08 promote workflow | Cursor | **Done** |
 | 9 | First use: **066 v3.1** dev paste + audit before prod | Mike / Cursor | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
+| 10 | **C-020** promotion doc + DEV test pass (Fillout-shaped Submission) | Cursor / Mike | **Queued** — after 9 |
 
 ---
 
@@ -390,3 +403,4 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 2026-07-05 | Dev base ID recorded: `appTetnuCZlCZdTCT` |
 | 2026-07-05 | DEV ready — 6 test enrollments retained; all other enrollments removed; prod unchanged; 066 dev test pending |
 | 2026-07-05 | **Structural promote-as-you-go** — DEV first; Production soon after approval; not Production last |
+| 2026-07-05 | **C-020 Test Intake** — confirmed priority DEV build after 066; downstream automation map |

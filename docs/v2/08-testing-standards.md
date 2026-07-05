@@ -2,7 +2,7 @@
 
 **Status:** Active — audit and integrity practices (integrity over unit tests).
 
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (C-020 Test Intake — priority DEV harness)
 
 ---
 
@@ -62,6 +62,23 @@ Dev base setup: [development-base-setup.md](../development-base-setup.md) (V2-01
 
 ---
 
+## Test Intake harness (C-020) — priority DEV build
+
+**After 066 v3.1 DEV test passes**, build **C-020** on DEV first. Full spec: [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020.
+
+| Rule | Standard |
+|------|----------|
+| Environment | **DEV first** — `appTetnuCZlCZdTCT` |
+| Test identification | **No `Is Test Record?`** on pipeline tables |
+| Operator trigger | **`Run Test?`** on Test Intake only — auto-uncheck after run |
+| Enrollments | Schmidt/testing + retained DEV test enrollments (`Active?` false) |
+| Verification | Testing views by Enrollment link; Stages A–H audit dry-runs |
+| Downstream chain | Documented in C-020 — **023** skipped if Enrollment pre-linked; **009→013/020→070→022** expected |
+
+**DEV build sequence (V2-015):** 066 DEV test → **C-020** → promotion doc → prod mirror (structure only).
+
+---
+
 ## Full standalone doc
 
-_To be expanded: required audits before launch, test enrollment pattern (C-019/C-020), Make webhook smoke tests._
+_Make webhook smoke tests: [development-base-setup.md](../development-base-setup.md) Step 3._
