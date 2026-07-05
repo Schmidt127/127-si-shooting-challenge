@@ -167,7 +167,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **V2-014** | Automation Modernization Roadmap | Category A–F inventory; four-axis evaluation; Complexity Score; complexity-first (capacity secondary); **066 v3.1** reference; **112 OFF** | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014a** | Wave 2a — classify everything | Category + Complexity Score for all 46; OMNI triggers; no unapproved production changes | V2-014 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014b** | Email Message Center | Replace 7 email automations with builder + sender | V2-014, C-011 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
-| **V2-015** | Permanent Development Airtable base | Dev clone + dev-first paste; [development-base-setup.md](./development-base-setup.md) | V2-014 | **in-progress** | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
+| **V2-015** | Permanent Development Airtable base | **Approved** — one repo, one prod, one dev; DEV for paste/schema/backfills/Make/Test Intake | V2-014 | **approved** | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
