@@ -200,7 +200,8 @@ Category **D** automations ([V2-014](./v2-014-automation-modernization-roadmap.m
 | Change | Workflow |
 |--------|----------|
 | New field, formula, view | Prototype in **dev** (OMNI or manual) |
-| Stage K ownership confirmed | Apply to **prod** in approved wave |
+| Promotion documented | Cursor writes steps in `docs/deploy-checklists/` ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
+| Stage K ownership confirmed | Apply to **prod** using promotion doc only — not from memory |
 | Destructive (delete table/field) | Dev only until C-012 sign-off |
 
 Export dev schema snapshots to `airtable/schema/snapshots/` when dev diverges intentionally.

@@ -28,6 +28,8 @@ Authority: [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development
 
 Phase 3 (Implementation) and Phase 5 (Close). `airtable/`, `web/`, `tools/`, `make/`, audits, commits when Mike asks.
 
+**DEV promotion:** If DEV was intentionally changed, document prod steps in `docs/deploy-checklists/` before ending the session — or mark throwaway on backlog item. See doc 04 § Official promotion documentation.
+
 ## Workspace Check template
 
 ```

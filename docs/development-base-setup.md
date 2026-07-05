@@ -2,11 +2,13 @@
 
 **Backlog:** V2-015  
 **Architecture:** [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)  
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (promotion documentation standard)
 
 Use this runbook when creating or refreshing the **Development** Airtable base. Production base stays the system of record for live season data.
 
 **Permanent rule:** Nothing ships to Production until tested in DEV — full pipeline in [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § DEV-first delivery pipeline.
+
+**Promotion rule:** DEV changes are not official until Cursor documents the promotion steps in GitHub — [v2/04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required). Template: [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md).
 
 ---
 
@@ -108,9 +110,11 @@ Dev can keep cloned data for realistic pipeline tests, or scrub PII:
 
 ---
 
-## Step 6 — Schema snapshot from dev (Cursor / Mike)
+## Step 6 — Schema snapshot and promotion doc (Cursor / Mike)
 
-After clone stabilizes:
+When DEV schema **intentionally diverges** from Production, Cursor documents promotion steps **before** the change is treated as official.
+
+### 6a — Export schema (for diff and checklist)
 
 ```powershell
 cd tools/airtable
@@ -118,17 +122,31 @@ cd tools/airtable
 python export_airtable_schema.py -v --out-dir ../../airtable/schema/snapshots/dev-YYYYMMDD
 ```
 
-Commit snapshot only if dev schema intentionally diverges from prod. Normally prod export remains canonical until Stage K changes land in dev first.
+For a promote wave, also export prod **before** mirroring (same command with prod `BASE_ID`) so the diff becomes the field-by-field checklist.
+
+Commit snapshots when they back a promotion document. Normally prod export remains canonical until Stage K changes land in dev first.
+
+### 6b — Write promotion steps (required)
+
+Copy [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) to:
+
+`docs/deploy-checklists/{backlog-id}-{short-name}-schema-promotion.md`
+
+Fill in: what changed in DEV, numbered Production steps (exact field names, types, formula text), smoke test, rollback notes.
+
+**Mike rule:** Do not recreate schema in Production from memory — use the promotion doc only.
+
+Throwaway DEV experiments (no prod intent) → note `DEV experiment only — do not promote` on the backlog item; no promotion doc required.
 
 ---
 
 ## Step 7 — Automation paste workflow (ongoing)
 
 ```
-GitHub commit → paste into DEV automation → audit (dev) → sandbox test → Mike approves → paste into PROD → CHANGELOG
+GitHub commit → paste into DEV → test → Cursor writes promotion doc → Mike approves → paste into PROD → CHANGELOG
 ```
 
-First dev paste: **066 v3.1** (H-002) — [deploy-checklists/066-v3.1-dev-deploy.md](./deploy-checklists/066-v3.1-dev-deploy.md)
+Every automation deploy checklist is also a promotion document. Example: [066-v3.1-dev-deploy.md](./deploy-checklists/066-v3.1-dev-deploy.md).
 
 Extension scripts: run dry-run in **dev** base Scripting extension before any `CONFIRM_WRITE` on prod.
 
@@ -169,6 +187,7 @@ On refresh: repeat Steps 3–5 (webhook isolation is the most common mistake).
 [ ] Fillout still on prod only
 [ ] tools/airtable/.env documented for dev exports
 [ ] Team knows: paste automations DEV first, then PROD
+[ ] Promotion doc exists before any DEV → PROD mirror (schema or automation)
 ```
 
 ---
