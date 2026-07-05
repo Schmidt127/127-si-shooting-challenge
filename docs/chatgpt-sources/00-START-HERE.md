@@ -77,4 +77,4 @@ From repo root (PowerShell):
 
 ---
 
-*Last synced: 2026-07-05 17:26 (local)*
+*Last synced: 2026-07-05 17:27 (local)*

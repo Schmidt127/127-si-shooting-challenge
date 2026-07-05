@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (V2-015 dev base `appTetnuCZlCZdTCT` live)
+Last updated: **2026-07-05** (V2-015 DEV ready — `appTetnuCZlCZdTCT`; 066 dev test pending)
 
 ---
 
@@ -12,11 +12,11 @@ Last updated: **2026-07-05** (V2-015 dev base `appTetnuCZlCZdTCT` live)
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **GitHub complete** (`45b17d7`); V2 reference template; **Airtable paste pending** Mike approval |
+| **H-002 — Automation 066 v3.1** | **GitHub complete** (`45b17d7`); **DEV paste + test pending** — prod paste after dev pass |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Current** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation inventory + capacity roadmap |
-| **V2-015 — Development base** | **Live** — `appTetnuCZlCZdTCT`; webhook isolation per [setup runbook](./development-base-setup.md) |
+| **V2-015 — Development base** | **Ready** — `appTetnuCZlCZdTCT`; scrubbed test enrollments only; **in-progress** until 066 v3.1 tested in DEV |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
 **Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
@@ -49,12 +49,25 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 | Item | Value |
 |------|--------|
-| Base name (recommended) | `127SI - SHOOTING CHALLENGE - DEV` |
+| Base name | `127SI - SHOOTING CHALLENGE - DEV` |
 | Base ID | `appTetnuCZlCZdTCT` |
-| Role | Automation paste test, schema experiments, extension backfills, Make dry-runs |
+| Status | **Ready** — first testing environment for Phase 2 work |
+| Clone + scrub | **2026-07-05** — production **unchanged** |
+| Test enrollments retained | **6 total** — Schmidt/testing enrollment + **5** additional test enrollments |
+| Other enrollments | **Removed from DEV** — all other registered athlete/enrollment records deleted in dev only |
 | Setup runbook | [development-base-setup.md](./development-base-setup.md) |
 | Architecture | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
-| Clone created | **2026-07-05** |
+
+**DEV is the first testing location for:**
+
+- Automation **066 v3.1** paste (H-002 — **pending**)
+- Automation merge experiments (V2-014)
+- Schema changes (Stage K, C-026, etc.)
+- Extension backfills (`CONFIRM_WRITE` rehearsal)
+- Test Intake / Schmidt sandbox (C-019, C-020)
+- Make dry-runs (when dev scenarios configured)
+
+**V2-015 completion gate:** base ID recorded ✓ · **066 v3.1 tested in DEV** — pending · webhook/Make isolation — verify per runbook
 
 **Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
 
@@ -152,9 +165,9 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **066 deploy** | GitHub v3.1 ready; **Airtable paste pending** Mike approval |
+| **066 deploy** | GitHub v3.1 ready; **DEV paste + test pending** — prod after dev pass |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
-| **Dev base (V2-015)** | **Live** — `appTetnuCZlCZdTCT`; complete Step 3 webhook isolation in [development-base-setup.md](./development-base-setup.md) |
+| **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
 
 ### Multi-year architecture (2026-07-05 decision)
 
