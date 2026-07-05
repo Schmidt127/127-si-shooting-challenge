@@ -2,7 +2,22 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-04**
+Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; V2-013 queued)
+
+---
+
+## V2 progress snapshot (2026-07-05)
+
+| Milestone | Status |
+|-----------|--------|
+| **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
+| **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
+| **H-002 — Automation 066 v3.1** | **GitHub complete** (`45b17d7`); V2 reference template; **Airtable paste pending** Mike approval |
+| **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
+| **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
+| **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
+
+**Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
 
 ---
 
@@ -48,7 +63,7 @@ Last verified clean on historical repair pass (re-run after bulk imports):
 | H — Video XP | `audit-video-xp-pipeline-integrity.js` | **96 OK / 0 issues** (38 `not_ready` expected) |
 | I — Achievements | `audit-achievement-xp-pipeline-integrity.js` | Run perfection pass — see [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
 | J — Legacy cleanup | `audit-field-coverage-report.js`, `audit-legacy-cleanup-candidates.js` | In progress |
-| **Final 090** | `audit-final-090a` … `090g` (Active enrollments) | **Ready to run** |
+| **Final 090** | `audit-final-090a` … `090g` (Active enrollments) | **090A–090E PASS** · **090F PASS** (v1.1, 2026-07-05) · 090G historical weekly gaps only |
 
 Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md)
 
@@ -60,29 +75,76 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 | June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0 |
 | Goal Met vs Conquered Goal | **Done** — 14/14 aligned |
 | Reference CSV | `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) |
-| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — H-001 unlock dedupe, H-002 automation 066, scope/catalog cleanup |
+| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **H-001 done** (audit fix) · **H-002 GitHub done** (066 v3.1, paste pending) · H-003/H-004 deferred |
 
 **Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
 
-### Individual final summary emails (2026-07-03)
+### Individual final summary emails (2026-07-05 — complete)
 
 | Step | Status |
 |------|--------|
-| Template revision | **`final-summary-2026-07-03-v2`** (`preview_final_email.py`; Riley Geraghty reference) |
-| Staged to WAS | **65** enrollments (`stage_final_emails_to_was.py --confirm-write`) |
-| Skipped (≤ 50 shots) | **26** |
-| Armed + sent via **074** | **53** families (`arm_final_emails_send.py --confirm-arm`) |
-| Blocked (prior `Weekly Email Sent?`) | **12** — uncheck **Weekly Email Sent?** on WAS, re-arm if needed |
+| Template revision | **`final-summary-2026-07-03-v2`** |
+| Staged + sent via **074** / Make | **Done** — Mike confirmed all final summary emails sent **2026-07-05** |
+| Prior partial run (2026-07-03) | 53 armed first batch; remaining families completed in follow-up |
 
-Reports: `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`. Do **not** paste JSON into Airtable Scripting (use Python staging).
+Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`.
 
-### Media & publicity (2026-07-04)
+### Wave 0 close-out (2026-07-05 — **closed**)
+
+| ID | Status |
+|----|--------|
+| C-001 Lyle Kimm shots | **Done** |
+| C-002 Final summary emails | **Done** |
+| C-003 Koen HW17 review + email | **Done** |
+| C-008 Fillout off | **Done** |
+| Newspaper + radio outreach | **Done** |
+
+**Wave 0 is closed.** No further close-out work in this wave.
+
+**Live re-audit (2026-07-05):** 090A–090E **PASS** · 090F **PASS** (v1.1 — Milestone Source Key dedupe) · 090G historical weekly gaps only (close-out complete).
+
+### Post-close hygiene (Wave 1)
+
+| ID | Status |
+|----|--------|
+| H-001 090F audit | **Done** — fix audit, not data; 0 rows deleted |
+| H-002 Automation 066 v3.1 | **GitHub done** — V2 reference; **Airtable paste not done** |
+| H-003 / H-004 | Deferred (scope metadata, catalog bucket) |
+
+### V2 automation standard
+
+| Item | Status |
+|------|--------|
+| **066 v3.1** | First V2-standard automation — SCRIPT/CONFIG split, batched writes, Week resolution, idempotent Source Key |
+| **Doc 06** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) **Active** — 066 is canonical template |
+| **Commit** | `45b17d7` — `docs: set 066 v3.1 as V2 automation standard` |
+
+### Multi-year architecture (2026-07-05 decision)
+
+| Decision | Detail |
+|----------|--------|
+| **One Airtable base** | Multiple program years in same base — **not** separate bases per season |
+| **Season identifier** | **Program Instance** (org table; e.g. `Shooting Challenge \| 2025-2026`) — not a new Program Year table |
+| **Historical accuracy** | Config changes must not alter historical reports |
+| **Backlog** | **V2-013** — Program Instance integration; **queued**; dedicated future wave only |
+| **Do not implement now** | 2026–2027 config mixed with production — requires architecture wave, not incremental edits |
+| **Prior plan** | Archive + clone ([base-cutover](./shooting-challenge-v2-base-cutover.md)) **superseded** by V2-013 direction |
+
+**Program Instance investigation (read-only, 2026-07-05):** Reviewed Shot Milestones, Levels, Level Gate Rules, XP Reward Rules, Achievements, Weeks, Awards. No records modified; no Program Instance links created. 125% milestone briefly added; 120% rows restored Active; 125% rows reserved for future config.
+
+---
+
+| Step | Status |
+|------|--------|
+| Fillout daily submission form | **OFF** — contest intake closed (**C-008** done) |
+
+### Media & publicity (2026-07-05)
 
 | Item | Status |
 |------|--------|
 | Top-level `media/` folder | **Done** — season layout under `media/2025-2026/` |
-| 2025–26 newspapers | **10** regional packets in `media/2025-2026/newspapers/final-packets/` |
-| 2025–26 radio | **12** kits in `media/2025-2026/radio/` |
+| 2025–26 radio | **12** kits in `media/2025-2026/radio/` — **station outreach emails sent 2026-07-05** |
+| 2025–26 newspapers | **10** regional packets — **articles completed and sent 2026-07-05** |
 | Build scripts | `tools/airtable/_build_*.py` → `media_paths.py` |
 | Platform roadmap | **V2-028** — [media-kits.md](./media-kits.md), [ROADMAP](../media/2025-2026/future-enhancements/ROADMAP.md) |
 
@@ -143,6 +205,7 @@ Upload ladder: [make/documentation/upload-asset-engine.md](../make/documentation
 | Event | Update |
 |-------|--------|
 | Audit pass completed | This file + `CHANGELOG.md` |
+| V2 milestone (wave close, hygiene, architecture decision) | This file + [v2-change-backlog.md](./v2-change-backlog.md) + [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) |
 | New automation deployed | [automation-index.md](./automation-index.md) + [automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md) |
 | Schema field/table change | `airtable/schema/current/` + new dated snapshot |
 | New public page | [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) + [web/docs/airtable-views.md](../web/docs/airtable-views.md) |

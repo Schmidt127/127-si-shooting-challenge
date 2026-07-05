@@ -6,7 +6,20 @@
 
 **Operating procedure:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — three roles (Mike / ChatGPT / Cursor), five phases, task classification, **workspace guardrails**.
 
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (Wave 0 closed; H-001/H-002; V2-013 queued)
+
+---
+
+## Session progress (2026-07-05)
+
+| Item | Status |
+|------|--------|
+| **Wave 0 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio |
+| **H-001** | **Done** — 090F audit v1.1; fix audit not data; 0 deletes |
+| **H-002** | **GitHub done** — 066 v3.1 V2 standard; Airtable paste pending |
+| **Automation standards** | Doc **06 Active**; 066 v3.1 canonical template |
+| **Multi-year architecture** | **V2-013 queued** — Program Instance; one base; do not implement now |
+| **V2-001** | **Deferred** — archive+clone superseded by V2-013 |
 
 ---
 
@@ -93,7 +106,7 @@ These were locked on **2026-07-03** per [shooting-challenge-v2-master-direction.
 | **Spread gates early** | Via Level Gate Rules config; numbers TBD Q1 2027 | V2-005 |
 | **Config over scripts** | Tune XP, levels, gates in Airtable tables — not hardcoded JS | V2-002 |
 | **Communication before Day 1** | Game manual, website rules hub, pre-season parent comms | V2-008–V2-010 |
-| **Archive + clone base** | New season = scrubbed Airtable clone; no GitHub fork | V2-001 |
+| **Archive + clone base** | **Superseded 2026-07-05** — one base + **Program Instance** per year (**V2-013**). Prior plan: [base-cutover](./shooting-challenge-v2-base-cutover.md) |
 | **Coach role** | Coaching only; automation is default for XP, emails, gates | Master direction |
 | **Educational Athletics philosophy** | Sports develop life skills, not just basketball skill | Constitution |
 
@@ -110,6 +123,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 - **Config tables for numbers** — scripts orchestrate; they do not embed season tuning
 - **Skip vs error distinction** — automations set `statusOut` correctly; skips are not failures
 - **Never write computed fields** — formulas, rollups, lookups, counts
+- **Fix the audit, not the data** — when investigation shows rows are correct, update audit logic (H-001 example)
 
 ---
 
@@ -117,33 +131,39 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 
 **Status key:** `open` · `queued` · `in-progress` · `done` · `deferred` · `resolved` · `monitoring`
 
-### Wave 0 — 2025–26 close-out (do first; do not defer to V2)
+### Wave 0 — 2025–26 close-out (**closed**)
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **C-001** | Restore Lyle Kimm excluded shots | ~300 shots; restore Count It on two submissions; XP backfill | — | open | [close-out-considerations.md](./close-out-considerations.md) |
-| **C-002** | Final summary emails | 090G repair → test 074 → ~91 families | C-001 optional | open | [close-out-considerations.md](./close-out-considerations.md) |
-| **C-003** | Koen HW10 reflection coach review | Symptom of C-009; optional for close-out email | — | open | [close-out-considerations.md](./close-out-considerations.md) |
-| **C-008** | Turn off Fillout daily form | Midnight Denver after contest end | — | open | [close-out-considerations.md](./close-out-considerations.md) |
-| **C-006** | 090F duplicate unlock prevention | Fix root cause in **066** + dedupe H-001 | H-002 | monitoring | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| **C-001** | Restore Lyle Kimm excluded shots | ~300 shots; Count It restored | — | **done** | [close-out-considerations.md](./close-out-considerations.md) |
+| **C-002** | Final summary emails | All families sent via **074** / Make | — | **done** | [close-out-considerations.md](./close-out-considerations.md) |
+| **C-003** | Koen HW17 coach review + email | Graded + parent email sent | — | **done** | [close-out-considerations.md](./close-out-considerations.md) |
+| **C-008** | Turn off Fillout daily form | Form OFF **2026-07-05** | — | **done** | [close-out-considerations.md](./close-out-considerations.md) |
+| **C-006** | 090F duplicate unlock prevention | Audit fixed in H-001; 066 v3.1 forward | H-002 | **done** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
 
-### Wave 1 — Base cutover + post-close hygiene
+### Wave 1 — Post-close hygiene
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **V2-001** | Archive 2025–26 base; clone for 2026–27 | Scrub season data; keep config tables | Wave 0 | queued | [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) |
-| **H-001** | Dedupe 090F achievement unlock rows | 9 duplicate groups; manual | Wave 0 | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
-| **H-002** | **066** writes Week on shot-milestone unlocks | Match **058** pattern | Wave 0 | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
-| **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| **V2-001** | Archive + clone base | **Deferred** — superseded by **V2-013** | Wave 0 | deferred | [shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) |
+| **H-001** | Fix 090F unlock audit | v1.1; Source Key dedupe; 0 deletes | Wave 0 | **done** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; Airtable paste pending | Wave 0 | **review** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) |
+| **H-003** | Award Recipients scope metadata | Accepted for 2025–26 | — | deferred | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
-| **H-005** | Weekly email workflow → automate next season | Feeds C-011 | — | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
-| **H-006** | Enrollment Conquered Goal Date lookup filter | Low priority | — | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| **H-005** | Weekly email workflow → automate | Feeds C-011 | — | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+| **H-006** | Enrollment Conquered Goal Date lookup | Low priority | — | queued | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) |
+
+### Wave 1b — Multi-year architecture (**do not start until approved wave**)
+
+| ID | Request | Detail | Depends on | Status | Primary doc |
+|----|---------|--------|------------|--------|-------------|
+| **V2-013** | Program Instance multi-year platform | One base; Program Instance scopes config + ops; historical reporting protection; automations/views/interfaces | Wave 1, C-012 | **queued** | [v2-change-backlog.md](./v2-change-backlog.md) |
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-001 | queued | [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
+| **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-013 | queued | [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
 | **C-026** | Merge **Tutorials** vs **Tutorials & Assets** | Keep **Tutorials** (web uses it); retire duplicate table | C-012 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | Idempotent creates at every layer; `audit-dedupe-key-coverage.js` | C-012 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
 | **C-014** | One ladder, spread gates early | **DECIDED** — tune in config Q1 2027 | C-021, Wave 9 | resolved | [xp-motivation-analysis-2025-26.md](./xp-motivation-analysis-2025-26.md) |
@@ -167,7 +187,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **C-010** | Harden `Active?` on Enrollments | Inactive = fully out of XP, emails, summaries, streaks | V2-001 | queued | [close-out-considerations.md](./close-out-considerations.md) |
+| **C-010** | Harden `Active?` on Enrollments | Inactive = fully out of XP, emails, summaries, streaks | V2-013 | queued | [close-out-considerations.md](./close-out-considerations.md) |
 | **C-011** | Fully automatic weekly parent emails | No manual Build/Send triggers; scheduled 072→074 | C-010, C-022 | queued | [close-out-considerations.md](./close-out-considerations.md) |
 
 ### Wave 6 — Testing & sandbox
@@ -175,7 +195,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; no test flags on pipeline rows | C-010 partial | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
-| **C-020** | Test Intake harness | Table + extension; multi-file video parity without Fillout | C-019, V2-001 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
+| **C-020** | Test Intake harness | Table + extension; multi-file video parity without Fillout | C-019, V2-013 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
 
 ### Wave 7 — Asset storage
 
@@ -189,14 +209,14 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
 | **C-017** | Fillout → Athletes validation | Stronger Fillout rules; identity hygiene before pipeline | C-012 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
-| **C-018** | Intake open vs challenge run | Two calendars in **Weeks** table; **005** maps by date range | V2-001 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
+| **C-018** | Intake open vs challenge run | Two calendars in **Weeks** table; **005** maps by date range | V2-013 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
 | **C-009** | Redo HW17 Fillout quiz intake | **067** creates rows without attachments; pursue Fillout PDF export or redesign | C-013, C-024 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
 
 ### Wave 9 — Season config (numbers, Q1 2027)
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
-| **V2-005** | Tune Level Gate Rules | Spread gates early; numbers in Airtable only | C-021, V2-001 | queued | [v2/season-configuration-design.md](./v2/season-configuration-design.md) |
+| **V2-005** | Tune Level Gate Rules | Spread gates early; numbers in Airtable only | C-021, V2-013 | queued | [v2/season-configuration-design.md](./v2/season-configuration-design.md) |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via links; streak economics review (**053**) | C-021 | queued | [v2/season-configuration-design.md](./v2/season-configuration-design.md) |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued | [v2/season-configuration-design.md](./v2/season-configuration-design.md) |
 | **C-025** | Zoom recording attendance — partial credit | Recording watch path with reduced XP/gate credit; distinct Source Key | C-024, V2-006, V2-005 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
@@ -209,16 +229,16 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued | [web/docs/project-roadmap.md](../web/docs/project-roadmap.md) |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued | [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) |
 | **C-027** | Major-event SMS notifications | Level up, milestones — not daily XP; Twilio/Make TBD | C-010, C-024, V2-008 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
-| **V2-028** | **Generate Media Kits** platform | One ops action → newspaper/radio/social from Airtable | C-013, C-022, Wave 0 | in-progress | [media-kits.md](./media-kits.md) |
+| **V2-028** | **Generate Media Kits** platform | 2025–26 manual send **done**; platform automation queued | C-013, C-022 | done (2025–26) | [media-kits.md](./media-kits.md) |
+
+**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014–V2-027** unused. **V2-028** = media kits.
 
 ### Wave 11 — Launch gate (before May 2027)
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
 |----|---------|--------|------------|--------|-------------|
 | **V2-011** | Full pre-season audit pack | Stages A–J + new audits (grade bands, Presentation, S3) | All above | queued | [airtable/extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md) |
-| **V2-012** | Dry-run season on Schmidt test | Full pipeline on clone before enrollment wave | C-020, Wave 7–9 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
-
-**Note:** IDs V2-013 through V2-027 are unused. Next media-kit ID is **V2-028**.
+| **V2-012** | Dry-run season on Schmidt test | Full pipeline before enrollment wave | C-020, Wave 7–9 | queued | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
 
 ---
 
@@ -227,7 +247,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 Nothing ships to production until the owner approves the wave.
 
 ```
-Wave 0 (close-out) → Wave 1 (cutover) → Wave 2 (schema)
+Wave 0 (close-out) → Wave 1 (hygiene) → Wave 1b (V2-013 Program Instance) → Wave 2 (schema)
   → Wave 3 (grade bands) → Wave 4 (presentation)
   → Wave 5 (reliability) → Wave 6 (test sandbox)
   → Wave 7 (S3) → Wave 8 (intake) → Wave 9 (season tuning)
@@ -236,12 +256,13 @@ Wave 0 (close-out) → Wave 1 (cutover) → Wave 2 (schema)
 
 | Wave | Focus | Why this order |
 |------|--------|----------------|
-| **0** | Finish 2025–26 | Don't mix close-out repairs with V2 architecture |
-| **1** | Archive base, clone 2026–27, H-001/H-002 | Clean workspace before schema changes |
+| **0** | Finish 2025–26 | **Closed 2026-07-05** |
+| **1** | H-001, H-002 hygiene | Audit fix + 066 V2 standard |
+| **1b** | **V2-013** Program Instance | One base, multi-year; **do not start until approved** |
 | **2** | C-012 Stage K; C-024 dedupe; C-026 Tutorials merge | Schema cleanup before new fields or storage |
 | **3** | C-021 grade bands — link-based matching | Must work before tuning XP Reward Rules |
 | **4** | C-022 public display fields | Affects 071, 072, web |
-| **5** | C-010, C-011, 066 Week write | Production safety before heavy testing |
+| **5** | C-010, C-011, 066 Airtable deploy | Production safety before heavy testing |
 | **6** | C-019, C-020 test sandbox | Validate pipeline without Fillout |
 | **7** | C-013 S3; C-023 file hash dedup | One URL per asset; hash at upload |
 | **8** | C-017, C-018, C-009 intake | Fillout + Weeks + HW17 quiz |
@@ -256,7 +277,7 @@ Wave 0 (close-out) → Wave 1 (cutover) → Wave 2 (schema)
 ### 6.1 Airtable automations
 
 - **46 production scripts** indexed in [automation-index.md](./automation-index.md)
-- **Standard:** [airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
+- **Standard:** [airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md) · **V2 reference:** [v2/06-automation-standards.md](./v2/06-automation-standards.md) — **066 v3.1**
 - **Key scripts touched by backlog:**
   - **005** — Week date mapping (C-018)
   - **007** — Submission dedupe (C-024)
@@ -306,7 +327,7 @@ From [media/2025-2026/future-enhancements/ROADMAP.md](../media/2025-2026/future-
 
 | Phase | Status | Work |
 |-------|--------|------|
-| **A** | In progress | `media/` folder; Python builders; extract docx/email templates |
+| **A** | **Done (2025–26)** | `media/` folder; Python builders; 10 newspaper + 12 radio kits **sent 2026-07-05** |
 | **B** | Queued | Config tables: Media Markets, Media Outlets, Season Publicity Settings |
 | **C** | Queued | `generate_media_kits()` service — idempotent, validation gate, manifest JSON |
 | **D** | Queued | UI button + optional Make/Gmail distribution |
@@ -314,10 +335,9 @@ From [media/2025-2026/future-enhancements/ROADMAP.md](../media/2025-2026/future-
 **Success metrics:** <1 day to send-ready; zero 10+ shot athletes missing; new region = config rows not script fork.
 
 **2025–26 close-out status** ([media-kits.md](./media-kits.md)):
-- 10 newspaper packets built
-- 12 radio kits + Word exports complete
-- Facebook kits **not started**
-- Article copy still requires manual paste into docx placeholders
+- 10 newspaper packets built and **sent**
+- 12 radio kits + station outreach emails **sent 2026-07-05**
+- Facebook kits **not started** (optional / future)
 
 ### 6.5 Audits & backfills
 
@@ -330,18 +350,18 @@ From [airtable/extension-scripts/audits/README.md](../airtable/extension-scripts
 
 ---
 
-## 7. 2025–26 remaining manual work (not all in backlog IDs)
+## 7. 2025–26 remaining manual work
 
 | Item | Status |
 |------|--------|
-| C-001 Lyle Kimm shot restoration | open |
-| C-002 Final summary emails (~91 families) | open |
-| C-003 Koen HW10 coach review | open |
-| C-008 Turn off Fillout daily form | open |
+| C-001 Lyle Kimm shot restoration | **done** |
+| C-002 Final summary emails | **done** |
+| C-003 Koen HW17 coach review + email | **done** |
+| C-008 Turn off Fillout daily form | **done** |
+| Newspaper + radio outreach | **done** |
 | Amazon gift card fulfillment | per close-out audits (70 rows, $595) |
-| Newspaper article paste into docx | manual ChatGPT paste still required |
-| Facebook publicity kits | not started |
-| Radio kits distribution | 12 kits + emails ready for send |
+| Facebook publicity kits | not started (optional) |
+| **066 v3.1 Airtable paste** | pending Mike deploy checklist |
 
 ---
 
@@ -350,7 +370,7 @@ From [airtable/extension-scripts/audits/README.md](../airtable/extension-scripts
 From [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md):
 
 - **Educational Athletics platform** — future challenges: Dribble, Free Throw, Reading, Workout
-- **Separate base vs shared base** for multi-challenge — TBD before large architecture work
+- **Multi-year in one base** — **Program Instance** scopes seasons (**V2-013**); prior archive+clone plan superseded **2026-07-05**
 - **Dribble Challenge** — recommended separate repo + Airtable base
 - **Replace Softr** entirely with Next.js at hoopchallenges.com
 - **Coach focuses on coaching** — system handles XP, emails, gates, publicity generation
@@ -364,7 +384,7 @@ From [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-
 | **C-027 SMS** | Twilio vs Make vs other? Athlete cell, parent cell, or both? Opt-in on enrollment? Quiet hours? | C-027 |
 | **C-009 HW17 quiz** | Will Fillout export PDF attachment? If not, full attachment-less schema redesign? | C-009 |
 | **C-025 Zoom recording** | How does athlete attest watching recording? Coach confirm vs form? Partial XP amount in config? | C-025 |
-| **Multi-challenge architecture** | One shared Airtable base vs separate base per challenge? | Master direction |
+| **Multi-challenge architecture** | One shared org base with Program Instance per program/year vs separate base per challenge? | V2-013, Master direction |
 | **Web auth** | Magic link vs Clerk vs other for participant dashboard? | Web Phase 3 |
 | **C-026 Tutorials merge** | Row-count audit before delete — any Softr views on Tutorials & Assets? | C-026 |
 
@@ -386,7 +406,8 @@ From [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-
 
 | File | Backlog IDs |
 |------|-------------|
-| [docs/shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) | V2-001 |
+| [docs/shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) | V2-001 (superseded by V2-013) |
+| [docs/v2-change-backlog.md](./v2-change-backlog.md) | V2-013 Program Instance |
 | [docs/shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) | V2-002 |
 | [docs/platform-config-improvements.md](./platform-config-improvements.md) | C-021, C-022, V2-003, V2-004 |
 | [docs/asset-storage-migration.md](./asset-storage-migration.md) | C-013, C-023 |
@@ -415,7 +436,9 @@ From [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-
 | [docs/v2/01-constitution.md](./v2/01-constitution.md) | Active |
 | [docs/v2/03-business-rules.md](./v2/03-business-rules.md) | Active — engine contract |
 | [docs/v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | Active — three-role workflow, five phases |
-| [docs/chatgpt-sources/](./chatgpt-sources/) | 23 synced files for ChatGPT Project Sources |
+| [docs/v2/06-automation-standards.md](./v2/06-automation-standards.md) | Active — 066 v3.1 V2 reference |
+| [docs/v2/08-testing-standards.md](./v2/08-testing-standards.md) | Active — fix the audit, not the data |
+| [docs/chatgpt-sources/](./chatgpt-sources/) | Synced files for ChatGPT Project Sources |
 
 ### Tier 5 — Operational context
 

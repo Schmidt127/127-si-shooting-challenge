@@ -1,7 +1,9 @@
 # Shooting Challenge v2 — Base cutover plan (2025–26 → 2026–27)
 
-**Status:** Planning only — **no base clone or data delete until owner approves.**  
-**Preferred approach (2026-07-03):** Archive current base → clone for next season → clear season data in clone → keep config/rules → update integrations.  
+> **⚠ Superseded (2026-07-05):** Owner direction changed to **one Airtable base + Program Instance** per program year (**V2-013**). This archive+clone document is kept for historical context. **Do not execute V2-001** until V2-013 architecture wave is planned. See [v2-change-backlog.md](./v2-change-backlog.md) § Wave 1b.
+
+**Status:** **Historical reference** — superseded by **V2-013** Program Instance integration.  
+**Preferred approach (2026-07-03, revised 2026-07-05):** ~~Archive + clone~~ → **Program Instance** multi-year in one base.  
 **Governed by:** [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md)
 
 ---
