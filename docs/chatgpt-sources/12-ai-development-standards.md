@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (DEV-first delivery pipeline — permanent rule)
+**Last updated:** 2026-07-05 (official promotion documentation — DEV changes not official until documented)
 
 ---
 
@@ -137,7 +137,7 @@ This applies to **all** platform changes:
 | Views | **Yes** | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) when web-facing |
 | Make scenarios | **Yes** | Blueprint export in `make/blueprints/` |
 | Extension scripts | **Yes** | `airtable/extension-scripts/` |
-| Schema changes (fields, tables) | **Yes** | Schema snapshot after intentional dev divergence |
+| Schema changes (fields, tables) | **Yes** | Promotion doc + schema snapshot after intentional dev divergence |
 
 **Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **DEV base** (`appTetnuCZlCZdTCT`) is the mandatory test environment. See [development-base-setup.md](../development-base-setup.md).
 
@@ -172,6 +172,62 @@ flowchart TB
 ```
 
 **In words:** ChatGPT designs → Cursor writes → GitHub stores → DEV validates → Mike approves → Production receives.
+
+### Official promotion documentation (required)
+
+**Rule:** Changes in DEV are **experiments** until **Cursor documents the promotion steps** in GitHub. Undocumented DEV work is not backlog-official and must not be treated as the plan for Production.
+
+This keeps DEV useful as a lab without becoming a confusing second system of record.
+
+| State | Meaning |
+|-------|---------|
+| **DEV experiment** | Someone changed DEV (Mike, OMNI, or Cursor); no promotion doc yet |
+| **Promotion documented** | Cursor committed numbered prod steps; ready for Mike review |
+| **Promoted** | Mike approved; steps executed in Production |
+
+#### When Cursor must write promotion steps
+
+Create or update a promotion document when DEV receives an **intentional** change that may ship to Production:
+
+| Change type | Promotion doc location |
+|-------------|------------------------|
+| **Automations** | `docs/deploy-checklists/{backlog-id}-{name}-dev-deploy.md` (DEV + prod sections) |
+| **Schema** (fields, tables, formulas, views) | `docs/deploy-checklists/{backlog-id}-{name}-schema-promotion.md` |
+| **Extension scripts** (audits / backfills) | Same deploy checklist or note in extension README |
+| **Make scenarios** | `make/documentation/` + blueprint header (prod vs dev mapping) |
+| **Web** (routes, env, Airtable views) | `docs/deployment-notes.md` or deploy checklist |
+
+**Template:** [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](../deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)
+
+#### Minimum content
+
+Every promotion document must include:
+
+1. **Backlog ID** and what changed in DEV
+2. **DEV test evidence** — audit dry-run, sandbox record, automation run (what passed)
+3. **Numbered Production steps** — exact field names, types, formula text, paste line ranges, Make/Fillout/web changes
+4. **Smoke test** — how to verify prod after promote (Schmidt / dry-run audit)
+5. **Risk / rollback notes** — what breaks if wrong; undo path if any
+6. **Schema snapshots** (when schema changed) — dev export path; prod pre-promote export for diff
+
+#### Cursor obligation (end of session)
+
+If DEV was intentionally changed during the session, Cursor must **before stopping**:
+
+- **(a)** Write or update the promotion document and link it from the backlog item, **or**
+- **(b)** Mark the change as **throwaway** in the backlog item notes (`DEV experiment only — do not promote`)
+
+#### Mike rule
+
+**Do not mirror DEV → Production from memory.** Use the promotion document only. If there is no doc, the DEV change is not official.
+
+#### Relationship to five-phase workflow
+
+| Phase | Promotion doc |
+|-------|----------------|
+| Phase 3 (Implementation) | Cursor creates doc when DEV change is part of the work |
+| Phase 4 (Review) | ChatGPT checks promotion steps against acceptance criteria |
+| Phase 5 (Close) | Promotion doc status → `Promoted to Production` after prod execute |
 
 ### Automation rewrite sequence (required)
 
@@ -419,6 +475,7 @@ What to open / paste:
 | Planning session but Mike asks Cursor to implement | Phase skip | Classify task; if plan missing, return to ChatGPT Phase 2. |
 | Wave 1+ work while Wave 0 close-out items still open | Wave skip | Flag open C-001–C-008; confirm Mike wants to defer close-out. |
 | Production Airtable paste before GitHub commit | Deploy order | GitHub first → Airtable paste → CHANGELOG ([monorepo rule](../../.cursor/rules/monorepo.mdc)). |
+| Promote DEV → Production without promotion doc | Process skip | Stop. Cursor must document promotion steps in `docs/deploy-checklists/` first. |
 | Audit/backfill with writes and no dry-run | Safety | Dry-run first; require `CONFIRM_WRITE` / `CONFIRM_DELETE`. |
 | Constitution or business-rules change during a code-only task | Layer violation | Stop. Route to ChatGPT; Mike must approve [01](./01-constitution.md) / [03](./03-business-rules.md) edits. |
 
@@ -682,6 +739,7 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
 - **DEV before Production** — nothing new ships to prod until tested in DEV ([DEV-first pipeline](#dev-first-delivery-pipeline-permanent--v2-015))
+- **Promotion doc required** — DEV changes are not official until Cursor documents prod steps ([Official promotion documentation](#official-promotion-documentation-required))
 - **Airtable production writes** — GitHub first → DEV test → Mike approval → paste prod → `CHANGELOG.md`
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
@@ -709,3 +767,4 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 | 2026-07-05 | Added workspace guardrails, Workspace Check, extended Task Classification |
 | 2026-07-05 | **OMNI-first** priority for in-Airtable work (Mike's Airtable credits) |
 | 2026-07-05 | **DEV-first delivery pipeline** — permanent rule + canonical diagram; nothing to prod without DEV test |
+| 2026-07-05 | **Official promotion documentation** — DEV changes not official until Cursor documents prod steps |
