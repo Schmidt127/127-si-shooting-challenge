@@ -28,7 +28,7 @@
 | Submission XP | 010 |
 | Levels / gates | 041, 042 |
 | Streaks | 053, 054 |
-| Achievements | 059, 066 |
+| Achievements | 059, **066 (v3.0 — first V2 standard rewrite)** |
 | Weekly email | 072, 074 |
 | Homework XP | 064, 065 |
 

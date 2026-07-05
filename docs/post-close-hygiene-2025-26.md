@@ -2,7 +2,7 @@
 
 **Purpose:** Record cleanup and automation fixes discovered during **2025–26 close-out audits** (July 2026). Use this after final emails and Amazon fulfillment are done — not blockers for close-out itself.
 
-**Last verified:** 2026-07-02 (Airtable extension scripts + Python cross-checks)
+**Last verified:** 2026-07-05 (H-001 audit fix applied; H-002 066 v3.0 in GitHub for review)
 
 **Related:** [close-out-considerations.md](./close-out-considerations.md) (watchlist IDs C-006, C-011, C-012+) · [audits README](../airtable/extension-scripts/audits/README.md) · [PROJECT_STATE.md](./PROJECT_STATE.md)
 
@@ -33,18 +33,17 @@ Priority: **High** = fix before next season · **Medium** = data hygiene · **Lo
 
 **Found by:** `audit-final-090f-athlete-achievement-unlocks-workflow.js` (2026-07-02)
 
-**Issue:** 9 duplicate groups on combo key **Enrollment + Achievement + Week**. All involve achievement **`reclgScxpCba3m1Mo`** (Shot Milestone). ~15 extra unlock rows across ~6 enrollments.
+**Re-audit 2026-07-05 (live API, read-only):** The 9 flagged groups are **not duplicate unlock rows**. Each group is **Enrollment + same Shot Milestone achievement + same Week** with **different `Shot Milestone` links** and **unique `Milestone Source Key`** values (0 source-key duplicates). Each row has its own XP Event. This is **expected** when multiple shot milestones cross in the same week — they all link achievement `reclgScxpCba3m1Mo` (generic “Shot Milestone” achievement).
 
-**Not blocking:** Amazon cart, final emails, or XP rollups (090F reported no missing links, no duplicate XP, no duplicate Milestone Source Key).
+**Do not delete** any of these rows. **Fix the audit**, not the data.
 
-**How to fix (manual, after season):**
+**Resolved 2026-07-05 (Mike approved — fix audit, not data):**
 
-1. Re-run 090F; for each group below, open all `unlockIds`.
-2. Keep **one** row per group (prefer the row with a valid **XP Events** link and **XP Award Status = Awarded**).
-3. Delete or archive extras only after confirming no unique XP Event would be orphaned.
-4. Re-run 090F until `duplicate_unlock_key_enrollment_achievement_week` is 0.
+1. Updated `audit-final-090f-athlete-achievement-unlocks-workflow.js` (v1.1) and `run_final_090_audits.py`.
+2. Shot milestone unlocks: dedupe on **`Milestone Source Key`** only. Non-shot: Enrollment + Achievement + Week.
+3. Live re-run **090F PASS** (Python, 2026-07-05). **Zero rows deleted.**
 
-**Do not use** `repair-final-090f-unlock-week-from-source.js` for this — that script fills **empty** Week fields only.
+**Historical table (2026-07-02)** — same enrollment/week groups; live dry-run JSON: `tools/airtable/_preview/h001-090f-dry-run.json`
 
 | Enrollment ID | Week ID (3rd part of comboKey) | Dup count | Unlock record IDs |
 |---------------|-------------------------------|-----------|-------------------|
@@ -66,13 +65,13 @@ Priority: **High** = fix before next season · **Medium** = data hygiene · **Lo
 
 **Found by:** 090F audit + Week 9 cohort review
 
-**Issue:** Automation **066** creates Shot Milestone unlocks but does not always set **Athlete Achievement Unlocks.Week**. Automation **058** (perfect-week unlocks) does set Week explicitly — 066 should match that pattern.
+**Re-audit 2026-07-05:** **0** shot-milestone unlocks with empty Week on active enrollments. Historical backfill (`backfill-shot-milestone-xp-week-and-was.js`) or prior writes already populated Week. **`repair-final-090f-unlock-week-from-source.js`** would report **0 candidates** today.
 
-**Why it matters next season:** Empty or inconsistent Week links make unlock audits, weekly rollups, and dedupe keys harder.
+**Issue (forward-looking):** Production Airtable still runs pre-v3.0 **066** until Mike pastes GitHub v3.0. **058** sets Week from WAS; without v3.0 deploy, new 2026–27 unlocks could lack Week until backfill.
 
-**Week 9 note (2025–26):** 13 Week 9 shot-milestone unlocks in the audit sample **did** have Week linked (`week9ByWeekLink: true`). The 066 fix is **forward-looking**, not required to finish 2025–26 close-out.
+**Fix:** Automation **066** rewritten to **v3.0** (V2 Automation Standard) in GitHub — writes Week from Milestone Activity Date via Weeks table ranges. **Awaiting Mike review before Airtable paste.**
 
-**Fix:** Edit `airtable/automations/shooting-challenge/066-*.js` to resolve Week from milestone activity date (same date→Week logic as `backfill-shot-milestone-xp-week-and-was.js` / `repair-final-090f-unlock-week-from-source.js`) and write `{ id: weekRecordId }` on create.
+**Status:** GitHub ready for review · production paste **not done**
 
 ---
 

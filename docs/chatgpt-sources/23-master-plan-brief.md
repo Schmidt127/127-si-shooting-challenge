@@ -24,7 +24,9 @@ Permanent workflow: **[v2/04-ai-development-standards.md](./v2/04-ai-development
 
 **Every new task** starts with **Task Classification** (Type, Priority, Difficulty, Owner, Dependencies, Backlog ID, Estimated Scope, **Phase, Correct tool, Repo, Mike's role**) before work begins.
 
-**Wrong area?** Both ChatGPT and Cursor output **Workspace Check** and redirect — planning/copy/review → ChatGPT; code/audits/commits → Cursor; backlog → `v2-change-backlog.md` only; wrong repos → `hoopchallenges-landing`, `127-si-jr-ref`. Full tables in doc 04 § Workspace guardrails.
+**Wrong area?** Both ChatGPT and Cursor output **Workspace Check** and redirect — planning/copy/review → ChatGPT; in-Airtable ops → **OMNI first**; production scripts/audits/commits → Cursor; backlog → `v2-change-backlog.md` only; wrong repos → `hoopchallenges-landing`, `127-si-jr-ref`. Full tables in doc 04 § Workspace guardrails.
+
+**OMNI priority:** Mike uses Airtable **OMNI** credits first for in-base work (views, formulas, data, interfaces) before Cursor repo edits. Production automations `001`–`114` still flow GitHub → paste → CHANGELOG.
 
 | Phase | Owner | Output |
 |-------|-------|--------|

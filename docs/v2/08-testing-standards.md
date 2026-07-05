@@ -1,17 +1,42 @@
 # 08 — Testing Standards
 
-**Status:** Shell — links to audit and backfill practices (integrity over unit tests).
+**Status:** Active — audit and integrity practices (integrity over unit tests).
+
+**Last updated:** 2026-07-05
+
+---
 
 ## Philosophy
 
 **Trust is everything.** Data integrity checks (extension audits + Python tools) are the primary “tests” for this system. Safe backfills require dry-run before any write.
 
+---
+
+## Core principle: fix the audit, not the data
+
+**When an audit flags rows but investigation shows the data is correct, fix the audit — do not “repair” valid data to satisfy an outdated check.**
+
+| Situation | Correct response |
+|-----------|------------------|
+| Audit uses wrong dedupe key (e.g. Enrollment+Achievement+Week for shot milestones) | Update audit logic to match current business rules |
+| Business rules evolved; old audit assumption no longer holds | Document the rule change; update audit + [03-business-rules.md](./03-business-rules.md) if needed |
+| True duplicate rows (same Source Key, same source record) | Safe backfill or manual delete **after** dry-run proves orphan risk |
+
+**Example (2025–26):** H-001 — 090F flagged 9 “duplicate” unlock groups. Live investigation showed **multiple legitimate shot milestones in the same week** (unique `Milestone Source Key` each). **No rows deleted.** Audit updated to dedupe shot milestones on Source Key only.
+
+**Before any backfill that deletes or merges rows:** Confirm the audit failure is a **true positive**, not a false positive from an evolved rule.
+
+---
+
 ## Audit-first workflow
 
 1. Run **audit** extension script (dry-run) → JSON with counts and sample record IDs.
-2. Fix via **safe-backfill** with `DRY_RUN=true`, then `CONFIRM_WRITE=true` in batches.
-3. Re-run audit until clean.
-4. Run **field coverage** / legacy cleanup when appropriate.
+2. **Investigate** — if counts look wrong, re-read business rules before assuming data is broken.
+3. Fix via **safe-backfill** with `DRY_RUN=true`, then `CONFIRM_WRITE=true` in batches — **only for true positives**.
+4. Re-run audit until clean (or until remaining flags are accepted/documented).
+5. Run **field coverage** / legacy cleanup when appropriate.
+
+---
 
 ## Canonical sources
 
@@ -24,12 +49,17 @@
 | [../../tools/airtable/README.md](../../tools/airtable/README.md) | Python schema export and close-out tools |
 | [../../.github/workflows/web.yml](../../.github/workflows/web.yml) | Web CI (lint, typecheck, test) |
 
+---
+
 ## Pre-season checklist (2026–27)
 
 - Stages A–J on **clone** base with test enrollments.
 - Final 090A–090G adapted for new season.
 - Schema export to `airtable/schema/snapshots/`.
+- Re-verify audit dedupe keys match [03-business-rules.md](./03-business-rules.md) Source Key patterns.
+
+---
 
 ## Full standalone doc
 
-_To be expanded: required audits before launch, test enrollment pattern, Make webhook smoke tests._
+_To be expanded: required audits before launch, test enrollment pattern (C-019/C-020), Make webhook smoke tests._

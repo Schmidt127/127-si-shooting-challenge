@@ -73,18 +73,18 @@ flowchart TD
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-001** | Restore Lyle Kimm excluded shots | ~300 shots; restore Count It on two submissions; XP backfill | — | open |
-| **C-002** | Final summary emails | 090G repair → test 074 → ~91 families | C-001 optional | open |
-| **C-003** | Koen HW10 reflection coach review | Symptom of C-009; optional for close-out email | — | open |
-| **C-008** | Turn off Fillout daily form | Midnight Denver after contest end | — | open |
+| **C-001** | Restore Lyle Kimm excluded shots | ~300 shots restored; Count It set; XP counted | — | **done** |
+| **C-002** | Final summary emails | All families sent via **074** / Make | C-001 optional | **done** |
+| **C-003** | Koen HW17 (Final Reflection) coach review + parent email | Graded + **071** email sent **2026-07-05** | — | **done** |
+| **C-008** | Turn off Fillout daily form | Form **OFF** **2026-07-05** | — | **done** |
 
 ### Wave 1 — Base cutover + post-close hygiene
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **V2-001** | Archive 2025–26 base; clone for 2026–27 | Scrub season data; keep config tables. [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | queued |
-| **H-001** | Dedupe 090F achievement unlock rows | 9 duplicate groups; manual | Wave 0 | queued |
-| **H-002** | **066** writes Week on shot-milestone unlocks | Match **058** pattern | Wave 0 | queued |
+| **H-001** | Dedupe 090F achievement unlock rows | **Done (audit fix)** — shot milestones dedupe on Milestone Source Key; 0 data deletes | Wave 0 | **done** |
+| **H-002** | **066** V2 rewrite + Week write | GitHub v3.0 ready for review; **not pasted** to Airtable | Wave 0 | **review** |
 | **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
 

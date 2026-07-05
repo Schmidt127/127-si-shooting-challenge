@@ -3,9 +3,11 @@ description: Prevent Mike from working in the wrong phase, tool, repo, or path
 alwaysApply: true
 ---
 
-# Workflow guardrails — Mike / ChatGPT / Cursor
+# Workflow guardrails — Mike / ChatGPT / Cursor / OMNI
 
 Authority: [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development-standards.md)
+
+**Mike priority:** Use **OMNI** (Airtable in-base AI) first for in-Airtable work — views, formulas, data exploration, interfaces, one-off fixes — before Cursor repo edits.
 
 ## Every new task (Cursor)
 
@@ -16,6 +18,7 @@ Authority: [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development
 
 | Request | Send to |
 |---------|---------|
+| In-Airtable views, formulas, data, interfaces | **OMNI first** (Mike in base) |
 | Planning, requirements, copy, Phase 4 review | **ChatGPT** |
 | Code/audits/commits with no backlog ID or unapproved Phase 2 plan | Stop — ask Mike for ID + approval |
 | Backlog edits | `docs/v2-change-backlog.md` only (not Master Plan Brief) |

@@ -19,7 +19,7 @@
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
 | 06 | [06-automation-standards.md](./06-automation-standards.md) | Shell |
 | 07 | [07-ui-standards.md](./07-ui-standards.md) | Shell |
-| 08 | [08-testing-standards.md](./08-testing-standards.md) | Shell |
+| 08 | [08-testing-standards.md](./08-testing-standards.md) | **Active** — audit-first workflow; **fix the audit, not the data** |
 | 09 | [09-release-notes.md](./09-release-notes.md) | Shell — points to CHANGELOG |
 
 ## Also read (not renumbered)
@@ -45,6 +45,8 @@ Permanent operating procedure: **[04-ai-development-standards.md](./04-ai-develo
 **Five phases:** Idea → Planning → Implementation → Review → Close
 
 **Guardrails:** Both tools output **Task Classification** + **Workspace Check** when Mike is in the wrong phase, tool, repo, or path. See doc 04 § Workspace guardrails.
+
+**OMNI first:** For in-Airtable work (views, formulas, data, interfaces), Mike uses **OMNI** in the base before Cursor — Airtable credits are priority.
 
 **Live backlog:** [v2-change-backlog.md](../v2-change-backlog.md) · **Planning aggregate:** [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md)
 

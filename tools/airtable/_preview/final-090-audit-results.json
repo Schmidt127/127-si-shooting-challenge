@@ -5,9 +5,9 @@
     "pass": true,
     "issueTotal": 0,
     "issueCounts": {
-      "clean": 1712
+      "clean": 1714
     },
-    "scoped": 1712,
+    "scoped": 1714,
     "samples": []
   },
   {
@@ -16,8 +16,8 @@
     "pass": true,
     "issueTotal": 0,
     "issueCounts": {
-      "clean": 134,
-      "excluded_not_ready": 8
+      "clean": 135,
+      "excluded_not_ready": 7
     },
     "scoped": 142,
     "samples": []
@@ -28,8 +28,7 @@
     "pass": true,
     "issueTotal": 0,
     "issueCounts": {
-      "clean": 490,
-      "excluded_not_ready": 1
+      "clean": 491
     },
     "unlocksChecked": 132,
     "streaksChecked": 359,
@@ -62,11 +61,9 @@
   {
     "id": "090F",
     "name": "Achievement Unlocks Workflow",
-    "pass": false,
-    "issueTotal": 9,
-    "issueCounts": {
-      "duplicate_unlock_key_enrollment_achievement_week": 9
-    },
+    "pass": true,
+    "issueTotal": 0,
+    "issueCounts": {},
     "scoped": 132,
     "samples": []
   },
@@ -74,16 +71,16 @@
     "id": "090G",
     "name": "Weekly Summary Email Workflow",
     "pass": false,
-    "problemCount": 365,
+    "problemCount": 312,
     "sendStatusCategoryCounts": {
-      "clean_and_sent": 92,
-      "should_have_sent_never_built": 293,
+      "clean_and_sent": 145,
+      "should_have_sent_never_built": 261,
       "package_built_not_sent": 48,
       "missing_recipient": 0,
       "missing_enrollment_or_week": 0,
       "not_eligible": 0,
       "error_blocked": 1,
-      "needs_manual_review": 23
+      "needs_manual_review": 2
     },
     "scoped": 457,
     "skippedInactive": 0,
@@ -107,9 +104,24 @@
           "weekId": "recNmS6xlp3HOWPAE"
         },
         {
+          "wasId": "rec19UW2BSOGBi3FU",
+          "enrollmentId": "recvY4UwL5udPp0CW",
+          "weekId": "recrTwxqXz31fNZ7e"
+        },
+        {
           "wasId": "rec1cjc7WRg9YenUF",
           "enrollmentId": "recSie4tYfSbfhwly",
           "weekId": "recNmS6xlp3HOWPAE"
+        },
+        {
+          "wasId": "rec2El9mG1stdysfd",
+          "enrollmentId": "recSOk6N8RL3j5fzg",
+          "weekId": "recbw58r8MlnhbBx7"
+        },
+        {
+          "wasId": "rec338h6s132lD802",
+          "enrollmentId": "recIh9oF3NYfMzkoS",
+          "weekId": "recrTwxqXz31fNZ7e"
         },
         {
           "wasId": "rec3N4Uaf6ApSQGK4",
@@ -137,6 +149,11 @@
           "weekId": "recNmS6xlp3HOWPAE"
         },
         {
+          "wasId": "rec4F335DEOcG3OPp",
+          "enrollmentId": "rechd9F0RV9Gs4n0j",
+          "weekId": "recZwSGoAiERDdTMr"
+        },
+        {
           "wasId": "rec4ruzk4oPIZwyhd",
           "enrollmentId": "rec2gnfAuY1xTodO6",
           "weekId": "recNmS6xlp3HOWPAE"
@@ -145,26 +162,6 @@
           "wasId": "rec6NZjdxltBgAW5Y",
           "enrollmentId": "rec7WoCM2GYcc0E8p",
           "weekId": "recNmS6xlp3HOWPAE"
-        },
-        {
-          "wasId": "rec6V6fgVAPSZLF2C",
-          "enrollmentId": "recvY4UwL5udPp0CW",
-          "weekId": "recNmS6xlp3HOWPAE"
-        },
-        {
-          "wasId": "rec8Gnzk2FZlhHEzU",
-          "enrollmentId": "rechBG2hMV5qXLSsb",
-          "weekId": "reciDzF3dUk32AoeD"
-        },
-        {
-          "wasId": "rec9nOt57b41uhrqR",
-          "enrollmentId": "recJsYuNK6HY0tUku",
-          "weekId": "recNmS6xlp3HOWPAE"
-        },
-        {
-          "wasId": "rec9rWztlK9NXLuU9",
-          "enrollmentId": "recNe84xp4corSBmm",
-          "weekId": "reciDzF3dUk32AoeD"
         }
       ],
       "should_have_sent_never_built": [
@@ -204,11 +201,6 @@
           "weekId": "recnMGC2JBHjO0ay6"
         },
         {
-          "wasId": "rec2El9mG1stdysfd",
-          "enrollmentId": "recSOk6N8RL3j5fzg",
-          "weekId": "recbw58r8MlnhbBx7"
-        },
-        {
           "wasId": "rec2bq61QUswb5oZW",
           "enrollmentId": "recK2dzcWqj5oFGHc",
           "weekId": "recUPkXtsDOHnY5q7"
@@ -234,91 +226,19 @@
           "weekId": "recZwSGoAiERDdTMr"
         },
         {
-          "wasId": "rec338h6s132lD802",
-          "enrollmentId": "recIh9oF3NYfMzkoS",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
           "wasId": "rec357v0QLIeJhAdC",
           "enrollmentId": "recUeFkUrOC5JRuNn",
           "weekId": "recUPkXtsDOHnY5q7"
-        }
-      ],
-      "needs_manual_review": [
-        {
-          "wasId": "rec19UW2BSOGBi3FU",
-          "enrollmentId": "recvY4UwL5udPp0CW",
-          "weekId": "recrTwxqXz31fNZ7e"
         },
         {
-          "wasId": "rec9RX9Yl9iBtfiMK",
-          "enrollmentId": "recbJ71DHseETAQRP",
-          "weekId": "recrTwxqXz31fNZ7e"
+          "wasId": "rec3LPK3IljawJFh3",
+          "enrollmentId": "recHUNHzjPGGz5wxX",
+          "weekId": "recUPkXtsDOHnY5q7"
         },
         {
-          "wasId": "recAEvwojVbWGNR7r",
-          "enrollmentId": "recK2dzcWqj5oFGHc",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recAeruJswYBunfhi",
-          "enrollmentId": "recKDTHpQrZOu0YN5",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recEBQf86ra3nLvNY",
-          "enrollmentId": "rec0BF7hSTCKRlfQk",
-          "weekId": "recaX4EyJ7BWWKfSq"
-        },
-        {
-          "wasId": "recEOs8k9LI2AFdKM",
-          "enrollmentId": "recaLZCSGUgF5PCrC",
+          "wasId": "rec3Uesopm1pWWjlF",
+          "enrollmentId": "recvMhReNktxj1Txk",
           "weekId": "recbw58r8MlnhbBx7"
-        },
-        {
-          "wasId": "recHMEXOR54jDyNte",
-          "enrollmentId": "recs4r7UjEsHlIjM7",
-          "weekId": "recaX4EyJ7BWWKfSq"
-        },
-        {
-          "wasId": "recHtVafZESTmulFi",
-          "enrollmentId": "recMiAeCmaYHd4OjI",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recI5r1cQ4lgONZwO",
-          "enrollmentId": "recn212vBAeMDpXco",
-          "weekId": "recZwSGoAiERDdTMr"
-        },
-        {
-          "wasId": "recIvmSmuWI8rFzKb",
-          "enrollmentId": "rectgE3U9zZkfbqQ4",
-          "weekId": "recd1V4C5KDJm87b1"
-        },
-        {
-          "wasId": "recNTmbuj14bhQcAn",
-          "enrollmentId": "recBKEOo6MqTWBsv8",
-          "weekId": "recd1V4C5KDJm87b1"
-        },
-        {
-          "wasId": "recPmFw0MYLm2frEg",
-          "enrollmentId": "rec8Z5KzsNif6mtpG",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recQXX9QN8vhSiK1N",
-          "enrollmentId": "recZm4wl6E5ePN2rb",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recR1n4yzP9p4a7FX",
-          "enrollmentId": "rechgOSWWFsOivzhX",
-          "weekId": "recrTwxqXz31fNZ7e"
-        },
-        {
-          "wasId": "recS0rvX53T2TMdWz",
-          "enrollmentId": "rec0Mop60efVsJ5sV",
-          "weekId": "recd1V4C5KDJm87b1"
         }
       ],
       "package_built_not_sent": [
@@ -395,6 +315,18 @@
         {
           "wasId": "recIzKUNwFL9pNALO",
           "enrollmentId": "recho64Y69r6DvwFL",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        }
+      ],
+      "needs_manual_review": [
+        {
+          "wasId": "recEBQf86ra3nLvNY",
+          "enrollmentId": "rec0BF7hSTCKRlfQk",
+          "weekId": "recaX4EyJ7BWWKfSq"
+        },
+        {
+          "wasId": "recHMEXOR54jDyNte",
+          "enrollmentId": "recs4r7UjEsHlIjM7",
           "weekId": "recaX4EyJ7BWWKfSq"
         }
       ],

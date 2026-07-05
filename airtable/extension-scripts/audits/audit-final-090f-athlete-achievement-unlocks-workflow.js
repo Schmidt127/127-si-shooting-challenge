@@ -7,15 +7,15 @@ Purpose:
   - missing enrollment / achievement links
   - empty week link classification (shot milestone vs perfect week vs other)
   - XP awarded status parity (missing XP, duplicate XP, XP points mismatch)
-  - duplicate unlock-key patterns (Milestone Source Key and enrollment+achievement+week)
-  - Week 9 cohort root-cause hypotheses
+  - duplicate unlock-key patterns (Milestone Source Key; enrollment+achievement+week for non-shot-milestone only)
 
 Reference:
-  - 066 does not write Week on shot milestone unlocks.
+  - 066 writes Week on shot milestone unlocks (v3.0+).
   - 058 writes Week for perfect-week unlocks.
+  - Multiple shot milestones in the same week share one Achievement link but unique Milestone Source Keys — not duplicates.
 
 Schema gate: 20260629_045741
-Version: v1.0
+Version: v1.1
 Default: read-only (no writes)
 */
 
@@ -26,7 +26,7 @@ const SCHEMA_SNAPSHOT = "20260629_045741";
 
 const CONFIG = {
   scriptName: "audit-final-090f-athlete-achievement-unlocks-workflow",
-  version: "v1.0",
+  version: "v1.1",
   schemaSnapshot: SCHEMA_SNAPSHOT,
 
   tables: {
@@ -372,11 +372,14 @@ async function main() {
     }
 
     if (enrollmentId && achievementId) {
-      const comboKey = buildEnrollmentAchievementWeekKey(enrollmentId, achievementId, weekId);
-      if (!unlockIdsByEnrollmentAchievementWeek.has(comboKey)) {
-        unlockIdsByEnrollmentAchievementWeek.set(comboKey, []);
+      // Shot milestones: dedupe on Milestone Source Key only (multiple milestones/week is valid).
+      if (!shotMilestoneId) {
+        const comboKey = buildEnrollmentAchievementWeekKey(enrollmentId, achievementId, weekId);
+        if (!unlockIdsByEnrollmentAchievementWeek.has(comboKey)) {
+          unlockIdsByEnrollmentAchievementWeek.set(comboKey, []);
+        }
+        unlockIdsByEnrollmentAchievementWeek.get(comboKey).push(unlockId);
       }
-      unlockIdsByEnrollmentAchievementWeek.get(comboKey).push(unlockId);
     }
 
     const week9ByWeekLink = weekId && isWeek9Label(weekLabel);
@@ -459,7 +462,11 @@ async function main() {
     week9CohortSample,
     week9RootCause,
     recommendedAutomationFix:
-      "Automation 066 should write Week on shot-milestone unlocks (match 058 pattern where Week is explicitly set).",
+      "Shot milestone unlocks: dedupe on Milestone Source Key only. Non-shot unlocks: enrollment+achievement+week.",
+    dedupeRules: {
+      shotMilestone: "Milestone Source Key (unique per enrollment + shot milestone)",
+      nonShotMilestone: "Enrollment + Achievement + Week",
+    },
   };
 
   console.log("===== FINAL 090F - ATHLETE ACHIEVEMENT UNLOCKS WORKFLOW =====");

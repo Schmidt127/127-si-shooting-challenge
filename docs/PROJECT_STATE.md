@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-04**
+Last updated: **2026-07-05**
 
 ---
 
@@ -64,25 +64,41 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 
 **Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
 
-### Individual final summary emails (2026-07-03)
+### Individual final summary emails (2026-07-05 — complete)
 
 | Step | Status |
 |------|--------|
-| Template revision | **`final-summary-2026-07-03-v2`** (`preview_final_email.py`; Riley Geraghty reference) |
-| Staged to WAS | **65** enrollments (`stage_final_emails_to_was.py --confirm-write`) |
-| Skipped (≤ 50 shots) | **26** |
-| Armed + sent via **074** | **53** families (`arm_final_emails_send.py --confirm-arm`) |
-| Blocked (prior `Weekly Email Sent?`) | **12** — uncheck **Weekly Email Sent?** on WAS, re-arm if needed |
+| Template revision | **`final-summary-2026-07-03-v2`** |
+| Staged + sent via **074** / Make | **Done** — Mike confirmed all final summary emails sent **2026-07-05** |
+| Prior partial run (2026-07-03) | 53 armed first batch; remaining families completed in follow-up |
 
-Reports: `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`. Do **not** paste JSON into Airtable Scripting (use Python staging).
+Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`.
 
-### Media & publicity (2026-07-04)
+### Wave 0 close-out (2026-07-05 — complete)
+
+| ID | Status |
+|----|--------|
+| C-001 Lyle Kimm shots | **Done** |
+| C-002 Final summary emails | **Done** |
+| C-003 Koen HW17 review + email | **Done** |
+| C-008 Fillout off | **Done** |
+| Newspaper + radio outreach | **Done** |
+
+**Live re-audit (2026-07-05):** 090A–090E **PASS** · 090F **9 hygiene flags** (see H-001 — not true dupes) · 090G historical weekly gaps only (close-out complete).
+
+---
+
+| Step | Status |
+|------|--------|
+| Fillout daily submission form | **OFF** — contest intake closed (**C-008** done) |
+
+### Media & publicity (2026-07-05)
 
 | Item | Status |
 |------|--------|
 | Top-level `media/` folder | **Done** — season layout under `media/2025-2026/` |
+| 2025–26 radio | **12** kits in `media/2025-2026/radio/` — **station outreach emails sent 2026-07-05** |
 | 2025–26 newspapers | **10** regional packets in `media/2025-2026/newspapers/final-packets/` |
-| 2025–26 radio | **12** kits in `media/2025-2026/radio/` |
 | Build scripts | `tools/airtable/_build_*.py` → `media_paths.py` |
 | Platform roadmap | **V2-028** — [media-kits.md](./media-kits.md), [ROADMAP](../media/2025-2026/future-enhancements/ROADMAP.md) |
 

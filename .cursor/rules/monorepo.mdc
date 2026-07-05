@@ -31,7 +31,7 @@ This repo (`127-si-shooting-challenge`) is **Shooting Challenge only**:
 4. For automations → `docs/automation-index.md` + `.cursor/rules/airtable-automation-scripts.mdc`.
 5. For web routes → `web/docs/site-hierarchy.md` + `.cursor/rules/web-ui-brand.mdc`.
 
-**Wrong area redirects (Cursor):** Planning/copy/review → ChatGPT. Code/audits/commits without approved backlog ID → stop first. Backlog → `docs/v2-change-backlog.md` only. Not this repo: `hoopchallenges-landing`, `127-si-jr-ref`.
+**Wrong area redirects (Cursor):** In-Airtable ops → **OMNI first**. Planning/copy/review → ChatGPT. Production scripts/audits/web without approved backlog ID → stop first. Backlog → `docs/v2-change-backlog.md` only. Not this repo: `hoopchallenges-landing`, `127-si-jr-ref`.
 
 ## Deploy paths
 

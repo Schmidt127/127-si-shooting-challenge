@@ -1,0 +1,377 @@
+{
+  "auditDate": "2026-07-05",
+  "scopedUnlocks": 132,
+  "duplicateEnrollmentAchievementWeekGroups": 9,
+  "duplicateMilestoneSourceKeyGroups": 0,
+  "emptyWeekShotMilestoneCount": 0,
+  "duplicateGroups": [
+    {
+      "comboKey": "rechgOSWWFsOivzhX|reclgScxpCba3m1Mo|recnMGC2JBHjO0ay6",
+      "count": 5,
+      "unlocks": [
+        {
+          "unlockId": "rec00VRhnV8Qhexog",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recgiiVu1xK0I0GNa",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recgiiVu1xK0I0GNa",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recouxCJiiKnil8S1"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recDwfnDw758GJznx",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recxc05LgoPWJIlhB",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recxc05LgoPWJIlhB",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recy02C4J1FreXPJV"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recJY2Wpa763vqM5Z",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recRHdSqPZFzVvjQX",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recRHdSqPZFzVvjQX",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recKj0eoKo9rmWkGZ"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recOMxdSiuDlctOAR",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "rec3mx7SyMeXzUkIp",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|rec3mx7SyMeXzUkIp",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recshA4qygwF3DHdK"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recW8qCgBQlESC5iq",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recL6zX7uddYGsUEU",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recL6zX7uddYGsUEU",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recVnz8eIcwQkOhqY"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recQiRUbTKZ5Wiz7B|reclgScxpCba3m1Mo|recZwSGoAiERDdTMr",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "rec87XSUgBDUq6Ou1",
+          "enrollmentId": "recQiRUbTKZ5Wiz7B",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recZwSGoAiERDdTMr",
+          "shotMilestoneId": "recuzCxUOLUU6dDGx",
+          "sourceKey": "SHOT_MILESTONE|recQiRUbTKZ5Wiz7B|recuzCxUOLUU6dDGx",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "reck16KoyoThuAB2K"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "rec9HvrspXPIQijWU",
+          "enrollmentId": "recQiRUbTKZ5Wiz7B",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recZwSGoAiERDdTMr",
+          "shotMilestoneId": "recsmKrqpCjErhR1K",
+          "sourceKey": "SHOT_MILESTONE|recQiRUbTKZ5Wiz7B|recsmKrqpCjErhR1K",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recqebjN0zivTBMJP"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recvMhReNktxj1Txk|reclgScxpCba3m1Mo|recNmS6xlp3HOWPAE",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "recG1ShTMcXuDVH3u",
+          "enrollmentId": "recvMhReNktxj1Txk",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recNmS6xlp3HOWPAE",
+          "shotMilestoneId": "recIDUBDYKhkeqOHy",
+          "sourceKey": "SHOT_MILESTONE|recvMhReNktxj1Txk|recIDUBDYKhkeqOHy",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recPzVolHBSF0SAjo"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recGsYX4h3isuKSF9",
+          "enrollmentId": "recvMhReNktxj1Txk",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recNmS6xlp3HOWPAE",
+          "shotMilestoneId": "rectxR2DuXC3JUh74",
+          "sourceKey": "SHOT_MILESTONE|recvMhReNktxj1Txk|rectxR2DuXC3JUh74",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recqlC7byQScBVLbj"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recZm4wl6E5ePN2rb|reclgScxpCba3m1Mo|recrTwxqXz31fNZ7e",
+      "count": 4,
+      "unlocks": [
+        {
+          "unlockId": "recGcAaD6mP9D1AB5",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recrTwxqXz31fNZ7e",
+          "shotMilestoneId": "recLIIzShyIFgiV5c",
+          "sourceKey": "SHOT_MILESTONE|recZm4wl6E5ePN2rb|recLIIzShyIFgiV5c",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "rechZtMxXjaYRnUKP"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recW96E4Tp7Pn5I75",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recrTwxqXz31fNZ7e",
+          "shotMilestoneId": "recuLqXBSyB7PE7jC",
+          "sourceKey": "SHOT_MILESTONE|recZm4wl6E5ePN2rb|recuLqXBSyB7PE7jC",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "rec9O6NL9N0JsqvTS"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recXvyBgupVg2JFiI",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recrTwxqXz31fNZ7e",
+          "shotMilestoneId": "rect6Rnm4NugIYzSp",
+          "sourceKey": "SHOT_MILESTONE|recZm4wl6E5ePN2rb|rect6Rnm4NugIYzSp",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recSdUf0ZPS96ATMp"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recqF0EElx4ofNSnP",
+          "enrollmentId": "recZm4wl6E5ePN2rb",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recrTwxqXz31fNZ7e",
+          "shotMilestoneId": "recSiWHRSsdjKytFU",
+          "sourceKey": "SHOT_MILESTONE|recZm4wl6E5ePN2rb|recSiWHRSsdjKytFU",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "reck2EfucaQEoAqW4"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recKlYEzTwrMaau6B|reclgScxpCba3m1Mo|recbw58r8MlnhbBx7",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "recHUEQ4RjYYAPqaK",
+          "enrollmentId": "recKlYEzTwrMaau6B",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recbw58r8MlnhbBx7",
+          "shotMilestoneId": "recxc05LgoPWJIlhB",
+          "sourceKey": "SHOT_MILESTONE|recKlYEzTwrMaau6B|recxc05LgoPWJIlhB",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recFX4wJPx5uib9Qu"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "reckMQb6wE4cF8zmk",
+          "enrollmentId": "recKlYEzTwrMaau6B",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recbw58r8MlnhbBx7",
+          "shotMilestoneId": "recRHdSqPZFzVvjQX",
+          "sourceKey": "SHOT_MILESTONE|recKlYEzTwrMaau6B|recRHdSqPZFzVvjQX",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recHzyWPYW02K7rbe"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recAHTFTFc2q4y59i|reclgScxpCba3m1Mo|recnMGC2JBHjO0ay6",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "recMyR44ID7Hklvax",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recsmKrqpCjErhR1K",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|recsmKrqpCjErhR1K",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "reckvdQJPlfxUOTEX"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recrG1B0bTfXCvQie",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recnMGC2JBHjO0ay6",
+          "shotMilestoneId": "recvzZE04Jg1mUsof",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|recvzZE04Jg1mUsof",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recwp8jJ1P6AxJhe2"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recAHTFTFc2q4y59i|reclgScxpCba3m1Mo|recEYLwDOOYMMsDNf",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "recUFrhMYEri8RSWl",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recEYLwDOOYMMsDNf",
+          "shotMilestoneId": "rec5ySmeXYWeIReJn",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|rec5ySmeXYWeIReJn",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "rec8m24T0188MFSON"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recaRv8zCoOrDFizD",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recEYLwDOOYMMsDNf",
+          "shotMilestoneId": "recvPCvwmMzIBogMP",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|recvPCvwmMzIBogMP",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recXnD38FY6KsRnmZ"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "rechgOSWWFsOivzhX|reclgScxpCba3m1Mo|recZwSGoAiERDdTMr",
+      "count": 3,
+      "unlocks": [
+        {
+          "unlockId": "reca0VqvGAtBcUn2m",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recZwSGoAiERDdTMr",
+          "shotMilestoneId": "recJHhLOks6SPMtHg",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recJHhLOks6SPMtHg",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "rec9a8FfO7IPvNvFZ"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recbjG82txFMn0xxs",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recZwSGoAiERDdTMr",
+          "shotMilestoneId": "recAKW4u4fQSeMRPY",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recAKW4u4fQSeMRPY",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recRyyZgKYTxjS6sc"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recje8OQ2kv1JwiYH",
+          "enrollmentId": "rechgOSWWFsOivzhX",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recZwSGoAiERDdTMr",
+          "shotMilestoneId": "recDz0p58zohzKGm8",
+          "sourceKey": "SHOT_MILESTONE|rechgOSWWFsOivzhX|recDz0p58zohzKGm8",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recvqCGf4tj1yXgeQ"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    },
+    {
+      "comboKey": "recAHTFTFc2q4y59i|reclgScxpCba3m1Mo|recaX4EyJ7BWWKfSq",
+      "count": 2,
+      "unlocks": [
+        {
+          "unlockId": "recbQKgNyXRONHp4p",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recaX4EyJ7BWWKfSq",
+          "shotMilestoneId": "recWGiiyPsv5wKeWd",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|recWGiiyPsv5wKeWd",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recmrcREwjRkSdGgs"
+          ],
+          "xpEventCount": 1
+        },
+        {
+          "unlockId": "recsTbNvhHcbdpUI3",
+          "enrollmentId": "recAHTFTFc2q4y59i",
+          "achievementId": "reclgScxpCba3m1Mo",
+          "weekId": "recaX4EyJ7BWWKfSq",
+          "shotMilestoneId": "reccezOiPdSpOQQhy",
+          "sourceKey": "SHOT_MILESTONE|recAHTFTFc2q4y59i|reccezOiPdSpOQQhy",
+          "xpAwardStatus": "Awarded",
+          "xpEventIds": [
+            "recpo4ABPYOIKMc00"
+          ],
+          "xpEventCount": 1
+        }
+      ]
+    }
+  ],
+  "duplicateSourceKeyGroups": [],
+  "emptyWeekShotMilestoneSample": []
+}

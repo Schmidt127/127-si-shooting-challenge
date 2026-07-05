@@ -927,7 +927,7 @@ def audit_090f(ctx: AuditContext) -> dict:
 
         if source_key:
             by_source[source_key].append(uid)
-        if eid and aid:
+        if eid and aid and not sm:
             by_combo[f"{eid}|{aid}|{wid or 'NONE'}"].append(uid)
 
     for sk, ids in by_source.items():

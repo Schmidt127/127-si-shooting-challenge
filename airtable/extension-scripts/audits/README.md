@@ -81,7 +81,7 @@ Read-only — run in Airtable Scripting Extension, save JSON output, approve fix
 | 2 | `audit-final-090b-homework-xp.js` | Homework XP (065), HW17 quiz link |
 | 3 | `audit-final-090c-streaks-milestones-perfect-week-xp.js` | Streaks (054), unlock XP (059), empty Week |
 | 4 | `audit-final-090d-video-zoom-xp.js` | Video XP (114), Zoom XP (101) |
-| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | Unlock workflow + Week 9 root cause |
+| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | Unlock workflow; shot milestones dedupe on **Milestone Source Key** (v1.1) |
 | 6 | `audit-final-090g-weekly-summary-email-workflow.js` | Weekly email (072 → 074 → Make) |
 | 7 | `audit-final-090e-xp-events-enrollment-totals.js` | XP Events integrity + enrollment rollup (run last) |
 

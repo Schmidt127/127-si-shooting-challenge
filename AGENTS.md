@@ -4,7 +4,7 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 
 ## Start here
 
-1. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) — **permanent workflow** (Mike / ChatGPT / Cursor, five phases, task classification)
+1. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) — **permanent workflow** (Mike / ChatGPT / Cursor / **OMNI-first** for in-Airtable work)
 2. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
 3. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
 4. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md) — live backlog (add new items here)
@@ -61,7 +61,8 @@ Then proceed only within Cursor's scope (Phase 3 Implementation / Phase 5 Close)
 | If Mike asks for… | Cursor should… |
 |-------------------|----------------|
 | Planning, requirements, parent/editor copy, Phase 4 review | Output **Workspace Check** → send to **ChatGPT** |
-| Code, audits, scripts, commits, schema, deploy prep | Proceed (after Task Classification) |
+| In-Airtable work (views, formulas, data, interfaces, one-off fixes) | Output **Workspace Check** → **OMNI first** (Mike's Airtable credit priority) unless GitHub required |
+| Production automations, audits, web, tools, commits | Proceed (after Task Classification) |
 | Implementation with no backlog ID or unapproved plan | Stop — request backlog ID + Phase 2 approval |
 | Backlog change | Edit `docs/v2-change-backlog.md` — not `CHATGPT-MASTER-PLAN-BRIEF.md` |
 | Hoop landing / JR Ref | Redirect to correct repo — not this one |

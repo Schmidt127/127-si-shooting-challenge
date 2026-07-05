@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (workspace guardrails added)
+**Last updated:** 2026-07-05 (OMNI-first in-Airtable priority)
 
 ---
 
@@ -33,6 +33,71 @@ Every task involves three roles. No role skips another without Mike's explicit a
 | **Cursor** | **Software engineer, repository maintainer** — code, schema, automations, audits, tests, commits; **no unapproved architecture changes** |
 
 **GitHub** is the source of truth for everything that ships. ChatGPT drafts; Cursor applies; Mike approves.
+
+**OMNI** (Airtable's in-base AI) is Mike's **first choice** for work that can stay inside Airtable — use those credits before opening Cursor or asking ChatGPT to simulate base work.
+
+---
+
+## Tool priority: OMNI first (in-Airtable work)
+
+**Mike's preference:** Whenever a task can be done **inside Airtable**, try **OMNI** first. OMNI credits are a priority resource — do not route in-base work to Cursor or ChatGPT when OMNI can handle it.
+
+### Decision order (in-Airtable tasks)
+
+```mermaid
+flowchart TD
+    Q[Task touches Airtable?]
+    Q -->|No| Other[ChatGPT plan / Cursor repo]
+    Q -->|Yes| O[Can OMNI do it in the base UI?]
+    O -->|Yes| OMNI[Mike uses OMNI first]
+    O -->|No| GH[Needs GitHub source of truth?]
+    GH -->|Yes| Cursor[Cursor implements + Mike pastes]
+    GH -->|No| OMNI
+```
+
+### Use OMNI first (Mike in Airtable)
+
+| Task type | Examples |
+|-----------|----------|
+| **Data exploration** | "How many submissions this week?", find gaps, summarize a view |
+| **Formulas & fields** | Draft or fix a formula, suggest field types, explain rollup behavior |
+| **Views & filters** | Build coach/ops views, sort groups, conditional filters |
+| **Interfaces** | Layout tweaks, record detail pages, dashboard blocks |
+| **One-off record ops** | Guided bulk updates, linking records, cleaning bad rows |
+| **Native automations (draft/prototype)** | Simple trigger → action flows to test before GitHub hardening |
+| **Base Q&A** | "Which table links Enrollment to Athlete?", schema questions in context |
+| **Ops triage** | Interpret a failed automation run, suggest next filter on a view |
+
+### Still use Cursor (even if OMNI could draft)
+
+| Task type | Why GitHub / Cursor |
+|-----------|---------------------|
+| **Production automations `001`–`114`** | Versioned source in `airtable/automations/shooting-challenge/`; paste after commit |
+| **Audit & backfill extensions** | `CONFIRM_WRITE` / dry-run patterns; not OMNI one-offs |
+| **XP / idempotency logic** | Engine rules — must match GitHub scripts and Source Key patterns |
+| **Web app (`web/`)** | Not in Airtable |
+| **Python tools (`tools/airtable/`)** | Not in Airtable |
+| **Make blueprints** | External to base |
+| **Schema snapshots & field-map docs** | Repo is documentation source of truth |
+
+**Rule:** OMNI may **prototype** in Airtable; **production** automations and Engine behavior still flow through GitHub → paste → CHANGELOG.
+
+### How ChatGPT and Cursor treat OMNI
+
+| Role | OMNI behavior |
+|------|---------------|
+| **ChatGPT** | In planning, ask: *"Can Mike do this in OMNI first?"* Do not write long formula/automation instructions when OMNI in-base is enough. Flag when OMNI prototype → Cursor GitHub sync is needed. |
+| **Cursor** | Before editing repo for an Airtable-only task, output **Workspace Check** → recommend **OMNI** unless GitHub is required. After Mike uses OMNI for a production automation draft, offer to pull into GitHub. |
+| **Mike** | Open the base → OMNI → describe the task. Escalate to Cursor only when the table above says GitHub is required. |
+
+### Task Classification — `Correct tool` values
+
+Include **`OMNI`** when the next step is in-base work Mike should do with Airtable credits:
+
+```
+Correct tool for this step: OMNI
+Mike's role right now: Run OMNI in [base name] to [specific action]
+```
 
 ---
 
@@ -227,6 +292,7 @@ Mike's role right now: Approve scope before Phase 3
 | Website Copy | ChatGPT | Public-facing text; Cursor wires into components |
 | UX brainstorming | ChatGPT | Wireframes, flows, page plans |
 | Bug Investigation | **Shared** | Cursor reproduces; ChatGPT analyzes root cause and fix plan |
+| In-Airtable ops (views, formulas, data, interfaces) | **OMNI first** → Cursor if GitHub needed | Mike uses OMNI credits before repo work |
 | Code Changes | Cursor | Automations, web, tools, scripts |
 | Airtable Schema | Cursor | Schema notes, field-map; Mike approves base changes |
 | Make.com | Cursor | Blueprints, scenario docs in `make/` |
@@ -264,6 +330,7 @@ What to open / paste:
 |--------------------|------------|----------|---------|
 | Plan a feature, write requirements, draft parent copy | **Cursor** | "This is Phase 1–2 — use **ChatGPT**, not Cursor." | ChatGPT + `12-ai-development-standards.md` |
 | Edit automations, run audits, commit code | **ChatGPT** | "This is Phase 3 — use **Cursor**, not ChatGPT." | Cursor + backlog ID + approved plan |
+| Build a view, fix a formula, explore base data | **Cursor** or **ChatGPT** | "Try **OMNI in Airtable first** — Mike priority for in-base credits." | Open base → OMNI |
 | Review completed work against acceptance criteria | **Cursor** | "This is Phase 4 — use **ChatGPT** for review." | ChatGPT + implementation summary |
 | Add a new backlog item by editing only the Master Plan Brief | **Either** | "Edit **v2-change-backlog.md** first; the brief is read-only aggregate." | `docs/v2-change-backlog.md` |
 
@@ -300,18 +367,24 @@ What to open / paste:
 
 ### What Mike should do vs delegate
 
-| Mike should… | Delegate to ChatGPT | Delegate to Cursor |
-|--------------|---------------------|---------------------|
-| Decide priorities and approve waves | Plan, document, review | — |
-| Write first draft of parent/editor copy | ✓ | Wire into templates/code |
-| Click Run in Airtable UI for audits/backfills | Interpret results | Prepare scripts, dry-run first |
-| Paste automation into Airtable after GitHub review | — | Prepare paste-ready docblock |
-| Edit Airtable schema / automations in production | Discuss design | GitHub first, then paste |
-| Commit and push | — | ✓ (when Mike asks) |
+| Mike should… | OMNI (first) | ChatGPT | Cursor |
+|--------------|--------------|---------|--------|
+| Decide priorities and approve waves | — | Plan, document, review | — |
+| Explore data, build views, fix formulas | ✓ | Interpret / plan if complex | GitHub sync if production script |
+| Write first draft of parent/editor copy | — | ✓ | Wire into templates/code |
+| Prototype simple native automation | ✓ | Design + idempotency rules | Harden in GitHub before production |
+| Run audit/backfill extensions | — | Interpret results | Prepare scripts, dry-run first |
+| Paste production automation after GitHub review | — | — | Prepare paste-ready docblock |
+| Edit Airtable schema / production automations | Discuss in OMNI | Discuss design | GitHub first, then paste |
+| Commit and push | — | — | ✓ (when Mike asks) |
 
 **Cursor rule:** If Mike asks for planning, copy, or architecture decisions, output **Workspace Check** and recommend ChatGPT — do not draft long plans in Cursor unless Mike explicitly says "stay in Cursor for a quick draft."
 
+**Cursor rule (OMNI):** If Mike asks for in-Airtable work that does not require GitHub (views, formulas, data exploration, interfaces, one-off fixes), output **Workspace Check** → recommend **OMNI first** — do not jump to repo edits.
+
 **ChatGPT rule:** If Mike asks to run audits, edit code, or commit, output **Workspace Check** and recommend Cursor with the backlog ID — do not pretend repo changes happened.
+
+**ChatGPT rule (OMNI):** If Mike asks for in-base exploration or UI work, recommend **OMNI first** before detailed step-by-step Airtable instructions.
 
 ---
 
@@ -331,6 +404,28 @@ Use ChatGPT for:
 **ChatGPT Project Sources:** Import all files in [../chatgpt-sources/](../chatgpt-sources/). Refresh after doc commits via sync script.
 
 **ChatGPT does not:** edit the repo, run audits, paste into Airtable, or commit to GitHub.
+
+**For in-Airtable work:** recommend **OMNI first** (Mike's credit priority) before long Airtable how-to answers.
+
+---
+
+## When to use OMNI (Airtable in-base AI)
+
+**Owner:** Mike (in the Airtable base UI)
+
+Use OMNI **first** when the task stays inside Airtable and does not require GitHub as source of truth:
+
+- Explore and summarize live data
+- Formulas, rollups, lookups (explain or draft)
+- Views, filters, grouped ops views
+- Interfaces and layout
+- One-off or guided bulk record fixes
+- Prototype native automations before Cursor hardens them for production
+- Ops triage on failed runs or messy views
+
+**Escalate to Cursor** when the task hits production scripts `001`–`114`, audit/backfill extensions, XP/idempotency Engine logic, web, tools, Make, or schema docs in repo.
+
+**After OMNI prototypes a production automation:** Cursor copies logic into GitHub → Mike reviews → paste → CHANGELOG.
 
 ---
 
@@ -353,7 +448,7 @@ Use Cursor for:
 4. This document ([04-ai-development-standards.md](./04-ai-development-standards.md))
 5. Relevant deep-dive doc for the active backlog item
 
-**Cursor does not:** approve scope, change Constitution without Mike, or skip dry-run on production audits.
+**Cursor does not:** approve scope, change Constitution without Mike, skip dry-run on production audits, or replace **OMNI** for in-base work Mike can do with Airtable credits.
 
 ---
 
@@ -447,6 +542,7 @@ You are the Architect for 127 SI Shooting Challenge. Follow docs/v2/04-ai-develo
 
 On every new task: output Task Classification first (include Phase, Correct tool, Repo, Mike's role).
 
+For in-Airtable work (views, formulas, data, interfaces): recommend OMNI first — Mike priority for Airtable credits.
 If Mike asks for code, audits, commits, or repo edits → Workspace Check → send to Cursor with backlog ID.
 If Mike is planning before Phase 2 approval → no implementation advice that skips Mike's sign-off.
 Live backlog: docs/v2-change-backlog.md only (not CHATGPT-MASTER-PLAN-BRIEF.md).
@@ -483,6 +579,8 @@ Do not commit unless Mike asks.
 When Mike asks for planning, copy drafts, architecture decisions, or Phase 4 review, output **Workspace Check** and recommend ChatGPT — do not proceed with a long plan unless Mike says "stay in Cursor for a quick draft."
 
 When Mike asks to implement without an approved backlog ID or Phase 2 plan, stop and ask for backlog ID + plan approval before editing files.
+
+When Mike asks for in-Airtable work that OMNI can handle (views, formulas, data exploration, interfaces, one-off record fixes), output **Workspace Check** → recommend **OMNI first** unless GitHub source of truth is required.
 
 ---
 
@@ -531,3 +629,4 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 |------|-------|
 | 2026-07-05 | Promoted from shell to **Active** — three-role, five-phase permanent operating procedure |
 | 2026-07-05 | Added workspace guardrails, Workspace Check, extended Task Classification |
+| 2026-07-05 | **OMNI-first** priority for in-Airtable work (Mike's Airtable credits) |
