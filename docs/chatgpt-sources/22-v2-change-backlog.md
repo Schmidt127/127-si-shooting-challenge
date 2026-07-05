@@ -114,8 +114,8 @@ flowchart TD
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **V2-014** | **Automation Modernization Roadmap** | Master inventory of all production automations: purpose, trigger, reads/writes, V2 standard compliance, disposition (Keep / Rewrite / Merge / Retire / Move), priority, capacity plan (~12 slots recoverable). **066 v3.1** = V2 reference. **112 OFF** — monitor before delete; **013** = production Video Feedback. **No rewrites until wave approved.** | Wave 0, H-002 | **done** (doc) |
-| **V2-014a** | Wave 2a — capacity quick wins | Delete **112** after monitor; retire **043**; merge **006+021**; OMNI live count reconciliation | V2-014 | queued |
+| **V2-014** | **Automation Modernization Roadmap** | Master inventory: Category A–F, four-axis evaluation, Complexity Score ([doc 06](./v2/06-automation-standards.md)), modernization priority. **Goal:** reduce complexity first; capacity recovery secondary. **066 v3.1** = V2 reference. **112 OFF**; **013** production. No rewrites until wave approved. | Wave 0, H-002 | **done** (doc) |
+| **V2-014a** | Wave 2a — classify everything | Category A–F + Complexity Score for all 46; duplicate/legacy marked; OMNI trigger confirm; **no unapproved production changes** | V2-014 | queued |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
 
 Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)

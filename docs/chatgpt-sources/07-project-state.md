@@ -129,7 +129,7 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
 | **066 deploy** | GitHub v3.1 ready; **Airtable paste pending** Mike approval |
-| **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — ~12 slots recoverable via merges + EMC |
+| **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
 
 ### Multi-year architecture (2026-07-05 decision)
 
