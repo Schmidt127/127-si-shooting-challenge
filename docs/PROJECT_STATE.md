@@ -15,8 +15,8 @@ Last updated: **2026-07-05** (V2-015 DEV ready — `appTetnuCZlCZdTCT`; 066 dev 
 | **H-002 — Automation 066 v3.1** | **DEV deploy in progress** — paste + test per [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md); prod after DEV pass |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
-| **Phase 2 — Platform Modernization** | **Current** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation inventory + capacity roadmap |
-| **V2-015 — Development base** | **Ready** — `appTetnuCZlCZdTCT`; scrubbed test enrollments only; **in-progress** until 066 v3.1 tested in DEV |
+| **Phase 2 — Platform Modernization** | **Wave 2A active** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation classification (no rewrites) |
+| **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
 **Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).

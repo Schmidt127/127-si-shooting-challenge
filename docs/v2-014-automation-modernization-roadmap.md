@@ -1,9 +1,13 @@
 # V2-014 — Automation Modernization Roadmap
 
 **Backlog ID:** V2-014  
-**Status:** Active — master engineering document for Platform Modernization (Phase 2)  
+**Status:** Active — **Wave 2A in progress** (classification only — no rewrites, no merges)  
 **Owner:** Cursor investigation → ChatGPT review → Mike approval  
 **Last updated:** 2026-07-05
+
+**Current focus:** Infrastructure is stable (V2-015 DEV ready). **Stop infrastructure work.** Classify every production automation before any modernization wave.
+
+**Delivery rule:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — DEV test before Production for all changes.
 
 **Related:**
 
@@ -135,9 +139,28 @@ Legacy **Disposition** column in inventory tables maps to categories; Wave 2a ad
 
 ---
 
-## Wave 2a — success criteria
+## Wave 2A — Automation inventory and classification (**active**)
 
-Wave 2a is **classification and documentation**, not bulk rewrites.
+**Objective:** Know the automation ecosystem as well as we know the tables. **Do not rewrite. Do not merge. Just understand.**
+
+### Per-automation deliverable (all 46)
+
+For each automation `#`, record in the inventory tables below (or OMNI + doc update):
+
+| Field | Source |
+|-------|--------|
+| **Purpose** | Docblock + OMNI trigger confirm |
+| **Inputs** | Trigger table, conditions, `input.config()` variables |
+| **Outputs** | Script outputs + fields written |
+| **Complexity Score + tier** | [doc 06](./v2/06-automation-standards.md) |
+| **Category (A–F)** | Taxonomy in this doc |
+| **Modernization priority** | P0–P3 |
+| **Merge opportunities** | Related automations; four-axis pass |
+| **Retirement opportunities** | Duplicates, superseded paths |
+
+### Wave 2A — success criteria
+
+Wave 2A is **classification and documentation**, not bulk rewrites.
 
 | # | Criterion | Status |
 |---|-----------|--------|
@@ -359,3 +382,4 @@ Run in Airtable OMNI to complete Wave 2a classification. Record results in this 
 | 2026-07-05 | V2-014 created — Phase 2 Platform Modernization master inventory; 012 deleted; 112 OFF; 066 V2 reference |
 | 2026-07-05 | Cross-linked from backlog, PROJECT_STATE, automation-index, ChatGPT brief |
 | 2026-07-05 | Philosophy update — complexity-first framing; Category A–F; four-axis evaluation; Complexity Score in doc 06; Wave 2a = classify everything; Lambda deferred |
+| 2026-07-05 | **Wave 2A active** — classification-only; infrastructure stable; DEV-first rule in doc 04 |

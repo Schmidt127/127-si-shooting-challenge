@@ -6,6 +6,8 @@
 
 Use this runbook when creating or refreshing the **Development** Airtable base. Production base stays the system of record for live season data.
 
+**Permanent rule:** Nothing ships to Production until tested in DEV — full pipeline in [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § DEV-first delivery pipeline.
+
 ---
 
 ## Base registry

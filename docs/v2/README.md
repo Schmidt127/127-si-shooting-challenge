@@ -17,7 +17,7 @@
 | 03 | [03-business-rules.md](./03-business-rules.md) | **Engine contract** (Layer 1) — platform behavior only |
 | — | [season-configuration-design.md](./season-configuration-design.md) | **DRAFT** — gate spread / season tuning (Layer 2) |
 | — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Worksheet — example level names; numbers TBD |
-| 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | **Active** — three-role workflow, five phases, task classification, **workspace guardrails** |
+| 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | **Active** — three-role workflow, **DEV-first delivery diagram**, five phases |
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
 | 06 | [06-automation-standards.md](./06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference; **Automation Complexity Score** |
 | 07 | [07-ui-standards.md](./07-ui-standards.md) | Shell |

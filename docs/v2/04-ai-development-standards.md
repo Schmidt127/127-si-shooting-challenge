@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (OMNI-first in-Airtable priority)
+**Last updated:** 2026-07-05 (DEV-first delivery pipeline — permanent rule)
 
 ---
 
@@ -120,6 +120,83 @@ flowchart LR
     P3 --> P4
     P4 --> P5
 ```
+
+---
+
+## DEV-first delivery pipeline (permanent — V2-015)
+
+**Permanent rule:** Nothing new ships to **Production** until it has been tested successfully in **DEV**.
+
+This applies to **all** platform changes:
+
+| Artifact | DEV first? | GitHub / docs |
+|----------|------------|---------------|
+| Airtable automations | **Yes** | Script in repo before paste |
+| Formulas | **Yes** | Document in schema notes or field-map when non-trivial |
+| Interfaces | **Yes** | Screenshot or OMNI notes in backlog item |
+| Views | **Yes** | [web/docs/airtable-views.md](../../web/docs/airtable-views.md) when web-facing |
+| Make scenarios | **Yes** | Blueprint export in `make/blueprints/` |
+| Extension scripts | **Yes** | `airtable/extension-scripts/` |
+| Schema changes (fields, tables) | **Yes** | Schema snapshot after intentional dev divergence |
+
+**Production base** (`appn84sqPw03zEbTT`) is the live season system of record. **DEV base** (`appTetnuCZlCZdTCT`) is the mandatory test environment. See [development-base-setup.md](../development-base-setup.md).
+
+### Canonical delivery diagram
+
+This is the **permanent** end-to-end workflow for Shooting Challenge V2:
+
+```mermaid
+flowchart TB
+    subgraph plan [Planning]
+        ChatGPT[ChatGPT]
+    end
+    subgraph build [Build]
+        Cursor[Cursor]
+        GitHub[GitHub]
+    end
+    subgraph validate [Validate]
+        DEV[DEV_Base]
+        Testing[Testing]
+    end
+    subgraph ship [Ship]
+        Approval[Mike_Approval]
+        Prod[Production_Base]
+    end
+
+    ChatGPT --> Cursor
+    Cursor --> GitHub
+    GitHub --> DEV
+    DEV --> Testing
+    Testing --> Approval
+    Approval --> Prod
+```
+
+**In words:** ChatGPT designs → Cursor writes → GitHub stores → DEV validates → Mike approves → Production receives.
+
+### Automation rewrite sequence (required)
+
+Every **new or rewritten** production automation:
+
+1. **ChatGPT** — design trigger, inputs, outputs, idempotency (Phase 2 plan).
+2. **Cursor** — implement to [06-automation-standards.md](./06-automation-standards.md) (**066 v3.1** pattern).
+3. **GitHub** — commit; docblock version is the reference version.
+4. **DEV** — paste, sandbox test, matching audit dry-run.
+5. **Mike** — approve promote.
+6. **Production** — paste **same** committed script → `CHANGELOG.md`.
+
+**Never** paste a script into Production that is not already committed in GitHub and tested in DEV.
+
+### OMNI and DEV
+
+OMNI may **prototype** formulas, views, and interfaces in **DEV** (or prod read-only exploration). Before any prototype becomes production:
+
+- Pull into GitHub/docs if it is an automation or extension script.
+- Test in DEV.
+- Promote to Production only after approval.
+
+### Five-phase workflow (roles)
+
+Every improvement also follows the five phases below (planning through close).
 
 ### Phase 1 — Idea
 
@@ -604,7 +681,8 @@ Use in Phase 4 (ChatGPT + Mike):
 These apply to ChatGPT, Cursor, and Mike's production actions:
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
-- **Airtable production writes** — GitHub first → paste into Airtable → CHANGELOG
+- **DEV before Production** — nothing new ships to prod until tested in DEV ([DEV-first pipeline](#dev-first-delivery-pipeline-permanent--v2-015))
+- **Airtable production writes** — GitHub first → DEV test → Mike approval → paste prod → `CHANGELOG.md`
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event
@@ -630,3 +708,4 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 | 2026-07-05 | Promoted from shell to **Active** — three-role, five-phase permanent operating procedure |
 | 2026-07-05 | Added workspace guardrails, Workspace Check, extended Task Classification |
 | 2026-07-05 | **OMNI-first** priority for in-Airtable work (Mike's Airtable credits) |
+| 2026-07-05 | **DEV-first delivery pipeline** — permanent rule + canonical diagram; nothing to prod without DEV test |

@@ -28,7 +28,8 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 ## Hard constraints
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
-- **Airtable writes in production** — GitHub first → paste **dev** → audit → paste **prod** → `CHANGELOG.md` ([development-base-setup.md](./docs/development-base-setup.md))
+- **DEV before Production** — automations, formulas, views, interfaces, Make scenarios, scripts, schema — test in DEV first ([doc 04](./docs/v2/04-ai-development-standards.md))
+- **Airtable production writes** — GitHub → DEV test → Mike approval → prod paste → `CHANGELOG.md`
 - **Audits/backfills** — dry-run first; explicit `CONFIRM_WRITE` / `CONFIRM_DELETE` for writes
 - **Web Airtable reads** — server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event; use Source Key patterns from automation scripts
