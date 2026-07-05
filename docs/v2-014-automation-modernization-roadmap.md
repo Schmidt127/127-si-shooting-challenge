@@ -326,9 +326,9 @@ Target after Phase 2: **lower average complexity tier** and **~37–38 automatio
 4. Set **modernization priority** (P0–P3).
 5. If Category B rewrite: full script to **066 v3.1** structure.
 6. If Category C merge: confirm clarity benefit before combining.
-7. Dry-run matching audit extension.
+7. Dry-run matching audit extension on **dev** base.
 8. Test one sandbox record (Complex/Critical tiers required).
-9. GitHub commit → paste to Airtable → `CHANGELOG.md`.
+9. GitHub commit → paste to **dev** Airtable → audit → Mike approves → paste to **prod** → `CHANGELOG.md`. See [V2-015](./v2-015-development-base-architecture.md).
 10. Update this roadmap row + [automation-index.md](./automation-index.md).
 
 ---

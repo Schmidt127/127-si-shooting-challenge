@@ -143,7 +143,10 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 ## Deploy workflow
 
 1. Edit script in GitHub → commit
-2. Paste docblock through end into Airtable automation (skip GitHub header block)
-3. Test on sandbox record
-4. Run matching audit extension (dry-run)
-5. Update `CHANGELOG.md` and this index if trigger/name changed
+2. Paste docblock through end into **development** automation (skip GitHub header)
+3. Test on sandbox record + run matching audit (dry-run) on **dev** base
+4. Mike approves promote
+5. Paste same script into **production** automation
+6. Update `CHANGELOG.md` and this index if trigger/name changed
+
+Runbook: [development-base-setup.md](./development-base-setup.md) (V2-015).

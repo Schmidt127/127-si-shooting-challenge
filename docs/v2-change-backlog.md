@@ -117,8 +117,9 @@ flowchart TD
 | **V2-014** | **Automation Modernization Roadmap** | Master inventory: Category A–F, four-axis evaluation, Complexity Score ([doc 06](./v2/06-automation-standards.md)), modernization priority. **Goal:** reduce complexity first; capacity recovery secondary. **066 v3.1** = V2 reference. **112 OFF**; **013** production. No rewrites until wave approved. | Wave 0, H-002 | **done** (doc) |
 | **V2-014a** | Wave 2a — classify everything | Category A–F + Complexity Score for all 46; duplicate/legacy marked; OMNI trigger confirm; **no unapproved production changes** | V2-014 | queued |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
+| **V2-015** | **Permanent Development Airtable base** | Clone prod → **DEV**; dev-first automation paste; Make staging. **Approved** — [development-base-setup.md](./development-base-setup.md) | V2-014 | **in-progress** |
 
-Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
+Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Dev base: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 

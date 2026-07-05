@@ -488,7 +488,7 @@ Use Cursor for:
 | **Production history** | [CHANGELOG.md](../../CHANGELOG.md) — Cursor updates on production-impacting ship |
 | **ChatGPT sync** | Run `tools/docs/sync-chatgpt-sources.ps1` after doc commits |
 
-**Docblock rule:** Airtable automation changes → GitHub first → paste docblock through end into Airtable → CHANGELOG.
+**Docblock rule:** Airtable automation changes → GitHub first → paste into **dev** → audit → paste into **prod** → `CHANGELOG.md`. See [development-base-setup.md](../development-base-setup.md).
 
 ---
 
@@ -499,7 +499,7 @@ All automation work follows [../../airtable/automations/AUTOMATION_SCRIPT_STANDA
 | Rule | Requirement |
 |------|-------------|
 | Source of truth | GitHub `airtable/automations/shooting-challenge/{nnn}-{kebab}.js` |
-| Deploy | Paste docblock through end into Airtable (skip GitHub header) |
+| Deploy | GitHub first → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md` (see [development-base-setup.md](../development-base-setup.md)) |
 | Structure | `async function main()`, CONFIG block, SECTION blocks, required outputs |
 | Idempotency | Source Key patterns; one source → one XP Event; skip vs error |
 | Schema | Validate fields early; never write formula/rollup/lookup fields |
@@ -515,7 +515,7 @@ All automation work follows [../../airtable/automations/AUTOMATION_SCRIPT_STANDA
 |----------|------------|
 | Automation scripts | Docblock Version + CONFIG.version; semantic bump on logic change |
 | Web app | Git commits; Vercel deploy from `master`; Root Directory = `web` |
-| Airtable base | Archive + clone per season (V2-001); schema snapshots in `airtable/schema/snapshots/` |
+| Airtable base | **Production** + **Development** clone (V2-015); schema snapshots in `airtable/schema/snapshots/` |
 | Docs | Git history; Last updated date in doc header where applicable |
 | Media kits | Season folder `media/{season}/`; manifest JSON for audit trail (V2-028 target) |
 

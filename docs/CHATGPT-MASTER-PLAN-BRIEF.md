@@ -167,6 +167,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **V2-014** | Automation Modernization Roadmap | Category A–F inventory; four-axis evaluation; Complexity Score; complexity-first (capacity secondary); **066 v3.1** reference; **112 OFF** | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014a** | Wave 2a — classify everything | Category + Complexity Score for all 46; OMNI triggers; no unapproved production changes | V2-014 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | **V2-014b** | Email Message Center | Replace 7 email automations with builder + sender | V2-014, C-011 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+| **V2-015** | Permanent Development Airtable base | Dev clone + dev-first paste; [development-base-setup.md](./development-base-setup.md) | V2-014 | **in-progress** | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
@@ -240,7 +241,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **C-027** | Major-event SMS notifications | Level up, milestones — not daily XP; Twilio/Make TBD | C-010, C-024, V2-008 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
 | **V2-028** | **Generate Media Kits** platform | 2025–26 manual send **done**; platform automation queued | C-013, C-022 | done (2025–26) | [media-kits.md](./media-kits.md) |
 
-**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014** = Automation Modernization Roadmap (Phase 2, **active**). **V2-015–V2-027** unused. **V2-028** = media kits.
+**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014** = Automation Modernization Roadmap (Phase 2, **active**). **V2-015** = Development base (**approved**, clone in progress). **V2-016–V2-027** unused. **V2-028** = media kits.
 
 ### Wave 11 — Launch gate (before May 2027)
 

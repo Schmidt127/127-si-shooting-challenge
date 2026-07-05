@@ -33,6 +33,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Docs
 
+#### Added
+- **V2-015 Development base** — [development-base-setup.md](./docs/development-base-setup.md) runbook; dev-first automation deploy; `web/.env.local.example`; prod/dev env patterns in `.env.example` and `tools/airtable/.env.example`.
+
 #### Changed
 - **`web/docs/airtable-data-map.md`** — View names aligned with `queries.ts` (`Web - Achievements`, publish flags, Vercel env vars, health check).
 - **`docs/PROJECT_STATE.md`** — Latest snapshot id, base UI name, production Airtable status, env var checklist.

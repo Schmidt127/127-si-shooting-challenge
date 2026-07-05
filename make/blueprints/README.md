@@ -29,8 +29,9 @@ Each scenario README or blueprint header should note:
 
 ## Deploy Workflow
 
-1. Edit scenario in Make dev/staging clone when possible.
-2. Export blueprint JSON to this folder.
+1. Edit scenario in Make **dev** clone when possible (dev base ID + test inbox).
+2. Production scenario stays on prod base ID only.
+3. Export blueprint JSON to this folder.
 3. Document payload shape in [../test-payloads/](../test-payloads/).
 4. Update [../documentation/](../documentation/) and [automation-trigger-map.md](../../airtable/schema/current/automation-trigger-map.md).
 5. Commit to GitHub; note in `CHANGELOG.md`.

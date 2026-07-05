@@ -5,13 +5,26 @@
 | Repo | `127-si-shooting-challenge` |
 | Root Directory | `web` |
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
-| `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` |
+| `AIRTABLE_BASE_ID` (Vercel **production only**) | `appn84sqPw03zEbTT` |
 | `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
+
+## Airtable environments (V2-015)
+
+| Environment | Base ID | Where configured |
+|-------------|---------|------------------|
+| **Production** | `appn84sqPw03zEbTT` | Vercel, live Make, Fillout |
+| **Development** | *(after clone — see PROJECT_STATE)* | Local `web/.env.local`, `tools/airtable/.env` |
+
+**Never** set the dev base ID on Vercel production. Setup: [development-base-setup.md](./development-base-setup.md).
+
+**Automation deploy:** GitHub → paste **dev** → audit → Mike approves → paste **prod** → `CHANGELOG.md`.
 
 ## Local dev
 
 ```powershell
 cd web
+copy .env.local.example .env.local
+# Edit .env.local — use dev AIRTABLE_BASE_ID for safe local reads (optional)
 npm run dev
 ```
 

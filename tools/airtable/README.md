@@ -2,7 +2,7 @@
 
 Exports schema metadata and optional record audits from the **127 SI Shooting Challenge** Airtable base.
 
-GitHub holds the script and dated snapshots. Airtable remains the live production base.
+GitHub holds the script and dated snapshots. **Production** base ID: `appn84sqPw03zEbTT`. **Development** base: set `BASE_ID` in `.env` after clone — see [docs/development-base-setup.md](../../docs/development-base-setup.md).
 
 ## Setup
 
