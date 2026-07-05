@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (V2-015 DEV ready — `appTetnuCZlCZdTCT`; 066 dev test pending)
+Last updated: **2026-07-05** (C-020 Test Intake — next DEV build after 066)
 
 ---
 
@@ -13,6 +13,7 @@ Last updated: **2026-07-05** (V2-015 DEV ready — `appTetnuCZlCZdTCT`; 066 dev 
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
 | **H-002 — Automation 066 v3.1** | **DEV deploy in progress** — paste + test per [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md); prod after DEV pass |
+| **C-020 — Test Intake harness** | **Queued — next DEV build after 066** — [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Wave 2A active** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation classification (no rewrites) |
@@ -64,7 +65,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
-- Test Intake / Schmidt sandbox (C-019, C-020)
+- Test Intake harness (**C-020** — **next** after 066) / Schmidt sandbox (C-019)
 - Make dry-runs (when dev scenarios configured)
 
 **V2-015 completion gate:** base ID recorded ✓ · **066 v3.1 tested in DEV** — pending · webhook/Make isolation — verify per runbook
