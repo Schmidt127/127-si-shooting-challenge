@@ -33,6 +33,7 @@
 | [../../AGENTS.md](../../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Full documentation index |
 | [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Consolidated backlog for ChatGPT master planning |
+| [../v2-014-automation-modernization-roadmap.md](../v2-014-automation-modernization-roadmap.md) | **Phase 2** — automation inventory, disposition, capacity plan |
 
 ## Workflow: Mike + ChatGPT + Cursor
 

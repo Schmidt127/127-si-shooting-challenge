@@ -49,6 +49,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) | Fillout validation, flexible Weeks, test sandbox, Test Intake (C-017–C-020) |
 | [platform-config-improvements.md](./platform-config-improvements.md) | Grade bands + public display fields (C-021, C-022) |
 | [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
+| [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) | **Phase 2 master doc** — automation inventory, disposition, capacity plan |
 | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.1 reference |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
@@ -63,7 +64,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [../AGENTS.md](../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Repo introduction and layout |
 | [../SYSTEM_OVERVIEW.md](../SYSTEM_OVERVIEW.md) | Modules, data flow, architecture goals |
-| [automation-index.md](./automation-index.md) | **All 46 production automations** |
+| [automation-index.md](./automation-index.md) | **All 46 production automations** — links to [V2-014 roadmap](./v2-014-automation-modernization-roadmap.md) |
 | [../CHANGELOG.md](../CHANGELOG.md) | Production-impacting changes (sections: Airtable / Web / Make) |
 | [architecture/architecture-review.md](./architecture/architecture-review.md) | Architecture review checklist |
 | [recovery/emergency-recovery.md](./recovery/emergency-recovery.md) | Incident recovery runbook |

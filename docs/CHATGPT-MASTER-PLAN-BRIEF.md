@@ -6,7 +6,7 @@
 
 **Operating procedure:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — three roles (Mike / ChatGPT / Cursor), five phases, task classification, **workspace guardrails**.
 
-**Last updated:** 2026-07-05 (Wave 0 closed; H-001/H-002; V2-013 queued)
+**Last updated:** 2026-07-05 (Wave 0 closed; H-001/H-002; **V2-014** active; V2-013 queued)
 
 ---
 
@@ -19,6 +19,7 @@
 | **H-002** | **GitHub done** — 066 v3.1 V2 standard; Airtable paste pending |
 | **Automation standards** | Doc **06 Active**; 066 v3.1 canonical template |
 | **Multi-year architecture** | **V2-013 queued** — Program Instance; one base; do not implement now |
+| **V2-014** | **Active** — [Automation Modernization Roadmap](./v2-014-automation-modernization-roadmap.md); Phase 2 current |
 | **V2-001** | **Deferred** — archive+clone superseded by V2-013 |
 
 ---
@@ -159,6 +160,14 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 |----|---------|--------|------------|--------|-------------|
 | **V2-013** | Program Instance multi-year platform | One base; Program Instance scopes config + ops; historical reporting protection; automations/views/interfaces | Wave 1, C-012 | **queued** | [v2-change-backlog.md](./v2-change-backlog.md) |
 
+### Wave 2 — Platform Modernization (automation inventory & capacity) — **current**
+
+| ID | Request | Detail | Depends on | Status | Primary doc |
+|----|---------|--------|------------|--------|-------------|
+| **V2-014** | Automation Modernization Roadmap | Master inventory of all 46 production automations; disposition; ~12 slot recovery plan; **066 v3.1** reference; **112 OFF**; **013** production | Wave 0, H-002 | **done** (doc) | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+| **V2-014a** | Wave 2a — capacity quick wins | Delete **112** after monitor; retire **043**; merge **006+021**; OMNI live count | V2-014 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+| **V2-014b** | Email Message Center | Replace 7 email automations with builder + sender | V2-014, C-011 | queued | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
+
 ### Wave 2 — Schema, field ownership & dedupe engine
 
 | ID | Request | Detail | Depends on | Status | Primary doc |
@@ -231,7 +240,7 @@ From C-023 and C-024 in [v2-change-backlog.md](./v2-change-backlog.md):
 | **C-027** | Major-event SMS notifications | Level up, milestones — not daily XP; Twilio/Make TBD | C-010, C-024, V2-008 | queued | [v2-change-backlog.md](./v2-change-backlog.md) |
 | **V2-028** | **Generate Media Kits** platform | 2025–26 manual send **done**; platform automation queued | C-013, C-022 | done (2025–26) | [media-kits.md](./media-kits.md) |
 
-**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014–V2-027** unused. **V2-028** = media kits.
+**Note:** **V2-013** = Program Instance multi-year architecture. **V2-014** = Automation Modernization Roadmap (Phase 2, **active**). **V2-015–V2-027** unused. **V2-028** = media kits.
 
 ### Wave 11 — Launch gate (before May 2027)
 
@@ -407,7 +416,8 @@ From [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-
 | File | Backlog IDs |
 |------|-------------|
 | [docs/shooting-challenge-v2-base-cutover.md](./shooting-challenge-v2-base-cutover.md) | V2-001 (superseded by V2-013) |
-| [docs/v2-change-backlog.md](./v2-change-backlog.md) | V2-013 Program Instance |
+| [docs/v2-change-backlog.md](./v2-change-backlog.md) | V2-013 Program Instance; **V2-014** automation roadmap |
+| [docs/v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) | **V2-014** — automation inventory, disposition, capacity |
 | [docs/shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) | V2-002 |
 | [docs/platform-config-improvements.md](./platform-config-improvements.md) | C-021, C-022, V2-003, V2-004 |
 | [docs/asset-storage-migration.md](./asset-storage-migration.md) | C-013, C-023 |

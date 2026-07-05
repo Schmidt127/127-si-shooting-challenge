@@ -2,6 +2,8 @@
 
 Production scripts: `airtable/automations/shooting-challenge/` (46 files, numbered `001`–`114`).
 
+**Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
+
 Standard: [../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
 
 Trigger map (downstream effects): [../airtable/schema/current/automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md)
@@ -92,7 +94,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 111 | Video Review — Copy Enrollment Grade Band to Video Feedback | *confirm in Airtable* | `111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js` |
-| 112 | Video Review — Create Video Feedback from Submission Asset | *confirm in Airtable* | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
+| 112 | Video Review — Create Video Feedback from Submission Asset | **OFF — monitor before delete** (legacy duplicate of **013**) | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
 | 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` |
 | **114** | Video Review — Create or Update Video XP Event | Video Feedback posted, XP positive, `Ready for XP Automation?` checked | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
 
@@ -115,7 +117,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | E — Homework upload | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js` |
 | F — Homework XP + email | 064, 065, 071 | `audit-homework-pipeline-integrity.js` |
 | F2 — HW17 Fillout test intake | 067 | `audit-homework17-reflection-quiz-pipeline.js` |
-| G — Video upload | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` |
+| G — Video upload | **013** (not 112), 070b, 022, 111 | `audit-video-pipeline-integrity.js` |
 | H — Video XP + email | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` |
 | I — Achievements | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` |
 | J — Legacy cleanup | — | `audit-field-coverage-report.js`, `audit-legacy-cleanup-candidates.js` |
@@ -129,6 +131,14 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 | `airtable/extension-scripts/audits/` | Dry-run pipeline audits (Stages A–J) |
 | `airtable/extension-scripts/safe-backfills/` | Controlled repairs with `DRY_RUN` / `CONFIRM_WRITE` gates |
 | `airtable/extension-scripts/schema/` | In-base schema export |
+
+## Retired automations (no GitHub file)
+
+| # | Name | Status | Notes |
+|---|------|--------|-------|
+| **012** | *(unknown — not in GitHub)* | **Deleted** | Mike confirmed legacy, unused. **+1 automation slot recovered.** |
+
+---
 
 ## Deploy workflow
 
