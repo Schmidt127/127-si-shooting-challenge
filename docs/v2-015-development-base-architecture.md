@@ -35,6 +35,16 @@ This is the **better long-term strategy** than:
 
 **Dev base + one repo + one production base** is standard platform engineering. It aligns with Phase 2 complexity reduction: *understand and validate before production changes.*
 
+### Locked decisions (owner, 2026-07-05)
+
+| Decision | Choice |
+|----------|--------|
+| GitHub | **One repo** — no fork for Shooting Challenge V2 |
+| Production | **One Airtable base** — no second production base |
+| Development | **One permanent DEV base** — clone of prod |
+| Schmidt sandbox (C-019) | **Remains** — small production smoke tests only |
+| DEV base purpose | Automation paste tests, schema changes, backfills, Make dry-runs, Test Intake (C-020) |
+
 ---
 
 ## Architecture
@@ -251,7 +261,7 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 
 ---
 
-## Implementation checklist (when approved)
+## Implementation checklist
 
 | # | Task | Owner |
 |---|------|-------|
