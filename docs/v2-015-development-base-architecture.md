@@ -38,7 +38,7 @@ Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke
 | 1 | DEV base ID recorded in docs | **Done** |
 | 2 | DEV scrubbed to test enrollments only | **Done** (2026-07-05) |
 | 3 | Production unchanged | **Confirmed** |
-| 4 | **066 v3.1** pasted and tested in DEV | **Pending** |
+| 4 | **066 v3.1** pasted and tested in DEV | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
 | 5 | Webhook / Make isolation verified | Verify per [development-base-setup.md](./development-base-setup.md) Step 3 |
 
 **Do not mark V2-015 `done` in backlog until criterion 4 passes.**
@@ -312,7 +312,7 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 6 | Paste current automations to dev (parity with prod) | Mike | |
 | 7 | Add **Testing** views + Test Intake table (C-020) on dev first | Cursor / Mike | |
 | 8 | Update doc 04 + doc 08 promote workflow | Cursor | **Done** |
-| 9 | First use: **066 v3.1** dev paste + audit before prod | Cursor | **Pending** — **blocks V2-015 done** |
+| 9 | First use: **066 v3.1** dev paste + audit before prod | Mike / Cursor | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
 
 ---
 

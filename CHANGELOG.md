@@ -34,6 +34,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **066 v3.1 DEV deploy checklist** — [docs/deploy-checklists/066-v3.1-dev-deploy.md](./docs/deploy-checklists/066-v3.1-dev-deploy.md) (H-002 / V2-015 gate).
 - **V2-015 Development base** — [development-base-setup.md](./docs/development-base-setup.md) runbook; dev-first automation deploy; `web/.env.local.example`; prod/dev env patterns in `.env.example` and `tools/airtable/.env.example`.
 
 #### Changed

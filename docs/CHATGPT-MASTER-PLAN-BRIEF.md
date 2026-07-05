@@ -16,7 +16,7 @@
 |------|--------|
 | **Wave 0 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio |
 | **H-001** | **Done** — 090F audit v1.1; fix audit not data; 0 deletes |
-| **H-002** | **GitHub done** — 066 v3.1 V2 standard; Airtable paste pending |
+| **H-002** | **066** v3.1 — DEV deploy in progress | GitHub done; [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
 | **Automation standards** | Doc **06 Active**; 066 v3.1 canonical template |
 | **Multi-year architecture** | **V2-013 queued** — Program Instance; one base; do not implement now |
 | **V2-014** | **Active** — [Automation Modernization Roadmap](./v2-014-automation-modernization-roadmap.md); Phase 2 current |

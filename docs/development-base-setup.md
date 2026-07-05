@@ -126,7 +126,7 @@ Commit snapshot only if dev schema intentionally diverges from prod. Normally pr
 GitHub commit → paste into DEV automation → audit (dev) → sandbox test → Mike approves → paste into PROD → CHANGELOG
 ```
 
-First dev paste candidate: **066 v3.1** (H-002).
+First dev paste: **066 v3.1** (H-002) — [deploy-checklists/066-v3.1-dev-deploy.md](./deploy-checklists/066-v3.1-dev-deploy.md)
 
 Extension scripts: run dry-run in **dev** base Scripting extension before any `CONFIRM_WRITE` on prod.
 

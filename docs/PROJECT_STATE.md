@@ -12,7 +12,7 @@ Last updated: **2026-07-05** (V2-015 DEV ready — `appTetnuCZlCZdTCT`; 066 dev 
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **GitHub complete** (`45b17d7`); **DEV paste + test pending** — prod paste after dev pass |
+| **H-002 — Automation 066 v3.1** | **DEV deploy in progress** — paste + test per [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md); prod after DEV pass |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Current** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation inventory + capacity roadmap |
@@ -165,7 +165,7 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **066 deploy** | GitHub v3.1 ready; **DEV paste + test pending** — prod after dev pass |
+| **066 deploy** | v3.1 — **DEV paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after pass |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
 | **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
 
