@@ -4,25 +4,29 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 > **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on hoopchallenges.com. Landing is `hoopchallenges-landing`.
 
-**New session?** Read [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [../AGENTS.md](../AGENTS.md) for AI conventions.
+**New session?** Read [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
 
-**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
+**Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) for consolidated planning, or import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
 
 ---
 
 ## Shooting Challenge v2 — numbered doc pack
 
-**[v2/README.md](./v2/README.md)** — read order, ChatGPT + Cursor workflow.
+**[v2/README.md](./v2/README.md)** — read order, Mike + ChatGPT + Cursor workflow.
 
-**[chatgpt-sources/](./chatgpt-sources/)** — **import this entire folder** into ChatGPT Project Sources (18 synced files + `00-START-HERE.md`).
+**[chatgpt-sources/](./chatgpt-sources/)** — **import this entire folder** into ChatGPT Project Sources (23 synced files + `00-START-HERE.md`).
+
+| — | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — permanent workflow (Mike / ChatGPT / Cursor) |
+| — | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Consolidated backlog** — all C-/V2-/H- IDs, sub-system roadmaps, ChatGPT prompt |
 
 | # | File | Status |
 |---|------|--------|
 | 01 | [v2/01-constitution.md](./v2/01-constitution.md) | **Active** — configurable game engine + four layers |
 | 02 | [v2/02-master-direction.md](./v2/02-master-direction.md) | Shell |
 | 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Engine contract** — platform behavior only |
+| 04 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — AI workflow, task classification, five phases |
 | — | [v2/season-configuration-design.md](./v2/season-configuration-design.md) | Season gate design (Layer 2, DRAFT) |
-| 04–09 | [v2/](./v2/) | Shell |
+| 05–09 | [v2/](./v2/) | Shell |
 
 Legacy long-form docs below remain canonical until each v2 file is fully expanded.
 

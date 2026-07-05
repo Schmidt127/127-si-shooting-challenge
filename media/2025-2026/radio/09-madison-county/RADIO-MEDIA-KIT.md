@@ -112,7 +112,7 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Madison County Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 2 athletes representing Sheridan, Virginia City, and Madison County combined to record **3,299 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Madison County Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Two athletes representing Sheridan, Virginia City, and Madison County combined to record **3,299 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Sheridan
 
@@ -133,7 +133,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Sheridan, Virginia City, and Madison County recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-2 athletes from the Madison County Radio listening area earned recognition during this year's challenge, highlighted by Sheridan's **Monroe Mailey**, recognized with the **Grade Band Third Place Award** after reaching the **Dangerous Shooter** level, while Sheridan's **Myla Mailey**, who reached the **Consistent Shooter** level during the eleven-week season.
+Two athletes from the Madison County Radio listening area earned recognition during this year's challenge, highlighted by **Monroe Mailey of Sheridan**, recognized with the **Grade Band Third Place Award** after reaching the **Dangerous Shooter** level, and **Myla Mailey of Sheridan**, who reached the **Consistent Shooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -153,10 +153,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Madison County Radio listening area was proudly represented by 2 outstanding athletes.
-Leading the way was Sheridan's **Monroe Mailey**, recognized with the **Grade Band Third Place Award** after reaching the **Dangerous Shooter** level.
+The Madison County Radio listening area was proudly represented by two outstanding athletes.
 
-Also recognized was Sheridan's **Myla Mailey**, who reached the **Consistent Shooter** level during the eleven-week season.
+**Monroe Mailey** of Sheridan, recognized with the **Grade Band Third Place Award** after reaching the **Dangerous Shooter** level.
+
+Also earning recognition was **Myla Mailey** of Sheridan, who reached the **Consistent Shooter** level.
 
 Athletes throughout the listening area demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

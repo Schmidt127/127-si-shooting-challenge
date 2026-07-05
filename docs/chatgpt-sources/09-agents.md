@@ -4,13 +4,11 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 
 ## Start here
 
-1. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
-2. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
-3. [docs/shooting-challenge-v2-master-direction.md](./docs/shooting-challenge-v2-master-direction.md) — full master direction (linked from `v2/02`)
-3. [docs/shooting-challenge-v2-config-vs-code.md](./docs/shooting-challenge-v2-config-vs-code.md) — config tables vs script changes
-4. [docs/shooting-challenge-v2-base-cutover.md](./docs/shooting-challenge-v2-base-cutover.md) — archive + clone strategy for 2026–27
-5. [docs/README.md](./docs/README.md) — documentation index
-6. [SYSTEM_OVERVIEW.md](./SYSTEM_OVERVIEW.md) — domain modules and data flow
+1. [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) — **permanent workflow** (Mike / ChatGPT / Cursor, five phases, task classification)
+2. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
+3. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
+4. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md) — live backlog (add new items here)
+5. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md) — aggregated planning view for ChatGPT
 
 ## Repo scope
 
@@ -21,6 +19,8 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 
 | Area | Rule file / doc |
 |------|-----------------|
+| **AI workflow (Mike / ChatGPT / Cursor)** | [docs/v2/04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md) |
+| Workspace guardrails (Cursor) | `.cursor/rules/workflow-guardrails.mdc` |
 | Airtable automations | `.cursor/rules/airtable-automation-scripts.mdc` |
 | Web UI | `.cursor/rules/web-ui-brand.mdc` |
 | Monorepo navigation | `.cursor/rules/monorepo.mdc` |
@@ -33,6 +33,41 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 - **Web Airtable reads** — server-side only (`lib/airtable/`); never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event; use Source Key patterns from automation scripts
 
+## Task intake (Cursor)
+
+When Mike brings a new task, respond first with a **Task Classification** block (see [04-ai-development-standards.md](./docs/v2/04-ai-development-standards.md)):
+
+```
+Task Classification
+Type:
+Priority:
+Difficulty:
+Owner:
+Dependencies:
+Backlog ID:
+Estimated Scope:
+Phase:
+Correct tool for this step:
+Repo:
+Mike's role right now:
+```
+
+Then proceed only within Cursor's scope (Phase 3 Implementation / Phase 5 Close) unless Mike explicitly asks for planning.
+
+## Workspace guardrails (Cursor)
+
+**Actively prevent Mike from working in the wrong area.** Full rules: [04-ai-development-standards.md § Workspace guardrails](./docs/v2/04-ai-development-standards.md#workspace-guardrails-do-not-work-in-the-wrong-area).
+
+| If Mike asks for… | Cursor should… |
+|-------------------|----------------|
+| Planning, requirements, parent/editor copy, Phase 4 review | Output **Workspace Check** → send to **ChatGPT** |
+| Code, audits, scripts, commits, schema, deploy prep | Proceed (after Task Classification) |
+| Implementation with no backlog ID or unapproved plan | Stop — request backlog ID + Phase 2 approval |
+| Backlog change | Edit `docs/v2-change-backlog.md` — not `CHATGPT-MASTER-PLAN-BRIEF.md` |
+| Hoop landing / JR Ref | Redirect to correct repo — not this one |
+
+When redirecting, use the **Workspace Check** block from doc 04 (Current request, Correct phase/tool/repo, What Mike should do instead).
+
 ## Common tasks
 
 | Task | Path |
@@ -43,3 +78,4 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 | Web routes | `web/docs/site-hierarchy.md` |
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
+| Media / publicity kits | `docs/media-kits.md`, `media/README.md` |

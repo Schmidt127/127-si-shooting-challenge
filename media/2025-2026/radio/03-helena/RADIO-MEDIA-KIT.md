@@ -112,7 +112,7 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Helena Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 2 athletes representing Helena, Clancy, and Townsend combined to record **13,765 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Helena Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Two athletes representing Helena, Clancy, and Townsend combined to record **13,765 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Clancy / Jefferson
 
@@ -133,7 +133,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Helena, Clancy, Townsend, and the surrounding capital region recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-2 athletes from the Helena Radio listening area earned recognition during this year's challenge, highlighted by Jefferson's **William Buresh**, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level, while Broadwater's **Kinsley Heggen**, who reached the **Rookie Shooter** level during the eleven-week season.
+Two athletes from the Helena Radio listening area earned recognition during this year's challenge, highlighted by **William Buresh of Jefferson**, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level, and **Kinsley Heggen of Broadwater**, who reached the **Rookie Shooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -153,10 +153,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Helena Radio listening area was proudly represented by 2 outstanding athletes.
-Leading the way was Jefferson's **William Buresh**, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level.
+The Helena Radio listening area was proudly represented by two outstanding athletes.
 
-Also recognized was Broadwater's **Kinsley Heggen**, who reached the **Rookie Shooter** level during the eleven-week season.
+**William Buresh** of Jefferson, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level.
+
+Also earning recognition was **Kinsley Heggen** of Broadwater, who reached the **Rookie Shooter** level.
 
 Athletes throughout the listening area demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

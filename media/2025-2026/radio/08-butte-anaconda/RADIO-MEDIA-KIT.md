@@ -129,7 +129,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Butte, Anaconda, and southwest Montana recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-1 athlete from the Butte / Anaconda Radio listening area earned recognition during this year's challenge, highlighted by Anaconda's **Maizee Mitchell**, who finished at the **Hot Hand** level with **7,450 counted shots**.
+One athlete from the Butte / Anaconda Radio listening area earned recognition during this year's challenge, highlighted by **Maizee Mitchell of Anaconda**, who finished at the **Hot Hand** level with **7,450 counted shots**.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -149,10 +149,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Butte / Anaconda Radio listening area was proudly represented by 1 outstanding athlete.
-Leading the way was Anaconda's **Maizee Mitchell**, who finished at the **Hot Hand** level with **7,450 counted shots**.
+The Butte / Anaconda Radio listening area was proudly represented by one outstanding athlete.
 
-Maizee Mitchell's commitment throughout the eleven-week season reflects the perseverance and daily habits that define Educational Athletics.
+**Maizee Mitchell** of Anaconda, who finished at the **Hot Hand** level with **7,450 counted shots**.
+
+The commitment shown throughout the eleven-week season reflects the daily habits that define Educational Athletics.
 
 Complete athlete standings, season statistics, and award winners are available at:
 

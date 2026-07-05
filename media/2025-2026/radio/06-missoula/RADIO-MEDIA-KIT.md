@@ -100,7 +100,7 @@ The statistics below represent thousands of individual decisions by young athlet
 
 ### Season Highlights
 
-The inaugural season produced remarkable accomplishments throughout Montana.
+This season's challenge produced remarkable accomplishments throughout Montana.
 
 Only **one athlete** reached **G.O.A.T.**, the highest of the challenge's twelve development levels. **Riley Geraghty** of Missoula achieved that distinction through excellence across every area of the program—not simply by shooting the most baskets.
 
@@ -112,29 +112,35 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Missoula Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 9 athletes representing Missoula, Frenchtown, and the Bitterroot Valley combined to record **64,909 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Missoula Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Nine athletes representing Missoula, Frenchtown, and the Bitterroot Valley combined to record **64,909 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
-### Missoula
+### Frenchtown
 
-**Riley Geraghty (Grade 8)** became the **only statewide G.O.A.T.** finisher — the highest of twelve development levels — with **15,404 counted shots**. Riley also completed **20** homework assignments, submitted **34** coach-reviewed videos, attended both live instructional Zoom sessions, and built a **60-day** shooting streak.
+**Camden Clark (Grade 7)** of Frenchtown reached the **Pro** level, one step below G.O.A.T. statewide, with **16,850 counted shots**. Camden earned the **Conquered Goal Award** and completed **11** homework assignments, submitted **16** coach-reviewed videos, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
 
-**Camden Clark (Grade 7)** of Frenchtown reached the **Pro** level, one step below G.O.A.T. statewide, with **16,850 counted shots**. Camden was also recognized with the **Conquered Goal Award** and other season honors. Camden also completed **11** homework assignments, submitted **16** coach-reviewed videos, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
+**McKinley Clark (Grade 5)** of Frenchtown surpassed the **10,000-shot milestone**, finishing with **13,633 counted shots** at the **Hot Hand** level. McKinley earned the **Conquered Goal Award**, completed **2** homework assignments, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
 
-**Colbie Schwenk (Grade 8)** recorded **5,841 counted shots** and reached the **Dangerous Shooter** level. Colbie also earned coach feedback on **1** video, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
+### Missoula / St. Joseph's School
 
-**McKinley Clark (Grade 5)** surpassed the **10,000-shot milestone**, finishing with **13,633 counted shots** at the **Hot Hand** level. McKinley earned the **Conquered Goal Award**. McKinley also completed **2** homework assignments, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
+**Riley Geraghty (Grade 8)** of St. Joseph's School became the **only statewide G.O.A.T.** finisher — the highest of twelve development levels — with **15,404 counted shots**. Riley completed **20** homework assignments, submitted **34** coach-reviewed videos, attended both live instructional Zoom sessions, and built a **60-day** shooting streak.
 
-**Jacob Schwenk (Grade 6)** recorded **8,280 counted shots** and reached the **Hot Hand** level. Jacob earned the **Conquered Goal Award**. Jacob also earned coach feedback on **1** video and maintained a **10-day** shooting streak.
+**Colbie Schwenk (Grade 8)** of St. Joseph's School recorded **5,841 counted shots** and reached the **Dangerous Shooter** level. Colbie earned coach feedback on **1** video, participated in a live instructional Zoom session, and maintained a **10-day** shooting streak.
 
-**Sam Tingley (Grade 7)** demonstrated commitment throughout the season with **3,250 counted shots**, reaching the **Developing Shooter** level. Sam also completed **5** homework assignments and submitted **7** coach-reviewed videos.
+**Jacob Schwenk (Grade 6)** of St. Joseph's School recorded **8,280 counted shots** and reached the **Hot Hand** level. Jacob earned the **Conquered Goal Award**, earned coach feedback on **1** video, and maintained a **10-day** shooting streak.
 
-**Cash Wieler (Grade 8)** demonstrated commitment throughout the season with **738 counted shots**, reaching the **Rookie Shooter** level.
+**Cash Wieler (Grade 8)** of St. Joseph's School demonstrated commitment throughout the season with **738 counted shots**, reaching the **Rookie Shooter** level.
 
-**Jensen Klimkiewicz (Grade 11)** demonstrated commitment throughout the season with **260 counted shots**, reaching the **Beginner** level.
+### Missoula / Hellgate
+
+**Sam Tingley (Grade 7)** of Hellgate demonstrated commitment throughout the season with **3,250 counted shots**, reaching the **Developing Shooter** level. Sam completed **5** homework assignments and submitted **7** coach-reviewed videos.
+
+### Missoula / Loyola Sacred Heart
+
+**Jensen Klimkiewicz (Grade 11)** of Loyola Sacred Heart demonstrated commitment throughout the season with **260 counted shots**, reaching the **Beginner** level.
 
 ### Darby
 
-**Lewis Talbitzer (Grade 4)** demonstrated commitment throughout the season with **653 counted shots**, reaching the **Beginner** level.
+**Lewis Talbitzer (Grade 4)** of Darby demonstrated commitment throughout the season with **653 counted shots**, reaching the **Beginner** level.
 
 
 Whether recording a few hundred shots or more than eighteen thousand, every athlete in the Missoula Radio listening area represented their family, school, and community with dedication, perseverance, and a commitment to becoming better both on and off the basketball court.
@@ -147,7 +153,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Missoula, Frenchtown, Darby, and western Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-9 athletes from the Missoula Radio listening area earned recognition during this year's challenge, highlighted by St. Joe's's **Riley Geraghty**, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**, Frenchtown's **Camden Clark**, who reached the **Pro** level with **16,850 counted shots**, and St. Joe's's **Colbie Schwenk**, who finished at the **Dangerous Shooter** level with **5,841 counted shots**.
+Nine athletes from the Missoula Radio listening area earned recognition during this year's challenge, highlighted by **Riley Geraghty of St. Joseph's School**, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**, **Camden Clark of Frenchtown**, who reached the **Pro** level with **16,850 counted shots**, and **Colbie Schwenk of St. Joseph's School**, who finished at the **Dangerous Shooter** level with **5,841 counted shots**.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -167,12 +173,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Missoula Radio listening area was proudly represented by 9 outstanding athletes.
-Leading the way was St. Joe's's **Riley Geraghty**, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**.
+The Missoula Radio listening area was proudly represented by nine outstanding athletes.
 
-Also recognized were Frenchtown's **Camden Clark**, who reached the **Pro** level with **16,850 counted shots**, St. Joe's's **Colbie Schwenk**, who finished at the **Dangerous Shooter** level with **5,841 counted shots**, and Frenchtown's **McKinley Clark**, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level.
+**Riley Geraghty** of St. Joseph's School, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**.
 
-St. Joe's's **Riley Geraghty** stood out for outstanding all-around participation including shooting, homework, coach-reviewed videos, and live instructional sessions.
+Also earning recognition were **Camden Clark** of Frenchtown, who reached the **Pro** level with **16,850 counted shots**, **Colbie Schwenk** of St. Joseph's School, who finished at the **Dangerous Shooter** level with **5,841 counted shots**, and **McKinley Clark** of Frenchtown, who surpassed the **10,000-shot milestone** and reached the **Hot Hand** level.
 
 Additional athletes from Missoula, Frenchtown, and the Bitterroot Valley also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

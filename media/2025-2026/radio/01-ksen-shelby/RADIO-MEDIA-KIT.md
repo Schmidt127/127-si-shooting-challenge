@@ -1,8 +1,21 @@
 # Radio Media Kit — KSEN Radio (Shelby)
+*Generated 2026-07-04 09:01 Mountain Daylight Time from Airtable export*
 
 **Market ID:** 01
 **Communities:** Shelby, Cut Bank, Valier, Conrad, Choteau, Fairfield, Greenfield, Power, Ledger
 **Athletes in kit:** 8
+
+## Fast Facts — 127 Sports Intensity – Shooting Challenge (2026)
+
+- **91** active enrollments
+- **65** qualifying athletes
+- **28** schools
+- **23** communities
+- **304,322** counted shots
+- **1,712** submissions
+- **54,049** lifetime XP
+- **1** statewide G.O.A.T.: Riley Geraghty (St. Joseph's, Missoula)
+
 
 ## 1. Introduction Letter
 
@@ -36,6 +49,9 @@ Sincerely,
 **Founder & Director**
 **127 Sports Intensity**
 
+
+
+
 ## 2. The Story Behind 127 Sports Intensity
 
 I founded **127 Sports Intensity** because I wanted to accomplish two goals at the same time.
@@ -61,6 +77,9 @@ That is, and always will be, the purpose of **127 Sports Intensity**.
 For complete standings, season statistics, and award winners, visit:
 
 **www.fairfieldbasketballclub.com/leaderboard**
+
+
+
 
 ## 3. Statewide Challenge Statistics
 
@@ -110,6 +129,8 @@ Throughout the challenge, athletes were recognized with **125 awards**, includin
 
 While those accomplishments are impressive, the greatest success of the **127 Sports Intensity – Shooting Challenge (2026)** was helping young athletes develop the daily habits, discipline, and character that will benefit them long after the basketball season has ended.
 
+
+
 ## 4. Local Athlete Highlights
 
 The KSEN Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Eight athletes representing Fairfield, Greenfield, Power, Conrad, and Ledger combined to record **53,324 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
@@ -137,15 +158,17 @@ Ledger athletes also demonstrated the value of perseverance throughout the seaso
 
 Whether recording a few hundred shots or more than eighteen thousand, every athlete in the KSEN listening area represented their family, school, and community with dedication, perseverance, and a commitment to becoming better both on and off the basketball court.
 
+
+
 ## 5. Suggested On-Air Copy
 
 The following scripts are provided as a convenience and may be used as written, shortened, expanded, or adapted to fit your station's programming style.
 
 ### Approximately 45 Seconds
 
-Young athletes from Fairfield, Greenfield, Conrad, Ledger, and surrounding north-central Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, a ten-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
+Young athletes from Fairfield, Greenfield, Conrad, Ledger, and surrounding north-central Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-Eight athletes from the KSEN listening area earned recognition during this year's challenge, highlighted by **Leyton Bakken of Fairfield**, who led the entire state with **18,110 counted shots**. **Eli Cowgill of Greenfield** also surpassed the **10,000-shot milestone**, while athletes from Conrad and Ledger demonstrated the value of consistent daily effort throughout the season.
+Eight athletes from the KSEN listening area earned recognition during this year's challenge, highlighted by **Leyton Bakken of Fairfield**, who led the entire state with **18,110 counted shots**, and **Eli Cowgill of Greenfield**, who surpassed the **10,000-shot milestone**.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -157,7 +180,7 @@ Complete athlete standings, season statistics, and award winners are available a
 
 ### Approximately 2 Minutes
 
-Young athletes from north-central Montana recently completed the annual **127 Sports Intensity – Shooting Challenge (2026)**, a ten-week offseason basketball development program that encourages young athletes to grow not only as basketball players, but also as disciplined, accountable, and confident young people.
+Young athletes from north-central Montana recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program that encourages young athletes to grow not only as basketball players, but also as disciplined, accountable, and confident young people.
 
 Unlike a traditional shooting contest, participants were recognized for complete player development. Throughout the season, athletes logged daily shooting, completed educational homework, submitted videos for coaching feedback, participated in live instructional sessions, built shooting streaks, and earned Experience Points while progressing through twelve achievement levels.
 
@@ -167,16 +190,15 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 The KSEN listening area was proudly represented by eight outstanding athletes.
 
-Fairfield's **Leyton Bakken** led the entire state with **18,110 counted shots**, while **Eli Cowgill** of Greenfield surpassed the **10,000-shot milestone** and reached the **Consistent Shooter** level.
+**Leyton Bakken** of Fairfield led the entire state with **18,110 counted shots**, while **Eli Cowgill** of Greenfield surpassed the **10,000-shot milestone** and reached the **Consistent Shooter** level.
 
-Fairfield athletes **Colton Dahl** and **Conley Dahl** were recognized for their steady commitment and improvement throughout the eleven-week challenge, while **Emmet Gustafson** of Conrad distinguished himself through outstanding all-around participation that included shooting, homework, coach-reviewed videos, and perfect attendance at the program's live instructional sessions.
+**Colton Dahl** and **Conley Dahl** of Fairfield were recognized for their steady commitment and improvement throughout the eleven-week challenge, while **Emmet Gustafson** of Conrad distinguished himself through outstanding all-around participation that included shooting, homework, coach-reviewed videos, and perfect attendance at the program's live instructional sessions.
 
 Athletes from Ledger also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 
 Complete athlete standings, season statistics, and award winners are available at:
 
-
+**www.fairfieldbasketballclub.com/leaderboard**
 
 Thank you to every athlete, parent, coach, and community that helped make the inaugural **127 Sports Intensity – Shooting Challenge (2026)** a tremendous success.
 
-**www.fairfieldbasketballclub.com/leaderboard**

@@ -129,7 +129,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Declo and the Magic Valley of southern Idaho recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-1 athlete from the Magic Valley Radio listening area earned recognition during this year's challenge, highlighted by Declo's **Dayton Fox**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
+One athlete from the Magic Valley Radio listening area earned recognition during this year's challenge, highlighted by **Dayton Fox of Declo**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -149,10 +149,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Magic Valley Radio listening area was proudly represented by 1 outstanding athlete.
-Leading the way was Declo's **Dayton Fox**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
+The Magic Valley Radio listening area was proudly represented by one outstanding athlete.
 
-Dayton Fox's commitment throughout the eleven-week season reflects the perseverance and daily habits that define Educational Athletics.
+**Dayton Fox** of Declo, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
+
+The commitment shown throughout the eleven-week season reflects the daily habits that define Educational Athletics.
 
 Complete athlete standings, season statistics, and award winners are available at:
 

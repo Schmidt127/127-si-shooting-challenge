@@ -112,43 +112,45 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Great Falls Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 12 athletes representing Great Falls, Fort Benton, Highwood, Cascade, Belt, and Centerville combined to record **42,501 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Great Falls Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Twelve athletes representing Great Falls, Fort Benton, Highwood, Cascade, Belt, and Centerville combined to record **42,501 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Highwood
 
 The **Brady** family was among the standouts from Highwood, with multiple athletes earning recognition for their offseason commitment.
 
-**Benny Brady (Grade K)** recorded **8,801 counted shots** and reached the **Hot Hand** level. Benny was also recognized with the **Conquered Goal Award** and other season honors. Benny also completed **2** homework assignments, submitted **5** coach-reviewed videos, and maintained a **10-day** shooting streak.
+**Benny Brady (Kindergarten)** of Highwood recorded **8,801 counted shots** and reached the **Hot Hand** level. Benny earned the **Conquered Goal Award** and **Grade Band Champion Award**, completed **2** homework assignments, submitted **5** coach-reviewed videos, and maintained a **10-day** shooting streak.
 
-**Andrew Brady (Grade 3)** recorded **5,232 counted shots** and reached the **Consistent Shooter** level. Andrew earned the **Conquered Goal Award**. Andrew also earned coach feedback on **1** video and maintained a **10-day** shooting streak.
+**Andrew Brady (Grade 3)** of Highwood recorded **5,232 counted shots** and reached the **Consistent Shooter** level. Andrew earned the **Conquered Goal Award**, earned coach feedback on **1** video, and maintained a **10-day** shooting streak.
 
-**Matthew Brady (Grade 5)** demonstrated commitment throughout the season with **3,520 counted shots**, reaching the **Developing Shooter** level. Matthew also earned coach feedback on **1** video.
+**Matthew Brady (Grade 5)** of Highwood demonstrated commitment throughout the season with **3,520 counted shots**, reaching the **Developing Shooter** level. Matthew earned coach feedback on **1** video.
 
-### Great Falls
+### Belt
 
-**Jackson Newcomer (Grade 6)** recorded **6,512 counted shots** and reached the **Hot Hand** level. Jackson also submitted **5** coach-reviewed videos and maintained a **10-day** shooting streak.
+**Jackson Newcomer (Grade 6)** of Belt recorded **6,512 counted shots** and reached the **Hot Hand** level. Jackson submitted **5** coach-reviewed videos and maintained a **10-day** shooting streak.
 
-**Lincoln Newcomer (Grade 3)** demonstrated commitment throughout the season with **4,815 counted shots**, reaching the **Hot Hand** level. Lincoln also earned coach feedback on **1** video and built a **20-day** shooting streak.
+**Lincoln Newcomer (Grade 3)** of Belt demonstrated commitment throughout the season with **4,815 counted shots**, reaching the **Hot Hand** level. Lincoln earned coach feedback on **1** video and built a **20-day** shooting streak.
 
-**Nora Davison (Grade 3)** demonstrated commitment throughout the season with **829 counted shots**, reaching the **Developing Shooter** level. Nora also completed **6** homework assignments, submitted **7** coach-reviewed videos, and maintained a **10-day** shooting streak.
+### Highwood / Centerville School
 
-**Charlotte Davison (Grade K)** demonstrated commitment throughout the season with **421 counted shots**, reaching the **Developing Shooter** level. Charlotte also completed **6** homework assignments and submitted **8** coach-reviewed videos.
+**Nora Davison (Grade 3)** of Centerville School demonstrated commitment throughout the season with **829 counted shots**, reaching the **Developing Shooter** level. Nora completed **6** homework assignments, submitted **7** coach-reviewed videos, and maintained a **10-day** shooting streak.
+
+**Charlotte Davison (Kindergarten)** of Centerville School demonstrated commitment throughout the season with **421 counted shots**, reaching the **Developing Shooter** level. Charlotte completed **6** homework assignments and submitted **8** coach-reviewed videos.
 
 ### Cascade
 
-**Clara Hardy (Grade 6)** demonstrated commitment throughout the season with **3,660 counted shots**, reaching the **Dangerous Shooter** level. Clara also completed **2** homework assignments and submitted **6** coach-reviewed videos.
+**Clara Hardy (Grade 6)** of Cascade demonstrated commitment throughout the season with **3,660 counted shots**, reaching the **Dangerous Shooter** level. Clara completed **2** homework assignments and submitted **6** coach-reviewed videos.
 
-**Milton Costa (Grade 6)** demonstrated commitment throughout the season with **3,238 counted shots**, reaching the **Consistent Shooter** level. Milton also earned coach feedback on **1** video.
+**Milton Costa (Grade 6)** of Cascade demonstrated commitment throughout the season with **3,238 counted shots**, reaching the **Consistent Shooter** level. Milton earned coach feedback on **1** video.
 
-**Daniel Costa (Grade 3)** demonstrated commitment throughout the season with **530 counted shots**, reaching the **Beginner** level.
+**Daniel Costa (Grade 3)** of Cascade demonstrated commitment throughout the season with **530 counted shots**, reaching the **Beginner** level.
 
 ### Fort Benton
 
 The **Bogart** family was among the standouts from Fort Benton, with multiple athletes earning recognition for their offseason commitment.
 
-**Kenady Bogart (Grade 5)** demonstrated commitment throughout the season with **4,353 counted shots**, reaching the **Developing Shooter** level. Kenady also earned coach feedback on **1** video.
+**Kenady Bogart (Grade 5)** of Fort Benton demonstrated commitment throughout the season with **4,353 counted shots**, reaching the **Developing Shooter** level. Kenady earned coach feedback on **1** video.
 
-**Aspyn Bogart (Grade 11)** demonstrated commitment throughout the season with **590 counted shots**, reaching the **Beginner** level.
+**Aspyn Bogart (Grade 11)** of Fort Benton demonstrated commitment throughout the season with **590 counted shots**, reaching the **Beginner** level.
 
 
 Whether recording a few hundred shots or more than eighteen thousand, every athlete in the Great Falls Radio listening area represented their family, school, and community with dedication, perseverance, and a commitment to becoming better both on and off the basketball court.
@@ -161,7 +163,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Great Falls, Fort Benton, Highwood, Cascade, Belt, and surrounding north-central Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-12 athletes from the Great Falls Radio listening area earned recognition during this year's challenge, highlighted by Cascade's **Clara Hardy**, who reached the **Dangerous Shooter** level during the eleven-week season, Highwood's **Benny Brady**, who finished at the **Hot Hand** level with **8,801 counted shots**, and Belt's **Jackson Newcomer**, who finished at the **Hot Hand** level with **6,512 counted shots**.
+Twelve athletes from the Great Falls Radio listening area earned recognition during this year's challenge, highlighted by **Benny Brady of Highwood**, who finished at the **Hot Hand** level with **8,801 counted shots**, **Jackson Newcomer of Belt**, who finished at the **Hot Hand** level with **6,512 counted shots**, and **Andrew Brady of Highwood**, who finished at the **Consistent Shooter** level with **5,232 counted shots**.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -181,12 +183,13 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Great Falls Radio listening area was proudly represented by 12 outstanding athletes.
-Leading the way was Cascade's **Clara Hardy**, who reached the **Dangerous Shooter** level during the eleven-week season.
+The Great Falls Radio listening area was proudly represented by twelve outstanding athletes.
 
-Also recognized were Highwood's **Benny Brady**, who finished at the **Hot Hand** level with **8,801 counted shots**, Belt's **Jackson Newcomer**, who finished at the **Hot Hand** level with **6,512 counted shots**, and Belt's **Lincoln Newcomer**, who reached the **Hot Hand** level during the eleven-week season.
+**Benny Brady** of Highwood, who finished at the **Hot Hand** level with **8,801 counted shots**.
 
-Centerville School's **Charlotte Davison** stood out for outstanding all-around participation including shooting, homework, coach-reviewed videos, and live instructional sessions.
+Also earning recognition were **Jackson Newcomer** of Belt, who finished at the **Hot Hand** level with **6,512 counted shots**, **Andrew Brady** of Highwood, who finished at the **Consistent Shooter** level with **5,232 counted shots**, and **Lincoln Newcomer** of Belt, who reached the **Hot Hand** level.
+
+**Charlotte Davison** of Centerville School also earned recognition for well-rounded participation, including shooting, homework, coach-reviewed videos, and live instructional sessions.
 
 Additional athletes from Great Falls, Fort Benton, Highwood, Cascade, Belt, and Centerville also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

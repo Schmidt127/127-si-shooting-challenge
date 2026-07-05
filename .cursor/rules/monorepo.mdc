@@ -25,10 +25,13 @@ This repo (`127-si-shooting-challenge`) is **Shooting Challenge only**:
 
 ## AI session startup
 
-1. Read `docs/PROJECT_STATE.md` for live base IDs, audit status, Vercel settings.
-2. Use `docs/README.md` to find the right doc.
-3. For automations → `docs/automation-index.md` + `.cursor/rules/airtable-automation-scripts.mdc`.
-4. For web routes → `web/docs/site-hierarchy.md` + `.cursor/rules/web-ui-brand.mdc`.
+1. Read [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development-standards.md) — **Task Classification + Workspace Check** on every new task; redirect if Mike is in wrong phase/tool/repo.
+2. Read `docs/PROJECT_STATE.md` for live base IDs, audit status, Vercel settings.
+3. Use `docs/README.md` to find the right doc.
+4. For automations → `docs/automation-index.md` + `.cursor/rules/airtable-automation-scripts.mdc`.
+5. For web routes → `web/docs/site-hierarchy.md` + `.cursor/rules/web-ui-brand.mdc`.
+
+**Wrong area redirects (Cursor):** Planning/copy/review → ChatGPT. Code/audits/commits without approved backlog ID → stop first. Backlog → `docs/v2-change-backlog.md` only. Not this repo: `hoopchallenges-landing`, `127-si-jr-ref`.
 
 ## Deploy paths
 

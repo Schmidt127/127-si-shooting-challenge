@@ -112,7 +112,7 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Billings Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 8 athletes representing Billings, Bridger, and Yellowstone County combined to record **10,812 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Billings Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Eight athletes representing Billings, Bridger, and Yellowstone County combined to record **10,812 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Bridger
 
@@ -145,7 +145,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Billings, Bridger, and Yellowstone County communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-8 athletes from the Billings Radio listening area earned recognition during this year's challenge, highlighted by Bridger's **Hartlie Ehrlich**, who reached the **Consistent Shooter** level during the eleven-week season, Bridger's **Seyler Ehrlich**, who reached the **Developing Shooter** level during the eleven-week season, and Bridger Elementary School's **Alyna Keyser**, who reached the **Developing Shooter** level during the eleven-week season.
+Eight athletes from the Billings Radio listening area earned recognition during this year's challenge, highlighted by **Hartlie Ehrlich of Bridger**, who reached the **Consistent Shooter** level, **Seyler Ehrlich of Bridger**, who reached the **Developing Shooter** level, and **Alyna Keyser of Bridger Elementary School**, who reached the **Developing Shooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -165,12 +165,13 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Billings Radio listening area was proudly represented by 8 outstanding athletes.
-Leading the way was Bridger's **Hartlie Ehrlich**, who reached the **Consistent Shooter** level during the eleven-week season.
+The Billings Radio listening area was proudly represented by eight outstanding athletes.
 
-Also recognized were Bridger's **Seyler Ehrlich**, who reached the **Developing Shooter** level during the eleven-week season, Bridger Elementary School's **Alyna Keyser**, who reached the **Developing Shooter** level during the eleven-week season, and Bridger Elementary School's **Raya Keyser**, who reached the **Developing Shooter** level during the eleven-week season.
+**Hartlie Ehrlich** of Bridger, who reached the **Consistent Shooter** level.
 
-Bridger's **Hartlie Ehrlich** stood out for outstanding all-around participation including shooting, homework, coach-reviewed videos, and live instructional sessions.
+Also earning recognition were **Seyler Ehrlich** of Bridger, who reached the **Developing Shooter** level, **Alyna Keyser** of Bridger Elementary School, who reached the **Developing Shooter** level, and **Raya Keyser** of Bridger Elementary School, who reached the **Developing Shooter** level.
+
+**Hartlie Ehrlich** of Bridger also earned recognition for well-rounded participation, including shooting, homework, coach-reviewed videos, and live instructional sessions.
 
 Additional athletes from Billings, Bridger, and Yellowstone County also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

@@ -31,7 +31,8 @@ $maps = @(
     @{ Src = "docs\asset-storage-migration.md"; Dst = "19-asset-storage-migration.md" },
     @{ Src = "docs\testing-and-intake-architecture.md"; Dst = "20-testing-and-intake-architecture.md" },
     @{ Src = "docs\platform-config-improvements.md"; Dst = "21-platform-config-improvements.md" },
-    @{ Src = "docs\v2-change-backlog.md"; Dst = "22-v2-change-backlog.md" }
+    @{ Src = "docs\v2-change-backlog.md"; Dst = "22-v2-change-backlog.md" },
+    @{ Src = "docs\CHATGPT-MASTER-PLAN-BRIEF.md"; Dst = "23-master-plan-brief.md" }
 )
 
 $copied = 0

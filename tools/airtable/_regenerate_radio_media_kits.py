@@ -118,11 +118,47 @@ def clean_name(name: str) -> str:
     return re.sub(r"\s+", " ", str(name or "").strip())
 
 
-def grade_label(grade: str) -> str:
+SCHOOL_RADIO_NAMES = {
+    "St. Joe's": "St. Joseph's School",
+}
+
+
+def normalize_place(name: str) -> str:
+    text = str(name or "").strip()
+    if text.lower() in {"wibaux", "wibaux / wibaux"}:
+        return "Wibaux"
+    return text
+
+
+def grade_parenthetical(grade: str) -> str:
     g = str(grade or "").strip()
     if g.upper() == "K":
-        return "kindergarten"
-    return f"grade {g}"
+        return "Kindergarten"
+    return f"Grade {g}"
+
+
+def place_for_copy(row: dict) -> str:
+    school = normalize_place(row["school_name"])
+    town = normalize_place(row["city_town"])
+    school = SCHOOL_RADIO_NAMES.get(school, school)
+    if school.lower() == town.lower():
+        return school
+    if school:
+        return school
+    return town
+
+
+def radio_athlete_ref(row: dict) -> str:
+    return f"**{clean_name(row['athlete_name'])}** of {place_for_copy(row)}"
+
+
+def pronoun(row: dict) -> str:
+    gender = str(row.get("gender") or "").strip().lower()
+    if gender.startswith("f"):
+        return "She"
+    if gender.startswith("m"):
+        return "He"
+    return "They"
 
 
 def significant_awards(major: str) -> list[str]:
@@ -206,46 +242,49 @@ def athlete_highlight_paragraph(row: dict, award: dict | None, *, state_leader: 
 
     if state_leader:
         sentences.append(
-            f"**{name} (Grade {grade})** turned in one of the most remarkable individual "
+            f"**{name} ({grade_parenthetical(grade)})** turned in one of the most remarkable individual "
             f"performances of the entire season. His **{fmt_int(shots)} counted shots** led "
             f"not only this listening area but every participant statewide. He finished at the "
             f"**{level}** level{award_phrase(major)}."
         )
         return " ".join(sentences)
 
+    place = place_for_copy(row)
     if level == "G.O.A.T.":
         sentences.append(
-            f"**{name} (Grade {grade})** became the **only statewide G.O.A.T.** finisher — "
-            f"the highest of twelve development levels — with **{fmt_int(shots)} counted shots**."
+            f"**{name} ({grade_parenthetical(grade)})** of {place} became the **only statewide G.O.A.T.** "
+            f"finisher — the highest of twelve development levels — with **{fmt_int(shots)} counted shots**."
         )
     elif level == "Pro":
         sentences.append(
-            f"**{name} (Grade {grade})** of {school} reached the **Pro** level, one step below "
+            f"**{name} ({grade_parenthetical(grade)})** of {place} reached the **Pro** level, one step below "
             f"G.O.A.T. statewide, with **{fmt_int(shots)} counted shots**."
         )
     elif shots >= 10_000:
         sentences.append(
-            f"**{name} (Grade {grade})** surpassed the **10,000-shot milestone**, finishing "
-            f"with **{fmt_int(shots)} counted shots** at the **{level}** level."
+            f"**{name} ({grade_parenthetical(grade)})** of {place} surpassed the **10,000-shot milestone**, "
+            f"finishing with **{fmt_int(shots)} counted shots** at the **{level}** level."
         )
     elif shots >= 5_000:
         sentences.append(
-            f"**{name} (Grade {grade})** recorded **{fmt_int(shots)} counted shots** and "
-            f"reached the **{level}** level."
+            f"**{name} ({grade_parenthetical(grade)})** of {place} recorded **{fmt_int(shots)} counted shots** "
+            f"and reached the **{level}** level."
         )
     else:
         sentences.append(
-            f"**{name} (Grade {grade})** demonstrated commitment throughout the season with "
-            f"**{fmt_int(shots)} counted shots**, reaching the **{level}** level."
+            f"**{name} ({grade_parenthetical(grade)})** of {place} demonstrated commitment throughout "
+            f"the season with **{fmt_int(shots)} counted shots**, reaching the **{level}** level."
         )
 
     sig = significant_awards(major)
-    if sig and level not in ("G.O.A.T.",):
+    subj = pronoun(row)
+    subj_l = subj.lower()
+    if sig and level != "G.O.A.T.":
         if len(sig) == 1:
-            sentences.append(f"{name.split()[0]} earned the **{sig[0]}**.")
+            sentences.append(f"{subj} earned the **{sig[0]}**.")
         else:
             sentences.append(
-                f"{name.split()[0]} was also recognized with the **{sig[0]}** and other season honors."
+                f"{subj} was also recognized with the **{sig[0]}** and other season honors."
             )
 
     extras: list[str] = []
@@ -265,24 +304,25 @@ def athlete_highlight_paragraph(row: dict, award: dict | None, *, state_leader: 
         extras.append(f"maintained a **{streak}-day** shooting streak")
 
     if extras:
-        who = name.split()[0]
         if len(extras) == 1:
-            sentences.append(f"{who} also {extras[0]}.")
+            sentences.append(f"{subj} also {extras[0]}.")
         elif len(extras) == 2:
-            sentences.append(f"{who} also {extras[0]} and {extras[1]}.")
+            sentences.append(f"{subj} also {extras[0]} and {extras[1]}.")
         else:
             sentences.append(
-                f"{who} also {', '.join(extras[:-1])}, and {extras[-1]}."
+                f"{subj} also {', '.join(extras[:-1])}, and {extras[-1]}."
             )
 
     return " ".join(sentences)
 
 
 def group_heading(town: str, school: str, members: list[dict]) -> str:
-    schools = {r["school_name"].strip() for r in members}
+    town = normalize_place(town)
+    school = normalize_place(school)
+    schools = {normalize_place(r["school_name"]) for r in members}
     if len(schools) == 1 and town:
         sch = next(iter(schools))
-        if sch != town:
+        if sch.lower() != town.lower():
             return f"{town} / {sch}"
     if town:
         return town
@@ -443,9 +483,9 @@ The following scripts are provided as a convenience and may be used as written, 
 
 ### Approximately 45 Seconds
 
-Young athletes from Fairfield, Greenfield, Conrad, Ledger, and surrounding north-central Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, a ten-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
+Young athletes from Fairfield, Greenfield, Conrad, Ledger, and surrounding north-central Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-Eight athletes from the KSEN listening area earned recognition during this year's challenge, highlighted by **Leyton Bakken of Fairfield**, who led the entire state with **18,110 counted shots**. **Eli Cowgill of Greenfield** also surpassed the **10,000-shot milestone**, while athletes from Conrad and Ledger demonstrated the value of consistent daily effort throughout the season.
+Eight athletes from the KSEN listening area earned recognition during this year's challenge, highlighted by **Leyton Bakken of Fairfield**, who led the entire state with **18,110 counted shots**, and **Eli Cowgill of Greenfield**, who surpassed the **10,000-shot milestone**.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -457,7 +497,7 @@ Complete athlete standings, season statistics, and award winners are available a
 
 ### Approximately 2 Minutes
 
-Young athletes from north-central Montana recently completed the annual **127 Sports Intensity – Shooting Challenge (2026)**, a ten-week offseason basketball development program that encourages young athletes to grow not only as basketball players, but also as disciplined, accountable, and confident young people.
+Young athletes from north-central Montana recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program that encourages young athletes to grow not only as basketball players, but also as disciplined, accountable, and confident young people.
 
 Unlike a traditional shooting contest, participants were recognized for complete player development. Throughout the season, athletes logged daily shooting, completed educational homework, submitted videos for coaching feedback, participated in live instructional sessions, built shooting streaks, and earned Experience Points while progressing through twelve achievement levels.
 
@@ -467,19 +507,17 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 The KSEN listening area was proudly represented by eight outstanding athletes.
 
-Fairfield's **Leyton Bakken** led the entire state with **18,110 counted shots**, while **Eli Cowgill** of Greenfield surpassed the **10,000-shot milestone** and reached the **Consistent Shooter** level.
+**Leyton Bakken** of Fairfield led the entire state with **18,110 counted shots**, while **Eli Cowgill** of Greenfield surpassed the **10,000-shot milestone** and reached the **Consistent Shooter** level.
 
-Fairfield athletes **Colton Dahl** and **Conley Dahl** were recognized for their steady commitment and improvement throughout the eleven-week challenge, while **Emmet Gustafson** of Conrad distinguished himself through outstanding all-around participation that included shooting, homework, coach-reviewed videos, and perfect attendance at the program's live instructional sessions.
+**Colton Dahl** and **Conley Dahl** of Fairfield were recognized for their steady commitment and improvement throughout the eleven-week challenge, while **Emmet Gustafson** of Conrad distinguished himself through outstanding all-around participation that included shooting, homework, coach-reviewed videos, and perfect attendance at the program's live instructional sessions.
 
 Athletes from Ledger also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 
 Complete athlete standings, season statistics, and award winners are available at:
 
+**www.fairfieldbasketballclub.com/leaderboard**
 
-
-Thank you to every athlete, parent, coach, and community that helped make the inaugural **127 Sports Intensity – Shooting Challenge (2026)** a tremendous success.
-
-**www.fairfieldbasketballclub.com/leaderboard**"""
+Thank you to every athlete, parent, coach, and community that helped make the inaugural **127 Sports Intensity – Shooting Challenge (2026)** a tremendous success."""
 
 
 def section_4(market: dict, meta: dict, athletes: list[dict], awards: dict[str, dict]) -> str:
@@ -488,19 +526,24 @@ def section_4(market: dict, meta: dict, athletes: list[dict], awards: dict[str, 
 
     local_shots = sum(int(a["total_shots_counted"]) for a in athletes)
     n = len(athletes)
+    athlete_word = "athlete" if n == 1 else "athletes"
+    count_word = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six",
+                  7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve",
+                  14: "Fourteen"}.get(n, str(n))
     intro = (
         f"The {meta['listening_area']} was well represented during the inaugural **{EVENT}**. "
-        f"{'One athlete' if n == 1 else f'{n} athletes'} representing {meta['highlights_communities']} "
+        f"{count_word} {athlete_word} representing {meta['highlights_communities']} "
         f"combined to record **{fmt_int(local_shots)} counted shots**, demonstrating the dedication "
         f"and consistent effort that define the Educational Athletics philosophy."
     )
 
-    state_top_shots = max(int(a["total_shots_counted"]) for a in athletes)
     statewide_max = 18110  # Leyton Bakken
 
-    groups: dict[str, list[dict]] = defaultdict(list)
+    groups: dict[tuple[str, str], list[dict]] = defaultdict(list)
     for a in athletes:
-        key = a["city_town"].strip() or a["school_name"].strip()
+        town = a["city_town"].strip()
+        school = a["school_name"].strip()
+        key = (town or school, school or town)
         groups[key].append(a)
 
     sorted_groups = sorted(
@@ -509,9 +552,9 @@ def section_4(market: dict, meta: dict, athletes: list[dict], awards: dict[str, 
     )
 
     body_parts: list[str] = [intro, ""]
-    for town, members in sorted_groups:
+    for (town, school), members in sorted_groups:
         members = sorted(members, key=athlete_sort_key)
-        heading = group_heading(town, members[0]["school_name"], members)
+        heading = group_heading(town, school, members)
         body_parts.append(f"### {heading}")
         body_parts.append("")
         fam = family_note(members)
@@ -539,47 +582,41 @@ def section_4(market: dict, meta: dict, athletes: list[dict], awards: dict[str, 
     return "## 4. Local Athlete Highlights\n\n" + "\n".join(body_parts).strip()
 
 
-def radio_name_phrase(row: dict) -> str:
-    name = clean_name(row["athlete_name"])
-    town = row["city_town"].strip()
-    school = row["school_name"].strip()
-    if school and town and school.lower() != town.lower():
-        place = school
-    else:
-        place = town or school
-    return f"{place}'s **{name}**"
-
-
 def radio_highlight(row: dict, award: dict | None) -> str:
     name = clean_name(row["athlete_name"])
     shots = int(row["total_shots_counted"])
     level = row["final_level"]
-    phrase = radio_name_phrase(row)
+    ref = radio_athlete_ref(row)
 
     if level == "G.O.A.T.":
         return (
-            f"{phrase}, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**"
+            f"{ref}, the state's only **G.O.A.T.**-level finisher and a **Grade Band Champion**"
         )
     if name == "Leyton Bakken":
-        return f"{phrase}, who led the entire state with **{fmt_int(shots)} counted shots**"
+        return f"{ref}, who led the entire state with **{fmt_int(shots)} counted shots**"
     if level == "Pro":
-        return f"{phrase}, who reached the **Pro** level with **{fmt_int(shots)} counted shots**"
+        return f"{ref}, who reached the **Pro** level with **{fmt_int(shots)} counted shots**"
     if shots >= 10_000:
         return (
-            f"{phrase}, who surpassed the **10,000-shot milestone** and reached the "
+            f"{ref}, who surpassed the **10,000-shot milestone** and finished at the "
             f"**{level}** level"
         )
     if shots >= 5_000:
         return (
-            f"{phrase}, who finished at the **{level}** level with **{fmt_int(shots)} counted shots**"
+            f"{ref}, who finished at the **{level}** level with **{fmt_int(shots)} counted shots**"
         )
     major = award.get("major_awards", "") if award else ""
     sig = significant_awards(major)
     if sig:
         return (
-            f"{phrase}, recognized with the **{sig[0]}** after reaching the **{level}** level"
+            f"{ref}, recognized with the **{sig[0]}** after reaching the **{level}** level"
         )
-    return f"{phrase}, who reached the **{level}** level during the eleven-week season"
+    return f"{ref}, who reached the **{level}** level"
+
+
+def on_air_feature_sentence(row: dict, award: dict | None) -> str:
+    """Full sentence for the 2-minute local feature section."""
+    return radio_highlight(row, award) + "."
 
 
 def section_5(market: dict, meta: dict, athletes: list[dict], awards: dict[str, dict]) -> str:
@@ -592,12 +629,15 @@ def section_5(market: dict, meta: dict, athletes: list[dict], awards: dict[str, 
     if len(hl) == 1:
         highlight_text = hl[0]
     elif len(hl) == 2:
-        highlight_text = f"{hl[0]}, while {hl[1]}"
+        highlight_text = f"{hl[0]} and {hl[1]}"
     else:
         highlight_text = f"{hl[0]}, {hl[1]}, and {hl[2]}"
 
     n = len(athletes)
     athlete_word = "athlete" if n == 1 else "athletes"
+    count_word = {1: "One", 2: "Two", 3: "Three", 4: "Four", 5: "Five", 6: "Six",
+                  7: "Seven", 8: "Eight", 9: "Nine", 10: "Ten", 11: "Eleven", 12: "Twelve",
+                  14: "Fourteen"}.get(n, str(n))
 
     sec45 = f"""## 5. Suggested On-Air Copy
 
@@ -607,7 +647,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from {meta['on_air_45_area']} recently completed the **{EVENT}**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-{n} {athlete_word} from the {meta['listening_area']} earned recognition during this year's challenge, highlighted by {highlight_text}.
+{count_word} {athlete_word} from the {meta['listening_area']} earned recognition during this year's challenge, highlighted by {highlight_text}.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -647,80 +687,97 @@ def build_local_on_air_paragraphs(
     athletes: list[dict],
     awards: dict[str, dict],
 ) -> str:
-  """Narrative local paragraphs for the 2-minute read."""
-  if not athletes:
-      return ""
+    if not athletes:
+        return ""
 
-  lines: list[str] = []
-  top = athletes[0]
-  aw = awards.get(top["enrollment_id"])
-  lines.append("")
-  lines.append(f"Leading the way was {radio_highlight(top, aw)}.")
+    lines: list[str] = [""]
+    top = athletes[0]
+    lines.append(on_air_feature_sentence(top, awards.get(top["enrollment_id"])))
 
-  if len(athletes) == 1:
-      name = clean_name(top["athlete_name"])
-      lines.append("")
-      lines.append(
-          f"{name}'s commitment throughout the eleven-week season reflects the perseverance "
-          "and daily habits that define Educational Athletics."
-      )
-      return "\n".join(lines)
+    if len(athletes) == 1:
+        lines.append("")
+        lines.append(
+            f"The commitment shown throughout the eleven-week season reflects the daily habits "
+            "that define Educational Athletics."
+        )
+        return "\n".join(lines)
 
-  # Second paragraph: next 1-2 standouts or thematic cluster
-  second_tier = athletes[1:4]
-  bits = [radio_highlight(a, awards.get(a["enrollment_id"])) for a in second_tier]
-  if bits:
-      lines.append("")
-      if len(bits) == 1:
-          lines.append(f"Also recognized was {bits[0]}.")
-      elif len(bits) == 2:
-          lines.append(f"Also recognized were {bits[0]} and {bits[1]}.")
-      else:
-          lines.append(
-              f"Also recognized were {bits[0]}, {bits[1]}, and {bits[2]}."
-          )
+    second_tier = athletes[1:4]
+    if len(second_tier) == 1:
+        lines.append("")
+        lines.append(
+            "Also earning recognition was "
+            + on_air_feature_sentence(second_tier[0], awards.get(second_tier[0]["enrollment_id"]))
+        )
+    elif len(second_tier) >= 2:
+        lines.append("")
+        parts = [
+            radio_highlight(a, awards.get(a["enrollment_id"]))
+            for a in second_tier
+        ]
+        if len(parts) == 2:
+            lines.append(f"Also earning recognition were {parts[0]} and {parts[1]}.")
+        else:
+            lines.append(f"Also earning recognition were {parts[0]}, {parts[1]}, and {parts[2]}.")
 
-  # Family / participation note
-  participation_athletes = [
-      a
-      for a in athletes
-      if int(a.get("homework_count") or 0) >= 2
-      or int(a.get("video_count") or 0) >= 5
-      or int(a.get("zoom_count") or 0) >= 2
-  ]
-  if participation_athletes and market["slug"] != "06-missoula":
-      a = max(
-          participation_athletes,
-          key=lambda r: (
-              int(r.get("video_count") or 0),
-              int(r.get("homework_count") or 0),
-          ),
-      )
-      nm = clean_name(a["athlete_name"])
-      town = a["city_town"].strip() or a["school_name"].strip()
-      lines.append("")
-      lines.append(
-          f"{radio_name_phrase(a)} stood out for outstanding all-around participation "
-          "including shooting, homework, coach-reviewed videos, and live instructional sessions."
-      )
+    participation_athletes = [
+        a
+        for a in athletes
+        if int(a.get("homework_count") or 0) >= 2
+        or int(a.get("video_count") or 0) >= 5
+        or int(a.get("zoom_count") or 0) >= 2
+    ]
+    if participation_athletes and market["slug"] not in {"06-missoula", "01-ksen-shelby"}:
+        a = max(
+            participation_athletes,
+            key=lambda r: (
+                int(r.get("video_count") or 0),
+                int(r.get("homework_count") or 0),
+            ),
+        )
+        ref = radio_athlete_ref(a)
+        lines.append("")
+        lines.append(
+            f"{ref} also earned recognition for well-rounded participation, including "
+            f"shooting, homework, coach-reviewed videos, and live instructional sessions."
+        )
 
-  if len(athletes) > 4:
-      lines.append("")
-      lines.append(
-          f"Additional athletes from {meta['highlights_communities']} also demonstrated the "
-          "perseverance and commitment that define the Educational Athletics philosophy, proving "
-          "that success is measured not only by statistics, but by the willingness to improve "
-          "one day at a time."
-      )
-  elif len(athletes) > 1:
-      lines.append("")
-      lines.append(
-          "Athletes throughout the listening area demonstrated the perseverance and commitment "
-          "that define the Educational Athletics philosophy, proving that success is measured "
-          "not only by statistics, but by the willingness to improve one day at a time."
-      )
+    if len(athletes) > 4:
+        lines.append("")
+        lines.append(
+            f"Additional athletes from {meta['highlights_communities']} also demonstrated the "
+            "perseverance and commitment that define the Educational Athletics philosophy, proving "
+            "that success is measured not only by statistics, but by the willingness to improve "
+            "one day at a time."
+        )
+    elif len(athletes) > 1:
+        lines.append("")
+        lines.append(
+            "Athletes throughout the listening area demonstrated the perseverance and commitment "
+            "that define the Educational Athletics philosophy, proving that success is measured "
+            "not only by statistics, but by the willingness to improve one day at a time."
+        )
 
-  return "\n".join(lines)
+    return "\n".join(lines)
+
+
+def email_to_station(market: dict) -> str:
+    return f"""Subject: Local Student-Athletes Recognized in the 127 Sports Intensity – Shooting Challenge (2026)
+
+Hello,
+
+I'm Mike Schmidt, Founder & Director of 127 Sports Intensity. I'm reaching out to share a radio media kit highlighting student-athletes from your listening area who completed the 127 Sports Intensity – Shooting Challenge (2026).
+
+The attached media kit includes program background, statewide statistics, local athlete highlights, and ready-to-use 45-second and 2-minute radio reads you may use on air as written or adapt to fit your format.
+
+Interviews are available on request. Complete athlete standings and season statistics are at {LEADERBOARD}.
+
+Thank you for considering coverage of youth basketball development in our communities.
+
+Mike Schmidt
+Founder & Director
+127 Sports Intensity
+"""
 
 
 def build_kit(market: dict, athletes: list[dict], awards: dict[str, dict]) -> str:
@@ -759,6 +816,14 @@ def run_qa(kits: list[dict]) -> str:
         "Frozen for this release",
         "[anchor name]",
         "[station name]",
+        "Coach Mike Schmidt",
+        "Leading the way was",
+        "Also recognized were",
+        "Also recognized was",
+        "stood out for outstanding",
+        "'s's",
+        "Grade K)",
+        "ten-week",
     ]
     old_patterns = [r"\[[^\]]+\]\(https?://"]
 
@@ -892,6 +957,9 @@ def main() -> None:
         resolved.sort(key=athlete_sort_key)
         kit_text = build_kit(market, resolved, awards)
         (folder / "RADIO-MEDIA-KIT.md").write_text(kit_text, encoding="utf-8", newline="\n")
+        (folder / "EMAIL-TO-STATION.txt").write_text(
+            email_to_station(market), encoding="utf-8", newline="\n"
+        )
 
         kits_meta.append(
             {

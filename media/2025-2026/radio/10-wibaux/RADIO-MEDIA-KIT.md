@@ -112,25 +112,23 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Wibaux Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 6 athletes representing Wibaux, Glendive, and eastern Montana combined to record **24,915 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Wibaux Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Six athletes representing Wibaux, Glendive, and eastern Montana combined to record **24,915 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Wibaux
 
-**Jordyn Nelson (Grade 4)** demonstrated commitment throughout the season with **4,300 counted shots**, reaching the **Consistent Shooter** level.
+The **Helvik** family was among the standouts from Wibaux, with multiple athletes earning recognition for their offseason commitment.
 
-**Jack Nelson (Grade 6)** recorded **5,865 counted shots** and reached the **Developing Shooter** level.
+**Jordyn Nelson (Grade 4)** of Wibaux demonstrated commitment throughout the season with **4,300 counted shots**, reaching the **Consistent Shooter** level.
 
-**Jamesy Helvik (Grade 9)** demonstrated commitment throughout the season with **4,250 counted shots**, reaching the **Developing Shooter** level. Jamesy earned the **Grade Band Third Place Award**. Jamesy also earned coach feedback on **1** video.
+**Jack Nelson (Grade 6)** of Wibaux recorded **5,865 counted shots** and reached the **Developing Shooter** level.
 
-**Josalin Helvik (Grade 9)** demonstrated commitment throughout the season with **3,300 counted shots**, reaching the **Rookie Shooter** level. Josalin also earned coach feedback on **1** video.
+**Jamesy Helvik (Grade 9)** of Wibaux demonstrated commitment throughout the season with **4,250 counted shots**, reaching the **Developing Shooter** level. Jamesy earned the **Grade Band Third Place Award** and earned coach feedback on **1** video.
 
-### WIbaux / Wibaux
+**Josalin Helvik (Grade 9)** of Wibaux demonstrated commitment throughout the season with **3,300 counted shots**, reaching the **Rookie Shooter** level. Josalin earned coach feedback on **1** video.
 
-The **Helvik** family was among the standouts from WIbaux / Wibaux, with multiple athletes earning recognition for their offseason commitment.
+**Alec Helvik (Grade 12)** of Wibaux demonstrated commitment throughout the season with **4,550 counted shots**, reaching the **Developing Shooter** level. Alec earned coach feedback on **1** video and maintained a **10-day** shooting streak.
 
-**Alec Helvik (Grade 12)** demonstrated commitment throughout the season with **4,550 counted shots**, reaching the **Developing Shooter** level. Alec also earned coach feedback on **1** video and maintained a **10-day** shooting streak.
-
-**Jolie Helvik (Grade 8)** demonstrated commitment throughout the season with **2,650 counted shots**, reaching the **Developing Shooter** level. Jolie also earned coach feedback on **1** video.
+**Jolie Helvik (Grade 8)** of Wibaux demonstrated commitment throughout the season with **2,650 counted shots**, reaching the **Developing Shooter** level. Jolie earned coach feedback on **1** video.
 
 
 Whether recording a few hundred shots or more than eighteen thousand, every athlete in the Wibaux Radio listening area represented their family, school, and community with dedication, perseverance, and a commitment to becoming better both on and off the basketball court.
@@ -143,7 +141,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Wibaux, Glendive, and eastern Montana communities recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-6 athletes from the Wibaux Radio listening area earned recognition during this year's challenge, highlighted by Wibaux's **Jordyn Nelson**, who reached the **Consistent Shooter** level during the eleven-week season, Wibaux's **Jack Nelson**, who finished at the **Developing Shooter** level with **5,865 counted shots**, and WIbaux's **Alec Helvik**, who reached the **Developing Shooter** level during the eleven-week season.
+Six athletes from the Wibaux Radio listening area earned recognition during this year's challenge, highlighted by **Jordyn Nelson of Wibaux**, who reached the **Consistent Shooter** level, **Jack Nelson of Wibaux**, who finished at the **Developing Shooter** level with **5,865 counted shots**, and **Alec Helvik of Wibaux**, who reached the **Developing Shooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -163,10 +161,11 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Wibaux Radio listening area was proudly represented by 6 outstanding athletes.
-Leading the way was Wibaux's **Jordyn Nelson**, who reached the **Consistent Shooter** level during the eleven-week season.
+The Wibaux Radio listening area was proudly represented by six outstanding athletes.
 
-Also recognized were Wibaux's **Jack Nelson**, who finished at the **Developing Shooter** level with **5,865 counted shots**, WIbaux's **Alec Helvik**, who reached the **Developing Shooter** level during the eleven-week season, and Wibaux's **Jamesy Helvik**, recognized with the **Grade Band Third Place Award** after reaching the **Developing Shooter** level.
+**Jordyn Nelson** of Wibaux, who reached the **Consistent Shooter** level.
+
+Also earning recognition were **Jack Nelson** of Wibaux, who finished at the **Developing Shooter** level with **5,865 counted shots**, **Alec Helvik** of Wibaux, who reached the **Developing Shooter** level, and **Jamesy Helvik** of Wibaux, recognized with the **Grade Band Third Place Award** after reaching the **Developing Shooter** level.
 
 Additional athletes from Wibaux, Glendive, and eastern Montana also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

@@ -112,7 +112,7 @@ While those accomplishments are impressive, the greatest success of the **127 Sp
 
 ## 4. Local Athlete Highlights
 
-The Bozeman / Manhattan Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. 14 athletes representing Bozeman, Manhattan, Belgrade, and Gallatin Valley communities combined to record **65,519 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
+The Bozeman / Manhattan Radio listening area was well represented during the inaugural **127 Sports Intensity – Shooting Challenge (2026)**. Fourteen athletes representing Bozeman, Manhattan, Belgrade, and Gallatin Valley communities combined to record **65,519 counted shots**, demonstrating the dedication and consistent effort that define the Educational Athletics philosophy.
 
 ### Manhattan / Manhattan Christian
 
@@ -159,7 +159,7 @@ The following scripts are provided as a convenience and may be used as written, 
 
 Young athletes from Bozeman, Manhattan, Belgrade, and the Gallatin Valley recently completed the **127 Sports Intensity – Shooting Challenge (2026)**, an eleven-week offseason basketball development program designed to improve basketball skills while teaching discipline, accountability, and consistency.
 
-14 athletes from the Bozeman / Manhattan Radio listening area earned recognition during this year's challenge, highlighted by Manhattan Christian's **Lyle Kimm**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level, Manhattan Christian's **Jackson Elders**, who finished at the **Sharpshooter** level with **5,100 counted shots**, and Manhattan Christian's **Koen Kimm**, recognized with the **Grade Band Third Place Award** after reaching the **Sharpshooter** level.
+Fourteen athletes from the Bozeman / Manhattan Radio listening area earned recognition during this year's challenge, highlighted by **Lyle Kimm of Manhattan Christian**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level, **Jackson Elders of Manhattan Christian**, who finished at the **Sharpshooter** level with **5,100 counted shots**, and **Koen Kimm of Manhattan Christian**, recognized with the **Grade Band Third Place Award** after reaching the **Sharpshooter** level.
 
 The challenge is built on the belief that great athletes are developed through consistent daily habits—not occasional great performances.
 
@@ -179,12 +179,13 @@ This year's challenge brought together **91 athletes** representing **28 schools
 
 **[OPTIONAL COMMERCIAL BREAK]**
 
-The Bozeman / Manhattan Radio listening area was proudly represented by 14 outstanding athletes.
-Leading the way was Manhattan Christian's **Lyle Kimm**, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
+The Bozeman / Manhattan Radio listening area was proudly represented by fourteen outstanding athletes.
 
-Also recognized were Manhattan Christian's **Jackson Elders**, who finished at the **Sharpshooter** level with **5,100 counted shots**, Manhattan Christian's **Koen Kimm**, recognized with the **Grade Band Third Place Award** after reaching the **Sharpshooter** level, and Manhattan Christian's **Kinsley Heidema**, who finished at the **Hot Hand** level with **8,423 counted shots**.
+**Lyle Kimm** of Manhattan Christian, who surpassed the **10,000-shot milestone** and reached the **Sharpshooter** level.
 
-Manhattan Christian's **Jackson Elders** stood out for outstanding all-around participation including shooting, homework, coach-reviewed videos, and live instructional sessions.
+Also earning recognition were **Jackson Elders** of Manhattan Christian, who finished at the **Sharpshooter** level with **5,100 counted shots**, **Koen Kimm** of Manhattan Christian, recognized with the **Grade Band Third Place Award** after reaching the **Sharpshooter** level, and **Kinsley Heidema** of Manhattan Christian, who finished at the **Hot Hand** level with **8,423 counted shots**.
+
+**Jackson Elders** of Manhattan Christian also earned recognition for well-rounded participation, including shooting, homework, coach-reviewed videos, and live instructional sessions.
 
 Additional athletes from Bozeman, Manhattan, Belgrade, and Gallatin Valley communities also demonstrated the perseverance and commitment that define the Educational Athletics philosophy, proving that success is measured not only by statistics, but by the willingness to improve one day at a time.
 

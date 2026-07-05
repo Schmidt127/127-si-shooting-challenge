@@ -1,0 +1,39 @@
+---
+description: Prevent Mike from working in the wrong phase, tool, repo, or path
+alwaysApply: true
+---
+
+# Workflow guardrails — Mike / ChatGPT / Cursor
+
+Authority: [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development-standards.md)
+
+## Every new task (Cursor)
+
+1. Output **Task Classification** first (include Phase, Correct tool, Repo, Mike's role).
+2. If the request is outside Cursor's scope, output **Workspace Check** and redirect — do not proceed silently.
+
+## Redirect (do not implement here)
+
+| Request | Send to |
+|---------|---------|
+| Planning, requirements, copy, Phase 4 review | **ChatGPT** |
+| Code/audits/commits with no backlog ID or unapproved Phase 2 plan | Stop — ask Mike for ID + approval |
+| Backlog edits | `docs/v2-change-backlog.md` only (not Master Plan Brief) |
+| Hoop landing, JR Ref | Wrong repo — not `127-si-shooting-challenge` |
+
+## Cursor scope only
+
+Phase 3 (Implementation) and Phase 5 (Close). `airtable/`, `web/`, `tools/`, `make/`, audits, commits when Mike asks.
+
+## Workspace Check template
+
+```
+Workspace Check
+You are in the wrong area if you proceed here.
+Current request:
+Correct phase:
+Correct tool:
+Correct repo:
+What Mike should do instead:
+What to open / paste:
+```

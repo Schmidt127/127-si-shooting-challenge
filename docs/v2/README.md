@@ -1,6 +1,6 @@
 # Shooting Challenge v2 — Documentation pack
 
-**Status:** Numbered pack. **01 Constitution** and **03 Engine contract** are active; others are thin shells until expanded.
+**Status:** Numbered pack. **01 Constitution**, **03 Engine contract**, and **04 AI Development Standards** are active; others are shells until expanded.
 
 **Source of truth:** GitHub. Re-upload after meaningful commits.
 
@@ -15,7 +15,7 @@
 | 03 | [03-business-rules.md](./03-business-rules.md) | **Engine contract** (Layer 1) — platform behavior only |
 | — | [season-configuration-design.md](./season-configuration-design.md) | **DRAFT** — gate spread / season tuning (Layer 2) |
 | — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Worksheet — example level names; numbers TBD |
-| 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | Shell |
+| 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | **Active** — three-role workflow, five phases, task classification, **workspace guardrails** |
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
 | 06 | [06-automation-standards.md](./06-automation-standards.md) | Shell |
 | 07 | [07-ui-standards.md](./07-ui-standards.md) | Shell |
@@ -30,12 +30,28 @@
 | [../../CHANGELOG.md](../../CHANGELOG.md) | Production release history |
 | [../../AGENTS.md](../../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Full documentation index |
+| [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Consolidated backlog for ChatGPT master planning |
 
-## Workflow: ChatGPT + Cursor
+## Workflow: Mike + ChatGPT + Cursor
 
-1. **ChatGPT** — Draft or expand numbered docs (03 engine contract done; 04+ next).
-2. **GitHub** — Save markdown in this folder; commit.
-3. **ChatGPT Project Sources** — Import all files from [chatgpt-sources/](./chatgpt-sources/) (run `tools/docs/sync-chatgpt-sources.ps1` after doc commits).
-4. **Cursor** — Apply repo changes, code, audits when credits allow.
+Permanent operating procedure: **[04-ai-development-standards.md](./04-ai-development-standards.md)**
 
-Existing long-form docs under `docs/` are **not renamed or removed** until each v2 file is fully written.
+| Role | Responsibility |
+|------|----------------|
+| **Mike** | Product Owner — final decisions, approves scope and commits |
+| **ChatGPT** | Architect, planner, reviewer, docs, business analyst, copy |
+| **Cursor** | Engineer — repo edits, code, audits, testing, commits |
+
+**Five phases:** Idea → Planning → Implementation → Review → Close
+
+**Guardrails:** Both tools output **Task Classification** + **Workspace Check** when Mike is in the wrong phase, tool, repo, or path. See doc 04 § Workspace guardrails.
+
+**Live backlog:** [v2-change-backlog.md](../v2-change-backlog.md) · **Planning aggregate:** [CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md)
+
+1. **ChatGPT** — Phases 1, 2, 4 (plan, document, review). Import [chatgpt-sources/](../chatgpt-sources/).
+2. **Cursor** — Phases 3, 5 (implement, commit). Run sync script after doc commits.
+3. **Mike** — Approves at every phase gate.
+
+```powershell
+.\tools\docs\sync-chatgpt-sources.ps1
+```
