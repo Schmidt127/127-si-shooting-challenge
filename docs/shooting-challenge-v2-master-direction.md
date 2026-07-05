@@ -2,7 +2,7 @@
 
 **Status:** Constitution document — read this before any V2 feature, rule change, or automation work.  
 **Target season:** May 1, 2027 – June 30, 2027 (`2026-2027`)  
-**Last updated:** 2026-07-03
+**Last updated:** 2026-07-05
 
 **Architecture:** The platform is a **configurable game engine** — see [v2/01-constitution.md](./v2/01-constitution.md) (four layers) and [v2/03-business-rules.md](./v2/03-business-rules.md) (engine contract). This document covers **season direction** and locked 2026–27 decisions, not engine behavior.
 
@@ -33,7 +33,7 @@ These are **decided** for the 2026–27 season. Do not reopen during build unles
 | **Revisit dual-track only if needed** | If better communication + platform reliability **still** cause major parent friction after 2026–27, **then** consider architectural changes — not now. |
 | **Config over scripts** | Game math and tunable rules belong in **Levels**, **Level Gate Rules**, **XP Reward Rules**, and related tables — not hardcoded in automations. See [config vs code](./shooting-challenge-v2-config-vs-code.md). |
 | **Numbers later** | Do **not** lock final XP and level thresholds in planning docs now. Tune config tables in Q1 2027; manual and website publish from those tables before Day 1. |
-| **Season base** | **Archive** 2025–26 base (read-only). **Clone** for 2026–27; **delete season data** in clone; **keep** config/rules tables. Details: [base cutover plan](./shooting-challenge-v2-base-cutover.md). |
+| **Season base** | **Revised 2026-07-05:** **One base + Program Instance** per program year (**V2-013**) — not separate bases per season. Prior archive+clone plan: [base cutover plan](./shooting-challenge-v2-base-cutover.md) (**superseded**). |
 | **GitHub** | **No fork** for season rollover — tag `season-2025-26-final`, continue V2 on `master`. Separate repo only for other programs (e.g. Dribble). |
 
 ---

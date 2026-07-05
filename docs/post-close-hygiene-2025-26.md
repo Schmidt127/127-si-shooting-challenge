@@ -2,9 +2,11 @@
 
 **Purpose:** Record cleanup and automation fixes discovered during **2025–26 close-out audits** (July 2026). Use this after final emails and Amazon fulfillment are done — not blockers for close-out itself.
 
-**Last verified:** 2026-07-05 (H-001 audit fix applied; H-002 066 v3.0 in GitHub for review)
+**Last verified:** 2026-07-05 (H-001 **done**; H-002 **066 v3.1 GitHub done**, Airtable paste pending)
 
 **Related:** [close-out-considerations.md](./close-out-considerations.md) (watchlist IDs C-006, C-011, C-012+) · [audits README](../airtable/extension-scripts/audits/README.md) · [PROJECT_STATE.md](./PROJECT_STATE.md)
+
+**Wave 0:** **Closed 2026-07-05.**
 
 ---
 
@@ -18,7 +20,7 @@ Run in Airtable Scripting; JSON saved from console.
 | 2 | `audit-final-goal-conquer-reconciliation.js` | **PASS** | 14/14 Goal Met ↔ Conquered Goal aligned |
 | 3 | `audit-final-awards-catalog-quick.js` | **PASS** (close-out) | `needConqueredRow: 0`; 49 scope mismatches — see **H-003** |
 | 4 | `audit-final-awards-cart-summary.js` | **PASS** | **70** rows, **$595** gift cards, 8 award types |
-| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | **Hygiene only** | 9 duplicate unlock groups — see **H-001**; XP parity clean |
+| 5 | `audit-final-090f-athlete-achievement-unlocks-workflow.js` | **PASS** (v1.1, 2026-07-05) | Audit dedupe fixed — see **H-001**; 0 data deleted |
 | 6 | `audit-final-090g-weekly-summary-email-workflow.js` | **Reviewed** (2026-07-02) | See **H-005** — do not retro-send missed weeklies; use final summary email |
 
 **Historical repair already done:** Wrong **Award** links on ~91 Award Recipients rows; Blake/Riley Week 8 homework duplicates removed. Reference CSV: `Award Recipients-Grid view from June 29 FINAL.csv`.
@@ -29,49 +31,40 @@ Run in Airtable Scripting; JSON saved from console.
 
 Priority: **High** = fix before next season · **Medium** = data hygiene · **Low** = optional / cosmetic
 
-### H-001 — Dedupe Athlete Achievement Unlock rows (Medium)
+### H-001 — Fix 090F Athlete Achievement Unlock audit (Medium) — **DONE**
 
 **Found by:** `audit-final-090f-athlete-achievement-unlocks-workflow.js` (2026-07-02)
 
-**Re-audit 2026-07-05 (live API, read-only):** The 9 flagged groups are **not duplicate unlock rows**. Each group is **Enrollment + same Shot Milestone achievement + same Week** with **different `Shot Milestone` links** and **unique `Milestone Source Key`** values (0 source-key duplicates). Each row has its own XP Event. This is **expected** when multiple shot milestones cross in the same week — they all link achievement `reclgScxpCba3m1Mo` (generic “Shot Milestone” achievement).
+**Outcome:** The 9 flagged groups were **not duplicate unlock rows**. Each group is **Enrollment + same Shot Milestone achievement + same Week** with **different `Shot Milestone` links** and **unique `Milestone Source Key`** values. Multiple shot milestones crossing in the same week is **legitimate**.
 
-**Do not delete** any of these rows. **Fix the audit**, not the data.
+**Engineering principle:** **Fix the audit, not the data.**
 
-**Resolved 2026-07-05 (Mike approved — fix audit, not data):**
+**Resolved 2026-07-05:**
 
 1. Updated `audit-final-090f-athlete-achievement-unlocks-workflow.js` (v1.1) and `run_final_090_audits.py`.
-2. Shot milestone unlocks: dedupe on **`Milestone Source Key`** only. Non-shot: Enrollment + Achievement + Week.
-3. Live re-run **090F PASS** (Python, 2026-07-05). **Zero rows deleted.**
+2. **Shot milestones:** dedupe on **`Milestone Source Key`** only.
+3. **Other achievements:** Enrollment + Achievement + Week.
+4. Live re-run **090F PASS** (Airtable + Python). **Zero rows deleted.**
 
-**Historical table (2026-07-02)** — same enrollment/week groups; live dry-run JSON: `tools/airtable/_preview/h001-090f-dry-run.json`
+**Watchlist:** [close-out-considerations.md](./close-out-considerations.md) **C-006** → resolved
 
-| Enrollment ID | Week ID (3rd part of comboKey) | Dup count | Unlock record IDs |
-|---------------|-------------------------------|-----------|-------------------|
-| `recQiRUbTKZ5Wiz7B` | `recZwSGoAiERDdTMr` | 2 | `rec9HvrspXPIQijWU`, `rec87XSUgBDUq6Ou1` |
-| `rechgOSWWFsOivzhX` | `recnMGC2JBHjO0ay6` | 5 | `recOMxdSiuDlctOAR`, `recW8qCgBQlESC5iq`, `rec00VRhnV8Qhexog`, `recDwfnDw758GJznx`, `recJY2Wpa763vqM5Z` |
-| `rechgOSWWFsOivzhX` | `recZwSGoAiERDdTMr` | 3 | `reca0VqvGAtBcUn2m`, `recbjG82txFMn0xxs`, `recje8OQ2kv1JwiYH` |
-| `recAHTFTFc2q4y59i` | `recnMGC2JBHjO0ay6` | 2 | `recMyR44ID7Hklvax`, `recrG1B0bTfXCvQie` |
-| `recAHTFTFc2q4y59i` | `recaX4EyJ7BWWKfSq` | 2 | `recbQKgNyXRONHp4p`, `recsTbNvhHcbdpUI3` |
-| `recAHTFTFc2q4y59i` | `recEYLwDOOYMMsDNf` | 2 | `recUFrhMYEri8RSWl`, `recaRv8zCoOrDFizD` |
-| `recKlYEzTwrMaau6B` | `recbw58r8MlnhbBx7` | 2 | `recHUEQ4RjYYAPqaK`, `reckMQb6wE4cF8zmk` |
-| `recvMhReNktxj1Txk` | `recNmS6xlp3HOWPAE` | 2 | `recGsYX4h3isuKSF9`, `recG1ShTMcXuDVH3u` |
-| `recZm4wl6E5ePN2rb` | `recrTwxqXz31fNZ7e` | 4 | `recW96E4Tp7Pn5I75`, `recqF0EElx4ofNSnP`, `recXvyBgupVg2JFiI`, `recGcAaD6mP9D1AB5` |
+### H-002 — Automation 066: V2 rewrite + Week write (High) — **GitHub DONE**
 
-**Watchlist:** [close-out-considerations.md](./close-out-considerations.md) **C-006**
+**Found by:** 090F audit + Week resolution review
 
----
+**Re-audit 2026-07-05:** **0** shot-milestone unlocks with empty Week on active enrollments.
 
-### H-002 — Automation 066: write Week on shot-milestone unlocks (High)
+**Fix:** Automation **066** rewritten to **v3.1** (V2 Automation Standard) in GitHub — commit `45b17d7`:
 
-**Found by:** 090F audit + Week 9 cohort review
+- SCRIPT metadata + CONFIG blocks
+- Week write from Milestone Activity Date via Weeks table ranges
+- Batched create/update (50)
+- Idempotent Milestone Source Key
+- Standard outputs (`statusOut`, `actionOut`, `debugStep`, etc.)
 
-**Re-audit 2026-07-05:** **0** shot-milestone unlocks with empty Week on active enrollments. Historical backfill (`backfill-shot-milestone-xp-week-and-was.js`) or prior writes already populated Week. **`repair-final-090f-unlock-week-from-source.js`** would report **0 candidates** today.
+**066 v3.1** is the **canonical template** for future V2 automation rewrites — see [v2/06-automation-standards.md](./v2/06-automation-standards.md).
 
-**Issue (forward-looking):** Production Airtable still runs pre-v3.0 **066** until Mike pastes GitHub v3.0. **058** sets Week from WAS; without v3.0 deploy, new 2026–27 unlocks could lack Week until backfill.
-
-**Fix:** Automation **066** rewritten to **v3.0** (V2 Automation Standard) in GitHub — writes Week from Milestone Activity Date via Weeks table ranges. **Awaiting Mike review before Airtable paste.**
-
-**Status:** GitHub ready for review · production paste **not done**
+**Status:** GitHub **done** · production Airtable paste **not done** (awaiting deploy checklist)
 
 ---
 
@@ -165,7 +158,7 @@ These overlap with hygiene but are **separate projects** — start after July 20
 ## Re-verification checklist (post-season)
 
 ```text
-1. audit-final-090f-athlete-achievement-unlocks-workflow.js  → duplicate groups = 0
+1. audit-final-090f-athlete-achievement-unlocks-workflow.js  → PASS (v1.1 — Source Key dedupe)
 2. audit-final-awards-catalog-quick.js                         → optional scope cleanup
 3. audit-final-090g-weekly-summary-email-workflow.js           → after any 072/074 changes
 4. audit-field-coverage-report.js + stage-j doc                → field cleanup Phase 3–5

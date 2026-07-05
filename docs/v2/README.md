@@ -1,6 +1,8 @@
 # Shooting Challenge v2 — Documentation pack
 
-**Status:** Numbered pack. **01 Constitution**, **03 Engine contract**, and **04 AI Development Standards** are active; others are shells until expanded.
+**Status:** Numbered pack. **01**, **03**, **04**, **06**, and **08** are active; others are shells until expanded.
+
+**Wave 0 (2025–26 close-out):** **Closed 2026-07-05.**
 
 **Source of truth:** GitHub. Re-upload after meaningful commits.
 

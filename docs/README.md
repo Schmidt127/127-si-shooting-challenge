@@ -26,7 +26,11 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | 03 | [v2/03-business-rules.md](./v2/03-business-rules.md) | **Engine contract** — platform behavior only |
 | 04 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — AI workflow, task classification, five phases |
 | — | [v2/season-configuration-design.md](./v2/season-configuration-design.md) | Season gate design (Layer 2, DRAFT) |
-| 05–09 | [v2/](./v2/) | Shell |
+| 05 | [v2/05-system-architecture.md](./v2/05-system-architecture.md) | Shell |
+| 06 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference |
+| 07 | [v2/07-ui-standards.md](./v2/07-ui-standards.md) | Shell |
+| 08 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Active** — audit-first; **fix the audit, not the data** |
+| 09 | [v2/09-release-notes.md](./v2/09-release-notes.md) | Shell — points to CHANGELOG |
 
 Legacy long-form docs below remain canonical until each v2 file is fully expanded.
 
@@ -44,7 +48,10 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [asset-storage-migration.md](./asset-storage-migration.md) | **AWS S3 + canonical URLs** — retire Drive/Airtable attachments (C-013) |
 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) | Fillout validation, flexible Weeks, test sandbox, Test Intake (C-017–C-020) |
 | [platform-config-improvements.md](./platform-config-improvements.md) | Grade bands + public display fields (C-021, C-022) |
-| [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, append new items here |
+| [v2-change-backlog.md](./v2-change-backlog.md) | **Owner change list** — all requests, dependency waves, **V2-013 Program Instance** |
+| [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
+| [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.1 reference |
+| [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
 
 ---
 
