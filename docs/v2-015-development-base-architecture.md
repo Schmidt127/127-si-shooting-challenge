@@ -2,7 +2,7 @@
 
 **Backlog ID:** V2-015  
 **Status:** **Ready — in progress** — `appTetnuCZlCZdTCT`; **not complete** until **066 v3.1** tested in DEV  
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (structural promote-as-you-go — DEV first, Production soon after approval)
 
 **Setup runbook:** [development-base-setup.md](./development-base-setup.md)
 
@@ -154,7 +154,7 @@ flowchart TB
 |------|------------|
 | **Two base IDs** in PAT, docs, Make | Record in [PROJECT_STATE.md](./PROJECT_STATE.md); `.env` / `.env.local` for dev |
 | **Schema drift** dev ≠ prod | **Refresh policy** — re-clone or sync schema from prod before major waves (see below) |
-| **Double paste** (dev → prod) | Explicit promote checklist; only after audit + sandbox test pass |
+| **Double paste** (dev → prod) | Explicit promote checklist; promote **soon after** dev pass — not end-of-project batch ([Structural promote-as-you-go](#structural-promote-as-you-go-permanent-rule)) |
 | **Make scenario duplication** | Dev clone of each webhook scenario; blueprint exports in repo name both |
 | **Airtable plan limits** | One extra base on workspace — acceptable for national-scale ops |
 
@@ -164,6 +164,58 @@ flowchart TB
 - **Not a substitute for GitHub** — automations still commit to repo first
 - **Not where historical seasons live** — production holds V2-013 multi-year history
 - **Not Lambda** — stays within Airtable + Make + GitHub stack (consistent with V2-014 deferral)
+
+---
+
+## Structural promote-as-you-go (permanent rule)
+
+> **DEV first. Production soon after approval. Not Production last.**
+
+Approved **structural** changes should be promoted to Production **soon after** they pass DEV testing. Do not wait until the end of Phase 2 or a big launch to update Production schema — batching increases the risk of **missing changes** and **widening dev/prod drift**.
+
+This complements the promotion documentation standard in [doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required): DEV is the lab; GitHub holds the promotion contract; Production receives approved structure **incrementally**, not all at once at project end.
+
+### Workflow
+
+| Step | Action |
+|------|--------|
+| 1 | **Build/test in DEV** — schema, automations, views, interfaces, config structure |
+| 2 | **Confirm result** — audit dry-run, sandbox record, Mike review |
+| 3 | **Document exact Production promotion steps** — `docs/deploy-checklists/` ([template](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md)) |
+| 4 | **Apply approved structural change to Production** — follow the promotion doc only |
+| 5 | **Update GitHub docs and `CHANGELOG.md`** — when production-impacting |
+
+**Timing:** After step 2 passes and step 3 is committed, step 4 should happen in the **same wave or the next approved wave** — not deferred to end-of-project.
+
+### Move to Production as we go
+
+Promote these to Production soon after DEV pass + Mike approval:
+
+| Category | Notes |
+|----------|-------|
+| **Fields** | New columns, link fields, single-select options (when structural) |
+| **Formulas** | After plain/link fields exist on prod |
+| **Views** | Coach, ops, audit, web-facing view definitions |
+| **Interfaces** | Layout and record-detail structure |
+| **Automation trigger changes** | Merge, retire, rewire — after dev trigger test |
+| **Automation script updates** | Same committed script text as DEV paste |
+| **Config table structure** | New columns on Levels, Gates, XP Rules, etc. — not tuning values |
+
+### Do not move until launch / dedicated wave
+
+Hold these in DEV (or docs-only) until an explicit launch or cutover wave with rollback plan:
+
+| Category | Why wait |
+|----------|----------|
+| **2026–2027 gameplay numbers** | Season-specific; not structural |
+| **XP tuning** | Alters live scoring behavior |
+| **Level / gate requirements** | Alters progression behavior |
+| **New season records** | Program Instance / enrollment rows for go-live |
+| **Bulk data imports** | Operational cutover, not schema |
+| **Make / Fillout cutovers** | External integration switch — dedicated wave |
+| **Changes that could alter historical reporting** | Require rollback plan before prod |
+
+**Rule of thumb:** If it changes **shape** of the base (tables, fields, automations, views), promote as we go. If it changes **live behavior or season data** for athletes/parents, wait for the dedicated wave.
 
 ---
 
@@ -197,9 +249,12 @@ Category **D** automations ([V2-014](./v2-014-automation-modernization-roadmap.m
 
 ### Schema / fields / views
 
+Governed by [Structural promote-as-you-go](#structural-promote-as-you-go-permanent-rule): promote structure to prod soon after DEV pass — do not accumulate until project end.
+
 | Change | Workflow |
 |--------|----------|
 | New field, formula, view | Prototype in **dev** (OMNI or manual) |
+| DEV test passed | Confirm result; promote **soon** — same or next approved wave |
 | Promotion documented | Cursor writes steps in `docs/deploy-checklists/` ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
 | Stage K ownership confirmed | Apply to **prod** using promotion doc only — not from memory |
 | Destructive (delete table/field) | Dev only until C-012 sign-off |
@@ -294,6 +349,7 @@ Prevent schema drift:
 |---------|--------|
 | **Before major Phase 2 wave** (066 deploy, EMC, merge) | Duplicate prod → dev **or** schema export diff |
 | **After prod schema change** (Stage K field add) | Mirror to dev within 1 week |
+| **After dev structural change approved** | Promote to prod **soon** — do not defer to end of Phase 2 |
 | **Quarterly** | Optional full refresh; wipe dev operational data, keep config |
 | **Never** | Copy dev schema → prod without review |
 
@@ -333,3 +389,4 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 2026-07-05 | V2-015 initial architecture evaluation and recommendation |
 | 2026-07-05 | Dev base ID recorded: `appTetnuCZlCZdTCT` |
 | 2026-07-05 | DEV ready — 6 test enrollments retained; all other enrollments removed; prod unchanged; 066 dev test pending |
+| 2026-07-05 | **Structural promote-as-you-go** — DEV first; Production soon after approval; not Production last |
