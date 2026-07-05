@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; V2-013 queued)
+Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; **V2-014** active; V2-013 queued)
 
 ---
 
@@ -15,6 +15,7 @@ Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 complete; V2-013 queued
 | **H-002 — Automation 066 v3.1** | **GitHub complete** (`45b17d7`); V2 reference template; **Airtable paste pending** Mike approval |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
+| **Phase 2 — Platform Modernization** | **Current** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation inventory + capacity roadmap |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
 **Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
@@ -118,6 +119,17 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **066 v3.1** | First V2-standard automation — SCRIPT/CONFIG split, batched writes, Week resolution, idempotent Source Key |
 | **Doc 06** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) **Active** — 066 is canonical template |
 | **Commit** | `45b17d7` — `docs: set 066 v3.1 as V2 automation standard` |
+
+### Automation capacity (V2-014)
+
+| Item | Status |
+|------|--------|
+| **Airtable limit** | 50 automations per base |
+| **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
+| **012** | **Deleted** — legacy, unused (+1 slot) |
+| **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
+| **066 deploy** | GitHub v3.1 ready; **Airtable paste pending** Mike approval |
+| **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — ~12 slots recoverable via merges + EMC |
 
 ### Multi-year architecture (2026-07-05 decision)
 

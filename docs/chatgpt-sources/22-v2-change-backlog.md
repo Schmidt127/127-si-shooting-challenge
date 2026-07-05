@@ -12,7 +12,7 @@
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 done; V2-013 multi-year architecture queued)
+Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 done; **V2-014** active; V2-013 queued)
 
 ---
 
@@ -22,7 +22,8 @@ Last updated: **2026-07-05** (Wave 0 closed; H-001/H-002 done; V2-013 multi-year
 |------|--------|
 | **0** — 2025–26 close-out | **Closed** |
 | **1** — Hygiene + cutover prep | **Partial** — H-001/H-002 done; V2-001 deferred (see V2-013) |
-| **2+** | Queued per dependency table below |
+| **2 — Platform Modernization** | **Current** — **V2-014** automation inventory + capacity roadmap |
+| **2+ (schema/features)** | Queued per dependency table below |
 
 **Do not start V2-013 (Program Instance) until its dedicated architecture wave is approved.**
 
@@ -108,6 +109,16 @@ flowchart TD
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **V2-013** | **Multi-Year Architecture — Program Instance Integration** | One Airtable base supports multiple program years. **Program Instance** (org table, e.g. `Shooting Challenge \| 2025-2026`) scopes config + operational tables. Historical data stays accurate; config changes must not alter historical reports. Scope: Program Instance links on config tables (Shot Milestones, Levels, Level Gate Rules, XP Reward Rules, Achievements, Weeks, Awards) + operational tables (Enrollments, Submissions, etc.); automation filters; views; interfaces; multi-year reporting. **Investigation 2026-07-05:** read-only review — no records modified; 2026–2027 config already mixed with production — requires dedicated wave, not incremental edits. **Recommendation:** finish planned V2 roadmap first; return when schema/multi-year wave is scheduled. | Wave 1 hygiene, C-012 partial | **queued** |
+
+### Wave 2 — Platform Modernization (automation inventory & capacity) — **current**
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **V2-014** | **Automation Modernization Roadmap** | Master inventory of all production automations: purpose, trigger, reads/writes, V2 standard compliance, disposition (Keep / Rewrite / Merge / Retire / Move), priority, capacity plan (~12 slots recoverable). **066 v3.1** = V2 reference. **112 OFF** — monitor before delete; **013** = production Video Feedback. **No rewrites until wave approved.** | Wave 0, H-002 | **done** (doc) |
+| **V2-014a** | Wave 2a — capacity quick wins | Delete **112** after monitor; retire **043**; merge **006+021**; OMNI live count reconciliation | V2-014 | queued |
+| **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
+
+Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)
 
 ### Wave 2 — Schema, field ownership & dedupe engine
 
