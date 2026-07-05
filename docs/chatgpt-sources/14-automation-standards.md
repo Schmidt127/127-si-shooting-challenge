@@ -2,11 +2,26 @@
 
 **Status:** **Active** — V2 rewrite pattern defined; **066 v3.1** is the reference implementation.
 
-**Last updated:** 2026-07-05 (Automation Complexity Score added)
+**Last updated:** 2026-07-05 (DEV-first paste rule)
 
 ---
 
-## Automation Complexity Score
+## DEV-first rule (permanent)
+
+**Nothing** is pasted into **Production** until tested successfully in **DEV**.
+
+| Step | Where |
+|------|--------|
+| Design | ChatGPT (plan) |
+| Write | Cursor → **GitHub** (reference version) |
+| Validate | **DEV** base — test + audit |
+| Ship | Mike approval → **Production** |
+
+Full pipeline: [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) § DEV-first delivery pipeline.
+
+Every rewrite becomes the **GitHub reference version** before any Production paste.
+
+---
 
 Every production automation gets a **Complexity Score** during Phase 2 inventory (see [V2-014](../v2-014-automation-modernization-roadmap.md)). Use the score to answer: *Which automation should we modernize next?*
 
