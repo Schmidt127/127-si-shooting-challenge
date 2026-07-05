@@ -13,7 +13,7 @@ Use this runbook when creating or refreshing the **Development** Airtable base. 
 | Environment | Base name (recommended) | Base ID | Status |
 |-------------|-------------------------|---------|--------|
 | **Production** | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` | `appn84sqPw03zEbTT` | Live |
-| **Development** | `127SI - SHOOTING CHALLENGE - DEV` | *(fill in after clone)* | **Create clone** |
+| **Development** | `127SI - SHOOTING CHALLENGE - DEV` | `appTetnuCZlCZdTCT` | **Live** — complete Step 3 webhook isolation |
 
 After clone: update [PROJECT_STATE.md](./PROJECT_STATE.md) with the dev base ID.
 

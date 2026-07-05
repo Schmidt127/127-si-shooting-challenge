@@ -1,7 +1,7 @@
 # V2-015 — Development Airtable Base Architecture
 
 **Backlog ID:** V2-015  
-**Status:** **Approved** — permanent dev base; clone in progress  
+**Status:** **Live** — `appTetnuCZlCZdTCT`; complete webhook isolation per runbook  
 **Last updated:** 2026-07-05
 
 **Setup runbook:** [development-base-setup.md](./development-base-setup.md)
@@ -291,4 +291,4 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | Date | Notes |
 |------|-------|
 | 2026-07-05 | V2-015 initial architecture evaluation and recommendation |
-| 2026-07-05 | Approved; [development-base-setup.md](./development-base-setup.md) runbook added |
+| 2026-07-05 | Dev base ID recorded: `appTetnuCZlCZdTCT` |

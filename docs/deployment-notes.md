@@ -13,7 +13,7 @@
 | Environment | Base ID | Where configured |
 |-------------|---------|------------------|
 | **Production** | `appn84sqPw03zEbTT` | Vercel, live Make, Fillout |
-| **Development** | *(after clone — see PROJECT_STATE)* | Local `web/.env.local`, `tools/airtable/.env` |
+| **Development** | `appTetnuCZlCZdTCT` | Local `web/.env.local`, `tools/airtable/.env` |
 
 **Never** set the dev base ID on Vercel production. Setup: [development-base-setup.md](./development-base-setup.md).
 
