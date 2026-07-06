@@ -3,15 +3,18 @@
 **Backlog ID:** V2-014  
 **Status:** Active — **Wave 2A in progress** (classification only — no rewrites, no merges)  
 **Owner:** Cursor investigation → ChatGPT review → Mike approval  
-**Last updated:** 2026-07-05
+**Last updated:** 2026-07-05 (Wave 2A GitHub classification complete)
 
-**Current focus:** Infrastructure is stable (V2-015 DEV ready). **Stop infrastructure work.** Classify every production automation before any modernization wave.
+**Current focus:** Wave 2A **GitHub classification complete** — OMNI trigger confirm + Mike answers [questions](./v2-014-questions-for-mike.md). **No rewrites until approved wave.**
 
 **Delivery rule:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — DEV test before Production for all changes.
 
 **Related:**
 
 - [v2/06-automation-standards.md](./v2/06-automation-standards.md) — V2 rewrite pattern (**066 v3.1** reference)
+- [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md) — Wave 2A complete matrix
+- [v2-common-engineering-patterns.md](./v2-common-engineering-patterns.md) — Recurring patterns
+- [phase-2a-sprint-deliverables-2026-07-05.md](./phase-2a-sprint-deliverables-2026-07-05.md) — Sprint deliverables index
 - [automation-index.md](./automation-index.md) — quick lookup index
 - [../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
 - [../airtable/schema/current/automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md)
@@ -94,7 +97,7 @@ Counts as of **2026-07-05** (GitHub + Mike confirmations). Reconcile live count 
 |--------|------:|-------|
 | **Airtable automation limit** | 50 | Hard cap per base |
 | **GitHub production scripts** | 46 | `001`–`114` numbered files (excludes 012) |
-| **Classified (Category A–F)** | 0 / 46 | **Wave 2a goal** — assign category + complexity to every row |
+| **Classified (Category A–F)** | **46 / 46** | **Wave 2a GitHub complete** — [classification doc](./v2-014-wave-2a-classification.md); OMNI trigger confirm pending |
 | **Duplicate paths documented** | 2 | 013/112, 042/043 |
 | **Legacy marked** | 3 | 012 deleted, 112 OFF, 043 retire candidate |
 | **V2 compliant (SCRIPT + CONFIG + sections)** | 1 | **066 v3.1** |
@@ -164,12 +167,12 @@ Wave 2A is **classification and documentation**, not bulk rewrites.
 
 | # | Criterion | Status |
 |---|-----------|--------|
-| 1 | Every production automation has **Category A–F** | Pending |
-| 2 | Every automation has **Complexity Score + tier** ([doc 06](./v2/06-automation-standards.md)) | Pending |
-| 3 | Every duplicate path identified and documented | **Partial** (013/112, 042/043) |
-| 4 | Every legacy automation marked | **Partial** (012, 112, 043) |
-| 5 | Every automation has **modernization priority** (P0–P3) | Preliminary in inventory |
-| 6 | **No production behavior changes** except Mike-approved (e.g. **112** OFF, future **112** delete) | In progress |
+| 1 | Every production automation has **Category A–F** | **Done** (GitHub) — [classification](./v2-014-wave-2a-classification.md); OMNI confirm pending |
+| 2 | Every automation has **Complexity Score + tier** ([doc 06](./v2/06-automation-standards.md)) | **Done** (GitHub static) |
+| 3 | Every duplicate path identified and documented | **Done** (013/112, 042/043) |
+| 4 | Every legacy automation marked | **Done** (012 deleted, 112 OFF, 043 retire) |
+| 5 | Every automation has **modernization priority** (P0–P3) | **Done** |
+| 6 | **No production behavior changes** except Mike-approved | **Done** tonight |
 
 When Wave 2a is complete, work proceeds **one approved wave at a time** — no wondering what to do next.
 
@@ -383,3 +386,4 @@ Run in Airtable OMNI to complete Wave 2a classification. Record results in this 
 | 2026-07-05 | Cross-linked from backlog, PROJECT_STATE, automation-index, ChatGPT brief |
 | 2026-07-05 | Philosophy update — complexity-first framing; Category A–F; four-axis evaluation; Complexity Score in doc 06; Wave 2a = classify everything; Lambda deferred |
 | 2026-07-05 | **Wave 2A active** — classification-only; infrastructure stable; DEV-first rule in doc 04 |
+| 2026-07-05 | **Wave 2A GitHub complete** — [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md); [patterns](./v2-common-engineering-patterns.md); [sprint deliverables](./phase-2a-sprint-deliverables-2026-07-05.md) |
