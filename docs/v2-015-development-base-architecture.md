@@ -390,10 +390,10 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 4 | Scrub dev: Schmidt + 5 test enrollments; remove all other enrollments | Mike / OMNI | **Done** — prod unchanged |
 | 5 | Clone Make scenarios → dev webhooks; document in `make/blueprints/` | Mike | |
 | 6 | Paste current automations to dev (parity with prod) | Mike | |
-| 7 | **C-020** Test Intake table + script + Testing views on **DEV** | Cursor / Mike | **Next** — after item 9 (066 DEV test) |
+| 7 | **C-020** **Testing Scenarios** + Testing views on **DEV** (OMNI) | OMNI / Mike | **In progress** — script blocked on final field list |
 | 8 | Update doc 04 + doc 08 promote workflow | Cursor | **Done** |
 | 9 | First use: **066 v3.1** dev paste + audit before prod | Mike / Cursor | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
-| 10 | **C-020** promotion doc + DEV test pass (Fillout-shaped Submission) | Cursor / Mike | **Queued** — after 9 |
+| 10 | **C-020** script + DEV test pass | Cursor / Mike | **Blocked** — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 
 ---
 
