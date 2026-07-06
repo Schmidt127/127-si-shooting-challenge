@@ -2,8 +2,9 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-06** (DEV + prod schema snapshots; session handoff)
+Last updated: **2026-07-06** (Phase 2B — Engineering Constitution; schema snapshots 2026-07-06)
 
+**Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 
 ---
@@ -18,7 +19,7 @@ Last updated: **2026-07-06** (DEV + prod schema snapshots; session handoff)
 | **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
-| **Phase 2 — Platform Modernization** | **Wave 2A planning complete** — [classification](./v2-014-wave-2a-classification.md); **implementation not started** (2b+) |
+| **Phase 2 — Platform Modernization** | **Wave 2A planning complete** · **Phase 2B docs complete** ([Constitution](./ENGINEERING_CONSTITUTION.md), [review](./phase-2b-engineering-review-2026-07-06.md)) — **implementation not started** |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 

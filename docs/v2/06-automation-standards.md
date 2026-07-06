@@ -2,7 +2,9 @@
 
 **Status:** **Active** — V2 rewrite pattern defined; **066 v3.1** is the reference implementation.
 
-**Last updated:** 2026-07-05 (DEV-first paste rule)
+**Last updated:** 2026-07-06 (permanent SCRIPT + CONFIG header standard — Phase 2B)
+
+**Engineering authority:** [../ENGINEERING_CONSTITUTION.md](../ENGINEERING_CONSTITUTION.md)
 
 ---
 
@@ -67,6 +69,127 @@ Slot recovery is a **secondary benefit** of reducing complexity — never merge 
 Path: [../../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js](../../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js)
 
 Full standard: [../../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
+
+---
+
+## Permanent automation header (SCRIPT + CONFIG)
+
+**Status:** **Proposed standard** — mandatory for all **new** Category B rewrites and substantive edits. **066 v3.1** is the reference. **No mass migration of legacy scripts until their wave is approved.**
+
+This is the **one permanent header** for V2 automations. Identity lives in **`SCRIPT`**; everything configurable lives in **`CONFIG`**.
+
+### File layout (top to bottom)
+
+| Order | Block | Paste into Airtable? |
+|-------|--------|----------------------|
+| 1 | GitHub-only header (`/* Automation: … */`) | **No** — skip lines 1–24 |
+| 2 | Production docblock (`/********* … */`) | **Yes** — start paste here |
+| 3 | `// @ts-nocheck` | Yes |
+| 4 | `SECTION 1 — SCRIPT` (`const SCRIPT = { … }`) | Yes |
+| 5 | `SECTION 2 — CONFIG` (`const CONFIG = { … }`) | Yes |
+| 6 | Helpers + `async function main()` + run wrapper | Yes |
+
+### `SCRIPT` — identity and version only
+
+**Never** put table names, field names, status labels, or business thresholds in `SCRIPT`.
+
+| Key | Required | Example (066) | Notes |
+|-----|----------|---------------|-------|
+| `scriptName` | Yes | `"066 - Achievements and Milestones - Create Shot Milestone Unlocks"` | Human-readable; matches Airtable automation title |
+| `automationNumber` | Yes | `"066"` | Three-digit string; matches filename prefix |
+| `version` | Yes | `"v3.1"` | Must match docblock `Version:` |
+| `versionDate` | Yes | `"2026-07-05"` | Date this version was cut |
+| `originalWrittenDate` | Yes | `"2026-06-17"` | Earliest write date — **preserve** |
+| `lastUpdated` | Yes | `"2026-07-05"` | Today on logic edits |
+| `folder` | Yes | `"06 - Achievements and Milestones"` | Airtable automation folder |
+| `automationName` | Yes | Same as `scriptName` | Must match live automation name exactly |
+
+**Proposed `SCRIPT` template:**
+
+```javascript
+const SCRIPT = {
+  scriptName: "NNN - Domain - Short Description",
+  automationNumber: "NNN",
+  version: "vX.Y",
+  versionDate: "YYYY-MM-DD",
+  originalWrittenDate: "YYYY-MM-DD",
+  lastUpdated: "YYYY-MM-DD",
+  folder: "NN - Folder Name",
+  automationName: "NNN - Domain - Short Description",
+};
+```
+
+**066 gap:** `automationNumber` is not yet a separate key — add on next 066 touch or treat as migration item for all V2 rewrites.
+
+### `CONFIG` — tables, fields, values, settings only
+
+**Never** put `scriptName`, `version`, or dates in `CONFIG`.
+
+| Key | Required | Purpose | 066 pattern |
+|-----|----------|---------|-------------|
+| `tables` | Yes | Logical key → Airtable table name | `enrollments: "Enrollments"` |
+| `fields` | Yes* | Nested by table/domain — field display names | `enrollmentFields`, `unlockFields`, … |
+| `values` | Yes* | Status labels, action strings, select options used in writes | `statuses`, `actions` |
+| `settings` | When needed | Timezone, batch size, prefixes, feature flags | `timeZone`, `batchSize`, `sourceKeyPrefix` |
+
+\*Use nested objects under `fields` / `values` — flat `CONFIG` keys are discouraged when a script touches multiple tables.
+
+**Proposed `CONFIG` skeleton:**
+
+```javascript
+const CONFIG = {
+  settings: {
+    timeZone: "America/Denver",
+    batchSize: 50,
+  },
+  tables: {
+    enrollments: "Enrollments",
+    submissions: "Submissions",
+  },
+  fields: {
+    enrollmentFields: {
+      active: "Active?",
+      runCheck: "Run Shot Milestone Check?",
+    },
+    unlockFields: {
+      milestoneSourceKey: "Milestone Source Key",
+      week: "Week",
+    },
+  },
+  values: {
+    statuses: {
+      success: "success",
+      skipped: "skipped",
+      error: "error",
+      pending: "Pending",
+    },
+    actions: {
+      created: "created",
+      skippedExisting: "skipped_existing",
+      error: "error",
+    },
+  },
+};
+```
+
+### Docblock alignment
+
+| Docblock field | Must match |
+|----------------|------------|
+| `Version:` | `SCRIPT.version` |
+| `CONFIG.scriptName` (legacy) | Remove on V2 rewrites — use `SCRIPT` only |
+| `CONFIG.version` (legacy) | Remove on V2 rewrites — use `SCRIPT` only |
+
+Console JSON final log should include `automation`, `version` from `SCRIPT`.
+
+### Version bumps
+
+| Change | Bump |
+|--------|------|
+| SCRIPT/CONFIG split, batching, schema gates, behavior fix | **MINOR** (`v3.0` → `v3.1`) |
+| Trigger change, new required output, breaking skip semantics | **MAJOR** (`v3.x` → `v4.0`) |
+
+Record in docblock **VERSION HISTORY** and `CHANGELOG.md` when pasted to Production.
 
 ---
 

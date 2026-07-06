@@ -2,7 +2,9 @@
 
 **Status:** Active — audit and integrity practices (integrity over unit tests).
 
-**Last updated:** 2026-07-05 (C-020 Test Intake — priority DEV harness)
+**Last updated:** 2026-07-06 (C-020 Engineering Test Framework; golden test dataset in Constitution)
+
+**Engineering authority:** [../ENGINEERING_CONSTITUTION.md](../ENGINEERING_CONSTITUTION.md) § Golden Test Dataset
 
 ---
 
@@ -65,7 +67,7 @@ Dev base setup: [development-base-setup.md](../development-base-setup.md) (V2-01
 ## Test Intake harness (C-020) — Engineering Test Framework
 
 **Table name:** **Testing Scenarios** (not Test Intake).  
-**Script:** **Paused** until OMNI final DEV field list — [checklist](../deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**Script:** **Paused** — see [checklist](../deploy-checklists/C-020-testing-scenarios-script-checklist.md) and [Phase 2B review](../phase-2b-engineering-review-2026-07-06.md) § C-020 gaps.
 
 | Rule | Standard |
 |------|----------|

@@ -85,7 +85,8 @@ After DEV clone, **intake automations were OFF** — Mike turned them **ON**. A 
 
 ## Suggested next session order
 
-1. OMNI pipeline confirm for Schmidt submission (or create new submission with automations ON).
+1. Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) + [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md)
+2. OMNI pipeline confirm for Schmidt submission (or create new submission with automations ON).
 2. Run **066** sandbox per checklist → 090F audit on DEV.
 3. Mike decides **066 prod promote** (promotion doc first).
 4. Sequencing decision: **C-020** script vs other Wave 2B work.

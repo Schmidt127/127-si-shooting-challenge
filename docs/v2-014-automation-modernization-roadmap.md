@@ -404,3 +404,4 @@ Run in Airtable OMNI to complete Wave 2a classification. Record results in this 
 | 2026-07-05 | Philosophy update — complexity-first framing; Category A–F; four-axis evaluation; Complexity Score in doc 06; Wave 2a = classify everything; Lambda deferred |
 | 2026-07-05 | **Wave 2A active** — classification-only; infrastructure stable; DEV-first rule in doc 04 |
 | 2026-07-05 | **Wave 2A GitHub complete** — [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md); [patterns](./v2-common-engineering-patterns.md); [sprint deliverables](./phase-2a-sprint-deliverables-2026-07-05.md) |
+| 2026-07-06 | **Phase 2B** — [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md); [phase-2b review](./phase-2b-engineering-review-2026-07-06.md); permanent SCRIPT+CONFIG header in [doc 06](./v2/06-automation-standards.md) |

@@ -1,7 +1,7 @@
 # C-020 — Testing Scenarios script checklist (future)
 
 **Backlog:** C-020  
-**Status:** **Blocked** — OMNI DEV schema **complete** (2026-07-05); script **not started** until **066 DEV audit** passes  
+**Status:** **Paused** — schema complete; **G1–G3** doc gaps + sequencing approval before implementation ([review](./phase-2b-engineering-review-2026-07-06.md) § C-020)  
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  

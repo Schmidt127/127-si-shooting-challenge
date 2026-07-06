@@ -32,7 +32,9 @@ $maps = @(
     @{ Src = "docs\testing-and-intake-architecture.md"; Dst = "20-testing-and-intake-architecture.md" },
     @{ Src = "docs\platform-config-improvements.md"; Dst = "21-platform-config-improvements.md" },
     @{ Src = "docs\v2-change-backlog.md"; Dst = "22-v2-change-backlog.md" },
-    @{ Src = "docs\CHATGPT-MASTER-PLAN-BRIEF.md"; Dst = "23-master-plan-brief.md" }
+    @{ Src = "docs\CHATGPT-MASTER-PLAN-BRIEF.md"; Dst = "23-master-plan-brief.md" },
+    @{ Src = "docs\ENGINEERING_CONSTITUTION.md"; Dst = "24-engineering-constitution.md" },
+    @{ Src = "docs\phase-2b-engineering-review-2026-07-06.md"; Dst = "25-phase-2b-engineering-review.md" }
 )
 
 $copied = 0

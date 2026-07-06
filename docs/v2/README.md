@@ -12,6 +12,7 @@
 
 | # | File | Status |
 |---|------|--------|
+| — | [../ENGINEERING_CONSTITUTION.md](../ENGINEERING_CONSTITUTION.md) | **Active** — highest-level engineering law (GitHub, DEV-first, priorities) |
 | 01 | [01-constitution.md](./01-constitution.md) | **Active** — configurable game engine + four layers |
 | 02 | [02-master-direction.md](./02-master-direction.md) | Shell — links to master direction |
 | 03 | [03-business-rules.md](./03-business-rules.md) | **Engine contract** (Layer 1) — platform behavior only |
@@ -19,7 +20,7 @@
 | — | [level-gate-rules-config-template.csv](./level-gate-rules-config-template.csv) | Worksheet — example level names; numbers TBD |
 | 04 | [04-ai-development-standards.md](./04-ai-development-standards.md) | **Active** — three-role workflow, **DEV-first delivery diagram**, five phases |
 | 05 | [05-system-architecture.md](./05-system-architecture.md) | Shell |
-| 06 | [06-automation-standards.md](./06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference; **Automation Complexity Score** |
+| 06 | [06-automation-standards.md](./06-automation-standards.md) | **Active** — V2 rewrite pattern; **permanent SCRIPT+CONFIG header**; **066 v3.1** reference |
 | 07 | [07-ui-standards.md](./07-ui-standards.md) | Shell |
 | 08 | [08-testing-standards.md](./08-testing-standards.md) | **Active** — audit-first workflow; **fix the audit, not the data** |
 | 09 | [09-release-notes.md](./09-release-notes.md) | Shell — points to CHANGELOG |
@@ -33,6 +34,7 @@
 | [../../AGENTS.md](../../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Full documentation index |
 | [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Consolidated backlog for ChatGPT master planning |
+| [../phase-2b-engineering-review-2026-07-06.md](../phase-2b-engineering-review-2026-07-06.md) | Phase 2B — V2-014 review, C-020 gaps |
 | [../development-base-setup.md](../development-base-setup.md) | **V2-015 ops runbook** — clone prod, isolate webhooks, dev-first deploy |
 
 ## Workflow: Mike + ChatGPT + Cursor

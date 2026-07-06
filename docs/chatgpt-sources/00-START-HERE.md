@@ -19,8 +19,9 @@
 
 | Order | File | What it is |
 |-------|------|------------|
-| 1 | `01-constitution.md` | Configurable game engine + four layers |
-| 2 | `02-master-direction.md` | Mission, vision, locked 2026–27 decisions |
+| 1 | `24-engineering-constitution.md` | **Engineering law** — GitHub, DEV-first, promotion, priorities |
+| 2 | `01-constitution.md` | Configurable game engine + four layers (product) |
+| 3 | `02-master-direction.md` | Mission, vision, locked 2026–27 decisions |
 | 3 | `03-business-rules.md` | **Engine contract** — platform behavior (not season numbers) |
 | 4 | `12-ai-development-standards.md` | **AI workflow** — Mike / ChatGPT / Cursor, five phases, task classification |
 | 5 | `04-season-configuration-design.md` | Season gate tuning guidance (Layer 2, DRAFT) |
@@ -37,7 +38,9 @@
 | 20 | `20-testing-and-intake-architecture.md` | Fillout validation, Weeks, test sandbox, Test Intake (C-017–C-020) |
 | 21 | `21-platform-config-improvements.md` | Grade bands + public display (C-021, C-022) |
 | 22 | `22-v2-change-backlog.md` | **Owner change list** — all fixes/components, waves, dependencies (C-001–C-027) |
-| **23** | **`23-master-plan-brief.md`** | **Consolidated planning brief** — all IDs, sub-system roadmaps, ChatGPT prompt (start here for master plan) |
+| **23** | **`23-master-plan-brief.md`** | **Consolidated planning brief** — all IDs, sub-system roadmaps, ChatGPT prompt |
+| **24** | **`24-engineering-constitution.md`** | **Highest-level engineering law** — how we build and ship |
+| **25** | **`25-phase-2b-engineering-review.md`** | V2-014 review, C-020 gaps, risks (2026-07-06) |
 
 ---
 
@@ -77,4 +80,4 @@ From repo root (PowerShell):
 
 ---
 
-*Last synced: 2026-07-06 16:20 (local)*
+*Last synced: 2026-07-06 16:24 (local)*

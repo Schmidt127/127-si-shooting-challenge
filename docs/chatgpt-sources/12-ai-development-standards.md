@@ -14,6 +14,7 @@ Define how **Mike**, **ChatGPT**, and **Cursor** work together to develop the 12
 
 | Doc | Role |
 |-----|------|
+| [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Engineering law** — how we build and ship |
 | [01-constitution.md](./01-constitution.md) | What must never change (Engine layer) |
 | [03-business-rules.md](./03-business-rules.md) | Platform behavior contract |
 | [../v2-change-backlog.md](../v2-change-backlog.md) | **Live backlog** — add and update change IDs here |
