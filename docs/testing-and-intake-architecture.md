@@ -1,7 +1,7 @@
 # Testing, intake validation, and flexible weeks
 
 **Status:** V2 architecture / ops planning — **C-020 priority DEV build**  
-**Last updated:** 2026-07-05 (C-020 confirmed priority; DEV-first after 066; downstream automation map)  
+**Last updated:** 2026-07-05 (OMNI test-flag rejection; Phase 2 next sequence)  
 **Tracked in:** [close-out-considerations.md](./close-out-considerations.md) **C-017** – **C-020**
 
 ---
@@ -24,7 +24,30 @@
 | **Test identification** | **No `Is Test Record?` checkbox.** Base does not know a row is a test. |
 | **Schmidt sandbox** | Dedicated Athlete + Enrollment; **`Active?` = false** — excluded from leaderboard, standings, close-out audits, production emails. |
 | **Automation behavior** | **Same as production.** All intake, asset, upload, XP, and video-feedback automations run normally so failures surface. |
-| **Testing views** | Filter by **Schmidt test Enrollment link** — not a test flag. |
+| **Testing views** | Filter by **Enrollment link** (Schmidt/testing or retained DEV test enrollments) — **not** a test flag or Test Status field |
+
+---
+
+## OMNI correction — rejected (2026-07-05)
+
+ChatGPT reviewed OMNI output. The following OMNI suggestions are **rejected** and must **not** be implemented:
+
+| Rejected | Why |
+|----------|-----|
+| **`Is Test Record?`** (or any test checkbox) on pipeline tables | Pipeline must look production-shaped |
+| **`Test Status`** (or similar) on Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary | Same — no operator metadata on pipeline rows |
+| Testing views filtered by test flags/status on pipeline tables | Wrong pattern — use **Enrollment link** only |
+
+**Approved testing architecture:**
+
+| Layer | Allowed test fields |
+|-------|---------------------|
+| **Test Intake table only** | `Run Test?`, `Dry Run?`, `Scenario Type`, `Last Run Status`, `Last Run At`, operator attachments |
+| **Pipeline tables** | **None** — records as if created by Fillout |
+| **Testing views** | Filter `Enrollment =` Schmidt/testing or selected DEV test enrollment |
+| **Enrollment** | `Active?` = false for standings visibility only — not a pipeline test flag |
+
+Tell OMNI: *Do not add test flags or Test Status to Submissions or related pipeline tables. Testing views use Enrollment link filters only.*
 | **Early bird** | Date on **Weeks** row = when app **starts accepting input** (intake open). |
 | **Challenge run** | Separate configured period = when the **challenge officially runs** (Week 1+). |
 

@@ -115,7 +115,7 @@ flowchart TD
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **V2-014** | **Automation Modernization Roadmap** | Master inventory: Category A–F, four-axis evaluation, Complexity Score ([doc 06](./v2/06-automation-standards.md)), modernization priority. **Goal:** reduce complexity first; capacity recovery secondary. **066 v3.1** = V2 reference. **112 OFF**; **013** production. No rewrites until wave approved. | Wave 0, H-002 | **done** (doc) |
-| **V2-014a** | Wave 2A — classify all automations | **Done** (GitHub + Mike decisions 2026-07-05). OMNI trigger spot-check optional. Retirements approved: **112**, **043** | V2-014, V2-015 | **done** |
+| **V2-014a** | Wave 2A — classify all automations | **Planning complete** (2026-07-05) — classification, patterns, Mike decisions; ChatGPT review accepted. **Implementation not complete** — no rewrites/merges/retirements executed. Retirements **approved:** **112**, **043** (pending maintenance window) | V2-014, V2-015 | **planning done** |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
 | **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Test Intake/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
 

@@ -1,6 +1,6 @@
 # V2-014 Wave 2A — Complete Automation Classification
 
-**Status:** **Complete** (GitHub inventory — OMNI trigger confirm pending)  
+**Status:** **Planning complete** — implementation not complete (OMNI trigger spot-check optional)  
 **Date:** 2026-07-05  
 **Sprint:** Phase 2A Engineering Sprint — Cursor Mission 1–3  
 **Parent:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)

@@ -1,11 +1,10 @@
 # V2-014 — Automation Modernization Roadmap
 
 **Backlog ID:** V2-014  
-**Status:** Active — **Wave 2A in progress** (classification only — no rewrites, no merges)  
-**Owner:** Cursor investigation → ChatGPT review → Mike approval  
-**Last updated:** 2026-07-05 (Wave 2A GitHub classification complete)
+**Status:** Active — **Wave 2A planning complete** (implementation **not** complete — no rewrites, merges, or prod retirements executed yet)  
+**Last updated:** 2026-07-05 (ChatGPT review accepted; next sequence locked)
 
-**Current focus:** Wave 2A **GitHub classification complete** — OMNI trigger confirm + Mike answers [questions](./v2-014-questions-for-mike.md). **No rewrites until approved wave.**
+**Current focus:** Wave 2A **planning complete** — classification, patterns, Mike decisions recorded. **Implementation waves (2b+) not started.** See [Phase 2 next sequence](#phase-2-next-sequence-post-wave-2a).
 
 **Delivery rule:** [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) — DEV test before Production for all changes.
 
@@ -142,9 +141,27 @@ Legacy **Disposition** column in inventory tables maps to categories; Wave 2a ad
 
 ---
 
-## Wave 2A — Automation inventory and classification (**active**)
+## Wave 2A — Automation inventory and classification (**planning complete**)
 
 **Objective:** Know the automation ecosystem as well as we know the tables. **Do not rewrite. Do not merge. Just understand.**
+
+**Planning complete (2026-07-05):** GitHub classification, common patterns, Mike decisions — ChatGPT review **accepted**.  
+**Implementation not complete:** No V2 rewrites, no approved merges, **112** / **043** not yet deleted in Production.
+
+---
+
+## Phase 2 next sequence (post–Wave 2A)
+
+Locked after ChatGPT review (2026-07-05):
+
+| Step | Action | Environment |
+|------|--------|-------------|
+| **1** | **066 DEV audit** + one sandbox test | DEV |
+| **2** | After DEV pass → **Mike decides** whether to promote **066** to Production | Promotion doc → prod paste |
+| **3** | During **approved production maintenance window** → delete **112**, retire **043** | Production |
+| **4** | Begin **C-020** Test Intake Harness | DEV first |
+
+**Not in this sequence yet:** merge waves (006+021, etc.), EMC, Lambda/C-013 implementation.
 
 ### Per-automation deliverable (all 46)
 
@@ -172,7 +189,7 @@ Wave 2A is **classification and documentation**, not bulk rewrites.
 | 3 | Every duplicate path identified and documented | **Done** (013/112, 042/043) |
 | 4 | Every legacy automation marked | **Done** (012 deleted, 112 OFF, 043 retire) |
 | 5 | Every automation has **modernization priority** (P0–P3) | **Done** |
-| 6 | **No production behavior changes** except Mike-approved | **Done** tonight |
+| 6 | **No production behavior changes** except Mike-approved | **Planning honored** — retirements **approved** but **not executed** (112, 043 pending maintenance window) |
 
 When Wave 2a is complete, work proceeds **one approved wave at a time** — no wondering what to do next.
 

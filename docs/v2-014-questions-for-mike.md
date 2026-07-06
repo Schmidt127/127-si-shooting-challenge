@@ -18,7 +18,7 @@
 | **Q6** | **Yes** | Approve **063 → 020** and **111 → 013** grade-band-at-create merges. |
 | **Q7** | **Yes** | EMC pilot **072+074** before daily **076+077**. |
 | **Q8** | **Yes** — DEV test before prod | **066 v3.1 already pasted in DEV Airtable** — next step is audit/sandbox test, not re-paste unless GitHub version drift. Prod only after DEV pass. |
-| **Q9** | **Yes** | Mark Wave 2A **done** after brief OMNI trigger spot-check (not blocking on full audit). |
+| **Q9** | **Yes** | Wave 2A **planning** complete — **implementation** (2b+) not started |
 | **Q10** | **Yes — Cursor recommendation** | **Parallel:** OMNI Test Intake table shell + Testing views in DEV now. **Cursor script** after ChatGPT C-020 design. **Full pipeline test** after 066 DEV audit pass. |
 | **Q11** | **Yes** | Document test enrollment/record scope in PROJECT_STATE. Test rows live in **registrant/pipeline tables** (Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, etc.) — **not** config tables (Milestones, Levels, Gates, XP Rules, …). |
 | **Q12** | **Yes — accept for now** | See [Q12 explained](#q12-explained) below. |

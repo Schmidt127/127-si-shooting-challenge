@@ -70,15 +70,16 @@ Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
 
 ---
 
-## What happens next (not tonight)
+## What happens next (locked sequence)
 
-| When | What |
-|------|------|
-| After Mike reviews | Answer [questions for Mike](./v2-014-questions-for-mike.md) |
-| Next DEV session | **066 v3.1** paste + test (H-002) — only if Mike chooses outside tonight rules |
-| After 066 DEV pass | **C-020** build in DEV |
-| Wave 2b | 066 prod paste (approved) |
-| Wave 2c | **112** delete, **043** retire (approved) |
+| # | Step | Owner |
+|---|------|-------|
+| 1 | **066 DEV audit** + one sandbox test | Mike / Cursor |
+| 2 | After DEV pass → **Mike decides** 066 prod promote | Mike |
+| 3 | Prod maintenance window → delete **112**, retire **043** | Mike |
+| 4 | Begin **C-020** Test Intake Harness | OMNI + Cursor (DEV) |
+
+Wave 2A = **planning complete**, **implementation not complete**.
 
 ---
 

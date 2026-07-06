@@ -2,7 +2,7 @@
 
 **Backlog ID:** V2-015  
 **Status:** **Ready — in progress** — `appTetnuCZlCZdTCT`; **not complete** until **066 v3.1** tested in DEV  
-**Last updated:** 2026-07-05 (C-020 Test Intake — next DEV build after 066)
+**Last updated:** 2026-07-05 (Phase 2 next sequence; OMNI test-flag rejection)
 
 **Setup runbook:** [development-base-setup.md](./development-base-setup.md)
 
@@ -53,7 +53,18 @@ Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke
 | 3 | Promotion doc → mirror Test Intake structure to Production | After DEV pass + Mike approval |
 | 4 | **C-019** — document enrollment IDs; prod Schmidt smoke optional | With or after C-020 |
 
-See [C-020 requirements](./testing-and-intake-architecture.md#c-020--test-intake-harness-production-identical) — **DEV first**, no `Is Test Record?` on pipeline rows, **`Run Test?`** auto-uncheck, downstream automation map documented.
+See [C-020 requirements](./testing-and-intake-architecture.md#c-020--test-intake-harness-production-identical) — **DEV first**, no test flags on pipeline rows, **`Run Test?`** on Test Intake only, downstream automation map documented.
+
+**OMNI rejected (2026-07-05):** No `Is Test Record?`, no `Test Status`, or similar on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
+
+### Phase 2 next sequence (post–Wave 2A planning)
+
+| Step | Action |
+|------|--------|
+| 1 | **066 DEV audit** + one sandbox test |
+| 2 | After DEV pass → Mike decides **066 prod promote** |
+| 3 | Approved prod maintenance → delete **112**, retire **043** |
+| 4 | Begin **C-020** Test Intake Harness (DEV) |
 
 ---
 

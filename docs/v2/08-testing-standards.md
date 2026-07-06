@@ -70,7 +70,8 @@ Dev base setup: [development-base-setup.md](../development-base-setup.md) (V2-01
 |------|----------|
 | Environment | **DEV first** — `appTetnuCZlCZdTCT` |
 | Test identification | **No `Is Test Record?`** on pipeline tables |
-| Operator trigger | **`Run Test?`** on Test Intake only — auto-uncheck after run |
+| **OMNI rejected** | No **Test Status** or test flags on Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, WAS — [testing doc § OMNI correction](../testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05) |
+| Operator trigger | **`Run Test?`** on **Test Intake table only** |
 | Enrollments | Schmidt/testing + retained DEV test enrollments (`Active?` false) |
 | Verification | Testing views by Enrollment link; Stages A–H audit dry-runs |
 | Downstream chain | Documented in C-020 — **023** skipped if Enrollment pre-linked; **009→013/020→070→022** expected |
