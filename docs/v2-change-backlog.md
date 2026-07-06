@@ -100,7 +100,7 @@ flowchart TD
 |----|---------|--------|------------|--------|
 | **V2-001** | Archive 2025–26 base; clone for 2026–27 | **Superseded** by **V2-013** (one base + Program Instance). Doc kept: [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | **deferred** |
 | **H-001** | Fix 090F achievement unlock audit | Audit v1.1 — shot milestones on Milestone Source Key; other on Enrollment+Achievement+Week; **0 data deletes** | Wave 0 | **done** |
-| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; **DEV automation ON** (OMNI confirmed); sandbox test **waiting on OMNI** enrollment + expected milestone behavior ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after DEV pass | Wave 0 | **blocked — OMNI test case** |
+| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; **DEV automation ON**; intake automations turned ON after clone (Mike 2026-07-05); sandbox **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after DEV pass | Wave 0 | **pending — OMNI pipeline confirm** |
 | **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
 
@@ -158,7 +158,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
-| **C-020** | **Engineering Test Framework** | **Testing Scenarios** table on DEV — OMNI schema **complete** (2026-07-05). Script **paused** until **066 DEV audit**. Field list: [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md). Production-shaped pipeline; framework fields on **Testing Scenarios only**. | C-019, V2-013, H-002, 066 DEV | **blocked — 066 DEV** |
+| **C-020** | **Engineering Test Framework** | **Testing Scenarios** on DEV — OMNI schema complete. **Justification:** manual DEV Submissions unreliable; must create Fillout-shaped pipeline-ready Submissions. **066** test blocked until C-020 script or existing intake-complete DEV row. Script paused pending sequencing approval. [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013, H-002 | **blocked — sequencing** |
 
 ### Wave 7 — Asset storage
 

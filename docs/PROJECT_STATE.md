@@ -12,8 +12,8 @@ Last updated: **2026-07-05** (Wave 2A planning complete; Phase 2 next sequence)
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **DEV ready** — OMNI confirmed automation ON; sandbox test **waiting** on enrollment `rec…` + expected milestone behavior from OMNI |
-| **C-020 — Engineering Test Framework** | **Schema on DEV complete** — script **blocked** on **066 DEV audit** — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
+| **H-002 — Automation 066 v3.1** | **DEV ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior |
+| **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Wave 2A planning complete** — [classification](./v2-014-wave-2a-classification.md); **implementation not started** (2b+) |
@@ -61,23 +61,23 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **DEV is the first testing location for:**
 
-- Automation **066 v3.1** — **ON in DEV** (OMNI confirmed); sandbox test **waiting on OMNI** test enrollment + expected milestone behavior (H-002)
+- Automation **066 v3.1** — **ON in DEV**; DEV intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002)
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
-- **C-020** Engineering Test Framework — **Testing Scenarios** DEV schema complete; script blocked until **066 DEV** passes
+- **C-020** Engineering Test Framework — justified by Fillout-shaped pipeline need; **066** test and C-020 script sequencing blocked on pipeline-ready DEV submission
 - Make dry-runs (when dev scenarios configured)
 
-**V2-015 completion gate:** base ID recorded ✓ · **066 ON in DEV** ✓ · **066 sandbox test** — waiting on OMNI enrollment `rec…` + expected milestone behavior · webhook/Make isolation — verify per runbook
+**V2-015 completion gate:** base ID recorded ✓ · **066 ON in DEV** ✓ · **DEV intake automations ON** ✓ · **066 sandbox pending** — OMNI confirm Schmidt submission through pipeline + expected milestone behavior · webhook/Make isolation — verify per runbook
 
 ### Phase 2 next sequence (locked 2026-07-05)
 
 | # | Step |
 |---|------|
-| 1 | **066 DEV sandbox test** — **waiting on OMNI** (enrollment `rec…` + expected milestone behavior) |
+| 1 | **066 DEV sandbox test** — **pending** OMNI confirm Schmidt submission through intake pipeline + expected milestone behavior (DEV automations now ON) |
 | 2 | After DEV pass → Mike decides **066 prod promote** |
 | 3 | Approved prod maintenance window → delete **112**, retire **043** |
-| 4 | **C-020** — DEV **Testing Scenarios** schema done; Cursor script **after** **066 DEV pass** | DEV |
+| 4 | **C-020** — script after pipeline-ready submission path + sequencing approval | DEV |
 
 **Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 

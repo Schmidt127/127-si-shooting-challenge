@@ -9,14 +9,28 @@
 
 ---
 
+## Why C-020 exists (justification)
+
+| Finding | Why it matters |
+|---------|----------------|
+| **Manual DEV Submissions are not reliable** | Rows typed into Submissions may not run **023**, **005**, **009**, **010**, **031**, etc. unless shaped exactly like Fillout |
+| **Manual rows are not enough** | Operator-created incomplete rows cannot validate pipeline behavior |
+| **Testing Scenarios must create Fillout-shaped Submissions** | Only production-shaped intake produces trustworthy downstream state for **066**, upload, homework, and video tests |
+| **066 depends on real pipeline state** | Shot milestone logic uses counted submissions from a enrollment that went through intake — not ad-hoc manual fields |
+
+**066 DEV test** waits until C-020 can create a pipeline-ready Submission **or** until an existing real DEV Submission is identified that already completed intake. See [066 dev checklist](./066-v3.1-dev-deploy.md).
+
+---
+
 ## C-020 Script Start Gates
 
 ### Required
 
-- **066 DEV audit** + sandbox test completed — [066 dev deploy checklist](./066-v3.1-dev-deploy.md)  
-  **Waiting on OMNI:** exact enrollment `rec…` + expected milestone behavior before trigger.
+- **Pipeline-ready submission path defined** for DEV testing — Fillout-shaped Submission via C-020 **or** verified existing DEV row ([066 dev deploy checklist](./066-v3.1-dev-deploy.md))
 
-Do **not** begin GitHub script work until this gate passes.
+Do **not** begin GitHub script work until Mike approves starting C-020 implementation (after sequencing decision with ChatGPT/OMNI).
+
+**Note:** **066** sandbox test is **blocked** on the same pipeline-ready submission requirement. Manual incomplete Submissions must **not** be used for **066** testing.
 
 ### Recommended (non-blocking)
 

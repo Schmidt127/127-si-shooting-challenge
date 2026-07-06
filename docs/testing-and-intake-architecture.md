@@ -130,7 +130,7 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 ## C-020 — Engineering Test Framework (Testing Scenarios)
 
 **Priority:** **Confirmed** — DEV testing framework for Phase 2 / V2-015.  
-**Build order:** Step **4** in [Phase 2 next sequence](./v2-015-development-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** 066 DEV audit and approved **112**/**043** maintenance (unless Mike reprioritizes).  
+**Build order:** Step **4** in [Phase 2 next sequence](./v2-015-development-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** DEV test (C-020 scenario or verified existing DEV row) and approved **112**/**043** maintenance (unless Mike reprioritizes).  
 **Environment:** **DEV first** (`appTetnuCZlCZdTCT`).
 
 ### What this is (and is not)
@@ -143,13 +143,25 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 
 ### Script development — **paused**
 
-**Do not start Cursor/GitHub script work** until **066 DEV audit** + sandbox test is complete.
+**Do not start Cursor/GitHub script work** until a pipeline-ready DEV submission path is defined for **066** testing (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 ### Problem
 
-Manual Fillout for every pipeline test is slow. Need repeatable **scenarios** → production-shaped pipeline run → compare **Expected** vs **Actual** — without polluting pipeline tables with test metadata.
+Manual Fillout for every pipeline test is slow. **Manual DEV Submissions are also unreliable** — rows typed directly into the Submissions table may not move through the normal intake chain unless they match Fillout field shapes and trigger **023**, **005**, **009**, **010**, **031**, etc. That makes them unsuitable for **066** milestone testing (which depends on counted submissions, Week, and XP/WAS state from a real pipeline run).
+
+Need repeatable **scenarios** → **Fillout-shaped** production pipeline run → compare **Expected** vs **Actual** — without polluting pipeline tables with test metadata.
+
+### C-020 justification — manual submissions are not enough
+
+| Finding | Implication |
+|---------|-------------|
+| Manual DEV Submissions may skip or mis-run intake automations | **066** tests on manual rows do not prove production behavior |
+| Fillout-shaped Submissions move through **023 → 005 → 009 → 010 → 031** (and downstream) | **Testing Scenarios** must create Submissions that match what Fillout sends |
+| **066** needs counted submissions + correct enrollment/week state | **066 DEV sandbox** waits until C-020 can create a pipeline-ready Submission **or** until an existing real DEV Submission is identified that already completed intake |
+
+**Locked:** Manual operator rows alone are **not** sufficient for Engineering Test Framework validation. C-020 exists to create pipeline-ready Submissions on demand.
 
 ### Goal
 
