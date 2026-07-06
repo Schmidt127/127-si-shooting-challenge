@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-07-05 (v3.1 SCRIPT/CONFIG split)
+Last GitHub Update: 2026-07-06 (v3.2 Week date-key fix)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,11 +27,12 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.1
+ * Version: v3.2
  * Date Written: 2026-06-17
- * Last Updated: 2026-07-05
+ * Last Updated: 2026-07-06
  *
  * VERSION HISTORY
+ * - v3.2 (2026-07-06): Week resolution uses 005/034 America/Denver date keys (not UTC ISO slice).
  * - v3.1 (2026-07-05): SCRIPT metadata block separated from CONFIG; batched create/update (50).
  * - v3.0 (2026-07-05): V2 standard rewrite — Week write from Milestone Activity Date;
  *   CONFIG/scriptName/version alignment; required outputs; numbered sections; schema gates.
@@ -105,10 +106,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.1",
-  versionDate: "2026-07-05",
+  version: "v3.2",
+  versionDate: "2026-07-06",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-07-05",
+  lastUpdated: "2026-07-06",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -425,11 +426,63 @@ function getDateValue(record, fieldName) {
   return null;
 }
 
-function toDateKey(value) {
+function toDateKeyFromText(textValue) {
+  const text = String(textValue || "").trim();
+  if (!text) return "";
+
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) {
+    return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+  }
+
+  const localMatch = text.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (localMatch) {
+    const month = localMatch[1].padStart(2, "0");
+    const day = localMatch[2].padStart(2, "0");
+    const year = localMatch[3];
+    return `${year}-${month}-${day}`;
+  }
+
+  return "";
+}
+
+function toDateKeyFromDateObject(value, timeZone = CONFIG.timeZone) {
   if (!value) return "";
-  const date = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(date.getTime())) return "";
-  return date.toISOString().slice(0, 10);
+
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+
+  const year = parts.find((part) => part.type === "year")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const day = parts.find((part) => part.type === "day")?.value || "";
+
+  if (!year || !month || !day) return "";
+
+  return `${year}-${month}-${day}`;
+}
+
+function toSafeDateKey(record, table, fieldName) {
+  const raw = record.getCellValue(fieldName);
+  const text = getText(record, fieldName);
+
+  const fromText = toDateKeyFromText(text);
+  if (fromText) return fromText;
+
+  return toDateKeyFromDateObject(raw, CONFIG.timeZone);
+}
+
+function compareDateKeys(a, b) {
+  if (!a && !b) return 0;
+  if (!a) return -1;
+  if (!b) return 1;
+  return String(a).localeCompare(String(b));
 }
 
 function formatDateForNotes(dateValue) {
@@ -473,41 +526,42 @@ function buildMilestoneSourceKey(enrollmentId, shotMilestoneId) {
    SECTION 6 — WEEK RESOLUTION
 ========================================================= */
 
-function findWeekForDate(weekRecords, weeksTable, dateKey) {
-  if (!dateKey) return null;
+function findWeekForDate(weekRecords, weeksTable, activityDateKey) {
+  if (!activityDateKey) return null;
 
-  const target = new Date(`${dateKey}T12:00:00.000Z`);
-
-  for (const week of weekRecords) {
-    const startRaw = getDateValue(week, CONFIG.weekFields.startDate);
-    const endRaw = getDateValue(week, CONFIG.weekFields.endDate);
-    if (!startRaw || !endRaw) continue;
-
-    const start = new Date(startRaw);
-    const end = new Date(endRaw);
-    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) continue;
-
-    const startDateOnly = new Date(
-      Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate(), 0, 0, 0, 0)
-    );
-    const endDateOnly = new Date(
-      Date.UTC(end.getUTCFullYear(), end.getUTCMonth(), end.getUTCDate(), 23, 59, 59, 999)
-    );
-
-    if (target >= startDateOnly && target <= endDateOnly) {
+  const candidates = weekRecords
+    .map((week) => {
+      const startKey = toSafeDateKey(week, weeksTable, CONFIG.weekFields.startDate);
+      const endKey = toSafeDateKey(week, weeksTable, CONFIG.weekFields.endDate);
       const isActive = fieldExists(weeksTable, CONFIG.weekFields.active)
         ? getBooleanish(week, CONFIG.weekFields.active, true)
         : true;
-      if (!isActive) continue;
-      return week;
-    }
-  }
 
-  return null;
+      return { week, startKey, endKey, isActive };
+    })
+    .filter(
+      (item) =>
+        item.isActive &&
+        item.startKey &&
+        item.endKey &&
+        compareDateKeys(activityDateKey, item.startKey) >= 0 &&
+        compareDateKeys(activityDateKey, item.endKey) <= 0
+    )
+    .sort((a, b) => {
+      const startCompare = compareDateKeys(a.startKey, b.startKey);
+      if (startCompare !== 0) return startCompare;
+
+      const endCompare = compareDateKeys(a.endKey, b.endKey);
+      if (endCompare !== 0) return endCompare;
+
+      return String(a.week.name || "").localeCompare(String(b.week.name || ""));
+    });
+
+  return candidates.length > 0 ? candidates[0].week : null;
 }
 
 function resolveWeekIdForActivityDate(weekRecords, weeksTable, activityDate) {
-  const dateKey = toDateKey(activityDate);
+  const dateKey = toDateKeyFromDateObject(activityDate, CONFIG.timeZone);
   if (!dateKey) return { weekId: "", dateKey: "" };
   const weekRecord = findWeekForDate(weekRecords, weeksTable, dateKey);
   return {
