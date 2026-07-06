@@ -13,7 +13,7 @@ Last updated: **2026-07-05** (Wave 2A planning complete; Phase 2 next sequence)
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
 | **H-002 — Automation 066 v3.1** | **DEV paste done** — audit + sandbox test next; prod after DEV pass |
-| **C-020 — Engineering Test Framework** | **Blocked on OMNI** — **Testing Scenarios** table revision; script paused — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
+| **C-020 — Engineering Test Framework** | **Schema on DEV complete** — script **blocked** on **066 DEV audit** — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Wave 2A planning complete** — [classification](./v2-014-wave-2a-classification.md); **implementation not started** (2b+) |
@@ -65,7 +65,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
-- **C-020** Engineering Test Framework — **Testing Scenarios** (OMNI schema; script blocked)
+- **C-020** Engineering Test Framework — **Testing Scenarios** DEV schema complete; script blocked until **066 DEV** passes
 - Make dry-runs (when dev scenarios configured)
 
 **V2-015 completion gate:** base ID recorded ✓ · **066 v3.1 pasted in DEV** ✓ · **066 DEV audit + sandbox test** — next · webhook/Make isolation — verify per runbook
@@ -77,7 +77,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | 1 | **066 DEV audit** + one sandbox test |
 | 2 | After DEV pass → Mike decides **066 prod promote** |
 | 3 | Approved prod maintenance window → delete **112**, retire **043** |
-| 4 | Begin **C-020** — OMNI finishes **Testing Scenarios**; Cursor script **after** final DEV field list | DEV |
+| 4 | **C-020** — DEV **Testing Scenarios** schema done; Cursor script **after** **066 DEV pass** | DEV |
 
 **Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 
