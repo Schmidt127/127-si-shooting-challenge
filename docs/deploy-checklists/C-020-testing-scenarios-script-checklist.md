@@ -13,7 +13,8 @@
 
 ### Required
 
-- **066 DEV audit** + sandbox test completed — [066 dev deploy checklist](./066-v3.1-dev-deploy.md)
+- **066 DEV audit** + sandbox test completed — [066 dev deploy checklist](./066-v3.1-dev-deploy.md)  
+  **Waiting on OMNI:** exact enrollment `rec…` + expected milestone behavior before trigger.
 
 Do **not** begin GitHub script work until this gate passes.
 
