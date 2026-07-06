@@ -113,12 +113,12 @@ Email builders/senders (**071–077**) are tagged **C/E** — merge to EMC (Cate
 
 Priority order follows **complexity reduction**, not slot recovery.
 
-### P0 — Approved-path retirements (Mike only)
+### P0 — Approved retirements (Mike 2026-07-05)
 
-| Item | Action | Clarity win | Slots (secondary) |
-|------|--------|-------------|------------------:|
-| **112** | Delete after monitor period | Single VF path (**013**) | +1 |
-| **043** | Retire after verify **042** assigns gate | One level script | +1 |
+| Automation | Action | When |
+|------------|--------|------|
+| **112** | **Delete** | Next approved production maintenance window |
+| **043** | **Retire** | Same — **042** is canonical |
 
 ### P1 — Merge when four-axis passes (do not execute tonight)
 
