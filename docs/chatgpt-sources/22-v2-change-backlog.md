@@ -100,7 +100,7 @@ flowchart TD
 |----|---------|--------|------------|--------|
 | **V2-001** | Archive 2025–26 base; clone for 2026–27 | **Superseded** by **V2-013** (one base + Program Instance). Doc kept: [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | **deferred** |
 | **H-001** | Fix 090F achievement unlock audit | Audit v1.1 — shot milestones on Milestone Source Key; other on Enrollment+Achievement+Week; **0 data deletes** | Wave 0 | **done** |
-| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; **DEV paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after DEV pass | Wave 0 | **in-progress** |
+| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; **DEV automation ON** (OMNI confirmed); sandbox test **waiting on OMNI** enrollment + expected milestone behavior ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after DEV pass | Wave 0 | **blocked — OMNI test case** |
 | **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
 
