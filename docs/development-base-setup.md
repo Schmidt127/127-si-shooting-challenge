@@ -21,7 +21,7 @@ Use this runbook when creating or refreshing the **Development** Airtable base. 
 
 **Data policy (2026-07-05):** DEV retains Schmidt/testing enrollment plus **5** additional test enrollments. All other registered athlete/enrollment records were **removed from DEV only**. Production was **not changed**.
 
-**First testing location:** 066 v3.1 paste, merge tests, schema changes, backfills, Test Intake / Schmidt work, Make dry-runs (when configured).
+**First testing location:** 066 v3.1 paste, merge tests, schema changes, backfills, **Testing Scenarios** / Schmidt work, Make dry-runs (when configured).
 
 After clone: update [PROJECT_STATE.md](./PROJECT_STATE.md) with the dev base ID.
 

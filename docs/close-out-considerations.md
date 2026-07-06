@@ -45,7 +45,7 @@ If a Submission / Homework Completion / XP row is **already linked** to an inact
 | **053** streak occurrences | Still rebuilds from counted submissions |
 | **072 / 076** parent emails | No enrollment `Active?` gate today |
 
-**Practical rule for safe testing:** Use a **dedicated Schmidt test Athlete** (**C-019**) with one Enrollment where **`Active?` is unchecked** — hidden from leaderboard and audits, but pipeline runs **identically** to production (no test flags on rows). Test Intake (**C-020**) pre-links that Enrollment. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md).
+**Practical rule for safe testing:** Use a **dedicated Schmidt test Athlete** (**C-019**) with one Enrollment where **`Active?` is unchecked** — hidden from leaderboard and audits, but pipeline runs **identically** to production (no test flags on rows). **Testing Scenarios** (**C-020**) pre-links that Enrollment. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md).
 
 **Post–July 1:** See **C-010** — harden `Active?` as a global gate in XP, weekly summary, homework, streak, and email automations.
 
@@ -168,7 +168,7 @@ Fillout → transient intake only (optional one-hop)
 - [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **2025–26 post-close cleanup backlog (H-001–H-006)**
 - [PROJECT_STATE.md](./PROJECT_STATE.md) — bases, audit index, deploy paths
 - [asset-storage-migration.md](./asset-storage-migration.md) — AWS S3 + canonical URL assets (C-013)
-- [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — Fillout validation, flexible Weeks, Schmidt sandbox, Test Intake harness (C-017–C-020)
+- [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — Fillout validation, flexible Weeks, Schmidt sandbox, Engineering Test Framework (C-017–C-020)
 - [platform-config-improvements.md](./platform-config-improvements.md) — Grade bands + public display (C-021, C-022)
 - [data-flow/weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) — **aspirational** scheduled flow; production still manual (C-011)
 - [airtable/stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) — Stage J field cleanup; extends to **Stage K** (C-012)

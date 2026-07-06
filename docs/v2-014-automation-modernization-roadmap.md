@@ -159,7 +159,7 @@ Locked after ChatGPT review (2026-07-05):
 | **1** | **066 DEV audit** + one sandbox test | DEV |
 | **2** | After DEV pass → **Mike decides** whether to promote **066** to Production | Promotion doc → prod paste |
 | **3** | During **approved production maintenance window** → delete **112**, retire **043** | Production |
-| **4** | Begin **C-020** Test Intake Harness | DEV first |
+| **4** | Begin **C-020** Engineering Test Framework (**Testing Scenarios**) | DEV first — **blocked on OMNI field list** |
 
 **Not in this sequence yet:** merge waves (006+021, etc.), EMC, Lambda/C-013 implementation.
 

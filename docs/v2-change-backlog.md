@@ -74,7 +74,7 @@ flowchart TD
 | **3** | **C-021** grade bands — link-based matching | Must work before tuning **XP Reward Rules** (Wave 9) |
 | **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
 | **5** | **C-010**, **C-011**, **066** Airtable deploy | Production safety + automation before heavy testing |
-| **6** | **C-019**, **C-020** test sandbox + Test Intake | Validate pipeline without Fillout; **C-020 DEV build after 066**; needed before S3 cutover |
+| **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | Validate pipeline without Fillout; **C-020 script blocked on OMNI field list**; needed before S3 cutover |
 | **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | Hash at upload; one URL per asset; duplicate files caught by **SHA-256**, not filename |
 | **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
 | **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
@@ -117,7 +117,7 @@ flowchart TD
 | **V2-014** | **Automation Modernization Roadmap** | Master inventory: Category A–F, four-axis evaluation, Complexity Score ([doc 06](./v2/06-automation-standards.md)), modernization priority. **Goal:** reduce complexity first; capacity recovery secondary. **066 v3.1** = V2 reference. **112 OFF**; **013** production. No rewrites until wave approved. | Wave 0, H-002 | **done** (doc) |
 | **V2-014a** | Wave 2A — classify all automations | **Planning complete** (2026-07-05) — classification, patterns, Mike decisions; ChatGPT review accepted. **Implementation not complete** — no rewrites/merges/retirements executed. Retirements **approved:** **112**, **043** (pending maintenance window) | V2-014, V2-015 | **planning done** |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
-| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Test Intake/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
+| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Testing Scenarios/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
 
 Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Dev base: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)
 

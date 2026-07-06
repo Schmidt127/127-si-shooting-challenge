@@ -26,7 +26,7 @@
 | Automation merge testing | **Yes** |
 | Schema changes | **Yes** |
 | Extension backfills | **Yes** |
-| Test Intake / Schmidt sandbox (C-019, C-020) | **Yes** |
+| Testing Scenarios / Schmidt sandbox (C-019, C-020) | **Yes** |
 | Make dry-runs | **Yes** — when dev scenarios configured |
 
 Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke tests only — see [testing-and-intake-architecture.md](./testing-and-intake-architecture.md).
@@ -123,7 +123,7 @@ flowchart TB
     subgraph dev [Development_Base]
         DevPaste[Automation_paste_test]
         DevSchema[Schema_field_experiments]
-        DevTest[C-019_C-020_Test_Intake]
+        DevTest[C-019_C-020_Testing_Scenarios]
         DevMake[Make_dev_scenarios]
     end
 
@@ -252,7 +252,7 @@ Hold these in DEV (or docs-only) until an explicit launch or cutover wave with r
 | 2. Commit + review | Repo |
 | 3. Paste docblock → end into **dev** automation | Dev base |
 | 4. Run matching audit extension (dry-run) on dev | Dev base |
-| 5. Test one sandbox record (Schmidt / Test Intake) | Dev base |
+| 5. Test one sandbox record (Schmidt / Testing Scenarios) | Dev base |
 | 6. Mike approves promote | — |
 | 7. Paste **same** script into **production** automation | Prod base |
 | 8. Re-run audit on prod (dry-run) | Prod base |
