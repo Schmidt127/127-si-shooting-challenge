@@ -158,7 +158,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
-| **C-020** | **Test Intake harness** | **Priority DEV build after 066** — Test Intake table + automation/extension; `Scenario Type`, `Run Test?` / `Dry Run?` → Fillout-shaped Submission with pre-linked Enrollment (Schmidt or DEV test enrollments); multi-file video; **no `Is Test Record?` on pipeline**; downstream automation map in [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 | C-019, V2-013, H-002 (066 DEV pass) | **queued — next after 066 DEV** |
+| **C-020** | **Engineering Test Framework** | **Testing Scenarios** table on DEV (OMNI finishing schema). Script **paused** until final field list. Production-shaped pipeline; framework fields (**Scenario Type**, **Test Status**, **Expected/Actual Result**, **Pass/Fail Notes**) on **Testing Scenarios only** — not pipeline. Future **Testing Scenario Library** deferred. Checklist: [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013, H-002, 066 DEV | **blocked — OMNI schema** |
 
 ### Wave 7 — Asset storage
 

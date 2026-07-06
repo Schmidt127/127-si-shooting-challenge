@@ -77,7 +77,7 @@ Attach for OMNI: `airtable/schema/snapshots/dev-20260705/schema_doc_*.md`
 | 1 | **066 DEV audit** + one sandbox test | Mike / Cursor |
 | 2 | After DEV pass → **Mike decides** 066 prod promote | Mike |
 | 3 | Prod maintenance window → delete **112**, retire **043** | Mike |
-| 4 | Begin **C-020** Test Intake Harness | OMNI + Cursor (DEV) |
+| 4 | Begin **C-020** Engineering Test Framework (**Testing Scenarios**; script after OMNI) | OMNI + Cursor (DEV) |
 
 Wave 2A = **planning complete**, **implementation not complete**.
 

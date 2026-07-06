@@ -169,7 +169,7 @@ Document **recurring patterns** across production automations so V2 rewrites and
 | Idempotent per-record logic | One-time cleanup |
 | Make webhook handoff | Bulk repair across many rows |
 
-**C-020 Test Intake:** Operator table + **one** production-style automation (or extension run manually) — design in [testing-and-intake-architecture.md](./testing-and-intake-architecture.md); implementation in GitHub after ChatGPT field map + OMNI table shell.
+**C-020 Engineering Test Framework:** **Testing Scenarios** table on DEV — script **blocked** until OMNI final field list. See [testing-and-intake-architecture.md](./testing-and-intake-architecture.md); [script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 ---
 

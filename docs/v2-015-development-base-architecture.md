@@ -40,7 +40,7 @@ Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke
 | 3 | Production unchanged | **Confirmed** |
 | 4 | **066 v3.1** pasted and tested in DEV | **In progress** — [066 dev deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md) |
 | 5 | Webhook / Make isolation verified | Verify per [development-base-setup.md](./development-base-setup.md) Step 3 |
-| 6 | **C-020** Test Intake harness built and tested in DEV | **Next** — after criterion 4 passes — [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
+| 6 | **C-020** **Testing Scenarios** + Testing views on DEV (OMNI); script after field list | **Blocked on OMNI** — after step 4 in next sequence |
 
 **Do not mark V2-015 `done` in backlog until criterion 4 passes.** Criterion 6 is the **next priority DEV build** after 066.
 
@@ -49,11 +49,11 @@ Schmidt sandbox in **production** (`Active?` false) remains for small prod smoke
 | Order | Work | Status |
 |-------|------|--------|
 | 1 | **066 v3.1** — paste, audit, sandbox test | **In progress** (H-002) |
-| 2 | **C-020** — Test Intake table + automation/extension + Testing views | **Next** — priority testing feature |
-| 3 | Promotion doc → mirror Test Intake structure to Production | After DEV pass + Mike approval |
+| 2 | **C-020** — **Testing Scenarios** table (OMNI) + future script | **Blocked on OMNI field list** |
+| 3 | Promotion doc → mirror **Testing Scenarios** to Production | After DEV pass + Mike approval |
 | 4 | **C-019** — document enrollment IDs; prod Schmidt smoke optional | With or after C-020 |
 
-See [C-020 requirements](./testing-and-intake-architecture.md#c-020--test-intake-harness-production-identical) — **DEV first**, no test flags on pipeline rows, **`Run Test?`** on Test Intake only, downstream automation map documented.
+See [C-020 — Engineering Test Framework](./testing-and-intake-architecture.md#c-020--engineering-test-framework-testing-scenarios) — **Testing Scenarios** table; script **paused** until OMNI final field list; no test fields on pipeline.
 
 **OMNI rejected (2026-07-05):** No `Is Test Record?`, no `Test Status`, or similar on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 
@@ -64,14 +64,14 @@ See [C-020 requirements](./testing-and-intake-architecture.md#c-020--test-intake
 | 1 | **066 DEV audit** + one sandbox test |
 | 2 | After DEV pass → Mike decides **066 prod promote** |
 | 3 | Approved prod maintenance → delete **112**, retire **043** |
-| 4 | Begin **C-020** Test Intake Harness (DEV) |
+| 4 | Begin **C-020** Engineering Test Framework (**Testing Scenarios** + script after OMNI field list) | DEV |
 
 ---
 
 **Related:**
 
 - [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — Phase 2; paste automations in dev first
-- [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — C-019 Schmidt enrollment, C-020 Test Intake
+- [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — C-019 Schmidt enrollment, C-020 Engineering Test Framework
 - [v2-change-backlog.md](./v2-change-backlog.md) — V2-013 Program Instance (production multi-year)
 - [PROJECT_STATE.md](./PROJECT_STATE.md) — live base IDs
 - [deployment-notes.md](./deployment-notes.md) — Vercel / env vars
@@ -105,7 +105,7 @@ This is the **better long-term strategy** than:
 | Production | **One Airtable base** — no second production base |
 | Development | **One permanent DEV base** — clone of prod |
 | Schmidt sandbox (C-019) | **Remains** — small production smoke tests only |
-| DEV base purpose | Automation paste tests, schema changes, backfills, Make dry-runs, Test Intake (C-020) |
+| DEV base purpose | Automation paste tests, schema changes, backfills, Make dry-runs, **Testing Scenarios** (C-020) |
 
 ---
 
@@ -353,7 +353,7 @@ Production base holds **all program years** via Program Instance. Dev base may u
 | Mechanism | Scope |
 |-----------|-------|
 | **Schmidt enrollment (`Active?` false)** | Pipeline parity test **inside prod** for a single athlete — still valuable for prod smoke tests |
-| **Test Intake (C-020)** | Primary home = **dev base**; optional prod smoke with Schmidt only |
+| **Testing Scenarios (C-020)** | Primary home = **dev base**; script after OMNI field list |
 | **Dev base** | Bulk testing, schema work, automation paste, backfills |
 
 **All three coexist.** Dev base reduces reliance on prod for risky work.
@@ -414,4 +414,4 @@ Dev operational data (test submissions, XP) can be **truncated freely**. Config 
 | 2026-07-05 | Dev base ID recorded: `appTetnuCZlCZdTCT` |
 | 2026-07-05 | DEV ready — 6 test enrollments retained; all other enrollments removed; prod unchanged; 066 dev test pending |
 | 2026-07-05 | **Structural promote-as-you-go** — DEV first; Production soon after approval; not Production last |
-| 2026-07-05 | **C-020 Test Intake** — confirmed priority DEV build after 066; downstream automation map |
+| 2026-07-05 | **C-020 Engineering Test Framework** — **Testing Scenarios** table; script blocked on OMNI field list |
