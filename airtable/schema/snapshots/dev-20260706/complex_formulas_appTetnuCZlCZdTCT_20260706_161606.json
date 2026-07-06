@@ -1,0 +1,406 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-06T16:17:16",
+    "baseId": "appTetnuCZlCZdTCT",
+    "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+    "threshold": 6,
+    "complexFormulaCount": 20
+  },
+  "complexFormulas": [
+    {
+      "tableId": "tbl6ORxLs192mXEWp",
+      "tableName": "Final Reflection Quiz Submissions",
+      "fieldId": "fldsIQShDXzmedaXQ",
+      "fieldName": "Score",
+      "dependencyCount": 18,
+      "dependsOnFieldNames": [
+        "Q1 Correct?",
+        "Q2 Correct?",
+        "Q3 Correct?",
+        "Q4 Correct?",
+        "Q5 Correct?",
+        "Q6 Correct?",
+        "Q7 Correct?",
+        "Q8 Correct?",
+        "Q9 Correct?",
+        "Q10 Correct?",
+        "Q11 Correct?",
+        "Q12 Correct?",
+        "Q13 Correct?",
+        "Q14 Correct?",
+        "Q15 Correct?",
+        "Q16 Correct?",
+        "Q17 Correct?",
+        "Q18 Correct?"
+      ],
+      "formula": "{fldlb3AVfAj7FEmjr} +\n{fldZAbDPFpiNpkDOq} +\n{fldaCZZrVbq3vnLSq} +\n{fldexVYGdhYxxfRX1} +\n{fldcOfPpL90km4pma} +\n{fldTXIJAAcaIG7p61} +\n{fldMEi055mkYu68AT} +\n{fld6jCKjhOIZraWE0} +\n{fldknn7fDm8dYcdUA} +\n{fldAO1L59WXe2yAda} +\n{fldnydmLvWZxEL0CN} +\n{fldID2LXbRMTXHGl0} +\n{fldWIwQtW65redest} +\n{fldeewXvzq25KD0LD} +\n{fldjwZgB95zTt1b1J} +\n{fldFa2XMCKCAVJGQH} +\n{fldqKED95c4zR4yUc} +\n{fldYgf26x3COZPJ7s}",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "tableName": "Enrollments",
+      "fieldId": "fldIZHMleMFonQn1R",
+      "fieldName": "Gate Debug Summary",
+      "dependencyCount": 12,
+      "dependsOnFieldNames": [
+        "Level Gate Rule",
+        "Gate Enabled?",
+        "Total Submissions",
+        "Gate Minimum: Submissions",
+        "Total Homework Completions",
+        "Gate Minimum: Homework",
+        "Total Video Submissions",
+        "Gate Minimum: Videos",
+        "Total Zoom Attendances",
+        "Gate Minimum: Zoom Meetings",
+        "Longest Streak Days",
+        "Gate Minimum: Streak Days"
+      ],
+      "formula": "\"Rule=\" & {fldol7GytBoDq5CIA} &\r\n\" | Enabled=\" & IF({fld0Z5sBc9m8qmFVW}, \"Yes\", \"No\") &\r\n\" | Sub \" & {fldewNyKEMDMt9Ger} & \"/\" & {fld7FaC0osGX9CxGp} &\r\n\" | HW \" & {fldHEMvcX18c99Adk} & \"/\" & {fldXhkxJ9Po3E5CTb} &\r\n\" | Vid \" & {fldHI9QxnerBFkKzK} & \"/\" & {fldeWeWXCX06g3IB0} &\r\n\" | Zoom \" & {fldvEHpfO4ModNQoJ} & \"/\" & {fldkyKW5vYiQ0Sm4b} &\r\n\" | Streak \" & {fld3hgGT4u1wsiBBE} & \"/\" & {fldGGjiFmuAwxTp64}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fld8c3ay4tdaQXdSa",
+      "fieldName": "Duplicate Key",
+      "dependencyCount": 10,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Activity Date",
+        "Submission Stat Mode",
+        "2PT Attempted",
+        "2PT Made",
+        "3PT Attempted",
+        "3PT Made",
+        "FT Attempted",
+        "FT Made",
+        "Shot Total"
+      ],
+      "formula": "IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH} & \"\",\r\n    {fldpkkSBsx8kQRZos},\r\n    {fldAw7146HvSLBxGF} & \"\"\r\n  ),\r\n  {fld0fKiO62UiztNQH} & \"|\" &\r\n  DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"YYYY-MM-DD\") & \"|\" &\r\n  {fldAw7146HvSLBxGF} & \"|\" &\r\n  IF(\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\r\n    {fldLZmCQB7vi1vTjF} & \"|\" &\r\n    {fldThGv2Y8MjgBZpp} & \"|\" &\r\n    {fldTW9qdhF8vNkDJA} & \"|\" &\r\n    {fldyS3osevRlfO2Kd} & \"|\" &\r\n    {fldzN0wgxFeuwyLIj} & \"|\" &\r\n    {fldPZu6GsysJwnXS9},\r\n    {fldtAIg2vtfWkyPPk} & \"\"\r\n  ),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblmGSiNA1akW8KnU",
+      "tableName": "XP Events",
+      "fieldId": "fldvh9pv1oTIp24IJ",
+      "fieldName": "XP Date Resolved",
+      "dependencyCount": 10,
+      "dependsOnFieldNames": [
+        "XP Activity Date",
+        "XP Bucket",
+        "Date - Submission Base Activity",
+        "Date - Homework Submission Activity",
+        "Date - Video Submission Activity",
+        "Date - Streak End",
+        "Date - Weekly Summary End",
+        "Date - Zoom Meeting",
+        "Date - Shot Milestone Activity",
+        "Date - Achievement Unlock"
+      ],
+      "formula": "IF(\r\n  {fldxVAackD0buQIba},\r\n  {fldxVAackD0buQIba},\r\n  SWITCH(\r\n    {fldOQBVTSNODRhRcd},\r\n    \"Submission Base\",\r\n      IF(\r\n        {fldvA0LSFK6uDlreq},\r\n        DATETIME_PARSE(ARRAYJOIN({fldvA0LSFK6uDlreq})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Homework Completion\",\r\n      IF(\r\n        {fldl6CyUiKYtqvHfz},\r\n        DATETIME_PARSE(ARRAYJOIN({fldl6CyUiKYtqvHfz})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Video Feedback\",\r\n      IF(\r\n        {fldXH9MGmbeE6Y7OS},\r\n        DATETIME_PARSE(ARRAYJOIN({fldXH9MGmbeE6Y7OS})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Streak\",\r\n      IF(\r\n        {fldHvhlnWHKlvNQDW},\r\n        DATETIME_PARSE(ARRAYJOIN({fldHvhlnWHKlvNQDW})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Weekly Threshold\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Perfect Week\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Zoom Attendance\",\r\n      IF(\r\n        {fldoP1I4zEXKF70DC},\r\n        DATETIME_PARSE(ARRAYJOIN({fldoP1I4zEXKF70DC})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Shot Milestone\",\r\n      IF(\r\n        {fldjNc2VdVl96AShM},\r\n        DATETIME_PARSE(ARRAYJOIN({fldjNc2VdVl96AShM})),\r\n        IF(\r\n          {fldfOBZ6TB0ifLZXx},\r\n          DATETIME_PARSE(ARRAYJOIN({fldfOBZ6TB0ifLZXx})),\r\n          CREATED_TIME()\r\n        )\r\n      ),\r\n    CREATED_TIME()\r\n  )\r\n)",
+      "resultType": "dateTime",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldV5480sMm40q0QX",
+      "fieldName": "Create Google Drive File Name",
+      "dependencyCount": 8,
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name",
+        "Program Instance - Convert to File Name",
+        "Upload Destination",
+        "Homework Name - Slot Correct",
+        "Asset Slot Base",
+        "Asset Type - Convert for File Name",
+        "Date - Convert to File Name"
+      ],
+      "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "fieldName": "Ready for Homework Completion Script?",
+      "dependencyCount": 8,
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Homework Completions",
+        "Asset Slot Base",
+        "Asset Label",
+        "Asset Purpose"
+      ],
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "tableName": "Enrollments",
+      "fieldId": "fldoXWryfQ32rsx3x",
+      "fieldName": "Welcome Email Ready?",
+      "dependencyCount": 7,
+      "dependsOnFieldNames": [
+        "Athlete",
+        "Full Athlete Name",
+        "School Year",
+        "Program Instance",
+        "Welcome Email To",
+        "Parent Email Subject",
+        "Parent Email HTML"
+      ],
+      "formula": "AND(\n  {fld7TFNgzmESOhTOu},\n  {fldVLV5YMCB2CHhai},\n  {fldKReGFHZ34Skb6D},\n  {fldVMwSfH8r9S0afA},\n  {fldj7JuUQiiRUqo5j},\n  {fldWYUYAOudslfXa0},\n  {fldt3egwi2fqgpDY8}\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldiTf8V6Jf5bBKeP",
+      "fieldName": "Detailed Stats Valid?",
+      "dependencyCount": 7,
+      "dependsOnFieldNames": [
+        "Submission Stat Mode",
+        "2PT Attempted",
+        "2PT Made",
+        "3PT Attempted",
+        "3PT Made",
+        "FT Attempted",
+        "FT Made"
+      ],
+      "formula": "IF(\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  AND(\n    {fldLZmCQB7vi1vTjF} >= 0,\n    {fldThGv2Y8MjgBZpp} >= 0,\n    {fldTW9qdhF8vNkDJA} >= 0,\n    {fldyS3osevRlfO2Kd} >= 0,\n    {fldzN0wgxFeuwyLIj} >= 0,\n    {fldPZu6GsysJwnXS9} >= 0,\n    {fldThGv2Y8MjgBZpp} <= {fldLZmCQB7vi1vTjF},\n    {fldyS3osevRlfO2Kd} <= {fldTW9qdhF8vNkDJA},\n    {fldPZu6GsysJwnXS9} <= {fldzN0wgxFeuwyLIj}\n  ),\n  BLANK()\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fld2onHVrtviMDOP8",
+      "fieldName": "Submission Has Detailed Stats?",
+      "dependencyCount": 7,
+      "dependsOnFieldNames": [
+        "Submission Stat Mode",
+        "2PT Attempted",
+        "2PT Made",
+        "3PT Attempted",
+        "3PT Made",
+        "FT Attempted",
+        "FT Made"
+      ],
+      "formula": "IF(\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  OR(\n    {fldLZmCQB7vi1vTjF} != BLANK(),\n    {fldThGv2Y8MjgBZpp} != BLANK(),\n    {fldTW9qdhF8vNkDJA} != BLANK(),\n    {fldyS3osevRlfO2Kd} != BLANK(),\n    {fldzN0wgxFeuwyLIj} != BLANK(),\n    {fldPZu6GsysJwnXS9} != BLANK()\n  ),\n  FALSE()\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldAw7146HvSLBxGF",
+      "fieldName": "Submission Stat Mode",
+      "dependencyCount": 7,
+      "dependsOnFieldNames": [
+        "2PT Attempted",
+        "2PT Made",
+        "3PT Attempted",
+        "3PT Made",
+        "FT Attempted",
+        "FT Made",
+        "Shot Total"
+      ],
+      "formula": "IF(\r\n  OR(\r\n    {fldLZmCQB7vi1vTjF} != BLANK(),\r\n    {fldThGv2Y8MjgBZpp} != BLANK(),\r\n    {fldTW9qdhF8vNkDJA} != BLANK(),\r\n    {fldyS3osevRlfO2Kd} != BLANK(),\r\n    {fldzN0wgxFeuwyLIj} != BLANK(),\r\n    {fldPZu6GsysJwnXS9} != BLANK()\r\n  ),\r\n  \"Detailed Shooting\",\r\n  IF(\r\n    {fldtAIg2vtfWkyPPk} != BLANK(),\r\n    \"Simple Total\",\r\n    BLANK()\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "tableName": "Enrollments",
+      "fieldId": "fld6pZGMbr2uWQ9bl",
+      "fieldName": "Public Gate Missing Reason",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Gate Passes",
+        "Public Missing Submissions",
+        "Public Missing Homework",
+        "Public Missing Videos",
+        "Public Missing Zoom",
+        "Public Missing Streak"
+      ],
+      "formula": "IF(\n  {fldcpQWJ9g315rQg1},\n  \"\",\n  IF(\n    LEN(\n      {fldid87attaGLbc92} &\n      {fldozKoW3osO7eORu} &\n      {fld5C8QbW0QYGU2m9} &\n      {fldcMl1TtIyCo0Vtn} &\n      {fld4N3ueITBuxqkNA}\n    ) = 0,\n    \"Missing: Complete remaining level requirements\",\n    \"Missing: \" &\n    REGEX_REPLACE(\n      {fldid87attaGLbc92} &\n      IF({fldid87attaGLbc92}, \", \", \"\") &\n      {fldozKoW3osO7eORu} &\n      IF({fldozKoW3osO7eORu}, \", \", \"\") &\n      {fld5C8QbW0QYGU2m9} &\n      IF({fld5C8QbW0QYGU2m9}, \", \", \"\") &\n      {fldcMl1TtIyCo0Vtn} &\n      IF({fldcMl1TtIyCo0Vtn}, \", \", \"\") &\n      {fld4N3ueITBuxqkNA},\n      \", $\",\n      \"\"\n    )\n  )\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblWIb8JCuQ842HI8",
+      "tableName": "Level Gate Rules",
+      "fieldId": "fldLHztmV49d5v4Pq",
+      "fieldName": "Public Gate Criteria",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Gate Enabled?",
+        "Minimum Submissions",
+        "Minimum Homework",
+        "Minimum Videos",
+        "Minimum Zoom Meetings",
+        "Minimum Streak Days"
+      ],
+      "formula": "IF(\r\n  NOT({fldGwszPuPkmo2ROq}),\r\n  \"\",\r\n  \"To unlock this level, athletes must complete:\" & \"\\n\" &\r\n  \"• \" & {fldvWKeUf1xf2H0JK} & \" shooting submissions\" & \"\\n\" &\r\n  \"• \" & {fldn9GN6ggEwENF1p} & \" homework completions\" & \"\\n\" &\r\n  \"• \" & {fldZqzsPncNyN0gBQ} & \" video submissions\" & \"\\n\" &\r\n  \"• \" & {fldyWZ77e9BgnHuBz} & \" Zoom meeting(s)\" & \"\\n\" &\r\n  \"• A \" & {fldy0V8N8vuLs0ggc} & \"-day shooting streak\"\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "fieldName": "Workflow Next Step",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldmrxhhChP7DiySK",
+      "fieldName": "Homework Completion Ready?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Week",
+        "Homework Name 1",
+        "Homework Name 2",
+        "HW Sub 1",
+        "HW Sub 2"
+      ],
+      "formula": "AND(\r\n  {fld0fKiO62UiztNQH},\r\n  {fldA3fpXWckngZ6g1},\r\n  OR(\r\n    {fldBuHIpIwxTy60js},\r\n    {fldnAy8yXTFafhvnu}\r\n  ),\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7}\r\n  )\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldYDitgQr6jgoDMk",
+      "fieldName": "Perfect Week Countable Submission?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Count This Submission?",
+        "Submitted Same Day?",
+        "Total Shots Counted",
+        "Enrollment",
+        "Week",
+        "Activity Date"
+      ],
+      "formula": "IF(\n  AND(\n    {fld1gQ2c04pndnTKe} = 1,\n    {fldE7G8H1O7HPYuIi} = 1,\n    {fldAqC1oUKKFZdU3p} > 0,\n    {fld0fKiO62UiztNQH},\n    {fldA3fpXWckngZ6g1},\n    {fldpkkSBsx8kQRZos}\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fld31w9XjMW5DbBpk",
+      "fieldName": "Ready for 009 Asset Creation?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Week",
+        "Submission Assets",
+        "HW Sub 1",
+        "HW Sub 2",
+        "Video Upload"
+      ],
+      "formula": "IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    COUNTA({fld1kilHu3o3Qtlpv}) = 0,\r\n    OR(\r\n      COUNTA({fldtJS9LW3PAyCaNC}) > 0,\r\n      COUNTA({fldUvfAHi3e15Oxb7}) > 0,\r\n      COUNTA({fld0pxr2NoMx2MxBu}) > 0\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fldZjS3FyJm18Pu1f",
+      "fieldName": "Ready for Homework Completion Automation?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Week",
+        "Activity Date",
+        "Submission Assets",
+        "Homework Name 1",
+        "Homework Name 2"
+      ],
+      "formula": "IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    {fldpkkSBsx8kQRZos},\r\n    {fld1kilHu3o3Qtlpv},\r\n    OR(\r\n      {fldBuHIpIwxTy60js},\r\n      {fldnAy8yXTFafhvnu}\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "tableName": "Submissions",
+      "fieldId": "fld7PEP0RfvxBJ5sx",
+      "fieldName": "Why Not Ready for 009?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Week",
+        "Submission Assets",
+        "HW Sub 1",
+        "HW Sub 2",
+        "Video Upload"
+      ],
+      "formula": "IF(\r\n  NOT({fld0fKiO62UiztNQH}),\r\n  \"Missing Enrollment\",\r\nIF(\r\n  NOT({fldA3fpXWckngZ6g1}),\r\n  \"Missing Week\",\r\nIF(\r\n  COUNTA({fld1kilHu3o3Qtlpv}) > 0,\r\n  \"Already has Submission Assets\",\r\nIF(\r\n  AND(\r\n    COUNTA({fldtJS9LW3PAyCaNC}) = 0,\r\n    COUNTA({fldUvfAHi3e15Oxb7}) = 0,\r\n    COUNTA({fld0pxr2NoMx2MxBu}) = 0\r\n  ),\r\n  \"No HW Sub 1, HW Sub 2, or Video Upload attachment\",\r\n  \"READY\"\r\n))))",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "tableName": "Video Feedback",
+      "fieldId": "fldzGYsF8NllnpRMQ",
+      "fieldName": "Writeback Complete?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Upload Status",
+        "Google Drive File ID",
+        "Google Drive File URL",
+        "Google Drive Folder ID",
+        "Google Drive Folder URL",
+        "Video Asset Uploaded At"
+      ],
+      "formula": "AND(\n  {fld1QFG4TX1fdN2h9} = \"Uploaded\",\n  {fldLRbcq68yn7aTp1} != BLANK(),\n  {fldGJsSIOBkvZRxf6} != BLANK(),\n  {fldJDWXsPcQaH2pA2} != BLANK(),\n  {fldnDfkcdMyZ0ychG} != BLANK(),\n  {fldGtSrSa4E25YmRW} != BLANK()\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tbl9520d72adxlAKQ",
+      "tableName": "Weekly Athlete Summary",
+      "fieldId": "flde9iIoiGNcaShL6",
+      "fieldName": "Threshold XP Ready?",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Enrollment",
+        "Week",
+        "Goal Record",
+        "Goal Completion %",
+        "Requeue Threshold XP",
+        "Threshold XP Status"
+      ],
+      "formula": "IF(\n  AND(\n    {fldNH81lfwL5dBnAw},\n    {fldNUSqzr3H0PE5Ex},\n    {fldNvhGv57qOqbsfN},\n    {flda0ZXW1Bf7OvRAK},\n    {flda0ZXW1Bf7OvRAK} >= 1,\n    OR(\n      {fld4pN4qHKO4Nzgvm} = 1,\n      {fldLWHZDNekE0eDN9} != \"Processed\"\n    )\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    }
+  ]
+}

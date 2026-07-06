@@ -2,7 +2,9 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (Wave 2A planning complete; Phase 2 next sequence)
+Last updated: **2026-07-06** (DEV + prod schema snapshots; session handoff)
+
+**New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 
 ---
 
@@ -83,14 +85,22 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
 
-### Schema (production export)
+### Schema snapshots (2026-07-06)
+
+| Base | Folder | Tables | Views |
+|------|--------|--------|-------|
+| **Production** | `airtable/schema/snapshots/prod-20260706/` | **29** | **118** |
+| **Development** | `airtable/schema/snapshots/dev-20260706/` | **30** | **120** |
+
+DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
+
+### Schema (legacy reference)
 
 | Item | Value |
 |------|--------|
-| Tables (schema export) | **29** (see `base_summary_*_20260629_045741.json`) |
-| Schema snapshot (latest) | `airtable/schema/snapshots/` — **`20260629_045741`** + `manifest_appn84sqPw03zEbTT_latest.json` |
+| Prior prod snapshot | `20260629_045741` |
 | Hand-maintained maps | `airtable/schema/current/` |
-| Web view docs | [web/docs/airtable-views.md](../web/docs/airtable-views.md) — **views are not exported from Airtable** (by policy); see [snapshots/README.md](../airtable/schema/snapshots/README.md) |
+| Web view docs | [web/docs/airtable-views.md](../web/docs/airtable-views.md) |
 
 **Web env vars (Vercel project `127-si-shooting-challenge`, never commit values):**
 

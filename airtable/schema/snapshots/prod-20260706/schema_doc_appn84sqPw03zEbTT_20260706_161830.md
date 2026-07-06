@@ -1,0 +1,7502 @@
+# Airtable Schema Snapshot
+
+- Generated: `2026-07-06T16:18:31`
+- Script version: `2.4.0`
+- Base ID: `appn84sqPw03zEbTT`
+- Base Name: **127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026**
+- Tables exported: **29**
+- Links found: **132**
+- Dependencies found: **365**
+- Basic views exported: **118**
+- Detailed view metadata exported: **118**
+- Health warnings: **33**
+
+## Base Summary
+
+### Hub Tables
+- **Enrollments** — link degree `36`
+- **Weeks** — link degree `22`
+- **Submissions** — link degree `20`
+- **XP Events** — link degree `20`
+- **Homework Completions** — link degree `18`
+- **Weekly Athlete Summary** — link degree `18`
+- **Grade Bands** — link degree `14`
+- **Athlete Achievement Unlocks** — link degree `12`
+- **FBC Curriculum - SYNC** — link degree `12`
+- **Submission Assets** — link degree `12`
+
+## Health Report
+
+- [WARNING] Table 'Enrollments' has 75 computed fields. | table=`Enrollments`
+- [WARNING] Table 'Submissions' has 54 computed fields. | table=`Submissions`
+- [WARNING] Table 'Submission Assets' has 35 computed fields. | table=`Submission Assets`
+- [WARNING] Table 'XP Events' has 22 computed fields. | table=`XP Events`
+- [WARNING] Table 'Weekly Athlete Summary' has 45 computed fields. | table=`Weekly Athlete Summary`
+- [WARNING] Table 'Homework Completions' has 32 computed fields. | table=`Homework Completions`
+- [INFO] Table 'Tutorials' has no description. | table=`Tutorials`
+- [INFO] Table 'Tutorials & Assets' has no description. | table=`Tutorials & Assets`
+- [WARNING] Table 'Final Reflection Quiz Submissions' has 25 computed fields. | table=`Final Reflection Quiz Submissions`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'Duplicate Match Record'. | table=`Submission Assets` | field=`Duplicate Match Record`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'From field: Duplicate Match Record'. | table=`Submission Assets` | field=`From field: Duplicate Match Record`
+- [WARNING] Self-link detected on 'Levels' via field 'Previous Level'. | table=`Levels` | field=`Previous Level`
+- [WARNING] Self-link detected on 'Levels' via field 'Next Level'. | table=`Levels` | field=`Next Level`
+- [INFO] Field 'Welcome Email Ready?' depends on many fields (7). | table=`Enrollments` | field=`Welcome Email Ready?`
+- [INFO] Field 'Gate Debug Summary' depends on many fields (12). | table=`Enrollments` | field=`Gate Debug Summary`
+- [INFO] Field 'Public Gate Missing Reason' depends on many fields (6). | table=`Enrollments` | field=`Public Gate Missing Reason`
+- [INFO] Field 'Public Gate Criteria' depends on many fields (6). | table=`Level Gate Rules` | field=`Public Gate Criteria`
+- [INFO] Field 'Submission Stat Mode' depends on many fields (7). | table=`Submissions` | field=`Submission Stat Mode`
+- [INFO] Field 'Submission Has Detailed Stats?' depends on many fields (7). | table=`Submissions` | field=`Submission Has Detailed Stats?`
+- [INFO] Field 'Detailed Stats Valid?' depends on many fields (7). | table=`Submissions` | field=`Detailed Stats Valid?`
+- [INFO] Field 'Duplicate Key' depends on many fields (10). | table=`Submissions` | field=`Duplicate Key`
+- [INFO] Field 'Homework Completion Ready?' depends on many fields (6). | table=`Submissions` | field=`Homework Completion Ready?`
+- [INFO] Field 'Ready for Homework Completion Automation?' depends on many fields (6). | table=`Submissions` | field=`Ready for Homework Completion Automation?`
+- [INFO] Field 'Perfect Week Countable Submission?' depends on many fields (6). | table=`Submissions` | field=`Perfect Week Countable Submission?`
+- [INFO] Field 'Ready for 009 Asset Creation?' depends on many fields (6). | table=`Submissions` | field=`Ready for 009 Asset Creation?`
+- [INFO] Field 'Why Not Ready for 009?' depends on many fields (6). | table=`Submissions` | field=`Why Not Ready for 009?`
+- [INFO] Field 'Ready for Homework Completion Script?' depends on many fields (8). | table=`Submission Assets` | field=`Ready for Homework Completion Script?`
+- [INFO] Field 'Create Google Drive File Name' depends on many fields (8). | table=`Submission Assets` | field=`Create Google Drive File Name`
+- [INFO] Field 'Workflow Next Step' depends on many fields (6). | table=`Submission Assets` | field=`Workflow Next Step`
+- [INFO] Field 'XP Date Resolved' depends on many fields (10). | table=`XP Events` | field=`XP Date Resolved`
+- [INFO] Field 'Threshold XP Ready?' depends on many fields (6). | table=`Weekly Athlete Summary` | field=`Threshold XP Ready?`
+- [INFO] Field 'Writeback Complete?' depends on many fields (6). | table=`Video Feedback` | field=`Writeback Complete?`
+- [INFO] Field 'Score' depends on many fields (18). | table=`Final Reflection Quiz Submissions` | field=`Score`
+
+## Linked-record Relationships
+
+- **Achievements** → **Athlete Achievement Unlocks** via **Athlete Achievement Unlocks** (inverse: _Achievement_; single?: `False`)
+- **Achievements** → **Streak Occurrences** via **Streak Occurrences** (inverse: _Achievement_; single?: `False`)
+- **Achievements** → **Weeks** via **Week** (inverse: _Achievements_; single?: `True`)
+- **Athlete Achievement Unlocks** → **Achievements** via **Achievement** (inverse: _Athlete Achievement Unlocks_; single?: `True`)
+- **Athlete Achievement Unlocks** → **Enrollments** via **Enrollment** (inverse: _Athlete Achievement Unlocks_; single?: `True`)
+- **Athlete Achievement Unlocks** → **Shot Milestones** via **Shot Milestone** (inverse: _Athlete Achievement Unlocks_; single?: `True`)
+- **Athlete Achievement Unlocks** → **Weeks** via **Week** (inverse: _Athlete Achievement Unlocks_; single?: `True`)
+- **Athlete Achievement Unlocks** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Perfect Week Unlock_; single?: `False`)
+- **Athlete Achievement Unlocks** → **XP Events** via **XP Events** (inverse: _Achievement Unlock_; single?: `False`)
+- **Athletes** → **Enrollments** via **Enrollments** (inverse: _Athlete_; single?: `False`)
+- **Athletes** → **Submissions** via **Submissions** (inverse: _Athlete_; single?: `False`)
+- **Award Recipients** → **Awards** via **Award** (inverse: _Award Recipients_; single?: `True`)
+- **Award Recipients** → **Enrollments** via **Enrollment** (inverse: _Award Recipients_; single?: `True`)
+- **Award Recipients** → **Weeks** via **Week** (inverse: _Award Recipients_; single?: `True`)
+- **Awards** → **Award Recipients** via **Award Recipients** (inverse: _Award_; single?: `False`)
+- **Enrollments** → **Athletes** via **Athlete** (inverse: _Enrollments_; single?: `True`)
+- **Enrollments** → **Athlete Achievement Unlocks** via **Athlete Achievement Unlocks** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Award Recipients** via **Award Recipients** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Levels** via **Current Level** (inverse: _Enrollments 4_; single?: `True`)
+- **Enrollments** → **Final Reflection Quiz Submissions** via **Final Reflection Quiz Submissions** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Grade Bands** via **Grade Band** (inverse: _Enrollments_; single?: `True`)
+- **Enrollments** → **Homework Completions** via **Homework Completions** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Level Gate Rules** via **Level Gate Rule** (inverse: _Enrollments Checked by This Gate_; single?: `True`)
+- **Enrollments** → **Levels** via **Next Level** (inverse: _Enrollments 5_; single?: `True`)
+- **Enrollments** → **Program Instance - Synced** via **Program Instance** (inverse: _Enrollments_; single?: `True`)
+- **Enrollments** → **School - Synced** via **School** (inverse: _Enrollments_; single?: `True`)
+- **Enrollments** → **Streak Occurrences** via **Streak Occurrences** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Submission Assets** via **Submission Assets - Enrollment** (inverse: _Enrollment - Linked_; single?: `True`)
+- **Enrollments** → **Submissions** via **Submissions** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Video Feedback** via **Video Feedback** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **XP Events** via **XP Events** (inverse: _Enrollment_; single?: `False`)
+- **Enrollments** → **Zoom Meetings** via **Zoom Meetings** (inverse: _Attendees_; single?: `False`)
+- **FBC Curriculum - SYNC** → **Grade Bands** via **Grade Band** (inverse: _FBC Curriculum - SYNC_; single?: `False`)
+- **FBC Curriculum - SYNC** → **Homework Completions** via **Homework Completions** (inverse: _Homework_; single?: `False`)
+- **FBC Curriculum - SYNC** → **Submissions** via **Submissions** (inverse: _Homework Name 1_; single?: `False`)
+- **FBC Curriculum - SYNC** → **Submissions** via **Submissions copy** (inverse: _Homework Name 2_; single?: `False`)
+- **FBC Curriculum - SYNC** → **Weeks** via **Week** (inverse: _FBC Curriculum - SYNC_; single?: `True`)
+- **FBC Curriculum - SYNC** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Homework_; single?: `False`)
+- **Final Reflection Quiz Submissions** → **Enrollments** via **Enrollment** (inverse: _Final Reflection Quiz Submissions_; single?: `True`)
+- **Final Reflection Quiz Submissions** → **Homework Completions** via **Homework Completion** (inverse: _Final Reflection Quiz Submissions_; single?: `True`)
+- **Grade Bands** → **Enrollments** via **Enrollments** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **FBC Curriculum - SYNC** via **FBC Curriculum - SYNC** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **Homework Completions** via **Homework Completions** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **Target Goal Shots** via **Target Goal Shots** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **Video Feedback** via **Video Feedback** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Grade Band_; single?: `False`)
+- **Grade Bands** → **XP Reward Rules** via **XP Reward Rules** (inverse: _Grade Band_; single?: `False`)
+- **Homework Completions** → **Enrollments** via **Enrollment** (inverse: _Homework Completions_; single?: `True`)
+- **Homework Completions** → **Final Reflection Quiz Submissions** via **Final Reflection Quiz Submissions** (inverse: _Homework Completion_; single?: `False`)
+- **Homework Completions** → **Grade Bands** via **Grade Band** (inverse: _Homework Completions_; single?: `True`)
+- **Homework Completions** → **FBC Curriculum - SYNC** via **Homework** (inverse: _Homework Completions_; single?: `True`)
+- **Homework Completions** → **Submission Assets** via **Submission Assets** (inverse: _Homework Completions_; single?: `False`)
+- **Homework Completions** → **Submissions** via **Submissions - Linked** (inverse: _Homework Completions_; single?: `True`)
+- **Homework Completions** → **Weeks** via **Week** (inverse: _Homework Completions_; single?: `True`)
+- **Homework Completions** → **Weekly Athlete Summary** via **Weekly Athlete Summary Link** (inverse: _Homework Completions Link_; single?: `True`)
+- **Homework Completions** → **XP Events** via **XP Events** (inverse: _Homework Completion_; single?: `False`)
+- **Level Gate Rules** → **Enrollments** via **Enrollments Checked by This Gate** (inverse: _Level Gate Rule_; single?: `False`)
+- **Level Gate Rules** → **Levels** via **Level** (inverse: _Level Gate Rules_; single?: `True`)
+- **Levels** → **Enrollments** via **Enrollments 4** (inverse: _Current Level_; single?: `False`)
+- **Levels** → **Enrollments** via **Enrollments 5** (inverse: _Next Level_; single?: `False`)
+- **Levels** → **Level Gate Rules** via **Level Gate Rules** (inverse: _Level_; single?: `False`)
+- **Levels** → **Levels** via **Next Level** (inverse: _Previous Level_; single?: `False`)
+- **Levels** → **Levels** via **Previous Level** (inverse: _Next Level_; single?: `True`)
+- **Program Instance - Synced** → **Enrollments** via **Enrollments** (inverse: _Program Instance_; single?: `False`)
+- **Program Instance - Synced** → **Weeks** via **Weeks** (inverse: _Program Instance_; single?: `False`)
+- **School - Synced** → **Enrollments** via **Enrollments** (inverse: _School_; single?: `False`)
+- **Shot Milestones** → **Athlete Achievement Unlocks** via **Athlete Achievement Unlocks** (inverse: _Shot Milestone_; single?: `False`)
+- **Shot Milestones** → **Target Goal Shots** via **Target Goal Shot** (inverse: _Shot Milestones_; single?: `True`)
+- **Shot Milestones** → **XP Events** via **XP Events** (inverse: _Shot Milestones_; single?: `False`)
+- **Streak Occurrences** → **Achievements** via **Achievement** (inverse: _Streak Occurrences_; single?: `True`)
+- **Streak Occurrences** → **Enrollments** via **Enrollment** (inverse: _Streak Occurrences_; single?: `True`)
+- **Streak Occurrences** → **Weeks** via **Week** (inverse: _Streak Occurrences_; single?: `True`)
+- **Streak Occurrences** → **XP Events** via **XP Events** (inverse: _Streak Occurrence_; single?: `False`)
+- **Submission Assets** → **Submission Assets** via **Duplicate Match Record** (inverse: _From field: Duplicate Match Record_; single?: `True`)
+- **Submission Assets** → **Enrollments** via **Enrollment - Linked** (inverse: _Submission Assets - Enrollment_; single?: `True`)
+- **Submission Assets** → **Submission Assets** via **From field: Duplicate Match Record** (inverse: _Duplicate Match Record_; single?: `False`)
+- **Submission Assets** → **Homework Completions** via **Homework Completions** (inverse: _Submission Assets_; single?: `False`)
+- **Submission Assets** → **Submissions** via **Submission - Linked** (inverse: _Submission Assets_; single?: `True`)
+- **Submission Assets** → **Video Feedback** via **Video Feedback** (inverse: _Submission Asset_; single?: `False`)
+- **Submissions** → **Athletes** via **Athlete** (inverse: _Submissions_; single?: `True`)
+- **Submissions** → **Enrollments** via **Enrollment** (inverse: _Submissions_; single?: `True`)
+- **Submissions** → **Homework Completions** via **Homework Completions** (inverse: _Submissions - Linked_; single?: `False`)
+- **Submissions** → **FBC Curriculum - SYNC** via **Homework Name 1** (inverse: _Submissions_; single?: `True`)
+- **Submissions** → **FBC Curriculum - SYNC** via **Homework Name 2** (inverse: _Submissions copy_; single?: `True`)
+- **Submissions** → **Submission Assets** via **Submission Assets** (inverse: _Submission - Linked_; single?: `False`)
+- **Submissions** → **Video Feedback** via **Video Feedback** (inverse: _Submission_; single?: `False`)
+- **Submissions** → **Weeks** via **Week** (inverse: _Submissions_; single?: `True`)
+- **Submissions** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Submissions_; single?: `False`)
+- **Submissions** → **XP Events** via **XP Events** (inverse: _Submission_; single?: `False`)
+- **Target Goal Shots** → **Grade Bands** via **Grade Band** (inverse: _Target Goal Shots_; single?: `True`)
+- **Target Goal Shots** → **Shot Milestones** via **Shot Milestones** (inverse: _Target Goal Shot_; single?: `False`)
+- **Target Goal Shots** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Goal Record_; single?: `False`)
+- **Video Feedback** → **Enrollments** via **Enrollment** (inverse: _Video Feedback_; single?: `True`)
+- **Video Feedback** → **Grade Bands** via **Grade Band** (inverse: _Video Feedback_; single?: `True`)
+- **Video Feedback** → **Submissions** via **Submission** (inverse: _Video Feedback_; single?: `True`)
+- **Video Feedback** → **Submission Assets** via **Submission Asset** (inverse: _Video Feedback_; single?: `True`)
+- **Video Feedback** → **XP Events** via **XP Events** (inverse: _Video Feedback_; single?: `False`)
+- **Weekly Athlete Summary** → **Enrollments** via **Enrollment** (inverse: _Weekly Athlete Summary_; single?: `True`)
+- **Weekly Athlete Summary** → **Target Goal Shots** via **Goal Record** (inverse: _Weekly Athlete Summary_; single?: `True`)
+- **Weekly Athlete Summary** → **Grade Bands** via **Grade Band** (inverse: _Weekly Athlete Summary_; single?: `True`)
+- **Weekly Athlete Summary** → **FBC Curriculum - SYNC** via **Homework** (inverse: _Weekly Athlete Summary_; single?: `False`)
+- **Weekly Athlete Summary** → **Homework Completions** via **Homework Completions Link** (inverse: _Weekly Athlete Summary Link_; single?: `True`)
+- **Weekly Athlete Summary** → **Athlete Achievement Unlocks** via **Perfect Week Unlock** (inverse: _Weekly Athlete Summary_; single?: `True`)
+- **Weekly Athlete Summary** → **Submissions** via **Submissions** (inverse: _Weekly Athlete Summary_; single?: `False`)
+- **Weekly Athlete Summary** → **Weeks** via **Week** (inverse: _Weekly Athlete Summary_; single?: `True`)
+- **Weekly Athlete Summary** → **XP Events** via **XP Events** (inverse: _Weekly Athlete Summary_; single?: `False`)
+- **Weeks** → **Achievements** via **Achievements** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Athlete Achievement Unlocks** via **Athlete Achievement Unlocks** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Award Recipients** via **Award Recipients** (inverse: _Week_; single?: `False`)
+- **Weeks** → **FBC Curriculum - SYNC** via **FBC Curriculum - SYNC** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Homework Completions** via **Homework Completions** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Program Instance - Synced** via **Program Instance** (inverse: _Weeks_; single?: `True`)
+- **Weeks** → **Streak Occurrences** via **Streak Occurrences** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Submissions** via **Submissions** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _Week_; single?: `False`)
+- **Weeks** → **XP Events** via **XP Events** (inverse: _Week_; single?: `False`)
+- **Weeks** → **Zoom Meetings** via **Zoom Meetings** (inverse: _Week_; single?: `False`)
+- **XP Events** → **Athlete Achievement Unlocks** via **Achievement Unlock** (inverse: _XP Events_; single?: `True`)
+- **XP Events** → **Enrollments** via **Enrollment** (inverse: _XP Events_; single?: `True`)
+- **XP Events** → **Homework Completions** via **Homework Completion** (inverse: _XP Events_; single?: `False`)
+- **XP Events** → **Shot Milestones** via **Shot Milestones** (inverse: _XP Events_; single?: `True`)
+- **XP Events** → **Streak Occurrences** via **Streak Occurrence** (inverse: _XP Events_; single?: `False`)
+- **XP Events** → **Submissions** via **Submission** (inverse: _XP Events_; single?: `True`)
+- **XP Events** → **Video Feedback** via **Video Feedback** (inverse: _XP Events_; single?: `False`)
+- **XP Events** → **Weeks** via **Week** (inverse: _XP Events_; single?: `True`)
+- **XP Events** → **Weekly Athlete Summary** via **Weekly Athlete Summary** (inverse: _XP Events_; single?: `False`)
+- **XP Events** → **Zoom Meetings** via **Zoom Meeting** (inverse: _XP Events_; single?: `True`)
+- **XP Reward Rules** → **Grade Bands** via **Grade Band** (inverse: _XP Reward Rules_; single?: `False`)
+- **Zoom Meetings** → **Enrollments** via **Attendees** (inverse: _Zoom Meetings_; single?: `False`)
+- **Zoom Meetings** → **Weeks** via **Week** (inverse: _Zoom Meetings_; single?: `True`)
+- **Zoom Meetings** → **XP Events** via **XP Events** (inverse: _Zoom Meeting_; single?: `False`)
+
+## Views (Basic)
+
+### Unknown Table
+- **002 - Submissions Ready for Homework Completion**  
+  - id: `viwzWRTwfwQrbz1NM`  
+  - type: `grid`
+- **020 - Ready to Link Homework Completion**  
+  - id: `viw13hPC2X2Cxcl6c`  
+  - type: `grid`
+- **030 - Assign Grade Band and Goal Record**  
+  - id: `viwGlczA6iOB2CwSw`  
+  - type: `grid`
+- **042 - Needs Level Assignment**  
+  - id: `viwm9OgwkPKI2bii3`  
+  - type: `grid`
+- **070 - Ready to Send Asset to Make**  
+  - id: `viwPlmXDSf78jt6Ht`  
+  - type: `grid`
+- **ADMIN - DUPLICATE SUMMARY CLEANUP - OK TO DELTE**  
+  - id: `viwb3YN5G8Md20q2K`  
+  - type: `grid`
+- **Active Rules Only**  
+  - id: `viwBm5yGP9Ge83E9R`  
+  - type: `grid`
+- **Admin - Duplicate Weekly Threshold XP**  
+  - id: `viwXJaiAyRifGjmzC`  
+  - type: `grid`
+- **Admin - Field Cleanup - Enrollments**  
+  - id: `viwA2S2uJQ4VuHKS2`  
+  - type: `grid`
+- **Assign Enrollment to Submission**  
+  - id: `viwPfXT0GwkI0VKV0`  
+  - type: `grid`
+- **Assign Week Automation**  
+  - id: `viwtvJ6jRC344aaNa`  
+  - type: `grid`
+- **Athlete Table Check**  
+  - id: `viwLSS0Rb0lRPFZCW`  
+  - type: `grid`
+- **Automation - 001 - Needs Athlete Link**  
+  - id: `viwNV87i8BwPBxYlq`  
+  - type: `grid`
+- **Automation - 002 - Needs Grade Band**  
+  - id: `viwitHfNChfwjvFkr`  
+  - type: `grid`
+- **Automation - 003 - Grade Band Refresh Needed**  
+  - id: `viwWfoiEzXoIIcBse`  
+  - type: `grid`
+- **CHECK - Streak Duplicate Checker**  
+  - id: `viwbXSbZjE2ksLspo`  
+  - type: `grid`
+- **CHECK - Streak Unlocks Created**  
+  - id: `viw5Uwh9RbYSsMWpm`  
+  - type: `grid`
+- **CHECK - Weekly Threshold Duplicates copy**  
+  - id: `viw6TixZQ87bHuPja`  
+  - type: `grid`
+- **Conditions only**  
+  - id: `viwPXhYcFAnQss6My`  
+  - type: `grid`
+- **Conquered Challenge**  
+  - id: `viwFxNXNs8gbNR37Z`  
+  - type: `grid`
+- **Conquered Challenge**  
+  - id: `viwjFtDtxuG9I6Bak`  
+  - type: `grid`
+- **Contact Emails**  
+  - id: `viw2x814kxfbEdHYr`  
+  - type: `grid`
+- **Create XP Event after Meeting**  
+  - id: `viwh3KmPC0T8ICM7Y`  
+  - type: `grid`
+- **Current Award List Only - Active**  
+  - id: `viwTvRZ7Jph4sO1ss`  
+  - type: `grid`
+- **Current Program Instance Only**  
+  - id: `viwTEBb0ZxBzBSJMw`  
+  - type: `grid`
+- **DUPLICATE REVIEW**  
+  - id: `viwYrrCCBDPyh44HF`  
+  - type: `grid`
+- **Daily Submission Email Flow Only**  
+  - id: `viwtiN9dFVvf3soku`  
+  - type: `grid`
+- **Dayton**  
+  - id: `viw3inUS6g2hEDKEl`  
+  - type: `grid`
+- **Duplicate Check**  
+  - id: `viwGEmipO73JSfPFi`  
+  - type: `grid`
+- **EMPTY Fields Check**  
+  - id: `viwCn2S99q8aCciXo`  
+  - type: `grid`
+- **ENROLLMENTS - A5 - XP Award Ready**  
+  - id: `viwRCz09bEvCTxOr9`  
+  - type: `grid`
+- **ENROLLMENTS - Needs Initial Level Assignment**  
+  - id: `viwbi08N7HxOKkbxc`  
+  - type: `grid`
+- **Everything - Alpha**  
+  - id: `viw38CUFg3rFFQ03n`  
+  - type: `grid`
+- **Fillout.com Form Info ONLY**  
+  - id: `viwUPQyy0F1dpTG5W`  
+  - type: `grid`
+- **Fix Award Links - Sent ONly**  
+  - id: `viw6I0oupsMDL8Bj0`  
+  - type: `grid`
+- **Fix Weekly Threshold Duplicates**  
+  - id: `viw28LDqQSR0E9mGS`  
+  - type: `grid`
+- **Form Input Only**  
+  - id: `viwwPxTk9YRRvoMcY`  
+  - type: `grid`
+- **Goal Conqured - Only**  
+  - id: `viw8EBQ4Qj2hlgf3v`  
+  - type: `grid`
+- **Grading Video. In Order of Checkboxes**  
+  - id: `viwx3YtYb9vcxOtlk`  
+  - type: `grid`
+- **Grid Testing View**  
+  - id: `viwkuKF0uwyC0hE6D`  
+  - type: `grid`
+- **Grid View - Everything**  
+  - id: `viwH01Z9UiwX4IMUZ`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwNr0UljU705Qqjl`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwVS9AG1o14Y1uwG`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw3Szu0TiUfdmmYV`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwx4cTzVxFuYSSWj`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwhyxRnIM7VDJ8XG`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwZpKN6mLYMRK7oV`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwxDeaSZwKZv3qna`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwjrFfhWXbljzchY`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwyeqqq3dZpgOjI2`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw4KreayIHAma482`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwWPy9HzIzMZHn6F`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw3eDERIq8sOX1Q1`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwuAWTyg9Js095wv`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwUXbIuoYqdKxHaI`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwA6STKYz8nHH3Uy`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwP1sHBlIKqxdOz7`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwIoIDsxGcP8bLld`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwvZLpuKFyivsKVy`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwQbstr9guphkhvA`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwkkwJ9DWq3bx1AX`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw7xjMcC1QbP9zXb`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwEj0ikcuO2VefHQ`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw0dGHV6kRZXIWkI`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwmmFeL3wSLgX0ZU`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viw1CVdpoPTgyWQvg`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwaZilUoe6WANvnP`  
+  - type: `grid`
+- **Grid view**  
+  - id: `viwKhAkKIntFlzotu`  
+  - type: `grid`
+- **Grid view copy**  
+  - id: `viwAYZ4UTtdnbjjyL`  
+  - type: `grid`
+- **Grouped by Book**  
+  - id: `viw9bPmY0zyCYaMHF`  
+  - type: `grid`
+- **HOMEWORK GRADING QUEUE - FINAL**  
+  - id: `viwbxi5La9rX8YQsS`  
+  - type: `grid`
+- **Homework**  
+  - id: `viwxvBYCjalp1kOJv`  
+  - type: `grid`
+- **Homework 1 Only**  
+  - id: `viwdF2TnML0uSmQdL`  
+  - type: `grid`
+- **Homework 2 Only**  
+  - id: `viwEQACUZlZuN64mV`  
+  - type: `grid`
+- **Homework Completion Create Queue**  
+  - id: `viw2XXs7opOP2DYY3`  
+  - type: `grid`
+- **Homework Record Picker View on FILLOUT.COM**  
+  - id: `viwlDL7M9djLAREEj`  
+  - type: `grid`
+- **Level List**  
+  - id: `viwDpVY4ZPtG0gP4k`  
+  - type: `grid`
+- **Meeting Agenda and Related Only**  
+  - id: `viw5ALBxpEl6IXRju`  
+  - type: `grid`
+- **No Assignment Detail Info - Setting Parameters**  
+  - id: `viwWGNi1Hks332lbx`  
+  - type: `grid`
+- **Operator View**  
+  - id: `viwnfnJMPboWZzIpo`  
+  - type: `grid`
+- **Participation Certificate CSV Export**  
+  - id: `viweullFf8vycYUsH`  
+  - type: `grid`
+- **Possible Duplicates**  
+  - id: `viwJAYg9yfAZ3FOFm`  
+  - type: `grid`
+- **Ready to Award XP**  
+  - id: `viwQtHsbg5V9m8ds9`  
+  - type: `grid`
+- **Review View**  
+  - id: `viw7AlnknfZ2xjp2x`  
+  - type: `grid`
+- **Review View**  
+  - id: `viwb500G9LTW76qSF`  
+  - type: `grid`
+- **Riley**  
+  - id: `viwiyN9FImjBTB5NU`  
+  - type: `grid`
+- **SUBMISSIONS - 5 - XP Award Ready**  
+  - id: `viwP0fsgmEzyZcKuU`  
+  - type: `grid`
+- **SUBMISSIONS - Weekly Athlete  Summary Builder**  
+  - id: `viw0dSw4RPFYkHcdg`  
+  - type: `grid`
+- **Scenario 1**  
+  - id: `viwFNxcOazCMT9Rvo`  
+  - type: `grid`
+- **Shooting Base**  
+  - id: `viwwOVqfRoiRhA8wZ`  
+  - type: `grid`
+- **Streak Duplicate Cleanup**  
+  - id: `viwnbMf8WykzWqg2p`  
+  - type: `grid`
+- **Streaks**  
+  - id: `viwd2DjTwF9Qi9vkR`  
+  - type: `grid`
+- **Submissions - Weekly Athlete Summary Builder**  
+  - id: `viwQaroOS7ymoWGLC`  
+  - type: `grid`
+- **Sunday Review for Awards**  
+  - id: `viwZ3GvBXgbljXf7Q`  
+  - type: `grid`
+- **Testing**  
+  - id: `viwhHkNyEPe21oMbI`  
+  - type: `grid`
+- **Thresholds**  
+  - id: `viw6GHYU5GdX5EhRU`  
+  - type: `grid`
+- **Todays Submissions**  
+  - id: `viwAa7MlPtcBhqRml`  
+  - type: `grid`
+- **Video**  
+  - id: `viwWhmg404LSl9zfs`  
+  - type: `grid`
+- **Video Upload Only**  
+  - id: `viwF65wFX1ZgLEfZz`  
+  - type: `grid`
+- **Weekly Summary - A5 - Needs Goal Setup**  
+  - id: `viwF8Yc51CD3JhF36`  
+  - type: `grid`
+- **Weekly Summary - A6 - Award Official Weekly XP Event**  
+  - id: `viwigjO8WzotJjmB1`  
+  - type: `grid`
+- **Weekly Summary - A6 - Calculate Official Weekly XP**  
+  - id: `viwRMMfMacGcjXZ5a`  
+  - type: `grid`
+- **Workflow**  
+  - id: `viws1MPDq1eC5TdUX`  
+  - type: `grid`
+- **Workflow - Check**  
+  - id: `viweDtbNeLm48qEO9`  
+  - type: `grid`
+- **Workflow - Email Fields Only**  
+  - id: `viwXGTg6oHInFPQku`  
+  - type: `grid`
+- **Workflow - Enrollment**  
+  - id: `viwejxZD6gx1mQjuV`  
+  - type: `grid`
+- **Workflow - Levels**  
+  - id: `viweBmKxwCHVopR7h`  
+  - type: `grid`
+- **Workflow - Mandatory Fields**  
+  - id: `viw1aOM2e4XBF1nxQ`  
+  - type: `grid`
+- **Workflow - Required Fields Only**  
+  - id: `viwTGosig4vtV0ImK`  
+  - type: `grid`
+- **Workflow Check**  
+  - id: `viwXmpH8UIUHxz2l8`  
+  - type: `grid`
+- **Workflow Check - Fields to Check Only**  
+  - id: `viwERev4p4vF1WtEt`  
+  - type: `grid`
+- **Workflow Check - Missing - Not Publishing**  
+  - id: `viwAbrB2geNH4aJwj`  
+  - type: `grid`
+- **Workflow Check - Required Fields Only**  
+  - id: `viwJaH4qwdmp5R0Me`  
+  - type: `grid`
+- **Workflow testing only**  
+  - id: `viwHOukunutCEKfZ5`  
+  - type: `grid`
+- **XP Audit by Athlete**  
+  - id: `viweuVTaP7BWVXLtx`  
+  - type: `grid`
+- **XP Date Resolved**  
+  - id: `viwKDEGG2PM2kK1GV`  
+  - type: `grid`
+- **Yesterdays Submissions**  
+  - id: `viwnEPd9ZSLGq5gKd`  
+  - type: `grid`
+- **Zoom**  
+  - id: `viwo6QaxleVBop8Dl`  
+  - type: `grid`
+
+## Table: **Automations**
+
+- id: `tblfpqKqPEbkPnN8E`
+- primary field: **Name** (`fldMhjKTBKMIoeAyV`)
+- role guess: `standard`
+- fields: `15`
+- link fields: `0`
+- computed fields: `0`
+- description: Track, manage, and document Airtable automations and their key trigger/action details.
+
+### Fields
+
+- **Name**
+  - id: `fldMhjKTBKMIoeAyV`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Automation Code**
+  - id: `fld96jSyTpKQUvsNL`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Ran Through Cursor?**
+  - id: `fld3EmExut7IhFgdi`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Sections**
+  - id: `fldmUHrmVMk6E0PSB`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["01 - Enrollment Intake and Setup","02 - Submission Intake and Asset Creation","03 - Weekly Summary and Goal Logic","04 - Levels and Progression","05 - Achievements and Milestones","06 - Homework Review and XP","07 - Email, Notifications, and External Handoffs","08 Leaderboards, Standings, and Public Output","09 - Admin and Utility","10 - Zoom Attendance XP","11 - Video Review and XP","90 - Testing","99 - Legacy Off"],"choicesDetailed":[{"id":"selFszpQXMnU9X93J","name":"01 - Enrollment Intake and Setup","color":"blueBright"},{"id":"selZ41ChF3Hp8dZTp","name":"02 - Submission Intake and Asset Creation","color":"pinkBright"},{"id":"selIjcFOYeCQ1IflB","name":"03 - Weekly Summary and Goal Logic","color":"tealLight2"},{"id":"seltJ3Lbb64MxNwAe","name":"04 - Levels and Progression","color":"greenLight2"},{"id":"selxAOBqifcMG6kYe","name":"05 - Achievements and Milestones","color":"yellowLight2"},{"id":"sel99KHTpgYDIi2PV","name":"06 - Homework Review and XP","color":"orangeLight2"},{"id":"seltOCQiuFXfNhutB","name":"07 - Email, Notifications, and External Handoffs","color":"redBright"},{"id":"seloQK8P1uApNj31p","name":"08 Leaderboards, Standings, and Public Output","color":"cyanLight2"},{"id":"selYmf4Rc9BYCDaA1","name":"09 - Admin and Utility","color":"purpleLight2"},{"id":"selyCJawGTsI6mPm2","name":"10 - Zoom Attendance XP","color":"orangeLight1"},{"id":"selL67hGyKFnMbcAF","name":"11 - Video Review and XP","color":"blueLight2"},{"id":"selleEMH0uDMtcSFv","name":"90 - Testing","color":"grayLight2"},{"id":"sel7ifAYDlQI2h2d1","name":"99 - Legacy Off","color":"blueLight1"}]}`
+- **Outputs Written back to Airtable**
+  - id: `fldTad8mRstUYnncT`
+  - type: `aiText`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"referencedFieldIds":["fld96jSyTpKQUvsNL"],"referencedFieldNames":["Automation Code"]}`
+- **Trigger type**
+  - id: `fldWiwBZBqOGzTtl4`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["When a Record Matches Condition","When a Record is Created","When a Record is Updated","When a Record Enters a View","At a Scheduled Time"],"choicesDetailed":[{"id":"selFkVnehXXH4GKAF","name":"When a Record Matches Condition","color":"blueLight2"},{"id":"selseDtGY8qckrf7P","name":"When a Record is Created","color":"cyanLight2"},{"id":"sel4bzux9L5VLBEX9","name":"When a Record is Updated","color":"tealLight2"},{"id":"selsIGMgz1P0TlmFh","name":"When a Record Enters a View","color":"orangeDark1"},{"id":"sel12ZIjCI98wfMMq","name":"At a Scheduled Time","color":"orangeLight1"}]}`
+- **Trigger table**
+  - id: `fldc8kAnPGD8M6kjC`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Athlete Achievement Unlocks","Config","Enrollments","Homework Completions","Submission Assets","Submissions","Video Feedback","Weekly Athlete Summary","XP Events","Zoom Meetings","Streak Occurrences"],"choicesDetailed":[{"id":"sel8kwyK54bTlv0rk","name":"Athlete Achievement Unlocks","color":"cyanLight1"},{"id":"sel7qyXtlIA8JXDf8","name":"Config","color":"blueLight2"},{"id":"selNNp0LS86zc9pbN","name":"Enrollments","color":"purpleLight1"},{"id":"selH7grv2M8hKM3CI","name":"Homework Completions","color":"tealBright"},{"id":"selB8VdNufRCPgVTD","name":"Submission Assets","color":"yellowLight2"},{"id":"selfZoPWB3YJM6dvT","name":"Submissions","color":"orangeDark1"},{"id":"seles4eZMQNZ5NShf","name":"Video Feedback","color":"yellowLight1"},{"id":"selXIzXG09ZGuOQeX","name":"Weekly Athlete Summary","color":"blueLight1"},{"id":"sel5hLWMak1hRmSk7","name":"XP Events","color":"redLight2"},{"id":"selKBZgPxHyaVhU0I","name":"Zoom Meetings","color":"cyanBright"},{"id":"selOjqCDEzG4E2sJE","name":"Streak Occurrences","color":"orangeBright"}]}`
+- **Conditions**
+  - id: `fldsbf7qHjvi8GQ2e`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Status**
+  - id: `fldFyBz0VojhWkT3B`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Live","Off","Legacy - OK to delete"],"choicesDetailed":[{"id":"selzMRAHf2x3oPgju","name":"Live","color":"blueLight2"},{"id":"selSrXnIBUTSvsg9R","name":"Off","color":"cyanLight2"},{"id":"selWKj1CwKB8Kpm3X","name":"Legacy - OK to delete","color":"tealLight2"}]}`
+- **Trigger view**
+  - id: `fldlYrBFPOqYsAoX0`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Action summary**
+  - id: `fldX7u2vkEBcc7oAy`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Trigger field(s)**
+  - id: `fldu6HK4BGFdLyT5L`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Script step present?**
+  - id: `fld67lFleVscBhCB0`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Yes","No"],"choicesDetailed":[{"id":"selddjyfYE7Bo3d0E","name":"Yes","color":"blueLight2"},{"id":"selrFiYqwJFtrnacq","name":"No","color":"cyanLight2"}]}`
+- **Script location / notes**
+  - id: `fldCYHvMjP9A3djcL`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Related external systems**
+  - id: `fld34GFcqWe2Exhtg`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+
+## Table: **Enrollments**
+
+- id: `tbl3PFmwbRoabu1YV`
+- primary field: **Full Athlete Name - Backward** (`fldnRDkfubz7p3gi4`)
+- role guess: `join/bridge`
+- fields: `130`
+- link fields: `18`
+- computed fields: `75`
+- description: Primary operating table for athlete participation records.
+
+Use this table to connect each athlete to the correct school year, program instance, school, grade context, and related activity records.
+
+This table is the main hub for submissions, weekly summaries, homework completions, XP events, and achievement progress.
+
+This table contains many computed and linked fields. Make small changes carefully and avoid duplicating logic unless there is a clear workflow need.
+
+### Fields
+
+- **Full Athlete Name - Backward**
+  - id: `fldnRDkfubz7p3gi4`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldpXNOzRflbkgVwV","fld4wGsfJKp7x4Bjd","fldKReGFHZ34Skb6D"],"referencedFieldNames":["Athlete Last Name","Athlete First Name","School Year"],"formula":"TRIM({fldpXNOzRflbkgVwV} & \", \" & {fld4wGsfJKp7x4Bjd} & \" - \" & {fldKReGFHZ34Skb6D})","fieldReferencesById":["fldpXNOzRflbkgVwV","fld4wGsfJKp7x4Bjd","fldKReGFHZ34Skb6D"],"fieldReferencesByName":["Athlete Last Name","Athlete First Name","School Year"],"dependencySource":"metadata"}`
+- **Level Status**
+  - id: `fldE6vqsroUqVXqCP`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Assigned","Error","Gate Blocked"],"choicesDetailed":[{"id":"sel6SojDVTJs7Cajb","name":"Pending","color":"yellowLight1"},{"id":"selUdEgE1EI8giF9I","name":"Processing","color":"blueBright"},{"id":"selsqXsrYiPcI9sx3","name":"Assigned","color":"greenBright"},{"id":"selUxYoV4fu5d8cYS","name":"Error","color":"redBright"},{"id":"seldMyzXd52VekXjB","name":"Gate Blocked","color":"orangeBright"}]}`
+- **Current Level**
+  - id: `fldqmwWHoaWM7dSFK`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblU6EWmc1jCpgRHe","linkedTableName":"Levels","inverseLinkFieldId":"fldIZT5MWgMskwF8s","inverseLinkFieldName":"Enrollments 4","prefersSingleRecordLink":true,"isReversed":false}`
+- **Meets Gate: Submissions**
+  - id: `fldPjhNtkxEqM4QDk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTAalsTtSVumJF9","fldewNyKEMDMt9Ger","fld7FaC0osGX9CxGp"],"referencedFieldNames":["Gate Enabled Status","Total Submissions","Gate Minimum: Submissions"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fldewNyKEMDMt9Ger} >= VALUE(ARRAYJOIN({fld7FaC0osGX9CxGp})),\r\n    1,\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldewNyKEMDMt9Ger","fld7FaC0osGX9CxGp"],"fieldReferencesByName":["Gate Enabled Status","Total Submissions","Gate Minimum: Submissions"],"dependencySource":"metadata"}`
+- **Meets Gate: Homework**
+  - id: `flduFi1oyDDsOBZLE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTAalsTtSVumJF9","fldHEMvcX18c99Adk","fldXhkxJ9Po3E5CTb"],"referencedFieldNames":["Gate Enabled Status","Total Homework Completions","Gate Minimum: Homework"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fldHEMvcX18c99Adk} >= VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})),\r\n    1,\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldHEMvcX18c99Adk","fldXhkxJ9Po3E5CTb"],"fieldReferencesByName":["Gate Enabled Status","Total Homework Completions","Gate Minimum: Homework"],"dependencySource":"metadata"}`
+- **Meets Gate: Videos**
+  - id: `fldD3lBPfDckVaqzZ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTAalsTtSVumJF9","fldHI9QxnerBFkKzK","fldeWeWXCX06g3IB0"],"referencedFieldNames":["Gate Enabled Status","Total Video Submissions","Gate Minimum: Videos"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fldHI9QxnerBFkKzK} >= VALUE(ARRAYJOIN({fldeWeWXCX06g3IB0})),\r\n    1,\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldHI9QxnerBFkKzK","fldeWeWXCX06g3IB0"],"fieldReferencesByName":["Gate Enabled Status","Total Video Submissions","Gate Minimum: Videos"],"dependencySource":"metadata"}`
+- **Meets Gate: Zoom Meetings**
+  - id: `fldlgsGcxW2109SzA`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTAalsTtSVumJF9","fldvEHpfO4ModNQoJ","fldkyKW5vYiQ0Sm4b"],"referencedFieldNames":["Gate Enabled Status","Total Zoom Attendances","Gate Minimum: Zoom Meetings"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fldvEHpfO4ModNQoJ} >= VALUE(ARRAYJOIN({fldkyKW5vYiQ0Sm4b})),\r\n    1,\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldvEHpfO4ModNQoJ","fldkyKW5vYiQ0Sm4b"],"fieldReferencesByName":["Gate Enabled Status","Total Zoom Attendances","Gate Minimum: Zoom Meetings"],"dependencySource":"metadata"}`
+- **Meets Gate: Streak**
+  - id: `fld3IU5ctu8CxB8mr`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTAalsTtSVumJF9","fld3hgGT4u1wsiBBE","fldGGjiFmuAwxTp64"],"referencedFieldNames":["Gate Enabled Status","Longest Streak Days","Gate Minimum: Streak Days"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fld3hgGT4u1wsiBBE} >= VALUE(ARRAYJOIN({fldGGjiFmuAwxTp64})),\r\n    1,\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fld3hgGT4u1wsiBBE","fldGGjiFmuAwxTp64"],"fieldReferencesByName":["Gate Enabled Status","Longest Streak Days","Gate Minimum: Streak Days"],"dependencySource":"metadata"}`
+- **Gate Passes**
+  - id: `fldcpQWJ9g315rQg1`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldPjhNtkxEqM4QDk","flduFi1oyDDsOBZLE","fldD3lBPfDckVaqzZ","fldlgsGcxW2109SzA","fld3IU5ctu8CxB8mr"],"referencedFieldNames":["Meets Gate: Submissions","Meets Gate: Homework","Meets Gate: Videos","Meets Gate: Zoom Meetings","Meets Gate: Streak"],"formula":"AND(\r\n  {fldPjhNtkxEqM4QDk},\r\n  {flduFi1oyDDsOBZLE},\r\n  {fldD3lBPfDckVaqzZ},\r\n  {fldlgsGcxW2109SzA},\r\n  {fld3IU5ctu8CxB8mr}\r\n)","fieldReferencesById":["fldPjhNtkxEqM4QDk","flduFi1oyDDsOBZLE","fldD3lBPfDckVaqzZ","fldlgsGcxW2109SzA","fld3IU5ctu8CxB8mr"],"fieldReferencesByName":["Meets Gate: Submissions","Meets Gate: Homework","Meets Gate: Videos","Meets Gate: Zoom Meetings","Meets Gate: Streak"],"dependencySource":"metadata"}`
+- **Level Recalc Needed?**
+  - id: `fldrdNv7jnty2BVVa`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Current Level - Public Facing Display**
+  - id: `fldYmEdB2mWoQqYNQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldqmwWHoaWM7dSFK"],"referencedFieldNames":["Current Level"],"formula":"ARRAYJOIN({fldqmwWHoaWM7dSFK})","fieldReferencesById":["fldqmwWHoaWM7dSFK"],"fieldReferencesByName":["Current Level"],"dependencySource":"metadata"}`
+- **Gate Failure Summary - Formula**
+  - id: `fldBOGscKYREiqtQS`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldTAalsTtSVumJF9","fldol7GytBoDq5CIA","fldcpQWJ9g315rQg1"],"referencedFieldNames":["Gate Enabled Status","Level Gate Rule","Gate Passes"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  {fldol7GytBoDq5CIA} & \" is disabled. No gate requirements apply.\",\r\n  IF(\r\n    FIND(\"Pass\", ARRAYJOIN({fldcpQWJ9g315rQg1} & \"\")),\r\n    {fldol7GytBoDq5CIA} & \": All active gate requirements met.\",\r\n    {fldol7GytBoDq5CIA} & \": Gate requirements not met. See Gate Debug Summary.\"\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldol7GytBoDq5CIA","fldcpQWJ9g315rQg1"],"fieldReferencesByName":["Gate Enabled Status","Level Gate Rule","Gate Passes"],"dependencySource":"metadata"}`
+- **Gate Summary**
+  - id: `fld78r7RqRgF8NK9c`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldTAalsTtSVumJF9","fldol7GytBoDq5CIA","fldcpQWJ9g315rQg1"],"referencedFieldNames":["Gate Enabled Status","Level Gate Rule","Gate Passes"],"formula":"IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  {fldol7GytBoDq5CIA} & \" is disabled. No gate requirements apply.\",\r\n  IF(\r\n    {fldcpQWJ9g315rQg1} = 1,\r\n    {fldol7GytBoDq5CIA} & \": All active gate requirements met.\",\r\n    {fldol7GytBoDq5CIA} & \": Gate requirements not met. See Gate Debug Summary.\"\r\n  )\r\n)","fieldReferencesById":["fldTAalsTtSVumJF9","fldol7GytBoDq5CIA","fldcpQWJ9g315rQg1"],"fieldReferencesByName":["Gate Enabled Status","Level Gate Rule","Gate Passes"],"dependencySource":"metadata"}`
+- **Athlete**
+  - id: `fld7TFNgzmESOhTOu`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblTluxBr3DcVrh6h","linkedTableName":"Athletes","inverseLinkFieldId":"fldU1pdEoxT7INud9","inverseLinkFieldName":"Enrollments","prefersSingleRecordLink":true,"isReversed":false}`
+- **Athlete First Name**
+  - id: `fld4wGsfJKp7x4Bjd`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Athlete Last Name**
+  - id: `fldpXNOzRflbkgVwV`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Events**
+  - id: `fldrZqLsT6r8MxrEk`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldOhbn1yIJLQOWHm","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Registratioin Referrer**
+  - id: `fldIk0ptYxJ0u94VJ`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Full Athlete Name**
+  - id: `fldVLV5YMCB2CHhai`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld4wGsfJKp7x4Bjd","fldpXNOzRflbkgVwV"],"referencedFieldNames":["Athlete First Name","Athlete Last Name"],"formula":"TRIM({fld4wGsfJKp7x4Bjd} & \" \" & {fldpXNOzRflbkgVwV})","fieldReferencesById":["fld4wGsfJKp7x4Bjd","fldpXNOzRflbkgVwV"],"fieldReferencesByName":["Athlete First Name","Athlete Last Name"],"dependencySource":"metadata"}`
+- **Athlete ID Lookup**
+  - id: `fldyO2uatMRG0YT6Q`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld7TFNgzmESOhTOu","recordLinkFieldName":"Athlete","fieldIdInLinkedTable":"fld4iy35C7tZalyEk","fieldNameInLinkedTable":"Athlete ID","fieldTableInLinkedTable":"Athletes"}`
+- **Athlete Match Key Lookup**
+  - id: `fldzrnixaUB5FDc48`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld7TFNgzmESOhTOu","recordLinkFieldName":"Athlete","fieldIdInLinkedTable":"fldAZn3tPwDF1ZNrs","fieldNameInLinkedTable":"Athlete Match Key","fieldTableInLinkedTable":"Athletes"}`
+- **Enrollment Key**
+  - id: `fldHlwaNU793Uojti`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldyO2uatMRG0YT6Q","fldKReGFHZ34Skb6D"],"referencedFieldNames":["Athlete ID Lookup","School Year"],"formula":"ARRAYJOIN({fldyO2uatMRG0YT6Q}) & \"|\" & {fldKReGFHZ34Skb6D}","fieldReferencesById":["fldyO2uatMRG0YT6Q","fldKReGFHZ34Skb6D"],"fieldReferencesByName":["Athlete ID Lookup","School Year"],"dependencySource":"metadata"}`
+- **Athlete Match Status**
+  - id: `fldk9rjaC9lvauCjr`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Linked","Error"],"choicesDetailed":[{"id":"seld6fzlRtegC1Ifu","name":"Pending","color":"greenLight2"},{"id":"selhyY7ruJ7zmtzKx","name":"Processing","color":"greenLight1"},{"id":"selK4muztoWihUI5P","name":"Linked","color":"greenBright"},{"id":"sel2u9Dz2BMzUJDd1","name":"Error","color":"redDark1"}]}`
+- **Gender**
+  - id: `fldL8nWI03ESXQbOj`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Male","Female"],"choicesDetailed":[{"id":"sel9ZAKY1IBq1cLd3","name":"Male","color":"blueBright"},{"id":"sel6A5ohRt2x0Lvua","name":"Female","color":"pinkBright"}]}`
+- **Grade**
+  - id: `fldqzUx0ZwsciCh95`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Pre K","K","1","2","3","4","5","6","7","8","9","10","11","12"],"choicesDetailed":[{"id":"sel4zHeo93FaaOEaq","name":"Pre K","color":"grayLight2"},{"id":"selWnZOjis20Jtwtl","name":"K","color":"purpleLight2"},{"id":"sel2COOO1RRbULGWt","name":"1","color":"pinkLight2"},{"id":"selArlDA6DUWzImiR","name":"2","color":"redLight2"},{"id":"selfL3bsatSZ7Wy1P","name":"3","color":"orangeLight2"},{"id":"selh0NIjmkjymWNGM","name":"4","color":"yellowLight2"},{"id":"selKuf6rHWbkOgGPG","name":"5","color":"greenLight2"},{"id":"selfETKlnkvY500J2","name":"6","color":"tealLight2"},{"id":"selzHyALwJu20CiQC","name":"7","color":"cyanLight2"},{"id":"selzEQjRqJkIiPsGM","name":"8","color":"blueLight2"},{"id":"sel3JHYZDrvIEiM6E","name":"9","color":"greenLight1"},{"id":"selezIpWyYKNL63x8","name":"10","color":"tealLight1"},{"id":"sel0zaFS6W866B1sZ","name":"11","color":"cyanLight1"},{"id":"selz3DYyevxUHknEL","name":"12","color":"blueLight1"}]}`
+- **School**
+  - id: `fldfYnPg1lBV9Jlhi`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyAJ36QvA7Wa2gU","linkedTableName":"School - Synced","inverseLinkFieldId":"fld0FxgUyjzdIcxYx","inverseLinkFieldName":"Enrollments","prefersSingleRecordLink":true,"isReversed":false}`
+- **School Mascot Lookup**
+  - id: `fldQiniXVzYd6Wfyr`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleAttachments","resultOptions":{"isReversed":false},"recordLinkFieldId":"fldfYnPg1lBV9Jlhi","recordLinkFieldName":"School","fieldIdInLinkedTable":"fldQU5l6GZ5DbHfxd","fieldNameInLinkedTable":"Mascot","fieldTableInLinkedTable":"School - Synced"}`
+- **School Name Lookup**
+  - id: `fld9UrsPNK8cH6Irw`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldfYnPg1lBV9Jlhi","recordLinkFieldName":"School","fieldIdInLinkedTable":"fldjX2tzJYOSJZaVc","fieldNameInLinkedTable":"Name","fieldTableInLinkedTable":"School - Synced"}`
+- **State**
+  - id: `fldt3CxIXTJLod4It`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldfYnPg1lBV9Jlhi","recordLinkFieldName":"School","fieldIdInLinkedTable":"fldKdrgVdcy97c41a","fieldNameInLinkedTable":"State","fieldTableInLinkedTable":"School - Synced"}`
+- **Parent First Name**
+  - id: `fldb0m8iUTNRkHkZg`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Parent Last Name**
+  - id: `fldIvtRxvN4Bsixeh`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Parent Email**
+  - id: `fldu2bZt8776rNYZ0`
+  - type: `email`
+  - role: `contact`
+  - primary: `False`
+- **Athlete Folder Name**
+  - id: `fld3YquzsXawXKcyB`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldpXNOzRflbkgVwV","fld4wGsfJKp7x4Bjd","fldKReGFHZ34Skb6D"],"referencedFieldNames":["Athlete Last Name","Athlete First Name","School Year"],"formula":"TRIM(ARRAYJOIN({fldpXNOzRflbkgVwV})) & \"_\" &\nTRIM(ARRAYJOIN({fld4wGsfJKp7x4Bjd})) & \"_\" &\nTRIM({fldKReGFHZ34Skb6D})","fieldReferencesById":["fldpXNOzRflbkgVwV","fld4wGsfJKp7x4Bjd","fldKReGFHZ34Skb6D"],"fieldReferencesByName":["Athlete Last Name","Athlete First Name","School Year"],"dependencySource":"metadata"}`
+- **School Year**
+  - id: `fldKReGFHZ34Skb6D`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["2025-2026","2026-2027","2027-2028"],"choicesDetailed":[{"id":"selOJAKUXvcjxGHdb","name":"2025-2026","color":"blueLight2"},{"id":"selpqerlgmyEtsmhK","name":"2026-2027","color":"cyanLight2"},{"id":"sel0CRVksd4U41BaI","name":"2027-2028","color":"tealLight2"}]}`
+- **Athlete Email**
+  - id: `fldY4U6QlqLc0GMLA`
+  - type: `email`
+  - role: `contact`
+  - primary: `False`
+- **Athlete Cell Number**
+  - id: `fld71CIyihF3TAHWq`
+  - type: `phoneNumber`
+  - role: `contact`
+  - primary: `False`
+- **Athlete Email - Cleaned**
+  - id: `fldCAx18QSO4sIsfP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldY4U6QlqLc0GMLA"],"referencedFieldNames":["Athlete Email"],"formula":"IF(\r\n  {fldY4U6QlqLc0GMLA},\r\n  LOWER(\r\n    REGEX_REPLACE(\r\n      TRIM(\r\n        IF(\r\n          REGEX_MATCH({fldY4U6QlqLc0GMLA}, \"<[^>]+>\"),\r\n          REGEX_EXTRACT({fldY4U6QlqLc0GMLA}, \"<([^>]+)>\"),\r\n          REGEX_REPLACE(\r\n            REGEX_REPLACE({fldY4U6QlqLc0GMLA}, \"^[\\\"']+|[\\\"']+$\", \"\"),\r\n            \"[,;]+$\",\r\n            \"\"\r\n          )\r\n        )\r\n      ),\r\n      \"\\\\s+\",\r\n      \"\"\r\n    )\r\n  ),\r\n  BLANK()\r\n)","fieldReferencesById":["fldY4U6QlqLc0GMLA"],"fieldReferencesByName":["Athlete Email"],"dependencySource":"metadata"}`
+- **Parent Email - Cleaned**
+  - id: `fldDaqe8xOpDoQo7S`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldu2bZt8776rNYZ0"],"referencedFieldNames":["Parent Email"],"formula":"IF(\r\n  {fldu2bZt8776rNYZ0},\r\n  LOWER(\r\n    REGEX_REPLACE(\r\n      TRIM(\r\n        IF(\r\n          REGEX_MATCH({fldu2bZt8776rNYZ0}, \"<[^>]+>\"),\r\n          REGEX_EXTRACT({fldu2bZt8776rNYZ0}, \"<([^>]+)>\"),\r\n          REGEX_REPLACE(\r\n            REGEX_REPLACE({fldu2bZt8776rNYZ0}, \"^[\\\"']+|[\\\"']+$\", \"\"),\r\n            \"[,;]+$\",\r\n            \"\"\r\n          )\r\n        )\r\n      ),\r\n      \"\\\\s+\",\r\n      \"\"\r\n    )\r\n  ),\r\n  BLANK()\r\n)","fieldReferencesById":["fldu2bZt8776rNYZ0"],"fieldReferencesByName":["Parent Email"],"dependencySource":"metadata"}`
+- **Parent Cell Number**
+  - id: `fld31gfPJGHT0KJ67`
+  - type: `phoneNumber`
+  - role: `contact`
+  - primary: `False`
+- **Active?**
+  - id: `fldEtpoueSb3dDSit`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Submissions**
+  - id: `fldUDk0RrT58rKgQ5`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fld0fKiO62UiztNQH","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Total Shots Submitted**
+  - id: `fld4Jni2Ec7yatLsr`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldAqC1oUKKFZdU3p","fieldNameInLinkedTable":"Total Shots Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total Makes Submitted**
+  - id: `fldrouKwocjULrb3b`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldhePmUYZ4kCaWeq","fieldNameInLinkedTable":"Total Makes Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total 2PT Attempted**
+  - id: `fldFKG6KEwNNnXhoP`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldqK8wSDMNsmnSeH","fieldNameInLinkedTable":"2PT Attempted Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total 2PT Made**
+  - id: `fldyDVsRklqz49MFV`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldzcBOkGK2KGrSTQ","fieldNameInLinkedTable":"2PT Made Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total 3PT Attempted**
+  - id: `fldGkziFZj70m5IVT`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldC7kjGLdg7SIoyp","fieldNameInLinkedTable":"3PT Attempted Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total 3PT Made**
+  - id: `fldgrAv9Kkyimrl5K`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldT86AJTsJB7i1Nx","fieldNameInLinkedTable":"3PT Made Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total FT Attempted**
+  - id: `fldZcOxEUZ8T0PxM4`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldGZFfAfXxTEICsE","fieldNameInLinkedTable":"FT Attempted Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total FT Made**
+  - id: `fldNH607ODnKOEhFb`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldKefUJ9Lwh5wYkP","fieldNameInLinkedTable":"FT Made Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Overall FG Attempted**
+  - id: `fldZfGABZk1rGsTTX`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldFKG6KEwNNnXhoP","fldGkziFZj70m5IVT"],"referencedFieldNames":["Total 2PT Attempted","Total 3PT Attempted"],"formula":"{fldFKG6KEwNNnXhoP} + {fldGkziFZj70m5IVT}","fieldReferencesById":["fldFKG6KEwNNnXhoP","fldGkziFZj70m5IVT"],"fieldReferencesByName":["Total 2PT Attempted","Total 3PT Attempted"],"dependencySource":"metadata"}`
+- **Overall FG Made**
+  - id: `fldaQuAskboDGwrej`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldyDVsRklqz49MFV","fldgrAv9Kkyimrl5K"],"referencedFieldNames":["Total 2PT Made","Total 3PT Made"],"formula":"{fldyDVsRklqz49MFV} + {fldgrAv9Kkyimrl5K}","fieldReferencesById":["fldyDVsRklqz49MFV","fldgrAv9Kkyimrl5K"],"fieldReferencesByName":["Total 2PT Made","Total 3PT Made"],"dependencySource":"metadata"}`
+- **Overall FG %**
+  - id: `fldUJnA80TrznELHE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldZfGABZk1rGsTTX","fldaQuAskboDGwrej"],"referencedFieldNames":["Overall FG Attempted","Overall FG Made"],"formula":"IF({fldZfGABZk1rGsTTX}, {fldaQuAskboDGwrej} / {fldZfGABZk1rGsTTX}, BLANK())","fieldReferencesById":["fldZfGABZk1rGsTTX","fldaQuAskboDGwrej"],"fieldReferencesByName":["Overall FG Attempted","Overall FG Made"],"dependencySource":"metadata"}`
+- **Overall 2PT %**
+  - id: `fldFUdlbjoDuXWc2Z`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldFKG6KEwNNnXhoP","fldyDVsRklqz49MFV"],"referencedFieldNames":["Total 2PT Attempted","Total 2PT Made"],"formula":"IF({fldFKG6KEwNNnXhoP}, {fldyDVsRklqz49MFV} / {fldFKG6KEwNNnXhoP}, BLANK())","fieldReferencesById":["fldFKG6KEwNNnXhoP","fldyDVsRklqz49MFV"],"fieldReferencesByName":["Total 2PT Attempted","Total 2PT Made"],"dependencySource":"metadata"}`
+- **Overall 3PT %**
+  - id: `fldrB5lj2fIEv3B7C`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldGkziFZj70m5IVT","fldgrAv9Kkyimrl5K"],"referencedFieldNames":["Total 3PT Attempted","Total 3PT Made"],"formula":"IF({fldGkziFZj70m5IVT}, {fldgrAv9Kkyimrl5K} / {fldGkziFZj70m5IVT}, BLANK())","fieldReferencesById":["fldGkziFZj70m5IVT","fldgrAv9Kkyimrl5K"],"fieldReferencesByName":["Total 3PT Attempted","Total 3PT Made"],"dependencySource":"metadata"}`
+- **Overall FT %**
+  - id: `fldyOQF4g0a0qtIlN`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldZcOxEUZ8T0PxM4","fldNH607ODnKOEhFb"],"referencedFieldNames":["Total FT Attempted","Total FT Made"],"formula":"IF({fldZcOxEUZ8T0PxM4}, {fldNH607ODnKOEhFb} / {fldZcOxEUZ8T0PxM4}, BLANK())","fieldReferencesById":["fldZcOxEUZ8T0PxM4","fldNH607ODnKOEhFb"],"fieldReferencesByName":["Total FT Attempted","Total FT Made"],"dependencySource":"metadata"}`
+- **Program Instance**
+  - id: `fldVMwSfH8r9S0afA`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblMfALZa4YYUy70P","linkedTableName":"Program Instance - Synced","inverseLinkFieldId":"fldWuPJCPJebVdcBg","inverseLinkFieldName":"Enrollments","prefersSingleRecordLink":true,"isReversed":false,"viewIdForRecordSelection":"viwTEBb0ZxBzBSJMw"}`
+- **Mailing Address Submitted**
+  - id: `fldoFf0Sm8ruGgWrz`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Physical Address Submitted**
+  - id: `fld8luvFTA4599iWl`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **City Submitted**
+  - id: `flddlRLfuQ393fWrt`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Zip Code Submitted**
+  - id: `fldfgRQ1jKGHVCl5o`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Registration Source**
+  - id: `fldtN6rAuPpv5tqFz`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Fillout Registration"],"choicesDetailed":[{"id":"selyM8CsidwwuIRw3","name":"Fillout Registration","color":"blueLight2"}]}`
+- **Parent Full Name Submitted**
+  - id: `fldBJ2pwawWFHpstQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldb0m8iUTNRkHkZg","fldIvtRxvN4Bsixeh"],"referencedFieldNames":["Parent First Name","Parent Last Name"],"formula":"TRIM({fldb0m8iUTNRkHkZg} & \" \" & {fldIvtRxvN4Bsixeh})","fieldReferencesById":["fldb0m8iUTNRkHkZg","fldIvtRxvN4Bsixeh"],"fieldReferencesByName":["Parent First Name","Parent Last Name"],"dependencySource":"metadata"}`
+- **Registered At**
+  - id: `fldKJI7ikaZaxB7oo`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Athlete Headshot**
+  - id: `fldyR7IYFX9CY34XK`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Parent Email Subject**
+  - id: `fldWYUYAOudslfXa0`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Parent Email HTML**
+  - id: `fldt3egwi2fqgpDY8`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Welcome Email Status**
+  - id: `fld8q4102HlqFssGt`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending Build","Ready","Sent","Error"],"choicesDetailed":[{"id":"selMgoUdGvEnuDN5x","name":"Pending Build","color":"blueLight2"},{"id":"selkEKnwAbGYcJk4e","name":"Ready","color":"cyanLight2"},{"id":"selCBGCz9LQfuBAT5","name":"Sent","color":"tealLight2"},{"id":"selLl51fk5y1Hi1TG","name":"Error","color":"greenLight2"}]}`
+- **Welcome Email Sent At**
+  - id: `fldOtPlE3QeBTkua0`
+  - type: `dateTime`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Welcome Email Error**
+  - id: `fldlTvIjixfP4bfvL`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Welcome Email To**
+  - id: `fldj7JuUQiiRUqo5j`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldDaqe8xOpDoQo7S","fldCAx18QSO4sIsfP"],"referencedFieldNames":["Parent Email - Cleaned","Athlete Email - Cleaned"],"formula":"IF(\r\n  {fldDaqe8xOpDoQo7S},\r\n  {fldDaqe8xOpDoQo7S},\r\n  IF(\r\n    {fldCAx18QSO4sIsfP},\r\n    {fldCAx18QSO4sIsfP},\r\n    BLANK()\r\n  )\r\n)","fieldReferencesById":["fldDaqe8xOpDoQo7S","fldCAx18QSO4sIsfP"],"fieldReferencesByName":["Parent Email - Cleaned","Athlete Email - Cleaned"],"dependencySource":"metadata"}`
+- **Welcome Email Ready?**
+  - id: `fldoXWryfQ32rsx3x`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld7TFNgzmESOhTOu","fldVLV5YMCB2CHhai","fldKReGFHZ34Skb6D","fldVMwSfH8r9S0afA","fldj7JuUQiiRUqo5j","fldWYUYAOudslfXa0","fldt3egwi2fqgpDY8"],"referencedFieldNames":["Athlete","Full Athlete Name","School Year","Program Instance","Welcome Email To","Parent Email Subject","Parent Email HTML"],"formula":"AND(\n  {fld7TFNgzmESOhTOu},\n  {fldVLV5YMCB2CHhai},\n  {fldKReGFHZ34Skb6D},\n  {fldVMwSfH8r9S0afA},\n  {fldj7JuUQiiRUqo5j},\n  {fldWYUYAOudslfXa0},\n  {fldt3egwi2fqgpDY8}\n)","fieldReferencesById":["fld7TFNgzmESOhTOu","fldVLV5YMCB2CHhai","fldKReGFHZ34Skb6D","fldVMwSfH8r9S0afA","fldj7JuUQiiRUqo5j","fldWYUYAOudslfXa0","fldt3egwi2fqgpDY8"],"fieldReferencesByName":["Athlete","Full Athlete Name","School Year","Program Instance","Welcome Email To","Parent Email Subject","Parent Email HTML"],"dependencySource":"metadata"}`
+- **Weekly Athlete Summary**
+  - id: `fldGMZrlmjEhzueQ5`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fldNH81lfwL5dBnAw","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Athlete Achievement Unlocks**
+  - id: `fldelG3oIUxOwE7dv`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldxCHW5Yc4kahb4Z","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Grade Band**
+  - id: `fldmM5UET9wsL1lwy`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldPMMGynbI3Hu2jv","inverseLinkFieldName":"Enrollments","prefersSingleRecordLink":true,"isReversed":false}`
+- **Last Grade Used for Grade Band**
+  - id: `fldFKOBjkCckjyQy1`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Pre K","K","1","2","3","4","5","6","7","8","9","10","11","12"],"choicesDetailed":[{"id":"selGimHsJ5viVW836","name":"Pre K","color":"blueLight2"},{"id":"seli785paRpokYx7I","name":"K","color":"cyanLight2"},{"id":"selqoDZAHsgH1Fl6c","name":"1","color":"tealLight2"},{"id":"sel6RUI85GT8sRhHU","name":"2","color":"greenLight2"},{"id":"sel9na0fM6q84VySN","name":"3","color":"yellowLight2"},{"id":"selizwN4WWALM9mmA","name":"4","color":"orangeLight2"},{"id":"sel9Zt1MBcQW2OPbF","name":"5","color":"redLight2"},{"id":"selrlNlcr2hiPlBBo","name":"6","color":"pinkLight2"},{"id":"selfuNjjqQQ7Taxk9","name":"7","color":"purpleLight2"},{"id":"selzvilaYENRoSPvv","name":"8","color":"grayLight2"},{"id":"selmK26XpvQ76pggO","name":"9","color":"blueLight1"},{"id":"sel1diILEOsQZj6ef","name":"10","color":"cyanLight1"},{"id":"selQUUT4TYWc2ma0v","name":"11","color":"tealLight1"},{"id":"selO1cW5oZaOq2ahF","name":"12","color":"greenLight1"}]}`
+- **Grade Band Label**
+  - id: `fldpOdEjLc64L3BZ5`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldmM5UET9wsL1lwy","recordLinkFieldName":"Grade Band","fieldIdInLinkedTable":"fldAVvaQKlXmP22FW","fieldNameInLinkedTable":"Grade Band Name","fieldTableInLinkedTable":"Grade Bands"}`
+- **Total Shots Counted**
+  - id: `fldaD4H9PBE8VVWG3`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldAqC1oUKKFZdU3p","fieldNameInLinkedTable":"Total Shots Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Price Paid to Stripe**
+  - id: `fldNPYtLP1EzqRvbx`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2}`
+- **Grade Band Refresh Needed**
+  - id: `fldR81v7KJasuSzVz`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldqzUx0ZwsciCh95","fldmM5UET9wsL1lwy","fldFKOBjkCckjyQy1"],"referencedFieldNames":["Grade","Grade Band","Last Grade Used for Grade Band"],"formula":"IF(\n  AND(\n    {fldqzUx0ZwsciCh95},\n    {fldmM5UET9wsL1lwy},\n    {fldFKOBjkCckjyQy1},\n    {fldqzUx0ZwsciCh95} != {fldFKOBjkCckjyQy1}\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldqzUx0ZwsciCh95","fldmM5UET9wsL1lwy","fldFKOBjkCckjyQy1"],"fieldReferencesByName":["Grade","Grade Band","Last Grade Used for Grade Band"],"dependencySource":"metadata"}`
+- **Grade Band Status**
+  - id: `fldfZQwSek9WL8Pec`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Assigned","Error"],"choicesDetailed":[{"id":"selpKAW5uB2ZrmNEd","name":"Pending","color":"blueLight2"},{"id":"selqqxgKCLWGkAfH5","name":"Processing","color":"cyanLight2"},{"id":"sel2owlIR4cOWwZkB","name":"Assigned","color":"tealLight2"},{"id":"sela0XMMgpEQbVhLA","name":"Error","color":"greenLight2"}]}`
+- **Lifetime XP Manual Adjustments**
+  - id: `fld1XFo2mJgqUIlNc`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Lifetime XP Earned**
+  - id: `fldcmufCfMn9a87Gz`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldrZqLsT6r8MxrEk","recordLinkFieldName":"XP Events","fieldIdInLinkedTable":"fldGCVRPYV76R2pPH","fieldNameInLinkedTable":"Active XP Points","fieldTableInLinkedTable":"XP Events"}`
+- **Lifetime XP Total**
+  - id: `fldT1LVV8xuBG0uyu`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldcmufCfMn9a87Gz","fld1XFo2mJgqUIlNc"],"referencedFieldNames":["Lifetime XP Earned","Lifetime XP Manual Adjustments"],"formula":"IF(\r\n  {fldcmufCfMn9a87Gz},\r\n  {fldcmufCfMn9a87Gz},\r\n  0\r\n)\r\n+\r\nIF(\r\n  {fld1XFo2mJgqUIlNc},\r\n  {fld1XFo2mJgqUIlNc},\r\n  0\r\n)","fieldReferencesById":["fldcmufCfMn9a87Gz","fld1XFo2mJgqUIlNc"],"fieldReferencesByName":["Lifetime XP Earned","Lifetime XP Manual Adjustments"],"dependencySource":"metadata"}`
+- **Level Sort Order - For Softr**
+  - id: `fldXgqEqU7PfhSUQE`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldqmwWHoaWM7dSFK","recordLinkFieldName":"Current Level","fieldIdInLinkedTable":"fldm3ie3koWeo0pYu","fieldNameInLinkedTable":"Sort Order","fieldTableInLinkedTable":"Levels"}`
+- **DELETE PROBABLY - Level Name with Color (from Current Level)**
+  - id: `fld3V0eLW4YOyNkbq`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleSelect","resultOptions":{"choices":[{"id":"selhkJWikoYAkhC4A","name":"Beginner","color":"grayLight2"},{"id":"selIK4Xf72uehGHJa","name":"Rookie Shooter","color":"blueLight2"},{"id":"sel576MBKYAgDq8Sh","name":"Developing Shooter","color":"blueLight1"},{"id":"sel5nJkp4HXSMWo0g","name":"Consistent Shooter","color":"blueBright"},{"id":"selMmfPb6gqMYVIst","name":"Dangerous Shooter","color":"blueDark1"},{"id":"seliTh4F9QHnNNl7s","name":"Hot Hand","color":"redLight1"},{"id":"selSiEPkyhsDyPL6C","name":"Deadeye","color":"redBright"},{"id":"selCEIScG4OK76MWE","name":"Sharpshooter","color":"redDark1"},{"id":"selcOqYRQ3RYv1LKh","name":"Pro","color":"blueLight1"},{"id":"sel2W6bKYUIkcH9ID","name":"All-Star","color":"blueBright"},{"id":"selxRwEmDbYOsNUK3","name":"Legend","color":"blueBright"},{"id":"selqMA0Bz6cCCb7dq","name":"G.O.A.T.","color":"yellowBright"}]},"recordLinkFieldId":"fldqmwWHoaWM7dSFK","recordLinkFieldName":"Current Level","fieldIdInLinkedTable":"fldskFKlnUPVZYxqQ","fieldNameInLinkedTable":"Level Name with Color","fieldTableInLinkedTable":"Levels"}`
+- **Current Level XP Required**
+  - id: `fld0d2rNmtrCpoBqe`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldqmwWHoaWM7dSFK","recordLinkFieldName":"Current Level","fieldIdInLinkedTable":"fldsvQz2K5W2Cg12V","fieldNameInLinkedTable":"XP Required (Cumulative)","fieldTableInLinkedTable":"Levels"}`
+- **Next Level**
+  - id: `flddnwaoAHRVSkIHC`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblU6EWmc1jCpgRHe","linkedTableName":"Levels","inverseLinkFieldId":"fldtaYEIwRvRKYkvb","inverseLinkFieldName":"Enrollments 5","prefersSingleRecordLink":true,"isReversed":false}`
+- **Current Level XP Ceiling**
+  - id: `fld7TLlcyz4jXDcaX`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldUkTILyyvuOYLkg"],"referencedFieldNames":["Next Level XP Required"],"formula":"IF(\r\n  {fldUkTILyyvuOYLkg},\r\n  VALUE(ARRAYJOIN({fldUkTILyyvuOYLkg})) - 1,\r\n  BLANK()\r\n)","fieldReferencesById":["fldUkTILyyvuOYLkg"],"fieldReferencesByName":["Next Level XP Required"],"dependencySource":"metadata"}`
+- **Next Level XP Required**
+  - id: `fldUkTILyyvuOYLkg`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"flddnwaoAHRVSkIHC","recordLinkFieldName":"Next Level","fieldIdInLinkedTable":"fldsvQz2K5W2Cg12V","fieldNameInLinkedTable":"XP Required (Cumulative)","fieldTableInLinkedTable":"Levels"}`
+- **XP Progress in Current Level**
+  - id: `fldBEEHG9ngzgvjaH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0d2rNmtrCpoBqe","fldT1LVV8xuBG0uyu"],"referencedFieldNames":["Current Level XP Required","Lifetime XP Total"],"formula":"IF(\n  {fld0d2rNmtrCpoBqe},\n  MAX(\n    0,\n    {fldT1LVV8xuBG0uyu} - VALUE(ARRAYJOIN({fld0d2rNmtrCpoBqe}))\n  ),\n  {fldT1LVV8xuBG0uyu}\n)","fieldReferencesById":["fld0d2rNmtrCpoBqe","fldT1LVV8xuBG0uyu"],"fieldReferencesByName":["Current Level XP Required","Lifetime XP Total"],"dependencySource":"metadata"}`
+- **XP Needed for Next Level**
+  - id: `fldGiiLSqTWjNRG6A`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldUkTILyyvuOYLkg","fldT1LVV8xuBG0uyu"],"referencedFieldNames":["Next Level XP Required","Lifetime XP Total"],"formula":"IF(\n  {fldUkTILyyvuOYLkg},\n  MAX(\n    0,\n    VALUE(ARRAYJOIN({fldUkTILyyvuOYLkg})) - {fldT1LVV8xuBG0uyu}\n  ),\n  0\n)","fieldReferencesById":["fldUkTILyyvuOYLkg","fldT1LVV8xuBG0uyu"],"fieldReferencesByName":["Next Level XP Required","Lifetime XP Total"],"dependencySource":"metadata"}`
+- **Homework Completions**
+  - id: `fldUC0bYq2Bws0q5s`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldfK3h5ucx3WdFNS","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Submission Assets - Enrollment**
+  - id: `fldLxLveNnVN93pia`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldJRSvui8RPg0Vyb","inverseLinkFieldName":"Enrollment - Linked","prefersSingleRecordLink":true,"isReversed":false}`
+- **Program Instance Name Only**
+  - id: `flde31eImaWCUgNPb`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldVMwSfH8r9S0afA","recordLinkFieldName":"Program Instance","fieldIdInLinkedTable":"fldYXOVK4BgbWdP8A","fieldNameInLinkedTable":"Program - Linked","fieldTableInLinkedTable":"Program Instance - Synced"}`
+- **Record Id**
+  - id: `fldnsyxEUbrJjyzXU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Zoom Meetings**
+  - id: `fldrM6ixKNS1X45to`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblWcSHEm8vNNIxyB","linkedTableName":"Zoom Meetings","inverseLinkFieldId":"fldbkE5FL3vz8bM7H","inverseLinkFieldName":"Attendees","prefersSingleRecordLink":false,"isReversed":false}`
+- **Video Feedback**
+  - id: `fldGZhsRVOK2XYPh4`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fldQuw8dRQnPmb5yU","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Award Recipients**
+  - id: `fldMjQZITCXNi7HQr`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblTyQXl8aEP93ubK","linkedTableName":"Award Recipients","inverseLinkFieldId":"fldscYvriHP3DH8HO","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Total Submissions**
+  - id: `fldewNyKEMDMt9Ger`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldUDk0RrT58rKgQ5","recordLinkFieldName":"Submissions"}`
+- **Total Homework Completions**
+  - id: `fldHEMvcX18c99Adk`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldUC0bYq2Bws0q5s","recordLinkFieldName":"Homework Completions"}`
+- **Total Video Submissions**
+  - id: `fldHI9QxnerBFkKzK`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldLxLveNnVN93pia","recordLinkFieldName":"Submission Assets - Enrollment"}`
+- **Total Zoom Attendances**
+  - id: `fldvEHpfO4ModNQoJ`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldrM6ixKNS1X45to","recordLinkFieldName":"Zoom Meetings"}`
+- **Level Gate Rule**
+  - id: `fldol7GytBoDq5CIA`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblWIb8JCuQ842HI8","linkedTableName":"Level Gate Rules","inverseLinkFieldId":"fldq2UsICe8sVBjbe","inverseLinkFieldName":"Enrollments Checked by This Gate","prefersSingleRecordLink":true,"isReversed":false}`
+- **Gate Minimum: Submissions**
+  - id: `fld7FaC0osGX9CxGp`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldvWKeUf1xf2H0JK","fieldNameInLinkedTable":"Minimum Submissions","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Minimum: Homework**
+  - id: `fldXhkxJ9Po3E5CTb`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldn9GN6ggEwENF1p","fieldNameInLinkedTable":"Minimum Homework","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Minimum: Videos**
+  - id: `fldeWeWXCX06g3IB0`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldZqzsPncNyN0gBQ","fieldNameInLinkedTable":"Minimum Videos","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Minimum: Zoom Meetings**
+  - id: `fldkyKW5vYiQ0Sm4b`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldyWZ77e9BgnHuBz","fieldNameInLinkedTable":"Minimum Zoom Meetings","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Minimum: Streak Days**
+  - id: `fldGGjiFmuAwxTp64`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldy0V8N8vuLs0ggc","fieldNameInLinkedTable":"Minimum Streak Days","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Enabled?**
+  - id: `fld0Z5sBc9m8qmFVW`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"checkbox","resultOptions":{"icon":"thumbsUp","color":"greenBright"},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldGwszPuPkmo2ROq","fieldNameInLinkedTable":"Gate Enabled?","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate-Test Eligible Level**
+  - id: `fld7gBWq1Vh8UbvOH`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldol7GytBoDq5CIA","recordLinkFieldName":"Level Gate Rule","fieldIdInLinkedTable":"fldmjqf8Eayve9d2q","fieldNameInLinkedTable":"Level","fieldTableInLinkedTable":"Level Gate Rules"}`
+- **Gate Debug Summary**
+  - id: `fldIZHMleMFonQn1R`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldol7GytBoDq5CIA","fld0Z5sBc9m8qmFVW","fldewNyKEMDMt9Ger","fld7FaC0osGX9CxGp","fldHEMvcX18c99Adk","fldXhkxJ9Po3E5CTb","fldHI9QxnerBFkKzK","fldeWeWXCX06g3IB0","fldvEHpfO4ModNQoJ","fldkyKW5vYiQ0Sm4b","fld3hgGT4u1wsiBBE","fldGGjiFmuAwxTp64"],"referencedFieldNames":["Level Gate Rule","Gate Enabled?","Total Submissions","Gate Minimum: Submissions","Total Homework Completions","Gate Minimum: Homework","Total Video Submissions","Gate Minimum: Videos","Total Zoom Attendances","Gate Minimum: Zoom Meetings","Longest Streak Days","Gate Minimum: Streak Days"],"formula":"\"Rule=\" & {fldol7GytBoDq5CIA} &\r\n\" | Enabled=\" & IF({fld0Z5sBc9m8qmFVW}, \"Yes\", \"No\") &\r\n\" | Sub \" & {fldewNyKEMDMt9Ger} & \"/\" & {fld7FaC0osGX9CxGp} &\r\n\" | HW \" & {fldHEMvcX18c99Adk} & \"/\" & {fldXhkxJ9Po3E5CTb} &\r\n\" | Vid \" & {fldHI9QxnerBFkKzK} & \"/\" & {fldeWeWXCX06g3IB0} &\r\n\" | Zoom \" & {fldvEHpfO4ModNQoJ} & \"/\" & {fldkyKW5vYiQ0Sm4b} &\r\n\" | Streak \" & {fld3hgGT4u1wsiBBE} & \"/\" & {fldGGjiFmuAwxTp64}","fieldReferencesById":["fldol7GytBoDq5CIA","fld0Z5sBc9m8qmFVW","fldewNyKEMDMt9Ger","fld7FaC0osGX9CxGp","fldHEMvcX18c99Adk","fldXhkxJ9Po3E5CTb","fldHI9QxnerBFkKzK","fldeWeWXCX06g3IB0","fldvEHpfO4ModNQoJ","fldkyKW5vYiQ0Sm4b","fld3hgGT4u1wsiBBE","fldGGjiFmuAwxTp64"],"fieldReferencesByName":["Level Gate Rule","Gate Enabled?","Total Submissions","Gate Minimum: Submissions","Total Homework Completions","Gate Minimum: Homework","Total Video Submissions","Gate Minimum: Videos","Total Zoom Attendances","Gate Minimum: Zoom Meetings","Longest Streak Days","Gate Minimum: Streak Days"],"dependencySource":"metadata"}`
+- **Streak Occurrences**
+  - id: `fldanl05JKEhuwysG`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9VxLdBiNcev4He","linkedTableName":"Streak Occurrences","inverseLinkFieldId":"fldq1NyyZe71Xxjvr","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+- **Current Shooting Streak**
+  - id: `flddbhaFH4y7kdbQi`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Current Shooting Streak As Of**
+  - id: `flduhIIDJVQs2egp6`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"}}`
+- **Current Shooting Streak Status**
+  - id: `fldMEJlsJobYGhQln`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Active","Broken","No Submissions"],"choicesDetailed":[{"id":"selCFcULqHXhHppTc","name":"Active","color":"blueLight2"},{"id":"selFvO7LrZCuF9G7l","name":"Broken","color":"cyanLight2"},{"id":"selIVllj6tYGaXbnP","name":"No Submissions","color":"tealLight2"}]}`
+- **Current Shooting Streak Last Checked At**
+  - id: `fldpt87RWrkya9i06`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Run Shot Milestone Check?**
+  - id: `fldwsuKGoypFBn2w4`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Longest Streak Days**
+  - id: `fld3hgGT4u1wsiBBE`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldanl05JKEhuwysG","recordLinkFieldName":"Streak Occurrences","fieldIdInLinkedTable":"fldHIIpPhhSzASswj","fieldNameInLinkedTable":"Gate Eligible Streak Days","fieldTableInLinkedTable":"Streak Occurrences"}`
+- **Target Goal Shots**
+  - id: `fldf15uPDVk174UrY`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldmM5UET9wsL1lwy","recordLinkFieldName":"Grade Band","fieldIdInLinkedTable":"fldM2PFJPD5RSOpuQ","fieldNameInLinkedTable":"Total Shot Target","fieldTableInLinkedTable":"Grade Bands"}`
+- **Goal Met?**
+  - id: `fldhmHDeQwtRt2Aqk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldaD4H9PBE8VVWG3","fldf15uPDVk174UrY"],"referencedFieldNames":["Total Shots Counted","Target Goal Shots"],"formula":"IF(\r\n  AND(\r\n    {fldaD4H9PBE8VVWG3},\r\n    {fldf15uPDVk174UrY},\r\n    {fldaD4H9PBE8VVWG3} >= VALUE(ARRAYJOIN({fldf15uPDVk174UrY}))\r\n  ),\r\n  \"🟢 🏆 GOAL MET!\",\r\n  BLANK()\r\n)","fieldReferencesById":["fldaD4H9PBE8VVWG3","fldf15uPDVk174UrY"],"fieldReferencesByName":["Total Shots Counted","Target Goal Shots"],"dependencySource":"metadata"}`
+- **Gate Enabled Status**
+  - id: `fldTAalsTtSVumJF9`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldIZHMleMFonQn1R"],"referencedFieldNames":["Gate Debug Summary"],"formula":"IF(\r\n  FIND(\"Enabled=Yes\", {fldIZHMleMFonQn1R}),\r\n  \"Enabled\",\r\n  \"Disabled\"\r\n)","fieldReferencesById":["fldIZHMleMFonQn1R"],"fieldReferencesByName":["Gate Debug Summary"],"dependencySource":"metadata"}`
+- **Public Progression Status**
+  - id: `fldMidMyM0NS0iIOy`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1"],"referencedFieldNames":["Gate Passes"],"formula":"IF(\r\n  {fldcpQWJ9g315rQg1},\r\n  \"On Track\",\r\n  \"Paused\"\r\n)","fieldReferencesById":["fldcpQWJ9g315rQg1"],"fieldReferencesByName":["Gate Passes"],"dependencySource":"metadata"}`
+- **Public Missing Submissions**
+  - id: `fldid87attaGLbc92`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fld7FaC0osGX9CxGp","fldewNyKEMDMt9Ger"],"referencedFieldNames":["Gate Passes","Gate Minimum: Submissions","Total Submissions"],"formula":"IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fld7FaC0osGX9CxGp})) = 0,\n    {fldewNyKEMDMt9Ger} >= VALUE(ARRAYJOIN({fld7FaC0osGX9CxGp}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fld7FaC0osGX9CxGp})) - {fldewNyKEMDMt9Ger} &\n  \" submission\" &\n  IF(\n    VALUE(ARRAYJOIN({fld7FaC0osGX9CxGp})) - {fldewNyKEMDMt9Ger} = 1,\n    \"\",\n    \"s\"\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fld7FaC0osGX9CxGp","fldewNyKEMDMt9Ger"],"fieldReferencesByName":["Gate Passes","Gate Minimum: Submissions","Total Submissions"],"dependencySource":"metadata"}`
+- **Public Missing Homework**
+  - id: `fldozKoW3osO7eORu`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fldXhkxJ9Po3E5CTb","fldHEMvcX18c99Adk"],"referencedFieldNames":["Gate Passes","Gate Minimum: Homework","Total Homework Completions"],"formula":"IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) = 0,\n    {fldHEMvcX18c99Adk} >= VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) - {fldHEMvcX18c99Adk} &\n  \" homework completion\" &\n  IF(\n    VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) - {fldHEMvcX18c99Adk} = 1,\n    \"\",\n    \"s\"\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fldXhkxJ9Po3E5CTb","fldHEMvcX18c99Adk"],"fieldReferencesByName":["Gate Passes","Gate Minimum: Homework","Total Homework Completions"],"dependencySource":"metadata"}`
+- **Public Missing Videos**
+  - id: `fld5C8QbW0QYGU2m9`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fldeWeWXCX06g3IB0","fldHI9QxnerBFkKzK"],"referencedFieldNames":["Gate Passes","Gate Minimum: Videos","Total Video Submissions"],"formula":"IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fldeWeWXCX06g3IB0})) = 0,\n    {fldHI9QxnerBFkKzK} >= VALUE(ARRAYJOIN({fldeWeWXCX06g3IB0}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fldeWeWXCX06g3IB0})) - {fldHI9QxnerBFkKzK} &\n  \" video review\" &\n  IF(\n    VALUE(ARRAYJOIN({fldeWeWXCX06g3IB0})) - {fldHI9QxnerBFkKzK} = 1,\n    \"\",\n    \"s\"\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fldeWeWXCX06g3IB0","fldHI9QxnerBFkKzK"],"fieldReferencesByName":["Gate Passes","Gate Minimum: Videos","Total Video Submissions"],"dependencySource":"metadata"}`
+- **Public Missing Zoom**
+  - id: `fldcMl1TtIyCo0Vtn`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fldkyKW5vYiQ0Sm4b","fldvEHpfO4ModNQoJ"],"referencedFieldNames":["Gate Passes","Gate Minimum: Zoom Meetings","Total Zoom Attendances"],"formula":"IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fldkyKW5vYiQ0Sm4b})) = 0,\n    {fldvEHpfO4ModNQoJ} >= VALUE(ARRAYJOIN({fldkyKW5vYiQ0Sm4b}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fldkyKW5vYiQ0Sm4b})) - {fldvEHpfO4ModNQoJ} &\n  \" zoom attendance\" &\n  IF(\n    VALUE(ARRAYJOIN({fldkyKW5vYiQ0Sm4b})) - {fldvEHpfO4ModNQoJ} = 1,\n    \"\",\n    \"s\"\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fldkyKW5vYiQ0Sm4b","fldvEHpfO4ModNQoJ"],"fieldReferencesByName":["Gate Passes","Gate Minimum: Zoom Meetings","Total Zoom Attendances"],"dependencySource":"metadata"}`
+- **Public Missing Streak**
+  - id: `fld4N3ueITBuxqkNA`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fldGGjiFmuAwxTp64","fld3hgGT4u1wsiBBE"],"referencedFieldNames":["Gate Passes","Gate Minimum: Streak Days","Longest Streak Days"],"formula":"IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fldGGjiFmuAwxTp64})) = 0,\n    {fld3hgGT4u1wsiBBE} >= VALUE(ARRAYJOIN({fldGGjiFmuAwxTp64}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fldGGjiFmuAwxTp64})) - {fld3hgGT4u1wsiBBE} &\n  \" more streak day\" &\n  IF(\n    VALUE(ARRAYJOIN({fldGGjiFmuAwxTp64})) - {fld3hgGT4u1wsiBBE} = 1,\n    \"\",\n    \"s\"\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fldGGjiFmuAwxTp64","fld3hgGT4u1wsiBBE"],"fieldReferencesByName":["Gate Passes","Gate Minimum: Streak Days","Longest Streak Days"],"dependencySource":"metadata"}`
+- **Public Gate Missing Reason**
+  - id: `fld6pZGMbr2uWQ9bl`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldcpQWJ9g315rQg1","fldid87attaGLbc92","fldozKoW3osO7eORu","fld5C8QbW0QYGU2m9","fldcMl1TtIyCo0Vtn","fld4N3ueITBuxqkNA"],"referencedFieldNames":["Gate Passes","Public Missing Submissions","Public Missing Homework","Public Missing Videos","Public Missing Zoom","Public Missing Streak"],"formula":"IF(\n  {fldcpQWJ9g315rQg1},\n  \"\",\n  IF(\n    LEN(\n      {fldid87attaGLbc92} &\n      {fldozKoW3osO7eORu} &\n      {fld5C8QbW0QYGU2m9} &\n      {fldcMl1TtIyCo0Vtn} &\n      {fld4N3ueITBuxqkNA}\n    ) = 0,\n    \"Missing: Complete remaining level requirements\",\n    \"Missing: \" &\n    REGEX_REPLACE(\n      {fldid87attaGLbc92} &\n      IF({fldid87attaGLbc92}, \", \", \"\") &\n      {fldozKoW3osO7eORu} &\n      IF({fldozKoW3osO7eORu}, \", \", \"\") &\n      {fld5C8QbW0QYGU2m9} &\n      IF({fld5C8QbW0QYGU2m9}, \", \", \"\") &\n      {fldcMl1TtIyCo0Vtn} &\n      IF({fldcMl1TtIyCo0Vtn}, \", \", \"\") &\n      {fld4N3ueITBuxqkNA},\n      \", $\",\n      \"\"\n    )\n  )\n)","fieldReferencesById":["fldcpQWJ9g315rQg1","fldid87attaGLbc92","fldozKoW3osO7eORu","fld5C8QbW0QYGU2m9","fldcMl1TtIyCo0Vtn","fld4N3ueITBuxqkNA"],"fieldReferencesByName":["Gate Passes","Public Missing Submissions","Public Missing Homework","Public Missing Videos","Public Missing Zoom","Public Missing Streak"],"dependencySource":"metadata"}`
+- **Goal Met Date**
+  - id: `fldohCsXsrU4hYqrJ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"},"recordLinkFieldId":"fldMjQZITCXNi7HQr","recordLinkFieldName":"Award Recipients","fieldIdInLinkedTable":"fldiTtywqTQHcsUXt","fieldNameInLinkedTable":"Date Awarded","fieldTableInLinkedTable":"Award Recipients"}`
+- **Final Reflection Quiz Submissions**
+  - id: `fldWRTWkBAvUu1ECx`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl6ORxLs192mXEWp","linkedTableName":"Final Reflection Quiz Submissions","inverseLinkFieldId":"flduxJuiiibQE0pbt","inverseLinkFieldName":"Enrollment","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **Athletes**
+
+- id: `tblTluxBr3DcVrh6h`
+- primary field: **Full Name** (`fldOQpa4GxVcU9ggc`)
+- role guess: `operational summary`
+- fields: `11`
+- link fields: `2`
+- computed fields: `4`
+- description: Core athlete/person table.
+
+Use this table to store the base athlete identity record.
+
+Use Enrollments as the operating record for school year, program instance, school context, submissions, homework completions, weekly summaries, XP events, and achievement progress.
+
+Avoid duplicating operating workflow logic directly in Athletes unless there is a clear reason.
+
+### Fields
+
+- **Full Name**
+  - id: `fldOQpa4GxVcU9ggc`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldS9q8hUiaaq6VjH","fldkigdfHbHNmTg6L"],"referencedFieldNames":["First Name","Last Name"],"formula":"{fldS9q8hUiaaq6VjH} & \" \" & {fldkigdfHbHNmTg6L}","fieldReferencesById":["fldS9q8hUiaaq6VjH","fldkigdfHbHNmTg6L"],"fieldReferencesByName":["First Name","Last Name"],"dependencySource":"metadata"}`
+- **First Name**
+  - id: `fldS9q8hUiaaq6VjH`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Last Name**
+  - id: `fldkigdfHbHNmTg6L`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Parent Email**
+  - id: `fldoJwkFLxsU4vdAe`
+  - type: `email`
+  - role: `contact`
+  - primary: `False`
+- **Athlete Match Key**
+  - id: `fldAZn3tPwDF1ZNrs`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldoJwkFLxsU4vdAe","fldS9q8hUiaaq6VjH","fldkigdfHbHNmTg6L"],"referencedFieldNames":["Parent Email","First Name","Last Name"],"formula":"LOWER(TRIM({fldoJwkFLxsU4vdAe})) & \"|\" & LOWER(TRIM({fldS9q8hUiaaq6VjH})) & \"|\" & LOWER(TRIM({fldkigdfHbHNmTg6L}))","fieldReferencesById":["fldoJwkFLxsU4vdAe","fldS9q8hUiaaq6VjH","fldkigdfHbHNmTg6L"],"fieldReferencesByName":["Parent Email","First Name","Last Name"],"dependencySource":"metadata"}`
+- **Athlete ID**
+  - id: `fld4iy35C7tZalyEk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"\"ATH-\" & RECORD_ID()","dependencySource":"none"}`
+- **Active?**
+  - id: `fldtt04Fxk7MC9WdC`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Register Date**
+  - id: `fldieabHYJFKJhO2Z`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Enrollments**
+  - id: `fldU1pdEoxT7INud9`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fld7TFNgzmESOhTOu","inverseLinkFieldName":"Athlete","prefersSingleRecordLink":false,"isReversed":false}`
+- **Submissions**
+  - id: `fldJbbZw7U6r246Zz`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldfWvl8g0JO5ObuB","inverseLinkFieldName":"Athlete","prefersSingleRecordLink":false,"isReversed":false}`
+- **RecordId**
+  - id: `fldgkgqyHNNn2goBJ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+
+## Table: **Level Gate Rules**
+
+- id: `tblWIb8JCuQ842HI8`
+- primary field: **Level Gate Rule Name** (`fldqMSIUmI2K2920W`)
+- role guess: `operational summary`
+- fields: `15`
+- link fields: `2`
+- computed fields: `4`
+- description: Define and manage customizable progression requirements for each Level by year or rule set.
+
+### Fields
+
+- **Level Gate Rule Name**
+  - id: `fldqMSIUmI2K2920W`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Level**
+  - id: `fldmjqf8Eayve9d2q`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblU6EWmc1jCpgRHe","linkedTableName":"Levels","inverseLinkFieldId":"fldyxZPYMh8qK8Gw1","inverseLinkFieldName":"Level Gate Rules","prefersSingleRecordLink":true,"isReversed":false}`
+- **Level Name (Lookup)**
+  - id: `fldRMBR0Oy7u28yMd`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldmjqf8Eayve9d2q","recordLinkFieldName":"Level","fieldIdInLinkedTable":"fldOXE187GbNwxXka","fieldNameInLinkedTable":"Level Name","fieldTableInLinkedTable":"Levels"}`
+- **School Year / Rule Set**
+  - id: `fldbeN62KVvmAjxYx`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Version Active?**
+  - id: `fld7Yg5c7HTHqu0xj`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Minimum Submissions**
+  - id: `fldvWKeUf1xf2H0JK`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Minimum Homework**
+  - id: `fldn9GN6ggEwENF1p`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Minimum Videos**
+  - id: `fldZqzsPncNyN0gBQ`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Minimum Zoom Meetings**
+  - id: `fldyWZ77e9BgnHuBz`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Minimum Streak Days**
+  - id: `fldy0V8N8vuLs0ggc`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Gate Enabled?**
+  - id: `fldGwszPuPkmo2ROq`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Level Rank (Lookup)**
+  - id: `fldyUUxYtGHeVEvWR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldmjqf8Eayve9d2q","recordLinkFieldName":"Level","fieldIdInLinkedTable":"fldkXCHwTnNASyEtL","fieldNameInLinkedTable":"Rank","fieldTableInLinkedTable":"Levels"}`
+- **Enrollments Checked by This Gate**
+  - id: `fldq2UsICe8sVBjbe`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldol7GytBoDq5CIA","inverseLinkFieldName":"Level Gate Rule","prefersSingleRecordLink":false,"isReversed":false}`
+- **Public Gate Criteria**
+  - id: `fldLHztmV49d5v4Pq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldGwszPuPkmo2ROq","fldvWKeUf1xf2H0JK","fldn9GN6ggEwENF1p","fldZqzsPncNyN0gBQ","fldyWZ77e9BgnHuBz","fldy0V8N8vuLs0ggc"],"referencedFieldNames":["Gate Enabled?","Minimum Submissions","Minimum Homework","Minimum Videos","Minimum Zoom Meetings","Minimum Streak Days"],"formula":"IF(\r\n  NOT({fldGwszPuPkmo2ROq}),\r\n  \"\",\r\n  \"To unlock this level, athletes must complete:\" & \"\\n\" &\r\n  \"• \" & {fldvWKeUf1xf2H0JK} & \" shooting submissions\" & \"\\n\" &\r\n  \"• \" & {fldn9GN6ggEwENF1p} & \" homework completions\" & \"\\n\" &\r\n  \"• \" & {fldZqzsPncNyN0gBQ} & \" video submissions\" & \"\\n\" &\r\n  \"• \" & {fldyWZ77e9BgnHuBz} & \" Zoom meeting(s)\" & \"\\n\" &\r\n  \"• A \" & {fldy0V8N8vuLs0ggc} & \"-day shooting streak\"\r\n)","fieldReferencesById":["fldGwszPuPkmo2ROq","fldvWKeUf1xf2H0JK","fldn9GN6ggEwENF1p","fldZqzsPncNyN0gBQ","fldyWZ77e9BgnHuBz","fldy0V8N8vuLs0ggc"],"fieldReferencesByName":["Gate Enabled?","Minimum Submissions","Minimum Homework","Minimum Videos","Minimum Zoom Meetings","Minimum Streak Days"],"dependencySource":"metadata"}`
+- **Public Gate Rules - Active Only**
+  - id: `fldyQKthaqgxk3nr4`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldGwszPuPkmo2ROq","fld7Yg5c7HTHqu0xj","fldLHztmV49d5v4Pq"],"referencedFieldNames":["Gate Enabled?","Version Active?","Public Gate Criteria"],"formula":"IF(\r\n  AND(\r\n    {fldGwszPuPkmo2ROq},\r\n    {fld7Yg5c7HTHqu0xj}\r\n  ),\r\n  {fldLHztmV49d5v4Pq},\r\n  \"\"\r\n)","fieldReferencesById":["fldGwszPuPkmo2ROq","fld7Yg5c7HTHqu0xj","fldLHztmV49d5v4Pq"],"fieldReferencesByName":["Gate Enabled?","Version Active?","Public Gate Criteria"],"dependencySource":"metadata"}`
+
+## Table: **Grade Bands**
+
+- id: `tblOhHrIqpjcsk2WG`
+- primary field: **Grade Band Name** (`fldAVvaQKlXmP22FW`)
+- role guess: `operational summary`
+- fields: `15`
+- link fields: `7`
+- computed fields: `2`
+- description: Reference table for grade-band definitions.
+
+Use this table to group athletes, curriculum assignments, target shot goals, homework relationships, and summary logic by grade-band structure.
+
+This table is a shared config/reference layer used across multiple parts of the Shooting Challenge Game App.
+
+### Fields
+
+- **Grade Band Name**
+  - id: `fldAVvaQKlXmP22FW`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld9Cdv1f3QbbmYYJ","fldKu3VXWBuD1DTDf"],"referencedFieldNames":["Min Grade","Max Grade"],"formula":"IF(\r\n  AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=2),\r\n  \"K-2\",\r\n  IF(\r\n    AND({fld9Cdv1f3QbbmYYJ}=3,{fldKu3VXWBuD1DTDf}=4),\r\n    \"3-4\",\r\n    IF(\r\n      AND({fld9Cdv1f3QbbmYYJ}=5,{fldKu3VXWBuD1DTDf}=6),\r\n      \"5-6\",\r\n      IF(\r\n        AND({fld9Cdv1f3QbbmYYJ}=7,{fldKu3VXWBuD1DTDf}=8),\r\n        \"7-8\",\r\n        IF(\r\n          AND({fld9Cdv1f3QbbmYYJ}=9,{fldKu3VXWBuD1DTDf}=12),\r\n          \"9-12\",\r\n          IF(\r\n            AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=0),\r\n            \"PreK–K\",\r\n            IF(\r\n              {fld9Cdv1f3QbbmYYJ}=0,\r\n              \"Kindergarten\",\r\n              IF(\r\n                {fld9Cdv1f3QbbmYYJ}={fldKu3VXWBuD1DTDf},\r\n                \"Grade \" & {fld9Cdv1f3QbbmYYJ},\r\n                \"Grades \" & {fld9Cdv1f3QbbmYYJ} & \"–\" & {fldKu3VXWBuD1DTDf}\r\n              )\r\n            )\r\n          )\r\n        )\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fld9Cdv1f3QbbmYYJ","fldKu3VXWBuD1DTDf"],"fieldReferencesByName":["Min Grade","Max Grade"],"dependencySource":"metadata"}`
+- **Target Goal Shots**
+  - id: `fldBh4UgoIF0i6L9C`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbleCfuAt3rY8unU3","linkedTableName":"Target Goal Shots","inverseLinkFieldId":"fldgR7XGIzqxS0LuO","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **Total Shot Target**
+  - id: `fldM2PFJPD5RSOpuQ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldBh4UgoIF0i6L9C","recordLinkFieldName":"Target Goal Shots","fieldIdInLinkedTable":"fldqxQzUHJnYpb93L","fieldNameInLinkedTable":"Total Shot Target","fieldTableInLinkedTable":"Target Goal Shots"}`
+- **Min Grade**
+  - id: `fld9Cdv1f3QbbmYYJ`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Max Grade**
+  - id: `fldKu3VXWBuD1DTDf`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Default Homework Tier**
+  - id: `fldYnwZNQDYXIJ21Q`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Early Childhood","Primary","Elementary","Upper Elementary","Middle School","Underclassmen","Upperclassmen"],"choicesDetailed":[{"id":"sely9W1sJYtJ66b4x","name":"Early Childhood","color":"yellowLight2"},{"id":"selU46G6uLYXlTtf7","name":"Primary","color":"blueLight2"},{"id":"selLlRJsC0hgiIoqs","name":"Elementary","color":"cyanLight2"},{"id":"selzocRST6gCwu4Zh","name":"Upper Elementary","color":"tealLight2"},{"id":"sel7wGZaJbaM9o0Ak","name":"Middle School","color":"greenLight2"},{"id":"selP5ouoAQKB4O4Ht","name":"Underclassmen","color":"orangeLight2"},{"id":"selywLctCotQdFVIY","name":"Upperclassmen","color":"redLight2"}]}`
+- **Notes**
+  - id: `fldAm4uAs72D516EI`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Active?**
+  - id: `fldfylpen9IDKwEQy`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Weekly Athlete Summary**
+  - id: `fldDFUmzJjKUGwBD7`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fld7CARd7rE7S3f8P","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **Enrollments**
+  - id: `fldPMMGynbI3Hu2jv`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldmM5UET9wsL1lwy","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **Homework Completions**
+  - id: `fldf2972XUiIOSDKH`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldwcbjY7YjJaAZGy","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **FBC Curriculum - SYNC**
+  - id: `fldYEIig2j86Ewsvc`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"fld69DQxhTVlmGoWh","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Reward Rules**
+  - id: `fldmegBkD05uVCBt2`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblnTLz8eDcyi8f3j","linkedTableName":"XP Reward Rules","inverseLinkFieldId":"fldM8BwPSXIZCB1Jm","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **Video Feedback**
+  - id: `fldF4e4QyPEqqWjyq`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fldhDaZcIuMeoFEyK","inverseLinkFieldName":"Grade Band","prefersSingleRecordLink":false,"isReversed":false}`
+- **Sort Order**
+  - id: `fld8Odq4dvlokNMFG`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+
+## Table: **Target Goal Shots**
+
+- id: `tbleCfuAt3rY8unU3`
+- primary field: **Target Label** (`fldkxLfYOHvYz26AP`)
+- role guess: `operational summary`
+- fields: `8`
+- link fields: `3`
+- computed fields: `3`
+- description: Reference table for target shot-goal definitions.
+
+Use this table to define expected shot targets or goal-shot benchmarks by grade band or related challenge context.
+
+This table is a config/reference layer used to support challenge rules, goals, and progress comparisons. It is not a raw activity table.
+
+### Fields
+
+- **Target Label**
+  - id: `fldkxLfYOHvYz26AP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldgR7XGIzqxS0LuO","fldqxQzUHJnYpb93L"],"referencedFieldNames":["Grade Band","Total Shot Target"],"formula":"{fldgR7XGIzqxS0LuO} & \" - \" & {fldqxQzUHJnYpb93L} & \" shots\"","fieldReferencesById":["fldgR7XGIzqxS0LuO","fldqxQzUHJnYpb93L"],"fieldReferencesByName":["Grade Band","Total Shot Target"],"dependencySource":"metadata"}`
+- **Total Shot Target**
+  - id: `fldqxQzUHJnYpb93L`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Grade Band**
+  - id: `fldgR7XGIzqxS0LuO`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldBh4UgoIF0i6L9C","inverseLinkFieldName":"Target Goal Shots","prefersSingleRecordLink":true,"isReversed":false}`
+- **Active?**
+  - id: `fldmZ2B6VccsD2zNq`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Goal Key**
+  - id: `fldZ17RtezN4snFff`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldgR7XGIzqxS0LuO","fldqxQzUHJnYpb93L"],"referencedFieldNames":["Grade Band","Total Shot Target"],"formula":"\"SHOT_GOAL|\" &\r\nUPPER(\r\n  SUBSTITUTE(\r\n    SUBSTITUTE(\r\n      ARRAYJOIN({fldgR7XGIzqxS0LuO}),\r\n      \" \",\r\n      \"\"\r\n    ),\r\n    \"-\",\r\n    \"_\"\r\n  )\r\n) &\r\n\"|\" &\r\n{fldqxQzUHJnYpb93L}","fieldReferencesById":["fldgR7XGIzqxS0LuO","fldqxQzUHJnYpb93L"],"fieldReferencesByName":["Grade Band","Total Shot Target"],"dependencySource":"metadata"}`
+- **Weekly Athlete Summary**
+  - id: `flduA37JFti7LODYH`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fldNvhGv57qOqbsfN","inverseLinkFieldName":"Goal Record","prefersSingleRecordLink":false,"isReversed":false}`
+- **Shot Milestones**
+  - id: `fldkoyTtiTemZ6RYw`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl5C4TsQpOigIyRz","linkedTableName":"Shot Milestones","inverseLinkFieldId":"fldw1VqNidFq2Yz2D","inverseLinkFieldName":"Target Goal Shot","prefersSingleRecordLink":false,"isReversed":false}`
+- **Band Sort Order**
+  - id: `fld2bdIdnS8RyMgro`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldgR7XGIzqxS0LuO","recordLinkFieldName":"Grade Band","fieldIdInLinkedTable":"fld8Odq4dvlokNMFG","fieldNameInLinkedTable":"Sort Order","fieldTableInLinkedTable":"Grade Bands"}`
+
+## Table: **Submissions**
+
+- id: `tblEVjVpGGlPTsYSt`
+- primary field: **Submission Full Name** (`fldzxmk634hDNrtiB`)
+- role guess: `operational summary`
+- fields: `96`
+- link fields: `10`
+- computed fields: `54`
+- description: Stores individual athlete shooting activity submissions.
+
+Use this table for raw submission records, activity dates, shot stats, linked enrollment, linked week, and supporting workflow/helper fields.
+
+This table contains many computed fields. Make small changes carefully and avoid adding duplicate helper logic unless there is a clear operational need.
+
+### Fields
+
+- **Submission Full Name**
+  - id: `fldzxmk634hDNrtiB`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - desc: Primary label field for submission records.
+
+This field should uniquely identify or summarize each submission record for viewing and linking purposes.
+
+Edit carefully if this field is formula-based or used widely in linked records, views, or automations.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldrylk2Fy2G8hUst","fldpkkSBsx8kQRZos","fldA3fpXWckngZ6g1"],"referencedFieldNames":["Athlete Name","Activity Date","Week"],"formula":"IF(\r\n  {fldrylk2Fy2G8hUst},\r\n  {fldrylk2Fy2G8hUst},\r\n  \"Unknown Athlete\"\r\n) &\r\n\" - \" &\r\nIF(\r\n  {fldpkkSBsx8kQRZos},\r\n  DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"M/D/YYYY\"),\r\n  \"No Date\"\r\n) &\r\n\" - \" &\r\nIF(\r\n  {fldA3fpXWckngZ6g1},\r\n  {fldA3fpXWckngZ6g1},\r\n  \"No Week\"\r\n)","fieldReferencesById":["fldrylk2Fy2G8hUst","fldpkkSBsx8kQRZos","fldA3fpXWckngZ6g1"],"fieldReferencesByName":["Athlete Name","Activity Date","Week"],"dependencySource":"metadata"}`
+- **Submission Key**
+  - id: `fldpO1vUHB675k6nm`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1"],"referencedFieldNames":["Enrollment","Week"],"formula":"{fld0fKiO62UiztNQH} & '-' & {fldA3fpXWckngZ6g1} & '-' & RECORD_ID()","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1"],"fieldReferencesByName":["Enrollment","Week"],"dependencySource":"metadata"}`
+- **Enrollment**
+  - id: `fld0fKiO62UiztNQH`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldUDk0RrT58rKgQ5","inverseLinkFieldName":"Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Athlete Name**
+  - id: `fldrylk2Fy2G8hUst`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld0fKiO62UiztNQH","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldVLV5YMCB2CHhai","fieldNameInLinkedTable":"Full Athlete Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Activity Date**
+  - id: `fldpkkSBsx8kQRZos`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"}}`
+- **Submitted At**
+  - id: `fld7JJ7neI0YYmB7i`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"formula":"CREATED_TIME()","dependencySource":"none"}`
+- **Week**
+  - id: `fldA3fpXWckngZ6g1`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fld8hxWh7fATBLghL","inverseLinkFieldName":"Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Has Review Assets?**
+  - id: `fld9vwPlfCVvjwZyJ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"referencedFieldNames":["HW Sub 1","HW Sub 2","Video Upload"],"formula":"IF(OR({fldtJS9LW3PAyCaNC}, {fldUvfAHi3e15Oxb7}, {fld0pxr2NoMx2MxBu}), TRUE(), FALSE())","fieldReferencesById":["fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"fieldReferencesByName":["HW Sub 1","HW Sub 2","Video Upload"],"dependencySource":"metadata"}`
+- **Submission Stat Mode**
+  - id: `fldAw7146HvSLBxGF`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9","fldtAIg2vtfWkyPPk"],"referencedFieldNames":["2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made","Shot Total"],"formula":"IF(\r\n  OR(\r\n    {fldLZmCQB7vi1vTjF} != BLANK(),\r\n    {fldThGv2Y8MjgBZpp} != BLANK(),\r\n    {fldTW9qdhF8vNkDJA} != BLANK(),\r\n    {fldyS3osevRlfO2Kd} != BLANK(),\r\n    {fldzN0wgxFeuwyLIj} != BLANK(),\r\n    {fldPZu6GsysJwnXS9} != BLANK()\r\n  ),\r\n  \"Detailed Shooting\",\r\n  IF(\r\n    {fldtAIg2vtfWkyPPk} != BLANK(),\r\n    \"Simple Total\",\r\n    BLANK()\r\n  )\r\n)","fieldReferencesById":["fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9","fldtAIg2vtfWkyPPk"],"fieldReferencesByName":["2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made","Shot Total"],"dependencySource":"metadata"}`
+- **2PT Made**
+  - id: `fldThGv2Y8MjgBZpp`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **2PT Attempted**
+  - id: `fldLZmCQB7vi1vTjF`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **3PT Made**
+  - id: `fldyS3osevRlfO2Kd`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **3PT Attempted**
+  - id: `fldTW9qdhF8vNkDJA`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **FT Made**
+  - id: `fldPZu6GsysJwnXS9`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **FT Attempted**
+  - id: `fldzN0wgxFeuwyLIj`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Total Shots Canonical**
+  - id: `fld98cbVpYc5lqrN6`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldTW9qdhF8vNkDJA","fldzN0wgxFeuwyLIj","fldtAIg2vtfWkyPPk"],"referencedFieldNames":["Submission Stat Mode","2PT Attempted","3PT Attempted","FT Attempted","Shot Total"],"formula":"IF(\n{fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n{fldLZmCQB7vi1vTjF} + {fldTW9qdhF8vNkDJA} + {fldzN0wgxFeuwyLIj},\nIF(\n  {fldAw7146HvSLBxGF} = \"Simple Total\",\n  {fldtAIg2vtfWkyPPk},\n  BLANK()\n)\n)","fieldReferencesById":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldTW9qdhF8vNkDJA","fldzN0wgxFeuwyLIj","fldtAIg2vtfWkyPPk"],"fieldReferencesByName":["Submission Stat Mode","2PT Attempted","3PT Attempted","FT Attempted","Shot Total"],"dependencySource":"metadata"}`
+- **Total Makes Canonical**
+  - id: `fldCS8ILuIjuA9puP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldAw7146HvSLBxGF","fldThGv2Y8MjgBZpp","fldyS3osevRlfO2Kd","fldPZu6GsysJwnXS9"],"referencedFieldNames":["Submission Stat Mode","2PT Made","3PT Made","FT Made"],"formula":"IF(\n  {fldAw7146HvSLBxGF} = 'Detailed Shooting',\n  {fldThGv2Y8MjgBZpp} + {fldyS3osevRlfO2Kd} + {fldPZu6GsysJwnXS9},\n  BLANK()\n)","fieldReferencesById":["fldAw7146HvSLBxGF","fldThGv2Y8MjgBZpp","fldyS3osevRlfO2Kd","fldPZu6GsysJwnXS9"],"fieldReferencesByName":["Submission Stat Mode","2PT Made","3PT Made","FT Made"],"dependencySource":"metadata"}`
+- **Submission Has Detailed Stats?**
+  - id: `fld2onHVrtviMDOP8`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"referencedFieldNames":["Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made"],"formula":"IF(\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  OR(\n    {fldLZmCQB7vi1vTjF} != BLANK(),\n    {fldThGv2Y8MjgBZpp} != BLANK(),\n    {fldTW9qdhF8vNkDJA} != BLANK(),\n    {fldyS3osevRlfO2Kd} != BLANK(),\n    {fldzN0wgxFeuwyLIj} != BLANK(),\n    {fldPZu6GsysJwnXS9} != BLANK()\n  ),\n  FALSE()\n)","fieldReferencesById":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"fieldReferencesByName":["Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made"],"dependencySource":"metadata"}`
+- **Detailed Stats Valid?**
+  - id: `fldiTf8V6Jf5bBKeP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"referencedFieldNames":["Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made"],"formula":"IF(\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  AND(\n    {fldLZmCQB7vi1vTjF} >= 0,\n    {fldThGv2Y8MjgBZpp} >= 0,\n    {fldTW9qdhF8vNkDJA} >= 0,\n    {fldyS3osevRlfO2Kd} >= 0,\n    {fldzN0wgxFeuwyLIj} >= 0,\n    {fldPZu6GsysJwnXS9} >= 0,\n    {fldThGv2Y8MjgBZpp} <= {fldLZmCQB7vi1vTjF},\n    {fldyS3osevRlfO2Kd} <= {fldTW9qdhF8vNkDJA},\n    {fldPZu6GsysJwnXS9} <= {fldzN0wgxFeuwyLIj}\n  ),\n  BLANK()\n)","fieldReferencesById":["fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"fieldReferencesByName":["Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made"],"dependencySource":"metadata"}`
+- **2PT %**
+  - id: `fldNLWTS2tgdwohrC`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp"],"referencedFieldNames":["2PT Attempted","2PT Made"],"formula":"IF(\n  {fldLZmCQB7vi1vTjF} > 0,\n  {fldThGv2Y8MjgBZpp} / {fldLZmCQB7vi1vTjF},\n  BLANK()\n)","fieldReferencesById":["fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp"],"fieldReferencesByName":["2PT Attempted","2PT Made"],"dependencySource":"metadata"}`
+- **3PT %**
+  - id: `fldXja72Wk02S2bmz`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd"],"referencedFieldNames":["3PT Attempted","3PT Made"],"formula":"IF(\n  {fldTW9qdhF8vNkDJA} > 0,\n  {fldyS3osevRlfO2Kd} / {fldTW9qdhF8vNkDJA},\n  BLANK()\n)","fieldReferencesById":["fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd"],"fieldReferencesByName":["3PT Attempted","3PT Made"],"dependencySource":"metadata"}`
+- **FT %**
+  - id: `fldYOVAgaKNL139Ij`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"referencedFieldNames":["FT Attempted","FT Made"],"formula":"IF(\n  {fldzN0wgxFeuwyLIj} > 0,\n  {fldPZu6GsysJwnXS9} / {fldzN0wgxFeuwyLIj},\n  BLANK()\n)","fieldReferencesById":["fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9"],"fieldReferencesByName":["FT Attempted","FT Made"],"dependencySource":"metadata"}`
+- **Total Shots Counted**
+  - id: `fldAqC1oUKKFZdU3p`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6"],"referencedFieldNames":["Count This Submission?","Total Shots Canonical"],"formula":"IF(\n{fld1gQ2c04pndnTKe},\n{fld98cbVpYc5lqrN6},\n0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6"],"fieldReferencesByName":["Count This Submission?","Total Shots Canonical"],"dependencySource":"metadata"}`
+- **Review Queue Sort**
+  - id: `fldJ3ZJDXOwG8OaUf`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"BLANK()","dependencySource":"none"}`
+- **Duplicate Key**
+  - id: `fld8c3ay4tdaQXdSa`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld0fKiO62UiztNQH","fldpkkSBsx8kQRZos","fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9","fldtAIg2vtfWkyPPk"],"referencedFieldNames":["Enrollment","Activity Date","Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made","Shot Total"],"formula":"IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH} & \"\",\r\n    {fldpkkSBsx8kQRZos},\r\n    {fldAw7146HvSLBxGF} & \"\"\r\n  ),\r\n  {fld0fKiO62UiztNQH} & \"|\" &\r\n  DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"YYYY-MM-DD\") & \"|\" &\r\n  {fldAw7146HvSLBxGF} & \"|\" &\r\n  IF(\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\r\n    {fldLZmCQB7vi1vTjF} & \"|\" &\r\n    {fldThGv2Y8MjgBZpp} & \"|\" &\r\n    {fldTW9qdhF8vNkDJA} & \"|\" &\r\n    {fldyS3osevRlfO2Kd} & \"|\" &\r\n    {fldzN0wgxFeuwyLIj} & \"|\" &\r\n    {fldPZu6GsysJwnXS9},\r\n    {fldtAIg2vtfWkyPPk} & \"\"\r\n  ),\r\n  BLANK()\r\n)","fieldReferencesById":["fld0fKiO62UiztNQH","fldpkkSBsx8kQRZos","fldAw7146HvSLBxGF","fldLZmCQB7vi1vTjF","fldThGv2Y8MjgBZpp","fldTW9qdhF8vNkDJA","fldyS3osevRlfO2Kd","fldzN0wgxFeuwyLIj","fldPZu6GsysJwnXS9","fldtAIg2vtfWkyPPk"],"fieldReferencesByName":["Enrollment","Activity Date","Submission Stat Mode","2PT Attempted","2PT Made","3PT Attempted","3PT Made","FT Attempted","FT Made","Shot Total"],"dependencySource":"metadata"}`
+- **Duplicate Review Status**
+  - id: `fldteuTQmE6z5ep2g`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Needs Review","Count It","Exclude It"],"choicesDetailed":[{"id":"seleNNgEJR1eAmVJG","name":"Needs Review","color":"blueLight2"},{"id":"selGofO1RmDh4VdAB","name":"Count It","color":"cyanLight2"},{"id":"selQ1dEdQWPatFbGF","name":"Exclude It","color":"tealLight2"}]}`
+- **RecordId**
+  - id: `fldFwXuLK18jJnT2z`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Count This Submission?**
+  - id: `fld1gQ2c04pndnTKe`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldteuTQmE6z5ep2g","fldAw7146HvSLBxGF","fldtAIg2vtfWkyPPk","fldiTf8V6Jf5bBKeP"],"referencedFieldNames":["Duplicate Review Status","Submission Stat Mode","Shot Total","Detailed Stats Valid?"],"formula":"IF(\nOR(\n  {fldteuTQmE6z5ep2g} = \"Exclude It\",\n  {fldteuTQmE6z5ep2g} = \"Needs Review\"\n),\n0,\nIF(\n  {fldAw7146HvSLBxGF} = \"Simple Total\",\n  IF(\n    AND(\n      {fldtAIg2vtfWkyPPk} != BLANK(),\n      {fldtAIg2vtfWkyPPk} >= 0\n    ),\n    1,\n    0\n  ),\n  IF(\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n    IF(\n      {fldiTf8V6Jf5bBKeP},\n      1,\n      0\n    ),\n    0\n  )\n)\n)","fieldReferencesById":["fldteuTQmE6z5ep2g","fldAw7146HvSLBxGF","fldtAIg2vtfWkyPPk","fldiTf8V6Jf5bBKeP"],"fieldReferencesByName":["Duplicate Review Status","Submission Stat Mode","Shot Total","Detailed Stats Valid?"],"dependencySource":"metadata"}`
+- **Total Makes Counted**
+  - id: `fldhePmUYZ4kCaWeq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldCS8ILuIjuA9puP"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","Total Makes Canonical"],"formula":"IF(\nAND(\n  {fld1gQ2c04pndnTKe},\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  {fldiTf8V6Jf5bBKeP}\n),\n{fldCS8ILuIjuA9puP},\n0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldCS8ILuIjuA9puP"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","Total Makes Canonical"],"dependencySource":"metadata"}`
+- **2PT Made Counted**
+  - id: `fldzcBOkGK2KGrSTQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldThGv2Y8MjgBZpp"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","2PT Made"],"formula":"IF(\r\n  AND(\r\n    {fld1gQ2c04pndnTKe},\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\r\n    {fldiTf8V6Jf5bBKeP}\r\n  ),\r\n  {fldThGv2Y8MjgBZpp},\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldThGv2Y8MjgBZpp"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","2PT Made"],"dependencySource":"metadata"}`
+- **2PT Attempted Counted**
+  - id: `fldqK8wSDMNsmnSeH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldLZmCQB7vi1vTjF"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","2PT Attempted"],"formula":"IF(\nAND(\n  {fld1gQ2c04pndnTKe},\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  {fldiTf8V6Jf5bBKeP}\n),\n{fldLZmCQB7vi1vTjF},\n0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldLZmCQB7vi1vTjF"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","2PT Attempted"],"dependencySource":"metadata"}`
+- **3PT Made Counted**
+  - id: `fldT86AJTsJB7i1Nx`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldyS3osevRlfO2Kd"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","3PT Made"],"formula":"IF(\r\n  AND(\r\n    {fld1gQ2c04pndnTKe},\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\r\n    {fldiTf8V6Jf5bBKeP}\r\n  ),\r\n  {fldyS3osevRlfO2Kd},\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldyS3osevRlfO2Kd"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","3PT Made"],"dependencySource":"metadata"}`
+- **3PT Attempted Counted**
+  - id: `fldC7kjGLdg7SIoyp`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldTW9qdhF8vNkDJA"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","3PT Attempted"],"formula":"IF(\n  AND(\n    {fld1gQ2c04pndnTKe},\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n    {fldiTf8V6Jf5bBKeP}\n  ),\n  {fldTW9qdhF8vNkDJA},\n  0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldTW9qdhF8vNkDJA"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","3PT Attempted"],"dependencySource":"metadata"}`
+- **FT Made Counted**
+  - id: `fldKefUJ9Lwh5wYkP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldPZu6GsysJwnXS9"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","FT Made"],"formula":"IF(\r\n  AND(\r\n    {fld1gQ2c04pndnTKe},\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\r\n    {fldiTf8V6Jf5bBKeP}\r\n  ),\r\n  {fldPZu6GsysJwnXS9},\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldPZu6GsysJwnXS9"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","FT Made"],"dependencySource":"metadata"}`
+- **FT Attempted Counted**
+  - id: `fldGZFfAfXxTEICsE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldzN0wgxFeuwyLIj"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","FT Attempted"],"formula":"IF(\n  AND(\n    {fld1gQ2c04pndnTKe},\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n    {fldiTf8V6Jf5bBKeP}\n  ),\n  {fldzN0wgxFeuwyLIj},\n  0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF","fldiTf8V6Jf5bBKeP","fldzN0wgxFeuwyLIj"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode","Detailed Stats Valid?","FT Attempted"],"dependencySource":"metadata"}`
+- **Weekly Athlete Summary**
+  - id: `fldZXSYorbG7BdDEo`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fld1zvk4QAmdrYSUC","inverseLinkFieldName":"Submissions","prefersSingleRecordLink":false,"isReversed":false}`
+- **Daily Email HTML**
+  - id: `fldqEXmSicovfwoAA`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Shot Total**
+  - id: `fldtAIg2vtfWkyPPk`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **HW Sub 1**
+  - id: `fldtJS9LW3PAyCaNC`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **HW Sub 2**
+  - id: `fldUvfAHi3e15Oxb7`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Video Upload**
+  - id: `fld0pxr2NoMx2MxBu`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **HW 1 - Parent Note**
+  - id: `fldeygBOVv5bHnkfe`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **HW 2 - Parent Note**
+  - id: `fldOgBoi9vbzX6B23`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **HW1 Coach Feedback**
+  - id: `fld1uL11xDEJDnsti`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldBRAvpbYfBSPyZH","recordLinkFieldName":"Homework Completions","fieldIdInLinkedTable":"fldARDQ1SSYLElstx","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Homework Completions"}`
+- **HW2 Coach Feedback**
+  - id: `fldf7fTc3pTIrak0Q`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Video Count**
+  - id: `fldV3MCyC7qUo1eVc`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Has HW1?**
+  - id: `fldrtEjfavdXyySkw`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldtJS9LW3PAyCaNC"],"referencedFieldNames":["HW Sub 1"],"formula":"IF({fldtJS9LW3PAyCaNC}, TRUE(), FALSE())","fieldReferencesById":["fldtJS9LW3PAyCaNC"],"fieldReferencesByName":["HW Sub 1"],"dependencySource":"metadata"}`
+- **Has HW2?**
+  - id: `fldjPJ8Xzr28t5VDN`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldUvfAHi3e15Oxb7"],"referencedFieldNames":["HW Sub 2"],"formula":"IF({fldUvfAHi3e15Oxb7}, TRUE(), FALSE())","fieldReferencesById":["fldUvfAHi3e15Oxb7"],"fieldReferencesByName":["HW Sub 2"],"dependencySource":"metadata"}`
+- **Has Video?**
+  - id: `fldHn8sQ3Ni7uTlto`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0pxr2NoMx2MxBu"],"referencedFieldNames":["Video Upload"],"formula":"IF({fld0pxr2NoMx2MxBu}, TRUE(), FALSE())","fieldReferencesById":["fld0pxr2NoMx2MxBu"],"fieldReferencesByName":["Video Upload"],"dependencySource":"metadata"}`
+- **Activity Date Is Future?**
+  - id: `fldyFAjhbfaC4LlPb`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldpkkSBsx8kQRZos"],"referencedFieldNames":["Activity Date"],"formula":"IF({fldpkkSBsx8kQRZos} > TODAY(), 1, 0)","fieldReferencesById":["fldpkkSBsx8kQRZos"],"fieldReferencesByName":["Activity Date"],"dependencySource":"metadata"}`
+- **Needs Week Assignment?**
+  - id: `fld8D24l3EqGzBqqK`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldpkkSBsx8kQRZos","fldA3fpXWckngZ6g1"],"referencedFieldNames":["Activity Date","Week"],"formula":"IF(AND({fldpkkSBsx8kQRZos}, NOT({fldA3fpXWckngZ6g1})), 1, 0)","fieldReferencesById":["fldpkkSBsx8kQRZos","fldA3fpXWckngZ6g1"],"fieldReferencesByName":["Activity Date","Week"],"dependencySource":"metadata"}`
+- **Week Assignment Status**
+  - id: `fldVbtRu7O8CtaS06`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldpkkSBsx8kQRZos","fldyFAjhbfaC4LlPb","fldA3fpXWckngZ6g1"],"referencedFieldNames":["Activity Date","Activity Date Is Future?","Week"],"formula":"IF(\n  NOT({fldpkkSBsx8kQRZos}),\n  \"No Activity Date\",\n  IF(\n    {fldyFAjhbfaC4LlPb} = 1,\n    \"Activity Date in Future\",\n    IF(\n      {fldA3fpXWckngZ6g1},\n      \"Assigned\",\n      \"Needs Assignment\"\n    )\n  )\n)","fieldReferencesById":["fldpkkSBsx8kQRZos","fldyFAjhbfaC4LlPb","fldA3fpXWckngZ6g1"],"fieldReferencesByName":["Activity Date","Activity Date Is Future?","Week"],"dependencySource":"metadata"}`
+- **Ready for Weekly Summary?**
+  - id: `fldxIoYn3PeIX314F`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldA3fpXWckngZ6g1","fld1gQ2c04pndnTKe"],"referencedFieldNames":["Week","Count This Submission?"],"formula":"IF(AND({fldA3fpXWckngZ6g1}, {fld1gQ2c04pndnTKe} = 1), 1, 0)","fieldReferencesById":["fldA3fpXWckngZ6g1","fld1gQ2c04pndnTKe"],"fieldReferencesByName":["Week","Count This Submission?"],"dependencySource":"metadata"}`
+- **XP Events**
+  - id: `fldVewtOPR0DmVg12`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldVWYcwMnJd01Lko","inverseLinkFieldName":"Submission","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Base Points**
+  - id: `fldQkosVQ4Np5hnBQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe"],"referencedFieldNames":["Count This Submission?"],"formula":"IF(\r\n  {fld1gQ2c04pndnTKe} = 1,\r\n  5,\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe"],"fieldReferencesByName":["Count This Submission?"],"dependencySource":"metadata"}`
+- **XP Bonus Points**
+  - id: `fldmveouFsqbGPVWg`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldMKQM3vEOSD2xlj","fldZI19nqXY6SKtBe","fldbSwAPw8diu1AGj"],"referencedFieldNames":["XP Volume Bonus","XP Accuracy Bonus","XP Detailed Stats Bonus"],"formula":"{fldMKQM3vEOSD2xlj} + {fldZI19nqXY6SKtBe} + {fldbSwAPw8diu1AGj}","fieldReferencesById":["fldMKQM3vEOSD2xlj","fldZI19nqXY6SKtBe","fldbSwAPw8diu1AGj"],"fieldReferencesByName":["XP Volume Bonus","XP Accuracy Bonus","XP Detailed Stats Bonus"],"dependencySource":"metadata"}`
+- **XP Award Status**
+  - id: `fldHss7nASESJFI8Z`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Awarded","Error","Completed","No Shots Submitted"],"choicesDetailed":[{"id":"selewuJOIIn5lf7jo","name":"Pending","color":"yellowLight1"},{"id":"sel4RLszBzfidObmM","name":"Processing","color":"cyanLight2"},{"id":"selr9LUVNnXR9EKUH","name":"Awarded","color":"greenBright"},{"id":"selWTLxCJr1SaBuwh","name":"Error","color":"greenLight2"},{"id":"selxhK5nRkd3yE9p2","name":"Completed","color":"yellowLight2"},{"id":"selnutvcXQhXIFfeb","name":"No Shots Submitted","color":"redBright"}]}`
+- **XP Notes**
+  - id: `fldjiftqj4mhyRMQL`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **XP Total Points**
+  - id: `fldkitTNbrThY56o7`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldQkosVQ4Np5hnBQ"],"referencedFieldNames":["XP Base Points"],"formula":"{fldQkosVQ4Np5hnBQ}","fieldReferencesById":["fldQkosVQ4Np5hnBQ"],"fieldReferencesByName":["XP Base Points"],"dependencySource":"metadata"}`
+- **XP Award Ready?**
+  - id: `fld7GUCJu5Q4HXQYm`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldZXSYorbG7BdDEo","fld1gQ2c04pndnTKe","fldkitTNbrThY56o7"],"referencedFieldNames":["Enrollment","Week","Weekly Athlete Summary","Count This Submission?","XP Total Points"],"formula":"IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    {fldZXSYorbG7BdDEo},\r\n    {fld1gQ2c04pndnTKe} = 1,\r\n    {fldkitTNbrThY56o7} > 0\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldZXSYorbG7BdDEo","fld1gQ2c04pndnTKe","fldkitTNbrThY56o7"],"fieldReferencesByName":["Enrollment","Week","Weekly Athlete Summary","Count This Submission?","XP Total Points"],"dependencySource":"metadata"}`
+- **XP Volume Bonus**
+  - id: `fldMKQM3vEOSD2xlj`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6"],"referencedFieldNames":["Count This Submission?","Total Shots Canonical"],"formula":"IF(\r\n  {fld1gQ2c04pndnTKe} = 1,\r\n  MIN(20, FLOOR({fld98cbVpYc5lqrN6} / 25)),\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6"],"fieldReferencesByName":["Count This Submission?","Total Shots Canonical"],"dependencySource":"metadata"}`
+- **XP Accuracy Bonus**
+  - id: `fldZI19nqXY6SKtBe`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6","fldCS8ILuIjuA9puP"],"referencedFieldNames":["Count This Submission?","Total Shots Canonical","Total Makes Canonical"],"formula":"IF(\r\n  AND(\r\n    {fld1gQ2c04pndnTKe} = 1,\r\n    {fld98cbVpYc5lqrN6} >= 25,\r\n    {fld98cbVpYc5lqrN6} > 0\r\n  ),\r\n  IF(\r\n    {fldCS8ILuIjuA9puP} / {fld98cbVpYc5lqrN6} >= 0.8,\r\n    10,\r\n    IF(\r\n      {fldCS8ILuIjuA9puP} / {fld98cbVpYc5lqrN6} >= 0.7,\r\n      6,\r\n      IF(\r\n        {fldCS8ILuIjuA9puP} / {fld98cbVpYc5lqrN6} >= 0.6,\r\n        3,\r\n        0\r\n      )\r\n    )\r\n  ),\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fld98cbVpYc5lqrN6","fldCS8ILuIjuA9puP"],"fieldReferencesByName":["Count This Submission?","Total Shots Canonical","Total Makes Canonical"],"dependencySource":"metadata"}`
+- **XP Detailed Stats Bonus**
+  - id: `fldbSwAPw8diu1AGj`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":1},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF"],"referencedFieldNames":["Count This Submission?","Submission Stat Mode"],"formula":"IF(\r\n  AND(\r\n    {fld1gQ2c04pndnTKe} = 1,\r\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\"\r\n  ),\r\n  2.5,\r\n  0\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldAw7146HvSLBxGF"],"fieldReferencesByName":["Count This Submission?","Submission Stat Mode"],"dependencySource":"metadata"}`
+- **Homework Completions**
+  - id: `fldBRAvpbYfBSPyZH`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldqG5ScbJkSrwonN","inverseLinkFieldName":"Submissions - Linked","prefersSingleRecordLink":false,"isReversed":false}`
+- **Athlete**
+  - id: `fldfWvl8g0JO5ObuB`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblTluxBr3DcVrh6h","linkedTableName":"Athletes","inverseLinkFieldId":"fldJbbZw7U6r246Zz","inverseLinkFieldName":"Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Submission Assets**
+  - id: `fld1kilHu3o3Qtlpv`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"flddRCbWCegg4WCoZ","inverseLinkFieldName":"Submission - Linked","prefersSingleRecordLink":false,"isReversed":false}`
+- **Video Feedback Note**
+  - id: `fld4BMvxuViJL9VAx`
+  - type: `multilineText`
+  - role: `identifier`
+  - primary: `False`
+- **Daily Email Version**
+  - id: `fldsc3K0We5VohQTS`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Attachment Upload Status**
+  - id: `fldkPLE3eLyQZsTCq`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Processing","Sent","Error","No Files"],"choicesDetailed":[{"id":"selLdGBi9xbDjCx65","name":"Processing","color":"blueLight2"},{"id":"selrJ9n2TPOA0oa8K","name":"Sent","color":"cyanLight2"},{"id":"selGcP8OUBFyaFM5g","name":"Error","color":"tealLight2"},{"id":"selCRakaJ92KkCaTI","name":"No Files","color":"greenLight2"}]}`
+- **Attachment Upload Error**
+  - id: `fldItp8eSJuUZPaIr`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Ready to Send Attachments to Make?**
+  - id: `fldNuRzPUPYEpaHyG`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu","fldkPLE3eLyQZsTCq"],"referencedFieldNames":["HW Sub 1","HW Sub 2","Video Upload","Attachment Upload Status"],"formula":"IF(\r\n  AND(\r\n    OR(\r\n      {fldtJS9LW3PAyCaNC},\r\n      {fldUvfAHi3e15Oxb7},\r\n      {fld0pxr2NoMx2MxBu}\r\n    ),\r\n    OR(\r\n      {fldkPLE3eLyQZsTCq} = BLANK(),\r\n      {fldkPLE3eLyQZsTCq} != \"Sent\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu","fldkPLE3eLyQZsTCq"],"fieldReferencesByName":["HW Sub 1","HW Sub 2","Video Upload","Attachment Upload Status"],"dependencySource":"metadata"}`
+- **Daily Email Subject**
+  - id: `fldV5jYeKARHR5CBD`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Daily Email To**
+  - id: `fldek7wYvoMXYyVgu`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Daily Email Status**
+  - id: `fld23EZnHgQMa79jV`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Error","Ready","Sending","Sent","Sent from Make.com","Sent to Make.com"],"choicesDetailed":[{"id":"selPASai8VxGeszGN","name":"Error","color":"cyanLight2"},{"id":"selrjIp2RjRiMxSw2","name":"Ready","color":"blueLight2"},{"id":"selN5818exDDFNPU3","name":"Sending","color":"greenLight2"},{"id":"seluWj1LMgMgZAVHY","name":"Sent","color":"greenBright"},{"id":"selXsoYVrWuboowgb","name":"Sent from Make.com","color":"yellowLight2"},{"id":"selEQMpWwXJqAsgO1","name":"Sent to Make.com","color":"orangeLight2"}]}`
+- **Daily Email Sent At**
+  - id: `fldwgak9nLSYiUGXL`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Homework Name 1**
+  - id: `fldBuHIpIwxTy60js`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"fldC2SjcSsN839oUW","inverseLinkFieldName":"Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Week Lkp**
+  - id: `fldmopSNL9aZf6K1A`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldBuHIpIwxTy60js","recordLinkFieldName":"Homework Name 1","fieldIdInLinkedTable":"flddMQ8OZdvSsvak8","fieldNameInLinkedTable":"Week","fieldTableInLinkedTable":"FBC Curriculum - SYNC"}`
+- **Video Upload Note**
+  - id: `fldnUvkgsPsdrowqx`
+  - type: `multilineText`
+  - role: `identifier`
+  - primary: `False`
+- **Activity Date Key**
+  - id: `fldLBZHH23uSm9qDs`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldpkkSBsx8kQRZos"],"referencedFieldNames":["Activity Date"],"formula":"DATETIME_FORMAT({fldpkkSBsx8kQRZos}, 'YYYY-MM-DD')","fieldReferencesById":["fldpkkSBsx8kQRZos"],"fieldReferencesByName":["Activity Date"],"dependencySource":"metadata"}`
+- **Created**
+  - id: `fld4G2aFUD8mxwjJ5`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"formula":"CREATED_TIME()","dependencySource":"none"}`
+- **Homework Completion Ready?**
+  - id: `fldmrxhhChP7DiySK`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldBuHIpIwxTy60js","fldnAy8yXTFafhvnu","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7"],"referencedFieldNames":["Enrollment","Week","Homework Name 1","Homework Name 2","HW Sub 1","HW Sub 2"],"formula":"AND(\r\n  {fld0fKiO62UiztNQH},\r\n  {fldA3fpXWckngZ6g1},\r\n  OR(\r\n    {fldBuHIpIwxTy60js},\r\n    {fldnAy8yXTFafhvnu}\r\n  ),\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7}\r\n  )\r\n)","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldBuHIpIwxTy60js","fldnAy8yXTFafhvnu","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7"],"fieldReferencesByName":["Enrollment","Week","Homework Name 1","Homework Name 2","HW Sub 1","HW Sub 2"],"dependencySource":"metadata"}`
+- **Homework Name 2**
+  - id: `fldnAy8yXTFafhvnu`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"fldtclW1JHRfNfAVw","inverseLinkFieldName":"Submissions copy","prefersSingleRecordLink":true,"isReversed":false}`
+- **Ready for Homework Completion Automation?**
+  - id: `fldZjS3FyJm18Pu1f`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldpkkSBsx8kQRZos","fld1kilHu3o3Qtlpv","fldBuHIpIwxTy60js","fldnAy8yXTFafhvnu"],"referencedFieldNames":["Enrollment","Week","Activity Date","Submission Assets","Homework Name 1","Homework Name 2"],"formula":"IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    {fldpkkSBsx8kQRZos},\r\n    {fld1kilHu3o3Qtlpv},\r\n    OR(\r\n      {fldBuHIpIwxTy60js},\r\n      {fldnAy8yXTFafhvnu}\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldpkkSBsx8kQRZos","fld1kilHu3o3Qtlpv","fldBuHIpIwxTy60js","fldnAy8yXTFafhvnu"],"fieldReferencesByName":["Enrollment","Week","Activity Date","Submission Assets","Homework Name 1","Homework Name 2"],"dependencySource":"metadata"}`
+- **Submission Assets Ready?**
+  - id: `fld4ZArf6KicJSpxE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldmrxhhChP7DiySK","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"referencedFieldNames":["Homework Completion Ready?","HW Sub 1","HW Sub 2","Video Upload"],"formula":"AND(\r\n  {fldmrxhhChP7DiySK},\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7},\r\n    {fld0pxr2NoMx2MxBu}\r\n  )\r\n)","fieldReferencesById":["fldmrxhhChP7DiySK","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"fieldReferencesByName":["Homework Completion Ready?","HW Sub 1","HW Sub 2","Video Upload"],"dependencySource":"metadata"}`
+- **Video Feedback**
+  - id: `fldUkjCtWcEPm4b0f`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fldIa3kwvQGwxnh1U","inverseLinkFieldName":"Submission","prefersSingleRecordLink":false,"isReversed":false}`
+- **Edit Submission - Parent**
+  - id: `fldK5ZxoOiEYfMlay`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"\"https://form.fillout.com/t/vNgeHardYcus?id=\" & RECORD_ID()","dependencySource":"none"}`
+- **Daily Email Sent to Make.com At**
+  - id: `fldsHqzPgybIBWoQg`
+  - type: `dateTime`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Daily Email Sent to Make.com Status**
+  - id: `fld67PP4NfQT7Ls35`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Error","Ready","Sent to Make.com","Sent"],"choicesDetailed":[{"id":"selPASai8VxGeszGN","name":"Error","color":"cyanLight2"},{"id":"selrjIp2RjRiMxSw2","name":"Ready","color":"blueLight2"},{"id":"selEQMpWwXJqAsgO1","name":"Sent to Make.com","color":"blueLight1"},{"id":"seleqztVIs28gnWzl","name":"Sent","color":"tealLight2"}]}`
+- **Counted Activity Date Key**
+  - id: `fld93oigqY19Z6zqN`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld1gQ2c04pndnTKe","fldLBZHH23uSm9qDs"],"referencedFieldNames":["Count This Submission?","Activity Date Key"],"formula":"IF(\r\n  {fld1gQ2c04pndnTKe},\r\n  {fldLBZHH23uSm9qDs}\r\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldLBZHH23uSm9qDs"],"fieldReferencesByName":["Count This Submission?","Activity Date Key"],"dependencySource":"metadata"}`
+- **Coach Feedback (from Video Feedback)**
+  - id: `fldJlefXLP4KVrmET`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldUkjCtWcEPm4b0f","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldyXVwvXuk1SYnpg","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Video Feedback"}`
+- **Build Daily Email Now?**
+  - id: `flddsovM5dq6naBQ2`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Send Daily Email to Make Now?**
+  - id: `fldgGWB0sjWGFuPJK`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Submitted Same Day?**
+  - id: `fldE7G8H1O7HPYuIi`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld7JJ7neI0YYmB7i","fldpkkSBsx8kQRZos"],"referencedFieldNames":["Submitted At","Activity Date"],"formula":"IF(\n  AND(\n    {fld7JJ7neI0YYmB7i},\n    {fldpkkSBsx8kQRZos}\n  ),\n  IF(\n    DATETIME_FORMAT(SET_TIMEZONE({fld7JJ7neI0YYmB7i}, \"America/Denver\"), \"YYYY-MM-DD\") =\n    DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"YYYY-MM-DD\"),\n    1,\n    0\n  ),\n  0\n)","fieldReferencesById":["fld7JJ7neI0YYmB7i","fldpkkSBsx8kQRZos"],"fieldReferencesByName":["Submitted At","Activity Date"],"dependencySource":"metadata"}`
+- **Perfect Week Countable Submission?**
+  - id: `fldYDitgQr6jgoDMk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1gQ2c04pndnTKe","fldE7G8H1O7HPYuIi","fldAqC1oUKKFZdU3p","fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldpkkSBsx8kQRZos"],"referencedFieldNames":["Count This Submission?","Submitted Same Day?","Total Shots Counted","Enrollment","Week","Activity Date"],"formula":"IF(\n  AND(\n    {fld1gQ2c04pndnTKe} = 1,\n    {fldE7G8H1O7HPYuIi} = 1,\n    {fldAqC1oUKKFZdU3p} > 0,\n    {fld0fKiO62UiztNQH},\n    {fldA3fpXWckngZ6g1},\n    {fldpkkSBsx8kQRZos}\n  ),\n  1,\n  0\n)","fieldReferencesById":["fld1gQ2c04pndnTKe","fldE7G8H1O7HPYuIi","fldAqC1oUKKFZdU3p","fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fldpkkSBsx8kQRZos"],"fieldReferencesByName":["Count This Submission?","Submitted Same Day?","Total Shots Counted","Enrollment","Week","Activity Date"],"dependencySource":"metadata"}`
+- **Ready for 009 Asset Creation?**
+  - id: `fld31w9XjMW5DbBpk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fld1kilHu3o3Qtlpv","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"referencedFieldNames":["Enrollment","Week","Submission Assets","HW Sub 1","HW Sub 2","Video Upload"],"formula":"IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    COUNTA({fld1kilHu3o3Qtlpv}) = 0,\r\n    OR(\r\n      COUNTA({fldtJS9LW3PAyCaNC}) > 0,\r\n      COUNTA({fldUvfAHi3e15Oxb7}) > 0,\r\n      COUNTA({fld0pxr2NoMx2MxBu}) > 0\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fld1kilHu3o3Qtlpv","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"fieldReferencesByName":["Enrollment","Week","Submission Assets","HW Sub 1","HW Sub 2","Video Upload"],"dependencySource":"metadata"}`
+- **Why Not Ready for 009?**
+  - id: `fld7PEP0RfvxBJ5sx`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fld1kilHu3o3Qtlpv","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"referencedFieldNames":["Enrollment","Week","Submission Assets","HW Sub 1","HW Sub 2","Video Upload"],"formula":"IF(\r\n  NOT({fld0fKiO62UiztNQH}),\r\n  \"Missing Enrollment\",\r\nIF(\r\n  NOT({fldA3fpXWckngZ6g1}),\r\n  \"Missing Week\",\r\nIF(\r\n  COUNTA({fld1kilHu3o3Qtlpv}) > 0,\r\n  \"Already has Submission Assets\",\r\nIF(\r\n  AND(\r\n    COUNTA({fldtJS9LW3PAyCaNC}) = 0,\r\n    COUNTA({fldUvfAHi3e15Oxb7}) = 0,\r\n    COUNTA({fld0pxr2NoMx2MxBu}) = 0\r\n  ),\r\n  \"No HW Sub 1, HW Sub 2, or Video Upload attachment\",\r\n  \"READY\"\r\n))))","fieldReferencesById":["fld0fKiO62UiztNQH","fldA3fpXWckngZ6g1","fld1kilHu3o3Qtlpv","fldtJS9LW3PAyCaNC","fldUvfAHi3e15Oxb7","fld0pxr2NoMx2MxBu"],"fieldReferencesByName":["Enrollment","Week","Submission Assets","HW Sub 1","HW Sub 2","Video Upload"],"dependencySource":"metadata"}`
+
+## Table: **Submission Assets**
+
+- id: `tblhMLKxQK77agtME`
+- primary field: **Submission Assets Full Name** (`fld3uqsvTrgAImBOh`)
+- role guess: `operational summary`
+- fields: `73`
+- link fields: `6`
+- computed fields: `35`
+- description: Operational asset table tied to submission records.
+
+Use this table to store files, generated assets, or supporting writeback/output records connected to a Submission and related Enrollment.
+
+This table supports downstream processing and asset management. It should be treated as an operational support table, not as the primary activity-entry table.
+
+### Fields
+
+- **Submission Assets Full Name**
+  - id: `fld3uqsvTrgAImBOh`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldtqSPrw0ah0fCmW","fldD4JV3iXYmIQLNG","fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Athlete Full Name","Asset Type","Asset Purpose"],"formula":"ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}","fieldReferencesById":["fldtqSPrw0ah0fCmW","fldD4JV3iXYmIQLNG","fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Athlete Full Name","Asset Type","Asset Purpose"],"dependencySource":"metadata"}`
+- **Submission - Linked**
+  - id: `flddRCbWCegg4WCoZ`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fld1kilHu3o3Qtlpv","inverseLinkFieldName":"Submission Assets","prefersSingleRecordLink":true,"isReversed":false}`
+- **Enrollment - Linked**
+  - id: `fldJRSvui8RPg0Vyb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldLxLveNnVN93pia","inverseLinkFieldName":"Submission Assets - Enrollment","prefersSingleRecordLink":true,"isReversed":false}`
+- **Asset Label**
+  - id: `fld6higUGAazpTX1e`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Upload Destination**
+  - id: `fldox2Rjj9YL3EYK6`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Asset Purpose"],"formula":"SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)","fieldReferencesById":["fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Asset Purpose"],"dependencySource":"metadata"}`
+- **Asset Purpose**
+  - id: `fldCpEiwVOMc8v4Vu`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework 1","Homework 2","Video For Feedback","Registration Headshot","Other"],"choicesDetailed":[{"id":"sel0A6dcJPDDxoUVM","name":"Homework 1","color":"blueBright"},{"id":"selkph4pgX4nZNcAU","name":"Homework 2","color":"blueBright"},{"id":"sell0seEiDj2Pwo7J","name":"Video For Feedback","color":"yellowBright"},{"id":"selbpbvWvqBRbAKXp","name":"Registration Headshot","color":"pinkLight1"},{"id":"sel5onXQEDKiWXx8R","name":"Other","color":"grayDark1"}]}`
+- **Airtable Attachment**
+  - id: `fldrGt7IsWDUAKfzD`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Homework Completions**
+  - id: `fldQF8OsfESrHdcUb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldKy5hltmJc6A8Jx","inverseLinkFieldName":"Submission Assets","prefersSingleRecordLink":false,"isReversed":false}`
+- **Asset Slot Base**
+  - id: `fldALREYJLGbCInMy`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6higUGAazpTX1e"],"referencedFieldNames":["Asset Label"],"formula":"IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)","fieldReferencesById":["fld6higUGAazpTX1e"],"fieldReferencesByName":["Asset Label"],"dependencySource":"metadata"}`
+- **DELETE POSSIBLY - Homework Completion Record ID**
+  - id: `fldxORUyJ7uvEgw9h`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Homework Completions RID**
+  - id: `fld8pLfrA76vMP5mt`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldQF8OsfESrHdcUb","recordLinkFieldName":"Homework Completions","fieldIdInLinkedTable":"fldKjhzUPSQS9m9wG","fieldNameInLinkedTable":"Homework Completions RID","fieldTableInLinkedTable":"Homework Completions"}`
+- **Ready for Homework Completion Script?**
+  - id: `fldYICCdWQ5xVcSk5`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldQF8OsfESrHdcUb","fldALREYJLGbCInMy","fld6higUGAazpTX1e","fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Homework Completions","Asset Slot Base","Asset Label","Asset Purpose"],"formula":"IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldQF8OsfESrHdcUb","fldALREYJLGbCInMy","fld6higUGAazpTX1e","fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Homework Completions","Asset Slot Base","Asset Label","Asset Purpose"],"dependencySource":"metadata"}`
+- **Created**
+  - id: `fldLAxgb6tMzC4lZH`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"}`
+- **Week**
+  - id: `fldVpRxZqGJxlAs6T`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldA3fpXWckngZ6g1","fieldNameInLinkedTable":"Week","fieldTableInLinkedTable":"Submissions"}`
+- **Asset Key**
+  - id: `fldy8UuxWmHT7WFFJ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddRCbWCegg4WCoZ","fldhx4nDKuzuWQna6"],"referencedFieldNames":["Submission - Linked","Google Drive File ID"],"formula":"ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}","fieldReferencesById":["flddRCbWCegg4WCoZ","fldhx4nDKuzuWQna6"],"fieldReferencesByName":["Submission - Linked","Google Drive File ID"],"dependencySource":"metadata"}`
+- **RecordId**
+  - id: `fldXz9TNOnGeRXEL8`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Original File Name**
+  - id: `fldS0DINXc5YSHYRO`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Type**
+  - id: `fldD4JV3iXYmIQLNG`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework PDF","Homework Image","Homework Document","Video Feedback","Submission Photo","Submission Video","Athlete Headshot","Other"],"choicesDetailed":[{"id":"selPeMcYVFuvjpFgN","name":"Homework PDF","color":"blueLight2"},{"id":"selUp9Pa4w8i25kVc","name":"Homework Image","color":"cyanLight2"},{"id":"selA08ztoDWA2T3Pr","name":"Homework Document","color":"tealLight2"},{"id":"selkZpTQhawYIY5ty","name":"Video Feedback","color":"greenLight2"},{"id":"selqIMUBKVHIt2jol","name":"Submission Photo","color":"yellowLight2"},{"id":"selW8qj6LPyiGf9CG","name":"Submission Video","color":"orangeLight2"},{"id":"selBw6uXPOaUGAbWY","name":"Athlete Headshot","color":"redLight2"},{"id":"seloYeOdYp4iF2r5w","name":"Other","color":"pinkLight2"}]}`
+- **Send to Make Trigger**
+  - id: `fld8C43NVQQ1NeQ7Z`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Upload Status**
+  - id: `fldPybPEvRcEVuNWl`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending Link","Processing","Uploaded","Error","Ready","No File"],"choicesDetailed":[{"id":"sel1x03bVpyf2dCcO","name":"Pending Link","color":"yellowLight2"},{"id":"sel8Ccid3HKaiUqqp","name":"Processing","color":"yellowLight1"},{"id":"self7yJ6ZRkta6Zcr","name":"Uploaded","color":"yellowLight2"},{"id":"sel6sFF3yc3aYm0ou","name":"Error","color":"redBright"},{"id":"sels844XNbi9Egn4m","name":"Ready","color":"greenBright"},{"id":"selPBWJsxhxNJvCVx","name":"No File","color":"grayDark1"}]}`
+- **Upload Error**
+  - id: `fldAkpl3cuzgz1jLP`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Uploaded At**
+  - id: `fldvXvURsGG611cSK`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Writeback Complete?**
+  - id: `fldtl04LTU3FoMmLL`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldPybPEvRcEVuNWl","fldITNuxNt9xphk7j","fldqd2ALDtGS6gMqs","fldxx1m0zTsMfEHfj","fldvXvURsGG611cSK"],"referencedFieldNames":["Upload Status","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Uploaded At"],"formula":"AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)","fieldReferencesById":["fldPybPEvRcEVuNWl","fldITNuxNt9xphk7j","fldqd2ALDtGS6gMqs","fldxx1m0zTsMfEHfj","fldvXvURsGG611cSK"],"fieldReferencesByName":["Upload Status","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Uploaded At"],"dependencySource":"metadata"}`
+- **Upload Ready?**
+  - id: `fldZiACFdNLECuRRU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldrGt7IsWDUAKfzD","fldD4JV3iXYmIQLNG","fldJRSvui8RPg0Vyb"],"referencedFieldNames":["Airtable Attachment","Asset Type","Enrollment - Linked"],"formula":"IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldrGt7IsWDUAKfzD","fldD4JV3iXYmIQLNG","fldJRSvui8RPg0Vyb"],"fieldReferencesByName":["Airtable Attachment","Asset Type","Enrollment - Linked"],"dependencySource":"metadata"}`
+- **Source Attachment ID**
+  - id: `fld7imlYToTHK6sZA`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Last Name**
+  - id: `fld6x0Y5s7V8X5psH`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldpXNOzRflbkgVwV","fieldNameInLinkedTable":"Athlete Last Name","fieldTableInLinkedTable":"Enrollments"}`
+- **First Name**
+  - id: `fldx2kdvgv9x3MU9A`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fld4wGsfJKp7x4Bjd","fieldNameInLinkedTable":"Athlete First Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Program Instance - Raw**
+  - id: `fldhBiaRmBLydLNrD`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"flde31eImaWCUgNPb","fieldNameInLinkedTable":"Program Instance Name Only","fieldTableInLinkedTable":"Enrollments"}`
+- **Program Instance - Convert to File Name**
+  - id: `fld7Fbq1VHNTYBqOb`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Converts the Program Instance value to CamelCase with no spaces.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldhBiaRmBLydLNrD"],"referencedFieldNames":["Program Instance - Raw"],"formula":"IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldhBiaRmBLydLNrD"],"fieldReferencesByName":["Program Instance - Raw"],"dependencySource":"metadata"}`
+- **Date**
+  - id: `fldu3NYlcZl942oU5`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"local","format":"l"}},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldpkkSBsx8kQRZos","fieldNameInLinkedTable":"Activity Date","fieldTableInLinkedTable":"Submissions"}`
+- **Date - Convert to File Name**
+  - id: `fldxcDBeWXEPV1rnO`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldu3NYlcZl942oU5"],"referencedFieldNames":["Date"],"formula":"IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldu3NYlcZl942oU5"],"fieldReferencesByName":["Date"],"dependencySource":"metadata"}`
+- **Asset Type - Convert for File Name**
+  - id: `fldzfpPNBX8ZmZ1sp`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldD4JV3iXYmIQLNG"],"referencedFieldNames":["Asset Type"],"formula":"IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldD4JV3iXYmIQLNG"],"fieldReferencesByName":["Asset Type"],"dependencySource":"metadata"}`
+- **Google Drive Folder Name**
+  - id: `fldv4Mhw3w84dXdxx`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A"],"referencedFieldNames":["Last Name","First Name"],"formula":"{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}","fieldReferencesById":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A"],"fieldReferencesByName":["Last Name","First Name"],"dependencySource":"metadata"}`
+- **Create Google Drive File Name**
+  - id: `fldV5480sMm40q0QX`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A","fld7Fbq1VHNTYBqOb","fldox2Rjj9YL3EYK6","fldiqTrLE7N8gjsxL","fldALREYJLGbCInMy","fldzfpPNBX8ZmZ1sp","fldxcDBeWXEPV1rnO"],"referencedFieldNames":["Last Name","First Name","Program Instance - Convert to File Name","Upload Destination","Homework Name - Slot Correct","Asset Slot Base","Asset Type - Convert for File Name","Date - Convert to File Name"],"formula":"{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)","fieldReferencesById":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A","fld7Fbq1VHNTYBqOb","fldox2Rjj9YL3EYK6","fldiqTrLE7N8gjsxL","fldALREYJLGbCInMy","fldzfpPNBX8ZmZ1sp","fldxcDBeWXEPV1rnO"],"fieldReferencesByName":["Last Name","First Name","Program Instance - Convert to File Name","Upload Destination","Homework Name - Slot Correct","Asset Slot Base","Asset Type - Convert for File Name","Date - Convert to File Name"],"dependencySource":"metadata"}`
+- **Google Drive Folder ID**
+  - id: `fldqd2ALDtGS6gMqs`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Google Drive Folder URL**
+  - id: `fldxx1m0zTsMfEHfj`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Athlete Full Name**
+  - id: `fldtqSPrw0ah0fCmW`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldnRDkfubz7p3gi4","fieldNameInLinkedTable":"Full Athlete Name - Backward","fieldTableInLinkedTable":"Enrollments"}`
+- **Record Id (from Enrollment - Linked)**
+  - id: `fldPWNhEsXP1KuMUI`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldnsyxEUbrJjyzXU","fieldNameInLinkedTable":"Record Id","fieldTableInLinkedTable":"Enrollments"}`
+- **XP Events**
+  - id: `fldwOklyDaW3nN2Kz`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Created Time**
+  - id: `fldiEOIvxT5D7gOp4`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Review Complete?**
+  - id: `fldpCKmuKiloOSsvd`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Asset Slot**
+  - id: `fldOwKqDaX2cUxMxf`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["HW1","HW2","VIDEO","VIDEO-1","VIDEO-2","VIDEO-3","VIDEO-4"],"choicesDetailed":[{"id":"selkpXbhgjj36eRG1","name":"HW1","color":"blueLight2"},{"id":"selPvXj5ocu5hKQHo","name":"HW2","color":"cyanLight2"},{"id":"selrSotaThLGLXQAX","name":"VIDEO","color":"tealLight2"},{"id":"selpvXQwiwX3GsitN","name":"VIDEO-1","color":"greenLight2"},{"id":"sel3MMFA1oXCvLH7h","name":"VIDEO-2","color":"yellowLight2"},{"id":"selwmjt07gzBLKq2r","name":"VIDEO-3","color":"orangeLight2"},{"id":"sel3IeSZ0U5UZe4RS","name":"VIDEO-4","color":"redLight2"}]}`
+- **Ready to Send to Make?**
+  - id: `fldG5lWlsUcrDNlIg`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Checks if all required fields are present for sending to Make, using correct field names.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fld8pLfrA76vMP5mt","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Airtable Attachment","Upload Destination","Homework Completions","Homework Completions RID","Video Feedback"],"formula":"IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fld8pLfrA76vMP5mt","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Airtable Attachment","Upload Destination","Homework Completions","Homework Completions RID","Video Feedback"],"dependencySource":"metadata"}`
+- **Google Drive File URL**
+  - id: `fldITNuxNt9xphk7j`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive File ID**
+  - id: `fldhx4nDKuzuWQna6`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Why Not Ready for Make?**
+  - id: `fldDJN1RrVyxiKrWu`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld8C43NVQQ1NeQ7Z","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Send to Make Trigger","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"formula":"IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fld8C43NVQQ1NeQ7Z","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Send to Make Trigger","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"dependencySource":"metadata"}`
+- **Coach Feedback (from Video Feedback)**
+  - id: `fldKDM3fvJsbAnUCR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldxapOLpLH4KaXOb","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldyXVwvXuk1SYnpg","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Video Feedback"}`
+- **RecordId - Submission Table**
+  - id: `fldw8R6h6DkyEMzFR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldFwXuLK18jJnT2z","fieldNameInLinkedTable":"RecordId","fieldTableInLinkedTable":"Submissions"}`
+- **XP Events copy**
+  - id: `fld5Emwipb3UjAMz9`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Homework Name 1**
+  - id: `fldnzHLHvSwyUsnQj`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldBuHIpIwxTy60js","fieldNameInLinkedTable":"Homework Name 1","fieldTableInLinkedTable":"Submissions"}`
+- **Homework Name 2**
+  - id: `fldc4VJaLJhaNFKOU`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldnAy8yXTFafhvnu","fieldNameInLinkedTable":"Homework Name 2","fieldTableInLinkedTable":"Submissions"}`
+- **HW Sub 1**
+  - id: `fldDvMkI9llIUmxFi`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleAttachments","resultOptions":{"isReversed":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldtJS9LW3PAyCaNC","fieldNameInLinkedTable":"HW Sub 1","fieldTableInLinkedTable":"Submissions"}`
+- **HW Sub 2**
+  - id: `fldahytXWi4YuRD2I`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleAttachments","resultOptions":{"isReversed":true},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldUvfAHi3e15Oxb7","fieldNameInLinkedTable":"HW Sub 2","fieldTableInLinkedTable":"Submissions"}`
+- **Video Feedback**
+  - id: `fldxapOLpLH4KaXOb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fld9laOK9yRAxgsph","inverseLinkFieldName":"Submission Asset","prefersSingleRecordLink":false,"isReversed":false}`
+- **Coach Feedback - LKP**
+  - id: `fldFzYi5tKorpDzzm`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldxapOLpLH4KaXOb","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldyXVwvXuk1SYnpg","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Video Feedback"}`
+- **Homework Name - Slot Correct**
+  - id: `fldiqTrLE7N8gjsxL`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldOwKqDaX2cUxMxf","fldnzHLHvSwyUsnQj","fldc4VJaLJhaNFKOU"],"referencedFieldNames":["Asset Slot","Homework Name 1","Homework Name 2"],"formula":"IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)","fieldReferencesById":["fldOwKqDaX2cUxMxf","fldnzHLHvSwyUsnQj","fldc4VJaLJhaNFKOU"],"fieldReferencesByName":["Asset Slot","Homework Name 1","Homework Name 2"],"dependencySource":"metadata"}`
+- **Ready for Video Feedback Script?**
+  - id: `fld2pkXIFSlyl2i3J`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Video Feedback"],"formula":"IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Video Feedback"],"dependencySource":"metadata"}`
+- **Workflow Next Step**
+  - id: `fldQDDzBS62Ow765c`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Submission - Linked","Enrollment - Linked","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"formula":"IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))","fieldReferencesById":["flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Submission - Linked","Enrollment - Linked","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"dependencySource":"metadata"}`
+- **File Content Hash**
+  - id: `fldMtYyiPhVWbQk6M`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **File Hash Algorithm**
+  - id: `fld2TBSzNI6bSkKZD`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["SHA-256"],"choicesDetailed":[{"id":"selxI3YFwVUmNJc1U","name":"SHA-256","color":"blueLight2"}]}`
+- **File Size Bytes**
+  - id: `fldYbWjb8YI5BBIjr`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **File MIME Type**
+  - id: `fldm34cEAadeJRatz`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **File is Duplicate?**
+  - id: `fldtE66EBZwDHewbl`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Duplicate File Status**
+  - id: `fldQTwrLKa5YNTELl`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Checked","Unique","Exact Duplicate","Possible Duplicate","Allowed Reuse","Needs Review","Error"],"choicesDetailed":[{"id":"sel2DxKYf4UWNS7fy","name":"Not Checked","color":"blueLight2"},{"id":"selWEKp7RhN5kCJrP","name":"Unique","color":"cyanLight2"},{"id":"selN2e0gMWSKwSrSg","name":"Exact Duplicate","color":"tealLight2"},{"id":"sellTSlTid17ZJRr9","name":"Possible Duplicate","color":"greenLight2"},{"id":"selTNS8sml7RvvAaY","name":"Allowed Reuse","color":"yellowLight2"},{"id":"selYJd9sn8614ZkEP","name":"Needs Review","color":"orangeLight2"},{"id":"sel3TDdVxM5RYvCfR","name":"Error","color":"redLight2"}]}`
+- **Duplicate Match Strength**
+  - id: `fld1gOJTK0e3G8ulG`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Exact SHA-256 Hash","Same Source Attachment ID","Same Size and Filename","Filename Only Weak Match","Manual Review"],"choicesDetailed":[{"id":"sel0B2WBzj2Y0v6sb","name":"Exact SHA-256 Hash","color":"blueLight2"},{"id":"sel51oRjkLtzpz5KY","name":"Same Source Attachment ID","color":"cyanLight2"},{"id":"selYFSTc329ovisf8","name":"Same Size and Filename","color":"tealLight2"},{"id":"sel9SeIW7LXkHVKbP","name":"Filename Only Weak Match","color":"greenLight2"},{"id":"selrwl3ctTYtbEitg","name":"Manual Review","color":"yellowLight2"}]}`
+- **Duplicate Match Notes**
+  - id: `fldVkOPvB74HbFliP`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Duplicate Checked At**
+  - id: `fld2DtlvzpaC4gXr5`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Duplicate Check Error**
+  - id: `fld0mZJBFxJ3c0rbK`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Duplicate Review Status**
+  - id: `fld8C1Wfr0BCKNxpK`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Reviewed","Needs Review","Confirmed Duplicate","Not Duplicate","Allowed Reuse"],"choicesDetailed":[{"id":"selKIa7mo259kGL5T","name":"Not Reviewed","color":"blueLight2"},{"id":"selL5H79F06PWwJdE","name":"Needs Review","color":"cyanLight2"},{"id":"sel8WCSv1ZR90xFaa","name":"Confirmed Duplicate","color":"tealLight2"},{"id":"selnqtEtYv6DNOc2P","name":"Not Duplicate","color":"greenLight2"},{"id":"selOrXHL7JjuLNyXk","name":"Allowed Reuse","color":"yellowLight2"}]}`
+- **Duplicate Match Record**
+  - id: `fldsNazvec6r4mxoY`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldEr7Dmv42UjdMlO","inverseLinkFieldName":"From field: Duplicate Match Record","prefersSingleRecordLink":true,"isReversed":false}`
+- **Is True Video Feedback Asset?**
+  - id: `fldt9uMc6pM717LjQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","fldCpEiwVOMc8v4Vu","fldOwKqDaX2cUxMxf"],"referencedFieldNames":["Upload Destination","Asset Purpose","Asset Slot"],"formula":"IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","fldCpEiwVOMc8v4Vu","fldOwKqDaX2cUxMxf"],"fieldReferencesByName":["Upload Destination","Asset Purpose","Asset Slot"],"dependencySource":"metadata"}`
+- **Is Homework Upload Asset?**
+  - id: `fldy8sCt6ttcMeLRD`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","fldOwKqDaX2cUxMxf"],"referencedFieldNames":["Upload Destination","Asset Slot"],"formula":"IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","fldOwKqDaX2cUxMxf"],"fieldReferencesByName":["Upload Destination","Asset Slot"],"dependencySource":"metadata"}`
+- **From field: Duplicate Match Record**
+  - id: `fldEr7Dmv42UjdMlO`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldsNazvec6r4mxoY","inverseLinkFieldName":"Duplicate Match Record","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **XP Events**
+
+- id: `tblmGSiNA1akW8KnU`
+- primary field: **XP Event Display** (`fldi8KtYuFK8QBjKP`)
+- role guess: `operational summary`
+- fields: `51`
+- link fields: `10`
+- computed fields: `22`
+- description: Event log table for XP-related activity.
+
+Use this table to store individual XP-award events tied to an Enrollment and related progression or achievement activity.
+
+Treat this table as a transaction/event history layer, not as a manual summary table.
+
+### Fields
+
+- **XP Event Display**
+  - id: `fldi8KtYuFK8QBjKP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldOhbn1yIJLQOWHm","fldjpB3lkXSV6apkp","fldlrFv6WaqSprjYk"],"referencedFieldNames":["Enrollment","XP Source","XP Points"],"formula":"ARRAYJOIN({fldOhbn1yIJLQOWHm}) & \" - \" & {fldjpB3lkXSV6apkp} & \" - \" & {fldlrFv6WaqSprjYk}","fieldReferencesById":["fldOhbn1yIJLQOWHm","fldjpB3lkXSV6apkp","fldlrFv6WaqSprjYk"],"fieldReferencesByName":["Enrollment","XP Source","XP Points"],"dependencySource":"metadata"}`
+- **XP Source**
+  - id: `fldjpB3lkXSV6apkp`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - desc: Achivement Unlock
+  - options summary: `{"choices":["3-Day Streak","5-Day Streak","7-Day Streak","10-Day Streak","20-Day Streak","30-Day Streak","40-Day Streak","50-Day Streak","60-Day Streak","Achievement Unlock","Coach Bonus","Homework Bonus","Homework Completion","Manual Adjustment","Perfect Week","Shot Milestone","Shot Volume Bonus","Streak Bonus","Submission Base","Video Bonus","Video Submission","Video Submissions for Feedback","Weekly Threshold 100","Weekly Threshold 125","Weekly Threshold 150","Zoom Meeting Attendance Base","Zoom Meeting Attendance Bonus 2","Zoom Meeting Attendance Bonus 3"],"choicesDetailed":[{"id":"selFcLBkTkl29CaBn","name":"3-Day Streak","color":"greenLight1"},{"id":"selY22oS0xS6ljwom","name":"5-Day Streak","color":"yellowLight1"},{"id":"selJxYLel98SsCudV","name":"7-Day Streak","color":"orangeLight1"},{"id":"selEdRaeds2TuTbfh","name":"10-Day Streak","color":"redLight1"},{"id":"sel49WBZ4X7zx7haQ","name":"20-Day Streak","color":"pinkLight1"},{"id":"selQCZB4b4r9BJT3h","name":"30-Day Streak","color":"purpleLight1"},{"id":"selhPXn1Hrdq1Drhk","name":"40-Day Streak","color":"greenBright"},{"id":"seldXc05JdAPSc25w","name":"50-Day Streak","color":"pinkBright"},{"id":"sel3pOwpFPifiTk2i","name":"60-Day Streak","color":"yellowDark1"},{"id":"selg8ec9f45qdvwYz","name":"Achievement Unlock","color":"blueLight2"},{"id":"selqSkldyGwEiB2fx","name":"Coach Bonus","color":"redLight2"},{"id":"sels2n9h2ZM7rvJZO","name":"Homework Bonus","color":"yellowLight2"},{"id":"selJO9UFSgtwmjbqU","name":"Homework Completion","color":"purpleLight2"},{"id":"sel3oNg39J2uFvEcf","name":"Manual Adjustment","color":"pinkLight2"},{"id":"selvi8YUUH4iRcURk","name":"Perfect Week","color":"purpleBright"},{"id":"selzPfBbqh18UvK3Y","name":"Shot Milestone","color":"blueBright"},{"id":"selKMaHN5BBE7BFff","name":"Shot Volume Bonus","color":"cyanLight2"},{"id":"selL0iNfUNqb7kq3R","name":"Streak Bonus","color":"greenLight2"},{"id":"selZw4nOkwMJCgGyR","name":"Submission Base","color":"blueLight1"},{"id":"sel9acbTv6IOtOHvU","name":"Video Bonus","color":"orangeLight2"},{"id":"sel5hEX57SOtMXuXn","name":"Video Submission","color":"redBright"},{"id":"seloYkh0KD4TwtjcW","name":"Video Submissions for Feedback","color":"cyanLight1"},{"id":"selpjueWeX2U4qThx","name":"Weekly Threshold 100","color":"grayLight2"},{"id":"selVeWStj70SXXoBL","name":"Weekly Threshold 125","color":"grayLight1"},{"id":"selbHiIHfYb5Cgx7q","name":"Weekly Threshold 150","color":"grayBright"},{"id":"sel5ZN56Kq79c2Xbi","name":"Zoom Meeting Attendance Base","color":"yellowLight2"},{"id":"selcWzwg9rfj1PgIK","name":"Zoom Meeting Attendance Bonus 2","color":"tealLight2"},{"id":"selTt08iZBXfX7kiR","name":"Zoom Meeting Attendance Bonus 3","color":"tealLight1"}]}`
+- **XP Points**
+  - id: `fldlrFv6WaqSprjYk`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Enrollment**
+  - id: `fldOhbn1yIJLQOWHm`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldrZqLsT6r8MxrEk","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **Weekly Athlete Summary**
+  - id: `flddGQd4FJQNn0OkY`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fld2i083lpc9jrfk8","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":false,"isReversed":false}`
+- **Created**
+  - id: `fldWS2Zgu3VNCDOu5`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Source Key**
+  - id: `fldEz2RLvrYqyj2vB`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Week**
+  - id: `fldND2zY07dQHygJL`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldchUzF9JSCQzxai","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **XP Reason Debug**
+  - id: `fldEtmGC6JcpZouP0`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Dedupe Key**
+  - id: `fld6Ey3SBbzxWXiAo`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Creates a unique key for XP events based on Enrollment, related record, and XP Source.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldRXY0HwfMxkv6cT","fldjpB3lkXSV6apkp","fldhPtSNanDsK9E9P","fldEz2RLvrYqyj2vB"],"referencedFieldNames":["Enrollment Record ID","XP Source","Event Identity ID","Source Key"],"formula":"IF(\r\n  AND(\r\n    {fldRXY0HwfMxkv6cT},\r\n    {fldjpB3lkXSV6apkp},\r\n    OR(\r\n      {fldhPtSNanDsK9E9P},\r\n      {fldEz2RLvrYqyj2vB}\r\n    )\r\n  ),\r\n  LOWER(\r\n    TRIM(ARRAYJOIN({fldRXY0HwfMxkv6cT}) & \"\") &\r\n    \"|\" &\r\n    TRIM(\r\n      IF(\r\n        {fldhPtSNanDsK9E9P},\r\n        {fldhPtSNanDsK9E9P},\r\n        {fldEz2RLvrYqyj2vB}\r\n      ) & \"\"\r\n    ) &\r\n    \"|\" &\r\n    TRIM({fldjpB3lkXSV6apkp} & \"\")\r\n  ),\r\n  BLANK()\r\n)","fieldReferencesById":["fldRXY0HwfMxkv6cT","fldjpB3lkXSV6apkp","fldhPtSNanDsK9E9P","fldEz2RLvrYqyj2vB"],"fieldReferencesByName":["Enrollment Record ID","XP Source","Event Identity ID","Source Key"],"dependencySource":"metadata"}`
+- **Processed**
+  - id: `fldnaCiqKV4LtoWtS`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Award Mode**
+  - id: `fldTtWFH1vIcEoy0x`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Automatic","Manual"],"choicesDetailed":[{"id":"selol4iBTc9jo9dHD","name":"Automatic","color":"blueLight2"},{"id":"selBbX66l8kYdSFKU","name":"Manual","color":"cyanLight2"}]}`
+- **Awarded By**
+  - id: `fldqo1rserMRSFlaM`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Shot Milestones**
+  - id: `fld7RDrBn8Ffhp8ER`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl5C4TsQpOigIyRz","linkedTableName":"Shot Milestones","inverseLinkFieldId":"fldmmFEzJt3kmEDh4","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **Active?**
+  - id: `fldIp6N4ppccSX1Ot`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Submission**
+  - id: `fldVWYcwMnJd01Lko`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldVewtOPR0DmVg12","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **Achievement Unlock**
+  - id: `fldfxic1XHlipDqET`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldnxSYwXBl2q61Aa","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **Video Feedback**
+  - id: `fldw2uzNagvapLcXp`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fldkTbQ1yyK0qOyLp","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":false,"isReversed":false}`
+- **Weekly Summary Key**
+  - id: `fldl335VjIWYVSlic`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldOhbn1yIJLQOWHm","fldND2zY07dQHygJL"],"referencedFieldNames":["Enrollment","Week"],"formula":"{fldOhbn1yIJLQOWHm} & \"|\" & {fldND2zY07dQHygJL}","fieldReferencesById":["fldOhbn1yIJLQOWHm","fldND2zY07dQHygJL"],"fieldReferencesByName":["Enrollment","Week"],"dependencySource":"metadata"}`
+- **XP Bucket**
+  - id: `fldOQBVTSNODRhRcd`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework Completion","Manual Bonus","Perfect Week","Shooting Base","Shot Milestone","Streak","Video Feedback","Weekly Threshold","Zoom Attendance"],"choicesDetailed":[{"id":"seleOJzOvpZH25TgS","name":"Homework Completion","color":"pinkBright"},{"id":"selbVWTxEHaWLELjy","name":"Manual Bonus","color":"redLight2"},{"id":"selder723z3ROO3XB","name":"Perfect Week","color":"tealLight1"},{"id":"selfe3suXIFIieYB6","name":"Shooting Base","color":"blueBright"},{"id":"selzIREBczRDeaaNE","name":"Shot Milestone","color":"blueLight2"},{"id":"selCgmhCQ7pBEKdkk","name":"Streak","color":"yellowLight1"},{"id":"selJPPc4ZJm8LWSHo","name":"Video Feedback","color":"redBright"},{"id":"selyNQIlYF6N3FLEB","name":"Weekly Threshold","color":"grayDark1"},{"id":"selEQkPuAa3IEZjRn","name":"Zoom Attendance","color":"greenLight2"}]}`
+- **XP Dedupe Key Normalized**
+  - id: `fldf97tsIG1QErtEF`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldRXY0HwfMxkv6cT","fldhPtSNanDsK9E9P","fldjpB3lkXSV6apkp"],"referencedFieldNames":["Enrollment Record ID","Event Identity ID","XP Source"],"formula":"IF(\r\n  AND({fldRXY0HwfMxkv6cT}, {fldhPtSNanDsK9E9P}, {fldjpB3lkXSV6apkp}),\r\n  LOWER(\r\n    TRIM(ARRAYJOIN({fldRXY0HwfMxkv6cT})) & \"|\" &\r\n    TRIM({fldhPtSNanDsK9E9P} & \"\") & \"|\" &\r\n    TRIM({fldjpB3lkXSV6apkp} & \"\")\r\n  ),\r\n  BLANK()\r\n)","fieldReferencesById":["fldRXY0HwfMxkv6cT","fldhPtSNanDsK9E9P","fldjpB3lkXSV6apkp"],"fieldReferencesByName":["Enrollment Record ID","Event Identity ID","XP Source"],"dependencySource":"metadata"}`
+- **Submission Record ID**
+  - id: `fldynYOPp5CRrb6pb`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldVWYcwMnJd01Lko","recordLinkFieldName":"Submission","fieldIdInLinkedTable":"fldFwXuLK18jJnT2z","fieldNameInLinkedTable":"RecordId","fieldTableInLinkedTable":"Submissions"}`
+- **Week Record ID**
+  - id: `fldSGoN2adV8JXVYe`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldND2zY07dQHygJL","recordLinkFieldName":"Week","fieldIdInLinkedTable":"fld5u278sXt1d4QvM","fieldNameInLinkedTable":"Record ID","fieldTableInLinkedTable":"Weeks"}`
+- **Enrollment Record ID**
+  - id: `fldRXY0HwfMxkv6cT`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldOhbn1yIJLQOWHm","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldnsyxEUbrJjyzXU","fieldNameInLinkedTable":"Record Id","fieldTableInLinkedTable":"Enrollments"}`
+- **Streak Occurrence**
+  - id: `fld2CP0yc4yZvxCWF`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9VxLdBiNcev4He","linkedTableName":"Streak Occurrences","inverseLinkFieldId":"fldQXrDK7TivJ9DIZ","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":false,"isReversed":false}`
+- **Streak Occurrence Key**
+  - id: `fldYtFEPeNN77BbsP`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld2CP0yc4yZvxCWF","recordLinkFieldName":"Streak Occurrence","fieldIdInLinkedTable":"fldetuPZCoQzFbulB","fieldNameInLinkedTable":"Streak Occurrence Key","fieldTableInLinkedTable":"Streak Occurrences"}`
+- **Event Identity ID**
+  - id: `fldhPtSNanDsK9E9P`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldEz2RLvrYqyj2vB","fldynYOPp5CRrb6pb","fldYtFEPeNN77BbsP","fldSGoN2adV8JXVYe"],"referencedFieldNames":["Source Key","Submission Record ID","Streak Occurrence Key","Week Record ID"],"formula":"IF(\r\n  {fldEz2RLvrYqyj2vB},\r\n  LOWER(TRIM({fldEz2RLvrYqyj2vB} & \"\")),\r\n  IF(\r\n    {fldynYOPp5CRrb6pb},\r\n    LOWER(\"SUBMISSION|\" & TRIM(ARRAYJOIN({fldynYOPp5CRrb6pb}))),\r\n    IF(\r\n      {fldYtFEPeNN77BbsP},\r\n      LOWER(\"STREAK|\" & TRIM(ARRAYJOIN({fldYtFEPeNN77BbsP}))),\r\n      IF(\r\n        {fldSGoN2adV8JXVYe},\r\n        LOWER(\"WEEK|\" & TRIM(ARRAYJOIN({fldSGoN2adV8JXVYe}))),\r\n        BLANK()\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fldEz2RLvrYqyj2vB","fldynYOPp5CRrb6pb","fldYtFEPeNN77BbsP","fldSGoN2adV8JXVYe"],"fieldReferencesByName":["Source Key","Submission Record ID","Streak Occurrence Key","Week Record ID"],"dependencySource":"metadata"}`
+- **Duplicate Count**
+  - id: `fldWdDRbWt9LzDsCs`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":1}`
+- **Duplicate Status**
+  - id: `fldc9USqXqgok8K7k`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Unique","Duplicate - Keeper","Duplicate - Remove","Duplicate - Review"],"choicesDetailed":[{"id":"sel6Kh0mQ2YtKM8QU","name":"Unique","color":"blueLight2"},{"id":"selijDZmNebzqkoor","name":"Duplicate - Keeper","color":"cyanLight2"},{"id":"selN2p1nkAsKj8Xpn","name":"Duplicate - Remove","color":"tealLight2"},{"id":"selkaDWa48fHc2Hnq","name":"Duplicate - Review","color":"greenLight2"}]}`
+- **Keep Record?**
+  - id: `fldaZ3488Yj6KqhOf`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Approved for Delete**
+  - id: `fldTnFXgFCk5TKea5`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Needs Dedupe Review**
+  - id: `fldTyULkslDhO5Ky6`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldWdDRbWt9LzDsCs"],"referencedFieldNames":["Duplicate Count"],"formula":"IF(\r\n  {fldWdDRbWt9LzDsCs} > 1,\r\n  \"Review\",\r\n  BLANK()\r\n)","fieldReferencesById":["fldWdDRbWt9LzDsCs"],"fieldReferencesByName":["Duplicate Count"],"dependencySource":"metadata"}`
+- **Date - Submission Base Activity**
+  - id: `fldvA0LSFK6uDlreq`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"local","format":"l"}},"recordLinkFieldId":"fldVWYcwMnJd01Lko","recordLinkFieldName":"Submission","fieldIdInLinkedTable":"fldpkkSBsx8kQRZos","fieldNameInLinkedTable":"Activity Date","fieldTableInLinkedTable":"Submissions"}`
+- **Homework Completion**
+  - id: `fldPl5VKHznvYwJtg`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldBv878RIIC5tpE0","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Date Resolved**
+  - id: `fldvh9pv1oTIp24IJ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Resolves the XP event date based on activity date or fallback by XP Bucket type.
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"referencedFieldIds":["fldxVAackD0buQIba","fldOQBVTSNODRhRcd","fldvA0LSFK6uDlreq","fldl6CyUiKYtqvHfz","fldXH9MGmbeE6Y7OS","fldHvhlnWHKlvNQDW","fldbyfXAlNtDtEc6q","fldoP1I4zEXKF70DC","fldjNc2VdVl96AShM","fldfOBZ6TB0ifLZXx"],"referencedFieldNames":["XP Activity Date","XP Bucket","Date - Submission Base Activity","Date - Homework Submission Activity","Date - Video Submission Activity","Date - Streak End","Date - Weekly Summary End","Date - Zoom Meeting","Date - Shot Milestone Activity","Date - Achievement Unlock"],"formula":"IF(\r\n  {fldxVAackD0buQIba},\r\n  {fldxVAackD0buQIba},\r\n  SWITCH(\r\n    {fldOQBVTSNODRhRcd},\r\n    \"Submission Base\",\r\n      IF(\r\n        {fldvA0LSFK6uDlreq},\r\n        DATETIME_PARSE(ARRAYJOIN({fldvA0LSFK6uDlreq})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Homework Completion\",\r\n      IF(\r\n        {fldl6CyUiKYtqvHfz},\r\n        DATETIME_PARSE(ARRAYJOIN({fldl6CyUiKYtqvHfz})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Video Feedback\",\r\n      IF(\r\n        {fldXH9MGmbeE6Y7OS},\r\n        DATETIME_PARSE(ARRAYJOIN({fldXH9MGmbeE6Y7OS})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Streak\",\r\n      IF(\r\n        {fldHvhlnWHKlvNQDW},\r\n        DATETIME_PARSE(ARRAYJOIN({fldHvhlnWHKlvNQDW})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Weekly Threshold\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Perfect Week\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Zoom Attendance\",\r\n      IF(\r\n        {fldoP1I4zEXKF70DC},\r\n        DATETIME_PARSE(ARRAYJOIN({fldoP1I4zEXKF70DC})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Shot Milestone\",\r\n      IF(\r\n        {fldjNc2VdVl96AShM},\r\n        DATETIME_PARSE(ARRAYJOIN({fldjNc2VdVl96AShM})),\r\n        IF(\r\n          {fldfOBZ6TB0ifLZXx},\r\n          DATETIME_PARSE(ARRAYJOIN({fldfOBZ6TB0ifLZXx})),\r\n          CREATED_TIME()\r\n        )\r\n      ),\r\n    CREATED_TIME()\r\n  )\r\n)","fieldReferencesById":["fldxVAackD0buQIba","fldOQBVTSNODRhRcd","fldvA0LSFK6uDlreq","fldl6CyUiKYtqvHfz","fldXH9MGmbeE6Y7OS","fldHvhlnWHKlvNQDW","fldbyfXAlNtDtEc6q","fldoP1I4zEXKF70DC","fldjNc2VdVl96AShM","fldfOBZ6TB0ifLZXx"],"fieldReferencesByName":["XP Activity Date","XP Bucket","Date - Submission Base Activity","Date - Homework Submission Activity","Date - Video Submission Activity","Date - Streak End","Date - Weekly Summary End","Date - Zoom Meeting","Date - Shot Milestone Activity","Date - Achievement Unlock"],"dependencySource":"metadata"}`
+- **XP Activity Date**
+  - id: `fldxVAackD0buQIba`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **XP Activity Date Source**
+  - id: `fld2RfGVwOBl619gU`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Achievement Unlock Date","Fallback Created Time","Homework Submission Activity Date","Manual Date","Perfect Week End Date","Shot Milestone Activity Date","Streak End Date","Submission Activity Date","Video Submission Activity Date","Weekly Summary Week End Date","Zoom Meeting Date"],"choicesDetailed":[{"id":"selFwtxa30ryM168z","name":"Achievement Unlock Date","color":"yellowLight2"},{"id":"seliEZPWXmG4H0axE","name":"Fallback Created Time","color":"purpleLight2"},{"id":"selcAXA04DcLFWY5q","name":"Homework Submission Activity Date","color":"cyanLight2"},{"id":"sel3MfXo3eghqi0mh","name":"Manual Date","color":"pinkLight2"},{"id":"seltzqPRzMsGHb2Hk","name":"Perfect Week End Date","color":"blueLight1"},{"id":"selg2n8Uv0crplmJz","name":"Shot Milestone Activity Date","color":"grayLight2"},{"id":"seloRpEp1iUv9La7v","name":"Streak End Date","color":"greenLight2"},{"id":"selHwbINqe0hUisWU","name":"Submission Activity Date","color":"blueLight2"},{"id":"seliqG5pKZC6fsJ7z","name":"Video Submission Activity Date","color":"tealLight2"},{"id":"selFpYDS8mOJwN4zC","name":"Weekly Summary Week End Date","color":"orangeLight2"},{"id":"seldFXhdgO8zIhCGw","name":"Zoom Meeting Date","color":"redLight2"}]}`
+- **Zoom Meeting**
+  - id: `fldyFpo1i4yV85l4x`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblWcSHEm8vNNIxyB","linkedTableName":"Zoom Meetings","inverseLinkFieldId":"fld1pUDdnK1wWRfyg","inverseLinkFieldName":"XP Events","prefersSingleRecordLink":true,"isReversed":false}`
+- **Date - Homework Submission Activity**
+  - id: `fldl6CyUiKYtqvHfz`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"local","format":"l"}},"recordLinkFieldId":"fldPl5VKHznvYwJtg","recordLinkFieldName":"Homework Completion","fieldIdInLinkedTable":"fldXNjet2ItpCfAZr","fieldNameInLinkedTable":"Submission Date","fieldTableInLinkedTable":"Homework Completions"}`
+- **Date - Video Submission Activity**
+  - id: `fldXH9MGmbeE6Y7OS`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fldw2uzNagvapLcXp","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldVpRPcp5PZDtQ7s","fieldNameInLinkedTable":"Activity Date - Lkp","fieldTableInLinkedTable":"Video Feedback"}`
+- **Date - Streak End**
+  - id: `fldHvhlnWHKlvNQDW`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fld2CP0yc4yZvxCWF","recordLinkFieldName":"Streak Occurrence","fieldIdInLinkedTable":"fld0xqXER4sVq2jhr","fieldNameInLinkedTable":"Streak End Date","fieldTableInLinkedTable":"Streak Occurrences"}`
+- **Date - Achievement Unlock**
+  - id: `fldfOBZ6TB0ifLZXx`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fldfxic1XHlipDqET","recordLinkFieldName":"Achievement Unlock","fieldIdInLinkedTable":"fldEHWSxRnRpChU8s","fieldNameInLinkedTable":"Date Unlocked","fieldTableInLinkedTable":"Athlete Achievement Unlocks"}`
+- **Date - Weekly Summary End**
+  - id: `fldbyfXAlNtDtEc6q`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddGQd4FJQNn0OkY","recordLinkFieldName":"Weekly Athlete Summary","fieldIdInLinkedTable":"fldNUSqzr3H0PE5Ex","fieldNameInLinkedTable":"Week","fieldTableInLinkedTable":"Weekly Athlete Summary"}`
+- **Date - Zoom Meeting**
+  - id: `fldoP1I4zEXKF70DC`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fldyFpo1i4yV85l4x","recordLinkFieldName":"Zoom Meeting","fieldIdInLinkedTable":"fld1VGAi6PUxMv6aH","fieldNameInLinkedTable":"Start Time","fieldTableInLinkedTable":"Zoom Meetings"}`
+- **XP Reason Public**
+  - id: `fldyFvqWFuwnE4zNN`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Awarded At**
+  - id: `fldBrLHMxrNzJflPp`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Date - Shot Milestone Activity**
+  - id: `fldjNc2VdVl96AShM`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"recordLinkFieldId":"fldfxic1XHlipDqET","recordLinkFieldName":"Achievement Unlock","fieldIdInLinkedTable":"fldJePXhpRtjKNAlb","fieldNameInLinkedTable":"Milestone Activity Date","fieldTableInLinkedTable":"Athlete Achievement Unlocks"}`
+- **XP Award Status**
+  - id: `fldi8PBuKxSjEeX6Q`
+  - type: `singleLineText`
+  - role: `status`
+  - primary: `False`
+- **XP Event RID**
+  - id: `fldsQS6ZFPu2Vkoeb`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **XP Events RID**
+  - id: `fldNXtFzUrdSrPz2l`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Active XP Points**
+  - id: `fldGCVRPYV76R2pPH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldc9USqXqgok8K7k","fldIp6N4ppccSX1Ot","fldlrFv6WaqSprjYk"],"referencedFieldNames":["Duplicate Status","Active?","XP Points"],"formula":"IF(\r\n  {fldc9USqXqgok8K7k} = \"Duplicate - Remove\",\r\n  0,\r\n  IF(\r\n    {fldIp6N4ppccSX1Ot},\r\n    {fldlrFv6WaqSprjYk},\r\n    0\r\n  )\r\n)","fieldReferencesById":["fldc9USqXqgok8K7k","fldIp6N4ppccSX1Ot","fldlrFv6WaqSprjYk"],"fieldReferencesByName":["Duplicate Status","Active?","XP Points"],"dependencySource":"metadata"}`
+
+## Table: **Athlete Achievement Unlocks**
+
+- id: `tblyT2AQo1JbvmvZS`
+- primary field: **Achievement Unlock Display** (`fldyJBYsFkbeIhco5`)
+- role guess: `operational summary`
+- fields: `35`
+- link fields: `6`
+- computed fields: `10`
+- description: Transaction table for earned achievement unlocks.
+
+Use this table to store which Enrollment unlocked which Achievement, when it was earned, and any related Week or XP event context.
+
+This table is the earned/unlocked record layer. Use Achievements for the achievement definitions.
+
+### Fields
+
+- **Achievement Unlock Display**
+  - id: `fldyJBYsFkbeIhco5`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldnsr1zuKjy17fxV"],"referencedFieldNames":["Enrollment","Achievement","Week"],"formula":"ARRAYJOIN({fldxCHW5Yc4kahb4Z}) & \" - \" & ARRAYJOIN({fldeeKnA7u6p3AoqV}) & \" - \" & ARRAYJOIN({fldnsr1zuKjy17fxV})","fieldReferencesById":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldnsr1zuKjy17fxV"],"fieldReferencesByName":["Enrollment","Achievement","Week"],"dependencySource":"metadata"}`
+- **XP Events**
+  - id: `fldnxSYwXBl2q61Aa`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldfxic1XHlipDqET","inverseLinkFieldName":"Achievement Unlock","prefersSingleRecordLink":false,"isReversed":false}`
+- **Enrollment**
+  - id: `fldxCHW5Yc4kahb4Z`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldelG3oIUxOwE7dv","inverseLinkFieldName":"Athlete Achievement Unlocks","prefersSingleRecordLink":true,"isReversed":false}`
+- **Achievement**
+  - id: `fldeeKnA7u6p3AoqV`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblrADEQbvH9kBfMZ","linkedTableName":"Achievements","inverseLinkFieldId":"fldzQXtmIZI31d1f8","inverseLinkFieldName":"Athlete Achievement Unlocks","prefersSingleRecordLink":true,"isReversed":false}`
+- **Week**
+  - id: `fldnsr1zuKjy17fxV`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldgUOHI9XmxtmWmD","inverseLinkFieldName":"Athlete Achievement Unlocks","prefersSingleRecordLink":true,"isReversed":false}`
+- **XP Awarded**
+  - id: `fldTbTn6dvrI0izps`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Trigger Value**
+  - id: `fldJdwCBRQt1cjN7A`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Active?**
+  - id: `fldmDBm7IIP2yTGaA`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Streak Instance Key**
+  - id: `fld8wlool8tiLZEIE`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Streak Start Date**
+  - id: `fldHuhkA1vRHwfEXh`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"}}`
+- **Unlock Key**
+  - id: `fld5yPKklaMYQbxyO`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldnsr1zuKjy17fxV","fldop6wVgfxwKck0h","fldHuhkA1vRHwfEXh"],"referencedFieldNames":["Enrollment","Achievement","Week","Shot Milestone","Streak Start Date"],"formula":"ARRAYJOIN({fldxCHW5Yc4kahb4Z}) &\r\n\"|\" &\r\nARRAYJOIN({fldeeKnA7u6p3AoqV}) &\r\n\"|WEEK:\" &\r\nARRAYJOIN({fldnsr1zuKjy17fxV}) &\r\nIF(\r\n  LEN(ARRAYJOIN({fldop6wVgfxwKck0h})) > 0,\r\n  \"|SHOT_MILESTONE:\" & ARRAYJOIN({fldop6wVgfxwKck0h}),\r\n  \"\"\r\n) &\r\nIF(\r\n  {fldHuhkA1vRHwfEXh},\r\n  \"|STREAK_RUN_START:\" & DATETIME_FORMAT({fldHuhkA1vRHwfEXh}, 'YYYY-MM-DD'),\r\n  \"\"\r\n)","fieldReferencesById":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldnsr1zuKjy17fxV","fldop6wVgfxwKck0h","fldHuhkA1vRHwfEXh"],"fieldReferencesByName":["Enrollment","Achievement","Week","Shot Milestone","Streak Start Date"],"dependencySource":"metadata"}`
+- **Athlete**
+  - id: `fld769C6BlHcHjAcK`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldxCHW5Yc4kahb4Z","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fld7TFNgzmESOhTOu","fieldNameInLinkedTable":"Athlete","fieldTableInLinkedTable":"Enrollments"}`
+- **Date Unlocked**
+  - id: `fldEHWSxRnRpChU8s`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Display in Weekly Email?**
+  - id: `fld9eYD5ISiXcvIda`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Display in Dashboard?**
+  - id: `fldyhj3t1MSUrxU95`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **First Time Unlock?**
+  - id: `fldUpjGZn1SXBW4v7`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Repeat Unlock Count**
+  - id: `fldXdbgTlZs1Yxmq0`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Achievement Type**
+  - id: `fldmWVXm2PgkE84XH`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldeeKnA7u6p3AoqV","recordLinkFieldName":"Achievement","fieldIdInLinkedTable":"fldA0pCUHaRHhGDCB","fieldNameInLinkedTable":"Achievement Type","fieldTableInLinkedTable":"Achievements"}`
+- **Category**
+  - id: `fld0gb6Z0qqL77PKG`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldeeKnA7u6p3AoqV","recordLinkFieldName":"Achievement","fieldIdInLinkedTable":"fld09H53gLStb1fXf","fieldNameInLinkedTable":"Category","fieldTableInLinkedTable":"Achievements"}`
+- **Visible?**
+  - id: `fldSqX2PIiinYnrQs`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"checkbox","resultOptions":{"icon":"thumbsUp","color":"greenBright"},"recordLinkFieldId":"fldeeKnA7u6p3AoqV","recordLinkFieldName":"Achievement","fieldIdInLinkedTable":"fldwSesknp3zP3KGf","fieldNameInLinkedTable":"Visible?","fieldTableInLinkedTable":"Achievements"}`
+- **Rarity**
+  - id: `fldbgxZRLjfSXjRbr`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldeeKnA7u6p3AoqV","recordLinkFieldName":"Achievement","fieldIdInLinkedTable":"fldllxxutInL45UL0","fieldNameInLinkedTable":"Rarity","fieldTableInLinkedTable":"Achievements"}`
+- **Week Summary**
+  - id: `fldXpg643NIopvFnH`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Trigger Context**
+  - id: `fldFduxf8Az6vbRt5`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Included in Summary?**
+  - id: `fldr1YE2EEIZEB5Ad`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Coach Note**
+  - id: `fld8r3TVAnHcFsEPE`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Events copy**
+  - id: `fldWnU9gJCsTmTLpK`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Weekly Athlete Summary**
+  - id: `fldcplpAaSHYEMa3C`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fldJVKEeziY9l5Dbq","inverseLinkFieldName":"Perfect Week Unlock","prefersSingleRecordLink":false,"isReversed":false}`
+- **Source Status**
+  - id: `fldcoqd7mKVjXqO1V`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Ready for XP","Awarded","Skipped","Error"],"choicesDetailed":[{"id":"selW4GuTkrYzTQ0ad","name":"Pending","color":"blueLight2"},{"id":"selS3YRci7dAwBa9u","name":"Ready for XP","color":"cyanLight2"},{"id":"seloGAdSx785qGzqQ","name":"Awarded","color":"tealLight2"},{"id":"sellWIl6CKPfnxuVq","name":"Skipped","color":"greenLight2"},{"id":"selUtViSEND0NI9hW","name":"Error","color":"yellowLight2"}]}`
+- **XP Award Status**
+  - id: `fldHUsIkp3hF8W5kd`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Awarded","Skipped","Error"],"choicesDetailed":[{"id":"selTGKaa4edonHbrP","name":"Pending","color":"blueLight2"},{"id":"selC6mOF45cbGC2sB","name":"Awarded","color":"cyanLight2"},{"id":"selVaVhvttFo4CE2S","name":"Skipped","color":"tealLight2"},{"id":"seljKFUid2kU2Zzvz","name":"Error","color":"greenLight2"}]}`
+- **Shot Milestone**
+  - id: `fldop6wVgfxwKck0h`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl5C4TsQpOigIyRz","linkedTableName":"Shot Milestones","inverseLinkFieldId":"fldMOcJn6dEBtgGjQ","inverseLinkFieldName":"Athlete Achievement Unlocks","prefersSingleRecordLink":true,"isReversed":false}`
+- **Milestone Source Key**
+  - id: `fldHwWWMESmhYX2Da`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Ready for 059 XP?**
+  - id: `fldqXvC2AZ0q045Ti`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldHUsIkp3hF8W5kd","fldnxSYwXBl2q61Aa"],"referencedFieldNames":["Enrollment","Achievement","XP Award Status","XP Events"],"formula":"IF(\r\n  AND(\r\n    {fldxCHW5Yc4kahb4Z},\r\n    {fldeeKnA7u6p3AoqV},\r\n    {fldHUsIkp3hF8W5kd} = \"Pending\",\r\n    LEN(ARRAYJOIN({fldnxSYwXBl2q61Aa})) = 0\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldxCHW5Yc4kahb4Z","fldeeKnA7u6p3AoqV","fldHUsIkp3hF8W5kd","fldnxSYwXBl2q61Aa"],"fieldReferencesByName":["Enrollment","Achievement","XP Award Status","XP Events"],"dependencySource":"metadata"}`
+- **Milestone Activity Date**
+  - id: `fldJePXhpRtjKNAlb`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Achievement Unlock Display - RID**
+  - id: `fldm9LiINZvUIWG2C`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Unlock Source Date**
+  - id: `fldSM4B2zP7o1A2t0`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"referencedFieldIds":["fldJePXhpRtjKNAlb","fldEHWSxRnRpChU8s"],"referencedFieldNames":["Milestone Activity Date","Date Unlocked"],"formula":"IF(\r\n  {fldJePXhpRtjKNAlb},\r\n  {fldJePXhpRtjKNAlb},\r\n  {fldEHWSxRnRpChU8s}\r\n)","fieldReferencesById":["fldJePXhpRtjKNAlb","fldEHWSxRnRpChU8s"],"fieldReferencesByName":["Milestone Activity Date","Date Unlocked"],"dependencySource":"metadata"}`
+
+## Table: **Streak Occurrences**
+
+- id: `tbl9VxLdBiNcev4He`
+- primary field: **Streak Occurrence Name** (`fldYynVjG0B9dfs68`)
+- role guess: `operational summary`
+- fields: `24`
+- link fields: `4`
+- computed fields: `7`
+- description: Tracks each individual streak milestone earned by a student or athlete.
+
+### Fields
+
+- **Streak Occurrence Name**
+  - id: `fldYynVjG0B9dfs68`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldq1NyyZe71Xxjvr","fldlyvz2Uk9u7AImn","fld0xqXER4sVq2jhr"],"referencedFieldNames":["Enrollment","Achievement","Streak End Date"],"formula":"{fldq1NyyZe71Xxjvr} & \" - \" & {fldlyvz2Uk9u7AImn} & \" - \" & DATETIME_FORMAT({fld0xqXER4sVq2jhr}, 'M/D/YYYY')","fieldReferencesById":["fldq1NyyZe71Xxjvr","fldlyvz2Uk9u7AImn","fld0xqXER4sVq2jhr"],"fieldReferencesByName":["Enrollment","Achievement","Streak End Date"],"dependencySource":"metadata"}`
+- **Active?**
+  - id: `fld74jFfDfp1huinA`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Enrollment**
+  - id: `fldq1NyyZe71Xxjvr`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldanl05JKEhuwysG","inverseLinkFieldName":"Streak Occurrences","prefersSingleRecordLink":true,"isReversed":false}`
+- **Achievement**
+  - id: `fldlyvz2Uk9u7AImn`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblrADEQbvH9kBfMZ","linkedTableName":"Achievements","inverseLinkFieldId":"fldDCi4wlrfHJaF3f","inverseLinkFieldName":"Streak Occurrences","prefersSingleRecordLink":true,"isReversed":false}`
+- **Streak Days**
+  - id: `fldgtic43J4s14jbK`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Streak Start Date**
+  - id: `fld3PLLvMlzz2KSPD`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"iso","format":"YYYY-MM-DD"}}`
+- **Streak End Date**
+  - id: `fld0xqXER4sVq2jhr`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"iso","format":"YYYY-MM-DD"}}`
+- **Awarded At**
+  - id: `fldcrBn2NTdCjmG8F`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **XP Events**
+  - id: `fldQXrDK7TivJ9DIZ`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fld2CP0yc4yZvxCWF","inverseLinkFieldName":"Streak Occurrence","prefersSingleRecordLink":false,"isReversed":false}`
+- **Source Status**
+  - id: `fldwKO0ZF2dkI2ix2`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Ready for XP","Awarded","Duplicate","Error"],"choicesDetailed":[{"id":"selCtbYXn30dtxQ9v","name":"Pending","color":"blueLight2"},{"id":"selgIH46OgzyvzrSx","name":"Ready for XP","color":"cyanLight2"},{"id":"selfol6Uoki7bL3Tb","name":"Awarded","color":"tealLight2"},{"id":"selrDUaRuGCc2fbC8","name":"Duplicate","color":"greenLight2"},{"id":"seltztWdC0r92htlS","name":"Error","color":"yellowLight2"}]}`
+- **Gate Eligible Streak Days**
+  - id: `fldHIIpPhhSzASswj`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld74jFfDfp1huinA","fldgtic43J4s14jbK"],"referencedFieldNames":["Active?","Streak Days"],"formula":"IF(\r\n  AND(\r\n    {fld74jFfDfp1huinA},\r\n    {fldgtic43J4s14jbK}\r\n  ),\r\n  {fldgtic43J4s14jbK},\r\n  BLANK()\r\n)","fieldReferencesById":["fld74jFfDfp1huinA","fldgtic43J4s14jbK"],"fieldReferencesByName":["Active?","Streak Days"],"dependencySource":"metadata"}`
+- **Achievement Key**
+  - id: `fld9f6SBfw4m58qOI`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldlyvz2Uk9u7AImn","recordLinkFieldName":"Achievement","fieldIdInLinkedTable":"fldG47suJXLj8P8VF","fieldNameInLinkedTable":"Achievement Key","fieldTableInLinkedTable":"Achievements"}`
+- **Week**
+  - id: `fldmtG66BIfAPqtk3`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldxUGRr7iLw4WUVU","inverseLinkFieldName":"Streak Occurrences","prefersSingleRecordLink":true,"isReversed":false}`
+- **Challenge / Season**
+  - id: `fldltgFPGVXHwRj4X`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Notes**
+  - id: `fldv8mFyd11gZBkkL`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Enrollment Record ID**
+  - id: `fldB7hH4dfBlYMkiu`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldq1NyyZe71Xxjvr","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldnsyxEUbrJjyzXU","fieldNameInLinkedTable":"Record Id","fieldTableInLinkedTable":"Enrollments"}`
+- **Streak Date Key**
+  - id: `fldp4sXrHcO2tMZV8`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld0xqXER4sVq2jhr"],"referencedFieldNames":["Streak End Date"],"formula":"IF({fld0xqXER4sVq2jhr}, DATETIME_FORMAT({fld0xqXER4sVq2jhr}, 'YYYY-MM-DD'))","fieldReferencesById":["fld0xqXER4sVq2jhr"],"fieldReferencesByName":["Streak End Date"],"dependencySource":"metadata"}`
+- **Streak Occurrence Key**
+  - id: `fldetuPZCoQzFbulB`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldB7hH4dfBlYMkiu","fld9f6SBfw4m58qOI","fldp4sXrHcO2tMZV8"],"referencedFieldNames":["Enrollment Record ID","Achievement Key","Streak Date Key"],"formula":"IF(AND({fldB7hH4dfBlYMkiu}, {fld9f6SBfw4m58qOI}, {fldp4sXrHcO2tMZV8}),\n  LOWER(\"streak|\" & TRIM(ARRAYJOIN({fldB7hH4dfBlYMkiu})) & \"|\" & TRIM(ARRAYJOIN({fld9f6SBfw4m58qOI})) & \"|\" & TRIM({fldp4sXrHcO2tMZV8}))\n)","fieldReferencesById":["fldB7hH4dfBlYMkiu","fld9f6SBfw4m58qOI","fldp4sXrHcO2tMZV8"],"fieldReferencesByName":["Enrollment Record ID","Achievement Key","Streak Date Key"],"dependencySource":"metadata"}`
+- **Source Submission Date**
+  - id: `fldpzbwdbCzaca6Yp`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Trigger Submission Date**
+  - id: `fld5FvNWdjW5TH1hq`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Backfill Run Label**
+  - id: `fldBFDl629arXFcnp`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Last Evaluated At**
+  - id: `flduVB3W0qpuyeGFr`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Created Time**
+  - id: `fldpekzzNPwsMhvJT`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Record Id**
+  - id: `fldM9E6VaCjTGvxov`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+
+## Table: **Achievements**
+
+- id: `tblrADEQbvH9kBfMZ`
+- primary field: **Achievement Name** (`fldiPdklodJyLZSL5`)
+- role guess: `operational summary`
+- fields: `23`
+- link fields: `3`
+- computed fields: `1`
+- description: Reference table for achievement definitions.
+
+Use this table to define achievement records, their challenge context, and any related week or unlock criteria used by the game app.
+
+This table should act as a definition/config layer. Use Athlete Achievement Unlocks to track which enrollments actually earned an achievement.
+
+### Fields
+
+- **Achievement Name**
+  - id: `fldiPdklodJyLZSL5`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Achievement Key**
+  - id: `fldG47suJXLj8P8VF`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldiPdklodJyLZSL5"],"referencedFieldNames":["Achievement Name"],"formula":"LOWER(SUBSTITUTE({fldiPdklodJyLZSL5},\" \",\"_\"))","fieldReferencesById":["fldiPdklodJyLZSL5"],"fieldReferencesByName":["Achievement Name"],"dependencySource":"metadata"}`
+- **Repeatable?**
+  - id: `fldV1DJGha1J7J3NN`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **One-Time Unlock?**
+  - id: `fldu0gilTH7n4l8LE`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Week-Specific?**
+  - id: `fldVnjpUBLEfS7G9z`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Achievement Type**
+  - id: `fldA0pCUHaRHhGDCB`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Behavior","Progress","Milestone","Challenge","Secret"],"choicesDetailed":[{"id":"selArIUYG9RrFFkUI","name":"Behavior","color":"blueLight2"},{"id":"selna8WTgo2wzGLD4","name":"Progress","color":"cyanLight2"},{"id":"sel2RxguD9eP7p52B","name":"Milestone","color":"tealLight2"},{"id":"selWvMVav9wOhxAKr","name":"Challenge","color":"greenLight2"},{"id":"sel0EYcn2Cl95jyUj","name":"Secret","color":"yellowLight2"}]}`
+- **Category**
+  - id: `fld09H53gLStb1fXf`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Streak","Consistency","Volume","Homework","Improvement","Comeback","Engagement","Special"],"choicesDetailed":[{"id":"selwpnXYZY9YSaXJC","name":"Streak","color":"blueLight2"},{"id":"selQpgv6J9znXp1DN","name":"Consistency","color":"cyanLight2"},{"id":"sel7i4Qb3MdVNd0Lt","name":"Volume","color":"tealLight2"},{"id":"sel1pJM7iiqSHxGHS","name":"Homework","color":"greenLight2"},{"id":"selomsgoW7FhWpvxl","name":"Improvement","color":"yellowLight2"},{"id":"selLeUweJGhVR7tWK","name":"Comeback","color":"orangeLight2"},{"id":"selgwgNvitqi49yx4","name":"Engagement","color":"redLight2"},{"id":"selpzZke9olNyR17a","name":"Special","color":"pinkLight2"}]}`
+- **Active?**
+  - id: `fldKD33jZGX0QaKgC`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Visible?**
+  - id: `fldwSesknp3zP3KGf`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Description**
+  - id: `fld2ax0LqlADCosi6`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Trigger Type**
+  - id: `fld150hE2HKeJI88i`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Goal %","Shots Total","Days Logged","Streak Length","Homework Completed","Weekly Challenge Completed","Improvement","Comeback","Engagement Score","Manual"],"choicesDetailed":[{"id":"selYTmglGY1sBsR29","name":"Goal %","color":"blueLight2"},{"id":"selhfF4iRQRcX0PR8","name":"Shots Total","color":"cyanLight2"},{"id":"selxSASvbRDqyNSoS","name":"Days Logged","color":"tealLight2"},{"id":"selcvt5dqQQ1SzhAm","name":"Streak Length","color":"greenLight2"},{"id":"sel7AY3gE8JWn72Xz","name":"Homework Completed","color":"yellowLight2"},{"id":"selCBsOI0j4HnnfEf","name":"Weekly Challenge Completed","color":"orangeLight2"},{"id":"seleftdylLEyXxqyq","name":"Improvement","color":"redLight2"},{"id":"sel5xhbO6BXnltBz0","name":"Comeback","color":"pinkLight2"},{"id":"sel8wdDKmgzRUkd09","name":"Engagement Score","color":"purpleLight2"},{"id":"selbvE4OETVKfnjKE","name":"Manual","color":"grayLight2"}]}`
+- **Trigger Threshold**
+  - id: `fld42zcAvFrM1j13r`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Trigger Operator**
+  - id: `fldXuBViGZLZjDG1m`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":[">=","=","<="],"choicesDetailed":[{"id":"selYTCiYUXpE2uuMl","name":">=","color":"blueLight2"},{"id":"selcWuLWL33W08DL9","name":"=","color":"cyanLight2"},{"id":"selC8OzKxJmpQc574","name":"<=","color":"tealLight2"}]}`
+- **Uses Grade Band Scaling?**
+  - id: `fldkIzG5emvUBQ0Tw`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Week**
+  - id: `flda5CCtdVbMdFSka`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fld4UZ2Lf1lARdCkz","inverseLinkFieldName":"Achievements","prefersSingleRecordLink":true,"isReversed":false}`
+- **Sort Order**
+  - id: `fldcKjdFf8fwTGlQX`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Badge Icon Name**
+  - id: `fldsNaS4jeIZYQESl`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Rarity**
+  - id: `fldllxxutInL45UL0`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Common","Uncommon","Rare","Epic","Legendary"],"choicesDetailed":[{"id":"selqAJtZvEoARpN5V","name":"Common","color":"blueLight2"},{"id":"selWynCuloifbUphN","name":"Uncommon","color":"cyanLight2"},{"id":"selOSTSDHHSSVSYDm","name":"Rare","color":"tealLight2"},{"id":"selGM0ytHn1OJ7qA5","name":"Epic","color":"greenLight2"},{"id":"selb9qwTX2opP7i1G","name":"Legendary","color":"yellowLight2"}]}`
+- **Internal Notes**
+  - id: `fldGyY23FJVoT5EoP`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Athlete Achievement Unlocks**
+  - id: `fldzQXtmIZI31d1f8`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldeeKnA7u6p3AoqV","inverseLinkFieldName":"Achievement","prefersSingleRecordLink":false,"isReversed":false}`
+- **Threshold Value**
+  - id: `fldOcT1SvA1cojJh9`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Reward Rule Key**
+  - id: `fldMYQosrPObUdpVZ`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Streak Occurrences**
+  - id: `fldDCi4wlrfHJaF3f`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9VxLdBiNcev4He","linkedTableName":"Streak Occurrences","inverseLinkFieldId":"fldlyvz2Uk9u7AImn","inverseLinkFieldName":"Achievement","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **Weeks**
+
+- id: `tblcsKugv1cla36A6`
+- primary field: **Week Name** (`fldvNgDbrO0yWuWrr`)
+- role guess: `operational summary`
+- fields: `20`
+- link fields: `11`
+- computed fields: `2`
+- description: Calendar anchor table for weekly challenge periods.
+
+Use this table to define active week records and date ranges used by Submissions, curriculum, achievements, and weekly summaries.
+
+One submission should link to the correct Week based on Activity Date.
+
+### Fields
+
+- **Week Name**
+  - id: `fldvNgDbrO0yWuWrr`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Record ID**
+  - id: `fld5u278sXt1d4QvM`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Start Date**
+  - id: `fldbvSVciJzE7DnxF`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **End Date**
+  - id: `fldKvPoOKSDcvuii7`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Submissions**
+  - id: `fld8hxWh7fATBLghL`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldA3fpXWckngZ6g1","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Award Recipients**
+  - id: `fldlFt4ncOqw44HCW`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblTyQXl8aEP93ubK","linkedTableName":"Award Recipients","inverseLinkFieldId":"fld6D1e5HT9NKWVGv","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Weekly Athlete Summary**
+  - id: `fld6YRmWGdKPQk8Vg`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fldNUSqzr3H0PE5Ex","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Achievements**
+  - id: `fld4UZ2Lf1lARdCkz`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblrADEQbvH9kBfMZ","linkedTableName":"Achievements","inverseLinkFieldId":"flda5CCtdVbMdFSka","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Athlete Achievement Unlocks**
+  - id: `fldgUOHI9XmxtmWmD`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldnsr1zuKjy17fxV","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Events**
+  - id: `fldchUzF9JSCQzxai`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldND2zY07dQHygJL","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Homework 2**
+  - id: `fldMnijLN0ozCGhjb`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Homework Completions**
+  - id: `fldBCFzjforqsWunR`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldesgOUPcUoo9S2q","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **FBC Curriculum - SYNC**
+  - id: `fldTJZEWORITbiZKe`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"flddMQ8OZdvSsvak8","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Video Feedback**
+  - id: `fld8tdkjgyYmrs4Eq`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Submission Assets**
+  - id: `fldo906P9t7nj9xmn`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Zoom Meetings**
+  - id: `fldXFQaclGkhzX19o`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblWcSHEm8vNNIxyB","linkedTableName":"Zoom Meetings","inverseLinkFieldId":"fldOi0gQkrvoBiuHs","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Week Key**
+  - id: `fldHpANf8BGrg64kb`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **XP Events copy**
+  - id: `fldL7WKpVKZtMmhZS`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Streak Occurrences**
+  - id: `fldxUGRr7iLw4WUVU`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9VxLdBiNcev4He","linkedTableName":"Streak Occurrences","inverseLinkFieldId":"fldmtG66BIfAPqtk3","inverseLinkFieldName":"Week","prefersSingleRecordLink":false,"isReversed":false}`
+- **Program Instance**
+  - id: `fldBsA60l4ONazDba`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblMfALZa4YYUy70P","linkedTableName":"Program Instance - Synced","inverseLinkFieldId":"fld1Vcr2wdEs7BftY","inverseLinkFieldName":"Weeks","prefersSingleRecordLink":true,"isReversed":false}`
+
+## Table: **Program Instance - Synced**
+
+- id: `tblMfALZa4YYUy70P`
+- primary field: **Name - Program Instance** (`fldrLB3z3EcgeLS72`)
+- role guess: `standard`
+- fields: `33`
+- link fields: `2`
+- computed fields: `0`
+- description: Synced source table for program instance records.
+
+Use this table as a reference source for linked program instance data used by Enrollments and related workflow records.
+
+Do not use this table for normal manual data entry unless the sync process is intentionally being replaced or repaired.
+
+### Fields
+
+- **Name - Program Instance**
+  - id: `fldrLB3z3EcgeLS72`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `True`
+- **Program - Linked**
+  - id: `fldYXOVK4BgbWdP8A`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Event - Linked**
+  - id: `fldyM4Gj74Hpm7vQj`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **School Year - Linked**
+  - id: `fldEQox8V8964YGhR`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Start Date**
+  - id: `fldpcPPBBmKw8v2xg`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **End Date**
+  - id: `fldg6KMb12xcdk9uY`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Registration Open**
+  - id: `fldBBH43hK1LwV1Z6`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Registration Closes**
+  - id: `fldrxwx2EVjrIYzJm`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Status**
+  - id: `fldIW9Ep1PPpH53fu`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Closed","Completed","In Progress","Inactive","Planning","Registering","Up Next"],"choicesDetailed":[{"id":"sel03vAJbgkHKzlR5","name":"Closed","color":"redBright"},{"id":"seltyXS3b1tsrJmf1","name":"Completed","color":"yellowLight2"},{"id":"sel1S1fuGfWCVnA3u","name":"In Progress","color":"grayLight2"},{"id":"selvGD9HmQvXI3klO","name":"Inactive","color":"greenBright"},{"id":"seljjIkxtGFlx4Id5","name":"Planning","color":"yellowBright"},{"id":"sel3CubivyH98FBns","name":"Registering","color":"blueBright"},{"id":"selT8bzFP7IOGcklC","name":"Up Next","color":"pinkBright"}]}`
+- **Cost**
+  - id: `fldCBsMM09VkmqmDO`
+  - type: `currency`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2,"symbol":"$"}`
+- **Season**
+  - id: `fldJXvQ8hHvlUFe1Q`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Fall","Shoulder","Spring","Summer","Winter","Fall/Winter/Spring"],"choicesDetailed":[{"id":"selpFGgojoZfFSK2n","name":"Fall","color":"orangeDark1"},{"id":"selT2K3d82TAQpwoS","name":"Shoulder","color":"yellowLight1"},{"id":"self8z5TmnMx0Sza9","name":"Spring","color":"greenBright"},{"id":"selfu6D3kSIuxd6jM","name":"Summer","color":"pinkBright"},{"id":"selUnRV6EKoHuNQeZ","name":"Winter","color":"blueBright"},{"id":"selILEr85UafOthUd","name":"Fall/Winter/Spring","color":"redLight2"}]}`
+- **Registration Required**
+  - id: `fldmJnrgLc7hujEQm`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"redBright"}`
+- **Price - Early Bird**
+  - id: `fld586b23QhrJCIPN`
+  - type: `currency`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2,"symbol":"$"}`
+- **Deadline - Early Bird**
+  - id: `fldUTuBd7kPYHNAws`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"}`
+- **Price - Regular**
+  - id: `fld5zktvS9kc9SUrQ`
+  - type: `currency`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2,"symbol":"$"}`
+- **Deadline - Regular Price**
+  - id: `fld5k390TYM0ll7YP`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"}`
+- **Price - Late**
+  - id: `fldXzFiEn9BQCoKJX`
+  - type: `currency`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2,"symbol":"$"}`
+- **Calendar Integration**
+  - id: `fldZE4LSdCeirrtgi`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Roster Group**
+  - id: `fldYpggT5TUiG9TDL`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Description**
+  - id: `fldUhKo0q9AJ67VNH`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Cover Image**
+  - id: `fldoBjUoDkBJjIOmk`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **QR - Registration**
+  - id: `fldCFhtTTZ3uDjTMa`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Program Code**
+  - id: `fldgjw0b4OF5Dbxa1`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["character","dribble","freethrow","shooting"],"choicesDetailed":[{"id":"sellweWTIRs62sBA3","name":"character","color":"tealLight2"},{"id":"sel8dUFMW4wiJpbvy","name":"dribble","color":"blueLight2"},{"id":"selFQ0xPcGxi2OHuv","name":"freethrow","color":"greenLight2"},{"id":"selGNx53wU1Lm0VP3","name":"shooting","color":"cyanLight2"}]}`
+- **Program Instance Key**
+  - id: `fldIvI3K0RhOFJKCJ`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Registration URL**
+  - id: `fldp7xrTqe1R0seSK`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Daily Submission URL**
+  - id: `fld4c6AyYxQMEH29y`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Welcome - Website URL**
+  - id: `fldnQTVvC8VxSRgu0`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Enrollments**
+  - id: `fldWuPJCPJebVdcBg`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldVMwSfH8r9S0afA","inverseLinkFieldName":"Program Instance","prefersSingleRecordLink":false,"isReversed":false}`
+- **Welcome - Subject Line**
+  - id: `fldi8RUj4IoVXoAdK`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Welcome - Intro Note**
+  - id: `fldprXB4nEftYx417`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Why This Matters**
+  - id: `fldLljmlGq7UwYP3h`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Award Recipients**
+  - id: `fld82bOsQ2CLs0IaU`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Weeks**
+  - id: `fld1Vcr2wdEs7BftY`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldBsA60l4ONazDba","inverseLinkFieldName":"Program Instance","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **School - Synced**
+
+- id: `tblyAJ36QvA7Wa2gU`
+- primary field: **Name** (`fldjX2tzJYOSJZaVc`)
+- role guess: `standard`
+- fields: `31`
+- link fields: `1`
+- computed fields: `0`
+- description: Synced source table for school records.
+
+Use this table as the reference source for school data linked into Enrollments and other operational tables.
+
+Do not use this table for normal manual data entry unless the sync process is intentionally being replaced or repaired.
+
+### Fields
+
+- **Name**
+  - id: `fldjX2tzJYOSJZaVc`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **State**
+  - id: `fldKdrgVdcy97c41a`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["ID","MT","ND","OR","SD","WA","WY"],"choicesDetailed":[{"id":"selMZ2jHxjMXcZxHX","name":"ID","color":"cyanLight2"},{"id":"selsNWZp1Xnh4KIzI","name":"MT","color":"blueLight2"},{"id":"selaAvqV49Uma70mo","name":"ND","color":"orangeLight2"},{"id":"selwAYdRouOJTMNJM","name":"OR","color":"greenLight2"},{"id":"sel7x677mQw5BoL0t","name":"SD","color":"redLight2"},{"id":"selBGkQoi4sjCozIu","name":"WA","color":"tealLight2"},{"id":"selR3ZQ8soUNyPZ88","name":"WY","color":"yellowLight2"}]}`
+- **School Level**
+  - id: `fldsYASCIVg0loAxy`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Elementary","Junior High","Middle School","High School","HS","JH/MS"],"choicesDetailed":[{"id":"sel7Qt6MRGHQNDqqD","name":"Elementary","color":"blueLight2"},{"id":"seloYt1BeEHGUPK2l","name":"Junior High","color":"yellowLight2"},{"id":"seli1nEEfbSZhDh1j","name":"Middle School","color":"tealLight2"},{"id":"selJF3ab3AjxW96c9","name":"High School","color":"redLight1"},{"id":"selrBhgqBpSrQo8l3","name":"HS","color":"blueLight2"},{"id":"selL8quBGpPakgHhJ","name":"JH/MS","color":"cyanLight2"}]}`
+- **Classification**
+  - id: `fldbt9gE9huSdSokt`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["AA","A","B","C","D","3A","2A","4A","1A","5A","6A"],"choicesDetailed":[{"id":"sellndtDGwIHwIJfG","name":"AA","color":"redDark1"},{"id":"sel5U8uGjxUiv18GU","name":"A","color":"blueBright"},{"id":"sel72nPTjI0yipaGA","name":"B","color":"greenBright"},{"id":"selnzx2L2JLlIxigU","name":"C","color":"yellowBright"},{"id":"selOPXLJ1sFrG9N5j","name":"D","color":"blueLight2"},{"id":"selfR1NFXvNkHzvx2","name":"3A","color":"blueLight2"},{"id":"selYuf71pNlTYEJfr","name":"2A","color":"cyanLight2"},{"id":"selQ8lXwvI4olf10R","name":"4A","color":"tealLight2"},{"id":"selAPCvGKXdcqqqAR","name":"1A","color":"greenLight2"},{"id":"seli9zdfytMPNZSKy","name":"5A","color":"yellowLight2"},{"id":"sellApWDOP84yKoD2","name":"6A","color":"orangeLight2"}]}`
+- **Division**
+  - id: `fldpuvDFLRlQTK7G6`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Eastern AA","Western AA","Northeastern A","Northwestern A","Southeastern A","Southwestern A","Northern B","Southern B","Western B","Northern C","Eastern C","Southern C","Western C","Eastern A","Western A","I","II","III","IV","V","VI","NW District","NE District","SW District","SE District"],"choicesDetailed":[{"id":"selyxVtHL4MJEPO9z","name":"Eastern AA","color":"blueLight2"},{"id":"selL1ou13qTvFCWui","name":"Western AA","color":"cyanLight2"},{"id":"sel4YoPC6Pjzu7Q4B","name":"Northeastern A","color":"greenLight1"},{"id":"selEQYEzPZhEQ2fWy","name":"Northwestern A","color":"redBright"},{"id":"selWxfBIF8lhXFU7l","name":"Southeastern A","color":"grayLight1"},{"id":"selccgKgn4MySCr8e","name":"Southwestern A","color":"tealLight1"},{"id":"selfy978vr3ZzbWEH","name":"Northern B","color":"orangeLight2"},{"id":"selQv3wFCkQgC8vrv","name":"Southern B","color":"redLight2"},{"id":"selvO7TywyTz9r5Qn","name":"Western B","color":"pinkLight2"},{"id":"selFKt4nteAIrSYSR","name":"Northern C","color":"purpleLight2"},{"id":"selh7sD7Pw6AN7qmV","name":"Eastern C","color":"blueLight1"},{"id":"selmk4bFPZc2g9SvY","name":"Southern C","color":"cyanLight1"},{"id":"selAvObEkZrl4vIsm","name":"Western C","color":"grayLight2"},{"id":"selqiUZcvuCYr14hv","name":"Eastern A","color":"tealLight2"},{"id":"sel1kzAXKPxw9qQ0v","name":"Western A","color":"greenLight2"},{"id":"selkZoM6LMvYfOwyO","name":"I","color":"yellowLight2"},{"id":"selhxmvl6SzldiTuB","name":"II","color":"orangeLight2"},{"id":"selcdFKbOkXH32oTE","name":"III","color":"tealLight2"},{"id":"selUrahuixfYwFjfr","name":"IV","color":"greenLight2"},{"id":"selhTJnnhiT12bXKO","name":"V","color":"blueLight2"},{"id":"seleIEzsFR7QwGd2I","name":"VI","color":"cyanLight2"},{"id":"selg3V0r1h74O3Oq9","name":"NW District","color":"blueLight2"},{"id":"selgdiTYW3NHU0QtU","name":"NE District","color":"cyanLight2"},{"id":"selORDub9EtiizeTW","name":"SW District","color":"tealLight2"},{"id":"sellArEVn22D9pgDU","name":"SE District","color":"greenLight2"}]}`
+- **District**
+  - id: `fld89SDeM7OI18FR3`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["6-C","13-C","6-B","10-C","2-C","3-B","Southwest A","8-C","9-C","Northwest A","Southeast A","5-C","5-B","4-C","1-B","3-C","4-B","Northeast A","2-B","12-C","7-B","14-C"],"choicesDetailed":[{"id":"selI1hnlMmlR9gnhC","name":"6-C","color":"blueLight2"},{"id":"selOskwDZj4lAt2Ak","name":"13-C","color":"cyanLight2"},{"id":"selVZ7CH07nYYw5fq","name":"6-B","color":"tealLight2"},{"id":"selIKTEBYfWcpaj9m","name":"10-C","color":"greenLight2"},{"id":"selxJvw48FD0vSlDg","name":"2-C","color":"yellowLight2"},{"id":"selVQJtrCG1KyrPrx","name":"3-B","color":"orangeLight2"},{"id":"selxFdPd48cEYrOcd","name":"Southwest A","color":"redLight2"},{"id":"selNHSUhR39AoDxUM","name":"8-C","color":"pinkLight2"},{"id":"seld5Vm7MCHume6DV","name":"9-C","color":"purpleLight2"},{"id":"selS94atfhGkMOI55","name":"Northwest A","color":"grayLight2"},{"id":"sel1q5MIH7tJ8vITj","name":"Southeast A","color":"blueLight1"},{"id":"sel7CbuRG31oVjO6e","name":"5-C","color":"cyanLight1"},{"id":"selfMM8y5Czyxpkf1","name":"5-B","color":"tealLight1"},{"id":"selPLl19UiEbTIE66","name":"4-C","color":"greenLight1"},{"id":"selsw6yZu8x4Bpc9U","name":"1-B","color":"yellowLight1"},{"id":"selvwuH0dvQz6USwI","name":"3-C","color":"orangeLight1"},{"id":"selwf3E0EEq8hTvss","name":"4-B","color":"redLight1"},{"id":"sell1c8aDDJakHDn7","name":"Northeast A","color":"pinkLight1"},{"id":"selXtx7vlmYx2aoDj","name":"2-B","color":"purpleLight1"},{"id":"selghBaEc2b1cGTbg","name":"12-C","color":"grayLight1"},{"id":"seluXJqTVGonI39Ez","name":"7-B","color":"blueBright"},{"id":"selJ5wZojnCMZ9RkO","name":"14-C","color":"cyanBright"}]}`
+- **Colors**
+  - id: `fldSJKRyzZkNcwjFH`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Black/Gold","Black/Green/Gold","Black/Orange","Black/Orange/White","Black/Silver/Orange","Black/Turquoise/White","Black/White/Gold","Black/Yellow","Blue/Black","Blue/Black/Silver","Blue/Gold","Blue/Gold/Black","Blue/Gold/White","Blue/Green","Blue/Green/White","Blue/Silver","Blue/White","Blue/White/Black","Blue/White/Red","Brown/Gold","Cardinal Red/Black","Cardinal Red/White","Cardinal/Silver/White","Cardinal/White","Columbia Blue/White","Forest Green/Vegas Gold","Gold/Black","Green/Blue","Green/Gold","Green/White","Green/White/Black","Green/Yellow","Hunter Green/White","Kelly Green/Black/White","Kelly Green/Gold","Kelly Green/Gold/White","Kelly Green/White","Kelly Green/White/Black","Maroon/Black","Maroon/Gold","Maroon/Gold/White","Maroon/White","Maroon/White/Black","Maroon/White/Gold","Maroon/White/Silver","Metallic Blue/Red/White","Navy Blue/Gold","Navy Blue/Kelly Green","Orange/Black","Orange/Black/White","Orange/Turquoise","Purple/Gold","Purple/Gold/White","Purple/White","Purple/White/Black","Purple/White/Gold","Purple/White/Gray","Red/Black","Red/Black/White","Red/Gold/White","Red/Orange","Red/White","Red/White/Black","Red/White/Blue","Red/White/Navy Blue","Royal Blue/Black","Royal Blue/Black/Gold","Royal Blue/Gold","Royal Blue/Red/White","Royal Blue/Scarlett","Royal Blue/Silver","Royal Blue/Vegas Gold","Royal Blue/White","Royal/Scarlet/White","Scarlet Red/White","Scarlet/Gold","Scarlet/White","Silver/Navy Blue","ID"],"choicesDetailed":[{"id":"selzderI6rSvztKBM","name":"Black/Gold","color":"grayDark1"},{"id":"selKzdx2atDbtp1No","name":"Black/Green/Gold","color":"pinkLight1"},{"id":"selMKDOusM9xALjJp","name":"Black/Orange","color":"pinkLight1"},{"id":"selscKCdfzSZoRdZL","name":"Black/Orange/White","color":"purpleLight1"},{"id":"selh0tHi6d30oof2v","name":"Black/Silver/Orange","color":"grayLight1"},{"id":"seluxVwDKqQIVv0D7","name":"Black/Turquoise/White","color":"blueLight2"},{"id":"sels3a1SUCmLtL3lU","name":"Black/White/Gold","color":"orangeLight2"},{"id":"selrhrz0K0p8qRB54","name":"Black/Yellow","color":"yellowDark1"},{"id":"selGlRhYKQR1IIcGp","name":"Blue/Black","color":"greenLight2"},{"id":"selTYqU5EUBJEACXz","name":"Blue/Black/Silver","color":"yellowBright"},{"id":"seliblbeUc09rF5Bm","name":"Blue/Gold","color":"greenLight1"},{"id":"selZVElgV2jHvpHXA","name":"Blue/Gold/Black","color":"pinkLight2"},{"id":"selhtXToDPvYcBxk2","name":"Blue/Gold/White","color":"blueDark1"},{"id":"selKTAuSIVfP1y52S","name":"Blue/Green","color":"purpleDark1"},{"id":"selfklroQI5oiReTz","name":"Blue/Green/White","color":"redDark1"},{"id":"sellcwBCOjuVAY1fY","name":"Blue/Silver","color":"tealLight2"},{"id":"sel3DlY411oeofYVO","name":"Blue/White","color":"yellowLight1"},{"id":"selvSSNCNvItCy2bL","name":"Blue/White/Black","color":"greenBright"},{"id":"selBDHv5MdWhP9GH5","name":"Blue/White/Red","color":"purpleBright"},{"id":"seleJzNHBuWGCsLDA","name":"Brown/Gold","color":"orangeBright"},{"id":"selFJMdue8Yz6BHrX","name":"Cardinal Red/Black","color":"purpleLight2"},{"id":"sel6WGz416nN58Exn","name":"Cardinal Red/White","color":"grayLight2"},{"id":"selH7RmPqtibe1u46","name":"Cardinal/Silver/White","color":"pinkDark1"},{"id":"selwnw0loog0nKvr0","name":"Cardinal/White","color":"grayBright"},{"id":"selgRbn3Izm9B7DXe","name":"Columbia Blue/White","color":"yellowLight1"},{"id":"selNO7NpjBGQf0V3p","name":"Forest Green/Vegas Gold","color":"blueLight1"},{"id":"selbCPTvC1HTEXgum","name":"Gold/Black","color":"blueBright"},{"id":"selzwg1X5pRdiErUP","name":"Green/Blue","color":"cyanLight1"},{"id":"selVQL84kHPaycN1k","name":"Green/Gold","color":"cyanDark1"},{"id":"selBrPMi9CNB1qeaS","name":"Green/White","color":"tealLight1"},{"id":"selEhcHLSMBAUPM2q","name":"Green/White/Black","color":"redLight1"},{"id":"selP6AxePdOZBiVl5","name":"Green/Yellow","color":"redBright"},{"id":"selueRGe8dLpGFVEw","name":"Hunter Green/White","color":"grayLight1"},{"id":"selucZr7fgD1cWbWt","name":"Kelly Green/Black/White","color":"purpleLight2"},{"id":"selCyLsJSq03NvKVW","name":"Kelly Green/Gold","color":"orangeLight1"},{"id":"selSkkwI0t1aMBBBW","name":"Kelly Green/Gold/White","color":"orangeDark1"},{"id":"sel5MuJhH2h397nzs","name":"Kelly Green/White","color":"greenDark1"},{"id":"selftK9zsAPIYJP1k","name":"Kelly Green/White/Black","color":"redLight2"},{"id":"sel7EqnwI3zEhouP3","name":"Maroon/Black","color":"tealBright"},{"id":"sel3WSBLCsuNQ01yF","name":"Maroon/Gold","color":"redLight1"},{"id":"selInlEhUa7IbLUUy","name":"Maroon/Gold/White","color":"grayLight2"},{"id":"selybQOpbtDWQKFRi","name":"Maroon/White","color":"pinkLight2"},{"id":"sel2AvCyhT0OAYq2P","name":"Maroon/White/Black","color":"greenBright"},{"id":"sel2z434AMW4su01b","name":"Maroon/White/Gold","color":"orangeLight1"},{"id":"selT9aNV2H0wSN6wM","name":"Maroon/White/Silver","color":"cyanBright"},{"id":"selEpNlo9OBCDHgpp","name":"Metallic Blue/Red/White","color":"grayBright"},{"id":"sel8QGRqhzmUut3hM","name":"Navy Blue/Gold","color":"yellowDark1"},{"id":"selbTh8IDXw4Pz8hK","name":"Navy Blue/Kelly Green","color":"cyanBright"},{"id":"selF7kO6yAaK4i6Kv","name":"Orange/Black","color":"pinkBright"},{"id":"selqCbVkQRoExvhoE","name":"Orange/Black/White","color":"yellowLight2"},{"id":"selUOoLl8jgM2ceCl","name":"Orange/Turquoise","color":"blueDark1"},{"id":"selWv7H1YwPyCrrnz","name":"Purple/Gold","color":"purpleLight1"},{"id":"selaIC6KkkQ74gQMs","name":"Purple/Gold/White","color":"redDark1"},{"id":"selTT0sk6JeAA7wiY","name":"Purple/White","color":"blueLight1"},{"id":"selS4NQznTEDbtfGt","name":"Purple/White/Black","color":"tealBright"},{"id":"seltZCYbPLl2dQBgH","name":"Purple/White/Gold","color":"yellowBright"},{"id":"selbUexlvpbYiDQLk","name":"Purple/White/Gray","color":"greenLight2"},{"id":"selBTnby5t7seqBpB","name":"Red/Black","color":"blueLight2"},{"id":"sel0XQfgFyl5el6wz","name":"Red/Black/White","color":"redLight2"},{"id":"sel2oNqHOeDv71nbr","name":"Red/Gold/White","color":"orangeDark1"},{"id":"sel8DRrmjVeUVlGMU","name":"Red/Orange","color":"tealLight1"},{"id":"selKxtl33nKuGGbOd","name":"Red/White","color":"redBright"},{"id":"sel7p4E1s1ZcRQaYo","name":"Red/White/Black","color":"yellowLight2"},{"id":"sel6fMoCuCJSYFc4Y","name":"Red/White/Blue","color":"pinkBright"},{"id":"seld1mJ2ezcBKYvnA","name":"Red/White/Navy Blue","color":"greenLight1"},{"id":"selz4yu4boesa3TDj","name":"Royal Blue/Black","color":"pinkDark1"},{"id":"sel4AjDnlu3mdKyxQ","name":"Royal Blue/Black/Gold","color":"greenDark1"},{"id":"sel0q0McDQR9IDV5T","name":"Royal Blue/Gold","color":"cyanLight2"},{"id":"selzlv1kjqsNs0Mwy","name":"Royal Blue/Red/White","color":"tealDark1"},{"id":"selJcSgHL6ZhUZL2Q","name":"Royal Blue/Scarlett","color":"cyanLight2"},{"id":"selRURNYfCXRHwFUM","name":"Royal Blue/Silver","color":"orangeLight2"},{"id":"selO0nCJyt2NeFO47","name":"Royal Blue/Vegas Gold","color":"cyanDark1"},{"id":"selR6yGacMwm6swD5","name":"Royal Blue/White","color":"cyanLight1"},{"id":"selqrmQ8zOAzoO8tS","name":"Royal/Scarlet/White","color":"orangeBright"},{"id":"selCP77D0da8QJQg7","name":"Scarlet Red/White","color":"blueBright"},{"id":"selL6xlYyZAW29SnZ","name":"Scarlet/Gold","color":"purpleBright"},{"id":"selwAoKoxacaSbAmL","name":"Scarlet/White","color":"tealLight2"},{"id":"sel9EyYN8SEgJiy1C","name":"Silver/Navy Blue","color":"tealDark1"},{"id":"sel4y4goIC7reLryb","name":"ID","color":"blueLight2"}]}`
+- **Song**
+  - id: `fldLTYTIIa1QHi8ti`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Air Force","Air Force Fight Song","All Hail Central","Anchors Away","Anchors Aweigh","BCCHS School Song","Big Sky Scream","Bison Fight","Blue and White","Bozeman High Fight Song","Bridger Loyalty","College Boy","Colstrip Loyalty Song","Columbia","Far Above Cayugas Water","Frenchtown Broncs","Gillette Look Sharp","Go Big Horns","Go Glacier","Go Northwestern","Go Northwestern Go","Go U Northwestern","Go Ye Northwestern","Hail (to the Victors)","Hail Dawson High","Hail Team","Hail to the Varsity","Hail to the Victors","Hail West Virginia","Hamilton Fight Song","Here's to Powell Co. HS","Honor Song","Illinois Fight Song","Illinois Loyalty","Irish Backs Go Marching","Legionnaires on Parade","Let's Talk About Jesus","Magnificent Seven","Minnesota Rouser","Minnesota Rouser ","My Bonnie Lassie","New Colonial March","Nortre Dame Victory","Notre Dame Fight Song","Notre Dame Victory","Notre Dame Victory Marc","Notre Dame Victory Song","On for Winifred","On Loyola","ON Wisconsin","On Wisconsin","Our Director","Park High Fight Song","Plains Fight Song","Rebel Fight Song","Round & Round","Saints go Marching in","St Regis School Song","Stand Up and Cheer","Stand Up Superior","Stars & Stripes Forever","Stein Song","The Cardinal","Fight Song","The Victors","The Victory","Up With Montana","Victors","WA State Fight Song","Washington & Lee","Washington & Lee Swing","Washington Lee","Washington & Lee Swing","Wave the Flag"],"choicesDetailed":[{"id":"seleN4Wsk3Jev6uw6","name":"Air Force","color":"cyanLight1"},{"id":"selrYj2O1Wc6UKd95","name":"Air Force Fight Song","color":"greenDark1"},{"id":"sel4OJgemxWx8YZd9","name":"All Hail Central","color":"redLight1"},{"id":"selvVzlhXdqRCCDoo","name":"Anchors Away","color":"cyanDark1"},{"id":"seleIZJVKMnIrl0rJ","name":"Anchors Aweigh","color":"purpleLight1"},{"id":"selro6KMGhFDP3z0X","name":"BCCHS School Song","color":"grayLight2"},{"id":"selgHO87Oh6YmhUG5","name":"Big Sky Scream","color":"redLight1"},{"id":"sel7Ca8zzOQ2X7QSU","name":"Bison Fight","color":"purpleDark1"},{"id":"selZeRf4SJywxzq8D","name":"Blue and White","color":"yellowLight1"},{"id":"seltvJugCDBEzfT1k","name":"Bozeman High Fight Song","color":"greenLight1"},{"id":"selkiB5avjcWMaQ35","name":"Bridger Loyalty","color":"yellowLight1"},{"id":"sels20tBcCJE2NLiw","name":"College Boy","color":"orangeLight1"},{"id":"selTuZGqtVdpo1I49","name":"Colstrip Loyalty Song","color":"blueBright"},{"id":"sel7ytik3bWC5qnqn","name":"Columbia","color":"purpleBright"},{"id":"selCPykic338DvUlz","name":"Far Above Cayugas Water","color":"grayLight1"},{"id":"sel0c28FPqf19LV3x","name":"Frenchtown Broncs","color":"tealDark1"},{"id":"selgz3gvhhFnHjwoi","name":"Gillette Look Sharp","color":"tealLight1"},{"id":"selJC3MXn8SODsfKI","name":"Go Big Horns","color":"tealLight1"},{"id":"seluRb71c7eq1uuvq","name":"Go Glacier","color":"yellowDark1"},{"id":"seli3lL1M1OteQC5Y","name":"Go Northwestern","color":"cyanDark1"},{"id":"selal7G7kAOQ7HVBW","name":"Go Northwestern Go","color":"pinkBright"},{"id":"seloZpF1BgTDoIYRb","name":"Go U Northwestern","color":"grayLight1"},{"id":"selbqljjb2ksXIe6o","name":"Go Ye Northwestern","color":"cyanBright"},{"id":"selcKm62heJ9mfJva","name":"Hail (to the Victors)","color":"blueLight1"},{"id":"selx7dsbSrgRwAAnb","name":"Hail Dawson High","color":"orangeBright"},{"id":"selxYFgfanQcDnRoR","name":"Hail Team","color":"grayLight2"},{"id":"selhmcnSwf1k0QA87","name":"Hail to the Varsity","color":"blueLight2"},{"id":"selt5fsuoaCfOGQuJ","name":"Hail to the Victors","color":"orangeBright"},{"id":"selL0x75M03Cc785F","name":"Hail West Virginia","color":"cyanLight2"},{"id":"selzZlWaWyj6UekHd","name":"Hamilton Fight Song","color":"grayDark1"},{"id":"sel5LJnTksRrwtpkZ","name":"Here's to Powell Co. HS","color":"yellowBright"},{"id":"sel0Jw60PKzLyUClV","name":"Honor Song","color":"tealDark1"},{"id":"selLRd8w4D3QUjTrZ","name":"Illinois Fight Song","color":"orangeDark1"},{"id":"selNjYezWGfWEV9Nb","name":"Illinois Loyalty","color":"cyanLight2"},{"id":"selt5PeJQdDpa9MKa","name":"Irish Backs Go Marching","color":"blueBright"},{"id":"sel6O3I97dcTB4Zdm","name":"Legionnaires on Parade","color":"yellowLight2"},{"id":"selWMacoFQDAXoBvn","name":"Let's Talk About Jesus","color":"yellowDark1"},{"id":"selUAv6jjbEBBP2gS","name":"Magnificent Seven","color":"pinkDark1"},{"id":"sel2IcpuP7FM8aLmm","name":"Minnesota Rouser","color":"purpleLight2"},{"id":"sel1JST4gePjO6Ya0","name":"Minnesota Rouser ","color":"redLight2"},{"id":"sel9TYysEsa85P6oO","name":"My Bonnie Lassie","color":"orangeDark1"},{"id":"selHsNQTMg7AMRt2y","name":"New Colonial March","color":"greenDark1"},{"id":"sel4SgCLAGSGgytU5","name":"Nortre Dame Victory","color":"purpleLight2"},{"id":"selCbRg4RjSKRDnB5","name":"Notre Dame Fight Song","color":"blueLight1"},{"id":"sel0SpwsNHobI3yfQ","name":"Notre Dame Victory","color":"greenLight2"},{"id":"selMFwoLwYnWzZHsN","name":"Notre Dame Victory Marc","color":"orangeLight1"},{"id":"selcNihIMYO04DRQE","name":"Notre Dame Victory Song","color":"purpleBright"},{"id":"selnPt5sqNzuHfUyT","name":"On for Winifred","color":"redDark1"},{"id":"selNanTcBKX4Q40NL","name":"On Loyola","color":"greenLight1"},{"id":"selftaRNexyBl52if","name":"ON Wisconsin","color":"yellowBright"},{"id":"seludq8mbgOuCspfj","name":"On Wisconsin","color":"blueLight2"},{"id":"selO63Fdt1yjvZoyf","name":"Our Director","color":"pinkLight2"},{"id":"selNGZI2veMXUUJPW","name":"Park High Fight Song","color":"cyanBright"},{"id":"selKH4MnZf5RZc4VJ","name":"Plains Fight Song","color":"tealBright"},{"id":"selXVwOqrjrA1KBrN","name":"Rebel Fight Song","color":"pinkBright"},{"id":"selycpq58POkvbYAY","name":"Round & Round","color":"tealLight2"},{"id":"selzSeEGUWS5TB6hP","name":"Saints go Marching in","color":"orangeLight2"},{"id":"sel6YOoJugjlNB4Wd","name":"St Regis School Song","color":"redBright"},{"id":"selVsGW5UWIH75dR9","name":"Stand Up and Cheer","color":"tealLight2"},{"id":"selyI5TFiuMGfgS8j","name":"Stand Up Superior","color":"grayBright"},{"id":"selpcZO0FHAr45Esd","name":"Stars & Stripes Forever","color":"redBright"},{"id":"selJV41isRSONqXOx","name":"Stein Song","color":"orangeLight2"},{"id":"seldAHlQoFKKOEfTc","name":"The Cardinal","color":"purpleLight1"},{"id":"selTwbRoTVWkYVV6C","name":"Fight Song","color":"pinkLight1"},{"id":"sel1vqNSOJAf2lawi","name":"The Victors","color":"pinkLight2"},{"id":"selBZrwibAMUeRkVH","name":"The Victory","color":"cyanLight1"},{"id":"selzzBJdhvql3YbSs","name":"Up With Montana","color":"redLight2"},{"id":"sellKew5TgY2MP3KP","name":"Victors","color":"blueDark1"},{"id":"selH0OzgWAqJCvsLT","name":"WA State Fight Song","color":"greenBright"},{"id":"selz9hUyDszHYbjiK","name":"Washington & Lee","color":"grayBright"},{"id":"selj824dyzifUiGrr","name":"Washington & Lee Swing","color":"tealBright"},{"id":"seluAKl3lltZvELiq","name":"Washington Lee","color":"greenLight2"},{"id":"selFiuT6C3yvjBAfZ","name":"Washington & Lee Swing","color":"redDark1"},{"id":"selj3KnWSe1jEH3xL","name":"Wave the Flag","color":"greenBright"}]}`
+- **Nickname**
+  - id: `fldBiSQI4Tuoq9PdM`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Badgers","Bats","Bearcubs","Bears","Beavers","Bengals","Big Horns","Bison","Blackhawks","Blue Demons","Blue Devils","Blue Hawks","Blue Ponies","Bobcats","Braves/Bravettes","Braves/Lady Braves","Broncs","Bruins","Bulldogs","Chiefs","Colts/Fillies","Copperheads","Cougars","Cowboys/Cowgirls","Coyotes","DiamondBacks","Dogies","Eagles","Elk","Engineers","Falcons","Fusion","Golden Bears","Golden Eagles","Hawks","Hornets","Horsemen/Trotters","Huskies","Indians","J-Hawks","Knights","Lions","Locomotives","Loggers","Longhorns","Lynx","Maroons","Miners","Morning Stars","Mountaineers","Mustangs","Mustangs/M-ettes","Outlaws","Panthers","Penguins","Pioneers","Pirates","Porcupines","Prospectors","Raiders","Rams","Rams/Breakers","Rangers","Rebels","Red Devils","Red Hawks","Redhawks","Refiners","Renegades","Rockets","Royal Lions","Rustlers","Savage Heat","Scotties","Scouts","Sheepherders","Spartans","Stars","Sugarbeeters","Terriers","Thunder","Thunderbirds","Tigers","Tornadoes","Trojans","Vikings","Vikings/Valkyries","Wardens","Warriors","Warriors/Scarlets","Wildcats","Wolfpack","Wolverines","Wolves","Wranglers","Yellowjackets","Raptors","Vigilantes","Cubs","Buccaneers","Unicorns","Dinomites"],"choicesDetailed":[{"id":"sel4AqZJN8FkHZLZK","name":"Badgers","color":"tealBright"},{"id":"self1VjWeQMVuYIwU","name":"Bats","color":"purpleLight2"},{"id":"selLe7aAOLZqZO6iM","name":"Bearcubs","color":"yellowLight2"},{"id":"selSyYzNJhiZZgGZ9","name":"Bears","color":"orangeLight1"},{"id":"seltuIXcyH0YhcYEJ","name":"Beavers","color":"pinkLight2"},{"id":"selLxGhgprgDPn3XB","name":"Bengals","color":"pinkLight1"},{"id":"seltvW8fp1gHskmhq","name":"Big Horns","color":"grayBright"},{"id":"selstFAnDJ4sQYeK9","name":"Bison","color":"tealLight1"},{"id":"selxVvr1q8kEhQbHA","name":"Blackhawks","color":"redLight2"},{"id":"selSUuwtjFeT1U87h","name":"Blue Demons","color":"yellowLight2"},{"id":"selRfW3ZiuE1PVNBX","name":"Blue Devils","color":"blueDark1"},{"id":"selatHJ1pZv1EJi84","name":"Blue Hawks","color":"tealLight1"},{"id":"selEdIa6roYmwjJwR","name":"Blue Ponies","color":"orangeLight1"},{"id":"selEgx54crrDuFJWL","name":"Bobcats","color":"grayLight2"},{"id":"seljeJgJz6r3a2mWl","name":"Braves/Bravettes","color":"cyanLight2"},{"id":"selftLqYS9g3RmtXB","name":"Braves/Lady Braves","color":"orangeLight2"},{"id":"selPbpv1IYPqEDSTy","name":"Broncs","color":"tealLight1"},{"id":"selc3KIhMSDgXzWQn","name":"Bruins","color":"redLight2"},{"id":"seljs82WSW8rxSw2Q","name":"Bulldogs","color":"yellowDark1"},{"id":"selOaGeZYoDZnHW31","name":"Chiefs","color":"tealLight2"},{"id":"selam1qusgxRZ9Gap","name":"Colts/Fillies","color":"pinkBright"},{"id":"selcgR90bISSnbiac","name":"Copperheads","color":"tealLight2"},{"id":"seliEl4ksYuGbysKC","name":"Cougars","color":"purpleBright"},{"id":"sel9wwTQdmGo95M8y","name":"Cowboys/Cowgirls","color":"grayBright"},{"id":"selhgy0MshPKMZdaa","name":"Coyotes","color":"redDark1"},{"id":"selHWr5NNytveU49B","name":"DiamondBacks","color":"pinkDark1"},{"id":"selDJRbSO7EDmzhTh","name":"Dogies","color":"tealLight2"},{"id":"sel9uOvG6uktCi0IP","name":"Eagles","color":"grayDark1"},{"id":"selPiul3RHSYMhSb6","name":"Elk","color":"yellowLight2"},{"id":"seleUfPCkxmPWh9bA","name":"Engineers","color":"yellowLight1"},{"id":"selC96yrCFTjaM6Lw","name":"Falcons","color":"greenLight1"},{"id":"selDjNLJr1LWxRApW","name":"Fusion","color":"greenBright"},{"id":"selAnbl8h5wT0fcsV","name":"Golden Bears","color":"yellowLight1"},{"id":"selTMOxR8t3pRqqtf","name":"Golden Eagles","color":"blueLight2"},{"id":"sellnRbstcADxMWz1","name":"Hawks","color":"redLight1"},{"id":"selYVSEArOO1jYM0B","name":"Hornets","color":"pinkLight1"},{"id":"selGbgHsyBPR15Wld","name":"Horsemen/Trotters","color":"redDark1"},{"id":"selfyOd0vjrB4TuxQ","name":"Huskies","color":"blueLight2"},{"id":"selHSHFNoskrQjJ7l","name":"Indians","color":"blueBright"},{"id":"sel2AMBbd4xYUQ2Gc","name":"J-Hawks","color":"tealBright"},{"id":"selpQIvVVgYoMYHhU","name":"Knights","color":"greenDark1"},{"id":"selQmjujTpBWMjY40","name":"Lions","color":"pinkBright"},{"id":"selvpxEGdHqPg8LGI","name":"Locomotives","color":"orangeBright"},{"id":"sel2huqm9t7OkIPyZ","name":"Loggers","color":"redBright"},{"id":"selGoZaqDh0j9Rfyu","name":"Longhorns","color":"greenLight2"},{"id":"selp0Qf5ZYKhoChS2","name":"Lynx","color":"purpleBright"},{"id":"selqTg8k6FgK6OQVU","name":"Maroons","color":"cyanBright"},{"id":"selZLal7KMi04uVVz","name":"Miners","color":"greenBright"},{"id":"selYXm8acsHFZwBJL","name":"Morning Stars","color":"yellowBright"},{"id":"selfI1jaa8fdnMXuR","name":"Mountaineers","color":"purpleLight1"},{"id":"selfCGnPBJ6oqadgJ","name":"Mustangs","color":"purpleDark1"},{"id":"selTt4O85j8niHeK1","name":"Mustangs/M-ettes","color":"cyanDark1"},{"id":"selyZIyXTtHf4L7ql","name":"Outlaws","color":"grayLight1"},{"id":"sel2o6ZYaNNx7X76r","name":"Panthers","color":"cyanLight2"},{"id":"selImEOOatYquLUqn","name":"Penguins","color":"purpleLight1"},{"id":"selZPOvD6wHiDojBW","name":"Pioneers","color":"grayLight2"},{"id":"selKmOB4mcYQjicRV","name":"Pirates","color":"purpleLight1"},{"id":"sel7oIeBKKT5KUQz4","name":"Porcupines","color":"orangeDark1"},{"id":"selo9Myf07if6dgPo","name":"Prospectors","color":"blueLight1"},{"id":"selN1s3i36JJNrB8N","name":"Raiders","color":"grayLight1"},{"id":"selcQjh5n4AFIdZDO","name":"Rams","color":"cyanLight1"},{"id":"selm6kryyfpxCSAH0","name":"Rams/Breakers","color":"blueDark1"},{"id":"selh1RWD8WWXR29n4","name":"Rangers","color":"cyanLight1"},{"id":"selnKjZ4PMcdPy7Rt","name":"Rebels","color":"cyanDark1"},{"id":"selKmJun40HKkXPTU","name":"Red Devils","color":"yellowDark1"},{"id":"selJjsmustLgwrgT5","name":"Red Hawks","color":"orangeLight2"},{"id":"selTytVJiYibmSPm4","name":"Redhawks","color":"tealDark1"},{"id":"selIk144XGmInfV65","name":"Refiners","color":"purpleLight2"},{"id":"selPYGMRHT9Ul0vPW","name":"Renegades","color":"purpleDark1"},{"id":"selcsXSrBlw6tFxJC","name":"Rockets","color":"blueLight2"},{"id":"sel3VDwCODQsPQY1o","name":"Royal Lions","color":"grayDark1"},{"id":"selXgLLCpzkfCxsET","name":"Rustlers","color":"greenLight1"},{"id":"sellqVUFMbyqV2rtN","name":"Savage Heat","color":"blueBright"},{"id":"selS80hsavOlmhjte","name":"Scotties","color":"grayLight2"},{"id":"selW7RMisB4WO3Bu5","name":"Scouts","color":"pinkLight1"},{"id":"selQbrQpHrVGaqAXl","name":"Sheepherders","color":"blueLight1"},{"id":"seljd9jXM6FdXg7UX","name":"Spartans","color":"redLight2"},{"id":"selN1AIY7pNO2RZf4","name":"Stars","color":"cyanLight2"},{"id":"selQQyXbY3SbXqMx3","name":"Sugarbeeters","color":"orangeBright"},{"id":"selTqqVYDTaknMD7H","name":"Terriers","color":"cyanLight1"},{"id":"selHHa7qfBKlZruNc","name":"Thunder","color":"redLight1"},{"id":"selCzxjI5y7hufxTM","name":"Thunderbirds","color":"redLight1"},{"id":"selzar1MFsuWYdxUS","name":"Tigers","color":"greenDark1"},{"id":"selJTtrGIqD0an4w0","name":"Tornadoes","color":"yellowLight1"},{"id":"selNsTfOHT5KkRXLI","name":"Trojans","color":"orangeDark1"},{"id":"selDqwF3GJSgpHdnK","name":"Vikings","color":"yellowBright"},{"id":"selVyvaBqxa7aFhbX","name":"Vikings/Valkyries","color":"blueLight1"},{"id":"selyi7AmEkvmUKrMa","name":"Wardens","color":"pinkDark1"},{"id":"selaHIHS9u2H7HSHG","name":"Warriors","color":"grayLight1"},{"id":"selu2OV2sJ15XkCug","name":"Warriors/Scarlets","color":"greenLight2"},{"id":"selVnnUwKvUuJSimE","name":"Wildcats","color":"redBright"},{"id":"selQisRZ3ELJ4JOMt","name":"Wolfpack","color":"purpleLight2"},{"id":"selQuVBYoHITI93Vn","name":"Wolverines","color":"orangeLight1"},{"id":"sel32VLipxSyC60iG","name":"Wolves","color":"tealDark1"},{"id":"selUzVtEbseADJllB","name":"Wranglers","color":"pinkLight2"},{"id":"sel6YF4P5LUiczaPN","name":"Yellowjackets","color":"pinkLight2"},{"id":"selpRvxoYI5AjRsTn","name":"Raptors","color":"cyanBright"},{"id":"selNDZ6KhTDHF4ZJF","name":"Vigilantes","color":"yellowDark1"},{"id":"selLjuSbfiyX6CIC0","name":"Cubs","color":"greenDark1"},{"id":"selC7DDCJxOKM2KlY","name":"Buccaneers","color":"grayDark1"},{"id":"sela2QYGa280qMDJd","name":"Unicorns","color":"blueDark1"},{"id":"sel65pSh0m8Q4r4d0","name":"Dinomites","color":"orangeLight2"}]}`
+- **Mascot**
+  - id: `fldQU5l6GZ5DbHfxd`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Website**
+  - id: `fldeaUIkJcKP0qn0t`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Zip**
+  - id: `fldLocyPq23cdbK4A`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **City**
+  - id: `fldhiCgiutE4Zz82t`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Physical Address**
+  - id: `fldVAATVVBWCfWupm`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Mailing Address**
+  - id: `fldSc8fJMs5z2HPKw`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Mailing Block**
+  - id: `fldTX9XZ2Lfymj1d1`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Mailing Address - Formatted**
+  - id: `fldwzONcOj2q5nwB7`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Physical Address - Formatted**
+  - id: `fldqHJGNJ78dnfZvh`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **School Phone**
+  - id: `fld7hwCGDmBUmo3ht`
+  - type: `phoneNumber`
+  - role: `contact`
+  - primary: `False`
+- **People**
+  - id: `fldhafhe1hpt6EflS`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Role Appointments - AD**
+  - id: `fldRj8ORXBNk0PpOZ`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Current Athletic Director**
+  - id: `fldKXb3jMH8YmHKPM`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Cell Number - Lookup**
+  - id: `fldj6IVgkeS9CWaHY`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Email - Lookup**
+  - id: `fldkBRvgwuEy0cQJY`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Name - Cleaned**
+  - id: `fld2pnXM3sPqK0ni8`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Facilities**
+  - id: `fldvsDjHUhAGXiugp`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Name - Display**
+  - id: `fldyh6zuatkpduCcn`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Team**
+  - id: `fldSWZ4VcsECnuPuY`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **JH League**
+  - id: `fldTZURXr9gS3HcnL`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["NMSAA"],"choicesDetailed":[{"id":"selrVzxZDEJgUi1Rg","name":"NMSAA","color":"blueLight2"}]}`
+- **Enrollments**
+  - id: `fld0FxgUyjzdIcxYx`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldfYnPg1lBV9Jlhi","inverseLinkFieldName":"School","prefersSingleRecordLink":false,"isReversed":false}`
+- **OLD - DELETE OK**
+  - id: `fld6J9l5Du6nYsj8G`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+
+## Table: **Weekly Athlete Summary**
+
+- id: `tbl9520d72adxlAKQ`
+- primary field: **Weekly Athlete Summary - Display** (`fldSjFnZpuBfkoCja`)
+- role guess: `summary`
+- fields: `101`
+- link fields: `9`
+- computed fields: `45`
+- description: Summary table for one athlete enrollment in one challenge week.
+
+Use this table to store weekly rollup and progress values tied to Enrollment, Week, and related challenge metrics.
+
+This table contains many computed fields and should be treated as a reporting / summary layer rather than raw activity entry.
+
+### Fields
+
+- **Weekly Athlete Summary - Display**
+  - id: `fldSjFnZpuBfkoCja`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldFx9VxabAod1DkZ","fldNUSqzr3H0PE5Ex","fld7CARd7rE7S3f8P"],"referencedFieldNames":["Full Name - From Enrollment - Display","Week","Grade Band"],"formula":"ARRAYJOIN({fldFx9VxabAod1DkZ}) & \" - \" & ARRAYJOIN({fldNUSqzr3H0PE5Ex}) & \" - \" & ARRAYJOIN({fld7CARd7rE7S3f8P})","fieldReferencesById":["fldFx9VxabAod1DkZ","fldNUSqzr3H0PE5Ex","fld7CARd7rE7S3f8P"],"fieldReferencesByName":["Full Name - From Enrollment - Display","Week","Grade Band"],"dependencySource":"metadata"}`
+- **XP Earned This Week**
+  - id: `fldIvSQR4O6a0jtsN`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld2i083lpc9jrfk8","recordLinkFieldName":"XP Events","fieldIdInLinkedTable":"fldGCVRPYV76R2pPH","fieldNameInLinkedTable":"Active XP Points","fieldTableInLinkedTable":"XP Events"}`
+- **XP Events**
+  - id: `fld2i083lpc9jrfk8`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"flddGQd4FJQNn0OkY","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":false,"isReversed":false}`
+- **Summary Key**
+  - id: `fldpgOrqgGkryjrdi`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldJG5q0ZibCkprwC","fldEBGRSNqMPE459s"],"referencedFieldNames":["Enrollment Key - Lkp","Week Key - Lkp"],"formula":"IF(\r\n  AND(\r\n    ARRAYJOIN({fldJG5q0ZibCkprwC}) != \"\",\r\n    ARRAYJOIN({fldEBGRSNqMPE459s}) != \"\"\r\n  ),\r\n  ARRAYJOIN({fldJG5q0ZibCkprwC}) & \"|\" & ARRAYJOIN({fldEBGRSNqMPE459s}),\r\n  \"\"\r\n)","fieldReferencesById":["fldJG5q0ZibCkprwC","fldEBGRSNqMPE459s"],"fieldReferencesByName":["Enrollment Key - Lkp","Week Key - Lkp"],"dependencySource":"metadata"}`
+- **Enrollment**
+  - id: `fldNH81lfwL5dBnAw`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldGMZrlmjEhzueQ5","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":true,"isReversed":false}`
+- **Full Name - From Enrollment - Display**
+  - id: `fldFx9VxabAod1DkZ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldnRDkfubz7p3gi4","fieldNameInLinkedTable":"Full Athlete Name - Backward","fieldTableInLinkedTable":"Enrollments"}`
+- **Athlete**
+  - id: `fld0VGe6Swc0vA3ze`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fld7TFNgzmESOhTOu","fieldNameInLinkedTable":"Athlete","fieldTableInLinkedTable":"Enrollments"}`
+- **Week**
+  - id: `fldNUSqzr3H0PE5Ex`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fld6YRmWGdKPQk8Vg","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":true,"isReversed":false}`
+- **Grade**
+  - id: `fldJfPaSIyESTaPph`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldqzUx0ZwsciCh95","fieldNameInLinkedTable":"Grade","fieldTableInLinkedTable":"Enrollments"}`
+- **Grade Band**
+  - id: `fld7CARd7rE7S3f8P`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldDFUmzJjKUGwBD7","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":true,"isReversed":false}`
+- **Goal Record**
+  - id: `fldNvhGv57qOqbsfN`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbleCfuAt3rY8unU3","linkedTableName":"Target Goal Shots","inverseLinkFieldId":"flduA37JFti7LODYH","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":true,"isReversed":false}`
+- **Homework**
+  - id: `fld3h3FZAoEVvDM4q`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"fldt2z0Lt95YbJ2kl","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":false,"isReversed":false}`
+- **Submissions**
+  - id: `fld1zvk4QAmdrYSUC`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldZXSYorbG7BdDEo","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":false,"isReversed":false}`
+- **Total Shots This Week**
+  - id: `fldR3esaWcZ7LmOrR`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld1zvk4QAmdrYSUC","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldAqC1oUKKFZdU3p","fieldNameInLinkedTable":"Total Shots Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Total Makes This Week**
+  - id: `fldGxsKbU51LY1P1K`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld1zvk4QAmdrYSUC","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldhePmUYZ4kCaWeq","fieldNameInLinkedTable":"Total Makes Counted","fieldTableInLinkedTable":"Submissions"}`
+- **Goal Shots Target**
+  - id: `fldY0WlLxwGh7WID5`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldNvhGv57qOqbsfN","recordLinkFieldName":"Goal Record","fieldIdInLinkedTable":"fldqxQzUHJnYpb93L","fieldNameInLinkedTable":"Total Shot Target","fieldTableInLinkedTable":"Target Goal Shots"}`
+- **Goal Completion %**
+  - id: `flda0ZXW1Bf7OvRAK`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"percent","resultOptions":{"precision":0},"referencedFieldIds":["fld9QMaqcgCzIAJhE","fldR3esaWcZ7LmOrR"],"referencedFieldNames":["Weekly Goal Shots Target","Total Shots This Week"],"formula":"IF(\r\n  {fld9QMaqcgCzIAJhE},\r\n  {fldR3esaWcZ7LmOrR} / {fld9QMaqcgCzIAJhE},\r\n  BLANK()\r\n)","fieldReferencesById":["fld9QMaqcgCzIAJhE","fldR3esaWcZ7LmOrR"],"fieldReferencesByName":["Weekly Goal Shots Target","Total Shots This Week"],"dependencySource":"metadata"}`
+- **Activity Dates**
+  - id: `fldFyPZN7A1qmxNg6`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fld1zvk4QAmdrYSUC","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fldpkkSBsx8kQRZos","fieldNameInLinkedTable":"Activity Date","fieldTableInLinkedTable":"Submissions"}`
+- **Days Logged This Week**
+  - id: `fldOLza7ol65TidXd`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld1zvk4QAmdrYSUC","recordLinkFieldName":"Submissions","fieldIdInLinkedTable":"fld93oigqY19Z6zqN","fieldNameInLinkedTable":"Counted Activity Date Key","fieldTableInLinkedTable":"Submissions"}`
+- **Met Minimum Days Requirement?**
+  - id: `fldNO1J6zZ1n9OcHU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldOLza7ol65TidXd"],"referencedFieldNames":["Days Logged This Week"],"formula":"IF(\r\n  {fldOLza7ol65TidXd} >= 3,\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldOLza7ol65TidXd"],"fieldReferencesByName":["Days Logged This Week"],"dependencySource":"metadata"}`
+- **Homework Assigned Count**
+  - id: `fldxA1xQQlui2XXi4`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld7IEpY1KsacJTM6","recordLinkFieldName":"Homework Completions Link","fieldIdInLinkedTable":"fldSxUIDwVd6xUhhC","fieldNameInLinkedTable":"Homework Completion Key","fieldTableInLinkedTable":"Homework Completions"}`
+- **Summary Calculation Status**
+  - id: `fldclTKmuQPSM9Pj6`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Calculating","Complete","Error"],"choicesDetailed":[{"id":"selehWHVloSBaP9xr","name":"Pending","color":"blueLight2"},{"id":"selxOerGGr39RqbiL","name":"Calculating","color":"cyanLight2"},{"id":"selkBMQOO4mJeMZPM","name":"Complete","color":"tealLight2"},{"id":"selXOi9uumsXiajsQ","name":"Error","color":"greenLight2"}]}`
+- **Weekly Improvement Value**
+  - id: `fldDAqp5woNqEdzE3`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldvJmTvqvJTtdYjE","fldR3esaWcZ7LmOrR"],"referencedFieldNames":["Previous Week Shots","Total Shots This Week"],"formula":"IF(\r\n  {fldvJmTvqvJTtdYjE},\r\n  {fldR3esaWcZ7LmOrR} - {fldvJmTvqvJTtdYjE},\r\n  BLANK()\r\n)","fieldReferencesById":["fldvJmTvqvJTtdYjE","fldR3esaWcZ7LmOrR"],"fieldReferencesByName":["Previous Week Shots","Total Shots This Week"],"dependencySource":"metadata"}`
+- **Momentum Status**
+  - id: `fldR3egEbDyiE2CPn`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldDAqp5woNqEdzE3"],"referencedFieldNames":["Weekly Improvement Value"],"formula":"IF(\n  {fldDAqp5woNqEdzE3} = BLANK(),\n  \"First Week\",\n  IF(\n    {fldDAqp5woNqEdzE3} > 50,\n    \"On Fire\",\n    IF(\n      {fldDAqp5woNqEdzE3} > 0,\n      \"Rising\",\n      IF(\n        {fldDAqp5woNqEdzE3} = 0,\n        \"Steady\",\n        IF(\n          {fldDAqp5woNqEdzE3} < -50,\n          \"Needs Push\",\n          \"Drop\"\n        )\n      )\n    )\n  )\n)","fieldReferencesById":["fldDAqp5woNqEdzE3"],"fieldReferencesByName":["Weekly Improvement Value"],"dependencySource":"metadata"}`
+- **Homework Completed?**
+  - id: `fld6yhWfsDQUFn0k5`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldxA1xQQlui2XXi4","fldAZvnZo9xAXyw5o"],"referencedFieldNames":["Homework Assigned Count","Homework Satisfactory Count"],"formula":"IF(\r\n  {fldxA1xQQlui2XXi4} > 0,\r\n  {fldAZvnZo9xAXyw5o} >= {fldxA1xQQlui2XXi4},\r\n  BLANK()\r\n)","fieldReferencesById":["fldxA1xQQlui2XXi4","fldAZvnZo9xAXyw5o"],"fieldReferencesByName":["Homework Assigned Count","Homework Satisfactory Count"],"dependencySource":"metadata"}`
+- **Homework Satisfactory Count**
+  - id: `fldAZvnZo9xAXyw5o`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fld7IEpY1KsacJTM6","recordLinkFieldName":"Homework Completions Link","fieldIdInLinkedTable":"fldh4ohAiEdp8oejg","fieldNameInLinkedTable":"Satisfactory?","fieldTableInLinkedTable":"Homework Completions"}`
+- **Level Number**
+  - id: `fldGmzzmlGHVB53SE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldDlAuaaIYmx7Q44"],"referencedFieldNames":["Total XP After Week"],"formula":"IF(\n{fldDlAuaaIYmx7Q44} >= 4500, 8,\nIF(\n  {fldDlAuaaIYmx7Q44} >= 3000, 7,\n  IF(\n    {fldDlAuaaIYmx7Q44} >= 2000, 6,\n    IF(\n      {fldDlAuaaIYmx7Q44} >= 1400, 5,\n      IF(\n        {fldDlAuaaIYmx7Q44} >= 900, 4,\n        IF(\n          {fldDlAuaaIYmx7Q44} >= 500, 3,\n          IF(\n            {fldDlAuaaIYmx7Q44} >= 200, 2,\n            1\n          )\n        )\n      )\n    )\n  )\n)\n)","fieldReferencesById":["fldDlAuaaIYmx7Q44"],"fieldReferencesByName":["Total XP After Week"],"dependencySource":"metadata"}`
+- **Previous Week Shots**
+  - id: `fldvJmTvqvJTtdYjE`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Total XP After Week**
+  - id: `fldDlAuaaIYmx7Q44`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldV13HNGyfbbDcz7","fldIvSQR4O6a0jtsN"],"referencedFieldNames":["Previous Total XP","XP Earned This Week"],"formula":"IF(\r\n  {fldV13HNGyfbbDcz7},\r\n  {fldV13HNGyfbbDcz7} + {fldIvSQR4O6a0jtsN},\r\n  {fldIvSQR4O6a0jtsN}\r\n)","fieldReferencesById":["fldV13HNGyfbbDcz7","fldIvSQR4O6a0jtsN"],"fieldReferencesByName":["Previous Total XP","XP Earned This Week"],"dependencySource":"metadata"}`
+- **Previous Total XP**
+  - id: `fldV13HNGyfbbDcz7`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Homework Completions**
+  - id: `fldzaABiiuRE3TUKN`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Homework Display**
+  - id: `fldKxl8nguJzqulJD`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Shows homework name(s) or a red no symbol with 'No Homework' if none assigned.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld3h3FZAoEVvDM4q"],"referencedFieldNames":["Homework"],"formula":"IF(\r\n  {fld3h3FZAoEVvDM4q},\r\n  ARRAYJOIN({fld3h3FZAoEVvDM4q}),\r\n  \"🚫 No Homework\"\r\n)","fieldReferencesById":["fld3h3FZAoEVvDM4q"],"fieldReferencesByName":["Homework"],"dependencySource":"metadata"}`
+- **Homework Completions Link**
+  - id: `fld7IEpY1KsacJTM6`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldkoEbVnCugcMCCi","inverseLinkFieldName":"Weekly Athlete Summary Link","prefersSingleRecordLink":true,"isReversed":false}`
+- **Created**
+  - id: `fldNQg2CnzCGzCMwh`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"formula":"CREATED_TIME()","dependencySource":"none"}`
+- **Weekly Goal Shots Target**
+  - id: `fld9QMaqcgCzIAJhE`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldY0WlLxwGh7WID5"],"referencedFieldNames":["Goal Shots Target"],"formula":"{fldY0WlLxwGh7WID5}/9","fieldReferencesById":["fldY0WlLxwGh7WID5"],"fieldReferencesByName":["Goal Shots Target"],"dependencySource":"metadata"}`
+- **Threshold XP Status**
+  - id: `fldLWHZDNekE0eDN9`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Processed","Error"],"choicesDetailed":[{"id":"selLqHsmPECKWQ1a9","name":"","color":"blueLight2"},{"id":"selVSUvaHRsS8gC3B","name":"Processed","color":"cyanLight2"},{"id":"sele6S1WYd8VjfxhE","name":"Error","color":"tealLight2"}]}`
+- **Threshold XP Processed At**
+  - id: `fld29cnT0HwFyNWCR`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Threshold XP Error Message**
+  - id: `fldJOm7XeS9v3kCgG`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Requeue Threshold XP**
+  - id: `fld4pN4qHKO4Nzgvm`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Threshold XP Ready?**
+  - id: `flde9iIoiGNcaShL6`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex","fldNvhGv57qOqbsfN","flda0ZXW1Bf7OvRAK","fld4pN4qHKO4Nzgvm","fldLWHZDNekE0eDN9"],"referencedFieldNames":["Enrollment","Week","Goal Record","Goal Completion %","Requeue Threshold XP","Threshold XP Status"],"formula":"IF(\n  AND(\n    {fldNH81lfwL5dBnAw},\n    {fldNUSqzr3H0PE5Ex},\n    {fldNvhGv57qOqbsfN},\n    {flda0ZXW1Bf7OvRAK},\n    {flda0ZXW1Bf7OvRAK} >= 1,\n    OR(\n      {fld4pN4qHKO4Nzgvm} = 1,\n      {fldLWHZDNekE0eDN9} != \"Processed\"\n    )\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex","fldNvhGv57qOqbsfN","flda0ZXW1Bf7OvRAK","fld4pN4qHKO4Nzgvm","fldLWHZDNekE0eDN9"],"fieldReferencesByName":["Enrollment","Week","Goal Record","Goal Completion %","Requeue Threshold XP","Threshold XP Status"],"dependencySource":"metadata"}`
+- **RecordId**
+  - id: `fldnYfLX5DuNsO3SX`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Enrollment Key - Lkp**
+  - id: `fldJG5q0ZibCkprwC`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldHlwaNU793Uojti","fieldNameInLinkedTable":"Enrollment Key","fieldTableInLinkedTable":"Enrollments"}`
+- **Week Key - Lkp**
+  - id: `fldEBGRSNqMPE459s`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNUSqzr3H0PE5Ex","recordLinkFieldName":"Week","fieldIdInLinkedTable":"fldHpANf8BGrg64kb","fieldNameInLinkedTable":"Week Key","fieldTableInLinkedTable":"Weeks"}`
+- **Weekly Email Ready?**
+  - id: `fldRXzo9QveAAEudP`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Weekly Summary Email Status**
+  - id: `fldzuHDdCi6YCvRbn`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Ready","Ready for Send","Sent","Error"],"choicesDetailed":[{"id":"selqm0i6E0HKSzuGN","name":"Not Ready","color":"blueLight2"},{"id":"selBKRsh0wbLg1QQ7","name":"Ready for Send","color":"cyanLight2"},{"id":"selh95qrrfqJx5ikv","name":"Sent","color":"tealLight2"},{"id":"selsreZkpo12Ec9jh","name":"Error","color":"greenLight2"}]}`
+- **Weekly Summary Sent At**
+  - id: `fldW0OwybJ0ZRMy5K`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"iso","format":"YYYY-MM-DD"},"timeFormat":{"name":"24hour","format":"HH:mm"},"timeZone":"utc"}`
+- **Weekly Summary Send Error**
+  - id: `fldh1gWZcD554JgqP`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Weekly Summary Email Type**
+  - id: `fldOwzaH8G35chFpL`
+  - type: `singleSelect`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"choices":["Regular","Preview","Test"],"choicesDetailed":[{"id":"seljFNXZFtQF73pqf","name":"Regular","color":"blueLight2"},{"id":"selzbf3gIKRULEVlY","name":"Preview","color":"cyanLight2"},{"id":"selYv5pQC7OubIaoJ","name":"Test","color":"tealLight2"}]}`
+- **Parent Email - Cleaned**
+  - id: `fldKXsaqFMEXMAwpd`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldDaqe8xOpDoQo7S","fieldNameInLinkedTable":"Parent Email - Cleaned","fieldTableInLinkedTable":"Enrollments"}`
+- **Athlete Email - Cleaned**
+  - id: `fldkwUWbSTLQM12BF`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldCAx18QSO4sIsfP","fieldNameInLinkedTable":"Athlete Email - Cleaned","fieldTableInLinkedTable":"Enrollments"}`
+- **Overall Awards Placeholder**
+  - id: `fldAOKSEvJ1qS0Ppw`
+  - type: `aiText`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"referencedFieldIds":["fldNH81lfwL5dBnAw","fldDlAuaaIYmx7Q44","fldGmzzmlGHVB53SE"],"referencedFieldNames":["Enrollment","Total XP After Week","Level Number"]}`
+- **Zoom Meetings Summary**
+  - id: `fldBr9Wm4ougvqm1R`
+  - type: `aiText`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"referencedFieldIds":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex"],"referencedFieldNames":["Enrollment","Week"]}`
+- **Combined Recipient Emails**
+  - id: `fldnNEwvyEht6BDtU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldKXsaqFMEXMAwpd","fldkwUWbSTLQM12BF"],"referencedFieldNames":["Parent Email - Cleaned","Athlete Email - Cleaned"],"formula":"TRIM(\r\n  IF(\r\n    {fldKXsaqFMEXMAwpd} & \"\",\r\n    {fldKXsaqFMEXMAwpd} & \"\",\r\n    \"\"\r\n  ) &\r\n  IF(\r\n    AND(\r\n      {fldKXsaqFMEXMAwpd} & \"\",\r\n      {fldkwUWbSTLQM12BF} & \"\"\r\n    ),\r\n    \", \",\r\n    \"\"\r\n  ) &\r\n  IF(\r\n    {fldkwUWbSTLQM12BF} & \"\",\r\n    {fldkwUWbSTLQM12BF} & \"\",\r\n    \"\"\r\n  )\r\n)","fieldReferencesById":["fldKXsaqFMEXMAwpd","fldkwUWbSTLQM12BF"],"fieldReferencesByName":["Parent Email - Cleaned","Athlete Email - Cleaned"],"dependencySource":"metadata"}`
+- **Athlete First Name**
+  - id: `fldrvgVniDFGHXITX`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fld4wGsfJKp7x4Bjd","fieldNameInLinkedTable":"Athlete First Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Athlete Last Name**
+  - id: `fldwBU1zPMwUogHGR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldNH81lfwL5dBnAw","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldpXNOzRflbkgVwV","fieldNameInLinkedTable":"Athlete Last Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Email Subject**
+  - id: `fld22Iv3MqYjIzkFn`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldrvgVniDFGHXITX"],"referencedFieldNames":["Athlete First Name"],"formula":"\"Weekly Shooting Challenge Summary for \" &\r\nIF(\r\n  {fldrvgVniDFGHXITX} & \"\",\r\n  {fldrvgVniDFGHXITX} & \"\",\r\n  \"Athlete\"\r\n)","fieldReferencesById":["fldrvgVniDFGHXITX"],"fieldReferencesByName":["Athlete First Name"],"dependencySource":"metadata"}`
+- **Make Send Status**
+  - id: `fldVI44vj8KmMxLVi`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Ready","Sent"],"choicesDetailed":[{"id":"selQtnHpe24pNvV8b","name":"Ready","color":"blueLight2"},{"id":"seld8W6g4enPlknNI","name":"Sent","color":"cyanLight2"}]}`
+- **Weekly Awards Placeholder**
+  - id: `fld0BFUkwusYhbMZ7`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Weekly Summary Overall Section**
+  - id: `fldIy0dLusRCZxqet`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Weekly Awards Display**
+  - id: `fldnsoxTePJh6gUPX`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Overall Awards Display**
+  - id: `fld6rcoqhQ6GmZQR7`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Upcoming Zoom Display**
+  - id: `fldSiIx55xQE5dMqY`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Upcoming Zoom Link**
+  - id: `fldIE7DYt8F7pSFuS`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldNUSqzr3H0PE5Ex","recordLinkFieldName":"Week","fieldIdInLinkedTable":"fldXFQaclGkhzX19o","fieldNameInLinkedTable":"Zoom Meetings","fieldTableInLinkedTable":"Weeks"}`
+- **Week - Display**
+  - id: `fldn7FMpyz3ZDMxly`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldNUSqzr3H0PE5Ex"],"referencedFieldNames":["Week"],"formula":"{fldNUSqzr3H0PE5Ex}","fieldReferencesById":["fldNUSqzr3H0PE5Ex"],"fieldReferencesByName":["Week"],"dependencySource":"metadata"}`
+- **Grade Band - Display**
+  - id: `fldEIVNQFxcOnEuNP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld7CARd7rE7S3f8P"],"referencedFieldNames":["Grade Band"],"formula":"{fld7CARd7rE7S3f8P}","fieldReferencesById":["fld7CARd7rE7S3f8P"],"fieldReferencesByName":["Grade Band"],"dependencySource":"metadata"}`
+- **Weekly Summary Key**
+  - id: `fldpwIfJ8Mq2u3rfn`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex"],"referencedFieldNames":["Enrollment","Week"],"formula":"{fldNH81lfwL5dBnAw} & \"|\" & {fldNUSqzr3H0PE5Ex}","fieldReferencesById":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex"],"fieldReferencesByName":["Enrollment","Week"],"dependencySource":"metadata"}`
+- **Weekly Email Sent?**
+  - id: `fldCCgjkgoPt7N4eK`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Weekly Email Sent At**
+  - id: `fld9dzmOqNfXzRom1`
+  - type: `dateTime`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Weekly Email Error**
+  - id: `fldzZnqYAoDDrUQFm`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Revision**
+  - id: `fldeP5OD0H90VhrM2`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Send to Make?**
+  - id: `fldcQzkAcrJXwRTgC`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Weekly Email Subject**
+  - id: `fldxRkHo6fdqLNjPB`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Recipients**
+  - id: `flduEBKX6UoJpEBMy`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email HTML**
+  - id: `fldBbRJTBH7fjOsFk`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Text**
+  - id: `fldvllIaaj1WNZQaX`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Payload JSON**
+  - id: `fldeVsUfvry5alYG7`
+  - type: `multilineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Week Label**
+  - id: `fldQcTW5jStDqUuwn`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Weekly Email Last Built At**
+  - id: `fldrwJEsWcqqYb124`
+  - type: `dateTime`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Weekly Email Record ID**
+  - id: `fldDFKGuHdQ61ELqg`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Build Weekly Email Now?**
+  - id: `fldBE60blHuUfAQa4`
+  - type: `checkbox`
+  - role: `contact`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **sendMode**
+  - id: `fldW8sTqbsSYJyjcD`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Test","Live"],"choicesDetailed":[{"id":"selHG469w3lJGB7RI","name":"Test","color":"blueLight2"},{"id":"selu1NXRWBkPeZtej","name":"Live","color":"cyanLight2"}]}`
+- **Perfect Week Daily Check Status**
+  - id: `fldEEYFHEBlVnNAV0`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Pass","Fail","Needs Review"],"choicesDetailed":[{"id":"selB9iCOgt2CCMSkM","name":"Pending","color":"blueLight2"},{"id":"selcDfvQfWqYerB03","name":"Pass","color":"cyanLight2"},{"id":"selPj388IhaFNCkaH","name":"Fail","color":"tealLight2"},{"id":"selYgo78ZGngXcBik","name":"Needs Review","color":"greenLight2"}]}`
+- **Perfect Week Daily Check Detail**
+  - id: `fldtASmByMBMCPXvp`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Perfect Week Daily Requirement Met?**
+  - id: `fld9whhW2WYo6Z3wD`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Perfect Week Video Count**
+  - id: `flds8k6TuRScMWW79`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Zoom Meeting Count**
+  - id: `fld1sBnbfMiunNlcW`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Zoom Attendance Count**
+  - id: `fldVs5IgC7PnCXCYM`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Homework Requirement Met?**
+  - id: `fldK2cIQXX18OTdhS`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Automation Status**
+  - id: `fldyFlpiRQiTpCKJz`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Ready","Created","Skipped","Error"],"choicesDetailed":[{"id":"sel3JnCmVJsW74k38","name":"Pending","color":"blueLight2"},{"id":"selPQUWvxM9lAp88R","name":"Ready","color":"cyanLight2"},{"id":"selRfyAxlHIq2bnzP","name":"Created","color":"tealLight2"},{"id":"selPSA9GHnnbewPpM","name":"Skipped","color":"greenLight2"},{"id":"selfvD11oBmt3xHY1","name":"Error","color":"yellowLight2"}]}`
+- **Perfect Week Automation Error**
+  - id: `fldIZgWPIPwpBv0hb`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Perfect Week Video Requirement Met?**
+  - id: `fldat2jCxT2sc9pms`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["flds8k6TuRScMWW79"],"referencedFieldNames":["Perfect Week Video Count"],"formula":"IF({flds8k6TuRScMWW79} >= 3, 1, 0)","fieldReferencesById":["flds8k6TuRScMWW79"],"fieldReferencesByName":["Perfect Week Video Count"],"dependencySource":"metadata"}`
+- **Perfect Week Zoom Requirement Met?**
+  - id: `fldWok1MQBND9z0r9`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldyFlpiRQiTpCKJz","fld1sBnbfMiunNlcW","fldVs5IgC7PnCXCYM"],"referencedFieldNames":["Perfect Week Automation Status","Perfect Week Zoom Meeting Count","Perfect Week Zoom Attendance Count"],"formula":"IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  0,\n  IF(\n    VALUE({fld1sBnbfMiunNlcW} & \"\") = 0,\n    1,\n    IF(\n      VALUE({fldVs5IgC7PnCXCYM} & \"\") >= 1,\n      1,\n      0\n    )\n  )\n)","fieldReferencesById":["fldyFlpiRQiTpCKJz","fld1sBnbfMiunNlcW","fldVs5IgC7PnCXCYM"],"fieldReferencesByName":["Perfect Week Automation Status","Perfect Week Zoom Meeting Count","Perfect Week Zoom Attendance Count"],"dependencySource":"metadata"}`
+- **Perfect Week Eligible?**
+  - id: `fld0re4ydFGq2vvZC`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldyFlpiRQiTpCKJz","fld9whhW2WYo6Z3wD","fldK2cIQXX18OTdhS","fldat2jCxT2sc9pms","fldWok1MQBND9z0r9"],"referencedFieldNames":["Perfect Week Automation Status","Perfect Week Daily Requirement Met?","Perfect Week Homework Requirement Met?","Perfect Week Video Requirement Met?","Perfect Week Zoom Requirement Met?"],"formula":"IF(\n  AND(\n    {fldyFlpiRQiTpCKJz} = \"Ready\",\n    {fld9whhW2WYo6Z3wD},\n    {fldK2cIQXX18OTdhS} = 1,\n    {fldat2jCxT2sc9pms} = 1,\n    {fldWok1MQBND9z0r9} = 1\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldyFlpiRQiTpCKJz","fld9whhW2WYo6Z3wD","fldK2cIQXX18OTdhS","fldat2jCxT2sc9pms","fldWok1MQBND9z0r9"],"fieldReferencesByName":["Perfect Week Automation Status","Perfect Week Daily Requirement Met?","Perfect Week Homework Requirement Met?","Perfect Week Video Requirement Met?","Perfect Week Zoom Requirement Met?"],"dependencySource":"metadata"}`
+- **Perfect Week Unlock**
+  - id: `fldJVKEeziY9l5Dbq`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldcplpAaSHYEMa3C","inverseLinkFieldName":"Weekly Athlete Summary","prefersSingleRecordLink":true,"isReversed":false}`
+- **Perfect Week Calculation Queue?**
+  - id: `fldNvOVO3WidABUXS`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex","fldNvhGv57qOqbsfN","fldyFlpiRQiTpCKJz"],"referencedFieldNames":["Enrollment","Week","Goal Record","Perfect Week Automation Status"],"formula":"IF(\r\n  AND(\r\n    LEN(ARRAYJOIN({fldNH81lfwL5dBnAw})) > 0,\r\n    LEN(ARRAYJOIN({fldNUSqzr3H0PE5Ex})) > 0,\r\n    LEN(ARRAYJOIN({fldNvhGv57qOqbsfN})) > 0,\r\n    OR(\r\n      {fldyFlpiRQiTpCKJz} = \"Pending\",\r\n      {fldyFlpiRQiTpCKJz} = \"Ready\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldNH81lfwL5dBnAw","fldNUSqzr3H0PE5Ex","fldNvhGv57qOqbsfN","fldyFlpiRQiTpCKJz"],"fieldReferencesByName":["Enrollment","Week","Goal Record","Perfect Week Automation Status"],"dependencySource":"metadata"}`
+- **Perfect Week Zoom Requirement Status**
+  - id: `fldPWqUmCAWpwKX6t`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldyFlpiRQiTpCKJz","fld1sBnbfMiunNlcW","fldVs5IgC7PnCXCYM"],"referencedFieldNames":["Perfect Week Automation Status","Perfect Week Zoom Meeting Count","Perfect Week Zoom Attendance Count"],"formula":"IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fld1sBnbfMiunNlcW} = 0,\n    \"No Zoom This Week\",\n    IF(\n      {fldVs5IgC7PnCXCYM} >= 1,\n      \"Attended\",\n      \"Missed\"\n    )\n  )\n)","fieldReferencesById":["fldyFlpiRQiTpCKJz","fld1sBnbfMiunNlcW","fldVs5IgC7PnCXCYM"],"fieldReferencesByName":["Perfect Week Automation Status","Perfect Week Zoom Meeting Count","Perfect Week Zoom Attendance Count"],"dependencySource":"metadata"}`
+- **Perfect Week Homework Assigned Count**
+  - id: `fldZmafiSNvvDOBLi`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Homework Satisfactory Count**
+  - id: `fldqNVE7X7uBED4XR`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Perfect Week Homework Completion %**
+  - id: `fld3eEpTebFgqTWYy`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldZmafiSNvvDOBLi","fldqNVE7X7uBED4XR"],"referencedFieldNames":["Perfect Week Homework Assigned Count","Perfect Week Homework Satisfactory Count"],"formula":"IF(\n  {fldZmafiSNvvDOBLi} > 0,\n  {fldqNVE7X7uBED4XR} / {fldZmafiSNvvDOBLi},\n  1\n)","fieldReferencesById":["fldZmafiSNvvDOBLi","fldqNVE7X7uBED4XR"],"fieldReferencesByName":["Perfect Week Homework Assigned Count","Perfect Week Homework Satisfactory Count"],"dependencySource":"metadata"}`
+- **Perfect Week Homework Requirement Status**
+  - id: `fldG3EmD6uueWmtRl`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldyFlpiRQiTpCKJz","fldZmafiSNvvDOBLi","fldK2cIQXX18OTdhS","fld3eEpTebFgqTWYy"],"referencedFieldNames":["Perfect Week Automation Status","Perfect Week Homework Assigned Count","Perfect Week Homework Requirement Met?","Perfect Week Homework Completion %"],"formula":"IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fldZmafiSNvvDOBLi} = 0,\n    \"Not Required - No Homework This Week\",\n    IF(\n      {fldK2cIQXX18OTdhS} = 1,\n      \"Complete - 100%\",\n      \"Incomplete - \" & ROUND({fld3eEpTebFgqTWYy} * 100, 0) & \"%\"\n    )\n  )\n)\n","fieldReferencesById":["fldyFlpiRQiTpCKJz","fldZmafiSNvvDOBLi","fldK2cIQXX18OTdhS","fld3eEpTebFgqTWYy"],"fieldReferencesByName":["Perfect Week Automation Status","Perfect Week Homework Assigned Count","Perfect Week Homework Requirement Met?","Perfect Week Homework Completion %"],"dependencySource":"metadata"}`
+- **Perfect Week Test Override?**
+  - id: `fldowpElOxgvOisY0`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+
+## Table: **Levels**
+
+- id: `tblU6EWmc1jCpgRHe`
+- primary field: **Level Name** (`fldOXE187GbNwxXka`)
+- role guess: `operational summary`
+- fields: `20`
+- link fields: `5`
+- computed fields: `3`
+- description: Reference table for level definitions and progression order.
+
+Use this table to define the game levels and the sequence between levels, including any Previous Level relationship used to build the level ladder.
+
+This table is a config/reference layer. Use linked fields on Enrollments and related tables to track an athlete’s current or next level.
+
+### Fields
+
+- **Level Name**
+  - id: `fldOXE187GbNwxXka`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Level Name with Color**
+  - id: `fldskFKlnUPVZYxqQ`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Beginner","Rookie Shooter","Developing Shooter","Consistent Shooter","Dangerous Shooter","Hot Hand","Deadeye","Sharpshooter","Pro","All-Star","Legend","G.O.A.T."],"choicesDetailed":[{"id":"selhkJWikoYAkhC4A","name":"Beginner","color":"grayLight2"},{"id":"selIK4Xf72uehGHJa","name":"Rookie Shooter","color":"blueLight2"},{"id":"sel576MBKYAgDq8Sh","name":"Developing Shooter","color":"blueLight1"},{"id":"sel5nJkp4HXSMWo0g","name":"Consistent Shooter","color":"blueBright"},{"id":"selMmfPb6gqMYVIst","name":"Dangerous Shooter","color":"blueDark1"},{"id":"seliTh4F9QHnNNl7s","name":"Hot Hand","color":"redLight1"},{"id":"selSiEPkyhsDyPL6C","name":"Deadeye","color":"redBright"},{"id":"selCEIScG4OK76MWE","name":"Sharpshooter","color":"redDark1"},{"id":"selcOqYRQ3RYv1LKh","name":"Pro","color":"blueLight1"},{"id":"sel2W6bKYUIkcH9ID","name":"All-Star","color":"blueBright"},{"id":"selxRwEmDbYOsNUK3","name":"Legend","color":"blueBright"},{"id":"selqMA0Bz6cCCb7dq","name":"G.O.A.T.","color":"yellowBright"}]}`
+- **Cover Image**
+  - id: `fldCajx5rvJWrK81n`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **XP Required (Cumulative)**
+  - id: `fldsvQz2K5W2Cg12V`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **XP From Previous Level**
+  - id: `fld0CEc1KKpTG8umq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Calculates the XP needed to advance from the previous level to this level.
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["flde7C9ThfNE9H9YF","fldsvQz2K5W2Cg12V","fldPvSUGEBiNP6IfG"],"referencedFieldNames":["Previous Level","XP Required (Cumulative)","Previous Level XP Required"],"formula":"IF(\n  {flde7C9ThfNE9H9YF},\n  {fldsvQz2K5W2Cg12V} - VALUE(ARRAYJOIN({fldPvSUGEBiNP6IfG})),\n  {fldsvQz2K5W2Cg12V}\n)","fieldReferencesById":["flde7C9ThfNE9H9YF","fldsvQz2K5W2Cg12V","fldPvSUGEBiNP6IfG"],"fieldReferencesByName":["Previous Level","XP Required (Cumulative)","Previous Level XP Required"],"dependencySource":"metadata"}`
+- **Previous Level**
+  - id: `flde7C9ThfNE9H9YF`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblU6EWmc1jCpgRHe","linkedTableName":"Levels","inverseLinkFieldId":"fldygwZv5wLEjW3uH","inverseLinkFieldName":"Next Level","prefersSingleRecordLink":true,"isReversed":false}`
+- **Next Level**
+  - id: `fldygwZv5wLEjW3uH`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblU6EWmc1jCpgRHe","linkedTableName":"Levels","inverseLinkFieldId":"flde7C9ThfNE9H9YF","inverseLinkFieldName":"Previous Level","prefersSingleRecordLink":false,"isReversed":false}`
+- **Unlock Message**
+  - id: `fldndSUIdaAXdWqrN`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Enrollments**
+  - id: `fldcn9IgfenUu1sLn`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Active?**
+  - id: `fld297P1ZsUsB1VaH`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Sort Order**
+  - id: `fldm3ie3koWeo0pYu`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Enrollments 2**
+  - id: `flddtorozO41fVy8z`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Enrollments 3**
+  - id: `fldTzIGODB2e03rvE`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Enrollments 4**
+  - id: `fldIZT5MWgMskwF8s`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldqmwWHoaWM7dSFK","inverseLinkFieldName":"Current Level","prefersSingleRecordLink":false,"isReversed":false}`
+- **Enrollments 5**
+  - id: `fldtaYEIwRvRKYkvb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"flddnwaoAHRVSkIHC","inverseLinkFieldName":"Next Level","prefersSingleRecordLink":false,"isReversed":false}`
+- **Weekly Athlete Summary**
+  - id: `fld3P2zc2MyyolAUs`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Previous Level XP Required**
+  - id: `fldPvSUGEBiNP6IfG`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"flde7C9ThfNE9H9YF","recordLinkFieldName":"Previous Level","fieldIdInLinkedTable":"fldsvQz2K5W2Cg12V","fieldNameInLinkedTable":"XP Required (Cumulative)","fieldTableInLinkedTable":"Levels"}`
+- **Rank**
+  - id: `fldkXCHwTnNASyEtL`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Level Gate Rules**
+  - id: `fldyxZPYMh8qK8Gw1`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblWIb8JCuQ842HI8","linkedTableName":"Level Gate Rules","inverseLinkFieldId":"fldmjqf8Eayve9d2q","inverseLinkFieldName":"Level","prefersSingleRecordLink":false,"isReversed":false}`
+- **Public Gate Criteria**
+  - id: `fldgIHfyM8hwhSrpy`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldyxZPYMh8qK8Gw1","recordLinkFieldName":"Level Gate Rules","fieldIdInLinkedTable":"fldyQKthaqgxk3nr4","fieldNameInLinkedTable":"Public Gate Rules - Active Only","fieldTableInLinkedTable":"Level Gate Rules"}`
+
+## Table: **Shot Milestones**
+
+- id: `tbl5C4TsQpOigIyRz`
+- primary field: **Milestone Label** (`fldnlrfQBmWER7dxD`)
+- role guess: `operational summary`
+- fields: `17`
+- link fields: `3`
+- computed fields: `8`
+- description: Reference table for shot milestone definitions.
+
+Use this table to define milestone thresholds or shot-count targets used by the Shooting Challenge Game App for progression, recognition, or achievement logic.
+
+This table is a config/reference layer, not a transaction table.
+
+### Fields
+
+- **Milestone Label**
+  - id: `fldnlrfQBmWER7dxD`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldw1VqNidFq2Yz2D","fldNgo6iYG1ekKjid"],"referencedFieldNames":["Target Goal Shot","Milestone Percent"],"formula":"{fldw1VqNidFq2Yz2D} & \" - \" & {fldNgo6iYG1ekKjid} & \"%\"","fieldReferencesById":["fldw1VqNidFq2Yz2D","fldNgo6iYG1ekKjid"],"fieldReferencesByName":["Target Goal Shot","Milestone Percent"],"dependencySource":"metadata"}`
+- **Target Goal Shot**
+  - id: `fldw1VqNidFq2Yz2D`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbleCfuAt3rY8unU3","linkedTableName":"Target Goal Shots","inverseLinkFieldId":"fldkoyTtiTemZ6RYw","inverseLinkFieldName":"Shot Milestones","prefersSingleRecordLink":true,"isReversed":false}`
+- **Grade Band**
+  - id: `flds7xmrvMVr3Zbp8`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldw1VqNidFq2Yz2D","recordLinkFieldName":"Target Goal Shot","fieldIdInLinkedTable":"fldgR7XGIzqxS0LuO","fieldNameInLinkedTable":"Grade Band","fieldTableInLinkedTable":"Target Goal Shots"}`
+- **Milestone Shot Count**
+  - id: `fldI9n3caSvtMEUzQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldioImLyCnucFuxZ","fldNgo6iYG1ekKjid"],"referencedFieldNames":["Target Shots Lookup","Milestone Percent"],"formula":"ROUND(VALUE(ARRAYJOIN({fldioImLyCnucFuxZ})) * ({fldNgo6iYG1ekKjid} / 100), 0)","fieldReferencesById":["fldioImLyCnucFuxZ","fldNgo6iYG1ekKjid"],"fieldReferencesByName":["Target Shots Lookup","Milestone Percent"],"dependencySource":"metadata"}`
+- **Milestone Percent**
+  - id: `fldNgo6iYG1ekKjid`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Points Awarded**
+  - id: `fldEOObF0c4SfFSMU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldNgo6iYG1ekKjid"],"referencedFieldNames":["Milestone Percent"],"formula":"SWITCH(\n  {fldNgo6iYG1ekKjid},\n  25, 10,\n  50, 15,\n  75, 20,\n  100, 30,\n  120, 40,\n  125, 40,\n  150, 50,\n  175, 65,\n  200, 80,\n  0\n)","fieldReferencesById":["fldNgo6iYG1ekKjid"],"fieldReferencesByName":["Milestone Percent"],"dependencySource":"metadata"}`
+- **Active**
+  - id: `fldUQSy1EaARfUUvw`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Milestone Unique Key**
+  - id: `fldFjb22cOEPusNqH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldw1VqNidFq2Yz2D","fldNgo6iYG1ekKjid"],"referencedFieldNames":["Target Goal Shot","Milestone Percent"],"formula":"ARRAYJOIN({fldw1VqNidFq2Yz2D}) & \"|\" & {fldNgo6iYG1ekKjid}","fieldReferencesById":["fldw1VqNidFq2Yz2D","fldNgo6iYG1ekKjid"],"fieldReferencesByName":["Target Goal Shot","Milestone Percent"],"dependencySource":"metadata"}`
+- **Band Sort Order**
+  - id: `flde1qiwxWSvpied6`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldw1VqNidFq2Yz2D","recordLinkFieldName":"Target Goal Shot","fieldIdInLinkedTable":"fld2bdIdnS8RyMgro","fieldNameInLinkedTable":"Band Sort Order","fieldTableInLinkedTable":"Target Goal Shots"}`
+- **Sort Order**
+  - id: `fldzoPUz9BSJeiHYc`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Target Shots Lookup**
+  - id: `fldioImLyCnucFuxZ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldw1VqNidFq2Yz2D","recordLinkFieldName":"Target Goal Shot","fieldIdInLinkedTable":"fldqxQzUHJnYpb93L","fieldNameInLinkedTable":"Total Shot Target","fieldTableInLinkedTable":"Target Goal Shots"}`
+- **Milestone Tier**
+  - id: `fld4Q8j7bB5MbszFT`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldNgo6iYG1ekKjid"],"referencedFieldNames":["Milestone Percent"],"formula":"SWITCH(\n  {fldNgo6iYG1ekKjid},\n  25, \"Starter\",\n  50, \"Building\",\n  75, \"Strong\",\n  100, \"Conquered\",\n  120, \"Beyond Target\",\n  150, \"High Achievement\",\n  175, \"Elite Achievement\",\n  200, \"Premier Achievement\",\n  \"Unknown\"\n)","fieldReferencesById":["fldNgo6iYG1ekKjid"],"fieldReferencesByName":["Milestone Percent"],"dependencySource":"metadata"}`
+- **Notes**
+  - id: `flda70LWBSmMsttuV`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Weekly Athlete Summary**
+  - id: `fldUubWimygpDfAhP`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Events**
+  - id: `fldmmFEzJt3kmEDh4`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fld7RDrBn8Ffhp8ER","inverseLinkFieldName":"Shot Milestones","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Events copy**
+  - id: `fldVcHPjvuabirn6E`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Athlete Achievement Unlocks**
+  - id: `fldMOcJn6dEBtgGjQ`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblyT2AQo1JbvmvZS","linkedTableName":"Athlete Achievement Unlocks","inverseLinkFieldId":"fldop6wVgfxwKck0h","inverseLinkFieldName":"Shot Milestone","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **FBC Curriculum - SYNC**
+
+- id: `tblUuxwYlX4EQ9MKE`
+- primary field: **Assignment Full Name** (`fldBv0SCf7KX47g9W`)
+- role guess: `operational summary`
+- fields: `28`
+- link fields: `6`
+- computed fields: `2`
+- description: Active homework / curriculum source table.
+
+This synced table is the current source of truth for homework assignments used in the Shooting Challenge Game App.
+
+Use this table for active homework links and lookups.
+
+Do not build new links or lookups to ZZZ LEGACY - Homework unless needed for historical cleanup only.
+
+### Fields
+
+- **Assignment Full Name**
+  - id: `fldBv0SCf7KX47g9W`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `True`
+- **Assignment Full Name - Display**
+  - id: `fldYbEFE6YJgWqJbW`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddMQ8OZdvSsvak8","fld2mYDUtnIO238c4","fld3w0F60Pijeo63p"],"referencedFieldNames":["Week","Homework Number","Assignment Title"],"formula":"{flddMQ8OZdvSsvak8} & \" |  \" & {fld2mYDUtnIO238c4} & \" | \" & {fld3w0F60Pijeo63p}","fieldReferencesById":["flddMQ8OZdvSsvak8","fld2mYDUtnIO238c4","fld3w0F60Pijeo63p"],"fieldReferencesByName":["Week","Homework Number","Assignment Title"],"dependencySource":"metadata"}`
+- **Week**
+  - id: `flddMQ8OZdvSsvak8`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldTJZEWORITbiZKe","inverseLinkFieldName":"FBC Curriculum - SYNC","prefersSingleRecordLink":true,"isReversed":false}`
+- **Homework Number**
+  - id: `fld2mYDUtnIO238c4`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["HW 1","HW 2","HW 3","HW 4","HW 5","HW 6","HW 7","HW 8","HW 9","HW 10","HW 11","HW 12","HW 13","HW 14","HW 15","HW 16","HW 17","HW 18"],"choicesDetailed":[{"id":"selyRns8PIEhlyYry","name":"HW 1","color":"blueLight2"},{"id":"selegRCv9HJ7aYlcd","name":"HW 2","color":"cyanLight2"},{"id":"seljBVISckOXdmFPG","name":"HW 3","color":"tealLight2"},{"id":"selN1hUSGi8O9KfAc","name":"HW 4","color":"greenLight2"},{"id":"selIihCz8RK95b2yq","name":"HW 5","color":"yellowLight2"},{"id":"selCxaeZaiy3HNaau","name":"HW 6","color":"orangeLight2"},{"id":"sel1lDktRQbk80rFz","name":"HW 7","color":"redLight2"},{"id":"selH5Pg3VyhZESsRh","name":"HW 8","color":"pinkLight2"},{"id":"selSv2uG7Vr7Rd1SK","name":"HW 9","color":"purpleLight2"},{"id":"selNpkTlNEju0o2Na","name":"HW 10","color":"grayLight2"},{"id":"sel4JJK6D0kP8uwdx","name":"HW 11","color":"blueLight1"},{"id":"selHOUO3HYLmWkE2w","name":"HW 12","color":"cyanLight1"},{"id":"selGQNh0xHN8VGD6R","name":"HW 13","color":"tealLight1"},{"id":"selNjq1IAAOmo8Yzi","name":"HW 14","color":"greenLight1"},{"id":"selyW0asG0kIO6QFM","name":"HW 15","color":"yellowLight1"},{"id":"selHSCPF4pfyJQqCu","name":"HW 16","color":"orangeLight1"},{"id":"selGZuu0AOgp8SNaA","name":"HW 17","color":"redLight1"},{"id":"selCpdPErzFV1dPsC","name":"HW 18","color":"pinkLight1"}]}`
+- **Assignment Number**
+  - id: `fldISOkTeqLmrFqRF`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Assignment Title**
+  - id: `fld3w0F60Pijeo63p`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Book**
+  - id: `fldtTqeyFgmHOw5PM`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Character 33","Playing in the Box","Mental Toughness for Young Athletes","Stand Alone"],"choicesDetailed":[{"id":"selJ86ZUj9j4WPzHc","name":"Character 33","color":"blueLight2"},{"id":"selXDlpwxad2atYIF","name":"Playing in the Box","color":"orangeLight2"},{"id":"selvHUWn06W4hM7ue","name":"Mental Toughness for Young Athletes","color":"grayLight2"},{"id":"sel6SPCrnvXM0SGMs","name":"Stand Alone","color":"cyanBright"}]}`
+- **Assignment Topic**
+  - id: `fldmE4y7TL8ENzlIN`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Growth Mindset","Leadership","Relationships","Sportsmanship","Teamwork","Mastery","Patience","Encouragement","Care","Responsibility","Legacy","Mindset","Self Awareness","Confidence Equation","Say It, Believe It, Be It!","Personal Game Plan","Performance Breathing","Refocusing Commands","Resilience Technique","Drive","Intentional Practice","Mental Imagery","Performance Playlists","Mental and Emotional Stamina","Play Grounded"],"choicesDetailed":[{"id":"selKQ7umWoJvoVRQy","name":"Growth Mindset","color":"tealLight2"},{"id":"selWHbSlDSSdsGf9Y","name":"Leadership","color":"blueLight2"},{"id":"sel9nn1PkrHDQnoIe","name":"Relationships","color":"yellowLight2"},{"id":"selPQYTigRg5UlVfc","name":"Sportsmanship","color":"cyanLight2"},{"id":"selfoVis0NtrSEjtS","name":"Teamwork","color":"greenLight2"},{"id":"selTdLD15UL1cFVQR","name":"Mastery","color":"purpleLight2"},{"id":"selhuHOEYYtZ47vU2","name":"Patience","color":"redLight2"},{"id":"seloablRYI9VX2JAT","name":"Encouragement","color":"grayLight2"},{"id":"selVmaSSmvhu72SfT","name":"Care","color":"pinkLight2"},{"id":"seljhYzsv23tMHMd8","name":"Responsibility","color":"orangeLight2"},{"id":"sele4TpBDXWWdIXUl","name":"Legacy","color":"redLight2"},{"id":"sel8RnPs1XgoeY8ZD","name":"Mindset","color":"orangeLight2"},{"id":"selaDzIfOIkf0iz9J","name":"Self Awareness","color":"yellowLight2"},{"id":"selICjmbuGMP5Qo6K","name":"Confidence Equation","color":"purpleLight2"},{"id":"selXOQBixv1JFvBu4","name":"Say It, Believe It, Be It!","color":"tealLight2"},{"id":"selrWSyheY12XPzM6","name":"Personal Game Plan","color":"greenLight2"},{"id":"seloceZe5KD4yqTaS","name":"Performance Breathing","color":"blueLight2"},{"id":"sel1KEAFKboZn97Qn","name":"Refocusing Commands","color":"pinkLight2"},{"id":"sel1xx56AJeU7zqmn","name":"Resilience Technique","color":"cyanLight2"},{"id":"selV2szyOC5bb7H4o","name":"Drive","color":"grayLight2"},{"id":"seloCkDTeOZcELyrS","name":"Intentional Practice","color":"blueLight2"},{"id":"selGxeDxaXEAryYZb","name":"Mental Imagery","color":"pinkLight2"},{"id":"selMUfSrcNDHWHRSY","name":"Performance Playlists","color":"cyanLight2"},{"id":"selEXq1og9eVzLtEW","name":"Mental and Emotional Stamina","color":"redLight2"},{"id":"selBDv8hUKP1qrnmH","name":"Play Grounded","color":"purpleLight2"}]}`
+- **Cover Images**
+  - id: `fldRC3W6xZW37Wxyy`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Docs**
+  - id: `fldHQ4VGXLht13jmn`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **URL**
+  - id: `fld4RXx8OQ165147R`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **URL Additional**
+  - id: `fldO7u7m5r3tXjdgq`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Age Appropriate**
+  - id: `fldknHTweLm5NNzuU`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["1-3","4-6","7-8","9-12"],"choicesDetailed":[{"id":"selpPazvvyi7OJqXF","name":"1-3","color":"blueLight2"},{"id":"selsTO5T9pvO5eDEM","name":"4-6","color":"cyanLight2"},{"id":"selJoUBTt83cgeZWG","name":"7-8","color":"tealLight2"},{"id":"selTglDfqaqq7YBNy","name":"9-12","color":"greenLight2"}]}`
+- **Full Assignment Description**
+  - id: `fldDnS1EhUdUgsYhD`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Brief Description - Display**
+  - id: `fldAnHr3uTuDN5bs9`
+  - type: `aiText`
+  - role: `narrative`
+  - primary: `False`
+  - options summary: `{"referencedFieldIds":["fldDnS1EhUdUgsYhD","fldrSPaUFQEuEV4i3"],"referencedFieldNames":["Full Assignment Description","Assignment Rationale"]}`
+- **Assignment Rationale**
+  - id: `fldrSPaUFQEuEV4i3`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Specific Steps**
+  - id: `fldrAWj2mfIyBEwQD`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Book Abbreviation**
+  - id: `fld9WmXaOW0ABZk4m`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Char33","P.I.B.","MTFYA","SA"],"choicesDetailed":[{"id":"selRCrcIt3mi6hvok","name":"Char33","color":"blueLight2"},{"id":"selnwuqXG0FPfLTX4","name":"P.I.B.","color":"cyanLight2"},{"id":"selZBp5508ySvsbpj","name":"MTFYA","color":"grayLight2"},{"id":"selY41kExc9dXWsk2","name":"SA","color":"blueBright"}]}`
+- **Grade Band**
+  - id: `fld69DQxhTVlmGoWh`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldYEIig2j86Ewsvc","inverseLinkFieldName":"FBC Curriculum - SYNC","prefersSingleRecordLink":false,"isReversed":false}`
+- **Active?**
+  - id: `fldOZBsTWKKH3jtEd`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Published?**
+  - id: `fldQAfy0BnTQVvpGT`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Lesson Key**
+  - id: `fldimsdazEpj0Z8Av`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddMQ8OZdvSsvak8","fld69DQxhTVlmGoWh","fld3w0F60Pijeo63p"],"referencedFieldNames":["Week","Grade Band","Assignment Title"],"formula":"ARRAYJOIN({flddMQ8OZdvSsvak8}) & \"|\" & ARRAYJOIN({fld69DQxhTVlmGoWh}) & \"|\" & {fld3w0F60Pijeo63p}","fieldReferencesById":["flddMQ8OZdvSsvak8","fld69DQxhTVlmGoWh","fld3w0F60Pijeo63p"],"fieldReferencesByName":["Week","Grade Band","Assignment Title"],"dependencySource":"metadata"}`
+- **Submissions**
+  - id: `fldC2SjcSsN839oUW`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldBuHIpIwxTy60js","inverseLinkFieldName":"Homework Name 1","prefersSingleRecordLink":false,"isReversed":false}`
+- **Homework Completions**
+  - id: `fld4swY3XDC0Bn4Er`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldotQdQqQ7RKVQGg","inverseLinkFieldName":"Homework","prefersSingleRecordLink":false,"isReversed":false}`
+- **Submissions copy**
+  - id: `fldtclW1JHRfNfAVw`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldnAy8yXTFafhvnu","inverseLinkFieldName":"Homework Name 2","prefersSingleRecordLink":false,"isReversed":false}`
+- **Weekly Athlete Summary**
+  - id: `fldt2z0Lt95YbJ2kl`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fld3h3FZAoEVvDM4q","inverseLinkFieldName":"Homework","prefersSingleRecordLink":false,"isReversed":false}`
+- **Assignment Description**
+  - id: `fldUY2qoIiD8Dlq7A`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Order**
+  - id: `fldu8izL5tIY4hIC0`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+
+## Table: **Homework Completions**
+
+- id: `tblv58ppTFDBXb3nv`
+- primary field: **Homework Completion Full Name** (`fld2ngOdaAmhpieZk`)
+- role guess: `operational summary`
+- fields: `82`
+- link fields: `9`
+- computed fields: `32`
+- description: Stores completion records for athlete homework assignments.
+
+Use this table to track which Enrollment completed which Homework item and when.
+
+Active homework source table:
+FBC Curriculum - SYNC
+
+Do not store duplicate homework title text here unless a true snapshot is needed for reporting or exports.
+
+### Fields
+
+- **Homework Completion Full Name**
+  - id: `fld2ngOdaAmhpieZk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldxpl7aW59DOZVP9","fldotQdQqQ7RKVQGg","fldesgOUPcUoo9S2q"],"referencedFieldNames":["Full Athlete Name - Backward (from Enrollment)","Homework","Week"],"formula":"{fldxpl7aW59DOZVP9} & \" - \" & {fldotQdQqQ7RKVQGg} & \" - \" & {fldesgOUPcUoo9S2q}","fieldReferencesById":["fldxpl7aW59DOZVP9","fldotQdQqQ7RKVQGg","fldesgOUPcUoo9S2q"],"fieldReferencesByName":["Full Athlete Name - Backward (from Enrollment)","Homework","Week"],"dependencySource":"metadata"}`
+- **Review Status**
+  - id: `fld3MBgft5N0hCnbS`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Archived","In Review","Needs Attention","New","Ready for Review","Reviewed"],"choicesDetailed":[{"id":"selEYA6OGjq8u1aae","name":"Archived","color":"yellowLight2"},{"id":"seloPURhYCW5bkL6A","name":"In Review","color":"orangeLight2"},{"id":"selEZE2LQht7FqUVV","name":"Needs Attention","color":"greenLight2"},{"id":"selRM8V10N6GdWiKd","name":"New","color":"blueLight2"},{"id":"selZ7hE4E6bDm9waf","name":"Ready for Review","color":"cyanLight2"},{"id":"selCIvCmSGzGRfAZf","name":"Reviewed","color":"tealLight2"}]}`
+- **Google Drive View URL**
+  - id: `fld8Lb7HmxR5MKcIc`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"url","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldITNuxNt9xphk7j","fieldNameInLinkedTable":"Google Drive File URL","fieldTableInLinkedTable":"Submission Assets"}`
+- **Coach Feedback**
+  - id: `fldARDQ1SSYLElstx`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Extra Credit?**
+  - id: `fldLgx4GGYyfsajd5`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Extra Credit XP Awarded**
+  - id: `fldVCbbqo9pWnyvZM`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Satisfactory?**
+  - id: `fldh4ohAiEdp8oejg`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Review Complete**
+  - id: `fldNi16ZUb3ldONNW`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Base XP Awarded**
+  - id: `fldWVAQIgZPsaHZi5`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Total Homework XP Awarded**
+  - id: `fldwiaO5UWbg9IIka`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldWVAQIgZPsaHZi5","fldVCbbqo9pWnyvZM"],"referencedFieldNames":["Base XP Awarded","Extra Credit XP Awarded"],"formula":"IF(\r\n  {fldWVAQIgZPsaHZi5},\r\n  {fldWVAQIgZPsaHZi5},\r\n  0\r\n)\r\n+\r\nIF(\r\n  {fldVCbbqo9pWnyvZM},\r\n  {fldVCbbqo9pWnyvZM},\r\n  0\r\n)","fieldReferencesById":["fldWVAQIgZPsaHZi5","fldVCbbqo9pWnyvZM"],"fieldReferencesByName":["Base XP Awarded","Extra Credit XP Awarded"],"dependencySource":"metadata"}`
+- **Award Status**
+  - id: `flddYu02VLUrk4qtg`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Awarded","Error"],"choicesDetailed":[{"id":"selDuwl9qhD3PJhDi","name":"Pending","color":"blueLight2"},{"id":"selCIFQr705j5ErSz","name":"Processing","color":"cyanLight2"},{"id":"selTCDVqiLd5Dks4e","name":"Awarded","color":"tealLight2"},{"id":"sel1TST6bxieNc9ZK","name":"Error","color":"greenLight2"}]}`
+- **XP Events**
+  - id: `fldBv878RIIC5tpE0`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldPl5VKHznvYwJtg","inverseLinkFieldName":"Homework Completion","prefersSingleRecordLink":false,"isReversed":false}`
+- **Parent Feedback Ready?**
+  - id: `fldEqqLhLQINkbzdR`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Upload Ready?**
+  - id: `fldv93VB39LdydxD9`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldFTRL2bgrlhxSoD","fldfK3h5ucx3WdFNS","fldASKykpfYEbf3t7"],"referencedFieldNames":["Airtable Attachment","Enrollment","Asset Type"],"formula":"IF(\n  AND(\n    {fldFTRL2bgrlhxSoD},\n    {fldfK3h5ucx3WdFNS},\n    {fldASKykpfYEbf3t7}\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldFTRL2bgrlhxSoD","fldfK3h5ucx3WdFNS","fldASKykpfYEbf3t7"],"fieldReferencesByName":["Airtable Attachment","Enrollment","Asset Type"],"dependencySource":"metadata"}`
+- **Parent Feedback Subject**
+  - id: `fldAnwLZilK1Tn4o2`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Parent Feedback Sent?**
+  - id: `fldYmNDVqhFtmI8Ov`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Parent Feedback Sent On**
+  - id: `fldjcY8iAA5qkW7Qc`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Uploaded At**
+  - id: `fld8IXHBFPdE7O8SI`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Writeback Complete?**
+  - id: `fldKI8IN30Ogye1E7`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Submission Date**
+  - id: `fldXNjet2ItpCfAZr`
+  - type: `date`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"}}`
+- **Asset Slot**
+  - id: `fldzbzik42JGLQzpX`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["HW1","HW2"],"choicesDetailed":[{"id":"selPNUOw0Xnlvvizt","name":"HW1","color":"blueDark1"},{"id":"selde37JdBIXHb9ZA","name":"HW2","color":"orangeBright"}]}`
+- **Homework Completions RID**
+  - id: `fldKjhzUPSQS9m9wG`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Submissions - Linked**
+  - id: `fldqG5ScbJkSrwonN`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldBRAvpbYfBSPyZH","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Full Athlete Name - Backward (from Enrollment)**
+  - id: `fldxpl7aW59DOZVP9`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldfK3h5ucx3WdFNS","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldnRDkfubz7p3gi4","fieldNameInLinkedTable":"Full Athlete Name - Backward","fieldTableInLinkedTable":"Enrollments"}`
+- **Google Drive Download URL**
+  - id: `fldH3XEkc4WQrn5Dp`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Homework Completion Key**
+  - id: `fldSxUIDwVd6xUhhC`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldfK3h5ucx3WdFNS","fldesgOUPcUoo9S2q","fldotQdQqQ7RKVQGg"],"referencedFieldNames":["Enrollment","Week","Homework"],"formula":"ARRAYJOIN({fldfK3h5ucx3WdFNS}) & \"|\" & ARRAYJOIN({fldesgOUPcUoo9S2q}) & \"|\" & ARRAYJOIN({fldotQdQqQ7RKVQGg})","fieldReferencesById":["fldfK3h5ucx3WdFNS","fldesgOUPcUoo9S2q","fldotQdQqQ7RKVQGg"],"fieldReferencesByName":["Enrollment","Week","Homework"],"dependencySource":"metadata"}`
+- **Weekly Athlete Summary**
+  - id: `fldhpGNYnu2l3bpUP`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Enrollment**
+  - id: `fldfK3h5ucx3WdFNS`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldUC0bYq2Bws0q5s","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Reviewed By**
+  - id: `fldniTLrSYiLgE26W`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Reviewed At**
+  - id: `fldkk8gxlhLWSiJaE`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Grade Band**
+  - id: `fldwcbjY7YjJaAZGy`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldf2972XUiIOSDKH","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Weekly Athlete Summary Link**
+  - id: `fldkoEbVnCugcMCCi`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl9520d72adxlAKQ","linkedTableName":"Weekly Athlete Summary","inverseLinkFieldId":"fld7IEpY1KsacJTM6","inverseLinkFieldName":"Homework Completions Link","prefersSingleRecordLink":true,"isReversed":false}`
+- **Completion Summary**
+  - id: `flds8qfFNyCAzYgzT`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldh4ohAiEdp8oejg","fldLgx4GGYyfsajd5","fld3QgYcH4AqQh6gP"],"referencedFieldNames":["Satisfactory?","Extra Credit?","Completion Status"],"formula":"IF(\n  {fldh4ohAiEdp8oejg},\n    IF(\n      {fldLgx4GGYyfsajd5},\n      \"Satisfactory + Extra Credit\",\n      \"Satisfactory\"\n    ),\n    IF(\n      {fld3QgYcH4AqQh6gP},\n        {fld3QgYcH4AqQh6gP},\n        BLANK()\n    )\n)","fieldReferencesById":["fldh4ohAiEdp8oejg","fldLgx4GGYyfsajd5","fld3QgYcH4AqQh6gP"],"fieldReferencesByName":["Satisfactory?","Extra Credit?","Completion Status"],"dependencySource":"metadata"}`
+- **Asset Label**
+  - id: `fldEmkfKCfp9WELbg`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Original File Name**
+  - id: `fldWyWWX9DQ3988EN`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Type**
+  - id: `fldASKykpfYEbf3t7`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework PDF","Homework Image","Homework Document","Video Feedback","Submission Photo","Submission Video","Other"],"choicesDetailed":[{"id":"selIY7ghpDtDRoyHc","name":"Homework PDF","color":"blueLight2"},{"id":"sel1wKH1Z9Tezm5h2","name":"Homework Image","color":"cyanLight2"},{"id":"sel9XLTpVwHenuo3N","name":"Homework Document","color":"tealLight2"},{"id":"selP322PpW7aUDVN4","name":"Video Feedback","color":"greenLight2"},{"id":"seluXfDdOpkgQ5JbH","name":"Submission Photo","color":"yellowLight2"},{"id":"seld8fTkZcEYxV2BZ","name":"Submission Video","color":"orangeLight2"},{"id":"selNsEepuyPC5lDOV","name":"Other","color":"redLight2"}]}`
+- **Asset Purpose**
+  - id: `fldmv5KdkH2T1chNn`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework Turn-In","Video For Feedback","General Submission Support","Coach Review","Other"],"choicesDetailed":[{"id":"seldXXJCzWr9q5ccB","name":"Homework Turn-In","color":"blueLight2"},{"id":"selGsDzij88Sru4iH","name":"Video For Feedback","color":"cyanLight2"},{"id":"selutsUXWeAet2IZM","name":"General Submission Support","color":"tealLight2"},{"id":"selbQmWKdbWLhhCsI","name":"Coach Review","color":"greenLight2"},{"id":"selA2xKeSOEkmKRIt","name":"Other","color":"yellowLight2"}]}`
+- **Source System**
+  - id: `fldwupjoZ8fbSEMM9`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Fillout","Airtable","Make","Manual Upload","Other"],"choicesDetailed":[{"id":"sel1wpGoTSXCGsbLy","name":"Fillout","color":"blueLight2"},{"id":"selQeDL1RWdXM8G0A","name":"Airtable","color":"cyanLight2"},{"id":"seluch5X54udBfMiB","name":"Make","color":"tealLight2"},{"id":"selGR2P1oDGK4hMwb","name":"Manual Upload","color":"greenLight2"},{"id":"seln7SDdkzilMoBCD","name":"Other","color":"yellowLight2"}]}`
+- **Airtable Attachment**
+  - id: `fldFTRL2bgrlhxSoD`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive File ID**
+  - id: `fldwtZbTk3M73OmZx`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Google Drive Folder ID**
+  - id: `fldR0yfOU8pCaDMBO`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Google Drive Folder URL**
+  - id: `fldvkVGoJVGTj3AEw`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Upload Error**
+  - id: `fldx8EjTgYczNYkNl`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Notes**
+  - id: `fldotkTIgjZhjmces`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Submission Asset - Linked**
+  - id: `fld9epQi6hrHq3pke`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Key**
+  - id: `fldplwH9Hq8oKJumP`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"\"AST-\" & RECORD_ID()","dependencySource":"none"}`
+- **Upload Status**
+  - id: `fldA4eP22MSQRBGrm`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Uploaded","Writeback Complete","Error"],"choicesDetailed":[{"id":"selcSPSUfWQwuh8U8","name":"Pending","color":"blueLight2"},{"id":"selT6qW6GFgXe0YVN","name":"Processing","color":"cyanLight2"},{"id":"selztT9toYyaIE68q","name":"Uploaded","color":"tealLight2"},{"id":"selcUPVjSvethZvMM","name":"Writeback Complete","color":"greenLight2"},{"id":"sel4Bbo67rZTFpknD","name":"Error","color":"yellowLight2"}]}`
+- **Parent Feedback Send Error**
+  - id: `fldUTn2YoCWeXsT5I`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive File URL**
+  - id: `fldGeqboEr8Ihwvjk`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Created**
+  - id: `fldX5YWF2B6aixj0c`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Item Type**
+  - id: `fld9ckzrVOBXfbdNr`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework","Video Review"],"choicesDetailed":[{"id":"selUzJ7w5AXHElla6","name":"Homework","color":"blueLight2"},{"id":"sel6pJOckBkjk7CAM","name":"Video Review","color":"cyanLight2"}]}`
+- **Automation Error**
+  - id: `fldBrKRbV9qs6rQTZ`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Submission Asset: Original File Name (lookup)**
+  - id: `fldFS46avqRlCYc4i`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldS0DINXc5YSHYRO","fieldNameInLinkedTable":"Original File Name","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset: Google Drive File URL (lookup)**
+  - id: `fld6NBbAwicqJ1nhf`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"url","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldITNuxNt9xphk7j","fieldNameInLinkedTable":"Google Drive File URL","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset: Google Drive File ID (lookup)**
+  - id: `fldKw0Gj4Hf8qhnGR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldhx4nDKuzuWQna6","fieldNameInLinkedTable":"Google Drive File ID","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset: Upload Status (lookup)**
+  - id: `fldI8bGAf7c1eMwvz`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldPybPEvRcEVuNWl","fieldNameInLinkedTable":"Upload Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset: Uploaded At (lookup)**
+  - id: `fldfBm12yOSogVp6g`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldvXvURsGG611cSK","fieldNameInLinkedTable":"Uploaded At","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset: Upload Error (lookup)**
+  - id: `fldtReawZBREtYrKz`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldAkpl3cuzgz1jLP","fieldNameInLinkedTable":"Upload Error","fieldTableInLinkedTable":"Submission Assets"}`
+- **Total Linked Submission Assets (rollup)**
+  - id: `fldcRGMdGYVPIGhgD`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fld3uqsvTrgAImBOh","fieldNameInLinkedTable":"Submission Assets Full Name","fieldTableInLinkedTable":"Submission Assets"}`
+- **Total Uploaded Submission Assets (rollup)**
+  - id: `fldz6pzDPOBEyQPIR`
+  - type: `rollup`
+  - role: `rollup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldPybPEvRcEVuNWl","fieldNameInLinkedTable":"Upload Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submission Asset Review Summary (formula)**
+  - id: `fldHchlovIaPlGKLk`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldFS46avqRlCYc4i","fld6NBbAwicqJ1nhf"],"referencedFieldNames":["Submission Asset: Original File Name (lookup)","Submission Asset: Google Drive File URL (lookup)"],"formula":"IF(\n  AND(\n    {fldFS46avqRlCYc4i},\n    {fld6NBbAwicqJ1nhf}\n  ),\n  ARRAYJOIN(\n    ARRAYCOMPACT(\n      IF(\n        {fldFS46avqRlCYc4i},\n        {fldFS46avqRlCYc4i} & \" – \" & {fld6NBbAwicqJ1nhf}\n      )\n    ),\n    \"\\n\"\n  ),\n  BLANK()\n)","fieldReferencesById":["fldFS46avqRlCYc4i","fld6NBbAwicqJ1nhf"],"fieldReferencesByName":["Submission Asset: Original File Name (lookup)","Submission Asset: Google Drive File URL (lookup)"],"dependencySource":"metadata"}`
+- **Submitted Asset File Names**
+  - id: `fldq8HdodVgQMlylM`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldS0DINXc5YSHYRO","fieldNameInLinkedTable":"Original File Name","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submitted Asset File Links**
+  - id: `fld71v6s6wYaJ2Umk`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"url","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldITNuxNt9xphk7j","fieldNameInLinkedTable":"Google Drive File URL","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submitted Asset Upload Statuses**
+  - id: `fldwaM1YePyV7x57d`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldPybPEvRcEVuNWl","fieldNameInLinkedTable":"Upload Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submitted Asset Uploaded At**
+  - id: `fldzIx93GXg7syqwA`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"}},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldvXvURsGG611cSK","fieldNameInLinkedTable":"Uploaded At","fieldTableInLinkedTable":"Submission Assets"}`
+- **Submitted Asset File IDs**
+  - id: `fldgGoh56Ck4fTQIE`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldhx4nDKuzuWQna6","fieldNameInLinkedTable":"Google Drive File ID","fieldTableInLinkedTable":"Submission Assets"}`
+- **Week**
+  - id: `fldesgOUPcUoo9S2q`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldBCFzjforqsWunR","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Item Slot**
+  - id: `fldnxt05lxlVRuj7p`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["HW1","HW2","Video-1","Video-2","Video-3"],"choicesDetailed":[{"id":"selFT6QulHQUyBeSP","name":"HW1","color":"blueLight2"},{"id":"selUb7DGqzU8LaqHm","name":"HW2","color":"cyanLight2"},{"id":"selUmEsW7JYuLfwjy","name":"Video-1","color":"tealLight2"},{"id":"selG2HxZn6DA6ALoT","name":"Video-2","color":"greenLight2"},{"id":"selj07DkgpCj84P4p","name":"Video-3","color":"yellowLight2"}]}`
+- **Homework**
+  - id: `fldotQdQqQ7RKVQGg`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblUuxwYlX4EQ9MKE","linkedTableName":"FBC Curriculum - SYNC","inverseLinkFieldId":"fld4swY3XDC0Bn4Er","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Submitted File Review Summary**
+  - id: `fldFZLzDjiEbENCGl`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldq8HdodVgQMlylM","fld71v6s6wYaJ2Umk"],"referencedFieldNames":["Submitted Asset File Names","Submitted Asset File Links"],"formula":"\"Files: \" &\nARRAYJOIN({fldq8HdodVgQMlylM}, \", \") &\n\"\\n\\nLinks:\\n\" &\nARRAYJOIN({fld71v6s6wYaJ2Umk}, \"\\n\")","fieldReferencesById":["fldq8HdodVgQMlylM","fld71v6s6wYaJ2Umk"],"fieldReferencesByName":["Submitted Asset File Names","Submitted Asset File Links"],"dependencySource":"metadata"}`
+- **All Submitted Files Uploaded?**
+  - id: `fldpQj6QhCexD5bMx`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldwaM1YePyV7x57d"],"referencedFieldNames":["Submitted Asset Upload Statuses"],"formula":"IF(\n  AND(\n    {fldwaM1YePyV7x57d},\n    NOT(FIND(\"Ready\", ARRAYJOIN({fldwaM1YePyV7x57d}, \",\"))),\n    NOT(FIND(\"Processing\", ARRAYJOIN({fldwaM1YePyV7x57d}, \",\"))),\n    NOT(FIND(\"Pending Link\", ARRAYJOIN({fldwaM1YePyV7x57d}, \",\"))),\n    NOT(FIND(\"Error\", ARRAYJOIN({fldwaM1YePyV7x57d}, \",\"))),\n    FIND(\"Uploaded\", ARRAYJOIN({fldwaM1YePyV7x57d}, \",\"))\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldwaM1YePyV7x57d"],"fieldReferencesByName":["Submitted Asset Upload Statuses"],"dependencySource":"metadata"}`
+- **Completion Status**
+  - id: `fld3QgYcH4AqQh6gP`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Submitted","Submitted","Under Review","Satisfactory","Needs Revision","Not Accepted"],"choicesDetailed":[{"id":"sel7cHMk9djMY4XbY","name":"Not Submitted","color":"blueLight2"},{"id":"selGGE1t0BKFE3nni","name":"Submitted","color":"cyanLight2"},{"id":"selce2Iy3Go1gklFZ","name":"Under Review","color":"tealLight2"},{"id":"selNjTuSuZ6niMG3H","name":"Satisfactory","color":"greenLight2"},{"id":"sel4rriFeZ67NwRgR","name":"Needs Revision","color":"yellowLight2"},{"id":"sel8uyKkatuc45EW6","name":"Not Accepted","color":"orangeLight2"}]}`
+- **Submission Assets**
+  - id: `fldKy5hltmJc6A8Jx`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldQF8OsfESrHdcUb","inverseLinkFieldName":"Homework Completions","prefersSingleRecordLink":false,"isReversed":false}`
+- ** Submission Asset Count**
+  - id: `fldczbWDjNmiH8riS`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldKy5hltmJc6A8Jx"],"referencedFieldNames":["Submission Assets"],"formula":"COUNTA({fldKy5hltmJc6A8Jx})","fieldReferencesById":["fldKy5hltmJc6A8Jx"],"fieldReferencesByName":["Submission Assets"],"dependencySource":"metadata"}`
+- **Final Reflection Quiz Submissions**
+  - id: `fldxn4crSQHzGhK3t`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl6ORxLs192mXEWp","linkedTableName":"Final Reflection Quiz Submissions","inverseLinkFieldId":"fldu8A4cwo5R237QL","inverseLinkFieldName":"Homework Completion","prefersSingleRecordLink":false,"isReversed":false}`
+- **Linked Asset Duplicate?**
+  - id: `fldOeJGckQnYlWI2J`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"checkbox","resultOptions":{"icon":"thumbsUp","color":"greenBright"},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldtE66EBZwDHewbl","fieldNameInLinkedTable":"File is Duplicate?","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Status**
+  - id: `fldutIRItKLRlcnYF`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldQTwrLKa5YNTELl","fieldNameInLinkedTable":"Duplicate File Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Notes**
+  - id: `fldqioldeDlWcHKly`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldVkOPvB74HbFliP","fieldNameInLinkedTable":"Duplicate Match Notes","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Match Record**
+  - id: `fldoOVFGOHb32c0wZ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fldsNazvec6r4mxoY","fieldNameInLinkedTable":"Duplicate Match Record","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Match Strength**
+  - id: `fldtFXniAJjGVu19u`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fld1gOJTK0e3G8ulG","fieldNameInLinkedTable":"Duplicate Match Strength","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Review Status**
+  - id: `fldWFJGKzeXneoEHQ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKy5hltmJc6A8Jx","recordLinkFieldName":"Submission Assets","fieldIdInLinkedTable":"fld8C1Wfr0BCKNxpK","fieldNameInLinkedTable":"Duplicate Review Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Final Reflection Quiz Submissions 2**
+  - id: `fldTXDGG63jE9cGW0`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+
+## Table: **Video Feedback**
+
+- id: `tblOV6pJDxQFBSQ3q`
+- primary field: **Video Feedback Name** (`fldKl1zQNuTwcPAlH`)
+- role guess: `operational summary`
+- fields: `49`
+- link fields: `5`
+- computed fields: `12`
+- description: Coach review tracks video asset feedback, approval, and XP awards efficiently.
+
+### Fields
+
+- **Video Feedback Name**
+  - id: `fldKl1zQNuTwcPAlH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldQuw8dRQnPmb5yU","fldLvfkoNR3cbxa6E"],"referencedFieldNames":["Enrollment","Week"],"formula":"{fldQuw8dRQnPmb5yU} & \" - \" & {fldLvfkoNR3cbxa6E} & \" - Video Feedback\"","fieldReferencesById":["fldQuw8dRQnPmb5yU","fldLvfkoNR3cbxa6E"],"fieldReferencesByName":["Enrollment","Week"],"dependencySource":"metadata"}`
+- **Google Drive File URL**
+  - id: `fldGJsSIOBkvZRxf6`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Week**
+  - id: `fldLvfkoNR3cbxa6E`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldIa3kwvQGwxnh1U","recordLinkFieldName":"Submission","fieldIdInLinkedTable":"fldA3fpXWckngZ6g1","fieldNameInLinkedTable":"Week","fieldTableInLinkedTable":"Submissions"}`
+- **Video URL or Drive Link**
+  - id: `fldHBzYcHzW5O0ip9`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Coach Feedback**
+  - id: `fldyXVwvXuk1SYnpg`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Do Not Award XP?**
+  - id: `fldJPT8GQhwHzOcmG`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Extra Credit XP Awarded**
+  - id: `fldkAu8YKNxCTlYIL`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Feedback Posted?**
+  - id: `fldHkvzRIoLANvpAQ`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Base XP Awarded**
+  - id: `flda0Bh7Wcvj3RASC`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Total Video XP Awarded**
+  - id: `fldS1v7HiAEWgWnZG`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldJPT8GQhwHzOcmG","flda0Bh7Wcvj3RASC","fldkAu8YKNxCTlYIL"],"referencedFieldNames":["Do Not Award XP?","Base XP Awarded","Extra Credit XP Awarded"],"formula":"IF(\r\n  {fldJPT8GQhwHzOcmG},\r\n  0,\r\n  IF({flda0Bh7Wcvj3RASC}, {flda0Bh7Wcvj3RASC}, 0) +\r\n  IF({fldkAu8YKNxCTlYIL}, {fldkAu8YKNxCTlYIL}, 0)\r\n)","fieldReferencesById":["fldJPT8GQhwHzOcmG","flda0Bh7Wcvj3RASC","fldkAu8YKNxCTlYIL"],"fieldReferencesByName":["Do Not Award XP?","Base XP Awarded","Extra Credit XP Awarded"],"dependencySource":"metadata"}`
+- **Award Status**
+  - id: `fldKwZPrVTxGGc9Wf`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Awarded","Do Not Award"],"choicesDetailed":[{"id":"selgSPKfWc4avqTZZ","name":"Pending","color":"blueLight2"},{"id":"selG7UHT5rrPzGFEJ","name":"Awarded","color":"cyanLight2"},{"id":"selpePm5Ku5XRxkiT","name":"Do Not Award","color":"orangeLight1"}]}`
+- **Reviewed At**
+  - id: `fldK0XgEWzxvw9hYx`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Parent Feedback Ready?**
+  - id: `fld8DOjFEpfaaRIrb`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Parent Feedback Subject**
+  - id: `fldrW1L6jXRIE3dGF`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Events**
+  - id: `fldkTbQ1yyK0qOyLp`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldw2uzNagvapLcXp","inverseLinkFieldName":"Video Feedback","prefersSingleRecordLink":false,"isReversed":false}`
+- **Parent Feedback Sent?**
+  - id: `fldrrXO7wS5f0RPV5`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Parent Feedback Sent On**
+  - id: `fld8b77cC15oc0mZE`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Writeback Complete?**
+  - id: `fldzGYsF8NllnpRMQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld1QFG4TX1fdN2h9","fldLRbcq68yn7aTp1","fldGJsSIOBkvZRxf6","fldJDWXsPcQaH2pA2","fldnDfkcdMyZ0ychG","fldGtSrSa4E25YmRW"],"referencedFieldNames":["Upload Status","Google Drive File ID","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Video Asset Uploaded At"],"formula":"AND(\n  {fld1QFG4TX1fdN2h9} = \"Uploaded\",\n  {fldLRbcq68yn7aTp1} != BLANK(),\n  {fldGJsSIOBkvZRxf6} != BLANK(),\n  {fldJDWXsPcQaH2pA2} != BLANK(),\n  {fldnDfkcdMyZ0ychG} != BLANK(),\n  {fldGtSrSa4E25YmRW} != BLANK()\n)","fieldReferencesById":["fld1QFG4TX1fdN2h9","fldLRbcq68yn7aTp1","fldGJsSIOBkvZRxf6","fldJDWXsPcQaH2pA2","fldnDfkcdMyZ0ychG","fldGtSrSa4E25YmRW"],"fieldReferencesByName":["Upload Status","Google Drive File ID","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Video Asset Uploaded At"],"dependencySource":"metadata"}`
+- **Record Id**
+  - id: `fld1ViQ8KFMlOuM2S`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Created**
+  - id: `fldfSDyiZ4nBAnoDg`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"}`
+- **Submission Asset**
+  - id: `fld9laOK9yRAxgsph`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldxapOLpLH4KaXOb","inverseLinkFieldName":"Video Feedback","prefersSingleRecordLink":true,"isReversed":false}`
+- **Video Feedback Key**
+  - id: `fldY0Jmc6aU4q5waJ`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Submission**
+  - id: `fldIa3kwvQGwxnh1U`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fldUkjCtWcEPm4b0f","inverseLinkFieldName":"Video Feedback","prefersSingleRecordLink":true,"isReversed":false}`
+- **Enrollment**
+  - id: `fldQuw8dRQnPmb5yU`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldGZhsRVOK2XYPh4","inverseLinkFieldName":"Video Feedback","prefersSingleRecordLink":true,"isReversed":false}`
+- **Asset Type**
+  - id: `fldCAnBNrOkgup7nz`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Submission Video","Other"],"choicesDetailed":[{"id":"selDqLoH5L60THIJJ","name":"Submission Video","color":"blueLight2"},{"id":"selCRFJKwI2zs09DO","name":"Other","color":"cyanLight2"}]}`
+- **Active?**
+  - id: `fld5vB8UQwrwTG6bm`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Reviewed By**
+  - id: `fldnogk7IOx8BtkOB`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Grade Band**
+  - id: `fldhDaZcIuMeoFEyK`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldF4e4QyPEqqWjyq","inverseLinkFieldName":"Video Feedback","prefersSingleRecordLink":true,"isReversed":false}`
+- **Video Asset File Name**
+  - id: `fldo2WZ7LzF8fmrtL`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Video Asset Uploaded At**
+  - id: `fldGtSrSa4E25YmRW`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Auto-link Eligible?**
+  - id: `fldOeyXmNGjQ2qSr5`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Ready for XP Automation?**
+  - id: `fldOAZdjTivt8Z5pe`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Video Feedback Workflow Status**
+  - id: `fldDyFRAykPxujAjN`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Needs Review","Feedback Given","Ready for XP","Completed"],"choicesDetailed":[{"id":"seloZjpcMmK8xNf78","name":"Needs Review","color":"blueLight2"},{"id":"selXzY2YGvCgCt8Gt","name":"Feedback Given","color":"cyanLight2"},{"id":"sellxqIghSRaNqyJI","name":"Ready for XP","color":"tealLight2"},{"id":"sel5FFZ7cwtl1JSxI","name":"Completed","color":"greenLight2"}]}`
+- **Upload Status**
+  - id: `fld1QFG4TX1fdN2h9`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processing","Uploaded","Error","Ready","No File"],"choicesDetailed":[{"id":"sel73fuBVsAjKlytm","name":"Pending","color":"blueLight2"},{"id":"selBhwVjhtZgtvH8T","name":"Processing","color":"cyanLight2"},{"id":"selQQ6AGjrEemAg8P","name":"Uploaded","color":"tealLight2"},{"id":"selP5xh4zzazgcScs","name":"Error","color":"greenLight2"},{"id":"selHdlrtKP0DNTqxt","name":"Ready","color":"yellowLight2"},{"id":"selUpOXghERI82J6B","name":"No File","color":"orangeLight2"}]}`
+- **Google Drive File ID**
+  - id: `fldLRbcq68yn7aTp1`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Google Drive View URL**
+  - id: `fldw6PfS3oJ9ztRU0`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive Download URL**
+  - id: `fldBj4pvJj2nZQs0c`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive Folder ID**
+  - id: `fldJDWXsPcQaH2pA2`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Google Drive Folder URL**
+  - id: `fldnDfkcdMyZ0ychG`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Upload Error**
+  - id: `fld1uXAvx9N8oqp5K`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Parent Feedback Send Error**
+  - id: `flduORgXj4l3fuTV0`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **DELETE MAYBE - XP Events copy**
+  - id: `fldTJd1LkzRRmBiAZ`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Activity Date - Lkp**
+  - id: `fldVpRPcp5PZDtQ7s`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"local","format":"l"}},"recordLinkFieldId":"fldIa3kwvQGwxnh1U","recordLinkFieldName":"Submission","fieldIdInLinkedTable":"fldpkkSBsx8kQRZos","fieldNameInLinkedTable":"Activity Date","fieldTableInLinkedTable":"Submissions"}`
+- **Linked Asset Duplicate?**
+  - id: `fldyJS0nSGwl9B1Pp`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"checkbox","resultOptions":{"icon":"thumbsUp","color":"greenBright"},"recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fldtE66EBZwDHewbl","fieldNameInLinkedTable":"File is Duplicate?","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Status**
+  - id: `fldiXBO7YNebVaqjB`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fldQTwrLKa5YNTELl","fieldNameInLinkedTable":"Duplicate File Status","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Notes**
+  - id: `fldBGvZh1XwONBNyn`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fldVkOPvB74HbFliP","fieldNameInLinkedTable":"Duplicate Match Notes","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Match Record**
+  - id: `fldRvQRxMX5l4uPID`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fldsNazvec6r4mxoY","fieldNameInLinkedTable":"Duplicate Match Record","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Match Strength**
+  - id: `fldMkEA5OZcsOJeZH`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fld1gOJTK0e3G8ulG","fieldNameInLinkedTable":"Duplicate Match Strength","fieldTableInLinkedTable":"Submission Assets"}`
+- **Linked Asset Duplicate Review Status**
+  - id: `flde1rKFOxJ3PVrrr`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fld9laOK9yRAxgsph","recordLinkFieldName":"Submission Asset","fieldIdInLinkedTable":"fld8C1Wfr0BCKNxpK","fieldNameInLinkedTable":"Duplicate Review Status","fieldTableInLinkedTable":"Submission Assets"}`
+
+## Table: **Tutorials**
+
+- id: `tbldfoVGdhqATi4MS`
+- primary field: **Name** (`fldn4wcgXZfTNH44h`)
+- role guess: `standard`
+- fields: `13`
+- link fields: `0`
+- computed fields: `0`
+
+### Fields
+
+- **Name**
+  - id: `fldn4wcgXZfTNH44h`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Link to Video**
+  - id: `fldlu91Ag39IUi2y6`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Athlete**
+  - id: `fldHqGqeLatb0FIKI`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Athlete Headshot - Lkp**
+  - id: `fld2hw0UhxXDDcA8t`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Thumbnail**
+  - id: `fldRZALpqRVvx42mG`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Website Image Resolved**
+  - id: `fld7HUJwBCT9FO6Wi`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Tutorial Type**
+  - id: `fldnG0KKjKKSsG1hV`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Tutorial","Shout - Out","FBC Article Book"],"choicesDetailed":[{"id":"selakNkvgt2Qhf4Dr","name":"Tutorial","color":"blueLight2"},{"id":"selL7IZoS595lMvPh","name":"Shout - Out","color":"cyanLight2"},{"id":"selXnaPRSG61AJ1v0","name":"FBC Article Book","color":"tealLight2"}]}`
+- **Tutorial - Category**
+  - id: `fld4wdx6Dn7u5DWOC`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Dribble","Shoot","Character","Freethrow"],"choicesDetailed":[{"id":"selnQJCYSKgApdycY","name":"Dribble","color":"blueLight2"},{"id":"selwwHW18rs23rksT","name":"Shoot","color":"cyanLight2"},{"id":"selY01syqCCArgFdW","name":"Character","color":"tealLight2"},{"id":"selPAgxjQvOJYWYT5","name":"Freethrow","color":"greenLight2"}]}`
+- **Associated Program**
+  - id: `fldrNntza75jftRrL`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Dribbling Challenge","Shooting Challenge"],"choicesDetailed":[{"id":"seld2Dkyqfu2Hbxff","name":"Dribbling Challenge","color":"blueLight2"},{"id":"selJeXsHYYN6KUTfC","name":"Shooting Challenge","color":"grayDark1"}]}`
+- **Brief Description**
+  - id: `fld0QcrusO6j4DJx8`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Detailed Description**
+  - id: `fldmx2L1GKCZexGpy`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **OK to Publish on Softr**
+  - id: `fldrNcMJBBnkdB9Be`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Sort Order**
+  - id: `fld2vRPsgRjz7Mzic`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+
+## Table: **Tutorials & Assets**
+
+- id: `tblDOTgsWfqPm18bw`
+- primary field: **﻿Name** (`fldduBizp8qAnAMJW`)
+- role guess: `standard`
+- fields: `13`
+- link fields: `0`
+- computed fields: `0`
+
+### Fields
+
+- **﻿Name**
+  - id: `fldduBizp8qAnAMJW`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `True`
+- **Link to Video**
+  - id: `fldM82Klng8bFoeNa`
+  - type: `multilineText`
+  - role: `identifier`
+  - primary: `False`
+- **Sort Order**
+  - id: `fldsFcI52Spo2BuZO`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Type of Asset**
+  - id: `fldcGq4kW1gbIEgQ5`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["FBC Article Book","Tutorial","Shout Out","Informational"],"choicesDetailed":[{"id":"selwgPwl2xbuxy27f","name":"FBC Article Book","color":"blueLight2"},{"id":"selMteB0tAumfwMwf","name":"Tutorial","color":"cyanLight2"},{"id":"selIuIF1Bn7KSrjK0","name":"Shout Out","color":"tealLight2"},{"id":"selZ65H4jXow1umqc","name":"Informational","color":"greenLight2"}]}`
+- **Associated Program**
+  - id: `fldKNWaFZ0bO6RmrQ`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Shooting Challenge","Dribbling Challenge"],"choicesDetailed":[{"id":"selov7RbNdVu26Rif","name":"Shooting Challenge","color":"blueLight2"},{"id":"selUWtX33RNbVdDtd","name":"Dribbling Challenge","color":"cyanLight2"}]}`
+- **Detailed Description**
+  - id: `fld7pNEDVhAIM9cYD`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Brief Descriptions**
+  - id: `fldUJJT2D20b3OovP`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Assignment Rationale**
+  - id: `fldWx4chaV3KFucsW`
+  - type: `richText`
+  - role: `standard`
+  - primary: `False`
+- **Athlete**
+  - id: `fldAubbpznx5aRMXI`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Leyton Bakken","Clara Hardy","Easton Hill","Seyler  Ehrlich","Blake Hubers","Brayden Elders","Kesler Moore","Dayton Fox","Timber Pennacchio","Tracen Heidema"],"choicesDetailed":[{"id":"selKeUNjPIqNY4BjT","name":"Leyton Bakken","color":"blueBright"},{"id":"selspd4lMNwO3pyHj","name":"Clara Hardy","color":"yellowBright"},{"id":"sel18SJmxgNcxta2H","name":"Easton Hill","color":"redBright"},{"id":"selVRkl3euTz11fIJ","name":"Seyler  Ehrlich","color":"grayBright"},{"id":"sel5h3N9YiNjxRmxc","name":"Blake Hubers","color":"greenBright"},{"id":"selDl8W8rTjXE58LJ","name":"Brayden Elders","color":"pinkBright"},{"id":"selB115p5l4z2Z9Ym","name":"Kesler Moore","color":"blueLight2"},{"id":"selwn3Fl2vZ1KVr4D","name":"Dayton Fox","color":"greenLight2"},{"id":"sel3QglepDme5w1O3","name":"Timber Pennacchio","color":"tealDark1"},{"id":"selbMAEegdX3nmdUV","name":"Tracen Heidema","color":"cyanLight2"}]}`
+- **Athlete Headshot**
+  - id: `fldc5w0swm9QM0nHI`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Thumbnail**
+  - id: `fldKCzsQ4KY5vSeEI`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Display Image**
+  - id: `fldGPuhpKhqOKsLCS`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **OK to Publish on Softr**
+  - id: `fldKDFR6pnEOu3N09`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["checked"],"choicesDetailed":[{"id":"selXJ6xV3ReGksVU2","name":"checked","color":"blueLight2"},{"id":"sel1QEo4E9myydhKO","name":"","color":"cyanLight2"}]}`
+
+## Table: **Zoom Meetings**
+
+- id: `tblWcSHEm8vNNIxyB`
+- primary field: **Meeting Name** (`fldCX0aHQq1xQDg1J`)
+- role guess: `operational summary`
+- fields: `26`
+- link fields: `3`
+- computed fields: `3`
+- description: Centralize and manage all online video meetings with seamless participant tracking.
+
+### Fields
+
+- **Meeting Name**
+  - id: `fldCX0aHQq1xQDg1J`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Cover Media**
+  - id: `fldnwVDJON3wbWNBv`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Week**
+  - id: `fldOi0gQkrvoBiuHs`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldXFQaclGkhzX19o","inverseLinkFieldName":"Zoom Meetings","prefersSingleRecordLink":true,"isReversed":false}`
+- **Start Time**
+  - id: `fld1VGAi6PUxMv6aH`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **End Time**
+  - id: `fldU3xfWq2zMkkFy1`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Full Description**
+  - id: `fldBtiHQCrY3wcK4C`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Brief Description**
+  - id: `fldlPQPTUVK0DsB2B`
+  - type: `richText`
+  - role: `narrative`
+  - primary: `False`
+- **Zoom Link**
+  - id: `fldCFoa7fVrAYdjaN`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Host Name**
+  - id: `fldAPtvKCXit7WCy2`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Host Email**
+  - id: `flduo3ocrVlp64XsZ`
+  - type: `email`
+  - role: `contact`
+  - primary: `False`
+- **Meeting Agenda**
+  - id: `fldhLdcsIFYuz1bkL`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Meeting Agenda Link**
+  - id: `fldnPq1fkAIGriDws`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Meeting Agenda - Coach Version**
+  - id: `fldZJPcOmryEzdoe0`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Meeting Agenda - Coach Version URL**
+  - id: `fldamJljzG2BWQ2Wp`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Attachments**
+  - id: `fld6O7SJQMOaQd3yZ`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Recording Link - Video**
+  - id: `fldzWw0SOOowFTZ59`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Recording Link - Audio Only**
+  - id: `fldzMktgMoknwCLEQ`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Meeting Summary**
+  - id: `fldbJ73oWBZ6hI120`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Meeting Status**
+  - id: `fldacwAjVOVvf6GL3`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Scheduled","In Progress","Completed","Cancelled"],"choicesDetailed":[{"id":"selL9lWZp34SeSWPX","name":"Scheduled","color":"blueLight2"},{"id":"sel9syxJOtIKgLWDT","name":"In Progress","color":"cyanLight2"},{"id":"sel1zOVMS6142Gbtq","name":"Completed","color":"tealLight2"},{"id":"selbmOymL2IHSX5hu","name":"Cancelled","color":"greenLight2"}]}`
+- **Attendees**
+  - id: `fldbkE5FL3vz8bM7H`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldrM6ixKNS1X45to","inverseLinkFieldName":"Zoom Meetings","prefersSingleRecordLink":false,"isReversed":false}`
+- **Create XP Events**
+  - id: `fldAgk3A2TuUzPiIH`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **XP Events**
+  - id: `fld1pUDdnK1wWRfyg`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblmGSiNA1akW8KnU","linkedTableName":"XP Events","inverseLinkFieldId":"fldyFpo1i4yV85l4x","inverseLinkFieldName":"Zoom Meeting","prefersSingleRecordLink":false,"isReversed":false}`
+- **XP Award Status**
+  - id: `fldvCIwwE5jOzAWhW`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Awarded"],"choicesDetailed":[{"id":"selnahReuJBfVXmHH","name":"Pending","color":"blueLight2"},{"id":"selxeqKGJ45cVafk9","name":"Awarded","color":"cyanLight2"}]}`
+- **Zoom Meeting Key**
+  - id: `fldPM4rI6gDjYsTnB`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Participant Count**
+  - id: `fldybDOkOsevQTazd`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldbkE5FL3vz8bM7H","recordLinkFieldName":"Attendees"}`
+- **RecordId**
+  - id: `fld5fWmgD4tNKQEfz`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+
+## Table: **XP Reward Rules**
+
+- id: `tblnTLz8eDcyi8f3j`
+- primary field: **Reward Rule** (`fldTgf61xAiH7rwoF`)
+- role guess: `standard`
+- fields: `9`
+- link fields: `1`
+- computed fields: `0`
+- description: Central hub to flexibly configure all XP award values and logic.
+
+### Fields
+
+- **Reward Rule**
+  - id: `fldTgf61xAiH7rwoF`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Rule Key**
+  - id: `fldk5bvvmpNa0rXuV`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Source Label**
+  - id: `fldbYFudD0ExZAjwh`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **XP Amount**
+  - id: `fldETKGwefYZ6yW74`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Active?**
+  - id: `fldEwzOUVGMcJeiOi`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Rule Set**
+  - id: `fld5Vt7M1EheRXbVR`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Sort Order**
+  - id: `fldQptrY0o33R0TKS`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Notes**
+  - id: `fldbar6Eua1WUQkGQ`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Grade Band**
+  - id: `fldM8BwPSXIZCB1Jm`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOhHrIqpjcsk2WG","linkedTableName":"Grade Bands","inverseLinkFieldId":"fldmegBkD05uVCBt2","inverseLinkFieldName":"XP Reward Rules","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Table: **Config**
+
+- id: `tblRB6sh77NxjS568`
+- primary field: **Active School Year** (`fldzmpiqjR4etQ24C`)
+- role guess: `config/reference`
+- fields: `16`
+- link fields: `0`
+- computed fields: `0`
+- description: Configuration table for app-wide settings and control values.
+
+Use this table for stable settings, thresholds, toggles, or reference values used across the Shooting Challenge Game App.
+
+Edit values in this table carefully, because changes here may affect formulas, automations, scripts, summaries, or game behavior across multiple tables.
+
+### Fields
+
+- **Active School Year**
+  - id: `fldzmpiqjR4etQ24C`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Root Google Drive Folder ID**
+  - id: `fldvG7kDIreffetRt`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Root Google Drive Folder Link**
+  - id: `fldwRqavjwXbCHzar`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Max Videos Per Submission**
+  - id: `fld8IwARVKdshaLzH`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **File**
+  - id: `fldA68WQ13vp8svCr`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **File Naming Pattern**
+  - id: `fldO6JFKn8casT4dO`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Detailed Stat Tracking Enabled?**
+  - id: `fldsEBaIoxqoIReoo`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Require Detailed Stats?**
+  - id: `fldA0Ms74tOeaYOFN`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **HW Review Enabled?**
+  - id: `fldaAbBWBsC44yCfD`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Video Review Enabled?**
+  - id: `flddeHoFNPavBkcPL`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Submission Base XP**
+  - id: `fldXk7fRSgpir8iwZ`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Shot XP Per Shot**
+  - id: `fldP7lyb4xfxW6vXR`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2}`
+- **Submission XP Active?**
+  - id: `fldNo8Innj9RKdgbJ`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Submission XP Notes**
+  - id: `fld0VA71ymOcxhg6X`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Challenge Week Count**
+  - id: `fldxXVEXMSInASsiB`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Active XP Rule Set**
+  - id: `fldhbswhXMrXPCJ0G`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+
+## Table: **Awards**
+
+- id: `tbltlhInAQPtOB8hx`
+- primary field: **Award Name** (`fldFLW9WVXYo170Zi`)
+- role guess: `standard`
+- fields: `29`
+- link fields: `1`
+- computed fields: `1`
+- description: Defines all reusable awards for the Shooting Challenge, including rules, categories, and settings.
+
+### Fields
+
+- **Award Name**
+  - id: `fldFLW9WVXYo170Zi`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `True`
+- **Award Scope**
+  - id: `fldqKmcMOqooDYklR`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Weekly","Overall","Both"],"choicesDetailed":[{"id":"seltZ0NLvtaDbtvh6","name":"Weekly","color":"blueLight2"},{"id":"seldL8ssUTRtgODPf","name":"Overall","color":"cyanLight2"},{"id":"sel0oP9arZ6Fe7LF4","name":"Both","color":"tealLight2"}]}`
+- **Summary Section Group**
+  - id: `fldQ9DooKnGm4pPaw`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Weekly Awards","Entire Challenge Awards","Both","Hidden","Overall Shot Champion","Overall XP Champion","Overall Homework Champion","Overall Zoom Champion","Overall Amazon Gift Card Winner","Overall Consistency Award"],"choicesDetailed":[{"id":"selyzHCIdtmFgTQEB","name":"Weekly Awards","color":"blueLight2"},{"id":"selGUcUIeQ734XyEC","name":"Entire Challenge Awards","color":"cyanLight2"},{"id":"selc5du9TtcDyd3m3","name":"Both","color":"tealLight2"},{"id":"sel5oKxt52Z1qQSNK","name":"Hidden","color":"greenLight2"},{"id":"selC72IqQ7O3E0MlK","name":"Overall Shot Champion","color":"blueLight2"},{"id":"seloQCpqvO6a5HnZU","name":"Overall XP Champion","color":"cyanLight2"},{"id":"selZCXphRlRQmuDes","name":"Overall Homework Champion","color":"tealLight2"},{"id":"seljFUJBpALkUm8rl","name":"Overall Zoom Champion","color":"greenLight2"},{"id":"selypCKM89mFVp9Xm","name":"Overall Amazon Gift Card Winner","color":"yellowLight2"},{"id":"sel63gQgne29s1CCh","name":"Overall Consistency Award","color":"orangeLight2"}]}`
+- **Prize Value**
+  - id: `fldQoETIjAjIGWYnH`
+  - type: `currency`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":2,"symbol":"$"}`
+- **Default Email Description**
+  - id: `fld72NoPwSFZJL1Om`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Default Email Label**
+  - id: `fldnOytupglaEHgwO`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Recurring Award?**
+  - id: `fldBP53VYqhtyO18U`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Include in Weekly Awards Section?**
+  - id: `fld3yQWw1Jb2Thy5n`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Eligible for Weekly Summary?**
+  - id: `fldQWPX5xf9yduRCu`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Eligible for Overall Summary?**
+  - id: `fldqBUU0QOP9O64t1`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Include in Overall Awards Section?**
+  - id: `fld3iYVye7jgqXAh6`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Challenge Active?**
+  - id: `fldE2Du2bYQNgckku`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Award Recipients**
+  - id: `fldUp6wfeehM6rT2q`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblTyQXl8aEP93ubK","linkedTableName":"Award Recipients","inverseLinkFieldId":"fldKpXJVF01SjiDOV","inverseLinkFieldName":"Award","prefersSingleRecordLink":false,"isReversed":false}`
+- **Default Winner Text**
+  - id: `fldv1o6yNwF1PyasA`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Default No-Winner Text**
+  - id: `fldmvrufmPpiTfdGx`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Gift Card Award?**
+  - id: `fldSe54esv7EVk4EE`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Current Challenge Eligible?**
+  - id: `fldmc5kEN1uapmslB`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Award Recipients Count**
+  - id: `fldJlOo6dALk66GPb`
+  - type: `count`
+  - role: `count`
+  - primary: `False`
+  - options summary: `{"isValid":true,"recordLinkFieldId":"fldUp6wfeehM6rT2q","recordLinkFieldName":"Award Recipients"}`
+- **Email Display Name**
+  - id: `fldkzrZ0LuqhgFiBu`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Email Display Short Name**
+  - id: `fldmsNeIplVq6Dw1T`
+  - type: `singleLineText`
+  - role: `contact`
+  - primary: `False`
+- **Award Description**
+  - id: `fldzpb9Hf8UBHIKr2`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Sort Order**
+  - id: `fldG7ynAfsi4QLsVJ`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Award Code**
+  - id: `fldOOa1YoABNbjia3`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Active?**
+  - id: `fldu0Ar8IN7uTxjXI`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Award Category**
+  - id: `fldDiJZVmSvN9IlFt`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Shots","XP","Homework","Zoom","Milestone","Achievement","Gift Card","Participation","Other","Video","Motivation","Random"],"choicesDetailed":[{"id":"selHCdLtiZGzendra","name":"Shots","color":"blueLight2"},{"id":"sel9Sw8OGmdI29Hxi","name":"XP","color":"cyanLight2"},{"id":"seljnYzwTIRKHZOXg","name":"Homework","color":"tealLight2"},{"id":"selG1dMyKQfFRYlMy","name":"Zoom","color":"greenLight2"},{"id":"selDwv3FBVrcydW1S","name":"Milestone","color":"yellowLight2"},{"id":"selkuKSFTrR15pvFx","name":"Achievement","color":"orangeLight2"},{"id":"selMqDk31tGbjSrYL","name":"Gift Card","color":"redLight2"},{"id":"selwhGtfRZKoD73pc","name":"Participation","color":"pinkLight2"},{"id":"selBmU6SfVFmpV3z6","name":"Other","color":"purpleLight2"},{"id":"selnP8wmm22Cnb2CH","name":"Video","color":"pinkBright"},{"id":"sellcsWRl2mD07Q4N","name":"Motivation","color":"purpleBright"},{"id":"selPpZb45nqCqsaTA","name":"Random","color":"blueDark1"}]}`
+- **Award Type**
+  - id: `fldWwIirq6ipZHIo3`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Performance","Participation","Prize","Recognition","Bonus"],"choicesDetailed":[{"id":"selk6GAtiP59grSnp","name":"Performance","color":"blueLight2"},{"id":"selJnX98l8yuWom9z","name":"Participation","color":"cyanLight2"},{"id":"selSMds6ftxNu02Hu","name":"Prize","color":"tealLight2"},{"id":"selGXPaEdvPjpuMG1","name":"Recognition","color":"greenLight2"},{"id":"selhjYFRYcEF7jk3U","name":"Bonus","color":"yellowLight2"}]}`
+- **Prize Type**
+  - id: `fldNd8RFsdLlpYRcx`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Amazon Gift Card","Physical Prize","Recognition Only","Badge","Other"],"choicesDetailed":[{"id":"selY7AxaATiKEC4hn","name":"Amazon Gift Card","color":"blueLight2"},{"id":"selw9F2INrxrbiTl6","name":"Physical Prize","color":"cyanLight2"},{"id":"selEq0qeARyYpDoiA","name":"Recognition Only","color":"tealLight2"},{"id":"sel68qhEJS6HBOTK2","name":"Badge","color":"greenLight2"},{"id":"sels0Lf8IGUkfDVPO","name":"Other","color":"yellowLight2"}]}`
+- **Internal Notes**
+  - id: `fldxcFOX72WzANqQc`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Requires Manual Fulfillment?**
+  - id: `fldm2pqsdVfscNHU7`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+
+## Table: **Award Recipients**
+
+- id: `tblTyQXl8aEP93ubK`
+- primary field: **Award Recipient Display** (`fldS0XuqihMQxhLZZ`)
+- role guess: `operational summary`
+- fields: `23`
+- link fields: `3`
+- computed fields: `15`
+- description: Tracks every actual award given to an athlete for each challenge.
+
+### Fields
+
+- **Award Recipient Display**
+  - id: `fldS0XuqihMQxhLZZ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldKpXJVF01SjiDOV","fldjDS2cgoEP3eBFJ","fld6D1e5HT9NKWVGv","fldFOsYD5HxeUHq3M"],"referencedFieldNames":["Award","Enrollment Name Lookup","Week","Award Status"],"formula":"{fldKpXJVF01SjiDOV} & \" | \" &\r\n{fldjDS2cgoEP3eBFJ} & \" | \" &\r\nIF({fld6D1e5HT9NKWVGv}, {fld6D1e5HT9NKWVGv}, \"OVERALL\") & \" | \" &\r\n{fldFOsYD5HxeUHq3M}","fieldReferencesById":["fldKpXJVF01SjiDOV","fldjDS2cgoEP3eBFJ","fld6D1e5HT9NKWVGv","fldFOsYD5HxeUHq3M"],"fieldReferencesByName":["Award","Enrollment Name Lookup","Week","Award Status"],"dependencySource":"metadata"}`
+- **Athlete Name - Display**
+  - id: `fldzV0vh3NJARcTS0`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldscYvriHP3DH8HO","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldVLV5YMCB2CHhai","fieldNameInLinkedTable":"Full Athlete Name","fieldTableInLinkedTable":"Enrollments"}`
+- **RecordId**
+  - id: `fldXSQ7KbWSPQn3vR`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Week**
+  - id: `fld6D1e5HT9NKWVGv`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblcsKugv1cla36A6","linkedTableName":"Weeks","inverseLinkFieldId":"fldlFt4ncOqw44HCW","inverseLinkFieldName":"Award Recipients","prefersSingleRecordLink":true,"isReversed":false}`
+- **Date Awarded**
+  - id: `fldiTtywqTQHcsUXt`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Award**
+  - id: `fldKpXJVF01SjiDOV`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbltlhInAQPtOB8hx","linkedTableName":"Awards","inverseLinkFieldId":"fldUp6wfeehM6rT2q","inverseLinkFieldName":"Award Recipients","prefersSingleRecordLink":true,"isReversed":false}`
+- **Award Status**
+  - id: `fldFOsYD5HxeUHq3M`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Approved","Sent","Delivered","Cancelled","In Amazon Cart"],"choicesDetailed":[{"id":"sel3GwanGB1hhM8eO","name":"Pending","color":"blueLight2"},{"id":"selMJGSlIzViC8Tky","name":"Approved","color":"cyanLight2"},{"id":"seldmtYuhvOYhUitS","name":"Sent","color":"tealLight2"},{"id":"sel8aRgrCAocKsrEG","name":"Delivered","color":"greenLight2"},{"id":"selib0bD8lLJe3cXD","name":"Cancelled","color":"yellowLight2"},{"id":"selJYicMidaTCdhPM","name":"In Amazon Cart","color":"purpleLight2"}]}`
+- **Award Amount**
+  - id: `fld48LJbn67iHmk3c`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"currency","resultOptions":{"precision":2,"symbol":"$"},"recordLinkFieldId":"fldKpXJVF01SjiDOV","recordLinkFieldName":"Award","fieldIdInLinkedTable":"fldQoETIjAjIGWYnH","fieldNameInLinkedTable":"Prize Value","fieldTableInLinkedTable":"Awards"}`
+- **Parent Email**
+  - id: `fldVd9S7mc12hnvJe`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldscYvriHP3DH8HO","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldDaqe8xOpDoQo7S","fieldNameInLinkedTable":"Parent Email - Cleaned","fieldTableInLinkedTable":"Enrollments"}`
+- **Enrollment**
+  - id: `fldscYvriHP3DH8HO`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldMjQZITCXNi7HQr","inverseLinkFieldName":"Award Recipients","prefersSingleRecordLink":true,"isReversed":false}`
+- **Enrollment Name Lookup**
+  - id: `fldjDS2cgoEP3eBFJ`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldscYvriHP3DH8HO","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldnRDkfubz7p3gi4","fieldNameInLinkedTable":"Full Athlete Name - Backward","fieldTableInLinkedTable":"Enrollments"}`
+- **Program Instance**
+  - id: `fld7Se1W7q58MvvZM`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"fldscYvriHP3DH8HO","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fldVMwSfH8r9S0afA","fieldNameInLinkedTable":"Program Instance","fieldTableInLinkedTable":"Enrollments"}`
+- **Award Scope**
+  - id: `fldK8WK2NYWD4R7yt`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Weekly","Overall"],"choicesDetailed":[{"id":"selxhhUwTcK1quRBu","name":"Weekly","color":"blueLight2"},{"id":"sel6gTaMmvSHpHusu","name":"Overall","color":"cyanLight2"}]}`
+- **Gift Card Needed?**
+  - id: `fldEbMMnLKr9nuYdh`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Returns true if prize is Amazon Gift Card and it has not been sent.
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldOgUlU1yl7l6dBG","fldFOsYD5HxeUHq3M"],"referencedFieldNames":["Prize Type Lookup","Award Status"],"formula":"IF(\n  AND(\n    FIND(\"Amazon Gift Card\", ARRAYJOIN({fldOgUlU1yl7l6dBG} & \"\")),\n    {fldFOsYD5HxeUHq3M} != \"Sent\"\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldOgUlU1yl7l6dBG","fldFOsYD5HxeUHq3M"],"fieldReferencesByName":["Prize Type Lookup","Award Status"],"dependencySource":"metadata"}`
+- **Gift Card Sent Date**
+  - id: `fldJSL3MhB5nNHNeF`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Delivery Method**
+  - id: `fldwW95B1Y0zclKCj`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Email","In Person","Manual","Other"],"choicesDetailed":[{"id":"selMvUuU63uGMYl3K","name":"Email","color":"blueLight2"},{"id":"seltePt8Zqj5BtdCT","name":"In Person","color":"cyanLight2"},{"id":"selSPbtsseG6jRhyJ","name":"Manual","color":"tealLight2"},{"id":"selEmCddTkPrdUoeZ","name":"Other","color":"greenLight2"}]}`
+- **Award Recipient Unique Key**
+  - id: `fldFIQFTR3Szj4nsV`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Creates a unique key for each award recipient using enrollment, award, week, date, and record ID.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldscYvriHP3DH8HO","fldKpXJVF01SjiDOV","fld6D1e5HT9NKWVGv","fldiTtywqTQHcsUXt"],"referencedFieldNames":["Enrollment","Award","Week","Date Awarded"],"formula":"SUBSTITUTE(\r\n  ARRAYJOIN({fldscYvriHP3DH8HO}) & \"|\" &\r\n  ARRAYJOIN({fldKpXJVF01SjiDOV}) & \"|\" &\r\n  IF(\r\n    {fld6D1e5HT9NKWVGv},\r\n    ARRAYJOIN({fld6D1e5HT9NKWVGv}),\r\n    \"OVERALL\"\r\n  ) & \"|\" &\r\n  IF(\r\n    {fldiTtywqTQHcsUXt},\r\n    DATETIME_FORMAT({fldiTtywqTQHcsUXt}, \"YYYY-MM-DD\"),\r\n    \"NO_DATE\"\r\n  ),\r\n  '\"',\r\n  ''\r\n)","fieldReferencesById":["fldscYvriHP3DH8HO","fldKpXJVF01SjiDOV","fld6D1e5HT9NKWVGv","fldiTtywqTQHcsUXt"],"fieldReferencesByName":["Enrollment","Award","Week","Date Awarded"],"dependencySource":"metadata"}`
+- **Award Category Lookup**
+  - id: `fldnRrES6nzGYrYA8`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKpXJVF01SjiDOV","recordLinkFieldName":"Award","fieldIdInLinkedTable":"fldDiJZVmSvN9IlFt","fieldNameInLinkedTable":"Award Category","fieldTableInLinkedTable":"Awards"}`
+- **Prize Type Lookup**
+  - id: `fldOgUlU1yl7l6dBG`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldKpXJVF01SjiDOV","recordLinkFieldName":"Award","fieldIdInLinkedTable":"fldNd8RFsdLlpYRcx","fieldNameInLinkedTable":"Prize Type","fieldTableInLinkedTable":"Awards"}`
+- **Award Status Sort**
+  - id: `fldDYJap2zTx3gKQ1`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldFOsYD5HxeUHq3M"],"referencedFieldNames":["Award Status"],"formula":"SWITCH(\n  {fldFOsYD5HxeUHq3M},\n  'Pending', 1,\n  'Approved', 2,\n  'Sent', 3,\n  'Delivered', 4,\n  'Cancelled', 9\n)","fieldReferencesById":["fldFOsYD5HxeUHq3M"],"fieldReferencesByName":["Award Status"],"dependencySource":"metadata"}`
+- **Athlete First Name Lookup**
+  - id: `fldRxjiHRZZjilcdW`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldscYvriHP3DH8HO","recordLinkFieldName":"Enrollment","fieldIdInLinkedTable":"fld4wGsfJKp7x4Bjd","fieldNameInLinkedTable":"Athlete First Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Award Description - Lkp**
+  - id: `fldOyxnusd7hooGFR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldKpXJVF01SjiDOV","recordLinkFieldName":"Award","fieldIdInLinkedTable":"fldzpb9Hf8UBHIKr2","fieldNameInLinkedTable":"Award Description","fieldTableInLinkedTable":"Awards"}`
+- **Award Description - Display**
+  - id: `fld3b3BLKm3qKaAvq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldOyxnusd7hooGFR"],"referencedFieldNames":["Award Description - Lkp"],"formula":"TRIM(ARRAYJOIN({fldOyxnusd7hooGFR}, \", \"))","fieldReferencesById":["fldOyxnusd7hooGFR"],"fieldReferencesByName":["Award Description - Lkp"],"dependencySource":"metadata"}`
+
+## Table: **Final Reflection Quiz Submissions**
+
+- id: `tbl6ORxLs192mXEWp`
+- primary field: **Quiz Submission Name** (`fldAqXmEQNBBawAke`)
+- role guess: `operational summary`
+- fields: `54`
+- link fields: `2`
+- computed fields: `25`
+- description: Captures, auto-scores, and links athlete submissions for the Shooting Challenge quiz.
+
+### Fields
+
+- **Quiz Submission Name**
+  - id: `fldAqXmEQNBBawAke`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flduxJuiiibQE0pbt","fldEG71aWxpM4hrGL"],"referencedFieldNames":["Enrollment","Submitted At"],"formula":"IF(\r\n  {flduxJuiiibQE0pbt},\r\n  SUBSTITUTE(\r\n    ARRAYJOIN({flduxJuiiibQE0pbt}, \"\"),\r\n    '\"',\r\n    \"\"\r\n  ) & \" - Final Reflection Quiz - \" & DATETIME_FORMAT({fldEG71aWxpM4hrGL}, \"M/D/YYYY h:mm A\"),\r\n  \"Final Reflection Quiz - \" & DATETIME_FORMAT({fldEG71aWxpM4hrGL}, \"M/D/YYYY h:mm A\")\r\n)","fieldReferencesById":["flduxJuiiibQE0pbt","fldEG71aWxpM4hrGL"],"fieldReferencesByName":["Enrollment","Submitted At"],"dependencySource":"metadata"}`
+- **Enrollment**
+  - id: `flduxJuiiibQE0pbt`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldWRTWkBAvUu1ECx","inverseLinkFieldName":"Final Reflection Quiz Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Homework Completion**
+  - id: `fldu8A4cwo5R237QL`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldxn4crSQHzGhK3t","inverseLinkFieldName":"Final Reflection Quiz Submissions","prefersSingleRecordLink":true,"isReversed":false}`
+- **Submitted At**
+  - id: `fldEG71aWxpM4hrGL`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Processing Status**
+  - id: `fldxQc86Q2OowYPxc`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending","Processed","Error","Needs Review"],"choicesDetailed":[{"id":"selSGWjQkTR4fIYhp","name":"Pending","color":"blueLight2"},{"id":"selbRCUOiGZmFPX8j","name":"Processed","color":"cyanLight2"},{"id":"selwc9oIMSNPuMWkm","name":"Error","color":"tealLight2"},{"id":"selzZATphFwTFrUnu","name":"Needs Review","color":"greenLight2"}]}`
+- **Processing Error**
+  - id: `flddnRLACKMAysd9J`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Coach/Admin Notes**
+  - id: `fldL3paXHkn6fPWsG`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **How did the athlete complete this reflection quiz?**
+  - id: `fldTKmWermFfdERjC`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Individually completed all questions alone","Worked with parent/family help on some questions","Worked with parent/family and discussed the questions together"],"choicesDetailed":[{"id":"selJg8cLY5BinTo8o","name":"Individually completed all questions alone","color":"blueLight2"},{"id":"seln3Ac1LhAnyXMjf","name":"Worked with parent/family help on some questions","color":"cyanLight2"},{"id":"selvMEKAi19wROS2F","name":"Worked with parent/family and discussed the questions together","color":"tealLight2"}]}`
+- **Q1 — Shot Tracker Usage: A player wants to improve, but sometimes they are tempted to only count makes or leave out bad shooting days. What is the best reason to track shots honestly?**
+  - id: `fldYF0DExP9KotsoZ`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Honest tracking helps the player see real patterns, real progress, and what needs more work.","B. Honest tracking matters only if the player is trying to win the leaderboard.","C. Tracking is mostly for the coach, not for the player.","D. Tracking should focus only on made shots because makes show confidence."],"choicesDetailed":[{"id":"selVfedw5CJqtK8V8","name":"A. Honest tracking helps the player see real patterns, real progress, and what needs more work.","color":"blueLight2"},{"id":"selw1mZ0qMl2c09fs","name":"B. Honest tracking matters only if the player is trying to win the leaderboard.","color":"cyanLight2"},{"id":"selVy5bIC6ILMRd6y","name":"C. Tracking is mostly for the coach, not for the player.","color":"tealLight2"},{"id":"seloU1zXTdpW3aDvi","name":"D. Tracking should focus only on made shots because makes show confidence.","color":"greenLight2"}]}`
+- **Q2 — Website Exploration: Why should the athlete regularly use the challenge site to check their progress and work?**
+  - id: `fldwABmogrWtC9zGM`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. It lets the athlete know which assignments they can skip.","B. It helps the athlete understand where they are, what they have completed, and what to work on next.","C. It replaces the need to communicate with parents or coaches.","D. It proves that rankings are more important than daily habits."],"choicesDetailed":[{"id":"selele2pXa72KjlFL","name":"A. It lets the athlete know which assignments they can skip.","color":"blueLight2"},{"id":"sela14xbUFJuDvLRx","name":"B. It helps the athlete understand where they are, what they have completed, and what to work on next.","color":"cyanLight2"},{"id":"selV9myqaJyyMxmkS","name":"C. It replaces the need to communicate with parents or coaches.","color":"tealLight2"},{"id":"selZpdaad8iUEA6n9","name":"D. It proves that rankings are more important than daily habits.","color":"greenLight2"}]}`
+- **Q3 — The Choice is Yours: If an athlete is having an off day in practice, what is the best mindset to use?**
+  - id: `fldshS8Fq9EHM0GG4`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. This just is not my day, so I should stop before it gets worse.","B. The ball feels different, so this practice probably does not count.","C. I can choose my attitude, reset my focus, and keep giving effort.","D. If I am not making shots, the practice is not helping me."],"choicesDetailed":[{"id":"selDOkWJcb4SP35Sn","name":"A. This just is not my day, so I should stop before it gets worse.","color":"blueLight2"},{"id":"selFN3ixAD4RVpvUn","name":"B. The ball feels different, so this practice probably does not count.","color":"cyanLight2"},{"id":"selEYsLpdhXPQlqjv","name":"C. I can choose my attitude, reset my focus, and keep giving effort.","color":"tealLight2"},{"id":"selaIWEYaxmh9TUKG","name":"D. If I am not making shots, the practice is not helping me.","color":"greenLight2"}]}`
+- **Q4 — Shooting Form and Technique: Why should players learn to focus on their form and technique during practice, even when they feel rushed or pressured?**
+  - id: `fldl4YXFMKiKtDUfb`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Shooting faster so they do not overthink.","B. Only counting the shots that feel good.","C. Moving farther from the basket to make practice harder.","D. Building repeatable form so the shot can become more consistent."],"choicesDetailed":[{"id":"selSw8XyvELbaWYBu","name":"A. Shooting faster so they do not overthink.","color":"blueLight2"},{"id":"seloWs1rbrJvSEw96","name":"B. Only counting the shots that feel good.","color":"cyanLight2"},{"id":"selAA9pZrW6X00y96","name":"C. Moving farther from the basket to make practice harder.","color":"tealLight2"},{"id":"selWE3XuO0a6e13BR","name":"D. Building repeatable form so the shot can become more consistent.","color":"greenLight2"}]}`
+- **Q5 — Self Esteem and Accomplishment: What helps a player actually build self-esteem and confidence during the challenge?**
+  - id: `fldIdHdBJRJdZIiqO`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Getting compliments even when they do not put in much effort.","B. Comparing themselves to players who are behind them.","C. Earning actual accomplishments through effort, discipline, and improvement.","D. Avoiding hard drills so they feel successful more often."],"choicesDetailed":[{"id":"selhQD11BNsodS0Td","name":"A. Getting compliments even when they do not put in much effort.","color":"blueLight2"},{"id":"selxUgIi9K9HxqdEt","name":"B. Comparing themselves to players who are behind them.","color":"cyanLight2"},{"id":"selFsKv0McPZ14Nyc","name":"C. Earning actual accomplishments through effort, discipline, and improvement.","color":"tealLight2"},{"id":"selwhQs19OGWY3WIh","name":"D. Avoiding hard drills so they feel successful more often.","color":"greenLight2"}]}`
+- **Q6 — Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?**
+  - id: `fldwGCnnpHkmiwC5n`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. It helps the player become more comfortable finishing in different ways near the basket.","B. It is mainly useful because layups are easier than all other shots.","C. It helps the player avoid using their weak hand in games.","D. It matters only for post players, not guards."],"choicesDetailed":[{"id":"selez3gyniGPgZ0hN","name":"A. It helps the player become more comfortable finishing in different ways near the basket.","color":"blueLight2"},{"id":"selv3LkP5SArejfuW","name":"B. It is mainly useful because layups are easier than all other shots.","color":"cyanLight2"},{"id":"selMIQWLCcffBEsnS","name":"C. It helps the player avoid using their weak hand in games.","color":"tealLight2"},{"id":"sel5U5TnwSRN2ScE0","name":"D. It matters only for post players, not guards.","color":"greenLight2"}]}`
+- **Q7 — Touch and Talk: If a teammate looks discouraged or frustrated, what is usually the best response?**
+  - id: `fldKNrTgpchnsWefJ`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Ignore them so they can figure it out alone.","B. Wait until they make a mistake, then correct them.","C. Only encourage them if they are one of your close friends.","D. Use positive communication and connection to help them feel supported."],"choicesDetailed":[{"id":"sel6iYX6aIA5zEDrW","name":"A. Ignore them so they can figure it out alone.","color":"blueLight2"},{"id":"selaocGYGNZQ3fHXC","name":"B. Wait until they make a mistake, then correct them.","color":"cyanLight2"},{"id":"sel3lVVtNuwB24u2v","name":"C. Only encourage them if they are one of your close friends.","color":"tealLight2"},{"id":"seleJevwZIKexWDT4","name":"D. Use positive communication and connection to help them feel supported.","color":"greenLight2"}]}`
+- **Q8 — 5 Spot Shooting Locations: Why do players practice shooting from all 5 main spots, and not just their favorite one?**
+  - id: `fldtzdrBXUP6i3kSD`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. It makes the workout shorter and easier to finish.","B. It helps the athlete become more prepared for game-like shots from different areas.","C. It proves that every player should shoot the same kind of shot.","D. It allows the athlete to ignore shots they are not good at yet."],"choicesDetailed":[{"id":"selK27HRKA88D7ugl","name":"A. It makes the workout shorter and easier to finish.","color":"blueLight2"},{"id":"sellvzA5aebBFWywY","name":"B. It helps the athlete become more prepared for game-like shots from different areas.","color":"cyanLight2"},{"id":"sel0rNqPQLMBTTTE2","name":"C. It proves that every player should shoot the same kind of shot.","color":"tealLight2"},{"id":"selKMrM3PW9h8WL4i","name":"D. It allows the athlete to ignore shots they are not good at yet.","color":"greenLight2"}]}`
+- **Q9 — Mikan Drill: What is the best intention for doing the Mikan Drill during the challenge?**
+  - id: `fldSCyUencG1gJwDq`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. They focus on footwork, weak-hand finishing, and soft touch near the rim.","B. They rush as fast as possible so the drill feels harder.","C. They only use their strong hand so they can make more shots.","D. They treat it mainly as a conditioning drill and ignore technique."],"choicesDetailed":[{"id":"selbaZjqebQKvFOfL","name":"A. They focus on footwork, weak-hand finishing, and soft touch near the rim.","color":"blueLight2"},{"id":"sel0AIFytLzvRVcuh","name":"B. They rush as fast as possible so the drill feels harder.","color":"cyanLight2"},{"id":"seleHiedyz1JdHTtK","name":"C. They only use their strong hand so they can make more shots.","color":"tealLight2"},{"id":"sele28kdIiesYfg8Y","name":"D. They treat it mainly as a conditioning drill and ignore technique.","color":"greenLight2"}]}`
+- **Q10 — Goal Setting — What GOATS Do!: How do the best athletes approach goal setting in a program like this?**
+  - id: `fldCkJN13P44pUVYO`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. I want to be great someday, but I do not need a plan yet.","B. I will only set goals after I know I can reach them easily.","C. My goal is to win, so daily habits do not matter much.","D. I have a clear goal, I know the habits needed, and I will track my progress."],"choicesDetailed":[{"id":"selNazIZnud969GgW","name":"A. I want to be great someday, but I do not need a plan yet.","color":"blueLight2"},{"id":"selQCmKlzAt5gCwsw","name":"B. I will only set goals after I know I can reach them easily.","color":"cyanLight2"},{"id":"selW9APPU0FfczJrI","name":"C. My goal is to win, so daily habits do not matter much.","color":"tealLight2"},{"id":"selAeSD7ERGmmav8k","name":"D. I have a clear goal, I know the habits needed, and I will track my progress.","color":"greenLight2"}]}`
+- **Q11 — Thank You Note: What is the biggest lesson behind the Thank You Note activity in this program?**
+  - id: `fldEjHXFqVmNOrkwT`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Athletes should only thank people when they receive a reward.","B. Gratitude is mostly about being polite so adults are happy.","C. Strong athletes recognize the people who help them and learn to show appreciation.","D. Thank you notes matter only if they are long and perfectly written."],"choicesDetailed":[{"id":"sel4AfF3yhlaWFMzN","name":"A. Athletes should only thank people when they receive a reward.","color":"blueLight2"},{"id":"selKhuudKR7iudw3J","name":"B. Gratitude is mostly about being polite so adults are happy.","color":"cyanLight2"},{"id":"selnVDsJZxN7465fn","name":"C. Strong athletes recognize the people who help them and learn to show appreciation.","color":"tealLight2"},{"id":"selKkVkFJrJDmpTXC","name":"D. Thank you notes matter only if they are long and perfectly written.","color":"greenLight2"}]}`
+- **Q12 — Coach Yourself: When a player is struggling or frustrated, what is a strong approach to coaching themselves?**
+  - id: `fld77T2e4qJkBrGI5`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. I am just not a shooter today.","B. Slow down, check my feet, finish high, and take the next rep seriously.","C. The ball must feel different today.","D. I should stop before my percentage gets worse."],"choicesDetailed":[{"id":"selXHUWaypOzZDLA9","name":"A. I am just not a shooter today.","color":"blueLight2"},{"id":"selKuMVChp3iR43Pw","name":"B. Slow down, check my feet, finish high, and take the next rep seriously.","color":"cyanLight2"},{"id":"selT5y8jj3s27aXQD","name":"C. The ball must feel different today.","color":"tealLight2"},{"id":"sellQ249tm3ealfgj","name":"D. I should stop before my percentage gets worse.","color":"greenLight2"}]}`
+- **Q13 — Visualization: Why use visualization in the challenge or before a game or practice?**
+  - id: `fldebZGfUzSgktSd0`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. It helps the player mentally rehearse focus, confidence, and successful actions before doing them.","B. It replaces the need for real practice if the player thinks clearly enough.","C. It works best only after an athlete is already playing perfectly.","D. It is useful only before games, not during training."],"choicesDetailed":[{"id":"sel4pCzRF59iTbDFM","name":"A. It helps the player mentally rehearse focus, confidence, and successful actions before doing them.","color":"blueLight2"},{"id":"selvqMKWtJwqvAFyr","name":"B. It replaces the need for real practice if the player thinks clearly enough.","color":"cyanLight2"},{"id":"sel8bcG1k5xxrjfsX","name":"C. It works best only after an athlete is already playing perfectly.","color":"tealLight2"},{"id":"seltcw5IgeZS5h2SB","name":"D. It is useful only before games, not during training.","color":"greenLight2"}]}`
+- **Q14 — Build Your Freethrow Routine: What is the purpose of building a repeatable free throw routine?**
+  - id: `fld0iZ3xKERog9yf8`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. A routine makes the shot automatic, so practice is no longer needed.","B. A routine is mostly for looking confident in front of people.","C. A routine helps only if the player is already a strong free throw shooter.","D. A routine gives the player a repeatable process for focus, rhythm, and confidence."],"choicesDetailed":[{"id":"selez6cuLOABsls3i","name":"A. A routine makes the shot automatic, so practice is no longer needed.","color":"blueLight2"},{"id":"sellt8M5sJ1odG8qq","name":"B. A routine is mostly for looking confident in front of people.","color":"cyanLight2"},{"id":"sel7e7gLAabpFPBMh","name":"C. A routine helps only if the player is already a strong free throw shooter.","color":"tealLight2"},{"id":"selJvufHIuBhmHGor","name":"D. A routine gives the player a repeatable process for focus, rhythm, and confidence.","color":"greenLight2"}]}`
+- **Q15 — Bad Habit I Need to Fix: What is the best way to approach a bad habit noticed during the challenge?**
+  - id: `fldUnzXdULPDJteoa`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. Wait until the habit disappears with age.","B. Focus only on strengths so the bad habit does not matter.","C. Identify the habit clearly and choose one specific way to work on it.","D. Blame the habit on teammates, coaches, or the situation."],"choicesDetailed":[{"id":"selQ8OltBgtRSX5bN","name":"A. Wait until the habit disappears with age.","color":"blueLight2"},{"id":"selYUC0Sy12QpXXIp","name":"B. Focus only on strengths so the bad habit does not matter.","color":"cyanLight2"},{"id":"selYTKmVlvyCvw9di","name":"C. Identify the habit clearly and choose one specific way to work on it.","color":"tealLight2"},{"id":"selX1kCzgmDpA83GX","name":"D. Blame the habit on teammates, coaches, or the situation.","color":"greenLight2"}]}`
+- **Q16 — Sportsmanship: What does true sportsmanship look like in the context of this challenge?**
+  - id: `fldCy4Ow15WOwUgHD`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. A player celebrates loudly after scoring but complains when teammates make mistakes.","B. A player competes hard while still respecting teammates, opponents, coaches, and officials.","C. A player stays quiet when winning but argues when the game is close.","D. A player is respectful only when the calls go their way."],"choicesDetailed":[{"id":"selAj1CWhCMq6MNRS","name":"A. A player celebrates loudly after scoring but complains when teammates make mistakes.","color":"blueLight2"},{"id":"seloDFqFKSX165UsI","name":"B. A player competes hard while still respecting teammates, opponents, coaches, and officials.","color":"cyanLight2"},{"id":"selxThq05IcBktRwo","name":"C. A player stays quiet when winning but argues when the game is close.","color":"tealLight2"},{"id":"selxe4Ky39GXBXO03","name":"D. A player is respectful only when the calls go their way.","color":"greenLight2"}]}`
+- **Q17 — Final Reflection Challenge: What is the purpose of the final reflection challenge for athletes?**
+  - id: `fldSbzcVFDOe24j3w`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. To make athletes memorize every assignment word for word.","B. To punish athletes who missed homework earlier in the program.","C. To replace the need for shooting, practice, and effort.","D. To help athletes review the biggest lessons and think about how they can use them."],"choicesDetailed":[{"id":"selwF7w7sCIC9mwMi","name":"A. To make athletes memorize every assignment word for word.","color":"blueLight2"},{"id":"selxBpR9fGSZjwyjU","name":"B. To punish athletes who missed homework earlier in the program.","color":"cyanLight2"},{"id":"selnibm9xtLMl44vn","name":"C. To replace the need for shooting, practice, and effort.","color":"tealLight2"},{"id":"selxDgM8H1hgOhjZr","name":"D. To help athletes review the biggest lessons and think about how they can use them.","color":"greenLight2"}]}`
+- **Q18 — Shot Tracker Summary: What is the real value of completing the full Shot Tracker and reviewing its data at the end?**
+  - id: `fldTcuPdeOKT1dLZ6`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["A. To see what they did, what they learned, and what they should improve next.","B. To decide whether the whole challenge was only successful if every number was perfect.","C. To focus only on rankings and ignore personal improvement.","D. To find excuses for any days they did not shoot well."],"choicesDetailed":[{"id":"seliSNkd3zheS7ZlL","name":"A. To see what they did, what they learned, and what they should improve next.","color":"blueLight2"},{"id":"selbOJWQycKzHCjuC","name":"B. To decide whether the whole challenge was only successful if every number was perfect.","color":"cyanLight2"},{"id":"selZArjpSkBzMkMvT","name":"C. To focus only on rankings and ignore personal improvement.","color":"tealLight2"},{"id":"selveTAUbkYpfDsjI","name":"D. To find excuses for any days they did not shoot well.","color":"greenLight2"}]}`
+- **Q1 Correct?**
+  - id: `fldlb3AVfAj7FEmjr`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldYF0DExP9KotsoZ"],"referencedFieldNames":["Q1 — Shot Tracker Usage: A player wants to improve, but sometimes they are tempted to only count makes or leave out bad shooting days. What is the best reason to track shots honestly?"],"formula":"IF({fldYF0DExP9KotsoZ} = \"A. Honest tracking helps the player see real patterns, real progress, and what needs more work.\", 1, 0)","fieldReferencesById":["fldYF0DExP9KotsoZ"],"fieldReferencesByName":["Q1 — Shot Tracker Usage: A player wants to improve, but sometimes they are tempted to only count makes or leave out bad shooting days. What is the best reason to track shots honestly?"],"dependencySource":"metadata"}`
+- **Q2 Correct?**
+  - id: `fldZAbDPFpiNpkDOq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldwABmogrWtC9zGM"],"referencedFieldNames":["Q2 — Website Exploration: Why should the athlete regularly use the challenge site to check their progress and work?"],"formula":"IF({fldwABmogrWtC9zGM} = \"B. It helps the athlete understand where they are, what they have completed, and what to work on next.\", 1, 0)","fieldReferencesById":["fldwABmogrWtC9zGM"],"fieldReferencesByName":["Q2 — Website Exploration: Why should the athlete regularly use the challenge site to check their progress and work?"],"dependencySource":"metadata"}`
+- **Q3 Correct?**
+  - id: `fldaCZZrVbq3vnLSq`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldshS8Fq9EHM0GG4"],"referencedFieldNames":["Q3 — The Choice is Yours: If an athlete is having an off day in practice, what is the best mindset to use?"],"formula":"IF({fldshS8Fq9EHM0GG4} = \"C. I can choose my attitude, reset my focus, and keep giving effort.\", 1, 0)","fieldReferencesById":["fldshS8Fq9EHM0GG4"],"fieldReferencesByName":["Q3 — The Choice is Yours: If an athlete is having an off day in practice, what is the best mindset to use?"],"dependencySource":"metadata"}`
+- **Q4 Correct?**
+  - id: `fldexVYGdhYxxfRX1`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldl4YXFMKiKtDUfb"],"referencedFieldNames":["Q4 — Shooting Form and Technique: Why should players learn to focus on their form and technique during practice, even when they feel rushed or pressured?"],"formula":"IF({fldl4YXFMKiKtDUfb} = \"D. Building repeatable form so the shot can become more consistent.\", 1, 0)","fieldReferencesById":["fldl4YXFMKiKtDUfb"],"fieldReferencesByName":["Q4 — Shooting Form and Technique: Why should players learn to focus on their form and technique during practice, even when they feel rushed or pressured?"],"dependencySource":"metadata"}`
+- **Q5 Correct?**
+  - id: `fldcOfPpL90km4pma`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldIdHdBJRJdZIiqO"],"referencedFieldNames":["Q5 — Self Esteem and Accomplishment: What helps a player actually build self-esteem and confidence during the challenge?"],"formula":"IF({fldIdHdBJRJdZIiqO} = \"C. Earning actual accomplishments through effort, discipline, and improvement.\", 1, 0)","fieldReferencesById":["fldIdHdBJRJdZIiqO"],"fieldReferencesByName":["Q5 — Self Esteem and Accomplishment: What helps a player actually build self-esteem and confidence during the challenge?"],"dependencySource":"metadata"}`
+- **Q6 Correct?**
+  - id: `fldTXIJAAcaIG7p61`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldwGCnnpHkmiwC5n"],"referencedFieldNames":["Q6 — Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?"],"formula":"IF({fldwGCnnpHkmiwC5n} = \"A. It helps the player become more comfortable finishing in different ways near the basket.\", 1, 0)","fieldReferencesById":["fldwGCnnpHkmiwC5n"],"fieldReferencesByName":["Q6 — Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?"],"dependencySource":"metadata"}`
+- **Q7 Correct?**
+  - id: `fldMEi055mkYu68AT`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldKNrTgpchnsWefJ"],"referencedFieldNames":["Q7 — Touch and Talk: If a teammate looks discouraged or frustrated, what is usually the best response?"],"formula":"IF({fldKNrTgpchnsWefJ} = \"D. Use positive communication and connection to help them feel supported.\", 1, 0)","fieldReferencesById":["fldKNrTgpchnsWefJ"],"fieldReferencesByName":["Q7 — Touch and Talk: If a teammate looks discouraged or frustrated, what is usually the best response?"],"dependencySource":"metadata"}`
+- **Q8 Correct?**
+  - id: `fld6jCKjhOIZraWE0`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldtzdrBXUP6i3kSD"],"referencedFieldNames":["Q8 — 5 Spot Shooting Locations: Why do players practice shooting from all 5 main spots, and not just their favorite one?"],"formula":"IF({fldtzdrBXUP6i3kSD} = \"B. It helps the athlete become more prepared for game-like shots from different areas.\", 1, 0)","fieldReferencesById":["fldtzdrBXUP6i3kSD"],"fieldReferencesByName":["Q8 — 5 Spot Shooting Locations: Why do players practice shooting from all 5 main spots, and not just their favorite one?"],"dependencySource":"metadata"}`
+- **Q9 Correct?**
+  - id: `fldknn7fDm8dYcdUA`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldSCyUencG1gJwDq"],"referencedFieldNames":["Q9 — Mikan Drill: What is the best intention for doing the Mikan Drill during the challenge?"],"formula":"IF({fldSCyUencG1gJwDq} = \"A. They focus on footwork, weak-hand finishing, and soft touch near the rim.\", 1, 0)","fieldReferencesById":["fldSCyUencG1gJwDq"],"fieldReferencesByName":["Q9 — Mikan Drill: What is the best intention for doing the Mikan Drill during the challenge?"],"dependencySource":"metadata"}`
+- **Q10 Correct?**
+  - id: `fldAO1L59WXe2yAda`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldCkJN13P44pUVYO"],"referencedFieldNames":["Q10 — Goal Setting — What GOATS Do!: How do the best athletes approach goal setting in a program like this?"],"formula":"IF({fldCkJN13P44pUVYO} = \"D. I have a clear goal, I know the habits needed, and I will track my progress.\", 1, 0)","fieldReferencesById":["fldCkJN13P44pUVYO"],"fieldReferencesByName":["Q10 — Goal Setting — What GOATS Do!: How do the best athletes approach goal setting in a program like this?"],"dependencySource":"metadata"}`
+- **Q11 Correct?**
+  - id: `fldnydmLvWZxEL0CN`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldEjHXFqVmNOrkwT"],"referencedFieldNames":["Q11 — Thank You Note: What is the biggest lesson behind the Thank You Note activity in this program?"],"formula":"IF({fldEjHXFqVmNOrkwT} = \"C. Strong athletes recognize the people who help them and learn to show appreciation.\", 1, 0)","fieldReferencesById":["fldEjHXFqVmNOrkwT"],"fieldReferencesByName":["Q11 — Thank You Note: What is the biggest lesson behind the Thank You Note activity in this program?"],"dependencySource":"metadata"}`
+- **Q12 Correct?**
+  - id: `fldID2LXbRMTXHGl0`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld77T2e4qJkBrGI5"],"referencedFieldNames":["Q12 — Coach Yourself: When a player is struggling or frustrated, what is a strong approach to coaching themselves?"],"formula":"IF({fld77T2e4qJkBrGI5} = \"B. Slow down, check my feet, finish high, and take the next rep seriously.\", 1, 0)","fieldReferencesById":["fld77T2e4qJkBrGI5"],"fieldReferencesByName":["Q12 — Coach Yourself: When a player is struggling or frustrated, what is a strong approach to coaching themselves?"],"dependencySource":"metadata"}`
+- **Q13 Correct?**
+  - id: `fldWIwQtW65redest`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldebZGfUzSgktSd0"],"referencedFieldNames":["Q13 — Visualization: Why use visualization in the challenge or before a game or practice?"],"formula":"IF({fldebZGfUzSgktSd0} = \"A. It helps the player mentally rehearse focus, confidence, and successful actions before doing them.\", 1, 0)","fieldReferencesById":["fldebZGfUzSgktSd0"],"fieldReferencesByName":["Q13 — Visualization: Why use visualization in the challenge or before a game or practice?"],"dependencySource":"metadata"}`
+- **Q14 Correct?**
+  - id: `fldeewXvzq25KD0LD`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fld0iZ3xKERog9yf8"],"referencedFieldNames":["Q14 — Build Your Freethrow Routine: What is the purpose of building a repeatable free throw routine?"],"formula":"IF({fld0iZ3xKERog9yf8} = \"D. A routine gives the player a repeatable process for focus, rhythm, and confidence.\", 1, 0)","fieldReferencesById":["fld0iZ3xKERog9yf8"],"fieldReferencesByName":["Q14 — Build Your Freethrow Routine: What is the purpose of building a repeatable free throw routine?"],"dependencySource":"metadata"}`
+- **Q15 Correct?**
+  - id: `fldjwZgB95zTt1b1J`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldUnzXdULPDJteoa"],"referencedFieldNames":["Q15 — Bad Habit I Need to Fix: What is the best way to approach a bad habit noticed during the challenge?"],"formula":"IF({fldUnzXdULPDJteoa} = \"C. Identify the habit clearly and choose one specific way to work on it.\", 1, 0)","fieldReferencesById":["fldUnzXdULPDJteoa"],"fieldReferencesByName":["Q15 — Bad Habit I Need to Fix: What is the best way to approach a bad habit noticed during the challenge?"],"dependencySource":"metadata"}`
+- **Q16 Correct?**
+  - id: `fldFa2XMCKCAVJGQH`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldCy4Ow15WOwUgHD"],"referencedFieldNames":["Q16 — Sportsmanship: What does true sportsmanship look like in the context of this challenge?"],"formula":"IF({fldCy4Ow15WOwUgHD} = \"B. A player competes hard while still respecting teammates, opponents, coaches, and officials.\", 1, 0)","fieldReferencesById":["fldCy4Ow15WOwUgHD"],"fieldReferencesByName":["Q16 — Sportsmanship: What does true sportsmanship look like in the context of this challenge?"],"dependencySource":"metadata"}`
+- **Q17 Correct?**
+  - id: `fldqKED95c4zR4yUc`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldSbzcVFDOe24j3w"],"referencedFieldNames":["Q17 — Final Reflection Challenge: What is the purpose of the final reflection challenge for athletes?"],"formula":"IF({fldSbzcVFDOe24j3w} = \"D. To help athletes review the biggest lessons and think about how they can use them.\", 1, 0)","fieldReferencesById":["fldSbzcVFDOe24j3w"],"fieldReferencesByName":["Q17 — Final Reflection Challenge: What is the purpose of the final reflection challenge for athletes?"],"dependencySource":"metadata"}`
+- **Q18 Correct?**
+  - id: `fldYgf26x3COZPJ7s`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTcuPdeOKT1dLZ6"],"referencedFieldNames":["Q18 — Shot Tracker Summary: What is the real value of completing the full Shot Tracker and reviewing its data at the end?"],"formula":"IF({fldTcuPdeOKT1dLZ6} = \"A. To see what they did, what they learned, and what they should improve next.\", 1, 0)","fieldReferencesById":["fldTcuPdeOKT1dLZ6"],"fieldReferencesByName":["Q18 — Shot Tracker Summary: What is the real value of completing the full Shot Tracker and reviewing its data at the end?"],"dependencySource":"metadata"}`
+- **Score**
+  - id: `fldsIQShDXzmedaXQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldlb3AVfAj7FEmjr","fldZAbDPFpiNpkDOq","fldaCZZrVbq3vnLSq","fldexVYGdhYxxfRX1","fldcOfPpL90km4pma","fldTXIJAAcaIG7p61","fldMEi055mkYu68AT","fld6jCKjhOIZraWE0","fldknn7fDm8dYcdUA","fldAO1L59WXe2yAda","fldnydmLvWZxEL0CN","fldID2LXbRMTXHGl0","fldWIwQtW65redest","fldeewXvzq25KD0LD","fldjwZgB95zTt1b1J","fldFa2XMCKCAVJGQH","fldqKED95c4zR4yUc","fldYgf26x3COZPJ7s"],"referencedFieldNames":["Q1 Correct?","Q2 Correct?","Q3 Correct?","Q4 Correct?","Q5 Correct?","Q6 Correct?","Q7 Correct?","Q8 Correct?","Q9 Correct?","Q10 Correct?","Q11 Correct?","Q12 Correct?","Q13 Correct?","Q14 Correct?","Q15 Correct?","Q16 Correct?","Q17 Correct?","Q18 Correct?"],"formula":"{fldlb3AVfAj7FEmjr} +\n{fldZAbDPFpiNpkDOq} +\n{fldaCZZrVbq3vnLSq} +\n{fldexVYGdhYxxfRX1} +\n{fldcOfPpL90km4pma} +\n{fldTXIJAAcaIG7p61} +\n{fldMEi055mkYu68AT} +\n{fld6jCKjhOIZraWE0} +\n{fldknn7fDm8dYcdUA} +\n{fldAO1L59WXe2yAda} +\n{fldnydmLvWZxEL0CN} +\n{fldID2LXbRMTXHGl0} +\n{fldWIwQtW65redest} +\n{fldeewXvzq25KD0LD} +\n{fldjwZgB95zTt1b1J} +\n{fldFa2XMCKCAVJGQH} +\n{fldqKED95c4zR4yUc} +\n{fldYgf26x3COZPJ7s}","fieldReferencesById":["fldlb3AVfAj7FEmjr","fldZAbDPFpiNpkDOq","fldaCZZrVbq3vnLSq","fldexVYGdhYxxfRX1","fldcOfPpL90km4pma","fldTXIJAAcaIG7p61","fldMEi055mkYu68AT","fld6jCKjhOIZraWE0","fldknn7fDm8dYcdUA","fldAO1L59WXe2yAda","fldnydmLvWZxEL0CN","fldID2LXbRMTXHGl0","fldWIwQtW65redest","fldeewXvzq25KD0LD","fldjwZgB95zTt1b1J","fldFa2XMCKCAVJGQH","fldqKED95c4zR4yUc","fldYgf26x3COZPJ7s"],"fieldReferencesByName":["Q1 Correct?","Q2 Correct?","Q3 Correct?","Q4 Correct?","Q5 Correct?","Q6 Correct?","Q7 Correct?","Q8 Correct?","Q9 Correct?","Q10 Correct?","Q11 Correct?","Q12 Correct?","Q13 Correct?","Q14 Correct?","Q15 Correct?","Q16 Correct?","Q17 Correct?","Q18 Correct?"],"dependencySource":"metadata"}`
+- **Target Score Met?**
+  - id: `fldEZzv92MPxZOnF8`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldsIQShDXzmedaXQ"],"referencedFieldNames":["Score"],"formula":"IF({fldsIQShDXzmedaXQ} >= 10, 1, 0)","fieldReferencesById":["fldsIQShDXzmedaXQ"],"fieldReferencesByName":["Score"],"dependencySource":"metadata"}`
+- **Quiz Result Summary**
+  - id: `fldqoB4GSy8uyJc0A`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldsIQShDXzmedaXQ","fldEZzv92MPxZOnF8","fldVGAmZzbfn89Ilp","fldXOIUPLSnWOIoPg"],"referencedFieldNames":["Score","Target Score Met?","Homework 17 Credit Earned?","Family Discussion Bonus?"],"formula":"\"Score: \" & {fldsIQShDXzmedaXQ} & \"/18\" &\n\" | Target 10+: \" & IF({fldEZzv92MPxZOnF8}, \"Yes\", \"No\") &\n\" | Homework Credit: \" & IF({fldVGAmZzbfn89Ilp}, \"Earned\", \"Not Yet\") &\n\" | Family Discussion Bonus: \" & IF({fldXOIUPLSnWOIoPg}, \"Yes\", \"No\")","fieldReferencesById":["fldsIQShDXzmedaXQ","fldEZzv92MPxZOnF8","fldVGAmZzbfn89Ilp","fldXOIUPLSnWOIoPg"],"fieldReferencesByName":["Score","Target Score Met?","Homework 17 Credit Earned?","Family Discussion Bonus?"],"dependencySource":"metadata"}`
+- **Homework 17 Credit Earned?**
+  - id: `fldVGAmZzbfn89Ilp`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldEG71aWxpM4hrGL"],"referencedFieldNames":["Submitted At"],"formula":"IF({fldEG71aWxpM4hrGL}, 1, 0)","fieldReferencesById":["fldEG71aWxpM4hrGL"],"fieldReferencesByName":["Submitted At"],"dependencySource":"metadata"}`
+- **Family Discussion Bonus?**
+  - id: `fldXOIUPLSnWOIoPg`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldTKmWermFfdERjC"],"referencedFieldNames":["How did the athlete complete this reflection quiz?"],"formula":"IF({fldTKmWermFfdERjC} = \"Worked with parent/family and discussed the questions together\", 1, 0)","fieldReferencesById":["fldTKmWermFfdERjC"],"fieldReferencesByName":["How did the athlete complete this reflection quiz?"],"dependencySource":"metadata"}`
+- **Correct Answer Distribution**
+  - id: `fldnZZs7xjj8SJmYO`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Quiz Version**
+  - id: `fldSxgf6SawPMpD4A`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Homework Credit Rule**
+  - id: `fldX2QfKwWWz8aacw`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Created Time**
+  - id: `fldRFXVvI57iekWiT`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Coach Feedback**
+  - id: `fldwiFIPNMP7uflIv`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldu8A4cwo5R237QL","recordLinkFieldName":"Homework Completion","fieldIdInLinkedTable":"fldARDQ1SSYLElstx","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Homework Completions"}`
+
+## Dependencies
+
+- **Enrollments** → **Full Athlete Name - Backward** (`formula`) depends on: `Athlete Last Name`, `Athlete First Name`, `School Year`
+- **Enrollments** → **Meets Gate: Submissions** (`formula`) depends on: `Gate Enabled Status`, `Total Submissions`, `Gate Minimum: Submissions`
+- **Enrollments** → **Meets Gate: Homework** (`formula`) depends on: `Gate Enabled Status`, `Total Homework Completions`, `Gate Minimum: Homework`
+- **Enrollments** → **Meets Gate: Videos** (`formula`) depends on: `Gate Enabled Status`, `Total Video Submissions`, `Gate Minimum: Videos`
+- **Enrollments** → **Meets Gate: Zoom Meetings** (`formula`) depends on: `Gate Enabled Status`, `Total Zoom Attendances`, `Gate Minimum: Zoom Meetings`
+- **Enrollments** → **Meets Gate: Streak** (`formula`) depends on: `Gate Enabled Status`, `Longest Streak Days`, `Gate Minimum: Streak Days`
+- **Enrollments** → **Gate Passes** (`formula`) depends on: `Meets Gate: Submissions`, `Meets Gate: Homework`, `Meets Gate: Videos`, `Meets Gate: Zoom Meetings`, `Meets Gate: Streak`
+- **Enrollments** → **Current Level - Public Facing Display** (`formula`) depends on: `Current Level`
+- **Enrollments** → **Gate Failure Summary - Formula** (`formula`) depends on: `Gate Enabled Status`, `Level Gate Rule`, `Gate Passes`
+- **Enrollments** → **Gate Summary** (`formula`) depends on: `Gate Enabled Status`, `Level Gate Rule`, `Gate Passes`
+- **Enrollments** → **Full Athlete Name** (`formula`) depends on: `Athlete First Name`, `Athlete Last Name`
+- **Enrollments** → **Athlete ID Lookup** (`multipleLookupValues`) uses recordLinkField=`Athlete`, linkedField=`Athlete ID`
+- **Enrollments** → **Athlete Match Key Lookup** (`multipleLookupValues`) uses recordLinkField=`Athlete`, linkedField=`Athlete Match Key`
+- **Enrollments** → **Enrollment Key** (`formula`) depends on: `Athlete ID Lookup`, `School Year`
+- **Enrollments** → **School Mascot Lookup** (`multipleLookupValues`) uses recordLinkField=`School`, linkedField=`Mascot`
+- **Enrollments** → **School Name Lookup** (`multipleLookupValues`) uses recordLinkField=`School`, linkedField=`Name`
+- **Enrollments** → **State** (`multipleLookupValues`) uses recordLinkField=`School`, linkedField=`State`
+- **Enrollments** → **Athlete Folder Name** (`formula`) depends on: `Athlete Last Name`, `Athlete First Name`, `School Year`
+- **Enrollments** → **Athlete Email - Cleaned** (`formula`) depends on: `Athlete Email`
+- **Enrollments** → **Parent Email - Cleaned** (`formula`) depends on: `Parent Email`
+- **Enrollments** → **Total Shots Submitted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Total Shots Counted`
+- **Enrollments** → **Total Makes Submitted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Total Makes Counted`
+- **Enrollments** → **Total 2PT Attempted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`2PT Attempted Counted`
+- **Enrollments** → **Total 2PT Made** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`2PT Made Counted`
+- **Enrollments** → **Total 3PT Attempted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`3PT Attempted Counted`
+- **Enrollments** → **Total 3PT Made** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`3PT Made Counted`
+- **Enrollments** → **Total FT Attempted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`FT Attempted Counted`
+- **Enrollments** → **Total FT Made** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`FT Made Counted`
+- **Enrollments** → **Overall FG Attempted** (`formula`) depends on: `Total 2PT Attempted`, `Total 3PT Attempted`
+- **Enrollments** → **Overall FG Made** (`formula`) depends on: `Total 2PT Made`, `Total 3PT Made`
+- **Enrollments** → **Overall FG %** (`formula`) depends on: `Overall FG Attempted`, `Overall FG Made`
+- **Enrollments** → **Overall 2PT %** (`formula`) depends on: `Total 2PT Attempted`, `Total 2PT Made`
+- **Enrollments** → **Overall 3PT %** (`formula`) depends on: `Total 3PT Attempted`, `Total 3PT Made`
+- **Enrollments** → **Overall FT %** (`formula`) depends on: `Total FT Attempted`, `Total FT Made`
+- **Enrollments** → **Parent Full Name Submitted** (`formula`) depends on: `Parent First Name`, `Parent Last Name`
+- **Enrollments** → **Welcome Email To** (`formula`) depends on: `Parent Email - Cleaned`, `Athlete Email - Cleaned`
+- **Enrollments** → **Welcome Email Ready?** (`formula`) depends on: `Athlete`, `Full Athlete Name`, `School Year`, `Program Instance`, `Welcome Email To`, `Parent Email Subject`, `Parent Email HTML`
+- **Enrollments** → **Grade Band Label** (`multipleLookupValues`) uses recordLinkField=`Grade Band`, linkedField=`Grade Band Name`
+- **Enrollments** → **Total Shots Counted** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Total Shots Counted`
+- **Enrollments** → **Grade Band Refresh Needed** (`formula`) depends on: `Grade`, `Grade Band`, `Last Grade Used for Grade Band`
+- **Enrollments** → **Lifetime XP Earned** (`rollup`) uses recordLinkField=`XP Events`, linkedField=`Active XP Points`
+- **Enrollments** → **Lifetime XP Total** (`formula`) depends on: `Lifetime XP Earned`, `Lifetime XP Manual Adjustments`
+- **Enrollments** → **Level Sort Order - For Softr** (`multipleLookupValues`) uses recordLinkField=`Current Level`, linkedField=`Sort Order`
+- **Enrollments** → **DELETE PROBABLY - Level Name with Color (from Current Level)** (`multipleLookupValues`) uses recordLinkField=`Current Level`, linkedField=`Level Name with Color`
+- **Enrollments** → **Current Level XP Required** (`multipleLookupValues`) uses recordLinkField=`Current Level`, linkedField=`XP Required (Cumulative)`
+- **Enrollments** → **Current Level XP Ceiling** (`formula`) depends on: `Next Level XP Required`
+- **Enrollments** → **Next Level XP Required** (`multipleLookupValues`) uses recordLinkField=`Next Level`, linkedField=`XP Required (Cumulative)`
+- **Enrollments** → **XP Progress in Current Level** (`formula`) depends on: `Current Level XP Required`, `Lifetime XP Total`
+- **Enrollments** → **XP Needed for Next Level** (`formula`) depends on: `Next Level XP Required`, `Lifetime XP Total`
+- **Enrollments** → **Program Instance Name Only** (`multipleLookupValues`) uses recordLinkField=`Program Instance`, linkedField=`Program - Linked`
+- **Enrollments** → **Record Id** (`formula`)
+- **Enrollments** → **Total Submissions** (`count`) uses recordLinkField=`Submissions`, linkedField=`None`
+- **Enrollments** → **Total Homework Completions** (`count`) uses recordLinkField=`Homework Completions`, linkedField=`None`
+- **Enrollments** → **Total Video Submissions** (`count`) uses recordLinkField=`Submission Assets - Enrollment`, linkedField=`None`
+- **Enrollments** → **Total Zoom Attendances** (`count`) uses recordLinkField=`Zoom Meetings`, linkedField=`None`
+- **Enrollments** → **Gate Minimum: Submissions** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Minimum Submissions`
+- **Enrollments** → **Gate Minimum: Homework** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Minimum Homework`
+- **Enrollments** → **Gate Minimum: Videos** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Minimum Videos`
+- **Enrollments** → **Gate Minimum: Zoom Meetings** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Minimum Zoom Meetings`
+- **Enrollments** → **Gate Minimum: Streak Days** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Minimum Streak Days`
+- **Enrollments** → **Gate Enabled?** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Gate Enabled?`
+- **Enrollments** → **Gate-Test Eligible Level** (`multipleLookupValues`) uses recordLinkField=`Level Gate Rule`, linkedField=`Level`
+- **Enrollments** → **Gate Debug Summary** (`formula`) depends on: `Level Gate Rule`, `Gate Enabled?`, `Total Submissions`, `Gate Minimum: Submissions`, `Total Homework Completions`, `Gate Minimum: Homework`, `Total Video Submissions`, `Gate Minimum: Videos`, `Total Zoom Attendances`, `Gate Minimum: Zoom Meetings`, `Longest Streak Days`, `Gate Minimum: Streak Days`
+- **Enrollments** → **Longest Streak Days** (`rollup`) uses recordLinkField=`Streak Occurrences`, linkedField=`Gate Eligible Streak Days`
+- **Enrollments** → **Target Goal Shots** (`multipleLookupValues`) uses recordLinkField=`Grade Band`, linkedField=`Total Shot Target`
+- **Enrollments** → **Goal Met?** (`formula`) depends on: `Total Shots Counted`, `Target Goal Shots`
+- **Enrollments** → **Gate Enabled Status** (`formula`) depends on: `Gate Debug Summary`
+- **Enrollments** → **Public Progression Status** (`formula`) depends on: `Gate Passes`
+- **Enrollments** → **Public Missing Submissions** (`formula`) depends on: `Gate Passes`, `Gate Minimum: Submissions`, `Total Submissions`
+- **Enrollments** → **Public Missing Homework** (`formula`) depends on: `Gate Passes`, `Gate Minimum: Homework`, `Total Homework Completions`
+- **Enrollments** → **Public Missing Videos** (`formula`) depends on: `Gate Passes`, `Gate Minimum: Videos`, `Total Video Submissions`
+- **Enrollments** → **Public Missing Zoom** (`formula`) depends on: `Gate Passes`, `Gate Minimum: Zoom Meetings`, `Total Zoom Attendances`
+- **Enrollments** → **Public Missing Streak** (`formula`) depends on: `Gate Passes`, `Gate Minimum: Streak Days`, `Longest Streak Days`
+- **Enrollments** → **Public Gate Missing Reason** (`formula`) depends on: `Gate Passes`, `Public Missing Submissions`, `Public Missing Homework`, `Public Missing Videos`, `Public Missing Zoom`, `Public Missing Streak`
+- **Enrollments** → **Goal Met Date** (`multipleLookupValues`) uses recordLinkField=`Award Recipients`, linkedField=`Date Awarded`
+- **Athletes** → **Full Name** (`formula`) depends on: `First Name`, `Last Name`
+- **Athletes** → **Athlete Match Key** (`formula`) depends on: `Parent Email`, `First Name`, `Last Name`
+- **Athletes** → **Athlete ID** (`formula`)
+- **Athletes** → **RecordId** (`formula`)
+- **Level Gate Rules** → **Level Name (Lookup)** (`multipleLookupValues`) uses recordLinkField=`Level`, linkedField=`Level Name`
+- **Level Gate Rules** → **Level Rank (Lookup)** (`multipleLookupValues`) uses recordLinkField=`Level`, linkedField=`Rank`
+- **Level Gate Rules** → **Public Gate Criteria** (`formula`) depends on: `Gate Enabled?`, `Minimum Submissions`, `Minimum Homework`, `Minimum Videos`, `Minimum Zoom Meetings`, `Minimum Streak Days`
+- **Level Gate Rules** → **Public Gate Rules - Active Only** (`formula`) depends on: `Gate Enabled?`, `Version Active?`, `Public Gate Criteria`
+- **Grade Bands** → **Grade Band Name** (`formula`) depends on: `Min Grade`, `Max Grade`
+- **Grade Bands** → **Total Shot Target** (`multipleLookupValues`) uses recordLinkField=`Target Goal Shots`, linkedField=`Total Shot Target`
+- **Target Goal Shots** → **Target Label** (`formula`) depends on: `Grade Band`, `Total Shot Target`
+- **Target Goal Shots** → **Goal Key** (`formula`) depends on: `Grade Band`, `Total Shot Target`
+- **Target Goal Shots** → **Band Sort Order** (`multipleLookupValues`) uses recordLinkField=`Grade Band`, linkedField=`Sort Order`
+- **Submissions** → **Submission Full Name** (`formula`) depends on: `Athlete Name`, `Activity Date`, `Week`
+- **Submissions** → **Submission Key** (`formula`) depends on: `Enrollment`, `Week`
+- **Submissions** → **Athlete Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Full Athlete Name`
+- **Submissions** → **Submitted At** (`formula`)
+- **Submissions** → **Has Review Assets?** (`formula`) depends on: `HW Sub 1`, `HW Sub 2`, `Video Upload`
+- **Submissions** → **Submission Stat Mode** (`formula`) depends on: `2PT Attempted`, `2PT Made`, `3PT Attempted`, `3PT Made`, `FT Attempted`, `FT Made`, `Shot Total`
+- **Submissions** → **Total Shots Canonical** (`formula`) depends on: `Submission Stat Mode`, `2PT Attempted`, `3PT Attempted`, `FT Attempted`, `Shot Total`
+- **Submissions** → **Total Makes Canonical** (`formula`) depends on: `Submission Stat Mode`, `2PT Made`, `3PT Made`, `FT Made`
+- **Submissions** → **Submission Has Detailed Stats?** (`formula`) depends on: `Submission Stat Mode`, `2PT Attempted`, `2PT Made`, `3PT Attempted`, `3PT Made`, `FT Attempted`, `FT Made`
+- **Submissions** → **Detailed Stats Valid?** (`formula`) depends on: `Submission Stat Mode`, `2PT Attempted`, `2PT Made`, `3PT Attempted`, `3PT Made`, `FT Attempted`, `FT Made`
+- **Submissions** → **2PT %** (`formula`) depends on: `2PT Attempted`, `2PT Made`
+- **Submissions** → **3PT %** (`formula`) depends on: `3PT Attempted`, `3PT Made`
+- **Submissions** → **FT %** (`formula`) depends on: `FT Attempted`, `FT Made`
+- **Submissions** → **Total Shots Counted** (`formula`) depends on: `Count This Submission?`, `Total Shots Canonical`
+- **Submissions** → **Review Queue Sort** (`formula`)
+- **Submissions** → **Duplicate Key** (`formula`) depends on: `Enrollment`, `Activity Date`, `Submission Stat Mode`, `2PT Attempted`, `2PT Made`, `3PT Attempted`, `3PT Made`, `FT Attempted`, `FT Made`, `Shot Total`
+- **Submissions** → **RecordId** (`formula`)
+- **Submissions** → **Count This Submission?** (`formula`) depends on: `Duplicate Review Status`, `Submission Stat Mode`, `Shot Total`, `Detailed Stats Valid?`
+- **Submissions** → **Total Makes Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `Total Makes Canonical`
+- **Submissions** → **2PT Made Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `2PT Made`
+- **Submissions** → **2PT Attempted Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `2PT Attempted`
+- **Submissions** → **3PT Made Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `3PT Made`
+- **Submissions** → **3PT Attempted Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `3PT Attempted`
+- **Submissions** → **FT Made Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `FT Made`
+- **Submissions** → **FT Attempted Counted** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`, `Detailed Stats Valid?`, `FT Attempted`
+- **Submissions** → **HW1 Coach Feedback** (`multipleLookupValues`) uses recordLinkField=`Homework Completions`, linkedField=`Coach Feedback`
+- **Submissions** → **Has HW1?** (`formula`) depends on: `HW Sub 1`
+- **Submissions** → **Has HW2?** (`formula`) depends on: `HW Sub 2`
+- **Submissions** → **Has Video?** (`formula`) depends on: `Video Upload`
+- **Submissions** → **Activity Date Is Future?** (`formula`) depends on: `Activity Date`
+- **Submissions** → **Needs Week Assignment?** (`formula`) depends on: `Activity Date`, `Week`
+- **Submissions** → **Week Assignment Status** (`formula`) depends on: `Activity Date`, `Activity Date Is Future?`, `Week`
+- **Submissions** → **Ready for Weekly Summary?** (`formula`) depends on: `Week`, `Count This Submission?`
+- **Submissions** → **XP Base Points** (`formula`) depends on: `Count This Submission?`
+- **Submissions** → **XP Bonus Points** (`formula`) depends on: `XP Volume Bonus`, `XP Accuracy Bonus`, `XP Detailed Stats Bonus`
+- **Submissions** → **XP Total Points** (`formula`) depends on: `XP Base Points`
+- **Submissions** → **XP Award Ready?** (`formula`) depends on: `Enrollment`, `Week`, `Weekly Athlete Summary`, `Count This Submission?`, `XP Total Points`
+- **Submissions** → **XP Volume Bonus** (`formula`) depends on: `Count This Submission?`, `Total Shots Canonical`
+- **Submissions** → **XP Accuracy Bonus** (`formula`) depends on: `Count This Submission?`, `Total Shots Canonical`, `Total Makes Canonical`
+- **Submissions** → **XP Detailed Stats Bonus** (`formula`) depends on: `Count This Submission?`, `Submission Stat Mode`
+- **Submissions** → **Ready to Send Attachments to Make?** (`formula`) depends on: `HW Sub 1`, `HW Sub 2`, `Video Upload`, `Attachment Upload Status`
+- **Submissions** → **Week Lkp** (`multipleLookupValues`) uses recordLinkField=`Homework Name 1`, linkedField=`Week`
+- **Submissions** → **Activity Date Key** (`formula`) depends on: `Activity Date`
+- **Submissions** → **Created** (`formula`)
+- **Submissions** → **Homework Completion Ready?** (`formula`) depends on: `Enrollment`, `Week`, `Homework Name 1`, `Homework Name 2`, `HW Sub 1`, `HW Sub 2`
+- **Submissions** → **Ready for Homework Completion Automation?** (`formula`) depends on: `Enrollment`, `Week`, `Activity Date`, `Submission Assets`, `Homework Name 1`, `Homework Name 2`
+- **Submissions** → **Submission Assets Ready?** (`formula`) depends on: `Homework Completion Ready?`, `HW Sub 1`, `HW Sub 2`, `Video Upload`
+- **Submissions** → **Edit Submission - Parent** (`formula`)
+- **Submissions** → **Counted Activity Date Key** (`formula`) depends on: `Count This Submission?`, `Activity Date Key`
+- **Submissions** → **Coach Feedback (from Video Feedback)** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Coach Feedback`
+- **Submissions** → **Submitted Same Day?** (`formula`) depends on: `Submitted At`, `Activity Date`
+- **Submissions** → **Perfect Week Countable Submission?** (`formula`) depends on: `Count This Submission?`, `Submitted Same Day?`, `Total Shots Counted`, `Enrollment`, `Week`, `Activity Date`
+- **Submissions** → **Ready for 009 Asset Creation?** (`formula`) depends on: `Enrollment`, `Week`, `Submission Assets`, `HW Sub 1`, `HW Sub 2`, `Video Upload`
+- **Submissions** → **Why Not Ready for 009?** (`formula`) depends on: `Enrollment`, `Week`, `Submission Assets`, `HW Sub 1`, `HW Sub 2`, `Video Upload`
+- **Submission Assets** → **Submission Assets Full Name** (`formula`) depends on: `Athlete Full Name`, `Asset Type`, `Asset Purpose`
+- **Submission Assets** → **Upload Destination** (`formula`) depends on: `Asset Purpose`
+- **Submission Assets** → **Asset Slot Base** (`formula`) depends on: `Asset Label`
+- **Submission Assets** → **Homework Completions RID** (`multipleLookupValues`) uses recordLinkField=`Homework Completions`, linkedField=`Homework Completions RID`
+- **Submission Assets** → **Ready for Homework Completion Script?** (`formula`) depends on: `Upload Destination`, `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Homework Completions`, `Asset Slot Base`, `Asset Label`, `Asset Purpose`
+- **Submission Assets** → **Week** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Week`
+- **Submission Assets** → **Asset Key** (`formula`) depends on: `Submission - Linked`, `Google Drive File ID`
+- **Submission Assets** → **RecordId** (`formula`)
+- **Submission Assets** → **Writeback Complete?** (`formula`) depends on: `Upload Status`, `Google Drive File URL`, `Google Drive Folder ID`, `Google Drive Folder URL`, `Uploaded At`
+- **Submission Assets** → **Upload Ready?** (`formula`) depends on: `Airtable Attachment`, `Asset Type`, `Enrollment - Linked`
+- **Submission Assets** → **Last Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Athlete Last Name`
+- **Submission Assets** → **First Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Athlete First Name`
+- **Submission Assets** → **Program Instance - Raw** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Program Instance Name Only`
+- **Submission Assets** → **Program Instance - Convert to File Name** (`formula`) depends on: `Program Instance - Raw`
+- **Submission Assets** → **Date** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Activity Date`
+- **Submission Assets** → **Date - Convert to File Name** (`formula`) depends on: `Date`
+- **Submission Assets** → **Asset Type - Convert for File Name** (`formula`) depends on: `Asset Type`
+- **Submission Assets** → **Google Drive Folder Name** (`formula`) depends on: `Last Name`, `First Name`
+- **Submission Assets** → **Create Google Drive File Name** (`formula`) depends on: `Last Name`, `First Name`, `Program Instance - Convert to File Name`, `Upload Destination`, `Homework Name - Slot Correct`, `Asset Slot Base`, `Asset Type - Convert for File Name`, `Date - Convert to File Name`
+- **Submission Assets** → **Athlete Full Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Full Athlete Name - Backward`
+- **Submission Assets** → **Record Id (from Enrollment - Linked)** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Record Id`
+- **Submission Assets** → **Ready to Send to Make?** (`formula`) depends on: `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Homework Completions RID`, `Video Feedback`
+- **Submission Assets** → **Why Not Ready for Make?** (`formula`) depends on: `Send to Make Trigger`, `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Video Feedback`
+- **Submission Assets** → **Coach Feedback (from Video Feedback)** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Coach Feedback`
+- **Submission Assets** → **RecordId - Submission Table** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`RecordId`
+- **Submission Assets** → **Homework Name 1** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Homework Name 1`
+- **Submission Assets** → **Homework Name 2** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Homework Name 2`
+- **Submission Assets** → **HW Sub 1** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`HW Sub 1`
+- **Submission Assets** → **HW Sub 2** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`HW Sub 2`
+- **Submission Assets** → **Coach Feedback - LKP** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Coach Feedback`
+- **Submission Assets** → **Homework Name - Slot Correct** (`formula`) depends on: `Asset Slot`, `Homework Name 1`, `Homework Name 2`
+- **Submission Assets** → **Ready for Video Feedback Script?** (`formula`) depends on: `Upload Destination`, `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Video Feedback`
+- **Submission Assets** → **Workflow Next Step** (`formula`) depends on: `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Video Feedback`
+- **Submission Assets** → **Is True Video Feedback Asset?** (`formula`) depends on: `Upload Destination`, `Asset Purpose`, `Asset Slot`
+- **Submission Assets** → **Is Homework Upload Asset?** (`formula`) depends on: `Upload Destination`, `Asset Slot`
+- **XP Events** → **XP Event Display** (`formula`) depends on: `Enrollment`, `XP Source`, `XP Points`
+- **XP Events** → **XP Dedupe Key** (`formula`) depends on: `Enrollment Record ID`, `XP Source`, `Event Identity ID`, `Source Key`
+- **XP Events** → **Weekly Summary Key** (`formula`) depends on: `Enrollment`, `Week`
+- **XP Events** → **XP Dedupe Key Normalized** (`formula`) depends on: `Enrollment Record ID`, `Event Identity ID`, `XP Source`
+- **XP Events** → **Submission Record ID** (`multipleLookupValues`) uses recordLinkField=`Submission`, linkedField=`RecordId`
+- **XP Events** → **Week Record ID** (`multipleLookupValues`) uses recordLinkField=`Week`, linkedField=`Record ID`
+- **XP Events** → **Enrollment Record ID** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Record Id`
+- **XP Events** → **Streak Occurrence Key** (`multipleLookupValues`) uses recordLinkField=`Streak Occurrence`, linkedField=`Streak Occurrence Key`
+- **XP Events** → **Event Identity ID** (`formula`) depends on: `Source Key`, `Submission Record ID`, `Streak Occurrence Key`, `Week Record ID`
+- **XP Events** → **Needs Dedupe Review** (`formula`) depends on: `Duplicate Count`
+- **XP Events** → **Date - Submission Base Activity** (`multipleLookupValues`) uses recordLinkField=`Submission`, linkedField=`Activity Date`
+- **XP Events** → **XP Date Resolved** (`formula`) depends on: `XP Activity Date`, `XP Bucket`, `Date - Submission Base Activity`, `Date - Homework Submission Activity`, `Date - Video Submission Activity`, `Date - Streak End`, `Date - Weekly Summary End`, `Date - Zoom Meeting`, `Date - Shot Milestone Activity`, `Date - Achievement Unlock`
+- **XP Events** → **Date - Homework Submission Activity** (`multipleLookupValues`) uses recordLinkField=`Homework Completion`, linkedField=`Submission Date`
+- **XP Events** → **Date - Video Submission Activity** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Activity Date - Lkp`
+- **XP Events** → **Date - Streak End** (`multipleLookupValues`) uses recordLinkField=`Streak Occurrence`, linkedField=`Streak End Date`
+- **XP Events** → **Date - Achievement Unlock** (`multipleLookupValues`) uses recordLinkField=`Achievement Unlock`, linkedField=`Date Unlocked`
+- **XP Events** → **Date - Weekly Summary End** (`multipleLookupValues`) uses recordLinkField=`Weekly Athlete Summary`, linkedField=`Week`
+- **XP Events** → **Date - Zoom Meeting** (`multipleLookupValues`) uses recordLinkField=`Zoom Meeting`, linkedField=`Start Time`
+- **XP Events** → **Date - Shot Milestone Activity** (`multipleLookupValues`) uses recordLinkField=`Achievement Unlock`, linkedField=`Milestone Activity Date`
+- **XP Events** → **XP Event RID** (`formula`)
+- **XP Events** → **XP Events RID** (`formula`)
+- **XP Events** → **Active XP Points** (`formula`) depends on: `Duplicate Status`, `Active?`, `XP Points`
+- **Athlete Achievement Unlocks** → **Achievement Unlock Display** (`formula`) depends on: `Enrollment`, `Achievement`, `Week`
+- **Athlete Achievement Unlocks** → **Unlock Key** (`formula`) depends on: `Enrollment`, `Achievement`, `Week`, `Shot Milestone`, `Streak Start Date`
+- **Athlete Achievement Unlocks** → **Athlete** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete`
+- **Athlete Achievement Unlocks** → **Achievement Type** (`multipleLookupValues`) uses recordLinkField=`Achievement`, linkedField=`Achievement Type`
+- **Athlete Achievement Unlocks** → **Category** (`multipleLookupValues`) uses recordLinkField=`Achievement`, linkedField=`Category`
+- **Athlete Achievement Unlocks** → **Visible?** (`multipleLookupValues`) uses recordLinkField=`Achievement`, linkedField=`Visible?`
+- **Athlete Achievement Unlocks** → **Rarity** (`multipleLookupValues`) uses recordLinkField=`Achievement`, linkedField=`Rarity`
+- **Athlete Achievement Unlocks** → **Ready for 059 XP?** (`formula`) depends on: `Enrollment`, `Achievement`, `XP Award Status`, `XP Events`
+- **Athlete Achievement Unlocks** → **Achievement Unlock Display - RID** (`formula`)
+- **Athlete Achievement Unlocks** → **Unlock Source Date** (`formula`) depends on: `Milestone Activity Date`, `Date Unlocked`
+- **Streak Occurrences** → **Streak Occurrence Name** (`formula`) depends on: `Enrollment`, `Achievement`, `Streak End Date`
+- **Streak Occurrences** → **Gate Eligible Streak Days** (`formula`) depends on: `Active?`, `Streak Days`
+- **Streak Occurrences** → **Achievement Key** (`multipleLookupValues`) uses recordLinkField=`Achievement`, linkedField=`Achievement Key`
+- **Streak Occurrences** → **Enrollment Record ID** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Record Id`
+- **Streak Occurrences** → **Streak Date Key** (`formula`) depends on: `Streak End Date`
+- **Streak Occurrences** → **Streak Occurrence Key** (`formula`) depends on: `Enrollment Record ID`, `Achievement Key`, `Streak Date Key`
+- **Streak Occurrences** → **Record Id** (`formula`)
+- **Achievements** → **Achievement Key** (`formula`) depends on: `Achievement Name`
+- **Weeks** → **Record ID** (`formula`)
+- **Weeks** → **Week Key** (`formula`)
+- **Weekly Athlete Summary** → **Weekly Athlete Summary - Display** (`formula`) depends on: `Full Name - From Enrollment - Display`, `Week`, `Grade Band`
+- **Weekly Athlete Summary** → **XP Earned This Week** (`rollup`) uses recordLinkField=`XP Events`, linkedField=`Active XP Points`
+- **Weekly Athlete Summary** → **Summary Key** (`formula`) depends on: `Enrollment Key - Lkp`, `Week Key - Lkp`
+- **Weekly Athlete Summary** → **Full Name - From Enrollment - Display** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Full Athlete Name - Backward`
+- **Weekly Athlete Summary** → **Athlete** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete`
+- **Weekly Athlete Summary** → **Grade** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Grade`
+- **Weekly Athlete Summary** → **Total Shots This Week** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Total Shots Counted`
+- **Weekly Athlete Summary** → **Total Makes This Week** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Total Makes Counted`
+- **Weekly Athlete Summary** → **Goal Shots Target** (`multipleLookupValues`) uses recordLinkField=`Goal Record`, linkedField=`Total Shot Target`
+- **Weekly Athlete Summary** → **Goal Completion %** (`formula`) depends on: `Weekly Goal Shots Target`, `Total Shots This Week`
+- **Weekly Athlete Summary** → **Activity Dates** (`multipleLookupValues`) uses recordLinkField=`Submissions`, linkedField=`Activity Date`
+- **Weekly Athlete Summary** → **Days Logged This Week** (`rollup`) uses recordLinkField=`Submissions`, linkedField=`Counted Activity Date Key`
+- **Weekly Athlete Summary** → **Met Minimum Days Requirement?** (`formula`) depends on: `Days Logged This Week`
+- **Weekly Athlete Summary** → **Homework Assigned Count** (`rollup`) uses recordLinkField=`Homework Completions Link`, linkedField=`Homework Completion Key`
+- **Weekly Athlete Summary** → **Weekly Improvement Value** (`formula`) depends on: `Previous Week Shots`, `Total Shots This Week`
+- **Weekly Athlete Summary** → **Momentum Status** (`formula`) depends on: `Weekly Improvement Value`
+- **Weekly Athlete Summary** → **Homework Completed?** (`formula`) depends on: `Homework Assigned Count`, `Homework Satisfactory Count`
+- **Weekly Athlete Summary** → **Homework Satisfactory Count** (`rollup`) uses recordLinkField=`Homework Completions Link`, linkedField=`Satisfactory?`
+- **Weekly Athlete Summary** → **Level Number** (`formula`) depends on: `Total XP After Week`
+- **Weekly Athlete Summary** → **Total XP After Week** (`formula`) depends on: `Previous Total XP`, `XP Earned This Week`
+- **Weekly Athlete Summary** → **Homework Display** (`formula`) depends on: `Homework`
+- **Weekly Athlete Summary** → **Created** (`formula`)
+- **Weekly Athlete Summary** → **Weekly Goal Shots Target** (`formula`) depends on: `Goal Shots Target`
+- **Weekly Athlete Summary** → **Threshold XP Ready?** (`formula`) depends on: `Enrollment`, `Week`, `Goal Record`, `Goal Completion %`, `Requeue Threshold XP`, `Threshold XP Status`
+- **Weekly Athlete Summary** → **RecordId** (`formula`)
+- **Weekly Athlete Summary** → **Enrollment Key - Lkp** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Enrollment Key`
+- **Weekly Athlete Summary** → **Week Key - Lkp** (`multipleLookupValues`) uses recordLinkField=`Week`, linkedField=`Week Key`
+- **Weekly Athlete Summary** → **Parent Email - Cleaned** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Parent Email - Cleaned`
+- **Weekly Athlete Summary** → **Athlete Email - Cleaned** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete Email - Cleaned`
+- **Weekly Athlete Summary** → **Combined Recipient Emails** (`formula`) depends on: `Parent Email - Cleaned`, `Athlete Email - Cleaned`
+- **Weekly Athlete Summary** → **Athlete First Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete First Name`
+- **Weekly Athlete Summary** → **Athlete Last Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete Last Name`
+- **Weekly Athlete Summary** → **Email Subject** (`formula`) depends on: `Athlete First Name`
+- **Weekly Athlete Summary** → **Upcoming Zoom Link** (`multipleLookupValues`) uses recordLinkField=`Week`, linkedField=`Zoom Meetings`
+- **Weekly Athlete Summary** → **Week - Display** (`formula`) depends on: `Week`
+- **Weekly Athlete Summary** → **Grade Band - Display** (`formula`) depends on: `Grade Band`
+- **Weekly Athlete Summary** → **Weekly Summary Key** (`formula`) depends on: `Enrollment`, `Week`
+- **Weekly Athlete Summary** → **Weekly Email Record ID** (`formula`)
+- **Weekly Athlete Summary** → **Perfect Week Video Requirement Met?** (`formula`) depends on: `Perfect Week Video Count`
+- **Weekly Athlete Summary** → **Perfect Week Zoom Requirement Met?** (`formula`) depends on: `Perfect Week Automation Status`, `Perfect Week Zoom Meeting Count`, `Perfect Week Zoom Attendance Count`
+- **Weekly Athlete Summary** → **Perfect Week Eligible?** (`formula`) depends on: `Perfect Week Automation Status`, `Perfect Week Daily Requirement Met?`, `Perfect Week Homework Requirement Met?`, `Perfect Week Video Requirement Met?`, `Perfect Week Zoom Requirement Met?`
+- **Weekly Athlete Summary** → **Perfect Week Calculation Queue?** (`formula`) depends on: `Enrollment`, `Week`, `Goal Record`, `Perfect Week Automation Status`
+- **Weekly Athlete Summary** → **Perfect Week Zoom Requirement Status** (`formula`) depends on: `Perfect Week Automation Status`, `Perfect Week Zoom Meeting Count`, `Perfect Week Zoom Attendance Count`
+- **Weekly Athlete Summary** → **Perfect Week Homework Completion %** (`formula`) depends on: `Perfect Week Homework Assigned Count`, `Perfect Week Homework Satisfactory Count`
+- **Weekly Athlete Summary** → **Perfect Week Homework Requirement Status** (`formula`) depends on: `Perfect Week Automation Status`, `Perfect Week Homework Assigned Count`, `Perfect Week Homework Requirement Met?`, `Perfect Week Homework Completion %`
+- **Levels** → **XP From Previous Level** (`formula`) depends on: `Previous Level`, `XP Required (Cumulative)`, `Previous Level XP Required`
+- **Levels** → **Previous Level XP Required** (`multipleLookupValues`) uses recordLinkField=`Previous Level`, linkedField=`XP Required (Cumulative)`
+- **Levels** → **Public Gate Criteria** (`rollup`) uses recordLinkField=`Level Gate Rules`, linkedField=`Public Gate Rules - Active Only`
+- **Shot Milestones** → **Milestone Label** (`formula`) depends on: `Target Goal Shot`, `Milestone Percent`
+- **Shot Milestones** → **Grade Band** (`multipleLookupValues`) uses recordLinkField=`Target Goal Shot`, linkedField=`Grade Band`
+- **Shot Milestones** → **Milestone Shot Count** (`formula`) depends on: `Target Shots Lookup`, `Milestone Percent`
+- **Shot Milestones** → **Points Awarded** (`formula`) depends on: `Milestone Percent`
+- **Shot Milestones** → **Milestone Unique Key** (`formula`) depends on: `Target Goal Shot`, `Milestone Percent`
+- **Shot Milestones** → **Band Sort Order** (`multipleLookupValues`) uses recordLinkField=`Target Goal Shot`, linkedField=`Band Sort Order`
+- **Shot Milestones** → **Target Shots Lookup** (`multipleLookupValues`) uses recordLinkField=`Target Goal Shot`, linkedField=`Total Shot Target`
+- **Shot Milestones** → **Milestone Tier** (`formula`) depends on: `Milestone Percent`
+- **FBC Curriculum - SYNC** → **Assignment Full Name - Display** (`formula`) depends on: `Week`, `Homework Number`, `Assignment Title`
+- **FBC Curriculum - SYNC** → **Lesson Key** (`formula`) depends on: `Week`, `Grade Band`, `Assignment Title`
+- **Homework Completions** → **Homework Completion Full Name** (`formula`) depends on: `Full Athlete Name - Backward (from Enrollment)`, `Homework`, `Week`
+- **Homework Completions** → **Google Drive View URL** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Google Drive File URL`
+- **Homework Completions** → **Total Homework XP Awarded** (`formula`) depends on: `Base XP Awarded`, `Extra Credit XP Awarded`
+- **Homework Completions** → **Upload Ready?** (`formula`) depends on: `Airtable Attachment`, `Enrollment`, `Asset Type`
+- **Homework Completions** → **Homework Completions RID** (`formula`)
+- **Homework Completions** → **Full Athlete Name - Backward (from Enrollment)** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Full Athlete Name - Backward`
+- **Homework Completions** → **Homework Completion Key** (`formula`) depends on: `Enrollment`, `Week`, `Homework`
+- **Homework Completions** → **Completion Summary** (`formula`) depends on: `Satisfactory?`, `Extra Credit?`, `Completion Status`
+- **Homework Completions** → **Asset Key** (`formula`)
+- **Homework Completions** → **Submission Asset: Original File Name (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Original File Name`
+- **Homework Completions** → **Submission Asset: Google Drive File URL (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Google Drive File URL`
+- **Homework Completions** → **Submission Asset: Google Drive File ID (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Google Drive File ID`
+- **Homework Completions** → **Submission Asset: Upload Status (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Upload Status`
+- **Homework Completions** → **Submission Asset: Uploaded At (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Uploaded At`
+- **Homework Completions** → **Submission Asset: Upload Error (lookup)** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Upload Error`
+- **Homework Completions** → **Total Linked Submission Assets (rollup)** (`rollup`) uses recordLinkField=`Submission Assets`, linkedField=`Submission Assets Full Name`
+- **Homework Completions** → **Total Uploaded Submission Assets (rollup)** (`rollup`) uses recordLinkField=`Submission Assets`, linkedField=`Upload Status`
+- **Homework Completions** → **Submission Asset Review Summary (formula)** (`formula`) depends on: `Submission Asset: Original File Name (lookup)`, `Submission Asset: Google Drive File URL (lookup)`
+- **Homework Completions** → **Submitted Asset File Names** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Original File Name`
+- **Homework Completions** → **Submitted Asset File Links** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Google Drive File URL`
+- **Homework Completions** → **Submitted Asset Upload Statuses** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Upload Status`
+- **Homework Completions** → **Submitted Asset Uploaded At** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Uploaded At`
+- **Homework Completions** → **Submitted Asset File IDs** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Google Drive File ID`
+- **Homework Completions** → **Submitted File Review Summary** (`formula`) depends on: `Submitted Asset File Names`, `Submitted Asset File Links`
+- **Homework Completions** → **All Submitted Files Uploaded?** (`formula`) depends on: `Submitted Asset Upload Statuses`
+- **Homework Completions** → ** Submission Asset Count** (`formula`) depends on: `Submission Assets`
+- **Homework Completions** → **Linked Asset Duplicate?** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`File is Duplicate?`
+- **Homework Completions** → **Linked Asset Duplicate Status** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Duplicate File Status`
+- **Homework Completions** → **Linked Asset Duplicate Notes** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Duplicate Match Notes`
+- **Homework Completions** → **Linked Asset Duplicate Match Record** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Duplicate Match Record`
+- **Homework Completions** → **Linked Asset Duplicate Match Strength** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Duplicate Match Strength`
+- **Homework Completions** → **Linked Asset Duplicate Review Status** (`multipleLookupValues`) uses recordLinkField=`Submission Assets`, linkedField=`Duplicate Review Status`
+- **Video Feedback** → **Video Feedback Name** (`formula`) depends on: `Enrollment`, `Week`
+- **Video Feedback** → **Week** (`multipleLookupValues`) uses recordLinkField=`Submission`, linkedField=`Week`
+- **Video Feedback** → **Total Video XP Awarded** (`formula`) depends on: `Do Not Award XP?`, `Base XP Awarded`, `Extra Credit XP Awarded`
+- **Video Feedback** → **Writeback Complete?** (`formula`) depends on: `Upload Status`, `Google Drive File ID`, `Google Drive File URL`, `Google Drive Folder ID`, `Google Drive Folder URL`, `Video Asset Uploaded At`
+- **Video Feedback** → **Record Id** (`formula`)
+- **Video Feedback** → **Activity Date - Lkp** (`multipleLookupValues`) uses recordLinkField=`Submission`, linkedField=`Activity Date`
+- **Video Feedback** → **Linked Asset Duplicate?** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`File is Duplicate?`
+- **Video Feedback** → **Linked Asset Duplicate Status** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`Duplicate File Status`
+- **Video Feedback** → **Linked Asset Duplicate Notes** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`Duplicate Match Notes`
+- **Video Feedback** → **Linked Asset Duplicate Match Record** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`Duplicate Match Record`
+- **Video Feedback** → **Linked Asset Duplicate Match Strength** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`Duplicate Match Strength`
+- **Video Feedback** → **Linked Asset Duplicate Review Status** (`multipleLookupValues`) uses recordLinkField=`Submission Asset`, linkedField=`Duplicate Review Status`
+- **Zoom Meetings** → **Zoom Meeting Key** (`formula`)
+- **Zoom Meetings** → **Participant Count** (`count`) uses recordLinkField=`Attendees`, linkedField=`None`
+- **Zoom Meetings** → **RecordId** (`formula`)
+- **Awards** → **Award Recipients Count** (`count`) uses recordLinkField=`Award Recipients`, linkedField=`None`
+- **Award Recipients** → **Award Recipient Display** (`formula`) depends on: `Award`, `Enrollment Name Lookup`, `Week`, `Award Status`
+- **Award Recipients** → **Athlete Name - Display** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Full Athlete Name`
+- **Award Recipients** → **RecordId** (`formula`)
+- **Award Recipients** → **Award Amount** (`multipleLookupValues`) uses recordLinkField=`Award`, linkedField=`Prize Value`
+- **Award Recipients** → **Parent Email** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Parent Email - Cleaned`
+- **Award Recipients** → **Enrollment Name Lookup** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Full Athlete Name - Backward`
+- **Award Recipients** → **Program Instance** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Program Instance`
+- **Award Recipients** → **Gift Card Needed?** (`formula`) depends on: `Prize Type Lookup`, `Award Status`
+- **Award Recipients** → **Award Recipient Unique Key** (`formula`) depends on: `Enrollment`, `Award`, `Week`, `Date Awarded`
+- **Award Recipients** → **Award Category Lookup** (`multipleLookupValues`) uses recordLinkField=`Award`, linkedField=`Award Category`
+- **Award Recipients** → **Prize Type Lookup** (`multipleLookupValues`) uses recordLinkField=`Award`, linkedField=`Prize Type`
+- **Award Recipients** → **Award Status Sort** (`formula`) depends on: `Award Status`
+- **Award Recipients** → **Athlete First Name Lookup** (`multipleLookupValues`) uses recordLinkField=`Enrollment`, linkedField=`Athlete First Name`
+- **Award Recipients** → **Award Description - Lkp** (`multipleLookupValues`) uses recordLinkField=`Award`, linkedField=`Award Description`
+- **Award Recipients** → **Award Description - Display** (`formula`) depends on: `Award Description - Lkp`
+- **Final Reflection Quiz Submissions** → **Quiz Submission Name** (`formula`) depends on: `Enrollment`, `Submitted At`
+- **Final Reflection Quiz Submissions** → **Q1 Correct?** (`formula`) depends on: `Q1 — Shot Tracker Usage: A player wants to improve, but sometimes they are tempted to only count makes or leave out bad shooting days. What is the best reason to track shots honestly?`
+- **Final Reflection Quiz Submissions** → **Q2 Correct?** (`formula`) depends on: `Q2 — Website Exploration: Why should the athlete regularly use the challenge site to check their progress and work?`
+- **Final Reflection Quiz Submissions** → **Q3 Correct?** (`formula`) depends on: `Q3 — The Choice is Yours: If an athlete is having an off day in practice, what is the best mindset to use?`
+- **Final Reflection Quiz Submissions** → **Q4 Correct?** (`formula`) depends on: `Q4 — Shooting Form and Technique: Why should players learn to focus on their form and technique during practice, even when they feel rushed or pressured?`
+- **Final Reflection Quiz Submissions** → **Q5 Correct?** (`formula`) depends on: `Q5 — Self Esteem and Accomplishment: What helps a player actually build self-esteem and confidence during the challenge?`
+- **Final Reflection Quiz Submissions** → **Q6 Correct?** (`formula`) depends on: `Q6 — Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?`
+- **Final Reflection Quiz Submissions** → **Q7 Correct?** (`formula`) depends on: `Q7 — Touch and Talk: If a teammate looks discouraged or frustrated, what is usually the best response?`
+- **Final Reflection Quiz Submissions** → **Q8 Correct?** (`formula`) depends on: `Q8 — 5 Spot Shooting Locations: Why do players practice shooting from all 5 main spots, and not just their favorite one?`
+- **Final Reflection Quiz Submissions** → **Q9 Correct?** (`formula`) depends on: `Q9 — Mikan Drill: What is the best intention for doing the Mikan Drill during the challenge?`
+- **Final Reflection Quiz Submissions** → **Q10 Correct?** (`formula`) depends on: `Q10 — Goal Setting — What GOATS Do!: How do the best athletes approach goal setting in a program like this?`
+- **Final Reflection Quiz Submissions** → **Q11 Correct?** (`formula`) depends on: `Q11 — Thank You Note: What is the biggest lesson behind the Thank You Note activity in this program?`
+- **Final Reflection Quiz Submissions** → **Q12 Correct?** (`formula`) depends on: `Q12 — Coach Yourself: When a player is struggling or frustrated, what is a strong approach to coaching themselves?`
+- **Final Reflection Quiz Submissions** → **Q13 Correct?** (`formula`) depends on: `Q13 — Visualization: Why use visualization in the challenge or before a game or practice?`
+- **Final Reflection Quiz Submissions** → **Q14 Correct?** (`formula`) depends on: `Q14 — Build Your Freethrow Routine: What is the purpose of building a repeatable free throw routine?`
+- **Final Reflection Quiz Submissions** → **Q15 Correct?** (`formula`) depends on: `Q15 — Bad Habit I Need to Fix: What is the best way to approach a bad habit noticed during the challenge?`
+- **Final Reflection Quiz Submissions** → **Q16 Correct?** (`formula`) depends on: `Q16 — Sportsmanship: What does true sportsmanship look like in the context of this challenge?`
+- **Final Reflection Quiz Submissions** → **Q17 Correct?** (`formula`) depends on: `Q17 — Final Reflection Challenge: What is the purpose of the final reflection challenge for athletes?`
+- **Final Reflection Quiz Submissions** → **Q18 Correct?** (`formula`) depends on: `Q18 — Shot Tracker Summary: What is the real value of completing the full Shot Tracker and reviewing its data at the end?`
+- **Final Reflection Quiz Submissions** → **Score** (`formula`) depends on: `Q1 Correct?`, `Q2 Correct?`, `Q3 Correct?`, `Q4 Correct?`, `Q5 Correct?`, `Q6 Correct?`, `Q7 Correct?`, `Q8 Correct?`, `Q9 Correct?`, `Q10 Correct?`, `Q11 Correct?`, `Q12 Correct?`, `Q13 Correct?`, `Q14 Correct?`, `Q15 Correct?`, `Q16 Correct?`, `Q17 Correct?`, `Q18 Correct?`
+- **Final Reflection Quiz Submissions** → **Target Score Met?** (`formula`) depends on: `Score`
+- **Final Reflection Quiz Submissions** → **Quiz Result Summary** (`formula`) depends on: `Score`, `Target Score Met?`, `Homework 17 Credit Earned?`, `Family Discussion Bonus?`
+- **Final Reflection Quiz Submissions** → **Homework 17 Credit Earned?** (`formula`) depends on: `Submitted At`
+- **Final Reflection Quiz Submissions** → **Family Discussion Bonus?** (`formula`) depends on: `How did the athlete complete this reflection quiz?`
+- **Final Reflection Quiz Submissions** → **Coach Feedback** (`multipleLookupValues`) uses recordLinkField=`Homework Completion`, linkedField=`Coach Feedback`

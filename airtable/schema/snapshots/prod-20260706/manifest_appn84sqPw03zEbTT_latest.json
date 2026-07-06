@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-07-06T16:19:32",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "airtable\\schema\\snapshots\\prod-20260706\\schema_raw_appn84sqPw03zEbTT_20260706_161830.json",
+    "enhancedSchema": "airtable\\schema\\snapshots\\prod-20260706\\schema_enhanced_appn84sqPw03zEbTT_20260706_161830.json",
+    "dependencies": "airtable\\schema\\snapshots\\prod-20260706\\dependencies_appn84sqPw03zEbTT_20260706_161830.json",
+    "viewsBasicJson": "airtable\\schema\\snapshots\\prod-20260706\\views_basic_appn84sqPw03zEbTT_20260706_161830.json",
+    "viewsDetailedJson": "airtable\\schema\\snapshots\\prod-20260706\\views_detailed_appn84sqPw03zEbTT_20260706_161830.json",
+    "viewsMarkdown": "airtable\\schema\\snapshots\\prod-20260706\\views_appn84sqPw03zEbTT_20260706_161830.md",
+    "baseSummary": "airtable\\schema\\snapshots\\prod-20260706\\base_summary_appn84sqPw03zEbTT_20260706_161830.json",
+    "healthReport": "airtable\\schema\\snapshots\\prod-20260706\\export_health_report_appn84sqPw03zEbTT_20260706_161830.json",
+    "fieldIndex": "airtable\\schema\\snapshots\\prod-20260706\\field_index_appn84sqPw03zEbTT_20260706_161830.json",
+    "invalidFields": "airtable\\schema\\snapshots\\prod-20260706\\invalid_fields_appn84sqPw03zEbTT_20260706_161830.json",
+    "complexFormulas": "airtable\\schema\\snapshots\\prod-20260706\\complex_formulas_appn84sqPw03zEbTT_20260706_161830.json",
+    "schemaMarkdown": "airtable\\schema\\snapshots\\prod-20260706\\schema_doc_appn84sqPw03zEbTT_20260706_161830.md",
+    "mermaidERD": "airtable\\schema\\snapshots\\prod-20260706\\schema_erd_appn84sqPw03zEbTT_20260706_161830.mmd",
+    "workflowCompanion": "airtable\\schema\\snapshots\\prod-20260706\\workflow_companion_appn84sqPw03zEbTT_20260706_161830.md"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-07-06T16:17:16",
+  "scriptVersion": "2.4.0",
+  "baseId": "appTetnuCZlCZdTCT",
+  "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "airtable\\schema\\snapshots\\dev-20260706\\schema_raw_appTetnuCZlCZdTCT_20260706_161606.json",
+    "enhancedSchema": "airtable\\schema\\snapshots\\dev-20260706\\schema_enhanced_appTetnuCZlCZdTCT_20260706_161606.json",
+    "dependencies": "airtable\\schema\\snapshots\\dev-20260706\\dependencies_appTetnuCZlCZdTCT_20260706_161606.json",
+    "viewsBasicJson": "airtable\\schema\\snapshots\\dev-20260706\\views_basic_appTetnuCZlCZdTCT_20260706_161606.json",
+    "viewsDetailedJson": "airtable\\schema\\snapshots\\dev-20260706\\views_detailed_appTetnuCZlCZdTCT_20260706_161606.json",
+    "viewsMarkdown": "airtable\\schema\\snapshots\\dev-20260706\\views_appTetnuCZlCZdTCT_20260706_161606.md",
+    "baseSummary": "airtable\\schema\\snapshots\\dev-20260706\\base_summary_appTetnuCZlCZdTCT_20260706_161606.json",
+    "healthReport": "airtable\\schema\\snapshots\\dev-20260706\\export_health_report_appTetnuCZlCZdTCT_20260706_161606.json",
+    "fieldIndex": "airtable\\schema\\snapshots\\dev-20260706\\field_index_appTetnuCZlCZdTCT_20260706_161606.json",
+    "invalidFields": "airtable\\schema\\snapshots\\dev-20260706\\invalid_fields_appTetnuCZlCZdTCT_20260706_161606.json",
+    "complexFormulas": "airtable\\schema\\snapshots\\dev-20260706\\complex_formulas_appTetnuCZlCZdTCT_20260706_161606.json",
+    "schemaMarkdown": "airtable\\schema\\snapshots\\dev-20260706\\schema_doc_appTetnuCZlCZdTCT_20260706_161606.md",
+    "mermaidERD": "airtable\\schema\\snapshots\\dev-20260706\\schema_erd_appTetnuCZlCZdTCT_20260706_161606.mmd",
+    "workflowCompanion": "airtable\\schema\\snapshots\\dev-20260706\\workflow_companion_appTetnuCZlCZdTCT_20260706_161606.md"
+  }
+}
