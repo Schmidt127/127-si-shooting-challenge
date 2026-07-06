@@ -100,7 +100,7 @@ flowchart TD
 |----|---------|--------|------------|--------|
 | **V2-001** | Archive 2025–26 base; clone for 2026–27 | **Superseded** by **V2-013** (one base + Program Instance). Doc kept: [base-cutover](./shooting-challenge-v2-base-cutover.md) | Wave 0 | **deferred** |
 | **H-001** | Fix 090F achievement unlock audit | Audit v1.1 — shot milestones on Milestone Source Key; other on Enrollment+Achievement+Week; **0 data deletes** | Wave 0 | **done** |
-| **H-002** | **066** v3.1 V2 rewrite + Week write | GitHub `45b17d7`; **DEV automation ON**; intake automations turned ON after clone (Mike 2026-07-05); sandbox **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after DEV pass | Wave 0 | **pending — OMNI pipeline confirm** |
+| **H-002** | **066** v3.2 V2 rewrite + Week write | GitHub `36a2e95`; DEV verified (Easton Hill idempotency + clean-create); **PROD pasted** v3.2 2026-07-06 (`appn84sqPw03zEbTT`); monitor first natural run | Wave 0 | **done** |
 | **H-003** | Award Recipients scope metadata | Accepted for 2025–26; optional cleanup | — | deferred |
 | **H-004** | Awards catalog duplicate bucket | `thanks_for_playing` class | — | deferred |
 
@@ -118,7 +118,7 @@ flowchart TD
 | **V2-014a** | Wave 2A — classify all automations | **Planning complete** (2026-07-05) — classification, patterns, Mike decisions; ChatGPT review accepted. **Implementation not complete** — no rewrites/merges/retirements executed. Retirements **approved:** **112**, **043** (pending maintenance window) | V2-014, V2-015 | **planning done** |
 | **V2-014c** | Phase 2B — engineering documentation | **Done** (2026-07-06) — [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md), SCRIPT+CONFIG header standard, [phase-2b review](./phase-2b-engineering-review-2026-07-06.md). **No code / no Airtable changes** | V2-014a | **done** (doc) |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
-| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Testing Scenarios/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
+| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; 066 v3.2 DEV verified + PROD deployed; first test env for merges/schema/backfills/Testing Scenarios/Make | V2-014 | **done** |
 
 Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Dev base: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)
 
@@ -159,7 +159,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
-| **C-020** | **Engineering Test Framework** | **Testing Scenarios** on DEV — OMNI schema complete. **Justification:** manual DEV Submissions unreliable; must create Fillout-shaped pipeline-ready Submissions. **066** test blocked until C-020 script or existing intake-complete DEV row. Script paused pending sequencing approval. [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013, H-002 | **blocked — sequencing** |
+| **C-020** | **Engineering Test Framework** | **Testing Scenarios** on DEV — OMNI schema complete. **066** deployed — C-020 unblocked on H-002; script still paused pending Mike sequencing approval. [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013 | **blocked — sequencing** |
 
 ### Wave 7 — Asset storage
 
