@@ -74,7 +74,7 @@ flowchart TD
 | **3** | **C-021** grade bands — link-based matching | Must work before tuning **XP Reward Rules** (Wave 9) |
 | **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
 | **5** | **C-010**, **C-011**, **066** Airtable deploy | Production safety + automation before heavy testing |
-| **6** | **C-019**, **C-020** test sandbox + Test Intake | Validate pipeline without Fillout; **C-020 DEV build after 066**; needed before S3 cutover |
+| **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | Validate pipeline without Fillout; **C-020 script blocked on OMNI field list**; needed before S3 cutover |
 | **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | Hash at upload; one URL per asset; duplicate files caught by **SHA-256**, not filename |
 | **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
 | **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
@@ -115,9 +115,9 @@ flowchart TD
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **V2-014** | **Automation Modernization Roadmap** | Master inventory: Category A–F, four-axis evaluation, Complexity Score ([doc 06](./v2/06-automation-standards.md)), modernization priority. **Goal:** reduce complexity first; capacity recovery secondary. **066 v3.1** = V2 reference. **112 OFF**; **013** production. No rewrites until wave approved. | Wave 0, H-002 | **done** (doc) |
-| **V2-014a** | Wave 2A — classify all automations | Purpose, I/O, Complexity Score, Category A–F, priority, merge/retire — **GitHub complete**; OMNI trigger confirm pending | V2-014, V2-015 | **monitoring** |
+| **V2-014a** | Wave 2A — classify all automations | **Planning complete** (2026-07-05) — classification, patterns, Mike decisions; ChatGPT review accepted. **Implementation not complete** — no rewrites/merges/retirements executed. Retirements **approved:** **112**, **043** (pending maintenance window) | V2-014, V2-015 | **planning done** |
 | **V2-014b** | Email Message Center (EMC) | Replace **071, 072, 073, 074, 075, 076, 077** with builder + sender automations | V2-014, C-011 | queued |
-| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Test Intake/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
+| **V2-015** | **Permanent Development Airtable base** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; first test env for 066/merges/schema/backfills/Testing Scenarios/Make. **Not done** until 066 v3.1 tested in DEV | V2-014 | **in-progress** |
 
 Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) · Dev base: [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md)
 
@@ -158,13 +158,13 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
-| **C-020** | **Test Intake harness** | **Priority DEV build after 066** — Test Intake table + automation/extension; `Scenario Type`, `Run Test?` / `Dry Run?` → Fillout-shaped Submission with pre-linked Enrollment (Schmidt or DEV test enrollments); multi-file video; **no `Is Test Record?` on pipeline**; downstream automation map in [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 | C-019, V2-013, H-002 (066 DEV pass) | **queued — next after 066 DEV** |
+| **C-020** | **Engineering Test Framework** | **Testing Scenarios** table on DEV (OMNI finishing schema). Script **paused** until final field list. Production-shaped pipeline; framework fields (**Scenario Type**, **Test Status**, **Expected/Actual Result**, **Pass/Fail Notes**) on **Testing Scenarios only** — not pipeline. Future **Testing Scenario Library** deferred. Checklist: [C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013, H-002, 066 DEV | **blocked — OMNI schema** |
 
 ### Wave 7 — Asset storage
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset for all consumers | C-012, C-020 | queued |
+| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing (replacing Google Drive path) — design wave with ChatGPT before implementation | C-012, C-020 | queued |
 | **C-023** | File dedup by **content hash**, not title/filename | **Today:** **007** uses **Duplicate Key** on submission **stats** (date + shots), not file bytes; **009** dedupes assets by **source attachment ID** only — same file re-uploaded under new name can slip through. Schema already has **`File Content Hash`** + **`File Hash Algorithm`** on Submission Assets (incl. SHA-256 option) — **not wired end-to-end**. **Target:** compute hash at intake/upload (Make or script); block or flag duplicate hash per enrollment/week; never rely on filename alone. | C-013, C-024 | queued |
 
 ### Wave 8 — Intake & calendar

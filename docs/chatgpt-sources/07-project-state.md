@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-05** (C-020 Test Intake — next DEV build after 066)
+Last updated: **2026-07-05** (Wave 2A planning complete; Phase 2 next sequence)
 
 ---
 
@@ -12,11 +12,11 @@ Last updated: **2026-07-05** (C-020 Test Intake — next DEV build after 066)
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **DEV deploy in progress** — paste + test per [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md); prod after DEV pass |
-| **C-020 — Test Intake harness** | **Queued — next DEV build after 066** — [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
+| **H-002 — Automation 066 v3.1** | **DEV paste done** — audit + sandbox test next; prod after DEV pass |
+| **C-020 — Engineering Test Framework** | **Blocked on OMNI** — **Testing Scenarios** table revision; script paused — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
-| **Phase 2 — Platform Modernization** | **Wave 2A GitHub complete** — [classification](./v2-014-wave-2a-classification.md) 46/46; OMNI trigger confirm pending |
+| **Phase 2 — Platform Modernization** | **Wave 2A planning complete** — [classification](./v2-014-wave-2a-classification.md); **implementation not started** (2b+) |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
@@ -55,20 +55,31 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Status | **Ready** — first testing environment for Phase 2 work |
 | Clone + scrub | **2026-07-05** — production **unchanged** |
 | Test enrollments retained | **6 total** — Schmidt/testing enrollment + **5** additional test enrollments |
-| Other enrollments | **Removed from DEV** — all other registered athlete/enrollment records deleted in dev only |
+| Test data scope (Mike 2026-07-05) | Test rows in **registrant/pipeline tables** only — Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, etc. **Not** config/reference tables (Milestones, Levels, Gates, XP Rules, Weeks, …). Document enrollment record IDs when OMNI exports them (C-019). |
 | Setup runbook | [development-base-setup.md](./development-base-setup.md) |
 | Architecture | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
 
 **DEV is the first testing location for:**
 
-- Automation **066 v3.1** paste (H-002 — **pending**)
+- Automation **066 v3.1** — **pasted in DEV**; audit + sandbox test next (H-002)
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
-- Test Intake harness (**C-020** — **next** after 066) / Schmidt sandbox (C-019)
+- **C-020** Engineering Test Framework — **Testing Scenarios** (OMNI schema; script blocked)
 - Make dry-runs (when dev scenarios configured)
 
-**V2-015 completion gate:** base ID recorded ✓ · **066 v3.1 tested in DEV** — pending · webhook/Make isolation — verify per runbook
+**V2-015 completion gate:** base ID recorded ✓ · **066 v3.1 pasted in DEV** ✓ · **066 DEV audit + sandbox test** — next · webhook/Make isolation — verify per runbook
+
+### Phase 2 next sequence (locked 2026-07-05)
+
+| # | Step |
+|---|------|
+| 1 | **066 DEV audit** + one sandbox test |
+| 2 | After DEV pass → Mike decides **066 prod promote** |
+| 3 | Approved prod maintenance window → delete **112**, retire **043** |
+| 4 | Begin **C-020** — OMNI finishes **Testing Scenarios**; Cursor script **after** final DEV field list | DEV |
+
+**Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
 
 **Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
 

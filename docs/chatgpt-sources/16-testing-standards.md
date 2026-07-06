@@ -62,20 +62,18 @@ Dev base setup: [development-base-setup.md](../development-base-setup.md) (V2-01
 
 ---
 
-## Test Intake harness (C-020) — priority DEV build
+## Test Intake harness (C-020) — Engineering Test Framework
 
-**After 066 v3.1 DEV test passes**, build **C-020** on DEV first. Full spec: [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020.
+**Table name:** **Testing Scenarios** (not Test Intake).  
+**Script:** **Paused** until OMNI final DEV field list — [checklist](../deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 | Rule | Standard |
 |------|----------|
-| Environment | **DEV first** — `appTetnuCZlCZdTCT` |
-| Test identification | **No `Is Test Record?`** on pipeline tables |
-| Operator trigger | **`Run Test?`** on Test Intake only — auto-uncheck after run |
-| Enrollments | Schmidt/testing + retained DEV test enrollments (`Active?` false) |
-| Verification | Testing views by Enrollment link; Stages A–H audit dry-runs |
-| Downstream chain | Documented in C-020 — **023** skipped if Enrollment pre-linked; **009→013/020→070→022** expected |
-
-**DEV build sequence (V2-015):** 066 DEV test → **C-020** → promotion doc → prod mirror (structure only).
+| Environment | **DEV first** |
+| Pipeline tables | **No** test fields — production-shaped records only |
+| **Testing Scenarios only** | Scenario Type, Test Status, Expected Result, Actual Result, Pass/Fail Notes, Last Run fields |
+| Testing views | Filter by **Related Enrollment** / test enrollment link |
+| **Testing Scenario Library** | Future option — **do not build now** |
 
 ---
 
