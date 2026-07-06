@@ -143,10 +143,9 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 
 ### Script development — **paused**
 
-**Do not start Cursor/GitHub script work** until OMNI finishes the **final Testing Scenarios table revision** on DEV and the **authoritative field list** is recorded (promotion doc or checklist update).
+**Do not start Cursor/GitHub script work** until **066 DEV audit** + sandbox test is complete.
 
-**OMNI in progress:** table schema, Testing views, scenario matrix.  
-**Cursor blocked on:** [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 ### Problem
 
@@ -176,9 +175,11 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 | **Testing Scenario Library** | **Future option** — separate template/library table; **do not build now** |
 | **Promotion doc** | Required before prod ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
 
-### Testing Scenarios table (DEV — OMNI authoritative)
+### Testing Scenarios table (DEV — OMNI complete 2026-07-05)
 
-OMNI is revising the final field list. **Minimum framework fields** (names may adjust):
+**Authoritative field list:** [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)
+
+**Minimum framework fields** (all on Testing Scenarios only):
 
 | Field | Purpose |
 |-------|---------|
