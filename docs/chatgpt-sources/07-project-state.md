@@ -16,7 +16,7 @@ Last updated: **2026-07-05** (C-020 Test Intake — next DEV build after 066)
 | **C-020 — Test Intake harness** | **Queued — next DEV build after 066** — [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) § C-020 |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
-| **Phase 2 — Platform Modernization** | **Wave 2A active** — [V2-014](./v2-014-automation-modernization-roadmap.md) automation classification (no rewrites) |
+| **Phase 2 — Platform Modernization** | **Wave 2A GitHub complete** — [classification](./v2-014-wave-2a-classification.md) 46/46; OMNI trigger confirm pending |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
 | **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
 
