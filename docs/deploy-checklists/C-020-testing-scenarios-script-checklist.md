@@ -1,8 +1,10 @@
 # C-020 — Testing Scenarios script checklist (future)
 
 **Backlog:** C-020  
-**Status:** **DEV verified** — Automation **115** v1.3 (Tests A–D + functional live **E/F/G** PASS 2026-07-07). Production not deployed  
+**Status:** **DEV functional complete** — Automation **115** v1.3 (Tests A–D + functional live **E/F/G** PASS 2026-07-07). Production not deployed  
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
+
+**Functional complete scope (2026-07-07):** Daily, Homework, and Video intake paths verified on DEV via **115**. **Out of scope / not tested:** Homework XP after coach review (**064/065**); **070a/070b** Make/S3 upload; combined **Homework + Video** scenario (115 v1.3); Production Airtable paste.
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
 **Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters  

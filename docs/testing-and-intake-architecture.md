@@ -133,6 +133,8 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 **Build order:** Step **4** in [Phase 2 next sequence](./v2-015-development-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** DEV test (C-020 scenario or verified existing DEV row) and approved **112**/**043** maintenance (unless Mike reprioritizes).  
 **Environment:** **DEV first** (`appTetnuCZlCZdTCT`).
 
+**Status (2026-07-07):** **DEV functional complete** — Automation **115** v1.3 on DEV; formal Tests A–D + functional live **E/F/G** PASS ([checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)). **Not in scope:** Homework XP after review; **070a/070b** Make/S3; combined Homework + Video; Production paste.
+
 ### What this is (and is not)
 
 | Is | Is not |
@@ -143,8 +145,7 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 
 ### Script development
 
-**115 v1.0 Daily Submission** — DEV verified 2026-07-06 (`a1bf96e`).  
-**Homework + Video branches** — planned; see [upload-workflow-homework-video.md](./upload-workflow-homework-video.md) and [C-020 checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) § G2/G3.
+**115 v1.3** — DEV functional complete 2026-07-07 (`9107280` docs). Daily Submission (v1.0), Homework (v1.1), Video (v1.3); Tests A–D + functional live E/F/G. See [upload-workflow-homework-video.md](./upload-workflow-homework-video.md) and [C-020 checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -208,9 +209,9 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 | **Created Submission** (or equivalent) | Back-link to pipeline row created by scenario |
 | *Scenario inputs* | Activity date, shots, attachments — per OMNI final list |
 
-**Trigger field:** TBD from OMNI final list (e.g. run checkbox or Test Status transition).
+**Trigger field:** **`Run Test?`** on **Testing Scenarios** (Automation **115**).
 
-### Future script behavior (checklist — not implemented yet)
+### Automation 115 behavior (implemented — DEV functional complete 2026-07-07)
 
 See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md):
 
@@ -325,7 +326,7 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 | 1 | **066 v3.1** DEV audit + sandbox test | **Next** |
 | 2 | Optional **066** prod promote | After DEV pass — Mike decides |
 | 3 | Delete **112**, retire **043** | Approved maintenance window |
-| 4 | **C-020** — **115 v1.1 Homework** then **v1.2 Video** on DEV | Daily Submission MVP done; [upload workflow](./upload-workflow-homework-video.md) |
+| 4 | **C-020** — **115 v1.3** on DEV | **DEV functional complete** (Tests A–D + E/F/G); [upload workflow](./upload-workflow-homework-video.md) |
 
 ---
 
@@ -334,7 +335,7 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 | Order | Item | Why |
 |-------|------|-----|
 | 1 | **066 DEV test** (H-002) | Blocks V2-015 done; milestone unlock reference |
-| 2 | **C-020** | Engineering Test Framework — **Testing Scenarios** on DEV; script after OMNI |
+| 2 | **C-020** | **DEV functional complete** — **115** v1.3; Production paste + optional combined scenario deferred |
 | 3 | **C-019** | Document Schmidt + DEV test enrollment IDs; Testing views |
 | 4 | **C-018** | Intake-open vs challenge-run dates before launch |
 | 5 | **C-017** | Fillout validation before enrollment wave |
