@@ -1,7 +1,7 @@
 # C-020 — Testing Scenarios script checklist (future)
 
 **Backlog:** C-020  
-**Status:** **DEV verified** — Automation **115** v1.3 (Daily Submission + Homework + Video; Tests A–D PASS 2026-07-07). Production not deployed  
+**Status:** **DEV verified** — Automation **115** v1.3 (Tests A–D + functional live **E/F/G** PASS 2026-07-07). Production not deployed  
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
@@ -403,6 +403,59 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
+## DEV test log — Automation 115 Homework functional live (2026-07-07)
+
+**Base:** DEV `appTetnuCZlCZdTCT`  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**  
+**Row:** `C-020 Functional — Homework 2-file Schmidt`  
+**Trigger:** New scenario row created with **Dry Run?** off + **Run Test?** on (2 files + same **Homework Assignment** as Test B)
+
+### Test G — Homework functional live (2 files)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `rec14HLmrN5suEyWs` |
+| Scenario Type | Homework |
+| Related Enrollment | Schmidt, Testing - 2025-2026 (`recgP9qZYjAhE7NXm`) |
+| Athlete | `recgqVstObQRzgXJF` |
+| Submission Date / Activity Date | 2026-05-29 |
+| Homework Assignment | `recHbROQu2tAtUzMg` (same as Test B) |
+| Intake Attachments | 2 — BlueOrangeCircleLogo.png; Shooting Tracker - 2026 Version.png |
+| Created Submission | `recfVEP3SAmPP6jiw` |
+| HW Sub 1 file count | 2 |
+| Week | Week 5 (`recUPkXtsDOHnY5q7`) — **005** |
+| Shot Total | *blank* (expected) |
+| Duplicate Review Status | *blank* (expected) |
+| XP Award Status (Submission) | Pending (expected — no shot XP; **Homework XP not tested**) |
+| Submission Assets | `reclhRQPhXJo1jmsS`, `recW63hxae641BCco` (2; slot **HW1**) |
+| Homework Completion | **1** — `recbf1adSvV2TvuC5` (links **both** assets) |
+| Video Feedback | **None** (expected) |
+| XP Events | **None** from this Homework-only submission source (expected; coach/064 path not exercised) |
+| **Run Test?** | Cleared after run |
+| **Dry Run?** | false |
+| **070a** | OFF (expected; **Make/S3 upload not tested**) |
+| Result | **PASS** — downstream verified via API 2026-07-07 |
+
+**Key acceptance proof:** 2 files → 2 Submission Assets → **1** Homework Completion (not 2).
+
+**Note:** Distinct from formal Test B (`recP51mbE5KEGngxQ` / `reca8SxXfri7aRZiB`, 1 file) — this is the operator **2-file functional live** retest for Wave 6.
+
+---
+
+## DEV functional live summary (2026-07-07)
+
+All three **115** scenario branches exercised end-to-end on DEV (Schmidt enrollment; intake automations ON; **070a/070b OFF**):
+
+| Test | Scenario Type | Testing Scenarios | Submission | Result |
+|------|---------------|-------------------|--------------|--------|
+| **E** | Daily Submission | `recQRaFbqTiiBbrcU` | `recAKNWwD6zn8hxwv` | **PASS** — Week + shot XP + WAS |
+| **F** | Video (2 files) | `recvuvDdglwY2I7nu` | `recMkN0fcgKDt9AOn` | **PASS** — 2 assets + 2 VF rows |
+| **G** | Homework (2 files) | `rec14HLmrN5suEyWs` | `recfVEP3SAmPP6jiw` | **PASS** — 2 assets + 1 HC |
+
+**Not in scope for this summary:** Homework XP award after coach review; Make/S3 upload (**070a/070b**); combined **Homework + Video** scenario (deferred in 115 v1.3).
+
+---
+
 ## Open schema notes
 
 | Item | Detail |
@@ -437,6 +490,8 @@ Intentionally deferred — do not build during Phase 2:
 - [x] Homework + Video DEV tests A–D (2026-07-07, v1.3)
 - [x] Daily functional live retest E (2026-07-07) — `recQRaFbqTiiBbrcU` → `recAKNWwD6zn8hxwv`
 - [x] Video functional live retest F (2026-07-07) — `recvuvDdglwY2I7nu` → `recMkN0fcgKDt9AOn`
+- [x] Homework functional live retest G (2026-07-07) — `rec14HLmrN5suEyWs` → `recfVEP3SAmPP6jiw`
+- [x] **Functional live E + F + G complete** (Daily + Video + Homework) — see summary above
 - [ ] Stages A–H audit dry-run on Schmidt enrollment (optional follow-up)
 - [ ] Promotion doc committed before prod
 
