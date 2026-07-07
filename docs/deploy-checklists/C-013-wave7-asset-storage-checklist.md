@@ -1,9 +1,9 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 1 complete (DEV schema)** — Metadata API confirmed **Canonical File URL** + **Storage Key** on DEV; 49 records, **0** populated (S3 not active yet). **Next:** Slice 2 — DEV Make S3 upload/writeback proof. No Production changes.  
+**Status:** **Wave 7 Slice 2 in progress** — DEV schema complete; [Make S3 writeback mapping](./C-013-make-s3-writeback-mapping.md) drafted. S3 not active until DEV scenario proves writeback. No Production changes.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
-**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md)  
+**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · **[Slice 2 Make S3 mapping](./C-013-make-s3-writeback-mapping.md)**  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
 **DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
 
@@ -249,9 +249,12 @@ Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documenta
 
 **Slice 2 — DEV Make S3 upload/writeback proof (still no Production)**
 
-1. Clone Upload Engine scenario → **DEV** webhook.
-2. Replace Drive upload branch with S3; write `Canonical File URL` + hash fields on asset.
-3. Turn **070a/070b ON** on DEV only; point to DEV webhook per [development-base-setup.md](../development-base-setup.md).
+See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** for module map, writeback fields, and C-020 H1–H4 tests.
+
+1. Clone Upload Engine v2 hash blueprint → **DEV-only** scenario + webhook.
+2. Replace Google Drive modules with **S3 Upload Object** + canonical URL build.
+3. Prove writeback on DEV (H1/H2) before enabling **070a/070b** on DEV.
+4. Point DEV **070a/070b** `makeWebhookUrl` at DEV hook only after Mike approves.
 
 **Slice 3 — Airtable DEV automations + formulas**
 
@@ -321,7 +324,7 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
 - [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [ ] **Slice 2 — DEV Make S3 upload/writeback proof**
+- [ ] **Slice 2 — DEV Make S3 upload/writeback proof** — [mapping doc](./C-013-make-s3-writeback-mapping.md)
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc
