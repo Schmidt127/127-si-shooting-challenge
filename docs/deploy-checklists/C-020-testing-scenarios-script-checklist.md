@@ -1,7 +1,7 @@
 # C-020 — Testing Scenarios script checklist (future)
 
 **Backlog:** C-020  
-**Status:** **Paused** — schema complete; **G1–G3** doc gaps + sequencing approval before implementation ([review](./phase-2b-engineering-review-2026-07-06.md) § C-020)  
+**Status:** **DEV MVP complete** — Automation **115** v1.0 Daily Submission verified on DEV (`appTetnuCZlCZdTCT`) 2026-07-06; Production not deployed  
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
@@ -18,7 +18,7 @@
 | **Testing Scenarios must create Fillout-shaped Submissions** | Only production-shaped intake produces trustworthy downstream state for **066**, upload, homework, and video tests |
 | **066 depends on real pipeline state** | Shot milestone logic uses counted submissions from a enrollment that went through intake — not ad-hoc manual fields |
 
-**066 DEV test** waits until C-020 can create a pipeline-ready Submission **or** until an existing real DEV Submission is identified that already completed intake. See [066 dev checklist](./066-v3.1-dev-deploy.md).
+**066 DEV test** completed separately (Easton Hill) — see [066 dev checklist](./066-v3.1-dev-deploy.md). C-020 provides ongoing Fillout-shaped DEV intake for Schmidt and future scenarios.
 
 ---
 
@@ -28,9 +28,9 @@
 
 - **Pipeline-ready submission path defined** for DEV testing — Fillout-shaped Submission via C-020 **or** verified existing DEV row ([066 dev deploy checklist](./066-v3.1-dev-deploy.md))
 
-Do **not** begin GitHub script work until Mike approves starting C-020 implementation (after sequencing decision with ChatGPT/OMNI).
+Do **not** begin additional scenario types until Daily Submission MVP is verified in DEV.
 
-**Note:** **066** sandbox test is **blocked** on the same pipeline-ready submission requirement. Manual incomplete Submissions must **not** be used for **066** testing.
+**Note:** Daily Submission MVP **verified** 2026-07-06 — see test log below.
 
 ### Recommended (non-blocking)
 
@@ -69,6 +69,7 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 | **Operator Assigned** | collaborator | `fldTGPN6emJvYb03J` | Operator UX — recommended; does not affect script behavior |
 | **Related Enrollment** | link → Enrollments | `fldPylkKBdhFTTDCL` | Required — Schmidt/testing or DEV test enrollment; pre-link on created Submission |
 | **Submission Date** | date | `fldNCS0y5Ez4pFccA` | Maps to Submission activity date |
+| **Shot Total** | number | *(added DEV 2026-07-06)* | Maps to Submission **Shot Total** — Daily Submission MVP |
 | **Intake Attachments** | multipleAttachments | `fldYubBWgAKHstQ6P` | Video/HW files → Fillout-shaped Submission attachments |
 | **Scenario Requirements** | multilineText | `fldVWP6MVqrBXqa6J` | Operator scenario inputs / constraints |
 | **Test Notes** | multilineText | `fldD8y9YrgIhjiqfu` | Operator notes |
@@ -101,10 +102,51 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 
 ---
 
+## G1 — Daily Submission field map (MVP — closed 2026-07-06)
+
+**Scenario Type:** `Daily Submission` only (v1.0 script).
+
+### Testing Scenarios → read
+
+| Testing Scenarios field | Maps to / use |
+|-------------------------|---------------|
+| **Related Enrollment** | Must be Schmidt MVP allowlist: `recgP9qZYjAhE7NXm` |
+| **Submission Date** | Submission **Activity Date** |
+| **Shot Total** | Submission **Shot Total** (number — added DEV 2026-07-06) |
+| **Run Test?** | Trigger; cleared after run |
+| **Dry Run?** | Preview only — no Submission create |
+| **Scenario Requirements** | Not used in v1.0 (optional operator notes) |
+
+### Submission → write (writable only)
+
+| Submission field | Value |
+|------------------|-------|
+| **Enrollment** | Related Enrollment link |
+| **Athlete** | Athlete from Enrollment |
+| **Activity Date** | Submission Date |
+| **Shot Total** | Testing Scenarios **Shot Total** |
+| **Duplicate Review Status** | `Count It` |
+
+### Submission → do not write
+
+Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/formula fields, any test flag.
+
+### Downstream (normal automations)
+
+**023** skipped (Enrollment pre-linked). Expect **005**, **007**, **010**, **031**, etc. per [testing-and-intake-architecture.md](../testing-and-intake-architecture.md).
+
+### G3 — MVP enrollment allowlist (Schmidt-only)
+
+| Enrollment | Record ID | Notes |
+|------------|-----------|-------|
+| Schmidt, Testing - 2025-2026 | `recgP9qZYjAhE7NXm` | Athlete `recgqVstObQRzgXJF`; Grade Band K-2; `Active?` false |
+| *Expanded allowlist* | *Deferred* | Five other DEV test enrollments + Bakken — post-MVP |
+
 ## Open schema notes
 
 | Item | Detail |
 |------|--------|
+| **Shot Total** on **Testing Scenarios** | **Done** — number field added DEV 2026-07-06 (writable, not computed). |
 | **Test Intake Name** (primary) | Legacy label from earlier naming — acceptable; optional rename to **Scenario Name** later. |
 
 ---
@@ -130,7 +172,47 @@ Intentionally deferred — do not build during Phase 2:
 
 ## After script exists
 
-- [ ] Dry-run on DEV with one scenario row
-- [ ] Verify downstream automations per [testing-and-intake-architecture.md § downstream map](../testing-and-intake-architecture.md#downstream-automations-expected-to-fire)
-- [ ] Stages A–H audit dry-run on test Enrollment
+- [x] Dry-run on DEV with one scenario row (2026-07-06)
+- [x] Live-create on DEV — downstream pipeline verified (2026-07-06)
+- [ ] Stages A–H audit dry-run on Schmidt enrollment (optional follow-up)
 - [ ] Promotion doc committed before prod
+
+---
+
+## DEV test log — Automation 115 v1.0 (2026-07-06)
+
+**Base:** DEV `appTetnuCZlCZdTCT`  
+**Automation:** 115 - Engineering Test Framework - Run Testing Scenario Daily Submission  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` v1.0  
+**Result:** **PASS**
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios row | `rec6UZsARW5dzTvzd` |
+| Scenario Type | Daily Submission |
+| Related Enrollment | Schmidt, Testing - 2025-2026 (`recgP9qZYjAhE7NXm`) |
+| Athlete | `recgqVstObQRzgXJF` |
+| Created Submission | `recHmgJB8txE5w0Bg` |
+| Activity Date | 2026-05-26 |
+| Shot Total | 100 |
+| Duplicate Review Status | Count It |
+| Count This Submission? | 1 |
+| Week | Week 5 (`recUPkXtsDOHnY5q7`) — assigned by **005** |
+| XP Event | `recEjDUfUHY2tUvJL` — Submission Base / Shooting Base / 20 XP |
+| Source Key | `SUBMISSION_XP\|recHmgJB8txE5w0Bg` |
+| Weekly Athlete Summary | `recBO81w4dYtcaL4V` |
+| Submission Assets | None (expected — no attachments) |
+| Homework Completions | None (expected) |
+| Video Feedback | None (expected) |
+| Duplicates | None |
+| Pipeline errors | None |
+
+**Link note:** Submission may show **Testing Scenarios** only as the inverse link from **Linked Submission** on the scenario row — acceptable; no test flags on pipeline tables.
+
+### Dry-run
+
+- [x] **PASS** — `actionOut: dry_run`, no Submission created, `Run Test?` cleared
+
+### Live-create
+
+- [x] **PASS** — `actionOut: created`, Submission + downstream (**005**, **010**, **031**) verified
