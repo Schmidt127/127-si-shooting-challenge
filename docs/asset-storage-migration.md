@@ -1,8 +1,10 @@
 # Asset storage migration — AWS + canonical URLs
 
-**Status:** V2 architecture decision (planning). **Blocks:** reliable 2026–27 season without personal Google Drive dependency.  
+**Status:** V2 architecture decision — **Wave 7 in progress** (planning + DEV inventory 2026-07-07). **Blocks:** reliable 2026–27 season without personal Google Drive dependency.  
 **Tracked as:** [close-out-considerations.md](./close-out-considerations.md) **C-013** (updated)  
-**Last updated:** 2026-07-03
+**Execution checklist:** [deploy-checklists/C-013-wave7-asset-storage-checklist.md](./deploy-checklists/C-013-wave7-asset-storage-checklist.md)  
+**DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py`  
+**Last updated:** 2026-07-07
 
 ---
 

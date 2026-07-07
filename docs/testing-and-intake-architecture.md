@@ -336,10 +336,10 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 |-------|------|-----|
 | 1 | **066 DEV test** (H-002) | Blocks V2-015 done; milestone unlock reference |
 | 2 | **C-020** | **DEV functional complete** — **115** v1.3; Production paste + optional combined scenario deferred |
-| 3 | **C-019** | Document Schmidt + DEV test enrollment IDs; Testing views |
-| 4 | **C-018** | Intake-open vs challenge-run dates before launch |
-| 5 | **C-017** | Fillout validation before enrollment wave |
-
+| 3 | **C-013 / C-023** | **Wave 7 in progress** — S3 canonical URL + hash dedup; [checklist](./deploy-checklists/C-013-wave7-asset-storage-checklist.md) |
+| 4 | **C-019** | Document Schmidt + DEV test enrollment IDs; Testing views (partial/manual) |
+| 5 | **C-018** | Intake-open vs challenge-run dates before launch |
+| 6 | **C-017** | Fillout validation before enrollment wave |
 ---
 
 ## Related documents

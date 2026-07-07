@@ -75,7 +75,7 @@ flowchart TD
 | **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
 | **5** | **C-010**, **C-011**, **066** Airtable deploy | Production safety + automation before heavy testing |
 | **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | **C-020 DEV functional complete** (115 v1.3; Tests A–D + E/F/G); C-019 Testing views partial; needed before S3 cutover |
-| **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | Hash at upload; one URL per asset; duplicate files caught by **SHA-256**, not filename |
+| **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | **In progress** — [Wave 7 checklist](./deploy-checklists/C-013-wave7-asset-storage-checklist.md); hash at upload; one URL per asset |
 | **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
 | **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
 | **10** | Game manual, `/shoot` hub; **C-027** major-event notifications (SMS TBD) | Comms + optional real-time athlete alerts |
@@ -167,8 +167,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Upload naming:** athlete + date + focus + sequence before Make send — [upload workflow](./upload-workflow-homework-video.md). **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing (replacing Google Drive path) — design wave with ChatGPT before implementation | C-012, C-020 | queued |
-| **C-023** | File dedup by **content hash**, not title/filename | **Today:** **007** uses **Duplicate Key** on submission **stats** (date + shots), not file bytes; **009** dedupes assets by **source attachment ID** only — same file re-uploaded under new name can slip through. Schema already has **`File Content Hash`** + **`File Hash Algorithm`** on Submission Assets (incl. SHA-256 option) — **not wired end-to-end**. **Target:** compute hash at intake/upload (Make or script); block or flag duplicate hash per enrollment/week; never rely on filename alone. | C-013, C-024 | queued |
+| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Wave 7 started** — [checklist](./deploy-checklists/C-013-wave7-asset-storage-checklist.md), [upload workflow](./upload-workflow-homework-video.md). **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing — design before Slice 2 | C-012, C-020 | **in progress** |
+| **C-023** | File dedup by **content hash**, not title/filename | Schema + Make v2 blueprint exist; not wired DEV end-to-end. **Probe:** `_probe_c013_asset_storage_fields.py`. Target: hash at upload; flag/block policy TBD | C-013, C-024 | **in progress** |
 
 ### Wave 8 — Intake & calendar
 
