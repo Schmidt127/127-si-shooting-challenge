@@ -14,6 +14,7 @@ import sys
 import urllib.parse
 import urllib.request
 from collections import Counter
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -235,7 +236,7 @@ def asset_stats(base_id: str, cfg: dict) -> dict:
 
 
 def schmidt_submission_intake_stats(base_id: str) -> dict:
-    formula = f"{{{ 'Enrollment' }}} = '{SCHMIDT_ENROLLMENT}'"
+    formula = f"{{Enrollment}} = '{SCHMIDT_ENROLLMENT}'"
     records = list_records(base_id, "Submissions", formula=formula, max_pages=10)
     stats = {
         "scope": "Schmidt Submissions",
@@ -257,6 +258,16 @@ def schmidt_submission_intake_stats(base_id: str) -> dict:
 
 
 def main() -> None:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="C-013/C-023 read-only asset storage probe")
+    parser.add_argument(
+        "--out",
+        default=os.getenv("C013_PROBE_OUT"),
+        help="Write JSON summary to this path (e.g. tools/airtable/_preview/c013-dev-baseline.json)",
+    )
+    args = parser.parse_args()
+
     base_id = os.getenv("WAVE7_PROBE_BASE") or os.getenv("DEV_BASE_ID") or DEV_BASE
     print(f"probe=C-013/C-023 asset storage")
     print(f"base_id={base_id}")
@@ -266,6 +277,8 @@ def main() -> None:
     inventory = field_inventory(schema)
 
     result = {
+        "probeScript": "_probe_c013_asset_storage_fields.py",
+        "probedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "baseId": base_id,
         "schmidtEnrollment": SCHMIDT_ENROLLMENT,
         "schemaInventory": inventory,
@@ -294,7 +307,16 @@ def main() -> None:
     }
 
     print("\n=== SUMMARY JSON ===")
-    print(json.dumps(result, indent=2))
+    payload = json.dumps(result, indent=2)
+    print(payload)
+
+    if args.out:
+        out_path = Path(args.out)
+        if not out_path.is_absolute():
+            out_path = REPO / out_path
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(payload + "\n", encoding="utf-8")
+        print(f"\nwritten={out_path.as_posix()}")
 
     # Human-readable gaps
     print("\n=== WAVE 7 GAPS (canonical fields) ===")

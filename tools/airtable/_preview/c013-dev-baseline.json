@@ -1,0 +1,403 @@
+{
+  "probeScript": "_probe_c013_asset_storage_fields.py",
+  "probedAt": "2026-07-07T23:12:04Z",
+  "baseId": "appTetnuCZlCZdTCT",
+  "schmidtEnrollment": "recgP9qZYjAhE7NXm",
+  "schemaInventory": {
+    "Submissions": {
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "fieldCount": 98,
+      "groups": {
+        "attachments": {
+          "present": [
+            "HW Sub 1",
+            "HW Sub 2",
+            "Video Upload"
+          ],
+          "missing": [
+            "Airtable Attachment",
+            "Athlete Headshot"
+          ]
+        },
+        "driveUrls": {
+          "present": [],
+          "missing": [
+            "Google Drive File URL",
+            "Google Drive File ID",
+            "Google Drive Folder ID",
+            "Google Drive Folder URL",
+            "Google Drive View URL",
+            "Google Drive Download URL",
+            "Video URL or Drive Link"
+          ]
+        },
+        "canonicalPlanned": {
+          "present": [],
+          "missing": [
+            "Canonical File URL",
+            "Storage Key",
+            "Storage Bucket",
+            "Athlete Headshot URL",
+            "Formatted Upload Name"
+          ]
+        },
+        "uploadStatus": {
+          "present": [
+            "Attachment Upload Status"
+          ],
+          "missing": [
+            "Upload Status",
+            "Upload Error",
+            "Uploaded At",
+            "Send to Make Trigger",
+            "Writeback Complete?",
+            "Upload Ready?",
+            "Ready to Send to Make?",
+            "Upload Naming Status"
+          ]
+        },
+        "hashDedup": {
+          "present": [
+            "Duplicate Review Status"
+          ],
+          "missing": [
+            "File Content Hash",
+            "File Hash Algorithm",
+            "File Size Bytes",
+            "File MIME Type",
+            "File is Duplicate?",
+            "Duplicate File Status",
+            "Duplicate Match Strength",
+            "Duplicate Match Record",
+            "Duplicate Match Notes",
+            "Duplicate Checked At",
+            "Duplicate Check Error",
+            "Source Attachment ID"
+          ]
+        }
+      },
+      "otherTrackedPresent": []
+    },
+    "Submission Assets": {
+      "tableId": "tblhMLKxQK77agtME",
+      "fieldCount": 76,
+      "groups": {
+        "attachments": {
+          "present": [
+            "Airtable Attachment",
+            "HW Sub 1",
+            "HW Sub 2"
+          ],
+          "missing": [
+            "Video Upload",
+            "Athlete Headshot"
+          ]
+        },
+        "driveUrls": {
+          "present": [
+            "Google Drive File URL",
+            "Google Drive File ID",
+            "Google Drive Folder ID",
+            "Google Drive Folder URL"
+          ],
+          "missing": [
+            "Google Drive View URL",
+            "Google Drive Download URL",
+            "Video URL or Drive Link"
+          ]
+        },
+        "canonicalPlanned": {
+          "present": [],
+          "missing": [
+            "Canonical File URL",
+            "Storage Key",
+            "Storage Bucket",
+            "Athlete Headshot URL",
+            "Formatted Upload Name"
+          ]
+        },
+        "uploadStatus": {
+          "present": [
+            "Upload Status",
+            "Upload Error",
+            "Uploaded At",
+            "Send to Make Trigger",
+            "Writeback Complete?",
+            "Upload Ready?",
+            "Ready to Send to Make?",
+            "Upload Naming Status"
+          ],
+          "missing": [
+            "Attachment Upload Status"
+          ]
+        },
+        "hashDedup": {
+          "present": [
+            "File Content Hash",
+            "File Hash Algorithm",
+            "File Size Bytes",
+            "File MIME Type",
+            "File is Duplicate?",
+            "Duplicate File Status",
+            "Duplicate Match Strength",
+            "Duplicate Match Record",
+            "Duplicate Match Notes",
+            "Duplicate Checked At",
+            "Duplicate Check Error",
+            "Duplicate Review Status",
+            "Source Attachment ID"
+          ],
+          "missing": []
+        }
+      },
+      "otherTrackedPresent": []
+    },
+    "Homework Completions": {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldCount": 83,
+      "groups": {
+        "attachments": {
+          "present": [
+            "Airtable Attachment"
+          ],
+          "missing": [
+            "HW Sub 1",
+            "HW Sub 2",
+            "Video Upload",
+            "Athlete Headshot"
+          ]
+        },
+        "driveUrls": {
+          "present": [
+            "Google Drive File URL",
+            "Google Drive File ID",
+            "Google Drive Folder ID",
+            "Google Drive Folder URL",
+            "Google Drive View URL",
+            "Google Drive Download URL"
+          ],
+          "missing": [
+            "Video URL or Drive Link"
+          ]
+        },
+        "canonicalPlanned": {
+          "present": [],
+          "missing": [
+            "Canonical File URL",
+            "Storage Key",
+            "Storage Bucket",
+            "Athlete Headshot URL",
+            "Formatted Upload Name"
+          ]
+        },
+        "uploadStatus": {
+          "present": [
+            "Upload Status",
+            "Upload Error",
+            "Uploaded At",
+            "Writeback Complete?",
+            "Upload Ready?"
+          ],
+          "missing": [
+            "Attachment Upload Status",
+            "Send to Make Trigger",
+            "Ready to Send to Make?",
+            "Upload Naming Status"
+          ]
+        },
+        "hashDedup": {
+          "present": [],
+          "missing": [
+            "File Content Hash",
+            "File Hash Algorithm",
+            "File Size Bytes",
+            "File MIME Type",
+            "File is Duplicate?",
+            "Duplicate File Status",
+            "Duplicate Match Strength",
+            "Duplicate Match Record",
+            "Duplicate Match Notes",
+            "Duplicate Checked At",
+            "Duplicate Check Error",
+            "Duplicate Review Status",
+            "Source Attachment ID"
+          ]
+        }
+      },
+      "otherTrackedPresent": []
+    },
+    "Video Feedback": {
+      "tableId": "tblOV6pJDxQFBSQ3q",
+      "fieldCount": 52,
+      "groups": {
+        "attachments": {
+          "present": [],
+          "missing": [
+            "Airtable Attachment",
+            "HW Sub 1",
+            "HW Sub 2",
+            "Video Upload",
+            "Athlete Headshot"
+          ]
+        },
+        "driveUrls": {
+          "present": [
+            "Google Drive File URL",
+            "Google Drive File ID",
+            "Google Drive Folder ID",
+            "Google Drive Folder URL",
+            "Google Drive View URL",
+            "Google Drive Download URL",
+            "Video URL or Drive Link"
+          ],
+          "missing": []
+        },
+        "canonicalPlanned": {
+          "present": [],
+          "missing": [
+            "Canonical File URL",
+            "Storage Key",
+            "Storage Bucket",
+            "Athlete Headshot URL",
+            "Formatted Upload Name"
+          ]
+        },
+        "uploadStatus": {
+          "present": [
+            "Upload Status",
+            "Upload Error",
+            "Writeback Complete?"
+          ],
+          "missing": [
+            "Attachment Upload Status",
+            "Uploaded At",
+            "Send to Make Trigger",
+            "Upload Ready?",
+            "Ready to Send to Make?",
+            "Upload Naming Status"
+          ]
+        },
+        "hashDedup": {
+          "present": [],
+          "missing": [
+            "File Content Hash",
+            "File Hash Algorithm",
+            "File Size Bytes",
+            "File MIME Type",
+            "File is Duplicate?",
+            "Duplicate File Status",
+            "Duplicate Match Strength",
+            "Duplicate Match Record",
+            "Duplicate Match Notes",
+            "Duplicate Checked At",
+            "Duplicate Check Error",
+            "Duplicate Review Status",
+            "Source Attachment ID"
+          ]
+        }
+      },
+      "otherTrackedPresent": []
+    },
+    "Enrollments": {
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "fieldCount": 131,
+      "groups": {
+        "attachments": {
+          "present": [
+            "Athlete Headshot"
+          ],
+          "missing": [
+            "Airtable Attachment",
+            "HW Sub 1",
+            "HW Sub 2",
+            "Video Upload"
+          ]
+        },
+        "driveUrls": {
+          "present": [],
+          "missing": [
+            "Google Drive File URL",
+            "Google Drive File ID",
+            "Google Drive Folder ID",
+            "Google Drive Folder URL",
+            "Google Drive View URL",
+            "Google Drive Download URL",
+            "Video URL or Drive Link"
+          ]
+        },
+        "canonicalPlanned": {
+          "present": [],
+          "missing": [
+            "Canonical File URL",
+            "Storage Key",
+            "Storage Bucket",
+            "Athlete Headshot URL",
+            "Formatted Upload Name"
+          ]
+        },
+        "uploadStatus": {
+          "present": [],
+          "missing": [
+            "Upload Status",
+            "Attachment Upload Status",
+            "Upload Error",
+            "Uploaded At",
+            "Send to Make Trigger",
+            "Writeback Complete?",
+            "Upload Ready?",
+            "Ready to Send to Make?",
+            "Upload Naming Status"
+          ]
+        },
+        "hashDedup": {
+          "present": [],
+          "missing": [
+            "File Content Hash",
+            "File Hash Algorithm",
+            "File Size Bytes",
+            "File MIME Type",
+            "File is Duplicate?",
+            "Duplicate File Status",
+            "Duplicate Match Strength",
+            "Duplicate Match Record",
+            "Duplicate Match Notes",
+            "Duplicate Checked At",
+            "Duplicate Check Error",
+            "Duplicate Review Status",
+            "Source Attachment ID"
+          ]
+        }
+      },
+      "otherTrackedPresent": []
+    }
+  },
+  "recordStats": {
+    "submissionAssetsSchmidt": {
+      "scope": "Schmidt enrollment Submission Assets",
+      "recordCount": 0,
+      "truncated": false,
+      "withAttachment": 0,
+      "withDriveUrl": 0,
+      "withCanonicalUrl": 0,
+      "withHash": 0,
+      "uploadStatusBreakdown": {},
+      "duplicateStatusBreakdown": {},
+      "sampleRecordIds": []
+    },
+    "submissionsSchmidt": {
+      "scope": "Schmidt Submissions",
+      "recordCount": 0,
+      "withHwSub1": 0,
+      "withVideoUpload": 0,
+      "attachmentUploadStatus": {}
+    },
+    "allAssetsSample": {
+      "sampleSize": 49,
+      "uploadStatusBreakdown": {
+        "Uploaded": 40,
+        "Pending Link": 9
+      },
+      "withHash": 0
+    }
+  }
+}
