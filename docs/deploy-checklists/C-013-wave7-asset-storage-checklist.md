@@ -249,7 +249,7 @@ Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documenta
 
 **Slice 2 — DEV Make S3 upload/writeback proof (still no Production)**
 
-See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** (architecture) and **[C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md)** (Make UI steps) for module map, writeback fields, and C-020 H1–H4 tests.
+See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)** (architecture), **[C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md)** (checklist), and **[Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)** (step-by-step build).
 
 1. Clone Upload Engine v2 hash blueprint → **DEV-only** scenario + webhook.
 2. Replace Google Drive modules with **S3 Upload Object** + canonical URL build.

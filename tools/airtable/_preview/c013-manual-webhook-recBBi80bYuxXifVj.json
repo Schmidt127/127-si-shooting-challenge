@@ -1,0 +1,47 @@
+{
+  "purpose": "C-013 Slice 2 manual Make webhook test — DEV Submission Asset preflight + v4.1 payload",
+  "probedAt": "2026-07-07",
+  "baseId": "appTetnuCZlCZdTCT",
+  "table": "Submission Assets",
+  "recordId": "recBBi80bYuxXifVj",
+  "preflight": {
+    "eligible": true,
+    "Upload Status": "Pending Link",
+    "Upload Destination": "Video Feedback",
+    "Airtable Attachment": "present",
+    "attachmentFilename": "BlueOrangeCircleLogo.png",
+    "Canonical File URL": "blank",
+    "Storage Key": "blank",
+    "File Content Hash": "blank",
+    "File Hash Algorithm": "blank",
+    "Google Drive File URL": "blank",
+    "Homework Completions": [],
+    "Video Feedback": ["recjdf9cSiw1ADs0T"],
+    "Enrollment - Linked": ["recgP9qZYjAhE7NXm"],
+    "Submission - Linked": ["reczeIEhJW60DlULu"],
+    "Original File Name": "BlueOrangeCircleLogo.png",
+    "Asset Type": "Video Feedback",
+    "routeNote": "VIDEO asset — use 070b / video_feedback (not homework 070a)"
+  },
+  "storageKeyPreview": "shooting-challenge/dev/video/recgP9qZYjAhE7NXm/reczeIEhJW60DlULu/recBBi80bYuxXifVj/BlueOrangeCircleLogo.png",
+  "webhookPayload": {
+    "sourceName": "Airtable Upload Engine",
+    "automationNumber": "070b",
+    "sentAtIso": "2026-07-07T18:00:00.000Z",
+    "routeKey": "video_feedback",
+    "uploadDestination": "Video Feedback",
+    "sourceTable": "Submission Assets",
+    "submissionAssetRecordId": "recBBi80bYuxXifVj",
+    "targetTable": "Video Feedback",
+    "targetRecordId": "recjdf9cSiw1ADs0T"
+  },
+  "successWritebackExpected": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "non-empty HTTPS URL",
+    "Storage Key": "storageKeyPreview value (or sanitized variant)",
+    "File Content Hash": "non-empty SHA-256 hex",
+    "File Hash Algorithm": "SHA-256",
+    "Uploaded At": "set",
+    "Upload Error": "blank"
+  }
+}

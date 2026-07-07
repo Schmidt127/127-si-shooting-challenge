@@ -2,7 +2,7 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **Ready for Make build** — hash single-select confirmed; use [build packet](./C-013-make-s3-dev-build-packet.md) in Make UI  
+**Status:** **Ready for Make build** — use [build packet](./C-013-make-s3-dev-build-packet.md) + [Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ### Confirmed schema — File Hash Algorithm (OMNI 2026-07-07)

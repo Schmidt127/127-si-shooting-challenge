@@ -152,6 +152,8 @@ On DEV **Submission Assets**, choose one row:
 
 Example Pending Link assets from 2026-07-07 inventory: `recBBi80bYuxXifVj`, `recIYFnfmsPcy7iop`, `recKQNVzYHHBHS2Qg` — verify current state in UI before use.
 
+**Preflight PASS (2026-07-07):** [`recBBi80bYuxXifVj`](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) — **VIDEO** asset (`070b` / `video_feedback`); attachment present; canonical/key/hash blank; `Pending Link`. Use **Make UI runbook:** [C-013-dev-s3-make-ui-runbook.md](../../make/documentation/C-013-dev-s3-make-ui-runbook.md).
+
 ### v4.1 webhook payload (070a / 070b contract)
 
 Make **Custom Webhook** must accept these fields (070a/070b v4.1 — see automation **070a** docblock):
@@ -166,25 +168,25 @@ Make **Custom Webhook** must accept these fields (070a/070b v4.1 — see automat
   "routeKey": "homework_completion",
   "uploadDestination": "Homework Completions",
   "sourceTable": "Submission Assets",
-  "submissionAssetRecordId": "recBBi80bYuxXifVj",
+  "submissionAssetRecordId": "recXXXXXXXXXXXXXX",
   "targetTable": "Homework Completions",
   "targetRecordId": "recXXXXXXXXXXXXXX"
 }
 ```
 
-**Video example:**
+**Video example (confirmed test asset `recBBi80bYuxXifVj` — use this for first manual test):**
 
 ```json
 {
   "sourceName": "Airtable Upload Engine",
   "automationNumber": "070b",
-  "sentAtIso": "2026-07-07T12:00:00.000Z",
+  "sentAtIso": "2026-07-07T18:00:00.000Z",
   "routeKey": "video_feedback",
   "uploadDestination": "Video Feedback",
   "sourceTable": "Submission Assets",
-  "submissionAssetRecordId": "recXXXXXXXXXXXXXX",
+  "submissionAssetRecordId": "recBBi80bYuxXifVj",
   "targetTable": "Video Feedback",
-  "targetRecordId": "recXXXXXXXXXXXXXX"
+  "targetRecordId": "recjdf9cSiw1ADs0T"
 }
 ```
 
