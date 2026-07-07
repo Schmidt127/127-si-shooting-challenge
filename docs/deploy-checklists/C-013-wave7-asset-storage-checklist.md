@@ -9,25 +9,50 @@
 
 **Environment:** DEV `appTetnuCZlCZdTCT` first. **070a/070b OFF** on DEV until DEV Make S3 scenario exists.
 
-**DEV baseline (read-only):** [tools/airtable/_preview/c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) — probed 2026-07-07 (`appTetnuCZlCZdTCT`)
+**DEV baselines (read-only):**
+
+| File | When | Notes |
+|------|------|-------|
+| [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
+| [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI-era snapshot; **await Mike confirm** before treating fields as added |
 
 ---
 
 ## Slice 1 — DEV field add (Mike / OMNI manual)
 
-**Why manual:** Live DEV probe confirms **`Canonical File URL`** and **`Storage Key`** are **missing** on **Submission Assets**. Slice 2 (Make S3 writeback) is blocked until these fields exist. Cursor/OMNI cannot add Airtable fields via the public Data API — Mike or OMNI adds them in the Airtable UI on **DEV only**.
+**DEV only first.** Add fields on **`127SI - SHOOTING CHALLENGE - DEV`** (`appTetnuCZlCZdTCT`) only. Do **not** mirror to Production until promotion doc + Mike approval.
+
+**Why manual:** Cursor/OMNI cannot add Airtable fields via the public Data API. Mike or OMNI adds them in the Airtable UI.
 
 **Base:** `127SI - SHOOTING CHALLENGE - DEV` (`appTetnuCZlCZdTCT`)  
 **Table:** **Submission Assets** (`tblhMLKxQK77agtME`)
 
-### Fields to add (Slice 1 — required)
+### OMNI field confirmation (2026-07-07)
+
+OMNI verified on DEV **Submission Assets**:
+
+| Field | OMNI status | Type (OMNI) |
+|-------|-------------|-------------|
+| **Canonical File URL** | **Missing** | URL (preferred when added) |
+| **Storage Key** | **Missing** | Single line text |
+| **File Content Hash** | Exists | Single line text |
+| **File Hash Algorithm** | Exists | Single select |
+| **Upload Status** | Exists | Single select |
+| **Airtable Attachment** | Exists | Attachment |
+| **Google Drive File URL** | Exists | Single line text |
+
+**Repo rule:** Do **not** treat fields as added for Slice 1 completion until **Mike confirms** in Airtable UI. A later API probe may show schema drift before Mike confirms — use Mike confirmation as the gate.
+
+**No consumer switch yet:** Do **not** point formulas, views, **022**, **070a/b**, or coach queues at **Canonical File URL** / **Storage Key** until **DEV Make S3 writeback is proven** (Slice 2 + Slice 4). Existing gates stay on **Airtable Attachment** and **Google Drive File URL**.
+
+### Required manual DEV field additions (Mike / OMNI)
 
 | Field name | Type | Writer (owner) | Readers | Notes |
 |------------|------|----------------|---------|-------|
-| **Canonical File URL** | **URL** (preferred) or single line text if URL type blocks presigned links | Make S3 Upload Engine (Slice 2) or future Lambda writeback | **022**, coach views, **071/073** emails, audits, future web | Single source of truth after upload. HTTPS only. |
-| **Storage Key** | Single line text | Make S3 Upload Engine (Slice 2) | Audits, C-023 duplicate checks, future repair tools | S3 object key, e.g. `2026-27/{enrollmentId}/{assetRecordId}/{filename}` — final pattern TBD by Mike |
+| **Canonical File URL** | **URL** (preferred) | Make S3 upload / writeback (Slice 2) | **022**, coach views, **071/073** emails, audits, future web | HTTPS canonical object URL after upload |
+| **Storage Key** | **Single line text** | Make S3 upload / writeback (Slice 2) | Audits, C-023 duplicate detection, repair tools | S3 object key — pattern TBD by Mike |
 
-**Optional (defer unless Mike wants now):** `Storage Bucket` (single line text) on Submission Assets; `Athlete Headshot URL` on **Enrollments** (Slice 5).
+**Optional (defer):** `Storage Bucket`; `Athlete Headshot URL` on **Enrollments** (Slice 5).
 
 ### Fields already present — protect (do not rename/delete in Slice 1)
 
@@ -37,23 +62,23 @@
 | **File Hash Algorithm** | Present (`SHA-256` option) | Make v2 | Do not delete |
 | **Upload Status** | Present (`Pending Link`, `Processing`, `Uploaded`, `Error`, …) | **009**, **020**, **013**, **070a/b**, Make | Keep ladder unchanged |
 | **Airtable Attachment** | Present | **009** (intake copy) | **Do not clear yet** — still required by **020/013/070** |
-| **Google Drive File URL** | Present | Make Drive engine (legacy) | **Do not remove yet** — formulas/views still gate on it |
+| **Google Drive File URL** | Present (Single line text per OMNI) | Make Drive engine (legacy) | **Legacy bridge — do not delete yet**; formulas/views still gate on it |
 
 **Probe record stats (DEV):** 49 Submission Assets sampled — 40 `Uploaded`, 9 `Pending Link`; **0** with `File Content Hash` populated (C-023 not wired end-to-end).
 
 ### Do not change yet (Slice 1)
 
+- **Do not** switch formulas, views, **022**, or **070a/b** to **Canonical File URL** / **Storage Key** until DEV Make S3 writeback is proven (after Slice 2 + Slice 4).
 - **Do not** clear **Airtable Attachment** fields after upload (Slice 4).
-- **Do not** switch formulas (`Upload Ready?`, `Writeback Complete?`, `Ready to Send to Make?`) to **Canonical File URL** yet (Slice 3).
 - **Do not** turn **070a** / **070b** ON on DEV until DEV Make S3 scenario exists (Slice 2).
-- **Do not** remove **Google Drive** URL/ID/folder fields yet — parallel run until cutover verified.
+- **Do not** remove **Google Drive File URL** or other Drive fields yet — legacy bridge until cutover verified.
 - **Do not** paste automation script changes to Production.
 
-### After Mike adds fields
+### After Mike confirms both fields added on DEV
 
-1. Re-run probe: `python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-baseline.json`
-2. Confirm `schemaInventory.Submission Assets.groups.canonicalPlanned.present` includes both new fields.
-3. Mark Slice 1 checklist item complete; proceed to Slice 2 (DEV Make S3).
+1. Re-run probe: `python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-baseline-after-fields.json`
+2. Confirm `schemaInventory.Submission Assets.groups.canonicalPlanned.present` includes **Canonical File URL** and **Storage Key**.
+3. Mark Slice 1c complete; proceed to Slice 2 (DEV Make S3).
 
 ---
 
@@ -254,9 +279,9 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 
 ## Checklist progress
 
-- [x] Slice 1a — probe baseline → [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json)
-- [x] Slice 1b — field ownership documented ([field-map.md](../../airtable/schema/current/field-map.md))
-- [ ] Slice 1c — Mike adds **Canonical File URL** + **Storage Key** on DEV Submission Assets
+- [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
+- [x] Slice 1b — OMNI field confirmation + ownership documented
+- [ ] Slice 1c — Mike confirms **Canonical File URL** + **Storage Key** added on DEV Submission Assets
 - [ ] Slice 2 — DEV Make S3 scenario
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS

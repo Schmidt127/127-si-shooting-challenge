@@ -30,17 +30,18 @@ Field-level reference for critical tables. Keep names aligned with live Airtable
 
 ## Submission Assets (C-013 / C-023 — Wave 7)
 
-> **Ownership:** one writer per field (C-012 lite). DEV baseline: [tools/airtable/_preview/c013-dev-baseline.json](../../../tools/airtable/_preview/c013-dev-baseline.json)
+> **Ownership:** one writer per field (C-012 lite). Baselines: [c013-dev-baseline-before-fields.json](../../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) · [c013-dev-baseline.json](../../../tools/airtable/_preview/c013-dev-baseline.json)  
+> **Gate:** Slice 1 complete only when **Mike confirms** both new fields on DEV. Do not repoint formulas/automations until Make S3 writeback proven.
 
-| Field | Type | Writer | Readers | Status (DEV 2026-07-07) |
-|-------|------|--------|---------|-------------------------|
-| Canonical File URL | URL (or single line text) | Make S3 Upload Engine (Slice 2) | **022**, coach views, **071/073**, audits, web | **Missing — Mike adds Slice 1** |
-| Storage Key | Single line text | Make S3 Upload Engine (Slice 2) | Audits, C-023 duplicate lookup, repair tools | **Missing — Mike adds Slice 1** |
-| File Content Hash | Single line text | Make v2 hash modules (Slice 2) | C-023 duplicate fields, coach duplicate lookups | Present; 0/49 sample populated |
-| File Hash Algorithm | Single select (`SHA-256`) | Make v2 hash modules | Audits | Present |
-| Upload Status | Single select | **009**, **020**, **013**, **070a/b**, Make | **070** triggers, formulas, views | Present — do not change ladder |
-| Airtable Attachment | Attachment | **009** (intake copy) | **020**, **013**, **070a/b** gates | Present — do not clear until Slice 4 |
-| Google Drive File URL | URL | Make Drive engine (legacy) | **022**, **Writeback Complete?**, views | Present — deprecate after S3 cutover |
+| Field | Type | Writer | Readers | Notes |
+|-------|------|--------|---------|-------|
+| Canonical File URL | URL (preferred) | Make S3 upload / writeback | **022**, coach views, **071/073**, audits, future web | **OMNI: missing on DEV** — add DEV only first |
+| Storage Key | Single line text | Make S3 upload / writeback | Audits, C-023 duplicate detection, repair tools | **OMNI: missing on DEV** — add DEV only first |
+| File Content Hash | Single line text | Future S3/Make hash step (Slice 2) | C-023 dedupe audit, duplicate lookups | Exists on DEV; not populated until upload wired |
+| File Hash Algorithm | Single select (`SHA-256`) | Future S3/Make hash step (Slice 2) | C-023 dedupe audit | Exists on DEV |
+| Upload Status | Single select | **009**, **020**, **013**, **070a/b**, Make | **070** triggers, formulas, views | Exists — do not change ladder |
+| Airtable Attachment | Attachment | **009** (intake copy) | **020**, **013**, **070a/b** | **Transient intake/source only** — do not clear until Slice 4 |
+| Google Drive File URL | Single line text (DEV) | Make Drive engine (legacy) | **022**, **Writeback Complete?**, views | **Legacy bridge** — do not delete until S3 cutover verified |
 
 ## XP Events
 
@@ -88,5 +89,5 @@ Document non-obvious formulas in [../../formulas/README.md](../../formulas/READM
 
 | Date | Table | Field | Change |
 |------|-------|-------|--------|
-| 2026-07-07 | Submission Assets | Canonical File URL, Storage Key | C-013 Slice 1 — planned DEV add (Mike); ownership documented |
+| 2026-07-07 | Submission Assets | Canonical File URL, Storage Key | OMNI confirmed missing on DEV; ownership + before-fields baseline |
 | 2026-07-07 | Submission Assets | File Content Hash, Upload Status, … | C-013 — existing fields protected; baseline probe |
