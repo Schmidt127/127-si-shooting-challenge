@@ -330,6 +330,41 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 | Result | **PASS** |
 
 ---
+
+## DEV test log — Automation 115 Daily functional live (2026-07-07)
+
+**Base:** DEV `appTetnuCZlCZdTCT`  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Daily branch unchanged from v1.0)  
+**Row:** `C-020 Functional — Daily shots Schmidt`  
+**Trigger:** API flip **Dry Run?** off + **Run Test?** on (prior run on same row was dry_run only)
+
+### Test E — Daily Submission live (functional retest)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `recQRaFbqTiiBbrcU` |
+| Scenario Type | Daily Submission |
+| Related Enrollment | Schmidt, Testing - 2025-2026 (`recgP9qZYjAhE7NXm`) |
+| Submission Date | 2026-05-27 |
+| Shot Total | 125 |
+| Created Submission | `recAKNWwD6zn8hxwv` |
+| Athlete | `recgqVstObQRzgXJF` |
+| Week | Week 5 (`recUPkXtsDOHnY5q7`) — **005** |
+| Duplicate Review Status | Count It |
+| Count This Submission? | 1 |
+| XP Award Status (Submission) | Awarded |
+| XP Event | `recZslUfRNVvNdnpR` — **Submission Base** / **Shooting Base** / **20 XP** |
+| Source Key | `SUBMISSION_XP\|recAKNWwD6zn8hxwv` |
+| Weekly Athlete Summary | `recBO81w4dYtcaL4V` — updated; links Submission + XP Event |
+| Submission Assets | **None** (expected) |
+| Homework Completions | **None** (expected) |
+| Video Feedback | **None** (expected) |
+| Result | **PASS** — downstream verified via API 2026-07-07 |
+
+**WAS snapshot (post-run):** Total Shots This Week **350**; XP Earned This Week **60**; Submissions include `recAKNWwD6zn8hxwv` plus prior Schmidt Week 5 rows.
+
+---
+
 ## Open schema notes
 
 | Item | Detail |
@@ -362,6 +397,7 @@ Intentionally deferred — do not build during Phase 2:
 
 - [x] Dry-run on DEV with one scenario row (2026-07-06)
 - [x] Homework + Video DEV tests A–D (2026-07-07, v1.3)
+- [x] Daily functional live retest E (2026-07-07) — `recQRaFbqTiiBbrcU` → `recAKNWwD6zn8hxwv`
 - [ ] Stages A–H audit dry-run on Schmidt enrollment (optional follow-up)
 - [ ] Promotion doc committed before prod
 
