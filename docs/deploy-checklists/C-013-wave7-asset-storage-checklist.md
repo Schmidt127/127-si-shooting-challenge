@@ -1,7 +1,7 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 1 in progress** — DEV baseline recorded 2026-07-07; awaiting Mike field add on DEV. No Production changes.  
+**Status:** **Wave 7 Slice 1 complete (DEV schema)** — Metadata API confirmed **Canonical File URL** + **Storage Key** on DEV; 49 records, **0** populated (S3 not active yet). **Next:** Slice 2 — DEV Make S3 upload/writeback proof. No Production changes.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md)  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
@@ -14,7 +14,46 @@
 | File | When | Notes |
 |------|------|-------|
 | [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
-| [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI-era snapshot; **await Mike confirm** before treating fields as added |
+| [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI report stale; Metadata API later confirmed fields |
+
+---
+
+## Storage source of truth transition
+
+**Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 only prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and hash fields on **Submission Assets**.
+
+### 1. Current source of truth (today on DEV)
+
+| Layer | Role |
+|-------|------|
+| **Airtable Attachment** | Still the **transient file source** at intake — **009** copies from Submissions; **020/013/070** still gate on it |
+| **Google Drive File URL** | Still the **legacy uploaded-file bridge** — 40/49 DEV assets have Drive URL; formulas/views/**022** still use it |
+| **Canonical File URL** | Field **exists** on DEV schema — **0/49 records populated** until Make S3 writeback |
+| **Storage Key** | Field **exists** on DEV schema — **0/49 records populated** until Make S3 writeback |
+| **File Content Hash** | Field exists — **0/49 populated** (C-023 not wired end-to-end) |
+
+### 2. Target source of truth (C-013 end state)
+
+| Layer | Role |
+|-------|------|
+| **S3 object** | Program-owned **durable asset** (bytes live in bucket, not Airtable/Drive) |
+| **Canonical File URL** | Airtable / web / email / coach-facing **HTTPS pointer** to that object — one URL wins everywhere |
+| **Storage Key** | Provider-neutral **object key/path** (e.g. season/enrollment/assetId/filename) for audits and dedupe |
+| **Airtable Attachment** | **Transient only** — cleared after successful upload (Slice 4) |
+| **Google Drive File URL** | **Legacy / archive only** — retained for 2025–26 history until migration policy; not the gate for new uploads |
+
+### 3. Cutover rule (do not switch consumers early)
+
+Do **not** repoint formulas, views, **022**, **070a/b**, coach queues, or emails away from **Google Drive File URL** or **Airtable Attachment** until **DEV Make S3 writeback** proves on test assets:
+
+- [ ] Upload succeeds (`Upload Status = Uploaded`)
+- [ ] **Canonical File URL** populated
+- [ ] **Storage Key** populated
+- [ ] **File Content Hash** (+ algorithm) populated
+- [ ] Old **Airtable Attachment** still present until explicit cleanup step (Slice 4)
+- [ ] Downstream homework / video coach views still work
+
+Only after the above → Slice 3 (automations/formulas) and Slice 4 (attachment clear + C-020 H1–H4).
 
 ---
 
@@ -208,7 +247,7 @@ Reference: [upload-asset-engine-v2-hash-duplicate-check.md](../../make/documenta
 3. Update [field-map.md](../../airtable/schema/current/field-map.md) ownership row (C-012 lite): who writes URL (Make), who reads (022, views, web).
 4. Mike decisions (blockers below): S3 bucket layout, public vs presigned, Lambda vs Make.
 
-**Slice 2 — DEV Make S3 path (still no Production)**
+**Slice 2 — DEV Make S3 upload/writeback proof (still no Production)**
 
 1. Clone Upload Engine scenario → **DEV** webhook.
 2. Replace Drive upload branch with S3; write `Canonical File URL` + hash fields on asset.
@@ -280,9 +319,9 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 ## Checklist progress
 
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
-- [x] Slice 1b — OMNI field confirmation + ownership documented
-- [ ] Slice 1c — Mike confirms **Canonical File URL** + **Storage Key** added on DEV Submission Assets
-- [ ] Slice 2 — DEV Make S3 scenario
+- [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
+- [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
+- [ ] **Slice 2 — DEV Make S3 upload/writeback proof**
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc
