@@ -141,9 +141,10 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 | **Testing Scenarios** operator table on DEV | Test flags on Submissions or downstream pipeline tables |
 | Production-shaped Submissions + normal automations | A second production base or test metadata on pipeline rows |
 
-### Script development — **paused**
+### Script development
 
-**Do not start Cursor/GitHub script work** until a pipeline-ready DEV submission path is defined for **066** testing (see [066 dev checklist](./deploy-checklists/066-v3.1-dev-deploy.md) — blocked on Fillout-shaped submission, not manual rows).
+**115 v1.0 Daily Submission** — DEV verified 2026-07-06 (`a1bf96e`).  
+**Homework + Video branches** — planned; see [upload-workflow-homework-video.md](./upload-workflow-homework-video.md) and [C-020 checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) § G2/G3.
 
 Field list recorded in [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -183,7 +184,8 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 | **Framework fields on Testing Scenarios only** | **Scenario Type**, **Test Status**, **Expected Result**, **Actual Result**, **Pass/Fail Notes**, **Last Run Status**, **Last Run At**, **Related Enrollment**, link to created Submission |
 | **Related Enrollment** | Schmidt/testing or any retained DEV test enrollment |
 | **Fillout-shaped Submissions** | When scenario requires intake — match field shapes **005**, **009**, **023** expect; Enrollment pre-linked |
-| **Multi-file video** | Support when scenario requires (N attachments → N assets) |
+| **Multi-file video** | Up to 3 files → N assets + N Video Feedback rows; **one** Focus + **one** Question per submission ([upload workflow](./upload-workflow-homework-video.md)) |
+| **Multi-file homework** | Up to 3 files → N assets → **one** Homework Completion per selected assignment |
 | **Testing Scenario Library** | **Future option** — separate template/library table; **do not build now** |
 | **Promotion doc** | Required before prod ([doc 04 § Official promotion documentation](./v2/04-ai-development-standards.md#official-promotion-documentation-required)) |
 
@@ -321,7 +323,7 @@ Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Fe
 | 1 | **066 v3.1** DEV audit + sandbox test | **Next** |
 | 2 | Optional **066** prod promote | After DEV pass — Mike decides |
 | 3 | Delete **112**, retire **043** | Approved maintenance window |
-| 4 | **C-020** — OMNI finishes **Testing Scenarios** table; then Cursor script | **Script paused** until OMNI field list final |
+| 4 | **C-020** — **115 v1.1 Homework** then **v1.2 Video** on DEV | Daily Submission MVP done; [upload workflow](./upload-workflow-homework-video.md) |
 
 ---
 

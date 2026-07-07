@@ -159,13 +159,15 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
-| **C-020** | **Engineering Test Framework** | **Testing Scenarios** on DEV — OMNI schema complete. **066** deployed — C-020 unblocked on H-002; script still paused pending Mike sequencing approval. [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) | C-019, V2-013 | **blocked — sequencing** |
+| **C-020** | **Engineering Test Framework** | **115 v1.3** DEV verified — Daily + Homework + Video (Tests A–D). [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), [upload workflow](./upload-workflow-homework-video.md). Production paste pending. | C-019, V2-013 | **done (DEV)** |
+| **C-020a** | C-020 Homework branch (115 v1.1) | Tests A/B PASS on DEV | C-020 | **done (DEV)** |
+| **C-020b** | C-020 Video branch (115 v1.3) | Tests C/D PASS; Intake Attachments → Video Upload | C-020a | **done (DEV)** |
 
 ### Wave 7 — Asset storage
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing (replacing Google Drive path) — design wave with ChatGPT before implementation | C-012, C-020 | queued |
+| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Upload naming:** athlete + date + focus + sequence before Make send — [upload workflow](./upload-workflow-homework-video.md). **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing (replacing Google Drive path) — design wave with ChatGPT before implementation | C-012, C-020 | queued |
 | **C-023** | File dedup by **content hash**, not title/filename | **Today:** **007** uses **Duplicate Key** on submission **stats** (date + shots), not file bytes; **009** dedupes assets by **source attachment ID** only — same file re-uploaded under new name can slip through. Schema already has **`File Content Hash`** + **`File Hash Algorithm`** on Submission Assets (incl. SHA-256 option) — **not wired end-to-end**. **Target:** compute hash at intake/upload (Make or script); block or flag duplicate hash per enrollment/week; never rely on filename alone. | C-013, C-024 | queued |
 
 ### Wave 8 — Intake & calendar
@@ -310,6 +312,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | Watchlist IDs C-001–C-027 | [close-out-considerations.md](./close-out-considerations.md) |
 | Grade bands + public display detail | [platform-config-improvements.md](./platform-config-improvements.md) |
 | Testing / intake C-017–C-020 | [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) |
+| Upload workflow (homework + video) | [upload-workflow-homework-video.md](./upload-workflow-homework-video.md) |
 | S3 assets C-013 | [asset-storage-migration.md](./asset-storage-migration.md) |
 | Locked season decisions | [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md) |
 | Config vs code | [shooting-challenge-v2-config-vs-code.md](./shooting-challenge-v2-config-vs-code.md) |

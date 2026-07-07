@@ -1,6 +1,8 @@
 # Automation index — Shooting Challenge
 
-Production scripts: `airtable/automations/shooting-challenge/` (46 files, numbered `001`–`114`).
+Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`115`).
+
+**C-020 test harness:** **115** v1.3 — Daily Submission + Homework + Video (**DEV verified** 2026-07-07). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 **Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
 
@@ -139,6 +141,16 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 | # | Name | Status | Notes |
 |---|------|--------|-------|
 | **012** | *(unknown — not in GitHub)* | **Deleted** | Mike confirmed legacy, unused. **+1 automation slot recovered.** |
+
+## Engineering test framework (115)
+
+| # | Airtable automation name | Trigger | File |
+|---|--------------------------|---------|------|
+| **115** | Engineering Test Framework — Run Testing Scenario | Testing Scenarios when **Run Test?** checked | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` |
+
+**Scenario types:** `Daily Submission`, `Homework`, `Video` (alias `Three Video Upload`) — DEV verified v1.3. [upload workflow](./upload-workflow-homework-video.md).
+
+**Upload scripts (no new automations for naming):** **009** asset creation, **013** VF link, **070b** gated by **Upload Naming Status** formula — see upload workflow doc.
 
 ---
 

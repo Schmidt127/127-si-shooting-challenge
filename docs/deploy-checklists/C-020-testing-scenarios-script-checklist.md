@@ -1,7 +1,7 @@
 # C-020 — Testing Scenarios script checklist (future)
 
 **Backlog:** C-020  
-**Status:** **DEV MVP complete** — Automation **115** v1.0 Daily Submission verified on DEV (`appTetnuCZlCZdTCT`) 2026-07-06; Production not deployed  
+**Status:** **DEV verified** — Automation **115** v1.3 (Daily Submission + Homework + Video; Tests A–D PASS 2026-07-07). Production not deployed  
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
@@ -28,9 +28,9 @@
 
 - **Pipeline-ready submission path defined** for DEV testing — Fillout-shaped Submission via C-020 **or** verified existing DEV row ([066 dev deploy checklist](./066-v3.1-dev-deploy.md))
 
-Do **not** begin additional scenario types until Daily Submission MVP is verified in DEV.
+**Daily Submission MVP verified** 2026-07-06 — Homework and Video branches may proceed per [upload-workflow-homework-video.md](../upload-workflow-homework-video.md).
 
-**Note:** Daily Submission MVP **verified** 2026-07-06 — see test log below.
+**115 implementation order:** Homework branch (v1.1) **before** Video branch (v1.2).
 
 ### Recommended (non-blocking)
 
@@ -70,7 +70,10 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 | **Related Enrollment** | link → Enrollments | `fldPylkKBdhFTTDCL` | Required — Schmidt/testing or DEV test enrollment; pre-link on created Submission |
 | **Submission Date** | date | `fldNCS0y5Ez4pFccA` | Maps to Submission activity date |
 | **Shot Total** | number | *(added DEV 2026-07-06)* | Maps to Submission **Shot Total** — Daily Submission MVP |
-| **Intake Attachments** | multipleAttachments | `fldYubBWgAKHstQ6P` | Video/HW files → Fillout-shaped Submission attachments |
+| **Intake Attachments** | multipleAttachments | `fldYubBWgAKHstQ6P` | **Homework** → Submission **HW Sub 1**; **Video** → Submission **Video Upload** |
+| **Homework Assignment** | link → FBC Curriculum - SYNC | *(OMNI DEV 2026-07-06)* | Required for **Homework** scenario — maps to **Homework Name 1** |
+| **Video Feedback Focus** | singleSelect | *(OMNI DEV 2026-07-06)* | Required for **Video Upload** / **Homework + Video** — submission-level focus |
+| **Video Feedback Question** | multilineText | *(OMNI DEV 2026-07-06)* | Required for video scenarios — maps to Submission **Video Feedback Note** |
 | **Scenario Requirements** | multilineText | `fldVWP6MVqrBXqa6J` | Operator scenario inputs / constraints |
 | **Test Notes** | multilineText | `fldD8y9YrgIhjiqfu` | Operator notes |
 | **Operator Feedback** | multilineText | `fldslXpxwlEBxousb` | Operator feedback |
@@ -142,6 +145,190 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 | Schmidt, Testing - 2025-2026 | `recgP9qZYjAhE7NXm` | Athlete `recgqVstObQRzgXJF`; Grade Band K-2; `Active?` false |
 | *Expanded allowlist* | *Deferred* | Five other DEV test enrollments + Bakken — post-MVP |
 
+---
+
+## G2 — Homework Upload field map (115 v1.1 — DEV verified 2026-07-07)
+
+**Scenario Type:** `Homework`  
+**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.1**
+
+### Testing Scenarios → read
+
+| Testing Scenarios field | Maps to / use |
+|-------------------------|---------------|
+| **Related Enrollment** | Schmidt MVP allowlist: `recgP9qZYjAhE7NXm` |
+| **Submission Date** | Submission **Activity Date** |
+| **Homework Assignment** | Submission **Homework Name 1** (single link) |
+| **Intake Attachments** | Submission **HW Sub 1** (1–3 files, same assignment) |
+| **Run Test?** / **Dry Run?** | Trigger; cleared after run |
+
+### Submission → write (writable only)
+
+| Submission field | Value |
+|------------------|--------|
+| **Enrollment** | Related Enrollment |
+| **Athlete** | From Enrollment |
+| **Activity Date** | Submission Date |
+| **Homework Name 1** | Homework Assignment |
+| **HW Sub 1** | Intake Attachments (all files) |
+| **Duplicate Review Status** | **Omitted** for homework-only (no Shot Total; avoids shot-count XP path) |
+
+### Submission → do not write
+
+**Homework Name 2**, **HW Sub 2**, **Video Upload**, **Video Feedback Note**, Week, computed fields, test flags.
+
+### Script validation (before create)
+
+| Check | Action |
+|-------|--------|
+| **Homework Assignment** empty | Block — `Last Run Status: Blocked` |
+| **Intake Attachments** count 0 | Block |
+| **Intake Attachments** count &gt; 3 | Block — no Submission create |
+| Wrong **Scenario Type** | Skip or error per router |
+
+### Downstream (normal automations — do not chain manually)
+
+**005** → **009** (N assets: HW1-1 … HW1-N) → **020** (one Homework Completion, all assets linked) → **070a** (DEV OFF).
+
+### Acceptance criteria
+
+| ID | Test | Pass |
+|----|------|------|
+| A | Dry run, 1 file | Preview only; no Submission |
+| B | Live, 1 file | 1 Submission, 1 asset, 1 Homework Completion |
+| C | Live, 2–3 files | 1 Submission, N assets, **still 1** Homework Completion |
+| D | 4 files | Blocked before Submission create |
+
+---
+
+## G3 — Video Upload field map (115 v1.3 — DEV verified 2026-07-07)
+
+**Scenario Type:** `Video` (alias: `Three Video Upload`)  
+**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**
+
+**v1.3 field model (confirmed):** Video files live on Testing Scenarios **Intake Attachments** only. Script copies to Submissions **Video Upload** for 009.  
+**Design:** [upload-workflow-homework-video.md](../upload-workflow-homework-video.md)
+
+### Testing Scenarios → read
+
+| Testing Scenarios field | Maps to / use |
+|-------------------------|---------------|
+| **Related Enrollment** | Schmidt MVP allowlist |
+| **Submission Date** | **Activity Date** |
+| **Video Feedback Focus** | Submission **Video Feedback Focus** |
+| **Video Feedback Question** | Submission **Video Feedback Note** |
+| **Intake Attachments** | Submission **Video Upload** (1–3 files) |
+
+### Submission → write
+
+| Submission field | Value |
+|------------------|--------|
+| **Enrollment** | Related Enrollment |
+| **Athlete** | From Enrollment |
+| **Activity Date** | Submission Date |
+| **Video Feedback Focus** | Testing Scenarios **Video Feedback Focus** |
+| **Video Feedback Note** | Testing Scenarios **Video Feedback Question** |
+| **Video Upload** | Testing Scenarios **Intake Attachments** (1–3 files) |
+
+### Downstream
+
+**005** → **009** (VIDEO-1 … VIDEO-N assets + sequence) → **013** (one VF per asset, inherit Focus + Question) → naming gate → **070b** (DEV OFF).
+
+### Acceptance criteria
+
+| ID | Test | Pass |
+|----|------|------|
+| A | Dry run, 1 video | Preview; Focus + Question shown |
+| B | Live, 1 video | 1 asset, 1 VF row, naming metadata present |
+| C | Live, 3 videos | 3 assets, 3 VF rows, same Focus + Question on all |
+| D | 4 videos | Blocked before create |
+
+---
+
+## OMNI — pipeline fields still needed (post Testing Scenarios)
+
+Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still need:
+
+| Table | Field | Type | MVP |
+|-------|-------|------|-----|
+| **Submissions** | **Video Feedback Focus** | singleSelect (same options as Testing Scenarios) | Video branch |
+| **Submissions** | **Video Feedback Question** | long text | Optional — can map to **Video Feedback Note** for MVP |
+| **Submission Assets** | **Video Feedback Focus** | singleSelect (copy from Submission at **009**) | Video + naming |
+| **Submission Assets** | **Asset Sequence** | number (1–3) | Video naming |
+| **Submission Assets** | **Upload Naming Status** | singleSelect or formula | Gates **070b** |
+| **Video Feedback** | **Video Feedback Focus** | singleSelect (copy at **013**) | Coach queue |
+| **Video Feedback** | **Video Feedback Question** | long text (copy at **013**) | Coach queue |
+| **Video Feedback** | **Coach Video Title** | single line text | Post-review display (C-022) |
+| **Submission Assets** | **Formatted Upload Name** | formula | Evolve **Create Google Drive File Name** |
+| **Submission Assets** | **Canonical File URL** | url | C-013 wave (today: **Google Drive File URL**) |
+
+**009 change (video):** Set **Asset Slot** to `VIDEO-1` / `VIDEO-2` / `VIDEO-3` (not generic `VIDEO`) for sequence in formatted name.
+
+**Config table (future):** **Default Homework File Limit**, **Max Homework File Limit** — align with existing **Max Videos Per Submission**.
+
+---
+
+## 115 — automation approach (closed DEV MVP)
+
+| Decision | Choice |
+|----------|--------|
+| Extend **115** vs new **116** | **Extend 115** — one **Run Test?** trigger; scenario router by **Scenario Type** |
+| v1.0 | Daily Submission |
+| v1.1 | Homework |
+| v1.3 | Video (`Intake Attachments` → `Submissions.Video Upload`) |
+| **Homework + Video** combined scenario | **Defer** — prove each path separately first |
+
+---
+
+## DEV test log — Automation 115 v1.1/v1.3 Homework + Video (2026-07-07)
+
+**Base:** DEV `appTetnuCZlCZdTCT`  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3** (Homework from v1.1; Video v1.3)  
+**External sends:** **070a** / **070b** OFF on DEV
+
+### Test A — Homework dry run
+
+- [x] **PASS**
+
+### Test B — Homework live (1 file)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `recP51mbE5KEGngxQ` |
+| Submission | `reca8SxXfri7aRZiB` |
+| Submission Asset | `recv2C72is5w3YJYB` |
+| Homework Completion | `recB8kqdoOkYJkNYr` |
+| Result | **PASS** — one asset, one Homework Completion |
+
+### Test C — Video dry run (2 files)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `reck9d758vX5yLneq` |
+| Scenario Type | Video |
+| Source field | **Intake Attachments** |
+| File count | 2 |
+| Filenames | BlueOrangeCircleLogo.png; Shooting Tracker - 2026 Version.png |
+| Submission / Assets / VF | None (expected) |
+| Result | **PASS** |
+
+### Test D — Video live (2 files)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `rec459yCln87a0w2V` |
+| Submission | `recj2rU2XtmCGBNpn` |
+| Video Upload files | 2 |
+| Week | Week 5 (**005**) |
+| Submission Assets | `recKQNVzYHHBHS2Qg`, `recc2dDzgl4Mqp6P1` |
+| Video Feedback | `recLc5Sj3lQlzJeLe`, `recalGPUFG19BmbSP` |
+| Homework Completions | None |
+| **070b** | OFF (expected) |
+| Result | **PASS** |
+
+---
 ## Open schema notes
 
 | Item | Detail |
@@ -173,7 +360,7 @@ Intentionally deferred — do not build during Phase 2:
 ## After script exists
 
 - [x] Dry-run on DEV with one scenario row (2026-07-06)
-- [x] Live-create on DEV — downstream pipeline verified (2026-07-06)
+- [x] Homework + Video DEV tests A–D (2026-07-07, v1.3)
 - [ ] Stages A–H audit dry-run on Schmidt enrollment (optional follow-up)
 - [ ] Promotion doc committed before prod
 
