@@ -2,8 +2,16 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** Planning — scenario not built in Make yet  
+**Status:** **Ready for Make build** — hash single-select confirmed; scenario not built in Make yet  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
+
+### Confirmed schema — File Hash Algorithm (OMNI 2026-07-07)
+
+| Field | Table | Type | Exact write value |
+|-------|-------|------|-------------------|
+| **File Hash Algorithm** | Submission Assets | Single select | **`SHA-256`** — only option on DEV; **no new option needed** |
+
+Make module **63** (success) and partial-failure paths must write the literal string **`SHA-256`** to match the single-select option name.
 
 **Source blueprints (Drive — replace upload destination only):**
 
@@ -98,11 +106,11 @@ Draft module plan — clone **v2 hash blueprint**, **remove Drive modules 20–4
 | **5** | HTTP → Get a file | Download | URL = `{{2.Airtable Attachment[1].url}}` (fresh from module 2) | Binary body for hash + S3 |
 | **50** | HTTP → Make a request **or** Crypto | Hash | Output: `sha256`, `sizeBytes`, `mimeType` | Reuse v2 hash-helper if already deployed; else Make **Hash** module with SHA-256 |
 | **52** | HTTP → GET Airtable API | Duplicate lookup (C-023) | Same formula as v2 doc; base **DEV** `appTetnuCZlCZdTCT`, table `tblhMLKxQK77agtME` | Flag only — do not block upload in Slice 2 unless Mike changes policy |
-| **51** | Airtable → Update record | Duplicate flags | Write hash + duplicate fields (optional mid-path update) | Can merge into final success update if simpler |
+| **51** | Airtable → Update record | Duplicate flags | Optional mid-path: hash + duplicate fields; if writing algorithm here use **`File Hash Algorithm = SHA-256`** | Can merge into module **63** |
 | **60** | Tools → Set variable **or** Text parser | Build **Storage Key** | See pattern below | Sanitize `originalFileName` (spaces → `-`, strip path chars) |
 | **61** | AWS → S3 → Upload a file | Put object | Bucket: **DEV bucket** (Mike); Key: `{{60.storageKey}}`; Body: module **5** output | IAM connection in Make — not in GitHub |
 | **62** | Tools → Set variable | Build **Canonical File URL** | `https://{cloudfront-or-bucket-host}/{{60.storageKey}}` OR presigned URL module | Mike chooses public CloudFront vs private + presigned |
-| **63** | Airtable → Update record | **Success writeback** | See §5 | Record id `{{1.submissionAssetRecordId}}` |
+| **63** | Airtable → Update record | **Success writeback** | §5 locked contract — includes **`File Hash Algorithm = SHA-256`** | Record id `{{1.submissionAssetRecordId}}` |
 | **EH** | Scenario error handler | Failure path | See §6 | Never leave `Processing` stuck |
 
 **Remove (from v2 clone):** Google Drive modules **20, 21, 19, 17, 36, 38, 42, 43, 24, 39, 40, 44, 45**.
@@ -131,15 +139,17 @@ shooting-challenge/dev/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{as
 **Record:** `{{1.submissionAssetRecordId}}`  
 **Base:** DEV `appTetnuCZlCZdTCT`
 
+### Locked success contract (module 63)
+
 | Field | Value |
 |-------|--------|
 | **Upload Status** | `Uploaded` |
-| **Canonical File URL** | Final HTTPS URL from module **62** (CloudFront, S3 public URL, or presigned URL per Mike config) |
-| **Storage Key** | Module **60** output |
+| **Canonical File URL** | Final S3 / CloudFront / presigned **HTTPS URL** from module **62** |
+| **Storage Key** | Generated object key from module **60** |
 | **File Content Hash** | SHA-256 hex string from module **50** |
-| **File Hash Algorithm** | `SHA-256` (exact single-select option name on DEV) |
-| **Uploaded At** | `{{now}}` (America/Denver if matching existing field config) |
-| **Upload Error** | *(blank)* |
+| **File Hash Algorithm** | **`SHA-256`** (exact single-select option — OMNI confirmed) |
+| **Uploaded At** | Current timestamp (`{{now}}`; America/Denver if matching field config) |
+| **Upload Error** | blank |
 
 **Optional same update (C-023 v2 parity):** `File Size Bytes`, `File MIME Type`, duplicate flag fields from module **51**.
 
@@ -156,14 +166,16 @@ shooting-challenge/dev/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{as
 
 **Scenario-level error handler** + explicit router branch (module **31**).
 
+### Locked failure contract
+
 | Field | Value |
 |-------|--------|
 | **Upload Status** | `Error` |
-| **Upload Error** | Human-readable, ≤500 chars, e.g. `Make S3 upload failed: {{error.message}}` or `No Airtable Attachment URL` |
+| **Upload Error** | Human-readable error (≤500 chars), e.g. `Make S3 upload failed: {{error.message}}` or `No Airtable Attachment URL` |
 | **Canonical File URL** | blank |
-| **Storage Key** | blank *(unless S3 put succeeded but Airtable update failed — then include key for ops recovery)* |
-| **File Content Hash** | blank *(unless hash computed before failure)* |
-| **File Hash Algorithm** | blank *(unless hash computed — then `SHA-256`)* |
+| **Storage Key** | blank *(unless S3 object was created — then include key for ops recovery)* |
+| **File Content Hash** | blank *(unless hash was computed before failure)* |
+| **File Hash Algorithm** | blank *(unless hash was computed — then **`SHA-256`**)* |
 
 If hash was written in module **51** before S3 failure, leave hash fields populated; set **Upload Status = Error** and explain in **Upload Error**.
 
@@ -179,8 +191,8 @@ If hash was written in module **51** before S3 failure, leave hash fields popula
 |------|---------------|---------------|
 | **H1** | Homework **1-file** (clone Test G, new date) | **115** → **009/020** unchanged; **070a** → Make → asset: `Uploaded`, **Canonical File URL**, **Storage Key**, **File Content Hash**, algorithm `SHA-256`; **Airtable Attachment** still present |
 | **H2** | Video **1-file** (clone Test F) | **115** → **009/013** unchanged; **070b** → same writeback on asset |
-| **H3** | Homework **2-file** (Test G style) | **2** Submission Assets; each row gets distinct URL/key/hash; **1** Homework Completion links both (**020** dedupe unchanged) |
-| **H4** | Video **2-file** (Test F style) | **2** assets + **2** Video Feedback rows; each asset gets URL/key/hash |
+| **H3** | Homework **2-file** (Test G style) | **2** Submission Assets; each row gets distinct URL/key/hash + **`File Hash Algorithm = SHA-256`**; **1** Homework Completion links both (**020** dedupe unchanged) |
+| **H4** | Video **2-file** (Test F style) | **2** assets + **2** Video Feedback rows; each asset gets URL/key/hash + **`File Hash Algorithm = SHA-256`** |
 
 **Verification commands (read-only):**
 

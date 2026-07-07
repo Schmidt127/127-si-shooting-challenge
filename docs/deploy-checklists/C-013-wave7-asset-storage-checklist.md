@@ -1,7 +1,7 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 2 in progress** — DEV schema complete; [Make S3 writeback mapping](./C-013-make-s3-writeback-mapping.md) drafted. S3 not active until DEV scenario proves writeback. No Production changes.  
+**Status:** **Wave 7 Slice 2 in progress** — DEV schema complete; [Make S3 writeback mapping](./C-013-make-s3-writeback-mapping.md) **ready for Make build** (`File Hash Algorithm = SHA-256` confirmed). S3 not active until DEV scenario proves writeback. No Production changes.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · **[Slice 2 Make S3 mapping](./C-013-make-s3-writeback-mapping.md)**  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
@@ -98,7 +98,7 @@ OMNI verified on DEV **Submission Assets**:
 | Field | Status on DEV (2026-07-07 probe) | Writer today | Slice 1 rule |
 |-------|-------------------------------------|--------------|--------------|
 | **File Content Hash** | Present | Make v2 hash modules (not wired DEV) | Do not delete; Make will populate at upload |
-| **File Hash Algorithm** | Present (`SHA-256` option) | Make v2 | Do not delete |
+| **File Hash Algorithm** | Present — exact option **`SHA-256`** (OMNI confirmed; no new option) | Make S3 writeback (Slice 2) | C-023 dedupe audit | Write literal **`SHA-256`** on success |
 | **Upload Status** | Present (`Pending Link`, `Processing`, `Uploaded`, `Error`, …) | **009**, **020**, **013**, **070a/b**, Make | Keep ladder unchanged |
 | **Airtable Attachment** | Present | **009** (intake copy) | **Do not clear yet** — still required by **020/013/070** |
 | **Google Drive File URL** | Present (Single line text per OMNI) | Make Drive engine (legacy) | **Legacy bridge — do not delete yet**; formulas/views still gate on it |
