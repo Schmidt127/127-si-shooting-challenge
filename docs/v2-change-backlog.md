@@ -158,7 +158,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows | C-010 partial | queued |
+| **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows; **Testing** views on 8 pipeline tables — [manual UI checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) | C-010 partial | queued |
 | **C-020** | **Engineering Test Framework** | **115 v1.3** DEV verified — Daily + Homework + Video (Tests A–D). [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), [upload workflow](./upload-workflow-homework-video.md). Production paste pending. | C-019, V2-013 | **done (DEV)** |
 | **C-020a** | C-020 Homework branch (115 v1.1) | Tests A/B PASS on DEV | C-020 | **done (DEV)** |
 | **C-020b** | C-020 Video branch (115 v1.3) | Tests C/D PASS; Intake Attachments → Video Upload | C-020a | **done (DEV)** |

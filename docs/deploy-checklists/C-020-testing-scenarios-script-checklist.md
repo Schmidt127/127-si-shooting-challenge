@@ -5,6 +5,7 @@
 **Environment:** DEV only (`appTetnuCZlCZdTCT`) until promotion doc + Mike approval
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
+**Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters  
 **Table:** **Testing Scenarios** (`tblEQLsXTCwx0iOd8`) on DEV
 
 ---

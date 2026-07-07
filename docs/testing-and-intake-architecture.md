@@ -113,7 +113,7 @@ One permanent **Schmidt** Athlete + Enrollment exercises the **entire base** lik
 | **Test flags on rows** | **None** — base treats all rows the same |
 | **Automations** | **Run identically** — 009, 013, 020, 070, 022, 010, 065, etc. |
 | **Athlete record** | **Never shared** with a live production enrollment |
-| **Testing views** | `Enrollment = Schmidt test enrollment` on pipeline tables |
+| **Testing views** | `Enrollment = Schmidt test enrollment` on pipeline tables — [verification checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) |
 
 ### Distinction from C-010
 
@@ -305,6 +305,8 @@ Verify:
 **Filter:** `Enrollment` (or linked enrollment) **=** test enrollment used on **Testing Scenarios** row
 
 Tables (minimum): Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, Streak Occurrences, Athlete Achievement Unlocks.
+
+**Manual verification:** OMNI and GitHub cannot read Airtable view filter definitions. Use [C-019 Testing views verification checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) in the Airtable UI (Schmidt enrollment `recgP9qZYjAhE7NXm` — filter by link, not test flags).
 
 ### Workflow
 
