@@ -28,6 +28,39 @@ OMNI (and Cursor agents working from GitHub) **cannot inspect Airtable view defi
 
 ---
 
+## What Cursor can and cannot do (Airtable API — 2026-07-07 probe)
+
+Cursor **does not** have an Airtable UI driver or OMNI view-admin access. The repo’s Python tools use the **Airtable REST / Metadata API** with a local PAT (`tools/airtable/.env` and/or `web/.env.local`).
+
+| Capability | Result |
+|------------|--------|
+| **List view names** (Metadata API `GET …/views` and per-table `views` on `GET …/tables`) | **Yes** — view `id`, `name`, `type` |
+| **Read view filter definitions** | **No** — `GET …/views/{viewId}` returns only `id`, `name`, `type` (no `filters`, `sorts`, or `groupLevels` in API response) |
+| **Create or update views** (name, filters, hidden fields) | **No** — no public `POST`/`PATCH` view endpoint; views are **UI-only** |
+| **Count rows through an existing view** (Data API `?view=viw…`) | **Yes** — applies the view’s saved filters, but **does not expose** what those filters are |
+| **Verify forbidden filters programmatically** | **No** — requires UI inspection |
+
+**Helper (read-only, local):** `tools/airtable/_probe_c019_testing_views.py` — lists `Testing` views per table and attempts Schmidt row counts. Re-run after PAT/`DEV_BASE_ID` changes. **Not** a substitute for UI filter verification.
+
+### Live DEV probe — view existence (2026-07-07)
+
+Base `appTetnuCZlCZdTCT`. Schmidt enrollment `recgP9qZYjAhE7NXm` **exists**; C-020 test Submissions (e.g. `reca8SxXfri7aRZiB`) link to it.
+
+| Table | `Testing` view on table? | View ID (if any) | Notes |
+|-------|--------------------------|------------------|-------|
+| Submissions | **No** | — | Create in UI |
+| Submission Assets | **No** | — | Filter field: `Enrollment - Linked` |
+| Homework Completions | **No** | — | Create in UI |
+| Video Feedback | **No** | — | Create in UI |
+| XP Events | **No** | — | Create in UI |
+| Weekly Athlete Summary | **No** | — | Create in UI |
+| Streak Occurrences | **No** | — | Create in UI |
+| Athlete Achievement Unlocks | **Yes** | `viwhHkNyEPe21oMbI` | **Filter not readable via API** — confirm in UI; Data API via this view returned **30** rows (2026-07-07) |
+
+**Conclusion:** Cursor **cannot** create the missing seven views or confirm any view’s filter group. Mike (or OMNI with Airtable UI access) must create/configure views manually using the steps below.
+
+---
+
 ## Schmidt test enrollment (locked reference)
 
 | Item | Value |
