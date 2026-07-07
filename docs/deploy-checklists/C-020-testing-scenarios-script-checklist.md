@@ -365,6 +365,44 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 
 ---
 
+## DEV test log — Automation 115 Video functional live (2026-07-07)
+
+**Base:** DEV `appTetnuCZlCZdTCT`  
+**Script:** `115-engineering-test-framework-run-testing-scenario-daily-submission.js` **v1.3**  
+**Row:** `C-020 Functional — Video 2-file Schmidt`  
+**Trigger:** New scenario row created with **Dry Run?** off + **Run Test?** on (2 files copied from Test D **Intake Attachments**)
+
+### Test F — Video functional live (2 files)
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios | `recvuvDdglwY2I7nu` |
+| Scenario Type | Video |
+| Related Enrollment | Schmidt, Testing - 2025-2026 (`recgP9qZYjAhE7NXm`) |
+| Athlete | `recgqVstObQRzgXJF` |
+| Submission Date / Activity Date | 2026-05-28 |
+| Video Feedback Focus | Shooting |
+| Video Feedback Question | C-020 functional test — coach review queue check |
+| Intake Attachments | 2 — BlueOrangeCircleLogo.png; Shooting Tracker - 2026 Version.png |
+| Created Submission | `recMkN0fcgKDt9AOn` |
+| Video Upload file count | 2 |
+| Week | Week 5 (`recUPkXtsDOHnY5q7`) — **005** |
+| Shot Total | *blank* (expected) |
+| Duplicate Review Status | *blank* (expected) |
+| XP Award Status (Submission) | Pending (expected — no shot XP) |
+| Submission Assets | `recbQbCXxmIg6TTpv`, `recvJ0UOxwTUCg2SU` (2; each → 1 VF row) |
+| Video Feedback | `recwdNgnqlrtsBxuc`, `rec16PS5fDsVOm5pB` |
+| Homework Completions | **None** (expected) |
+| XP Events | **None** from this Video-only scenario (expected) |
+| **Run Test?** | Cleared after run |
+| **Dry Run?** | false |
+| **070b** | OFF (expected) |
+| Result | **PASS** — downstream verified via API 2026-07-07 |
+
+**Note:** Distinct from formal Test D (`rec459yCln87a0w2V` / `recj2rU2XtmCGBNpn`) — this is the operator **functional live** retest row for Wave 6.
+
+---
+
 ## Open schema notes
 
 | Item | Detail |
@@ -398,6 +436,7 @@ Intentionally deferred — do not build during Phase 2:
 - [x] Dry-run on DEV with one scenario row (2026-07-06)
 - [x] Homework + Video DEV tests A–D (2026-07-07, v1.3)
 - [x] Daily functional live retest E (2026-07-07) — `recQRaFbqTiiBbrcU` → `recAKNWwD6zn8hxwv`
+- [x] Video functional live retest F (2026-07-07) — `recvuvDdglwY2I7nu` → `recMkN0fcgKDt9AOn`
 - [ ] Stages A–H audit dry-run on Schmidt enrollment (optional follow-up)
 - [ ] Promotion doc committed before prod
 
