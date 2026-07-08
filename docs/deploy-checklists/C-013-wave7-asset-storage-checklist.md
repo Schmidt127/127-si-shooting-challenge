@@ -7,7 +7,7 @@
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
 **DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
 
-**Environment:** DEV `appTetnuCZlCZdTCT` first. **070a/070b OFF** on DEV until DEV Make S3 scenario exists.
+**Environment:** DEV `appTetnuCZlCZdTCT` first. **070a/070b OFF**. Upload runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)** (Make S3 **parked**).
 
 **DEV baselines (read-only):**
 
@@ -34,9 +34,10 @@
 | **C-013 DEV S3 + canonical writeback** | **PASS** (SDK, one video asset) |
 | **C-023 hash writeback** | **PASS** (SHA-256 on asset row) |
 | **C-023 duplicate lookup (module 52)** | **PENDING** — not in SDK script |
-| **Make DEV scenario S3 path** | **BLOCKED** — S3 Upload module times out |
-| **DEV 070a/070b connection** | **NOT STARTED** |
-| **C-020 H2 harness** | **NOT STARTED** |
+| **Make DEV scenario S3 path** | **PARKED** — S3 Upload timeout; no further fix this slice |
+| **Upload runtime (interim)** | **SDK / hybrid** — [decision doc](./C-013-sdk-hybrid-runtime.md) |
+| **DEV 070a/070b connection** | **NOT STARTED** — gated on **H2** + C-023 duplicate test |
+| **C-020 H2 harness** | **NEXT BUILD** |
 | **Production cutover** | **NOT STARTED** |
 
 ### Confirmed writeback
@@ -61,14 +62,16 @@
 
 **Not proven:** Make.com end-to-end path; homework route; **070a/070b** automation send; C-020 **H2**; duplicate-hash detection; attachment cleanup; Production; formula/view cutover.
 
-### Next steps (ordered)
+### Next steps (ordered) — runtime locked 2026-07-08
 
-1. Decide upload runtime for DEV harness: fix Make S3, Lambda, or interim **SDK/Make webhook hybrid**.
-2. **Do not** enable **070a/070b** until upload path for harness is chosen and tested.
-3. C-020 **H2** video test after **070b** wiring decision.
-4. Optional: C-023 duplicate lookup (module 52) in chosen runtime.
+**Decision:** **Option 3 — SDK / hybrid interim.** Make S3 **parked**. Lambda deferred until after DEV harness proof.
 
-**Hard stops unchanged:** No Production; no attachment clear; no Drive removal; no canonical URL formula cutover yet.
+1. Extend SDK path: **C-023 duplicate lookup** on [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py).
+2. Build **C-020 H2** (video 1-file harness) → SDK processes harness asset → verify `allPass`.
+3. **Only after H2 gate** — prep **070b** hybrid webhook (Make orchestration → SDK; **not** Make S3).
+4. **H1** homework after video path stable.
+
+Full spec: [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md).
 
 ---
 
@@ -504,7 +507,7 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 | # | Decision | Blocks |
 |---|----------|--------|
 | 1 | **AWS account** + bucket name(s) + IAM for Make (or Lambda) | Slice 2 |
-| 2 | **Lambda vs Make** for upload (Mike 2026-07-05: Lambda direction) | Architecture of Slice 2 |
+| 2 | **Upload runtime** | **DECIDED 2026-07-08:** SDK/hybrid interim for DEV; Lambda later for prod — [runtime doc](./C-013-sdk-hybrid-runtime.md) |
 | 3 | **Public CloudFront** (headshots) vs **presigned/private** (homework/video) | URL shape + Make modules |
 | 4 | **S3 key layout** (`Storage Key` pattern) | Make writeback + dedupe scope |
 | 5 | **C-023 policy**: flag duplicate vs block upload | Make module 51 + coach workflow |
@@ -518,8 +521,10 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
 - [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [x] **Slice 2 — DEV S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)): full writeback + hash on `recBBi80bYuxXifVj`. Make S3 path still blocked.
-- [ ] Slice 2 Make path — fix S3 timeout or choose Lambda (optional if SDK/hybrid is interim runtime)
+- [x] **Slice 2 — DEV S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json))
+- [x] **Runtime decision** — SDK/hybrid interim; Make S3 parked — [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)
+- [ ] **Slice 2b — C-020 H2** + C-023 duplicate lookup on SDK path
+- [ ] Slice 2b gate → prep **070b** hybrid webhook (DEV only)
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc

@@ -6,6 +6,8 @@
 
 **Functional complete scope (2026-07-07):** Daily, Homework, and Video intake paths verified on DEV via **115**. **Out of scope / not tested:** Homework XP after coach review (**064/065**); **070a/070b** Make/S3 upload; combined **Homework + Video** scenario (115 v1.3); Production Airtable paste.
 
+**Wave 7 upload (2026-07-08):** Runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)**. **Next:** **H2** video harness + SDK upload (before **070b**). Make S3 **parked**.
+
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
 **Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters  
 **Table:** **Testing Scenarios** (`tblEQLsXTCwx0iOd8`) on DEV
@@ -536,3 +538,35 @@ Intentionally deferred — do not build during Phase 2:
 ### Live-create
 
 - [x] **PASS** — `actionOut: created`, Submission + downstream (**005**, **010**, **031**) verified
+
+---
+
+## Wave 7 upload tests — H2 first (SDK / hybrid)
+
+**Runtime:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) — **Option 3** selected. Make **Amazon S3 Upload** **parked**. Upload via [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) (extend for harness + C-023 duplicate).
+
+**070a / 070b:** **OFF** until [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-dev-070b) passes.
+
+### H2 — Video 1-file (next build)
+
+| Item | Spec |
+|------|------|
+| **Harness** | **115** v1.3 Video scenario — clone Test **F** pattern; **new** Submission Date; 1 file in **Intake Attachments** |
+| **Enrollment** | Schmidt `recgP9qZYjAhE7NXm` |
+| **Intake** | **009** → **013** unchanged from Wave 6 |
+| **Upload** | SDK processes resulting Submission Asset (`Pending Link` + attachment) — manual SDK invoke or hybrid webhook (no Make S3) |
+| **Writeback** | Probe `allPass=true`: Canonical URL, Storage Key, File Content Hash, SHA-256, Uploaded At, Uploaded, Upload Error blank |
+| **C-023** | Duplicate lookup tested on SDK path |
+| **Artifact** | `tools/airtable/_preview/c013-dev-h2-sdk-proof-<assetId>.json` |
+
+### H1 — Homework 1-file
+
+**After** H2 gate + **070b** hybrid prep — not next.
+
+### Gate before **070b** (summary)
+
+1. Harness-origin video asset processed by SDK  
+2. Full writeback contract  
+3. C-023 duplicate behavior tested  
+4. No attachment clear · no Production · no formula cutover  
+5. **070b** still OFF until 1–3 pass  

@@ -9,8 +9,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Make
 
 #### Changed
-- **C-013/C-023 DEV SDK proof PASS (2026-07-08)** — `c013_dev_s3_upload_proof.py` live run on `recBBi80bYuxXifVj`: S3 upload + full Airtable writeback including SHA-256 hash; probe `allPass=true`. [Wave 7 SDK proof](./docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md#2026-07-08--dev-sdk-proof-pass-c-013--c-023-hash-writeback).
-- **C-013 DEV S3 SDK proof script (2026-07-08)** — `tools/airtable/c013_dev_s3_upload_proof.py`: DEV-only download → SHA-256 → S3 `PutObject` → Airtable writeback; bypasses Make S3 timeout.
+- **C-013 upload runtime decision (2026-07-08)** — **SDK / hybrid interim** locked; Make S3 parked; Lambda deferred. Next: C-020 **H2** + C-023 duplicate on SDK. [C-013-sdk-hybrid-runtime.md](./docs/deploy-checklists/C-013-sdk-hybrid-runtime.md).
+- **C-013/C-023 DEV SDK proof PASS (2026-07-08)** — `c013_dev_s3_upload_proof.py` live run on `recBBi80bYuxXifVj`: S3 upload + full Airtable writeback including SHA-256 hash; probe `allPass=true`.
 
 ### Airtable
 

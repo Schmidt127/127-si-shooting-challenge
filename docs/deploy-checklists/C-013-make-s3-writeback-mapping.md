@@ -2,7 +2,7 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **SDK proof PASS (2026-07-08)** — full writeback + SHA-256 on `recBBi80bYuxXifVj` via [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py). Make S3 blocked. **Not** full migration.  
+**Status:** **SDK proof PASS + hybrid runtime locked (2026-07-08)** — [runtime decision](./C-013-sdk-hybrid-runtime.md). Make S3 parked. **Not** full migration.  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ---

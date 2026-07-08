@@ -167,8 +167,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | Retire personal Google Drive + Airtable attachments; one HTTPS URL per asset. **Wave 7 started** — [checklist](./deploy-checklists/C-013-wave7-asset-storage-checklist.md), [upload workflow](./upload-workflow-homework-video.md). **Mike (2026-07-05):** long-term direction includes **Lambda** for upload/processing — design before Slice 2 | C-012, C-020 | **in progress** |
-| **C-023** | File dedup by **content hash**, not title/filename | Schema + Make v2 blueprint exist; not wired DEV end-to-end. **Probe:** `_probe_c013_asset_storage_fields.py`. Target: hash at upload; flag/block policy TBD | C-013, C-024 | **in progress** |
+| **C-013** | AWS S3 canonical URLs | **Slice 2 SDK PASS** — runtime **[SDK/hybrid interim](./deploy-checklists/C-013-sdk-hybrid-runtime.md)**; Make S3 parked; **C-020 H2** next. Lambda deferred for prod | C-012, C-020 | **in progress** |
+| **C-023** | File dedup by **content hash**, not title/filename | Hash writeback PASS (SDK); **duplicate lookup + H2 harness** pending | C-013, C-024 | **in progress** |
 
 ### Wave 8 — Intake & calendar
 

@@ -5,7 +5,7 @@
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
 **Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
-**Status (2026-07-08):** **SDK proof PASS** — [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) full writeback + hash on `recBBi80bYuxXifVj` (`allPass=true`). Make S3 module **times out** — use SDK for DEV proof. **Not** full migration.
+**Status (2026-07-08):** **SDK proof PASS** — runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)**. Make S3 **parked**. **Next:** C-020 **H2** + C-023 duplicate on SDK path.
 
 ---
 

@@ -5,7 +5,7 @@
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
 **Backlog:** C-013, C-023 (hash writeback slice — duplicate lookup optional later)
 
-> **2026-07-08:** Make **Amazon S3 Upload** module **times out** on DEV (even with modules 2→5 only). **Use [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py)** (AWS SDK) for DEV upload + hash writeback proof instead. Keep this runbook if Make S3 is fixed later.
+> **2026-07-08:** Make **Amazon S3 Upload** **PARKED** (timeout). Runtime = **[SDK / hybrid](../../docs/deploy-checklists/C-013-sdk-hybrid-runtime.md)**. Extend [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) for H2 + C-023 duplicate — not Make hash/S3 modules.
 
 **Goal:** Add SHA-256 hash of downloaded file bytes **after HTTP download** and write **File Content Hash** on success Airtable update.
 
