@@ -1,7 +1,7 @@
 # C-013 — DEV Lambda upload implementation plan
 
 **Date:** 2026-07-08  
-**Status:** **PLAN ONLY — no deploy, no 070a/070b enable** until Mike approves this document  
+**Status:** **IMPLEMENTED** (code in `lambda/upload-asset/`, local handler PASS 2026-07-08). **AWS deploy** pending admin IAM. **070a/070b OFF.**
 **Permanent architecture (locked):**
 
 ```text
@@ -39,7 +39,7 @@ Airtable 070b (v4.1 payload)
 
 | Scope | Name | Notes |
 |-------|------|-------|
-| **DEV (deploy first)** | `shooting-challenge-dev-upload-asset` | Clear env prefix; one asset per invocation |
+| **DEV (deploy first)** | `127si-dev-shooting-challenge-asset-upload` | Implemented in repo; AWS deploy pending admin IAM |
 | **PROD (later)** | `shooting-challenge-prod-upload-asset` | Separate function + IAM + secret — not this slice |
 | **Repo path (proposed)** | `lambda/upload-asset/` | Handler + shared library extracted from SDK proof |
 

@@ -223,6 +223,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="C-020 H2 video 1-file + SDK upload")
     parser.add_argument("--confirm-write", action="store_true")
     parser.add_argument("--prepare-only", action="store_true", help="Create scenario + trigger 115 only")
+    parser.add_argument("--poll-only", action="store_true", help="Poll scenario for asset only (no SDK/Lambda)")
     parser.add_argument("--asset-id", default=None, help="Skip harness; SDK-process this asset")
     parser.add_argument("--scenario-id", default=None, help="Use existing scenario (poll asset)")
     parser.add_argument("--poll-timeout", type=int, default=360)
@@ -264,6 +265,10 @@ def main() -> None:
         asset_id = polled["assetId"]
         result["assetId"] = asset_id
         result["submissionId"] = polled.get("submissionId")
+
+    if args.poll_only:
+        print(json.dumps(result, indent=2))
+        return
 
     if not confirm:
         result["next"] = f"python c013_dev_s3_upload_proof.py {asset_id} --athlete-slug schmidt-mike --confirm-write"

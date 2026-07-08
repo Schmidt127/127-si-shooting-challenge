@@ -6,7 +6,7 @@
 
 **Functional complete scope (2026-07-07):** Daily, Homework, and Video intake paths verified on DEV via **115**. **Out of scope / not tested:** Homework XP after coach review (**064/065**); **070a/070b** Make/S3 upload; combined **Homework + Video** scenario (115 v1.3); Production Airtable paste.
 
-**Wave 7 upload (2026-07-08):** Runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)**. **Next:** **H2** video harness + SDK upload (before **070b**). Make S3 **parked**.
+**Wave 7 upload (2026-07-08):** Runtime = **Lambda** ([C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)). SDK proof + **Lambda handler PASS** on H2 asset `recLAk8TA4lfbA6eu`. Make S3 **dropped**. **070a/070b OFF.**
 
 **Architecture:** [testing-and-intake-architecture.md](../testing-and-intake-architecture.md) § C-020  
 **Testing views (C-019):** [C-019 Testing views verification checklist](./C-019-testing-views-verification-checklist.md) — manual Airtable UI; OMNI cannot audit view filters  
@@ -541,13 +541,13 @@ Intentionally deferred — do not build during Phase 2:
 
 ---
 
-## Wave 7 upload tests — H2 first (SDK / hybrid)
+## Wave 7 upload tests — H2 first (Lambda)
 
-**Runtime:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) — **Option 3** selected. Make **Amazon S3 Upload** **parked**. Upload via [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) (extend for harness + C-023 duplicate).
+**Runtime:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) — **Lambda** (`lambda/upload-asset/`). Make **Amazon S3 Upload** **dropped**.
 
-**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-dev-070b) **PASS** (2026-07-08); **070b prep** is next, automations still **OFF**.
+**070a / 070b:** **OFF** — [H2 gate](./C-013-sdk-hybrid-runtime.md#gate--required-before-enabling-dev-070b) **PASS** (SDK + Lambda handler); **AWS deploy + Make dry-run** next.
 
-### H2 — Video 1-file — **PASS** (2026-07-08)
+### H2 — Video 1-file — SDK **PASS** (2026-07-08)
 
 | Item | Result |
 |------|--------|
@@ -558,18 +558,31 @@ Intentionally deferred — do not build during Phase 2:
 | **C-023** | Exact duplicate of `recBBi80bYuxXifVj`; flags written; upload not blocked |
 | **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg.json) |
 
-Orchestrator: `python c013_dev_h2_video_run.py --confirm-write` (or `--asset-id rec…` after harness).
+### H2 — Video 1-file — Lambda handler **PASS** (2026-07-08)
 
-**070b hybrid prep (next):** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — permanent Make → Lambda path. **070b/070a remain OFF** until plan approved + DEV Lambda deployed.
+| Item | Result |
+|------|--------|
+| **Scenario** | `rec1fPdnIkhHfyLUN` |
+| **Submission** | `reckdsMrSJFADmopS` |
+| **Asset** | `recLAk8TA4lfbA6eu` (`Pending Link` → handler `Uploaded`) |
+| **Invoke** | `python c013_dev_lambda_invoke.py recLAk8TA4lfbA6eu` (in-process; same code as Lambda zip) |
+| **Probe** | `allPass=true` — [verify](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) |
+| **C-023** | `match_found_written_to_existing_field` → first match `recBBi80bYuxXifVj` (4 prior hashes) |
+| **Artifact** | [proof](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json) |
+| **AWS Lambda** | Not deployed yet — admin IAM required ([DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)) |
+
+Orchestrator: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`; invoke: `c013_dev_lambda_invoke.py`.
+
+**Make scenario (prep):** `Shooting Challenge - DEV - Upload Engine - Lambda - v1` — webhook → HTTP → Lambda URL. **Not live-tested** until AWS deploy.
 
 ### H1 — Homework 1-file
 
-**After** H2 gate + **070b** hybrid prep — not next.
+**After** Lambda AWS deploy + Make dry-run — not next.
 
 ### Gate before **070b** (summary)
 
-1. Harness-origin video asset processed by SDK  
-2. Full writeback contract  
-3. C-023 duplicate behavior tested  
-4. No attachment clear · no Production · no formula cutover  
-5. **070b** still OFF until 1–3 pass → **1–3 PASS**; **Lambda plan** — [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md); deploy + enable only after Mike approves
+1. Harness-origin video asset processed by upload runtime — **PASS** (SDK + Lambda handler)  
+2. Full writeback contract — **PASS**  
+3. C-023 duplicate behavior tested — **PASS**  
+4. No attachment clear · no Production · no formula cutover — **Enforced**  
+5. **070b** still OFF until AWS Lambda deploy + Make dry-run PASS

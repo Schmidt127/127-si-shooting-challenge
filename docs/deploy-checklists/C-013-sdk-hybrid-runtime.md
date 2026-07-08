@@ -2,7 +2,7 @@
 
 **Decision date:** 2026-07-08 (Mike)  
 **Architecture lock (2026-07-08):** **Airtable → Make → Lambda → S3 → Airtable**  
-**Implementation plan:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — **PLAN ONLY; no deploy yet**  
+**Implementation plan:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — **IMPLEMENTED** (code + local PASS 2026-07-08); **AWS deploy** pending admin IAM  
 **Backlog:** C-013, C-023, C-020 (H2)  
 **Environment:** DEV `appTetnuCZlCZdTCT` only  
 **Parent:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
@@ -15,7 +15,7 @@
 |--------|--------|
 | **1 — Make AWS S3 Upload** | **DROPPED** — no further troubleshooting |
 | **2 — Lambda (Make → HTTP → Lambda → S3)** | **SELECTED** — permanent upload runtime |
-| **3 — SDK / hybrid interim** | **Proof complete** — logic source for Lambda; [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) |
+| **3 — SDK / hybrid interim** | **Proof complete** — logic source for Lambda; [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) + [`lambda/upload-asset/`](../../lambda/upload-asset/) |
 
 **Rule:** Upload + hash + duplicate lookup + Airtable writeback run in **AWS Lambda**, invoked by **Make webhook/orchestration only** (070b v4.1 payload). **Do not** use Make **Amazon S3 Upload**.
 
@@ -36,15 +36,17 @@ C-020 H2 (115 harness)
 | Layer | Role |
 |-------|------|
 | **Airtable 115 / 009 / 013** | Fillout-shaped intake — unchanged |
-| **070a / 070b** | **OFF** until Lambda plan approved + DEV deployed + dry-run PASS |
+| **070a / 070b** | **OFF** until Lambda AWS deploy + Make dry-run PASS |
 | **Make** | Webhook receive + router + HTTP to Lambda — **no S3 module** |
-| **Lambda** | `shooting-challenge-dev-upload-asset` — authoritative upload runtime |
+| **Lambda** | `127si-dev-shooting-challenge-asset-upload` — authoritative upload runtime |
 | **S3** | `shooting-challenge-assets` (us-east-2) |
 | **SDK CLI** | Local proof + regression; extracts into `lambda/upload-asset/` |
 
 **Proven baseline:** Manual SDK run on `recBBi80bYuxXifVj` — [proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) (`allPass=true`).
 
 **H2 harness PASS (2026-07-08):** Scenario `recd9CxYgdJD2T435` → Submission `recv5dbLefJipUvmh` → Asset `recL9r4a7navUxEhg` — [proof](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg.json) · [verify](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) (`allPass=true`). C-023 duplicate matched prior manual proof asset `recBBi80bYuxXifVj` (same SHA-256); upload **not** blocked.
+
+**H2 Lambda handler PASS (2026-07-08):** Scenario `rec1fPdnIkhHfyLUN` → Submission `reckdsMrSJFADmopS` → Asset `recLAk8TA4lfbA6eu` — [proof](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json) · [verify](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json) (`allPass=true`). In-process handler (same code as Lambda zip); C-023 `match_found_written_to_existing_field` → `recBBi80bYuxXifVj` (4 prior matches). **AWS Lambda deploy** blocked on IAM; see [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md).
 
 ---
 
@@ -83,21 +85,22 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 | 4 | Airtable Attachment **not** cleared | **Enforced** |
 | 5 | Production **not** touched | **Enforced** |
 | 6 | No formula/view/script cutover to Canonical File URL | **Enforced** |
-| 7 | **070a / 070b** remain **OFF** until rows 1–3 pass | **Enforced** (gate rows 1–3 PASS; **070b prep** is next, still OFF) |
+| 7 | **070a / 070b** remain **OFF** until Lambda AWS deploy + Make dry-run PASS | **Enforced** (handler gate rows 1–3 PASS; **070b still OFF**) |
 
-**After gate:** Prep **070b** `makeWebhookUrl` → **hybrid** webhook (Make orchestration → SDK), **DEV URL only**. Then re-run H2 with **070b** ON if desired. **H1** homework after video path stable.
+**After gate:** Deploy DEV Lambda to AWS (admin IAM) → Make scenario dry-run → prep **070b** `makeWebhookUrl` → **DEV URL only**. **H1** homework after video path stable.
 
-**070b prep:** [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) (trigger criteria). **Lambda runtime:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) — **no deploy / 070b OFF** until approved.
+**Lambda deploy:** [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md). **070b prep:** [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) (still OFF).
 
 ---
 
-## 070b + Lambda prep summary (OFF — awaiting approval)
+## 070b + Lambda status (OFF — awaiting AWS deploy + Make dry-run)
 
 | Item | Finding |
 |------|---------|
 | **Permanent path** | Airtable **070b** → Make webhook → **Lambda** → S3 → Airtable writeback |
 | **Make S3 module** | **Dropped** — never use |
-| **SDK script** | Source logic for Lambda extraction — not production runtime |
+| **Lambda code** | [`lambda/upload-asset/`](../../lambda/upload-asset/) — **local handler PASS** `recLAk8TA4lfbA6eu` |
+| **AWS deploy** | **Blocked** — `127si-program-storage-uploader` lacks Lambda/IAM create; admin deploy required |
 | **070b enabled?** | **NO** |
 | **070a enabled?** | **NO** |
 
@@ -108,10 +111,11 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 | Step | Task | Owner | Status |
 |------|------|-------|--------|
 | **1** | Extend SDK script: C-023 duplicate lookup (Airtable GET `File Content Hash` match, enrollment scope TBD) | Cursor / Mike | **DONE** (2026-07-08) |
-| **2** | Implement DEV Lambda (`lambda/upload-asset/`) from SDK proof logic | Cursor / Mike | **PLAN** — [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) |
+| **2** | Implement DEV Lambda (`lambda/upload-asset/`) from SDK proof logic | Cursor / Mike | **DONE** (2026-07-08) — local PASS; AWS deploy pending admin |
 | **3** | Run **H2**: new Testing Scenarios Video 1-file row → **115** → SDK on resulting asset | Mike | **DONE** (`recL9r4a7navUxEhg`) |
 | **4** | Save `_preview/c013-dev-h2-sdk-proof-<assetId>.json` + probe verify | Cursor | **DONE** |
-| **5** | Deploy DEV Lambda + Make Lambda scenario; prep **070b** (still OFF until dry-run PASS) | Mike | **PLAN DONE** — awaiting approval §Approval gate |
+| **4b** | H2 through Lambda handler (`c013_dev_lambda_invoke.py`) | Cursor | **DONE** (`recLAk8TA4lfbA6eu`, `allPass=true`) |
+| **5** | Deploy DEV Lambda to AWS + Make Lambda scenario; prep **070b** (still OFF) | Mike | **IN PROGRESS** — code in repo; IAM blocked on storage uploader user |
 
 **Parked (do not work):** Make **Amazon S3 Upload** module troubleshooting.
 

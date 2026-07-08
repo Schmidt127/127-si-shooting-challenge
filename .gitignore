@@ -20,3 +20,6 @@ web/.next/
 web/out/
 web/.vercel/
 .vercel
+
+# Lambda build artifacts (source in lambda/upload-asset/)
+lambda/upload-asset/dist/

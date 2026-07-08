@@ -1,0 +1,104 @@
+{
+  "statusCode": 200,
+  "body": {
+    "ok": true,
+    "statusOut": "success",
+    "actionOut": "uploaded",
+    "runtime": "lambda",
+    "environment": "DEV",
+    "baseId": "appTetnuCZlCZdTCT",
+    "table": "Submission Assets",
+    "submissionAssetRecordId": "recspCNupTqnydJcC",
+    "targetRecordId": "",
+    "routeKey": "video_feedback",
+    "automationNumber": "070b",
+    "s3": {
+      "bucket": "shooting-challenge-assets",
+      "region": "us-east-2",
+      "storageKey": "shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-08-video-feedback-recspCNupTqnydJcC-BlueOrangeCircleLogo.png",
+      "canonicalFileUrl": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-08-video-feedback-recspCNupTqnydJcC-BlueOrangeCircleLogo.png"
+    },
+    "hash": {
+      "algorithm": "SHA-256",
+      "hex": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "valid64CharHex": true
+    },
+    "c023Duplicate": {
+      "currentAssetId": "recspCNupTqnydJcC",
+      "computedSha256": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "duplicateLookupPerformed": true,
+      "duplicateMatchCount": 3,
+      "duplicateMatches": [
+        {
+          "recordId": "recBBi80bYuxXifVj",
+          "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+          "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+          "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+          "Uploaded At": "2026-07-08T14:15:37.412Z"
+        },
+        {
+          "recordId": "recL9r4a7navUxEhg",
+          "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recL9r4a7navUxEhg-BlueOrangeCircleLogo.png",
+          "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recL9r4a7navUxEhg-BlueOrangeCircleLogo.png",
+          "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+          "Uploaded At": "2026-07-08T14:51:44.786Z"
+        },
+        {
+          "recordId": "recTvOjglxIQ0cZWy",
+          "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recTvOjglxIQ0cZWy-BlueOrangeCircleLogo.png",
+          "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recTvOjglxIQ0cZWy-BlueOrangeCircleLogo.png",
+          "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+          "Uploaded At": "2026-07-08T15:18:19.515Z"
+        }
+      ],
+      "duplicateBehaviorDecision": "match_found_written_to_existing_field",
+      "duplicateFieldsAvailable": [
+        "File is Duplicate?",
+        "Duplicate File Status",
+        "Duplicate Match Strength",
+        "Duplicate Match Record",
+        "Duplicate Match Notes",
+        "Duplicate Checked At",
+        "Duplicate Check Error"
+      ],
+      "uploadBlocked": false,
+      "notes": "C-023 flag-only \u2014 upload continues regardless of duplicate match."
+    },
+    "writebackApplied": {
+      "Upload Status": "Uploaded",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-08-video-feedback-recspCNupTqnydJcC-BlueOrangeCircleLogo.png",
+      "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-08-video-feedback-recspCNupTqnydJcC-BlueOrangeCircleLogo.png",
+      "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "File Hash Algorithm": "SHA-256",
+      "Uploaded At": "2026-07-08T09:19:43.800-06:00",
+      "File Size Bytes": 67730,
+      "File MIME Type": "image/png",
+      "Upload Error": null,
+      "File is Duplicate?": true,
+      "Duplicate File Status": "Exact Duplicate",
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Match Record": [
+        "recBBi80bYuxXifVj"
+      ],
+      "Duplicate Match Notes": "Exact duplicate file content. Same SHA-256 hash already exists on Submission Asset recBBi80bYuxXifVj.",
+      "Duplicate Checked At": "2026-07-08T15:19:42.970+00:00",
+      "Duplicate Check Error": ""
+    },
+    "airtablePatchId": "recspCNupTqnydJcC",
+    "writebackVerification": {
+      "canonicalUrlPopulated": true,
+      "storageKeyPopulated": true,
+      "fileContentHashPopulated": true,
+      "fileHashAlgorithmSha256": true,
+      "uploadedAtPopulated": true,
+      "uploadStatusUploaded": true,
+      "uploadErrorCleared": true,
+      "hashHexLength": 64,
+      "duplicateLookupPerformed": true,
+      "duplicateBehaviorDecision": "match_found_written_to_existing_field",
+      "attachmentRetained": true,
+      "allPass": true
+    },
+    "durationMs": 2894
+  }
+}
