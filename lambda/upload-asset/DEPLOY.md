@@ -1,103 +1,80 @@
-# DEV Lambda deployment — `127si-dev-shooting-challenge-asset-upload`
+# DEV Lambda deployment — `127si-upload-asset-dev`
 
-**Status:** Code **implemented** + **local handler PASS** (2026-07-08). **AWS deploy blocked** on this machine — IAM user `127si-program-storage-uploader` lacks `lambda:*` and `iam:CreateRole`. Use an admin principal for first deploy.
+**Status:** AWS **shell complete** (2026-07-08). **Code deploy + Function URL test** — [C-013-dev-lambda-deploy-and-url-test.md](../../docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md) (**awaiting Mike approval**).
 
-**Hard stops:** DEV only. Production untouched. **070a / 070b OFF.**
+**Hard stops:** DEV only. Production untouched. **070a / 070b OFF.** No Make changes in deploy slice.
+
+## AWS shell (live)
+
+| Item | Value |
+|------|--------|
+| Function | `127si-upload-asset-dev` |
+| Region | `us-east-2` |
+| Role | `127si-upload-asset-dev-role-syfw0dzs` |
+| S3 | `shooting-challenge-assets` (`PutObject` / `GetObject` / `HeadObject` / `ListBucket`) |
+| Function URL | Auth `NONE` — **`X-Upload-Secret` validated in handler** — URL in local ops notes only |
+
+> Repo docs previously referenced `127si-dev-shooting-challenge-asset-upload` — use **`127si-upload-asset-dev`** for deploy/invoke.
 
 ## Prerequisites
 
 | Requirement | Notes |
 |-------------|--------|
-| AWS CLI | Account `021891587263`, region `us-east-2` |
-| Deploy principal | `lambda:CreateFunction`, `lambda:UpdateFunction*`, `lambda:CreateFunctionUrlConfig`, `iam:CreateRole` (first time) |
-| Airtable PAT | In `tools/airtable/.env` as `AIRTABLE_TOKEN` or `AIRTABLE_API_TOKEN` (deploy script reads locally; **not committed**) |
+| AWS CLI | Principal with `lambda:UpdateFunctionCode` on `127si-upload-asset-dev` |
+| Local `.env` | `tools/airtable/.env` — `UPLOAD_WEBHOOK_SECRET`, optional `LAMBDA_FUNCTION_URL` (**not committed**) |
 
-## Deploy
+## Deploy code (recommended — shell already exists)
 
 ```powershell
 cd lambda/upload-asset
-$env:AWS_PROFILE = $null   # avoid broken profile override
-.\deploy.ps1
+$env:AWS_PROFILE = $null
+.\deploy.ps1 -FunctionName 127si-upload-asset-dev -CodeOnly
 ```
 
-If IAM role already exists (admin created):
+`-CodeOnly` updates the zip only — does **not** change IAM, Function URL, or Lambda env vars already set in console.
+
+### Sync env from local .env (optional)
 
 ```powershell
-.\deploy.ps1 -ExistingRoleArn "arn:aws:iam::021891587263:role/127si-dev-shooting-challenge-asset-upload-role"
+.\deploy.ps1 -FunctionName 127si-upload-asset-dev -SkipIam
 ```
 
-Creates or updates:
+### New function from scratch (not needed if shell exists)
 
-- IAM role `127si-dev-shooting-challenge-asset-upload-role` (inline policy from [iam-policy-dev.json](./iam-policy-dev.json))
-- Lambda `127si-dev-shooting-challenge-asset-upload` (Python 3.12, 120s, 512MB)
-- Function URL (`auth-type` NONE — **`X-Upload-Secret` validated in handler**)
+```powershell
+.\deploy.ps1 -FunctionName 127si-upload-asset-dev -ExistingRoleArn "arn:aws:iam::021891587263:role/127si-upload-asset-dev-role-syfw0dzs"
+```
 
-**Do not set `AWS_REGION` in Lambda environment variables** — reserved by Lambda runtime. Region comes from function config (`us-east-2`).
+## Environment variables (Lambda console — already set)
 
-## Environment variables (Lambda)
+See [deploy-and-url-test plan](../../docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md#lambda-environment-already-set-in-aws-console).
 
-| Variable | Value |
-|----------|--------|
-| `AIRTABLE_BASE_ID` | `appTetnuCZlCZdTCT` |
-| `AIRTABLE_API_TOKEN` | PAT (secret) |
-| `AIRTABLE_TOKEN` | Same PAT (alias) |
-| `S3_BUCKET` | `shooting-challenge-assets` |
-| `ENVIRONMENT` | `DEV` |
-| `ALLOW_ROUTE_KEYS` | `video_feedback` |
-| `SEASON_SLUG` | `2026-2027` |
-| `CHALLENGE_SLUG` | `shooting-challenge` |
-| `UPLOAD_WEBHOOK_SECRET` | Random string (secret — required; set in `tools/airtable/.env` for deploy script) |
+**Auth:** Every POST must send `X-Upload-Secret` matching `UPLOAD_WEBHOOK_SECRET`. Missing/invalid → **401**, no Airtable PATCH.
 
-**Auth:** Every POST must send header `X-Upload-Secret` matching `UPLOAD_WEBHOOK_SECRET`. Missing/invalid → **401**, no Airtable PATCH.
+## Post-deploy smoke (Function URL)
 
-## IAM (current DEV policy)
-
-See [iam-policy-dev.json](./iam-policy-dev.json).
-
-| Permission | Scope |
-|------------|--------|
-| `s3:PutObject` | `arn:aws:s3:::shooting-challenge-assets/shooting-challenge/*` |
-| `logs:CreateLogGroup`, `CreateLogStream`, `PutLogEvents` | `/aws/lambda/127si-dev-shooting-challenge-asset-upload:*` |
-
-**Tightening follow-up:** Restrict logs to `PutLogEvents` only; move Airtable token to Secrets Manager; restrict Function URL by WAF if needed.
-
-## Post-deploy smoke
+Full sequence: [C-013-dev-lambda-deploy-and-url-test.md](../../docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md).
 
 ```powershell
 cd tools/airtable
 python c013_dev_h2_video_run.py --confirm-write --prepare-only
 python c013_dev_h2_video_run.py --confirm-write --scenario-id <rec> --poll-only
-python c013_dev_lambda_invoke.py <assetId> --aws --out _preview/c013-dev-lambda-h2-proof-<assetId>.json
-python _probe_c013_asset_storage_fields.py --record-id <assetId> --out _preview/c013-dev-lambda-h2-proof-<assetId>-verify.json
+python c013_dev_lambda_invoke.py <assetId> --function-url --out _preview/c013-dev-lambda-url-proof-<assetId>.json
+python _probe_c013_asset_storage_fields.py --record-id <assetId> --out _preview/c013-dev-lambda-url-proof-<assetId>-verify.json
 ```
-
-## Make scenario (prep — not live-tested until AWS deploy)
-
-**Name:** `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
-
-```text
-[1] Custom webhook
-[2] Router: automationNumber = 070b AND routeKey = video_feedback
-[3] HTTP > Make a request → POST Lambda Function URL (body = webhook JSON)
-[4] Webhook response 200
-```
-
-**No Amazon S3 Upload module.** Store Function URL in ops notes only — not GitHub.
 
 ## Rollback
 
 ```powershell
-aws lambda put-function-concurrency --function-name 127si-dev-shooting-challenge-asset-upload --reserved-concurrent-executions 0
+aws lambda put-function-concurrency --function-name 127si-upload-asset-dev --reserved-concurrent-executions 0 --region us-east-2
 ```
 
-Or disable Make scenario + keep **070b OFF**.
+Keep **070b OFF**.
 
 ## Local proof (no AWS)
 
-Handler logic verified in-process:
-
 ```powershell
-python tools/airtable/c013_dev_lambda_invoke.py recLAk8TA4lfbA6eu --out _preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json
+python tools/airtable/c013_dev_lambda_invoke.py <assetId>
 ```
 
-Artifact: `allPass=true` — [proof](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu.json) · [verify](../../tools/airtable/_preview/c013-dev-lambda-h2-proof-recLAk8TA4lfbA6eu-verify.json).
+Uses in-process handler (no Function URL).

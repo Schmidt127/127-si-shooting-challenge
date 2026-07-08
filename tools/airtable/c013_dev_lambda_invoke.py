@@ -8,6 +8,8 @@ import json
 import os
 import subprocess
 import sys
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -16,7 +18,7 @@ REPO = Path(__file__).resolve().parents[2]
 LAMBDA_ROOT = REPO / "lambda" / "upload-asset"
 HERE = Path(__file__).parent
 
-FUNCTION_NAME = "127si-dev-shooting-challenge-asset-upload"
+FUNCTION_NAME = os.getenv("LAMBDA_FUNCTION_NAME", "127si-upload-asset-dev")
 
 
 def load_env() -> None:
@@ -85,12 +87,41 @@ def invoke_aws(payload: dict) -> dict:
     return raw
 
 
+def invoke_function_url(payload: dict, function_url: str, secret: str | None) -> dict:
+    headers = {"Content-Type": "application/json"}
+    if secret:
+        headers["X-Upload-Secret"] = secret
+    req = urllib.request.Request(
+        function_url.rstrip("/") + "/",
+        data=json.dumps(payload).encode("utf-8"),
+        headers=headers,
+        method="POST",
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=180) as resp:
+            body_text = resp.read().decode("utf-8")
+            body = json.loads(body_text) if body_text else {}
+            return {"statusCode": resp.status, "body": body}
+    except urllib.error.HTTPError as exc:
+        body_text = exc.read().decode("utf-8")
+        try:
+            body = json.loads(body_text)
+        except json.JSONDecodeError:
+            body = {"errorOut": body_text}
+        return {"statusCode": exc.code, "body": body}
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Invoke DEV upload Lambda")
     parser.add_argument("asset_id", help="Submission Assets record id")
     parser.add_argument("--target-record-id", default=None)
     parser.add_argument("--out", default=None, help="Save result JSON")
     parser.add_argument("--aws", action="store_true", help="Invoke deployed Lambda via AWS CLI")
+    parser.add_argument(
+        "--function-url",
+        default=None,
+        help="POST to Lambda Function URL (or set LAMBDA_FUNCTION_URL in tools/airtable/.env)",
+    )
     args = parser.parse_args()
 
     load_env()
@@ -107,7 +138,13 @@ def main() -> None:
         )
 
     payload = build_payload(args.asset_id, args.target_record_id)
-    if args.aws:
+    secret = os.getenv("UPLOAD_WEBHOOK_SECRET")
+    if args.function_url or os.getenv("LAMBDA_FUNCTION_URL"):
+        url = args.function_url or os.getenv("LAMBDA_FUNCTION_URL")
+        if not url:
+            raise SystemExit("ERROR: --function-url or LAMBDA_FUNCTION_URL required")
+        result = invoke_function_url(payload, url, secret)
+    elif args.aws:
         result = invoke_aws(payload)
     else:
         result = invoke_local(payload)

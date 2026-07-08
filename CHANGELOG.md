@@ -15,6 +15,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **DEV Lambda `X-Upload-Secret` auth (2026-07-08)** — `upload_core/auth.py` validates `UPLOAD_WEBHOOK_SECRET`; 401 on missing/invalid header; no Airtable write on unauthorized. Tests: `lambda/upload-asset/tests/test_auth.py`.
+- **DEV Lambda deploy/test prep (2026-07-08)** — `127si-upload-asset-dev` code-only deploy flags, Function URL invoke helper, [deploy-and-url-test plan](./docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md). No AWS deploy in commit.
 
 ### Make
 

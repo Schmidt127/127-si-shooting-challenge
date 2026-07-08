@@ -1,11 +1,13 @@
-# Deploy 127si-dev-shooting-challenge-asset-upload (DEV)
+# Deploy DEV upload Lambda (code + optional config)
 param(
+    [string]$FunctionName = "127si-upload-asset-dev",
     [string]$ExistingRoleArn = "",
-    [switch]$SkipIam
+    [switch]$SkipIam,
+    [switch]$CodeOnly,
+    [switch]$SkipEnvUpdate
 )
 $ErrorActionPreference = "Stop"
 
-$FunctionName = "127si-dev-shooting-challenge-asset-upload"
 $RoleName = "127si-dev-shooting-challenge-asset-upload-role"
 $Region = if ($env:AWS_REGION) { $env:AWS_REGION } else { "us-east-2" }
 $ZipPath = Join-Path $PSScriptRoot "dist\lambda-upload-asset.zip"
@@ -107,11 +109,26 @@ try {
     $exists = $true
 } catch {}
 
+if ($CodeOnly) {
+    if (-not $exists) {
+        throw "Function $FunctionName not found — cannot use -CodeOnly"
+    }
+    Write-Host "Code-only update for $FunctionName..."
+    aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region | Out-Null
+    Write-Host "CODE UPDATED function=$FunctionName region=$Region"
+    Write-Host "Run direct Function URL test plan before enabling Make/070b."
+    exit 0
+}
+
 if ($exists) {
     Write-Host "Updating function $FunctionName..."
     aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region | Out-Null
     Start-Sleep -Seconds 5
-    aws lambda update-function-configuration --function-name $FunctionName --runtime python3.12 --handler handler.lambda_handler --timeout 120 --memory-size 512 --environment "file://$EnvFile" --region $Region | Out-Null
+    if (-not $SkipEnvUpdate) {
+        aws lambda update-function-configuration --function-name $FunctionName --runtime python3.12 --handler handler.lambda_handler --timeout 120 --memory-size 512 --environment "file://$EnvFile" --region $Region | Out-Null
+    } else {
+        Write-Host "Skipped environment update (-SkipEnvUpdate). AWS console env vars unchanged."
+    }
 } else {
     Write-Host "Creating function $FunctionName..."
     aws lambda create-function `
