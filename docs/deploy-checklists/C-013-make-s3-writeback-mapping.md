@@ -2,7 +2,7 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **SDK proof PASS + hybrid runtime locked (2026-07-08)** — [runtime decision](./C-013-sdk-hybrid-runtime.md). Make S3 parked. **Not** full migration.  
+**Status:** **SDK proof PASS** — runtime = **[Lambda](./C-013-sdk-hybrid-runtime.md)**. Make S3 **dropped**. **Make migration plan:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md).  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ---

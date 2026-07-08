@@ -42,7 +42,7 @@ C-020 H2 (115 harness)
 | **S3** | `shooting-challenge-assets` (us-east-2) |
 | **SDK CLI** | Local proof + regression; extracts into `lambda/upload-asset/` |
 
-**Proven baseline:** Manual SDK run on `recBBi80bYuxXifVj` — [proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) (`allPass=true`).
+**Proven baseline:** Manual SDK run on `recBBi80bYuxXifVj` — [proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) (`allPass=true`). **Controlled recheck (2026-07-08):** `--confirm-write --athlete-slug schmidt-mike` — same key/hash; C-023 duplicate fields written; [checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-dev-confirm-write-recheck-c-013--c-023).
 
 **H2 harness PASS (2026-07-08):** Scenario `recd9CxYgdJD2T435` → Submission `recv5dbLefJipUvmh` → Asset `recL9r4a7navUxEhg` — [proof](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg.json) · [verify](../../tools/airtable/_preview/c013-dev-h2-sdk-proof-recL9r4a7navUxEhg-verify.json) (`allPass=true`). C-023 duplicate matched prior manual proof asset `recBBi80bYuxXifVj` (same SHA-256); upload **not** blocked.
 

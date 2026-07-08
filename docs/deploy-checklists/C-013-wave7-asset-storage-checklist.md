@@ -1,7 +1,7 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) uploaded one video asset to S3 with **full writeback** (canonical URL + storage key + **SHA-256 hash**). Verifier `allPass=true` on `recBBi80bYuxXifVj`. Make S3 module still times out; **070a/070b OFF**; Production untouched. **Not** full migration.  
+**Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — controlled confirm-write recheck same day. Full writeback + C-023 duplicate flags on `recBBi80bYuxXifVj`. Upload runtime = **Lambda** (Make S3 **dropped**). **070a/070b OFF**; Production untouched. **Not** full migration.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
@@ -33,9 +33,9 @@
 |-------|--------|
 | **C-013 DEV S3 + canonical writeback** | **PASS** (SDK, one video asset) |
 | **C-023 hash writeback** | **PASS** (SHA-256 on asset row) |
-| **C-023 duplicate lookup (module 52)** | **PENDING** — not in SDK script |
-| **Make DEV scenario S3 path** | **PARKED** — S3 Upload timeout; no further fix this slice |
-| **Upload runtime (interim)** | **SDK / hybrid** — [decision doc](./C-013-sdk-hybrid-runtime.md) |
+| **C-023 duplicate lookup (module 52)** | **PASS** (SDK/Lambda — flag-only; not Make module 52 on DEV) |
+| **Make DEV scenario S3 path** | **DROPPED** — S3 Upload timeout; use **Lambda** orchestration |
+| **Upload runtime** | **Lambda** — [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [Make migration plan](./C-013-make-upload-migration-plan.md) |
 | **DEV 070a/070b connection** | **NOT STARTED** — gated on **H2** + C-023 duplicate test |
 | **C-020 H2 harness** | **NEXT BUILD** |
 | **Production cutover** | **NOT STARTED** |
@@ -208,7 +208,40 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** [live proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
-**Next:** Upload runtime decision for **070b** + C-020 **H2** — not Make S3 until timeout fixed.
+**Next:** Upload runtime = **Make → Lambda → S3**; C-020 **H2** gate complete; AWS Lambda deploy pending admin IAM.
+
+---
+
+## 2026-07-08 — Controlled DEV confirm-write recheck (C-013 + C-023)
+
+**Purpose:** Re-verify SDK path after dry-run recheck; force **`schmidt-mike`** athlete slug to match prior writeback on canonical test record.
+
+| Item | Value |
+|------|--------|
+| **Tool** | `c013_dev_s3_upload_proof.py` |
+| **Command** | `--confirm-write --athlete-slug schmidt-mike` |
+| **Base** | `appTetnuCZlCZdTCT` only |
+| **Record** | `recBBi80bYuxXifVj` |
+| **Bucket / region** | `shooting-challenge-assets` / `us-east-2` |
+| **Verifier** | `allPass=true` (probe) |
+
+### Confirmed
+
+| Check | Result |
+|-------|--------|
+| S3 key | `shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png` |
+| Canonical File URL | Same `schmidt-mike` path (HTTPS S3 URL) |
+| SHA-256 | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` |
+| Upload Status | `Uploaded` · **Upload Error** cleared · **Writeback Complete?** = 1 |
+| C-023 duplicate fields | **Written** — `File is Duplicate? = true`, `Exact Duplicate`, first match `recL9r4a7navUxEhg` |
+| S3 object | Re-PUT to **same** key (path unchanged vs prior live writeback) |
+| **Uploaded At** | Refreshed (`2026-07-08T15:50:26.579Z`) |
+| Airtable Attachment | **Retained** |
+| Production | **Untouched** |
+
+**Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
+
+**Next:** [Make upload migration plan](./C-013-make-upload-migration-plan.md) (DEV Lambda scenario); no Production Make/Airtable changes until promotion doc.
 
 ---
 
