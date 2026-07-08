@@ -257,6 +257,48 @@ def schmidt_submission_intake_stats(base_id: str) -> dict:
     return stats
 
 
+def fetch_record_writeback_check(base_id: str, record_id: str) -> dict:
+    """Read-only single-record C-013/C-023 writeback verification."""
+    url = f"{API}/{base_id}/Submission%20Assets/{record_id}"
+    status, data = get(url)
+    if status != 200 or not isinstance(data, dict):
+        return {
+            "recordId": record_id,
+            "error": f"HTTP {status}",
+            "detail": data,
+        }
+    f = data.get("fields", {})
+    checks = {
+        "uploadStatusUploaded": f.get("Upload Status") == "Uploaded",
+        "canonicalUrlPopulated": nonempty_text(f.get("Canonical File URL")),
+        "storageKeyPopulated": nonempty_text(f.get("Storage Key")),
+        "fileContentHashPopulated": nonempty_text(f.get("File Content Hash")),
+        "fileHashAlgorithmSha256": f.get("File Hash Algorithm") == "SHA-256",
+        "uploadedAtPopulated": f.get("Uploaded At") is not None and f.get("Uploaded At") != "",
+        "uploadErrorBlank": not nonempty_text(f.get("Upload Error")),
+        "attachmentRetained": has_attachment(f.get("Airtable Attachment")),
+        "writebackCompleteFormula": f.get("Writeback Complete?") in (1, True, "1"),
+    }
+    return {
+        "recordId": record_id,
+        "fields": {
+            "Upload Status": f.get("Upload Status"),
+            "Canonical File URL": f.get("Canonical File URL"),
+            "Storage Key": f.get("Storage Key"),
+            "File Content Hash": f.get("File Content Hash"),
+            "File Hash Algorithm": f.get("File Hash Algorithm"),
+            "Uploaded At": f.get("Uploaded At"),
+            "Upload Error": f.get("Upload Error"),
+            "Airtable Attachment": "present" if has_attachment(f.get("Airtable Attachment")) else "missing",
+            "Writeback Complete?": f.get("Writeback Complete?"),
+        },
+        "writebackVerification": {
+            "allPass": all(checks.values()),
+            "checks": checks,
+        },
+    }
+
+
 def main() -> None:
     import argparse
 
@@ -266,12 +308,46 @@ def main() -> None:
         default=os.getenv("C013_PROBE_OUT"),
         help="Write JSON summary to this path (e.g. tools/airtable/_preview/c013-dev-baseline.json)",
     )
+    parser.add_argument(
+        "--record-id",
+        default=None,
+        help="Optional Submission Assets record id — adds writeback verification block (e.g. recBBi80bYuxXifVj)",
+    )
     args = parser.parse_args()
 
     base_id = os.getenv("WAVE7_PROBE_BASE") or os.getenv("DEV_BASE_ID") or DEV_BASE
     print(f"probe=C-013/C-023 asset storage")
     print(f"base_id={base_id}")
     print(f"schmidt_enrollment={SCHMIDT_ENROLLMENT}")
+
+    if args.record_id:
+        check = fetch_record_writeback_check(base_id, args.record_id)
+        result = {
+            "probeScript": "_probe_c013_asset_storage_fields.py",
+            "probedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "baseId": base_id,
+            "mode": "single_record_writeback_check",
+            "submissionAsset": check,
+        }
+        print("\n=== WRITEBACK CHECK ===")
+        v = check.get("writebackVerification", {})
+        print(f"recordId={args.record_id}")
+        print(f"allPass={v.get('allPass')}")
+        if v.get("checks"):
+            for k, ok in v["checks"].items():
+                print(f"  {k}: {'PASS' if ok else 'FAIL'}")
+        print("\n=== SUMMARY JSON ===")
+        payload = json.dumps(result, indent=2)
+        print(payload)
+        if args.out:
+            out_path = Path(args.out)
+            if not out_path.is_absolute():
+                out_path = REPO / out_path
+            out_path.parent.mkdir(parents=True, exist_ok=True)
+            out_path.write_text(payload + "\n", encoding="utf-8")
+            print(f"\nwritten={out_path.as_posix()}")
+        print("\n=== READ-ONLY — no writes performed ===")
+        return
 
     schema = fetch_schema(base_id)
     inventory = field_inventory(schema)

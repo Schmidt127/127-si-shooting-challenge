@@ -130,7 +130,44 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 - Do **not** switch formulas/views/scripts to Canonical File URL
 - Do **not** store secrets/env values in repo (webhook URL, AWS creds → Make only)
 
-**Artifacts:** [preflight](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · [partial PASS](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)
+**Artifacts:** [preflight](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · [partial PASS](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md) · **[hash patch (Step A)](../../make/documentation/C-013-dev-s3-hash-patch.md)**
+
+---
+
+## 2026-07-08 — C-023 hash patch (in progress)
+
+**Active task:** Add SHA-256 hash module to DEV Make scenario → re-test manual webhook → document full PASS.
+
+| Track | Status |
+|-------|--------|
+| **C-013 DEV S3 partial writeback proof** | **PASS** (2026-07-07) |
+| **C-023 hash completion** | **IN PROGRESS** — [hash patch runbook](../../make/documentation/C-013-dev-s3-hash-patch.md) |
+| **Dynamic path mapping** | **PENDING** |
+| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production cutover** | **NOT STARTED** |
+
+**Mike action:** Insert hash between HTTP download and S3 upload; map **File Content Hash** on Airtable update; POST [retest webhook](../../tools/airtable/_preview/c013-hash-retest-webhook-recBBi80bYuxXifVj.json).
+
+### 2026-07-08 End-of-test — C-023 hash manual webhook
+
+**Status:** **PENDING** — fill after hash re-test PASS.
+
+| Check | Result |
+|-------|--------|
+| File Content Hash populated | *pending* |
+| All §6 success fields | *pending* |
+| Upload Error blank on success | *pending* |
+| Probe `allPass` | *pending* |
+
+**After PASS:**
+
+1. Save probe output: `tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json`
+2. Set **C-023 hash completion** → **PASS** (hash writeback only; duplicate lookup module 52 still optional)
+3. Proceed to dynamic path mapping (step **C**) before **070b**
+
+```powershell
+python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json
+```
 
 ---
 

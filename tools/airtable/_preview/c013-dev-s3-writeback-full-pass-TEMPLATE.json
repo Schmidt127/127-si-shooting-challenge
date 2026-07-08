@@ -1,0 +1,55 @@
+{
+  "purpose": "C-013/C-023 DEV manual Make S3 writeback — FULL PASS template (fill after hash re-test)",
+  "recordedAt": "YYYY-MM-DD",
+  "result": "full_PASS",
+  "statusSummary": {
+    "c013DevS3PartialWritebackProof": "PASS",
+    "c023HashCompletion": "PASS",
+    "dynamicPathMapping": "PENDING",
+    "dev070a070bConnection": "NOT_STARTED",
+    "productionCutover": "NOT_STARTED"
+  },
+  "baseId": "appTetnuCZlCZdTCT",
+  "table": "Submission Assets",
+  "recordId": "recXXXXXXXXXXXXXX",
+  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "s3Bucket": "shooting-challenge-assets",
+  "route": {
+    "automationNumber": "070b",
+    "routeKey": "video_feedback",
+    "uploadDestination": "Video Feedback",
+    "targetRecordId": "recXXXXXXXXXXXXXX"
+  },
+  "confirmedWriteback": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "",
+    "Storage Key": "",
+    "File Content Hash": "",
+    "File Hash Algorithm": "SHA-256",
+    "Uploaded At": "",
+    "Upload Error": "",
+    "Airtable Attachment": "still present",
+    "Writeback Complete?": 1
+  },
+  "writebackVerification": {
+    "allPass": false,
+    "checks": {
+      "uploadStatusUploaded": false,
+      "canonicalUrlPopulated": false,
+      "storageKeyPopulated": false,
+      "fileContentHashPopulated": false,
+      "fileHashAlgorithmSha256": false,
+      "uploadedAtPopulated": false,
+      "uploadErrorBlank": false,
+      "attachmentRetained": false,
+      "writebackCompleteFormula": false
+    }
+  },
+  "hardStopsStillInForce": [
+    "Do not enable DEV 070a/070b until dynamic path mapping + Mike approval",
+    "Do not clear Airtable Attachment",
+    "Do not remove Google Drive fields",
+    "Do not switch formulas/views/scripts to Canonical File URL",
+    "Do not touch Production"
+  ]
+}

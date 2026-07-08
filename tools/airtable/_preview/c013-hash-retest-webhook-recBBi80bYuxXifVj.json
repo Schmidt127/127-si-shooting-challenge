@@ -1,0 +1,41 @@
+{
+  "purpose": "C-013/C-023 hash patch re-test — manual Make webhook (070b still OFF)",
+  "probedAt": "2026-07-08",
+  "baseId": "appTetnuCZlCZdTCT",
+  "table": "Submission Assets",
+  "recordId": "recBBi80bYuxXifVj",
+  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "prerequisite": "Insert SHA-256 hash module after HTTP download (module 3); map digest to File Content Hash on Airtable update",
+  "retestNote": "Same asset as partial PASS — row may already be Uploaded; Make webhook path does not require Pending Link while 070b is OFF",
+  "route": {
+    "automationNumber": "070b",
+    "routeKey": "video_feedback",
+    "uploadDestination": "Video Feedback",
+    "targetTable": "Video Feedback",
+    "targetRecordId": "recjdf9cSiw1ADs0T"
+  },
+  "webhookPayload": {
+    "sourceName": "Airtable Upload Engine",
+    "automationNumber": "070b",
+    "sentAtIso": "2026-07-08T12:00:00.000Z",
+    "routeKey": "video_feedback",
+    "uploadDestination": "Video Feedback",
+    "sourceTable": "Submission Assets",
+    "submissionAssetRecordId": "recBBi80bYuxXifVj",
+    "targetTable": "Video Feedback",
+    "targetRecordId": "recjdf9cSiw1ADs0T"
+  },
+  "passCondition": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "non-empty",
+    "Storage Key": "non-empty",
+    "File Content Hash": "non-empty SHA-256 hex",
+    "File Hash Algorithm": "SHA-256",
+    "Uploaded At": "set",
+    "Upload Error": "blank",
+    "Airtable Attachment": "still present",
+    "Writeback Complete?": 1
+  },
+  "verifyCommand": "python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json",
+  "hashPatchDoc": "make/documentation/C-013-dev-s3-hash-patch.md"
+}

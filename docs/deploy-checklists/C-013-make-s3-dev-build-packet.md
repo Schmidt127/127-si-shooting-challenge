@@ -5,7 +5,7 @@
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
 **Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
-**Status (2026-07-07 EOD):** **Partial PASS** — see [Wave 7 end-of-night checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof). **Not** full C-013/C-023 completion.
+**Status (2026-07-08):** **Hash patch in progress** — partial S3 PASS done; [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md) for Step A/B. **Not** full C-013/C-023 completion.
 
 ---
 
@@ -132,7 +132,7 @@ shooting-challenge/dev/homework/recgP9qZYjAhE7NXm/recfVEP3SAmPP6jiw/recW63hxae64
 | **Upload Status** | `Uploaded` |
 | **Canonical File URL** | Generated HTTPS URL (CloudFront or presigned) |
 | **Storage Key** | Module **60** output |
-| **File Content Hash** | SHA-256 hex digest from module **50** |
+| **File Content Hash** | SHA-256 hex digest from **hash module** (insert after HTTP download, before S3) |
 | **File Hash Algorithm** | **`SHA-256`** (exact single-select option) |
 | **Uploaded At** | `now` |
 | **Upload Error** | blank |
@@ -312,7 +312,7 @@ Confirm **009/020/013** unchanged; each new asset gets canonical URL + key + has
 - [x] Drive modules removed; S3 upload inserted
 - [x] Placeholders §2 filled in Make (bucket `shooting-challenge-assets`; webhook in Make only)
 - [~] Manual webhook test §8 — **partial PASS** on `recBBi80bYuxXifVj` (S3 + canonical OK; **File Content Hash pending**)
-- [ ] Add hash module + re-test → full §8 PASS
+- [ ] **Hash patch** — [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md) → re-test → full §8 PASS
 - [ ] DEV **070a/b** enabled with DEV webhook URL only *(after full Slice 2 PASS)*
 - [ ] C-020 H1–H4 PASS
 - [~] Record results in Wave 7 checklist — **end-of-night checkpoint** 2026-07-07

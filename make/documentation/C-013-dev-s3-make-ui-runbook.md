@@ -4,7 +4,23 @@
 **Do not edit:** Production Upload Engine scenario  
 **References:** [build packet](../../docs/deploy-checklists/C-013-make-s3-dev-build-packet.md) · [writeback mapping](../../docs/deploy-checklists/C-013-make-s3-writeback-mapping.md)
 
-**Manual test asset:** `recBBi80bYuxXifVj` — **VIDEO** path (**070b**). Preflight: [c013-manual-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · Result: [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
+**Active task (2026-07-08):** **[C-013-dev-s3-hash-patch.md](./C-013-dev-s3-hash-patch.md)** — insert SHA-256 hash after module 3; map **File Content Hash** on Airtable update; re-test webhook.
+
+**Manual test asset:** `recBBi80bYuxXifVj` — **VIDEO** / **070b**. Retest: [c013-hash-retest-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-hash-retest-webhook-recBBi80bYuxXifVj.json) · Partial PASS: [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
+
+---
+
+## 2026-07-08 — Hash patch (Step A/B)
+
+See **[C-013-dev-s3-hash-patch.md](./C-013-dev-s3-hash-patch.md)** for the exact 6-module chain:
+
+`1 webhook → 2 Get Record → 3 HTTP → **4 Hash** → 5 S3 → 6 Airtable update`
+
+After PASS, verify:
+
+```powershell
+python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json
+```
 
 ---
 

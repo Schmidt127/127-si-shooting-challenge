@@ -2,7 +2,7 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **Partial PASS (2026-07-07 EOD)** — see [end-of-night checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof). **Not** full migration.  
+**Status:** **Partial PASS + hash patch in progress (2026-07-08)** — [hash patch runbook](../../make/documentation/C-013-dev-s3-hash-patch.md). **Not** full migration.  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ---
