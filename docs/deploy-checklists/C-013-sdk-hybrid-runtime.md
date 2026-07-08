@@ -85,6 +85,23 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 
 **After gate:** Prep **070b** `makeWebhookUrl` → **hybrid** webhook (Make orchestration → SDK), **DEV URL only**. Then re-run H2 with **070b** ON if desired. **H1** homework after video path stable.
 
+**070b prep plan (2026-07-08):** [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) — **PREP ONLY; 070b remains OFF** until Mike approves §9.
+
+---
+
+## 070b hybrid prep summary (OFF — awaiting approval)
+
+| Item | Finding |
+|------|---------|
+| **070b automation** | `070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` v4.1 — POST minimal webhook; sets **Processing** on Make 200; **does not** clear attachments |
+| **070a** | Separate automation — **stay OFF** |
+| **Trigger (proposed)** | `Send to Make Trigger` + `Upload Destination = Video Feedback` + `Ready to Send to Make? = READY_TO_SEND` + `Upload Status = Pending Link` + attachment + VF link; optional view **070 - Ready to Send Asset to Make** (`viwPlmXDSf78jt6Ht`) |
+| **Runtime path** | **070b → DEV Make webhook → HTTP → SDK** (not Make S3) |
+| **Manual bridge** | Required for dry-run before enable: POST v4.1 payload while **070b OFF** |
+| **Code gap** | SDK **HTTP wrapper** needed before enable (step 2 below) |
+| **Test assets** | Fresh H2 clone (`c013_dev_h2_video_run.py`); not `recL9r4a7navUxEhg` (already Uploaded) |
+| **070b enabled?** | **NO** — awaiting Mike approval of [prep plan](./C-013-dev-070b-hybrid-prep.md) |
+
 ---
 
 ## Engineering build sequence (Slice 2b)
@@ -92,10 +109,10 @@ All must pass on a **harness-origin** video asset (H2), not manual-only proof:
 | Step | Task | Owner | Status |
 |------|------|-------|--------|
 | **1** | Extend SDK script: C-023 duplicate lookup (Airtable GET `File Content Hash` match, enrollment scope TBD) | Cursor / Mike | **DONE** (2026-07-08) |
-| **2** | SDK HTTP wrapper or documented Make **Webhook → HTTP** → trigger script (no S3 in Make) | Mike / ops | Pending |
+| **2** | SDK HTTP wrapper or documented Make **Webhook → HTTP** → trigger script (no S3 in Make) | Mike / ops | **PREP** — see [070b hybrid prep](./C-013-dev-070b-hybrid-prep.md) §2, §8 |
 | **3** | Run **H2**: new Testing Scenarios Video 1-file row → **115** → SDK on resulting asset | Mike | **DONE** (`recL9r4a7navUxEhg`) |
 | **4** | Save `_preview/c013-dev-h2-sdk-proof-<assetId>.json` + probe verify | Cursor | **DONE** |
-| **5** | Document gate PASS; **then** prep **070b** webhook URL (still no Production) | Mike | **Ready** (gate PASS; 070b still OFF) |
+| **5** | Document gate PASS; **then** prep **070b** webhook URL (still no Production) | Mike | **PREP DONE** — [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md); **070b OFF** |
 
 **Parked (do not work):** Make **Amazon S3 Upload** module troubleshooting.
 
@@ -138,4 +155,4 @@ Implemented in `c013_dev_s3_upload_proof.py` (2026-07-08):
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 slices |
 | [C-020-testing-scenarios-script-checklist.md](./C-020-testing-scenarios-script-checklist.md) | H2 harness |
 | [C-013-make-s3-dev-build-packet.md](./C-013-make-s3-dev-build-packet.md) | Writeback contract |
-| [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md) | Field map |
+| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | **070b prep plan (OFF until approved)** |

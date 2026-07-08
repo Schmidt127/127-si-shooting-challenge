@@ -560,6 +560,8 @@ Intentionally deferred — do not build during Phase 2:
 
 Orchestrator: `python c013_dev_h2_video_run.py --confirm-write` (or `--asset-id rec…` after harness).
 
+**070b hybrid prep (next):** [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) — trigger criteria, safety gates, dry-run plan. **070b remains OFF** until Mike approves §9. Re-test with **fresh** Pending Link asset (not `recL9r4a7navUxEhg`).
+
 ### H1 — Homework 1-file
 
 **After** H2 gate + **070b** hybrid prep — not next.
@@ -570,4 +572,4 @@ Orchestrator: `python c013_dev_h2_video_run.py --confirm-write` (or `--asset-id 
 2. Full writeback contract  
 3. C-023 duplicate behavior tested  
 4. No attachment clear · no Production · no formula cutover  
-5. **070b** still OFF until 1–3 pass → **1–3 PASS**; enable **070b** only after Mike preps hybrid webhook
+5. **070b** still OFF until 1–3 pass → **1–3 PASS**; **070b prep** documented — [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md); enable only after Mike approves
