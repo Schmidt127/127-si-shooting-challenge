@@ -36,7 +36,7 @@ if (Test-Path $WebEnv) {
 }
 
 $AirtableToken = if ($env:AIRTABLE_TOKEN) { $env:AIRTABLE_TOKEN } else { $env:AIRTABLE_API_TOKEN }
-if (-not $AirtableToken) { throw "Missing AIRTABLE_TOKEN in tools/airtable/.env" }
+if (-not $CodeOnly -and -not $AirtableToken) { throw "Missing AIRTABLE_TOKEN in tools/airtable/.env" }
 
 Write-Host "Building zip..."
 $DistDir = Join-Path $PSScriptRoot "dist\package"
@@ -47,6 +47,27 @@ Copy-Item -Recurse (Join-Path $PSScriptRoot "upload_core") $DistDir
 if (-not (Test-Path (Join-Path $PSScriptRoot "dist"))) { New-Item -ItemType Directory -Path (Join-Path $PSScriptRoot "dist") | Out-Null }
 if (Test-Path $ZipPath) { Remove-Item -Force $ZipPath }
 Compress-Archive -Path (Join-Path $DistDir "*") -DestinationPath $ZipPath
+
+$exists = $false
+$gf = aws lambda get-function --function-name $FunctionName --region $Region 2>&1
+if ($LASTEXITCODE -eq 0) {
+    $exists = $true
+}
+
+if ($CodeOnly) {
+    if (-not $exists) {
+        if ($gf) { Write-Host $gf }
+        throw "Function $FunctionName not found or AWS call failed - cannot use -CodeOnly"
+    }
+    Write-Host "Code-only update for $FunctionName..."
+    aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region
+    if ($LASTEXITCODE -ne 0) {
+        throw "update-function-code failed (exit $LASTEXITCODE)"
+    }
+    Write-Host "CODE UPDATED function=$FunctionName region=$Region"
+    Write-Host "Run direct Function URL test plan before enabling Make/070b."
+    exit 0
+}
 
 $TrustPolicy = @'
 {
@@ -79,7 +100,7 @@ if (-not $RoleArn -and -not $SkipIam) {
     }
 }
 
-if (-not $RoleArn) {
+if (-not $RoleArn -and -not $SkipIam -and -not $CodeOnly) {
     throw "Missing -ExistingRoleArn. Create IAM role $RoleName with iam-policy-dev.json, then deploy with -ExistingRoleArn."
 }
 
@@ -96,29 +117,12 @@ $EnvVars = @{
 if ($env:UPLOAD_WEBHOOK_SECRET) {
     $EnvVars["UPLOAD_WEBHOOK_SECRET"] = $env:UPLOAD_WEBHOOK_SECRET
 } else {
-    Write-Warning "UPLOAD_WEBHOOK_SECRET not set — Lambda will return 401 until configured"
+    Write-Warning "UPLOAD_WEBHOOK_SECRET not set - Lambda will return 401 until configured"
 }
 $EnvJson = (@{ Variables = $EnvVars } | ConvertTo-Json -Compress -Depth 5)
 # AWS CLI requires strict JSON; write temp file to avoid PowerShell escaping issues
 $EnvFile = Join-Path $PSScriptRoot "dist\lambda-env.json"
 $EnvJson | Set-Content -Path $EnvFile -Encoding UTF8
-
-$exists = $false
-try {
-    aws lambda get-function --function-name $FunctionName --region $Region | Out-Null
-    $exists = $true
-} catch {}
-
-if ($CodeOnly) {
-    if (-not $exists) {
-        throw "Function $FunctionName not found — cannot use -CodeOnly"
-    }
-    Write-Host "Code-only update for $FunctionName..."
-    aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region | Out-Null
-    Write-Host "CODE UPDATED function=$FunctionName region=$Region"
-    Write-Host "Run direct Function URL test plan before enabling Make/070b."
-    exit 0
-}
 
 if ($exists) {
     Write-Host "Updating function $FunctionName..."
@@ -127,7 +131,7 @@ if ($exists) {
     if (-not $SkipEnvUpdate) {
         aws lambda update-function-configuration --function-name $FunctionName --runtime python3.12 --handler handler.lambda_handler --timeout 120 --memory-size 512 --environment "file://$EnvFile" --region $Region | Out-Null
     } else {
-        Write-Host "Skipped environment update (-SkipEnvUpdate). AWS console env vars unchanged."
+        Write-Host 'Skipped environment update (-SkipEnvUpdate). AWS console env vars unchanged.'
     }
 } else {
     Write-Host "Creating function $FunctionName..."
@@ -157,4 +161,4 @@ if (-not $Url) {
 
 Write-Host "DEPLOYED function=$FunctionName region=$Region"
 Write-Host "FUNCTION_URL=$Url"
-Write-Host "Store Function URL in ops notes only - not GitHub."
+Write-Host 'Store Function URL in ops notes only - not GitHub.'
