@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""C-013/C-023 — DEV S3 upload + hash writeback proof (AWS SDK).
+"""C-013/C-023 — DEV S3 upload + hash + duplicate lookup writeback (AWS SDK).
 
 Bypasses Make.com S3 Upload module timeout. DEV base only.
+Includes C-023 duplicate hash lookup (flag-only; upload continues).
 
 Usage (dry-run — default):
   python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj
@@ -27,7 +28,7 @@ import mimetypes
 import os
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 from zoneinfo import ZoneInfo
@@ -61,6 +62,23 @@ ASSET_FIELDS = [
 ]
 
 ENROLLMENT_SLUG_FIELDS = ["Athlete Last Name", "Athlete First Name"]
+
+# C-023 duplicate lookup — DEV Submission Assets fields (v2 Make module 51 parity)
+DUPLICATE_MATCH_READ_FIELDS = [
+    "Canonical File URL",
+    "Storage Key",
+    "File Content Hash",
+    "Uploaded At",
+]
+DUPLICATE_WRITEBACK_FIELDS = [
+    "File is Duplicate?",
+    "Duplicate File Status",
+    "Duplicate Match Strength",
+    "Duplicate Match Record",
+    "Duplicate Match Notes",
+    "Duplicate Checked At",
+    "Duplicate Check Error",
+]
 
 
 def load_env() -> None:
@@ -308,6 +326,132 @@ def verify_hash_hex(value: str) -> bool:
     return bool(re.fullmatch(r"[a-f0-9]{64}", value or ""))
 
 
+def duplicate_checked_at_iso() -> str:
+    return datetime.now(timezone.utc).isoformat(timespec="milliseconds")
+
+
+def format_duplicate_match(record: dict) -> dict:
+    fields = record.get("fields", {})
+    return {
+        "recordId": record.get("id"),
+        "Canonical File URL": fields.get("Canonical File URL"),
+        "Storage Key": fields.get("Storage Key"),
+        "File Content Hash": fields.get("File Content Hash"),
+        "Uploaded At": fields.get("Uploaded At"),
+    }
+
+
+def lookup_duplicate_matches(
+    token: str,
+    base_id: str,
+    file_hash: str,
+    exclude_record_id: str,
+    *,
+    max_records: int = 5,
+) -> list[dict]:
+    """Search DEV Submission Assets for same File Content Hash, excluding current record."""
+    if not file_hash or not verify_hash_hex(file_hash):
+        return []
+    formula = (
+        f'AND({{File Content Hash}} = "{file_hash}", RECORD_ID() != "{exclude_record_id}")'
+    )
+    url = api_url(base_id, TABLE)
+    params: dict = {
+        "filterByFormula": formula,
+        "maxRecords": max_records,
+    }
+    for i, name in enumerate(DUPLICATE_MATCH_READ_FIELDS):
+        params[f"fields[{i}]"] = name
+    resp = requests.get(
+        url,
+        headers={"Authorization": f"Bearer {token}"},
+        params=params,
+        timeout=120,
+    )
+    if not resp.ok:
+        raise SystemExit(
+            f"ERROR: duplicate lookup GET -> {resp.status_code}: {resp.text[:500]}"
+        )
+    return resp.json().get("records", [])
+
+
+def build_duplicate_writeback(
+    matches: list[dict],
+    *,
+    file_hash: str,
+    write_to_airtable: bool,
+) -> tuple[dict, str]:
+    """Return (Airtable fields patch, duplicateBehaviorDecision)."""
+    checked_at = duplicate_checked_at_iso()
+    if not file_hash:
+        fields = {
+            "Duplicate File Status": "Error",
+            "Duplicate Match Strength": "Manual Review",
+            "Duplicate Match Notes": "Hash missing — duplicate check skipped.",
+            "Duplicate Checked At": checked_at,
+            "Duplicate Check Error": "SHA-256 hash not computed.",
+        }
+        return fields, "match_found_report_only"
+
+    if not matches:
+        fields = {
+            "File is Duplicate?": False,
+            "Duplicate File Status": "Unique",
+            "Duplicate Match Strength": "Exact SHA-256 Hash",
+            "Duplicate Match Record": [],
+            "Duplicate Match Notes": "No matching file hash found.",
+            "Duplicate Checked At": checked_at,
+            "Duplicate Check Error": "",
+        }
+        return fields, "no_match"
+
+    first = matches[0]
+    first_id = first.get("id", "")
+    note = (
+        f"Exact duplicate file content. Same SHA-256 hash already exists on "
+        f"Submission Asset {first_id}."
+    )
+    fields = {
+        "File is Duplicate?": True,
+        "Duplicate File Status": "Exact Duplicate",
+        "Duplicate Match Strength": "Exact SHA-256 Hash",
+        "Duplicate Match Record": [first_id] if first_id else [],
+        "Duplicate Match Notes": note,
+        "Duplicate Checked At": checked_at,
+        "Duplicate Check Error": "",
+    }
+    decision = (
+        "match_found_written_to_existing_field"
+        if write_to_airtable
+        else "match_found_report_only"
+    )
+    return fields, decision
+
+
+def build_c023_duplicate_report(
+    *,
+    record_id: str,
+    file_hash: str,
+    matches: list[dict],
+    decision: str,
+    lookup_performed: bool,
+) -> dict:
+    formatted = [format_duplicate_match(rec) for rec in matches]
+    return {
+        "currentAssetId": record_id,
+        "computedSha256": file_hash,
+        "duplicateLookupPerformed": lookup_performed,
+        "duplicateMatchCount": len(formatted),
+        "duplicateMatches": formatted,
+        "duplicateBehaviorDecision": decision,
+        "duplicateFieldsAvailable": DUPLICATE_WRITEBACK_FIELDS,
+        "uploadBlocked": False,
+        "notes": (
+            "C-023 flag-only on SDK path — upload continues regardless of duplicate match."
+        ),
+    }
+
+
 def build_plan(
     token: str,
     base_id: str,
@@ -365,6 +509,20 @@ def build_plan(
         mime_type=mime_type,
     )
 
+    dup_matches = lookup_duplicate_matches(token, base_id, file_hash, record_id)
+    dup_fields, dup_decision = build_duplicate_writeback(
+        dup_matches,
+        file_hash=file_hash,
+        write_to_airtable=False,
+    )
+    c023 = build_c023_duplicate_report(
+        record_id=record_id,
+        file_hash=file_hash,
+        matches=dup_matches,
+        decision=dup_decision,
+        lookup_performed=True,
+    )
+
     return {
         "script": "c013_dev_s3_upload_proof.py",
         "mode": "dry_run",
@@ -396,6 +554,8 @@ def build_plan(
             "assetType": asset_type_token(fields),
         },
         "writebackPlanned": wb,
+        "duplicateWritebackPlanned": dup_fields,
+        "c023Duplicate": c023,
         "priorWriteback": {
             "Upload Status": fields.get("Upload Status"),
             "Canonical File URL": fields.get("Canonical File URL"),
@@ -459,6 +619,10 @@ def main() -> None:
     if not os.getenv("AWS_ACCESS_KEY_ID") or not os.getenv("AWS_SECRET_ACCESS_KEY"):
         raise SystemExit("ERROR: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY required for --confirm-write")
 
+    # Explicit env keys take precedence over a missing local AWS profile name.
+    if os.getenv("AWS_ACCESS_KEY_ID"):
+        os.environ.pop("AWS_PROFILE", None)
+
     # Re-download for upload (plan already computed; reuse values)
     record = get_record(token, base_id, args.record_id)
     attachment = first_attachment(record.get("fields", {}))
@@ -468,6 +632,20 @@ def main() -> None:
     original_name = plan["attachment"]["originalFileName"]
     mime_type = guess_mime(original_name, header_mime)
     file_hash = sha256_hex(file_bytes)
+
+    dup_matches = lookup_duplicate_matches(token, base_id, file_hash, args.record_id)
+    dup_fields, dup_decision = build_duplicate_writeback(
+        dup_matches,
+        file_hash=file_hash,
+        write_to_airtable=True,
+    )
+    c023 = build_c023_duplicate_report(
+        record_id=args.record_id,
+        file_hash=file_hash,
+        matches=dup_matches,
+        decision=dup_decision,
+        lookup_performed=True,
+    )
 
     s3_result = upload_s3(
         args.bucket,
@@ -484,22 +662,29 @@ def main() -> None:
         size_bytes=len(file_bytes),
         mime_type=mime_type,
     )
-    patched = patch_asset(token, base_id, args.record_id, wb)
+    wb_full = {**wb, **dup_fields}
+    patched = patch_asset(token, base_id, args.record_id, wb_full)
 
     report = {
         **plan,
         "mode": "live",
         "probedAt": datetime.now(DENVER).isoformat(timespec="seconds"),
         "s3Upload": s3_result,
-        "writebackApplied": wb,
+        "writebackApplied": wb_full,
+        "duplicateWritebackApplied": dup_fields,
+        "c023Duplicate": c023,
         "airtablePatchId": patched.get("id"),
         "writebackVerification": {
             "canonicalUrlPopulated": bool(wb.get("Canonical File URL")),
             "storageKeyPopulated": bool(wb.get("Storage Key")),
             "fileContentHashPopulated": verify_hash_hex(file_hash),
             "fileHashAlgorithmSha256": wb.get("File Hash Algorithm") == "SHA-256",
+            "uploadedAtPopulated": bool(wb.get("Uploaded At")),
+            "uploadStatusUploaded": wb.get("Upload Status") == "Uploaded",
             "uploadErrorCleared": wb.get("Upload Error") is None,
             "hashHexLength": len(file_hash),
+            "duplicateLookupPerformed": c023.get("duplicateLookupPerformed"),
+            "duplicateBehaviorDecision": c023.get("duplicateBehaviorDecision"),
         },
     }
     report["writebackVerification"]["allPass"] = all(
@@ -509,7 +694,10 @@ def main() -> None:
             "storageKeyPopulated",
             "fileContentHashPopulated",
             "fileHashAlgorithmSha256",
+            "uploadedAtPopulated",
+            "uploadStatusUploaded",
             "uploadErrorCleared",
+            "duplicateLookupPerformed",
         )
     )
 

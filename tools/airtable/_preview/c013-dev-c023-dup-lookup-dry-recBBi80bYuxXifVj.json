@@ -1,0 +1,78 @@
+{
+  "script": "c013_dev_s3_upload_proof.py",
+  "mode": "dry_run",
+  "baseId": "appTetnuCZlCZdTCT",
+  "table": "Submission Assets",
+  "recordId": "recBBi80bYuxXifVj",
+  "enrollmentId": "recgP9qZYjAhE7NXm",
+  "attachment": {
+    "filename": "BlueOrangeCircleLogo.png",
+    "originalFileName": "BlueOrangeCircleLogo.png",
+    "downloadBytes": 67730
+  },
+  "hash": {
+    "algorithm": "SHA-256",
+    "hex": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+    "valid64CharHex": true
+  },
+  "s3": {
+    "bucket": "shooting-challenge-assets",
+    "region": "us-east-2",
+    "storageKey": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+    "canonicalFileUrl": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png"
+  },
+  "pathTokens": {
+    "seasonSlug": "2026-2027",
+    "challengeSlug": "shooting-challenge",
+    "athleteSlug": "schmidt-mike",
+    "date": "2026-07-08",
+    "assetType": "video-feedback"
+  },
+  "writebackPlanned": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+    "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+    "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+    "File Hash Algorithm": "SHA-256",
+    "Uploaded At": "2026-07-08T08:38:00.857-06:00",
+    "File Size Bytes": 67730,
+    "File MIME Type": "image/png",
+    "Upload Error": null
+  },
+  "duplicateWritebackPlanned": {
+    "File is Duplicate?": false,
+    "Duplicate File Status": "Unique",
+    "Duplicate Match Strength": "Exact SHA-256 Hash",
+    "Duplicate Match Record": [],
+    "Duplicate Match Notes": "No matching file hash found.",
+    "Duplicate Checked At": "2026-07-08T14:38:01.404+00:00",
+    "Duplicate Check Error": ""
+  },
+  "c023Duplicate": {
+    "currentAssetId": "recBBi80bYuxXifVj",
+    "computedSha256": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+    "duplicateLookupPerformed": true,
+    "duplicateMatchCount": 0,
+    "duplicateMatches": [],
+    "duplicateBehaviorDecision": "no_match",
+    "duplicateFieldsAvailable": [
+      "File is Duplicate?",
+      "Duplicate File Status",
+      "Duplicate Match Strength",
+      "Duplicate Match Record",
+      "Duplicate Match Notes",
+      "Duplicate Checked At",
+      "Duplicate Check Error"
+    ],
+    "uploadBlocked": false,
+    "notes": "C-023 flag-only on SDK path \u2014 upload continues regardless of duplicate match."
+  },
+  "priorWriteback": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+    "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+    "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+    "Upload Error": null
+  },
+  "probedAt": "2026-07-08T08:38:01-06:00"
+}
