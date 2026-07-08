@@ -5,7 +5,7 @@
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
 **Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
-**Status (2026-07-08):** **Hash patch in progress** — partial S3 PASS done; [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md) for Step A/B. **Not** full C-013/C-023 completion.
+**Status (2026-07-08):** **Hash patch in progress** — Make S3 Upload module **times out** on DEV; use **[AWS SDK proof script](../../tools/airtable/c013_dev_s3_upload_proof.py)** for DEV upload + hash writeback instead.
 
 ---
 

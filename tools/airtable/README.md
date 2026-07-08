@@ -142,6 +142,24 @@ python generate_june29_snapshot_data.py
 
 **Status (2026-07-02):** Award Recipients historical cleanup and Goal Met / Conquered Goal reconciliation both passed (14/14 aligned).
 
+## Wave 7 — C-013 DEV S3 upload proof (AWS SDK)
+
+Make.com **S3 Upload** module times out on DEV. Use **`c013_dev_s3_upload_proof.py`** instead — downloads attachment, SHA-256 hash, `PutObject` to `shooting-challenge-assets`, Airtable writeback on DEV only.
+
+```powershell
+cd tools/airtable
+pip install -r requirements.txt
+python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike
+python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike --confirm-write `
+  --out _preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json
+```
+
+Env (never commit): `AIRTABLE_TOKEN`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, optional `AWS_REGION`, `S3_BUCKET`. See `.env.example`.
+
+Verify: `python _probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj`
+
+Docs: [C-013-wave7 checklist](../../docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md)
+
 ### Old award name → current catalog (snapshot era)
 
 | June 29 export label | Link this award today |

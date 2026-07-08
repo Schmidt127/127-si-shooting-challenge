@@ -141,12 +141,25 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 | Track | Status |
 |-------|--------|
 | **C-013 DEV S3 partial writeback proof** | **PASS** (2026-07-07) |
-| **C-023 hash completion** | **IN PROGRESS** — [hash patch runbook](../../make/documentation/C-013-dev-s3-hash-patch.md) |
+| **C-023 hash completion** | **IN PROGRESS** — Make hash + **Make S3 timeout**; use [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) (AWS SDK) |
 | **Dynamic path mapping** | **PENDING** |
 | **DEV 070a/070b connection** | **NOT STARTED** |
 | **Production cutover** | **NOT STARTED** |
 
-**Mike action:** Insert hash between HTTP download and S3 upload; map **File Content Hash** on Airtable update; POST [retest webhook](../../tools/airtable/_preview/c013-hash-retest-webhook-recBBi80bYuxXifVj.json).
+**Mike action:** Run AWS SDK proof (Make S3 module times out):
+
+```powershell
+cd tools/airtable
+pip install -r requirements.txt
+# Dry-run (download + hash + planned key — no writes):
+python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike `
+  --out _preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-dry-run.json
+# Live (requires AWS + Airtable write scopes in .env — never commit):
+python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike --confirm-write `
+  --out _preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json
+```
+
+Make hash patch runbook still applies if S3 module is fixed later: [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md).
 
 ### 2026-07-08 End-of-test — C-023 hash manual webhook
 
