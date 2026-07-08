@@ -4,7 +4,7 @@
 **Do not edit:** Production Upload Engine scenario  
 **References:** [build packet](../../docs/deploy-checklists/C-013-make-s3-dev-build-packet.md) · [writeback mapping](../../docs/deploy-checklists/C-013-make-s3-writeback-mapping.md)
 
-**Active task (2026-07-08):** **[SDK / hybrid runtime](./../../docs/deploy-checklists/C-013-sdk-hybrid-runtime.md)** locked — build **C-020 H2** + C-023 duplicate on SDK. Make S3 **parked**.
+**Active task (2026-07-08):** **[Lambda upload runtime](../../docs/deploy-checklists/C-013-dev-lambda-upload-plan.md)** — Airtable → Make → Lambda → S3. Make S3 **dropped**. **No deploy until plan approved.**
 
 **Manual test asset:** `recBBi80bYuxXifVj` — **VIDEO** / **070b**. Retest: [c013-hash-retest-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-hash-retest-webhook-recBBi80bYuxXifVj.json) · Partial PASS: [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
 

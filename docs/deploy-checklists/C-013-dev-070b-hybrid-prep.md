@@ -1,7 +1,8 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
 **Date:** 2026-07-08  
-**Status:** **PREP ONLY — 070b remains OFF** until Mike approves this plan and dry-run passes  
+**Status:** **PREP ONLY — 070b remains OFF** until [Lambda plan](./C-013-dev-lambda-upload-plan.md) is approved, DEV Lambda deployed, and dry-run passes  
+**Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)  
 **Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)  
 **Prerequisites (PASS):** SDK upload + hash + C-023 duplicate on DEV; C-020 H2 harness (`recL9r4a7navUxEhg`); commit `8dcc460`
 
@@ -15,8 +16,9 @@
 | **Production base** | `appn84sqPw03zEbTT` — **untouched** |
 | **070a** (homework → Make) | **OFF** per [development-base-setup.md](../development-base-setup.md) |
 | **070b** (video → Make) | **OFF** per development-base-setup |
-| **Make Amazon S3 Upload** | **PARKED / blocked** — do not use |
-| **SDK runtime** | [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) — authoritative upload + hash + duplicate + writeback |
+| **Make Amazon S3 Upload** | **DROPPED** — do not use |
+| **Upload runtime** | **Lambda** (planned) — [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) |
+| **SDK proof** | [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) — source logic for Lambda extraction |
 | **Existing DEV Make scenario** | `Shooting Challenge - DEV - Upload Engine - S3 - v1` — webhook + Get Record + HTTP download + **S3 module (parked)** + Airtable update — **must be refactored** for hybrid |
 | **H2 harness asset** | `recL9r4a7navUxEhg` — already **Uploaded** via manual SDK (not usable for 070b first-fire without fresh asset) |
 
@@ -80,7 +82,7 @@
 
 | Path | Role in interim slice | Recommendation |
 |------|----------------------|----------------|
-| **A — 070b → Make DEV webhook → HTTP → SDK** | Production-shaped; orchestration in Make; upload in SDK | **SELECT for enable** |
+| **A — 070b → Make DEV webhook → HTTP → Lambda** | Production-shaped; orchestration in Make; upload in Lambda | **SELECT for enable** |
 | **B — Manual webhook POST** (070b OFF) | Same payload; tests Make + SDK without Airtable trigger | **Required dry-run step 1** |
 | **C — Direct SDK CLI** (`c013_dev_s3_upload_proof.py`) | Proven; bypasses 070b + Make | **Already PASS (H2);** use for regression only |
 
@@ -89,30 +91,20 @@
 1. POST v4.1 payload to DEV Make webhook (scenario **Run once**) — validates Make routing without firing Airtable.
 2. Optionally run SDK CLI on same asset — compares outcomes.
 
-**Do not** re-enable the Make **Amazon S3 Upload** module. Replace upload steps with **HTTP → SDK handler**.
+**Do not** re-enable the Make **Amazon S3 Upload** module. Make calls **Lambda Function URL** per [Lambda plan](./C-013-dev-lambda-upload-plan.md) §16.
 
 ### Target Make scenario (new or refactor)
 
-**Name (proposed):** `Shooting Challenge - DEV - Upload Engine - SDK Hybrid - v1`
+**Name (proposed):** `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
 
 ```text
 Module 1  Custom webhook          ← 070b POST (v4.1 payload)
 Module 2  Router                  ← automationNumber = "070b" AND routeKey = "video_feedback"
-Module 3  HTTP → SDK handler      ← POST { submissionAssetRecordId, routeKey, … }
+Module 3  HTTP → Lambda Function URL
 Module 4  Webhook response 200    ← required: 070b sets Processing only on response.ok
 ```
 
-**Remove / do not wire:** Amazon S3 Upload, Google Drive modules, legacy S3 Get+Put chain from `…S3 - v1`.
-
-**SDK handler gap:** No HTTP wrapper exists in repo yet (build sequence step 2). Options for Mike:
-
-| Option | Pros | Cons |
-|--------|------|------|
-| **ngrok + thin Flask/FastAPI** wrapping `c013_dev_s3_upload_proof.py` | Fast DEV proof | Ephemeral URL; ops overhead |
-| **Vercel/serverless** in `web/` | Stable HTTPS URL | Small code deploy; env vars |
-| **Make → subprocess** | N/A | Make cannot run local Python/boto3 |
-
-**Until SDK HTTP endpoint exists:** dry-run uses **manual webhook POST** with Make scenario calling HTTP module pointed at stub (returns 200) OR Mike runs SDK CLI after webhook receive logged.
+**See:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) §16 for full Make integration.
 
 ---
 
@@ -267,10 +259,10 @@ Execute in order. **Stop if any step fails.**
 
 | Item | Required for prep? | Required for enable? | Owner |
 |------|-------------------|---------------------|-------|
-| **SDK HTTP wrapper** (POST v4.1 → invoke proof logic) | Documented | **Yes** | Cursor / Mike |
+| **DEV Lambda** (`shooting-challenge-dev-upload-asset`) | Superseded SDK HTTP wrapper | **Yes** — see [Lambda plan](./C-013-dev-lambda-upload-plan.md) | Cursor / Mike |
 | **070b script changes** | No | No (optional: Pending Link + canonical blank guard) | — |
 | **013 / 009 changes** | No | No | — |
-| **Make scenario** (webhook → HTTP, no S3) | Documented | **Yes** | Mike / ops |
+| **Make scenario** (webhook → Lambda HTTP, no S3) | Documented | **Yes** | Mike / ops |
 | **`c013_dev_h2_video_run.py`** | Exists | For fresh test assets | Done |
 
 ---
@@ -279,9 +271,9 @@ Execute in order. **Stop if any step fails.**
 
 - [ ] DEV **070b** trigger conditions match §3  
 - [ ] DEV **070a** remains **OFF**  
-- [ ] DEV Make scenario uses **SDK hybrid** path (no S3 module)  
+- [ ] DEV Make scenario uses **Lambda** path (no S3 module)  
 - [ ] DEV webhook URL recorded (ops only)  
-- [ ] SDK HTTP endpoint URL decided and reachable from Make  
+- [ ] Lambda Function URL deployed and reachable from Make  
 - [ ] Disabled-state test plan §7 steps 1–8 PASS  
 - [ ] Explicit approval to turn **070b ON** (step 10)
 
