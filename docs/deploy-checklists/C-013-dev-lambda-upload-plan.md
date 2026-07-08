@@ -35,6 +35,83 @@ Airtable 070b (v4.1 payload)
 
 ---
 
+## Minimal DEV contract — review 2026-07-08
+
+**Purpose:** Single-page DEV contract from design review. **No deploy in this section** — documentation only.
+
+### Transport and caller
+
+| Item | Contract |
+|------|----------|
+| **HTTP method** | **POST only** to Lambda Function URL |
+| **Caller** | DEV Make scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1` (not built yet) |
+| **Request body** | Make forwards **070b v4.1 webhook JSON unchanged** — no attachment bytes in webhook |
+| **Make role** | Orchestration only — webhook receive, router, HTTP POST to Lambda, return 200 to caller |
+
+**Make does not** download files, compute hash, upload to S3, or PATCH Airtable on the DEV Lambda path.
+
+### Required request fields (070b slice)
+
+| Field | Rule |
+|-------|------|
+| **`submissionAssetRecordId`** | **Required** — `rec…`; Lambda re-fetches **Submission Assets** and downloads **Airtable Attachment** |
+| **`routeKey`** | **Required** — must be `video_feedback` (env `ALLOW_ROUTE_KEYS`) |
+| **`automationNumber`** | Should be **`070b`** if present |
+| `uploadDestination` | Should be `Video Feedback` (Lambda also validates on asset row) |
+| `targetRecordId`, `targetTable`, `sourceTable`, `sentAtIso`, `sourceName` | Optional — log/trace only |
+
+### Environment and storage (DEV only)
+
+| Item | Value |
+|------|--------|
+| **Airtable base** | `appTetnuCZlCZdTCT` — **hard-block** production base `appn84sqPw03zEbTT` in Lambda config |
+| **S3 bucket** | `shooting-challenge-assets` |
+| **Region** | `us-east-2` (function config + boto3; do **not** set reserved `AWS_REGION` in Lambda env) |
+| **Function name** | `127si-dev-shooting-challenge-asset-upload` |
+
+### Lambda owns (authoritative upload runtime)
+
+1. GET **Submission Assets** row for `submissionAssetRecordId`
+2. Validate `Upload Destination = Video Feedback`, `Upload Status = Pending Link`, attachment + Video Feedback link
+3. Download attachment bytes from Airtable CDN URL
+4. **SHA-256** from downloaded bytes
+5. **C-023** duplicate lookup + writeback (flag-only; upload continues)
+6. **S3 PutObject** to canonical key pattern (see §11)
+7. **C-013 Airtable writeback** on **Submission Assets** — canonical URL, storage key, hash, algorithm, uploaded at, size, MIME, clear upload error
+8. Structured JSON response to Make
+
+**Do not clear** Airtable Attachment. **Do not remove** Google Drive fields.
+
+### Auth and credentials
+
+| Item | Rule |
+|------|------|
+| **Function URL** | `auth-type: NONE` acceptable for DEV bootstrap |
+| **Shared secret** | **`X-Upload-Secret` header required before exposing Function URL** — validated against `UPLOAD_WEBHOOK_SECRET` in Lambda env |
+| **Secret storage** | Lambda env + Make scenario header only — **never GitHub** |
+| **AWS credentials** | Lambda **IAM execution role** (`s3:PutObject` on `shooting-challenge/*`) — **not** long-term access keys in Lambda env |
+| **Airtable** | PAT in Lambda env or Secrets Manager — scopes `data.records:read` + `write` on DEV |
+
+**Pre-deploy code gap:** `X-Upload-Secret` validation is **documented here** but **not implemented** in `handler.py` / `upload_core` yet — add before Function URL is shared.
+
+### SDK CLI vs Lambda
+
+| Runtime | Role |
+|---------|------|
+| **`c013_dev_s3_upload_proof.py`** | **Dry-run / regression** — default dry-run; `--confirm-write` for controlled ops |
+| **Lambda** | **Live upload path** — **no dry-run mode** for DEV gate; idempotent skip if already Uploaded + canonical + hash |
+| **Local handler test** | `c013_dev_lambda_invoke.py` — in-process, no AWS deploy |
+
+### Gate — 070b stays OFF until
+
+1. Direct Lambda test PASS (Function URL or `aws lambda invoke`) on fresh H2 **Pending Link** asset  
+2. DEV Make manual test PASS (webhook → HTTP → Lambda → probe `allPass=true`)  
+3. Mike approval  
+
+**This review:** no AWS resources created, no Lambda deploy, no Make scenario changes, no Airtable automation changes, no web changes.
+
+---
+
 ## 1. Lambda function name recommendation
 
 | Scope | Name | Notes |
