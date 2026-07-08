@@ -20,6 +20,7 @@ class UploadConfig:
     season_slug: str
     challenge_slug: str
     athlete_slug_override: str | None
+    upload_webhook_secret: str | None
 
     @classmethod
     def from_env(cls) -> UploadConfig:
@@ -46,4 +47,5 @@ class UploadConfig:
             season_slug=os.getenv("SEASON_SLUG", "2026-2027"),
             challenge_slug=os.getenv("CHALLENGE_SLUG", "shooting-challenge"),
             athlete_slug_override=os.getenv("ATHLETE_SLUG_OVERRIDE") or None,
+            upload_webhook_secret=os.getenv("UPLOAD_WEBHOOK_SECRET") or None,
         )

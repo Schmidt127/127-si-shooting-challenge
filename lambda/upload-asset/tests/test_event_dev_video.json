@@ -3,7 +3,8 @@
   "routeKey": "$default",
   "rawPath": "/",
   "headers": {
-    "content-type": "application/json"
+    "content-type": "application/json",
+    "x-upload-secret": "REPLACE_FROM_LAMBDA_ENV_NOT_GITHUB"
   },
   "requestContext": {
     "http": {

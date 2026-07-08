@@ -30,7 +30,7 @@ Creates or updates:
 
 - IAM role `127si-dev-shooting-challenge-asset-upload-role` (inline policy from [iam-policy-dev.json](./iam-policy-dev.json))
 - Lambda `127si-dev-shooting-challenge-asset-upload` (Python 3.12, 120s, 512MB)
-- Function URL (`auth-type` NONE — add `X-Upload-Secret` in Make later)
+- Function URL (`auth-type` NONE — **`X-Upload-Secret` validated in handler**)
 
 **Do not set `AWS_REGION` in Lambda environment variables** — reserved by Lambda runtime. Region comes from function config (`us-east-2`).
 
@@ -46,6 +46,9 @@ Creates or updates:
 | `ALLOW_ROUTE_KEYS` | `video_feedback` |
 | `SEASON_SLUG` | `2026-2027` |
 | `CHALLENGE_SLUG` | `shooting-challenge` |
+| `UPLOAD_WEBHOOK_SECRET` | Random string (secret — required; set in `tools/airtable/.env` for deploy script) |
+
+**Auth:** Every POST must send header `X-Upload-Secret` matching `UPLOAD_WEBHOOK_SECRET`. Missing/invalid → **401**, no Airtable PATCH.
 
 ## IAM (current DEV policy)
 
@@ -56,7 +59,7 @@ See [iam-policy-dev.json](./iam-policy-dev.json).
 | `s3:PutObject` | `arn:aws:s3:::shooting-challenge-assets/shooting-challenge/*` |
 | `logs:CreateLogGroup`, `CreateLogStream`, `PutLogEvents` | `/aws/lambda/127si-dev-shooting-challenge-asset-upload:*` |
 
-**Tightening follow-up:** Restrict logs to `PutLogEvents` only; move Airtable token to Secrets Manager; add optional `X-Upload-Secret` validation; restrict Function URL by WAF or IAM if Make supports SigV4.
+**Tightening follow-up:** Restrict logs to `PutLogEvents` only; move Airtable token to Secrets Manager; restrict Function URL by WAF if needed.
 
 ## Post-deploy smoke
 

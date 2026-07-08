@@ -47,8 +47,9 @@ cd lambda/upload-asset
 | `ALLOW_ROUTE_KEYS` | `video_feedback` |
 | `SEASON_SLUG` | `2026-2027` |
 | `CHALLENGE_SLUG` | `shooting-challenge` |
+| `UPLOAD_WEBHOOK_SECRET` | Random string (secret — Lambda env + Make header only) |
 
-**Note:** Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function.
+**Note:** Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function. **`X-Upload-Secret` required** on every request when `UPLOAD_WEBHOOK_SECRET` is set.
 
 ## Make integration (not enabled yet)
 

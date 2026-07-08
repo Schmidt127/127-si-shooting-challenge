@@ -91,6 +91,11 @@ $EnvVars = @{
     SEASON_SLUG = "2026-2027"
     CHALLENGE_SLUG = "shooting-challenge"
 }
+if ($env:UPLOAD_WEBHOOK_SECRET) {
+    $EnvVars["UPLOAD_WEBHOOK_SECRET"] = $env:UPLOAD_WEBHOOK_SECRET
+} else {
+    Write-Warning "UPLOAD_WEBHOOK_SECRET not set — Lambda will return 401 until configured"
+}
 $EnvJson = (@{ Variables = $EnvVars } | ConvertTo-Json -Compress -Depth 5)
 # AWS CLI requires strict JSON; write temp file to avoid PowerShell escaping issues
 $EnvFile = Join-Path $PSScriptRoot "dist\lambda-env.json"

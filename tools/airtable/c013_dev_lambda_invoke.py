@@ -44,7 +44,11 @@ def invoke_local(payload: dict) -> dict:
     sys.path.insert(0, str(LAMBDA_ROOT))
     from handler import lambda_handler
 
-    event = {"body": json.dumps(payload)}
+    headers: dict[str, str] = {"content-type": "application/json"}
+    secret = os.getenv("UPLOAD_WEBHOOK_SECRET")
+    if secret:
+        headers["X-Upload-Secret"] = secret
+    event = {"headers": headers, "body": json.dumps(payload)}
     resp = lambda_handler(event, None)
     body = json.loads(resp["body"])
     return {"statusCode": resp["statusCode"], "body": body}
@@ -53,7 +57,14 @@ def invoke_local(payload: dict) -> dict:
 def invoke_aws(payload: dict) -> dict:
     event_path = HERE / "_preview" / "_lambda_invoke_event.json"
     event_path.parent.mkdir(parents=True, exist_ok=True)
-    event_path.write_text(json.dumps({"body": json.dumps(payload)}) + "\n", encoding="utf-8")
+    headers: dict[str, str] = {"content-type": "application/json"}
+    secret = os.getenv("UPLOAD_WEBHOOK_SECRET")
+    if secret:
+        headers["X-Upload-Secret"] = secret
+    event_path.write_text(
+        json.dumps({"headers": headers, "body": json.dumps(payload)}) + "\n",
+        encoding="utf-8",
+    )
     out_path = HERE / "_preview" / "_lambda_invoke_response.json"
     cmd = [
         "aws",
@@ -90,6 +101,10 @@ def main() -> None:
     os.environ.setdefault("AWS_REGION", "us-east-2")
     if os.getenv("AWS_ACCESS_KEY_ID"):
         os.environ.pop("AWS_PROFILE", None)
+    if not os.getenv("UPLOAD_WEBHOOK_SECRET"):
+        raise SystemExit(
+            "ERROR: UPLOAD_WEBHOOK_SECRET required in tools/airtable/.env for Lambda invoke (not committed)"
+        )
 
     payload = build_payload(args.asset_id, args.target_record_id)
     if args.aws:

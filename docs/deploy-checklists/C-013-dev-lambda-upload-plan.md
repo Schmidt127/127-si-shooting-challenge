@@ -92,7 +92,7 @@ Airtable 070b (v4.1 payload)
 | **AWS credentials** | Lambda **IAM execution role** (`s3:PutObject` on `shooting-challenge/*`) — **not** long-term access keys in Lambda env |
 | **Airtable** | PAT in Lambda env or Secrets Manager — scopes `data.records:read` + `write` on DEV |
 
-**Pre-deploy code gap:** `X-Upload-Secret` validation is **documented here** but **not implemented** in `handler.py` / `upload_core` yet — add before Function URL is shared.
+**Pre-deploy code gap:** ~~`X-Upload-Secret` validation documented but not coded~~ **IMPLEMENTED** (2026-07-08) — `upload_core/auth.py` + `handler.py`; see `lambda/upload-asset/tests/test_auth.py`.
 
 ### SDK CLI vs Lambda
 
