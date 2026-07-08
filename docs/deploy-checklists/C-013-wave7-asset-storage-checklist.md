@@ -1,7 +1,7 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 2 partial PASS (2026-07-07)** — DEV S3 upload + **Canonical File URL** / **Storage Key** writeback proven on one video asset (`recBBi80bYuxXifVj`); **C-023 `File Content Hash` still pending**. S3 is **not** full source of truth until hash + harness pass. No Production changes.  
+**Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) uploaded one video asset to S3 with **full writeback** (canonical URL + storage key + **SHA-256 hash**). Verifier `allPass=true` on `recBBi80bYuxXifVj`. Make S3 module still times out; **070a/070b OFF**; Production untouched. **Not** full migration.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
@@ -15,7 +15,60 @@
 |------|------|-------|
 | [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
 | [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI report stale; Metadata API later confirmed fields |
-| [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) | 2026-07-07 (EOD) | Partial PASS artifact — resume here tomorrow |
+| [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) | 2026-07-07 (EOD) | Make partial PASS (no hash) |
+| [c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) | 2026-07-08 | **SDK live proof** — S3 + full writeback |
+| [c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json) | 2026-07-08 | Probe verify `allPass=true` |
+
+---
+
+## 2026-07-08 — DEV SDK proof PASS (C-013 + C-023 hash writeback)
+
+**Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)  
+**Record:** `recBBi80bYuxXifVj` (Video Feedback / **070b** route)  
+**Verifier:** `allPass=true` — [verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
+
+### Status summary
+
+| Track | Status |
+|-------|--------|
+| **C-013 DEV S3 + canonical writeback** | **PASS** (SDK, one video asset) |
+| **C-023 hash writeback** | **PASS** (SHA-256 on asset row) |
+| **C-023 duplicate lookup (module 52)** | **PENDING** — not in SDK script |
+| **Make DEV scenario S3 path** | **BLOCKED** — S3 Upload module times out |
+| **DEV 070a/070b connection** | **NOT STARTED** |
+| **C-020 H2 harness** | **NOT STARTED** |
+| **Production cutover** | **NOT STARTED** |
+
+### Confirmed writeback
+
+| Field | Value |
+|-------|-------|
+| **Upload Status** | `Uploaded` |
+| **Canonical File URL** | `https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png` |
+| **Storage Key** | `shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png` |
+| **File Content Hash** | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` |
+| **File Hash Algorithm** | `SHA-256` |
+| **Uploaded At** | `2026-07-08T14:15:37.412Z` |
+| **File Size Bytes** | `67730` |
+| **File MIME Type** | `image/png` |
+| **Upload Error** | blank |
+| **Airtable Attachment** | retained |
+| **Writeback Complete?** | `1` |
+
+### What this proves vs not
+
+**Proven:** DEV program S3 bucket accepts upload; Airtable DEV accepts full §6 success writeback including **true byte-hash**; Mike path pattern works via SDK (`season/challenge/athlete-slug` + dated filename).
+
+**Not proven:** Make.com end-to-end path; homework route; **070a/070b** automation send; C-020 **H2**; duplicate-hash detection; attachment cleanup; Production; formula/view cutover.
+
+### Next steps (ordered)
+
+1. Decide upload runtime for DEV harness: fix Make S3, Lambda, or interim **SDK/Make webhook hybrid**.
+2. **Do not** enable **070a/070b** until upload path for harness is chosen and tested.
+3. C-020 **H2** video test after **070b** wiring decision.
+4. Optional: C-023 duplicate lookup (module 52) in chosen runtime.
+
+**Hard stops unchanged:** No Production; no attachment clear; no Drive removal; no canonical URL formula cutover yet.
 
 ---
 
@@ -134,53 +187,25 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 ---
 
-## 2026-07-08 — C-023 hash patch (in progress)
+## 2026-07-08 — C-023 hash patch (SDK path — PASS)
 
-**Active task:** Add SHA-256 hash module to DEV Make scenario → re-test manual webhook → document full PASS.
+**Result:** **PASS** via [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) — see [SDK proof section](#2026-07-08--dev-sdk-proof-pass-c-013--c-023-hash-writeback). Make hash/S3 modules still blocked (S3 timeout).
 
-| Track | Status |
-|-------|--------|
-| **C-013 DEV S3 partial writeback proof** | **PASS** (2026-07-07) |
-| **C-023 hash completion** | **IN PROGRESS** — Make hash + **Make S3 timeout**; use [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) (AWS SDK) |
-| **Dynamic path mapping** | **PENDING** |
-| **DEV 070a/070b connection** | **NOT STARTED** |
-| **Production cutover** | **NOT STARTED** |
+### 2026-07-08 End-of-test — C-023 hash SDK proof
 
-**Mike action:** Run AWS SDK proof (Make S3 module times out):
-
-```powershell
-cd tools/airtable
-pip install -r requirements.txt
-# Dry-run (download + hash + planned key — no writes):
-python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike `
-  --out _preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-dry-run.json
-# Live (requires AWS + Airtable write scopes in .env — never commit):
-python c013_dev_s3_upload_proof.py recBBi80bYuxXifVj --athlete-slug schmidt-mike --confirm-write `
-  --out _preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json
-```
-
-Make hash patch runbook still applies if S3 module is fixed later: [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md).
-
-### 2026-07-08 End-of-test — C-023 hash manual webhook
-
-**Status:** **PENDING** — fill after hash re-test PASS.
+**Status:** **PASS** — `allPass=true` on `recBBi80bYuxXifVj`.
 
 | Check | Result |
 |-------|--------|
-| File Content Hash populated | *pending* |
-| All §6 success fields | *pending* |
-| Upload Error blank on success | *pending* |
-| Probe `allPass` | *pending* |
+| File Content Hash populated | **PASS** — 64-char SHA-256 |
+| All §6 success fields | **PASS** |
+| Upload Error blank on success | **PASS** |
+| Probe `allPass` | **PASS** |
+| Airtable Attachment retained | **PASS** |
 
-**After PASS:**
+**Artifacts:** [live proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
-1. Save probe output: `tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json`
-2. Set **C-023 hash completion** → **PASS** (hash writeback only; duplicate lookup module 52 still optional)
-3. Proceed to dynamic path mapping (step **C**) before **070b**
-
-```powershell
-python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifVj --out tools/airtable/_preview/c013-dev-s3-writeback-full-pass-recBBi80bYuxXifVj.json
-```
+**Next:** Upload runtime decision for **070b** + C-020 **H2** — not Make S3 until timeout fixed.
 
 ---
 
@@ -188,7 +213,7 @@ python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bY
 
 **Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.
 
-**2026-07-07:** One DEV video asset (`recBBi80bYuxXifVj`) has canonical URL + storage key — **partial** proof only; **File Content Hash** still empty ([artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)).
+**2026-07-08:** One DEV video asset has **full** SDK writeback including hash ([verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)). Make S3 path still blocked.
 
 ### 1. Current source of truth (today on DEV)
 
@@ -196,9 +221,9 @@ python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bY
 |-------|------|
 | **Airtable Attachment** | Still the **transient file source** at intake — **009** copies from Submissions; **020/013/070** still gate on it |
 | **Google Drive File URL** | Still the **legacy uploaded-file bridge** — 40/49 DEV assets have Drive URL; formulas/views/**022** still use it |
-| **Canonical File URL** | Field **exists** on DEV schema — **1/49** populated (partial PASS 2026-07-07, one video test) |
-| **Storage Key** | Field **exists** on DEV schema — **1/49** populated (same test) |
-| **File Content Hash** | Field exists — **0/49 populated** (C-023 hash module pending in DEV Make) |
+| **Canonical File URL** | Field exists — **1+** populated (SDK proof `recBBi80bYuxXifVj`) |
+| **Storage Key** | Field exists — **1+** populated (same) |
+| **File Content Hash** | Field exists — **1+** populated (SDK proof 2026-07-08) |
 
 ### 2. Target source of truth (C-013 end state)
 
@@ -214,14 +239,15 @@ python tools/airtable/_probe_c013_asset_storage_fields.py --record-id recBBi80bY
 
 Do **not** repoint formulas, views, **022**, **070a/b**, coach queues, or emails away from **Google Drive File URL** or **Airtable Attachment** until **DEV Make S3 writeback** proves on test assets:
 
-- [x] Upload succeeds (`Upload Status = Uploaded`) — **one video asset** 2026-07-07
-- [x] **Canonical File URL** populated — same asset
-- [x] **Storage Key** populated — same asset
-- [ ] **File Content Hash** (+ algorithm) populated — **algorithm only** on test row; digest **pending**
+- [x] Upload succeeds (`Upload Status = Uploaded`) — SDK proof 2026-07-08
+- [x] **Canonical File URL** populated — same
+- [x] **Storage Key** populated — same
+- [x] **File Content Hash** (+ algorithm) populated — SDK proof `allPass=true`
 - [x] Old **Airtable Attachment** still present until explicit cleanup step (Slice 4)
 - [ ] Downstream homework / video coach views still work *(not re-validated on canonical URL yet)*
+- [ ] **Runtime for harness:** Make S3 still times out — decide Make fix vs Lambda vs SDK hybrid before **070b**
 
-Only after **full** Slice 2 success (including hash) → enable **070a/b** on DEV → Slice 3 (automations/formulas) and Slice 4 (attachment clear + C-020 H1–H4).
+Only after **upload runtime** chosen + **070b** wired + C-020 **H2** → Slice 3 (automations/formulas) and Slice 4 (attachment clear + full H1–H4).
 
 ---
 
@@ -492,13 +518,13 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
 - [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [~] **Slice 2 — DEV Make S3 upload/writeback proof** — **partial PASS** 2026-07-07 ([mapping](./C-013-make-s3-writeback-mapping.md) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)): S3 + canonical URL + storage key on `recBBi80bYuxXifVj`; **File Content Hash pending**
-- [ ] Slice 2 complete — hash module + full manual re-test
+- [x] **Slice 2 — DEV S3 upload/writeback proof** — **SDK PASS** 2026-07-08 ([proof](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)): full writeback + hash on `recBBi80bYuxXifVj`. Make S3 path still blocked.
+- [ ] Slice 2 Make path — fix S3 timeout or choose Lambda (optional if SDK/hybrid is interim runtime)
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc
-- [ ] C-013 status → DEV verified *(partial: S3/canonical only)*
-- [ ] C-023 status → DEV verified (hash + duplicate flag) — **pending hash module**
+- [~] C-013 status → DEV verified *(SDK proof one asset; Make path blocked; not prod)*
+- [~] C-023 status → DEV verified *(hash writeback PASS; duplicate lookup module 52 pending)*
 
 ---
 

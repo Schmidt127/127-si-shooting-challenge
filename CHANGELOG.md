@@ -9,8 +9,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Make
 
 #### Changed
-- **C-013 DEV S3 SDK proof script (2026-07-08)** — `tools/airtable/c013_dev_s3_upload_proof.py`: DEV-only download → SHA-256 → S3 `PutObject` → Airtable writeback; bypasses Make S3 timeout. Dry-run default; `--confirm-write` for live. Requires `boto3` + AWS creds in `.env` (not committed).
-- **C-013 DEV S3 hash patch (2026-07-08)** — [C-013-dev-s3-hash-patch.md](./make/documentation/C-013-dev-s3-hash-patch.md): insert SHA-256 after HTTP download; re-test webhook; probe `--record-id` for writeback verification. Pre-hash baseline: `c013-dev-s3-writeback-pre-hash-recBBi80bYuxXifVj.json` (`allPass=false`, hash only gap).
+- **C-013/C-023 DEV SDK proof PASS (2026-07-08)** — `c013_dev_s3_upload_proof.py` live run on `recBBi80bYuxXifVj`: S3 upload + full Airtable writeback including SHA-256 hash; probe `allPass=true`. [Wave 7 SDK proof](./docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md#2026-07-08--dev-sdk-proof-pass-c-013--c-023-hash-writeback).
+- **C-013 DEV S3 SDK proof script (2026-07-08)** — `tools/airtable/c013_dev_s3_upload_proof.py`: DEV-only download → SHA-256 → S3 `PutObject` → Airtable writeback; bypasses Make S3 timeout.
 
 ### Airtable
 

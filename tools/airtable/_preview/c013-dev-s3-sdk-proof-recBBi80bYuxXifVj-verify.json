@@ -1,0 +1,34 @@
+{
+  "probeScript": "_probe_c013_asset_storage_fields.py",
+  "probedAt": "2026-07-08T14:17:16Z",
+  "baseId": "appTetnuCZlCZdTCT",
+  "mode": "single_record_writeback_check",
+  "submissionAsset": {
+    "recordId": "recBBi80bYuxXifVj",
+    "fields": {
+      "Upload Status": "Uploaded",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+      "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png",
+      "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "File Hash Algorithm": "SHA-256",
+      "Uploaded At": "2026-07-08T14:15:37.412Z",
+      "Upload Error": null,
+      "Airtable Attachment": "present",
+      "Writeback Complete?": 1
+    },
+    "writebackVerification": {
+      "allPass": true,
+      "checks": {
+        "uploadStatusUploaded": true,
+        "canonicalUrlPopulated": true,
+        "storageKeyPopulated": true,
+        "fileContentHashPopulated": true,
+        "fileHashAlgorithmSha256": true,
+        "uploadedAtPopulated": true,
+        "uploadErrorBlank": true,
+        "attachmentRetained": true,
+        "writebackCompleteFormula": true
+      }
+    }
+  }
+}

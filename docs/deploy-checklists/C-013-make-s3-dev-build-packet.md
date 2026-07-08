@@ -5,7 +5,7 @@
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
 **Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
-**Status (2026-07-08):** **Hash patch in progress** — Make S3 Upload module **times out** on DEV; use **[AWS SDK proof script](../../tools/airtable/c013_dev_s3_upload_proof.py)** for DEV upload + hash writeback instead.
+**Status (2026-07-08):** **SDK proof PASS** — [c013_dev_s3_upload_proof.py](../../tools/airtable/c013_dev_s3_upload_proof.py) full writeback + hash on `recBBi80bYuxXifVj` (`allPass=true`). Make S3 module **times out** — use SDK for DEV proof. **Not** full migration.
 
 ---
 
@@ -258,7 +258,22 @@ shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-fe
 
 **What this proves:** DEV Make can upload a Submission Asset attachment to program S3 and write back **Canonical File URL** + **Storage Key** for a **video** route. **What this does not prove:** full C-013 migration, homework path, C-020 harness, **070a/070b** automation send, **C-023** hash/dedupe, attachment cleanup, or Production.
 
-**Do not enable DEV 070a/070b** until **File Content Hash** is populated on a repeat manual test (full §6 success contract).
+**Do not enable DEV 070a/070b** until upload **runtime** for harness is decided (Make S3 fix vs Lambda vs hybrid) and C-020 **H2** plan is approved.
+
+### 8.2 SDK proof PASS (2026-07-08)
+
+**Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` · **Record:** `recBBi80bYuxXifVj` · **Verifier:** `allPass=true`
+
+| Field | Confirmed |
+|-------|-----------|
+| Canonical File URL | `…/2026-07-08-video-feedback-recBBi80bYuxXifVj-BlueOrangeCircleLogo.png` |
+| Storage Key | same key path |
+| File Content Hash | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` |
+| File Hash Algorithm | `SHA-256` |
+| Upload Error | blank |
+| Attachment | retained |
+
+**Artifacts:** [live](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj.json) · [verify](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
 ---
 
@@ -311,8 +326,8 @@ Confirm **009/020/013** unchanged; each new asset gets canonical URL + key + has
 - [x] Airtable modules use DEV base `appTetnuCZlCZdTCT`
 - [x] Drive modules removed; S3 upload inserted
 - [x] Placeholders §2 filled in Make (bucket `shooting-challenge-assets`; webhook in Make only)
-- [~] Manual webhook test §8 — **partial PASS** on `recBBi80bYuxXifVj` (S3 + canonical OK; **File Content Hash pending**)
-- [ ] **Hash patch** — [C-013-dev-s3-hash-patch.md](../../make/documentation/C-013-dev-s3-hash-patch.md) → re-test → full §8 PASS
+- [x] Manual webhook / SDK test — **SDK PASS** 2026-07-08 (`allPass=true`, hash included)
+- [ ] Upload runtime for harness (Make S3 fix / Lambda / hybrid) before **070a/b**
 - [ ] DEV **070a/b** enabled with DEV webhook URL only *(after full Slice 2 PASS)*
 - [ ] C-020 H1–H4 PASS
 - [~] Record results in Wave 7 checklist — **end-of-night checkpoint** 2026-07-07

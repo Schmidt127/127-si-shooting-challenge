@@ -4,7 +4,7 @@
 **Do not edit:** Production Upload Engine scenario  
 **References:** [build packet](../../docs/deploy-checklists/C-013-make-s3-dev-build-packet.md) · [writeback mapping](../../docs/deploy-checklists/C-013-make-s3-writeback-mapping.md)
 
-**Active task (2026-07-08):** **[C-013-dev-s3-hash-patch.md](./C-013-dev-s3-hash-patch.md)** — insert SHA-256 hash after module 3; map **File Content Hash** on Airtable update; re-test webhook.
+**Active task (2026-07-08):** **SDK proof PASS** — next: upload runtime decision for **070b** + C-020 **H2**. Make S3 still times out.
 
 **Manual test asset:** `recBBi80bYuxXifVj` — **VIDEO** / **070b**. Retest: [c013-hash-retest-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-hash-retest-webhook-recBBi80bYuxXifVj.json) · Partial PASS: [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
 
