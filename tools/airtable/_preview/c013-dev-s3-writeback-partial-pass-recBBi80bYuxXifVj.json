@@ -1,20 +1,48 @@
 {
-  "purpose": "C-013 Slice 2 DEV manual Make S3 writeback — partial PASS record (read-only doc artifact)",
+  "purpose": "C-013 Slice 2 DEV manual Make S3 writeback — partial PASS + 2026-07-07 end-of-night checkpoint",
   "recordedAt": "2026-07-07",
+  "checkpoint": "end-of-night",
   "result": "partial_PASS",
+  "statusSummary": {
+    "c013DevS3PartialWritebackProof": "PASS",
+    "c023HashCompletion": "PENDING",
+    "dynamicPathMapping": "PENDING",
+    "dev070a070bConnection": "NOT_STARTED",
+    "productionCutover": "NOT_STARTED"
+  },
   "notFullMigration": true,
   "c023HashComplete": false,
   "baseId": "appTetnuCZlCZdTCT",
   "table": "Submission Assets",
   "recordId": "recBBi80bYuxXifVj",
   "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "makeModulesWorking": [
+    "1 Custom webhook",
+    "2 Airtable Get Record",
+    "3 HTTP Make a request — download Airtable Attachment URL",
+    "4 Amazon S3 Upload a file",
+    "5 Airtable Update Record — canonical S3 fields"
+  ],
+  "makeModulesPending": [
+    "SHA-256 hash module (File Content Hash)",
+    "Dynamic Storage Key / filename / canonical URL builders",
+    "C-023 duplicate lookup (module 52)",
+    "Upload Error clear-on-success verification",
+    "Scenario error handler"
+  ],
   "s3Bucket": "shooting-challenge-assets",
+  "s3Region": "us-east-2",
   "route": {
     "automationNumber": "070b",
     "routeKey": "video_feedback",
     "uploadDestination": "Video Feedback",
     "targetTable": "Video Feedback",
     "targetRecordId": "recjdf9cSiw1ADs0T"
+  },
+  "pathPatternsMike20260707": {
+    "folderPrefix": "shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}",
+    "fileName": "{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}",
+    "note": "Hardcoded test values in Make tonight — dynamic mapping pending"
   },
   "confirmedWriteback": {
     "Upload Status": "Uploaded",
@@ -27,8 +55,19 @@
   },
   "remainingGap": {
     "File Content Hash": "blank — hash module not wired in DEV Make scenario yet",
-    "c023Status": "pending — duplicate lookup (module 52) not proven",
-    "nextMakeWork": "Add SHA-256 hash module (v2 module 50 or Make Crypto); map digest to File Content Hash on success writeback"
+    "Upload Error": "verify cleared on success on next run",
+    "dynamicPathMapping": "convert hardcoded folder/file/canonical URL to Make field mappings",
+    "canonicalUrlMode": "direct S3 HTTPS tonight; CloudFront/presigned decision pending",
+    "c023Status": "pending — duplicate lookup (module 52) not proven"
+  },
+  "tomorrowMorningSequence": {
+    "A": "Add/confirm Make hash step for File Content Hash",
+    "B": "Write File Content Hash to Submission Assets on success update",
+    "C": "Convert hardcoded folder/file/canonical URL to dynamic mappings",
+    "D": "Re-test same video asset or fresh Pending Link video asset",
+    "E": "Document full C-013/C-023 manual webhook PASS",
+    "F": "Only after manual PASS — prepare controlled DEV 070b connection",
+    "G": "Run C-020 H2 video test before homework H1"
   },
   "provenScope": "One video Submission Asset — S3 upload + Canonical File URL + Storage Key writeback on DEV; not homework path; not C-020 harness; not Production",
   "hardStopsStillInForce": [
@@ -36,7 +75,9 @@
     "Do not clear Airtable Attachment",
     "Do not remove Google Drive fields",
     "Do not switch formulas/views/scripts to Canonical File URL",
-    "Do not touch Production"
+    "Do not touch Production",
+    "Do not store secrets/env values in repo"
   ],
-  "preflightArtifact": "c013-manual-webhook-recBBi80bYuxXifVj.json"
+  "preflightArtifact": "c013-manual-webhook-recBBi80bYuxXifVj.json",
+  "resumeDoc": "docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof"
 }

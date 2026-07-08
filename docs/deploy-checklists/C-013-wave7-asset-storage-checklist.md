@@ -15,6 +15,122 @@
 |------|------|-------|
 | [c013-dev-baseline.json](../../tools/airtable/_preview/c013-dev-baseline.json) | 2026-07-07 (first probe) | Both canonical fields missing |
 | [c013-dev-baseline-before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) | 2026-07-07 (post-OMNI) | OMNI report stale; Metadata API later confirmed fields |
+| [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) | 2026-07-07 (EOD) | Partial PASS artifact — resume here tomorrow |
+
+---
+
+## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+
+**Resume here tomorrow morning.** Mike stopped for the night after first live DEV Make S3 proof. Production untouched.
+
+### Status summary
+
+| Track | Status |
+|-------|--------|
+| **C-013 DEV S3 partial writeback proof** | **PASS** |
+| **C-023 hash completion** | **PENDING** |
+| **Dynamic path mapping** | **PENDING** (hardcoded test values in Make tonight) |
+| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production cutover** | **NOT STARTED** |
+
+### Make scenario (DEV only)
+
+**Name:** `Shooting Challenge - DEV - Upload Engine - S3 - v1`
+
+| # | Module | Status tonight |
+|---|--------|----------------|
+| 1 | Custom webhook | Working |
+| 2 | Airtable Get Record | Working |
+| 3 | HTTP Make a request — download Airtable Attachment URL | Working |
+| 4 | Amazon S3 Upload a file → bucket `shooting-challenge-assets` | Working |
+| 5 | Airtable Update Record — canonical S3 fields on Submission Assets | Working |
+
+**Not built yet:** SHA-256 hash module; duplicate lookup (C-023 module 52); dynamic Storage Key / filename / canonical URL builders; error-handler branch; **Upload Error** clear-on-success verification.
+
+### Tested record and route
+
+| Item | Value |
+|------|-------|
+| **Base** | DEV `appTetnuCZlCZdTCT` |
+| **Table** | Submission Assets |
+| **Record** | `recBBi80bYuxXifVj` |
+| **Route** | Video Feedback — **070b**-style webhook (`routeKey = video_feedback`) |
+| **Bucket** | `shooting-challenge-assets` (us-east-2) |
+
+### Mike’s path patterns (chosen tonight — still hardcoded in Make)
+
+**Folder (Storage Key prefix):**
+
+```text
+shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}
+```
+
+**File name segment:**
+
+```text
+{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}
+```
+
+**Full Storage Key (tested):**
+
+```text
+shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+**Canonical File URL (tested — direct S3 HTTPS; CloudFront/presigned decision pending):**
+
+```text
+https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+### Confirmed partial PASS (Airtable writeback)
+
+- Make received webhook payload
+- Airtable Get Record worked
+- HTTP module downloaded Airtable Attachment
+- S3 upload worked
+- Airtable Update Record worked
+- **Upload Status** = `Uploaded`
+- **Storage Key** populated
+- **Canonical File URL** populated
+- **File Hash Algorithm** = `SHA-256`
+- **Uploaded At** populated
+- **Airtable Attachment** stayed in place
+- **Writeback Complete?** = `1`
+
+### Known remaining gaps
+
+- **File Content Hash** still blank — hash module not added
+- **Upload Error** clearing on success — verify/document on next run
+- S3 path/file/canonical URL still **hardcoded test values** — convert to dynamic Make mappings from Get Record fields
+- Canonical URL uses **direct S3 URL**; final CloudFront vs presigned decision pending
+- DEV **070a/070b** not enabled
+- Production untouched
+- Attachments not cleared; Google Drive fields not removed
+- Formulas/views/scripts not switched to Canonical File URL
+
+### Tomorrow morning — next-step sequence
+
+| Step | Task |
+|------|------|
+| **A** | Add/confirm Make hash step for **File Content Hash** (v2 module **50** or Make Crypto SHA-256) |
+| **B** | Write **File Content Hash** (+ confirm **File Hash Algorithm = SHA-256**) on success Airtable update |
+| **C** | Convert hardcoded folder/file/canonical URL values to **dynamic** mappings (`seasonSlug`, `challengeSlug`, `athleteSlug`, date, asset type, record id, safe filename) |
+| **D** | Re-test same video asset or a fresh `Pending Link` video asset via manual webhook |
+| **E** | Document **full** C-013/C-023 manual webhook PASS (all §6 success fields including hash) |
+| **F** | **Only after manual PASS** — prepare controlled DEV **070b** connection (webhook URL in Make only; do not paste Production) |
+| **G** | Run C-020 **H2** video test **before** homework **H1** |
+
+### Hard stops (still in force)
+
+- Do **not** enable DEV **070a/070b** tonight or before full manual PASS
+- Do **not** touch Production
+- Do **not** clear Airtable attachments
+- Do **not** remove Google Drive fields
+- Do **not** switch formulas/views/scripts to Canonical File URL
+- Do **not** store secrets/env values in repo (webhook URL, AWS creds → Make only)
+
+**Artifacts:** [preflight](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · [partial PASS](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)
 
 ---
 

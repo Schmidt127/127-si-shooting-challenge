@@ -5,7 +5,27 @@
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
 **Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
-**Status (2026-07-07):** **Partial PASS** — DEV manual S3 + canonical writeback proven on one video asset; **C-023 hash writeback still pending** (see §8.1). **Not** full C-013/C-023 completion.
+**Status (2026-07-07 EOD):** **Partial PASS** — see [Wave 7 end-of-night checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof). **Not** full C-013/C-023 completion.
+
+---
+
+## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+
+| Track | Status |
+|-------|--------|
+| **C-013 DEV S3 partial writeback proof** | **PASS** |
+| **C-023 hash completion** | **PENDING** |
+| **Dynamic path mapping** | **PENDING** |
+| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production cutover** | **NOT STARTED** |
+
+**Scenario:** `Shooting Challenge - DEV - Upload Engine - S3 - v1` — modules **1** webhook, **2** Get Record, **3** HTTP download, **4** S3 upload (`shooting-challenge-assets`), **5** Airtable success update. Hash module **not** added.
+
+**Tested:** `recBBi80bYuxXifVj` (Video Feedback / **070b**). **Storage Key:** `shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png`. **Canonical URL:** `https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png`.
+
+**Mike path patterns (hardcoded in Make — dynamic mapping tomorrow):** folder `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}`; file `{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}`.
+
+**Tomorrow:** A hash → B write hash → C dynamic paths → D re-test → E full PASS doc → F DEV **070b** prep → G C-020 **H2** before **H1**. Full sequence: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
 
 ---
 
@@ -240,6 +260,26 @@ shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-fe
 
 **Do not enable DEV 070a/070b** until **File Content Hash** is populated on a repeat manual test (full §6 success contract).
 
+---
+
+## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+
+Resume reference for Mike — full detail in [Wave 7 checklist](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
+
+| Track | Status |
+|-------|--------|
+| C-013 DEV S3 partial writeback proof | **PASS** |
+| C-023 hash completion | **PENDING** |
+| Dynamic path mapping | **PENDING** |
+| DEV 070a/070b connection | **NOT STARTED** |
+| Production cutover | **NOT STARTED** |
+
+**Working Make modules tonight:** (1) webhook → (2) Get Record → (3) HTTP download → (4) S3 upload → (5) Airtable update. **Missing:** hash module, dynamic key/URL builders.
+
+**Tomorrow A→G:** Hash step → write **File Content Hash** → dynamic path mappings → re-test video asset → document full PASS → DEV **070b** prep only → C-020 **H2** before **H1**.
+
+---
+
 ## 9. C-020 proof tests (after manual webhook passes)
 
 Enable DEV **070a/070b** with **DEV webhook URL only** → run via **115** harness (Schmidt `recgP9qZYjAhE7NXm`):
@@ -275,4 +315,4 @@ Confirm **009/020/013** unchanged; each new asset gets canonical URL + key + has
 - [ ] Add hash module + re-test → full §8 PASS
 - [ ] DEV **070a/b** enabled with DEV webhook URL only *(after full Slice 2 PASS)*
 - [ ] C-020 H1–H4 PASS
-- [~] Record results in Wave 7 checklist (partial PASS logged 2026-07-07)
+- [~] Record results in Wave 7 checklist — **end-of-night checkpoint** 2026-07-07

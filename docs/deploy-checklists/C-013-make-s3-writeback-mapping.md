@@ -2,8 +2,55 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **Partial PASS (2026-07-07)** — DEV S3 + canonical writeback proven on one video asset (`recBBi80bYuxXifVj`); **C-023 `File Content Hash` writeback still pending**. Use [build packet](./C-013-make-s3-dev-build-packet.md) §8.1 + [Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md). **Not** full migration.  
+**Status:** **Partial PASS (2026-07-07 EOD)** — see [end-of-night checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof). **Not** full migration.  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
+
+---
+
+## 2026-07-07 End-of-night checkpoint — DEV S3 partial writeback proof
+
+| Track | Status |
+|-------|--------|
+| **C-013 DEV S3 partial writeback proof** | **PASS** |
+| **C-023 hash completion** | **PENDING** |
+| **Dynamic path mapping** | **PENDING** |
+| **DEV 070a/070b connection** | **NOT STARTED** |
+| **Production cutover** | **NOT STARTED** |
+
+**Live DEV scenario:** `Shooting Challenge - DEV - Upload Engine - S3 - v1`. Working chain: webhook → Get Record → HTTP download attachment → S3 `shooting-challenge-assets` → Airtable success update on **Submission Assets**.
+
+**Test record:** `recBBi80bYuxXifVj` (Video Feedback / **070b**).
+
+**Tested Storage Key:**
+
+```text
+shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+**Tested Canonical File URL:**
+
+```text
+https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+### Mike path convention (2026-07-07 — hardcoded in Make; dynamic mapping pending)
+
+| Segment | Pattern |
+|---------|---------|
+| Folder prefix | `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}` |
+| File name | `{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` |
+
+Replaces earlier draft pattern `shooting-challenge/dev/{assetType}/{enrollmentRecordId}/…` for production path layout — update module **60** / **62** when converting to dynamic mappings (tomorrow step **C**).
+
+### Confirmed writeback fields (partial)
+
+`Upload Status = Uploaded`, **Storage Key**, **Canonical File URL**, **File Hash Algorithm = SHA-256**, **Uploaded At**, attachment retained, **Writeback Complete? = 1**. **File Content Hash** blank.
+
+### Tomorrow A→G
+
+A. Hash module → B. Write **File Content Hash** → C. Dynamic path/URL → D. Re-test video → E. Full manual PASS doc → F. DEV **070b** prep (after PASS) → G. C-020 **H2** before **H1**. Full detail: [Wave 7 checkpoint](./C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
+
+---
 
 ### Confirmed schema — File Hash Algorithm (OMNI 2026-07-07)
 
@@ -22,7 +69,7 @@ Make module **63** (success) and partial-failure paths must write the literal st
 **Working assumptions (Slice 2):**
 
 - Make.com first for DEV; Lambda deferred unless Make cannot hash/upload reliably.
-- **Storage Key pattern:** `shooting-challenge/dev/{assetType}/{enrollmentRecordId}/{submissionRecordId}/{assetRecordId}/{originalFileName}`
+- **Storage Key pattern (Mike 2026-07-07):** `shooting-challenge/{seasonSlug}/{challengeSlug}/{athleteSlug}/{date}-{assetType}-{assetRecordId}-{safeOriginalFileName}` — **hardcoded in Make tonight**; dynamic mapping pending (step **C**). Earlier draft `shooting-challenge/dev/{assetType}/…` superseded for path layout.
 - **Hash:** SHA-256
 - Attachments stay in Airtable until later cleanup slice.
 - **Google Drive File URL** stays legacy bridge until S3 proven.

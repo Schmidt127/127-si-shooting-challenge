@@ -10,6 +10,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **C-013 DEV S3 writeback — partial PASS (2026-07-07)** — Scenario `Shooting Challenge - DEV - Upload Engine - S3 - v1` proved S3 upload + **Canonical File URL** + **Storage Key** on DEV Submission Asset `recBBi80bYuxXifVj` (video). **File Content Hash** still pending (hash module). Not full C-013/C-023 completion. See [build packet §8.1](./docs/deploy-checklists/C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07).
+- **C-013 end-of-night checkpoint (2026-07-07)** — Resume doc for Wave 7 Slice 2: working Make modules 1–5, Mike path patterns, tomorrow A→G sequence. [Wave 7 checkpoint](./docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md#2026-07-07-end-of-night-checkpoint--dev-s3-partial-writeback-proof).
 
 ### Airtable
 
