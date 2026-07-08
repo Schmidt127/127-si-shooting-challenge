@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Make
+
+#### Changed
+- **C-013 DEV S3 writeback — partial PASS (2026-07-07)** — Scenario `Shooting Challenge - DEV - Upload Engine - S3 - v1` proved S3 upload + **Canonical File URL** + **Storage Key** on DEV Submission Asset `recBBi80bYuxXifVj` (video). **File Content Hash** still pending (hash module). Not full C-013/C-023 completion. See [build packet §8.1](./docs/deploy-checklists/C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07).
+
 ### Airtable
 
 #### Added

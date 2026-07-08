@@ -43,5 +43,10 @@
     "File Hash Algorithm": "SHA-256",
     "Uploaded At": "set",
     "Upload Error": "blank"
+  },
+  "partialPassResult": {
+    "recordedAt": "2026-07-07",
+    "artifact": "c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json",
+    "note": "S3 + canonical URL + storage key PASS; File Content Hash still blank"
   }
 }

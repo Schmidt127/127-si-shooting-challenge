@@ -4,7 +4,8 @@
 **Base:** DEV `appTetnuCZlCZdTCT`  
 **Table:** Submission Assets (`tblhMLKxQK77agtME`)  
 **Architecture map:** [C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)  
-**Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
+**Wave 7 checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)  
+**Status (2026-07-07):** **Partial PASS** — DEV manual S3 + canonical writeback proven on one video asset; **C-023 hash writeback still pending** (see §8.1). **Not** full C-013/C-023 completion.
 
 ---
 
@@ -25,11 +26,11 @@ Fill these in Make or ops notes (never commit values to GitHub):
 
 | Placeholder | Value | Notes |
 |-------------|-------|-------|
-| **DEV S3 bucket name** | TBD | e.g. `127si-shooting-challenge-dev` |
-| **AWS connection name in Make** | TBD | IAM user/role with `s3:PutObject` on DEV bucket |
-| **Canonical URL mode** | TBD | **CloudFront HTTPS URL** *or* **S3 presigned URL** |
-| **CloudFront host** (if used) | TBD | e.g. `d1234abcd.cloudfront.net` — prefix in URL builder |
-| **DEV webhook URL** | TBD | Copy from new scenario Custom Webhook module after save |
+| **DEV S3 bucket name** | `shooting-challenge-assets` | Confirmed 2026-07-07 partial PASS |
+| **AWS connection name in Make** | *(Make only — not in GitHub)* | IAM with `s3:PutObject` on DEV bucket |
+| **Canonical URL mode** | **S3 HTTPS URL** (us-east-2) | Observed on test asset; CloudFront/presigned still optional |
+| **CloudFront host** (if used) | TBD | Not used in partial PASS run |
+| **DEV webhook URL** | *(Make only — not in GitHub)* | Scenario `Shooting Challenge - DEV - Upload Engine - S3 - v1` |
 
 ---
 
@@ -204,9 +205,40 @@ Replace `submissionAssetRecordId`, `targetRecordId`, and `sentAtIso` with live v
 python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_preview/c013-dev-after-manual-webhook.json
 ```
 
-**Pass:** `Upload Status = Uploaded`, **Canonical File URL** and **Storage Key** non-empty, **File Content Hash** + **File Hash Algorithm = SHA-256**.
+**Pass (full Slice 2):** `Upload Status = Uploaded`, **Canonical File URL** and **Storage Key** non-empty, **File Content Hash** + **File Hash Algorithm = SHA-256**.
 
----
+### 8.1 Manual test result — partial PASS (2026-07-07)
+
+**Scenario:** `Shooting Challenge - DEV - Upload Engine - S3 - v1`  
+**Asset:** `recBBi80bYuxXifVj` (video / **070b**)  
+**Artifact:** [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
+
+| Check | Result |
+|-------|--------|
+| S3 upload + **Canonical File URL** writeback | **PASS** — one video asset on DEV |
+| **Storage Key** writeback | **PASS** |
+| **Upload Status = Uploaded**, **Uploaded At** | **PASS** |
+| **File Hash Algorithm = SHA-256** | **PASS** (algorithm field only) |
+| **Airtable Attachment** retained | **PASS** (not cleared) |
+| **Writeback Complete?** formula | `1` on test row |
+| **File Content Hash** | **FAIL / pending** — hash module not added to DEV scenario yet |
+| **C-023** duplicate detection end-to-end | **Not tested** |
+
+**Observed canonical URL (DEV proof only):**
+
+```text
+https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+**Observed Storage Key:**
+
+```text
+shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png
+```
+
+**What this proves:** DEV Make can upload a Submission Asset attachment to program S3 and write back **Canonical File URL** + **Storage Key** for a **video** route. **What this does not prove:** full C-013 migration, homework path, C-020 harness, **070a/070b** automation send, **C-023** hash/dedupe, attachment cleanup, or Production.
+
+**Do not enable DEV 070a/070b** until **File Content Hash** is populated on a repeat manual test (full §6 success contract).
 
 ## 9. C-020 proof tests (after manual webhook passes)
 
@@ -235,11 +267,12 @@ Confirm **009/020/013** unchanged; each new asset gets canonical URL + key + has
 
 ## Build checklist (ops)
 
-- [ ] DEV scenario created; Production untouched
-- [ ] Airtable modules use DEV base `appTetnuCZlCZdTCT`
-- [ ] Drive modules removed; S3 upload inserted
-- [ ] Placeholders §2 filled in Make
-- [ ] Manual webhook test §8 PASS on one asset
-- [ ] DEV **070a/b** enabled with DEV webhook URL only
+- [x] DEV scenario created (`Shooting Challenge - DEV - Upload Engine - S3 - v1`); Production untouched
+- [x] Airtable modules use DEV base `appTetnuCZlCZdTCT`
+- [x] Drive modules removed; S3 upload inserted
+- [x] Placeholders §2 filled in Make (bucket `shooting-challenge-assets`; webhook in Make only)
+- [~] Manual webhook test §8 — **partial PASS** on `recBBi80bYuxXifVj` (S3 + canonical OK; **File Content Hash pending**)
+- [ ] Add hash module + re-test → full §8 PASS
+- [ ] DEV **070a/b** enabled with DEV webhook URL only *(after full Slice 2 PASS)*
 - [ ] C-020 H1–H4 PASS
-- [ ] Record results in Wave 7 checklist
+- [~] Record results in Wave 7 checklist (partial PASS logged 2026-07-07)

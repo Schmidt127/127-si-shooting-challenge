@@ -4,7 +4,9 @@
 **Do not edit:** Production Upload Engine scenario  
 **References:** [build packet](../../docs/deploy-checklists/C-013-make-s3-dev-build-packet.md) · [writeback mapping](../../docs/deploy-checklists/C-013-make-s3-writeback-mapping.md)
 
-**Manual test asset (preflight PASS 2026-07-07):** `recBBi80bYuxXifVj` — **VIDEO** path (**070b**). Payload: [c013-manual-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json)
+**Status (2026-07-07):** **Partial PASS** — scenario `Shooting Challenge - DEV - Upload Engine - S3 - v1` uploaded one video asset to S3 and wrote **Canonical File URL** + **Storage Key** on `recBBi80bYuxXifVj`. **Next:** add SHA-256 hash module → map **File Content Hash** → re-test before enabling **070a/070b**.
+
+**Manual test asset:** `recBBi80bYuxXifVj` — **VIDEO** path (**070b**). Preflight: [c013-manual-webhook-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-manual-webhook-recBBi80bYuxXifVj.json) · Result: [c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)
 
 ---
 

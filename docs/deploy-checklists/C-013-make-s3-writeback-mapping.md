@@ -2,7 +2,7 @@
 
 **Backlog:** C-013 (Wave 7 Slice 2)  
 **Environment:** DEV only — base `appTetnuCZlCZdTCT`  
-**Status:** **Ready for Make build** — use [build packet](./C-013-make-s3-dev-build-packet.md) + [Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md)  
+**Status:** **Partial PASS (2026-07-07)** — DEV S3 + canonical writeback proven on one video asset (`recBBi80bYuxXifVj`); **C-023 `File Content Hash` writeback still pending**. Use [build packet](./C-013-make-s3-dev-build-packet.md) §8.1 + [Make UI runbook](../../make/documentation/C-013-dev-s3-make-ui-runbook.md). **Not** full migration.  
 **Parent checklist:** [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md)
 
 ### Confirmed schema — File Hash Algorithm (OMNI 2026-07-07)
@@ -42,6 +42,8 @@ Slice 1 added empty schema columns (**Canonical File URL**, **Storage Key**, has
 4. Writes **Canonical File URL**, **Storage Key**, and **SHA-256** hash back to Airtable.
 
 Until this scenario succeeds on DEV test assets, **S3 is not the storage source of truth** — see [storage transition section](./C-013-wave7-asset-storage-checklist.md#storage-source-of-truth-transition) in the Wave 7 checklist.
+
+**2026-07-07 partial proof:** One DEV video asset has S3 object + **Canonical File URL** + **Storage Key** populated; **File Content Hash** still blank — see [partial PASS artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json).
 
 ---
 
@@ -201,6 +203,8 @@ python tools/airtable/_probe_c013_asset_storage_fields.py --out tools/airtable/_
 ```
 
 Confirm counts: `withCanonicalFileUrl`, `withStorageKey`, `withFileContentHash` > 0 for new test assets only.
+
+**Manual webhook (pre-harness):** Partial PASS 2026-07-07 on `recBBi80bYuxXifVj` — canonical URL + storage key only; hash pending before H1–H4.
 
 ---
 

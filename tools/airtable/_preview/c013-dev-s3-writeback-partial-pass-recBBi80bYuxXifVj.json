@@ -1,0 +1,42 @@
+{
+  "purpose": "C-013 Slice 2 DEV manual Make S3 writeback — partial PASS record (read-only doc artifact)",
+  "recordedAt": "2026-07-07",
+  "result": "partial_PASS",
+  "notFullMigration": true,
+  "c023HashComplete": false,
+  "baseId": "appTetnuCZlCZdTCT",
+  "table": "Submission Assets",
+  "recordId": "recBBi80bYuxXifVj",
+  "makeScenario": "Shooting Challenge - DEV - Upload Engine - S3 - v1",
+  "s3Bucket": "shooting-challenge-assets",
+  "route": {
+    "automationNumber": "070b",
+    "routeKey": "video_feedback",
+    "uploadDestination": "Video Feedback",
+    "targetTable": "Video Feedback",
+    "targetRecordId": "recjdf9cSiw1ADs0T"
+  },
+  "confirmedWriteback": {
+    "Upload Status": "Uploaded",
+    "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png",
+    "Storage Key": "shooting-challenge/2026-2027/shooting-challenge/schmidt-mike/2026-07-07-video-feedback-recBBi80bYuxXifVj-C013-Test.png",
+    "File Hash Algorithm": "SHA-256",
+    "Uploaded At": "populated",
+    "Airtable Attachment": "still present",
+    "Writeback Complete?": 1
+  },
+  "remainingGap": {
+    "File Content Hash": "blank — hash module not wired in DEV Make scenario yet",
+    "c023Status": "pending — duplicate lookup (module 52) not proven",
+    "nextMakeWork": "Add SHA-256 hash module (v2 module 50 or Make Crypto); map digest to File Content Hash on success writeback"
+  },
+  "provenScope": "One video Submission Asset — S3 upload + Canonical File URL + Storage Key writeback on DEV; not homework path; not C-020 harness; not Production",
+  "hardStopsStillInForce": [
+    "Do not enable DEV 070a/070b until full Slice 2 success contract (including File Content Hash)",
+    "Do not clear Airtable Attachment",
+    "Do not remove Google Drive fields",
+    "Do not switch formulas/views/scripts to Canonical File URL",
+    "Do not touch Production"
+  ],
+  "preflightArtifact": "c013-manual-webhook-recBBi80bYuxXifVj.json"
+}

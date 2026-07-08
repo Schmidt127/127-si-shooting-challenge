@@ -1,7 +1,7 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 2 in progress** — DEV schema complete; [Make S3 writeback mapping](./C-013-make-s3-writeback-mapping.md) **ready for Make build** (`File Hash Algorithm = SHA-256` confirmed). S3 not active until DEV scenario proves writeback. No Production changes.  
+**Status:** **Wave 7 Slice 2 partial PASS (2026-07-07)** — DEV S3 upload + **Canonical File URL** / **Storage Key** writeback proven on one video asset (`recBBi80bYuxXifVj`); **C-023 `File Content Hash` still pending**. S3 is **not** full source of truth until hash + harness pass. No Production changes.  
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**  
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
@@ -20,7 +20,9 @@
 
 ## Storage source of truth transition
 
-**Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 only prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and hash fields on **Submission Assets**.
+**Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.
+
+**2026-07-07:** One DEV video asset (`recBBi80bYuxXifVj`) has canonical URL + storage key — **partial** proof only; **File Content Hash** still empty ([artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)).
 
 ### 1. Current source of truth (today on DEV)
 
@@ -28,9 +30,9 @@
 |-------|------|
 | **Airtable Attachment** | Still the **transient file source** at intake — **009** copies from Submissions; **020/013/070** still gate on it |
 | **Google Drive File URL** | Still the **legacy uploaded-file bridge** — 40/49 DEV assets have Drive URL; formulas/views/**022** still use it |
-| **Canonical File URL** | Field **exists** on DEV schema — **0/49 records populated** until Make S3 writeback |
-| **Storage Key** | Field **exists** on DEV schema — **0/49 records populated** until Make S3 writeback |
-| **File Content Hash** | Field exists — **0/49 populated** (C-023 not wired end-to-end) |
+| **Canonical File URL** | Field **exists** on DEV schema — **1/49** populated (partial PASS 2026-07-07, one video test) |
+| **Storage Key** | Field **exists** on DEV schema — **1/49** populated (same test) |
+| **File Content Hash** | Field exists — **0/49 populated** (C-023 hash module pending in DEV Make) |
 
 ### 2. Target source of truth (C-013 end state)
 
@@ -46,14 +48,14 @@
 
 Do **not** repoint formulas, views, **022**, **070a/b**, coach queues, or emails away from **Google Drive File URL** or **Airtable Attachment** until **DEV Make S3 writeback** proves on test assets:
 
-- [ ] Upload succeeds (`Upload Status = Uploaded`)
-- [ ] **Canonical File URL** populated
-- [ ] **Storage Key** populated
-- [ ] **File Content Hash** (+ algorithm) populated
-- [ ] Old **Airtable Attachment** still present until explicit cleanup step (Slice 4)
-- [ ] Downstream homework / video coach views still work
+- [x] Upload succeeds (`Upload Status = Uploaded`) — **one video asset** 2026-07-07
+- [x] **Canonical File URL** populated — same asset
+- [x] **Storage Key** populated — same asset
+- [ ] **File Content Hash** (+ algorithm) populated — **algorithm only** on test row; digest **pending**
+- [x] Old **Airtable Attachment** still present until explicit cleanup step (Slice 4)
+- [ ] Downstream homework / video coach views still work *(not re-validated on canonical URL yet)*
 
-Only after the above → Slice 3 (automations/formulas) and Slice 4 (attachment clear + C-020 H1–H4).
+Only after **full** Slice 2 success (including hash) → enable **070a/b** on DEV → Slice 3 (automations/formulas) and Slice 4 (attachment clear + C-020 H1–H4).
 
 ---
 
@@ -324,12 +326,13 @@ Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).
 - [x] Slice 1a — probe baselines → [before-fields.json](../../tools/airtable/_preview/c013-dev-baseline-before-fields.json) (+ [first baseline](../../tools/airtable/_preview/c013-dev-baseline.json))
 - [x] Slice 1b — OMNI + Metadata API field confirmation + ownership documented
 - [x] Slice 1c — **Canonical File URL** + **Storage Key** on DEV Submission Assets (Metadata API; 0/49 records populated — schema only)
-- [ ] **Slice 2 — DEV Make S3 upload/writeback proof** — [mapping](./C-013-make-s3-writeback-mapping.md) · [build packet](./C-013-make-s3-dev-build-packet.md)
+- [~] **Slice 2 — DEV Make S3 upload/writeback proof** — **partial PASS** 2026-07-07 ([mapping](./C-013-make-s3-writeback-mapping.md) · [build packet §8.1](./C-013-make-s3-dev-build-packet.md#81-manual-test-result--partial-pass-2026-07-07) · [artifact](../../tools/airtable/_preview/c013-dev-s3-writeback-partial-pass-recBBi80bYuxXifVj.json)): S3 + canonical URL + storage key on `recBBi80bYuxXifVj`; **File Content Hash pending**
+- [ ] Slice 2 complete — hash module + full manual re-test
 - [ ] Slice 3 — 022 / 070 / formulas on DEV
 - [ ] Slice 4 — C-020 H1–H4 PASS
 - [ ] Slice 5 — web headshot URL + promotion doc
-- [ ] C-013 status → DEV verified
-- [ ] C-023 status → DEV verified (hash + duplicate flag)
+- [ ] C-013 status → DEV verified *(partial: S3/canonical only)*
+- [ ] C-023 status → DEV verified (hash + duplicate flag) — **pending hash module**
 
 ---
 
