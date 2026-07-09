@@ -3,6 +3,7 @@
 .env.local
 **/.env
 **/.env.local
+**/.env.new-token
 
 # Local Python
 __pycache__/

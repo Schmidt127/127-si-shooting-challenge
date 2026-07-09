@@ -167,8 +167,9 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | **Slice 2 SDK PASS** — runtime **[SDK/hybrid interim](./deploy-checklists/C-013-sdk-hybrid-runtime.md)**; Make S3 parked; **C-020 H2** next. Lambda deferred for prod | C-012, C-020 | **in progress** |
-| **C-023** | File dedup by **content hash**, not title/filename | Hash writeback PASS (SDK); **duplicate lookup + H2 harness** pending | C-013, C-024 | **in progress** |
+| **C-013** | AWS S3 canonical URLs | **Lambda DEV gate PASS (2026-07-09)** — B1–B4 Function URL HTTP POST; fresh upload `rec9Pk14BJjFuNpf7`. **Next:** Make DEV Lambda scenario prep → manual test → 070b last. See [C-013-dev-make-lambda-scenario-prep.md](./deploy-checklists/C-013-dev-make-lambda-scenario-prep.md) | C-012, C-020 | **in progress** |
+| **C-023** | File dedup by **content hash**, not title/filename | Hash writeback PASS (SDK + Lambda); duplicate lookup PASS on B4 asset | C-013, C-024 | **in progress** |
+| **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 
 ### Wave 8 — Intake & calendar
 
