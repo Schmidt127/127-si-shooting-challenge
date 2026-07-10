@@ -10,9 +10,17 @@ from upload_core.airtable import get_asset, get_enrollment_slug, patch_asset
 from upload_core.config import TABLE, UploadConfig
 from upload_core.duplicate import (
     build_c023_duplicate_report,
-    build_duplicate_writeback,
+    build_review_writeback,
+    classify_duplicate_matches,
     lookup_duplicate_matches,
 )
+from upload_core.fields import (
+    FIELD_CANONICAL_FILE_URL,
+    FIELD_FILE_CONTENT_HASH,
+    FIELD_UPLOAD_ERROR,
+    FIELD_UPLOAD_STATUS,
+)
+from upload_core.upload_claim import ClaimEvaluation, evaluate_upload_claim
 from upload_core.util import (
     DENVER,
     athlete_slug_from_asset,
@@ -68,15 +76,15 @@ def writeback_fields(
 ) -> dict:
     uploaded_at = datetime.now(DENVER_TZ).isoformat(timespec="milliseconds")
     return {
-        "Upload Status": "Uploaded",
+        FIELD_UPLOAD_STATUS: "Uploaded",
         "Canonical File URL": canonical,
         "Storage Key": storage_key,
-        "File Content Hash": file_hash,
+        FIELD_FILE_CONTENT_HASH: file_hash,
         "File Hash Algorithm": "SHA-256",
         "Uploaded At": uploaded_at,
         "File Size Bytes": size_bytes,
         "File MIME Type": mime_type,
-        "Upload Error": None,
+        FIELD_UPLOAD_ERROR: None,
     }
 
 
@@ -93,12 +101,6 @@ def validate_pre_upload(fields: dict, record_id: str) -> None:
             f'Upload Destination must be "Video Feedback"; got "{destination or "[blank]"}"',
             action_out="error_unsupported_destination",
         )
-    status = select_name(fields.get("Upload Status"))
-    if status != "Pending Link":
-        raise UploadError(
-            f'Upload Status must be "Pending Link"; got "{status or "[blank]"}"',
-            action_out="error_invalid_upload_status",
-        )
     if not first_attachment(fields):
         raise UploadError("Airtable Attachment is missing", action_out="error_missing_attachment")
     vf_links = fields.get("Video Feedback")
@@ -107,12 +109,50 @@ def validate_pre_upload(fields: dict, record_id: str) -> None:
 
 
 def already_uploaded(fields: dict) -> bool:
-    status = select_name(fields.get("Upload Status"))
+    status = select_name(fields.get(FIELD_UPLOAD_STATUS))
     if status != "Uploaded":
         return False
-    canonical = str(fields.get("Canonical File URL") or "").strip()
-    file_hash = str(fields.get("File Content Hash") or "").strip()
+    canonical = str(fields.get(FIELD_CANONICAL_FILE_URL) or "").strip()
+    file_hash = str(fields.get(FIELD_FILE_CONTENT_HASH) or "").strip()
     return bool(canonical) and verify_hash_hex(file_hash)
+
+
+def claim_response_from_evaluation(
+    evaluation: ClaimEvaluation,
+    *,
+    config: UploadConfig,
+    record_id: str,
+    route_key: str,
+    automation_number: str,
+    started: float,
+) -> dict | None:
+    if evaluation.should_upload:
+        return None
+    duration_ms = int((time.time() - started) * 1000)
+    return {
+        "ok": evaluation.status_out != "error",
+        "statusOut": evaluation.status_out,
+        "actionOut": evaluation.action_out,
+        "environment": config.environment,
+        "submissionAssetRecordId": record_id,
+        "routeKey": route_key,
+        "automationNumber": automation_number or "070b",
+        "message": evaluation.message,
+        "uploadClaimRunId": evaluation.claim_run_id,
+        "durationMs": duration_ms,
+    }
+
+
+def apply_upload_claim(
+    token: str,
+    base_id: str,
+    record_id: str,
+    evaluation: ClaimEvaluation,
+) -> dict:
+    if evaluation.claim_patch:
+        patched = patch_asset(token, base_id, record_id, evaluation.claim_patch)
+        return patched.get("fields", evaluation.claim_patch)
+    return {}
 
 
 def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
@@ -155,7 +195,25 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "durationMs": duration_ms,
         }
 
+    claim_eval = evaluate_upload_claim(fields, payload)
+    early = claim_response_from_evaluation(
+        claim_eval,
+        config=config,
+        record_id=record_id,
+        route_key=route_key,
+        automation_number=automation_number,
+        started=started,
+    )
+    if early is not None:
+        if claim_eval.action_out == "error_invalid_upload_status":
+            raise UploadError(claim_eval.message, action_out=claim_eval.action_out)
+        return early
+
     validate_pre_upload(fields, record_id)
+
+    if claim_eval.claim_patch:
+        claim_fields = apply_upload_claim(token, base_id, record_id, claim_eval)
+        fields = {**fields, **claim_fields}
 
     attachment = first_attachment(fields)
     assert attachment is not None
@@ -192,18 +250,25 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
     file_hash = sha256_hex(file_bytes)
     size_bytes = len(file_bytes)
 
-    dup_matches = lookup_duplicate_matches(token, base_id, file_hash, record_id)
-    dup_fields, dup_decision = build_duplicate_writeback(
-        dup_matches,
-        file_hash=file_hash,
-        write_to_airtable=True,
-    )
-    c023 = build_c023_duplicate_report(
-        record_id=record_id,
-        file_hash=file_hash,
+    dup_matches: list[dict] = []
+    lookup_performed = False
+    lookup_error = ""
+    try:
+        dup_matches = lookup_duplicate_matches(token, base_id, file_hash, record_id)
+        lookup_performed = True
+    except Exception as exc:
+        lookup_error = str(exc)[:1000]
+
+    classification = classify_duplicate_matches(
+        current_record_id=record_id,
+        current_fields=fields,
         matches=dup_matches,
-        decision=dup_decision,
-        lookup_performed=True,
+    )
+    review_wb = build_review_writeback(
+        classification,
+        existing_fields=fields,
+        file_hash=file_hash,
+        lookup_error=lookup_error,
     )
 
     s3_result = upload_s3(
@@ -214,28 +279,55 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         mime_type,
     )
 
-    wb = writeback_fields(
+    upload_wb = writeback_fields(
         canonical=canonical,
         storage_key=storage_key,
         file_hash=file_hash,
         size_bytes=size_bytes,
         mime_type=mime_type,
     )
-    wb_full = {**wb, **dup_fields}
-    patched = patch_asset(token, base_id, record_id, wb_full)
+    patched_upload = patch_asset(token, base_id, record_id, upload_wb)
+
+    review_writeback_applied = False
+    review_writeback_error = ""
+    try:
+        patch_asset(token, base_id, record_id, review_wb)
+        review_writeback_applied = True
+    except Exception as exc:
+        review_writeback_error = str(exc)[:1000]
+        try:
+            patch_asset(
+                token,
+                base_id,
+                record_id,
+                {"Duplicate Check Error": review_writeback_error},
+            )
+        except Exception:
+            pass
+
+    c023 = build_c023_duplicate_report(
+        record_id=record_id,
+        file_hash=file_hash,
+        classification=classification,
+        lookup_performed=lookup_performed,
+        review_writeback_applied=review_writeback_applied,
+        review_writeback_error=review_writeback_error,
+    )
 
     writeback_verification = {
-        "canonicalUrlPopulated": bool(wb.get("Canonical File URL")),
-        "storageKeyPopulated": bool(wb.get("Storage Key")),
+        "canonicalUrlPopulated": bool(upload_wb.get("Canonical File URL")),
+        "storageKeyPopulated": bool(upload_wb.get("Storage Key")),
         "fileContentHashPopulated": verify_hash_hex(file_hash),
-        "fileHashAlgorithmSha256": wb.get("File Hash Algorithm") == "SHA-256",
-        "uploadedAtPopulated": bool(wb.get("Uploaded At")),
-        "uploadStatusUploaded": wb.get("Upload Status") == "Uploaded",
-        "uploadErrorCleared": wb.get("Upload Error") is None,
+        "fileHashAlgorithmSha256": upload_wb.get("File Hash Algorithm") == "SHA-256",
+        "uploadedAtPopulated": bool(upload_wb.get("Uploaded At")),
+        "uploadStatusUploaded": upload_wb.get(FIELD_UPLOAD_STATUS) == "Uploaded",
+        "uploadErrorCleared": upload_wb.get(FIELD_UPLOAD_ERROR) is None,
         "hashHexLength": len(file_hash),
         "duplicateLookupPerformed": c023.get("duplicateLookupPerformed"),
-        "duplicateBehaviorDecision": c023.get("duplicateBehaviorDecision"),
+        "reviewWritebackApplied": review_writeback_applied,
         "attachmentRetained": True,
+        "uploadClaimRunId": claim_eval.claim_run_id,
+        "claimContinuation": claim_eval.continuation,
     }
     writeback_verification["allPass"] = all(
         writeback_verification[k]
@@ -264,6 +356,8 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         "targetRecordId": payload.get("targetRecordId"),
         "routeKey": route_key,
         "automationNumber": automation_number or "070b",
+        "uploadClaimRunId": claim_eval.claim_run_id,
+        "claimActionOut": claim_eval.action_out,
         "s3": {
             "bucket": s3_result["bucket"],
             "region": s3_result["region"],
@@ -276,8 +370,8 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "valid64CharHex": verify_hash_hex(file_hash),
         },
         "c023Duplicate": c023,
-        "writebackApplied": wb_full,
-        "airtablePatchId": patched.get("id"),
+        "writebackApplied": {**upload_wb, **review_wb},
+        "airtablePatchId": patched_upload.get("id"),
         "writebackVerification": writeback_verification,
         "durationMs": duration_ms,
     }
@@ -296,8 +390,8 @@ def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[i
                     config.airtable_base_id,
                     record_id,
                     {
-                        "Upload Status": "Error",
-                        "Upload Error": exc.message,
+                        FIELD_UPLOAD_STATUS: "Error",
+                        FIELD_UPLOAD_ERROR: exc.message,
                     },
                 )
             except Exception:
@@ -318,8 +412,8 @@ def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[i
                     config.airtable_base_id,
                     record_id,
                     {
-                        "Upload Status": "Error",
-                        "Upload Error": message[:1000],
+                        FIELD_UPLOAD_STATUS: "Error",
+                        FIELD_UPLOAD_ERROR: message[:1000],
                     },
                 )
             except Exception:
