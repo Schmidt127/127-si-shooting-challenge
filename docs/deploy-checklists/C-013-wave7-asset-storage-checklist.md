@@ -241,7 +241,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
 
-**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023:** Stage **4A** DEV Lambda code-only deploy **complete** (`8c94475`, no invoke); **Stage 4B** 070b Option A next; prior lookups + review views still **open**.
+**Next:** **C-023:** Stage **4A** Lambda deploy + Stage **4B** 070b Option A **repo complete** — paste DEV 070b v4.2 (OFF); **Stage 4C** runtime next.
 
 ---
 

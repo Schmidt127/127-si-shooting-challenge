@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-27
-Last GitHub Update: 2026-06-27
+Last GitHub Update: 2026-07-10
 
 Purpose:
 Sends one video Submission Asset to the shared Make Upload Engine (v4.1 minimal payload).
@@ -37,15 +37,22 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.1 - Minimal Canonical Webhook Payload, routeKey corrected
+ * v4.2 - Lambda owns upload claim (070b Option A)
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-06-27
+ * 2026-07-10
  *
  * CHANGE HISTORY:
+ * 2026-07-10 - v4.2 (070b / C-013-UPLOAD-CLAIM Option A)
+ * - Removed Upload Status = Processing writeback on Make HTTP 2xx.
+ * - Lambda is the sole claim owner (Processing + Upload Claim Run ID + Processing Started At).
+ * - Parse and validate Make-returned Lambda JSON body before clearing Send to Make Trigger.
+ * - Approved success: actionOut uploaded + writebackVerification.allPass=true, or skipped_already_uploaded.
+ * - Failures retain Send to Make Trigger for retry; write Upload Error; never set Processing.
+ *
  * 2026-06-27 - v4.1
  * - Corrected homework routeKey from "homework" to "homework_completion".
  * - Kept one shared script body for 070a and 070b.
@@ -107,7 +114,7 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.1",
+        version: "v4.2",
 
         tables: {
             submissionAssets: "Submission Assets",
@@ -299,6 +306,204 @@ async function main() {
     function getResponsePreview(text) {
         const raw = String(text || "");
         return raw.length > 1000 ? `${raw.slice(0, 1000)}...` : raw;
+    }
+
+    // --- Lambda response validation (keep in sync with lib/upload-make-lambda-response.js) ---
+
+    const VERIFIED_SUCCESS_ACTIONS = new Set(["uploaded", "skipped_already_uploaded"]);
+    const EXPLICIT_FAILURE_ACTIONS = new Set([
+        "error_claim_conflict",
+        "skipped_concurrent_upload",
+        "stale_claim",
+    ]);
+
+    function parseLambdaResponseBody(responseText) {
+        const raw = String(responseText ?? "").trim();
+        if (!raw) {
+            return { ok: false, reason: "blank_body", message: "Make response body is empty." };
+        }
+
+        let parsed;
+        try {
+            parsed = JSON.parse(raw);
+        } catch (error) {
+            return {
+                ok: false,
+                reason: "malformed_json",
+                message: `Make response is not valid JSON: ${error?.message || error}`,
+            };
+        }
+
+        if (!parsed || typeof parsed !== "object") {
+            return {
+                ok: false,
+                reason: "invalid_shape",
+                message: "Make response JSON is not an object.",
+            };
+        }
+
+        if ("body" in parsed) {
+            const inner = parsed.body;
+            if (typeof inner === "string") {
+                const trimmed = inner.trim();
+                if (!trimmed) {
+                    return {
+                        ok: false,
+                        reason: "blank_inner_body",
+                        message: "Lambda response wrapper has an empty body.",
+                    };
+                }
+                try {
+                    parsed = JSON.parse(trimmed);
+                } catch (error) {
+                    return {
+                        ok: false,
+                        reason: "malformed_inner_json",
+                        message: `Lambda response inner body is not valid JSON: ${error?.message || error}`,
+                    };
+                }
+            } else if (inner && typeof inner === "object") {
+                parsed = inner;
+            }
+        }
+
+        if (!parsed || typeof parsed !== "object") {
+            return {
+                ok: false,
+                reason: "invalid_inner_shape",
+                message: "Lambda response body is not an object.",
+            };
+        }
+
+        return { ok: true, body: parsed };
+    }
+
+    function evaluateLambdaHandoffResult(body) {
+        const actionOut = String(body.actionOut ?? "").trim();
+        const statusOut = String(body.statusOut ?? "").trim();
+        const errorOut = String(body.errorOut ?? "").trim();
+        const allPass = body.writebackVerification?.allPass === true;
+
+        if (!actionOut) {
+            return {
+                verified: false,
+                actionOut: "error_lambda_response_unverified",
+                message:
+                    "Make returned HTTP 2xx but no Lambda actionOut was present (generic acknowledgement or incomplete path).",
+            };
+        }
+
+        if (actionOut === "uploaded") {
+            if (allPass) {
+                return {
+                    verified: true,
+                    actionOut: "lambda_upload_verified",
+                    lambdaActionOut: actionOut,
+                    statusOut,
+                    allPass: true,
+                    message: "Lambda upload verified (uploaded, allPass=true).",
+                };
+            }
+            return {
+                verified: false,
+                actionOut: "error_lambda_writeback_incomplete",
+                lambdaActionOut: actionOut,
+                statusOut,
+                allPass: false,
+                message: "Lambda returned uploaded but writebackVerification.allPass is not true.",
+            };
+        }
+
+        if (actionOut === "skipped_already_uploaded") {
+            return {
+                verified: true,
+                actionOut: "lambda_upload_verified",
+                lambdaActionOut: actionOut,
+                statusOut,
+                message: "Lambda idempotent skip verified (skipped_already_uploaded).",
+            };
+        }
+
+        if (EXPLICIT_FAILURE_ACTIONS.has(actionOut)) {
+            return {
+                verified: false,
+                actionOut: `error_lambda_${actionOut}`,
+                lambdaActionOut: actionOut,
+                statusOut,
+                message: errorOut || `Lambda returned non-success actionOut=${actionOut}.`,
+            };
+        }
+
+        if (statusOut === "error" || actionOut.startsWith("error_")) {
+            return {
+                verified: false,
+                actionOut: "error_lambda_upload_failed",
+                lambdaActionOut: actionOut,
+                statusOut,
+                message: errorOut || `Lambda upload failed (${actionOut}).`,
+            };
+        }
+
+        if (!VERIFIED_SUCCESS_ACTIONS.has(actionOut)) {
+            return {
+                verified: false,
+                actionOut: "error_lambda_response_unrecognized",
+                lambdaActionOut: actionOut,
+                statusOut,
+                message: `Unrecognized Lambda actionOut=${actionOut}.`,
+            };
+        }
+
+        return {
+            verified: false,
+            actionOut: "error_lambda_response_unrecognized",
+            lambdaActionOut: actionOut,
+            statusOut,
+            message: `Lambda actionOut=${actionOut} is not an approved handoff success.`,
+        };
+    }
+
+    async function stopWithLambdaHandoffFailure(options) {
+        const {
+            actionOut,
+            uploadError,
+            message,
+            extra = {},
+            lambdaActionOut = "",
+            lambdaStatusOut = "",
+        } = options;
+
+        const fields = {};
+        setWritable(fields, assetsTable, CONFIG.fields.uploadError, uploadError);
+        // Retain Send to Make Trigger for retry — do not uncheck on Lambda handoff failure.
+
+        await updateAsset(assetsTable, recordId, fields);
+
+        const result = {
+            ok: false,
+            skipped: false,
+            statusOut: "error",
+            actionOut,
+            errorOut: uploadError,
+            message,
+            submissionAssetRecordId: recordId,
+            automationNumber,
+            lambdaActionOut,
+            lambdaStatusOut,
+            ...extra,
+        };
+
+        setStandardOutputs(result);
+
+        console.log(
+            JSON.stringify({
+                automation: CONFIG.scriptName,
+                version: CONFIG.version,
+                ...result,
+            }),
+        );
+
+        return result;
     }
 
     async function postJson(url, payload) {
@@ -592,8 +797,8 @@ async function main() {
         await stopWithAssetUpdate({
             statusOut: "error",
             actionOut: "error_webhook_request",
-            uploadStatus: CONFIG.values.statusError,
             uploadError: message,
+            uncheckTrigger: false,
             message,
             extra: {
                 uploadDestination,
@@ -611,8 +816,8 @@ async function main() {
         await stopWithAssetUpdate({
             statusOut: "error",
             actionOut: "error_webhook_response",
-            uploadStatus: CONFIG.values.statusError,
             uploadError: message,
+            uncheckTrigger: false,
             message,
             extra: {
                 uploadDestination,
@@ -627,32 +832,83 @@ async function main() {
     }
 
     /************************************************************
-     * SECTION 9: SUCCESS WRITEBACK
+     * SECTION 9: VALIDATE LAMBDA RESPONSE (Option A — no Processing write)
      ************************************************************/
 
-    setDebug("7 - Success Writeback");
+    setDebug("7 - Validate Lambda Response");
+
+    const parsedResponse = parseLambdaResponseBody(responseText);
+    if (!parsedResponse.ok) {
+        const message = `${automationNumber} Make HTTP 2xx but Lambda body invalid: ${parsedResponse.message}`;
+
+        await stopWithLambdaHandoffFailure({
+            actionOut: "error_lambda_response_invalid",
+            uploadError: message,
+            message,
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                targetRecordId,
+                makeStatus: String(response.status),
+                makeResponse: getResponsePreview(responseText),
+                lambdaParseReason: parsedResponse.reason,
+            },
+        });
+        return;
+    }
+
+    const lambdaEvaluation = evaluateLambdaHandoffResult(parsedResponse.body);
+
+    if (!lambdaEvaluation.verified) {
+        const message = `${automationNumber} Lambda handoff not verified: ${lambdaEvaluation.message}`;
+
+        await stopWithLambdaHandoffFailure({
+            actionOut: lambdaEvaluation.actionOut,
+            uploadError: message,
+            message,
+            lambdaActionOut: lambdaEvaluation.lambdaActionOut || "",
+            lambdaStatusOut: lambdaEvaluation.statusOut || "",
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                targetRecordId,
+                makeStatus: String(response.status),
+                makeResponse: getResponsePreview(responseText),
+                lambdaAllPass: lambdaEvaluation.allPass === true,
+            },
+        });
+        return;
+    }
+
+    /************************************************************
+     * SECTION 10: VERIFIED SUCCESS WRITEBACK
+     ************************************************************/
+
+    setDebug("8 - Verified Success Writeback");
 
     const successFields = {};
 
-    setStatus(successFields, assetsTable, CONFIG.values.statusProcessing);
+    // Lambda owns Upload Status / claim fields — 070b only clears trigger and error.
     setWritable(successFields, assetsTable, CONFIG.fields.uploadError, "");
     setWritable(successFields, assetsTable, CONFIG.fields.sendToMakeTrigger, false);
 
     await updateAsset(assetsTable, recordId, successFields);
 
     /************************************************************
-     * SECTION 10: OUTPUTS
+     * SECTION 11: OUTPUTS
      ************************************************************/
 
-    setDebug("8 - Done");
+    setDebug("9 - Done");
 
     const result = {
         ok: true,
         skipped: false,
         statusOut: "success",
-        actionOut: "sent_to_make",
+        actionOut: lambdaEvaluation.actionOut,
         errorOut: "",
-        message: `${automationNumber} asset sent to Make successfully.`,
+        message: lambdaEvaluation.message,
         submissionAssetRecordId: recordId,
         targetRecordId,
         targetTable: route.targetTable,
@@ -661,6 +917,9 @@ async function main() {
         automationNumber,
         makeStatus: String(response.status),
         makeResponse: getResponsePreview(responseText),
+        lambdaActionOut: lambdaEvaluation.lambdaActionOut || "",
+        lambdaStatusOut: lambdaEvaluation.statusOut || "",
+        lambdaAllPass: lambdaEvaluation.allPass === true,
     };
 
     setStandardOutputs(result);

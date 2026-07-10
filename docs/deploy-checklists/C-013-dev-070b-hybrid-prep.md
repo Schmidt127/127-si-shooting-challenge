@@ -136,10 +136,24 @@
 Module 1  Custom webhook          ← 070b POST (v4.1 payload)
 Module 2  Router                  ← automationNumber = "070b" AND routeKey = "video_feedback"
 Module 3  HTTP → Lambda Function URL
-Module 4  Webhook response 200    ← required: 070b sets Processing only on response.ok
+Module 4  Webhook response 200    ← return Lambda JSON body to 070b (not generic Accepted)
 ```
 
-**See:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) §16 for full Make integration.
+**070b v4.2 (Option A, 2026-07-10):** Lambda owns `Processing` claim. **070b does not** set `Upload Status = Processing`. **070b** validates Lambda `actionOut` in Make response body before clearing `Send to Make Trigger`.
+
+### 070b → Lambda response matrix (v4.2)
+
+| Make HTTP | Response body | 070b `actionOut` | `Send to Make Trigger` | `Upload Status` |
+|-----------|---------------|------------------|------------------------|-----------------|
+| 2xx | `uploaded` + `allPass=true` | `lambda_upload_verified` | cleared | unchanged (Lambda wrote final state) |
+| 2xx | `skipped_already_uploaded` | `lambda_upload_verified` | cleared | unchanged |
+| 2xx | blank / non-JSON / `Accepted` only | `error_lambda_response_invalid` | **retained** | unchanged (no Processing) |
+| 2xx | `uploaded` + `allPass≠true` | `error_lambda_writeback_incomplete` | retained | unchanged |
+| 2xx | `skipped_concurrent_upload` / `stale_claim` / `error_claim_conflict` | `error_lambda_*` | retained | unchanged |
+| 2xx | Lambda `error_*` | `error_lambda_upload_failed` | retained | unchanged |
+| non-2xx | any | `error_webhook_response` | retained | unchanged |
+
+**DEV paste:** GitHub `070b-...js` v4.2 — automation **remains OFF** until Stage 4C runtime approval.
 
 ---
 

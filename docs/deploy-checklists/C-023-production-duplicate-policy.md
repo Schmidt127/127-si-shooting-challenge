@@ -686,7 +686,7 @@ After schema approval, Mike builds in OMNI:
 | # | Decision | Status |
 |---|----------|--------|
 | 1 | Approve §11 v1 schema (new fields + deprecate `File is Duplicate?` writer) | **Pending** — Stage 3 |
-| 2 | Approve §10 claim design (070b Option A) | **Approved** — implemented locally (Stage 2A) |
+| 2 | Approve §10 claim design (070b Option A) | **Approved** — **repo v4.2 complete** (DEV paste pending Mike) |
 | 3 | `Same Assignment Resubmission` always queues (`Potential Asset Reuse?`) | **Implemented** locally |
 | 4 | Skip `Asset Reuse Review Queue Status` | **Implemented** locally |
 | 5 | Stage 2 code (local tests only, no deploy) | **Complete** (2026-07-10) |
@@ -761,7 +761,7 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 | Step | Action |
 |------|--------|
 | Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
-| 070b Option A | Remove `setStatus(..., Processing)` in §9 success writeback (`070b-...js` ~L637); keep clear `Send to Make Trigger` + clear `Upload Error` |
+| 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** — Mike paste DEV 070b script (automation OFF) |
 | Make | Scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1`: Module 3 POST Lambda → Module 4 status router → Module 5 webhook response **200** — **synchronous** if response module wired (see `recIY` risk if scenario returns 200 without Lambda body checks) |
 | Runtime gates | Schema gaps closed → Lambda deploy → 070b Option A paste → Make verify → smoke asset → H3l claim → H3b–H3p |
 
