@@ -36,6 +36,20 @@ def patch_asset(asset_id: str, fields: dict) -> None:
     s5.patch_rec("Submission Assets", asset_id, fields)
 
 
+def reset_activity_eligibility(asset_id: str) -> None:
+    """Clear prior Stage 5 suppress flags so Not Reviewed baseline tests start clean."""
+    fields = s5.snap_asset(asset_id)
+    target = s5.resolve_target(fields)
+    if not target:
+        return
+    if target["route"] == "video":
+        s5.patch_rec("Video Feedback", target["id"], {"Do Not Award XP?": False})
+    else:
+        act = s5.snap_activity(target["route"], target["id"])
+        if s5.select_name(act.get("Award Status")) == "Do Not Award":
+            s5.patch_rec("Homework Completions", target["id"], {"Award Status": "Pending"})
+
+
 def reset_resolution(asset_id: str) -> None:
     fields = {
         "Duplicate Resolution Applied?": False,
@@ -45,6 +59,7 @@ def reset_resolution(asset_id: str) -> None:
     if FIELD_LAST_APPLIED in s5._schema_fields("Submission Assets"):
         fields[FIELD_LAST_APPLIED] = None
     patch_asset(asset_id, fields)
+    reset_activity_eligibility(asset_id)
 
 
 def target_for(asset_id: str) -> dict:

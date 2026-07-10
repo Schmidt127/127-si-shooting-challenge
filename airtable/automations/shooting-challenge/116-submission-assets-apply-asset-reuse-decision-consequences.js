@@ -27,12 +27,13 @@ Does not modify Lambda detection or upload automations 070a/070b.
  * 116 - SUBMISSION ASSETS
  * Apply Asset Reuse Decision Consequences (C-023 Stage 5)
  *
- * Version: v1.0
+ * Version: v1.0.1
  * Date Written: 2026-07-10
  * Last Updated: 2026-07-10
  *
  * VERSION HISTORY
  * - v1.0 (2026-07-10): Initial DEV Stage 5 consequence workflow.
+ * - v1.0.1 (2026-07-10): Write dateTime fields with Date objects; notes-only Upload Destination read.
  *
  * PURPOSE
  * - Runs from one Submission Asset when Mike updates Asset Reuse Decision.
@@ -87,7 +88,7 @@ Does not modify Lambda detection or upload automations 070a/070b.
 
 const SCRIPT = {
   scriptName: "116 - Submission Assets - Apply Asset Reuse Decision Consequences",
-  version: "v1.0",
+  version: "v1.0.1",
   versionDate: "2026-07-10",
   originalWrittenDate: "2026-07-10",
   lastUpdated: "2026-07-10",
@@ -216,6 +217,10 @@ function getFirstLinkedId(value) {
 
 function getCheckbox(value) {
   return value === true;
+}
+
+function nowDate() {
+  return new Date();
 }
 
 function nowIso() {
@@ -387,8 +392,8 @@ async function applyConfirmedDuplicate({
 
   const activityTable = await getTable(target.tableName);
   const xpEvent = await findXpEventBySourceKey(target.sourceKey);
-  const timestamp = nowIso();
-  const auditLine = `${CONFIG.auditMarker} Confirmed Duplicate applied ${timestamp}`;
+  const timestamp = nowDate();
+  const auditLine = `${CONFIG.auditMarker} Confirmed Duplicate applied ${nowIso()}`;
 
   if (target.route === "video") {
     await requireField(activityTable, CONFIG.videoFields.doNotAwardXp, ["checkbox"]);
@@ -410,7 +415,7 @@ async function applyConfirmedDuplicate({
       [CONFIG.xpFields.duplicateStatus]: { name: CONFIG.duplicateStatuses.remove },
       [CONFIG.xpFields.reasonDebug]: appendNote(
         priorDebug,
-        `${CONFIG.auditMarker} Confirmed duplicate — XP deactivated ${timestamp}`,
+        `${CONFIG.auditMarker} Confirmed duplicate — XP deactivated ${nowIso()}`,
       ),
     });
   }
@@ -458,10 +463,10 @@ async function restoreFromConfirmed({
 
   const activityTable = await getTable(target.tableName);
   const xpEvent = await findXpEventBySourceKey(target.sourceKey);
-  const timestamp = nowIso();
+  const timestamp = nowDate();
   const decisionLabel =
     decisionCategory === "approved" ? "Approved Reuse" : "False Positive";
-  const auditLine = `${CONFIG.auditMarker} Restored after ${decisionLabel} ${timestamp}`;
+  const auditLine = `${CONFIG.auditMarker} Restored after ${decisionLabel} ${nowIso()}`;
 
   if (target.route === "video") {
     await activityTable.updateRecordAsync(target.recordId, {
@@ -490,7 +495,7 @@ async function restoreFromConfirmed({
       [CONFIG.xpFields.duplicateStatus]: { name: CONFIG.duplicateStatuses.unique },
       [CONFIG.xpFields.reasonDebug]: appendNote(
         priorDebug,
-        `${CONFIG.auditMarker} Restored — decision reversed ${timestamp}`,
+        `${CONFIG.auditMarker} Restored — decision reversed ${nowIso()}`,
       ),
     });
   }
