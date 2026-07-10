@@ -1,10 +1,10 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
 **Date:** 2026-07-08  
-**Status:** **PREP ONLY — 070b remains OFF** until [Lambda plan](./C-013-dev-lambda-upload-plan.md) is approved, DEV Lambda deployed, and dry-run passes  
+**Status:** **070b hybrid PREP step 8 complete (2026-07-09)** — DEV `makeWebhookUrl` saved; **070b / 070a remain OFF**. First-fire asset **`recF86pJTIMFoEypJ`**. **Next gate:** explicit approval for one controlled 070b enable test (§7 step 10).  
 **Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)  
-**Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md)  
-**Prerequisites (PASS):** SDK upload + hash + C-023 duplicate on DEV; C-020 H2 harness (`recL9r4a7navUxEhg`); commit `8dcc460`
+**Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)  
+**Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · commit `5520003`
 
 ---
 
@@ -15,12 +15,37 @@
 | **DEV base** | `appTetnuCZlCZdTCT` |
 | **Production base** | `appn84sqPw03zEbTT` — **untouched** |
 | **070a** (homework → Make) | **OFF** per [development-base-setup.md](../development-base-setup.md) |
-| **070b** (video → Make) | **OFF** per development-base-setup |
+| **070b** (video → Make) | **OFF** — `makeWebhookUrl` = **DEV Make Lambda webhook** (saved 2026-07-09; URL in ops notes / `.env` only) |
 | **Make Amazon S3 Upload** | **DROPPED** — do not use |
 | **Upload runtime** | **Lambda** (planned) — [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) |
 | **SDK proof** | [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) — source logic for Lambda extraction |
-| **Existing DEV Make scenario** | `Shooting Challenge - DEV - Upload Engine - S3 - v1` — webhook + Get Record + HTTP download + **S3 module (parked)** + Airtable update — **must be refactored** for hybrid |
-| **H2 harness asset** | `recL9r4a7navUxEhg` — already **Uploaded** via manual SDK (not usable for 070b first-fire without fresh asset) |
+| **Existing DEV Make scenario** | **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** — manual webhook PASS 2026-07-10 |
+| **Enable-test asset (fresh)** | **`recF86pJTIMFoEypJ`** — Pending Link, `READY_TO_SEND`, Send to Make Trigger checked (2026-07-10 prep) |
+| **Make manual-test asset (used)** | `recthL2wrTha5nWHL` — already **Uploaded** — do not use for 070b first-fire |
+| **H2 harness asset (legacy)** | `recL9r4a7navUxEhg` — already **Uploaded** — regression reference only |
+
+---
+
+## Prep session — 070b enable asset (2026-07-10)
+
+| Item | Value |
+|------|--------|
+| **C-020 scenario** | `rec7IdiHF1jDeI8OW` |
+| **Submission** | `recaYxc5UfoJGcmeb` |
+| **Submission Asset** | **`recF86pJTIMFoEypJ`** |
+| **Video Feedback** | `recSqaDSDY1JKp81l` |
+| **070b prep check** | **allPass=true** — `python c013_dev_070b_prep_check.py recF86pJTIMFoEypJ` |
+| **Artifact** | `tools/airtable/_preview/c013-dev-070b-prep-recF86pJTIMFoEypJ.json` |
+| **Step 8 (makeWebhookUrl)** | **DONE 2026-07-09** — DEV Make webhook URL pasted into **070b** input; automation **OFF** |
+
+**Mike — step 8 complete (2026-07-09):**
+
+- [x] **070b** `makeWebhookUrl` = DEV Make webhook (`Shooting Challenge - DEV - Upload Engine - Lambda - v1`)
+- [x] **070b** automation toggle = **OFF**
+- [x] **070a** = **OFF**
+- [x] First-fire asset locked: **`recF86pJTIMFoEypJ`** — do **not** toggle **Send to Make Trigger**
+
+**Next gate (explicit approval required):** §7 step **10** only — turn **070b ON**, single asset `recF86pJTIMFoEypJ`, then probe + hybrid artifacts. **No broad automation. No production.**
 
 ---
 
@@ -35,14 +60,14 @@
 
 **Shared script body (v4.1):** Both use the same logic. **070b** is distinguished only by Airtable automation **input** `automationNumber = "070b"` and (must verify) **trigger conditions** limiting to video assets.
 
-**Mike must verify in DEV Airtable UI (not exportable via API):**
+**Mike verified in DEV Airtable UI (2026-07-09):**
 
-- [ ] Automation **070b** is **OFF**
-- [ ] Automation **070a** is **OFF**
-- [ ] **070b** trigger table = **Submission Assets**
-- [ ] **070b** trigger type = **When a record matches conditions** (expected)
-- [ ] **070b** `makeWebhookUrl` input = **empty or DEV placeholder** — not Production hook
-- [ ] **070b** trigger conditions include **video-only** filters (see §3)
+- [x] Automation **070b** is **OFF**
+- [x] Automation **070a** is **OFF**
+- [ ] **070b** trigger table = **Submission Assets** *(verify before enable)*
+- [ ] **070b** trigger type = **When a record matches conditions** *(verify before enable)*
+- [x] **070b** `makeWebhookUrl` input = **DEV Make Lambda webhook** — not Production hook
+- [ ] **070b** trigger conditions include **video-only** filters (see §3) *(verify before enable)*
 
 ### Submission Assets — formula gates (DEV schema snapshot 2026-07-06)
 
@@ -239,16 +264,16 @@ Execute in order. **Stop if any step fails.**
 | Step | Action | 070b | 070a | Pass criteria |
 |------|--------|------|------|---------------|
 | **0** | Confirm this doc reviewed by Mike | OFF | OFF | Approval recorded |
-| **1** | Build/refactor DEV Make **SDK Hybrid** scenario (no S3 module) | OFF | OFF | Webhook URL copied to ops notes only |
-| **2** | Create fresh H2 **Pending Link** video asset | OFF | OFF | `Ready to Send to Make? = READY_TO_SEND` |
-| **3** | Manual POST v4.1 payload to DEV webhook | OFF | OFF | Make green; SDK path invoked or stub 200 |
-| **4** | Run `_probe_c013_asset_storage_fields.py --record-id <assetId>` | OFF | OFF | `allPass=true` after SDK completes |
+| **1** | Build DEV Make **Lambda** scenario (no S3 module) | OFF | OFF | **PASS** 2026-07-10 |
+| **2** | Create fresh H2 **Pending Link** video asset | OFF | OFF | **PASS** — `recF86pJTIMFoEypJ` |
+| **3** | Manual POST v4.1 payload to DEV webhook | OFF | OFF | **PASS** — `recthL2wrTha5nWHL` |
+| **4** | Run `_probe_c013_asset_storage_fields.py --record-id <assetId>` | OFF | OFF | **PASS** (manual test asset) |
 | **5** | Verify attachment retained; Drive URL blank | OFF | OFF | Read-only GET |
 | **6** | Verify C-023 duplicate flags if same file bytes | OFF | OFF | JSON `c023Duplicate` block |
-| **7** | Document DEV webhook URL in ops (not GitHub) | OFF | OFF | — |
-| **8** | Paste DEV webhook into **070b** `makeWebhookUrl` input only | OFF | OFF | Input saved; automation still OFF |
-| **9** | **Mike approval** | — | — | Explicit go |
-| **10** | Turn **070b ON**; uncheck/recreate trigger on **one** fresh test asset | **ON** | OFF | End-to-end PASS |
+| **7** | Document DEV webhook URL in ops (not GitHub) | OFF | OFF | **PASS** (local `.env`) |
+| **8** | Paste DEV webhook into **070b** `makeWebhookUrl` input only | OFF | OFF | **PASS 2026-07-09** — input saved; automation still OFF |
+| **9** | **Mike approval** for one controlled enable test | — | — | **PENDING** |
+| **10** | Turn **070b ON**; trigger on **`recF86pJTIMFoEypJ` only** | **ON** | OFF | End-to-end PASS |
 | **11** | Re-run probe; save 070b hybrid artifacts | ON | OFF | `allPass=true` |
 
 **Do not run H1. Do not enable 070a.**
@@ -264,18 +289,20 @@ Execute in order. **Stop if any step fails.**
 | **013 / 009 changes** | No | No | — |
 | **Make scenario** (webhook → Lambda HTTP, no S3) | Documented | **Yes** | Mike / ops |
 | **`c013_dev_h2_video_run.py`** | Exists | For fresh test assets | Done |
+| **`c013_dev_070b_prep_check.py`** | **Yes** | Validate Pending Link asset before enable | Done |
+| **`c013_dev_make_webhook_post.py`** | Exists | Manual Make webhook (070b OFF) | Done |
 
 ---
 
 ## 9. Approval checklist (Mike)
 
-- [ ] DEV **070b** trigger conditions match §3  
-- [ ] DEV **070a** remains **OFF**  
-- [ ] DEV Make scenario uses **Lambda** path (no S3 module)  
-- [ ] DEV webhook URL recorded (ops only)  
-- [ ] Lambda Function URL deployed and reachable from Make  
-- [ ] Disabled-state test plan §7 steps 1–8 PASS  
-- [ ] Explicit approval to turn **070b ON** (step 10)
+- [ ] DEV **070b** trigger conditions match §3 *(verify before step 10)*  
+- [x] DEV **070a** remains **OFF**  
+- [x] DEV Make scenario uses **Lambda** path (no S3 module)  
+- [x] DEV webhook URL recorded (ops only) — **070b input updated 2026-07-09**  
+- [x] Lambda Function URL deployed and reachable from Make  
+- [x] Disabled-state test plan §7 steps 1–8 PASS  
+- [ ] **Explicit approval** to turn **070b ON** for **one** asset (`recF86pJTIMFoEypJ`) — step 10
 
 **Until all checked:** **070b = OFF**
 

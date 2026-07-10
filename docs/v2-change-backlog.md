@@ -167,7 +167,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | **Make DEV Lambda manual webhook PASS (2026-07-10)** — asset `recthL2wrTha5nWHL`, scenario `recTqAXWshNR3b0c1`; probe `allPass=true`. **Next:** explicit approval → paste DEV Make webhook into **070b** `makeWebhookUrl` (automation still OFF) → one-asset 070b enable test. Gates: [Lambda URL test](./deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md) · [Make prep](./deploy-checklists/C-013-dev-make-lambda-scenario-prep.md) · [070b prep](./deploy-checklists/C-013-dev-070b-hybrid-prep.md) | C-012, C-020 | **in progress** |
+| **C-013** | AWS S3 canonical URLs | **070b prep step 8 DONE (2026-07-09)** — DEV `makeWebhookUrl` saved; **070b/070a OFF**. First-fire asset `recF86pJTIMFoEypJ`. **Next:** explicit approval → one controlled 070b enable test (step 10). [070b prep](./deploy-checklists/C-013-dev-070b-hybrid-prep.md) | C-012, C-020 | **in progress** |
 | **C-023** | File dedup by **content hash**, not title/filename | Hash writeback PASS (SDK + Lambda); duplicate lookup PASS on B4 asset | C-013, C-024 | **in progress** |
 | **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 
