@@ -1,8 +1,8 @@
 # C-023 — Production duplicate policy (specification)
 
 **Date:** 2026-07-10
-**Last revised:** 2026-07-10 — **owner policy correction** (independent upload + contextual manual review)
-**Status:** **Planning only** — Mike approval required before implementation
+**Last revised:** 2026-07-10 — **Stage 1** implementation specification (assessment + schema + claim design)
+**Status:** **Stage 1 complete** — awaiting Mike approval before Airtable schema (Stage 3) or Lambda deploy (Stage 4)
 **Backlog:** C-023 (parents: C-013, C-024)
 **Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on DEV
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
@@ -26,6 +26,16 @@ Every submitted asset:
 7. Combines SHA-256 with enrollment + submission context to flag **potential improper reuse** for Mike's manual review.
 8. Treats cross-enrollment matches as **informational only** — not suspicious by default.
 9. Preserves same-record retry idempotency (`skipped_already_uploaded`).
+
+### Locked operational defaults (2026-07-10)
+
+| Rule | Behavior |
+|------|----------|
+| Potential reuse | **Warning, not a hold** — upload and downstream processing continue |
+| Default meaning | **Not reviewed; processing normally** — not an affirmative Mike approval |
+| Mike only | Confirms improper duplicate via `Asset Reuse Decision` |
+| Consequences | **Only after** `Confirmed Duplicate` — separate auditable workflow, never in upload Lambda |
+| Evidence | File, asset record, hash, S3 object, match links, audit history **never deleted** |
 
 ---
 
@@ -248,18 +258,18 @@ Review view / Interface must link to:
 
 ### 5.3 Manual review outcome (operator-controlled)
 
-**Proposed field:** `Asset Reuse Review Status` (new single-select) — or extend `Duplicate Review Status` after Mike approves option list.
+**v1 field:** `Asset Reuse Decision` (single-select) — see **§11.4** for final schema. Mike only.
 
-| Value | Who sets | Meaning |
-|-------|----------|---------|
-| `Not Required` | Auto or Mike | No review needed |
-| `Pending Review` | **Auto only** on flag | Awaiting Mike |
-| `Approved — Legitimate Reuse` | Mike | OK — resubmit, correction, shared template, etc. |
-| `Approved — Correction/Resubmission` | Mike | Intentional redo |
-| `Confirmed Improper Reuse` | Mike | Same file used improperly |
-| `Unable to Determine` | Mike | Inconclusive |
+| Value | Writer |
+|-------|--------|
+| `Not Reviewed` | Default — automation never implies approval |
+| `Allowed — Legitimate Reuse` | Mike |
+| `Allowed — Correction/Resubmission` | Mike |
+| `Confirmed Duplicate` | Mike — enables Stage 5 consequence workflow only |
+| `Unable to Determine` | Mike |
+| `Resolved — Duplicate Record Error` | Mike |
 
-**Automation may only initialize** `Pending Review` (or `Not Required`). **Never** write final human judgment.
+Automation may set `Potential Asset Reuse?` and review reasons/summary. Automation **must not** write final judgment or overwrite a nonblank human decision on retry.
 
 ### 5.4 Pending review — downstream effects (Mike decisions)
 
@@ -389,100 +399,316 @@ The following are **withdrawn** and must not be implemented:
 
 ---
 
-## 9. Implementation plan (not started)
+## 9. Implementation plan (superseded by §13–§18)
 
-### 9.1 Lambda / Python
+Sections **10–18** contain the current Stage 1 specification, staged execution, schema, claim design, test matrix, and local test plan. Stage 2 code work begins only after Mike approves §11 + §10.
 
-| File | Changes |
-|------|---------|
-| `lambda/upload-asset/upload_core/duplicate.py` | Global + same-enrollment queries; context comparator; review reason builder; primary prior selection; **no** reuse writeback |
-| `lambda/upload-asset/upload_core/processor.py` | Always `upload_s3()` then write review fields; new `actionOut` e.g. `uploaded` / `uploaded_review_flagged` |
-| `lambda/upload-asset/upload_core/airtable.py` | Field list constants for match GET; optional batch match load |
-| `lambda/upload-asset/tests/test_duplicate_review_scope.py` | **New** — H3b–H3h logic |
-| `lambda/upload-asset/tests/test_processor_always_uploads.py` | **New** — S3 always called except idempotent skip |
+## 10. Upload status, claim sequence, and H3 collision (Stage 1 assessment)
 
-### 9.2 Airtable (DEV — Mike approval)
+**Status:** **Open** — separate from C-023 review logic but **blocks reliable DEV/Production upload testing** until resolved.
 
-New fields (§7.5), lookups from primary prior, review queue view. **OMNI** for Interface.
+### 10.1 Current sequence (code review)
 
-### 9.3 DEV test matrix (not executed)
+| Step | Component | Behavior today |
+|------|-----------|----------------|
+| 1 | **013 / 020** | Asset → `Upload Status = Pending Link`; `Send to Make Trigger` checked |
+| 2 | **070b** (when ON) | POST Make webhook; on HTTP **2xx** → `Upload Status = Processing` |
+| 3 | **Make** | Module 3 POST Lambda Function URL (async within scenario) |
+| 4 | **Lambda** | Requires `Upload Status = Pending Link` at `validate_pre_upload()` — **rejects Processing** |
+| 5 | **Lambda** | On success → `Uploaded` + storage writeback; never sets `Processing` itself |
+| 6 | **Lambda** | `already_uploaded()` → `skipped_already_uploaded` when Uploaded + canonical + hash |
 
-| ID | Scenario | S3 | Review | Primary pass criteria |
-|----|----------|-----|--------|----------------------|
-| **H3b** | Same enrollment, same assignment, same bytes | New key | `Same Assignment Resubmission`; both uses visible | Independent URLs; match link; summary mentions same assignment |
-| **H3c** | Same enrollment, different homework | New key | `Different Assignment Reuse`; Pending Review | Prior + current HC context in summary |
-| **H3d** | Homework → Video Feedback | New key | `Homework Used for Video Feedback`; Pending Review | Cross-type summary |
-| **H3e** | Video Feedback → Homework | New key | `Video Feedback Used for Homework`; Pending Review | Reverse cross-type |
-| **H3f** | Different enrollment, same bytes | New key | Informational only; **not** Pending Review | `Cross-Enrollment Match — Informational` in notes |
-| **H3g** | Same enrollment, different week | New key | `Different Week Reuse`; Pending Review | Both weeks in summary |
-| **H3h** | Missing assignment/context | New key | `Missing Context`; Pending Review | Upload succeeds |
-| **H3i** | Same asset-record retry | **No** second object | Unchanged | `skipped_already_uploaded` |
+**There is no formal claim token, lease, or single-worker lock today.** `Processing` is a convention set by 070b after Make accepts the webhook — not a Lambda-issued lease.
 
-**Common pass criteria:** `Upload Status = Uploaded`; own `Storage Key` + `Canonical File URL`; hash matches; attachment retained; reference records untouched; no unrelated writes.
+### 10.2 H3 collision root cause
 
-**Common fail criteria:** Blocked upload; reused prior URL/key; stuck Processing; second object on H3i; unrelated records changed.
+| Evidence | Finding |
+|----------|---------|
+| H3 prep | Asset reached `Pending Link` + `READY_TO_SEND` |
+| H3 invoke #1 | Lambda error: `Upload Status must be "Pending Link"; got "Processing"` |
+| **070b script** | Only production path that sets Submission Assets `Processing` (after Make 2xx) |
+| **recIY** diagnosis | Make returned 200 **Accepted** but Lambda never ran — stuck Processing |
+| H3 recovery | Manual reset to Pending Link + invoke #2 succeeded |
 
-### 9.4 Production promotion prerequisites
+**Root cause class:** Orchestration race — asset moves to `Processing` before (or without) Lambda completing writeback. Direct Lambda invoke while `Processing` fails by design. Competing 070b/Make run vs manual test is plausible when `READY_TO_SEND` is true.
 
-- H3b–H3i PASS on DEV
-- Mike approves schema + review status options
-- Review Interface/view in DEV
-- Processing race disposition (§10) — SOP minimum for manual tests
-- [C-013 production promotion plan](./C-013-production-promotion-plan.md) updated
+**Not caused by:** duplicate-review logic, H3 prep harness, or separate asset records with identical bytes.
+
+### 10.3 Recommended single-worker claim design (C-013-UPLOAD-CLAIM)
+
+**Official claim owner:** **Lambda** (at processing start). **070b** must stop being the sole writer of `Processing` without a shared claim contract.
+
+| # | Behavior |
+|---|----------|
+| 1 | Asset ready → `Pending Link` |
+| 2 | Authorized path invokes Lambda (Make or direct test) with optional `uploadClaimRunId` in payload |
+| 3 | Lambda **claims**: if `Pending Link` → PATCH `Processing` + `Upload Claim Run ID` + `Processing Started At` |
+| 4 | Lambda accepts `Processing` **only** when claim id matches payload or stale-lease policy applies |
+| 5 | Concurrent worker with different/missing claim → `skipped_concurrent_upload` or `error_claim_conflict` (no S3) |
+| 6 | Success → `Uploaded` + clear claim fields |
+| 7 | Same record already Uploaded → `skipped_already_uploaded` |
+| 8 | Stale `Processing` → reclaim per §10.4 |
+
+**070b change (separate approval):** Option **A** (preferred) — 070b **does not** set `Processing`; only clears `Send to Make Trigger` on Make 2xx. Option **B** — 070b sets `Processing` + generates `uploadClaimRunId` passed through Make payload for Lambda to validate.
+
+**Do not combine** claim fix deployment with C-023 review field rollout unless Mike approves coordinated Stage 2 PR.
+
+### 10.4 Stale Processing recovery
+
+| Item | Proposal |
+|------|----------|
+| Detection | `audit-stuck-upload-processing.js` (exists) — extend for canonical/hash blank + age > 30 min |
+| New fields | `Processing Started At` (datetime), `Upload Claim Run ID` (text) |
+| Recovery | Ops or Lambda `stale_claim_recovery`: if Processing, no canonical, started > TTL → reset `Pending Link` or allow reclaim on next invoke |
+| Manual DEV test SOP | **070b OFF**; invoke within seconds of prep; never leave asset `READY_TO_SEND` idle |
+
+### 10.5 Production blocker?
+
+| Area | Blocker? |
+|------|----------|
+| C-023 review specification | **No** |
+| Upload path reliability with 070b ON | **Yes** until claim design deployed |
+| DEV H3b–H3p runtime tests | **Yes** without claim SOP or fix |
 
 ---
 
-## 10. Processing race (separate issue)
+## 11. Stage 1 — v1 schema proposal (final for Mike approval)
 
-**Status:** **Open** — documented in H3 test and prior analysis. **Not a C-023 duplicate-policy blocker** for specification or Lambda review logic.
+**Source:** DEV schema snapshot `dev-20260706` + Lambda field audit. **Do not create fields in Stage 1.**
 
-| Question | Answer |
-|----------|--------|
-| Production blocker for duplicate **policy**? | **No** — race is 070b/Make/Lambda orchestration |
-| Production blocker for **upload path**? | **Yes, potentially** — asset can stick Processing if Make 200 without Lambda writeback |
-| Combine fixes? | **No** unless shared root cause proven — separate C-013-OPS slice |
-| Evidence | H3 first invoke; `recIYFnfmsPcy7iop` diagnosis artifact |
+### 11.1 Field reuse vs new
 
-See [C-023-dev-h3-duplicate-bytes-test.md § Processing race](./C-023-dev-h3-duplicate-bytes-test.md).
+| Existing field | Reuse? | Stage 1 recommendation |
+|----------------|--------|--------------------------|
+| `File Content Hash` | **Keep** | Lambda writes SHA-256 |
+| `File Hash Algorithm` | **Keep** | `SHA-256` |
+| `Duplicate Match Record` | **Keep** | Primary prior comparison link (single) |
+| `Duplicate Match Strength` | **Keep** | `Exact SHA-256 Hash` |
+| `Duplicate Checked At` | **Keep** | Audit timestamp |
+| `Duplicate Check Error` | **Keep** | Partial-failure diagnostics |
+| `Duplicate Match Notes` | **Keep** | Machine debug + optional global-match note |
+| `File is Duplicate?` | **Deprecate writer** | Conflates global hash + review — stop writing; migrate to `Exact Hash Match Found?` |
+| `Duplicate File Status` | **Repurpose writer** | Technical only: `Unique`, `Exact Duplicate` (hash exists), `Not Checked`, `Error` — **not** review queue |
+| `Duplicate Review Status` | **Do not write from Lambda** | Legacy/submission-adjacent semantics differ; avoid collision with `Asset Reuse Decision` |
+| `Review Complete?` | **Unrelated** | Coach review — do not repurpose |
+
+### 11.2 New fields — technical (Lambda writer)
+
+| Field | Type | Writer | Meaning |
+|-------|------|--------|---------|
+| `Exact Hash Match Found?` | checkbox | Lambda | Identical bytes exist anywhere |
+| `Same Enrollment Match Found?` | checkbox | Lambda | ≥1 same-enrollment hash match |
+| `Duplicate Match Records (All)` | multipleRecordLinks (self) | Lambda | All same-enrollment uploaded matches |
+| `Upload Claim Run ID` | singleLineText | Lambda / 070b | Single-worker claim token |
+| `Processing Started At` | dateTime | Lambda | Claim lease start |
+
+### 11.3 New fields — automated review (Lambda writer only)
+
+| Field | Type | Writer | Meaning |
+|-------|------|--------|---------|
+| `Potential Asset Reuse?` | checkbox | Lambda | Contextual same-enrollment warning |
+| `Asset Reuse Review Primary Reason` | singleSelect | Lambda | Highest-severity reason (§4.4 order) |
+| `Asset Reuse Review Reasons` | multipleSelect | Lambda | All triggered reasons |
+| `Asset Reuse Review Summary` | multilineText | Lambda | Plain-language current vs prior comparison |
+
+**Queue status:** Use `Potential Asset Reuse? = true` as queue filter — **no separate** `Asset Reuse Review Queue Status` in v1 (avoids overlap with decision field). Optional formula view: `AND({Potential Asset Reuse?}, {Asset Reuse Decision} = "Not Reviewed")`.
+
+### 11.4 Mike-controlled decision (Mike / OMNI only)
+
+| Field | Type | Writer | Values |
+|-------|------|--------|--------|
+| `Asset Reuse Decision` | singleSelect | **Mike only** | `Not Reviewed` (default), `Allowed — Legitimate Reuse`, `Allowed — Correction/Resubmission`, `Confirmed Duplicate`, `Unable to Determine`, `Resolved — Duplicate Record Error` |
+
+**Retry rule:** Lambda **must not overwrite** `Asset Reuse Decision` when not blank and not `Not Reviewed`.
+
+### 11.5 Audit fields (Mike + consequence workflow)
+
+| Field | Type | Writer | Purpose |
+|-------|------|--------|---------|
+| `Asset Reuse Reviewed At` | dateTime | Mike / consequence automation | Last human decision timestamp |
+| `Asset Reuse Reviewed By` | singleLineText or collaborator | Mike | Reviewer identity |
+| `Asset Reuse Review Notes` | multilineText | Mike | Free-text |
+| `Duplicate Resolution Applied?` | checkbox | Consequence automation | Idempotent apply guard |
+| `Duplicate Resolution Applied At` | dateTime | Consequence automation | When consequences ran |
+| `Duplicate Resolution Error` | multilineText | Consequence automation | Apply failure |
+
+### 11.6 Lookups for OMNI (create after primary link populated)
+
+Lookups **from** `Duplicate Match Record` on Submission Assets:
+
+- Prior `Athlete Full Name`, `Asset Type`, `Asset Purpose`, `Week`, `Date`, `Submission - Linked`, `Homework Completions`, `Video Feedback`, `Original File Name`, `Canonical File URL`, `Uploaded At`
+
+No new links required for side-by-side display if primary link + lookups suffice.
+
+### 11.7 Primary reason severity order (comparison only)
+
+1. Homework Used for Video Feedback
+2. Video Feedback Used for Homework
+3. Different Assignment Reuse
+4. Different Week Reuse
+5. Different Submission Reuse
+6. Cross-Type Reuse (generic)
+7. Same Assignment Resubmission
+8. Missing Context
+9. Multiple Prior Uses
+
+Tie-break: earliest prior `Uploaded At`, then lowest `rec` id.
 
 ---
 
-## 11. Decisions requiring Mike approval
+## 12. Downstream behavior (locked v1)
+
+### 12.1 Default and pending review
+
+When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
+
+- `Upload Status` = successful (`Uploaded`)
+- Homework / VF workflows **continue**
+- XP **not** withheld; existing XP **not** removed
+- Gate credit **not** withheld
+- Asset appears in Mike's review queue (view/Interface)
+- Meaning: **processing normally; not yet reviewed**
+
+### 12.2 Mike decision outcomes
+
+| `Asset Reuse Decision` | Credit / XP | Queue | Consequence workflow |
+|------------------------|-------------|-------|----------------------|
+| `Not Reviewed` | Normal | Visible if `Potential Asset Reuse?` | None |
+| `Allowed — Legitimate Reuse` | Normal | Cleared from pending filter | None |
+| `Allowed — Correction/Resubmission` | Normal; identify credit target | Cleared | Optional correction if duplicate HC/XP row exists |
+| `Unable to Determine` | Normal | May remain visible | None |
+| `Confirmed Duplicate` | **No auto-change** until consequence workflow | Cleared after review | **Triggers/enables** Stage 5 workflow |
+| `Resolved — Duplicate Record Error` | Normal | Cleared | None |
+
+### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — design only)
+
+**Separate automation/extension** (not upload Lambda):
+
+| Principle | Rule |
+|-----------|------|
+| Idempotent | `Duplicate Resolution Applied?` guard + Source Key per correction |
+| Auditable | Write `Asset Reuse Review Notes`, resolution timestamps |
+| Reversible where practical | Deactivate (not delete) XP Events; mark HC/VF ineligible flags |
+| Evidence preserved | **Never** delete S3 object or Submission Asset |
+
+**Records that may need correction (assess in Stage 5):**
+
+| Record | Possible action |
+|--------|-----------------|
+| Homework Completion | Mark duplicate credit / satisfactory denied |
+| Video Feedback | Mark ineligible for XP or coach completion |
+| XP Events | Deactivate or reverse via existing patterns (**114** Source Key) |
+| Weekly Athlete Summary | Rollup recalc via existing chains |
+| Enrollment gate rollups | Recalc after XP/HC correction |
+
+**Trigger:** Airtable automation on `Asset Reuse Decision` → `Confirmed Duplicate` (DEV first) **or** manual extension with `CONFIRM_WRITE`.
+
+---
+
+## 13. Staged execution
+
+| Stage | Scope | Status |
+|-------|--------|--------|
+| **1** | Assessment, schema proposal, claim design, docs | **Complete** (this revision) |
+| **2** | Lambda + local tests | **Blocked** — Mike approval of §11 schema + §10 claim design |
+| **3** | DEV Airtable fields + OMNI Interface | **Blocked** — separate approval |
+| **4** | DEV runtime H3b–H3p + claim tests | **Blocked** — after Stage 2–3 |
+| **5** | Consequence workflow | **Blocked** — separate design approval |
+| **6** | Production readiness | **Blocked** — after Stage 4 pass |
+
+---
+
+## 14. DEV runtime test matrix (prepare only — not executed)
+
+| ID | Scenario | S3 | Review flags | Decision | Pass highlights |
+|----|----------|-----|--------------|----------|----------------|
+| **H3b** | Same enrollment, same assignment, same bytes | New key | `Same Assignment Resubmission`; `Potential Asset Reuse?` | Stays `Not Reviewed` | Both uses visible; normal processing |
+| **H3c** | Different homework assignment | New key | `Different Assignment Reuse` | `Not Reviewed` | Summary shows both assignments |
+| **H3d** | HW → VF | New key | `Homework Used for Video Feedback` | `Not Reviewed` | Cross-type summary |
+| **H3e** | VF → HW | New key | `Video Feedback Used for Homework` | `Not Reviewed` | Reverse cross-type |
+| **H3f** | Different enrollment | New key | Informational only; **no** `Potential Asset Reuse?` | `Not Reviewed` | Cross-enrollment note optional |
+| **H3g** | Different week | New key | `Different Week Reuse` | `Not Reviewed` | Both weeks in summary |
+| **H3h** | Missing context | New key | `Missing Context` | `Not Reviewed` | Upload succeeds |
+| **H3i** | Same asset-record retry | **No** second object | Unchanged | Unchanged | `skipped_already_uploaded` |
+| **H3j** | Multiple prior same-enrollment | New key | `Multiple Prior Uses` | `Not Reviewed` | Primary + all-links populated |
+| **H3k** | Retry with Mike decision set | No re-upload | Review fields not overwritten | Preserved | Lambda skips decision PATCH |
+| **H3l** | Two workers same asset | One object max | — | — | Second returns skip/conflict |
+| **H3m** | Stale Processing recovery | One object | — | — | Reclaim or reset per §10.4 |
+| **H3n** | Mike → Allowed — Legitimate Reuse | — | — | Allowed | Credit unchanged; off pending queue |
+| **H3o** | Mike → Allowed — Correction/Resubmission | — | — | Allowed | Both files preserved |
+| **H3p** | Mike → Confirmed Duplicate | — | — | Confirmed | Evidence intact; consequence workflow eligible |
+
+**Each test doc must include:** starting records, expected hash, permitted writes, rollback/evidence retention, fail criteria (blocked upload, reused URL/key, stuck Processing, decision overwritten).
+
+---
+
+## 15. Local test plan (Stage 2)
+
+| Test module | Cases |
+|-------------|-------|
+| `test_duplicate_review_scope.py` | Context comparator: H3b–H3h reason codes; cross-enrollment informational |
+| `test_duplicate_primary_match.py` | Severity order + tie-break |
+| `test_processor_always_uploads.py` | Separate asset records always PutObject; never copy prior URL/key |
+| `test_processor_idempotent.py` | `skipped_already_uploaded`; H3i |
+| `test_processor_review_writeback.py` | Partial failure: S3 ok, review PATCH fails — upload fields retained |
+| `test_processor_decision_guard.py` | Existing Mike decision never overwritten |
+| `test_upload_claim.py` | Claim, concurrent reject, stale reclaim |
+
+Run: `python -m pytest lambda/upload-asset/tests/` (no deploy).
+
+---
+
+## 16. OMNI Interface requirements (Stage 3)
+
+After schema approval, Mike builds in OMNI:
+
+| Element | Requirement |
+|---------|-------------|
+| Filter | `Potential Asset Reuse?` + `Asset Reuse Decision = Not Reviewed` |
+| Layout | Current use (left) / prior use via lookups (right) |
+| Summary | `Asset Reuse Review Summary` prominent |
+| Links | Open current asset, primary prior asset, HC/VF records, both canonical URLs |
+| Controls | `Asset Reuse Decision`, `Asset Reuse Review Notes`, `Asset Reuse Reviewed At` |
+| Read-only | Hash, storage keys, reason multiselect (Lambda-written) |
+
+---
+
+## 17. Decisions requiring Mike approval (Stage 1 gate)
 
 | # | Decision |
 |---|----------|
-| 1 | New fields vs extend `Duplicate Review Status` options |
-| 2 | `File is Duplicate?` semantics vs new `Has Global Hash Match?` |
-| 3 | Primary prior match rule when multiple reasons conflict |
-| 4 | `Same Assignment Resubmission` — auto `Not Required` or always Pending Review |
-| 5 | Pending review effects on XP, homework satisfactory, VF (§5.4) |
-| 6 | Multi-link field for all matches vs notes-only v1 |
-| 7 | Processing race fix priority vs C-023 implementation |
-| 8 | Production cutover timing |
+| 1 | Approve §11 v1 schema (new fields + deprecate `File is Duplicate?` writer) |
+| 2 | Approve §10 claim design (070b Option A vs B) |
+| 3 | `Same Assignment Resubmission` always queues (`Potential Asset Reuse?`) — **recommended yes** |
+| 4 | Skip `Asset Reuse Review Queue Status` — use checkbox + decision filter — **recommended yes** |
+| 5 | Stage 2 code start (local tests only, no deploy) |
+| 6 | Stage 3 DEV schema + OMNI |
+| 7 | Stage 5 consequence scope (which rollups/XP paths) |
+| 8 | Processing claim fix priority vs review code in one PR |
 
 ---
 
-## 12. C-023 closure criteria
+## 18. C-023 closure criteria
 
 C-023 **done** only when:
 
-1. This policy approved
-2. Independent upload + contextual review implemented
-3. H3b–H3i PASS on DEV
-4. Review queue visible to Mike (view or Interface)
-5. Audit checks defined
+1. Policy + schema approved
+2. Stage 2 local tests pass
+3. Stage 3 schema + OMNI review queue live on DEV
+4. Stage 4 H3b–H3p (+ claim tests) PASS
+5. Stage 5 consequence workflow approved (or explicitly deferred with disposition)
+6. Audit checks defined
 
 **Current state:**
 
 | Item | Status |
 |------|--------|
 | H3 hash detection | **PASS** |
-| Prior reuse policy | **Superseded** |
-| Independent upload policy | **Approved** (this doc) |
-| Contextual same-enrollment review rules | **Approved** (this doc) |
-| Schema / code implementation | **Not started** |
-| DEV scenario matrix H3b–H3i | **Pending** |
-| Processing race | **Separate / open** |
+| Independent upload + manual review policy | **Approved** |
+| Stage 1 assessment + schema proposal | **Complete** |
+| Stage 2–6 implementation | **Not started** |
+| Processing claim | **Designed — open** |
+| C-023 | **in progress** |
 
 ---
 

@@ -160,11 +160,11 @@ No other Submission Assets modified.
 
 ## Recommended next slice
 
-1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) (independent upload + manual review)
-2. **Schema approval:** review fields + operator status options (§7.5 of policy doc)
-3. **Implementation:** Lambda contextual review + DEV H3b–H3i
-4. **OMNI:** review Interface after schema approved
-5. **Processing race:** separate C-013-OPS slice (policy doc §10)
+1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) §11 schema + §10 claim design (Stage 1 gate)
+2. **Stage 2:** Lambda contextual review + local tests (no deploy)
+3. **Stage 3:** DEV Airtable fields + OMNI Interface
+4. **Stage 4:** DEV runtime H3b–H3p
+5. **Processing claim:** C-013-UPLOAD-CLAIM slice (§10) — coordinate with 070b change approval
 
 ---
 
