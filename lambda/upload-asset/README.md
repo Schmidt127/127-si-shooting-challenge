@@ -18,6 +18,14 @@ lambda/upload-asset/
 
 ```powershell
 cd lambda/upload-asset
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **31 unit tests PASS**. Not deployed; approved schema fields referenced by name only.
+
+Legacy path helpers and DEV invoke (requires env; not part of unit tests):
+
+```powershell
 python tests/test_core.py
 
 cd ../../tools/airtable

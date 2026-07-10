@@ -241,7 +241,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
 
-**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023:** Stage 1 assessment complete — [policy §10–§18](./C-023-production-duplicate-policy.md); Stages 2–6 await Mike approval.
+**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023:** Stage 2A/2B local implementation complete — [policy](./C-023-production-duplicate-policy.md); **Stage 3** DEV schema + OMNI next.
 
 ---
 
@@ -499,7 +499,7 @@ See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)
 |------|----------|---------------|
 | **H1** | New C-020 Homework 1-file (clone G) | Asset → **070a** → Make → `Upload Status = Uploaded`, **Canonical File URL** set, **022** on HC |
 | **H2** | New C-020 Video 1-file (clone F) | Asset → **070b** → VF URL set |
-| **H3** | C-023 | Global hash + independent S3 — **PASS** (`rec1ZyqOfljt4foEX`). **Stage 1** schema/claim spec complete. **H3b–H3p** runtime tests pending Stage 4 approval |
+| **H3** | C-023 | Global hash + independent S3 — **PASS** (`rec1ZyqOfljt4foEX`). **Stage 2A/2B** local code + unit tests PASS. **H3b–H3p** runtime tests pending Stage 3–4 |
 | **H4** | Attachment clear | After success, `Airtable Attachment` empty on asset (+ submission intake fields) |
 
 Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).

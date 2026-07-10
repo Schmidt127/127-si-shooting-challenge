@@ -1,13 +1,13 @@
 # C-023 — Production duplicate policy (specification)
 
 **Date:** 2026-07-10
-**Last revised:** 2026-07-10 — **Stage 1** implementation specification (assessment + schema + claim design)
-**Status:** **Stage 1 complete** — awaiting Mike approval before Airtable schema (Stage 3) or Lambda deploy (Stage 4)
+**Last revised:** 2026-07-10 — **Stage 2A/2B** local implementation (claim + contextual review code + unit tests)
+**Status:** **Stage 2A/2B complete (local only)** — runtime blocked until Stage 3 DEV schema + Stage 4 Lambda deploy approval
 **Backlog:** C-023 (parents: C-013, C-024)
 **Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on DEV
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
 
-**Hard stops:** No Lambda deploy · no Airtable writes · no Production changes in this doc task
+**Hard stops:** No Lambda deploy · no Airtable field creation · no Production changes
 
 ---
 
@@ -407,18 +407,30 @@ Sections **10–18** contain the current Stage 1 specification, staged execution
 
 **Status:** **Open** — separate from C-023 review logic but **blocks reliable DEV/Production upload testing** until resolved.
 
-### 10.1 Current sequence (code review)
+### 10.1 Current sequence (code — Stage 2A implemented locally)
 
-| Step | Component | Behavior today |
-|------|-----------|----------------|
+| Step | Component | Behavior (repo `master` after Stage 2A) |
+|------|-----------|----------------------------------------|
 | 1 | **013 / 020** | Asset → `Upload Status = Pending Link`; `Send to Make Trigger` checked |
-| 2 | **070b** (when ON) | POST Make webhook; on HTTP **2xx** → `Upload Status = Processing` |
-| 3 | **Make** | Module 3 POST Lambda Function URL (async within scenario) |
-| 4 | **Lambda** | Requires `Upload Status = Pending Link` at `validate_pre_upload()` — **rejects Processing** |
-| 5 | **Lambda** | On success → `Uploaded` + storage writeback; never sets `Processing` itself |
-| 6 | **Lambda** | `already_uploaded()` → `skipped_already_uploaded` when Uploaded + canonical + hash |
+| 2 | **070b** (when ON) | POST Make webhook — **Option A:** should **not** set `Processing` (separate Airtable approval) |
+| 3 | **Make** | Module 3 POST Lambda Function URL |
+| 4 | **Lambda** | `evaluate_upload_claim()` — `Pending Link` → claim PATCH (`Processing` + `Upload Claim Run ID` + `Processing Started At`) |
+| 5 | **Lambda** | `Processing` + matching claim + active lease → `claim_continuation` (no second claim PATCH) |
+| 6 | **Lambda** | Concurrent / stale / legacy Processing → skip or error **without S3** |
+| 7 | **Lambda** | On success → `Uploaded` + storage writeback; claim audit fields **preserved** |
+| 8 | **Lambda** | `already_uploaded()` → `skipped_already_uploaded` |
 
-**There is no formal claim token, lease, or single-worker lock today.** `Processing` is a convention set by 070b after Make accepts the webhook — not a Lambda-issued lease.
+**There is no formal claim token in deployed Lambda yet** — Stage 2A implements `upload_core/upload_claim.py` locally; deploy blocked until Stage 4.
+
+### 10.1b Claim-state matrix (implemented in `upload_claim.py`)
+
+| Upload Status | Claim on record | Payload `uploadClaimRunId` | Lease | `actionOut` | S3 |
+|---------------|-----------------|----------------------------|-------|-------------|-----|
+| `Pending Link` | n/a | optional | n/a | `claim_acquired` | yes (after claim PATCH) |
+| `Processing` | matches payload | same | active (<30 min) | `claim_continuation` | yes |
+| `Processing` | differs / missing | other / blank | active | `skipped_concurrent_upload` or `error_claim_conflict` | **no** |
+| `Processing` | any | any | stale (≥30 min or missing started) | `stale_claim` | **no** (not auto-reset) |
+| `Uploaded` + canonical + hash | any | any | any | `skipped_already_uploaded` | **no** |
 
 ### 10.2 H3 collision root cause
 
@@ -642,19 +654,15 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 
 ---
 
-## 15. Local test plan (Stage 2)
+## 15. Local test plan (Stage 2) — **PASS (2026-07-10)**
 
-| Test module | Cases |
-|-------------|-------|
-| `test_duplicate_review_scope.py` | Context comparator: H3b–H3h reason codes; cross-enrollment informational |
-| `test_duplicate_primary_match.py` | Severity order + tie-break |
-| `test_processor_always_uploads.py` | Separate asset records always PutObject; never copy prior URL/key |
-| `test_processor_idempotent.py` | `skipped_already_uploaded`; H3i |
-| `test_processor_review_writeback.py` | Partial failure: S3 ok, review PATCH fails — upload fields retained |
-| `test_processor_decision_guard.py` | Existing Mike decision never overwritten |
-| `test_upload_claim.py` | Claim, concurrent reject, stale reclaim |
+| Test module | Cases | Status |
+|-------------|-------|--------|
+| `tests/test_duplicate_review.py` | Context comparator: reason codes; cross-enrollment informational; primary match; decision guard | **PASS** |
+| `tests/test_processor.py` | Always uploads; idempotent skip; review writeback partial failure; claim skip paths | **PASS** |
+| `tests/test_upload_claim.py` | Claim, concurrent reject, stale claim (no auto-reset) | **PASS** |
 
-Run: `python -m pytest lambda/upload-asset/tests/` (no deploy).
+Run: `cd lambda/upload-asset && python -m unittest discover -s tests -p "test_*.py" -v` (no deploy).
 
 ---
 
@@ -673,18 +681,18 @@ After schema approval, Mike builds in OMNI:
 
 ---
 
-## 17. Decisions requiring Mike approval (Stage 1 gate)
+## 17. Decisions requiring Mike approval
 
-| # | Decision |
-|---|----------|
-| 1 | Approve §11 v1 schema (new fields + deprecate `File is Duplicate?` writer) |
-| 2 | Approve §10 claim design (070b Option A vs B) |
-| 3 | `Same Assignment Resubmission` always queues (`Potential Asset Reuse?`) — **recommended yes** |
-| 4 | Skip `Asset Reuse Review Queue Status` — use checkbox + decision filter — **recommended yes** |
-| 5 | Stage 2 code start (local tests only, no deploy) |
-| 6 | Stage 3 DEV schema + OMNI |
-| 7 | Stage 5 consequence scope (which rollups/XP paths) |
-| 8 | Processing claim fix priority vs review code in one PR |
+| # | Decision | Status |
+|---|----------|--------|
+| 1 | Approve §11 v1 schema (new fields + deprecate `File is Duplicate?` writer) | **Pending** — Stage 3 |
+| 2 | Approve §10 claim design (070b Option A) | **Approved** — implemented locally (Stage 2A) |
+| 3 | `Same Assignment Resubmission` always queues (`Potential Asset Reuse?`) | **Implemented** locally |
+| 4 | Skip `Asset Reuse Review Queue Status` | **Implemented** locally |
+| 5 | Stage 2 code (local tests only, no deploy) | **Complete** (2026-07-10) |
+| 6 | Stage 3 DEV schema + OMNI | **Pending** |
+| 7 | Stage 5 consequence scope | **Pending** |
+| 8 | Lambda deploy + 070b Option A Airtable change | **Pending** — Stage 4 |
 
 ---
 
@@ -693,7 +701,7 @@ After schema approval, Mike builds in OMNI:
 C-023 **done** only when:
 
 1. Policy + schema approved
-2. Stage 2 local tests pass
+2. ~~Stage 2 local tests pass~~ **Done (2026-07-10)**
 3. Stage 3 schema + OMNI review queue live on DEV
 4. Stage 4 H3b–H3p (+ claim tests) PASS
 5. Stage 5 consequence workflow approved (or explicitly deferred with disposition)
@@ -706,8 +714,9 @@ C-023 **done** only when:
 | H3 hash detection | **PASS** |
 | Independent upload + manual review policy | **Approved** |
 | Stage 1 assessment + schema proposal | **Complete** |
-| Stage 2–6 implementation | **Not started** |
-| Processing claim | **Designed — open** |
+| Stage 2A/2B local code + unit tests | **Complete (2026-07-10)** |
+| Stage 3–6 (schema, deploy, runtime, consequences) | **Not started** |
+| Processing claim | **Implemented locally** — deploy + 070b change pending |
 | C-023 | **in progress** |
 
 ---

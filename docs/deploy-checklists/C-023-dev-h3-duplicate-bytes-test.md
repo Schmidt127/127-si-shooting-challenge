@@ -160,11 +160,11 @@ No other Submission Assets modified.
 
 ## Recommended next slice
 
-1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) §11 schema + §10 claim design (Stage 1 gate)
-2. **Stage 2:** Lambda contextual review + local tests (no deploy)
-3. **Stage 3:** DEV Airtable fields + OMNI Interface
-4. **Stage 4:** DEV runtime H3b–H3p
-5. **Processing claim:** C-013-UPLOAD-CLAIM slice (§10) — coordinate with 070b change approval
+1. ~~**Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) §11 schema + §10 claim design (Stage 1 gate)~~ — claim **approved**; schema pending Stage 3
+2. ~~**Stage 2:** Lambda contextual review + local tests (no deploy)~~ — **complete (2026-07-10)** — 31 unit tests PASS
+3. **Stage 3:** DEV Airtable fields + OMNI Interface — **next approval gate**
+4. **Stage 4:** DEV runtime H3b–H3p + Lambda deploy
+5. **Processing claim:** 070b Option A Airtable change (stop setting `Processing`) — separate approval with Stage 4 deploy
 
 ---
 
