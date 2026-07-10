@@ -1,7 +1,7 @@
 # C-013 — DEV Make Lambda scenario prep (orchestration only)
 
 **Date:** 2026-07-09  
-**Status:** **PREP ONLY** — create scenario in Make UI; **do not enable 070b** until manual Make test PASS  
+**Status:** **Make manual webhook PASS (2026-07-10)** — `recthL2wrTha5nWHL` via `Shooting Challenge - DEV - Upload Engine - Lambda - v1`. **070b remains OFF** until explicit approval.  
 **Parents:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) · [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md)
 
 **Hard stops:** DEV only · **070a / 070b OFF** · no Production Airtable/web · secrets **not in GitHub**
@@ -12,11 +12,84 @@
 
 | Gate | Status |
 |------|--------|
-| Lambda code deploy (Phase A) | PASS |
-| Function URL B1–B4 HTTP POST | PASS |
-| **C-013-SEC** webhook secret rotated | Required — `UPLOAD_WEBHOOK_SECRET` in local `.env` matches Lambda |
-| Airtable PAT rotated (exposed token revoked) | Mike — [airtable.com/create/tokens](https://airtable.com/create/tokens) → `--new-token-file .env.new-token` on rotation script |
-| `LAMBDA_FUNCTION_URL` in `tools/airtable/.env` | Local only |
+| Lambda code deploy (Phase A) | **PASS** |
+| Function URL B1–B4 HTTP POST | **PASS** |
+| **C-013-SEC** PAT + webhook secret rotated | **PASS** (2026-07-09) |
+| Exposed PAT revoked in Airtable UI | **PASS** (Mike) |
+| `LAMBDA_FUNCTION_URL` + `UPLOAD_WEBHOOK_SECRET` in `tools/airtable/.env` | Local only |
+| **Manual Make webhook test** | **PASS** (2026-07-10) — see § Pass record |
+
+---
+
+## Pass record — Make manual webhook (2026-07-10)
+
+| Item | Value |
+|------|--------|
+| **Asset** | `recthL2wrTha5nWHL` |
+| **C-020 scenario** | `recTqAXWshNR3b0c1` |
+| **Submission** | `recW6YsJNnY1qXJOX` |
+| **Video Feedback** | `recNinD0IlztL5z26` |
+| **Make HTTP** | **200** · `statusOut=success` · `actionOut=uploaded` · `runtime=lambda` · `environment=DEV` |
+| **Probe** | `allPass=true` · Upload Status **Uploaded** · C-013/C-023 fields populated · attachment retained · Writeback Complete? **1** |
+| **Artifacts** | `tools/airtable/_preview/c013-dev-make-webhook-recthL2wrTha5nWHL.json` · `...-verify.json` |
+| **Helper** | `tools/airtable/c013_dev_make_webhook_post.py` |
+
+**070b:** still **OFF** — DEV Make webhook URL in ops notes only until explicit enable approval.
+
+---
+
+## Mike checklist — create scenario in Make UI
+
+**070b stays OFF.** Build scenario only; test with **Run once**.
+
+| Step | Action | Done |
+|------|--------|------|
+| 1 | Make → **Create scenario** → name **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** | ✅ |
+| 2 | Module **1** — **Webhooks → Custom webhook** → copy webhook URL to **local ops notes only** (not GitHub) | ✅ |
+| 3 | Module **2** — **Router** — route when `automationNumber` = `070b` **AND** `routeKey` = `video_feedback` | ✅ |
+| 4 | Module **3** — **HTTP → Make a request** — see § Module 3 below | ✅ |
+| 5 | Module **4** — **Router** — success when HTTP status **200–299** | ✅ |
+| 6 | Module **5** — **Webhooks → Webhook response** — status **200** on success branch | ✅ |
+| 7 | Save scenario **OFF** (no scheduling) | ✅ |
+| 8 | H2 fresh asset: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` then `--poll-only` | ✅ |
+| 9 | **Run once** + `python c013_dev_make_webhook_post.py <assetId> ...` | ✅ |
+| 10 | Probe: `python _probe_c013_asset_storage_fields.py --record-id <assetId>` → `allPass=true` | ✅ |
+| 11 | Record Make scenario ID + webhook URL in **local ops notes** | ✅ |
+
+**Do not** paste Make webhook URL into **070b** `makeWebhookUrl` until step 10 PASS + explicit approval.
+
+---
+
+## Sample webhook JSON (Run once — replace asset id)
+
+Use a **fresh** H2 asset with `Upload Status = Pending Link`. Shape matches **070b v4.1** / `c013_dev_lambda_invoke.py`:
+
+```json
+{
+  "sourceName": "Airtable Upload Engine",
+  "automationNumber": "070b",
+  "sentAtIso": "2026-07-09T23:00:00.000Z",
+  "routeKey": "video_feedback",
+  "uploadDestination": "Video Feedback",
+  "sourceTable": "Submission Assets",
+  "submissionAssetRecordId": "recREPLACE_WITH_FRESH_ASSET",
+  "targetTable": "Video Feedback",
+  "targetRecordId": ""
+}
+```
+
+**Pass (live upload):** HTTP **200**, response `actionOut=uploaded`, `writebackVerification.allPass=true`.
+
+---
+
+## Module 2 — Router filters
+
+| Field | Operator | Value |
+|-------|----------|-------|
+| `automationNumber` | Equal to | `070b` |
+| `routeKey` | Equal to | `video_feedback` |
+
+Homework **070a** route is **out of scope** for this scenario (add later after H1 gate).
 
 ---
 
@@ -56,7 +129,9 @@
 | Body type | Raw / JSON |
 | Body | **Map entire webhook JSON** from module 1 (070b payload unchanged) |
 | Headers | `Content-Type: application/json` |
-| Headers | `X-Upload-Secret: <UPLOAD_WEBHOOK_SECRET>` — store in Make **scenario variable** or connection secret; **not in blueprint commit** |
+| Headers | `X-Upload-Secret: <UPLOAD_WEBHOOK_SECRET>` — copy from **`tools/airtable/.env`** into Make scenario variable; **not in blueprint commit** |
+
+**Make scenario variable (recommended):** create `uploadWebhookSecret` at scenario level; reference in module 3 header. Rotate by updating variable + Lambda env together (`c013_dev_rotate_secrets.py`).
 
 **Required JSON fields (070b slice):** `submissionAssetRecordId`, `routeKey`, `uploadDestination`, `sourceTable`, `targetTable`, `targetRecordId`, `automationNumber`, `sentAtIso`
 
@@ -84,9 +159,23 @@
 **070b remains OFF.** Test with **Run once** + sample webhook JSON pointing at a **fresh** H2 `Pending Link` asset.
 
 1. H2 harness: `python c013_dev_h2_video_run.py --confirm-write --prepare-only` then `--poll-only`
-2. Copy webhook JSON shape from DEV **070b** docblock / prior Make tests
-3. Make **Run once** → module 3 POST → expect **200**
-4. Verify: `python _probe_c013_asset_storage_fields.py --record-id <assetId>` → `allPass=true`
+2. In PowerShell — POST webhook (Make **Run once** must be waiting):
+
+```powershell
+cd tools/airtable
+# One-time: copy webhook URL from Make module 1 into .env as MAKE_DEV_UPLOAD_WEBHOOK_URL
+python c013_dev_make_webhook_post.py <assetId> --scenario-id <scenarioRec> --submission-id <submissionRec>
+```
+
+Or pass URL inline (not saved):
+
+```powershell
+python c013_dev_make_webhook_post.py <assetId> --webhook-url "https://hook....make.com/..." --scenario-id <scenarioRec>
+```
+
+Helper: [`c013_dev_make_webhook_post.py`](../../tools/airtable/c013_dev_make_webhook_post.py) — builds 070b v4.1 JSON, resolves `targetRecordId` from Video Feedback link.
+
+3. Probe after Make green:
 
 **Do not** connect 070b webhook URL to this scenario until manual test PASS + Mike approval.
 
@@ -118,4 +207,5 @@
 |-----|--------|
 | [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) | Full migration architecture |
 | [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) | Lambda request/response contract |
+| [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | 070b enable prep (**after** Make manual PASS) |
 | [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md) | Lambda deploy |
