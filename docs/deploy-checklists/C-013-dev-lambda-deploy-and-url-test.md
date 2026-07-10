@@ -1,7 +1,8 @@
 # C-013 — DEV Lambda deploy + direct Function URL test plan
 
 **Date:** 2026-07-08  
-**Status:** **PLAN ONLY** — AWS shell exists; **code deploy + URL test await Mike approval**  
+**Last updated:** 2026-07-10 — **Stage 4A code-only deploy complete**  
+**Status:** **Phase A complete** — code deployed; **no runtime invocation**; Phase B URL test still pending Mike approval  
 **Parents:** [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) · [lambda/upload-asset/DEPLOY.md](../../lambda/upload-asset/DEPLOY.md)
 
 **Hard stops:** DEV only · **070a / 070b OFF** · no Make changes · no Production Airtable/web · Function URL **not in GitHub**
@@ -44,7 +45,24 @@ LAMBDA_FUNCTION_NAME=127si-upload-asset-dev
 
 ---
 
-## Phase A — Code deploy (awaiting approval)
+## Phase A — Code deploy — **COMPLETE (2026-07-10)**
+
+**Deployed commit:** `8c94475` (`origin/master`)  
+**Local tests before deploy:** 31/31 PASS (`python -m unittest discover -s tests -p "test_*.py" -v`)  
+**Invocation:** **None** in Stage 4A  
+**070a / 070b:** **OFF** — unchanged
+
+| Checkpoint | Pre-deploy | Post-deploy |
+|------------|------------|-------------|
+| `LastModified` | `2026-07-09T23:13:31Z` | `2026-07-10T11:49:09Z` |
+| `CodeSha256` | `0IpfI0pSAvdJaDrg4BsIpPC5dZN+4hCf77v3XWZLRn8=` | `32fweHbTjypwvD3PYwkN53TSwDH1rDjrxLE0/UAppbs=` |
+| `RevisionId` | `b229a4a9-4eb4-45bf-9725-df394cf74949` | `69469039-ed9a-47c2-8fcf-34918a68a786` |
+| Runtime / Handler / Timeout / Memory | `python3.12` / `handler.lambda_handler` / 120 / 512 | **unchanged** |
+| Env vars | DEV base, bucket, route keys, secrets present | **unchanged** (code-only deploy) |
+
+**Rollback:** Re-publish prior deployment using `CodeSha256` `0IpfI0pSAvdJaDrg4BsIpPC5dZN+4hCf77v3XWZLRn8=` (AWS console → Versions or redeploy prior zip from ops backup).
+
+**Package modules verified in zip:** `handler.py`, `upload_core/upload_claim.py`, `upload_core/duplicate.py`, `upload_core/processor.py`, `upload_core/fields.py`, and related helpers.
 
 **Goal:** Upload GitHub `lambda/upload-asset/` handler + `upload_core` to existing function. **Do not** recreate IAM, Function URL, or overwrite console env unless intended.
 

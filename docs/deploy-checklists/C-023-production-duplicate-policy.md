@@ -760,7 +760,7 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 
 | Step | Action |
 |------|--------|
-| Lambda | Code-only deploy: `127si-upload-asset-dev` · `deploy.ps1 -FunctionName 127si-upload-asset-dev -CodeOnly` · rollback = prior Lambda version in AWS |
+| Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
 | 070b Option A | Remove `setStatus(..., Processing)` in §9 success writeback (`070b-...js` ~L637); keep clear `Send to Make Trigger` + clear `Upload Error` |
 | Make | Scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1`: Module 3 POST Lambda → Module 4 status router → Module 5 webhook response **200** — **synchronous** if response module wired (see `recIY` risk if scenario returns 200 without Lambda body checks) |
 | Runtime gates | Schema gaps closed → Lambda deploy → 070b Option A paste → Make verify → smoke asset → H3l claim → H3b–H3p |
