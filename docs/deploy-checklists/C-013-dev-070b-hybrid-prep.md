@@ -1,7 +1,7 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
 **Date:** 2026-07-08
-**Status:** **DEV video hybrid path PROVEN (close-out 2026-07-10)** — controlled **070b** test PASS on **`recF86pJTIMFoEypJ`** · probe **`allPass=true`** · **070b / 070a OFF** (not approved for continuous operation). **Production promotion:** [plan documented](./C-013-production-promotion-plan.md) — **not started**.
+**Status:** **Stage 4D partial (2026-07-10)** — v4.2 repo at `c0f91d3`; **070b DEV paste not API-verifiable**. Prior hybrid PASS (2026-07-09) was pre–Option A. **Part B re-test BLOCKED** until Make returns Lambda JSON (see [Make scenario prep](./C-013-dev-make-lambda-scenario-prep.md) § Stage 4D).
 **Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)
 **Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)
 **Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · 070b hybrid `recF86pJTIMFoEypJ`

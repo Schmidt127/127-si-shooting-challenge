@@ -349,6 +349,23 @@ Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike
 
 ---
 
+## 2026-07-10 — Stage 4D DEV Make + claim proof (partial)
+
+| Part | Result | Notes |
+|------|--------|-------|
+| **A** Make-only | **BLOCKED** | `MAKE_DEV_UPLOAD_WEBHOOK_URL` missing from local `.env`; prior manual test returned `Accepted` only |
+| **B** 070b E2E | **BLOCKED** | Depends on Part A; 070b enable requires Airtable UI |
+| **C** Invalid-response validation | **PASS** | `upload-make-lambda-response.test.js` — 10/10 |
+| **D** Claim collision | **PASS** | `recbjubFiO5xqZFvw` — winner uploaded, loser `skipped_concurrent_upload`, 1 S3 object |
+| **E** Stale claim | **PASS** | `recMLMjuPcpjOjY94` — `stale_claim`, no upload, no auto-reset |
+| **F** Unit tests | **PASS** | Lambda 31/31 + Node 10/10 |
+
+**070a / 070b:** **OFF** (unchanged). **C-013 / C-023 not complete.**
+
+Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md) § Stage 4D.
+
+---
+
 ## Storage source of truth transition
 
 **Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.

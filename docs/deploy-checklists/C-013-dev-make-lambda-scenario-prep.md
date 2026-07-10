@@ -1,7 +1,7 @@
 # C-013 — DEV Make Lambda scenario prep (orchestration only)
 
 **Date:** 2026-07-09  
-**Status:** **Make manual webhook PASS (2026-07-10)** — `recthL2wrTha5nWHL` via `Shooting Challenge - DEV - Upload Engine - Lambda - v1`. **070b hybrid controlled test PASS (2026-07-09)** on `recF86pJTIMFoEypJ`. **070b / 070a OFF** post-test — not approved for continuous operation.
+**Status:** **Stage 4D partial (2026-07-10)** — Parts **C/D/E/F PASS**; Parts **A/B BLOCKED** (see § Stage 4D). Prior manual webhook `recthL2wrTha5nWHL` returned **`Accepted` only** — Make response module must return Lambda JSON before 070b enable.
 **Parents:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) · [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md)
 
 **Hard stops:** DEV only · **070a / 070b OFF** · no Production Airtable/web · secrets **not in GitHub**
@@ -17,7 +17,7 @@
 | **C-013-SEC** PAT + webhook secret rotated | **PASS** (2026-07-09) |
 | Exposed PAT revoked in Airtable UI | **PASS** (Mike) |
 | `LAMBDA_FUNCTION_URL` + `UPLOAD_WEBHOOK_SECRET` in `tools/airtable/.env` | Local only |
-| **Manual Make webhook test** | **PASS** (2026-07-10) — see § Pass record |
+| **Manual Make webhook test** | **Partial** — upload completed 2026-07-10; response body **`Accepted` only** (Module 5 fix required) |
 
 ---
 
@@ -29,12 +29,71 @@
 | **C-020 scenario** | `recTqAXWshNR3b0c1` |
 | **Submission** | `recW6YsJNnY1qXJOX` |
 | **Video Feedback** | `recNinD0IlztL5z26` |
-| **Make HTTP** | **200** · `statusOut=success` · `actionOut=uploaded` · `runtime=lambda` · `environment=DEV` |
+| **Make HTTP** | **200** — webhook response body was **`Accepted` only** (Lambda JSON not returned to caller); upload still completed via Module 3 async path |
 | **Probe** | `allPass=true` · Upload Status **Uploaded** · C-013/C-023 fields populated · attachment retained · Writeback Complete? **1** |
 | **Artifacts** | `tools/airtable/_preview/c013-dev-make-webhook-recthL2wrTha5nWHL.json` · `...-verify.json` |
 | **Helper** | `tools/airtable/c013_dev_make_webhook_post.py` |
 
 **070b:** **OFF** post controlled hybrid PASS — not approved for continuous operation. Production promotion: [plan](./C-013-production-promotion-plan.md) documented — **not started**.
+
+---
+
+## Stage 4D — Make path + claim proof (2026-07-10)
+
+**Git checkpoint:** `5cada82` · **070a/070b OFF** · Production untouched.
+
+### Scenario identity (documented — not modified)
+
+| Item | Value |
+|------|--------|
+| **Name** | `Shooting Challenge - DEV - Upload Engine - Lambda - v1` |
+| **Module 1** | Custom webhook (070b JSON in) |
+| **Module 2** | Router — `automationNumber = 070b` AND `routeKey = video_feedback` |
+| **Module 3** | HTTP POST → DEV Lambda Function URL + `X-Upload-Secret` header |
+| **Module 4** | Router — HTTP 2xx vs error |
+| **Module 5** | Webhook response — **must map Lambda HTTP body** to response (not generic `Accepted`) |
+
+**Scenario ID:** stored in local ops notes only (not GitHub).
+
+### Part A — Make-only smoke — **BLOCKED**
+
+| Item | Value |
+|------|--------|
+| **Blocker** | `MAKE_DEV_UPLOAD_WEBHOOK_URL` **not set** in `tools/airtable/.env` |
+| **Prepared asset** | `recbjubFiO5xqZFvw` (scenario `rec16etR6lyWqTP6J`) — `Pending Link` at poll; later used by Part D |
+| **Prior evidence** | 2026-07-10 POST returned HTTP 200 body **`Accepted`** only — **fails** Stage 4D Lambda JSON requirement |
+
+**Remediation:** Add webhook URL to local `.env` → fix Module 5 to return Lambda body → re-run Part A.
+
+### Part B — 070b end-to-end — **BLOCKED** (depends on Part A)
+
+070b enable/disable requires Airtable UI (Metadata API 403). **Not executed.**
+
+### Part D — Claim collision — **PASS**
+
+| Item | Value |
+|------|--------|
+| **Asset** | `recbjubFiO5xqZFvw` |
+| **Winner** | `2622882a-4500-44ac-82b3-1c66d6bc0d73` → `uploaded` / `claim_acquired` |
+| **Loser** | `112baaaf-a984-419d-aa0b-0f0237eb81e0` → `skipped_concurrent_upload` |
+| **S3 objects** | **1** |
+
+**Artifact:** `tools/airtable/_preview/c013-dev-4d-partD-concurrent-recbjubFiO5xqZFvw.json`
+
+### Part E — Stale claim — **PASS**
+
+| Item | Value |
+|------|--------|
+| **Asset** | `recMLMjuPcpjOjY94` |
+| **Prep** | `Processing` + legacy claim + `Processing Started At` 35 min ago |
+| **Result** | `stale_claim`; no upload; no reset; legacy claim retained |
+
+**Artifact:** `tools/airtable/_preview/c013-dev-4d-partE-stale-recMLMjuPcpjOjY94.json`
+
+### Part C / F — Unit tests — **PASS**
+
+- Node `upload-make-lambda-response.test.js` → **10/10**
+- Python lambda tests → **31/31**
 
 ---
 
