@@ -191,14 +191,74 @@ stateDiagram-v2
 
 ---
 
-## 2026-07-10 — DEV automation 116 live validation
+## 2026-07-10 — C-023 Stage 5 final report
 
-**Base:** DEV `appTetnuCZlCZdTCT` · **Script:** v1.0.1 · **Slot:** replaced retired **008** (automation count unchanged)
+**Status:** **DEV complete** · **Production untouched**
+
+| Check | Result |
+|-------|--------|
+| Matrix S5A–S5L | **12/12 PASS** |
+| Live Confirmed Duplicate | **PASS** |
+| Live Approved Reuse reversal | **PASS** |
+| Same XP Event reused and restored | **PASS** |
+| Automation count after 008 → 116 swap | **Unchanged (~49)** |
+
+**Base:** DEV `appTetnuCZlCZdTCT` · **Automation:** 116 — Submission Assets — Apply Asset Reuse Decision Consequences · **Script:** `992677d` / v1.0.1 · **Slot:** replaced retired **008** (last run 2026-05-10)
+
+### Live validation records
+
+| Field | Value |
+|-------|-------|
+| Submission Asset | `recF86pJTIMFoEypJ` |
+| Video Feedback | `rec20xfx0hKCCwPw2` |
+| XP Event | `recx2MvUh2WP0tbjO` |
+| Source Key | `VIDEO_SUBMISSION\|rec20xfx0hKCCwPw2` |
+
+### Run 1 — Confirmed Duplicate (**PASS**)
+
+| Check | Observed |
+|-------|----------|
+| `statusOut` | `success` |
+| `actionOut` | `applied_confirmed_duplicate` |
+| XP Event `Active?` | `false` (deactivated) |
+| XP Event `Duplicate Status` | `Duplicate - Remove` |
+| Reason Debug audit | `[C-023-S5] Confirmed duplicate — XP deactivated` |
+| Duplicate XP Event created | **No** |
+
+### Run 2 — Approved Reuse reversal (**PASS**)
+
+| Check | Observed |
+|-------|----------|
+| `statusOut` | `success` |
+| `actionOut` | `restored_approved_reuse` |
+| XP Event row | **Same** `recx2MvUh2WP0tbjO` (reactivated) |
+| XP Event `Active?` | `true` |
+| XP Event `Duplicate Status` | `Unique` (restored) |
+| Reason Debug audit | `[C-023-S5] Restored — decision reversed` |
+| Duplicate XP Event created | **No** |
+
+### Final XP Event state
+
+| Field | Value |
+|-------|-------|
+| Record | `recx2MvUh2WP0tbjO` |
+| `Active?` | `true` |
+| `Duplicate Status` | `Unique` |
+
+**Harness matrix:** S5A–S5L **12/12 PASS** — `python tools/airtable/c023_dev_stage5_matrix_run.py all`
+
+**Verdict:** Stage 5 consequence workflow **DEV complete**. Production paste pending separate approval.
+
+---
+
+## 2026-07-10 — DEV automation 116 live validation (summary)
+
+**Base:** DEV `appTetnuCZlCZdTCT` · **Script:** v1.0.1 (`992677d`) · **Slot:** replaced retired **008** (automation count unchanged)
 
 | Step | Submission Asset | Video Feedback | XP Event | Outputs |
 |------|------------------|----------------|----------|---------|
-| **Confirmed Duplicate** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` | `statusOut=success` · `actionOut=applied_confirmed_duplicate` |
-| **Approved Reuse reversal** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` *(same row restored)* | `statusOut=success` · `actionOut=restored_approved_reuse` |
+| **Confirmed Duplicate** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` | `statusOut=success` · `actionOut=applied_confirmed_duplicate` · XP deactivated · `Duplicate Status=Duplicate - Remove` |
+| **Approved Reuse reversal** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` *(same row restored)* | `statusOut=success` · `actionOut=restored_approved_reuse` · XP reactivated · `Duplicate Status=Unique` |
 
 **Harness matrix (prior):** S5A–S5L **12/12 PASS** — `python tools/airtable/c023_dev_stage5_matrix_run.py all`
 

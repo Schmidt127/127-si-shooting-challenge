@@ -108,7 +108,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
 
-**DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · v1.0.1 · matrix S5A–S5L **12/12 PASS** · live confirm + reversal on `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (`applied_confirmed_duplicate` then `restored_approved_reuse`; same XP Event reused). Replaced retired **008** (slot-neutral). [Stage 5 checklist](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
+**DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
 
 ## Zoom (101)
 
