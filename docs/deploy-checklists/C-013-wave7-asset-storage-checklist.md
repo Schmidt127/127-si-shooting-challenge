@@ -366,6 +366,22 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 
 ---
 
+## 2026-07-10 — Wave 7 H3b–H3p contextual reuse matrix
+
+| Track | Result |
+|-------|--------|
+| **H3b–H3d, H3g–H3k, H3n–H3p** | **PASS** (direct Lambda; independent S3 per asset) |
+| **H3l / H3m** | **PASS** (cited Stage 4D-D/E — not rerun) |
+| **H3e** | **BLOCKED** — DEV Lambda homework upload route not deployed |
+| **H3f** | **BLOCKED** — second DEV test enrollment unavailable via API |
+| **Regression** | Lambda **31/31** + Node **10/10** |
+
+**070a / 070b / Make:** **OFF**. **Production:** untouched. **C-023 not complete** (H3e/H3f + Stage 5).
+
+Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
+
+---
+
 ## Storage source of truth transition
 
 **Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.

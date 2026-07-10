@@ -175,3 +175,51 @@ No other Submission Assets modified.
 | [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | Hybrid path PASS |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 gates |
 | [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) | Production duplicate scope + reuse spec — **planning only** |
+
+---
+
+## 2026-07-10 — Wave 7 H3b–H3p contextual reuse runtime matrix
+
+**Harness:** `tools/airtable/c013_dev_h3_matrix_run.py` (direct Lambda invoke; 070a/070b/Make **OFF**)
+**Reference bytes:** SHA-256 `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967`
+**Enrollment:** Schmidt test `recgP9qZYjAhE7NXm` only (no real athletes)
+**Homework prior for H3d:** `recq9t8zWUhDJts40` seeded via `c013_dev_s3_upload_proof.py` (Lambda homework route not deployed — see H3e)
+
+### Matrix results
+
+| ID | Result | Current asset | Primary prior / notes | S3 | Decision |
+|----|--------|---------------|----------------------|-----|----------|
+| **H3b** | **PASS** | `recL5y7uGhDgpBgzH` | Same-enrollment; `Same Assignment Resubmission` in reasons; primary `Different Week Reuse` among 20+ priors (severity order) | Independent object | `Not Reviewed` |
+| **H3c** | **PASS** | `recgDL7dqsS1J1LUl` | Primary `Different Assignment Reuse` | Independent object | `Not Reviewed` |
+| **H3d** | **PASS** | `rec9JAtfj0MMp3Tua` | Primary `Homework Used for Video Feedback`; prior `recq9t8zWUhDJts40` | Independent object | `Not Reviewed` |
+| **H3e** | **BLOCKED** | — | DEV Lambda returns `error_unsupported_destination` for `Homework Completions` (`processor.py` video-only) | — | — |
+| **H3f** | **BLOCKED** | — | No second DEV test enrollment; API cannot create (`Full Athlete Name - Backward` computed) | — | — |
+| **H3g** | **PASS** | `recpj3febxqjGUHdz` | `Different Week Reuse` in reasons; different submission context | Independent object | `Not Reviewed` |
+| **H3h** | **PASS** | `recr96fs0WGBlZZ5L` | `Missing Context` in reasons (submission cleared; VF retained) | Independent object | `Not Reviewed` |
+| **H3i** | **PASS** | `recvzxmLrjer4DLyt` | `skipped_already_uploaded`; hash/URL unchanged; no second S3 object | 1 object | Unchanged |
+| **H3j** | **PASS** | `recDlklLsYKCDwXjv` | `Multiple Prior Uses`; 20+ rows in `Duplicate Match Records (All)` | Independent object | `Not Reviewed` |
+| **H3k** | **PASS** | `recgDL7dqsS1J1LUl` | `Allowed — Legitimate Reuse` + notes preserved after skip invoke | Unchanged | Preserved |
+| **H3l** | **PASS** (cite 4D) | `recbjubFiO5xqZFvw` | Stage 4D-D: one winner, one `skipped_concurrent_upload`, one S3 object | 1 object | — |
+| **H3m** | **PASS** (cite 4D) | `recMLMjuPcpjOjY94` | Stage 4D-E: `stale_claim`; no upload; no auto-reset | 0 new | — |
+| **H3n** | **PASS** | `recF86pJTIMFoEypJ` | `Allowed — Legitimate Reuse` persisted after Lambda skip | Evidence retained | Allowed |
+| **H3o** | **PASS** | `recF86pJTIMFoEypJ` | `Allowed — Correction/Resubmission` persisted | Both assets remain | Allowed |
+| **H3p** | **PASS** | `recF86pJTIMFoEypJ` | `Confirmed Duplicate` persisted; no Stage 5 consequence | Evidence retained | Confirmed |
+
+### Regression (same session)
+
+| Suite | Result |
+|-------|--------|
+| `lambda/upload-asset` unit tests | **31/31 PASS** |
+| `upload-make-lambda-response.test.js` | **10/10 PASS** |
+
+### Failure gates
+
+No automatic denial, credit removal, evidence deletion, cross-enrollment primary review, or S3 key reuse observed on executed scenarios.
+
+### Verdict
+
+**14/16 executed or cited PASS; 2 BLOCKED** (H3e homework Lambda route; H3f second test enrollment). **C-023 not complete** — Stage 5 consequence workflow and homework upload route remain open.
+
+**Artifacts (local, not committed):** `tools/airtable/_preview/c013-dev-h3-matrix-*.json`
+
+**Next gate:** (1) C-013 homework Lambda route for H3e retest; (2) OMNI/Mike second test enrollment for H3f; (3) Stage 5 consequence workflow design.

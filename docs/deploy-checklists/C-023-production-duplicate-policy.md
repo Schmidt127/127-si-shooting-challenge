@@ -630,27 +630,27 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 
 ---
 
-## 14. DEV runtime test matrix (prepare only — not executed)
+## 14. DEV runtime test matrix — **executed 2026-07-10 (H3b–H3p)**
 
-| ID | Scenario | S3 | Review flags | Decision | Pass highlights |
-|----|----------|-----|--------------|----------|----------------|
-| **H3b** | Same enrollment, same assignment, same bytes | New key | `Same Assignment Resubmission`; `Potential Asset Reuse?` | Stays `Not Reviewed` | Both uses visible; normal processing |
-| **H3c** | Different homework assignment | New key | `Different Assignment Reuse` | `Not Reviewed` | Summary shows both assignments |
-| **H3d** | HW → VF | New key | `Homework Used for Video Feedback` | `Not Reviewed` | Cross-type summary |
-| **H3e** | VF → HW | New key | `Video Feedback Used for Homework` | `Not Reviewed` | Reverse cross-type |
-| **H3f** | Different enrollment | New key | Informational only; **no** `Potential Asset Reuse?` | `Not Reviewed` | Cross-enrollment note optional |
-| **H3g** | Different week | New key | `Different Week Reuse` | `Not Reviewed` | Both weeks in summary |
-| **H3h** | Missing context | New key | `Missing Context` | `Not Reviewed` | Upload succeeds |
-| **H3i** | Same asset-record retry | **No** second object | Unchanged | Unchanged | `skipped_already_uploaded` |
-| **H3j** | Multiple prior same-enrollment | New key | `Multiple Prior Uses` | `Not Reviewed` | Primary + all-links populated |
-| **H3k** | Retry with Mike decision set | No re-upload | Review fields not overwritten | Preserved | Lambda skips decision PATCH |
-| **H3l** | Two workers same asset | One object max | — | — | Second returns skip/conflict |
-| **H3m** | Stale Processing recovery | One object | — | — | Reclaim or reset per §10.4 |
-| **H3n** | Mike → Allowed — Legitimate Reuse | — | — | Allowed | Credit unchanged; off pending queue |
-| **H3o** | Mike → Allowed — Correction/Resubmission | — | — | Allowed | Both files preserved |
-| **H3p** | Mike → Confirmed Duplicate | — | — | Confirmed | Evidence intact; consequence workflow eligible |
+| ID | Scenario | Result | Current asset | Primary reason / evidence |
+|----|----------|--------|---------------|---------------------------|
+| **H3b** | Same enrollment, same assignment | **PASS** | `recL5y7uGhDgpBgzH` | `Same Assignment Resubmission` in reasons; severity primary among many priors |
+| **H3c** | Different homework assignment | **PASS** | `recgDL7dqsS1J1LUl` | `Different Assignment Reuse` |
+| **H3d** | HW → VF | **PASS** | `rec9JAtfj0MMp3Tua` | `Homework Used for Video Feedback`; prior `recq9t8zWUhDJts40` |
+| **H3e** | VF → HW | **BLOCKED** | — | Lambda video-only (`error_unsupported_destination`) |
+| **H3f** | Different enrollment | **BLOCKED** | — | No second DEV test enrollment |
+| **H3g** | Different week | **PASS** | `recpj3febxqjGUHdz` | `Different Week Reuse` in reasons |
+| **H3h** | Missing context | **PASS** | `recr96fs0WGBlZZ5L` | `Missing Context` in reasons |
+| **H3i** | Same asset-record retry | **PASS** | `recvzxmLrjer4DLyt` | `skipped_already_uploaded` |
+| **H3j** | Multiple prior same-enrollment | **PASS** | `recDlklLsYKCDwXjv` | `Multiple Prior Uses`; all-match retention |
+| **H3k** | Retry with Mike decision set | **PASS** | `recgDL7dqsS1J1LUl` | Decision + notes preserved |
+| **H3l** | Two workers same asset | **PASS** (4D cite) | `recbjubFiO5xqZFvw` | Stage 4D-D collision |
+| **H3m** | Stale Processing recovery | **PASS** (4D cite) | `recMLMjuPcpjOjY94` | Stage 4D-E `stale_claim` |
+| **H3n** | Mike → Allowed — Legitimate Reuse | **PASS** | `recF86pJTIMFoEypJ` | Decision persists |
+| **H3o** | Mike → Allowed — Correction/Resubmission | **PASS** | `recF86pJTIMFoEypJ` | Decision persists |
+| **H3p** | Mike → Confirmed Duplicate | **PASS** | `recF86pJTIMFoEypJ` | Evidence intact; no consequence automation |
 
-**Each test doc must include:** starting records, expected hash, permitted writes, rollback/evidence retention, fail criteria (blocked upload, reused URL/key, stuck Processing, decision overwritten).
+Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
 ---
 
