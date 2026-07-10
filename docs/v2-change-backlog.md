@@ -168,7 +168,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-013** | AWS S3 canonical URLs | **DEV video hybrid path proven** — `recF86pJTIMFoEypJ` · probe `allPass=true` · **070b/070a OFF**. [Production promotion plan](./deploy-checklists/C-013-production-promotion-plan.md) **documented** — **execution not started**. Open: formula/view hardening, attachment clearing, **070a** homework route, Production deploy. [070b prep](./deploy-checklists/C-013-dev-070b-hybrid-prep.md) | C-012, C-020 | **in progress** |
-| **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** direct Lambda **PASS** · **Stage 4D** partial — claim collision + stale claim **PASS**; Make/070b path **BLOCKED** (webhook URL + Lambda JSON response). | C-013, C-024 | **in progress** |
+| **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** PASS · **4D-R Part A** Make JSON **PASS** · **Part B** 070b E2E **BLOCKED** (auto-upload). Claim collision + stale claim PASS. | C-013, C-024 | **in progress** |
 | **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 
 ### Wave 8 — Intake & calendar

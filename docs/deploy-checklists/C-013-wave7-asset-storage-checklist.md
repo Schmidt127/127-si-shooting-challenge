@@ -353,8 +353,8 @@ Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike
 
 | Part | Result | Notes |
 |------|--------|-------|
-| **A** Make-only | **BLOCKED** | `MAKE_DEV_UPLOAD_WEBHOOK_URL` missing from local `.env`; prior manual test returned `Accepted` only |
-| **B** 070b E2E | **BLOCKED** | Depends on Part A; 070b enable requires Airtable UI |
+| **A** Make-only (4D-R) | **PASS** — `recRwPpHiii5n4m6Q` · full Lambda JSON |
+| **B** 070b E2E (4D-R) | **BLOCKED** — auto-upload within 5s; 070b likely ON |
 | **C** Invalid-response validation | **PASS** | `upload-make-lambda-response.test.js` — 10/10 |
 | **D** Claim collision | **PASS** | `recbjubFiO5xqZFvw` — winner uploaded, loser `skipped_concurrent_upload`, 1 S3 object |
 | **E** Stale claim | **PASS** | `recMLMjuPcpjOjY94` — `stale_claim`, no upload, no auto-reset |

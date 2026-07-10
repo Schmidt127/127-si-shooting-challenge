@@ -1,7 +1,7 @@
 # C-013 — DEV Make Lambda scenario prep (orchestration only)
 
 **Date:** 2026-07-09  
-**Status:** **Stage 4D partial (2026-07-10)** — Parts **C/D/E/F PASS**; Parts **A/B BLOCKED** (see § Stage 4D). Prior manual webhook `recthL2wrTha5nWHL` returned **`Accepted` only** — Make response module must return Lambda JSON before 070b enable.
+**Status:** **Stage 4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) · Parts **C/D/E/F PASS** (see § Stage 4D).
 **Parents:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) · [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md)
 
 **Hard stops:** DEV only · **070a / 070b OFF** · no Production Airtable/web · secrets **not in GitHub**
@@ -17,7 +17,7 @@
 | **C-013-SEC** PAT + webhook secret rotated | **PASS** (2026-07-09) |
 | Exposed PAT revoked in Airtable UI | **PASS** (Mike) |
 | `LAMBDA_FUNCTION_URL` + `UPLOAD_WEBHOOK_SECRET` in `tools/airtable/.env` | Local only |
-| **Manual Make webhook test** | **Partial** — upload completed 2026-07-10; response body **`Accepted` only** (Module 5 fix required) |
+| **Manual Make webhook test** | **PASS (4D-R Part A)** — Module 16 returns Lambda JSON; see § Stage 4D |
 
 ---
 
@@ -55,19 +55,30 @@
 
 **Scenario ID:** stored in local ops notes only (not GitHub).
 
-### Part A — Make-only smoke — **BLOCKED**
+### Part A — Make-only (4D-R) — **PASS** (2026-07-10)
 
 | Item | Value |
 |------|--------|
-| **Blocker** | `MAKE_DEV_UPLOAD_WEBHOOK_URL` **not set** in `tools/airtable/.env` |
-| **Prepared asset** | `recbjubFiO5xqZFvw` (scenario `rec16etR6lyWqTP6J`) — `Pending Link` at poll; later used by Part D |
-| **Prior evidence** | 2026-07-10 POST returned HTTP 200 body **`Accepted`** only — **fails** Stage 4D Lambda JSON requirement |
+| **Asset** | `recRwPpHiii5n4m6Q` (reset to `Pending Link` for Make-only POST) |
+| **Make HTTP** | **200** — full Lambda JSON (**5330** bytes), not `Accepted` |
+| **Lambda fields** | `statusOut=success` · `actionOut=uploaded` · `allPass=true` · `claimActionOut=claim_acquired` |
+| **Module mapping** | Module **16** body = Module **14** Data (Mike fix confirmed) |
+| **Artifact** | `tools/airtable/_preview/c013-dev-4dr-partA-recRwPpHiii5n4m6Q.json` (local) |
 
-**Remediation:** Add webhook URL to local `.env` → fix Module 5 to return Lambda body → re-run Part A.
+### Part B — 070b end-to-end (4D-R) — **BLOCKED** (2026-07-10)
 
-### Part B — 070b end-to-end — **BLOCKED** (depends on Part A)
+**Stopped per failure gate:** fresh assets do **not** remain `Pending Link` for 30s while Make/070a reportedly OFF.
 
-070b enable/disable requires Airtable UI (Metadata API 403). **Not executed.**
+| Attempt | Asset | Finding |
+|---------|-------|---------|
+| 1 | `rec4JbHs65LbkhPBO` | First poll `Uploaded`; reset → re-upload in **5.5s** (`Send to Make Trigger` null) |
+| 2 | `recThdj2Q4u651poh` | First poll `Uploaded`; reset → re-upload in **5.6s** (`Send to Make Trigger` null) |
+
+**Active path (most likely):** DEV **070b ON** — automation fires on video-ready / `Pending Link` intake (013 chain). GitHub 070b script does **not** check `Send to Make Trigger` in code (relies on Airtable trigger UI).
+
+**Remediation:** Confirm **070b OFF** in UI → 30s stability → sole qualifier → Mike enables 070b for one run → disable immediately.
+
+**070b v4.2:** GitHub `c0f91d3` confirmed (no `Processing` write on success; Lambda JSON validation). **Mike UI paste:** pending explicit confirmation.
 
 ### Part D — Claim collision — **PASS**
 

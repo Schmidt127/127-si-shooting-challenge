@@ -763,7 +763,7 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 | Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
 | 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** (`c0f91d3`) — Mike paste DEV 070b script (automation OFF) |
 | **4C direct Lambda smoke** | **PASS 2026-07-10** — asset `recXUc3010h16Usmo`; `uploaded` + `allPass=true`; claim `44d2b856-30cd-45b6-9cdf-d642faa58220`; retry `skipped_already_uploaded`; 1 S3 object. See [Wave 7 checklist § Stage 4C](./C-013-wave7-asset-storage-checklist.md). |
-| **4D Make path** | **Partial 2026-07-10** — Parts C/D/E/F PASS; Parts A/B **BLOCKED** (`MAKE_DEV_UPLOAD_WEBHOOK_URL` missing; Make prior response `Accepted` only). See [Make scenario prep](./C-013-dev-make-lambda-scenario-prep.md). |
+| **4D Make path** | **4D-R Part A PASS** · **Part B BLOCKED** (070b auto-upload path) — see [Make scenario prep](./C-013-dev-make-lambda-scenario-prep.md) |
 | Runtime gates (remaining) | 070b DEV paste verify → Make smoke → H3l claim via Make → H3b–H3p |
 
 ---
