@@ -34,7 +34,7 @@ class UploadConfig:
         if not token:
             raise ValueError("Missing AIRTABLE_TOKEN / AIRTABLE_API_TOKEN")
 
-        allow_raw = os.getenv("ALLOW_ROUTE_KEYS", "video_feedback")
+        allow_raw = os.getenv("ALLOW_ROUTE_KEYS", "video_feedback,homework_completion")
         allow_route_keys = frozenset(k.strip() for k in allow_raw.split(",") if k.strip())
 
         return cls(

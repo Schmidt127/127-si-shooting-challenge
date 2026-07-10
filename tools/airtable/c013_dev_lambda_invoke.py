@@ -28,7 +28,24 @@ def load_env() -> None:
         load_dotenv(web_env, override=True)
 
 
-def build_payload(asset_id: str, target_record_id: str | None) -> dict:
+def build_payload(
+    asset_id: str,
+    target_record_id: str | None,
+    *,
+    upload_destination: str = "Video Feedback",
+) -> dict:
+    if upload_destination == "Homework Completions":
+        return {
+            "sourceName": "Airtable Upload Engine",
+            "automationNumber": "070a",
+            "sentAtIso": "2026-07-08T16:00:00.000Z",
+            "routeKey": "homework_completion",
+            "uploadDestination": "Homework Completions",
+            "sourceTable": "Submission Assets",
+            "submissionAssetRecordId": asset_id,
+            "targetTable": "Homework Completions",
+            "targetRecordId": target_record_id or "",
+        }
     return {
         "sourceName": "Airtable Upload Engine",
         "automationNumber": "070b",
@@ -40,6 +57,19 @@ def build_payload(asset_id: str, target_record_id: str | None) -> dict:
         "targetTable": "Video Feedback",
         "targetRecordId": target_record_id or "",
     }
+
+
+def fetch_upload_destination(asset_id: str) -> str:
+    import requests
+
+    token = os.getenv("AIRTABLE_TOKEN") or os.getenv("AIRTABLE_API_TOKEN") or ""
+    if not token:
+        return "Video Feedback"
+    url = f"https://api.airtable.com/v0/appTetnuCZlCZdTCT/Submission%20Assets/{asset_id}"
+    resp = requests.get(url, headers={"Authorization": f"Bearer {token}"}, timeout=120)
+    if not resp.ok:
+        return "Video Feedback"
+    return (resp.json().get("fields") or {}).get("Upload Destination") or "Video Feedback"
 
 
 def invoke_local(payload: dict) -> dict:
@@ -127,7 +157,7 @@ def main() -> None:
     load_env()
     os.environ["AIRTABLE_BASE_ID"] = "appTetnuCZlCZdTCT"
     os.environ.setdefault("ENVIRONMENT", "DEV")
-    os.environ.setdefault("ALLOW_ROUTE_KEYS", "video_feedback")
+    os.environ.setdefault("ALLOW_ROUTE_KEYS", "video_feedback,homework_completion")
     os.environ.setdefault("S3_BUCKET", "shooting-challenge-assets")
     os.environ.setdefault("AWS_REGION", "us-east-2")
     if os.getenv("AWS_ACCESS_KEY_ID"):
@@ -137,7 +167,12 @@ def main() -> None:
             "ERROR: UPLOAD_WEBHOOK_SECRET required in tools/airtable/.env for Lambda invoke (not committed)"
         )
 
-    payload = build_payload(args.asset_id, args.target_record_id)
+    destination = fetch_upload_destination(args.asset_id)
+    if destination == "Homework Completions" and not args.target_record_id:
+        raise SystemExit(
+            "ERROR: homework asset requires --target-record-id (Homework Completions rec id)"
+        )
+    payload = build_payload(args.asset_id, args.target_record_id, upload_destination=destination)
     secret = os.getenv("UPLOAD_WEBHOOK_SECRET")
     if args.function_url or os.getenv("LAMBDA_FUNCTION_URL"):
         url = args.function_url or os.getenv("LAMBDA_FUNCTION_URL")

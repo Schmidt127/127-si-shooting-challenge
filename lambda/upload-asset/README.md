@@ -21,7 +21,7 @@ cd lambda/upload-asset
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **31 unit tests PASS**. Not deployed; approved schema fields referenced by name only.
+**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **38+ unit tests PASS**. Homework route (`homework_completion` / **070a**) added 2026-07-10 for H3e.
 
 Legacy path helpers and DEV invoke (requires env; not part of unit tests):
 
@@ -52,7 +52,7 @@ cd lambda/upload-asset
 | `AIRTABLE_TOKEN` | Same PAT (alias) |
 | `S3_BUCKET` | `shooting-challenge-assets` |
 | `ENVIRONMENT` | `DEV` |
-| `ALLOW_ROUTE_KEYS` | `video_feedback` |
+| `ALLOW_ROUTE_KEYS` | `video_feedback,homework_completion` |
 | `SEASON_SLUG` | `2026-2027` |
 | `CHALLENGE_SLUG` | `shooting-challenge` |
 | `UPLOAD_WEBHOOK_SECRET` | Random string (secret — Lambda env + Make header only) |

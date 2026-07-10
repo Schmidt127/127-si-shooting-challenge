@@ -88,10 +88,10 @@ def snap_asset(rid: str) -> dict:
 
 
 def s3_count_for_asset(asset_id: str, storage_key: str | None = None) -> int:
-    prefix = storage_key or f"shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/"
+    prefix = storage_key or "shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/"
     if storage_key:
         prefix = "/".join(storage_key.split("/")[:-1]) + "/"
-    needle = f"video-feedback-{asset_id.lower()}"
+    needle = asset_id.lower()
     env = os.environ.copy()
     env.pop("AWS_PROFILE", None)
     out = subprocess.check_output(
@@ -567,6 +567,36 @@ def run_h3d(hw_ref: str) -> dict:
 
 
 def run_h3e(vf_ref: str) -> dict:
+    pending_formula = (
+        f"AND({{Upload Status}}='Pending Link', {{Upload Destination}}='Homework Completions')"
+    )
+    r = requests.get(
+        api("Submission Assets"),
+        headers={"Authorization": f"Bearer {tok()}"},
+        params={"filterByFormula": pending_formula, "pageSize": 20},
+        timeout=120,
+    )
+    r.raise_for_status()
+    for rec in r.json().get("records", []):
+        fields = rec.get("fields", {})
+        if SCHMIDT not in (fields.get("Enrollment - Linked") or []):
+            continue
+        if fields.get("Airtable Attachment") and fields.get("Homework Completions"):
+            return upload_and_verify(
+                "H3e",
+                rec["id"],
+                reference_id=vf_ref,
+                target_record_id=homework_target_for(rec["id"]),
+                expectations={
+                    "primaryReason": "Video Feedback Used for Homework",
+                    "reasonIncludes": ["Video Feedback Used for Homework"],
+                    "exactHash": True,
+                    "sameEnrollment": True,
+                    "potentialReuse": True,
+                    "decision": "Not Reviewed",
+                },
+                retry=True,
+            )
     aid = prep_homework_asset(vf_ref)
     return upload_and_verify(
         "H3e",
@@ -581,6 +611,7 @@ def run_h3e(vf_ref: str) -> dict:
             "potentialReuse": True,
             "decision": "Not Reviewed",
         },
+        retry=True,
     )
 
 

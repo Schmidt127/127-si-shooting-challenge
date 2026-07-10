@@ -637,7 +637,7 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | **H3b** | Same enrollment, same assignment | **PASS** | `recL5y7uGhDgpBgzH` | `Same Assignment Resubmission` in reasons; severity primary among many priors |
 | **H3c** | Different homework assignment | **PASS** | `recgDL7dqsS1J1LUl` | `Different Assignment Reuse` |
 | **H3d** | HW → VF | **PASS** | `rec9JAtfj0MMp3Tua` | `Homework Used for Video Feedback`; prior `recq9t8zWUhDJts40` |
-| **H3e** | VF → HW | **BLOCKED** | — | Lambda video-only (`error_unsupported_destination`) |
+| **H3e** | VF → HW | **PASS** | `rec1PzA7th0qJbsN4` | `Video Feedback Used for Homework` |
 | **H3f** | Different enrollment | **BLOCKED** | — | No second DEV test enrollment |
 | **H3g** | Different week | **PASS** | `recpj3febxqjGUHdz` | `Different Week Reuse` in reasons |
 | **H3h** | Missing context | **PASS** | `recr96fs0WGBlZZ5L` | `Missing Context` in reasons |

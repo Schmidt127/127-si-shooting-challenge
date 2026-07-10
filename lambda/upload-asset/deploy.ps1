@@ -110,7 +110,7 @@ $EnvVars = @{
     AIRTABLE_TOKEN = $AirtableToken
     S3_BUCKET = "shooting-challenge-assets"
     ENVIRONMENT = "DEV"
-    ALLOW_ROUTE_KEYS = "video_feedback"
+    ALLOW_ROUTE_KEYS = "video_feedback,homework_completion"
     SEASON_SLUG = "2026-2027"
     CHALLENGE_SLUG = "shooting-challenge"
 }

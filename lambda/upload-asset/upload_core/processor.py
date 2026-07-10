@@ -20,6 +20,7 @@ from upload_core.fields import (
     FIELD_UPLOAD_ERROR,
     FIELD_UPLOAD_STATUS,
 )
+from upload_core.routes import ROUTE_HOMEWORK_COMPLETION, ROUTE_VIDEO_FEEDBACK, resolve_upload_route
 from upload_core.upload_claim import ClaimEvaluation, evaluate_upload_claim
 from upload_core.util import (
     DENVER,
@@ -94,18 +95,30 @@ def upload_s3(bucket: str, region: str, key: str, body: bytes, content_type: str
     return {"bucket": bucket, "key": key, "region": region, "etag": "uploaded"}
 
 
-def validate_pre_upload(fields: dict, record_id: str) -> None:
+def validate_pre_upload(fields: dict, record_id: str, route) -> None:
     destination = select_name(fields.get("Upload Destination"))
-    if destination != "Video Feedback":
+    if destination != route.upload_destination:
         raise UploadError(
-            f'Upload Destination must be "Video Feedback"; got "{destination or "[blank]"}"',
+            f'Upload Destination must be "{route.upload_destination}"; got "{destination or "[blank]"}"',
             action_out="error_unsupported_destination",
         )
     if not first_attachment(fields):
         raise UploadError("Airtable Attachment is missing", action_out="error_missing_attachment")
-    vf_links = fields.get("Video Feedback")
-    if not isinstance(vf_links, list) or not vf_links:
-        raise UploadError("Video Feedback link is missing", action_out="error_missing_video_feedback")
+    links = fields.get(route.target_link_field)
+    if not isinstance(links, list) or not links:
+        label = route.target_link_field
+        raise UploadError(f"{label} link is missing", action_out=route.missing_link_action)
+
+
+def validate_automation_number(route, automation_number: str) -> None:
+    if not automation_number:
+        return
+    if automation_number != route.automation_number:
+        raise UploadError(
+            f'automationNumber must be "{route.automation_number}" for route '
+            f"{route.route_key!r}; got {automation_number!r}",
+            status_code=400,
+        )
 
 
 def already_uploaded(fields: dict) -> bool:
@@ -169,17 +182,28 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             status_code=400,
             action_out="error_invalid_route",
         )
-    if automation_number and automation_number != "070b":
-        raise UploadError(
-            f'automationNumber must be "070b" for this slice; got {automation_number!r}',
-            status_code=400,
-        )
 
     token = config.airtable_token
     base_id = config.airtable_base_id
 
     record = get_asset(token, base_id, record_id)
     fields = record.get("fields", {})
+
+    try:
+        route = resolve_upload_route(fields=fields, route_key=route_key)
+    except ValueError as exc:
+        raise UploadError(str(exc), status_code=400, action_out="error_invalid_route") from exc
+
+    if route.route_key != route_key:
+        raise UploadError(
+            f"routeKey {route_key!r} does not match asset Upload Destination "
+            f'"{select_name(fields.get("Upload Destination")) or "[blank]"}"',
+            status_code=400,
+            action_out="error_invalid_route",
+        )
+
+    validate_automation_number(route, automation_number)
+    effective_automation = automation_number or route.automation_number
 
     if already_uploaded(fields):
         duration_ms = int((time.time() - started) * 1000)
@@ -190,7 +214,7 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "environment": config.environment,
             "submissionAssetRecordId": record_id,
             "routeKey": route_key,
-            "automationNumber": automation_number or "070b",
+            "automationNumber": effective_automation,
             "message": "Asset already uploaded with canonical URL and hash.",
             "durationMs": duration_ms,
         }
@@ -201,7 +225,7 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         config=config,
         record_id=record_id,
         route_key=route_key,
-        automation_number=automation_number,
+        automation_number=effective_automation,
         started=started,
     )
     if early is not None:
@@ -209,7 +233,7 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             raise UploadError(claim_eval.message, action_out=claim_eval.action_out)
         return early
 
-    validate_pre_upload(fields, record_id)
+    validate_pre_upload(fields, record_id, route)
 
     if claim_eval.claim_patch:
         claim_fields = apply_upload_claim(token, base_id, record_id, claim_eval)
@@ -355,7 +379,7 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         "submissionAssetRecordId": record_id,
         "targetRecordId": payload.get("targetRecordId"),
         "routeKey": route_key,
-        "automationNumber": automation_number or "070b",
+        "automationNumber": effective_automation,
         "uploadClaimRunId": claim_eval.claim_run_id,
         "claimActionOut": claim_eval.action_out,
         "s3": {

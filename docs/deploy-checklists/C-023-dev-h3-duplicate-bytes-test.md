@@ -192,7 +192,7 @@ No other Submission Assets modified.
 | **H3b** | **PASS** | `recL5y7uGhDgpBgzH` | Same-enrollment; `Same Assignment Resubmission` in reasons; primary `Different Week Reuse` among 20+ priors (severity order) | Independent object | `Not Reviewed` |
 | **H3c** | **PASS** | `recgDL7dqsS1J1LUl` | Primary `Different Assignment Reuse` | Independent object | `Not Reviewed` |
 | **H3d** | **PASS** | `rec9JAtfj0MMp3Tua` | Primary `Homework Used for Video Feedback`; prior `recq9t8zWUhDJts40` | Independent object | `Not Reviewed` |
-| **H3e** | **BLOCKED** | — | DEV Lambda returns `error_unsupported_destination` for `Homework Completions` (`processor.py` video-only) | — | — |
+| **H3e** | **PASS** | `rec1PzA7th0qJbsN4` | Primary `Video Feedback Used for Homework`; prior VF `recF86pJTIMFoEypJ` | Independent object | `Not Reviewed` |
 | **H3f** | **BLOCKED** | — | No second DEV test enrollment; API cannot create (`Full Athlete Name - Backward` computed) | — | — |
 | **H3g** | **PASS** | `recpj3febxqjGUHdz` | `Different Week Reuse` in reasons; different submission context | Independent object | `Not Reviewed` |
 | **H3h** | **PASS** | `recr96fs0WGBlZZ5L` | `Missing Context` in reasons (submission cleared; VF retained) | Independent object | `Not Reviewed` |
@@ -218,8 +218,29 @@ No automatic denial, credit removal, evidence deletion, cross-enrollment primary
 
 ### Verdict
 
-**14/16 executed or cited PASS; 2 BLOCKED** (H3e homework Lambda route; H3f second test enrollment). **C-023 not complete** — Stage 5 consequence workflow and homework upload route remain open.
+**15/16 executed or cited PASS; 1 BLOCKED** (H3f second test enrollment). **H3e PASS** after DEV Lambda homework route deploy (2026-07-10). **C-023 not complete** — H3f + Stage 5 consequence workflow remain open.
 
 **Artifacts (local, not committed):** `tools/airtable/_preview/c013-dev-h3-matrix-*.json`
 
-**Next gate:** (1) C-013 homework Lambda route for H3e retest; (2) OMNI/Mike second test enrollment for H3f; (3) Stage 5 consequence workflow design.
+**Next gate:** (1) OMNI/Mike second test enrollment for H3f; (2) Stage 5 consequence workflow design.
+
+---
+
+## 2026-07-10 — H3e homework Lambda route (C-013 / C-023)
+
+**Change:** DEV Lambda `127si-upload-asset-dev` accepts `homework_completion` / **070a** per shared 070a/070b v4.1 contract.
+
+| Item | Value |
+|------|--------|
+| Route key | `homework_completion` |
+| Upload Destination | `Homework Completions` |
+| automationNumber | `070a` |
+| targetTable | `Homework Completions` |
+| ALLOW_ROUTE_KEYS | `video_feedback,homework_completion` |
+| H3e asset | `rec1PzA7th0qJbsN4` |
+| VF prior | `recF86pJTIMFoEypJ` |
+| Primary reason | `Video Feedback Used for Homework` |
+| Retry | `skipped_already_uploaded` — no second S3 object |
+| Unit tests | **38/38 PASS** (7 new homework-route tests) |
+
+**070a / 070b / Make:** still **OFF**. Production untouched.

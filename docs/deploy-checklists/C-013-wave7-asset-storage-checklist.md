@@ -370,11 +370,11 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 
 | Track | Result |
 |-------|--------|
-| **H3b–H3d, H3g–H3k, H3n–H3p** | **PASS** (direct Lambda; independent S3 per asset) |
+| **H3b–H3d, H3e, H3g–H3k, H3n–H3p** | **PASS** (direct Lambda; independent S3 per asset) |
 | **H3l / H3m** | **PASS** (cited Stage 4D-D/E — not rerun) |
-| **H3e** | **BLOCKED** — DEV Lambda homework upload route not deployed |
-| **H3f** | **BLOCKED** — second DEV test enrollment unavailable via API |
-| **Regression** | Lambda **31/31** + Node **10/10** |
+| **H3e** | **PASS** (2026-07-10) | DEV Lambda homework route deployed |
+| **H3f** | **BLOCKED** | second DEV test enrollment unavailable via API |
+| **Regression** | Lambda **38/38** + Node **10/10** |
 
 **070a / 070b / Make:** **OFF**. **Production:** untouched. **C-023 not complete** (H3e/H3f + Stage 5).
 
