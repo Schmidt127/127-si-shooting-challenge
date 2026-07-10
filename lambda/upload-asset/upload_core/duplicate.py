@@ -48,7 +48,7 @@ DUPLICATE_MATCH_READ_FIELDS = [
 ]
 
 REASON_HOMEWORK_FOR_VF = "Homework Used for Video Feedback"
-REASON_VF_FOR_HOMEWORK = "Video Feedback Used as Homework"
+REASON_VF_FOR_HOMEWORK = "Video Feedback Used for Homework"
 REASON_DIFF_ASSIGNMENT = "Different Assignment Reuse"
 REASON_DIFF_WEEK = "Different Week Reuse"
 REASON_DIFF_SUBMISSION = "Different Submission Reuse"

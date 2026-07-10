@@ -1,8 +1,8 @@
 # C-023 — Production duplicate policy (specification)
 
 **Date:** 2026-07-10
-**Last revised:** 2026-07-10 — **Stage 2A/2B** local implementation (claim + contextual review code + unit tests)
-**Status:** **Stage 2A/2B complete (local only)** — runtime blocked until Stage 3 DEV schema + Stage 4 Lambda deploy approval
+**Last revised:** 2026-07-10 — **Stage 3** DEV schema verification + Stage 4 readiness
+**Status:** **Stage 3 verified (read-only)** — 1 option string aligned in code; prior lookups + review views **open**; Stage 4 deploy blocked on Mike approval
 **Backlog:** C-023 (parents: C-013, C-024)
 **Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on DEV
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
@@ -715,9 +715,55 @@ C-023 **done** only when:
 | Independent upload + manual review policy | **Approved** |
 | Stage 1 assessment + schema proposal | **Complete** |
 | Stage 2A/2B local code + unit tests | **Complete (2026-07-10)** |
-| Stage 3–6 (schema, deploy, runtime, consequences) | **Not started** |
+| Stage 3 DEV schema verification (read-only) | **Complete (2026-07-10)** — see **§19** |
+| Stage 4–6 (deploy, runtime, consequences) | **Not started** |
 | Processing claim | **Implemented locally** — deploy + 070b change pending |
 | C-023 | **in progress** |
+
+---
+
+## 19. Stage 3 DEV schema verification (2026-07-10, read-only)
+
+**Source:** `export_airtable_schema.py` against `appTetnuCZlCZdTCT` only (snapshot `airtable/schema/snapshots/c023-stage3-verify-dev/` — local, not committed).
+
+### Field contract
+
+All **16** C-023 fields exist on DEV **Submission Assets** with expected types (checkbox, `dateTime` with time, `multilineText`, links). `Duplicate Match Record` = `multipleRecordLinks` + `prefersSingleRecordLink: true`. `Duplicate Match Records (All)` = multi-link self-reference.
+
+### Select options
+
+All reason/decision option **sets** match code except one string corrected in repo:
+
+| Option | DEV Airtable | Code (after fix) |
+|--------|--------------|------------------|
+| VF→Homework reason | `Video Feedback Used for Homework` | **Aligned** (`847aa6e` had `Used as`) |
+
+Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+2014 (matches code).
+
+### Gaps (OMNI follow-up)
+
+| Item | Status |
+|------|--------|
+| Prior-use lookup fields (`Prior Athlete Full Name`, etc.) | **MISSING** on DEV |
+| View `Asset Reuse — Pending Review` | **MISSING** (only 4 table views in metadata) |
+| View `Asset Reuse — Reviewed` | **MISSING** |
+| Interface `Asset Reuse Review` | **Not verifiable** via Metadata API — confirm in Airtable UI |
+
+### `Not Reviewed` vs blank
+
+- Airtable **no default** on `Asset Reuse Decision`.
+- Lambda **writes** `Not Reviewed` on first upload when decision blank (`build_review_writeback`).
+- `human_decision_is_locked()` treats blank as unlocked (Mike decision not set).
+- **Pending Review view** should filter `OR({Asset Reuse Decision} = "Not Reviewed", {Asset Reuse Decision} = BLANK())` AND `{Potential Asset Reuse?}` — exact `Not Reviewed` only **hides** pre-Lambda blank rows.
+
+### Stage 4 readiness (plan only — not executed)
+
+| Step | Action |
+|------|--------|
+| Lambda | Code-only deploy: `127si-upload-asset-dev` · `deploy.ps1 -FunctionName 127si-upload-asset-dev -CodeOnly` · rollback = prior Lambda version in AWS |
+| 070b Option A | Remove `setStatus(..., Processing)` in §9 success writeback (`070b-...js` ~L637); keep clear `Send to Make Trigger` + clear `Upload Error` |
+| Make | Scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1`: Module 3 POST Lambda → Module 4 status router → Module 5 webhook response **200** — **synchronous** if response module wired (see `recIY` risk if scenario returns 200 without Lambda body checks) |
+| Runtime gates | Schema gaps closed → Lambda deploy → 070b Option A paste → Make verify → smoke asset → H3l claim → H3b–H3p |
 
 ---
 
