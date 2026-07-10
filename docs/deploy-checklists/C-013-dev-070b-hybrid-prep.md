@@ -1,10 +1,10 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
 **Date:** 2026-07-08  
-**Status:** **070b hybrid PREP step 8 complete (2026-07-09)** — DEV `makeWebhookUrl` saved; **070b / 070a remain OFF**. First-fire asset **`recF86pJTIMFoEypJ`**. **Next gate:** explicit approval for one controlled 070b enable test (§7 step 10).  
+**Status:** **070b DEV hybrid controlled test PASS (2026-07-09)** — asset **`recF86pJTIMFoEypJ`** · probe **`allPass=true`** · **070b / 070a OFF** post-test. **Next:** promotion doc for Production (not in this slice).  
 **Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)  
 **Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)  
-**Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · commit `5520003`
+**Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · 070b hybrid `recF86pJTIMFoEypJ`
 
 ---
 
@@ -15,12 +15,12 @@
 | **DEV base** | `appTetnuCZlCZdTCT` |
 | **Production base** | `appn84sqPw03zEbTT` — **untouched** |
 | **070a** (homework → Make) | **OFF** per [development-base-setup.md](../development-base-setup.md) |
-| **070b** (video → Make) | **OFF** — `makeWebhookUrl` = **DEV Make Lambda webhook** (saved 2026-07-09; URL in ops notes / `.env` only) |
+| **070b** (video → Make) | **OFF** (post-test 2026-07-09) — `makeWebhookUrl` = **DEV Make Lambda webhook** (ops / `.env` only) |
 | **Make Amazon S3 Upload** | **DROPPED** — do not use |
 | **Upload runtime** | **Lambda** (planned) — [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md) |
 | **SDK proof** | [`c013_dev_s3_upload_proof.py`](../../tools/airtable/c013_dev_s3_upload_proof.py) — source logic for Lambda extraction |
 | **Existing DEV Make scenario** | **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** — manual webhook PASS 2026-07-10 |
-| **Enable-test asset (fresh)** | **`recF86pJTIMFoEypJ`** — Pending Link, `READY_TO_SEND`, Send to Make Trigger checked (2026-07-10 prep) |
+| **070b hybrid PASS asset** | **`recF86pJTIMFoEypJ`** — **Uploaded** · Writeback Complete? **1** · probe **allPass=true** (2026-07-09) |
 | **Make manual-test asset (used)** | `recthL2wrTha5nWHL` — already **Uploaded** — do not use for 070b first-fire |
 | **H2 harness asset (legacy)** | `recL9r4a7navUxEhg` — already **Uploaded** — regression reference only |
 
@@ -45,7 +45,17 @@
 - [x] **070a** = **OFF**
 - [x] First-fire asset locked: **`recF86pJTIMFoEypJ`** — do **not** toggle **Send to Make Trigger**
 
-**Next gate (explicit approval required):** §7 step **10** only — turn **070b ON**, single asset `recF86pJTIMFoEypJ`, then probe + hybrid artifacts. **No broad automation. No production.**
+**Controlled enable test — PASS (2026-07-09):**
+
+- [x] **070b ON** for one asset only — **`recF86pJTIMFoEypJ`**
+- [x] End-to-end: 070b → Make → Lambda → S3 → Airtable writeback
+- [x] Probe **`allPass=true`** — Upload Status **Uploaded**; Canonical File URL, Storage Key, SHA-256 hash, Uploaded At populated; attachment retained; Upload Error blank; Writeback Complete? **1**
+- [x] **070b OFF** immediately after test
+- [x] **070a OFF** throughout
+
+**Artifact:** [`_preview/c013-dev-070b-hybrid-proof-recF86pJTIMFoEypJ-verify.json`](../../_preview/c013-dev-070b-hybrid-proof-recF86pJTIMFoEypJ-verify.json)
+
+**Note:** An earlier accidental 070b Test on **`recIYFnfmsPcy7iop`** (wrong picker record) reached **Processing** only — Lambda never ran for that asset. Not counted as hybrid PASS. See [`c013-dev-070b-make-lambda-diagnosis-recIYFnfmsPcy7iop.json`](../../tools/airtable/_preview/c013-dev-070b-make-lambda-diagnosis-recIYFnfmsPcy7iop.json).
 
 ---
 
@@ -64,10 +74,10 @@
 
 - [x] Automation **070b** is **OFF**
 - [x] Automation **070a** is **OFF**
-- [ ] **070b** trigger table = **Submission Assets** *(verify before enable)*
-- [ ] **070b** trigger type = **When a record matches conditions** *(verify before enable)*
+- [x] **070b** trigger table = **Submission Assets** *(verified for controlled test)*
+- [x] **070b** trigger type = **When a record matches conditions** *(verified for controlled test)*
 - [x] **070b** `makeWebhookUrl` input = **DEV Make Lambda webhook** — not Production hook
-- [ ] **070b** trigger conditions include **video-only** filters (see §3) *(verify before enable)*
+- [x] **070b** trigger conditions include **video-only** filters (see §3) *(verified for controlled test)*
 
 ### Submission Assets — formula gates (DEV schema snapshot 2026-07-06)
 
@@ -97,7 +107,7 @@
   → 005 Week assignment (may need Week 10 patch for harness dates — see H2 runbook)
   → 009 Submission Asset(s)
   → 013 Video Feedback link + Pending Link + Send to Make Trigger
-  → [070b OFF today] → Make webhook → SDK hybrid
+  → [070b OFF — hybrid PASS 2026-07-09 on recF86pJTIMFoEypJ] → Make webhook → Lambda
   → 022 (Drive URL copy — legacy; not in scope)
 ```
 
@@ -272,9 +282,9 @@ Execute in order. **Stop if any step fails.**
 | **6** | Verify C-023 duplicate flags if same file bytes | OFF | OFF | JSON `c023Duplicate` block |
 | **7** | Document DEV webhook URL in ops (not GitHub) | OFF | OFF | **PASS** (local `.env`) |
 | **8** | Paste DEV webhook into **070b** `makeWebhookUrl` input only | OFF | OFF | **PASS 2026-07-09** — input saved; automation still OFF |
-| **9** | **Mike approval** for one controlled enable test | — | — | **PENDING** |
-| **10** | Turn **070b ON**; trigger on **`recF86pJTIMFoEypJ` only** | **ON** | OFF | End-to-end PASS |
-| **11** | Re-run probe; save 070b hybrid artifacts | ON | OFF | `allPass=true` |
+| **9** | **Mike approval** for one controlled enable test | — | — | **PASS 2026-07-09** |
+| **10** | Turn **070b ON**; trigger on **`recF86pJTIMFoEypJ` only** | **ON** → **OFF** | OFF | **PASS 2026-07-09** |
+| **11** | Re-run probe; save 070b hybrid artifacts | OFF | OFF | **PASS** — `allPass=true` |
 
 **Do not run H1. Do not enable 070a.**
 
@@ -296,15 +306,15 @@ Execute in order. **Stop if any step fails.**
 
 ## 9. Approval checklist (Mike)
 
-- [ ] DEV **070b** trigger conditions match §3 *(verify before step 10)*  
+- [x] DEV **070b** trigger conditions match §3  
 - [x] DEV **070a** remains **OFF**  
 - [x] DEV Make scenario uses **Lambda** path (no S3 module)  
 - [x] DEV webhook URL recorded (ops only) — **070b input updated 2026-07-09**  
 - [x] Lambda Function URL deployed and reachable from Make  
-- [x] Disabled-state test plan §7 steps 1–8 PASS  
-- [ ] **Explicit approval** to turn **070b ON** for **one** asset (`recF86pJTIMFoEypJ`) — step 10
+- [x] Disabled-state test plan §7 steps 1–11 PASS  
+- [x] **Controlled 070b enable test** on **`recF86pJTIMFoEypJ`** — hybrid **allPass=true** (2026-07-09)
 
-**Until all checked:** **070b = OFF**
+**070b = OFF** (post-test). Do not re-enable on DEV without explicit approval + promotion plan.
 
 ---
 
