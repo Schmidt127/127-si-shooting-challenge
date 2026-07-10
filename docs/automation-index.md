@@ -1,6 +1,6 @@
 # Automation index — Shooting Challenge
 
-Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`115`).
+Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`116`).
 
 **C-020 test harness:** **115** v1.3 — Daily Submission + Homework + Video (**DEV verified** 2026-07-07). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -106,9 +106,9 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets when `Asset Reuse Decision` updated (C-023 Stage 5) | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
+| **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
 
-**DEV:** GitHub complete · paste automation in DEV pending Mike · matrix S5A–S5L **12/12 PASS** via `tools/airtable/c023_dev_stage5_matrix_run.py`
+**DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · v1.0.1 · matrix S5A–S5L **12/12 PASS** · live confirm + reversal on `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (`applied_confirmed_duplicate` then `restored_approved_reuse`; same XP Event reused). Replaced retired **008** (slot-neutral). [Stage 5 checklist](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
 
 ## Zoom (101)
 
@@ -148,6 +148,7 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 
 | # | Name | Status | Notes |
 |---|------|--------|-------|
+| **008** | *(legacy duplicate/reuse handler — pre-C-023 Stage 5)* | **Removed (DEV 2026-07-10)** | Obsolete; last run **2026-05-10**. Replaced by **116** in same automation slot — **net count unchanged**. |
 | **012** | *(unknown — not in GitHub)* | **Deleted** | Mike confirmed legacy, unused. **+1 automation slot recovered.** |
 
 ## Engineering test framework (115)

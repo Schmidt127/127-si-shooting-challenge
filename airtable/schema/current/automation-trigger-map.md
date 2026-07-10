@@ -114,6 +114,14 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 |---|-------|---------|--------|------------|
 | **101** | Zoom Meetings | `Create XP Events` + ready | `101-zoom-attendance-xp-award-meeting-xp.js` | **XP Events** (meeting) |
 
+### Asset reuse review (116)
+
+| # | Table | Trigger | Script | Downstream |
+|---|-------|---------|--------|------------|
+| **116** | Submission Assets | **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` | Do Not Award / Award Status suppress; **XP Events** deactivate or restore; Enrollment level recalc flag |
+
+**DEV validated 2026-07-10:** `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO`. Replaced retired **008** (slot-neutral).
+
 ---
 
 ## Make.com webhooks (outbound from Airtable)

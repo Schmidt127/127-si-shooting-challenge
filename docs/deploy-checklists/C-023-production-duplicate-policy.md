@@ -594,7 +594,7 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 
 ### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — **DEV implemented 2026-07-10**)
 
-**Automation 116** (GitHub; DEV paste pending Mike):
+**Automation 116** (GitHub v1.0.1 · **DEV deployed and validated 2026-07-10**):
 
 | Principle | Rule |
 |-----------|------|
@@ -617,7 +617,7 @@ Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-
 | **2** | Lambda + local tests | **Blocked** — Mike approval of §11 schema + §10 claim design |
 | **3** | DEV Airtable fields + OMNI Interface | **Blocked** — separate approval |
 | **4** | DEV runtime H3b–H3p + claim tests | **Blocked** — after Stage 2–3 |
-| **5** | Consequence workflow | **DEV implemented** (116 + S5 12/12) — prod paste pending |
+| **5** | Consequence workflow | **DEV complete** (116 live + S5 12/12 + live confirm/reversal) — prod paste pending |
 | **6** | Production readiness | **Blocked** — after Stage 4 pass |
 
 ---

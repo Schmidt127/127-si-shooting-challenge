@@ -187,7 +187,22 @@ stateDiagram-v2
 **Harness:** `python tools/airtable/c023_dev_stage5_matrix_run.py all`  
 **Dry-run audit:** Extension `audit-c023-stage5-duplicate-consequences.js` with `CONFIRM_WRITE` unset.
 
-**DEV paste gate:** Mike creates automation in DEV from script docblock → optional re-run with live trigger.
+**DEV paste gate:** ~~Mike creates automation in DEV~~ **Done (2026-07-10)** — live automation enabled on `appTetnuCZlCZdTCT`.
+
+---
+
+## 2026-07-10 — DEV automation 116 live validation
+
+**Base:** DEV `appTetnuCZlCZdTCT` · **Script:** v1.0.1 · **Slot:** replaced retired **008** (automation count unchanged)
+
+| Step | Submission Asset | Video Feedback | XP Event | Outputs |
+|------|------------------|----------------|----------|---------|
+| **Confirmed Duplicate** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` | `statusOut=success` · `actionOut=applied_confirmed_duplicate` |
+| **Approved Reuse reversal** | `recF86pJTIMFoEypJ` | `rec20xfx0hKCCwPw2` | `recx2MvUh2WP0tbjO` *(same row restored)* | `statusOut=success` · `actionOut=restored_approved_reuse` |
+
+**Harness matrix (prior):** S5A–S5L **12/12 PASS** — `python tools/airtable/c023_dev_stage5_matrix_run.py all`
+
+**Verdict:** Stage 5 consequence workflow **DEV complete**. Production paste pending separate approval.
 
 ---
 
