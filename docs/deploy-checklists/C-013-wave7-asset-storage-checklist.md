@@ -241,7 +241,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
 
-**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023 H3** duplicate-bytes test **PASS** — [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) (`rec1ZyqOfljt4foEX`).
+**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023 H3** **PASS** — [H3 test](./C-023-dev-h3-duplicate-bytes-test.md). **C-023 Production policy** documented — [spec](./C-023-production-duplicate-policy.md) — **implementation not started**; Processing race **open**.
 
 ---
 
@@ -499,7 +499,7 @@ See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)
 |------|----------|---------------|
 | **H1** | New C-020 Homework 1-file (clone G) | Asset → **070a** → Make → `Upload Status = Uploaded`, **Canonical File URL** set, **022** on HC |
 | **H2** | New C-020 Video 1-file (clone F) | Asset → **070b** → VF URL set |
-| **H3** | C-023 | Re-upload same bytes → `Duplicate File Status = Exact Duplicate` — **PASS 2026-07-10** (`rec1ZyqOfljt4foEX`; flag-only; new S3 key) |
+| **H3** | C-023 | Re-upload same bytes → `Duplicate File Status = Exact Duplicate` — **PASS 2026-07-10** (`rec1ZyqOfljt4foEX`; global flag-only; new S3 key). **Policy:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) |
 | **H4** | Attachment clear | After success, `Airtable Attachment` empty on asset (+ submission intake fields) |
 
 Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).

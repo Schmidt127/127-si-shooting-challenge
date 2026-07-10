@@ -124,7 +124,13 @@ H3 pass criteria met on successful upload + retry:
 6. Retry idempotent (`skipped_already_uploaded`).  
 7. Auditable via prep script + local preview artifacts.
 
-**C-023 is not closed:** policy does **not** block upload or reuse canonical S3 object. Mike must choose next slice: block upload, reuse storage key, or accept flag-only for Production.
+**C-023 is not closed:** global flag-only behavior proven on DEV. Scoped actionable reuse is specified in [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) — **implementation not started**.
+
+---
+
+## Processing race (first invoke failure)
+
+See [C-023-production-duplicate-policy.md §5](./C-023-production-duplicate-policy.md#5-processing-race-investigation-read-only). **Open** — likely 070b/Make set `Processing` before Lambda completed; separate fix slice from duplicate policy.
 
 ---
 
@@ -154,10 +160,10 @@ No other Submission Assets modified.
 
 ## Recommended next slice
 
-1. **Mike decision:** flag-only vs block vs S3 key reuse for Production.  
-2. **Implementation** (if blocking/reuse): update `processor.py` + tests; re-run H3 with fresh asset.  
-3. **Ops:** restore `MAKE_DEV_UPLOAD_WEBHOOK_URL` in local `.env` for full Make-chain H3 replay.  
-4. **Investigate** Processing race when `READY_TO_SEND` before manual upload (070b OFF assumption vs Make instant trigger).
+1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md)
+2. **Implementation:** scoped reuse in Lambda + tests; DEV H3b–H3f
+3. **Ops:** restore `MAKE_DEV_UPLOAD_WEBHOOK_URL` for full Make-chain replay; confirm 070b OFF for manual Lambda tests
+4. **Processing race:** separate disposition — policy doc §5
 
 ---
 
@@ -167,4 +173,4 @@ No other Submission Assets modified.
 |-----|--------|
 | [C-013-dev-070b-hybrid-prep.md](./C-013-dev-070b-hybrid-prep.md) | Hybrid path PASS |
 | [C-013-wave7-asset-storage-checklist.md](./C-013-wave7-asset-storage-checklist.md) | Wave 7 gates |
-| [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Prod plan (not started) |
+| [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) | Production duplicate scope + reuse spec — **planning only** |

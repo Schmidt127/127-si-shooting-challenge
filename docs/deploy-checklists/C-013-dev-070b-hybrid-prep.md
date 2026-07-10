@@ -326,7 +326,7 @@ Execute in order. **Stop if any step fails.**
 | Close-out re-probe (read-only) | **PASS** — `allPass=true` (2026-07-10) |
 | **070b** / **070a** | **OFF** — unchanged |
 | Production | **Untouched** |
-| **C-023 H3** duplicate-bytes test | **PASS** — [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) (`rec1ZyqOfljt4foEX`) |
+| **C-023 H3** duplicate-bytes test | **PASS** — [H3 test](./C-023-dev-h3-duplicate-bytes-test.md). **Production policy** documented — [spec](./C-023-production-duplicate-policy.md) — implementation **not started** |
 | **recIYFnfmsPcy7iop** | Stuck **Processing** — **not repaired** (accidental test; not counted as PASS) |
 | Attachments | **Retained** on PASS asset (clearing deferred to later slice) |
 | Production promotion | [Plan documented](./C-013-production-promotion-plan.md) — **execution not approved** |
