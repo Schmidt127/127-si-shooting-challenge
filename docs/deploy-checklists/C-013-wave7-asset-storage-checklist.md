@@ -245,6 +245,110 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 ---
 
+## 2026-07-10 — Stage 4C direct DEV Lambda smoke test (C-013 + C-023)
+
+**Purpose:** Prove deployed `127si-upload-asset-dev` can claim, upload, write back, initialize reuse-review fields, and skip retry — **without Make or 070b**.
+
+| Item | Value |
+|------|--------|
+| **Git checkpoint** | `c0f91d3` on `master` (= `origin/master`); tracked tree clean |
+| **Lambda** | `127si-upload-asset-dev` · `us-east-2` · `CodeSha256=32fweHbTjypwvD3PYwkN53TSwDH1rDjrxLE0/UAppbs=` (Stage 4A; config unchanged) |
+| **Invoke method** | `python c013_dev_lambda_invoke.py <assetId> --aws` (direct AWS Lambda invoke; `X-Upload-Secret` from local `.env` — not logged) |
+| **070a / 070b** | **OFF** (not enabled for this test) |
+| **Make** | **Not used** |
+| **Production** | **Untouched** |
+
+### Test asset (H2 harness)
+
+| Field | Value |
+|-------|--------|
+| **Scenario** | `recUwABfz7TLrrORf` (C-020 H2 Video 1-file SDK 2026-07-10) |
+| **Submission Asset** | `recXUc3010h16Usmo` |
+| **Submission** | `recvxU2a9vogdqll0` |
+| **Enrollment** | `recgP9qZYjAhE7NXm` (Schmidt test) |
+| **Video Feedback** | `recnczZlciNU1XRNV` |
+| **Attachment** | `BlueOrangeCircleLogo.png` |
+| **Upload Destination** | `Video Feedback` |
+| **Before Upload Status** | `Pending Link` (poll 2026-07-10T06:02:13-06:00) |
+
+### Before-state (pre-invoke)
+
+All storage/claim/review fields **blank**; `Upload Status = Pending Link`; no Canonical URL, Storage Key, hash, claim, or reuse fields.
+
+### First invoke (2026-07-10 ~12:02:46Z)
+
+| Check | Result |
+|-------|--------|
+| HTTP | **200** |
+| `actionOut` | **`uploaded`** |
+| `writebackVerification.allPass` | **`true`** |
+| `claimActionOut` | **`claim_acquired`** |
+| `uploadClaimRunId` | `44d2b856-30cd-45b6-9cdf-d642faa58220` |
+
+**Claim evidence:** Lambda response + Airtable retain `Upload Claim Run ID` and `Processing Started At` (`2026-07-10T12:02:46.685Z`) after completion. **070b did not write `Processing`** (automation OFF). CloudWatch: structured success log for `recXUc3010h16Usmo`.
+
+### Airtable completion (post-invoke)
+
+| Field | Value |
+|-------|--------|
+| Upload Status | `Uploaded` |
+| Canonical File URL | `https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-10-video-feedback-recXUc3010h16Usmo-BlueOrangeCircleLogo.png` |
+| Storage Key | `shooting-challenge/2026-2027/shooting-challenge/schmidt-testing/2026-07-10-video-feedback-recXUc3010h16Usmo-BlueOrangeCircleLogo.png` |
+| File Content Hash | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` |
+| File Hash Algorithm | `SHA-256` |
+| File Size Bytes | `67730` |
+| Uploaded At | populated |
+| Upload Error | blank |
+| Asset Reuse Decision | `Not Reviewed` |
+
+### C-023 duplicate + contextual review (same bytes as prior DEV tests)
+
+| Field | Result |
+|-------|--------|
+| Exact Hash Match Found? | `true` |
+| Same Enrollment Match Found? | `true` |
+| Duplicate Match Record | `recBBi80bYuxXifVj` (primary) |
+| Duplicate Match Records (All) | 10 prior same-enrollment matches |
+| Potential Asset Reuse? | `true` |
+| Asset Reuse Review Primary Reason | `Different Week Reuse` |
+| Asset Reuse Review Reasons | Different Submission Reuse, Different Week Reuse, Multiple Prior Uses |
+| Upload blocked | **No** — independent upload per policy |
+
+Primary match `recBBi80bYuxXifVj` retains its own Storage Key (`…/schmidt-mike/…recBBi80bYuxXifVj…`); **not reused**.
+
+### S3
+
+| Check | Result |
+|-------|--------|
+| Object count (asset prefix) | **1** |
+| Size | **67730** bytes (matches Airtable) |
+| SHA-256 (downloaded object) | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` |
+
+### Same-record retry
+
+| Check | Result |
+|-------|--------|
+| HTTP | **200** |
+| `actionOut` | **`skipped_already_uploaded`** |
+| S3 object count after retry | **1** (unchanged) |
+| Canonical URL / Storage Key / hash | **Unchanged** |
+
+### Local unit tests
+
+`cd lambda/upload-asset && python -m unittest discover -s tests -p "test_*.py" -v` → **31 tests, all PASS**.
+
+### Artifacts (local only — not committed)
+
+`tools/airtable/_preview/c013-dev-4c-before-recXUc3010h16Usmo.json` · `c013-dev-4c-upload-recXUc3010h16Usmo.json` · `c013-dev-4c-retry-recXUc3010h16Usmo.json` · `c013-dev-4c-after-recXUc3010h16Usmo.json`
+
+### Pass / fail
+
+**PASS** — Stage 4C criteria met. **C-013 / C-023 not marked complete.**
+
+**Next:** Stage **4D** — Make-path test with 070b v4.2 pasted (still OFF until Mike approves enable); verify synchronous Lambda body routing.
+
+---
+
 ## Storage source of truth transition
 
 **Yes — C-013 moves the system toward S3 / canonical URL as the storage source of truth.** Wave 7 Slice 1 prepared DEV schema columns. **S3 is not yet the active source of truth** until DEV Make uploads files to S3 and writeback populates **Canonical File URL**, **Storage Key**, and **hash fields** on **Submission Assets**.

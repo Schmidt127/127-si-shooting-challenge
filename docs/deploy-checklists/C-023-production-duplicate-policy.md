@@ -1,8 +1,8 @@
 # C-023 — Production duplicate policy (specification)
 
 **Date:** 2026-07-10
-**Last revised:** 2026-07-10 — **Stage 3** DEV schema verification + Stage 4 readiness
-**Status:** **Stage 3 verified (read-only)** — 1 option string aligned in code; prior lookups + review views **open**; Stage 4 deploy blocked on Mike approval
+**Last revised:** 2026-07-10 — **Stage 4C** direct DEV Lambda smoke test PASS
+**Status:** **Stage 4C PASS** — claim + upload + writeback + reuse review + retry skip proven on DEV Lambda (no Make/070b). **Not complete** — Stage 4D Make path + H3b–H3p pending.
 **Backlog:** C-023 (parents: C-013, C-024)
 **Evidence:** [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) — H3 **PASS** on DEV
 **Supersedes:** Prior draft sections recommending canonical S3 reuse, skip PutObject, `reused_canonical_duplicate`, and `Allowed Reuse` as automatic processing outcomes (2026-07-10 revision).
@@ -756,14 +756,15 @@ Em dash in `Allowed — …` and `Cross-Enrollment Match — Informational` = U+
 - `human_decision_is_locked()` treats blank as unlocked (Mike decision not set).
 - **Pending Review view** should filter `OR({Asset Reuse Decision} = "Not Reviewed", {Asset Reuse Decision} = BLANK())` AND `{Potential Asset Reuse?}` — exact `Not Reviewed` only **hides** pre-Lambda blank rows.
 
-### Stage 4 readiness (plan only — not executed)
+### Stage 4 readiness
 
 | Step | Action |
 |------|--------|
 | Lambda | ~~Code-only deploy: `127si-upload-asset-dev`~~ **Done 2026-07-10** (`8c94475`, no invoke) |
-| 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** — Mike paste DEV 070b script (automation OFF) |
-| Make | Scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1`: Module 3 POST Lambda → Module 4 status router → Module 5 webhook response **200** — **synchronous** if response module wired (see `recIY` risk if scenario returns 200 without Lambda body checks) |
-| Runtime gates | Schema gaps closed → Lambda deploy → 070b Option A paste → Make verify → smoke asset → H3l claim → H3b–H3p |
+| 070b Option A | ~~Remove Processing writeback~~ **Done in repo v4.2** (`c0f91d3`) — Mike paste DEV 070b script (automation OFF) |
+| **4C direct Lambda smoke** | **PASS 2026-07-10** — asset `recXUc3010h16Usmo`; `uploaded` + `allPass=true`; claim `44d2b856-30cd-45b6-9cdf-d642faa58220`; retry `skipped_already_uploaded`; 1 S3 object. See [Wave 7 checklist § Stage 4C](./C-013-wave7-asset-storage-checklist.md). |
+| **4D Make path** | **Next** — scenario synchronous Lambda body; 070b enable only after Mike approval |
+| Runtime gates (remaining) | 070b DEV paste verify → Make smoke → H3l claim via Make → H3b–H3p |
 
 ---
 
