@@ -1,7 +1,7 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
 **Date:** 2026-07-08  
-**Status:** **070b DEV hybrid controlled test PASS (2026-07-09)** — asset **`recF86pJTIMFoEypJ`** · probe **`allPass=true`** · **070b / 070a OFF** post-test. **Next:** promotion doc for Production (not in this slice).  
+**Status:** **DEV video hybrid path PROVEN (close-out 2026-07-10)** — controlled **070b** test PASS on **`recF86pJTIMFoEypJ`** · probe **`allPass=true`** · **070b / 070a OFF** (not approved for continuous operation). **Production promotion:** [plan documented](./C-013-production-promotion-plan.md) — **not started**.
 **Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)  
 **Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)  
 **Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · 070b hybrid `recF86pJTIMFoEypJ`
@@ -314,7 +314,22 @@ Execute in order. **Stop if any step fails.**
 - [x] Disabled-state test plan §7 steps 1–11 PASS  
 - [x] **Controlled 070b enable test** on **`recF86pJTIMFoEypJ`** — hybrid **allPass=true** (2026-07-09)
 
-**070b = OFF** (post-test). Do not re-enable on DEV without explicit approval + promotion plan.
+**070b = OFF** (post-test). The controlled hybrid test **passed once** — this is **not** approval for continuous **070b** operation on DEV or Production.
+
+---
+
+## 10. DEV close-out (2026-07-10)
+
+| Item | State |
+|------|--------|
+| Controlled **070b** hybrid test | **PASS** — `recF86pJTIMFoEypJ` |
+| Close-out re-probe (read-only) | **PASS** — `allPass=true` (2026-07-10) |
+| **070b** / **070a** | **OFF** — unchanged |
+| Production | **Untouched** |
+| **C-023 H3** duplicate-bytes test | **Not run** — next DEV technical test |
+| **recIYFnfmsPcy7iop** | Stuck **Processing** — **not repaired** (accidental test; not counted as PASS) |
+| Attachments | **Retained** on PASS asset (clearing deferred to later slice) |
+| Production promotion | [Plan documented](./C-013-production-promotion-plan.md) — **execution not approved** |
 
 ---
 
@@ -322,6 +337,7 @@ Execute in order. **Stop if any step fails.**
 
 | Doc | Topic |
 |-----|--------|
+| [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md) | Production promotion plan — **not started** |
 | [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) | Runtime decision + H2 gate |
 | [C-020-testing-scenarios-script-checklist.md](./C-020-testing-scenarios-script-checklist.md) | H2 harness |
 | [development-base-setup.md](../development-base-setup.md) | DEV automation OFF list |

@@ -1,7 +1,7 @@
 # C-013 — DEV Make Lambda scenario prep (orchestration only)
 
 **Date:** 2026-07-09  
-**Status:** **Make manual webhook PASS (2026-07-10)** — `recthL2wrTha5nWHL` via `Shooting Challenge - DEV - Upload Engine - Lambda - v1`. **070b remains OFF** until explicit approval.  
+**Status:** **Make manual webhook PASS (2026-07-10)** — `recthL2wrTha5nWHL` via `Shooting Challenge - DEV - Upload Engine - Lambda - v1`. **070b hybrid controlled test PASS (2026-07-09)** on `recF86pJTIMFoEypJ`. **070b / 070a OFF** post-test — not approved for continuous operation.
 **Parents:** [C-013-make-upload-migration-plan.md](./C-013-make-upload-migration-plan.md) · [C-013-dev-lambda-deploy-and-url-test.md](./C-013-dev-lambda-deploy-and-url-test.md)
 
 **Hard stops:** DEV only · **070a / 070b OFF** · no Production Airtable/web · secrets **not in GitHub**
@@ -34,7 +34,7 @@
 | **Artifacts** | `tools/airtable/_preview/c013-dev-make-webhook-recthL2wrTha5nWHL.json` · `...-verify.json` |
 | **Helper** | `tools/airtable/c013_dev_make_webhook_post.py` |
 
-**070b:** still **OFF** — DEV Make webhook URL in ops notes only until explicit enable approval.
+**070b:** **OFF** post controlled hybrid PASS — not approved for continuous operation. Production promotion: [plan](./C-013-production-promotion-plan.md) documented — **not started**.
 
 ---
 
