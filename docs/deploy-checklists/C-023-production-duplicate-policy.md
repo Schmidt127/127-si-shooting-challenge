@@ -592,28 +592,20 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | `Confirmed Duplicate` | **No auto-change** until consequence workflow | Cleared after review | **Triggers/enables** Stage 5 workflow |
 | `Resolved — Duplicate Record Error` | Normal | Cleared | None |
 
-### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — design only)
+### 12.3 Consequence architecture — `Confirmed Duplicate` (Stage 5 — **DEV implemented 2026-07-10**)
 
-**Separate automation/extension** (not upload Lambda):
+**Automation 116** (GitHub; DEV paste pending Mike):
 
 | Principle | Rule |
 |-----------|------|
-| Idempotent | `Duplicate Resolution Applied?` guard + Source Key per correction |
-| Auditable | Write `Asset Reuse Review Notes`, resolution timestamps |
-| Reversible where practical | Deactivate (not delete) XP Events; mark HC/VF ineligible flags |
-| Evidence preserved | **Never** delete S3 object or Submission Asset |
+| Idempotent | `Duplicate Resolution Applied?` + `[C-023-S5-LAST]` note (or optional `Duplicate Resolution Last Applied Decision` field) |
+| Auditable | Append-only `Asset Reuse Review Notes` + XP Reason Debug marker |
+| Reversible | Approved Reuse / False Positive restore same XP Event via Source Key |
+| Evidence preserved | Never delete S3, assets, or activity rows |
 
-**Records that may need correction (assess in Stage 5):**
+Detail + S5A–S5L matrix: [C-023-dev-stage5-duplicate-consequences.md](./C-023-dev-stage5-duplicate-consequences.md)
 
-| Record | Possible action |
-|--------|-----------------|
-| Homework Completion | Mark duplicate credit / satisfactory denied |
-| Video Feedback | Mark ineligible for XP or coach completion |
-| XP Events | Deactivate or reverse via existing patterns (**114** Source Key) |
-| Weekly Athlete Summary | Rollup recalc via existing chains |
-| Enrollment gate rollups | Recalc after XP/HC correction |
-
-**Trigger:** Airtable automation on `Asset Reuse Decision` → `Confirmed Duplicate` (DEV first) **or** manual extension with `CONFIRM_WRITE`.
+**Trigger:** Airtable automation on `Asset Reuse Decision` change (Submission Assets) — **not** upload Lambda.
 
 ---
 
@@ -625,7 +617,7 @@ When `Potential Asset Reuse? = true` and `Asset Reuse Decision = Not Reviewed`:
 | **2** | Lambda + local tests | **Blocked** — Mike approval of §11 schema + §10 claim design |
 | **3** | DEV Airtable fields + OMNI Interface | **Blocked** — separate approval |
 | **4** | DEV runtime H3b–H3p + claim tests | **Blocked** — after Stage 2–3 |
-| **5** | Consequence workflow | **Blocked** — separate design approval |
+| **5** | Consequence workflow | **DEV implemented** (116 + S5 12/12) — prod paste pending |
 | **6** | Production readiness | **Blocked** — after Stage 4 pass |
 
 ---

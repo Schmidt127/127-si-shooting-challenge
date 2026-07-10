@@ -102,6 +102,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` |
 | **114** | Video Review — Create or Update Video XP Event | Video Feedback posted, XP positive, `Ready for XP Automation?` checked | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
 
+## Asset reuse review (116)
+
+| # | Airtable automation name | Trigger | File |
+|---|--------------------------|---------|------|
+| **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets when `Asset Reuse Decision` updated (C-023 Stage 5) | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
+
+**DEV:** GitHub complete · paste automation in DEV pending Mike · matrix S5A–S5L **12/12 PASS** via `tools/airtable/c023_dev_stage5_matrix_run.py`
+
 ## Zoom (101)
 
 | # | Airtable automation name | Trigger | File |

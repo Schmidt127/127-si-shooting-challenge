@@ -376,7 +376,7 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 | **H3f** | **PASS** (2026-07-10) | second enrollment `recKPxp0RlPhCLwDp`; cross-enrollment informational only |
 | **Regression** | Lambda **38/38** + Node **10/10** |
 
-**070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** — C-023 Stage 5 consequence workflow still open.
+**070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** — C-023 Stage 5 DEV implemented (116 + S5 12/12). Prod paste pending.
 
 Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 

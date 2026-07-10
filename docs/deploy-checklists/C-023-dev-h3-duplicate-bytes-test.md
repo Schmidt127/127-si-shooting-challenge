@@ -218,7 +218,7 @@ No automatic denial, credit removal, evidence deletion, cross-enrollment primary
 
 ### Verdict
 
-**16/16 executed or cited PASS** (H3f PASS 2026-07-10 with Mike-provided second enrollment — see section below). **H3e PASS** after DEV Lambda homework route deploy (2026-07-10). **Matrix complete** — Stage 5 consequence workflow remains open (separate design).
+**16/16 executed or cited PASS** (H3f PASS 2026-07-10 with Mike-provided second enrollment — see section below). **H3e PASS** after DEV Lambda homework route deploy (2026-07-10). **Matrix complete.** Stage 5 DEV implemented — see [C-023-dev-stage5-duplicate-consequences.md](./C-023-dev-stage5-duplicate-consequences.md) (S5A–S5L **12/12 PASS**).
 
 **Artifacts (local, not committed):** `tools/airtable/_preview/c013-dev-h3-matrix-*.json`
 
