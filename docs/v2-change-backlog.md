@@ -168,7 +168,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-013** | AWS S3 canonical URLs | **DEV video hybrid path proven** — `recF86pJTIMFoEypJ` · probe `allPass=true` · **070b/070a OFF**. [Production promotion plan](./deploy-checklists/C-013-production-promotion-plan.md) **documented** — **execution not started**. Open: formula/view hardening, attachment clearing, **070a** homework route, Production deploy. [070b prep](./deploy-checklists/C-013-dev-070b-hybrid-prep.md) | C-012, C-020 | **in progress** |
-| **C-023** | File dedup by **content hash**, not title/filename | **H3 PASS (2026-07-10)** — global flag-only behavior proven (`rec1ZyqOfljt4foEX`). **Production duplicate scope** documented — [policy spec](./deploy-checklists/C-023-production-duplicate-policy.md). **Implementation not started.** Processing race investigation **open** (§5 of policy doc). C-023 **not closed**. | C-013, C-024 | **in progress** |
+| **C-023** | File dedup by **content hash**, not title/filename | **H3 PASS** — global hash + independent upload proven. **Policy approved (2026-07-10):** always own S3 object; same-enrollment contextual **manual review** — [spec](./deploy-checklists/C-023-production-duplicate-policy.md) (prior canonical-reuse draft **superseded**). Schema/code **not started**; H3b–H3i **pending**; Processing race **separate/open**. | C-013, C-024 | **in progress** |
 | **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 
 ### Wave 8 — Intake & calendar
@@ -216,7 +216,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | Layer | Today | Gap | Target (C-023 / C-024) |
 |-------|--------|-----|------------------------|
 | **Submissions** | **007** — `Duplicate Key` from enrollment + date + shot stats | Same stats, different intent; no file awareness | Keep stat key; add file-hash cross-check when attachments present |
-| **Submission Assets** | **009** — skip if same `sourceAttachmentId` on same submission | Re-upload same bytes, new attachment id / filename passes | **`File Content Hash` (SHA-256)** required; reject or `Needs Review` on hash match per enrollment+week |
+| **Submission Assets** | **009** — skip if same `sourceAttachmentId` on same submission | Re-upload same bytes, new attachment id / filename passes | **`File Content Hash` (SHA-256)** at upload; same-enrollment contextual match → **manual review** (never auto-block/reuse object) — [C-023 policy](./deploy-checklists/C-023-production-duplicate-policy.md) |
 | **Homework Completions** | Partial keys / manual duplicates (C-004) | Re-submits create multiple rows | One completion key per enrollment + assignment + week |
 | **XP Events** | **Source Key** + **XP Dedupe Key** formula | Some paths weak; backfills risky | Document every **Source Key** pattern; create = recheck key first (**010**, **065**, **101**, **114**) |
 | **Achievements** | **066** duplicate unlocks (H-001) | Audit fixed — not data; **066** v3.1 idempotent Source Key + Week write |
@@ -225,8 +225,9 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 ### File hash (C-023)
 
 - Fields exist on **Submission Assets**: `File Content Hash`, `File Hash Algorithm` (incl. **Exact SHA-256 Hash**).
-- Wire hash computation at **Make upload** or **009** (post–S3); store algorithm on row.
-- **Never** dedupe on filename/title alone for homework/video assets.
+- Wire hash computation at upload (Lambda); store algorithm on row.
+- **Never** dedupe on filename/title alone.
+- **Never** auto-reuse another asset's S3 object — flag same-enrollment contextual reuse for Mike's review queue.
 
 ### Safe backfills (C-024)
 

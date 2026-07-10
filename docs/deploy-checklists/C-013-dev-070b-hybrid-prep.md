@@ -1,9 +1,9 @@
 # C-013 — DEV 070b hybrid webhook prep plan
 
-**Date:** 2026-07-08  
+**Date:** 2026-07-08
 **Status:** **DEV video hybrid path PROVEN (close-out 2026-07-10)** — controlled **070b** test PASS on **`recF86pJTIMFoEypJ`** · probe **`allPass=true`** · **070b / 070a OFF** (not approved for continuous operation). **Production promotion:** [plan documented](./C-013-production-promotion-plan.md) — **not started**.
-**Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)  
-**Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)  
+**Runtime (locked):** Airtable → Make → **Lambda** → S3 → Airtable — see [C-013-dev-lambda-upload-plan.md](./C-013-dev-lambda-upload-plan.md)
+**Parent:** [C-013-sdk-hybrid-runtime.md](./C-013-sdk-hybrid-runtime.md) · [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenario-prep.md)
 **Prerequisites (PASS):** Lambda B1–B4 · C-013-SEC · Make manual webhook `recthL2wrTha5nWHL` · 070b hybrid `recF86pJTIMFoEypJ`
 
 ---
@@ -147,8 +147,8 @@ Module 4  Webhook response 200    ← required: 070b sets Processing only on res
 
 ### Airtable automation trigger (recommended — Mike verify/paste)
 
-**Table:** Submission Assets  
-**Type:** When a record matches conditions  
+**Table:** Submission Assets
+**Type:** When a record matches conditions
 **Recommended conditions (all AND):**
 
 | # | Field | Operator | Value |
@@ -306,12 +306,12 @@ Execute in order. **Stop if any step fails.**
 
 ## 9. Approval checklist (Mike)
 
-- [x] DEV **070b** trigger conditions match §3  
-- [x] DEV **070a** remains **OFF**  
-- [x] DEV Make scenario uses **Lambda** path (no S3 module)  
-- [x] DEV webhook URL recorded (ops only) — **070b input updated 2026-07-09**  
-- [x] Lambda Function URL deployed and reachable from Make  
-- [x] Disabled-state test plan §7 steps 1–11 PASS  
+- [x] DEV **070b** trigger conditions match §3
+- [x] DEV **070a** remains **OFF**
+- [x] DEV Make scenario uses **Lambda** path (no S3 module)
+- [x] DEV webhook URL recorded (ops only) — **070b input updated 2026-07-09**
+- [x] Lambda Function URL deployed and reachable from Make
+- [x] Disabled-state test plan §7 steps 1–11 PASS
 - [x] **Controlled 070b enable test** on **`recF86pJTIMFoEypJ`** — hybrid **allPass=true** (2026-07-09)
 
 **070b = OFF** (post-test). The controlled hybrid test **passed once** — this is **not** approval for continuous **070b** operation on DEV or Production.
@@ -326,7 +326,7 @@ Execute in order. **Stop if any step fails.**
 | Close-out re-probe (read-only) | **PASS** — `allPass=true` (2026-07-10) |
 | **070b** / **070a** | **OFF** — unchanged |
 | Production | **Untouched** |
-| **C-023 H3** duplicate-bytes test | **PASS** — [H3 test](./C-023-dev-h3-duplicate-bytes-test.md). **Production policy** documented — [spec](./C-023-production-duplicate-policy.md) — implementation **not started** |
+| **C-023 H3** duplicate-bytes test | **PASS** — [H3 test](./C-023-dev-h3-duplicate-bytes-test.md). **Policy revised** — [independent upload + manual review](./C-023-production-duplicate-policy.md) (prior reuse draft superseded). H3b–H3i **pending** |
 | **recIYFnfmsPcy7iop** | Stuck **Processing** — **not repaired** (accidental test; not counted as PASS) |
 | Attachments | **Retained** on PASS asset (clearing deferred to later slice) |
 | Production promotion | [Plan documented](./C-013-production-promotion-plan.md) — **execution not approved** |

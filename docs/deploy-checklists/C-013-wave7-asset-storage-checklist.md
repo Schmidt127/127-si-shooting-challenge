@@ -1,10 +1,10 @@
 # C-013 / C-023 — Wave 7 asset storage execution checklist
 
-**Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)  
-**Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — controlled confirm-write recheck same day. Full writeback + C-023 duplicate flags on `recBBi80bYuxXifVj`. Upload runtime = **Lambda** (Make S3 **dropped**). **070a/070b OFF**; Production untouched. **Not** full migration.  
-**Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)  
-**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**  
-**Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired  
+**Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)
+**Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — controlled confirm-write recheck same day. Full writeback + C-023 duplicate flags on `recBBi80bYuxXifVj`. Upload runtime = **Lambda** (Make S3 **dropped**). **070a/070b OFF**; Production untouched. **Not** full migration.
+**Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)
+**Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**
+**Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired
 **DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py` (read-only)
 
 **Environment:** DEV `appTetnuCZlCZdTCT` first. **070a/070b OFF**. Upload runtime = **[SDK / hybrid interim](./C-013-sdk-hybrid-runtime.md)** (Make S3 **parked**).
@@ -23,8 +23,8 @@
 
 ## 2026-07-08 — DEV SDK proof PASS (C-013 + C-023 hash writeback)
 
-**Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)  
-**Record:** `recBBi80bYuxXifVj` (Video Feedback / **070b** route)  
+**Tool:** `tools/airtable/c013_dev_s3_upload_proof.py` (AWS SDK — bypasses Make S3 timeout)
+**Record:** `recBBi80bYuxXifVj` (Video Feedback / **070b** route)
 **Verifier:** `allPass=true` — [verify.json](../../tools/airtable/_preview/c013-dev-s3-sdk-proof-recBBi80bYuxXifVj-verify.json)
 
 ### Status summary
@@ -241,7 +241,7 @@ https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/
 
 **Artifacts:** Local-only recheck JSON under `tools/airtable/_preview/` (`*-confirm-recheck*.json`) — not required for Git; prior committed proof artifacts remain canonical.
 
-**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023 H3** **PASS** — [H3 test](./C-023-dev-h3-duplicate-bytes-test.md). **C-023 Production policy** documented — [spec](./C-023-production-duplicate-policy.md) — **implementation not started**; Processing race **open**.
+**Next:** [C-013 production promotion plan](./C-013-production-promotion-plan.md) documented — **execution not started**. **C-023:** H3 **PASS**; [policy](./C-023-production-duplicate-policy.md) revised for **independent upload + manual review** (prior reuse draft superseded); H3b–H3i **pending**; Processing race **separate/open**.
 
 ---
 
@@ -293,7 +293,7 @@ Only after **upload runtime** chosen + **070b** wired + C-020 **H2** → Slice 3
 
 **Why manual:** Cursor/OMNI cannot add Airtable fields via the public Data API. Mike or OMNI adds them in the Airtable UI.
 
-**Base:** `127SI - SHOOTING CHALLENGE - DEV` (`appTetnuCZlCZdTCT`)  
+**Base:** `127SI - SHOOTING CHALLENGE - DEV` (`appTetnuCZlCZdTCT`)
 **Table:** **Submission Assets** (`tblhMLKxQK77agtME`)
 
 ### OMNI field confirmation (2026-07-07)
@@ -499,7 +499,7 @@ See **[C-013-make-s3-writeback-mapping.md](./C-013-make-s3-writeback-mapping.md)
 |------|----------|---------------|
 | **H1** | New C-020 Homework 1-file (clone G) | Asset → **070a** → Make → `Upload Status = Uploaded`, **Canonical File URL** set, **022** on HC |
 | **H2** | New C-020 Video 1-file (clone F) | Asset → **070b** → VF URL set |
-| **H3** | C-023 | Re-upload same bytes → `Duplicate File Status = Exact Duplicate` — **PASS 2026-07-10** (`rec1ZyqOfljt4foEX`; global flag-only; new S3 key). **Policy:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) |
+| **H3** | C-023 | Global hash match + independent S3 upload — **PASS 2026-07-10** (`rec1ZyqOfljt4foEX`). **Policy:** [independent upload + manual review](./C-023-production-duplicate-policy.md). **H3b–H3i** contextual review tests **pending** |
 | **H4** | Attachment clear | After success, `Airtable Attachment` empty on asset (+ submission intake fields) |
 
 Use Schmidt enrollment `recgP9qZYjAhE7NXm`; small test files (&lt; 5 MB).

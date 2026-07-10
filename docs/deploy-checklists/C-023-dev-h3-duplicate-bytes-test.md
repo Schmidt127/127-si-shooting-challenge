@@ -1,11 +1,11 @@
 # C-023 H3 — DEV duplicate-bytes test
 
-**Date:** 2026-07-10  
-**Base:** DEV `appTetnuCZlCZdTCT` only  
-**Backlog:** C-023 (related C-013)  
-**070a / 070b:** OFF (unchanged)  
-**Production:** Untouched  
-**AWS config:** Unchanged  
+**Date:** 2026-07-10
+**Base:** DEV `appTetnuCZlCZdTCT` only
+**Backlog:** C-023 (related C-013)
+**070a / 070b:** OFF (unchanged)
+**Production:** Untouched
+**AWS config:** Unchanged
 
 ---
 
@@ -116,15 +116,15 @@ Re-probe **unchanged** — `allPass=true`, same hash and storage key as before t
 
 H3 pass criteria met on successful upload + retry:
 
-1. Same SHA-256 as reference (identical bytes, different filename).  
-2. Duplicate identified per **current flag-only** policy.  
-3. Airtable duplicate flags populated and understandable.  
-4. Final state **Uploaded** (not stuck Processing).  
-5. Reference asset unchanged.  
-6. Retry idempotent (`skipped_already_uploaded`).  
+1. Same SHA-256 as reference (identical bytes, different filename).
+2. Duplicate identified per **current flag-only** policy.
+3. Airtable duplicate flags populated and understandable.
+4. Final state **Uploaded** (not stuck Processing).
+5. Reference asset unchanged.
+6. Retry idempotent (`skipped_already_uploaded`).
 7. Auditable via prep script + local preview artifacts.
 
-**C-023 is not closed:** global flag-only behavior proven on DEV. Scoped actionable reuse is specified in [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) — **implementation not started**.
+**C-023 is not closed.** Global hash detection and independent upload are proven on DEV. **Owner-approved policy (2026-07-10):** always upload to a new S3 object; flag same-enrollment contextual reuse for **manual review** — see [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md). Prior canonical-reuse draft **superseded**. Implementation **not started**.
 
 ---
 
@@ -151,19 +151,20 @@ No other Submission Assets modified.
 
 ## Rollback / evidence
 
-- **H3 record retained** as DEV audit evidence (`rec1ZyqOfljt4foEX`).  
-- **Reference** `recF86pJTIMFoEypJ` untouched.  
-- **recIYFnfmsPcy7iop** untouched.  
+- **H3 record retained** as DEV audit evidence (`rec1ZyqOfljt4foEX`).
+- **Reference** `recF86pJTIMFoEypJ` untouched.
+- **recIYFnfmsPcy7iop** untouched.
 - Preview artifacts local only: `tools/airtable/_preview/c013-dev-h3-*` (not committed).
 
 ---
 
 ## Recommended next slice
 
-1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md)
-2. **Implementation:** scoped reuse in Lambda + tests; DEV H3b–H3f
-3. **Ops:** restore `MAKE_DEV_UPLOAD_WEBHOOK_URL` for full Make-chain replay; confirm 070b OFF for manual Lambda tests
-4. **Processing race:** separate disposition — policy doc §5
+1. **Mike approval:** [C-023-production-duplicate-policy.md](./C-023-production-duplicate-policy.md) (independent upload + manual review)
+2. **Schema approval:** review fields + operator status options (§7.5 of policy doc)
+3. **Implementation:** Lambda contextual review + DEV H3b–H3i
+4. **OMNI:** review Interface after schema approved
+5. **Processing race:** separate C-013-OPS slice (policy doc §10)
 
 ---
 
