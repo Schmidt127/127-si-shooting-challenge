@@ -235,11 +235,12 @@ def upload_and_verify(
     check("canonical", bool(after1.get("Canonical File URL")) == expectations.get("expectCanonical", True))
     check("independentS3", s3_after >= expectations.get("minS3", 1))
     if "exactHash" in expectations:
-        check("exactHash", after1.get("Exact Hash Match Found?") == expectations["exactHash"])
+        check("exactHash", bool(after1.get("Exact Hash Match Found?")) == expectations["exactHash"])
     if "sameEnrollment" in expectations:
-        check("sameEnrollment", after1.get("Same Enrollment Match Found?") == expectations["sameEnrollment"])
+        # Airtable returns unchecked checkboxes as null; coerce to bool
+        check("sameEnrollment", bool(after1.get("Same Enrollment Match Found?")) == expectations["sameEnrollment"])
     if "potentialReuse" in expectations:
-        check("potentialReuse", after1.get("Potential Asset Reuse?") == expectations["potentialReuse"])
+        check("potentialReuse", bool(after1.get("Potential Asset Reuse?")) == expectations["potentialReuse"])
     if "primaryReason" in expectations:
         got = after1.get("Asset Reuse Review Primary Reason")
         check("primaryReason", got == expectations["primaryReason"], str(got))
@@ -854,6 +855,7 @@ def main() -> None:
     ])
     parser.add_argument("--reference", default=DEFAULT_REF)
     parser.add_argument("--asset-id", default=None)
+    parser.add_argument("--enrollment", default=None, help="Second-enrollment RID for H3f")
     args = parser.parse_args()
     load_env()
 
@@ -878,7 +880,8 @@ def main() -> None:
     if args.scenario in {"all", "H3e"}:
         results["H3e"] = run_h3e(ref)
     if args.scenario in {"all", "H3f"}:
-        results["H3f"] = run_h3f(ref, find_or_create_second_test_enrollment())
+        other = args.enrollment or find_or_create_second_test_enrollment()
+        results["H3f"] = run_h3f(ref, other)
     if args.scenario in {"all", "H3g"}:
         results["H3g"] = run_h3g(ref)
     if args.scenario in {"all", "H3h"}:

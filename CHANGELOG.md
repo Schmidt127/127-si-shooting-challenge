@@ -14,6 +14,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **C-013 DEV Lambda minimal contract (2026-07-08)** — [C-013-dev-lambda-upload-plan.md](./docs/deploy-checklists/C-013-dev-lambda-upload-plan.md#minimal-dev-contract--review-2026-07-08).
 
 #### Changed
+- **C-023 H3 matrix complete (2026-07-10)** — H3f cross-enrollment PASS on `recQcpLCsYFrYYH7w` (second DEV enrollment `recKPxp0RlPhCLwDp`); informational-only cross-enrollment review, no reuse flag, no block. Matrix **16/16**. Harness: `--enrollment` arg + checkbox null-coercion fix in `tools/airtable/c013_dev_h3_matrix_run.py`. [Evidence](./docs/deploy-checklists/C-023-dev-h3-duplicate-bytes-test.md#2026-07-10--h3f-cross-enrollment-reuse-matrix-close).
 - **DEV Lambda homework upload route (2026-07-10)** — `127si-upload-asset-dev` accepts `homework_completion` / **070a** (`Homework Completions` destination) with same claim, S3, hash, and C-023 review protections as video. `ALLOW_ROUTE_KEYS` includes `homework_completion`. H3e PASS on `rec1PzA7th0qJbsN4`. 38 unit tests PASS.
 - **DEV Lambda `X-Upload-Secret` auth (2026-07-08)** — `upload_core/auth.py` validates `UPLOAD_WEBHOOK_SECRET`; 401 on missing/invalid header; no Airtable write on unauthorized. Tests: `lambda/upload-asset/tests/test_auth.py`.
 - **DEV Lambda deploy/test prep (2026-07-08)** — `127si-upload-asset-dev` code-only deploy flags, Function URL invoke helper, [deploy-and-url-test plan](./docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md). No AWS deploy in commit.

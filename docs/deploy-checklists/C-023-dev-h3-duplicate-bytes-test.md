@@ -193,7 +193,7 @@ No other Submission Assets modified.
 | **H3c** | **PASS** | `recgDL7dqsS1J1LUl` | Primary `Different Assignment Reuse` | Independent object | `Not Reviewed` |
 | **H3d** | **PASS** | `rec9JAtfj0MMp3Tua` | Primary `Homework Used for Video Feedback`; prior `recq9t8zWUhDJts40` | Independent object | `Not Reviewed` |
 | **H3e** | **PASS** | `rec1PzA7th0qJbsN4` | Primary `Video Feedback Used for Homework`; prior VF `recF86pJTIMFoEypJ` | Independent object | `Not Reviewed` |
-| **H3f** | **BLOCKED** | — | No second DEV test enrollment; API cannot create (`Full Athlete Name - Backward` computed) | — | — |
+| **H3f** | **PASS** (2026-07-10) | `recQcpLCsYFrYYH7w` | Second enrollment `recKPxp0RlPhCLwDp` (C-023 Test Athlete `recy7jWWVPNXDqYrN`); 25 cross-enrollment matches, 0 same-enrollment; reasons `Cross-Enrollment Match — Informational` only; primary reason null; `Potential Asset Reuse?` false | Independent object | `Not Reviewed` |
 | **H3g** | **PASS** | `recpj3febxqjGUHdz` | `Different Week Reuse` in reasons; different submission context | Independent object | `Not Reviewed` |
 | **H3h** | **PASS** | `recr96fs0WGBlZZ5L` | `Missing Context` in reasons (submission cleared; VF retained) | Independent object | `Not Reviewed` |
 | **H3i** | **PASS** | `recvzxmLrjer4DLyt` | `skipped_already_uploaded`; hash/URL unchanged; no second S3 object | 1 object | Unchanged |
@@ -218,11 +218,34 @@ No automatic denial, credit removal, evidence deletion, cross-enrollment primary
 
 ### Verdict
 
-**15/16 executed or cited PASS; 1 BLOCKED** (H3f second test enrollment). **H3e PASS** after DEV Lambda homework route deploy (2026-07-10). **C-023 not complete** — H3f + Stage 5 consequence workflow remain open.
+**16/16 executed or cited PASS** (H3f PASS 2026-07-10 with Mike-provided second enrollment — see section below). **H3e PASS** after DEV Lambda homework route deploy (2026-07-10). **Matrix complete** — Stage 5 consequence workflow remains open (separate design).
 
 **Artifacts (local, not committed):** `tools/airtable/_preview/c013-dev-h3-matrix-*.json`
 
-**Next gate:** (1) OMNI/Mike second test enrollment for H3f; (2) Stage 5 consequence workflow design.
+**Next gate:** Stage 5 consequence workflow design.
+
+---
+
+## 2026-07-10 — H3f cross-enrollment reuse (matrix close)
+
+**Prerequisite (Mike/OMNI):** second DEV enrollment `recKPxp0RlPhCLwDp` — Athlete `C-023 Test Athlete` (`recy7jWWVPNXDqYrN`), Active, 2025-2026, K-2, Fairfield, no prior linked rows. Enrollment primary display renders `, - 2025-2026` (blank first/last-name lookups on the Enrollment) — confirmed display-only; not repaired per scope. Harness therefore targets the enrollment by RID (`--enrollment recKPxp0RlPhCLwDp`).
+
+| Item | Value |
+|------|-------|
+| Current asset | `recQcpLCsYFrYYH7w` (Submission `recJUOLKXtAYl4mx0`, VF `recYtXBLIIoHcA15B`, Week `recrTwxqXz31fNZ7e`, `VID-1`) |
+| Enrollment | `recKPxp0RlPhCLwDp` (patched before invoke; verified after) |
+| SHA-256 | `448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967` (identical to reference `recF86pJTIMFoEypJ`) |
+| Lambda | 200 · `actionOut=uploaded` · claim `041e7aae-7d04-4afe-91f4-6b6cb37c9190` · `writebackVerification.allPass=true` |
+| Duplicate lookup | `exactHashMatchFound=true` · `sameEnrollmentMatchCount=0` · `crossEnrollmentMatchCount=25` (all Schmidt `recgP9qZYjAhE7NXm`) |
+| Review | Reasons `["Cross-Enrollment Match — Informational"]` only · primary reason **null** · `Potential Asset Reuse?` **false** · summary "No same-enrollment contextual reuse detected." |
+| Decision | `Not Reviewed` (no auto-flag, no block) |
+| S3 | Independent object `…/unknown-athlete/2026-07-10-video-feedback-recQcpLCsYFrYYH7w-…png` (slug falls back to `unknown-athlete` due to the blank enrollment name lookups — display-only issue above) |
+
+**Assertions:** uploaded, canonical URL + hash written, independent S3 object, exact-hash match true, same-enrollment false, potential reuse false, no same-enrollment reasons (`Same Assignment Resubmission` / `Different Assignment Reuse` / `Different Week Reuse` all absent), decision `Not Reviewed`, enrollment link = `recKPxp0RlPhCLwDp`. **All PASS.**
+
+**Harness fix:** initial run reported FAIL because the harness compared unchecked Airtable checkboxes (returned as `null`) with `False`; `c013_dev_h3_matrix_run.py` now coerces checkbox reads with `bool()` and accepts `--enrollment` for H3f. Lambda behavior was correct on the first invocation.
+
+**Side observation (not H3f evidence):** a second identical-bytes asset in the same second enrollment (`rechth7SQT3vfwvO6`) was correctly flagged `Different Submission Reuse` with primary match `recQcpLCsYFrYYH7w` — same-enrollment detection works inside enrollment 2 as well. Both records retained as DEV evidence.
 
 ---
 

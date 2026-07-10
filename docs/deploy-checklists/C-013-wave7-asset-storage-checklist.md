@@ -373,10 +373,10 @@ Detail: [C-013-dev-make-lambda-scenario-prep.md](./C-013-dev-make-lambda-scenari
 | **H3b–H3d, H3e, H3g–H3k, H3n–H3p** | **PASS** (direct Lambda; independent S3 per asset) |
 | **H3l / H3m** | **PASS** (cited Stage 4D-D/E — not rerun) |
 | **H3e** | **PASS** (2026-07-10) | DEV Lambda homework route deployed |
-| **H3f** | **BLOCKED** | second DEV test enrollment unavailable via API |
+| **H3f** | **PASS** (2026-07-10) | second enrollment `recKPxp0RlPhCLwDp`; cross-enrollment informational only |
 | **Regression** | Lambda **38/38** + Node **10/10** |
 
-**070a / 070b / Make:** **OFF**. **Production:** untouched. **C-023 not complete** (H3e/H3f + Stage 5).
+**070a / 070b / Make:** **OFF**. **Production:** untouched. **H3b–H3p matrix complete (16/16)** — C-023 Stage 5 consequence workflow still open.
 
 Detail: [C-023-dev-h3-duplicate-bytes-test.md](./C-023-dev-h3-duplicate-bytes-test.md) § Wave 7 matrix.
 
