@@ -1,0 +1,20 @@
+{
+  "submissionId": "rec9yoDZ3DMIEhi3I",
+  "assetId": "recWZ4cHNYgbV60mL",
+  "videoFeedbackId": "reccXspFIiNIPMPcm",
+  "xpEventId": "recYQ10pOoFlApmjZ",
+  "sourceKey": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm",
+  "assetReuseDecision": "Not Reviewed",
+  "duplicateResolutionApplied": null,
+  "duplicateResolutionLastAppliedDecision": null,
+  "duplicateResolutionError": null,
+  "duplicateResolutionAppliedAt": null,
+  "vfDoNotAwardXP": null,
+  "xpActive": true,
+  "xpDuplicateStatus": "Unique",
+  "xpReasonDebug": "PROD V2 Test fixture for automation 116 (PROD-V2-A116-TEST). Reference commit 992677d.",
+  "xpCountForSourceKey": 1,
+  "submissionLabel": "Testing Schmidt - 7/10/2026 - Post Challenge",
+  "assetLabel": "PROD V2 Test - Duplicate Reuse",
+  "vfKey": "PROD-V2-A116-TEST"
+}

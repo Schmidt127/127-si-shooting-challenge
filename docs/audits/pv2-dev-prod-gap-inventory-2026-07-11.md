@@ -9,7 +9,7 @@
 
 ## 1. Executive summary
 
-Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference(s)). **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation **116 forward test FAIL** — OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.
+Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference). Automation **116 schema PASS**; automation **116 runtime validation FAIL** (2026-07-11 — forward test no field changes; automation not pasted/enabled on PROD). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md` · Runtime: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.
 
 ## 2. Repository Production v2 inventory
 
@@ -190,10 +190,10 @@ DEV records: **48** · PROD records: **48**
 **Count: 1**
 
 ### PV2-GAP-0003 — Automation 116
-- DEV: Deployed ON, v1.0.1 validated S5A-S5L · PROD: Forward test FAIL — no field changes after 90s poll
-- Evidence: docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-10.md
+- DEV: Deployed ON, v1.0.1 validated S5A-S5L · PROD: **Runtime validation FAIL 2026-07-11** — 90s poll after Confirmed Duplicate produced no field changes; Automations table has no 116 doc row (008 still present)
+- Evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`
 - Impact: Duplicate decisions have no consequences on PROD
-- Correction: Paste 116 v1.0.1, enable trigger on Asset Reuse Decision
+- Correction: Paste 116 v1.0.1 in PROD Airtable UI, configure trigger on Asset Reuse Decision, enable, re-run `prod_116_fixture_run.py confirm + restore`
 - Mike manual: **True** · Cursor safe: **False** · Risk: High
 - Validation: prod_116_fixture_run.py confirm + restore PASS
 
@@ -292,7 +292,7 @@ DEV records: **48** · PROD records: **48**
 
 ## Recommended next Cursor prompt
 
-Run automation 116 PROD runtime validation: paste 116 v1.0.1 from GitHub into PROD Airtable, enable trigger on Asset Reuse Decision, execute tools/airtable/prod_116_fixture_run.py confirm + restore on Schmidt Testing fixture — document in docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md. Do not enable 070b until C-013 production promotion smoke PASS.
+Mike pasted and enabled PROD automation 116 v1.0.1. Re-run `tools/airtable/prod_116_fixture_run.py pretest`, `confirm`, and `restore` on Schmidt Testing fixture; update `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md` to PASS if both directions pass. If runtime PASS, begin C-013 PROD infrastructure readiness review per `docs/deploy-checklists/C-013-production-promotion-plan.md` — do not enable 070b until isolated Lambda smoke PASS.
 
 ---
 *Generated 2026-07-11T13:16:11Z by pv2_dev_prod_gap_audit.py*
