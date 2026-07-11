@@ -72,6 +72,9 @@ def get_asset(tok: str, asset_id: str) -> dict:
 
 
 def patch_asset(tok: str, asset_id: str, fields: dict) -> None:
+    # typecast=True is required for setting valid single-select names (e.g. Upload Status).
+    # Never pass "" to clear a single-select — use null or omit the field; typecast would
+    # create a blank select option (observed on File Hash Algorithm).
     r = requests.patch(
         api(asset_id),
         headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"},
@@ -179,7 +182,7 @@ FULL_UPLOAD_RESET_FIELDS = {
     "Canonical File URL": "",
     "Storage Key": "",
     "File Content Hash": "",
-    "File Hash Algorithm": "",
+    "File Hash Algorithm": None,
     "File Size Bytes": None,
     "File MIME Type": "",
     "Uploaded At": None,
@@ -233,7 +236,7 @@ RESET_LIVE_TRIGGER_FIELDS = {
     "Canonical File URL": "",
     "Storage Key": "",
     "File Content Hash": "",
-    "File Hash Algorithm": "",
+    "File Hash Algorithm": None,
     "File Size Bytes": None,
     "File MIME Type": "",
     "Uploaded At": None,
@@ -489,7 +492,7 @@ def check_reset_live_trigger(before: dict, after: dict) -> dict:
     cleared = {}
     for key in RESET_LIVE_TRIGGER_CLEARED:
         value = after.get(key)
-        if key in ("File Size Bytes", "Uploaded At", "Processing Started At"):
+        if key in ("File Size Bytes", "Uploaded At", "Processing Started At", "File Hash Algorithm"):
             cleared[f"{key}Blank"] = value is None or value == ""
         else:
             cleared[f"{key}Blank"] = not (value or "").strip() if isinstance(value, str) else not value

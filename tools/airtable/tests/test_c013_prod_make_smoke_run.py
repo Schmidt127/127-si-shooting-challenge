@@ -125,6 +125,33 @@ class TestResetFieldSets(unittest.TestCase):
         ):
             self.assertIn(key, FULL_UPLOAD_RESET_FIELDS)
 
+    def test_full_reset_clears_file_hash_algorithm_with_null(self) -> None:
+        self.assertIsNone(FULL_UPLOAD_RESET_FIELDS["File Hash Algorithm"])
+        self.assertNotEqual(FULL_UPLOAD_RESET_FIELDS.get("File Hash Algorithm"), "")
+
+    def test_reset_live_clears_file_hash_algorithm_with_null(self) -> None:
+        self.assertIsNone(RESET_LIVE_TRIGGER_FIELDS["File Hash Algorithm"])
+        self.assertNotEqual(RESET_LIVE_TRIGGER_FIELDS.get("File Hash Algorithm"), "")
+
+    def test_no_reset_payload_uses_empty_string_for_file_hash_algorithm(self) -> None:
+        for payload in (FULL_UPLOAD_RESET_FIELDS, RESET_LIVE_TRIGGER_FIELDS):
+            self.assertIsNone(payload["File Hash Algorithm"])
+            self.assertNotEqual(payload["File Hash Algorithm"], "")
+
+    def test_lambda_writeback_sets_sha256(self) -> None:
+        repo = Path(__file__).resolve().parents[3]
+        sys.path.insert(0, str(repo / "lambda" / "upload-asset"))
+        from upload_core.processor import writeback_fields  # noqa: E402
+
+        fields = writeback_fields(
+            canonical="https://example.com/x.png",
+            storage_key="shooting-challenge/x.png",
+            file_hash="a" * 64,
+            size_bytes=100,
+            mime_type="image/png",
+        )
+        self.assertEqual(fields["File Hash Algorithm"], "SHA-256")
+
 
 def live_fixture_fields(**overrides) -> dict:
     """Schmidt live-test record state after a successful 070b-triggered run."""
