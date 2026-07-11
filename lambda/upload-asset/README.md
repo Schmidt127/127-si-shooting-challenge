@@ -59,12 +59,17 @@ cd lambda/upload-asset
 
 **Note:** Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function. **`X-Upload-Secret` required** on every request when `UPLOAD_WEBHOOK_SECRET` is set.
 
-## Make integration (not enabled yet)
+## Make integration (DEV)
 
 Scenario: `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
 
 ```text
-Webhook → Router (070b, video_feedback) → HTTP POST Lambda Function URL → 200
+Webhook → Router
+  (070b + video_feedback) OR (070a + homework_completion)
+  → HTTP POST Lambda Function URL → complete Lambda JSON
 ```
 
-**070a / 070b:** OFF until Mike approves after Lambda direct test PASS.
+Blueprint: [upload-asset-engine-lambda-dev-v1.template.json](../../make/blueprints/upload-asset-engine-lambda-dev-v1.template.json)  
+Homework runbook: [C-013-dev-070a-homework-lambda-runbook.md](../../make/documentation/C-013-dev-070a-homework-lambda-runbook.md)
+
+**070a / 070b:** OFF until Mike approves after Make manual webhook PASS.
