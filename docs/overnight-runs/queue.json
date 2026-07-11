@@ -290,7 +290,7 @@
   ],
   "githubTokenLimitation": "Lead cloud token cannot label/comment/close GitHub issues (403). Mike must label overnight-blocker+overnight-run on #8/#9/#11/#17, close duplicates #6/#7/#10/#14, close/update #15, assign Schmidt127, and paste docs/overnight-runs/_live-status-update.md into issue #1.",
   "leadBootstrapCommit": "36ae37d",
-  "lastLeadCommit": "153ae20847dfe889b735d75ac7e62ebc6a041633",
+  "lastLeadCommit": "89b9e3d7295d8ca3858f280dbf4ad9f2d3d86fab",
   "lastUpdated": "2026-07-11T22:33:30Z",
   "lastUpdatedBy": "Cloud-Lead"
 }
