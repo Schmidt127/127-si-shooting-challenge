@@ -1,6 +1,6 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **Infrastructure readiness audited — PROD deploy NOT started** (2026-07-11)  
+**Status:** **PROD Lambda DEPLOYED — direct smoke PASS (2026-07-11)** · Make scenario **NOT built** · **070b OFF**  
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
 **Production base:** `appn84sqPw03zEbTT` — **untouched** (schema + 116 PASS; Lambda/Make not deployed)  

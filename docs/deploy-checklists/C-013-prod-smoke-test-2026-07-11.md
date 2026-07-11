@@ -1,7 +1,7 @@
 # C-013 — PROD isolated smoke test plan
 
 **Date:** 2026-07-11  
-**Status:** **Ready for execution after PROD Lambda deploy**  
+**Status:** **Complete — direct Lambda smoke PASS** · Make + 070b enablement pending  
 **Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)  
 **Hard stops:** Automation **070b OFF** until steps 1–10 PASS · Schmidt Testing only · no live athlete records
 

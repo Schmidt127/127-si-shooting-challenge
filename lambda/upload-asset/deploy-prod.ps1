@@ -1,4 +1,4 @@
-# Deploy PROD upload Lambda (code + optional config) — C-013 promotion
+# Deploy PROD upload Lambda (code + optional config) - C-013 promotion
 # Does NOT enable automation 070b. Mike runs after explicit approval.
 param(
     [string]$FunctionName = "127si-upload-asset",
@@ -41,13 +41,16 @@ if (Test-Path $ZipPath) { Remove-Item -Force $ZipPath }
 Compress-Archive -Path (Join-Path $DistDir "*") -DestinationPath $ZipPath
 
 $exists = $false
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = "Continue"
 $gf = aws lambda get-function --function-name $FunctionName --region $Region 2>&1
 if ($LASTEXITCODE -eq 0) { $exists = $true }
+$ErrorActionPreference = $prevEap
 
 if ($CodeOnly) {
     if (-not $exists) {
         if ($gf) { Write-Host $gf }
-        throw "Function $FunctionName not found — create shell first (full deploy without -CodeOnly)"
+        throw "Function $FunctionName not found - create shell first (full deploy without -CodeOnly)"
     }
     Write-Host "Code-only update for $FunctionName..."
     aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region
@@ -57,30 +60,27 @@ if ($CodeOnly) {
     exit 0
 }
 
-$TrustPolicy = @'
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Principal": { "Service": "lambda.amazonaws.com" },
-    "Action": "sts:AssumeRole"
-  }]
-}
-'@
+$TrustPolicyPath = Join-Path $PSScriptRoot "iam-trust-policy.json"
 
 $RoleArn = if ($ExistingRoleArn) { $ExistingRoleArn } else { $null }
 if (-not $RoleArn -and -not $SkipIam) {
-    try {
-        $RoleArn = (aws iam get-role --role-name $RoleName --query Role.Arn --output text 2>$null)
-    } catch {}
+    $ErrorActionPreference = "Continue"
+    $RoleArn = aws iam get-role --role-name $RoleName --query Role.Arn --output text 2>$null
+    if ($LASTEXITCODE -ne 0) { $RoleArn = $null }
+    $ErrorActionPreference = $prevEap
 }
 
 if (-not $RoleArn -and -not $SkipIam) {
     Write-Host "Creating IAM role $RoleName..."
-    $RoleArn = aws iam create-role --role-name $RoleName --assume-role-policy-document $TrustPolicy --query Role.Arn --output text
+    $ErrorActionPreference = "Continue"
+    $RoleArn = aws iam create-role --role-name $RoleName --assume-role-policy-document "file://$TrustPolicyPath" --query Role.Arn --output text
+    if ($LASTEXITCODE -ne 0 -or -not $RoleArn) { throw "create-role failed (exit $LASTEXITCODE)" }
     Start-Sleep -Seconds 10
-    aws iam put-role-policy --role-name $RoleName --policy-name "${RoleName}-s3-inline" --policy-document file://$((Join-Path $PSScriptRoot "iam-policy-prod.json"))
+    aws iam put-role-policy --role-name $RoleName --policy-name "${RoleName}-s3-inline" --policy-document "file://$((Join-Path $PSScriptRoot 'iam-policy-prod.json'))"
+    if ($LASTEXITCODE -ne 0) { throw "put-role-policy failed (exit $LASTEXITCODE)" }
     aws iam attach-role-policy --role-name $RoleName --policy-arn arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+    if ($LASTEXITCODE -ne 0) { throw "attach-role-policy failed (exit $LASTEXITCODE)" }
+    $ErrorActionPreference = $prevEap
 }
 
 if (-not $RoleArn -and -not $SkipIam) {
@@ -100,24 +100,29 @@ $EnvVars = @{
 if ($env:UPLOAD_WEBHOOK_SECRET_PROD) {
     $EnvVars["UPLOAD_WEBHOOK_SECRET"] = $env:UPLOAD_WEBHOOK_SECRET_PROD
 } elseif ($env:UPLOAD_WEBHOOK_SECRET) {
-    Write-Warning "Using UPLOAD_WEBHOOK_SECRET — prefer UPLOAD_WEBHOOK_SECRET_PROD for Production"
+    Write-Warning "Using UPLOAD_WEBHOOK_SECRET - prefer UPLOAD_WEBHOOK_SECRET_PROD for Production"
     $EnvVars["UPLOAD_WEBHOOK_SECRET"] = $env:UPLOAD_WEBHOOK_SECRET
 } else {
-    Write-Warning "UPLOAD_WEBHOOK_SECRET_PROD not set — Lambda returns 401 until configured"
+    Write-Warning "UPLOAD_WEBHOOK_SECRET_PROD not set - Lambda returns 401 until configured"
 }
 $EnvJson = (@{ Variables = $EnvVars } | ConvertTo-Json -Compress -Depth 5)
 $EnvFilePath = Join-Path $PSScriptRoot "dist\lambda-env-prod.json"
-$EnvJson | Set-Content -Path $EnvFilePath -Encoding UTF8
+$Utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($EnvFilePath, $EnvJson, $Utf8NoBom)
 
 if ($exists) {
     Write-Host "Updating function $FunctionName..."
+    $ErrorActionPreference = "Continue"
     aws lambda update-function-code --function-name $FunctionName --zip-file "fileb://$ZipPath" --region $Region | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "update-function-code failed (exit $LASTEXITCODE)" }
     Start-Sleep -Seconds 5
     if (-not $SkipEnvUpdate) {
-        aws lambda update-function-configuration --function-name $FunctionName --runtime python3.12 --handler handler.lambda_handler --timeout 120 --memory-size 512 --environment "file://$EnvFilePath" --region $Region | Out-Null
+        aws lambda update-function-configuration --function-name $FunctionName --runtime python3.12 --handler handler.lambda_handler --timeout 120 --memory-size 512 --environment "file://$($EnvFilePath -replace '\\','/')" --region $Region | Out-Null
+        if ($LASTEXITCODE -ne 0) { throw "update-function-configuration failed (exit $LASTEXITCODE)" }
     }
 } else {
     Write-Host "Creating function $FunctionName..."
+    $ErrorActionPreference = "Continue"
     aws lambda create-function `
         --function-name $FunctionName `
         --runtime python3.12 `
@@ -126,20 +131,26 @@ if ($exists) {
         --zip-file "fileb://$ZipPath" `
         --timeout 120 `
         --memory-size 512 `
-        --environment "file://$EnvFilePath" `
+        --environment "file://$($EnvFilePath -replace '\\','/')" `
         --region $Region | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "create-function failed (exit $LASTEXITCODE)" }
 }
+$ErrorActionPreference = $prevEap
 
 Write-Host "Ensuring Function URL..."
-try {
-    $Url = aws lambda get-function-url-config --function-name $FunctionName --region $Region --query FunctionUrl --output text 2>$null
-} catch { $Url = $null }
+$ErrorActionPreference = "Continue"
+$Url = aws lambda get-function-url-config --function-name $FunctionName --region $Region --query FunctionUrl --output text 2>$null
+if ($LASTEXITCODE -ne 0) { $Url = $null }
 if (-not $Url) {
     aws lambda create-function-url-config --function-name $FunctionName --auth-type NONE --region $Region | Out-Null
+    if ($LASTEXITCODE -ne 0) { throw "create-function-url-config failed (exit $LASTEXITCODE)" }
     aws lambda add-permission --function-name $FunctionName --statement-id FunctionUrlAllowPublic --action lambda:InvokeFunctionUrl --principal "*" --function-url-auth-type NONE --region $Region 2>$null | Out-Null
+    aws lambda add-permission --function-name $FunctionName --statement-id AllowPublicInvokeFunction --action lambda:InvokeFunction --principal "*" --region $Region 2>$null | Out-Null
     $Url = aws lambda get-function-url-config --function-name $FunctionName --region $Region --query FunctionUrl --output text
+    if ($LASTEXITCODE -ne 0) { throw "get-function-url-config failed (exit $LASTEXITCODE)" }
 }
+$ErrorActionPreference = $prevEap
 
 Write-Host "DEPLOYED function=$FunctionName region=$Region"
 Write-Host "FUNCTION_URL=$Url"
-Write-Host "Store Function URL in ops notes only — not GitHub."
+Write-Host "Store Function URL in ops notes only - not GitHub."

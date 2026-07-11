@@ -4,6 +4,7 @@
 **/.env
 **/.env.local
 **/.env.new-token
+**/c013-prod-deploy-session.local.json
 
 # Local Python
 __pycache__/

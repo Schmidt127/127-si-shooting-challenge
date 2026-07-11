@@ -1,0 +1,87 @@
+{
+  "auditId": "C-013-prod-lambda-smoke-result",
+  "auditDate": "2026-07-11",
+  "overallResult": "PASS",
+  "goNoGoMakeSmoke": "GO",
+  "automation070bState": "OFF",
+  "automation070aState": "OFF",
+  "makeScenarioState": "NOT_BUILT",
+  "productionV2EstimatePercent": 75,
+  "fixture": {
+    "enrollmentId": "recgP9qZYjAhE7NXm",
+    "enrollmentLabel": "Schmidt, Testing - 2025-2026",
+    "submissionAssetId": "recGQ8EjAMz3bEBiW",
+    "videoFeedbackId": "recrvEzk8GxXfy3EE",
+    "submissionId": "recM0GbWfptu06da1",
+    "fixtureLabel": "C-013 PROD Lambda Smoke Test"
+  },
+  "lambda": {
+    "functionName": "127si-upload-asset",
+    "functionArn": "arn:aws:lambda:us-east-2:021891587263:function:127si-upload-asset",
+    "runtime": "python3.12",
+    "handler": "handler.lambda_handler",
+    "memorySize": 512,
+    "timeout": 120,
+    "codeSha256": "o6DD1Fpp3YAzw/ebb8aBZV3/bR871PrBSdv3Pz23zGQ=",
+    "lastModified": "2026-07-11T14:17:47.260+0000",
+    "functionUrlStatus": "CONFIGURED",
+    "functionUrlAuthType": "NONE"
+  },
+  "iamRole": {
+    "roleName": "127si-upload-asset-role",
+    "roleArn": "arn:aws:iam::021891587263:role/127si-upload-asset-role"
+  },
+  "secretConfiguration": {
+    "AIRTABLE_PROD_TOKEN": "CONFIGURED",
+    "UPLOAD_WEBHOOK_SECRET_PROD": "CONFIGURED",
+    "LAMBDA_FUNCTION_URL_PROD": "CONFIGURED",
+    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "MISSING"
+  },
+  "tests": {
+    "missingSecretRejection": { "pass": true, "statusCode": 401, "actionOut": "error_unauthorized" },
+    "wrongSecretRejection": { "pass": true, "statusCode": 401, "actionOut": "error_unauthorized" },
+    "unsupportedRouteRejection": { "pass": true, "statusCode": 400, "actionOut": "error_invalid_route" },
+    "directLambdaUpload": {
+      "pass": true,
+      "actionOut": "uploaded",
+      "writebackAllPass": true,
+      "environment": "PROD",
+      "baseId": "appn84sqPw03zEbTT"
+    },
+    "s3Verification": {
+      "pass": true,
+      "bucket": "shooting-challenge-assets",
+      "storageKeyPattern": "shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/*",
+      "contentLength": 67730,
+      "contentType": "image/png",
+      "fileContentHash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967"
+    },
+    "airtableWritebackProbe": { "pass": true, "allPass": true, "recordId": "recGQ8EjAMz3bEBiW" },
+    "idempotency": { "pass": true, "actionOut": "skipped_already_uploaded" },
+    "errorWriteback": { "pass": true, "actionOut": "error_missing_attachment", "uploadStatus": "Error" }
+  },
+  "remainingInfrastructureBlockers": 2,
+  "remainingManualActions": 8,
+  "makePackage": {
+    "scenarioName": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
+    "status": "DOCUMENTED_NOT_BUILT",
+    "moduleChain": [
+      "Webhook (070b JSON)",
+      "Router automationNumber=070b AND routeKey=video_feedback",
+      "HTTP POST PROD Lambda Function URL",
+      "Header X-Upload-Secret = MAKE variable (PROD secret)",
+      "Router HTTP 2xx vs error",
+      "Webhook response body = Lambda JSON (not generic Accepted)"
+    ],
+    "requiredMakeVariables": [
+      "LAMBDA_FUNCTION_URL_PROD",
+      "UPLOAD_WEBHOOK_SECRET_PROD"
+    ],
+    "notes": [
+      "Scenario must remain OFF until manual webhook PASS",
+      "Webhook response must map Lambda body to caller (DEV lesson recIYFnfmsPcy7iop)",
+      "Do not use Amazon S3 Upload module"
+    ]
+  },
+  "nextCursorPrompt": "Build Make scenario Shooting Challenge - GAME - Upload Engine - Lambda - v1 (OFF): webhook → router 070b/video_feedback → HTTP POST PROD Lambda Function URL with X-Upload-Secret → return Lambda JSON on 2xx. Run manual webhook smoke against recGQ8EjAMz3bEBiW. Do not enable automation 070b."
+}
