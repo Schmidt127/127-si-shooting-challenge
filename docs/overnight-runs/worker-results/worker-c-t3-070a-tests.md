@@ -74,9 +74,9 @@ python3 tools/airtable/c070a_dev_smoke_run.py all
 
 ## Commit SHA
 
-*(filled after push — see git log on branch `overnight/worker-c-070a-tests`)*
 
-`COMMIT_SHA_PLACEHOLDER`
+
+`e8b1b9cb5cb36135e928b45972402cff2a1d78cf`
 
 ---
 
