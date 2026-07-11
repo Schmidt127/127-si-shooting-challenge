@@ -1,0 +1,1336 @@
+{
+  "audit_date": "2026-07-11",
+  "dev_base": "appTetnuCZlCZdTCT",
+  "prod_base": "appn84sqPw03zEbTT",
+  "branch": "master",
+  "head": "5ad3899ebe138336f249456e8ff89500a46f237a",
+  "generated_at": "2026-07-11T12:24:58Z",
+  "executive_summary": "Production v2 promotion is **not complete**. Live schema compare shows **17 Submission Assets fields** on DEV absent from PROD. **1** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation **116 forward test FAIL** \u2014 OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **2 BLOCKER**, **10 REQUIRED BEFORE LAUNCH**.",
+  "table_comparisons": [
+    {
+      "table": "Automations",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 15,
+      "prod_field_count": 15,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Config",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 16,
+      "prod_field_count": 16,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Enrollments",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 131,
+      "prod_field_count": 130,
+      "missing_in_prod": [
+        "Testing Scenarios"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Submissions",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 98,
+      "prod_field_count": 96,
+      "missing_in_prod": [
+        "Testing Scenarios",
+        "Video Feedback Focus"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Submission Assets",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 97,
+      "prod_field_count": 80,
+      "missing_in_prod": [
+        "Asset Reuse Review Primary Reason",
+        "Asset Reuse Review Reasons",
+        "Asset Reuse Review Summary",
+        "Asset Reuse Reviewed At",
+        "Asset Reuse Reviewed By",
+        "Asset Sequence",
+        "Calculation",
+        "Duplicate Match Records (All)",
+        "Exact Hash Match Found?",
+        "From field: Duplicate Match Records (All)",
+        "Potential Asset Reuse?",
+        "Processing Started At",
+        "Same Enrollment Match Found?",
+        "Storage Key",
+        "Upload Claim Run ID",
+        "Upload Naming Status",
+        "Video Feedback Focus"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Homework Completions",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 85,
+      "prod_field_count": 83,
+      "missing_in_prod": [
+        "Linked Asset Reuse Decision",
+        "Testing Scenarios"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": [
+        {
+          "field": "Activity XP Display Label",
+          "dev_len": 104,
+          "prod_len": 28
+        }
+      ]
+    },
+    {
+      "table": "Video Feedback",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 54,
+      "prod_field_count": 50,
+      "missing_in_prod": [
+        "Coach Video Title",
+        "Linked Asset Reuse Decision",
+        "Video Feedback Focus",
+        "Video Feedback Question"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": [
+        {
+          "field": "Activity XP Display Label",
+          "dev_len": 104,
+          "prod_len": 28
+        }
+      ]
+    },
+    {
+      "table": "XP Events",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 51,
+      "prod_field_count": 51,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 101,
+      "prod_field_count": 101,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "XP Reward Rules",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 9,
+      "prod_field_count": 9,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Level Gate Rules",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 15,
+      "prod_field_count": 15,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Streak Occurrences",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 24,
+      "prod_field_count": 24,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Shot Milestones",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 17,
+      "prod_field_count": 17,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 35,
+      "prod_field_count": 35,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Zoom Meetings",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 26,
+      "prod_field_count": 26,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Weeks",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 20,
+      "prod_field_count": 20,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 55,
+      "prod_field_count": 54,
+      "missing_in_prod": [
+        "Testing Scenarios"
+      ],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Achievements",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 23,
+      "prod_field_count": 23,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Testing Scenarios",
+      "dev_present": true,
+      "prod_present": false,
+      "dev_only_table": true
+    },
+    {
+      "table": "Athletes",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 11,
+      "prod_field_count": 11,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    },
+    {
+      "table": "Levels",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_field_count": 20,
+      "prod_field_count": 20,
+      "missing_in_prod": [],
+      "extra_in_prod": [],
+      "type_mismatches": [],
+      "link_mismatches": [],
+      "select_gaps": [],
+      "formula_diffs": []
+    }
+  ],
+  "script_matrix": [
+    {
+      "script": "116",
+      "name": "Apply Asset Reuse Decision Consequences",
+      "version": "v1.0.1",
+      "path": "airtable/automations/shooting-challenge/116-submission-assets-apply-asset-reuse-decision-consequences.js",
+      "commit": "992677d",
+      "dev_ok": true,
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
+    },
+    {
+      "script": "070b",
+      "name": "Send Video Asset Payload to Make",
+      "version": "v4.2",
+      "path": "airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
+      "commit": "955ea2a",
+      "dev_ok": true,
+      "prod_ok": false,
+      "issues": [
+        "PROD: missing Submission Assets.Storage Key"
+      ],
+      "safe_to_deploy_prod": false
+    },
+    {
+      "script": "022",
+      "name": "Sync Child Upload Writeback",
+      "version": "v1.1",
+      "path": "airtable/automations/shooting-challenge/022-submission-intake-sync-child-upload-writeback-from-submission-asset.js",
+      "commit": "8839659",
+      "dev_ok": true,
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
+    },
+    {
+      "script": "114",
+      "name": "Create or Update Video XP Event",
+      "version": "v5.8",
+      "path": "airtable/automations/shooting-challenge/114-video-review-and-xp-create-or-update-video-xp-event.js",
+      "commit": null,
+      "dev_ok": true,
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
+    },
+    {
+      "script": "065",
+      "name": "Create Homework XP Event",
+      "version": "v9.2",
+      "path": "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js",
+      "commit": null,
+      "dev_ok": true,
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
+    },
+    {
+      "script": "066",
+      "name": "Create Shot Milestone Unlocks",
+      "version": "v3.2",
+      "path": "airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+      "commit": "36a2e95",
+      "dev_ok": true,
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
+    }
+  ],
+  "formula_report": [
+    {
+      "table": "Submissions",
+      "field": "Count This Submission?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submissions",
+      "field": "Total Shots Counted",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submissions",
+      "field": "Perfect Week Countable Submission?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submissions",
+      "field": "Homework Completion Ready?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submissions",
+      "field": "Ready for 009 Asset Creation?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submissions",
+      "field": "Duplicate Key",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "Ready for Homework Completion Script?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "Ready to Send to Make?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "Writeback Complete?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "Upload Destination",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "Potential Asset Reuse?",
+      "dev_present": true,
+      "prod_present": false,
+      "dev_type": "checkbox",
+      "prod_type": null,
+      "formulas_match": null,
+      "classification": "Required PROD correction"
+    },
+    {
+      "table": "Submission Assets",
+      "field": "File is Duplicate?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "checkbox",
+      "prod_type": "checkbox",
+      "formulas_match": null,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "field": "Perfect Week Eligible?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "field": "Threshold XP Ready?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Enrollments",
+      "field": "Active XP Total",
+      "dev_present": false,
+      "prod_present": false,
+      "dev_type": null,
+      "prod_type": null,
+      "formulas_match": null,
+      "classification": "Unknown \u2014 field missing both"
+    },
+    {
+      "table": "Enrollments",
+      "field": "Level Recalc Needed?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "checkbox",
+      "prod_type": "checkbox",
+      "formulas_match": null,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Video Feedback",
+      "field": "Ready for XP Automation?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "checkbox",
+      "prod_type": "checkbox",
+      "formulas_match": null,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Video Feedback",
+      "field": "Writeback Complete?",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    },
+    {
+      "table": "Homework Completions",
+      "field": "Ready for XP Automation?",
+      "dev_present": false,
+      "prod_present": false,
+      "dev_type": null,
+      "prod_type": null,
+      "formulas_match": null,
+      "classification": "Unknown \u2014 field missing both"
+    },
+    {
+      "table": "XP Events",
+      "field": "XP Date Resolved",
+      "dev_present": true,
+      "prod_present": true,
+      "dev_type": "formula",
+      "prod_type": "formula",
+      "formulas_match": true,
+      "classification": "Behaviorally equivalent"
+    }
+  ],
+  "automation_compare": {
+    "rows": [
+      {
+        "key": "001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment",
+        "status": "both",
+        "diffs": [],
+        "dev_name": " 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment",
+        "prod_name": " 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "002",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "002 - Enrollment Intake and Setup - Assign Grade Band - Initial",
+        "prod_name": "002 - Enrollment Intake and Setup - Assign Grade Band - Initial",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "003",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes",
+        "prod_name": "003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "005",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
+        "prod_name": "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "006",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "006 - Submission Intake and Asset Creation - Set Video Count",
+        "prod_name": "006 - Submission Intake and Asset Creation - Set Video Count",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "007",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "007 - Submission Intake and Asset Creation - Duplicate Checker for Submissions",
+        "prod_name": "007 - Submission Intake and Asset Creation - Duplicate Checker for Submissions",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "008",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "008 - Submission Intake and Asset Creation - Mark Submission XP Award as Processing",
+        "prod_name": "008 - Submission Intake and Asset Creation - Mark Submission XP Award as Processing",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "009",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "009 - Submission Intake and Asset Creation - Create Submission Assets from Submission",
+        "prod_name": "009 - Submission Intake and Asset Creation - Create Submission Assets from Submission",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "010",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+        "prod_name": "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "013",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "013 - Submission Intake - Create or Link Video Feedback",
+        "prod_name": "013 - Submission Intake - Create or Link Video Feedback",
+        "dev_status": null,
+        "prod_status": null
+      },
+      {
+        "key": "020",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+        "prod_name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "021",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "021 - Submission Intake and Asset Creation - Set Attachment Upload Status",
+        "prod_name": "021 - Submission Intake and Asset Creation - Set Attachment Upload Status",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "023",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "023 - Submission Intake and Asset Creation - Assign Enrollment to Submission",
+        "prod_name": "023 - Submission Intake and Asset Creation - Assign Enrollment to Submission",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "030",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "030 - Weekly Summary and Goal Logic - Copy Enrollment Grade Band to Weekly Summary",
+        "prod_name": "030 - Weekly Summary and Goal Logic - Copy Enrollment Grade Band to Weekly Summary",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "031",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+        "prod_name": "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "032",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "032 - Weekly Summary and Goal Logic - Link Goal Record to Weekly Athlete Summary",
+        "prod_name": "032 - Weekly Summary and Goal Logic - Link Goal Record to Weekly Athlete Summary",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "033",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+        "prod_name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "034",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "034 - Weekly Summary and Goal Logic - Set Previous Week Helper Values",
+        "prod_name": "034 - Weekly Summary and Goal Logic - Set Previous Week Helper Values",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "041",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
+        "prod_name": "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "042",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "042 - Levels and Progression - Assign Current and Next Level",
+        "prod_name": "042 - Levels and Progression - Assign Current and Next Level",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "043",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "043 - Levels and Progression - Set Level Gate Rule from Next Level",
+        "prod_name": "043 - Levels and Progression - Set Level Gate Rule from Next Level",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "053",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions",
+        "prod_name": "053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "054",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
+        "prod_name": "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "055",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "055 - Achievements and Milestones - Update Current Shooting Streak",
+        "prod_name": "055 - Achievements and Milestones - Update Current Shooting Streak",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "056",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "056 - Achievements and Milestones - Refresh Current Shooting Streaks Daily",
+        "prod_name": "056 - Achievements and Milestones - Refresh Current Shooting Streaks Daily",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "057",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "057 - Achievements and Milestones - Calculate Perfect Week Eligibility",
+        "prod_name": "057 - Achievements and Milestones - Calculate Perfect Week Eligibility",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "058",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "058 - Achievements and Milestones - Create Perfect Week Unlock",
+        "prod_name": "058 - Achievements and Milestones - Create Perfect Week Unlock",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "059",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
+        "prod_name": "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "061",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "061 - Homework Review and XP - Mark Homework Completion as Reviewed",
+        "prod_name": "061 - Homework Review and XP - Mark Homework Completion as Reviewed",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "063",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
+        "prod_name": "063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "064",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "064 - Homework Review and XP - Assign Base Homework XP",
+        "prod_name": "064 - Homework Review and XP - Assign Base Homework XP",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "065",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "065 - Homework Review and XP - Create or Update Homework XP Event",
+        "prod_name": "065 - Homework Review and XP - Create or Update Homework XP Event",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "066",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+        "prod_name": "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+        "prod_name": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
+        "prod_name": "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "071",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook",
+        "prod_name": "071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "072",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+        "prod_name": "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "073",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook",
+        "prod_name": "073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "074",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make",
+        "prod_name": "074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "075",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "075 - Email, Notifications, and External Handoffs - Build Challenge Welcome Email",
+        "prod_name": "075 - Email, Notifications, and External Handoffs - Build Challenge Welcome Email",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "076",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "076 - Email, Notifications, and External Handoffs - Build Daily Submission Email Package",
+        "prod_name": "076 - Email, Notifications, and External Handoffs - Build Daily Submission Email Package",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "077",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "077 - Email, Notifications, and External Handoffs - Send Daily Submission Email Package to Make",
+        "prod_name": "077 - Email, Notifications, and External Handoffs - Send Daily Submission Email Package to Make",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "078",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "078 - Email, Notifications, and External Handoffs - Mark Homework Parent Feedback Ready",
+        "prod_name": "078 - Email, Notifications, and External Handoffs - Mark Homework Parent Feedback Ready",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "101",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "101 - Zoom / Attendance XP - Award Meeting XP",
+        "prod_name": "101 - Zoom / Attendance XP - Award Meeting XP",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "111",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback",
+        "prod_name": "111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "112",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "112 - Video Review and XP - Create Video Feedback from Submission Asset",
+        "prod_name": "112 - Video Review and XP - Create Video Feedback from Submission Asset",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "113",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "113 - Video Review and XP - Assign Base Video XP by Grade Band",
+        "prod_name": "113 - Video Review and XP - Assign Base Video XP by Grade Band",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      },
+      {
+        "key": "114",
+        "status": "both",
+        "diffs": [],
+        "dev_name": "114 - Video Review and XP - Create or Update Video XP Event",
+        "prod_name": "114 - Video Review and XP - Create or Update Video XP Event",
+        "dev_status": "Live",
+        "prod_status": "Live"
+      }
+    ],
+    "dev_count": 48,
+    "prod_count": 48
+  },
+  "config_diffs": [],
+  "xp_rule_diffs": [],
+  "level_gate_diffs": [],
+  "shot_milestone_diffs": [],
+  "achievement_diffs": [],
+  "gaps": {
+    "BLOCKER": [
+      {
+        "gap_id": "PV2-GAP-0011",
+        "classification": "BLOCKER",
+        "workstream": "Script 070b",
+        "dev_value": "dependencies OK",
+        "prod_value": "missing dependencies",
+        "evidence": "PROD: missing Submission Assets.Storage Key",
+        "operational_impact": "Automation 070b will fail on PROD",
+        "correction": "Promote schema deps then paste airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "High",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py script matrix for 070b"
+      },
+      {
+        "gap_id": "PV2-GAP-0012",
+        "classification": "BLOCKER",
+        "workstream": "Automation 116",
+        "dev_value": "Deployed ON, v1.0.1 validated S5A-S5L",
+        "prod_value": "Forward test FAIL \u2014 no field changes after 90s poll",
+        "evidence": "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-10.md",
+        "operational_impact": "Duplicate decisions have no consequences on PROD",
+        "correction": "Paste 116 v1.0.1, enable trigger on Asset Reuse Decision",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "High",
+        "validation": "prod_116_fixture_run.py confirm + restore PASS"
+      }
+    ],
+    "REQUIRED BEFORE LAUNCH": [
+      {
+        "gap_id": "PV2-GAP-0001",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Primary Reason",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Asset Reuse Review Primary Reason to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0002",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Reasons",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Asset Reuse Review Reasons to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0003",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Summary",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Asset Reuse Review Summary to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0004",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Asset Reuse Reviewed At",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Asset Reuse Reviewed At to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0005",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Asset Reuse Reviewed By",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Asset Reuse Reviewed By to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0006",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Duplicate Match Records (All)",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Duplicate Match Records (All) to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0007",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Potential Asset Reuse?",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Potential Asset Reuse? to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0008",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Storage Key",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Storage Key to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0009",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013/C-023 schema",
+        "dev_value": "present",
+        "prod_value": "missing",
+        "evidence": "Live schema compare Submission Assets field Upload Claim Run ID",
+        "operational_impact": "Script/runtime failure if promoted without field",
+        "correction": "Add Upload Claim Run ID to PROD Submission Assets per DEV spec",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
+      },
+      {
+        "gap_id": "PV2-GAP-0013",
+        "classification": "REQUIRED BEFORE LAUNCH",
+        "workstream": "C-013 Production promotion",
+        "dev_value": "Lambda/Make/070b hybrid proven DEV",
+        "prod_value": "Promotion NOT started per plan",
+        "evidence": "docs/deploy-checklists/C-013-production-promotion-plan.md status Planning only",
+        "operational_impact": "No S3 canonical URLs or hash writeback on PROD uploads",
+        "correction": "Execute C-013 production promotion plan steps 1-11",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Medium",
+        "validation": "Isolated PROD Lambda smoke + one controlled 070b test"
+      }
+    ],
+    "SAFE POST-LAUNCH CLEANUP": [],
+    "NO ACTION": [
+      {
+        "gap_id": "PV2-GAP-0010",
+        "classification": "NO ACTION",
+        "workstream": "C-019/C-020",
+        "dev_value": "Testing Scenarios table exists",
+        "prod_value": "absent",
+        "evidence": "DEV-only test harness table",
+        "operational_impact": "None for live athletes",
+        "correction": "None",
+        "mike_manual": false,
+        "cursor_safe": false,
+        "risk": "None",
+        "validation": "N/A"
+      },
+      {
+        "gap_id": "PV2-GAP-0014",
+        "classification": "NO ACTION",
+        "workstream": "066 shot milestones",
+        "dev_value": "v3.2 pasted DEV+PROD 2026-07-06",
+        "prod_value": "Same commit per automation-index",
+        "evidence": "docs/automation-index.md",
+        "operational_impact": "None if already pasted",
+        "correction": "Verify PROD automation UI matches GitHub 36a2e95",
+        "mike_manual": true,
+        "cursor_safe": false,
+        "risk": "Low",
+        "validation": "Spot-check PROD 066 run log"
+      }
+    ]
+  },
+  "promotion_plan": [
+    {
+      "title": "Promote Submission Assets schema (C-013 + C-023 fields)",
+      "detail": "Add 22+ missing PROD fields per DEV c023-stage3-verify-dev snapshot",
+      "owner": "Mike/OMNI",
+      "rollback": "Field delete only if no live data written",
+      "pass_evidence": "pv2 audit Submission Assets missing_in_prod = 0 for v2 fields"
+    },
+    {
+      "title": "Add required single-select options",
+      "detail": "Asset Reuse Decision, Award Status, Duplicate Status options on PROD",
+      "owner": "Mike/OMNI",
+      "rollback": "Remove unused options if no records",
+      "pass_evidence": "Script 116 schema validate PASS on PROD"
+    },
+    {
+      "title": "Align priority formulas",
+      "detail": "Manual review formula diffs on Ready to Send, Potential Asset Reuse, duplicate helpers",
+      "owner": "Mike/OMNI",
+      "rollback": "Revert formula from snapshot",
+      "pass_evidence": "Formula report classifications not 'Required PROD correction'"
+    },
+    {
+      "title": "Production Lambda + Make (C-013)",
+      "detail": "Deploy Lambda, new secrets, Make scenario \u2014 070b OFF until smoke PASS",
+      "owner": "Mike/AWS/Make",
+      "rollback": "Disable Function URL; 070b OFF",
+      "pass_evidence": "Isolated upload smoke allPass=true"
+    },
+    {
+      "title": "Paste automation 116 v1.0.1",
+      "detail": "Enable on Asset Reuse Decision; retire 008 if present",
+      "owner": "Mike",
+      "rollback": "Disable 116; reset test fixture",
+      "pass_evidence": "prod_116_fixture_run.py confirm + restore PASS"
+    },
+    {
+      "title": "Paste 070b v4.2 + controlled enable",
+      "detail": "One Schmidt Testing upload after infra PASS",
+      "owner": "Mike",
+      "rollback": "070b OFF immediately",
+      "pass_evidence": "Canonical URL + hash on test asset"
+    },
+    {
+      "title": "Paste 022 writeback if changed",
+      "detail": "Sync child tables after Lambda writeback fields exist",
+      "owner": "Mike",
+      "rollback": "Disable 022",
+      "pass_evidence": "Writeback Complete? chain PASS on test asset"
+    },
+    {
+      "title": "Update Automations table records",
+      "detail": "Document 116, 070b versions and statuses on PROD",
+      "owner": "Mike/Cursor docs",
+      "rollback": "Doc-only",
+      "pass_evidence": "Automation doc compare 116/070b parity"
+    },
+    {
+      "title": "Regression tests",
+      "detail": "PROD fixture tests only \u2014 no live athlete records",
+      "owner": "Mike/Cursor",
+      "rollback": "N/A",
+      "pass_evidence": "116 fixture + one upload smoke"
+    },
+    {
+      "title": "Launch approval + CHANGELOG",
+      "detail": "Mike sign-off; CHANGELOG Airtable section",
+      "owner": "Mike",
+      "rollback": "N/A",
+      "pass_evidence": "Backlog C-013/C-023 marked promoted"
+    }
+  ],
+  "manual_actions": [
+    "Add missing Submission Assets fields on PROD (OMNI or Airtable UI) per BLOCKER list",
+    "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
+    "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
+    "Verify live Airtable automation ON/OFF states against automation-index.md",
+    "Approve launch after regression tests on Schmidt Testing fixture only"
+  ],
+  "cursor_actions": [
+    "Re-run pv2_dev_prod_gap_audit.py after schema promotion",
+    "Update deploy checklists and CHANGELOG when Mike completes each promotion step",
+    "Run prod_116_fixture_run.py (read-only fixture validation)",
+    "Commit schema snapshots to airtable/schema/snapshots/ after PROD field promotion"
+  ],
+  "limitations": [
+    "Airtable automation UI state (ON/OFF, pasted script body) is not available via API \u2014 inferred from forward tests and docs.",
+    "Formula equivalence is string compare only; behaviorally equivalent rewrites may flag as diff.",
+    "Automations table stores full script body in Automation Code \u2014 comparison keyed by Name prefix (###).",
+    "Config table key field names assumed; mismatches may hide record diffs.",
+    "Config table fetch: '<' not supported between instances of 'str' and 'NoneType'"
+  ],
+  "completion_estimate": "**Estimated completion: ~35\u201345%** for Production v2 wave (C-013 + C-023 + 116). Core season automations (005\u2013114, 066) appear largely aligned; asset storage, duplicate consequences, and PROD infra remain unpromoted.",
+  "next_prompt": "Execute Production v2 promotion step 1: generate OMNI/Airtable field-creation checklist from `docs/audits/pv2-dev-prod-gap-inventory-2026-07-11.md` BLOCKER list for Submission Assets only; do not enable automations until schema PASS confirmed by re-running pv2_dev_prod_gap_audit.py."
+}
