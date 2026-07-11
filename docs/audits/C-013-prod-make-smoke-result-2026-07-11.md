@@ -1,7 +1,8 @@
 # C-013 — PROD Make smoke test results
 
 **Date:** 2026-07-11  
-**Overall:** **FAIL** (runtime smoke **BLOCKED** — Make scenario not built)  
+**Last run:** 2026-07-11T15:04:47Z  
+**Overall:** **FAIL** (runtime smoke **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing from session file)  
 **Package:** **PASS** (tooling, blueprint, runbook, 070b audit)  
 **GO for controlled 070b test:** **NO-GO**  
 **Machine-readable:** [C-013-prod-make-smoke-result-2026-07-11.json](./C-013-prod-make-smoke-result-2026-07-11.json)  
@@ -13,15 +14,16 @@
 
 | Item | Result |
 |------|--------|
-| Make scenario built | **NO** |
-| Make scenario state | **N/A** (not created) |
-| `LAMBDA_FUNCTION_URL_PROD` | **CONFIGURED** |
-| `UPLOAD_WEBHOOK_SECRET_PROD` | **CONFIGURED** |
-| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | **MISSING** |
+| Session file keys (2026-07-11 run) | `LAMBDA_FUNCTION_URL_PROD` **CONFIGURED** · `UPLOAD_WEBHOOK_SECRET_PROD` **CONFIGURED** · `MAKE_UPLOAD_WEBHOOK_URL_PROD` **MISSING** · `AIRTABLE_PROD_TOKEN` **CONFIGURED** (via env, not session file) |
+| Make scenario built | **NO** (no webhook URL in ops session) |
+| Make scenario state | **N/A** |
+| Preflight (fixture + script) | **PASS** |
 | Manual webhook smoke | **BLOCKED** |
-| Complete Lambda JSON via Make | **NOT TESTED** |
-| Idempotency via Make | **NOT TESTED** |
-| Invalid route via Make | **NOT TESTED** |
+| Complete Lambda JSON via Make | **NOT RUN** |
+| Airtable writeback via Make | **NOT RUN** |
+| S3 via Make | **NOT RUN** |
+| Idempotency via Make | **NOT RUN** |
+| Invalid route via Make | **NOT RUN** |
 | Automation 070b | **OFF** (unchanged) |
 
 Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke result](./C-013-prod-lambda-smoke-result-2026-07-11.md).
@@ -36,15 +38,16 @@ Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke resu
 | Submission Asset | `recGQ8EjAMz3bEBiW` |
 | Video Feedback | `recrvEzk8GxXfy3EE` |
 
-**Preflight (2026-07-11):**
+**Preflight (2026-07-11T15:04:47Z):**
 
 - Enrollment guard: **PASS**
 - Upload Destination: **Video Feedback**
-- Upload Status: **Uploaded** (from direct Lambda test — reset required before Make upload smoke)
+- Upload Status: **Uploaded** (direct Lambda test state — reset skipped because smoke blocked)
 - Attachment: **present**
 - Video Feedback link: **present**
 - Send to Make Trigger: **unchecked**
-- Probe `allPass`: **true** (direct Lambda writeback)
+- Script v4.2 verify: **PASS**
+- No live athlete records modified
 
 ---
 
@@ -52,56 +55,42 @@ Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke resu
 
 | Test | Result | Notes |
 |------|--------|-------|
-| Preflight + 070b v4.2 script verify | **PASS** | GitHub `version: "v4.2"` |
-| Primary upload via Make | **BLOCKED** | No webhook URL |
+| Preflight + 070b v4.2 script verify | **PASS** | `c013_prod_make_smoke_run.py preflight` exit 0 |
+| Primary upload via Make | **BLOCKED** | `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing |
 | Complete Lambda JSON in webhook response | **NOT RUN** | |
-| Airtable writeback via Make path | **NOT RUN** | Direct Lambda writeback PASS |
-| S3 via Make path | **NOT RUN** | Direct Lambda S3 PASS |
+| Airtable writeback via Make path | **NOT RUN** | |
+| S3 via Make path | **NOT RUN** | |
 | Idempotency via Make | **NOT RUN** | |
 | Invalid route via Make | **NOT RUN** | |
 
 ---
 
-## 070b v4.2 handoff expectations (verified from script)
+## Session file audit (no secrets printed)
 
-| Scenario | Expected 070b outcome |
-|----------|---------------------|
-| Lambda `uploaded` + `allPass=true` | Verified success · clear Send to Make Trigger |
-| `skipped_already_uploaded` | Verified success |
-| Generic HTTP 200 `Accepted` | `error_lambda_response_unverified` |
-| Malformed JSON | `error_lambda_response_invalid` |
-| Lambda `error_*` | Failure · trigger retained |
+File: `tools/airtable/_preview/c013-prod-deploy-session.local.json`
 
----
-
-## Make scenario specification (ready to build)
-
-| Item | Value |
-|------|--------|
-| **Name** | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
-| **State after build** | **OFF** |
-| **Blueprint** | `make/blueprints/upload-asset-engine-lambda-prod-v1.template.json` |
-| **Runbook** | `make/documentation/C-013-prod-upload-engine-lambda-runbook.md` |
-
----
-
-## Rollback
-
-Unchanged from Lambda deployment — **070b OFF** · Make OFF when built · Lambda throttle available.
+| Key | Status | Note |
+|-----|--------|------|
+| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | **MISSING** | Add from Make module 1 Custom webhook after scenario build |
+| `LAMBDA_FUNCTION_URL_PROD` | **CONFIGURED** | Verify value starts with `https://` (no leading `/`) |
+| `UPLOAD_WEBHOOK_SECRET_PROD` | **CONFIGURED** | |
+| `AIRTABLE_PROD_TOKEN` | **Not in session file** | Available via `tools/airtable/.env` or `web/.env.local` |
 
 ---
 
 ## Remaining blockers
 
-1. Mike builds Make scenario in UI
-2. Webhook URL stored in ops session file
-3. Manual Make webhook smoke PASS on `recGQ8EjAMz3bEBiW`
-4. Mike explicit approval for controlled 070b enable
+1. Build Make scenario `Shooting Challenge - GAME - Upload Engine - Lambda - v1` per [C-013-prod-make-build-2026-07-11.md](../deploy-checklists/C-013-prod-make-build-2026-07-11.md)
+2. Add `MAKE_UPLOAD_WEBHOOK_URL_PROD` to session file
+3. Re-run `c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset`
+4. Paste 070b v4.2 + configure inputs (automation **OFF**)
+5. Create isolation view `C-013 PROD Smoke — Schmidt Testing Only`
+6. Mike explicit approval for controlled 070b enable
 
 ---
 
-## Exact next prompt (after Make build)
+## Exact next prompt (after Make build + webhook URL saved)
 
 ```
-MAKE_UPLOAD_WEBHOOK_URL_PROD is configured in tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): c013_prod_make_smoke_run.py all --reset. Update docs/audits/C-013-prod-make-smoke-result-2026-07-11.md to PASS if complete Lambda JSON returned. Then prepare controlled 070b enablement — do not turn 070b ON without my explicit approval.
+MAKE_UPLOAD_WEBHOOK_URL_PROD is configured in tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): cd tools/airtable; python c013_prod_make_smoke_run.py preflight; python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset. Update docs/audits/C-013-prod-make-smoke-result-2026-07-11.md to PASS if complete Lambda JSON returned. Do not enable automation 070b.
 ```
