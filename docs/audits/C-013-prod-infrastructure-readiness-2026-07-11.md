@@ -13,15 +13,15 @@
 
 | Result | Detail |
 |--------|--------|
-| **Overall C-013 PROD readiness** | **NOT READY** (Make runtime smoke pending) |
-| **Production v2 estimate** | **~82%** (schema + 116 + Lambda PASS; Make + 070b config package ready; runtime smoke + enable remain) |
-| **Infrastructure blockers** | **2** (Make scenario not built; `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing; isolation view missing) |
-| **070b can be enabled** | **NO** — Make manual webhook must pass first |
+| **Overall C-013 PROD readiness** | **CONDITIONAL GO** for one controlled 070b test after secret rotation/re-smoke + UI checks |
+| **Production v2 estimate** | **~92%** (Lambda + Make manual route PASS; activation gates remain) |
+| **Infrastructure blockers** | **0** — remaining gates are secret rotation and Airtable activation verification |
+| **070b can be enabled** | **Not yet** — Mike approval required after secret rotation, re-smoke, UI + isolation-view verification |
 | **Manual deployment actions** | **8** remaining (see §8) |
 
 DEV proves the full design: **Airtable 070b → Make → Lambda Function URL → S3 → Airtable writeback** with Lambda-owned upload claim (v4.2). PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. Automation **070b** is **OFF**.
 
-**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS (2026-07-11).** Make + 070b **configuration package ready** ([make build](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [070b UI](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt)); scenario **not built in Make UI**; manual webhook smoke **BLOCKED**. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
+**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS. PROD Make manual route also PASS (`overallPass=true`, 2026-07-11).** Repository closeout package is complete ([make build](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [070b UI](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt)). Operational closure waits on secret rotation + one Airtable-triggered Schmidt test. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
 
 ---
 
@@ -56,7 +56,7 @@ DEV proves the full design: **Airtable 070b → Make → Lambda Function URL →
 | Function URL | **CONFIGURED** (ops) |
 | IAM role `127si-upload-asset-role` | **EXISTS** |
 | CloudWatch `/aws/lambda/127si-upload-asset` | **EXISTS** |
-| Make Lambda scenario | **NOT BUILT** (package in GitHub) |
+| Make Lambda scenario | **BUILT · manual route PASS** |
 | Schmidt Testing fixture | `recGQ8EjAMz3bEBiW` · probe `allPass=true` (direct Lambda) |
 
 ---
@@ -187,7 +187,7 @@ python tests/test_config.py                                 # 4/4 PASS
 | 12 | OMNI: prepare Schmidt Testing Submission Asset fixture (see smoke doc) | Mike/OMNI | No | Asset Pending Link |
 | 13 | Direct Lambda smoke: valid secret + `video_feedback` | Mike | No | `actionOut=uploaded`, `allPass=true` |
 | 14 | S3 HEAD object at Storage Key | Mike | No | Object exists |
-| 15 | Probe: `_probe_c013_asset_storage_fields.py --base-id appn84sqPw03zEbTT` | Cursor/Mike | No | `allPass=true` |
+| 15 | Probe with `WAVE7_PROBE_BASE=appn84sqPw03zEbTT`: `_probe_c013_asset_storage_fields.py --record-id rec...` | Cursor/Mike | No | `allPass=true` |
 | 16 | Idempotency: repeat same payload | Mike | No | `skipped_already_uploaded` |
 | 17 | Build Make `Shooting Challenge - GAME - Upload Engine - Lambda - v1` | Mike | **Yes** | Scenario saved OFF |
 | 18 | Make manual webhook test (070b OFF) | Mike | No | Lambda JSON in response |
@@ -268,18 +268,16 @@ See §15 below (full prompt for Mike).
 
 ## 15. Remaining risks
 
-1. Make scenario not built — no Make-route upload until Mike completes UI build
-2. Make false-positive 200 without Lambda body (v4.2 mitigates)
-3. Shared S3 bucket — season prefix must differ DEV vs PROD
-4. Secret reuse across environments
-5. Live athlete exposure if 070b enabled before smoke
-6. Isolation view missing — harder to verify only Schmidt Testing records enter trigger
+1. Exposed PROD upload secret must be rotated before activation
+2. Shared S3 bucket — season prefix must differ DEV vs PROD
+3. Live athlete exposure if 070b enabled outside the approved Schmidt-only window
+4. Isolation view missing — create/verify before controlled trigger test
 
 ---
 
 ## 16. Updated Production v2 estimate
 
-**~82%** — Schema + automation 116 + PROD Lambda smoke complete; Make + 070b configuration package ready in GitHub; Make runtime smoke + live 070b UI paste + controlled enable remain.
+**~92%** — Schema + automation 116 + PROD Lambda + Make manual route complete. Secret rotation, live 070b UI/isolation verification, and one controlled trigger test remain.
 
 **Configuration package (2026-07-11):** [C-013-prod-make-build-2026-07-11.md](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [C-013-prod-070b-ui-verification-2026-07-11.md](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md)
 
@@ -288,7 +286,7 @@ See §15 below (full prompt for Mike).
 ## 17. Exact next Cursor prompt
 
 ```
-Build Make scenario Shooting Challenge - GAME - Upload Engine - Lambda - v1 per docs/deploy-checklists/C-013-prod-make-build-2026-07-11.md (OFF). Save MAKE_UPLOAD_WEBHOOK_URL_PROD to tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): c013_prod_make_smoke_run.py all --reset. Update docs/audits/C-013-prod-make-smoke-result-2026-07-11.md to PASS if complete Lambda JSON returned. Do not enable automation 070b.
+Rotate the C-013 PROD upload secret in AWS Lambda, Make X-Upload-Secret, and local tools/airtable/.env without printing it. Re-run auth checks and the full manual Make smoke on recGQ8EjAMz3bEBiW with 070b OFF. If overallPass=true, verify the 070b v4.2 Airtable builder and Schmidt isolation view, then stop for Mike's explicit approval before one controlled trigger test.
 ```
 
 ---

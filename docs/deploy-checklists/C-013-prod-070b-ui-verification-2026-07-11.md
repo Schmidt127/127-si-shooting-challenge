@@ -222,13 +222,74 @@ Verified: asset and VF link only to Schmidt Testing enrollment.
 | GitHub v4.2 script verified | **PASS** |
 | Script paste artifact | **READY** |
 | PROD Lambda direct smoke | **PASS** |
-| Make scenario built | **PENDING** |
-| Make manual webhook smoke | **NOT RUN** |
+| Make scenario built | **PASS** |
+| Make manual webhook smoke | **PASS** (`overallPass=true`) |
+| Production upload secret rotation | **REQUIRED before activation** |
 | Isolation view | **MISSING** |
 | Live 070b builder configured | **PENDING** (Mike UI) |
 | 070b enabled | **NO** |
 
 **Automation 070b required final state before controlled test:** **OFF** · script pasted · inputs configured · Make smoke PASS · isolation view exists · Mike approval.
+
+---
+
+## Part 7 — Final Airtable-triggered activation checklist
+
+**Exact automation:** `070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make`
+
+### Preconditions
+
+- [ ] Production upload secret rotated in AWS Lambda, Make HTTP header, and local env
+- [ ] Post-rotation manual Make smoke `overallPass=true`
+- [ ] Make scenario **ON** for the controlled test window
+- [ ] Automation 070a **OFF**
+- [ ] Automation 070b configuration matches Parts 1–3 and is **OFF**
+- [ ] Isolation view exists and contains only Schmidt Testing enrollment `recgP9qZYjAhE7NXm`
+- [ ] Mike explicitly approves this one test
+
+### One Schmidt asset procedure
+
+1. Use only Submission Asset `recGQ8EjAMz3bEBiW` (or a fresh asset linked only to the same Schmidt enrollment if this fixture cannot safely reset).
+2. Confirm `Upload Destination = Video Feedback`, linked Video Feedback exists, attachment exists, and `Send to Make Trigger` is unchecked.
+3. Reset only the Schmidt fixture to `Upload Status = Pending Link`; clear prior canonical/hash/claim fields per smoke reset procedure.
+4. Turn **070b ON**.
+5. Check `Send to Make Trigger` on the single Schmidt fixture.
+6. Confirm exactly one Make execution and one Lambda invocation.
+7. Immediately verify fields below.
+8. Turn **070b OFF** unless Mike explicitly approves general production enablement.
+
+### Verification fields
+
+- Upload Status = `Uploaded`
+- Upload Error blank
+- Canonical File URL populated
+- Storage Key populated
+- File Content Hash populated (64-character SHA-256)
+- File Hash Algorithm = `SHA-256`
+- File Size Bytes populated
+- File MIME Type populated
+- Uploaded At populated
+- Writeback Complete? = `1`
+- Airtable Attachment retained
+- Send to Make Trigger cleared only after verified success
+- Independent probe `allPass=true`
+- Repeat test returns `skipped_already_uploaded` without changing key/hash
+
+### Rollback
+
+1. Turn **070b OFF**
+2. Turn Make scenario **OFF**
+3. If needed, throttle Lambda reserved concurrency to 0
+4. Do not bulk-delete or clear operational records
+5. Reset/delete only the Schmidt fixture using the documented smoke reset
+6. Rotate secrets if any value is exposed
+7. Record the failed step and preserve redacted evidence
+
+### Approved final state
+
+- Before/after controlled test: **070b OFF** unless Mike explicitly approves general enablement
+- 070a: **OFF**
+- Make scenario: **OFF after the controlled test** unless Mike explicitly approves ongoing production service
 
 ---
 

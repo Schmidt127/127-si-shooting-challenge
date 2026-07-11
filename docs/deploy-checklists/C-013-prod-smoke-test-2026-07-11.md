@@ -1,7 +1,7 @@
 # C-013 — PROD isolated smoke test plan
 
 **Date:** 2026-07-11  
-**Status:** **Direct Lambda smoke PASS** · **Make runtime smoke BLOCKED** (scenario not built) · 070b enablement pending  
+**Status:** **Direct Lambda smoke PASS** · **Make manual route PASS** (`overallPass=true`) · secret rotation + 070b Airtable-triggered test pending
 **Make build spec:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md)  
 **Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)  
@@ -128,7 +128,8 @@ python c013_dev_lambda_invoke.py recSUBMISSION_ASSET --aws --target-record-id re
 **Probe:**
 
 ```powershell
-python _probe_c013_asset_storage_fields.py --base-id appn84sqPw03zEbTT --record-id recSUBMISSION_ASSET --out _preview/c013-prod-smoke-T1-verify.json
+$env:WAVE7_PROBE_BASE = "appn84sqPw03zEbTT"
+python _probe_c013_asset_storage_fields.py --record-id recSUBMISSION_ASSET --out _preview/c013-prod-smoke-T1-verify.json
 ```
 
 Expect **`allPass=true`**.
@@ -189,7 +190,7 @@ Direct Lambda tests **T0–T2 PASS** → Mike builds Make scenario ([deployment 
 
 ### T4 — Make manual webhook (070b OFF)
 
-**Status:** **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing. Build Make scenario first — [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md).
+**Status:** **PASS** — upload, independent Airtable writeback probe, idempotency, and invalid-route paths passed. See [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md).
 
 **Fixture:** `recGQ8EjAMz3bEBiW` only · bypasses 070b.
 
@@ -197,14 +198,17 @@ Direct Lambda tests **T0–T2 PASS** → Mike builds Make scenario ([deployment 
 cd tools/airtable
 python c013_prod_make_smoke_run.py preflight
 python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset
-python _probe_c013_asset_storage_fields.py --base-id appn84sqPw03zEbTT --record-id recGQ8EjAMz3bEBiW --out _preview/c013-prod-make-smoke-verify.json
+$env:WAVE7_PROBE_BASE = "appn84sqPw03zEbTT"
+python _probe_c013_asset_storage_fields.py --record-id recGQ8EjAMz3bEBiW --out _preview/c013-prod-make-smoke-verify.json
 ```
 
-**Pass:** Make receives request · route filter matches · Lambda called · secret accepted · complete Lambda JSON returned · upload + idempotency + invalid-route PASS · probe `allPass=true` · no live athlete records touched. See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md).
+**Observed PASS:** Make received request · route filter matched · Lambda authenticated · complete Lambda JSON returned · upload + idempotency + invalid-route PASS · independent probe `allPass=true` · no live athlete records touched. Invalid route intentionally wrote Upload Status=`Error` while preserving canonical/hash fields. See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md).
 
 ### T5 — 070b UI configuration (070b OFF — no trigger test)
 
 Paste script from [C-013-prod-070b-script-paste-v4.2.txt](./C-013-prod-070b-script-paste-v4.2.txt) · configure inputs per [C-013-prod-070b-ui-verification-2026-07-11.md](./C-013-prod-070b-ui-verification-2026-07-11.md) · create isolation view · **do not enable** · **do not check Send to Make Trigger** until T4 PASS + Mike approval.
+
+Before T5 activation, rotate the exposed production upload secret in AWS Lambda, Make `X-Upload-Secret`, and local env; repeat T0 auth checks + T4.
 
 ---
 

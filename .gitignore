@@ -6,6 +6,15 @@
 **/.env.new-token
 **/c013-prod-deploy-session.local.json
 
+# Generated operational previews (previously tracked files remain tracked)
+_preview/
+**/_preview/**
+
+# Unsanitized Make exports stay local; commit only reviewed templates/blueprints
+make/exports/
+make/blueprints/*.local.json
+make/blueprints/*-unsanitized.json
+
 # Local Python
 __pycache__/
 *.py[cod]

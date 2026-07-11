@@ -1,15 +1,178 @@
 {
   "phase": "all",
-  "probedAt": "2026-07-11T15:04:47+00:00",
+  "probedAt": "2026-07-11T15:41:40+00:00",
   "secureVariables": {
     "LAMBDA_FUNCTION_URL_PROD": "CONFIGURED",
     "UPLOAD_WEBHOOK_SECRET_PROD": "CONFIGURED",
-    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "MISSING"
+    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "CONFIGURED"
   },
-  "blocked": true,
-  "upload": null,
-  "idempotency": null,
-  "invalidRoute": null,
-  "overallPass": false,
-  "reason": "MAKE_UPLOAD_WEBHOOK_URL_PROD missing \u2014 build Make scenario first"
+  "blocked": false,
+  "upload": {
+    "phase": "make_upload",
+    "assetId": "recGQ8EjAMz3bEBiW",
+    "webhook": {
+      "script": "c013_prod_make_webhook_post.py",
+      "probedAt": "2026-07-11T15:41:48+00:00",
+      "baseId": "appn84sqPw03zEbTT",
+      "assetId": "recGQ8EjAMz3bEBiW",
+      "targetRecordId": "recrvEzk8GxXfy3EE",
+      "enrollmentId": "recgP9qZYjAhE7NXm",
+      "preflight": {
+        "uploadStatus": "Pending Link",
+        "uploadDestination": "Video Feedback",
+        "sendToMakeTrigger": null,
+        "attachmentPresent": true
+      },
+      "makeResponse": {
+        "statusCode": 200,
+        "bodyLength": 3169,
+        "lambdaValidation": {
+          "ok": true,
+          "reason": null,
+          "statusOut": "success",
+          "actionOut": "uploaded",
+          "allPass": true,
+          "submissionAssetRecordId": "recGQ8EjAMz3bEBiW",
+          "completeLambdaJson": true
+        }
+      },
+      "pass": true,
+      "exitCode": 0
+    },
+    "probe": {
+      "allPass": true,
+      "storageKey": "[REDACTED — populated]",
+      "fileContentHash": "[REDACTED — SHA-256 populated]",
+      "uploadStatus": "Uploaded",
+      "checks": {
+        "uploadStatusUploaded": true,
+        "canonicalUrlPopulated": true,
+        "storageKeyPopulated": true,
+        "fileContentHashPopulated": true,
+        "fileHashAlgorithmSha256": true,
+        "uploadedAtPopulated": true,
+        "uploadErrorBlank": true,
+        "attachmentRetained": true,
+        "writebackCompleteFormula": true
+      },
+      "summary": {
+        "recordId": "recGQ8EjAMz3bEBiW",
+        "fields": {
+          "Upload Status": "Uploaded",
+          "Canonical File URL": "[REDACTED — populated]",
+          "Storage Key": "[REDACTED — populated]",
+          "File Content Hash": "[REDACTED — SHA-256 populated]",
+          "File Hash Algorithm": "SHA-256",
+          "Uploaded At": "2026-07-11T15:41:46.145Z",
+          "Upload Error": null,
+          "Airtable Attachment": "present",
+          "Writeback Complete?": 1
+        },
+        "writebackVerification": {
+          "allPass": true,
+          "checks": {
+            "uploadStatusUploaded": true,
+            "canonicalUrlPopulated": true,
+            "storageKeyPopulated": true,
+            "fileContentHashPopulated": true,
+            "fileHashAlgorithmSha256": true,
+            "uploadedAtPopulated": true,
+            "uploadErrorBlank": true,
+            "attachmentRetained": true,
+            "writebackCompleteFormula": true
+          }
+        }
+      },
+      "error": null
+    },
+    "lambdaAllPass": true,
+    "pass": true
+  },
+  "idempotency": {
+    "phase": "make_idempotency",
+    "assetId": "recGQ8EjAMz3bEBiW",
+    "webhook": {
+      "script": "c013_prod_make_webhook_post.py",
+      "probedAt": "2026-07-11T15:41:53+00:00",
+      "baseId": "appn84sqPw03zEbTT",
+      "assetId": "recGQ8EjAMz3bEBiW",
+      "targetRecordId": "recrvEzk8GxXfy3EE",
+      "enrollmentId": "recgP9qZYjAhE7NXm",
+      "preflight": {
+        "uploadStatus": "Uploaded",
+        "uploadDestination": "Video Feedback",
+        "sendToMakeTrigger": null,
+        "attachmentPresent": true
+      },
+      "makeResponse": {
+        "statusCode": 200,
+        "bodyLength": 274,
+        "lambdaValidation": {
+          "ok": true,
+          "reason": null,
+          "statusOut": "skipped",
+          "actionOut": "skipped_already_uploaded",
+          "allPass": null,
+          "submissionAssetRecordId": "recGQ8EjAMz3bEBiW",
+          "completeLambdaJson": true
+        }
+      },
+      "pass": true,
+      "exitCode": 0
+    },
+    "probeBefore": {
+      "storageKey": "[REDACTED — unchanged]",
+      "fileContentHash": "[REDACTED — unchanged]"
+    },
+    "probeAfter": {
+      "storageKey": "[REDACTED — unchanged]",
+      "fileContentHash": "[REDACTED — unchanged]"
+    },
+    "storageKeyUnchanged": true,
+    "hashUnchanged": true,
+    "actionOut": "skipped_already_uploaded",
+    "pass": true
+  },
+  "invalidRoute": {
+    "phase": "make_invalid_route",
+    "assetId": "recGQ8EjAMz3bEBiW",
+    "webhook": {
+      "script": "c013_prod_make_webhook_post.py",
+      "probedAt": "2026-07-11T15:41:56+00:00",
+      "baseId": "appn84sqPw03zEbTT",
+      "assetId": "recGQ8EjAMz3bEBiW",
+      "targetRecordId": "recrvEzk8GxXfy3EE",
+      "enrollmentId": "recgP9qZYjAhE7NXm",
+      "preflight": {
+        "uploadStatus": "Uploaded",
+        "uploadDestination": "Video Feedback",
+        "sendToMakeTrigger": null,
+        "attachmentPresent": true
+      },
+      "makeResponse": {
+        "statusCode": 200,
+        "bodyLength": 198,
+        "lambdaValidation": {
+          "ok": true,
+          "reason": null,
+          "statusOut": "error",
+          "actionOut": "error_invalid_route",
+          "allPass": null,
+          "submissionAssetRecordId": "recGQ8EjAMz3bEBiW",
+          "completeLambdaJson": true
+        }
+      },
+      "pass": true,
+      "exitCode": 0
+    },
+    "storageKeyUnchanged": true,
+    "uploadStatusBefore": "Uploaded",
+    "uploadStatusAfter": "Error",
+    "uploadStatusUnchanged": false,
+    "uploadStatusErrorWritebackExpected": true,
+    "actionOut": "error_invalid_route",
+    "pass": true,
+    "note": "Upload Status may change to Error \u2014 expected Lambda error writeback on invalid route; canonical/hash fields must remain unchanged."
+  },
+  "overallPass": true
 }

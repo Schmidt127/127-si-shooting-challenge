@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import sys
 import unittest
 from pathlib import Path
@@ -13,15 +12,33 @@ sys.path.insert(0, str(HERE))
 
 from c013_prod_make_smoke_run import parse_probe_snapshot  # noqa: E402
 
-FIXTURE_PROBE = HERE / "_preview" / "c013-prod-make-probe-recGQ8EjAMz3bEBiW.json"
+def successful_probe() -> dict:
+    """Sanitized unit fixture; never depend on local operational _preview files."""
+    return {
+        "submissionAsset": {
+            "recordId": "recTEST",
+            "fields": {
+                "Storage Key": "shooting-challenge/test/video-feedback-recTEST.png",
+                "File Content Hash": "a" * 64,
+                "Upload Status": "Uploaded",
+            },
+            "writebackVerification": {
+                "allPass": True,
+                "checks": {
+                    "uploadStatusUploaded": True,
+                    "storageKeyPopulated": True,
+                    "fileContentHashPopulated": True,
+                },
+            },
+        }
+    }
 
 
 class TestParseProbeSnapshot(unittest.TestCase):
     def test_submission_asset_shape(self) -> None:
-        raw = json.loads(FIXTURE_PROBE.read_text(encoding="utf-8"))
-        snap = parse_probe_snapshot(raw)
+        snap = parse_probe_snapshot(successful_probe())
         self.assertTrue(snap["allPass"])
-        self.assertIn("shooting-challenge/2025-2026", snap["storageKey"])
+        self.assertIn("shooting-challenge/test", snap["storageKey"])
         self.assertEqual(len(snap["fileContentHash"]), 64)
         self.assertEqual(snap["uploadStatus"], "Uploaded")
         self.assertIsNotNone(snap["summary"])
@@ -54,8 +71,7 @@ class TestParseProbeSnapshot(unittest.TestCase):
         self.assertEqual(snap["error"], "probe_output_missing")
 
     def test_make_upload_pass_contract(self) -> None:
-        raw = json.loads(FIXTURE_PROBE.read_text(encoding="utf-8"))
-        probe = parse_probe_snapshot(raw)
+        probe = parse_probe_snapshot(successful_probe())
         webhook = {
             "pass": True,
             "makeResponse": {

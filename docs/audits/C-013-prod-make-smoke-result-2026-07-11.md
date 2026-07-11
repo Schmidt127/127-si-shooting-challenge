@@ -1,10 +1,10 @@
 # C-013 — PROD Make smoke test results
 
 **Date:** 2026-07-11  
-**Last run:** 2026-07-11T15:04:47Z  
-**Overall:** **FAIL** (runtime smoke **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing from session file)  
+**Last run:** 2026-07-11T15:41:40Z
+**Overall:** **PASS** (`overallPass=true`)
 **Package:** **PASS** (tooling, blueprint, runbook, 070b audit)  
-**GO for controlled 070b test:** **NO-GO**  
+**GO for controlled 070b test:** **CONDITIONAL GO** — rotate exposed upload secret, verify 070b v4.2 UI configuration, then Mike explicitly approves one Schmidt test
 **Machine-readable:** [C-013-prod-make-smoke-result-2026-07-11.json](./C-013-prod-make-smoke-result-2026-07-11.json)  
 **Deployment record:** [C-013-prod-make-deployment-2026-07-11.md](../deploy-checklists/C-013-prod-make-deployment-2026-07-11.md)
 
@@ -14,16 +14,16 @@
 
 | Item | Result |
 |------|--------|
-| Session file keys (2026-07-11 run) | `LAMBDA_FUNCTION_URL_PROD` **CONFIGURED** · `UPLOAD_WEBHOOK_SECRET_PROD` **CONFIGURED** · `MAKE_UPLOAD_WEBHOOK_URL_PROD` **MISSING** · `AIRTABLE_PROD_TOKEN` **CONFIGURED** (via env, not session file) |
-| Make scenario built | **NO** (no webhook URL in ops session) |
-| Make scenario state | **N/A** |
+| Session file keys (2026-07-11 run) | All required runtime values **CONFIGURED** (values not committed) |
+| Make scenario built | **YES** — `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
+| Make scenario state | Tested successfully; required controlled-test/final state documented below |
 | Preflight (fixture + script) | **PASS** |
-| Manual webhook smoke | **BLOCKED** |
-| Complete Lambda JSON via Make | **NOT RUN** |
-| Airtable writeback via Make | **NOT RUN** |
-| S3 via Make | **NOT RUN** |
-| Idempotency via Make | **NOT RUN** |
-| Invalid route via Make | **NOT RUN** |
+| Manual webhook smoke | **PASS** |
+| Complete Lambda JSON via Make | **PASS** — not generic `Accepted` |
+| Airtable writeback via Make | **PASS** — independent probe `allPass=true` |
+| S3 via Make | **PASS** — storage key and canonical URL populated |
+| Idempotency via Make | **PASS** — `skipped_already_uploaded`; storage key/hash unchanged |
+| Invalid route via Make | **PASS** — `error_invalid_route`; canonical/hash preserved |
 | Automation 070b | **OFF** (unchanged) |
 
 Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke result](./C-013-prod-lambda-smoke-result-2026-07-11.md).
@@ -38,15 +38,21 @@ Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke resu
 | Submission Asset | `recGQ8EjAMz3bEBiW` |
 | Video Feedback | `recrvEzk8GxXfy3EE` |
 
-**Preflight (2026-07-11T15:04:47Z):**
+**Controlled run (2026-07-11T15:41:40Z):**
 
 - Enrollment guard: **PASS**
 - Upload Destination: **Video Feedback**
-- Upload Status: **Uploaded** (direct Lambda test state — reset skipped because smoke blocked)
+- Primary upload: **Uploaded**
 - Attachment: **present**
 - Video Feedback link: **present**
 - Send to Make Trigger: **unchecked**
 - Script v4.2 verify: **PASS**
+- Canonical File URL: **populated** (value omitted)
+- Storage Key: **populated** (value omitted)
+- File Content Hash: **SHA-256 populated** (value omitted)
+- File Hash Algorithm: **SHA-256**
+- Uploaded At: **populated**
+- Writeback Complete?: **PASS**
 - No live athlete records modified
 
 ---
@@ -56,41 +62,44 @@ Upstream **direct Lambda smoke PASS** on same fixture — see [lambda smoke resu
 | Test | Result | Notes |
 |------|--------|-------|
 | Preflight + 070b v4.2 script verify | **PASS** | `c013_prod_make_smoke_run.py preflight` exit 0 |
-| Primary upload via Make | **BLOCKED** | `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing |
-| Complete Lambda JSON in webhook response | **NOT RUN** | |
-| Airtable writeback via Make path | **NOT RUN** | |
-| S3 via Make path | **NOT RUN** | |
-| Idempotency via Make | **NOT RUN** | |
-| Invalid route via Make | **NOT RUN** | |
+| Primary upload via Make | **PASS** | HTTP 200 · `statusOut=success` · `actionOut=uploaded` · Lambda `allPass=true` |
+| Complete Lambda JSON in webhook response | **PASS** | Top-level Lambda keys preserved |
+| Airtable writeback via Make path | **PASS** | Independent probe `allPass=true` |
+| S3 via Make path | **PASS** | Canonical URL/storage/hash fields populated |
+| Idempotency via Make | **PASS** | `skipped_already_uploaded`; storage key/hash unchanged |
+| Invalid route via Make | **PASS** | `error_invalid_route`; expected Upload Status=`Error`; canonical/hash unchanged |
 
 ---
 
-## Session file audit (no secrets printed)
+## Secret handling
 
 File: `tools/airtable/_preview/c013-prod-deploy-session.local.json`
 
-| Key | Status | Note |
-|-----|--------|------|
-| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | **MISSING** | Add from Make module 1 Custom webhook after scenario build |
-| `LAMBDA_FUNCTION_URL_PROD` | **CONFIGURED** | Verify value starts with `https://` (no leading `/`) |
-| `UPLOAD_WEBHOOK_SECRET_PROD` | **CONFIGURED** | |
-| `AIRTABLE_PROD_TOKEN` | **Not in session file** | Available via `tools/airtable/.env` or `web/.env.local` |
+All required values were configured for the successful run. Values remain local and are not reproduced here.
+
+**Rotation required before Airtable-triggered activation:** the production upload secret was displayed in local/chat output during preparation. Rotate the same new value in:
+
+1. AWS Lambda `127si-upload-asset` environment variable `UPLOAD_WEBHOOK_SECRET`
+2. Make HTTP module header `X-Upload-Secret`
+3. `tools/airtable/.env` / local session value used by smoke tooling
+
+Re-run authorization + manual webhook smoke after rotation.
 
 ---
 
-## Remaining blockers
+## Remaining operational gates
 
-1. Build Make scenario `Shooting Challenge - GAME - Upload Engine - Lambda - v1` per [C-013-prod-make-build-2026-07-11.md](../deploy-checklists/C-013-prod-make-build-2026-07-11.md)
-2. Add `MAKE_UPLOAD_WEBHOOK_URL_PROD` to session file
-3. Re-run `c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset`
-4. Paste 070b v4.2 + configure inputs (automation **OFF**)
-5. Create isolation view `C-013 PROD Smoke — Schmidt Testing Only`
-6. Mike explicit approval for controlled 070b enable
+1. Rotate the exposed production upload secret in the three locations above
+2. Re-run manual Make smoke after rotation
+3. Verify/paste 070b v4.2 + inputs in Airtable UI (automation **OFF**)
+4. Create/verify isolation view `C-013 PROD Smoke — Schmidt Testing Only`
+5. Mike explicitly approves one controlled Airtable-triggered Schmidt test
+6. Run the test, verify fields, then leave 070b and Make in the approved final state
 
 ---
 
-## Exact next prompt (after Make build + webhook URL saved)
+## Exact next prompt (after secret rotation)
 
 ```
-MAKE_UPLOAD_WEBHOOK_URL_PROD is configured in tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): cd tools/airtable; python c013_prod_make_smoke_run.py preflight; python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset. Update docs/audits/C-013-prod-make-smoke-result-2026-07-11.md to PASS if complete Lambda JSON returned. Do not enable automation 070b.
+Production upload secret rotation is complete in AWS Lambda, Make X-Upload-Secret, and local tools/airtable/.env. Re-run the C-013 PROD manual Make smoke on recGQ8EjAMz3bEBiW with 070b OFF. If overallPass=true, verify the 070b v4.2 Airtable UI configuration and isolation view, then stop for Mike's explicit approval before enabling 070b for one Schmidt test.
 ```

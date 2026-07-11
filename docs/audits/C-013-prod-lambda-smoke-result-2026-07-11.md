@@ -45,11 +45,13 @@
 | Setting | Value |
 |---------|--------|
 | **Name** | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
-| **Package status** | **READY** (blueprint + runbook + smoke helpers) |
-| **Scenario built** | **NO** |
-| **Runtime smoke** | **BLOCKED** |
+| **Package status** | **COMPLETE** (sanitized blueprint + runbook + smoke helpers) |
+| **Scenario built** | **YES** |
+| **Runtime smoke** | **PASS** (`overallPass=true`) |
 
 See [C-013-prod-make-deployment-2026-07-11.md](../deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md).
+
+**Activation gate:** rotate the exposed PROD upload secret in AWS Lambda, Make, and local env; re-smoke before one Mike-approved Airtable-triggered 070b test.
 
 ---
 

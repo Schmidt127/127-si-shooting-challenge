@@ -1,7 +1,7 @@
 # C-013 — PROD Lambda deployment record
 
 **Date:** 2026-07-11  
-**Status:** **DEPLOYED** · direct smoke **PASS** · Make scenario **NOT built** · **070b OFF**  
+**Status:** **DEPLOYED** · direct smoke **PASS** · Make manual route **PASS** · **070b OFF**
 **Parent:** [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md)
 
 ---
@@ -121,4 +121,4 @@ See smoke-result doc § Make configuration. Scenario name: **`Shooting Challenge
 
 ## Next step
 
-Build Make PROD scenario + manual webhook smoke → paste **070b v4.2** (automation **OFF**) → Mike approval → one controlled **070b** enable on `recGQ8EjAMz3bEBiW` or fresh fixture → **070b OFF**.
+Rotate exposed PROD upload secret in AWS Lambda + Make + local env → re-run auth and manual Make smoke → paste/verify **070b v4.2** (automation **OFF**) + isolation view → Mike approval → one controlled **070b** Schmidt test → leave **070b/Make** in Mike-approved final states.

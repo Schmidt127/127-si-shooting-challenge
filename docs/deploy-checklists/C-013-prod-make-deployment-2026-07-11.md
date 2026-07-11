@@ -1,9 +1,9 @@
 # C-013 — PROD Make deployment and 070b enablement prep
 
 **Date:** 2026-07-11  
-**Status:** **Package READY** · Make scenario **NOT built** · manual webhook smoke **BLOCKED** · **070b OFF**  
+**Status:** **Make scenario BUILT** · manual webhook smoke **PASS** (`overallPass=true`) · **070b OFF**
 **Lambda smoke:** [PASS](../audits/C-013-prod-lambda-smoke-result-2026-07-11.md)  
-**Make smoke:** [BLOCKED](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
+**Make smoke:** [PASS](../audits/C-013-prod-make-smoke-result-2026-07-11.md)
 **Runbook:** [C-013-prod-upload-engine-lambda-runbook.md](../../make/documentation/C-013-prod-upload-engine-lambda-runbook.md)  
 **Blueprint:** [upload-asset-engine-lambda-prod-v1.template.json](../../make/blueprints/upload-asset-engine-lambda-prod-v1.template.json)
 
@@ -28,7 +28,7 @@
 |------|---------|--------|
 | `LAMBDA_FUNCTION_URL_PROD` | Make HTTP module URL | **CONFIGURED** (ops) |
 | `UPLOAD_WEBHOOK_SECRET_PROD` | Make scenario variable → `X-Upload-Secret` header | **CONFIGURED** (ops) |
-| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | Module 1 webhook URL for 070b input + smoke scripts | **MISSING** |
+| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | Module 1 webhook URL for 070b input + smoke scripts | **CONFIGURED** (local ops only) |
 
 Values live in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gitignored) — **never commit**.
 
@@ -113,7 +113,7 @@ Uses `parseLambdaResponseBody` + `evaluateLambdaHandoffResult` (shared lib `uplo
 
 ## 5. Manual webhook smoke (Phase 5–7)
 
-**Status:** **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing.
+**Status:** **PASS** — upload, independent Airtable probe, idempotency, and invalid-route handling all passed on `recGQ8EjAMz3bEBiW`.
 
 **Fixture (Schmidt Testing only):**
 
@@ -191,30 +191,29 @@ Uses `parseLambdaResponseBody` + `evaluateLambdaHandoffResult` (shared lib `uplo
 | Gate | Result |
 |------|--------|
 | Make package in GitHub | **PASS** |
-| Make scenario built | **FAIL** (Mike UI) |
+| Make scenario built | **PASS** |
 | Secure vars Lambda + secret | **CONFIGURED** |
-| Webhook URL | **MISSING** |
-| Manual webhook smoke | **BLOCKED** |
-| Idempotency via Make | **BLOCKED** |
-| Invalid route via Make | **BLOCKED** |
+| Webhook URL | **CONFIGURED** (local ops only) |
+| Manual webhook smoke | **PASS** |
+| Idempotency via Make | **PASS** |
+| Invalid route via Make | **PASS** |
 | 070b script v4.2 verified | **PASS** |
 | 070b enabled | **NO** (correct) |
 
-**GO for controlled 070b test:** **NO-GO**
+**GO for controlled 070b test:** **CONDITIONAL GO** — rotate exposed upload secret, re-smoke, verify UI/isolation view, then Mike approval.
 
 ---
 
 ## 10. Remaining manual actions
 
-1. Build Make scenario per [runbook](../../make/documentation/C-013-prod-upload-engine-lambda-runbook.md)
-2. Save webhook URL to session file
-3. Run `c013_prod_make_smoke_run.py all --reset`
-4. Update [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md) to PASS
-5. Paste webhook into 070b input (automation still OFF)
-6. Execute controlled 070b test (Phase 9) with Mike approval
+1. Rotate the production upload secret in AWS Lambda, Make HTTP header, and local env
+2. Re-run manual Make smoke
+3. Paste/verify webhook + v4.2 script in 070b input (automation still OFF)
+4. Create/verify Schmidt isolation view
+5. Execute one controlled 070b test only after Mike approval
 
 ---
 
 ## 11. Production v2 estimate
 
-**~78%** — PROD Lambda smoke PASS; Make deployment package ready; Make runtime smoke + 070b enablement remain.
+**~92%** — PROD Lambda + Make manual route PASS; secret rotation + one Airtable-triggered Schmidt test remain.

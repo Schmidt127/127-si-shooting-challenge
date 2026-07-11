@@ -2,8 +2,8 @@
 
 **Date:** 2026-07-11  
 **Scenario name:** `Shooting Challenge - GAME - Upload Engine - Lambda - v1`  
-**Initial state:** **OFF** (no scheduling)  
-**070b / 070a:** **OFF** — unchanged until manual smoke PASS + Mike approval  
+**Status:** **BUILT · manual PROD smoke PASS** (`overallPass=true`)
+**070b / 070a:** **OFF** — unchanged pending secret rotation + Mike approval
 **Blueprint:** [upload-asset-engine-lambda-prod-v1.template.json](../../make/blueprints/upload-asset-engine-lambda-prod-v1.template.json)  
 **Runbook:** [C-013-prod-upload-engine-lambda-runbook.md](../../make/documentation/C-013-prod-upload-engine-lambda-runbook.md)  
 **Parent:** [C-013-production-promotion-plan.md](./C-013-production-promotion-plan.md)
@@ -31,7 +31,7 @@ Manual smoke **bypasses 070b** — POST the same JSON directly to module 1 webho
 |----------|---------|-------------|
 | `LAMBDA_FUNCTION_URL_PROD` | HTTP module URL | **CONFIGURED** (ops) |
 | `UPLOAD_WEBHOOK_SECRET_PROD` | Header `X-Upload-Secret` — must match Lambda `UPLOAD_WEBHOOK_SECRET` | **CONFIGURED** (ops) |
-| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | Module 1 Custom webhook URL — for smoke scripts + 070b `makeWebhookUrl` input | **MISSING** (save to ops after build) |
+| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | Module 1 Custom webhook URL — for smoke scripts + 070b `makeWebhookUrl` input | **CONFIGURED** (local ops only) |
 
 Store values in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gitignored). **Never commit.**
 
@@ -43,10 +43,10 @@ Store values in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (g
 |---|--------------|---------------|
 | **1** | **Webhooks → Custom webhook** | Receives 070b v4.2 minimal JSON. Copy webhook URL to ops as `MAKE_UPLOAD_WEBHOOK_URL_PROD`. |
 | **2** | **Flow control → Router** | **Filter (both required):** `automationNumber` **equal** `070b` · `routeKey` **equal** `video_feedback`. Reject all other routes in first PROD slice. |
-| **3** | **HTTP → Make a request** | **Method:** POST · **URL:** `{{LAMBDA_FUNCTION_URL_PROD}}` · **Headers:** `Content-Type: application/json` · `X-Upload-Secret: {{UPLOAD_WEBHOOK_SECRET_PROD}}` · **Body:** entire JSON from module 1 (unchanged) · **Timeout:** **120 s** |
-| **4** | **Flow control → Router** | Branch A: HTTP status 200–299 · Branch B: else (4xx/5xx/timeout) |
-| **5** | **Webhooks → Webhook response** (success branch) | Status **200** · Body = **complete Lambda JSON** from module 3 response (parsed `Data` / body — top-level `actionOut`, `statusOut`, `writebackVerification`) |
-| **6** | **Webhooks → Webhook response** (failure branch) | Status **502** · Body = deterministic JSON e.g. `{"statusOut":"error","actionOut":"error_make_http_failure","errorOut":"..."}` |
+| **3** | **HTTP → Make a request** | POST PROD Lambda URL · `X-Upload-Secret` · body = module 1 JSON · timeout **120 s** · parse response **ON** · **Return error if HTTP request fails OFF** |
+| **4** | **Flow control → Router** | Branch A: complete Lambda JSON with `actionOut` (success or structured error) · Branch B: transport/malformed response |
+| **5** | **Webhooks → Webhook response** (Lambda JSON) | Status **200** · complete Lambda JSON with top-level keys unchanged |
+| **6** | **Webhooks → Webhook response** (transport failure) | Status **502** · deterministic `error_make_http_failure` JSON |
 
 ### Critical response rules (070b v4.2 gate)
 
@@ -92,16 +92,16 @@ Module 3 must forward this JSON **unchanged** to Lambda.
 
 | Step | Action | Done |
 |------|--------|------|
-| 1 | Create scenario **`Shooting Challenge - GAME - Upload Engine - Lambda - v1`** | [ ] |
-| 2 | Add scenario variables `LAMBDA_FUNCTION_URL_PROD`, `UPLOAD_WEBHOOK_SECRET_PROD` | [ ] |
-| 3 | Module 1 Custom webhook — save URL to ops (`MAKE_UPLOAD_WEBHOOK_URL_PROD`) | [ ] |
-| 4 | Module 2 Router — filter `070b` + `video_feedback` | [ ] |
-| 5 | Module 3 HTTP POST — secret header, 120 s timeout, body = module 1 JSON | [ ] |
-| 6 | Modules 4–6 — success returns **complete Lambda JSON**, not generic acknowledgement | [ ] |
-| 7 | Save scenario **OFF** | [ ] |
-| 8 | Add webhook URL to `c013-prod-deploy-session.local.json` | [ ] |
-| 9 | Run manual smoke (below) — **070b stays OFF** | [ ] |
-| 10 | Leave scenario **OFF** until controlled 070b window | [ ] |
+| 1 | Create scenario **`Shooting Challenge - GAME - Upload Engine - Lambda - v1`** | [x] |
+| 2 | Configure scenario runtime values | [x] (upload secret rotation required) |
+| 3 | Module 1 webhook saved to local ops | [x] |
+| 4 | Router filter `070b` + `video_feedback` | [x] |
+| 5 | HTTP POST + secret header + 120 s timeout | [x] |
+| 6 | Complete Lambda JSON returned, including structured errors | [x] |
+| 7 | Manual smoke with 070b OFF | [x] |
+| 8 | Sanitized blueprint committed | [x] |
+| 9 | Rotate exposed upload secret and re-smoke | [ ] |
+| 10 | Controlled Airtable-triggered Schmidt test | [ ] |
 
 **Do not** add Amazon S3 Upload module. Lambda owns S3.
 
@@ -125,7 +125,8 @@ Or step-by-step:
 python c013_prod_make_smoke_run.py upload --asset-id recGQ8EjAMz3bEBiW --reset
 python c013_prod_make_smoke_run.py idempotency --asset-id recGQ8EjAMz3bEBiW
 python c013_prod_make_smoke_run.py invalid-route --asset-id recGQ8EjAMz3bEBiW
-python _probe_c013_asset_storage_fields.py --base-id appn84sqPw03zEbTT --record-id recGQ8EjAMz3bEBiW --out _preview/c013-prod-make-smoke-verify.json
+$env:WAVE7_PROBE_BASE = "appn84sqPw03zEbTT"
+python _probe_c013_asset_storage_fields.py --record-id recGQ8EjAMz3bEBiW --out _preview/c013-prod-make-smoke-verify.json
 ```
 
 ### Pass criteria
@@ -162,31 +163,30 @@ Save redacted results to `tools/airtable/_preview/c013-prod-make-smoke-*.json` (
 |------|--------|
 | PROD Lambda direct smoke | **PASS** |
 | Make scenario package in GitHub | **PASS** |
-| Make scenario built in UI | **PENDING** (Mike) |
-| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | **MISSING** |
-| Manual Make webhook smoke | **NOT RUN** |
+| Make scenario built in UI | **PASS** |
+| `MAKE_UPLOAD_WEBHOOK_URL_PROD` | **CONFIGURED** (local only) |
+| Manual Make webhook smoke | **PASS** (`overallPass=true`) |
 | 070b script paste artifact | **READY** — [C-013-prod-070b-script-paste-v4.2.txt](./C-013-prod-070b-script-paste-v4.2.txt) |
 | 070b live automation configured | **PENDING** (Mike UI) |
 | 070b enabled | **NO** (correct) |
 
-**GO for controlled 070b enable test:** **NO-GO** until Make manual smoke PASS.
+**GO for controlled 070b enable test:** **CONDITIONAL GO** after required secret rotation/re-smoke, UI verification, isolation view, and Mike approval.
 
 ---
 
 ## 9. Remaining blockers
 
-1. Build Make scenario in UI (this doc §5)
-2. Save `MAKE_UPLOAD_WEBHOOK_URL_PROD` to ops session file
-3. Run manual Make smoke on `recGQ8EjAMz3bEBiW`
-4. Paste 070b v4.2 + configure inputs in Airtable builder (**automation OFF**) — [C-013-prod-070b-ui-verification-2026-07-11.md](./C-013-prod-070b-ui-verification-2026-07-11.md)
-5. Create isolation view — same doc §6
-6. Mike explicit approval for one controlled 070b enable test
+1. Rotate the exposed upload secret in AWS Lambda, Make header, and local env
+2. Re-run manual Make smoke
+3. Paste/verify 070b v4.2 + inputs in Airtable builder (**automation OFF**)
+4. Create/verify isolation view
+5. Mike explicitly approves and runs one controlled 070b Schmidt test
 
 ---
 
 ## 10. Production v2 estimate
 
-**~82%** — PROD Lambda smoke PASS; Make + 070b configuration package complete in GitHub; Make runtime smoke + live 070b UI paste + controlled enable remain.
+**~92%** — PROD Lambda and Make manual route PASS; repository package complete. Secret rotation + Airtable-triggered 070b Schmidt test remain.
 
 ---
 

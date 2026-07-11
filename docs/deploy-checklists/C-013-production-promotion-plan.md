@@ -1,6 +1,6 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **PROD Lambda DEPLOYED — direct smoke PASS (2026-07-11)** · Make + 070b **configuration package READY** · Make runtime smoke **BLOCKED** · **070b OFF**  
+**Status:** **PROD Lambda + Make manual route PASS (2026-07-11)** · repository closeout complete · secret rotation + Airtable-triggered 070b Schmidt test pending · **070b OFF**
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
 **Production base:** `appn84sqPw03zEbTT` — Lambda deployed + smoke PASS; Make scenario not built in UI  
@@ -84,8 +84,8 @@ All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/air
 | 5 | GitHub source current (`lambda/upload-asset/`, **070b** v4.2, `deploy-prod.ps1`) | Cursor | [x] |
 | 6 | Production schema parity (§5) | Mike / OMNI | [x] |
 | 7 | Production Lambda isolated PASS (§6) — **070b OFF** | Mike / AWS | [x] |
-| 8 | Production Make manual webhook PASS (§7) — **070b OFF** | Mike / Make | [ ] |
-| 9 | Production secrets issued (§4) — not in GitHub | Mike | [x] (Lambda URL + secret; Make webhook pending) |
+| 8 | Production Make manual webhook PASS (§7) — **070b OFF** | Mike / Make | [x] |
+| 9 | Production secrets issued (§4) — not in GitHub | Mike | [x] (rotation required before activation) |
 | 10 | Rollback plan (§9) understood | Mike | [ ] |
 
 **First Production slice:** **Video / 070b only.** **070a OFF.**
@@ -184,7 +184,7 @@ Execute **in order** in a future approved session:
 | **P1** | Production schema read-only audit (§5) | OFF | OFF |
 | **P2** | Issue Production secrets (§4) | OFF | OFF |
 | **P3** | Deploy Production Lambda + isolated smoke (§6) | OFF | OFF |
-| **P4** | Build Production Make scenario + manual webhook PASS (§7) | OFF | OFF |
+| **P4** | Build Production Make scenario + manual webhook PASS (§7) | **DONE** | OFF |
 | **P5** | Paste Production webhook into **070b** `makeWebhookUrl` — automation **OFF** | OFF | OFF |
 | **P6** | **Mike explicit approval** for one controlled enable | — | — |
 | **P7** | One controlled **070b** test asset | ON → **OFF** | OFF |
@@ -255,7 +255,7 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 | **G2** | **C-023 H3** resolved or dispositioned | Mike |
 | **G3** | Production schema verified | Mike / OMNI |
 | **G4** | Production Lambda isolated PASS | Mike |
-| **G5** | Production Make manual PASS | Mike |
+| **G5** | Production Make manual PASS | **PASS** |
 | **G6** | Explicit approval for one **070b** enable | Mike |
 | **G7** | Post-test **070b OFF** + probe saved locally | Mike |
 | **G8** | `CHANGELOG.md` after Production PASS | Cursor |
@@ -270,7 +270,8 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 - **No** web deployment for C-013 in first slice
 - **No** attachment clearing in first slice
 - **Do not repair** `recIYFnfmsPcy7iop` as part of promotion
-- **Do not mark** C-013 or C-023 **done** until remaining slices complete
+- **Do not mark C-013 operationally done** until secret rotation + one Airtable-triggered Schmidt test pass
+- Attachment retirement/hash-dedup expansion belongs to **C-023**, not this C-013 closeout
 
 ### Responsibility matrix
 
@@ -296,8 +297,15 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 
 ---
 
-## Close-out (after future Production promote only)
+## Close-out
 
-- [ ] `CHANGELOG.md` — `### Airtable` + `### Make`
-- [ ] `docs/v2-change-backlog.md` — status update
-- [ ] This doc **Status** → `Promoted to Production`
+- [x] Lambda + Make manual PROD route smoke PASS
+- [x] Sanitized blueprint + tests + runbooks committed
+- [x] `CHANGELOG.md`, `PROJECT_STATE.md`, backlog, close-out docs updated
+- [ ] Rotate exposed upload secret (AWS Lambda + Make header + local env), then re-smoke
+- [ ] Verify/paste 070b v4.2 and create isolation view (automation OFF)
+- [ ] Mike approves one Airtable-triggered Schmidt test
+- [ ] Test passes; 070b and Make left in Mike-approved final state
+
+**Repository closeout:** complete.
+**Operational C-013 definition of done:** pending the unchecked items above.
