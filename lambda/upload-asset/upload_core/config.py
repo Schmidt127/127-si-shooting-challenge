@@ -24,11 +24,23 @@ class UploadConfig:
 
     @classmethod
     def from_env(cls) -> UploadConfig:
-        base = os.getenv("AIRTABLE_BASE_ID") or DEV_BASE
-        if base == PROD_BASE:
-            raise ValueError(f"Production base {PROD_BASE} is blocked")
-        if base != DEV_BASE:
-            raise ValueError(f"Only DEV base {DEV_BASE} allowed; got {base}")
+        environment = (os.getenv("ENVIRONMENT") or "DEV").strip().upper()
+        base = (os.getenv("AIRTABLE_BASE_ID") or "").strip()
+        if not base:
+            base = PROD_BASE if environment == "PROD" else DEV_BASE
+
+        if environment == "PROD":
+            if base != PROD_BASE:
+                raise ValueError(
+                    f"ENVIRONMENT=PROD requires AIRTABLE_BASE_ID={PROD_BASE}; got {base}"
+                )
+        else:
+            if base == PROD_BASE:
+                raise ValueError(
+                    f"Production base {PROD_BASE} is blocked when ENVIRONMENT={environment}"
+                )
+            if base != DEV_BASE:
+                raise ValueError(f"Only DEV base {DEV_BASE} allowed; got {base}")
 
         token = os.getenv("AIRTABLE_TOKEN") or os.getenv("AIRTABLE_API_TOKEN") or ""
         if not token:

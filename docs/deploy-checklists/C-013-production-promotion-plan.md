@@ -1,9 +1,10 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **Planning only — Production promotion NOT started**  
+**Status:** **Infrastructure readiness audited — PROD deploy NOT started** (2026-07-11)  
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
-**Production base:** `appn84sqPw03zEbTT` — **untouched**
+**Production base:** `appn84sqPw03zEbTT` — **untouched** (schema + 116 PASS; Lambda/Make not deployed)  
+**Readiness audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md) · [smoke test](./C-013-prod-smoke-test-2026-07-11.md)
 
 **This document does not authorize Production deployment.** Committing this plan to GitHub records promotion steps only. **Separate explicit Mike approval** is required before any Production Airtable, Make, AWS, or secret change.
 
@@ -78,8 +79,8 @@ All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/air
 | 2 | Phase 2 / backlog approval for Production execution | ChatGPT + Mike | [ ] |
 | 3 | DEV video hybrid path proven (`recF86pJTIMFoEypJ`) | Cursor | [x] |
 | 4 | **C-023 H3** completed or explicitly dispositioned for cutover | Mike | [ ] |
-| 5 | GitHub source current (`lambda/upload-asset/`, **070b** v4.1) | Cursor | [ ] |
-| 6 | Production schema parity (§5) | Mike / OMNI | [ ] |
+| 5 | GitHub source current (`lambda/upload-asset/`, **070b** v4.2, `deploy-prod.ps1`) | Cursor | [x] |
+| 6 | Production schema parity (§5) | Mike / OMNI | [x] |
 | 7 | Production Lambda isolated PASS (§6) — **070b OFF** | Mike / AWS | [ ] |
 | 8 | Production Make manual webhook PASS (§7) — **070b OFF** | Mike / Make | [ ] |
 | 9 | Production secrets issued (§4) — not in GitHub | Mike | [ ] |
@@ -126,7 +127,7 @@ Canonical File URL · Storage Key · File Content Hash · File Hash Algorithm (S
 
 | Automation | State today | Promotion gate |
 |------------|-------------|----------------|
-| **070b** | **OFF** | Paste v4.1 script only after §8 G6 approval |
+| **070b** | **OFF** | Paste v4.2 script only after §8 G6 approval |
 | **070a** | **OFF** | **Out of first slice** |
 
 **No formula/view cutover** to Canonical URL in first slice.
@@ -150,7 +151,7 @@ Canonical File URL · Storage Key · File Content Hash · File Hash Algorithm (S
 | Isolated smoke (`actionOut=uploaded`) | Before **070b** enable |
 | CloudWatch `/aws/lambda/127si-upload-asset` | No secrets in logs |
 
-**Reference:** [`lambda/upload-asset/deploy.ps1`](../../lambda/upload-asset/deploy.ps1) · [DEV URL test](./C-013-dev-lambda-deploy-and-url-test.md)
+**Reference:** [`lambda/upload-asset/deploy-prod.ps1`](../../lambda/upload-asset/deploy-prod.ps1) · [`deploy.ps1`](../../lambda/upload-asset/deploy.ps1) (DEV) · [PROD smoke test](./C-013-prod-smoke-test-2026-07-11.md) · [DEV URL test](./C-013-dev-lambda-deploy-and-url-test.md)
 
 ---
 
