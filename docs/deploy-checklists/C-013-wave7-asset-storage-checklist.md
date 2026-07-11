@@ -3,7 +3,7 @@
 **Backlog:** C-013 (AWS S3 canonical URLs), C-023 (file content hash dedup)
 **Status:** **Wave 7 Slice 2 SDK proof PASS (2026-07-08)** — controlled confirm-write recheck same day. Full writeback + C-023 duplicate flags on `recBBi80bYuxXifVj`. Upload runtime = **Lambda** (Make S3 **dropped**). **070a/070b OFF**; Production untouched. **Not** full migration.
 
-**PROD update (2026-07-11):** PROD Lambda + Make manual route smoke **PASS** on Schmidt fixture `recGQ8EjAMz3bEBiW`. Repository closeout complete; activation gates remain (secret rotation, 070b UI/isolation view, one Mike-approved trigger test). See [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md).
+**PROD update (2026-07-11):** C-013 PROD video upload workflow **COMPLETE** — Airtable-triggered PASS on `recGQ8EjAMz3bEBiW` (070b v4.4 + 070c v1.1). See [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md).
 **Depends on:** C-020 DEV functional complete (115 harness); C-012 field ownership (partial — document as we go)
 **Architecture:** [asset-storage-migration.md](../asset-storage-migration.md) · [upload-workflow-homework-video.md](../upload-workflow-homework-video.md) · [make/documentation/upload-asset-engine.md](../../make/documentation/upload-asset-engine.md) · [Slice 2 mapping](./C-013-make-s3-writeback-mapping.md) · **[Make build packet](./C-013-make-s3-dev-build-packet.md)**
 **Test harness:** [C-020 checklist](./C-020-testing-scenarios-script-checklist.md) — Tests **F** (video) and **G** (homework) for upload path after DEV Make is wired

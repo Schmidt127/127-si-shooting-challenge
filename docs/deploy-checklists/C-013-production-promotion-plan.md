@@ -1,10 +1,11 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **PROD Lambda + Make manual route PASS (2026-07-11)** · repository closeout complete · secret rotation + Airtable-triggered 070b Schmidt test pending · **070b OFF**
+**Status:** **C-013 PROD video upload workflow COMPLETE (2026-07-11)** · Airtable-triggered Schmidt test PASS · commits `5d5f27b` + `9f8495d`  
+**Closeout:** [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md)
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
 **Production base:** `appn84sqPw03zEbTT` — Lambda deployed + direct smoke PASS; Make scenario built + manual route smoke PASS (`overallPass=true`)  
-**Make build:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](./C-013-prod-070b-script-paste-v4.2.txt)  
+**Make build:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [closeout](./C-013-prod-closeout-2026-07-11.md) · *(historical v4.2 UI package:* [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](./C-013-prod-070b-script-paste-v4.2.txt)*)  
 **Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Readiness audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md) · [smoke test](./C-013-prod-smoke-test-2026-07-11.md)
 
@@ -271,7 +272,6 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 - **No** attachment clearing in first slice
 - **Do not repair** `recIYFnfmsPcy7iop` as part of promotion
 - **Do not mark C-013 operationally done** until secret rotation + one Airtable-triggered Schmidt test pass
-- Attachment retirement/hash-dedup expansion belongs to **C-023**, not this C-013 closeout
 
 ### Responsibility matrix
 
@@ -302,10 +302,11 @@ Rollback does **not** auto-delete S3 objects or clear canonical fields.
 - [x] Lambda + Make manual PROD route smoke PASS
 - [x] Sanitized blueprint + tests + runbooks committed
 - [x] `CHANGELOG.md`, `PROJECT_STATE.md`, backlog, close-out docs updated
-- [ ] Rotate exposed upload secret (AWS Lambda + Make header + local env), then re-smoke
-- [ ] Verify/paste 070b v4.2 and create isolation view (automation OFF)
-- [ ] Mike approves one Airtable-triggered Schmidt test
-- [ ] Test passes; 070b and Make left in Mike-approved final state
+- [x] **070b v4.4 + 070c v1.1** committed and PROD Schmidt test PASS
+- [x] Airtable-triggered end-to-end PASS on `recGQ8EjAMz3bEBiW`
+- [ ] Optional: rotate exposed upload secret (AWS Lambda + Make header + local env), then re-smoke
+- [ ] Optional: update Automations table documentation rows (070b v4.4, 070c v1.1)
 
-**Repository closeout:** complete.
-**Operational C-013 definition of done:** pending the unchecked items above.
+**Repository closeout:** **COMPLETE**  
+**C-013 video upload workflow:** **COMPLETE** (2026-07-11)  
+**Attachment retirement / hash-dedup expansion:** **C-023** (separate backlog)

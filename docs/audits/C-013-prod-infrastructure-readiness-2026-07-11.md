@@ -13,15 +13,13 @@
 
 | Result | Detail |
 |--------|--------|
-| **Overall C-013 PROD readiness** | **CONDITIONAL GO** for one controlled 070b test after secret rotation/re-smoke + UI checks |
-| **Production v2 estimate** | **~92%** (Lambda + Make manual route PASS; activation gates remain) |
-| **Infrastructure blockers** | **0** — remaining gates are secret rotation and Airtable activation verification |
-| **070b can be enabled** | **Not yet** — Mike approval required after secret rotation, re-smoke, UI + isolation-view verification |
-| **Manual deployment actions** | **8** remaining (see §8) |
+| **Overall C-013 PROD readiness** | **COMPLETE** — video upload workflow PASS (2026-07-11) |
+| **Production v2 estimate** | **~95%** (C-013 video slice done; C-023 + 070a homework remain) |
+| **Infrastructure blockers** | **0** for C-013 video upload |
+| **070b / 070c** | **v4.4 / v1.1** deployed for controlled PROD test · Schmidt PASS |
+| **Optional hygiene** | Rotate exposed PROD upload secret |
 
-DEV proves the full design: **Airtable 070b → Make → Lambda Function URL → S3 → Airtable writeback** with Lambda-owned upload claim (v4.2). PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. Automation **070b** is **OFF**.
-
-**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS. PROD Make manual route also PASS (`overallPass=true`, 2026-07-11).** Repository closeout package is complete ([make build](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [070b UI](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt)). Operational closure waits on secret rotation + one Airtable-triggered Schmidt test. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
+DEV proves the full design: **Airtable 070b v4.4 → Make → Lambda → S3 → Airtable writeback** with async `Accepted` handoff + **070c v1.1** idempotent verify. PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. **C-013 PROD video upload workflow COMPLETE** on Schmidt fixture `recGQ8EjAMz3bEBiW` (2026-07-11). See [closeout](../deploy-checklists/C-013-prod-closeout-2026-07-11.md).
 
 ---
 

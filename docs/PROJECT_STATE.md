@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-11** (C-013 PROD Lambda + Make manual route PASS; 070b activation pending)
+Last updated: **2026-07-11** (C-013 PROD video upload workflow **COMPLETE** — 070b v4.4 + 070c v1.1)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -255,7 +255,7 @@ Cutover checklist: Phase 6 in [web/docs/project-roadmap.md](../web/docs/project-
 
 | Scenario | Blueprint | Airtable scripts |
 |----------|-----------|------------------|
-| **PROD Upload Engine — Lambda v1** | `make/blueprints/upload-asset-engine-lambda-prod-v1.template.json` (sanitized) | **070b v4.2** video; **OFF** pending activation |
+| **PROD Upload Engine — Lambda v1** | `make/blueprints/upload-asset-engine-lambda-prod-v1.template.json` (sanitized) | **070b v4.4** + **070c v1.1** video; async `Accepted` handoff |
 | Legacy Upload Asset Engine | `make/blueprints/upload-asset-engine-v1.json` | 070a/070b legacy Drive path |
 | Weekly summary email | *(export pending)* | 074 |
 | Daily submission email | *(export pending)* | 077 |
@@ -264,19 +264,18 @@ Cutover checklist: Phase 6 in [web/docs/project-roadmap.md](../web/docs/project-
 
 Upload ladder: [make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md)
 
-### C-013 PROD status (2026-07-11)
+### C-013 PROD status (2026-07-11) — **COMPLETE**
 
 - PROD Lambda direct smoke: **PASS**
 - PROD Make manual route: **PASS** on Schmidt fixture `recGQ8EjAMz3bEBiW`
-- Upload: `actionOut=uploaded` · independent Airtable probe `allPass=true`
-- Idempotency: `skipped_already_uploaded` · storage key/hash unchanged
-- Invalid route: `error_invalid_route` · expected Upload Status=`Error`; canonical/hash preserved
-- Automation **070b OFF**; **070a OFF**
-- Repository closeout: **complete**
-- Operational closeout pending: rotate exposed PROD upload secret in AWS/Make/local env, re-smoke, verify 070b UI + isolation view, run one Mike-approved Airtable-triggered Schmidt test
-- C-023 attachment retirement/hash-dedup expansion remains separate and deferred
+- **Airtable-triggered end-to-end:** **PASS** — 070b `Accepted` async handoff → Lambda writeback → 070c idempotent verify
+- Scripts: **070b v4.4** (no timers/polling) · **070c v1.1** (idempotent writeback verify)
+- Automation **070a OFF** (homework out of first PROD slice)
+- Repository + operational video upload workflow: **100% complete**
+- Optional hygiene: rotate exposed PROD upload secret (AWS/Make/local); update Automations table doc rows
+- C-023 attachment retirement / Drive sunset: **deferred** (separate backlog)
 
-Runbook: [C-013 PROD Make](../make/documentation/C-013-prod-upload-engine-lambda-runbook.md) · [activation checklist](./deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md)
+Runbook: [C-013 PROD Make](../make/documentation/C-013-prod-upload-engine-lambda-runbook.md) · [closeout](./deploy-checklists/C-013-prod-closeout-2026-07-11.md)
 
 ---
 

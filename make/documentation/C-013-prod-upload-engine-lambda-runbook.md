@@ -2,24 +2,34 @@
 
 **Date:** 2026-07-11  
 **Scenario name:** `Shooting Challenge - GAME - Upload Engine - Lambda - v1`  
-**Status:** **PROD manual smoke PASS** (`overallPass=true`, 2026-07-11) · sanitized blueprint ready · Airtable-triggered 070b test pending
+**Status:** **PROD COMPLETE** — manual smoke PASS · Airtable-triggered Schmidt test PASS (`recGQ8EjAMz3bEBiW`)  
+**Scripts:** **070b v4.4** · **070c v1.1**  
+**Closeout:** [C-013-prod-closeout-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-closeout-2026-07-11.md)  
 **Parents:** [C-013-prod-make-deployment-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [C-013-dev-make-lambda-scenario-prep.md](../deploy-checklists/C-013-dev-make-lambda-scenario-prep.md)
 
-**Hard stops:** **070b OFF** · **070a OFF** · Schmidt Testing only · no secrets in GitHub
+**Hard stops:** Schmidt Testing only for experiments · no secrets in GitHub
 
 ---
 
 ## Architecture
 
 ```text
-Airtable 070b (later) → Make Custom Webhook
+Airtable 070b v4.4 → Make Custom Webhook
   → Router (automationNumber=070b AND routeKey=video_feedback)
   → HTTP POST PROD Lambda Function URL + X-Upload-Secret
   → Lambda → S3 + Airtable writeback
-  → Make Webhook response = complete Lambda JSON (not generic Accepted)
+  → Make may return plain-text "Accepted" to 070b (async gateway ack)
+  → 070c v1.1 verifies writeback idempotently; clears trigger only if still checked
 ```
 
-070b **does not** call Lambda directly.
+070b **does not** call Lambda directly. 070b **does not** poll or use timers.
+
+### Make `Accepted` vs immediate Lambda JSON
+
+| Make response to 070b | 070b v4.4 behavior | 070c role |
+|----------------------|-------------------|-----------|
+| Plain-text **`Accepted`** (HTTP 200) | `statusOut=pending`, `actionOut=lambda_upload_accepted_async`; retains Send to Make Trigger | Verify writeback when fields complete; idempotent if trigger already cleared |
+| Complete Lambda JSON (`uploaded`, etc.) | Immediate verified success path; may clear trigger | Optional idempotent confirm (`async_upload_already_verified`) |
 
 ---
 
@@ -28,9 +38,9 @@ Airtable 070b (later) → Make Custom Webhook
 | Variable | Purpose | Status |
 |----------|---------|--------|
 | `LAMBDA_FUNCTION_URL_PROD` | PROD Lambda Function URL | CONFIGURED (ops; value not committed) |
-| `UPLOAD_WEBHOOK_SECRET_PROD` | Header `X-Upload-Secret` — must match Lambda env | **ROTATION REQUIRED before activation** |
+| `UPLOAD_WEBHOOK_SECRET_PROD` | Header `X-Upload-Secret` — must match Lambda env | CONFIGURED · **rotation recommended** (exposed during prep) |
 
-`MAKE_UPLOAD_WEBHOOK_URL_PROD` is configured locally and manual smoke passed. Keep it in ops notes only — **not GitHub**.
+`MAKE_UPLOAD_WEBHOOK_URL_PROD` is configured locally. Keep in ops notes only — **not GitHub**.
 
 ---
 
@@ -38,20 +48,14 @@ Airtable 070b (later) → Make Custom Webhook
 
 | # | Module | Configuration |
 |---|--------|---------------|
-| 1 | **Webhooks → Custom webhook** | Receives 070b v4.2 JSON |
+| 1 | **Webhooks → Custom webhook** | Receives 070b v4.4 minimal JSON |
 | 2 | **Router** | `automationNumber` = `070b` **AND** `routeKey` = `video_feedback` |
-| 3 | **HTTP → Make a request** | POST PROD Lambda URL · header `X-Upload-Secret` · body = entire module 1 JSON · timeout **120 s** · parse response **ON** · **Return error if HTTP request fails OFF** so structured Lambda 4xx JSON continues |
-| 4 | **Router** | Branch A: complete Lambda JSON with `actionOut` (success or structured Lambda error) · Branch B: transport/malformed response |
-| 5 | **Webhooks → Webhook response** (Lambda JSON) | Status **200** · body = complete Lambda JSON, preserving top-level keys |
-| 6 | **Webhooks → Webhook response** (transport failure) | Status **502** · deterministic `error_make_http_failure` JSON |
+| 3 | **HTTP → Make a request** | POST PROD Lambda URL · header `X-Upload-Secret` · body = entire module 1 JSON · timeout **120 s** · parse response **ON** · **Return error if HTTP request fails OFF** |
+| 4 | **Router** | Branch A: complete Lambda JSON · Branch B: transport/malformed |
+| 5 | **Webhooks → Webhook response** (Lambda JSON path) | Status **200** · complete Lambda JSON when synchronous path applies |
+| 6 | **Webhooks → Webhook response** (transport failure) | Status **502** · deterministic error JSON |
 
-### Critical response rule
-
-**Do not** return generic `Accepted`, `Success`, or HTTP status alone. 070b v4.2 treats HTTP 2xx without `actionOut` as **`error_lambda_response_unverified`**.
-
-Map module 5 body from module 3 **Data** (full Lambda JSON), matching DEV Part A fix (Module 16 = Module 14 Data).
-
-**Why HTTP errors must continue:** PROD invalid-route smoke proved Lambda returns `statusOut=error`, `actionOut=error_invalid_route`. Make must pass that complete JSON to Airtable instead of terminating at module 3.
+**Observed PROD behavior:** Make may return **`Accepted`** to the webhook caller while Lambda completes asynchronously. This is expected; 070b v4.4 + 070c v1.1 handle it. Scenario must be **ON** with **Immediately as data arrives** for executions to run.
 
 ---
 
@@ -73,66 +77,50 @@ Map module 5 body from module 3 **Data** (full Lambda JSON), matching DEV Part A
 
 ---
 
-## Build verification (completed for manual smoke)
+## 070c trigger (recommended)
 
-| Step | Action | Done |
-|------|--------|------|
-| 1 | Create scenario **`Shooting Challenge - GAME - Upload Engine - Lambda - v1`** | [x] |
-| 2 | Configure PROD Lambda URL + upload secret | [x] (rotate secret before activation) |
-| 3 | Module 1 Custom webhook URL stored in local ops | [x] |
-| 4 | Module 2 Router filter `070b` + `video_feedback` | [x] |
-| 5 | Module 3 HTTP POST with secret header, 120 s timeout | [x] |
-| 6 | Structured Lambda errors continue to complete JSON response | [x] |
-| 7 | Manual upload/idempotency/invalid-route smoke | [x] |
-| 8 | Sanitized blueprint committed | [x] |
-| 9 | Rotate exposed upload secret in AWS + Make + local env | [ ] |
-| 10 | Airtable-triggered Schmidt test; leave approved final states | [ ] |
+**Do not require** Send to Make Trigger checked.
 
-**Do not** paste webhook URL into 070b `makeWebhookUrl` until manual smoke PASS + explicit approval.
+- Upload Status = Uploaded  
+- Writeback Complete? > 0  
+- Canonical File URL, Storage Key, File Content Hash populated  
+- File Hash Algorithm = SHA-256  
+- Uploaded At populated  
+- Upload Error blank  
 
 ---
 
-## Manual smoke (070b OFF)
+## Build verification
+
+| Step | Done |
+|------|------|
+| PROD Lambda deployed + direct smoke | [x] |
+| Make scenario built | [x] |
+| Manual webhook smoke | [x] |
+| Airtable-triggered Schmidt test | [x] |
+| 070b v4.4 + 070c v1.1 in GitHub | [x] |
+| Optional: rotate exposed upload secret | [ ] |
+
+---
+
+## Manual smoke (070b not required)
 
 **Fixture:** `recGQ8EjAMz3bEBiW` · enrollment `recgP9qZYjAhE7NXm` only.
 
 ```powershell
 cd tools/airtable
 python c013_prod_make_smoke_run.py preflight
-python c013_prod_make_smoke_run.py upload --asset-id recGQ8EjAMz3bEBiW --reset
-python c013_prod_make_smoke_run.py idempotency --asset-id recGQ8EjAMz3bEBiW
-python c013_prod_make_smoke_run.py invalid-route --asset-id recGQ8EjAMz3bEBiW
 python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset
 ```
 
-Or single POST:
-
-```powershell
-python c013_prod_make_webhook_post.py recGQ8EjAMz3bEBiW
-```
-
-**Result:** **PASS** — complete Lambda JSON · `actionOut=uploaded` + independent probe `allPass=true` · `skipped_already_uploaded` with unchanged key/hash · `error_invalid_route` with expected `Upload Status=Error` and preserved canonical/hash fields.
-
-Evidence: [C-013 PROD Make smoke](../../docs/audits/C-013-prod-make-smoke-result-2026-07-11.md).
-
----
-
-## Required secret rotation
-
-The PROD upload secret was displayed during local/chat preparation. Before Airtable-triggered activation, generate one new value and update all three locations in one maintenance window:
-
-1. AWS Lambda `127si-upload-asset` → environment → `UPLOAD_WEBHOOK_SECRET`
-2. Make scenario HTTP module → header `X-Upload-Secret`
-3. Local `tools/airtable/.env` / gitignored session value used by smoke tooling
-
-Then run missing-secret, wrong-secret, and full manual Make smoke again. Never print or commit the value.
+**Do not reset** `recGQ8EjAMz3bEBiW` while it serves as production-pass evidence.
 
 ---
 
 ## Rollback
 
 1. Scenario **OFF**
-2. **070b OFF**
+2. **070b OFF** · **070c OFF**
 3. Lambda reserved concurrency 0 if needed
 4. Rotate secrets if exposed
 
@@ -140,4 +128,4 @@ Then run missing-secret, wrong-secret, and full manual Make smoke again. Never p
 
 ## Blueprint (secret-free)
 
-[upload-asset-engine-lambda-prod-v1.template.json](../blueprints/upload-asset-engine-lambda-prod-v1.template.json) — sanitized reference with placeholders; no operational URLs or secrets.
+[upload-asset-engine-lambda-prod-v1.template.json](../blueprints/upload-asset-engine-lambda-prod-v1.template.json)

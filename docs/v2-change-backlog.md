@@ -75,7 +75,7 @@ flowchart TD
 | **4** | **C-022** public display fields | Schema + automations; affects **071**, **072**, web |
 | **5** | **C-010**, **C-011**, **066** Airtable deploy | Production safety + automation before heavy testing |
 | **6** | **C-019**, **C-020** test sandbox + **Testing Scenarios** | **C-020 DEV functional complete** (115 v1.3; Tests A–D + E/F/G); C-019 Testing views partial; needed before S3 cutover |
-| **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | **C-013 repo closeout complete / activation pending** — PROD Lambda + Make manual route PASS; secret rotation + one Airtable-triggered Schmidt test remain. **C-023 deferred separately.** |
+| **7** | **C-013** AWS S3 canonical URLs; **C-023** file content hash dedup | **C-013 done (2026-07-11)** — PROD video upload route complete (070b v4.4 + 070c v1.1). **C-023** in progress separately. |
 | **8** | **C-017**, **C-018**, **C-009** intake | Fillout + Weeks + HW17 quiz — after storage model is clear |
 | **9** | Levels, gates, XP rules; **C-025** Zoom recording attendance | Config tuning + fair gate path for missed live Zoom |
 | **10** | Game manual, `/shoot` hub; **C-027** major-event notifications (SMS TBD) | Comms + optional real-time athlete alerts |
@@ -167,7 +167,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-013** | AWS S3 canonical URLs | **PROD Lambda + Make manual route PASS (2026-07-11)** on Schmidt asset `recGQ8EjAMz3bEBiW`: upload + independent writeback probe + idempotency + invalid route all PASS. Sanitized blueprint, tests, runbooks, and closeout docs committed. **070b remains OFF.** Remaining definition-of-done gates: rotate exposed PROD upload secret (AWS/Make/local), re-smoke, verify 070b v4.2 + isolation view, and one Mike-approved Airtable-triggered Schmidt test. Attachment retirement/hash-dedup expansion is **C-023**, not C-013. | C-012, C-020 | **repo complete / activation pending** |
+| **C-013** | AWS S3 canonical URLs | **DONE (2026-07-11)** — PROD video upload route complete on Schmidt asset `recGQ8EjAMz3bEBiW`: Lambda + Make + Airtable-triggered 070b v4.4 (`Accepted` async handoff) + 070c v1.1 idempotent verify. Manual smoke + 47 unit tests PASS. Commits `5d5f27b`, `9f8495d`. Optional hygiene: rotate exposed PROD upload secret. Attachment retirement / expanded hash-dedup → **C-023**. | C-012, C-020 | **done** |
 | **C-023** | File dedup by **content hash**, not title/filename | **Stage 4C** PASS · **4D-R** Parts A–E PASS · **H3b–H3p** matrix **16/16 PASS** · **Stage 5 DEV complete** — automation **116** (`992677d`) live validated: S5 **12/12 PASS**; confirm + reversal PASS on `recF86pJTIMFoEypJ` / XP `recx2MvUh2WP0tbjO` (same row restored; no duplicate XP); retired **008** slot-neutral. Prod paste pending. | C-013, C-024 | **in progress** |
 | **C-013-SEC** | Rotate DEV Lambda/Airtable secrets after validation | **Done (2026-07-09)** — PAT + `UPLOAD_WEBHOOK_SECRET` rotated; Lambda env synced; HTTP verify PASS. Exposed PAT revoked in Airtable UI. Script: `tools/airtable/c013_dev_rotate_secrets.py` | C-013 | **done** |
 

@@ -1,5 +1,7 @@
 # C-013 — PROD automation 070b UI verification package
 
+> **SUPERSEDED (2026-07-11):** This package describes **070b v4.2**. Production closeout uses **070b v4.4** + **070c v1.1**. See [C-013-prod-closeout-2026-07-11.md](./C-013-prod-closeout-2026-07-11.md). Paste from GitHub script files (skip lines 1–24), not this v4.2 artifact.
+
 **Date:** 2026-07-11  
 **PROD base:** `appn84sqPw03zEbTT`  
 **Automation name:** `070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make`  

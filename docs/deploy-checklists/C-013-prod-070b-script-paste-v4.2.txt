@@ -1,6 +1,6 @@
 /********************************************************************
- * AUTOMATION:
- * 070a / 070b - Send Upload Asset Payload to Make
+ * SUPERSEDED 2026-07-11 — use GitHub 070b v4.4 script, not this v4.2 paste artifact.
+ * See docs/deploy-checklists/C-013-prod-closeout-2026-07-11.md
  *
  * SYSTEM:
  * 127 Sports Intensity - Shooting Challenge App

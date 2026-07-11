@@ -9,7 +9,7 @@
 
 ## 1. Executive summary
 
-Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference(s)). **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation 116 runtime **PASS**). C-013 production promotion **not started**. Classified gaps: **0 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Runtime evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.
+Production v2 promotion is **not complete** (C-023, 070a homework, broader wave items remain). **C-013 PROD video upload workflow is COMPLETE** (2026-07-11). Submission Assets required field promotion **PASS**. **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation 116 runtime **PASS**). Classified gaps: **0 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Runtime evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md` · `docs/deploy-checklists/C-013-prod-closeout-2026-07-11.md`.
 
 ## 2. Repository Production v2 inventory
 
@@ -18,7 +18,7 @@ Production v2 promotion is **not complete**. Submission Assets required field pr
 | C-013 Wave 7 asset storage | `docs/deploy-checklists/C-013-production-promotion-plan.md` | cca1ac5 | Submission Assets | Canonical File URL, Storage Key, Lambda writeback | Yes |
 | C-023 duplicate hash + review | `docs/deploy-checklists/C-023-production-duplicate-policy.md` | 847aa6e | Submission Assets | File Content Hash, Duplicate Match Record | Yes |
 | C-023 Stage 5 consequences | `airtable/automations/shooting-challenge/116-submission-assets-apply-asset-reuse-decision-consequences.js` | 992677d | Submission Assets | Automation 116 + consequence fields | Yes |
-| 070b Lambda upload route | `airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` | 955ea2a | Submission Assets | 070b v4.2 Make→Lambda | Yes |
+| 070b Lambda upload route | `airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` | 5d5f27b | Submission Assets | 070b v4.4 Make→Lambda async | Yes |
 | 022 upload writeback sync | `airtable/automations/shooting-challenge/022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` | c0f91d3 | Submission Assets | Child table writeback | Yes |
 | 066 shot milestones v3.2 | `airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js` | 36a2e95 | Enrollments | 066 pasted DEV+PROD 2026-07-06 | Yes |
 | C-019 testing views | `docs/deploy-checklists/C-019-testing-views-verification-checklist.md` | — | multiple | Testing views on DEV | No |
@@ -129,7 +129,8 @@ Production v2 promotion is **not complete**. Submission Assets required field pr
 | Script | Version | DEV | PROD | Safe to deploy PROD | Issues |
 |---|---|---|---|---|---|
 | 116 | v1.0.1 | PASS | PASS | Yes | — |
-| 070b | v4.2 | PASS | PASS | Yes | — |
+| 070b | v4.4 | PASS | PASS | Yes | — |
+| 070c | v1.1 | PASS | PASS | Yes | — |
 | 022 | v1.1 | PASS | PASS | Yes | — |
 | 114 | v5.8 | PASS | PASS | Yes | — |
 | 065 | v9.2 | PASS | PASS | Yes | — |
@@ -194,12 +195,9 @@ DEV records: **48** · PROD records: **48**
 **Count: 1**
 
 ### PV2-GAP-0003 — C-013 Production promotion
-- DEV: Lambda/Make/070b hybrid proven DEV · PROD: Promotion NOT started per plan
-- Evidence: docs/deploy-checklists/C-013-production-promotion-plan.md status Planning only
-- Impact: No S3 canonical URLs or hash writeback on PROD uploads
-- Correction: Execute C-013 production promotion plan steps 1-11
-- Mike manual: **True** · Cursor safe: **False** · Risk: Medium
-- Validation: Isolated PROD Lambda smoke + one controlled 070b test
+
+- **Status:** **RESOLVED (2026-07-11)** — PROD video upload workflow PASS; see [C-013-prod-closeout-2026-07-11.md](../deploy-checklists/C-013-prod-closeout-2026-07-11.md)
+- Evidence: Airtable-triggered Schmidt test on `recGQ8EjAMz3bEBiW`; commits `5d5f27b`, `9f8495d`
 
 ## SAFE POST-LAUNCH CLEANUP list
 
@@ -279,7 +277,7 @@ DEV records: **48** · PROD records: **48**
 
 ## Production v2 completion estimate
 
-**Estimated completion: ~65–70%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema and automation 116 controlled runtime validation **PASS**; C-013 PROD infrastructure remains open.
+**Estimated completion: ~90–95%** for Production v2 wave (C-023 + 070a homework remain). **C-013 PROD video upload COMPLETE.**
 
 ## Recommended next Cursor prompt
 

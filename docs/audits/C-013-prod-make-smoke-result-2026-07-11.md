@@ -1,8 +1,9 @@
 # C-013 — PROD Make smoke test results
 
 **Date:** 2026-07-11  
-**Last run:** 2026-07-11T15:41:40Z
-**Overall:** **PASS** (`overallPass=true`)
+**Last run:** 2026-07-11T15:41:40Z (manual smoke PASS)  
+**Airtable-triggered PASS:** 2026-07-11 (Schmidt `recGQ8EjAMz3bEBiW` — 070b v4.4 + 070c v1.1)  
+**Overall:** **PASS**
 **Package:** **PASS** (tooling, blueprint, runbook, 070b audit)  
 **GO for controlled 070b test:** **CONDITIONAL GO** — rotate exposed upload secret, verify 070b v4.2 UI configuration, then Mike explicitly approves one Schmidt test
 **Machine-readable:** [C-013-prod-make-smoke-result-2026-07-11.json](./C-013-prod-make-smoke-result-2026-07-11.json)  
