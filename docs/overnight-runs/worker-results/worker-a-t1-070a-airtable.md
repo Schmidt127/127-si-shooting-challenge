@@ -117,8 +117,10 @@ Continuing work without waiting: repo alignment + checklist + tests completed ab
 | Hash | Summary |
 |---|---|
 | `767eb18` | T1 Worker A: align 070a to v4.4 async homework upload architecture |
+| `332b4f5` | T1 Worker A: record commit hash and blocker #17 in result doc |
 
 **Branch:** https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/worker-a-070a-airtable  
+**PR:** https://github.com/Schmidt127/127-si-shooting-challenge/pull/18  
 **Blocker issue:** https://github.com/Schmidt127/127-si-shooting-challenge/issues/17
 
 ---
