@@ -1,0 +1,51 @@
+{
+  "audit": "C-013-prod-make-smoke",
+  "date": "2026-07-11",
+  "overallPass": false,
+  "packagePass": true,
+  "goForControlled070bTest": false,
+  "reason": "MAKE_UPLOAD_WEBHOOK_URL_PROD missing — Make scenario not built in UI",
+  "makeScenario": {
+    "name": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
+    "built": false,
+    "expectedState": "OFF"
+  },
+  "secureVariables": {
+    "LAMBDA_FUNCTION_URL_PROD": "CONFIGURED",
+    "UPLOAD_WEBHOOK_SECRET_PROD": "CONFIGURED",
+    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "MISSING"
+  },
+  "fixture": {
+    "enrollmentId": "recgP9qZYjAhE7NXm",
+    "submissionAssetId": "recGQ8EjAMz3bEBiW",
+    "videoFeedbackId": "recrvEzk8GxXfy3EE",
+    "enrollmentGuardPass": true,
+    "uploadStatusAtAudit": "Uploaded",
+    "directLambdaProbeAllPass": true
+  },
+  "tests": {
+    "preflight": { "pass": true, "scriptVersion": "v4.2" },
+    "manualWebhookUpload": { "pass": false, "status": "BLOCKED" },
+    "completeLambdaJsonResponse": { "pass": false, "status": "NOT_RUN" },
+    "airtableWritebackViaMake": { "pass": false, "status": "NOT_RUN" },
+    "s3ViaMake": { "pass": false, "status": "NOT_RUN" },
+    "idempotency": { "pass": false, "status": "NOT_RUN" },
+    "invalidRoute": { "pass": false, "status": "NOT_RUN" }
+  },
+  "automation070b": {
+    "configuredInDoc": true,
+    "enabled": false,
+    "version": "v4.2"
+  },
+  "artifacts": {
+    "deploymentDoc": "docs/deploy-checklists/C-013-prod-make-deployment-2026-07-11.md",
+    "runbook": "make/documentation/C-013-prod-upload-engine-lambda-runbook.md",
+    "blueprint": "make/blueprints/upload-asset-engine-lambda-prod-v1.template.json",
+    "helpers": [
+      "tools/airtable/c013_prod_make_webhook_post.py",
+      "tools/airtable/c013_prod_make_smoke_run.py"
+    ]
+  },
+  "productionV2EstimatePercent": 78,
+  "upstreamLambdaSmokePass": true
+}

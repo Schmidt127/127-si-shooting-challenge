@@ -13,15 +13,15 @@
 
 | Result | Detail |
 |--------|--------|
-| **Overall C-013 PROD readiness** | **NOT READY** |
-| **Production v2 estimate** | **~68%** (schema + 116 PASS; C-013 infra not deployed) |
-| **Infrastructure blockers** | **5** (PROD Lambda, IAM role, Function URL, secrets, Make scenario) |
-| **070b can be enabled** | **NO** — isolated Lambda smoke must pass first |
-| **Manual deployment actions** | **27** (see §8) |
+| **Overall C-013 PROD readiness** | **NOT READY** (Make runtime smoke pending) |
+| **Production v2 estimate** | **~78%** (schema + 116 + Lambda PASS; Make smoke + 070b remain) |
+| **Infrastructure blockers** | **1** (Make scenario not built; webhook URL missing) |
+| **070b can be enabled** | **NO** — Make manual webhook must pass first |
+| **Manual deployment actions** | **8** remaining (see §8) |
 
 DEV proves the full design: **Airtable 070b → Make → Lambda Function URL → S3 → Airtable writeback** with Lambda-owned upload claim (v4.2). PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. Automation **070b** is **OFF**.
 
-**PROD Lambda `127si-upload-asset` does not exist.** S3 bucket `shooting-challenge-assets` exists in `us-east-2`. This audit adds `deploy-prod.ps1`, `iam-policy-prod.json`, PROD config guard in `upload_core/config.py`, and the exact manual checklist below. **No PROD deployment was performed.**
+**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS (2026-07-11).** Make deployment **package ready**; scenario **not built in Make UI**; manual webhook smoke **BLOCKED**. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
 
 ---
 
@@ -52,13 +52,12 @@ DEV proves the full design: **Airtable 070b → Make → Lambda Function URL →
 | Submission Assets schema | **PASS** (16 required fields; `Calculation` approved NO ACTION) |
 | Automation 116 | **ON** · runtime fixture **PASS** |
 | Automation 070b | **OFF** |
-| Lambda `127si-upload-asset` | **MISSING** (ResourceNotFoundException) |
-| Function URL | **MISSING** |
-| IAM role `127si-upload-asset-role` | **MISSING** |
-| CloudWatch `/aws/lambda/127si-upload-asset` | **MISSING** |
-| Make Lambda scenario | **MISSING** |
-| S3 bucket | **EXISTS** · `us-east-2` |
-| Schmidt Testing enrollment | `recgP9qZYjAhE7NXm` · zero Submission Assets at audit time |
+| Lambda `127si-upload-asset` | **EXISTS** · direct smoke **PASS** |
+| Function URL | **CONFIGURED** (ops) |
+| IAM role `127si-upload-asset-role` | **EXISTS** |
+| CloudWatch `/aws/lambda/127si-upload-asset` | **EXISTS** |
+| Make Lambda scenario | **NOT BUILT** (package in GitHub) |
+| Schmidt Testing fixture | `recGQ8EjAMz3bEBiW` · probe `allPass=true` (direct Lambda) |
 
 ---
 
@@ -220,19 +219,19 @@ Full steps: [C-013-prod-smoke-test-2026-07-11.md](../deploy-checklists/C-013-pro
 
 | Gate | Pass? |
 |------|-------|
-| PROD Lambda exists | ❌ |
-| Code matches approved commit | ❌ |
-| Env vars exist | ❌ |
-| Secret rejection tests | ❌ |
-| S3 write + key + hash | ❌ |
-| Airtable writeback | ❌ |
-| Canonical URL usable | ❌ |
-| Idempotency | ❌ |
-| Error writeback | ❌ |
-| Schmidt Testing only | ❌ |
-| Rollback verified | ❌ |
-| Documentation | ✅ (this audit) |
-| Make manual PASS | ❌ |
+| PROD Lambda exists | ✅ |
+| Code matches approved commit | ✅ |
+| Env vars exist | ✅ |
+| Secret rejection tests | ✅ |
+| S3 write + key + hash | ✅ |
+| Airtable writeback | ✅ |
+| Canonical URL usable | ✅ |
+| Idempotency | ✅ |
+| Error writeback | ✅ |
+| Schmidt Testing only | ✅ |
+| Rollback verified | ✅ |
+| Documentation | ✅ |
+| Make manual PASS | ❌ (BLOCKED) |
 
 **070b enable:** **NO-GO**
 
@@ -279,14 +278,16 @@ See §15 below (full prompt for Mike).
 
 ## 16. Updated Production v2 estimate
 
-**~68%** — Schema + automation 116 complete; C-013 infrastructure and smoke remain.
+**~78%** — Schema + automation 116 + PROD Lambda smoke complete; Make runtime smoke + controlled 070b enable remain.
+
+**Make package (2026-07-11):** [C-013-prod-make-deployment-2026-07-11.md](../deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md)
 
 ---
 
 ## 17. Exact next Cursor prompt
 
 ```
-Execute controlled C-013 PROD Lambda deployment using docs/deploy-checklists/C-013-prod-smoke-test-2026-07-11.md: run deploy-prod.ps1 (full create, not code-only), verify env var names non-empty, run isolated Schmidt Testing direct Function URL smoke (070b OFF), save local probe artifacts, do not enable 070b or build Make until Lambda smoke PASS.
+MAKE_UPLOAD_WEBHOOK_URL_PROD is configured in tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): c013_prod_make_smoke_run.py all --reset. Update make smoke docs to PASS if complete Lambda JSON returned. Prepare controlled 070b enablement checklist — do not turn 070b ON without my explicit approval.
 ```
 
 ---

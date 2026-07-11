@@ -40,22 +40,16 @@
 
 ---
 
-## Make PROD package (scenario OFF)
+## Make PROD package (2026-07-11)
 
 | Setting | Value |
 |---------|--------|
 | **Name** | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
-| **Status** | Not built |
+| **Package status** | **READY** (blueprint + runbook + smoke helpers) |
+| **Scenario built** | **NO** |
+| **Runtime smoke** | **BLOCKED** |
 
-**Module chain:** Webhook → Router (`070b` + `video_feedback`) → HTTP POST `LAMBDA_FUNCTION_URL_PROD` with header `X-Upload-Secret: {{UPLOAD_WEBHOOK_SECRET_PROD}}` → Router 2xx → Webhook response **= Lambda JSON body**.
-
-**Body:** Map entire webhook JSON from module 1 (070b v4.2 shape).
-
-**Timeout:** ≥ 120 s (match Lambda).
-
-**Failure handling:** Non-2xx branch must not return success; log Make HTTP status + body (no secrets).
-
-**070b enable:** **NOT authorized** until Make manual webhook PASS + Mike explicit approval.
+See [C-013-prod-make-deployment-2026-07-11.md](../deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md).
 
 ---
 

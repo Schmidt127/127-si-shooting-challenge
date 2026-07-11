@@ -1,7 +1,8 @@
 # C-013 — PROD isolated smoke test plan
 
 **Date:** 2026-07-11  
-**Status:** **Complete — direct Lambda smoke PASS** · Make + 070b enablement pending  
+**Status:** **Direct Lambda smoke PASS** · **Make runtime smoke BLOCKED** (scenario not built) · 070b enablement pending  
+**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)  
 **Hard stops:** Automation **070b OFF** until steps 1–10 PASS · Schmidt Testing only · no live athlete records
 
@@ -183,7 +184,18 @@ After tests complete (success or fail):
 
 ## Gate: when Make + 070b may proceed
 
-Direct Lambda tests **T0–T2 PASS** → Mike may build Make scenario → manual webhook PASS → paste 070b script (still OFF) → **G6 approval** → one 070b enable test → **070b OFF**.
+Direct Lambda tests **T0–T2 PASS** → Mike builds Make scenario ([deployment doc](./C-013-prod-make-deployment-2026-07-11.md)) → manual webhook PASS on `recGQ8EjAMz3bEBiW` → paste 070b script + webhook input (still OFF) → **G6 approval** → one 070b enable test → **070b OFF**.
+
+### T4 — Make manual webhook (070b OFF)
+
+**Status:** **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing.
+
+```powershell
+cd tools/airtable
+python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset
+```
+
+**Pass:** Make returns complete Lambda JSON · upload + idempotency + invalid-route PASS. See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md).
 
 ---
 

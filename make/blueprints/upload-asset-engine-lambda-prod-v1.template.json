@@ -1,0 +1,104 @@
+{
+  "name": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
+  "description": "C-013 PROD secret-free scenario template. Recreate in Make UI or use as import reference. Do not commit webhook URLs or secrets.",
+  "c013": {
+    "backlog": "C-013",
+    "baseId": "appn84sqPw03zEbTT",
+    "environment": "PROD",
+    "initialState": "OFF",
+    "allowedRoutesFirstSlice": ["video_feedback"],
+    "automationNumbersFirstSlice": ["070b"],
+    "scenarioVariables": [
+      {
+        "name": "LAMBDA_FUNCTION_URL_PROD",
+        "type": "text",
+        "secret": true,
+        "description": "PROD Lambda Function URL (ops only)"
+      },
+      {
+        "name": "UPLOAD_WEBHOOK_SECRET_PROD",
+        "type": "text",
+        "secret": true,
+        "description": "Same value as Lambda UPLOAD_WEBHOOK_SECRET"
+      }
+    ],
+    "modules": [
+      {
+        "id": 1,
+        "app": "Webhooks",
+        "module": "Custom webhook",
+        "purpose": "Receives 070b v4.2 minimal JSON from Airtable (manual or automation)"
+      },
+      {
+        "id": 2,
+        "app": "Flow control",
+        "module": "Router",
+        "filters": [
+          {"field": "automationNumber", "operator": "equal", "value": "070b"},
+          {"field": "routeKey", "operator": "equal", "value": "video_feedback"}
+        ],
+        "purpose": "Reject homework and unsupported routes in first PROD slice"
+      },
+      {
+        "id": 3,
+        "app": "HTTP",
+        "module": "Make a request",
+        "method": "POST",
+        "url": "{{scenario.LAMBDA_FUNCTION_URL_PROD}}",
+        "headers": [
+          {"name": "Content-Type", "value": "application/json"},
+          {"name": "X-Upload-Secret", "value": "{{scenario.UPLOAD_WEBHOOK_SECRET_PROD}}"}
+        ],
+        "body": "Map entire JSON from module 1",
+        "timeoutSeconds": 120,
+        "purpose": "Forward unchanged 070b payload to PROD Lambda Function URL"
+      },
+      {
+        "id": 4,
+        "app": "Flow control",
+        "module": "Router",
+        "branches": [
+          {"name": "success", "condition": "HTTP status 200-299 AND body contains actionOut"},
+          {"name": "error", "condition": "else"}
+        ]
+      },
+      {
+        "id": 5,
+        "app": "Webhooks",
+        "module": "Webhook response",
+        "successBranch": {
+          "status": 200,
+          "body": "{{module3.Data}} or parsed Lambda JSON body — NOT generic Accepted"
+        },
+        "errorBranch": {
+          "status": 502,
+          "body": "Deterministic JSON with actionOut=error_make_http_failure"
+        },
+        "criticalRule": "Response body MUST be complete Lambda JSON preserving statusOut, actionOut, writebackVerification"
+      }
+    ],
+    "webhookPayloadShape": {
+      "sourceName": "Airtable Upload Engine",
+      "automationNumber": "070b",
+      "sentAtIso": "ISO-8601",
+      "routeKey": "video_feedback",
+      "uploadDestination": "Video Feedback",
+      "sourceTable": "Submission Assets",
+      "submissionAssetRecordId": "rec...",
+      "targetTable": "Video Feedback",
+      "targetRecordId": "rec..."
+    },
+    "lambdaSuccessExamples": {
+      "upload": {"statusOut": "success", "actionOut": "uploaded", "writebackVerification.allPass": true},
+      "idempotent": {"statusOut": "skipped", "actionOut": "skipped_already_uploaded"}
+    },
+    "antiPatterns": [
+      "Webhook response body = Accepted only",
+      "Webhook response = HTTP status without Lambda JSON",
+      "Wrapping Lambda JSON so actionOut is not at top level",
+      "Amazon S3 Upload module in Make",
+      "Reusing DEV webhook URL or DEV upload secret"
+    ]
+  },
+  "flow": []
+}

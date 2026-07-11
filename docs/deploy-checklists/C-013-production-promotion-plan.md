@@ -1,9 +1,10 @@
 # C-013 / C-023 — Production promotion plan
 
-**Status:** **PROD Lambda DEPLOYED — direct smoke PASS (2026-07-11)** · Make scenario **NOT built** · **070b OFF**  
+**Status:** **PROD Lambda DEPLOYED — direct smoke PASS (2026-07-11)** · Make package **READY** · Make runtime smoke **BLOCKED** · **070b OFF**  
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
-**Production base:** `appn84sqPw03zEbTT` — **untouched** (schema + 116 PASS; Lambda/Make not deployed)  
+**Production base:** `appn84sqPw03zEbTT` — Lambda deployed + smoke PASS; Make scenario not built in UI  
+**Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Readiness audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md) · [smoke test](./C-013-prod-smoke-test-2026-07-11.md)
 
 **This document does not authorize Production deployment.** Committing this plan to GitHub records promotion steps only. **Separate explicit Mike approval** is required before any Production Airtable, Make, AWS, or secret change.
@@ -81,9 +82,9 @@ All evidence is **DEV only**. Proof artifacts are local (`_preview/`, `tools/air
 | 4 | **C-023 H3** completed or explicitly dispositioned for cutover | Mike | [ ] |
 | 5 | GitHub source current (`lambda/upload-asset/`, **070b** v4.2, `deploy-prod.ps1`) | Cursor | [x] |
 | 6 | Production schema parity (§5) | Mike / OMNI | [x] |
-| 7 | Production Lambda isolated PASS (§6) — **070b OFF** | Mike / AWS | [ ] |
+| 7 | Production Lambda isolated PASS (§6) — **070b OFF** | Mike / AWS | [x] |
 | 8 | Production Make manual webhook PASS (§7) — **070b OFF** | Mike / Make | [ ] |
-| 9 | Production secrets issued (§4) — not in GitHub | Mike | [ ] |
+| 9 | Production secrets issued (§4) — not in GitHub | Mike | [x] (Lambda URL + secret; Make webhook pending) |
 | 10 | Rollback plan (§9) understood | Mike | [ ] |
 
 **First Production slice:** **Video / 070b only.** **070a OFF.**
