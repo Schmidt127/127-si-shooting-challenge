@@ -265,5 +265,59 @@ Until then: continue read-only doc hygiene notes on this branch only; **do not**
 
 ---
 
-**Phase 1 status:** **COMPLETE**  
+---
+
+## 13. Addendum — C-023 Make / duplicate-check documentation (read-only)
+
+### Legacy Make Drive hash path (superseded)
+
+| Doc | Role today |
+|-----|------------|
+| `make/documentation/upload-asset-engine-v2-hash-duplicate-check.md` | Drive-era modules **50/51/52** (hash helper → Airtable REST lookup → flag fields → continue Drive upload) |
+| Blueprint `upload-asset-engine-v2-with-file-hash-duplicate-check.json` | Historical; not the C-013 Lambda Upload Engine |
+
+**Policy alignment (partial):** flag-only, upload continues — matches locked C-023 “always upload” principle.  
+**Policy misalignment:** global hash only (no same-enrollment contextual review); writes legacy `File is Duplicate?` / `Exact Duplicate` semantics that Stage 2 Lambda **repurposed/extended**; still targets Google Drive, not S3/canonical URL.
+
+**Cleanup proposal:** Add a top banner: *Superseded by Lambda `upload_core/duplicate.py` + C-023 policy. Do not implement Drive hash modules for new DEV/PROD Lambda scenarios.*
+
+### Canonical duplicate path (current)
+
+```text
+Make (webhook only) → Lambda upload_core
+  → download → SHA-256 → lookup_duplicate_matches
+  → classify_duplicate_matches (same-enrollment contextual reasons)
+  → ALWAYS PutObject (new key)
+  → writeback hash + C-023 review fields
+```
+
+Homework route already included: `ALLOW_ROUTE_KEYS` default `video_feedback,homework_completion`; H3e PASS; Worker B DEV Make dual-route template pending Mike Module 2 patch (#8).
+
+### Worker B/C status relevant to C-023 (at addendum time)
+
+| Worker | Result | C-023 relevance |
+|--------|--------|-----------------|
+| B | Published — Make/Lambda homework pack | Homework assets will get same Lambda C-023 review once Make patched + smoke PASS |
+| C | Published — 73 tests PASS (mock) | Contract expects 070a **v4.4** + Accepted/070c patterns |
+| A | **Unpublished** — blocker [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) | Blocks Phase 2 docs + live 070a enable path |
+
+---
+
+## 14. Addendum — 070a baseline gap (prep only; no implementation)
+
+| Aspect | 070a (master today) | 070b (reference) | Implication |
+|--------|---------------------|------------------|-------------|
+| Version | **v4.1** | **v4.4** | Worker A expected to align |
+| Claim / Processing | Sets `Processing` after Make 2xx (v4.0/v4.1) | Option A — **no** Processing write (v4.2+) | H3-style race risk if 070a enabled as-is |
+| Async Accepted | Not handled | `lambda_upload_accepted_async` + **070c** | Need homework 070c companion or shared 070c generalization |
+| routeKey | `homework_completion` (already correct in v4.1) | `video_feedback` | Backend ready |
+| Companion verify | None for homework | **070c** v1.1 (video-named) | Docs must clarify whether 070c widens to homework or new 070a-c |
+| Enable state | **OFF** | PROD video path complete | Keep OFF until smoke |
+
+Phase 2 will document the post–Worker-A package once `worker-a-t1-070a-airtable.md` exists.
+
+---
+
+**Phase 1 status:** **COMPLETE** (addenda 13–14 appended while waiting on Worker A)  
+**Blocker:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) — Worker A result unpublished  
 **Commit target:** this file on `overnight/worker-d-docs`
