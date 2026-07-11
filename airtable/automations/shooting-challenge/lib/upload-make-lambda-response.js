@@ -236,26 +236,70 @@ function evaluateSubmissionAssetWriteback(fields) {
 }
 
 /**
- * 070c verification — requires Send to Make Trigger still checked before clearing.
+ * 070c writeback-only verification (independent of Send to Make Trigger state).
  * @param {Record<string, unknown>} fields
- * @returns {WritebackEvaluation & { checks: Record<string, boolean> }}
+ * @returns {WritebackEvaluation}
  */
 function evaluate070cAsyncWritebackVerification(fields) {
+    return evaluateSubmissionAssetWriteback(fields);
+}
+
+/**
+ * 070c idempotent decision — writeback fields gate failure; trigger only gates clearing.
+ * @param {Record<string, unknown>} fields
+ * @returns {{
+ *   writebackVerified: boolean,
+ *   writebackChecks: Record<string, boolean>,
+ *   sendToMakeTriggerChecked: boolean,
+ *   shouldClearTrigger: boolean,
+ *   statusOut: "success" | "error",
+ *   actionOut: string,
+ *   message: string,
+ *   failedWritebackChecks: string[],
+ * }}
+ */
+function decide070cAction(fields) {
     const writeback = evaluateSubmissionAssetWriteback(fields);
     const sendToMakeTriggerChecked = fields["Send to Make Trigger"] === true;
-    const checks = {
-        ...writeback.checks,
-        sendToMakeTriggerChecked,
-    };
-    const verified = writeback.verified && sendToMakeTriggerChecked;
+    const failedWritebackChecks = Object.entries(writeback.checks)
+        .filter(([, pass]) => !pass)
+        .map(([name]) => name);
+
+    if (!writeback.verified) {
+        return {
+            writebackVerified: false,
+            writebackChecks: writeback.checks,
+            sendToMakeTriggerChecked,
+            shouldClearTrigger: false,
+            statusOut: "error",
+            actionOut: "async_writeback_verification_failed",
+            message: `${writeback.message} Failed checks: ${failedWritebackChecks.join(", ") || "unknown"}.`,
+            failedWritebackChecks,
+        };
+    }
+
+    if (sendToMakeTriggerChecked) {
+        return {
+            writebackVerified: true,
+            writebackChecks: writeback.checks,
+            sendToMakeTriggerChecked: true,
+            shouldClearTrigger: true,
+            statusOut: "success",
+            actionOut: "async_upload_verified_trigger_cleared",
+            message: "Upload writeback verified; Send to Make Trigger cleared.",
+            failedWritebackChecks: [],
+        };
+    }
+
     return {
-        verified,
-        checks,
-        message: verified
-            ? "Async upload writeback verified; Send to Make Trigger may be cleared."
-            : sendToMakeTriggerChecked
-              ? writeback.message
-              : "Send to Make Trigger is not checked; async verification skipped.",
+        writebackVerified: true,
+        writebackChecks: writeback.checks,
+        sendToMakeTriggerChecked: false,
+        shouldClearTrigger: false,
+        statusOut: "success",
+        actionOut: "async_upload_already_verified",
+        message: "Upload writeback verified; Send to Make Trigger was already cleared.",
+        failedWritebackChecks: [],
     };
 }
 
@@ -302,13 +346,19 @@ function resolveMakeHttpResponse(responseText) {
 /**
  * Pure 070c decision — whether to clear Send to Make Trigger.
  * @param {Record<string, unknown>} fields
- * @returns {{ shouldClearTrigger: boolean, result: ReturnType<typeof evaluate070cAsyncWritebackVerification> }}
+ * @returns {{ shouldClearTrigger: boolean, decision: ReturnType<typeof decide070cAction>, result: WritebackEvaluation & { sendToMakeTriggerChecked: boolean } }}
  */
 function decide070cTriggerClear(fields) {
-    const result = evaluate070cAsyncWritebackVerification(fields);
+    const decision = decide070cAction(fields);
     return {
-        shouldClearTrigger: result.verified,
-        result,
+        shouldClearTrigger: decision.shouldClearTrigger,
+        decision,
+        result: {
+            verified: decision.writebackVerified,
+            checks: decision.writebackChecks,
+            sendToMakeTriggerChecked: decision.sendToMakeTriggerChecked,
+            message: decision.message,
+        },
     };
 }
 
@@ -339,6 +389,7 @@ module.exports = {
     evaluateSubmissionAssetWriteback,
     evaluate070cAsyncWritebackVerification,
     buildAcceptedAsyncHandoffResult,
+    decide070cAction,
     decide070cTriggerClear,
     isMakeAcceptedAsyncResponse,
     resolveMakeHttpResponse,

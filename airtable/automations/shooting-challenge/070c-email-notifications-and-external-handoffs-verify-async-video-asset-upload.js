@@ -7,7 +7,7 @@ Last Synced From Airtable: (not yet deployed — repurpose an existing automatio
 Last GitHub Update: 2026-07-11
 
 Purpose:
-Verifies Lambda async writeback after 070b receives Make plain-text Accepted; clears Send to Make Trigger only when all writeback fields pass.
+Verifies Lambda upload writeback after 070b handoff; idempotently clears Send to Make Trigger when still checked.
 
 Trigger:
 Submission Assets when Send to Make Trigger checked and async writeback fields are complete (see docblock).
@@ -34,7 +34,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v1.0 - Async writeback verification after Make Accepted handoff
+ * v1.1 - Idempotent writeback verification (trigger state does not fail verification)
  *
  * CREATED:
  * 2026-07-11
@@ -43,6 +43,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 2026-07-11
  *
  * CHANGE HISTORY:
+ * 2026-07-11 - v1.1 (070c / C-013 idempotent verify)
+ * - Writeback checks independent of Send to Make Trigger state.
+ * - Full writeback + trigger checked → clear trigger (async_upload_verified_trigger_cleared).
+ * - Full writeback + trigger already unchecked → idempotent success (async_upload_already_verified).
+ * - Failure only when upload writeback fields fail; trigger retained if still checked.
+ *
  * 2026-07-11 - v1.0 (070c / C-013 Make async Accepted companion)
  * - Rereads Submission Asset after Lambda direct writeback.
  * - Clears Send to Make Trigger only when all required fields verify.
@@ -64,7 +70,6 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 070c - Email, Notifications, and External Handoffs - Verify Async Video Asset Upload
  *
  * RECOMMENDED TRIGGER CONDITIONS (all must match):
- * - Send to Make Trigger is checked
  * - Upload Status = Uploaded
  * - Writeback Complete? is checked
  * - Canonical File URL is not empty
@@ -73,13 +78,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - File Hash Algorithm = SHA-256
  * - Uploaded At is not empty
  * - Upload Error is empty
+ * - Send to Make Trigger is checked (optional — omit for idempotent re-fire after 070b cleared trigger)
  *
  * REQUIRED INPUT VARIABLES:
  * - recordId — Submission Assets record ID from trigger
  *
  * OUTPUTS:
  * - statusOut = success | error
- * - actionOut = async_writeback_verified | async_writeback_verification_failed | error
+ * - actionOut = async_upload_verified_trigger_cleared | async_upload_already_verified | async_writeback_verification_failed | error
  * - errorOut
  * - debugStep
  * - submissionAssetRecordId
@@ -95,7 +101,7 @@ async function main() {
 
     const SCRIPT = {
         scriptName: "070c - Verify Async Video Asset Upload",
-        version: "v1.0",
+        version: "v1.1",
         versionDate: "2026-07-11",
         originalWrittenDate: "2026-07-11",
         lastUpdated: "2026-07-11",
@@ -127,7 +133,8 @@ async function main() {
         },
 
         actions: {
-            verified: "async_writeback_verified",
+            verifiedTriggerCleared: "async_upload_verified_trigger_cleared",
+            alreadyVerified: "async_upload_already_verified",
             verificationFailed: "async_writeback_verification_failed",
             error: "error",
         },
@@ -236,16 +243,14 @@ async function main() {
         };
     }
 
-    function evaluate070cAsyncWritebackVerification(fields) {
+    function evaluateSubmissionAssetWriteback(fields) {
         const uploadStatus = normalizeText(fields["Upload Status"]);
         const uploadError = normalizeText(fields["Upload Error"]);
         const writebackComplete = fields["Writeback Complete?"];
         const writebackCompleteOk =
             writebackComplete === 1 || writebackComplete === true || writebackComplete === "1";
-        const sendToMakeTriggerChecked = fields["Send to Make Trigger"] === true;
 
         const checks = {
-            sendToMakeTriggerChecked,
             uploadStatusUploaded: uploadStatus === CONFIG.values.statusUploaded,
             canonicalUrlPopulated: Boolean(normalizeText(fields["Canonical File URL"])),
             storageKeyPopulated: Boolean(normalizeText(fields["Storage Key"])),
@@ -262,10 +267,50 @@ async function main() {
             verified,
             checks,
             message: verified
-                ? "Async upload writeback verified; Send to Make Trigger cleared."
-                : sendToMakeTriggerChecked
-                  ? "Submission Asset async writeback incomplete."
-                  : "Send to Make Trigger is not checked; verification skipped.",
+                ? "Submission Asset upload writeback verified."
+                : "Submission Asset upload writeback incomplete.",
+        };
+    }
+
+    function decide070cAction(fields) {
+        const writeback = evaluateSubmissionAssetWriteback(fields);
+        const sendToMakeTriggerChecked = fields["Send to Make Trigger"] === true;
+        const failedWritebackChecks = Object.entries(writeback.checks)
+            .filter(([, pass]) => !pass)
+            .map(([name]) => name);
+
+        if (!writeback.verified) {
+            return {
+                writebackVerified: false,
+                writebackChecks: writeback.checks,
+                sendToMakeTriggerChecked,
+                shouldClearTrigger: false,
+                statusOut: "error",
+                actionOut: CONFIG.actions.verificationFailed,
+                message: `${writeback.message} Failed checks: ${failedWritebackChecks.join(", ") || "unknown"}.`,
+            };
+        }
+
+        if (sendToMakeTriggerChecked) {
+            return {
+                writebackVerified: true,
+                writebackChecks: writeback.checks,
+                sendToMakeTriggerChecked: true,
+                shouldClearTrigger: true,
+                statusOut: "success",
+                actionOut: CONFIG.actions.verifiedTriggerCleared,
+                message: "Upload writeback verified; Send to Make Trigger cleared.",
+            };
+        }
+
+        return {
+            writebackVerified: true,
+            writebackChecks: writeback.checks,
+            sendToMakeTriggerChecked: false,
+            shouldClearTrigger: false,
+            statusOut: "success",
+            actionOut: CONFIG.actions.alreadyVerified,
+            message: "Upload writeback verified; Send to Make Trigger was already cleared.",
         };
     }
 
@@ -275,6 +320,7 @@ async function main() {
         setOutputSafe("errorOut", result.errorOut || "");
         setOutputSafe("submissionAssetRecordId", result.submissionAssetRecordId || "");
         setOutputSafe("writebackChecks", result.writebackChecks || "");
+        setOutputSafe("sendToMakeTriggerChecked", result.sendToMakeTriggerChecked ?? "");
     }
 
     /************************************************************
@@ -317,26 +363,23 @@ async function main() {
     setDebug("3 - Evaluate writeback");
 
     const fieldMap = readWritebackFieldMap(assetRecord, assetsTable);
-    const evaluation = evaluate070cAsyncWritebackVerification(fieldMap);
-    const checksJson = JSON.stringify(evaluation.checks);
+    const decision = decide070cAction(fieldMap);
+    const checksJson = JSON.stringify({
+        ...decision.writebackChecks,
+        sendToMakeTriggerChecked: decision.sendToMakeTriggerChecked,
+    });
 
-    if (!evaluation.verified) {
-        setDebug("4 - Verification failed (trigger retained)");
-
-        const failedChecks = Object.entries(evaluation.checks)
-            .filter(([, pass]) => !pass)
-            .map(([name]) => name)
-            .join(", ");
-
-        const message = `${evaluation.message} Failed checks: ${failedChecks || "unknown"}.`;
+    if (decision.statusOut === "error") {
+        setDebug("4 - Verification failed (trigger retained if checked)");
 
         const result = {
-            statusOut: "error",
-            actionOut: CONFIG.actions.verificationFailed,
-            errorOut: message,
+            statusOut: decision.statusOut,
+            actionOut: decision.actionOut,
+            errorOut: decision.message,
             submissionAssetRecordId: recordId,
             writebackChecks: checksJson,
-            message,
+            sendToMakeTriggerChecked: decision.sendToMakeTriggerChecked,
+            message: decision.message,
         };
 
         setStandardOutputs(result);
@@ -351,25 +394,26 @@ async function main() {
         return;
     }
 
-    /************************************************************
-     * SECTION 5: CLEAR TRIGGER
-     ************************************************************/
+    if (decision.shouldClearTrigger) {
+        setDebug("5 - Clear Send to Make Trigger");
 
-    setDebug("5 - Clear Send to Make Trigger");
-
-    const updateFields = {};
-    setWritable(updateFields, assetsTable, CONFIG.fields.sendToMakeTrigger, false);
-    await updateAsset(assetsTable, recordId, updateFields);
+        const updateFields = {};
+        setWritable(updateFields, assetsTable, CONFIG.fields.sendToMakeTrigger, false);
+        await updateAsset(assetsTable, recordId, updateFields);
+    } else {
+        setDebug("5 - Idempotent success (no trigger change)");
+    }
 
     setDebug("6 - Done");
 
     const result = {
-        statusOut: "success",
-        actionOut: CONFIG.actions.verified,
+        statusOut: decision.statusOut,
+        actionOut: decision.actionOut,
         errorOut: "",
         submissionAssetRecordId: recordId,
         writebackChecks: checksJson,
-        message: evaluation.message,
+        sendToMakeTriggerChecked: decision.sendToMakeTriggerChecked,
+        message: decision.message,
     };
 
     setStandardOutputs(result);

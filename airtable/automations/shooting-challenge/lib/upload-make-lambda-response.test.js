@@ -14,6 +14,7 @@ const {
     evaluateSubmissionAssetWriteback,
     evaluate070cAsyncWritebackVerification,
     buildAcceptedAsyncHandoffResult,
+    decide070cAction,
     decide070cTriggerClear,
     isMakeAcceptedAsyncResponse,
     resolveMakeHttpResponse,
@@ -198,37 +199,71 @@ tests.push(
 );
 
 tests.push(
-    test("12 070c clears trigger only after complete verified writeback", () => {
-        const complete = decide070cTriggerClear(passingWritebackFields());
-        assert.strictEqual(complete.shouldClearTrigger, true);
-        assert.strictEqual(complete.result.verified, true);
+    test("12 070c full writeback + trigger checked clears trigger", () => {
+        const decision = decide070cAction(passingWritebackFields({ "Send to Make Trigger": true }));
+        assert.strictEqual(decision.statusOut, "success");
+        assert.strictEqual(decision.actionOut, "async_upload_verified_trigger_cleared");
+        assert.strictEqual(decision.shouldClearTrigger, true);
+        assert.strictEqual(decision.writebackVerified, true);
 
-        const incomplete = decide070cTriggerClear(
+        const wrapped = decide070cTriggerClear(passingWritebackFields({ "Send to Make Trigger": true }));
+        assert.strictEqual(wrapped.shouldClearTrigger, true);
+    }),
+);
+
+tests.push(
+    test("13 070c full writeback + trigger already unchecked is idempotent success", () => {
+        const decision = decide070cAction(passingWritebackFields({ "Send to Make Trigger": false }));
+        assert.strictEqual(decision.statusOut, "success");
+        assert.strictEqual(decision.actionOut, "async_upload_already_verified");
+        assert.strictEqual(decision.shouldClearTrigger, false);
+        assert.strictEqual(decision.writebackVerified, true);
+        assert.ok(decision.message.includes("already cleared"));
+
+        const wrapped = decide070cTriggerClear(passingWritebackFields({ "Send to Make Trigger": false }));
+        assert.strictEqual(wrapped.shouldClearTrigger, false);
+        assert.strictEqual(wrapped.decision.actionOut, "async_upload_already_verified");
+    }),
+);
+
+tests.push(
+    test("14 070c incomplete writeback + trigger checked fails and retains trigger", () => {
+        const decision = decide070cAction(
             passingWritebackFields({ "Storage Key": "", "Send to Make Trigger": true }),
         );
-        assert.strictEqual(incomplete.shouldClearTrigger, false);
-        assert.strictEqual(incomplete.result.verified, false);
+        assert.strictEqual(decision.statusOut, "error");
+        assert.strictEqual(decision.actionOut, "async_writeback_verification_failed");
+        assert.strictEqual(decision.shouldClearTrigger, false);
+        assert.ok(decision.failedWritebackChecks.includes("storageKeyPopulated"));
+        assert.ok(!decision.failedWritebackChecks.includes("sendToMakeTriggerChecked"));
+    }),
+);
 
-        const triggerOff = decide070cTriggerClear(
+tests.push(
+    test("15 070c incomplete writeback + trigger unchecked fails on writeback only", () => {
+        const decision = decide070cAction(
+            passingWritebackFields({ "File Hash Algorithm": "", "Send to Make Trigger": false }),
+        );
+        assert.strictEqual(decision.statusOut, "error");
+        assert.strictEqual(decision.actionOut, "async_writeback_verification_failed");
+        assert.strictEqual(decision.shouldClearTrigger, false);
+        assert.ok(decision.failedWritebackChecks.includes("fileHashAlgorithmSha256"));
+        assert.strictEqual(decision.sendToMakeTriggerChecked, false);
+    }),
+);
+
+tests.push(
+    test("16 070c writeback-only helper excludes trigger from verification", () => {
+        const evaluation = evaluate070cAsyncWritebackVerification(
             passingWritebackFields({ "Send to Make Trigger": false }),
         );
-        assert.strictEqual(triggerOff.shouldClearTrigger, false);
-        assert.strictEqual(triggerOff.result.checks.sendToMakeTriggerChecked, false);
+        assert.strictEqual(evaluation.verified, true);
+        assert.strictEqual(evaluation.checks.sendToMakeTriggerChecked, undefined);
     }),
 );
 
 tests.push(
-    test("13 070c verification failure actionOut", () => {
-        const evaluation = evaluate070cAsyncWritebackVerification(
-            passingWritebackFields({ "File Hash Algorithm": "" }),
-        );
-        assert.strictEqual(evaluation.verified, false);
-        assert.strictEqual(evaluation.checks.fileHashAlgorithmSha256, false);
-    }),
-);
-
-tests.push(
-    test("14 writeback evaluation requires all fields", () => {
+    test("17 writeback evaluation requires all fields", () => {
         const incomplete = evaluateSubmissionAssetWriteback(
             passingWritebackFields({ "File Hash Algorithm": "" }),
         );
@@ -241,5 +276,5 @@ tests.push(
 );
 
 Promise.all(tests).then(() => {
-    console.log(`\nAll ${14} upload-make-lambda-response tests passed.`);
+    console.log(`\nAll ${17} upload-make-lambda-response tests passed.`);
 });
