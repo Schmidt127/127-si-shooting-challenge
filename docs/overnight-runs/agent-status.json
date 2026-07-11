@@ -9,7 +9,8 @@
     "branch": "overnight/lead-integration",
     "status": "active",
     "lastAction": "LEAD-003 merged Workers D+B+C after review+tests; awaiting Worker A; Mike blockers #8/#9/#11/#15",
-    "tipCommitPendingPush": true
+    "tipCommitPendingPush": false,
+    "lastCommit": "38f1a666a2393320124c8974e7738c98b00f9dc9"
   },
   "workers": {
     "Worker-A": {
@@ -54,7 +55,17 @@
       "nextAssignment": "P-D1 C-023 docs reconciliation (non-overlapping); Phase 2 blocked on Worker A"
     }
   },
-  "openBlockers": [8, 9, 11, 15],
-  "duplicateBlockersToClose": [6, 7, 10, 14],
+  "openBlockers": [
+    8,
+    9,
+    11,
+    15
+  ],
+  "duplicateBlockersToClose": [
+    6,
+    7,
+    10,
+    14
+  ],
   "nextHourlyStatusDue": "2026-07-11T23:30:00Z"
 }
