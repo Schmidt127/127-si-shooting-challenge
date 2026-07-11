@@ -68,11 +68,14 @@ def load_env() -> dict[str, str]:
     except ImportError:
         pass
 
+    # Prefer Worker B published names; keep Worker-C aliases for compatibility.
     keys = (
         "AIRTABLE_TOKEN",
         "AIRTABLE_API_TOKEN",
+        "MAKE_DEV_UPLOAD_WEBHOOK_URL",  # Worker B T2
         "MAKE_UPLOAD_WEBHOOK_URL_DEV",
         "MAKE_HOMEWORK_UPLOAD_WEBHOOK_URL_DEV",
+        "LAMBDA_FUNCTION_URL",  # Worker B T2
         "LAMBDA_FUNCTION_URL_DEV",
         "UPLOAD_WEBHOOK_SECRET",
         "C070A_ALLOW_LIVE",
@@ -86,7 +89,30 @@ def load_env() -> dict[str, str]:
         status[key] = "CONFIGURED" if raw else "MISSING"
     tok = (os.getenv("AIRTABLE_TOKEN") or os.getenv("AIRTABLE_API_TOKEN") or "").strip()
     status["AIRTABLE_DEV_TOKEN"] = "CONFIGURED" if tok else "MISSING"
+    status["MAKE_WEBHOOK_RESOLVED"] = (
+        "CONFIGURED" if resolve_dev_webhook_url() else "MISSING"
+    )
+    status["LAMBDA_URL_RESOLVED"] = (
+        "CONFIGURED" if resolve_lambda_function_url() else "MISSING"
+    )
     return status
+
+
+def resolve_dev_webhook_url() -> str:
+    return (
+        os.getenv("MAKE_DEV_UPLOAD_WEBHOOK_URL")
+        or os.getenv("MAKE_HOMEWORK_UPLOAD_WEBHOOK_URL_DEV")
+        or os.getenv("MAKE_UPLOAD_WEBHOOK_URL_DEV")
+        or ""
+    ).strip()
+
+
+def resolve_lambda_function_url() -> str:
+    return (
+        os.getenv("LAMBDA_FUNCTION_URL")
+        or os.getenv("LAMBDA_FUNCTION_URL_DEV")
+        or ""
+    ).strip()
 
 
 def select_name(value: Any) -> str:
@@ -436,17 +462,17 @@ def cmd_live_upload(args: argparse.Namespace) -> dict[str, Any]:
             "contracts": read_worker_contract_status(),
         }
     refuse_prod_targets(args.asset_id)
-    webhook = (
-        os.getenv("MAKE_HOMEWORK_UPLOAD_WEBHOOK_URL_DEV")
-        or os.getenv("MAKE_UPLOAD_WEBHOOK_URL_DEV")
-        or ""
-    ).strip()
+    webhook = resolve_dev_webhook_url()
     if not webhook:
         return {
             "command": "live-upload",
             "mode": "blocked",
             "pass": False,
-            "blocker": "MISSING MAKE_UPLOAD_WEBHOOK_URL_DEV / MAKE_HOMEWORK_UPLOAD_WEBHOOK_URL_DEV",
+            "blocker": (
+                "MISSING MAKE_DEV_UPLOAD_WEBHOOK_URL "
+                "(or MAKE_HOMEWORK_UPLOAD_WEBHOOK_URL_DEV / MAKE_UPLOAD_WEBHOOK_URL_DEV)"
+            ),
+            "contracts": read_worker_contract_status(),
         }
 
     import requests

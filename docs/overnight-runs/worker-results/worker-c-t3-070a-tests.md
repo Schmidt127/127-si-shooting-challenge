@@ -23,12 +23,12 @@ Live DEV smoke is **BLOCKED** (Worker A/B results + DEV webhook/token credential
 |---|---:|---|
 | Node `070a-homework-upload.test.js` (new) | 20 | **PASS** |
 | Node `upload-make-lambda-response.test.js` (baseline mirror) | 17 | **PASS** |
-| Python `tests.test_c070a_dev_smoke_run` (new) | 13 | **PASS** |
+| Python `tests.test_c070a_dev_smoke_run` (new) | 16 | **PASS** |
 | Python `tests.test_070a_homework_regression` (new) | 8 | **PASS** |
 | Python `tests.test_homework_route` (existing) | 7 | **PASS** |
 | DEV smoke mock phases (`c070a_dev_smoke_run.py all`) | 5 | **PASS** |
-| **Total executed** | **70** | **70 PASS / 0 FAIL** |
-| **New T3 artifacts** | **41** (+ 5 smoke phases) | **PASS** |
+| **Total executed** | **73** | **73 PASS / 0 FAIL** |
+| **New T3 artifacts** | **44** (+ 5 smoke phases) | **PASS** |
 
 ---
 
@@ -45,7 +45,7 @@ node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.tes
 
 # Smoke harness unit tests
 cd tools/airtable && python3 -m unittest tests.test_c070a_dev_smoke_run -v
-# → Ran 13 tests … OK
+# → Ran 16 tests … OK
 
 # Lambda homework route + 070a regression
 cd lambda/upload-asset && python3 -m unittest tests.test_homework_route tests.test_070a_homework_regression -v
@@ -95,10 +95,17 @@ Hard refusals: PROD base `appn84sqPw03zEbTT`, protected evidence `recGQ8EjAMz3bE
 
 | Worker | Result file | Status at run time |
 |---|---|---|
-| A (T1) | `docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md` | **Not present** — stubbed |
-| B (T2) | `docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md` | **Not present** — stubbed |
+| A (T1) | `docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md` | **Not present** — stubbed (branch not on remote) |
+| B (T2) | `docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md` | **Published on `overnight/worker-b-070a-backend`** — contract aligned |
 
-Scaffold used mocks/stubs per overnight instructions. Tests assert the expected `homework_completion` / `070a` payload + Make Accepted async + writeback field contract aligned with 070b v4.4 / 070c v1.1. Re-run and tighten assertions when A/B result files appear.
+### Worker B alignment (post-publish update)
+
+- Payload shape matches Worker B sample `homework-completion-070a-dev.sample.json`.
+- Env aliases: prefer `MAKE_DEV_UPLOAD_WEBHOOK_URL` + `LAMBDA_FUNCTION_URL` (Worker B); keep legacy `*_DEV` aliases.
+- Cross-ref Worker B smoke tools (on their branch, not copied here to avoid lock overlap):
+  - `tools/airtable/c013_dev_h1_homework_smoke.py`
+  - `tools/airtable/c013_dev_make_homework_webhook_post.py`
+- Live smoke still blocked on missing DEV credentials (#9 / #11) and Make Module 2 patch (#8).
 
 ---
 
@@ -109,8 +116,8 @@ Labels: `overnight-blocker`, `overnight-run`
 Assignee: requested for `Schmidt127` (token lacked assign permission; please assign manually).
 
 1. Worker A result unpublished  
-2. Worker B result unpublished  
-3. DEV credentials missing in agent environment  
+2. Worker B Make Module 2 homework filter not yet patched in Make UI (#8)  
+3. DEV credentials missing in agent environment (#9 / #11)  
 4. Live smoke gated until `C070A_ALLOW_LIVE=1`
 
 ---
