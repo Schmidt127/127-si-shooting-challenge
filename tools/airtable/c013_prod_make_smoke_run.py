@@ -11,6 +11,8 @@ Usage:
   python c013_prod_make_smoke_run.py invalid-route --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py reset-trigger --asset-id recGQ8EjAMz3bEBiW
+  python c013_prod_make_smoke_run.py prepare-live-trigger --asset-id recGQ8EjAMz3bEBiW
+  python c013_prod_make_smoke_run.py verify-live-trigger --asset-id recGQ8EjAMz3bEBiW
 """
 
 from __future__ import annotations
@@ -212,6 +214,184 @@ def reset_for_make_upload(tok: str, asset_id: str) -> dict:
         "sendToMakeTrigger": after.get("Send to Make Trigger"),
         "storageKeyBlank": not (after.get("Storage Key") or "").strip(),
     }
+
+
+ALLOWED_LIVE_ASSET = "recGQ8EjAMz3bEBiW"
+EXPECTED_VIDEO_FEEDBACK = "recrvEzk8GxXfy3EE"
+LIVE_PREP_OUT = "c013-prod-live-trigger-prep.json"
+
+# Live 070b trigger test prep: hold the record OUTSIDE the trigger state
+# (Upload Status=Error) with Send to Make Trigger pre-checked, so Mike's single
+# edit (Error -> Pending Link) makes the record ENTER the matching condition
+# and fire exactly one run. Drive fields must be blank or 070b skips before Make.
+LIVE_TRIGGER_PREP_FIELDS = {
+    "Google Drive File URL": "",
+    "Google Drive File ID": "",
+    "Upload Status": "Error",
+    "Send to Make Trigger": True,
+    "Upload Error": "",
+    "Upload Claim Run ID": "",
+    "Processing Started At": None,
+}
+
+LIVE_TRIGGER_PRESERVED_FIELDS = (
+    "Airtable Attachment",
+    "Enrollment - Linked",
+    "Submission - Linked",
+    "Video Feedback",
+    "Upload Destination",
+    "Canonical File URL",
+    "Storage Key",
+    "File Content Hash",
+    "File Hash Algorithm",
+    "Uploaded At",
+)
+
+
+def _attachment_ids(value) -> list:
+    if not isinstance(value, list):
+        return []
+    return [a.get("id") for a in value if isinstance(a, dict)]
+
+
+def _field_snapshot(fields: dict) -> dict:
+    """Redacted-safe before/after snapshot of prep-relevant fields."""
+    snap = {}
+    for key in sorted(set(LIVE_TRIGGER_PRESERVED_FIELDS) | set(LIVE_TRIGGER_PREP_FIELDS)):
+        value = fields.get(key)
+        if key == "Airtable Attachment":
+            ids = _attachment_ids(value)
+            value = {"count": len(ids), "ids": ids}
+        snap[key] = value
+    return snap
+
+
+def _parse_airtable_ts(value) -> datetime | None:
+    if not value or not isinstance(value, str):
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def check_live_trigger_prep(before: dict, after: dict) -> dict:
+    """Pure check logic for prepare-live-trigger (unit-testable)."""
+    preserved = {}
+    for key in LIVE_TRIGGER_PRESERVED_FIELDS:
+        if key == "Airtable Attachment":
+            preserved[key] = _attachment_ids(before.get(key)) == _attachment_ids(after.get(key)) and bool(
+                _attachment_ids(after.get(key))
+            )
+        else:
+            preserved[key] = before.get(key) == after.get(key)
+    return {
+        "uploadStatusError": after.get("Upload Status") == "Error",
+        "sendToMakeTriggerChecked": after.get("Send to Make Trigger") is True,
+        "googleDriveUrlBlank": not (after.get("Google Drive File URL") or "").strip(),
+        "googleDriveIdBlank": not (after.get("Google Drive File ID") or "").strip(),
+        "uploadErrorBlank": not (after.get("Upload Error") or "").strip(),
+        "uploadClaimRunIdBlank": not (after.get("Upload Claim Run ID") or "").strip(),
+        "processingStartedAtBlank": not after.get("Processing Started At"),
+        "preserved": preserved,
+        "allPreserved": all(preserved.values()),
+    }
+
+
+def evaluate_live_trigger_result(prep: dict, record_fields: dict, probe_snapshot: dict) -> dict:
+    """Pure PASS contract for the live Airtable-triggered 070b test (unit-testable).
+
+    A manually corrected record cannot pass: Uploaded At must be newer than the
+    pre-test value (only the Lambda writeback advances it), the trigger must have
+    been cleared by 070b itself, and the probe's independent allPass must hold.
+    """
+    pre_ts = _parse_airtable_ts(prep.get("preTestUploadedAt"))
+    post_ts = _parse_airtable_ts(record_fields.get("Uploaded At"))
+    checks = {
+        "recordIdMatches": prep.get("assetId") == ALLOWED_LIVE_ASSET,
+        "probeAllPass": probe_snapshot.get("allPass") is True,
+        "uploadStatusUploaded": record_fields.get("Upload Status") == "Uploaded",
+        "canonicalUrlPopulated": bool((record_fields.get("Canonical File URL") or "").strip()),
+        "storageKeyPopulated": bool((record_fields.get("Storage Key") or "").strip()),
+        "fileContentHashPopulated": bool((record_fields.get("File Content Hash") or "").strip()),
+        "fileHashAlgorithmSha256": record_fields.get("File Hash Algorithm") == "SHA-256",
+        "uploadErrorBlank": not (record_fields.get("Upload Error") or "").strip(),
+        "writebackComplete": record_fields.get("Writeback Complete?") in (1, True, "1"),
+        "sendToMakeTriggerCleared": not record_fields.get("Send to Make Trigger"),
+        "uploadedAtAdvanced": bool(pre_ts and post_ts and post_ts > pre_ts),
+        "videoFeedbackLinked": EXPECTED_VIDEO_FEEDBACK in (record_fields.get("Video Feedback") or []),
+        "noDriveSkip": not (record_fields.get("Google Drive File URL") or "").strip()
+        and not (record_fields.get("Google Drive File ID") or "").strip(),
+        "attachmentRetained": bool(_attachment_ids(record_fields.get("Airtable Attachment"))),
+    }
+    return {
+        "checks": checks,
+        "preTestUploadedAt": prep.get("preTestUploadedAt"),
+        "postTestUploadedAt": record_fields.get("Uploaded At"),
+        "pass": all(checks.values()),
+    }
+
+
+def cmd_prepare_live_trigger(args: argparse.Namespace) -> None:
+    load_env()
+    tok = token()
+    asset_id = args.asset_id
+    if asset_id != ALLOWED_LIVE_ASSET:
+        raise SystemExit(f"Refusing: live-trigger prep is only allowed on {ALLOWED_LIVE_ASSET}, got {asset_id}")
+    before = get_asset(tok, asset_id)["fields"]
+    enr = before.get("Enrollment - Linked") or []
+    if enr != [ENR]:
+        raise SystemExit(f"Refusing: asset must be linked exclusively to Schmidt Testing enrollment {ENR}")
+    patch_asset(tok, asset_id, LIVE_TRIGGER_PREP_FIELDS)
+    after = get_asset(tok, asset_id)["fields"]
+    checks = check_live_trigger_prep(before, after)
+    result = {
+        "phase": "prepare_live_trigger",
+        "probedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "assetId": asset_id,
+        "enrollmentId": ENR,
+        "preTestUploadedAt": after.get("Uploaded At"),
+        "before": _field_snapshot(before),
+        "after": _field_snapshot(after),
+        "checks": checks,
+        "pass": all(v for k, v in checks.items() if k != "preserved"),
+        "nextStep": (
+            "With Make scenario ON and 070b ON, change Upload Status from Error to "
+            "Pending Link on this record only. No other field edits."
+        ),
+    }
+    out = HERE / "_preview" / LIVE_PREP_OUT
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(result, indent=2))
+    if not result["pass"]:
+        raise SystemExit(1)
+
+
+def cmd_verify_live_trigger(args: argparse.Namespace) -> None:
+    load_env()
+    tok = token()
+    asset_id = args.asset_id
+    if asset_id != ALLOWED_LIVE_ASSET:
+        raise SystemExit(f"Refusing: live-trigger verify is only allowed on {ALLOWED_LIVE_ASSET}, got {asset_id}")
+    prep_path = HERE / "_preview" / LIVE_PREP_OUT
+    if not prep_path.exists():
+        raise SystemExit(f"Missing prep artifact {prep_path} — run prepare-live-trigger first")
+    prep = json.loads(prep_path.read_text(encoding="utf-8"))
+    record_fields = get_asset(tok, asset_id)["fields"]
+    probe_snapshot = parse_probe_snapshot(probe_asset(asset_id))
+    evaluation = evaluate_live_trigger_result(prep, record_fields, probe_snapshot)
+    result = {
+        "phase": "verify_live_trigger",
+        "probedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "assetId": asset_id,
+        "probe": {"allPass": probe_snapshot.get("allPass"), "checks": probe_snapshot.get("checks")},
+        **evaluation,
+    }
+    out = HERE / "_preview" / "c013-prod-070b-live-trigger-result.json"
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(result, indent=2))
+    if not result["pass"]:
+        raise SystemExit(1)
 
 
 def cmd_reset_trigger(args: argparse.Namespace) -> None:
@@ -418,6 +598,14 @@ def main() -> None:
     p_reset = sub.add_parser("reset-trigger")
     p_reset.add_argument("--asset-id", default=DEFAULT_ASSET)
     p_reset.set_defaults(func=cmd_reset_trigger)
+
+    p_prep = sub.add_parser("prepare-live-trigger")
+    p_prep.add_argument("--asset-id", required=True, help="Must be the approved Schmidt live-test asset")
+    p_prep.set_defaults(func=cmd_prepare_live_trigger)
+
+    p_verify = sub.add_parser("verify-live-trigger")
+    p_verify.add_argument("--asset-id", required=True, help="Must be the approved Schmidt live-test asset")
+    p_verify.set_defaults(func=cmd_verify_live_trigger)
 
     for name in ("preflight", "upload", "idempotency", "invalid-route", "all"):
         p = sub.add_parser(name.replace("-", "_") if name == "invalid-route" else name)
