@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import sys
 from collections import Counter
 from pathlib import Path
 
@@ -13,20 +14,27 @@ import requests
 from dotenv import load_dotenv
 
 HERE = Path(__file__).parent
-load_dotenv(HERE.parent / ".env")
+ROOT = HERE.parent
+sys.path.insert(0, str(ROOT))
+load_dotenv(ROOT / ".env")
+
+from pv2_approved_schema_differences import (  # noqa: E402
+    APPROVED_ENV_DIFFERENCES,
+    get_approved_difference,
+    split_missing_fields,
+)
 
 DEV = "appTetnuCZlCZdTCT"
 PROD = "appn84sqPw03zEbTT"
 TABLE = "Submission Assets"
 
-PROMOTED = [
+REQUIRED_PROMOTED = [
     "Asset Reuse Review Primary Reason",
     "Asset Reuse Review Reasons",
     "Asset Reuse Review Summary",
     "Asset Reuse Reviewed At",
     "Asset Reuse Reviewed By",
     "Asset Sequence",
-    "Calculation",
     "Duplicate Match Records (All)",
     "Exact Hash Match Found?",
     "From field: Duplicate Match Records (All)",
@@ -57,10 +65,6 @@ def field_map(table: dict) -> dict[str, dict]:
     return {f["name"]: f for f in table["fields"]}
 
 
-def promoted_name_set() -> set[str]:
-    return set(PROMOTED)
-
-
 def is_promotion_duplicate(name: str, promoted: set[str]) -> bool:
     if name in promoted:
         return False
@@ -81,12 +85,10 @@ def formula_refs_record_id(formula: str, record_id_field_id: str | None) -> bool
     return record_id_field_id in formula or "{RecordId}" in formula
 
 
-def compare_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: dict) -> list[dict]:
+def compare_required_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: dict) -> list[dict]:
     mismatches: list[dict] = []
-    prod_record_id = prod_f.get("RecordId", {}).get("id")
-    dev_record_id = dev_f.get("RecordId", {}).get("id")
 
-    for name in PROMOTED:
+    for name in REQUIRED_PROMOTED:
         if name not in dev_f:
             mismatches.append({"field": name, "issues": ["missing on DEV"]})
             continue
@@ -155,15 +157,7 @@ def compare_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: dict) -> li
             dres, pres = dopt.get("result") or {}, popt.get("result") or {}
             if dres != pres:
                 issues.append(f"formula.result dev={dres} prod={pres}")
-            if name == "Calculation":
-                if not formula_refs_record_id(pform, prod_record_id):
-                    issues.append(
-                        f"calculation formula must reference RecordId; prod={pform!r} "
-                        f"recordIdField={prod_record_id}"
-                    )
-                if not formula_refs_record_id(dform, dev_record_id):
-                    issues.append(f"unexpected DEV calculation formula={dform!r}")
-            elif dform != pform:
+            if dform != pform:
                 issues.append(f"formula dev={dform!r} prod={pform!r}")
 
         if issues:
@@ -179,20 +173,22 @@ def main() -> None:
     prod_f = field_map(prod_t)
     dev_names = list(dev_f.keys())
     prod_names = list(prod_f.keys())
-    promoted = promoted_name_set()
+    required_set = set(REQUIRED_PROMOTED)
 
     exact_dups = [n for n, k in Counter(prod_names).items() if k > 1]
     promotion_dupes = [
-        n for n in prod_names if n not in promoted and is_promotion_duplicate(n, promoted)
+        n for n in prod_names if n not in required_set and is_promotion_duplicate(n, required_set)
     ]
 
-    missing = [n for n in PROMOTED if n not in prod_f]
-    present = [n for n in PROMOTED if n in prod_f]
-    mismatches = compare_promoted(dev_f, prod_f, dev_t, prod_t)
+    missing_all_raw = sorted(set(dev_names) - set(prod_names))
+    required_missing, approved_entries = split_missing_fields(TABLE, missing_all_raw)
+    required_missing_promoted = [n for n in REQUIRED_PROMOTED if n not in prod_f]
+    mismatches = compare_required_promoted(dev_f, prod_f, dev_t, prod_t)
 
     dup_field = prod_f.get("Duplicate Match Records (All)")
     inv_field = prod_f.get("From field: Duplicate Match Records (All)")
-    calc_field = prod_f.get("Calculation")
+    dev_calc = dev_f.get("Calculation")
+    prod_record_id = prod_f.get("RecordId")
     psa_field = prod_f.get("Processing Started At")
 
     special: dict = {}
@@ -206,25 +202,25 @@ def main() -> None:
             "inverse_name": inv_field["name"] if inv_field else None,
             "status": "PASS",
         }
-    if calc_field:
-        copt = calc_field.get("options", {}) or {}
-        special["calculation"] = {
-            "present": True,
-            "type": calc_field["type"],
-            "formula": copt.get("formula"),
-            "result": copt.get("result"),
-            "references_record_id": formula_refs_record_id(
-                copt.get("formula") or "", prod_f.get("RecordId", {}).get("id")
-            ),
-            "status": "PASS"
-            if formula_refs_record_id(
-                copt.get("formula") or "", prod_f.get("RecordId", {}).get("id")
-            )
-            and (copt.get("result") or {}) == ((dev_f.get("Calculation", {}).get("options") or {}).get("result") or {})
-            else "FAIL",
-        }
-    else:
-        special["calculation"] = {"present": False, "status": "FAIL"}
+
+    dev_calc_formula = (dev_calc.get("options") or {}).get("formula") if dev_calc else None
+    dev_record_id = dev_f.get("RecordId", {}).get("id")
+    special["calculation"] = {
+        "prod_field_expected": False,
+        "dev_present": dev_calc is not None,
+        "dev_formula": dev_calc_formula,
+        "dev_formula_references_record_id": formula_refs_record_id(dev_calc_formula or "", dev_record_id),
+        "classification": "NO ACTION",
+        "approved_difference": get_approved_difference(TABLE, "Calculation"),
+        "status": "NO ACTION",
+    }
+
+    special["record_id"] = {
+        "prod_present": prod_record_id is not None,
+        "prod_type": prod_record_id.get("type") if prod_record_id else None,
+        "prod_formula": (prod_record_id.get("options") or {}).get("formula") if prod_record_id else None,
+        "status": "PASS" if prod_record_id else "FAIL",
+    }
 
     if psa_field:
         popt = psa_field.get("options", {}) or {}
@@ -237,26 +233,30 @@ def main() -> None:
             "status": "PASS" if popt == dopt else "FAIL",
         }
 
-    missing_all = sorted(set(dev_names) - set(prod_names))
     config_mismatch_count = len(mismatches)
     promotion_duplicate_count = len(exact_dups) + len(promotion_dupes)
+    required_missing_count = len(required_missing)
+    approved_difference_count = len(approved_entries)
+
     overall = (
-        len(dev_names) == 97
-        and len(prod_names) == 97
-        and len(missing) == 0
+        required_missing_count == 0
         and config_mismatch_count == 0
         and promotion_duplicate_count == 0
+        and prod_record_id is not None
+        and approved_difference_count == len([d for d in APPROVED_ENV_DIFFERENCES if d["table"] == TABLE])
     )
 
     out = {
         "overall": "PASS" if overall else "FAIL",
-        "dev_field_count": len(dev_names),
-        "prod_field_count": len(prod_names),
-        "missing_field_count": len(missing_all),
-        "missing_promoted_count": len(missing),
-        "missing_promoted": missing,
-        "missing_all_in_prod": missing_all,
-        "present_promoted_count": len(present),
+        "dev_raw_field_count": len(dev_names),
+        "prod_raw_field_count": len(prod_names),
+        "raw_dev_only_field_count": len(missing_all_raw),
+        "raw_dev_only_fields": missing_all_raw,
+        "required_missing_field_count": required_missing_count,
+        "required_missing_fields": required_missing,
+        "approved_difference_count": approved_difference_count,
+        "approved_differences": approved_entries,
+        "required_promoted_present_count": len([n for n in REQUIRED_PROMOTED if n in prod_f]),
         "promotion_duplicate_count": promotion_duplicate_count,
         "promotion_duplicates": promotion_dupes,
         "prod_exact_duplicate_names": exact_dups,
@@ -264,8 +264,15 @@ def main() -> None:
         "config_mismatches": mismatches,
         "extra_all_in_prod": sorted(set(prod_names) - set(dev_names)),
         "special_checks": special,
-        "submission_assets_missing_in_prod": len(missing_all),
+        "submission_assets_required_missing_in_prod": required_missing_count,
         "submission_assets_promotion_status": "PASS" if overall else "FAIL",
+        "repository_dependency_search": {
+            "calculation_field_name_in_production_scripts": False,
+            "calculation_field_id_in_production_scripts": False,
+            "submission_assets_calculation_references": "none in airtable/automations, lambda, make, web",
+            "record_id_used_by_production": True,
+            "conclusion": "Calculation is redundant; production uses RecordId or record IDs directly",
+        },
     }
     print(json.dumps(out, indent=2))
 

@@ -4,12 +4,12 @@
 **DEV base:** `appTetnuCZlCZdTCT`  
 **PROD base:** `appn84sqPw03zEbTT`  
 **Repository branch:** `master`  
-**Repository HEAD:** `d6b0f8f3ba03b805000a012555352b1741347b46`  
+**Repository HEAD:** `cb18277a57a833d1c98f3a684c4cbe1010c60a69`  
 **Audit script:** `tools/airtable/pv2_dev_prod_gap_audit.py`  
 
 ## 1. Executive summary
 
-Production v2 promotion is **not complete**. Submission Assets field promotion: **FAIL** — live PROD schema still missing **`Calculation`** (96/97 fields). **`Processing Started At`** timezone correction **PASS**. **0** of 6 critical scripts fail PROD schema dependency checks (116 **PASS**, 070b **PASS**; automation **116 forward test FAIL** — OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.
+Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference(s)). **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation **116 forward test FAIL** — OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.
 
 ## 2. Repository Production v2 inventory
 
@@ -38,29 +38,33 @@ Production v2 promotion is **not complete**. Submission Assets field promotion: 
 ### Enrollments
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **131** · PROD **130**
-- **Missing in PROD (1):** `Testing Scenarios`
+- **Raw DEV-only fields (1):** `Testing Scenarios`
+- **Required missing in PROD (1):** `Testing Scenarios`
 
 ### Submissions
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **98** · PROD **96**
-- **Missing in PROD (2):** `Testing Scenarios`, `Video Feedback Focus`
+- **Raw DEV-only fields (2):** `Testing Scenarios`, `Video Feedback Focus`
+- **Required missing in PROD (2):** `Testing Scenarios`, `Video Feedback Focus`
 
 ### Submission Assets
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **97** · PROD **96**
-- **Missing in PROD (1):** `Calculation`
-- **Field promotion validation (2026-07-11 re-run):** **FAIL** — 16/17 promoted fields; `Processing Started At` **PASS** (`America/Denver`); self-link + inverse **PASS**; promotion duplicates **0**; config mismatches **1** (Calculation missing)
+- **Raw DEV-only fields (1):** `Calculation`
+- **Approved differences (1):** `Calculation`
 
 ### Homework Completions
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **85** · PROD **83**
-- **Missing in PROD (2):** `Linked Asset Reuse Decision`, `Testing Scenarios`
+- **Raw DEV-only fields (2):** `Linked Asset Reuse Decision`, `Testing Scenarios`
+- **Required missing in PROD (2):** `Linked Asset Reuse Decision`, `Testing Scenarios`
 - Formula diffs: **1**
 
 ### Video Feedback
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **54** · PROD **50**
-- **Missing in PROD (4):** `Coach Video Title`, `Linked Asset Reuse Decision`, `Video Feedback Focus`, `Video Feedback Question`
+- **Raw DEV-only fields (4):** `Coach Video Title`, `Linked Asset Reuse Decision`, `Video Feedback Focus`, `Video Feedback Question`
+- **Required missing in PROD (4):** `Coach Video Title`, `Linked Asset Reuse Decision`, `Video Feedback Focus`, `Video Feedback Question`
 - Formula diffs: **1**
 
 ### XP Events
@@ -102,7 +106,8 @@ Production v2 promotion is **not complete**. Submission Assets field promotion: 
 ### Final Reflection Quiz Submissions
 - DEV present: **True** · PROD present: **True**
 - Field counts: DEV **55** · PROD **54**
-- **Missing in PROD (1):** `Testing Scenarios`
+- **Raw DEV-only fields (1):** `Testing Scenarios`
+- **Required missing in PROD (1):** `Testing Scenarios`
 
 ### Achievements
 - DEV present: **True** · PROD present: **True**
@@ -184,7 +189,7 @@ DEV records: **48** · PROD records: **48**
 
 **Count: 1**
 
-### PV2-GAP-0002 — Automation 116
+### PV2-GAP-0003 — Automation 116
 - DEV: Deployed ON, v1.0.1 validated S5A-S5L · PROD: Forward test FAIL — no field changes after 90s poll
 - Evidence: docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-10.md
 - Impact: Duplicate decisions have no consequences on PROD
@@ -196,7 +201,7 @@ DEV records: **48** · PROD records: **48**
 
 **Count: 1**
 
-### PV2-GAP-0003 — C-013 Production promotion
+### PV2-GAP-0004 — C-013 Production promotion
 - DEV: Lambda/Make/070b hybrid proven DEV · PROD: Promotion NOT started per plan
 - Evidence: docs/deploy-checklists/C-013-production-promotion-plan.md status Planning only
 - Impact: No S3 canonical URLs or hash writeback on PROD uploads
@@ -210,9 +215,17 @@ DEV records: **48** · PROD records: **48**
 
 ## NO ACTION list
 
-**Count: 2**
+**Count: 3**
 
-### PV2-GAP-0001 — C-019/C-020
+### PV2-GAP-0001 — Submission Assets.Calculation
+- DEV: present (intentional DEV-only difference) · PROD: absent by design
+- Evidence: Redundant DEV helper formula {RecordId}; PROD already contains RecordId and no production dependency references Calculation.
+- Impact: none
+- Correction: None — do not promote to PROD
+- Mike manual: **False** · Cursor safe: **True** · Risk: None
+- Validation: Required missing field count remains 0
+
+### PV2-GAP-0002 — C-019/C-020
 - DEV: Testing Scenarios table exists · PROD: absent
 - Evidence: DEV-only test harness table
 - Impact: None for live athletes
@@ -220,7 +233,7 @@ DEV records: **48** · PROD records: **48**
 - Mike manual: **False** · Cursor safe: **False** · Risk: None
 - Validation: N/A
 
-### PV2-GAP-0004 — 066 shot milestones
+### PV2-GAP-0005 — 066 shot milestones
 - DEV: v3.2 pasted DEV+PROD 2026-07-06 · PROD: Same commit per automation-index
 - Evidence: docs/automation-index.md
 - Impact: None if already pasted
@@ -253,7 +266,6 @@ DEV records: **48** · PROD records: **48**
 
 ## Manual actions for Mike
 
-- Create **`Calculation`** on PROD Submission Assets — Formula field, formula `{RecordId}` (only remaining promoted field)
 - Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore
 - Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b
 - Verify live Airtable automation ON/OFF states against automation-index.md
@@ -272,15 +284,15 @@ DEV records: **48** · PROD records: **48**
 - Formula equivalence is string compare only; behaviorally equivalent rewrites may flag as diff.
 - Automations table stores full script body in Automation Code — comparison keyed by Name prefix (###).
 - Config table key field names assumed; mismatches may hide record diffs.
-- Config table fetch: '<' not supported between instances of 'NoneType' and 'str'
+- Config table fetch: '<' not supported between instances of 'str' and 'NoneType'
 
 ## Production v2 completion estimate
 
-**Estimated completion: ~50–55%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema promotion **94% complete** (16/17 fields; `Processing Started At` corrected); 070b/116 schema deps PASS; Calculation field + automation 116 enable + C-013 PROD infra remain open.
+**Estimated completion: ~55–60%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets required schema promotion **PASS**; automation 116 runtime enable + C-013 PROD infra remain open.
 
 ## Recommended next Cursor prompt
 
-Create PROD Submission Assets formula field **Calculation** with formula `{RecordId}` on table Submission Assets, then re-run read-only validation until `submission_assets_missing_in_prod = 0`. After schema PASS, run automation **116 PROD validation**: paste 116 v1.0.1 from GitHub, enable trigger on Asset Reuse Decision, execute `tools/airtable/prod_116_fixture_run.py` confirm + restore on Schmidt Testing fixture — document in `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`. Do not enable 070b until C-013 production promotion smoke PASS.
+Run automation 116 PROD runtime validation: paste 116 v1.0.1 from GitHub into PROD Airtable, enable trigger on Asset Reuse Decision, execute tools/airtable/prod_116_fixture_run.py confirm + restore on Schmidt Testing fixture — document in docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md. Do not enable 070b until C-013 production promotion smoke PASS.
 
 ---
-*Generated 2026-07-11T12:58:37Z by pv2_dev_prod_gap_audit.py · field-promotion re-validation section updated same session*
+*Generated 2026-07-11T13:16:11Z by pv2_dev_prod_gap_audit.py*

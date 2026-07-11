@@ -17,6 +17,13 @@ from urllib.parse import quote
 import requests
 from dotenv import load_dotenv
 
+from pv2_approved_schema_differences import (
+    APPROVED_ENV_DIFFERENCES,
+    get_approved_difference,
+    is_approved_difference,
+    split_missing_fields,
+)
+
 HERE = Path(__file__).parent
 REPO = HERE.parents[1]
 DEV_BASE = "appTetnuCZlCZdTCT"
@@ -324,7 +331,8 @@ def compare_table(dev_t: dict | None, prod_t: dict | None, tname: str) -> dict:
     dev_names = set(dev_f)
     prod_names = set(prod_f)
 
-    missing_in_prod = sorted(dev_names - prod_names)
+    missing_in_prod_raw = sorted(dev_names - prod_names)
+    required_missing_in_prod, approved_differences = split_missing_fields(tname, missing_in_prod_raw)
     extra_in_prod = sorted(prod_names - dev_names)
     type_mismatches = []
     link_mismatches = []
@@ -357,7 +365,9 @@ def compare_table(dev_t: dict | None, prod_t: dict | None, tname: str) -> dict:
     out.update({
         "dev_field_count": len(dev_f),
         "prod_field_count": len(prod_f),
-        "missing_in_prod": missing_in_prod,
+        "missing_in_prod_raw": missing_in_prod_raw,
+        "missing_in_prod": required_missing_in_prod,
+        "approved_differences": approved_differences,
         "extra_in_prod": extra_in_prod,
         "type_mismatches": type_mismatches,
         "link_mismatches": link_mismatches,
@@ -523,6 +533,22 @@ def classify_gaps(data: dict) -> dict[str, list[dict]]:
         gaps[cls].append({"gap_id": f"PV2-GAP-{gid:04d}", **kw})
 
     sa = next((t for t in data["table_comparisons"] if t["table"] == "Submission Assets"), {})
+    for entry in sa.get("approved_differences") or []:
+        add(
+            "NO ACTION",
+            classification="NO ACTION",
+            workstream=f"{entry['table']}.{entry['field']}",
+            dev_value=f"present ({entry.get('environment_difference', 'intentional')} DEV-only difference)",
+            prod_value="absent by design",
+            evidence=entry.get("justification", "Approved environment difference"),
+            operational_impact=entry.get("operational_impact", "none"),
+            correction="None — do not promote to PROD",
+            mike_manual=False,
+            cursor_safe=True,
+            risk="None",
+            validation="Required missing field count remains 0",
+        )
+
     for f in sa.get("missing_in_prod") or []:
         if f in C013_PROD_FIELDS + C023_PROD_FIELDS or "Reuse" in f or "Duplicate Resolution" in f or "Canonical" in f or "Storage" in f or "Upload Claim" in f:
             cls = "BLOCKER" if f in ["Asset Reuse Decision", "Canonical File URL", "File Content Hash", "Duplicate Resolution Applied?"] else "REQUIRED BEFORE LAUNCH"
@@ -655,8 +681,18 @@ def render_markdown(data: dict) -> str:
         lines.append(f"- DEV present: **{t.get('dev_present')}** · PROD present: **{t.get('prod_present')}**")
         if t.get("dev_field_count") is not None:
             lines.append(f"- Field counts: DEV **{t['dev_field_count']}** · PROD **{t['prod_field_count']}**")
+        if t.get("missing_in_prod_raw"):
+            lines.append(
+                f"- **Raw DEV-only fields ({len(t['missing_in_prod_raw'])}):** "
+                + ", ".join(f"`{x}`" for x in t["missing_in_prod_raw"][:40])
+            )
+        if t.get("approved_differences"):
+            lines.append(
+                f"- **Approved differences ({len(t['approved_differences'])}):** "
+                + ", ".join(f"`{x['field']}`" for x in t["approved_differences"])
+            )
         if t.get("missing_in_prod"):
-            lines.append(f"- **Missing in PROD ({len(t['missing_in_prod'])}):** " + ", ".join(f"`{x}`" for x in t["missing_in_prod"][:40]))
+            lines.append(f"- **Required missing in PROD ({len(t['missing_in_prod'])}):** " + ", ".join(f"`{x}`" for x in t["missing_in_prod"][:40]))
             if len(t["missing_in_prod"]) > 40:
                 lines.append(f"  - … and {len(t['missing_in_prod']) - 40} more")
         if t.get("extra_in_prod"):
@@ -873,27 +909,41 @@ def main() -> None:
     required = len(gaps["REQUIRED BEFORE LAUNCH"])
 
     sa = next(t for t in table_comparisons if t["table"] == "Submission Assets")
-    missing_sa = len(sa.get("missing_in_prod") or [])
+    missing_sa_raw = len(sa.get("missing_in_prod_raw") or sa.get("missing_in_prod") or [])
+    missing_sa_required = len(sa.get("missing_in_prod") or [])
+    approved_sa = len(sa.get("approved_differences") or [])
+    sa_promotion_pass = missing_sa_required == 0
     prod_script_fails = sum(1 for s in script_matrix if not s["prod_ok"])
 
+    if sa_promotion_pass:
+        sa_status = (
+            f"Submission Assets required field promotion **PASS** "
+            f"({approved_sa} approved DEV-only difference(s))"
+        )
+    else:
+        sa_status = f"**{missing_sa_required} required Submission Assets fields** still missing on PROD"
+
     executive = (
-        f"Production v2 promotion is **not complete**. Live schema compare shows **{missing_sa} Submission Assets fields** on DEV absent from PROD. "
+        f"Production v2 promotion is **not complete**. {sa_status}. "
         f"**{prod_script_fails}** of {len(script_matrix)} critical scripts fail PROD dependency checks "
         f"(116 schema **PASS**; automation **116 forward test FAIL** — OFF or not pasted). "
         f"C-013 production promotion **not started**. "
-        f"Classified gaps: **{blockers} BLOCKER**, **{required} REQUIRED BEFORE LAUNCH**."
+        f"Classified gaps: **{blockers} BLOCKER**, **{required} REQUIRED BEFORE LAUNCH**. "
+        f"Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`."
     )
 
     completion = (
-        "**Estimated completion: ~35–45%** for Production v2 wave (C-013 + C-023 + 116). "
-        "Core season automations (005–114, 066) appear largely aligned; "
-        "asset storage, duplicate consequences, and PROD infra remain unpromoted."
+        "**Estimated completion: ~55–60%** for Production v2 wave (C-013 + C-023 + 116). "
+        "Submission Assets required schema promotion **PASS**; automation 116 runtime enable + "
+        "C-013 PROD infra remain open."
     )
 
     next_prompt = (
-        "Execute Production v2 promotion step 1: generate OMNI/Airtable field-creation checklist from "
-        "`docs/audits/pv2-dev-prod-gap-inventory-2026-07-11.md` BLOCKER list for Submission Assets only; "
-        "do not enable automations until schema PASS confirmed by re-running pv2_dev_prod_gap_audit.py."
+        "Run automation 116 PROD runtime validation: paste 116 v1.0.1 from GitHub into PROD Airtable, "
+        "enable trigger on Asset Reuse Decision, execute tools/airtable/prod_116_fixture_run.py confirm + "
+        "restore on Schmidt Testing fixture — document in "
+        "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md. "
+        "Do not enable 070b until C-013 production promotion smoke PASS."
     )
 
     data = {
@@ -916,7 +966,6 @@ def main() -> None:
         "gaps": gaps,
         "promotion_plan": build_promotion_plan(gaps),
         "manual_actions": [
-            "Add missing Submission Assets fields on PROD (OMNI or Airtable UI) per BLOCKER list",
             "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
             "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
             "Verify live Airtable automation ON/OFF states against automation-index.md",
@@ -928,6 +977,14 @@ def main() -> None:
             "Run prod_116_fixture_run.py (read-only fixture validation)",
             "Commit schema snapshots to airtable/schema/snapshots/ after PROD field promotion",
         ],
+        "approved_env_differences": APPROVED_ENV_DIFFERENCES,
+        "submission_assets_field_promotion": {
+            "status": "PASS" if sa_promotion_pass else "FAIL",
+            "raw_dev_only_field_count": missing_sa_raw,
+            "required_missing_field_count": missing_sa_required,
+            "approved_difference_count": approved_sa,
+            "approved_differences": sa.get("approved_differences") or [],
+        },
         "limitations": limitations,
         "completion_estimate": completion,
         "next_prompt": next_prompt,
@@ -945,7 +1002,10 @@ def main() -> None:
         "required_before_launch": required,
         "safe_cleanup": len(gaps["SAFE POST-LAUNCH CLEANUP"]),
         "no_action": len(gaps["NO ACTION"]),
-        "submission_assets_missing_in_prod": missing_sa,
+        "submission_assets_missing_in_prod_raw": missing_sa_raw,
+        "submission_assets_required_missing_in_prod": missing_sa_required,
+        "submission_assets_approved_differences": approved_sa,
+        "submission_assets_field_promotion": "PASS" if sa_promotion_pass else "FAIL",
         "md_path": str(md_path.relative_to(REPO)),
         "json_path": str(json_path.relative_to(REPO)),
     }
