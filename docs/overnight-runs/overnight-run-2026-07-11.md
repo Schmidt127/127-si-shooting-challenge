@@ -212,10 +212,12 @@ See [manual-actions-2026-07-11.md](./manual-actions-2026-07-11.md): **MA-001** (
 
 ## Remaining work
 
-1. Mike: **MA-006** (#17 paste 070a v4.4 DEV OFF), **MA-001** (#8), **MA-002** (#9), **MA-005** hygiene + paste #1.
-2. Worker D: Phase 2 `worker-d-t4-070a-docs.md` (+ optional P-D1).
-3. After #17+#8+#9: controlled DEV verification (`_dev-070a-verification-prep.md`).
-4. Lead: keep T5 blocked until live gates + lock release; docs-only Stage 6 OK under D.
+1. **Worker B:** Execute **T6** now (`assignments/T6-worker-b-make-blueprint-validator.md`).
+2. **Worker C:** Execute **T7** now (`assignments/T7-worker-c-070a-contract-alignment.md`).
+3. **Worker D:** Start **T9** Stage 6 checklist (optional P-D1).
+4. **Worker A:** Optional **T8**; stand by for #17.
+5. Mike: MA-001 (#8), MA-002 (#9), MA-006 (#17), paste `_live-status-update.md` into #1 (MA-005).
+6. Lead: merge T6/T7 when delivered; live DEV verify only after gates.
 
 ---
 
