@@ -76,7 +76,8 @@ python3 tools/airtable/c070a_dev_smoke_run.py all
 
 - **Primary delivery:** `e8b1b9cb5cb36135e928b45972402cff2a1d78cf`
 - **Worker B alignment follow-up:** `45396d92d554c52179d7e1d0582941f15e0925c2`
-- **Branch tip:** `45396d92d554c52179d7e1d0582941f15e0925c2` (`origin/overnight/worker-c-070a-tests`)
+- **Branch tip:** `a7d5d8f99aa2a15f07b89257ff33375a25cdd4cc` (`origin/overnight/worker-c-070a-tests`)
+- **PR:** https://github.com/Schmidt127/127-si-shooting-challenge/pull/13
 
 ---
 
