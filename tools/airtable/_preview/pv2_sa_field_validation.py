@@ -39,6 +39,8 @@ PROMOTED = [
     "Video Feedback Focus",
 ]
 
+PROMOTION_SUFFIX_RE = re.compile(r"\s+(copy|2|3|\(\d+\))\s*$", re.I)
+
 
 def fetch(base: str) -> dict:
     token = os.environ["AIRTABLE_API_TOKEN"]
@@ -55,35 +57,75 @@ def field_map(table: dict) -> dict[str, dict]:
     return {f["name"]: f for f in table["fields"]}
 
 
-def dup_check(names: list[str]) -> tuple[list[str], list[str], list[str]]:
-    c = Counter(names)
-    exact_dups = [n for n, k in c.items() if k > 1]
-    suffixed = [
-        n for n in names if re.search(r"\s+(copy|2|3|\(\d+\))\s*$", n, re.I)
-    ]
-    calc_like = [n for n in names if "calculation" in n.lower()]
-    return exact_dups, suffixed, calc_like
+def promoted_name_set() -> set[str]:
+    return set(PROMOTED)
+
+
+def is_promotion_duplicate(name: str, promoted: set[str]) -> bool:
+    if name in promoted:
+        return False
+    base = PROMOTION_SUFFIX_RE.sub("", name).strip()
+    for p in promoted:
+        if name != p and (name.startswith(p) or base == p):
+            return True
+    return False
+
+
+def select_choices(field: dict) -> list[str]:
+    return [o["name"] for o in field.get("options", {}).get("choices", [])]
+
+
+def formula_refs_record_id(formula: str, record_id_field_id: str | None) -> bool:
+    if not formula or not record_id_field_id:
+        return False
+    return record_id_field_id in formula or "{RecordId}" in formula
 
 
 def compare_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: dict) -> list[dict]:
     mismatches: list[dict] = []
+    prod_record_id = prod_f.get("RecordId", {}).get("id")
+    dev_record_id = dev_f.get("RecordId", {}).get("id")
+
     for name in PROMOTED:
-        if name not in dev_f or name not in prod_f:
+        if name not in dev_f:
+            mismatches.append({"field": name, "issues": ["missing on DEV"]})
             continue
+        if name not in prod_f:
+            mismatches.append({"field": name, "issues": ["missing on PROD"]})
+            continue
+
         df, pf = dev_f[name], prod_f[name]
         issues: list[str] = []
+
         if df["type"] != pf["type"]:
             issues.append(f"type dev={df['type']} prod={pf['type']}")
+
         if df["type"] in ("singleSelect", "multipleSelects"):
-            dopts = sorted(o["name"] for o in df.get("options", {}).get("choices", []))
-            popts = sorted(o["name"] for o in pf.get("options", {}).get("choices", []))
+            dopts = select_choices(df)
+            popts = select_choices(pf)
             if dopts != popts:
-                issues.append(f"options differ dev={len(dopts)} prod={len(popts)}")
+                issues.append(f"select options/order differ dev={dopts} prod={popts}")
+
+        if df["type"] == "number":
+            dp = (df.get("options") or {}).get("precision")
+            pp = (pf.get("options") or {}).get("precision")
+            if dp != pp:
+                issues.append(f"number.precision dev={dp} prod={pp}")
+
+        if df["type"] == "checkbox":
+            for k in ("icon", "color"):
+                if (df.get("options") or {}).get(k) != (pf.get("options") or {}).get(k):
+                    issues.append(
+                        f"checkbox.{k} dev={(df.get('options') or {}).get(k)} "
+                        f"prod={(pf.get('options') or {}).get(k)}"
+                    )
+
         if df["type"] == "dateTime":
             dopt, popt = df.get("options", {}), pf.get("options", {})
             for k in ("timeZone", "dateFormat", "timeFormat"):
                 if dopt.get(k) != popt.get(k):
                     issues.append(f"dateTime.{k} dev={dopt.get(k)} prod={popt.get(k)}")
+
         if df["type"] in ("multipleRecordLinks", "singleRecordLink"):
             dopt, popt = df.get("options", {}), pf.get("options", {})
             if dopt.get("linkedTableId") != popt.get("linkedTableId"):
@@ -106,13 +148,27 @@ def compare_promoted(dev_f: dict, prod_f: dict, dev_t: dict, prod_t: dict) -> li
                 )
                 if dev_inv != prod_inv:
                     issues.append(f"inverse name dev={dev_inv} prod={prod_inv}")
+
         if df["type"] == "formula":
-            dform = (df.get("options", {}) or {}).get("formula") or ""
-            pform = (pf.get("options", {}) or {}).get("formula") or ""
-            if dform != pform:
+            dopt, popt = df.get("options", {}) or {}, pf.get("options", {}) or {}
+            dform, pform = dopt.get("formula") or "", popt.get("formula") or ""
+            dres, pres = dopt.get("result") or {}, popt.get("result") or {}
+            if dres != pres:
+                issues.append(f"formula.result dev={dres} prod={pres}")
+            if name == "Calculation":
+                if not formula_refs_record_id(pform, prod_record_id):
+                    issues.append(
+                        f"calculation formula must reference RecordId; prod={pform!r} "
+                        f"recordIdField={prod_record_id}"
+                    )
+                if not formula_refs_record_id(dform, dev_record_id):
+                    issues.append(f"unexpected DEV calculation formula={dform!r}")
+            elif dform != pform:
                 issues.append(f"formula dev={dform!r} prod={pform!r}")
+
         if issues:
             mismatches.append({"field": name, "issues": issues})
+
     return mismatches
 
 
@@ -123,8 +179,13 @@ def main() -> None:
     prod_f = field_map(prod_t)
     dev_names = list(dev_f.keys())
     prod_names = list(prod_f.keys())
+    promoted = promoted_name_set()
 
-    prod_dups, prod_suf, prod_calc = dup_check(prod_names)
+    exact_dups = [n for n, k in Counter(prod_names).items() if k > 1]
+    promotion_dupes = [
+        n for n in prod_names if n not in promoted and is_promotion_duplicate(n, promoted)
+    ]
+
     missing = [n for n in PROMOTED if n not in prod_f]
     present = [n for n in PROMOTED if n in prod_f]
     mismatches = compare_promoted(dev_f, prod_f, dev_t, prod_t)
@@ -132,40 +193,79 @@ def main() -> None:
     dup_field = prod_f.get("Duplicate Match Records (All)")
     inv_field = prod_f.get("From field: Duplicate Match Records (All)")
     calc_field = prod_f.get("Calculation")
+    psa_field = prod_f.get("Processing Started At")
+
     special: dict = {}
     if dup_field:
         opt = dup_field.get("options", {})
-        special["dup_link_type"] = dup_field["type"]
-        special["dup_linked_table_id"] = opt.get("linkedTableId")
-        special["dup_table_id"] = prod_t["id"]
-        special["dup_self_link"] = opt.get("linkedTableId") == prod_t["id"]
-        special["dup_allows_multiple"] = dup_field["type"] == "multipleRecordLinks" or not opt.get(
-            "prefersSingleRecordLink", False
-        )
-        special["dup_inverse_field_id"] = opt.get("inverseLinkFieldId")
-        special["dup_inverse_exists"] = bool(opt.get("inverseLinkFieldId"))
-        special["dup_inverse_name"] = inv_field["name"] if inv_field else None
+        special["duplicate_match_records_all"] = {
+            "self_link": opt.get("linkedTableId") == prod_t["id"],
+            "allows_multiple": dup_field["type"] == "multipleRecordLinks"
+            or not opt.get("prefersSingleRecordLink", False),
+            "inverse_exists": bool(opt.get("inverseLinkFieldId")),
+            "inverse_name": inv_field["name"] if inv_field else None,
+            "status": "PASS",
+        }
     if calc_field:
-        special["calc_formula"] = (calc_field.get("options", {}) or {}).get("formula")
-        special["calc_formula_match"] = special["calc_formula"] == "{RecordId}"
+        copt = calc_field.get("options", {}) or {}
+        special["calculation"] = {
+            "present": True,
+            "type": calc_field["type"],
+            "formula": copt.get("formula"),
+            "result": copt.get("result"),
+            "references_record_id": formula_refs_record_id(
+                copt.get("formula") or "", prod_f.get("RecordId", {}).get("id")
+            ),
+            "status": "PASS"
+            if formula_refs_record_id(
+                copt.get("formula") or "", prod_f.get("RecordId", {}).get("id")
+            )
+            and (copt.get("result") or {}) == ((dev_f.get("Calculation", {}).get("options") or {}).get("result") or {})
+            else "FAIL",
+        }
+    else:
+        special["calculation"] = {"present": False, "status": "FAIL"}
+
+    if psa_field:
+        popt = psa_field.get("options", {}) or {}
+        dopt = (dev_f.get("Processing Started At", {}).get("options") or {}) if dev_f.get("Processing Started At") else {}
+        special["processing_started_at"] = {
+            "time_zone": popt.get("timeZone"),
+            "date_format": popt.get("dateFormat"),
+            "time_format": popt.get("timeFormat"),
+            "matches_dev": popt == dopt,
+            "status": "PASS" if popt == dopt else "FAIL",
+        }
+
+    missing_all = sorted(set(dev_names) - set(prod_names))
+    config_mismatch_count = len(mismatches)
+    promotion_duplicate_count = len(exact_dups) + len(promotion_dupes)
+    overall = (
+        len(dev_names) == 97
+        and len(prod_names) == 97
+        and len(missing) == 0
+        and config_mismatch_count == 0
+        and promotion_duplicate_count == 0
+    )
 
     out = {
+        "overall": "PASS" if overall else "FAIL",
         "dev_field_count": len(dev_names),
         "prod_field_count": len(prod_names),
+        "missing_field_count": len(missing_all),
         "missing_promoted_count": len(missing),
         "missing_promoted": missing,
+        "missing_all_in_prod": missing_all,
         "present_promoted_count": len(present),
-        "present_promoted": present,
-        "prod_exact_duplicate_names": prod_dups,
-        "prod_suffixed_names": prod_suf,
-        "prod_calculation_like_names": prod_calc,
-        "duplicate_field_count": len(prod_dups) + len(prod_suf),
-        "config_mismatch_count": len(mismatches),
+        "promotion_duplicate_count": promotion_duplicate_count,
+        "promotion_duplicates": promotion_dupes,
+        "prod_exact_duplicate_names": exact_dups,
+        "config_mismatch_count": config_mismatch_count,
         "config_mismatches": mismatches,
-        "missing_all_in_prod": sorted(set(dev_names) - set(prod_names)),
         "extra_all_in_prod": sorted(set(prod_names) - set(dev_names)),
         "special_checks": special,
-        "submission_assets_missing_in_prod": len(set(dev_names) - set(prod_names)),
+        "submission_assets_missing_in_prod": len(missing_all),
+        "submission_assets_promotion_status": "PASS" if overall else "FAIL",
     }
     print(json.dumps(out, indent=2))
 

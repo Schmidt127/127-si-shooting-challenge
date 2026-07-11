@@ -3,9 +3,9 @@
   "dev_base": "appTetnuCZlCZdTCT",
   "prod_base": "appn84sqPw03zEbTT",
   "branch": "master",
-  "head": "e4d2edeac64e7e14bf83d43b06594939914fee9f",
-  "generated_at": "2026-07-11T12:53:22Z",
-  "executive_summary": "Production v2 promotion is **not complete**. Submission Assets field promotion: **16/17 PASS** — only **`Calculation`** still missing on PROD (live API 2026-07-11). **0** of 6 critical scripts fail PROD schema dependency checks (116 **PASS**, 070b **PASS**; automation **116 forward test FAIL** \u2014 OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Full validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.",
+  "head": "d6b0f8f3ba03b805000a012555352b1741347b46",
+  "generated_at": "2026-07-11T12:58:37Z",
+  "executive_summary": "Production v2 promotion is **not complete**. Submission Assets field promotion: **FAIL** \u2014 live PROD schema still missing **`Calculation`** (96/97 fields). **`Processing Started At`** timezone correction **PASS**. **0** of 6 critical scripts fail PROD schema dependency checks (116 **PASS**, 070b **PASS**; automation **116 forward test FAIL** \u2014 OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.",
   "table_comparisons": [
     {
       "table": "Automations",
@@ -1154,8 +1154,7 @@
     }
   ],
   "manual_actions": [
-    "Create Calculation on PROD Submission Assets \u2014 formula exactly {RecordId} (only remaining promoted field)",
-    "Optional: set Processing Started At timezone to America/Denver to match DEV",
+    "Create Calculation on PROD Submission Assets \u2014 Formula field, formula {RecordId} (only remaining promoted field)",
     "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
     "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
     "Verify live Airtable automation ON/OFF states against automation-index.md",
@@ -1172,26 +1171,28 @@
     "Formula equivalence is string compare only; behaviorally equivalent rewrites may flag as diff.",
     "Automations table stores full script body in Automation Code \u2014 comparison keyed by Name prefix (###).",
     "Config table key field names assumed; mismatches may hide record diffs.",
-    "Config table fetch: '<' not supported between instances of 'str' and 'NoneType'"
+    "Config table fetch: '<' not supported between instances of 'NoneType' and 'str'"
   ],
-  "completion_estimate": "**Estimated completion: ~50\u201355%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema promotion **94% complete** (16/17 fields); 070b/116 schema deps PASS; automation 116 enable + C-013 PROD infra remain open.",
+  "completion_estimate": "**Estimated completion: ~50\u201355%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema promotion **94% complete** (16/17 fields; `Processing Started At` corrected); 070b/116 schema deps PASS; Calculation field + automation 116 enable + C-013 PROD infra remain open.",
   "submission_assets_field_promotion_validation": {
-    "validated_at": "2026-07-11T12:55:00Z",
+    "validated_at": "2026-07-11T13:00:00Z",
     "overall": "FAIL",
+    "submission_assets_promotion_status": "FAIL",
     "dev_field_count": 97,
     "prod_field_count": 96,
+    "missing_field_count": 1,
+    "missing_fields": ["Calculation"],
     "promoted_field_count": 17,
     "promoted_present_count": 16,
-    "promoted_missing_count": 1,
-    "promoted_missing": ["Calculation"],
     "promotion_duplicate_count": 0,
     "config_mismatch_count": 1,
-    "config_mismatches": [
-      {
-        "field": "Processing Started At",
-        "issue": "dateTime.timeZone dev=America/Denver prod=utc"
-      }
-    ],
+    "config_mismatches": [{"field": "Calculation", "issue": "missing on PROD"}],
+    "processing_started_at": {
+      "time_zone": "America/Denver",
+      "date_format": "M/D/YYYY",
+      "time_format": "h:mma",
+      "status": "PASS"
+    },
     "duplicate_match_records_all": {
       "self_link": true,
       "allows_multiple": true,
@@ -1211,5 +1212,5 @@
     "automation_070b_enable_ready": false,
     "validation_report": "docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md"
   },
-  "next_prompt": "Mike created PROD Submission Assets field Calculation with formula {RecordId}. Re-run read-only validation: python tools/airtable/_preview/pv2_sa_field_validation.py and python tools/airtable/pv2_dev_prod_gap_audit.py; confirm submission_assets_missing_in_prod = 0; update docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md to PASS; then proceed to automation 116 paste/enable checklist \u2014 do not enable 070b until C-013 production promotion smoke PASS."
+  "next_prompt": "Create PROD Submission Assets formula field Calculation with formula {RecordId} on table Submission Assets, then re-run read-only validation until submission_assets_missing_in_prod = 0. After schema PASS, run automation 116 PROD validation: paste 116 v1.0.1 from GitHub, enable trigger on Asset Reuse Decision, execute tools/airtable/prod_116_fixture_run.py confirm + restore on Schmidt Testing fixture \u2014 document in docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md. Do not enable 070b until C-013 production promotion smoke PASS."
 }
