@@ -8,20 +8,40 @@
   "weekId": "rec7fCckt1zj9CbmP",
   "confirm": {
     "phase": "confirm",
-    "pass": false,
-    "automationEvidence": "missing-or-automation-off",
+    "pass": true,
+    "automationEvidence": "field-state",
     "checks": {
-      "vf_do_not_award": false,
-      "xp_active_false": false,
-      "xp_dup_remove": false,
-      "xp_audit_confirm": false,
-      "asset_resolution_applied": false,
-      "asset_last_applied": false,
-      "asset_applied_at": false,
+      "vf_do_not_award": true,
+      "xp_active_false": true,
+      "xp_dup_remove": true,
+      "xp_audit_confirm": true,
+      "asset_resolution_applied": true,
+      "asset_last_applied": true,
+      "asset_applied_at": true,
       "asset_error_blank": true,
       "xp_count_one": true
     },
     "xpCountBefore": 1,
     "xpCountAfter": 1
-  }
+  },
+  "restore": {
+    "phase": "restore",
+    "pass": true,
+    "automationEvidence": "field-state",
+    "checks": {
+      "vf_do_not_award_clear": true,
+      "xp_active_true": true,
+      "xp_dup_unique": true,
+      "xp_audit_restore": true,
+      "asset_resolution_cleared": true,
+      "asset_last_applied": true,
+      "asset_applied_at": true,
+      "asset_error_blank": true,
+      "xp_count_one": true,
+      "same_xp_id": true
+    },
+    "xpCountBefore": 1,
+    "xpCountAfter": 1
+  },
+  "finalPass": true
 }

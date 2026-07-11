@@ -122,7 +122,8 @@ def verify_confirm_state(asset_id: str, vf_id: str, xp_id: str) -> tuple[bool, d
     xp_count = len(list_xp_by_source(f"VIDEO_SUBMISSION|{vf_id}"))
     checks = {
         "vf_do_not_award": vf.get("Do Not Award XP?") is True,
-        "xp_active_false": xp.get("Active?") is False,
+        # Airtable REST omits unchecked checkbox fields instead of returning false.
+        "xp_active_false": xp.get("Active?") is not True,
         "xp_dup_remove": xp.get("Duplicate Status") == "Duplicate - Remove",
         "xp_audit_confirm": "Confirmed duplicate — XP deactivated" in str(xp.get("XP Reason Debug") or ""),
         "asset_resolution_applied": asset.get("Duplicate Resolution Applied?") is True,
@@ -144,7 +145,9 @@ def verify_restore_state(asset_id: str, vf_id: str, xp_id: str) -> tuple[bool, d
         "xp_active_true": xp.get("Active?") is True,
         "xp_dup_unique": xp.get("Duplicate Status") == "Unique",
         "xp_audit_restore": "Restored — decision reversed" in str(xp.get("XP Reason Debug") or ""),
+        "asset_resolution_cleared": asset.get("Duplicate Resolution Applied?") is not True,
         "asset_last_applied": asset.get("Duplicate Resolution Last Applied Decision") == "Approved Reuse",
+        "asset_applied_at": bool(asset.get("Duplicate Resolution Applied At")),
         "asset_error_blank": not (asset.get("Duplicate Resolution Error") or "").strip(),
         "xp_count_one": xp_count == 1,
         "same_xp_id": xp_id == xp_id,

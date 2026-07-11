@@ -4,12 +4,12 @@
 **DEV base:** `appTetnuCZlCZdTCT`  
 **PROD base:** `appn84sqPw03zEbTT`  
 **Repository branch:** `master`  
-**Repository HEAD:** `cb18277a57a833d1c98f3a684c4cbe1010c60a69`  
+**Repository HEAD:** `80ff5a0cd036f842e30da960a097cfe04bd79140`  
 **Audit script:** `tools/airtable/pv2_dev_prod_gap_audit.py`  
 
 ## 1. Executive summary
 
-Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference). Automation **116 schema PASS**; automation **116 runtime validation FAIL** (2026-07-11 — forward test no field changes; automation not pasted/enabled on PROD). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md` · Runtime: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.
+Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference(s)). **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation 116 runtime **PASS**). C-013 production promotion **not started**. Classified gaps: **0 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Runtime evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.
 
 ## 2. Repository Production v2 inventory
 
@@ -187,21 +187,13 @@ DEV records: **48** · PROD records: **48**
 
 ## BLOCKER list
 
-**Count: 1**
-
-### PV2-GAP-0003 — Automation 116
-- DEV: Deployed ON, v1.0.1 validated S5A-S5L · PROD: **Runtime validation FAIL 2026-07-11** — 90s poll after Confirmed Duplicate produced no field changes; Automations table has no 116 doc row (008 still present)
-- Evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`
-- Impact: Duplicate decisions have no consequences on PROD
-- Correction: Paste 116 v1.0.1 in PROD Airtable UI, configure trigger on Asset Reuse Decision, enable, re-run `prod_116_fixture_run.py confirm + restore`
-- Mike manual: **True** · Cursor safe: **False** · Risk: High
-- Validation: prod_116_fixture_run.py confirm + restore PASS
+**Count: 0**
 
 ## REQUIRED BEFORE LAUNCH list
 
 **Count: 1**
 
-### PV2-GAP-0004 — C-013 Production promotion
+### PV2-GAP-0003 — C-013 Production promotion
 - DEV: Lambda/Make/070b hybrid proven DEV · PROD: Promotion NOT started per plan
 - Evidence: docs/deploy-checklists/C-013-production-promotion-plan.md status Planning only
 - Impact: No S3 canonical URLs or hash writeback on PROD uploads
@@ -233,7 +225,7 @@ DEV records: **48** · PROD records: **48**
 - Mike manual: **False** · Cursor safe: **False** · Risk: None
 - Validation: N/A
 
-### PV2-GAP-0005 — 066 shot milestones
+### PV2-GAP-0004 — 066 shot milestones
 - DEV: v3.2 pasted DEV+PROD 2026-07-06 · PROD: Same commit per automation-index
 - Evidence: docs/automation-index.md
 - Impact: None if already pasted
@@ -266,7 +258,6 @@ DEV records: **48** · PROD records: **48**
 
 ## Manual actions for Mike
 
-- Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore
 - Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b
 - Verify live Airtable automation ON/OFF states against automation-index.md
 - Approve launch after regression tests on Schmidt Testing fixture only
@@ -288,11 +279,11 @@ DEV records: **48** · PROD records: **48**
 
 ## Production v2 completion estimate
 
-**Estimated completion: ~55–60%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets required schema promotion **PASS**; automation 116 runtime enable + C-013 PROD infra remain open.
+**Estimated completion: ~65–70%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema and automation 116 controlled runtime validation **PASS**; C-013 PROD infrastructure remains open.
 
 ## Recommended next Cursor prompt
 
-Mike pasted and enabled PROD automation 116 v1.0.1. Re-run `tools/airtable/prod_116_fixture_run.py pretest`, `confirm`, and `restore` on Schmidt Testing fixture; update `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md` to PASS if both directions pass. If runtime PASS, begin C-013 PROD infrastructure readiness review per `docs/deploy-checklists/C-013-production-promotion-plan.md` — do not enable 070b until isolated Lambda smoke PASS.
+Run a read-only C-013 PROD infrastructure readiness audit against `docs/deploy-checklists/C-013-production-promotion-plan.md`: verify required AWS Lambda, Function URL, Make scenario, secrets, and rollback prerequisites without deploying or enabling automation 070b; report exact missing prerequisites and the controlled promotion sequence.
 
 ---
-*Generated 2026-07-11T13:16:11Z by pv2_dev_prod_gap_audit.py*
+*Generated 2026-07-11T13:58:27Z by pv2_dev_prod_gap_audit.py*

@@ -3,9 +3,9 @@
   "dev_base": "appTetnuCZlCZdTCT",
   "prod_base": "appn84sqPw03zEbTT",
   "branch": "master",
-  "head": "cb18277a57a833d1c98f3a684c4cbe1010c60a69",
-  "generated_at": "2026-07-11T13:16:11Z",
-  "executive_summary": "Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference). Automation **116 schema PASS**; automation **116 runtime validation FAIL** (2026-07-11 \u2014 forward test no field changes; automation not pasted/enabled on PROD). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md` \u00b7 Runtime: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.",
+  "head": "80ff5a0cd036f842e30da960a097cfe04bd79140",
+  "generated_at": "2026-07-11T13:58:27Z",
+  "executive_summary": "Production v2 promotion is **not complete**. Submission Assets required field promotion **PASS** (1 approved DEV-only difference(s)). **0** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation 116 runtime **PASS**). C-013 production promotion **not started**. Classified gaps: **0 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Runtime evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`.",
   "table_comparisons": [
     {
       "table": "Automations",
@@ -1082,26 +1082,60 @@
   "level_gate_diffs": [],
   "shot_milestone_diffs": [],
   "achievement_diffs": [],
+  "automation_116_runtime": {
+    "phase": "create",
+    "submissionId": "rec9yoDZ3DMIEhi3I",
+    "assetId": "recWZ4cHNYgbV60mL",
+    "videoFeedbackId": "reccXspFIiNIPMPcm",
+    "xpEventId": "recYQ10pOoFlApmjZ",
+    "sourceKey": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm",
+    "weekId": "rec7fCckt1zj9CbmP",
+    "confirm": {
+      "phase": "confirm",
+      "pass": true,
+      "automationEvidence": "field-state",
+      "checks": {
+        "vf_do_not_award": true,
+        "xp_active_false": true,
+        "xp_dup_remove": true,
+        "xp_audit_confirm": true,
+        "asset_resolution_applied": true,
+        "asset_last_applied": true,
+        "asset_applied_at": true,
+        "asset_error_blank": true,
+        "xp_count_one": true
+      },
+      "xpCountBefore": 1,
+      "xpCountAfter": 1
+    },
+    "restore": {
+      "phase": "restore",
+      "pass": true,
+      "automationEvidence": "field-state",
+      "checks": {
+        "vf_do_not_award_clear": true,
+        "xp_active_true": true,
+        "xp_dup_unique": true,
+        "xp_audit_restore": true,
+        "asset_resolution_cleared": true,
+        "asset_last_applied": true,
+        "asset_applied_at": true,
+        "asset_error_blank": true,
+        "xp_count_one": true,
+        "same_xp_id": true
+      },
+      "xpCountBefore": 1,
+      "xpCountAfter": 1
+    },
+    "finalPass": true,
+    "status": "PASS",
+    "evidence_path": "tools\\airtable\\_preview\\prod-116-fixture-audit.json"
+  },
   "gaps": {
-    "BLOCKER": [
-      {
-        "gap_id": "PV2-GAP-0003",
-        "classification": "BLOCKER",
-        "workstream": "Automation 116",
-        "dev_value": "Deployed ON, v1.0.1 validated S5A-S5L",
-        "prod_value": "Runtime validation FAIL 2026-07-11 \u2014 no field changes after 90s poll; Automations table has no 116 doc row",
-        "evidence": "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md",
-        "operational_impact": "Duplicate decisions have no consequences on PROD",
-        "correction": "Paste 116 v1.0.1 in PROD Airtable UI, configure trigger on Asset Reuse Decision, enable, re-run prod_116_fixture_run.py confirm + restore",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "High",
-        "validation": "prod_116_fixture_run.py confirm + restore PASS"
-      }
-    ],
+    "BLOCKER": [],
     "REQUIRED BEFORE LAUNCH": [
       {
-        "gap_id": "PV2-GAP-0004",
+        "gap_id": "PV2-GAP-0003",
         "classification": "REQUIRED BEFORE LAUNCH",
         "workstream": "C-013 Production promotion",
         "dev_value": "Lambda/Make/070b hybrid proven DEV",
@@ -1146,7 +1180,7 @@
         "validation": "N/A"
       },
       {
-        "gap_id": "PV2-GAP-0005",
+        "gap_id": "PV2-GAP-0004",
         "classification": "NO ACTION",
         "workstream": "066 shot milestones",
         "dev_value": "v3.2 pasted DEV+PROD 2026-07-06",
@@ -1234,7 +1268,6 @@
     }
   ],
   "manual_actions": [
-    "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
     "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
     "Verify live Airtable automation ON/OFF states against automation-index.md",
     "Approve launch after regression tests on Schmidt Testing fixture only"
@@ -1275,6 +1308,7 @@
       }
     ]
   },
+  "automation_116_runtime_status": "PASS",
   "limitations": [
     "Airtable automation UI state (ON/OFF, pasted script body) is not available via API \u2014 inferred from forward tests and docs.",
     "Formula equivalence is string compare only; behaviorally equivalent rewrites may flag as diff.",
@@ -1282,26 +1316,6 @@
     "Config table key field names assumed; mismatches may hide record diffs.",
     "Config table fetch: '<' not supported between instances of 'str' and 'NoneType'"
   ],
-  "completion_estimate": "**Estimated completion: ~55\u201360%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets required schema promotion **PASS**; automation 116 runtime enable + C-013 PROD infra remain open.",
-  "automation_116_runtime_validation": {
-    "validated_at": "2026-07-11T13:30:00Z",
-    "result": "FAIL",
-    "schema_validation_commit": "2958d8d",
-    "script_version": "1.0.1",
-    "script_commit": "992677d",
-    "fixture": {
-      "submissionId": "rec9yoDZ3DMIEhi3I",
-      "assetId": "recWZ4cHNYgbV60mL",
-      "videoFeedbackId": "reccXspFIiNIPMPcm",
-      "xpEventId": "recYQ10pOoFlApmjZ",
-      "sourceKey": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm"
-    },
-    "confirm_test": "FAIL",
-    "restore_test": "NOT_RUN",
-    "xp_count_before": 1,
-    "xp_count_after_confirm": 1,
-    "automation_recommended_state": "OFF",
-    "report": "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md"
-  },
-  "next_prompt": "Mike pasted and enabled PROD automation 116 v1.0.1. Re-run tools/airtable/prod_116_fixture_run.py pretest, confirm, and restore on Schmidt Testing fixture; update docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md to PASS if both directions pass. If runtime PASS, begin C-013 PROD infrastructure readiness review per docs/deploy-checklists/C-013-production-promotion-plan.md \u2014 do not enable 070b until isolated Lambda smoke PASS."
+  "completion_estimate": "**Estimated completion: ~65\u201370%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema and automation 116 controlled runtime validation **PASS**; C-013 PROD infrastructure remains open.",
+  "next_prompt": "Run a read-only C-013 PROD infrastructure readiness audit against `docs/deploy-checklists/C-013-production-promotion-plan.md`: verify required AWS Lambda, Function URL, Make scenario, secrets, and rollback prerequisites without deploying or enabling automation 070b; report exact missing prerequisites and the controlled promotion sequence."
 }

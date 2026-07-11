@@ -1,0 +1,20 @@
+{
+  "submissionId": "rec9yoDZ3DMIEhi3I",
+  "assetId": "recWZ4cHNYgbV60mL",
+  "videoFeedbackId": "reccXspFIiNIPMPcm",
+  "xpEventId": "recYQ10pOoFlApmjZ",
+  "sourceKey": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm",
+  "assetReuseDecision": "Approved Reuse",
+  "duplicateResolutionApplied": null,
+  "duplicateResolutionLastAppliedDecision": "Approved Reuse",
+  "duplicateResolutionError": null,
+  "duplicateResolutionAppliedAt": "2026-07-11T13:55:11.680Z",
+  "vfDoNotAwardXP": null,
+  "xpActive": true,
+  "xpDuplicateStatus": "Unique",
+  "xpReasonDebug": "PROD V2 Test fixture for automation 116 (PROD-V2-A116-TEST). Reference commit 992677d.\n[C-023-S5] Confirmed duplicate \u2014 XP deactivated 2026-07-11T13:52:14.804Z\n[C-023-S5] Restored \u2014 decision reversed 2026-07-11T13:53:49.615Z\n[C-023-S5] Confirmed duplicate \u2014 XP deactivated 2026-07-11T13:54:55.869Z\n[C-023-S5] Restored \u2014 decision reversed 2026-07-11T13:55:11.935Z",
+  "xpCountForSourceKey": 1,
+  "submissionLabel": "Testing Schmidt - 7/10/2026 - Post Challenge",
+  "assetLabel": "PROD V2 Test - Duplicate Reuse",
+  "vfKey": "PROD-V2-A116-TEST"
+}

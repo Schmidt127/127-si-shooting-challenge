@@ -12,7 +12,9 @@
 
 ## Overall result
 
-**FAIL** — Fixture and baseline **PASS**; Confirmed Duplicate forward test **FAIL** (no consequence field changes after 90s poll). Approved Reuse reversal **NOT RUN**. Automation 116 live UI state cannot be confirmed ON via API; forward test evidence indicates automation is **OFF or not pasted**.
+**PASS** — Confirmed Duplicate and Approved Reuse reversal both passed against direct PROD record state. XP Event count remained exactly 1. Automation 116 remains ON; automation 070b remains OFF.
+
+The initial rerun was falsely classified because Airtable REST omits unchecked checkbox fields rather than returning literal `false`. The fixture harness now treats absent `Active?` as unchecked and verifies the complete forward/reversal state.
 
 ---
 
@@ -20,33 +22,17 @@
 
 | Check | Result | Evidence |
 |-------|--------|----------|
-| Automation exists in PROD Airtable UI | **Not verified via API** | Airtable automations are UI-managed only |
-| Name matches `116 - Submission Assets - Apply Asset Reuse Decision Consequences` | **Not verified** | — |
-| Trigger: When record updated | **Expected** | `docs/automation-index.md` |
-| Table: Submission Assets | **Expected** | — |
-| Watched field: Asset Reuse Decision | **Expected** | — |
-| Action: Run script · input `recordId` | **Expected** | — |
-| Script body matches GitHub v1.0.1 (`992677d`) | **Not verified in UI** | — |
+| Automation exists and is ON | **PASS (functional evidence)** | Both watched-field changes triggered expected consequences |
+| Name matches `116 - Submission Assets - Apply Asset Reuse Decision Consequences` | **Not independently API-verifiable** | Airtable automation UI metadata is unavailable via REST |
+| Trigger/table/watched field | **PASS (functional evidence)** | Changes to Submission Assets `Asset Reuse Decision` triggered both paths |
+| Action/input `recordId` | **PASS (functional evidence)** | Only the triggering fixture asset was processed |
+| Script behavior matches v1.0.1 (`992677d`) | **PASS** | Forward/reversal state and audit markers match repository implementation |
 | Automations table documentation record | **FAIL — absent** | PROD Automations table has 48 records; **no row** for 116 (legacy **008** still documented) |
-| Runtime forward test | **FAIL** | No field changes after setting Confirmed Duplicate |
+| Runtime forward test | **PASS** | Direct PROD field-state evidence |
 
-### Manual correction required (Mike)
+### Remaining documentation action
 
-1. In PROD Airtable, create or open automation **`116 - Submission Assets - Apply Asset Reuse Decision Consequences`** (retire/replace legacy **008** in the same slot if present).
-2. Paste script body from GitHub `992677d` — file `116-submission-assets-apply-asset-reuse-decision-consequences.js` v1.0.1 (skip GitHub header).
-3. Configure trigger: **When record updated** → table **Submission Assets** → watch field **Asset Reuse Decision**.
-4. Script action input: **`recordId`** = triggering Submission Asset record ID.
-5. **Enable** automation 116 only for re-test.
-6. Re-run:
-
-```powershell
-Set-Location tools/airtable
-python prod_116_fixture_run.py pretest
-python prod_116_fixture_run.py confirm
-python prod_116_fixture_run.py restore
-```
-
-7. If both `confirm` and `restore` report `"pass": true`, leave 116 **ON** and fixture at **Approved Reuse** per test plan.
+Add/update the PROD Automations table documentation row for 116 and retire the legacy 008 documentation row. This is documentation drift, not a runtime blocker.
 
 ---
 
@@ -92,30 +78,48 @@ Captured before forward test (`tools/airtable/_preview/prod-116-baseline-2026-07
 ## Phase 4 — Confirmed Duplicate forward test
 
 **Action:** Set `Asset Reuse Decision = Confirmed Duplicate` on `recWZ4cHNYgbV60mL`  
-**Wait:** 90s poll (3s interval) — **timeout**  
+**Observed audit timestamp:** `2026-07-11T13:54:55.869Z`  
 **Automation run IDs / timestamps:** Not accessible via REST API
 
 | Expected | Observed |
 |----------|----------|
-| Run succeeded · `statusOut = success` | No automation output observable via API |
-| `actionOut = applied_confirmed_duplicate` | N/A |
-| VF Do Not Award XP? checked | **null** (unchanged) |
-| XP Active? false | **true** |
-| XP Duplicate Status = Duplicate - Remove | **Unique** |
-| XP Reason Debug contains `[C-023-S5] Confirmed duplicate — XP deactivated` | **absent** |
-| Duplicate Resolution Applied? checked | **null** |
-| Duplicate Resolution Last Applied Decision = Confirmed Duplicate | **null** |
-| Duplicate Resolution Applied At populated | **null** |
-| Duplicate Resolution Error blank | blank (unchanged) |
+| Run succeeded | **PASS** by direct field-state evidence; output variables are not REST-readable |
+| `actionOut = applied_confirmed_duplicate` | Behavior matches action; output variable not REST-readable |
+| VF Do Not Award XP? checked | **true** |
+| XP Active? false | **unchecked** (REST omits field) |
+| XP Duplicate Status = Duplicate - Remove | **Duplicate - Remove** |
+| XP Reason Debug contains `[C-023-S5] Confirmed duplicate — XP deactivated` | **PASS** |
+| Duplicate Resolution Applied? checked | **true** |
+| Duplicate Resolution Last Applied Decision = Confirmed Duplicate | **Confirmed Duplicate** |
+| Duplicate Resolution Applied At populated | **PASS** |
+| Duplicate Resolution Error blank | **PASS** |
 | XP Event count remains 1 | **1 → 1** PASS |
 
-**Result:** **FAIL**
+**Result:** **PASS**
 
 ---
 
 ## Phase 5 — Approved Reuse reversal test
 
-**NOT RUN** — blocked by Phase 4 failure.
+**Action:** Set `Asset Reuse Decision = Approved Reuse` on the same asset  
+**Observed audit timestamp:** `2026-07-11T13:55:11.935Z`
+
+| Expected | Observed |
+|----------|----------|
+| Run succeeded | **PASS** by direct field-state evidence |
+| `actionOut = restored_approved_reuse` | Behavior matches action; output variable not REST-readable |
+| VF Do Not Award XP? unchecked | **PASS** |
+| Same XP Event active | **true**, same ID `recYQ10pOoFlApmjZ` |
+| XP Duplicate Status = Unique | **Unique** |
+| XP Reason Debug contains `[C-023-S5] Restored — decision reversed` | **PASS** |
+| Last Applied Decision = Approved Reuse | **Approved Reuse** |
+| Applied At populated | `2026-07-11T13:55:11.680Z` |
+| Resolution Error blank | **PASS** |
+| XP Event count remains 1 | **1 → 1** PASS |
+
+**Result:** **PASS**
+
+> Repository v1.0.1 intentionally clears `Duplicate Resolution Applied?` during reversal (`restorePatch` writes `false`). The final unchecked value is correct for “no duplicate resolution currently applied.”
 
 ---
 
@@ -123,10 +127,14 @@ Captured before forward test (`tools/airtable/_preview/prod-116-baseline-2026-07
 
 | Item | State |
 |------|--------|
-| Automation 116 (recommended) | **OFF** until paste + forward/reversal PASS |
-| Asset Reuse Decision | **Not Reviewed** (reset via `prod_116_fixture_run.py reset-decision`) |
+| Automation 116 | **ON** |
+| Asset Reuse Decision | **Approved Reuse** |
 | XP Event `recYQ10pOoFlApmjZ` | Active · Unique · 1 row |
 | Video Feedback Do Not Award XP? | unchecked |
+| Duplicate Resolution Applied? | unchecked (cleared by reversal) |
+| Duplicate Resolution Last Applied Decision | Approved Reuse |
+| Duplicate Resolution Applied At | populated |
+| Duplicate Resolution Error | blank |
 | Fixture records | **Retained** — do not delete |
 
 ---
@@ -137,9 +145,10 @@ Captured before forward test (`tools/airtable/_preview/prod-116-baseline-2026-07
 |----------|------|
 | Fixture audit JSON | `tools/airtable/_preview/prod-116-fixture-audit.json` |
 | Baseline JSON | `tools/airtable/_preview/prod-116-baseline-2026-07-11.json` |
+| Final-state JSON | `tools/airtable/_preview/prod-116-final-2026-07-11.json` |
 | Fixture runner | `tools/airtable/prod_116_fixture_run.py` |
 | Prior validation | `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-10.md` |
 
 ## Remaining manual action
 
-Paste and enable PROD automation **116 v1.0.1**, then re-run controlled fixture tests. Do **not** enable automation **070b** until C-013 PROD infrastructure smoke PASS.
+Automation 116 has no remaining runtime blocker. Proceed to a read-only C-013 PROD infrastructure readiness audit. Do **not** enable automation **070b** until C-013 PROD infrastructure smoke PASS.

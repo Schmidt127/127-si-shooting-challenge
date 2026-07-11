@@ -315,6 +315,24 @@ def git_branch() -> str:
         return "unknown"
 
 
+def load_automation_116_runtime_evidence() -> dict[str, Any]:
+    path = HERE / "_preview" / "prod-116-fixture-audit.json"
+    if not path.exists():
+        return {"status": "NOT_RUN", "finalPass": False, "evidence_path": str(path.relative_to(REPO))}
+    try:
+        evidence = json.loads(path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        return {
+            "status": "INVALID_EVIDENCE",
+            "finalPass": False,
+            "error": str(exc),
+            "evidence_path": str(path.relative_to(REPO)),
+        }
+    evidence["status"] = "PASS" if evidence.get("finalPass") is True else "FAIL"
+    evidence["evidence_path"] = str(path.relative_to(REPO))
+    return evidence
+
+
 def compare_table(dev_t: dict | None, prod_t: dict | None, tname: str) -> dict:
     out: dict[str, Any] = {"table": tname, "dev_present": dev_t is not None, "prod_present": prod_t is not None}
     if not dev_t and not prod_t:
@@ -571,10 +589,14 @@ def classify_gaps(data: dict) -> dict[str, list[dict]]:
                 correction=f"Promote schema deps then paste {script['path']}", mike_manual=True, cursor_safe=False,
                 risk="High", validation=f"Re-run pv2_dev_prod_gap_audit.py script matrix for {script['script']}")
 
-    add("BLOCKER", classification="BLOCKER", workstream="Automation 116", dev_value="Deployed ON, v1.0.1 validated S5A-S5L",
-        prod_value="Forward test FAIL — no field changes after 90s poll", evidence="docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-10.md",
-        operational_impact="Duplicate decisions have no consequences on PROD", correction="Paste 116 v1.0.1, enable trigger on Asset Reuse Decision",
-        mike_manual=True, cursor_safe=False, risk="High", validation="prod_116_fixture_run.py confirm + restore PASS")
+    runtime_116 = data.get("automation_116_runtime") or {}
+    if runtime_116.get("finalPass") is not True:
+        add("BLOCKER", classification="BLOCKER", workstream="Automation 116", dev_value="Deployed ON, v1.0.1 validated S5A-S5L",
+            prod_value="Runtime validation FAIL or not completed",
+            evidence="docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md",
+            operational_impact="Duplicate decisions have no consequences on PROD",
+            correction="Enable 116 v1.0.1 and re-run prod_116_fixture_run.py confirm + restore",
+            mike_manual=True, cursor_safe=False, risk="High", validation="prod_116_fixture_run.py confirm + restore PASS")
 
     add("REQUIRED BEFORE LAUNCH", classification="REQUIRED BEFORE LAUNCH", workstream="C-013 Production promotion",
         dev_value="Lambda/Make/070b hybrid proven DEV", prod_value="Promotion NOT started per plan",
@@ -903,6 +925,7 @@ def main() -> None:
         "script_matrix": script_matrix,
         "automation_compare": automation_compare,
         "config_diffs": config_diffs,
+        "automation_116_runtime": load_automation_116_runtime_evidence(),
     }
     gaps = classify_gaps(partial)
     blockers = len(gaps["BLOCKER"])
@@ -914,6 +937,8 @@ def main() -> None:
     approved_sa = len(sa.get("approved_differences") or [])
     sa_promotion_pass = missing_sa_required == 0
     prod_script_fails = sum(1 for s in script_matrix if not s["prod_ok"])
+    runtime_116 = partial["automation_116_runtime"]
+    runtime_116_pass = runtime_116.get("finalPass") is True
 
     if sa_promotion_pass:
         sa_status = (
@@ -926,24 +951,23 @@ def main() -> None:
     executive = (
         f"Production v2 promotion is **not complete**. {sa_status}. "
         f"**{prod_script_fails}** of {len(script_matrix)} critical scripts fail PROD dependency checks "
-        f"(116 schema **PASS**; automation **116 forward test FAIL** — OFF or not pasted). "
+        f"(116 schema **PASS**; automation 116 runtime **{'PASS' if runtime_116_pass else 'FAIL'}**). "
         f"C-013 production promotion **not started**. "
         f"Classified gaps: **{blockers} BLOCKER**, **{required} REQUIRED BEFORE LAUNCH**. "
-        f"Validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`."
+        f"Runtime evidence: `docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md`."
     )
 
     completion = (
-        "**Estimated completion: ~55–60%** for Production v2 wave (C-013 + C-023 + 116). "
-        "Submission Assets required schema promotion **PASS**; automation 116 runtime enable + "
-        "C-013 PROD infra remain open."
+        "**Estimated completion: ~65–70%** for Production v2 wave (C-013 + C-023 + 116). "
+        "Submission Assets schema and automation 116 controlled runtime validation **PASS**; "
+        "C-013 PROD infrastructure remains open."
     )
 
     next_prompt = (
-        "Run automation 116 PROD runtime validation: paste 116 v1.0.1 from GitHub into PROD Airtable, "
-        "enable trigger on Asset Reuse Decision, execute tools/airtable/prod_116_fixture_run.py confirm + "
-        "restore on Schmidt Testing fixture — document in "
-        "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md. "
-        "Do not enable 070b until C-013 production promotion smoke PASS."
+        "Run a read-only C-013 PROD infrastructure readiness audit against "
+        "`docs/deploy-checklists/C-013-production-promotion-plan.md`: verify required AWS Lambda, "
+        "Function URL, Make scenario, secrets, and rollback prerequisites without deploying or enabling "
+        "automation 070b; report exact missing prerequisites and the controlled promotion sequence."
     )
 
     data = {
@@ -963,10 +987,10 @@ def main() -> None:
         "level_gate_diffs": level_gate_diffs,
         "shot_milestone_diffs": shot_milestone_diffs,
         "achievement_diffs": achievement_diffs,
+        "automation_116_runtime": runtime_116,
         "gaps": gaps,
         "promotion_plan": build_promotion_plan(gaps),
         "manual_actions": [
-            "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
             "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
             "Verify live Airtable automation ON/OFF states against automation-index.md",
             "Approve launch after regression tests on Schmidt Testing fixture only",
@@ -985,6 +1009,7 @@ def main() -> None:
             "approved_difference_count": approved_sa,
             "approved_differences": sa.get("approved_differences") or [],
         },
+        "automation_116_runtime_status": "PASS" if runtime_116_pass else "FAIL",
         "limitations": limitations,
         "completion_estimate": completion,
         "next_prompt": next_prompt,
