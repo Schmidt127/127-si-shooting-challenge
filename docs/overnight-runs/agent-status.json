@@ -1,0 +1,38 @@
+{
+  "runId": "overnight-run-2026-07-11",
+  "lastUpdated": "2026-07-11T21:54:00-06:00",
+  "lead": {
+    "branch": "overnight/lead-integration",
+    "status": "active",
+    "lastAction": "infrastructure bootstrap"
+  },
+  "workers": {
+    "Worker-A": {
+      "taskId": "T1",
+      "branch": "overnight/worker-a-070a-airtable",
+      "status": "ready_to_launch",
+      "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script"
+    },
+    "Worker-B": {
+      "taskId": "T2",
+      "branch": "overnight/worker-b-070a-backend",
+      "status": "ready_to_launch",
+      "cloudTaskName": "[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route"
+    },
+    "Worker-C": {
+      "taskId": "T3",
+      "branch": "overnight/worker-c-070a-tests",
+      "status": "ready_to_launch",
+      "cloudTaskName": "[OVERNIGHT][T3][Worker-C] 070a DEV tests + smoke tooling"
+    },
+    "Worker-D": {
+      "taskId": "T4",
+      "branch": "overnight/worker-d-docs",
+      "status": "ready_to_launch",
+      "phase": 1,
+      "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation"
+    }
+  },
+  "openBlockers": [],
+  "nextHourlyStatusDue": "2026-07-11T22:54:00-06:00"
+}

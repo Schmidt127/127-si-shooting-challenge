@@ -1,0 +1,143 @@
+{
+  "runId": "overnight-run-2026-07-11",
+  "startedAt": "2026-07-11T21:54:00-06:00",
+  "primaryEnvironment": "DEV",
+  "devBaseId": "appTetnuCZlCZdTCT",
+  "prodBaseId": "appn84sqPw03zEbTT",
+  "leadBranch": "overnight/lead-integration",
+  "liveStatusIssueTitle": "[OVERNIGHT] Live Run Status — 2026-07-11",
+  "rules": {
+    "devFirst": true,
+    "prodChangesRequireLeadControlledVerification": true,
+    "noBusinessDataDeletion": true,
+    "neverResetProdEvidenceRecord": "recGQ8EjAMz3bEBiW",
+    "workersDoNotEditSharedFiles": true,
+    "hourlyNoAutoMergeRebaseDeploy": true
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "070a DEV Airtable and automation script",
+      "agent": "Worker-A",
+      "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script",
+      "branch": "overnight/worker-a-070a-airtable",
+      "environment": "DEV",
+      "status": "queued",
+      "locks": ["L-070a-script", "L-070a-schema-dev"],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
+      "dependencies": [],
+      "testsRequired": ["unit tests for 070a-related pure helpers when applicable"],
+      "deploymentRequired": false,
+      "manualActionRequired": false,
+      "commitHash": null,
+      "verificationResult": null,
+      "notes": "Align 070a with 070b v4.4 + 070c v1.1 async patterns for homework routeKey homework_completion."
+    },
+    {
+      "id": "T2",
+      "title": "070a DEV Make/Lambda backend route",
+      "agent": "Worker-B",
+      "cloudTaskName": "[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route",
+      "branch": "overnight/worker-b-070a-backend",
+      "environment": "DEV",
+      "status": "queued",
+      "locks": ["L-070a-make-dev", "L-070a-lambda-dev"],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
+      "dependencies": ["T1 contract optional — read worker-a result when published"],
+      "testsRequired": ["DEV smoke script when B delivers"],
+      "deploymentRequired": "DEV only",
+      "manualActionRequired": false,
+      "commitHash": null,
+      "verificationResult": null,
+      "notes": "Mirror C-013 video path architecture for homework DEV route."
+    },
+    {
+      "id": "T3",
+      "title": "070a DEV tests and smoke tooling",
+      "agent": "Worker-C",
+      "cloudTaskName": "[OVERNIGHT][T3][Worker-C] 070a DEV tests + smoke tooling",
+      "branch": "overnight/worker-c-070a-tests",
+      "environment": "DEV",
+      "status": "queued",
+      "locks": ["L-070a-tests"],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-c-t3-070a-tests.md",
+      "dependencies": ["T1/T2 contracts as published — scaffold immediately with mocks"],
+      "testsRequired": ["node/pytest unit tests", "DEV smoke when unblocked"],
+      "deploymentRequired": false,
+      "manualActionRequired": false,
+      "commitHash": null,
+      "verificationResult": null,
+      "notes": "Do not wait idle — scaffold tests immediately."
+    },
+    {
+      "id": "T4",
+      "title": "C-023 read-only audit, then 070a documentation",
+      "agent": "Worker-D",
+      "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation",
+      "branch": "overnight/worker-d-docs",
+      "environment": "repo-only",
+      "status": "queued",
+      "phase": 1,
+      "locks": ["L-c023-docs-readonly"],
+      "workerResultFiles": [
+        "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
+        "docs/overnight-runs/worker-results/worker-d-t4-070a-docs.md"
+      ],
+      "dependencies": ["Phase 2 after T1–T3 worker results published"],
+      "testsRequired": [],
+      "deploymentRequired": false,
+      "manualActionRequired": false,
+      "commitHash": null,
+      "verificationResult": null,
+      "notes": "Phase 1 starts immediately — read-only C-023 audit. Phase 2 after A–C results."
+    },
+    {
+      "id": "T5",
+      "title": "C-023 implementation (next stages)",
+      "agent": "lead-assign",
+      "branch": null,
+      "environment": "DEV",
+      "status": "blocked_until_070a_locks_clear",
+      "locks": ["L-c023-implementation"],
+      "dependencies": ["T1", "T2", "T3", "T4 phase 1 audit", "no overlap with active 070a locks"],
+      "testsRequired": ["C-023 DEV matrix tests"],
+      "deploymentRequired": "DEV first",
+      "manualActionRequired": false,
+      "commitHash": null,
+      "verificationResult": null,
+      "notes": "Lead unlocks when 070a locks released and dependency map from Worker D reviewed."
+    }
+  ],
+  "locks": {
+    "L-070a-script": {
+      "holder": "Worker-A",
+      "paths": ["airtable/automations/shooting-challenge/070a-*.js"]
+    },
+    "L-070a-schema-dev": {
+      "holder": "Worker-A",
+      "systems": ["Airtable DEV appTetnuCZlCZdTCT homework upload schema"]
+    },
+    "L-070a-make-dev": {
+      "holder": "Worker-B",
+      "paths": ["make/** homework upload DEV"]
+    },
+    "L-070a-lambda-dev": {
+      "holder": "Worker-B",
+      "paths": ["tools/airtable/* homework/upload DEV"]
+    },
+    "L-070a-tests": {
+      "holder": "Worker-C",
+      "paths": ["**/*070a*test*", "tools/airtable/*smoke*"]
+    },
+    "L-c023-docs-readonly": {
+      "holder": "Worker-D",
+      "paths": ["docs/**/C-023*", "airtable/schema/snapshots/c023*"]
+    },
+    "L-c023-implementation": {
+      "holder": null,
+      "status": "blocked"
+    }
+  },
+  "lastUpdated": "2026-07-11T21:54:00-06:00",
+  "lastUpdatedBy": "Cloud-Lead"
+}
