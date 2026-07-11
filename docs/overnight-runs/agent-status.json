@@ -8,7 +8,9 @@
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",
-    "lastAction": "LEAD-005: refresh status, merge D Phase2 + A tip, assign T6/T7, refill queue T8/T9"
+    "lastAction": "LEAD-005: refresh status, merge D Phase2 + A tip, assign T6/T7, refill queue T8/T9",
+    "lastCommit": "3ae7cc9fae368627e237c2af71661f9d83207388",
+    "statusPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19"
   },
   "workers": {
     "Worker-A": {
@@ -51,6 +53,18 @@
       "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356"
     }
   },
-  "openBlockers": [8, 9, 11, 17],
-  "staleClosable": [14, 15, 6, 7, 10, 16]
+  "openBlockers": [
+    8,
+    9,
+    11,
+    17
+  ],
+  "staleClosable": [
+    14,
+    15,
+    6,
+    7,
+    10,
+    16
+  ]
 }
