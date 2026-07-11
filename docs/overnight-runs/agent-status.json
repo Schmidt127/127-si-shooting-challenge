@@ -8,7 +8,8 @@
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",
-    "lastAction": "LEAD-004 merged Worker A + D addenda; A–D on lead; awaiting Mike #17/#8/#9"
+    "lastAction": "LEAD-004 merged Worker A + D addenda; A\u2013D on lead; awaiting Mike #17/#8/#9",
+    "lastCommit": "24acc86cce4ba6dfaf8a01bdd812fb45e3093fbc"
   },
   "workers": {
     "Worker-A": {
@@ -54,8 +55,20 @@
       "nextAssignment": "Phase 2 write worker-d-t4-070a-docs.md (+ optional P-D1)"
     }
   },
-  "openBlockers": [8, 9, 11, 17],
-  "staleClosableBlockers": [15],
-  "duplicateBlockersToClose": [6, 7, 10, 14],
+  "openBlockers": [
+    8,
+    9,
+    11,
+    17
+  ],
+  "staleClosableBlockers": [
+    15
+  ],
+  "duplicateBlockersToClose": [
+    6,
+    7,
+    10,
+    14
+  ],
   "nextHourlyStatusDue": "2026-07-11T23:32:00Z"
 }
