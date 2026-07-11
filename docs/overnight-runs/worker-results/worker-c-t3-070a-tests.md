@@ -75,7 +75,8 @@ python3 tools/airtable/c070a_dev_smoke_run.py all
 ## Commit SHA
 
 - **Primary delivery:** `e8b1b9cb5cb36135e928b45972402cff2a1d78cf`
-- **Branch tip (includes this result file):** see `git rev-parse origin/overnight/worker-c-070a-tests` after push
+- **Worker B alignment follow-up:** `45396d92d554c52179d7e1d0582941f15e0925c2`
+- **Branch tip:** `45396d92d554c52179d7e1d0582941f15e0925c2` (`origin/overnight/worker-c-070a-tests`)
 
 ---
 
