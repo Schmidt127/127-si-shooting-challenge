@@ -4,23 +4,22 @@
   "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
   "leadBootstrapCommit": "36ae37d",
   "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
-  "lastUpdated": "2026-07-11T22:30:00Z",
+  "lastUpdated": "2026-07-11T22:32:00Z",
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",
-    "lastAction": "LEAD-003 merged Workers D+B+C after review+tests; awaiting Worker A; Mike blockers #8/#9/#11/#15",
-    "tipCommitPendingPush": false,
-    "lastCommit": "38f1a666a2393320124c8974e7738c98b00f9dc9"
+    "lastAction": "LEAD-004 merged Worker A + D addenda; A–D on lead; awaiting Mike #17/#8/#9"
   },
   "workers": {
     "Worker-A": {
       "taskId": "T1",
       "branch": "overnight/worker-a-070a-airtable",
-      "status": "running_no_remote_branch",
+      "status": "merged_awaiting_mike_paste",
       "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script",
       "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864",
-      "prUrl": null,
-      "resultFile": null
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/18",
+      "resultFile": "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
+      "mergedToLead": true
     },
     "Worker-B": {
       "taskId": "T2",
@@ -45,27 +44,18 @@
     "Worker-D": {
       "taskId": "T4",
       "branch": "overnight/worker-d-docs",
-      "status": "phase1_merged_next_p_d1",
-      "phase": 1,
+      "status": "phase2_cleared",
+      "phase": 2,
       "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation",
       "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
       "resultFile": "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
       "mergedToLead": true,
-      "nextAssignment": "P-D1 C-023 docs reconciliation (non-overlapping); Phase 2 blocked on Worker A"
+      "nextAssignment": "Phase 2 write worker-d-t4-070a-docs.md (+ optional P-D1)"
     }
   },
-  "openBlockers": [
-    8,
-    9,
-    11,
-    15
-  ],
-  "duplicateBlockersToClose": [
-    6,
-    7,
-    10,
-    14
-  ],
-  "nextHourlyStatusDue": "2026-07-11T23:30:00Z"
+  "openBlockers": [8, 9, 11, 17],
+  "staleClosableBlockers": [15],
+  "duplicateBlockersToClose": [6, 7, 10, 14],
+  "nextHourlyStatusDue": "2026-07-11T23:32:00Z"
 }

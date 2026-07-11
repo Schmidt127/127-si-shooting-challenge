@@ -63,22 +63,38 @@
 - **Continuing meanwhile:** Offline harness merged to lead
 - **Note:** Worker B result **is** published (PR #12) — issue body partially stale
 
-### MA-004 — T4 Phase 2 blocked on Worker A result
+### MA-004 — T4 Phase 2 (STALE / closable)
 - **GitHub issue:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) (canonical; duplicate #14)
 - **Task / agent:** T4 / Worker-D
-- **System:** Docs / GitHub
-- **Location:** Missing `docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md`
-- **Exact action:** No Mike Make/AWS action — monitor Worker A (`bc-c1932048…`). If stalled >1h with no branch, Mike may relaunch Worker A on `overnight/worker-a-070a-airtable`.
-- **Blocks:** T4 Phase 2 070a docs only
-- **Continuing meanwhile:** Worker D may execute **P-D1** C-023 docs reconciliation (non-overlapping)
+- **Update (LEAD-004):** Worker A result **published** and merged to lead. Phase 2 **cleared**.
+- **Exact action:** Comment `RESOLVED — worker-a-t1 published` on #15 and close (also close #14). Worker D: write `worker-d-t4-070a-docs.md`.
 
 ### MA-005 — GitHub hygiene (token 403 workaround)
 - **System:** GitHub issues
 - **Exact action:**
-  1. Label `#8 #9 #11 #15` with `overnight-blocker` + `overnight-run`; assign `Schmidt127`.
-  2. Close duplicates `#6 #7 #10 #14` as duplicates of `#8 #9 #11 #15`.
+  1. Label `#8 #9 #11 #17` with `overnight-blocker` + `overnight-run`; assign `Schmidt127`.
+  2. Close duplicates `#6 #7 #10 #14`; close #15 as resolved (A published).
   3. Paste contents of `docs/overnight-runs/_live-status-update.md` into issue [#1](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1).
 - **Blocks:** Remote monitoring clarity only (run continues)
+
+### MA-006 — T1 Airtable-DEV paste 070a v4.4
+- **GitHub issue:** [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17)
+- **Task / agent:** T1 / Worker-A
+- **System:** Airtable DEV `appTetnuCZlCZdTCT`
+- **Location:** Automation **070a - Send Homework Asset Payload to Make**
+- **Exact error:** Worker A cloud env has no `AIRTABLE_TOKEN`; cannot paste or live-verify schema
+- **Actions attempted:** Repo 070a v4.4 + prep checklist + tests on `overnight/worker-a-070a-airtable` (merged to lead)
+- **Exact action:**
+  1. Open DEV automation 070a.
+  2. Paste from GitHub script `airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` — **skip GitHub header** (lines 1–24); paste production docblock through EOF.
+  3. Inputs: `recordId` from trigger; `makeWebhookUrl` = DEV webhook (after MA-001); `automationNumber` = `070a`.
+  4. **Leave OFF.**
+  5. Confirm companion **070c** can fire for homework (`Upload Destination = Homework Completions` or no destination filter).
+  6. Optional: add read-only DEV `AIRTABLE_TOKEN` to cloud env.
+- **Blocks:** Live DEV enable/verify for T1 (not full run)
+- **Continuing meanwhile:** Workers B/C/D continue; lead holds integrated repo
+- **Branch / commit / result:** `overnight/worker-a-070a-airtable` @ `332b4f5` · `worker-a-t1-070a-airtable.md` · PR #18 · https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864
+- **Verify when done:** Comment `RESOLVED — [what you did]` on #17; DEV shows v4.4; 070a still OFF
 
 ---
 

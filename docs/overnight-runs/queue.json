@@ -5,7 +5,7 @@
   "devBaseId": "appTetnuCZlCZdTCT",
   "prodBaseId": "appn84sqPw03zEbTT",
   "leadBranch": "overnight/lead-integration",
-  "liveStatusIssueTitle": "[OVERNIGHT] Live Run Status \u2014 2026-07-11",
+  "liveStatusIssueTitle": "[OVERNIGHT] Live Run Status — 2026-07-11",
   "liveStatusIssueNumber": 1,
   "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
   "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
@@ -26,22 +26,20 @@
       "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864",
       "branch": "overnight/worker-a-070a-airtable",
       "environment": "DEV",
-      "status": "in_progress_no_branch_yet",
-      "locks": [
-        "L-070a-script",
-        "L-070a-schema-dev"
-      ],
+      "status": "merged_to_lead_awaiting_mike_paste",
+      "locks": ["L-070a-script", "L-070a-schema-dev"],
       "workerResultFile": "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
       "dependencies": [],
-      "testsRequired": [
-        "unit tests for 070a-related pure helpers when applicable"
-      ],
+      "testsRequired": ["unit tests for 070a-related pure helpers when applicable"],
       "deploymentRequired": false,
-      "manualActionRequired": false,
-      "commitHash": null,
-      "prUrl": null,
-      "verificationResult": null,
-      "notes": "Agent RUNNING but no remote branch/PR/result file as of lead sync 2026-07-11T22:30Z. Blocks T3 live smoke, T4 Phase 2, and full 070a DEV verification. Align 070a with 070b v4.4 + 070c v1.1 async patterns for homework_completion."
+      "manualActionRequired": true,
+      "manualActionIssues": [17],
+      "commitHash": "332b4f5ce4efc20e27930ee0be04a589902a7c02",
+      "implementationCommit": "767eb18",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/18",
+      "mergedIntoLead": true,
+      "verificationResult": "repo v4.4 PASS (helper tests incl 11b); live DEV paste BLOCKED on #17",
+      "notes": "070a GitHub aligned to 070b v4.4 Accepted async. Remains OFF. Mike paste to DEV per #17. Check 070c trigger allows homework destination."
     },
     {
       "id": "T2",
@@ -52,30 +50,20 @@
       "branch": "overnight/worker-b-070a-backend",
       "environment": "DEV",
       "status": "merged_to_lead_awaiting_mike_manual",
-      "locks": [
-        "L-070a-make-dev",
-        "L-070a-lambda-dev"
-      ],
+      "locks": ["L-070a-make-dev", "L-070a-lambda-dev"],
       "workerResultFile": "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
-      "dependencies": [
-        "T1 contract optional \u2014 read worker-a result when published"
-      ],
-      "testsRequired": [
-        "DEV smoke script when B delivers"
-      ],
+      "dependencies": ["T1 contract optional — published"],
+      "testsRequired": ["DEV smoke script when B delivers"],
       "deploymentRequired": "DEV only",
       "manualActionRequired": true,
-      "manualActionIssues": [
-        8,
-        9
-      ],
+      "manualActionIssues": [8, 9],
       "commitHash": "0dd0ac54b2f371b83d1bdd3773a0c377c558fdd7",
       "implementationCommit": "2235340c8523b3ecde095bc63941fd0be206e580",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/12",
       "mergedIntoLead": true,
       "leadMergeCommit": "8cc58f3",
-      "verificationResult": "offline PASS (lambda 38/38 + homework smoke 8/8); live smoke BLOCKED on #8/#9",
-      "notes": "Repo pack merged to lead. Make UI Module 2 + DEV credentials still required for live smoke. Did not edit 070a-*.js. PROD untouched."
+      "verificationResult": "offline PASS; live smoke BLOCKED on #8/#9",
+      "notes": "Compatible with Worker A v4.4 Accepted + immediate JSON modes."
     },
     {
       "id": "T3",
@@ -86,29 +74,20 @@
       "branch": "overnight/worker-c-070a-tests",
       "environment": "DEV",
       "status": "merged_to_lead_awaiting_live_unblock",
-      "locks": [
-        "L-070a-tests"
-      ],
+      "locks": ["L-070a-tests"],
       "workerResultFile": "docs/overnight-runs/worker-results/worker-c-t3-070a-tests.md",
-      "dependencies": [
-        "T1/T2 contracts as published \u2014 scaffold immediately with mocks"
-      ],
-      "testsRequired": [
-        "node/pytest unit tests",
-        "DEV smoke when unblocked"
-      ],
+      "dependencies": ["T1/T2 published"],
+      "testsRequired": ["node/pytest unit tests", "DEV smoke when unblocked"],
       "deploymentRequired": false,
       "manualActionRequired": true,
-      "manualActionIssues": [
-        11
-      ],
+      "manualActionIssues": [11],
       "commitHash": "66c9464f66e042fd0d1558ca759628cbbdb20944",
       "primaryDeliveryCommit": "e8b1b9cb5cb36135e928b45972402cff2a1d78cf",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/13",
       "mergedIntoLead": true,
       "leadMergeCommit": "3404e08",
-      "verificationResult": "offline PASS (Node 20+17, Python 16 smoke units, lambda 46 incl 070a regression, mock smoke 5/5); live BLOCKED on T1+#8+#9+#11",
-      "notes": "Compatible with Worker B payload/env aliases. Merged to lead after integration tests."
+      "verificationResult": "offline+mock PASS post-A merge; live BLOCKED on #8/#9/#17",
+      "notes": "Post-A integration: 070a script homework_completion regression still PASS."
     },
     {
       "id": "T4",
@@ -118,32 +97,25 @@
       "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356",
       "branch": "overnight/worker-d-docs",
       "environment": "repo-only",
-      "status": "phase1_merged_phase2_blocked_on_T1",
-      "phase": 1,
+      "status": "phase1_merged_phase2_cleared_to_start",
+      "phase": 2,
       "phase1Status": "complete_merged",
-      "phase2Status": "blocked_waiting_worker_a_result",
-      "locks": [
-        "L-c023-docs-readonly"
-      ],
+      "phase2Status": "cleared_A_B_C_results_published",
+      "locks": ["L-c023-docs-readonly"],
       "workerResultFiles": [
         "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
         "docs/overnight-runs/worker-results/worker-d-t4-070a-docs.md"
       ],
-      "dependencies": [
-        "Phase 2 after T1\u2013T3 worker results published"
-      ],
+      "dependencies": ["Phase 2 after T1–T3 worker results published"],
       "testsRequired": [],
       "deploymentRequired": false,
       "manualActionRequired": false,
-      "manualActionIssues": [
-        15
-      ],
-      "commitHash": "a9a4166991e0dc8da7eb3461ff6feff6324f7de5",
+      "manualActionIssues": [],
+      "commitHash": "7b5b60950a351f1186533aeb6d93235e631fef18",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
       "mergedIntoLead": true,
-      "leadMergeCommit": "1cdeebe",
-      "verificationResult": "Phase 1 audit reviewed by lead; unlock criteria accepted",
-      "notes": "Phase 1 COMPLETE and merged. Next safe work: P-D1 C-023 docs reconciliation (non-overlapping). Phase 2 070a docs wait for worker-a-t1. Duplicate blocker issues #14/#15 \u2014 keep #15 as canonical."
+      "verificationResult": "Phase 1 audit + addenda merged; Phase 2 UNBLOCKED (A/B/C results on lead)",
+      "notes": "NEXT: write worker-d-t4-070a-docs.md from A/B/C results + optionally P-D1 C-023 docs reconciliation. Issue #15 can close when Phase 2 starts."
     },
     {
       "id": "T5",
@@ -152,69 +124,45 @@
       "branch": null,
       "environment": "DEV",
       "status": "blocked_until_070a_locks_clear",
-      "locks": [
-        "L-c023-implementation"
-      ],
-      "dependencies": [
-        "T1",
-        "T2",
-        "T3",
-        "T4 phase 1 audit",
-        "no overlap with active 070a locks"
-      ],
-      "testsRequired": [
-        "C-023 DEV matrix tests"
-      ],
+      "locks": ["L-c023-implementation"],
+      "dependencies": ["T1", "T2", "T3", "T4 phase 1 audit", "no overlap with active 070a locks"],
+      "testsRequired": ["C-023 DEV matrix tests"],
       "deploymentRequired": "DEV first",
       "manualActionRequired": false,
       "commitHash": null,
       "verificationResult": null,
-      "notes": "Worker D audit reviewed. First safe unlock candidates after 070a locks clear: T5-Stage6-closure docs / T5-HW-hash-proof. T5-OMNI-support checklist can start as docs-only anytime under Worker D P-D1 without releasing 070a locks. Do not reopen 116 logic."
+      "notes": "070a locks still held until live DEV verify + enable decision. Docs-only Stage 6/OMNI packet OK under Worker D."
     }
   ],
   "locks": {
     "L-070a-script": {
       "holder": "Worker-A",
-      "paths": [
-        "airtable/automations/shooting-challenge/070a-*.js"
-      ],
-      "status": "held"
+      "paths": ["airtable/automations/shooting-challenge/070a-*.js"],
+      "status": "held_repo_merged_awaiting_dev_paste"
     },
     "L-070a-schema-dev": {
       "holder": "Worker-A",
-      "systems": [
-        "Airtable DEV appTetnuCZlCZdTCT homework upload schema"
-      ],
-      "status": "held"
+      "systems": ["Airtable DEV appTetnuCZlCZdTCT homework upload schema"],
+      "status": "held_awaiting_mike_verify"
     },
     "L-070a-make-dev": {
       "holder": "Worker-B",
-      "paths": [
-        "make/** homework upload DEV"
-      ],
+      "paths": ["make/** homework upload DEV"],
       "status": "held_pending_mike_make_ui"
     },
     "L-070a-lambda-dev": {
       "holder": "Worker-B",
-      "paths": [
-        "tools/airtable/* homework/upload DEV"
-      ],
+      "paths": ["tools/airtable/* homework/upload DEV"],
       "status": "held_repo_merged_live_pending_creds"
     },
     "L-070a-tests": {
       "holder": "Worker-C",
-      "paths": [
-        "**/*070a*test*",
-        "tools/airtable/*smoke*"
-      ],
+      "paths": ["**/*070a*test*", "tools/airtable/*smoke*"],
       "status": "held_repo_merged_live_pending"
     },
     "L-c023-docs-readonly": {
       "holder": "Worker-D",
-      "paths": [
-        "docs/**/C-023*",
-        "airtable/schema/snapshots/c023*"
-      ],
+      "paths": ["docs/**/C-023*", "airtable/schema/snapshots/c023*"],
       "status": "held"
     },
     "L-c023-implementation": {
@@ -223,65 +171,59 @@
     }
   },
   "integration": {
-    "lastReviewedAt": "2026-07-11T22:30:00Z",
-    "mergedWorkers": [
-      "Worker-D",
-      "Worker-B",
-      "Worker-C"
-    ],
-    "pendingWorkers": [
-      "Worker-A"
-    ],
-    "fileOverlaps": "none among B/C/D",
-    "compatibility": "B sample payload \u2194 C contract OK (routeKey=homework_completion, automationNumber=070a)",
+    "lastReviewedAt": "2026-07-11T22:32:00Z",
+    "mergedWorkers": ["Worker-D", "Worker-B", "Worker-C", "Worker-A"],
+    "pendingWorkers": [],
+    "fileOverlaps": "CHANGELOG auto-merged A+B; no other overlaps",
+    "compatibility": "A v4.4 script ↔ B sample ↔ C contract OK (homework_completion + Accepted async)",
     "integrationTests": {
       "node_070a": "20/20 PASS",
-      "node_upload_response_baseline": "17/17 PASS",
+      "node_upload_response_baseline": "17/17 PASS (incl 11b 070a parity)",
       "lambda_suite": "46/46 PASS",
-      "b_homework_make_smoke_units": "8/8 PASS",
-      "c_smoke_units": "16/16 PASS",
+      "b_and_c_python_units": "24/24 PASS",
       "c_mock_smoke_phases": "5/5 PASS"
     },
-    "prodModified": false
+    "prodModified": false,
+    "dev070aRepoReady": true,
+    "dev070aLiveReady": false
   },
   "openBlockersCanonical": [
     {
       "issue": 8,
       "title": "[OVERNIGHT][T2][Make-DEV] Patch Module 2 router for homework_completion (070a)",
       "system": "Make-DEV",
-      "duplicates": [
-        6
-      ]
+      "duplicates": [6]
     },
     {
       "issue": 9,
       "title": "[OVERNIGHT][T2][AWS-DEV] Missing DEV upload credentials in Worker B cloud env",
       "system": "AWS-DEV / Cursor env",
-      "duplicates": [
-        7
-      ]
+      "duplicates": [7]
     },
     {
       "issue": 11,
-      "title": "[OVERNIGHT][T3][Tests-DEV] Live 070a DEV smoke blocked \u2014 waiting on Worker A/B + DEV webhook creds",
+      "title": "[OVERNIGHT][T3][Tests-DEV] Live 070a DEV smoke blocked",
       "system": "Tests-DEV",
-      "duplicates": [
-        10
-      ],
-      "note": "Worker B result now published; still needs T1 + #8 + #9"
+      "duplicates": [10],
+      "note": "A+B results published; still needs #8+#9+#17 paste"
+    },
+    {
+      "issue": 17,
+      "title": "[OVERNIGHT][T1][Worker-A] DEV 070a Airtable paste + schema verify",
+      "system": "Airtable-DEV",
+      "duplicates": []
     },
     {
       "issue": 15,
-      "title": "[OVERNIGHT][T4][Docs] Worker A T1 result unpublished \u2014 blocks Phase 2 070a docs",
+      "title": "[OVERNIGHT][T4][Docs] Worker A T1 result unpublished",
       "system": "Docs",
-      "duplicates": [
-        14
-      ]
+      "duplicates": [14],
+      "note": "STALE — Worker A result now published; Mike may close #15 as RESOLVED when confirming Phase 2 start"
     }
   ],
-  "githubTokenLimitation": "Lead cloud token cannot label/comment/close GitHub issues (403). Mike must label overnight-blocker+overnight-run on #8/#9/#11/#15, close duplicates #6/#7/#10/#14, assign Schmidt127, and paste live status from docs/overnight-runs/_live-status-update.md into issue #1.",
+  "githubTokenLimitation": "Lead cloud token cannot label/comment/close GitHub issues (403). Mike must label overnight-blocker+overnight-run on #8/#9/#11/#17, close duplicates #6/#7/#10/#14, close/update #15, assign Schmidt127, and paste docs/overnight-runs/_live-status-update.md into issue #1.",
   "leadBootstrapCommit": "36ae37d",
-  "lastLeadCommit": "38f1a666a2393320124c8974e7738c98b00f9dc9",
-  "lastUpdated": "2026-07-11T22:31:00Z",
+  "lastLeadCommit": null,
+  "lastUpdated": "2026-07-11T22:32:00Z",
   "lastUpdatedBy": "Cloud-Lead"
 }

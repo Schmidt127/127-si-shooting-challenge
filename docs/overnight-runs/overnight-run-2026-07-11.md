@@ -27,10 +27,10 @@
 | Agent | Branch | Task | Status |
 |---|---|---|---|
 | Cloud Lead | `overnight/lead-integration` | Queue, integration, blockers, status | **active** |
-| Worker A | `overnight/worker-a-070a-airtable` | T1 — 070a DEV script/schema | **RUNNING — no remote branch/PR/result yet** |
+| Worker A | `overnight/worker-a-070a-airtable` | T1 — 070a DEV script/schema | **repo COMPLETE — merged; Mike paste #17** |
 | Worker B | `overnight/worker-b-070a-backend` | T2 — 070a DEV Make/Lambda | **IDLE — merged to lead; blocked on Mike #8/#9** |
-| Worker C | `overnight/worker-c-070a-tests` | T3 — 070a DEV tests/smoke | **IDLE — merged to lead; live blocked on T1+#8+#9** |
-| Worker D | `overnight/worker-d-docs` | T4 — C-023 audit → 070a docs | **RUNNING/Phase1 merged; Phase2 blocked on T1; next=P-D1** |
+| Worker C | `overnight/worker-c-070a-tests` | T3 — 070a DEV tests/smoke | **IDLE — merged to lead; live blocked on #8/#9/#17** |
+| Worker D | `overnight/worker-d-docs` | T4 — C-023 audit → 070a docs | **Phase1 merged; Phase2 CLEARED** |
 
 ---
 

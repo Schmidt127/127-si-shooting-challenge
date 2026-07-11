@@ -10,12 +10,12 @@
 
 | # | Gate | Status |
 |---|------|--------|
-| G1 | Worker A publishes `worker-a-t1-070a-airtable.md` + branch/PR | **OPEN** |
-| G2 | Lead reviews/merges Worker A into `overnight/lead-integration` | Pending G1 |
-| G3 | 070a script pasted to **DEV** Airtable (automation may stay **OFF**) | Pending G1 |
+| G1 | Worker A publishes `worker-a-t1-070a-airtable.md` + branch/PR | **PASS** (PR #18, merged) |
+| G2 | Lead reviews/merges Worker A into `overnight/lead-integration` | **PASS** (LEAD-004) |
+| G3 | 070a script pasted to **DEV** Airtable (automation may stay **OFF**) | **OPEN** (#17 / MA-006) |
 | G4 | Make DEV Module 2 homework branch (#8 / MA-001) | **OPEN** |
 | G5 | DEV credentials in ops env (#9 / MA-002) | **OPEN** |
-| G6 | Offline integration suite green on lead tip | **PASS** (LEAD-003) |
+| G6 | Offline integration suite green on lead tip | **PASS** (LEAD-003 + LEAD-004 post-A) |
 
 ---
 
