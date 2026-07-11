@@ -3,39 +3,58 @@
   "liveStatusIssueNumber": 1,
   "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
   "leadBootstrapCommit": "36ae37d",
-  "lastUpdated": "2026-07-11T21:56:00-06:00",
+  "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
+  "lastUpdated": "2026-07-11T22:30:00Z",
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",
-    "lastAction": "infrastructure bootstrap"
+    "lastAction": "LEAD-003 merged Workers D+B+C after review+tests; awaiting Worker A; Mike blockers #8/#9/#11/#15",
+    "tipCommitPendingPush": true
   },
   "workers": {
     "Worker-A": {
       "taskId": "T1",
       "branch": "overnight/worker-a-070a-airtable",
-      "status": "ready_to_launch",
-      "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script"
+      "status": "running_no_remote_branch",
+      "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864",
+      "prUrl": null,
+      "resultFile": null
     },
     "Worker-B": {
       "taskId": "T2",
       "branch": "overnight/worker-b-070a-backend",
-      "status": "ready_to_launch",
-      "cloudTaskName": "[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route"
+      "status": "idle_merged_awaiting_mike",
+      "cloudTaskName": "[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/12",
+      "resultFile": "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
+      "mergedToLead": true
     },
     "Worker-C": {
       "taskId": "T3",
       "branch": "overnight/worker-c-070a-tests",
-      "status": "ready_to_launch",
-      "cloudTaskName": "[OVERNIGHT][T3][Worker-C] 070a DEV tests + smoke tooling"
+      "status": "idle_merged_awaiting_live",
+      "cloudTaskName": "[OVERNIGHT][T3][Worker-C] 070a DEV tests + smoke tooling",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-3fe201a7-2824-4762-a35d-acb258a5c1a1",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/13",
+      "resultFile": "docs/overnight-runs/worker-results/worker-c-t3-070a-tests.md",
+      "mergedToLead": true
     },
     "Worker-D": {
       "taskId": "T4",
       "branch": "overnight/worker-d-docs",
-      "status": "ready_to_launch",
+      "status": "phase1_merged_next_p_d1",
       "phase": 1,
-      "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation"
+      "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
+      "resultFile": "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
+      "mergedToLead": true,
+      "nextAssignment": "P-D1 C-023 docs reconciliation (non-overlapping); Phase 2 blocked on Worker A"
     }
   },
-  "openBlockers": [],
-  "nextHourlyStatusDue": "2026-07-11T22:54:00-06:00"
+  "openBlockers": [8, 9, 11, 15],
+  "duplicateBlockersToClose": [6, 7, 10, 14],
+  "nextHourlyStatusDue": "2026-07-11T23:30:00Z"
 }
