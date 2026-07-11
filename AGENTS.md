@@ -84,3 +84,14 @@ When redirecting, use the **Workspace Check** block from doc 04 (Current request
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
 | Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
+
+## Cursor Cloud specific instructions
+
+The only long-running/runnable service in this repo is the **Next.js web app** in `web/` (Node 22 + npm; CI uses Node 22 in `.github/workflows/web.yml`). Everything else (Airtable automations, extension scripts, Make blueprints, Python tools) runs inside Airtable/Make or is dev-time CLI tooling — not a local server. Standard commands live in `web/package.json` (`dev`, `build`, `lint`, `typecheck`, `test`); dependencies are installed by the startup update script, so no manual install is needed.
+
+Non-obvious caveats when running the web app:
+
+- **Dev server port is 3001, not 3000.** `npm run dev` runs `next dev -p 3001`, so `web/README.md`'s "localhost:3000" is stale.
+- **Everything is mounted under the `/shoot` basePath.** Open `http://localhost:3001/shoot`. The bare root `/` returns a 404 locally (no redirect in dev), and the health/API route is `http://localhost:3001/shoot/api/airtable` (not `/api/airtable`).
+- **The app boots and renders without any secrets.** Missing `AIRTABLE_API_TOKEN` does NOT crash it: data-driven pages (leaderboard, tutorials, levels, homework, etc.) catch the error and render a "Missing Airtable configuration" fallback, while static pages (home, game manual) render fully. To exercise real data end-to-end, put `AIRTABLE_API_TOKEN` + `AIRTABLE_BASE_ID` in `web/.env.local` (copy from `web/.env.example`).
+- **Leave `SITE_ACCESS_TOKEN` unset locally.** When set it gates every route/API behind the token (401 otherwise); unset = open local access.
