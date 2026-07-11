@@ -81,11 +81,12 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **059** | Achievements — Create XP Event from Achievement Unlock | Athlete Achievement Unlocks when XP Award Status Pending and Ready for 059 XP | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` |
 | 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.2** — DEV + PROD pasted 2026-07-06, GitHub `36a2e95`; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
 
-## Email and Make handoffs (070b, 072–077)
+## Email and Make handoffs (070b, 070c, 072–077)
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 070b | Email — Send Video Asset Payload to Make | *confirm in Airtable* | `070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` |
+| 070b | Email — Send Video Asset Payload to Make | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Pending Link` · `Upload Destination = Video Feedback` | `070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` (**v4.4**) |
+| **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.0**) |
 | **072** | Email — Build Weekly Summary Email Package | Weekly Athlete Summary when `Build Weekly Email Now?` checked | `072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js` |
 | 073 | Email — Send Video Feedback Parent Email Webhook | *confirm in Airtable* | `073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js` |
 | 074 | Email — Send Weekly Summary Email Package to Make | *confirm in Airtable* | `074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js` |

@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 /**
- * Local tests for 070b Option A Lambda response validation (no Make/Lambda).
+ * Local tests for 070b/070c Make Lambda response validation (no Make/Lambda/Airtable).
  * Run: node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js
  */
 
 const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 const {
     parseLambdaResponseBody,
     evaluateLambdaHandoffResult,
     evaluateMakeLambdaResponseText,
     evaluateSubmissionAssetWriteback,
+    evaluate070cAsyncWritebackVerification,
+    buildAcceptedAsyncHandoffResult,
+    decide070cTriggerClear,
     isMakeAcceptedAsyncResponse,
-    pollForLambdaWriteback,
     resolveMakeHttpResponse,
 } = require("./upload-make-lambda-response");
 
@@ -48,6 +52,7 @@ const skippedOk = {
 
 function passingWritebackFields(overrides = {}) {
     return {
+        "Send to Make Trigger": true,
         "Upload Status": "Uploaded",
         "Canonical File URL": "https://example.com/x.png",
         "Storage Key": "shooting-challenge/x.png",
@@ -95,11 +100,20 @@ tests.push(
 );
 
 tests.push(
-    test("5 HTTP 200 + Make Accepted async acknowledgement", () => {
+    test("5 HTTP 200 + Make Accepted returns pending without polling", () => {
         assert.strictEqual(isMakeAcceptedAsyncResponse("Accepted"), true);
         assert.strictEqual(isMakeAcceptedAsyncResponse("  ACCEPTED  "), true);
+
         const resolved = resolveMakeHttpResponse("Accepted");
         assert.strictEqual(resolved.mode, "accepted_async");
+        assert.strictEqual(resolved.handoff.statusOut, "pending");
+        assert.strictEqual(resolved.handoff.actionOut, "lambda_upload_accepted_async");
+        assert.strictEqual(resolved.handoff.makeResponseMode, "accepted_async");
+        assert.strictEqual(resolved.handoff.pending, true);
+
+        const handoff = buildAcceptedAsyncHandoffResult();
+        assert.strictEqual(handoff.statusOut, "pending");
+        assert.strictEqual(handoff.actionOut, "lambda_upload_accepted_async");
     }),
 );
 
@@ -167,61 +181,49 @@ tests.push(
 );
 
 tests.push(
-    test("11 Accepted followed by successful Airtable writeback", async () => {
-        let calls = 0;
-        const result = await pollForLambdaWriteback({
-            loadFields: async () => {
-                calls += 1;
-                if (calls === 1) {
-                    return { "Upload Status": "Processing" };
-                }
-                return passingWritebackFields();
-            },
-            sleep: async () => {},
-            sleepMs: 1,
-            timeoutMs: 5000,
-        });
-        assert.strictEqual(result.ok, true);
-        assert.strictEqual(result.evaluation.verified, true);
-        assert.ok(result.attempts >= 2);
+    test("11 070b source has no setTimeout or pollForLambdaWriteback", () => {
+        const scriptPath = path.join(
+            __dirname,
+            "..",
+            "070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
+        );
+        const source = fs.readFileSync(scriptPath, "utf8");
+        assert.ok(!/\bsetTimeout\s*\(/.test(source), "070b must not call setTimeout");
+        assert.ok(
+            !/\bpollForLambdaWritebackAsync\b/.test(source),
+            "070b must not define pollForLambdaWritebackAsync",
+        );
+        assert.ok(source.includes('version: "v4.4"'), "070b version must be v4.4");
     }),
 );
 
 tests.push(
-    test("12 Accepted followed by Upload Status = Error", async () => {
-        const result = await pollForLambdaWriteback({
-            loadFields: async () =>
-                passingWritebackFields({
-                    "Upload Status": "Error",
-                    "Upload Error": "Lambda upload failed in async path.",
-                }),
-            sleep: async () => {},
-            sleepMs: 1,
-            timeoutMs: 5000,
-        });
-        assert.strictEqual(result.ok, false);
-        assert.strictEqual(result.error, true);
-        assert.strictEqual(result.uploadError, "Lambda upload failed in async path.");
+    test("12 070c clears trigger only after complete verified writeback", () => {
+        const complete = decide070cTriggerClear(passingWritebackFields());
+        assert.strictEqual(complete.shouldClearTrigger, true);
+        assert.strictEqual(complete.result.verified, true);
+
+        const incomplete = decide070cTriggerClear(
+            passingWritebackFields({ "Storage Key": "", "Send to Make Trigger": true }),
+        );
+        assert.strictEqual(incomplete.shouldClearTrigger, false);
+        assert.strictEqual(incomplete.result.verified, false);
+
+        const triggerOff = decide070cTriggerClear(
+            passingWritebackFields({ "Send to Make Trigger": false }),
+        );
+        assert.strictEqual(triggerOff.shouldClearTrigger, false);
+        assert.strictEqual(triggerOff.result.checks.sendToMakeTriggerChecked, false);
     }),
 );
 
 tests.push(
-    test("13 Accepted timeout", async () => {
-        const result = await pollForLambdaWriteback({
-            loadFields: async () => ({ "Upload Status": "Processing" }),
-            sleep: async () => {},
-            sleepMs: 10,
-            timeoutMs: 25,
-            now: (() => {
-                let t = 0;
-                return () => {
-                    t += 10;
-                    return t;
-                };
-            })(),
-        });
-        assert.strictEqual(result.ok, false);
-        assert.strictEqual(result.timedOut, true);
+    test("13 070c verification failure actionOut", () => {
+        const evaluation = evaluate070cAsyncWritebackVerification(
+            passingWritebackFields({ "File Hash Algorithm": "" }),
+        );
+        assert.strictEqual(evaluation.verified, false);
+        assert.strictEqual(evaluation.checks.fileHashAlgorithmSha256, false);
     }),
 );
 

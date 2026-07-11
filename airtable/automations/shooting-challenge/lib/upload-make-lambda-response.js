@@ -1,6 +1,6 @@
 /**
- * Pure helpers for 070b Option A — validate Make-returned Lambda JSON and async Accepted polling.
- * Keep in sync with the copy embedded in 070b automation script.
+ * Pure helpers for 070b/070c — validate Make-returned Lambda JSON and async Accepted handoff.
+ * Keep in sync with copies embedded in 070b and 070c automation scripts.
  * Tests: lib/upload-make-lambda-response.test.js
  */
 
@@ -15,9 +15,6 @@ const EXPLICIT_FAILURE_ACTIONS = new Set([
     "skipped_concurrent_upload",
     "stale_claim",
 ]);
-
-const DEFAULT_POLL_INTERVAL_MS = 4000;
-const DEFAULT_POLL_TIMEOUT_MS = 120000;
 
 /**
  * @param {unknown} value
@@ -81,7 +78,6 @@ function parseLambdaResponseBody(responseText) {
         };
     }
 
-    // Lambda Function URL / API Gateway proxy envelope
     if ("body" in parsed) {
         const inner = parsed.body;
         if (typeof inner === "string") {
@@ -234,18 +230,61 @@ function evaluateSubmissionAssetWriteback(fields) {
         verified,
         checks,
         message: verified
-            ? "Submission Asset writeback verified after async Lambda processing."
-            : "Submission Asset writeback incomplete during async poll.",
+            ? "Submission Asset async writeback verified."
+            : "Submission Asset async writeback incomplete.",
+    };
+}
+
+/**
+ * 070c verification — requires Send to Make Trigger still checked before clearing.
+ * @param {Record<string, unknown>} fields
+ * @returns {WritebackEvaluation & { checks: Record<string, boolean> }}
+ */
+function evaluate070cAsyncWritebackVerification(fields) {
+    const writeback = evaluateSubmissionAssetWriteback(fields);
+    const sendToMakeTriggerChecked = fields["Send to Make Trigger"] === true;
+    const checks = {
+        ...writeback.checks,
+        sendToMakeTriggerChecked,
+    };
+    const verified = writeback.verified && sendToMakeTriggerChecked;
+    return {
+        verified,
+        checks,
+        message: verified
+            ? "Async upload writeback verified; Send to Make Trigger may be cleared."
+            : sendToMakeTriggerChecked
+              ? writeback.message
+              : "Send to Make Trigger is not checked; async verification skipped.",
+    };
+}
+
+/**
+ * @param {Record<string, unknown>} [extra]
+ * @returns {Record<string, unknown>}
+ */
+function buildAcceptedAsyncHandoffResult(extra = {}) {
+    return {
+        pending: true,
+        ok: true,
+        skipped: false,
+        statusOut: "pending",
+        actionOut: "lambda_upload_accepted_async",
+        makeResponseMode: "accepted_async",
+        errorOut: "",
+        message:
+            "Make returned Accepted; Lambda continues asynchronously. Automation 070c verifies writeback and clears Send to Make Trigger.",
+        ...extra,
     };
 }
 
 /**
  * @param {string} responseText
- * @returns {{ mode: "accepted_async" } | { mode: "invalid", parse: ReturnType<typeof parseLambdaResponseBody> } | { mode: "lambda_json", parse: { ok: true, body: Record<string, unknown> }, evaluation: HandoffEvaluation }}
+ * @returns {{ mode: "accepted_async", handoff: ReturnType<typeof buildAcceptedAsyncHandoffResult> } | { mode: "invalid", parse: ReturnType<typeof parseLambdaResponseBody> } | { mode: "lambda_json", parse: { ok: true, body: Record<string, unknown> }, evaluation: HandoffEvaluation }}
  */
 function resolveMakeHttpResponse(responseText) {
     if (isMakeAcceptedAsyncResponse(responseText)) {
-        return { mode: "accepted_async" };
+        return { mode: "accepted_async", handoff: buildAcceptedAsyncHandoffResult() };
     }
 
     const parse = parseLambdaResponseBody(responseText);
@@ -261,49 +300,16 @@ function resolveMakeHttpResponse(responseText) {
 }
 
 /**
- * @param {object} options
- * @param {() => Promise<Record<string, unknown>>} options.loadFields
- * @param {(ms: number) => Promise<void>} [options.sleep]
- * @param {() => number} [options.now]
- * @param {number} [options.sleepMs]
- * @param {number} [options.timeoutMs]
- * @returns {Promise<{ ok: true, evaluation: WritebackEvaluation, attempts: number, fields: Record<string, unknown> } | { ok: false, error: true, uploadError: string, attempts: number, fields: Record<string, unknown> } | { ok: false, timedOut: true, attempts: number }>}
+ * Pure 070c decision — whether to clear Send to Make Trigger.
+ * @param {Record<string, unknown>} fields
+ * @returns {{ shouldClearTrigger: boolean, result: ReturnType<typeof evaluate070cAsyncWritebackVerification> }}
  */
-async function pollForLambdaWriteback(options) {
-    const sleep = options.sleep || ((ms) => new Promise((resolve) => setTimeout(resolve, ms)));
-    const now = options.now || (() => Date.now());
-    const sleepMs = options.sleepMs ?? DEFAULT_POLL_INTERVAL_MS;
-    const timeoutMs = options.timeoutMs ?? DEFAULT_POLL_TIMEOUT_MS;
-    const deadline = now() + timeoutMs;
-    let attempts = 0;
-
-    while (now() < deadline) {
-        attempts += 1;
-        const fields = await options.loadFields();
-        const uploadStatus = selectName(fields["Upload Status"]);
-
-        if (uploadStatus === "Error") {
-            return {
-                ok: false,
-                error: true,
-                uploadError: selectName(fields["Upload Error"]) || "Upload failed during async Lambda writeback.",
-                attempts,
-                fields,
-            };
-        }
-
-        const evaluation = evaluateSubmissionAssetWriteback(fields);
-        if (evaluation.verified) {
-            return { ok: true, evaluation, attempts, fields };
-        }
-
-        if (now() + sleepMs >= deadline) {
-            break;
-        }
-        await sleep(sleepMs);
-    }
-
-    return { ok: false, timedOut: true, attempts };
+function decide070cTriggerClear(fields) {
+    const result = evaluate070cAsyncWritebackVerification(fields);
+    return {
+        shouldClearTrigger: result.verified,
+        result,
+    };
 }
 
 /**
@@ -313,7 +319,9 @@ async function pollForLambdaWriteback(options) {
 function evaluateMakeLambdaResponseText(responseText) {
     const resolved = resolveMakeHttpResponse(responseText);
     if (resolved.mode === "accepted_async") {
-        return { parse: { ok: false, reason: "accepted_async", message: "Make returned Accepted async acknowledgement." } };
+        return {
+            parse: { ok: false, reason: "accepted_async", message: "Make returned Accepted async acknowledgement." },
+        };
     }
     if (resolved.mode === "invalid") {
         return { parse: resolved.parse };
@@ -329,12 +337,12 @@ module.exports = {
     evaluateLambdaHandoffResult,
     evaluateMakeLambdaResponseText,
     evaluateSubmissionAssetWriteback,
+    evaluate070cAsyncWritebackVerification,
+    buildAcceptedAsyncHandoffResult,
+    decide070cTriggerClear,
     isMakeAcceptedAsyncResponse,
-    pollForLambdaWriteback,
     resolveMakeHttpResponse,
     selectName,
     VERIFIED_SUCCESS_ACTIONS,
     EXPLICIT_FAILURE_ACTIONS,
-    DEFAULT_POLL_INTERVAL_MS,
-    DEFAULT_POLL_TIMEOUT_MS,
 };
