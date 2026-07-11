@@ -74,9 +74,8 @@ python3 tools/airtable/c070a_dev_smoke_run.py all
 
 ## Commit SHA
 
-
-
-`96e351db3411ae4cd94a7cab35e2fa7e1a5a5cfc`
+- **Primary delivery:** `e8b1b9cb5cb36135e928b45972402cff2a1d78cf`
+- **Branch tip (includes this result file):** see `git rev-parse origin/overnight/worker-c-070a-tests` after push
 
 ---
 
