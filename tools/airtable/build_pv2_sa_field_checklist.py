@@ -59,8 +59,32 @@ CREATE_ORDER = [
     "Asset Reuse Review Primary Reason",
     "Asset Reuse Review Reasons",
     "Duplicate Match Records (All)",
+    "From field: Duplicate Match Records (All)",
     "Calculation",
 ]
+
+# How each of the 17 missing fields is promoted (must sum to 17).
+DISPOSITION = {
+    "Storage Key": "omni",
+    "Upload Claim Run ID": "omni",
+    "Potential Asset Reuse?": "omni",
+    "Exact Hash Match Found?": "omni",
+    "Same Enrollment Match Found?": "omni",
+    "Processing Started At": "omni",
+    "Asset Reuse Review Summary": "omni",
+    "Asset Reuse Reviewed By": "omni",
+    "Asset Sequence": "omni",
+    "Asset Reuse Reviewed At": "omni",
+    "Upload Naming Status": "omni",
+    "Video Feedback Focus": "omni",
+    "Asset Reuse Review Primary Reason": "omni",
+    "Asset Reuse Review Reasons": "omni",
+    "Duplicate Match Records (All)": "manual",
+    "From field: Duplicate Match Records (All)": "auto_inverse",
+    "Calculation": "manual",
+}
+
+PROMOTION_SEQUENCE = CREATE_ORDER  # all 17 missing fields in dependency order
 
 PURPOSE = {
     "Storage Key": "S3 object path written by Lambda/Make; required for canonical storage and 070b route.",
@@ -124,9 +148,19 @@ def build_field_entry(f: dict) -> dict:
         "prodOptions": None,
         "dependsOnMissingFields": [],
         "dependsOnProdFields": [],
-        "createMethod": "omni" if name not in ("Duplicate Match Records (All)", "Calculation", "From field: Duplicate Match Records (All)") else "manual",
+        "createMethod": DISPOSITION.get(name, "omni"),
         "notes": [],
     }
+    if name == "From field: Duplicate Match Records (All)":
+        entry["linkedTable"] = "Submission Assets"
+        entry["linkedTableId"] = "tblhMLKxQK77agtME"
+        entry["prefersSingleRecordLink"] = False
+        entry["dependsOnMissingFields"] = ["Duplicate Match Records (All)"]
+        entry["intentionallyNotCreatedReason"] = (
+            "Airtable auto-creates this inverse field when "
+            "'Duplicate Match Records (All)' self-link is added. "
+            "Creating it manually would duplicate the link pair."
+        )
     if name == "Calculation":
         entry["dependsOnProdFields"] = ["RecordId"]
         entry["manualFormula"] = "{RecordId}"
@@ -137,17 +171,57 @@ def build_field_entry(f: dict) -> dict:
         entry["prefersSingleRecordLink"] = False
         entry["notes"].append("Create as self-link to Submission Assets. Airtable auto-creates inverse 'From field: Duplicate Match Records (All)'.")
     if name == "From field: Duplicate Match Records (All)":
-        entry["createMethod"] = "auto_inverse"
         entry["notes"].append("Do NOT create manually — verify after Duplicate Match Records (All) is created.")
     return entry
 
 
+def live_reconcile() -> dict:
+    import os
+    import requests
+    from dotenv import load_dotenv
+
+    load_dotenv(REPO / "tools" / "airtable" / ".env", override=True)
+    tok = os.environ.get("AIRTABLE_TOKEN") or os.environ.get("AIRTABLE_API_TOKEN")
+    if not tok:
+        raise SystemExit("missing AIRTABLE_TOKEN")
+    h = {"Authorization": f"Bearer {tok}"}
+
+    def fetch(base: str) -> list[dict]:
+        r = requests.get(
+            f"https://api.airtable.com/v0/meta/bases/{base}/tables", headers=h, timeout=120
+        )
+        r.raise_for_status()
+        return r.json()["tables"]
+
+    dev_t = next(t for t in fetch(DEV_BASE) if t["name"] == "Submission Assets")
+    prod_t = next(t for t in fetch(PROD_BASE) if t["name"] == "Submission Assets")
+    dev_f = {f["name"]: f for f in dev_t["fields"]}
+    prod_f = {f["name"]: f for f in prod_t["fields"]}
+    missing = sorted(set(dev_f) - set(prod_f))
+    return {
+        "devFieldCount": len(dev_f),
+        "prodFieldCount": len(prod_f),
+        "missingFieldCount": len(missing),
+        "missingNames": missing,
+        "devFieldsByName": dev_f,
+        "extraInProd": sorted(set(prod_f) - set(dev_f)),
+    }
+
+
 def build_omni_prompt(fields: list[dict]) -> str:
+    by_name = {f["name"]: f for f in fields}
+    omni_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "omni")
+    manual_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "manual")
+    auto_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "auto_inverse")
     lines = [
         "You are working in the PRODUCTION Airtable base only.",
         "",
         f"Base ID: {PROD_BASE}",
-        f"Table: Submission Assets",
+        "Table: Submission Assets",
+        "",
+        f"FIELD ACCOUNTING: {len(PROMOTION_SEQUENCE)} missing fields total = "
+        f"{omni_n} create with OMNI + {manual_n} manual follow-up + "
+        f"{auto_n} auto-created inverse (do NOT create manually).",
         "",
         "STRICT RULES:",
         "- Do NOT modify, rename, or delete any existing field.",
@@ -155,20 +229,30 @@ def build_omni_prompt(fields: list[dict]) -> str:
         "- Do NOT enable, disable, or edit any automation.",
         "- Do NOT create, update, or delete any records.",
         "- Do NOT change views, interfaces, or permissions.",
-        "- Create ONLY the missing fields listed below, in order.",
+        "- Create ONLY the OMNI fields listed below, in order.",
         "- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').",
         "- After each creation, report: field name, field type, and confirmation it was newly created.",
         "",
-        "Create these fields in order:",
+        "Promotion sequence for all 17 missing fields:",
         "",
     ]
     step = 1
-    for name in CREATE_ORDER:
-        f = next(x for x in fields if x["name"] == name)
-        if f["createMethod"] in ("auto_inverse",):
+    for name in PROMOTION_SEQUENCE:
+        f = by_name[name]
+        disp = DISPOSITION[name]
+        if disp == "auto_inverse":
+            lines.append(
+                f"{step}. DO NOT CREATE — **{name}** ({f['type']}) — "
+                "intentionally auto-created by Airtable when "
+                "'Duplicate Match Records (All)' self-link is added in manual step 15. "
+                "Verify this inverse field exists after manual step; do not create it yourself."
+            )
+            step += 1
             continue
-        if f["createMethod"] == "manual":
-            lines.append(f"{step}. SKIP IN OMNI — manual follow-up required: **{name}** ({f['type']})")
+        if disp == "manual":
+            lines.append(
+                f"{step}. SKIP IN OMNI — manual follow-up required: **{name}** ({f['type']})"
+            )
             step += 1
             continue
         lines.append(f"{step}. **{name}** — type: `{f['type']}`")
@@ -181,7 +265,9 @@ def build_omni_prompt(fields: list[dict]) -> str:
             lines.append(f"   - Number, precision {prec}, no default.")
         elif f["type"] == "checkbox":
             opts = f["devOptions"] or {}
-            lines.append(f"   - Checkbox, icon: {opts.get('icon', 'check')}, color: {opts.get('color', 'greenBright')}.")
+            lines.append(
+                f"   - Checkbox, icon: {opts.get('icon', 'check')}, color: {opts.get('color', 'greenBright')}."
+            )
         elif f["type"] == "dateTime":
             opts = f["devOptions"] or {}
             tz = opts.get("timeZone", "utc")
@@ -200,7 +286,9 @@ def build_omni_prompt(fields: list[dict]) -> str:
     lines.extend([
         "",
         "When finished, report:",
-        "- Total fields created",
+        f"- OMNI fields created (expected {omni_n})",
+        "- Manual fields deferred to Mike (Duplicate Match Records (All), Calculation)",
+        "- Auto-inverse field NOT created by OMNI (From field: Duplicate Match Records (All))",
         "- Any fields skipped because they already existed",
         "- Any fields you could not create",
         "- Confirmation that no existing fields were modified",
@@ -229,14 +317,40 @@ def build_md(data: dict) -> str:
         f"| Prior audit count (2026-07-11) | **{PRIOR_AUDIT_COUNT}** |",
         f"| Discrepancy | **{DISCREPANCY or 'None — live matches audit'}** |",
         f"| Target PROD count after promotion | **{data['reconciliation']['targetProdFieldCount']}** |",
-        f"| Reconciled at | {RECONCILED_AT} |",
+        f"| Reconciled at | {data['reconciliation']['reconciledAt']} |",
         "",
         "### Missing field list (live verified)",
         "",
     ]
     for f in data["fields"]:
         lines.append(f"- `{f['name']}` — DEV `{f['devFieldId']}` · `{f['type']}` · {f['classification']}")
+    disp = data["dispositionAccounting"]
     lines.extend([
+        "",
+        "### 17-field disposition accounting",
+        "",
+        f"| Disposition | Count |",
+        f"|-------------|-------|",
+        f"| Create with OMNI | **{disp['omniCreateCount']}** |",
+        f"| Create manually (Mike) | **{disp['manualCreateCount']}** |",
+        f"| Auto-created inverse — do NOT create manually | **{disp['autoInverseCount']}** |",
+        f"| **Total missing** | **{disp['totalMissingCount']}** |",
+        "",
+        "| # | Field | Type | Disposition |",
+        "|---|-------|------|-------------|",
+    ])
+    for i, name in enumerate(PROMOTION_SEQUENCE, 1):
+        f = next(x for x in data["fields"] if x["name"] == name)
+        label = {
+            "omni": "OMNI create",
+            "manual": "Manual create",
+            "auto_inverse": "Auto inverse (verify only)",
+        }[DISPOSITION[name]]
+        lines.append(f"| {i} | {name} | `{f['type']}` | {label} |")
+    lines.extend([
+        "",
+        "**Prior checklist gap:** Step 16 `From field: Duplicate Match Records (All)` was omitted from the OMNI prompt. "
+        "It is the auto-created inverse of `Duplicate Match Records (All)` and must not be created manually.",
         "",
         "## 2. Risk summary",
         "",
@@ -246,21 +360,21 @@ def build_md(data: dict) -> str:
         "",
         "## 3. Dependency order",
         "",
-        f"**First field to create:** `{CREATE_ORDER[0]}`  ",
-        f"**Last field to create (manual):** `Calculation`  ",
+        f"**First field to create:** `{PROMOTION_SEQUENCE[0]}`  ",
+        f"**Last promotion step:** `{PROMOTION_SEQUENCE[-1]}` (manual formula)  ",
         "",
         "| Step | Field | Method | Waits for |",
         "|------|-------|--------|-----------|",
     ])
-    for i, name in enumerate(CREATE_ORDER, 1):
+    for i, name in enumerate(PROMOTION_SEQUENCE, 1):
         f = next(x for x in data["fields"] if x["name"] == name)
         waits = ", ".join(f["dependsOnProdFields"] + f["dependsOnMissingFields"]) or "—"
         lines.append(f"| {i} | {name} | {f['createMethod']} | {waits} |")
     lines.extend([
         "",
-        "**Independent batch (step 1–5):** Storage Key, Upload Claim Run ID, Potential Asset Reuse?, Exact Hash Match Found?, Same Enrollment Match Found?",
+        "**Independent OMNI batch (steps 1–5):** Storage Key, Upload Claim Run ID, Potential Asset Reuse?, Exact Hash Match Found?, Same Enrollment Match Found?",
         "",
-        "**Auto-created:** `From field: Duplicate Match Records (All)` when step 15 self-link is created.",
+        "**Step 16 auto-inverse:** `From field: Duplicate Match Records (All)` — verify only after step 15.",
         "",
         "## 4. Field definitions (DEV source of truth)",
         "",
@@ -303,7 +417,15 @@ def build_md(data: dict) -> str:
         "",
         "**Verify:** Both link fields exist; link targets Submission Assets only.",
         "",
-        "### 6.2 Calculation — formula",
+        "### 6.2 Verify auto-created inverse (step 16 — do NOT create manually)",
+        "",
+        "After creating **Duplicate Match Records (All)**, confirm Airtable added:",
+        "",
+        "- **From field: Duplicate Match Records (All)** — type link to Submission Assets (inverse)",
+        "",
+        "If the inverse field is missing, delete and recreate the self-link once. Do not add a second link field with a similar name.",
+        "",
+        "### 6.3 Calculation — formula",
         "",
         "1. Add field **Calculation** → type **Formula**.",
         "2. Description: `Displays the record id for this record.`",
@@ -349,45 +471,67 @@ def build_md(data: dict) -> str:
 
 
 def main() -> None:
+    live = live_reconcile()
+    if set(live["missingNames"]) != set(PROMOTION_SEQUENCE):
+        missing_only = set(live["missingNames"]) - set(PROMOTION_SEQUENCE)
+        extra_only = set(PROMOTION_SEQUENCE) - set(live["missingNames"])
+        raise SystemExit(
+            f"PROMOTION_SEQUENCE mismatch. missing_only={sorted(missing_only)} extra_only={sorted(extra_only)}"
+        )
+
     raw = json.loads(TMP.read_text(encoding="utf-8"))
     fields = [build_field_entry(f) for f in raw["fields"]]
-    # sort fields list to match missing order from live reconcile
-    name_order = {f["name"]: i for i, f in enumerate(raw["fields"])}
+    name_order = {name: i for i, name in enumerate(PROMOTION_SEQUENCE)}
     fields.sort(key=lambda x: name_order[x["name"]])
 
     blocker = sum(1 for f in fields if f["classification"] == "BLOCKER")
     required = sum(1 for f in fields if f["classification"] == "REQUIRED BEFORE LAUNCH")
     not_req = sum(1 for f in fields if f["classification"] == "NOT REQUIRED")
+    omni_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "omni")
+    manual_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "manual")
+    auto_n = sum(1 for n in PROMOTION_SEQUENCE if DISPOSITION[n] == "auto_inverse")
+    reconciled_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     data = {
-        "generatedAt": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generatedAt": reconciled_at,
         "auditCommit": AUDIT_COMMIT,
         "devBaseId": DEV_BASE,
         "prodBaseId": PROD_BASE,
         "tableName": "Submission Assets",
         "tableId": raw["table_id"],
         "reconciliation": {
-            "reconciledAt": RECONCILED_AT,
-            "devFieldCount": DEV_COUNT,
-            "prodFieldCount": PROD_COUNT,
-            "missingFieldCount": MISSING_COUNT,
+            "reconciledAt": reconciled_at,
+            "devFieldCount": live["devFieldCount"],
+            "prodFieldCount": live["prodFieldCount"],
+            "missingFieldCount": live["missingFieldCount"],
             "priorAuditMissingCount": PRIOR_AUDIT_COUNT,
-            "discrepancy": DISCREPANCY,
-            "targetProdFieldCount": DEV_COUNT,
-            "extraInProd": [],
+            "discrepancy": None if live["missingFieldCount"] == PRIOR_AUDIT_COUNT else "count changed",
+            "targetProdFieldCount": live["devFieldCount"],
+            "extraInProd": live["extraInProd"],
+            "missingFieldNames": live["missingNames"],
+        },
+        "dispositionAccounting": {
+            "totalMissingCount": len(PROMOTION_SEQUENCE),
+            "omniCreateCount": omni_n,
+            "manualCreateCount": manual_n,
+            "autoInverseCount": auto_n,
+            "omittedFromPriorOmniPrompt": "From field: Duplicate Match Records (All)",
+            "accountingCheck": omni_n + manual_n + auto_n,
         },
         "summary": {
             "blockerCount": blocker,
             "requiredBeforeLaunchCount": required,
             "notRequiredCount": not_req,
         },
-        "createOrder": CREATE_ORDER,
-        "firstFiveFields": CREATE_ORDER[:5],
+        "promotionSequence": PROMOTION_SEQUENCE,
+        "disposition": DISPOSITION,
+        "firstFiveFields": PROMOTION_SEQUENCE[:5],
         "fields": fields,
         "omniPrompt": build_omni_prompt(fields),
         "manualFollowUpRequired": True,
         "manualItems": [
             {
+                "step": 15,
                 "field": "Duplicate Match Records (All)",
                 "type": "multipleRecordLinks",
                 "linkedTable": "Submission Assets",
@@ -395,12 +539,26 @@ def main() -> None:
                 "autoCreatesInverse": "From field: Duplicate Match Records (All)",
             },
             {
+                "step": 17,
                 "field": "Calculation",
                 "type": "formula",
                 "formula": "{RecordId}",
                 "resultType": "singleLineText",
                 "description": "Displays the record id for this record.",
             },
+        ],
+        "autoInverseItems": [
+            {
+                "step": 16,
+                "field": "From field: Duplicate Match Records (All)",
+                "type": "multipleRecordLinks",
+                "linkedTable": "Submission Assets",
+                "createMethod": "auto_inverse",
+                "intentionallyNotCreatedReason": (
+                    "Airtable auto-creates this inverse when Duplicate Match Records (All) self-link is added."
+                ),
+                "verifyAfterStep": 15,
+            }
         ],
         "postCreationValidation": [
             "python tools/airtable/pv2_dev_prod_gap_audit.py",
@@ -418,7 +576,16 @@ def main() -> None:
     }
     OUT_JSON.write_text(json.dumps(data, indent=2), encoding="utf-8")
     OUT_MD.write_text(build_md(data), encoding="utf-8")
-    print(json.dumps({"json": str(OUT_JSON.relative_to(REPO)), "md": str(OUT_MD.relative_to(REPO)), "blocker": blocker, "required": required}, indent=2))
+    print(json.dumps({
+        "json": str(OUT_JSON.relative_to(REPO)),
+        "md": str(OUT_MD.relative_to(REPO)),
+        "blocker": blocker,
+        "required": required,
+        "omni": omni_n,
+        "manual": manual_n,
+        "auto_inverse": auto_n,
+        "total": len(PROMOTION_SEQUENCE),
+    }, indent=2))
 
 
 if __name__ == "__main__":

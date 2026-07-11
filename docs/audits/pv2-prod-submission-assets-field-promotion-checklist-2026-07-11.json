@@ -1,26 +1,53 @@
 {
-  "generatedAt": "2026-07-11T12:30:38Z",
+  "generatedAt": "2026-07-11T12:44:51Z",
   "auditCommit": "fdf7116420360c74462df4ce786d0dea13c45d50",
   "devBaseId": "appTetnuCZlCZdTCT",
   "prodBaseId": "appn84sqPw03zEbTT",
   "tableName": "Submission Assets",
   "tableId": "tblhMLKxQK77agtME",
   "reconciliation": {
-    "reconciledAt": "2026-07-11T12:45:00Z",
+    "reconciledAt": "2026-07-11T12:44:51Z",
     "devFieldCount": 97,
     "prodFieldCount": 80,
     "missingFieldCount": 17,
     "priorAuditMissingCount": 17,
     "discrepancy": null,
     "targetProdFieldCount": 97,
-    "extraInProd": []
+    "extraInProd": [],
+    "missingFieldNames": [
+      "Asset Reuse Review Primary Reason",
+      "Asset Reuse Review Reasons",
+      "Asset Reuse Review Summary",
+      "Asset Reuse Reviewed At",
+      "Asset Reuse Reviewed By",
+      "Asset Sequence",
+      "Calculation",
+      "Duplicate Match Records (All)",
+      "Exact Hash Match Found?",
+      "From field: Duplicate Match Records (All)",
+      "Potential Asset Reuse?",
+      "Processing Started At",
+      "Same Enrollment Match Found?",
+      "Storage Key",
+      "Upload Claim Run ID",
+      "Upload Naming Status",
+      "Video Feedback Focus"
+    ]
+  },
+  "dispositionAccounting": {
+    "totalMissingCount": 17,
+    "omniCreateCount": 14,
+    "manualCreateCount": 2,
+    "autoInverseCount": 1,
+    "omittedFromPriorOmniPrompt": "From field: Duplicate Match Records (All)",
+    "accountingCheck": 17
   },
   "summary": {
     "blockerCount": 2,
     "requiredBeforeLaunchCount": 13,
     "notRequiredCount": 2
   },
-  "createOrder": [
+  "promotionSequence": [
     "Storage Key",
     "Upload Claim Run ID",
     "Potential Asset Reuse?",
@@ -36,8 +63,28 @@
     "Asset Reuse Review Primary Reason",
     "Asset Reuse Review Reasons",
     "Duplicate Match Records (All)",
+    "From field: Duplicate Match Records (All)",
     "Calculation"
   ],
+  "disposition": {
+    "Storage Key": "omni",
+    "Upload Claim Run ID": "omni",
+    "Potential Asset Reuse?": "omni",
+    "Exact Hash Match Found?": "omni",
+    "Same Enrollment Match Found?": "omni",
+    "Processing Started At": "omni",
+    "Asset Reuse Review Summary": "omni",
+    "Asset Reuse Reviewed By": "omni",
+    "Asset Sequence": "omni",
+    "Asset Reuse Reviewed At": "omni",
+    "Upload Naming Status": "omni",
+    "Video Feedback Focus": "omni",
+    "Asset Reuse Review Primary Reason": "omni",
+    "Asset Reuse Review Reasons": "omni",
+    "Duplicate Match Records (All)": "manual",
+    "From field: Duplicate Match Records (All)": "auto_inverse",
+    "Calculation": "manual"
+  },
   "firstFiveFields": [
     "Storage Key",
     "Upload Claim Run ID",
@@ -46,6 +93,403 @@
     "Same Enrollment Match Found?"
   ],
   "fields": [
+    {
+      "name": "Storage Key",
+      "devFieldId": "fldB4X0dqVUf6lplz",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "singleLineText",
+      "description": "",
+      "classification": "BLOCKER",
+      "operationalPurpose": "S3 object path written by Lambda/Make; required for canonical storage and 070b route.",
+      "dependencyBlocks": {
+        "c013": true,
+        "c023": true,
+        "116": false,
+        "070b": true,
+        "lambda": true,
+        "duplicate_review": true,
+        "launch": true
+      },
+      "devOptions": {},
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Upload Claim Run ID",
+      "devFieldId": "fldLMzAxwd9AffgbJ",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "singleLineText",
+      "description": "",
+      "classification": "BLOCKER",
+      "operationalPurpose": "Lambda single-worker upload claim token; prevents concurrent upload collisions.",
+      "dependencyBlocks": {
+        "c013": true,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": false,
+        "launch": true
+      },
+      "devOptions": {},
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Potential Asset Reuse?",
+      "devFieldId": "fldNjXKr8jaUXAEKR",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "checkbox",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Flags same-enrollment contextual duplicate for operator review queue (C-023).",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": true,
+        "launch": true
+      },
+      "devOptions": {
+        "icon": "thumbsUp",
+        "color": "greenBright"
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Exact Hash Match Found?",
+      "devFieldId": "fldVvlCSTDPMYKI2n",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "checkbox",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Lambda flag: byte-identical hash match detected.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": true,
+        "launch": false
+      },
+      "devOptions": {
+        "icon": "thumbsUp",
+        "color": "greenBright"
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Same Enrollment Match Found?",
+      "devFieldId": "fldoAF3gUaBAzPVRI",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "checkbox",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Lambda flag: same-enrollment duplicate context detected.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": true,
+        "launch": false
+      },
+      "devOptions": {
+        "icon": "thumbsUp",
+        "color": "greenBright"
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Processing Started At",
+      "devFieldId": "fldSlCe9nuGvymdvQ",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "dateTime",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Timestamp when Lambda claims asset for upload (America/Denver).",
+      "dependencyBlocks": {
+        "c013": true,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": false,
+        "launch": true
+      },
+      "devOptions": {
+        "dateFormat": {
+          "name": "us",
+          "format": "M/D/YYYY"
+        },
+        "timeFormat": {
+          "name": "12hour",
+          "format": "h:mma"
+        },
+        "timeZone": "America/Denver"
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Asset Reuse Review Summary",
+      "devFieldId": "flduuIThdtc5q0a12",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "multilineText",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Human-readable reuse review summary from Lambda.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": true,
+        "duplicate_review": true,
+        "launch": false
+      },
+      "devOptions": {},
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Asset Reuse Reviewed By",
+      "devFieldId": "fldYpqMsyo0Dcvg0q",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "singleLineText",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Operator identifier for reuse review.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": false,
+        "duplicate_review": true,
+        "launch": false
+      },
+      "devOptions": {},
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Asset Sequence",
+      "devFieldId": "fldYPCnUe1RQSEzu0",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "number",
+      "description": "",
+      "classification": "NOT REQUIRED",
+      "operationalPurpose": "Optional asset ordering integer within submission.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": false,
+        "116": false,
+        "070b": false,
+        "lambda": false,
+        "duplicate_review": false,
+        "launch": false
+      },
+      "devOptions": {
+        "precision": 0
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Asset Reuse Reviewed At",
+      "devFieldId": "fld4N90PQqB1wVql1",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "dateTime",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "When operator finalized reuse decision (UTC).",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": true,
+        "116": false,
+        "070b": false,
+        "lambda": false,
+        "duplicate_review": true,
+        "launch": false
+      },
+      "devOptions": {
+        "dateFormat": {
+          "name": "us",
+          "format": "M/D/YYYY"
+        },
+        "timeFormat": {
+          "name": "12hour",
+          "format": "h:mma"
+        },
+        "timeZone": "utc"
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Upload Naming Status",
+      "devFieldId": "fldj98NjKTnwQOIgz",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "singleSelect",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "File naming pipeline readiness for Make upload.",
+      "dependencyBlocks": {
+        "c013": true,
+        "c023": false,
+        "116": false,
+        "070b": true,
+        "lambda": false,
+        "duplicate_review": false,
+        "launch": true
+      },
+      "devOptions": {
+        "choices": [
+          {
+            "id": "seluA51x3tnvSwqxa",
+            "name": "Pending Metadata",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selZdSgngQJ48Q2lt",
+            "name": "Ready",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selPK4E8E8UH9Y8k4",
+            "name": "Blocked",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selkGqpYsfhty7JLn",
+            "name": "Error",
+            "color": "greenLight2"
+          }
+        ]
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
+    {
+      "name": "Video Feedback Focus",
+      "devFieldId": "fldFCExyojIkXG0t9",
+      "prodFieldId": null,
+      "existsInProd": false,
+      "type": "singleSelect",
+      "description": "",
+      "classification": "REQUIRED BEFORE LAUNCH",
+      "operationalPurpose": "Video skill focus category on video submission assets.",
+      "dependencyBlocks": {
+        "c013": false,
+        "c023": false,
+        "116": false,
+        "070b": false,
+        "lambda": false,
+        "duplicate_review": false,
+        "launch": false
+      },
+      "devOptions": {
+        "choices": [
+          {
+            "id": "sel6RErHUELWBbmAH",
+            "name": "Shooting",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selh8tHpU5mQP4dCL",
+            "name": "Layups / Finishing",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selTOLYqfV9xjdmBP",
+            "name": "Ball Handling",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selGxlYKtW7ZDWWsL",
+            "name": "Free Throws",
+            "color": "greenLight2"
+          },
+          {
+            "id": "selERE2BUoyeMcJPF",
+            "name": "Footwork / Defense",
+            "color": "yellowLight2"
+          },
+          {
+            "id": "selc9lXLpJIVY4ClI",
+            "name": "Strength / Movement",
+            "color": "orangeLight2"
+          },
+          {
+            "id": "selVmFXnnGBLYRRHV",
+            "name": "General Basketball",
+            "color": "redLight2"
+          },
+          {
+            "id": "selHMCPjNpITIo39X",
+            "name": "Other",
+            "color": "pinkLight2"
+          }
+        ]
+      },
+      "prodOptions": null,
+      "dependsOnMissingFields": [],
+      "dependsOnProdFields": [],
+      "createMethod": "omni",
+      "notes": []
+    },
     {
       "name": "Asset Reuse Review Primary Reason",
       "devFieldId": "fld5RMMPKIIxYoI1L",
@@ -203,14 +647,14 @@
       "notes": []
     },
     {
-      "name": "Asset Reuse Review Summary",
-      "devFieldId": "flduuIThdtc5q0a12",
+      "name": "Duplicate Match Records (All)",
+      "devFieldId": "fld3mKhVv4RMIPBjc",
       "prodFieldId": null,
       "existsInProd": false,
-      "type": "multilineText",
+      "type": "multipleRecordLinks",
       "description": "",
       "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Human-readable reuse review summary from Lambda.",
+      "operationalPurpose": "Self-link to all same-enrollment uploaded hash matches.",
       "dependencyBlocks": {
         "c013": false,
         "c023": true,
@@ -218,101 +662,62 @@
         "070b": false,
         "lambda": true,
         "duplicate_review": true,
-        "launch": false
+        "launch": true
       },
-      "devOptions": {},
+      "devOptions": {
+        "linkedTableId": "tblhMLKxQK77agtME",
+        "isReversed": false,
+        "prefersSingleRecordLink": false,
+        "inverseLinkFieldId": "fldhk3rFwECkaTLrD"
+      },
       "prodOptions": null,
       "dependsOnMissingFields": [],
       "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
+      "createMethod": "manual",
+      "notes": [
+        "Create as self-link to Submission Assets. Airtable auto-creates inverse 'From field: Duplicate Match Records (All)'."
+      ],
+      "linkedTable": "Submission Assets",
+      "linkedTableId": "tblhMLKxQK77agtME",
+      "prefersSingleRecordLink": false
     },
     {
-      "name": "Asset Reuse Reviewed At",
-      "devFieldId": "fld4N90PQqB1wVql1",
+      "name": "From field: Duplicate Match Records (All)",
+      "devFieldId": "fldhk3rFwECkaTLrD",
       "prodFieldId": null,
       "existsInProd": false,
-      "type": "dateTime",
+      "type": "multipleRecordLinks",
       "description": "",
       "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "When operator finalized reuse decision (UTC).",
+      "operationalPurpose": "Inverse self-link \u2014 auto-created with Duplicate Match Records (All).",
       "dependencyBlocks": {
         "c013": false,
         "c023": true,
         "116": false,
         "070b": false,
-        "lambda": false,
+        "lambda": true,
         "duplicate_review": true,
-        "launch": false
+        "launch": true
       },
       "devOptions": {
-        "dateFormat": {
-          "name": "us",
-          "format": "M/D/YYYY"
-        },
-        "timeFormat": {
-          "name": "12hour",
-          "format": "h:mma"
-        },
-        "timeZone": "utc"
+        "linkedTableId": "tblhMLKxQK77agtME",
+        "isReversed": false,
+        "prefersSingleRecordLink": false,
+        "inverseLinkFieldId": "fld3mKhVv4RMIPBjc"
       },
       "prodOptions": null,
-      "dependsOnMissingFields": [],
+      "dependsOnMissingFields": [
+        "Duplicate Match Records (All)"
+      ],
       "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Asset Reuse Reviewed By",
-      "devFieldId": "fldYpqMsyo0Dcvg0q",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "singleLineText",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Operator identifier for reuse review.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": false,
-        "duplicate_review": true,
-        "launch": false
-      },
-      "devOptions": {},
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Asset Sequence",
-      "devFieldId": "fldYPCnUe1RQSEzu0",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "number",
-      "description": "",
-      "classification": "NOT REQUIRED",
-      "operationalPurpose": "Optional asset ordering integer within submission.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": false,
-        "116": false,
-        "070b": false,
-        "lambda": false,
-        "duplicate_review": false,
-        "launch": false
-      },
-      "devOptions": {
-        "precision": 0
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
+      "createMethod": "auto_inverse",
+      "notes": [
+        "Do NOT create manually \u2014 verify after Duplicate Match Records (All) is created."
+      ],
+      "linkedTable": "Submission Assets",
+      "linkedTableId": "tblhMLKxQK77agtME",
+      "prefersSingleRecordLink": false,
+      "intentionallyNotCreatedReason": "Airtable auto-creates this inverse field when 'Duplicate Match Records (All)' self-link is added. Creating it manually would duplicate the link pair."
     },
     {
       "name": "Calculation",
@@ -352,364 +757,13 @@
         "PROD already has RecordId (fldXz9TNOnGeRXEL8). Formula must reference {RecordId}, not a missing field."
       ],
       "manualFormula": "{RecordId}"
-    },
-    {
-      "name": "Duplicate Match Records (All)",
-      "devFieldId": "fld3mKhVv4RMIPBjc",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "multipleRecordLinks",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Self-link to all same-enrollment uploaded hash matches.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": true
-      },
-      "devOptions": {
-        "linkedTableId": "tblhMLKxQK77agtME",
-        "isReversed": false,
-        "prefersSingleRecordLink": false,
-        "inverseLinkFieldId": "fldhk3rFwECkaTLrD"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "manual",
-      "notes": [
-        "Create as self-link to Submission Assets. Airtable auto-creates inverse 'From field: Duplicate Match Records (All)'."
-      ],
-      "linkedTable": "Submission Assets",
-      "linkedTableId": "tblhMLKxQK77agtME",
-      "prefersSingleRecordLink": false
-    },
-    {
-      "name": "Exact Hash Match Found?",
-      "devFieldId": "fldVvlCSTDPMYKI2n",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "checkbox",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Lambda flag: byte-identical hash match detected.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": false
-      },
-      "devOptions": {
-        "icon": "thumbsUp",
-        "color": "greenBright"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "From field: Duplicate Match Records (All)",
-      "devFieldId": "fldhk3rFwECkaTLrD",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "multipleRecordLinks",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Inverse self-link \u2014 auto-created with Duplicate Match Records (All).",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": true
-      },
-      "devOptions": {
-        "linkedTableId": "tblhMLKxQK77agtME",
-        "isReversed": false,
-        "prefersSingleRecordLink": false,
-        "inverseLinkFieldId": "fld3mKhVv4RMIPBjc"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "auto_inverse",
-      "notes": [
-        "Do NOT create manually \u2014 verify after Duplicate Match Records (All) is created."
-      ]
-    },
-    {
-      "name": "Potential Asset Reuse?",
-      "devFieldId": "fldNjXKr8jaUXAEKR",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "checkbox",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Flags same-enrollment contextual duplicate for operator review queue (C-023).",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": true
-      },
-      "devOptions": {
-        "icon": "thumbsUp",
-        "color": "greenBright"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Processing Started At",
-      "devFieldId": "fldSlCe9nuGvymdvQ",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "dateTime",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Timestamp when Lambda claims asset for upload (America/Denver).",
-      "dependencyBlocks": {
-        "c013": true,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": false,
-        "launch": true
-      },
-      "devOptions": {
-        "dateFormat": {
-          "name": "us",
-          "format": "M/D/YYYY"
-        },
-        "timeFormat": {
-          "name": "12hour",
-          "format": "h:mma"
-        },
-        "timeZone": "America/Denver"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Same Enrollment Match Found?",
-      "devFieldId": "fldoAF3gUaBAzPVRI",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "checkbox",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Lambda flag: same-enrollment duplicate context detected.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": false
-      },
-      "devOptions": {
-        "icon": "thumbsUp",
-        "color": "greenBright"
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Storage Key",
-      "devFieldId": "fldB4X0dqVUf6lplz",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "singleLineText",
-      "description": "",
-      "classification": "BLOCKER",
-      "operationalPurpose": "S3 object path written by Lambda/Make; required for canonical storage and 070b route.",
-      "dependencyBlocks": {
-        "c013": true,
-        "c023": true,
-        "116": false,
-        "070b": true,
-        "lambda": true,
-        "duplicate_review": true,
-        "launch": true
-      },
-      "devOptions": {},
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Upload Claim Run ID",
-      "devFieldId": "fldLMzAxwd9AffgbJ",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "singleLineText",
-      "description": "",
-      "classification": "BLOCKER",
-      "operationalPurpose": "Lambda single-worker upload claim token; prevents concurrent upload collisions.",
-      "dependencyBlocks": {
-        "c013": true,
-        "c023": true,
-        "116": false,
-        "070b": false,
-        "lambda": true,
-        "duplicate_review": false,
-        "launch": true
-      },
-      "devOptions": {},
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Upload Naming Status",
-      "devFieldId": "fldj98NjKTnwQOIgz",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "singleSelect",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "File naming pipeline readiness for Make upload.",
-      "dependencyBlocks": {
-        "c013": true,
-        "c023": false,
-        "116": false,
-        "070b": true,
-        "lambda": false,
-        "duplicate_review": false,
-        "launch": true
-      },
-      "devOptions": {
-        "choices": [
-          {
-            "id": "seluA51x3tnvSwqxa",
-            "name": "Pending Metadata",
-            "color": "blueLight2"
-          },
-          {
-            "id": "selZdSgngQJ48Q2lt",
-            "name": "Ready",
-            "color": "cyanLight2"
-          },
-          {
-            "id": "selPK4E8E8UH9Y8k4",
-            "name": "Blocked",
-            "color": "tealLight2"
-          },
-          {
-            "id": "selkGqpYsfhty7JLn",
-            "name": "Error",
-            "color": "greenLight2"
-          }
-        ]
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
-    },
-    {
-      "name": "Video Feedback Focus",
-      "devFieldId": "fldFCExyojIkXG0t9",
-      "prodFieldId": null,
-      "existsInProd": false,
-      "type": "singleSelect",
-      "description": "",
-      "classification": "REQUIRED BEFORE LAUNCH",
-      "operationalPurpose": "Video skill focus category on video submission assets.",
-      "dependencyBlocks": {
-        "c013": false,
-        "c023": false,
-        "116": false,
-        "070b": false,
-        "lambda": false,
-        "duplicate_review": false,
-        "launch": false
-      },
-      "devOptions": {
-        "choices": [
-          {
-            "id": "sel6RErHUELWBbmAH",
-            "name": "Shooting",
-            "color": "blueLight2"
-          },
-          {
-            "id": "selh8tHpU5mQP4dCL",
-            "name": "Layups / Finishing",
-            "color": "cyanLight2"
-          },
-          {
-            "id": "selTOLYqfV9xjdmBP",
-            "name": "Ball Handling",
-            "color": "tealLight2"
-          },
-          {
-            "id": "selGxlYKtW7ZDWWsL",
-            "name": "Free Throws",
-            "color": "greenLight2"
-          },
-          {
-            "id": "selERE2BUoyeMcJPF",
-            "name": "Footwork / Defense",
-            "color": "yellowLight2"
-          },
-          {
-            "id": "selc9lXLpJIVY4ClI",
-            "name": "Strength / Movement",
-            "color": "orangeLight2"
-          },
-          {
-            "id": "selVmFXnnGBLYRRHV",
-            "name": "General Basketball",
-            "color": "redLight2"
-          },
-          {
-            "id": "selHMCPjNpITIo39X",
-            "name": "Other",
-            "color": "pinkLight2"
-          }
-        ]
-      },
-      "prodOptions": null,
-      "dependsOnMissingFields": [],
-      "dependsOnProdFields": [],
-      "createMethod": "omni",
-      "notes": []
     }
   ],
-  "omniPrompt": "You are working in the PRODUCTION Airtable base only.\n\nBase ID: appn84sqPw03zEbTT\nTable: Submission Assets\n\nSTRICT RULES:\n- Do NOT modify, rename, or delete any existing field.\n- Do NOT change any existing field type, formula, option, or link.\n- Do NOT enable, disable, or edit any automation.\n- Do NOT create, update, or delete any records.\n- Do NOT change views, interfaces, or permissions.\n- Create ONLY the missing fields listed below, in order.\n- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it \u2014 do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').\n- After each creation, report: field name, field type, and confirmation it was newly created.\n\nCreate these fields in order:\n\n1. **Storage Key** \u2014 type: `singleLineText`\n   - Single line text, no default.\n2. **Upload Claim Run ID** \u2014 type: `singleLineText`\n   - Single line text, no default.\n3. **Potential Asset Reuse?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n4. **Exact Hash Match Found?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n5. **Same Enrollment Match Found?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n6. **Processing Started At** \u2014 type: `dateTime`\n   - Date with time. Date format: M/D/YYYY. Time format: h:mma. Time zone: America/Denver.\n7. **Asset Reuse Review Summary** \u2014 type: `multilineText`\n   - Long text, no default.\n8. **Asset Reuse Reviewed By** \u2014 type: `singleLineText`\n   - Single line text, no default.\n9. **Asset Sequence** \u2014 type: `number`\n   - Number, precision 0, no default.\n10. **Asset Reuse Reviewed At** \u2014 type: `dateTime`\n   - Date with time. Date format: M/D/YYYY. Time format: h:mma. Time zone: utc.\n11. **Upload Naming Status** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Pending Metadata\n     - Ready\n     - Blocked\n     - Error\n12. **Video Feedback Focus** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Shooting\n     - Layups / Finishing\n     - Ball Handling\n     - Free Throws\n     - Footwork / Defense\n     - Strength / Movement\n     - General Basketball\n     - Other\n13. **Asset Reuse Review Primary Reason** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Same Assignment Resubmission\n     - Different Assignment Reuse\n     - Different Week Reuse\n     - Different Submission Reuse\n     - Cross-Type Reuse\n     - Homework Used for Video Feedback\n     - Video Feedback Used for Homework\n     - Missing Context\n     - Multiple Prior Uses\n     - Cross-Enrollment Match \u2014 Informational\n14. **Asset Reuse Review Reasons** \u2014 type: `multipleSelects`\n   - Multiple select. Options in this exact order:\n     - Same Assignment Resubmission\n     - Different Assignment Reuse\n     - Different Week Reuse\n     - Different Submission Reuse\n     - Cross-Type Reuse\n     - Homework Used for Video Feedback\n     - Video Feedback Used for Homework\n     - Missing Context\n     - Multiple Prior Uses\n     - Cross-Enrollment Match \u2014 Informational\n15. SKIP IN OMNI \u2014 manual follow-up required: **Duplicate Match Records (All)** (multipleRecordLinks)\n16. SKIP IN OMNI \u2014 manual follow-up required: **Calculation** (formula)\n\nWhen finished, report:\n- Total fields created\n- Any fields skipped because they already existed\n- Any fields you could not create\n- Confirmation that no existing fields were modified",
+  "omniPrompt": "You are working in the PRODUCTION Airtable base only.\n\nBase ID: appn84sqPw03zEbTT\nTable: Submission Assets\n\nFIELD ACCOUNTING: 17 missing fields total = 14 create with OMNI + 2 manual follow-up + 1 auto-created inverse (do NOT create manually).\n\nSTRICT RULES:\n- Do NOT modify, rename, or delete any existing field.\n- Do NOT change any existing field type, formula, option, or link.\n- Do NOT enable, disable, or edit any automation.\n- Do NOT create, update, or delete any records.\n- Do NOT change views, interfaces, or permissions.\n- Create ONLY the OMNI fields listed below, in order.\n- Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it \u2014 do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').\n- After each creation, report: field name, field type, and confirmation it was newly created.\n\nPromotion sequence for all 17 missing fields:\n\n1. **Storage Key** \u2014 type: `singleLineText`\n   - Single line text, no default.\n2. **Upload Claim Run ID** \u2014 type: `singleLineText`\n   - Single line text, no default.\n3. **Potential Asset Reuse?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n4. **Exact Hash Match Found?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n5. **Same Enrollment Match Found?** \u2014 type: `checkbox`\n   - Checkbox, icon: thumbsUp, color: greenBright.\n6. **Processing Started At** \u2014 type: `dateTime`\n   - Date with time. Date format: M/D/YYYY. Time format: h:mma. Time zone: America/Denver.\n7. **Asset Reuse Review Summary** \u2014 type: `multilineText`\n   - Long text, no default.\n8. **Asset Reuse Reviewed By** \u2014 type: `singleLineText`\n   - Single line text, no default.\n9. **Asset Sequence** \u2014 type: `number`\n   - Number, precision 0, no default.\n10. **Asset Reuse Reviewed At** \u2014 type: `dateTime`\n   - Date with time. Date format: M/D/YYYY. Time format: h:mma. Time zone: utc.\n11. **Upload Naming Status** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Pending Metadata\n     - Ready\n     - Blocked\n     - Error\n12. **Video Feedback Focus** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Shooting\n     - Layups / Finishing\n     - Ball Handling\n     - Free Throws\n     - Footwork / Defense\n     - Strength / Movement\n     - General Basketball\n     - Other\n13. **Asset Reuse Review Primary Reason** \u2014 type: `singleSelect`\n   - Single select. Options in this exact order:\n     - Same Assignment Resubmission\n     - Different Assignment Reuse\n     - Different Week Reuse\n     - Different Submission Reuse\n     - Cross-Type Reuse\n     - Homework Used for Video Feedback\n     - Video Feedback Used for Homework\n     - Missing Context\n     - Multiple Prior Uses\n     - Cross-Enrollment Match \u2014 Informational\n14. **Asset Reuse Review Reasons** \u2014 type: `multipleSelects`\n   - Multiple select. Options in this exact order:\n     - Same Assignment Resubmission\n     - Different Assignment Reuse\n     - Different Week Reuse\n     - Different Submission Reuse\n     - Cross-Type Reuse\n     - Homework Used for Video Feedback\n     - Video Feedback Used for Homework\n     - Missing Context\n     - Multiple Prior Uses\n     - Cross-Enrollment Match \u2014 Informational\n15. SKIP IN OMNI \u2014 manual follow-up required: **Duplicate Match Records (All)** (multipleRecordLinks)\n16. DO NOT CREATE \u2014 **From field: Duplicate Match Records (All)** (multipleRecordLinks) \u2014 intentionally auto-created by Airtable when 'Duplicate Match Records (All)' self-link is added in manual step 15. Verify this inverse field exists after manual step; do not create it yourself.\n17. SKIP IN OMNI \u2014 manual follow-up required: **Calculation** (formula)\n\nWhen finished, report:\n- OMNI fields created (expected 14)\n- Manual fields deferred to Mike (Duplicate Match Records (All), Calculation)\n- Auto-inverse field NOT created by OMNI (From field: Duplicate Match Records (All))\n- Any fields skipped because they already existed\n- Any fields you could not create\n- Confirmation that no existing fields were modified",
   "manualFollowUpRequired": true,
   "manualItems": [
     {
+      "step": 15,
       "field": "Duplicate Match Records (All)",
       "type": "multipleRecordLinks",
       "linkedTable": "Submission Assets",
@@ -717,11 +771,23 @@
       "autoCreatesInverse": "From field: Duplicate Match Records (All)"
     },
     {
+      "step": 17,
       "field": "Calculation",
       "type": "formula",
       "formula": "{RecordId}",
       "resultType": "singleLineText",
       "description": "Displays the record id for this record."
+    }
+  ],
+  "autoInverseItems": [
+    {
+      "step": 16,
+      "field": "From field: Duplicate Match Records (All)",
+      "type": "multipleRecordLinks",
+      "linkedTable": "Submission Assets",
+      "createMethod": "auto_inverse",
+      "intentionallyNotCreatedReason": "Airtable auto-creates this inverse when Duplicate Match Records (All) self-link is added.",
+      "verifyAfterStep": 15
     }
   ],
   "postCreationValidation": [

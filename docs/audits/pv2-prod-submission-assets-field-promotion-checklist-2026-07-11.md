@@ -16,27 +16,58 @@
 | Prior audit count (2026-07-11) | **17** |
 | Discrepancy | **None — live matches audit** |
 | Target PROD count after promotion | **97** |
-| Reconciled at | 2026-07-11T12:45:00Z |
+| Reconciled at | 2026-07-11T12:44:51Z |
 
 ### Missing field list (live verified)
 
-- `Asset Reuse Review Primary Reason` — DEV `fld5RMMPKIIxYoI1L` · `singleSelect` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Review Reasons` — DEV `fldIRI7T1rY5R9mdg` · `multipleSelects` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Review Summary` — DEV `flduuIThdtc5q0a12` · `multilineText` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Reviewed At` — DEV `fld4N90PQqB1wVql1` · `dateTime` · REQUIRED BEFORE LAUNCH
-- `Asset Reuse Reviewed By` — DEV `fldYpqMsyo0Dcvg0q` · `singleLineText` · REQUIRED BEFORE LAUNCH
-- `Asset Sequence` — DEV `fldYPCnUe1RQSEzu0` · `number` · NOT REQUIRED
-- `Calculation` — DEV `fldzFo5To0DXi94OS` · `formula` · NOT REQUIRED
-- `Duplicate Match Records (All)` — DEV `fld3mKhVv4RMIPBjc` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
-- `Exact Hash Match Found?` — DEV `fldVvlCSTDPMYKI2n` · `checkbox` · REQUIRED BEFORE LAUNCH
-- `From field: Duplicate Match Records (All)` — DEV `fldhk3rFwECkaTLrD` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
-- `Potential Asset Reuse?` — DEV `fldNjXKr8jaUXAEKR` · `checkbox` · REQUIRED BEFORE LAUNCH
-- `Processing Started At` — DEV `fldSlCe9nuGvymdvQ` · `dateTime` · REQUIRED BEFORE LAUNCH
-- `Same Enrollment Match Found?` — DEV `fldoAF3gUaBAzPVRI` · `checkbox` · REQUIRED BEFORE LAUNCH
 - `Storage Key` — DEV `fldB4X0dqVUf6lplz` · `singleLineText` · BLOCKER
 - `Upload Claim Run ID` — DEV `fldLMzAxwd9AffgbJ` · `singleLineText` · BLOCKER
+- `Potential Asset Reuse?` — DEV `fldNjXKr8jaUXAEKR` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Exact Hash Match Found?` — DEV `fldVvlCSTDPMYKI2n` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Same Enrollment Match Found?` — DEV `fldoAF3gUaBAzPVRI` · `checkbox` · REQUIRED BEFORE LAUNCH
+- `Processing Started At` — DEV `fldSlCe9nuGvymdvQ` · `dateTime` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Summary` — DEV `flduuIThdtc5q0a12` · `multilineText` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Reviewed By` — DEV `fldYpqMsyo0Dcvg0q` · `singleLineText` · REQUIRED BEFORE LAUNCH
+- `Asset Sequence` — DEV `fldYPCnUe1RQSEzu0` · `number` · NOT REQUIRED
+- `Asset Reuse Reviewed At` — DEV `fld4N90PQqB1wVql1` · `dateTime` · REQUIRED BEFORE LAUNCH
 - `Upload Naming Status` — DEV `fldj98NjKTnwQOIgz` · `singleSelect` · REQUIRED BEFORE LAUNCH
 - `Video Feedback Focus` — DEV `fldFCExyojIkXG0t9` · `singleSelect` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Primary Reason` — DEV `fld5RMMPKIIxYoI1L` · `singleSelect` · REQUIRED BEFORE LAUNCH
+- `Asset Reuse Review Reasons` — DEV `fldIRI7T1rY5R9mdg` · `multipleSelects` · REQUIRED BEFORE LAUNCH
+- `Duplicate Match Records (All)` — DEV `fld3mKhVv4RMIPBjc` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
+- `From field: Duplicate Match Records (All)` — DEV `fldhk3rFwECkaTLrD` · `multipleRecordLinks` · REQUIRED BEFORE LAUNCH
+- `Calculation` — DEV `fldzFo5To0DXi94OS` · `formula` · NOT REQUIRED
+
+### 17-field disposition accounting
+
+| Disposition | Count |
+|-------------|-------|
+| Create with OMNI | **14** |
+| Create manually (Mike) | **2** |
+| Auto-created inverse — do NOT create manually | **1** |
+| **Total missing** | **17** |
+
+| # | Field | Type | Disposition |
+|---|-------|------|-------------|
+| 1 | Storage Key | `singleLineText` | OMNI create |
+| 2 | Upload Claim Run ID | `singleLineText` | OMNI create |
+| 3 | Potential Asset Reuse? | `checkbox` | OMNI create |
+| 4 | Exact Hash Match Found? | `checkbox` | OMNI create |
+| 5 | Same Enrollment Match Found? | `checkbox` | OMNI create |
+| 6 | Processing Started At | `dateTime` | OMNI create |
+| 7 | Asset Reuse Review Summary | `multilineText` | OMNI create |
+| 8 | Asset Reuse Reviewed By | `singleLineText` | OMNI create |
+| 9 | Asset Sequence | `number` | OMNI create |
+| 10 | Asset Reuse Reviewed At | `dateTime` | OMNI create |
+| 11 | Upload Naming Status | `singleSelect` | OMNI create |
+| 12 | Video Feedback Focus | `singleSelect` | OMNI create |
+| 13 | Asset Reuse Review Primary Reason | `singleSelect` | OMNI create |
+| 14 | Asset Reuse Review Reasons | `multipleSelects` | OMNI create |
+| 15 | Duplicate Match Records (All) | `multipleRecordLinks` | Manual create |
+| 16 | From field: Duplicate Match Records (All) | `multipleRecordLinks` | Auto inverse (verify only) |
+| 17 | Calculation | `formula` | Manual create |
+
+**Prior checklist gap:** Step 16 `From field: Duplicate Match Records (All)` was omitted from the OMNI prompt. It is the auto-created inverse of `Duplicate Match Records (All)` and must not be created manually.
 
 ## 2. Risk summary
 
@@ -47,7 +78,7 @@
 ## 3. Dependency order
 
 **First field to create:** `Storage Key`  
-**Last field to create (manual):** `Calculation`  
+**Last promotion step:** `Calculation` (manual formula)  
 
 | Step | Field | Method | Waits for |
 |------|-------|--------|-----------|
@@ -66,39 +97,56 @@
 | 13 | Asset Reuse Review Primary Reason | omni | — |
 | 14 | Asset Reuse Review Reasons | omni | — |
 | 15 | Duplicate Match Records (All) | manual | — |
-| 16 | Calculation | manual | RecordId |
+| 16 | From field: Duplicate Match Records (All) | auto_inverse | Duplicate Match Records (All) |
+| 17 | Calculation | manual | RecordId |
 
-**Independent batch (step 1–5):** Storage Key, Upload Claim Run ID, Potential Asset Reuse?, Exact Hash Match Found?, Same Enrollment Match Found?
+**Independent OMNI batch (steps 1–5):** Storage Key, Upload Claim Run ID, Potential Asset Reuse?, Exact Hash Match Found?, Same Enrollment Match Found?
 
-**Auto-created:** `From field: Duplicate Match Records (All)` when step 15 self-link is created.
+**Step 16 auto-inverse:** `From field: Duplicate Match Records (All)` — verify only after step 15.
 
 ## 4. Field definitions (DEV source of truth)
 
-### Asset Reuse Review Primary Reason
-- Type: `singleSelect`
-- DEV ID: `fld5RMMPKIIxYoI1L`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Primary contextual reuse classification for operator review.
-- Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
+### Storage Key
+- Type: `singleLineText`
+- DEV ID: `fldB4X0dqVUf6lplz`
+- Classification: **BLOCKER**
+- Purpose: S3 object path written by Lambda/Make; required for canonical storage and 070b route.
 
-### Asset Reuse Review Reasons
-- Type: `multipleSelects`
-- DEV ID: `fldIRI7T1rY5R9mdg`
+### Upload Claim Run ID
+- Type: `singleLineText`
+- DEV ID: `fldLMzAxwd9AffgbJ`
+- Classification: **BLOCKER**
+- Purpose: Lambda single-worker upload claim token; prevents concurrent upload collisions.
+
+### Potential Asset Reuse?
+- Type: `checkbox`
+- DEV ID: `fldNjXKr8jaUXAEKR`
 - Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: All contextual reuse reason tags (multi-select).
-- Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
+- Purpose: Flags same-enrollment contextual duplicate for operator review queue (C-023).
+
+### Exact Hash Match Found?
+- Type: `checkbox`
+- DEV ID: `fldVvlCSTDPMYKI2n`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Lambda flag: byte-identical hash match detected.
+
+### Same Enrollment Match Found?
+- Type: `checkbox`
+- DEV ID: `fldoAF3gUaBAzPVRI`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Lambda flag: same-enrollment duplicate context detected.
+
+### Processing Started At
+- Type: `dateTime`
+- DEV ID: `fldSlCe9nuGvymdvQ`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Timestamp when Lambda claims asset for upload (America/Denver).
 
 ### Asset Reuse Review Summary
 - Type: `multilineText`
 - DEV ID: `flduuIThdtc5q0a12`
 - Classification: **REQUIRED BEFORE LAUNCH**
 - Purpose: Human-readable reuse review summary from Lambda.
-
-### Asset Reuse Reviewed At
-- Type: `dateTime`
-- DEV ID: `fld4N90PQqB1wVql1`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: When operator finalized reuse decision (UTC).
 
 ### Asset Reuse Reviewed By
 - Type: `singleLineText`
@@ -112,64 +160,11 @@
 - Classification: **NOT REQUIRED**
 - Purpose: Optional asset ordering integer within submission.
 
-### Calculation
-- Type: `formula`
-- DEV ID: `fldzFo5To0DXi94OS`
-- Classification: **NOT REQUIRED**
-- Purpose: Debug formula displaying RecordId — cosmetic on DEV.
-- Formula (PROD): `{RecordId}`
-- Note: PROD already has RecordId (fldXz9TNOnGeRXEL8). Formula must reference {RecordId}, not a missing field.
-
-### Duplicate Match Records (All)
-- Type: `multipleRecordLinks`
-- DEV ID: `fld3mKhVv4RMIPBjc`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Self-link to all same-enrollment uploaded hash matches.
-- Link: `Submission Assets` (self-link, multiple records)
-- Note: Create as self-link to Submission Assets. Airtable auto-creates inverse 'From field: Duplicate Match Records (All)'.
-
-### Exact Hash Match Found?
-- Type: `checkbox`
-- DEV ID: `fldVvlCSTDPMYKI2n`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Lambda flag: byte-identical hash match detected.
-
-### From field: Duplicate Match Records (All)
-- Type: `multipleRecordLinks`
-- DEV ID: `fldhk3rFwECkaTLrD`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Inverse self-link — auto-created with Duplicate Match Records (All).
-- Note: Do NOT create manually — verify after Duplicate Match Records (All) is created.
-
-### Potential Asset Reuse?
-- Type: `checkbox`
-- DEV ID: `fldNjXKr8jaUXAEKR`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Flags same-enrollment contextual duplicate for operator review queue (C-023).
-
-### Processing Started At
+### Asset Reuse Reviewed At
 - Type: `dateTime`
-- DEV ID: `fldSlCe9nuGvymdvQ`
+- DEV ID: `fld4N90PQqB1wVql1`
 - Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Timestamp when Lambda claims asset for upload (America/Denver).
-
-### Same Enrollment Match Found?
-- Type: `checkbox`
-- DEV ID: `fldoAF3gUaBAzPVRI`
-- Classification: **REQUIRED BEFORE LAUNCH**
-- Purpose: Lambda flag: same-enrollment duplicate context detected.
-
-### Storage Key
-- Type: `singleLineText`
-- DEV ID: `fldB4X0dqVUf6lplz`
-- Classification: **BLOCKER**
-- Purpose: S3 object path written by Lambda/Make; required for canonical storage and 070b route.
-
-### Upload Claim Run ID
-- Type: `singleLineText`
-- DEV ID: `fldLMzAxwd9AffgbJ`
-- Classification: **BLOCKER**
-- Purpose: Lambda single-worker upload claim token; prevents concurrent upload collisions.
+- Purpose: When operator finalized reuse decision (UTC).
 
 ### Upload Naming Status
 - Type: `singleSelect`
@@ -185,6 +180,44 @@
 - Purpose: Video skill focus category on video submission assets.
 - Options: Shooting, Layups / Finishing, Ball Handling, Free Throws, Footwork / Defense, Strength / Movement, General Basketball, Other
 
+### Asset Reuse Review Primary Reason
+- Type: `singleSelect`
+- DEV ID: `fld5RMMPKIIxYoI1L`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Primary contextual reuse classification for operator review.
+- Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
+
+### Asset Reuse Review Reasons
+- Type: `multipleSelects`
+- DEV ID: `fldIRI7T1rY5R9mdg`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: All contextual reuse reason tags (multi-select).
+- Options: Same Assignment Resubmission, Different Assignment Reuse, Different Week Reuse, Different Submission Reuse, Cross-Type Reuse, Homework Used for Video Feedback, Video Feedback Used for Homework, Missing Context, Multiple Prior Uses, Cross-Enrollment Match — Informational
+
+### Duplicate Match Records (All)
+- Type: `multipleRecordLinks`
+- DEV ID: `fld3mKhVv4RMIPBjc`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Self-link to all same-enrollment uploaded hash matches.
+- Link: `Submission Assets` (self-link, multiple records)
+- Note: Create as self-link to Submission Assets. Airtable auto-creates inverse 'From field: Duplicate Match Records (All)'.
+
+### From field: Duplicate Match Records (All)
+- Type: `multipleRecordLinks`
+- DEV ID: `fldhk3rFwECkaTLrD`
+- Classification: **REQUIRED BEFORE LAUNCH**
+- Purpose: Inverse self-link — auto-created with Duplicate Match Records (All).
+- Link: `Submission Assets` (self-link, multiple records)
+- Note: Do NOT create manually — verify after Duplicate Match Records (All) is created.
+
+### Calculation
+- Type: `formula`
+- DEV ID: `fldzFo5To0DXi94OS`
+- Classification: **NOT REQUIRED**
+- Purpose: Debug formula displaying RecordId — cosmetic on DEV.
+- Formula (PROD): `{RecordId}`
+- Note: PROD already has RecordId (fldXz9TNOnGeRXEL8). Formula must reference {RecordId}, not a missing field.
+
 ## 5. OMNI-ready prompt
 
 Copy everything below into Airtable OMNI in PROD base:
@@ -195,17 +228,19 @@ You are working in the PRODUCTION Airtable base only.
 Base ID: appn84sqPw03zEbTT
 Table: Submission Assets
 
+FIELD ACCOUNTING: 17 missing fields total = 14 create with OMNI + 2 manual follow-up + 1 auto-created inverse (do NOT create manually).
+
 STRICT RULES:
 - Do NOT modify, rename, or delete any existing field.
 - Do NOT change any existing field type, formula, option, or link.
 - Do NOT enable, disable, or edit any automation.
 - Do NOT create, update, or delete any records.
 - Do NOT change views, interfaces, or permissions.
-- Create ONLY the missing fields listed below, in order.
+- Create ONLY the OMNI fields listed below, in order.
 - Before creating each field, check whether a field with the EXACT same name already exists. If it exists, STOP that field and report it — do not create a duplicate or suffix variant (no '2', 'copy', or '(from DEV)').
 - After each creation, report: field name, field type, and confirmation it was newly created.
 
-Create these fields in order:
+Promotion sequence for all 17 missing fields:
 
 1. **Storage Key** — type: `singleLineText`
    - Single line text, no default.
@@ -268,10 +303,13 @@ Create these fields in order:
      - Multiple Prior Uses
      - Cross-Enrollment Match — Informational
 15. SKIP IN OMNI — manual follow-up required: **Duplicate Match Records (All)** (multipleRecordLinks)
-16. SKIP IN OMNI — manual follow-up required: **Calculation** (formula)
+16. DO NOT CREATE — **From field: Duplicate Match Records (All)** (multipleRecordLinks) — intentionally auto-created by Airtable when 'Duplicate Match Records (All)' self-link is added in manual step 15. Verify this inverse field exists after manual step; do not create it yourself.
+17. SKIP IN OMNI — manual follow-up required: **Calculation** (formula)
 
 When finished, report:
-- Total fields created
+- OMNI fields created (expected 14)
+- Manual fields deferred to Mike (Duplicate Match Records (All), Calculation)
+- Auto-inverse field NOT created by OMNI (From field: Duplicate Match Records (All))
 - Any fields skipped because they already existed
 - Any fields you could not create
 - Confirmation that no existing fields were modified
@@ -291,7 +329,15 @@ OMNI cannot reliably create self-referential link pairs. Mike must:
 
 **Verify:** Both link fields exist; link targets Submission Assets only.
 
-### 6.2 Calculation — formula
+### 6.2 Verify auto-created inverse (step 16 — do NOT create manually)
+
+After creating **Duplicate Match Records (All)**, confirm Airtable added:
+
+- **From field: Duplicate Match Records (All)** — type link to Submission Assets (inverse)
+
+If the inverse field is missing, delete and recreate the self-link once. Do not add a second link field with a similar name.
+
+### 6.3 Calculation — formula
 
 1. Add field **Calculation** → type **Formula**.
 2. Description: `Displays the record id for this record.`
@@ -331,4 +377,4 @@ python pv2_dev_prod_gap_audit.py
 Mike completed PROD Submission Assets field promotion. Re-run pv2_dev_prod_gap_audit.py, confirm submission_assets_missing_in_prod=0 and 070b PROD PASS, then generate OMNI checklist for Homework Completions and Video Feedback missing fields (Linked Asset Reuse Decision, Video Feedback Focus).
 
 ---
-*Generated 2026-07-11T12:30:38Z*
+*Generated 2026-07-11T12:44:51Z*
