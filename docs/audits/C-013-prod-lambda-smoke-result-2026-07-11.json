@@ -5,8 +5,8 @@
   "goNoGoMakeSmoke": "GO",
   "automation070bState": "OFF",
   "automation070aState": "OFF",
-  "makeScenarioState": "NOT_BUILT",
-  "productionV2EstimatePercent": 75,
+  "makeScenarioState": "BUILT_MANUAL_SMOKE_PASS",
+  "productionV2EstimatePercent": 92,
   "fixture": {
     "enrollmentId": "recgP9qZYjAhE7NXm",
     "enrollmentLabel": "Schmidt, Testing - 2025-2026",
@@ -35,7 +35,7 @@
     "AIRTABLE_PROD_TOKEN": "CONFIGURED",
     "UPLOAD_WEBHOOK_SECRET_PROD": "CONFIGURED",
     "LAMBDA_FUNCTION_URL_PROD": "CONFIGURED",
-    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "MISSING"
+    "MAKE_UPLOAD_WEBHOOK_URL_PROD": "CONFIGURED"
   },
   "tests": {
     "missingSecretRejection": { "pass": true, "statusCode": 401, "actionOut": "error_unauthorized" },

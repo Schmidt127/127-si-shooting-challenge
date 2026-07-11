@@ -231,9 +231,12 @@ Full steps: [C-013-prod-smoke-test-2026-07-11.md](../deploy-checklists/C-013-pro
 | Schmidt Testing only | ✅ |
 | Rollback verified | ✅ |
 | Documentation | ✅ |
-| Make manual PASS | ❌ (BLOCKED) |
+| Make manual PASS | ✅ (2026-07-11 · `overallPass=true`) |
+| Secret rotation + re-smoke | ⏳ pending |
+| 070b UI + isolation view verified | ⏳ pending |
+| One Airtable-triggered Schmidt test | ⏳ pending Mike approval |
 
-**070b enable:** **NO-GO**
+**070b enable:** **CONDITIONAL GO** after secret rotation, re-smoke, UI/isolation verification, and explicit Mike approval for one controlled test
 
 ---
 

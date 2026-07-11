@@ -103,7 +103,7 @@ Full machine-readable summary: [C-013-prod-lambda-smoke-result-2026-07-11.json](
 ## Rollback
 
 1. **070b OFF** · **070a OFF** (unchanged)
-2. Make Production upload scenario **OFF** (not built yet)
+2. Make Production upload scenario **OFF** (built and tested; leave OFF until Mike approves activation)
 3. Throttle Lambda:  
    `aws lambda put-function-concurrency --function-name 127si-upload-asset --reserved-concurrent-executions 0 --region us-east-2`
 4. Code rollback: redeploy prior zip by `CodeSha256` from AWS console versions
@@ -113,9 +113,9 @@ Full machine-readable summary: [C-013-prod-lambda-smoke-result-2026-07-11.json](
 
 ---
 
-## Make PROD package (not activated)
+## Make PROD package (built; activation pending)
 
-See smoke-result doc § Make configuration. Scenario name: **`Shooting Challenge - GAME - Upload Engine - Lambda - v1`** · remains **OFF**.
+See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md). Scenario name: **`Shooting Challenge - GAME - Upload Engine - Lambda - v1`** · manual route smoke **PASS** · remains **OFF** until Mike approves one Airtable-triggered Schmidt test.
 
 ---
 

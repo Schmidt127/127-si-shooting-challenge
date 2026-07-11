@@ -3,7 +3,7 @@
 **Status:** **PROD Lambda + Make manual route PASS (2026-07-11)** · repository closeout complete · secret rotation + Airtable-triggered 070b Schmidt test pending · **070b OFF**
 **Backlog:** C-013 (AWS S3 canonical URLs) · C-023 (file content hash dedup)  
 **DEV base:** `appTetnuCZlCZdTCT`  
-**Production base:** `appn84sqPw03zEbTT` — Lambda deployed + smoke PASS; Make scenario not built in UI  
+**Production base:** `appn84sqPw03zEbTT` — Lambda deployed + direct smoke PASS; Make scenario built + manual route smoke PASS (`overallPass=true`)  
 **Make build:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](./C-013-prod-070b-script-paste-v4.2.txt)  
 **Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Readiness audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md) · [smoke test](./C-013-prod-smoke-test-2026-07-11.md)

@@ -138,7 +138,7 @@ python _probe_c013_asset_storage_fields.py --record-id recGQ8EjAMz3bEBiW --out _
 | Airtable | Probe `allPass=true` on `recGQ8EjAMz3bEBiW` |
 | S3 | Object under `shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/` |
 | Idempotency | Repeat POST → `skipped_already_uploaded` · no duplicate S3 object |
-| Invalid route | `routeKey=not_a_route` → rejected · no Airtable/S3 change on fixture |
+| Invalid route | `routeKey=not_a_route` → `error_invalid_route` · complete Lambda JSON returned · Upload Status=`Error` expected · canonical URL/storage key/hash unchanged |
 | Isolation | **No live athlete record touched** |
 
 Save redacted results to `tools/airtable/_preview/c013-prod-make-smoke-*.json` (local only).
