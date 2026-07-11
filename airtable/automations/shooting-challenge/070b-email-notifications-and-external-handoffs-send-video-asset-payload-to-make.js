@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-27
-Last GitHub Update: 2026-07-10
+Last GitHub Update: 2026-07-11
 
 Purpose:
 Sends one video Submission Asset to the shared Make Upload Engine (v4.1 minimal payload).
@@ -37,15 +37,21 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.2 - Lambda owns upload claim (070b Option A)
+ * v4.3 - Make Accepted async response + Airtable writeback poll
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-07-10
+ * 2026-07-11
  *
  * CHANGE HISTORY:
+ * 2026-07-11 - v4.3 (070b / C-013 Make async Accepted)
+ * - Handle Make HTTP 2xx body "Accepted" without treating as invalid JSON.
+ * - Poll Submission Asset for Lambda direct writeback up to 120s (4s interval).
+ * - Success actionOut lambda_upload_verified_async when writeback verified via poll.
+ * - Immediate Lambda JSON path unchanged (uploaded, skipped_already_uploaded, structured errors).
+ *
  * 2026-07-10 - v4.2 (070b / C-013-UPLOAD-CLAIM Option A)
  * - Removed Upload Status = Processing writeback on Make HTTP 2xx.
  * - Lambda is the sole claim owner (Processing + Upload Claim Run ID + Processing Started At).
@@ -114,10 +120,15 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.2",
+        version: "v4.3",
 
         tables: {
             submissionAssets: "Submission Assets",
+        },
+
+        asyncPoll: {
+            intervalMs: 4000,
+            timeoutMs: 120000,
         },
 
         fields: {
@@ -135,6 +146,13 @@ async function main() {
 
             googleDriveFileId: "Google Drive File ID",
             googleDriveFileUrl: "Google Drive File URL",
+
+            canonicalFileUrl: "Canonical File URL",
+            storageKey: "Storage Key",
+            fileContentHash: "File Content Hash",
+            fileHashAlgorithm: "File Hash Algorithm",
+            uploadedAt: "Uploaded At",
+            writebackComplete: "Writeback Complete?",
         },
 
         values: {
@@ -195,6 +213,7 @@ async function main() {
         setOutputSafe("automationNumber", result.automationNumber || "");
         setOutputSafe("makeStatus", result.makeStatus || "");
         setOutputSafe("makeResponse", result.makeResponse || "");
+        setOutputSafe("makeResponseMode", result.makeResponseMode || "");
     }
 
     function normalizeText(value) {
@@ -461,6 +480,135 @@ async function main() {
             statusOut,
             message: `Lambda actionOut=${actionOut} is not an approved handoff success.`,
         };
+    }
+
+    function selectNameValue(value) {
+        if (value == null || value === "") return "";
+        if (typeof value === "string") return value.trim();
+        if (typeof value === "object" && value !== null && "name" in value) {
+            return String(value.name).trim();
+        }
+        return String(value).trim();
+    }
+
+    function isMakeAcceptedAsyncResponse(responseText) {
+        return selectNameValue(responseText).toLowerCase() === "accepted";
+    }
+
+    function evaluateSubmissionAssetWriteback(fields) {
+        const uploadStatus = selectNameValue(fields["Upload Status"]);
+        const uploadError = selectNameValue(fields["Upload Error"]);
+        const writebackComplete = fields["Writeback Complete?"];
+        const writebackCompleteOk =
+            writebackComplete === 1 || writebackComplete === true || writebackComplete === "1";
+
+        const checks = {
+            uploadStatusUploaded: uploadStatus === CONFIG.values.statusUploaded,
+            canonicalUrlPopulated: Boolean(selectNameValue(fields["Canonical File URL"])),
+            storageKeyPopulated: Boolean(selectNameValue(fields["Storage Key"])),
+            fileContentHashPopulated: Boolean(selectNameValue(fields["File Content Hash"])),
+            fileHashAlgorithmSha256:
+                selectNameValue(fields["File Hash Algorithm"]) === "SHA-256",
+            uploadedAtPopulated: fields["Uploaded At"] != null && fields["Uploaded At"] !== "",
+            uploadErrorBlank: !uploadError,
+            writebackCompleteFormula: writebackCompleteOk,
+        };
+
+        const verified = Object.values(checks).every(Boolean);
+        return {
+            verified,
+            checks,
+            message: verified
+                ? "Submission Asset writeback verified after async Lambda processing."
+                : "Submission Asset writeback incomplete during async poll.",
+        };
+    }
+
+    function resolveMakeHttpResponse(responseText) {
+        if (isMakeAcceptedAsyncResponse(responseText)) {
+            return { mode: "accepted_async" };
+        }
+
+        const parse = parseLambdaResponseBody(responseText);
+        if (!parse.ok) {
+            return { mode: "invalid", parse };
+        }
+
+        return {
+            mode: "lambda_json",
+            parse,
+            evaluation: evaluateLambdaHandoffResult(parse.body),
+        };
+    }
+
+    async function readWritebackFieldMap() {
+        const writebackFieldNames = [
+            CONFIG.fields.uploadStatus,
+            CONFIG.fields.uploadError,
+            CONFIG.fields.canonicalFileUrl,
+            CONFIG.fields.storageKey,
+            CONFIG.fields.fileContentHash,
+            CONFIG.fields.fileHashAlgorithm,
+            CONFIG.fields.uploadedAt,
+            CONFIG.fields.writebackComplete,
+        ];
+        const fieldsToLoad = getSafeFields(assetsTable, writebackFieldNames);
+        const assetRecord = await assetsTable.selectRecordAsync(recordId, {
+            fields: fieldsToLoad.length ? fieldsToLoad : undefined,
+        });
+
+        if (!assetRecord) {
+            throw new Error(`Submission Assets record not found during writeback poll: ${recordId}`);
+        }
+
+        return {
+            "Upload Status": getText(assetRecord, assetsTable, CONFIG.fields.uploadStatus),
+            "Canonical File URL": getText(assetRecord, assetsTable, CONFIG.fields.canonicalFileUrl),
+            "Storage Key": getText(assetRecord, assetsTable, CONFIG.fields.storageKey),
+            "File Content Hash": getText(assetRecord, assetsTable, CONFIG.fields.fileContentHash),
+            "File Hash Algorithm": getText(assetRecord, assetsTable, CONFIG.fields.fileHashAlgorithm),
+            "Uploaded At": getRaw(assetRecord, assetsTable, CONFIG.fields.uploadedAt),
+            "Upload Error": getText(assetRecord, assetsTable, CONFIG.fields.uploadError),
+            "Writeback Complete?": getRaw(assetRecord, assetsTable, CONFIG.fields.writebackComplete),
+        };
+    }
+
+    async function pollForLambdaWritebackAsync() {
+        const started = Date.now();
+        let attempts = 0;
+
+        while (Date.now() - started < CONFIG.asyncPoll.timeoutMs) {
+            attempts += 1;
+            setDebug(`7 - Poll writeback attempt ${attempts}`);
+
+            const fields = await readWritebackFieldMap();
+            const uploadStatus = selectNameValue(fields["Upload Status"]);
+
+            if (uploadStatus === CONFIG.values.statusError) {
+                return {
+                    ok: false,
+                    error: true,
+                    uploadError:
+                        selectNameValue(fields["Upload Error"]) ||
+                        "Upload failed during async Lambda writeback.",
+                    attempts,
+                    fields,
+                };
+            }
+
+            const evaluation = evaluateSubmissionAssetWriteback(fields);
+            if (evaluation.verified) {
+                return { ok: true, evaluation, attempts, fields };
+            }
+
+            if (Date.now() - started + CONFIG.asyncPoll.intervalMs >= CONFIG.asyncPoll.timeoutMs) {
+                break;
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, CONFIG.asyncPoll.intervalMs));
+        }
+
+        return { ok: false, timedOut: true, attempts };
     }
 
     async function stopWithLambdaHandoffFailure(options) {
@@ -837,9 +985,95 @@ async function main() {
 
     setDebug("7 - Validate Lambda Response");
 
-    const parsedResponse = parseLambdaResponseBody(responseText);
-    if (!parsedResponse.ok) {
-        const message = `${automationNumber} Make HTTP 2xx but Lambda body invalid: ${parsedResponse.message}`;
+    const resolved = resolveMakeHttpResponse(responseText);
+
+    if (resolved.mode === "accepted_async") {
+        setDebug("7 - Poll Lambda Writeback (Accepted async)");
+
+        const pollResult = await pollForLambdaWritebackAsync();
+
+        if (pollResult.ok) {
+            setDebug("8 - Verified Success Writeback");
+
+            const successFields = {};
+            setWritable(successFields, assetsTable, CONFIG.fields.uploadError, "");
+            setWritable(successFields, assetsTable, CONFIG.fields.sendToMakeTrigger, false);
+            await updateAsset(assetsTable, recordId, successFields);
+
+            const result = {
+                ok: true,
+                skipped: false,
+                statusOut: "success",
+                actionOut: "lambda_upload_verified_async",
+                errorOut: "",
+                message: pollResult.evaluation.message,
+                submissionAssetRecordId: recordId,
+                targetRecordId,
+                targetTable: route.targetTable,
+                routeKey: route.routeKey,
+                uploadDestination: route.uploadDestination,
+                automationNumber,
+                makeStatus: String(response.status),
+                makeResponse: getResponsePreview(responseText),
+                makeResponseMode: "accepted_async",
+                pollAttempts: pollResult.attempts,
+            };
+
+            setStandardOutputs(result);
+
+            console.log(
+                JSON.stringify({
+                    automation: CONFIG.scriptName,
+                    version: CONFIG.version,
+                    ...result,
+                }),
+            );
+            return;
+        }
+
+        if (pollResult.error) {
+            const message = `${automationNumber} async Lambda writeback failed: ${pollResult.uploadError}`;
+
+            await stopWithLambdaHandoffFailure({
+                actionOut: "error_lambda_upload_failed",
+                uploadError: pollResult.uploadError,
+                message,
+                extra: {
+                    uploadDestination,
+                    routeKey: route.routeKey,
+                    targetTable: route.targetTable,
+                    targetRecordId,
+                    makeStatus: String(response.status),
+                    makeResponse: getResponsePreview(responseText),
+                    makeResponseMode: "accepted_async",
+                    pollAttempts: pollResult.attempts,
+                },
+            });
+            return;
+        }
+
+        const timeoutMessage = `${automationNumber} timed out waiting for Lambda writeback after Make Accepted (${CONFIG.asyncPoll.timeoutMs / 1000}s).`;
+
+        await stopWithLambdaHandoffFailure({
+            actionOut: "error_lambda_writeback_timeout",
+            uploadError: timeoutMessage,
+            message: timeoutMessage,
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                targetRecordId,
+                makeStatus: String(response.status),
+                makeResponse: getResponsePreview(responseText),
+                makeResponseMode: "accepted_async",
+                pollAttempts: pollResult.attempts,
+            },
+        });
+        return;
+    }
+
+    if (resolved.mode === "invalid") {
+        const message = `${automationNumber} Make HTTP 2xx but Lambda body invalid: ${resolved.parse.message}`;
 
         await stopWithLambdaHandoffFailure({
             actionOut: "error_lambda_response_invalid",
@@ -852,13 +1086,13 @@ async function main() {
                 targetRecordId,
                 makeStatus: String(response.status),
                 makeResponse: getResponsePreview(responseText),
-                lambdaParseReason: parsedResponse.reason,
+                lambdaParseReason: resolved.parse.reason,
             },
         });
         return;
     }
 
-    const lambdaEvaluation = evaluateLambdaHandoffResult(parsedResponse.body);
+    const lambdaEvaluation = resolved.evaluation;
 
     if (!lambdaEvaluation.verified) {
         const message = `${automationNumber} Lambda handoff not verified: ${lambdaEvaluation.message}`;
@@ -917,6 +1151,7 @@ async function main() {
         automationNumber,
         makeStatus: String(response.status),
         makeResponse: getResponsePreview(responseText),
+        makeResponseMode: "lambda_json",
         lambdaActionOut: lambdaEvaluation.lambdaActionOut || "",
         lambdaStatusOut: lambdaEvaluation.statusOut || "",
         lambdaAllPass: lambdaEvaluation.allPass === true,

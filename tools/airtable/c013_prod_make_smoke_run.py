@@ -595,14 +595,14 @@ def cmd_preflight(args: argparse.Namespace) -> None:
         "sendToMakeTrigger": fields.get("Send to Make Trigger"),
         "videoFeedbackLinked": bool(fields.get("Video Feedback")),
         "attachmentPresent": bool(fields.get("Airtable Attachment")),
-        "scriptVersionOk": 'version: "v4.2"' in script_text,
+        "scriptVersionOk": 'version: "v4.3"' in script_text,
         "automation070bState": "OFF (manual confirmation required)",
         "makeScenario": {
             "name": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
             "expectedState": "OFF",
             "built": (os.getenv("MAKE_UPLOAD_WEBHOOK_URL_PROD") or "").strip() != "",
         },
-        "pass": ENR in enr and fields.get("Upload Destination") == "Video Feedback" and 'version: "v4.2"' in script_text,
+        "pass": ENR in enr and fields.get("Upload Destination") == "Video Feedback" and 'version: "v4.3"' in script_text,
     }
     out = HERE / "_preview" / "c013-prod-make-preflight.json"
     out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")

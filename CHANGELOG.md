@@ -30,6 +30,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **070b v4.3 (2026-07-11)** — Handle Make HTTP 2xx body `Accepted` without JSON parse failure; poll Submission Asset for Lambda direct writeback up to 120s (4s interval); success `actionOut=lambda_upload_verified_async` with `makeResponseMode=accepted_async`. Immediate Lambda JSON path unchanged.
+
 #### Added
 - **C-013 PROD readiness audit sync (2026-07-11)** — Reconciled stale BLOCKED/NOT_READY statuses in infrastructure readiness JSON and related deployment docs with verified PROD Lambda + Make manual route PASS. Invalid-route contract documented as expected Upload Status=`Error` with canonical/hash preserved.
 - **Automation 116 (v1.0.1) — C-023 Stage 5 duplicate consequences (2026-07-10)** — `116-submission-assets-apply-asset-reuse-decision-consequences.js` (`992677d`) **DEV deployed and validated** on `appTetnuCZlCZdTCT`. Trigger: Submission Assets · when record updated · `Asset Reuse Decision` · input `recordId`. Live PASS: asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (`applied_confirmed_duplicate` then `restored_approved_reuse`; same XP Event; `Duplicate Status` `Duplicate - Remove` → `Unique`; `[C-023-S5]` audit entries). S5A–S5L **12/12 PASS**. Replaced retired automation **008** — **automation count unchanged (~49)**. [Stage 5 report](./docs/deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
