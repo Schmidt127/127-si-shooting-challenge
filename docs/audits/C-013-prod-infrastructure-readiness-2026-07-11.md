@@ -14,14 +14,14 @@
 | Result | Detail |
 |--------|--------|
 | **Overall C-013 PROD readiness** | **NOT READY** (Make runtime smoke pending) |
-| **Production v2 estimate** | **~78%** (schema + 116 + Lambda PASS; Make smoke + 070b remain) |
-| **Infrastructure blockers** | **1** (Make scenario not built; webhook URL missing) |
+| **Production v2 estimate** | **~82%** (schema + 116 + Lambda PASS; Make + 070b config package ready; runtime smoke + enable remain) |
+| **Infrastructure blockers** | **2** (Make scenario not built; `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing; isolation view missing) |
 | **070b can be enabled** | **NO** — Make manual webhook must pass first |
 | **Manual deployment actions** | **8** remaining (see §8) |
 
 DEV proves the full design: **Airtable 070b → Make → Lambda Function URL → S3 → Airtable writeback** with Lambda-owned upload claim (v4.2). PROD Submission Assets schema promotion is **PASS**. Automation **116** schema and runtime are **PASS** and **ON**. Automation **070b** is **OFF**.
 
-**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS (2026-07-11).** Make deployment **package ready**; scenario **not built in Make UI**; manual webhook smoke **BLOCKED**. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
+**PROD Lambda `127si-upload-asset` deployed — direct smoke PASS (2026-07-11).** Make + 070b **configuration package ready** ([make build](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [070b UI](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt)); scenario **not built in Make UI**; manual webhook smoke **BLOCKED**. S3 bucket `shooting-challenge-assets` exists in `us-east-2`.
 
 ---
 
@@ -268,26 +268,27 @@ See §15 below (full prompt for Mike).
 
 ## 15. Remaining risks
 
-1. PROD Lambda shell missing — no upload until deploy
+1. Make scenario not built — no Make-route upload until Mike completes UI build
 2. Make false-positive 200 without Lambda body (v4.2 mitigates)
 3. Shared S3 bucket — season prefix must differ DEV vs PROD
 4. Secret reuse across environments
 5. Live athlete exposure if 070b enabled before smoke
+6. Isolation view missing — harder to verify only Schmidt Testing records enter trigger
 
 ---
 
 ## 16. Updated Production v2 estimate
 
-**~78%** — Schema + automation 116 + PROD Lambda smoke complete; Make runtime smoke + controlled 070b enable remain.
+**~82%** — Schema + automation 116 + PROD Lambda smoke complete; Make + 070b configuration package ready in GitHub; Make runtime smoke + live 070b UI paste + controlled enable remain.
 
-**Make package (2026-07-11):** [C-013-prod-make-deployment-2026-07-11.md](../deploy-checklists/C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md)
+**Configuration package (2026-07-11):** [C-013-prod-make-build-2026-07-11.md](../deploy-checklists/C-013-prod-make-build-2026-07-11.md) · [C-013-prod-070b-ui-verification-2026-07-11.md](../deploy-checklists/C-013-prod-070b-ui-verification-2026-07-11.md) · [script paste v4.2](../deploy-checklists/C-013-prod-070b-script-paste-v4.2.txt) · [make smoke result](./C-013-prod-make-smoke-result-2026-07-11.md)
 
 ---
 
 ## 17. Exact next Cursor prompt
 
 ```
-MAKE_UPLOAD_WEBHOOK_URL_PROD is configured in tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): c013_prod_make_smoke_run.py all --reset. Update make smoke docs to PASS if complete Lambda JSON returned. Prepare controlled 070b enablement checklist — do not turn 070b ON without my explicit approval.
+Build Make scenario Shooting Challenge - GAME - Upload Engine - Lambda - v1 per docs/deploy-checklists/C-013-prod-make-build-2026-07-11.md (OFF). Save MAKE_UPLOAD_WEBHOOK_URL_PROD to tools/airtable/_preview/c013-prod-deploy-session.local.json. Run C-013 PROD Make manual webhook smoke on recGQ8EjAMz3bEBiW only (070b OFF): c013_prod_make_smoke_run.py all --reset. Update docs/audits/C-013-prod-make-smoke-result-2026-07-11.md to PASS if complete Lambda JSON returned. Do not enable automation 070b.
 ```
 
 ---

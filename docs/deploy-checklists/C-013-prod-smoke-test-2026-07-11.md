@@ -2,6 +2,7 @@
 
 **Date:** 2026-07-11  
 **Status:** **Direct Lambda smoke PASS** · **Make runtime smoke BLOCKED** (scenario not built) · 070b enablement pending  
+**Make build spec:** [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md) · [070b UI verification](./C-013-prod-070b-ui-verification-2026-07-11.md)  
 **Make deployment:** [C-013-prod-make-deployment-2026-07-11.md](./C-013-prod-make-deployment-2026-07-11.md) · [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md)  
 **Parent audit:** [C-013-prod-infrastructure-readiness-2026-07-11.md](../audits/C-013-prod-infrastructure-readiness-2026-07-11.md)  
 **Hard stops:** Automation **070b OFF** until steps 1–10 PASS · Schmidt Testing only · no live athlete records
@@ -188,14 +189,22 @@ Direct Lambda tests **T0–T2 PASS** → Mike builds Make scenario ([deployment 
 
 ### T4 — Make manual webhook (070b OFF)
 
-**Status:** **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing.
+**Status:** **BLOCKED** — `MAKE_UPLOAD_WEBHOOK_URL_PROD` missing. Build Make scenario first — [C-013-prod-make-build-2026-07-11.md](./C-013-prod-make-build-2026-07-11.md).
+
+**Fixture:** `recGQ8EjAMz3bEBiW` only · bypasses 070b.
 
 ```powershell
 cd tools/airtable
+python c013_prod_make_smoke_run.py preflight
 python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset
+python _probe_c013_asset_storage_fields.py --base-id appn84sqPw03zEbTT --record-id recGQ8EjAMz3bEBiW --out _preview/c013-prod-make-smoke-verify.json
 ```
 
-**Pass:** Make returns complete Lambda JSON · upload + idempotency + invalid-route PASS. See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md).
+**Pass:** Make receives request · route filter matches · Lambda called · secret accepted · complete Lambda JSON returned · upload + idempotency + invalid-route PASS · probe `allPass=true` · no live athlete records touched. See [make smoke result](../audits/C-013-prod-make-smoke-result-2026-07-11.md).
+
+### T5 — 070b UI configuration (070b OFF — no trigger test)
+
+Paste script from [C-013-prod-070b-script-paste-v4.2.txt](./C-013-prod-070b-script-paste-v4.2.txt) · configure inputs per [C-013-prod-070b-ui-verification-2026-07-11.md](./C-013-prod-070b-ui-verification-2026-07-11.md) · create isolation view · **do not enable** · **do not check Send to Make Trigger** until T4 PASS + Mike approval.
 
 ---
 
