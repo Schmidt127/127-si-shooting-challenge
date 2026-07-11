@@ -1,6 +1,6 @@
 /**
- * Pure helpers for 070b/070c — validate Make-returned Lambda JSON and async Accepted handoff.
- * Keep in sync with copies embedded in 070b and 070c automation scripts.
+ * Pure helpers for 070a/070b/070c — validate Make-returned Lambda JSON and async Accepted handoff.
+ * Keep in sync with copies embedded in 070a, 070b, and 070c automation scripts.
  * Tests: lib/upload-make-lambda-response.test.js
  */
 

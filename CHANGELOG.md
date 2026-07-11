@@ -34,6 +34,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **070a v4.4 (2026-07-11)** — Homework sender brought to parity with proven **070b v4.4** / **070c v1.1** async architecture (`routeKey=homework_completion`). Make `Accepted` → pending handoff (trigger retained); Lambda JSON verified success clears trigger; no `Processing` write (Lambda owns claim). GitHub source updated for DEV paste — **070a remains OFF**; no PROD paste. Prep: [C-070a-dev-airtable-v4.4-prep.md](./docs/deploy-checklists/C-070a-dev-airtable-v4.4-prep.md).
 - **070b v4.4 (2026-07-11)** — Remove invalid `setTimeout` polling (Airtable scripts cannot use timers). Make HTTP 2xx body `Accepted` returns `statusOut=pending`, `actionOut=lambda_upload_accepted_async`, `makeResponseMode=accepted_async`; retains `Send to Make Trigger` for companion **070c**. Immediate Lambda JSON path unchanged (`uploaded`, `skipped_already_uploaded`, structured errors).
 - **070b v4.3 (2026-07-11)** — Superseded same day; polling design invalid in Airtable automation scripting.
 
