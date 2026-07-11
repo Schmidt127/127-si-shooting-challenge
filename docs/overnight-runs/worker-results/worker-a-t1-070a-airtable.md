@@ -114,7 +114,12 @@ Continuing work without waiting: repo alignment + checklist + tests completed ab
 
 ## Commits
 
-*(filled after push)*
+| Hash | Summary |
+|---|---|
+| `767eb18` | T1 Worker A: align 070a to v4.4 async homework upload architecture |
+
+**Branch:** https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/worker-a-070a-airtable  
+**Blocker issue:** https://github.com/Schmidt127/127-si-shooting-challenge/issues/17
 
 ---
 
