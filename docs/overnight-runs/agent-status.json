@@ -9,7 +9,7 @@
     "branch": "overnight/lead-integration",
     "status": "active",
     "lastAction": "LEAD-004 merged Worker A + D addenda; A\u2013D on lead; awaiting Mike #17/#8/#9",
-    "lastCommit": "24acc86cce4ba6dfaf8a01bdd812fb45e3093fbc"
+    "lastCommit": "c2c6d36fd360e39a2c1a15b0c68faabebd9b4295"
   },
   "workers": {
     "Worker-A": {
