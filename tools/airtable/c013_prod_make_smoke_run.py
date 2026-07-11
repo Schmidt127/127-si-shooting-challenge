@@ -10,6 +10,7 @@ Usage:
   python c013_prod_make_smoke_run.py idempotency --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py invalid-route --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW
+  python c013_prod_make_smoke_run.py reset-trigger --asset-id recGQ8EjAMz3bEBiW
 """
 
 from __future__ import annotations
@@ -162,29 +163,78 @@ def run_webhook_post(asset_id: str, *, route_key: str = "video_feedback", out_su
     return {"pass": False, "exitCode": proc.returncode, "stderr": proc.stderr[:800]}
 
 
-def reset_for_make_upload(tok: str, asset_id: str) -> dict:
-    """Reset Schmidt fixture to Pending Link for primary Make upload test."""
-    fields = {
-        "Upload Status": "Pending Link",
-        "Send to Make Trigger": False,
-        "Upload Error": "",
-        "Canonical File URL": "",
-        "Storage Key": "",
-        "File Content Hash": "",
-        "File Hash Algorithm": "",
-        "File Size Bytes": None,
-        "File MIME Type": "",
-        "Uploaded At": None,
-        "Upload Claim Run ID": "",
-        "Processing Started At": None,
-    }
-    patch_asset(tok, asset_id, fields)
+TRIGGER_RESET_FIELDS = {
+    "Upload Status": "Pending Link",
+    "Send to Make Trigger": False,
+    "Upload Error": "",
+    "Upload Claim Run ID": "",
+    "Processing Started At": None,
+}
+
+FULL_UPLOAD_RESET_FIELDS = {
+    **TRIGGER_RESET_FIELDS,
+    "Canonical File URL": "",
+    "Storage Key": "",
+    "File Content Hash": "",
+    "File Hash Algorithm": "",
+    "File Size Bytes": None,
+    "File MIME Type": "",
+    "Uploaded At": None,
+}
+
+
+def reset_for_trigger(tok: str, asset_id: str) -> dict:
+    """Reset Schmidt fixture for 070b Airtable trigger test; preserve canonical/hash."""
+    before = get_asset(tok, asset_id)["fields"]
+    patch_asset(tok, asset_id, TRIGGER_RESET_FIELDS)
     after = get_asset(tok, asset_id)["fields"]
     return {
+        "mode": "trigger_only",
+        "assetId": asset_id,
+        "uploadStatus": after.get("Upload Status"),
+        "sendToMakeTrigger": after.get("Send to Make Trigger"),
+        "uploadErrorBlank": not (after.get("Upload Error") or "").strip(),
+        "canonicalPreserved": (before.get("Canonical File URL") or "") == (after.get("Canonical File URL") or ""),
+        "storageKeyPreserved": (before.get("Storage Key") or "") == (after.get("Storage Key") or ""),
+        "hashPreserved": (before.get("File Content Hash") or "") == (after.get("File Content Hash") or ""),
+        "googleDriveBlank": not (after.get("Google Drive File URL") or "").strip()
+        and not (after.get("Google Drive File ID") or "").strip(),
+    }
+
+
+def reset_for_make_upload(tok: str, asset_id: str) -> dict:
+    """Reset Schmidt fixture to Pending Link for primary Make upload test."""
+    patch_asset(tok, asset_id, FULL_UPLOAD_RESET_FIELDS)
+    after = get_asset(tok, asset_id)["fields"]
+    return {
+        "mode": "full_upload",
         "uploadStatus": after.get("Upload Status"),
         "sendToMakeTrigger": after.get("Send to Make Trigger"),
         "storageKeyBlank": not (after.get("Storage Key") or "").strip(),
     }
+
+
+def cmd_reset_trigger(args: argparse.Namespace) -> None:
+    load_env()
+    result = {
+        "phase": "reset_trigger",
+        "probedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        **reset_for_trigger(token(), args.asset_id),
+    }
+    result["pass"] = (
+        result["uploadStatus"] == "Pending Link"
+        and result["sendToMakeTrigger"] is False
+        and result["uploadErrorBlank"]
+        and result["canonicalPreserved"]
+        and result["storageKeyPreserved"]
+        and result["hashPreserved"]
+        and result["googleDriveBlank"]
+    )
+    out = HERE / "_preview" / "c013-prod-reset-trigger.json"
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(result, indent=2))
+    if not result["pass"]:
+        raise SystemExit(1)
 
 
 def cmd_preflight(args: argparse.Namespace) -> None:
@@ -365,10 +415,18 @@ def cmd_all(args: argparse.Namespace) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser()
     sub = parser.add_subparsers(dest="cmd", required=True)
+    p_reset = sub.add_parser("reset-trigger")
+    p_reset.add_argument("--asset-id", default=DEFAULT_ASSET)
+    p_reset.set_defaults(func=cmd_reset_trigger)
+
     for name in ("preflight", "upload", "idempotency", "invalid-route", "all"):
         p = sub.add_parser(name.replace("-", "_") if name == "invalid-route" else name)
         p.add_argument("--asset-id", default=DEFAULT_ASSET)
-        p.add_argument("--reset", action="store_true", help="Reset fixture to Pending Link before upload test")
+        p.add_argument(
+            "--reset",
+            action="store_true",
+            help="Full upload reset (clears canonical/hash) before Make webhook upload test",
+        )
         p.set_defaults(func=globals()[f"cmd_{name.replace('-', '_')}"])
     args = parser.parse_args()
     args.func(args)

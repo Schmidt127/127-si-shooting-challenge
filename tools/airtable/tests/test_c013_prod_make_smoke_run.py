@@ -10,7 +10,11 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(HERE))
 
-from c013_prod_make_smoke_run import parse_probe_snapshot  # noqa: E402
+from c013_prod_make_smoke_run import (  # noqa: E402
+    FULL_UPLOAD_RESET_FIELDS,
+    TRIGGER_RESET_FIELDS,
+    parse_probe_snapshot,
+)
 
 def successful_probe() -> dict:
     """Sanitized unit fixture; never depend on local operational _preview files."""
@@ -89,6 +93,24 @@ class TestParseProbeSnapshot(unittest.TestCase):
             and webhook["makeResponse"]["lambdaValidation"]["allPass"] is True
         )
         self.assertTrue(phase_pass)
+
+
+class TestResetFieldSets(unittest.TestCase):
+    def test_trigger_reset_preserves_canonical_fields(self) -> None:
+        self.assertNotIn("Canonical File URL", TRIGGER_RESET_FIELDS)
+        self.assertNotIn("Storage Key", TRIGGER_RESET_FIELDS)
+        self.assertNotIn("File Content Hash", TRIGGER_RESET_FIELDS)
+        self.assertNotIn("Uploaded At", TRIGGER_RESET_FIELDS)
+
+    def test_full_reset_clears_canonical_fields(self) -> None:
+        for key in (
+            "Canonical File URL",
+            "Storage Key",
+            "File Content Hash",
+            "File Hash Algorithm",
+            "Uploaded At",
+        ):
+            self.assertIn(key, FULL_UPLOAD_RESET_FIELDS)
 
 
 if __name__ == "__main__":
