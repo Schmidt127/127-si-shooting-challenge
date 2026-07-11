@@ -4,7 +4,8 @@
 **Cloud task:** `[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route`  
 **Agent:** Worker B  
 **Branch:** `overnight/worker-b-070a-backend`  
-**Commit SHA:** `2235340c8523b3ecde095bc63941fd0be206e580`  
+**Commit SHA (branch tip):** `2d551e4800a86d5a099ab8b79beddb2f68acf2a1`  
+**Implementation commit:** `2235340c8523b3ecde095bc63941fd0be206e580`  
 **Completed at:** 2026-07-11 (overnight run)  
 **Worker A result:** Not published yet (branch `overnight/worker-a-070a-airtable` not on remote; used existing 070a v4.1 / Lambda `homework_completion` contract)
 
