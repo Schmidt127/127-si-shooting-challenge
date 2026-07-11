@@ -12,14 +12,21 @@ sys.path.insert(0, str(HERE))
 
 from c013_prod_make_smoke_run import (  # noqa: E402
     ALLOWED_LIVE_ASSET,
+    ENR,
     EXPECTED_VIDEO_FEEDBACK,
     FULL_UPLOAD_RESET_FIELDS,
     LIVE_TRIGGER_PREP_FIELDS,
     LIVE_TRIGGER_PRESERVED_FIELDS,
+    RESET_LIVE_TRIGGER_CLEARED,
+    RESET_LIVE_TRIGGER_FIELDS,
+    RESET_LIVE_TRIGGER_PRESERVED,
     TRIGGER_RESET_FIELDS,
     check_live_trigger_prep,
+    check_reset_live_trigger,
     evaluate_live_trigger_result,
     parse_probe_snapshot,
+    validate_reset_live_trigger_fixture,
+    validate_reset_live_trigger_target,
 )
 
 def successful_probe() -> dict:
@@ -228,6 +235,67 @@ class TestEvaluateLiveTriggerResult(unittest.TestCase):
         result = evaluate_live_trigger_result(passing_prep(), fields, self.passing_probe())
         self.assertFalse(result["checks"]["videoFeedbackLinked"])
         self.assertFalse(result["pass"])
+
+
+class TestResetLiveTriggerFields(unittest.TestCase):
+    def test_reset_live_sets_error_and_unchecked_trigger(self) -> None:
+        self.assertEqual(RESET_LIVE_TRIGGER_FIELDS["Upload Status"], "Error")
+        self.assertIs(RESET_LIVE_TRIGGER_FIELDS["Send to Make Trigger"], False)
+        self.assertEqual(RESET_LIVE_TRIGGER_FIELDS["Upload Error"], "")
+        self.assertEqual(RESET_LIVE_TRIGGER_FIELDS["Upload Claim Run ID"], "")
+        self.assertIsNone(RESET_LIVE_TRIGGER_FIELDS["Processing Started At"])
+
+    def test_reset_live_clears_writeback_and_drive(self) -> None:
+        for key in RESET_LIVE_TRIGGER_CLEARED:
+            self.assertIn(key, RESET_LIVE_TRIGGER_FIELDS)
+
+    def test_reset_live_preserves_only_required_links(self) -> None:
+        for key in RESET_LIVE_TRIGGER_PRESERVED:
+            self.assertNotIn(key, RESET_LIVE_TRIGGER_FIELDS)
+
+    def test_validate_target_rejects_wrong_asset(self) -> None:
+        with self.assertRaises(SystemExit):
+            validate_reset_live_trigger_target("recWRONG")
+
+    def test_validate_fixture_rejects_missing_attachment(self) -> None:
+        fields = live_fixture_fields(**{"Airtable Attachment": []})
+        with self.assertRaises(SystemExit):
+            validate_reset_live_trigger_fixture(fields)
+
+    def test_validate_fixture_rejects_wrong_enrollment(self) -> None:
+        fields = live_fixture_fields(**{"Enrollment - Linked": ["recOTHER"]})
+        with self.assertRaises(SystemExit):
+            validate_reset_live_trigger_fixture(fields)
+
+    def test_check_reset_live_trigger_pass(self) -> None:
+        before = live_fixture_fields()
+        after = live_fixture_fields(
+            **{
+                "Upload Status": "Error",
+                "Send to Make Trigger": None,
+                "Canonical File URL": None,
+                "Storage Key": None,
+                "File Content Hash": None,
+                "File Hash Algorithm": None,
+                "File Size Bytes": None,
+                "File MIME Type": None,
+                "Uploaded At": None,
+                "Google Drive File URL": None,
+                "Google Drive File ID": None,
+            }
+        )
+        checks = check_reset_live_trigger(before, after)
+        self.assertTrue(checks["uploadStatusError"])
+        self.assertTrue(checks["notPendingLink"])
+        self.assertTrue(checks["sendToMakeTriggerUnchecked"])
+        self.assertTrue(checks["allCleared"])
+        self.assertTrue(checks["allPreserved"])
+
+    def test_check_reset_live_trigger_detects_stale_canonical(self) -> None:
+        before = live_fixture_fields()
+        after = live_fixture_fields(**{"Upload Status": "Error", "Canonical File URL": "https://x"})
+        checks = check_reset_live_trigger(before, after)
+        self.assertFalse(checks["allCleared"])
 
 
 if __name__ == "__main__":

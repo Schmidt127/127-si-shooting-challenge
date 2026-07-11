@@ -11,6 +11,7 @@ Usage:
   python c013_prod_make_smoke_run.py invalid-route --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py reset-trigger --asset-id recGQ8EjAMz3bEBiW
+  python c013_prod_make_smoke_run.py reset-live-trigger --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py prepare-live-trigger --asset-id recGQ8EjAMz3bEBiW
   python c013_prod_make_smoke_run.py verify-live-trigger --asset-id recGQ8EjAMz3bEBiW
 """
@@ -220,6 +221,46 @@ ALLOWED_LIVE_ASSET = "recGQ8EjAMz3bEBiW"
 EXPECTED_VIDEO_FEEDBACK = "recrvEzk8GxXfy3EE"
 LIVE_PREP_OUT = "c013-prod-live-trigger-prep.json"
 
+# Genuine Airtable → 070b → Make → Lambda live test prep: hold outside trigger
+# (Upload Status=Error, Send to Make Trigger unchecked). Clears prior writeback
+# so Lambda must perform a fresh upload on the next trigger. Does not call Make.
+RESET_LIVE_TRIGGER_FIELDS = {
+    "Upload Status": "Error",
+    "Upload Error": "",
+    "Send to Make Trigger": False,
+    "Upload Claim Run ID": "",
+    "Processing Started At": None,
+    "Canonical File URL": "",
+    "Storage Key": "",
+    "File Content Hash": "",
+    "File Hash Algorithm": "",
+    "File Size Bytes": None,
+    "File MIME Type": "",
+    "Uploaded At": None,
+    "Google Drive File URL": "",
+    "Google Drive File ID": "",
+}
+
+RESET_LIVE_TRIGGER_PRESERVED = (
+    "Airtable Attachment",
+    "Enrollment - Linked",
+    "Submission - Linked",
+    "Video Feedback",
+    "Upload Destination",
+)
+
+RESET_LIVE_TRIGGER_CLEARED = (
+    "Canonical File URL",
+    "Storage Key",
+    "File Content Hash",
+    "File Hash Algorithm",
+    "File Size Bytes",
+    "File MIME Type",
+    "Uploaded At",
+    "Google Drive File URL",
+    "Google Drive File ID",
+)
+
 # Live 070b trigger test prep: hold the record OUTSIDE the trigger state
 # (Upload Status=Error) with Send to Make Trigger pre-checked, so Mike's single
 # edit (Error -> Pending Link) makes the record ENTER the matching condition
@@ -388,6 +429,120 @@ def cmd_verify_live_trigger(args: argparse.Namespace) -> None:
         **evaluation,
     }
     out = HERE / "_preview" / "c013-prod-070b-live-trigger-result.json"
+    out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(result, indent=2))
+    if not result["pass"]:
+        raise SystemExit(1)
+
+
+def _reset_live_snapshot(fields: dict) -> dict:
+    """Before/after snapshot for reset-live-trigger."""
+    keys = sorted(
+        set(RESET_LIVE_TRIGGER_PRESERVED)
+        | set(RESET_LIVE_TRIGGER_FIELDS)
+        | set(RESET_LIVE_TRIGGER_CLEARED)
+    )
+    snap = {}
+    for key in keys:
+        value = fields.get(key)
+        if key == "Airtable Attachment":
+            ids = _attachment_ids(value)
+            value = {"count": len(ids), "ids": ids}
+        snap[key] = value
+    return snap
+
+
+def validate_reset_live_trigger_target(asset_id: str) -> None:
+    if asset_id != ALLOWED_LIVE_ASSET:
+        raise SystemExit(
+            f"Refusing: reset-live-trigger is only allowed on {ALLOWED_LIVE_ASSET}, got {asset_id}"
+        )
+
+
+def validate_reset_live_trigger_fixture(fields: dict) -> None:
+    """Fail before patch if required links/attachment are missing."""
+    enr = fields.get("Enrollment - Linked") or []
+    if enr != [ENR]:
+        raise SystemExit(
+            f"Refusing: asset must be linked exclusively to Schmidt Testing enrollment {ENR}"
+        )
+    if not _attachment_ids(fields.get("Airtable Attachment")):
+        raise SystemExit("Refusing: missing Airtable Attachment")
+    if not fields.get("Submission - Linked"):
+        raise SystemExit("Refusing: missing Submission - Linked")
+    if EXPECTED_VIDEO_FEEDBACK not in (fields.get("Video Feedback") or []):
+        raise SystemExit(f"Refusing: missing Video Feedback link to {EXPECTED_VIDEO_FEEDBACK}")
+    if fields.get("Upload Destination") != "Video Feedback":
+        raise SystemExit('Refusing: Upload Destination must be "Video Feedback"')
+
+
+def check_reset_live_trigger(before: dict, after: dict) -> dict:
+    """Pure check logic for reset-live-trigger (unit-testable)."""
+    preserved = {}
+    for key in RESET_LIVE_TRIGGER_PRESERVED:
+        if key == "Airtable Attachment":
+            preserved[key] = _attachment_ids(before.get(key)) == _attachment_ids(after.get(key)) and bool(
+                _attachment_ids(after.get(key))
+            )
+        else:
+            preserved[key] = before.get(key) == after.get(key)
+    cleared = {}
+    for key in RESET_LIVE_TRIGGER_CLEARED:
+        value = after.get(key)
+        if key in ("File Size Bytes", "Uploaded At", "Processing Started At"):
+            cleared[f"{key}Blank"] = value is None or value == ""
+        else:
+            cleared[f"{key}Blank"] = not (value or "").strip() if isinstance(value, str) else not value
+    return {
+        "uploadStatusError": after.get("Upload Status") == "Error",
+        "notPendingLink": after.get("Upload Status") != "Pending Link",
+        "sendToMakeTriggerUnchecked": not after.get("Send to Make Trigger"),
+        "uploadErrorBlank": not (after.get("Upload Error") or "").strip(),
+        "uploadClaimRunIdBlank": not (after.get("Upload Claim Run ID") or "").strip(),
+        "processingStartedAtBlank": not after.get("Processing Started At"),
+        "cleared": cleared,
+        "allCleared": all(cleared.values()),
+        "preserved": preserved,
+        "allPreserved": all(preserved.values()),
+    }
+
+
+def reset_live_trigger(tok: str, asset_id: str) -> dict:
+    validate_reset_live_trigger_target(asset_id)
+    before = get_asset(tok, asset_id)["fields"]
+    validate_reset_live_trigger_fixture(before)
+    patch_asset(tok, asset_id, RESET_LIVE_TRIGGER_FIELDS)
+    after = get_asset(tok, asset_id)["fields"]
+    checks = check_reset_live_trigger(before, after)
+    return {
+        "assetId": asset_id,
+        "enrollmentId": ENR,
+        "before": _reset_live_snapshot(before),
+        "after": _reset_live_snapshot(after),
+        "checks": checks,
+    }
+
+
+def cmd_reset_live_trigger(args: argparse.Namespace) -> None:
+    load_env()
+    reset = reset_live_trigger(token(), args.asset_id)
+    checks = reset["checks"]
+    result = {
+        "phase": "reset_live_trigger",
+        "probedAt": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        **reset,
+        "pass": (
+            checks["uploadStatusError"]
+            and checks["notPendingLink"]
+            and checks["sendToMakeTriggerUnchecked"]
+            and checks["uploadErrorBlank"]
+            and checks["uploadClaimRunIdBlank"]
+            and checks["processingStartedAtBlank"]
+            and checks["allCleared"]
+            and checks["allPreserved"]
+        ),
+    }
+    out = HERE / "_preview" / "c013-prod-reset-live-trigger.json"
     out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
     if not result["pass"]:
@@ -598,6 +753,10 @@ def main() -> None:
     p_reset = sub.add_parser("reset-trigger")
     p_reset.add_argument("--asset-id", default=DEFAULT_ASSET)
     p_reset.set_defaults(func=cmd_reset_trigger)
+
+    p_reset_live = sub.add_parser("reset-live-trigger")
+    p_reset_live.add_argument("--asset-id", required=True, help="Must be recGQ8EjAMz3bEBiW")
+    p_reset_live.set_defaults(func=cmd_reset_live_trigger)
 
     p_prep = sub.add_parser("prepare-live-trigger")
     p_prep.add_argument("--asset-id", required=True, help="Must be the approved Schmidt live-test asset")
