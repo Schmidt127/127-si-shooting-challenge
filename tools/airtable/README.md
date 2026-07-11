@@ -160,6 +160,24 @@ Verify: `python _probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifV
 
 Docs: [C-013-wave7 checklist](../../docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md)
 
+## C-013 PROD Make manual webhook smoke (070b OFF)
+
+Bypasses automation **070b** — POSTs the same JSON Make will receive later. Requires `MAKE_UPLOAD_WEBHOOK_URL_PROD` in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gitignored).
+
+```powershell
+cd tools/airtable
+python c013_prod_make_smoke_run.py preflight
+python c013_prod_make_smoke_run.py all --asset-id recGQ8EjAMz3bEBiW --reset
+```
+
+**Upload pass contract:** Make webhook returns complete Lambda JSON (`actionOut=uploaded`, `allPass=true`) **and** independent Airtable probe `_probe_c013_asset_storage_fields.py` reports `submissionAsset.writebackVerification.allPass=true`.
+
+**Invalid route note:** Lambda `process_with_error_writeback` sets `Upload Status=Error` on `error_invalid_route` — `uploadStatusUnchanged=false` is expected; canonical/hash must stay unchanged.
+
+Tests: `python -m unittest tools/airtable/tests/test_c013_prod_make_smoke_run.py`
+
+Docs: [C-013-prod-make-build-2026-07-11.md](../../docs/deploy-checklists/C-013-prod-make-build-2026-07-11.md)
+
 ### Old award name → current catalog (snapshot era)
 
 | June 29 export label | Link this award today |

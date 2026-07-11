@@ -78,6 +78,48 @@ def patch_asset(tok: str, asset_id: str, fields: dict) -> None:
         raise SystemExit(f"patch failed: {r.status_code} {r.text[:500]}")
 
 
+def parse_probe_snapshot(probe: dict | None) -> dict:
+    """Normalize _probe_c013_asset_storage_fields.py JSON for smoke-runner checks.
+
+    The probe writes `submissionAsset` (not `recordProbe`). Accept both keys for
+    backward compatibility with older smoke artifacts.
+    """
+    if not probe:
+        return {
+            "allPass": None,
+            "storageKey": "",
+            "fileContentHash": "",
+            "uploadStatus": "",
+            "checks": None,
+            "summary": None,
+            "error": "empty_probe",
+        }
+
+    if probe.get("error"):
+        return {
+            "allPass": False,
+            "storageKey": "",
+            "fileContentHash": "",
+            "uploadStatus": "",
+            "checks": None,
+            "summary": probe,
+            "error": probe.get("error"),
+        }
+
+    node = probe.get("submissionAsset") or probe.get("recordProbe") or {}
+    fields = node.get("fields") or {}
+    verification = node.get("writebackVerification") or {}
+    return {
+        "allPass": verification.get("allPass"),
+        "storageKey": fields.get("Storage Key") or "",
+        "fileContentHash": fields.get("File Content Hash") or "",
+        "uploadStatus": fields.get("Upload Status") or "",
+        "checks": verification.get("checks"),
+        "summary": node,
+        "error": None,
+    }
+
+
 def probe_asset(asset_id: str) -> dict:
     env = os.environ.copy()
     env["WAVE7_PROBE_BASE"] = PROD
@@ -91,7 +133,11 @@ def probe_asset(asset_id: str) -> dict:
     )
     if out.exists():
         return json.loads(out.read_text(encoding="utf-8"))
-    return {"pass": False, "stderr": proc.stderr[:500]}
+    return {
+        "error": "probe_output_missing",
+        "stderr": proc.stderr[:500],
+        "exitCode": proc.returncode,
+    }
 
 
 def run_webhook_post(asset_id: str, *, route_key: str = "video_feedback", out_suffix: str) -> dict:
@@ -184,13 +230,21 @@ def cmd_upload(args: argparse.Namespace) -> None:
         time.sleep(1)
     webhook_result = run_webhook_post(asset_id, out_suffix="upload")
     time.sleep(2)
-    probe = probe_asset(asset_id)
+    probe_raw = probe_asset(asset_id)
+    probe = parse_probe_snapshot(probe_raw)
+    lambda_val = (webhook_result.get("makeResponse") or {}).get("lambdaValidation") or {}
     result = {
         "phase": "make_upload",
         "assetId": asset_id,
         "webhook": webhook_result,
-        "probe": {"allPass": probe.get("recordProbe", {}).get("allPass"), "summary": probe.get("recordProbe")},
-        "pass": webhook_result.get("pass") is True and probe.get("recordProbe", {}).get("allPass") is True,
+        "probe": probe,
+        "lambdaAllPass": lambda_val.get("allPass"),
+        "pass": (
+            webhook_result.get("pass") is True
+            and probe.get("allPass") is True
+            and lambda_val.get("actionOut") == "uploaded"
+            and lambda_val.get("allPass") is True
+        ),
     }
     _write_audit(result, "upload")
 
@@ -198,19 +252,21 @@ def cmd_upload(args: argparse.Namespace) -> None:
 def cmd_idempotency(args: argparse.Namespace) -> None:
     load_env()
     asset_id = args.asset_id
-    before = probe_asset(asset_id)
+    before = parse_probe_snapshot(probe_asset(asset_id))
     webhook_result = run_webhook_post(asset_id, out_suffix="idempotency")
     time.sleep(1)
-    after = probe_asset(asset_id)
-    sk_before = (before.get("recordProbe") or {}).get("storageKey") or ""
-    sk_after = (after.get("recordProbe") or {}).get("storageKey") or ""
-    hash_before = (before.get("recordProbe") or {}).get("fileContentHash") or ""
-    hash_after = (after.get("recordProbe") or {}).get("fileContentHash") or ""
+    after = parse_probe_snapshot(probe_asset(asset_id))
+    sk_before = before.get("storageKey") or ""
+    sk_after = after.get("storageKey") or ""
+    hash_before = before.get("fileContentHash") or ""
+    hash_after = after.get("fileContentHash") or ""
     lambda_val = (webhook_result.get("makeResponse") or {}).get("lambdaValidation") or {}
     result = {
         "phase": "make_idempotency",
         "assetId": asset_id,
         "webhook": webhook_result,
+        "probeBefore": {"storageKey": sk_before, "fileContentHash": hash_before},
+        "probeAfter": {"storageKey": sk_after, "fileContentHash": hash_after},
         "storageKeyUnchanged": sk_before == sk_after and bool(sk_before),
         "hashUnchanged": hash_before == hash_after and bool(hash_before),
         "actionOut": lambda_val.get("actionOut"),
@@ -225,19 +281,31 @@ def cmd_invalid_route(args: argparse.Namespace) -> None:
     asset_id = args.asset_id
     before_fields = get_asset(tok, asset_id)["fields"]
     sk_before = before_fields.get("Storage Key") or ""
+    status_before = before_fields.get("Upload Status")
     webhook_result = run_webhook_post(asset_id, route_key="not_a_route", out_suffix="invalid-route")
     time.sleep(1)
     after_fields = get_asset(tok, asset_id)["fields"]
     sk_after = after_fields.get("Storage Key") or ""
+    status_after = after_fields.get("Upload Status")
     lambda_val = (webhook_result.get("makeResponse") or {}).get("lambdaValidation") or {}
+    action_out = lambda_val.get("actionOut")
+    # Lambda process_with_error_writeback sets Upload Status=Error on UploadError.
+    upload_status_error_writeback_expected = action_out == "error_invalid_route" and status_after == "Error"
     result = {
         "phase": "make_invalid_route",
         "assetId": asset_id,
         "webhook": webhook_result,
         "storageKeyUnchanged": sk_before == sk_after,
-        "uploadStatusUnchanged": before_fields.get("Upload Status") == after_fields.get("Upload Status"),
-        "actionOut": lambda_val.get("actionOut"),
-        "pass": sk_before == sk_after and lambda_val.get("actionOut") not in ("uploaded", None),
+        "uploadStatusBefore": status_before,
+        "uploadStatusAfter": status_after,
+        "uploadStatusUnchanged": status_before == status_after,
+        "uploadStatusErrorWritebackExpected": upload_status_error_writeback_expected,
+        "actionOut": action_out,
+        "pass": sk_before == sk_after and action_out not in ("uploaded", None),
+        "note": (
+            "Upload Status may change to Error — expected Lambda error writeback on invalid route; "
+            "canonical/hash fields must remain unchanged."
+        ),
     }
     _write_audit(result, "invalid-route")
 
