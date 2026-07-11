@@ -1,0 +1,238 @@
+{
+  "name": "Shooting Challenge - DEV - Upload Engine - Lambda - v1",
+  "description": "C-013 DEV sanitized Make scenario reference. Video route proven; homework_completion (070a) route added for overnight T2. Recreate or patch in Make UI. No webhook URLs or secrets included.",
+  "c013": {
+    "backlog": "C-013",
+    "overnightTask": "T2",
+    "baseId": "appTetnuCZlCZdTCT",
+    "environment": "DEV",
+    "sanitized": true,
+    "containsOperationalSecrets": false,
+    "importMode": "reference-template",
+    "lambdaFunctionName": "127si-upload-asset-dev",
+    "lambdaRegion": "us-east-2",
+    "allowedRoutes": ["video_feedback", "homework_completion"],
+    "automationNumbers": ["070b", "070a"],
+    "hardStops": [
+      "DEV only — never point at PROD base appn84sqPw03zEbTT",
+      "Do not enable Airtable 070a/070b until manual webhook PASS + Mike approval",
+      "Do not commit webhook URLs or upload secrets",
+      "Do not begin C-023 implementation in this scenario"
+    ],
+    "scenarioVariables": [
+      {
+        "name": "LAMBDA_FUNCTION_URL_DEV",
+        "placeholder": "REPLACE_WITH_DEV_LAMBDA_FUNCTION_URL",
+        "type": "text",
+        "secret": true,
+        "description": "DEV Lambda Function URL (ops only)"
+      },
+      {
+        "name": "UPLOAD_WEBHOOK_SECRET_DEV",
+        "placeholder": "REPLACE_WITH_DEV_UPLOAD_SECRET",
+        "type": "text",
+        "secret": true,
+        "description": "Same value as DEV Lambda UPLOAD_WEBHOOK_SECRET"
+      },
+      {
+        "name": "MAKE_DEV_UPLOAD_WEBHOOK_URL",
+        "placeholder": "REPLACE_WITH_DEV_MAKE_CUSTOM_WEBHOOK_URL",
+        "type": "text",
+        "secret": true,
+        "description": "Custom webhook URL from module 1; local ops / tools/airtable/.env only"
+      }
+    ],
+    "modules": [
+      {
+        "id": 1,
+        "app": "Webhooks",
+        "module": "Custom webhook",
+        "purpose": "Receives 070a/070b minimal JSON (manual Run once or automation)"
+      },
+      {
+        "id": 2,
+        "app": "Flow control",
+        "module": "Router",
+        "filters": [
+          {
+            "name": "video_feedback",
+            "conditions": [
+              {"field": "automationNumber", "operator": "equal", "value": "070b"},
+              {"field": "routeKey", "operator": "equal", "value": "video_feedback"}
+            ]
+          },
+          {
+            "name": "homework_completion",
+            "conditions": [
+              {"field": "automationNumber", "operator": "equal", "value": "070a"},
+              {"field": "routeKey", "operator": "equal", "value": "homework_completion"}
+            ]
+          }
+        ],
+        "purpose": "Accept proven video route and new homework route; reject everything else"
+      },
+      {
+        "id": 3,
+        "app": "HTTP",
+        "module": "Make a request",
+        "method": "POST",
+        "url": "REPLACE_WITH_DEV_LAMBDA_FUNCTION_URL",
+        "headers": [
+          {"name": "Content-Type", "value": "application/json"},
+          {"name": "X-Upload-Secret", "value": "REPLACE_WITH_DEV_UPLOAD_SECRET"}
+        ],
+        "body": "Map entire JSON from module 1 unchanged",
+        "timeoutSeconds": 120,
+        "parseResponse": true,
+        "returnErrorIfHttpRequestFails": false,
+        "structuredErrorContract": "Do not stop the scenario on Lambda 4xx. Preserve complete Lambda JSON so structured errors reach the webhook response.",
+        "purpose": "Forward unchanged payload to DEV Lambda Function URL"
+      },
+      {
+        "id": 4,
+        "app": "Flow control",
+        "module": "Router",
+        "branches": [
+          {
+            "name": "lambda_json",
+            "condition": "HTTP response body contains top-level actionOut (including structured Lambda error JSON)"
+          },
+          {
+            "name": "transport_error",
+            "condition": "No complete Lambda JSON body is available"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "app": "Webhooks",
+        "module": "Webhook response",
+        "lambdaJsonBranch": {
+          "status": 200,
+          "body": "Map the complete parsed Lambda JSON body from module 3 without wrapping or renaming keys"
+        },
+        "transportErrorBranch": {
+          "status": 502,
+          "body": "Deterministic JSON with actionOut=error_make_http_failure"
+        },
+        "criticalRule": "Prefer complete Lambda JSON. Plain-text Accepted is tolerated only if Airtable 070a/070c async path is live; for DEV manual smoke prefer full JSON."
+      }
+    ],
+    "webhookPayloadShapeHomework": {
+      "sourceName": "Airtable Upload Engine",
+      "automationNumber": "070a",
+      "sentAtIso": "ISO-8601",
+      "routeKey": "homework_completion",
+      "uploadDestination": "Homework Completions",
+      "sourceTable": "Submission Assets",
+      "submissionAssetRecordId": "rec...",
+      "targetTable": "Homework Completions",
+      "targetRecordId": "rec..."
+    },
+    "webhookPayloadShapeVideo": {
+      "sourceName": "Airtable Upload Engine",
+      "automationNumber": "070b",
+      "sentAtIso": "ISO-8601",
+      "routeKey": "video_feedback",
+      "uploadDestination": "Video Feedback",
+      "sourceTable": "Submission Assets",
+      "submissionAssetRecordId": "rec...",
+      "targetTable": "Video Feedback",
+      "targetRecordId": "rec..."
+    },
+    "lambdaSuccessExamples": {
+      "upload": {"statusOut": "success", "actionOut": "uploaded", "writebackVerification.allPass": true},
+      "idempotent": {"statusOut": "skipped", "actionOut": "skipped_already_uploaded"}
+    },
+    "lambdaStructuredErrorExample": {
+      "statusOut": "error",
+      "actionOut": "error_invalid_route",
+      "expectedWebhookStatus": 200,
+      "reason": "Airtable sender must evaluate complete Lambda error JSON"
+    },
+    "antiPatterns": [
+      "Webhook response body = Accepted only (unless 070a async Accepted + 070c verify is intentional)",
+      "Wrapping Lambda JSON so actionOut is not at top level",
+      "Amazon S3 Upload module in Make",
+      "Reusing PROD webhook URL or PROD upload secret",
+      "Router that only allows 070b/video_feedback after homework route is enabled"
+    ],
+    "mikeUiPatchFromVideoOnlyScenario": [
+      "Open existing scenario Shooting Challenge - DEV - Upload Engine - Lambda - v1",
+      "On Module 2 Router, ADD a second branch (or OR filter) for automationNumber=070a AND routeKey=homework_completion",
+      "Route that branch to the same Module 3 HTTP POST → DEV Lambda (reuse video path modules)",
+      "Keep scenario OFF for scheduling; use Run once for smoke",
+      "Confirm Lambda env ALLOW_ROUTE_KEYS includes homework_completion",
+      "Do not paste Make webhook URL into Airtable 070a until smoke PASS + approval"
+    ]
+  },
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "configuration": {
+        "webhook": "REPLACE_WITH_DEV_CUSTOM_WEBHOOK",
+        "interface": [
+          "sourceName",
+          "automationNumber",
+          "sentAtIso",
+          "routeKey",
+          "uploadDestination",
+          "sourceTable",
+          "submissionAssetRecordId",
+          "targetTable",
+          "targetRecordId"
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "flow:Router",
+      "filter": "(automationNumber = 070b AND routeKey = video_feedback) OR (automationNumber = 070a AND routeKey = homework_completion)"
+    },
+    {
+      "id": 3,
+      "module": "http:ActionSendData",
+      "configuration": {
+        "method": "POST",
+        "url": "REPLACE_WITH_DEV_LAMBDA_FUNCTION_URL",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Upload-Secret": "REPLACE_WITH_DEV_UPLOAD_SECRET"
+        },
+        "body": "Map complete module 1 JSON",
+        "parseResponse": true,
+        "handleErrors": false,
+        "timeoutSeconds": 120
+      }
+    },
+    {
+      "id": 4,
+      "module": "flow:Router",
+      "branches": [
+        "complete Lambda JSON (success or structured Lambda error)",
+        "transport or malformed-response failure"
+      ]
+    },
+    {
+      "id": 5,
+      "module": "gateway:WebhookResponse",
+      "configuration": {
+        "status": 200,
+        "body": "Complete module 3 Lambda JSON body"
+      }
+    },
+    {
+      "id": 6,
+      "module": "gateway:WebhookResponse",
+      "configuration": {
+        "status": 502,
+        "body": {
+          "statusOut": "error",
+          "actionOut": "error_make_http_failure",
+          "errorOut": "Transport failure before complete Lambda JSON was available"
+        }
+      }
+    }
+  ]
+}

@@ -22,6 +22,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Make
 
+#### Added
+- **DEV 070a homework Make/Lambda route pack (2026-07-11, overnight T2)** — Sanitized DEV blueprint with dual router (`video_feedback` + `homework_completion`), runbook, sample payload, `c013_dev_make_homework_webhook_post.py`, `c013_dev_h1_homework_smoke.py`, offline unit tests. Live Make UI patch + DEV credential smoke gated on Mike blockers #8 / #9. **070a remains OFF.** **PROD not modified.**
+
 #### Changed
 - **C-013 PROD upload route manual smoke PASS (2026-07-11)** — `Shooting Challenge - GAME - Upload Engine - Lambda - v1` passed upload (`actionOut=uploaded`, independent Airtable probe `allPass=true`), idempotency (`skipped_already_uploaded`, key/hash unchanged), and structured invalid-route handling (`error_invalid_route`). Sanitized blueprint documents `handleErrors=false` / complete Lambda JSON response behavior. **070b remains OFF**; exposed upload secret rotation + one Airtable-triggered Schmidt test remain.
 - **C-013 PROD Make smoke runner probe parsing (2026-07-11)** — `c013_prod_make_smoke_run.py` now reads `submissionAsset.writebackVerification` from `_probe_c013_asset_storage_fields.py` (was incorrectly keyed as `recordProbe`, causing false `make_upload` FAIL). Upload pass requires webhook Lambda JSON **and** independent Airtable probe `allPass=true`. Invalid-route diagnostics document expected `Upload Status=Error` writeback.
