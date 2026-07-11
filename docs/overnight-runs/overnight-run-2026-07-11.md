@@ -67,10 +67,23 @@
 | **Agent** | Cloud Lead (`bc-9c7b292c…`) |
 | **Action** | Pulled worker branches; reviewed result files + PRs #5/#12/#13; confirmed zero file overlaps; ran offline integration tests; deliberate `--no-ff` merges D→B→C into lead; reconciled blockers into manual-actions; prepared live status paste |
 | **Merges** | `1cdeebe` (D), `8cc58f3` (B), `3404e08` (C) |
-| **Worker A** | Still no remote branch — cannot merge; monitoring |
+| **Worker A** | Still no remote branch at this moment — cannot merge; monitoring |
 | **GitHub issues** | Lead token **403** on label/comment/close — Mike must apply MA-005 |
 | **DEV/PROD** | DEV-first; **PROD not modified** |
 | **Result** | Lead branch holds B+C+D deliverables; live 070a path still blocked on T1 + Make + credentials |
+
+### LEAD-004 — Worker A merge + Phase 2 clear
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~22:32 UTC |
+| **Agent** | Cloud Lead |
+| **Action** | Fetched newly published Worker A branch + PR #18; reviewed 070a v4.4 script; merged D addenda + A into lead; re-ran integration tests; reconciled #17 (MA-006); cleared Worker D Phase 2; updated verification prep gates G1/G2 PASS |
+| **Merges** | Worker D addenda; Worker A (CHANGELOG auto-merge) |
+| **Tests** | Node 20+17, lambda 46/46, Python 24/24, mock 5/5 — all PASS post-A |
+| **Blockers** | #8, #9, #11, #17 open; #15 stale/closable |
+| **DEV/PROD** | DEV paste pending; **PROD not modified** |
+| **Result** | Full A–D repo integration on lead; live DEV verification still gated |
 
 ---
 
@@ -185,11 +198,10 @@ See [manual-actions-2026-07-11.md](./manual-actions-2026-07-11.md): **MA-001** (
 
 ## Remaining work
 
-1. Worker A: publish T1 branch + result + PR (critical path).
-2. Mike: MA-001 Make Module 2; MA-002 DEV credentials; MA-005 issue hygiene + paste #1 status.
-3. After A + Make + creds: controlled DEV verification (see `_dev-070a-verification-prep.md`).
-4. Worker D: P-D1 C-023 docs reconciliation; Phase 2 after A.
-5. Lead: merge Worker A when ready; unlock T5 slices per audit; do not unlock HW hash proof until 070a locks clear.
+1. Mike: **MA-006** (#17 paste 070a v4.4 DEV OFF), **MA-001** (#8), **MA-002** (#9), **MA-005** hygiene + paste #1.
+2. Worker D: Phase 2 `worker-d-t4-070a-docs.md` (+ optional P-D1).
+3. After #17+#8+#9: controlled DEV verification (`_dev-070a-verification-prep.md`).
+4. Lead: keep T5 blocked until live gates + lock release; docs-only Stage 6 OK under D.
 
 ---
 
