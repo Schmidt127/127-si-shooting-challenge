@@ -3,9 +3,9 @@
   "dev_base": "appTetnuCZlCZdTCT",
   "prod_base": "appn84sqPw03zEbTT",
   "branch": "master",
-  "head": "5ad3899ebe138336f249456e8ff89500a46f237a",
-  "generated_at": "2026-07-11T12:24:58Z",
-  "executive_summary": "Production v2 promotion is **not complete**. Live schema compare shows **17 Submission Assets fields** on DEV absent from PROD. **1** of 6 critical scripts fail PROD dependency checks (116 schema **PASS**; automation **116 forward test FAIL** \u2014 OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **2 BLOCKER**, **10 REQUIRED BEFORE LAUNCH**.",
+  "head": "e4d2edeac64e7e14bf83d43b06594939914fee9f",
+  "generated_at": "2026-07-11T12:53:22Z",
+  "executive_summary": "Production v2 promotion is **not complete**. Submission Assets field promotion: **16/17 PASS** — only **`Calculation`** still missing on PROD (live API 2026-07-11). **0** of 6 critical scripts fail PROD schema dependency checks (116 **PASS**, 070b **PASS**; automation **116 forward test FAIL** \u2014 OFF or not pasted). C-013 production promotion **not started**. Classified gaps: **1 BLOCKER**, **1 REQUIRED BEFORE LAUNCH**. Full validation: `docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md`.",
   "table_comparisons": [
     {
       "table": "Automations",
@@ -69,25 +69,9 @@
       "dev_present": true,
       "prod_present": true,
       "dev_field_count": 97,
-      "prod_field_count": 80,
+      "prod_field_count": 96,
       "missing_in_prod": [
-        "Asset Reuse Review Primary Reason",
-        "Asset Reuse Review Reasons",
-        "Asset Reuse Review Summary",
-        "Asset Reuse Reviewed At",
-        "Asset Reuse Reviewed By",
-        "Asset Sequence",
-        "Calculation",
-        "Duplicate Match Records (All)",
-        "Exact Hash Match Found?",
-        "From field: Duplicate Match Records (All)",
-        "Potential Asset Reuse?",
-        "Processing Started At",
-        "Same Enrollment Match Found?",
-        "Storage Key",
-        "Upload Claim Run ID",
-        "Upload Naming Status",
-        "Video Feedback Focus"
+        "Calculation"
       ],
       "extra_in_prod": [],
       "type_mismatches": [],
@@ -338,11 +322,9 @@
       "path": "airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
       "commit": "955ea2a",
       "dev_ok": true,
-      "prod_ok": false,
-      "issues": [
-        "PROD: missing Submission Assets.Storage Key"
-      ],
-      "safe_to_deploy_prod": false
+      "prod_ok": true,
+      "issues": [],
+      "safe_to_deploy_prod": true
     },
     {
       "script": "022",
@@ -494,11 +476,11 @@
       "table": "Submission Assets",
       "field": "Potential Asset Reuse?",
       "dev_present": true,
-      "prod_present": false,
+      "prod_present": true,
       "dev_type": "checkbox",
-      "prod_type": null,
+      "prod_type": "checkbox",
       "formulas_match": null,
-      "classification": "Required PROD correction"
+      "classification": "Behaviorally equivalent"
     },
     {
       "table": "Submission Assets",
@@ -1037,21 +1019,7 @@
   "gaps": {
     "BLOCKER": [
       {
-        "gap_id": "PV2-GAP-0011",
-        "classification": "BLOCKER",
-        "workstream": "Script 070b",
-        "dev_value": "dependencies OK",
-        "prod_value": "missing dependencies",
-        "evidence": "PROD: missing Submission Assets.Storage Key",
-        "operational_impact": "Automation 070b will fail on PROD",
-        "correction": "Promote schema deps then paste airtable/automations/shooting-challenge/070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "High",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py script matrix for 070b"
-      },
-      {
-        "gap_id": "PV2-GAP-0012",
+        "gap_id": "PV2-GAP-0002",
         "classification": "BLOCKER",
         "workstream": "Automation 116",
         "dev_value": "Deployed ON, v1.0.1 validated S5A-S5L",
@@ -1067,133 +1035,7 @@
     ],
     "REQUIRED BEFORE LAUNCH": [
       {
-        "gap_id": "PV2-GAP-0001",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Primary Reason",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Asset Reuse Review Primary Reason to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0002",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Reasons",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Asset Reuse Review Reasons to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
         "gap_id": "PV2-GAP-0003",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Asset Reuse Review Summary",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Asset Reuse Review Summary to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0004",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Asset Reuse Reviewed At",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Asset Reuse Reviewed At to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0005",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Asset Reuse Reviewed By",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Asset Reuse Reviewed By to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0006",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Duplicate Match Records (All)",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Duplicate Match Records (All) to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0007",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Potential Asset Reuse?",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Potential Asset Reuse? to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0008",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Storage Key",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Storage Key to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0009",
-        "classification": "REQUIRED BEFORE LAUNCH",
-        "workstream": "C-013/C-023 schema",
-        "dev_value": "present",
-        "prod_value": "missing",
-        "evidence": "Live schema compare Submission Assets field Upload Claim Run ID",
-        "operational_impact": "Script/runtime failure if promoted without field",
-        "correction": "Add Upload Claim Run ID to PROD Submission Assets per DEV spec",
-        "mike_manual": true,
-        "cursor_safe": false,
-        "risk": "Medium",
-        "validation": "Re-run pv2_dev_prod_gap_audit.py after field added"
-      },
-      {
-        "gap_id": "PV2-GAP-0013",
         "classification": "REQUIRED BEFORE LAUNCH",
         "workstream": "C-013 Production promotion",
         "dev_value": "Lambda/Make/070b hybrid proven DEV",
@@ -1210,7 +1052,7 @@
     "SAFE POST-LAUNCH CLEANUP": [],
     "NO ACTION": [
       {
-        "gap_id": "PV2-GAP-0010",
+        "gap_id": "PV2-GAP-0001",
         "classification": "NO ACTION",
         "workstream": "C-019/C-020",
         "dev_value": "Testing Scenarios table exists",
@@ -1224,7 +1066,7 @@
         "validation": "N/A"
       },
       {
-        "gap_id": "PV2-GAP-0014",
+        "gap_id": "PV2-GAP-0004",
         "classification": "NO ACTION",
         "workstream": "066 shot milestones",
         "dev_value": "v3.2 pasted DEV+PROD 2026-07-06",
@@ -1312,7 +1154,8 @@
     }
   ],
   "manual_actions": [
-    "Add missing Submission Assets fields on PROD (OMNI or Airtable UI) per BLOCKER list",
+    "Create Calculation on PROD Submission Assets \u2014 formula exactly {RecordId} (only remaining promoted field)",
+    "Optional: set Processing Started At timezone to America/Denver to match DEV",
     "Paste and enable automation 116 v1.0.1; run prod_116_fixture_run.py confirm + restore",
     "Execute C-013 production promotion plan (Lambda, Make, secrets) before enabling 070b",
     "Verify live Airtable automation ON/OFF states against automation-index.md",
@@ -1331,6 +1174,42 @@
     "Config table key field names assumed; mismatches may hide record diffs.",
     "Config table fetch: '<' not supported between instances of 'str' and 'NoneType'"
   ],
-  "completion_estimate": "**Estimated completion: ~35\u201345%** for Production v2 wave (C-013 + C-023 + 116). Core season automations (005\u2013114, 066) appear largely aligned; asset storage, duplicate consequences, and PROD infra remain unpromoted.",
-  "next_prompt": "Execute Production v2 promotion step 1: generate OMNI/Airtable field-creation checklist from `docs/audits/pv2-dev-prod-gap-inventory-2026-07-11.md` BLOCKER list for Submission Assets only; do not enable automations until schema PASS confirmed by re-running pv2_dev_prod_gap_audit.py."
+  "completion_estimate": "**Estimated completion: ~50\u201355%** for Production v2 wave (C-013 + C-023 + 116). Submission Assets schema promotion **94% complete** (16/17 fields); 070b/116 schema deps PASS; automation 116 enable + C-013 PROD infra remain open.",
+  "submission_assets_field_promotion_validation": {
+    "validated_at": "2026-07-11T12:55:00Z",
+    "overall": "FAIL",
+    "dev_field_count": 97,
+    "prod_field_count": 96,
+    "promoted_field_count": 17,
+    "promoted_present_count": 16,
+    "promoted_missing_count": 1,
+    "promoted_missing": ["Calculation"],
+    "promotion_duplicate_count": 0,
+    "config_mismatch_count": 1,
+    "config_mismatches": [
+      {
+        "field": "Processing Started At",
+        "issue": "dateTime.timeZone dev=America/Denver prod=utc"
+      }
+    ],
+    "duplicate_match_records_all": {
+      "self_link": true,
+      "allows_multiple": true,
+      "inverse_field": "From field: Duplicate Match Records (All)",
+      "status": "PASS"
+    },
+    "calculation": {
+      "present": false,
+      "formula": null,
+      "status": "FAIL"
+    },
+    "submission_assets_missing_in_prod": 1,
+    "storage_key_dependency": "PASS",
+    "upload_claim_run_id_dependency": "PASS",
+    "automation_116_schema": "PASS",
+    "automation_070b_schema": "PASS",
+    "automation_070b_enable_ready": false,
+    "validation_report": "docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md"
+  },
+  "next_prompt": "Mike created PROD Submission Assets field Calculation with formula {RecordId}. Re-run read-only validation: python tools/airtable/_preview/pv2_sa_field_validation.py and python tools/airtable/pv2_dev_prod_gap_audit.py; confirm submission_assets_missing_in_prod = 0; update docs/audits/pv2-prod-submission-assets-field-validation-2026-07-11.md to PASS; then proceed to automation 116 paste/enable checklist \u2014 do not enable 070b until C-013 production promotion smoke PASS."
 }
