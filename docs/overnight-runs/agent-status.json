@@ -1,74 +1,56 @@
 {
   "runId": "overnight-run-2026-07-11",
+  "runStatus": "ACTIVE",
   "liveStatusIssueNumber": 1,
   "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
-  "leadBootstrapCommit": "36ae37d",
   "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
-  "lastUpdated": "2026-07-11T22:32:00Z",
+  "lastUpdated": "2026-07-11T22:35:00Z",
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",
-    "lastAction": "LEAD-004 merged Worker A + D addenda; A\u2013D on lead; awaiting Mike #17/#8/#9",
-    "lastCommit": "89b9e3d7295d8ca3858f280dbf4ad9f2d3d86fab"
+    "lastAction": "LEAD-005: refresh status, merge D Phase2 + A tip, assign T6/T7, refill queue T8/T9"
   },
   "workers": {
     "Worker-A": {
       "taskId": "T1",
+      "nextTaskId": "T8",
       "branch": "overnight/worker-a-070a-airtable",
-      "status": "merged_awaiting_mike_paste",
-      "cloudTaskName": "[OVERNIGHT][T1][Worker-A] 070a DEV Airtable + automation script",
-      "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864",
+      "status": "idle_t1_complete_t8_optional",
+      "tip": "2d50fa5",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/18",
-      "resultFile": "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
-      "mergedToLead": true
+      "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864"
     },
     "Worker-B": {
-      "taskId": "T2",
+      "taskId": "T6",
+      "priorTaskId": "T2",
       "branch": "overnight/worker-b-070a-backend",
-      "status": "idle_merged_awaiting_mike",
-      "cloudTaskName": "[OVERNIGHT][T2][Worker-B] 070a DEV Make/Lambda homework backend route",
-      "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2",
+      "status": "assigned_t6",
+      "tip": "0dd0ac5",
+      "implementationCommit": "2235340c8523b3ecde095bc63941fd0be206e580",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/12",
-      "resultFile": "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
-      "mergedToLead": true
+      "assignmentFile": "docs/overnight-runs/assignments/T6-worker-b-make-blueprint-validator.md",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2"
     },
     "Worker-C": {
-      "taskId": "T3",
+      "taskId": "T7",
+      "priorTaskId": "T3",
       "branch": "overnight/worker-c-070a-tests",
-      "status": "idle_merged_awaiting_live",
-      "cloudTaskName": "[OVERNIGHT][T3][Worker-C] 070a DEV tests + smoke tooling",
-      "cloudAgentUrl": "https://cursor.com/agents/bc-3fe201a7-2824-4762-a35d-acb258a5c1a1",
+      "status": "assigned_t7",
+      "tip": "66c9464",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/13",
-      "resultFile": "docs/overnight-runs/worker-results/worker-c-t3-070a-tests.md",
-      "mergedToLead": true
+      "assignmentFile": "docs/overnight-runs/assignments/T7-worker-c-070a-contract-alignment.md",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-3fe201a7-2824-4762-a35d-acb258a5c1a1"
     },
     "Worker-D": {
       "taskId": "T4",
+      "nextTaskId": "T9",
       "branch": "overnight/worker-d-docs",
-      "status": "phase2_cleared",
-      "phase": 2,
-      "cloudTaskName": "[OVERNIGHT][T4][Worker-D] C-023 read-only audit then 070a documentation",
-      "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356",
+      "status": "running_phase2_complete_t9_queued",
+      "tip": "5a69dbf",
       "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
-      "resultFile": "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
-      "mergedToLead": true,
-      "nextAssignment": "Phase 2 write worker-d-t4-070a-docs.md (+ optional P-D1)"
+      "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356"
     }
   },
-  "openBlockers": [
-    8,
-    9,
-    11,
-    17
-  ],
-  "staleClosableBlockers": [
-    15
-  ],
-  "duplicateBlockersToClose": [
-    6,
-    7,
-    10,
-    14
-  ],
-  "nextHourlyStatusDue": "2026-07-11T23:32:00Z"
+  "openBlockers": [8, 9, 11, 17],
+  "staleClosable": [14, 15, 6, 7, 10, 16]
 }

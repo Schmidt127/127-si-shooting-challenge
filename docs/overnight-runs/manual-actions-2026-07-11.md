@@ -27,8 +27,8 @@
   7. Put webhook URL in local ops / `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **never commit**.
   8. **Do not** enable Airtable automation **070a** yet.
 - **Blocks:** T2 live smoke + T3 live smoke (not full run)
-- **Continuing meanwhile:** Offline tests merged; Worker A continues; Worker D P-D1 docs
-- **Branch / commit / result:** `overnight/worker-b-070a-backend` @ `0dd0ac5` · `docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md` · https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2
+- **Continuing meanwhile:** Worker B **reassigned to T6** (offline Make blueprint validator — does not wait on this issue). Worker C on T7. Worker D Phase2 complete.
+- **Branch / commit / result:** `overnight/worker-b-070a-backend` @ `0dd0ac5` · impl `2235340` · `worker-b-t2-070a-backend.md` · PR #12 · https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2
 - **Verify when done:** Comment `RESOLVED — Module 2 homework branch wired; Run once ready` on #8
 
 ### MA-002 — T2 AWS-DEV / Cursor env credentials
@@ -44,7 +44,7 @@
   3. Re-run smoke (local or follow-up agent) per issue #9 body.
 - **Hard stops:** No PROD secrets; do not enable 070a until smoke PASS; never commit secrets
 - **Blocks:** Live Make/Lambda/Airtable smoke for T2/T3 (not full run)
-- **Continuing meanwhile:** Repo deliverables merged to lead
+- **Continuing meanwhile:** Worker B on **T6** (offline-only). Worker C on **T7**. No idle wait.
 - **Verify when done:** Comment `RESOLVED — DEV env keys present` + sanitized `envPresent` JSON only
 
 ### MA-003 — T3 live 070a DEV smoke
@@ -52,16 +52,16 @@
 - **Task / agent:** T3 / Worker-C
 - **System:** Tests-DEV (Airtable + Make + Lambda)
 - **Location:** `tools/airtable/c070a_dev_smoke_run.py` live modes (`C070A_ALLOW_LIVE=1`)
-- **Exact error:** Live invoke gated; missing Worker A result + DEV webhook/token creds
-- **Actions attempted:** 73 offline tests PASS; mock smoke 5/5 PASS; aligned to Worker B env names
+- **Exact error:** Live invoke gated; DEV webhook/token creds + Make Module 2 + Airtable paste
+- **Actions attempted:** **73/73** offline tests PASS; mock smoke 5/5 PASS; aligned to Worker B env names; Worker A+B results published
 - **Exact action:**
-  1. Wait for Worker A result `worker-a-t1-070a-airtable.md` + DEV paste of 070a script (may stay OFF).
+  1. Complete MA-006 (#17 paste 070a v4.4 DEV, leave OFF).
   2. Complete MA-001 and MA-002.
   3. Provide disposable DEV homework Submission Asset id.
   4. Set `C070A_ALLOW_LIVE=1` and run live-preflight / live-upload against DEV only.
 - **Blocks:** T3 live verification only
-- **Continuing meanwhile:** Offline harness merged to lead
-- **Note:** Worker B result **is** published (PR #12) — issue body partially stale
+- **Continuing meanwhile:** Worker C **reassigned to T7** (contract alignment + offline suite — does not wait on live smoke)
+- **Note:** Worker A+B results published; issue body partially stale on “Worker A/B unpublished”
 
 ### MA-004 — T4 Phase 2 (STALE / closable)
 - **GitHub issue:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) (canonical; duplicate #14)

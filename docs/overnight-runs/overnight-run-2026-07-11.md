@@ -27,10 +27,10 @@
 | Agent | Branch | Task | Status |
 |---|---|---|---|
 | Cloud Lead | `overnight/lead-integration` | Queue, integration, blockers, status | **active** |
-| Worker A | `overnight/worker-a-070a-airtable` | T1 — 070a DEV script/schema | **repo COMPLETE — merged; Mike paste #17** |
-| Worker B | `overnight/worker-b-070a-backend` | T2 — 070a DEV Make/Lambda | **IDLE — merged to lead; blocked on Mike #8/#9** |
-| Worker C | `overnight/worker-c-070a-tests` | T3 — 070a DEV tests/smoke | **IDLE — merged to lead; live blocked on #8/#9/#17** |
-| Worker D | `overnight/worker-d-docs` | T4 — C-023 audit → 070a docs | **Phase1 merged; Phase2 CLEARED** |
+| Worker A | `overnight/worker-a-070a-airtable` | T1 complete → optional T8 | **IDLE (T1 repo complete)** tip `2d50fa5` |
+| Worker B | `overnight/worker-b-070a-backend` | T2 complete → **T6 assigned** | **ASSIGNED T6** (was idle; refilled) |
+| Worker C | `overnight/worker-c-070a-tests` | T3 complete → **T7 assigned** | **ASSIGNED T7** (was idle; refilled) |
+| Worker D | `overnight/worker-d-docs` | T4 Phase1+2 complete → T9 queued | **RUNNING / Phase2 merged** tip `5a69dbf` |
 
 ---
 
@@ -84,6 +84,20 @@
 | **Blockers** | #8, #9, #11, #17 open; #15 stale/closable |
 | **DEV/PROD** | DEV paste pending; **PROD not modified** |
 | **Result** | Full A–D repo integration on lead; live DEV verification still gated |
+
+---
+
+### LEAD-005 — Status refresh + queue refill (T6/T7)
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~22:35 UTC |
+| **Agent** | Cloud Lead |
+| **Action** | Replaced stale issue #1 bootstrap narrative in durable files; merged Worker A tip + Worker D Phase 2; reconciled #8/#9/#11 continuing-meanwhile notes; **assigned T6→B and T7→C immediately** (no wait on Mike); queued T8/T9 |
+| **Issue #1** | Comment/edit **403** for lead token — canonical paste: `_live-status-update.md`; assignments also on PRs #12/#13 |
+| **Assignments** | `docs/overnight-runs/assignments/T6-*.md`, `T7-*.md`, `T8-*.md`, `T9-*.md` |
+| **DEV/PROD** | DEV-first; **PROD not modified** |
+| **Result** | Run remains **ACTIVE**; B/C no longer idle |
 
 ---
 
