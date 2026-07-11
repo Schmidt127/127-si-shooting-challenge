@@ -5,7 +5,7 @@
 **Lead branch:** [overnight/lead-integration](https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/lead-integration)  
 **Primary environment:** DEV Airtable `appTetnuCZlCZdTCT`  
 **PROD policy:** No PROD modifications until DEV implementation + tests pass; lead-controlled verification only  
-**Live status issue:** See GitHub `[OVERNIGHT] Live Run Status — 2026-07-11`
+**Live status issue:** [#1 — Live Run Status — 2026-07-11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1)
 
 ---
 
@@ -44,7 +44,7 @@
 | **Files** | `docs/overnight-runs/*` |
 | **DEV/PROD** | DEV-first; no PROD changes |
 | **Result** | Infrastructure ready; Workers A–D may launch |
-| **Commit** | (pending push) |
+| **Commit** | [`36ae37d`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/36ae37d) |
 
 ---
 
@@ -101,7 +101,7 @@
 
 | Time | Hash | Branch | Summary |
 |---|---|---|---|
-| 2026-07-11 | (pending) | `overnight/lead-integration` | Overnight run infrastructure bootstrap |
+| 2026-07-11 | [`36ae37d`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/36ae37d) | `overnight/lead-integration` | Overnight run infrastructure bootstrap |
 
 ---
 

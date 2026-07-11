@@ -1,6 +1,9 @@
 {
   "runId": "overnight-run-2026-07-11",
-  "lastUpdated": "2026-07-11T21:54:00-06:00",
+  "liveStatusIssueNumber": 1,
+  "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
+  "leadBootstrapCommit": "36ae37d",
+  "lastUpdated": "2026-07-11T21:56:00-06:00",
   "lead": {
     "branch": "overnight/lead-integration",
     "status": "active",

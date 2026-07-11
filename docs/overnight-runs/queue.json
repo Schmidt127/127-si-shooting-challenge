@@ -6,6 +6,8 @@
   "prodBaseId": "appn84sqPw03zEbTT",
   "leadBranch": "overnight/lead-integration",
   "liveStatusIssueTitle": "[OVERNIGHT] Live Run Status — 2026-07-11",
+  "liveStatusIssueNumber": 1,
+  "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
   "rules": {
     "devFirst": true,
     "prodChangesRequireLeadControlledVerification": true,
@@ -138,6 +140,7 @@
       "status": "blocked"
     }
   },
-  "lastUpdated": "2026-07-11T21:54:00-06:00",
+  "leadBootstrapCommit": "36ae37d",
+  "lastUpdated": "2026-07-11T21:56:00-06:00",
   "lastUpdatedBy": "Cloud-Lead"
 }
