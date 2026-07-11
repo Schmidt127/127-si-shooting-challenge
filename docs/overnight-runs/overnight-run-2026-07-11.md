@@ -44,7 +44,7 @@
 | **Files** | `docs/overnight-runs/*` |
 | **DEV/PROD** | DEV-first; no PROD changes |
 | **Result** | Infrastructure ready; Workers A–D may launch |
-| **Commit** | [`36ae37d`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/36ae37d) |
+| **Commit** | [`ec50718`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/ec50718) (includes issue #1 refs) |
 
 ---
 
