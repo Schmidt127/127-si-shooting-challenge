@@ -8,63 +8,36 @@
 
 **Lead note (2026-07-12):** Mike confirmed Make has **no** separate DEV upload scenario — only PROD `Shooting Challenge - GAME - Upload Engine - Lambda - v1` (`C-013 PROD S3 Upload Webhook`). He did **not** edit it. **MA-001 rewritten:** create DEV scenario first; never patch PROD for #8.
 
+**Lead note (2026-07-12T13:50Z):** Local Make homework webhook smoke **PASS** on `rec7X6stG6utxykiG` (`skipped_already_uploaded`). MA-001 Phase 0+1 verified; Mike should comment RESOLVED on #8 and keep scenario OFF when idle.
+
 ---
 
 ## Open actions
 
-### MA-001 — Create DEV Make upload scenario, then homework router (#8)
-- **GitHub issue:** [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) (canonical; duplicate #6)
-- **Task / agent:** T2 / Worker-B (Mike UI)
-- **System:** Make.com — **DEV clone only**
-- **Checklist:** [C-013-create-dev-make-upload-scenario.md](../deploy-checklists/C-013-create-dev-make-upload-scenario.md)
-- **Live shape (Mike export 2026-07-12):** **3 modules, no Router**
-  - **15** Custom webhook
-  - **14** HTTP POST (“POST”)
-  - **16** Webhook response (`{{14.data}}`)
-- **Exact error / why blocked (updated 2026-07-12):** Clone exists as `Shooting Challenge - DEV - Upload Engine - Lambda - v1 (copy)`, but module **15** is still attached to **`C-013 PROD S3 Upload Webhook`**, and module **14** still has the copied PROD Lambda URL/secret until replaced with DEV.
-- **Exact action (Phase 0 — now):**
-  1. Stay in the **copy**; do not edit PROD GAME.
-  2. Module **15**: create/attach a **new** webhook labeled e.g. `C-013 DEV S3 Upload Webhook` (must leave PROD webhook alone).
-  3. Module **14**: set URL = DEV Lambda `127si-upload-asset-dev` Function URL; set `X-Upload-Secret` = **DEV** secret only.
-  4. Leave module **16** returning `{{14.data}}` / 200.
-  5. **Do not add a Router** — Lambda enforces `070a`/`homework_completion` via `ALLOW_ROUTE_KEYS`.
-  6. Scheduling OFF; save new webhook URL as `MAKE_DEV_UPLOAD_WEBHOOK_URL` locally only.
-- **Phase 1:** DEV homework Run once / smoke after Phase 0.
-- **Blocks:** T2/T3 live Make smoke (not full run)
-- **Continuing meanwhile:** Worker B **T6**; Worker C **T7**
-- **Verify when done:** Comment on #8: `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; Run once ready`
-
-### MA-002 — T2 AWS-DEV / Cursor env credentials
+### MA-002 — T2 AWS-DEV / Cursor env credentials (partial)
 - **GitHub issue:** [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) (canonical; duplicate #7)
 - **Task / agent:** T2 / Worker-B (also unblocks T3)
 - **System:** Cursor cloud environment / local ops (DEV-only secrets)
-- **Location:** Env for repo `127-si-shooting-challenge` — **not** PROD
-- **Exact error:** No `tools/airtable/.env`, no AWS creds, no `LAMBDA_FUNCTION_URL` / `UPLOAD_WEBHOOK_SECRET` / `MAKE_DEV_UPLOAD_WEBHOOK_URL` / `AIRTABLE_TOKEN`
-- **Actions attempted:** Offline unit tests + expected-fail preflight documented
-- **Exact action:**
-  1. Provision **DEV-only**: `AIRTABLE_TOKEN` (DEV base `appTetnuCZlCZdTCT`), `LAMBDA_FUNCTION_URL` (DEV `127si-upload-asset-dev`), `UPLOAD_WEBHOOK_SECRET`, `MAKE_DEV_UPLOAD_WEBHOOK_URL` (**after MA-001 Phase 0 creates the DEV webhook** — must not be the PROD webhook), optional AWS keys for `us-east-2`.
-  2. Confirm DEV Lambda `ALLOW_ROUTE_KEYS=video_feedback,homework_completion`.
-  3. Re-run smoke (local or follow-up agent) per issue #9 body.
-- **Hard stops:** No PROD secrets; do not enable 070a until smoke PASS; never commit secrets; never point `MAKE_DEV_*` at `C-013 PROD S3 Upload Webhook`
-- **Blocks:** Live Make/Lambda/Airtable smoke for T2/T3 (not full run)
-- **Continuing meanwhile:** Worker B on **T6** (offline-only). Worker C on **T7**. No idle wait.
-- **Verify when done:** Comment `RESOLVED — DEV env keys present` + sanitized `envPresent` JSON only
+- **Status:** **Local ops PASS** (smoke used local `.env`). Cloud agent still has no `tools/airtable/.env`.
+- **Exact action (remaining — optional):**
+  1. Optionally provision same DEV-only keys into Cursor cloud env for agent-side smoke.
+  2. Comment `RESOLVED — DEV env keys present locally; cloud optional` on #9 if local-only is enough.
+- **Hard stops:** No PROD secrets; never commit secrets; never point `MAKE_DEV_*` at PROD webhook
+- **Blocks:** Cloud-side live smoke only (local Make path unblocked)
+- **Continuing meanwhile:** Worker B on **T6**. Worker C on **T7**.
 
 ### MA-003 — T3 live 070a DEV smoke
 - **GitHub issue:** [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) (canonical; duplicate #10)
 - **Task / agent:** T3 / Worker-C
 - **System:** Tests-DEV (Airtable + Make + Lambda)
 - **Location:** `tools/airtable/c070a_dev_smoke_run.py` live modes (`C070A_ALLOW_LIVE=1`)
-- **Exact error:** Live invoke gated; DEV webhook/token creds + **DEV Make scenario** + Airtable paste
-- **Actions attempted:** **73/73** offline tests PASS; mock smoke 5/5 PASS; aligned to Worker B env names; Worker A+B results published
+- **Status:** Make webhook homework path **PASS** (MA-001). Full harness still needs #17 paste.
 - **Exact action:**
   1. Complete MA-006 (#17 paste 070a v4.4 DEV, leave OFF).
-  2. Complete **MA-001 Phase 0+1** (create DEV scenario; not PROD) and MA-002.
-  3. Provide disposable DEV homework Submission Asset id.
-  4. Set `C070A_ALLOW_LIVE=1` and run live-preflight / live-upload against DEV only.
-- **Blocks:** T3 live verification only
-- **Continuing meanwhile:** Worker C **reassigned to T7** (contract alignment + offline suite — does not wait on live smoke)
-- **Note:** Worker A+B results published; issue body partially stale on “Worker A/B unpublished”
+  2. Provide a disposable DEV homework asset that is still **Pending Link** (not `rec7X6stG6utxykiG` — already Uploaded).
+  3. Set `C070A_ALLOW_LIVE=1` and run live-preflight / live-upload against DEV only.
+- **Blocks:** T3 live harness verification only
+- **Continuing meanwhile:** Worker C **reassigned to T7**
 
 ### MA-004 — T4 Phase 2 (STALE / closable)
 - **GitHub issue:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) (canonical; duplicate #14)
@@ -106,7 +79,7 @@
 
 | ID | Task | Issue | Resolved | Verified by lead |
 |---|---|---|---|---|
-| — | — | — | — | — |
+| MA-001 | Create DEV Make upload scenario + homework smoke | #8 | 2026-07-12 — local smoke PASS `rec7X6stG6utxykiG` → `skipped_already_uploaded` (HTTP 200, DEV, `homework_completion`/`070a`). Mike: still comment RESOLVED on #8 + scenario OFF | Lead 2026-07-12T13:50Z |
 
 ---
 

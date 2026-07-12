@@ -55,10 +55,10 @@
         8,
         9
       ],
-      "verificationResult": "Lambda 38/38 + smoke tools 8/8 PASS; live BLOCKED #8/#9",
+      "verificationResult": "Lambda 38/38 + smoke tools 8/8 PASS; local Make homework webhook PASS 2026-07-12 (skipped_already_uploaded on rec7X6stG6utxykiG); #8 Phase 0+1 verified pending Mike RESOLVED comment",
       "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2",
       "agentLifecycle": "IDLE_REASSIGNED_TO_T6",
-      "notes": "Repo complete. Issue #8 rewritten 2026-07-12: CREATE DEV Make scenario first (DEV scenario missing). Never edit PROD GAME / C-013 PROD S3 Upload Webhook.",
+      "notes": "Repo complete. MA-001 Phase 0+1 local smoke PASS 2026-07-12. Never edit PROD GAME / C-013 PROD S3 Upload Webhook.",
       "manualActionRequired": true
     },
     {
@@ -235,21 +235,24 @@
         6
       ],
       "title": "[OVERNIGHT][T2][Make-DEV] Create DEV upload scenario then homework router (070a)",
-      "note": "2026-07-12: DEV scenario missing; only PROD GAME exists. Create DEV first; do not edit PROD."
+      "status": "phase0_phase1_pass_pending_mike_resolved_comment",
+      "note": "2026-07-12T13:48Z local smoke PASS rec7X6stG6utxykiG skipped_already_uploaded. Mike comment RESOLVED on #8."
     },
     {
       "issue": 9,
       "system": "AWS-DEV",
       "duplicates": [
         7
-      ]
+      ],
+      "note": "Local ops PASS; cloud .env still optional"
     },
     {
       "issue": 11,
       "system": "Tests-DEV",
       "duplicates": [
         10
-      ]
+      ],
+      "note": "Make webhook path PASS; full c070a live harness gated on #17"
     },
     {
       "issue": 17,
@@ -265,9 +268,9 @@
   ],
   "githubTokenLimitation": "Lead token cannot comment/edit issue #1 (403). Status is in _live-status-update.md; Mike must paste into #1. Assignments also posted on PRs #12/#13.",
   "prodModified": false,
-  "lastUpdated": "2026-07-12T12:55:00Z",
+  "lastUpdated": "2026-07-12T13:50:00Z",
   "lastUpdatedBy": "Cloud-Lead",
-  "lastLeadCommit": "3ae7cc9fae368627e237c2af71661f9d83207388",
+  "lastLeadCommit": "7d6c695",
   "liveStatusWorkaroundPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19",
   "makeInventory": {
     "confirmedAt": "2026-07-12",
@@ -275,9 +278,15 @@
     "prodScenarioOnly": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
     "prodWebhookLabel": "C-013 PROD S3 Upload Webhook",
     "prodEditedByMike": false,
-    "devScenarioExists": false,
-    "devScenarioToCreate": "Shooting Challenge - DEV - Upload Engine - Lambda - v1",
+    "devScenarioExists": true,
+    "devWebhookLabel": "C-013 DEV S3 Upload Webhook",
     "createChecklist": "docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md",
-    "issue8Plan": "Phase0 create DEV scenario before any Module 2 patch language; never edit PROD"
+    "issue8Plan": "Phase0+1 PASS local smoke 2026-07-12; never edit PROD",
+    "homeworkWebhookSmoke": {
+      "at": "2026-07-12T13:48:53Z",
+      "assetId": "rec7X6stG6utxykiG",
+      "actionOut": "skipped_already_uploaded",
+      "pass": true
+    }
   }
 }

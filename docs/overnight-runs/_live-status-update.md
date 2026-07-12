@@ -1,13 +1,15 @@
 ## Overnight run — live status update (LEAD-005)
 
 **Paste into issue [#1](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1) — replaces stale bootstrap snapshot**  
-**Generated:** 2026-07-11T22:35Z  
+**Generated:** 2026-07-12T13:50Z  
 **Lead tip branch:** https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/lead-integration  
 **Lead agent:** https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a  
 
 > Lead GitHub token cannot post issue comments (HTTP 403). This file is the canonical status; Mike: paste as a new comment on #1.
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
+
+**Live Make smoke (2026-07-12):** `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` → **PASS** (`actionOut=skipped_already_uploaded`, HTTP 200, `environment=DEV`, route `homework_completion` / `070a`). First local upload already wrote the asset; retest confirmed Make→Lambda idempotent skip.
 
 ---
 
@@ -40,16 +42,19 @@
 
 | Issue | Action |
 |-------|--------|
-| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Updated 2026-07-12:** **Create** DEV Make scenario first (`Shooting Challenge - DEV - Upload Engine - Lambda - v1` + new DEV webhook). Do **not** edit PROD GAME / `C-013 PROD S3 Upload Webhook`. Checklist: `docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md` |
-| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | DEV credentials (`MAKE_DEV_UPLOAD_WEBHOOK_URL` = **new DEV** webhook only) |
-| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | Live smoke after #8 Phase 0+#9+#17 |
+| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Phase 0+1 PASS (local)** — DEV Make webhook→Lambda homework path verified. Mike: comment `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; smoke PASS skipped_already_uploaded on rec7X6stG6utxykiG` then turn scenario **OFF** |
+| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** — `MAKE_DEV_UPLOAD_WEBHOOK_URL` + Airtable token work. Cloud env still missing `.env` (optional) |
+| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | Make homework webhook smoke **PASS**; full `c070a_dev_smoke_run.py` live still gated on #17 paste |
 | [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | Paste 070a v4.4 DEV; leave OFF |
 
 Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-Exact steps in `docs/overnight-runs/manual-actions-2026-07-11.md` (MA-001, MA-002, MA-003, MA-006 + hygiene MA-005).
+1. Comment **RESOLVED** on [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) (smoke PASS).
+2. Turn DEV Make scenario **OFF** when not testing.
+3. Remaining: **MA-006** (#17 paste 070a), optional cloud **MA-002**, then **MA-003** live harness; hygiene **MA-005**.
+4. Exact steps: `docs/overnight-runs/manual-actions-2026-07-11.md`.
 
 ### New assignments (immediate — do not wait on Mike)
 

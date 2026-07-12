@@ -114,6 +114,19 @@
 
 ---
 
+### LEAD-007 — Local Make homework webhook smoke PASS
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-12T13:48Z |
+| **Agent** | Cloud Lead (Mike local ops) |
+| **Command** | `python c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` (cwd already `tools/airtable`) |
+| **Result** | **PASS** — HTTP 200; `actionOut=skipped_already_uploaded`; `environment=DEV`; `routeKey=homework_completion`; `automationNumber=070a`; asset Upload Status already `Uploaded` from prior local upload |
+| **PROD** | **Not modified** |
+| **Follow-up** | Mike comment RESOLVED on #8; scenario OFF when idle; next #17 paste then optional fresh Pending Link asset for full `uploaded` path / MA-003 |
+
+---
+
 ## Decisions made
 
 1. **DEV-first:** All implementation targets DEV base `appTetnuCZlCZdTCT` until tests pass.
@@ -140,7 +153,7 @@
 | Time | Env | Change | Agent |
 |---|---|---|---|
 | 2026-07-11 | DEV repo | Sanitized dual-route blueprint + runbook committed (UI not patched) | Worker-B → lead |
-| — | Make UI DEV | **Missing DEV scenario** — Mike 2026-07-12; create before #8 (MA-001 Phase 0) | Mike |
+| — | Make UI DEV | **Phase 0+1 PASS** — DEV webhook→Lambda homework smoke 2026-07-12 (`rec7X6stG6utxykiG`) | Mike |
 | — | Make UI PROD | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` / `C-013 PROD S3 Upload Webhook` — **do not edit** (Mike confirmed untouched) | — |
 | — | PROD | **none** | — |
 
@@ -177,6 +190,7 @@
 | 2026-07-11 | Worker C: `c070a_dev_smoke_run.py all` mock | **5/5 PASS** | Worker-C / Lead verify |
 | 2026-07-11 | **Lead integration (post-merge lead tip)** | Node 20+17; lambda **46/46**; B 8/8; C 16/16; mock 5/5; B↔C payload compat OK | Cloud Lead |
 | 2026-07-11 | Live Make/Lambda/Airtable smoke | **BLOCKED** (#8/#9/#11 + Worker A) | — |
+| 2026-07-12 | Mike local: `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` | **PASS** (`skipped_already_uploaded`) | Mike / Lead verify |
 
 ---
 
@@ -230,8 +244,8 @@ See [manual-actions-2026-07-11.md](./manual-actions-2026-07-11.md): **MA-001** (
 2. **Worker C:** Execute **T7** now (`assignments/T7-worker-c-070a-contract-alignment.md`).
 3. **Worker D:** Start **T9** Stage 6 checklist (optional P-D1).
 4. **Worker A:** Optional **T8**; stand by for #17.
-5. Mike: **MA-001 Phase 0** — **create** DEV Make scenario (do not edit PROD GAME / `C-013 PROD S3 Upload Webhook`); then #9, #17; paste `_live-status-update.md` into #1.
-6. Lead: merge T6/T7 when delivered; live DEV verify only after gates (incl. new DEV Make webhook).
+5. Mike: comment RESOLVED on **#8** (smoke PASS); keep DEV Make **OFF** when idle; then **#17** paste 070a; paste `_live-status-update.md` into #1.
+6. Lead: merge T6/T7 when delivered; MA-003 full harness after #17 + disposable Pending Link asset.
 
 ---
 
