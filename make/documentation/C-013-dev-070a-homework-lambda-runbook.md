@@ -1,13 +1,16 @@
 # C-013 — DEV Make/Lambda homework route (070a / `homework_completion`)
 
-**Date:** 2026-07-11  
+**Date:** 2026-07-11 · **Updated:** 2026-07-12  
 **Overnight task:** T2 (Worker B)  
-**Status:** **REPO READY** — Make UI patch + live DEV smoke gated on credentials / Mike actions  
-**Architecture parent:** [C-013-dev-make-lambda-scenario-prep.md](../../docs/deploy-checklists/C-013-dev-make-lambda-scenario-prep.md) (proven video path)  
+**Status:** **REPO READY** — **DEV Make scenario must be created first** (Mike 2026-07-12: no separate DEV scenario exists) · then live smoke gated on credentials  
+**Create-DEV gate:** [C-013-create-dev-make-upload-scenario.md](../../docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md)  
+**Architecture parent:** [C-013-dev-make-lambda-scenario-prep.md](../../docs/deploy-checklists/C-013-dev-make-lambda-scenario-prep.md) (proven video path patterns)  
 **Blueprint:** [upload-asset-engine-lambda-dev-v1.template.json](../blueprints/upload-asset-engine-lambda-dev-v1.template.json)  
 **Lambda routes:** `lambda/upload-asset/upload_core/routes.py` (`ROUTE_HOMEWORK_COMPLETION`)
 
-**Hard stops:** DEV only (`appTetnuCZlCZdTCT`) · **070a OFF** until smoke PASS + Mike approval · no PROD Make/AWS/Airtable · no secrets in GitHub · do not edit `070a-*.js` in this task · do not start C-023 implementation
+**Hard stops:** DEV only (`appTetnuCZlCZdTCT`) · **070a OFF** until smoke PASS + Mike approval · **never edit** PROD scenario `Shooting Challenge - GAME - Upload Engine - Lambda - v1` / webhook `C-013 PROD S3 Upload Webhook` · no PROD Make/AWS/Airtable · no secrets in GitHub · do not edit `070a-*.js` in this task · do not start C-023 implementation
+
+**Mike inventory (2026-07-12):** Make currently has **only** the PROD GAME upload scenario. The DEV scenario named below is the **target to create**, not an existing scenario to patch.
 
 ---
 
@@ -71,20 +74,26 @@ Sanitized copy: [homework-completion-070a-dev.sample.json](../test-payloads/home
 
 ## Mike Make UI checklist (exact)
 
-Existing scenario: **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`**
+### Phase 0 — Create DEV scenario (required first)
+
+**Target name:** `Shooting Challenge - DEV - Upload Engine - Lambda - v1`  
+**Full steps:** [C-013-create-dev-make-upload-scenario.md](../../docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md)
 
 | Step | Action | Done |
 |------|--------|------|
-| 1 | Open DEV scenario (do **not** create a PROD scenario) | ☐ |
-| 2 | Module 2 Router — **add** branch/filter: `automationNumber` = `070a` **AND** `routeKey` = `homework_completion` | ☐ |
-| 3 | Wire homework branch to the **same** Module 3 HTTP POST used by video | ☐ |
-| 4 | Confirm Module 3: 120s timeout, parse response ON, return-error-if-fails **OFF**, `X-Upload-Secret` from DEV variable | ☐ |
-| 5 | Confirm Module 5 returns **complete Lambda JSON** (not generic Accepted) for manual smoke | ☐ |
-| 6 | Save scenario; leave **scheduling OFF**; use **Run once** only | ☐ |
+| 0 | Confirm PROD `Shooting Challenge - GAME - Upload Engine - Lambda - v1` / `C-013 PROD S3 Upload Webhook` will **not** be edited | ☐ |
+| 1 | **Create new** DEV scenario with the target name (blueprint build **or** clone-to-new then re-point to DEV) | ☐ |
+| 2 | Module 1: **new** Custom webhook labeled e.g. `C-013 DEV S3 Upload Webhook` (never reuse PROD webhook) | ☐ |
+| 3 | Module 2 Router — **both** branches: `070b`+`video_feedback` **and** `070a`+`homework_completion` | ☐ |
+| 4 | Module 3: HTTP POST → **DEV** Lambda URL; 120s timeout; parse response ON; return-error-if-fails **OFF**; `X-Upload-Secret` = **DEV** secret | ☐ |
+| 5 | Module 5 returns **complete Lambda JSON** (preferred for DEV manual smoke) | ☐ |
+| 6 | Save; scheduling **OFF**; Run once only | ☐ |
 | 7 | Confirm DEV Lambda `ALLOW_ROUTE_KEYS` includes `homework_completion` | ☐ |
-| 8 | Store webhook URL in local ops / `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **not GitHub** | ☐ |
+| 8 | Store **new** webhook URL as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **not GitHub**; **not** the PROD webhook | ☐ |
 | 9 | Run smoke (below) → probe `allPass=true` | ☐ |
 | 10 | **Do not** enable Airtable **070a** until step 9 PASS + explicit approval | ☐ |
+
+**Do not** “patch Module 2” on the PROD GAME scenario to satisfy Issue #8.
 
 ---
 

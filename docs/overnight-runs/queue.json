@@ -57,7 +57,9 @@
       ],
       "verificationResult": "Lambda 38/38 + smoke tools 8/8 PASS; live BLOCKED #8/#9",
       "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2",
-      "agentLifecycle": "IDLE_REASSIGNED_TO_T6"
+      "agentLifecycle": "IDLE_REASSIGNED_TO_T6",
+      "notes": "Repo complete. Issue #8 rewritten 2026-07-12: CREATE DEV Make scenario first (DEV scenario missing). Never edit PROD GAME / C-013 PROD S3 Upload Webhook.",
+      "manualActionRequired": true
     },
     {
       "id": "T3",
@@ -126,7 +128,7 @@
       ],
       "deploymentRequired": false,
       "manualActionRequired": false,
-      "notes": "Do NOT wait on #8/#9. No live Make/AWS."
+      "notes": "Offline validator still valid. Do NOT wait on #8. Blueprint should assert dual-route filters for the TEMPLATE (create-time), not assume live DEV scenario exists."
     },
     {
       "id": "T7",
@@ -228,10 +230,12 @@
   "openBlockersCanonical": [
     {
       "issue": 8,
-      "system": "Make-DEV",
+      "system": "Make-DEV-create",
       "duplicates": [
         6
-      ]
+      ],
+      "title": "[OVERNIGHT][T2][Make-DEV] Create DEV upload scenario then homework router (070a)",
+      "note": "2026-07-12: DEV scenario missing; only PROD GAME exists. Create DEV first; do not edit PROD."
     },
     {
       "issue": 9,
@@ -261,8 +265,19 @@
   ],
   "githubTokenLimitation": "Lead token cannot comment/edit issue #1 (403). Status is in _live-status-update.md; Mike must paste into #1. Assignments also posted on PRs #12/#13.",
   "prodModified": false,
-  "lastUpdated": "2026-07-11T22:37:00Z",
+  "lastUpdated": "2026-07-12T12:55:00Z",
   "lastUpdatedBy": "Cloud-Lead",
   "lastLeadCommit": "3ae7cc9fae368627e237c2af71661f9d83207388",
-  "liveStatusWorkaroundPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19"
+  "liveStatusWorkaroundPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19",
+  "makeInventory": {
+    "confirmedAt": "2026-07-12",
+    "by": "Mike",
+    "prodScenarioOnly": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
+    "prodWebhookLabel": "C-013 PROD S3 Upload Webhook",
+    "prodEditedByMike": false,
+    "devScenarioExists": false,
+    "devScenarioToCreate": "Shooting Challenge - DEV - Upload Engine - Lambda - v1",
+    "createChecklist": "docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md",
+    "issue8Plan": "Phase0 create DEV scenario before any Module 2 patch language; never edit PROD"
+  }
 }

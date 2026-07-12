@@ -40,9 +40,9 @@
 
 | Issue | Action |
 |-------|--------|
-| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | Make DEV Module 2 homework router |
-| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | DEV credentials |
-| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | Live smoke after #8/#9/#17 |
+| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Updated 2026-07-12:** **Create** DEV Make scenario first (`Shooting Challenge - DEV - Upload Engine - Lambda - v1` + new DEV webhook). Do **not** edit PROD GAME / `C-013 PROD S3 Upload Webhook`. Checklist: `docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md` |
+| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | DEV credentials (`MAKE_DEV_UPLOAD_WEBHOOK_URL` = **new DEV** webhook only) |
+| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | Live smoke after #8 Phase 0+#9+#17 |
 | [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | Paste 070a v4.4 DEV; leave OFF |
 
 Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.

@@ -157,13 +157,22 @@
       "Reusing PROD webhook URL or PROD upload secret",
       "Router that only allows 070b/video_feedback after homework route is enabled"
     ],
-    "mikeUiPatchFromVideoOnlyScenario": [
-      "Open existing scenario Shooting Challenge - DEV - Upload Engine - Lambda - v1",
-      "On Module 2 Router, ADD a second branch (or OR filter) for automationNumber=070a AND routeKey=homework_completion",
-      "Route that branch to the same Module 3 HTTP POST → DEV Lambda (reuse video path modules)",
+    "mikeUiCreateDevScenarioFirst": [
+      "CONFIRMED 2026-07-12: no separate DEV upload scenario exists in Make",
+      "ONLY live upload scenario is PROD: Shooting Challenge - GAME - Upload Engine - Lambda - v1 (webhook label C-013 PROD S3 Upload Webhook) — DO NOT EDIT IT",
+      "Create NEW scenario named Shooting Challenge - DEV - Upload Engine - Lambda - v1 from this blueprint (or clone PROD to a NEW scenario then immediately re-point all URLs/secrets to DEV)",
+      "Module 1 must be a NEW Custom webhook (e.g. label C-013 DEV S3 Upload Webhook) — never reuse the PROD webhook",
+      "Module 2 Router: include BOTH video_feedback/070b AND homework_completion/070a branches from the start",
+      "Module 3 HTTP POST → DEV Lambda Function URL + DEV X-Upload-Secret only",
       "Keep scenario OFF for scheduling; use Run once for smoke",
       "Confirm Lambda env ALLOW_ROUTE_KEYS includes homework_completion",
-      "Do not paste Make webhook URL into Airtable 070a until smoke PASS + approval"
+      "Store new webhook as MAKE_DEV_UPLOAD_WEBHOOK_URL locally — never commit; never use PROD webhook URL",
+      "Do not paste Make webhook URL into Airtable 070a until smoke PASS + approval",
+      "Checklist: docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md"
+    ],
+    "mikeUiPatchFromVideoOnlyScenario": [
+      "DEPRECATED assumption: DEV scenario already exists — superseded by mikeUiCreateDevScenarioFirst (2026-07-12)",
+      "If and only if DEV scenario already exists: add Module 2 homework branch; never patch PROD GAME scenario for overnight #8"
     ]
   },
   "flow": [

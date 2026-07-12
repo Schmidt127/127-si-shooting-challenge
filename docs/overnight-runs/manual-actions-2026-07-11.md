@@ -6,30 +6,40 @@
 
 **Lead note (2026-07-11T22:30Z):** Cloud Lead GitHub token cannot label/assign/comment/close issues (HTTP 403). Please apply labels `overnight-blocker` + `overnight-run`, assign `@Schmidt127`, close duplicates as noted, and paste the live status update from `_live-status-update.md` into issue #1.
 
+**Lead note (2026-07-12):** Mike confirmed Make has **no** separate DEV upload scenario — only PROD `Shooting Challenge - GAME - Upload Engine - Lambda - v1` (`C-013 PROD S3 Upload Webhook`). He did **not** edit it. **MA-001 rewritten:** create DEV scenario first; never patch PROD for #8.
+
 ---
 
 ## Open actions
 
-### MA-001 — T2 Make-DEV Module 2 homework router
+### MA-001 — Create DEV Make upload scenario, then homework router (#8)
 - **GitHub issue:** [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) (canonical; duplicate #6)
-- **Task / agent:** T2 / Worker-B
-- **System:** Make.com DEV
-- **Location:** Scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1` → Module **2** Router
-- **Exact error / why blocked:** Cloud agents cannot edit Make UI; DEV scenario currently routes 070b/`video_feedback` only
-- **Actions attempted:** Sanitized blueprint + runbook shipped on `overnight/worker-b-070a-backend` (merged to lead)
-- **Exact action:**
-  1. Open Make → DEV scenario **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** (do **not** touch PROD).
-  2. Module **2** Router — add branch **or** OR-filter: `automationNumber` = `070a` **AND** `routeKey` = `homework_completion`.
-  3. Wire that branch to the **same** Module 3 HTTP POST → DEV Lambda Function URL (reuse video path).
-  4. Confirm Module 5 returns **complete Lambda JSON** for manual smoke (preferred over plain `Accepted`).
-  5. Save; leave scheduling **OFF**; use **Run once** only.
-  6. Confirm DEV Lambda env `ALLOW_ROUTE_KEYS` includes `homework_completion`.
-  7. Put webhook URL in local ops / `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **never commit**.
-  8. **Do not** enable Airtable automation **070a** yet.
-- **Blocks:** T2 live smoke + T3 live smoke (not full run)
-- **Continuing meanwhile:** Worker B **reassigned to T6** (offline Make blueprint validator — does not wait on this issue). Worker C on T7. Worker D Phase2 complete.
-- **Branch / commit / result:** `overnight/worker-b-070a-backend` @ `0dd0ac5` · impl `2235340` · `worker-b-t2-070a-backend.md` · PR #12 · https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2
-- **Verify when done:** Comment `RESOLVED — Module 2 homework branch wired; Run once ready` on #8
+- **Task / agent:** T2 / Worker-B (Mike UI)
+- **System:** Make.com — **new DEV scenario only**
+- **Checklist:** [C-013-create-dev-make-upload-scenario.md](../deploy-checklists/C-013-create-dev-make-upload-scenario.md)
+- **Exact error / why blocked (updated 2026-07-12):** Prior plan assumed scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1` already existed. **Mike inventory:** that DEV scenario is **missing**. Only live upload scenario is PROD:
+  - Name: `Shooting Challenge - GAME - Upload Engine - Lambda - v1`
+  - Webhook label: `C-013 PROD S3 Upload Webhook`
+  - Mike: **did not edit it** (correct)
+- **Actions attempted:** Sanitized DEV blueprint + runbook in repo; lead updated plan after Mike report
+- **Exact action (Phase 0 — do this before any Module 2 “patch” language):**
+  1. **Do not open/edit** the PROD GAME scenario or `C-013 PROD S3 Upload Webhook`.
+  2. Create a **new** Make scenario named **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** (from [blueprint](../../make/blueprints/upload-asset-engine-lambda-dev-v1.template.json) **or** clone PROD into a **new** scenario then immediately re-point all URLs/secrets to **DEV** — see checklist Phase 0a).
+  3. Module 1: **new** Custom webhook labeled e.g. `C-013 DEV S3 Upload Webhook` (must **not** share the PROD webhook).
+  4. Module 2 Router — include **both** branches from the start:
+     - `automationNumber=070b` **AND** `routeKey=video_feedback`
+     - `automationNumber=070a` **AND** `routeKey=homework_completion`
+  5. Module 3 → **DEV** Lambda Function URL + **DEV** `X-Upload-Secret` only.
+  6. Prefer webhook response = **complete Lambda JSON** for manual smoke.
+  7. Save; scheduling **OFF**; Run once only.
+  8. Put the **new** webhook URL in local ops / `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **never commit**; never use the PROD webhook URL here.
+  9. Confirm PROD GAME scenario remains unmodified.
+  10. **Do not** enable Airtable **070a** yet.
+- **Phase 1 (only after Phase 0):** Confirm DEV Lambda `ALLOW_ROUTE_KEYS` includes `homework_completion`; run homework webhook smoke against DEV asset.
+- **Blocks:** T2/T3 live Make smoke (not full run)
+- **Continuing meanwhile:** Worker B **T6** (offline validator); Worker C **T7**; no idle wait on this issue
+- **Branch / commit / result:** blueprint on lead · Worker B T2 result · PR #12
+- **Verify when done:** Comment on #8: `RESOLVED — DEV scenario created; Module 2 homework wired; Run once ready` (and note webhook is DEV-labeled, not PROD)
 
 ### MA-002 — T2 AWS-DEV / Cursor env credentials
 - **GitHub issue:** [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) (canonical; duplicate #7)
@@ -39,10 +49,10 @@
 - **Exact error:** No `tools/airtable/.env`, no AWS creds, no `LAMBDA_FUNCTION_URL` / `UPLOAD_WEBHOOK_SECRET` / `MAKE_DEV_UPLOAD_WEBHOOK_URL` / `AIRTABLE_TOKEN`
 - **Actions attempted:** Offline unit tests + expected-fail preflight documented
 - **Exact action:**
-  1. Provision **DEV-only**: `AIRTABLE_TOKEN` (DEV base `appTetnuCZlCZdTCT`), `LAMBDA_FUNCTION_URL` (DEV `127si-upload-asset-dev`), `UPLOAD_WEBHOOK_SECRET`, `MAKE_DEV_UPLOAD_WEBHOOK_URL` (after MA-001), optional AWS keys for `us-east-2`.
+  1. Provision **DEV-only**: `AIRTABLE_TOKEN` (DEV base `appTetnuCZlCZdTCT`), `LAMBDA_FUNCTION_URL` (DEV `127si-upload-asset-dev`), `UPLOAD_WEBHOOK_SECRET`, `MAKE_DEV_UPLOAD_WEBHOOK_URL` (**after MA-001 Phase 0 creates the DEV webhook** — must not be the PROD webhook), optional AWS keys for `us-east-2`.
   2. Confirm DEV Lambda `ALLOW_ROUTE_KEYS=video_feedback,homework_completion`.
   3. Re-run smoke (local or follow-up agent) per issue #9 body.
-- **Hard stops:** No PROD secrets; do not enable 070a until smoke PASS; never commit secrets
+- **Hard stops:** No PROD secrets; do not enable 070a until smoke PASS; never commit secrets; never point `MAKE_DEV_*` at `C-013 PROD S3 Upload Webhook`
 - **Blocks:** Live Make/Lambda/Airtable smoke for T2/T3 (not full run)
 - **Continuing meanwhile:** Worker B on **T6** (offline-only). Worker C on **T7**. No idle wait.
 - **Verify when done:** Comment `RESOLVED — DEV env keys present` + sanitized `envPresent` JSON only
@@ -52,11 +62,11 @@
 - **Task / agent:** T3 / Worker-C
 - **System:** Tests-DEV (Airtable + Make + Lambda)
 - **Location:** `tools/airtable/c070a_dev_smoke_run.py` live modes (`C070A_ALLOW_LIVE=1`)
-- **Exact error:** Live invoke gated; DEV webhook/token creds + Make Module 2 + Airtable paste
+- **Exact error:** Live invoke gated; DEV webhook/token creds + **DEV Make scenario** + Airtable paste
 - **Actions attempted:** **73/73** offline tests PASS; mock smoke 5/5 PASS; aligned to Worker B env names; Worker A+B results published
 - **Exact action:**
   1. Complete MA-006 (#17 paste 070a v4.4 DEV, leave OFF).
-  2. Complete MA-001 and MA-002.
+  2. Complete **MA-001 Phase 0+1** (create DEV scenario; not PROD) and MA-002.
   3. Provide disposable DEV homework Submission Asset id.
   4. Set `C070A_ALLOW_LIVE=1` and run live-preflight / live-upload against DEV only.
 - **Blocks:** T3 live verification only
@@ -75,6 +85,7 @@
   1. Label `#8 #9 #11 #17` with `overnight-blocker` + `overnight-run`; assign `Schmidt127`.
   2. Close duplicates `#6 #7 #10 #14`; close #15 as resolved (A published).
   3. Paste contents of `docs/overnight-runs/_live-status-update.md` into issue [#1](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1).
+  4. On #8, paste note that DEV scenario must be **created** first (see MA-001 / create-dev checklist) — lead token cannot comment.
 - **Blocks:** Remote monitoring clarity only (run continues)
 
 ### MA-006 — T1 Airtable-DEV paste 070a v4.4
@@ -87,7 +98,7 @@
 - **Exact action:**
   1. Open DEV automation 070a.
   2. Paste from GitHub script `airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` — **skip GitHub header** (lines 1–24); paste production docblock through EOF.
-  3. Inputs: `recordId` from trigger; `makeWebhookUrl` = DEV webhook (after MA-001); `automationNumber` = `070a`.
+  3. Inputs: `recordId` from trigger; `makeWebhookUrl` = **DEV** webhook from MA-001 Phase 0 (**not** `C-013 PROD S3 Upload Webhook`); `automationNumber` = `070a`.
   4. **Leave OFF.**
   5. Confirm companion **070c** can fire for homework (`Upload Destination = Homework Completions` or no destination filter).
   6. Optional: add read-only DEV `AIRTABLE_TOKEN` to cloud env.

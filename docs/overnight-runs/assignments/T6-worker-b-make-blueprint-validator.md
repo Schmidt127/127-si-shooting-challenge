@@ -5,7 +5,8 @@
 **Agent:** Worker-B  
 **Cloud agent:** https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2  
 **Branch:** `overnight/worker-b-070a-backend` (continue on this branch)  
-**Do not wait on:** Mike #8 / #9 / #11
+**Do not wait on:** Mike #8 / #9 / #11  
+**Context (2026-07-12):** Live Make has **no** DEV upload scenario yet — only PROD GAME. Your T6 work validates the **repo blueprint template** used to **create** that DEV scenario. Do not instruct anyone to edit PROD.
 
 ---
 

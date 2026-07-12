@@ -101,6 +101,19 @@
 
 ---
 
+### LEAD-006 — DEV Make scenario missing; rewrite #8 plan
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-12 |
+| **Agent** | Cloud Lead |
+| **Trigger** | Mike: no separate DEV upload scenario; only PROD GAME scenario with webhook `C-013 PROD S3 Upload Webhook`; **not edited** |
+| **Action** | Rewrote MA-001 / Issue #8 plan: **create** `Shooting Challenge - DEV - Upload Engine - Lambda - v1` first; never patch PROD. Added [C-013-create-dev-make-upload-scenario.md](../deploy-checklists/C-013-create-dev-make-upload-scenario.md); updated runbook, homework checklist, blueprint notes, verification gates G4a/G4b |
+| **PROD** | **Not modified** |
+| **Result** | Mike can proceed safely with Phase 0 create-DEV before any Module 2 work |
+
+---
+
 ## Decisions made
 
 1. **DEV-first:** All implementation targets DEV base `appTetnuCZlCZdTCT` until tests pass.
@@ -127,7 +140,8 @@
 | Time | Env | Change | Agent |
 |---|---|---|---|
 | 2026-07-11 | DEV repo | Sanitized dual-route blueprint + runbook committed (UI not patched) | Worker-B → lead |
-| — | Make UI DEV | Pending Mike MA-001 (#8) | Mike |
+| — | Make UI DEV | **Missing DEV scenario** — Mike 2026-07-12; create before #8 (MA-001 Phase 0) | Mike |
+| — | Make UI PROD | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` / `C-013 PROD S3 Upload Webhook` — **do not edit** (Mike confirmed untouched) | — |
 | — | PROD | **none** | — |
 
 ---
@@ -216,8 +230,8 @@ See [manual-actions-2026-07-11.md](./manual-actions-2026-07-11.md): **MA-001** (
 2. **Worker C:** Execute **T7** now (`assignments/T7-worker-c-070a-contract-alignment.md`).
 3. **Worker D:** Start **T9** Stage 6 checklist (optional P-D1).
 4. **Worker A:** Optional **T8**; stand by for #17.
-5. Mike: MA-001 (#8), MA-002 (#9), MA-006 (#17), paste `_live-status-update.md` into #1 (MA-005).
-6. Lead: merge T6/T7 when delivered; live DEV verify only after gates.
+5. Mike: **MA-001 Phase 0** — **create** DEV Make scenario (do not edit PROD GAME / `C-013 PROD S3 Upload Webhook`); then #9, #17; paste `_live-status-update.md` into #1.
+6. Lead: merge T6/T7 when delivered; live DEV verify only after gates (incl. new DEV Make webhook).
 
 ---
 

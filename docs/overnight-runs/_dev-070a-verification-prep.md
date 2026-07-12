@@ -1,8 +1,8 @@
 # Controlled DEV verification prep — 070a homework upload
 
-**Status:** **NOT READY TO RUN** — waiting on Worker A + Mike Make (#8) + DEV credentials (#9)  
+**Status:** **NOT READY TO RUN** — waiting on **create DEV Make scenario** (#8 Phase 0) + credentials (#9) + Airtable paste (#17)  
 **Environment:** DEV only `appTetnuCZlCZdTCT`  
-**PROD:** Do not run. Do not touch `recGQ8EjAMz3bEBiW`.
+**PROD:** Do not run. Do not touch `recGQ8EjAMz3bEBiW`. Do **not** edit Make PROD GAME upload scenario.
 
 ---
 
@@ -13,8 +13,9 @@
 | G1 | Worker A publishes `worker-a-t1-070a-airtable.md` + branch/PR | **PASS** (PR #18, merged) |
 | G2 | Lead reviews/merges Worker A into `overnight/lead-integration` | **PASS** (LEAD-004) |
 | G3 | 070a script pasted to **DEV** Airtable (automation may stay **OFF**) | **OPEN** (#17 / MA-006) |
-| G4 | Make DEV Module 2 homework branch (#8 / MA-001) | **OPEN** |
-| G5 | DEV credentials in ops env (#9 / MA-002) | **OPEN** |
+| G4a | **Create** Make DEV scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1` with new DEV webhook | **OPEN** (#8 Phase 0 / [create checklist](../deploy-checklists/C-013-create-dev-make-upload-scenario.md)) — Mike 2026-07-12: DEV scenario **missing**; only PROD GAME exists |
+| G4b | DEV Module 2 includes `070a` + `homework_completion` (on **DEV** scenario only) | **OPEN** (part of Phase 0 create) |
+| G5 | DEV credentials in ops env (#9 / MA-002); `MAKE_DEV_UPLOAD_WEBHOOK_URL` ≠ PROD webhook | **OPEN** |
 | G6 | Offline integration suite green on lead tip | **PASS** (LEAD-003 + LEAD-004 post-A) |
 
 ---
