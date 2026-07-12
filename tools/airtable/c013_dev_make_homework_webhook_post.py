@@ -17,6 +17,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
@@ -95,7 +96,15 @@ def post_webhook(url: str, payload: dict) -> tuple[int, str]:
         json=payload,
         timeout=180,
     )
-    return r.status_code, r.text[:2000]
+    # Keep full body for parse/evaluate — C-023 duplicateMatches can exceed 2KB.
+    return r.status_code, r.text or ""
+
+
+def body_preview(text: str, *, limit: int = 2000) -> str:
+    raw = text or ""
+    if len(raw) <= limit:
+        return raw
+    return raw[:limit] + f"...[truncated {len(raw) - limit} chars]"
 
 
 def parse_make_body(body_text: str) -> dict:
@@ -105,7 +114,13 @@ def parse_make_body(body_text: str) -> dict:
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
-        return {"rawText": text[:500]}
+        # Truncated Lambda JSON still often contains actionOut — salvage for evaluate.
+        salvaged: dict = {"rawText": text[:500]}
+        for key in ("actionOut", "routeKey", "automationNumber", "statusOut", "environment"):
+            m = re.search(rf'"{key}"\s*:\s*"([^"]+)"', text)
+            if m:
+                salvaged[key] = m.group(1)
+        return salvaged
     if isinstance(data, dict) and isinstance(data.get("body"), str):
         try:
             inner = json.loads(data["body"])
@@ -217,7 +232,7 @@ def main() -> None:
         "webhookPayload": payload,
         "makeResponse": {
             "statusCode": status_code,
-            "bodyPreview": response_text,
+            "bodyPreview": body_preview(response_text),
             "evaluation": evaluation,
         },
         "pass": evaluation["pass"],

@@ -114,16 +114,16 @@
 
 ---
 
-### LEAD-008 — Direct Lambda homework writeback PASS; Make path still broken
+### LEAD-009 — Make→Lambda homework uploaded PASS (false script fail fixed)
 
 | Field | Value |
 |---|---|
-| **Time** | 2026-07-12T14:04Z |
-| **Asset** | `recv2C72is5w3YJYB` (HC `recB8kqdoOkYJkNYr`) |
-| **Make path** | Webhook → `Accepted` → probe **FAIL** (stayed Pending Link) |
-| **Lambda path** | `c013_dev_lambda_invoke.py` → probe **`allPass=true`** (Uploaded, S3 URL, SHA-256) |
-| **Conclusion** | DEV Lambda homework route **PROVEN**. DEV Make scenario must be fixed (HTTP→Lambda + response `{{14.data}}`) before #8/#11 close |
+| **Time** | 2026-07-12T14:40Z |
+| **Asset** | `recVUoPApngfRYOys` (HC `recnyFGUacG3wqIdB`, sub `recY1Pbpz4x3N8zzl`) |
+| **Make path** | HTTP 200 + Lambda JSON `actionOut=uploaded` + S3 + SHA-256 + C-023 duplicate lookup |
+| **Script exit** | False FAIL — response truncated at 2KB before JSON parse; fixed to parse full body + salvage truncated `actionOut` |
 | **PROD** | **Not modified** |
+| **Follow-up** | Probe `allPass=true`; Mike RESOLVED on #8/#11; Make OFF; 070a OFF |
 
 ---
 

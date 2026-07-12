@@ -97,6 +97,20 @@ class TestEvaluateMakeResponse(unittest.TestCase):
         parsed = parse_make_body(wrapped)
         self.assertEqual(parsed["actionOut"], "uploaded")
 
+    def test_truncated_uploaded_json_still_passes(self) -> None:
+        # Large C-023 duplicateMatches arrays used to truncate body before parse.
+        body = (
+            '{"ok":true,"statusOut":"success","actionOut":"uploaded",'
+            '"routeKey":"homework_completion","automationNumber":"070a",'
+            '"c023Duplicate":{"duplicateMatches":[' + ("{}," * 80) + "{}]"
+        )
+        self.assertFalse(body.endswith("}"))  # intentionally truncated
+        result = evaluate_make_response(200, body)
+        self.assertTrue(result["pass"])
+        self.assertEqual(result["actionOut"], "uploaded")
+        self.assertEqual(result["routeKey"], "homework_completion")
+        self.assertEqual(result["automationNumber"], "070a")
+
 
 def json_dumps(obj: dict) -> str:
     import json

@@ -36,22 +36,15 @@
   4. Comment on #17: `RESOLVED — 070a v4.4 pasted DEV, still OFF, makeWebhookUrl=DEV`
 - **Blocks:** nothing further for paste; unlocks MA-003 Airtable-triggered path
 
-### MA-003 — T3 live 070a DEV smoke (**NEXT = fix Make**)
+### MA-003 — T3 live 070a DEV smoke
 - **GitHub issue:** [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11)
-- **Status:**
-  - Make webhook on Pending Link `recv2C72is5w3YJYB` → `Accepted` → probe **FAIL** (still Pending Link)
-  - Direct `c013_dev_lambda_invoke.py` → probe **`allPass=true`** 2026-07-12T14:04Z
-- **Exact action (Make fix):**
-  1. DEV scenario module **14**: DEV Lambda URL + DEV `X-Upload-Secret`; do not stop on HTTP error.
-  2. Module **16**: body = `{{14.data}}` (must wait for HTTP; not instant plain Accepted).
-  3. Scheduling ON / Immediately as data arrives for the retest only.
-  4. New Pending Link homework asset → `c013_dev_make_homework_webhook_post.py` → expect Lambda JSON (`uploaded`) → probe `allPass=true`.
-  5. Make **OFF**; 070a stays **OFF**.
-- **Verify when done:** Make path writeback PASS on a fresh asset; comment on #8/#11
+- **Status:** **PASS (Make→Lambda)** — `recVUoPApngfRYOys` returned `actionOut=uploaded` + S3 + SHA-256 (2026-07-12T14:40Z). Smoke script exit code was a false fail (2KB truncate); fixed in repo.
+- **Confirm:** `python _probe_c013_asset_storage_fields.py --record-id recVUoPApngfRYOys` → `allPass=true`
+- **Then:** Comment RESOLVED on #11; Make OFF; 070a stays OFF
 
-### MA-001 follow-up — Make returns Accepted without writeback
+### MA-001 follow-up — Make path fixed
 - **Related:** #8
-- **Evidence:** Earlier skip JSON worked once; fresh Pending Link only got `Accepted` and no Airtable write. Lambda alone proves backend OK.
+- **Evidence:** Full Lambda JSON on Pending Link homework upload via DEV webhook. Comment RESOLVED on #8.
 
 ### MA-004 — T4 Phase 2 (STALE / closable)
 - **GitHub issue:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) (canonical; duplicate #14)
