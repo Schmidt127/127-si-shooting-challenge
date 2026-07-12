@@ -9,9 +9,9 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** **PASS** — Make→Lambda homework `uploaded` on `recVUoPApngfRYOys`; retest after parser fix → `skipped_already_uploaded` / `"pass": true` (14:49Z).
+**Live Make smoke (2026-07-12):** **PASS** — `recVUoPApngfRYOys` uploaded + skip retest; **`rec3jjoZzDTGiuKXA` uploaded + probe allPass=true** (15:11Z) with Make ON. Earlier 070a run returned `Accepted` while Make was OFF → no writeback (070a script OK; Make must be ON for E2E).
 
-**Airtable (2026-07-12):** **070a v4.4 pasted in DEV** (#17). Keep **OFF**.
+**Airtable (2026-07-12):** **070a v4.4 pasted in DEV** (#17). Keep **OFF** when idle.
 
 ---
 
@@ -53,10 +53,9 @@ Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Turn DEV Make **OFF**.
-2. Comment **RESOLVED** on #8, #11, #17.
-3. Keep **070a OFF**.
-4. Optional later: Airtable-triggered 070a ON test on a fresh Pending Link asset.
+1. Turn DEV Make **OFF** when idle; keep **070a OFF** when idle.
+2. Optional E2E: fresh Pending Link asset → Make **ON** → 070a **ON** → arm Send to Make Trigger → probe `allPass=true` → both OFF.
+3. Comment RESOLVED on #8/#11/#17 if not done.
 
 ### New assignments (immediate — do not wait on Mike)
 
