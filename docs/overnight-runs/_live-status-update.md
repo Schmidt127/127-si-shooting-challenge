@@ -9,9 +9,9 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** **PASS** — `recVUoPApngfRYOys` uploaded + skip retest; **`rec3jjoZzDTGiuKXA` uploaded + probe allPass=true** (15:11Z) with Make ON. Earlier 070a run returned `Accepted` while Make was OFF → no writeback (070a script OK; Make must be ON for E2E).
+**Live Make smoke (2026-07-12 evening):** **070a Airtable E2E PASS** — Mike confirms checking **Send to Make Trigger** fills writeback fields (Uploaded / URL / hash). Proven on `recyGWLq8kN15kzgd` (`allPass=true`, Uploaded At 21:41Z). Earlier false alarms: wrong webhook on 070a; Pending Link views hid Uploaded rows.
 
-**Airtable (2026-07-12):** **070a v4.4 pasted in DEV** (#17). Keep **OFF** when idle.
+**Airtable (2026-07-12):** **070a v4.4 in DEV**. Leave **OFF** when idle. Make DEV **OFF** when idle.
 
 ---
 
@@ -44,18 +44,19 @@
 
 | Issue | Action |
 |-------|--------|
-| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **PASS** — Make→DEV Lambda homework `uploaded` on `recVUoPApngfRYOys`. Comment `RESOLVED` |
+| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **PASS** — comment RESOLVED |
 | [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** |
-| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | **Make path PASS** — confirm probe `allPass=true` on `recVUoPApngfRYOys`; then RESOLVED |
-| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | **Paste DONE** — keep 070a OFF; comment RESOLVED |
+| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | **PASS** — 070a E2E writeback confirmed; comment RESOLVED |
+| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | **PASS** — v4.4 in DEV; leave OFF; comment RESOLVED |
 
 Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Turn DEV Make **OFF** when idle; keep **070a OFF** when idle.
-2. Optional E2E: fresh Pending Link asset → Make **ON** → 070a **ON** → arm Send to Make Trigger → probe `allPass=true` → both OFF.
-3. Comment RESOLVED on #8/#11/#17 if not done.
+1. **070a OFF**, Make DEV **OFF**
+2. Comment **RESOLVED** on #8, #11, #17
+3. Optional: paste `_live-status-update.md` into issue #1
+4. Submission Assets views: include **Uploaded** so writeback isn’t hidden
 
 ### New assignments (immediate — do not wait on Mike)
 
