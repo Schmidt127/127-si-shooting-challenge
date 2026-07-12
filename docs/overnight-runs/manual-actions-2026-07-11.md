@@ -70,6 +70,7 @@
 | MA-001 | Create DEV Make upload scenario + homework smoke | #8 | 2026-07-12 — local smoke PASS `rec7X6stG6utxykiG` → `skipped_already_uploaded`. Mike: comment RESOLVED on #8 if not done | Lead 2026-07-12T13:50Z |
 | MA-006 | Paste 070a v4.4 DEV | #17 | 2026-07-12 — Mike confirmed pasted; keep OFF; comment RESOLVED on #17 | Lead 2026-07-12T13:55Z |
 | — | Direct Lambda homework writeback | #11 partial | 2026-07-12T14:04Z — `recv2C72is5w3YJYB` probe `allPass=true` via `c013_dev_lambda_invoke.py` (Make path still FAIL) | Lead 2026-07-12T14:05Z |
+| MA-001/003 | Make→Lambda homework uploaded | #8/#11 | 2026-07-12T14:40Z — `recVUoPApngfRYOys` `actionOut=uploaded` full Lambda JSON (script false-fail fixed) | Lead 2026-07-12T14:42Z |
 
 ---
 
