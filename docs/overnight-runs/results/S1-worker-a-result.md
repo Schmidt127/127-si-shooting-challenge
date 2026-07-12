@@ -85,7 +85,7 @@
 
 | Item | Value |
 |------|--------|
-| Commit SHA | `ad6d2c4` (branch HEAD) |
+| Commit SHA | `9e4fb46` (branch HEAD; docs commit `ad6d2c4`) |
 | Push | `overnight/v2-run/worker-a-s1-c023-schema` |
 | PR | **No PR** — worker branch per overnight rules |
 
