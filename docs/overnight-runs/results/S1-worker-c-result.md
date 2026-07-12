@@ -111,7 +111,7 @@ All scenarios assert **`uploadBlocked` remains false** per C-023 policy.
 | Field | Value |
 |---|---|
 | Branch | `overnight/v2-run/worker-c-s1-c023-tests` |
-| Commit SHA | *(filled after commit)* |
+| Commit SHA | `3aee60b754943f6e74a4c0a11ef2cdc13bcec30f` |
 
 ---
 
