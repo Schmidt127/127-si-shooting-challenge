@@ -57,7 +57,7 @@ Tests 5, 12–17 directly cover `Accepted` pending handoff and 070c idempotent w
 
 | Item | Value |
 |---|---|
-| Commit SHA | *(filled after commit)* |
+| Commit SHA | `88ba16c` (branch HEAD) |
 | PR | **No PR** — worker branch commit only; do not merge to master per overnight rules |
 
 ---
