@@ -9,9 +9,9 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** **Make→Lambda homework `uploaded` PASS** on Pending Link `recVUoPApngfRYOys` (HC `recnyFGUacG3wqIdB`) — full Lambda JSON with S3 + SHA-256. Smoke script false-failed only because response was truncated mid-JSON before parse (fixed). Earlier `Accepted`-without-writeback cases were Make config; path now returns complete Lambda JSON.
+**Live Make smoke (2026-07-12):** **PASS** — Make→Lambda homework `uploaded` on `recVUoPApngfRYOys`; retest after parser fix → `skipped_already_uploaded` / `"pass": true` (14:49Z).
 
-**Airtable (2026-07-12):** Mike confirmed **070a v4.4 pasted in DEV** (#17). Keep **OFF** until optional Airtable-triggered test.
+**Airtable (2026-07-12):** **070a v4.4 pasted in DEV** (#17). Keep **OFF**.
 
 ---
 
@@ -53,10 +53,10 @@ Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Probe `recVUoPApngfRYOys` → expect `allPass=true`.
-2. Comment **RESOLVED** on #8 / #11 / #17.
-3. Turn DEV Make **OFF**; keep **070a OFF**.
-4. Optional later: brief 070a ON + Send to Make Trigger on a fresh Pending Link asset.
+1. Turn DEV Make **OFF**.
+2. Comment **RESOLVED** on #8, #11, #17.
+3. Keep **070a OFF**.
+4. Optional later: Airtable-triggered 070a ON test on a fresh Pending Link asset.
 
 ### New assignments (immediate — do not wait on Mike)
 
