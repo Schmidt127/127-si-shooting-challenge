@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Unit + regression tests for 070a homework upload path (Worker-C / T3).
+ * Unit + regression tests for 070a homework upload path (Worker-C / T7).
  *
  * Covers:
  * - Pure homework route/payload/safety contracts
@@ -24,6 +24,7 @@ const {
     evaluate070aMakeHandoff,
     evaluate070aWriteback,
     decide070aAsyncCompanionAction,
+    get070aContractManifest,
     get070aContractStub,
 } = require("./070a-homework-upload-contract");
 
@@ -281,13 +282,20 @@ results.push(
 );
 
 results.push(
-    test("18 contract stub documents Worker A/B result paths", () => {
-        const stub = get070aContractStub();
-        assert.strictEqual(stub.expectedScriptVersion, EXPECTED_070A_ASYNC_VERSION);
-        assert.strictEqual(stub.route.routeKey, HOMEWORK_ROUTE.routeKey);
-        assert.ok(stub.workerAResultFile.includes("worker-a-t1-070a-airtable"));
-        assert.ok(stub.workerBResultFile.includes("worker-b-t2-070a-backend"));
-        assert.ok(stub.payloadKeys.includes("routeKey"));
+    test("18 contract manifest documents Worker A/B v4.4 alignment", () => {
+        const manifest = get070aContractManifest();
+        assert.strictEqual(manifest.expectedScriptVersion, EXPECTED_070A_ASYNC_VERSION);
+        assert.strictEqual(manifest.expectedScriptVersion, "v4.4");
+        assert.strictEqual(manifest.route.routeKey, HOMEWORK_ROUTE.routeKey);
+        assert.ok(manifest.workerAResultFile.includes("worker-a-t1-070a-airtable"));
+        assert.ok(manifest.workerBResultFile.includes("worker-b-t2-070a-backend"));
+        assert.ok(manifest.payloadKeys.includes("routeKey"));
+        assert.strictEqual(manifest.asyncHandoff.actionOut, "lambda_upload_accepted_async");
+        assert.strictEqual(manifest.asyncHandoff.statusOut, "pending");
+        assert.strictEqual(manifest.asyncHandoff.retainSendToMakeTrigger, true);
+        assert.ok(manifest.syncSuccessActions.includes("uploaded"));
+        assert.ok(manifest.syncFailureActions.includes("error_lambda_upload_failed"));
+        assert.strictEqual(get070aContractStub().source, manifest.source);
     }),
 );
 
@@ -309,7 +317,7 @@ results.push(
 );
 
 results.push(
-    test("20 regression: current 070a script still declares homework_completion", () => {
+    test("20 regression: 070a v4.4 script declares homework_completion + async handoff", () => {
         const scriptPath = path.join(
             __dirname,
             "..",
@@ -319,8 +327,42 @@ results.push(
         assert.ok(source.includes('routeKey: "homework_completion"'));
         assert.ok(source.includes('uploadDestination: "Homework Completions"'));
         assert.ok(source.includes("homework_completion"));
-        // Worker A may bump to v4.4; until then v4.1 is acceptable baseline.
-        assert.ok(/version:\s*"v4\.[1-9]"/.test(source) || source.includes("v4.1"));
+        assert.ok(!/\bsetTimeout\s*\(/.test(source), "070a must not call setTimeout");
+        assert.ok(
+            !/\bpollForLambdaWritebackAsync\b/.test(source),
+            "070a must not define pollForLambdaWritebackAsync",
+        );
+        assert.ok(source.includes('version: "v4.4"'), "070a version must be v4.4");
+        assert.ok(
+            source.includes("lambda_upload_accepted_async"),
+            "070a must handle Make Accepted async handoff",
+        );
+    }),
+);
+
+results.push(
+    test("21 Make handoff Lambda upload failure retains error actionOut", () => {
+        const handoff = evaluate070aMakeHandoff(
+            JSON.stringify({
+                ok: false,
+                statusOut: "error",
+                actionOut: "error_internal",
+                errorOut: "boom",
+            }),
+        );
+        assert.strictEqual(handoff.mode, "lambda_json");
+        assert.strictEqual(handoff.verified, false);
+        assert.strictEqual(handoff.actionOut, "error_lambda_upload_failed");
+        assert.strictEqual(handoff.statusOut, "error");
+    }),
+);
+
+results.push(
+    test("22 Make handoff invalid non-JSON body fails verification", () => {
+        const handoff = evaluate070aMakeHandoff("OK");
+        assert.strictEqual(handoff.mode, "invalid");
+        assert.strictEqual(handoff.verified, false);
+        assert.strictEqual(handoff.actionOut, "error_lambda_response_unverified");
     }),
 );
 
