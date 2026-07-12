@@ -1,7 +1,7 @@
 ## Overnight run — live status update (LEAD-005)
 
 **Paste into issue [#1](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1) — replaces stale bootstrap snapshot**  
-**Generated:** 2026-07-12T13:55Z  
+**Generated:** 2026-07-12T22:48Z  
 **Lead tip branch:** https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/lead-integration  
 **Lead agent:** https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a  
 
@@ -9,7 +9,32 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12 evening):** **070a Airtable E2E PASS** — Mike confirms checking **Send to Make Trigger** fills writeback fields (Uploaded / URL / hash). Proven on `recyGWLq8kN15kzgd` (`allPass=true`, Uploaded At 21:41Z). Earlier false alarms: wrong webhook on 070a; Pending Link views hid Uploaded rows.
+### C-013 DEV homework upload — **PASS** (2026-07-12)
+
+**Overall result:** **PASS** — end-to-end DEV homework upload path confirmed.
+
+| Item | Confirmed |
+|------|-----------|
+| Trigger | Submission Asset — **Send to Make Trigger** checked |
+| Flow | **070a** → DEV Make → DEV Lambda → S3 → Airtable writeback |
+| Make response | **Full Lambda JSON** via Module 16 `{{14.data}}` (synchronous-response path) |
+| **070c required?** | **No** — not required for this DEV synchronous JSON path |
+| Upload Status | Populated (**Uploaded**) |
+| Canonical File URL | Populated |
+| Storage Key | Populated |
+| File Content Hash | Populated |
+| File Hash Algorithm | Populated |
+| Uploaded At | Populated |
+| Send to Make Trigger | Cleared automatically by **070a** |
+| Upload Error | Blank |
+| **022** child sync | Canonical File URL synced to linked **Homework Completion** |
+| Duplicate asset | **No** duplicate Submission Asset created |
+| Operating view | Uploaded record remained visible in **Uploaded** view |
+
+**Path distinction (do not conflate):**
+
+- **Synchronous JSON path (DEV PASS above):** Make returns complete Lambda JSON → **070a** verifies and clears trigger → **070c not required**.
+- **Plain-text `Accepted` path (PROD video proven):** Sender retains trigger → Lambda writeback → **070c v1.1** companion may be required to clear trigger.
 
 **Airtable (2026-07-12):** **070a v4.4 in DEV**. Leave **OFF** when idle. Make DEV **OFF** when idle.
 
@@ -53,21 +78,6 @@ Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. **070a OFF**, Make DEV **OFF**
-2. Comment **RESOLVED** on #8, #11, #17
-3. Optional: paste `_live-status-update.md` into issue #1
-4. Submission Assets views: include **Uploaded** so writeback isn’t hidden
-
-### New assignments (immediate — do not wait on Mike)
-
-1. **Worker B → T6:** `docs/overnight-runs/assignments/T6-worker-b-make-blueprint-validator.md`
-2. **Worker C → T7:** `docs/overnight-runs/assignments/T7-worker-c-070a-contract-alignment.md`
-3. **Worker D → T9** after Phase2: Stage 6 checklist assignment file
-4. **Worker A → T8** optional while waiting #17
-
-### DEV / PROD
-
-| Env | Status |
-|-----|--------|
-| DEV `appTetnuCZlCZdTCT` | 070a path integrated in repo; live enable gated on Mike |
-| PROD `appn84sqPw03zEbTT` | **No changes this cycle** |
+1. **070a OFF**, Make DEV **OFF** when idle
+2. Optional: paste `_live-status-update.md` into issue #1
+3. If DEV Make is ever switched to plain-text `Accepted` response, evaluate **070c** slot for trigger clearing (not needed for current sync JSON config)

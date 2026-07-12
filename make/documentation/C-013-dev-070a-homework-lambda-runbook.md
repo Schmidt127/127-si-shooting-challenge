@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-11 · **Updated:** 2026-07-12  
 **Overnight task:** T2 (Worker B)  
-**Status:** **REPO READY** — **DEV Make scenario must be created first** (Mike 2026-07-12: no separate DEV scenario exists) · then live smoke gated on credentials  
+**Status:** **DEV E2E PASS (2026-07-12)** — synchronous Lambda JSON via Module 16 `{{14.data}}` · **070c not required** for this path · keep **070a OFF** when idle  
 **Create-DEV gate:** [C-013-create-dev-make-upload-scenario.md](../../docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md)  
 **Architecture parent:** [C-013-dev-make-lambda-scenario-prep.md](../../docs/deploy-checklists/C-013-dev-make-lambda-scenario-prep.md) (proven video path patterns)  
 **Blueprint:** [upload-asset-engine-lambda-dev-v1.template.json](../blueprints/upload-asset-engine-lambda-dev-v1.template.json)  

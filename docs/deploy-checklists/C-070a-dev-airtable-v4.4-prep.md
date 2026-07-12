@@ -6,7 +6,18 @@
 **GitHub script:** `airtable/automations/shooting-challenge/070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js`  
 **Version:** **v4.4** (parity with proven **070b v4.4** + companion **070c v1.1**)  
 **Overnight task:** T1 / Worker A  
-**Hard stop:** Keep **070a OFF** until Worker B DEV Make/Lambda homework route + Worker C smoke are ready and Mike approves enable.
+**Hard stop:** Keep **070a OFF** when idle. **DEV homework upload E2E PASS (2026-07-12)** on synchronous Lambda JSON path — **070c not required** for that path.
+
+---
+
+## When 070c is required (path distinction)
+
+| Make response to 070a | 070c required? | Who clears `Send to Make Trigger` |
+|---|---|---|
+| **Full Lambda JSON** (DEV Module 16 `{{14.data}}`) | **No** | **070a** on verified success |
+| Plain-text **`Accepted`** | **Yes** (companion verify) | **070c** v1.1 after Lambda writeback |
+
+**DEV PASS (2026-07-12):** Synchronous JSON path — all writeback fields populated, trigger cleared by 070a, **022** synced Canonical URL to Homework Completion, no duplicate asset.
 
 ---
 
@@ -20,7 +31,7 @@
 | `uploadDestination` / `targetTable` | Video Feedback | Homework Completions |
 | Make HTTP 2xx body `Accepted` | `statusOut=pending`, retain trigger | Same |
 | Immediate Lambda JSON | Verify `actionOut` / `allPass`; clear trigger on success | Same |
-| Async writeback verify | **070c** v1.1 (destination-agnostic fields) | Same **070c** (ensure trigger not video-only) |
+| Async writeback verify | **070c** v1.1 (destination-agnostic fields) | **Only if** Make returns plain-text `Accepted`; **not required** for sync JSON path (DEV PASS) |
 | Upload claim / Processing | Lambda owns | Lambda owns |
 
 **070a must not** set `Upload Status = Processing` on Make accept (v4.1 behavior). Lambda is sole claim owner.
@@ -65,7 +76,7 @@ Keep automation **OFF** after paste until enable gate.
 
 ## Part 3 — DEV schema dependencies (Submission Assets)
 
-Required for 070a send + 070c verify (same fields as proven video path):
+Required for 070a send + Lambda writeback (070c verify fields only on `Accepted` async path):
 
 | Field | Role |
 |---|---|
@@ -78,14 +89,14 @@ Required for 070a send + 070c verify (same fields as proven video path):
 | Enrollment - Linked | Safety check |
 | Homework Completions | `targetRecordId` |
 | Google Drive File URL / ID | Legacy duplicate stop (parity with 070b) |
-| Canonical File URL | 070c writeback |
-| Storage Key | 070c writeback |
-| File Content Hash | 070c writeback |
-| File Hash Algorithm | 070c expects SHA-256 |
-| Uploaded At | 070c writeback |
-| Writeback Complete? | 070c formula gate |
+| Canonical File URL | **Lambda** writeback (070c verifies on `Accepted` path only) |
+| Storage Key | **Lambda** writeback |
+| File Content Hash | **Lambda** writeback |
+| File Hash Algorithm | SHA-256 expected |
+| Uploaded At | **Lambda** writeback |
+| Writeback Complete? | Formula gate |
 
-**070c note:** Script is destination-agnostic. If DEV 070c trigger filters `Upload Destination = Video Feedback`, add homework (or remove destination filter) so async homework Accepted path can clear the trigger.
+**070c note (Accepted path only):** If DEV Make returns plain-text `Accepted` and a 070c slot exists, ensure trigger is not video-only. **Not applicable** to DEV synchronous JSON path (070a clears trigger).
 
 ---
 
@@ -118,14 +129,18 @@ Required for 070a send + 070c verify (same fields as proven video path):
 
 ---
 
-## Part 6 — Enable gate (not Worker A)
+## Part 6 — Enable gate
 
-Do **not** enable 070a until:
+**Status (2026-07-12):** **DEV homework upload E2E PASS** — synchronous Lambda JSON path.
 
-1. Worker B: DEV Make/Lambda homework route ready
-2. Worker C: smoke/tests ready
-3. Mike: DEV webhook URL pasted; automation still OFF until explicit enable
-4. Lead: integrates worker results
+- [x] Worker B: DEV Make/Lambda homework route — **PASS**
+- [x] Worker C: smoke/tests — **PASS** (offline + live)
+- [x] Mike: 070a v4.4 in DEV — **PASS**
+- [x] Lead: worker results integrated on `overnight/lead-integration` — **PASS**
+- [x] Live E2E: Send to Make Trigger → 070a → Make → Lambda → writeback — **PASS**
+- [x] **070c not required** for current DEV Make config (Module 16 returns full Lambda JSON)
+
+**Idle rule:** Turn **070a OFF** and DEV Make **OFF** when not testing. **PROD remains OFF.**
 
 ---
 

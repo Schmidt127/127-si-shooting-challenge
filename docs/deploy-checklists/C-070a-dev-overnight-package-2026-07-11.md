@@ -18,7 +18,7 @@ Full evidence and merge notes:
   → automationNumber=070a AND routeKey=homework_completion
   → DEV Lambda (ALLOW_ROUTE_KEYS includes homework_completion)
   → S3 + Submission Assets writeback (+ C-023 hash/review)
-  → Accepted async → 070c v1.1  OR  immediate Lambda JSON success
+  → Sync JSON path: 070a clears trigger (DEV PASS 2026-07-12)  OR  Accepted async → 070c v1.1
 ```
 
 ---
@@ -47,22 +47,22 @@ Full evidence and merge notes:
 | # | Action | Done |
 |---|--------|------|
 | 1 | Lead merges PRs #18 → #12 → #13 → #5 (or cherry-pick) | ☐ |
-| 2 | Paste 070a v4.4 into DEV (skip GitHub header); `automationNumber=070a`; **leave OFF** | ☐ |
-| 3 | Ensure 070c trigger allows homework (not video-only) | ☐ |
+| 2 | Paste 070a v4.4 into DEV (skip GitHub header); `automationNumber=070a`; **leave OFF** when idle | [x] PASS 2026-07-12 |
+| 3 | 070c trigger for homework | **N/A** — sync JSON path; 070c not required. Only if Make returns `Accepted` |
 | 4 | Make DEV Module 2: `070a` + `homework_completion` → same Lambda HTTP | ☐ |
 | 5 | Confirm Lambda `ALLOW_ROUTE_KEYS=video_feedback,homework_completion` | ☐ |
 | 6 | Load DEV env: token, webhook URL, upload secret, Lambda URL | ☐ |
 | 7 | Smoke: `c013_dev_h1_homework_smoke.py` and/or `c070a_dev_smoke_run.py live-*` | ☐ |
-| 8 | Probe `allPass=true`; attachment retained | ☐ |
-| 9 | Explicit approval → enable **070a ON** (DEV only) | ☐ |
-| 10 | Update automation-index + PROJECT_STATE after first live PASS | ☐ |
+| 8 | Probe `allPass=true`; attachment retained | [x] PASS 2026-07-12 |
+| 9 | Explicit approval → enable **070a ON** (DEV only) | [x] PASS — sync JSON E2E |
+| 10 | Update automation-index + live status after first live PASS | [x] 2026-07-12 |
 
 ---
 
 ## Pass criteria
 
 - `automationNumber=070a` · `routeKey=homework_completion`
-- `actionOut=uploaded` or `skipped_already_uploaded` (or Accepted → 070c clear)
+- `actionOut=uploaded` or `skipped_already_uploaded` (sync JSON — DEV PASS) OR Accepted → 070c clear (async path only)
 - Writeback: Canonical File URL · Storage Key · File Content Hash · SHA-256 · Uploaded At
 - C-023 review fields written by Lambda (flag-only; no auto-block)
 - **No PROD changes**

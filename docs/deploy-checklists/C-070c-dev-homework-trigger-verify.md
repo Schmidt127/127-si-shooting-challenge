@@ -11,6 +11,17 @@
 
 ---
 
+## When 070c is required
+
+| Path | 070c required? |
+|------|----------------|
+| **Synchronous Lambda JSON** — Make returns full JSON (e.g. DEV Module 16 `{{14.data}}`) | **No** — **070a**/**070b** verify JSON and clear `Send to Make Trigger` |
+| **Plain-text `Accepted`** — Make returns HTTP 2xx body `Accepted` only | **Yes** — companion **070c** v1.1 verifies Lambda writeback and clears trigger |
+
+**DEV homework (2026-07-12):** E2E **PASS** on synchronous JSON path. **070c not required** and may not exist in DEV base. This checklist applies to the **`Accepted` async path** and PROD video operations.
+
+---
+
 ## Purpose
 
 070c completes the **async Make `Accepted`** handoff started by 070a or 070b. When Make returns plain-text `Accepted` (HTTP 2xx), the sender automation returns **`statusOut=pending`** and **retains** `Send to Make Trigger`. Lambda writes back directly to the Submission Asset; 070c verifies those writeback fields and clears the trigger when complete.

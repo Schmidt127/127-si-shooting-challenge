@@ -186,8 +186,8 @@ Breakdown:
 
 | Risk | Severity | Notes |
 |------|----------|-------|
-| DEV 070c trigger may still be video-only | **High** | T8 checklist documents fix; OMNI/Mike UI action required |
-| DEV Make upload scenario not yet created from blueprint | **Medium** | T6 validates template offline; live scenario still Mike/ops |
+| DEV 070c trigger may still be video-only | **Low** (sync JSON path) | **070c not required** for DEV homework PASS; only relevant for `Accepted` async path |
+| DEV Make upload scenario | **Resolved** | E2E PASS with Module 16 sync JSON |
 | Worker result SHA metadata drift | **Low** | Cosmetic only; branch tips verified |
 | Stashed lead-prep docs not integrated | **Low** | `automation-index.md` + `C-070a-dev-airtable-v4.4-prep.md` await deliberate restore |
 | Untracked schema snapshots / media assets | **Low** | Left untouched per instructions |
@@ -199,12 +199,10 @@ Breakdown:
 
 ## DEV work still required (Mike / OMNI)
 
-1. **070a DEV:** Turn ON only for controlled test; verify trigger on `recWBSmHnblEcSIm1` per `C-070a-dev-airtable-v4.4-prep.md` (stashed copy may add Part 7 detail — restore stash when ready).
-2. **070c DEV:** Paste/verify v1.1; fix trigger destination filter per [C-070c-dev-homework-trigger-verify.md](../../deploy-checklists/C-070c-dev-homework-trigger-verify.md).
-3. **DEV Make:** Create dual-route scenario from `upload-asset-engine-lambda-dev-v1.template.json`; keep OFF when idle.
-4. **E2E homework `Accepted` path:** 070a ON → Make ON → arm trigger → confirm 070c writeback clears trigger.
-5. **C-023 Stage 6:** OMNI views/Interface (§11 T9 checklist); homework hash proof after 070a smoke (§8).
-6. **Systems OFF when idle:** 009, 070a, 070c, DEV Make.
+1. **Idle:** Keep **070a OFF** and DEV Make **OFF** when not testing.
+2. **070c:** **Not required** for current DEV synchronous JSON path (PASS confirmed). Deploy/repurpose **070c** only if Make returns plain-text `Accepted`.
+3. **C-023 Stage 6:** OMNI views/Interface (§11 T9 checklist).
+4. **Systems OFF when idle:** 009, 070a, DEV Make (070c N/A on sync path).
 
 ---
 
@@ -213,8 +211,8 @@ Breakdown:
 | System | Status |
 |--------|--------|
 | PROD Airtable / Make / Lambda | **OFF / unchanged** |
-| DEV 070a | **OFF** until Mike runs gated E2E |
-| DEV 070c | **OFF** until trigger UI verified |
+| DEV 070a | **OFF** when idle (E2E PASS 2026-07-12) |
+| DEV 070c | **N/A** on sync JSON path; optional for `Accepted` path only |
 | DEV Make | **OFF** when idle |
 | Automation 009 | **OFF** except prep/test windows |
 
@@ -251,3 +249,75 @@ Breakdown:
 ---
 
 *Lead integration review complete — awaiting Mike.*
+
+---
+
+## Post-handoff update — C-013 DEV homework upload PASS (2026-07-12)
+
+**Recorded:** Mike confirmed live DEV end-to-end homework upload. **Overall: PASS.**
+
+### Confirmed flow
+
+```text
+Submission Asset — Send to Make Trigger checked
+  → 070a v4.4
+  → DEV Make (Module 16 returns full Lambda JSON via {{14.data}})
+  → DEV Lambda → S3 → Airtable writeback (Submission Assets)
+  → 070a clears Send to Make Trigger (sync JSON path)
+  → 022 syncs Canonical File URL to linked Homework Completion
+```
+
+### Confirmed field outcomes
+
+| Field / check | Result |
+|---------------|--------|
+| Upload Status | **Uploaded** |
+| Canonical File URL | Populated |
+| Storage Key | Populated |
+| File Content Hash | Populated |
+| File Hash Algorithm | Populated |
+| Uploaded At | Populated |
+| Send to Make Trigger | Cleared automatically (**070a**) |
+| Upload Error | Blank |
+| 022 child sync | Canonical URL on Homework Completion |
+| Duplicate Submission Asset | None created |
+| Uploaded operating view | Record visible |
+
+### Path distinction (documentation corrected)
+
+| Path | 070c required? |
+|------|----------------|
+| **Synchronous Lambda JSON** (DEV PASS) | **No** |
+| **Plain-text `Accepted`** (PROD video proven) | **Yes** — companion 070c v1.1 may be required |
+
+### Documentation updated (this commit)
+
+- `docs/overnight-runs/_live-status-update.md`
+- `docs/overnight-runs/results/2026-07-12-lead-result.md` (this section)
+- `docs/automation-index.md` (070a + 070c rows)
+- `docs/deploy-checklists/C-070a-dev-airtable-v4.4-prep.md`
+- `docs/deploy-checklists/C-070c-dev-homework-trigger-verify.md`
+- `docs/deploy-checklists/C-070a-dev-overnight-package-2026-07-11.md`
+- `make/documentation/C-013-dev-070a-homework-lambda-runbook.md`
+
+### Revised risks (post-PASS)
+
+| Risk | Severity | Notes |
+|------|----------|-------|
+| DEV 070c slot missing | **Low** for sync JSON path | Only matters if Make switched to `Accepted` |
+| Stashed lead-prep docs | **Low** | Still not restored; overlap with committed prep doc |
+| PROD | **None** | Unchanged this cycle |
+
+### Revised DEV work still required
+
+1. **Idle:** 070a OFF, DEV Make OFF when not testing.
+2. **Optional:** If DEV Make response mode changes to plain-text `Accepted`, deploy/repurpose **070c** per [C-070c-dev-homework-trigger-verify.md](../../deploy-checklists/C-070c-dev-homework-trigger-verify.md).
+3. **C-023 Stage 6:** OMNI views/Interface per T9 checklist.
+4. **Do not merge to master** without Mike approval.
+
+### Revised recommended next overnight run
+
+1. **C-023 OMNI packet** — Pending/Reviewed views + Interface (Mike in DEV).
+2. **Schema snapshot commit** — `c023-stage3-verify-dev` export (untracked).
+3. **Optional Accepted-path test** — only if DEV Make Module 16 response mode changes.
+4. **T5 deferral holds** — no C-023 hash implementation until Stage 6 gates clear.
