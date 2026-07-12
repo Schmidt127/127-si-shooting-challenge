@@ -21,7 +21,9 @@ cd lambda/upload-asset
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **38+ unit tests PASS**. Homework route (`homework_completion` / **070a**) added 2026-07-10 for H3e.
+**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **46 unit tests PASS**. Homework route (`homework_completion` / **070a**) added 2026-07-10 for H3e.
+
+**C-023 contract (Stage 1):** [C-023-lambda-duplicate-hash-contract.md](../../make/documentation/C-023-lambda-duplicate-hash-contract.md) — flag-only duplicate detection; `c023Duplicate` Make-visible JSON.
 
 Legacy path helpers and DEV invoke (requires env; not part of unit tests):
 
