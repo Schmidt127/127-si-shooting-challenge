@@ -1,0 +1,1 @@
+{"ok":true,"actionOut":"uploaded","routeKey":"homework_completion"

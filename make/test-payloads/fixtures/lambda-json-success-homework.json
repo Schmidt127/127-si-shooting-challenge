@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "statusOut": "success",
+  "actionOut": "uploaded",
+  "routeKey": "homework_completion",
+  "automationNumber": "070a",
+  "environment": "DEV"
+}
