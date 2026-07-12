@@ -1,10 +1,10 @@
 # Asset storage migration — AWS + canonical URLs
 
-**Status:** V2 architecture decision — **Wave 7 in progress** (planning + DEV inventory 2026-07-07). **Blocks:** reliable 2026–27 season without personal Google Drive dependency.  
+**Status:** V2 architecture decision — **C-013 PROD video complete; DEV homework PASS; C-023 Stage 1 alignment in progress**. **Blocks:** reliable 2026–27 season without personal Google Drive dependency.
 **Tracked as:** [close-out-considerations.md](./close-out-considerations.md) **C-013** (updated)  
 **Execution checklist:** [deploy-checklists/C-013-wave7-asset-storage-checklist.md](./deploy-checklists/C-013-wave7-asset-storage-checklist.md)  
 **DEV probe:** `tools/airtable/_probe_c013_asset_storage_fields.py`  
-**Last updated:** 2026-07-07
+**Last updated:** 2026-07-12
 
 ---
 
@@ -54,7 +54,7 @@ After upload completes, **every** consumer treats the stored **HTTPS URL** exact
 |------|---------|
 | **One URL field wins** | Provider-neutral name recommended: `Canonical File URL` (migrate from `Google Drive File URL`) |
 | **No dual truth** | Do not gate on `Airtable Attachment` after upload; gate on `Canonical File URL` + `Upload Status = Uploaded` |
-| **Clear attachments** | After successful upload, clear intake/submission/asset attachment fields (transient only) |
+| **Clear attachments** | Deferred migration step after successful canonical writeback is proven; **not authorized by C-023 Stage 1** |
 | **Same URL everywhere** | Email href, web `img src`, coach link, audit checks — identical string |
 | **No Drive-specific logic in app layer** | Storage backend may change; URL contract does not |
 
@@ -99,6 +99,41 @@ Fillout → transient intake only (optional one-hop)
 
 ---
 
+## Upload completion response modes
+
+The Make-to-Airtable handoff has two valid modes. Both end at the same canonical writeback contract, but only one requires 070c.
+
+| Mode | Make response | Sender behavior | 070c |
+|------|---------------|-----------------|------|
+| **Synchronous completion** | Complete Lambda JSON after S3 + Airtable writeback | Validate final result; handle trigger as verified success | **Not required** |
+| **Asynchronous handoff** | Plain-text `Accepted` while Lambda continues | Return pending; retain trigger; do not claim upload success | **Required** to verify final writeback |
+
+**Current evidence:**
+
+- DEV homework PASS: 070a → DEV Make → DEV Lambda → S3 → Airtable, with synchronous Lambda JSON from Make Module 16 (`{{14.data}}`). **070c was not required.**
+- PROD video PASS: 070b received async `Accepted`; 070c v1.1 verified writeback idempotently.
+
+For async homework in the future, 070c (or an approved destination-neutral successor) must not be filtered to Video Feedback only. For synchronous homework, adding 070c is unnecessary and must not be treated as a completion gate.
+
+The final writeback contract in either mode is: Upload Status, Canonical File URL, Storage Key, File Content Hash, File Hash Algorithm (`SHA-256`), and Uploaded At.
+
+---
+
+## C-023 content-hash review contract
+
+SHA-256 is computed in Lambda after download and before S3 PutObject. Filename, title, URL, or Storage Key is not a content-identity key.
+
+- A hash match may create a Needs Review signal for same-enrollment contextual reuse.
+- The valid upload continues.
+- Every successful new asset receives a new S3 object, Storage Key, and Canonical File URL.
+- The system does not automatically reuse or delete objects.
+- Mike/OMNI makes the final review decision.
+- Attachment clearing and Drive retirement are separate, deferred migration work.
+
+Implementation and rollback detail: [C-023 Stage 1 guide](./deploy-checklists/C-023-implementation-guide-stage1.md).
+
+---
+
 ## Touchpoints (must all switch to URL)
 
 | Area | Today | Target |
@@ -107,7 +142,8 @@ Fillout → transient intake only (optional one-hop)
 | **Airtable fields** | `Google Drive File URL`, `Airtable Attachment` gates | `Canonical File URL`; deprecate attachment gates |
 | **009** | Copies file into attachment | Create asset row; optional temp URL only; no permanent attachment |
 | **020, 013** | Require attachment not empty | Require intake complete OR temp URL; after upload require canonical URL |
-| **070a, 070b** | Send to Make; duplicate check on Drive ID | Duplicate check on storage key / URL |
+| **070a, 070b** | Send to Make; legacy duplicate assumptions | Lambda SHA-256 detection + contextual Needs Review; sender does not compute hash |
+| **070c** | Async writeback verifier for proven video path | Required only after async `Accepted`; destination-neutral if used for homework |
 | **022** | Sync Drive writeback | Sync canonical URL fields |
 | **Formulas** | `Upload Ready?` uses attachment | `Upload Ready?` uses URL + status |
 | **Enrollment headshot** | `Athlete Headshot` attachment | `Athlete Headshot URL` (or canonical URL on Athletes) |
@@ -148,6 +184,8 @@ Homework naming continues to use assignment + slot + sequence in the existing fo
 | 8 | Audits: `audit-stuck-upload-processing`, field coverage — URL-based |
 
 **Nothing in production Airtable until explicitly approved** (same as other V2 phases).
+
+**Stage 1 safety:** No attachment, Airtable record, or S3 object deletion; no automatic S3 reuse; no upload blocking.
 
 ---
 
