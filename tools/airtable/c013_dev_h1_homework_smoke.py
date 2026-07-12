@@ -127,8 +127,8 @@ def poll_homework_asset(scenario_id: str, *, timeout_sec: int = 600) -> str:
             time.sleep(5)
             continue
 
-        # FIND is more reliable than = for linked-record filters.
-        formula = f"FIND('{linked}', ARRAYJOIN({{Submission - Linked}}))"
+        # Linked-record filter: compare to record id (ARRAYJOIN returns names, not ids).
+        formula = f"{{Submission - Linked}} = '{linked}'"
         r = requests.get(
             api("Submission Assets"),
             headers={"Authorization": f"Bearer {tok()}"},
