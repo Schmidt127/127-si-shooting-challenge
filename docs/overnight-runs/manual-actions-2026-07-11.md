@@ -15,31 +15,24 @@
 ### MA-001 — Create DEV Make upload scenario, then homework router (#8)
 - **GitHub issue:** [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) (canonical; duplicate #6)
 - **Task / agent:** T2 / Worker-B (Mike UI)
-- **System:** Make.com — **new DEV scenario only**
+- **System:** Make.com — **DEV clone only**
 - **Checklist:** [C-013-create-dev-make-upload-scenario.md](../deploy-checklists/C-013-create-dev-make-upload-scenario.md)
-- **Exact error / why blocked (updated 2026-07-12):** Prior plan assumed scenario `Shooting Challenge - DEV - Upload Engine - Lambda - v1` already existed. **Mike inventory:** that DEV scenario is **missing**. Only live upload scenario is PROD:
-  - Name: `Shooting Challenge - GAME - Upload Engine - Lambda - v1`
-  - Webhook label: `C-013 PROD S3 Upload Webhook`
-  - Mike: **did not edit it** (correct)
-- **Actions attempted:** Sanitized DEV blueprint + runbook in repo; lead updated plan after Mike report
-- **Exact action (Phase 0 — do this before any Module 2 “patch” language):**
-  1. **Do not open/edit** the PROD GAME scenario or `C-013 PROD S3 Upload Webhook`.
-  2. Create a **new** Make scenario named **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`** (from [blueprint](../../make/blueprints/upload-asset-engine-lambda-dev-v1.template.json) **or** clone PROD into a **new** scenario then immediately re-point all URLs/secrets to **DEV** — see checklist Phase 0a).
-  3. Module 1: **new** Custom webhook labeled e.g. `C-013 DEV S3 Upload Webhook` (must **not** share the PROD webhook).
-  4. Module 2 Router — include **both** branches from the start:
-     - `automationNumber=070b` **AND** `routeKey=video_feedback`
-     - `automationNumber=070a` **AND** `routeKey=homework_completion`
-  5. Module 3 → **DEV** Lambda Function URL + **DEV** `X-Upload-Secret` only.
-  6. Prefer webhook response = **complete Lambda JSON** for manual smoke.
-  7. Save; scheduling **OFF**; Run once only.
-  8. Put the **new** webhook URL in local ops / `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **never commit**; never use the PROD webhook URL here.
-  9. Confirm PROD GAME scenario remains unmodified.
-  10. **Do not** enable Airtable **070a** yet.
-- **Phase 1 (only after Phase 0):** Confirm DEV Lambda `ALLOW_ROUTE_KEYS` includes `homework_completion`; run homework webhook smoke against DEV asset.
+- **Live shape (Mike export 2026-07-12):** **3 modules, no Router**
+  - **15** Custom webhook
+  - **14** HTTP POST (“POST”)
+  - **16** Webhook response (`{{14.data}}`)
+- **Exact error / why blocked (updated 2026-07-12):** Clone exists as `Shooting Challenge - DEV - Upload Engine - Lambda - v1 (copy)`, but module **15** is still attached to **`C-013 PROD S3 Upload Webhook`**, and module **14** still has the copied PROD Lambda URL/secret until replaced with DEV.
+- **Exact action (Phase 0 — now):**
+  1. Stay in the **copy**; do not edit PROD GAME.
+  2. Module **15**: create/attach a **new** webhook labeled e.g. `C-013 DEV S3 Upload Webhook` (must leave PROD webhook alone).
+  3. Module **14**: set URL = DEV Lambda `127si-upload-asset-dev` Function URL; set `X-Upload-Secret` = **DEV** secret only.
+  4. Leave module **16** returning `{{14.data}}` / 200.
+  5. **Do not add a Router** — Lambda enforces `070a`/`homework_completion` via `ALLOW_ROUTE_KEYS`.
+  6. Scheduling OFF; save new webhook URL as `MAKE_DEV_UPLOAD_WEBHOOK_URL` locally only.
+- **Phase 1:** DEV homework Run once / smoke after Phase 0.
 - **Blocks:** T2/T3 live Make smoke (not full run)
-- **Continuing meanwhile:** Worker B **T6** (offline validator); Worker C **T7**; no idle wait on this issue
-- **Branch / commit / result:** blueprint on lead · Worker B T2 result · PR #12
-- **Verify when done:** Comment on #8: `RESOLVED — DEV scenario created; Module 2 homework wired; Run once ready` (and note webhook is DEV-labeled, not PROD)
+- **Continuing meanwhile:** Worker B **T6**; Worker C **T7**
+- **Verify when done:** Comment on #8: `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; Run once ready`
 
 ### MA-002 — T2 AWS-DEV / Cursor env credentials
 - **GitHub issue:** [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) (canonical; duplicate #7)

@@ -1,9 +1,8 @@
-# C-013 — Create DEV Make Upload Engine scenario (before #8 Module 2 work)
+# C-013 — Create DEV Make Upload Engine scenario (before #8)
 
 **Date:** 2026-07-12  
 **Overnight:** Blocks Issue [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) / MA-001  
-**Status:** **REQUIRED GATE** — Mike confirmed 2026-07-12: there is **no** separate DEV upload scenario in Make  
-**Blueprint:** [upload-asset-engine-lambda-dev-v1.template.json](../../make/blueprints/upload-asset-engine-lambda-dev-v1.template.json)  
+**Status:** **IN PROGRESS** — Mike cloned PROD; live shape is **3 modules, no Router**  
 **Parent runbook:** [C-013-dev-070a-homework-lambda-runbook.md](../../make/documentation/C-013-dev-070a-homework-lambda-runbook.md)
 
 ---
@@ -12,97 +11,79 @@
 
 | Item | Value |
 |------|--------|
-| **Only live upload scenario found** | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
-| **Webhook label** | `C-013 PROD S3 Upload Webhook` |
-| **Mike action** | **Did not edit it** (correct) |
-| **Separate DEV scenario** | **Missing** — must be created before homework Module 2 work |
+| **PROD scenario (do not edit)** | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` |
+| **PROD webhook label** | `C-013 PROD S3 Upload Webhook` |
+| **DEV clone (current)** | `Shooting Challenge - DEV - Upload Engine - Lambda - v1 (copy)` |
+| **Live module shape** | **3 modules only** — Custom webhook → HTTP POST → Webhook response (**no Router**) |
 
-Historical docs that assumed `Shooting Challenge - DEV - Upload Engine - Lambda - v1` already existed are **stale** until this checklist is completed.
+Older repo blueprints that show Routers are **not** your live scenario. Ignore “Module 2 Router” language for this clone.
 
 ---
 
 ## Hard stops
 
-1. **Do not open or edit** `Shooting Challenge - GAME - Upload Engine - Lambda - v1`.
-2. **Do not** change, re-label, or re-point the webhook labeled **`C-013 PROD S3 Upload Webhook`**.
-3. **Do not** paste the PROD webhook URL into Airtable DEV, `.env` as `MAKE_DEV_*`, or any 070a input.
-4. **Do not** point a new DEV scenario at PROD Airtable (`appn84sqPw03zEbTT`) or PROD Lambda.
-5. Scheduling stays **OFF**; use **Run once** only until smoke PASS + approval.
-6. Airtable **070a** remains **OFF**.
+1. **Do not edit** the original PROD GAME scenario.
+2. **Do not** leave the DEV clone attached to `C-013 PROD S3 Upload Webhook`.
+3. **Do not** paste the PROD webhook URL into Airtable DEV / `MAKE_DEV_*`.
+4. **Do not** keep PROD Lambda URL + PROD upload secret on the DEV clone.
+5. Scheduling **OFF**; Airtable **070a** remains **OFF**.
+6. Never commit webhook URLs or upload secrets to GitHub.
 
 ---
 
-## Goal
+## Your live modules (from export)
 
-Create a **new** Make scenario for DEV only:
-
-**Name:** `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
+| Make id | What it is | Status in clone |
+|--------:|------------|-----------------|
+| **15** | Custom webhook | **WRONG** — still labeled `C-013 PROD S3 Upload Webhook` |
+| **14** | HTTP POST to Lambda | **LIKELY STILL PROD** URL + secret until you replace with DEV |
+| **16** | Webhook response | **OK** — body `{{14.data}}`, status 200 |
 
 ```text
-Custom webhook (NEW — DEV only)
-  → Router: 070b/video_feedback AND 070a/homework_completion
-  → HTTP POST → DEV Lambda Function URL + DEV X-Upload-Secret
-  → Webhook response = complete Lambda JSON (preferred for manual smoke)
+15 Custom webhook  →  14 HTTP POST Lambda  →  16 Webhook response ({{14.data}})
 ```
 
-Then store the **new** webhook URL as `MAKE_DEV_UPLOAD_WEBHOOK_URL` (local ops only).
+Homework vs video is decided by **Lambda** from the JSON (`routeKey` / `automationNumber` + `ALLOW_ROUTE_KEYS`).  
+**You do not need a Router module.**
 
 ---
 
-## Phase 0 — Create DEV scenario (do this first)
-
-Preferred method: **Clone structure from the repo blueprint**, not by mutating PROD.
+## Phase 0 — Fix the clone (do this now)
 
 | # | Action | Done |
 |---|--------|------|
-| 0.1 | In Make, create a **new** scenario (do **not** open PROD for editing). | ☐ |
-| 0.2 | Name it exactly: **`Shooting Challenge - DEV - Upload Engine - Lambda - v1`**. | ☐ |
-| 0.3 | Build modules from blueprint reference (or carefully **duplicate** PROD scenario **into a new scenario**, then immediately re-point every secret/URL to **DEV** — see Phase 0a). | ☐ |
-| 0.4 | Module 1: **new** Custom webhook — label it e.g. `C-013 DEV S3 Upload Webhook` (must **not** reuse PROD webhook). | ☐ |
-| 0.5 | Module 2 Router — include **both** filters from day one: | ☐ |
-| | • `automationNumber=070b` **AND** `routeKey=video_feedback` | |
-| | • `automationNumber=070a` **AND** `routeKey=homework_completion` | |
-| 0.6 | Module 3 HTTP POST → **DEV** Lambda Function URL (`127si-upload-asset-dev`) + header `X-Upload-Secret` = **DEV** secret only. | ☐ |
-| 0.7 | Module 4/5: 2xx vs error; webhook response maps **complete Lambda JSON** (preferred for DEV smoke). | ☐ |
-| 0.8 | Scenario variables: `LAMBDA_FUNCTION_URL_DEV`, `UPLOAD_WEBHOOK_SECRET_DEV` only — never PROD values. | ☐ |
-| 0.9 | Save; scheduling **OFF**. | ☐ |
-| 0.10 | Copy the **new** webhook URL to local `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — **never commit**. | ☐ |
-| 0.11 | Confirm PROD scenario + `C-013 PROD S3 Upload Webhook` are **unchanged**. | ☐ |
-
-### Phase 0a — If duplicating PROD as a starting point
-
-Only if Make “clone/copy scenario” is easier than building from the blueprint:
-
-1. **Copy** `Shooting Challenge - GAME - Upload Engine - Lambda - v1` to a **new** scenario.
-2. Immediately rename the copy to `Shooting Challenge - DEV - Upload Engine - Lambda - v1`.
-3. **Create a new Custom webhook** for the copy (or detach and replace Module 1) so it does **not** share `C-013 PROD S3 Upload Webhook`.
-4. Replace Lambda URL + upload secret with **DEV** values only.
-5. Add homework router branch (`070a` + `homework_completion`) if missing.
-6. Leave the original PROD scenario untouched (Mike already verified he did not edit it).
+| 0.1 | Keep working in the **copy**, not the PROD GAME scenario. Optional: rename to `Shooting Challenge - DEV - Upload Engine - Lambda - v1`. | ☐ |
+| 0.2 | Open module **15**. Create / select a **new** Custom webhook. Label it e.g. **`C-013 DEV S3 Upload Webhook`**. | ☐ |
+| 0.3 | Confirm module 15 no longer shows `C-013 PROD S3 Upload Webhook`. | ☐ |
+| 0.4 | Open module **14**. Set URL = **DEV** Function URL for Lambda `127si-upload-asset-dev` (from your local ops notes). | ☐ |
+| 0.5 | On module **14**, set `X-Upload-Secret` = **DEV** secret only (replace the value copied from PROD). | ☐ |
+| 0.6 | Leave the JSON body mapping as-is (it already forwards `automationNumber`, `routeKey`, record ids, etc.). | ☐ |
+| 0.7 | Leave module **16** as `body = {{14.data}}`, status `200`. | ☐ |
+| 0.8 | Scheduling **OFF**. Save. | ☐ |
+| 0.9 | Copy the **new DEV** webhook URL into local `tools/airtable/.env` as `MAKE_DEV_UPLOAD_WEBHOOK_URL` — never commit. | ☐ |
+| 0.10 | Confirm PROD GAME scenario + `C-013 PROD S3 Upload Webhook` unchanged. | ☐ |
+| 0.11 | Confirm DEV Lambda env includes `ALLOW_ROUTE_KEYS=video_feedback,homework_completion`. | ☐ |
 
 ---
 
-## Phase 1 — Issue #8 remainder (only after Phase 0)
+## Phase 1 — Smoke (only after Phase 0)
 
 | # | Action | Done |
 |---|--------|------|
-| 1.1 | Confirm Module 2 homework branch exists on the **DEV** scenario only. | ☐ |
-| 1.2 | Confirm DEV Lambda `ALLOW_ROUTE_KEYS=video_feedback,homework_completion`. | ☐ |
-| 1.3 | Run once + `python tools/airtable/c013_dev_make_homework_webhook_post.py <devHomeworkAssetId>`. | ☐ |
-| 1.4 | Probe writeback `allPass=true` on DEV asset. | ☐ |
-| 1.5 | Comment on #8: `RESOLVED — DEV scenario created; Module 2 homework wired; Run once ready` | ☐ |
-
-**Do not start Phase 1 against the PROD GAME scenario.**
+| 1.1 | Run once with homework payload (`automationNumber=070a`, `routeKey=homework_completion`) on a **DEV** asset. | ☐ |
+| 1.2 | Or: `python tools/airtable/c013_dev_make_homework_webhook_post.py <devHomeworkAssetId>` | ☐ |
+| 1.3 | Probe writeback `allPass=true` on that DEV asset. | ☐ |
+| 1.4 | On #8 comment: `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; Run once ready` | ☐ |
 
 ---
 
 ## Verify when done
 
-- New scenario name visible in Make: `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
-- New webhook label distinct from `C-013 PROD S3 Upload Webhook`
-- `MAKE_DEV_UPLOAD_WEBHOOK_URL` points at the **DEV** webhook only
-- PROD GAME scenario unmodified
-- Then continue #9 credentials / #11 live smoke / #17 Airtable paste as already queued
+- Module 15 webhook label is **DEV**, not PROD
+- Module 14 points at **DEV** Lambda + **DEV** secret
+- Module 16 still returns full Lambda JSON
+- No Router required
+- PROD GAME scenario untouched
 
 ---
 
@@ -110,4 +91,3 @@ Only if Make “clone/copy scenario” is easier than building from the blueprin
 
 - Manual action: `docs/overnight-runs/manual-actions-2026-07-11.md` → **MA-001**
 - GitHub: [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8)
-- Overnight queue: `docs/overnight-runs/queue.json`
