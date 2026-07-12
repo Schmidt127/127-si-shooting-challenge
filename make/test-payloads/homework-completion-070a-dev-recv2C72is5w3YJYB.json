@@ -1,0 +1,12 @@
+{
+  "sourceName": "Airtable Upload Engine",
+  "automationNumber": "070a",
+  "sentAtIso": "2026-07-12T14:00:00.000Z",
+  "routeKey": "homework_completion",
+  "uploadDestination": "Homework Completions",
+  "sourceTable": "Submission Assets",
+  "submissionAssetRecordId": "recv2C72is5w3YJYB",
+  "targetTable": "Homework Completions",
+  "targetRecordId": "recB8kqdoOkYJkNYr",
+  "submissionId": "reca8SxXfri7aRZiB"
+}
