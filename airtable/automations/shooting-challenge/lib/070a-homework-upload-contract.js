@@ -1,13 +1,13 @@
 /**
  * Pure 070a homework upload contract helpers (test harness / Worker-C).
  *
- * Mirrors proven 070b v4.4 + 070c v1.1 upload-response and writeback patterns for
+ * Mirrors 070a v4.4 + 070b v4.4 + 070c v1.1 upload-response and writeback patterns for
  * routeKey=homework_completion. Intentionally independent of Airtable runtime so
- * unit/regression tests can run without Worker A/B deliveries.
+ * unit/regression tests can run offline.
  *
- * Expected alignment (stubs until worker-results appear):
- * - Worker A: overnight 070a automation script → same payload + Accepted async handoff
- * - Worker B: DEV Make/Lambda homework route → same Lambda actionOut / writeback fields
+ * Aligned with published overnight contracts:
+ * - Worker A: 070a v4.4 — Accepted async handoff + immediate Lambda JSON verification
+ * - Worker B: DEV Make/Lambda homework route — same actionOut / writeback fields
  *
  * Reuses shared validators from ./upload-make-lambda-response.js
  */
@@ -22,7 +22,7 @@ const {
     selectName,
 } = require("./upload-make-lambda-response");
 
-/** Canonical 070a homework route contract (stub until Worker A publishes). */
+/** Canonical 070a homework route contract (Worker A v4.4 / Worker B homework_completion). */
 const HOMEWORK_ROUTE = Object.freeze({
     automationNumber: "070a",
     uploadDestination: "Homework Completions",
@@ -33,7 +33,7 @@ const HOMEWORK_ROUTE = Object.freeze({
     sourceTable: "Submission Assets",
 });
 
-/** Expected Worker A script version once aligned with 070b async pattern. */
+/** Worker A 070a script version (aligned with 070b v4.4 async pattern). */
 const EXPECTED_070A_ASYNC_VERSION = "v4.4";
 
 /**
@@ -271,12 +271,12 @@ function decide070aAsyncCompanionAction(fields) {
 }
 
 /**
- * Stub contract published until Worker A/B result files exist.
- * Tests assert against this; overnight lead replaces stubs when contracts land.
+ * Published 070a contract manifest (Worker A v4.4 + Worker B homework route).
+ * Offline tests assert against this for regression alignment.
  */
-function get070aContractStub() {
+function get070aContractManifest() {
     return {
-        source: "worker-c-stub",
+        source: "worker-a-v4.4-worker-b-homework-route",
         workerAResultFile: "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
         workerBResultFile: "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
         expectedScriptVersion: EXPECTED_070A_ASYNC_VERSION,
@@ -292,8 +292,20 @@ function get070aContractStub() {
             "targetTable",
             "targetRecordId",
         ],
-        verifiedSuccessActions: ["uploaded", "skipped_already_uploaded"],
-        asyncAcceptedBody: "Accepted",
+        asyncHandoff: {
+            makeResponseBody: "Accepted",
+            statusOut: "pending",
+            actionOut: "lambda_upload_accepted_async",
+            retainSendToMakeTrigger: true,
+            companionAutomation: "070c",
+        },
+        syncSuccessActions: ["uploaded", "skipped_already_uploaded"],
+        syncFailureActions: [
+            "error_lambda_upload_failed",
+            "error_lambda_writeback_incomplete",
+            "error_lambda_skipped_concurrent_upload",
+            "error_lambda_response_unverified",
+        ],
         writebackRequiredFields: [
             "Upload Status",
             "Canonical File URL",
@@ -303,8 +315,13 @@ function get070aContractStub() {
             "Uploaded At",
         ],
         notes:
-            "Scaffolded with mocks. Update when Worker A (script) and Worker B (Make/Lambda) publish result files.",
+            "Aligned with Worker A 070a v4.4 and Worker B homework_completion Lambda route.",
     };
+}
+
+/** @deprecated Use get070aContractManifest — kept for T3 harness imports. */
+function get070aContractStub() {
+    return get070aContractManifest();
 }
 
 module.exports = {
@@ -317,6 +334,7 @@ module.exports = {
     evaluate070aMakeHandoff,
     evaluate070aWriteback,
     decide070aAsyncCompanionAction,
+    get070aContractManifest,
     get070aContractStub,
     // re-exports for smoke/test convenience
     evaluateLambdaHandoffResult,
