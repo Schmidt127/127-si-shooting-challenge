@@ -108,30 +108,73 @@ def preflight_env() -> dict:
 
 def poll_homework_asset(scenario_id: str, *, timeout_sec: int = 600) -> str:
     deadline = time.time() + timeout_sec
+    last_note = ""
     while time.time() < deadline:
         sc = get_rec("Testing Scenarios", scenario_id)
-        linked = (sc.get("fields", {}).get("Linked Submission") or [None])[0]
-        if linked:
-            formula = f"AND({{Submission - Linked}} = '{linked}')"
-            r = requests.get(
-                api("Submission Assets"),
-                headers={"Authorization": f"Bearer {tok()}"},
-                params={"filterByFormula": formula, "pageSize": 10},
-                timeout=120,
+        scf = sc.get("fields", {}) or {}
+        linked = (scf.get("Linked Submission") or [None])[0]
+        run_status = scf.get("Last Run Status") or scf.get("Test Status") or ""
+        remaining = int(max(0, deadline - time.time()))
+        if not linked:
+            note = (
+                f"polling scenario={scenario_id} linkedSubmission=none "
+                f"runStatus={run_status!r} remainingSec~{remaining} "
+                f"(is DEV automation 115 ON?)"
             )
-            r.raise_for_status()
-            for rec in r.json().get("records", []):
-                af = rec.get("fields", {})
-                dest = af.get("Upload Destination")
-                if af.get("Airtable Attachment") and dest in {
-                    "Homework Completions",
-                    "Homework",
-                }:
-                    status = af.get("Upload Status")
-                    if status in {"Pending Link", "Processing", "Uploaded"}:
-                        return rec["id"]
+            if note != last_note:
+                print(note, flush=True)
+                last_note = note
+            time.sleep(5)
+            continue
+
+        # FIND is more reliable than = for linked-record filters.
+        formula = f"FIND('{linked}', ARRAYJOIN({{Submission - Linked}}))"
+        r = requests.get(
+            api("Submission Assets"),
+            headers={"Authorization": f"Bearer {tok()}"},
+            params={"filterByFormula": formula, "pageSize": 20},
+            timeout=120,
+        )
+        r.raise_for_status()
+        records = r.json().get("records", [])
+        candidates = []
+        for rec in records:
+            af = rec.get("fields", {})
+            dest = af.get("Upload Destination")
+            status = af.get("Upload Status")
+            has_att = bool(af.get("Airtable Attachment"))
+            hc = af.get("Homework Completions") or []
+            if has_att and dest in {"Homework Completions", "Homework"}:
+                if status in {"Pending Link", "Processing", "Uploaded"}:
+                    print(
+                        f"found homework asset={rec['id']} status={status!r} "
+                        f"destination={dest!r} hc={hc[:1]}",
+                        flush=True,
+                    )
+                    return rec["id"]
+            candidates.append(
+                {
+                    "id": rec["id"],
+                    "uploadStatus": status,
+                    "uploadDestination": dest,
+                    "attachment": has_att,
+                    "homeworkCompletions": bool(hc),
+                }
+            )
+        note = (
+            f"polling scenario={scenario_id} linkedSubmission={linked} "
+            f"assets={len(records)} readyHomework=0 remainingSec~{remaining} "
+            f"sample={candidates[:3]!r}"
+        )
+        if note != last_note:
+            print(note, flush=True)
+            last_note = note
         time.sleep(5)
-    raise SystemExit(f"homework asset poll timeout for scenario {scenario_id}")
+    raise SystemExit(
+        f"homework asset poll timeout for scenario {scenario_id}. "
+        "Open Testing Scenarios in DEV: confirm Linked Submission, automation 115 ran, "
+        "and Submission Assets reached Upload Destination=Homework Completions + Pending Link."
+    )
 
 
 def prepare_homework_asset(*, confirm: bool) -> dict:
@@ -177,6 +220,18 @@ def prepare_homework_asset(*, confirm: bool) -> dict:
     )
     if not patch.ok:
         raise SystemExit(f"set Run Test? failed: {patch.status_code} {patch.text[:400]}")
+    print(
+        json.dumps(
+            {
+                "prepare": "created",
+                "scenarioId": scenario_id,
+                "testIntakeName": scenario_fields["Test Intake Name"],
+                "next": "polling for Linked Submission → homework Submission Asset",
+            },
+            indent=2,
+        ),
+        flush=True,
+    )
     asset_id = poll_homework_asset(scenario_id)
     asset = get_rec("Submission Assets", asset_id)
     fields = asset.get("fields") or {}
