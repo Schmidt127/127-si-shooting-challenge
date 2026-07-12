@@ -1,0 +1,5 @@
+{
+  "statusOut": "error",
+  "actionOut": "error_make_http_failure",
+  "errorOut": "Transport failure before complete Lambda JSON was available"
+}

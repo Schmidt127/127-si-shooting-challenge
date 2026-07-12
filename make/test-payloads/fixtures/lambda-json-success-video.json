@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "statusOut": "success",
+  "actionOut": "uploaded",
+  "routeKey": "video_feedback",
+  "automationNumber": "070b",
+  "environment": "DEV"
+}

@@ -1,0 +1,11 @@
+{
+  "sourceName": "Airtable Upload Engine",
+  "automationNumber": "070a",
+  "sentAtIso": "2026-07-12T04:00:00.000Z",
+  "routeKey": "video_feedback",
+  "uploadDestination": "Video Feedback",
+  "sourceTable": "Submission Assets",
+  "submissionAssetRecordId": "recTESTASSET00000001",
+  "targetTable": "Video Feedback",
+  "targetRecordId": "recTESTTARGET0000001"
+}
