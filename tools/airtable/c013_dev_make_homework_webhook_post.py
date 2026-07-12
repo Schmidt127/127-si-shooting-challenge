@@ -89,15 +89,13 @@ def build_homework_payload(
     return payload
 
 
-def post_webhook(url: str, payload: dict) -> tuple[int, str]:
-    r = requests.post(
+def post_webhook(url: str, payload: dict) -> "requests.Response":
+    return requests.post(
         url,
         headers={"Content-Type": "application/json"},
         json=payload,
         timeout=180,
     )
-    # Keep full body for parse/evaluate — C-023 duplicateMatches can exceed 2KB.
-    return r.status_code, r.text or ""
 
 
 def body_preview(text: str, *, limit: int = 2000) -> str:
@@ -107,20 +105,80 @@ def body_preview(text: str, *, limit: int = 2000) -> str:
     return raw[:limit] + f"...[truncated {len(raw) - limit} chars]"
 
 
-def parse_make_body(body_text: str) -> dict:
-    text = (body_text or "").strip()
+def _salvage_truncated_json(text: str) -> dict:
+    """Best-effort extract of key fields when body was cut mid-JSON."""
+    salvaged: dict = {"rawText": text[:500], "_salvaged": True}
+    for key in ("actionOut", "routeKey", "automationNumber", "statusOut", "environment"):
+        m = re.search(rf'"{key}"\s*:\s*"([^"]+)"', text)
+        if m:
+            salvaged[key] = m.group(1)
+    if re.search(r'"ok"\s*:\s*true', text, flags=re.IGNORECASE):
+        salvaged["ok"] = True
+    elif re.search(r'"ok"\s*:\s*false', text, flags=re.IGNORECASE):
+        salvaged["ok"] = False
+    return salvaged
+
+
+def parse_response_body(response: "requests.Response") -> dict:
+    """Parse Make/Lambda body from a full requests.Response (never pre-truncate)."""
+    text = (response.text or "").strip()
     if not text:
         return {}
+
+    # 1) Prefer requests JSON decode
+    try:
+        data = response.json()
+        if isinstance(data, dict):
+            if isinstance(data.get("body"), str):
+                try:
+                    inner = json.loads(data["body"])
+                    if isinstance(inner, dict):
+                        return inner
+                except json.JSONDecodeError:
+                    pass
+            return data
+        if isinstance(data, str):
+            text = data.strip()
+    except ValueError:
+        pass
+
+    # 2) json.loads on full text
     try:
         data = json.loads(text)
     except json.JSONDecodeError:
-        # Truncated Lambda JSON still often contains actionOut — salvage for evaluate.
-        salvaged: dict = {"rawText": text[:500]}
-        for key in ("actionOut", "routeKey", "automationNumber", "statusOut", "environment"):
-            m = re.search(rf'"{key}"\s*:\s*"([^"]+)"', text)
-            if m:
-                salvaged[key] = m.group(1)
-        return salvaged
+        return _salvage_truncated_json(text)
+
+    # 3) One-level double-decode (API Gateway / Make wrapper)
+    if isinstance(data, dict) and isinstance(data.get("body"), str):
+        try:
+            inner = json.loads(data["body"])
+            if isinstance(inner, dict):
+                return inner
+        except json.JSONDecodeError:
+            pass
+    if isinstance(data, dict):
+        return data
+    if isinstance(data, str):
+        try:
+            inner = json.loads(data)
+            if isinstance(inner, dict):
+                return inner
+        except json.JSONDecodeError:
+            return {"rawText": data[:500]}
+    return {"rawText": text[:500]}
+
+
+def parse_make_body(body_text: str) -> dict:
+    """Parse body text (unit-test helper; production path uses parse_response_body)."""
+    text = (body_text or "").strip()
+    if not text:
+        return {}
+    if text == "Accepted":
+        return {"rawText": "Accepted"}
+    try:
+        data = json.loads(text)
+    except json.JSONDecodeError:
+        return _salvage_truncated_json(text)
     if isinstance(data, dict) and isinstance(data.get("body"), str):
         try:
             inner = json.loads(data["body"])
@@ -131,29 +189,59 @@ def parse_make_body(body_text: str) -> dict:
     return data if isinstance(data, dict) else {"rawText": text[:500]}
 
 
-def evaluate_make_response(status_code: int, body_text: str) -> dict:
-    parsed = parse_make_body(body_text)
-    action = str(parsed.get("actionOut") or "")
-    route = str(parsed.get("routeKey") or "")
-    automation = str(parsed.get("automationNumber") or "")
+UPLOAD_OK_ACTIONS = frozenset(
+    {
+        "uploaded",
+        "skipped_already_uploaded",
+        "already_uploaded",  # alias tolerated if Lambda/Make ever emit it
+    }
+)
+SUCCESS_STATUS = frozenset({"success", "skipped"})
+
+
+def evaluate_make_response(status_code: int, body_text: str, *, parsed: dict | None = None) -> dict:
+    text = (body_text or "").strip()
     ok_http = 200 <= status_code < 300
-    accepted_async = ok_http and body_text.strip() == "Accepted"
-    upload_ok = action in {"uploaded", "skipped_already_uploaded"}
-    route_ok = (not route) or route == ROUTE_KEY
-    auto_ok = (not automation) or automation == AUTOMATION_NUMBER
+    accepted_async = ok_http and text == "Accepted"
+    parsed_body = parsed if parsed is not None else parse_make_body(text)
+
+    if accepted_async:
+        return {
+            "httpOk": ok_http,
+            "acceptedAsync": True,
+            "ok": None,
+            "statusOut": None,
+            "actionOut": None,
+            "routeKey": None,
+            "automationNumber": None,
+            "parsedBody": parsed_body,
+            "pass": True,
+            "note": "Make returned plain Accepted — verify Airtable writeback separately",
+        }
+
+    action = str(parsed_body.get("actionOut") or "")
+    route = str(parsed_body.get("routeKey") or "")
+    automation = str(parsed_body.get("automationNumber") or "")
+    status_out = str(parsed_body.get("statusOut") or "")
+    ok_flag = parsed_body.get("ok")
+    upload_ok = action in UPLOAD_OK_ACTIONS
+    status_ok = status_out in SUCCESS_STATUS
+    # Require exact route/automation on sync Lambda JSON (no silent defaults).
+    route_ok = route == ROUTE_KEY
+    auto_ok = automation == AUTOMATION_NUMBER
+    ok_ok = ok_flag is True or (ok_flag is None and upload_ok and status_ok)
+    sync_pass = ok_http and ok_ok and status_ok and upload_ok and route_ok and auto_ok
     return {
         "httpOk": ok_http,
-        "acceptedAsync": accepted_async,
+        "acceptedAsync": False,
+        "ok": ok_flag if isinstance(ok_flag, bool) else None,
+        "statusOut": status_out or None,
         "actionOut": action or None,
         "routeKey": route or None,
         "automationNumber": automation or None,
-        "parsedBody": parsed,
-        "pass": ok_http and (accepted_async or (upload_ok and route_ok and auto_ok)),
-        "note": (
-            "Make returned plain Accepted — verify Airtable writeback separately"
-            if accepted_async
-            else None
-        ),
+        "parsedBody": parsed_body,
+        "pass": sync_pass,
+        "note": None,
     }
 
 
@@ -210,8 +298,10 @@ def main() -> None:
         submission_id=submission_id,
     )
 
-    status_code, response_text = post_webhook(webhook_url, payload)
-    evaluation = evaluate_make_response(status_code, response_text)
+    status_resp = post_webhook(webhook_url, payload)
+    response_text = status_resp.text or ""
+    parsed = parse_response_body(status_resp)
+    evaluation = evaluate_make_response(status_resp.status_code, response_text, parsed=parsed)
 
     result = {
         "script": "c013_dev_make_homework_webhook_post.py",
@@ -231,7 +321,7 @@ def main() -> None:
         },
         "webhookPayload": payload,
         "makeResponse": {
-            "statusCode": status_code,
+            "statusCode": status_resp.status_code,
             "bodyPreview": body_preview(response_text),
             "evaluation": evaluation,
         },
@@ -247,7 +337,7 @@ def main() -> None:
     print(json.dumps(printable, indent=2))
     print(f"\nwritten={out_path}")
     if not result["pass"]:
-        raise SystemExit(f"ERROR: Make homework webhook failed HTTP {status_code}")
+        raise SystemExit(f"ERROR: Make homework webhook failed HTTP {status_resp.status_code}")
 
 
 if __name__ == "__main__":
