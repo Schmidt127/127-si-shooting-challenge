@@ -114,16 +114,16 @@
 
 ---
 
-### LEAD-007 — Local Make homework webhook smoke PASS
+### LEAD-008 — Direct Lambda homework writeback PASS; Make path still broken
 
 | Field | Value |
 |---|---|
-| **Time** | 2026-07-12T13:48Z |
-| **Agent** | Cloud Lead (Mike local ops) |
-| **Command** | `python c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` (cwd already `tools/airtable`) |
-| **Result** | **PASS** — HTTP 200; `actionOut=skipped_already_uploaded`; `environment=DEV`; `routeKey=homework_completion`; `automationNumber=070a`; asset Upload Status already `Uploaded` from prior local upload |
+| **Time** | 2026-07-12T14:04Z |
+| **Asset** | `recv2C72is5w3YJYB` (HC `recB8kqdoOkYJkNYr`) |
+| **Make path** | Webhook → `Accepted` → probe **FAIL** (stayed Pending Link) |
+| **Lambda path** | `c013_dev_lambda_invoke.py` → probe **`allPass=true`** (Uploaded, S3 URL, SHA-256) |
+| **Conclusion** | DEV Lambda homework route **PROVEN**. DEV Make scenario must be fixed (HTTP→Lambda + response `{{14.data}}`) before #8/#11 close |
 | **PROD** | **Not modified** |
-| **Follow-up** | Mike comment RESOLVED on #8; scenario OFF when idle; next #17 paste then optional fresh Pending Link asset for full `uploaded` path / MA-003 |
 
 ---
 

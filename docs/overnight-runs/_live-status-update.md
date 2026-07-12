@@ -9,9 +9,9 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` → **PASS** (`actionOut=skipped_already_uploaded`, HTTP 200, `environment=DEV`, route `homework_completion` / `070a`).
+**Live Make smoke (2026-07-12):** webhook soft-ack only (`Accepted`) on Pending Link `recv2C72is5w3YJYB` — **no writeback**. Direct DEV Lambda invoke then probe → **`allPass=true`** at 14:04Z (Uploaded + S3 URL + SHA-256). **Lambda homework route PROVEN; Make scenario still broken for real upload completion.**
 
-**Airtable (2026-07-12):** Mike confirmed **070a v4.4 pasted in DEV** (#17). Keep **OFF** until Airtable-triggered path is intentionally tested.
+**Airtable (2026-07-12):** Mike confirmed **070a v4.4 pasted in DEV** (#17). Keep **OFF** until Make path fixed + Airtable-triggered test.
 
 ---
 
@@ -44,20 +44,19 @@
 
 | Issue | Action |
 |-------|--------|
-| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Phase 0+1 PASS** — comment `RESOLVED` if not already |
-| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** — cloud `.env` optional |
-| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | **Next:** pick Pending Link homework asset → live-preflight / optional 070a ON test |
-| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | **Paste DONE (Mike)** — comment `RESOLVED — 070a v4.4 in DEV, still OFF`; confirm `makeWebhookUrl` = DEV webhook |
+| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **PARTIAL** — DEV webhook exists; returns `Accepted` without writeback. Fix module 14→16 so Lambda JSON returns / HTTP actually runs. Do not close until Make→writeback PASS |
+| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** — Lambda Function URL path works |
+| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | **Lambda PASS** on `recv2C72is5w3YJYB`; Make path still FAIL (Accepted, no writeback) |
+| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | **Paste DONE** — comment RESOLVED; keep 070a OFF |
 
 Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Confirm 070a **OFF**; `makeWebhookUrl` = **DEV** webhook (not PROD).
-2. Comment **RESOLVED** on [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) and [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) if not done.
-3. **Next test:** find a disposable DEV homework asset still **Pending Link** (not `rec7X6stG6utxykiG`).
-4. Turn DEV Make **ON**, run webhook smoke on that asset, probe writeback, then Make **OFF** again.
-5. Optional: briefly turn 070a **ON** and arm Send to Make Trigger on that asset (Airtable→Make path).
+1. **Fix DEV Make** so webhook→HTTP Lambda→response returns `{{14.data}}` (not bare `Accepted` before Lambda finishes).
+2. Pick a **new** Pending Link homework asset (not `recv2C72is5w3YJYB` / `rec7X6stG6utxykiG` — both Uploaded).
+3. Retest Make webhook → probe `allPass=true`.
+4. Comment status on #8 / #11; keep 070a **OFF**.
 
 ### New assignments (immediate — do not wait on Mike)
 

@@ -36,19 +36,22 @@
   4. Comment on #17: `RESOLVED — 070a v4.4 pasted DEV, still OFF, makeWebhookUrl=DEV`
 - **Blocks:** nothing further for paste; unlocks MA-003 Airtable-triggered path
 
-### MA-003 — T3 live 070a DEV smoke (**NEXT**)
+### MA-003 — T3 live 070a DEV smoke (**NEXT = fix Make**)
 - **GitHub issue:** [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11)
-- **Exact action:**
-  1. Pick disposable DEV homework Submission Asset with Upload Status **Pending Link**, destination Homework Completions, attachment + HC link (not `rec7X6stG6utxykiG`).
-  2. DEV Make scenario **ON**.
-  3. From `tools/airtable`:
-     ```powershell
-     python c013_dev_make_homework_webhook_post.py <newAssetId>
-     ```
-  4. Confirm `actionOut=uploaded` (or skip if already done) + Airtable writeback fields.
-  5. Make scenario **OFF**.
-  6. Optional Airtable path: turn 070a **ON** briefly, arm Send to Make Trigger on that asset, verify run, then 070a **OFF** again.
-- **Verify when done:** Comment `RESOLVED — live DEV homework upload PASS` on #11
+- **Status:**
+  - Make webhook on Pending Link `recv2C72is5w3YJYB` → `Accepted` → probe **FAIL** (still Pending Link)
+  - Direct `c013_dev_lambda_invoke.py` → probe **`allPass=true`** 2026-07-12T14:04Z
+- **Exact action (Make fix):**
+  1. DEV scenario module **14**: DEV Lambda URL + DEV `X-Upload-Secret`; do not stop on HTTP error.
+  2. Module **16**: body = `{{14.data}}` (must wait for HTTP; not instant plain Accepted).
+  3. Scheduling ON / Immediately as data arrives for the retest only.
+  4. New Pending Link homework asset → `c013_dev_make_homework_webhook_post.py` → expect Lambda JSON (`uploaded`) → probe `allPass=true`.
+  5. Make **OFF**; 070a stays **OFF**.
+- **Verify when done:** Make path writeback PASS on a fresh asset; comment on #8/#11
+
+### MA-001 follow-up — Make returns Accepted without writeback
+- **Related:** #8
+- **Evidence:** Earlier skip JSON worked once; fresh Pending Link only got `Accepted` and no Airtable write. Lambda alone proves backend OK.
 
 ### MA-004 — T4 Phase 2 (STALE / closable)
 - **GitHub issue:** [#15](https://github.com/Schmidt127/127-si-shooting-challenge/issues/15) (canonical; duplicate #14)
@@ -73,6 +76,7 @@
 |---|---|---|---|---|
 | MA-001 | Create DEV Make upload scenario + homework smoke | #8 | 2026-07-12 — local smoke PASS `rec7X6stG6utxykiG` → `skipped_already_uploaded`. Mike: comment RESOLVED on #8 if not done | Lead 2026-07-12T13:50Z |
 | MA-006 | Paste 070a v4.4 DEV | #17 | 2026-07-12 — Mike confirmed pasted; keep OFF; comment RESOLVED on #17 | Lead 2026-07-12T13:55Z |
+| — | Direct Lambda homework writeback | #11 partial | 2026-07-12T14:04Z — `recv2C72is5w3YJYB` probe `allPass=true` via `c013_dev_lambda_invoke.py` (Make path still FAIL) | Lead 2026-07-12T14:05Z |
 
 ---
 

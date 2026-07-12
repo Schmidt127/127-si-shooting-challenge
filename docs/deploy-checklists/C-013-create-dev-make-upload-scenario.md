@@ -71,8 +71,8 @@ Homework vs video is decided by **Lambda** from the JSON (`routeKey` / `automati
 | # | Action | Done |
 |---|--------|------|
 | 1.1 | Run once with homework payload (`automationNumber=070a`, `routeKey=homework_completion`) on a **DEV** asset. | ☑ |
-| 1.2 | Or: `python tools/airtable/c013_dev_make_homework_webhook_post.py <devHomeworkAssetId>` | ☑ `rec7X6stG6utxykiG` → PASS |
-| 1.3 | Probe writeback `allPass=true` on that DEV asset. | ☑ Upload Status=`Uploaded`; retest `skipped_already_uploaded` |
+| 1.2 | Or: `python tools/airtable/c013_dev_make_homework_webhook_post.py <devHomeworkAssetId>` | ☑ skip PASS on `rec7X6stG6utxykiG`; Pending Link Make path still returns `Accepted` without writeback |
+| 1.3 | Probe writeback `allPass=true` on that DEV asset. | ☑ via **direct Lambda** on `recv2C72is5w3YJYB` (Make path still open) |
 | 1.4 | On #8 comment: `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; Run once ready` | ☐ Mike |
 
 ---
