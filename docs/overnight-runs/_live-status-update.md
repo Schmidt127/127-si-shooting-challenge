@@ -1,7 +1,7 @@
 ## Overnight run — live status update (LEAD-005)
 
 **Paste into issue [#1](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1) — replaces stale bootstrap snapshot**  
-**Generated:** 2026-07-12T13:50Z  
+**Generated:** 2026-07-12T13:55Z  
 **Lead tip branch:** https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/lead-integration  
 **Lead agent:** https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a  
 
@@ -9,7 +9,9 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` → **PASS** (`actionOut=skipped_already_uploaded`, HTTP 200, `environment=DEV`, route `homework_completion` / `070a`). First local upload already wrote the asset; retest confirmed Make→Lambda idempotent skip.
+**Live Make smoke (2026-07-12):** `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` → **PASS** (`actionOut=skipped_already_uploaded`, HTTP 200, `environment=DEV`, route `homework_completion` / `070a`).
+
+**Airtable (2026-07-12):** Mike confirmed **070a v4.4 pasted in DEV** (#17). Keep **OFF** until Airtable-triggered path is intentionally tested.
 
 ---
 
@@ -42,19 +44,20 @@
 
 | Issue | Action |
 |-------|--------|
-| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Phase 0+1 PASS (local)** — DEV Make webhook→Lambda homework path verified. Mike: comment `RESOLVED — DEV scenario fixed; new DEV webhook; HTTP→DEV Lambda; smoke PASS skipped_already_uploaded on rec7X6stG6utxykiG` then turn scenario **OFF** |
-| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** — `MAKE_DEV_UPLOAD_WEBHOOK_URL` + Airtable token work. Cloud env still missing `.env` (optional) |
-| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | Make homework webhook smoke **PASS**; full `c070a_dev_smoke_run.py` live still gated on #17 paste |
-| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | Paste 070a v4.4 DEV; leave OFF |
+| [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) | **Phase 0+1 PASS** — comment `RESOLVED` if not already |
+| [#9](https://github.com/Schmidt127/127-si-shooting-challenge/issues/9) | **Local ops PASS** — cloud `.env` optional |
+| [#11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/11) | **Next:** pick Pending Link homework asset → live-preflight / optional 070a ON test |
+| [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) | **Paste DONE (Mike)** — comment `RESOLVED — 070a v4.4 in DEV, still OFF`; confirm `makeWebhookUrl` = DEV webhook |
 
 Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Comment **RESOLVED** on [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) (smoke PASS).
-2. Turn DEV Make scenario **OFF** when not testing.
-3. Remaining: **MA-006** (#17 paste 070a), optional cloud **MA-002**, then **MA-003** live harness; hygiene **MA-005**.
-4. Exact steps: `docs/overnight-runs/manual-actions-2026-07-11.md`.
+1. Confirm 070a **OFF**; `makeWebhookUrl` = **DEV** webhook (not PROD).
+2. Comment **RESOLVED** on [#17](https://github.com/Schmidt127/127-si-shooting-challenge/issues/17) and [#8](https://github.com/Schmidt127/127-si-shooting-challenge/issues/8) if not done.
+3. **Next test:** find a disposable DEV homework asset still **Pending Link** (not `rec7X6stG6utxykiG`).
+4. Turn DEV Make **ON**, run webhook smoke on that asset, probe writeback, then Make **OFF** again.
+5. Optional: briefly turn 070a **ON** and arm Send to Make Trigger on that asset (Airtable→Make path).
 
 ### New assignments (immediate — do not wait on Mike)
 
