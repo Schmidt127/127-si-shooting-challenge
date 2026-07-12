@@ -9,7 +9,7 @@
 
 **Run status: ACTIVE** — DEV-first — **PROD not modified** — evidence `recGQ8EjAMz3bEBiW` protected.
 
-**Live Make smoke (2026-07-12):** **PASS** — `recVUoPApngfRYOys` uploaded + skip retest; **`rec3jjoZzDTGiuKXA` uploaded + probe allPass=true** (15:11Z) with Make ON. Earlier 070a run returned `Accepted` while Make was OFF → no writeback (070a script OK; Make must be ON for E2E).
+**Live Make smoke (2026-07-12):** Webhook→Lambda **PASS** (`recVUoPApngfRYOys`, `rec3jjoZzDTGiuKXA`, `recmPCPUSKSQHkAQQ`). **070a Airtable E2E still FAIL:** 070a gets Make `Accepted` / `lambda_upload_accepted_async` but **no writeback** until webhook script forces full Lambda JSON. Root cause: DEV Make returns bare `Accepted` without completing HTTP→Lambda for the 070a call.
 
 **Airtable (2026-07-12):** **070a v4.4 pasted in DEV** (#17). Keep **OFF** when idle.
 
@@ -53,9 +53,12 @@ Close stale: #14, #15 (A published). Duplicate close: #6,#7,#10,#16.
 
 ### Open Mike actions
 
-1. Turn DEV Make **OFF** when idle; keep **070a OFF** when idle.
-2. Optional E2E: fresh Pending Link asset → Make **ON** → 070a **ON** → arm Send to Make Trigger → probe `allPass=true` → both OFF.
-3. Comment RESOLVED on #8/#11/#17 if not done.
+1. **Fix DEV Make** so 070a calls complete Lambda writeback (not bare `Accepted` with no HTTP):
+   - History for 070a runs: confirm module **14** runs
+   - Module **16** body = `{{14.data}}`
+   - Disable “respond immediately / Accepted” if it skips waiting on HTTP
+2. Fresh Pending Link asset → Make ON → 070a ON → trigger → probe `allPass=true`
+3. 070a OFF, Make OFF; RESOLVED on #8/#11/#17 when E2E passes (or close #8/#9 now for webhook path only)
 
 ### New assignments (immediate — do not wait on Mike)
 
