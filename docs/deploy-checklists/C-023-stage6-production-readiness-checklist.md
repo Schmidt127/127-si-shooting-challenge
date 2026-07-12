@@ -399,3 +399,79 @@ Mark C-023 **complete** in backlog only when **all** rows are checked:
 ---
 
 *Worker D · T9 · `overnight/2026-07-12/worker-d-T9` · docs-only*
+
+---
+
+## Appendix A — Overnight V2 Stage 1 alignment (2026-07-12)
+
+**Scope:** Append-only Stage 1 update. The original Stage 6 checklist above remains the historical T9 baseline.
+
+### A.1 Locked Stage 1 policy
+
+- Exact-byte detection uses **SHA-256**.
+- A likely same-enrollment reuse is marked **Needs Review** through `Potential Asset Reuse?` and review metadata.
+- Upload continues; a hash match does **not** block a valid asset.
+- Every successful new asset receives a **new** S3 object, Storage Key, and Canonical File URL.
+- No S3 object, Airtable record, attachment, or hash evidence is deleted.
+- Cross-enrollment matches remain informational.
+- Mike/OMNI owns the final `Asset Reuse Decision`.
+
+Implementation, audit, and rollback instructions: [C-023-implementation-guide-stage1.md](./C-023-implementation-guide-stage1.md).
+
+### A.2 Corrected homework path status
+
+The Stage 1 DEV homework end-to-end test is now **PASS**:
+
+```text
+070a → DEV Make → DEV Lambda → S3 → Airtable writeback
+```
+
+Make returned **synchronous complete Lambda JSON** through Module 16 (`{{14.data}}`). The final writeback included Upload Status, Canonical File URL, Storage Key, File Content Hash, File Hash Algorithm, and Uploaded At; 022 synced the Canonical File URL to Homework Completion.
+
+**070c was not required for this synchronous PASS.** The routing rule is:
+
+| Response mode | 070c rule |
+|---------------|-----------|
+| Complete Lambda JSON with verified final writeback | Not required |
+| Plain-text async `Accepted` | Required to verify final writeback and clear the retained trigger |
+
+If homework later changes to async `Accepted`, 070c (or an approved destination-neutral successor) must accept Homework Completion assets and verify the same writeback contract. The proven Production video path remains an async `Accepted` example; it does not redefine the synchronous homework path.
+
+This appendix supersedes the stale homework statements in §6.4 and §8 that describe the DEV smoke as pending or 070c as always required.
+
+### A.3 Stage 1 integration gate
+
+| Gate | Status at Worker D handoff |
+|------|----------------------------|
+| Implementation/audit/rollback guide | **Complete** |
+| Sync JSON vs async `Accepted` rules | **Complete** |
+| DEV homework E2E | **PASS** |
+| Homework 070c requirement | **Not required for current sync path** |
+| Worker B Lambda/Make contract | **Pending Lead integration** |
+| Worker C duplicate matrix + regression totals | **Pending Lead integration** |
+| Worker A schema/OMNI package | **Pending Lead integration** |
+| Lead unified regression | **Open** |
+| Production promotion | **Prohibited in Stage 1** |
+
+### A.4 Stage 1 completion criteria
+
+- [ ] Lead integrates Worker branches in order **B → C → A → D**.
+- [ ] Lambda contract confirms `uploadBlocked=false` for duplicate findings.
+- [ ] Same-enrollment matches populate review metadata without reusing an object.
+- [ ] Worker C's required matrix passes with no weakened assertions.
+- [ ] Worker A's field inventory cites committed schema sources.
+- [ ] Unified offline suite passes.
+- [ ] Lead confirms only authorized files changed and no secrets entered the diff.
+- [ ] PROD remains untouched.
+
+### A.5 Remaining Stage 6 items after Stage 1
+
+1. Mike/OMNI verifies Pending Review and Reviewed UX in DEV.
+2. Lead reconciles the Stage 6 closure table with integrated Worker A–C evidence.
+3. Automations-table documentation hygiene remains an owner action.
+4. Attachment clearing and Drive retirement remain a separate deferred migration slice; no delete is authorized here.
+5. Any Production promotion requires a new approved promotion checklist and Mike approval.
+
+---
+
+*Appendix A · Worker D · `overnight/v2-run/worker-d-s1-c023-docs`*
