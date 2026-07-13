@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T06:40:00-06:00",
+  "updated_at": "2026-07-13T06:42:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "707e3b18f9c2a4ff479c414646191930a3e79ec7",
-    "remote_sha": "707e3b18f9c2a4ff479c414646191930a3e79ec7",
+    "sha": "6f3b55bd06578587d96685dfafefe268aa8c134d",
+    "remote_sha": "6f3b55bd06578587d96685dfafefe268aa8c134d",
     "match": true
   },
   "run": {
@@ -446,6 +446,6 @@
     "targeted": "26/26 + guard 10/10",
     "pass": true
   },
-  "next_action": "Desktop OS v1 committed. Begin trial: authorize Stage 6 package pipeline-homework-video-audit (single lane, Lead-direct).",
+  "next_action": "Desktop OS v1 ready for trial. Next READY: pipeline-homework-video-audit (single lane, Lead-direct).",
   "stop_reason": null
 }
