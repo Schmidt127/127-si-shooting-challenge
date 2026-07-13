@@ -66,6 +66,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 | `audit-achievement-xp-pipeline-integrity.js` | Awarded unlocks (059) + streaks (054) → XP parity | **Ready** |
 | `audit-pending-shot-milestone-unlocks.js` | Why 059/view misses Pending shot-milestone unlocks | **Ready** |
 | `audit-legacy-cleanup-candidates.js` | LEGACY/ZZZ fields + orphan streak unlock inventory | **Ready** |
+| `audit-dedupe-key-coverage.js` | C-024 dedupe key coverage — XP, HC, Submissions, Assets, Achievements, Zoom (DK-01–DK-08) | **Stage 3 v0.1** |
 
 ---
 
