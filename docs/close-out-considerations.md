@@ -110,7 +110,7 @@ Items intentionally deferred until the contest is closed and final emails/audits
 | **C-021** | **High** | **Grade bands** — link-based matching; remove hardcoded band strings in scripts. |
 | **C-022** | **High** | **Public display fields** — emails/web use Presentation labels, not primary field. |
 | **C-023** | **High** | **File hash dedup** — SHA-256 content hash, not filename/title. |
-| **C-024** | **High** | **Dedupe keys + idempotent backfills** — safe to rerun repairs. |
+| **C-010** | **High** | **Two-field enrollment** — `Active?` visibility/comms; `Progress Processing Enabled?` progress gate. Stage 4 repo audit complete; DEV OMNI implementation pending. |
 | **C-025** | **High** | **Zoom recording attendance** — partial XP/gate credit when live missed. |
 | **C-026** | **Medium** | **Tutorials table merge** — keep `Tutorials` (web uses it); retire `Tutorials & Assets` after audit. |
 | **C-027** | **Medium** | **Major-event notifications** — level up / milestones; SMS via cell number TBD (not daily XP). |
