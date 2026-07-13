@@ -71,7 +71,7 @@ None for Worker A scope. Stage 3 should implement `audit-dedupe-key-coverage.js`
 
 | Item | Value |
 |------|--------|
-| Commit SHA | *(filled after commit)* |
+| Commit SHA | `7502510` |
 | Push | `overnight/v2-run/worker-a-s2-c024-inventory` → `origin` |
 | PR | **No PR** — worker branch per overnight rules |
 
