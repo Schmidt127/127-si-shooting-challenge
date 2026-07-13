@@ -129,7 +129,7 @@ C-024 complements C-023: **file bytes** (hash) vs **record identity** (Source Ke
 | Field | Value |
 |---|---|
 | Branch | `overnight/v2-run/worker-c-s2-c024-idempotency-tests` |
-| Commit SHA | `89d0f37` |
+| Commit SHA | `350ac36` |
 
 ---
 
