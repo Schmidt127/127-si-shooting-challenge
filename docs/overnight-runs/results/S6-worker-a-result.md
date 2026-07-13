@@ -9,5 +9,5 @@
 | Tests run | none on worker (Lead runs full suites post-integration) |
 | Known limitations | No Airtable verification; C-010 gates still pending OMNI paste |
 | Owner action | None for this package |
-| Commit SHA | pending |
-| Push status | pending |
+| Commit SHA | `8afe092` |
+| Push status | pushed to origin |
