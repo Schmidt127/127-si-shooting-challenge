@@ -92,4 +92,4 @@ Stage 1 baseline: **62/62 lambda, 97/97 offline PASS** (Lead integration).
 |-------|-------|
 | Branch | `overnight/v2-run/worker-b-s2-c024-retry-audit` |
 | Base | `c59dca8` |
-| Post-commit SHA | *(filled after push)* |
+| Post-commit SHA | `dfb66c94acc703b5b6b0bbfbda9b68a7e9a47e5f` |
