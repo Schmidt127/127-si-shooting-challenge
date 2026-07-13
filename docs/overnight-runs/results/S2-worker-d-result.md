@@ -3,7 +3,7 @@
 **Status:** **COMPLETE**  
 **Branch:** `overnight/v2-run/worker-d-s2-c024-dedupe-contract`  
 **Base SHA:** `c59dca8`  
-**Commit SHA:** *(filled after push)*
+**Commit SHA:** `c52e5d0`
 
 ## Deliverables
 
