@@ -84,7 +84,7 @@ Deliverable for D → A → B → C merge order: **field inventory aligns with W
 
 | Item | Value |
 |------|--------|
-| Commit SHA | `072e3946530ad727fe8a1fcfffc3251f4a8dfb28` (`072e394`) |
+| Commit SHA | `d45038d59ac13a71a0e07747474be1852d15db6b` (`d45038d`; inventory docs `072e394`) |
 | Push | `overnight/v2-run/worker-a-s2-c024-inventory` |
 | PR | **No PR** — worker branch per overnight rules |
 
