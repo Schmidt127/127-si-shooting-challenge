@@ -4,7 +4,7 @@
 **Task:** Overnight V2 Stage 2 — C-024 dedupe field + automation dependency inventory  
 **Branch:** `overnight/v2-run/worker-a-s2-c024-inventory`  
 **Base SHA:** `c59dca80723f281a7aa3f26a5f6ec03643c62b93`  
-**Commit SHA:** `6abfd1d33fdc2c890eb4acd3b5f1f786c4a3aa76`  
+**Commit SHA:** `a18d1722d491993314c74aaf1677a89e54bf74cb` (inventory body: `6abfd1d`)  
 **Environment:** Repo documentation only — **no PROD**, **no Airtable API**, **no automation logic edits**  
 **Finished (UTC):** 2026-07-13T05:30:00Z (approx)
 
