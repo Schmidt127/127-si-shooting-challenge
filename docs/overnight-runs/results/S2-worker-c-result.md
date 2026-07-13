@@ -3,7 +3,7 @@
 **Status:** **COMPLETE**  
 **Branch:** `overnight/v2-run/worker-c-s2-c024-idempotency-tests`  
 **Base SHA:** `c59dca8`  
-**Commit SHA:** *(filled after push)*
+**Commit SHA:** `024d009`
 
 ## Deliverables
 
