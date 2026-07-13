@@ -127,7 +127,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-012** | Stage K — every field has one writer | Field ownership matrix; hide/delete legacy; update field-map | V2-013 | queued |
-| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | Two tables with overlapping purpose (~same fields: video link, type, program, descriptions, thumbnails, publish flag). **Repo today:** **`Tutorials`** is live — web `/tutorials`, `/shoutouts`, `/articles` reads `Web - Tutorials Catalog` (`web/lib/airtable/queries.ts`). **`Tutorials & Assets`** is **not** referenced in automations or web; weaker schema (e.g. `Athlete` as hardcoded single-select, multiline video link vs URL). **Work:** row-count + field diff audit → migrate any unique rows → repoint views/interfaces → delete orphan table on 2026–27 clone. Relates to **C-012**, **C-013** (attachments on tutorial images). | C-012 | queued |
+| **C-026** | Merge **Tutorials** vs **Tutorials & Assets** — keep one, delete duplicate | **`Tutorials` likely canonical** (owner 2026-07-13). **BLOCKED:** do not merge, move, delete, retire, or modify either table until full owner discussion + inspection. Repo today: **`Tutorials`** is live on web; **`Tutorials & Assets`** not in code. Future work after unblock: row-count audit → migrate unique rows → repoint views → retire orphan on clone. | C-012 | **blocked** |
 | **C-024** | Rock-solid dedupe keys + safe backfill reruns | **Duplicates caught instantly** at every layer — Submissions (**007**), Submission Assets, Homework Completions, XP Events (**Source Key** / **XP Dedupe Key**), achievements. One canonical key per source record; automations + extension backfills **idempotent** — rerunning a repair/backfill must **never** create doubles or corrupt rollups. Audit all writers; document key patterns in engine contract. | C-012 | queued |
 | **C-014** | One ladder, spread gates early | **DECIDED** — tune in config Q1 2027, not in docs | C-021, Wave 9 | resolved |
 
@@ -150,7 +150,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-010** | Harden `Active?` on Enrollments | Inactive = fully out of XP, emails, summaries, streaks — not just leaderboard | V2-013 partial | queued |
+| **C-010** | Two-field enrollment controls | **Approved (2026-07-13):** **`Active?`** = visibility + communications gate; **`Progress Processing Enabled?`** = progress calculation gate. Reactivated athletes stay caught up. **No Airtable field or automation changes yet** — audit gaps (**010**, **031**, **065**, **053**, **072**, **076**) remain documented until implementation wave. | V2-013 partial | **queued** |
 | **C-011** | Fully automatic weekly parent emails | No `Build Weekly Email Now?` / `Send to Make?`; scheduled 072→074 | C-010, C-022 | queued |
 | **C-006** | 090F duplicate unlock prevention | Root cause was audit dedupe key — **fixed in H-001**; **066** v3.1 prevents empty Week going forward | H-002 | **done** |
 
@@ -158,7 +158,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-019** | Schmidt test enrollment | `Active?` = false for standings only; **no test flags** on pipeline rows; **Testing** views on 8 pipeline tables — [manual UI checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) | C-010 partial | queued |
+| **C-019** | Schmidt test enrollment | **Approved (2026-07-13):** run **full pipeline**; exclude from **public output** and **real-family communications**; **no** `Is Test Record` on ordinary pipeline tables. `Active?` = false for standings; **Testing** views on 8 pipeline tables — [checklist](./deploy-checklists/C-019-testing-views-verification-checklist.md) | C-010 partial | queued |
 | **C-020** | **Engineering Test Framework** | **115 v1.3 DEV functional complete** — Tests A–D + functional live E/F/G (Daily, Video 2-file, Homework 2-file). [Checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md), [upload workflow](./upload-workflow-homework-video.md). **Not tested:** Homework XP, Make/S3, combined HW+Video. Production paste pending. | C-019, V2-013 | **DEV functional complete** |
 | **C-020a** | C-020 Homework branch (115 v1.1) | Tests A/B PASS on DEV | C-020 | **done (DEV)** |
 | **C-020b** | C-020 Video branch (115 v1.3) | Tests C/D PASS; Intake Attachments → Video Upload | C-020a | **done (DEV)** |
@@ -177,7 +177,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 |----|---------|--------|------------|--------|
 | **C-017** | Fillout → Athletes validation | Stronger Fillout rules; Athletes field hygiene; trust identity before pipeline | C-012 | queued |
 | **C-018** | Intake open vs challenge run | Two calendars in **Weeks** table; **005** maps by date range | V2-013 | queued |
-| **C-009** | Redo HW17 Fillout quiz intake (no attachment today) | **067** creates Homework Completion **without** Submission Asset / attachment — breaks coach views, **020**, **070**, **071**, satisfactory path (see C-003). **Owner:** pursuing Fillout.com **attachment export** for quiz PDF. **V2 paths:** (A) PDF attachment → normal file pipeline (preferred if Fillout delivers); (B) attachment-less dual path with explicit schema + automation redesign. Fix **Final Reflection Quiz Submissions** table + **067** + related views regardless. | C-013, C-024 | queued |
+| **C-009** | Learning Activities intake (replaces HW17-specific design) | **BLOCKED (2026-07-13):** no schema or automation implementation. **067** today creates Homework Completion without Submission Asset (see C-003). **Approved direction:** keep **`Homework`** catalog; add **`Learning Activities`** + **`Learning Activity Responses`** after audit + owner-approved minimum schema (#11). **No Homework 17–specific architecture.** | C-013, C-024 | **blocked** |
 
 ### Wave 9 — Season config (numbers)
 
@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | Legitimate misses happen; kids should not be **fully blocked** from higher levels for one missed live Zoom. **Today:** **101** awards live **Attendees** only; docblock mentions supplemental re-run when staff manually add attendees after live award — **no parent-facing recording-watch flow**, no separate XP amount for recording. **Target:** defined alternative when athlete watches **Zoom recording** — e.g. lower XP via **XP Reward Rules**, counts toward **Level Gate Rules** zoom requirement at reduced weight (config, not script constants). Needs intake/attestation (form or coach confirm) + **Source Key** so live + recording cannot double-award. | C-024, V2-006, V2-005 | queued |
+| **C-025** | Zoom **recording** attendance — partial credit path | **DECIDED (2026-07-13):** recording watch = **50% of live Zoom XP**; **full level-gate credit**; **mutually exclusive** with live XP for same meeting (`ZOOM_LIVE` vs `ZOOM_RECORDING` Source Key). **Today:** **101** = live attendees only; no recording workflow. **Target:** attestation path + XP Reward Rule row + Level Gate Rule row; extend **101** or sibling automation. | C-024, V2-006, V2-005 | queued |
 
 ### Wave 10 — Communication & website
 
@@ -195,7 +195,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-008** | Game manual | Published from config tables before Day 1 | Wave 9 | queued |
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
-| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **DECIDED (2026-07-13):** first version → **parents**; events: **level up**, **major shot milestone**, **Perfect Week**, **major streak milestone**. **No** daily-submission notifications. **Do not** alter **071** homework or video feedback notifications. Channel/provider (SMS vs email), opt-in, templates TBD. Idempotent send key per **C-024**. | C-010, C-024, V2-008 | queued |
 | **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **2025–26 manual phase done** — 10 newspaper packets + 12 radio kits sent **2026-07-05**. Platform automation (config-driven generate) remains future work. | C-013, C-022, Wave 0 close-out | **done** (2025–26) / queued (platform) |
 
 ### Wave 11 — Launch gate
@@ -207,19 +207,47 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ---
 
+## Owner business decisions — approved 2026-07-13
+
+**Authority:** Owner (Mike) — applies to current overnight run, C-023/C-024 planning, and future V2 waves. **No code or schema changes** authorized for **blocked** items below until owner + ChatGPT review.
+
+### Approved — implement in repo/DEV/docs when scheduled
+
+| # | Topic | Decision | Backlog / automations |
+|---|-------|----------|------------------------|
+| 1 | **Duplicate files** | Allow upload; mark **Needs Review**; **do not** award anything twice. **Never** auto-delete, overwrite, or block the file. | **C-023**, **116**, Lambda duplicate contract |
+| 2 | **Homework resubmissions** | **One** official Homework Completion per athlete + assignment + week. Later files = **resubmissions** linked to existing completion; **keep file history**. Award Homework XP **once**. | **C-024**, **065**, **009/020/070** |
+| 3 | **Same-day shooting submissions** | Multiple same-day submissions are **legitimate** when any meaningful shooting value differs. When Activity Date **and** all relevant shooting amounts are **identical**, **flag for owner review** — notify owner. **Do not** auto-delete either record. **Do not** allow duplicate daily shooting XP. | **007**, **010**, **C-024** |
+| 4 | **Repair / backfill scripts** | Every repair and backfill **safe to rerun**: skip records already correct; create only missing records. **Never** create duplicate XP, assets, completions, achievements, or communications. | **C-024**, all extension backfills |
+| 5 | **Duplicate achievements** | Keep **earliest valid** achievement record. Mark later duplicates for **review**. **Do not** award duplicate XP. | **058**, **059**, **066**, audits |
+| 6 | **Enrollment controls (two-field model)** | **`Active?`** controls normal **visibility** and **communications**. **`Progress Processing Enabled?`** controls whether **progress calculations** continue. Reactivated athletes can catch up without losing hidden progress. **No schema implementation yet** — design approved only. | **C-010**, Enrollments table |
+| 7 | **Schmidt test enrollment** | Run **full pipeline**. Exclude from **public output** and **real-family communications**. **Do not** add `Is Test Record` fields to ordinary pipeline tables. | **C-019**, **C-020**, views/filters |
+| 8 | **Tutorials tables** | **`Tutorials`** is the **likely canonical** table. **Do not** merge, move, delete, retire, or modify **either** Tutorials table yet. | **C-026** → **blocked** (owner discussion + inspection pending) |
+| 9 | **Zoom recording** | Recording watch earns **50% of live Zoom XP**. Recording watch receives **full level-gate credit**. Athlete **cannot** receive both live and recording XP for the same meeting. | **C-025**, **101**, XP Reward Rules, Level Gate Rules |
+| 10 | **Major-event notifications** | **First version → parents.** Events: level up, major shot milestone, Perfect Week, major streak milestone. **No** new ordinary daily-submission notifications. **Do not** alter existing homework (**071**) or video feedback notifications. | **C-027** |
+| 11 | **Learning Activities architecture** | **Keep existing `Homework` table** as the official homework catalog. **Approved future structure:** `Homework` · `Learning Activities` · `Homework Completions` · `Learning Activity Responses`. Learning Activities may route Fillout questions, files, videos, quizzes, reflections, assessments, optional activities, and special assignments. May optionally link to Homework and count as homework, video submission, assessment, or more than one destination. **Do not implement Airtable schema yet.** First: audit Homework table + dependencies, document minimum proposed schema, present for owner approval. **Replaces any Homework 17–specific architecture.** | **C-009** successor · new backlog slice TBD |
+
+### Blocked — owner design pending (no implementation)
+
+| ID | Topic | Owner direction | Gate |
+|----|-------|-----------------|------|
+| **B** | **Homework / quiz intake redesign** | **Do not implement yet.** Owner + ChatGPT must review complete workflow. **C-009 / HW17-specific paths superseded** by Learning Activities architecture (#11) — audit and proposed schema first. | **C-009** — blocked |
+
+---
+
 ## Engine principles — deduplication & idempotency (C-023, C-024)
 
-**Owner intent:** Duplicates are caught **instantly** at intake — not repaired weeks later. Backfills are **safe to rerun**.
+**Owner intent (2026-07-13):** Duplicates are caught **instantly** at intake — not repaired weeks later. Backfills are **safe to rerun**. Duplicate **files** → Needs Review, no double award. Duplicate **stats** (identical same-day shooting) → flag + notify, no auto-delete, no double daily XP.
 
 ### Today vs target
 
 | Layer | Today | Gap | Target (C-023 / C-024) |
 |-------|--------|-----|------------------------|
-| **Submissions** | **007** — `Duplicate Key` from enrollment + date + shot stats | Same stats, different intent; no file awareness | Keep stat key; add file-hash cross-check when attachments present |
-| **Submission Assets** | **009** — skip if same `sourceAttachmentId` on same submission | Re-upload same bytes, new attachment id / filename passes | **`File Content Hash` (SHA-256)** at upload; same-enrollment contextual match → **manual review** (never auto-block/reuse object) — [C-023 policy](./deploy-checklists/C-023-production-duplicate-policy.md) |
-| **Homework Completions** | Partial keys / manual duplicates (C-004) | Re-submits create multiple rows | One completion key per enrollment + assignment + week |
+| **Submissions** | **007** — `Duplicate Key` from enrollment + date + shot stats | Same stats, different intent; no file awareness | **Approved:** identical date + all shooting amounts → flag + notify owner; no auto-delete; no duplicate daily XP. Different meaningful values → legitimate multiple rows. |
+| **Submission Assets** | **009** — skip if same `sourceAttachmentId` on same submission | Re-upload same bytes, new attachment id / filename passes | **Approved:** allow upload; SHA-256 match → **Needs Review**; never auto-block/delete/overwrite; no double award (**C-023**) |
+| **Homework Completions** | Partial keys / manual duplicates (C-004) | Re-submits create multiple rows | **Approved:** one completion per enrollment + assignment + week; resubmissions link to it; keep file history; Homework XP once |
 | **XP Events** | **Source Key** + **XP Dedupe Key** formula | Some paths weak; backfills risky | Document every **Source Key** pattern; create = recheck key first (**010**, **065**, **101**, **114**) |
-| **Achievements** | **066** duplicate unlocks (H-001) | Audit fixed — not data; **066** v3.1 idempotent Source Key + Week write |
+| **Achievements** | **066** duplicate unlocks (H-001) | Audit fixed — not data; **066** v3.1 idempotent Source Key + Week write | **Approved:** keep earliest valid unlock; mark later duplicates for review; no duplicate XP |
 | **Backfill extensions** | Mixed — some `CONFIRM_WRITE`, uneven idempotency | Fear of re-running | Standard: dry-run default; writes skip unchanged; **Source Key** guard on every create |
 
 ### File hash (C-023)
@@ -227,25 +255,27 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 - Fields exist on **Submission Assets**: `File Content Hash`, `File Hash Algorithm` (incl. **Exact SHA-256 Hash**).
 - Wire hash computation at upload (Lambda); store algorithm on row.
 - **Never** dedupe on filename/title alone.
-- **Never** auto-reuse another asset's S3 object — flag same-enrollment contextual reuse for Mike's review queue.
+- **Never** auto-reuse another asset's S3 object — flag same-enrollment contextual reuse for review queue.
+- **Owner approved (2026-07-13):** allow upload; Needs Review; do not auto-delete, overwrite, or block; do not award twice.
 
 ### Safe backfills (C-024)
 
 - Every repair/backfill extension: **find-by-key → skip if exists → create if missing**.
 - Rerunning after partial failure must be **boring** — no double XP, no duplicate assets, no duplicate emails.
+- **Owner approved (2026-07-13):** skip records already correct; create only missing; never duplicate XP, assets, completions, achievements, or communications.
 - Add audit: `audit-dedupe-key-coverage.js` (dry-run) before 2026–27 launch.
 
 ### HW17 quiz / no attachment (C-009)
 
+- **BLOCKED** until owner + ChatGPT complete workflow review (2026-07-13).
 - **067** path bypasses asset pipeline — tables/views assume attachment.
-- **Preferred:** Fillout exports **PDF attachment** → normal **009 → 020 → 070** path.
+- **Preferred (when unblocked):** Fillout exports **PDF attachment** → normal **009 → 020 → 070** path.
 - **Fallback:** explicit attachment-less schema (bigger change); do not leave hybrid broken state.
 
 ### Zoom recording attendance (C-025)
 
 - Live path: **101** + `Attendees` link → full zoom XP + gate credit.
-- Recording path (design TBD): attest watch → partial XP (config in **XP Reward Rules**) + partial gate credit (**Level Gate Rules**).
-- **101** already supports supplemental attendee add after live award — extend into **first-class recording workflow**, not manual-only ops.
+- **Owner approved (2026-07-13):** recording = **50% live XP** + **full gate credit**; mutually exclusive with live for same meeting.
 - **Source Key** must distinguish `ZOOM_LIVE` vs `ZOOM_RECORDING` for same meeting + enrollment.
 
 ---
@@ -254,30 +284,28 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ### Tutorials table consolidation (C-026)
 
-| Table | Status in repo | Recommendation (pending audit) |
-|-------|----------------|--------------------------------|
-| **Tutorials** | **Production** — web catalog, 13 fields, `Tutorial Type` multi-select | **Keep** as canonical content table |
-| **Tutorials & Assets** | Schema only — no code references; duplicate field set | **Candidate to retire** after row migration |
+**BLOCKED (owner 2026-07-13):** `Tutorials` is the **likely canonical** table. **Do not** merge, move, delete, retire, or modify either table until owner discussion + full inspection.
 
-**Decision checklist:** Which table has more/current rows? Any Softr/interface views still on `Tutorials & Assets`? After **C-013**, consolidate image fields to canonical URL pattern on the surviving table.
+| Table | Status in repo | Recommendation |
+|-------|----------------|----------------|
+| **Tutorials** | **Production** — web catalog, 13 fields, `Tutorial Type` multi-select | **Likely canonical** — no changes until unblock |
+| **Tutorials & Assets** | Schema only — no code references; duplicate field set | **Hold** — no retirement until unblock |
 
 ### Major-event notifications (C-027)
 
-**In scope (discuss):**
+**Owner approved (2026-07-13):** first version → **parents**. **In scope:**
 
-| Event | Likely trigger | Not in scope |
-|-------|----------------|--------------|
-| Level up / gate cleared | **042** level assignment change | Daily shooting XP (**010**) |
-| Shot milestone unlock | **066** → **059** | Homework submitted |
-| Streak milestone | **054** | Routine coach feedback |
-| Perfect week | **058** | Weekly summary email (stays email) |
+| Event | Trigger | Not in scope |
+|-------|---------|--------------|
+| Level up | **042** level assignment change | Daily shooting XP (**010**) |
+| Major shot milestone | **066** → **059** | Homework submitted |
+| Perfect Week | **058** | Routine coach feedback |
+| Major streak milestone | **054** | **071** homework email (unchanged) |
+| | | Video feedback notifications (unchanged) |
 
-**Open questions for owner:**
+**Out of scope:** daily submissions; changes to **071** or video feedback flows.
 
-1. Text **athlete** cell, **parent** cell, or both?
-2. Provider: Twilio, Make SMS module, other?
-3. Opt-in on enrollment form?
-4. Same message for test enrollment (**C-019**)?
+**Still TBD:** channel (SMS vs email), opt-in, templates, idempotent send key (**C-024**).
 
 ---
 
@@ -330,5 +358,6 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | Date | Notes |
 |------|-------|
+| 2026-07-13 | Owner business decisions approved — dedupe/backfill/achievement rules; two-field enrollment (`Active?` + `Progress Processing Enabled?`); Schmidt test; Tutorials blocked; Zoom 50%/full gate; C-027 parent notifications; Learning Activities architecture (replaces HW17-specific); C-009 blocked pending schema approval |
 | 2026-07-05 | Wave 0 closed; H-001 audit fix; H-002 066 v3.1 V2 standard; V2-013 Program Instance queued; V2-001 deferred; V2-028 2025–26 media done |
 | 2026-07-04 | C-026 Tutorials table merge; C-027 major-event SMS notifications (discussion) |
