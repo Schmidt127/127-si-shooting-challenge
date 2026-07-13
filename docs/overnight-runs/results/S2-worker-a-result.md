@@ -3,10 +3,9 @@
 **Worker:** A  
 **Task:** Overnight V2 Stage 2 — C-024 dedupe field + automation dependency inventory  
 **Branch:** `overnight/v2-run/worker-a-s2-c024-inventory`  
-**Base SHA:** `c59dca80723f281a7aa3f26a5f6ec03643c62b93`  
-**Commit SHA:** `a18d1722d491993314c74aaf1677a89e54bf74cb` (inventory body: `6abfd1d`)  
-**Environment:** Repo documentation only — **no PROD**, **no Airtable API**, **no automation logic edits**  
-**Finished (UTC):** 2026-07-13T05:30:00Z (approx)
+**Base SHA:** `c59dca8`  
+**Environment:** Repo documentation only — **no PROD**, **no Airtable API**, **no automations edited**  
+**Finished (UTC):** 2026-07-13T02:15:00Z (approx)
 
 ---
 
@@ -16,12 +15,12 @@
 
 | Gate | Result |
 |------|--------|
-| Five-table dedupe field inventory | **DONE** |
-| 13 writer matrix with Source Key + recheck evidence | **DONE** |
-| Schema citations (`airtable/schema/current/**` + snapshots) | **DONE** |
-| Automation docblock citations | **DONE** |
-| Stage 3 audit gaps flagged | **DONE** (12 gaps) |
-| PROD / lambda / automations | **Not touched** (required) |
+| Table-per-table dedupe field inventory (5 tables) | **DONE** |
+| Writer matrix (13 automations) with Source Key + recheck evidence | **DONE** |
+| Citations to `airtable/schema/current/**` + automation docblocks | **DONE** |
+| Gaps flagged for Stage 3 audit script | **DONE** (8 items) |
+| C-023 byte layer distinguished from C-024 record keys | **DONE** |
+| PROD / lambda / make / automations | **Not touched** (required) |
 
 ---
 
@@ -29,73 +28,72 @@
 
 | File | Action |
 |------|--------|
-| `docs/deploy-checklists/C-024-dedupe-field-inventory-stage2.md` | **Created** — comprehensive tables + writer matrix + mermaid graph |
+| `docs/deploy-checklists/C-024-dedupe-field-inventory-stage2.md` | **Created** — field inventory §1–5, writer matrix §6, Source Key registry §7, gaps §8 |
 | `docs/overnight-runs/results/S2-worker-a-result.md` | **Created** — this result |
 
 **Not edited (forbidden / out of scope):**
 
 - `lambda/**`, `make/**`, `airtable/automations/**`
-- `docs/overnight-runs/_live-status-update.md`
-- `overnight/lead-integration` (Lead worktree)
-
----
-
-## Table counts
-
-| Table | Dedupe-related fields inventoried |
-|-------|----------------------------------:|
-| Submissions | 8 |
-| Submission Assets | 24 |
-| Homework Completions | 11 |
-| XP Events | 12 |
-| Athlete Achievement Unlocks | 8 |
-| **Total** | **63** |
-
-| Other counts | |
-|--------------|--:|
-| Automation writers mapped | 13 |
-| Source Key prefix patterns | 10 |
-| Audit gaps for Stage 3 | 12 |
-
----
-
-## Key findings
-
-1. **Two dedupe layers are distinct:** C-023 (file hash / `Duplicate File Status` / `Asset Reuse Decision`) vs C-024 (automation `Source Key` on XP Events and unlock keys on Achievement Unlocks). Upload retry idempotency (**070a/b/c**) uses Drive URL + trigger state — not Source Key.
-
-2. **Strongest recheck patterns:** **114** (explicit `10a - Last-Chance XP Event Recheck Before Create`), **101** (in-memory `sourceKeyIndex`), **066** (`existingUnlockBySourceKey` Map), **009** (`existingAssetKeys` Set). **010**, **065**, **059** scan full XP table — race-window gap vs 114.
-
-3. **Unlock dedupe is two-step:** **058** / **066** create unlock rows with `PERFECT_WEEK|…` or `SHOT_MILESTONE|…` keys; **059** projects the same patterns onto XP Events with link + Source Key duplicate protection.
-
-4. **116 bridges C-023 → C-024:** On `Asset Reuse Decision`, resolves XP via `VIDEO_SUBMISSION|` or `HOMEWORK_XP|` prefixes (must stay aligned with **114** / **065** CONFIG).
-
-5. **Schema doc drift:** [field-map.md](../../airtable/schema/current/field-map.md) names `Dedupe Key`; live XP field is **`Source Key`** with formula `XP Dedupe Key`. `Canonical File URL` / `Storage Key` still flagged missing on DEV.
-
----
-
-## Blockers
-
-| Blocker | Owner | Notes |
-|---------|-------|-------|
-| None for Worker A scope | — | Inventory complete; no implementation dependency |
-| DEV fields `Canonical File URL` / `Storage Key` | Mike / OMNI | Blocks full L2b audit until DEV confirmed — see G5 in inventory |
-| Worker D contract should align prefix registry | Worker D | A inventory provides draft registry; D owns canonical contract |
+- `docs/overnight-runs/_live-status-update.md`, `queue.json`, `agent-status.json`
+- `overnight/lead-integration`, Worker B/C/D deliverables
 
 ---
 
 ## Tests run
 
-**N/A** — documentation-only task. All field names and patterns cited from:
+**N/A** — documentation task. Field names and formula keys cited from:
 
-- `airtable/schema/current/field-map.md`, `table-map.md`, `automation-trigger-map.md`
-- `airtable/schema/snapshots/schema_doc_appn84sqPw03zEbTT_20260629_045741.md`
-- `airtable/schema/snapshots/dev-20260706/schema_doc_appTetnuCZlCZdTCT_20260706_161606.md`
-- Automation docblocks: 007, 009, 010, 054, 058, 059, 065, 066, 101, 114, 116, 070a, 070b, 070c
+- `airtable/schema/current/field-map.md`, `table-map.md`, `automation-trigger-map.md`, `schema-notes.md`
+- `airtable/schema/snapshots/schema_doc_appn84sqPw03zEbTT_20260629_045741.md` (prod formula detail)
+- Automation docblocks: **007**, **009**, **010**, **054**, **058**, **059**, **065**, **066**, **101**, **114**, **116**, **070a**, **070b**, **070c**
+- `docs/v2-change-backlog.md` § Engine principles; `docs/upload-workflow-homework-video.md` §020 dedupe key
 
 ---
 
-## Deliverable for Lead
+## Summary
 
-Primary artifact: [C-024-dedupe-field-inventory-stage2.md](../../deploy-checklists/C-024-dedupe-field-inventory-stage2.md)
+### Tables inventoried
 
-Integration order per LEAD-STAGE2-AUTHORIZED: **D → A → B → C**. This result is ready for Lead merge after Worker D contract pass.
+| Table | Key dedupe fields | Primary writers |
+|-------|-------------------|-----------------|
+| **Submissions** | `Duplicate Key`, `Duplicate Review Status`, `Count This Submission?` | **007**, **010** |
+| **Submission Assets** | `Source Attachment ID`; C-023 hash/review fields; upload transport fields | **009**, **070a/b/c**, Lambda, **116** |
+| **Homework Completions** | `Homework Completion Key` (Enrollment \| Week \| Homework) | **020**, **065** |
+| **XP Events** | `Source Key`, `XP Dedupe Key`, `XP Dedupe Key Normalized` | **010**, **054**, **059**, **065**, **101**, **114** |
+| **Athlete Achievement Unlocks** | `Source Key`, `Milestone Source Key`, `Unlock Key` (formula) | **058**, **066**, **059** |
+
+### Writer matrix highlights
+
+- **XP create path:** All six XP writers (**010**, **054**, **059**, **065**, **101**, **114**) query by `Source Key` before create; **114** adds explicit last-chance recheck (Step 10a).
+- **Unlock create path:** **058** and **066** guard on writable Source Key / Milestone Source Key; **059** consumes unlock → XP with dual match (Source Key + Achievement Unlock link).
+- **Intake path:** **007** reads formula `Duplicate Key`; **009** dedupes `Source Attachment ID` per submission only.
+- **Upload path:** **070a/b** block on legacy Drive URL/ID — separate from C-024 Source Key layer; **070c** idempotent writeback verify.
+- **Consequence path:** **116** looks up XP by `VIDEO_SUBMISSION\|` / `HOMEWORK_XP\|` — reactivates same row on reversal (DEV S5 validated per automation-trigger-map).
+
+### Stage 3 handoff (gaps)
+
+Eight gaps documented in inventory §8 — top priority: **G2** (Homework Completion Key vs **020** match dimensions), **G1** (**009** vs byte hash), **G4** (**065** missing **114**-style last-chance recheck).
+
+### Lead integration
+
+Deliverable for D → A → B → C merge order: **field inventory aligns with Worker D contract** when D lands canonical Source Key patterns + `audit-dedupe-key-coverage.js` requirements.
+
+---
+
+## Commit
+
+| Item | Value |
+|------|--------|
+| Commit SHA | `37b5cac8ecedfe057fb61a35b81b0a054d742a3a` (`37b5cac`) |
+| Push | `overnight/v2-run/worker-a-s2-c024-inventory` |
+| PR | **No PR** — worker branch per overnight rules |
+
+---
+
+## Escalations
+
+None. All assigned automation docblocks present on branch at `c59dca8`. Schema current docs are sparse for XP/Homework field detail — prod snapshot used for formula citations (read-only, not committed).
+
+---
+
+*Worker A · Overnight V2 Stage 2 · `overnight/v2-run/worker-a-s2-c024-inventory`*
