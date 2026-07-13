@@ -1,0 +1,270 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-13T06:20:00-06:00",
+  "canonical": {
+    "branch": "overnight/lead-integration",
+    "sha": "ef09acccf6f352ced878f57ca4ddc60ed4989caa",
+    "remote_sha": "ef09acccf6f352ced878f57ca4ddc60ed4989caa",
+    "match": true
+  },
+  "run": {
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
+  },
+  "lanes": {
+    "lead": {
+      "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
+      "branch": "overnight/lead-integration"
+    },
+    "active_writes": [],
+    "available": ["worker-a", "worker-b", "worker-c", "worker-d"]
+  },
+  "queue": [
+    {
+      "id": "pipeline-homework-video-audit",
+      "backlog_refs": ["automation-index", "C-024"],
+      "state": "READY_REPO",
+      "priority": 1,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "pipeline-zoom-achievements-audit",
+      "backlog_refs": ["C-025", "C-024"],
+      "state": "READY_REPO",
+      "priority": 2,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "pipeline-summary-comms-audit",
+      "backlog_refs": ["C-011", "C-027"],
+      "state": "READY_REPO",
+      "priority": 3,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-009-learning-activities-proposal",
+      "backlog_refs": ["C-009"],
+      "state": "READY_REPO",
+      "priority": 4,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 75,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "prod-promotion-rollback-docs",
+      "backlog_refs": ["C-023", "C-010", "C-013"],
+      "state": "READY_DOC",
+      "priority": 5,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "stale-branch-review",
+      "backlog_refs": [],
+      "state": "READY_REPO",
+      "priority": 6,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 45,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-025-zoom-recording-design",
+      "backlog_refs": ["C-025"],
+      "state": "READY_DOC",
+      "priority": 7,
+      "depends_on": ["pipeline-zoom-achievements-audit"],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-027-major-event-notifications-design",
+      "backlog_refs": ["C-027"],
+      "state": "READY_DOC",
+      "priority": 8,
+      "depends_on": ["pipeline-summary-comms-audit"],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-022-presentation-fields-audit",
+      "backlog_refs": ["C-022", "V2-003", "V2-004"],
+      "state": "READY_REPO",
+      "priority": 9,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-010-dev-omni-implementation",
+      "backlog_refs": ["C-010"],
+      "state": "BLOCKED_AIRTABLE",
+      "priority": 20,
+      "depends_on": [],
+      "auth": "explicit_mike",
+      "est_minutes": 120,
+      "gates": { "owner": false, "airtable": true, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-019-dev-testing-views",
+      "backlog_refs": ["C-019"],
+      "state": "BLOCKED_AIRTABLE",
+      "priority": 21,
+      "depends_on": ["C-010-dev-omni-implementation"],
+      "auth": "explicit_mike",
+      "est_minutes": 90,
+      "gates": { "owner": false, "airtable": true, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-011-weekly-email-implementation",
+      "backlog_refs": ["C-011"],
+      "state": "BLOCKED_AIRTABLE",
+      "priority": 22,
+      "depends_on": ["C-010-dev-omni-implementation"],
+      "auth": "explicit_mike",
+      "est_minutes": 120,
+      "gates": { "owner": false, "airtable": true, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-009-learning-activities-airtable",
+      "backlog_refs": ["C-009"],
+      "state": "BLOCKED_AIRTABLE",
+      "priority": 30,
+      "depends_on": ["C-009-learning-activities-proposal"],
+      "auth": "explicit_mike",
+      "est_minutes": 180,
+      "gates": { "owner": true, "airtable": true, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-026-tutorials-merge",
+      "backlog_refs": ["C-026"],
+      "state": "BLOCKED_OWNER",
+      "priority": 31,
+      "depends_on": [],
+      "auth": "explicit_mike",
+      "est_minutes": 120,
+      "gates": { "owner": true, "airtable": true, "prod": false, "credentials": false, "destructive": true },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "C-023-prod-automation-paste",
+      "backlog_refs": ["C-023"],
+      "state": "BLOCKED_PROD",
+      "priority": 40,
+      "depends_on": ["prod-promotion-rollback-docs"],
+      "auth": "explicit_mike",
+      "est_minutes": 90,
+      "gates": { "owner": false, "airtable": true, "prod": true, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": null
+    },
+    {
+      "id": "overnight-s2-c024-inventory",
+      "backlog_refs": ["C-024"],
+      "state": "COMPLETE",
+      "priority": 100,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
+    },
+    {
+      "id": "overnight-s3-c024-audit",
+      "backlog_refs": ["C-024"],
+      "state": "COMPLETE",
+      "priority": 101,
+      "depends_on": ["overnight-s2-c024-inventory"],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
+    },
+    {
+      "id": "overnight-s4-c010-lifecycle",
+      "backlog_refs": ["C-010"],
+      "state": "COMPLETE",
+      "priority": 102,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 90,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
+    },
+    {
+      "id": "overnight-s5-post-omni-verify",
+      "backlog_refs": ["C-010", "C-019", "C-011", "C-023"],
+      "state": "COMPLETE",
+      "priority": 103,
+      "depends_on": ["overnight-s4-c010-lifecycle"],
+      "auth": "standing",
+      "est_minutes": 120,
+      "gates": { "owner": false, "airtable": false, "prod": false, "credentials": false, "destructive": false },
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
+    }
+  ],
+  "stage": {
+    "authorized": false,
+    "auth_doc": null,
+    "merge_order": [],
+    "worker_branches": {}
+  },
+  "pending_approvals": [],
+  "tests": {
+    "last_run_at": "2026-07-13T05:45:00-06:00",
+    "lambda": "66/66",
+    "offline": "97/97",
+    "targeted": "26/26",
+    "pass": true
+  },
+  "next_action": "Begin Desktop OS v1 trial: authorize Stage 6 package pipeline-homework-video-audit (single lane, Lead-direct).",
+  "stop_reason": null
+}

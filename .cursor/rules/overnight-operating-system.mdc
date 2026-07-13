@@ -1,0 +1,76 @@
+---
+description: Overnight Lead operating system — CONTROL.json, lanes, stages, approvals
+alwaysApply: true
+---
+
+# Overnight operating system (Desktop v1)
+
+Authority: [docs/overnight-runs/CONTROL.json](../docs/overnight-runs/CONTROL.json)
+
+## Session start (mandatory)
+
+1. Read `docs/overnight-runs/CONTROL.json`.
+2. Verify `canonical.sha` against `git rev-parse HEAD` on the Lead worktree.
+3. `git fetch origin` and verify `canonical.remote_sha` matches `origin/overnight/lead-integration`.
+4. Do not trust chat history over CONTROL.json + git state.
+
+## Stage model
+
+- A **stage** is one small integration unit (30–90 minutes), not necessarily one backlog item.
+- **Lead-direct implementation** is the default.
+- Use **one active write lane** by default; use two only for clearly separate file paths.
+- **Subagents** are for bounded research or inventory only — not persistent implementation workers.
+- Produce a **first saved deliverable within 15 minutes** of branch creation.
+- Do **not** stop merely because a stage finished; after integration PASS, select the next `READY_*` package immediately.
+
+## Lanes and branches
+
+| Role | Worktree | Branch |
+|------|----------|--------|
+| Lead | `127-si-shooting-challenge` | `overnight/lead-integration` |
+| Worker | `127-si-worktrees/worker-{a-d}` | `overnight/v2-run/worker-[a-d]-s[stage]-[scope]` |
+
+Before every `git commit` or Lead merge commit:
+
+```bash
+python tools/overnight/assert_git_lane.py --role lead
+# or
+python tools/overnight/assert_git_lane.py --role worker --lane worker-a
+```
+
+## Integration
+
+1. Write stage auth doc from `docs/overnight-runs/stages/_TEMPLATE-AUTHORIZED.md`.
+2. Implement on worker branch (or Lead-direct in worker worktree).
+3. Merge to Lead in documented order.
+4. Run regression: Lambda 66, offline 97, targeted carry-forward.
+5. Update CONTROL.json queue states and canonical SHA.
+6. Update `docs/overnight-runs/results/UNATTENDED-RUN-STATUS.md` at **milestones only**.
+
+## Status log milestones
+
+Log only: stage authorized, first deliverable, package committed, integration started, tests completed, Lead pushed, run blocked, run stopped.
+
+## Pending approvals
+
+Record blocked commands in `CONTROL.json` → `pending_approvals`. Continue independent READY work when possible. Never use destructive workarounds.
+
+## Hard blocks (require explicit Mike authorization)
+
+- PROD deployment or PROD automation changes
+- Credentials or environment-variable changes
+- Airtable schema creation, deletion, rename, or migration
+- `git reset --hard`, `git clean`, force push, branch/file deletion
+- Package installation, AWS, external-account changes
+- Tutorials table changes (C-026)
+- Learning Activities Airtable implementation (C-009)
+
+## Cloud Agents
+
+Cloud Agents have **no integration authority**. Desktop Lead merges to `overnight/lead-integration` only. Cloud phase is out of scope until Desktop v1 trial passes.
+
+## Approval profile
+
+Initial profile: **Balanced** — see [docs/overnight-runs/APPROVAL-PROFILE.md](../docs/overnight-runs/APPROVAL-PROFILE.md).
+
+Manual Cursor setting required: **Cursor Settings → Agents → Approvals & Execution → Run Mode → Auto-review**.

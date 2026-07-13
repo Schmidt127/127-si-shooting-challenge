@@ -1,0 +1,30 @@
+{
+  "terminalAllowlist": [
+    "git status",
+    "git diff",
+    "git log",
+    "git branch",
+    "git fetch",
+    "git rev-parse",
+    "git show",
+    "git add",
+    "git commit",
+    "python tools/overnight/assert_git_lane.py",
+    "python -m unittest",
+    "python tools/airtable/c070a_overnight_offline_suite.py",
+    "python tools/overnight/tests/test_assert_git_lane.py"
+  ],
+  "autoRun": {
+    "allow_instructions": [
+      "Allow read-only git inspection and repository-local documentation, test, automation, and overnight tooling changes in the 127-si-shooting-challenge repo.",
+      "Allow git add and git commit for paths under docs/, tools/, airtable/, lambda/, web/, and .cursor/ during overnight lead-integration work after branch guard passes."
+    ],
+    "block_instructions": [
+      "Block git reset --hard, git clean, git push --force, branch deletion, and recursive file deletion commands.",
+      "Block package installation commands such as pip install, npm install, yarn, pnpm, and cargo install.",
+      "Block AWS CLI, deployment scripts, PROD operations, credential changes, and environment-variable changes.",
+      "Block Airtable schema creation, deletion, rename, or migration commands.",
+      "Require approval for git merge and git push even when other git commands are allowed."
+    ]
+  }
+}

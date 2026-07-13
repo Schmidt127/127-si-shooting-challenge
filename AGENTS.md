@@ -10,7 +10,8 @@ Guidance for AI assistants (Cursor, etc.) working in this repository.
 3. [docs/v2/README.md](./docs/v2/README.md) — **V2 numbered doc pack** (`01`–`09`)
 4. [docs/PROJECT_STATE.md](./docs/PROJECT_STATE.md) — live snapshot (bases, audits, Vercel, Softr)
 5. [docs/v2-change-backlog.md](./docs/v2-change-backlog.md) — live backlog (add new items here)
-6. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md) — aggregated planning view for ChatGPT
+6. [docs/overnight-runs/CONTROL.json](./docs/overnight-runs/CONTROL.json) — **overnight resume source of truth** (read before acting; verify git SHA)
+7. [docs/CHATGPT-MASTER-PLAN-BRIEF.md](./docs/CHATGPT-MASTER-PLAN-BRIEF.md) — aggregated planning view for ChatGPT
 
 ## Repo scope
 
