@@ -150,7 +150,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-010** | Two-field enrollment controls | **Approved (2026-07-13):** **`Active?`** = visibility + communications gate; **`Progress Processing Enabled?`** = progress calculation gate. Reactivated athletes stay caught up. **No Airtable field or automation changes yet** — audit gaps (**010**, **031**, **065**, **053**, **072**, **076**) remain documented until implementation wave. | V2-013 partial | **queued** |
+| **C-010** | Two-field enrollment controls | **Approved (2026-07-13):** **`Active?`** = visibility + communications; **`Progress Processing Enabled?`** = progress gate. **Stage 4 repo audit complete (2026-07-13):** [inventory](./deploy-checklists/C-010-field-automation-inventory-stage4.md), [visibility](./deploy-checklists/C-010-email-public-visibility-audit-stage4.md), [contract](./deploy-checklists/C-010-two-field-behavior-contract-stage4.md), [OMNI runbook](./deploy-checklists/C-010-dev-omni-implementation-stage4.md), [tests](../tools/airtable/tests/test_c010_enrollment_lifecycle.py). **No Airtable schema or automation paste yet.** | V2-013 partial | **repo audit complete** |
 | **C-011** | Fully automatic weekly parent emails | No `Build Weekly Email Now?` / `Send to Make?`; scheduled 072→074 | C-010, C-022 | queued |
 | **C-006** | 090F duplicate unlock prevention | Root cause was audit dedupe key — **fixed in H-001**; **066** v3.1 prevents empty Week going forward | H-002 | **done** |
 
