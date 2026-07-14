@@ -101,7 +101,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 114 | Video XP Event | | Y | — | Keep separate |
 | 115 | Test Framework | | Y | — | Keep separate |
 | 116 | Asset Reuse Consequences | | Y | Replaced **008** | Keep separate |
-| *(slot for 117)* | Zoom Recording Orchestrator | not pasted | Y | — | Pending after Phase A frees +1 |
+| 117 | Zoom Recording Orchestrator | **OFF** | Y | — | Keep separate — DEV pasted v1.0.0; trigger not configured |
 
 \*061/078: docs-table only / no GitHub file — still **required UI slots** until Mike authorizes fold into neighbors with tests; **not** deletable for OFF or missing GH.
 
