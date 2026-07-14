@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T16:00:00-06:00",
+  "updated_at": "2026-07-14T16:20:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "7f64154282c267ff4c84bbbcf86556719d22ebd2",
@@ -871,9 +871,11 @@
         "airtable/automations/shooting-challenge/_rollback/phase-a-006-021-2026-07-14/",
         "docs/deploy-checklists/PHASE-A-006-021-mike-ui-actions.md",
         "docs/overnight-runs/results/S22-phase-a-migration-record.md",
-        "docs/audits/phase-a-021-combined-live-dev-2026-07-14.json"
+        "docs/audits/phase-a-021-combined-live-dev-2026-07-14.json",
+        "docs/audits/phase-a-021-live-smoke-2026-07-14.json",
+        "docs/overnight-runs/results/S22-phase-a-live-smoke-result.md"
       ],
-      "notes": "Repo+offline+API mirror PASS. Stopped for Mike UI: paste combined 021, retire 006, create 117 OFF blank webhook. Phase B and Folder 07 untouched."
+      "notes": "Live smoke CRITICAL PASS. 006 still ON. Awaiting Mike: retire 006 then create 117 OFF blank webhook."
     }
   ],
   "stage": {
@@ -886,12 +888,11 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T16:00:00-06:00",
+    "last_run_at": "2026-07-14T16:20:00-06:00",
     "phase_a_offline": "13/13",
-    "phase_a_live_api_mirror": "PASS",
-    "phase_a_repair_path": "PASS",
+    "phase_a_live_smoke": "CRITICAL PASS (sent retest included)",
     "pass": true
   },
-  "next_action": "Mike UI Phase A: (1) paste combined 021 (2) smoke (3) retire 006 for +1 (4) create 117 OFF webhook blank. Sheet: PHASE-A-006-021-mike-ui-actions.md",
-  "stop_reason": "Waiting Mike Airtable UI for paste/retire/create (Meta automations API 403)"
+  "next_action": "Mike: smoke PASS \u2014 retire 006 (+1), create 117 OFF with webhookUrl blank. See S22-phase-a-live-smoke-result.md",
+  "stop_reason": "Waiting Mike UI Steps 2-3 (retire 006, create 117 OFF)"
 }

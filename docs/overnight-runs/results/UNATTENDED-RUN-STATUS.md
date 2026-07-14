@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S22 Phase A live smoke PASS (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Smoke | CRITICAL **PASS** (video/HW/both/idempotent/Sent/009/no dupes) |
+| 006 | Still ON — do not retire until Mike does next step |
+| Next | Mike retires **006**, creates **117 OFF** blank webhook |
+| Result | \S22-phase-a-live-smoke-result.md\ |
+
+
 ## Milestone — S22 Phase A 006∪021 + 117 (2026-07-14)
 
 | Field | Value |

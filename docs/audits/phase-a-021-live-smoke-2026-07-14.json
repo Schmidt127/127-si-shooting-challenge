@@ -1,0 +1,125 @@
+{
+  "ran_at": "2026-07-14T16:11:07.384214-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "combined_021_live": true,
+  "006_still_on": true,
+  "tests": {
+    "1_video_only": {
+      "submission_id": "recS6KgsiWrpXpau0",
+      "scenario_id": "recPf5kNn1Jcm235H",
+      "ready": {
+        "status": "Processing",
+        "video_count": 1,
+        "vid": 1,
+        "hw1": 0,
+        "hw2": 0,
+        "week": true,
+        "enrollment": true,
+        "asset_ids": [
+          "recFlbnWcRaLk6irK"
+        ]
+      },
+      "asset_ids": [
+        "recFlbnWcRaLk6irK"
+      ],
+      "asset_count": 1,
+      "ok": true,
+      "critical": true
+    },
+    "2_homework_only": {
+      "submission_id": "recgPS8m1y2ISmxQK",
+      "scenario_id": "recOT82c0VMaf26eW",
+      "ready": {
+        "status": "Processing",
+        "video_count": 0,
+        "vid": 0,
+        "hw1": 1,
+        "hw2": 0,
+        "week": true,
+        "enrollment": true,
+        "asset_ids": [
+          "recjqLOXz7c12Wu3a"
+        ]
+      },
+      "asset_ids": [
+        "recjqLOXz7c12Wu3a"
+      ],
+      "ok": true,
+      "critical": true
+    },
+    "3_both": {
+      "submission_id": "recW4CvqDTVZvrBQH",
+      "ready": {
+        "status": "Processing",
+        "video_count": 1,
+        "vid": 1,
+        "hw1": 1,
+        "hw2": 0,
+        "week": true,
+        "enrollment": true,
+        "asset_ids": [
+          "recYDRy3SsYZAdr35",
+          "rec0nLntnWXgr5eSi"
+        ]
+      },
+      "asset_ids": [
+        "recYDRy3SsYZAdr35",
+        "rec0nLntnWXgr5eSi"
+      ],
+      "ok": true,
+      "critical": true
+    },
+    "4_idempotent": {
+      "submission_id": "recS6KgsiWrpXpau0",
+      "before": {
+        "status": "Processing",
+        "count": 1,
+        "assets": 1
+      },
+      "after": {
+        "status": "Processing",
+        "count": 1,
+        "assets": 1
+      },
+      "ok": true,
+      "critical": true
+    },
+    "5_sent_preserved": {
+      "submission_id": "rec0GIIB7Il8s7LZb",
+      "status": "Sent",
+      "video_count": 2,
+      "expected_count": 2,
+      "ok": true,
+      "critical": true,
+      "note": "Initial harness truncated Video Upload to 1 file (false fail). Retest with full attachment set PASS."
+    },
+    "6_009_assets_video": {
+      "asset_ids": [
+        "recFlbnWcRaLk6irK"
+      ],
+      "vf_links_seen": 1,
+      "ok": true,
+      "critical": true
+    },
+    "8_no_duplicate_assets": {
+      "video_only_assets": 1,
+      "ok": true,
+      "critical": true
+    },
+    "7_021_errors_inferred": {
+      "meta_automations_api": "403 \u2014 run history not readable via PAT",
+      "inferred_ok": true,
+      "mike_confirm": "Spot-check DEV Automations \u2192 021 \u2192 Run history for red errors during this window",
+      "ok": true,
+      "critical": false
+    }
+  },
+  "critical_pass": true,
+  "notes": [
+    "Sent retest PASS after harness fix; see phase-a-021-sent-retest-2026-07-14.json"
+  ],
+  "summary": {
+    "critical_pass": true,
+    "next": "Mike: retire 006 (+1 free), then create 117 OFF with blank webhookUrl"
+  }
+}
