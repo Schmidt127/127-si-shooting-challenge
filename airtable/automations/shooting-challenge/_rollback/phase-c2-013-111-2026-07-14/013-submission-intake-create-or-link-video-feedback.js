@@ -1,38 +1,45 @@
 /*
-GitHub Source of Truth — paste into Airtable starting AFTER this header block
-(skip this GitHub header when pasting).
+Automation: 013 - Submission Intake - Create or Link Video Feedback
 System: 127 SI Shooting Challenge
-Backlog: Phase C2 / S25 — absorb former 111 Grade Band copy into 013
-Folder: 02 - Submission Intake and Asset Creation
-Rollback: airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-2026-07-14/
+Source: Airtable Automation
+Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-06-22
+Last GitHub Update: 2026-06-22
+
+Purpose:
+Creates or links Video Feedback for one video Submission Asset and marks the asset Pending Link for Make.
+
+Trigger:
+Submission Assets when a video asset is ready for Video Feedback prep.
+
+Important Tables:
+Submission Assets, Video Feedback, Submissions, Enrollments
+
+Important Fields:
+Video Feedback, Upload Status, Send to Make Trigger, Submission - Linked, Enrollment - Linked
+
+Notes:
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 013 - Submission Intake - Create or Link Video Feedback
  *
- * Version: v3.0.0
+ * Version: v2.0
  * Date Written: 2026-05-20
- * Last Updated: 2026-07-14
- * Supersedes: separate 111 (copy Enrollment Grade Band → Video Feedback)
+ * Last Updated: 2026-06-22
  *
  * PURPOSE
  * - Runs from one Submission Assets record.
  * - Confirms the asset is a Video Feedback asset.
  * - Creates or links one Video Feedback record.
  * - Links Video Feedback to Submission Asset, Submission, Enrollment, and Grade Band when available.
- * - Sets or repairs Video Feedback → Grade Band from Enrollment when blank (former 111).
  * - Marks the Submission Asset Pending Link and checks Send to Make Trigger for 070b.
  *
  * IMPORTANT DESIGN RULES
  * - Upload Status Make send gate is Pending Link (same ladder as 009, 020, 070a, 070b).
  * - Does not upload files to Google Drive.
  * - Idempotent: reuses existing Video Feedback keyed by asset link or Video Feedback Key.
- * - Re-queries Video Feedback immediately before create to avoid duplicate rows when 009
- *   creates multiple assets for the same video path in parallel (013 race guard).
- * - Grade Band repair is blank-only: skip when VF already has Grade Band; never overwrite
- *   an existing valid Grade Band (safer than legacy 111, which could overwrite).
- * - Missing Enrollment Grade Band → soft-skip GB repair (do not invent; do not throw).
- * - Former automation 111 must be retired only after DEV live smoke PASS.
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation
@@ -55,7 +62,6 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-202
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
  * - actionOut = created_new_video_feedback | linked_existing_or_repaired | error
- * - gradeBandActionOut = copied_grade_band | already_has_grade_band | skipped_no_enrollment_grade_band | skipped_no_enrollment | ""
  * - errorOut
  * - debugStep
  * - submissionAssetId, videoFeedbackId, submissionId, enrollmentId, gradeBandId
@@ -64,17 +70,15 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-202
  * PRIMARY TABLES USED
  * - Submission Assets
  * - Video Feedback
- * - Enrollments (Grade Band repair — former 111)
+ * - Enrollments
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Video Feedback links and initial workflow/upload status when blank
- * - Video Feedback → Grade Band (create + blank repair)
  * - Submission Assets → Video Feedback, Upload Status, Send to Make Trigger, Upload Error
  *
  * IMPORTANT NOTES
  * - This is not the Make upload automation (070b).
  * - This is not the video XP automation (114).
- * - This is not 112 (create VF from Submission Asset — keep separate if present).
  ************************************************************/
 
 // @ts-nocheck
@@ -85,7 +89,7 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-202
 
 const CONFIG = {
   scriptName: "013 - Submission Intake - Create or Link Video Feedback",
-  version: "v3.0.0",
+  version: "v2.0",
 
   tables: {
     assets: "Submission Assets",
@@ -266,53 +270,17 @@ function setTextField(fields, table, fieldName, value) {
   fields[fieldName] = String(value);
 }
 
+function summarizeFields(fields) {
+  return Object.keys(fields).join(", ") || "No writable fields";
+}
+
 function buildVideoFeedbackKey(assetId) {
   return `${CONFIG.values.videoKeyPrefix}|${assetId}`;
-}
-
-/**
- * Blank-only Grade Band decision (no overwrite of existing valid GB).
- * Soft-skip when enrollment or enrollment GB missing — do not invent.
- */
-function decideGradeBandRepair({ currentGradeBandIds, enrollmentGradeBandIds, hasEnrollment }) {
-  if ((currentGradeBandIds || []).length > 0) {
-    return { action: "already_has_grade_band", write: false, ids: currentGradeBandIds };
-  }
-  if (!hasEnrollment) {
-    return { action: "skipped_no_enrollment", write: false, ids: [] };
-  }
-  if (!(enrollmentGradeBandIds || []).length) {
-    return { action: "skipped_no_enrollment_grade_band", write: false, ids: [] };
-  }
-  return { action: "copied_grade_band", write: true, ids: enrollmentGradeBandIds };
-}
-
-function findExistingVideoFeedback(videoQuery, assetId, videoKey, existingVideoIdsFromAsset) {
-  let existingVideo = null;
-
-  if (existingVideoIdsFromAsset.length > 0) {
-    existingVideo = videoQuery.getRecord(existingVideoIdsFromAsset[0]) || null;
-  }
-
-  if (!existingVideo) {
-    for (const videoRecord of videoQuery.records) {
-      const videoAssetIds = linkedIds(videoRecord, CONFIG.video.submissionAsset);
-      const existingKey = text(videoRecord, CONFIG.video.key);
-
-      if (videoAssetIds.includes(assetId) || existingKey === videoKey) {
-        existingVideo = videoRecord;
-        break;
-      }
-    }
-  }
-
-  return existingVideo;
 }
 
 function setFinalOutputs({
   statusOut,
   actionOut,
-  gradeBandActionOut = "",
   errorOut = "",
   debugStep,
   submissionAssetId = "",
@@ -325,7 +293,6 @@ function setFinalOutputs({
 }) {
   setOutputSafe("statusOut", statusOut);
   setOutputSafe("actionOut", actionOut);
-  setOutputSafe("gradeBandActionOut", gradeBandActionOut);
   setOutputSafe("errorOut", errorOut);
   setOutputSafe("debugStep", debugStep);
   setOutputSafe("submissionAssetId", submissionAssetId);
@@ -341,7 +308,6 @@ function setFinalOutputs({
     version: CONFIG.version,
     statusOut,
     actionOut,
-    gradeBandActionOut,
     errorOut,
     debugStep,
     submissionAssetId,
@@ -431,8 +397,6 @@ async function main() {
   setOutputSafe("debugStep", debugStep);
 
   let gradeBandIds = [];
-  let gradeBandActionOut = "";
-  const hasEnrollment = enrollmentIds.length > 0;
 
   if (fieldExists(enrollmentsTable, CONFIG.enrollment.gradeBand)) {
     const enrollmentQuery = await enrollmentsTable.selectRecordsAsync({
@@ -446,33 +410,37 @@ async function main() {
     }
   }
 
-  if (!hasEnrollment) {
-    gradeBandActionOut = "skipped_no_enrollment";
-  } else if (!gradeBandIds.length) {
-    gradeBandActionOut = "skipped_no_enrollment_grade_band";
-  }
-
   debugStep = "find_existing_video_feedback";
   setOutputSafe("debugStep", debugStep);
 
-  let videoQuery = await videoTable.selectRecordsAsync({
+  const videoQuery = await videoTable.selectRecordsAsync({
     fields: safeFields(videoTable, Object.values(CONFIG.video)),
   });
 
   const videoKey = buildVideoFeedbackKey(asset.id);
-  let existingVideo = findExistingVideoFeedback(
-    videoQuery,
-    asset.id,
-    videoKey,
-    existingVideoIdsFromAsset
-  );
+  let existingVideo = null;
+
+  if (existingVideoIdsFromAsset.length > 0) {
+    existingVideo = videoQuery.getRecord(existingVideoIdsFromAsset[0]) || null;
+  }
+
+  if (!existingVideo) {
+    for (const videoRecord of videoQuery.records) {
+      const videoAssetIds = linkedIds(videoRecord, CONFIG.video.submissionAsset);
+      const existingKey = text(videoRecord, CONFIG.video.key);
+
+      if (videoAssetIds.includes(asset.id) || existingKey === videoKey) {
+        existingVideo = videoRecord;
+        break;
+      }
+    }
+  }
 
   debugStep = "create_or_repair_video_feedback";
   setOutputSafe("debugStep", debugStep);
 
   let videoFeedbackId = "";
   let actionOut = "";
-  let finalGradeBandId = "";
 
   if (existingVideo) {
     videoFeedbackId = existingVideo.id;
@@ -499,18 +467,8 @@ async function main() {
       setLink(updateFields, videoTable, CONFIG.video.enrollment, enrollmentIds);
     }
 
-    // Former 111: blank-only Grade Band repair (never overwrite existing valid GB)
-    const gbDecision = decideGradeBandRepair({
-      currentGradeBandIds,
-      enrollmentGradeBandIds: gradeBandIds,
-      hasEnrollment,
-    });
-    gradeBandActionOut = gbDecision.action;
-    finalGradeBandId = (gbDecision.ids && gbDecision.ids[0]) || "";
-
-    if (gbDecision.write) {
-      setLink(updateFields, videoTable, CONFIG.video.gradeBand, gbDecision.ids);
-      finalGradeBandId = gbDecision.ids[0] || "";
+    if (gradeBandIds.length > 0 && !sameIdSet(currentGradeBandIds, gradeBandIds)) {
+      setLink(updateFields, videoTable, CONFIG.video.gradeBand, gradeBandIds);
     }
 
     setTextField(updateFields, videoTable, CONFIG.video.key, videoKey);
@@ -546,108 +504,42 @@ async function main() {
       await videoTable.updateRecordAsync(existingVideo.id, updateFields);
     }
   } else {
-    // Recheck-before-create (one source → one Video Feedback)
-    debugStep = "recheck_video_feedback_before_create";
-    setOutputSafe("debugStep", debugStep);
+    actionOut = "created_new_video_feedback";
 
-    videoQuery = await videoTable.selectRecordsAsync({
-      fields: safeFields(videoTable, Object.values(CONFIG.video)),
-    });
+    const createFields = {};
 
-    const recheckExisting = findExistingVideoFeedback(
-      videoQuery,
-      asset.id,
-      videoKey,
-      existingVideoIdsFromAsset
-    );
+    setLink(createFields, videoTable, CONFIG.video.submissionAsset, [asset.id]);
+    setLink(createFields, videoTable, CONFIG.video.submission, submissionIds);
+    setLink(createFields, videoTable, CONFIG.video.enrollment, enrollmentIds);
+    setLink(createFields, videoTable, CONFIG.video.gradeBand, gradeBandIds);
+    setTextField(createFields, videoTable, CONFIG.video.key, videoKey);
+    setCheckbox(createFields, videoTable, CONFIG.video.active, true);
+    setTextField(createFields, videoTable, CONFIG.video.uploadError, "");
 
-    if (recheckExisting) {
-      existingVideo = recheckExisting;
-      videoFeedbackId = recheckExisting.id;
-      actionOut = "linked_existing_or_repaired";
+    const videoAssetTypeChoice = firstExistingChoice(videoTable, CONFIG.video.assetType, [
+      assetType,
+      "Video Feedback",
+      "Video",
+    ]);
 
-      const updateFields = {};
-      const currentGradeBandIds = linkedIds(recheckExisting, CONFIG.video.gradeBand);
-      const currentAssetIds = linkedIds(recheckExisting, CONFIG.video.submissionAsset);
-      const currentSubmissionIds = linkedIds(recheckExisting, CONFIG.video.submission);
-      const currentEnrollmentIds = linkedIds(recheckExisting, CONFIG.video.enrollment);
+    const workflowChoice = firstExistingChoice(videoTable, CONFIG.video.workflowStatus, [
+      "Pending Upload",
+      "Pending",
+      "Ready",
+      "Processing",
+    ]);
 
-      if (!sameIdSet(currentAssetIds, [asset.id])) {
-        setLink(updateFields, videoTable, CONFIG.video.submissionAsset, [asset.id]);
-      }
-      if (!sameIdSet(currentSubmissionIds, submissionIds)) {
-        setLink(updateFields, videoTable, CONFIG.video.submission, submissionIds);
-      }
-      if (!sameIdSet(currentEnrollmentIds, enrollmentIds)) {
-        setLink(updateFields, videoTable, CONFIG.video.enrollment, enrollmentIds);
-      }
+    const uploadChoice = firstExistingChoice(videoTable, CONFIG.video.uploadStatus, [
+      "Pending Upload",
+      "Pending",
+      "Ready",
+    ]);
 
-      const gbDecision = decideGradeBandRepair({
-        currentGradeBandIds,
-        enrollmentGradeBandIds: gradeBandIds,
-        hasEnrollment,
-      });
-      gradeBandActionOut = gbDecision.action;
-      finalGradeBandId = (gbDecision.ids && gbDecision.ids[0]) || "";
+    setSingleSelect(createFields, videoTable, CONFIG.video.assetType, videoAssetTypeChoice);
+    setSingleSelect(createFields, videoTable, CONFIG.video.workflowStatus, workflowChoice);
+    setSingleSelect(createFields, videoTable, CONFIG.video.uploadStatus, uploadChoice);
 
-      if (gbDecision.write) {
-        setLink(updateFields, videoTable, CONFIG.video.gradeBand, gbDecision.ids);
-        finalGradeBandId = gbDecision.ids[0] || "";
-      }
-
-      setTextField(updateFields, videoTable, CONFIG.video.key, videoKey);
-
-      if (Object.keys(updateFields).length > 0) {
-        await videoTable.updateRecordAsync(recheckExisting.id, updateFields);
-      }
-    } else {
-      actionOut = "created_new_video_feedback";
-
-      const createFields = {};
-
-      setLink(createFields, videoTable, CONFIG.video.submissionAsset, [asset.id]);
-      setLink(createFields, videoTable, CONFIG.video.submission, submissionIds);
-      setLink(createFields, videoTable, CONFIG.video.enrollment, enrollmentIds);
-
-      if (gradeBandIds.length > 0) {
-        setLink(createFields, videoTable, CONFIG.video.gradeBand, gradeBandIds);
-        gradeBandActionOut = "copied_grade_band";
-        finalGradeBandId = gradeBandIds[0] || "";
-      } else if (!gradeBandActionOut) {
-        gradeBandActionOut = hasEnrollment
-          ? "skipped_no_enrollment_grade_band"
-          : "skipped_no_enrollment";
-      }
-
-      setTextField(createFields, videoTable, CONFIG.video.key, videoKey);
-      setCheckbox(createFields, videoTable, CONFIG.video.active, true);
-      setTextField(createFields, videoTable, CONFIG.video.uploadError, "");
-
-      const videoAssetTypeChoice = firstExistingChoice(videoTable, CONFIG.video.assetType, [
-        assetType,
-        "Video Feedback",
-        "Video",
-      ]);
-
-      const workflowChoice = firstExistingChoice(videoTable, CONFIG.video.workflowStatus, [
-        "Pending Upload",
-        "Pending",
-        "Ready",
-        "Processing",
-      ]);
-
-      const uploadChoice = firstExistingChoice(videoTable, CONFIG.video.uploadStatus, [
-        "Pending Upload",
-        "Pending",
-        "Ready",
-      ]);
-
-      setSingleSelect(createFields, videoTable, CONFIG.video.assetType, videoAssetTypeChoice);
-      setSingleSelect(createFields, videoTable, CONFIG.video.workflowStatus, workflowChoice);
-      setSingleSelect(createFields, videoTable, CONFIG.video.uploadStatus, uploadChoice);
-
-      videoFeedbackId = await videoTable.createRecordAsync(createFields);
-    }
+    videoFeedbackId = await videoTable.createRecordAsync(createFields);
   }
 
   debugStep = "mark_asset_pending_link";
@@ -696,21 +588,16 @@ async function main() {
   const finalReadyToSend = finalAsset ? text(finalAsset, CONFIG.assets.readyToSendToMake) : "";
   const finalWhyNotReady = finalAsset ? text(finalAsset, CONFIG.assets.whyNotReadyForMake) : "";
 
-  if (!finalGradeBandId && gradeBandIds.length > 0) {
-    finalGradeBandId = gradeBandIds[0];
-  }
-
   setFinalOutputs({
     statusOut: CONFIG.outputStatuses.success,
     actionOut,
-    gradeBandActionOut,
     errorOut: "",
     debugStep,
     submissionAssetId: asset.id,
     videoFeedbackId,
     submissionId: submissionIds[0] || "",
     enrollmentId: enrollmentIds[0] || "",
-    gradeBandId: finalGradeBandId,
+    gradeBandId: gradeBandIds[0] || "",
     readyToSendToMake: finalReadyToSend,
     whyNotReadyForMake: finalWhyNotReady,
   });
@@ -723,7 +610,6 @@ try {
 
   setOutputSafe("statusOut", CONFIG.outputStatuses.error);
   setOutputSafe("actionOut", "error");
-  setOutputSafe("gradeBandActionOut", "");
   setOutputSafe("errorOut", message);
   setOutputSafe("debugStep", "error");
 

@@ -60,7 +60,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 007 | Duplicate Checker | | Y | — | Keep separate |
 | 009 | Create Submission Assets | | Y | — | Keep separate |
 | 010 | Create XP Event | | Y | — | Keep separate |
-| 013 | Create/Link Video Feedback | | Y | — | Keep separate (absorb 111 later) |
+| 013 | Create/Link VF + GB repair | **ON** | Y | Absorbed **111** (C2) | Keep separate (combined) — Phase C2 IN FLIGHT |
 | 020 | Link/Create HC + GB repair | **ON** | Y | Absorbed **063** | Keep separate (combined) — Phase C1 COMPLETE |
 | 021 | Attachment Status + Video Count | ON | Y | Absorbed **006** | Keep separate (combined) |
 | 022 | Sync Child Upload Writeback | | Y | — | Keep separate |
@@ -98,7 +98,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 077 | Send Daily → Make | often OFF | Y | — | Combine later → 076 |
 | 078 | Mark Parent Feedback Ready | | N* | **No** (065 sets flag — overlap only) | **Keep separate** until proven merge into 065 |
 | 101 | Award Meeting XP | | Y | — | Keep separate |
-| 111 | Copy GB → VF | | Y | Absorb into **013** | **Combine with conditions** → 013 |
+| 111 | Copy GB → VF | ON until PASS | library | Replaced by **013** | **LIBRARY** after post-paste delete — Phase C2 |
 | 113 | Base Video XP | | Y | — | Keep separate |
 | 114 | Video XP Event | | Y | — | Keep separate |
 | 115 | Test Framework | | Y | — | Keep separate |
@@ -138,7 +138,7 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase C1 COMPLETE 2026-07-14:** combined 020 v3.0.0 live; post-paste smoke PASS; **063** deleted; DEV **47 estimated / 3 free**.
 
-**Next recommended:** Phase C2 — [`PHASE-C2-111-013-bootstrap-plan.md`](../deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md) (111→013, +1 → 4 free). Do not start until Mike authorizes.
+**Phase C2 IN FLIGHT 2026-07-14:** combined 013 v3.0.0 on GitHub; awaiting Mike paste + post-paste PASS + **111** delete → **46 estimated / 4 free**. See [`PHASE-C2-111-013-mike-ui-actions.md`](../deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md). Do **not** start Phase D.
 
 ---
 

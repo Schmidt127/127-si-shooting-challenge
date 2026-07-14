@@ -91,7 +91,8 @@ flowchart TD
   HC --> A078[078 Parent Feedback Ready?]
   HC --> A071[071 Make email]
   A065 -->|sets Parent Feedback Ready| A071
-  VF --> A111[111 legacy / absorb into 013]
+  SA --> A013[013 Create/Link VF + blank-only GB]
+  A013 --> VF
   VF --> A113[113 Base XP]
   VF --> A114[114 XP Event]
   VF --> A073[073 Make email]
@@ -103,7 +104,7 @@ flowchart TD
 | 065 → 071 | 065 already arms Parent Feedback Ready — **078 likely redundant** |
 | 064 ≠ 065 | Prep vs award — do not merge |
 | 113 ≠ 114 | Same |
-| 013 → 111 | 013 path may already cover — **C2 absorb candidate** |
+| **013 ← 111** | Phase C2 IN FLIGHT — GB blank-only repair in 013; retire 111 after post-paste PASS |
 | **020 ← 063** | Phase C1 COMPLETE — GB repair in 020; 063 deleted |
 
 ---

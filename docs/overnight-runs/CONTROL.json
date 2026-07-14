@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T17:40:00-06:00",
+  "updated_at": "2026-07-14T17:49:03-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "08177217cc1ebda712ab0a165e93136ec02347ea",
-    "remote_sha": "08177217cc1ebda712ab0a165e93136ec02347ea",
+    "sha": "650ed6e17f8e55b2594b48ead5fd566461903ad2",
+    "remote_sha": "650ed6e17f8e55b2594b48ead5fd566461903ad2",
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S25",
+    "package_id": "phase-c2-111-into-013",
+    "started_at": "2026-07-14"
   },
   "lanes": {
     "lead": {
@@ -943,7 +943,7 @@
       "deliverables": [
         "docs/deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md"
       ],
-      "notes": "C1 done. Remaining C2 only (111->013). Do not execute until Mike authorizes Phase C2."
+      "notes": "C1 COMPLETE. C2 IN PROGRESS (111->013). Awaiting Mike paste."
     },
     {
       "id": "phase-c1-063-into-020",
@@ -991,12 +991,12 @@
         "V2-014",
         "C-025"
       ],
-      "state": "READY",
+      "state": "IN_PROGRESS",
       "priority": 25,
       "depends_on": [
         "phase-c1-063-into-020"
       ],
-      "auth": "standing",
+      "auth": "owner-authorized-execution",
       "est_minutes": 120,
       "gates": {
         "owner": true,
@@ -1005,29 +1005,39 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
-      "started_at": null,
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
       "completed_at": null,
       "deliverables": [
+        "airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js",
+        "airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-2026-07-14/",
+        "docs/deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md",
+        "docs/overnight-runs/results/S25-phase-c2-migration-record.md",
+        "docs/overnight-runs/stages/S25-AUTHORIZED.md",
+        "tools/airtable/tests/test_phase_c2_013_combined.py",
+        "tools/airtable/phase_c2_013_live_smoke_suite.py",
+        "tools/airtable/phase_c2_013_post_paste_smoke.py",
+        "docs/audits/phase-c2-013-live-smoke-2026-07-14.json",
+        "docs/overnight-runs/results/S25-phase-c2-live-smoke-result.md",
         "docs/deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md"
       ],
-      "notes": "Next consolidation: 111->013 Video Feedback (+1 -> 4 free estimated). Do not execute until Mike authorizes Phase C2."
+      "notes": "IN PROGRESS. GitHub 013 v3.0.0 + rollback + 111 stub. Offline 9/9. Pre-paste live smoke CRITICAL PASS. STOP at Mike paste 013. Do not retire 111 until post-paste PASS. Do not start Phase D. 117 OFF. Folder 07 unchanged. Occupancy still 47 estimated / 3 free."
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S24-AUTHORIZED.md",
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S25-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T17:20:00-06:00",
-    "phase_c1_offline": "10/10",
-    "phase_c1_post_paste_smoke": "CRITICAL PASS",
+    "last_run_at": "2026-07-14T17:49:03-06:00",
+    "phase_c2_offline": "9/9",
+    "phase_c2_pre_paste_smoke": "CRITICAL PASS",
     "phase_c1_ui_count": "47 estimated / 3 free (no visible counter)",
     "pass": true
   },
-  "next_action": "Phase C1 COMPLETE (47 estimated / 3 free). Recommended next: Mike authorize Phase C2 (111->013, +1). Do not start C2 until instructed. 117 remains OFF.",
-  "stop_reason": null
+  "next_action": "Phase C2: Mike paste combined 013 v3.0.0 (PHASE-C2-111-013-mike-ui-actions.md). Leave 111 ON. Reply \"013 pasted \u2014 run post-paste smoke\". Do not start Phase D.",
+  "stop_reason": "awaiting_mike_paste_013"
 }

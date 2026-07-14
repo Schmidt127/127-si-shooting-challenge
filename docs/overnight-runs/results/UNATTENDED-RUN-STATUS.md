@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — S25 Phase C2 GitHub ready / Mike UI stop (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Auth | Mike authorized **C2 only** (111→013) |
+| Repo | Combined **013 v3.0.0** + rollback + 111 library |
+| Offline | **9/9 PASS** |
+| Live | Pre-paste smoke **CRITICAL PASS** |
+| Stop | Mike paste into surviving **013**; leave 111 ON until post-paste PASS; then retire → **46 est / 4 free** |
+| Sheet | `PHASE-C2-111-013-mike-ui-actions.md` |
+| Untouched | Phase D · 117 · Folder 07 OFF · PROD |
+
 ## Milestone — S24 Phase C1 COMPLETE (2026-07-14)
 
 | Field | Value |
