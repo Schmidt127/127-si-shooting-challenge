@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T17:20:00-06:00",
+  "updated_at": "2026-07-14T17:25:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "316aa2581a4af005f3c94c75c0aac0571d5731ea",
@@ -976,9 +976,12 @@
         "docs/overnight-runs/stages/S24-AUTHORIZED.md",
         "tools/airtable/tests/test_phase_c1_020_combined.py",
         "tools/airtable/phase_c1_020_live_smoke_suite.py",
-        "docs/audits/phase-c1-020-live-smoke-2026-07-14.json"
+        "docs/audits/phase-c1-020-live-smoke-2026-07-14.json",
+        "docs/audits/phase-c1-020-post-paste-smoke-2026-07-14.json",
+        "docs/overnight-runs/results/S24-phase-c1-post-paste-smoke-result.md",
+        "tools/airtable/phase_c1_020_post_paste_smoke.py"
       ],
-      "notes": "AUTHORIZED C1 only. GitHub 020 v3.0.0 + offline 10/10 + live GB smoke PASS. STOPPED for Mike paste into 020. Leave 063 ON until post-paste smoke. No C2."
+      "notes": "Post-paste smoke CRITICAL PASS. 063 still ON. Next: Mike retire 063 then Phase C1 UI complete. Do not start C2."
     }
   ],
   "stage": {
@@ -989,12 +992,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T17:15:00-06:00",
+    "last_run_at": "2026-07-14T17:20:00-06:00",
     "phase_c1_offline": "10/10",
-    "phase_c1_live_smoke": "CRITICAL PASS (GB repair/adjacency; post-paste asset path pending)",
+    "phase_c1_live_smoke": "CRITICAL PASS (pre-paste GB)",
+    "phase_c1_post_paste_smoke": "CRITICAL PASS",
     "phase_b_ui_count": "48 estimated / 2 free (no visible counter)",
     "pass": true
   },
-  "next_action": "Mike: paste combined 020 v3.0.0 per PHASE-C1-063-020-mike-ui-actions.md. Leave 063 ON for dual-run smoke. After PASS delete 063 and reply Phase C1 UI complete. Do not start C2.",
+  "next_action": "Mike: retire DEV automation 063 after post-paste CRITICAL PASS. Confirm 47 estimated / 3 free. Reply Phase C1 UI complete. Do not start C2. Leave 117 OFF.",
   "stop_reason": null
 }

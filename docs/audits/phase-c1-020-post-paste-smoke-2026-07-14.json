@@ -1,0 +1,190 @@
+{
+  "started": "2026-07-14T17:14:49.953018-06:00",
+  "ended": "2026-07-14T17:16:46.295972-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "combined_020": "v3.0.0 post-paste",
+  "063_still_on": true,
+  "submission": "recLfeQUBcMcjxjEq",
+  "assets": [
+    "recjVot4X1on55u6X"
+  ],
+  "homework_completion": "recGjccu21UiG1Bnp",
+  "enrollment_gb": "recK7BDVSpHy2ipCS",
+  "critical_pass": true,
+  "results": [
+    {
+      "name": "homework_assets_created",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "submission": "recLfeQUBcMcjxjEq",
+        "assets": [
+          "recjVot4X1on55u6X"
+        ]
+      }
+    },
+    {
+      "name": "new_homework_completion_linked",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "asset": "recjVot4X1on55u6X",
+        "hc": "recGjccu21UiG1Bnp"
+      }
+    },
+    {
+      "name": "new_hc_grade_band_populated",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "hc": "recGjccu21UiG1Bnp",
+        "state": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "sub": "recLfeQUBcMcjxjEq",
+          "assets": [
+            "recjVot4X1on55u6X"
+          ],
+          "review": "Ready for Review",
+          "satisfactory": null,
+          "xp": null,
+          "base_xp": null
+        },
+        "expected_enrollment_gb": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "new_hc_gb_matches_enrollment",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "gb": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "link_existing_stays_single_hc",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "asset_hc": "recGjccu21UiG1Bnp",
+        "expected": "recGjccu21UiG1Bnp",
+        "hc_assets": [
+          "recjVot4X1on55u6X"
+        ]
+      }
+    },
+    {
+      "name": "link_existing_keeps_asset_on_hc",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "assets": [
+          "recjVot4X1on55u6X"
+        ]
+      }
+    },
+    {
+      "name": "blank_grade_band_repair",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "sub": "recLfeQUBcMcjxjEq",
+          "assets": [
+            "recjVot4X1on55u6X"
+          ],
+          "review": "Ready for Review",
+          "satisfactory": null,
+          "xp": null,
+          "base_xp": null
+        },
+        "note": "063 may dual-run until retired"
+      }
+    },
+    {
+      "name": "already_correct_grade_band",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "before": "recK7BDVSpHy2ipCS",
+        "after": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "repeated_grade_band_repair",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "first": "recK7BDVSpHy2ipCS",
+        "second": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "duplicate_prevention_no_extra_hc",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "before": 1,
+        "after": 1,
+        "asset_hc": "recGjccu21UiG1Bnp",
+        "hc": "recGjccu21UiG1Bnp",
+        "create_count": 1
+      }
+    },
+    {
+      "name": "missing_enrollment_gb_soft_skip_contract",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "note": "Script soft-skips; live Enrollment GB left intact on Schmidt"
+      }
+    },
+    {
+      "name": "adjacent_061_064_065_067_context_readable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "fields": {
+          "Review Status": "Ready for Review",
+          "Satisfactory?": null,
+          "XP Award Status": null,
+          "Enrollment": "recgP9qZYjAhE7NXm",
+          "Week": "recUPkXtsDOHnY5q7",
+          "Grade Band": "recK7BDVSpHy2ipCS",
+          "Submissions - Linked": "recLfeQUBcMcjxjEq"
+        },
+        "note": "061 review / 064 base XP / 065 XP / 067 reflection remain separate autos"
+      }
+    },
+    {
+      "name": "formula_timing_gb_stable_after_recalc",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "gb": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "fixture_gb_restored",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "sub": "recLfeQUBcMcjxjEq",
+          "assets": [
+            "recjVot4X1on55u6X"
+          ],
+          "review": "Ready for Review",
+          "satisfactory": null,
+          "xp": null,
+          "base_xp": null
+        }
+      }
+    }
+  ],
+  "retire_063": true
+}
