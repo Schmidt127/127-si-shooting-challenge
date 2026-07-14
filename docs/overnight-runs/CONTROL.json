@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T19:21:00-06:00",
+  "updated_at": "2026-07-13T19:35:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "e036d05e1ce953ceb94a699be5248d1b3079cbc1",
-    "remote_sha": "e036d05e1ce953ceb94a699be5248d1b3079cbc1",
-    "match": true
+    "sha": "e0a0406d31db063a3b432cd0346672a9bd6c2f9b",
+    "remote_sha": "e0a0406d31db063a3b432cd0346672a9bd6c2f9b",
+    "match": false
   },
   "run": {
     "state": "idle",
@@ -442,7 +442,7 @@
       "backlog_refs": [
         "C-024"
       ],
-      "state": "READY_REPO",
+      "state": "COMPLETE",
       "priority": 10,
       "depends_on": [],
       "auth": "standing",
@@ -455,7 +455,7 @@
         "destructive": false
       },
       "claimed_by": null,
-      "completed_at": null
+      "completed_at": "2026-07-13"
     }
   ],
   "stage": {
@@ -466,12 +466,12 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T19:20:00-06:00",
+    "last_run_at": "2026-07-13T19:35:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "45/45",
+    "targeted": "53/53",
     "pass": true
   },
-  "next_action": "S14 PASS. Next READY: orphan-c024-070a-double-send-review",
-  "stop_reason": null
+  "next_action": "No READY packages. Unblock via Mike: C-010/OMNI, C-009 schema approval, C-025/C-027 ODs, then implementation; or C-023 PROD.",
+  "stop_reason": "READY queue exhausted after S12\u2013S15; remaining items BLOCKED_AIRTABLE/OWNER/PROD."
 }
