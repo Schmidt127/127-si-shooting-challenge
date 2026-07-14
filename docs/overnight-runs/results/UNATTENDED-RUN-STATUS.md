@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S22 Phase A COMPLETE (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| 006 | **Deleted** |
+| 117 | Created **OFF** · GitHub **v1.0.0** · webhook blank · trigger not set |
+| Count | **50/50** (net zero) |
+| Next | Authorize Phase B (030∪032∪033) — plan ready |
+| Docs | `S22-phase-a-closeout.md`, `PHASE-B-WAS-bootstrap-plan.md` |
+
 ## Milestone — S22 Phase A live smoke PASS (2026-07-14)
 
 | Field | Value |

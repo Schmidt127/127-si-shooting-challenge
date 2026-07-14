@@ -128,7 +128,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117** | Zoom Recording Credit — Orchestrator | Zoom Attendance · Recording Quiz updates | `117-zoom-recording-credit-orchestrator.js` |
 | 117a–f | *(library only — **do not paste ×6**)* | — | `117a`–`117f-*.js` |
 
-**DEV (2026-07-14 S20):** At automation limit → paste **one** orchestrator after freeing **1** **UI-confirmed** slot. **112 not in DEV** — prefer confirm/retire **043** if present. [Reopen](./deploy-checklists/C-025-s20-dev-slot-reopen-2026-07-14.md) · [Mike action](./deploy-checklists/C-025-mike-action-sheet-s20-orchestrator.md).
+**DEV (2026-07-14 Phase A):** **117 v1.0.0** pasted DEV — **OFF**, `webhookUrl` blank, trigger not configured. Slot freed by deleting **006** after combined **021** smoke PASS. [Closeout](./overnight-runs/results/S22-phase-a-closeout.md) · [Phase B plan](./deploy-checklists/PHASE-B-WAS-bootstrap-plan.md).
 
 ---
 

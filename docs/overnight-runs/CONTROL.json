@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T16:20:00-06:00",
+  "updated_at": "2026-07-14T16:25:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "e3f04d394570eb6165738737984661ea4a617f91",
@@ -849,7 +849,7 @@
         "C-025",
         "V2-014"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 22,
       "depends_on": [
         "DEV-automation-architecture-review"
@@ -865,7 +865,7 @@
       },
       "claimed_by": "lead",
       "started_at": "2026-07-14",
-      "completed_at": null,
+      "completed_at": "2026-07-14",
       "deliverables": [
         "airtable/automations/shooting-challenge/021-submission-intake-and-asset-creation-set-attachment-status-and-video-count.js",
         "airtable/automations/shooting-challenge/_rollback/phase-a-006-021-2026-07-14/",
@@ -873,17 +873,45 @@
         "docs/overnight-runs/results/S22-phase-a-migration-record.md",
         "docs/audits/phase-a-021-combined-live-dev-2026-07-14.json",
         "docs/audits/phase-a-021-live-smoke-2026-07-14.json",
-        "docs/overnight-runs/results/S22-phase-a-live-smoke-result.md"
+        "docs/overnight-runs/results/S22-phase-a-live-smoke-result.md",
+        "docs/overnight-runs/results/S22-phase-a-closeout.md",
+        "docs/deploy-checklists/PHASE-B-WAS-bootstrap-plan.md"
       ],
-      "notes": "Live smoke CRITICAL PASS. 006 still ON. Awaiting Mike: retire 006 then create 117 OFF blank webhook."
+      "notes": "COMPLETE. Mike deleted 006; created 117 OFF (blank webhook, trigger not configured). Smoke PASS. GitHub 117 v1.0.0. Occupied still 50/50 (net zero). Phase B not started."
+    },
+    {
+      "id": "phase-b-was-030-032-033",
+      "backlog_refs": [
+        "V2-014",
+        "C-025"
+      ],
+      "state": "READY",
+      "priority": 23,
+      "depends_on": [
+        "phase-a-006-021-consolidate-117"
+      ],
+      "auth": "standing",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "started_at": null,
+      "completed_at": null,
+      "deliverables": [
+        "docs/deploy-checklists/PHASE-B-WAS-bootstrap-plan.md"
+      ],
+      "notes": "Next consolidation: 030+032+033 WAS bootstrap (+2 slots). Do not execute until Mike authorizes."
     }
   ],
   "stage": {
-    "authorized": true,
+    "authorized": false,
     "auth_doc": "docs/overnight-runs/stages/S22-AUTHORIZED.md",
-    "merge_order": [
-      "lead-direct"
-    ],
+    "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
@@ -893,6 +921,6 @@
     "phase_a_live_smoke": "CRITICAL PASS (sent retest included)",
     "pass": true
   },
-  "next_action": "Mike: smoke PASS \u2014 retire 006 (+1), create 117 OFF with webhookUrl blank. See S22-phase-a-live-smoke-result.md",
-  "stop_reason": "Waiting Mike UI Steps 2-3 (retire 006, create 117 OFF)"
+  "next_action": "Phase A COMPLETE. Recommended next: Mike authorize Phase B (030+032+033 WAS bootstrap, +2 slots). 117 remains OFF until recording smoke. No Airtable changes until authorized.",
+  "stop_reason": null
 }

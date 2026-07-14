@@ -28,18 +28,18 @@
 
 | Milestone | Occupied | Free | How |
 |-----------|----------|------|-----|
-| Current | **50** | **0** | Mike |
-| After Phase A (006∪021) + paste **117** | **50** | **0** | Consolidate +1, consume +1 |
-| After Phase B (WAS trio) | **48** | **2** | 3→1 |
+| Pre–Phase A | **50** | **0** | Mike |
+| **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
+| After Phase B (WAS trio) | **48** | **2** | 030∪032∪033 |
 | After Phase C (063→020, 111→013) | **46** | **4** | Absorb copies |
 | After Phase D (072∪074) | **45** | **5** | **Target met** |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count | **50** |
+| Current count (post Phase A) | **50** (Mike: 006 gone, 117 present) |
 | Proposed target (post Phase A–D) | **45** |
-| Slots freed by consolidation (gross) | **+6** then **-1** for 117 → **net +5** |
+| Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
 
 ---
@@ -54,13 +54,13 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 002 | Grade Band — Initial | | Y | — | Combine with conditions (enrollment group later) |
 | 003 | Grade Band — If Changes | | Y | — | Keep separate |
 | 005 | Assign Week | | Y | — | Keep separate |
-| 006 | Set Video Count | | Y | — | **Combine safely** → with 021 |
+| 006 | Set Video Count | — | library | Replaced by **021** (Phase A) | **LIBRARY** — deleted from DEV UI |
 | 007 | Duplicate Checker | | Y | — | Keep separate |
 | 009 | Create Submission Assets | | Y | — | Keep separate |
 | 010 | Create XP Event | | Y | — | Keep separate |
 | 013 | Create/Link Video Feedback | | Y | — | Keep separate (absorb 111 later) |
 | 020 | Link/Create Homework Completion | | Y | — | Keep separate (absorb 063 later) |
-| 021 | Set Attachment Upload Status | | Y | — | **Combine safely** → with 006 |
+| 021 | Attachment Status + Video Count | ON | Y | Absorbed **006** | Keep separate (combined) |
 | 022 | Sync Child Upload Writeback | | Y | — | Keep separate |
 | 023 | Assign Enrollment | | Y | — | Keep separate |
 | 030 | Copy GB → WAS | | Y | — | **Combine with conditions** WAS trio |
@@ -128,16 +128,11 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 ---
 
-## First migration phase (S22 — in progress)
+## First migration phase (S22 — COMPLETE)
 
-**Phase A only — approved 2026-07-14:**
+**Phase A COMPLETE 2026-07-14:** combined 021 live; smoke PASS; **006** deleted; **117 v1.0.0** OFF (blank webhook, no trigger yet).
 
-1. ~~Combined script + rollback + offline/API tests~~ **DONE** (repo).  
-2. **Mike UI pending:** paste combined into **021**, smoke, retire **006**, create **117** OFF (blank webhook).  
-3. Sheet: [`PHASE-A-006-021-mike-ui-actions.md`](../deploy-checklists/PHASE-A-006-021-mike-ui-actions.md).  
-4. Do not touch Folder 07 OFF automations; do not start Phase B.
-
-**Do not** free slots by deleting OFF email/upload automations.
+**Next recommended:** Phase B — [`PHASE-B-WAS-bootstrap-plan.md`](../deploy-checklists/PHASE-B-WAS-bootstrap-plan.md) (030∪032∪033, +2 free).
 
 ---
 

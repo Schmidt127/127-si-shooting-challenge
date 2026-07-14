@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **S21 corrected:** OFF≠deletable. Free +1 via **006∪021** consolidation then paste **117** OFF. Path to ≥5 free: WAS trio + 063→020 + 111→013 + 072∪074. Do not delete 070a–078/061/078 for capacity. | C-024, V2-006, V2-005 | Waiting Mike approve Phase A consolidation |
+| **C-025** | Zoom **recording** attendance — partial credit path | **Phase A COMPLETE:** combined 021; 006 deleted; **117 v1.0.0 OFF** (blank webhook, no trigger). Next: authorize Phase B WAS 030∪032∪033 for +2 free toward ≥5. | C-024, V2-006, V2-005 | Phase A done; Phase B pending authorization |
 
 ### Wave 10 — Communication & website
 
