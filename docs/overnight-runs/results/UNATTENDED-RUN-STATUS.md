@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S21 capacity correction OFF≠obsolete (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Correction | **OFF ≠ deletable**; 070a–078 intentional DEV OFF remain required |
+| Retracted | Status-based deletes; Path B retire 061/078 |
+| Capacity path | Consolidation only: 006∪021 → 117; then WAS / 063→020 / 111→013 / 072∪074 → **≥5 free** |
+| First phase | Approve **006+021** merge then paste **117** OFF |
+| Docs | Updated `AIRTABLE-AUTOMATION-CAPACITY-LEDGER.md` + decision sheet |
+
 ## Milestone — S21 DEV Automation Architecture Review (2026-07-14)
 
 | Field | Value |
@@ -7,8 +17,8 @@
 | Scope | Analysis only — **no** Airtable disable/delete/combine/paste |
 | Live evidence | Meta automations **403**; docs table **48** rows; Mike **50/50** + **112 absent** |
 | Deliverables | Inventory · Dependency map · Refactor plan · Capacity ledger · Mike decision sheet |
-| Target | ≥**5 free** after **117** orchestrator (Path B: 043+061+078+006∪021+063+111) |
-| Stop | Mike pastes full UI list + Phase 0 decision |
+| Target | ≥**5 free** after **117** via consolidation Path A–E (corrected) |
+| Stop | Mike approves Phase A consolidation |
 | Docs | `docs/architecture/AIRTABLE-AUTOMATION-*.md`, `AIRTABLE-AUTOMATION-ARCHITECTURE-mike-decision-sheet.md` |
 
 ## Milestone — S20 DEV slot reopen (112 retracted) (2026-07-14)

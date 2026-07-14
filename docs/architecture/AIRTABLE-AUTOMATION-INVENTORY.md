@@ -1,9 +1,13 @@
 # Airtable Automation Inventory — DEV
 
 **Base:** `appTetnuCZlCZdTCT` (DEV)  
-**As-of:** 2026-07-14  
+**As-of:** 2026-07-14 (corrected)  
 **Stage:** S21 — Architecture Review (analysis only — **no Airtable mutations**)  
 **Hard cap:** 50 (ON and OFF both consume slots)
+
+### Correction (2026-07-14 afternoon)
+
+**OFF ≠ obsolete.** Every automation in Mike’s 50-item DEV list is **required** unless **explicit replacement** evidence exists. Do **not** recommend deletion because an automation is OFF. Capacity = **consolidation** only. Full corrected ranks and slot math: [CAPACITY-LEDGER](./AIRTABLE-AUTOMATION-CAPACITY-LEDGER.md).
 
 ---
 
@@ -98,31 +102,31 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 034 | Previous Week Helpers | Y | Y | Y | ? | WAS | — | Keep separate | |
 | 041 | Mark Level Recalc | Y | Y | Y | ? | XP Events | — | Keep separate | Never merge→010 |
 | 042 | Assign Current/Next Level | Y | Y | Y | ? | Enrollments | — | Keep separate | Owns gate rule |
-| 043 | Set Level Gate Rule | **?** | Y | Y | ? | Enrollments | — | Retire safely | **If UI confirms**; Cat F |
-| 053 | Streak Occurrences Rebuild | Y | Y | Y | ? | Submissions | — | Keep separate | |
-| 054 | Streak XP Event | Y | Y | Y | ? | Streak Occurrences | — | Keep separate | |
-| 055 | Update Current Streak | Y | Y | Y | ? | Submissions | — | Keep separate | |
-| 056 | Daily Streak Refresh | Y | Y | Y | ? | Scheduled | — | Keep separate | |
-| 057 | Perfect Week Eligibility | Y | Y | Y | ? | WAS | — | Keep separate | ≠058 |
-| 058 | Perfect Week Unlock | Y | Y | Y | ? | WAS | — | Keep separate | ≠057 |
-| 059 | XP from Achievement Unlock | Y | Y | Y | ? | Unlocks | — | Keep separate | |
-| 061 | Mark HW Reviewed | **?** | Y | **N** | ? | Homework Completions | — | Needs investigation | Likely retire if UI ON |
-| 063 | Copy Grade Band → HW | Y | Y | Y | ? | Homework Completions | — | Combine with conditions | →020 |
-| 064 | Assign Base Homework XP | Y | Y | Y | ? | Homework Completions | — | Keep separate | ≠065 |
-| 065 | Create Homework XP Event | Y | Y | Y | ? | Homework Completions | — | Keep separate | ≠064 |
-| 066 | Shot Milestone Unlocks | Y | Y | Y | ? | Enrollments | — | Keep separate | V2 reference |
-| 067 | HW from Reflection Quiz | Y | **N** | Y | ? | Final Reflection Quiz | Fillout | Keep separate | Reconciled add |
-| 070a | Send HW Asset → Make | Y | Y | Y | ? | Submission Assets | Make/Lambda/S3 | Keep separate | Idle OFF practice |
-| 070b | Send Video Asset → Make | Y | Y | Y | ? | Submission Assets | Make/Lambda/S3 | Keep separate | |
-| 070c | Verify Async Video Upload | **?** | **N** | Y | ? | Submission Assets | Lambda | Needs investigation | Optional async path |
-| 071 | HW Feedback Email Webhook | Y | Y | Y | ? | Homework Completions | Make | Combine with conditions | EMC later |
-| 072 | Build Weekly Email | Y | Y | Y | ? | WAS | — | Combine with conditions | EMC |
-| 073 | VF Parent Email Webhook | Y | Y | Y | ? | Video Feedback | Make | Combine with conditions | EMC |
-| 074 | Send Weekly Email → Make | Y | Y | Y | ? | WAS | Make | Combine with conditions | EMC |
-| 075 | Build Welcome Email | Y | Y | Y | ? | Enrollments | — | Combine with conditions | EMC |
-| 076 | Build Daily Email | Y | Y | Y | ? | Submissions | — | Combine with conditions | EMC |
-| 077 | Send Daily Email → Make | Y | Y | Y | ? | Submissions | Make | Combine with conditions | EMC |
-| 078 | Mark HW Parent Feedback Ready | **?** | Y | **N** | ? | Homework Completions | — | Needs investigation | Likely retire; 065 arms 071 |
+| 043 | Set Level Gate Rule | Y | Y | Y | Mike list | Enrollments | — | Combine with conditions | →042 only with replacement evidence — **never because OFF** |
+| 053 | Streak Occurrences Rebuild | Y | Y | Y | Mike list | Submissions | — | Keep separate | |
+| 054 | Streak XP Event | Y | Y | Y | Mike list | Streak Occurrences | — | Keep separate | |
+| 055 | Update Current Streak | Y | Y | Y | Mike list | Submissions | — | Keep separate | |
+| 056 | Daily Streak Refresh | Y | Y | Y | Mike list | Scheduled | — | Keep separate | |
+| 057 | Perfect Week Eligibility | Y | Y | Y | Mike list | WAS | — | Keep separate | ≠058 |
+| 058 | Perfect Week Unlock | Y | Y | Y | Mike list | WAS | — | Keep separate | ≠057 |
+| 059 | XP from Achievement Unlock | Y | Y | Y | Mike list | Unlocks | — | Keep separate | |
+| 061 | Mark HW Reviewed | Y | Y | **N** | Mike list | Homework Completions | — | Keep separate | Required; GH gap — not deletable |
+| 063 | Copy Grade Band → HW | Y | Y | Y | Mike list | Homework Completions | — | Combine with conditions | →020 |
+| 064 | Assign Base Homework XP | Y | Y | Y | Mike list | Homework Completions | — | Keep separate | ≠065 |
+| 065 | Create Homework XP Event | Y | Y | Y | Mike list | Homework Completions | — | Keep separate | ≠064 |
+| 066 | Shot Milestone Unlocks | Y | Y | Y | Mike list | Enrollments | — | Keep separate | V2 reference |
+| 067 | HW from Reflection Quiz | Y | **N** | Y | Mike list | Final Reflection Quiz | Fillout | Keep separate | |
+| 070a | Send HW Asset → Make | Y | Y | Y | often OFF | Submission Assets | Make/Lambda/S3 | Keep separate | Intentional DEV OFF — required |
+| 070b | Send Video Asset → Make | Y | Y | Y | often OFF | Submission Assets | Make/Lambda/S3 | Keep separate | Intentional DEV OFF — required |
+| 070c | Verify Async Video Upload | Y | **N** | Y | often OFF | Submission Assets | Lambda | Keep separate | Required async path |
+| 071 | HW Feedback Email Webhook | Y | Y | Y | often OFF | Homework Completions | Make | Keep separate | EMC combine later — not delete |
+| 072 | Build Weekly Email | Y | Y | Y | Mike list | WAS | — | Combine with conditions | →074 |
+| 073 | VF Parent Email Webhook | Y | Y | Y | often OFF | Video Feedback | Make | Keep separate | EMC later |
+| 074 | Send Weekly Email → Make | Y | Y | Y | often OFF | WAS | Make | Combine with conditions | →072 |
+| 075 | Build Welcome Email | Y | Y | Y | Mike list | Enrollments | — | Keep separate | EMC later |
+| 076 | Build Daily Email | Y | Y | Y | Mike list | Submissions | — | Combine with conditions | →077 later |
+| 077 | Send Daily Email → Make | Y | Y | Y | often OFF | Submissions | Make | Combine with conditions | →076 later |
+| 078 | Mark HW Parent Feedback Ready | Y | Y | **N** | Mike list | Homework Completions | — | Keep separate | Required until proven fold into 065 |
 | 101 | Award Meeting XP | Y | Y | Y | ? | Zoom Meetings | — | Keep separate | Live Zoom |
 | 111 | Copy Grade Band → VF | Y | Y | Y | ? | Video Feedback | — | Combine with conditions | →013 |
 | 112 | Create VF from Asset | **N** | Y stale | Y | — | — | — | Rename only | **Not in DEV UI** |
@@ -139,11 +143,12 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 
 | Class | Codes | Action |
 |-------|-------|--------|
-| **Superseded** | 043 (by 042); 112 (by 013); 008 (by 116) | Retire / docs cleanup |
-| **Legacy no-GH** | 061, 078 | UI investigate → likely retire |
+| **Replacement candidate** | 043→042 (GitHub + V2-014a) | Fold only with Mike approval — **not because OFF** |
+| **Historical** | 008→116; 112 not in DEV UI | Docs cleanup; 0 capacity from OFF |
+| **GH gap (still required)** | 061, 078 | Keep separate; investigate scripts — **do not delete** |
+| **Intentional DEV OFF** | 070a–078 cluster | Keep slots; consolidate builders/senders later |
 | **Test** | 115 | Keep in DEV |
-| **Docs drift** | 008, 112 rows; missing 022/067/070c/115/116 | Hygiene only (0 slots) |
-| **Consolidation** | 006+021; 030+032+033; 063→020; 111→013; EMC 071–077 | See [REFACTOR-PLAN](./AIRTABLE-AUTOMATION-REFACTOR-PLAN.md) |
+| **Consolidation path** | 006+021; 030+032+033; 063→020; 111→013; 072∪074 | See [CAPACITY-LEDGER](./AIRTABLE-AUTOMATION-CAPACITY-LEDGER.md) |
 
 ---
 

@@ -128,7 +128,7 @@ flowchart TD
 |------------|------|------------|
 | 041 | Sets Level Recalc Needed from XP | After XP Events |
 | 042 | Assigns Current/Next Level **and Level Gate Rule** | After 041 |
-| 043 | Sets Level Gate Rule from Next Level | **Superseded by 042** |
+| 043 | Sets Level Gate Rule from Next Level | Fold into **042** only with replacement evidence — **not** because OFF |
 
 ---
 
@@ -169,13 +169,13 @@ flowchart TD
 | Group | Verdict | Slots |
 |-------|---------|------:|
 | Folder 01 enrollment monolith | **Blocked** — trigger investigation first | 0 now |
-| 006+021 submission prep | **Safe** after DEV test | +1 |
+| 006+021 submission prep | **Safe** — first capacity phase | +1 |
 | 030+032+033 WAS bootstrap | **Conditional** — confirm fire order | +2 |
 | 063→020 / 111→013 | **Conditional** — create-path audit | +2 |
-| 043 retire | **Safest** if UI confirms | +1 |
-| 061/078 retire | **Likely** if UI confirms | +2 |
-| 070a/b/c+022 upload | **Unsafe near-term** | 0 |
-| 117 recording (already designed) | **Approved pattern** | −1 net swap |
-| EMC 071–077 | **Later wave** | up to +5 |
+| 043→042 | Replacement evidence only — **not because OFF** | +1 optional |
+| 061 / 078 | **Keep** — required; not deletable for OFF/missing GH | 0 |
+| 070a/b/c+022 | Keep separate; OFF intentional; no upload orchestrator | 0 |
+| 117 recording | Paste after consolidation frees +1 | −1 net after Phase A |
+| 072∪074 (then EMC) | Later consolidation among required email autos | +1 (+more) |
 
 Full migration order: [REFACTOR-PLAN](./AIRTABLE-AUTOMATION-REFACTOR-PLAN.md).
