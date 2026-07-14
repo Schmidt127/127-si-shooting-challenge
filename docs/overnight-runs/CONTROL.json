@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T19:56:00-06:00",
+  "updated_at": "2026-07-13T19:25:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "cf7b33b97452a57b60d658dde711611cf81c918a",
-    "remote_sha": "cf7b33b97452a57b60d658dde711611cf81c918a",
-    "match": true
+    "sha": "1e9442a41974ee4cefbeda10039ec35e2e52e90a",
+    "remote_sha": "1e9442a41974ee4cefbeda10039ec35e2e52e90a",
+    "match": false
   },
   "run": {
     "state": "idle",
@@ -511,7 +511,8 @@
       },
       "claimed_by": null,
       "completed_at": null,
-      "runbook": "docs/deploy-checklists/C-025-dev-omni-runbook-stage12.md"
+      "runbook": "docs/deploy-checklists/C-025-dev-omni-runbook-stage12.md",
+      "notes": "Formula repair package ready \u2014 run OMNI repair prompt before award automations"
     },
     {
       "id": "C-027-dev-omni-implementation",
@@ -535,6 +536,33 @@
       "claimed_by": null,
       "completed_at": null,
       "runbook": "docs/deploy-checklists/C-027-dev-omni-runbook-stage13.md"
+    },
+    {
+      "id": "C-025-zoom-recording-formula-repair",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 12,
+      "depends_on": [
+        "c025-c027-owner-config-decisions"
+      ],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-13",
+      "deliverables": [
+        "docs/deploy-checklists/C-025-Zoom-Recording-Formula-Repair.md",
+        "docs/deploy-checklists/C-025-Zoom-Recording-OMNI-Repair-Prompt.md",
+        "tools/airtable/tests/test_c025_zoom_attendance_formula_repair.py"
+      ]
     }
   ],
   "stage": {
@@ -545,12 +573,12 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T19:55:00-06:00",
+    "last_run_at": "2026-07-13T19:25:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "34/34 c025+c027+guard",
+    "targeted": "29/29 c025 formula+config",
     "pass": true
   },
-  "next_action": "S16 PASS. Owner decisions approved. Next: Mike/OMNI DEV for C-025-dev-omni-implementation and C-027-dev-omni-implementation (BLOCKED_AIRTABLE). No READY repo packages.",
-  "stop_reason": "READY repo work exhausted; C-025/C-027 waiting Airtable/OMNI implementation."
+  "next_action": "Mike/OMNI: paste C-025-Zoom-Recording-OMNI-Repair-Prompt.md in DEV. Then validate checklist. No Cursor Airtable.",
+  "stop_reason": null
 }

@@ -1,13 +1,12 @@
 ﻿# Unattended run status
 
-## Milestone — S16 integrated: C-025/C-027 decisions approved + config-driven
+## Milestone — C-025 Zoom Attendance formula repair package ready
 
 | Field | Value |
 |-------|-------|
-| Time | 2026-07-13 ~19:55 MDT |
-| Stage | S16 |
-| Worker tip | `07363be` |
-| Tests | Lambda 66/66 · Offline 97/97 · Targeted 34/34 |
-| Queue | C-025/C-027 design COMPLETE (decisions APPROVED); OMNI impl BLOCKED_AIRTABLE |
-| Next READY | none (repo) |
-| Stop reason | Waiting Mike/OMNI for Airtable Config field creation |
+| Time | 2026-07-13 ~19:25 MDT |
+| Package | `C-025-zoom-recording-formula-repair` |
+| Lead tip (pre-commit) | `1e9442a` |
+| Tests | Lambda 66/66 · Offline 97/97 · C-025 targeted 29/29 |
+| Next | OMNI DEV: run `C-025-Zoom-Recording-OMNI-Repair-Prompt.md` |
+| Airtable from Cursor | none |
