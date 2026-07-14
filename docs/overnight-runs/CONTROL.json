@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T06:56:00-06:00",
+  "updated_at": "2026-07-14T07:00:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "dba0f0ffa1cce38e4ebfe8e5643cdc350e898605",
@@ -743,6 +743,6 @@
     "live_c025_precedence": "postconversion Effectives 13/13 PASS (incl. checkbox checked/unchecked/override)",
     "pass": true
   },
-  "next_action": "C-025 cleanup of temp/legacy/probe fields (separate), then 117a\u2013f DEV paste. No PROD.",
+  "next_action": "Await Mike confirm next feature brief (recommended: C-025 Zoom recording attendance path DEV DoD \u2014 cleanup + 117a-f). See docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md",
   "stop_reason": null
 }

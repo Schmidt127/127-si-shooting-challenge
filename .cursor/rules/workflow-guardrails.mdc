@@ -5,30 +5,36 @@ alwaysApply: true
 
 # Workflow guardrails — Mike / ChatGPT / Cursor / OMNI
 
-Authority: [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development-standards.md)
+Authority:
+- [docs/v2/04-ai-development-standards.md](../docs/v2/04-ai-development-standards.md)
+- [docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md](../docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md) — **feature-once DEV execution**
 
-**Mike priority:** Use **OMNI** (Airtable in-base AI) first for in-Airtable work — views, formulas, data exploration, interfaces, one-off fixes — before Cursor repo edits.
+**Mike priority (ad-hoc):** Use **OMNI** for in-Airtable Q&A Mike wants to do himself.
+
+**Approved feature Phase 3:** Cursor/Lead may finish the feature in **DEV autonomously** (fields, formulas, views, fixtures, script repairs) without stopping for routine approvals. Stop only for product decisions, PROD, archive, real sends, or other high-risk triggers in the DEV execution model.
 
 ## Every new task (Cursor)
 
 1. Output **Task Classification** first (include Phase, Correct tool, Repo, Mike's role).
-2. If the request is outside Cursor's scope, output **Workspace Check** and redirect — do not proceed silently.
+2. If outside Cursor scope, output **Workspace Check** and redirect — do not proceed silently.
+3. If Phase 3 with approved feature brief: execute to DEV Definition of Done; one consolidated report at the end — not an approval per repair.
 
 ## Redirect (do not implement here)
 
 | Request | Send to |
 |---------|---------|
-| In-Airtable views, formulas, data, interfaces | **OMNI first** (Mike in base) |
+| Ad-hoc views/formulas/data Mike wants to explore himself | **OMNI** (Mike in base) |
 | Planning, requirements, copy, Phase 4 review | **ChatGPT** |
-| Code/audits/commits with no backlog ID or unapproved Phase 2 plan | Stop — ask Mike for ID + approval |
+| Code/audits/commits with no backlog ID or unapproved feature brief | Stop — ask Mike for ID + outcome + acceptance criteria |
 | Backlog edits | `docs/v2-change-backlog.md` only (not Master Plan Brief) |
 | Hoop landing, JR Ref | Wrong repo — not `127-si-shooting-challenge` |
+| PROD promotion / archive write / real family sends | Stop — Mike approval |
 
 ## Cursor scope only
 
-Phase 3 (Implementation) and Phase 5 (Close). `airtable/`, `web/`, `tools/`, `make/`, audits, commits when Mike asks.
+Phase 3 (Implementation) and Phase 5 (Close). `airtable/`, `web/`, `tools/`, `make/`, audits, commits when Mike asks — or when completing an **approved** feature end-to-end in DEV.
 
-**DEV promotion:** If DEV was intentionally changed, document prod steps in `docs/deploy-checklists/` before ending the session — or mark throwaway on backlog item. See doc 04 § Official promotion documentation.
+**DEV promotion package:** Before calling a feature done, prepare prod steps in `docs/deploy-checklists/` (DEV execution model §4–§6). Undocumented DEV work is not promotion-ready.
 
 ## Workspace Check template
 

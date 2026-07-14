@@ -1,5 +1,14 @@
 ﻿# Unattended run status
 
+## Milestone — DEV execution model documented (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Doc | `docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md` |
+| Agent updates | `AGENTS.md`, workflow-guardrails, monorepo, overnight hard-blocks, doc 04, APPROVAL-PROFILE |
+| Intent | Feature-once Mike approval; autonomous low-risk DEV; PROD/archive/real-send stops unchanged |
+| Next | Await Mike confirm next feature brief (recommended: C-025 path DEV DoD) |
+
 ## Milestone — C-025 Effective→Formula convert + postverify (2026-07-14)
 
 | Field | Value |

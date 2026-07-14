@@ -4,7 +4,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 > **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on hoopchallenges.com. Landing is `hoopchallenges-landing`.
 
-**New session?** Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) and [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
+**New session?** Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md), [PROJECT_STATE.md](./PROJECT_STATE.md), [development/DEV-EXECUTION-AND-PROMOTION-MODEL.md](./development/DEV-EXECUTION-AND-PROMOTION-MODEL.md), then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
 
 **Shooting Challenge V2?** Start at [v2/README.md](./v2/README.md), then [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) for consolidated planning, or import [chatgpt-sources/](./chatgpt-sources/) into ChatGPT Project Sources.
 
@@ -15,6 +15,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | Doc | Purpose |
 |-----|---------|
 | [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Highest-level engineering law** — GitHub, DEV-first, promotion, testing, priorities |
+| [development/DEV-EXECUTION-AND-PROMOTION-MODEL.md](./development/DEV-EXECUTION-AND-PROMOTION-MODEL.md) | **DEV execution model** — feature-once approval; autonomous low-risk DEV; PROD/archive stops |
 | [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md) | Phase 2B — V2-014 review, C-020 gaps, risks |
 
 ---

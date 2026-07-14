@@ -30,7 +30,7 @@ Mike has approved considering **Higher-autonomy overnight** after a successful t
 |----------|----------|
 | Auto-allowed | Conservative read-only git; `git add`; `git commit`; `python tools/overnight/assert_git_lane.py`; `python -m unittest` for known suites; `python tools/airtable/c070a_overnight_offline_suite.py` |
 | Manual review | `git merge`, `git push`, `git checkout`/`switch -c`, `pip install`, `npm install`, `gh` mutations, `.env` access |
-| Blocked / steer block | `git reset --hard`, `git clean`, force push, branch deletion, destructive deletes, AWS, PROD/deploy, credentials, env changes, Airtable schema operations |
+| Blocked / steer block | `git reset --hard`, `git clean`, force push, branch deletion, destructive deletes outside feature scope, AWS account changes, PROD/deploy, credentials, env changes, **archive** writes. **DEV schema** for an authorized feature package is allowed under the [DEV execution model](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md). |
 
 - **Interruptions:** Medium (roughly 2–6 per stage — mainly merge/push/checkout)
 - **Risk:** Medium-low with branch guard

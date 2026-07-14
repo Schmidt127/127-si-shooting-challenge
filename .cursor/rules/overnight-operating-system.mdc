@@ -59,11 +59,15 @@ Record blocked commands in `CONTROL.json` → `pending_approvals`. Continue inde
 
 - PROD deployment or PROD automation changes
 - Credentials or environment-variable changes
-- Airtable schema creation, deletion, rename, or migration
-- `git reset --hard`, `git clean`, force push, branch/file deletion
-- Package installation, AWS, external-account changes
-- Tutorials table changes (C-026)
-- Learning Activities Airtable implementation (C-009)
+- Archive / historical base modification
+- Real parent/athlete communications or external sends
+- Paid / real-user external activations (Make prod, Fillout prod, AWS affecting live traffic, etc.)
+- `git reset --hard`, `git clean`, force push, branch/file deletion (unless Mike explicitly authorizes)
+- Package installation, AWS account changes outside an authorized package
+- Tutorials table changes (C-026) until unblocked
+- Learning Activities Airtable implementation (C-009) until owner schema approval
+
+**DEV schema under an authorized feature package:** creating, renaming, replacing, or deleting **DEV-only** fields/views/fixtures for the current approved overnight feature is **allowed** (Lead-direct) per [DEV-EXECUTION-AND-PROMOTION-MODEL.md](../docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md). Do not park routine DEV field work in `pending_approvals`. Still stop for PROD, archive, and high-risk triggers.
 
 ## Cloud Agents
 

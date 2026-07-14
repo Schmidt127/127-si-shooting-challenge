@@ -2,7 +2,7 @@
 
 **Status:** **Active** — permanent operating procedure for this project.
 
-**Last updated:** 2026-07-05 (official promotion documentation — DEV changes not official until documented)
+**Last updated:** 2026-07-14 (DEV execution and promotion model — feature-once approval in DEV)
 
 ---
 
@@ -15,6 +15,7 @@ Define how **Mike**, **ChatGPT**, and **Cursor** work together to develop the 12
 | Doc | Role |
 |-----|------|
 | [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) | **Engineering law** — how we build and ship |
+| [../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md) | **DEV execution model** — feature-once approval; autonomous low-risk DEV; PROD/archive stops |
 | [01-constitution.md](./01-constitution.md) | What must never change (Engine layer) |
 | [03-business-rules.md](./03-business-rules.md) | Platform behavior contract |
 | [../v2-change-backlog.md](../v2-change-backlog.md) | **Live backlog** — add and update change IDs here |
@@ -35,13 +36,15 @@ Every task involves three roles. No role skips another without Mike's explicit a
 
 **GitHub** is the source of truth for everything that ships. ChatGPT drafts; Cursor applies; Mike approves.
 
-**OMNI** (Airtable's in-base AI) is Mike's **first choice** for work that can stay inside Airtable — use those credits before opening Cursor or asking ChatGPT to simulate base work.
+**OMNI** (Airtable's in-base AI) remains available when **Mike** wants to explore or prototype inside Airtable himself. For **approved Cursor Phase 3 features**, agents implement in **DEV under the [DEV execution model](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md)** and do not pause for OMNI or Mike on every field/formula repair.
 
 ---
 
-## Tool priority: OMNI first (in-Airtable work)
+## Tool priority: OMNI vs approved feature DEV work
 
-**Mike's preference:** Whenever a task can be done **inside Airtable**, try **OMNI** first. OMNI credits are a priority resource — do not route in-base work to Cursor or ChatGPT when OMNI can handle it.
+**Mike's preference for ad-hoc work:** Whenever Mike wants a task done **himself inside Airtable**, try **OMNI** first. Do not spend long ChatGPT/Cursor turn loops simulating OMNI when Mike can open the base.
+
+**Exception — approved feature implementation:** After Mike approves a feature brief (outcome + acceptance criteria) for Cursor Phase 3, Cursor/Lead **owns DEV completion** including fields, formulas, views, fixtures, and script repairs — **without** redirecting each step to OMNI or asking Mike to approve routine repairs. See [DEV-EXECUTION-AND-PROMOTION-MODEL.md](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md).
 
 ### Decision order (in-Airtable tasks)
 
@@ -88,7 +91,7 @@ flowchart TD
 | Role | OMNI behavior |
 |------|---------------|
 | **ChatGPT** | In planning, ask: *"Can Mike do this in OMNI first?"* Do not write long formula/automation instructions when OMNI in-base is enough. Flag when OMNI prototype → Cursor GitHub sync is needed. |
-| **Cursor** | Before editing repo for an Airtable-only task, output **Workspace Check** → recommend **OMNI** unless GitHub is required. After Mike uses OMNI for a production automation draft, offer to pull into GitHub. |
+| **Cursor** | For ad-hoc Mike-led in-base work: recommend **OMNI**. For **approved feature Phase 3**: implement in DEV per DEV execution model; do not Workspace-Check→OMNI for each repair. After Mike uses OMNI for a production automation draft, offer to pull into GitHub. |
 | **Mike** | Open the base → OMNI → describe the task. Escalate to Cursor only when the table above says GitHub is required. |
 
 ### Task Classification — `Correct tool` values
@@ -426,9 +429,10 @@ Mike's role right now: Approve scope before Phase 3
 | Website Copy | ChatGPT | Public-facing text; Cursor wires into components |
 | UX brainstorming | ChatGPT | Wireframes, flows, page plans |
 | Bug Investigation | **Shared** | Cursor reproduces; ChatGPT analyzes root cause and fix plan |
-| In-Airtable ops (views, formulas, data, interfaces) | **OMNI first** → Cursor if GitHub needed | Mike uses OMNI credits before repo work |
+| In-Airtable ops (ad-hoc Mike exploration) | **OMNI** → Cursor if GitHub needed | Mike credits for self-serve base work |
+| Approved feature Phase 3 (DEV schema/formulas/views/fixtures) | **Cursor Lead** (autonomous DEV) | [DEV execution model](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md) — do not stop per field |
 | Code Changes | Cursor | Automations, web, tools, scripts |
-| Airtable Schema | Cursor | Schema notes, field-map; Mike approves base changes |
+| Airtable Schema | Cursor | Schema notes, field-map; Mike approves **PROD** base changes; DEV schema OK inside approved feature |
 | Make.com | Cursor | Blueprints, scenario docs in `make/` |
 | GitHub | Cursor | Commits, PRs, repo structure |
 | Testing | Cursor | Audits, dry-runs, extension scripts |
@@ -515,7 +519,9 @@ What to open / paste:
 
 **Cursor rule:** If Mike asks for planning, copy, or architecture decisions, output **Workspace Check** and recommend ChatGPT — do not draft long plans in Cursor unless Mike explicitly says "stay in Cursor for a quick draft."
 
-**Cursor rule (OMNI):** If Mike asks for in-Airtable work that does not require GitHub (views, formulas, data exploration, interfaces, one-off fixes), output **Workspace Check** → recommend **OMNI first** — do not jump to repo edits.
+**Cursor rule (OMNI):** If Mike asks for **ad-hoc** in-Airtable work he wants to do himself, output **Workspace Check** → recommend **OMNI**. If the task is an **approved feature** in Phase 3, implement in DEV under the DEV execution model instead of redirecting.
+
+**Cursor rule (DEV execution):** Do not create approval checkpoints for routine DEV repairs. Stop only for product decisions, PROD, archive, real sends, secrets gaps, or out-of-scope behavior changes. At feature end: one consolidated report + promotion package.
 
 **ChatGPT rule:** If Mike asks to run audits, edit code, or commit, output **Workspace Check** and recommend Cursor with the backlog ID — do not pretend repo changes happened.
 
@@ -739,6 +745,7 @@ Use in Phase 4 (ChatGPT + Mike):
 These apply to ChatGPT, Cursor, and Mike's production actions:
 
 - **Never commit secrets** — `.env`, PATs, webhook URLs with tokens
+- **Feature-once DEV execution** — after Mike approves outcome + acceptance criteria, finish the feature in DEV without per-repair approval ([DEV execution model](../development/DEV-EXECUTION-AND-PROMOTION-MODEL.md))
 - **DEV before Production** — nothing new ships to prod until tested in DEV ([DEV-first pipeline](#dev-first-delivery-pipeline-permanent--v2-015))
 - **Promotion doc required** — DEV changes are not official until Cursor documents prod steps ([Official promotion documentation](#official-promotion-documentation-required))
 - **Airtable production writes** — GitHub first → DEV test → Mike approval → paste prod → `CHANGELOG.md`
@@ -746,6 +753,7 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 - **Web** — Airtable reads server-side only; never expose `AIRTABLE_API_TOKEN` to the browser
 - **XP idempotency** — one source record → one XP Event
 - **Wave approval** — nothing ships to production until Mike approves the wave ([v2-change-backlog.md](../v2-change-backlog.md))
+- **Archive / real family sends** — Mike approval required
 
 ---
 
@@ -764,6 +772,7 @@ These apply to ChatGPT, Cursor, and Mike's production actions:
 
 | Date | Notes |
 |------|-------|
+| 2026-07-14 | **DEV execution and promotion model** — feature-once approval; autonomous low-risk DEV; reconcile OMNI for ad-hoc vs approved Phase 3 |
 | 2026-07-05 | Promoted from shell to **Active** — three-role, five-phase permanent operating procedure |
 | 2026-07-05 | Added workspace guardrails, Workspace Check, extended Task Classification |
 | 2026-07-05 | **OMNI-first** priority for in-Airtable work (Mike's Airtable credits) |
