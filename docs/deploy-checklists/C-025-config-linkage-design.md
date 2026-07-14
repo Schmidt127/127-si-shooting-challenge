@@ -1,6 +1,6 @@
 # C-025 — Config linkage design (meeting override → Program Config → Global Config → safe fallback)
 
-**Status:** DESIGN + DEV SCAFFOLD APPLIED (2026-07-14). Live number/select precedence **PASS**; checkbox rollups need aggregation formula repair before Effective→formula convert. See [C-025-config-linkage-live-verify-result.md](./C-025-config-linkage-live-verify-result.md).
+**Status:** DESIGN + DEV SCAFFOLD + **Effective→formula convert COMPLETE (2026-07-14)**. Postconversion precedence **13/13 PASS**; Schmidt **4/4**. See [C-025-effective-postconversion-result.md](./C-025-effective-postconversion-result.md) · [C-025-checkbox-rollup-repair.md](./C-025-checkbox-rollup-repair.md).
 **Author:** Agent A (overnight Lead subagent), 2026-07-13; apply/verify Cursor Lead 2026-07-14
 **Base:** DEV `appTetnuCZlCZdTCT` only. PROD untouched.
 **Depends on / do not repeat:** [C-025-Zoom-Recording-Manual-Airtable-Repair.md](./C-025-Zoom-Recording-Manual-Airtable-Repair.md) and [C-025-Zoom-Recording-Formula-Repair.md](./C-025-Zoom-Recording-Formula-Repair.md) — the seven credit formulas are **already applied and correct**. This document does **not** touch them; it only replaces how the `Effective *` **inputs** to those formulas get their values.
@@ -167,7 +167,7 @@ IF(
 )
 ```
 
-Example — `Effective Recording Counts for Level Gate?` (`fldswwnnpWpiKSIL4`), a checkbox-typed override chain resolved through the `Yes`/`No` select:
+Example — `Effective Recording Counts for Level Gate?` (`fldswwnnpWpiKSIL4`), checkbox Effective via Yes/No Override + Program/Global **YN lookups** (see `C-025-checkbox-rollup-repair.md`):
 
 ```airtable
 IF(
@@ -175,19 +175,23 @@ IF(
   IF(
     {Full Gate Credit — Meeting Override} = "No", FALSE(),
     IF(
-      {Program Config: Full Gate Credit} != BLANK(),
-      {Program Config: Full Gate Credit},
+      {Program Config: Full Gate Credit} = "Yes", TRUE(),
       IF(
-        {Global Config: Full Gate Credit} != BLANK(),
-        {Global Config: Full Gate Credit},
-        TRUE()
+        {Program Config: Full Gate Credit} = "No", FALSE(),
+        IF(
+          {Global Config: Full Gate Credit} = "Yes", TRUE(),
+          IF(
+            {Global Config: Full Gate Credit} = "No", FALSE(),
+            TRUE()
+          )
+        )
       )
     )
   )
 )
 ```
 
-Deadline Mode and Makeup Enabled and the email trio follow the same two patterns (number-style for days/text; select-style for the rest). Full formula text for all ten fields should be generated at implementation time using this template — not duplicated ten times here to avoid drift; the two patterns above are the complete template set.
+Select / text Effectives (Deadline Mode, Approval Email Timing, Template Key) must use **LEN/TRIM** on the Meeting Override and **ARRAYJOIN** on Program/Global rollups — a bare `!= BLANK()` chain against rollup arrays blanks out as `singleLineText`. Canonical paste formulas for all ten fields: **`docs/deploy-checklists/C-025-effective-to-formula-conversion.md`**.
 
 **Airtable API type-conversion caveat (why this stays design-only):** converting a field from Checkbox/Number/Single-select to Formula is not reliably supported as a plain Meta API `PATCH` on `type` for all source types — Airtable's own UI field editor ("Edit field" → change type dropdown) is the reliable path and preserves the field ID (so the Zoom Attendance lookup keeps working with zero changes on that side). **Recommend doing this conversion in the Airtable UI, not via API**, even once schema-write is authorized. Do the copy-to-Override step (§4.1) first so no data is lost when the type changes out from under the old values.
 

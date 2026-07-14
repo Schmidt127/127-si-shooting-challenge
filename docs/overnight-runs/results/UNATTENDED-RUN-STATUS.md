@@ -1,5 +1,18 @@
 ﻿# Unattended run status
 
+## Milestone — C-025 Effective→Formula convert + postverify (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Mike UI | Converted all 10 Effective Recording* fields to Formula (same IDs) |
+| Formatting forced | Checkbox Effectives → formula **number** (1/0); selects → **singleLineText** |
+| Schema | IDs unchanged; formulas match approved set; ZA lookups OK |
+| Precedence | **13/13 PASS** on live Effectives (override/program/global/fallback + checkbox cases) |
+| Restore / Schmidt / Deadline | **OK** / **4/4** / **date OK** |
+| Untouched | PROD, 117a–f, C-027, XP creates, email, Make, Vercel, AWS |
+| Next | Cleanup temp/legacy fields; then 117a–f DEV |
+| Docs | `C-025-effective-to-formula-conversion.md`, `C-025-effective-postconversion-result.md` |
+
 ## Milestone — C-025 checkbox blank-safe repair (2026-07-14)
 
 | Field | Value |

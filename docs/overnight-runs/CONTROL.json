@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T06:05:00-06:00",
+  "updated_at": "2026-07-14T06:55:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "dc54635c57a38e4da1a2a4b73c752cf0dc223603",
-    "remote_sha": "dc54635c57a38e4da1a2a4b73c752cf0dc223603",
+    "sha": "PENDING_AFTER_PUSH",
+    "remote_sha": "PENDING_AFTER_PUSH",
     "match": true
   },
   "run": {
@@ -739,10 +739,10 @@
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "61/61 c025+c027 S17",
-    "live_dev_schmidt_credit": "4/4 (after checkbox YN repair)",
-    "live_c025_precedence": "number/select prior PASS; checkbox 7/7 PASS after YN repair",
+    "live_dev_schmidt_credit": "4/4 (after Effective→formula convert)",
+    "live_c025_precedence": "postconversion Effectives 13/13 PASS (incl. checkbox checked/unchecked/override)",
     "pass": true
   },
-  "next_action": "UI convert Effective Recording * to formulas (same field IDs) using draft Yes/No and number/select drafts. No 117a–f yet. No PROD.",
+  "next_action": "C-025 cleanup of temp/legacy/probe fields (separate), then 117a–f DEV paste. No PROD.",
   "stop_reason": null
 }

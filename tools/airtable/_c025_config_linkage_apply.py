@@ -643,15 +643,17 @@ def text_formula(override, prog, glob, fallback):
         fb = "BLANK()"
     else:
         fb = json.dumps(fallback)
+    # Empty Meeting Override singleSelect can fail `!= BLANK()` and short-circuit to blank.
+    # Program/Global rollups need ARRAYJOIN for singleLineText formula results.
     return f"""IF(
-  {{{override}}} != BLANK(),
-  {{{override}}},
+  LEN(TRIM({{{override}}} & "")) > 0,
+  {{{override}}} & "",
   IF(
-    {{{prog}}} != BLANK(),
-    {{{prog}}},
+    LEN(TRIM(ARRAYJOIN({{{prog}}}) & "")) > 0,
+    ARRAYJOIN({{{prog}}}),
     IF(
-      {{{glob}}} != BLANK(),
-      {{{glob}}},
+      LEN(TRIM(ARRAYJOIN({{{glob}}}) & "")) > 0,
+      ARRAYJOIN({{{glob}}}),
       {fb}
     )
   )
