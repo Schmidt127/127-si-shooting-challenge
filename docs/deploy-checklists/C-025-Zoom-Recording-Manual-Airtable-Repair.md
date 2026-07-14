@@ -1,9 +1,20 @@
 # C-025 — Manual Airtable repair (DEV Zoom credit formulas)
 
 **Environment:** DEV only — `127SI - SHOOTING CHALLENGE - DEV` (`appTetnuCZlCZdTCT`)  
-**Date:** 2026-07-13  
-**Authority:** Mike C-025 finish request (Cursor Airtable attempt)  
-**Status:** Cursor **inspected** live DEV and confirmed missing helpers + broken formulas. Cursor **could not write** schema (Meta API `403` — token lacks `schema.bases:write`). Mike must complete Steps A–F in the Airtable UI. Then Cursor can re-run live verification.
+**Date applied:** 2026-07-13 (Cursor Meta API)  
+**Authority:** Mike C-025 apply request  
+**Status:** **APPLIED in DEV** via Cursor (`schema.bases:write` on `tools/airtable/.env` PAT). OMNI not used. PROD not touched.
+
+| Step | Result |
+|------|--------|
+| A — Zoom Meetings rollup `Approved Preconflict Pair Tags` | **Created** `fldcM3v5VOjjW002p` (ARRAYJOIN of `Preconflict Pair Tag` via linked `Zoom Attendance`) |
+| B — Zoom Attendance lookup `Meeting Approved Preconflict Pair Tags` | **Created** `fld08lAdEm1TQElUC` |
+| C — Seven credit formulas | **Patched** (all `isValid: true`) |
+| Mike helpers | Left unchanged: `Zoom Credit Pre-Approved?`, `Preconflict Pair Tag` |
+| D — View `Zoom Recording Quiz — Past Deadline` | **Not created via API** (Meta views POST 422) — Mike create in UI if missing |
+| E — Schmidt live tests | **4/4 pass** (see § Applied verification) |
+
+**Config linkage:** still **not** complete — Effective\* remain meeting-level.
 
 **Do not use OMNI.** Do not touch PROD. Do not create automations, XP Events, email, or interface changes.
 
@@ -47,10 +58,8 @@
 | Field | Status |
 |-------|--------|
 | `Zoom Attendance` | **Exists** — inverse link to Zoom Attendance (use this for the rollup) |
-| `Approved Preconflict Pair Tags` | **Missing** — create rollup (Step A) |
-| `Meeting Approved Preconflict Pair Tags` on Zoom Attendance | **Missing** — create lookup (Step B) |
-
-Mike could not find `Approved Preconflict Pair Tags` because it was never created. There is **no** alternate rollup under another name (live inspect).
+| `Approved Preconflict Pair Tags` | **Created 2026-07-13** `fldcM3v5VOjjW002p` |
+| `Meeting Approved Preconflict Pair Tags` on Zoom Attendance | **Created 2026-07-13** `fld08lAdEm1TQElUC` |
 
 ---
 
@@ -267,9 +276,30 @@ Use Schmidt DEV rows only. Do **not** create XP Events or send email.
 
 ## Step F — After paste
 
-Tell Cursor: “C-025 formulas pasted in DEV — re-verify.” Cursor will re-run `tools/airtable/_c025_dev_zoom_credit_repair.py test` (data read) and update CONTROL.
+**Completed 2026-07-13 by Cursor** (with `schema.bases:write`). No further paste needed unless formulas are reverted.
 
-Optional later: add `schema.bases:write` to the PAT if Mike wants Cursor to patch formulas directly next time.
+Optional cleanup in DEV UI:
+
+- Delete leftover text field `C025 Schema Write Probe` on Zoom Meetings (create-permission probe).
+- Create view **`Zoom Recording Quiz — Past Deadline`** if still missing (API view create unavailable).
+
+---
+
+## Applied verification (2026-07-13)
+
+Enrollment: Schmidt DEV `recgP9qZYjAhE7NXm`  
+Fixture attendance (DEV only; no XP Events / email):
+
+| Scenario | Record | Result |
+|----------|--------|--------|
+| Live approved | `rec9EEtEf3AS5GYCf` | Pre=1 Conflict=0 Approved=1 Pct=100 XP=40 Gate=1 Key filled |
+| Recording Satisfactory | `recHkB9aER3vCvBsL` | Pre=1 Conflict=0 Approved=1 Pct=50 XP=20 Gate=1 |
+| Conflict (same meeting) | Live `rec9EEtEf3AS5GYCf` + Rec `rec2GKdH8UURJIy09` | both Conflict=1 Approved=0 Pct=0 XP=0 Gate=0 |
+| Blank RIDs | `recqddsE2Okt8gdQP` | Key blank |
+
+Live formula survey previously: blank-key orphan `rec53tl3IIQQljrT1` also Key blank.
+
+**C-025 formula repair in DEV: complete** (Config→Effective linkage still separate).
 
 ---
 

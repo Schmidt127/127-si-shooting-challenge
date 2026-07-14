@@ -1,10 +1,11 @@
 # C-025 — Zoom Recording formula repair (DEV)
 
-**Status:** Live DEV inspected 2026-07-13 — helpers still incomplete; Cursor Meta API **cannot write** schema (`403`, no `schema.bases:write`).  
-**Execute paste in Airtable UI via:** [C-025-Zoom-Recording-Manual-Airtable-Repair.md](./C-025-Zoom-Recording-Manual-Airtable-Repair.md)  
-**Do not recreate broken fields**; **do not touch PROD**; **no automations**; **OMNI not used**.  
+**Status:** **APPLIED in DEV (2026-07-13)** via Cursor Meta API — helpers created + seven formulas patched + Schmidt fixtures 4/4.  
+**View:** `Zoom Recording Quiz — Past Deadline` still needs UI create (Meta views API 422).  
+**Execute reference:** [C-025-Zoom-Recording-Manual-Airtable-Repair.md](./C-025-Zoom-Recording-Manual-Airtable-Repair.md)  
+**Do not recreate fields**; **do not touch PROD**; **no automations**; **OMNI not used**.  
 **Canonical Lead:** `overnight/lead-integration`  
-**Authority:** Stage 16 config catalog + Mike DEV findings + live Meta inspect (2026-07-13)  
+**Authority:** Stage 16 config catalog + Mike DEV findings + live Meta apply (2026-07-13)  
 **DEV base:** `appTetnuCZlCZdTCT`
 
 ### Live name map (use these — not catalog aliases)
@@ -20,12 +21,12 @@
 | Gate credit toggle | `Effective Recording Counts for Level Gate?` |
 | Coach approval toggle | `Effective Recording Quiz Requires Coach Approval?` |
 | Inverse link on Zoom Meetings | `Zoom Attendance` |
+| Conflict rollup | `Approved Preconflict Pair Tags` (**created**) |
+| Conflict lookup | `Meeting Approved Preconflict Pair Tags` (**created**) |
 
 **Mike already created (do not recreate):** `Zoom Credit Pre-Approved?`, `Preconflict Pair Tag`.
 
 **Config linkage:** `Effective Recording *` remain **meeting-level editable values**. Do **not** claim Config → Effective is complete.
-
-**Still missing on live DEV:** Zoom Meetings `Approved Preconflict Pair Tags` (rollup); Zoom Attendance `Meeting Approved Preconflict Pair Tags` (lookup).
 
 ---
 

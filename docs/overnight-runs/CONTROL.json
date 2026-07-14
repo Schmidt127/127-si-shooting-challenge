@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T21:12:00-06:00",
+  "updated_at": "2026-07-13T22:20:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "977595be0bf0de80ced378b30f4a7b4ec893294c",
@@ -512,7 +512,7 @@
       "claimed_by": null,
       "completed_at": null,
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
-      "notes": "OMNI retired for this task. Manual UI paste: C-025-Zoom-Recording-Manual-Airtable-Repair.md. Cursor inspected DEV; schema writes 403."
+      "notes": "OMNI retired. Formula layer applied by Cursor Meta API 2026-07-13. Remaining: award automations + Config linkage (separate)."
     },
     {
       "id": "C-027-dev-omni-implementation",
@@ -565,14 +565,14 @@
         "tools/airtable/tests/test_c025_zoom_attendance_formula_repair.py",
         "tools/airtable/_c025_dev_zoom_credit_repair.py"
       ],
-      "notes": "Repo paste package + live-name inventory updated. Airtable formula install pending Mike UI (Cursor API 403)."
+      "notes": "Repo + live DEV apply complete 2026-07-13. Schmidt 4/4."
     },
     {
       "id": "C-025-dev-manual-formula-paste",
       "backlog_refs": [
         "C-025"
       ],
-      "state": "BLOCKED_OWNER",
+      "state": "COMPLETE",
       "priority": 13,
       "depends_on": [
         "C-025-zoom-recording-formula-repair"
@@ -587,9 +587,9 @@
         "destructive": false
       },
       "claimed_by": null,
-      "completed_at": null,
+      "completed_at": "2026-07-13",
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
-      "notes": "Mike paste helpers+formulas in DEV UI. Cursor cannot Meta-write. Config\u2192Effective linkage still out of scope."
+      "notes": "Cursor Meta API applied helpers+formulas; Schmidt fixtures 4/4. View API unavailable."
     }
   ],
   "stage": {
@@ -600,13 +600,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T21:05:00-06:00",
+    "last_run_at": "2026-07-13T22:20:00-06:00",
     "lambda": "deferred",
     "offline": "deferred",
-    "targeted": "14/14 c025 formula contract (gate blank=false)",
-    "live_dev_survey": "0/5 pass \u2014 formulas still broken / helpers missing",
+    "targeted": "14/14 c025 formula contract",
+    "live_dev_schmidt": "4/4",
     "pass": true
   },
-  "next_action": "Mike (Airtable UI, no OMNI): follow docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md \u2014 create rollup+lookup, paste formulas, Schmidt tests. Cursor PAT lacks schema.bases:write (403). Then ask Cursor to re-verify.",
+  "next_action": "C-025 formula repair APPLIED in DEV. Mike: create Past Deadline view in UI if missing; delete C025 Schema Write Probe field. Config-Effective linkage still separate. Award automations not started.",
   "stop_reason": null
 }

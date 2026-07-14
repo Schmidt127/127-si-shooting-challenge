@@ -178,8 +178,9 @@ IF({Zoom Gate Credit Earned?} = 1, "Y", "N") &
 
 
 def load_env() -> None:
+    """Prefer tools/airtable/.env (schema write PAT). Do not let web/.env.local override."""
+    load_dotenv(REPO / "web" / ".env.local", override=False)
     load_dotenv(HERE / ".env", override=True)
-    load_dotenv(REPO / "web" / ".env.local", override=True)
 
 
 def tok() -> str:
@@ -312,14 +313,11 @@ def ensure_conflict_helpers(za: dict, zm: dict) -> dict:
                 "name": "Approved Preconflict Pair Tags",
                 "type": "rollup",
                 "description": "C-025 — ARRAYJOIN of Zoom Attendance Preconflict Pair Tag for exclusivity",
-                "options": {
-                    "isValid": True,
-                    "recordLinkFieldId": inv["id"],
-                    "fieldIdInLinkedTable": pre["id"],
-                    "referencedFieldIds": [],
-                    "formula": "ARRAYJOIN(values)",
-                    "result": {"type": "singleLineText"},
-                },
+                                        "options": {
+                                            "recordLinkFieldId": inv["id"],
+                                            "fieldIdInLinkedTable": pre["id"],
+                                            "formula": "ARRAYJOIN(values)",
+                                        },
             },
         )
         if created.get("manual_required"):
@@ -345,12 +343,10 @@ def ensure_conflict_helpers(za: dict, zm: dict) -> dict:
                 "name": "Meeting Approved Preconflict Pair Tags",
                 "type": "multipleLookupValues",
                 "description": "C-025 — lookup of Zoom Meetings.Approved Preconflict Pair Tags",
-                "options": {
-                    "isValid": True,
-                    "recordLinkFieldId": zoom_meeting["id"],
-                    "fieldIdInLinkedTable": rollup_id,
-                    "result": {"type": "singleLineText"},
-                },
+                                "options": {
+                                    "recordLinkFieldId": zoom_meeting["id"],
+                                    "fieldIdInLinkedTable": rollup_id,
+                                },
             },
         )
         if created.get("manual_required"):
