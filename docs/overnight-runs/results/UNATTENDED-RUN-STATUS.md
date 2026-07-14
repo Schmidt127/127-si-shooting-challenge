@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — C-025 checkbox blank-safe repair (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Issue | Meta API cannot store rollup COUNTA/OR formula |
+| Fix | Config `* YN` formulas + Program/Global Lookups of YN; checkbox draft formulas Yes/No |
+| Checkbox matrix | **7/7 PASS** |
+| Restore / Schmidt / Deadline | **OK** / **4/4** / **date OK** |
+| Effectives | still editable |
+| Next | UI Effective→formula convert (all kinds now evidence-ready) |
+| Doc | `docs/deploy-checklists/C-025-checkbox-rollup-repair.md` |
+
 ## Milestone — C-025 live precedence verify (2026-07-14)
 
 | Field | Value |

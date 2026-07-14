@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **Owner decisions APPROVED (2026-07-13 S16).** **DEV formulas/conflict APPLIED (2026-07-13).** **DEV deadline true-date APPLIED (2026-07-14).** **DEV Config scaffold APPLIED** (Config fields + links + overrides + rollups + draft formulas). **Live precedence verify 2026-07-14:** number/select tiers **PASS**; checkbox-unchecked **FAIL** (Config checkbox rollups missing aggregation formula). Effectives still editable. Schmidt **4/4** after restore. Automations **designed S17**, not pasted. **Next:** repair checkbox rollup formulas; re-verify; then UI Effective→formula convert; then 117a–f (no PROD). | C-024, V2-006, V2-005 | scaffold in; checkbox rollup blocked |
+| **C-025** | Zoom **recording** attendance — partial credit path | **Owner decisions APPROVED (2026-07-13 S16).** DEV formulas/conflict + deadline true-date + Config scaffold APPLIED. **Checkbox blank-safe repair 2026-07-14** (Config YN + Lookups; Meta cannot set rollup OR formula). Precedence **PASS** incl. unchecked path; Schmidt **4/4**. Effectives still editable. **Next:** UI Effective→formula convert; then 117a–f (no PROD). | C-024, V2-006, V2-005 | ready for Effective UI convert |
 
 ### Wave 10 — Communication & website
 

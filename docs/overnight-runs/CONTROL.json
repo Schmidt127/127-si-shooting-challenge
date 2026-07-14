@@ -735,14 +735,14 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T06:04:00-06:00",
+    "last_run_at": "2026-07-14T06:20:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "61/61 c025+c027 S17",
-    "live_dev_schmidt_credit": "4/4 (after config-linkage live verify restore)",
-    "live_c025_precedence": "11/12 (checkbox rollup fail)",
+    "live_dev_schmidt_credit": "4/4 (after checkbox YN repair)",
+    "live_c025_precedence": "number/select prior PASS; checkbox 7/7 PASS after YN repair",
     "pass": true
   },
-  "next_action": "Repair Program/Global checkbox Config rollup aggregation formulas; re-run live checkbox assertion; then UI Effective→formula convert. No 117a–f yet. No PROD.",
+  "next_action": "UI convert Effective Recording * to formulas (same field IDs) using draft Yes/No and number/select drafts. No 117a–f yet. No PROD.",
   "stop_reason": null
 }

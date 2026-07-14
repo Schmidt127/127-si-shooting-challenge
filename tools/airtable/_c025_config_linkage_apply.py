@@ -614,18 +614,24 @@ def number_formula(override, prog, glob, fallback):
 
 
 def checkbox_formula(override, prog, glob, fallback_bool):
+    # Program/Global are Yes/No text lookups of Config *YN companions (checkbox
+    # lookups return blank when unchecked; YN formulas always return Yes/No).
     fb = "TRUE()" if fallback_bool else "FALSE()"
     return f"""IF(
   {{{override}}} = "Yes", TRUE(),
   IF(
     {{{override}}} = "No", FALSE(),
     IF(
-      {{{prog}}} != BLANK(),
-      {{{prog}}},
+      {{{prog}}} = "Yes", TRUE(),
       IF(
-        {{{glob}}} != BLANK(),
-        {{{glob}}},
-        {fb}
+        {{{prog}}} = "No", FALSE(),
+        IF(
+          {{{glob}}} = "Yes", TRUE(),
+          IF(
+            {{{glob}}} = "No", FALSE(),
+            {fb}
+          )
+        )
       )
     )
   )
