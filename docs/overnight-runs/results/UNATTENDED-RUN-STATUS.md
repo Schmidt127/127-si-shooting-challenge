@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — S18 C-025 recording credit DEV DoD (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Feature | APPROVED brief — cleanup + 117a–f + DEV E2E without Fillout |
+| Scripts | `117a`–`117f` on GitHub |
+| E2E / Effectives / contracts | **6/6** · **13/13** · **15/15** offline |
+| Temp fields | Meta DELETE 404 → renamed `ZZZ C025 Archive — *` (40) |
+| Untouched | PROD, archive, real email, Make prod, Fillout public, Vercel/AWS prod, C-027 |
+| Remaining | Paste 117a–f in DEV Airtable; then Mike PROD promotion decision |
+| Docs | `S18-AUTHORIZED.md`, `S18-lead-integration-result.md`, `C-025-prod-promotion-package.md` |
+
 ## Milestone — DEV execution model documented (2026-07-14)
 
 | Field | Value |

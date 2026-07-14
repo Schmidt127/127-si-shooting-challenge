@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **Owner decisions APPROVED (2026-07-13 S16).** DEV formulas/conflict + deadline + Config scaffold + checkbox YN repair APPLIED. **Effective→formula UI convert 2026-07-14** (same field IDs; checkbox→number 1/0). Postconversion precedence **13/13 PASS**; Schmidt **4/4**; deadline date OK. **Next:** cleanup temp/legacy fields; then 117a–f DEV paste (no PROD). | C-024, V2-006, V2-005 | Effectives are formulas in DEV; cleanup then 117a–f |
+| **C-025** | Zoom **recording** attendance — partial credit path | **Owner APPROVED.** DEV Effectives→formula DONE. **S18 DEV DoD 2026-07-14:** 117a–f GitHub sources; ZA support fields; E2E harness (no Fillout) **6/6**; temp fields archive-renamed; promotion package ready. **Remaining:** paste/activate 117a–f in DEV Airtable UI; optional UI-delete `ZZZ C025 Archive — *`; then PROD only with Mike approval. | C-024, V2-006, V2-005 | DEV DoD mostly complete; Airtable paste pending |
 
 ### Wave 10 — Communication & website
 

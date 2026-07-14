@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T07:00:00-06:00",
+  "updated_at": "2026-07-14T07:20:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "221af88a7f2de9c302d6fd4a4f7fca4950ccc6b9",
-    "remote_sha": "221af88a7f2de9c302d6fd4a4f7fca4950ccc6b9",
+    "sha": "7dcf7c807b0fe38b0fd89ba0f20e65dc3079ba53",
+    "remote_sha": "7dcf7c807b0fe38b0fd89ba0f20e65dc3079ba53",
     "match": true
   },
   "run": {
@@ -725,24 +725,50 @@
         "docs/deploy-checklists/C-027-implementation-prep-stage17.md",
         "tools/airtable/tests/test_c027_men_contracts.py"
       ]
+    },
+    {
+      "id": "C-025-recording-credit-dev-dod",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 18,
+      "depends_on": [],
+      "auth": "owner-feature-brief",
+      "est_minutes": 480,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "deliverables": [
+        "airtable/automations/shooting-challenge/117a-zoom-recording-normalize-recording-quiz-submission.js",
+        "docs/deploy-checklists/C-025-prod-promotion-package.md",
+        "docs/overnight-runs/results/S18-lead-integration-result.md"
+      ],
+      "completed_at": "2026-07-14"
     }
   ],
   "stage": {
     "authorized": false,
-    "auth_doc": null,
+    "auth_doc": "docs/overnight-runs/stages/S18-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T06:20:00-06:00",
+    "last_run_at": "2026-07-14T07:15:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "61/61 c025+c027 S17",
-    "live_dev_schmidt_credit": "4/4 (after Effective\u2192formula convert)",
-    "live_c025_precedence": "postconversion Effectives 13/13 PASS (incl. checkbox checked/unchecked/override)",
+    "live_dev_schmidt_credit": "4/4 (held through S18 regression)",
+    "live_c025_precedence": "postconversion 13/13 + E2E harness 6/6",
     "pass": true
   },
-  "next_action": "Await Mike confirm next feature brief (recommended: C-025 Zoom recording attendance path DEV DoD \u2014 cleanup + 117a-f). See docs/development/DEV-EXECUTION-AND-PROMOTION-MODEL.md",
+  "next_action": "Mike paste 117a-f in DEV Airtable; optional delete ZZZ archive fields; then PROD package approval",
   "stop_reason": null
 }

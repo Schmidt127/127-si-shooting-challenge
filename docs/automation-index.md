@@ -121,6 +121,19 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
 
+## Zoom Recording Credit (117a–f) — C-025
+
+| # | Airtable automation name | Trigger (design) | File |
+|---|--------------------------|------------------|------|
+| **117a** | Normalize Recording Quiz Submission | Zoom Attendance · Recording Quiz | `117a-zoom-recording-normalize-recording-quiz-submission.js` |
+| **117b** | Coach Review and Needs Correction | Zoom Attendance · Review Status changed | `117b-zoom-recording-coach-review-and-needs-correction-handling.js` |
+| **117c** | Create Zoom XP Event | Zoom Attendance · Approved + amount > 0 | `117c-zoom-recording-create-zoom-xp-event.js` |
+| **117d** | Apply Zoom Gate Credit | Recording Quiz · Gate Credit Earned | `117d-zoom-recording-apply-zoom-gate-credit.js` |
+| **117e** | Apply Perfect Week Credit | Recording Quiz · Approved + PW Effective | `117e-zoom-recording-apply-perfect-week-credit.js` |
+| **117f** | Send Approval Email | Satisfactory (+ Config enabled); webhook optional | `117f-zoom-recording-send-approval-email.js` |
+
+**DEV (2026-07-14):** GitHub sources + support fields + E2E harness (no Fillout). **Airtable paste/activation of 117a–f still required** for trigger runs. Design: [C-025-automation-packages-stage17.md](./deploy-checklists/C-025-automation-packages-stage17.md). Promotion package: [C-025-prod-promotion-package.md](./deploy-checklists/C-025-prod-promotion-package.md).
+
 ---
 
 ## Pipeline stage map (audits)
