@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T19:06:00-06:00",
+  "updated_at": "2026-07-13T19:20:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "86ab036d0cd2df178eb9e04cb9508eccc2128f77",
-    "remote_sha": "86ab036d0cd2df178eb9e04cb9508eccc2128f77",
-    "match": true
+    "sha": "72e41dfef8d0110ee062e9f4e51eb1aaf5acbc4d",
+    "remote_sha": "72e41dfef8d0110ee062e9f4e51eb1aaf5acbc4d",
+    "match": false
   },
   "run": {
     "state": "idle",
@@ -207,7 +207,7 @@
         "V2-003",
         "V2-004"
       ],
-      "state": "READY_REPO",
+      "state": "COMPLETE",
       "priority": 9,
       "depends_on": [],
       "auth": "standing",
@@ -220,7 +220,7 @@
         "destructive": false
       },
       "claimed_by": null,
-      "completed_at": null
+      "completed_at": "2026-07-13"
     },
     {
       "id": "C-010-dev-omni-implementation",
@@ -436,6 +436,26 @@
       },
       "claimed_by": null,
       "completed_at": "2026-07-13"
+    },
+    {
+      "id": "orphan-c024-070a-double-send-review",
+      "backlog_refs": [
+        "C-024"
+      ],
+      "state": "READY_REPO",
+      "priority": 10,
+      "depends_on": [],
+      "auth": "standing",
+      "est_minutes": 45,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": null
     }
   ],
   "stage": {
@@ -446,12 +466,12 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T19:05:00-06:00",
+    "last_run_at": "2026-07-13T19:20:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "64/64",
+    "targeted": "45/45",
     "pass": true
   },
-  "next_action": "S13 PASS. Next READY: C-022-presentation-fields-audit",
+  "next_action": "S14 PASS. Next READY: orphan-c024-070a-double-send-review",
   "stop_reason": null
 }

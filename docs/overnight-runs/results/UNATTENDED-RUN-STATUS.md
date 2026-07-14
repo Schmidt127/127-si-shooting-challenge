@@ -1,11 +1,11 @@
 ﻿# Unattended run status
 
-## Milestone — S13 integrated (C-027 design PASS); next C-022
+## Milestone — S14 integrated (C-022 audit PASS); next orphan C-024 review
 
 | Field | Value |
 |-------|-------|
-| Time | 2026-07-13 ~19:05 MDT |
-| Stage completed | S13 `C-027-major-event-notifications-design` |
-| Worker tip | `1e33780` |
-| Tests | Lambda 66/66 · Offline 97/97 · Targeted 64/64 |
-| Next READY | `C-022-presentation-fields-audit` |
+| Time | 2026-07-13 ~19:20 MDT |
+| Stage completed | S14 `C-022-presentation-fields-audit` |
+| Worker tip | `a2fc0c2` |
+| Tests | Lambda 66/66 · Offline 97/97 · Targeted 45/45 |
+| Next READY | `orphan-c024-070a-double-send-review` |

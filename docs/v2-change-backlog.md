@@ -142,7 +142,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
-| **C-022** | Public display fields — not primary/formula | Parents/emails/web use **short Presentation labels only** — never `record.name` / primary field fallback. Example: homework email col 2 should be **Assignment Title**, not **Assignment Full Name** formula. Extend to Weeks (`Week Label - Public`), video/zoom titles. | C-012 | queued |
+| **C-022** | Public display fields — not primary/formula | Parents/emails/web use **short Presentation labels only** — never `record.name` / primary field fallback. Example: homework email col 2 should be **Assignment Title**, not **Assignment Full Name** formula. Extend to Weeks (`Week Label - Public`), video/zoom titles. **Audit S14 COMPLETE (2026-07-13):** [C-022-presentation-fields-audit-stage14.md](./deploy-checklists/C-022-presentation-fields-audit-stage14.md) — **071** still falls back to `record.name` (V2-003); **072** falls back to Full Name (V2-004); web Title→Full Name fallback remains. | C-012 | audit complete / impl pending |
 | **V2-003** | Homework email column fix (**071**) | Remove `homeworkRecord.name` fallback; use Presentation field only | C-022 | queued |
 | **V2-004** | Weekly email homework table (**072**) | Same Presentation rule for homework name column | C-022 | queued |
 
