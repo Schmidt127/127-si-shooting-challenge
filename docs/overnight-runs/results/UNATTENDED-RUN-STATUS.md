@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S20 DEV slot reopen (112 retracted) (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Correction | **112 not present in DEV UI** (Mike) — prior retire-112 advice wrong for DEV |
+| Live API | Meta automations list **403**; Automations **docs table** 48 rows (drifted; still lists 112 Live; missing 070c/115/116) |
+| Candidate | **043** exact name in reopen doc — **UI confirm required** before any disable; design-superseded by **042** |
+| Orchestrator | Still **+1** |
+| Mike action | Confirm 043 in DEV Automations UI (or export full name list) |
+
 ## Milestone — S20 C-025 117 orchestrator slot fit (2026-07-14)
 
 | Field | Value |

@@ -27,41 +27,27 @@ Live DEV count = **UNKNOWN** in repo (Mike reports **at limit**; Airtable cap **
 
 ### 2. Existing slots that could potentially be retired
 
-**Recommend only — do not disable until you approve:**
+**Revised 2026-07-14 (DEV UI correction — do not disable until you approve):**
 
-| # | Why (repo evidence) | Est. slots freed |
-|---|---------------------|-----------------:|
-| **112** | **OFF**; legacy duplicate of **013**; V2-014 Category F | **+1** (best first candidate) |
-| **043** | Superseded by **042** gate assignment; Cat F retire | **+1** |
-| **008** / **012** | Already removed historically | 0 remaining |
+| # | Why | Est. slots freed |
+|---|-----|-----------------:|
+| **043** | Design-superseded by **042**; exact docs name available; **UI presence must be confirmed** | **+1** if present in DEV UI |
+| ~~**112**~~ | **Not in DEV UI** (Mike) — recommendation **retracted** | **0** |
 
-Do **not** retire **115**, **070a/b**, or productive pipeline slots for this.
+Do **not** retire **042**, **013**, **116**, **115**, or productive **070a/b** for capacity.
 
 ### 3. Exact safest deployment option
 
-1. You approve **delete or permanently disable 112** in **DEV only** (frees 1 slot).  
-2. Create **one** automation:  
-   **`117 - Zoom Recording Credit - Orchestrator`**  
-   Folder: `17 - Zoom Recording Credit`  
-3. Paste **only**  
-   `airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js`  
-   — skip GitHub header; leave **OFF**.  
-4. Inputs: `recordId` (+ optional `webhookUrl` **blank**).  
-5. Trigger later: Zoom Attendance · Method = Recording Quiz · update on review/credit fields (see slot plan).  
-6. Keep `117a`–`117f` as **library only** — do not paste them as six automations.
-
-Fallback if you refuse retirement: Option 2 needs **two** free slots — still no six-way paste.
+1. Confirm **043** in DEV Automations UI (or export full name list if absent).  
+2. If 043 present and **042** is the live level/gate assigner → approve retire **043** only (**+1**).  
+3. Paste **one** `117-zoom-recording-credit-orchestrator.js` OFF (skip GitHub header).  
+4. Keep `117a`–`117f` library-only.
 
 ### 4. First required Airtable UI action
 
-**Decide and act in DEV Automations:**
+> Search DEV for **`043 - Levels and Progression - Set Level Gate Rule from Next Level`**. Reply present ON/OFF **or** not in UI (+ full list). **Do not hunt 112.**
 
-> Approve freeing **one** slot by deleting or disabling **112** (recommended), **or** tell Cursor you’ve freed a different unused slot — then create/paste the **single** orchestrator **OFF**.
-
-Until a slot is free, **cannot** activate C-025 recording credit in DEV Airtable.
-
-Full plan: [`C-025-s20-orchestrator-slot-plan.md`](../../deploy-checklists/C-025-s20-orchestrator-slot-plan.md)  
-Mike sheet: [`C-025-mike-action-sheet-s20-orchestrator.md`](../../deploy-checklists/C-025-mike-action-sheet-s20-orchestrator.md)
+Evidence: [`C-025-s20-dev-slot-reopen-2026-07-14.md`](../../deploy-checklists/C-025-s20-dev-slot-reopen-2026-07-14.md) · Mike sheet updated.
 
 ## Deliverables landed
 
@@ -69,6 +55,7 @@ Mike sheet: [`C-025-mike-action-sheet-s20-orchestrator.md`](../../deploy-checkli
 - Library headers on `117a`–`117f`
 - Slot plan + Agent B result + offline tests **34/34**
 - S19 six-paste path **superseded** for DEV capacity
+- **S20 reopen:** 112 retracted; 043 UI-confirm path
 
 ## Untouched
 

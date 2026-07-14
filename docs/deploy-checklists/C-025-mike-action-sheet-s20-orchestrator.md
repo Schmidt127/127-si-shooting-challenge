@@ -1,39 +1,33 @@
-# Mike action sheet — S20 C-025 orchestrator (slot limit)
+# Mike action sheet — S20 DEV slot free (revised 2026-07-14)
 
-**Stop here.** First Airtable UI decision required.
+**Correction applied:** **112 is not in DEV.** Do not delete 112. Orchestrator still needs **+1** slot.
 
-## Why
+**Stop here.** First Airtable UI decision:
 
-DEV is at the automation limit. Pasting **117a–f as six** is blocked. GitHub now has **one** orchestrator that runs A→F safely (XP Recording Quiz–only, conflict deactivate, gate/PW, email skip without webhook).
+## 1) Confirm whether 043 exists in DEV Automations UI
 
-## First action (choose one)
+Search exactly:
 
-### Preferred
+**`043 - Levels and Progression - Set Level Gate Rule from Next Level`**
 
-In **DEV** Automations only:
+| If you find it | What it is | Next |
+|----------------|------------|------|
+| Present (ON or OFF) | Sets `Level Gate Rule` from Next Level — **superseded by 042** in GitHub design | Reply **“043 present — status ON/OFF”**. Safest retirement candidate for +1 slot **after** you confirm **042** is live in DEV. |
+| Not present | Docs table was stale (same class of error as 112) | Reply **“043 not in UI”** and send a full Automations list (every name, ON/OFF). |
 
-1. Confirm **112** is still **OFF** (legacy duplicate of **013**).  
-2. **Delete** or permanently **turn off + leave deleted** slot for **112** — **only if you approve** (this frees one slot).  
-3. Reply to Cursor: “112 freed in DEV” (or name the slot you freed).
+## 2) Do not
 
-### Alternative
-
-Free any **other** unused DEV automation you confirm is safe (e.g. **043** if you prefer that retirement instead of 112). Same reply.
-
-## After that (not yet — wait for Cursor confirmation)
-
-1. Create **`117 - Zoom Recording Credit - Orchestrator`** in folder `17 - Zoom Recording Credit`.  
-2. Paste `117-zoom-recording-credit-orchestrator.js` (skip GitHub header).  
-3. Leave **OFF**; `webhookUrl` blank.
-
-## Do not
-
-- Paste six `117a`–`117f` automations  
+- Delete **112** in DEV (not present)  
+- Paste six 117a–f  
 - Touch PROD  
-- Enable real email / production webhook  
-- Start C-027  
+- Disable **042** / **013** / **116** / **115** without a named plan  
 
-## Docs
+## 3) After a real slot is freed
 
-- Slot plan: `docs/deploy-checklists/C-025-s20-orchestrator-slot-plan.md`  
-- Lead verdict: `docs/overnight-runs/results/S20-lead-integration-result.md`
+Paste **one** orchestrator OFF:  
+`117-zoom-recording-credit-orchestrator.js`  
+(see prior S20 sheet / slot plan).
+
+## Evidence
+
+[`C-025-s20-dev-slot-reopen-2026-07-14.md`](./C-025-s20-dev-slot-reopen-2026-07-14.md) · JSON: `docs/audits/C-025-s20-dev-automations-doc-table-2026-07-14.json`

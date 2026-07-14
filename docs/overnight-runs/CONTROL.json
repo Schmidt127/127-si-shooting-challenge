@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T13:45:00-06:00",
+  "updated_at": "2026-07-14T13:50:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "1a65a59b600b52199f61865c5ef07604e452109b",
@@ -809,7 +809,7 @@
         "docs/deploy-checklists/C-025-mike-action-sheet-s20-orchestrator.md",
         "docs/overnight-runs/results/S20-lead-integration-result.md"
       ],
-      "notes": "Option 1 orchestrator ready. Stop: Mike free 1 DEV slot (prefer 112) then paste single 117 OFF."
+      "notes": "Orchestrator +1 still valid. 112 DEV recommendation RETRACTED (not in UI). Prefer UI-confirm 043 then retire; see C-025-s20-dev-slot-reopen-2026-07-14.md"
     }
   ],
   "stage": {
@@ -828,6 +828,6 @@
     "live_c025_precedence": "postconversion 13/13 + E2E harness 6/6",
     "pass": true
   },
-  "next_action": "Mike: free 1 DEV automation slot (prefer delete/disable 112 with approval), then paste single 117 orchestrator OFF \u2014 C-025-mike-action-sheet-s20-orchestrator.md",
+  "next_action": "Mike: confirm whether DEV UI has 043 (exact name in C-025-mike-action-sheet-s20-orchestrator.md). Do NOT pursue 112 in DEV. Then free +1 slot and paste 117 orchestrator OFF.",
   "stop_reason": null
 }

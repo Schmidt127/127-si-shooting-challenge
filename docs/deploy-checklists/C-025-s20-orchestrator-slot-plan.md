@@ -60,8 +60,8 @@ Do **not** delete, disable, or repurpose without Mike. Recommendations from repo
 
 | Candidate | Repo evidence | Likely disposition | Est. slots if Mike approves |
 |-----------|---------------|--------------------|-----------------------------|
-| **112** | automation-index: **OFF — monitor before delete**; legacy duplicate of **013**; V2-014 Cat **F** | Delete after Mike confirm | **+1** |
-| **043** | V2-014 Cat **F** Retire; **042** owns gate; PROJECT_STATE: “retire **043**” in maintenance window | Disable/delete after Mike confirm | **+1** |
+| **1** | **043** (*if* confirmed in DEV UI) | Docs table has exact name; **042** GitHub says turn 043 off; **UI presence UNCONFIRMED** | **+1** after Mike UI confirm + approve |
+| ~~**112**~~ | **Retracted for DEV** | Mike 2026-07-14: **not in DEV UI** (docs table falsely Status=Live) | **0** |
 | **070c** | Index: required only for plain-text `Accepted` async path; **not required** when Make returns full Lambda JSON (DEV homework PASS sync path) | Possibly leave OFF / skip enabling; **not** automatic delete | 0 unless Mike disables a live ON copy |
 | **115** | Engineering test framework — DEV tooling | Leave ON in DEV; never a PROD requirement | 0 (keep) |
 | Merge Cat **C** (`006+021`, `030+032+033`, `111→013`, email EMC) | Wave 2A planning only — **not executed** | Future wave; not S20 | TBD |
@@ -71,7 +71,7 @@ Do **not** delete, disable, or repurpose without Mike. Recommendations from repo
 | Path | Slots needed | Feasible at limit? |
 |------|-------------:|--------------------|
 | Original Stage 17 (117a–f ×6) | **+6** | **No** — blocked |
-| **Option 1** (preferred): 1 orchestrator | **+1** | Yes if **≥1** free **or** Mike frees 112/043 |
+| **Option 1** (preferred): 1 orchestrator | **+1** | Yes if **≥1** free **or** Mike frees a **UI-confirmed** candidate (**043** preferred if present; **not 112** in DEV) |
 | **Option 2**: core + email (2 automations) | **+2** | Needs **≥2** free |
 
 ---
@@ -135,7 +135,7 @@ Airtable re-runs “matches conditions” when a matching record is **updated** 
 
 ```
 Need: +1 slot for Orchestrator
-If DEV at 50/50 → free 1 slot first (Mike-approved candidate: 112 delete or 043 retire)
+If DEV at 50/50 → free 1 slot first (Mike-approved **UI-confirmed** candidate: prefer **043** if present; **not 112** in DEV — see slot reopen doc).
 Net for C-025 recording credit: +1 (not +6)
 ```
 
@@ -175,7 +175,7 @@ Offline contracts for step logic remain in `tools/airtable/tests/test_c025_117_c
 ## 5. Mike action (UI — not done by agent)
 
 1. Reconcile live DEV automation count (OMNI / Automations list) → confirm free slots.
-2. If **0** free: approve **one** retirement candidate (**112** preferred if still OFF; else **043** if verified superseded by **042**).
+2. If **0** free: confirm **043** in DEV UI (exact name in reopen doc); if present and **042** live, retire **043**. **Do not** pursue **112** in DEV.
 3. Create **one** automation: `117 - Zoom Recording Credit - Orchestrator` (folder `17 - Zoom Recording Credit`).
 4. Paste Option 1 script (skip GitHub header). Wire inputs. Trigger per §2.2. Leave **OFF**.
 5. Tell Cursor when paste exists so fixtures / ON can proceed under existing C-025 DEV rules.
