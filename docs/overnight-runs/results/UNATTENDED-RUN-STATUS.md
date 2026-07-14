@@ -1,5 +1,18 @@
 ﻿# Unattended run status
 
+## Milestone — C-025 DEV deadline repair APPLIED (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Time | 2026-07-14 ~05:40 MDT |
+| DEV changes | Created Zoom Meetings `Week End Date` (`fldmeNbIm6UVQZI9Y`); patched `Calculated Recording Quiz Deadline` (`fldbmg5yT9O2TSqwn`) to true **date**; ZA lookup now date-typed |
+| Formula adaptations | `DATETIME_PARSE(ARRAYJOIN({Week End Date}))` + `DATETIME_DIFF` for Later/Earlier (bare lookup / MAX/MIN blanked) |
+| View | `Zoom Recording Quiz - Past Deadline` (`viwO4iOrQtWXpAnQY`) present — confirm filters/sort in UI |
+| Schmidt credits | **4/4** |
+| Untouched | PROD, XP creates, emails, Make, Vercel, AWS, Config linkage, 117a–f |
+| Stop | Config linkage / automations **not** started |
+| Doc | `docs/deploy-checklists/C-025-deadline-repair-design.md` §8 |
+
 ## Morning report — Overnight S17 (2026-07-13/14)
 
 | # | Item | Value |

@@ -1,8 +1,8 @@
 # C-025 — Deadline repair design (true-date `Calculated Recording Quiz Deadline` + Past Deadline view)
 
-**Status:** DESIGN ONLY — no DEV schema changes made by this document.
-**Author:** Agent A (overnight Lead subagent), 2026-07-13
-**Base inspected (read-only Meta API):** DEV `appTetnuCZlCZdTCT`, `GET` only.
+**Status:** APPLIED IN DEV (2026-07-14) — see §8.
+**Author:** Agent A (overnight Lead subagent), 2026-07-13; applied Cursor Lead 2026-07-14
+**Base:** DEV `appTetnuCZlCZdTCT` only. PROD untouched.
 **Depends on:** [C-025-config-linkage-design.md](./C-025-config-linkage-design.md) for the `Effective Recording Makeup Window Days` / `Effective Recording Deadline Mode` config-driven values this formula consumes.
 
 ---
@@ -131,6 +131,64 @@ This is very likely the actual root cause of the "wrong type" bug (in addition t
 2. Confirm **Formatting** shows **Date** (with **Include a time field** checked, since `Recording Available At` and `Week End Date` are both dateTime) — not "Formula" generic/text.
 3. If Airtable does not auto-offer Date formatting, manually set it. This is a UI-only step (Meta API field `options.result` is read-only/derived, not settable directly) — confirm in DEV with a real record before relying on it in the view filter (§5).
 
+### 4.2 Required Airtable adaptations discovered at apply time (2026-07-14)
+
+The §4 formula preserves modes and defaults, but as written it **does not evaluate** against a `multipleLookupValues` `Week End Date`:
+
+| Probe | Result |
+|---|---|
+| Bare `{Week End Date}` return | API returns an **array**, not a scalar date |
+| `MAX`/`MIN` of `DATEADD(...)` and `{Week End Date}` | Evaluates to **blank** |
+| `MAX({Week End Date})` alone | Still **blank** |
+| `Days After` only (no week-end) | Works; ISO date returned |
+
+**Installed adaptation (logic-equivalent):**
+
+1. Scalarize week end: `DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')`
+2. Replace `MAX`/`MIN` with `DATETIME_DIFF(..., 'seconds')` pick (Later ≥ 0 → available+days; Earlier ≤ 0 → available+days)
+
+After that patch, Meta reports formula result type **`date`** (`M/D/YYYY`), and Zoom Attendance lookup `Calculated Recording Quiz Deadline` also reports **`date`**.
+
+**Attendance Method gate note:** the formula lives on **Zoom Meetings** and therefore reads **Zoom Meetings → `Attendance Method`**, not the Zoom Attendance row's method. Deadline values only compute when the **meeting** method is `Recording Quiz` (plus `Recording Available At` set).
+
+Exact installed formula (field names):
+
+```airtable
+IF(
+  OR(
+    {Recording Available At} = BLANK(),
+    {Attendance Method} != "Recording Quiz"
+  ),
+  BLANK(),
+  SWITCH(
+    IF({Effective Recording Deadline Mode} = BLANK(), "Later of Both", {Effective Recording Deadline Mode}),
+    "Days After Recording Available",
+      DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'),
+    "End of Program Week",
+      IF({Week End Date} = BLANK(), BLANK(), DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')),
+    "Earlier of Both",
+      IF(
+        OR({Week End Date} = BLANK(), {Recording Available At} = BLANK()),
+        IF({Week End Date} = BLANK(), DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'), DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')),
+        IF(
+          DATETIME_DIFF(DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'), DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD'), 'seconds') <= 0,
+          DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'),
+          DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')
+        )
+      ),
+      IF(
+        OR({Week End Date} = BLANK(), {Recording Available At} = BLANK()),
+        IF({Week End Date} = BLANK(), DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'), DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')),
+        IF(
+          DATETIME_DIFF(DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'), DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD'), 'seconds') >= 0,
+          DATEADD({Recording Available At}, IF({Effective Recording Makeup Window Days} = BLANK(), 7, {Effective Recording Makeup Window Days}), 'days'),
+          DATETIME_PARSE(ARRAYJOIN({Week End Date}), 'YYYY-MM-DD')
+        )
+      )
+  )
+)
+```
+
 ---
 
 ## 5. Step 3 — view `Zoom Recording Quiz - Past Deadline` (normal hyphen)
@@ -175,23 +233,43 @@ This appears to be a stand-in created during the prior session when the real vie
 
 ## 6. Validation checklist (DEV, after implementation)
 
-- [ ] `Week End Date` lookup created, shows the correct `Weeks.End Date` for a sample meeting.
-- [ ] `Calculated Recording Quiz Deadline` result type is **Date**, not text (check field formatting, not just visual output).
-- [ ] Mode = `Days After Recording Available`, days = 7 → deadline = `Recording Available At` + 7 days exactly.
-- [ ] Mode = `End of Program Week` → deadline = that meeting's `Week End Date` exactly (not the stringified link).
-- [ ] Mode = `Later of Both` (default, including blank mode) → deadline = `MAX(available+days, week end)`.
-- [ ] Mode = `Earlier of Both` → deadline = `MIN(available+days, week end)`.
-- [ ] Blank `Effective Recording Makeup Window Days` → formula uses 7, not blank/error.
-- [ ] Blank `Effective Recording Deadline Mode` → formula behaves as `Later of Both`, not blank.
-- [ ] Live attendance rows (`Attendance Method` = `Live`) always return blank deadline (guard clause holds).
-- [ ] View `Zoom Recording Quiz - Past Deadline` (normal hyphen, renamed from any em-dash duplicate) shows only Recording Quiz rows with a past true-date deadline and `Zoom Credit Approved?` empty/false.
-- [ ] `Zoom Credit Debug` (which already interpolates `{Calculated Recording Quiz Deadline}`) shows a real date string post-fix, not the old text artifact.
-- [ ] No PROD changes.
+- [x] `Week End Date` lookup created, shows the correct `Weeks.End Date` for a sample meeting.
+- [x] `Calculated Recording Quiz Deadline` result type is **Date**, not text (Meta `result.type = date`).
+- [x] Mode = `Days After Recording Available`, days = 7 → deadline = `Recording Available At` + 7 days exactly.
+- [x] Mode = `End of Program Week` → deadline = that meeting's `Week End Date` exactly (not the stringified link).
+- [x] Mode = `Later of Both` (default, including blank mode) → deadline = later of available+days vs week end.
+- [x] Mode = `Earlier of Both` → deadline = earlier of available+days vs week end.
+- [x] Blank `Effective Recording Makeup Window Days` → formula uses 7, not blank/error.
+- [x] Blank `Effective Recording Deadline Mode` → formula behaves as `Later of Both`, not blank.
+- [ ] Live attendance rows (`Attendance Method` = `Live`) always return blank deadline (guard clause holds) — **meeting**-level Live blanks deadline (verified by formula gate).
+- [x] View `Zoom Recording Quiz - Past Deadline` (normal hyphen) **exists** (`viwO4iOrQtWXpAnQY`). Meta API cannot read/set filters — Mike should confirm the three AND filters + sort in UI.
+- [ ] `Zoom Credit Debug` shows a real date string post-fix (not re-checked this slice).
+- [x] No PROD changes.
 
 ---
 
 ## 7. Summary of what this document does and does not authorize
 
 - **Does:** Pin down the exact root cause (raw link used instead of an End Date lookup) with the field's live formula text and field IDs; provide a corrected formula that keeps the same field ID; specify the view with the corrected normal-hyphen name and UI fallback steps; flag the leftover marker field.
-- **Does not:** Create `Week End Date`, edit the live formula, or create/rename the view. All of that remains gated behind `C-025-dev-omni-implementation` (`auth: explicit_mike`).
-- **Live schema changed by this document:** none. Only `GET` calls were made against DEV Meta API.
+- **Does not (original design):** Create `Week End Date`, edit the live formula, or create/rename the view. That was gated behind Mike authorization.
+- **Live schema changed by the original design document:** none.
+
+---
+
+## 8. Applied state — DEV 2026-07-14
+
+| Item | Value |
+|---|---|
+| Base | DEV `appTetnuCZlCZdTCT` only |
+| `Week End Date` | **Created** `fldmeNbIm6UVQZI9Y` — Lookup `Week` → Weeks.`End Date` |
+| `Calculated Recording Quiz Deadline` | **Patched** same ID `fldbmg5yT9O2TSqwn` — formula §4.2; Meta result **`date`** |
+| ZA lookup `Calculated Recording Quiz Deadline` | **Unchanged field** `fldJnSfq7APTY3JD5` — now returns **`date`** values |
+| View | **Exists** `viwO4iOrQtWXpAnQY` — name `Zoom Recording Quiz - Past Deadline` (hyphen). Filters/sort: confirm in UI |
+| Probe field `C025 Schema Write Probe` | **Absent** (Mike deleted) |
+| Mode matrix (fixture `reczeUT0AJUWMmEOb`, Available At `2026-07-01`, days 7, Week End `2026-05-31`) | Later → `2026-07-08`; Earlier → `2026-05-31`; End week → `2026-05-31`; Days After → `2026-07-08`; Blank mode → `2026-07-08` |
+| Schmidt credit checks | **4/4** (`tools/airtable/_preview/c025_deadline_verify.json`) |
+| Fixtures created this slice | Meeting `rech5YbJNUzBRY6LQ` + Live ZA `recRIu3ld00t9AKKR` (live-only credit; no XP Events written by us) |
+| Untouched | PROD, XP Event creates, emails, Make, Vercel, AWS, Config linkage, automations 117a–f, Meeting Effective* conversion |
+| Apply helpers | `tools/airtable/_c025_deadline_repair_apply.py`, `_c025_deadline_verify.py` |
+
+**Next recommended task:** DEV Config field create + Config→Meeting Effective linkage per [C-025-config-linkage-design.md](./C-025-config-linkage-design.md). Do **not** paste 117a–f until Config linkage lands.

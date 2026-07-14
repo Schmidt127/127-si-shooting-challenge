@@ -512,7 +512,35 @@
       "claimed_by": null,
       "completed_at": null,
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
-      "notes": "Formula layer done. Next Airtable: Config fields + deadline date + view UI. Automations designed stage17, not pasted."
+      "notes": "Formula layer + deadline true-date done 2026-07-14. Next Airtable: Config fields + Effective linkage. Automations designed stage17, not pasted. View hyphen exists — confirm filters in UI."
+    },
+    {
+      "id": "C-025-deadline-repair-dev-apply",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 18,
+      "depends_on": [
+        "C-025-deadline-submission-design"
+      ],
+      "auth": "explicit_mike",
+      "est_minutes": 60,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-14",
+      "deliverables": [
+        "docs/deploy-checklists/C-025-deadline-repair-design.md",
+        "tools/airtable/_c025_deadline_repair_apply.py",
+        "tools/airtable/_c025_deadline_verify.py"
+      ],
+      "notes": "Week End Date lookup + date formula + view present. Schmidt 4/4. No Config/117 paste."
     },
     {
       "id": "C-027-dev-omni-implementation",
@@ -707,13 +735,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T23:50:00-06:00",
+    "last_run_at": "2026-07-14T05:40:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "61/61 c025+c027 S17",
-    "live_dev_schmidt_credit": "4/4 (prior)",
+    "live_dev_schmidt_credit": "4/4 (deadline repair 2026-07-14)",
     "pass": true
   },
-  "next_action": "Mike UI: delete C025 Schema Write Probe; create view Zoom Recording Quiz - Past Deadline (hyphen); then DEV Config field create per C-025-config-linkage-design.md. No award automation paste yet.",
+  "next_action": "DEV Config field create + Meeting Effective linkage per C-025-config-linkage-design.md. Confirm Past Deadline view filters in UI. No 117a–f paste yet. No PROD.",
   "stop_reason": null
 }
