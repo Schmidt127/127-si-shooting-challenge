@@ -63,8 +63,12 @@ def xp_create_117c(*, approved: bool, conflict: bool, amount: float, key: str, e
         return "skipped_not_recording_quiz"
     if not key:
         return "error_blank_key"
+    # Match 117c JS: deactivate when approved/conflict/amount fails and XP already exists;
+    # otherwise distinguish skipped_not_approved vs skipped_zero_amount.
     if not approved or conflict or amount <= 0:
-        return "deactivated_on_conflict" if key in existing else "skipped_not_approved"
+        if key in existing:
+            return "deactivated_on_conflict"
+        return "skipped_not_approved" if (not approved or conflict) else "skipped_zero_amount"
     if key in existing:
         return "skipped_exists"
     return "created"
@@ -152,15 +156,52 @@ class Test117c(unittest.TestCase):
             "skipped_not_recording_quiz",
         )
 
+    def test_conflict_deactivates_existing(self):
+        key = zoom_credit_key("recE", "recM")
+        self.assertEqual(
+            xp_create_117c(approved=True, conflict=True, amount=20, key=key, existing={key}),
+            "deactivated_on_conflict",
+        )
+
+    def test_conflict_skips_when_no_existing(self):
+        key = zoom_credit_key("recE", "recM")
+        self.assertEqual(
+            xp_create_117c(approved=False, conflict=True, amount=20, key=key, existing=set()),
+            "skipped_not_approved",
+        )
+
+    def test_zero_amount_skips(self):
+        key = zoom_credit_key("recE", "recM")
+        self.assertEqual(
+            xp_create_117c(approved=True, conflict=False, amount=0, key=key, existing=set()),
+            "skipped_zero_amount",
+        )
+
 
 class Test117d117e(unittest.TestCase):
     def test_gate(self):
         row = ZaRow("recA", "Recording Quiz", "recE", "recM", gate_earned=True)
         self.assertEqual(gate_credit_117d(row), "linked_attendee_for_gate")
 
+    def test_gate_idempotent(self):
+        row = ZaRow("recA", "Recording Quiz", "recE", "recM", gate_earned=True, gate_applied=True)
+        self.assertEqual(gate_credit_117d(row), "skipped_already_applied")
+
     def test_pw_off(self):
         row = ZaRow("recA", "Recording Quiz", "recE", "recM", approved=True, pw_flag=False)
         self.assertEqual(perfect_week_117e(row), "skipped_flag_off")
+
+    def test_pw_idempotent(self):
+        row = ZaRow(
+            "recA",
+            "Recording Quiz",
+            "recE",
+            "recM",
+            approved=True,
+            pw_flag=True,
+            pw_applied=True,
+        )
+        self.assertEqual(perfect_week_117e(row), "skipped_already_applied")
 
 
 class Test117f(unittest.TestCase):
@@ -204,6 +245,20 @@ class Test117f(unittest.TestCase):
         )
         self.assertEqual(approval_email_117f(row, "https://example.com"), "skipped_not_approved")
 
+    def test_not_approved_blocks_send(self):
+        row = ZaRow(
+            "recA",
+            "Recording Quiz",
+            "recE",
+            "recM",
+            satisfactory=True,
+            approved=False,
+            email_enabled=True,
+            template="T",
+        )
+        self.assertEqual(approval_email_117f(row, "https://example.com"), "skipped_not_approved")
+
 
 if __name__ == "__main__":
     unittest.main()
+

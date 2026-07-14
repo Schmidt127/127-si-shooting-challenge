@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **Owner APPROVED.** S18 DEV DoD done. **S19:** DEV activation sheet + Mike action sheet; 117b/c/f v1.0.1 safety fixes. **Remaining:** Mike paste 117a–f in DEV (start with 117a OFF); then live trigger E2E; optional ZZZ delete; PROD only with approval. | C-024, V2-006, V2-005 | DEV activation closeout docs ready; Airtable paste pending |
+| **C-025** | Zoom **recording** attendance — partial credit path | **S20:** One orchestrator fits DEV slot limit (not six 117a–f). Library scripts retained. **Remaining:** Mike frees 1 DEV slot (prefer **112**); paste `117` orchestrator OFF; then trigger E2E. PROD via promotion package only. | C-024, V2-006, V2-005 | Slot-fit ready; waiting Mike slot decision |
 
 ### Wave 10 — Communication & website
 

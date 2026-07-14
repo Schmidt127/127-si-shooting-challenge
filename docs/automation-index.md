@@ -121,18 +121,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
 
-## Zoom Recording Credit (117a–f) — C-025
+## Zoom Recording Credit (117) — C-025 · **S20 orchestrator**
 
 | # | Airtable automation name | Trigger (design) | File |
 |---|--------------------------|------------------|------|
-| **117a** | Normalize Recording Quiz Submission | Zoom Attendance · Recording Quiz | `117a-zoom-recording-normalize-recording-quiz-submission.js` |
-| **117b** | Coach Review and Needs Correction | Zoom Attendance · Review Status changed | `117b-zoom-recording-coach-review-and-needs-correction-handling.js` |
-| **117c** | Create Zoom XP Event | Zoom Attendance · Approved + amount > 0 | `117c-zoom-recording-create-zoom-xp-event.js` |
-| **117d** | Apply Zoom Gate Credit | Recording Quiz · Gate Credit Earned | `117d-zoom-recording-apply-zoom-gate-credit.js` |
-| **117e** | Apply Perfect Week Credit | Recording Quiz · Approved + PW Effective | `117e-zoom-recording-apply-perfect-week-credit.js` |
-| **117f** | Send Approval Email | Satisfactory (+ Config enabled); webhook optional | `117f-zoom-recording-send-approval-email.js` |
+| **117** | Zoom Recording Credit — Orchestrator | Zoom Attendance · Recording Quiz updates | `117-zoom-recording-credit-orchestrator.js` |
+| 117a–f | *(library only — **do not paste ×6**)* | — | `117a`–`117f-*.js` |
 
-**DEV (2026-07-14):** GitHub sources + S19 activation closeout sheet. **117b/c/f = v1.0.1.** Paste guide: [C-025-dev-airtable-117-deployment-sheet.md](./deploy-checklists/C-025-dev-airtable-117-deployment-sheet.md). **First Mike UI action:** [Mike action sheet](./deploy-checklists/C-025-mike-action-sheet-117-dev-activation.md) — create/paste **117a** OFF in DEV. Design: [C-025-automation-packages-stage17.md](./deploy-checklists/C-025-automation-packages-stage17.md). Promotion package: [C-025-prod-promotion-package.md](./deploy-checklists/C-025-prod-promotion-package.md).
+**DEV (2026-07-14 S20):** At automation limit → paste **one** orchestrator after freeing **1** slot (prefer retire **112** with Mike approval). [Slot plan](./deploy-checklists/C-025-s20-orchestrator-slot-plan.md) · [Mike action](./deploy-checklists/C-025-mike-action-sheet-s20-orchestrator.md). S19 six-paste path superseded for capacity.
 
 ---
 

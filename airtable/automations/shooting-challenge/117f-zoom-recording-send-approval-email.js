@@ -4,6 +4,10 @@ GitHub Source of Truth — paste into Airtable starting AFTER this header block
 System: 127 SI Shooting Challenge
 Backlog: C-025
 Folder: 17 - Zoom Recording Credit
+
+LIBRARY/REFERENCE ONLY (S20): Consolidated into
+117-zoom-recording-credit-orchestrator.js for DEV automation slot limit.
+Do NOT paste this file as one of six separate Airtable automations.
 */
 
 /************************************************************
@@ -12,6 +16,10 @@ Folder: 17 - Zoom Recording Credit
  * Version: v1.0.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
+ *
+ * LIBRARY/REFERENCE (S20)
+ * - Logic lives in 117-zoom-recording-credit-orchestrator.js (step F).
+ * - Keep this file for contracts/reference; do not paste as a separate DEV slot.
  *
  * PURPOSE
  * - Parent notification once after Satisfactory when Config enables email.

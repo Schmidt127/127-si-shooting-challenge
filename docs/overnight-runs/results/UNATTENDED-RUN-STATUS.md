@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S20 C-025 117 orchestrator slot fit (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Problem | DEV at automation limit — cannot add six 117a–f |
+| Solution | **One** orchestrator `117-zoom-recording-credit-orchestrator.js` (A→F); 117a–f library-only |
+| Tests | Offline **34/34** (Agent B) |
+| Retirement (Mike only) | Prefer free **112** (+1) or **043** (+1) — no disables without approval |
+| Stop | Mike frees 1 DEV slot, then paste single orchestrator OFF |
+| Docs | `C-025-s20-orchestrator-slot-plan.md`, `C-025-mike-action-sheet-s20-orchestrator.md`, `S20-lead-integration-result.md` |
+
 ## Milestone — S19 C-025 DEV 117 activation closeout (2026-07-14)
 
 | Field | Value |

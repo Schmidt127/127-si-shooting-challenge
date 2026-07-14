@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T13:35:00-06:00",
+  "updated_at": "2026-07-14T13:45:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "25f9a0f2bc4a55d97f841b9877b569698890e0be",
@@ -780,24 +780,54 @@
         "docs/overnight-runs/results/S19-lead-integration-result.md"
       ],
       "notes": "Docs+script safety fixes done. Stopped for Mike UI: paste 117a OFF in DEV."
+    },
+    {
+      "id": "C-025-117-orchestrator-slot-fit",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 20,
+      "depends_on": [
+        "C-025-dev-activation-117-closeout"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": "2026-07-14",
+      "deliverables": [
+        "airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js",
+        "docs/deploy-checklists/C-025-s20-orchestrator-slot-plan.md",
+        "docs/deploy-checklists/C-025-mike-action-sheet-s20-orchestrator.md",
+        "docs/overnight-runs/results/S20-lead-integration-result.md"
+      ],
+      "notes": "Option 1 orchestrator ready. Stop: Mike free 1 DEV slot (prefer 112) then paste single 117 OFF."
     }
   ],
   "stage": {
     "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S19-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S20-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T13:25:00-06:00",
+    "last_run_at": "2026-07-14T13:40:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "test_c025_117_contracts 11/11",
+    "targeted": "test_c025_117_contracts+orchestrator 34/34",
     "live_dev_schmidt_credit": "4/4 (held through S18 regression)",
     "live_c025_precedence": "postconversion 13/13 + E2E harness 6/6",
     "pass": true
   },
-  "next_action": "Mike: create DEV automation 117a, paste GitHub script (skip header), leave OFF \u2014 see C-025-mike-action-sheet-117-dev-activation.md",
+  "next_action": "Mike: free 1 DEV automation slot (prefer delete/disable 112 with approval), then paste single 117 orchestrator OFF \u2014 C-025-mike-action-sheet-s20-orchestrator.md",
   "stop_reason": null
 }
