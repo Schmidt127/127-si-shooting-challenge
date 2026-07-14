@@ -1,61 +1,63 @@
-# C-027 — DEV OMNI / implementation runbook (Stage 13)
+# C-027 — DEV OMNI runbook (Stage 13 + S16)
 
-**Status:** Proposal only (no Airtable / provider execution in S13)  
-**Package:** `C-027-major-event-notifications-design`  
-**Prerequisite:** Owner answers OD-1…OD-5 in the Stage 13 design doc
+**Status:** Proposal only — DEV only · no PROD · no Cursor Airtable writes  
+**Catalog:** [C-025-C-027-configuration-catalog-stage16.md](./C-025-C-027-configuration-catalog-stage16.md)
 
 ---
 
 ## Hard stops
 
-- No PROD.
-- No new SMS/email provider credentials unattended.
-- Do not edit **071** or video feedback automations.
-- Do not add daily-submission notifications.
+- No PROD / no new SMS providers unattended.
+- Do not hardcode streak day lists or shot totals into automations.
+- Do not alter **071** / video feedback automations.
+- Reuse **Config**, **Achievements**, **Shot Milestones** — no duplicate notification rules table unless Phase 0 proves one already exists to extend.
 
 ---
 
-## Phase 0 — Read-only inventory (DEV)
+## Phase 0 — Inspect
 
-1. Confirm parent email fields on Enrollments / Contacts.
-2. Confirm Schmidt test enrollment id used by Stage 8 gates.
-3. Confirm which Shot Milestone / streak XP steps exist for “major” tagging.
-4. Check whether any Notification / Email Log table already exists.
+1. Config fields present?
+2. Achievements streak rows + thresholds?
+3. Shot Milestones rows?
+4. Any existing Notification / Email Log table?
+5. Parent email fields on Enrollment?
 
----
-
-## Phase 1 — Schema (after OD answers)
-
-1. Create `Notification Sends` (or reuse existing log) with Send Key + Status.
-2. Add config flags for major milestones / streak lengths if OD-3/OD-4 need them.
-3. Add Testing views: Pending, Failed retry, Sent last 7 days, Skipped.
+Report before creates.
 
 ---
 
-## Phase 2 — Automations (GitHub → DEV)
+## Phase 1 — Fields
 
-1. Implement MEN dispatcher script (new number — assign at implementation).
-2. Add thin enqueue hooks from **042** / **058** / **054** / **059** paths **or** watchers on unlock/level fields — prefer minimal edits.
-3. Wire Make/email scenario only after channel OD-1.
-4. Offline contract tests must stay green.
+1. Add Config MEN fields (catalog §4.1) with defaults.
+2. Add `Parent Notification Enabled?` to **Achievements** and **Shot Milestones**.
+3. Seed streak Achievements 10/20/30/40/50/60 checked.
+4. Seed shot milestones Mike marks as major (owner data call — do not guess shot counts).
+5. Create `Notification Sends` log if none exists.
 
 ---
 
-## Phase 3 — DEV acceptance
+## Phase 2 — Automations (GitHub → DEV later)
 
-| # | Scenario | Expect |
-|---|----------|--------|
-| 1 | Level up Active athlete | One parent email; Send Key stored Sent |
-| 2 | Rerun same level up | Skip duplicate |
-| 3 | Perfect Week unlock | One notify |
-| 4 | Hidden athlete | Skip |
-| 5 | Schmidt | Skip |
-| 6 | Daily submission XP | No MEN row |
-| 7 | Homework **071** send | Unchanged behavior |
-| 8 | Provider fail then retry | Failed → Sent; one success |
+Dispatcher reads Config channel/timing/enables; eligibility from Active? + rule flags; Send Key idempotent.
+
+---
+
+## Phase 3 — Acceptance
+
+| # | Expect |
+|---|--------|
+| Level up Active athlete | One email when enabled |
+| Streak 7 with flag off | No MEN |
+| Streak 10 with flag on | MEN |
+| Shot milestone flag off | No MEN |
+| Master Config notify off | No sends |
+| Inactive enrollment | Skip |
+| Schmidt | Skip |
+| Daily submission XP | No MEN |
+| **071** unchanged | Smoke prior behavior |
 
 ---
 
 ## Rollback
 
-Disable dispatcher automation; leave historical `Notification Sends` intact.
+Disable MEN dispatcher; leave log rows.

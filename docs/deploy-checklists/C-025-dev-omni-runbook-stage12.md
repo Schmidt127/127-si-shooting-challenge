@@ -1,80 +1,78 @@
-# C-025 — DEV OMNI implementation runbook (Stage 12)
+# C-025 — DEV OMNI runbook (Stage 12 + S16)
 
-**Status:** Proposal runbook (no Airtable execution in S12)  
-**Package:** `C-025-zoom-recording-design`  
-**Base:** DEV only (`appTetnuCZlCZdTCT` per PROJECT_STATE — confirm before any OMNI work)  
-**Prerequisite:** Owner answers OD-1…OD-6 in [C-025-zoom-recording-design-stage12.md](./C-025-zoom-recording-design-stage12.md) §10
+**Status:** Proposal only — **DEV only** · no PROD · no Cursor Airtable writes  
+**Prerequisite:** Owner decisions approved (S16). Catalog: [C-025-C-027-configuration-catalog-stage16.md](./C-025-C-027-configuration-catalog-stage16.md)
 
 ---
 
 ## Hard stops
 
-- Do **not** create/rename/delete fields in PROD.
-- Do **not** paste automation code to PROD unattended.
-- Do **not** change Tutorials tables.
-- Do **not** implement Learning Activities schema under this runbook.
-- Prefer OMNI for in-base field creation after Mike authorizes Airtable work.
+- No PROD.
+- No hardcoded 50 / 7 / Perfect Week truth in formulas or scripts when Config fields exist.
+- Do not create a second settings table — extend **Config**.
+- Do not invent parent-attestation fields (quiz path only).
 
 ---
 
-## Phase 0 — Verify current Zoom surface (read-only)
+## Phase 0 — Inspect existing tables (read-only)
 
-In DEV, confirm actual field names for:
-
-1. Zoom Meetings: `Attendees`, `Zoom Meeting Key`, `Create XP Events`, `XP Award Status`, recording URL field (if any).
-2. Enrollment: `Total Zoom Attendances`, `Zoom Meetings`, `Progress Processing Enabled?` (C-010).
-3. Existing XP Events Source Keys for a sample live award (`ZOOM_ATTEND_BASE|…` expected today).
-4. XP Reward Rules row for `ZOOM_ATTEND_BASE` amount.
-
-Record findings in a short DEV note before creating anything.
+1. **Config** — list current fields; confirm Active School Year row.
+2. **XP Reward Rules** — confirm `ZOOM_ATTEND_BASE` amount.
+3. **Zoom Meetings** — recording URL / attendees fields present?
+4. **Homework** — suitable quiz catalog pattern (HW17-like).
+5. **Achievements / Shot Milestones** — note only (C-027).
+6. Report findings before creating anything.
 
 ---
 
-## Phase 1 — Schema (OMNI / Mike) after OD answers
+## Phase 1 — Create only missing fields
 
-1. Create `Zoom Recording Claims` table with fields from design §4.2.
-2. Add Zoom Meetings fields from design §4.1 (`Recording Attendees` required).
-3. Add XP Reward Rule `ZOOM_ATTEND_RECORDING` at **50%** of live base (explicit integer).
-4. Update Enrollment `Total Zoom Attendances` to distinct-meeting count across live Attendees ∪ Recording Attendees (formula/rollup). **Test on Schmidt enrollment first.**
-5. Add Testing views (pair with C-019 when available): Pending claims, Approved-not-awarded, Skipped-live-exists.
+### Config (global/program)
+
+Create fields from catalog §3.1 with documented defaults.
+
+### Zoom Meetings
+
+Create override + availability fields from catalog §3.2 if missing.
+
+### Homework / Completions
+
+Create or link Zoom Recording Quiz assignment; ensure Enrollment + Zoom Meeting links on submission path.
+
+### XP Reward Rules
+
+Confirm live base row; optional recording display row — **percent still authoritative in Config**.
+
+### Enrollment attendance
+
+Update `Total Zoom Attendances` only after gate-credit design reviewed (union of live + recording attendees when Config gate credit on).
 
 ---
 
-## Phase 2 — Automation (GitHub → DEV paste)
+## Phase 2 — Automations (GitHub → DEV paste later)
 
-1. Implement sibling script (recommended `101r`) or extend **101** with recording mode — GitHub first.
-2. Inputs: claim `recordId`.
-3. Outputs: `statusOut`, `actionOut`, `errorOut`, `debugStep`.
-4. Enforce exclusivity helpers including legacy `ZOOM_ATTEND_BASE`.
-5. Honor C-010 `Progress Processing Enabled?`.
-6. Paste to DEV only after offline tests pass.
+1. Award on Satisfactory (honor Config toggles).
+2. Deadline helper uses Config days/mode + meeting overrides.
+3. Parent email only after Satisfactory when enabled.
+4. Dual-detect legacy live Source Keys.
+5. Unit/offline contracts must stay green.
 
 ---
 
-## Phase 3 — DEV acceptance checklist
+## Phase 3 — Acceptance
 
 | # | Scenario | Expect |
 |---|----------|--------|
-| 1 | Live attendee only | Live XP; gate +1; no recording XP |
-| 2 | Recording approved, no live | Recording XP at 50%; gate +1; Recording Attendees linked |
-| 3 | Live then recording approve | Recording skipped; claim reason live-exists |
-| 4 | Recording then live award attempt | Live skipped; recording retained |
-| 5 | Double approve same claim | Idempotent skip |
-| 6 | Progress disabled enrollment | Skip award |
-| 7 | Legacy live key only | Treated as live for exclusivity |
-| 8 | Past deadline (if OD-2 set) | New claims rejected |
-
----
-
-## Phase 4 — Promotion (later)
-
-Use `docs/deploy-checklists/` promotion pattern: DEV evidence → Mike approval → PROD paste + CHANGELOG. Not part of S12.
+| 1 | pct Config = 40, live = 40 | Recording XP = 16 |
+| 2 | Makeup days Config = 10 | Deadline shifts +10 from available |
+| 3 | Perfect Week Config off | Recording does not satisfy PW Zoom |
+| 4 | Approval email Config off | No parent package |
+| 5 | Live already awarded | Recording skipped |
+| 6 | Quiz submit only | No XP until Satisfactory |
+| 7 | Missing Config pct | Fallback 50 |
 
 ---
 
 ## Rollback
 
-1. Turn off recording-claim automation.
-2. Stop accepting new claims (uncheck `Recording Available?` or close form).
-3. Leave awarded XP Events intact unless a dedicated repair audit says otherwise.
-4. Revert Enrollment attendance formula only if gate counts regress (restore prior formula from schema snapshot).
+Disable recording award automation; leave Config values; do not delete historical XP.
