@@ -5,12 +5,12 @@
 | # | Item | Value |
 |---|------|-------|
 | 1 | Starting Lead SHA | `4530780` |
-| 2 | Ending Lead SHA | *(set at push)* |
+| 2 | Ending Lead SHA | ab0270e |
 | 3 | Agent A work | Config linkage design; deadline repair design; submission page verification; precedence/deadline offline tests. Live Meta scan: Config missing C-025 fields; Meeting Effective* are editable; deadline lookup not a true date. |
 | 4 | Agent B work | C-025 automation packages 117a–f design; C-027 MEN impl prep; automation + MEN offline contracts. Coordinated by Lead (same deliverables landed on Lead). |
 | 5 | Files created/changed | `C-025-config-linkage-design.md`, `C-025-deadline-repair-design.md`, `C-025-submission-page-verification.md`, `C-025-automation-packages-stage17.md`, `C-027-implementation-prep-stage17.md`, catalog gap note, `S17-AUTHORIZED.md`, tests `test_c025_config_precedence.py`, `test_c025_automation_contracts.py`, `test_c027_men_contracts.py`, CONTROL, this status |
 | 6 | Airtable DEV changes tonight | **None** (schema writes deferred — Config fields absent; deadline paste deferred). Prior C-025 formula apply remains. |
-| 7 | Tests | Lambda **66/66** · Offline **97/97** · Targeted C-025/C-027 contracts **55/55** · prior Schmidt credit **4/4** |
+| 7 | Tests | Lambda **66/66** · Offline **97/97** · Targeted C-025/C-027 contracts **61/61** · prior Schmidt credit **4/4** |
 | 8 | C-025 status | Formulas/conflict **complete**. Config linkage **designed, blocked on Config schema**. Deadline **designed**. Automations **designed, not pasted**. |
 | 9 | C-027 status | Impl prep **complete (repo)**. Schema fields missing on DEV. No automations pasted. |
 | 10 | Blockers | (1) Config lacks C-025/C-027 fields (2) Achievements/Shot Milestones lack `Parent Notification Enabled?` (3) True deadline date not installed (4) View API cannot create filters (5) 117d gate writable target needs inventory before code |
