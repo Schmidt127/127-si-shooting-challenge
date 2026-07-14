@@ -1,28 +1,27 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T15:25:00-06:00",
+  "updated_at": "2026-07-13T15:40:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "6b70b5183940689b17b6b702394007506c776255",
-    "remote_sha": "6b70b5183940689b17b6b702394007506c776255",
+    "sha": "250e8caa2cec81bd1d3157d606b73b97e579cbba",
+    "remote_sha": "250e8caa2cec81bd1d3157d606b73b97e579cbba",
     "match": false
   },
   "run": {
-    "state": "authorizing",
-    "stage_id": "S11",
-    "package_id": "stale-branch-review",
-    "started_at": "2026-07-13T15:25:00-06:00"
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
   },
   "lanes": {
     "lead": {
       "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
       "branch": "overnight/lead-integration"
     },
-    "active_writes": [
-      "worker-b"
-    ],
+    "active_writes": [],
     "available": [
       "worker-a",
+      "worker-b",
       "worker-c",
       "worker-d"
     ]
@@ -136,7 +135,7 @@
     {
       "id": "stale-branch-review",
       "backlog_refs": [],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 6,
       "depends_on": [],
       "auth": "standing",
@@ -148,8 +147,8 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": "desktop",
-      "completed_at": null
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
     },
     {
       "id": "C-025-zoom-recording-design",
@@ -434,23 +433,19 @@
     }
   ],
   "stage": {
-    "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S11-AUTHORIZED.md",
-    "merge_order": [
-      "worker-b"
-    ],
-    "worker_branches": {
-      "worker-b": "overnight/v2-run/worker-b-s11-stale-branch-review"
-    }
+    "authorized": false,
+    "auth_doc": null,
+    "merge_order": [],
+    "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T15:22:00-06:00",
+    "last_run_at": "2026-07-13T15:35:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "17/17 spot + prior 43/43",
+    "targeted": "17/17 spot",
     "pass": true
   },
-  "next_action": "S10 PASS. Start S11 stale-branch-review.",
-  "stop_reason": null
-}\n
+  "next_action": "S11 PASS. Next READY: C-025-zoom-recording-design (or extract orphan C-024 070a double-send mock tests).",
+  "stop_reason": "Paused after S6\u2013S11 continuous package run for session handoff; READY work remains."
+}

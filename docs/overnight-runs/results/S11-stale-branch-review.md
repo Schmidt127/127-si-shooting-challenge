@@ -24,7 +24,7 @@
 | Branch | Tip | Ahead of Lead | Disposition |
 |--------|-----|---------------|-------------|
 | `worker-a-s2-c024-inventory` | `24ad0f1` | 8 commits / 2 files | **Superseded** — Stage 2–3 integrated C-024 inventory on Lead; do not merge |
-| `worker-c-s2-c024-idempotency-tests` | `15e456d` | 6 commits / 4 files | **Superseded** — idempotency tests landed via Stage 2 Lead recovery + Stage 3 audit tests |
+| `worker-c-s2-c024-idempotency-tests` | `15e456d` | 6 commits / 4 files | **Superseded** for main content — Lead already has core C-024 tests. **Unique candidate not yet on Lead:** `tools/airtable/tests/test_c024_070a_double_send_mocks.py` (extract in a future READY package; do not blind-merge branch). |
 | `worker-d-s2-c024-dedupe-contract` | `47c3c9a` | 2 commits / 4 files | **Superseded** — dedupe contract / docs already on Lead post Stage 2–3 |
 
 **Action taken:** Documented only. No cherry-picks. No branch deletions.
