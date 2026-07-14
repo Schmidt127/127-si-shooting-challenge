@@ -1,8 +1,8 @@
 # C-025 — Config linkage design (meeting override → Program Config → Global Config → safe fallback)
 
-**Status:** DESIGN ONLY — no DEV schema changes made by this document.
-**Author:** Agent A (overnight Lead subagent), 2026-07-13
-**Base inspected (read-only Meta API):** DEV `appTetnuCZlCZdTCT` — token from `tools/airtable/.env` (`AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID`), **GET only**. No POST/PATCH/DELETE issued.
+**Status:** DESIGN + DEV SCAFFOLD APPLIED (2026-07-14). Live number/select precedence **PASS**; checkbox rollups need aggregation formula repair before Effective→formula convert. See [C-025-config-linkage-live-verify-result.md](./C-025-config-linkage-live-verify-result.md).
+**Author:** Agent A (overnight Lead subagent), 2026-07-13; apply/verify Cursor Lead 2026-07-14
+**Base:** DEV `appTetnuCZlCZdTCT` only. PROD untouched.
 **Depends on / do not repeat:** [C-025-Zoom-Recording-Manual-Airtable-Repair.md](./C-025-Zoom-Recording-Manual-Airtable-Repair.md) and [C-025-Zoom-Recording-Formula-Repair.md](./C-025-Zoom-Recording-Formula-Repair.md) — the seven credit formulas are **already applied and correct**. This document does **not** touch them; it only replaces how the `Effective *` **inputs** to those formulas get their values.
 **Catalog authority:** [C-025-C-027-configuration-catalog-stage16.md](./C-025-C-027-configuration-catalog-stage16.md) — owner-approved 2026-07-13 (`CONTROL.json` → `c025-c027-owner-config-decisions` COMPLETE).
 

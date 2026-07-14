@@ -1,5 +1,18 @@
 ﻿# Unattended run status
 
+## Milestone — C-025 live precedence verify (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Command | `live --confirm-write` with snapshot+finally restore |
+| Result | **11 pass / 1 fail** — number/select tiers PASS; checkbox-unchecked FAIL (rollup missing aggregation formula) |
+| Restore | **OK** (Config + meeting pretest values) |
+| Schmidt | **4/4** after restore |
+| Deadline | date OK |
+| Effectives | still editable (not converted) |
+| Next | Repair checkbox Config rollup formulas, then re-assert; UI Effective convert still gated |
+| Doc | `docs/deploy-checklists/C-025-config-linkage-live-verify-result.md` |
+
 ## Milestone — C-025 DEV deadline repair APPLIED (2026-07-14)
 
 | Field | Value |
