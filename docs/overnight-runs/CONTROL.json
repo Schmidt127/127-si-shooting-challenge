@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T18:46:00-06:00",
+  "updated_at": "2026-07-13T19:05:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "e2c242142cae629a46f308f6d6e084ca7024df50",
-    "remote_sha": "e2c242142cae629a46f308f6d6e084ca7024df50",
-    "match": true
+    "sha": "7f988fe646c4b074408bdf2b9b708b91e79b8fa4",
+    "remote_sha": "7f988fe646c4b074408bdf2b9b708b91e79b8fa4",
+    "match": false
   },
   "run": {
     "state": "idle",
@@ -171,14 +171,19 @@
         "destructive": false
       },
       "claimed_by": null,
-      "completed_at": "2026-07-13"
+      "completed_at": "2026-07-13",
+      "owner_decisions": {
+        "OD-1_proof_mode": "LOCKED_zoom_recording_quiz_coach_satisfactory",
+        "locked_at": "2026-07-13T18:55:00-06:00",
+        "notes": "Quiz linked to Enrollment+Zoom Meeting; Needs Review; Satisfactory before 50% XP + full gate; resubmit history; XP once ZRQ/ZOOM_RECORDING; no parent attestation; no click-link proof. Airtable not modified."
+      }
     },
     {
       "id": "C-027-major-event-notifications-design",
       "backlog_refs": [
         "C-027"
       ],
-      "state": "READY_DOC",
+      "state": "COMPLETE",
       "priority": 8,
       "depends_on": [
         "pipeline-summary-comms-audit"
@@ -193,7 +198,7 @@
         "destructive": false
       },
       "claimed_by": null,
-      "completed_at": null
+      "completed_at": "2026-07-13"
     },
     {
       "id": "C-022-presentation-fields-audit",
@@ -441,13 +446,12 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T18:45:00-06:00",
+    "last_run_at": "2026-07-13T19:05:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "airtable_discover": "123/123",
-    "targeted": "42/42",
+    "targeted": "64/64",
     "pass": true
   },
-  "next_action": "S12 PASS. Next READY: C-027-major-event-notifications-design",
+  "next_action": "S13 PASS. Next READY: C-022-presentation-fields-audit",
   "stop_reason": null
 }
