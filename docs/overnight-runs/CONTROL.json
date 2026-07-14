@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T15:35:00-06:00",
+  "updated_at": "2026-07-14T16:00:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "23c3f8cb188c96cc95ba4b268b989271fbf8768a",
@@ -842,11 +842,43 @@
         "docs/deploy-checklists/AIRTABLE-AUTOMATION-ARCHITECTURE-mike-decision-sheet.md"
       ],
       "notes": "CORRECTED: OFF!=deletable. Capacity via consolidation Path A-E (006+021 first, then WAS/063/111/072+074). Retracted 061/078 status deletes. 070a-078 remain required."
+    },
+    {
+      "id": "phase-a-006-021-consolidate-117",
+      "backlog_refs": [
+        "C-025",
+        "V2-014"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 22,
+      "depends_on": [
+        "DEV-automation-architecture-review"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [
+        "airtable/automations/shooting-challenge/021-submission-intake-and-asset-creation-set-attachment-status-and-video-count.js",
+        "airtable/automations/shooting-challenge/_rollback/phase-a-006-021-2026-07-14/",
+        "docs/deploy-checklists/PHASE-A-006-021-mike-ui-actions.md",
+        "docs/overnight-runs/results/S22-phase-a-migration-record.md",
+        "docs/audits/phase-a-021-combined-live-dev-2026-07-14.json"
+      ],
+      "notes": "Repo+offline+API mirror PASS. Stopped for Mike UI: paste combined 021, retire 006, create 117 OFF blank webhook. Phase B and Folder 07 untouched."
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S21-AUTHORIZED.md",
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S22-AUTHORIZED.md",
     "merge_order": [
       "lead-direct"
     ],
@@ -854,14 +886,12 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T13:40:00-06:00",
-    "lambda": "66/66",
-    "offline": "97/97",
-    "targeted": "test_c025_117_contracts+orchestrator 34/34",
-    "live_dev_schmidt_credit": "4/4 (held through S18 regression)",
-    "live_c025_precedence": "postconversion 13/13 + E2E harness 6/6",
+    "last_run_at": "2026-07-14T16:00:00-06:00",
+    "phase_a_offline": "13/13",
+    "phase_a_live_api_mirror": "PASS",
+    "phase_a_repair_path": "PASS",
     "pass": true
   },
-  "next_action": "Mike: approve Phase A consolidation (006+021) to free +1, then paste 117 OFF. Do NOT delete OFF automations. See corrected capacity ledger.",
-  "stop_reason": "Waiting Mike approval of consolidation-first capacity path (OFF!=obsolete correction)"
+  "next_action": "Mike UI Phase A: (1) paste combined 021 (2) smoke (3) retire 006 for +1 (4) create 117 OFF webhook blank. Sheet: PHASE-A-006-021-mike-ui-actions.md",
+  "stop_reason": "Waiting Mike Airtable UI for paste/retire/create (Meta automations API 403)"
 }

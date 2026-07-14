@@ -128,18 +128,16 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 ---
 
-## First migration phase (recommended)
+## First migration phase (S22 — in progress)
 
-**Phase A only — safest high-value consolidation among required autos:**
+**Phase A only — approved 2026-07-14:**
 
-1. Implement/test **006+021** combined script in GitHub (DEV).  
-2. Mike pastes combined automation **ON** (or matching prior readiness); turn off **separate** 006 and 021 only **after** combined PASS — this is consolidation, not OFF-deletion.  
-3. **+1 slot free** → paste **117** orchestrator **OFF**.  
-4. Stop for smoke; do not touch 070a–078.
+1. ~~Combined script + rollback + offline/API tests~~ **DONE** (repo).  
+2. **Mike UI pending:** paste combined into **021**, smoke, retire **006**, create **117** OFF (blank webhook).  
+3. Sheet: [`PHASE-A-006-021-mike-ui-actions.md`](../deploy-checklists/PHASE-A-006-021-mike-ui-actions.md).  
+4. Do not touch Folder 07 OFF automations; do not start Phase B.
 
-**Do not** free the C-025 slot by deleting OFF email/upload automations.
-
-Optional later in Phase A if Mike wants replacement path: fold **043 into 042** with explicit approval (replacement evidence) — still not “delete because OFF.”
+**Do not** free slots by deleting OFF email/upload automations.
 
 ---
 

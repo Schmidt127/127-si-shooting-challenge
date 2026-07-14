@@ -29,12 +29,12 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | 005 | Submission Intake — Assign Week to Submission — Homework First | *confirm in Airtable* | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` |
-| 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
+| 006 | Submission Intake — Set Video Count | **LIBRARY only (Phase A)** — merged into **021** | `_rollback/phase-a-006-021-2026-07-14/` + library stub `006-…-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
 | **010** | Submission Intake — Create XP Event from Submission | Submissions when `Count This Submission?` checked and XP should be awarded | `010-submission-intake-create-xp-event.js` |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
-| 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
+| 021 | Submission Intake — Set Attachment Status and Video Count | Submissions updated · watch HW/Video · Match ANY status empty/No Files OR video count empty | `021-submission-intake-and-asset-creation-set-attachment-status-and-video-count.js` (**Phase A** consolidates former 006+021) |
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 

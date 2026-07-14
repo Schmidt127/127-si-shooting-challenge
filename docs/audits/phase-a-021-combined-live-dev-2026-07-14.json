@@ -1,0 +1,187 @@
+{
+  "ran_at": "2026-07-14T21:49:00.640845+00:00",
+  "base": "appTetnuCZlCZdTCT",
+  "mode": "API_MIRROR_OF_COMBINED_LOGIC",
+  "note": "Does not fire Airtable automations; validates decision+write parity and reads adjacent state",
+  "picked": {
+    "no_files": {
+      "id": "rec02Jn38FGcCBnHb",
+      "kind": "no_files",
+      "status": "No Files",
+      "video_count": 0,
+      "hw1": 0,
+      "hw2": 0,
+      "vid": 0
+    },
+    "both": {
+      "id": "rec0GIIB7Il8s7LZb",
+      "kind": "both",
+      "status": "Sent",
+      "video_count": 3,
+      "hw1": 2,
+      "hw2": 2,
+      "vid": 3
+    },
+    "video_only": {
+      "id": "rec1OD1oLsWHZeWqc",
+      "kind": "video_only",
+      "status": "Processing",
+      "video_count": 1,
+      "hw1": 0,
+      "hw2": 0,
+      "vid": 1
+    },
+    "hw_only": {
+      "id": "rec2890d1A2EaZcVq",
+      "kind": "hw_only",
+      "status": "Processing",
+      "video_count": 0,
+      "hw1": 1,
+      "hw2": 0,
+      "vid": 0
+    }
+  },
+  "tests": [
+    {
+      "kind": "no_files",
+      "id": "rec02Jn38FGcCBnHb",
+      "actions": [
+        "status_skipped",
+        "video_count_skipped"
+      ],
+      "planned_updates": {},
+      "before": {
+        "status": "No Files",
+        "video_count": 0,
+        "vid": 0
+      },
+      "after": {
+        "status": "No Files",
+        "video_count": 0
+      },
+      "ok_status": true,
+      "ok_count": true,
+      "ready_for_009": false,
+      "week_set": true,
+      "enrollment_set": true,
+      "submission_asset_count": null,
+      "ok": true
+    },
+    {
+      "kind": "both",
+      "id": "rec0GIIB7Il8s7LZb",
+      "actions": [
+        "status_unmanaged_skip",
+        "video_count_skipped"
+      ],
+      "planned_updates": {},
+      "before": {
+        "status": "Sent",
+        "video_count": 3,
+        "vid": 3
+      },
+      "after": {
+        "status": "Sent",
+        "video_count": 3
+      },
+      "ok_status": true,
+      "ok_count": true,
+      "ready_for_009": false,
+      "week_set": true,
+      "enrollment_set": true,
+      "submission_asset_count": null,
+      "ok": true
+    },
+    {
+      "kind": "video_only",
+      "id": "rec1OD1oLsWHZeWqc",
+      "actions": [
+        "status_skipped",
+        "video_count_skipped"
+      ],
+      "planned_updates": {},
+      "before": {
+        "status": "Processing",
+        "video_count": 1,
+        "vid": 1
+      },
+      "after": {
+        "status": "Processing",
+        "video_count": 1
+      },
+      "ok_status": true,
+      "ok_count": true,
+      "ready_for_009": true,
+      "week_set": true,
+      "enrollment_set": true,
+      "submission_asset_count": null,
+      "ok": true
+    },
+    {
+      "kind": "hw_only",
+      "id": "rec2890d1A2EaZcVq",
+      "actions": [
+        "status_skipped",
+        "video_count_skipped"
+      ],
+      "planned_updates": {},
+      "before": {
+        "status": "Processing",
+        "video_count": 0,
+        "vid": 0
+      },
+      "after": {
+        "status": "Processing",
+        "video_count": 0
+      },
+      "ok_status": true,
+      "ok_count": true,
+      "ready_for_009": true,
+      "week_set": true,
+      "enrollment_set": true,
+      "submission_asset_count": null,
+      "ok": true
+    },
+    {
+      "kind": "idempotent_repeat",
+      "id": "rec02Jn38FGcCBnHb",
+      "actions": [
+        "status_skipped",
+        "video_count_skipped"
+      ],
+      "planned_updates": {},
+      "ok": true
+    }
+  ],
+  "adjacent_probe": [
+    {
+      "check": "submissions_schema_for_005_007_009_010_023",
+      "missing": [],
+      "ok": true
+    },
+    {
+      "check": "submission_assets_schema_for_013_020_022_116",
+      "present": [
+        "Upload Destination",
+        "Upload Status",
+        "Asset Reuse Decision"
+      ],
+      "ok": false
+    }
+  ],
+  "pass": true,
+  "recommended_trigger": {
+    "type": "When record is updated",
+    "watch": [
+      "HW Sub 1",
+      "HW Sub 2",
+      "Video Upload"
+    ],
+    "match_any": [
+      "Attachment Upload Status is empty",
+      "Attachment Upload Status is No Files",
+      "Video Upload is not empty AND Video Count is empty"
+    ],
+    "covers": "Former 006+021 plus count fix when already Processing (via watch)"
+  }
+}

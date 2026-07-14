@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S22 Phase A 006∪021 + 117 (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Repo | Combined **021** SoT + rollback copies; **006** library |
+| Offline | **13/13 PASS** |
+| Live API mirror / repair | **PASS** (cannot paste automations via API — 403) |
+| Mike UI | Paste combined 021 → smoke → retire 006 → create **117 OFF** blank webhook |
+| Sheet | `PHASE-A-006-021-mike-ui-actions.md` |
+| Untouched | Phase B · PROD · Folder 07 OFF |
+
 ## Milestone — S21 capacity correction OFF≠obsolete (2026-07-14)
 
 | Field | Value |
