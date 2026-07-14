@@ -177,7 +177,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 |----|---------|--------|------------|--------|
 | **C-017** | Fillout → Athletes validation | Stronger Fillout rules; Athletes field hygiene; trust identity before pipeline | C-012 | queued |
 | **C-018** | Intake open vs challenge run | Two calendars in **Weeks** table; **005** maps by date range | V2-013 | queued |
-| **C-009** | Learning Activities intake (replaces HW17-specific design) | **BLOCKED (2026-07-13):** no schema or automation implementation. **067** today creates Homework Completion without Submission Asset (see C-003). **Approved direction:** keep **`Homework`** catalog; add **`Learning Activities`** + **`Learning Activity Responses`** after audit + owner-approved minimum schema (#11). **No Homework 17–specific architecture.** | C-013, C-024 | **blocked** |
+| **C-009** | Learning Activities intake (replaces HW17-specific design) | **BLOCKED for Airtable implementation.** **Stage 9 owner-review proposal complete:** [C-009-learning-activities-owner-review-stage9.md](./deploy-checklists/C-009-learning-activities-owner-review-stage9.md). **067** today creates Homework Completion without Submission Asset. Keep **`Homework`** catalog; add LA tables only after owner schema approval. | C-013, C-024 | **proposal complete / Airtable blocked** |
 
 ### Wave 9 — Season config (numbers)
 

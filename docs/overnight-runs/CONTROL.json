@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T15:05:00-06:00",
+  "updated_at": "2026-07-13T15:25:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "eb612802715d59b9ee58ce69093cad53e435fcbb",
-    "remote_sha": "eb612802715d59b9ee58ce69093cad53e435fcbb",
+    "sha": "6b70b5183940689b17b6b702394007506c776255",
+    "remote_sha": "6b70b5183940689b17b6b702394007506c776255",
     "match": false
   },
   "run": {
     "state": "authorizing",
-    "stage_id": "S10",
-    "package_id": "prod-promotion-rollback-docs",
-    "started_at": "2026-07-13T15:05:00-06:00"
+    "stage_id": "S11",
+    "package_id": "stale-branch-review",
+    "started_at": "2026-07-13T15:25:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -19,10 +19,10 @@
       "branch": "overnight/lead-integration"
     },
     "active_writes": [
-      "worker-a"
+      "worker-b"
     ],
     "available": [
-      "worker-b",
+      "worker-a",
       "worker-c",
       "worker-d"
     ]
@@ -118,7 +118,7 @@
         "C-010",
         "C-013"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 5,
       "depends_on": [],
       "auth": "standing",
@@ -130,13 +130,13 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": "desktop",
-      "completed_at": null
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
     },
     {
       "id": "stale-branch-review",
       "backlog_refs": [],
-      "state": "READY_REPO",
+      "state": "IN_PROGRESS",
       "priority": 6,
       "depends_on": [],
       "auth": "standing",
@@ -148,7 +148,7 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
+      "claimed_by": "desktop",
       "completed_at": null
     },
     {
@@ -435,22 +435,22 @@
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S10-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S11-AUTHORIZED.md",
     "merge_order": [
-      "worker-a"
+      "worker-b"
     ],
     "worker_branches": {
-      "worker-a": "overnight/v2-run/worker-a-s10-prod-rollback-docs"
+      "worker-b": "overnight/v2-run/worker-b-s11-stale-branch-review"
     }
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T15:02:00-06:00",
+    "last_run_at": "2026-07-13T15:22:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "43/43",
+    "targeted": "17/17 spot + prior 43/43",
     "pass": true
   },
-  "next_action": "S9 PASS. Start S10 prod-promotion-rollback-docs.",
+  "next_action": "S10 PASS. Start S11 stale-branch-review.",
   "stop_reason": null
-}
+}\n
