@@ -3,8 +3,8 @@
   "updated_at": "2026-07-14T16:45:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "cfefd9ac01efa86da5b84392c6e3951350fd83d4",
-    "remote_sha": "cfefd9ac01efa86da5b84392c6e3951350fd83d4",
+    "sha": "32d0fcb552f5386a0a91b5ac855593d331ab0ec7",
+    "remote_sha": "32d0fcb552f5386a0a91b5ac855593d331ab0ec7",
     "match": true
   },
   "run": {
