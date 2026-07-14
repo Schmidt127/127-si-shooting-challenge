@@ -132,7 +132,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117e** | Apply Perfect Week Credit | Recording Quiz · Approved + PW Effective | `117e-zoom-recording-apply-perfect-week-credit.js` |
 | **117f** | Send Approval Email | Satisfactory (+ Config enabled); webhook optional | `117f-zoom-recording-send-approval-email.js` |
 
-**DEV (2026-07-14):** GitHub sources + support fields + E2E harness (no Fillout). **Airtable paste/activation of 117a–f still required** for trigger runs. Design: [C-025-automation-packages-stage17.md](./deploy-checklists/C-025-automation-packages-stage17.md). Promotion package: [C-025-prod-promotion-package.md](./deploy-checklists/C-025-prod-promotion-package.md).
+**DEV (2026-07-14):** GitHub sources + S19 activation closeout sheet. **117b/c/f = v1.0.1.** Paste guide: [C-025-dev-airtable-117-deployment-sheet.md](./deploy-checklists/C-025-dev-airtable-117-deployment-sheet.md). **First Mike UI action:** [Mike action sheet](./deploy-checklists/C-025-mike-action-sheet-117-dev-activation.md) — create/paste **117a** OFF in DEV. Design: [C-025-automation-packages-stage17.md](./deploy-checklists/C-025-automation-packages-stage17.md). Promotion package: [C-025-prod-promotion-package.md](./deploy-checklists/C-025-prod-promotion-package.md).
 
 ---
 

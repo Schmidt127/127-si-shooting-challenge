@@ -9,7 +9,7 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117b - Zoom Recording Credit - Coach Review and Needs Correction Handling
  *
- * Version: v1.0.0
+ * Version: v1.0.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
  *
@@ -42,7 +42,7 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: '117b-zoom-recording-coach-review-and-needs-correction-handling',
-  version: 'v1.0.0',
+  version: 'v1.0.1',
   versionDate: '2026-07-14',
   originalWrittenDate: '2026-07-14',
   lastUpdated: '2026-07-14',
@@ -182,9 +182,15 @@ async function main() {
   setOutputSafe("debugStep", debugStep);
   if (Object.keys(patch).length) await updateRecordSafe(zaTable, recordId, patch);
 
+  const correctionOut = Object.prototype.hasOwnProperty.call(patch, CONFIG.fields.correctionCount)
+    ? patch[CONFIG.fields.correctionCount]
+    : fieldExists(zaTable, CONFIG.fields.correctionCount)
+      ? getNumber(rec, CONFIG.fields.correctionCount) || 0
+      : 0;
+
   setOutputSafe("statusOut", "success");
   setOutputSafe("actionOut", actionOut);
-  setOutputSafe("correctionCount", fieldExists(zaTable, CONFIG.fields.correctionCount) ? (getNumber(rec, CONFIG.fields.correctionCount) || 0) : 0);
+  setOutputSafe("correctionCount", correctionOut);
   setOutputSafe("errorOut", "");
   console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "success", actionOut }));
 }

@@ -9,12 +9,13 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117f - Zoom Recording Credit - Send Approval Email
  *
- * Version: v1.0.0
+ * Version: v1.0.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
  *
  * PURPOSE
  * - Parent notification once after Satisfactory when Config enables email.
+ * - Requires Zoom Credit Approved? and not Zoom Credit Conflict?.
  *
  * IMPORTANT DESIGN RULES
  * - Safe default: missing/disabled config => no send. Missing webhook => skip (DEV-safe).
@@ -42,7 +43,7 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: '117f-zoom-recording-send-approval-email',
-  version: 'v1.0.0',
+  version: 'v1.0.1',
   versionDate: '2026-07-14',
   originalWrittenDate: '2026-07-14',
   lastUpdated: '2026-07-14',
@@ -151,6 +152,13 @@ async function main() {
   if (!getCheckbox(rec, CONFIG.fields.satisfactory)) {
     setOutputSafe("statusOut", "skipped");
     setOutputSafe("actionOut", "skipped_not_satisfactory");
+    return;
+  }
+  const approved = getCheckbox(rec, CONFIG.fields.approved) || getNumber(rec, CONFIG.fields.approved) === 1;
+  const conflict = getCheckbox(rec, CONFIG.fields.conflict) || getNumber(rec, CONFIG.fields.conflict) === 1;
+  if (!approved || conflict) {
+    setOutputSafe("statusOut", "skipped");
+    setOutputSafe("actionOut", "skipped_not_approved");
     return;
   }
 

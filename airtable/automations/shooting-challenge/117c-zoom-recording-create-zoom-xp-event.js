@@ -9,7 +9,7 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117c - Zoom Recording Credit - Create Zoom XP Event
  *
- * Version: v1.0.0
+ * Version: v1.0.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
  *
@@ -17,6 +17,7 @@ Folder: 17 - Zoom Recording Credit
  * - Create/update/deactivate exactly one XP Event per Zoom Credit Key.
  *
  * IMPORTANT DESIGN RULES
+ * - Recording Quiz rows only (skip Live — live XP remains automation 101).
  * - Source Key read from Zoom Credit Key (ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}).
  * - Recheck-before-create; never steal another automation's XP Event.
  *
@@ -43,7 +44,7 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: '117c-zoom-recording-create-zoom-xp-event',
-  version: 'v1.0.0',
+  version: 'v1.0.1',
   versionDate: '2026-07-14',
   originalWrittenDate: '2026-07-14',
   lastUpdated: '2026-07-14',
@@ -73,6 +74,7 @@ const CONFIG = {
     xpEnrollment: "Enrollment",
     xpSource: "XP Source",
   },
+  methods: { recordingQuiz: "Recording Quiz" },
   xpSourceName: "Zoom Attendance",
 };
 
@@ -164,6 +166,14 @@ async function main() {
     ],
   });
   if (!rec) throw new Error(`Zoom Attendance not found: ${recordId}`);
+
+  if (getText(rec, CONFIG.fields.attendanceMethod) !== CONFIG.methods.recordingQuiz) {
+    setOutputSafe("statusOut", "skipped");
+    setOutputSafe("actionOut", "skipped_not_recording_quiz");
+    setOutputSafe("xpEventId", "");
+    setOutputSafe("xpPoints", 0);
+    return;
+  }
 
   debugStep = "3 - Load credit fields";
   setOutputSafe("debugStep", debugStep);

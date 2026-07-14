@@ -58,7 +58,9 @@ def coach_review_117b(row: ZaRow):
     return "skipped_unchanged", {}
 
 
-def xp_create_117c(*, approved: bool, conflict: bool, amount: float, key: str, existing: set[str]):
+def xp_create_117c(*, approved: bool, conflict: bool, amount: float, key: str, existing: set[str], method: str = "Recording Quiz"):
+    if method != "Recording Quiz":
+        return "skipped_not_recording_quiz"
     if not key:
         return "error_blank_key"
     if not approved or conflict or amount <= 0:
@@ -97,6 +99,8 @@ def approval_email_117f(row: ZaRow, webhook: str):
         return "skipped_not_recording_quiz"
     if not row.satisfactory:
         return "skipped_not_satisfactory"
+    if not row.approved or row.conflict:
+        return "skipped_not_approved"
     if row.email_enabled is None:
         return "skipped_config_missing"
     if row.email_enabled is False:
@@ -141,6 +145,13 @@ class Test117c(unittest.TestCase):
         key = zoom_credit_key("recE", "recM")
         self.assertEqual(xp_create_117c(approved=True, conflict=False, amount=20, key=key, existing={key}), "skipped_exists")
 
+    def test_skip_live(self):
+        key = zoom_credit_key("recE", "recM")
+        self.assertEqual(
+            xp_create_117c(approved=True, conflict=False, amount=20, key=key, existing=set(), method="Live"),
+            "skipped_not_recording_quiz",
+        )
+
 
 class Test117d117e(unittest.TestCase):
     def test_gate(self):
@@ -154,7 +165,16 @@ class Test117d117e(unittest.TestCase):
 
 class Test117f(unittest.TestCase):
     def test_safe_default(self):
-        row = ZaRow("recA", "Recording Quiz", "recE", "recM", satisfactory=True, email_enabled=None, template="T")
+        row = ZaRow(
+            "recA",
+            "Recording Quiz",
+            "recE",
+            "recM",
+            satisfactory=True,
+            approved=True,
+            email_enabled=None,
+            template="T",
+        )
         self.assertEqual(approval_email_117f(row, "https://example.com"), "skipped_config_missing")
 
     def test_no_webhook_dev_safe(self):
@@ -164,10 +184,25 @@ class Test117f(unittest.TestCase):
             "recE",
             "recM",
             satisfactory=True,
+            approved=True,
             email_enabled=True,
             template="ZOOM_RECORDING_APPROVED",
         )
         self.assertEqual(approval_email_117f(row, ""), "skipped_no_webhook")
+
+    def test_conflict_blocks_send(self):
+        row = ZaRow(
+            "recA",
+            "Recording Quiz",
+            "recE",
+            "recM",
+            satisfactory=True,
+            approved=True,
+            conflict=True,
+            email_enabled=True,
+            template="T",
+        )
+        self.assertEqual(approval_email_117f(row, "https://example.com"), "skipped_not_approved")
 
 
 if __name__ == "__main__":

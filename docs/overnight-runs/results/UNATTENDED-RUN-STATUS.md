@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S19 C-025 DEV 117 activation closeout (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Package | `C-025-dev-activation-117-closeout` |
+| Agents | A deploy verify · B schema/E2E · Lead integrate |
+| Scripts | 117b/c/f → **v1.0.1** (Recording Quiz-only XP; email Approved/Conflict; correctionCount) |
+| Deliverables | DEV deployment sheet + Mike action sheet (stop at create/paste **117a** OFF) |
+| Untouched | PROD, real email, prod webhook, C-027 |
+| Docs | `S19-AUTHORIZED.md`, `C-025-dev-airtable-117-deployment-sheet.md`, `C-025-mike-action-sheet-117-dev-activation.md` |
+
 ## Milestone — S18 C-025 recording credit DEV DoD (2026-07-14)
 
 | Field | Value |
