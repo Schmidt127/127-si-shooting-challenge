@@ -30,15 +30,14 @@
 |-----------|----------|------|-----|
 | Pre–Phase A | **50** | **0** | Mike |
 | **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
-| **Phase B (IN PROGRESS)** | 50 → **48** after retire | 0 → **2** | Combined 030 GitHub ready; awaiting Mike paste + retire 032/033 |
-| After Phase B (WAS trio) | **48** | **2** | 030∪032∪033 |
+| **After Phase B (COMPLETE)** | **48** | **2** | Combined 030; **032** + **033** deleted (Mike UI) |
 | After Phase C (063→020, 111→013) | **46** | **4** | Absorb copies |
 | After Phase D (072∪074) | **45** | **5** | **Target met** |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count (post Phase A) | **50** (Mike: 006 gone, 117 present) |
+| Current count (post Phase B) | **48** (Mike: 032+033 deleted; 2 free) |
 | Proposed target (post Phase A–D) | **45** |
 | Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
@@ -64,10 +63,10 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 021 | Attachment Status + Video Count | ON | Y | Absorbed **006** | Keep separate (combined) |
 | 022 | Sync Child Upload Writeback | | Y | — | Keep separate |
 | 023 | Assign Enrollment | | Y | — | Keep separate |
-| 030 | Bootstrap GB+Goal+HW | ON (pending paste) | Y | Absorbs **032/033** | Combined SoT v1.0.0 (Phase B) |
+| 030 | Bootstrap GB+Goal+HW | **ON** | Y | Absorbed **032/033** | Keep separate (combined) — Phase B COMPLETE |
 | 031 | Find/Create WAS | | Y | — | Keep separate |
-| 032 | Link Goal → WAS | pending retire | library | Replaced by **030** | Retire after live smoke PASS |
-| 033 | Assign Homework → WAS | pending retire | library | Replaced by **030** | Retire after live smoke PASS |
+| 032 | Link Goal → WAS | — | library | Replaced by **030** | **LIBRARY** — deleted from DEV UI |
+| 033 | Assign Homework → WAS | — | library | Replaced by **030** | **LIBRARY** — deleted from DEV UI |
 | 034 | Previous Week Helpers | | Y | — | Keep separate |
 | 041 | Level Recalc Flag | | Y | — | Keep separate |
 | 042 | Assign Current/Next Level | | Y | — | Keep separate |
@@ -133,7 +132,9 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase A COMPLETE 2026-07-14:** combined 021 live; smoke PASS; **006** deleted; **117 v1.0.0** OFF (blank webhook, no trigger yet).
 
-**Next recommended:** Phase B — [`PHASE-B-WAS-bootstrap-plan.md`](../deploy-checklists/PHASE-B-WAS-bootstrap-plan.md) (030∪032∪033, +2 free).
+**Phase B COMPLETE 2026-07-14:** combined 030 live; smoke PASS; **032** + **033** deleted; DEV **48/50** (2 free).
+
+**Next recommended:** Phase C — [`PHASE-C-063-020-111-013-bootstrap-plan.md`](../deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md) (063→020, 111→013, +2 → 4 free).
 
 ---
 
@@ -142,7 +143,7 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 | Step | Group | Δ | Free after 117 |
 |------|-------|--:|---------------:|
 | A | 006∪021 then +117 | 0 net | 0 |
-| B | WAS 030∪032∪033 | +2 | 2 |
+| B | WAS 030∪032∪033 | +2 | **2** (COMPLETE) |
 | C | 063→020 | +1 | 3 |
 | D | 111→013 | +1 | 4 |
 | E | 072∪074 | +1 | **5** ✓ |

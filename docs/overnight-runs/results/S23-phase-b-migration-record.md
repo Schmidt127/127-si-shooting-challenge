@@ -1,6 +1,6 @@
 # S23 / Phase B — migration record (030∪032∪033)
 
-**Status:** Live smoke **CRITICAL PASS** 2026-07-14 — awaiting Mike retire 032+033  
+**Status:** Live smoke **CRITICAL PASS**; UI closeout **COMPLETE** 2026-07-14 (032+033 deleted; **48/50**)  
 **Base:** DEV `appTetnuCZlCZdTCT`  
 
 ## Live smoke
@@ -8,7 +8,8 @@
 Harness: `tools/airtable/phase_b_030_live_smoke_suite.py`  
 JSON: `docs/audits/phase-b-030-live-smoke-2026-07-14.json`  
 Result: `docs/overnight-runs/results/S23-phase-b-live-smoke-result.md`  
-**Verdict: CRITICAL PASS** (GB/Goal/HW single+multi, idempotent, formula target, fresh WAS, 031 path, fixture restore)
+Closeout: `docs/overnight-runs/results/S23-phase-b-closeout.md`  
+**Verdict: CRITICAL PASS** · capacity **48/50** confirmed by Mike
 
 ## What changed (GitHub)
 

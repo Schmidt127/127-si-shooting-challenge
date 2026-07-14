@@ -112,13 +112,11 @@ flowchart TD
 | Automation | Depends on | Feeds |
 |------------|------------|-------|
 | 031 | Counted Submission | WAS create |
-| 030 | Enrollment.Grade Band | WAS.Grade Band |
-| 032 | Grade Band + Week | Goal link |
-| 033 | Week + Grade Band | Homework assign |
+| **030** (combined) | Enrollment.Grade Band; then Week+GB | WAS.Grade Band → Goal → Homework |
 | 034 | Enrollment + Week | Prior-week helpers |
 | 057 → 058 | Perfect Week queue | Unlock → 059 |
 
-**Orchestrator:** 030+032+033 = **Combine with conditions** (order-sensitive). Keep 031 and 034 separate.
+**Phase B COMPLETE:** former 032/033 absorbed into **030**; deleted from DEV UI. Keep 031 and 034 separate.
 
 ---
 
@@ -137,7 +135,7 @@ flowchart TD
 | Automation | Path | Notes |
 |------------|------|-------|
 | 101 | Live meeting XP | Keep separate |
-| **117** (pending) | Recording Quiz orchestrator A→F | +1 slot; replaces six 117a–f paste |
+| **117** (OFF) | Recording Quiz orchestrator A→F | Present in DEV; blank webhook; trigger not configured |
 
 ---
 

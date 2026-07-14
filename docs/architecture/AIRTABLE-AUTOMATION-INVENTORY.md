@@ -97,8 +97,10 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 023 | Assign Enrollment to Submission | Y | Y | Y | ? | Submissions | — | Keep separate | |
 | 030 | Copy Grade Band → WAS | Y | Y | Y | ? | WAS | — | Combine with conditions | WAS trio |
 | 031 | Find/Create WAS | Y | Y | Y | ? | Submissions | — | Keep separate | |
-| 032 | Link Goal → WAS | Y | Y | Y | ? | WAS | — | Combine with conditions | WAS trio |
-| 033 | Assign Homework → WAS | Y | Y | Y | ? | WAS | — | Combine with conditions | WAS trio |
+| 030 | Bootstrap GB+Goal+HW | Y | Y | Y | ON | WAS | Absorbed 032/033 | Keep separate (combined) | Phase B COMPLETE |
+| 031 | Find/Create WAS | Y | Y | Y | ? | Submissions→WAS | — | Keep separate | — |
+| 032 | Link Goal → WAS | library | — | — | deleted | — | →030 | LIBRARY | Phase B |
+| 033 | Assign Homework → WAS | library | — | — | deleted | — | →030 | LIBRARY | Phase B |
 | 034 | Previous Week Helpers | Y | Y | Y | ? | WAS | — | Keep separate | |
 | 041 | Mark Level Recalc | Y | Y | Y | ? | XP Events | — | Keep separate | Never merge→010 |
 | 042 | Assign Current/Next Level | Y | Y | Y | ? | Enrollments | — | Keep separate | Owns gate rule |

@@ -58,8 +58,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | 030 | Weekly Summary — Bootstrap WAS Grade Band + Goal + Homework (Phase B; absorbs 032/033) | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-bootstrap-grade-band-goal-and-homework.js` |
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when `Count This Submission?` checked and WAS empty | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` |
-| 032 | Weekly Summary — Link Challenge Goal to WAS | **LIBRARY** after Phase B | stub → use combined 030; rollback under `_rollback/phase-b-030-032-033-2026-07-14/` |
-| 033 | Weekly Summary — Assign Homework to WAS | **LIBRARY** after Phase B | stub → use combined 030; rollback under `_rollback/phase-b-030-032-033-2026-07-14/` |
+| 032 | Weekly Summary — Link Challenge Goal to WAS | **DELETED** Phase B | library stub · rollback `_rollback/phase-b-030-032-033-2026-07-14/` |
+| 033 | Weekly Summary — Assign Homework to WAS | **DELETED** Phase B | library stub · rollback `_rollback/phase-b-030-032-033-2026-07-14/` |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)
