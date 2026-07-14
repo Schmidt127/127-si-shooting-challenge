@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T13:50:00-06:00",
+  "updated_at": "2026-07-14T14:30:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "d2a4da8bcae65d3eddc208e20a88c8b8eda69048",
@@ -810,12 +810,46 @@
         "docs/overnight-runs/results/S20-lead-integration-result.md"
       ],
       "notes": "Orchestrator +1 still valid. 112 DEV recommendation RETRACTED (not in UI). Prefer UI-confirm 043 then retire; see C-025-s20-dev-slot-reopen-2026-07-14.md"
+    },
+    {
+      "id": "DEV-automation-architecture-review",
+      "backlog_refs": [
+        "V2-014",
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 21,
+      "depends_on": [
+        "C-025-117-orchestrator-slot-fit"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": "2026-07-14",
+      "deliverables": [
+        "docs/architecture/AIRTABLE-AUTOMATION-INVENTORY.md",
+        "docs/architecture/AIRTABLE-AUTOMATION-DEPENDENCY-MAP.md",
+        "docs/architecture/AIRTABLE-AUTOMATION-REFACTOR-PLAN.md",
+        "docs/architecture/AIRTABLE-AUTOMATION-CAPACITY-LEDGER.md",
+        "docs/deploy-checklists/AIRTABLE-AUTOMATION-ARCHITECTURE-mike-decision-sheet.md"
+      ],
+      "notes": "Analysis only. Meta automations 403. Working 50-model. Path B >=5 free after 117. Stopped for Mike UI paste + Phase 0 decision."
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S20-AUTHORIZED.md",
-    "merge_order": [],
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S21-AUTHORIZED.md",
+    "merge_order": [
+      "lead-direct"
+    ],
     "worker_branches": {}
   },
   "pending_approvals": [],
@@ -828,6 +862,6 @@
     "live_c025_precedence": "postconversion 13/13 + E2E harness 6/6",
     "pass": true
   },
-  "next_action": "Mike: confirm whether DEV UI has 043 (exact name in C-025-mike-action-sheet-s20-orchestrator.md). Do NOT pursue 112 in DEV. Then free +1 slot and paste 117 orchestrator OFF.",
-  "stop_reason": null
+  "next_action": "Mike: paste full DEV Automations UI list (50 names + ON/OFF) and decide Phase 0 (043 retire \u2192 117 OFF). See AIRTABLE-AUTOMATION-ARCHITECTURE-mike-decision-sheet.md. No Airtable mutations by Cursor.",
+  "stop_reason": "Architecture review complete \u2014 waiting Mike UI inventory + Phase 0 approval"
 }

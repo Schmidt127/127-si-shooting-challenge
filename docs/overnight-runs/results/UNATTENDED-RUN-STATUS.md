@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S21 DEV Automation Architecture Review (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Scope | Analysis only — **no** Airtable disable/delete/combine/paste |
+| Live evidence | Meta automations **403**; docs table **48** rows; Mike **50/50** + **112 absent** |
+| Deliverables | Inventory · Dependency map · Refactor plan · Capacity ledger · Mike decision sheet |
+| Target | ≥**5 free** after **117** orchestrator (Path B: 043+061+078+006∪021+063+111) |
+| Stop | Mike pastes full UI list + Phase 0 decision |
+| Docs | `docs/architecture/AIRTABLE-AUTOMATION-*.md`, `AIRTABLE-AUTOMATION-ARCHITECTURE-mike-decision-sheet.md` |
+
 ## Milestone — S20 DEV slot reopen (112 retracted) (2026-07-14)
 
 | Field | Value |
@@ -17,7 +28,7 @@
 | Problem | DEV at automation limit — cannot add six 117a–f |
 | Solution | **One** orchestrator `117-zoom-recording-credit-orchestrator.js` (A→F); 117a–f library-only |
 | Tests | Offline **34/34** (Agent B) |
-| Retirement (Mike only) | Prefer free **112** (+1) or **043** (+1) — no disables without approval |
+| Retirement (Mike only) | Prefer UI-confirm **043** (+1) — **not** 112 in DEV; no disables without approval |
 | Stop | Mike frees 1 DEV slot, then paste single orchestrator OFF |
 | Docs | `C-025-s20-orchestrator-slot-plan.md`, `C-025-mike-action-sheet-s20-orchestrator.md`, `S20-lead-integration-result.md` |
 
