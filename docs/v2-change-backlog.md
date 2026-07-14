@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **DECIDED (2026-07-13):** recording watch = **50% of live Zoom XP**; **full level-gate credit**; **mutually exclusive** with live XP for same meeting (`ZOOM_LIVE` vs `ZOOM_RECORDING` Source Key). **Today:** **101** = live attendees only; no recording workflow. **Target:** attestation path + XP Reward Rule row + Level Gate Rule row; extend **101** or sibling automation. | C-024, V2-006, V2-005 | queued |
+| **C-025** | Zoom **recording** attendance — partial credit path | **DECIDED (2026-07-13):** recording watch = **50% of live Zoom XP**; **full level-gate credit**; **mutually exclusive** with live XP for same meeting (`ZOOM_LIVE` vs `ZOOM_RECORDING` Source Key). **Design package S12 COMPLETE (2026-07-13):** [C-025-zoom-recording-design-stage12.md](./deploy-checklists/C-025-zoom-recording-design-stage12.md) + DEV OMNI runbook + offline contract tests. **Today still:** **101** = live attendees only. **Next:** owner OD-1…OD-6 → Airtable/automation implementation (separate package; not unattended). | C-024, V2-006, V2-005 | design complete / OD pending |
 
 ### Wave 10 — Communication & website
 
