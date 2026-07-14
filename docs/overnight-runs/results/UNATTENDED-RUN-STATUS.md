@@ -5,7 +5,7 @@
 | # | Item | Value |
 |---|------|-------|
 | 1 | Starting Lead SHA | `4530780` |
-| 2 | Ending Lead SHA | `4068215` |
+| 2 | Ending Lead SHA | `7302b08` |
 | 3 | Agent A work | Config linkage design; deadline repair design; submission page verification; precedence/deadline offline tests. Live Meta scan: Config missing C-025 fields; Meeting Effective* are editable; deadline lookup not a true date. |
 | 4 | Agent B work | C-025 automation packages 117a–f design; C-027 MEN impl prep; automation + MEN offline contracts. Coordinated by Lead (same deliverables landed on Lead). |
 | 5 | Files created/changed | `C-025-config-linkage-design.md`, `C-025-deadline-repair-design.md`, `C-025-submission-page-verification.md`, `C-025-automation-packages-stage17.md`, `C-027-implementation-prep-stage17.md`, catalog gap note, `S17-AUTHORIZED.md`, tests `test_c025_config_precedence.py`, `test_c025_deadline_modes.py`, `test_c025_automation_contracts.py`, `test_c027_men_contracts.py`, CONTROL, this status |
