@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T14:50:00-06:00",
+  "updated_at": "2026-07-13T15:05:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "7579623bb96663c8ebb71fbc7f0187db840e694b",
-    "remote_sha": "7579623bb96663c8ebb71fbc7f0187db840e694b",
+    "sha": "eb612802715d59b9ee58ce69093cad53e435fcbb",
+    "remote_sha": "eb612802715d59b9ee58ce69093cad53e435fcbb",
     "match": false
   },
   "run": {
     "state": "authorizing",
-    "stage_id": "S9",
-    "package_id": "C-009-learning-activities-proposal",
-    "started_at": "2026-07-13T14:50:00-06:00"
+    "stage_id": "S10",
+    "package_id": "prod-promotion-rollback-docs",
+    "started_at": "2026-07-13T15:05:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -19,12 +19,12 @@
       "branch": "overnight/lead-integration"
     },
     "active_writes": [
-      "worker-d"
+      "worker-a"
     ],
     "available": [
-      "worker-a",
       "worker-b",
-      "worker-c"
+      "worker-c",
+      "worker-d"
     ]
   },
   "queue": [
@@ -96,7 +96,7 @@
       "backlog_refs": [
         "C-009"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 4,
       "depends_on": [],
       "auth": "standing",
@@ -108,8 +108,8 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": "desktop",
-      "completed_at": null
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
     },
     {
       "id": "prod-promotion-rollback-docs",
@@ -118,7 +118,7 @@
         "C-010",
         "C-013"
       ],
-      "state": "READY_DOC",
+      "state": "IN_PROGRESS",
       "priority": 5,
       "depends_on": [],
       "auth": "standing",
@@ -130,7 +130,7 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
+      "claimed_by": "desktop",
       "completed_at": null
     },
     {
@@ -435,22 +435,22 @@
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S9-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S10-AUTHORIZED.md",
     "merge_order": [
-      "worker-d"
+      "worker-a"
     ],
     "worker_branches": {
-      "worker-d": "overnight/v2-run/worker-d-s9-learning-activities"
+      "worker-a": "overnight/v2-run/worker-a-s10-prod-rollback-docs"
     }
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T14:48:00-06:00",
+    "last_run_at": "2026-07-13T15:02:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "43/43",
     "pass": true
   },
-  "next_action": "S8 PASS. Start S9 C-009 Learning Activities owner-review proposal (no Airtable).",
+  "next_action": "S9 PASS. Start S10 prod-promotion-rollback-docs.",
   "stop_reason": null
 }

@@ -1,11 +1,11 @@
 ﻿# Unattended run status
 
-## Milestone — S8 integrated PASS
+## Milestone — S9 integrated PASS
 
 | Field | Value |
 |-------|-------|
-| Time | 2026-07-13 ~14:50 MDT |
-| SHA | `7579623` |
-| Package | pipeline-summary-comms-audit COMPLETE |
+| Time | 2026-07-13 ~15:05 MDT |
+| SHA | `eb61280` |
+| Package | C-009-learning-activities-proposal COMPLETE |
 | Tests | 66/66 · 97/97 · 43/43 |
-| Next | S9 C-009-learning-activities-proposal |
+| Next | S10 prod-promotion-rollback-docs |
