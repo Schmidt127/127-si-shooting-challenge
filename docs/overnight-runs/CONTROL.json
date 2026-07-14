@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T19:55:00-06:00",
+  "updated_at": "2026-07-13T19:56:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "6472be98e44e1706fa6a86b228aeac1a635d1790",
-    "remote_sha": "6472be98e44e1706fa6a86b228aeac1a635d1790",
-    "match": false
+    "sha": "cf7b33b97452a57b60d658dde711611cf81c918a",
+    "remote_sha": "cf7b33b97452a57b60d658dde711611cf81c918a",
+    "match": true
   },
   "run": {
     "state": "idle",
