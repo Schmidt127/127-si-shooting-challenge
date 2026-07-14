@@ -3,8 +3,8 @@
   "updated_at": "2026-07-14T14:30:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "d2a4da8bcae65d3eddc208e20a88c8b8eda69048",
-    "remote_sha": "d2a4da8bcae65d3eddc208e20a88c8b8eda69048",
+    "sha": "90975f7ed7d65af88aab573a8d384b3717dea2d3",
+    "remote_sha": "90975f7ed7d65af88aab573a8d384b3717dea2d3",
     "match": true
   },
   "run": {
@@ -845,7 +845,7 @@
     }
   ],
   "stage": {
-    "authorized": true,
+    "authorized": false,
     "auth_doc": "docs/overnight-runs/stages/S21-AUTHORIZED.md",
     "merge_order": [
       "lead-direct"
