@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T14:20:00-06:00",
+  "updated_at": "2026-07-13T14:35:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "8afe0927407fbfc29be62d98d22a1af2c849920d",
-    "remote_sha": "8afe0927407fbfc29be62d98d22a1af2c849920d",
+    "sha": "bea7dd6be4fb2fb8163c2f54a1cfe92811f5f9f8",
+    "remote_sha": "bea7dd6be4fb2fb8163c2f54a1cfe92811f5f9f8",
     "match": false
   },
   "run": {
     "state": "authorizing",
-    "stage_id": "S7",
-    "package_id": "pipeline-zoom-achievements-audit",
-    "started_at": "2026-07-13T14:20:00-06:00"
+    "stage_id": "S8",
+    "package_id": "pipeline-summary-comms-audit",
+    "started_at": "2026-07-13T14:35:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -19,11 +19,11 @@
       "branch": "overnight/lead-integration"
     },
     "active_writes": [
-      "worker-b"
+      "worker-c"
     ],
     "available": [
       "worker-a",
-      "worker-c",
+      "worker-b",
       "worker-d"
     ]
   },
@@ -55,7 +55,7 @@
         "C-025",
         "C-024"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 2,
       "depends_on": [],
       "auth": "standing",
@@ -67,8 +67,8 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": "desktop",
-      "completed_at": null
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
     },
     {
       "id": "pipeline-summary-comms-audit",
@@ -76,7 +76,7 @@
         "C-011",
         "C-027"
       ],
-      "state": "READY_REPO",
+      "state": "IN_PROGRESS",
       "priority": 3,
       "depends_on": [],
       "auth": "standing",
@@ -88,7 +88,7 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
+      "claimed_by": "desktop",
       "completed_at": null
     },
     {
@@ -434,23 +434,23 @@
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S7-AUTHORIZED.md",
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S8-AUTHORIZED.md",
     "merge_order": [
-      "worker-b"
+      "worker-c"
     ],
     "worker_branches": {
-      "worker-b": "overnight/v2-run/worker-b-s7-zoom-achievements-pipeline"
+      "worker-c": "overnight/v2-run/worker-c-s8-summary-comms-pipeline"
     }
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T14:18:00-06:00",
+    "last_run_at": "2026-07-13T14:32:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "36/36",
     "pass": true
   },
-  "next_action": "S6 PASS. Authorize S7 pipeline-zoom-achievements-audit on worker-b; Lead-direct.",
+  "next_action": "S7 PASS. Start S8 pipeline-summary-comms-audit on worker-c.",
   "stop_reason": null
 }
