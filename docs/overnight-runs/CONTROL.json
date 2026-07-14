@@ -1,17 +1,17 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T14:35:00-06:00",
+  "updated_at": "2026-07-13T14:50:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "bea7dd6be4fb2fb8163c2f54a1cfe92811f5f9f8",
-    "remote_sha": "bea7dd6be4fb2fb8163c2f54a1cfe92811f5f9f8",
+    "sha": "7579623bb96663c8ebb71fbc7f0187db840e694b",
+    "remote_sha": "7579623bb96663c8ebb71fbc7f0187db840e694b",
     "match": false
   },
   "run": {
     "state": "authorizing",
-    "stage_id": "S8",
-    "package_id": "pipeline-summary-comms-audit",
-    "started_at": "2026-07-13T14:35:00-06:00"
+    "stage_id": "S9",
+    "package_id": "C-009-learning-activities-proposal",
+    "started_at": "2026-07-13T14:50:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -19,12 +19,12 @@
       "branch": "overnight/lead-integration"
     },
     "active_writes": [
-      "worker-c"
+      "worker-d"
     ],
     "available": [
       "worker-a",
       "worker-b",
-      "worker-d"
+      "worker-c"
     ]
   },
   "queue": [
@@ -76,7 +76,7 @@
         "C-011",
         "C-027"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 3,
       "depends_on": [],
       "auth": "standing",
@@ -88,15 +88,15 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": "desktop",
-      "completed_at": null
+      "claimed_by": null,
+      "completed_at": "2026-07-13"
     },
     {
       "id": "C-009-learning-activities-proposal",
       "backlog_refs": [
         "C-009"
       ],
-      "state": "READY_REPO",
+      "state": "IN_PROGRESS",
       "priority": 4,
       "depends_on": [],
       "auth": "standing",
@@ -108,7 +108,7 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
+      "claimed_by": "desktop",
       "completed_at": null
     },
     {
@@ -435,22 +435,22 @@
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S8-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S9-AUTHORIZED.md",
     "merge_order": [
-      "worker-c"
+      "worker-d"
     ],
     "worker_branches": {
-      "worker-c": "overnight/v2-run/worker-c-s8-summary-comms-pipeline"
+      "worker-d": "overnight/v2-run/worker-d-s9-learning-activities"
     }
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T14:32:00-06:00",
+    "last_run_at": "2026-07-13T14:48:00-06:00",
     "lambda": "66/66",
     "offline": "97/97",
-    "targeted": "36/36",
+    "targeted": "43/43",
     "pass": true
   },
-  "next_action": "S7 PASS. Start S8 pipeline-summary-comms-audit on worker-c.",
+  "next_action": "S8 PASS. Start S9 C-009 Learning Activities owner-review proposal (no Airtable).",
   "stop_reason": null
 }

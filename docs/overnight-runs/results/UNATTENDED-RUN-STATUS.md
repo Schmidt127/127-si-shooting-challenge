@@ -1,13 +1,11 @@
 ﻿# Unattended run status
 
-## Milestone — S7 integrated PASS
+## Milestone — S8 integrated PASS
 
 | Field | Value |
 |-------|-------|
-| Time | 2026-07-13 ~14:35 MDT |
-| Canonical SHA | `bea7dd6` |
-| Stage | S7 COMPLETE |
-| Package | pipeline-zoom-achievements-audit |
-| Tests | 66/66 · 97/97 · 36/36 |
-| Next action | S8 pipeline-summary-comms-audit |
-
+| Time | 2026-07-13 ~14:50 MDT |
+| SHA | `7579623` |
+| Package | pipeline-summary-comms-audit COMPLETE |
+| Tests | 66/66 · 97/97 · 43/43 |
+| Next | S9 C-009-learning-activities-proposal |
