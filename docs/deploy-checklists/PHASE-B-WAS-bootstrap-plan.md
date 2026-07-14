@@ -1,9 +1,10 @@
 # Phase B plan — WAS bootstrap consolidation (030 + 032 + 033)
 
-**Status:** Recommendation only — **not authorized to execute**  
+**Status:** **AUTHORIZED** 2026-07-14 — GitHub combined ready; Mike UI paste required  
 **Depends on:** Phase A COMPLETE (2026-07-14)  
 **Target:** Free **+2** slots (3 automations → 1)  
-**After Phase B:** DEV **48 occupied / 2 free** (with 117 already using one of the prior net-zero slots)
+**After Phase B:** DEV **48 occupied / 2 free** (with 117 already using one of the prior net-zero slots)  
+**Mike UI:** `docs/deploy-checklists/PHASE-B-030-032-033-mike-ui-actions.md`
 
 ---
 

@@ -30,6 +30,7 @@
 |-----------|----------|------|-----|
 | Pre–Phase A | **50** | **0** | Mike |
 | **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
+| **Phase B (IN PROGRESS)** | 50 → **48** after retire | 0 → **2** | Combined 030 GitHub ready; awaiting Mike paste + retire 032/033 |
 | After Phase B (WAS trio) | **48** | **2** | 030∪032∪033 |
 | After Phase C (063→020, 111→013) | **46** | **4** | Absorb copies |
 | After Phase D (072∪074) | **45** | **5** | **Target met** |
@@ -63,10 +64,10 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 021 | Attachment Status + Video Count | ON | Y | Absorbed **006** | Keep separate (combined) |
 | 022 | Sync Child Upload Writeback | | Y | — | Keep separate |
 | 023 | Assign Enrollment | | Y | — | Keep separate |
-| 030 | Copy GB → WAS | | Y | — | **Combine with conditions** WAS trio |
+| 030 | Bootstrap GB+Goal+HW | ON (pending paste) | Y | Absorbs **032/033** | Combined SoT v1.0.0 (Phase B) |
 | 031 | Find/Create WAS | | Y | — | Keep separate |
-| 032 | Link Goal → WAS | | Y | — | **Combine with conditions** WAS trio |
-| 033 | Assign Homework → WAS | | Y | — | **Combine with conditions** WAS trio |
+| 032 | Link Goal → WAS | pending retire | library | Replaced by **030** | Retire after live smoke PASS |
+| 033 | Assign Homework → WAS | pending retire | library | Replaced by **030** | Retire after live smoke PASS |
 | 034 | Previous Week Helpers | | Y | — | Keep separate |
 | 041 | Level Recalc Flag | | Y | — | Keep separate |
 | 042 | Assign Current/Next Level | | Y | — | Keep separate |

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T16:25:00-06:00",
+  "updated_at": "2026-07-14T16:45:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "cfefd9ac01efa86da5b84392c6e3951350fd83d4",
@@ -8,10 +8,10 @@
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S23",
+    "package_id": "phase-b-was-030-032-033",
+    "started_at": "2026-07-14T16:30:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -885,12 +885,12 @@
         "V2-014",
         "C-025"
       ],
-      "state": "READY",
+      "state": "IN_PROGRESS",
       "priority": 23,
       "depends_on": [
         "phase-a-006-021-consolidate-117"
       ],
-      "auth": "standing",
+      "auth": "owner-authorized-execution",
       "est_minutes": 120,
       "gates": {
         "owner": true,
@@ -899,28 +899,33 @@
         "credentials": false,
         "destructive": false
       },
-      "claimed_by": null,
-      "started_at": null,
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
       "completed_at": null,
       "deliverables": [
-        "docs/deploy-checklists/PHASE-B-WAS-bootstrap-plan.md"
+        "airtable/automations/shooting-challenge/030-weekly-summary-and-goal-logic-bootstrap-grade-band-goal-and-homework.js",
+        "airtable/automations/shooting-challenge/_rollback/phase-b-030-032-033-2026-07-14/",
+        "docs/deploy-checklists/PHASE-B-030-032-033-mike-ui-actions.md",
+        "docs/overnight-runs/results/S23-phase-b-migration-record.md",
+        "docs/overnight-runs/stages/S23-AUTHORIZED.md",
+        "tools/airtable/tests/test_phase_b_030_combined.py"
       ],
-      "notes": "Next consolidation: 030+032+033 WAS bootstrap (+2 slots). Do not execute until Mike authorizes."
+      "notes": "AUTHORIZED. GitHub combined v1.0.0 + rollback + offline 14/14. STOPPED for Mike UI paste into 030. 032/033 stay ON until smoke PASS. Do not touch 117/Folder07/PROD."
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S22-AUTHORIZED.md",
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S23-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T16:20:00-06:00",
-    "phase_a_offline": "13/13",
-    "phase_a_live_smoke": "CRITICAL PASS (sent retest included)",
+    "last_run_at": "2026-07-14T16:40:00-06:00",
+    "phase_b_offline": "14/14",
+    "phase_b_live_smoke": "pending Mike paste",
     "pass": true
   },
-  "next_action": "Phase A COMPLETE. Recommended next: Mike authorize Phase B (030+032+033 WAS bootstrap, +2 slots). 117 remains OFF until recording smoke. No Airtable changes until authorized.",
+  "next_action": "Mike: paste combined 030 per PHASE-B-030-032-033-mike-ui-actions.md. Leave 032/033 ON for dual-run smoke. Reply Phase B UI complete after 032+033 retired and 48/50 confirmed.",
   "stop_reason": null
 }
