@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T22:26:00-06:00",
+  "updated_at": "2026-07-13T23:05:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "593a9887ad6c8effeb78ac39bebcfc9404289bae",
-    "remote_sha": "593a9887ad6c8effeb78ac39bebcfc9404289bae",
+    "sha": "4530780ab837cae9de178ff5f20ad9c7f117faed",
+    "remote_sha": "4530780ab837cae9de178ff5f20ad9c7f117faed",
     "match": true
   },
   "run": {
@@ -512,7 +512,7 @@
       "claimed_by": null,
       "completed_at": null,
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
-      "notes": "OMNI retired. Formula layer applied by Cursor Meta API 2026-07-13. Remaining: award automations + Config linkage (separate)."
+      "notes": "Formula layer done. Next Airtable: Config fields + deadline date + view UI. Automations designed stage17, not pasted."
     },
     {
       "id": "C-027-dev-omni-implementation",
@@ -535,7 +535,8 @@
       },
       "claimed_by": null,
       "completed_at": null,
-      "runbook": "docs/deploy-checklists/C-027-dev-omni-runbook-stage13.md"
+      "runbook": "docs/deploy-checklists/C-027-dev-omni-runbook-stage13.md",
+      "notes": "Impl prep stage17 ready. Needs Config MEN fields + Parent Notification Enabled? schema in DEV."
     },
     {
       "id": "C-025-zoom-recording-formula-repair",
@@ -590,6 +591,112 @@
       "completed_at": "2026-07-13",
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
       "notes": "Cursor Meta API applied helpers+formulas; Schmidt fixtures 4/4. View API unavailable."
+    },
+    {
+      "id": "C-025-config-linkage-design",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 14,
+      "depends_on": [
+        "C-025-dev-manual-formula-paste"
+      ],
+      "auth": "standing",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-13",
+      "notes": "Agent A overnight \u2014 repo design + tests; no PROD",
+      "deliverables": [
+        "docs/deploy-checklists/C-025-config-linkage-design.md",
+        "tools/airtable/tests/test_c025_config_precedence.py"
+      ]
+    },
+    {
+      "id": "C-025-deadline-submission-design",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 15,
+      "depends_on": [
+        "C-025-dev-manual-formula-paste"
+      ],
+      "auth": "standing",
+      "est_minutes": 60,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-13",
+      "deliverables": [
+        "docs/deploy-checklists/C-025-deadline-repair-design.md",
+        "docs/deploy-checklists/C-025-submission-page-verification.md"
+      ]
+    },
+    {
+      "id": "C-025-automation-packages",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "COMPLETE",
+      "priority": 16,
+      "depends_on": [
+        "C-025-dev-manual-formula-paste"
+      ],
+      "auth": "standing",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-13",
+      "notes": "Agent B \u2014 repo designs only, no deploy",
+      "deliverables": [
+        "docs/deploy-checklists/C-025-automation-packages-stage17.md",
+        "tools/airtable/tests/test_c025_automation_contracts.py"
+      ]
+    },
+    {
+      "id": "C-027-implementation-prep",
+      "backlog_refs": [
+        "C-027"
+      ],
+      "state": "COMPLETE",
+      "priority": 17,
+      "depends_on": [
+        "c025-c027-owner-config-decisions"
+      ],
+      "auth": "standing",
+      "est_minutes": 75,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": "2026-07-13",
+      "deliverables": [
+        "docs/deploy-checklists/C-027-implementation-prep-stage17.md",
+        "tools/airtable/tests/test_c027_men_contracts.py"
+      ]
     }
   ],
   "stage": {
@@ -600,13 +707,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T22:20:00-06:00",
-    "lambda": "deferred",
-    "offline": "deferred",
-    "targeted": "14/14 c025 formula contract",
-    "live_dev_schmidt": "4/4",
+    "last_run_at": "2026-07-13T23:05:00-06:00",
+    "lambda": "66/66",
+    "offline": "97/97",
+    "targeted": "55/55 c025+c027 contracts (incl formula 14 + watch + new S17)",
+    "live_dev_schmidt_credit": "4/4 (prior)",
     "pass": true
   },
-  "next_action": "C-025 formula repair APPLIED in DEV. Mike: create Past Deadline view in UI if missing; delete C025 Schema Write Probe field. Config-Effective linkage still separate. Award automations not started.",
+  "next_action": "Mike UI: delete C025 Schema Write Probe; create view Zoom Recording Quiz - Past Deadline (hyphen); then DEV Config field create per C-025-config-linkage-design.md. No award automation paste yet.",
   "stop_reason": null
 }

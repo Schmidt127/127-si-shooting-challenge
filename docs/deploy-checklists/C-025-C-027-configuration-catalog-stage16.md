@@ -1,9 +1,20 @@
 # C-025 / C-027 — Configuration catalog (Stage 16)
 
-**Status:** COMPLETE (repo proposal — no Airtable writes)  
+**Status:** COMPLETE (repo proposal) + **S17 live DEV gap note**  
 **Date:** 2026-07-13  
 **Owner decisions:** Approved 2026-07-13 (this package)  
 **Architecture rule:** Adjustable business values live in Airtable **configuration / rules tables**. Scripts **read active config at runtime**. Reuse existing tables before proposing new ones. **Do not** hardcode tunable percentages, day counts, milestone lists, or notification toggles into automations.
+
+### Live DEV gap (Meta inspect 2026-07-13 overnight S17)
+
+| Location | Finding |
+|----------|---------|
+| Config | **None** of the C-025/C-027 catalog fields below exist yet (16 unrelated fields only) |
+| Zoom Meetings | Policy currently stored as **editable** `Effective Recording *` fields (manual) |
+| Zoom Attendance | Lookups of those meeting Effective* fields; credit formulas applied |
+| Achievements / Shot Milestones | **No** `Parent Notification Enabled?` yet |
+
+See also: `C-025-config-linkage-design.md`, `C-027-implementation-prep-stage17.md`.
 
 ---
 
