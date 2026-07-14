@@ -83,14 +83,15 @@ flowchart LR
 flowchart TD
   HC[Homework Completions]
   VF[Video Feedback]
-  HC --> A063[063 Grade Band]
+  SA[Submission Assets] --> A020[020 Link/Create HC + GB]
+  A020 --> HC
   HC --> A061[061 Mark Reviewed?]
   HC --> A064[064 Base XP]
   HC --> A065[065 XP Event]
   HC --> A078[078 Parent Feedback Ready?]
   HC --> A071[071 Make email]
   A065 -->|sets Parent Feedback Ready| A071
-  VF --> A111[111 Grade Band]
+  VF --> A111[111 legacy / absorb into 013]
   VF --> A113[113 Base XP]
   VF --> A114[114 XP Event]
   VF --> A073[073 Make email]
@@ -102,8 +103,8 @@ flowchart TD
 | 065 → 071 | 065 already arms Parent Feedback Ready — **078 likely redundant** |
 | 064 ≠ 065 | Prep vs award — do not merge |
 | 113 ≠ 114 | Same |
-| 013 → 111 | 013 already copies Grade Band — **111 backfill candidate** |
-| 020 → 063 | Same pattern |
+| 013 → 111 | 013 path may already cover — **C2 absorb candidate** |
+| **020 ← 063** | Phase C1 COMPLETE — GB repair in 020; 063 deleted |
 
 ---
 

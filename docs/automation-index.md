@@ -42,8 +42,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep | `020-homework-link-or-create-homework-completion.js` |
-| 063 | Homework Review — Copy Enrollment Grade Band to Homework Completion | *confirm in Airtable* | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` |
+| **020** | Homework — Link or Create Homework Completion (+ Grade Band repair; Phase C1) | Submission Assets when homework asset ready | `020-homework-link-or-create-homework-completion.js` |
+| 063 | Homework Review — Copy Enrollment Grade Band to Homework Completion | **DELETED** Phase C1 | library stub · rollback `_rollback/phase-c1-020-063-2026-07-14/` |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready (created / Processing Status Pending, Enrollment set) | `067-homework-link-or-create-completion-from-reflection-quiz.js` |

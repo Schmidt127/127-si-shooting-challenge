@@ -90,8 +90,9 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 008 | Mark XP Processing | **N** | Y stale | — | — | — | — | Rename only | Replaced by **116** |
 | 009 | Create Submission Assets | Y | Y | Y | ? | Submissions | — | Keep separate | High risk path |
 | 010 | Create XP Event from Submission | Y | Y | Y | ? | Submissions | — | Keep separate | Core XP |
-| 013 | Create or Link Video Feedback | Y | Y | Y | ? | Submission Assets | — | Keep separate | Absorb 111 |
-| 020 | Link/Create Homework Completion | Y | Y | Y | ? | Submission Assets | — | Keep separate | Absorb 063 |
+| 013 | Create or Link Video Feedback | Y | Y | Y | ? | Submission Assets | — | Keep separate | Absorb 111 (C2) |
+| 020 | Link/Create HC + GB | Y | Y | Y | ON | Submission Assets | Absorbed 063 | Keep separate (combined) | Phase C1 COMPLETE |
+| 063 | Copy Grade Band → HW | library | — | — | deleted | — | →020 | LIBRARY | Phase C1 |
 | 021 | Set Attachment Upload Status | Y | Y | Y | ? | Submissions | — | Combine safely | ←006 |
 | 022 | Sync Child Upload Writeback | Y | **N** | Y | ? | Submission Assets | Make/S3 writeback | Keep separate | Reconciled add |
 | 023 | Assign Enrollment to Submission | Y | Y | Y | ? | Submissions | — | Keep separate | |
@@ -113,7 +114,6 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 058 | Perfect Week Unlock | Y | Y | Y | Mike list | WAS | — | Keep separate | ≠057 |
 | 059 | XP from Achievement Unlock | Y | Y | Y | Mike list | Unlocks | — | Keep separate | |
 | 061 | Mark HW Reviewed | Y | Y | **N** | Mike list | Homework Completions | — | Keep separate | Required; GH gap — not deletable |
-| 063 | Copy Grade Band → HW | Y | Y | Y | Mike list | Homework Completions | — | Combine with conditions | →020 |
 | 064 | Assign Base Homework XP | Y | Y | Y | Mike list | Homework Completions | — | Keep separate | ≠065 |
 | 065 | Create Homework XP Event | Y | Y | Y | Mike list | Homework Completions | — | Keep separate | ≠064 |
 | 066 | Shot Milestone Unlocks | Y | Y | Y | Mike list | Enrollments | — | Keep separate | V2 reference |

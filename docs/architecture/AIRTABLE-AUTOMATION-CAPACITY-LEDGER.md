@@ -31,14 +31,15 @@
 | Pre–Phase A | **50** | **0** | Mike |
 | **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
 | **After Phase B (COMPLETE)** | **48 estimated** | **2 estimated** | Combined 030; **032** + **033** deleted. No visible Airtable counter — inventory math |
-| **Phase C1 (IN PROGRESS)** | 48 → **47 est** after 063 | 2 → **3 est** | Combined 020 GitHub v3.0.0; awaiting Mike paste + retire 063 |
-| After Phase C (063→020, 111→013) | **46** | **4** | Absorb copies |
+| **After Phase C1 (COMPLETE)** | **47 estimated** | **3 estimated** | Combined 020; **063** deleted (Mike UI) |
+| After Phase C2 (111→013) | **46 estimated** | **4 estimated** | Absorb 111 into 013 |
+| After Phase C (full: C1+C2) | **46** | **4** | 063→020 + 111→013 |
 | After Phase D (072∪074) | **45** | **5** | **Target met** |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count (post Phase B) | **48 estimated / 2 free estimated** (no visible Airtable automations counter; authoritative 50-item inventory − 032 − 033) |
+| Current count (post Phase C1) | **47 estimated / 3 free estimated** (no visible Airtable counter; inventory − 032 − 033 − 063) |
 | Proposed target (post Phase A–D) | **45** |
 | Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
@@ -60,7 +61,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 009 | Create Submission Assets | | Y | — | Keep separate |
 | 010 | Create XP Event | | Y | — | Keep separate |
 | 013 | Create/Link Video Feedback | | Y | — | Keep separate (absorb 111 later) |
-| 020 | Link/Create Homework Completion | | Y | — | Keep separate (absorb 063 later) |
+| 020 | Link/Create HC + GB repair | **ON** | Y | Absorbed **063** | Keep separate (combined) — Phase C1 COMPLETE |
 | 021 | Attachment Status + Video Count | ON | Y | Absorbed **006** | Keep separate (combined) |
 | 022 | Sync Child Upload Writeback | | Y | — | Keep separate |
 | 023 | Assign Enrollment | | Y | — | Keep separate |
@@ -80,7 +81,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 058 | Perfect Week Unlock | | Y | — | Keep separate |
 | 059 | XP from Unlock | | Y | — | Keep separate |
 | 061 | Mark HW Reviewed | | N* | **No** explicit replacement | **Keep separate** (required; investigate GH gap) |
-| 063 | Copy GB → HC | | Y | Absorb into **020** (create-time) | **Combine with conditions** → 020 |
+| 063 | Copy GB → HC | — | library | Replaced by **020** | **LIBRARY** — deleted from DEV UI |
 | 064 | Base Homework XP | | Y | — | Keep separate |
 | 065 | Homework XP Event | | Y | — | Keep separate (arms Parent Feedback Ready) |
 | 066 | Shot Milestone Unlocks | | Y | — | Keep separate |
@@ -135,7 +136,9 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase B COMPLETE 2026-07-14:** combined 030 live; smoke PASS; **032** + **033** deleted; DEV **48 estimated / 2 free** (Airtable exposes **no visible** automations counter — count from inventory).
 
-**Next recommended:** Phase C — [`PHASE-C-063-020-111-013-bootstrap-plan.md`](../deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md) (063→020, 111→013, +2 → 4 free).
+**Phase C1 COMPLETE 2026-07-14:** combined 020 v3.0.0 live; post-paste smoke PASS; **063** deleted; DEV **47 estimated / 3 free**.
+
+**Next recommended:** Phase C2 — [`PHASE-C2-111-013-bootstrap-plan.md`](../deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md) (111→013, +1 → 4 free). Do not start until Mike authorizes.
 
 ---
 
@@ -145,7 +148,8 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 |------|-------|--:|---------------:|
 | A | 006∪021 then +117 | 0 net | 0 |
 | B | WAS 030∪032∪033 | +2 | **2** (COMPLETE) |
-| C | 063→020 | +1 | 3 |
+| C | 063→020 (C1) | +1 | **3** (COMPLETE) |
+| C2 | 111→013 | +1 | 4 |
 | D | 111→013 | +1 | 4 |
 | E | 072∪074 | +1 | **5** ✓ |
 

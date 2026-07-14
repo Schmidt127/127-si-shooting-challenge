@@ -1,10 +1,11 @@
 # Phase C plan — absorb 063→020 and 111→013
 
-**Status:** **C1 AUTHORIZED** 2026-07-14 — GitHub combined 020 ready; Mike paste required · **C2 not authorized**  
-**Depends on:** Phase B COMPLETE — DEV **48 estimated / 2 free** (no visible Airtable counter)  
-**Target:** Free **+1** from C1 (063→020); C2 later for another +1  
-**After C1:** DEV **47 estimated / 3 free**  
-**Mike UI:** `docs/deploy-checklists/PHASE-C1-063-020-mike-ui-actions.md`
+**Status:** **C1 COMPLETE** 2026-07-14 · **C2 recommendation only — not authorized**  
+**Depends on:** Phase B COMPLETE — DEV was **48 estimated / 2 free**; now **47 / 3** after C1  
+**Target:** Free **+1** more from C2 (111→013) after C1's +1  
+**After C1+C2:** DEV **46 estimated / 4 free**  
+**C1 closeout:** `docs/overnight-runs/results/S24-phase-c1-closeout.md`  
+**C2 plan:** `docs/deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md`
 
 ---
 

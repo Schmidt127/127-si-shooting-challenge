@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S24 Phase C1 COMPLETE (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| 063 | **Deleted** |
+| Count | **47 estimated / 3 free** (no visible Airtable counter) |
+| 117 | Remains **OFF** |
+| Folder 07 | Unchanged |
+| Next | Authorize Phase **C2** (111→013) — plan ready; do not start until instructed |
+| Docs | `S24-phase-c1-closeout.md`, `PHASE-C2-111-013-bootstrap-plan.md` |
+
 ## Milestone — S24 Phase C1 post-paste smoke PASS (2026-07-14)
 
 | Field | Value |
