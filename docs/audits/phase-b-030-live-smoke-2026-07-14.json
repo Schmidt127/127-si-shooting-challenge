@@ -1,0 +1,306 @@
+{
+  "started": "2026-07-14T16:52:00.399474-06:00",
+  "ended": "2026-07-14T16:53:35.099523-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "fixture_was": "recBO81w4dYtcaL4V",
+  "baseline": {
+    "enrollment": "recgP9qZYjAhE7NXm",
+    "week": "recUPkXtsDOHnY5q7",
+    "gb": "recK7BDVSpHy2ipCS",
+    "goal": "reczG19bSB6Aa3VbV",
+    "hw": [
+      "recHbROQu2tAtUzMg",
+      "reccGb6KbwG6lmeLs"
+    ],
+    "goal_target": [
+      2000
+    ],
+    "perfect_week_eligible": 0,
+    "prev_week": null,
+    "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+  },
+  "critical_pass": true,
+  "overall_pass": true,
+  "results": [
+    {
+      "name": "missing_grade_band_only",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "missing_goal_only",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "missing_homework_only",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "multi_step_all_three",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "already_correct_stable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "before": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        },
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "repeated_goal_restore_idempotent",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "first": "reczG19bSB6Aa3VbV",
+        "second": "reczG19bSB6Aa3VbV"
+      }
+    },
+    {
+      "name": "formula_goal_shots_target_populated",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "goal": "reczG19bSB6Aa3VbV",
+        "goal_shots_target": [
+          2000
+        ]
+      }
+    },
+    {
+      "name": "fresh_was_bootstrap",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "was_id": "recZDAf0wMcw5gBmx",
+        "created": false,
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recrTwxqXz31fNZ7e",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "rec1KJZYvonmdZGZ7",
+            "rec8oexrgOV5OWCRw"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recrTwxqXz31fNZ7e"
+        }
+      }
+    },
+    {
+      "name": "fresh_was_goal_matches_challenge_goal",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "expected_goal": "reczG19bSB6Aa3VbV",
+        "got": "reczG19bSB6Aa3VbV"
+      }
+    },
+    {
+      "name": "031_links_or_finds_was",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "submission": "recF28NVoPloUkFm8",
+        "was": "recZDAf0wMcw5gBmx",
+        "state": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recrTwxqXz31fNZ7e",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "rec1KJZYvonmdZGZ7",
+            "rec8oexrgOV5OWCRw"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recrTwxqXz31fNZ7e"
+        }
+      }
+    },
+    {
+      "name": "031_adjacent_bootstrap_populated",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "was": "recZDAf0wMcw5gBmx",
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recrTwxqXz31fNZ7e",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "rec1KJZYvonmdZGZ7",
+            "rec8oexrgOV5OWCRw"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recrTwxqXz31fNZ7e"
+        }
+      }
+    },
+    {
+      "name": "adjacent_perfect_week_field_readable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "perfect_week_eligible": 0,
+        "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+      }
+    },
+    {
+      "name": "fixture_restored",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "gb": "recK7BDVSpHy2ipCS",
+          "goal": "reczG19bSB6Aa3VbV",
+          "hw": [
+            "recHbROQu2tAtUzMg",
+            "reccGb6KbwG6lmeLs"
+          ],
+          "goal_target": [
+            2000
+          ],
+          "perfect_week_eligible": 0,
+          "prev_week": null,
+          "summary_key": "ATH-recgqVstObQRzgXJF|2025-2026|recUPkXtsDOHnY5q7"
+        }
+      }
+    },
+    {
+      "name": "duplicate_prevention_stable_ids",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "hw": [
+          "recHbROQu2tAtUzMg",
+          "reccGb6KbwG6lmeLs"
+        ],
+        "goal": "reczG19bSB6Aa3VbV"
+      }
+    }
+  ],
+  "032_033_still_on": true,
+  "note": "Dual-run with 032/033 ON is expected until Mike retires them after PASS."
+}

@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S23 Phase B live smoke PASS (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Combined 030 | Live; smoke **CRITICAL PASS** |
+| 032 / 033 | Still ON — retire next |
+| Evidence | `phase-b-030-live-smoke-2026-07-14.json`, `S23-phase-b-live-smoke-result.md` |
+| Next | Mike deletes **032** + **033** → **48/50** · reply **Phase B UI complete** |
+| Untouched | 117 · Folder 07 OFF · PROD |
+
 ## Milestone — S23 Phase B GitHub ready / Mike UI stop (2026-07-14)
 
 | Field | Value |

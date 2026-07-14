@@ -1,9 +1,14 @@
 # S23 / Phase B — migration record (030∪032∪033)
 
-**Date:** 2026-07-14  
-**Package:** `phase-b-was-030-032-033`  
+**Status:** Live smoke **CRITICAL PASS** 2026-07-14 — awaiting Mike retire 032+033  
 **Base:** DEV `appTetnuCZlCZdTCT`  
-**Status:** GitHub ready — awaiting Mike UI paste into surviving **030**
+
+## Live smoke
+
+Harness: `tools/airtable/phase_b_030_live_smoke_suite.py`  
+JSON: `docs/audits/phase-b-030-live-smoke-2026-07-14.json`  
+Result: `docs/overnight-runs/results/S23-phase-b-live-smoke-result.md`  
+**Verdict: CRITICAL PASS** (GB/Goal/HW single+multi, idempotent, formula target, fresh WAS, 031 path, fixture restore)
 
 ## What changed (GitHub)
 

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T16:45:00-06:00",
+  "updated_at": "2026-07-14T17:05:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "32d0fcb552f5386a0a91b5ac855593d331ab0ec7",
@@ -908,9 +908,12 @@
         "docs/deploy-checklists/PHASE-B-030-032-033-mike-ui-actions.md",
         "docs/overnight-runs/results/S23-phase-b-migration-record.md",
         "docs/overnight-runs/stages/S23-AUTHORIZED.md",
-        "tools/airtable/tests/test_phase_b_030_combined.py"
+        "tools/airtable/tests/test_phase_b_030_combined.py",
+        "docs/audits/phase-b-030-live-smoke-2026-07-14.json",
+        "docs/overnight-runs/results/S23-phase-b-live-smoke-result.md",
+        "tools/airtable/phase_b_030_live_smoke_suite.py"
       ],
-      "notes": "AUTHORIZED. GitHub combined v1.0.0 + rollback + offline 14/14. STOPPED for Mike UI paste into 030. 032/033 stay ON until smoke PASS. Do not touch 117/Folder07/PROD."
+      "notes": "Live smoke CRITICAL PASS. Combined 030 proven. Next: Mike retire 032+033 then reply Phase B UI complete. Do not touch 117/Folder07/PROD."
     }
   ],
   "stage": {
@@ -921,11 +924,11 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T16:40:00-06:00",
+    "last_run_at": "2026-07-14T17:00:00-06:00",
     "phase_b_offline": "14/14",
-    "phase_b_live_smoke": "pending Mike paste",
+    "phase_b_live_smoke": "CRITICAL PASS",
     "pass": true
   },
-  "next_action": "Mike: paste combined 030 per PHASE-B-030-032-033-mike-ui-actions.md. Leave 032/033 ON for dual-run smoke. Reply Phase B UI complete after 032+033 retired and 48/50 confirmed.",
+  "next_action": "Mike: retire DEV automations 032 and 033 after live smoke PASS. Confirm 48/50 (2 free). Reply Phase B UI complete. Leave 117 OFF.",
   "stop_reason": null
 }
