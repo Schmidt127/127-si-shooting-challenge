@@ -133,7 +133,8 @@ def gate_credit(
     if attendance_method == "Live":
         return True
     if attendance_method == "Recording Quiz":
-        return cfg_bool_default_true(effective_full_gate)
+        # Live DEV rule (Mike 2026-07-13): only when Effective Level Gate is checked.
+        return bool(effective_full_gate)
     return False
 
 
@@ -247,8 +248,8 @@ class TestC025FormulaRepairXpAndGate(unittest.TestCase):
             )
         )
 
-    def test_blank_gate_config_defaults_true(self):
-        self.assertTrue(
+    def test_blank_gate_config_defaults_false(self):
+        self.assertFalse(
             gate_credit(
                 attendance_method="Recording Quiz",
                 approved=True,

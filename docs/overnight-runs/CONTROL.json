@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-13T19:26:00-06:00",
+  "updated_at": "2026-07-13T21:05:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "461e6ab58071f3c3a7cc3d863ea90b01adb8bbd0",
@@ -511,8 +511,8 @@
       },
       "claimed_by": null,
       "completed_at": null,
-      "runbook": "docs/deploy-checklists/C-025-dev-omni-runbook-stage12.md",
-      "notes": "Formula repair package ready \u2014 run OMNI repair prompt before award automations"
+      "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
+      "notes": "OMNI retired for this task. Manual UI paste: C-025-Zoom-Recording-Manual-Airtable-Repair.md. Cursor inspected DEV; schema writes 403."
     },
     {
       "id": "C-027-dev-omni-implementation",
@@ -561,8 +561,35 @@
       "deliverables": [
         "docs/deploy-checklists/C-025-Zoom-Recording-Formula-Repair.md",
         "docs/deploy-checklists/C-025-Zoom-Recording-OMNI-Repair-Prompt.md",
-        "tools/airtable/tests/test_c025_zoom_attendance_formula_repair.py"
-      ]
+        "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
+        "tools/airtable/tests/test_c025_zoom_attendance_formula_repair.py",
+        "tools/airtable/_c025_dev_zoom_credit_repair.py"
+      ],
+      "notes": "Repo paste package + live-name inventory updated. Airtable formula install pending Mike UI (Cursor API 403)."
+    },
+    {
+      "id": "C-025-dev-manual-formula-paste",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "BLOCKED_OWNER",
+      "priority": 13,
+      "depends_on": [
+        "C-025-zoom-recording-formula-repair"
+      ],
+      "auth": "explicit_mike",
+      "est_minutes": 45,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": null,
+      "completed_at": null,
+      "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
+      "notes": "Mike paste helpers+formulas in DEV UI. Cursor cannot Meta-write. Config\u2192Effective linkage still out of scope."
     }
   ],
   "stage": {
@@ -573,12 +600,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-13T19:25:00-06:00",
-    "lambda": "66/66",
-    "offline": "97/97",
-    "targeted": "29/29 c025 formula+config",
+    "last_run_at": "2026-07-13T21:05:00-06:00",
+    "lambda": "deferred",
+    "offline": "deferred",
+    "targeted": "14/14 c025 formula contract (gate blank=false)",
+    "live_dev_survey": "0/5 pass \u2014 formulas still broken / helpers missing",
     "pass": true
   },
-  "next_action": "Mike/OMNI: paste C-025-Zoom-Recording-OMNI-Repair-Prompt.md in DEV. Then validate checklist. No Cursor Airtable.",
+  "next_action": "Mike (Airtable UI, no OMNI): follow docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md \u2014 create rollup+lookup, paste formulas, Schmidt tests. Cursor PAT lacks schema.bases:write (403). Then ask Cursor to re-verify.",
   "stop_reason": null
 }

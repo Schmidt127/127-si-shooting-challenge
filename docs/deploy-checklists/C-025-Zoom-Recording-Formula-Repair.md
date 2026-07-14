@@ -1,15 +1,31 @@
 # C-025 — Zoom Recording formula repair (DEV)
 
-**Status:** Repo-only paste package — **do not recreate broken fields**; **do not touch PROD**; **no automations**  
+**Status:** Live DEV inspected 2026-07-13 — helpers still incomplete; Cursor Meta API **cannot write** schema (`403`, no `schema.bases:write`).  
+**Execute paste in Airtable UI via:** [C-025-Zoom-Recording-Manual-Airtable-Repair.md](./C-025-Zoom-Recording-Manual-Airtable-Repair.md)  
+**Do not recreate broken fields**; **do not touch PROD**; **no automations**; **OMNI not used**.  
 **Canonical Lead:** `overnight/lead-integration`  
-**Authority:** Stage 16 config catalog + Mike DEV findings (2026-07-13)  
-**Base confirmation:** Schema snapshots do **not** yet include table `Zoom Attendance` (built in DEV after last export). Field names below combine:
+**Authority:** Stage 16 config catalog + Mike DEV findings + live Meta inspect (2026-07-13)  
+**DEV base:** `appTetnuCZlCZdTCT`
 
-1. Mike’s confirmed DEV findings  
-2. Catalog Config / Zoom Meetings names  
-3. Snapshot-confirmed RID helpers on Enrollments / Zoom Meetings / Weeks  
+### Live name map (use these — not catalog aliases)
 
-If OMNI sees a different name, **stop and report mismatch** — do not invent alternate formulas.
+| Role | Live DEV name |
+|------|----------------|
+| Enrollment record id | `Enrollment RID` |
+| Zoom Meeting record id | `Zoom Meeting RID` |
+| Live confirmed | `Live Attendance Confirmed?` |
+| Quiz review | `Recording Quiz Review Status` |
+| Quiz satisfactory | `Recording Quiz Satisfactory?` |
+| Recording XP % | `Effective Recording XP Percentage` |
+| Gate credit toggle | `Effective Recording Counts for Level Gate?` |
+| Coach approval toggle | `Effective Recording Quiz Requires Coach Approval?` |
+| Inverse link on Zoom Meetings | `Zoom Attendance` |
+
+**Mike already created (do not recreate):** `Zoom Credit Pre-Approved?`, `Preconflict Pair Tag`.
+
+**Config linkage:** `Effective Recording *` remain **meeting-level editable values**. Do **not** claim Config → Effective is complete.
+
+**Still missing on live DEV:** Zoom Meetings `Approved Preconflict Pair Tags` (rollup); Zoom Attendance `Meeting Approved Preconflict Pair Tags` (lookup).
 
 ---
 
@@ -352,16 +368,18 @@ Notes:
 
 ### 4.3 `Preconflict Pair Tag` (single line text formula)
 
+**Already created by Mike in DEV — do not recreate.** Canonical paste if ever needed:
+
 ```airtable
 IF(
   {Zoom Credit Pre-Approved?} = 1,
   IF(
     OR(
-      {Enrollment Record Id} = BLANK(),
-      {Zoom Meeting Record Id} = BLANK()
+      {Enrollment RID} = BLANK(),
+      {Zoom Meeting RID} = BLANK()
     ),
     BLANK(),
-    {Enrollment Record Id} & "|" &
+    {Enrollment RID} & "|" &
       IF({Attendance Method} = "Live", "LIVE", "REC")
   ),
   BLANK()
@@ -370,16 +388,16 @@ IF(
 
 ### 4.4 `Zoom Credit Key` (single line text formula)
 
-Attendance method is **not** part of the key.
+Attendance method is **not** part of the key. Live names: `Enrollment RID`, `Zoom Meeting RID`.
 
 ```airtable
 IF(
   OR(
-    {Enrollment Record Id} = BLANK(),
-    {Zoom Meeting Record Id} = BLANK()
+    {Enrollment RID} = BLANK(),
+    {Zoom Meeting RID} = BLANK()
   ),
   BLANK(),
-  "ZOOM_CREDIT|" & {Enrollment Record Id} & "|" & {Zoom Meeting Record Id}
+  "ZOOM_CREDIT|" & {Enrollment RID} & "|" & {Zoom Meeting RID}
 )
 ```
 
@@ -388,14 +406,20 @@ IF(
 ```airtable
 IF(
   OR(
-    {Enrollment Record Id} = BLANK(),
+    {Enrollment RID} = BLANK(),
     {Meeting Approved Preconflict Pair Tags} = BLANK()
   ),
   0,
   IF(
     AND(
-      FIND({Enrollment Record Id} & "|LIVE", {Meeting Approved Preconflict Pair Tags} & "") > 0,
-      FIND({Enrollment Record Id} & "|REC", {Meeting Approved Preconflict Pair Tags} & "") > 0
+      FIND(
+        {Enrollment RID} & "|LIVE",
+        {Meeting Approved Preconflict Pair Tags} & ""
+      ) > 0,
+      FIND(
+        {Enrollment RID} & "|REC",
+        {Meeting Approved Preconflict Pair Tags} & ""
+      ) > 0
     ),
     1,
     0
@@ -433,9 +457,9 @@ IF(
       IF(
         {Attendance Method} = "Recording Quiz",
         IF(
-          {Effective Zoom Recording XP Percent of Live} = BLANK(),
+          {Effective Recording XP Percentage} = BLANK(),
           50,
-          {Effective Zoom Recording XP Percent of Live}
+          {Effective Recording XP Percentage}
         ),
         0
       )
@@ -463,6 +487,9 @@ IF(
 
 ### 4.9 `Zoom Gate Credit Earned?` (checkbox formula)
 
+Live DEV field: `Effective Recording Counts for Level Gate?` (not catalog `Effective Recording Gives Full Zoom Gate Credit?`).  
+Recording Quiz earns gate credit **only when that field is checked**.
+
 ```airtable
 IF(
   {Zoom Credit Conflict?} = 1,
@@ -476,10 +503,7 @@ IF(
       IF(
         AND(
           {Attendance Method} = "Recording Quiz",
-          OR(
-            {Effective Recording Gives Full Zoom Gate Credit?} = BLANK(),
-            {Effective Recording Gives Full Zoom Gate Credit?} = 1
-          )
+          {Effective Recording Counts for Level Gate?} = 1
         ),
         1,
         0
@@ -489,27 +513,35 @@ IF(
 )
 ```
 
-(Blank gate-config → **true** per catalog fallback.)
-
 ### 4.10 `Zoom Credit Debug` (single line / long text formula)
 
 ```airtable
 "Method=" & {Attendance Method} &
-" | LiveConfirmed=" & IF({Live Confirmed?} = 1, "Y", "N") &
-" | Review=" & {Review Status} &
-" | PreApproved=" & IF({Zoom Credit Pre-Approved?} = 1, "Y", "N") &
-" | Conflict=" & IF({Zoom Credit Conflict?} = 1, "Y", "N") &
-" | Approved=" & IF({Zoom Credit Approved?} = 1, "Y", "N") &
+" | LiveConfirmed=" &
+IF({Live Attendance Confirmed?} = 1, "Y", "N") &
+" | Review=" & {Recording Quiz Review Status} &
+" | Satisfactory=" &
+IF({Recording Quiz Satisfactory?} = 1, "Y", "N") &
+" | PreApproved=" &
+IF({Zoom Credit Pre-Approved?} = 1, "Y", "N") &
+" | Conflict=" &
+IF({Zoom Credit Conflict?} = 1, "Y", "N") &
+" | Approved=" &
+IF({Zoom Credit Approved?} = 1, "Y", "N") &
 " | Pct=" & {Zoom XP Percentage} &
 " | XP=" & {Zoom XP Amount} &
-" | Gate=" & IF({Zoom Gate Credit Earned?} = 1, "Y", "N") &
+" | Gate=" &
+IF({Zoom Gate Credit Earned?} = 1, "Y", "N") &
 " | Key=" & {Zoom Credit Key} &
-" | EnrollRID=" & {Enrollment Record Id} &
-" | MeetingRID=" & {Zoom Meeting Record Id} &
-" | EffPct=" & {Effective Zoom Recording XP Percent of Live} &
-" | EffGate=" & {Effective Recording Gives Full Zoom Gate Credit?} &
-" | EffCoach=" & {Effective Recording Quiz Requires Coach Approval?} &
-" | Deadline=" & {Calculated Recording Quiz Deadline}
+" | EnrollmentRID=" & {Enrollment RID} &
+" | MeetingRID=" & {Zoom Meeting RID} &
+" | EffectivePct=" & {Effective Recording XP Percentage} &
+" | EffectiveGate=" &
+{Effective Recording Counts for Level Gate?} &
+" | EffectiveCoachApproval=" &
+{Effective Recording Quiz Requires Coach Approval?} &
+" | Deadline=" &
+{Calculated Recording Quiz Deadline}
 ```
 
 ---
@@ -522,7 +554,7 @@ IF(
 | Makeup days blank | Deadline uses **7** |
 | Deadline mode blank | **Later of Both** |
 | Recording XP % blank | **50** |
-| Gate credit config blank | Gate credit **allowed** |
+| Gate credit config blank / unchecked | Gate credit **not** earned on Recording Quiz (must be checked) |
 | Coach approval config blank | Approval **required** (Satisfactory) |
 | Conflict helpers blank | Conflict = false (OMNI must report helpers incomplete) |
 | Conflict true | XP % = 0, XP Amount = 0, Gate = false, Approved = false |
