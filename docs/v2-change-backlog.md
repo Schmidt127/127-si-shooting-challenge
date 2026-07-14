@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | **DECIDED (2026-07-13):** recording = **50% live Zoom XP**; **full level-gate credit**; **mutually exclusive** with live for same meeting. **Proof (OD-1 locked 2026-07-13):** Zoom Recording Quiz (HW17-style reusable short answers) → **Needs Review** → coach **Satisfactory** before credit; resubmits allowed with history; XP once via `ZRQ\|…` / `ZOOM_RECORDING\|…`; **no** parent attestation; **no** click-link-only proof. **Design package S12 COMPLETE** + quiz-proof amendment: [C-025-zoom-recording-design-stage12.md](./deploy-checklists/C-025-zoom-recording-design-stage12.md). **Today still:** **101** = live attendees only. **Next:** remaining OD-2…OD-7 optional → Airtable/automation implementation (separate package; not from Cursor unattended). | C-024, V2-006, V2-005 | design complete / quiz proof locked |
+| **C-025** | Zoom **recording** attendance — partial credit path | **Owner decisions APPROVED (2026-07-13 S16):** Zoom Recording Quiz proof → coach Satisfactory; XP = **configurable % of live** (default 50, Config); full gate credit configurable (default on); exclusivity on Enrollment+Meeting RIDs; makeup window configurable (default 7 days, mode Later of Both); Perfect Week credit configurable (default on); parent email only after Satisfactory (configurable); no recording bonus; preserve stable Source Keys. **Config-driven:** [C-025-C-027-configuration-catalog-stage16.md](./deploy-checklists/C-025-C-027-configuration-catalog-stage16.md). **Design:** [C-025-zoom-recording-design-stage12.md](./deploy-checklists/C-025-zoom-recording-design-stage12.md). **Next:** DEV OMNI field create + automation — **not** from Cursor. | C-024, V2-006, V2-005 | decisions approved / OMNI blocked |
 
 ### Wave 10 — Communication & website
 
@@ -195,7 +195,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-008** | Game manual | Published from config tables before Day 1 | Wave 9 | queued |
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
-| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **DECIDED (2026-07-13):** first version → **parents**; events: **level up**, **major shot milestone**, **Perfect Week**, **major streak milestone**. **No** daily-submission notifications. **Do not** alter **071** homework or video feedback notifications. **Design package S13 COMPLETE (2026-07-13):** [C-027-major-event-notifications-design-stage13.md](./deploy-checklists/C-027-major-event-notifications-design-stage13.md) + offline send-key tests. Channel/provider (SMS vs email), opt-in, templates still OD. Idempotent `MEN\|…` send key per **C-024**. | C-010, C-024, V2-008 | design complete / OD pending |
+| **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Owner decisions APPROVED (2026-07-13 S16):** parents; channel **Email** first (configurable); eligibility = Active? + existing comms exclusions; timing **Immediate** default (configurable); streaks/shot majors from rule `Parent Notification Enabled?` (seed 10/20/30/40/50/60); events = level up / major shot / Perfect Week / major streak; no daily; no **071**/video changes. **Config-driven:** [C-025-C-027-configuration-catalog-stage16.md](./deploy-checklists/C-025-C-027-configuration-catalog-stage16.md). **Design:** [C-027-major-event-notifications-design-stage13.md](./deploy-checklists/C-027-major-event-notifications-design-stage13.md). **Next:** DEV OMNI — **not** from Cursor. | C-010, C-024, V2-008 | decisions approved / OMNI blocked |
 | **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **2025–26 manual phase done** — 10 newspaper packets + 12 radio kits sent **2026-07-05**. Platform automation (config-driven generate) remains future work. | C-013, C-022, Wave 0 close-out | **done** (2025–26) / queued (platform) |
 
 ### Wave 11 — Launch gate
@@ -223,8 +223,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | 6 | **Enrollment controls (two-field model)** | **`Active?`** controls normal **visibility** and **communications**. **`Progress Processing Enabled?`** controls whether **progress calculations** continue. Reactivated athletes can catch up without losing hidden progress. **No schema implementation yet** — design approved only. | **C-010**, Enrollments table |
 | 7 | **Schmidt test enrollment** | Run **full pipeline**. Exclude from **public output** and **real-family communications**. **Do not** add `Is Test Record` fields to ordinary pipeline tables. | **C-019**, **C-020**, views/filters |
 | 8 | **Tutorials tables** | **`Tutorials`** is the **likely canonical** table. **Do not** merge, move, delete, retire, or modify **either** Tutorials table yet. | **C-026** → **blocked** (owner discussion + inspection pending) |
-| 9 | **Zoom recording** | Recording watch earns **50% of live Zoom XP** and **full level-gate credit**. Athlete **cannot** receive both live and recording credit for the same meeting. **Proof:** Zoom Recording Quiz (reusable short answers; HW17-like) linked to Enrollment + Zoom Meeting → **Needs Review** → coach marks **Satisfactory** before credit. Resubmissions allowed with preserved history; XP once (stable Enrollment+Meeting key). **No** parent attestation. **No** credit from clicking the recording link alone. | **C-025**, **101**, XP Reward Rules, Level Gate Rules |
-| 10 | **Major-event notifications** | **First version → parents.** Events: level up, major shot milestone, Perfect Week, major streak milestone. **No** new ordinary daily-submission notifications. **Do not** alter existing homework (**071**) or video feedback notifications. | **C-027** |
+| 9 | **Zoom recording** | **APPROVED full ops (2026-07-13):** Quiz proof (HW17-style) → coach Satisfactory; XP = **Config % of live** (default 50); full gate credit **Config** (default on); exclusivity Enrollment+Meeting RIDs; makeup **Config days** (default 7) + deadline mode (default Later of Both); Perfect Week credit **Config** (default on); coach approval required **Config** (default on); parent email only after Satisfactory **Config**; no extra bonus; migrate preserving Source Key identity. **All tunable values Config/rules — not hardcoded in scripts.** | **C-025**, **Config**, **XP Reward Rules**, **101** |
+| 10 | **Major-event notifications** | **APPROVED full ops (2026-07-13):** Parents; channel Email first (Config); Active? eligibility; timing Immediate default (Config); streak/shot notify flags on **Achievements** / **Shot Milestones** (seed streaks 10–60); events level up / major shot / Perfect Week / major streak; no daily; no **071**/video changes. **No hardcoded milestone lists in automations.** | **C-027**, **Config**, **Achievements**, **Shot Milestones** |
 | 11 | **Learning Activities architecture** | **Keep existing `Homework` table** as the official homework catalog. **Approved future structure:** `Homework` · `Learning Activities` · `Homework Completions` · `Learning Activity Responses`. Learning Activities may route Fillout questions, files, videos, quizzes, reflections, assessments, optional activities, and special assignments. May optionally link to Homework and count as homework, video submission, assessment, or more than one destination. **Do not implement Airtable schema yet.** First: audit Homework table + dependencies, document minimum proposed schema, present for owner approval. **Replaces any Homework 17–specific architecture.** | **C-009** successor · new backlog slice TBD |
 
 ### Blocked — owner design pending (no implementation)
@@ -275,9 +275,9 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 ### Zoom recording attendance (C-025)
 
 - Live path: **101** + `Attendees` link → full zoom XP + gate credit.
-- **Owner approved (2026-07-13):** recording = **50% live XP** + **full gate credit**; mutually exclusive with live for same meeting.
-- **Source Key** must distinguish `ZOOM_LIVE` vs `ZOOM_RECORDING` for same meeting + enrollment.
-- **Owner approved proof (2026-07-13):** Zoom Recording Quiz → Needs Review → coach Satisfactory; reusable short-answer bank OK; resubmits preserve history; XP once via Enrollment + Zoom Meeting key (`ZRQ|…` / `ZOOM_RECORDING|…`); no parent attestation; no click-link-only proof.
+- **Owner approved ops (2026-07-13 S16):** quiz proof; configurable % XP / gate / PW / makeup / email; exclusivity on Enrollment+Meeting; config catalog mandatory.
+- **Source Key** distinguishes `ZOOM_LIVE` vs `ZOOM_RECORDING` for same meeting + enrollment; preserve identity on migration.
+- Catalog: [deploy-checklists/C-025-C-027-configuration-catalog-stage16.md](./deploy-checklists/C-025-C-027-configuration-catalog-stage16.md).
 
 ---
 
@@ -294,19 +294,19 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ### Major-event notifications (C-027)
 
-**Owner approved (2026-07-13):** first version → **parents**. **In scope:**
+**Owner approved ops (2026-07-13 S16):** parents; Email channel first (Config); Immediate timing default (Config); eligibility via Active? + existing exclusions; major streaks/shots via `Parent Notification Enabled?` on rule rows (seed 10/20/30/40/50/60); idempotent `MEN|…` keys (**C-024**).
 
 | Event | Trigger | Not in scope |
 |-------|---------|--------------|
 | Level up | **042** level assignment change | Daily shooting XP (**010**) |
-| Major shot milestone | **066** → **059** | Homework submitted |
+| Major shot milestone | **066** → **059** + notify flag | Homework submitted |
 | Perfect Week | **058** | Routine coach feedback |
-| Major streak milestone | **054** | **071** homework email (unchanged) |
+| Major streak milestone | **054** + Achievement notify flag | **071** homework email (unchanged) |
 | | | Video feedback notifications (unchanged) |
 
 **Out of scope:** daily submissions; changes to **071** or video feedback flows.
 
-**Still TBD:** channel (SMS vs email), opt-in, templates, idempotent send key (**C-024**).
+**Next:** DEV OMNI Config/Achievements/Shot Milestones fields — not Cursor unattended.
 
 ---
 
@@ -359,6 +359,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 | Date | Notes |
 |------|-------|
+| 2026-07-13 | C-025/C-027 full ops approved + **configuration-driven** architecture (S16 catalog); reusable Config / XP Reward Rules / Achievements / Shot Milestones; OMNI impl blocked |
 | 2026-07-13 | Owner business decisions approved — dedupe/backfill/achievement rules; two-field enrollment (`Active?` + `Progress Processing Enabled?`); Schmidt test; Tutorials blocked; Zoom 50%/full gate; C-027 parent notifications; Learning Activities architecture (replaces HW17-specific); C-009 blocked pending schema approval |
 | 2026-07-05 | Wave 0 closed; H-001 audit fix; H-002 066 v3.1 V2 standard; V2-013 Program Instance queued; V2-001 deferred; V2-028 2025–26 media done |
 | 2026-07-04 | C-026 Tutorials table merge; C-027 major-event SMS notifications (discussion) |
