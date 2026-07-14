@@ -1,11 +1,23 @@
 ﻿# Unattended run status
 
+## Milestone — S24 Phase C1 GitHub ready / Mike UI stop (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Auth | Mike authorized **C1 only** (063→020) |
+| Repo | Combined **020 v3.0.0** + rollback + 063 library |
+| Offline | **10/10 PASS** |
+| Live | GB repair smoke **CRITICAL PASS** |
+| Stop | Mike paste into surviving **020**; leave 063 ON until PASS; then retire → **47 est / 3 free** |
+| Sheet | `PHASE-C1-063-020-mike-ui-actions.md` |
+| Untouched | C2 · 117 · Folder 07 OFF · PROD |
+
 ## Milestone — S23 Phase B COMPLETE (2026-07-14)
 
 | Field | Value |
 |-------|-------|
 | 032 / 033 | **Deleted** |
-| Count | **48/50** (2 free) |
+| Count | **48 estimated / 2 free** (no visible Airtable counter) |
 | 117 | Remains **OFF** |
 | Folder 07 | Unchanged |
 | Next | Authorize Phase C (063→020, 111→013) — plan ready |

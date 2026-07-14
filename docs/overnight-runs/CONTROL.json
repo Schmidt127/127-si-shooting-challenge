@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T17:10:00-06:00",
+  "updated_at": "2026-07-14T17:20:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "11be94356e1d11fde474234d3205119df3beac83",
@@ -8,10 +8,10 @@
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S24",
+    "package_id": "phase-c1-063-into-020",
+    "started_at": "2026-07-14T17:00:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -915,7 +915,7 @@
         "docs/overnight-runs/results/S23-phase-b-closeout.md",
         "docs/deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md"
       ],
-      "notes": "COMPLETE. Mike deleted 032+033. DEV 48/50 (2 free). 117 OFF. Folder 07 unchanged. Smoke PASS. Combined 030 v1.0.0."
+      "notes": "COMPLETE. Mike deleted 032+033. DEV 48 estimated / 2 free (no visible Airtable counter). 117 OFF. Folder 07 unchanged. Smoke PASS."
     },
     {
       "id": "phase-c-063-020-111-013",
@@ -923,7 +923,7 @@
         "V2-014",
         "C-025"
       ],
-      "state": "READY",
+      "state": "BLOCKED",
       "priority": 24,
       "depends_on": [
         "phase-b-was-030-032-033"
@@ -943,23 +943,58 @@
       "deliverables": [
         "docs/deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md"
       ],
-      "notes": "Next consolidation: 063->020 and 111->013 (+2 slots -> 4 free). Do not execute until Mike authorizes."
+      "notes": "C2 blocked until C1 accepted. Use phase-c1-063-into-020 for C1 only."
+    },
+    {
+      "id": "phase-c1-063-into-020",
+      "backlog_refs": [
+        "V2-014",
+        "C-025"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 24,
+      "depends_on": [
+        "phase-b-was-030-032-033"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": true,
+        "airtable": true,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [
+        "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js",
+        "airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-2026-07-14/",
+        "docs/deploy-checklists/PHASE-C1-063-020-mike-ui-actions.md",
+        "docs/overnight-runs/results/S24-phase-c1-migration-record.md",
+        "docs/overnight-runs/stages/S24-AUTHORIZED.md",
+        "tools/airtable/tests/test_phase_c1_020_combined.py",
+        "tools/airtable/phase_c1_020_live_smoke_suite.py",
+        "docs/audits/phase-c1-020-live-smoke-2026-07-14.json"
+      ],
+      "notes": "AUTHORIZED C1 only. GitHub 020 v3.0.0 + offline 10/10 + live GB smoke PASS. STOPPED for Mike paste into 020. Leave 063 ON until post-paste smoke. No C2."
     }
   ],
   "stage": {
-    "authorized": false,
-    "auth_doc": "docs/overnight-runs/stages/S23-AUTHORIZED.md",
+    "authorized": true,
+    "auth_doc": "docs/overnight-runs/stages/S24-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T17:00:00-06:00",
-    "phase_b_offline": "14/14",
-    "phase_b_live_smoke": "CRITICAL PASS",
-    "phase_b_ui_count": "48/50",
+    "last_run_at": "2026-07-14T17:15:00-06:00",
+    "phase_c1_offline": "10/10",
+    "phase_c1_live_smoke": "CRITICAL PASS (GB repair/adjacency; post-paste asset path pending)",
+    "phase_b_ui_count": "48 estimated / 2 free (no visible counter)",
     "pass": true
   },
-  "next_action": "Phase B COMPLETE (48/50, 2 free). Recommended next: Mike authorize Phase C (063->020, 111->013, +2). 117 remains OFF. No Airtable changes until authorized.",
+  "next_action": "Mike: paste combined 020 v3.0.0 per PHASE-C1-063-020-mike-ui-actions.md. Leave 063 ON for dual-run smoke. After PASS delete 063 and reply Phase C1 UI complete. Do not start C2.",
   "stop_reason": null
 }

@@ -11,7 +11,7 @@
 | Live smoke CRITICAL PASS | Done |
 | Automation **032** deleted | Done |
 | Automation **033** deleted | Done |
-| DEV Automations counter | **48/50** (2 free) |
+| DEV occupancy (estimated) | **48 / 2 free** (no visible Airtable counter) |
 | **117** | Remains **OFF** |
 | Folder 07 OFF autos | **Unchanged** |
 
@@ -31,7 +31,8 @@
 |--------|------:|-------|
 | Hard cap | 50 | ON+OFF consume |
 | After Phase A | 50 / 0 free | Net zero |
-| After Phase B (032+033 retired) | **48 / 2 free** | Mike UI authority |
+| After Phase B (032+033 retired) | **48 estimated / 2 free** | Inventory math: prior 50 − 032 − 033 |
+| Visible Airtable counter | **None** | UI does not expose a slot meter |
 | Meta automations API | 403 | Cannot poll via PAT |
 
 ## Capacity progress vs ≥5 free target

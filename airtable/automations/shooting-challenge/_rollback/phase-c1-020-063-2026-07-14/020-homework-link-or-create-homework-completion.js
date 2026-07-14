@@ -1,19 +1,33 @@
 /*
-GitHub Source of Truth — paste into Airtable starting AFTER this header block
-(skip this GitHub header when pasting).
+Automation: 020 - Homework - Link or Create Homework Completion
 System: 127 SI Shooting Challenge
-Backlog: Phase C1 / S24 — absorb former 063 Grade Band copy into 020
-Folder: 02 - Submission Intake and Asset Creation
-Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-2026-07-14/
+Source: Airtable Automation
+Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-28
+
+Purpose:
+Links or creates a Homework Completion for one homework Submission Asset and marks the asset Pending Link for Make.
+
+Trigger:
+Submission Assets when a homework asset is ready for Homework Completion prep.
+
+Important Tables:
+Submission Assets, Submissions, Homework Completions
+
+Important Fields:
+Homework Completions, Upload Status, Send to Make Trigger, Asset Slot, Submission - Linked
+
+Notes:
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.0.0
+ * Version: v2.3
  * Date Written: 2026-05-20
- * Last Updated: 2026-07-14
- * Supersedes: separate 063 (copy Enrollment Grade Band → HC)
+ * Last Updated: 2026-06-28
  *
  * PURPOSE
  * - Runs from one Submission Assets record.
@@ -22,8 +36,6 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-202
  * - Finds or creates the matching Homework Completion.
  * - Links the Submission Asset to the Homework Completion.
  * - Marks the asset Pending Link and checks Send to Make Trigger for 070a.
- * - Sets or repairs Homework Completions → Grade Band from Submission
- *   Grade Band when present, else Enrollment Grade Band (former 063).
  *
  * IMPORTANT DESIGN RULES
  * - Upload Status Make send gate is Pending Link (same ladder as 009, 013, 070a, 070b).
@@ -33,9 +45,6 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-202
  * - Re-queries Homework Completions immediately before create to avoid duplicate rows when 009
  *   creates multiple assets for the same HW slot in parallel (020 race guard).
  * - When multiple matching Homework Completions exist, links to the preferred row instead of erroring.
- * - Grade Band repair is idempotent: skip when HC already has Grade Band; only write when blank.
- * - Missing Enrollment Grade Band → soft-skip GB repair (do not invent).
- * - Former automation 063 must be retired only after DEV live smoke PASS.
  *
  * FOLDER
  * - 02 - Submission Intake and Asset Creation
@@ -59,7 +68,6 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-202
  * OUTPUTS (automation script action outputs)
  * - statusOut = success | skipped | error
  * - actionOut = created_new | linked_existing | linked_existing_duplicate_resolved | synced_upload_writeback | skipped_already_linked | error
- * - gradeBandActionOut = copied_grade_band | already_has_grade_band | skipped_no_enrollment_grade_band | skipped_no_enrollment | ""
  * - errorOut
  * - debugStep
  * - submissionAssetId, homeworkCompletionId, slot
@@ -68,17 +76,14 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-202
  * - Submission Assets
  * - Submissions
  * - Homework Completions
- * - Enrollments (Grade Band repair — former 063)
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Homework Completions create/link fields from Submission + asset
- * - Homework Completions → Grade Band (create + blank repair)
  * - Submission Assets → Homework Completions, Asset Slot, Upload Status, Send to Make Trigger
  *
  * IMPORTANT NOTES
  * - This is not the Make upload automation (070a).
  * - This is not the homework XP automation (065).
- * - This is not parent feedback email.
  ************************************************************/
 
 // @ts-nocheck
@@ -89,13 +94,12 @@ Rollback: airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-202
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.0.0",
+  version: "v2.3",
 
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
     homework: "Homework Completions",
-    enrollments: "Enrollments",
   },
 
   assets: {
@@ -127,10 +131,6 @@ const CONFIG = {
     weeklySummary: "Weekly Athlete Summary",
     homeworkName1: "Homework Name 1",
     homeworkName2: "Homework Name 2",
-  },
-
-  enrollments: {
-    gradeBand: "Grade Band",
   },
 
   homework: {
@@ -178,7 +178,6 @@ const CONFIG = {
 let assetsTable;
 let submissionsTable;
 let homeworkTable;
-let enrollmentsTable;
 
 /* =========================================================
    SECTION 2 — HELPERS
@@ -450,77 +449,6 @@ function buildHomeworkUploadSyncFields(homeworkRecord, asset) {
   return fields;
 }
 
-async function loadEnrollmentGradeBandIds(enrollmentId) {
-  if (!enrollmentId || !enrollmentsTable) return [];
-  if (!fieldExists(enrollmentsTable, CONFIG.enrollments.gradeBand)) return [];
-
-  const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId, {
-    fields: [CONFIG.enrollments.gradeBand],
-  });
-  if (!enrollmentRecord) return [];
-  return linkedIds(enrollmentRecord, CONFIG.enrollments.gradeBand);
-}
-
-/**
- * Prefer Submission Grade Band; fall back to Enrollment Grade Band (former 063).
- * Returns { ids, source }.
- */
-async function resolveGradeBandIds({ submissionGradeBandIds, enrollmentId }) {
-  if ((submissionGradeBandIds || []).length > 0) {
-    return { ids: [...submissionGradeBandIds], source: "submission" };
-  }
-  if (!enrollmentId) {
-    return { ids: [], source: "none" };
-  }
-  const enrollmentIds = await loadEnrollmentGradeBandIds(enrollmentId);
-  if (enrollmentIds.length > 0) {
-    return { ids: enrollmentIds, source: "enrollment" };
-  }
-  return { ids: [], source: "none" };
-}
-
-/**
- * Idempotent blank Grade Band repair on an existing HC (former 063).
- * Does not overwrite a non-empty Grade Band.
- */
-async function repairHomeworkGradeBandIfBlank(homeworkRecordOrId, enrollmentIdHint) {
-  let homeworkRecord = homeworkRecordOrId;
-  if (typeof homeworkRecordOrId === "string") {
-    homeworkRecord = await homeworkTable.selectRecordAsync(homeworkRecordOrId, {
-      fields: safeFields(homeworkTable, [
-        CONFIG.homework.enrollment,
-        CONFIG.homework.gradeBand,
-      ]),
-    });
-  }
-  if (!homeworkRecord) {
-    return { action: "skipped_hc_not_found", gradeBandIds: [] };
-  }
-
-  const existing = linkedIds(homeworkRecord, CONFIG.homework.gradeBand);
-  if (existing.length > 0) {
-    return { action: "already_has_grade_band", gradeBandIds: existing };
-  }
-
-  const enrollmentId =
-    enrollmentIdHint || firstLinkedId(homeworkRecord, CONFIG.homework.enrollment);
-  if (!enrollmentId) {
-    return { action: "skipped_no_enrollment", gradeBandIds: [] };
-  }
-
-  const enrollmentGb = await loadEnrollmentGradeBandIds(enrollmentId);
-  if (enrollmentGb.length === 0) {
-    return { action: "skipped_no_enrollment_grade_band", gradeBandIds: [] };
-  }
-
-  const fields = {};
-  setLink(fields, homeworkTable, CONFIG.homework.gradeBand, enrollmentGb);
-  if (Object.keys(fields).length > 0) {
-    await homeworkTable.updateRecordAsync(homeworkRecord.id, fields);
-  }
-  return { action: "copied_grade_band", gradeBandIds: enrollmentGb };
-}
-
 function setFinalOutputs({
   statusOut,
   actionOut,
@@ -529,7 +457,6 @@ function setFinalOutputs({
   submissionAssetId = "",
   homeworkCompletionId = "",
   slot = "",
-  gradeBandActionOut = "",
 }) {
   setOutputSafe("statusOut", statusOut);
   setOutputSafe("actionOut", actionOut);
@@ -538,14 +465,12 @@ function setFinalOutputs({
   setOutputSafe("submissionAssetId", submissionAssetId);
   setOutputSafe("homeworkCompletionId", homeworkCompletionId);
   setOutputSafe("slot", slot);
-  setOutputSafe("gradeBandActionOut", gradeBandActionOut);
 
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
     version: CONFIG.version,
     statusOut,
     actionOut,
-    gradeBandActionOut,
     errorOut,
     debugStep,
     submissionAssetId,
@@ -590,7 +515,6 @@ async function main() {
   assetsTable = base.getTable(CONFIG.tables.assets);
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   homeworkTable = base.getTable(CONFIG.tables.homework);
-  enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 
   debugStep = "load_submission_asset";
   setOutputSafe("debugStep", debugStep);
@@ -613,7 +537,6 @@ async function main() {
     });
     let actionOut = "skipped_already_linked";
     let statusOut = CONFIG.outputStatuses.skipped;
-    let gradeBandActionOut = "";
 
     if (homeworkRecord) {
       const syncFields = buildHomeworkUploadSyncFields(homeworkRecord, asset);
@@ -623,34 +546,16 @@ async function main() {
         actionOut = "synced_upload_writeback";
         statusOut = CONFIG.outputStatuses.success;
       }
-
-      debugStep = "repair_grade_band_if_blank";
-      setOutputSafe("debugStep", debugStep);
-      const repair = await repairHomeworkGradeBandIfBlank(
-        homeworkRecord,
-        firstLinkedId(asset, CONFIG.assets.enrollment)
-      );
-      gradeBandActionOut = repair.action;
-      if (repair.action === "copied_grade_band" && statusOut === CONFIG.outputStatuses.skipped) {
-        statusOut = CONFIG.outputStatuses.success;
-        actionOut = "repaired_grade_band";
-      }
     }
 
     setFinalOutputs({
       statusOut,
       actionOut,
       errorOut: "",
-      debugStep:
-        gradeBandActionOut === "copied_grade_band"
-          ? "repaired_grade_band"
-          : actionOut === "synced_upload_writeback"
-            ? "synced_upload_writeback"
-            : "skipped_already_linked",
+      debugStep: actionOut === "synced_upload_writeback" ? "synced_upload_writeback" : "skipped_already_linked",
       submissionAssetId: asset.id,
       homeworkCompletionId: existingHomeworkIds[0],
       slot: selectName(asset, CONFIG.assets.assetSlot),
-      gradeBandActionOut,
     });
     return;
   }
@@ -777,7 +682,6 @@ async function main() {
 
   let homeworkCompletionId = "";
   let actionOut = "";
-  let gradeBandActionOut = "";
 
   if (homeworkCompletion) {
     actionOut =
@@ -854,24 +758,6 @@ async function main() {
       buildHomeworkUploadSyncFields(homeworkCompletion, asset)
     );
 
-    // Grade Band repair while linking (blank only)
-    if (linkedIds(homeworkCompletion, CONFIG.homework.gradeBand).length === 0) {
-      const resolved = await resolveGradeBandIds({
-        submissionGradeBandIds: linkedIds(submission, CONFIG.submissions.gradeBand),
-        enrollmentId: enrollmentIds[0] || firstLinkedId(homeworkCompletion, CONFIG.homework.enrollment),
-      });
-      if (resolved.ids.length > 0) {
-        setLink(updateFields, homeworkTable, CONFIG.homework.gradeBand, resolved.ids);
-        gradeBandActionOut = "copied_grade_band";
-      } else if (!enrollmentIds[0] && !firstLinkedId(homeworkCompletion, CONFIG.homework.enrollment)) {
-        gradeBandActionOut = "skipped_no_enrollment";
-      } else {
-        gradeBandActionOut = "skipped_no_enrollment_grade_band";
-      }
-    } else {
-      gradeBandActionOut = "already_has_grade_band";
-    }
-
     if (Object.keys(updateFields).length > 0) {
       await homeworkTable.updateRecordAsync(homeworkCompletion.id, updateFields);
     }
@@ -886,20 +772,7 @@ async function main() {
     setLink(createFields, homeworkTable, CONFIG.homework.submission, [submission.id]);
     setLink(createFields, homeworkTable, CONFIG.homework.enrollment, enrollmentIds);
     setLink(createFields, homeworkTable, CONFIG.homework.week, linkedIds(submission, CONFIG.submissions.week));
-
-    const resolvedCreateGb = await resolveGradeBandIds({
-      submissionGradeBandIds: linkedIds(submission, CONFIG.submissions.gradeBand),
-      enrollmentId: enrollmentIds[0],
-    });
-    if (resolvedCreateGb.ids.length > 0) {
-      setLink(createFields, homeworkTable, CONFIG.homework.gradeBand, resolvedCreateGb.ids);
-      gradeBandActionOut = "copied_grade_band";
-    } else if (!enrollmentIds[0]) {
-      gradeBandActionOut = "skipped_no_enrollment";
-    } else {
-      gradeBandActionOut = "skipped_no_enrollment_grade_band";
-    }
-
+    setLink(createFields, homeworkTable, CONFIG.homework.gradeBand, linkedIds(submission, CONFIG.submissions.gradeBand));
     setLink(
       createFields,
       homeworkTable,
@@ -974,7 +847,6 @@ async function main() {
     submissionAssetId: asset.id,
     homeworkCompletionId,
     slot,
-    gradeBandActionOut,
   });
 }
 

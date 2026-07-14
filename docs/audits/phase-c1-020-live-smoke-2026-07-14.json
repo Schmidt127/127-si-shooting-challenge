@@ -1,0 +1,114 @@
+{
+  "started": "2026-07-14T17:04:28.935331-06:00",
+  "ended": "2026-07-14T17:04:59.396380-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "hc_id": "rec10mNDNpeYnlEWc",
+  "enrollment_gb": "recK7BDVSpHy2ipCS",
+  "critical_pass": true,
+  "results": [
+    {
+      "name": "blank_grade_band_repair",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "review": "Ready for Review",
+          "satisfactory": null
+        },
+        "automation_or_mirror": "automation"
+      }
+    },
+    {
+      "name": "already_correct_stable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "before": "recK7BDVSpHy2ipCS",
+        "after": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "repeated_grade_band_repair_idempotent",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "first": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "review": "Ready for Review",
+          "satisfactory": null
+        },
+        "second": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "review": "Ready for Review",
+          "satisfactory": null
+        }
+      }
+    },
+    {
+      "name": "resolve_prefer_submission",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "ids": [
+          "recSUBGB"
+        ],
+        "source": "submission"
+      }
+    },
+    {
+      "name": "resolve_fallback_enrollment",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "ids": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "source": "enrollment"
+      }
+    },
+    {
+      "name": "resolve_missing_soft_skip",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "ids": [],
+        "source": "none"
+      }
+    },
+    {
+      "name": "adjacent_061_064_065_context_readable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "fields": {
+          "Review Status": "Ready for Review",
+          "Satisfactory?": null,
+          "XP Award Status": null,
+          "Base XP": null,
+          "Enrollment": "recgP9qZYjAhE7NXm",
+          "Week": "recUPkXtsDOHnY5q7"
+        },
+        "note": "061 review / 064 base XP / 065 XP event / 067 reflection remain separate"
+      }
+    },
+    {
+      "name": "fixture_restored",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "review": "Ready for Review",
+          "satisfactory": null
+        }
+      }
+    }
+  ],
+  "note": "Full asset\u2192020 create/link smoke runs after Mike pastes combined 020. This suite validates GB repair semantics + adjacency.",
+  "063_still_on": true
+}

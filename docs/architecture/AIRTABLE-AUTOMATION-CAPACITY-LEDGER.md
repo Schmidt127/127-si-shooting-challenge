@@ -30,14 +30,15 @@
 |-----------|----------|------|-----|
 | Pre–Phase A | **50** | **0** | Mike |
 | **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
-| **After Phase B (COMPLETE)** | **48** | **2** | Combined 030; **032** + **033** deleted (Mike UI) |
+| **After Phase B (COMPLETE)** | **48 estimated** | **2 estimated** | Combined 030; **032** + **033** deleted. No visible Airtable counter — inventory math |
+| **Phase C1 (IN PROGRESS)** | 48 → **47 est** after 063 | 2 → **3 est** | Combined 020 GitHub v3.0.0; awaiting Mike paste + retire 063 |
 | After Phase C (063→020, 111→013) | **46** | **4** | Absorb copies |
 | After Phase D (072∪074) | **45** | **5** | **Target met** |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count (post Phase B) | **48** (Mike: 032+033 deleted; 2 free) |
+| Current count (post Phase B) | **48 estimated / 2 free estimated** (no visible Airtable automations counter; authoritative 50-item inventory − 032 − 033) |
 | Proposed target (post Phase A–D) | **45** |
 | Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
@@ -132,7 +133,7 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase A COMPLETE 2026-07-14:** combined 021 live; smoke PASS; **006** deleted; **117 v1.0.0** OFF (blank webhook, no trigger yet).
 
-**Phase B COMPLETE 2026-07-14:** combined 030 live; smoke PASS; **032** + **033** deleted; DEV **48/50** (2 free).
+**Phase B COMPLETE 2026-07-14:** combined 030 live; smoke PASS; **032** + **033** deleted; DEV **48 estimated / 2 free** (Airtable exposes **no visible** automations counter — count from inventory).
 
 **Next recommended:** Phase C — [`PHASE-C-063-020-111-013-bootstrap-plan.md`](../deploy-checklists/PHASE-C-063-020-111-013-bootstrap-plan.md) (063→020, 111→013, +2 → 4 free).
 

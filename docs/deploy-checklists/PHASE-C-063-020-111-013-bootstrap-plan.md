@@ -1,9 +1,10 @@
 # Phase C plan — absorb 063→020 and 111→013
 
-**Status:** Recommendation only — **not authorized to execute**  
-**Depends on:** Phase B COMPLETE (2026-07-14) — DEV **48/50** (2 free)  
-**Target:** Free **+2** more slots (4 automations → 2)  
-**After Phase C:** DEV **46 occupied / 4 free**
+**Status:** **C1 AUTHORIZED** 2026-07-14 — GitHub combined 020 ready; Mike paste required · **C2 not authorized**  
+**Depends on:** Phase B COMPLETE — DEV **48 estimated / 2 free** (no visible Airtable counter)  
+**Target:** Free **+1** from C1 (063→020); C2 later for another +1  
+**After C1:** DEV **47 estimated / 3 free**  
+**Mike UI:** `docs/deploy-checklists/PHASE-C1-063-020-mike-ui-actions.md`
 
 ---
 
