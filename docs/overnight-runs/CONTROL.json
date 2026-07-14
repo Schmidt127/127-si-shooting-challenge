@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T06:55:00-06:00",
+  "updated_at": "2026-07-14T06:56:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "7d4952dce32debb1744926d019831e26017612b2",
-    "remote_sha": "7d4952dce32debb1744926d019831e26017612b2",
+    "sha": "dba0f0ffa1cce38e4ebfe8e5643cdc350e898605",
+    "remote_sha": "dba0f0ffa1cce38e4ebfe8e5643cdc350e898605",
     "match": true
   },
   "run": {
@@ -512,7 +512,7 @@
       "claimed_by": null,
       "completed_at": null,
       "runbook": "docs/deploy-checklists/C-025-Zoom-Recording-Manual-Airtable-Repair.md",
-      "notes": "Formula layer + deadline true-date done 2026-07-14. Next Airtable: Config fields + Effective linkage. Automations designed stage17, not pasted. View hyphen exists — confirm filters in UI."
+      "notes": "Formula layer + deadline true-date done 2026-07-14. Next Airtable: Config fields + Effective linkage. Automations designed stage17, not pasted. View hyphen exists \u2014 confirm filters in UI."
     },
     {
       "id": "C-025-deadline-repair-dev-apply",
@@ -739,10 +739,10 @@
     "lambda": "66/66",
     "offline": "97/97",
     "targeted": "61/61 c025+c027 S17",
-    "live_dev_schmidt_credit": "4/4 (after Effective→formula convert)",
+    "live_dev_schmidt_credit": "4/4 (after Effective\u2192formula convert)",
     "live_c025_precedence": "postconversion Effectives 13/13 PASS (incl. checkbox checked/unchecked/override)",
     "pass": true
   },
-  "next_action": "C-025 cleanup of temp/legacy/probe fields (separate), then 117a–f DEV paste. No PROD.",
+  "next_action": "C-025 cleanup of temp/legacy/probe fields (separate), then 117a\u2013f DEV paste. No PROD.",
   "stop_reason": null
 }
