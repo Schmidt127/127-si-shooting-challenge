@@ -1,6 +1,5 @@
-import Link from "next/link";
-
 import { BackToHubLink } from "@/components/layout/back-to-hub-link";
+import { ProductNav } from "@/components/layout/product-nav";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { LANDING_URL } from "@/lib/app-config";
 
@@ -57,22 +56,7 @@ export function ProductShell({
               </h1>
             </div>
 
-            {navItems.length > 0 ? (
-              <nav
-                className="flex flex-wrap gap-1"
-                aria-label={`${productName} navigation`}
-              >
-                {navItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="rounded-lg px-3 py-2 text-sm font-medium text-muted transition hover:bg-white/[0.04] hover:text-foreground"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </nav>
-            ) : null}
+            <ProductNav productName={productName} items={navItems} />
           </div>
         </div>
       </header>

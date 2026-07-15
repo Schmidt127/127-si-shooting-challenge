@@ -7,6 +7,12 @@ import { LevelBadge } from "./level-badge";
 
 type LeaderboardTableProps = {
   entries: LeaderboardEntry[];
+  /**
+   * Skip athletes already shown on the podium.
+   * Default 3 for full-board layouts; pass 0 when no podium is rendered.
+   */
+  skipFirst?: number;
+  heading?: string;
 };
 
 function RankCell({ rank }: { rank: number }) {
@@ -25,15 +31,19 @@ function RankCell({ rank }: { rank: number }) {
   );
 }
 
-export function LeaderboardTable({ entries }: LeaderboardTableProps) {
-  const rest = entries.slice(3);
+export function LeaderboardTable({
+  entries,
+  skipFirst = 3,
+  heading = "Full Rankings",
+}: LeaderboardTableProps) {
+  const rest = entries.slice(Math.max(0, skipFirst));
   if (rest.length === 0) return null;
 
   return (
     <section aria-label="Full rankings">
       <div className="mb-4 flex items-end justify-between gap-4">
         <div>
-          <h2 className="text-lg font-bold text-foreground sm:text-xl">Full Rankings</h2>
+          <h2 className="text-lg font-bold text-foreground sm:text-xl">{heading}</h2>
           <p className="mt-1 text-sm text-muted">Sorted by level, then XP, then total shots</p>
         </div>
         <p className="hidden text-xs uppercase tracking-widest text-muted sm:block">

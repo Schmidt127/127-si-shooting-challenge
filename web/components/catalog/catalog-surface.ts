@@ -37,7 +37,7 @@ export function catalogCardClass(options?: CatalogCardOptions): string {
   if (options?.featured === "amber") {
     return cn(
       base,
-      "border-amber-400/35 bg-gradient-to-br from-amber-500/10 via-card/85 to-violet-900/20",
+      "border-amber-400/35 bg-gradient-to-br from-amber-500/10 via-card/85 to-brand-blue/15",
       "shadow-[0_10px_40px_-12px_rgba(0,0,0,0.75),0_0_44px_-12px_rgba(251,191,36,0.35),inset_0_1px_0_0_rgba(255,255,255,0.08)]",
       "hover:border-amber-400/45",
     );

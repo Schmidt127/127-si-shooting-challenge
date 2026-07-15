@@ -21,6 +21,7 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
 | `/shoot` | `/` | Overview | — | Live |
+| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) | Mock adapter | Live (demo) |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | FBC Curriculum (`Web - Homework Catalog`) | Live |
 | `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | FBC Curriculum + Weeks | Live |
@@ -50,16 +51,17 @@ Views and filters: [airtable-views.md](./airtable-views.md)
 Order from `SHOOTING_CHALLENGE_NAV`:
 
 1. Overview → `/`
-2. Leaderboard → `/leaderboard`
-3. Tutorials → `/tutorials`
-4. Homework → `/homework`
-5. Shoutouts → `/shoutouts`
-6. Articles → `/articles`
-7. Zoom Meetings → `/zoom-meetings`
-8. Game Manual → `/game-manual`
-9. Levels → `/levels`
-10. Achievements → `/achievements`
-11. Display → `/public-display`
+2. Dashboard → `/dashboard`
+3. Leaderboard → `/leaderboard`
+4. Tutorials → `/tutorials`
+5. Homework → `/homework`
+6. Shoutouts → `/shoutouts`
+7. Articles → `/articles`
+8. Zoom Meetings → `/zoom-meetings`
+9. Game Manual → `/game-manual`
+10. Levels → `/levels`
+11. Achievements → `/achievements`
+12. Display → `/public-display`
 
 ---
 

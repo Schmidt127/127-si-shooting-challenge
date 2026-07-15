@@ -12,8 +12,9 @@ import {
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import type { LeaderboardData } from "@/types/leaderboard";
 
-import { LeaderboardPodium } from "./leaderboard-podium";
-import { LeaderboardTable } from "./leaderboard-table";
+import { EmptyState, ErrorState, StatTile } from "@/components/ui";
+
+import { LeaderboardBoard } from "./leaderboard-board";
 import { LeaderboardTiebreakerLegend } from "./leaderboard-tiebreaker-legend";
 
 type LeaderboardViewProps = {
@@ -25,36 +26,17 @@ function LeaderboardStats({ data }: LeaderboardViewProps) {
   const totalShots = data.entries.reduce((sum, entry) => sum + entry.totalShots, 0);
   const topXp = data.entries[0]?.xp ?? 0;
 
-  const stats = [
-    { label: "Athletes", value: String(data.entries.length), icon: IconBasketball, tint: "text-brand-blue" },
-    { label: "Combined XP", value: formatXp(totalXp), icon: IconBolt, tint: "text-amber-300" },
-    { label: "Shots Logged", value: formatXp(totalShots), icon: IconTarget, tint: "text-cyan-300" },
-    { label: "Leader XP", value: formatXp(topXp), icon: IconTrophy, tint: "text-accent-soft" },
-  ];
-
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-      {stats.map((stat) => {
-        const Icon = stat.icon;
-        return (
-          <div
-            key={stat.label}
-            className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 backdrop-blur-sm"
-          >
-            <div className="flex items-center gap-2">
-              <span className={`rounded-lg bg-black/25 p-1.5 ${stat.tint}`}>
-                <Icon size={16} />
-              </span>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
-                {stat.label}
-              </p>
-            </div>
-            <p className="mt-2 font-mono text-xl font-bold text-foreground sm:text-2xl">
-              {stat.value}
-            </p>
-          </div>
-        );
-      })}
+      <StatTile
+        label="Athletes"
+        value={String(data.entries.length)}
+        icon={IconBasketball}
+        tint="blue"
+      />
+      <StatTile label="Combined XP" value={formatXp(totalXp)} icon={IconBolt} tint="amber" />
+      <StatTile label="Shots Logged" value={formatXp(totalShots)} icon={IconTarget} tint="blue" />
+      <StatTile label="Leader XP" value={formatXp(topXp)} icon={IconTrophy} tint="orange" />
     </div>
   );
 }
@@ -104,18 +86,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
           </div>
         </header>
 
-        {data.entries.length >= 3 ? (
-          <LeaderboardPodium entries={data.entries} />
-        ) : null}
-
-        {data.entries.length > 3 ? (
-          <LeaderboardTable entries={data.entries} />
-        ) : data.entries.length > 0 && data.entries.length <= 3 ? (
-          <p className="text-center text-sm text-muted">
-            Only {data.entries.length} athlete{data.entries.length === 1 ? "" : "s"} on the board so
-            far — more challengers coming soon.
-          </p>
-        ) : null}
+        <LeaderboardBoard entries={data.entries} />
       </div>
     </AmbientPage>
   );
@@ -123,40 +94,35 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
 
 export function LeaderboardEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-white/10 bg-card/80 p-8 text-center backdrop-blur-xl">
-        <div className="mx-auto inline-flex rounded-2xl border border-white/10 bg-white/5 p-4 text-muted">
-          <IconTrophy size={40} />
-        </div>
-        <h1 className="mt-6 text-2xl font-bold text-foreground">Leaderboard warming up</h1>
-        <p className="mt-3 text-muted">
-          No active athletes with XP yet. Check back soon as submissions roll in.
-        </p>
+    <EmptyState
+      title="Leaderboard warming up"
+      description="No active athletes with XP yet. Check back soon as submissions roll in."
+      icon={<IconTrophy size={40} />}
+      action={
         <Link
           href="/"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
+          className="inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge
         </Link>
-      </div>
-    </div>
+      }
+    />
   );
 }
 
 export function LeaderboardErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className="max-w-md rounded-2xl border border-red-500/20 bg-card/80 p-8 text-center backdrop-blur-xl">
-        <div className="mx-auto h-px w-12 bg-gradient-to-r from-transparent via-red-400/80 to-transparent" />
-        <h1 className="mt-6 text-2xl font-bold text-foreground">Could not load leaderboard</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
+    <ErrorState
+      title="Could not load leaderboard"
+      message={message}
+      action={
         <Link
           href="/"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
+          className="inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
         >
           ← Shooting Challenge
         </Link>
-      </div>
-    </div>
+      }
+    />
   );
 }
