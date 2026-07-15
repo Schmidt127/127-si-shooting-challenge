@@ -4,10 +4,10 @@
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/four-agent-os-prep-cfc9",
-    "sha": null,
-    "remote_sha": null,
-    "match": null,
-    "note": "Lead sets sha/remote_sha after first push of an active run. Until then treat git rev-parse HEAD as tip."
+    "sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
+    "remote_sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
+    "match": true,
+    "note": "Lead updates sha/remote_sha after each push of an active run."
   },
   "integration": {
     "branch": "cursor/four-agent-os-prep-cfc9",
