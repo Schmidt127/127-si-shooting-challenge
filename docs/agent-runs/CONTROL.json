@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:52:00Z",
+  "updated_at": "2026-07-15T13:53:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "eea9fc45306cc30ce255d4d66d32195159ef2ec8",
-    "remote_sha": "eea9fc45306cc30ce255d4d66d32195159ef2ec8",
+    "sha": "e217938536dbbf290c00cd658773e2ccf442097d",
+    "remote_sha": "e217938536dbbf290c00cd658773e2ccf442097d",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
@@ -19,7 +19,9 @@
     "state": "active",
     "package_id": "FA-001",
     "started_at": "2026-07-15T13:47:00Z",
-    "stage_id": "FA-001-setup"
+    "stage_id": "FA-001-lead-takeover",
+    "lead_takeover": true,
+    "lead_takeover_reason": "Workers were authorized but not launched as separate agents; Lead executes path-disjoint worker slices on assigned branches then merges."
   },
   "roles": {
     "lead": {
@@ -112,7 +114,7 @@
     }
   ],
   "hard_stops": [
-    "DEV only \u2014 no Production access",
+    "DEV only — no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -123,7 +125,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Workers branch from integration tip eea9fc45306cc30ce255d4d66d32195159ef2ec8. Base package root remains master 9d293ab. Lead waits for results; merge order Research \u2192 Implementation \u2192 Testing.",
+  "next_action": "Lead-takeover executing worker branches from tip e217938536dbbf290c00cd658773e2ccf442097d. Merge order Research → Implementation → Testing.",
   "stop_reason": null,
   "merge_order": [
     "research",

@@ -6,7 +6,7 @@
 - Package: FA-001 — Four-agent pilot (docs-only kit gaps)
 - Role: research
 - Exact branch: `cursor/fa-001-research-cfc9`
-- Base tip SHA to branch from (Lead provides): `9c3e1d83c671d09418ac9107821107b09c9654c3` (integration tip; package rooted at master `9d293ab368dd42d700e19980bd2a4dd8aecc5412`)
+- Base tip SHA to branch from (Lead provides): `e217938536dbbf290c00cd658773e2ccf442097d` (integration tip; package rooted at master `9d293ab368dd42d700e19980bd2a4dd8aecc5412`)
 - Integration branch (do not commit here): `cursor/fa-001-four-agent-pilot-cfc9`
 - Max wall time: 45 minutes
 
