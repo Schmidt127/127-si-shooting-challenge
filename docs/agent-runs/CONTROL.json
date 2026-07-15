@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:50:00Z",
+  "updated_at": "2026-07-15T13:51:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "85a59c7194dd9e8178a5ca7dc764267c2f3b94dd",
-    "remote_sha": null,
-    "match": null,
-    "note": "Lead tip-sync after push; remote_sha set on push follow-up if needed."
+    "sha": "acc53c4118085e21ca144b879ebec39fffd74fdf",
+    "remote_sha": "acc53c4118085e21ca144b879ebec39fffd74fdf",
+    "match": true,
+    "note": "Lead updates sha/remote_sha after each push of an active run."
   },
   "integration": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
