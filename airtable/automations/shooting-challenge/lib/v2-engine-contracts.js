@@ -36,8 +36,9 @@ const SOURCE_KEY_PREFIXES = Object.freeze({
   zoomAttendBase: "ZOOM_ATTEND_BASE",
   zoomAttendBonus2: "ZOOM_ATTEND_BONUS_2",
   zoomAttendBonus3: "ZOOM_ATTEND_BONUS_3",
-  // Placeholder only — C-025 not shipped; must never collide with live attendance keys.
-  zoomRecordingCredit: "ZOOM_RECORDING_CREDIT",
+  // C-025 recording family (canonical S16). Do not use ZOOM_RECORDING_CREDIT.
+  zoomRecording: "ZOOM_RECORDING",
+  zoomLiveCanonical: "ZOOM_LIVE",
 });
 
 function isValidRecordId(recordId) {
@@ -218,11 +219,14 @@ function buildZoomAttendBonus3SourceKey(enrollmentId) {
 }
 
 /**
- * C-025 placeholder — recording credit is not live.
- * Kept so tests prove future keys cannot collide with live attendance keys.
+ * C-025 recording Source Key (S16): ZOOM_RECORDING|{meetingId}|{enrollmentId}
  */
 function buildZoomRecordingCreditSourceKey(zoomMeetingId, enrollmentId) {
-  return `${SOURCE_KEY_PREFIXES.zoomRecordingCredit}|${assertValidRecordId(zoomMeetingId, "zoomMeetingId")}|${assertValidRecordId(enrollmentId, "enrollmentId")}`;
+  return `${SOURCE_KEY_PREFIXES.zoomRecording}|${assertValidRecordId(zoomMeetingId, "zoomMeetingId")}|${assertValidRecordId(enrollmentId, "enrollmentId")}`;
+}
+
+function buildZoomLiveCanonicalSourceKey(zoomMeetingId, enrollmentId) {
+  return `${SOURCE_KEY_PREFIXES.zoomLiveCanonical}|${assertValidRecordId(zoomMeetingId, "zoomMeetingId")}|${assertValidRecordId(enrollmentId, "enrollmentId")}`;
 }
 
 function extractVideoFeedbackIdFromSourceKey(sourceKey) {
@@ -561,6 +565,7 @@ module.exports = {
   buildZoomAttendBonus2SourceKey,
   buildZoomAttendBonus3SourceKey,
   buildZoomRecordingCreditSourceKey,
+  buildZoomLiveCanonicalSourceKey,
   extractVideoFeedbackIdFromSourceKey,
   decideXpEventAction,
   decideHomeworkCompletionAction,

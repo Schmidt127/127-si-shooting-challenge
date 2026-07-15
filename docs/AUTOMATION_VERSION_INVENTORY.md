@@ -28,7 +28,7 @@
 | Rows with strong PROD evidence | 070b, 070c, 116 (partial), C-013 closeout |
 | DEV-only by design | 115 (Engineering Test Framework) |
 | Explicitly leave PROD OFF until scheduled | 070a homework upload |
-| Not implemented | Zoom recording credit (C-025) — **101** is live attendance only |
+| C-025 recording credit | **117a/117b implemented in repo** — ready for DEV install; **not** live-verified |
 
 ## Inventory
 
@@ -40,7 +40,7 @@
 | 005 | Submission Intake — Assign Week to Submission — Homework First | v4.0 | UNKNOWN | 2026-05-20 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 006 | Submission Intake — Set Video Count | v3.0 | UNKNOWN | 2026-05-20 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 007 | Submission Intake — Duplicate Checker for Submissions | v2.0 | UNKNOWN | 2026-05-20 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
-| 009 | Submission Intake — Create Submission Assets | UNKNOWN | UNKNOWN | UNKNOWN | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
+| 009 | Submission Intake — Create Submission Assets | v1.0 | 2026-07-15 | 2026-06-20 | Submissions — confirm in Airtable UI | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | SCRIPT metadata established 2026-07-15 (runtime unchanged) | Verify live trigger; paste only if DEV/PROD drift |
 | 010 | Submission Intake — Create XP Event from Submission | 10.4 | UNKNOWN | 2026-06-06 | Submissions when `Count This Submission?` checked and XP should be awarded | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV UI | UNKNOWN — confirm live | automation-index; script header v10.4 | Verify trigger + Source Key SUBMISSION_XP in DEV smoke |
 | 013 | Submission Intake — Create or Link Video Feedback | v2.0 | UNKNOWN | 2026-05-20 | Submission Assets when video asset ready for Video Feedback prep | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 020 | Homework — Link or Create Homework Completion | v2.3 | UNKNOWN | 2026-05-20 | Submission Assets when homework asset ready for Homework Completion prep | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN | UNKNOWN | script v2.3 | DEV homework duplicate / recheck smoke |
@@ -77,13 +77,16 @@
 | 075 | Email — Build Challenge Welcome Email | v3.0 | UNKNOWN | 2026-05-29 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 076 | Email — Build Daily Submission Email Package | v6.4 | UNKNOWN | UNKNOWN | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | CONFIG.version v6.4 | Verify live trigger/version against GitHub before promote |
 | 077 | Email — Send Daily Submission Email Package to Make | v5.0 | UNKNOWN | 2026-05-29 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
-| 101 | Zoom Attendance XP — Award Meeting XP | v5.4 | UNKNOWN | 2026-05-28 | Zoom Meetings when `Create XP Events` checked and meeting ready to award | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN | UNKNOWN | script v5.4; recording credit C-025 not implemented | Live attendance only; recording backlog |
+| 101 | Zoom Attendance XP — Award Meeting XP | v5.4 | UNKNOWN | 2026-05-28 | Zoom Meetings when `Create XP Events` checked and meeting ready to award | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN | UNKNOWN | script v5.4; recording credit C-025 not implemented | Live attendance unchanged; recording via **117a** (repo) |
 | 111 | Video Review — Copy Enrollment Grade Band to Video Feedback | v1.1 | UNKNOWN | 2026-04-27 | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 112 | Video Review — Create Video Feedback from Submission Asset | v2.1 | UNKNOWN | 2026-05-19 | **OFF — monitor before delete** (legacy duplicate of **013**) | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 113 | Video Review — Assign Base Video XP | v6.2 | UNKNOWN | UNKNOWN | *confirm in Airtable* | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN — confirm in DEV Airtable UI | UNKNOWN — confirm in PROD Airtable UI | GitHub script header + docs/automation-index.md | Verify live trigger/version against GitHub before promote |
 | 114 | Video Review — Create or Update Video XP Event | v5.8 | UNKNOWN | 2026-05-23 | Video Feedback posted, XP positive, `Ready for XP Automation?` checked | UNKNOWN — confirm in Airtable UI | recordId | UNKNOWN | UNKNOWN | script v5.8 | Video XP steal-guard rerun |
 | 115 | 115 - Engineering Test Framework - Run Testing Scenario Daily Submission | v1.3 | 2026-07-07 | 2026-07-06 | Testing Scenarios when **Run Test?** checked | UNKNOWN — confirm in Airtable UI | recordId | v1.3 DEV functional complete 2026-07-07 | Not deployed (DEV only) | C-020 checklist | Keep DEV-only until promotion doc |
 | 116 | 116 - Submission Assets - Apply Asset Reuse Decision Consequences | v1.0.1 | 2026-07-10 | 2026-07-10 | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | UNKNOWN — confirm in Airtable UI | recordId | DEV complete | PROD runtime PASS on fixture; doc hygiene pending | C-023-prod-automation-116-validation-2026-07-11.md | Sign-off checklist hygiene |
+
+| 117a | 117a - Zoom Recording Credit - Award XP from Quiz Completion | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + Zoom Meeting linked | Completion Status Satisfactory; Zoom Meeting + Enrollment not empty | recordId | **Ready for DEV install** (not live-verified) | Not installed | C-025 S16 design + 117a script + contract tests | Follow docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md |
+| 117b | 117b - Zoom Recording Credit - Send Approval Email Webhook | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + send flag | Config email enabled; template key present | recordId, makeWebhookUrl | **Ready for DEV install** (not live-verified) | Not installed | C-025 S16 + 117b script | DEV webhook only; keep OFF until email dry-run |
 
 ## Source Key quick reference (for version verification)
 
@@ -97,7 +100,8 @@
 | Perfect Week unlock | 058 | `PERFECT_WEEK\|{enrollmentId}\|{weekId}` |
 | Zoom live base | 101 | `ZOOM_ATTEND_BASE\|{meetingId}\|{enrollmentId}` |
 | Zoom live bonuses | 101 | `ZOOM_ATTEND_BONUS_2\|{enrollmentId}`, `ZOOM_ATTEND_BONUS_3\|{enrollmentId}` |
-| Zoom recording | — | **Not shipped (C-025)** |
+| Zoom recording | **117a** | `ZOOM_RECORDING\|{meetingId}\|{enrollmentId}` — repo implemented; DEV install pending |
+| Zoom recording email | **117b** | Config-gated parent email after Satisfactory — repo implemented; DEV install pending |
 
 ## Refresh procedure
 
@@ -105,3 +109,23 @@
 2. During DEV/PROD smoke, overwrite UNKNOWN status cells with observed Airtable UI version + date.
 3. Link test evidence to deploy-checklist or audit paths under `docs/`.
 4. Re-run `node tools/validate-v2-release-readiness.js`.
+
+
+## Implementation status legend (2026-07-15)
+
+| State | Meaning |
+|-------|---------|
+| Implemented in repository | Scripts/docs/tests exist in GitHub |
+| Ready for DEV installation | Install packet exists; no claim of live DEV paste |
+| Verified in DEV | Live DEV evidence captured (OMNI/Mike) |
+| Ready for PROD promotion | DEV verified + promotion checklist + Mike approval |
+| Verified in PROD | Live PROD smoke evidence |
+
+| Item | Repo | Ready DEV install | Verified DEV | Ready PROD | Verified PROD |
+|------|------|-------------------|--------------|------------|---------------|
+| 009 SCRIPT header | Yes | N/A (existing automation) | UNKNOWN | UNKNOWN | UNKNOWN |
+| C-025 / 117a XP award | Yes | Yes | No | No | No |
+| C-025 / 117b email | Yes | Yes | No | No | No |
+| 117c–117f | Not required | — | — | — | — |
+| 066 OMNI confirm support | Yes (packet+harness) | N/A | **Pending OMNI** | No | No |
+| 070a homework upload | Yes (existing) | DEV evidence historical | Re-verify | **No — keep OFF** | No |

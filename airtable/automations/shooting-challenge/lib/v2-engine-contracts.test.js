@@ -371,10 +371,9 @@ test("Zoom attendance source keys and recording credit non-collision", () => {
   assert.strictEqual(buildZoomAttendBonus3SourceKey(ENR), `ZOOM_ATTEND_BONUS_3|${ENR}`);
 
   const recording = buildZoomRecordingCreditSourceKey(ZM, ENR);
-  assert.ok(recording.startsWith("ZOOM_RECORDING_CREDIT|"));
+  assert.ok(recording.startsWith("ZOOM_RECORDING|"));
+  assert.strictEqual(recording, `ZOOM_RECORDING|${ZM}|${ENR}`);
   assert.notStrictEqual(recording, live);
-  assert.ok(!recording.startsWith(SOURCE_KEY_PREFIXES.zoomAttendBase + "|") || recording !== live);
-  // Rerun of live attendance is idempotent by Source Key
   assert.strictEqual(
     decideXpEventAction({ sourceKey: live, existingKeys: [live] }).action,
     "skip_existing",

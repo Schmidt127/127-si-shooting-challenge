@@ -70,6 +70,15 @@ function hasVersionHeader(text) {
   );
 }
 
+function hasStandardScriptMetadata(text) {
+  const match = text.match(/const SCRIPT\s*=\s*\{([\s\S]*?)\n\};/);
+  if (!match) return false;
+  const block = match[1];
+  return ["scriptName", "version", "versionDate", "originalWrittenDate"].every((key) =>
+    new RegExp(`${key}\\s*:`).test(block),
+  );
+}
+
 function parseEnvExampleKeys(relPath) {
   if (!exists(relPath)) return [];
   return read(relPath)
@@ -136,27 +145,44 @@ for (const [num, files] of [...byNumber.entries()].sort()) {
 }
 
 let missingVersion = 0;
+let missingStandardMeta = 0;
 for (const filePath of scripts) {
   const text = fs.readFileSync(filePath, "utf8");
   if (!hasVersionHeader(text)) {
     missingVersion += 1;
-    warn(`no version header detected: ${rel(filePath)}`);
+    fail(`no version header detected: ${rel(filePath)}`);
+  }
+  const base = path.basename(filePath);
+  if (/^(009|066|117a|117b)-/.test(base) && !hasStandardScriptMetadata(text)) {
+    missingStandardMeta += 1;
+    fail(`missing standard SCRIPT metadata (scriptName/version/versionDate/originalWrittenDate): ${rel(filePath)}`);
   }
 }
 if (missingVersion === 0) {
   pass("all automation scripts have a detectable version header");
-} else {
-  warn(`${missingVersion} automation script(s) lack a clear version header (see WARN lines)`);
+}
+if (missingStandardMeta === 0) {
+  pass("critical scripts (009/066/117a/117b) expose standard SCRIPT metadata");
 }
 
 // Expected high-value scripts for V2 validation domains
 const expectedScripts = [
   "010", "020", "031", "034", "042", "053", "054", "057", "058",
-  "065", "066", "070b", "070c", "101", "114", "115", "116",
+  "065", "066", "070b", "070c", "101", "114", "115", "116", "117a", "117b",
 ];
 for (const num of expectedScripts) {
   if (byNumber.has(num.toLowerCase())) pass(`expected automation ${num} present`);
   else fail(`expected automation ${num} missing`);
+}
+
+// 009 must be present and version-detectable (release blocker closed in repo)
+if (byNumber.has("009")) {
+  const file009 = byNumber.get("009")[0];
+  const text009 = fs.readFileSync(file009, "utf8");
+  if (hasStandardScriptMetadata(text009)) pass("009 standard SCRIPT metadata present");
+  else fail("009 missing standard SCRIPT metadata");
+} else {
+  fail("expected automation 009 missing");
 }
 
 // ---------------------------------------------------------------------------
@@ -166,8 +192,13 @@ console.log("\n== Test fixtures and contract tests ==");
 const requiredTests = [
   "airtable/automations/shooting-challenge/lib/v2-engine-contracts.js",
   "airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js",
+  "airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.js",
+  "airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js",
+  "airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js",
+  "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js",
+  "tools/airtable/tests/test_c025_recording_watch_contract.py",
   "web/lib/data/levels.test.ts",
   "web/lib/data/homework.test.ts",
   "tools/airtable/tests/test_c013_prod_make_smoke_run.py",
@@ -176,6 +207,17 @@ const requiredTests = [
 for (const t of requiredTests) {
   if (exists(t)) pass(t);
   else fail(`missing test/fixture: ${t}`);
+}
+
+const requiredC025Docs = [
+  "docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md",
+  "docs/v2/AUTOMATION_070A_LAUNCH_DECISION.md",
+  "docs/deploy-checklists/066-dev-omni-confirmation-packet.md",
+  "docs/deploy-checklists/C-025-zoom-recording-design-stage12.md",
+];
+for (const doc of requiredC025Docs) {
+  if (exists(doc)) pass(doc);
+  else fail(`missing required C-025/launch doc: ${doc}`);
 }
 
 // ---------------------------------------------------------------------------

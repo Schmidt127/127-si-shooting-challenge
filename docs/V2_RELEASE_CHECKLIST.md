@@ -17,6 +17,9 @@
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion/rollback index (if present from overnight S10) |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | Audit-first testing standards |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live base IDs and milestone snapshot |
+| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b DEV install packet |
+| [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
+| [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 
 **Safe repo validation (no secrets / no Airtable):**
 
@@ -24,7 +27,11 @@
 node tools/validate-v2-release-readiness.js
 cd web && npm run lint && npm run typecheck && npm test && npm run build
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
+node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js
+node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js
+node airtable/automations/shooting-challenge/lib/script-header-contract.test.js
 node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js
+python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 ```
 
 ---
@@ -37,9 +44,12 @@ node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.tes
 - [ ] Frontend styling PRs from other agents reviewed for conflict (do not restyle here)
 - [ ] Backlog items being promoted have Phase 2 approval + promotion docs under `docs/deploy-checklists/`
 - [ ] [known-issues.md](./known-issues.md) launch blockers reviewed (accept, fix, or defer with owner)
-- [ ] Repository validation script **PASS**
+- [ ] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence)
+- [ ] C-025 DEV install packet reviewed if recording credit in scope
+- [ ] 070a PROD remains OFF unless Mike-approved decision flips
+- [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence)
 - [ ] Web lint / typecheck / tests / production build **PASS**
-- [ ] Engine contract + upload response Node tests **PASS**
+- [ ] Engine / C-025 / 066 harness / header / upload Node tests **PASS**
 
 ---
 
@@ -59,7 +69,8 @@ Run on DEV only (`appTetnuCZlCZdTCT`) with Schmidt / named test enrollments.
 | Perfect Week | **057/058** eligibility + `PERFECT_WEEK\|…` unlock | [ ] |
 | Level gates | **042** Gate Blocked when XP ok / gate fail | [ ] |
 | Weekly summary | **031–034** WAS create + previous-week helpers | [ ] |
-| Zoom live attendance | **101** awards live keys only; no recording credit unless C-025 shipped | [ ] |
+| Zoom live attendance | **101** awards live keys only | [ ] |
+| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); not live-verified | [ ] |
 | Asset upload | **070b/070c** writeback + hash validation (if in scope) | [ ] |
 | Audits | Stages A–J / relevant 090 dry-runs clean or documented exceptions | [ ] |
 
@@ -154,7 +165,8 @@ Use Schmidt / isolated fixture enrollment only.
 | Milestone / streak / Perfect Week | Unlock + XP Source Keys unique | [ ] |
 | Level gate | Gate Blocked vs Assigned matches enrollment stats | [ ] |
 | Weekly summary | WAS row + email package dry-run (send OFF) | [ ] |
-| Zoom live | Attendance XP keys only; recording credit absent unless shipped | [ ] |
+| Zoom live | Attendance XP keys only (`ZOOM_ATTEND_*`) | [ ] |
+| Zoom recording (if in scope) | **117a** `ZOOM_RECORDING\|…` once; exclusivity vs live; **117b** email only after Satisfactory | [ ] |
 | Upload (if in scope) | 070b/070c writeback fields + hash | [ ] |
 | Audit dry-run | No new unexpected integrity failures | [ ] |
 

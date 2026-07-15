@@ -10,13 +10,14 @@ Track these before treating V2 as fully launch-ready. Status is repository evide
 |----|---------|----------|-------------------------|
 | L1 | Most automation DEV/PROD live versions still **UNKNOWN** in inventory | High | Fill [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) from Airtable UI during checklist |
 | L2 | Full athlete E2E matrix largely **Untested** in docs | High | Execute [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) on DEV |
-| L3 | **066** DEV sandbox still pending OMNI confirm (PROJECT_STATE) | High | Schmidt submission through pipeline + milestone behavior |
+| L3 | **066** DEV sandbox still pending OMNI confirm (PROJECT_STATE) | High | Use [066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md); do **not** mark complete without live evidence |
 | L4 | C-020 / **115** homework+video XP after coach review not fully covered | Medium | Extend DEV scenarios beyond intake (064/065, 114) |
-| L5 | Zoom **recording credit (C-025)** not implemented | Medium | Keep matrix J4 N/A; do not invent Source Keys |
-| L6 | **070a** homework S3 PROD intentionally OFF | Medium | Leave OFF until Mike schedules homework PROD wave |
+| L5 | Zoom **recording credit (C-025)** not installed in live DEV/PROD | Medium | **Repo package ready** — follow [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); 117a/117b not live-verified |
+| L6 | **070a** homework S3 PROD intentionally OFF | Medium | Keep OFF — see [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
 | L7 | Web achievements / athlete profile incomplete | Medium | Public launch UX gap — not automation-blocking |
 | L8 | Root marketing URL 404 / landing hub dependency | Low–Medium | `/shoot` works; root depends on landing |
 | L9 | Automation GitHub trigger headers often *confirm in Airtable* | Low | Verify triggers in UI before PROD debug/promote |
+| ~~L0~~ | ~~009 missing SCRIPT version header~~ | ~~Closed in repo~~ | **009 v1.0 SCRIPT metadata established** (runtime unchanged) |
 
 ## Active
 

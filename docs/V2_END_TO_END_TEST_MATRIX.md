@@ -140,7 +140,9 @@ cd web && npm test
 | J1 | Live attendance base XP | Meeting + enrollment attendance | 101 | `ZOOM_ATTEND_BASE\|meeting\|enr` once | U | U |
 | J2 | Live attendance bonuses | 2nd / 3rd meeting rules | 101 | Bonus keys once per enrollment rules | U | U |
 | J3 | Attendance rerun | Re-run Create XP Events | 101 | No duplicate live XP Events | U | U |
-| J4 | Zoom recording credit | Recording watched | — | **Blocked / N/A** until C-025 ships; must not invent live keys | N | N |
+| J4 | Zoom recording credit | Recording quiz Satisfactory | **117a** | `ZOOM_RECORDING\|…` once; blocked if live exists; Config % of live | U (repo ready) | N |
+| J5 | Recording credit rerun | Re-run 117a | **117a** | `skipped_already_awarded` | U | N |
+| J6 | Recording approval email | Config enabled + Satisfactory | **117b** | Send once after Satisfactory only | U | N |
 
 ---
 

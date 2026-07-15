@@ -111,11 +111,15 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 **DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
 
-## Zoom (101)
+## Zoom (101, 117a–117b)
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
+| **117a** | Zoom Recording Credit — Award XP from Quiz Completion | Homework Completions when Satisfactory + Zoom Meeting linked (**DEV install pending**) | `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` |
+| **117b** | Zoom Recording Credit — Send Approval Email Webhook | Homework Completions when Satisfactory + send flag (**DEV install pending**) | `117b-zoom-recording-credit-send-approval-email-webhook.js` |
+
+C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). **117c–117f not required.** Live attendance remains **101** only.
 
 ---
 

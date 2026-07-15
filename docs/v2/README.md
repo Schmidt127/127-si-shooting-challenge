@@ -39,6 +39,8 @@
 | [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | **Release checklist** — promote, smoke, rollback, sign-off |
 | [../AUTOMATION_VERSION_INVENTORY.md](../AUTOMATION_VERSION_INVENTORY.md) | Automation version / trigger / DEV·PROD inventory |
 | [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | End-to-end athlete scenario matrix |
+| [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 Zoom recording credit DEV install |
+| [AUTOMATION_070A_LAUNCH_DECISION.md](./AUTOMATION_070A_LAUNCH_DECISION.md) | 070a homework upload launch decision |
 
 ## Workflow: Mike + ChatGPT + Cursor
 
