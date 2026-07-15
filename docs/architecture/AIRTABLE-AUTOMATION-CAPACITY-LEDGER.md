@@ -32,14 +32,13 @@
 | **After Phase A (COMPLETE)** | **50** | **0** | 006 deleted; 117 OFF created (net zero) |
 | **After Phase B (COMPLETE)** | **48 estimated** | **2 estimated** | Combined 030; **032** + **033** deleted. No visible Airtable counter — inventory math |
 | **After Phase C1 (COMPLETE)** | **47 estimated** | **3 estimated** | Combined 020; **063** deleted (Mike UI) |
-| After Phase C2 (111→013) | **46 estimated** | **4 estimated** | Absorb 111 into 013 |
-| After Phase C (full: C1+C2) | **46** | **4** | 063→020 + 111→013 |
-| After Phase D (072∪074) | **45** | **5** | **Target met** |
+| **After Phase C2 (COMPLETE)** | **46 estimated** | **4 estimated** | Combined 013; **111** deleted (Mike UI 2026-07-15) |
+| After Phase D (072∪074) | **45** | **5** | **Target met** (READY_FOR_AUTHORIZATION) |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count (post Phase C1) | **47 estimated / 3 free estimated** (no visible Airtable counter; inventory − 032 − 033 − 063) |
+| Current count (post Phase C2) | **46 estimated / 4 free estimated** (no visible Airtable counter; inventory − 032 − 033 − 063 − 111) |
 | Proposed target (post Phase A–D) | **45** |
 | Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
@@ -98,7 +97,7 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 077 | Send Daily → Make | often OFF | Y | — | Combine later → 076 |
 | 078 | Mark Parent Feedback Ready | | N* | **No** (065 sets flag — overlap only) | **Keep separate** until proven merge into 065 |
 | 101 | Award Meeting XP | | Y | — | Keep separate |
-| 111 | Copy GB → VF | ON until PASS | library | Replaced by **013** | **LIBRARY** after post-paste delete — Phase C2 |
+| 111 | Copy GB → VF | — | library | Replaced by **013** | **LIBRARY** — deleted from DEV UI (Phase C2 COMPLETE) |
 | 113 | Base Video XP | | Y | — | Keep separate |
 | 114 | Video XP Event | | Y | — | Keep separate |
 | 115 | Test Framework | | Y | — | Keep separate |
@@ -138,7 +137,7 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase C1 COMPLETE 2026-07-14:** combined 020 v3.0.0 live; post-paste smoke PASS; **063** deleted; DEV **47 estimated / 3 free**.
 
-**Phase C2 post-paste PASS 2026-07-14:** combined 013 v3.0.0 live; post-paste smoke PASS; awaiting Mike delete of **111** → **46 estimated / 4 free**. Do **not** start Phase D.
+**Phase C2 COMPLETE 2026-07-15:** combined 013 v3.0.0 live; post-paste PASS; **111** deleted; DEV **46 estimated / 4 free**. Phase D package READY_FOR_AUTHORIZATION (not pasted).
 
 ---
 

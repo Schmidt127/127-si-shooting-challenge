@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — S25 Phase C2 COMPLETE (2026-07-15)
+
+| Field | Value |
+|-------|-------|
+| 111 | **Deleted** |
+| Count | **46 estimated / 4 free** (no visible Airtable counter) |
+| 117 | Remains **OFF** |
+| Folder 07 | Unchanged |
+| Standing by | Mike next Lead + 2-agent job set |
+| Next package | Phase D **READY_FOR_AUTHORIZATION** (not executed) |
+| Docs | `S25-phase-c2-closeout.md` |
+
 ## Milestone — S26 overnight packages integrated (2026-07-14)
 
 | Field | Value |

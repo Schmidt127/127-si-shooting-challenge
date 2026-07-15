@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T20:30:39-06:00",
+  "updated_at": "2026-07-15T05:10:12-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "00c19452845caac316e8078d8de89d0843bd04a1",
@@ -8,10 +8,10 @@
     "match": true
   },
   "run": {
-    "state": "active",
-    "stage_id": "S26",
-    "package_id": "overnight-multi-ws-2026-07-14",
-    "started_at": "2026-07-14T18:10:00-06:00"
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
   },
   "lanes": {
     "lead": {
@@ -991,7 +991,7 @@
         "V2-014",
         "C-025"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 25,
       "depends_on": [
         "phase-c1-063-into-020"
@@ -1007,7 +1007,7 @@
       },
       "claimed_by": "lead",
       "started_at": "2026-07-14",
-      "completed_at": null,
+      "completed_at": "2026-07-15",
       "deliverables": [
         "airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js",
         "airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-2026-07-14/",
@@ -1021,9 +1021,10 @@
         "docs/overnight-runs/results/S25-phase-c2-live-smoke-result.md",
         "docs/deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md",
         "docs/audits/phase-c2-013-post-paste-smoke-2026-07-14.json",
-        "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md"
+        "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md",
+        "docs/overnight-runs/results/S25-phase-c2-closeout.md"
       ],
-      "notes": "Post-paste CRITICAL PASS. UI GATE: Mike delete 111 then report Phase C2 UI complete. Overnight continues other workstreams. Occupancy 47 est / 3 free until 111 delete."
+      "notes": "COMPLETE. Mike deleted 111. DEV 46 estimated / 4 free. 117 OFF. Folder 07 unchanged. Phase D READY_FOR_AUTHORIZATION (not executed)."
     },
     {
       "id": "phase-d-072-074-prep",
@@ -1240,7 +1241,7 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T20:30:08-06:00",
+    "last_run_at": "2026-07-15T05:10:12-06:00",
     "phase_c2_post_paste": "CRITICAL PASS",
     "phase_c2_adjacent": "CRITICAL PASS",
     "phase_d_offline": "20/20",
@@ -1248,8 +1249,10 @@
     "levels_042_043_offline": "PASS",
     "phase_117_offline": "22/22",
     "web_build": "PASS",
-    "pass": true
+    "pass": true,
+    "phase_c2_ui_count": "46 estimated / 4 free (no visible counter)",
+    "phase_c2_complete": true
   },
-  "next_action": "Mike: delete DEV Automation 111 \u2192 Phase C2 UI complete. Phase D READY_FOR_AUTHORIZATION. 117 READY_FOR_MIKE_ACTIVATION (stay OFF). See S26-MORNING-HANDOFF.md.",
-  "stop_reason": null
+  "next_action": "Phase C2 COMPLETE (46 est / 4 free). Standing by for Mike Lead+2-agent job set. Phase D READY_FOR_AUTHORIZATION; 117 READY_FOR_MIKE_ACTIVATION (OFF).",
+  "stop_reason": "awaiting_mike_next_job_set"
 }
