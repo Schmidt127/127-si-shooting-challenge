@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:54:00Z",
+  "updated_at": "2026-07-15T13:55:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "296cd90808213db1b8c77a6fd7555ad9fc4d0f48",
-    "remote_sha": "296cd90808213db1b8c77a6fd7555ad9fc4d0f48",
+    "sha": "ca73aeed3c72398d272470a4c9e5dc0b54f8da04",
+    "remote_sha": "ca73aeed3c72398d272470a4c9e5dc0b54f8da04",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
@@ -125,7 +125,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Lead-takeover executing worker branches from tip e217938536dbbf290c00cd658773e2ccf442097d. Merge order Research \u2192 Implementation \u2192 Testing.",
+  "next_action": "Lead-takeover: workers branch from ca73aeed3c72398d272470a4c9e5dc0b54f8da04. Merge Research \u2192 Implementation \u2192 Testing.",
   "stop_reason": null,
   "merge_order": [
     "research",
