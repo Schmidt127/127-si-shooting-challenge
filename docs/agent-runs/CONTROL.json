@@ -1,24 +1,28 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:30:00Z",
+  "updated_at": "2026-07-15T14:06:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
-    "branch": "cursor/four-agent-os-prep-cfc9",
-    "sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
-    "remote_sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
+    "branch": "cursor/fa-001-four-agent-pilot-cfc9",
+    "sha": "34f71fc10157468e9ae094ad198859aa27f5c5ed",
+    "remote_sha": "34f71fc10157468e9ae094ad198859aa27f5c5ed",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
   "integration": {
-    "branch": "cursor/four-agent-os-prep-cfc9",
+    "branch": "cursor/fa-001-four-agent-pilot-cfc9",
     "base_branch_for_prs": "master",
+    "base_tip_sha": "9d293ab368dd42d700e19980bd2a4dd8aecc5412",
     "merge_to_main_requires": "explicit Mike approval"
   },
   "run": {
-    "state": "idle",
-    "package_id": null,
-    "started_at": null,
-    "stage_id": null
+    "state": "complete",
+    "package_id": "FA-001",
+    "started_at": "2026-07-15T13:47:00Z",
+    "completed_at": "2026-07-15T14:05:00Z",
+    "stage_id": "FA-001-complete",
+    "lead_takeover": true,
+    "lead_takeover_reason": "Workers were authorized but not launched as separate agents; Lead executed path-disjoint worker slices on assigned branches then merged."
   },
   "roles": {
     "lead": {
@@ -49,7 +53,11 @@
   },
   "lanes": {
     "active_writes": [],
-    "available": ["implementation", "testing", "research"]
+    "available": [
+      "implementation",
+      "testing",
+      "research"
+    ]
   },
   "claims": [],
   "queue": [
@@ -61,10 +69,29 @@
       "depends_on": [],
       "auth": "mike-approved-prep",
       "summary": "Minimal four-agent docs, rules, CONTROL, and templates on current branch line."
+    },
+    {
+      "id": "FA-001",
+      "backlog_refs": [
+        "FA-001"
+      ],
+      "state": "COMPLETE",
+      "priority": 1,
+      "depends_on": [
+        "four-agent-os-prep"
+      ],
+      "auth": "mike-approved-2026-07-15",
+      "summary": "Docs-only four-agent pilot: research gap brief, handoff template + pilot checklist, testing validation.",
+      "completed_at": "2026-07-15T14:05:00Z",
+      "worker_tips": {
+        "research": "acec637a4b0158c3fb9fdc59785c8b738fdca12d",
+        "implementation": "9c78b7be3db6a77d7231171183eb2b7dcb516631",
+        "testing": "20e928237f90d6ac2fa41cbf8259683cb9dc4de1"
+      }
     }
   ],
   "hard_stops": [
-    "DEV only — no Production access",
+    "DEV only \u2014 no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -74,7 +101,18 @@
     "Mike must approve merge to master/main",
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
-  "pending_approvals": [],
-  "next_action": "Four-agent kit ready. Lead may authorize the next package by writing assignments and setting run.state to active.",
-  "stop_reason": null
+  "pending_approvals": [
+    {
+      "id": "FA-001-merge-to-master",
+      "action": "merge cursor/fa-001-four-agent-pilot-cfc9 into master",
+      "requires": "explicit Mike approval"
+    }
+  ],
+  "next_action": "FA-001 complete on integration branch. Draft PR to master ready. Awaiting Mike approval before merge to master. Lead takeover was used for all three workers.",
+  "stop_reason": null,
+  "merge_order": [
+    "research",
+    "implementation",
+    "testing"
+  ]
 }
