@@ -1,32 +1,53 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T06:24:47-06:00",
+  "updated_at": "2026-07-15T06:40:10-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "1edb5abb2d0fb2ee07a744c208aabc8406a4743d",
-    "remote_sha": "1edb5abb2d0fb2ee07a744c208aabc8406a4743d",
+    "sha": "ed9d2f1cdb1c04f63302237b9d918808384472f5",
+    "remote_sha": "ed9d2f1cdb1c04f63302237b9d918808384472f5",
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S29",
+    "package_id": "morning-lead-2agent-2026-07-15-s29",
+    "started_at": "2026-07-15T06:40:10-06:00"
   },
   "lanes": {
     "lead": {
       "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
       "branch": "overnight/lead-integration"
     },
-    "active_writes": [],
-    "available": [
+    "active_writes": [
       "worker-a",
-      "worker-b",
+      "worker-b"
+    ],
+    "available": [
       "worker-c",
       "worker-d"
     ]
   },
-  "claims": [],
+  "claims": [
+    {
+      "lane": "worker-a",
+      "package": "117-activation-readiness",
+      "paths": [
+        "docs/deploy-checklists/AUTOMATION-117-*",
+        "tools/airtable/phase_117*",
+        "docs/overnight-runs/results/S29-agent-a*"
+      ]
+    },
+    {
+      "lane": "worker-b",
+      "package": "022-website",
+      "paths": [
+        "docs/deploy-checklists/AUTOMATION-022-*",
+        "web/**",
+        "docs/testing/**",
+        "docs/overnight-runs/results/S29-agent-b*"
+      ]
+    }
+  ],
   "queue": [
     {
       "id": "pipeline-homework-video-audit",
@@ -1271,13 +1292,48 @@
         "web/app/(program)/athletes/[slug]/page.tsx"
       ],
       "notes": "COMPLETE. Phase D auth package + 117/022 verify; athlete profile + matrix. No Airtable changes. Next: Authorize Phase D UI."
+    },
+    {
+      "id": "morning-lead-2agent-2026-07-15-s29",
+      "backlog_refs": [
+        "C-025",
+        "V2-014",
+        "web"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 37,
+      "depends_on": [
+        "phase-d-072-074-prep"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-15",
+      "completed_at": null,
+      "deliverables": [
+        "docs/overnight-runs/stages/S29-AUTHORIZED.md"
+      ],
+      "notes": "117 readiness (no enable), 022 sheet, website feature, Phase E analysis only."
     }
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S28-AUTHORIZED.md",
-    "merge_order": [],
-    "worker_branches": {}
+    "auth_doc": "docs/overnight-runs/stages/S29-AUTHORIZED.md",
+    "merge_order": [
+      "worker-a",
+      "worker-b"
+    ],
+    "worker_branches": {
+      "worker-a": "overnight/v2-run/worker-a-s29-117-activation",
+      "worker-b": "overnight/v2-run/worker-b-s29-022-website"
+    }
   },
   "pending_approvals": [],
   "tests": {
@@ -1291,6 +1347,6 @@
     "pass": true,
     "phase_d_live_smoke": "CRITICAL_PASS"
   },
-  "next_action": "Phase D COMPLETE (45/5 free). Optional: 022 rename; later 117 activation (blank webhook). Phase E later.",
+  "next_action": "S29 IN_PROGRESS: Agent A 117 readiness; Agent B 022+website; Lead Phase E analysis. Do not enable 117.",
   "stop_reason": null
 }
