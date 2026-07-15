@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T14:05:00Z",
+  "updated_at": "2026-07-15T14:06:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "bf8769bd96e9ef5b69652f0db0d3091dab8fc273",
-    "remote_sha": "bf8769bd96e9ef5b69652f0db0d3091dab8fc273",
+    "sha": "34f71fc10157468e9ae094ad198859aa27f5c5ed",
+    "remote_sha": "34f71fc10157468e9ae094ad198859aa27f5c5ed",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
