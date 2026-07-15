@@ -1,0 +1,33 @@
+{
+  "terminalAllowlist": [
+    "git status",
+    "git diff",
+    "git log",
+    "git branch",
+    "git fetch",
+    "git rev-parse",
+    "git show",
+    "git add",
+    "git commit",
+    "python -m json.tool",
+    "python -c",
+    "npm test",
+    "npm run lint",
+    "npm run typecheck"
+  ],
+  "autoRun": {
+    "allow_instructions": [
+      "Allow read-only git inspection and repository-local documentation and agent-run configuration changes under docs/agent-runs/, AGENTS.md, and .cursor/ during controlled four-agent prep or Lead documentation work.",
+      "Allow git add and git commit for path-legal agent-workflow documentation after confirming the agent is on an assigned non-main branch."
+    ],
+    "block_instructions": [
+      "Block git reset --hard, git clean, git push --force, branch deletion, and recursive destructive file deletion.",
+      "Block package installation commands such as pip install, npm install, yarn, pnpm, and cargo install unless Mike explicitly authorizes them.",
+      "Block AWS CLI, deployment scripts, Production operations, credential changes, and environment-variable changes.",
+      "Block Airtable schema creation, deletion, rename, or migration commands.",
+      "Block workers from merging branches; only the Lead may merge worker branches into the integration branch.",
+      "Require explicit Mike approval before any merge to master or main.",
+      "Require approval for git merge and git push even when other git commands are allowed."
+    ]
+  }
+}
