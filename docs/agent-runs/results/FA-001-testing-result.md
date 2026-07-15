@@ -4,7 +4,7 @@
 
 - Role: testing
 - Branch: `cursor/fa-001-testing-cfc9`
-- Tip SHA: (filled after commit)
+- Tip SHA: 5eba8f3866e4e95c15cd9ec6f8c2aafc14b5c823
 - Started / finished: 2026-07-15T14:00Z / 2026-07-15T14:02Z
 - Assignment file: `docs/agent-runs/assignments/FA-001-testing.md`
 - lead_takeover: true (Lead executed Testing slice; separate Testing agent was not launched)
