@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T14:10:00Z",
+  "updated_at": "2026-07-15T14:11:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "PLACEHOLDER",
-    "remote_sha": "PLACEHOLDER",
+    "sha": "c2d5701698b788a0927254022ac4b6c30e5213e0",
+    "remote_sha": "c2d5701698b788a0927254022ac4b6c30e5213e0",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
@@ -49,7 +49,11 @@
   },
   "lanes": {
     "active_writes": [],
-    "available": ["implementation", "testing", "research"]
+    "available": [
+      "implementation",
+      "testing",
+      "research"
+    ]
   },
   "claims": [],
   "queue": [
@@ -64,10 +68,14 @@
     },
     {
       "id": "FA-001",
-      "backlog_refs": ["FA-001"],
+      "backlog_refs": [
+        "FA-001"
+      ],
       "state": "COMPLETE",
       "priority": 1,
-      "depends_on": ["four-agent-os-prep"],
+      "depends_on": [
+        "four-agent-os-prep"
+      ],
       "auth": "mike-approved-2026-07-15",
       "summary": "Docs-only four-agent pilot: research gap brief, handoff template + pilot checklist, testing validation.",
       "completed_at": "2026-07-15T14:05:00Z",
@@ -82,7 +90,7 @@
     }
   ],
   "hard_stops": [
-    "DEV only — no Production access",
+    "DEV only \u2014 no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -93,7 +101,11 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "FA-001 merged to master (Mike approved 2026-07-15). Kit idle — Lead may authorize the next package.",
+  "next_action": "FA-001 merged to master (Mike approved 2026-07-15). Kit idle \u2014 Lead may authorize the next package.",
   "stop_reason": null,
-  "merge_order": ["research", "implementation", "testing"]
+  "merge_order": [
+    "research",
+    "implementation",
+    "testing"
+  ]
 }
