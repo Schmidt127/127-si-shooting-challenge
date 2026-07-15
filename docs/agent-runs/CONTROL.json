@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:51:00Z",
+  "updated_at": "2026-07-15T13:52:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "acc53c4118085e21ca144b879ebec39fffd74fdf",
-    "remote_sha": "acc53c4118085e21ca144b879ebec39fffd74fdf",
+    "sha": "eea9fc45306cc30ce255d4d66d32195159ef2ec8",
+    "remote_sha": "eea9fc45306cc30ce255d4d66d32195159ef2ec8",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
@@ -123,7 +123,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Workers execute FA-001 assignments from base SHA 9d293ab. Lead waits for worker result files, then merges Research \u2192 Implementation \u2192 Testing. Do not merge to master without Mike approval.",
+  "next_action": "Workers branch from integration tip eea9fc45306cc30ce255d4d66d32195159ef2ec8. Base package root remains master 9d293ab. Lead waits for results; merge order Research \u2192 Implementation \u2192 Testing.",
   "stop_reason": null,
   "merge_order": [
     "research",
