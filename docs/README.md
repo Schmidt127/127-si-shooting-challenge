@@ -67,6 +67,22 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 ---
 
+## V2 release readiness
+
+| Doc | Purpose |
+|-----|---------|
+| [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
+| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
+| [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Full athlete-scenario launch matrix |
+| [known-issues.md](./known-issues.md) | Active gaps + **launch blockers** |
+| [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
+
+**Safe repo validation (no Airtable / no secrets printed):**
+
+```bash
+node tools/validate-v2-release-readiness.js
+```
+
 ## Operations and architecture
 
 | Doc | Purpose |

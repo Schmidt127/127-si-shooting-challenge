@@ -36,6 +36,9 @@
 | [../CHATGPT-MASTER-PLAN-BRIEF.md](../CHATGPT-MASTER-PLAN-BRIEF.md) | Consolidated backlog for ChatGPT master planning |
 | [../phase-2b-engineering-review-2026-07-06.md](../phase-2b-engineering-review-2026-07-06.md) | Phase 2B — V2-014 review, C-020 gaps |
 | [../development-base-setup.md](../development-base-setup.md) | **V2-015 ops runbook** — clone prod, isolate webhooks, dev-first deploy |
+| [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | **Release checklist** — promote, smoke, rollback, sign-off |
+| [../AUTOMATION_VERSION_INVENTORY.md](../AUTOMATION_VERSION_INVENTORY.md) | Automation version / trigger / DEV·PROD inventory |
+| [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | End-to-end athlete scenario matrix |
 
 ## Workflow: Mike + ChatGPT + Cursor
 
