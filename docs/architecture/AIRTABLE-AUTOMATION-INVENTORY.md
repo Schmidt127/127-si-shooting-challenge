@@ -90,7 +90,7 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 008 | Mark XP Processing | **N** | Y stale | — | — | — | — | Rename only | Replaced by **116** |
 | 009 | Create Submission Assets | Y | Y | Y | ? | Submissions | — | Keep separate | High risk path |
 | 010 | Create XP Event from Submission | Y | Y | Y | ? | Submissions | — | Keep separate | Core XP |
-| 013 | Create/Link VF + GB repair | Y | Y | Y | ON | Submission Assets | Absorbed 111 (C2 in flight) | Keep separate (combined) | Phase C2 IN FLIGHT |
+| 013 | Create/Link VF + GB repair | Y | Y | Y | ON | Submission Assets | Absorbed 111 | Keep separate (combined) | Phase C2 COMPLETE |
 | 020 | Link/Create HC + GB | Y | Y | Y | ON | Submission Assets | Absorbed 063 | Keep separate (combined) | Phase C1 COMPLETE |
 | 063 | Copy Grade Band → HW | library | — | — | deleted | — | →020 | LIBRARY | Phase C1 |
 | 021 | Set Attachment Upload Status | Y | Y | Y | ? | Submissions | — | Combine safely | ←006 |
@@ -130,7 +130,7 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 077 | Send Daily Email → Make | Y | Y | Y | often OFF | Submissions | Make | Combine with conditions | →076 later |
 | 078 | Mark HW Parent Feedback Ready | Y | Y | **N** | Mike list | Homework Completions | — | Keep separate | Required until proven fold into 065 |
 | 101 | Award Meeting XP | Y | Y | Y | ? | Zoom Meetings | — | Keep separate | Live Zoom |
-| 111 | Copy Grade Band → VF | library | — | — | ON until post-paste | — | →013 | LIBRARY after retire | Phase C2 — delete only after PASS |
+| 111 | Copy Grade Band → VF | library | — | — | deleted | — | →013 | LIBRARY | Phase C2 COMPLETE |
 | 112 | Create VF from Asset | **N** | Y stale | Y | — | — | — | Rename only | **Not in DEV UI** |
 | 113 | Assign Base Video XP | Y | Y | Y | ? | Video Feedback | — | Keep separate | ≠114 |
 | 114 | Create/Update Video XP | Y | Y | Y | ? | Video Feedback | — | Keep separate | ≠113 |
