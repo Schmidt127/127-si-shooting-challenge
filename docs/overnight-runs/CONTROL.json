@@ -1,27 +1,24 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T05:12:16-06:00",
+  "updated_at": "2026-07-15T05:23:27-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
-    "sha": "55a00b44e84ae01af47410266eeedee8b57bbadc",
-    "remote_sha": "55a00b44e84ae01af47410266eeedee8b57bbadc",
+    "sha": "919adf4a3386285e10f0f8df3ecf35912ceffbee",
+    "remote_sha": "919adf4a3386285e10f0f8df3ecf35912ceffbee",
     "match": true
   },
   "run": {
-    "state": "active",
-    "stage_id": "S27",
-    "package_id": "morning-lead-2agent-2026-07-15",
-    "started_at": "2026-07-15T05:10:00-06:00"
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
   },
   "lanes": {
     "lead": {
       "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
       "branch": "overnight/lead-integration"
     },
-    "active_writes": [
-      "worker-a",
-      "worker-b"
-    ],
+    "active_writes": [],
     "available": [
       "worker-a",
       "worker-b",
@@ -1242,7 +1239,7 @@
         "C-025",
         "web"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 35,
       "depends_on": [
         "phase-c2-111-into-013"
@@ -1258,11 +1255,14 @@
       },
       "claimed_by": "lead",
       "started_at": "2026-07-15",
-      "completed_at": null,
+      "completed_at": "2026-07-15",
       "deliverables": [
-        "docs/overnight-runs/stages/S27-AUTHORIZED.md"
+        "docs/overnight-runs/stages/S27-AUTHORIZED.md",
+        "docs/overnight-runs/results/S27-MORNING-REPORT.md",
+        "docs/deploy-checklists/PHASE-D-072-074-authorization-package.md",
+        "web/app/(program)/athletes/[slug]/page.tsx"
       ],
-      "notes": "C2 COMPLETE confirmed. Agent A=Airtable packages; Agent B=web+matrix. No UI paste."
+      "notes": "COMPLETE. Phase D auth package + 117/022 verify; athlete profile + matrix. No Airtable changes. Next: Authorize Phase D UI."
     }
   ],
   "stage": {
@@ -1276,18 +1276,15 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-15T05:10:12-06:00",
-    "phase_c2_post_paste": "CRITICAL PASS",
-    "phase_c2_adjacent": "CRITICAL PASS",
+    "last_run_at": "2026-07-15T05:23:12-06:00",
     "phase_d_offline": "20/20",
-    "folder01_offline": "PASS",
-    "levels_042_043_offline": "PASS",
     "phase_117_offline": "22/22",
+    "web_typecheck": "PASS",
+    "web_lint": "PASS",
+    "web_test": "46/46",
     "web_build": "PASS",
-    "pass": true,
-    "phase_c2_ui_count": "46 estimated / 4 free (no visible counter)",
-    "phase_c2_complete": true
+    "pass": true
   },
-  "next_action": "S27 morning run: Agent A Phase D/117/022 readiness; Agent B website+regression. No Airtable paste/enable.",
+  "next_action": "S27 COMPLETE. Mike: Authorize Phase D UI (072 paste, blank webhook) for path to 5 free. 117 stays OFF.",
   "stop_reason": null
 }
