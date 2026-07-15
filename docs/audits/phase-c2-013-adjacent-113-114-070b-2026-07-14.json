@@ -1,0 +1,110 @@
+{
+  "started": "2026-07-14T18:13:56.736284-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "critical_pass": true,
+  "results": [
+    {
+      "name": "github_113_present",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "files": [
+          "113-video-review-and-xp-assign-base-video-xp.js"
+        ]
+      }
+    },
+    {
+      "name": "github_114_present",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "files": [
+          "114-video-review-and-xp-create-or-update-video-xp-event.js"
+        ]
+      }
+    },
+    {
+      "name": "github_070b_present",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "file": "070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js"
+      }
+    },
+    {
+      "name": "114_source_key_idempotency_markers",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "has_source_key_text": true
+      }
+    },
+    {
+      "name": "114_one_xp_event_markers",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "snippet_ok": true
+      }
+    },
+    {
+      "name": "070b_unchanged_path_still_make_send",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "note": "070b remains separate Make send path; leave OFF"
+      }
+    },
+    {
+      "name": "live_schmidt_video_feedback_readable",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "count": 5,
+        "sample_ids": [
+          "rec16PS5fDsVOm5pB",
+          "rec1DYj8yWmJUjZxE",
+          "rec20xfx0hKCCwPw2",
+          "rec38cWUVFemORVPg",
+          "rec43e0Z4uanLMfEd"
+        ]
+      }
+    },
+    {
+      "name": "113_114_fields_readable_on_vf",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "fields": {
+          "vf_id": "rec16PS5fDsVOm5pB",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "grade_band": "recK7BDVSpHy2ipCS",
+          "base_xp": null,
+          "xp_award_status": null,
+          "xp_events": null,
+          "feedback_posted": null,
+          "workflow": null,
+          "upload": "Pending"
+        }
+      }
+    },
+    {
+      "name": "no_mass_duplicate_xp_on_sample_vf",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "xp_count": 0,
+        "xp_ids": []
+      }
+    },
+    {
+      "name": "070b_leave_off_contract",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "note": "Standing rule: 070b often intentionally OFF in DEV; C2 must not enable it"
+      }
+    }
+  ],
+  "note": "Adjacent probe for C2. Does not fire 113/114/070b. Does not retire 111."
+}

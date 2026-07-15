@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T18:07:56-06:00",
+  "updated_at": "2026-07-14T18:11:29-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "7c9af7da6621af6963ce7652861cd7a777c9d697",
@@ -9,9 +9,9 @@
   },
   "run": {
     "state": "active",
-    "stage_id": "S25",
-    "package_id": "phase-c2-111-into-013",
-    "started_at": "2026-07-14"
+    "stage_id": "S26",
+    "package_id": "overnight-multi-ws-2026-07-14",
+    "started_at": "2026-07-14T18:10:00-06:00"
   },
   "lanes": {
     "lead": {
@@ -1023,12 +1023,218 @@
         "docs/audits/phase-c2-013-post-paste-smoke-2026-07-14.json",
         "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md"
       ],
-      "notes": "Post-paste smoke CRITICAL PASS. 013 live. Awaiting Mike delete of 111 \u2192 46 est / 4 free. Do not start Phase D. 117 OFF. Folder 07 unchanged."
+      "notes": "Post-paste CRITICAL PASS. UI GATE: Mike delete 111 then report Phase C2 UI complete. Overnight continues other workstreams. Occupancy 47 est / 3 free until 111 delete."
+    },
+    {
+      "id": "phase-d-072-074-prep",
+      "backlog_refs": [
+        "V2-014",
+        "C-025"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 26,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 180,
+      "gates": {
+        "owner": true,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Repo-only Phase D prep. READY_FOR_AUTHORIZATION when done. No Airtable paste/enable/email."
+    },
+    {
+      "id": "automation-117-activation-package",
+      "backlog_refs": [
+        "C-025"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 27,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "READY_FOR_MIKE_ACTIVATION package only. Do not enable 117 or configure webhook."
+    },
+    {
+      "id": "core-workflow-regression-matrix",
+      "backlog_refs": [
+        "V2-014"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 28,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Docs + machine-readable matrix. No destructive/email tests."
+    },
+    {
+      "id": "resolve-022-identity",
+      "backlog_refs": [
+        "V2-014"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 29,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 45,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Identify 022 blank UI name. No Airtable changes."
+    },
+    {
+      "id": "folder01-001-003-investigation",
+      "backlog_refs": [
+        "V2-014"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 30,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Decision + plan only unless clearly safe without UI."
+    },
+    {
+      "id": "levels-043-into-042-investigation",
+      "backlog_refs": [
+        "V2-014"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 31,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Recommendation + migration package. Do not retire 043."
+    },
+    {
+      "id": "website-overnight-build",
+      "backlog_refs": [
+        "web"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 32,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 240,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Repo-level website. No prod secrets/settings. Mock data OK."
+    },
+    {
+      "id": "multi-year-season-architecture",
+      "backlog_refs": [
+        "V2"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 33,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 90,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "ADR + phased proposal. No schema mutations."
+    },
+    {
+      "id": "docs-repo-cleanup-plan",
+      "backlog_refs": [],
+      "state": "IN_PROGRESS",
+      "priority": 34,
+      "depends_on": [],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 60,
+      "gates": {
+        "owner": false,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-14",
+      "completed_at": null,
+      "deliverables": [],
+      "notes": "Classify untracked/stale docs. No delete of recovery/media."
     }
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S25-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S26-AUTHORIZED.md",
     "merge_order": [],
     "worker_branches": {}
   },
@@ -1041,6 +1247,6 @@
     "phase_c2_ui_count": "47 estimated / 3 free until 111 delete",
     "pass": true
   },
-  "next_action": "Phase C2 post-paste PASS. Mike deletes automation 111, confirms 46 est / 4 free, replies \"Phase C2 UI complete\". Do not start Phase D.",
-  "stop_reason": "awaiting_mike_delete_111"
+  "next_action": "S26 overnight multi-workstream. UI GATE: Mike delete DEV Automation 111 then report Phase C2 UI complete. Agents continue Phase D prep, 117 package, regression, 022, folder01, 043/042, website, season ADR, cleanup.",
+  "stop_reason": null
 }

@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S26 overnight started (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Auth | Mike authorized multi-workstream overnight (S26) |
+| C2 | Post-paste **PASS** — **UI GATE:** delete **111** |
+| Mike sheet | `PHASE-C2-111-retire-mike-ui.md` |
+| Continues | Phase D prep · 117 package · regression · 022 · Folder01 · 043/042 · website · season · cleanup |
+| Untouched | PROD · Folder 07 · 117 state · real email |
+
 ## Milestone — S25 Phase C2 post-paste smoke PASS (2026-07-14)
 
 | Field | Value |
