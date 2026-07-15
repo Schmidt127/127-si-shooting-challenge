@@ -31,7 +31,7 @@ export function ProgressMeter({
         <p className="font-mono text-xs font-semibold text-foreground">{valueLabel}</p>
       </div>
       <div
-        className="h-2.5 overflow-hidden rounded-full bg-white/[0.1]"
+        className="h-2.5 overflow-hidden rounded-full bg-brand-medium-gray/40"
         role="progressbar"
         aria-valuenow={Math.round(clamped)}
         aria-valuemin={0}

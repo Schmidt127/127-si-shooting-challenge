@@ -12,11 +12,11 @@ const CATEGORY_ACCENTS: Record<string, string> = {
   Shoot: "from-brand-orange/20 to-brand-orange/5",
   Dribble: "from-brand-blue/20 to-brand-blue/5",
   Character: "from-court-navy/30 to-brand-blue/10",
-  Freethrow: "from-brand-blue/15 to-white/[0.03]",
+  Freethrow: "from-brand-blue/15 to-brand-light-gray",
 };
 
 function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
-  const accent = CATEGORY_ACCENTS[tutorial.categories[0] ?? ""] ?? "from-white/5 to-white/[0.02]";
+  const accent = CATEGORY_ACCENTS[tutorial.categories[0] ?? ""] ?? "from-brand-light-gray to-brand-medium-gray/30";
 
   return (
     <Link href={`/tutorials/${tutorial.id}`} className="group block">
@@ -37,14 +37,14 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
             </div>
           )}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition group-hover:opacity-100">
-            <span className="rounded-full border border-white/20 bg-black/50 p-3 text-white backdrop-blur-sm">
+            <span className="rounded-full border border-brand-medium-gray bg-black/50 p-3 text-white backdrop-blur-sm">
               <IconPlay size={28} />
             </span>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
           <div className="absolute bottom-3 left-3 right-3">
             {tutorial.categories[0] ? (
-              <span className="rounded-md border border-white/15 bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
+              <span className="rounded-md border border-border bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                 {tutorial.categories[0]}
               </span>
             ) : null}

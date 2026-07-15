@@ -15,7 +15,7 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
 
   return (
     <section
-      className="mt-12 rounded-xl border border-court-gold/25 bg-gradient-to-br from-court-gold/[0.08] via-card/80 to-brand-blue/[0.1] p-6 sm:p-8"
+      className="mt-12 overflow-hidden rounded-xl border border-court-gold/30 bg-gradient-to-br from-court-gold/[0.12] via-card to-brand-blue/[0.08] p-6 shadow-[0_8px_24px_-12px_rgba(38,38,38,0.14)] sm:p-8"
       aria-labelledby="top-board-heading"
     >
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -39,8 +39,8 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className={`flex items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-4 ${
-              entry.rank === 1 ? "ring-1 ring-court-gold/40" : ""
+            className={`flex items-center gap-3 rounded-lg border border-border bg-card p-4 ${
+              entry.rank === 1 ? "ring-1 ring-court-gold/50" : ""
             }`}
           >
             <span className="font-mono text-lg font-bold text-muted" aria-label={`Rank ${entry.rank}`}>
@@ -72,13 +72,13 @@ function HubCard({ link }: { link: ProgramHubLink }) {
       href={link.href}
       className={`group relative overflow-hidden rounded-xl border p-5 transition duration-200 hover:-translate-y-0.5 ${
         link.featured
-          ? "border-accent/35 bg-gradient-to-br from-accent/[0.1] via-card/80 to-brand-blue/[0.08] hover:border-accent/50"
-          : "border-white/10 bg-card/60 hover:border-white/20 hover:bg-card/90"
+          ? "border-accent/40 bg-gradient-to-br from-accent/[0.12] via-card to-brand-blue/[0.06] shadow-[0_8px_24px_-12px_rgba(38,38,38,0.14)] hover:border-accent/55"
+          : "border-border bg-card shadow-[0_4px_16px_-10px_rgba(38,38,38,0.1)] hover:border-brand-blue/35 hover:bg-card"
       }`}
     >
       <div
         className={`mb-3 inline-flex rounded-lg p-2.5 ${
-          link.featured ? "bg-accent/15 text-accent-soft" : "bg-brand-blue/15 text-brand-white"
+          link.featured ? "bg-accent/15 text-accent-soft" : "bg-brand-blue/10 text-brand-blue"
         }`}
       >
         <Icon size={22} aria-hidden />
