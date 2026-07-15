@@ -1,7 +1,7 @@
 # Phase D — Authorization package (final readiness)
 
-**Status:** `AUTHORIZED` — Mike authorized Phase D UI 2026-07-15 (S28)  
-**Scope:** DEV only · blank webhook · 072 OFF / 074 OFF for first smoke · retire 074 only after critical PASS · no 117 / other Folder 07 / PROD / real email.
+**Status:** `COMPLETE` — Mike Phase D UI complete 2026-07-15 (S28). 074 deleted. Capacity **45 / 5 free**.  
+**Live smoke:** critical PASS (`docs/audits/phase-d-072-live-smoke-2026-07-15.json`).
 
 ---
 

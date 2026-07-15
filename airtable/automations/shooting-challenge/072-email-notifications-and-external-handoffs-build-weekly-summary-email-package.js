@@ -7,7 +7,7 @@ Folder: 07 - Email, Notifications, and External Handoffs
 Survives: 072
 Absorbs: 074 (library stub after authorize + retire)
 Rollback: _rollback/phase-d-072-074-2026-07-14/
-Status: AUTHORIZED (S28) — paste into DEV 072; leave OFF + blank webhook for first smoke
+Status: COMPLETE (S28) — DEV 072 v4.0.0 live; 074 retired from UI
 */
 
 /************************************************************

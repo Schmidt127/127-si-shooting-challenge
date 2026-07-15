@@ -4,8 +4,8 @@
 |-------|-------|
 | Base | `appTetnuCZlCZdTCT` (DEV) |
 | Hard cap | **50** (ON + OFF both consume) |
-| Ledger as-of | 2026-07-14 (S21 correction) |
-| Stage | Analysis only — **no Airtable mutations** |
+| Ledger as-of | 2026-07-15 (Phase D COMPLETE) |
+| Stage | Capacity tracking — Phase A–D executed in DEV |
 | Authority | Mike’s 50-item DEV list = current / required |
 
 ---
@@ -33,13 +33,13 @@
 | **After Phase B (COMPLETE)** | **48 estimated** | **2 estimated** | Combined 030; **032** + **033** deleted. No visible Airtable counter — inventory math |
 | **After Phase C1 (COMPLETE)** | **47 estimated** | **3 estimated** | Combined 020; **063** deleted (Mike UI) |
 | **After Phase C2 (COMPLETE)** | **46 estimated** | **4 estimated** | Combined 013; **111** deleted (Mike UI 2026-07-15) |
-| After Phase D (072∪074) | **45** | **5** | **Target met** (READY_FOR_AUTHORIZATION) |
+| **After Phase D (COMPLETE)** | **45 estimated** | **5 estimated** | Combined 072; **074** deleted (Mike UI 2026-07-15). **Target met** |
 | Stretch Phase E (076∪077 + more EMC) | ≤43 | ≥7 | Later |
 
 | Metric | Value |
 |--------|------:|
-| Current count (post Phase C2) | **46 estimated / 4 free estimated** (no visible Airtable counter; inventory − 032 − 033 − 063 − 111) |
-| Proposed target (post Phase A–D) | **45** |
+| Current count (post Phase D) | **45 estimated / 5 free estimated** (no visible Airtable counter; inventory − 032 − 033 − 063 − 111 − 074) |
+| Proposed target (post Phase A–D) | **45** — **met** |
 | Phase A slot delta | **0 net** |
 | Deletions recommended for OFF status | **0** |
 
@@ -89,9 +89,9 @@ Model used when full UI paste not yet filed: S21 reconciliation (docs ± known U
 | 070b | Send Video → Make | often OFF | Y | — | **Keep separate** — intentional DEV OFF |
 | 070c | Verify Async Upload | often OFF | Y | — | **Keep separate** — required async path |
 | 071 | HW Feedback Email | often OFF | Y | — | Keep / later EMC combine |
-| 072 | Build Weekly Email | | Y | — | **Combine with conditions** → 074 |
+| 072 | Build (+ Send) Weekly Email | | Y | Absorbed **074** | Keep separate (combined) — Phase D COMPLETE |
 | 073 | VF Parent Email | often OFF | Y | — | Keep / later EMC |
-| 074 | Send Weekly → Make | often OFF | Y | — | **Combine with conditions** → 072 |
+| 074 | Send Weekly → Make | — | library | Replaced by **072** | **LIBRARY** — deleted from DEV UI (Phase D COMPLETE) |
 | 075 | Build Welcome Email | | Y | — | Keep / later EMC |
 | 076 | Build Daily Email | | Y | — | Combine later → 077 |
 | 077 | Send Daily → Make | often OFF | Y | — | Combine later → 076 |
@@ -137,7 +137,9 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase C1 COMPLETE 2026-07-14:** combined 020 v3.0.0 live; post-paste smoke PASS; **063** deleted; DEV **47 estimated / 3 free**.
 
-**Phase C2 COMPLETE 2026-07-15:** combined 013 v3.0.0 live; post-paste PASS; **111** deleted; DEV **46 estimated / 4 free**. Phase D package READY_FOR_AUTHORIZATION (not pasted).
+**Phase C2 COMPLETE 2026-07-15:** combined 013 v3.0.0 live; post-paste PASS; **111** deleted; DEV **46 estimated / 4 free**.
+
+**Phase D COMPLETE 2026-07-15:** combined 072 v4.0.0 live; no-send smoke PASS; **074** deleted; DEV **45 estimated / 5 free** (**target met**).
 
 ---
 
@@ -148,9 +150,8 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 | A | 006∪021 then +117 | 0 net | 0 |
 | B | WAS 030∪032∪033 | +2 | **2** (COMPLETE) |
 | C | 063→020 (C1) | +1 | **3** (COMPLETE) |
-| C2 | 111→013 | +1 | 4 |
-| D | 111→013 | +1 | 4 |
-| E | 072∪074 | +1 | **5** ✓ |
+| C2 | 111→013 | +1 | **4** (COMPLETE) |
+| D | 072∪074 | +1 | **5** ✓ (COMPLETE) |
 
 ---
 
@@ -162,9 +163,9 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 | 070b | Video → Make | Keep |
 | 070c | Async verify | Keep — required for Accepted path |
 | 071 | HW parent email | Keep; EMC later |
-| 072 | Weekly build | Combine with 074 (Phase E) |
+| 072 | Weekly build (+ send) | Combined — Phase D COMPLETE |
 | 073 | VF parent email | Keep; EMC later |
-| 074 | Weekly send | Combine with 072 (Phase E) |
+| 074 | Weekly send | **LIBRARY** — deleted; absorbed by 072 |
 | 075 | Welcome build | Keep; EMC later |
 | 076 | Daily build | Combine with 077 later |
 | 077 | Daily send | Combine with 076 later |

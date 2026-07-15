@@ -21,7 +21,7 @@ Rollback copy: _rollback/phase-d-072-074-2026-07-14/074-email-notifications-and-
  * IMPORTANT DESIGN RULES
  * - Do not paste this file as a separate Airtable automation after Phase D PASS.
  * - Retire the DEV UI slot only after live smoke PASS (slot recovery → +1 free).
- * - Until Mike authorizes Phase D UI, the pre-combine 074 may still exist in Airtable OFF.
+ * - Phase D COMPLETE: 074 deleted from DEV UI 2026-07-15; this file is library-only.
  ************************************************************/
 
 // @ts-nocheck

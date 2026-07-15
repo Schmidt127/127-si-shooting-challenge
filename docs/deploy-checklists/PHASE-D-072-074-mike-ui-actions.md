@@ -1,10 +1,10 @@
 # Mike UI actions — Phase D (072 ∪ 074)
 
-**Repo prep is done.** Status: **AUTHORIZED** (Mike · 2026-07-15 · S28).
+**Repo prep is done.** Status: **COMPLETE** (Mike · Phase D UI complete · 2026-07-15 · S28).
 
-**Do not send real family email. Do not configure a live Make webhook until test inbox path is confirmed. Do not touch 117. Do not touch other Folder 07 OFF automations. Do not touch PROD.**
+**074 deleted.** Capacity **45 estimated / 5 free**. Live smoke: `docs/audits/phase-d-072-live-smoke-2026-07-15.json`.
 
-Complete no-send smoke: [PHASE-D-072-074-dev-no-send-smoke.md](./PHASE-D-072-074-dev-no-send-smoke.md)
+Do not send real family email. Do not configure a live Make webhook until test inbox path is confirmed. Do not touch 117. Do not touch other Folder 07 OFF automations. Do not touch PROD.
 
 ---
 

@@ -36,6 +36,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Phase D COMPLETE (2026-07-15)** — Combined **072** v4.0.0 (BUILD + optional SEND) live on DEV; live no-send smoke critical PASS; Mike deleted **074**. Occupancy **45 estimated / 5 free**. 117 unchanged OFF. No PROD / real email / Make prod. Evidence: `docs/audits/phase-d-072-live-smoke-2026-07-15.json`, closeout `docs/overnight-runs/results/S28-phase-d-closeout.md`.
 - **C-025 S20 orchestrator slot fit (2026-07-14)** — DEV at automation limit: `117-zoom-recording-credit-orchestrator.js` runs A→F in one automation; 117a–f marked library-only. Offline tests 34/34. Stop for Mike: free 1 DEV slot (prefer retire 112) then paste single orchestrator OFF. No PROD.
 - **C-025 S19 DEV 117 activation closeout (2026-07-14)** — Deployment sheet + Mike action sheet for paste of 117a–f. Safety fixes: **117c/117f/117b v1.0.1** (Recording Quiz–only XP; email Approved/Conflict guards; correctionCount output). *(Superseded for DEV capacity by S20.)*
 - **C-025 S18 Zoom recording credit DEV DoD (2026-07-14)** — GitHub sources `117a`–`117f`; ZA support fields for gate/PW/email/review; DEV E2E harness without Fillout; temp scaffold renamed `ZZZ C025 Archive — *`. Promotion package prepared — **not applied to PROD**. Paste of 117a–f into Airtable UI still required for trigger runs.

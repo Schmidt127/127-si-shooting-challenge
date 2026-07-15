@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T05:47:13-06:00",
+  "updated_at": "2026-07-15T06:24:29-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "a8779162a063e1d732c74b4eb21b521599c4130f",
@@ -8,10 +8,10 @@
     "match": true
   },
   "run": {
-    "state": "active",
-    "stage_id": "S28",
-    "package_id": "phase-d-072-074-ui",
-    "started_at": "2026-07-15T05:46:56-06:00"
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
   },
   "lanes": {
     "lead": {
@@ -1032,7 +1032,7 @@
         "V2-014",
         "C-011"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 26,
       "depends_on": [],
       "auth": "owner-authorized-execution",
@@ -1046,12 +1046,17 @@
       },
       "claimed_by": "lead",
       "started_at": "2026-07-15",
-      "completed_at": null,
+      "completed_at": "2026-07-15",
       "deliverables": [
         "docs/overnight-runs/stages/S28-AUTHORIZED.md",
-        "docs/deploy-checklists/PHASE-D-072-074-dev-no-send-smoke.md"
+        "docs/deploy-checklists/PHASE-D-072-074-dev-no-send-smoke.md",
+        "docs/audits/phase-d-072-live-smoke-2026-07-15.json",
+        "docs/overnight-runs/results/S28-phase-d-live-smoke-result.md",
+        "tools/airtable/phase_d_072_live_smoke_suite.py",
+        "docs/overnight-runs/results/S28-phase-d-closeout.md",
+        "docs/overnight-runs/results/S28-phase-d-migration-record.md"
       ],
-      "notes": "AUTHORIZED Phase D UI (S28). Stopped at Mike first paste into 072. Offline 20/20. Rollback preserved."
+      "notes": "COMPLETE. Mike deleted 074. DEV 45 estimated / 5 free. Live smoke PASS. 117 OFF. No PROD."
     },
     {
       "id": "automation-117-activation-package",
@@ -1276,15 +1281,16 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-15T05:26:27-06:00",
+    "last_run_at": "2026-07-15T06:24:29-06:00",
     "phase_d_offline": "20/20",
     "phase_117_offline": "22/22",
     "web_typecheck": "PASS",
     "web_lint": "PASS",
     "web_test": "46/46",
     "web_build": "PASS",
-    "pass": true
+    "pass": true,
+    "phase_d_live_smoke": "CRITICAL_PASS"
   },
-  "next_action": "S28 Phase D UI: Mike paste 072 v4.0.0 (blank webhook, leave 072+074 OFF). Then run PHASE-D-072-074-dev-no-send-smoke.md. Stop: waiting on Mike paste.",
+  "next_action": "Phase D COMPLETE (45/5 free). Optional: 022 rename; later 117 activation (blank webhook). Phase E later.",
   "stop_reason": null
 }

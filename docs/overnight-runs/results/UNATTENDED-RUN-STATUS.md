@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — S28 Phase D COMPLETE (2026-07-15)
+
+| Field | Value |
+|-------|-------|
+| 072 | Combined v4.0.0 live (paste + smoke PASS) |
+| 074 | **Deleted** |
+| Count | **45 estimated / 5 free** |
+| 117 | Remains **OFF** |
+| PROD / real email | Unchanged / none |
+| Docs | `S28-phase-d-closeout.md` · `S28-phase-d-migration-record.md` |
+| Next | Optional 022 rename · later 117 activation · Phase E later |
+
 ## Milestone — S27 morning COMPLETE (2026-07-15)
 
 | Field | Value |

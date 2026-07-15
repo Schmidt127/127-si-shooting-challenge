@@ -1,0 +1,256 @@
+{
+  "stage": "S28",
+  "package": "phase-d-072-074-ui",
+  "base": "appTetnuCZlCZdTCT",
+  "fixture_was": "recBO81w4dYtcaL4V",
+  "started_at": "2026-07-15T06:15:50.573467-06:00",
+  "finished_at": "2026-07-15T06:18:14.393358-06:00",
+  "makeWebhookUrl": "blank (automation input \u2014 not set by this suite)",
+  "automation_074": "OFF (not touched)",
+  "automation_117": "unchanged",
+  "prod": "untouched",
+  "real_email": false,
+  "make_production_call": false,
+  "critical_pass": true,
+  "cases": [
+    {
+      "case": "1_package_build",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "build": false,
+        "send": false,
+        "ready": true,
+        "sent": false,
+        "subject_len": 62,
+        "html_len": 67960,
+        "recipients_len": 28,
+        "error": "",
+        "enrollment": "recgP9qZYjAhE7NXm",
+        "week": "recUPkXtsDOHnY5q7",
+        "last_built": "2026-07-15T12:15:59.124Z",
+        "revision": "v4.0.0"
+      },
+      "notes": ""
+    },
+    {
+      "case": "2_already_built_package",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "build": false,
+        "send": true,
+        "ready": true,
+        "sent": false,
+        "subject_len": 62,
+        "html_len": 67960,
+        "recipients_len": 28,
+        "error": "",
+        "enrollment": "recgP9qZYjAhE7NXm",
+        "week": "recUPkXtsDOHnY5q7",
+        "last_built": "2026-07-15T12:15:59.124Z",
+        "revision": "v4.0.0"
+      },
+      "notes": "Send stays armed after send-only + blank webhook; package unchanged"
+    },
+    {
+      "case": "4_blank_webhook",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "build": false,
+        "send": true,
+        "ready": true,
+        "sent": false,
+        "subject_len": 62,
+        "html_len": 67960,
+        "recipients_len": 28,
+        "error": "",
+        "enrollment": "recgP9qZYjAhE7NXm",
+        "week": "recUPkXtsDOHnY5q7",
+        "last_built": "2026-07-15T12:15:59.124Z",
+        "revision": "v4.0.0"
+      },
+      "notes": "No Sent stamp; Send not cleared \u2014 safe no-send with blank webhook"
+    },
+    {
+      "case": "3_disabled_config",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "do_build": false,
+        "do_send": false,
+        "action_out": "skipped_send_disabled",
+        "status_out": "skipped",
+        "send_skip": "skipped_send_disabled"
+      },
+      "notes": "Offline decide contract \u2014 sendEnabled input not writable via Records API"
+    },
+    {
+      "case": "5_missing_recipient_template",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "missing_package": {
+          "do_build": false,
+          "do_send": false,
+          "action_out": "skipped_missing_package",
+          "status_out": "skipped",
+          "send_skip": "skipped_missing_package"
+        },
+        "missing_recipient": {
+          "do_build": false,
+          "do_send": false,
+          "action_out": "skipped_missing_recipient",
+          "status_out": "skipped",
+          "send_skip": "skipped_missing_recipient"
+        },
+        "live_corroboration": {
+          "build": false,
+          "send": true,
+          "ready": true,
+          "sent": false,
+          "subject_len": 62,
+          "html_len": 67960,
+          "recipients_len": 0,
+          "error": "",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "last_built": "2026-07-15T12:15:59.124Z",
+          "revision": "v4.0.0"
+        }
+      },
+      "notes": "Offline under blank-webhook safety (live blank webhook short-circuits first)"
+    },
+    {
+      "case": "6_already_sent_key",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "build": false,
+        "send": true,
+        "ready": true,
+        "sent": true,
+        "subject_len": 62,
+        "html_len": 67960,
+        "recipients_len": 28,
+        "error": "",
+        "enrollment": "recgP9qZYjAhE7NXm",
+        "week": "recUPkXtsDOHnY5q7",
+        "last_built": "2026-07-15T12:15:59.124Z",
+        "revision": "v4.0.0"
+      },
+      "notes": "Sent stays checked; no rebuild arm"
+    },
+    {
+      "case": "7_failed_send_retry_model",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "fail": {
+          "ok": false,
+          "action": "error",
+          "clear_send_flag": false,
+          "write_error": true
+        },
+        "success_clear_send": true
+      },
+      "notes": "Offline \u2014 no prod Make webhook used; Send stays armed on fail"
+    },
+    {
+      "case": "8_duplicate_trigger_protection",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "after_rebuild": {
+          "build": false,
+          "send": false,
+          "ready": true,
+          "sent": false,
+          "subject_len": 62,
+          "html_len": 67960,
+          "recipients_len": 28,
+          "error": "",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "last_built": "2026-07-15T12:17:26.764Z",
+          "revision": "v4.0.0"
+        },
+        "idle": {
+          "build": false,
+          "send": false,
+          "ready": true,
+          "sent": false,
+          "subject_len": 62,
+          "html_len": 67960,
+          "recipients_len": 28,
+          "error": "",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "last_built": "2026-07-15T12:17:26.764Z",
+          "revision": "v4.0.0"
+        },
+        "subj_before": 62
+      },
+      "notes": "Build re-run clears Build Now; idle leaves package intact"
+    },
+    {
+      "case": "9_weekly_timing_prerequisites",
+      "critical": true,
+      "result": "PASS",
+      "evidence": {
+        "offline_boundary": true,
+        "live_no_fire": {
+          "build": true,
+          "send": false,
+          "ready": true,
+          "sent": false,
+          "subject_len": 62,
+          "html_len": 67960,
+          "recipients_len": 28,
+          "error": "",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": null,
+          "last_built": "2026-07-15T12:17:26.764Z",
+          "revision": "v4.0.0"
+        },
+        "restored": {
+          "build": false,
+          "send": false,
+          "ready": true,
+          "sent": false,
+          "subject_len": 62,
+          "html_len": 67960,
+          "recipients_len": 28,
+          "error": "",
+          "enrollment": "recgP9qZYjAhE7NXm",
+          "week": "recUPkXtsDOHnY5q7",
+          "last_built": "2026-07-15T12:17:26.764Z",
+          "revision": "v4.0.0"
+        }
+      },
+      "notes": "Week empty prevents trigger fire; week boundary offline PASS"
+    },
+    {
+      "case": "fixture_restored",
+      "critical": false,
+      "result": "PASS",
+      "evidence": {
+        "build": false,
+        "send": false,
+        "ready": false,
+        "sent": false,
+        "subject_len": 0,
+        "html_len": 0,
+        "recipients_len": 0,
+        "error": "",
+        "enrollment": "recgP9qZYjAhE7NXm",
+        "week": "recUPkXtsDOHnY5q7",
+        "last_built": "2026-07-15T12:17:26.764Z",
+        "revision": null
+      },
+      "notes": "Package cleared; links intact"
+    }
+  ],
+  "mike_next": "Delete DEV automation 074 only. Then reply: Phase D UI complete."
+}

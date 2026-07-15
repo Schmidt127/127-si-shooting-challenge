@@ -30,13 +30,13 @@ Mike-authorized Phase D: paste combined **072 v4.0.0**, run complete DEV **no-se
 
 ## Definition of done
 
-- [ ] Combined 072 pasted (skip GitHub header)
-- [ ] Webhook blank; 072 OFF / 074 OFF for first smoke setup
-- [ ] Complete DEV no-send smoke **critical PASS**
-- [ ] Confirm no real email / no Make production call
-- [ ] Retire 074; capacity **45 / 5 free** (estimated)
-- [ ] CONTROL + capacity ledger + migration evidence + closeout
+- [x] Combined 072 pasted (skip GitHub header)
+- [x] Webhook blank; 072 OFF / 074 OFF for first smoke setup
+- [x] Complete DEV no-send smoke **critical PASS**
+- [x] Confirm no real email / no Make production call
+- [x] Retire 074; capacity **45 / 5 free** (estimated)
+- [x] CONTROL + capacity ledger + migration evidence + closeout
 
-## Stop gate
+## Status
 
-Cursor stops at **Mike’s first Airtable UI action** (paste into 072). Cursor resumes after Mike reports paste done / smoke results / “Phase D UI complete”.
+**COMPLETE** — Mike signal: Phase D UI complete (2026-07-15).
