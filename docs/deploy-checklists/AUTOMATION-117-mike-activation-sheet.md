@@ -1,14 +1,16 @@
 # Mike activation sheet — Automation 117 (orchestrator)
 
 **Status:** READY_FOR_MIKE_ACTIVATION  
-**Date:** 2026-07-14 · S26 Workstream 3  
+**Date:** 2026-07-15 · S29 re-verify  
 **Base:** DEV `appTetnuCZlCZdTCT` only  
-**Do not:** enable on this pass until you choose to · configure a real webhook · touch PROD · change Folder 07 · send parent email
+**Do not:** enable until Mike reaches the UI gate · configure a real webhook · touch PROD · change Folder 07 · send parent email
 
 Authority docs:
 - [AUTOMATION-117-trigger-design.md](./AUTOMATION-117-trigger-design.md)
 - [AUTOMATION-117-interaction-map.md](./AUTOMATION-117-interaction-map.md)
-- Offline suite: `python tools/airtable/phase_117_activation_smoke_plan.py`
+- [AUTOMATION-117-live-activation-smoke-matrix.md](./AUTOMATION-117-live-activation-smoke-matrix.md)
+- Offline suite: `python tools/airtable/phase_117_activation_smoke_plan.py` (**22/22 PASS** S29)
+- Unit: `test_c025_117_*` (**34/34 PASS** S29)
 
 ---
 
@@ -18,7 +20,8 @@ Authority docs:
 |------|--------|
 | **Exact automation name** | `117 - Zoom Recording Credit - Orchestrator` |
 | **Folder** | `17 - Zoom Recording Credit` |
-| **GitHub paste source** | `airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js` **v1.0.1** |
+| **Full Windows source path** | `C:\Users\mschmidt_fairfield\Documents\GitHub\127-si-shooting-challenge\airtable\automations\shooting-challenge\117-zoom-recording-credit-orchestrator.js` |
+| **GitHub version** | **v1.0.1** |
 | **Paste boundary** | Skip GitHub header lines **1–7**; paste from `/************************************************************` through EOF |
 | **Trigger type** | **When record matches conditions** |
 | **Trigger table** | **Zoom Attendance** |

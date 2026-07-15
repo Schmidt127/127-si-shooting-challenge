@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T06:40:10-06:00",
+  "updated_at": "2026-07-15T06:43:09-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "ed9d2f1cdb1c04f63302237b9d918808384472f5",
@@ -8,46 +8,25 @@
     "match": true
   },
   "run": {
-    "state": "active",
-    "stage_id": "S29",
-    "package_id": "morning-lead-2agent-2026-07-15-s29",
-    "started_at": "2026-07-15T06:40:10-06:00"
+    "state": "idle",
+    "stage_id": null,
+    "package_id": null,
+    "started_at": null
   },
   "lanes": {
     "lead": {
       "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
       "branch": "overnight/lead-integration"
     },
-    "active_writes": [
-      "worker-a",
-      "worker-b"
-    ],
+    "active_writes": [],
     "available": [
+      "worker-a",
+      "worker-b",
       "worker-c",
       "worker-d"
     ]
   },
-  "claims": [
-    {
-      "lane": "worker-a",
-      "package": "117-activation-readiness",
-      "paths": [
-        "docs/deploy-checklists/AUTOMATION-117-*",
-        "tools/airtable/phase_117*",
-        "docs/overnight-runs/results/S29-agent-a*"
-      ]
-    },
-    {
-      "lane": "worker-b",
-      "package": "022-website",
-      "paths": [
-        "docs/deploy-checklists/AUTOMATION-022-*",
-        "web/**",
-        "docs/testing/**",
-        "docs/overnight-runs/results/S29-agent-b*"
-      ]
-    }
-  ],
+  "claims": [],
   "queue": [
     {
       "id": "pipeline-homework-video-audit",
@@ -1300,7 +1279,7 @@
         "V2-014",
         "web"
       ],
-      "state": "IN_PROGRESS",
+      "state": "COMPLETE",
       "priority": 37,
       "depends_on": [
         "phase-d-072-074-prep"
@@ -1316,11 +1295,17 @@
       },
       "claimed_by": "lead",
       "started_at": "2026-07-15",
-      "completed_at": null,
+      "completed_at": "2026-07-15",
       "deliverables": [
-        "docs/overnight-runs/stages/S29-AUTHORIZED.md"
+        "docs/overnight-runs/stages/S29-AUTHORIZED.md",
+        "docs/overnight-runs/results/S29-MORNING-HANDOFF.md",
+        "docs/deploy-checklists/AUTOMATION-117-mike-activation-sheet.md",
+        "docs/deploy-checklists/AUTOMATION-117-live-activation-smoke-matrix.md",
+        "docs/deploy-checklists/AUTOMATION-022-identity-and-mike-rename-sheet.md",
+        "web/components/athlete/athlete-profile-view.tsx",
+        "docs/overnight-runs/results/S29-phase-e-analysis-only.md"
       ],
-      "notes": "117 readiness (no enable), 022 sheet, website feature, Phase E analysis only."
+      "notes": "COMPLETE Lead-direct. 117 readiness (not enabled). 022 sheet. Website polish. Phase E analysis only. 45/5 free."
     }
   ],
   "stage": {
@@ -1337,7 +1322,7 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-15T06:24:29-06:00",
+    "last_run_at": "2026-07-15T06:43:09-06:00",
     "phase_d_offline": "20/20",
     "phase_117_offline": "22/22",
     "web_typecheck": "PASS",
@@ -1345,8 +1330,9 @@
     "web_test": "46/46",
     "web_build": "PASS",
     "pass": true,
-    "phase_d_live_smoke": "CRITICAL_PASS"
+    "phase_d_live_smoke": "CRITICAL_PASS",
+    "phase_117_unit": "34/34"
   },
-  "next_action": "S29 IN_PROGRESS: Agent A 117 readiness; Agent B 022+website; Lead Phase E analysis. Do not enable 117.",
+  "next_action": "S29 COMPLETE. Capacity 45/5. Next: Mike 117 activation when ready (blank webhook; stay OFF until chosen). Optional 022 rename. Phase E analysis only \u2014 do not implement.",
   "stop_reason": null
 }

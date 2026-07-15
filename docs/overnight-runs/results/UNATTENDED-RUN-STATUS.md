@@ -1,5 +1,16 @@
 ﻿# Unattended run status
 
+## Milestone — S29 Lead+2 COMPLETE (2026-07-15)
+
+| Field | Value |
+|-------|-------|
+| 117 | Readiness package · offline 22/22 + 34/34 · **still OFF** |
+| 022 | Rename sheet ready · no UI change |
+| Website | Athlete profile levels/achievements polish · 46/46 |
+| Phase E | Analysis only |
+| Capacity | **45 / 5 free** |
+| Next | Mike: 117 activation sheet when ready (blank webhook) |
+
 ## Milestone — S28 Phase D COMPLETE (2026-07-15)
 
 | Field | Value |

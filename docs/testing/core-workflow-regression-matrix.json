@@ -2,15 +2,21 @@
   "schema_version": 1,
   "document": "docs/testing/CORE-WORKFLOW-REGRESSION-MATRIX.md",
   "as_of": "2026-07-15",
-  "stage": "S27",
-  "workstream": "morning-lead-2agent",
+  "stage": "S29",
+  "workstream": "morning-lead-2agent-s29",
+  "s29_focus": [
+    {"id": "combined_072", "status": "live_DEV_passing", "evidence": "Phase D S28 no-send; 074 deleted"},
+    {"id": "117_x_101", "status": "automated_and_passing", "blocked": "Mike UI (117 OFF)"},
+    {"id": "022_identity", "status": "automated_and_passing", "blocked": "Mike UI rename optional"},
+    {"id": "public_athlete_profile", "status": "automated_and_passing", "evidence": "mock adapter /athletes/[slug]"}
+  ],
   "s27_focus": [
     {"id": "combined_021", "status": "live_DEV_passing", "evidence": "Phase A smoke"},
     {"id": "combined_030", "status": "live_DEV_passing", "evidence": "Phase B smoke"},
     {"id": "combined_020", "status": "live_DEV_passing", "evidence": "Phase C1 post-paste"},
     {"id": "combined_013", "status": "live_DEV_passing", "evidence": "Phase C2 post-paste"},
     {"id": "117_x_101", "status": "automated_and_passing", "blocked": "Mike UI (117 OFF)"},
-    {"id": "phase_d_weekly_email_no_send", "status": "automated_and_passing", "blocked": "Mike UI (Phase D paste)"}
+    {"id": "phase_d_weekly_email_no_send", "status": "live_DEV_passing", "evidence": "S28 Phase D complete"}
   ],
   "evidence_vocabulary": {
     "PASS": "Documented live smoke with artifact path",

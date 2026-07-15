@@ -2,7 +2,7 @@
 
 **Status:** Authoritative human matrix (docs-only)  
 **Stage:** S26 · Workstream 4  
-**As-of:** 2026-07-14  
+**As-of:** 2026-07-15 (S29)  
 **Bases:** DEV `appTetnuCZlCZdTCT` · PROD `appn84sqPw03zEbTT`  
 **Companion JSON:** [core-workflow-regression-matrix.json](./core-workflow-regression-matrix.json)
 
@@ -29,6 +29,15 @@
 | **blocked by Mike UI** | Paste, enable, rename, or delete required before live run |
 | **blocked by external service** | Make / Lambda / email / webhook dependency |
 
+### S29 high-risk focus rows
+
+| Workflow | Autos | Status |
+|----------|-------|--------|
+| Combined **072** weekly email | 072 | **live DEV passing** — Phase D no-send · **074 retired** |
+| **117** × **101** double-award / keys | 117, 101 | **automated and passing** offline · live **blocked by Mike UI** (117 remains OFF) |
+| **022** child writeback | 022 | Identity confirmed · rename **blocked by Mike UI** (optional) |
+| Public athlete profile | web | **automated and passing** (mock adapter) |
+
 ### S27 high-risk focus rows
 
 | Workflow | Autos | Status |
@@ -38,7 +47,7 @@
 | Combined **020** HC + GB | 020 | **live DEV passing** — Phase C1 post-paste |
 | Combined **013** VF + GB | 013 | **live DEV passing** — Phase C2 post-paste |
 | **117** × **101** double-award / keys | 117, 101 | **automated and passing** offline · live **blocked by Mike UI** (117 OFF) |
-| Phase D weekly email no-send | 072 v4 | **automated and passing** (blank webhook) · paste **blocked by Mike UI** |
+| Phase D weekly email no-send | 072 v4 | **live DEV passing** (S28) · **074 deleted** |
 
 ### Global constraints (this matrix)
 
@@ -57,7 +66,7 @@
 | W1 | Enrollment | 001, 002, 003 | **UNKNOWN** |
 | W2 | Submission intake | 023, 005, 007, **021**, 009, 010 | **021 live DEV passing** (Phase A) · chain **planned** via 115 |
 | W3 | Weekly summaries | 031, **030**, 034 | **030 live DEV passing** (Phase B) |
-| W3b | Weekly email (Phase D) | **072∪074** (repo) | **automated and passing** (offline no-send) · paste **blocked by Mike UI** |
+| W3b | Weekly email (Phase D) | **072** (074 library) | **live DEV passing** (S28 no-send) · **074 deleted** |
 | W4 | Homework | **020**, 064, 065, 070a, 022, 071 | **020 live DEV passing** (Phase C1) · XP/email **planned** |
 | W5 | Video | **013**, 070b, 070c, 022, 113, 114, 116 | **013 live DEV passing** (Phase C2) · full XP **planned** |
 | W6 | Levels | 041, 042, 043 | **UNKNOWN** · offline 042/043 **automated and passing** |

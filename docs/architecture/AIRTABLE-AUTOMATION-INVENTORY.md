@@ -122,9 +122,9 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 070b | Send Video Asset → Make | Y | Y | Y | often OFF | Submission Assets | Make/Lambda/S3 | Keep separate | Intentional DEV OFF — required |
 | 070c | Verify Async Video Upload | Y | **N** | Y | often OFF | Submission Assets | Lambda | Keep separate | Required async path |
 | 071 | HW Feedback Email Webhook | Y | Y | Y | often OFF | Homework Completions | Make | Keep separate | EMC combine later — not delete |
-| 072 | Build Weekly Email | Y | Y | Y | Mike list | WAS | — | Combine with conditions | →074 |
+| 072 | Build (+ Send) Weekly Email | Y | Y | Y | Mike list | WAS | Make optional | Combined Phase D | Keep |
 | 073 | VF Parent Email Webhook | Y | Y | Y | often OFF | Video Feedback | Make | Keep separate | EMC later |
-| 074 | Send Weekly Email → Make | Y | Y | Y | often OFF | WAS | Make | Combine with conditions | →072 |
+| 074 | Send Weekly Email → Make | — | library | Y | deleted UI | — | — | Absorbed by 072 | LIBRARY |
 | 075 | Build Welcome Email | Y | Y | Y | Mike list | Enrollments | — | Keep separate | EMC later |
 | 076 | Build Daily Email | Y | Y | Y | Mike list | Submissions | — | Combine with conditions | →077 later |
 | 077 | Send Daily Email → Make | Y | Y | Y | often OFF | Submissions | Make | Combine with conditions | →076 later |
