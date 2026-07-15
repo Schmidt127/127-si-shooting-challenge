@@ -84,3 +84,15 @@ When redirecting, use the **Workspace Check** block from doc 04 (Current request
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
 | Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
+
+## Cursor Cloud specific instructions
+
+The only locally-runnable application is the **Next.js web app** in `web/` (Node 22, npm). Everything else (Airtable, Make.com, Vercel, the `tools/airtable` Python CLI, `lambda/`) is an external/hosted service and is not needed to run or test the site. The startup update script already runs `npm --prefix web ci`.
+
+Standard commands live in `web/package.json` (`dev`, `build`, `lint`, `typecheck`, `test`). Run them from `web/`.
+
+Non-obvious caveats:
+- **Base path `/shoot`**: the app mounts at `/shoot` (see `web/next.config.ts`). The dev server listens on **port 3001** (not 3000 as the `web/README.md` text says), so open `http://localhost:3001/shoot`. The bare `/` path returns 404 — always include `/shoot`.
+- **Airtable token is optional for dev/CI**: there is no local database; all data comes from the hosted Airtable base at request time. Pages catch fetch failures and render graceful fallback/empty states, so the app boots, lints, typechecks, tests, and builds with **no** `AIRTABLE_API_TOKEN`. To see live data (leaderboard, levels, tutorials, etc.) or a green `/shoot/api/airtable` health check, copy `web/.env.local.example` to `web/.env.local` and set `AIRTABLE_API_TOKEN` (needs `data.records:read`) plus `AIRTABLE_BASE_ID` (DEV base `appTetnuCZlCZdTCT`).
+- **Site access gate**: leave `SITE_ACCESS_TOKEN` unset locally. If it is set, `middleware.ts` blocks all routes (and returns 401 on `/api/*`) unless a matching token is supplied.
+- No git hooks, Makefile, or devcontainer exist; CI is `.github/workflows/web.yml` (lint → typecheck → test → build on Node 22).
