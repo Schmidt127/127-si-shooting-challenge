@@ -56,6 +56,8 @@ Mike approves merge to master/main (never automatic)
 
 - Assignment: [assignments/_TEMPLATE.md](./assignments/_TEMPLATE.md)
 - Result: [results/_TEMPLATE.md](./results/_TEMPLATE.md)
+- Lead handoff: [06-HANDOFF-TEMPLATE.md](./06-HANDOFF-TEMPLATE.md)
+- Pilot checklist: [07-PILOT-CHECKLIST.md](./07-PILOT-CHECKLIST.md)
 
 ## Out of scope for this kit
 
