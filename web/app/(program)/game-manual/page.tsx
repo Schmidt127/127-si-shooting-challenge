@@ -4,7 +4,7 @@ import { GameManualView } from "@/components/game-manual/game-manual-view";
 import { getGameManualUrl } from "@/lib/game-manual/config";
 
 export const metadata: Metadata = {
-  title: "Game Manual | Shooting Challenge",
+  title: "Game Manual",
   description: "Official rules, scoring, XP, and program reference for the Shooting Challenge.",
 };
 

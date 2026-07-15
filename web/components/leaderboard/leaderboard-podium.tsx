@@ -25,13 +25,13 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
       }`}
     >
       <div
-        className={`absolute inset-x-4 top-16 h-32 rounded-full blur-3xl opacity-60 ${accent.halo}`}
+        className={`absolute inset-x-4 top-16 h-32 rounded-full blur-3xl opacity-50 ${accent.halo}`}
         aria-hidden
       />
 
       {isFirst ? (
-        <div className="relative mb-2 flex items-center justify-center text-amber-300">
-          <IconCrown size={32} className="drop-shadow-[0_0_12px_rgba(251,191,36,0.6)]" />
+        <div className="relative mb-2 flex items-center justify-center text-court-gold">
+          <IconCrown size={32} />
         </div>
       ) : (
         <div className="relative mb-2 font-mono text-xl font-bold tracking-widest text-accent-soft/90 sm:text-2xl">
@@ -46,16 +46,16 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
         rank={isFirst ? 1 : undefined}
         ringClass={
           entry.rank === 1
-            ? "ring-amber-300/70"
+            ? "ring-court-gold/60"
             : entry.rank === 2
               ? "ring-slate-300/60"
-              : "ring-orange-400/60"
+              : "ring-brand-orange/50"
         }
       />
 
       <div
-        className={`relative mt-4 w-full overflow-hidden rounded-2xl border border-white/10 bg-card/80 p-5 backdrop-blur-xl ${
-          isFirst ? "min-h-[240px] sm:min-h-[260px] shadow-[0_0_40px_-8px_rgba(251,191,36,0.25)]" : "min-h-[220px] sm:min-h-[240px]"
+        className={`relative mt-4 w-full overflow-hidden rounded-2xl border border-white/10 bg-card/90 p-5 backdrop-blur-xl ${
+          isFirst ? "min-h-[240px] border-court-gold/25 sm:min-h-[260px]" : "min-h-[220px] sm:min-h-[240px]"
         }`}
       >
         <div

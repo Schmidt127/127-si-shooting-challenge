@@ -16,7 +16,7 @@ export function LevelBadge({ level, size = "md" }: LevelBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center rounded-full bg-gradient-to-r font-semibold uppercase tracking-wide ring-1 ${style.gradient} ${style.text} ${style.ring} ${style.glow} ${sizeClasses[size]}`}
+      className={`inline-flex items-center rounded-md bg-gradient-to-r font-semibold uppercase tracking-wide ring-1 ${style.gradient} ${style.text} ${style.ring} ${sizeClasses[size]}`}
     >
       {style.label}
     </span>

@@ -22,10 +22,13 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 | Name | Hex | Web token | Use |
 |------|-----|-----------|-----|
 | Primary Blue | `#0034B7` | `--brand-blue` | Headers, nav bars, trust blocks |
-| Primary Orange | `#FF8B00` | `--accent` | CTAs, highlights, XP accents |
-| Dark | `#262626` | `--brand-dark` | Text on light surfaces |
-| Light Gray | `#C4C4C4` | `--brand-gray` | Borders, secondary UI |
-| Off White | `#F2F2F2` | `--brand-light` | Light section backgrounds |
+| Primary Orange | `#FF8B00` | `--brand-orange` / `--accent` | CTAs, highlights, XP accents |
+| Charcoal | `#262626` | `--brand-charcoal` / `--brand-dark` | Text on light surfaces |
+| Medium Gray | `#C4C4C4` | `--brand-medium-gray` / `--brand-gray` | Borders, secondary UI |
+| Light Gray | `#F2F2F2` | `--brand-light-gray` / `--brand-light` | Light section backgrounds |
+| White | `#FFFFFF` | `--brand-white` | Text on dark, light surfaces |
+
+**Program supporting (Shooting Challenge only, subordinate):** `--court-navy` `#001A5C`, `--court-tan` `#C4A574`, `--court-gold` `#C9A227`.
 
 **Dark UI (current web default):** Near-black base (`#0A0A0A`), white headlines, gray body text. Use **blue and orange as accents only** — not full-page color washes or rainbow product cards.
 
@@ -35,11 +38,12 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 
 | Role | Font | Web implementation |
 |------|------|-------------------|
-| Display / headlines | **Magistral** | Licensed desktop font — use **Maven Pro 700–800** on web until Magistral web files are added |
-| Body / UI | **Maven Pro** | `next/font/google` in `app/layout.tsx` |
+| Display / headlines | **Magistral** (brand kit) | **Substitution:** Maven Pro 800 via `.font-display` — no Magistral `.woff`/`.ttf` in repo; do not invent CDN URLs |
+| Body / UI / nav / forms / tables | **Maven Pro** | `next/font/google` in `app/layout.tsx` (`--font-maven-pro`) |
 
 - Headlines: bold, slightly tracked; avoid all-caps on long titles  
-- Stats (XP, rank, shots): `font-mono` or Maven Pro tabular nums  
+- Stats (XP, rank, shots): `font-mono` (Geist Mono) or Maven Pro tabular nums  
+- Constants: `BRAND_TYPOGRAPHY` in `lib/brand.ts`  
 
 ---
 

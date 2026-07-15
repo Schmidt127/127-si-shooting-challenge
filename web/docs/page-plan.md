@@ -11,6 +11,7 @@ See [site-hierarchy.md](./site-hierarchy.md) for the full table. Highlights:
 | Public URL | Role | Status |
 |------------|------|--------|
 | `/shoot` | Shooting Challenge overview | Live |
+| `/shoot/dashboard` | Athlete program home (demo/mock) | Live |
 | `/shoot/leaderboard` | Season XP rankings | Live |
 | `/shoot/homework`, `/shoot/tutorials`, `/shoot/shoutouts`, `/shoot/articles`, `/shoot/zoom-meetings`, `/shoot/levels` | Catalog pages (shared nav) | Live |
 | `/shoot/achievements`, `/shoot/game-manual`, `/shoot/public-display` | Shell / partial | In progress |

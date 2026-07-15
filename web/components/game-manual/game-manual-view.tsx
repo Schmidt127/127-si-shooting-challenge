@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { MediaPanel } from "@/components/catalog/media-panel";
 
@@ -29,7 +30,7 @@ export function GameManualView({ manualUrl }: GameManualViewProps) {
             />
           </div>
         ) : (
-          <div className="mx-auto mt-10 max-w-xl rounded-2xl border border-white/10 bg-card/50 p-8 text-center backdrop-blur-sm">
+          <div className={`mx-auto mt-10 ${catalogStatePanelClass()}`}>
             <p className="text-sm leading-relaxed text-muted">
               Paste your Adobe-hosted manual link into{" "}
               <code className="rounded bg-white/5 px-1.5 py-0.5 text-foreground">
@@ -42,10 +43,7 @@ export function GameManualView({ manualUrl }: GameManualViewProps) {
               Share the public Adobe link (from Share → Anyone can view). Typical formats:
               documentcloud.adobe.com or acrobat.adobe.com.
             </p>
-            <Link
-              href="/"
-              className="mt-8 inline-block text-sm font-medium text-accent-soft transition hover:text-accent"
-            >
+            <Link href="/" className="btn-secondary mt-8">
               ← Back to Shooting Challenge
             </Link>
           </div>

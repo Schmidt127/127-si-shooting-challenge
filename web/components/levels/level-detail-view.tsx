@@ -23,7 +23,7 @@ type LevelDetailViewProps = {
 
 function StatPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className={cn(catalogInsetClass(), "rounded-2xl px-4 py-3")}>
+    <div className={cn(catalogInsetClass(), "rounded-xl px-4 py-3")}>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">{label}</p>
       <p className="mt-1 font-mono text-xl font-bold text-foreground">{value}</p>
     </div>
@@ -38,7 +38,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
       <div className="mx-auto max-w-4xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
         <Link
           href="/levels"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
+          className="inline-flex min-h-[2.75rem] items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
         >
           <span aria-hidden>←</span> Level ladder
         </Link>
@@ -49,19 +49,19 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}
-                alt=""
+                alt={level.displayName || level.name ? `${level.displayName || level.name} cover` : "Level cover"}
                 className="max-h-72 w-auto max-w-full object-contain sm:max-h-96"
               />
             </div>
           ) : (
-            <div className={`h-32 bg-gradient-to-br ${style.gradient}`} />
+            <div className={`h-24 bg-gradient-to-br ${style.gradient}`} />
           )}
 
           <div className="relative p-6 sm:p-10">
             <div className="flex flex-wrap items-start justify-between gap-6">
               <div className="flex items-start gap-5">
                 <div
-                  className={`flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br font-mono text-2xl font-black ${style.gradient} ${style.text} ring-1 ${style.ring} ${style.glow}`}
+                  className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br font-mono text-2xl font-black ${style.gradient} ${style.text} ring-1 ${style.ring}`}
                 >
                   {level.sortOrder || level.rank || "★"}
                 </div>
@@ -100,7 +100,10 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           {level.previousLevelId ? (
             <Link
               href={`/levels/${level.previousLevelId}`}
-              className={cn(catalogInsetClass(), "px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft")}
+              className={cn(
+                catalogInsetClass(),
+                "inline-flex min-h-[2.75rem] items-center px-4 text-sm transition hover:border-brand-orange/30 hover:text-accent-soft",
+              )}
             >
               ← Previous tier
             </Link>
@@ -108,7 +111,10 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           {level.nextLevelId ? (
             <Link
               href={`/levels/${level.nextLevelId}`}
-              className={cn(catalogInsetClass(), "px-4 py-2 text-sm transition hover:border-accent/30 hover:text-accent-soft")}
+              className={cn(
+                catalogInsetClass(),
+                "inline-flex min-h-[2.75rem] items-center px-4 text-sm transition hover:border-brand-orange/30 hover:text-accent-soft",
+              )}
             >
               Next tier →
             </Link>
@@ -123,9 +129,9 @@ export function LevelNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">Level not found</h1>
+        <h1 className="font-display text-2xl text-foreground">Level not found</h1>
         <p className="mt-3 text-muted">This tier may be inactive or the link is incorrect.</p>
-        <Link href="/levels" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <Link href="/levels" className="btn-secondary mt-6">
           ← Back to levels
         </Link>
       </div>

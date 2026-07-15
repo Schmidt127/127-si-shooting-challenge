@@ -28,8 +28,9 @@ function XpMeter({
   return (
     <div className={`h-1.5 overflow-hidden rounded-full bg-white/10 ${className}`}>
       <div
-        className="h-full rounded-full bg-gradient-to-r from-brand-blue via-accent to-amber-300"
+        className="h-full rounded-full bg-brand-orange"
         style={{ width: `${width}%` }}
+        role="presentation"
       />
     </div>
   );
@@ -51,19 +52,19 @@ function LevelLadderCard({
 
   return (
     <Link href={`/levels/${level.id}`} className="group relative block">
-      <article
-        className={catalogCardClass(isPinnacle ? { featured: "amber" } : undefined)}
-      >
+      <article className={catalogCardClass(isPinnacle ? { featured: "gold" } : undefined)}>
         <div className="flex items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3">
           <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-mono text-base font-black sm:h-12 sm:w-12 sm:rounded-2xl sm:text-lg ${style.gradient} ${style.text} ring-1 ${style.ring}`}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br font-mono text-base font-black sm:h-12 sm:w-12 sm:text-lg ${style.gradient} ${style.text} ring-1 ${style.ring}`}
           >
             {level.sortOrder || level.rank || "—"}
           </div>
 
           <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 sm:gap-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted">{tierLabel}</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted">
+                {tierLabel}
+              </p>
               <LevelBadge level={level.displayName} />
             </div>
             <h3 className="text-base font-bold leading-tight text-foreground transition group-hover:text-accent-soft sm:text-lg">
@@ -71,7 +72,9 @@ function LevelLadderCard({
             </h3>
             <p className="text-xs leading-snug text-muted sm:text-sm">
               {formatXp(level.xpRequired)} lifetime XP
-              {level.xpFromPrevious > 0 ? ` · +${formatXp(level.xpFromPrevious)} from prior tier` : ""}
+              {level.xpFromPrevious > 0
+                ? ` · +${formatXp(level.xpFromPrevious)} from prior tier`
+                : ""}
             </p>
             <XpMeter xp={level.xpRequired} maxXp={maxXp} className="mt-1" />
           </div>
@@ -81,7 +84,7 @@ function LevelLadderCard({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}
-                alt=""
+                alt={level.displayName || level.name ? `${level.displayName || level.name} cover` : "Level cover"}
                 className="max-h-24 max-w-32 object-contain sm:max-h-28 sm:max-w-36"
               />
             </div>
@@ -116,13 +119,13 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
 
         <div className="relative mt-14 space-y-5">
           <div
-            className="absolute bottom-4 left-7 top-4 hidden w-px bg-gradient-to-b from-amber-400/60 via-accent/30 to-brand-blue/20 sm:block"
+            className="absolute bottom-4 left-7 top-4 hidden w-px bg-gradient-to-b from-court-gold/50 via-brand-orange/30 to-brand-blue/20 sm:block"
             aria-hidden
           />
           {data.levels.map((level, index) => (
             <div key={level.id} className="relative sm:pl-14">
               <span
-                className="absolute left-4 top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-accent/50 bg-background sm:block"
+                className="absolute left-4 top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-brand-orange/50 bg-background sm:block"
                 aria-hidden
               />
               <LevelLadderCard
@@ -143,9 +146,11 @@ export function LevelsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">Levels coming soon</h1>
-        <p className="mt-3 text-muted">Active level tiers will appear here once marked Active in Airtable.</p>
-        <Link href="/" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <h1 className="font-display text-2xl text-foreground">Levels coming soon</h1>
+        <p className="mt-3 text-muted">
+          Active level tiers will appear here once marked Active in Airtable.
+        </p>
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>
@@ -157,7 +162,7 @@ export function LevelsErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass(true)}>
-        <h1 className="text-2xl font-bold text-foreground">Could not load levels</h1>
+        <h1 className="font-display text-2xl text-foreground">Could not load levels</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>
     </div>

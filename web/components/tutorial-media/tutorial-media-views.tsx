@@ -20,10 +20,10 @@ import { cn } from "@/lib/utils";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
 
 const CATEGORY_ACCENTS: Record<string, string> = {
-  Shoot: "from-orange-500/20 to-red-600/5",
-  Dribble: "from-cyan-500/20 to-blue-600/5",
-  Character: "from-violet-500/20 to-purple-700/5",
-  Freethrow: "from-emerald-500/20 to-teal-700/5",
+  Shoot: "from-brand-orange/20 to-brand-orange/5",
+  Dribble: "from-brand-blue/20 to-brand-blue/5",
+  Character: "from-court-navy/30 to-brand-blue/10",
+  Freethrow: "from-brand-blue/15 to-white/[0.03]",
 };
 
 function MediaCardLink({
@@ -39,12 +39,7 @@ function MediaCardLink({
 
   if (shouldOpenExternally(externalUrl)) {
     return (
-      <a
-        href={externalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block"
-      >
+      <a href={externalUrl} target="_blank" rel="noopener noreferrer" className="group block">
         {children}
       </a>
     );
@@ -73,9 +68,9 @@ function MediaCard({
           {item.thumbnail ? (
             <Image
               src={item.thumbnail.url}
-              alt=""
+              alt={item.name ? `${item.name} thumbnail` : "Media thumbnail"}
               fill
-              className="object-cover transition duration-700 group-hover:scale-105"
+              className="object-cover transition duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 768px) 100vw, 33vw"
               unoptimized
             />
@@ -92,7 +87,7 @@ function MediaCard({
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
           {item.categories[0] ? (
             <div className="absolute bottom-3 left-3 right-3">
-              <span className="rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
+              <span className="rounded-md border border-white/15 bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                 {item.categories[0]}
               </span>
             </div>
@@ -153,10 +148,8 @@ export function TutorialMediaGridView({
           {data.categoryGroups.map((group) => (
             <section key={group.category}>
               <div className="mb-6 flex items-end justify-between gap-4">
-                <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-                  <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-                    {group.category}
-                  </span>
+                <h2 className="font-display text-2xl text-foreground sm:text-3xl">
+                  {group.category}
                 </h2>
                 <span className="font-mono text-xs text-muted">
                   {group.tutorials.length} {config.catalog.itemCountLabel}
@@ -189,7 +182,7 @@ export function TutorialMediaDetailView({
       <div className="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
         <Link
           href={config.basePath}
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
+          className="inline-flex min-h-[2.75rem] items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
         >
           <span aria-hidden>←</span> {config.detail.backLabel}
         </Link>
@@ -206,7 +199,7 @@ export function TutorialMediaDetailView({
               {item.categories.map((category) => (
                 <span
                   key={category}
-                  className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+                  className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
                 >
                   {category}
                 </span>
@@ -214,7 +207,9 @@ export function TutorialMediaDetailView({
             </div>
 
             {item.briefDescription ? (
-              <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">{item.briefDescription}</p>
+              <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
+                {item.briefDescription}
+              </p>
             ) : null}
           </div>
 
@@ -265,7 +260,7 @@ export function TutorialMediaDetailView({
               href={item.videoUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-5 py-3 text-sm font-semibold text-accent-soft transition hover:border-accent/50"
+              className="btn-secondary"
             >
               {config.detail.openVideoLabel} ↗
             </a>
@@ -280,12 +275,9 @@ export function TutorialMediaEmptyState({ config }: { config: TutorialMediaSecti
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">{config.empty.title}</h1>
+        <h1 className="font-display text-2xl text-foreground">{config.empty.title}</h1>
         <p className="mt-3 text-muted">{config.empty.message}</p>
-        <Link
-          href="/"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>
@@ -303,7 +295,7 @@ export function TutorialMediaErrorState({
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass(true)}>
-        <h1 className="text-2xl font-bold text-foreground">{config.error.title}</h1>
+        <h1 className="font-display text-2xl text-foreground">{config.error.title}</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>
     </div>
@@ -314,12 +306,9 @@ export function TutorialMediaNotFoundState({ config }: { config: TutorialMediaSe
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">{config.notFound.title}</h1>
+        <h1 className="font-display text-2xl text-foreground">{config.notFound.title}</h1>
         <p className="mt-3 text-muted">{config.notFound.message}</p>
-        <Link
-          href={config.basePath}
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <Link href={config.basePath} className="btn-secondary mt-6">
           ← {config.detail.backLabel}
         </Link>
       </div>

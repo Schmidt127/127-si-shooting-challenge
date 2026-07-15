@@ -6,99 +6,104 @@ export type LevelStyle = {
   ring: string;
 };
 
+/**
+ * Level badge palette — a single controlled brand ramp (blue → orange → gold),
+ * not a rainbow per-tier scheme. Early tiers stay neutral/blue, mid tiers move
+ * into brand orange, and only the top two tiers use court-gold as an accent.
+ */
 const LEVEL_STYLES: Record<string, LevelStyle> = {
   Beginner: {
     label: "Beginner",
-    gradient: "from-slate-500/30 to-slate-600/10",
-    glow: "shadow-slate-500/20",
-    text: "text-slate-200",
-    ring: "ring-slate-400/30",
+    gradient: "from-white/[0.08] to-white/[0.02]",
+    glow: "shadow-black/20",
+    text: "text-muted",
+    ring: "ring-white/15",
   },
   "Rookie Shooter": {
     label: "Rookie",
-    gradient: "from-sky-500/35 to-blue-600/10",
-    glow: "shadow-sky-500/25",
-    text: "text-sky-200",
-    ring: "ring-sky-400/35",
+    gradient: "from-brand-blue/25 to-brand-blue/5",
+    glow: "shadow-brand-blue/15",
+    text: "text-brand-white",
+    ring: "ring-brand-blue/30",
   },
   "Developing Shooter": {
     label: "Developing",
-    gradient: "from-cyan-500/35 to-teal-600/10",
-    glow: "shadow-cyan-500/25",
-    text: "text-cyan-200",
-    ring: "ring-cyan-400/35",
+    gradient: "from-brand-blue/35 to-brand-blue/10",
+    glow: "shadow-brand-blue/20",
+    text: "text-brand-white",
+    ring: "ring-brand-blue/35",
   },
   "Consistent Shooter": {
     label: "Consistent",
-    gradient: "from-emerald-500/35 to-green-600/10",
-    glow: "shadow-emerald-500/25",
-    text: "text-emerald-200",
-    ring: "ring-emerald-400/35",
+    gradient: "from-brand-blue/50 to-court-navy/20",
+    glow: "shadow-brand-blue/25",
+    text: "text-brand-white",
+    ring: "ring-brand-blue/45",
   },
   "Dangerous Shooter": {
     label: "Dangerous",
-    gradient: "from-lime-500/35 to-green-700/10",
-    glow: "shadow-lime-500/25",
-    text: "text-lime-200",
-    ring: "ring-lime-400/35",
+    gradient: "from-brand-blue/45 to-brand-orange/20",
+    glow: "shadow-brand-blue/20",
+    text: "text-brand-white",
+    ring: "ring-brand-blue/40",
   },
   "Hot Hand": {
     label: "Hot Hand",
-    gradient: "from-orange-500/40 to-red-500/15",
-    glow: "shadow-orange-500/30",
-    text: "text-orange-200",
-    ring: "ring-orange-400/40",
+    gradient: "from-brand-orange/30 to-brand-orange/10",
+    glow: "shadow-brand-orange/20",
+    text: "text-orange-100",
+    ring: "ring-brand-orange/35",
   },
   Deadeye: {
     label: "Deadeye",
-    gradient: "from-red-500/40 to-rose-600/15",
-    glow: "shadow-red-500/30",
-    text: "text-red-200",
-    ring: "ring-red-400/40",
+    gradient: "from-brand-orange/40 to-orange-700/15",
+    glow: "shadow-brand-orange/25",
+    text: "text-orange-100",
+    ring: "ring-brand-orange/40",
   },
   Sharpshooter: {
     label: "Sharpshooter",
-    gradient: "from-rose-500/40 to-red-700/15",
-    glow: "shadow-rose-500/35",
-    text: "text-rose-200",
-    ring: "ring-rose-400/40",
+    gradient: "from-brand-orange/50 to-orange-800/20",
+    glow: "shadow-brand-orange/30",
+    text: "text-orange-50",
+    ring: "ring-brand-orange/45",
   },
   Pro: {
     label: "Pro",
-    gradient: "from-violet-500/40 to-purple-700/15",
-    glow: "shadow-violet-500/35",
-    text: "text-violet-200",
-    ring: "ring-violet-400/40",
+    gradient: "from-brand-orange/55 to-court-tan/25",
+    glow: "shadow-brand-orange/30",
+    text: "text-orange-50",
+    ring: "ring-brand-orange/50",
   },
   "All-Star": {
     label: "All-Star",
-    gradient: "from-fuchsia-500/40 to-purple-600/15",
-    glow: "shadow-fuchsia-500/35",
-    text: "text-fuchsia-200",
-    ring: "ring-fuchsia-400/40",
+    gradient: "from-court-gold/35 to-brand-orange/20",
+    glow: "shadow-court-gold/30",
+    text: "text-amber-100",
+    ring: "ring-court-gold/40",
   },
   Legend: {
     label: "Legend",
-    gradient: "from-amber-400/45 to-orange-500/20",
-    glow: "shadow-amber-400/40",
-    text: "text-amber-200",
-    ring: "ring-amber-300/45",
+    gradient: "from-court-gold/50 to-brand-orange/20",
+    glow: "shadow-court-gold/35",
+    text: "text-amber-50",
+    ring: "ring-court-gold/50",
   },
   "G.O.A.T.": {
     label: "G.O.A.T.",
-    gradient: "from-yellow-300/50 to-amber-500/25",
-    glow: "shadow-yellow-400/45",
-    text: "text-yellow-100",
-    ring: "ring-yellow-300/50",
+    gradient: "from-court-gold/65 to-brand-orange/25",
+    glow: "shadow-court-gold/40",
+    text: "text-amber-50",
+    ring: "ring-court-gold/60",
   },
 };
 
 const DEFAULT_STYLE: LevelStyle = {
   label: "Unranked",
-  gradient: "from-zinc-500/25 to-zinc-700/10",
-  glow: "shadow-zinc-500/20",
-  text: "text-zinc-300",
-  ring: "ring-zinc-400/25",
+  gradient: "from-white/[0.06] to-white/[0.01]",
+  glow: "shadow-black/15",
+  text: "text-muted",
+  ring: "ring-white/12",
 };
 
 export function getLevelStyle(levelName: string): LevelStyle {
@@ -122,23 +127,23 @@ export function getPodiumAccent(rank: number): {
   if (rank === 1) {
     return {
       medal: "I",
-      bar: "from-amber-300 via-yellow-400 to-amber-600",
-      halo: "shadow-[0_0_60px_rgba(251,191,36,0.35)]",
+      bar: "from-court-gold to-brand-orange",
+      halo: "ring-1 ring-court-gold/40",
       label: "1st",
     };
   }
   if (rank === 2) {
     return {
       medal: "II",
-      bar: "from-slate-300 via-slate-200 to-slate-400",
-      halo: "shadow-[0_0_50px_rgba(148,163,184,0.28)]",
+      bar: "from-brand-medium-gray to-white/40",
+      halo: "ring-1 ring-white/25",
       label: "2nd",
     };
   }
   return {
     medal: "III",
-    bar: "from-orange-400 via-amber-600 to-orange-800",
-    halo: "shadow-[0_0_50px_rgba(251,146,60,0.28)]",
+    bar: "from-brand-orange to-court-tan",
+    halo: "ring-1 ring-brand-orange/35",
     label: "3rd",
   };
 }

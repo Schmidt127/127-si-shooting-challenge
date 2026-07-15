@@ -7,7 +7,7 @@ import {
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
-  title: "Public Display | Shooting Challenge",
+  title: "Public Display",
   description: "Full-screen season leaderboard for gyms and event displays.",
 };
 

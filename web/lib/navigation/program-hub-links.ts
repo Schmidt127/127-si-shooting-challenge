@@ -2,6 +2,7 @@ import type { ComponentType } from "react";
 
 import {
   IconBook,
+  IconBolt,
   IconLevel,
   IconMedal,
   IconMegaphone,
@@ -25,6 +26,15 @@ export type ProgramHubLink = {
 
 /** Overview hub cards — mirrors ProductShell nav (see site-hierarchy.md). */
 export const PROGRAM_HUB_LINKS: ProgramHubLink[] = [
+  {
+    href: "/dashboard",
+    label: "Home",
+    title: "Athlete Dashboard",
+    description: "Level, XP, weekly shots, streak, Perfect Week, homework, and your next action.",
+    eyebrow: "Program home",
+    icon: IconBolt,
+    featured: true,
+  },
   {
     href: "/leaderboard",
     label: "Primary",

@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { PlaceholderPage } from "@/components/shared/placeholder-page";
 
 export const metadata: Metadata = {
-  title: "Admin | 127 SI Shooting Challenge",
+  title: "Admin",
   robots: { index: false, follow: false },
 };
 
