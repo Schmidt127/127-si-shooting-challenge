@@ -1,7 +1,7 @@
 # S27 morning report — FINAL
 
 **Stage:** S27 · Lead + 2 agents (~2h) · 2026-07-15  
-**Lead tip:** `71ea240` (`8a001e0` package + tip-sync) · re-verify PASS 2026-07-15  
+**Lead tip:** 5b26f41 (package 8a001e0) · re-verify PASS 2026-07-15
 **Airtable mutations this stage:** **none**
 
 ---
