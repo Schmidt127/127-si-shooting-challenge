@@ -1,8 +1,7 @@
 # Phase D — Authorization package (final readiness)
 
-**Status:** `READY_FOR_AUTHORIZATION` — repo verified 2026-07-15 (S27)  
-**Do not paste/activate until Mike authorizes Phase D UI.**  
-**No Airtable changes in S27.**
+**Status:** `AUTHORIZED` — Mike authorized Phase D UI 2026-07-15 (S28)  
+**Scope:** DEV only · blank webhook · 072 OFF / 074 OFF for first smoke · retire 074 only after critical PASS · no 117 / other Folder 07 / PROD / real email.
 
 ---
 

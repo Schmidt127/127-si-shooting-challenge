@@ -1,8 +1,10 @@
 # Mike UI actions — Phase D (072 ∪ 074)
 
-**Repo prep is done.** Status: **READY_FOR_AUTHORIZATION** — do **not** paste until Mike authorizes Phase D UI.
+**Repo prep is done.** Status: **AUTHORIZED** (Mike · 2026-07-15 · S28).
 
 **Do not send real family email. Do not configure a live Make webhook until test inbox path is confirmed. Do not touch 117. Do not touch other Folder 07 OFF automations. Do not touch PROD.**
+
+Complete no-send smoke: [PHASE-D-072-074-dev-no-send-smoke.md](./PHASE-D-072-074-dev-no-send-smoke.md)
 
 ---
 
@@ -10,17 +12,18 @@
 
 | Gate | Result |
 |------|--------|
-| Offline contracts | `tools/airtable/tests/test_phase_d_072_074_combined.py` |
-| Rollback | `_rollback/phase-d-072-074-2026-07-14/` |
+| Offline contracts | **20/20 PASS** (`tools/airtable/tests/test_phase_d_072_074_combined.py`) |
+| Rollback | `_rollback/phase-d-072-074-2026-07-14/` (072 + 074 + README) |
 | Combined SoT | `072-…build-weekly-summary-email-package.js` **v4.0.0** |
 | 074 path | Library stub in GitHub |
 | Decision | `docs/overnight-runs/results/S26-phase-d-decision.md` |
+| Auth | `docs/overnight-runs/stages/S28-AUTHORIZED.md` |
 
 ---
 
 ## Step 0 — Authorize
 
-Wait for Mike: **Authorize Phase D UI**.
+**DONE** — Mike: Authorize Phase D UI (2026-07-15).
 
 ---
 

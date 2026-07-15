@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-14  
 **Purpose:** Pre-consolidation GitHub copies for safe restore.  
-**Package status:** `READY_FOR_AUTHORIZATION` (repo prep only — not executed in Airtable).
+**Package status:** `AUTHORIZED` (S28) — paste in progress; restore from here on critical FAIL.
 
 ## Files
 

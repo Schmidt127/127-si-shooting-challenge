@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T05:26:27-06:00",
+  "updated_at": "2026-07-15T05:46:56-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "5b26f41c91c398f578e30f294a6c3bac0049f4ef",
@@ -8,10 +8,10 @@
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S28",
+    "package_id": "phase-d-072-074-ui",
+    "started_at": "2026-07-15T05:46:56-06:00"
   },
   "lanes": {
     "lead": {
@@ -1030,25 +1030,28 @@
       "id": "phase-d-072-074-prep",
       "backlog_refs": [
         "V2-014",
-        "C-025"
+        "C-011"
       ],
-      "state": "READY_FOR_AUTHORIZATION",
+      "state": "IN_PROGRESS",
       "priority": 26,
       "depends_on": [],
       "auth": "owner-authorized-execution",
       "est_minutes": 180,
       "gates": {
         "owner": true,
-        "airtable": false,
+        "airtable": true,
         "prod": false,
         "credentials": false,
         "destructive": false
       },
       "claimed_by": "lead",
-      "started_at": "2026-07-14",
-      "completed_at": "2026-07-14",
-      "deliverables": [],
-      "notes": "Repo combined 072 v4 + 074 stub + offline + tests. safe_with_conditions. No Airtable paste."
+      "started_at": "2026-07-15",
+      "completed_at": null,
+      "deliverables": [
+        "docs/overnight-runs/stages/S28-AUTHORIZED.md",
+        "docs/deploy-checklists/PHASE-D-072-074-dev-no-send-smoke.md"
+      ],
+      "notes": "AUTHORIZED Phase D UI (S28). Stopped at Mike first paste into 072. Offline 20/20. Rollback preserved."
     },
     {
       "id": "automation-117-activation-package",
@@ -1267,12 +1270,9 @@
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S27-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S28-AUTHORIZED.md",
     "merge_order": [],
-    "worker_branches": {
-      "worker-a": "overnight/v2-run/worker-a-s27-airtable-readiness",
-      "worker-b": "overnight/v2-run/worker-b-s27-website-regression"
-    }
+    "worker_branches": {}
   },
   "pending_approvals": [],
   "tests": {
@@ -1285,6 +1285,6 @@
     "web_build": "PASS",
     "pass": true
   },
-  "next_action": "S27 COMPLETE. Mike: Authorize Phase D UI (072 paste, blank webhook) for path to 5 free. 117 stays OFF.",
+  "next_action": "S28 Phase D UI: Mike paste 072 v4.0.0 (blank webhook, leave 072+074 OFF). Then run PHASE-D-072-074-dev-no-send-smoke.md. Stop: waiting on Mike paste.",
   "stop_reason": null
 }
