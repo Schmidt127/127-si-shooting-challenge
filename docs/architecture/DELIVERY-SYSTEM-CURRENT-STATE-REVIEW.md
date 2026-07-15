@@ -1,21 +1,23 @@
 # Delivery System — Current-State Review
 
-**Status:** Analysis only (no application or Airtable changes)  
+**Status:** Historical analysis (basis for v2.0)  
 **Date:** 2026-07-15  
-**Scope:** `127-si-shooting-challenge` software-delivery operating model  
-**Evidence window:** Overnight Desktop v1 (2026-07-12+) through S29 / Phase D closeout (2026-07-15)  
-**Authority evidence:** `docs/overnight-runs/CONTROL.json`, stage auth docs, migration records, rollback packages, Mike action sheets, capacity ledger, agent results, branch/worktree history
+**Superseding OS:** [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) — **governs entire remaining V2 rebuild**; pilot is validation only  
+**Worker model:** [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md)  
+**Evidence window:** Overnight Desktop v1 (2026-07-12+) through S29 / Phase D closeout (2026-07-15)
 
 **Companion docs:**
 
 | Doc | Purpose |
 |-----|---------|
-| [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) | Proposed Mike–ChatGPT–Cursor Delivery System v2.0 |
-| [DELIVERY-SYSTEM-ROLE-MATRIX.md](./DELIVERY-SYSTEM-ROLE-MATRIX.md) | Ideal role responsibilities |
-| [DELIVERY-SYSTEM-TEST-GATES.md](./DELIVERY-SYSTEM-TEST-GATES.md) | Mandatory test hierarchy |
-| [DELIVERY-SYSTEM-HANDOFF-TEMPLATE.md](./DELIVERY-SYSTEM-HANDOFF-TEMPLATE.md) | Standard Mike UI handoff |
-| [DELIVERY-SYSTEM-STATE-MODEL.md](./DELIVERY-SYSTEM-STATE-MODEL.md) | Single authoritative state model |
-| [../deploy-checklists/DELIVERY-SYSTEM-MIKE-DECISION-SHEET.md](../deploy-checklists/DELIVERY-SYSTEM-MIKE-DECISION-SHEET.md) | Decisions requiring Mike |
+| [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) | Active operating model |
+| [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md) | Lead/worker first-class |
+| [DELIVERY-SYSTEM-V2-PILOT.md](./DELIVERY-SYSTEM-V2-PILOT.md) | Validation charter |
+| [DELIVERY-SYSTEM-ROLE-MATRIX.md](./DELIVERY-SYSTEM-ROLE-MATRIX.md) | Roles |
+| [DELIVERY-SYSTEM-TEST-GATES.md](./DELIVERY-SYSTEM-TEST-GATES.md) | Test hierarchy |
+| [DELIVERY-SYSTEM-HANDOFF-TEMPLATE.md](./DELIVERY-SYSTEM-HANDOFF-TEMPLATE.md) | Mike UI handoff |
+| [DELIVERY-SYSTEM-STATE-MODEL.md](./DELIVERY-SYSTEM-STATE-MODEL.md) | State model |
+| [../deploy-checklists/DELIVERY-SYSTEM-MIKE-DECISION-SHEET.md](../deploy-checklists/DELIVERY-SYSTEM-MIKE-DECISION-SHEET.md) | Locked decisions |
 
 ---
 

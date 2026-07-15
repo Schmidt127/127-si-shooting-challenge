@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-15",
+  "base_id_dev": "appTetnuCZlCZdTCT",
+  "base_id_prod": "appn84sqPw03zEbTT",
+  "notes": "Repository-only deployment registry (Delivery System v2.0 pilot · D5 json-only). No Airtable registry table. Update on G4/G5/G6 for touched automations. content_sha256 is of the GitHub source file; pasted_claim is Mike/UI asserted, not API-proven.",
+  "automations": [
+    {
+      "number": "117",
+      "name": "117 - Zoom Recording Credit - Orchestrator",
+      "github_path": "airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js",
+      "windows_path": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge\\airtable\\automations\\shooting-challenge\\117-zoom-recording-credit-orchestrator.js",
+      "version": "v1.0.1",
+      "content_sha256": "D484327A9F4E13BCA3908F728B695F4C66705AD63776FC68D30247758B4AADAB",
+      "paste_boundary": "Skip GitHub header lines 1-7; paste from docblock /************************************************************ through EOF",
+      "dev": {
+        "expected_on_off": "OFF",
+        "webhook": "blank",
+        "pasted_claim": "pending_mike",
+        "pasted_at": null,
+        "package_commit": null,
+        "known_drift": []
+      },
+      "prod": {
+        "pasted_claim": "not_in_scope_pilot",
+        "version": null
+      },
+      "pilot_sheet": "docs/deploy-checklists/AUTOMATION-117-v2-pilot-mike-handoff.md"
+    },
+    {
+      "number": "072",
+      "name": "072 - Email Build and Send Weekly Summary (combined)",
+      "github_path": "airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js",
+      "version": "v4.0.0",
+      "content_sha256": null,
+      "dev": {
+        "expected_on_off": "as_configured",
+        "pasted_claim": "claimed_phase_d_2026-07-15",
+        "pasted_at": "2026-07-15",
+        "package_id": "phase-d-072-074",
+        "known_drift": []
+      },
+      "prod": {
+        "pasted_claim": "unknown",
+        "version": null
+      },
+      "notes": "Phase D consolidation evidence; hash not backfilled in pilot bootstrap"
+    },
+    {
+      "number": "013",
+      "name": "013 - Create or Link Video Feedback (combined C2)",
+      "github_path": "airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js",
+      "version": "v3.0.0",
+      "content_sha256": null,
+      "dev": {
+        "pasted_claim": "claimed_phase_c2_2026-07-15",
+        "pasted_at": "2026-07-15",
+        "package_id": "phase-c2-111-into-013",
+        "known_drift": []
+      },
+      "prod": {
+        "pasted_claim": "unknown"
+      }
+    },
+    {
+      "number": "020",
+      "name": "020 - Link or Create Homework Completion (combined C1)",
+      "github_path": "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js",
+      "dev": {
+        "pasted_claim": "claimed_phase_c1_2026-07-14",
+        "package_id": "phase-c1-063-into-020"
+      },
+      "prod": {
+        "pasted_claim": "unknown"
+      }
+    },
+    {
+      "number": "030",
+      "name": "030 - Bootstrap grade band goal homework (combined B)",
+      "github_path": "airtable/automations/shooting-challenge/030-weekly-summary-and-goal-logic-bootstrap-grade-band-goal-and-homework.js",
+      "dev": {
+        "pasted_claim": "claimed_phase_b_2026-07-14",
+        "package_id": "phase-b-was-030-032-033"
+      },
+      "prod": {
+        "pasted_claim": "unknown"
+      }
+    },
+    {
+      "number": "021",
+      "name": "021 - Attachment status and video count (combined A)",
+      "github_path": "airtable/automations/shooting-challenge/021-submission-intake-and-asset-creation-set-attachment-status-and-video-count.js",
+      "dev": {
+        "pasted_claim": "claimed_phase_a_2026-07-14",
+        "package_id": "phase-a-006-021-consolidate-117"
+      },
+      "prod": {
+        "pasted_claim": "unknown"
+      }
+    }
+  ],
+  "retired_dev_ui": [
+    {"number": "006", "replaced_by": "021", "deleted_claimed": "2026-07-14"},
+    {"number": "032", "replaced_by": "030", "deleted_claimed": "2026-07-14"},
+    {"number": "033", "replaced_by": "030", "deleted_claimed": "2026-07-14"},
+    {"number": "063", "replaced_by": "020", "deleted_claimed": "2026-07-14"},
+    {"number": "111", "replaced_by": "013", "deleted_claimed": "2026-07-15"},
+    {"number": "074", "replaced_by": "072", "deleted_claimed": "2026-07-15"}
+  ]
+}

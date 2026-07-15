@@ -1,8 +1,8 @@
 # Delivery System — Role Matrix
 
-**Status:** Proposed companion to Delivery System v2.0  
-**Date:** 2026-07-15  
-**Related:** [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) · [DELIVERY-SYSTEM-CURRENT-STATE-REVIEW.md](./DELIVERY-SYSTEM-CURRENT-STATE-REVIEW.md)
+**Status:** Binding companion to Delivery System v2.0  
+**Date:** 2026-07-15 (revised — full V2 governance + first-class workers)  
+**Related:** [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) · [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md)
 
 ---
 
@@ -11,15 +11,14 @@
 | Role | Decides | Executes | Must not |
 |------|---------|----------|----------|
 | **Mike** | Product outcomes, AC, PROD, sends, archive, UI ON/OFF deletes | Airtable UI gates; external account approvals | Debug agent toolpaths; invent script versions |
-| **ChatGPT** | Architecture options, plan quality, copy | Plans and reviews outside repo | Edit repo; invent paths/triggers; assign routine DEV API work to Mike |
-| **Cursor Lead** | Technical means inside AC; state tip; test PASS/FAIL | Code, Meta API in DEV, smokes, sheets, commits | PROD mutate; silent real sends; skip hard stops |
-| **Cursor workers** | Nothing product | Bounded branch tasks | Merge to tip; author unverified Mike sheets |
-| **GitHub** | SoT for shippable artifacts | Host history / PRs | Deploy Airtable |
-| **Airtable DEV** | Runtime truth for DEV behavior | Schema/records (API); automations (UI) | Be promoted from memory |
-| **Airtable PROD** | Season SoR | Mike-executed promo steps only | Experimental edits |
-| **Vercel** | Web runtime | Preview/prod deploys | Own Airtable secrets in client |
-| **Make/AWS/external** | Side effects | Webhooks, upload, email | Produce without blank/no-send first proof |
-| **OMNI** | — | Mike-led ad-hoc in-base exploration | Replace GitHub SoT for production automations |
+| **ChatGPT** | Architecture options, plan quality, copy | Plans/reviews outside repo; consume session pack | Edit repo; invent paths/triggers; duplicate Mike sheets |
+| **Cursor Lead** | Technical means inside AC; 0/1/2 concurrency; accept/reject workers; STOP/ROLLBACK | Integration, diff review, test re-run, CONTROL/registry, Mike sheets, G6, promotion readiness | Accept worker output without retest; tip-sync-only commits; skip hard stops |
+| **Cursor workers** | Nothing product | Bounded exclusive-path deliverables per assignment | CONTROL, capacity, registry, Mike sheets, closeout, merge to integration/`master` |
+| **GitHub** | SoT for shippable artifacts | History / PRs | Deploy Airtable |
+| **Airtable DEV / PROD** | Runtime truth by env | DEV lab; PROD season SoR | Promote from memory |
+| **Vercel** | Web runtime | Preview / prod | Client Airtable secrets |
+| **Make/AWS/external** | Side effects | Webhooks/uploads/email | Real send without Mike |
+| **OMNI** | — | Mike-led ad-hoc in-base | Replace GitHub SoT for production automations |
 
 ---
 
@@ -27,135 +26,76 @@
 
 Legend: **R** responsible · **A** accountable · **C** consulted · **I** informed
 
-| Work | Mike | ChatGPT | Lead | Worker | GitHub | DEV | PROD | Vercel | External |
-|------|------|---------|------|--------|--------|-----|------|--------|----------|
-| Feature brief | A | R | C | — | I | — | — | — | — |
-| Task Classification | I | C | R/A | — | — | — | — | — | — |
-| Script implementation | I | C | R/A | R | A (store) | — | — | — | — |
-| Offline tests | I | — | R/A | R | A | — | — | — | — |
-| Live DEV API smoke | I | — | R/A | C | I | A (data) | — | — | C |
-| Paste / trigger / delete automation | **R/A** | — | C (sheet) | — | C (source) | A (runtime) | — | — | — |
-| Schema via Meta API (approved) | I | C | R/A | C | A | A | — | — | — |
-| Capacity ledger update | C | — | R/A | — | A | C | — | — | — |
-| PROD promotion | **A** + R UI | C review | R docs/support | — | A | I | A | C | C |
-| Real family email | **A** | — | R prepare | — | A | C | C | — | R send |
-| Website feature | I | C | R/A | R | A | C mock | — | A deploy | — |
-| Incident rollback | A | C | R | — | A | R | R if needed | C | C |
-| Season architecture | A | R draft | C | — | A | C | C | — | — |
+| Work | Mike | ChatGPT | Lead | Worker | GitHub |
+|------|------|---------|------|--------|--------|
+| Feature brief | A | R | C | — | I |
+| Concurrency plan (0/1/2) | I | — | R/A | — | — |
+| Worker assignment contract | I | — | R/A | I | I |
+| Script / web slice impl | I | C | A | R (if assigned) | A (store) |
+| Offline tests for slice | I | — | A (re-run) | R (initial) | A |
+| Live DEV smoke | I | — | R/A | — | I |
+| CONTROL / registry / capacity | I | — | R/A | **prohibited** | A |
+| Mike nine-field sheet | I | — | R/A | **prohibited** | A |
+| Paste / trigger / delete | **R/A** | — | C (sheet) | — | C |
+| G6 closeout / promo readiness | I | C | R/A | **prohibited** | A |
+| integration→master PR | A cadence | — | R | — | A |
+| PROD promotion | **A** + R UI | C | R support | — | A |
+| Season rollover | A | R draft | R execute plan | C docs/tests only | A |
 
 ---
 
-## 3. Ideal responsibilities (detail)
+## 3. Lead responsibilities (revised)
 
-### 3.1 Mike
-
-- Approve feature outcome, scope, AC, external restrictions once  
-- Authorize UI packages that mutate automations or risk sends (`Authorize Phase X`)  
-- Perform **exactly** the sheet’s UI steps  
-- Reply with the sheet’s **exact phrase**  
-- Approve PROD promotion packages  
-- Own credentials and billing platforms  
-- Ad-hoc OMNI exploration when he wants to work in-base himself  
-
-### 3.2 ChatGPT
-
-- Translate Mike language ↔ engineering constraints  
-- Draft briefs, ADRs, parent/ops copy  
-- Review Cursor plans against AC and Constitution  
-- Hold cross-app refactor memory between sessions  
-- Challenge unsafe proposals (OFF=delete, PROD shortcuts)  
-- Produce Mike summaries from CONTROL — without re-authoring triggers  
-
-### 3.3 Cursor Lead
-
-- Task Classification + Workspace Check  
-- Maintain CONTROL tip honesty  
-- Implement to DoD in DEV  
-- Write **one** Mike sheet per gate; path-verify before publish  
-- Run test gates; decide STOP/ROLLBACK  
-- Integration commits; prepare promo packages  
-- May finish stalled workers with audit note  
-
-### 3.4 Cursor worker agents
-
-- Execute assignment file; commit on feat branch only  
-- Return result artifact with SHA + paths used  
-- Escalate product questions to Lead (not Mike)  
-- Stop at blocked approvals listed in CONTROL  
-
-### 3.5 GitHub
-
-- Canonical script/docs store  
-- History / rollback archaeology  
-- PR gate to `master` for Vercel prod and human review  
-
-### 3.6 Airtable DEV
-
-- Construction and proof environment  
-- Disposable fixtures under labeled enrollments  
-- Automation runtime Mike configures  
-
-### 3.7 Airtable PROD
-
-- Live system of record  
-- Receives only promotion-doc steps after DEV proof  
-
-### 3.8 Vercel
-
-- Host `web/`  
-- Preview per branch when enabled  
-- Production deploy from protected default branch  
-
-### 3.9 Make / AWS / external
-
-- Isolated DEV/test scenarios first  
-- Blank webhook / no-send until Mike authorize  
-- Blueprints versioned in repo when shippable  
-
-### 3.10 OMNI
-
-- Mike’s preferred **ad-hoc** in-base tool  
-- Prototype formulas/views Mike may later ask Cursor to formalize  
-- Never the SoT for production automation bodies  
+- Task Classification + Workspace Check for every remaining V2 item  
+- Choose **Lead-direct** vs 1 vs 2 workers per concurrency rules  
+- Author assignment templates with exclusive paths  
+- Integrate worker branches; resolve conflicts  
+- **Independently review diffs and rerun tests** before accept  
+- Own CONTROL (lagging SHA), DEPLOYMENT-REGISTRY, capacity narrative updates  
+- Own hybrid Mike status + nine-field sheets  
+- Own G6 closeout and per-feature master PR  
+- Stall takeover at 15 minutes  
+- Record worker metrics classifications  
 
 ---
 
-## 4. Work currently performed by the wrong role (corrective mapping)
+## 4. Worker responsibilities (revised)
 
-| Observed | Wrong role | Correct role |
-|----------|------------|--------------|
-| Inventing absolute paths / trigger text in chat | ChatGPT | Lead via verified sheet |
-| Routine DEV formula/field repairs waiting on Mike | Mike | Lead (approved feature) |
-| Workers assigned then Lead rewrites package | Workers (theater) | Lead-direct, or wait for worker |
-| ChatGPT re-issuing full paste runbook | ChatGPT | Cite existing sheet |
-| Using PROJECT_STATE as live next_action | Docs confusion | CONTROL |
-| Agents recommending deletes from OFF status | Lead/workers | Capacity rules + UI confirm |
-| Asking Mike to “check if file exists” | Mike | Lead `Test-Path` |
-| Parallel website blocked on Airtable capacity narrative | Process noise | Decouple; website uses mock |
+- Execute only the assignment’s bounded deliverable  
+- Write only writable paths; honor read-only and prohibited lists  
+- Run required test commands; write result artifact  
+- Stop on stop conditions; escalate to Lead  
+- Never touch CONTROL, capacity, registry, Mike sheets, closeout  
+- Never merge to integration or master  
+
+Detail + templates: [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md)
 
 ---
 
-## 5. ChatGPT stop-list (binding for v2.0)
+## 5. Wrong-role corrections
 
-1. Do not guess repository file paths — ask Cursor or cite CONTROL deliverables.  
-2. Do not invent Airtable UI behavior (views API, slot counters, trigger editors).  
-3. Do not duplicate Cursor Mike handoffs — link/summarize only.  
-4. Do not issue alternate trigger conditions that conflict with the sheet.  
-5. Do not assign Mike schema/API work that Lead can do under approved feature briefs.  
-6. Do not authorize PROD, real sends, or archive writes.  
+| Observed | Correct |
+|----------|---------|
+| Workers update CONTROL after finish | Lead only |
+| Lead accepts merge without retest | Forbidden |
+| ChatGPT invents paths/triggers | Session pack + sheet only |
+| 4 concurrent workers | Max Lead+2 |
+| Pilot treated as “only two packages use v2.0” | Validation only; full V2 under governance now |
+| Website uses PROD adapter by default | Mock-default |
 
 ---
 
 ## 6. Decision rights — quick reference
 
 ```
-Product behavior changed?     → Mike
-Technical means inside AC?    → Lead
-Human must click Airtable?    → Mike (sheet)
-Can Meta API do it in DEV?    → Lead (don’t ask Mike)
-Touches PROD / send / $ ?     → Mike stop gate
-Website mock vs live DEV?     → Lead (default mock until backlog)
-Conflicting docs?             → CONTROL wins for ops tip
+Product behavior changed?          → Mike
+0/1/2 workers?                     → Lead
+Exclusive path assigned?           → Lead (workers obey)
+Worker output mergeable?           → Lead after diff+retest
+Human must click Airtable?         → Mike (sheet)
+CONTROL / registry / sheet / G6?   → Lead only
+Touches PROD / send / $?           → Mike stop gate
+Ops tip vs infrastructure?         → CONTROL vs PROJECT_STATE
 ```
 
 ---

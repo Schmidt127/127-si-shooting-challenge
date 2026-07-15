@@ -1,10 +1,12 @@
 # Delivery System — Handoff Template (Mike UI Gate)
 
-**Status:** Standard for Delivery System v2.0  
+**Status:** Standard for Delivery System v2.0 (full V2 governance)  
 **Date:** 2026-07-15  
-**Rule:** One sheet per UI gate. No parallel contradictory runbooks. ChatGPT may summarize; must not rewrite fields 3–6.
+**Rule (D2 hybrid):** Short Mike status message + **one** nine-field sheet link. Do **not** duplicate sheet fields in chat. ChatGPT may summarize status only; must not rewrite fields 3–6.
 
-**Proven shape:** `docs/deploy-checklists/AUTOMATION-117-mike-activation-sheet.md`, Phase A–D `*-mike-ui-actions.md` (compress further toward this template).
+**Workers:** Never author Mike sheets (Lead only) — see [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md).
+
+**First validation sheet:** `docs/deploy-checklists/AUTOMATION-117-v2-pilot-mike-handoff.md`
 
 ---
 
