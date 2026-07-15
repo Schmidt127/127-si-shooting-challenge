@@ -4,8 +4,8 @@
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "PLACEHOLDER",
-    "remote_sha": "PLACEHOLDER",
+    "sha": "bf8769bd96e9ef5b69652f0db0d3091dab8fc273",
+    "remote_sha": "bf8769bd96e9ef5b69652f0db0d3091dab8fc273",
     "match": true,
     "note": "Lead updates sha/remote_sha after each push of an active run."
   },
@@ -53,7 +53,11 @@
   },
   "lanes": {
     "active_writes": [],
-    "available": ["implementation", "testing", "research"]
+    "available": [
+      "implementation",
+      "testing",
+      "research"
+    ]
   },
   "claims": [],
   "queue": [
@@ -68,10 +72,14 @@
     },
     {
       "id": "FA-001",
-      "backlog_refs": ["FA-001"],
+      "backlog_refs": [
+        "FA-001"
+      ],
       "state": "COMPLETE",
       "priority": 1,
-      "depends_on": ["four-agent-os-prep"],
+      "depends_on": [
+        "four-agent-os-prep"
+      ],
       "auth": "mike-approved-2026-07-15",
       "summary": "Docs-only four-agent pilot: research gap brief, handoff template + pilot checklist, testing validation.",
       "completed_at": "2026-07-15T14:05:00Z",
@@ -83,7 +91,7 @@
     }
   ],
   "hard_stops": [
-    "DEV only — no Production access",
+    "DEV only \u2014 no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -102,5 +110,9 @@
   ],
   "next_action": "FA-001 complete on integration branch. Draft PR to master ready. Awaiting Mike approval before merge to master. Lead takeover was used for all three workers.",
   "stop_reason": null,
-  "merge_order": ["research", "implementation", "testing"]
+  "merge_order": [
+    "research",
+    "implementation",
+    "testing"
+  ]
 }

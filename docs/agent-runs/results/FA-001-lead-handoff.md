@@ -9,7 +9,7 @@ Filled after worker merges and independent test re-run. Do **not** merge to `mas
 | Package ID | FA-001 |
 | Integration branch | `cursor/fa-001-four-agent-pilot-cfc9` |
 | Base tip SHA (start) | `9d293ab368dd42d700e19980bd2a4dd8aecc5412` (master) |
-| Integration tip SHA (end) | (filled after CONTROL close commit) |
+| Integration tip SHA (end) | bf8769bd96e9ef5b69652f0db0d3091dab8fc273 |
 | Started at (UTC) | 2026-07-15T13:47:00Z |
 | Finished at (UTC) | 2026-07-15T14:05:00Z |
 | Lead takeover? | true — workers not launched as separate agents |
