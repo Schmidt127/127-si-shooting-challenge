@@ -9,7 +9,7 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117 - Zoom Recording Credit - Orchestrator (A→F)
  *
- * Version: v1.0.0
+ * Version: v1.0.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
  *
@@ -82,7 +82,7 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: "117-zoom-recording-credit-orchestrator",
-  version: "v1.0.0",
+  version: "v1.0.1",
   versionDate: "2026-07-14",
   originalWrittenDate: "2026-07-14",
   lastUpdated: "2026-07-14",
@@ -402,19 +402,34 @@ async function stepC(ctx) {
     };
   }
 
-  if (existing) {
+  async function applyExistingXp(xpRec) {
     const patch = {};
-    if (fieldExists(xpTable, CONFIG.fields.xpPoints) && getNumber(existing, CONFIG.fields.xpPoints) !== amount) {
+    if (fieldExists(xpTable, CONFIG.fields.xpPoints) && getNumber(xpRec, CONFIG.fields.xpPoints) !== amount) {
       patch[CONFIG.fields.xpPoints] = amount;
     }
-    if (fieldExists(xpTable, CONFIG.fields.xpActive) && !getCheckbox(existing, CONFIG.fields.xpActive)) {
+    if (fieldExists(xpTable, CONFIG.fields.xpActive) && !getCheckbox(xpRec, CONFIG.fields.xpActive)) {
       patch[CONFIG.fields.xpActive] = true;
     }
     if (Object.keys(patch).length) {
-      await updateRecordSafe(xpTable, existing.id, patch);
-      return { actionOut: "updated", xpEventId: existing.id, xpPoints: amount };
+      await updateRecordSafe(xpTable, xpRec.id, patch);
+      return { actionOut: "updated", xpEventId: xpRec.id, xpPoints: amount };
     }
-    return { actionOut: "skipped_exists", xpEventId: existing.id, xpPoints: amount };
+    return { actionOut: "skipped_exists", xpEventId: xpRec.id, xpPoints: amount };
+  }
+
+  if (existing) {
+    return await applyExistingXp(existing);
+  }
+
+  // Recheck immediately before create (automation standard — guards race / retrigger)
+  const recheckFields = [CONFIG.fields.xpSourceKey, CONFIG.fields.xpPoints, CONFIG.fields.xpActive].filter((n) =>
+    fieldExists(xpTable, n)
+  );
+  const recheckQuery = await xpTable.selectRecordsAsync({ fields: recheckFields });
+  const recheckMatch = recheckQuery.records.find((r) => getText(r, CONFIG.fields.xpSourceKey) === key) || null;
+  recheckQuery.unloadData();
+  if (recheckMatch) {
+    return await applyExistingXp(recheckMatch);
   }
 
   const createFields = { [CONFIG.fields.xpSourceKey]: key };

@@ -1,6 +1,6 @@
 # Airtable Automation Dependency Map — DEV
 
-**As-of:** 2026-07-14 · Stage S21 · Analysis only  
+**As-of:** 2026-07-14 · Stage S26 · Analysis only  
 **Companion:** [INVENTORY](./AIRTABLE-AUTOMATION-INVENTORY.md)
 
 ---
@@ -38,9 +38,9 @@ flowchart TD
 |------------|------|----------------|
 | 001 → 002 | Soft (Athlete must exist) | 002 throws / skips |
 | 002 ↔ 003 | Lifecycle split | Lost grade-change refresh |
-| Docs 001/002 conditions | **Suspected swap** vs scripts | Orchestrator premature |
+| Docs 001/002 conditions | **S26 confirmed swap** vs scripts (docs table) | Orchestrator premature until Mike verifies live views |
 
-**Orchestrator note:** One enrollment orchestrator is **Combine with conditions** long-term, but **blocked** until Mike verifies live 001/002 views.
+**S26 verdict:** `combine_with_conditions` — not `combine_001_002_safely`. Keep **003** separate. Docs: [FOLDER-01 investigation](../deploy-checklists/FOLDER-01-001-003-investigation.md) · [decision](../overnight-runs/results/S26-folder01-decision.md).
 
 ---
 
@@ -72,7 +72,7 @@ flowchart LR
 |------|----------|---------------|
 | 006 + 021 | Same table prep | **Combine safely** |
 | 009 → 013 / 020 | Asset fan-out | Keep separate |
-| 070a / 070b / 070c / 022 | Upload path | **Needs investigation** — do **not** merge near-term |
+| 070a / 070b / 070c / 022 | Upload path | **Keep separate** — 022 identity confirmed (post-Make child writeback); do **not** merge |
 | 010 ↔ 041 | XP → level flag | **Keep separate** |
 
 ---
@@ -127,8 +127,8 @@ flowchart TD
 | Automation | Role | Dependency |
 |------------|------|------------|
 | 041 | Sets Level Recalc Needed from XP | After XP Events |
-| 042 | Assigns Current/Next Level **and Level Gate Rule** | After 041 |
-| 043 | Sets Level Gate Rule from Next Level | Fold into **042** only with replacement evidence — **not** because OFF |
+| 042 | Assigns Current/Next Level **and Level Gate Rule** (v3.0) | After 041 |
+| 043 | Sets Level Gate Rule from Next Level (gap filler if gate empty) | **S26:** optional later retire after Mike soak — **do not retire tonight** · [rec](../overnight-runs/results/S26-043-042-recommendation.md) |
 
 ---
 
@@ -168,13 +168,13 @@ flowchart TD
 
 | Group | Verdict | Slots |
 |-------|---------|------:|
-| Folder 01 enrollment monolith | **Blocked** — trigger investigation first | 0 now |
+| Folder 01 enrollment (001∪002) | **S26:** `combine_with_conditions` — UI verify first; 003 stay separate | 0 now |
 | 006+021 submission prep | **Safe** — first capacity phase | +1 |
 | 030+032+033 WAS bootstrap | **Conditional** — confirm fire order | +2 |
 | 063→020 / 111→013 | **Conditional** — create-path audit | +2 |
-| 043→042 | Replacement evidence only — **not because OFF** | +1 optional |
+| 043→042 | Replacement evidence (042 v3.0) — soak then Mike — **not tonight** | +1 optional later |
 | 061 / 078 | **Keep** — required; not deletable for OFF/missing GH | 0 |
-| 070a/b/c+022 | Keep separate; OFF intentional; no upload orchestrator | 0 |
+| 070a/b/c+022 | Keep separate; **022 required** writeback; no upload orchestrator | 0 |
 | 117 recording | Paste after consolidation frees +1 | −1 net after Phase A |
 | 072∪074 (then EMC) | Later consolidation among required email autos | +1 (+more) |
 

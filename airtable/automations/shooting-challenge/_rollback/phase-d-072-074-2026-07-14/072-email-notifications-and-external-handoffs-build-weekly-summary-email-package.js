@@ -1,81 +1,93 @@
 /*
-GitHub Source of Truth — paste into Airtable starting AFTER this header block
-(skip this GitHub header when pasting).
+Automation: 072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package
 System: 127 SI Shooting Challenge
-Backlog: V2-014 / Phase D / S26
-Folder: 07 - Email, Notifications, and External Handoffs
-Survives: 072
-Absorbs: 074 (library stub after authorize + retire)
-Rollback: _rollback/phase-d-072-074-2026-07-14/
-Status: READY_FOR_AUTHORIZATION (repo prep only — do not paste/enable yet)
+Source: Airtable Automation
+Status: GitHub Source of Truth
+Last Synced From Airtable: 2026-06-21
+Last GitHub Update: 2026-06-21
+
+Purpose:
+Builds the branded weekly parent/athlete summary email package on Weekly Athlete Summary.
+
+Trigger:
+Weekly Athlete Summary when Build Weekly Email Now? is checked.
+
+Important Tables:
+Weekly Athlete Summary, Enrollments, Weeks, Submissions, Homework Completions, XP Events, Video Feedback, Zoom Meetings, XP Reward Rules, FBC Curriculum - SYNC
+
+Important Fields:
+Build Weekly Email Now?, Weekly Email Ready?, Send to Make?, Weekly Email HTML, Weekly Email Subject, Weekly Email Recipients
+
+Notes:
+GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 */
 
 /************************************************************
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
- * Build (+ optional Send) Weekly Summary Email Package
+ * Build Weekly Summary Email Package
  *
- * Version: v4.0.0
+ * Version: v3.7
  * Date Written: 2026-05-19
- * Last Updated: 2026-07-14
+ * Last Updated: 2026-06-21
  *
  * PURPOSE
- * - Phase D combine: former 072 BUILD + former 074 Make handoff in one slot.
  * - Runs from one Weekly Athlete Summary record.
- * - Ordered steps: BUILD package (when Build Weekly Email Now?) then SEND
- *   to Make (when Send to Make? is armed / autoSendAfterBuild), never send-before-build.
- * - Does NOT mark Weekly Email Sent? / Sent At — Make owns final Gmail writeback.
- *
- * IMPORTANT DESIGN RULES
- * - Surviving automation number: **072**. Former **074** becomes library-only.
- * - Blank / missing makeWebhookUrl = safe no-send (skip), never throw for DEV.
- * - sendEnabled input false (or unset with empty webhook) = no-send.
- * - Do not clear Send to Make? on webhook failure (retryable).
- * - Do not steal / arm send on build-only runs — leave Send to Make? unchecked
- *   unless autoSendAfterBuild or Send was already armed before build.
- * - Idempotent gate: Weekly Email Sent? checked → skip send (duplicate blocked).
- * - This is NOT Folder 07 other send scripts (071/073/076/077) and NOT 117.
+ * - Builds the branded weekly parent/athlete summary email.
+ * - Summarizes shooting, homework, Zoom attendance, video feedback,
+ *   streaks, thresholds, XP buckets, and XP event detail.
+ * - Writes the finished email package back to the Weekly Athlete Summary record.
+ * - Does NOT send the email to Make.com or Gmail directly.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
  *
  * AUTOMATION NAME
- * - 072 - Email, Notifications, and External Handoffs - Build and Send Weekly Summary Email Package
+ * - 072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package
  *
  * TRIGGER TABLE
  * - Weekly Athlete Summary
  *
  * TRIGGER TYPE
- * - When record matches conditions (OR of build and send arms)
+ * - When record matches conditions
  *
- * REQUIRED TRIGGER CONDITIONS (UI — after authorization)
+ * REQUIRED TRIGGER CONDITIONS
+ * - Build Weekly Email Now? is checked
  * - Weekly Email Sent? is unchecked
  * - Enrollment is not empty
  * - Week is not empty
- * - AND either:
- *   - Build Weekly Email Now? is checked
- *   - OR (Send to Make? is checked AND Weekly Email Ready? is checked)
+ *
+ * OPTIONAL TRIGGER CONDITION
+ * - Weekly Email Ready? is unchecked
  *
  * REQUIRED INPUT VARIABLES
- * - recordId = triggering Weekly Athlete Summary record id (must start with rec)
+ * - recordId = Airtable record ID from the triggering Weekly Athlete Summary record
  *
  * OPTIONAL INPUT VARIABLES
- * - makeWebhookUrl / webhookUrl = Make webhook (blank = safe no-send)
- * - sendEnabled = "true"/"false" hard gate (default true only when webhook present)
- * - autoSendAfterBuild = when true, SEND runs in same run after successful BUILD
- * - sendModeInput / sendMode = test | live
- * - testRecipientEmail = required for test mode send
- * - replyTo = reply-to (default mschmidt@fairfield.k12.mt.us)
+ * - sendModeInput = sendMode from the triggering Weekly Athlete Summary record
  *
- * OUTPUTS
- * - statusOut: success | skipped | error
- * - errorOut, debugStep, actionOut (built | sent | skipped_* | error)
- * - buildActionOut, sendActionOut
- * - subjectOut, recipientsCsv, sendMode, sendKey
+ * OUTPUT / WRITEBACK FIELDS
+ * - Build Weekly Email Now? = unchecked
+ * - Weekly Email Ready? = checked
+ * - Weekly Email Sent? = unchecked
+ * - Send to Make? = unchecked
+ * - Weekly Email Sent At = cleared
+ * - Weekly Email Error = cleared
+ * - Weekly Email Subject = generated subject
+ * - Weekly Email Recipients = parent/athlete email CSV
+ * - Weekly Email HTML = generated branded HTML email
+ * - Weekly Email Text = generated plain-text version
+ * - Weekly Email Payload JSON = full payload/diagnostics JSON
+ * - Weekly Email Week Label = generated week label
+ * - Weekly Email Revision = script version
+ * - Weekly Email Last Built At = current timestamp
  *
- * ACTION OUT VALUES
- * - built, built_and_sent, sent, skipped_nothing_to_do, skipped_already_sent,
- *   skipped_send_disabled, skipped_no_webhook, skipped_missing_package,
- *   skipped_missing_recipient, error
+ * IMPORTANT NOTES
+ * - This is NOT a Video Feedback trigger script.
+ * - This is NOT the Make/Gmail send script.
+ * - This script only prepares the weekly email package.
+ * - This script must not send the email and must not arm the Make send automation.
+ * - Send to Make? is left unchecked so staff can review the email HTML before manually arming send.
+ * - A separate automation (074) sends the prepared package to Make/Gmail after Send to Make? is checked manually.
  ************************************************************/
 
 // @ts-nocheck
@@ -85,11 +97,10 @@ Status: READY_FOR_AUTHORIZATION (repo prep only — do not paste/enable yet)
    ========================================================= */
 
 const CONFIG = {
-    scriptName: "072 - Email, Notifications, and External Handoffs - Build and Send Weekly Summary Email Package",
-    version: "v4.0.0",
+    scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+    version: "v3.7",
     dateWritten: "2026-05-19",
-    lastUpdated: "2026-07-14",
-    phaseDAbsorbed: "074",
+    lastUpdated: "2026-06-21",
 
     timeZone: "America/Denver",
 
@@ -439,301 +450,6 @@ function setOutputSafe(name, value) {
     }
 }
 
-
-/* =========================================================
-   SECTION 4C: PHASE D SEND HELPERS (former 074)
-   ========================================================= */
-
-const SEND_TYPE = "weekly_summary";
-const SEND_TAG = "WEEKLY_SUMMARY_PARENT";
-const DEFAULT_REPLY_TO = "mschmidt@fairfield.k12.mt.us";
-
-function cleanCsvEmails(value) {
-    const items = String(value || "")
-        .split(/[,\n;]+/)
-        .map(v => v.trim())
-        .filter(Boolean);
-    return [...new Set(items)].join(",");
-}
-
-function safeJsonParse(value) {
-    const text = String(value || "").trim();
-    if (!text) return null;
-    try {
-        return JSON.parse(text);
-    } catch {
-        return null;
-    }
-}
-
-function boolishInput(value, fallback = false) {
-    if (value === true || value === false) return value;
-    const text = String(value ?? "").trim().toLowerCase();
-    if (!text) return fallback;
-    if (["1", "true", "yes", "y", "on"].includes(text)) return true;
-    if (["0", "false", "no", "n", "off"].includes(text)) return false;
-    return fallback;
-}
-
-function normalizeSendModeInline(value) {
-    const raw = String(value || "").trim().toLowerCase();
-    if (["live", "l", "real", "send", "parent"].includes(raw)) return "live";
-    if (["test", "t", "preview", "practice", "draft"].includes(raw)) return "test";
-    return "";
-}
-
-function buildWeeklySendKey(enrollmentId, weekId, revision) {
-    return `WEEKLY_SUMMARY|${enrollmentId || ""}|${weekId || ""}|${revision || ""}`;
-}
-
-async function postJson(url, payload) {
-    const request = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    };
-    if (typeof fetch === "function") {
-        return await fetch(url, request);
-    }
-    if (typeof remoteFetchAsync === "function") {
-        return await remoteFetchAsync(url, request);
-    }
-    throw new Error("No supported HTTP method is available in this Airtable automation environment.");
-}
-
-/**
- * Decide build vs send phases from WAS flags + inputs.
- * Pure-decision contract mirrored in tools/airtable/tests/test_phase_d_072_074_combined.py
- */
-function decidePhaseDActions(opts) {
-    const buildRequested = opts.buildRequested === true;
-    const sendArmed = opts.sendArmed === true;
-    const emailReady = opts.emailReady === true;
-    const emailSent = opts.emailSent === true;
-    const autoSendAfterBuild = opts.autoSendAfterBuild === true;
-    const webhookPresent = Boolean(String(opts.webhookUrl || "").trim());
-    const sendEnabled = opts.sendEnabled !== false;
-    const hasSubject = Boolean(String(opts.subject || "").trim());
-    const hasHtml = Boolean(String(opts.html || "").trim());
-    const hasRecipients = Boolean(String(opts.recipients || "").trim());
-
-    if (emailSent && !buildRequested) {
-        return {
-            doBuild: false,
-            doSend: false,
-            actionOut: "skipped_already_sent",
-            statusOut: "skipped",
-            reason: "Weekly Email Sent? already checked",
-        };
-    }
-
-    if (!buildRequested && !(sendArmed && emailReady)) {
-        return {
-            doBuild: false,
-            doSend: false,
-            actionOut: "skipped_nothing_to_do",
-            statusOut: "skipped",
-            reason: "Neither Build Now nor Send-to-Make ready",
-        };
-    }
-
-    const wantSendAfterBuild = buildRequested && (sendArmed || autoSendAfterBuild);
-    const wantSendOnly = !buildRequested && sendArmed && emailReady;
-    let doSend = wantSendAfterBuild || wantSendOnly;
-
-    if (doSend && emailSent) {
-        return {
-            doBuild: buildRequested,
-            doSend: false,
-            actionOut: buildRequested ? "built" : "skipped_already_sent",
-            statusOut: buildRequested ? "success" : "skipped",
-            reason: "Duplicate send blocked by Weekly Email Sent?",
-        };
-    }
-
-    if (doSend && !sendEnabled) {
-        return {
-            doBuild: buildRequested,
-            doSend: false,
-            actionOut: buildRequested ? "built" : "skipped_send_disabled",
-            statusOut: buildRequested ? "success" : "skipped",
-            reason: "sendEnabled=false",
-            sendSkip: "skipped_send_disabled",
-        };
-    }
-
-    if (doSend && !webhookPresent) {
-        return {
-            doBuild: buildRequested,
-            doSend: false,
-            actionOut: buildRequested ? "built" : "skipped_no_webhook",
-            statusOut: buildRequested ? "success" : "skipped",
-            reason: "Blank webhook — safe no-send",
-            sendSkip: "skipped_no_webhook",
-        };
-    }
-
-    if (doSend && !wantSendAfterBuild) {
-        if (!hasSubject || !hasHtml) {
-            return {
-                doBuild: false,
-                doSend: false,
-                actionOut: "skipped_missing_package",
-                statusOut: "skipped",
-                reason: "Missing subject or HTML package",
-                sendSkip: "skipped_missing_package",
-            };
-        }
-        if (!hasRecipients) {
-            return {
-                doBuild: false,
-                doSend: false,
-                actionOut: "skipped_missing_recipient",
-                statusOut: "skipped",
-                reason: "Missing recipients",
-                sendSkip: "skipped_missing_recipient",
-            };
-        }
-    }
-
-    return {
-        doBuild: buildRequested,
-        doSend,
-        actionOut: buildRequested && doSend ? "built_and_sent" : buildRequested ? "built" : "sent",
-        statusOut: "success",
-        reason: "",
-        sendSkip: "",
-    };
-}
-
-async function sendWeeklyPackageToMake(ctx) {
-    const {
-        weeklySummaryTable,
-        recordId,
-        makeWebhookUrl,
-        sendMode,
-        testRecipientEmail,
-        replyTo,
-        subjectOut,
-        recipientsCsv,
-        htmlOut,
-        textOut,
-        weekLabel,
-        payloadJsonText,
-        enrollmentId,
-        weekId,
-        revision,
-    } = ctx;
-
-    const sendKey = buildWeeklySendKey(enrollmentId, weekId, revision);
-    const payloadJson = safeJsonParse(payloadJsonText);
-
-    if (!["test", "live"].includes(sendMode)) {
-        throw new Error(`Invalid send mode after normalization: ${sendMode}`);
-    }
-    if (sendMode === "test" && !testRecipientEmail) {
-        throw new Error("Missing testRecipientEmail for test mode.");
-    }
-
-    const cleanRecipients = cleanCsvEmails(recipientsCsv);
-    if (!String(subjectOut || "").trim()) {
-        return { ok: false, actionOut: "skipped_missing_package", errorOut: "Weekly Email Subject is blank.", sendKey };
-    }
-    if (!String(htmlOut || "").trim()) {
-        return { ok: false, actionOut: "skipped_missing_package", errorOut: "Weekly Email HTML is blank.", sendKey };
-    }
-    if (!cleanRecipients) {
-        return { ok: false, actionOut: "skipped_missing_recipient", errorOut: "Weekly Email Recipients is blank.", sendKey };
-    }
-
-    const payload = {
-        recordId,
-        weeklySummaryRecordId: recordId,
-        weeklyEmailRecordId: recordId,
-        sourceTable: CONFIG.tables.summary,
-        sendType: SEND_TYPE,
-        sendTag: SEND_TAG,
-        sendMode,
-        sendKey,
-        enrollmentId: enrollmentId || "",
-        weekId: weekId || "",
-        weekLabel: weekLabel || "",
-        subjectOut,
-        htmlOut,
-        textOut: textOut || "",
-        recipientsCsv: cleanRecipients,
-        subject: subjectOut,
-        html: htmlOut,
-        text: textOut || "",
-        csvemail: cleanRecipients,
-        payloadJson: payloadJsonText || "",
-        toEmail: sendMode === "test" ? testRecipientEmail : cleanRecipients,
-        liveRecipientEmail: cleanRecipients,
-        testRecipientEmail,
-        replyTo,
-        preparedPayload: payloadJson || {},
-        parsedPayload: payloadJson || {},
-        rawPreparedPayloadJson: payloadJsonText || "",
-        revision: revision || payloadJson?.revision || "",
-        handoffBuiltAt: new Date().toISOString(),
-    };
-
-    let response;
-    let responseText = "";
-    try {
-        response = await postJson(makeWebhookUrl, payload);
-        responseText = await response.text();
-        if (!response.ok) {
-            throw new Error(`Webhook failed with status ${response.status}: ${responseText}`);
-        }
-    } catch (error) {
-        const errorUpdates = {};
-        if (fieldExists(weeklySummaryTable, CONFIG.summaryFields.emailError)) {
-            errorUpdates[CONFIG.summaryFields.emailError] = String(error.message || error);
-        }
-        // Do not uncheck Send to Make? on webhook failure (retryable).
-        if (Object.keys(errorUpdates).length) {
-            await weeklySummaryTable.updateRecordAsync(recordId, errorUpdates);
-        }
-        return {
-            ok: false,
-            actionOut: "error",
-            errorOut: String(error.message || error),
-            sendKey,
-            makeResponse: responseText,
-            threw: true,
-        };
-    }
-
-    const successUpdates = {};
-    if (fieldExists(weeklySummaryTable, CONFIG.summaryFields.sendToMake)) {
-        successUpdates[CONFIG.summaryFields.sendToMake] = false;
-    }
-    if (fieldExists(weeklySummaryTable, CONFIG.summaryFields.emailError)) {
-        successUpdates[CONFIG.summaryFields.emailError] = "";
-    }
-    if (fieldExists(weeklySummaryTable, CONFIG.summaryFields.emailReady)) {
-        successUpdates[CONFIG.summaryFields.emailReady] = true;
-    }
-    if (fieldExists(weeklySummaryTable, CONFIG.summaryFields.emailSent)) {
-        successUpdates[CONFIG.summaryFields.emailSent] = false;
-    }
-    if (Object.keys(successUpdates).length) {
-        await weeklySummaryTable.updateRecordAsync(recordId, successUpdates);
-    }
-
-    return {
-        ok: true,
-        actionOut: "sent",
-        errorOut: "",
-        sendKey,
-        makeResponse: responseText,
-        toEmail: payload.toEmail,
-        threw: false,
-    };
-}
-
-
 function plainTextFromHtml(html) {
     return String(html || "")
         .replace(/<style[\s\S]*?<\/style>/gi, "")
@@ -955,31 +671,13 @@ async function main() {
        SECTION 2: INPUT
        ========================================================= */
 
-    let debugStep = "1 - Input";
-    setOutputSafe("debugStep", debugStep);
-
     const cfg = input.config();
     const recordId = String(cfg.recordId || "").trim();
-    const sendModeInput = String(cfg.sendMode || cfg.sendModeInput || "").trim();
-    const makeWebhookUrl = String(cfg.makeWebhookUrl || cfg.webhookUrl || "").trim();
-    const testRecipientEmail = String(cfg.testRecipientEmail || "").trim();
-    const replyTo = String(cfg.replyTo || DEFAULT_REPLY_TO).trim();
-    const autoSendAfterBuild = boolishInput(cfg.autoSendAfterBuild, false);
-    // sendEnabled: explicit false always blocks; otherwise allow when webhook present
-    const sendEnabledExplicit = cfg.sendEnabled;
-    const sendEnabled = sendEnabledExplicit === undefined || sendEnabledExplicit === null || String(sendEnabledExplicit).trim() === ""
-        ? true
-        : boolishInput(sendEnabledExplicit, true);
+    const sendModeInput = String(cfg.sendModeInput || "").trim();
 
-    if (!recordId || !recordId.startsWith("rec")) {
-        throw new Error("Missing or invalid required input: recordId");
+    if (!recordId) {
+        throw new Error("Missing required input: recordId");
     }
-
-    let buildActionOut = "skipped";
-    let sendActionOut = "skipped";
-    let actionOut = "skipped_nothing_to_do";
-    let sendKeyOut = "";
-    let phaseDSendResult = null;
 
     /* =========================================================
        SECTION 3: TABLES
@@ -995,151 +693,6 @@ async function main() {
     const zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
     const xpRulesTable = base.getTable(CONFIG.tables.xpRules);
     const curriculumTable = base.getTable(CONFIG.tables.curriculum);
-
-    /* =========================================================
-       SECTION 5B: PHASE D ROUTING (build vs send-only)
-       ========================================================= */
-
-    debugStep = "2 - Route build/send";
-    setOutputSafe("debugStep", debugStep);
-
-    const routeFields = existingFields(summaryTable, [
-        CONFIG.summaryFields.buildNow,
-        CONFIG.summaryFields.sendToMake,
-        CONFIG.summaryFields.emailReady,
-        CONFIG.summaryFields.emailSent,
-        CONFIG.summaryFields.emailSubject,
-        CONFIG.summaryFields.emailRecipients,
-        CONFIG.summaryFields.emailHtml,
-        CONFIG.summaryFields.emailText,
-        CONFIG.summaryFields.emailPayloadJson,
-        CONFIG.summaryFields.emailWeekLabel,
-        CONFIG.summaryFields.emailRevision,
-        CONFIG.summaryFields.enrollment,
-        CONFIG.summaryFields.week,
-        CONFIG.summaryFields.sendMode,
-    ]);
-
-    const routeRecord = await summaryTable.selectRecordAsync(recordId, { fields: routeFields });
-    if (!routeRecord) {
-        throw new Error(`Weekly Athlete Summary not found: ${recordId}`);
-    }
-
-    const buildRequested = fieldExists(summaryTable, CONFIG.summaryFields.buildNow)
-        ? getBooleanish(routeRecord, summaryTable, CONFIG.summaryFields.buildNow)
-        : false;
-    const sendArmed = fieldExists(summaryTable, CONFIG.summaryFields.sendToMake)
-        ? getBooleanish(routeRecord, summaryTable, CONFIG.summaryFields.sendToMake)
-        : false;
-    const emailReady = fieldExists(summaryTable, CONFIG.summaryFields.emailReady)
-        ? getBooleanish(routeRecord, summaryTable, CONFIG.summaryFields.emailReady)
-        : false;
-    const emailSent = fieldExists(summaryTable, CONFIG.summaryFields.emailSent)
-        ? getBooleanish(routeRecord, summaryTable, CONFIG.summaryFields.emailSent)
-        : false;
-
-    const routeSubject = getText(routeRecord, summaryTable, CONFIG.summaryFields.emailSubject);
-    const routeRecipients = getText(routeRecord, summaryTable, CONFIG.summaryFields.emailRecipients);
-    const routeHtml = getText(routeRecord, summaryTable, CONFIG.summaryFields.emailHtml);
-
-    const routeDecision = decidePhaseDActions({
-        buildRequested,
-        sendArmed,
-        emailReady,
-        emailSent,
-        autoSendAfterBuild,
-        webhookUrl: makeWebhookUrl,
-        sendEnabled,
-        subject: routeSubject,
-        html: routeHtml,
-        recipients: routeRecipients,
-    });
-
-    if (!routeDecision.doBuild && !routeDecision.doSend) {
-        actionOut = routeDecision.actionOut;
-        buildActionOut = "skipped";
-        sendActionOut = routeDecision.sendSkip || routeDecision.actionOut;
-        setOutputSafe("statusOut", routeDecision.statusOut);
-        setOutputSafe("errorOut", "");
-        setOutputSafe("actionOut", actionOut);
-        setOutputSafe("buildActionOut", buildActionOut);
-        setOutputSafe("sendActionOut", sendActionOut);
-        setOutputSafe("debugStep", "done - skipped");
-        setOutputSafe("sendKey", "");
-        console.log(JSON.stringify({
-            automation: CONFIG.scriptName,
-            version: CONFIG.version,
-            recordId,
-            actionOut,
-            reason: routeDecision.reason,
-        }));
-        return;
-    }
-
-    // Send-only path (package already built by a prior run)
-    if (!routeDecision.doBuild && routeDecision.doSend) {
-        debugStep = "3 - Send only (former 074)";
-        setOutputSafe("debugStep", debugStep);
-
-        const enrollmentIdSend = getFirstLinkedId(routeRecord, summaryTable, CONFIG.summaryFields.enrollment);
-        const weekIdSend = getFirstLinkedId(routeRecord, summaryTable, CONFIG.summaryFields.week);
-        const sendModeFromRecord = fieldExists(summaryTable, CONFIG.summaryFields.sendMode)
-            ? getText(routeRecord, summaryTable, CONFIG.summaryFields.sendMode)
-            : "";
-        const payloadJsonText = getText(routeRecord, summaryTable, CONFIG.summaryFields.emailPayloadJson);
-        const payloadJson = safeJsonParse(payloadJsonText);
-        const sendMode = firstNonBlank(
-            normalizeSendModeInline(sendModeInput),
-            normalizeSendModeInline(sendModeFromRecord),
-            normalizeSendModeInline(payloadJson?.sendMode),
-            "test"
-        );
-
-        phaseDSendResult = await sendWeeklyPackageToMake({
-            weeklySummaryTable: summaryTable,
-            recordId,
-            makeWebhookUrl,
-            sendMode,
-            testRecipientEmail,
-            replyTo,
-            subjectOut: routeSubject,
-            recipientsCsv: routeRecipients,
-            htmlOut: routeHtml,
-            textOut: getText(routeRecord, summaryTable, CONFIG.summaryFields.emailText),
-            weekLabel: getText(routeRecord, summaryTable, CONFIG.summaryFields.emailWeekLabel),
-            payloadJsonText,
-            enrollmentId: enrollmentIdSend,
-            weekId: weekIdSend,
-            revision: getText(routeRecord, summaryTable, CONFIG.summaryFields.emailRevision) || CONFIG.version,
-        });
-
-        sendActionOut = phaseDSendResult.actionOut;
-        sendKeyOut = phaseDSendResult.sendKey || "";
-        buildActionOut = "skipped";
-        actionOut = phaseDSendResult.ok ? "sent" : phaseDSendResult.actionOut;
-        setOutputSafe("statusOut", phaseDSendResult.ok ? "success" : (phaseDSendResult.threw ? "error" : "skipped"));
-        setOutputSafe("errorOut", phaseDSendResult.errorOut || "");
-        setOutputSafe("actionOut", actionOut);
-        setOutputSafe("buildActionOut", buildActionOut);
-        setOutputSafe("sendActionOut", sendActionOut);
-        setOutputSafe("sendKey", sendKeyOut);
-        setOutputSafe("sendMode", sendMode);
-        setOutputSafe("subjectOut", routeSubject);
-        setOutputSafe("recipientsCsv", routeRecipients);
-        setOutputSafe("debugStep", "done - send only");
-        console.log(JSON.stringify({
-            automation: CONFIG.scriptName,
-            version: CONFIG.version,
-            recordId,
-            actionOut,
-            sendActionOut,
-            sendKey: sendKeyOut,
-        }));
-        if (phaseDSendResult.threw) {
-            throw new Error(phaseDSendResult.errorOut || "Make webhook failed");
-        }
-        return;
-    }
 
     /* =========================================================
        SECTION 6: DETERMINE EXISTING FIELDS
@@ -2715,14 +2268,6 @@ async function main() {
        SECTION 22: WRITE BACK TO WEEKLY ATHLETE SUMMARY
        ========================================================= */
 
-    debugStep = "22 - Write package";
-    setOutputSafe("debugStep", debugStep);
-
-    const sendArmedBeforeBuild = sendArmed;
-    const willAttemptSendAfterBuild = Boolean(
-        routeDecision.doSend || ((sendArmedBeforeBuild || autoSendAfterBuild) && sendEnabled && makeWebhookUrl)
-    );
-
     const updateFields = {};
 
     if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
@@ -2737,11 +2282,8 @@ async function main() {
         updateFields[CONFIG.summaryFields.emailSent] = false;
     }
 
-    // Keep Send to Make? armed when we will hand off in this same run; otherwise clear for review gate.
     if (fieldExists(summaryTable, CONFIG.summaryFields.sendToMake)) {
-        updateFields[CONFIG.summaryFields.sendToMake] = willAttemptSendAfterBuild
-            ? true
-            : false;
+        updateFields[CONFIG.summaryFields.sendToMake] = false;
     }
 
     if (fieldExists(summaryTable, CONFIG.summaryFields.emailSentAt)) {
@@ -2785,77 +2327,11 @@ async function main() {
     }
 
     await summaryTable.updateRecordAsync(recordId, updateFields);
-    buildActionOut = "built";
-
-    /* =========================================================
-       SECTION 22B: OPTIONAL SEND (former 074) — ordered after BUILD
-       ========================================================= */
-
-    const postBuildDecision = decidePhaseDActions({
-        buildRequested: false,
-        sendArmed: willAttemptSendAfterBuild,
-        emailReady: true,
-        emailSent: false,
-        autoSendAfterBuild: false,
-        webhookUrl: makeWebhookUrl,
-        sendEnabled,
-        subject: subjectOut,
-        html: htmlOut,
-        recipients: recipientsCsv,
-    });
-
-    if (postBuildDecision.doSend) {
-        debugStep = "22B - Send to Make";
-        setOutputSafe("debugStep", debugStep);
-        phaseDSendResult = await sendWeeklyPackageToMake({
-            weeklySummaryTable: summaryTable,
-            recordId,
-            makeWebhookUrl,
-            sendMode,
-            testRecipientEmail,
-            replyTo,
-            subjectOut,
-            recipientsCsv,
-            htmlOut,
-            textOut,
-            weekLabel,
-            payloadJsonText: JSON.stringify(payload, null, 2),
-            enrollmentId,
-            weekId,
-            revision: CONFIG.version,
-        });
-        sendActionOut = phaseDSendResult.actionOut;
-        sendKeyOut = phaseDSendResult.sendKey || "";
-        if (phaseDSendResult.threw) {
-            actionOut = "error";
-            setOutputSafe("statusOut", "error");
-            setOutputSafe("errorOut", phaseDSendResult.errorOut || "");
-            setOutputSafe("actionOut", actionOut);
-            setOutputSafe("buildActionOut", buildActionOut);
-            setOutputSafe("sendActionOut", sendActionOut);
-            setOutputSafe("sendKey", sendKeyOut);
-            throw new Error(phaseDSendResult.errorOut || "Make webhook failed");
-        }
-        actionOut = phaseDSendResult.ok ? "built_and_sent" : (phaseDSendResult.actionOut || "built");
-    } else {
-        sendActionOut = postBuildDecision.sendSkip || "skipped";
-        actionOut = "built";
-        if (!makeWebhookUrl && (sendArmedBeforeBuild || autoSendAfterBuild)) {
-            sendActionOut = "skipped_no_webhook";
-        } else if (!sendEnabled && (sendArmedBeforeBuild || autoSendAfterBuild)) {
-            sendActionOut = "skipped_send_disabled";
-        }
-    }
 
     /* =========================================================
        SECTION 23: OUTPUTS
        ========================================================= */
 
-    setOutputSafe("actionOut", actionOut);
-    setOutputSafe("buildActionOut", buildActionOut);
-    setOutputSafe("sendActionOut", sendActionOut);
-    setOutputSafe("sendKey", sendKeyOut);
-    setOutputSafe("debugStep", "done");
     setOutputSafe("subjectOut", subjectOut);
     setOutputSafe("htmlOut", htmlOut);
     setOutputSafe("recipientsCsv", recipientsCsv);
@@ -2951,11 +2427,4 @@ async function main() {
     }, null, 2));
 }
 
-try {
-    await main();
-} catch (error) {
-    setOutputSafe("statusOut", "error");
-    setOutputSafe("errorOut", String(error && error.message ? error.message : error));
-    setOutputSafe("debugStep", "error");
-    throw error;
-}
+await main();

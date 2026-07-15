@@ -67,11 +67,11 @@ Mike reports **50/50**. Best-fit reconciliation:
 
 | # | Exact docs name | Trigger (docs) | Tables R/W | Rank | Notes |
 |---|-----------------|----------------|------------|------|-------|
-| **001** | `001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment` *(docs name may have leading space)* | Enters view · Enrollments | Athletes + Enrollments | **Needs investigation** | Docs conditions look **swapped with 002** vs GitHub intent |
-| **002** | `002 - Enrollment Intake and Setup - Assign Grade Band - Initial` | Enters view · Enrollments | Grade Bands + Enrollments | **Combine with conditions** | After 001; shares logic with 003 |
-| **003** | `003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes` | Enters view · Enrollments · Grade Band Refresh Needed=1 | Grade Bands + Enrollments | **Keep separate** | Distinct lifecycle; do not fold into 002 unconditionally |
+| **001** | `001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment` *(docs name may have leading space)* | Enters view · Enrollments | Athletes + Enrollments | **Combine with conditions** *(w/ 002 later)* | **S26:** docs conditions **confirmed swapped** with 002 vs GitHub intent — Mike must verify live views before any merge |
+| **002** | `002 - Enrollment Intake and Setup - Assign Grade Band - Initial` | Enters view · Enrollments | Grade Bands + Enrollments | **Combine with conditions** *(w/ 001 later)* | After Athlete linked; blank Grade Band only |
+| **003** | `003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes` | Enters view · Enrollments · Grade Band Refresh Needed=1 | Grade Bands + Enrollments | **Keep separate** | Distinct lifecycle; docs ↔ script aligned |
 
-**Folder 01 finding:** Do **not** merge into one enrollment orchestrator until Mike confirms live 001/002 trigger views. See [DEPENDENCY-MAP](./AIRTABLE-AUTOMATION-DEPENDENCY-MAP.md).
+**Folder 01 finding (S26):** Verdict **`combine_with_conditions`** — **not** `combine_001_002_safely` tonight. Docs-table 001/002 conditions are swapped; confirm live UI, then optional orchestrator. Keep **003** separate. See [FOLDER-01 investigation](../deploy-checklists/FOLDER-01-001-003-investigation.md) · [S26 decision](../overnight-runs/results/S26-folder01-decision.md) · [DEPENDENCY-MAP](./AIRTABLE-AUTOMATION-DEPENDENCY-MAP.md).
 
 ---
 
@@ -81,9 +81,9 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 
 | # | Exact / short name | Est. UI | Docs? | GH? | ON/OFF | Trigger table | External | Rank | Evidence |
 |---|--------------------|---------|-------|-----|--------|---------------|----------|------|----------|
-| 001 | Find or Create Athlete | Y | Y | Y | ? | Enrollments | — | Needs investigation | Docs vs script mismatch |
-| 002 | Assign Grade Band — Initial | Y | Y | Y | ? | Enrollments | — | Combine with conditions | After 001 |
-| 003 | Assign Grade Band — If Grade Changes | Y | Y | Y | ? | Enrollments | — | Keep separate | Refresh path |
+| 001 | Find or Create Athlete | Y | Y | Y | ? | Enrollments | — | Combine with conditions | S26: docs↔002 swap confirmed; UI verify first |
+| 002 | Assign Grade Band — Initial | Y | Y | Y | ? | Enrollments | — | Combine with conditions | After 001; blank GB |
+| 003 | Assign Grade Band — If Grade Changes | Y | Y | Y | ? | Enrollments | — | Keep separate | Refresh path; docs OK |
 | 005 | Assign Week — Homework First | Y | Y | Y | ? | Submissions | — | Keep separate | C-018 calendar |
 | 006 | Set Video Count | Y | Y | Y | ? | Submissions | — | Combine safely | →021 |
 | 007 | Duplicate Checker | Y | Y | Y | ? | Submissions | — | Keep separate | |
@@ -94,7 +94,7 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 020 | Link/Create HC + GB | Y | Y | Y | ON | Submission Assets | Absorbed 063 | Keep separate (combined) | Phase C1 COMPLETE |
 | 063 | Copy Grade Band → HW | library | — | — | deleted | — | →020 | LIBRARY | Phase C1 |
 | 021 | Set Attachment Upload Status | Y | Y | Y | ? | Submissions | — | Combine safely | ←006 |
-| 022 | Sync Child Upload Writeback | Y | **N** | Y | ? | Submission Assets | Make/S3 writeback | Keep separate | Reconciled add |
+| 022 | Sync Child Upload Writeback from Submission Asset | Y | Y (index) / **N** docs-table | Y | ? (UI may show blank `022 -`) | Submission Assets | Make/S3 writeback → HC/VF | Keep separate | **S26 identity confirmed** · required · [rename sheet](../deploy-checklists/AUTOMATION-022-identity-and-mike-rename-sheet.md) |
 | 023 | Assign Enrollment to Submission | Y | Y | Y | ? | Submissions | — | Keep separate | |
 | 030 | Copy Grade Band → WAS | Y | Y | Y | ? | WAS | — | Combine with conditions | WAS trio |
 | 031 | Find/Create WAS | Y | Y | Y | ? | Submissions | — | Keep separate | |
@@ -104,8 +104,8 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 | 033 | Assign Homework → WAS | library | — | — | deleted | — | →030 | LIBRARY | Phase B |
 | 034 | Previous Week Helpers | Y | Y | Y | ? | WAS | — | Keep separate | |
 | 041 | Mark Level Recalc | Y | Y | Y | ? | XP Events | — | Keep separate | Never merge→010 |
-| 042 | Assign Current/Next Level | Y | Y | Y | ? | Enrollments | — | Keep separate | Owns gate rule |
-| 043 | Set Level Gate Rule | Y | Y | Y | Mike list | Enrollments | — | Combine with conditions | →042 only with replacement evidence — **never because OFF** |
+| 042 | Assign Current/Next Level + Gate Blocking | Y | Y | Y | ? | Enrollments | — | Keep separate (owns gate) | v3.0 writes Level Gate Rule |
+| 043 | Set Level Gate Rule from Next Level | Y | Y | Y | Mike list | Enrollments | — | Combine with conditions | **S26:** fold later w/ Mike soak — **do not retire tonight** · [rec](../overnight-runs/results/S26-043-042-recommendation.md) |
 | 053 | Streak Occurrences Rebuild | Y | Y | Y | Mike list | Submissions | — | Keep separate | |
 | 054 | Streak XP Event | Y | Y | Y | Mike list | Streak Occurrences | — | Keep separate | |
 | 055 | Update Current Streak | Y | Y | Y | Mike list | Submissions | — | Keep separate | |
@@ -145,7 +145,7 @@ Legend — **Rank:** Keep separate · Combine safely · Combine with conditions 
 
 | Class | Codes | Action |
 |-------|-------|--------|
-| **Replacement candidate** | 043→042 (GitHub + V2-014a) | Fold only with Mike approval — **not because OFF** |
+| **Replacement candidate** | 043→042 (GitHub + V2-014a) | S26: soak then Mike-approved retire — **not because OFF**; **do not retire tonight** |
 | **Historical** | 008→116; 112 not in DEV UI | Docs cleanup; 0 capacity from OFF |
 | **GH gap (still required)** | 061, 078 | Keep separate; investigate scripts — **do not delete** |
 | **Intentional DEV OFF** | 070a–078 cluster | Keep slots; consolidate builders/senders later |

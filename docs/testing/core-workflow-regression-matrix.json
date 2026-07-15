@@ -1,0 +1,360 @@
+{
+  "schema_version": 1,
+  "document": "docs/testing/CORE-WORKFLOW-REGRESSION-MATRIX.md",
+  "as_of": "2026-07-14",
+  "stage": "S26",
+  "workstream": 4,
+  "bases": {
+    "dev": "appTetnuCZlCZdTCT",
+    "prod": "appn84sqPw03zEbTT"
+  },
+  "canonical_fixture": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "enrollment_label": "Schmidt, Testing - 2025-2026",
+    "rule": "Schmidt-only for live writes; no real-family email; no PROD unless Mike window; do not enable 117"
+  },
+  "evidence_vocabulary": {
+    "PASS": "Documented live smoke with artifact path",
+    "UNKNOWN": "Scripts/docs exist; no current authoritative live smoke for this row",
+    "PLANNED": "Design/harness ready; intentionally not run or gated"
+  },
+  "authority_sources": [
+    "docs/automation-index.md",
+    "docs/architecture/AIRTABLE-AUTOMATION-INVENTORY.md",
+    "docs/architecture/AIRTABLE-AUTOMATION-DEPENDENCY-MAP.md",
+    "docs/PROJECT_STATE.md",
+    "docs/deploy-checklists/C-024-dedupe-field-inventory-stage2.md",
+    "docs/overnight-runs/results/S22-phase-a-live-smoke-result.md",
+    "docs/overnight-runs/results/S23-phase-b-live-smoke-result.md",
+    "docs/overnight-runs/results/S24-phase-c1-post-paste-smoke-result.md",
+    "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md"
+  ],
+  "workflows": [
+    {
+      "id": "enrollment",
+      "label": "Enrollment",
+      "order": 1,
+      "trigger": "Enrollment enters intake view / create-update; confirm live 001-003 views (docs may swap vs GitHub)",
+      "prerequisites": [
+        "Enrollment payload (Fillout-shaped preferred)",
+        "Athletes writable",
+        "Grade Bands populated"
+      ],
+      "primary_automations": ["001", "002", "003"],
+      "outputs": [
+        "Athlete linked on Enrollment",
+        "Grade Band assigned"
+      ],
+      "dedupe_key": "Athlete find-or-create identity; Enrollment row is season participant",
+      "retry": "Re-run 001/002/003 after fixing missing athlete/band; skip when already correct",
+      "adjacent_automations": ["030", "020", "013", "113", "023", "075"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "notes": "Do not create production enrollments for regression"
+      },
+      "expected_result": "Athlete linked; Grade Band matches grade; no duplicate Athlete",
+      "rollback_restore": "Unlink mistaken Athlete on test enrollments only; restore Grade Band; do not delete shared Athletes",
+      "evidence_status": "UNKNOWN",
+      "evidence_paths": [
+        "docs/architecture/AIRTABLE-AUTOMATION-DEPENDENCY-MAP.md",
+        "docs/architecture/AIRTABLE-AUTOMATION-INVENTORY.md"
+      ],
+      "notes": "Folder 01 investigation open S26"
+    },
+    {
+      "id": "submission_intake",
+      "label": "Submission intake",
+      "order": 2,
+      "trigger": "Submissions created/updated (Fillout-shaped)",
+      "prerequisites": [
+        "Enrollment (023 may not auto-link inactive — C-020 pre-links Schmidt)",
+        "Weeks calendar for activity date",
+        "Attachments for asset path"
+      ],
+      "primary_automations": ["023", "005", "007", "021", "009", "010"],
+      "retired_or_library": ["006"],
+      "outputs": [
+        "Enrollment + Week on Submission",
+        "Duplicate Key when applicable",
+        "Upload Status / Video Count",
+        "Submission Asset row(s)",
+        "XP Event when counted"
+      ],
+      "dedupe_key": "Duplicate Key (007); SUBMISSION|{submissionId} (010); attachment id skip (009)",
+      "retry": "Re-touch when statuses empty/assets missing; 021 idempotent; preserve Sent",
+      "adjacent_automations": ["031", "013", "020", "041", "055", "053"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "phase_a_examples": [
+          "recS6KgsiWrpXpau0",
+          "recgPS8m1y2ISmxQK",
+          "recW4CvqDTVZvrBQH"
+        ]
+      },
+      "expected_result": "023→005→021→009→010 without duplicate assets; correct video count; Sent preserved",
+      "rollback_restore": "airtable/automations/shooting-challenge/_rollback/phase-a-006-021-2026-07-14/; Schmidt-only row cleanup",
+      "evidence_status": "PASS",
+      "evidence_status_detail": {
+        "021_phase_a": "PASS",
+        "full_intake_including_010": "PLANNED"
+      },
+      "evidence_paths": [
+        "docs/overnight-runs/results/S22-phase-a-live-smoke-result.md",
+        "docs/audits/phase-a-021-live-smoke-2026-07-14.json",
+        "docs/deploy-checklists/C-020-testing-scenarios-script-checklist.md"
+      ]
+    },
+    {
+      "id": "weekly_summaries",
+      "label": "Weekly summaries",
+      "order": 3,
+      "trigger": "Counted Submission with empty WAS → 031; WAS updates → 030; previous-week helpers → 034",
+      "prerequisites": [
+        "Enrollment + Week on Submission",
+        "Challenge Goals / Homework catalog",
+        "Grade Band on Enrollment"
+      ],
+      "primary_automations": ["031", "030", "034"],
+      "retired_or_library": ["032", "033"],
+      "outputs": [
+        "WAS per Enrollment+Week",
+        "Grade Band / Challenge Goal / Homework links",
+        "Previous-week helper fields"
+      ],
+      "dedupe_key": "Enrollment + Week WAS identity; 031 find-or-create",
+      "retry": "Re-run 030 when GB/Goal/HW blank; skip when correct",
+      "adjacent_automations": ["057", "058", "072", "074"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "notes": "Phase B suite fixtures; Schmidt-scoped WAS only"
+      },
+      "expected_result": "Bootstrap fills missing links; 031 links or finds WAS; idempotent",
+      "rollback_restore": "airtable/automations/shooting-challenge/_rollback/phase-b-030-032-033-2026-07-14/",
+      "evidence_status": "PASS",
+      "evidence_status_detail": {
+        "030_phase_b": "PASS",
+        "weekly_email_072_074": "PLANNED"
+      },
+      "evidence_paths": [
+        "docs/overnight-runs/results/S23-phase-b-live-smoke-result.md",
+        "docs/audits/phase-b-030-live-smoke-2026-07-14.json",
+        "docs/deploy-checklists/C-011-weekly-email-design-audit-stage5.md"
+      ]
+    },
+    {
+      "id": "homework",
+      "label": "Homework",
+      "order": 4,
+      "trigger": "Homework-ready Submission Asset → 020; review → 064/065; Send to Make → 070a; writeback → 022; feedback ready → 071",
+      "prerequisites": [
+        "Homework Submission Asset",
+        "Enrollment Grade Band",
+        "DEV Make/Lambda for upload (Mike-gated)",
+        "071 OFF for regression"
+      ],
+      "primary_automations": ["020", "064", "065", "070a", "022", "071", "067"],
+      "retired_or_library": ["063"],
+      "outputs": [
+        "Homework Completion linked",
+        "Grade Band on HC",
+        "Canonical URL after upload",
+        "XP HOMEWORK_XP|{hcId}"
+      ],
+      "dedupe_key": "Enrollment+Assignment+Week HC identity; HOMEWORK_XP|{homeworkCompletionId}",
+      "retry": "Re-trigger 020 for blank GB/missing link; 070a OFF when idle",
+      "adjacent_automations": ["030", "009", "057", "058"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "notes": "Phase C1 post-paste; historical 070a E2E 2026-07-12"
+      },
+      "expected_result": "HC create or link once; GB from Enrollment; upload writeback when authorized",
+      "rollback_restore": "airtable/automations/shooting-challenge/_rollback/phase-c1-020-063-2026-07-14/",
+      "evidence_status": "PASS",
+      "evidence_status_detail": {
+        "020_phase_c1": "PASS",
+        "070a_dev_e2e_historical": "PASS",
+        "065_homework_xp": "UNKNOWN",
+        "071_email": "PLANNED"
+      },
+      "evidence_paths": [
+        "docs/overnight-runs/results/S24-phase-c1-post-paste-smoke-result.md",
+        "docs/audits/phase-c1-020-post-paste-smoke-2026-07-14.json",
+        "docs/automation-index.md",
+        "docs/deploy-checklists/C-070a-dev-airtable-v4.4-prep.md"
+      ]
+    },
+    {
+      "id": "video",
+      "label": "Video",
+      "order": 5,
+      "trigger": "Video-ready Submission Asset → 013; Pending Link → 070b; Uploaded+writeback → 070c; review → 113/114; Asset Reuse Decision → 116",
+      "prerequisites": [
+        "Video Submission Asset",
+        "Enrollment Grade Band",
+        "Make/Lambda for upload",
+        "112 must stay OFF / not re-enabled"
+      ],
+      "primary_automations": ["013", "070b", "070c", "022", "113", "114", "116"],
+      "retired_or_library": ["111", "112"],
+      "outputs": [
+        "Video Feedback row",
+        "Canonical URL",
+        "XP VIDEO_SUBMISSION|{vfId}",
+        "XP Active? soft-delete on Confirmed Duplicate"
+      ],
+      "dedupe_key": "One VF per submission path; VIDEO_SUBMISSION|{vfId}; File Content Hash review (C-023)",
+      "retry": "013 GB repair idempotent; 070c idempotent; 116 Approved Reuse reverses same XP row",
+      "adjacent_automations": ["009", "021", "041"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "prod_116_asset": "recWZ4cHNYgbV60mL",
+        "prod_upload_asset": "recGQ8EjAMz3bEBiW"
+      },
+      "expected_result": "VF once; GB repaired; upload verified; reuse toggles Active? without second Source Key",
+      "rollback_restore": "airtable/automations/shooting-challenge/_rollback/phase-c2-013-111-2026-07-14/; reverse 116 decision; no hard-delete XP",
+      "evidence_status": "PASS",
+      "evidence_status_detail": {
+        "013_phase_c2": "PASS",
+        "070b_070c_prod": "PASS",
+        "116_dev_prod": "PASS",
+        "114_full_coach_path": "UNKNOWN",
+        "111_ui_delete": "PLANNED"
+      },
+      "evidence_paths": [
+        "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md",
+        "docs/audits/phase-c2-013-post-paste-smoke-2026-07-14.json",
+        "docs/deploy-checklists/C-013-prod-lambda-deployment-2026-07-11.md",
+        "docs/deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md"
+      ],
+      "notes": "Do not delete 111 until Mike reports Phase C2 UI complete"
+    },
+    {
+      "id": "levels",
+      "label": "Levels",
+      "order": 6,
+      "trigger": "XP Events → 041; Enrollment recalc → 042; Next Level → 043 Level Gate Rule",
+      "prerequisites": [
+        "Levels + Level Gate Rules config",
+        "Enrollment linked",
+        "XP Events present"
+      ],
+      "primary_automations": ["041", "042", "043"],
+      "outputs": [
+        "Current Level",
+        "Next Level",
+        "Level Gate Rule link",
+        "Gate blocking when unmet"
+      ],
+      "dedupe_key": "N/A — field assignment on Enrollment; idempotent when correct",
+      "retry": "Re-check recalc flag; re-run 042/043 after config/XP repairs",
+      "adjacent_automations": ["010", "065", "114", "059", "101"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm"
+      },
+      "expected_result": "Levels match thresholds; gate rule matches Next Level; blocked when gates incomplete",
+      "rollback_restore": "Restore prior Current/Next Level on test Enrollment; do not mutate shared Levels catalog",
+      "evidence_status": "UNKNOWN",
+      "evidence_paths": [
+        "docs/automation-index.md",
+        "docs/architecture/AIRTABLE-AUTOMATION-INVENTORY.md",
+        "docs/v2/season-configuration-design.md"
+      ],
+      "notes": "043→042 investigation in flight; do not retire 043"
+    },
+    {
+      "id": "achievements",
+      "label": "Achievements",
+      "order": 7,
+      "trigger": "Submissions → 053/055; schedule → 056; WAS → 057/058; Unlocks → 059; Run Shot Milestone Check → 066",
+      "prerequisites": [
+        "Counted submissions + Weeks",
+        "Achievements / Shot Milestones catalog",
+        "Suppress parent notifications for test"
+      ],
+      "primary_automations": ["053", "054", "055", "056", "057", "058", "059", "066"],
+      "outputs": [
+        "Streak Occurrences",
+        "Perfect Week unlocks",
+        "Shot Milestone unlocks",
+        "XP from unlocks"
+      ],
+      "dedupe_key": "054 streak key; PERFECT_WEEK|{enrollment}|{week}; SHOT_MILESTONE|{enrollment}|{milestone}; 059 Source Key",
+      "retry": "Idempotent repair missing XP; never second unlock for same Milestone Source Key",
+      "adjacent_automations": ["010", "031", "030", "117"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm"
+      },
+      "expected_result": "One unlock per milestone key; one XP per unlock Source Key; streaks upserted",
+      "rollback_restore": "Deactivate mistaken XP; flag duplicate unlocks (H-001); Schmidt-only restores",
+      "evidence_status": "UNKNOWN",
+      "evidence_status_detail": {
+        "066_deploy_historical": "PASS",
+        "full_streak_pw_e2e": "PLANNED",
+        "066_pipeline_sandbox_confirm": "UNKNOWN"
+      },
+      "evidence_paths": [
+        "docs/deploy-checklists/PIPELINE-zoom-achievements-audit-stage7.md",
+        "docs/deploy-checklists/066-v3.1-dev-deploy.md",
+        "docs/deploy-checklists/C-024-dedupe-field-inventory-stage2.md"
+      ]
+    },
+    {
+      "id": "zoom",
+      "label": "Zoom",
+      "order": 8,
+      "trigger": "Zoom Meetings Create XP Events → 101; Zoom Attendance / Recording Quiz → 117 (OFF)",
+      "prerequisites": [
+        "Zoom Meetings + Attendance",
+        "C-025 Effective formulas (DEV partial)",
+        "117 webhook blank; automation OFF"
+      ],
+      "primary_automations": ["101", "117"],
+      "library_only_modules": ["117a", "117b", "117c", "117d", "117e", "117f"],
+      "outputs": [
+        "XP ZOOM_LIVE (101)",
+        "Designed ZOOM_CREDIT|{Enrollment}|{Zoom Meeting} (117 — gated)"
+      ],
+      "dedupe_key": "Live vs recording mutually exclusive Source Key families; find-by-key before create",
+      "retry": "Re-check Create XP Events when missing; do not enable 117 to retry",
+      "adjacent_automations": ["041", "057", "058"],
+      "live_fixture": {
+        "enrollment_id": "recgP9qZYjAhE7NXm",
+        "recording_attendance_example": "recHkB9aER3vCvBsL"
+      },
+      "expected_result": "Live awards once; recording path when authorized does not steal live XP",
+      "rollback_restore": "Deactivate mistaken Zoom XP; reset Review Status on fixtures; never enable 117 webhook without Mike package",
+      "evidence_status": "UNKNOWN",
+      "evidence_status_detail": {
+        "101_live": "UNKNOWN",
+        "117_recording_credit": "PLANNED"
+      },
+      "evidence_paths": [
+        "docs/automation-index.md",
+        "docs/deploy-checklists/C-025-dev-airtable-117-deployment-sheet.md",
+        "docs/deploy-checklists/PIPELINE-zoom-achievements-audit-stage7.md"
+      ],
+      "hard_gates": [
+        "Do not enable 117",
+        "No email 117f",
+        "No PROD Zoom changes"
+      ]
+    }
+  ],
+  "suggested_regression_order": [
+    "submission_intake",
+    "weekly_summaries",
+    "homework",
+    "video",
+    "enrollment",
+    "levels",
+    "achievements",
+    "zoom"
+  ],
+  "hard_constraints": [
+    "docs_design_only_for_this_deliverable",
+    "no_destructive_airtable_tests",
+    "no_email",
+    "no_prod",
+    "do_not_enable_117"
+  ]
+}

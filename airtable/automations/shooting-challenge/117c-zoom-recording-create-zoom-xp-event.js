@@ -13,7 +13,7 @@ Do NOT paste this file as one of six separate Airtable automations.
 /************************************************************
  * 117c - Zoom Recording Credit - Create Zoom XP Event
  *
- * Version: v1.0.1
+ * Version: v1.0.2
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-14
  *
@@ -27,7 +27,7 @@ Do NOT paste this file as one of six separate Airtable automations.
  * IMPORTANT DESIGN RULES
  * - Recording Quiz rows only (skip Live — live XP remains automation 101).
  * - Source Key read from Zoom Credit Key (ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}).
- * - Recheck-before-create; never steal another automation's XP Event.
+ * - Recheck-before-create (true second query before createRecordAsync); never steal another automation's XP Event.
  *
  * INPUT
  * - recordId (Zoom Attendance record id)
@@ -52,7 +52,7 @@ Do NOT paste this file as one of six separate Airtable automations.
 
 const SCRIPT = {
   scriptName: '117c-zoom-recording-create-zoom-xp-event',
-  version: 'v1.0.1',
+  version: 'v1.0.2',
   versionDate: '2026-07-14',
   originalWrittenDate: '2026-07-14',
   lastUpdated: '2026-07-14',
@@ -240,6 +240,34 @@ async function main() {
     }
     setOutputSafe("statusOut", "success");
     setOutputSafe("xpEventId", existing.id);
+    setOutputSafe("xpPoints", amount);
+    setOutputSafe("errorOut", "");
+    return;
+  }
+
+  // True recheck immediately before create (guards race / concurrent retrigger)
+  const recheckFields = [CONFIG.fields.xpSourceKey, CONFIG.fields.xpPoints, CONFIG.fields.xpActive].filter((n) =>
+    fieldExists(xpTable, n)
+  );
+  const recheckQuery = await xpTable.selectRecordsAsync({ fields: recheckFields });
+  const recheckMatch = recheckQuery.records.find((r) => getText(r, CONFIG.fields.xpSourceKey) === key) || null;
+  recheckQuery.unloadData();
+  if (recheckMatch) {
+    const patch = {};
+    if (fieldExists(xpTable, CONFIG.fields.xpPoints) && getNumber(recheckMatch, CONFIG.fields.xpPoints) !== amount) {
+      patch[CONFIG.fields.xpPoints] = amount;
+    }
+    if (fieldExists(xpTable, CONFIG.fields.xpActive) && !getCheckbox(recheckMatch, CONFIG.fields.xpActive)) {
+      patch[CONFIG.fields.xpActive] = true;
+    }
+    if (Object.keys(patch).length) {
+      await updateRecordSafe(xpTable, recheckMatch.id, patch);
+      setOutputSafe("actionOut", "updated");
+    } else {
+      setOutputSafe("actionOut", "skipped_exists");
+    }
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("xpEventId", recheckMatch.id);
     setOutputSafe("xpPoints", amount);
     setOutputSafe("errorOut", "");
     return;
