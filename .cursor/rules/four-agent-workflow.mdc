@@ -1,0 +1,40 @@
+---
+description: Controlled four-agent workflow — Lead integrates; workers never merge; DEV-only hard stops
+alwaysApply: true
+---
+
+# Four-agent workflow hard stops
+
+Authority: [docs/agent-runs/00-START-HERE.md](../../docs/agent-runs/00-START-HERE.md) · [docs/agent-runs/CONTROL.json](../../docs/agent-runs/CONTROL.json)
+
+When operating in the four-agent model (Lead, Implementation, Testing, Research), enforce all of the following.
+
+## Environment and safety
+
+- **DEV only** — do not change Production Airtable, Make, Lambda, or live traffic.
+- **No production access** as part of normal agent work.
+- **No Airtable schema changes** (create/rename/delete fields, tables, views) unless Mike explicitly authorizes the change.
+- **No credential or secret changes** — never commit or rotate `.env`, tokens, webhook secrets, or AWS keys.
+- **No deployment** — no Vercel/AWS/Make prod deploys and no Production Airtable paste from agents.
+- **No live Airtable access** unless Mike authorizes a named DEV check.
+- **No destructive Git** — never `git reset --hard`, `git clean`, force push, or branch/file deletion as a workaround.
+
+## Integration authority
+
+- **Workers cannot merge** (Implementation, Testing, Research).
+- **Only the Lead / Integrator** may merge worker branches into the integration branch.
+- **Mike must approve** any merge to `master` / `main`. Agents must not merge to main without that approval.
+- Workers must not edit `docs/agent-runs/CONTROL.json`.
+- Do not trust chat history over CONTROL.json + `git rev-parse HEAD`.
+
+## Session start
+
+1. Read `docs/agent-runs/CONTROL.json`.
+2. Read the role doc under `docs/agent-runs/`.
+3. Confirm branch and SHA before writing.
+
+## Related
+
+- Role docs: `01-LEAD.md`, `02-IMPLEMENTATION.md`, `03-TESTING.md`, `04-RESEARCH.md`
+- Launch prompts: `05-LAUNCH-PROMPTS.md`
+- Permissions allowlist: `.cursor/permissions.json`

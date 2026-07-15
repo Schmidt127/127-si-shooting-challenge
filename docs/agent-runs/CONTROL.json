@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "updated_at": "2026-07-15T13:30:00Z",
+  "mode": "controlled-four-agent",
+  "canonical": {
+    "branch": "cursor/four-agent-os-prep-cfc9",
+    "sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
+    "remote_sha": "b4a16c6a0f3b74f5fe6ab05f451cde7955f71aad",
+    "match": true,
+    "note": "Lead updates sha/remote_sha after each push of an active run."
+  },
+  "integration": {
+    "branch": "cursor/four-agent-os-prep-cfc9",
+    "base_branch_for_prs": "master",
+    "merge_to_main_requires": "explicit Mike approval"
+  },
+  "run": {
+    "state": "idle",
+    "package_id": null,
+    "started_at": null,
+    "stage_id": null
+  },
+  "roles": {
+    "lead": {
+      "id": "lead",
+      "title": "Lead / Integrator",
+      "doc": "docs/agent-runs/01-LEAD.md",
+      "may_merge_workers": true,
+      "may_merge_to_main": false
+    },
+    "implementation": {
+      "id": "implementation",
+      "title": "Implementation Worker",
+      "doc": "docs/agent-runs/02-IMPLEMENTATION.md",
+      "may_merge": false
+    },
+    "testing": {
+      "id": "testing",
+      "title": "Testing and Review Worker",
+      "doc": "docs/agent-runs/03-TESTING.md",
+      "may_merge": false
+    },
+    "research": {
+      "id": "research",
+      "title": "Research and Documentation Worker",
+      "doc": "docs/agent-runs/04-RESEARCH.md",
+      "may_merge": false
+    }
+  },
+  "lanes": {
+    "active_writes": [],
+    "available": ["implementation", "testing", "research"]
+  },
+  "claims": [],
+  "queue": [
+    {
+      "id": "four-agent-os-prep",
+      "backlog_refs": [],
+      "state": "COMPLETE",
+      "priority": 0,
+      "depends_on": [],
+      "auth": "mike-approved-prep",
+      "summary": "Minimal four-agent docs, rules, CONTROL, and templates on current branch line."
+    }
+  ],
+  "hard_stops": [
+    "DEV only — no Production access",
+    "No Airtable schema changes without Mike authorization",
+    "No credential or secret changes",
+    "No deployment (Vercel, AWS, Make prod, Airtable prod)",
+    "No destructive git (reset --hard, clean, force push, branch delete)",
+    "Workers cannot merge",
+    "Only Lead may integrate worker branches",
+    "Mike must approve merge to master/main",
+    "No live Airtable access unless Mike authorizes a named DEV check"
+  ],
+  "pending_approvals": [],
+  "next_action": "Four-agent kit ready. Lead may authorize the next package by writing assignments and setting run.state to active.",
+  "stop_reason": null
+}
