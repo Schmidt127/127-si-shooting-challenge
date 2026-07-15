@@ -11,53 +11,50 @@ import {
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, DisplayHeading, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
+import { StatusBadge } from "@/components/ui";
 import { formatMeetingDateTime, formatRelativeUpdate } from "@/lib/formatters";
 import { cn } from "@/lib/utils";
 import type { ZoomMeeting, ZoomMeetingCatalogData } from "@/types/zoom-meetings";
 
-function StatusBadge({ status }: { status: string }) {
+function MeetingStatusBadge({ status }: { status: string }) {
   if (!status) return null;
 
   const tone =
-    status === "Scheduled"
-      ? "border-cyan-400/30 bg-cyan-500/10 text-cyan-200"
-      : status === "Completed"
-        ? "border-emerald-400/30 bg-emerald-500/10 text-emerald-200"
-        : "border-white/15 bg-white/5 text-muted";
+    status === "Scheduled" ? "blue" : status === "Completed" ? "success" : "neutral";
 
-  return (
-    <span className={cn("rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wider", tone)}>
-      {status}
-    </span>
-  );
+  return <StatusBadge tone={tone}>{status}</StatusBadge>;
 }
 
 function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
   return (
     <Link href={`/zoom-meetings/${meeting.id}`} className="group block">
-      <article className={catalogCardClass(meeting.status === "Scheduled" ? { featured: "accent" } : undefined)}>
+      <article
+        className={catalogCardClass(
+          meeting.status === "Scheduled" ? { featured: "accent" } : undefined,
+        )}
+      >
         <div className="flex flex-col sm:flex-row">
           {meeting.coverImage ? (
             <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-black/30 sm:aspect-auto sm:w-44 md:w-52">
               <Image
                 src={meeting.coverImage.url}
-                alt=""
+                alt={meeting.name ? `${meeting.name} cover` : "Zoom meeting cover"}
                 fill
-                className="object-cover transition duration-500 group-hover:scale-105"
+                className="object-cover transition duration-500 group-hover:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, 208px"
                 unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
-            <div className="flex w-full items-center justify-center border-b border-white/5 bg-gradient-to-br from-cyan-500/15 to-transparent py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
+            <div className="flex w-full items-center justify-center border-b border-white/5 bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
               <span className="font-mono text-4xl font-black text-white/20">Z</span>
             </div>
           )}
 
           <div className="flex flex-1 flex-col justify-center p-5 sm:p-6">
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge status={meeting.status} />
+              <MeetingStatusBadge status={meeting.status} />
               <span className="text-[10px] font-medium uppercase tracking-wider text-muted">
                 {meeting.weekName}
               </span>
@@ -100,9 +97,9 @@ function WeekSection({
           <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted">
             {isLatestWeek ? "Current week" : "Week archive"}
           </p>
-          <h2 className="mt-1 text-2xl font-black tracking-tight text-foreground sm:text-3xl">{weekName}</h2>
+          <h2 className="font-display mt-1 text-2xl text-foreground sm:text-3xl">{weekName}</h2>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
+        <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
           {meetings.length} meeting{meetings.length === 1 ? "" : "s"}
         </span>
       </div>
@@ -148,12 +145,7 @@ export function ZoomMeetingsCatalogView({ data }: { data: ZoomMeetingCatalogData
 
 function ResourceLink({ href, label }: { href: string; label: string }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-sm font-semibold text-accent-soft transition hover:border-accent/50 hover:bg-accent/15"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="btn-primary">
       {label}
       <span aria-hidden>↗</span>
     </a>
@@ -166,7 +158,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
       <div className="mx-auto max-w-4xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
         <Link
           href="/zoom-meetings"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
+          className="inline-flex min-h-[2.75rem] items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
         >
           <span aria-hidden>←</span> All zoom meetings
         </Link>
@@ -177,7 +169,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={meeting.coverImage.url}
-                alt=""
+                alt={meeting.name ? `${meeting.name} cover` : "Zoom meeting cover"}
                 className="max-h-64 w-auto max-w-full object-contain sm:max-h-80"
               />
             </div>
@@ -185,8 +177,8 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
 
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge status={meeting.status} />
-              <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+              <MeetingStatusBadge status={meeting.status} />
+              <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
                 {meeting.weekName}
               </span>
             </div>
@@ -200,19 +192,25 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
 
             <div className="mt-6 grid gap-3 sm:grid-cols-3">
               {meeting.hostName ? (
-                <div className={cn(catalogInsetClass(), "rounded-2xl px-4 py-3")}>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Host</p>
+                <div className={cn(catalogInsetClass(), "rounded-xl px-4 py-3")}>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                    Host
+                  </p>
                   <p className="mt-1 text-sm font-semibold text-foreground">{meeting.hostName}</p>
                 </div>
               ) : null}
-              <div className={cn(catalogInsetClass(), "rounded-2xl px-4 py-3")}>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Starts</p>
+              <div className={cn(catalogInsetClass(), "rounded-xl px-4 py-3")}>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                  Starts
+                </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {formatMeetingDateTime(meeting.startTime)}
                 </p>
               </div>
-              <div className={cn(catalogInsetClass(), "rounded-2xl px-4 py-3")}>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">Ends</p>
+              <div className={cn(catalogInsetClass(), "rounded-xl px-4 py-3")}>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+                  Ends
+                </p>
                 <p className="mt-1 text-sm font-semibold text-foreground">
                   {formatMeetingDateTime(meeting.endTime)}
                 </p>
@@ -220,8 +218,12 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
             </div>
 
             <div className="mt-6 flex flex-wrap gap-3">
-              {meeting.zoomLink ? <ResourceLink href={meeting.zoomLink} label="Join Zoom meeting" /> : null}
-              {meeting.agendaLink ? <ResourceLink href={meeting.agendaLink} label="Open agenda" /> : null}
+              {meeting.zoomLink ? (
+                <ResourceLink href={meeting.zoomLink} label="Join Zoom meeting" />
+              ) : null}
+              {meeting.agendaLink ? (
+                <ResourceLink href={meeting.agendaLink} label="Open agenda" />
+              ) : null}
               {meeting.recordingVideoUrl ? (
                 <ResourceLink href={meeting.recordingVideoUrl} label="Watch recording" />
               ) : null}
@@ -268,9 +270,11 @@ export function ZoomMeetingsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">No zoom meetings yet</h1>
-        <p className="mt-3 text-muted">Scheduled challenge meetings will appear here once added in Airtable.</p>
-        <Link href="/" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <h1 className="font-display text-2xl text-foreground">No zoom meetings yet</h1>
+        <p className="mt-3 text-muted">
+          Scheduled challenge meetings will appear here once added in Airtable.
+        </p>
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>
@@ -282,7 +286,7 @@ export function ZoomMeetingsErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass(true)}>
-        <h1 className="text-2xl font-bold text-foreground">Could not load zoom meetings</h1>
+        <h1 className="font-display text-2xl text-foreground">Could not load zoom meetings</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>
     </div>
@@ -293,9 +297,9 @@ export function ZoomMeetingNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">Meeting not found</h1>
+        <h1 className="font-display text-2xl text-foreground">Meeting not found</h1>
         <p className="mt-3 text-muted">This meeting may be cancelled or the link is incorrect.</p>
-        <Link href="/zoom-meetings" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <Link href="/zoom-meetings" className="btn-secondary mt-6">
           ← Back to zoom meetings
         </Link>
       </div>

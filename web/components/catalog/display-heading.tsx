@@ -35,20 +35,19 @@ export function DisplayHeading({
           {icon}
         </div>
       ) : null}
-      <p className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.38em] text-accent-soft">
-        <span className="h-px w-6 bg-gradient-to-r from-transparent via-accent/70 to-transparent" aria-hidden />
+      <p
+        className={`inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.38em] text-accent-soft ${
+          align === "center" ? "justify-center" : ""
+        }`}
+      >
+        <span className="h-px w-6 bg-brand-orange/60" aria-hidden />
         {eyebrow}
-        <span className="h-px w-6 bg-gradient-to-r from-transparent via-accent/70 to-transparent" aria-hidden />
       </p>
 
-      <h1 className="mt-4 text-4xl font-black leading-[0.95] tracking-tight sm:text-5xl lg:text-6xl">
-        <span className="block bg-gradient-to-br from-white via-white to-white/75 bg-clip-text text-transparent">
-          {title}
-        </span>
+      <h1 className="font-display mt-4 text-4xl leading-[0.95] tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+        <span className="block">{title}</span>
         {titleAccent ? (
-          <span className="mt-1 block bg-gradient-to-r from-accent via-amber-300 to-brand-blue bg-clip-text text-transparent italic">
-            {titleAccent}
-          </span>
+          <span className="mt-1 block text-brand-orange">{titleAccent}</span>
         ) : null}
       </h1>
 
@@ -76,7 +75,7 @@ export function DetailTitle({ overline, title, accent, className = "" }: DetailT
       {overline ? (
         <p className="text-[10px] font-bold uppercase tracking-[0.32em] text-accent-soft">{overline}</p>
       ) : null}
-      <h1 className="mt-3 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+      <h1 className="font-display mt-3 text-3xl leading-tight text-foreground sm:text-4xl lg:text-5xl">
         {title}
       </h1>
       {accent ? (
@@ -96,7 +95,7 @@ export function SectionHeading({ label, title, description }: SectionHeadingProp
   return (
     <div className="mb-6">
       <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-blue">{label}</p>
-      <h2 className="mt-2 text-xl font-bold text-foreground sm:text-2xl">{title}</h2>
+      <h2 className="font-display mt-2 text-xl text-foreground sm:text-2xl">{title}</h2>
       {description ? <p className="mt-2 text-sm text-muted">{description}</p> : null}
     </div>
   );

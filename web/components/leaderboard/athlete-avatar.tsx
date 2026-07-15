@@ -50,7 +50,7 @@ export function AthleteAvatar({
         </div>
       )}
       {rank === 1 ? (
-        <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-amber-400 text-[10px] font-black text-amber-950 shadow-lg">
+        <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-court-gold text-[10px] font-black text-brand-charcoal shadow-lg">
           1
         </span>
       ) : null}

@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   },
   description:
     "127 Sports Intensity Shooting Challenge — leaderboard, homework, tutorials, levels, and more.",
+  icons: {
+    icon: [{ url: "/favicon.png", type: "image/png" }],
+    apple: [{ url: "/favicon.png", type: "image/png" }],
+  },
   robots: {
     index: false,
     follow: false,

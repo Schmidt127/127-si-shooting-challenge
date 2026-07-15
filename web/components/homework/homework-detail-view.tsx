@@ -18,12 +18,7 @@ type HomeworkDetailViewProps = {
 
 function ResourceLink({ href, label }: { href: string; label: string }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-2 rounded-xl border border-accent/30 bg-accent/10 px-4 py-2.5 text-sm font-semibold text-accent-soft transition hover:border-accent/50 hover:bg-accent/15"
-    >
+    <a href={href} target="_blank" rel="noopener noreferrer" className="btn-primary">
       {label}
       <span aria-hidden>↗</span>
     </a>
@@ -41,7 +36,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
       <div className="relative mx-auto max-w-4xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
         <Link
           href="/homework"
-          className="inline-flex items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
+          className="inline-flex min-h-[2.75rem] items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
         >
           <span aria-hidden>←</span> All homework
         </Link>
@@ -52,7 +47,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={assignment.coverImage.url}
-                alt=""
+                alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
                 className="h-full w-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
@@ -61,16 +56,16 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
 
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-full border border-brand-blue/30 bg-brand-blue/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-blue">
+              <span className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-white">
                 {assignment.weekName}
               </span>
               {assignment.homeworkNumber ? (
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+                <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
                   {assignment.homeworkNumber}
                 </span>
               ) : null}
               {assignment.book ? (
-                <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+                <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
                   {assignment.bookAbbreviation || assignment.book}
                 </span>
               ) : null}
@@ -141,7 +136,7 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
                     rel="noopener noreferrer"
                     className={cn(
                       catalogInsetClass(),
-                      "flex items-center justify-between px-4 py-3 text-sm transition hover:border-accent/30 hover:text-accent-soft",
+                      "flex min-h-[2.75rem] items-center justify-between px-4 py-3 text-sm transition hover:border-brand-orange/30 hover:text-accent-soft",
                     )}
                   >
                     <span>{doc.filename}</span>
@@ -161,14 +156,11 @@ export function HomeworkNotFoundState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">Assignment not found</h1>
+        <h1 className="font-display text-2xl text-foreground">Assignment not found</h1>
         <p className="mt-3 text-muted">
           This homework may be unpublished or the link is incorrect.
         </p>
-        <Link
-          href="/homework"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <Link href="/homework" className="btn-secondary mt-6">
           ← Back to homework
         </Link>
       </div>

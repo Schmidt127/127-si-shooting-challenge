@@ -5,7 +5,9 @@ import { fetchLeaderboard } from "@/lib/airtable/queries";
 import { SHOOTING_CHALLENGE } from "@/lib/app-config";
 
 export const metadata: Metadata = {
-  title: SHOOTING_CHALLENGE.name,
+  title: {
+    absolute: "Shooting Challenge | 127 Sports Intensity",
+  },
   description: SHOOTING_CHALLENGE.description,
 };
 

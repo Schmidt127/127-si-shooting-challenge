@@ -14,17 +14,22 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
   if (entries.length === 0) return null;
 
   return (
-    <section className="mt-12 rounded-2xl border border-amber-400/20 bg-gradient-to-br from-amber-500/10 via-card/60 to-brand-blue/10 p-6 backdrop-blur-xl sm:p-8">
+    <section
+      className="mt-12 rounded-xl border border-court-gold/25 bg-gradient-to-br from-court-gold/[0.08] via-card/80 to-brand-blue/[0.1] p-6 sm:p-8"
+      aria-labelledby="top-board-heading"
+    >
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-amber-300">
+          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-court-gold">
             Live leaders
           </p>
-          <h2 className="mt-1 text-2xl font-black text-foreground">Top of the board</h2>
+          <h2 id="top-board-heading" className="font-display mt-1 text-2xl text-foreground">
+            Top of the board
+          </h2>
         </div>
         <Link
           href="/leaderboard"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-accent-soft transition hover:gap-2"
+          className="inline-flex min-h-[2.75rem] items-center gap-1 text-sm font-semibold text-accent-soft transition hover:gap-2"
         >
           Full leaderboard <IconChevronRight size={16} />
         </Link>
@@ -34,11 +39,13 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
         {entries.map((entry) => (
           <div
             key={entry.id}
-            className={`flex items-center gap-3 rounded-xl border border-white/10 bg-black/20 p-4 ${
-              entry.rank === 1 ? "ring-1 ring-amber-400/30" : ""
+            className={`flex items-center gap-3 rounded-lg border border-white/10 bg-black/25 p-4 ${
+              entry.rank === 1 ? "ring-1 ring-court-gold/40" : ""
             }`}
           >
-            <span className="font-mono text-lg font-black text-muted">#{entry.rank}</span>
+            <span className="font-mono text-lg font-bold text-muted" aria-label={`Rank ${entry.rank}`}>
+              #{entry.rank}
+            </span>
             <AthleteAvatar
               name={entry.displayName}
               headshotUrl={entry.headshot?.url}
@@ -63,20 +70,18 @@ function HubCard({ link }: { link: ProgramHubLink }) {
   return (
     <Link
       href={link.href}
-      className={`group relative overflow-hidden rounded-2xl border p-6 backdrop-blur-sm transition duration-300 hover:-translate-y-0.5 ${
+      className={`group relative overflow-hidden rounded-xl border p-5 transition duration-200 hover:-translate-y-0.5 ${
         link.featured
-          ? "border-accent/30 bg-gradient-to-br from-accent/10 via-card/60 to-brand-blue/10 hover:border-accent/50 hover:shadow-[0_0_40px_-12px_rgba(255,139,0,0.35)]"
-          : "border-white/10 bg-card/50 hover:border-white/20 hover:bg-card/80"
+          ? "border-accent/35 bg-gradient-to-br from-accent/[0.1] via-card/80 to-brand-blue/[0.08] hover:border-accent/50"
+          : "border-white/10 bg-card/60 hover:border-white/20 hover:bg-card/90"
       }`}
     >
       <div
-        className={`mb-4 inline-flex rounded-xl p-2.5 ${
-          link.featured
-            ? "bg-accent/15 text-accent-soft"
-            : "bg-white/5 text-brand-blue"
+        className={`mb-3 inline-flex rounded-lg p-2.5 ${
+          link.featured ? "bg-accent/15 text-accent-soft" : "bg-brand-blue/15 text-brand-white"
         }`}
       >
-        <Icon size={24} />
+        <Icon size={22} aria-hidden />
       </div>
       <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
         {link.eyebrow}
@@ -84,7 +89,7 @@ function HubCard({ link }: { link: ProgramHubLink }) {
       <h2 className="mt-2 text-lg font-bold text-foreground">{link.title}</h2>
       <p className="mt-2 text-sm leading-relaxed text-muted">{link.description}</p>
       <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-accent-soft transition group-hover:gap-2">
-        Open <IconChevronRight size={16} />
+        Open <IconChevronRight size={16} aria-hidden />
       </span>
     </Link>
   );
@@ -97,18 +102,21 @@ type HomePageViewProps = {
 export function HomePageView({ topEntries }: HomePageViewProps) {
   return (
     <AmbientPage variant="default">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
-        <header className="max-w-3xl">
-          <BrandLogo variant="horizontal" className="h-12 w-auto sm:h-14" priority />
-          <p className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.3em] text-accent-soft">
-            <IconBasketball size={16} />
+      <div className="relative mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="pointer-events-none absolute inset-x-4 top-8 h-48 shot-arc sm:inset-x-6" aria-hidden />
+        <header className="relative max-w-3xl">
+          <BrandLogo
+            variant="horizontal"
+            className="h-12 w-auto object-contain sm:h-14"
+            priority
+          />
+          <p className="mt-6 inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.28em] text-accent-soft">
+            <IconBasketball size={16} aria-hidden />
             {SHOOTING_CHALLENGE.name}
           </p>
-          <h1 className="mt-4 text-3xl font-black leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
+          <h1 className="font-display mt-4 text-3xl leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Train with purpose.{" "}
-            <span className="bg-gradient-to-r from-accent via-amber-300 to-brand-blue bg-clip-text text-transparent">
-              Compete with clarity.
-            </span>
+            <span className="text-brand-orange">Compete with clarity.</span>
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg">
             {SHOOTING_CHALLENGE.description}
@@ -118,7 +126,7 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         <TopThreePreview entries={topEntries} />
 
         <div className="mt-12">
-          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-brand-blue">
+          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-accent-soft">
             Explore the challenge
           </p>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -8,7 +8,7 @@ import {
 import { fetchAchievementCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
-  title: "Achievements | Shooting Challenge",
+  title: "Achievements",
   description: "Milestones, streaks, and unlock badges for the 127 SI Shooting Challenge.",
 };
 

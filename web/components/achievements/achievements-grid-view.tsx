@@ -6,31 +6,31 @@ import { DisplayHeading } from "@/components/catalog/display-heading";
 import { IconMedal } from "@/components/icons/shoot-icons";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
 
-const RARITY_STYLES: Record<string, { ring: string; glow: string; label: string }> = {
+const RARITY_STYLES: Record<string, { ring: string; chip: string; label: string }> = {
   Common: {
-    ring: "ring-slate-400/30",
-    glow: "from-slate-500/10 to-slate-600/5",
-    label: "text-slate-300",
+    ring: "ring-white/20",
+    chip: "border-white/15 bg-white/5",
+    label: "text-muted",
   },
   Uncommon: {
-    ring: "ring-cyan-400/35",
-    glow: "from-cyan-500/15 to-brand-blue/10",
-    label: "text-cyan-300",
+    ring: "ring-brand-blue/35",
+    chip: "border-brand-blue/30 bg-brand-blue/10",
+    label: "text-brand-white",
   },
   Rare: {
-    ring: "ring-blue-400/40",
-    glow: "from-blue-500/15 to-violet-600/10",
-    label: "text-blue-300",
+    ring: "ring-brand-blue/45",
+    chip: "border-brand-blue/35 bg-brand-blue/15",
+    label: "text-brand-white",
   },
   Epic: {
-    ring: "ring-violet-400/40",
-    glow: "from-violet-500/20 to-fuchsia-600/10",
-    label: "text-violet-300",
+    ring: "ring-brand-orange/40",
+    chip: "border-brand-orange/30 bg-brand-orange/10",
+    label: "text-accent-soft",
   },
   Legendary: {
-    ring: "ring-amber-400/45",
-    glow: "from-amber-500/20 to-orange-600/15",
-    label: "text-amber-300",
+    ring: "ring-court-gold/45",
+    chip: "border-court-gold/35 bg-court-gold/10",
+    label: "text-court-gold",
   },
 };
 
@@ -45,25 +45,25 @@ function AchievementCard({ achievement }: { achievement: AchievementDefinition }
   return (
     <article
       className={catalogCardClass(
-        featured ? { featured: achievement.rarity === "Legendary" ? "amber" : "accent" } : undefined,
+        featured ? { featured: achievement.rarity === "Legendary" ? "gold" : "accent" } : undefined,
       )}
     >
-      <div
-        className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${style.glow} p-5 sm:p-6`}
-      >
+      <div className="relative p-5 sm:p-6">
         <div className="flex items-start gap-4">
           <div
-            className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black/30 ring-1 ${style.ring}`}
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-black/30 ring-1 ${style.ring}`}
           >
-            <IconMedal size={28} className={style.label} />
+            <IconMedal size={24} className={style.label} />
           </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <span className={`text-[10px] font-bold uppercase tracking-[0.22em] ${style.label}`}>
+              <span
+                className={`rounded-md border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] ${style.chip} ${style.label}`}
+              >
                 {achievement.rarity}
               </span>
               {achievement.category ? (
-                <span className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] font-medium text-muted">
+                <span className="text-[10px] font-medium uppercase tracking-wider text-muted">
                   {achievement.category}
                 </span>
               ) : null}
@@ -135,15 +135,12 @@ export function AchievementsEmptyState() {
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <div className={catalogStatePanelClass()}>
           <IconMedal size={40} className="mx-auto text-muted" />
-          <h1 className="mt-4 text-2xl font-bold">Achievements coming online</h1>
+          <h1 className="font-display mt-4 text-2xl">Achievements coming online</h1>
           <p className="mt-3 text-sm text-muted">
             Achievement definitions will appear here once they are marked active and visible in
             Airtable.
           </p>
-          <Link
-            href="/"
-            className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-          >
+          <Link href="/" className="btn-secondary mt-6">
             ← Back to overview
           </Link>
         </div>
@@ -157,12 +154,9 @@ export function AchievementsErrorState({ message }: { message: string }) {
     <AmbientPage variant="achievements">
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <div className={catalogStatePanelClass()}>
-          <h1 className="text-2xl font-bold text-foreground">Could not load achievements</h1>
+          <h1 className="font-display text-2xl text-foreground">Could not load achievements</h1>
           <p className="mt-3 text-sm text-muted">{message}</p>
-          <Link
-            href="/"
-            className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-          >
+          <Link href="/" className="btn-secondary mt-6">
             ← Back to overview
           </Link>
         </div>

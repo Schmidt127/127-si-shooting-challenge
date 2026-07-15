@@ -9,10 +9,10 @@ import { formatRelativeUpdate } from "@/lib/formatters";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
 
 const CATEGORY_ACCENTS: Record<string, string> = {
-  Shoot: "from-orange-500/20 to-red-600/5",
-  Dribble: "from-cyan-500/20 to-blue-600/5",
-  Character: "from-violet-500/20 to-purple-700/5",
-  Freethrow: "from-emerald-500/20 to-teal-700/5",
+  Shoot: "from-brand-orange/20 to-brand-orange/5",
+  Dribble: "from-brand-blue/20 to-brand-blue/5",
+  Character: "from-court-navy/30 to-brand-blue/10",
+  Freethrow: "from-brand-blue/15 to-white/[0.03]",
 };
 
 function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
@@ -25,9 +25,9 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
           {tutorial.thumbnail ? (
             <Image
               src={tutorial.thumbnail.url}
-              alt=""
+              alt={tutorial.name ? `${tutorial.name} thumbnail` : "Tutorial thumbnail"}
               fill
-              className="object-cover transition duration-700 group-hover:scale-105"
+              className="object-cover transition duration-500 group-hover:scale-[1.02]"
               sizes="(max-width: 768px) 100vw, 33vw"
               unoptimized
             />
@@ -44,7 +44,7 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
           <div className="absolute bottom-3 left-3 right-3">
             {tutorial.categories[0] ? (
-              <span className="rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
+              <span className="rounded-md border border-white/15 bg-black/40 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                 {tutorial.categories[0]}
               </span>
             ) : null}
@@ -93,12 +93,10 @@ export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
           {data.categoryGroups.map((group) => (
             <section key={group.category}>
               <div className="mb-6 flex items-end justify-between gap-4">
-                <h2 className="text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-                  <span className="bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-                    {group.category}
-                  </span>
+                <h2 className="font-display text-2xl text-foreground sm:text-3xl">
+                  {group.category}
                 </h2>
-                <span className="text-xs font-mono text-muted">{group.tutorials.length} clips</span>
+                <span className="font-mono text-xs text-muted">{group.tutorials.length} clips</span>
               </div>
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {group.tutorials.map((tutorial) => (
@@ -117,9 +115,11 @@ export function TutorialsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="text-2xl font-bold text-foreground">No tutorials published yet</h1>
-        <p className="mt-3 text-muted">Mark tutorials OK to Publish on Softr and they will appear here.</p>
-        <Link href="/" className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent">
+        <h1 className="font-display text-2xl text-foreground">No tutorials published yet</h1>
+        <p className="mt-3 text-muted">
+          Mark tutorials OK to Publish on Softr and they will appear here.
+        </p>
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>
@@ -131,7 +131,7 @@ export function TutorialsErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass(true)}>
-        <h1 className="text-2xl font-bold text-foreground">Could not load tutorials</h1>
+        <h1 className="font-display text-2xl text-foreground">Could not load tutorials</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
       </div>
     </div>

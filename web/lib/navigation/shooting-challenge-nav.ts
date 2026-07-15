@@ -6,6 +6,7 @@ import type { ProductNavItem } from "@/components/layout/product-shell";
  */
 export const SHOOTING_CHALLENGE_NAV: ProductNavItem[] = [
   { label: "Overview", href: "/" },
+  { label: "Dashboard", href: "/dashboard" },
   { label: "Leaderboard", href: "/leaderboard" },
   { label: "Tutorials", href: "/tutorials" },
   { label: "Homework", href: "/homework" },

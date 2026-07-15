@@ -7,22 +7,22 @@ const TIEBREAKERS = [
     icon: IconLevel,
     label: "Level",
     detail: "Higher tier wins — Beginner to G.O.A.T.",
-    accent: "text-violet-300",
-    bg: "from-violet-500/15 to-violet-600/5",
+    accent: "text-brand-blue",
+    bg: "from-brand-blue/15 to-brand-blue/5",
   },
   {
     icon: IconBolt,
     label: "Lifetime XP",
     detail: "Total XP earned this season",
-    accent: "text-amber-300",
-    bg: "from-amber-500/15 to-orange-600/5",
+    accent: "text-accent-soft",
+    bg: "from-brand-orange/15 to-brand-orange/5",
   },
   {
     icon: IconTarget,
     label: "Total Shots",
     detail: "Verified makes + attempts logged",
-    accent: "text-cyan-300",
-    bg: "from-cyan-500/15 to-brand-blue/10",
+    accent: "text-court-gold",
+    bg: "from-court-gold/12 to-brand-blue/5",
   },
 ] as const;
 
@@ -34,7 +34,7 @@ export function LeaderboardTiebreakerLegend() {
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-brand-blue">
+          <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-accent-soft">
             Ranking formula
           </p>
           <h2 className="mt-1 text-lg font-bold text-foreground sm:text-xl">

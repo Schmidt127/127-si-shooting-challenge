@@ -24,12 +24,7 @@ function HomeworkCardLink({
 
   if (externalUrl) {
     return (
-      <a
-        href={externalUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative block"
-      >
+      <a href={externalUrl} target="_blank" rel="noopener noreferrer" className="group relative block">
         {children}
       </a>
     );
@@ -51,7 +46,8 @@ function HomeworkCard({
   index: number;
   isLatestWeek: boolean;
 }) {
-  const hwLabel = assignment.homeworkNumber || `Assignment ${assignment.assignmentNumber || index + 1}`;
+  const hwLabel =
+    assignment.homeworkNumber || `Assignment ${assignment.assignmentNumber || index + 1}`;
   const hasExternalUrl = Boolean(assignment.url.trim());
 
   return (
@@ -66,23 +62,23 @@ function HomeworkCard({
             <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-black/30 sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
               <Image
                 src={assignment.coverImage.url}
-                alt=""
+                alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
                 fill
-                className="object-cover transition duration-500 group-hover:scale-105"
+                className="object-cover transition duration-500 group-hover:scale-[1.02]"
                 sizes="(max-width: 640px) 100vw, 208px"
                 unoptimized
               />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
-            <div className="flex w-full items-center justify-center border-b border-white/5 bg-gradient-to-br from-brand-blue/20 to-transparent py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
+            <div className="flex w-full items-center justify-center border-b border-white/5 bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
               <span className="font-mono text-4xl font-black text-white/20">{hwLabel}</span>
             </div>
           )}
 
           <div className="flex flex-1 flex-col justify-center p-5 sm:p-6">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-white/5 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-soft">
+              <span className="rounded-md bg-brand-orange/10 px-2 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-soft">
                 {hwLabel}
               </span>
               {assignment.bookAbbreviation ? (
@@ -105,7 +101,7 @@ function HomeworkCard({
                 {assignment.topics.slice(0, 3).map((topic) => (
                   <span
                     key={topic}
-                    className="rounded-md border border-white/5 px-2 py-0.5 text-[11px] text-muted"
+                    className="rounded-md border border-white/10 px-2 py-0.5 text-[11px] text-muted"
                   >
                     {topic}
                   </span>
@@ -140,18 +136,16 @@ function WeekSection({
           <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted">
             {isLatestWeek ? "Current week" : "Week archive"}
           </p>
-          <h2 className="mt-1 text-2xl font-black tracking-tight text-foreground sm:text-3xl">
-            {weekName}
-          </h2>
+          <h2 className="font-display mt-1 text-2xl text-foreground sm:text-3xl">{weekName}</h2>
         </div>
-        <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
+        <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
           {assignments.length} assignment{assignments.length === 1 ? "" : "s"}
         </span>
       </div>
 
       <div className="relative space-y-4 pl-0 sm:pl-8">
         <div
-          className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-accent/50 via-white/10 to-transparent sm:block"
+          className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-brand-orange/50 via-white/10 to-transparent sm:block"
           aria-hidden
         />
         {assignments.map((assignment, index) => (
@@ -202,15 +196,12 @@ export function HomeworkEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <div className="mx-auto h-px w-12 bg-gradient-to-r from-transparent via-accent to-transparent" />
-        <h1 className="mt-6 text-2xl font-bold text-foreground">No homework published yet</h1>
+        <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
+        <h1 className="font-display mt-6 text-2xl text-foreground">No homework published yet</h1>
         <p className="mt-3 text-muted">
           Check back soon — new assignments appear here when marked Published in Airtable.
         </p>
-        <Link
-          href="/"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>
@@ -222,12 +213,9 @@ export function HomeworkErrorState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass(true)}>
-        <h1 className="text-2xl font-bold text-foreground">Could not load homework</h1>
+        <h1 className="font-display text-2xl text-foreground">Could not load homework</h1>
         <p className="mt-3 text-sm text-muted">{message}</p>
-        <Link
-          href="/"
-          className="mt-6 inline-block rounded-lg border border-border px-4 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
       </div>

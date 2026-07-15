@@ -1,20 +1,34 @@
 @import "tailwindcss";
 
 /**
- * Global styles — tokens aligned with 127_SI_Brand_Kit.
+ * Global styles — 127 Sports Intensity brand + Shooting Challenge theme.
  * See web/docs/brand-guide.md
+ *
+ * Typography: Maven Pro for all UI (body, nav, buttons, tables, forms).
+ * Display headings use Maven Pro 700–800 — Magistral is licensed desktop-only
+ * and has no approved web font files in this repository.
  */
 
 :root {
+  /* Official brand foundation */
   --brand-blue: #0034b7;
   --brand-orange: #ff8b00;
-  --brand-dark: #262626;
-  --brand-gray: #c4c4c4;
-  --brand-light: #f2f2f2;
+  --brand-charcoal: #262626;
+  --brand-dark: var(--brand-charcoal);
+  --brand-light-gray: #f2f2f2;
+  --brand-medium-gray: #c4c4c4;
+  --brand-white: #ffffff;
+  --brand-gray: var(--brand-medium-gray);
+  --brand-light: var(--brand-light-gray);
 
-  /* Near-black sporty base — blue & orange are accents only */
+  /* Controlled program supporting colors (accents only) */
+  --court-navy: #001a5c;
+  --court-tan: #c4a574;
+  --court-gold: #c9a227;
+
+  /* Near-black sporty base — blue & orange remain dominant accents */
   --background: #0a0a0a;
-  --foreground: #ffffff;
+  --foreground: var(--brand-white);
   --muted: #9ca3af;
   --muted-subtle: #6b7280;
   --accent: var(--brand-orange);
@@ -23,6 +37,17 @@
   --card-elevated: #1a1a1a;
   --border: #2a2a2a;
   --border-subtle: #1f1f1f;
+  --surface-light: var(--brand-light-gray);
+  --text-on-light: var(--brand-charcoal);
+
+  /* Spacing / shape scale */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.25rem;
+
+  /* Focus — visible keyboard indicator (not color-only) */
+  --focus-ring: 0 0 0 2px var(--background), 0 0 0 4px var(--brand-orange);
 }
 
 @theme inline {
@@ -39,10 +64,24 @@
   --color-brand-blue: var(--brand-blue);
   --color-brand-orange: var(--brand-orange);
   --color-brand-dark: var(--brand-dark);
+  --color-brand-charcoal: var(--brand-charcoal);
   --color-brand-gray: var(--brand-gray);
+  --color-brand-medium-gray: var(--brand-medium-gray);
   --color-brand-light: var(--brand-light);
+  --color-brand-light-gray: var(--brand-light-gray);
+  --color-brand-white: var(--brand-white);
+  --color-court-navy: var(--court-navy);
+  --color-court-tan: var(--court-tan);
+  --color-court-gold: var(--court-gold);
+  --color-surface-light: var(--surface-light);
+  --color-text-on-light: var(--text-on-light);
   --font-sans: var(--font-maven-pro);
+  --font-display: var(--font-maven-pro);
   --font-mono: var(--font-geist-mono);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
 }
 
 body {
@@ -52,11 +91,183 @@ body {
   min-height: 100vh;
 }
 
+/* Display headings — Maven Pro bold until Magistral web license ships */
+.font-display {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Visible keyboard focus for interactive elements */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Court-line motif — subtle program theme for header/hero bands */
+.court-lines {
+  background-image:
+    linear-gradient(
+      90deg,
+      transparent 0,
+      transparent calc(50% - 0.5px),
+      color-mix(in srgb, var(--brand-blue) 18%, transparent) calc(50% - 0.5px),
+      color-mix(in srgb, var(--brand-blue) 18%, transparent) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      color-mix(in srgb, var(--brand-white) 4%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 100% 100%, 100% 2.5rem;
+  background-position: center, 0 0;
+}
+
+.shot-arc {
+  background-image: radial-gradient(
+    ellipse 120% 80% at 50% 120%,
+    transparent 55%,
+    color-mix(in srgb, var(--brand-orange) 12%, transparent) 56%,
+    transparent 57%
+  );
+}
+
+/* Scoreboard-inspired data table chrome */
+.sc-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.sc-table thead th {
+  background: var(--brand-blue);
+  color: var(--brand-white);
+  font-weight: 600;
+  text-align: left;
+  padding: 0.625rem 0.75rem;
+  white-space: nowrap;
+}
+
+.sc-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--brand-light-gray) 4%, transparent);
+}
+
+.sc-table tbody td {
+  padding: 0.625rem 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.sc-table .num,
+.sc-table td[data-align="right"] {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+.sc-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Button primitives — brand CTAs */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: var(--brand-orange);
+  color: var(--brand-charcoal);
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: filter 150ms ease, transform 150ms ease;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--brand-white) 20%, transparent);
+  background: transparent;
+  color: var(--brand-white);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--brand-white) 6%, transparent);
+  border-color: color-mix(in srgb, var(--brand-white) 35%, transparent);
+}
+
+/* Form controls */
+.sc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.sc-field label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sc-input,
+.sc-select,
+.sc-textarea {
+  min-height: 2.75rem;
+  width: 100%;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--foreground);
+  padding: 0.625rem 0.875rem;
+  font-size: 0.9375rem;
+}
+
+.sc-input:focus-visible,
+.sc-select:focus-visible,
+.sc-textarea:focus-visible {
+  border-color: var(--brand-orange);
+}
+
+.sc-field-error {
+  font-size: 0.8125rem;
+  color: #f87171;
+}
+
 @keyframes loading-bar {
   0% {
     transform: translateX(-120%);
   }
   100% {
     transform: translateX(320%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
