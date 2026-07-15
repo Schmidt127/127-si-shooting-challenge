@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/shared/placeholder-page";
+import { AthleteProfileEmptyState, AthleteProfileView } from "@/components/athlete/athlete-profile-view";
+import { loadAthleteProfile } from "@/lib/data/athlete-profile";
 
 type AthleteProfilePageProps = {
   params: Promise<{ slug: string }>;
@@ -8,23 +9,27 @@ type AthleteProfilePageProps = {
 
 export async function generateMetadata({ params }: AthleteProfilePageProps): Promise<Metadata> {
   const { slug } = await params;
+  const profile = await loadAthleteProfile(slug);
 
   return {
-    title: `Athlete: ${slug} | 127 SI Shooting Challenge`,
+    title: profile
+      ? `${profile.athlete.displayName} | 127 SI Shooting Challenge`
+      : `Athlete: ${slug} | 127 SI Shooting Challenge`,
+    robots: { index: false, follow: false },
   };
 }
 
 /**
- * Public athlete profile page (dynamic route).
- * `slug` will map to a stable public identifier from Airtable Enrollments.
+ * Public athlete profile (dynamic slug).
+ * Uses mock/safe adapter until published Enrollment slug views are wired.
  */
 export default async function AthleteProfilePage({ params }: AthleteProfilePageProps) {
   const { slug } = await params;
+  const profile = await loadAthleteProfile(slug);
 
-  return (
-    <PlaceholderPage
-      title="Athlete Profile"
-      description={`Profile route scaffolded for slug: ${slug}. XP, levels, homework, and video progress will load from Airtable.`}
-    />
-  );
+  if (!profile) {
+    return <AthleteProfileEmptyState slug={slug} />;
+  }
+
+  return <AthleteProfileView data={profile} />;
 }

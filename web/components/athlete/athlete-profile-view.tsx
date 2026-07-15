@@ -1,0 +1,158 @@
+import Link from "next/link";
+
+import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogPanelClass } from "@/components/catalog/catalog-surface";
+import { IconBolt, IconMedal, IconTrophy } from "@/components/icons/shoot-icons";
+import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
+import {
+  InteractiveCard,
+  LevelIndicator,
+  PageFrame,
+  PageHeader,
+  StatTile,
+  StatusBadge,
+} from "@/components/ui";
+import type { AthleteProfileModel } from "@/lib/data/athlete-profile";
+import { formatGrade, formatXp } from "@/lib/formatters";
+
+type AthleteProfileViewProps = {
+  data: AthleteProfileModel;
+};
+
+export function AthleteProfileView({ data }: AthleteProfileViewProps) {
+  const unlocked = data.achievements.filter((a) => a.unlocked);
+
+  return (
+    <AmbientPage variant="default">
+      <PageFrame width="wide">
+        <PageHeader
+          eyebrow="Athlete profile"
+          title={data.athlete.displayName}
+          description={`${data.athlete.school} · ${formatGrade(data.athlete.grade)} · ${data.seasonLabel}`}
+          actions={
+            data.source === "mock" ? (
+              <StatusBadge tone="warn">Demo data — public Airtable adapter pending</StatusBadge>
+            ) : null
+          }
+        />
+
+        <p className="text-sm text-muted" role="note">
+          {data.privacyNote}
+        </p>
+
+        <section className="mt-6 grid gap-6 lg:grid-cols-[1.35fr_1fr]">
+          <div className={catalogPanelClass({ tint: "neutral" })}>
+            <div className="flex flex-wrap items-center gap-4">
+              <AthleteAvatar
+                name={data.athlete.displayName}
+                headshotUrl={data.athlete.avatarUrl}
+                size="lg"
+              />
+              <div className="min-w-0">
+                <h2 className="truncate text-2xl font-bold text-foreground">{data.athlete.displayName}</h2>
+                <p className="mt-1 text-sm text-muted">
+                  Level · {data.athlete.level} · {formatXp(data.xp.total)} XP
+                </p>
+              </div>
+            </div>
+            <div className="mt-6">
+              <LevelIndicator
+                level={data.athlete.level}
+                totalXp={data.xp.total}
+                xpIntoLevel={data.xp.xpIntoLevel}
+                xpForNextLevel={data.xp.xpForNextLevel}
+                nextLevelLabel={data.xp.nextLevelLabel}
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-3">
+            <StatTile label="Current streak" value={`${data.streakDays} days`} icon={IconBolt} tint="amber" />
+            <StatTile
+              label="Perfect Weeks"
+              value={String(data.perfectWeek.seasonCount)}
+              icon={IconTrophy}
+              tint="blue"
+              hint={data.perfectWeek.earnedThisWeek ? "Earned this week" : "Keep shooting"}
+            />
+            <StatTile label="Achievements unlocked" value={String(unlocked.length)} icon={IconMedal} tint="blue" />
+          </div>
+        </section>
+
+        <section className="mt-8" aria-labelledby="milestones-heading">
+          <h2 id="milestones-heading" className="text-lg font-bold text-foreground">
+            Milestones
+          </h2>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-3">
+            {data.milestones.map((m) => (
+              <li key={m.id} className={catalogPanelClass({ tint: "neutral" })}>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">{m.label}</p>
+                <p className="mt-2 font-mono text-sm text-foreground">{m.value}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-8" aria-labelledby="achievements-heading">
+          <div className="flex items-end justify-between gap-3">
+            <h2 id="achievements-heading" className="text-lg font-bold text-foreground">
+              Achievements
+            </h2>
+            <Link href="/achievements" className="text-sm font-semibold text-si-blue hover:underline">
+              Full catalog
+            </Link>
+          </div>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {data.achievements.map((a) => (
+              <li key={a.id}>
+                <Link href="/achievements" className="block h-full">
+                  <InteractiveCard className="h-full">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-semibold text-foreground">{a.name}</p>
+                      <StatusBadge tone={a.unlocked ? "success" : "neutral"}>
+                        {a.unlocked ? "Earned" : "Locked"}
+                      </StatusBadge>
+                    </div>
+                  </InteractiveCard>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="mt-8 mb-4" aria-labelledby="activity-heading">
+          <h2 id="activity-heading" className="text-lg font-bold text-foreground">
+            Recent activity
+          </h2>
+          <ul className="mt-3 grid gap-3">
+            {data.recentActivity.map((item) => (
+              <li key={item.id} className={catalogPanelClass({ tint: "neutral" })}>
+                <p className="font-semibold text-foreground">{item.title}</p>
+                <p className="mt-1 text-sm text-muted">{item.detail}</p>
+                {item.href ? (
+                  <Link href={item.href} className="mt-2 inline-block text-sm font-semibold text-si-blue hover:underline">
+                    Open
+                  </Link>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+        </section>
+      </PageFrame>
+    </AmbientPage>
+  );
+}
+
+export function AthleteProfileEmptyState({ slug }: { slug: string }) {
+  return (
+    <AmbientPage variant="default">
+      <PageFrame>
+        <PageHeader
+          eyebrow="Athlete profile"
+          title="Profile not found"
+          description={`No public athlete is published for “${slug}”.`}
+        />
+      </PageFrame>
+    </AmbientPage>
+  );
+}

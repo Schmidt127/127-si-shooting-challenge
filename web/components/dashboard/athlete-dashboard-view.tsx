@@ -67,6 +67,12 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
                 <p className="mt-1 text-sm text-muted">
                   {data.athlete.school} · {formatGrade(data.athlete.grade)}
                 </p>
+                <Link
+                  href={`/athletes/${data.athlete.slug}`}
+                  className="mt-2 inline-block text-sm font-semibold text-si-blue hover:underline"
+                >
+                  Open public profile
+                </Link>
               </div>
             </div>
 

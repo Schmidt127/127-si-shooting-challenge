@@ -1,22 +1,25 @@
 {
   "schema_version": 1,
   "document": "docs/testing/CORE-WORKFLOW-REGRESSION-MATRIX.md",
-  "as_of": "2026-07-14",
-  "stage": "S26",
-  "workstream": 4,
-  "bases": {
-    "dev": "appTetnuCZlCZdTCT",
-    "prod": "appn84sqPw03zEbTT"
-  },
-  "canonical_fixture": {
-    "enrollment_id": "recgP9qZYjAhE7NXm",
-    "enrollment_label": "Schmidt, Testing - 2025-2026",
-    "rule": "Schmidt-only for live writes; no real-family email; no PROD unless Mike window; do not enable 117"
-  },
+  "as_of": "2026-07-15",
+  "stage": "S27",
+  "workstream": "morning-lead-2agent",
+  "s27_focus": [
+    {"id": "combined_021", "status": "live_DEV_passing", "evidence": "Phase A smoke"},
+    {"id": "combined_030", "status": "live_DEV_passing", "evidence": "Phase B smoke"},
+    {"id": "combined_020", "status": "live_DEV_passing", "evidence": "Phase C1 post-paste"},
+    {"id": "combined_013", "status": "live_DEV_passing", "evidence": "Phase C2 post-paste"},
+    {"id": "117_x_101", "status": "automated_and_passing", "blocked": "Mike UI (117 OFF)"},
+    {"id": "phase_d_weekly_email_no_send", "status": "automated_and_passing", "blocked": "Mike UI (Phase D paste)"}
+  ],
   "evidence_vocabulary": {
     "PASS": "Documented live smoke with artifact path",
+    "live_DEV_passing": "Live DEV smoke with artifact",
+    "automated_and_passing": "Offline/unit contracts green",
     "UNKNOWN": "Scripts/docs exist; no current authoritative live smoke for this row",
-    "PLANNED": "Design/harness ready; intentionally not run or gated"
+    "PLANNED": "Design/harness ready; intentionally not run or gated",
+    "blocked_by_Mike_UI": "Paste/enable/rename/delete required",
+    "blocked_by_external_service": "Make/Lambda/email/webhook dependency"
   },
   "authority_sources": [
     "docs/automation-index.md",

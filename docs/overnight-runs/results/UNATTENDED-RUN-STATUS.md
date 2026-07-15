@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S27 morning COMPLETE (2026-07-15)
+
+| Field | Value |
+|-------|-------|
+| Phase D | Auth package ready — **not pasted** |
+| 117 / 022 | Verified sheets — **117 still OFF** |
+| Website | `/athletes/[slug]` profile · build PASS |
+| Next | **Authorize Phase D UI** |
+| Airtable | **No changes this stage** |
+
 ## Milestone — S25 Phase C2 COMPLETE (2026-07-15)
 
 | Field | Value |

@@ -22,9 +22,23 @@
 
 | Status | Meaning |
 |--------|---------|
-| **PASS** | Documented live DEV (or PROD where noted) smoke with artifact path |
+| **PASS** / **live DEV passing** | Documented live DEV (or PROD where noted) smoke with artifact path |
+| **automated and passing** | Offline/unit contracts green in repo |
 | **UNKNOWN** | Scripts/docs exist; no current authoritative live smoke for this matrix row |
-| **PLANNED** | Design / harness ready; intentionally not run yet (or blocked: 117 OFF, email gates, etc.) |
+| **PLANNED** / **planned** | Design / harness ready; intentionally not run yet |
+| **blocked by Mike UI** | Paste, enable, rename, or delete required before live run |
+| **blocked by external service** | Make / Lambda / email / webhook dependency |
+
+### S27 high-risk focus rows
+
+| Workflow | Autos | Status |
+|----------|-------|--------|
+| Combined **021** attachment + video count | 021 | **live DEV passing** — Phase A smoke |
+| Combined **030** WAS bootstrap | 030 | **live DEV passing** — Phase B smoke |
+| Combined **020** HC + GB | 020 | **live DEV passing** — Phase C1 post-paste |
+| Combined **013** VF + GB | 013 | **live DEV passing** — Phase C2 post-paste |
+| **117** × **101** double-award / keys | 117, 101 | **automated and passing** offline · live **blocked by Mike UI** (117 OFF) |
+| Phase D weekly email no-send | 072 v4 | **automated and passing** (blank webhook) · paste **blocked by Mike UI** |
 
 ### Global constraints (this matrix)
 
@@ -41,13 +55,14 @@
 | ID | Workflow | Primary autos | Evidence |
 |----|----------|---------------|----------|
 | W1 | Enrollment | 001, 002, 003 | **UNKNOWN** |
-| W2 | Submission intake | 023, 005, 007, 021, 009, 010 | **PASS** (021 Phase A) · full intake chain **UNKNOWN** / **PLANNED** via 115 |
-| W3 | Weekly summaries | 031, 030, 034 | **PASS** (030 Phase B) |
-| W4 | Homework | 020, 064, 065, 070a, 022, 071 | **PASS** (020 Phase C1; 070a DEV E2E historical) · XP/email **UNKNOWN**/**PLANNED** |
-| W5 | Video | 013, 070b, 070c, 022, 113, 114, 116 | **PASS** (013 Phase C2; 070b/070c PROD; 116 DEV+PROD) · full XP chain **UNKNOWN** |
-| W6 | Levels | 041, 042, 043 | **UNKNOWN** |
+| W2 | Submission intake | 023, 005, 007, **021**, 009, 010 | **021 live DEV passing** (Phase A) · chain **planned** via 115 |
+| W3 | Weekly summaries | 031, **030**, 034 | **030 live DEV passing** (Phase B) |
+| W3b | Weekly email (Phase D) | **072∪074** (repo) | **automated and passing** (offline no-send) · paste **blocked by Mike UI** |
+| W4 | Homework | **020**, 064, 065, 070a, 022, 071 | **020 live DEV passing** (Phase C1) · XP/email **planned** |
+| W5 | Video | **013**, 070b, 070c, 022, 113, 114, 116 | **013 live DEV passing** (Phase C2) · full XP **planned** |
+| W6 | Levels | 041, 042, 043 | **UNKNOWN** · offline 042/043 **automated and passing** |
 | W7 | Achievements | 053–059, 066 | **UNKNOWN** (066 deploy done; sandbox pipeline confirm still pending historically) |
-| W8 | Zoom | 101, 117 (OFF) | **UNKNOWN** (101) · **PLANNED** (117 recording credit) |
+| W8 | Zoom | 101, 117 (OFF) | **101 UNKNOWN** · **117×101 automated and passing** offline · live 117 **blocked by Mike UI** |
 
 ---
 
