@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-14T17:54:14-06:00",
+  "updated_at": "2026-07-14T18:06:43-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "d18a4b5c2bafec57c0d58a760fc1ec4a671cb11a",
@@ -1019,9 +1019,11 @@
         "tools/airtable/phase_c2_013_post_paste_smoke.py",
         "docs/audits/phase-c2-013-live-smoke-2026-07-14.json",
         "docs/overnight-runs/results/S25-phase-c2-live-smoke-result.md",
-        "docs/deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md"
+        "docs/deploy-checklists/PHASE-C2-111-013-bootstrap-plan.md",
+        "docs/audits/phase-c2-013-post-paste-smoke-2026-07-14.json",
+        "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md"
       ],
-      "notes": "IN PROGRESS. GitHub 013 v3.0.0 + rollback + 111 stub. Offline 9/9. Pre-paste live smoke CRITICAL PASS. STOP at Mike paste 013. Do not retire 111 until post-paste PASS. Do not start Phase D. 117 OFF. Folder 07 unchanged. Occupancy still 47 estimated / 3 free."
+      "notes": "Post-paste smoke CRITICAL PASS. 013 live. Awaiting Mike delete of 111 \u2192 46 est / 4 free. Do not start Phase D. 117 OFF. Folder 07 unchanged."
     }
   ],
   "stage": {
@@ -1032,12 +1034,13 @@
   },
   "pending_approvals": [],
   "tests": {
-    "last_run_at": "2026-07-14T17:49:03-06:00",
+    "last_run_at": "2026-07-14T18:06:43-06:00",
     "phase_c2_offline": "9/9",
     "phase_c2_pre_paste_smoke": "CRITICAL PASS",
-    "phase_c1_ui_count": "47 estimated / 3 free (no visible counter)",
+    "phase_c2_post_paste_smoke": "CRITICAL PASS",
+    "phase_c2_ui_count": "47 estimated / 3 free until 111 delete",
     "pass": true
   },
-  "next_action": "Phase C2: Mike paste combined 013 v3.0.0 (PHASE-C2-111-013-mike-ui-actions.md). Leave 111 ON. Reply \"013 pasted \u2014 run post-paste smoke\". Do not start Phase D.",
-  "stop_reason": "awaiting_mike_paste_013"
+  "next_action": "Phase C2 post-paste PASS. Mike deletes automation 111, confirms 46 est / 4 free, replies \"Phase C2 UI complete\". Do not start Phase D.",
+  "stop_reason": "awaiting_mike_delete_111"
 }

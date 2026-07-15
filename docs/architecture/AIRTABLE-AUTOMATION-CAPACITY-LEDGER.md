@@ -138,7 +138,7 @@ Hard **do-not-merge:** 041↔010 · 064↔065 · 113↔114 · 057↔058 · 070a�
 
 **Phase C1 COMPLETE 2026-07-14:** combined 020 v3.0.0 live; post-paste smoke PASS; **063** deleted; DEV **47 estimated / 3 free**.
 
-**Phase C2 IN FLIGHT 2026-07-14:** combined 013 v3.0.0 on GitHub; awaiting Mike paste + post-paste PASS + **111** delete → **46 estimated / 4 free**. See [`PHASE-C2-111-013-mike-ui-actions.md`](../deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md). Do **not** start Phase D.
+**Phase C2 post-paste PASS 2026-07-14:** combined 013 v3.0.0 live; post-paste smoke PASS; awaiting Mike delete of **111** → **46 estimated / 4 free**. Do **not** start Phase D.
 
 ---
 

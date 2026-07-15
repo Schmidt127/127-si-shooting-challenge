@@ -39,11 +39,13 @@ Critical fail → restore both scripts and **stop** (do not start Phase D).
 | Post-paste smoke | `tools/airtable/phase_c2_013_post_paste_smoke.py` |
 | Mike UI | `docs/deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md` |
 
-## Status (this commit)
+## Status (post-paste)
 
-- GitHub prep + offline + pre-paste smoke → **IN PROGRESS / awaiting Mike paste**
-- 111 **not** deleted yet
-- Occupancy remains **47 estimated / 3 free** until post-paste PASS + 111 retire → **46 / 4**
+- GitHub prep + offline + pre-paste smoke PASS
+- Mike pasted combined **013 v3.0.0**
+- Post-paste live smoke **CRITICAL PASS** (`phase-c2-013-post-paste-smoke-2026-07-14.json`)
+- 111 **not** deleted yet — Mike retires next
+- Occupancy remains **47 estimated / 3 free** until 111 retire → **46 / 4**
 
 ## Out of scope
 

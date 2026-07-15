@@ -1,5 +1,15 @@
 ﻿# Unattended run status
 
+## Milestone — S25 Phase C2 post-paste smoke PASS (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Combined 013 | Live; post-paste smoke **CRITICAL PASS** |
+| 111 | Still ON — retire next |
+| Evidence | `phase-c2-013-post-paste-smoke-2026-07-14.json` |
+| Next | Mike deletes **111** → **46 est / 4 free** · reply **Phase C2 UI complete** |
+| Untouched | Phase D · 117 · Folder 07 OFF · PROD |
+
 ## Milestone — S25 Phase C2 GitHub ready / Mike UI stop (2026-07-14)
 
 | Field | Value |

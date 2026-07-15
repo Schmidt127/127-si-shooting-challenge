@@ -1,0 +1,178 @@
+{
+  "started": "2026-07-14T18:01:59.069765-06:00",
+  "ended": "2026-07-14T18:05:00.633664-06:00",
+  "base": "appTetnuCZlCZdTCT",
+  "vf_id": "rect3MIwDgjvryexO",
+  "submission_id": "rec7sxVd8ILDICnbY",
+  "enrollment_gb": "recK7BDVSpHy2ipCS",
+  "critical_pass": true,
+  "results": [
+    {
+      "name": "contract_blank_writes",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "action": "copied_grade_band",
+        "write": true
+      }
+    },
+    {
+      "name": "contract_no_overwrite_existing",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "action": "already_has_grade_band",
+        "write": false
+      }
+    },
+    {
+      "name": "contract_missing_enrollment_gb_soft_skip",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "action": "skipped_no_enrollment_grade_band",
+        "write": false
+      }
+    },
+    {
+      "name": "new_video_feedback_create",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "scenario_id": "recLGt0HZ3Hg4ozbu",
+        "submission_id": "rec7sxVd8ILDICnbY",
+        "vf_ids": [
+          "rect3MIwDgjvryexO"
+        ],
+        "vf_gb": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "link_existing_no_duplicate",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "before": [
+          "rect3MIwDgjvryexO"
+        ],
+        "after": [
+          "rect3MIwDgjvryexO"
+        ],
+        "asset_id": "recInpeEanXxWBtqb"
+      }
+    },
+    {
+      "name": "blank_grade_band_repair",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "workflow": null,
+          "upload": "Pending"
+        },
+        "automation_or_mirror": "automation"
+      }
+    },
+    {
+      "name": "already_correct_stable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "before": "recK7BDVSpHy2ipCS",
+        "after": "recK7BDVSpHy2ipCS"
+      }
+    },
+    {
+      "name": "no_overwrite_existing_valid_gb_contract",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "note": "blank-only decideGradeBandRepair; live overwrite refusal verified post-paste",
+        "decision": {
+          "action": "already_has_grade_band",
+          "write": false
+        }
+      }
+    },
+    {
+      "name": "repeated_grade_band_repair_idempotent",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "first": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "workflow": null,
+          "upload": "Pending"
+        },
+        "second": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "workflow": null,
+          "upload": "Pending"
+        }
+      }
+    },
+    {
+      "name": "duplicate_prevention_one_vf_per_submission",
+      "pass": true,
+      "critical": true,
+      "detail": {
+        "sub2": "rec7fzj2afzD3kzlJ",
+        "vf2": [
+          "reckuy4nega9jNDVB"
+        ],
+        "vf1": "rect3MIwDgjvryexO"
+      }
+    },
+    {
+      "name": "adjacent_113_114_070b_context_readable",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "fields": {
+          "VF Enrollment": "recgP9qZYjAhE7NXm",
+          "VF Workflow": null,
+          "VF Upload Status": "Pending",
+          "Asset Upload Status": "Pending Link",
+          "Asset Send to Make Trigger": true,
+          "Ready to Send to Make?": "READY_TO_SEND",
+          "Why Not Ready for Make?": null,
+          "Feedback Posted?": null,
+          "XP Award Status": null
+        },
+        "note": "113 feedback/XP prep, 114 video XP, 070b Make send remain separate; this checks readability / handoff fields"
+      }
+    },
+    {
+      "name": "formula_recalc_after_pending_link",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "upload": "Pending Link",
+        "ready": "READY_TO_SEND",
+        "why": null
+      }
+    },
+    {
+      "name": "fixture_restored",
+      "pass": true,
+      "critical": false,
+      "detail": {
+        "after": {
+          "gb": "recK7BDVSpHy2ipCS",
+          "enr": "recgP9qZYjAhE7NXm",
+          "workflow": null,
+          "upload": "Pending"
+        }
+      }
+    }
+  ],
+  "note": "Post-paste suite after Mike pasted combined 013 v3.0.0. CRITICAL PASS. Leave 111 ON until Mike deletes after this PASS. Do not start Phase D. Untouched: 117, Folder 07, PROD.",
+  "111_still_on": true,
+  "do_not_retire_111_yet": true,
+  "mode": "post_paste",
+  "013_pasted": true
+}

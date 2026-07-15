@@ -28,8 +28,17 @@ VIDEO_TEMPLATE = "recvuvDdglwY2I7nu"
 ACTIVITY_DATE = "2026-06-30"
 WEEK_10 = "recrTwxqXz31fNZ7e"
 DENVER = ZoneInfo("America/Denver")
-OUT = ROOT / "docs/audits/phase-c2-013-live-smoke-2026-07-14.json"
-RESULT_MD = ROOT / "docs/overnight-runs/results/S25-phase-c2-live-smoke-result.md"
+POST_PASTE = os.environ.get("PHASE_C2_POST_PASTE") == "1"
+OUT = ROOT / (
+    "docs/audits/phase-c2-013-post-paste-smoke-2026-07-14.json"
+    if POST_PASTE
+    else "docs/audits/phase-c2-013-live-smoke-2026-07-14.json"
+)
+RESULT_MD = ROOT / (
+    "docs/overnight-runs/results/S25-phase-c2-post-paste-smoke-result.md"
+    if POST_PASTE
+    else "docs/overnight-runs/results/S25-phase-c2-live-smoke-result.md"
+)
 
 
 def load_token() -> str:
@@ -466,22 +475,34 @@ def main() -> None:
         "started": started,
         "ended": ended,
         "base": DEV,
+        "mode": "post_paste" if POST_PASTE else "pre_paste",
+        "013_pasted": POST_PASTE,
         "vf_id": vf_id,
         "submission_id": sub_id,
         "enrollment_gb": enr_gb,
         "critical_pass": critical_pass,
         "results": results,
         "note": (
-            "Pre-paste suite validates create/link + dual-run 111/013 GB fill + contracts. "
-            "Blank-only overwrite safety is enforced in GitHub 013 v3; confirm after Mike paste via post-paste smoke."
+            "Post-paste suite after Mike pasted combined 013 v3.0.0. "
+            "CRITICAL PASS unlocks Mike delete of 111. Do not start Phase D."
+            if POST_PASTE
+            else (
+                "Pre-paste suite validates create/link + dual-run 111/013 GB fill + contracts. "
+                "Blank-only overwrite safety is enforced in GitHub 013 v3; confirm after Mike paste."
+            )
         ),
         "111_still_on": True,
         "do_not_retire_111_yet": True,
     }
     OUT.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
 
+    title = (
+        "# S25 Phase C2 — Post-paste live smoke (2026-07-14)"
+        if POST_PASTE
+        else "# S25 Phase C2 — Live smoke result (2026-07-14)"
+    )
     lines = [
-        "# S25 Phase C2 — Live smoke result (2026-07-14)",
+        title,
         "",
         "**Scope:** 111→013 Grade Band absorb (C2 only)",
         "",
@@ -494,18 +515,31 @@ def main() -> None:
         lines.append(
             f"| {i} | {r['name']}{' (non-critical)' if not r['critical'] else ''} | {'**PASS**' if r['pass'] else '**FAIL**'} |"
         )
-    lines += [
-        "",
-        f"JSON: `{OUT.as_posix().split('docs/')[-1]}`",
-        "",
-        "## Next Mike UI action (only)",
-        "",
-        "1. Paste combined **013** v3.0.0 per `docs/deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md`",
-        "2. Leave **111 ON** for dual-run; reply after paste so Cursor can run post-paste smoke",
-        "3. After post-paste PASS: delete **111** → reply **Phase C2 UI complete**",
-        "",
-        "Do **not** start Phase D. Do **not** touch 117 / Folder 07 / PROD.",
-    ]
+    if POST_PASTE:
+        lines += [
+            "",
+            f"JSON: `docs/{OUT.as_posix().split('docs/')[-1]}`",
+            "",
+            "## Next Mike UI action (only)",
+            "",
+            "1. **Retire automation 111** (delete from DEV UI) — frees +1 estimated slot.",
+            "2. Confirm inventory math: **46 estimated / 4 free** (no visible Airtable counter).",
+            "3. Leave **117** OFF. Leave Folder 07 unchanged. Do **not** start Phase D.",
+            "4. Reply: **“Phase C2 UI complete”**",
+        ]
+    else:
+        lines += [
+            "",
+            f"JSON: `docs/{OUT.as_posix().split('docs/')[-1]}`",
+            "",
+            "## Next Mike UI action (only)",
+            "",
+            "1. Paste combined **013** v3.0.0 per `docs/deploy-checklists/PHASE-C2-111-013-mike-ui-actions.md`",
+            "2. Leave **111 ON** for dual-run; reply after paste so Cursor can run post-paste smoke",
+            "3. After post-paste PASS: delete **111** → reply **Phase C2 UI complete**",
+            "",
+            "Do **not** start Phase D. Do **not** touch 117 / Folder 07 / PROD.",
+        ]
     RESULT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps({"critical_pass": critical_pass, "out": str(OUT)}, indent=2))
     raise SystemExit(0 if critical_pass else 1)

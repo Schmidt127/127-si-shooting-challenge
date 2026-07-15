@@ -1,9 +1,9 @@
 # Phase C2 plan — absorb 111 into 013 (Video Feedback)
 
-**Status:** **AUTHORIZED / IN FLIGHT** (2026-07-14 S25) — stop at Mike paste after pre-paste smoke  
+**Status:** **POST-PASTE PASS** (2026-07-14) — awaiting Mike delete of **111**  
 **Depends on:** Phase C1 COMPLETE (2026-07-14) — DEV **47 estimated / 3 free**  
 **Target:** Free **+1** slot (111 → into 013)  
-**After Phase C2:** DEV **46 estimated / 4 free**
+**After Phase C2 (111 deleted):** DEV **46 estimated / 4 free**
 
 ---
 
