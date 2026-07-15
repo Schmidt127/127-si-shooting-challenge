@@ -50,6 +50,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
 
+**070a status (2026-07-11 overnight):** GitHub **v4.4** (Worker A PR #18 — aligned to 070b async `Accepted` + **070c** v1.1). DEV paste/enable **pending** (keep **OFF** — #17). DEV Make/Lambda homework route **repo ready** (Worker B PR #12; Make Module 2 patch #8). Tests **73/73** mock PASS (Worker C PR #13; live smoke #11). **PROD OFF** this wave. Ensure **070c** trigger is not video-only if homework uses `Accepted` async. Package: [C-070a-dev-overnight-package-2026-07-11.md](./deploy-checklists/C-070a-dev-overnight-package-2026-07-11.md) · [Worker D 070a docs](./overnight-runs/worker-results/worker-d-t4-070a-docs.md).
+
 ## Weekly summary and goals (030–034)
 
 | # | Airtable automation name | Trigger | File |
@@ -110,6 +112,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **116** | Submission Assets — Apply Asset Reuse Decision Consequences | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | `116-submission-assets-apply-asset-reuse-decision-consequences.js` |
 
 **DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
+
+**PROD (2026-07-11):** Runtime **PASS** on Schmidt Testing fixture asset `recWZ4cHNYgbV60mL` → VF `reccXspFIiNIPMPcm` → XP `recYQ10pOoFlApmjZ` (Source Key `VIDEO_SUBMISSION|reccXspFIiNIPMPcm`; Confirmed Duplicate then Approved Reuse reversal; XP count stayed 1). Automations-table documentation row for 116 still missing (legacy 008 doc drift — not a runtime blocker). [PROD validation](./deploy-checklists/C-023-prod-automation-116-validation-2026-07-11.md). C-023 remaining work: Stage 6 / OMNI review UX / homework path after 070a — [Worker D C-023 audit](./overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md).
 
 ## Zoom (101)
 
