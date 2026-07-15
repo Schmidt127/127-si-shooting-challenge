@@ -4,7 +4,7 @@
 
 - Role: implementation
 - Branch: `cursor/fa-001-implementation-cfc9`
-- Tip SHA: (filled after commit)
+- Tip SHA: dde9b70ebe49b82b35f39d00bbdd21bbc553657d
 - Started / finished: 2026-07-15T13:58Z / 2026-07-15T14:00Z
 - Assignment file: `docs/agent-runs/assignments/FA-001-implementation.md`
 - lead_takeover: true (Lead executed Implementation slice; separate Implementation agent was not launched)
