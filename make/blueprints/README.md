@@ -6,7 +6,9 @@ Export and document **Make.com scenarios** that support the shooting challenge (
 
 | Blueprint file | Scenario name (Make) | Trigger | Airtable / external |
 |----------------|----------------------|---------|---------------------|
-| [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive |
+| [upload-asset-engine-lambda-dev-v1.template.json](./upload-asset-engine-lambda-dev-v1.template.json) | Shooting Challenge - DEV - Upload Engine - Lambda - v1 (**CREATE** — missing in Make as of 2026-07-12; do not edit PROD GAME) | Webhook (070b video + **070a homework**) | DEV Lambda → S3 |
+| [upload-asset-engine-lambda-prod-v1.template.json](./upload-asset-engine-lambda-prod-v1.template.json) | Shooting Challenge - GAME - Upload Engine - Lambda - v1 | Webhook (**070b video only**) | PROD Lambda → S3 |
+| [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive (legacy) |
 | *(add)*.json | Weekly summary email | Webhook / schedule | Airtable + Gmail |
 | *(add)*.json | Parent notification | Webhook | Gmail |
 

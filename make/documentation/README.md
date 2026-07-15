@@ -56,6 +56,14 @@ Never point test scenarios at production Gmail without explicit routing rules.
 3. Update Airtable automation-trigger-map if webhook source changed.
 4. `CHANGELOG.md` entry for production-impacting deploys.
 
+## C-013 Upload Engine (Lambda)
+
+| Doc | Environment | Routes |
+|-----|-------------|--------|
+| [C-013-dev-070a-homework-lambda-runbook.md](./C-013-dev-070a-homework-lambda-runbook.md) | **DEV** | `homework_completion` (070a) + video |
+| [C-013-dev-s3-make-ui-runbook.md](./C-013-dev-s3-make-ui-runbook.md) | DEV (legacy S3 notes) | Superseded by Lambda |
+| [C-013-prod-upload-engine-lambda-runbook.md](./C-013-prod-upload-engine-lambda-runbook.md) | PROD | `video_feedback` (070b) only |
+
 ## Related
 
 - [Blueprints](../blueprints/README.md)

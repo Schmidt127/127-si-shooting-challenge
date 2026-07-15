@@ -1,0 +1,70 @@
+{
+  "runId": "overnight-run-2026-07-11",
+  "runStatus": "ACTIVE",
+  "liveStatusIssueNumber": 1,
+  "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
+  "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
+  "lastUpdated": "2026-07-11T22:35:00Z",
+  "lead": {
+    "branch": "overnight/lead-integration",
+    "status": "active",
+    "lastAction": "LEAD-005: refresh status, merge D Phase2 + A tip, assign T6/T7, refill queue T8/T9",
+    "lastCommit": "3ae7cc9fae368627e237c2af71661f9d83207388",
+    "statusPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19"
+  },
+  "workers": {
+    "Worker-A": {
+      "taskId": "T1",
+      "nextTaskId": "T8",
+      "branch": "overnight/worker-a-070a-airtable",
+      "status": "idle_t1_complete_t8_optional",
+      "tip": "2d50fa5",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/18",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864"
+    },
+    "Worker-B": {
+      "taskId": "T6",
+      "priorTaskId": "T2",
+      "branch": "overnight/worker-b-070a-backend",
+      "status": "assigned_t6",
+      "tip": "0dd0ac5",
+      "implementationCommit": "2235340c8523b3ecde095bc63941fd0be206e580",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/12",
+      "assignmentFile": "docs/overnight-runs/assignments/T6-worker-b-make-blueprint-validator.md",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2"
+    },
+    "Worker-C": {
+      "taskId": "T7",
+      "priorTaskId": "T3",
+      "branch": "overnight/worker-c-070a-tests",
+      "status": "assigned_t7",
+      "tip": "66c9464",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/13",
+      "assignmentFile": "docs/overnight-runs/assignments/T7-worker-c-070a-contract-alignment.md",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-3fe201a7-2824-4762-a35d-acb258a5c1a1"
+    },
+    "Worker-D": {
+      "taskId": "T4",
+      "nextTaskId": "T9",
+      "branch": "overnight/worker-d-docs",
+      "status": "running_phase2_complete_t9_queued",
+      "tip": "5a69dbf",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356"
+    }
+  },
+  "openBlockers": [
+    8,
+    9,
+    11,
+    17
+  ],
+  "staleClosable": [
+    14,
+    15,
+    6,
+    7,
+    10,
+    16
+  ]
+}

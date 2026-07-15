@@ -1,0 +1,292 @@
+{
+  "runId": "overnight-run-2026-07-11",
+  "startedAt": "2026-07-11T21:54:00-06:00",
+  "runStatus": "ACTIVE",
+  "primaryEnvironment": "DEV",
+  "devBaseId": "appTetnuCZlCZdTCT",
+  "prodBaseId": "appn84sqPw03zEbTT",
+  "leadBranch": "overnight/lead-integration",
+  "liveStatusIssueTitle": "[OVERNIGHT] Live Run Status \u2014 2026-07-11",
+  "liveStatusIssueNumber": 1,
+  "liveStatusIssueUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/issues/1",
+  "liveStatusPasteFile": "docs/overnight-runs/_live-status-update.md",
+  "leadCloudAgentUrl": "https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a",
+  "rules": {
+    "devFirst": true,
+    "prodChangesRequireLeadControlledVerification": true,
+    "noBusinessDataDeletion": true,
+    "neverResetProdEvidenceRecord": "recGQ8EjAMz3bEBiW",
+    "workersDoNotEditSharedFiles": true,
+    "hourlyNoAutoMergeRebaseDeploy": true,
+    "doNotIdleOnMikeBlockers": true
+  },
+  "tasks": [
+    {
+      "id": "T1",
+      "title": "070a DEV Airtable and automation script",
+      "agent": "Worker-A",
+      "branch": "overnight/worker-a-070a-airtable",
+      "status": "complete_repo_awaiting_mike_paste",
+      "commitHash": "2d50fa5",
+      "implementationCommit": "767eb18",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/18",
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-a-t1-070a-airtable.md",
+      "mergedIntoLead": true,
+      "manualActionIssues": [
+        17
+      ],
+      "verificationResult": "070a v4.4 repo PASS; live paste BLOCKED #17",
+      "nextAssignment": "T8 optional 070c homework trigger checklist",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-c1932048-b10e-416a-9810-f963343dc864",
+      "agentLifecycle": "IDLE"
+    },
+    {
+      "id": "T2",
+      "title": "070a DEV Make/Lambda backend route",
+      "agent": "Worker-B",
+      "branch": "overnight/worker-b-070a-backend",
+      "status": "complete_repo_live_blocked",
+      "commitHash": "0dd0ac5",
+      "implementationCommit": "2235340c8523b3ecde095bc63941fd0be206e580",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/12",
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-b-t2-070a-backend.md",
+      "mergedIntoLead": true,
+      "manualActionIssues": [
+        8,
+        9
+      ],
+      "verificationResult": "Lambda 38/38 + smoke tools 8/8 PASS; local Make homework webhook PASS 2026-07-12 (skipped_already_uploaded on rec7X6stG6utxykiG); #8 Phase 0+1 verified pending Mike RESOLVED comment",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-29524ab2-f376-4153-83ba-920a12ffe8c2",
+      "agentLifecycle": "IDLE_REASSIGNED_TO_T6",
+      "notes": "Repo complete. MA-001 Phase 0+1 local smoke PASS 2026-07-12. Never edit PROD GAME / C-013 PROD S3 Upload Webhook.",
+      "manualActionRequired": true
+    },
+    {
+      "id": "T3",
+      "title": "070a DEV tests and smoke tooling",
+      "agent": "Worker-C",
+      "branch": "overnight/worker-c-070a-tests",
+      "status": "complete_repo_live_blocked",
+      "commitHash": "66c9464",
+      "primaryDeliveryCommit": "e8b1b9c",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/13",
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-c-t3-070a-tests.md",
+      "mergedIntoLead": true,
+      "manualActionIssues": [
+        11
+      ],
+      "verificationResult": "73/73 PASS (offline+mock); live BLOCKED #11",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-3fe201a7-2824-4762-a35d-acb258a5c1a1",
+      "agentLifecycle": "IDLE_REASSIGNED_TO_T7"
+    },
+    {
+      "id": "T4",
+      "title": "C-023 read-only audit, then 070a documentation",
+      "agent": "Worker-D",
+      "branch": "overnight/worker-d-docs",
+      "status": "phase1_and_phase2_complete_merged",
+      "phase": 2,
+      "commitHash": "5a69dbf",
+      "prUrl": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/5",
+      "workerResultFiles": [
+        "docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md",
+        "docs/overnight-runs/worker-results/worker-d-t4-070a-docs.md"
+      ],
+      "mergedIntoLead": true,
+      "verificationResult": "Phase1 audit + Phase2 070a docs package on lead",
+      "nextAssignment": "T9 C-023 Stage 6 checklist / P-D1",
+      "cloudAgentUrl": "https://cursor.com/agents/bc-e5da2c48-aae8-4d6a-9c90-bca2116dd356",
+      "agentLifecycle": "RUNNING"
+    },
+    {
+      "id": "T5",
+      "title": "C-023 implementation (next stages)",
+      "agent": "lead-assign",
+      "status": "blocked_until_070a_locks_clear",
+      "notes": "Do not start HW hash proof until locks clear. Docs Stage 6 via T9 OK."
+    },
+    {
+      "id": "T6",
+      "title": "Offline Make dual-route blueprint validator + payload matrix",
+      "agent": "Worker-B",
+      "cloudTaskName": "[OVERNIGHT][T6][Worker-B] Offline Make blueprint validator + payload matrix",
+      "branch": "overnight/worker-b-070a-backend",
+      "environment": "repo-only",
+      "status": "assigned",
+      "assignedAt": "2026-07-11T22:35:00Z",
+      "assignmentFile": "docs/overnight-runs/assignments/T6-worker-b-make-blueprint-validator.md",
+      "locks": [
+        "L-070a-make-dev"
+      ],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-b-t6-make-blueprint-validator.md",
+      "dependencies": [
+        "T2 complete"
+      ],
+      "testsRequired": [
+        "new offline blueprint/payload unit tests",
+        "lambda suite still green"
+      ],
+      "deploymentRequired": false,
+      "manualActionRequired": false,
+      "notes": "Offline validator still valid. Do NOT wait on #8. Blueprint should assert dual-route filters for the TEMPLATE (create-time), not assume live DEV scenario exists."
+    },
+    {
+      "id": "T7",
+      "title": "Align 070a contracts to A v4.4 + unified overnight regression suite",
+      "agent": "Worker-C",
+      "cloudTaskName": "[OVERNIGHT][T7][Worker-C] 070a v4.4 contract alignment + offline suite",
+      "branch": "overnight/worker-c-070a-tests",
+      "environment": "repo-only",
+      "status": "assigned",
+      "assignedAt": "2026-07-11T22:35:00Z",
+      "assignmentFile": "docs/overnight-runs/assignments/T7-worker-c-070a-contract-alignment.md",
+      "locks": [
+        "L-070a-tests"
+      ],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-c-t7-070a-contract-alignment.md",
+      "dependencies": [
+        "T1 result published",
+        "T3 complete"
+      ],
+      "testsRequired": [
+        "full offline overnight suite PASS"
+      ],
+      "deploymentRequired": false,
+      "manualActionRequired": false,
+      "notes": "Do NOT wait on #11 live smoke."
+    },
+    {
+      "id": "T8",
+      "title": "070c homework trigger verification checklist",
+      "agent": "Worker-A",
+      "status": "assigned_optional",
+      "assignedAt": "2026-07-11T22:35:00Z",
+      "assignmentFile": "docs/overnight-runs/assignments/T8-worker-a-070c-trigger-checklist.md",
+      "locks": [
+        "L-070a-script",
+        "L-070a-schema-dev"
+      ],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-a-t8-070c-trigger-checklist.md",
+      "manualActionRequired": false,
+      "notes": "Repo-only while waiting on #17."
+    },
+    {
+      "id": "T9",
+      "title": "C-023 Stage 6 production readiness checklist",
+      "agent": "Worker-D",
+      "status": "queued",
+      "assignedAt": "2026-07-11T22:35:00Z",
+      "assignmentFile": "docs/overnight-runs/assignments/T9-c023-stage6-checklist.md",
+      "locks": [
+        "L-c023-docs-readonly"
+      ],
+      "workerResultFile": "docs/overnight-runs/worker-results/worker-d-t9-c023-stage6-checklist.md",
+      "dependencies": [
+        "T4 phase 2"
+      ],
+      "notes": "Queue refill \u2014 start after Phase 2 merge acknowledged."
+    }
+  ],
+  "locks": {
+    "L-070a-script": {
+      "holder": "Worker-A",
+      "status": "held_awaiting_dev_paste"
+    },
+    "L-070a-schema-dev": {
+      "holder": "Worker-A",
+      "status": "held_awaiting_mike_verify"
+    },
+    "L-070a-make-dev": {
+      "holder": "Worker-B",
+      "status": "held_for_T6"
+    },
+    "L-070a-lambda-dev": {
+      "holder": "Worker-B",
+      "status": "held_repo_merged_live_pending_creds"
+    },
+    "L-070a-tests": {
+      "holder": "Worker-C",
+      "status": "held_for_T7"
+    },
+    "L-c023-docs-readonly": {
+      "holder": "Worker-D",
+      "status": "held"
+    },
+    "L-c023-implementation": {
+      "holder": null,
+      "status": "blocked"
+    }
+  },
+  "testTotals": {
+    "workerB_t2_lambda": "38/38",
+    "workerB_t2_smoke_units": "8/8",
+    "workerC_t3": "73/73",
+    "lead_integration_node_070a": "20/20",
+    "lead_integration_node_baseline": "17/17",
+    "lead_integration_lambda": "46/46",
+    "lead_integration_python_b_c": "24/24",
+    "lead_integration_mock_smoke": "5/5"
+  },
+  "openBlockersCanonical": [
+    {
+      "issue": 8,
+      "system": "Make-DEV-create",
+      "duplicates": [
+        6
+      ],
+      "title": "[OVERNIGHT][T2][Make-DEV] Create DEV upload scenario then homework router (070a)",
+      "status": "phase0_phase1_pass_pending_mike_resolved_comment",
+      "note": "2026-07-12T13:48Z local smoke PASS rec7X6stG6utxykiG skipped_already_uploaded. Mike comment RESOLVED on #8."
+    },
+    {
+      "issue": 9,
+      "system": "AWS-DEV",
+      "duplicates": [
+        7
+      ],
+      "note": "Local ops PASS; cloud .env still optional"
+    },
+    {
+      "issue": 11,
+      "system": "Tests-DEV",
+      "duplicates": [
+        10
+      ],
+      "note": "Make webhook path PASS; full c070a live harness gated on #17"
+    },
+    {
+      "issue": 17,
+      "system": "Airtable-DEV",
+      "duplicates": [
+        16
+      ]
+    }
+  ],
+  "staleClosableIssues": [
+    14,
+    15
+  ],
+  "githubTokenLimitation": "Lead token cannot comment/edit issue #1 (403). Status is in _live-status-update.md; Mike must paste into #1. Assignments also posted on PRs #12/#13.",
+  "prodModified": false,
+  "lastUpdated": "2026-07-12T13:50:00Z",
+  "lastUpdatedBy": "Cloud-Lead",
+  "lastLeadCommit": "7d6c695",
+  "liveStatusWorkaroundPr": "https://github.com/Schmidt127/127-si-shooting-challenge/pull/19",
+  "makeInventory": {
+    "confirmedAt": "2026-07-12",
+    "by": "Mike",
+    "prodScenarioOnly": "Shooting Challenge - GAME - Upload Engine - Lambda - v1",
+    "prodWebhookLabel": "C-013 PROD S3 Upload Webhook",
+    "prodEditedByMike": false,
+    "devScenarioExists": true,
+    "devWebhookLabel": "C-013 DEV S3 Upload Webhook",
+    "createChecklist": "docs/deploy-checklists/C-013-create-dev-make-upload-scenario.md",
+    "issue8Plan": "Phase0+1 PASS local smoke 2026-07-12; never edit PROD",
+    "homeworkWebhookSmoke": {
+      "at": "2026-07-12T13:48:53Z",
+      "assetId": "rec7X6stG6utxykiG",
+      "actionOut": "skipped_already_uploaded",
+      "pass": true
+    }
+  }
+}

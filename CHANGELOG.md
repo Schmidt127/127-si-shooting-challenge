@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Added
+- **Overnight T4 Worker D — C-023 read-only audit + 070a docs package (2026-07-11)** — Phase 1 stage reconciliation / T5 unlock criteria: [worker-d-t4-c023-readonly-audit.md](./docs/overnight-runs/worker-results/worker-d-t4-c023-readonly-audit.md). Phase 2 lead evidence + runbook/checklist/CHANGELOG/index notes: [worker-d-t4-070a-docs.md](./docs/overnight-runs/worker-results/worker-d-t4-070a-docs.md) · [C-070a-dev-overnight-package-2026-07-11.md](./docs/deploy-checklists/C-070a-dev-overnight-package-2026-07-11.md). Repo-only; no Airtable/Make/AWS/PROD changes.
 - **DEV Lambda upload service (2026-07-08)** — `lambda/upload-asset/` (`127si-dev-shooting-challenge-asset-upload`): handler + `upload_core` ported from SDK proof; H2 handler PASS on `recLAk8TA4lfbA6eu` (`allPass=true`). AWS deploy pending admin IAM. [DEPLOY.md](./lambda/upload-asset/DEPLOY.md), [C-013-sdk-hybrid-runtime.md](./docs/deploy-checklists/C-013-sdk-hybrid-runtime.md).
 - **C-013 controlled confirm-write recheck + Make migration plan (2026-07-08)** — SDK re-PUT on `recBBi80bYuxXifVj` with `schmidt-mike` slug; C-023 duplicate fields written. [checkpoint](./docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md#2026-07-08--controlled-dev-confirm-write-recheck-c-013--c-023) · [Make migration plan](./docs/deploy-checklists/C-013-make-upload-migration-plan.md).
 - **C-013 DEV Lambda minimal contract (2026-07-08)** — [C-013-dev-lambda-upload-plan.md](./docs/deploy-checklists/C-013-dev-lambda-upload-plan.md#minimal-dev-contract--review-2026-07-08).
@@ -22,6 +23,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Make
 
+#### Added
+- **DEV 070a homework Make/Lambda route pack (2026-07-11, overnight T2)** — Sanitized DEV blueprint with dual router (`video_feedback` + `homework_completion`), runbook, sample payload, `c013_dev_make_homework_webhook_post.py`, `c013_dev_h1_homework_smoke.py`, offline unit tests. Live Make UI patch + DEV credential smoke gated on Mike blockers #8 / #9. **070a remains OFF.** **PROD not modified.**
+
 #### Changed
 - **C-013 PROD upload route manual smoke PASS (2026-07-11)** — `Shooting Challenge - GAME - Upload Engine - Lambda - v1` passed upload (`actionOut=uploaded`, independent Airtable probe `allPass=true`), idempotency (`skipped_already_uploaded`, key/hash unchanged), and structured invalid-route handling (`error_invalid_route`). Sanitized blueprint documents `handleErrors=false` / complete Lambda JSON response behavior. **070b remains OFF**; exposed upload secret rotation + one Airtable-triggered Schmidt test remain.
 - **C-013 PROD Make smoke runner probe parsing (2026-07-11)** — `c013_prod_make_smoke_run.py` now reads `submissionAsset.writebackVerification` from `_probe_c013_asset_storage_fields.py` (was incorrectly keyed as `recordProbe`, causing false `make_upload` FAIL). Upload pass requires webhook Lambda JSON **and** independent Airtable probe `allPass=true`. Invalid-route diagnostics document expected `Upload Status=Error` writeback.
@@ -31,6 +35,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **070a v4.4 (2026-07-11)** — Homework sender brought to parity with proven **070b v4.4** / **070c v1.1** async architecture (`routeKey=homework_completion`). Make `Accepted` → pending handoff (trigger retained); Lambda JSON verified success clears trigger; no `Processing` write (Lambda owns claim). GitHub source updated for DEV paste — **070a remains OFF**; no PROD paste. Prep: [C-070a-dev-airtable-v4.4-prep.md](./docs/deploy-checklists/C-070a-dev-airtable-v4.4-prep.md).
 - **070b v4.4 (2026-07-11)** — Remove invalid `setTimeout` polling (Airtable scripts cannot use timers). Make HTTP 2xx body `Accepted` returns `statusOut=pending`, `actionOut=lambda_upload_accepted_async`, `makeResponseMode=accepted_async`; retains `Send to Make Trigger` for companion **070c**. Immediate Lambda JSON path unchanged (`uploaded`, `skipped_already_uploaded`, structured errors).
 - **070b v4.3 (2026-07-11)** — Superseded same day; polling design invalid in Airtable automation scripting.
 

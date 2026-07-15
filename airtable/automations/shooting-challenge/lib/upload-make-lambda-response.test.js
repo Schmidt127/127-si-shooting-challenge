@@ -199,6 +199,32 @@ tests.push(
 );
 
 tests.push(
+    test("11b 070a v4.4 parity with 070b async Accepted (no setTimeout)", () => {
+        const scriptPath = path.join(
+            __dirname,
+            "..",
+            "070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js",
+        );
+        const source = fs.readFileSync(scriptPath, "utf8");
+        assert.ok(!/\bsetTimeout\s*\(/.test(source), "070a must not call setTimeout");
+        assert.ok(
+            !/\bpollForLambdaWritebackAsync\b/.test(source),
+            "070a must not define pollForLambdaWritebackAsync",
+        );
+        assert.ok(source.includes('version: "v4.4"'), "070a version must be v4.4");
+        assert.ok(source.includes("homework_completion"), "070a must route homework_completion");
+        assert.ok(
+            source.includes("lambda_upload_accepted_async"),
+            "070a must handle Make Accepted async handoff",
+        );
+        assert.ok(
+            source.includes("070c verifies writeback"),
+            "070a Accepted path must defer writeback verify to 070c",
+        );
+    }),
+);
+
+tests.push(
     test("12 070c full writeback + trigger checked clears trigger", () => {
         const decision = decide070cAction(passingWritebackFields({ "Send to Make Trigger": true }));
         assert.strictEqual(decision.statusOut, "success");

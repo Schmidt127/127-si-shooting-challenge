@@ -1,0 +1,254 @@
+# Overnight run log — 2026-07-11
+
+**Run ID:** `overnight-run-2026-07-11`  
+**Repository:** [Schmidt127/127-si-shooting-challenge](https://github.com/Schmidt127/127-si-shooting-challenge)  
+**Lead branch:** [overnight/lead-integration](https://github.com/Schmidt127/127-si-shooting-challenge/tree/overnight/lead-integration)  
+**Lead agent:** https://cursor.com/agents/bc-9c7b292c-e800-4aea-9097-6b37c299251a  
+**Primary environment:** DEV Airtable `appTetnuCZlCZdTCT`  
+**PROD policy:** No PROD modifications until DEV implementation + tests pass; lead-controlled verification only  
+**Live status issue:** [#1 — Live Run Status — 2026-07-11](https://github.com/Schmidt127/127-si-shooting-challenge/issues/1)  
+**Pasteable status:** [`_live-status-update.md`](./_live-status-update.md) (lead token cannot write issues — 403)
+
+---
+
+## Run metadata
+
+| Field | Value |
+|---|---|
+| **Start time** | 2026-07-11 ~21:54 UTC-6 |
+| **End time** | (in progress) |
+| **Lead** | Cloud Lead on `overnight/lead-integration` |
+| **Workers** | A (070a Airtable), B (070a backend), C (070a tests), D (C-023 audit → 070a docs) |
+
+---
+
+## Agent assignments
+
+| Agent | Branch | Task | Status |
+|---|---|---|---|
+| Cloud Lead | `overnight/lead-integration` | Queue, integration, blockers, status | **active** |
+| Worker A | `overnight/worker-a-070a-airtable` | T1 complete → optional T8 | **IDLE (T1 repo complete)** tip `2d50fa5` |
+| Worker B | `overnight/worker-b-070a-backend` | T2 complete → **T6 assigned** | **ASSIGNED T6** (was idle; refilled) |
+| Worker C | `overnight/worker-c-070a-tests` | T3 complete → **T7 assigned** | **ASSIGNED T7** (was idle; refilled) |
+| Worker D | `overnight/worker-d-docs` | T4 Phase1+2 complete → T9 queued | **RUNNING / Phase2 merged** tip `5a69dbf` |
+
+---
+
+## Task log
+
+### LEAD-001 — Run infrastructure bootstrap
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~21:54 UTC-6 |
+| **Agent** | Cloud Lead |
+| **Action** | Created lead branch, queue, log, manual-actions, worker-results dir; GitHub labels + live status issue |
+| **Files** | `docs/overnight-runs/*` |
+| **DEV/PROD** | DEV-first; no PROD changes |
+| **Result** | Infrastructure ready; Workers A–D may launch |
+| **Commit** | [`ec50718`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/ec50718) (includes issue #1 refs) |
+
+### LEAD-002 — Live status issue + worker launch clearance
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~21:56 UTC-6 |
+| **Agent** | Cloud Lead |
+| **Action** | Created GitHub issue #1; posted READY comment; cleared Workers A–D to launch |
+| **GitHub** | https://github.com/Schmidt127/127-si-shooting-challenge/issues/1 |
+| **Comment** | https://github.com/Schmidt127/127-si-shooting-challenge/issues/1#issuecomment-4948898989 |
+| **Result** | Remote monitoring channel active |
+
+### LEAD-003 — First integration pass (Workers B/C/D)
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~22:30 UTC |
+| **Agent** | Cloud Lead (`bc-9c7b292c…`) |
+| **Action** | Pulled worker branches; reviewed result files + PRs #5/#12/#13; confirmed zero file overlaps; ran offline integration tests; deliberate `--no-ff` merges D→B→C into lead; reconciled blockers into manual-actions; prepared live status paste |
+| **Merges** | `1cdeebe` (D), `8cc58f3` (B), `3404e08` (C) |
+| **Worker A** | Still no remote branch at this moment — cannot merge; monitoring |
+| **GitHub issues** | Lead token **403** on label/comment/close — Mike must apply MA-005 |
+| **DEV/PROD** | DEV-first; **PROD not modified** |
+| **Result** | Lead branch holds B+C+D deliverables; live 070a path still blocked on T1 + Make + credentials |
+
+### LEAD-004 — Worker A merge + Phase 2 clear
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~22:32 UTC |
+| **Agent** | Cloud Lead |
+| **Action** | Fetched newly published Worker A branch + PR #18; reviewed 070a v4.4 script; merged D addenda + A into lead; re-ran integration tests; reconciled #17 (MA-006); cleared Worker D Phase 2; updated verification prep gates G1/G2 PASS |
+| **Merges** | Worker D addenda; Worker A (CHANGELOG auto-merge) |
+| **Tests** | Node 20+17, lambda 46/46, Python 24/24, mock 5/5 — all PASS post-A |
+| **Blockers** | #8, #9, #11, #17 open; #15 stale/closable |
+| **DEV/PROD** | DEV paste pending; **PROD not modified** |
+| **Result** | Full A–D repo integration on lead; live DEV verification still gated |
+
+---
+
+### LEAD-005 — Status refresh + queue refill (T6/T7)
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-11 ~22:35 UTC |
+| **Agent** | Cloud Lead |
+| **Action** | Replaced stale issue #1 bootstrap narrative in durable files; merged Worker A tip + Worker D Phase 2; reconciled #8/#9/#11 continuing-meanwhile notes; **assigned T6→B and T7→C immediately** (no wait on Mike); queued T8/T9 |
+| **Issue #1** | Comment/edit **403** for lead token — canonical paste: `_live-status-update.md`; assignments also on PRs #12/#13 |
+| **Assignments** | `docs/overnight-runs/assignments/T6-*.md`, `T7-*.md`, `T8-*.md`, `T9-*.md` |
+| **DEV/PROD** | DEV-first; **PROD not modified** |
+| **Result** | Run remains **ACTIVE**; B/C no longer idle |
+
+---
+
+### LEAD-006 — DEV Make scenario missing; rewrite #8 plan
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-12 |
+| **Agent** | Cloud Lead |
+| **Trigger** | Mike: no separate DEV upload scenario; only PROD GAME scenario with webhook `C-013 PROD S3 Upload Webhook`; **not edited** |
+| **Action** | Rewrote MA-001 / Issue #8 plan: **create** `Shooting Challenge - DEV - Upload Engine - Lambda - v1` first; never patch PROD. Added [C-013-create-dev-make-upload-scenario.md](../deploy-checklists/C-013-create-dev-make-upload-scenario.md); updated runbook, homework checklist, blueprint notes, verification gates G4a/G4b |
+| **PROD** | **Not modified** |
+| **Result** | Mike can proceed safely with Phase 0 create-DEV before any Module 2 work |
+
+---
+
+### LEAD-009 — Make→Lambda homework uploaded PASS (false script fail fixed)
+
+| Field | Value |
+|---|---|
+| **Time** | 2026-07-12T14:40Z |
+| **Asset** | `recVUoPApngfRYOys` (HC `recnyFGUacG3wqIdB`, sub `recY1Pbpz4x3N8zzl`) |
+| **Make path** | HTTP 200 + Lambda JSON `actionOut=uploaded` + S3 + SHA-256 + C-023 duplicate lookup |
+| **Script exit** | False FAIL — response truncated at 2KB before JSON parse; fixed to parse full body + salvage truncated `actionOut` |
+| **PROD** | **Not modified** |
+| **Follow-up** | Probe `allPass=true`; Mike RESOLVED on #8/#11; Make OFF; 070a OFF |
+
+---
+
+## Decisions made
+
+1. **DEV-first:** All implementation targets DEV base `appTetnuCZlCZdTCT` until tests pass.
+2. **Worker D phase 1:** C-023 read-only audit runs in parallel with 070a A–C (non-conflicting).
+3. **C-023 T5:** Blocked until 070a locks clear and Worker D audit reviewed.
+4. **PROD evidence:** Never reset/rerun `recGQ8EjAMz3bEBiW`.
+5. **LEAD-003:** Merge order D→B→C only after review + offline tests; no blind merge/rebase/force-push.
+6. **Canonical blockers:** Keep #8, #9, #11, #15; duplicates #6, #7, #10, #14 (Mike close).
+7. **Worker D next:** P-D1 C-023 docs reconciliation allowed under existing `L-c023-docs-readonly`; Phase 2 waits for Worker A.
+
+---
+
+## Airtable changes
+
+| Time | Base | Change | Agent |
+|---|---|---|---|
+| — | DEV | (none yet — 070a OFF; Worker A unpublished) | — |
+| — | PROD | **none** | — |
+
+---
+
+## Make changes
+
+| Time | Env | Change | Agent |
+|---|---|---|---|
+| 2026-07-11 | DEV repo | Sanitized dual-route blueprint + runbook committed (UI not patched) | Worker-B → lead |
+| — | Make UI DEV | **Phase 0+1 PASS** — DEV webhook→Lambda homework smoke 2026-07-12 (`rec7X6stG6utxykiG`) | Mike |
+| — | Make UI PROD | `Shooting Challenge - GAME - Upload Engine - Lambda - v1` / `C-013 PROD S3 Upload Webhook` — **do not edit** (Mike confirmed untouched) | — |
+| — | PROD | **none** | — |
+
+---
+
+## AWS / Lambda changes
+
+| Time | Env | Change | Agent |
+|---|---|---|---|
+| — | DEV code | No Lambda code change required (homework route already present) | Worker-B confirmed |
+| — | DEV deploy | Pending credentials / optional confirm `ALLOW_ROUTE_KEYS` | Mike #9 |
+| — | PROD | **none** | — |
+
+---
+
+## Deployments
+
+| Time | Target | What | Result |
+|---|---|---|---|
+| — | — | (none — no Airtable/Make/AWS deploys this cycle) | — |
+
+---
+
+## Tests and results
+
+| Time | Command / suite | Result | Agent |
+|---|---|---|---|
+| 2026-07-11 | Worker B: lambda `test_*.py` | **38/38 PASS** (pre-merge) | Worker-B / Lead verify |
+| 2026-07-11 | Worker B: `test_c013_dev_homework_make_smoke` | **8/8 PASS** | Worker-B / Lead verify |
+| 2026-07-11 | Worker C: Node `070a-homework-upload.test.js` | **20/20 PASS** | Worker-C / Lead verify |
+| 2026-07-11 | Worker C: Node `upload-make-lambda-response.test.js` | **17/17 PASS** | Worker-C / Lead verify |
+| 2026-07-11 | Worker C: `test_c070a_dev_smoke_run` | **16/16 PASS** | Worker-C / Lead verify |
+| 2026-07-11 | Worker C: homework + 070a regression | **15/15 PASS** | Worker-C / Lead verify |
+| 2026-07-11 | Worker C: `c070a_dev_smoke_run.py all` mock | **5/5 PASS** | Worker-C / Lead verify |
+| 2026-07-11 | **Lead integration (post-merge lead tip)** | Node 20+17; lambda **46/46**; B 8/8; C 16/16; mock 5/5; B↔C payload compat OK | Cloud Lead |
+| 2026-07-11 | Live Make/Lambda/Airtable smoke | **BLOCKED** (#8/#9/#11 + Worker A) | — |
+| 2026-07-12 | Mike local: `c013_dev_make_homework_webhook_post.py rec7X6stG6utxykiG` | **PASS** (`skipped_already_uploaded`) | Mike / Lead verify |
+
+---
+
+## Commits
+
+| Time | Hash | Branch | Summary |
+|---|---|---|---|
+| 2026-07-11 | [`36ae37d`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/36ae37d) | `overnight/lead-integration` | Overnight run infrastructure bootstrap |
+| 2026-07-11 | [`1cdeebe`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/1cdeebe) | `overnight/lead-integration` | Merge Worker D T4 Phase 1 |
+| 2026-07-11 | [`8cc58f3`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/8cc58f3) | `overnight/lead-integration` | Merge Worker B T2 backend pack |
+| 2026-07-11 | [`3404e08`](https://github.com/Schmidt127/127-si-shooting-challenge/commit/3404e08) | `overnight/lead-integration` | Merge Worker C T3 tests/smoke |
+
+*(Lead status/docs commit follows this log update.)*
+
+---
+
+## Production evidence
+
+- **No PROD modifications this run cycle.**
+- **Protected record:** `recGQ8EjAMz3bEBiW` — do not reset/rerun.
+
+---
+
+## Failures / rollbacks
+
+| Time | Task | Issue | Action |
+|---|---|---|---|
+| — | — | — | — |
+
+---
+
+## Skipped destructive actions
+
+| Time | Requested | Reason skipped |
+|---|---|---|
+| — | Blind merge/rebase/force-push | Prohibited by overnight rules |
+| — | PROD changes | DEV not complete |
+| — | Reset `recGQ8EjAMz3bEBiW` | Protected evidence |
+
+---
+
+## Manual actions required from Mike
+
+See [manual-actions-2026-07-11.md](./manual-actions-2026-07-11.md): **MA-001** (#8), **MA-002** (#9), **MA-003** (#11), **MA-004** (#15), **MA-005** (GitHub hygiene + paste status to #1).
+
+---
+
+## Remaining work
+
+1. **Worker B:** Execute **T6** now (`assignments/T6-worker-b-make-blueprint-validator.md`).
+2. **Worker C:** Execute **T7** now (`assignments/T7-worker-c-070a-contract-alignment.md`).
+3. **Worker D:** Start **T9** Stage 6 checklist (optional P-D1).
+4. **Worker A:** Optional **T8**; stand by for #17.
+5. Mike: comment RESOLVED on **#8** (smoke PASS); keep DEV Make **OFF** when idle; then **#17** paste 070a; paste `_live-status-update.md` into #1.
+6. Lead: merge T6/T7 when delivered; MA-003 full harness after #17 + disposable Pending Link asset.
+
+---
+
+## End-of-run report
+
+*(Pending run completion)*

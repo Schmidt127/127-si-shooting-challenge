@@ -160,6 +160,27 @@ Verify: `python _probe_c013_asset_storage_fields.py --record-id recBBi80bYuxXifV
 
 Docs: [C-013-wave7 checklist](../../docs/deploy-checklists/C-013-wave7-asset-storage-checklist.md)
 
+## C-013 DEV Make/Lambda homework smoke (070a OFF)
+
+Homework route key: `homework_completion`. Mirrors video Make → Lambda architecture. **Do not enable Airtable 070a** until manual PASS + Mike approval.
+
+```powershell
+cd tools/airtable
+python c013_dev_h1_homework_smoke.py preflight
+# Make scenario Run once waiting, then:
+python c013_dev_make_homework_webhook_post.py <homeworkAssetId>
+# Or orchestrated (prepare needs --confirm-write on DEV):
+python c013_dev_h1_homework_smoke.py make-webhook --asset-id <homeworkAssetId>
+```
+
+Offline unit tests:
+
+```powershell
+python -m unittest tools/airtable/tests/test_c013_dev_homework_make_smoke.py
+```
+
+Docs: [C-013-dev-070a-homework-lambda-runbook.md](../../make/documentation/C-013-dev-070a-homework-lambda-runbook.md) · [checklist](../../docs/deploy-checklists/C-013-dev-070a-make-lambda-homework-route.md)
+
 ## C-013 PROD Make manual webhook smoke (070b OFF)
 
 Bypasses automation **070b** — POSTs the same JSON Make will receive later. Requires `MAKE_UPLOAD_WEBHOOK_URL_PROD` in `tools/airtable/_preview/c013-prod-deploy-session.local.json` (gitignored).
