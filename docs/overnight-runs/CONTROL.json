@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T05:10:26-06:00",
+  "updated_at": "2026-07-15T05:12:00-06:00",
   "canonical": {
     "branch": "overnight/lead-integration",
     "sha": "008021a8b632e36702a6ca0e07a8a943d7220596",
@@ -8,17 +8,20 @@
     "match": true
   },
   "run": {
-    "state": "idle",
-    "stage_id": null,
-    "package_id": null,
-    "started_at": null
+    "state": "active",
+    "stage_id": "S27",
+    "package_id": "morning-lead-2agent-2026-07-15",
+    "started_at": "2026-07-15T05:10:00-06:00"
   },
   "lanes": {
     "lead": {
       "path": "C:/Users/mschmidt_fairfield/Documents/GitHub/127-si-shooting-challenge",
       "branch": "overnight/lead-integration"
     },
-    "active_writes": [],
+    "active_writes": [
+      "worker-a",
+      "worker-b"
+    ],
     "available": [
       "worker-a",
       "worker-b",
@@ -1231,13 +1234,45 @@
       "completed_at": "2026-07-14",
       "deliverables": [],
       "notes": "Decision sheet; no deletes of recovery/media."
+    },
+    {
+      "id": "morning-lead-2agent-2026-07-15",
+      "backlog_refs": [
+        "V2-014",
+        "C-025",
+        "web"
+      ],
+      "state": "IN_PROGRESS",
+      "priority": 35,
+      "depends_on": [
+        "phase-c2-111-into-013"
+      ],
+      "auth": "owner-authorized-execution",
+      "est_minutes": 120,
+      "gates": {
+        "owner": true,
+        "airtable": false,
+        "prod": false,
+        "credentials": false,
+        "destructive": false
+      },
+      "claimed_by": "lead",
+      "started_at": "2026-07-15",
+      "completed_at": null,
+      "deliverables": [
+        "docs/overnight-runs/stages/S27-AUTHORIZED.md"
+      ],
+      "notes": "C2 COMPLETE confirmed. Agent A=Airtable packages; Agent B=web+matrix. No UI paste."
     }
   ],
   "stage": {
     "authorized": true,
-    "auth_doc": "docs/overnight-runs/stages/S26-AUTHORIZED.md",
+    "auth_doc": "docs/overnight-runs/stages/S27-AUTHORIZED.md",
     "merge_order": [],
-    "worker_branches": {}
+    "worker_branches": {
+      "worker-a": "overnight/v2-run/worker-a-s27-airtable-readiness",
+      "worker-b": "overnight/v2-run/worker-b-s27-website-regression"
+    }
   },
   "pending_approvals": [],
   "tests": {
@@ -1253,6 +1288,6 @@
     "phase_c2_ui_count": "46 estimated / 4 free (no visible counter)",
     "phase_c2_complete": true
   },
-  "next_action": "Phase C2 COMPLETE (46 est / 4 free). Standing by for Mike Lead+2-agent job set. Phase D READY_FOR_AUTHORIZATION; 117 READY_FOR_MIKE_ACTIVATION (OFF).",
-  "stop_reason": "awaiting_mike_next_job_set"
+  "next_action": "S27 morning run: Agent A Phase D/117/022 readiness; Agent B website+regression. No Airtable paste/enable.",
+  "stop_reason": null
 }
