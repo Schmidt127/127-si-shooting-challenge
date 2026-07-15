@@ -1,4 +1,6 @@
-# Hoop Challenges — Brand System
+> **Authority notice:** Root [`BRAND_STANDARDS.md`](../BRAND_STANDARDS.md) is authoritative for current shared branding (Version 1.0). The Landing Hub repository (`Schmidt127/hoopchallenges-landing`) is the canonical source of truth for shared brand standards. This file may retain useful repository-specific implementation notes; do not treat it as overriding root `BRAND_STANDARDS.md`.
+
+# Hoop Challenges  -  Brand System
 
 Canonical visual identity for **all** Hoop Challenges repos (landing + every app).  
 Source kit: **127_SI_Brand_Kit** (Patrick Liddell). Web assets: `web/public/brand/`.
@@ -27,7 +29,7 @@ Source kit: **127_SI_Brand_Kit** (Patrick Liddell). Web assets: `web/public/bran
 
 | Role | Font | Web |
 |------|------|-----|
-| Display | Magistral (licensed) | **Maven Pro 700–800** until web Magistral files |
+| Display | Magistral (licensed) | **Maven Pro 700-800** until web Magistral files |
 | Body / UI | Maven Pro | `next/font/google` in `app/layout.tsx` |
 | Stats | Tabular nums | `font-mono` or Maven Pro |
 
@@ -38,7 +40,7 @@ Source kit: **127_SI_Brand_Kit** (Patrick Liddell). Web assets: `web/public/bran
 | Circle stamp | `/brand/logo-circle-blue-orange.png` | Compact nav, favicon |
 | Horizontal V1 | `/brand/logo-v1-blue-orange.png` | Hero, wide headers |
 
-Constants: `lib/brand.ts` → `BRAND_LOGOS`
+Constants: `lib/brand.ts` â†' `BRAND_LOGOS`
 
 ## Buttons
 
@@ -58,7 +60,7 @@ Constants: `lib/brand.ts` → `BRAND_LOGOS`
 
 Every app includes:
 
-1. **Home** link → `NEXT_PUBLIC_LANDING_URL` or `https://www.hoopchallenges.com`
+1. **Home** link â†' `NEXT_PUBLIC_LANDING_URL` or `https://www.hoopchallenges.com`
 2. 127 SI logo (horizontal, compact)
 3. App name + app-specific nav row
 4. Dark ambient background with subtle blue blur
@@ -68,7 +70,7 @@ Implement via `ProductShell` / `AppShell` in each app's `web/components/layout/`
 ## Footer
 
 Landing: org name + text links to each app path.  
-Apps: minimal — home link in header is required; full footer optional.
+Apps: minimal  -  home link in header is required; full footer optional.
 
 ## Icons
 
@@ -78,7 +80,7 @@ Apps: minimal — home link in header is required; full footer optional.
 ## Spacing
 
 - Page max width: `max-w-6xl`, horizontal `px-4 sm:px-6`
-- Section gaps: `mt-16`–`mt-20` between major blocks
+- Section gaps: `mt-16`-`mt-20` between major blocks
 - Card padding: `p-6 sm:p-8`
 
 ## Naming
@@ -93,7 +95,7 @@ Apps: minimal — home link in header is required; full footer optional.
 
 ## Shared UI code
 
-**Recommendation:** Duplicate small layout/brand components per repo (landing + each app) rather than a shared npm package — keeps repos independent and Cursor-friendly. Copy from `hoopchallenges-landing/web/components/brand/` when scaffolding new apps. Keep this doc as the source of truth for tokens in `app/globals.css`.
+**Recommendation:** Duplicate small layout/brand components per repo (landing + each app) rather than a shared npm package  -  keeps repos independent and Cursor-friendly. Copy from `hoopchallenges-landing/web/components/brand/` when scaffolding new apps. Keep this doc as the source of truth for tokens in `app/globals.css`.
 
 ## Don't
 
