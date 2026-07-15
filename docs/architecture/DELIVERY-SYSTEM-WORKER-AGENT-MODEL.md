@@ -38,7 +38,7 @@ The **Cursor Lead** is the single integration authority for a package.
 - Accept worker output without independent diff review + test re-run  
 - Let workers edit CONTROL, capacity, registry, Mike sheets, or final closeout  
 - Launch workers for “busywork” that is not independently testable  
-- Claim CONTROL SHA as current tip (lagging-pointer rule)
+- Claim CONTROL SHA as current tip (lagging-pointer rule; **no tip-sync-only commits**)
 
 ### Lead acceptance of worker output
 

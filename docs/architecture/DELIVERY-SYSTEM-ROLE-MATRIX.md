@@ -2,6 +2,7 @@
 
 **Status:** Binding companion to Delivery System v2.0  
 **Date:** 2026-07-15 (revised — full V2 governance + first-class workers)  
+**Scope:** v2.0 **governs the entire remaining V2 rebuild** (pilot = validation only). Workers = **path-disjoint**, independently testable only; max **Lead+2**.  
 **Related:** [DELIVERY-SYSTEM-V2-PROPOSAL.md](./DELIVERY-SYSTEM-V2-PROPOSAL.md) · [DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md](./DELIVERY-SYSTEM-WORKER-AGENT-MODEL.md)
 
 ---

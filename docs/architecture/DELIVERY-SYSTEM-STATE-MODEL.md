@@ -2,7 +2,8 @@
 
 **Status:** Binding companion to Delivery System v2.0  
 **Date:** 2026-07-15 (revised — lagging-pointer SHA; workers cannot write state)  
-**Goal:** One authoritative ops tip; HEAD is tip SoT; CONTROL SHA is lagging.
+**Goal:** One authoritative ops tip; HEAD is tip SoT; CONTROL SHA is lagging.  
+**OS binding:** v2.0 governs the entire remaining V2 rebuild; pilot validates process health only (not a scope limit). Lead alone owns state. Workers are path-disjoint only; max Lead+2. No tip-sync-only commits. After G6, use per-feature PRs to `master`.
 
 ---
 
