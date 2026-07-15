@@ -4,7 +4,7 @@
 
 - Role: research
 - Branch: `cursor/fa-001-research-cfc9`
-- Tip SHA: (filled after commit)
+- Tip SHA: e79635e45d1438e317a849be2ecb765d248d9299
 - Started / finished: 2026-07-15T13:55Z / 2026-07-15T13:58Z
 - Assignment file: `docs/agent-runs/assignments/FA-001-research.md`
 - lead_takeover: true (Lead executed Research slice; separate Research agent was not launched)
