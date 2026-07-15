@@ -1,5 +1,17 @@
 ﻿# Unattended run status
 
+## Milestone — S26 overnight packages integrated (2026-07-14)
+
+| Field | Value |
+|-------|-------|
+| Phase D | **READY_FOR_AUTHORIZATION** (072∪074 repo only) |
+| 117 | **READY_FOR_MIKE_ACTIVATION** (stay OFF) |
+| Website | `/dashboard` + build PASS |
+| Matrix / ADR / cleanup | Delivered |
+| Handoff | `S26-MORNING-HANDOFF.md` |
+| UI GATE | Delete **111** for C2 close |
+| Untouched | PROD · Folder 07 · 117 ON · real email |
+
 ## Milestone — S26 overnight started (2026-07-14)
 
 | Field | Value |
