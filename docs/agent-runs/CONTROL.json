@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T13:47:00Z",
+  "updated_at": "2026-07-15T13:50:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
-    "sha": "9d293ab368dd42d700e19980bd2a4dd8aecc5412",
+    "sha": "85a59c7194dd9e8178a5ca7dc764267c2f3b94dd",
     "remote_sha": null,
     "match": null,
-    "note": "Lead tip-syncs sha/remote_sha after push of this setup commit."
+    "note": "Lead tip-sync after push; remote_sha set on push follow-up if needed."
   },
   "integration": {
     "branch": "cursor/fa-001-four-agent-pilot-cfc9",
@@ -49,7 +49,11 @@
     }
   },
   "lanes": {
-    "active_writes": ["research", "implementation", "testing"],
+    "active_writes": [
+      "research",
+      "implementation",
+      "testing"
+    ],
     "available": []
   },
   "claims": [
@@ -57,7 +61,9 @@
       "role": "research",
       "branch": "cursor/fa-001-research-cfc9",
       "assignment": "docs/agent-runs/assignments/FA-001-research.md",
-      "writable": ["docs/agent-runs/results/FA-001-research-result.md"]
+      "writable": [
+        "docs/agent-runs/results/FA-001-research-result.md"
+      ]
     },
     {
       "role": "implementation",
@@ -73,8 +79,12 @@
       "role": "testing",
       "branch": "cursor/fa-001-testing-cfc9",
       "assignment": "docs/agent-runs/assignments/FA-001-testing.md",
-      "writable": ["docs/agent-runs/results/FA-001-testing-result.md"],
-      "depends_on": ["implementation deliverables available"]
+      "writable": [
+        "docs/agent-runs/results/FA-001-testing-result.md"
+      ],
+      "depends_on": [
+        "implementation deliverables available"
+      ]
     }
   ],
   "queue": [
@@ -89,16 +99,20 @@
     },
     {
       "id": "FA-001",
-      "backlog_refs": ["FA-001"],
+      "backlog_refs": [
+        "FA-001"
+      ],
       "state": "ACTIVE",
       "priority": 1,
-      "depends_on": ["four-agent-os-prep"],
+      "depends_on": [
+        "four-agent-os-prep"
+      ],
       "auth": "mike-approved-2026-07-15",
       "summary": "Docs-only four-agent pilot: research gap brief, handoff template + pilot checklist, testing validation."
     }
   ],
   "hard_stops": [
-    "DEV only — no Production access",
+    "DEV only \u2014 no Production access",
     "No Airtable schema changes without Mike authorization",
     "No credential or secret changes",
     "No deployment (Vercel, AWS, Make prod, Airtable prod)",
@@ -109,7 +123,11 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Workers execute FA-001 assignments from base SHA 9d293ab. Lead waits for worker result files, then merges Research → Implementation → Testing. Do not merge to master without Mike approval.",
+  "next_action": "Workers execute FA-001 assignments from base SHA 9d293ab. Lead waits for worker result files, then merges Research \u2192 Implementation \u2192 Testing. Do not merge to master without Mike approval.",
   "stop_reason": null,
-  "merge_order": ["research", "implementation", "testing"]
+  "merge_order": [
+    "research",
+    "implementation",
+    "testing"
+  ]
 }
