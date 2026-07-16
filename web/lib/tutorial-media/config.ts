@@ -54,7 +54,7 @@ export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
   },
   empty: {
     title: "No shoutouts published yet",
-    message: "Mark shoutouts OK to Publish on Softr and they will appear here.",
+    message: "Publish shoutouts for the web catalog and they will appear here.",
   },
   error: {
     title: "Could not load shoutouts",
@@ -88,7 +88,7 @@ export const ARTICLES_SECTION: TutorialMediaSectionConfig = {
   },
   empty: {
     title: "No articles published yet",
-    message: "Mark article book entries OK to Publish on Softr and they will appear here.",
+    message: "Publish article book entries for the web catalog and they will appear here.",
   },
   error: {
     title: "Could not load articles",

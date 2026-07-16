@@ -21,7 +21,7 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
 | `/shoot` | `/` | Overview | — | Live |
-| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) | Mock adapter | Live (demo) |
+| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) — weekly summary, streak, Perfect Week, XP sources, homework, video feedback preview | Mock adapter | Live (demo) |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | FBC Curriculum (`Web - Homework Catalog`) | Live |
 | `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | FBC Curriculum + Weeks | Live |
@@ -32,7 +32,7 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot/articles` | `/articles` | FBC articles | Tutorials (article type) | Live |
 | `/shoot/articles/[id]` | `/articles/[id]` | Article detail | Tutorials | Live |
 | `/shoot/zoom-meetings` | `/zoom-meetings` | Zoom meetings | Zoom Meetings (`Web - Zoom Meetings`) | Live |
-| `/shoot/zoom-meetings/[id]` | `/zoom-meetings/[id]` | Meeting detail | Zoom Meetings + Weeks | Live |
+| `/shoot/zoom-meetings/[id]` | `/zoom-meetings/[id]` | Meeting detail + recording-credit presentation | Zoom Meetings + Weeks | Live |
 | `/shoot/levels` | `/levels` | Level ladder | Levels (`Web - Levels`) | Live |
 | `/shoot/levels/[id]` | `/levels/[id]` | Level detail | Levels | Live |
 | `/shoot/achievements` | `/achievements` | Achievements | Achievements (`Web - Achievements` or active+visible filter) | Live |

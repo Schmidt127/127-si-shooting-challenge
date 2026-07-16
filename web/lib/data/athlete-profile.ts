@@ -1,5 +1,7 @@
 import type { AthleteDashboardModel } from "@/lib/data/athlete-dashboard";
 import { getMockAthleteDashboard } from "@/lib/data/athlete-dashboard";
+import { formatShots, formatXp } from "@/lib/formatters";
+import type { XpEventSummary } from "@/types/xp";
 
 /** Public athlete profile — privacy-safe presentation model (mockable). */
 
@@ -13,6 +15,7 @@ export type AthleteProfileModel = {
   milestones: Array<{ id: string; label: string; value: string }>;
   achievements: AthleteDashboardModel["achievements"];
   recentActivity: Array<{ id: string; title: string; detail: string; href?: string }>;
+  recentXp: XpEventSummary[];
   /** Never include parent email / phone / address on public profile. */
   privacyNote: string;
 };
@@ -27,9 +30,26 @@ export function getMockAthleteProfile(slug = "demo-athlete"): AthleteProfileMode
     streakDays: dash.streakDays,
     perfectWeek: dash.perfectWeek,
     milestones: [
-      { id: "m1", label: "Season shots", value: "4,280 XP · active" },
-      { id: "m2", label: "Current streak", value: `${dash.streakDays} days` },
-      { id: "m3", label: "Perfect Weeks", value: String(dash.perfectWeek.seasonCount) },
+      {
+        id: "m1",
+        label: "Season shots",
+        value: `${formatShots(dash.seasonShots)} counted`,
+      },
+      {
+        id: "m2",
+        label: "Lifetime XP",
+        value: formatXp(dash.xp.total),
+      },
+      {
+        id: "m3",
+        label: "Current streak",
+        value: `${dash.streakDays} days`,
+      },
+      {
+        id: "m4",
+        label: "Perfect Weeks",
+        value: String(dash.perfectWeek.seasonCount),
+      },
     ],
     achievements: dash.achievements,
     recentActivity: [
@@ -43,15 +63,16 @@ export function getMockAthleteProfile(slug = "demo-athlete"): AthleteProfileMode
         id: "r2",
         title: "Coach feedback",
         detail: dash.feedback?.preview ?? "No recent feedback",
-        href: dash.feedback?.href,
+        // Omit href until a public Video Feedback surface exists.
       },
       {
         id: "r3",
-        title: "Weekly progress",
-        detail: `${dash.weekly.shots} / ${dash.weekly.goal} shots · ${dash.weekly.weekLabel}`,
+        title: "Weekly summary",
+        detail: `${formatShots(dash.weekly.shots)} / ${formatShots(dash.weekly.goal)} shots · ${dash.weekly.weekLabel}`,
         href: "/dashboard",
       },
     ],
+    recentXp: dash.recentXp,
     privacyNote: "Public profile shows first name, school, grade band, XP, and achievements only.",
   };
 }

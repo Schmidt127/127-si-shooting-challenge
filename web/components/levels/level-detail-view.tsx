@@ -85,16 +85,21 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
           </div>
         </div>
 
-        {level.gateCriteria ? (
-          <section className={cn(catalogPanelClass({ tint: "blue" }), "mt-10")}>
-            <SectionHeading
-              label="Gate checklist"
-              title="What it takes to advance"
-              description="Requirements pulled live from your level gate rules."
-            />
+        <section className={cn(catalogPanelClass({ tint: "blue" }), "mt-10")}>
+          <SectionHeading
+            label="Gate checklist"
+            title="What it takes to advance"
+            description="Requirements pulled live from your level gate rules."
+          />
+          {level.gateCriteria ? (
             <RichContent text={level.gateCriteria} className="text-foreground/90" />
-          </section>
-        ) : null}
+          ) : (
+            <p className="mt-4 text-sm text-muted" role="status">
+              Public gate criteria are not published for this level yet. XP thresholds above still
+              apply; Zoom and Perfect Week gates appear when configured in Airtable.
+            </p>
+          )}
+        </section>
 
         <nav className="mt-10 flex flex-wrap gap-3">
           {level.previousLevelId ? (
