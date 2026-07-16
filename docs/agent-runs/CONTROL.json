@@ -1,24 +1,25 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-16T14:20:18Z",
+  "updated_at": "2026-07-16T15:24:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "1d403df38a335237e69715de98efb0cb75182ab5",
-    "remote_sha": "1d403df38a335237e69715de98efb0cb75182ab5",
+    "sha": "3ec489a326d184df9d66a30ad4dbf46805d8233f",
+    "remote_sha": "3ec489a326d184df9d66a30ad4dbf46805d8233f",
     "match": true,
-    "note": "Lead tip-sync to master after #30; authoritative sequencing in docs/v2/V2_EXECUTION_BOARD.md."
+    "note": "Lead tip-sync after PR #38 merge (#34/#35/#37 reconciled). Sequencing authority: docs/v2/V2_EXECUTION_BOARD.md."
   },
   "integration": {
     "branch": "master",
     "base_branch_for_prs": "master",
-    "merge_to_main_requires": "explicit Mike approval"
+    "merge_to_main_requires": "explicit Mike approval",
+    "active_integration_baseline": "PR #38 MERGED — no further repository reconcile PR"
   },
   "run": {
     "state": "active",
     "package_id": "V2-EXEC-BOARD-2026-07-16",
     "started_at": "2026-07-16T14:14:00Z",
-    "stage_id": "lead-execution-board"
+    "stage_id": "lead-post-38-control"
   },
   "roles": {
     "lead": {
@@ -56,7 +57,7 @@
       "testing",
       "research"
     ],
-    "external_active_note": "Concurrent cloud agents (not four-agent kit lanes): Worker A remaining Airtable packages bc-9ed6132b; Worker B DEV runbook bc-b59766da; repo blocker closure bc-e43e4bfc; frontend readiness bc-0173c9ba. See V2_EXECUTION_BOARD.md §3."
+    "external_active_note": "Active: Lead CONTROL (PR #36, bc-ece28342) + Frontend readiness (PR #33, bc-0173c9ba). Paused (superseded by #38): Worker A bc-9ed6132b, Worker B bc-b59766da, repo blocker bc-e43e4bfc. Paused (creds): C-025 bc-6403ddd5 (#32), 066 bc-5218fb4d (#31). See V2_EXECUTION_BOARD.md §3."
   },
   "claims": [
     {
@@ -116,7 +117,7 @@
         "FA-001"
       ],
       "auth": "mike-continue-lead-coordination-2026-07-16",
-      "summary": "Authoritative V2 execution board reconciling PRs #25–#32 and assigning non-overlapping worker follow-ups. Do not merge #31/#32 yet. No PROD."
+      "summary": "Authoritative V2 execution board. Post-#38: mark #34/#35/#37 superseded; pause those agents; keep #31/#32 blocked on DEV Airtable; FE #33 separate active; no duplicate repo work."
     }
   ],
   "hard_stops": [
@@ -129,26 +130,53 @@
     "Only Lead may integrate worker branches",
     "Mike must approve merge to master/main",
     "No live Airtable access unless Mike authorizes a named DEV check",
-    "Do not merge open Cloud Agent PRs #31/#32 without Mike approval"
+    "Do not merge open Cloud Agent PRs #31/#32 without Mike approval",
+    "Do not create another integration PR after #38",
+    "Do not reassign Worker A/B/repo scopes unless a post-#38 defect is found"
   ],
   "pending_approvals": [
     {
+      "id": "merge-pr-36",
+      "item": "PR #36 execution board + CONTROL tip-sync",
+      "requires": "Mike review"
+    },
+    {
+      "id": "merge-pr-33",
+      "item": "PR #33 frontend functional readiness",
+      "requires": "Mike FE review"
+    },
+    {
       "id": "merge-pr-31",
       "item": "PR #31 066 OMNI blocked-attempt docs",
-      "requires": "Mike review"
+      "requires": "Mike review — not DEV-verified"
     },
     {
       "id": "merge-pr-32",
       "item": "PR #32 C-025 DEV install attempt docs",
-      "requires": "Mike review"
+      "requires": "Mike review — not DEV-verified"
     },
     {
       "id": "dev-airtable-creds",
       "item": "DEV-scoped Airtable PAT or authenticated OMNI/UI session",
       "requires": "Mike"
+    },
+    {
+      "id": "decision-043",
+      "item": "Automation 043 A keep / B disable / C delete",
+      "requires": "Mike"
+    },
+    {
+      "id": "decision-070a",
+      "item": "Affirm 070a PROD remains OFF for V2 launch",
+      "requires": "Mike"
+    },
+    {
+      "id": "decision-112",
+      "item": "Confirm 112 OFF + schedule delete",
+      "requires": "Mike"
     }
   ],
-  "next_action": "Board published. Mike: unblock DEV Airtable (EB-CREDS) then 066 OMNI then C-025. Keep #31/#32 unmerged until Mike reviews. Concurrent workers continue non-overlapping packages/runbook/repo/FE. Keep 070a/117a/117b OFF in PROD.",
+  "next_action": "PR #38 MERGED — repo integration baseline set. #34/#35/#37 superseded; those agents paused. Active: Lead board (#36) + FE (#33). Mike: EB-CREDS then first five live DEV actions (fields→PPE→paste→066/C-025→C-019/059/112+smoke CLI). Keep #31/#32 unmerged as verified. Keep 070a/117a/117b OFF in PROD. No second integration PR.",
   "stop_reason": null,
   "merge_order": [
     "research",
