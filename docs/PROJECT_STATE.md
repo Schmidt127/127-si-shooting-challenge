@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-11** (C-013 PROD video upload workflow **COMPLETE** — 070b v4.4 + 070c v1.1)
+Last updated: **2026-07-16** (repo blocker closure pass — 066 **v3.2** paste status reconciled; C-013 still **COMPLETE** — 070b **v4.4** + 070c **v1.1**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -15,9 +15,9 @@ Last updated: **2026-07-11** (C-013 PROD video upload workflow **COMPLETE** — 
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **DEV ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior |
+| **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — intake automations ON; **live OMNI sandbox still pending** (offline harness PASS 2026-07-16) |
 | **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
-| **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
+| **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference (evolved from v3.1 pattern) |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
 | **Phase 2 — Platform Modernization** | **Wave 2A planning complete** · **Phase 2B docs complete** ([Constitution](./ENGINEERING_CONSTITUTION.md), [review](./phase-2b-engineering-review-2026-07-06.md)) — **implementation not started** |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
@@ -64,7 +64,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **DEV is the first testing location for:**
 
-- Automation **066 v3.1** — **ON in DEV**; DEV intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002)
+- Automation **066 v3.2** — **ON in DEV** (and PROD pasted 2026-07-06); DEV intake automations **ON** after clone (Mike 2026-07-05); **live OMNI sandbox still pending** — offline harness PASS 2026-07-16 (H-002 paste closed; confirmation open)
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)
@@ -77,9 +77,9 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 | # | Step |
 |---|------|
-| 1 | **066 DEV sandbox test** — **pending** OMNI confirm Schmidt submission through intake pipeline + expected milestone behavior (DEV automations now ON) |
-| 2 | After DEV pass → Mike decides **066 prod promote** |
-| 3 | Approved prod maintenance window → delete **112**, retire **043** |
+| 1 | **066 live OMNI sandbox confirm** — still pending (script **v3.2** already pasted DEV + PROD; offline harness PASS) |
+| 2 | Keep monitoring **066** natural PROD runs; no re-paste unless GitHub drifts |
+| 3 | Planned prod maintenance window → delete **112** (keep **OFF** until then), retire **043** |
 | 4 | **C-020** — script after pipeline-ready submission path + sequencing approval | DEV |
 
 **Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
@@ -136,7 +136,7 @@ Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/a
 | June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0 |
 | Goal Met vs Conquered Goal | **Done** — 14/14 aligned |
 | Reference CSV | `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) |
-| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **H-001 done** (audit fix) · **H-002 GitHub done** (066 v3.1, paste pending) · H-003/H-004 deferred |
+| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **H-001 done** (audit fix) · **H-002 done** (066 **v3.2** DEV+PROD pasted; OMNI sandbox confirm still open) · H-003/H-004 deferred |
 
 **Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
 
@@ -169,16 +169,16 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | ID | Status |
 |----|--------|
 | H-001 090F audit | **Done** — fix audit, not data; 0 rows deleted |
-| H-002 Automation 066 v3.1 | **GitHub done** — V2 reference; **Airtable paste not done** |
+| H-002 Automation 066 v3.2 | **Done** — GitHub + **DEV/PROD pasted** 2026-07-06 (`36a2e95`); live OMNI sandbox confirm still open (offline harness PASS 2026-07-16) |
 | H-003 / H-004 | Deferred (scope metadata, catalog bucket) |
 
 ### V2 automation standard
 
 | Item | Status |
 |------|--------|
-| **066 v3.1** | First V2-standard automation — SCRIPT/CONFIG split, batched writes, Week resolution, idempotent Source Key |
+| **066 v3.2** | Current V2-standard automation (evolved from **v3.1**) — SCRIPT/CONFIG split, batched writes, Week resolution, idempotent Source Key |
 | **Doc 06** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) **Active** — 066 is canonical template |
-| **Commit** | `45b17d7` — `docs: set 066 v3.1 as V2 automation standard` |
+| **Commit** | `36a2e95` — 066 v3.2 paste line; original standard set in `45b17d7` (v3.1 pattern) |
 
 ### Automation capacity (V2-014)
 
@@ -188,9 +188,10 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
 | **012** | **Deleted** — legacy, unused (+1 slot) |
 | **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **066 deploy** | v3.1 — **DEV paste/test** ([checklist](./deploy-checklists/066-v3.1-dev-deploy.md)); prod after pass |
+| **043** | **Retire** in planned maintenance window (legacy Next Level gate helper; keep until window) |
+| **066 deploy** | **v3.2** — DEV + PROD pasted 2026-07-06; [OMNI confirmation packet](./deploy-checklists/066-dev-omni-confirmation-packet.md) still open |
 | **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
-| **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **not complete** until 066 dev test |
+| **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **066 paste complete**; OMNI sandbox confirm still open |
 
 ### Multi-year architecture (2026-07-05 decision)
 

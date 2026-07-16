@@ -1,0 +1,36 @@
+{
+  "domain": "duplicate_prevention",
+  "matrix_ids": ["A4", "B4", "K4", "L1", "L2"],
+  "pre_test_state": {
+    "require": [
+      "Known Source Keys from prior awards for L1/L2",
+      "Duplicate Key collision rows for B4",
+      "Blank Duplicate Key case for K4"
+    ]
+  },
+  "source_keys_battery": [
+    "SUBMISSION_XP|{{submission}}",
+    "HOMEWORK_XP|{{homework_completion}}",
+    "VIDEO_SUBMISSION|{{video_feedback}}",
+    "STREAK_XP|{{enrollment}}|{{achievement_streak}}|2026-07-15",
+    "ZOOM_ATTEND_BASE|{{zoom_meeting}}|{{enrollment}}",
+    "PERFECT_WEEK|{{enrollment}}|{{week}}",
+    "SHOT_MILESTONE|{{enrollment}}|{{shot_milestone_100}}",
+    "ZOOM_RECORDING|{{zoom_meeting}}|{{enrollment}}"
+  ],
+  "automation_expected": {
+    "A4": "statusOut=error; no partial writes",
+    "B4": "Needs Review; not silently double-counted",
+    "K4": "Skip safely on blank Duplicate Key",
+    "L1": "XP Event counts unchanged after reruns",
+    "L2": "Unlock/XP counts unchanged after reruns"
+  },
+  "expected_output": {
+    "malformed_record_id": "error",
+    "idempotent_rerun": "skip_or_repair",
+    "event_count_delta_on_rerun": 0
+  },
+  "cleanup": ["No mass delete — count snapshots are the evidence"],
+  "rollback": ["Mark true duplicates Duplicate - Remove after dry-run proof"],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-L{n}-idempotency.md"
+}

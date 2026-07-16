@@ -1,0 +1,40 @@
+{
+  "domain": "submission_xp",
+  "matrix_ids": ["B1", "B2", "B3", "B5"],
+  "source_key_pattern": "SUBMISSION_XP|{submissionId}",
+  "pre_test_state": {
+    "require": [
+      "Counted submission linked to test enrollment + week",
+      "No existing XP Event with Source Key for that submission (B1) OR known existing Event (B2)",
+      "Automation 010 ON in DEV"
+    ]
+  },
+  "records_to_create_shape": {
+    "Submissions": {
+      "Enrollment": ["{{enrollment}}"],
+      "Week": ["{{week}}"],
+      "Activity Date": "2026-07-14",
+      "Shot Total": 30,
+      "Count This Submission?": true
+    }
+  },
+  "automation_expected": {
+    "B1": "Create one XP Event",
+    "B2": "Skip/repair; no second Event",
+    "B3": "At most one shooting XP per enrollment per Denver day",
+    "B5": "Week + XP activity date use normalized Denver key"
+  },
+  "expected_output": {
+    "source_key": "SUBMISSION_XP|{{submission}}",
+    "xp_event_count_for_key": 1,
+    "rerun_action": "skip_or_repair"
+  },
+  "cleanup": [
+    "Retain XP Event for idempotency evidence OR soft-void with Duplicate Status if Mike approves cleanup",
+    "Do not delete unrelated enrollment XP"
+  ],
+  "rollback": [
+    "If duplicate Events created: mark extras Duplicate - Remove; file bug against 010"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-B{n}-{enrollmentId}.md"
+}
