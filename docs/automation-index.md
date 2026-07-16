@@ -66,7 +66,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 |---|--------------------------|---------|------|
 | 041 | Levels — Mark Enrollment for Level Recalculation | *confirm in Airtable* | `041-levels-and-progression-mark-enrollment-for-level-recalculation.js` |
 | 042 | Levels — Assign Current and Next Level with Gate Blocking | *confirm in Airtable* | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` |
-| 043 | Levels — Set Level Gate Rule from Next Level | *confirm in Airtable* | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
+| 043 | Levels — Set Level Gate Rule from Next Level | **Retire** — legacy helper; keep until planned maintenance window, then delete | `043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 
 ## Achievements and streaks (053–059, 066)
 
@@ -78,7 +78,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
 | 057 | Achievements — Calculate Perfect Week Eligibility | *confirm in Airtable* | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
-| **059** | Achievements — Create XP Event from Achievement Unlock | Athlete Achievement Unlocks when XP Award Status Pending and Ready for 059 XP | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` |
+| **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
 | 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.2** — DEV + PROD pasted 2026-07-06, GitHub `36a2e95`; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
 
 ## Email and Make handoffs (070b, 070c, 072–077)

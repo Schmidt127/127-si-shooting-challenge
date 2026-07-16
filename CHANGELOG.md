@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Added
+- **Repo blocker closure pass (2026-07-16)** — Contract helpers/tests for Enrollment `Active?` / Progress Processing guards (C-010), weekly-summary build/send + automatic resend prevention (C-011 / 072–074), and HW17/009 attachment-slot mapping + quiz dedupe (C-009). Release validator now enforces launch-scope version headers, duplicate automation numbers, contradictory status docs (066/059/043/112/070b–c), C-019 Testing-view documentation rules, and launch-test evidence packages. Docs reconciled: **066 v3.2** paste status, **070b v4.4 / 070c v1.1** wording, **059** created-trigger recommendation, **043** retire, **112 OFF**. No live Airtable changes.
+
 ### Docs
 
 #### Added

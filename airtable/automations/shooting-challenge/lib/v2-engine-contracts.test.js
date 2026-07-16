@@ -40,6 +40,16 @@ const {
   determineAllowedLevelWithGateBlocking,
   isValidSha256Hex,
   evaluateAssetUploadFields,
+  isBooleanishTrue,
+  evaluateEnrollmentProcessingGuard,
+  ENROLLMENT_ACTIVE_GUARD_COVERAGE,
+  evaluateWeeklySummaryBuildGate,
+  evaluateWeeklySummarySendGate,
+  decideAutomaticWeeklySummaryAction,
+  mapAttachmentsToAssetSlotPlans,
+  inferHomeworkAssetSlot,
+  decideHw17QuizIntakeAction,
+  ASSET_SLOT_SOURCES,
 } = require("./v2-engine-contracts");
 
 function test(name, fn) {
@@ -405,6 +415,213 @@ test("asset upload validation: SHA-256 and required writeback fields", () => {
   assert.ok(bad.failures.includes("canonical_url_missing_or_insecure"));
   assert.ok(bad.failures.includes("storage_key_missing"));
   assert.ok(bad.failures.includes("file_hash_invalid"));
+});
+
+// --- C-010 Active? / Progress Processing guards ---
+test("Active? processing guard: inactive enrollment skips (not error)", () => {
+  assert.strictEqual(isBooleanishTrue(false), false);
+  assert.strictEqual(isBooleanishTrue("checked", false), true);
+
+  const inactive = evaluateEnrollmentProcessingGuard({ enrollmentActive: false });
+  assert.strictEqual(inactive.allow, false);
+  assert.strictEqual(inactive.statusOut, "skipped");
+  assert.strictEqual(inactive.actionOut, "skipped_inactive_enrollment");
+
+  const active = evaluateEnrollmentProcessingGuard({ enrollmentActive: true });
+  assert.strictEqual(active.allow, true);
+  assert.strictEqual(active.actionOut, "continue");
+});
+
+test("Active? processing guard: Progress Processing Enabled? optional field", () => {
+  const disabled = evaluateEnrollmentProcessingGuard({
+    enrollmentActive: true,
+    progressFieldExists: true,
+    progressProcessingEnabled: false,
+  });
+  assert.strictEqual(disabled.allow, false);
+  assert.strictEqual(disabled.actionOut, "skipped_progress_disabled");
+
+  const missingField = evaluateEnrollmentProcessingGuard({
+    enrollmentActive: true,
+    progressFieldExists: false,
+    progressProcessingEnabled: false,
+  });
+  assert.strictEqual(missingField.allow, true);
+
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.guarded.includes("066"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.guarded.includes("117a"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps.includes("010"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps.includes("072"));
+});
+
+// --- C-011 weekly summary dedupe / resend prevention ---
+test("weekly summary build gate: manual Build Now + already-sent skip", () => {
+  assert.deepStrictEqual(
+    evaluateWeeklySummaryBuildGate({ buildNow: false, emailSent: false, autoMode: false }).action,
+    "skip_build_not_armed",
+  );
+  assert.deepStrictEqual(
+    evaluateWeeklySummaryBuildGate({ buildNow: true, emailSent: true, autoMode: false }).action,
+    "skip_already_sent",
+  );
+  assert.deepStrictEqual(
+    evaluateWeeklySummaryBuildGate({ buildNow: true, emailSent: false, autoMode: false }).action,
+    "manual_build",
+  );
+  assert.deepStrictEqual(
+    evaluateWeeklySummaryBuildGate({ buildNow: false, emailSent: false, autoMode: true }).action,
+    "auto_build",
+  );
+});
+
+test("weekly summary send gate: 074 duplicate send blocked", () => {
+  assert.strictEqual(
+    evaluateWeeklySummarySendGate({
+      emailReady: true,
+      emailSent: true,
+      sendToMake: true,
+    }).action,
+    "error_duplicate_send_blocked",
+  );
+  assert.strictEqual(
+    evaluateWeeklySummarySendGate({
+      emailReady: false,
+      emailSent: false,
+      sendToMake: true,
+    }).action,
+    "error_not_ready",
+  );
+  assert.strictEqual(
+    evaluateWeeklySummarySendGate({
+      emailReady: true,
+      emailSent: false,
+      sendToMake: false,
+    }).action,
+    "error_send_not_armed",
+  );
+  assert.strictEqual(
+    evaluateWeeklySummarySendGate({
+      emailReady: true,
+      emailSent: false,
+      sendToMake: true,
+    }).action,
+    "send",
+  );
+});
+
+test("automatic weekly summary: resend prevention + inactive skip", () => {
+  assert.strictEqual(
+    decideAutomaticWeeklySummaryAction({
+      emailSent: true,
+      emailReady: true,
+      hasPackage: true,
+      enrollmentActive: true,
+    }).action,
+    "skip_already_sent",
+  );
+  assert.strictEqual(
+    decideAutomaticWeeklySummaryAction({
+      emailSent: false,
+      emailReady: true,
+      hasPackage: true,
+      enrollmentActive: false,
+    }).action,
+    "skip_inactive_enrollment",
+  );
+  assert.strictEqual(
+    decideAutomaticWeeklySummaryAction({
+      emailSent: false,
+      emailReady: true,
+      hasPackage: true,
+      enrollmentActive: true,
+    }).action,
+    "send_existing_package",
+  );
+  assert.strictEqual(
+    decideAutomaticWeeklySummaryAction({
+      emailSent: false,
+      emailReady: false,
+      hasPackage: false,
+      enrollmentActive: true,
+    }).action,
+    "build_then_send",
+  );
+});
+
+// --- HW17 / 009 attachment-slot mapping + duplicate handling ---
+test("009 attachment-slot mapping: HW1/HW2/VIDEO + duplicate source ids skipped", () => {
+  assert.strictEqual(ASSET_SLOT_SOURCES.length, 3);
+
+  const plan = mapAttachmentsToAssetSlotPlans({
+    hw1Files: [{ id: "attHw1a", filename: "tracker.pdf" }],
+    hw2Files: [
+      { id: "attHw2a", filename: "note.pdf" },
+      { id: "attHw2a", filename: "note-dup.pdf" },
+    ],
+    videoFiles: [{ id: "attVid1", filename: "form.mp4" }],
+    existingSourceAttachmentIds: ["attHw1a"],
+  });
+
+  assert.strictEqual(plan.creates.length, 2);
+  assert.strictEqual(plan.creates[0].slot, "HW2");
+  assert.strictEqual(plan.creates[0].label, "HW2-1");
+  assert.strictEqual(plan.creates[1].slot, "VIDEO");
+  assert.ok(plan.skipped.some((row) => row.reason === "asset_already_exists" && row.slot === "HW1"));
+  assert.ok(plan.skipped.some((row) => row.reason === "asset_already_exists" && row.file === "note-dup.pdf"));
+
+  const missing = mapAttachmentsToAssetSlotPlans({
+    hw1Files: [{ filename: "no-id.pdf" }],
+  });
+  assert.strictEqual(missing.creates.length, 0);
+  assert.strictEqual(missing.skipped[0].reason, "missing_attachment_id");
+});
+
+test("020 inferHomeworkAssetSlot from slot / purpose / label", () => {
+  assert.strictEqual(inferHomeworkAssetSlot({ assetSlot: "HW1" }), "HW1");
+  assert.strictEqual(inferHomeworkAssetSlot({ assetPurpose: "Homework 2" }), "HW2");
+  assert.strictEqual(inferHomeworkAssetSlot({ assetLabel: "VID-1" }), "VIDEO");
+  assert.strictEqual(inferHomeworkAssetSlot({ assetLabel: "other" }), "");
+});
+
+test("HW17 quiz intake: Enrollment+Week+Homework dedupe; C-009 no-asset gap", () => {
+  const hw = "recHomework000001";
+  const created = decideHw17QuizIntakeAction({
+    enrollmentId: ENR,
+    weekId: WEEK,
+    homeworkId: hw,
+    existingCompletionIdsForKey: [],
+    hasAttachment: false,
+  });
+  assert.strictEqual(created.action, "created_new");
+  assert.strictEqual(created.c009Gap, true);
+  assert.strictEqual(created.hasAssetSlot, false);
+
+  const linked = decideHw17QuizIntakeAction({
+    enrollmentId: ENR,
+    weekId: WEEK,
+    homeworkId: hw,
+    existingCompletionIdsForKey: [HW],
+    hasAttachment: false,
+  });
+  assert.strictEqual(linked.action, "linked_existing");
+  assert.strictEqual(linked.completionId, HW);
+
+  const ambiguous = decideHw17QuizIntakeAction({
+    enrollmentId: ENR,
+    weekId: WEEK,
+    homeworkId: hw,
+    existingCompletionIdsForKey: [HW, "recHomeworkComp002"],
+  });
+  assert.strictEqual(ambiguous.action, "error");
+  assert.strictEqual(ambiguous.reason, "ambiguous_hw17_duplicate_completions");
+
+  const already = decideHw17QuizIntakeAction({
+    enrollmentId: ENR,
+    weekId: WEEK,
+    homeworkId: hw,
+    alreadyLinkedCompletionId: HW,
+  });
+  assert.strictEqual(already.action, "skipped_already_linked");
 });
 
 console.log("\nAll v2-engine-contracts tests passed.");
