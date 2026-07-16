@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-15T14:11:00Z",
+  "updated_at": "2026-07-16T13:03:26Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "c2d5701698b788a0927254022ac4b6c30e5213e0",
-    "remote_sha": "c2d5701698b788a0927254022ac4b6c30e5213e0",
+    "sha": "47287231a43bcdd43d3ff3ce4791ca81abdd3b8b",
+    "remote_sha": "47287231a43bcdd43d3ff3ce4791ca81abdd3b8b",
     "match": true,
-    "note": "Lead updates sha/remote_sha after each push of an active run."
+    "note": "Lead tip-sync after Mike-authorized merges of #25\u2013#28 (2026-07-16)."
   },
   "integration": {
     "branch": "master",
@@ -101,7 +101,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "FA-001 merged to master (Mike approved 2026-07-15). Kit idle \u2014 Lead may authorize the next package.",
+  "next_action": "PRs #25\u2013#28 merged to master. Kit idle. Next: Mike-authorized DEV live C-025/066 verification per DEV-release-readiness-verification-2026-07-16.md. Keep 070a/117a/117b OFF in PROD.",
   "stop_reason": null,
   "merge_order": [
     "research",
