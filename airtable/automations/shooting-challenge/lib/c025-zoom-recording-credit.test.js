@@ -21,6 +21,10 @@ const {
   shouldSendRecordingApprovalEmail,
   distinctZoomMeetingCredit,
   buildRecordingXpEventFields,
+  perfectWeekZoomAttendanceCount,
+  decideConflictSoftVoid,
+  assertLiveAttendanceDoesNotOwnRecordingXp,
+  S16_RESPONSIBILITY_OWNERS,
   XP_BUCKET_ZOOM,
   XP_SOURCE_RECORDING,
   RULE_KEY_LIVE_BASE,
@@ -239,6 +243,102 @@ test("gate credit union respects Config toggle", () => {
       config: { "Recording Gives Full Zoom Gate Credit?": true },
     }),
     2,
+  );
+});
+
+// --- Architecture reconciliation: every claimed responsibility ---
+
+test("101 / live attendance does not own recording XP keys", () => {
+  const ownership = assertLiveAttendanceDoesNotOwnRecordingXp();
+  assert.strictEqual(ownership.liveOwnsRecording, false);
+  assert.ok(!ownership.livePrefixes.includes(ownership.recordingPrefix));
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.recordingXpAward, "117a");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.liveAttendanceXp, "101");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.approvalEmail, "117b");
+});
+
+test("recording approval is coach Satisfactory — Stage17-117b not required under S16", () => {
+  assert.ok(S16_RESPONSIBILITY_OWNERS.recordingApproval.includes("Satisfactory"));
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17CoachReviewZa, "NOT_REQUIRED_UNDER_S16_HC_PATH");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17NormalizeZa, "NOT_REQUIRED_UNDER_S16_HC_PATH");
+});
+
+test("Stage17 XP/email/gate fold into S16 117a/b with documented open gaps", () => {
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17CreateXp, "FOLDED_INTO_117a");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17Email, "FOLDED_INTO_117b");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17Gate, "FOLDED_INTO_117a_PLUS_FORMULA");
+  assert.strictEqual(S16_RESPONSIBILITY_OWNERS.stage17PerfectWeek, "OPEN_GAP");
+  assert.ok(S16_RESPONSIBILITY_OWNERS.postAwardConflictSoftVoid.startsWith("OPEN_GAP"));
+  assert.ok(S16_RESPONSIBILITY_OWNERS.levelGateCount.startsWith("OPEN_GAP"));
+  assert.ok(S16_RESPONSIBILITY_OWNERS.perfectWeekRosterCount.startsWith("OPEN_GAP"));
+});
+
+test("Perfect Week count includes Recording Attendees only when Config allows", () => {
+  const weekMeetings = [M, M2];
+  const live = { [M]: [E], [M2]: [] };
+  const recording = { [M]: [], [M2]: [E] };
+  assert.strictEqual(
+    perfectWeekZoomAttendanceCount({
+      enrollmentId: E,
+      weekMeetingIds: weekMeetings,
+      liveAttendeesByMeeting: live,
+      recordingAttendeesByMeeting: recording,
+      config: { "Recording Makeup Counts for Perfect Week?": true },
+    }),
+    2,
+  );
+  assert.strictEqual(
+    perfectWeekZoomAttendanceCount({
+      enrollmentId: E,
+      weekMeetingIds: weekMeetings,
+      liveAttendeesByMeeting: live,
+      recordingAttendeesByMeeting: recording,
+      config: { "Recording Makeup Counts for Perfect Week?": false },
+    }),
+    1,
+  );
+});
+
+test("post-award live+recording conflict requires soft-void of recording keys", () => {
+  const recordingKey = buildZoomRecordingSourceKey(M, E);
+  const liveKey = buildZoomLiveSourceKey(M, E);
+  const none = decideConflictSoftVoid({
+    meetingId: M,
+    enrollmentId: E,
+    xpRows: [{ sourceKey: recordingKey, active: true }],
+  });
+  assert.strictEqual(none.conflict, false);
+  const both = decideConflictSoftVoid({
+    meetingId: M,
+    enrollmentId: E,
+    xpRows: [
+      { sourceKey: recordingKey, active: true },
+      { sourceKey: liveKey, active: true },
+    ],
+  });
+  assert.strictEqual(both.conflict, true);
+  assert.deepStrictEqual(both.deactivateSourceKeys, [recordingKey]);
+});
+
+test("corrections: Needs Review does not award or email", () => {
+  const gate = canAwardRecordingCredit({
+    meetingId: M,
+    enrollmentId: E,
+    quizStatus: "Needs Correction",
+    config: { "Recording Quiz Requires Coach Approval?": true },
+  });
+  assert.strictEqual(gate.ok, false);
+  assert.strictEqual(gate.reason, "skipped_awaiting_coach_approval");
+  assert.strictEqual(
+    shouldSendRecordingApprovalEmail({
+      config: {
+        "Recording Approval Email Enabled?": true,
+        "Recording Approval Email Timing": "On Satisfactory",
+        "Recording Approval Email Template Key": "ZOOM_RECORDING_APPROVED",
+      },
+      quizStatus: "Needs Correction",
+    }).send,
+    false,
   );
 });
 

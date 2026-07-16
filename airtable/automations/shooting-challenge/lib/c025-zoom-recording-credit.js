@@ -290,6 +290,95 @@ function buildRecordingXpEventFields({
   };
 }
 
+/**
+ * Perfect Week Zoom attendance count under S16.
+ * Today automation 057 only reads live `Attendees`. Recording credit must be
+ * unioned from `Recording Attendees` when Config allows — otherwise PW gap remains.
+ */
+function perfectWeekZoomAttendanceCount({
+  enrollmentId,
+  weekMeetingIds = [],
+  liveAttendeesByMeeting = {},
+  recordingAttendeesByMeeting = {},
+  config = {},
+}) {
+  assertValidRecordId(enrollmentId, "enrollmentId");
+  const includeRecording = cfgBool(
+    config,
+    "Recording Makeup Counts for Perfect Week?",
+    DEFAULTS.countsForPerfectWeek,
+  );
+  let count = 0;
+  for (const meetingId of weekMeetingIds) {
+    const live = liveAttendeesByMeeting[meetingId] || [];
+    const recording = recordingAttendeesByMeeting[meetingId] || [];
+    const onLive = live.includes(enrollmentId);
+    const onRecording = includeRecording && recording.includes(enrollmentId);
+    if (onLive || onRecording) count += 1;
+  }
+  return count;
+}
+
+/**
+ * Post-award conflict: if live credit appears after recording (or vice versa),
+ * S16 award-time skip is insufficient. Soft-void the recording XP Event.
+ * Returns which Source Keys should be deactivated — does not invent deletes.
+ */
+function decideConflictSoftVoid({
+  meetingId,
+  enrollmentId,
+  xpRows = [],
+  meetingKeyToId = {},
+}) {
+  assertValidRecordId(meetingId, "meetingId");
+  assertValidRecordId(enrollmentId, "enrollmentId");
+  const token = `${meetingId}|${enrollmentId}`;
+  const { live, recording } = activeZoomPairs(xpRows, meetingKeyToId);
+  if (!(live.has(token) && recording.has(token))) {
+    return { conflict: false, deactivateSourceKeys: [] };
+  }
+  const deactivateSourceKeys = [];
+  for (const row of xpRows) {
+    if (!row || row.active === false) continue;
+    if (!isRecordingFamilyKey(row.sourceKey)) continue;
+    const pair = meetingEnrollmentFromKey(row.sourceKey, meetingKeyToId);
+    if (pair && `${pair.meetingId}|${pair.enrollmentId}` === token) {
+      deactivateSourceKeys.push(row.sourceKey);
+    }
+  }
+  return { conflict: true, deactivateSourceKeys };
+}
+
+/**
+ * Responsibility ownership under S16 (PR #26). Used by contract tests so claims
+ * cannot silently drift from docs/v2/C025_ARCHITECTURE_RECONCILIATION.md.
+ */
+const S16_RESPONSIBILITY_OWNERS = Object.freeze({
+  recordingApproval: "Homework Completions Satisfactory (coach) — no Stage17-117b required",
+  recordingXpAward: "117a",
+  awardTimeExclusivity: "117a + canAwardRecordingCredit",
+  postAwardConflictSoftVoid: "OPEN_GAP — decideConflictSoftVoid helper; not wired in 101/117a yet",
+  levelGateRoster: "117a → Zoom Meetings.Recording Attendees",
+  levelGateCount: "OPEN_GAP — Enrollments.Total Zoom Attendances must union live∪recording",
+  perfectWeekRosterCount: "OPEN_GAP — 057 Attendees-only; use perfectWeekZoomAttendanceCount when wired",
+  approvalEmail: "117b",
+  liveAttendanceXp: "101",
+  stage17NormalizeZa: "NOT_REQUIRED_UNDER_S16_HC_PATH",
+  stage17CoachReviewZa: "NOT_REQUIRED_UNDER_S16_HC_PATH",
+  stage17CreateXp: "FOLDED_INTO_117a",
+  stage17Gate: "FOLDED_INTO_117a_PLUS_FORMULA",
+  stage17PerfectWeek: "OPEN_GAP",
+  stage17Email: "FOLDED_INTO_117b",
+});
+
+function assertLiveAttendanceDoesNotOwnRecordingXp() {
+  return {
+    livePrefixes: [LIVE_BASE_PREFIX, LIVE_CANONICAL_PREFIX, LIVE_BONUS_2_PREFIX, LIVE_BONUS_3_PREFIX],
+    recordingPrefix: RECORDING_PREFIX,
+    liveOwnsRecording: false,
+  };
+}
+
 module.exports = {
   LIVE_BASE_PREFIX,
   LIVE_CANONICAL_PREFIX,
@@ -301,6 +390,7 @@ module.exports = {
   RULE_KEY_LIVE_BASE,
   RULE_KEY_RECORDING_DISPLAY,
   DEFAULTS,
+  S16_RESPONSIBILITY_OWNERS,
   isValidRecordId,
   assertValidRecordId,
   buildZoomLiveSourceKey,
@@ -322,4 +412,7 @@ module.exports = {
   shouldSendRecordingApprovalEmail,
   distinctZoomMeetingCredit,
   buildRecordingXpEventFields,
+  perfectWeekZoomAttendanceCount,
+  decideConflictSoftVoid,
+  assertLiveAttendanceDoesNotOwnRecordingXp,
 };

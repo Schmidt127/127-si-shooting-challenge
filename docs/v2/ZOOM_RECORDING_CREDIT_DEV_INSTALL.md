@@ -5,6 +5,7 @@
 **PROD:** Do not paste or enable until DEV evidence + Mike approval  
 **Authority:** S16-approved design — [C-025-zoom-recording-design-stage12.md](../deploy-checklists/C-025-zoom-recording-design-stage12.md) · [C-025-C-027-configuration-catalog-stage16.md](../deploy-checklists/C-025-C-027-configuration-catalog-stage16.md)  
 **Scripts:** `117a-…js`, `117b-…js` · Numbering: [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)  
+**Architecture reconciliation:** [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) — Stage 17 six-pack vs S16 117a/b; open Perfect Week / Total Zoom / post-award conflict gaps  
 **Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract`
 
 ---
@@ -135,7 +136,7 @@ Exact Airtable view names may differ — create if missing; do not rename produc
 | `117a - Zoom Recording Credit - Award XP from Quiz Completion` | `airtable/automations/shooting-challenge/117a-zoom-recording-credit-award-xp-from-quiz-completion.js` | **OFF** until schema+tests ready, then ON in DEV only |
 | `117b - Zoom Recording Credit - Send Approval Email Webhook` | `…/117b-zoom-recording-credit-send-approval-email-webhook.js` | **OFF** until Make DEV webhook ready |
 
-**117c–117f:** Not required — see [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md).
+**117c–117f:** Not separate scripts under S16 — see [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md) and [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md). **Perfect Week (057)**, **Total Zoom Attendances union**, and **post-award conflict soft-void** remain open behavioral gaps even with 117a/b.
 
 ---
 

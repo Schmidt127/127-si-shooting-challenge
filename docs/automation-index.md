@@ -119,7 +119,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117a** | Zoom Recording Credit — Award XP from Quiz Completion | Homework Completions when Satisfactory + Zoom Meeting linked (**DEV install pending**) | `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` |
 | **117b** | Zoom Recording Credit — Send Approval Email Webhook | Homework Completions when Satisfactory + send flag (**DEV install pending**) | `117b-zoom-recording-credit-send-approval-email-webhook.js` |
 
-C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). **117c–117f not required.** Live attendance remains **101** only.
+C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). **117c–117f are not separate S16 scripts** (XP/gate/email folded into 117a/b); Perfect Week / Total Zoom / post-award conflict remain open gaps. Live attendance remains **101** only.
 
 ---
 
