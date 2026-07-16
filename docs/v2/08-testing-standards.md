@@ -52,6 +52,9 @@
 | [../../.github/workflows/web.yml](../../.github/workflows/web.yml) | Web CI (lint, typecheck, test) |
 | [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | V2 release / promote checklist |
 | [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
+| [./V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV runbook — mode taxonomy, fixtures, setup/cleanup |
+| [./V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Launch smoke subset before PROD promotion |
+| [../../tools/airtable/v2_dev_runbook/](../../tools/airtable/v2_dev_runbook/) | Offline fixtures + classification + plan printer |
 | [../../airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js](../../airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js) | Repo-level XP/gate/streak/date contract tests (no live Airtable) |
 | [../../tools/validate-v2-release-readiness.js](../../tools/validate-v2-release-readiness.js) | Safe docs/automation consistency validator |
 

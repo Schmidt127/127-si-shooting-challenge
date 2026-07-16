@@ -14,6 +14,8 @@
 |-----|------|
 | [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Script versions, triggers, DEV/PROD status |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
+| [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV runbook (modes, fixtures, cleanup) |
+| [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
 | [known-issues.md](./known-issues.md) | Active gaps and accepted exceptions |
 | [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) | Per-change promotion template |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion/rollback index (if present from overnight S10) |
@@ -173,7 +175,8 @@ Use Schmidt / isolated fixture enrollment only.
 | Upload (if in scope) | 070b/070c writeback fields + hash | [ ] |
 | Audit dry-run | No new unexpected integrity failures | [ ] |
 
-Detailed athlete matrix: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md).
+Detailed athlete matrix: [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md).  
+DEV execution + launch smoke gate: [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md).
 
 ---
 

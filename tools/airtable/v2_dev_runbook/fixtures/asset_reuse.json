@@ -1,0 +1,35 @@
+{
+  "domain": "asset_reuse",
+  "matrix_ids": ["C7", "D6", "D7", "D8", "K1", "K2"],
+  "pre_test_state": {
+    "require": [
+      "DEV Submission Assets with known hash fixtures (C-023)",
+      "070b/070c for video path; 070a only if Mike schedules DEV",
+      "116 for duplicate-byte consequence"
+    ],
+    "forbid": ["070a ON in PROD", "PROD Lambda/Make secrets rotation from agents"]
+  },
+  "synthetic_hashes": {
+    "valid_sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "invalid_short": "abcd",
+    "invalid_non_hex": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+  },
+  "automation_expected": {
+    "C7": "070a payload accepted in DEV only",
+    "D6": "Uploaded + hash + canonical URL",
+    "D7": "Reuse consequences applied once",
+    "D8": "Verification fails; trigger not cleared incorrectly",
+    "K1": "Verification pass; trigger clear per design",
+    "K2": "Fail closed on invalid SHA-256"
+  },
+  "expected_output": {
+    "valid_sha_accepted": true,
+    "invalid_sha_accepted": false
+  },
+  "cleanup": [
+    "Reset Duplicate Resolution Applied? flags on test assets (C-023 pattern)",
+    "Leave 070a OFF unless Mike keeps DEV experiment ON"
+  ],
+  "rollback": ["Clear false-success upload status fields on asset"],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-{testId}-asset.md"
+}

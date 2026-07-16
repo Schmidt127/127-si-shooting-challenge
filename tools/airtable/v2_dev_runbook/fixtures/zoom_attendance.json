@@ -1,0 +1,37 @@
+{
+  "domain": "zoom_attendance",
+  "matrix_ids": ["J1", "J2", "J3"],
+  "source_key_pattern": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+  "pre_test_state": {
+    "require": [
+      "Zoom Meeting record in DEV",
+      "Enrollment marked attended for that meeting",
+      "Automation 101 ON in DEV",
+      "No recording credit for same meeting+enrollment before live award (ops rule)"
+    ]
+  },
+  "records_to_create_shape": {
+    "Zoom attendance link": {
+      "Zoom Meeting": ["{{zoom_meeting}}"],
+      "Enrollment": ["{{enrollment}}"],
+      "Create XP Events trigger": true
+    }
+  },
+  "automation_expected": {
+    "J1": "ZOOM_ATTEND_BASE|{meeting}|{enr} once",
+    "J2": "Bonus keys once per enrollment rules",
+    "J3": "No duplicate live XP on rerun"
+  },
+  "expected_output": {
+    "source_key_base": "ZOOM_ATTEND_BASE|{{zoom_meeting}}|{{enrollment}}",
+    "xp_event_count_for_base_key": 1
+  },
+  "cleanup": [
+    "Clear Create XP Events trigger",
+    "Keep Events for recording conflict tests (J4) or soft-void under Mike approval"
+  ],
+  "rollback": [
+    "Mark accidental duplicates Duplicate - Remove"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-J{n}-{enrollmentId}.md"
+}

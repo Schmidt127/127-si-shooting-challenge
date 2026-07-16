@@ -1,0 +1,40 @@
+{
+  "domain": "homework_completion",
+  "matrix_ids": ["C1", "C2", "C3", "C4", "C5", "C6"],
+  "source_key_pattern": "HOMEWORK_XP|{homeworkCompletionId}",
+  "pre_test_state": {
+    "require": [
+      "Homework attachment path or C-020 Homework scenario",
+      "Homework Assignment linked (curriculum)",
+      "064/065 available for XP path (C3-C5)"
+    ]
+  },
+  "records_to_create_shape": {
+    "Homework Completions": {
+      "Enrollment": ["{{enrollment}}"],
+      "Satisfactory?": true,
+      "Award Status": "Pending"
+    }
+  },
+  "automation_expected": {
+    "C1": "One Homework Completion linked",
+    "C2": "Links existing; no second completion",
+    "C3": "No HOMEWORK_XP Event when not satisfactory",
+    "C4": "One Event HOMEWORK_XP|{completionId}",
+    "C5": "Skip/link existing on rerun",
+    "C6": "Reflection quiz completion once"
+  },
+  "expected_output": {
+    "source_key": "HOMEWORK_XP|{{homework_completion}}",
+    "xp_event_count_for_key_when_satisfactory": 1,
+    "xp_event_count_when_unsatisfactory": 0
+  },
+  "cleanup": [
+    "Uncheck coach review triggers",
+    "Keep completion row for chained Perfect Week if needed"
+  ],
+  "rollback": [
+    "Clear erroneous XP Event Active? only with Mike approval"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-C{n}-{enrollmentId}.md"
+}

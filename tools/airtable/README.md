@@ -200,3 +200,4 @@ Docs: [C-013-prod-make-build-2026-07-11.md](../../docs/deploy-checklists/C-013-p
 - Hand-maintained schema notes: `airtable/schema/current/`
 - Airtable extension audits (in-base JS): `airtable/extension-scripts/audits/`
 - Live ops snapshot: [docs/PROJECT_STATE.md](../../docs/PROJECT_STATE.md)
+- V2 DEV execution fixtures (offline-safe): [v2_dev_runbook/README.md](./v2_dev_runbook/README.md)

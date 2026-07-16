@@ -42,6 +42,9 @@
 | [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 Zoom recording credit DEV install |
 | [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) | Stage 17 six-pack vs S16 117a/b — responsibility matrix |
 | [AUTOMATION_070A_LAUNCH_DECISION.md](./AUTOMATION_070A_LAUNCH_DECISION.md) | 070a homework upload launch decision |
+| [V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV test runbook (modes, fixtures, cleanup) |
+| [V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
+| [evidence/_TEMPLATE-dev-test-evidence.md](./evidence/_TEMPLATE-dev-test-evidence.md) | Per-test DEV evidence form |
 
 ## Workflow: Mike + ChatGPT + Cursor
 
