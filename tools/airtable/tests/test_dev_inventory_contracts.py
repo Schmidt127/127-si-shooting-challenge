@@ -124,6 +124,8 @@ class TestRepoScriptsFromInventory(unittest.TestCase):
         self.assertIn("skipped_inactive", text)
         self.assertIn("skipped_already_sent", text)
         self.assertIn("recgP9qZYjAhE7NXm", text)
+        self.assertIn("WEEKLY_EMAIL|${enrollmentId}|${weekId}", text)
+        self.assertIn("eventId", text)
 
     def test_118_119_exist_and_default_dry_run(self):
         t118 = SCRIPT_118.read_text(encoding="utf-8")
@@ -133,8 +135,20 @@ class TestRepoScriptsFromInventory(unittest.TestCase):
         self.assertIn("parseBool(inputConfig.dryRun, true)", t118)
         self.assertIn("parseBool(inputConfig.dryRun, true)", t119)
         self.assertIn("WEEKLY_EMAIL|", t119)
+        self.assertIn("priorSaturdayKeyDenver", t118)
+        self.assertIn("priorSaturdayKeyDenver", t119)
+        self.assertNotIn("yesterdayKeyDenver", t118)
+        self.assertNotIn("yesterdayKeyDenver", t119)
         # refuse Live when not dry-run
         self.assertTrue(re.search(r"sendMode=Live", t118))
+
+    def test_067_hw1_only_and_send_to_make_false(self):
+        text = SCRIPT_067.read_text(encoding="utf-8")
+        self.assertIn('slotHw1: "HW1"', text)
+        self.assertIn('purposeHomework1: "Homework 1"', text)
+        self.assertNotIn('purposeHomework2', text)
+        self.assertNotIn('slotHw2', text)
+        self.assertIn("setCheckbox(fields, assetsTable, CONFIG.assets.sendToMakeTrigger, false)", text)
 
 
 if __name__ == "__main__":

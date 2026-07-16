@@ -147,15 +147,35 @@ function denverDateParts(date = new Date()) {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
+    weekday: "short",
   });
   const parts = Object.fromEntries(fmt.formatToParts(date).map((p) => [p.type, p.value]));
-  return { y: Number(parts.year), m: Number(parts.month), d: Number(parts.day) };
+  return {
+    y: Number(parts.year),
+    m: Number(parts.month),
+    d: Number(parts.day),
+    weekday: parts.weekday,
+  };
 }
 
-function yesterdayKeyDenver() {
-  const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
-  const p = denverDateParts(yesterday);
-  return `${p.y}-${String(p.m).padStart(2, "0")}-${String(p.d).padStart(2, "0")}`;
+/**
+ * Most recently completed Week End (Saturday) in America/Denver.
+ * Matches 118 — Sunday run and Mon–Sat manual reruns target the same prior Saturday.
+ */
+function priorSaturdayKeyDenver(now = new Date()) {
+  const p = denverDateParts(now);
+  const dowMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  const dow = dowMap[p.weekday];
+  if (dow === undefined) {
+    throw new Error(`Unable to resolve Denver weekday: ${p.weekday}`);
+  }
+  const daysBack = dow === 6 ? 7 : dow + 1;
+  const utcNoon = new Date(Date.UTC(p.y, p.m - 1, p.d, 12, 0, 0));
+  utcNoon.setUTCDate(utcNoon.getUTCDate() - daysBack);
+  const y = utcNoon.getUTCFullYear();
+  const m = String(utcNoon.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(utcNoon.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function dateKeyFromCell(value) {
@@ -196,7 +216,7 @@ async function main() {
   debugStep = "2 - Resolve target week";
   setOutputSafe("debugStep", debugStep);
 
-  const targetEndKey = yesterdayKeyDenver();
+  const targetEndKey = priorSaturdayKeyDenver();
   const weeksQuery = await weeksTable.selectRecordsAsync({
     fields: safeFields(weeksTable, Object.values(CONFIG.weeks)),
   });

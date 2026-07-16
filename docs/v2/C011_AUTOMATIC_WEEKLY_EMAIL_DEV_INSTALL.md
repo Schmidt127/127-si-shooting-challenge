@@ -16,7 +16,7 @@
 | Send automation | **074** (existing) armed by **119** | **repository-ready** |
 | Manual checkboxes | Keep `Build Weekly Email Now?` / `Send to Make?` | **verified in DEV (snapshot)** |
 | Make writeback field | `Weekly Email Sent?` (+ `Weekly Email Sent At`) | **verified in DEV (snapshot)** fields; Make behavior **live-blocked** |
-| Dedupe / eventId | `WEEKLY_EMAIL\|{enrollmentId}\|{}weekId}` in 074 payload | **repository-ready** |
+| Dedupe / eventId | `WEEKLY_EMAIL\|{enrollmentId}\|{weekId}` in 072 payload + 074/Make | **repository-ready** |
 | DEV webhook | Not in env | **live-blocked** / **requires Mike approval** |
 | Test recipient mode | `sendMode=Test` + 074 testRecipientEmail | **repository-ready** |
 | 118/119 still correct? | **Yes** | **repository-ready** · **requires DEV paste** · do not activate schedule |
@@ -146,7 +146,7 @@ For WAS linked to target Week:
 WEEKLY_EMAIL|{enrollmentId}|{weekId}
 ```
 
-Use Airtable record IDs. Place in 074 payload as `eventId` (and optionally in 072 `Weekly Email Payload JSON`).
+Use Airtable record IDs. **072 v3.8+** writes `eventId` into `Weekly Email Payload JSON`. **074**/Make must use the same string before Gmail.
 
 ---
 

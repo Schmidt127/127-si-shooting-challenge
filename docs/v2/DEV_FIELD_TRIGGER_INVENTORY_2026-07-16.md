@@ -110,7 +110,7 @@ Note: DEV has an **Automations** metadata table (`Status` Live/Off/Legacy) — r
 | `sendMode` (`Test` \| `Live`) | Yes | **verified in DEV (snapshot)** |
 | Package fields (Subject/Recipients/HTML/Text/Payload JSON/…) | Yes | **verified in DEV (snapshot)** |
 | Make writeback actually sets Sent? | UNKNOWN | **live-blocked** |
-| `eventId` in Make | Design key `WEEKLY_EMAIL\|{enrollmentId}\|{}weekId}` — not an Airtable field | **repository-ready** |
+| `eventId` in Make | Design key `WEEKLY_EMAIL\|{enrollmentId}\|{weekId}` — not an Airtable field | **repository-ready** |
 
 ### 10. DEV-safe Make webhook for weekly email
 

@@ -2236,8 +2236,12 @@ async function main() {
         unknownBucket: unknownBucketXpRows.length,
     };
 
+    // C-011 / C-024 idempotency key for Make (must match 119 docs)
+    const eventId = `WEEKLY_EMAIL|${enrollmentId}|${weekId}`;
+
     const payload = {
         sendMode,
+        eventId,
         weeklySummaryRecordId: summaryRecord.id,
         weeklyEmailRecordId: summaryRecord.id,
         enrollmentId,

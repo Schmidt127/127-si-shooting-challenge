@@ -154,8 +154,21 @@ class TestC009Hw17AttachmentContract(unittest.TestCase):
         self.assertFalse(has_assets)  # explicitly allowed
 
     def test_hw17_slot_is_hw1_not_hw2(self):
+        """HW17 is a single curriculum item — maps to HW1 only, never HW2."""
         self.assertEqual(ASSET_SLOT, "HW1")
+        self.assertEqual(ASSET_PURPOSE, "Homework 1")
         self.assertEqual(HW17_NUMBER, "HW 17")
+        self.assertNotEqual(ASSET_SLOT, "HW2")
+        self.assertNotEqual(ASSET_PURPOSE, "Homework 2")
+
+    def test_send_to_make_remains_false_on_create(self):
+        fields = asset_fields_for_070a(
+            {"id": "attY", "filename": "a.pdf"},
+            SCHMIDT_ENROLLMENT_ID,
+            "recHC",
+        )
+        self.assertFalse(fields["Send to Make Trigger"])
+        self.assertEqual(fields["Upload Status"], UPLOAD_STATUS_PENDING_LINK)
 
     def test_xp_not_created_by_067(self):
         # 067 never invents Source Keys — 065 does after coach review

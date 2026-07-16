@@ -17,7 +17,7 @@
 | Input | `recordId` | **repository-ready** |
 | Attachment source | Preferred field **`Quiz Result PDF`** (candidates in CONFIG) | Field **missing** as of snapshot — **requires Mike approval** to create |
 | Parent Submission | **Required** (Upload Ready formulas need `Submission - Linked`) | **verified in DEV (snapshot)** |
-| Asset mappings | Purpose=`Homework 1`, Slot=`HW1`, Type inferred (`Homework PDF`), Upload Status=`Pending Link`, Send to Make=`false` | **verified in DEV (snapshot)** options |
+| Asset mappings | Purpose=`Homework 1`, Slot=`HW1` only (not HW2 — HW17 is single curriculum slot), Type inferred (`Homework PDF`), Upload Status=`Pending Link`, Send to Make=`false` | **verified in DEV (snapshot)** options |
 | Duplicate key | Completion: Enrollment\|Week\|HW17; Asset: `Source Attachment ID` | **repository-ready** |
 | Multi-attachment | One asset per file | **repository-ready** |
 | 070a | Compatible once assets Pending Link + HC linked; do not auto-arm Send in 067 | **repository-ready** |

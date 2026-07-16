@@ -5,7 +5,8 @@
 **Branch:** `cursor/remaining-airtable-dev-packages-2565`  
 **Base:** DEV `appTetnuCZlCZdTCT` only  
 **Hard stops:** No PROD · No live sending · No secrets · No CONTROL.json edits  
-**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
+**Migration safety:** [C009_C010_C011_MIGRATION_SAFETY.md](./C009_C010_C011_MIGRATION_SAFETY.md)
 
 ---
 

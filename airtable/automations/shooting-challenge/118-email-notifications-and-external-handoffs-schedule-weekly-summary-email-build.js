@@ -167,12 +167,26 @@ function denverDateParts(date = new Date()) {
   };
 }
 
-function yesterdayKeyDenver() {
-  // Sunday 05:00 run → Saturday just ended
-  const now = new Date();
-  const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const p = denverDateParts(yesterday);
-  return `${p.y}-${String(p.m).padStart(2, "0")}-${String(p.d).padStart(2, "0")}`;
+/**
+ * Most recently completed Week End (Saturday) in America/Denver.
+ * Sunday schedule → yesterday Saturday. Manual Mon–Sat rerun → prior Saturday
+ * (never "today" when today is Saturday — week still in progress until Sunday run).
+ */
+function priorSaturdayKeyDenver(now = new Date()) {
+  const p = denverDateParts(now);
+  const dowMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  const dow = dowMap[p.weekday];
+  if (dow === undefined) {
+    throw new Error(`Unable to resolve Denver weekday: ${p.weekday}`);
+  }
+  const daysBack = dow === 6 ? 7 : dow + 1; // Sun→1 … Fri→6, Sat→7
+  // Build UTC noon on Denver calendar day, then step back (avoids DST hour math).
+  const utcNoon = new Date(Date.UTC(p.y, p.m - 1, p.d, 12, 0, 0));
+  utcNoon.setUTCDate(utcNoon.getUTCDate() - daysBack);
+  const y = utcNoon.getUTCFullYear();
+  const m = String(utcNoon.getUTCMonth() + 1).padStart(2, "0");
+  const d = String(utcNoon.getUTCDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
 
 function dateKeyFromCell(value) {
@@ -217,7 +231,7 @@ async function main() {
   debugStep = "2 - Resolve target week";
   setOutputSafe("debugStep", debugStep);
 
-  const targetEndKey = yesterdayKeyDenver();
+  const targetEndKey = priorSaturdayKeyDenver();
   const weekFields = safeFields(weeksTable, Object.values(CONFIG.weeks));
   const weeksQuery = await weeksTable.selectRecordsAsync({ fields: weekFields });
 

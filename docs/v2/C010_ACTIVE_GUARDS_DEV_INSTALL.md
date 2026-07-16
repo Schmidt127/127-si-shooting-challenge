@@ -26,7 +26,9 @@
 | **065** | `Progress Processing Enabled?` only | No | Spec ready; **requires DEV paste** after PPE |
 | **072** | `Active?` + Schmidt ID hard exclude | **Yes** `recgP9qZYjAhE7NXm` | **072 v3.8 in GitHub** — **requires DEV paste** |
 
-Missing PPE → treat as enabled (no progress skip) until field is created.
+Missing PPE → treat as **enabled** (no progress skip) until field is created.
+
+**Critical rollout:** Create PPE → **backfill true** on all non-withdrawn → **then** paste 010/031/053/065 guards. Pasting guards before backfill would skip everyone (new checkboxes default unchecked). See [C009_C010_C011_MIGRATION_SAFETY.md](./C009_C010_C011_MIGRATION_SAFETY.md).
 
 ---
 
