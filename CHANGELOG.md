@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Changed
+- **V2 frontend functional readiness** — Safe presentation fixes on `feature/shooting-v2-light-theme`: V2 XP source labels, dashboard/profile CTA and milestone corrections, Zoom recording-credit presentation, catalog loading states, mobile nav scroll affordance, null-safe date formatters, and non-Softr empty-state copy. Inventory: [web/docs/v2-frontend-readiness.md](./web/docs/v2-frontend-readiness.md). No Airtable business logic changes.
+
 ### Docs
 
 #### Added

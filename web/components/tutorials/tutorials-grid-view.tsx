@@ -117,7 +117,7 @@ export function TutorialsEmptyState() {
       <div className={catalogStatePanelClass()}>
         <h1 className="font-display text-2xl text-foreground">No tutorials published yet</h1>
         <p className="mt-3 text-muted">
-          Mark tutorials OK to Publish on Softr and they will appear here.
+          Publish tutorials for the web catalog and they will appear here.
         </p>
         <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge

@@ -13,7 +13,7 @@ import {
   StatusBadge,
 } from "@/components/ui";
 import type { AthleteProfileModel } from "@/lib/data/athlete-profile";
-import { formatGrade, formatXp } from "@/lib/formatters";
+import { formatGrade, formatXp, formatXpSourceLabel } from "@/lib/formatters";
 
 type AthleteProfileViewProps = {
   data: AthleteProfileModel;
@@ -103,18 +103,70 @@ export function AthleteProfileView({ data }: AthleteProfileViewProps) {
 
         <section className="mt-8" aria-labelledby="milestones-heading">
           <h2 id="milestones-heading" className="font-display text-lg text-foreground">
-            Milestones
+            Shot milestones &amp; season marks
           </h2>
-          <ul className="mt-3 grid gap-3 sm:grid-cols-3">
-            {data.milestones.map((m) => (
-              <li key={m.id} className={catalogPanelClass({ tint: "neutral" })}>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
-                  {m.label}
-                </p>
-                <p className="mt-2 font-mono text-sm text-foreground">{m.value}</p>
-              </li>
-            ))}
-          </ul>
+          {data.milestones.length === 0 ? (
+            <div
+              className={`mt-3 ${catalogPanelClass({ tint: "neutral" })}`}
+              role="status"
+              aria-live="polite"
+            >
+              <p className="font-semibold text-foreground">No milestones published yet</p>
+              <p className="mt-1 text-sm text-muted">
+                Shot milestones and Perfect Week marks appear when published for this athlete.
+              </p>
+            </div>
+          ) : (
+            <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {data.milestones.map((m) => (
+                <li key={m.id} className={catalogPanelClass({ tint: "neutral" })}>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
+                    {m.label}
+                  </p>
+                  <p className="mt-2 font-mono text-sm text-foreground">{m.value}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="mt-8" aria-labelledby="recent-xp-heading">
+          <h2 id="recent-xp-heading" className="font-display text-lg text-foreground">
+            Recent XP
+          </h2>
+          {data.recentXp.length === 0 ? (
+            <div
+              className={`mt-3 ${catalogPanelClass({ tint: "neutral" })}`}
+              role="status"
+              aria-live="polite"
+            >
+              <p className="font-semibold text-foreground">No public XP events yet</p>
+              <p className="mt-1 text-sm text-muted">
+                XP source labels appear here when publishable events are linked.
+              </p>
+            </div>
+          ) : (
+            <ul className="mt-3 grid gap-3">
+              {data.recentXp.slice(0, 5).map((event) => (
+                <li
+                  key={event.id}
+                  className={`flex flex-wrap items-baseline justify-between gap-2 ${catalogPanelClass({ tint: "neutral" })}`}
+                >
+                  <div className="min-w-0">
+                    <p className="font-semibold text-foreground">
+                      {formatXpSourceLabel(event.sourceLabel)}
+                    </p>
+                    <p className="mt-1 text-sm text-muted">
+                      {event.reasonPublic || "XP awarded"}
+                    </p>
+                  </div>
+                  <p className="font-mono text-sm font-bold text-brand-blue">
+                    +{formatXp(event.points)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="mt-8" aria-labelledby="achievements-heading">

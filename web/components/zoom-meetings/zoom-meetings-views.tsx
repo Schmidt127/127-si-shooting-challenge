@@ -234,6 +234,48 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
           </div>
         </header>
 
+        {meeting.recordingVideoUrl || meeting.recordingAudioUrl ? (
+          <section className={cn(catalogPanelClass({ tint: "accent" }), "mt-8")}>
+            <SectionHeading
+              label="Recording credit"
+              title="Makeup XP from the recording quiz"
+              description="Missed the live call? Watching alone does not award XP — complete the Zoom Recording Quiz after the recording is available."
+            />
+            <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-foreground/90">
+              <li>
+                Recording credit uses the{" "}
+                <span className="font-semibold text-foreground">Zoom Recording</span> XP source and
+                is a configured percent of live attendance XP.
+              </li>
+              <li>
+                Live attendance and recording credit cannot both apply for the same meeting.
+              </li>
+              <li>
+                Coach approval may be required before recording XP and Zoom level-gate credit post.
+              </li>
+            </ul>
+            <div className="mt-5 flex flex-wrap gap-3">
+              {meeting.recordingVideoUrl ? (
+                <ResourceLink href={meeting.recordingVideoUrl} label="Watch recording" />
+              ) : null}
+              {meeting.recordingAudioUrl ? (
+                <ResourceLink href={meeting.recordingAudioUrl} label="Audio recording" />
+              ) : null}
+              <Link href="/homework" className="btn-secondary">
+                Open homework catalog
+              </Link>
+            </div>
+          </section>
+        ) : meeting.status === "Completed" ? (
+          <section className={cn(catalogPanelClass({ tint: "neutral" }), "mt-8")} role="status">
+            <SectionHeading
+              label="Recording credit"
+              title="Recording not published yet"
+              description="When video or audio recording links are added, makeup credit instructions and watch links appear here."
+            />
+          </section>
+        ) : null}
+
         {meeting.briefDescription ? (
           <section className={cn(catalogPanelClass(), "mt-8")}>
             <SectionHeading label="Overview" title="What this session covers" />
