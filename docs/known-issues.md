@@ -1,5 +1,24 @@
 # Known issues — Shooting Challenge
 
+**Release companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md)
+
+## Launch blockers (V2 promote / public launch)
+
+Track these before treating V2 as fully launch-ready. Status is repository evidence only — confirm live Airtable/Make as needed.
+
+| ID | Blocker | Severity | Notes / owner next step |
+|----|---------|----------|-------------------------|
+| L1 | Most automation DEV/PROD live versions still **UNKNOWN** in inventory | High | Fill [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) from Airtable UI during checklist |
+| L2 | Full athlete E2E matrix largely **Untested** in docs | High | Execute [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) on DEV |
+| L3 | **066** DEV sandbox still pending OMNI confirm (PROJECT_STATE) | High | Use [066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md); do **not** mark complete without live evidence |
+| L4 | C-020 / **115** homework+video XP after coach review not fully covered | Medium | Extend DEV scenarios beyond intake (064/065, 114) |
+| L5 | Zoom **recording credit (C-025)** not installed in live DEV/PROD; Perfect Week / Total Zoom / post-award conflict gaps under S16 | Medium | **Repo 117a/b ready** — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) · reconcile Stage17 vs S16 in [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md) |
+| L6 | **070a** homework S3 PROD intentionally OFF | Medium | Keep OFF — see [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
+| L7 | Web achievements / athlete profile incomplete | Medium | Public launch UX gap — not automation-blocking |
+| L8 | Root marketing URL 404 / landing hub dependency | Low–Medium | `/shoot` works; root depends on landing |
+| L9 | Automation GitHub trigger headers often *confirm in Airtable* | Low | Verify triggers in UI before PROD debug/promote |
+| ~~L0~~ | ~~009 missing SCRIPT version header~~ | ~~Closed in repo~~ | **009 v1.0 SCRIPT metadata established** (runtime unchanged) |
+
 ## Active
 
 ### Web app

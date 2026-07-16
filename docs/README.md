@@ -67,6 +67,25 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 ---
 
+## V2 release readiness
+
+| Doc | Purpose |
+|-----|---------|
+| [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
+| [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
+| [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Full athlete-scenario launch matrix |
+| [known-issues.md](./known-issues.md) | Active gaps + **launch blockers** |
+| [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** DEV install packet |
+| [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
+| [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
+| [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
+
+**Safe repo validation (no Airtable / no secrets printed):**
+
+```bash
+node tools/validate-v2-release-readiness.js
+```
+
 ## Operations and architecture
 
 | Doc | Purpose |
