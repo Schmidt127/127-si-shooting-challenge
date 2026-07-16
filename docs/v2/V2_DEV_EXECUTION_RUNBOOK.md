@@ -114,9 +114,39 @@ node tools/airtable/v2_dev_runbook/cli.js cleanup A3 --dev-confirm --rollback-on
 # then --execute only if owned rows should be deleted
 ```
 
-Initial live-supported IDs: **A3, B1, B2, F1, F2, F3**.
+Live-supported IDs: **A3, B1, B2, C4, D3, F1, F2, F3, G3, H2, J1, J4, J5, L1, L2**.  
+Not in CLI: **M1, M2**, Make/email.
 
-CLI safety tests: `node tools/airtable/v2_dev_runbook/cli.test.js`
+```bash
+# Wave 2 dry-run
+node tools/airtable/v2_dev_runbook/cli.js run-test C4 --dev-confirm --enrollment rec… --assignment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test D3 --dev-confirm --enrollment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test G3 --dev-confirm --enrollment rec… --week rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test H2 --dev-confirm --enrollment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J1 --dev-confirm --enrollment rec… --meeting rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J4 --dev-confirm --enrollment rec… --meeting rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J5 --dev-confirm
+node tools/airtable/v2_dev_runbook/cli.js run-test L1 --dev-confirm
+node tools/airtable/v2_dev_runbook/cli.js run-test L2 --dev-confirm
+```
+
+CLI tests:  
+`node tools/airtable/v2_dev_runbook/cli.test.js`  
+`node tools/airtable/v2_dev_runbook/scenarios.test.js`
+
+### Wave 2 handler cheat-sheet
+
+| ID | Purpose | Writes (when --execute) | Cleanup / rollback |
+|---|---|---|---|
+| C4 | Satisfactory homework XP | Create Homework Completions | Delete owned completion |
+| D3 | Video feedback XP | Create Video Feedback (Ready?) | Delete owned VF |
+| G3 | Perfect Week unlock | Create WAS if needed | Delete owned WAS |
+| H2 | Gate Blocked | Optional Enrollment Recalc patch | Restore previousFields |
+| J1 | Zoom live attendance XP | None (operator/101) | No shared meeting deletes |
+| J4 | Zoom recording credit | Create HW Completion + Zoom Meeting | Delete owned completion |
+| J5 | Recording credit rerun | None | n/a |
+| L1 | XP Source Key battery | None | n/a |
+| L2 | Unlock Source Key battery | None | n/a |
 
 ---
 

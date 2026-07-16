@@ -93,6 +93,9 @@ Safety flags (live actions):
   --execute                    Required for Airtable writes (default is dry-run)
   --rollback-only              Cleanup: revert owned records only (no broad delete)
   --enrollment <rec...>        Override test enrollment id
+  --assignment <rec...>        Homework assignment id (C4)
+  --meeting <rec...>           Zoom Meeting id (J1/J4/J5)
+  --week <rec...>              Week id (G3)
   --operator <name>            Operator label for evidence
   --notes <text>               Operator notes for evidence
 
@@ -100,7 +103,7 @@ Hard stops:
   BASE_ID must equal appTetnuCZlCZdTCT
   PROD base appn84sqPw03zEbTT is always refused
   Tokens are never printed
-  Make/email tests are not implemented in this CLI yet
+  Make/email/M1/M2 tests are not implemented in this CLI yet
 `.trim();
 }
 

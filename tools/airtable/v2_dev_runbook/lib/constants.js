@@ -27,8 +27,28 @@ function getEvidenceRoot() {
 const RUN_STATE_DIR = getRunStateDir();
 const EVIDENCE_ROOT = getEvidenceRoot();
 
-/** Initial live CLI support (no Make/email). */
-const SUPPORTED_LIVE_TESTS = Object.freeze(["A3", "B1", "B2", "F1", "F2", "F3"]);
+/**
+ * Live CLI support (no Make/email/M1/M2).
+ * Wave 1: A3 B1 B2 F1–F3
+ * Wave 2: C4 D3 G3 H2 J1 J4 J5 L1 L2
+ */
+const SUPPORTED_LIVE_TESTS = Object.freeze([
+  "A3",
+  "B1",
+  "B2",
+  "C4",
+  "D3",
+  "F1",
+  "F2",
+  "F3",
+  "G3",
+  "H2",
+  "J1",
+  "J4",
+  "J5",
+  "L1",
+  "L2",
+]);
 
 const REQUIRED_TABLES = Object.freeze([
   "Enrollments",
@@ -36,6 +56,10 @@ const REQUIRED_TABLES = Object.freeze([
   "Weeks",
   "XP Events",
   "Achievement Unlocks",
+  "Homework Completions",
+  "Video Feedback",
+  "Weekly Athlete Summary",
+  "Zoom Meetings",
 ]);
 
 /** Minimal field checks used by verify-env (names only). */
@@ -43,6 +67,8 @@ const REQUIRED_FIELDS = Object.freeze({
   Enrollments: ["Enrollment Name"],
   Submissions: ["Shot Total", "Count This Submission?"],
   "XP Events": ["Source Key"],
+  "Homework Completions": ["Satisfactory?"],
+  "Video Feedback": ["Ready for XP Automation?"],
 });
 
 const TEST_ID_RE = /^[A-Z]\d{1,2}$/;

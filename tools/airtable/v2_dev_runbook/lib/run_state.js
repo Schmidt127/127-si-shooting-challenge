@@ -41,6 +41,7 @@ function createRunState({
     dryRun: Boolean(dryRun),
     ownershipToken: crypto.randomBytes(16).toString("hex"),
     recordsCreated: [],
+    rollbackPatches: [],
     preTestState: {},
     status: dryRun ? "dry_run" : "started",
     cleanup: null,
@@ -78,6 +79,28 @@ function addOwnedRecord(state, record) {
   return {
     ...state,
     recordsCreated: [...(state.recordsCreated || []), entry],
+  };
+}
+
+/**
+ * Track a field patch for rollback (e.g. H2 enrollment gate prep).
+ * Cleanup restores `previousFields` only when ownership is proven.
+ */
+function addRollbackPatch(state, patch) {
+  const entry = {
+    table: patch.table,
+    id: patch.id,
+    previousFields: patch.previousFields || {},
+    appliedFields: patch.appliedFields || {},
+    createdAt: new Date().toISOString(),
+    owned: true,
+  };
+  if (!entry.table || !entry.id) {
+    throw new SafetyError("invalid_rollback_patch", "Rollback patch requires table + id");
+  }
+  return {
+    ...state,
+    rollbackPatches: [...(state.rollbackPatches || []), entry],
   };
 }
 
@@ -134,13 +157,14 @@ function assertCleanupOwnership({ testId, runState, rollbackOnly = false }) {
     );
   }
   const owned = (runState.recordsCreated || []).filter((r) => r.owned && r.id);
-  if (!owned.length && !rollbackOnly) {
+  const patches = (runState.rollbackPatches || []).filter((r) => r.owned && r.id);
+  if (!owned.length && !patches.length && !rollbackOnly) {
     throw new SafetyError(
       "cleanup_nothing_owned",
-      "Cleanup refused: no owned records in run-state (shared fixtures are never deleted).",
+      "Cleanup refused: no owned records/patches in run-state (shared fixtures are never deleted).",
     );
   }
-  return owned;
+  return { ownedRecords: owned, rollbackPatches: patches };
 }
 
 function markCleanup(state, result) {
@@ -151,6 +175,7 @@ function markCleanup(state, result) {
       at: new Date().toISOString(),
       mode: result.mode || "owned_only",
       deleted: result.deleted || [],
+      rolledBack: result.rolledBack || [],
       skipped: result.skipped || [],
       notes: result.notes || "",
     },
@@ -165,6 +190,7 @@ module.exports = {
   readRunState,
   writeRunState,
   addOwnedRecord,
+  addRollbackPatch,
   listRunStates,
   latestRunStateForTest,
   assertCleanupOwnership,

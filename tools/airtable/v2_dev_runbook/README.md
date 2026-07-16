@@ -48,11 +48,27 @@ node tools/airtable/v2_dev_runbook/cli.js cleanup A3 --dev-confirm --rollback-on
 node tools/airtable/v2_dev_runbook/cli.js status
 ```
 
-### Initial live-supported tests
+### Live-supported tests
 
-`A3` · `B1` · `B2` · `F1` · `F2` · `F3`
+Wave 1: `A3` · `B1` · `B2` · `F1` · `F2` · `F3`  
+Wave 2: `C4` · `D3` · `G3` · `H2` · `J1` · `J4` · `J5` · `L1` · `L2`
 
-Recommended order: **A3 → B1 → B2 → F1 → F2 → F3**
+Not in CLI yet: `M1` · `M2` · Make/email (`I6` · `J6` · `L3` · `C7` · …)
+
+Recommended order: **A3 → B1 → B2 → C4 → D3 → F1 → F2 → F3 → G3 → H2 → J1 → J4 → J5 → L1 → L2**
+
+```bash
+# Wave 2 examples (dry-run default)
+node tools/airtable/v2_dev_runbook/cli.js run-test C4 --dev-confirm --enrollment rec… --assignment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test D3 --dev-confirm --enrollment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test G3 --dev-confirm --enrollment rec… --week rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test H2 --dev-confirm --enrollment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J1 --dev-confirm --enrollment rec… --meeting rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J4 --dev-confirm --enrollment rec… --meeting rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J5 --dev-confirm --enrollment rec… --meeting rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test L1 --dev-confirm --enrollment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test L2 --dev-confirm --enrollment rec…
+```
 
 ### Evidence output
 
@@ -68,6 +84,7 @@ Recommended order: **A3 → B1 → B2 → F1 → F2 → F3**
 node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js
 node tools/airtable/v2_dev_runbook/print_live_plan.js --smoke-only --check-credentials
 node tools/airtable/v2_dev_runbook/cli.test.js
+node tools/airtable/v2_dev_runbook/scenarios.test.js
 ```
 
 ## Layout

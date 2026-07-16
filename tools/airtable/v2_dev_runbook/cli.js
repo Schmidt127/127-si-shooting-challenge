@@ -178,7 +178,16 @@ async function cmdRunTest(parsed, env) {
 
   const scenario = getScenario(testId);
   const enrollmentId = parsed.get("enrollment", env.DEV_TEST_ENROLLMENT_ID || "");
-  const plan = await scenario.plan({ enrollmentId });
+  const assignmentId = parsed.get("assignment", env.DEV_HOMEWORK_ASSIGNMENT_ID || "");
+  const meetingId = parsed.get("meeting", env.DEV_ZOOM_MEETING_ID || "");
+  const weekId = parsed.get("week", env.DEV_TEST_WEEK_ID || "");
+  const plan = await scenario.plan({
+    enrollmentId,
+    assignmentId,
+    meetingId,
+    weekId,
+    submissionId: parsed.get("submission", ""),
+  });
   print("== Scenario plan ==");
   print(JSON.stringify({ id: scenario.id, title: scenario.title, plan }, null, 2));
   print("");
@@ -194,6 +203,12 @@ async function cmdRunTest(parsed, env) {
   let client = {
     dryRun: true,
     async createRecord() {
+      return { dryRun: true };
+    },
+    async updateRecord(table, id) {
+      return { dryRun: true, id: id || "(dry-run)" };
+    },
+    async deleteRecord() {
       return { dryRun: true };
     },
   };
@@ -299,12 +314,14 @@ async function cmdCleanup(parsed, env) {
   print("");
 
   const latest = latestRunStateForTest(testId);
-  // Cleanup is always owned-records-only (rollback-only). Never broad delete.
-  const owned = assertCleanupOwnership({
+  // Cleanup is always owned-records/patches only. Never broad delete.
+  const ownership = assertCleanupOwnership({
     testId,
     runState: latest && latest.state,
     rollbackOnly: false,
   });
+  const owned = ownership.ownedRecords || [];
+  const patches = ownership.rollbackPatches || [];
 
   // Shared synthetic fixture IDs never deleted — only owned IDs from run-state
   const sharedForbidden = new Set(
@@ -312,14 +329,24 @@ async function cmdCleanup(parsed, env) {
   );
 
   if (!isWriteAllowed(parsed)) {
-    print("DRY-RUN cleanup plan (owned records only; no deletes):");
+    print("DRY-RUN cleanup plan (owned records/patches only; no writes):");
     for (const rec of owned) {
       const shared = sharedForbidden.has(rec.id);
       print(`  would ${shared ? "SKIP_SHARED" : "DELETE"} ${rec.table} ${rec.id}`);
     }
-    print("Pass --execute to delete owned records only after Mike authorization.");
+    for (const patch of patches) {
+      print(
+        `  would ROLLBACK ${patch.table} ${patch.id} fields=${Object.keys(patch.previousFields || {}).join(",") || "(none)"}`,
+      );
+    }
+    print("Pass --execute to apply owned cleanup after Mike authorization.");
     print("--rollback-only is implied: shared fixtures are never deleted.");
-    return { ok: true, dryRun: true, ownedCount: owned.length };
+    return {
+      ok: true,
+      dryRun: true,
+      ownedCount: owned.length,
+      patchCount: patches.length,
+    };
   }
 
   assertExecuteForWrites(parsed, true);
@@ -331,7 +358,23 @@ async function cmdCleanup(parsed, env) {
 
   const client = createAirtableClient({ env, dryRun: false, fetchImpl: global.fetch });
   const deleted = [];
+  const rolledBack = [];
   const skipped = [];
+
+  // Apply rollback patches first (restore prior field values)
+  for (const patch of patches) {
+    if (sharedForbidden.has(patch.id) || patch.id === "(dry-run)") {
+      skipped.push({ ...patch, reason: "shared_or_dry_run" });
+      continue;
+    }
+    if (patch.previousFields && Object.keys(patch.previousFields).length) {
+      await client.updateRecord(patch.table, patch.id, patch.previousFields);
+      rolledBack.push(patch);
+    } else {
+      skipped.push({ ...patch, reason: "empty_previous_fields" });
+    }
+  }
+
   for (const rec of owned) {
     if (sharedForbidden.has(rec.id) || rec.id === "(dry-run)") {
       skipped.push({ ...rec, reason: "shared_or_dry_run" });
@@ -345,6 +388,7 @@ async function cmdCleanup(parsed, env) {
     status: "cleaned",
     mode: parsed.has("rollback-only") ? "rollback_only" : "owned_only",
     deleted,
+    rolledBack,
     skipped,
     notes: parsed.get("notes", ""),
   });
@@ -359,16 +403,18 @@ async function cmdCleanup(parsed, env) {
     runId: next.runId,
     preTestState: next.preTestState || {},
     recordsCreated: next.recordsCreated || [],
-    expectedResult: "Owned records removed; shared fixtures untouched",
-    actualResult: `Deleted ${deleted.length}; skipped ${skipped.length}`,
+    expectedResult: "Owned records removed / patches rolled back; shared fixtures untouched",
+    actualResult: `Deleted ${deleted.length}; rolledBack ${rolledBack.length}; skipped ${skipped.length}`,
     automationEvidence: "n/a cleanup",
     cleanupResult: next.cleanup,
     result: "pass",
     notes: parsed.get("notes", ""),
   });
 
-  print(`Cleanup complete: deleted=${deleted.length} skipped=${skipped.length}`);
-  return { ok: true, deleted, skipped };
+  print(
+    `Cleanup complete: deleted=${deleted.length} rolledBack=${rolledBack.length} skipped=${skipped.length}`,
+  );
+  return { ok: true, deleted, rolledBack, skipped };
 }
 
 async function cmdStatus() {

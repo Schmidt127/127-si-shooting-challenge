@@ -192,13 +192,13 @@ test("run-state ownership", () => {
       kind: "create",
     });
     next = writeRunState(filePath, next);
-    const owned = assertCleanupOwnership({
+    const ownership = assertCleanupOwnership({
       testId: "B1",
       runState: next,
       rollbackOnly: false,
     });
-    assert.strictEqual(owned.length, 1);
-    assert.strictEqual(owned[0].id, "recOwnedSub0000001");
+    assert.strictEqual(ownership.ownedRecords.length, 1);
+    assert.strictEqual(ownership.ownedRecords[0].id, "recOwnedSub0000001");
   });
 });
 

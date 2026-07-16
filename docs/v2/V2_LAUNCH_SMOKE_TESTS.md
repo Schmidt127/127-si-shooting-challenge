@@ -42,21 +42,24 @@ node tools/airtable/v2_dev_runbook/cli.js plan --smoke-only
 node tools/airtable/v2_dev_runbook/print_live_plan.js --smoke-only
 ```
 
-### CLI-supported live smoke (first wave)
+### CLI-supported live smoke
 
-Safe operator CLI currently implements live dry-run/execute for:
+Safe operator CLI implements dry-run/execute for all non-Make launch-smoke rows except web:
 
-**A3 · B1 · B2 · F1 · F2 · F3**
+**A3 · B1 · B2 · C4 · D3 · F1 · F2 · F3 · G3 · H2 · J1 · J4 · J5 · L1 · L2**
+
+Still not in CLI: **M1 · M2** (web) · Make/email rows.
 
 ```bash
 node tools/airtable/v2_dev_runbook/cli.js verify-env --dev-confirm
 node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+node tools/airtable/v2_dev_runbook/cli.js run-test C4 --dev-confirm --enrollment rec… --assignment rec…
+node tools/airtable/v2_dev_runbook/cli.js run-test J4 --dev-confirm --enrollment rec… --meeting rec…
 # After Mike named DEV auth only:
 node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --execute --enrollment recYOUR_DEV_ENROLLMENT --operator Mike
 ```
 
-Evidence: `docs/v2/evidence/dev-runs/<date>/<test-id>.md`  
-Remaining smoke rows (C4, D3, G3, H2, J1, J4–J5, L1–L2, M1–M2) stay UI/API/manual until CLI handlers are added.
+Evidence: `docs/v2/evidence/dev-runs/<date>/<test-id>.md`
 
 ---
 
@@ -80,6 +83,7 @@ Run from repo root. These clear the offline half of smoke-tagged rows; they do *
 
 ```bash
 node tools/airtable/v2_dev_runbook/cli.test.js
+node tools/airtable/v2_dev_runbook/scenarios.test.js
 node tools/airtable/v2_dev_runbook/cli.js run-offline
 node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
