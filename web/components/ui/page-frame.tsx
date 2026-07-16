@@ -42,7 +42,7 @@ export function PageHeader({
   align = "left",
 }: PageHeaderProps) {
   return (
-    <header className={cn("relative mb-8 overflow-hidden rounded-xl border border-white/[0.08] bg-card/50 p-5 sm:mb-10 sm:p-6", align === "center" && "text-center")}>
+    <header className={cn("relative mb-8 overflow-hidden rounded-xl border border-border bg-card p-5 shadow-[0_4px_16px_-10px_rgba(38,38,38,0.12)] sm:mb-10 sm:p-6", align === "center" && "text-center")}>
       <div className="pointer-events-none absolute inset-0 court-lines opacity-30" aria-hidden />
       <div className="relative">
         {eyebrow ? (

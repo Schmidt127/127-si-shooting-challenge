@@ -43,7 +43,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
               {tutorial.categories.map((category) => (
                 <span
                   key={category}
-                  className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+                  className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
                 >
                   {category}
                 </span>
@@ -51,7 +51,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
               {tutorial.tutorialTypes.map((type) => (
                 <span
                   key={type}
-                  className="rounded-md border border-brand-blue/30 bg-brand-blue/15 px-3 py-1 text-xs font-semibold text-brand-white"
+                  className="rounded-md border border-brand-blue/30 bg-brand-blue/15 px-3 py-1 text-xs font-semibold text-brand-blue"
                 >
                   {type}
                 </span>
@@ -74,7 +74,7 @@ export function TutorialDetailView({ tutorial }: TutorialDetailViewProps) {
                 className="object-cover"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
               {tutorial.athlete ? (
                 <p className="absolute bottom-4 left-4 right-4 text-sm font-bold uppercase tracking-wider text-white">
                   {tutorial.athlete}

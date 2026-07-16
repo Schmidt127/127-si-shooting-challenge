@@ -50,22 +50,22 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
                 alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
             </div>
           ) : null}
 
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-white">
+              <span className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-brand-blue">
                 {assignment.weekName}
               </span>
               {assignment.homeworkNumber ? (
-                <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+                <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-muted">
                   {assignment.homeworkNumber}
                 </span>
               ) : null}
               {assignment.book ? (
-                <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+                <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-muted">
                   {assignment.bookAbbreviation || assignment.book}
                 </span>
               ) : null}

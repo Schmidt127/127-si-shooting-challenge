@@ -9,16 +9,17 @@ type StatusBadgeProps = {
 };
 
 const TONE: Record<StatusBadgeTone, string> = {
-  neutral: "border-white/15 bg-white/5 text-muted",
-  success: "border-emerald-400/35 bg-emerald-500/10 text-emerald-100",
-  warn: "border-court-gold/40 bg-court-gold/10 text-court-gold",
-  danger: "border-red-400/35 bg-red-500/10 text-red-200",
-  accent: "border-accent/35 bg-accent/10 text-accent-soft",
-  blue: "border-brand-blue/40 bg-brand-blue/15 text-brand-white",
+  neutral: "border-border bg-brand-light-gray text-muted",
+  success: "border-emerald-300 bg-emerald-50 text-emerald-800",
+  warn: "border-court-gold/50 bg-court-gold/15 text-amber-900",
+  danger: "border-red-300 bg-red-50 text-red-800",
+  accent: "border-accent/40 bg-accent/10 text-accent-soft",
+  blue: "border-brand-blue/35 bg-brand-blue/10 text-brand-blue",
 };
 
 /**
  * Compact status chip — use sparingly; prefer plain text when possible.
+ * Tone is paired with text so status is never color-only.
  */
 export function StatusBadge({ children, tone = "neutral", className }: StatusBadgeProps) {
   return (

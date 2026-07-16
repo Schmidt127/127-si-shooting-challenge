@@ -17,8 +17,9 @@ Full guide: `web/docs/brand-guide.md`
 ## Visual rules
 
 - Use tokens from `app/globals.css` — official kit: blue `#0034B7`, orange `#FF8B00`
-- **Base UI:** near-black `#0A0A0A`, white headlines, gray body — blue/orange as **accents only**, not full-page color washes
-- Full guide: `web/docs/brand-guide.md` (127_SI_Brand_Kit)
+- **Base UI:** light gray `#F2F2F2` page, white cards, charcoal `#262626` text — blue/orange as **dominant accents**
+- Dark surfaces only for isolated heroes, key stats, achievements, or approved contrast sections (`.sc-contrast` / court navy)
+- Full guide: `web/docs/brand-guide.md` (127_SI_Brand_Kit); shared foundation: `BRAND_STANDARDS.md`
 - Logo: `BRAND_LOGOS` in `lib/brand.ts` — horizontal V1 on hub hero + product headers; circle for nav/footer/favicon
 - **Maven Pro** for UI type; Magistral when web license available
 - **No emoji** as icons on hub or product chrome
@@ -30,8 +31,8 @@ Full guide: `web/docs/brand-guide.md`
 ## Tailwind
 
 - Prefer existing tokens; extend `globals.css` for new semantic colors
-- Panels: `bg-card border border-white/[0.08]` on dark base
-- CTAs: solid `bg-brand-orange` or white-outline secondary — avoid orange gradients everywhere
+- Panels: `bg-card border border-border` on light base
+- CTAs: solid `bg-brand-orange` or white secondary with border — avoid orange gradients everywhere
 
 ## Incremental delivery
 

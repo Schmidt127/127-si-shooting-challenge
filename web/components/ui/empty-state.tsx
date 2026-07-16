@@ -16,7 +16,7 @@ export function EmptyState({ title, description, icon, action, className }: Empt
     <div className={cn("flex flex-col items-center justify-center px-6 py-20", className)}>
       <div className={catalogStatePanelClass(false)}>
         {icon ? (
-          <div className="mx-auto inline-flex rounded-2xl border border-white/10 bg-white/5 p-4 text-muted">
+          <div className="mx-auto inline-flex rounded-2xl border border-border bg-brand-light-gray p-4 text-muted">
             {icon}
           </div>
         ) : null}

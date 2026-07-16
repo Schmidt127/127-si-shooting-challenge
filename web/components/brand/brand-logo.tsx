@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { withBasePath } from "@/lib/app-config";
 import { BRAND_LOGOS, BRAND_ORG_NAME } from "@/lib/brand";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,9 @@ const SIZES: Record<BrandLogoVariant, { width: number; height: number }> = {
 /**
  * Official 127 Sports Intensity logos.
  * Do not stretch, recolor, filter, outline, crop, or distort.
+ *
+ * Local public files are served under basePath `/shoot`. With `unoptimized`,
+ * next/image does not always rewrite string srcs, so we prefix explicitly.
  */
 export function BrandLogo({
   variant = "horizontal",
@@ -34,7 +38,8 @@ export function BrandLogo({
   alt = BRAND_ORG_NAME,
 }: BrandLogoProps) {
   const { width, height } = SIZES[variant];
-  const src = variant === "circle" ? BRAND_LOGOS.circle : BRAND_LOGOS.horizontal;
+  const assetPath = variant === "circle" ? BRAND_LOGOS.circle : BRAND_LOGOS.horizontal;
+  const src = withBasePath(assetPath);
 
   return (
     <Image
@@ -43,7 +48,6 @@ export function BrandLogo({
       width={width}
       height={height}
       priority={priority}
-      /** Local static files + basePath=/shoot break next/image optimizer fetches at /brand/* */
       unoptimized
       className={cn("object-contain", className)}
       sizes={

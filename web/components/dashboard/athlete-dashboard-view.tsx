@@ -213,7 +213,7 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               {data.achievements.slice(0, 3).map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2"
+                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2"
                 >
                   <span className="text-sm text-foreground">{item.name}</span>
                   <StatusBadge tone={item.unlocked ? "success" : "neutral"}>

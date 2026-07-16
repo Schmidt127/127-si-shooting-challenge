@@ -44,7 +44,7 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
 
   return (
     <div>
-      <div className="mb-8 rounded-2xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm sm:p-5">
+      <div className="mb-8 rounded-2xl border border-border bg-brand-light-gray p-4 backdrop-blur-sm sm:p-5">
         <div className="mb-3 flex flex-wrap items-end justify-between gap-2">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
@@ -62,7 +62,7 @@ export function LeaderboardBoard({ entries }: LeaderboardBoardProps) {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="rounded-2xl border border-white/10 bg-card/60 px-6 py-12 text-center text-sm text-muted">
+        <p className="rounded-2xl border border-border bg-card/60 px-6 py-12 text-center text-sm text-muted">
           No athletes in this grade band yet.
         </p>
       ) : (

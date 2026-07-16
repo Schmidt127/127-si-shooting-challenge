@@ -30,7 +30,7 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 
 **Program supporting (Shooting Challenge only, subordinate):** `--court-navy` `#001A5C`, `--court-tan` `#C4A574`, `--court-gold` `#C9A227`.
 
-**Dark UI (current web default):** Near-black base (`#0A0A0A`), white headlines, gray body text. Use **blue and orange as accents only** — not full-page color washes or rainbow product cards.
+**Base UI (Shooting Challenge):** Primarily light — page background `#F2F2F2`, cards/surfaces `#FFFFFF`, charcoal text `#262626`. Blue and orange are dominant accents. Dark navy contrast panels (`--court-navy` / `.sc-contrast`) are allowed only for isolated heroes, statistic moments, achievements, and public-display scoreboard headers — never as full-page chrome.
 
 ---
 
@@ -67,7 +67,7 @@ Code constants: `lib/brand.ts` → `BRAND_LOGOS`
 
 - Do not stretch, recolor, or add effects to the logo  
 - Minimum clear space: height of the orange circle in the mark  
-- Logos are designed for dark backgrounds — use on navy/black UI or brand-blue bands  
+- Logos are designed for both light and dark bands — prefer light page chrome; use white/contrast logos only on navy or brand-blue contrast panels  
 
 ---
 

@@ -59,7 +59,7 @@ function HomeworkCard({
       >
         <div className="flex flex-col sm:flex-row">
           {assignment.coverImage ? (
-            <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-black/30 sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
+            <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-brand-light-gray sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
               <Image
                 src={assignment.coverImage.url}
                 alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
@@ -68,11 +68,11 @@ function HomeworkCard({
                 sizes="(max-width: 640px) 100vw, 208px"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 sm:bg-gradient-to-t sm:to-card/90" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
-            <div className="flex w-full items-center justify-center border-b border-white/5 bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
-              <span className="font-mono text-4xl font-black text-white/20">{hwLabel}</span>
+            <div className="flex w-full items-center justify-center border-b border-border-subtle bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
+              <span className="font-mono text-4xl font-black text-brand-blue/25">{hwLabel}</span>
             </div>
           )}
 
@@ -101,7 +101,7 @@ function HomeworkCard({
                 {assignment.topics.slice(0, 3).map((topic) => (
                   <span
                     key={topic}
-                    className="rounded-md border border-white/10 px-2 py-0.5 text-[11px] text-muted"
+                    className="rounded-md border border-border px-2 py-0.5 text-[11px] text-muted"
                   >
                     {topic}
                   </span>
@@ -138,14 +138,14 @@ function WeekSection({
           </p>
           <h2 className="font-display mt-1 text-2xl text-foreground sm:text-3xl">{weekName}</h2>
         </div>
-        <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
+        <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 font-mono text-xs text-muted">
           {assignments.length} assignment{assignments.length === 1 ? "" : "s"}
         </span>
       </div>
 
       <div className="relative space-y-4 pl-0 sm:pl-8">
         <div
-          className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-brand-orange/50 via-white/10 to-transparent sm:block"
+          className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-brand-orange/50 via-border to-transparent sm:block"
           aria-hidden
         />
         {assignments.map((assignment, index) => (

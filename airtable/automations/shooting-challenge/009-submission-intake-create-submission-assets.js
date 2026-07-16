@@ -2,20 +2,21 @@
 Automation: 009 - Submission Intake - Create Submission Assets
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
+Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
+Last GitHub Update: 2026-07-15 (v1.0 SCRIPT metadata established; runtime unchanged)
 
 Purpose:
-To be confirmed from production script.
+Create one Submission Assets row per uploaded file on a Submission (HW Sub 1/2, Video Upload).
 
 Trigger:
-To be confirmed from Airtable automation.
+Submissions — confirm exact conditions in Airtable UI (*confirm in Airtable*).
 
 Important Tables:
-To be confirmed from production script.
+Submissions, Submission Assets
 
 Important Fields:
-To be confirmed from production script.
+HW Sub 1, HW Sub 2, Video Upload, Attachment Upload Status, Source Attachment ID
 
 Notes:
 GitHub is the source-of-truth copy.
@@ -25,6 +26,14 @@ Airtable is the deployed/running copy.
 /************************************************************
  * 009 - Submission Intake - Create Submission Assets
  * Trigger Table: Submissions
+ *
+ * Version: v1.0
+ * Date Written: 2026-06-20
+ * Last Updated: 2026-07-15
+ *
+ * VERSION HISTORY
+ * - v1.0 (2026-07-15): Established SCRIPT metadata header for release inventory
+ *   (runtime behavior unchanged from GitHub production copy synced 2026-06-20).
  *
  * PURPOSE
  * For one Submission record:
@@ -43,7 +52,37 @@ Airtable is the deployed/running copy.
  * 009 creates Submission Assets.
  * 020 creates/links Homework Completions and marks homework assets Ready.
  * 070a sends homework assets to Make only after Homework Completion link exists.
+ *
+ * FOLDER
+ * - 02 - Submission Intake and Asset Creation
+ *
+ * AUTOMATION NAME
+ * - 009 - Submission Intake - Create Submission Assets
+ *
+ * REQUIRED INPUT VARIABLES
+ * - recordId = Airtable record ID from the triggering Submission record
  ************************************************************/
+
+// @ts-nocheck
+
+/* =========================================================
+   SECTION 1 — SCRIPT METADATA
+========================================================= */
+
+const SCRIPT = {
+    scriptName: "009 - Submission Intake - Create Submission Assets",
+    version: "v1.0",
+    versionNumber: "v1.0",
+    versionDate: "2026-07-15",
+    originalWrittenDate: "2026-06-20",
+    lastUpdated: "2026-07-15",
+    folder: "02 - Submission Intake and Asset Creation",
+    automationName: "009 - Submission Intake - Create Submission Assets",
+};
+
+/* =========================================================
+   SECTION 2 — CONFIGURATION
+========================================================= */
 
 const { recordId } = input.config();
 
