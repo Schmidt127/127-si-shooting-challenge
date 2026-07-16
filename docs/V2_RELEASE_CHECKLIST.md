@@ -8,6 +8,8 @@
 
 **Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md). Live DEV install **not** performed. Merge gate **closed** 2026-07-16 (#25/#26/#27 on `master`); OA2 package reconciled after merges.
 
+**OA1 authorized DEV install attempt (2026-07-16):** Master tip `1d403df` (#25–#28). Pre-install checklist completed; **live paste/smoke blocked** (no Airtable credentials/UI session). See [C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md). Do **not** mark C-025 DEV-verified.
+
 **Companion docs:**
 
 | Doc | Role |
@@ -18,6 +20,7 @@
 | [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) | Per-change promotion template |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion/rollback index (if present from overnight S10) |
 | [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | Online Agent 2 DEV verification package |
+| [deploy-checklists/C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md) | Online Agent 1 authorized DEV install attempt (blocked) |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | Audit-first testing standards |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live base IDs and milestone snapshot |
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b DEV install packet |
@@ -48,7 +51,7 @@ python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 - [ ] Backlog items being promoted have Phase 2 approval + promotion docs under `docs/deploy-checklists/`
 - [ ] [known-issues.md](./known-issues.md) launch blockers reviewed (accept, fix, or defer with owner)
 - [x] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence) — 2026-07-16 offline
-- [x] C-025 DEV install packet reviewed if recording credit in scope — reviewed; live install still open
+- [x] C-025 DEV install packet reviewed if recording credit in scope — reviewed; OA1 live install **blocked** (credentials); still open
 - [x] 070a PROD remains OFF unless Mike-approved decision flips — decision record affirmed 2026-07-16
 - [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence) — offline PASS; **live pending**
 - [x] Web lint / typecheck / tests / production build **PASS** — 2026-07-16
@@ -73,7 +76,7 @@ Run on DEV only (`appTetnuCZlCZdTCT`) with Schmidt / named test enrollments.
 | Level gates | **042** Gate Blocked when XP ok / gate fail | [ ] |
 | Weekly summary | **031–034** WAS create + previous-week helpers | [ ] |
 | Zoom live attendance | **101** awards live keys only | [ ] |
-| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); not live-verified | [ ] |
+| Zoom recording credit (C-025) | **117a/117b** repo-ready — [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); OA1 attempt blocked — [C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md); not live-verified | [ ] |
 | Asset upload | **070b/070c** writeback + hash validation (if in scope) | [ ] |
 | Audits | Stages A–J / relevant 090 dry-runs clean or documented exceptions | [ ] |
 

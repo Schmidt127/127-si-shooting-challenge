@@ -7,6 +7,8 @@
 
 **Repo verification (2026-07-16, Online Agent 2):** Offline release-readiness validator + C-025/066/header/engine/upload/web suites **PASS** (originally on tip `b320aa2`). No live Airtable poll — DEV/PROD UI columns remain UNKNOWN unless noted. **Merge gate closed:** #25/#26/#27 merged to `master` 2026-07-16; this OA2 package reconciled onto post-merge tip.
 
+**Authorized DEV install attempt (2026-07-16, Online Agent 1):** Starting master `1d403df` (includes #25–#28). Pre-install checklist completed from docs + DEV snapshot `20260706`. **Live paste/smoke blocked** — no Airtable PAT or authenticated UI session in cloud environment. Evidence: [C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md). 117a/117b remain **not live-installed**.
+
 ## How to read this table
 
 | Column | Meaning |
@@ -30,7 +32,7 @@
 | Rows with strong PROD evidence | 070b, 070c, 116 (partial), C-013 closeout |
 | DEV-only by design | 115 (Engineering Test Framework) |
 | Explicitly leave PROD OFF until scheduled | 070a homework upload |
-| C-025 recording credit | **117a/117b implemented in repo** — ready for DEV install; **not** live-verified |
+| C-025 recording credit | **117a/117b implemented in repo** — ready for DEV install; OA1 authorized attempt **blocked** (no credentials); **not** live-installed |
 
 ## Inventory
 
@@ -87,8 +89,8 @@
 | 115 | 115 - Engineering Test Framework - Run Testing Scenario Daily Submission | v1.3 | 2026-07-07 | 2026-07-06 | Testing Scenarios when **Run Test?** checked | UNKNOWN — confirm in Airtable UI | recordId | v1.3 DEV functional complete 2026-07-07 | Not deployed (DEV only) | C-020 checklist | Keep DEV-only until promotion doc |
 | 116 | 116 - Submission Assets - Apply Asset Reuse Decision Consequences | v1.0.1 | 2026-07-10 | 2026-07-10 | Submission Assets · **When record updated** · watched field **`Asset Reuse Decision`** · input `recordId` | UNKNOWN — confirm in Airtable UI | recordId | DEV complete | PROD runtime PASS on fixture; doc hygiene pending | C-023-prod-automation-116-validation-2026-07-11.md | Sign-off checklist hygiene |
 
-| 117a | 117a - Zoom Recording Credit - Award XP from Quiz Completion | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + Zoom Meeting linked | Completion Status Satisfactory; Zoom Meeting + Enrollment not empty | recordId | **Ready for DEV install** — offline contract tests PASS 2026-07-16; **not live-installed/verified** | **Not installed** — do not activate PROD | C-025 tests PASS 2026-07-16; ZOOM_RECORDING_CREDIT_DEV_INSTALL.md | Execute DEV packet after Mike auth; capture Source Keys |
-| 117b | 117b - Zoom Recording Credit - Send Approval Email Webhook | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + send flag | Config email enabled; template key present | recordId, makeWebhookUrl | **Ready for DEV install** — offline tests PASS 2026-07-16; **not live-verified** | **Not installed** — do not activate PROD | C-025 tests PASS 2026-07-16 | DEV Make webhook only; leave OFF until dry-run |
+| 117a | 117a - Zoom Recording Credit - Award XP from Quiz Completion | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + Zoom Meeting linked | Completion Status Satisfactory; Zoom Meeting + Enrollment not empty | recordId | **Ready for DEV install** — OA1 pre-install checklist done 2026-07-16; **live paste blocked (no PAT/UI)**; not installed | **Not installed** — do not activate PROD | Offline PASS; [C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md) | Provide DEV PAT or OMNI paste; reconcile XP Bucket `Zoom` vs `Zoom Attendance`; add XP Source `Zoom Recording` |
+| 117b | 117b - Zoom Recording Credit - Send Approval Email Webhook | v1.0 | 2026-07-15 | 2026-07-15 | Homework Completions when Satisfactory + send flag | Config email enabled; template key present | recordId, makeWebhookUrl | **Ready for DEV install** — OA1 blocked same as 117a; webhook DEV-safety unproven | **Not installed** — do not activate PROD | Offline PASS; install-attempt packet | Prove DEV Make webhook before ON; leave OFF until dry-run |
 
 ## Source Key quick reference (for version verification)
 
@@ -126,8 +128,8 @@
 | Item | Repo | Ready DEV install | Verified DEV | Ready PROD | Verified PROD |
 |------|------|-------------------|--------------|------------|---------------|
 | 009 SCRIPT header | Yes | N/A (existing automation) | UNKNOWN | UNKNOWN | UNKNOWN |
-| C-025 / 117a XP award | Yes | Yes | No | No | No |
-| C-025 / 117b email | Yes | Yes | No | No | No |
+| C-025 / 117a XP award | Yes | Yes | No (OA1 blocked 2026-07-16) | No | No |
+| C-025 / 117b email | Yes | Yes | No (OA1 blocked 2026-07-16) | No | No |
 | 117c–117f | Not required | — | — | — | — |
 | 066 OMNI confirm support | Yes (packet+harness) | N/A | **Pending OMNI** | No | No |
 | 070a homework upload | Yes (existing) | DEV evidence historical | Re-verify | **No — keep OFF** | No |

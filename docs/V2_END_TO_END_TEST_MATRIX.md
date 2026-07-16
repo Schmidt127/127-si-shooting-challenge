@@ -5,7 +5,7 @@
 **Environment:** DEV first (`appTetnuCZlCZdTCT`) · PROD smoke only after Mike approval  
 **Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
 
-**Prep status (2026-07-16):** Repository contract tests PASS. Merge gate #25/#26/#27 closed. Live matrix rows remain **U** until Mike/OMNI execute on DEV. Recommended first live DEV block: **F1–F3** (066) then **J4–J5** (117a). Do not mark P without enrollment IDs + automation output evidence.
+**Prep status (2026-07-16):** Repository contract tests PASS. Merge gate #25/#26/#27/#28 closed (`master` `1d403df`). OA1 authorized C-025 DEV install **blocked** (no Airtable PAT/UI) — [C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md). Live matrix rows remain **U**. Recommended first live DEV block: **F1–F3** (066) then **J4–J5** (117a) after credentials. Do not mark P without enrollment IDs + automation output evidence.
 
 ## How to use
 
@@ -142,9 +142,9 @@ cd web && npm test
 | J1 | Live attendance base XP | Meeting + enrollment attendance | 101 | `ZOOM_ATTEND_BASE\|meeting\|enr` once | U | U |
 | J2 | Live attendance bonuses | 2nd / 3rd meeting rules | 101 | Bonus keys once per enrollment rules | U | U |
 | J3 | Attendance rerun | Re-run Create XP Events | 101 | No duplicate live XP Events | U | U |
-| J4 | Zoom recording credit | Recording quiz Satisfactory | **117a** | `ZOOM_RECORDING\|…` once; blocked if live exists; Config % of live | U (repo ready) | N |
+| J4 | Zoom recording credit | Recording quiz Satisfactory | **117a** | `ZOOM_RECORDING\|…` once; blocked if live exists; Config % of live | U (repo ready; OA1 live install blocked 2026-07-16) | N |
 | J5 | Recording credit rerun | Re-run 117a | **117a** | `skipped_already_awarded` | U | N |
-| J6 | Recording approval email | Config enabled + Satisfactory | **117b** | Send once after Satisfactory only | U | N |
+| J6 | Recording approval email | Config enabled + Satisfactory | **117b** | Send once after Satisfactory only | U (webhook DEV-safety unproven) | N |
 
 ---
 
