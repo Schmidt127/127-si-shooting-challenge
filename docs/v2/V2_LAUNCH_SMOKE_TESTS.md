@@ -38,8 +38,25 @@ Aligned with matrix sign-off plus C-025 DEV recording readiness.
 Machine-readable flags: `launch_smoke: true` in [../../tools/airtable/v2_dev_runbook/matrix-classification.json](../../tools/airtable/v2_dev_runbook/matrix-classification.json).
 
 ```bash
+node tools/airtable/v2_dev_runbook/cli.js plan --smoke-only
 node tools/airtable/v2_dev_runbook/print_live_plan.js --smoke-only
 ```
+
+### CLI-supported live smoke (first wave)
+
+Safe operator CLI currently implements live dry-run/execute for:
+
+**A3 · B1 · B2 · F1 · F2 · F3**
+
+```bash
+node tools/airtable/v2_dev_runbook/cli.js verify-env --dev-confirm
+node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+# After Mike named DEV auth only:
+node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --execute --enrollment recYOUR_DEV_ENROLLMENT --operator Mike
+```
+
+Evidence: `docs/v2/evidence/dev-runs/<date>/<test-id>.md`  
+Remaining smoke rows (C4, D3, G3, H2, J1, J4–J5, L1–L2, M1–M2) stay UI/API/manual until CLI handlers are added.
 
 ---
 
@@ -62,6 +79,8 @@ Do **not** block PROD promotion wait on these unless Mike expands the gate:
 Run from repo root. These clear the offline half of smoke-tagged rows; they do **not** clear live UI/API rows.
 
 ```bash
+node tools/airtable/v2_dev_runbook/cli.test.js
+node tools/airtable/v2_dev_runbook/cli.js run-offline
 node tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js

@@ -14,7 +14,9 @@
 | [V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
 | [../../tools/airtable/v2_dev_runbook/matrix-classification.json](../../tools/airtable/v2_dev_runbook/matrix-classification.json) | Machine-readable mode tags |
 | [../../tools/airtable/v2_dev_runbook/fixtures/](../../tools/airtable/v2_dev_runbook/fixtures/) | Domain fixtures (setup/cleanup/rollback) |
+| [../../tools/airtable/v2_dev_runbook/cli.js](../../tools/airtable/v2_dev_runbook/cli.js) | Safe operator CLI (dry-run default) |
 | [evidence/_TEMPLATE-dev-test-evidence.md](./evidence/_TEMPLATE-dev-test-evidence.md) | Per-test evidence form |
+| [evidence/dev-runs/](./evidence/dev-runs/) | CLI evidence output (`<date>/<test-id>.md`) |
 | [08-testing-standards.md](./08-testing-standards.md) | Audit-first + C-020 rules |
 
 **Live results rule:** Do **not** mark matrix cells Pass without enrollment IDs + automation output evidence filed under `docs/v2/evidence/`. Offline suite PASS ≠ live DEV PASS.
@@ -50,10 +52,71 @@ Every matrix row is tagged with one or more modes in `matrix-classification.json
 Print the classification anytime:
 
 ```bash
-node tools/airtable/v2_dev_runbook/print_live_plan.js
-node tools/airtable/v2_dev_runbook/print_live_plan.js --mode offline
+node tools/airtable/v2_dev_runbook/cli.js list
+node tools/airtable/v2_dev_runbook/cli.js plan --smoke-only
 node tools/airtable/v2_dev_runbook/print_live_plan.js --check-credentials
 ```
+
+---
+
+## 2A. Safe operator CLI (Mike / Desktop Lead)
+
+Entrypoint: `node tools/airtable/v2_dev_runbook/cli.js`
+
+| Command | Purpose |
+|---|---|
+| `list` | Matrix rows + which IDs the CLI can run live |
+| `plan [--smoke-only]` | Execution plan |
+| `verify-env --dev-confirm` | Token presence, DEV `BASE_ID`, schema plan (no token print) |
+| `run-offline` | Offline fixture suite |
+| `run-test <ID> --dev-confirm` | Dry-run one scenario (default) |
+| `run-test <ID> --dev-confirm --execute --enrollment rec…` | Live write path (Mike auth required) |
+| `collect-evidence <ID> --dev-confirm` | Write/update evidence markdown |
+| `cleanup <ID> --dev-confirm [--rollback-only] [--execute]` | Delete **owned** run-state records only |
+| `status` | Local run-state + evidence summary |
+
+### CLI hard safety controls
+
+1. `BASE_ID` must equal exactly `appTetnuCZlCZdTCT` — any other value (including PROD) is refused.  
+2. `--dev-confirm` required for live/env actions.  
+3. Default is **dry-run**; Airtable writes require separate `--execute`.  
+4. Token values are never printed.  
+5. PROD Make/webhook env keys are refused.  
+6. Cleanup only deletes record IDs stored in the local run-state ownership file; shared fixtures are skipped.  
+7. Make/email tests (`I6`, `J6`, `L3`, `C7`, …) are **not** implemented in the CLI yet.
+
+### Exact commands for first live block (A3 → F3)
+
+```bash
+# 0) tools/airtable/.env (gitignored)
+# AIRTABLE_TOKEN=pat...
+# BASE_ID=appTetnuCZlCZdTCT
+
+node tools/airtable/v2_dev_runbook/cli.js run-offline
+node tools/airtable/v2_dev_runbook/cli.js verify-env --dev-confirm
+
+# Dry-run (safe; no writes)
+node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+node tools/airtable/v2_dev_runbook/cli.js run-test B1 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+node tools/airtable/v2_dev_runbook/cli.js run-test B2 --dev-confirm
+node tools/airtable/v2_dev_runbook/cli.js run-test F1 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+node tools/airtable/v2_dev_runbook/cli.js run-test F2 --dev-confirm --enrollment recYOUR_DEV_ENROLLMENT
+node tools/airtable/v2_dev_runbook/cli.js run-test F3 --dev-confirm
+
+# ONLY after Mike named DEV authorization — writes enabled
+node tools/airtable/v2_dev_runbook/cli.js run-test A3 --dev-confirm --execute --enrollment recYOUR_DEV_ENROLLMENT --operator Mike
+
+# Evidence lands at:
+# docs/v2/evidence/dev-runs/<YYYY-MM-DD>/<TEST-ID>.md
+
+node tools/airtable/v2_dev_runbook/cli.js collect-evidence A3 --dev-confirm --result pass --notes "Week linked"
+node tools/airtable/v2_dev_runbook/cli.js cleanup A3 --dev-confirm --rollback-only
+# then --execute only if owned rows should be deleted
+```
+
+Initial live-supported IDs: **A3, B1, B2, F1, F2, F3**.
+
+CLI safety tests: `node tools/airtable/v2_dev_runbook/cli.test.js`
 
 ---
 
@@ -403,12 +466,14 @@ Procedures below are for Mike/OMNI (or a Mike-authorized agent with DEV PAT). Ag
 
 | Script | Writes? | Purpose |
 |---|---|---|
+| `cli.js` | Only with `--dev-confirm --execute` on DEV | Operator runner + evidence + owned cleanup |
+| `cli.test.js` | No | Safety tests (PROD refusal, dry-run, ownership) |
 | `run_offline_fixture_suite.js` | No | Validate fixtures, keys, decisions |
 | `print_live_plan.js` | No | Mode filter + smoke list + credential presence |
 | `fixture_builders.js` | No | Shared Source Key + evidence helpers |
 | Existing C-023/C-013 DEV tools under `tools/airtable/` | Yes when explicitly run | Asset reuse / upload proofs — use only with Mike DEV auth |
 
-No new script in this package performs Airtable writes.
+Without both `--dev-confirm` and `--execute`, the CLI performs **no** Airtable writes.
 
 ---
 
