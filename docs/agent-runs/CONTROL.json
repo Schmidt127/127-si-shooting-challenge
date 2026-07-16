@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-16T13:03:26Z",
+  "updated_at": "2026-07-16T13:03:46Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "47287231a43bcdd43d3ff3ce4791ca81abdd3b8b",
-    "remote_sha": "47287231a43bcdd43d3ff3ce4791ca81abdd3b8b",
+    "sha": "a4b32ca2ebf8ed47d11d790faa2c9a03866e3129",
+    "remote_sha": "a4b32ca2ebf8ed47d11d790faa2c9a03866e3129",
     "match": true,
-    "note": "Lead tip-sync after Mike-authorized merges of #25\u2013#28 (2026-07-16)."
+    "note": "Lead tip-sync to master after #25\u2013#29 (CONTROL tip-sync PR included)."
   },
   "integration": {
     "branch": "master",
