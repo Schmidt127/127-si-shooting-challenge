@@ -5,7 +5,7 @@
 **Source scripts:** `airtable/automations/shooting-challenge/*.js`  
 **Companion:** [automation-index.md](./automation-index.md) · [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
 
-**Repo verification (2026-07-16, Online Agent 2):** Offline release-readiness validator + C-025/066/header/engine/upload/web suites **PASS** on tip `b320aa2`. No live Airtable poll — DEV/PROD UI columns remain UNKNOWN unless noted. PRs #25/#26/#27 were **not** on `master` (`babe74c`) at verification start.
+**Repo verification (2026-07-16, Online Agent 2):** Offline release-readiness validator + C-025/066/header/engine/upload/web suites **PASS** (originally on tip `b320aa2`). No live Airtable poll — DEV/PROD UI columns remain UNKNOWN unless noted. **Merge gate closed:** #25/#26/#27 merged to `master` 2026-07-16; this OA2 package reconciled onto post-merge tip.
 
 ## How to read this table
 

@@ -10,9 +10,9 @@
 | Starting master | `babe74c` |
 | Package doc | `docs/deploy-checklists/DEV-release-readiness-verification-2026-07-16.md` |
 
-## Merge gate (blocking)
+## Merge gate
 
-PRs **#25, #26, #27** were **not merged** when this assignment started. `master` remained `babe74c`. Do not claim tip-of-master release readiness until Lead/Mike merges them and tip-syncs CONTROL.
+At OA2 start, PRs **#25/#26/#27** were open and `master` was `babe74c`. Cloud Lead later merged them (2026-07-16): #25 → `c1f135f`, #26 → `6ef60fd`, #27 → `efa3322`. PR #28 was reconciled onto the post-merge tip before merge.
 
 ## Hard stops observed
 
@@ -28,7 +28,6 @@ PRs **#25, #26, #27** were **not merged** when this assignment started. `master`
 
 ## Next for Mike / Lead
 
-1. Merge #25 → #26 → #27 (approved order)  
-2. Tip-sync CONTROL to new master SHA  
-3. Authorize named DEV C-025 install and/or 066 OMNI  
-4. Execute smoke sequence in verification package §3–4  
+1. Tip-sync CONTROL to final master SHA after #28  
+2. Authorize named DEV C-025 install and/or 066 OMNI  
+3. Execute smoke sequence in verification package §3–4  

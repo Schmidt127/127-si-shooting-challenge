@@ -14,7 +14,7 @@ Track these before treating V2 as fully launch-ready. Status is repository evide
 | L4 | C-020 / **115** homework+video XP after coach review not fully covered | Medium | Extend DEV scenarios beyond intake (064/065, 114) |
 | L5 | Zoom **recording credit (C-025)** not installed in live DEV/PROD; Perfect Week / Total Zoom / post-award conflict gaps under S16 | Medium | **Repo 117a/b ready** (offline tests PASS 2026-07-16) — executable DEV sequence in [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) · [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) |
 | L6 | **070a** homework S3 PROD intentionally OFF | Medium | Keep OFF — [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) (affirmed 2026-07-16) |
-| L10 | Expected merges of PRs **#25 / #26 / #27** not on `master` at 2026-07-16 verification | High | Lead/Mike merge gate before tip-of-master release claims; `master` was `babe74c` |
+| ~~L10~~ | ~~Expected merges of PRs **#25 / #26 / #27** not on `master`~~ | ~~Closed~~ | **Merged 2026-07-16** by Cloud Lead (#25 `c1f135f`, #26 `6ef60fd`, #27 `efa3322`); continue with DEV live verification |
 | L7 | Web achievements / athlete profile incomplete | Medium | Public launch UX gap — not automation-blocking |
 | L8 | Root marketing URL 404 / landing hub dependency | Low–Medium | `/shoot` works; root depends on landing |
 | L9 | Automation GitHub trigger headers often *confirm in Airtable* | Low | Verify triggers in UI before PROD debug/promote |

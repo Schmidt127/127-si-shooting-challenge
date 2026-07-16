@@ -6,7 +6,7 @@
 **Environments:** DEV `appTetnuCZlCZdTCT` · PROD `appn84sqPw03zEbTT`  
 **Hard rules:** DEV first · no unattended PROD paste · Mike approves PROD · no Vercel setting changes from agents · do not merge without Mike
 
-**Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md). Live DEV install **not** performed. Merge gate: PRs #25/#26/#27 were still open vs `master` `babe74c` at verification start.
+**Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md). Live DEV install **not** performed. Merge gate **closed** 2026-07-16 (#25/#26/#27 on `master`); OA2 package reconciled after merges.
 
 **Companion docs:**
 

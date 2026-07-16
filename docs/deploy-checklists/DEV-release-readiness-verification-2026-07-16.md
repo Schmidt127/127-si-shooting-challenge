@@ -10,16 +10,16 @@
 
 ## 0. Merge gate (verified before work)
 
-| PR | Title | Expected | Actual (2026-07-16) |
-|----|-------|----------|---------------------|
-| #25 | Light-theme correction | Merged to master | **OPEN draft** — not merged |
-| #26 | V2 release readiness (C-025/117a-b, 009, 066/070a) | Merged to master | **OPEN draft** — not merged |
-| #27 | LA-000 handoff + routing contract | Merged to master | **OPEN draft** — not merged |
-| `master` tip | — | Includes #25–#27 | Still **`babe74c`** |
+| PR | Title | At OA2 start | After Cloud Lead (2026-07-16) |
+|----|-------|--------------|-------------------------------|
+| #25 | Light-theme correction | OPEN draft | **MERGED** → `c1f135f` |
+| #26 | V2 release readiness | OPEN draft | **MERGED** → `6ef60fd` |
+| #27 | LA-000 handoff | OPEN draft | **MERGED** → `efa3322` |
+| `master` tip at OA2 start | — | `babe74c` | Updated after merges; OA2/#28 reconciled onto post-merge tip |
 
-**Implication:** This package reviews and extends the **PR #26 tip** content. It does **not** claim those PRs are on `master`. Lead must merge #25–#27 (Mike-approved) before treating this as tip-of-master verification.
+**Implication:** Original OA2 work reviewed **PR #26 tip** content offline. After Lead merges, this packet is tip-of-master–compatible. Live DEV install remains Mike/OMNI-gated.
 
-**CONTROL.json:** Still points at `c2d5701` while `master` is `babe74c` — Lead tip-sync required after merges. Workers must not edit CONTROL.
+**CONTROL.json:** Tip-sync to final master SHA remains a Lead follow-up after #28 merges. Workers must not edit CONTROL.
 
 ---
 
