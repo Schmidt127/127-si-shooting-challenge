@@ -45,7 +45,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
 
         <div className={cn(catalogHeroClass(), "relative mt-8")}>
           {level.coverImage ? (
-            <div className="flex w-full items-center justify-center bg-black/25 px-4 py-6 sm:px-8 sm:py-8">
+            <div className="flex w-full items-center justify-center bg-brand-light-gray px-4 py-6 sm:px-8 sm:py-8">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}

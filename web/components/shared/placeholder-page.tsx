@@ -11,7 +11,7 @@ type PlaceholderPageProps = {
 export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
-      <div className="w-full max-w-xl rounded-2xl border border-white/12 bg-card/90 p-8 text-center">
+      <div className="w-full max-w-xl rounded-2xl border border-border bg-card p-8 text-center shadow-[0_8px_24px_-12px_rgba(38,38,38,0.18)]">
         <p className="text-xs font-medium uppercase tracking-widest text-accent-soft">Coming soon</p>
         <h1 className="font-display mt-2 text-2xl text-foreground">{title}</h1>
         <p className="mt-4 text-muted">{description}</p>

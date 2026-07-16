@@ -26,14 +26,14 @@ export function AthleteAvatar({
   name,
   headshotUrl,
   size = "md",
-  ringClass = "ring-white/15",
+  ringClass = "ring-brand-blue/25",
   rank,
 }: AthleteAvatarProps) {
   const s = sizes[size];
 
   return (
     <div
-      className={`relative shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-brand-blue/30 to-accent/20 ring-2 ${ringClass} ${s.box}`}
+      className={`relative shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-brand-blue to-court-navy ring-2 ${ringClass} ${s.box}`}
     >
       {headshotUrl ? (
         <Image
@@ -45,7 +45,7 @@ export function AthleteAvatar({
           unoptimized
         />
       ) : (
-        <div className="flex h-full w-full items-center justify-center font-black text-white/85">
+        <div className="flex h-full w-full items-center justify-center font-black text-brand-white">
           <span className={s.text}>{initials(name)}</span>
         </div>
       )}

@@ -8,19 +8,19 @@ import type { AchievementCatalogData, AchievementDefinition } from "@/types/achi
 
 const RARITY_STYLES: Record<string, { ring: string; chip: string; label: string }> = {
   Common: {
-    ring: "ring-white/20",
-    chip: "border-white/15 bg-white/5",
+    ring: "ring-border",
+    chip: "border-border bg-brand-light-gray",
     label: "text-muted",
   },
   Uncommon: {
     ring: "ring-brand-blue/35",
     chip: "border-brand-blue/30 bg-brand-blue/10",
-    label: "text-brand-white",
+    label: "text-brand-blue",
   },
   Rare: {
     ring: "ring-brand-blue/45",
     chip: "border-brand-blue/35 bg-brand-blue/15",
-    label: "text-brand-white",
+    label: "text-brand-blue",
   },
   Epic: {
     ring: "ring-brand-orange/40",
@@ -30,7 +30,7 @@ const RARITY_STYLES: Record<string, { ring: string; chip: string; label: string 
   Legendary: {
     ring: "ring-court-gold/45",
     chip: "border-court-gold/35 bg-court-gold/10",
-    label: "text-court-gold",
+    label: "text-amber-900",
   },
 };
 
@@ -51,7 +51,7 @@ function AchievementCard({ achievement }: { achievement: AchievementDefinition }
       <div className="relative p-5 sm:p-6">
         <div className="flex items-start gap-4">
           <div
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-black/30 ring-1 ${style.ring}`}
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-light-gray ring-1 ${style.ring}`}
           >
             <IconMedal size={24} className={style.label} />
           </div>

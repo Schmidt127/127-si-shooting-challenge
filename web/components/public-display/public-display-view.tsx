@@ -20,23 +20,23 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
     <AmbientPage variant="leaderboard">
       <div className="min-h-[calc(100vh-8rem)] px-4 py-8 sm:px-8 sm:py-12">
         <div className="mx-auto max-w-7xl">
-          <header className="court-lines flex flex-wrap items-center justify-between gap-6 rounded-2xl border border-white/10 bg-card/80 px-5 py-6 sm:px-8">
+          <header className="court-lines sc-contrast flex flex-wrap items-center justify-between gap-6 rounded-2xl border px-5 py-6 shadow-[0_10px_32px_-12px_rgba(0,26,92,0.35)] sm:px-8">
             <div className="flex items-center gap-4">
               <BrandLogo variant="circle" className="h-14 w-14" />
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.35em] text-accent-soft">
                   127 Sports Intensity
                 </p>
-                <h1 className="font-display mt-1 text-3xl text-foreground sm:text-4xl lg:text-5xl">
+                <h1 className="font-display mt-1 text-3xl text-contrast-fg sm:text-4xl lg:text-5xl">
                   {data.seasonLabel}
                 </h1>
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-muted">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-contrast-muted">
                 Live leaderboard
               </p>
-              <p className="mt-1 text-sm text-muted">
+              <p className="mt-1 text-sm text-contrast-muted">
                 Updated {formatRelativeUpdate(data.updatedAt)}
               </p>
               <Link
@@ -57,7 +57,7 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
               <div
                 key={entry.id}
                 className={`rounded-2xl border bg-card/90 p-4 ${
-                  entry.rank === 1 ? "border-court-gold/35" : "border-white/10"
+                  entry.rank === 1 ? "border-court-gold/35" : "border-border"
                 }`}
               >
                 <div className="flex items-center gap-3">

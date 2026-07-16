@@ -33,7 +33,7 @@ export function GradeBandFilter({ value, onChange, counts }: GradeBandFilterProp
               "min-h-[2.75rem] rounded-lg border px-3.5 text-xs font-semibold uppercase tracking-[0.14em] transition",
               selected
                 ? "border-brand-orange/50 bg-brand-orange/15 text-accent-soft"
-                : "border-white/10 bg-white/[0.03] text-muted hover:border-white/20 hover:text-foreground",
+                : "border-border bg-brand-light-gray text-muted hover:border-brand-medium-gray hover:text-foreground",
             )}
           >
             <span className="sm:hidden">{option.shortLabel}</span>

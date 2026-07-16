@@ -23,15 +23,15 @@ export function ProductShell({
   children,
 }: ProductShellProps) {
   return (
-    <div className="relative flex min-h-screen flex-col">
+    <div className="relative flex min-h-screen flex-col bg-background">
       <div className="pointer-events-none absolute inset-0" aria-hidden>
-        <div className="absolute -left-24 top-0 h-72 w-72 rounded-full bg-brand-blue/[0.05] blur-3xl" />
-        <div className="absolute right-0 top-1/3 h-64 w-64 rounded-full bg-accent/[0.04] blur-3xl" />
+        <div className="absolute -left-24 top-0 h-72 w-72 rounded-full bg-brand-blue/[0.06] blur-3xl" />
+        <div className="absolute right-0 top-1/3 h-64 w-64 rounded-full bg-accent/[0.05] blur-3xl" />
       </div>
 
-      <header className="relative border-b border-white/[0.08] bg-background/95 backdrop-blur-md">
-        <div className="absolute inset-0 court-lines opacity-40" aria-hidden />
-        <div className="absolute inset-x-0 bottom-0 h-24 shot-arc opacity-80" aria-hidden />
+      <header className="relative border-b border-border bg-card/95 backdrop-blur-md">
+        <div className="absolute inset-0 court-lines opacity-50" aria-hidden />
+        <div className="absolute inset-x-0 bottom-0 h-24 shot-arc opacity-70" aria-hidden />
 
         <div className="relative mx-auto flex max-w-6xl flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5">
           <div className="flex flex-wrap items-center justify-between gap-3">
@@ -81,7 +81,7 @@ export function ProductShell({
 
       <main className="relative flex-1">{children}</main>
 
-      <footer className="relative mt-auto border-t border-white/[0.08] bg-card/40">
+      <footer className="relative mt-auto border-t border-border bg-card">
         <div className="mx-auto flex max-w-6xl flex-col items-start justify-between gap-4 px-4 py-6 sm:flex-row sm:items-center sm:px-6">
           <div className="flex items-center gap-3">
             <BrandLogo variant="circle" className="h-8 w-8 object-contain" />

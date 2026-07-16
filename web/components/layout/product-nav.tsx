@@ -37,7 +37,7 @@ export function ProductNav({ productName, items }: ProductNavProps) {
               "inline-flex min-h-[2.75rem] shrink-0 items-center rounded-lg px-3 py-2 text-sm font-medium transition",
               active
                 ? "bg-brand-blue text-brand-white ring-1 ring-brand-orange/50"
-                : "text-muted hover:bg-white/[0.06] hover:text-foreground",
+                : "text-muted hover:bg-brand-light-gray hover:text-foreground",
             )}
           >
             {item.label}

@@ -36,7 +36,7 @@ export function StatTile({
     <div className={cn(catalogInsetClass(), "px-4 py-3", className)}>
       <div className="flex items-center gap-2">
         {Icon ? (
-          <span className={cn("rounded-lg bg-black/25 p-1.5", TINT[tint])}>
+          <span className={cn("rounded-lg bg-card p-1.5 ring-1 ring-border-subtle", TINT[tint])}>
             <Icon size={16} />
           </span>
         ) : null}

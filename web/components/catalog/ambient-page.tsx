@@ -78,7 +78,7 @@ export function AmbientPage({ children, variant = "default" }: AmbientPageProps)
           className="absolute inset-0 opacity-[0.03]"
           style={{
             backgroundImage:
-              "linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)",
+              "linear-gradient(rgba(38,38,38,0.45) 1px, transparent 1px), linear-gradient(90deg, rgba(38,38,38,0.45) 1px, transparent 1px)",
             backgroundSize: "48px 48px",
           }}
         />

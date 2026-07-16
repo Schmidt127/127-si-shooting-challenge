@@ -26,7 +26,7 @@ function XpMeter({
   const width = maxXp > 0 ? Math.max(8, Math.round((xp / maxXp) * 100)) : 8;
 
   return (
-    <div className={`h-1.5 overflow-hidden rounded-full bg-white/10 ${className}`}>
+    <div className={`h-1.5 overflow-hidden rounded-full bg-brand-medium-gray/40 ${className}`}>
       <div
         className="h-full rounded-full bg-brand-orange"
         style={{ width: `${width}%` }}
@@ -80,7 +80,7 @@ function LevelLadderCard({
           </div>
 
           {level.coverImage ? (
-            <div className="flex shrink-0 items-center justify-center rounded-lg border border-white/5 bg-black/20 p-1.5">
+            <div className="flex shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-brand-light-gray p-1.5">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}
@@ -91,7 +91,7 @@ function LevelLadderCard({
           ) : null}
         </div>
 
-        <div className="border-t border-white/5 px-4 py-2 sm:px-5">
+        <div className="border-t border-border-subtle px-4 py-2 sm:px-5">
           <span className="text-sm font-semibold text-accent-soft opacity-80 transition group-hover:translate-x-0.5 group-hover:opacity-100">
             Unlock requirements & details →
           </span>

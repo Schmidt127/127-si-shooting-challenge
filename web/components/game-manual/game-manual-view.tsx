@@ -33,10 +33,10 @@ export function GameManualView({ manualUrl }: GameManualViewProps) {
           <div className={`mx-auto mt-10 ${catalogStatePanelClass()}`}>
             <p className="text-sm leading-relaxed text-muted">
               Paste your Adobe-hosted manual link into{" "}
-              <code className="rounded bg-white/5 px-1.5 py-0.5 text-foreground">
+              <code className="rounded bg-brand-light-gray px-1.5 py-0.5 text-foreground">
                 NEXT_PUBLIC_GAME_MANUAL_URL
               </code>{" "}
-              and it will display here with an open button — same nav and dark frame as Homework and
+              and it will display here with an open button — same nav and light frame as Homework and
               Tutorials.
             </p>
             <p className="mt-4 text-sm text-muted">
