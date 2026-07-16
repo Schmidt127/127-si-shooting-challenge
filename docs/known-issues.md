@@ -10,7 +10,7 @@ Track these before treating V2 as fully launch-ready. Status is repository evide
 |----|---------|----------|-------------------------|
 | L1 | Most automation DEV/PROD live versions still **UNKNOWN** in inventory | High | Fill [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) from Airtable UI during checklist |
 | L2 | Full athlete E2E matrix largely **Untested** in docs | High | Execute [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) on DEV |
-| L3 | **066** DEV sandbox still pending OMNI confirm (PROJECT_STATE) | High | Offline harness PASS 2026-07-16 — use [066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) + [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md); do **not** mark complete without live evidence |
+| L3 | **066 v3.2** live OMNI sandbox still pending (paste already done DEV+PROD) | High | Offline harness PASS 2026-07-16 — use [066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) + [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md); do **not** mark complete without live evidence |
 | L4 | C-020 / **115** homework+video XP after coach review not fully covered | Medium | Extend DEV scenarios beyond intake (064/065, 114) |
 | L5 | Zoom **recording credit (C-025)** not installed in live DEV/PROD; Perfect Week / Total Zoom / post-award conflict gaps under S16 | Medium | **Repo 117a/b ready** (offline tests PASS 2026-07-16) — executable DEV sequence in [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) · [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) |
 | L6 | **070a** homework S3 PROD intentionally OFF | Medium | Keep OFF — [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) (affirmed 2026-07-16) |
@@ -19,6 +19,7 @@ Track these before treating V2 as fully launch-ready. Status is repository evide
 | L8 | Root marketing URL 404 / landing hub dependency | Low–Medium | `/shoot` works; root depends on landing |
 | L9 | Automation GitHub trigger headers often *confirm in Airtable* | Low | Verify triggers in UI before PROD debug/promote |
 | ~~L0~~ | ~~009 missing SCRIPT version header~~ | ~~Closed in repo~~ | **009 v1.0 SCRIPT metadata established** (runtime unchanged) |
+| ~~L11~~ | ~~Stale repo status: 066 paste/version, 059 trigger, 043/112 disposition, 070b/c wording~~ | ~~Closed in repo~~ | **2026-07-16 blocker closure** — docs + release validator now enforce; Worker A six-pack amended by [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md) (117a/b) |
 
 ## Active
 

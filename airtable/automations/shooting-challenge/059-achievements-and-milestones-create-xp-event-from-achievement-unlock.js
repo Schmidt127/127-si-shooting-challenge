@@ -10,7 +10,9 @@ Purpose:
 Creates one XP Event from one Athlete Achievement Unlock for Perfect Week or Shot Milestone.
 
 Trigger:
-Athlete Achievement Unlocks when XP Award Status is Pending and Ready for 059 XP.
+Athlete Achievement Unlocks when record is created, Shot Milestone is not empty,
+and XP Award Status is Pending.
+(Do NOT filter on Ready for 059 XP — formula flips mid-run; see RECOMMENDED TRIGGER.)
 
 Important Tables:
 Athlete Achievement Unlocks, Achievements, XP Reward Rules, XP Events, Shot Milestones, Weeks, Weekly Athlete Summary

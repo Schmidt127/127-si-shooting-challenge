@@ -36,7 +36,7 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 | 04 | [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) | **Active** — AI workflow, task classification, five phases |
 | — | [v2/season-configuration-design.md](./v2/season-configuration-design.md) | Season gate design (Layer 2, DRAFT) |
 | 05 | [v2/05-system-architecture.md](./v2/05-system-architecture.md) | Shell |
-| 06 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.1** reference |
+| 06 | [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **Active** — V2 rewrite pattern; **066 v3.2** reference |
 | 07 | [v2/07-ui-standards.md](./v2/07-ui-standards.md) | Shell |
 | 08 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Active** — audit-first; **fix the audit, not the data** |
 | 09 | [v2/09-release-notes.md](./v2/09-release-notes.md) | Shell — points to CHANGELOG |
@@ -62,7 +62,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [development-base-setup.md](./development-base-setup.md) | **V2-015 ops runbook** — clone, PAT, webhook isolation, dev-first deploy |
 | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) | **Approved** — dev Airtable base + one prod + one repo |
 | [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) | **Planning aggregate** — Wave 0 closed; H-001/H-002; session progress |
-| [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.1 reference |
+| [v2/06-automation-standards.md](./v2/06-automation-standards.md) | **V2 automation rewrite pattern** — 066 v3.2 reference |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | **Audit-first testing** — fix the audit, not the data |
 
 ---
