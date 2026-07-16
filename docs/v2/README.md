@@ -52,6 +52,10 @@
 | [AUTOMATION_059_TRIGGER_RESOLUTION.md](./AUTOMATION_059_TRIGGER_RESOLUTION.md) | 059 created vs Ready-filter conflict |
 | [AUTOMATION_043_RETIREMENT_PLAN.md](./AUTOMATION_043_RETIREMENT_PLAN.md) | 043 superseded by 042 — retirement procedure |
 | [AUTOMATION_112_OFF_STATE_VERIFICATION.md](./AUTOMATION_112_OFF_STATE_VERIFICATION.md) | 112 OFF-state verification packet |
+| [PR34_PR35_PR37_RECONCILIATION.md](./PR34_PR35_PR37_RECONCILIATION.md) | PR #34/#35/#37 contract reconciliation (authoritative #35) |
+| [V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV test runbook (modes, fixtures, cleanup) |
+| [V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Pre-PROD promotion smoke subset |
+| [evidence/_TEMPLATE-dev-test-evidence.md](./evidence/_TEMPLATE-dev-test-evidence.md) | Per-test DEV evidence form |
 
 ## Workflow: Mike + ChatGPT + Cursor
 

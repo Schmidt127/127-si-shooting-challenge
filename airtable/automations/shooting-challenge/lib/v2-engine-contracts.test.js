@@ -41,8 +41,14 @@ const {
   isValidSha256Hex,
   evaluateAssetUploadFields,
   isBooleanishTrue,
+  evaluateProgressProcessingGuard,
+  evaluateCommsProcessingGuard,
   evaluateEnrollmentProcessingGuard,
   ENROLLMENT_ACTIVE_GUARD_COVERAGE,
+  SCHMIDT_ENROLLMENT_ID,
+  HW17_ASSET_DEFAULTS,
+  buildWeeklyEmailEventId,
+  priorSaturdayKeyDenver,
   evaluateWeeklySummaryBuildGate,
   evaluateWeeklySummarySendGate,
   decideAutomaticWeeklySummaryAction,
@@ -417,7 +423,7 @@ test("asset upload validation: SHA-256 and required writeback fields", () => {
   assert.ok(bad.failures.includes("file_hash_invalid"));
 });
 
-// --- C-010 Active? / Progress Processing guards ---
+// --- C-010 Active? / Progress Processing guards (PR #35 authoritative) ---
 test("Active? processing guard: inactive enrollment skips (not error)", () => {
   assert.strictEqual(isBooleanishTrue(false), false);
   assert.strictEqual(isBooleanishTrue("checked", false), true);
@@ -433,25 +439,47 @@ test("Active? processing guard: inactive enrollment skips (not error)", () => {
 });
 
 test("Active? processing guard: Progress Processing Enabled? optional field", () => {
-  const disabled = evaluateEnrollmentProcessingGuard({
-    enrollmentActive: true,
+  const disabled = evaluateProgressProcessingGuard({
     progressFieldExists: true,
     progressProcessingEnabled: false,
   });
   assert.strictEqual(disabled.allow, false);
   assert.strictEqual(disabled.actionOut, "skipped_progress_disabled");
 
-  const missingField = evaluateEnrollmentProcessingGuard({
-    enrollmentActive: true,
+  const missingField = evaluateProgressProcessingGuard({
     progressFieldExists: false,
     progressProcessingEnabled: false,
   });
   assert.strictEqual(missingField.allow, true);
 
+  // Hidden athlete: Active?=false must NOT block progress when PPE=true
+  const progressOk = evaluateProgressProcessingGuard({
+    progressFieldExists: true,
+    progressProcessingEnabled: true,
+  });
+  assert.strictEqual(progressOk.allow, true);
+  const commsSkip = evaluateCommsProcessingGuard({
+    enrollmentActive: false,
+    enrollmentId: ENR,
+  });
+  assert.strictEqual(commsSkip.allow, false);
+
   assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.guarded.includes("066"));
   assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.guarded.includes("117a"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.guarded.includes("072"));
   assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps.includes("010"));
-  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps.includes("072"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.progressPpe.includes("065"));
+  assert.ok(ENROLLMENT_ACTIVE_GUARD_COVERAGE.commsActive.includes("072"));
+  assert.ok(!ENROLLMENT_ACTIVE_GUARD_COVERAGE.gaps.includes("072"));
+});
+
+test("comms guard: Schmidt hard exclude even when Active?=true", () => {
+  const schmidt = evaluateCommsProcessingGuard({
+    enrollmentActive: true,
+    enrollmentId: SCHMIDT_ENROLLMENT_ID,
+  });
+  assert.strictEqual(schmidt.allow, false);
+  assert.strictEqual(schmidt.reason, "schmidt_excluded");
 });
 
 // --- C-011 weekly summary dedupe / resend prevention ---
@@ -534,6 +562,16 @@ test("automatic weekly summary: resend prevention + inactive skip", () => {
       emailReady: true,
       hasPackage: true,
       enrollmentActive: true,
+      enrollmentId: SCHMIDT_ENROLLMENT_ID,
+    }).action,
+    "skip_inactive_enrollment",
+  );
+  assert.strictEqual(
+    decideAutomaticWeeklySummaryAction({
+      emailSent: false,
+      emailReady: true,
+      hasPackage: true,
+      enrollmentActive: true,
     }).action,
     "send_existing_package",
   );
@@ -545,6 +583,28 @@ test("automatic weekly summary: resend prevention + inactive skip", () => {
       enrollmentActive: true,
     }).action,
     "build_then_send",
+  );
+});
+
+test("weekly email eventId + priorSaturdayKeyDenver match PR #35", () => {
+  assert.strictEqual(
+    buildWeeklyEmailEventId(ENR, WEEK),
+    `WEEKLY_EMAIL|${ENR}|${WEEK}`,
+  );
+  // Sunday 2026-07-12 Denver → prior Sat 2026-07-11
+  assert.strictEqual(
+    priorSaturdayKeyDenver(new Date("2026-07-12T12:00:00-06:00")),
+    "2026-07-11",
+  );
+  // Monday rerun → same prior Saturday
+  assert.strictEqual(
+    priorSaturdayKeyDenver(new Date("2026-07-13T12:00:00-06:00")),
+    "2026-07-11",
+  );
+  // Saturday → previous Saturday (−7)
+  assert.strictEqual(
+    priorSaturdayKeyDenver(new Date("2026-07-11T12:00:00-06:00")),
+    "2026-07-04",
   );
 });
 
@@ -595,6 +655,11 @@ test("HW17 quiz intake: Enrollment+Week+Homework dedupe; C-009 no-asset gap", ()
   assert.strictEqual(created.action, "created_new");
   assert.strictEqual(created.c009Gap, true);
   assert.strictEqual(created.hasAssetSlot, false);
+  assert.strictEqual(created.assetDefaults.slot, "HW1");
+  assert.strictEqual(created.assetDefaults.purpose, "Homework 1");
+  assert.strictEqual(created.assetDefaults.sendToMakeTrigger, false);
+  assert.strictEqual(HW17_ASSET_DEFAULTS.slot, "HW1");
+  assert.notStrictEqual(HW17_ASSET_DEFAULTS.slot, "HW2");
 
   const linked = decideHw17QuizIntakeAction({
     enrollmentId: ENR,

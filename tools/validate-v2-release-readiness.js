@@ -140,6 +140,8 @@ const requiredDocs = [
   "docs/V2_RELEASE_CHECKLIST.md",
   "docs/AUTOMATION_VERSION_INVENTORY.md",
   "docs/V2_END_TO_END_TEST_MATRIX.md",
+  "docs/v2/V2_DEV_EXECUTION_RUNBOOK.md",
+  "docs/v2/V2_LAUNCH_SMOKE_TESTS.md",
   "docs/known-issues.md",
   "docs/automation-index.md",
   "docs/deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md",
@@ -242,7 +244,18 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js",
+  "tools/airtable/v2_dev_runbook/matrix-classification.json",
+  "tools/airtable/v2_dev_runbook/run_offline_fixture_suite.js",
+  "tools/airtable/v2_dev_runbook/cli.js",
+  "tools/airtable/v2_dev_runbook/cli.test.js",
+  "tools/airtable/v2_dev_runbook/scenarios.test.js",
+  "tools/airtable/v2_dev_runbook/lib/safety.js",
+  "tools/airtable/v2_dev_runbook/lib/scenarios.js",
+  "tools/airtable/v2_dev_runbook/fixtures/milestones.json",
   "tools/airtable/tests/test_c025_recording_watch_contract.py",
+  "tools/airtable/tests/test_c009_hw17_attachment_contract.py",
+  "tools/airtable/tests/test_c010_active_guards_contract.py",
+  "tools/airtable/tests/test_c011_weekly_email_contract.py",
   "web/lib/data/levels.test.ts",
   "web/lib/data/homework.test.ts",
   "tools/airtable/tests/test_c013_prod_make_smoke_run.py",
@@ -262,9 +275,24 @@ for (const needle of [
   "weekly summary",
   "attachment-slot mapping",
   "HW17 quiz intake",
+  "WEEKLY_EMAIL",
+  "priorSaturdayKeyDenver",
+  "schmidt_excluded",
 ]) {
   if (engineTest.includes(needle)) pass(`engine contract tests cover: ${needle}`);
   else fail(`engine contract tests missing coverage for: ${needle}`);
+}
+
+const requiredC009C011Docs = [
+  "docs/v2/C009_C010_C011_MIGRATION_SAFETY.md",
+  "docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md",
+  "docs/v2/C010_ACTIVE_GUARDS_DEV_INSTALL.md",
+  "docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md",
+  "docs/v2/PR34_PR35_PR37_RECONCILIATION.md",
+];
+for (const doc of requiredC009C011Docs) {
+  if (exists(doc)) pass(doc);
+  else fail(`missing required C-009/C-010/C-011 reconcile doc: ${doc}`);
 }
 
 const requiredC025Docs = [

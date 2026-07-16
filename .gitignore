@@ -34,3 +34,6 @@ web/.vercel/
 
 # Lambda build artifacts (source in lambda/upload-asset/)
 lambda/upload-asset/dist/
+
+# V2 DEV runbook local operator state (owned record IDs; never commit tokens)
+tools/airtable/v2_dev_runbook/.run-state/

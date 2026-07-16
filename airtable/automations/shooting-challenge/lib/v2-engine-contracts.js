@@ -21,12 +21,16 @@
  * - 117a — ZOOM_RECORDING|{meetingId}|{enrollmentId} (repo-ready; live DEV install open)
  * - 009 — Asset Slot HW1 / HW2 / VIDEO mapping + source-attachment dedupe
  * - 020 — infer HW1/HW2 from Asset Slot / Purpose / Label
- * - 067 — HW17 quiz Enrollment+Week+Homework dedupe (no attachment slot)
- * - 072 / 074 — weekly email build/send gates + resend prevention
+ * - 067 — HW17 quiz Enrollment+Week+Homework dedupe; assets HW1-only
+ *   (Purpose=Homework 1, Slot=HW1, Send to Make Trigger=false; Source Attachment ID)
+ * - 072 / 074 / 118 / 119 — weekly email build/send + priorSaturdayKeyDenver
+ *   eventId = WEEKLY_EMAIL|{enrollmentId}|{weekId}
  *
- * C-010 Active? / Progress Processing guards: contract helpers below encode the
- * intended skip semantics. Live script coverage is tracked in
- * ENROLLMENT_ACTIVE_GUARD_COVERAGE (gaps remain until C-010 lands).
+ * C-010 (authoritative PR #35):
+ * - Progress scripts 010/031/053/065 → Progress Processing Enabled? only
+ *   (missing field = enabled; false = skip)
+ * - Comms script 072 → Active? + Schmidt hard exclude (not PPE)
+ * - PPE rollout: create field → backfill true → then paste guards
  */
 
 "use strict";
@@ -40,12 +44,28 @@ const SOURCE_KEY_PREFIXES = Object.freeze({
   streakXp: "STREAK_XP|",
   shotMilestone: "SHOT_MILESTONE|",
   perfectWeek: "PERFECT_WEEK|",
+  weeklyEmail: "WEEKLY_EMAIL|",
   zoomAttendBase: "ZOOM_ATTEND_BASE",
   zoomAttendBonus2: "ZOOM_ATTEND_BONUS_2",
   zoomAttendBonus3: "ZOOM_ATTEND_BONUS_3",
   // C-025 recording family (canonical S16). Do not use ZOOM_RECORDING_CREDIT.
   zoomRecording: "ZOOM_RECORDING",
   zoomLiveCanonical: "ZOOM_LIVE",
+});
+
+/** Schmidt sandbox enrollment — excluded from weekly email / 072 comms. */
+const SCHMIDT_ENROLLMENT_ID = "recgP9qZYjAhE7NXm";
+
+/**
+ * HW17 / 067 v2.0 asset defaults (PR #35).
+ * Quiz row itself has no Asset Slot field; assets are created on parent Submission.
+ */
+const HW17_ASSET_DEFAULTS = Object.freeze({
+  purpose: "Homework 1",
+  slot: "HW1",
+  sendToMakeTrigger: false,
+  uploadStatus: "Pending Link",
+  uploadDestination: "Homework Completions",
 });
 
 function isValidRecordId(recordId) {
@@ -178,6 +198,42 @@ function buildSubmissionXpSourceKey(submissionId) {
 
 function buildHomeworkXpSourceKey(homeworkCompletionId) {
   return `${SOURCE_KEY_PREFIXES.homeworkXp}${assertValidRecordId(homeworkCompletionId, "homeworkCompletionId")}`;
+}
+
+/** Make/072 weekly email eventId — WEEKLY_EMAIL|{enrollmentId}|{weekId} */
+function buildWeeklyEmailEventId(enrollmentId, weekId) {
+  return `${SOURCE_KEY_PREFIXES.weeklyEmail}${assertValidRecordId(enrollmentId, "enrollmentId")}|${assertValidRecordId(weekId, "weekId")}`;
+}
+
+/**
+ * Most recently completed Week End (Saturday) date key in America/Denver.
+ * Mirrors 118/119 priorSaturdayKeyDenver (PR #35):
+ * Sun → prior Sat; Mon–Fri → prior Sat; Sat → previous Sat (−7).
+ */
+function priorSaturdayKeyDenver(now = new Date(), timeZone = DEFAULT_TIME_ZONE) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    weekday: "short",
+  }).formatToParts(now instanceof Date ? now : new Date(now));
+  const byType = Object.fromEntries(parts.map((p) => [p.type, p.value]));
+  const y = Number(byType.year);
+  const m = Number(byType.month);
+  const d = Number(byType.day);
+  const dowMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+  const dow = dowMap[byType.weekday];
+  if (!y || !m || !d || dow === undefined) {
+    throw new Error(`Unable to resolve Denver calendar day for prior Saturday: ${byType.weekday}`);
+  }
+  const daysBack = dow === 6 ? 7 : dow + 1;
+  const utcNoon = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+  utcNoon.setUTCDate(utcNoon.getUTCDate() - daysBack);
+  const yy = utcNoon.getUTCFullYear();
+  const mm = String(utcNoon.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(utcNoon.getUTCDate()).padStart(2, "0");
+  return `${yy}-${mm}-${dd}`;
 }
 
 function buildVideoXpSourceKey(videoFeedbackId) {
@@ -563,25 +619,14 @@ function isBooleanishTrue(value, fallback = false) {
 }
 
 /**
- * C-010 / 117a enrollment processing guard.
- * Inactive enrollment → skip (not error). Optional Progress Processing Enabled?
- * defaults to allow when the field is absent.
+ * C-010 progress guard (010/031/053/065) — PPE only.
+ * Missing field → enabled (migration-safe). Present + false → skip.
+ * Does NOT check Active? (hidden athletes with PPE=true still earn XP).
  */
-function evaluateEnrollmentProcessingGuard({
-  enrollmentActive,
+function evaluateProgressProcessingGuard({
   progressProcessingEnabled,
   progressFieldExists = false,
-  activeFieldExists = true,
 } = {}) {
-  if (activeFieldExists && !isBooleanishTrue(enrollmentActive, true)) {
-    return {
-      allow: false,
-      statusOut: "skipped",
-      actionOut: "skipped_inactive_enrollment",
-      reason: "enrollment_inactive",
-    };
-  }
-
   if (
     progressFieldExists &&
     !isBooleanishTrue(progressProcessingEnabled, true)
@@ -598,14 +643,95 @@ function evaluateEnrollmentProcessingGuard({
     allow: true,
     statusOut: "success",
     actionOut: "continue",
+    reason: "progress_processing_allowed",
+  };
+}
+
+/**
+ * C-010 / C-011 comms guard (072 / 118 / 119) — Active? + Schmidt exclude.
+ * Missing Active? field → treat as active. Does NOT check PPE.
+ */
+function evaluateCommsProcessingGuard({
+  enrollmentActive,
+  activeFieldExists = true,
+  enrollmentId = "",
+  schmidtEnrollmentId = SCHMIDT_ENROLLMENT_ID,
+} = {}) {
+  if (
+    enrollmentId &&
+    schmidtEnrollmentId &&
+    String(enrollmentId) === String(schmidtEnrollmentId)
+  ) {
+    return {
+      allow: false,
+      statusOut: "skipped",
+      actionOut: "skipped_inactive",
+      reason: "schmidt_excluded",
+    };
+  }
+
+  if (activeFieldExists && !isBooleanishTrue(enrollmentActive, true)) {
+    return {
+      allow: false,
+      statusOut: "skipped",
+      actionOut: "skipped_inactive",
+      reason: "enrollment_inactive",
+    };
+  }
+
+  return {
+    allow: true,
+    statusOut: "success",
+    actionOut: "continue",
+    reason: "comms_processing_allowed",
+  };
+}
+
+/**
+ * Combined Active? + PPE guard for scripts that intentionally check both (e.g. 117a).
+ * Prefer evaluateProgressProcessingGuard / evaluateCommsProcessingGuard for C-010.
+ */
+function evaluateEnrollmentProcessingGuard({
+  enrollmentActive,
+  progressProcessingEnabled,
+  progressFieldExists = false,
+  activeFieldExists = true,
+} = {}) {
+  if (activeFieldExists && !isBooleanishTrue(enrollmentActive, true)) {
+    return {
+      allow: false,
+      statusOut: "skipped",
+      actionOut: "skipped_inactive_enrollment",
+      reason: "enrollment_inactive",
+    };
+  }
+
+  const progress = evaluateProgressProcessingGuard({
+    progressProcessingEnabled,
+    progressFieldExists,
+  });
+  if (!progress.allow) return progress;
+
+  return {
+    allow: true,
+    statusOut: "success",
+    actionOut: "continue",
     reason: "enrollment_processing_allowed",
   };
 }
 
-/** Live script coverage for Enrollment.Active? early skip (C-010 tracker). */
+/**
+ * Live script coverage tracker (C-010 / PR #35).
+ * - progressPpe: paste PPE guards after create→backfill true
+ * - commsActive: 072 v3.8 repo-ready (Active? + Schmidt)
+ * - bothActiveAndPpe: existing scripts that already check both
+ */
 const ENROLLMENT_ACTIVE_GUARD_COVERAGE = Object.freeze({
-  guarded: Object.freeze(["023", "056", "066", "101", "117a"]),
-  gaps: Object.freeze(["010", "031", "053", "065", "072", "076"]),
+  guarded: Object.freeze(["023", "056", "066", "072", "101", "117a"]),
+  gaps: Object.freeze(["010", "031", "053", "065", "076"]),
+  progressPpe: Object.freeze(["010", "031", "053", "065"]),
+  commsActive: Object.freeze(["072"]),
+  bothActiveAndPpe: Object.freeze(["117a"]),
 });
 
 /**
@@ -683,15 +809,16 @@ function evaluateWeeklySummarySendGate({
 
 /**
  * C-011 automatic weekly summary decision (build → send without manual checkboxes).
- * Always refuse resend when Sent? is checked.
+ * Always refuse resend when Sent? is checked. Comms gate = Active? + Schmidt (not PPE).
  */
 function decideAutomaticWeeklySummaryAction({
   emailSent = false,
   emailReady = false,
   hasPackage = false,
   enrollmentActive = true,
+  enrollmentId = "",
 } = {}) {
-  const guard = evaluateEnrollmentProcessingGuard({ enrollmentActive });
+  const guard = evaluateCommsProcessingGuard({ enrollmentActive, enrollmentId });
   if (!guard.allow) {
     return {
       action: "skip_inactive_enrollment",
@@ -821,8 +948,9 @@ function inferHomeworkAssetSlot({
 }
 
 /**
- * HW17 / 067 intake: quiz rows have no Submission Asset / Asset Slot.
- * Dedupe identity is Enrollment + Week + Homework (mirrors Homework Completion Key).
+ * HW17 / 067 intake completion dedupe: Enrollment + Week + Homework.
+ * Quiz row has no Asset Slot field; 067 v2.0 creates parent Submission + HW1 assets
+ * from Quiz Result PDF (HW17_ASSET_DEFAULTS) when attachments exist.
  */
 function decideHw17QuizIntakeAction({
   enrollmentId,
@@ -837,6 +965,7 @@ function decideHw17QuizIntakeAction({
       action: "needs_review",
       reason: "missing_enrollment_week_or_homework",
       hasAssetSlot: false,
+      assetDefaults: HW17_ASSET_DEFAULTS,
     };
   }
 
@@ -846,6 +975,7 @@ function decideHw17QuizIntakeAction({
       reason: "quiz_already_linked",
       completionId: alreadyLinkedCompletionId,
       hasAssetSlot: Boolean(hasAttachment),
+      assetDefaults: HW17_ASSET_DEFAULTS,
     };
   }
 
@@ -856,6 +986,7 @@ function decideHw17QuizIntakeAction({
       reason: "ambiguous_hw17_duplicate_completions",
       completionIds: unique,
       hasAssetSlot: false,
+      assetDefaults: HW17_ASSET_DEFAULTS,
     };
   }
   if (unique.length === 1) {
@@ -864,7 +995,9 @@ function decideHw17QuizIntakeAction({
       reason: "hw17_dedupe_key_match",
       completionId: unique[0],
       hasAssetSlot: false,
+      // Pending Quiz Result PDF / asset create on parent Submission.
       c009Gap: !hasAttachment,
+      assetDefaults: HW17_ASSET_DEFAULTS,
     };
   }
 
@@ -872,14 +1005,16 @@ function decideHw17QuizIntakeAction({
     action: "created_new",
     reason: "no_existing_hw17_completion",
     hasAssetSlot: Boolean(hasAttachment),
-    // C-009: Fillout quiz path creates completion without asset/attachment today.
     c009Gap: !hasAttachment,
+    assetDefaults: HW17_ASSET_DEFAULTS,
   };
 }
 
 module.exports = {
   DEFAULT_TIME_ZONE,
   SOURCE_KEY_PREFIXES,
+  SCHMIDT_ENROLLMENT_ID,
+  HW17_ASSET_DEFAULTS,
   ENROLLMENT_ACTIVE_GUARD_COVERAGE,
   ASSET_SLOT_SOURCES,
   isValidRecordId,
@@ -895,6 +1030,8 @@ module.exports = {
   unlockStreaksFromBlocks,
   buildSubmissionXpSourceKey,
   buildHomeworkXpSourceKey,
+  buildWeeklyEmailEventId,
+  priorSaturdayKeyDenver,
   buildVideoXpSourceKey,
   buildStreakXpSourceKey,
   buildShotMilestoneSourceKey,
@@ -917,6 +1054,8 @@ module.exports = {
   isValidSha256Hex,
   evaluateAssetUploadFields,
   isBooleanishTrue,
+  evaluateProgressProcessingGuard,
+  evaluateCommsProcessingGuard,
   evaluateEnrollmentProcessingGuard,
   evaluateWeeklySummaryBuildGate,
   evaluateWeeklySummarySendGate,
