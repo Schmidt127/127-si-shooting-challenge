@@ -200,3 +200,9 @@ Capture: Config values, SCRIPT.version, XP Event IDs + Source Keys, console JSON
 | Live DEV C-025 install | **Not performed** | — |
 | Live 066 OMNI | **Not performed** | — |
 | Mike — authorize DEV install | **Required** | — |
+
+---
+
+## 8. Follow-up — authorized live 066 attempt (same day)
+
+A later Online Agent 2 run on master `1d403df` was explicitly authorized for DEV-only 066 OMNI. That run **stopped before writes**: no Airtable PAT in the Cloud Agent environment and no authenticated browser session for `appTetnuCZlCZdTCT`. See [066-omni-live-attempt-2026-07-16.md](./066-omni-live-attempt-2026-07-16.md). H-002 remains open.

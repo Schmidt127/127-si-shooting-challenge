@@ -64,7 +64,9 @@ Priority: **High** = fix before next season · **Medium** = data hygiene · **Lo
 
 **066 v3.1** is the **canonical template** for future V2 automation rewrites — see [v2/06-automation-standards.md](./v2/06-automation-standards.md).
 
-**Status:** GitHub **done** · production Airtable paste **not done** (awaiting deploy checklist)
+**Status:** GitHub **done** · production Airtable paste **not done** (awaiting deploy checklist) · **live DEV OMNI still OPEN**
+
+**2026-07-16 authorized live attempt:** Online Agent 2 verified master `1d403df` (includes #25–#28) and re-ran the offline harness (**PASS**), but **could not** open DEV Airtable (no PAT; browser login wall). No `Run Shot Milestone Check?` trigger. Evidence: [066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md). **Do not close H-002.**
 
 ---
 
