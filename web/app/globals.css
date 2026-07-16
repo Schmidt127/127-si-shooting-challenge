@@ -2,7 +2,11 @@
 
 /**
  * Global styles — 127 Sports Intensity brand + Shooting Challenge theme.
- * See web/docs/brand-guide.md
+ * See web/docs/brand-guide.md, BRAND_STANDARDS.md, APP_CONTEXT.md
+ *
+ * Theme: primarily light (white / light-gray surfaces). Dark surfaces are
+ * reserved for isolated hero panels, statistic contrast cards, achievement
+ * moments, and approved contrast sections — not full-page chrome.
  *
  * Typography: Maven Pro for all UI (body, nav, buttons, tables, forms).
  * Display headings use Maven Pro 700–800 — Magistral is licensed desktop-only
@@ -26,19 +30,26 @@
   --court-tan: #c4a574;
   --court-gold: #c9a227;
 
-  /* Near-black sporty base — blue & orange remain dominant accents */
-  --background: #0a0a0a;
-  --foreground: var(--brand-white);
-  --muted: #9ca3af;
-  --muted-subtle: #6b7280;
+  /* Primarily light UI — blue & orange remain dominant accents */
+  --background: var(--brand-light-gray);
+  --foreground: var(--brand-charcoal);
+  --muted: #5c5c5c;
+  --muted-subtle: #737373;
   --accent: var(--brand-orange);
-  --accent-soft: #ffb347;
-  --card: #141414;
-  --card-elevated: #1a1a1a;
-  --border: #2a2a2a;
-  --border-subtle: #1f1f1f;
+  /* Readable orange text on light surfaces (official orange remains CTAs) */
+  --accent-soft: #c96e00;
+  --card: var(--brand-white);
+  --card-elevated: var(--brand-white);
+  --border: var(--brand-medium-gray);
+  --border-subtle: #e5e5e5;
   --surface-light: var(--brand-light-gray);
   --text-on-light: var(--brand-charcoal);
+
+  /* Isolated contrast panel (hero / stats / achievements — not page chrome) */
+  --contrast-bg: var(--court-navy);
+  --contrast-fg: var(--brand-white);
+  --contrast-muted: #b8c4e0;
+  --contrast-border: color-mix(in srgb, var(--brand-white) 18%, transparent);
 
   /* Spacing / shape scale */
   --radius-sm: 0.5rem;
@@ -75,6 +86,10 @@
   --color-court-gold: var(--court-gold);
   --color-surface-light: var(--surface-light);
   --color-text-on-light: var(--text-on-light);
+  --color-contrast-bg: var(--contrast-bg);
+  --color-contrast-fg: var(--contrast-fg);
+  --color-contrast-muted: var(--contrast-muted);
+  --color-contrast-border: var(--contrast-border);
   --font-sans: var(--font-maven-pro);
   --font-display: var(--font-maven-pro);
   --font-mono: var(--font-geist-mono);
@@ -116,12 +131,12 @@ body {
       90deg,
       transparent 0,
       transparent calc(50% - 0.5px),
-      color-mix(in srgb, var(--brand-blue) 18%, transparent) calc(50% - 0.5px),
-      color-mix(in srgb, var(--brand-blue) 18%, transparent) calc(50% + 0.5px),
+      color-mix(in srgb, var(--brand-blue) 22%, transparent) calc(50% - 0.5px),
+      color-mix(in srgb, var(--brand-blue) 22%, transparent) calc(50% + 0.5px),
       transparent calc(50% + 0.5px)
     ),
     linear-gradient(
-      color-mix(in srgb, var(--brand-white) 4%, transparent) 1px,
+      color-mix(in srgb, var(--brand-charcoal) 6%, transparent) 1px,
       transparent 1px
     );
   background-size: 100% 100%, 100% 2.5rem;
@@ -132,9 +147,32 @@ body {
   background-image: radial-gradient(
     ellipse 120% 80% at 50% 120%,
     transparent 55%,
-    color-mix(in srgb, var(--brand-orange) 12%, transparent) 56%,
+    color-mix(in srgb, var(--brand-orange) 14%, transparent) 56%,
     transparent 57%
   );
+}
+
+/**
+ * Isolated contrast panel — navy/dark surfaces for heroes, key stats,
+ * and achievement moments only. Do not wrap the whole page in this.
+ */
+.sc-contrast {
+  background: var(--contrast-bg);
+  color: var(--contrast-fg);
+  border-color: var(--contrast-border);
+}
+
+.sc-contrast .text-muted,
+.sc-contrast .text-muted-subtle {
+  color: var(--contrast-muted);
+}
+
+.sc-contrast .text-foreground {
+  color: var(--contrast-fg);
+}
+
+.sc-contrast .text-accent-soft {
+  color: #ffb347;
 }
 
 /* Scoreboard-inspired data table chrome */
@@ -154,7 +192,7 @@ body {
 }
 
 .sc-table tbody tr:nth-child(even) {
-  background: color-mix(in srgb, var(--brand-light-gray) 4%, transparent);
+  background: color-mix(in srgb, var(--brand-light-gray) 85%, transparent);
 }
 
 .sc-table tbody td {
@@ -203,7 +241,28 @@ body {
   min-height: 2.75rem;
   padding: 0.625rem 1.25rem;
   border-radius: var(--radius-md);
-  border: 1px solid color-mix(in srgb, var(--brand-white) 20%, transparent);
+  border: 1px solid var(--border);
+  background: var(--brand-white);
+  color: var(--brand-charcoal);
+  font-weight: 600;
+  font-size: 0.875rem;
+  transition: background 150ms ease, border-color 150ms ease;
+}
+
+.btn-secondary:hover {
+  background: var(--brand-light-gray);
+  border-color: color-mix(in srgb, var(--brand-blue) 35%, var(--border));
+}
+
+.btn-secondary-on-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid color-mix(in srgb, var(--brand-white) 35%, transparent);
   background: transparent;
   color: var(--brand-white);
   font-weight: 600;
@@ -211,9 +270,9 @@ body {
   transition: background 150ms ease, border-color 150ms ease;
 }
 
-.btn-secondary:hover {
-  background: color-mix(in srgb, var(--brand-white) 6%, transparent);
-  border-color: color-mix(in srgb, var(--brand-white) 35%, transparent);
+.btn-secondary-on-dark:hover {
+  background: color-mix(in srgb, var(--brand-white) 8%, transparent);
+  border-color: color-mix(in srgb, var(--brand-white) 55%, transparent);
 }
 
 /* Form controls */
@@ -250,7 +309,7 @@ body {
 
 .sc-field-error {
   font-size: 0.8125rem;
-  color: #f87171;
+  color: #b91c1c;
 }
 
 @keyframes loading-bar {

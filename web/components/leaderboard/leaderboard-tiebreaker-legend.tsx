@@ -30,7 +30,7 @@ export function LeaderboardTiebreakerLegend() {
   return (
     <section
       aria-label="How rankings are calculated"
-      className="rounded-2xl border border-white/10 bg-card/50 p-5 backdrop-blur-xl sm:p-6"
+      className="rounded-2xl border border-border bg-card/50 p-5 backdrop-blur-xl sm:p-6"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -43,7 +43,7 @@ export function LeaderboardTiebreakerLegend() {
         </div>
         <Link
           href="/levels"
-          className="inline-flex items-center gap-1 rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs font-semibold text-muted transition hover:border-accent/30 hover:text-accent-soft"
+          className="inline-flex items-center gap-1 rounded-lg border border-border bg-brand-light-gray px-3 py-1.5 text-xs font-semibold text-muted transition hover:border-accent/30 hover:text-accent-soft"
         >
           View level ladder →
         </Link>
@@ -55,10 +55,10 @@ export function LeaderboardTiebreakerLegend() {
           return (
             <li
               key={item.label}
-              className={`flex gap-3 rounded-xl border border-white/5 bg-gradient-to-br p-4 ${item.bg}`}
+              className={`flex gap-3 rounded-xl border border-border-subtle bg-gradient-to-br p-4 ${item.bg}`}
             >
               <span
-                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-black/25 ${item.accent}`}
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-light-gray ${item.accent}`}
               >
                 <Icon size={22} />
               </span>

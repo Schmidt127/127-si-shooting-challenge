@@ -23,7 +23,7 @@ function RankCell({ rank }: { rank: number }) {
       className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg font-mono text-sm font-bold ${
         isTopTen
           ? "bg-accent/15 text-accent-soft ring-1 ring-accent/30"
-          : "bg-white/5 text-muted ring-1 ring-white/10"
+          : "bg-brand-light-gray text-muted ring-1 ring-border"
       }`}
     >
       {rank}
@@ -51,7 +51,7 @@ export function LeaderboardTable({
         </p>
       </div>
 
-      <div className="sc-table-scroll hidden overflow-hidden rounded-2xl border border-white/10 md:block">
+      <div className="sc-table-scroll hidden overflow-hidden rounded-2xl border border-border md:block">
         <table className="sc-table">
           <thead>
             <tr>
@@ -74,7 +74,7 @@ export function LeaderboardTable({
           </thead>
           <tbody>
             {rest.map((entry) => (
-              <tr key={entry.id} className="transition-colors hover:bg-white/[0.04]">
+              <tr key={entry.id} className="transition-colors hover:bg-brand-light-gray">
                 <td>
                   <RankCell rank={entry.rank} />
                 </td>
@@ -109,7 +109,7 @@ export function LeaderboardTable({
         {rest.map((entry) => (
           <article
             key={entry.id}
-            className="rounded-2xl border border-white/10 bg-card/70 p-4 backdrop-blur-xl"
+            className="rounded-2xl border border-border bg-card/70 p-4 backdrop-blur-xl"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="flex items-start gap-3">
@@ -128,7 +128,7 @@ export function LeaderboardTable({
               <LevelBadge level={entry.level} size="sm" />
             </div>
 
-            <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-white/[0.03] p-3">
+            <div className="mt-4 grid grid-cols-2 gap-3 rounded-xl bg-brand-light-gray p-3">
               <div>
                 <p className="flex items-center gap-1 text-[10px] font-semibold uppercase tracking-widest text-muted">
                   <IconBolt size={12} className="text-brand-orange" /> XP
@@ -139,7 +139,7 @@ export function LeaderboardTable({
               </div>
               <div className="text-right">
                 <p className="flex items-center justify-end gap-1 text-[10px] font-semibold uppercase tracking-widest text-muted">
-                  <IconTarget size={12} className="text-white/70" /> Shots
+                  <IconTarget size={12} className="text-muted" /> Shots
                 </p>
                 <p className="mt-1 font-mono text-lg font-bold text-foreground">
                   {formatShots(entry.totalShots)}

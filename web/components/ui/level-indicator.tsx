@@ -29,7 +29,7 @@ export function LevelIndicator({
   return (
     <div
       className={cn(
-        "rounded-2xl border border-white/[0.12] bg-card/90 p-5 backdrop-blur-md",
+        "rounded-2xl border border-border bg-card p-5 shadow-[0_4px_16px_-10px_rgba(38,38,38,0.12)]",
         className,
       )}
     >

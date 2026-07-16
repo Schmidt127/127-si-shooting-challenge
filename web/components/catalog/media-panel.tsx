@@ -28,7 +28,7 @@ function ExternalDocumentPanel({
   return (
     <div className={catalogCardClass()}>
       <div className="flex min-h-[220px] flex-col items-center justify-center gap-4 px-6 py-10 text-center sm:min-h-[280px]">
-        <div className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-white">
+        <div className="rounded-md border border-brand-blue/35 bg-brand-blue/15 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-blue">
           Hosted on {host}
         </div>
         <p className="max-w-md text-base font-semibold text-foreground">{title}</p>
@@ -67,7 +67,7 @@ export function MediaPanel({
 
   if (embedUrl) {
     return (
-      <div className="aspect-video overflow-hidden rounded-2xl border border-white/[0.12] bg-black shadow-[0_10px_36px_-10px_rgba(0,0,0,0.85)]">
+      <div className="aspect-video overflow-hidden rounded-2xl border border-border bg-black shadow-[0_10px_36px_-10px_rgba(0,0,0,0.85)]">
         <iframe
           src={embedUrl}
           title={title}
@@ -84,7 +84,7 @@ export function MediaPanel({
       <video
         src={trimmed}
         controls
-        className="aspect-video w-full overflow-hidden rounded-2xl border border-white/10 bg-black"
+        className="aspect-video w-full overflow-hidden rounded-2xl border border-border bg-black"
       />
     );
   }

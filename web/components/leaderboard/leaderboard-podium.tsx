@@ -54,7 +54,7 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
       />
 
       <div
-        className={`relative mt-4 w-full overflow-hidden rounded-2xl border border-white/10 bg-card/90 p-5 backdrop-blur-xl ${
+        className={`relative mt-4 w-full overflow-hidden rounded-2xl border border-border bg-card/90 p-5 backdrop-blur-xl ${
           isFirst ? "min-h-[240px] border-court-gold/25 sm:min-h-[260px]" : "min-h-[220px] sm:min-h-[240px]"
         }`}
       >
@@ -82,7 +82,7 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
           <LevelBadge level={entry.level} size={isFirst ? "lg" : "md"} />
         </div>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-white/5 pt-4">
+        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-border-subtle pt-4">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-muted">XP</p>
             <p className="mt-1 font-mono text-lg font-bold text-accent-soft">
