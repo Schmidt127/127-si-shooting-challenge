@@ -28,7 +28,7 @@ export function DisplayHeading({
     <header className={alignClass}>
       {icon ? (
         <div
-          className={`mb-4 inline-flex rounded-2xl border border-white/10 bg-white/5 p-3 text-accent-soft ${
+          className={`mb-4 inline-flex rounded-2xl border border-border bg-brand-light-gray p-3 text-accent-soft ${
             align === "center" ? "mx-auto" : ""
           }`}
         >

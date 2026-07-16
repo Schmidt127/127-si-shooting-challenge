@@ -55,7 +55,7 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
             </div>
             <Link
               href="/public-display"
-              className="inline-flex min-h-[2.75rem] items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 text-xs font-semibold text-muted transition hover:border-brand-orange/30 hover:text-accent-soft"
+              className="inline-flex min-h-[2.75rem] items-center gap-2 rounded-lg border border-border bg-brand-light-gray px-3 text-xs font-semibold text-muted transition hover:border-brand-orange/30 hover:text-accent-soft"
             >
               <IconRank size={14} /> Display mode
             </Link>

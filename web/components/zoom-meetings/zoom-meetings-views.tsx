@@ -35,7 +35,7 @@ function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
       >
         <div className="flex flex-col sm:flex-row">
           {meeting.coverImage ? (
-            <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-black/30 sm:aspect-auto sm:w-44 md:w-52">
+            <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-brand-light-gray sm:aspect-auto sm:w-44 md:w-52">
               <Image
                 src={meeting.coverImage.url}
                 alt={meeting.name ? `${meeting.name} cover` : "Zoom meeting cover"}
@@ -44,11 +44,11 @@ function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
                 sizes="(max-width: 640px) 100vw, 208px"
                 unoptimized
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/80 sm:bg-gradient-to-t sm:to-card/90" />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
-            <div className="flex w-full items-center justify-center border-b border-white/5 bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
-              <span className="font-mono text-4xl font-black text-white/20">Z</span>
+            <div className="flex w-full items-center justify-center border-b border-border-subtle bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
+              <span className="font-mono text-4xl font-black text-brand-blue/25">Z</span>
             </div>
           )}
 
@@ -99,7 +99,7 @@ function WeekSection({
           </p>
           <h2 className="font-display mt-1 text-2xl text-foreground sm:text-3xl">{weekName}</h2>
         </div>
-        <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 font-mono text-xs text-muted">
+        <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 font-mono text-xs text-muted">
           {meetings.length} meeting{meetings.length === 1 ? "" : "s"}
         </span>
       </div>
@@ -165,7 +165,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
 
         <header className={cn(catalogHeroClass(), "relative mt-8")}>
           {meeting.coverImage ? (
-            <div className="flex w-full items-center justify-center bg-black/25 px-4 py-6 sm:px-8 sm:py-8">
+            <div className="flex w-full items-center justify-center bg-brand-light-gray px-4 py-6 sm:px-8 sm:py-8">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={meeting.coverImage.url}
@@ -178,7 +178,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-2">
               <MeetingStatusBadge status={meeting.status} />
-              <span className="rounded-md border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-muted">
+              <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-medium text-muted">
                 {meeting.weekName}
               </span>
             </div>
