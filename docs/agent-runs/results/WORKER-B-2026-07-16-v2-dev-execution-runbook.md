@@ -4,7 +4,7 @@
 
 - Role: testing
 - Branch: `cursor/v2-dev-execution-runbook-3ea4`
-- Tip SHA: 5d335f64705222ed7135b294ccdc545c46e2dcc1
+- Tip SHA: `39f95e56e8f65d1cf096b9434f994245d5581cc2` (update if more commits land on branch)
 - Started / finished: 2026-07-16
 - Assignment: Turn End-to-End Matrix into executable DEV test runbook
 
