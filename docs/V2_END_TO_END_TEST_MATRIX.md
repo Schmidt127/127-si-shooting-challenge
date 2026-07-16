@@ -7,6 +7,8 @@
 
 **Prep status (2026-07-16):** Repository contract tests PASS. Merge gate #25/#26/#27 closed. Live matrix rows remain **U** until Mike/OMNI execute on DEV. Recommended first live DEV block: **F1–F3** (066) then **J4–J5** (117a). Do not mark P without enrollment IDs + automation output evidence.
 
+**066 live attempt (2026-07-16, OA2):** Authorized run on master `1d403df` **blocked** before writes (no Airtable PAT / login). Matrix F1–F3 marked **B** in evidence packet — not Pass. See [066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md).
+
 ## How to use
 
 1. Prefer **Fillout-shaped** Submissions (C-020 / automation **115**) or verified production-shaped intake — not hand-typed incomplete rows.
@@ -92,9 +94,9 @@ cd web && npm test
 
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| F1 | Cross single threshold | Shots move 90 → 120 | 066 | One unlock `SHOT_MILESTONE\|enr\|ms` | U | U |
-| F2 | Cross multiple thresholds same run | 90 → 260 | 066 | One unlock per newly crossed milestone | U | U |
-| F3 | Milestone rerun | Re-check after unlocks exist | 066 | No duplicate unlocks for same Source Key | U | U |
+| F1 | Cross single threshold | Shots move 90 → 120 | 066 | One unlock `SHOT_MILESTONE\|enr\|ms` | B | U |
+| F2 | Cross multiple thresholds same run | 90 → 260 | 066 | One unlock per newly crossed milestone | B | U |
+| F3 | Milestone rerun | Re-check after unlocks exist | 066 | No duplicate unlocks for same Source Key | B | U |
 | F4 | Milestone XP via unlock | Unlock ready for 059 | 059 | One XP Event per unlock Source Key | U | U |
 
 ---

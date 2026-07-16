@@ -15,7 +15,7 @@ Last updated: **2026-07-11** (C-013 PROD video upload workflow **COMPLETE** — 
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.1** | **DEV ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior |
+| **H-002 — Automation 066 v3.1** | **DEV ready** — intake automations ON (Mike 2026-07-05); sandbox test **pending** OMNI confirm; authorized live OA2 attempt **blocked** 2026-07-16 (no Airtable access) — [066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md) |
 | **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
 | **Automation standards (doc 06)** | **Active** — 066 v3.1 canonical V2 rewrite pattern |
 | **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
@@ -64,7 +64,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 **DEV is the first testing location for:**
 
-- Automation **066 v3.1** — **ON in DEV**; DEV intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002)
+- Automation **066 v3.1** — **ON in DEV**; DEV intake automations turned **ON** after clone (Mike 2026-07-05); **066 sandbox pending** OMNI confirm Schmidt submission through pipeline + expected milestone behavior (H-002); 2026-07-16 authorized live attempt blocked — no PAT/UI in Cloud Agent env
 - Automation merge experiments (V2-014)
 - Schema changes (Stage K, C-026, etc.)
 - Extension backfills (`CONFIRM_WRITE` rehearsal)

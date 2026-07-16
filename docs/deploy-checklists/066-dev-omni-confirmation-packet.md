@@ -163,3 +163,5 @@ Update [PROJECT_STATE.md](../PROJECT_STATE.md) / [066-v3.1-dev-deploy.md](../dep
 **Pending OMNI / Mike.** This document does not close H-002.
 
 **Repo-only re-run (2026-07-16, Online Agent 2):** `066-milestone-crossing-harness.test.js` **PASS**. No live Airtable access in that run — see [DEV-release-readiness-verification-2026-07-16.md](./DEV-release-readiness-verification-2026-07-16.md).
+
+**Authorized live attempt (2026-07-16, Online Agent 2, master `1d403df`):** **BLOCKED** before any write — no `AIRTABLE_*` PAT in environment; browser hit Airtable login wall for `appTetnuCZlCZdTCT`; base identity could not be independently confirmed live. F1–F3 not executed. Evidence: [066-omni-live-attempt-2026-07-16.md](./066-omni-live-attempt-2026-07-16.md). **H-002 remains OPEN.**

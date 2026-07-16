@@ -23,6 +23,7 @@
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b DEV install packet |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
+| [deploy-checklists/066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md) | 066 live OMNI attempt evidence (blocked) |
 
 **Safe repo validation (no secrets / no Airtable):**
 
@@ -50,7 +51,7 @@ python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 - [x] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence) — 2026-07-16 offline
 - [x] C-025 DEV install packet reviewed if recording credit in scope — reviewed; live install still open
 - [x] 070a PROD remains OFF unless Mike-approved decision flips — decision record affirmed 2026-07-16
-- [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence) — offline PASS; **live pending**
+- [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence) — offline PASS; authorized live attempt **blocked** 2026-07-16 ([066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md))
 - [x] Web lint / typecheck / tests / production build **PASS** — 2026-07-16
 - [x] Engine / C-025 / 066 harness / header / upload Node tests **PASS** — 2026-07-16
 

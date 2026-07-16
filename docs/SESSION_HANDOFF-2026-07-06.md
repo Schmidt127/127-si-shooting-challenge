@@ -30,7 +30,7 @@ Human-readable: `schema_doc_*.md` in each folder. Manifest: `manifest_*_latest.j
 
 | Item | Status | Next action |
 |------|--------|-------------|
-| **H-002 — 066 v3.1 DEV test** | **Pending** | OMNI confirms Schmidt submission completed intake pipeline + expected milestone behavior. DEV intake automations are **ON** (Mike 2026-07-05). **Do not** trigger `Run Shot Milestone Check?` until confirmed. |
+| **H-002 — 066 v3.1 DEV test** | **Pending** | OMNI confirms Schmidt submission completed intake pipeline + expected milestone behavior. DEV intake automations are **ON** (Mike 2026-07-05). **Do not** trigger `Run Shot Milestone Check?` until confirmed. Authorized OA2 live attempt 2026-07-16 **blocked** (no Airtable access) — [066-omni-live-attempt-2026-07-16.md](./deploy-checklists/066-omni-live-attempt-2026-07-16.md). |
 | **C-020 script** | **Paused** | No script until sequencing approved. Testing Scenarios table exists on DEV only. |
 | **Production** | **No changes** | No 066 paste, no C-020 mirror, no test triggers on prod. |
 | **112 / 043** | **Approved, not executed** | Delete **112**, retire **043** at next approved prod maintenance window. |

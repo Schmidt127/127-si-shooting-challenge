@@ -23,7 +23,7 @@ Single entry point for Mike when promoting DEV-proven work to PROD, with rollbac
 | C-011 weekly email auto | Design audit complete | Not implemented | After C-010 gates in **072**/**074** |
 | 070a homework S3 | DEV E2E historical; re-verify on current SHA | **PROD OFF** (affirmed 2026-07-16) | Keep OFF — [AUTOMATION_070A_LAUNCH_DECISION.md](../v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
 | C-025 Zoom recording (**117a/117b**) | **Repo ready** — offline tests PASS 2026-07-16; executable DEV sequence | Not installed | [DEV-release-readiness-verification-2026-07-16.md](./DEV-release-readiness-verification-2026-07-16.md) + [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](../v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) + DEV evidence |
-| 066 shot milestones | Offline harness PASS 2026-07-16; live OMNI pending | Confirm UI version | [066-dev-omni-confirmation-packet.md](./066-dev-omni-confirmation-packet.md) |
+| 066 shot milestones | Offline harness PASS; live OMNI pending — authorized 2026-07-16 attempt **blocked** (no PAT/UI) | Confirm UI version; no PROD promote | [066-dev-omni-confirmation-packet.md](./066-dev-omni-confirmation-packet.md) · [066-omni-live-attempt-2026-07-16.md](./066-omni-live-attempt-2026-07-16.md) |
 | C-009 Learning Activities | Proposal + LA-000/#27 routing contract (merge pending) | **Blocked Airtable** | After owner schema approval |
 
 ### Status distinctions
