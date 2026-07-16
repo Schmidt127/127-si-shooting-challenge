@@ -4,7 +4,7 @@
 
 - Role: testing
 - Branch: `cursor/v2-dev-execution-runbook-3ea4` (PR #34)
-- Tip SHA: _(after push)_
+- Tip SHA: `c7e321fc3184a0547c66bcc2d0866563b8532f1a`
 - Started / finished: 2026-07-16
 - Assignment: Turn DEV runbook into safe operator CLI
 
