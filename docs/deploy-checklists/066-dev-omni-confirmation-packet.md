@@ -161,3 +161,5 @@ Update [PROJECT_STATE.md](../PROJECT_STATE.md) / [066-v3.1-dev-deploy.md](../dep
 ## Live confirmation status
 
 **Pending OMNI / Mike.** This document does not close H-002.
+
+**Repo-only re-run (2026-07-16, Online Agent 2):** `066-milestone-crossing-harness.test.js` **PASS**. No live Airtable access in that run — see [DEV-release-readiness-verification-2026-07-16.md](./DEV-release-readiness-verification-2026-07-16.md).

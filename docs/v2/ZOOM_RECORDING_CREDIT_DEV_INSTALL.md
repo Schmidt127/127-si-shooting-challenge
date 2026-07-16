@@ -6,7 +6,8 @@
 **Authority:** S16-approved design — [C-025-zoom-recording-design-stage12.md](../deploy-checklists/C-025-zoom-recording-design-stage12.md) · [C-025-C-027-configuration-catalog-stage16.md](../deploy-checklists/C-025-C-027-configuration-catalog-stage16.md)  
 **Scripts:** `117a-…js`, `117b-…js` · Numbering: [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)  
 **Architecture reconciliation:** [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) — Stage 17 six-pack vs S16 117a/b; open Perfect Week / Total Zoom / post-award conflict gaps  
-**Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract`
+**Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract`  
+**Executable operator sequence (2026-07-16):** [DEV-release-readiness-verification-2026-07-16.md](../deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) — offline suites PASS; live DEV paste still requires Mike authorization + base ID `appTetnuCZlCZdTCT`
 
 ---
 
