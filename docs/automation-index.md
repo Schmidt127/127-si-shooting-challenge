@@ -116,10 +116,10 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
-| **117a** | Zoom Recording Credit — Award XP from Quiz Completion | Homework Completions when Satisfactory + Zoom Meeting linked (**DEV install pending**) | `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` |
-| **117b** | Zoom Recording Credit — Send Approval Email Webhook | Homework Completions when Satisfactory + send flag (**DEV install pending**) | `117b-zoom-recording-credit-send-approval-email-webhook.js` |
+| **117a** | Zoom Recording Credit — Award XP from Quiz Completion | Homework Completions when Satisfactory + Zoom Meeting linked (**DEV install pending** — OA1 blocked 2026-07-16) | `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` |
+| **117b** | Zoom Recording Credit — Send Approval Email Webhook | Homework Completions when Satisfactory + send flag (**DEV install pending** — OA1 blocked 2026-07-16) | `117b-zoom-recording-credit-send-approval-email-webhook.js` |
 
-C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). **117c–117f are not separate S16 scripts** (XP/gate/email folded into 117a/b); Perfect Week / Total Zoom / post-award conflict remain open gaps. Live attendance remains **101** only.
+C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). OA1 attempt record: [deploy-checklists/C-025-dev-install-attempt-2026-07-16.md](./deploy-checklists/C-025-dev-install-attempt-2026-07-16.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). **117c–117f are not separate S16 scripts** (XP/gate/email folded into 117a/b); Perfect Week / Total Zoom / post-award conflict remain open gaps. Live attendance remains **101** only.
 
 ---
 
