@@ -1,11 +1,18 @@
 # Automation 112 — OFF-State Verification Packet
 
-**Status:** Verification checklist — **112 must remain OFF**; delete only in Mike-approved maintenance window  
+**Status:** Verification checklist — **112 must remain OFF**; live toggle **live-blocked** this run  
 **Base:** DEV attest first; PROD attest before any delete  
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
 **Scripts:**  
-- Production path: `013-…create-video-feedback…` (**v2.0**) — **ON**  
-- Legacy: `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` (**v2.1**) — **OFF**  
-**Authority:** V2-014 · PROJECT_STATE · Mike Q1 **2026-07-05** (delete approved, not executed) · automation-index Stage G (“Run 013 not 112”)
+- Production path: `013-…create-video-feedback…` (**v2.0**) — expected **ON**  
+- Legacy: `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` (**v2.1**) — expected **OFF**  
+**Authority:** V2-014 · PROJECT_STATE · Mike Q1 **2026-07-05** (delete approved, not executed)
+
+| Item | Label |
+|------|-------|
+| Docs / inventory claim 112 OFF | **repository-ready** (not live UI proof) |
+| Live DEV/PROD toggle | **live-blocked** — **requires Mike approval** (UI attest) |
+| Delete 112 | **requires Mike approval** · **requires PROD promotion** window |
 
 ---
 

@@ -1,10 +1,19 @@
 # C-019 — DEV Testing Views Specification
 
-**Status:** Specification for Mike/OMNI UI work — views are **UI-only** (API cannot create or read filters)  
+**Status:** Spec locked · snapshot shows **only 1 of 8** `Testing` views exist · filters **live-blocked**  
 **Base:** DEV `appTetnuCZlCZdTCT`  
 **PROD:** Optional later mirror — not part of this packet  
 **Backlog:** C-019 · Wave 6 · Pairs with **C-020** (Automation 115)  
-**Authority:** Completed Airtable readiness audit · [C-019-airtable-ui-work-order.md](../deploy-checklists/C-019-airtable-ui-work-order.md) · [C-019-testing-views-verification-checklist.md](../deploy-checklists/C-019-testing-views-verification-checklist.md)
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
+**Authority:** [C-019-airtable-ui-work-order.md](../deploy-checklists/C-019-airtable-ui-work-order.md) · [C-019-testing-views-verification-checklist.md](../deploy-checklists/C-019-testing-views-verification-checklist.md)
+
+### Snapshot evidence (2026-07-06)
+
+| Table | `Testing` view | Label |
+|-------|----------------|-------|
+| Athlete Achievement Unlocks | **Yes** `viwhHkNyEPe21oMbI` | **verified in DEV (snapshot)** name only — filter **live-blocked** |
+| Weekly Athlete Summary | No (`Grid Testing View` exists) | **requires Mike approval** (create/rename) |
+| Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Streak Occurrences | **Missing** | **requires Mike approval** (UI create) |
 
 ---
 

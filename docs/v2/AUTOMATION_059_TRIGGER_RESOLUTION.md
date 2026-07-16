@@ -1,9 +1,16 @@
 # Automation 059 — Trigger Conflict Resolution (DEV)
 
-**Status:** Design authority locked from GitHub script + Stage I/J notes — **live UI still UNKNOWN**  
+**Status:** Design authority locked · formula **verified in DEV (snapshot)** · live trigger type/filters **live-blocked**  
 **Base:** DEV `appTetnuCZlCZdTCT` first  
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
 **Script:** `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**)  
 **Hard stops:** No PROD changes · Confirm UI before relying on inventory rows
+
+| Item | Label |
+|------|-------|
+| `Ready for 059 XP?` formula exists | **verified in DEV (snapshot)** |
+| Authoritative trigger = record created, no Ready filter | **repository-ready** |
+| Live Airtable trigger/filters/ON | **live-blocked** — **requires Mike approval** (UI attest) |
 
 ---
 

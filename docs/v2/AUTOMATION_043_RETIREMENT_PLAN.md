@@ -1,11 +1,19 @@
 # Automation 043 — Retirement Plan (superseded by 042)
 
-**Status:** Plan only — **do not disable or delete in PROD** from this packet  
+**Status:** Plan only — **do not disable or delete** without Mike · live ON/OFF **live-blocked**  
 **Base:** Document for DEV soak → Mike-approved maintenance window  
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
 **Scripts:**  
 - Keep: `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` (**v3.0**)  
 - Retire: `043-levels-and-progression-set-level-gate-rule-from-next-level.js` (**v2.0**)  
-**Authority:** V2-014 / V2-014a · S26 recommendation · LEVELS-043-042 investigation · Mike Q2 **2026-07-05** (retire approved, not executed)
+**Authority:** V2-014 / V2-014a · S26 recommendation · Mike Q2 **2026-07-05** (retire approved, not executed)
+
+| Item | Label |
+|------|-------|
+| 042 writes Level Gate Rule (GitHub v3.0) | **repository-ready** |
+| View `042 - Needs Level Assignment` exists | **verified in DEV (snapshot)** |
+| Live 042/043 ON/OFF + gate population evidence | **live-blocked** |
+| Delete 043 | **requires Mike approval** · **requires PROD promotion** window |
 
 ---
 

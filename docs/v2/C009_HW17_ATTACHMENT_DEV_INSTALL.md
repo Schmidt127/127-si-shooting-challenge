@@ -1,13 +1,29 @@
 # C-009 — HW17 Attachment Intake — DEV Installation Packet
 
-**Status:** Repository package **ready for DEV installation design** — **not installed / not verified** in live Airtable by this commit  
+**Status:** Repository **067 v2.0 implemented** — **requires DEV paste** after Mike creates `Quiz Result PDF`  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Do not paste or enable until DEV evidence + Mike approval  
 **Backlog:** C-009 · Wave 8  
-**Authority:** Completed Airtable readiness audit + overnight C-010/C-019 contracts · [homework-flow.md](../data-flow/homework-flow.md) § HW17 · Stage-9 LA review  
-**Script:** `067-homework-link-or-create-completion-from-reflection-quiz.js` (current **v1.0** — attachment path not yet in GitHub)  
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
+**Script:** `067-homework-link-or-create-completion-from-reflection-quiz.js` (**v2.0**)  
 **Downstream:** **020** (file path), **070a** (Make upload), **071** (parent email; already Fillout-aware)  
 **Hard stops:** No PROD · No live Make send · No secrets in git · No schema create without Mike/OMNI
+
+### Authoritative design (post-inventory)
+
+| Item | Decision | Evidence label |
+|------|----------|----------------|
+| Trigger | Record created **or** Processing Status=Pending; Enrollment not empty | **repository-ready** |
+| Input | `recordId` | **repository-ready** |
+| Attachment source | Preferred field **`Quiz Result PDF`** (candidates in CONFIG) | Field **missing** as of snapshot — **requires Mike approval** to create |
+| Parent Submission | **Required** (Upload Ready formulas need `Submission - Linked`) | **verified in DEV (snapshot)** |
+| Asset mappings | Purpose=`Homework 1`, Slot=`HW1`, Type inferred (`Homework PDF`), Upload Status=`Pending Link`, Send to Make=`false` | **verified in DEV (snapshot)** options |
+| Duplicate key | Completion: Enrollment\|Week\|HW17; Asset: `Source Attachment ID` | **repository-ready** |
+| Multi-attachment | One asset per file | **repository-ready** |
+| 070a | Compatible once assets Pending Link + HC linked; do not auto-arm Send in 067 | **repository-ready** |
+| 071 | Keep Fillout path; do not require assets on 071 trigger | **repository-ready** |
+| Failure | No enrollment → Needs Review; no attachment field/files → success with `no_attachment_*` actionOut | **repository-ready** |
+| 067 v2.0 implemented? | **Yes** in GitHub | **requires DEV paste** |
 
 ---
 

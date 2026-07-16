@@ -1,11 +1,26 @@
 # C-011 — Automatic Weekly Email — DEV Installation Packet
 
-**Status:** Repository **design package ready** — scheduled automations **not implemented / not enabled** in live Airtable by this commit  
+**Status:** Repository scripts **118/119 v1.0 + 072 v3.8** ready — **do not enable schedules**; DEV Make webhook **live-blocked**  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Do not paste · Do **not** enable live sending  
 **Backlog:** C-011 · Wave 5 · Depends on **C-010** (072 Active? gate)  
-**Workers:** Existing **072** (build) + **074** (send to Make) · New scheduled **118** + **119**  
-**Hard stops:** `sendMode=Test` only · DEV Make webhook only · Schmidt excluded · No secrets in git
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
+**Workers:** **072** (build) + **074** (send) · **118** + **119** (schedule arm)  
+**Hard stops:** `sendMode=Test` only · `dryRun=true` default · Schmidt excluded · No secrets in git
+
+### Authoritative design (post-inventory)
+
+| Question | Answer | Label |
+|----------|--------|-------|
+| Build automation | **072** (existing) armed by **118** | **repository-ready** |
+| Send automation | **074** (existing) armed by **119** | **repository-ready** |
+| Manual checkboxes | Keep `Build Weekly Email Now?` / `Send to Make?` | **verified in DEV (snapshot)** |
+| Make writeback field | `Weekly Email Sent?` (+ `Weekly Email Sent At`) | **verified in DEV (snapshot)** fields; Make behavior **live-blocked** |
+| Dedupe / eventId | `WEEKLY_EMAIL\|{enrollmentId}\|{}weekId}` in 074 payload | **repository-ready** |
+| DEV webhook | Not in env | **live-blocked** / **requires Mike approval** |
+| Test recipient mode | `sendMode=Test` + 074 testRecipientEmail | **repository-ready** |
+| 118/119 still correct? | **Yes** | **repository-ready** · **requires DEV paste** · do not activate schedule |
+| 118/119 implemented? | **Yes** (`118-…js`, `119-…js` v1.0) | **requires DEV paste** |
 
 ---
 

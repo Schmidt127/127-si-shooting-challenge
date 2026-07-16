@@ -94,6 +94,13 @@ class TestC019TestingViewsContract(unittest.TestCase):
         tables = [v["table"] for v in REQUIRED_VIEWS]
         self.assertEqual(len(tables), len(set(tables)))
 
+    def test_snapshot_only_unlocks_has_testing_view_name(self):
+        # DEV snapshot 2026-07-06: only Athlete Achievement Unlocks has Testing
+        snapshot_present = {"Athlete Achievement Unlocks"}
+        required = {v["table"] for v in REQUIRED_VIEWS}
+        missing = required - snapshot_present
+        self.assertEqual(len(missing), 7)
+
     def test_submission_assets_uses_enrollment_linked(self):
         assets = next(v for v in REQUIRED_VIEWS if v["table"] == "Submission Assets")
         self.assertEqual(assets["filter_field"], "Enrollment - Linked")

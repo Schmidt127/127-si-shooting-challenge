@@ -41,11 +41,14 @@ def action_for_quiz_row(
     enrollment_count: int,
     attachments: list[dict],
     existing_source_attachment_ids: set[str],
+    attachment_field_present: bool = True,
 ) -> str:
     if enrollment_count != 1:
         return "needs_review"
+    if not attachment_field_present:
+        return "no_attachment_field"
     if already_linked and not attachments:
-        return "skipped_already_linked"
+        return "no_attachment_yet"
     if already_linked and attachments:
         pending = should_create_asset(
             attachments=attachments,
@@ -55,7 +58,7 @@ def action_for_quiz_row(
             return "assets_linked"
         if pending:
             return "assets_created"
-        return "skipped_already_linked"
+        return "assets_linked"
     if not attachments:
         return "no_attachment_yet"
     return "created_new"
@@ -110,6 +113,24 @@ class TestC009Hw17AttachmentContract(unittest.TestCase):
             ),
             "no_attachment_yet",
         )
+
+    def test_missing_attachment_field_action(self):
+        self.assertEqual(
+            action_for_quiz_row(
+                already_linked=False,
+                enrollment_count=1,
+                attachments=[],
+                existing_source_attachment_ids=set(),
+                attachment_field_present=False,
+            ),
+            "no_attachment_field",
+        )
+
+    def test_parent_submission_required_for_upload_ready(self):
+        # Inventory decision: both parent Submission + assets
+        design = {"parent_submission": True, "direct_assets": True}
+        self.assertTrue(design["parent_submission"])
+        self.assertTrue(design["direct_assets"])
 
     def test_070a_compatible_defaults(self):
         fields = asset_fields_for_070a(

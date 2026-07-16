@@ -1,12 +1,32 @@
 # C-010 — Active? / Progress Guards — DEV Installation Packet
 
-**Status:** Repository package **ready for DEV installation** — **not pasted / not verified** in live Airtable by this commit  
+**Status:** Field contract **snapshot-confirmed**; **072 v3.8** guard implemented in repo; progress scripts still **require PPE field create** before skips matter  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Do not paste until DEV evidence + Mike approval  
 **Backlog:** C-010 · Wave 5  
-**Authority:** Completed Airtable readiness audit · Stage-4 two-field contract · Stage-5 post-OMNI checklist  
+**Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
+**Authority:** Stage-4 two-field contract · Stage-5 post-OMNI checklist  
 **Scripts in scope:** **010**, **031**, **053**, **065**, **072**  
 **Hard stops:** No PROD · No schema without Mike · Schmidt pipeline must keep running
+
+### Confirmed field presence (DEV snapshot 2026-07-06)
+
+| Field | Present? | Label |
+|-------|----------|-------|
+| `Active?` | **Yes** | **verified in DEV (snapshot)** |
+| `Progress Processing Enabled?` | **No** | **requires Mike approval** to create |
+
+### Exact guard matrix (authoritative)
+
+| Automation | Guard field(s) | Schmidt exclude? | Repo status |
+|------------|----------------|------------------|-------------|
+| **010** | `Progress Processing Enabled?` only | No (pipeline must run) | Spec ready; script patch **requires DEV paste** after PPE exists |
+| **031** | `Progress Processing Enabled?` only | No | Spec ready; **requires DEV paste** after PPE |
+| **053** | `Progress Processing Enabled?` only | No | Spec ready; **requires DEV paste** after PPE |
+| **065** | `Progress Processing Enabled?` only | No | Spec ready; **requires DEV paste** after PPE |
+| **072** | `Active?` + Schmidt ID hard exclude | **Yes** `recgP9qZYjAhE7NXm` | **072 v3.8 in GitHub** — **requires DEV paste** |
+
+Missing PPE → treat as enabled (no progress skip) until field is created.
 
 ---
 
