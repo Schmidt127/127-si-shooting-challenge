@@ -29,6 +29,7 @@
 
 | Doc | Purpose |
 |-----|---------|
+| [V2_EXECUTION_BOARD.md](./V2_EXECUTION_BOARD.md) | **Authoritative V2 completion board** — order, owners, blockers, Mike actions |
 | [../PROJECT_STATE.md](../PROJECT_STATE.md) | Live ops snapshot |
 | [../../CHANGELOG.md](../../CHANGELOG.md) | Production release history |
 | [../../AGENTS.md](../../AGENTS.md) | AI assistant instructions |

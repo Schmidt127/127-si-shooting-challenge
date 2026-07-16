@@ -71,6 +71,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 | Doc | Purpose |
 |-----|---------|
+| [v2/V2_EXECUTION_BOARD.md](./v2/V2_EXECUTION_BOARD.md) | **Authoritative V2 completion board** — sequencing, owners, blockers, Mike actions |
 | [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
 | [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | **Online Agent 2** DEV verification package (2026-07-16) — offline PASS; live install pending |
 | [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
