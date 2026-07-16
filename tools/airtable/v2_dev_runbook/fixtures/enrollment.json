@@ -1,0 +1,48 @@
+{
+  "domain": "enrollment",
+  "matrix_ids": ["A1", "A2", "A3"],
+  "purpose": "Fillout-shaped / C-020 intake identity fixtures",
+  "pre_test_state": {
+    "require": [
+      "DEV base appTetnuCZlCZdTCT confirmed",
+      "Named test enrollment (Schmidt or sandbox) exists",
+      "Automations 001-003, 023, 005 ON in DEV only"
+    ],
+    "forbid": ["PROD base writes", "Creating real parent enrollments"]
+  },
+  "records_to_create_shape": {
+    "Testing Scenarios (preferred)": {
+      "Scenario Type": "Daily Submission",
+      "Related Enrollment": ["{{enrollment}}"],
+      "Submission Date": "2026-07-14",
+      "Shot Total": 25,
+      "Run Test?": true,
+      "Dry Run?": false
+    },
+    "Submissions (Fillout-shaped fallback)": {
+      "Enrollment": ["{{enrollment}}"],
+      "Activity Date": "2026-07-14",
+      "Shot Total": 25,
+      "Count This Submission?": true
+    }
+  },
+  "automation_expected": {
+    "A1": "Athlete linked; grade band assigned",
+    "A2": "Band updates once; no loop",
+    "A3": "Enrollment + Week set; Denver date key correct"
+  },
+  "expected_output": {
+    "statusOut": "success",
+    "submission_links": ["Enrollment", "Week"]
+  },
+  "cleanup": [
+    "Uncheck Run Test? on Testing Scenarios row",
+    "Leave pipeline rows if needed for chained smoke; otherwise archive/delete only test-tagged DEV rows",
+    "Do not delete config/reference tables"
+  ],
+  "rollback": [
+    "If accidental PROD write: STOP and escalate to Mike — this runbook never targets PROD",
+    "Revert grade on enrollment if A2 left test grade"
+  ],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-{testId}-{enrollmentId}.md"
+}

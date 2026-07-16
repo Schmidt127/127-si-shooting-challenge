@@ -1,0 +1,35 @@
+{
+  "domain": "perfect_week",
+  "matrix_ids": ["G1", "G2", "G3", "G4", "G5", "K3"],
+  "source_key_pattern": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+  "pre_test_state": {
+    "require": [
+      "Week with required daily window (default 5 days)",
+      "Counted days + homework (+ video/zoom if Config requires)",
+      "WAS present for enrollment+week",
+      "057/058 ON in DEV"
+    ]
+  },
+  "synthetic_week": {
+    "week_start": "2026-07-13",
+    "required_daily_count": 5,
+    "eligible_dates": ["2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16", "2026-07-17"],
+    "missing_one_dates": ["2026-07-13", "2026-07-14", "2026-07-15", "2026-07-16"]
+  },
+  "automation_expected": {
+    "G1": "Eligible flag set; missing days empty",
+    "G2": "Not eligible; missing day listed",
+    "G3": "Unlock PERFECT_WEEK|enr|week",
+    "G4": "No second unlock",
+    "G5": "One XP Event via 059",
+    "K3": "Error status; no unlock when WAS missing enrollment/week"
+  },
+  "expected_output": {
+    "source_key": "PERFECT_WEEK|{{enrollment}}|{{week}}",
+    "eligible_g1": true,
+    "eligible_g2": false
+  },
+  "cleanup": ["Clear unlock create triggers; keep WAS"],
+  "rollback": ["Soft-void erroneous Perfect Week unlock"],
+  "evidence_location": "docs/v2/evidence/YYYY-MM-DD-G{n}-{enrollmentId}.md"
+}

@@ -106,7 +106,7 @@ Items intentionally deferred until the contest is closed and final emails/audits
 | **C-027** | **Medium** | **Major-event notifications** — level up / milestones; SMS via cell number TBD (not daily XP). |
 | **C-014** | **Medium** | **XP / levels / streaks game design** — **DECIDED 2026-07-03:** one ladder, spread gates in config, comms-first; no dual-track for 2026–27. Streak economics may still need **053** review. See [shooting-challenge-v2-master-direction.md](./shooting-challenge-v2-master-direction.md). |
 | **H-001** | **Done** | **090F audit fix** — Milestone Source Key dedupe for shot milestones; 0 data deleted. See [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md). |
-| **H-002** | **GitHub done** | **Automation 066 v3.1** — V2 standard rewrite; Week write; **Airtable paste pending**. See [v2/06-automation-standards.md](./v2/06-automation-standards.md). |
+| **H-002** | **Done** | **Automation 066 v3.2** — V2 standard rewrite; Week write; **DEV + PROD pasted** 2026-07-06; live OMNI sandbox confirm still open. See [v2/06-automation-standards.md](./v2/06-automation-standards.md). |
 | **H-003 / C-015** | **Low** | Award Recipients scope metadata — accepted for close-out; no bulk fix. |
 | **H-004 / C-016** | **Low** | Awards catalog `thanks_for_playing` duplicate bucket. |
 

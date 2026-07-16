@@ -106,7 +106,7 @@ Index: [README.md](./README.md)
 | V2 rewrite structure | [v2/06-automation-standards.md](./v2/06-automation-standards.md) |
 | **Permanent SCRIPT + CONFIG header** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) § Permanent automation header |
 | Full script contract | [airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md) |
-| Reference implementation | **066 v3.1** — [066 script](../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js) |
+| Reference implementation | **066 v3.2** — [066 script](../airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js) |
 | Modernization inventory | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) |
 | Cursor rule | `.cursor/rules/airtable-automation-scripts.mdc` |
 
@@ -174,7 +174,7 @@ Phase 2 goal: **reduce platform complexity first**; automation capacity recovery
 
 **Do not merge** solely to save slots if readability suffers.  
 **Do not rewrite** outside an approved wave.  
-**One reference template:** **066 v3.1** — all Category B rewrites converge on this structure.
+**One reference template:** **066 v3.2** — all Category B rewrites converge on this structure.
 
 Roadmap: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md)  
 Phase 2B review: [phase-2b-engineering-review-2026-07-06.md](./phase-2b-engineering-review-2026-07-06.md)

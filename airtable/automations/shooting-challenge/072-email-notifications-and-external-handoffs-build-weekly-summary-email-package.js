@@ -26,9 +26,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v3.7
+ * Version: v3.8
  * Date Written: 2026-05-19
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-07-16
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
@@ -37,6 +37,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *   streaks, thresholds, XP buckets, and XP event detail.
  * - Writes the finished email package back to the Weekly Athlete Summary record.
  * - Does NOT send the email to Make.com or Gmail directly.
+ * - Skips inactive enrollments and Schmidt test enrollment (C-010 / C-011).
+ * - Does not clear Weekly Email Sent? when already sent (resend hole fix).
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -98,7 +100,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-    version: "v3.7",
+    version: "v3.8",
+    schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
     dateWritten: "2026-05-19",
     lastUpdated: "2026-06-21",
 
@@ -160,6 +163,7 @@ const CONFIG = {
         fullName: "Full Athlete Name",
         fullNameBackward: "Full Athlete Name - Backward",
         gradeBand: "Grade Band",
+        active: "Active?",
     },
 
     levelDisplayCandidates: [
@@ -733,6 +737,7 @@ async function main() {
         CONFIG.summaryFields.homeworkDisplay,
         CONFIG.summaryFields.buildNow,
         CONFIG.summaryFields.sendMode,
+        CONFIG.summaryFields.emailSent,
     ]);
 
     const enrollmentFieldsToLoad = existingFields(enrollmentsTable, [
@@ -741,6 +746,7 @@ async function main() {
         CONFIG.enrollmentFields.fullName,
         CONFIG.enrollmentFields.fullNameBackward,
         CONFIG.enrollmentFields.gradeBand,
+        CONFIG.enrollmentFields.active,
         enrollmentLevelField,
     ]);
 
@@ -871,6 +877,59 @@ async function main() {
 
     if (!weekRecord) {
         throw new Error(`Week not found: ${weekId}`);
+    }
+
+    // C-010 / C-011: comms gate — Active? + Schmidt hard exclude
+    debugStep = "Check enrollment Active? for comms";
+    setOutputSafe("debugStep", debugStep);
+    const isSchmidt = enrollmentId === CONFIG.schmidtEnrollmentId;
+    const activeFieldPresent = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active);
+    const enrollmentActive = !activeFieldPresent
+        ? true
+        : getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollmentFields.active);
+    if (isSchmidt || !enrollmentActive) {
+        if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
+            await summaryTable.updateRecordAsync(recordId, {
+                [CONFIG.summaryFields.buildNow]: false,
+            });
+        }
+        setOutputSafe("statusOut", "skipped");
+        setOutputSafe("actionOut", "skipped_inactive");
+        setOutputSafe(
+            "errorOut",
+            isSchmidt
+                ? "Skipped: Schmidt test enrollment excluded from weekly email."
+                : "Skipped: Enrollment Active? is unchecked."
+        );
+        setOutputSafe("debugStep", debugStep);
+        console.log(
+            JSON.stringify({
+                automation: CONFIG.scriptName,
+                version: CONFIG.version,
+                statusOut: "skipped",
+                actionOut: "skipped_inactive",
+                enrollmentId,
+                isSchmidt,
+            })
+        );
+        return;
+    }
+
+    // Resend prevention: do not rebuild/clear when already sent
+    if (
+        fieldExists(summaryTable, CONFIG.summaryFields.emailSent) &&
+        getBooleanish(summaryRecord, summaryTable, CONFIG.summaryFields.emailSent)
+    ) {
+        if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
+            await summaryTable.updateRecordAsync(recordId, {
+                [CONFIG.summaryFields.buildNow]: false,
+            });
+        }
+        setOutputSafe("statusOut", "skipped");
+        setOutputSafe("actionOut", "skipped_already_sent");
+        setOutputSafe("errorOut", "Skipped: Weekly Email Sent? is already checked.");
+        setOutputSafe("debugStep", "skipped_already_sent");
+        return;
     }
 
     const submissionsQuery = await submissionsTable.selectRecordsAsync({
@@ -2177,8 +2236,12 @@ async function main() {
         unknownBucket: unknownBucketXpRows.length,
     };
 
+    // C-011 / C-024 idempotency key for Make (must match 119 docs)
+    const eventId = `WEEKLY_EMAIL|${enrollmentId}|${weekId}`;
+
     const payload = {
         sendMode,
+        eventId,
         weeklySummaryRecordId: summaryRecord.id,
         weeklyEmailRecordId: summaryRecord.id,
         enrollmentId,
