@@ -72,6 +72,7 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | Doc | Purpose |
 |-----|---------|
 | [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
+| [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | **Online Agent 2** DEV verification package (2026-07-16) — offline PASS; live install pending |
 | [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Full athlete-scenario launch matrix |
 | [known-issues.md](./known-issues.md) | Active gaps + **launch blockers** |

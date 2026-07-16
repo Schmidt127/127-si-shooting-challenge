@@ -1,9 +1,11 @@
 # V2 End-to-End Test Matrix — Shooting Challenge
 
 **Status:** Launch athlete-scenario matrix  
-**Last updated:** 2026-07-15  
+**Last updated:** 2026-07-16  
 **Environment:** DEV first (`appTetnuCZlCZdTCT`) · PROD smoke only after Mike approval  
-**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)
+**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
+
+**Prep status (2026-07-16):** Repository contract tests PASS. Live matrix rows remain **U** until Mike/OMNI execute on DEV. Recommended first live DEV block after merge gate + auth: **F1–F3** (066) then **J4–J5** (117a). Do not mark P without enrollment IDs + automation output evidence.
 
 ## How to use
 

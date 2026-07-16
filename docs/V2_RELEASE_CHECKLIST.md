@@ -1,10 +1,12 @@
 # V2 Release Checklist — Shooting Challenge
 
 **Status:** Active release-readiness runbook  
-**Last updated:** 2026-07-15  
+**Last updated:** 2026-07-16  
 **Repo:** `Schmidt127/127-si-shooting-challenge`  
 **Environments:** DEV `appTetnuCZlCZdTCT` · PROD `appn84sqPw03zEbTT`  
 **Hard rules:** DEV first · no unattended PROD paste · Mike approves PROD · no Vercel setting changes from agents · do not merge without Mike
+
+**Offline suite (2026-07-16):** Validator + C-025/066/header/engine/upload/web lint·typecheck·test·build **PASS** — see [DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md). Live DEV install **not** performed. Merge gate: PRs #25/#26/#27 were still open vs `master` `babe74c` at verification start.
 
 **Companion docs:**
 
@@ -15,6 +17,7 @@
 | [known-issues.md](./known-issues.md) | Active gaps and accepted exceptions |
 | [deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md](./deploy-checklists/_PROMOTION-STEPS-TEMPLATE.md) | Per-change promotion template |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion/rollback index (if present from overnight S10) |
+| [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | Online Agent 2 DEV verification package |
 | [v2/08-testing-standards.md](./v2/08-testing-standards.md) | Audit-first testing standards |
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | Live base IDs and milestone snapshot |
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / 117a–117b DEV install packet |
@@ -44,12 +47,12 @@ python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract
 - [ ] Frontend styling PRs from other agents reviewed for conflict (do not restyle here)
 - [ ] Backlog items being promoted have Phase 2 approval + promotion docs under `docs/deploy-checklists/`
 - [ ] [known-issues.md](./known-issues.md) launch blockers reviewed (accept, fix, or defer with owner)
-- [ ] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence)
-- [ ] C-025 DEV install packet reviewed if recording credit in scope
-- [ ] 070a PROD remains OFF unless Mike-approved decision flips
-- [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence)
-- [ ] Web lint / typecheck / tests / production build **PASS**
-- [ ] Engine / C-025 / 066 harness / header / upload Node tests **PASS**
+- [x] Repository validation script **PASS** (includes 009 SCRIPT metadata + 117a/117b presence) — 2026-07-16 offline
+- [x] C-025 DEV install packet reviewed if recording credit in scope — reviewed; live install still open
+- [x] 070a PROD remains OFF unless Mike-approved decision flips — decision record affirmed 2026-07-16
+- [ ] 066 OMNI confirmation packet followed if milestones in scope (do not mark live-complete without evidence) — offline PASS; **live pending**
+- [x] Web lint / typecheck / tests / production build **PASS** — 2026-07-16
+- [x] Engine / C-025 / 066 harness / header / upload Node tests **PASS** — 2026-07-16
 
 ---
 
