@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Repo ready** (117a/b; 117a XP Reason Public/Debug contract) — **not installed / not verified** in live DEV or PROD |
+| **C-025 — Zoom recording credit** | **Stage 17 Zoom Attendance path selected for DEV** (117a–f repo-ready) — **not pasted**; S16 HC path superseded; see [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |

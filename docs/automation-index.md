@@ -116,8 +116,12 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
-| **117a** | Zoom Recording Credit — Award XP from Quiz Completion | Homework Completions when Satisfactory + Zoom Meeting linked (**DEV install pending**) | `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` |
-| **117b** | Zoom Recording Credit — Send Approval Email Webhook | Homework Completions when Satisfactory + send flag (**DEV install pending**) | `117b-zoom-recording-credit-send-approval-email-webhook.js` |
+| **117a** | Zoom Recording Credit — Normalize Recording Quiz Submission (**Stage 17**) | Zoom Attendance · Recording Quiz (**DEV paste pending**) | `117a-zoom-recording-normalize-recording-quiz-submission.js` |
+| **117b** | Zoom Recording Credit — Coach Review / Needs Correction (**Stage 17**) | Zoom Attendance · Review Status (**DEV paste pending**) | `117b-zoom-recording-coach-review-and-needs-correction-handling.js` |
+| **117c** | Zoom Recording Credit — Create Zoom XP Event (**Stage 17**) | Zoom Attendance · Credit Approved (**DEV paste pending**) | `117c-zoom-recording-create-zoom-xp-event.js` |
+| **117d** | Zoom Recording Credit — Apply Zoom Gate Credit (**Stage 17**) | Zoom Attendance · Gate Credit Earned (**DEV paste pending**) | `117d-zoom-recording-apply-zoom-gate-credit.js` |
+| **117e** | Zoom Recording Credit — Apply Perfect Week Credit (**Stage 17**) | Zoom Attendance · Approved + PW flag (**DEV paste pending**) | `117e-zoom-recording-apply-perfect-week-credit.js` |
+| **117f** | Zoom Recording Credit — Send Approval Email (**Stage 17**) | Zoom Attendance · Satisfactory (**leave OFF**) | `117f-zoom-recording-send-approval-email.js` |
 
 C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). **117c–117f are not separate S16 scripts** (XP/gate/email folded into 117a/b); Perfect Week / Total Zoom / post-award conflict remain open gaps. Live attendance remains **101** only.
 

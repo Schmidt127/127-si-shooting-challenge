@@ -206,11 +206,12 @@ test("XP Event uses Zoom bucket + Zoom Recording source", () => {
   assert.ok(fields.reasonDebug.includes(fields.sourceKey));
 });
 
-test("117a script CONFIG maps canonical XP Reason Public/Debug fields", () => {
+test("S16 superseded 117a CONFIG maps canonical XP Reason Public/Debug fields", () => {
   const scriptPath = path.join(
     __dirname,
     "..",
-    "117a-zoom-recording-credit-award-xp-from-quiz-completion.js",
+    "_superseded",
+    "117a-s16-homework-completions-award-xp-SUPERSEDED.js",
   );
   const text = fs.readFileSync(scriptPath, "utf8");
   assert.ok(/reasonPublic:\s*"XP Reason Public"/.test(text));

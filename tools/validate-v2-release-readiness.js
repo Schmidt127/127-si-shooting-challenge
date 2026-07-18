@@ -116,6 +116,10 @@ const LAUNCH_SCOPE_SCRIPTS = Object.freeze([
   "116",
   "117a",
   "117b",
+  "117c",
+  "117d",
+  "117e",
+  "117f",
 ]);
 
 function parseEnvExampleKeys(relPath) {
@@ -200,7 +204,7 @@ for (const filePath of scripts) {
     missingDeclaredVersion += 1;
     fail(`launch-scope script missing declared version string: ${rel(filePath)}`);
   }
-  if (/^(009|066|117a|117b)-/.test(base) && !hasStandardScriptMetadata(text)) {
+  if (/^(009|066|117a|117b|117c)-/.test(base) && !hasStandardScriptMetadata(text)) {
     missingStandardMeta += 1;
     fail(`missing standard SCRIPT metadata (scriptName/version/versionDate/originalWrittenDate): ${rel(filePath)}`);
   }
@@ -212,7 +216,7 @@ if (missingDeclaredVersion === 0) {
   pass("all launch-scope automation scripts declare an explicit version string");
 }
 if (missingStandardMeta === 0) {
-  pass("critical scripts (009/066/117a/117b) expose standard SCRIPT metadata");
+  pass("critical scripts (009/066/117a/117b/117c) expose standard SCRIPT metadata");
 }
 
 // Expected high-value scripts for V2 validation domains (launch scope)
@@ -240,6 +244,8 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js",
   "airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.js",
   "airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js",
+  "airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.js",
+  "airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js",
   "airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js",
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",

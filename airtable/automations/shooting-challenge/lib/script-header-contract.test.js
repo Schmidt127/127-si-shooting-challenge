@@ -32,8 +32,9 @@ function hasMeta(block, key) {
 const root = path.join(__dirname, "..");
 const requiredFiles = [
   "009-submission-intake-create-submission-assets.js",
-  "117a-zoom-recording-credit-award-xp-from-quiz-completion.js",
-  "117b-zoom-recording-credit-send-approval-email-webhook.js",
+  "117a-zoom-recording-normalize-recording-quiz-submission.js",
+  "117b-zoom-recording-coach-review-and-needs-correction-handling.js",
+  "117c-zoom-recording-create-zoom-xp-event.js",
   "066-achievements-and-milestones-create-shot-milestone-unlocks.js",
 ];
 
@@ -46,7 +47,7 @@ for (const fileName of requiredFiles) {
       assert.ok(hasMeta(block, key), `${fileName} missing SCRIPT.${key}`);
     }
     // versionNumber is optional alias used on newer scripts
-    if (fileName.startsWith("009") || fileName.startsWith("117")) {
+    if (fileName.startsWith("009")) {
       assert.ok(hasMeta(block, "versionNumber"), `${fileName} missing SCRIPT.versionNumber`);
     }
   });

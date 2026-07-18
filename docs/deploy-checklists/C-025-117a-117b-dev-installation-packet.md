@@ -202,6 +202,6 @@
 | State | Value |
 |-------|-------|
 | Implemented in repository | Yes |
-| Ready for DEV installation | Yes (this packet) |
+| Ready for DEV installation | **Superseded for this base** — use Stage 17 packet [C-025-stage17-zoom-recording-dev-installation-packet.md](./C-025-stage17-zoom-recording-dev-installation-packet.md). S16 HC fields will **not** be created. Preflight stop: [C-025-117a-117b-dev-install-preflight-stop-2026-07-18.md](./C-025-117a-117b-dev-install-preflight-stop-2026-07-18.md) |
 | Installed / verified in DEV | **No** |
 | Ready for PROD | **No** |

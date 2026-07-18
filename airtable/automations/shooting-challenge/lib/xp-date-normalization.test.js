@@ -66,13 +66,14 @@ test("text date keys parse without timezone shift", () => {
   assert.strictEqual(toDateKeyFromText("7/18/2026"), "2026-07-18");
 });
 
-test("117a already Denver-safe for activity dates", () => {
-  const s117a = fs.readFileSync(
-    path.join(root, "117a-zoom-recording-credit-award-xp-from-quiz-completion.js"),
+test("Stage 17 117c is Denver-safe for XP Activity Date", () => {
+  const s117c = fs.readFileSync(
+    path.join(root, "117c-zoom-recording-create-zoom-xp-event.js"),
     "utf8",
   );
-  assert.ok(/timeZone:\s*"America\/Denver"/.test(s117a));
-  assert.ok(/toDateKeyFromDateObject/.test(s117a));
+  assert.ok(/timeZone:\s*"America\/Denver"/.test(s117c));
+  assert.ok(/XP Activity Date/.test(s117c));
+  assert.ok(/toDenverDateKey/.test(s117c));
 });
 
 console.log("\nAll xp-date-normalization tests passed.");

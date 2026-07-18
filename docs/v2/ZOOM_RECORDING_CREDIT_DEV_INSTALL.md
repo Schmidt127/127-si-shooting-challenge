@@ -1,14 +1,14 @@
 # Zoom Recording Credit — DEV Installation Packet (C-025)
 
-**Status:** Repository package **ready for DEV installation** — **not installed / not verified** in live Airtable by this commit  
-**Base:** DEV only `appTetnuCZlCZdTCT`  
-**PROD:** Do not paste or enable until DEV evidence + Mike approval  
-**Authority:** S16-approved design — [C-025-zoom-recording-design-stage12.md](../deploy-checklists/C-025-zoom-recording-design-stage12.md) · [C-025-C-027-configuration-catalog-stage16.md](../deploy-checklists/C-025-C-027-configuration-catalog-stage16.md)  
-**Scripts:** `117a-…js` (**v1.1**), `117b-…js` · Numbering: [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)  
-**Precise install packet:** [C-025-117a-117b-dev-installation-packet.md](../deploy-checklists/C-025-117a-117b-dev-installation-packet.md)  
-**Architecture reconciliation:** [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) — Stage 17 six-pack vs S16 117a/b; open Perfect Week / Total Zoom / post-award conflict gaps  
-**Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python -m unittest tools.airtable.tests.test_c025_recording_watch_contract`  
-**Executable operator sequence (2026-07-16):** [DEV-release-readiness-verification-2026-07-16.md](../deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) — offline suites PASS; live DEV paste still requires Mike authorization + base ID `appTetnuCZlCZdTCT`
+**Status (2026-07-18):** **Stage 17 Zoom Attendance is authoritative for DEV.**
+S16 Homework Completions package is **superseded for this base** (scripts under `_superseded/`).
+**Current install packet:** [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md)
+**Historical S16 packet:** [C-025-117a-117b-dev-installation-packet.md](../deploy-checklists/C-025-117a-117b-dev-installation-packet.md)
+**Numbering:** [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)
+**Base:** DEV only `appTetnuCZlCZdTCT` · **PROD:** do not paste
+**Offline tests:** `node …/lib/c025-stage17-zoom-attendance.test.js` · historical S16: `…/lib/c025-zoom-recording-credit.test.js`
+
+> The sections below originally described the S16 Homework Completions design. Keep for history; **do not install S16 on DEV** while Stage 17 is selected.
 
 ---
 
@@ -190,14 +190,14 @@ Exact Airtable view names may differ — create if missing; do not rename produc
 
 ## 7. Activation order (DEV)
 
-1. Config fields + defaults on active season row  
-2. Zoom Meetings fields (`Recording Attendees`, availability, overrides)  
-3. Homework Completions quiz links + email flags  
-4. XP Events select options (`Zoom Recording`) if needed  
-5. Homework catalog: **Zoom Recording Quiz** assignment row (content)  
-6. Paste **117a** (OFF) → map I/O → turn **ON**  
-7. Paste **117b** (OFF) → map I/O + DEV webhook → leave OFF until email dry-run  
-8. Do **not** enable on PROD  
+1. Config fields + defaults on active season row
+2. Zoom Meetings fields (`Recording Attendees`, availability, overrides)
+3. Homework Completions quiz links + email flags
+4. XP Events select options (`Zoom Recording`) if needed
+5. Homework catalog: **Zoom Recording Quiz** assignment row (content)
+6. Paste **117a** (OFF) → map I/O → turn **ON**
+7. Paste **117b** (OFF) → map I/O + DEV webhook → leave OFF until email dry-run
+8. Do **not** enable on PROD
 
 ---
 
@@ -244,22 +244,22 @@ Exact Airtable view names may differ — create if missing; do not rename produc
 
 ## 11. Evidence to capture
 
-- Config field screenshot + values  
-- Automation script version (`SCRIPT.version` **v1.1**)  
-- XP Event record IDs + Source Keys  
-- `statusOut` / `actionOut` JSON console logs  
-- Recording Attendees before/after  
-- Link evidence into [AUTOMATION_VERSION_INVENTORY.md](../AUTOMATION_VERSION_INVENTORY.md)  
+- Config field screenshot + values
+- Automation script version (`SCRIPT.version` **v1.1**)
+- XP Event record IDs + Source Keys
+- `statusOut` / `actionOut` JSON console logs
+- Recording Attendees before/after
+- Link evidence into [AUTOMATION_VERSION_INVENTORY.md](../AUTOMATION_VERSION_INVENTORY.md)
 
 ---
 
 ## 12. Rollback / disable
 
-1. Turn **117a** and **117b** **OFF**.  
-2. Leave Config values (do not delete fields).  
-3. Do **not** delete historical XP Events.  
-4. If bad XP created: deactivate/audit by Source Key; repair with idempotent tools after Mike approval.  
-5. Revert script paste to previous GitHub SHA if needed (none in PROD yet).  
+1. Turn **117a** and **117b** **OFF**.
+2. Leave Config values (do not delete fields).
+3. Do **not** delete historical XP Events.
+4. If bad XP created: deactivate/audit by Source Key; repair with idempotent tools after Mike approval.
+5. Revert script paste to previous GitHub SHA if needed (none in PROD yet).
 
 ---
 
