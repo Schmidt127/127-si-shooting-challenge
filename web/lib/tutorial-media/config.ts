@@ -1,4 +1,5 @@
 import type { AmbientPageProps } from "@/components/catalog/ambient-page";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 
 export type TutorialMediaSectionConfig = {
   basePath: string;
@@ -53,8 +54,8 @@ export const SHOUTOUTS_SECTION: TutorialMediaSectionConfig = {
     openVideoLabel: "Open video in new tab",
   },
   empty: {
-    title: "No shoutouts published yet",
-    message: "Mark shoutouts OK to Publish on Softr and they will appear here.",
+    title: EMPTY_STATE_COPY.shoutouts.title,
+    message: EMPTY_STATE_COPY.shoutouts.description,
   },
   error: {
     title: "Could not load shoutouts",
@@ -87,8 +88,8 @@ export const ARTICLES_SECTION: TutorialMediaSectionConfig = {
       "This article is hosted on Adobe. Open it in a new tab for the full reading experience.",
   },
   empty: {
-    title: "No articles published yet",
-    message: "Mark article book entries OK to Publish on Softr and they will appear here.",
+    title: EMPTY_STATE_COPY.articles.title,
+    message: EMPTY_STATE_COPY.articles.description,
   },
   error: {
     title: "Could not load articles",

@@ -7,6 +7,7 @@ import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { LeaderboardPodium } from "@/components/leaderboard/leaderboard-podium";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LeaderboardData } from "@/types/leaderboard";
 
 type PublicDisplayViewProps = {
@@ -86,6 +87,20 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
             <IconTrophy size={14} className="text-court-gold" />
           </footer>
         </div>
+      </div>
+    </AmbientPage>
+  );
+}
+
+export function PublicDisplayEmptyState() {
+  return (
+    <AmbientPage variant="leaderboard">
+      <div className="mx-auto max-w-lg px-4 py-24 text-center">
+        <h1 className="font-display text-2xl">{EMPTY_STATE_COPY.publicDisplay.title}</h1>
+        <p className="mt-3 text-sm text-muted">{EMPTY_STATE_COPY.publicDisplay.description}</p>
+        <Link href="/" className="btn-secondary mt-6">
+          ← Back to overview
+        </Link>
       </div>
     </AmbientPage>
   );
