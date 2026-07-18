@@ -249,6 +249,8 @@ const requiredTests = [
   "airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js",
   "airtable/automations/shooting-challenge/lib/c025-stage17-combined-zoom-credit.js",
   "airtable/automations/shooting-challenge/lib/c025-stage17-combined-zoom-credit.test.js",
+  "airtable/automations/shooting-challenge/lib/c025-stage17-etf-downstream.js",
+  "airtable/automations/shooting-challenge/lib/c025-stage17-etf-downstream.test.js",
   "airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js",
   "airtable/automations/shooting-challenge/lib/script-header-contract.test.js",
   "airtable/automations/shooting-challenge/lib/upload-make-lambda-response.js",

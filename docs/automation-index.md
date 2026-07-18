@@ -119,7 +119,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117** | Zoom Recording Credit — Orchestrator (**Stage 17 v1.1.0**) | Zoom Attendance · Recording Quiz · Enrollment + Meeting not empty (**DEV paste pending; keep OFF**) — **never writes Attendees** | `117-zoom-recording-credit-orchestrator.js` |
 | **117a–f** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117f-*.js` |
 
-C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Perfect Week (**057**) / Total Zoom gate (**042**) remain **documented gaps** (live Attendees only). Live attendance remains **101** only — do not add recording athletes to `Attendees`.
+C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115 v1.4** `C025_STAGE17_DOWNSTREAM` → triggers **057**/**042**; never writes `Attendees`). Live attendance remains **101** only.
 
 ---
 
