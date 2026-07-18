@@ -2,11 +2,11 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025 Stage 17 orchestrator v1.1.0 — removed Attendees writes / 101 double-credit risk; paste still pending)
+Last updated: **2026-07-18** (C-025 Stage 17 orchestrator v1.1.0 ready; DEV replace/test **stopped** — Automations API 403; fixtures prepared)
 
-**Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
-**New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
-**Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)  
+**Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
+**New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
+**Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 **Softr cutover:** [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 > **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
@@ -121,7 +121,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Scripts | `117-zoom-recording-credit-orchestrator.js` + modular 117a–f (reference); 117d/e flag-only |
 | DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
 | DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
-| Live DEV paste | **Not done** — keep OFF; fix trigger before paste |
+| Live DEV paste | **Blocked** — Automations API **403**; Mike UI paste card + fixtures ready ([replace-stop](./deploy-checklists/C-025-stage17-orchestrator-dev-replace-stop-2026-07-18.md)) |
 | Live PROD | **Blocked** — untouched; **101 unchanged** |
 | Downstream gaps | **057** PW counts live Attendees only; **042** Total Zoom Attendances is live link count |
 | Packet | [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
@@ -170,7 +170,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | `/admin` | Placeholder — roadmap only; **no write controls**; no sensitive diagnostics without auth |
 | `/api/airtable` | Health check only |
 
-Canonical map: [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md)  
+Canonical map: [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md)
 Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 
 ### Admin page status

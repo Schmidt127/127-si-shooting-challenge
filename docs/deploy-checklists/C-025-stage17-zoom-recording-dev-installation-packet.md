@@ -1,11 +1,13 @@
 # C-025 — Stage 17 Zoom Attendance recording credit — DEV installation packet
 
-**Status:** Repository-ready **v1.1.0 orchestrator** (Attendees-write removed) · **Do not paste until Mike authorizes** · **Do not enable**
+**Status:** Repository-ready **v1.1.0 orchestrator** · **DEV paste blocked (Automations API 403)** · fixtures prepared · **Do not enable permanently**
 **Base:** DEV only `appTetnuCZlCZdTCT`
 **PROD:** Forbidden
 **Architecture:** **Zoom Attendance** (Stage 17) — **not** Homework Completions (S16)
 **Supersedes for this base:** [C-025-117a-117b-dev-installation-packet.md](./C-025-117a-117b-dev-installation-packet.md) (S16 HC path)
-**Install results (preflight):** [C-025-stage17-dev-install-results-2026-07-18.md](./C-025-stage17-dev-install-results-2026-07-18.md)
+**Install / preflight:** [C-025-stage17-dev-install-results-2026-07-18.md](./C-025-stage17-dev-install-results-2026-07-18.md)
+**Replace/test STOP:** [C-025-stage17-orchestrator-dev-replace-stop-2026-07-18.md](./C-025-stage17-orchestrator-dev-replace-stop-2026-07-18.md)
+**Paste body (skip GitHub header already done):** [C-025-stage17-117-orchestrator-v1.1.0-PASTE.txt](./C-025-stage17-117-orchestrator-v1.1.0-PASTE.txt)
 **Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js`
 
 ---
@@ -185,8 +187,9 @@ Keep automation **OFF**.
 | Orchestrator in repository | **Yes — v1.1.0** (no Attendees writes) |
 | XP Source option in DEV | **Added** — `Zoom Meeting Recording Quiz` |
 | Read-only preflight | **PASS** (2026-07-18) |
-| Ready for DEV paste | **After** Mike UI inventory + trigger fix |
-| Installed / verified in DEV | **No** |
+| DEV fixtures for orchestrator tests | **Prepared** (Schmidt; see replace-stop doc) |
+| Ready for DEV paste | **Mike UI only** — Automations Meta API **403** |
+| Installed / verified in DEV | **No** — replace/test stopped pending UI paste |
 | Ready for PROD | **No** |
 | Automation 101 | **Unchanged** |
 | PROD | **Untouched** |

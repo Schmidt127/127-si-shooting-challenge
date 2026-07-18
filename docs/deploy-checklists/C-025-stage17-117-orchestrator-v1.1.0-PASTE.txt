@@ -1,0 +1,574 @@
+/************************************************************
+ * 117 - Zoom Recording Credit - Orchestrator (Stage 17)
+ *
+ * Version: v1.1.0
+ * Date Written: 2026-07-14
+ * Last Updated: 2026-07-18
+ *
+ * VERSION HISTORY
+ * - v1.1.0 (2026-07-18): Eliminate live Attendees writes (Steps D/E).
+ *   Recording XP via ZOOM_CREDIT only; gate/PW mark applied flags only;
+ *   never mutate Zoom Meetings.Attendees (avoids Automation 101 double-credit).
+ *   Correct trigger: Zoom Attendance · Recording Quiz · links present.
+ *   Email send disabled unless non-blank webhookUrl is provided.
+ * - v1.0.0 (2026-07-14): Initial combined orchestrator (DEV slot limit).
+ *
+ * PURPOSE
+ * - Single DEV automation for Stage 17 recording-quiz credit:
+ *   normalize → coach review sync → create/soft-void XP → flag gate/PW.
+ * - Replace incorrect "Recording Quiz Submitted At is one week from now" trigger.
+ *
+ * IMPORTANT DESIGN RULES
+ * - NEVER write Zoom Meetings → Attendees (live roster only; 101 owns that path).
+ * - Source Key = Zoom Credit Key = ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}
+ * - Disjoint from live 101 keys (ZOOM_ATTEND_BASE|…).
+ * - XP Bucket = Zoom Attendance; XP Source = Zoom Meeting Recording Quiz.
+ * - Date = XP Activity Date; reasons = XP Reason Public / XP Reason Debug.
+ * - Amount from Zoom XP Amount formula — do not hard-code.
+ * - Gate / Perfect Week: set applied flags only; report downstream gaps
+ *   (042/057 still count live Attendees — do not impersonate live attendance).
+ * - Email: blank webhookUrl ⇒ skip (DEV-safe default).
+ * - Leave automation OFF except controlled DEV runs.
+ *
+ * INPUT
+ * - recordId (required) = Zoom Attendance record id from trigger
+ * - webhookUrl (optional) — leave blank to keep email send disabled
+ *
+ * OUTPUTS
+ * - statusOut: success | skipped | error
+ * - errorOut
+ * - debugStep
+ * - actionOut (primary XP / normalize action)
+ * - xpEventId, xpPoints, sourceKeyOut
+ * - gateActionOut, perfectWeekActionOut, emailActionOut
+ * - attendeesWriteAttempted (always false on success path)
+ *
+ * TRIGGER (recommended)
+ * - Table: Zoom Attendance
+ * - Conditions:
+ *   - Attendance Method is Recording Quiz
+ *   - Enrollment is not empty
+ *   - Zoom Meeting is not empty
+ * - Input: recordId = Airtable record ID of trigger record
+ *
+ * DO NOT USE
+ * - Recording Quiz Submitted At is one week from now (incorrect)
+ * - Writing Zoom Meetings.Attendees
+ * - Enabling permanently / PROD paste without Mike approval
+ *
+ * AUTOMATION NAME
+ * - 117 - Zoom Recording Credit - Orchestrator
+ *
+ * FOLDER
+ * - 17 - Zoom Recording Credit
+ ************************************************************/
+
+// @ts-nocheck
+
+const SCRIPT = {
+  scriptName: "117 - Zoom Recording Credit - Orchestrator",
+  version: "v1.1.0",
+  versionDate: "2026-07-18",
+  originalWrittenDate: "2026-07-14",
+  lastUpdated: "2026-07-18",
+  folder: "17 - Zoom Recording Credit",
+  automationName: "117 - Zoom Recording Credit - Orchestrator",
+};
+
+const CONFIG = {
+  timeZone: "America/Denver",
+  tables: {
+    zoomAttendance: "Zoom Attendance",
+    zoomMeetings: "Zoom Meetings",
+    xpEvents: "XP Events",
+  },
+  za: {
+    attendanceMethod: "Attendance Method",
+    enrollment: "Enrollment",
+    zoomMeeting: "Zoom Meeting",
+    enrollmentRid: "Enrollment RID",
+    zoomMeetingRid: "Zoom Meeting RID",
+    reviewStatus: "Recording Quiz Review Status",
+    satisfactory: "Recording Quiz Satisfactory?",
+    submittedAt: "Recording Quiz Submitted At",
+    correctionCount: "Recording Quiz Correction Count",
+    reviewedAt: "Recording Quiz Reviewed At",
+    needsCorrectionAt: "Recording Quiz Needs Correction At",
+    creditKey: "Zoom Credit Key",
+    creditApproved: "Zoom Credit Approved?",
+    creditConflict: "Zoom Credit Conflict?",
+    xpAmount: "Zoom XP Amount",
+    creditDebug: "Zoom Credit Debug",
+    gateEarned: "Zoom Gate Credit Earned?",
+    gateApplied: "Gate Credit Applied?",
+    pwFlag: "Effective Recording Counts for Perfect Week?",
+    pwApplied: "Perfect Week Credit Applied?",
+    sendKey: "Recording Approval Email Send Key",
+    sentAt: "Recording Approval Email Sent At",
+  },
+  zoom: {
+    startTime: "Start Time",
+    week: "Week",
+    // Intentionally NO Attendees field — writing it can re-trigger Automation 101.
+  },
+  xp: {
+    sourceKey: "Source Key",
+    enrollment: "Enrollment",
+    xpPoints: "XP Points",
+    xpBucket: "XP Bucket",
+    xpSource: "XP Source",
+    active: "Active?",
+    reasonPublic: "XP Reason Public",
+    reasonDebug: "XP Reason Debug",
+    xpActivityDate: "XP Activity Date",
+    zoomMeeting: "Zoom Meeting",
+    zoomAttendance: "Zoom Attendance",
+    week: "Week",
+    awardedBy: "Awarded By",
+  },
+  values: {
+    xpBucket: "Zoom Attendance",
+    xpSource: "Zoom Meeting Recording Quiz",
+    reasonPublic: "Zoom recording quiz credit",
+    recordingMethod: "Recording Quiz",
+    awardedBy: "117-orchestrator-v1.1.0",
+    reviewNeedsReview: "Needs Review",
+    reviewSatisfactory: "Satisfactory",
+    reviewNeedsCorrection: "Needs Correction",
+  },
+};
+
+function setOutputSafe(key, value) {
+  try {
+    if (typeof output !== "undefined" && output && typeof output.set === "function") {
+      output.set(key, value);
+    }
+  } catch (e) {
+    console.log(`setOutputSafe(${key}) failed: ${e && e.message ? e.message : e}`);
+  }
+}
+
+function requireRecId(recordId) {
+  if (!recordId || typeof recordId !== "string" || !recordId.startsWith("rec")) {
+    throw new Error(`Invalid recordId: ${recordId}`);
+  }
+  return recordId;
+}
+
+function fieldExists(table, name) {
+  try {
+    table.getField(name);
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function getLinkedIds(record, fieldName) {
+  const v = record.getCellValue(fieldName);
+  if (!v) return [];
+  if (Array.isArray(v)) return v.map((x) => (x && x.id) || x).filter(Boolean);
+  if (v.id) return [v.id];
+  return [];
+}
+
+function getText(record, fieldName) {
+  try {
+    const v = record.getCellValueAsString(fieldName);
+    return v == null ? "" : String(v).trim();
+  } catch (e) {
+    return "";
+  }
+}
+
+function getNumber(record, fieldName) {
+  const raw = record.getCellValue(fieldName);
+  if (raw == null || raw === "") return null;
+  if (typeof raw === "number") return raw;
+  if (Array.isArray(raw) && raw.length === 1) {
+    return getNumber({ getCellValue: () => raw[0] }, "x");
+  }
+  const n = Number(raw);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getCheckbox(record, fieldName) {
+  const v = record.getCellValue(fieldName);
+  if (v === true || v === 1 || v === "1") return true;
+  if (Array.isArray(v) && v.length === 1) {
+    return getCheckbox({ getCellValue: () => v[0] }, "x");
+  }
+  return false;
+}
+
+function isTruthyFlag(record, fieldName) {
+  return getCheckbox(record, fieldName) || getNumber(record, fieldName) === 1;
+}
+
+function requireSingleSelectOption(table, fieldName, optionName) {
+  const field = table.getField(fieldName);
+  const choices = (field.options && field.options.choices) || [];
+  const match = choices.find((c) => c && c.name === optionName);
+  if (!match) {
+    throw new Error(
+      `Missing single-select option "${optionName}" on ${table.name}.${fieldName}. ` +
+        `Add this DEV option before enabling 117 orchestrator.`
+    );
+  }
+  return { id: match.id, name: match.name };
+}
+
+function toDenverDateKey(dateObj) {
+  if (!(dateObj instanceof Date) || Number.isNaN(dateObj.getTime())) return "";
+  const fmt = new Intl.DateTimeFormat("en-US", {
+    timeZone: CONFIG.timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const parts = Object.fromEntries(fmt.formatToParts(dateObj).map((p) => [p.type, p.value]));
+  return `${parts.year}-${parts.month}-${parts.day}`;
+}
+
+function dateOnlyFromKey(dateKey) {
+  const m = String(dateKey || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return null;
+  return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12, 0, 0));
+}
+
+async function updateRecordSafe(table, recordId, fields) {
+  const keys = Object.keys(fields || {});
+  if (!keys.length) return;
+  // Hard stop: never write live Attendees via any table update from this script.
+  if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
+    throw new Error("Refuse write to Attendees — live roster is reserved for Automation 101");
+  }
+  await table.updateRecordAsync(recordId, fields);
+}
+
+async function main() {
+  let debugStep = "1 - Validate input";
+  setOutputSafe("debugStep", debugStep);
+  setOutputSafe("errorOut", "");
+  setOutputSafe("sourceKeyOut", "");
+  setOutputSafe("xpEventId", "");
+  setOutputSafe("xpPoints", "");
+  setOutputSafe("gateActionOut", "");
+  setOutputSafe("perfectWeekActionOut", "");
+  setOutputSafe("emailActionOut", "");
+  setOutputSafe("attendeesWriteAttempted", false);
+
+  const cfg = input.config();
+  const recordId = requireRecId(String(cfg.recordId || "").trim());
+  const webhookUrl = String(cfg.webhookUrl || "").trim();
+
+  const zaTable = base.getTable(CONFIG.tables.zoomAttendance);
+  const xpTable = base.getTable(CONFIG.tables.xpEvents);
+  const zmTable = base.getTable(CONFIG.tables.zoomMeetings);
+
+  debugStep = "2 - Validate XP schema";
+  setOutputSafe("debugStep", debugStep);
+  for (const name of [
+    CONFIG.xp.sourceKey,
+    CONFIG.xp.enrollment,
+    CONFIG.xp.xpPoints,
+    CONFIG.xp.xpBucket,
+    CONFIG.xp.xpSource,
+    CONFIG.xp.reasonPublic,
+    CONFIG.xp.reasonDebug,
+    CONFIG.xp.xpActivityDate,
+  ]) {
+    if (!fieldExists(xpTable, name)) {
+      throw new Error(`XP Events missing required field: ${name}`);
+    }
+  }
+  const bucketOpt = requireSingleSelectOption(xpTable, CONFIG.xp.xpBucket, CONFIG.values.xpBucket);
+  const sourceOpt = requireSingleSelectOption(xpTable, CONFIG.xp.xpSource, CONFIG.values.xpSource);
+
+  debugStep = "3 - Load Zoom Attendance row";
+  setOutputSafe("debugStep", debugStep);
+  const zaFieldNames = Object.values(CONFIG.za).filter((n) => fieldExists(zaTable, n));
+  let rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+  if (!rec) throw new Error(`Zoom Attendance not found: ${recordId}`);
+
+  const method = getText(rec, CONFIG.za.attendanceMethod);
+  if (method && method !== CONFIG.values.recordingMethod) {
+    setOutputSafe("statusOut", "skipped");
+    setOutputSafe("actionOut", "skipped_not_recording_quiz");
+    setOutputSafe("debugStep", "complete");
+    return;
+  }
+
+  const enrollIds = getLinkedIds(rec, CONFIG.za.enrollment);
+  const meetingIds = getLinkedIds(rec, CONFIG.za.zoomMeeting);
+  if (!enrollIds.length) throw new Error("Missing Enrollment link on Zoom Attendance");
+  if (!meetingIds.length) throw new Error("Missing Zoom Meeting link on Zoom Attendance");
+
+  // SECTION A — Normalize submission stamps
+  debugStep = "4A - Normalize recording quiz submission";
+  setOutputSafe("debugStep", debugStep);
+  const normalizePatch = {};
+  if (fieldExists(zaTable, CONFIG.za.reviewStatus) && !getText(rec, CONFIG.za.reviewStatus)) {
+    normalizePatch[CONFIG.za.reviewStatus] = { name: CONFIG.values.reviewNeedsReview };
+  }
+  if (fieldExists(zaTable, CONFIG.za.submittedAt) && !rec.getCellValue(CONFIG.za.submittedAt)) {
+    normalizePatch[CONFIG.za.submittedAt] = new Date();
+  }
+  let normalizeAction = "skipped_already_normalized";
+  if (Object.keys(normalizePatch).length) {
+    await updateRecordSafe(zaTable, recordId, normalizePatch);
+    normalizeAction = "normalized";
+    rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+  }
+
+  // SECTION B — Coach review sync
+  debugStep = "4B - Coach review sync";
+  setOutputSafe("debugStep", debugStep);
+  const reviewStatus = getText(rec, CONFIG.za.reviewStatus);
+  const sat = getCheckbox(rec, CONFIG.za.satisfactory);
+  const reviewPatch = {};
+  let reviewAction = "skipped_unchanged";
+  if (reviewStatus === CONFIG.values.reviewSatisfactory && !sat) {
+    reviewPatch[CONFIG.za.satisfactory] = true;
+    if (fieldExists(zaTable, CONFIG.za.reviewedAt)) reviewPatch[CONFIG.za.reviewedAt] = new Date();
+    reviewAction = "marked_satisfactory";
+  } else if (reviewStatus === CONFIG.values.reviewNeedsCorrection && sat) {
+    reviewPatch[CONFIG.za.satisfactory] = false;
+    if (fieldExists(zaTable, CONFIG.za.needsCorrectionAt)) {
+      reviewPatch[CONFIG.za.needsCorrectionAt] = new Date();
+    }
+    if (fieldExists(zaTable, CONFIG.za.correctionCount)) {
+      reviewPatch[CONFIG.za.correctionCount] = (getNumber(rec, CONFIG.za.correctionCount) || 0) + 1;
+    }
+    reviewAction = "marked_needs_correction";
+  }
+  if (Object.keys(reviewPatch).length) {
+    await updateRecordSafe(zaTable, recordId, reviewPatch);
+    rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+  }
+
+  // SECTION C — XP Event create / soft-void (never Attendees)
+  debugStep = "4C - Create or soft-void Zoom XP Event";
+  setOutputSafe("debugStep", debugStep);
+  const key = getText(rec, CONFIG.za.creditKey);
+  const approved = isTruthyFlag(rec, CONFIG.za.creditApproved);
+  const conflict = isTruthyFlag(rec, CONFIG.za.creditConflict);
+  const amount = getNumber(rec, CONFIG.za.xpAmount) || 0;
+  setOutputSafe("sourceKeyOut", key);
+
+  if (!key) throw new Error("Blank Zoom Credit Key — refuse XP create");
+
+  let activityDate = null;
+  const meetingId = meetingIds[0];
+  const zmFieldList = [CONFIG.zoom.startTime, CONFIG.zoom.week].filter((n) => fieldExists(zmTable, n));
+  const meeting = await zmTable.selectRecordAsync(meetingId, { fields: zmFieldList });
+  if (meeting && fieldExists(zmTable, CONFIG.zoom.startTime)) {
+    const start = meeting.getCellValue(CONFIG.zoom.startTime);
+    if (start instanceof Date) {
+      activityDate = dateOnlyFromKey(toDenverDateKey(start));
+    } else if (typeof start === "string" && start) {
+      const parsed = new Date(start);
+      if (!Number.isNaN(parsed.getTime())) activityDate = dateOnlyFromKey(toDenverDateKey(parsed));
+    }
+  }
+  const weekIds =
+    meeting && fieldExists(zmTable, CONFIG.zoom.week) ? getLinkedIds(meeting, CONFIG.zoom.week) : [];
+
+  const xpFieldList = [
+    CONFIG.xp.sourceKey,
+    CONFIG.xp.xpPoints,
+    CONFIG.xp.active,
+    CONFIG.xp.enrollment,
+    CONFIG.xp.awardedBy,
+  ].filter((n) => fieldExists(xpTable, n));
+  const xpQuery = await xpTable.selectRecordsAsync({ fields: xpFieldList });
+  const matches = xpQuery.records.filter((r) => getText(r, CONFIG.xp.sourceKey) === key);
+  const existing = matches[0] || null;
+  try {
+    xpQuery.unloadData();
+  } catch (e) {
+    /* older runtimes */
+  }
+
+  let xpAction = "skipped_not_approved";
+  if (!approved || conflict || amount <= 0) {
+    if (existing && fieldExists(xpTable, CONFIG.xp.active) && getCheckbox(existing, CONFIG.xp.active)) {
+      await updateRecordSafe(xpTable, existing.id, { [CONFIG.xp.active]: false });
+      xpAction = "deactivated_on_conflict";
+      setOutputSafe("xpEventId", existing.id);
+      setOutputSafe("xpPoints", "0");
+    } else {
+      xpAction = !approved || conflict ? "skipped_not_approved" : "skipped_zero_amount";
+      setOutputSafe("xpEventId", existing ? existing.id : "");
+    }
+  } else if (existing) {
+    if (
+      fieldExists(xpTable, CONFIG.xp.awardedBy) &&
+      getText(existing, CONFIG.xp.awardedBy) &&
+      getText(existing, CONFIG.xp.awardedBy) !== CONFIG.values.awardedBy &&
+      !String(getText(existing, CONFIG.xp.awardedBy)).includes("117")
+    ) {
+      throw new Error(
+        `Source Key ${key} owned by another automation (${getText(existing, CONFIG.xp.awardedBy)}); refuse steal`
+      );
+    }
+    const patch = {};
+    if (fieldExists(xpTable, CONFIG.xp.xpPoints) && getNumber(existing, CONFIG.xp.xpPoints) !== amount) {
+      patch[CONFIG.xp.xpPoints] = amount;
+    }
+    if (fieldExists(xpTable, CONFIG.xp.active) && !getCheckbox(existing, CONFIG.xp.active)) {
+      patch[CONFIG.xp.active] = true;
+    }
+    if (Object.keys(patch).length) {
+      await updateRecordSafe(xpTable, existing.id, patch);
+      xpAction = "updated";
+    } else {
+      xpAction = "skipped_exists";
+    }
+    setOutputSafe("xpEventId", existing.id);
+    setOutputSafe("xpPoints", String(amount));
+  } else {
+    const createFields = {
+      [CONFIG.xp.sourceKey]: key,
+      [CONFIG.xp.xpPoints]: amount,
+      [CONFIG.xp.active]: true,
+      [CONFIG.xp.enrollment]: enrollIds.map((id) => ({ id })),
+      [CONFIG.xp.xpBucket]: { id: bucketOpt.id },
+      [CONFIG.xp.xpSource]: { id: sourceOpt.id },
+      [CONFIG.xp.reasonPublic]: CONFIG.values.reasonPublic,
+      [CONFIG.xp.reasonDebug]:
+        getText(rec, CONFIG.za.creditDebug) || `C-025 ${SCRIPT.version} ${key}`,
+    };
+    if (fieldExists(xpTable, CONFIG.xp.zoomMeeting)) {
+      createFields[CONFIG.xp.zoomMeeting] = meetingIds.map((id) => ({ id }));
+    }
+    if (fieldExists(xpTable, CONFIG.xp.zoomAttendance)) {
+      createFields[CONFIG.xp.zoomAttendance] = [{ id: recordId }];
+    }
+    if (fieldExists(xpTable, CONFIG.xp.week) && weekIds.length) {
+      createFields[CONFIG.xp.week] = weekIds.map((id) => ({ id }));
+    }
+    if (fieldExists(xpTable, CONFIG.xp.xpActivityDate) && activityDate) {
+      createFields[CONFIG.xp.xpActivityDate] = activityDate;
+    }
+    if (fieldExists(xpTable, CONFIG.xp.awardedBy)) {
+      createFields[CONFIG.xp.awardedBy] = CONFIG.values.awardedBy;
+    }
+    const created = await xpTable.createRecordAsync(createFields);
+    xpAction = "created";
+    setOutputSafe("xpEventId", created);
+    setOutputSafe("xpPoints", String(amount));
+  }
+
+  // SECTION D — Gate applied flag only (NO Attendees write)
+  debugStep = "4D - Gate applied flag only (no Attendees write)";
+  setOutputSafe("debugStep", debugStep);
+  let gateAction = "skipped_no_gate_credit";
+  const gateEarned = isTruthyFlag(rec, CONFIG.za.gateEarned);
+  const gateAlready =
+    fieldExists(zaTable, CONFIG.za.gateApplied) && getCheckbox(rec, CONFIG.za.gateApplied);
+  if (conflict) {
+    gateAction = "skipped_conflict";
+  } else if (!gateEarned) {
+    gateAction = "skipped_no_gate_credit";
+  } else if (gateAlready) {
+    gateAction = "skipped_already_applied";
+  } else if (fieldExists(zaTable, CONFIG.za.gateApplied)) {
+    await updateRecordSafe(zaTable, recordId, { [CONFIG.za.gateApplied]: true });
+    gateAction = "marked_gate_applied_flag_only";
+  } else {
+    gateAction = "skipped_no_gate_applied_field";
+  }
+  setOutputSafe("gateActionOut", gateAction);
+
+  // SECTION E — Perfect Week applied flag only (NO Attendees write)
+  debugStep = "4E - Perfect Week applied flag only (no Attendees write)";
+  setOutputSafe("debugStep", debugStep);
+  let pwAction = "skipped_flag_off";
+  const pwFlag = isTruthyFlag(rec, CONFIG.za.pwFlag);
+  const pwAlready =
+    fieldExists(zaTable, CONFIG.za.pwApplied) && getCheckbox(rec, CONFIG.za.pwApplied);
+  if (conflict) {
+    pwAction = "skipped_conflict";
+  } else if (!approved || !pwFlag) {
+    pwAction = "skipped_flag_off";
+  } else if (pwAlready) {
+    pwAction = "skipped_already_applied";
+  } else if (fieldExists(zaTable, CONFIG.za.pwApplied)) {
+    await updateRecordSafe(zaTable, recordId, { [CONFIG.za.pwApplied]: true });
+    pwAction = "marked_perfect_week_applied_flag_only";
+  } else {
+    pwAction = "skipped_no_pw_applied_field";
+  }
+  setOutputSafe("perfectWeekActionOut", pwAction);
+
+  // SECTION F — Email preparation (disabled by blank webhook)
+  debugStep = "4F - Email preparation (webhook optional)";
+  setOutputSafe("debugStep", debugStep);
+  let emailAction = "skipped_webhook_blank";
+  if (!webhookUrl) {
+    emailAction = "skipped_webhook_blank";
+  } else if (!getCheckbox(rec, CONFIG.za.satisfactory) && reviewStatus !== CONFIG.values.reviewSatisfactory) {
+    emailAction = "skipped_not_satisfactory";
+  } else {
+    // DEV-safe: still do not POST — only stamp send key preparation when webhook present
+    // Real send remains intentionally unimplemented in v1.1.0 until Mike authorizes Make.
+    emailAction = "skipped_email_send_disabled_in_v1_1_0";
+    if (fieldExists(zaTable, CONFIG.za.sendKey) && !getText(rec, CONFIG.za.sendKey)) {
+      const sendKey = `ZOOM_REC_APPROVAL|${getText(rec, CONFIG.za.enrollmentRid) || enrollIds[0]}|${
+        getText(rec, CONFIG.za.zoomMeetingRid) || meetingIds[0]
+      }`;
+      await updateRecordSafe(zaTable, recordId, { [CONFIG.za.sendKey]: sendKey });
+      emailAction = "prepared_send_key_no_webhook_post";
+    }
+  }
+  setOutputSafe("emailActionOut", emailAction);
+
+  setOutputSafe("statusOut", "success");
+  setOutputSafe("actionOut", xpAction !== "skipped_not_approved" && xpAction !== "skipped_zero_amount"
+    ? xpAction
+    : normalizeAction !== "skipped_already_normalized"
+      ? normalizeAction
+      : reviewAction !== "skipped_unchanged"
+        ? reviewAction
+        : xpAction);
+  setOutputSafe("attendeesWriteAttempted", false);
+  setOutputSafe("errorOut", "");
+  setOutputSafe("debugStep", "complete");
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: "success",
+      actionOut: xpAction,
+      normalizeAction,
+      reviewAction,
+      gateAction,
+      pwAction,
+      emailAction,
+      sourceKey: key,
+      attendeesWriteAttempted: false,
+      note: "Never writes Zoom Meetings.Attendees; 101 trigger prerequisites untouched",
+    })
+  );
+}
+
+try {
+  await main();
+} catch (err) {
+  const msg = err && err.message ? err.message : String(err);
+  setOutputSafe("statusOut", "error");
+  setOutputSafe("errorOut", msg);
+  setOutputSafe("actionOut", "error");
+  setOutputSafe("debugStep", "error");
+  setOutputSafe("attendeesWriteAttempted", false);
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: "error",
+      errorOut: msg,
+    })
+  );
+  throw err;
+}
