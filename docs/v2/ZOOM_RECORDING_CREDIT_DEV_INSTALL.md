@@ -4,9 +4,10 @@
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Do not paste or enable until DEV evidence + Mike approval  
 **Authority:** S16-approved design — [C-025-zoom-recording-design-stage12.md](../deploy-checklists/C-025-zoom-recording-design-stage12.md) · [C-025-C-027-configuration-catalog-stage16.md](../deploy-checklists/C-025-C-027-configuration-catalog-stage16.md)  
-**Scripts:** `117a-…js`, `117b-…js` · Numbering: [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)  
+**Scripts:** `117a-…js` (**v1.1**), `117b-…js` · Numbering: [C-025-117-numbering.md](../deploy-checklists/C-025-117-numbering.md)  
+**Precise install packet:** [C-025-117a-117b-dev-installation-packet.md](../deploy-checklists/C-025-117a-117b-dev-installation-packet.md)  
 **Architecture reconciliation:** [C025_ARCHITECTURE_RECONCILIATION.md](./C025_ARCHITECTURE_RECONCILIATION.md) — Stage 17 six-pack vs S16 117a/b; open Perfect Week / Total Zoom / post-award conflict gaps  
-**Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python3 -m unittest tools.airtable.tests.test_c025_recording_watch_contract`  
+**Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` · `python -m unittest tools.airtable.tests.test_c025_recording_watch_contract`  
 **Executable operator sequence (2026-07-16):** [DEV-release-readiness-verification-2026-07-16.md](../deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) — offline suites PASS; live DEV paste still requires Mike authorization + base ID `appTetnuCZlCZdTCT`
 
 ---
@@ -89,7 +90,7 @@ Capture screenshots / field lists before creating anything.
 | `XP Source` | Single select including `Zoom Recording` | **Create option if missing** |
 | `Week` | Link | Optional |
 | `Activity Date` | Date | Optional |
-| `Reason Public` / `Reason Debug` | Text | Optional |
+| `XP Reason Public` / `XP Reason Debug` | Text | **Canonical** (v1.1+) — do **not** create bare `Reason Public` / `Reason Debug` |
 | `Active?` | Checkbox | Optional |
 | `Zoom Meeting` | Link | Optional — create if missing |
 | `Homework Completion` | Link | Optional — create if missing |
@@ -244,7 +245,7 @@ Exact Airtable view names may differ — create if missing; do not rename produc
 ## 11. Evidence to capture
 
 - Config field screenshot + values  
-- Automation script version (`SCRIPT.version` v1.0)  
+- Automation script version (`SCRIPT.version` **v1.1**)  
 - XP Event record IDs + Source Keys  
 - `statusOut` / `actionOut` JSON console logs  
 - Recording Attendees before/after  
