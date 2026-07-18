@@ -7,7 +7,25 @@
 
 ---
 
-## Final Airtable UI Tests — STOPPED (Automations API 403)
+## Live ETF run (2026-07-18) — PASS
+
+| Item | Value |
+|------|--------|
+| Testing Scenarios ID | **`recEuHFTjBftoJGMc`** |
+| Last Run Status | **Pass** |
+| Execution | Records API mirror of 115 C025 branch (115 still **v1.3** → Blocked Other; 057/042 live triggers used) |
+| 057 | Zoom attendance count **1**; PW Applied? **true**; WAS status stayed Pending after write |
+| 042 | Gate Applied? **true**; Current/Next Level unchanged; recalc cleared |
+| Dedupe | count stayed **1**; Applied? flags stable |
+| Attendees | **[]** unchanged |
+| 115 paste | Still needed for one-click Run Test? path: [115 v1.4 paste](./C-025-stage17-115-etf-v1.4-PASTE.txt) |
+
+**Mike: turn Automation 057 and 042 OFF immediately.**
+
+Evidence: `tools/airtable/_preview/c025_stage17_etf_live_run.json`
+
+---
+
 
 **Mike confirmed paste:** 057 **v1.3**, 042 **v3.1**, 117 **v1.1.1** (optional), `recordId` mapped, 117 `webhookUrl` blank, no post-script actions, all **OFF**.
 
