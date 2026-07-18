@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (Agent B docs refresh — master `3ec489a`)
+Last updated: **2026-07-18** (Lead integration of Agent A reliability + Agent B web/docs — branch `audit-followup/lead-integration`; production master still `3ec489a` until Mike merges)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
@@ -38,8 +38,8 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Repo ready** (117a/b) — **not installed / not verified** in live DEV or PROD |
-| **C-011 — Automatic weekly email** | **Repo ready** (118/119 + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
+| **C-025 — Zoom recording credit** | **Repo ready** (117a/b; 117a XP Reason Public/Debug contract) — **not installed / not verified** in live DEV or PROD |
+| **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
@@ -88,7 +88,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 | Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** (prod) and **`dev-20260706/`** (DEV) — export stamp `20260706_161830` / `20260706_161606` |
 | Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
 
-**Agent A** owns refreshing `airtable/schema/**`. This Agent B pass documents staleness only — no schema files edited.
+**Agent A** owns refreshing `airtable/schema/**`. Agent B documented staleness only. Lead integration did **not** refresh schema snapshots or claim live XP Reward Rules verification (offline fixture verifier only).
 
 ### Schema snapshot counts (2026-07-06 export notes)
 
@@ -122,6 +122,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Live PROD | **Blocked** until DEV evidence + Mike approval |
 | Open gaps | Perfect Week / Total Zoom / post-award conflict (see [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md)) |
 | Packet | [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) |
+| Agent A install packet | [C-025-117a-117b-dev-installation-packet.md](./deploy-checklists/C-025-117a-117b-dev-installation-packet.md) — **repository packet only**; does not mean Airtable paste occurred |
 
 ---
 
@@ -134,6 +135,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Schedules | **Must remain OFF** until Mike authorizes |
 | Make DEV webhook | **Live-blocked** / requires approval |
 | Packet | [C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) |
+| Activation checklist | [C-011-weekly-email-schedule-activation-checklist.md](./deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md) — keep schedules off until authorized |
 
 Manual Build/Send checkboxes remain the production path today.
 

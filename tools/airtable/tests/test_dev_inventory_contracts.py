@@ -130,8 +130,8 @@ class TestRepoScriptsFromInventory(unittest.TestCase):
     def test_118_119_exist_and_default_dry_run(self):
         t118 = SCRIPT_118.read_text(encoding="utf-8")
         t119 = SCRIPT_119.read_text(encoding="utf-8")
-        self.assertIn('version: "v1.0"', t118)
-        self.assertIn('version: "v1.0"', t119)
+        self.assertIn('version: "v1.1"', t118)
+        self.assertIn('version: "v1.1"', t119)
         self.assertIn("parseBool(inputConfig.dryRun, true)", t118)
         self.assertIn("parseBool(inputConfig.dryRun, true)", t119)
         self.assertIn("WEEKLY_EMAIL|", t119)
