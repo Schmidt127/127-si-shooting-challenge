@@ -21,7 +21,7 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | Public URL | App path | Page | Airtable data | Status |
 |------------|----------|------|---------------|--------|
 | `/shoot` | `/` | Overview | — | Live |
-| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) | Mock adapter | Live (demo) |
+| `/shoot/dashboard` | `/dashboard` | Athlete dashboard (mock until auth) | Mock adapter | Demo — not cutover-ready |
 | `/shoot/leaderboard` | `/leaderboard` | Season leaderboard | Enrollments (`Web - Leaderboard`) | Live |
 | `/shoot/homework` | `/homework` | Homework catalog | FBC Curriculum (`Web - Homework Catalog`) | Live |
 | `/shoot/homework/[id]` | `/homework/[id]` | Homework detail | FBC Curriculum + Weeks | Live |
@@ -38,8 +38,8 @@ Nav `href` values are **relative to basePath** (e.g. `/leaderboard` → public `
 | `/shoot/achievements` | `/achievements` | Achievements | Achievements (`Web - Achievements` or active+visible filter) | Live |
 | `/shoot/game-manual` | `/game-manual` | Game manual | Static / CMS TBD | Live |
 | `/shoot/public-display` | `/public-display` | TV / kiosk display | Leaderboard subset | Live |
-| `/shoot/athletes/[slug]` | `/athletes/[slug]` | Athlete profile | Enrollments + XP | Planned |
-| `/shoot/admin` | `/admin` | Staff tools | — | Planned |
+| `/shoot/athletes/[slug]` | `/athletes/[slug]` | Athlete profile | Mock adapter (auth TBD) | Demo — not cutover-ready |
+| `/shoot/admin` | `/admin` | Staff tools | Health/roadmap only | Placeholder — see [admin-roadmap.md](./admin-roadmap.md) |
 | `/shoot/api/airtable` | `/api/airtable` | Health check | — | Live |
 
 Views and filters: [airtable-views.md](./airtable-views.md)

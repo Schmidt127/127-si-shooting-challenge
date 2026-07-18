@@ -47,9 +47,13 @@ Replace Softr.io with a custom Next.js site that reads from the same Airtable ba
 
 ### Phase 6 — Softr cutover
 
+**Checklist (do not execute without Mike approval):** [SOFTR-CUTOVER-READINESS.md](../../docs/deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+
 - DNS / URL switch from Softr to Vercel
 - Redirect old Softr paths if needed
-- Decommission Softr app
+- Remove sitewide `noindex` only after pre-cutover tests pass
+- Decommission Softr app only after rollback window
+- Keep Softr intact for rollback during the first 48h
 
 ## Success metrics
 
