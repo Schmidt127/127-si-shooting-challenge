@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025 Stage 17 DEV: XP Source option added + preflight PASS; paste **blocked** on Automations UI inventory / API 403)
+Last updated: **2026-07-18** (C-025 Stage 17 orchestrator v1.1.0 — removed Attendees writes / 101 double-credit risk; paste still pending)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17 DEV prep:** XP Source `Zoom Meeting Recording Quiz` added; preflight **PASS**; **117a–f not pasted** (Automations API 403 — UI inventory required); S16 HC superseded; [results](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) · [packet](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
+| **C-025 — Zoom recording credit** | **Stage 17 orchestrator v1.1.0** (no `Attendees` writes — 101 double-credit fix) · XP Source option added · preflight PASS · **not pasted**; PW/gate downstream **gaps** documented; [packet](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
@@ -116,16 +116,16 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Architecture | **Stage 17 Zoom Attendance** (authoritative for DEV) — S16 Homework Completions path superseded |
-| Scripts | **117a–f v1.1.0** in repo |
+| Architecture | **Stage 17 Zoom Attendance** — single **117 Orchestrator v1.1.0** (DEV slot limit) |
+| Hard rule | **Never** write `Zoom Meetings.Attendees` (101 double-credit risk) |
+| Scripts | `117-zoom-recording-credit-orchestrator.js` + modular 117a–f (reference); 117d/e flag-only |
 | DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
-| DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60 active once; Config recording % = 50 |
-| Live DEV paste | **Not done** — stopped for Automations UI inventory (Meta API **403**) |
-| Live PROD | **Blocked** — untouched |
-| Open gaps | UI inventory before paste; then controlled DEV tests; Perfect Week / totals observation (see [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md)) |
+| DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
+| Live DEV paste | **Not done** — keep OFF; fix trigger before paste |
+| Live PROD | **Blocked** — untouched; **101 unchanged** |
+| Downstream gaps | **057** PW counts live Attendees only; **042** Total Zoom Attendances is live link count |
+| Packet | [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
 | Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
-| Stage 17 packet | [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
-| Historical S16 packet | [C-025-117a-117b-dev-installation-packet.md](./deploy-checklists/C-025-117a-117b-dev-installation-packet.md) — do not install on this base |
 
 ---
 

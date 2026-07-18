@@ -48,6 +48,7 @@ Skip GitHub header when pasting into Airtable.
  * - Date field = XP Activity Date (canonical on this base).
  * - Reasons: XP Reason Public / XP Reason Debug only.
  * - Never write Homework Completions.
+ * - Never write Zoom Meetings.Attendees (live roster / Automation 101).
  * - Recheck-before-create; never steal another Source Key.
  *
  * INPUT
@@ -221,6 +222,9 @@ function dateOnlyFromKey(dateKey) {
 async function updateRecordSafe(table, recordId, fields) {
   const keys = Object.keys(fields || {});
   if (!keys.length) return;
+  if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
+    throw new Error("Refuse write to Attendees — live roster reserved for Automation 101");
+  }
   await table.updateRecordAsync(recordId, fields);
 }
 

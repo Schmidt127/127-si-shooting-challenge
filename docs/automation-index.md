@@ -111,19 +111,15 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 **DEV (2026-07-10):** **Deployed and validated** on `appTetnuCZlCZdTCT` · script `992677d` · v1.0.1 · matrix **S5A–S5L 12/12 PASS** · live **Confirmed Duplicate PASS** + **Approved Reuse reversal PASS** on asset `recF86pJTIMFoEypJ` → VF `rec20xfx0hKCCwPw2` → XP `recx2MvUh2WP0tbjO` (Source Key `VIDEO_SUBMISSION|rec20xfx0hKCCwPw2`; same row deactivated then reactivated; no duplicate XP Event). Replaced retired **008** (slot-neutral; count unchanged). [Stage 5 report](./deploy-checklists/C-023-dev-stage5-duplicate-consequences.md).
 
-## Zoom (101, 117a–117b)
+## Zoom (101, 117)
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award | `101-zoom-attendance-xp-award-meeting-xp.js` |
-| **117a** | Zoom Recording Credit — Normalize Recording Quiz Submission (**Stage 17**) | Zoom Attendance · Recording Quiz (**DEV paste pending**) | `117a-zoom-recording-normalize-recording-quiz-submission.js` |
-| **117b** | Zoom Recording Credit — Coach Review / Needs Correction (**Stage 17**) | Zoom Attendance · Review Status (**DEV paste pending**) | `117b-zoom-recording-coach-review-and-needs-correction-handling.js` |
-| **117c** | Zoom Recording Credit — Create Zoom XP Event (**Stage 17**) | Zoom Attendance · Credit Approved (**DEV paste pending**) | `117c-zoom-recording-create-zoom-xp-event.js` |
-| **117d** | Zoom Recording Credit — Apply Zoom Gate Credit (**Stage 17**) | Zoom Attendance · Gate Credit Earned (**DEV paste pending**) | `117d-zoom-recording-apply-zoom-gate-credit.js` |
-| **117e** | Zoom Recording Credit — Apply Perfect Week Credit (**Stage 17**) | Zoom Attendance · Approved + PW flag (**DEV paste pending**) | `117e-zoom-recording-apply-perfect-week-credit.js` |
-| **117f** | Zoom Recording Credit — Send Approval Email (**Stage 17**) | Zoom Attendance · Satisfactory (**leave OFF**) | `117f-zoom-recording-send-approval-email.js` |
+| **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award (**live Attendees only**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
+| **117** | Zoom Recording Credit — Orchestrator (**Stage 17 v1.1.0**) | Zoom Attendance · Recording Quiz · Enrollment + Meeting not empty (**DEV paste pending; keep OFF**) — **never writes Attendees** | `117-zoom-recording-credit-orchestrator.js` |
+| **117a–f** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117f-*.js` |
 
-C-025 DEV install: [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). **117c–117f are not separate S16 scripts** (XP/gate/email folded into 117a/b); Perfect Week / Total Zoom / post-award conflict remain open gaps. Live attendance remains **101** only.
+C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Perfect Week (**057**) / Total Zoom gate (**042**) remain **documented gaps** (live Attendees only). Live attendance remains **101** only — do not add recording athletes to `Attendees`.
 
 ---
 

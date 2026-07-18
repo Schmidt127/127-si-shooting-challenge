@@ -1,9 +1,26 @@
 # C-025 Architecture Reconciliation — 117a–f vs 117a/b-only
 
-**Date:** 2026-07-15  
-**Branch / PR:** `feature/shooting-v2-release-readiness` · [#26](https://github.com/Schmidt127/127-si-shooting-challenge/pull/26)  
-**Scope:** Repository evidence only — **no live Airtable, PROD, merge, or deploy**  
+**Date:** 2026-07-15 (addendum **2026-07-18**)
+**Branch / PR:** `feature/shooting-v2-release-readiness` · [#26](https://github.com/Schmidt127/127-si-shooting-challenge/pull/26)
+**Scope:** Repository evidence only — **no live Airtable, PROD, merge, or deploy**
 **Purpose:** Resolve the conflict between Worker A’s readiness audit (six automations 117a–f required) and the PR #26 package (117a/b only; 117c–f “not required”).
+
+---
+
+## Addendum 2026-07-18 — Attendees double-credit correction (Stage 17)
+
+**Authoritative for DEV now:** Stage 17 Zoom Attendance + single orchestrator
+`117-zoom-recording-credit-orchestrator.js` **v1.1.0**.
+
+| Rule | Detail |
+|------|--------|
+| Live roster | `Zoom Meetings.Attendees` remains **live-only** / Automation **101** |
+| Recording XP | Direct XP Event (`ZOOM_CREDIT\|…`, bucket `Zoom Attendance`, source `Zoom Meeting Recording Quiz`) |
+| Forbidden | Adding recording enrollments to `Attendees` (re-triggers 101 live XP) |
+| Gate / PW | Mark `Gate Credit Applied?` / `Perfect Week Credit Applied?` **only** |
+| Gaps (unchanged product debt) | **057** still counts live `Attendees`; **042** still reads `Total Zoom Attendances` (live link count) — do **not** bypass by impersonating live attendance |
+
+Packet: [C-025-stage17-zoom-recording-dev-installation-packet.md](../deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md)
 
 ---
 
@@ -21,9 +38,9 @@
 
 ## 1. Old six-automation architecture (Stage 17 overnight)
 
-**Authority:** `chatgpt-recovery-2026-07-14/docs/deploy-checklists/C-025-automation-packages-stage17.md`  
-**Primary table:** `Zoom Attendance` (`Attendance Method = Recording Quiz`)  
-**Credit key:** `ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}` (formula layer already applied in DEV per S18)  
+**Authority:** `chatgpt-recovery-2026-07-14/docs/deploy-checklists/C-025-automation-packages-stage17.md`
+**Primary table:** `Zoom Attendance` (`Attendance Method = Recording Quiz`)
+**Credit key:** `ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}` (formula layer already applied in DEV per S18)
 **Exclusivity:** Formula `Zoom Credit Conflict?` / `Zoom Credit Approved?`
 
 | # | Stage 17 name | Intended responsibility |
@@ -41,10 +58,10 @@
 
 ## 2. Proposed current architecture (S16 / PR #26)
 
-**Authority:** Owner-approved Stage 12 design + Stage 16 config catalog  
-**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md`  
-**Primary table:** `Homework Completions` (HW17-style **Zoom Recording Quiz**)  
-**Credit key:** `ZOOM_RECORDING|{meetingId}|{enrollmentId}`  
+**Authority:** Owner-approved Stage 12 design + Stage 16 config catalog
+**Docs:** `docs/deploy-checklists/C-025-zoom-recording-design-stage12.md`, `C-025-C-027-configuration-catalog-stage16.md`, `docs/v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md`
+**Primary table:** `Homework Completions` (HW17-style **Zoom Recording Quiz**)
+**Credit key:** `ZOOM_RECORDING|{meetingId}|{enrollmentId}`
 **Live keys unchanged:** `ZOOM_ATTEND_BASE|…` (101) · future `ZOOM_LIVE|…`
 
 | # | PR #26 name | Intended responsibility |
@@ -103,11 +120,11 @@
 
 Do **not** guess. Confirm in DEV `appTetnuCZlCZdTCT`:
 
-1. Does overnight **Zoom Attendance** credit formula layer (`Zoom Credit Key` / `ZOOM_CREDIT|…`, Approved?, Conflict?) still exist and is it authoritative?  
-2. Are recording quizzes expected on **Homework Completions** (S16) or **Zoom Attendance** (Stage 17)?  
-3. Does `Recording Attendees` exist on Zoom Meetings?  
-4. What is the live formula for `Enrollments.Total Zoom Attendances`?  
-5. Does **057** only read `Attendees`, and should Perfect Week use `Recording Attendees` when Config `Recording Makeup Counts for Perfect Week?` is on?  
+1. Does overnight **Zoom Attendance** credit formula layer (`Zoom Credit Key` / `ZOOM_CREDIT|…`, Approved?, Conflict?) still exist and is it authoritative?
+2. Are recording quizzes expected on **Homework Completions** (S16) or **Zoom Attendance** (Stage 17)?
+3. Does `Recording Attendees` exist on Zoom Meetings?
+4. What is the live formula for `Enrollments.Total Zoom Attendances`?
+5. Does **057** only read `Attendees`, and should Perfect Week use `Recording Attendees` when Config `Recording Makeup Counts for Perfect Week?` is on?
 6. Any live paste of Stage 17 117a–f or PR 117a/b already present?
 
 Until (1)–(2) are answered, **do not paste** either automation set.
@@ -116,11 +133,11 @@ Until (1)–(2) are answered, **do not paste** either automation set.
 
 ## 7. Final recommendation
 
-1. **Product authority:** S16 Stage 12/16 owner approvals (Homework Completions quiz; Config %; `Recording Attendees`; exclusivity).  
-2. **Automation surface:** Keep PR **117a** + **117b**; do **not** claim Stage 17 117c–f are obsolete because 101 replaces them.  
-3. **Before DEV activation:** close Perfect Week + Total Zoom Attendances gaps (formula and/or 057 update — prefer schema/formula over new automations when possible).  
-4. **Before PROD:** add or verify 101 dual-detect / soft-void when the opposite family already exists for the same meeting+enrollment.  
-5. **Stage 17 scripts:** retain only as recovery/historical design unless Mike selects the ZA intake path; if selected, restore/correct Stage 17 117a–f with real DEV field names (do not invent).  
+1. **Product authority:** S16 Stage 12/16 owner approvals (Homework Completions quiz; Config %; `Recording Attendees`; exclusivity).
+2. **Automation surface:** Keep PR **117a** + **117b**; do **not** claim Stage 17 117c–f are obsolete because 101 replaces them.
+3. **Before DEV activation:** close Perfect Week + Total Zoom Attendances gaps (formula and/or 057 update — prefer schema/formula over new automations when possible).
+4. **Before PROD:** add or verify 101 dual-detect / soft-void when the opposite family already exists for the same meeting+enrollment.
+5. **Stage 17 scripts:** retain only as recovery/historical design unless Mike selects the ZA intake path; if selected, restore/correct Stage 17 117a–f with real DEV field names (do not invent).
 6. **Worker A audit:** remains valid for the Stage 17 path. For the S16 path, replace “must ship six automations” with “must ship 117a/b **plus** gate/PW/conflict companions documented here.”
 
 ---

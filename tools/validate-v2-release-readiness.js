@@ -114,6 +114,7 @@ const LAUNCH_SCOPE_SCRIPTS = Object.freeze([
   "114",
   "115",
   "116",
+  "117",
   "117a",
   "117b",
   "117c",
@@ -204,7 +205,7 @@ for (const filePath of scripts) {
     missingDeclaredVersion += 1;
     fail(`launch-scope script missing declared version string: ${rel(filePath)}`);
   }
-  if (/^(009|066|117a|117b|117c)-/.test(base) && !hasStandardScriptMetadata(text)) {
+  if (/^(009|066|117|117a|117b|117c)-/.test(base) && !hasStandardScriptMetadata(text)) {
     missingStandardMeta += 1;
     fail(`missing standard SCRIPT metadata (scriptName/version/versionDate/originalWrittenDate): ${rel(filePath)}`);
   }
@@ -216,7 +217,7 @@ if (missingDeclaredVersion === 0) {
   pass("all launch-scope automation scripts declare an explicit version string");
 }
 if (missingStandardMeta === 0) {
-  pass("critical scripts (009/066/117a/117b/117c) expose standard SCRIPT metadata");
+  pass("critical scripts (009/066/117/117a/117b/117c) expose standard SCRIPT metadata");
 }
 
 // Expected high-value scripts for V2 validation domains (launch scope)

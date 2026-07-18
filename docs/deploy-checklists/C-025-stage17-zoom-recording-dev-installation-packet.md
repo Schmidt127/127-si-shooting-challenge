@@ -1,12 +1,11 @@
 # C-025 — Stage 17 Zoom Attendance recording credit — DEV installation packet
 
-**Status:** DEV schema preflight **PASS** (2026-07-18) · **Paste blocked** pending Automations UI inventory · **Do not enable**  
-**Base:** DEV only `appTetnuCZlCZdTCT`  
-**PROD:** Forbidden  
-**Architecture:** **Zoom Attendance** (Stage 17) — **not** Homework Completions (S16)  
-**Supersedes for this base:** [C-025-117a-117b-dev-installation-packet.md](./C-025-117a-117b-dev-installation-packet.md) (S16 HC path)  
-**Companion design:** recovery `C-025-automation-packages-stage17.md` · [C025_ARCHITECTURE_RECONCILIATION.md](../v2/C025_ARCHITECTURE_RECONCILIATION.md)  
-**Install results (stop at Step 2):** [C-025-stage17-dev-install-results-2026-07-18.md](./C-025-stage17-dev-install-results-2026-07-18.md)  
+**Status:** Repository-ready **v1.1.0 orchestrator** (Attendees-write removed) · **Do not paste until Mike authorizes** · **Do not enable**
+**Base:** DEV only `appTetnuCZlCZdTCT`
+**PROD:** Forbidden
+**Architecture:** **Zoom Attendance** (Stage 17) — **not** Homework Completions (S16)
+**Supersedes for this base:** [C-025-117a-117b-dev-installation-packet.md](./C-025-117a-117b-dev-installation-packet.md) (S16 HC path)
+**Install results (preflight):** [C-025-stage17-dev-install-results-2026-07-18.md](./C-025-stage17-dev-install-results-2026-07-18.md)
 **Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js`
 
 ---
@@ -18,8 +17,26 @@
 - Do **not** paste superseded S16 scripts from `_superseded/`.
 - Do **not** modify Make / send real emails / enable 118–119.
 - Do **not** change XP Reward Rule amounts or Perfect Week rules.
-- Leave all 117a–f **OFF** except controlled manual DEV runs, then disable again.
-- Automations Meta API returns **403** — UI inspection required (see §7).
+- Do **not** modify Automation **101**.
+- Do **not** write recording enrollments into **`Zoom Meetings → Attendees`** (live roster only — writing it can re-trigger 101 live XP).
+- Leave **117 Orchestrator OFF** except controlled manual DEV runs, then disable again.
+- Automations Meta API returns **403** — UI paste required.
+
+---
+
+## 0. Double-credit root cause (corrected)
+
+Automation **101** awards live Zoom XP when `Zoom Meetings` has:
+
+- `Create XP Events` checked
+- `XP Award Status` ≠ `Awarded`
+- `Attendees` not empty
+- `Week` / `Zoom Meeting Key` not empty
+- `Meeting Status` = `Completed`
+
+Stage 17 Steps D/E previously **added recording enrollments to `Attendees`**, which can satisfy 101’s attendee prerequisite and award **live** `ZOOM_ATTEND_BASE|…` XP in addition to recording `ZOOM_CREDIT|…` XP.
+
+**Correction:** recording credit creates XP Events directly and **never** mutates `Attendees`.
 
 ---
 
@@ -28,163 +45,136 @@
 | Table | Role |
 |-------|------|
 | **Zoom Attendance** | Primary recording-quiz credit row |
-| **Zoom Meetings** | Meeting identity, `Attendees` roster, `Start Time`, Week |
+| **Zoom Meetings** | Meeting identity, live `Attendees` roster (101 only), `Start Time`, Week |
 | **Enrollments** | Athlete enrollment |
 | **XP Events** | Append-only awards |
 | **XP Reward Rules** | Live base amount (`ZOOM_ATTEND_BASE`) — recording amount via ZA formula |
-| **Config** | Recording percent / gate / PW / email toggles (already on DEV) |
+| **Config** | Recording percent / gate / PW / email toggles |
 
 ---
 
-## 2. Exact fields (Stage 17 — verified present on DEV 2026-07-18)
+## 2. Exact fields (Stage 17)
 
 ### Zoom Attendance (writable + formula)
 
 | Field | Type | Notes |
 |-------|------|-------|
 | `Attendance Method` | Single select | `Live` · `Recording Quiz` |
-| `Enrollment` | Link | Required |
-| `Zoom Meeting` | Link | Required |
-| `Enrollment RID` | Lookup/formula | Credit key input |
-| `Zoom Meeting RID` | Lookup | Credit key input |
-| `Recording Quiz Review Status` | Single select | `Not Submitted` · `Needs Review` · `Satisfactory` · `Needs Correction` |
-| `Recording Quiz Satisfactory?` | Checkbox | Synced by 117b |
-| `Recording Quiz Submitted At` | DateTime | 117a stamp |
-| `Recording Quiz Correction Count` | Number | 117b |
-| `Recording Quiz Reviewed At` | DateTime | 117b |
-| `Recording Quiz Needs Correction At` | DateTime | 117b |
+| `Enrollment` / `Zoom Meeting` | Link | Required |
 | `Zoom Credit Key` | Formula | `ZOOM_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` |
-| `Zoom Credit Approved?` | Formula | Exclusivity gate |
-| `Zoom Credit Conflict?` | Formula | Live + Recording conflict |
-| `Zoom XP Amount` | Formula | Config % of live — **authoritative award amount** |
-| `Zoom Credit Debug` | Formula | Feeds XP Reason Debug |
-| `Zoom Gate Credit Earned?` | Formula | 117d gate |
-| `Gate Credit Applied?` | Checkbox | 117d idempotency |
-| `Perfect Week Credit Applied?` | Checkbox | 117e idempotency |
-| `Effective Recording Counts for Perfect Week?` | Lookup | 117e |
-| `Recording Approval Email Send Key` | Text | 117f |
-| `Recording Approval Email Sent At` | DateTime | 117f |
+| `Zoom Credit Approved?` / `Zoom Credit Conflict?` | Formula | Exclusivity |
+| `Zoom XP Amount` | Formula | Config % of live — **authoritative award amount** (expect **30** when base 60 × 50%) |
+| `Zoom Gate Credit Earned?` | Formula | Recording gate eligibility |
+| `Gate Credit Applied?` | Checkbox | Orchestrator marks **flag only** |
+| `Effective Recording Counts for Perfect Week?` | Lookup | Recording PW eligibility |
+| `Perfect Week Credit Applied?` | Checkbox | Orchestrator marks **flag only** |
 
 ### XP Events (canonical writes)
 
 | Field | Value / rule |
 |-------|----------------|
 | `Source Key` | = `Zoom Credit Key` |
-| `XP Bucket` | **`Zoom Attendance`** (exists) |
-| `XP Source` | **`Zoom Meeting Recording Quiz`** — **must add this single-select option in DEV before paste** (smallest required addition) |
-| `XP Activity Date` | Canonical date field (exists) — **not** `Activity Date` |
-| `XP Reason Public` | `Zoom recording quiz credit` |
-| `XP Reason Debug` | From `Zoom Credit Debug` / `C-025 v1.1.0 ZOOM_CREDIT|…` |
-| `XP Points` | From `Zoom XP Amount` |
-| `Enrollment` / `Zoom Meeting` / `Week` | Linked |
+| `XP Bucket` | **`Zoom Attendance`** |
+| `XP Source` | **`Zoom Meeting Recording Quiz`** (DEV option present) |
+| `XP Activity Date` | Canonical date |
+| `XP Reason Public` / `XP Reason Debug` | Public + debug |
+| `Enrollment` / `Zoom Meeting` | Linked |
+| `Zoom Attendance` | Link **if field exists** (DEV: **missing** — skip) |
 | `Active?` | Soft-void on conflict |
+| **Never** | `Zoom Meetings.Attendees` |
 
 ### Reward rule
 
 | Rule Key | Amount (DEV) | Role |
 |----------|--------------|------|
-| `ZOOM_ATTEND_BASE` | **60** (active, unique) | Live base; recording amount = formula % of this |
-| `ZOOM_ATTEND_RECORDING` | **absent** | Not required — Config percent + formula remain authoritative |
+| `ZOOM_ATTEND_BASE` | **60** (active, unique) | Live base; recording = formula % |
 
 ---
 
-## 3. Scripts / versions
+## 3. Script / version (DEV slot limit → single orchestrator)
 
 | # | File | Version | Automation name |
 |---|------|---------|-----------------|
-| 117a | `117a-zoom-recording-normalize-recording-quiz-submission.js` | **v1.1.0** | 117a - Zoom Recording Credit - Normalize Recording Quiz Submission |
-| 117b | `117b-zoom-recording-coach-review-and-needs-correction-handling.js` | **v1.1.0** | 117b - Zoom Recording Credit - Coach Review and Needs Correction Handling |
-| 117c | `117c-zoom-recording-create-zoom-xp-event.js` | **v1.1.0** | 117c - Zoom Recording Credit - Create Zoom XP Event |
-| 117d | `117d-zoom-recording-apply-zoom-gate-credit.js` | **v1.1.0** | 117d - Zoom Recording Credit - Apply Zoom Gate Credit |
-| 117e | `117e-zoom-recording-apply-perfect-week-credit.js` | **v1.1.0** | 117e - Zoom Recording Credit - Apply Perfect Week Credit |
-| 117f | `117f-zoom-recording-send-approval-email.js` | **v1.1.0** | 117f - Zoom Recording Credit - Send Approval Email |
+| **117** | `117-zoom-recording-credit-orchestrator.js` | **v1.1.0** | **117 - Zoom Recording Credit - Orchestrator** |
+
+Modular 117a–f remain in repo as reference / future split. **DEV paste = orchestrator only** (slot limit).
+**117d/117e v1.1.0** no longer write `Attendees` (flag-only + documented gaps).
 
 Paste from production docblock through end — **skip** GitHub header.
 
----
-
-## 4. Triggers / conditions / inputs
-
-| Auto | Trigger table | Conditions (recommended) | Inputs |
-|------|---------------|--------------------------|--------|
-| **117a** | Zoom Attendance | Method = Recording Quiz; Enrollment + Meeting not empty | `recordId` |
-| **117b** | Zoom Attendance | Method = Recording Quiz; Review Status changed | `recordId` |
-| **117c** | Zoom Attendance | `Zoom Credit Approved?` · `Zoom XP Amount` > 0 · key not empty | `recordId` |
-| **117d** | Zoom Attendance | Method = Recording Quiz · `Zoom Gate Credit Earned?` | `recordId` |
-| **117e** | Zoom Attendance | Method = Recording Quiz · Approved · Effective PW flag | `recordId` |
-| **117f** | Zoom Attendance | Method = Recording Quiz · Satisfactory | `recordId` · `webhookUrl` (DEV secret) — **leave OFF** |
+Keep automation **OFF**.
 
 ---
 
-## 5. Source Key / exclusivity / dedupe
+## 4. Trigger / conditions / inputs (corrected)
+
+**Replace incorrect trigger:** `Recording Quiz Submitted At is one week from now`
+
+| Item | Value |
+|------|--------|
+| Table | **Zoom Attendance** |
+| Conditions | `Attendance Method` is `Recording Quiz`; `Enrollment` not empty; `Zoom Meeting` not empty |
+| Input | `recordId` = Airtable record ID of trigger record |
+| Optional input | `webhookUrl` — **leave blank** (email send stays disabled) |
+
+---
+
+## 5. Source Key / exclusivity / 101 safety
 
 | Concern | Rule |
 |---------|------|
-| Recording Source Key | `ZOOM_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` (from formula field) |
+| Recording Source Key | `ZOOM_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` |
 | Live Source Key (101) | `ZOOM_ATTEND_BASE\|{Zoom Meeting Key}\|{enrollmentId}` |
-| Exclusivity | Formula `Zoom Credit Conflict?` / `Zoom Credit Approved?` — at most one Approved credit per Enrollment+Meeting |
-| Dedupe | Recheck XP Events by Source Key before create; rerun → `skipped_exists` |
-| Conflict after award | 117c sets `Active? = false` (`deactivated_on_conflict`) |
-| Gate / PW | 117d/117e add Enrollment to `Zoom Meetings.Attendees` idempotently (separate applied flags) |
+| Exclusivity | Formula `Zoom Credit Conflict?` / `Zoom Credit Approved?` |
+| Dedupe | Recheck XP Events by Source Key; rerun → `skipped_exists` |
+| Conflict | Soft-void `Active? = false` (`deactivated_on_conflict`) |
+| **Attendees** | **Never written** by 117 |
+| **101** | Trigger prerequisites must remain unchanged |
 
 ---
 
-## 6. Test scenarios (DEV only — after paste, still OFF unless manual run)
+## 6. Perfect Week & level-gate downstream status (gaps)
+
+| Concern | Recording layer | Downstream consumer today | Status |
+|---------|-----------------|---------------------------|--------|
+| Perfect Week | `Effective Recording Counts for Perfect Week?` + `Perfect Week Credit Applied?` | **057** counts `Zoom Meetings.Attendees` only | **GAP** — flag marked; PW not satisfied via recording until 057 (or formula) unions recording credits |
+| Level gate | `Zoom Gate Credit Earned?` + `Gate Credit Applied?` | **042** reads `Enrollments.Total Zoom Attendances` (count of live `Zoom Meetings` / Attendees inverse) | **GAP** — flag marked; gate total does not include recording-only credit |
+| Bypass forbidden | — | Writing `Attendees` to impersonate live | **Not allowed** (101 double-credit) |
+
+---
+
+## 7. Exact DEV replacement steps (when Mike authorizes paste)
+
+1. Open DEV Automations → **117 - Zoom Recording Credit - Orchestrator** (keep **OFF**).
+2. Fix trigger to Zoom Attendance + conditions in §4 (remove “one week from now”).
+3. Replace script body with repo `117-zoom-recording-credit-orchestrator.js` **v1.1.0** (skip GitHub header).
+4. Map input `recordId` only; leave `webhookUrl` blank / unset.
+5. Confirm no action writes `Zoom Meetings.Attendees`; no Make/email action enabled.
+6. Leave **OFF**. Do not enable 101 changes. Do not PROD paste.
+7. Record automation ID in install-results doc after paste.
+
+---
+
+## 8. Test scenarios (after paste — still OFF unless manual)
 
 | ID | Setup | Expected |
 |----|-------|----------|
-| T1 | Recording Quiz ZA · Satisfactory · Approved · amount > 0 | 117c `created` · one XP Event |
-| T2 | Same row rerun | `skipped_exists` · no duplicate |
-| T3 | Live sibling causes Conflict | `deactivated_on_conflict` or `skipped_not_approved` |
-| T4 | Missing Enrollment | error |
-| T5 | Missing Zoom Meeting | error |
-| T6 | Amount 0 / not approved | skip |
-| T7 | Needs Correction | 117b clears Satisfactory · no new credit identity |
-| T8 | Edge-of-day `Start Time` | `XP Activity Date` Denver calendar day |
-| T9 | Gate earned | Enrollment on meeting `Attendees` once |
-| T10 | 117f | **Do not send** — Config disabled / no webhook / leave OFF |
-
-Label created rows as DEV test. Prefer Schmidt / explicit test enrollments.
-
----
-
-## 7. Automation UI inspection (API cannot list — 403)
-
-In Airtable DEV → Automations, Mike should record for each of 117a–f (or similarly named):
-
-1. Exact automation name  
-2. Enabled? (should be **OFF**)  
-3. Trigger type + table  
-4. Conditions  
-5. Input variable names  
-6. Script version string visible in script body (`v1.1.0`)  
-
-**Do not claim absent** solely because Meta API failed.
-
----
-
-## 8. Smallest schema addition required before paste
-
-| Item | Action | DEV status (2026-07-18) |
-|------|--------|-------------------------|
-| XP Events → `XP Source` option **`Zoom Meeting Recording Quiz`** | Add exact option only (no field create/rename; no legacy `Zoom Recording`) | **Done** — exact display: `Zoom Meeting Recording Quiz` |
-
-Everything else required for Stage 17 was present on DEV preflight 2026-07-18. Re-preflight after option add: **PASS** (22/22 ZA fields; `ZOOM_ATTEND_BASE` active once at **60**; Config recording % **50** → expected award **30** when approved).
+| T1 | Recording Quiz · Approved · amount > 0 | XP `created` · bucket/source/key/date correct · **Attendees unchanged** |
+| T2 | Rerun | `skipped_exists` |
+| T3 | Live sibling conflict | soft-void / skip · live XP untouched |
+| T4–T5 | Missing Enrollment/Meeting | error |
+| T6 | Gate earned | `Gate Credit Applied?` true · **Attendees unchanged** · gap documented |
+| T7 | PW flag | `Perfect Week Credit Applied?` true · **Attendees unchanged** · gap documented |
+| T8 | Email | blank webhook → no send |
 
 ---
 
 ## 9. Rollback
 
-1. Turn **117a–f OFF**.  
-2. Soft-void bad XP by `Active?=false` on `ZOOM_CREDIT|…` keys — do not delete ledger rows.  
-3. Remove mistaken `Attendees` links only if this package added them (check Gate/PW applied flags).  
-4. Do not delete formula fields.
-
----
-
-## 10. Final disabled state
-
-After any DEV verification: **all of 117a–f OFF**. 118/119 remain absent or OFF. PROD untouched.
+1. Keep **117 OFF**.
+2. Soft-void bad XP (`Active?=false` on `ZOOM_CREDIT|…`) — do not delete ledger.
+3. Clear applied flags if needed.
+4. **Do not** remove live attendees that were never added by this package.
 
 ---
 
@@ -192,10 +182,11 @@ After any DEV verification: **all of 117a–f OFF**. 118/119 remain absent or OF
 
 | State | Value |
 |-------|-------|
-| Implemented in repository | **Yes** (Stage 17 117a–f v1.1.0) |
-| S16 HC packet | **Superseded for this base** (historical) |
+| Orchestrator in repository | **Yes — v1.1.0** (no Attendees writes) |
 | XP Source option in DEV | **Added** — `Zoom Meeting Recording Quiz` |
 | Read-only preflight | **PASS** (2026-07-18) |
-| Ready for DEV paste | **Blocked** — Automations Meta API **403**; Mike must inventory DEV Automations UI first |
-| Installed / verified in DEV | **No** — Steps 3–9 not started |
+| Ready for DEV paste | **After** Mike UI inventory + trigger fix |
+| Installed / verified in DEV | **No** |
 | Ready for PROD | **No** |
+| Automation 101 | **Unchanged** |
+| PROD | **Untouched** |

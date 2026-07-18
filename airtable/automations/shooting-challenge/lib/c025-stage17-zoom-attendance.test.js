@@ -18,6 +18,16 @@ function test(name, fn) {
 
 const root = path.join(__dirname, "..");
 
+const STAGE17_SCRIPTS = [
+  "117-zoom-recording-credit-orchestrator.js",
+  "117a-zoom-recording-normalize-recording-quiz-submission.js",
+  "117b-zoom-recording-coach-review-and-needs-correction-handling.js",
+  "117c-zoom-recording-create-zoom-xp-event.js",
+  "117d-zoom-recording-apply-zoom-gate-credit.js",
+  "117e-zoom-recording-apply-perfect-week-credit.js",
+  "117f-zoom-recording-send-approval-email.js",
+];
+
 test("Source Key ZOOM_CREDIT is deterministic and distinct from live", () => {
   const k = c.buildZoomCreditSourceKey("recE1", "recM1");
   assert(k === "ZOOM_CREDIT|recE1|recM1", "credit key shape");
@@ -42,6 +52,31 @@ test("Eligible recording credit creates once", () => {
   assert(r.xpEvent.xpSource === c.XP_SOURCE, "source");
   assert(r.xpEvent.dateField === c.DATE_FIELD, "date field");
   assert(r.xpEvent.reasonPublic === c.REASON_PUBLIC_TEXT, "public reason");
+  assert(r.xpEvent.writesLiveAttendees === false, "no attendees write");
+});
+
+test("Recording XP Event field plan uses correct source/bucket/date/reasons/links", () => {
+  const key = c.buildZoomCreditSourceKey("recE", "recM");
+  const plan = c.buildRecordingXpEventFields({
+    sourceKey: key,
+    amount: 30,
+    enrollmentId: "recE",
+    meetingId: "recM",
+    activityDate: "2026-07-18",
+    reasonDebug: "debug",
+    weekId: "recW",
+    zoomAttendanceId: "recZA",
+    linkZoomAttendance: true,
+  });
+  assert(plan.writesLiveAttendees === false, "plan no attendees");
+  assert(plan.fields.xpBucket === c.XP_BUCKET, "bucket");
+  assert(plan.fields.xpSource === c.XP_SOURCE, "source");
+  assert(plan.fields.dateField === c.DATE_FIELD, "date");
+  assert(plan.fields.reasonPublic === c.REASON_PUBLIC_TEXT, "public");
+  assert(plan.fields.enrollmentId === "recE", "enrollment");
+  assert(plan.fields.meetingId === "recM", "meeting");
+  assert(plan.fields.zoomAttendanceId === "recZA", "za link when supported");
+  assert(plan.forbiddenWrites[c.LIVE_ATTENDEES_FIELD] === false, "attendees forbidden");
 });
 
 test("Live attendance exclusivity uses disjoint Source Key families", () => {
@@ -80,6 +115,18 @@ test("Invalid approval / conflict soft-voids active XP", () => {
   assert(r.action === "deactivated_on_conflict", "soft void");
 });
 
+test("Conflict soft-void remains idempotent on inactive existing", () => {
+  const key = c.buildZoomCreditSourceKey("recE", "recM");
+  const r = c.canCreateRecordingXpEvent({
+    approved: false,
+    conflict: true,
+    amount: 30,
+    creditKey: key,
+    existingXpBySourceKey: { [key]: { id: "recXP1", active: false } },
+  });
+  assert(r.action === "skipped_not_approved", "already inactive");
+});
+
 test("Missing evidence / zero amount skips", () => {
   const key = c.buildZoomCreditSourceKey("recE", "recM");
   const r = c.canCreateRecordingXpEvent({
@@ -92,8 +139,6 @@ test("Missing evidence / zero amount skips", () => {
 });
 
 test("America/Denver date handling near UTC midnight", () => {
-  // 2026-07-18T06:00:00Z is still 2026-07-18 evening prior in some zones;
-  // pick a known Denver local morning via fixed offset approximation:
   const key = c.denverDateKeyFromUtcMs(Date.UTC(2026, 6, 18, 12, 0, 0));
   assert(/^\d{4}-\d{2}-\d{2}$/.test(key), "date key shape");
 });
@@ -114,7 +159,7 @@ test("Configured XP amount comes from Zoom XP Amount (formula), not hardcoded", 
   const r = c.canCreateRecordingXpEvent({
     approved: true,
     conflict: false,
-    amount: 30, // e.g. floor(60 * 50 / 100)
+    amount: 30,
     creditKey: key,
   });
   assert(r.xpEvent.xpPoints === 30, "uses provided formula amount");
@@ -138,15 +183,64 @@ test("Idempotent rerun", () => {
   assert(first.action === "created" && second.action === "skipped_exists", "idempotent");
 });
 
+test("Recording credit does not modify Zoom Meetings Attendees", () => {
+  for (const file of STAGE17_SCRIPTS) {
+    const src = fs.readFileSync(path.join(root, file), "utf8");
+    const r = c.assertNeverWritesLiveAttendees(src);
+    assert(r.ok, `${file} attendees write hits: ${r.hits.join(", ")}`);
+    assert(!src.includes("linked_attendee_for_gate"), `${file} no gate attendee link`);
+    assert(!src.includes("linked_attendee_for_perfect_week"), `${file} no pw attendee link`);
+  }
+});
+
+test("Automation 101 trigger prerequisites are not changed by recording path", () => {
+  const before = {
+    createXpEvents: true,
+    xpAwardStatus: "Pending",
+    attendees: ["recLive1"],
+    week: ["recW"],
+    zoomMeetingKey: "ZM|2026-07-18",
+    meetingStatus: "Completed",
+  };
+  const afterSame = { ...before, attendees: ["recLive1"] };
+  const ok = c.assertAutomation101PrereqsUnchanged(before, afterSame);
+  assert(ok.ok, "unchanged snapshot");
+
+  const afterBad = { ...before, attendees: ["recLive1", "recRecording"] };
+  const bad = c.assertAutomation101PrereqsUnchanged(before, afterBad);
+  assert(!bad.ok, "detect attendees mutation");
+});
+
+test("Gate and Perfect Week flags do not impersonate live attendance", () => {
+  const gate = c.planGateCreditApplication({
+    gateEarned: true,
+    conflict: false,
+    alreadyApplied: false,
+  });
+  assert(gate.action === "marked_gate_applied_flag_only", "gate flag only");
+  assert(gate.writesLiveAttendees === false, "gate no attendees");
+  assert(String(gate.gap.status).includes("GAP"), "gate gap reported");
+
+  const pw = c.planPerfectWeekCreditApplication({
+    approved: true,
+    pwFlag: true,
+    conflict: false,
+    alreadyApplied: false,
+  });
+  assert(pw.action === "marked_perfect_week_applied_flag_only", "pw flag only");
+  assert(pw.writesLiveAttendees === false, "pw no attendees");
+  assert(String(pw.gap.status).includes("GAP"), "pw gap reported");
+});
+
+test("Missing downstream consumers are reported rather than bypassed", () => {
+  assert(c.DOWNSTREAM_GAPS.perfectWeek.consumer.includes("057"), "pw consumer");
+  assert(c.DOWNSTREAM_GAPS.levelGate.consumer.includes("042"), "gate consumer");
+  assert(c.DOWNSTREAM_GAPS.perfectWeek.status.startsWith("GAP"), "pw gap");
+  assert(c.DOWNSTREAM_GAPS.levelGate.status.startsWith("GAP"), "gate gap");
+});
+
 test("No Homework Completions dependency in Stage 17 scripts", () => {
-  for (const file of [
-    "117a-zoom-recording-normalize-recording-quiz-submission.js",
-    "117b-zoom-recording-coach-review-and-needs-correction-handling.js",
-    "117c-zoom-recording-create-zoom-xp-event.js",
-    "117d-zoom-recording-apply-zoom-gate-credit.js",
-    "117e-zoom-recording-apply-perfect-week-credit.js",
-    "117f-zoom-recording-send-approval-email.js",
-  ]) {
+  for (const file of STAGE17_SCRIPTS) {
     const src = fs.readFileSync(path.join(root, file), "utf8");
     const r = c.assertNoHomeworkCompletionsDependency(src);
     assert(r.ok, `${file} banned hits: ${r.hits.join(", ")}`);
@@ -172,6 +266,22 @@ test("117c script CONFIG maps canonical fields", () => {
   assert(src.includes("ZOOM_CREDIT"), "credit family mentioned");
   assert(!src.includes("ZOOM_RECORDING|"), "no S16 recording key");
   assert(!/homeworkCompletions:\s*"Homework Completions"/.test(src), "no HC");
+});
+
+test("117 orchestrator v1.1.0 forbids Attendees and uses correct trigger docs", () => {
+  const src = fs.readFileSync(path.join(root, "117-zoom-recording-credit-orchestrator.js"), "utf8");
+  assert(src.includes('version: "v1.1.0"'), "version");
+  assert(src.includes("117 - Zoom Recording Credit - Orchestrator"), "name");
+  assert(src.includes("Attendance Method is Recording Quiz"), "trigger method");
+  assert(src.includes("NEVER write Zoom Meetings"), "hard rule");
+  assert(src.includes('xpSource: "Zoom Meeting Recording Quiz"'), "source");
+  assert(src.includes('xpBucket: "Zoom Attendance"'), "bucket");
+  assert(src.includes('xpActivityDate: "XP Activity Date"'), "date");
+  assert(!src.includes('attendees: "Attendees"'), "no attendees config");
+  assert(src.includes("Refuse write to Attendees"), "runtime guard");
+  assert(src.includes("skipped_webhook_blank"), "email default off");
+  const r = c.assertNeverWritesLiveAttendees(src);
+  assert(r.ok, `orchestrator attendees hits: ${r.hits.join(", ")}`);
 });
 
 console.log("\nAll c025-stage17-zoom-attendance tests passed.");

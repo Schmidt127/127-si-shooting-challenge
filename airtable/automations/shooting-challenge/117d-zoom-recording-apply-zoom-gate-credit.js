@@ -13,13 +13,23 @@ Folder: 17 - Zoom Recording Credit
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-18
  *
- * Architecture: Stage 17 Zoom Attendance path (S16 HC path superseded)
+ * VERSION HISTORY
+ * - v1.1.0 (2026-07-18): REMOVED Zoom Meetings.Attendees write (double-credit
+ *   risk via Automation 101). Marks Gate Credit Applied? only and documents
+ *   downstream gap (042 / Total Zoom Attendances still live-roster based).
+ * - v1.0.0: Idempotent Attendees add (superseded — unsafe with 101).
+ *
+ * Architecture: Stage 17 Zoom Attendance path
+ * Prefer single orchestrator: 117-zoom-recording-credit-orchestrator.js
  *
  * PURPOSE
- * - Idempotently add Enrollment to Zoom Meeting Attendees when gate credit earned.
+ * - When Zoom Gate Credit Earned?, mark Gate Credit Applied? on the ZA row.
+ * - Do NOT add Enrollment to Zoom Meetings.Attendees.
  *
  * IMPORTANT DESIGN RULES
- * - Live rows are out of scope. Uses Gate Credit Applied? when present.
+ * - Live Attendees roster is reserved for actual live attendance / Automation 101.
+ * - Downstream gap: 042 reads Enrollments.Total Zoom Attendances (count of live
+ *   Zoom Meetings link / Attendees). Recording flags are not consumed yet.
  *
  * INPUT
  * - recordId (Zoom Attendance record id)
@@ -31,7 +41,7 @@ Folder: 17 - Zoom Recording Credit
  * - actionOut
  *
  * TRIGGER
- * - Zoom Attendance (see design package C-025-automation-packages-stage17.md)
+ * - Zoom Attendance (modular; DEV prefers 117 orchestrator)
  *
  * AUTOMATION NAME
  * - 117d - Zoom Recording Credit - Apply Zoom Gate Credit
@@ -43,17 +53,17 @@ Folder: 17 - Zoom Recording Credit
 // @ts-nocheck
 
 const SCRIPT = {
-  scriptName: '117d-zoom-recording-apply-zoom-gate-credit',
-  version: 'v1.1.0',
-  versionDate: '2026-07-18',
-  originalWrittenDate: '2026-07-14',
-  lastUpdated: '2026-07-18',
+  scriptName: "117d-zoom-recording-apply-zoom-gate-credit",
+  version: "v1.1.0",
+  versionDate: "2026-07-18",
+  originalWrittenDate: "2026-07-14",
+  lastUpdated: "2026-07-18",
   folder: "17 - Zoom Recording Credit",
-  automationName: '117d - Zoom Recording Credit - Apply Zoom Gate Credit',
+  automationName: "117d - Zoom Recording Credit - Apply Zoom Gate Credit",
 };
 
 const CONFIG = {
-  tables: { zoomAttendance: "Zoom Attendance", zoomMeetings: "Zoom Meetings" },
+  tables: { zoomAttendance: "Zoom Attendance" },
   fields: {
     attendanceMethod: "Attendance Method",
     enrollment: "Enrollment",
@@ -61,11 +71,9 @@ const CONFIG = {
     gateEarned: "Zoom Gate Credit Earned?",
     conflict: "Zoom Credit Conflict?",
     gateApplied: "Gate Credit Applied?",
-    attendees: "Attendees",
   },
   methods: { recordingQuiz: "Recording Quiz" },
 };
-
 
 function setOutputSafe(key, value) {
   try {
@@ -125,10 +133,11 @@ function fieldExists(table, name) {
 async function updateRecordSafe(table, recordId, fields) {
   const keys = Object.keys(fields || {});
   if (!keys.length) return;
+  if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
+    throw new Error("Refuse write to Attendees — live roster reserved for Automation 101");
+  }
   await table.updateRecordAsync(recordId, fields);
 }
-
-
 
 async function main() {
   let debugStep = "1 - Validate input";
@@ -137,7 +146,6 @@ async function main() {
   const cfg = input.config();
   const recordId = requireRecId(cfg.recordId);
   const zaTable = base.getTable(CONFIG.tables.zoomAttendance);
-  const zmTable = base.getTable(CONFIG.tables.zoomMeetings);
   const rec = await zaTable.selectRecordAsync(recordId, { fields: Object.values(CONFIG.fields) });
   if (!rec) throw new Error(`Zoom Attendance not found: ${recordId}`);
 
@@ -167,26 +175,26 @@ async function main() {
   const meetingIds = getLinkedIds(rec, CONFIG.fields.zoomMeeting);
   if (!enrollIds.length || !meetingIds.length) throw new Error("Missing Enrollment or Zoom Meeting");
 
-  const meetingId = meetingIds[0];
-  const enrollId = enrollIds[0];
-  const meeting = await zmTable.selectRecordAsync(meetingId, { fields: [CONFIG.fields.attendees] });
-  if (!meeting) throw new Error(`Zoom Meeting not found: ${meetingId}`);
-  const attendees = getLinkedIds(meeting, CONFIG.fields.attendees);
-  const already = attendees.includes(enrollId);
-  if (!already) {
-    await updateRecordSafe(zmTable, meetingId, {
-      [CONFIG.fields.attendees]: attendees.concat([enrollId]).map((id) => ({ id })),
-    });
-  }
+  // Flag only — never mutate Zoom Meetings.Attendees (Automation 101 risk).
   if (fieldExists(zaTable, CONFIG.fields.gateApplied)) {
     await updateRecordSafe(zaTable, recordId, { [CONFIG.fields.gateApplied]: true });
   }
   setOutputSafe("statusOut", "success");
-  setOutputSafe("actionOut", already ? "skipped_already_applied" : "linked_attendee_for_gate");
+  setOutputSafe("actionOut", "marked_gate_applied_flag_only");
   setOutputSafe("errorOut", "");
-  console.log(JSON.stringify({ automation: SCRIPT.scriptName, actionOut: already ? "skipped_already_applied" : "linked_attendee_for_gate" }));
+  setOutputSafe(
+    "downstreamGapOut",
+    "042/Total Zoom Attendances still counts live Attendees only — recording gate not applied to level totals"
+  );
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      actionOut: "marked_gate_applied_flag_only",
+      attendeesWriteAttempted: false,
+    })
+  );
 }
-
 
 try {
   await main();
