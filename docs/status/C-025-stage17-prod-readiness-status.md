@@ -1,12 +1,13 @@
 # C-025 Stage 17 — Production readiness status
 
-**Backlog ID:** C-025  
-**Date:** 2026-07-18  
-**Mode:** Read-only synthesize + document (no Airtable writes; no live Meta re-probe in this finalize pass)  
-**DEV:** `appTetnuCZlCZdTCT`  
-**PROD:** `appn84sqPw03zEbTT`  
-**Feature branch:** `feature/c025-stage17-zoom-attendance`  
-**Committed tip at audit start:** `e8db32e` (115 **v1.6**)  
+**Backlog ID:** C-025
+**Date:** 2026-07-18
+**Mode:** Read-only synthesize + document (no Airtable writes; no live Meta re-probe in this finalize pass)
+**DEV:** `appTetnuCZlCZdTCT`
+**PROD:** `appn84sqPw03zEbTT`
+**Feature branch:** `feature/c025-stage17-zoom-attendance`
+**Committed tip at audit start:** `e8db32e` (115 **v1.6**)
+**Post-audit alignment:** Commit Automation **115 v1.8** + paste on this branch (see tip after this commit)
 **Schema-gap audit source:** `audit/c025-stage17-prod-readiness` @ `0510663`
 
 ---
@@ -17,7 +18,7 @@
 
 Zoom Attendance and Stage 17 support schema are **missing in PROD**. DEV one-click Pass does **not** make PROD ready.
 
-**Hard prerequisite (before any PROD OMNI work):** resolve **DEV / repository version alignment** — working tree holds uncommitted **115 v1.8** (+ v1.7) while HEAD is still **v1.6**; commit/align so paste bodies match the proven DEV script.
+**Repo / DEV alignment (115):** Resolved by committing **115 v1.8** + paste packet on this branch. PROD remains blocked on schema migration only.
 
 ---
 
@@ -26,41 +27,40 @@ Zoom Attendance and Stage 17 support schema are **missing in PROD**. DEV one-cli
 | Item | Value |
 |------|--------|
 | Branch | `feature/c025-stage17-zoom-attendance` |
-| Committed HEAD | `e8db32e8bf8eee136ebafd948fbfc4246f275d13` — *fix: retrigger stage17 downstream automation conditions* (**115 v1.6**) |
-| Working tree | **Not clean** — modified 115/lib/docs **v1.7→v1.8**; untracked paste `…-v1.7-PASTE.txt`, `…-v1.8-PASTE.txt`, status/docs drafts, many helpers |
-| v1.6 committed? | **Yes** (at `e8db32e`) |
-| v1.8 committed? | **No** (local only at audit time) |
+| Prior committed tip (v1.6 / audit docs) | `e8db32e` / `41f1abd` |
+| **115 v1.8** | Committed on this branch with paste + related Stage 17 docs |
 | Related audit worktree | `…-c025-stage17-audit` → `audit/c025-stage17-prod-readiness` @ `0510663` |
-| `master` / ops production tip (docs) | `bd2c2b4` / local master `4b5c91a` — no Stage 17 PROD schema |
+| `master` / ops production tip (docs) | `bd2c2b4` — no Stage 17 PROD schema |
 
-### Authoritative script / paste versions (intended Stage 17 package)
+### Authoritative script / paste versions (Stage 17 package)
 
-| Automation | Repo version (intended) | Paste path | Committed on tip? |
-|------------|-------------------------|------------|-------------------|
-| **115** ETF (DEV only) | **v1.8** (working tree) | `docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt` | Tip still **v1.6**; v1.8 uncommitted |
-| **117** Orchestrator | **v1.1.1** | `…-117-orchestrator-v1.1.1-PASTE.txt` | Yes (`f0c9e1d`) |
-| **057** Perfect Week | **1.3** | `…-057-perfect-week-v1.3-PASTE.txt` | Yes |
-| **042** Level gates | **3.1** | `…-042-level-gates-v3.1-PASTE.txt` | Yes |
+| Automation | Repo version | Paste path | Notes |
+|------------|--------------|------------|-------|
+| **115** ETF (DEV only) | **v1.8** | `docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt` | DEV Pass proven; do not promote to PROD |
+| **117** Orchestrator | **v1.1.1** | `…-117-orchestrator-v1.1.1-PASTE.txt` | Remained **OFF** during DEV ETF Pass |
+| **057** Perfect Week | **1.3** | `…-057-perfect-week-v1.3-PASTE.txt` | Fired successfully in DEV ETF; OFF after |
+| **042** Level gates | **3.1** | `…-042-level-gates-v3.1-PASTE.txt` | Fired successfully in DEV ETF; OFF after |
 | **101** Live Zoom XP | Unchanged | — | Must not change |
 
 ---
 
-## 2. DEV proof (Phase 2) — newly confirmed
+## 2. DEV proof (Phase 2) — confirmed PASS
 
 | Item | Result |
 |------|--------|
 | ETF record | `recEuHFTjBftoJGMc` |
 | Scenario | `C025_STAGE17_DOWNSTREAM` |
-| Overall | **PASS** (Mike-confirmed live one-click) |
+| Overall | **PASS** (live one-click) |
 | Query usage | **11 / 22** |
 | `Run Test?` | Cleared automatically |
-| Phase A (057) | Triggered successfully |
-| Phase B (042) | Triggered successfully |
-| Post-test state | 057 / 042 instructed **OFF**; **117** remains **OFF** |
-| Attendees | Design + prior runs: never written by recording path (reconfirm on next capture) |
-| Repo JSON capture of this Pass | **Not yet committed** — treat Mike confirmation as authority; optional later `_preview` capture |
+| Phase A (057) | **Fired successfully** |
+| Phase B (042) | **Fired successfully** |
+| Automation **117** | **Remained OFF** |
+| Post-test | 057 / 042 instructed **OFF** |
+| PROD | **Blocked on schema migration** (Zoom Attendance missing) |
+| Authoritative DEV script | Automation **115 v1.8** |
 
-**Architecture conclusion:** DEV Stage 17 **downstream path proven** (115 → 057 + 042), subject to committing the **115 v1.8** sources that match the live DEV paste.
+**Architecture conclusion:** DEV Stage 17 **downstream path proven** (115 v1.8 → 057 + 042) with 117 OFF.
 
 ---
 
@@ -133,7 +133,7 @@ Any recording path that writes athletes into **`Zoom Meetings.Attendees`** can *
 
 **Not** paste. First Mike-approved action after repo align:
 
-1. Commit / align **115 v1.8** on the feature branch (DEV/repo match).  
+1. Commit / align **115 v1.8** on the feature branch (DEV/repo match).
 2. Then start PROD OMNI schema: create **Zoom Attendance** + Config recording fields + XP Source option (automations still OFF).
 
 Exact first Production Airtable action: **OMNI create Zoom Attendance table scaffold** (or Config Stage 17 fields first — either order is fine while automations OFF). Prefer Config % + XP Source option early so formulas can target stable selects.
@@ -142,12 +142,12 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 
 ## 8. Actions requiring Mike’s approval
 
-- Any PROD schema create/rename  
-- Any PROD automation paste or enable  
-- Any change to `ZOOM_ATTEND_BASE` amount  
-- Any soft-void / edit of live athlete XP beyond designated smoke fixtures  
-- Merge feature branch → `master`  
-- Retroactive recording-credit backfill  
+- Any PROD schema create/rename
+- Any PROD automation paste or enable
+- Any change to `ZOOM_ATTEND_BASE` amount
+- Any soft-void / edit of live athlete XP beyond designated smoke fixtures
+- Merge feature branch → `master`
+- Retroactive recording-credit backfill
 
 ---
 
@@ -163,7 +163,7 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 
 ## Related deliverables
 
-- [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md)  
-- [C-025-stage17-production-release-packet.md](../deploy-checklists/C-025-stage17-production-release-packet.md)  
-- [C-025-stage17-etf-downstream-dev-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (115 **v1.8**)  
+- [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md)
+- [C-025-stage17-production-release-packet.md](../deploy-checklists/C-025-stage17-production-release-packet.md)
+- [C-025-stage17-etf-downstream-dev-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (115 **v1.8**)
 - Prior STOP (superseded on DEV gate only): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)

@@ -12,11 +12,12 @@
 
 | Gate | State |
 |------|--------|
-| DEV one-click `C025_STAGE17_DOWNSTREAM` | **PASS** (`recEuHFTjBftoJGMc`, **11/22** queries, 057+042 fired, Run Test? cleared) |
-| Repo / DEV 115 alignment | **Open** — commit **115 v1.8** (working tree) before packaging PROD |
+| DEV one-click `C025_STAGE17_DOWNSTREAM` | **PASS** (`recEuHFTjBftoJGMc`, **11/22** queries, **057+042 fired**, Run Test? cleared, **117 OFF**) |
+| Repo / DEV 115 alignment | **115 v1.8** committed on feature branch with paste packet |
 | PROD Zoom Attendance table | **Missing** |
 | Curated schema blockers | **125 missing** + **1 incompatible** select option |
 | PROD automation paste | **Forbidden** until re-audit curated blockers = 0 |
+| PROD readiness | **Blocked on schema migration** |
 
 **Do not paste 115 to PROD.** ETF remains DEV-only.
 

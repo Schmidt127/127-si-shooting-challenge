@@ -106,14 +106,16 @@ function estimateWorstCaseQueryCount() {
     pollDelayMs: POLL_DELAY_MS,
     breakdown: {
       initialExactReads: 4, // WAS, ZA, ZM, Enrollment
+      trigger057QueueReentry: 1, // confirm After Queue? left (Skipped); status from initial WAS
       poll057ZaOnly: POLL_ATTEMPTS, // max 5
       trigger042ViewReentry: 2, // read Level Recalc + confirm after uncheck (worst)
       poll042ZaOnly: POLL_ATTEMPTS, // max 5
       finalExactReads: 4, // WAS, ZA, ZM, Enrollment
     },
-    worstCaseBranchTotal: 4 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4, // 20
+    // 4 + 1 + 5 + 2 + 5 + 4 = 21 branch; +1 scenario select = 22
+    worstCaseBranchTotal: 4 + 1 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4,
     mainScenarioSelect: 1,
-    worstCaseInvocationTotal: 4 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4 + 1, // 21
+    worstCaseInvocationTotal: 4 + 1 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4 + 1,
     resumesBothDone: 4 + 4, // initial + final = 8
     forbids: ["selectRecordsAsync full table", "unbounded poll loops", "20× dual-record polls"],
   };
@@ -130,13 +132,29 @@ function planResumeState({ pwApplied, gateApplied, resetFixtures }) {
   return { skip057: false, skip042: false, mode: "fresh" };
 }
 
+/** Statuses that keep formula Perfect Week Calculation Queue? = 1 (when links present). */
+const QUEUE_MATCH_STATUSES = ["Pending", "Ready"];
+
+/** Valid non-queue leave value (Queue?=0). Prefer Skipped over Error for a temporary ETF leave. */
+const QUEUE_LEAVE_STATUS = "Skipped";
+const QUEUE_ARM_STATUS = "Pending";
+
+function isQueueMatchStatus(statusName) {
+  const name = String(statusName || "").trim();
+  return QUEUE_MATCH_STATUSES.includes(name);
+}
+
 function planDownstreamTriggers() {
   return {
     automation057: {
-      method: "was_status_toggle",
+      method: "was_queue_reentry_via_automation_status",
       description:
-        "Set WAS Perfect Week Automation Status Ready then Pending (min updates).",
+        "Force Perfect Week Calculation Queue? 0→1 by writing Automation Status " +
+        "Skipped (leave) → confirm → Pending (arm). Ready↔Pending keeps Queue?=1 and never re-matches.",
+      triggerCondition: "Perfect Week Calculation Queue? = 1",
       fields: ["Perfect Week Automation Status"],
+      leaveStatus: QUEUE_LEAVE_STATUS,
+      armStatus: QUEUE_ARM_STATUS,
     },
     automation042: {
       method: "view_reentry_level_recalc_needed",
@@ -153,6 +171,55 @@ function planDownstreamTriggers() {
       delayMs: POLL_DELAY_MS,
       record: "exact fixture only",
     },
+  };
+}
+
+/**
+ * Plan WAS Perfect Week Automation Status transition that forces Automation 057
+ * (When record matches conditions: Perfect Week Calculation Queue? = 1) to fire.
+ *
+ * Queue? is a formula: 1 when links present AND status is Pending OR Ready.
+ * Ready→Pending keeps Queue?=1 and does NOT re-match. Must leave via Skipped/Created/Error first.
+ */
+function plan057QueueReentryTransition({
+  automationStatusCurrently,
+  pwApplied = false,
+  resetFixtures = false,
+} = {}) {
+  if (isTruthyFlag(pwApplied) && !resetFixtures) {
+    return {
+      skip: true,
+      triggerOnce: false,
+      steps: [],
+      transition: "skip_already_applied",
+      previous: String(automationStatusCurrently || "").trim() || null,
+      leaveValue: null,
+      armedValue: null,
+      reason: "Perfect Week Credit Applied? already true — skip 057 retrigger",
+    };
+  }
+  const previous = String(automationStatusCurrently || "").trim();
+  if (isQueueMatchStatus(previous)) {
+    return {
+      skip: false,
+      triggerOnce: true,
+      steps: ["set_skipped", "confirm_left_queue", "set_pending"],
+      transition: `${previous || "queue-match"} → Skipped → Pending`,
+      previous: previous || null,
+      leaveValue: QUEUE_LEAVE_STATUS,
+      armedValue: QUEUE_ARM_STATUS,
+      reason: "Force Queue? leave (0) then re-enter (1) for 057 condition match",
+    };
+  }
+  return {
+    skip: false,
+    triggerOnce: true,
+    steps: ["set_pending"],
+    transition: `${previous || "non-queue"} → Pending`,
+    previous: previous || null,
+    leaveValue: null,
+    armedValue: QUEUE_ARM_STATUS,
+    reason: "Enter Queue?=1 by setting Automation Status Pending",
   };
 }
 
@@ -215,24 +282,32 @@ function evaluatePerfectWeekZoomPhase({
 }) {
   const attendeesUnchanged =
     JSON.stringify(attendeesBefore || []) === JSON.stringify(attendeesAfter || []);
-  const appliedStableOrConsumed = isTruthyFlag(pwAppliedAfter);
+  const wasReady = String(wasAutomationStatus || "").trim() === "Ready";
+  const applied = isTruthyFlag(pwAppliedAfter);
   const countOk = Number(zoomAttendanceCount) === 1;
   const meetingCountOk = Number(zoomMeetingCount) >= 1;
-  // Ready is nice-to-have; Applied? + counts are the completion signal (v1.5).
-  const pass = attendeesUnchanged && countOk && meetingCountOk && appliedStableOrConsumed;
+  // v1.8: 057 completion signal is WAS Status=Ready (not ZA Applied?).
+  // Applied? remains an expected Zoom-credit side effect when recording was newly counted.
+  const pass = attendeesUnchanged && countOk && meetingCountOk && wasReady;
   return {
     pass,
     attendeesUnchanged,
     effectiveZoomAttendanceCount: Number(zoomAttendanceCount) || 0,
     zoomMeetingCount: Number(zoomMeetingCount) || 0,
     pwAppliedBefore: !!isTruthyFlag(pwAppliedBefore),
-    pwAppliedAfter: !!isTruthyFlag(pwAppliedAfter),
+    pwAppliedAfter: !!applied,
     wasAutomationStatus: wasAutomationStatus || "",
+    wasReady,
     reasons: [
       !attendeesUnchanged ? "Attendees changed" : null,
       !countOk ? `zoomAttendanceCount=${zoomAttendanceCount} expected 1` : null,
       !meetingCountOk ? `zoomMeetingCount=${zoomMeetingCount} expected >=1` : null,
-      !appliedStableOrConsumed ? "Perfect Week Credit Applied? not true after 057" : null,
+      !wasReady
+        ? `Perfect Week Automation Status="${wasAutomationStatus || ""}" expected Ready`
+        : null,
+      wasReady && !applied
+        ? "note: Perfect Week Credit Applied? still false after Ready (recording may not have been newly counted)"
+        : null,
     ].filter(Boolean),
   };
 }
@@ -326,7 +401,14 @@ function c025PathMustUseQueryBudget(sourceText) {
     !sourceText.includes("waitFor057") &&
     (sourceText.includes("checked → unchecked → checked") ||
       sourceText.includes("plan042ViewReentry") ||
-      sourceText.includes("viewReentry042"))
+      sourceText.includes("viewReentry042")) &&
+    (sourceText.includes("Skipped → Pending") ||
+      sourceText.includes("plan057QueueReentry") ||
+      sourceText.includes("queueReentry057") ||
+      sourceText.includes("confirm057 left Queue")) &&
+    (sourceText.includes("poll057 WAS") ||
+      sourceText.includes("wasAutomationStatus") ||
+      sourceText.includes("Status=Ready"))
   );
 }
 
@@ -336,7 +418,11 @@ module.exports = {
   POLL_ATTEMPTS,
   POLL_DELAY_MS,
   DEFAULT_FIXTURES,
+  QUEUE_MATCH_STATUSES,
+  QUEUE_LEAVE_STATUS,
+  QUEUE_ARM_STATUS,
   isTruthyFlag,
+  isQueueMatchStatus,
   parseFixtureOverrides,
   resolveFixtures,
   isC025Stage17DownstreamScenario,
@@ -344,6 +430,7 @@ module.exports = {
   estimateWorstCaseQueryCount,
   planResumeState,
   planDownstreamTriggers,
+  plan057QueueReentryTransition,
   plan042ViewReentryTransition,
   evaluatePerfectWeekZoomPhase,
   evaluateGatePhase,

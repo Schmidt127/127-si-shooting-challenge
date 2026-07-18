@@ -14,9 +14,9 @@
 
 | Item | Update |
 |------|--------|
-| DEV one-click ETF | **Pass** confirmed on `recEuHFTjBftoJGMc` (`C025_STAGE17_DOWNSTREAM`, query **11/22**, 057+042 fired, Run Test? cleared). Schema gap verdict **unchanged**. |
+| DEV one-click ETF | **Pass** on `recEuHFTjBftoJGMc` (`C025_STAGE17_DOWNSTREAM`, query **11/22**, **057+042 fired**, **117 OFF**, Run Test? cleared). Schema gap verdict **unchanged**. |
 | Dated schema snapshots | `prod-20260706` / `dev-20260706` **lack** Zoom Attendance (DEV ZA created later). Live Meta audit supersedes snapshots for table presence. |
-| Repo alignment gate | Feature tip commit `e8db32e` is **115 v1.6**; working tree holds uncommitted **115 v1.8** + paste. Align/commit before PROD packaging. |
+| Repo alignment gate | **115 v1.8** + paste packet committed on `feature/c025-stage17-zoom-attendance`. PROD still **blocked on schema migration**. |
 
 ---
 

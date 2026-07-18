@@ -1,34 +1,8 @@
-/*
-Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submission
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-07-07 (DEV v1.3 Tests A–D verified)
-Last GitHub Update: 2026-07-18 (v1.8 — C025 Phase A wait on WAS Ready, not ZA Applied?)
-
-Purpose:
-Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submission, Homework, or Video),
-or runs C-025 Stage 17 downstream Zoom-credit verification (Other / Perfect Week + C025_STAGE17_DOWNSTREAM).
-
-Trigger:
-Testing Scenarios when Run Test? is checked (DEV only).
-
-Important Tables:
-Testing Scenarios, Enrollments, Athletes, Submissions
-
-Important Fields:
-Run Test?, Dry Run?, Related Enrollment, Submission Date, Shot Total, Homework Assignment,
-Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submission
-
-Notes:
-GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval.
-*/
-
 /************************************************************
  * 115 - ENGINEERING TEST FRAMEWORK
  * Run Testing Scenario — Daily Submission + Homework + Video
  *
- * Version: v1.8
+ * Version: v1.7
  * Date Written: 2026-07-06
  * Last Updated: 2026-07-18
  *
@@ -48,9 +22,6 @@ GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval
  * - v1.7 (2026-07-18): C025 Phase A forces Automation 057 condition re-match on WAS
  *   `recvtukGFL7u74Tme`: Perfect Week Automation Status Skipped→Pending (or non-queue→Pending).
  *   Ready→Pending keeps formula Queue?=1 and never re-fires "Queue? = 1".
- * - v1.8 (2026-07-18): Phase A completion waits for WAS Perfect Week Automation Status=Ready
- *   (057’s real done write). v1.7 incorrectly polled Zoom Attendance Perfect Week Credit Applied?
- *   which can stay false even after a successful 057 run.
  *
  * PURPOSE
  * - Runs from one Testing Scenarios record when Run Test? is checked.
@@ -130,7 +101,7 @@ GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval
 
 const SCRIPT = {
   scriptName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
-  version: "v1.8",
+  version: "v1.7",
   versionDate: "2026-07-18",
   originalWrittenDate: "2026-07-06",
   lastUpdated: "2026-07-18",
@@ -1355,12 +1326,11 @@ async function runVideoBranch({
 }
 
 /* =========================================================
-   SECTION 5B — C-025 STAGE 17 DOWNSTREAM (057 + 042) — v1.8
+   SECTION 5B — C-025 STAGE 17 DOWNSTREAM (057 + 042) — v1.7
    Query-budgeted: exact-record reads only, capped polls (5×),
    resume-safe, never writes Attendees. Daily/HW/Video unchanged.
    057 trigger: Queue? re-entry via Automation Status
    Skipped→Pending (Ready/Pending alone never leave Queue?=1).
-   057 wait: WAS Perfect Week Automation Status → Ready (not ZA Applied?).
    042 trigger: view `042` re-entry via Level Recalc Needed?
    (checked→unchecked→checked, or unchecked→checked).
 ========================================================= */
@@ -1714,7 +1684,7 @@ async function runC025Stage17DownstreamBranch({
           resumedFrom,
           attendeesBefore,
           trigger057:
-            "Queue? re-entry then wait WAS Status=Ready (not ZA Applied?); skipped if PW Applied already",
+            "Queue? re-entry: Automation Status Skipped→Pending (or non-queue→Pending); skipped if PW Applied already",
           trigger042:
             "View 042 re-entry: Level Recalc Needed? checked→unchecked→checked (or unchecked→checked); skipped if Gate Applied already",
           neverWrite: ["Attendees"],
@@ -1822,49 +1792,32 @@ async function runC025Stage17DownstreamBranch({
       }
       phaseA.queueReentry057 = queueReentry057;
 
-      currentStep = "C025-2-poll-057-was-ready";
+      currentStep = "C025-2-poll-057";
       setOutputSafe("debugStep", currentStep);
-      // 057 success write is WAS Status=Ready (always). ZA Perfect Week Credit Applied? is only
-      // set when a recording credit was newly counted — not a reliable "057 finished" signal.
-      const poll057WasFields = [
-        CONFIG.wasFields.automationStatus,
-        CONFIG.wasFields.automationError,
-        CONFIG.wasFields.zoomMeetingCount,
-        CONFIG.wasFields.zoomAttendanceCount,
-      ].filter((n) => fieldExists(wasTable, n));
-      let wasStatusAfter057 = "";
+      const poll057Fields = [
+        CONFIG.zoomAttendanceFields.pwApplied,
+        CONFIG.zoomAttendanceFields.gateApplied,
+      ].filter((n) => fieldExists(zaTable, n));
       for (let i = 0; i < pollAttempts; i += 1) {
         attempts057 += 1;
         await delayMs(pollDelayMs);
-        wasRec = await c025SelectRecord(
+        zaRec = await c025SelectRecord(
           budget,
-          wasTable,
-          fixtures.wasId,
-          poll057WasFields,
-          `poll057 WAS #${attempts057}`
+          zaTable,
+          fixtures.zoomAttendanceId,
+          poll057Fields,
+          `poll057 ZA #${attempts057}`
         );
-        wasStatusAfter057 = getText(wasRec, CONFIG.wasFields.automationStatus);
-        if (wasStatusAfter057 === "Ready") {
+        if (getBooleanish(zaRec, CONFIG.zoomAttendanceFields.pwApplied, false)) {
           phaseA.waitOk = true;
+          pwApplied = true;
+          gateApplied = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateApplied, false);
           break;
-        }
-        if (wasStatusAfter057 === "Error") {
-          phaseA.timedOut = true;
-          phaseA.wasError = getText(wasRec, CONFIG.wasFields.automationError);
-          await finishAwaiting("057", "057 ended Error", {
-            phaseA_057: {
-              ...phaseA,
-              attempts: attempts057,
-              wasAutomationStatus: wasStatusAfter057,
-            },
-            attendeesBefore,
-          });
-          return;
         }
       }
       phaseA.attempts = attempts057;
-      phaseA.wasAutomationStatus = wasStatusAfter057;
       phaseA.pwAppliedBefore = pwAppliedBefore;
+      phaseA.pwAppliedAfter = pwApplied;
 
       if (!phaseA.waitOk) {
         phaseA.timedOut = true;
@@ -1874,10 +1827,6 @@ async function runC025Stage17DownstreamBranch({
         });
         return;
       }
-
-      // Applied? is NOT the wait signal — final WAS/ZA snapshot records it for Phase A evaluation.
-      phaseA.pwAppliedAfter = null;
-      phaseA.wasReady = true;
     }
 
     // ---------- Phase B: 042 (view re-entry) ----------
@@ -2035,7 +1984,6 @@ async function runC025Stage17DownstreamBranch({
 
     const zoomAttendanceCount = getNumber(wasRec, CONFIG.wasFields.zoomAttendanceCount);
     const zoomMeetingCount = getNumber(wasRec, CONFIG.wasFields.zoomMeetingCount);
-    const wasStatusFinal = getText(wasRec, CONFIG.wasFields.automationStatus);
     const attendeesAfter = getLinkedIds(zmRec, CONFIG.zoomMeetingFields.attendees);
     const pwFinal = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.pwApplied, false);
     const gateFinal = getBooleanish(zaRec, CONFIG.zoomAttendanceFields.gateApplied, false);
@@ -2048,11 +1996,10 @@ async function runC025Stage17DownstreamBranch({
       JSON.stringify(attendeesBefore) === JSON.stringify(attendeesAfter) &&
       attendeesAfter.length === 0;
 
-    // v1.8: Phase A pass on WAS Ready + Zoom counts (057 done signal). Applied? is logged only.
     const passA =
       Number(zoomAttendanceCount) === 1 &&
       Number(zoomMeetingCount) >= 1 &&
-      wasStatusFinal === "Ready" &&
+      pwFinal === true &&
       attendeesUnchanged;
     // Prefer Gate Applied; when we triggered 042, also expect Level Recalc cleared by workflow.
     // Resume-skip (already Applied) does not require recalc cleared.
@@ -2061,10 +2008,7 @@ async function runC025Stage17DownstreamBranch({
       attendeesUnchanged &&
       (phaseB.skipped === true || recalcFinal === false);
     const passDedupe =
-      Number(zoomAttendanceCount) === 1 &&
-      wasStatusFinal === "Ready" &&
-      gateFinal &&
-      attendeesAfter.length === 0;
+      Number(zoomAttendanceCount) === 1 && pwFinal && gateFinal && attendeesAfter.length === 0;
     const overallPass = passA && passB && passDedupe && attendeesUnchanged;
 
     if (recalcFinal) {
@@ -2092,7 +2036,6 @@ async function runC025Stage17DownstreamBranch({
         videoCountBefore,
         zoomMeetingCount,
         zoomAttendanceCount,
-        wasAutomationStatusFinal: wasStatusFinal,
         pwAppliedFinal: pwFinal,
       },
       phaseB_042: {

@@ -1,5 +1,5 @@
 /**
- * Node tests — C-025 ETF downstream v1.6 query budget + 042 view re-entry + resume.
+ * Node tests — C-025 ETF downstream v1.7 query budget + 057 Queue? re-entry + 042 view re-entry.
  */
 const assert = require("assert");
 const fs = require("fs");
@@ -45,9 +45,10 @@ function testQueryBudgetNormalAndExhaust() {
 function testWorstCaseUnder22() {
   const est = lib.estimateWorstCaseQueryCount();
   assert.strictEqual(est.pollAttempts, 5);
-  assert.ok(est.worstCaseBranchTotal <= 20);
+  assert.ok(est.worstCaseBranchTotal <= 21);
   assert.ok(est.worstCaseInvocationTotal <= 22);
   assert.ok(est.worstCaseInvocationTotal < 30);
+  assert.ok(est.breakdown.trigger057QueueReentry >= 1);
   assert.ok(est.breakdown.trigger042ViewReentry >= 1);
   ok(`Worst-case invocation queries=${est.worstCaseInvocationTotal} (<=22, <30)`);
 }
@@ -73,6 +74,71 @@ function testResumePlans() {
     { skip057: false, skip042: false, mode: "explicit_reset" }
   );
   ok("Resume after 057 / both / resetFixtures");
+}
+
+function test057PendingToSkippedToPending() {
+  const plan = lib.plan057QueueReentryTransition({
+    automationStatusCurrently: "Pending",
+    pwApplied: false,
+  });
+  assert.strictEqual(plan.skip, false);
+  assert.strictEqual(plan.triggerOnce, true);
+  assert.strictEqual(plan.leaveValue, "Skipped");
+  assert.strictEqual(plan.armedValue, "Pending");
+  assert.deepStrictEqual(plan.steps, ["set_skipped", "confirm_left_queue", "set_pending"]);
+  assert.ok(String(plan.transition).includes("Skipped → Pending"));
+  ok("Pending → Skipped → Pending (Queue? leave/re-enter)");
+}
+
+function test057ReadyToSkippedToPending() {
+  const plan = lib.plan057QueueReentryTransition({
+    automationStatusCurrently: "Ready",
+    pwApplied: false,
+  });
+  assert.strictEqual(plan.skip, false);
+  assert.strictEqual(plan.leaveValue, "Skipped");
+  assert.strictEqual(plan.armedValue, "Pending");
+  assert.deepStrictEqual(plan.steps, ["set_skipped", "confirm_left_queue", "set_pending"]);
+  ok("Ready → Skipped → Pending");
+}
+
+function test057NonQueueToPending() {
+  const plan = lib.plan057QueueReentryTransition({
+    automationStatusCurrently: "Error",
+    pwApplied: false,
+  });
+  assert.strictEqual(plan.skip, false);
+  assert.strictEqual(plan.leaveValue, null);
+  assert.strictEqual(plan.armedValue, "Pending");
+  assert.deepStrictEqual(plan.steps, ["set_pending"]);
+  ok("Non-queue (Error) → Pending");
+}
+
+function test057ResumeSkipsRetrigger() {
+  const plan = lib.plan057QueueReentryTransition({
+    automationStatusCurrently: "Pending",
+    pwApplied: true,
+    resetFixtures: false,
+  });
+  assert.strictEqual(plan.skip, true);
+  assert.strictEqual(plan.triggerOnce, false);
+  const reset = lib.plan057QueueReentryTransition({
+    automationStatusCurrently: "Pending",
+    pwApplied: true,
+    resetFixtures: true,
+  });
+  assert.strictEqual(reset.skip, false);
+  assert.deepStrictEqual(reset.steps, ["set_skipped", "confirm_left_queue", "set_pending"]);
+  ok("Resume skips 057 retrigger when already applied; reset forces leave/re-enter");
+}
+
+function testReadyPendingNeverLeavesQueue() {
+  assert.strictEqual(lib.isQueueMatchStatus("Ready"), true);
+  assert.strictEqual(lib.isQueueMatchStatus("Pending"), true);
+  assert.strictEqual(lib.isQueueMatchStatus("Skipped"), false);
+  assert.strictEqual(lib.isQueueMatchStatus("Error"), false);
+  assert.strictEqual(lib.isQueueMatchStatus("Created"), false);
+  ok("Ready and Pending both match Queue?; Skipped/Error/Created leave Queue?");
 }
 
 function test042CheckedToUncheckedToChecked() {
@@ -110,7 +176,6 @@ function test042TriggeredExactlyOnce() {
   const b = lib.plan042ViewReentryTransition({ levelRecalcNeededCurrently: false });
   assert.strictEqual(a.triggerOnce, true);
   assert.strictEqual(b.triggerOnce, true);
-  // arm step appears exactly once in each plan
   assert.strictEqual(a.steps.filter((s) => s === "check").length, 1);
   assert.strictEqual(b.steps.filter((s) => s === "check").length, 1);
   ok("042 is triggered exactly once (single arm/check step)");
@@ -142,11 +207,12 @@ function testPwEvalFirstPoll() {
     zoomMeetingCount: 2,
     zoomAttendanceCount: 1,
     pwAppliedBefore: false,
-    pwAppliedAfter: true,
-    wasAutomationStatus: "Pending",
+    pwAppliedAfter: false,
+    wasAutomationStatus: "Ready",
   });
   assert.strictEqual(pass.pass, true);
-  ok("Normal 057 completion (Applied? true; Ready not required)");
+  assert.strictEqual(pass.wasReady, true);
+  ok("Normal 057 completion (WAS Ready; Applied? optional)");
 }
 
 function testPwTimeoutShape() {
@@ -154,13 +220,13 @@ function testPwTimeoutShape() {
     attendeesBefore: [],
     attendeesAfter: [],
     zoomMeetingCount: 2,
-    zoomAttendanceCount: 0,
+    zoomAttendanceCount: 1,
     pwAppliedBefore: false,
-    pwAppliedAfter: false,
+    pwAppliedAfter: true,
     wasAutomationStatus: "Pending",
   });
   assert.strictEqual(fail.pass, false);
-  ok("057 not complete when Applied? false");
+  ok("057 not complete when WAS Status still Pending");
 }
 
 function testGateEval() {
@@ -202,7 +268,7 @@ function testSourceGuards() {
   );
   assert.ok(lib.dailySubmissionBranchMustRemainUntouched(src));
   assert.ok(lib.c025PathMustUseQueryBudget(src));
-  assert.ok(src.includes('version: "v1.6"'));
+  assert.ok(src.includes('version: "v1.8"'));
   assert.ok(src.includes("pollAttempts: 5"));
   assert.ok(!src.includes("pollAttempts: 20"));
   assert.ok(src.includes("Timed Out Waiting for 057"));
@@ -210,6 +276,9 @@ function testSourceGuards() {
   assert.ok(src.includes("clearRunTest: true"));
   assert.ok(src.includes("checked → unchecked → checked"));
   assert.ok(src.includes("unchecked → checked"));
+  assert.ok(src.includes("confirm057 left Queue"));
+  assert.ok(src.includes("poll057 WAS"));
+  assert.ok(src.includes("Skipped → Pending") || src.includes('"Skipped"'));
   assert.ok(src.includes("viewReentry042") || src.includes("view_reentry"));
   assert.ok(src.includes("C025 error — Run Test? cleared"));
   const idx5b = src.indexOf("SECTION 5B");
@@ -219,12 +288,15 @@ function testSourceGuards() {
   assert.ok(section5b.includes("c025SelectRecord"));
   assert.ok(section5b.includes("Refuse Attendees"));
   assert.ok(!section5b.includes("waitFor057"));
-  // Must not arm by only writing true without leave when already checked
   assert.ok(section5b.includes("confirm042 Level Recalc unchecked"));
+  assert.ok(section5b.includes("confirm057 left Queue"));
+  assert.ok(section5b.includes("poll057 WAS"));
+  assert.ok(!section5b.includes("poll057 ZA"));
+  assert.ok(!section5b.includes('trigger057: "WAS status Ready→Pending'));
   const dailyIdx = src.indexOf("scenarioType === CONFIG.scenarioTypes.dailySubmission");
   const c025Idx = src.indexOf("isC025Stage17DownstreamScenario");
   assert.ok(dailyIdx > 0 && c025Idx > 0);
-  ok("115 v1.6 source guards: 042 view re-entry, budget, Daily intact");
+  ok("115 v1.8 source guards: wait WAS Ready, Queue re-entry, 042 view re-entry, budget, Daily intact");
 }
 
 function testNoProdBase() {
@@ -259,17 +331,25 @@ function testDelayedCompletion() {
   ok("Delayed completion within 5 attempts; timeout after 5");
 }
 
-function testDownstream042DocsView() {
+function testDownstreamTriggerDocs() {
   const trig = lib.planDownstreamTriggers();
   assert.strictEqual(trig.automation042.view, "042");
   assert.ok(String(trig.automation042.method).includes("view_reentry"));
-  ok("Downstream trigger docs name view 042 re-entry");
+  assert.ok(String(trig.automation057.method).includes("queue_reentry"));
+  assert.strictEqual(trig.automation057.leaveStatus, "Skipped");
+  assert.strictEqual(trig.automation057.armStatus, "Pending");
+  ok("Downstream trigger docs name 057 Queue re-entry + 042 view re-entry");
 }
 
 testIdentify();
 testQueryBudgetNormalAndExhaust();
 testWorstCaseUnder22();
 testResumePlans();
+test057PendingToSkippedToPending();
+test057ReadyToSkippedToPending();
+test057NonQueueToPending();
+test057ResumeSkipsRetrigger();
+testReadyPendingNeverLeavesQueue();
 test042CheckedToUncheckedToChecked();
 test042UncheckedToChecked();
 test042TriggeredExactlyOnce();
@@ -281,6 +361,5 @@ testDedupe();
 testSourceGuards();
 testNoProdBase();
 testDelayedCompletion();
-testDownstream042DocsView();
-
-console.log("\nAll c025-stage17-etf-downstream tests passed.");
+testDownstreamTriggerDocs();
+console.log("All C-025 ETF downstream tests passed.");

@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025: 115 **v1.6** ETF 042 view re-entry — paste [v1.6](./deploy-checklists/C-025-stage17-115-etf-v1.6-PASTE.txt); keep 057/042/117 OFF until ready)
+Last updated: **2026-07-18** (C-025: DEV ETF **PASS** on 115 **v1.8** — 11/22 queries; 057+042 fired; 117 OFF; PROD **blocked on schema migration** — paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt))
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17:** 057/042 pasted · **115 v1.6** ETF 042 view re-entry (`recEuHFTjBftoJGMc`) · [ETF packet](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) · keep 057/042/117 OFF until live card |
+| **C-025 — Zoom recording credit** | **Stage 17 DEV ETF PASS** (115 **v1.8**, 11/22) · 057+042 fired · 117 OFF · PROD **blocked — schema migration** ([status](./status/C-025-stage17-prod-readiness-status.md)) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
@@ -121,9 +121,9 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Scripts | 117 **v1.1.1** (OFF) · **057 v1.3** · **042 v3.1** — [PW/gate packet](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
 | DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
-| Live DEV paste | **057 v1.3 · 042 v3.1 · 117 v1.1.1 OFF** · **115 v1.6** ETF paste ready ([packet](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md)) · scenario row `recEuHFTjBftoJGMc` |
-| Live PROD | **Blocked** — untouched; **101 unchanged** |
-| Downstream gaps | ETF live run pending Mike: paste **115 v1.6** → ON 057/042 → Run Test? → OFF (v1.6 forces 042 view leave/re-enter) |
+| Live DEV paste | **057 v1.3 · 042 v3.1 · 117 v1.1.1 OFF** · **115 v1.8** · scenario `recEuHFTjBftoJGMc` **PASS** (11/22) |
+| Live PROD | **Blocked — schema migration** (Zoom Attendance missing); **101 unchanged** |
+| Downstream gaps | PROD schema + XP Source option + Config % required before any Stage 17 PROD paste |
 | Packet | [recording](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) · [PW/gate](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
 
