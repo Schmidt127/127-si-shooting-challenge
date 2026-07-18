@@ -188,8 +188,8 @@ Keep automation **OFF**.
 | XP Source option in DEV | **Added** — `Zoom Meeting Recording Quiz` |
 | Read-only preflight | **PASS** (2026-07-18) |
 | DEV fixtures for orchestrator tests | **Prepared** (Schmidt; see replace-stop doc) |
-| Ready for DEV paste | **Mike UI only** — Automations Meta API **403** |
-| Installed / verified in DEV | **No** — replace/test stopped pending UI paste |
-| Ready for PROD | **No** |
+| Ready for DEV paste | **Done (Mike)** — v1.1.0 confirmed OFF |
+| Installed / verified in DEV | **Logic verified** via REST harness mirroring v1.1.0 ([test results](./C-025-stage17-orchestrator-dev-test-results-2026-07-18.md)); Airtable UI Test optional |
+| Ready for PROD | **No** — PW/gate downstream gaps remain |
 | Automation 101 | **Unchanged** |
 | PROD | **Untouched** |
