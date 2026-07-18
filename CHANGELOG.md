@@ -36,6 +36,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **115 v1.6 (2026-07-18)** — C025 Phase B forces Automation 042 view re-entry: `Level Recalc Needed?` checked→unchecked→checked (or unchecked→checked) on Enrollment `recgP9qZYjAhE7NXm`. Resume skips when Gate Applied. Query budget still ≤22. DEV paste: [C-025-stage17-115-etf-v1.6-PASTE.txt](./docs/deploy-checklists/C-025-stage17-115-etf-v1.6-PASTE.txt). Do not paste to PROD.
 - **115 v1.5 (2026-07-18)** — C025 Stage 17 ETF runner stays under Airtable’s 30-query quota: exact-record polls only (max 5×057 + 5×042), `MAX_QUERY_BUDGET=22`, resume-safe Applied? skips, timeout → Blocked + clear `Run Test?`. Daily/Homework/Video unchanged. DEV paste: [C-025-stage17-115-etf-v1.5-PASTE.txt](./docs/deploy-checklists/C-025-stage17-115-etf-v1.5-PASTE.txt). Do not paste to PROD.
 - **070b v4.4 (2026-07-11)** — Remove invalid `setTimeout` polling (Airtable scripts cannot use timers). Make HTTP 2xx body `Accepted` returns `statusOut=pending`, `actionOut=lambda_upload_accepted_async`, `makeResponseMode=accepted_async`; retains `Send to Make Trigger` for companion **070c**. Immediate Lambda JSON path unchanged (`uploaded`, `skipped_already_uploaded`, structured errors).
 - **070b v4.3 (2026-07-11)** — Superseded same day; polling design invalid in Airtable automation scripting.

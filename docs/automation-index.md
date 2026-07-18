@@ -2,7 +2,7 @@
 
 Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`116`).
 
-**C-020 test harness:** **115** v1.5 — Daily Submission + Homework + Video (+ C025 Stage 17 downstream). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.5](./deploy-checklists/C-025-stage17-115-etf-v1.5-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**C-020 test harness:** **115** v1.6 — Daily Submission + Homework + Video (+ C025 Stage 17 downstream with 042 view re-entry). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.6](./deploy-checklists/C-025-stage17-115-etf-v1.6-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 **Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
 
@@ -119,7 +119,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117** | Zoom Recording Credit — Orchestrator (**Stage 17 v1.1.0**) | Zoom Attendance · Recording Quiz · Enrollment + Meeting not empty (**DEV paste pending; keep OFF**) — **never writes Attendees** | `117-zoom-recording-credit-orchestrator.js` |
 | **117a–f** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117f-*.js` |
 
-C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115 v1.5** `C025_STAGE17_DOWNSTREAM` → triggers **057**/**042**; query budget ≤22; never writes `Attendees`). Live attendance remains **101** only.
+C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115 v1.6** `C025_STAGE17_DOWNSTREAM` → triggers **057**/**042** via view re-entry; query budget ≤22; never writes `Attendees`). Live attendance remains **101** only.
 
 ---
 

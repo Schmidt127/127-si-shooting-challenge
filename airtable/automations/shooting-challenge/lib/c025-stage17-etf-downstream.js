@@ -107,12 +107,13 @@ function estimateWorstCaseQueryCount() {
     breakdown: {
       initialExactReads: 4, // WAS, ZA, ZM, Enrollment
       poll057ZaOnly: POLL_ATTEMPTS, // max 5
+      trigger042ViewReentry: 2, // read Level Recalc + confirm after uncheck (worst)
       poll042ZaOnly: POLL_ATTEMPTS, // max 5
       finalExactReads: 4, // WAS, ZA, ZM, Enrollment
     },
-    worstCaseBranchTotal: 4 + POLL_ATTEMPTS + POLL_ATTEMPTS + 4, // 18
+    worstCaseBranchTotal: 4 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4, // 20
     mainScenarioSelect: 1,
-    worstCaseInvocationTotal: 4 + POLL_ATTEMPTS + POLL_ATTEMPTS + 4 + 1, // 19
+    worstCaseInvocationTotal: 4 + POLL_ATTEMPTS + 2 + POLL_ATTEMPTS + 4 + 1, // 21
     resumesBothDone: 4 + 4, // initial + final = 8
     forbids: ["selectRecordsAsync full table", "unbounded poll loops", "20× dual-record polls"],
   };
@@ -138,8 +139,12 @@ function planDownstreamTriggers() {
       fields: ["Perfect Week Automation Status"],
     },
     automation042: {
-      method: "level_recalc_needed",
-      description: "Set Enrollments.Level Recalc Needed? = true.",
+      method: "view_reentry_level_recalc_needed",
+      description:
+        "Force Enrollment to leave/re-enter view 042 (Level Recalc Needed? checked). " +
+        "If already checked: unchecked → confirm → checked. If unchecked: checked once.",
+      view: "042",
+      viewCondition: "Level Recalc Needed? is checked",
       fields: ["Level Recalc Needed?"],
     },
     neverWrite: ["Attendees", "XP Points", "Minimum Zoom Meetings"],
@@ -148,6 +153,54 @@ function planDownstreamTriggers() {
       delayMs: POLL_DELAY_MS,
       record: "exact fixture only",
     },
+  };
+}
+
+/**
+ * Plan the Enrollment.Level Recalc Needed? transition that forces Automation 042
+ * (When record enters view `042`) to fire exactly once.
+ *
+ * Writing checked→checked does NOT re-enter the view.
+ */
+function plan042ViewReentryTransition({
+  levelRecalcNeededCurrently,
+  gateApplied = false,
+  resetFixtures = false,
+} = {}) {
+  if (isTruthyFlag(gateApplied) && !resetFixtures) {
+    return {
+      skip: true,
+      triggerOnce: false,
+      steps: [],
+      transition: "skip_already_applied",
+      previous: !!isTruthyFlag(levelRecalcNeededCurrently),
+      resetValue: null,
+      armedValue: null,
+      reason: "Gate Credit Applied? already true — skip 042 retrigger",
+    };
+  }
+  const previous = !!isTruthyFlag(levelRecalcNeededCurrently);
+  if (previous) {
+    return {
+      skip: false,
+      triggerOnce: true,
+      steps: ["uncheck", "confirm_unchecked", "check"],
+      transition: "checked → unchecked → checked",
+      previous: true,
+      resetValue: false,
+      armedValue: true,
+      reason: "Force leave/re-enter view 042",
+    };
+  }
+  return {
+    skip: false,
+    triggerOnce: true,
+    steps: ["check"],
+    transition: "unchecked → checked",
+    previous: false,
+    resetValue: null,
+    armedValue: true,
+    reason: "Enter view 042 by checking Level Recalc Needed?",
   };
 }
 
@@ -270,7 +323,10 @@ function c025PathMustUseQueryBudget(sourceText) {
     !sourceText.includes("pollAttempts: 20") &&
     sourceText.includes("Refuse Attendees") &&
     sourceText.includes("c025SelectRecord") &&
-    !sourceText.includes("waitFor057")
+    !sourceText.includes("waitFor057") &&
+    (sourceText.includes("checked → unchecked → checked") ||
+      sourceText.includes("plan042ViewReentry") ||
+      sourceText.includes("viewReentry042"))
   );
 }
 
@@ -288,6 +344,7 @@ module.exports = {
   estimateWorstCaseQueryCount,
   planResumeState,
   planDownstreamTriggers,
+  plan042ViewReentryTransition,
   evaluatePerfectWeekZoomPhase,
   evaluateGatePhase,
   evaluateDedupeRerun,
