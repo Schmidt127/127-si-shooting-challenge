@@ -1,6 +1,6 @@
 # C-025 Stage 17 — DEV current status
 
-**Updated:** 2026-07-18  
+**Updated:** 2026-07-18
 **Branch:** `feature/c025-stage17-zoom-attendance`
 
 ## DEV proof — PASS
@@ -27,6 +27,6 @@
 
 ## Next
 
-1. Do **not** merge to `master` until Mike approves.  
-2. Do **not** start PROD paste until curated schema blockers = 0.  
+1. Do **not** merge to `master` until Mike approves.
+2. Do **not** start PROD paste until curated schema blockers = 0.
 3. Optional: capture ETF Pass JSON into `_preview` for archive.
