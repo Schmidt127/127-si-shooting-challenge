@@ -13,6 +13,7 @@ import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import type { LeaderboardData } from "@/types/leaderboard";
 
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 
 import { LeaderboardBoard } from "./leaderboard-board";
 import { LeaderboardTiebreakerLegend } from "./leaderboard-tiebreaker-legend";
@@ -95,8 +96,8 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
 export function LeaderboardEmptyState() {
   return (
     <EmptyState
-      title="Leaderboard warming up"
-      description="No active athletes with XP yet. Check back soon as submissions roll in."
+      title={EMPTY_STATE_COPY.leaderboard.title}
+      description={EMPTY_STATE_COPY.leaderboard.description}
       icon={<IconTrophy size={40} />}
       action={
         <Link href="/" className="btn-secondary">

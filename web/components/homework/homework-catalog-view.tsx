@@ -7,6 +7,7 @@ import { IconBook } from "@/components/icons/shoot-icons";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 
 type HomeworkCatalogViewProps = {
@@ -197,10 +198,8 @@ export function HomeworkEmptyState() {
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
         <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
-        <h1 className="font-display mt-6 text-2xl text-foreground">No homework published yet</h1>
-        <p className="mt-3 text-muted">
-          Check back soon — new assignments appear here when marked Published in Airtable.
-        </p>
+        <h1 className="font-display mt-6 text-2xl text-foreground">{EMPTY_STATE_COPY.homework.title}</h1>
+        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.homework.description}</p>
         <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>

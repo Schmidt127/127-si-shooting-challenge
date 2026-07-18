@@ -13,6 +13,7 @@ import { DetailTitle, DisplayHeading, SectionHeading } from "@/components/catalo
 import { RichContent } from "@/components/catalog/rich-content";
 import { StatusBadge } from "@/components/ui";
 import { formatMeetingDateTime, formatRelativeUpdate } from "@/lib/formatters";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 import type { ZoomMeeting, ZoomMeetingCatalogData } from "@/types/zoom-meetings";
 
@@ -270,10 +271,8 @@ export function ZoomMeetingsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">No zoom meetings yet</h1>
-        <p className="mt-3 text-muted">
-          Scheduled challenge meetings will appear here once added in Airtable.
-        </p>
+        <h1 className="font-display text-2xl text-foreground">{EMPTY_STATE_COPY.zoom.title}</h1>
+        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.zoom.description}</p>
         <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>

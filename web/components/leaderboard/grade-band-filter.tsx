@@ -1,6 +1,7 @@
 "use client";
 
 import { GRADE_BAND_OPTIONS, type GradeBandId } from "@/lib/data/grade-bands";
+import { ACCESSIBILITY_LABELS } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 
 type GradeBandFilterProps = {
@@ -14,7 +15,7 @@ export function GradeBandFilter({ value, onChange, counts }: GradeBandFilterProp
     <div
       className="flex flex-wrap gap-2"
       role="group"
-      aria-label="Filter leaderboard by grade band"
+      aria-label={ACCESSIBILITY_LABELS.gradeBandFilter}
     >
       {GRADE_BAND_OPTIONS.map((option) => {
         const selected = value === option.id;

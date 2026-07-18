@@ -1,6 +1,6 @@
 import { LoadingState } from "@/components/ui";
 import { LOADING_LABELS } from "@/lib/release/public-surface";
 
-export default function LeaderboardLoading() {
-  return <LoadingState label={LOADING_LABELS.leaderboard} />;
+export default function HomeworkLoading() {
+  return <LoadingState label={LOADING_LABELS.homework} />;
 }

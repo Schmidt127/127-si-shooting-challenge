@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import {
+  PublicDisplayEmptyState,
   PublicDisplayErrorState,
   PublicDisplayView,
 } from "@/components/public-display/public-display-view";
@@ -18,9 +19,7 @@ export default async function PublicDisplayPage() {
     const data = await fetchLeaderboard();
 
     if (data.entries.length === 0) {
-      return (
-        <PublicDisplayErrorState message="No leaderboard entries are available for display yet." />
-      );
+      return <PublicDisplayEmptyState />;
     }
 
     return <PublicDisplayView data={data} />;

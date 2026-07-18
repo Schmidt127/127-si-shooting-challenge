@@ -2,28 +2,48 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-16** (repo blocker closure pass — 066 **v3.2** paste status reconciled; C-013 still **COMPLETE** — 070b **v4.4** + 070c **v1.1**)
+Last updated: **2026-07-18** (Agent B docs refresh — master `3ec489a`)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
-**New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
+**New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
+**Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)  
+**Softr cutover:** [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+
+> **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
 
 ---
 
-## V2 progress snapshot (2026-07-05)
+## Production commit and URLs
+
+| Item | Value |
+|------|--------|
+| **Production branch** | `master` |
+| **Current production commit** | `3ec489a` — *Merge PR #38: reconcile #34/#35/#37 migration-safety contracts* |
+| **Public URL** | https://www.hoopchallenges.com/shoot |
+| **Local dev** | http://localhost:3001/shoot |
+| **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
+| **Vercel root** | `web/` |
+| **CI** | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |
+
+Verify with: `git fetch origin && git rev-parse origin/master`
+
+---
+
+## V2 progress snapshot
 
 | Milestone | Status |
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
-| **H-001 — 090F audit fix** | **Complete** — audit v1.1; shot milestones dedupe on Milestone Source Key; **0 data deleted** |
-| **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — intake automations ON; **live OMNI sandbox still pending** (offline harness PASS 2026-07-16) |
-| **C-020 — Engineering Test Framework** | **Schema on DEV complete** — manual DEV Submissions unreliable; **066** + C-020 sequencing blocked on pipeline-ready Fillout-shaped Submission — [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) |
-| **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference (evolved from v3.1 pattern) |
-| **Multi-year architecture** | **Decided** — one base + **Program Instance** (not separate bases per year); **V2-013 queued** — do not implement until dedicated wave |
-| **Phase 2 — Platform Modernization** | **Wave 2A planning complete** · **Phase 2B docs complete** ([Constitution](./ENGINEERING_CONSTITUTION.md), [review](./phase-2b-engineering-review-2026-07-06.md)) — **implementation not started** |
-| **V2-015 — Development base** | **Ready** — DEV-first pipeline is permanent ([doc 04](./v2/04-ai-development-standards.md)) |
-| **Wave 1** | Hygiene items done; **V2-001 base cutover deferred** pending V2-013 architecture wave |
-
-**Engineering principle (H-001):** **Fix the audit, not the data** — see [v2/08-testing-standards.md](./v2/08-testing-standards.md).
+| **H-001 — 090F audit fix** | **Complete** |
+| **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
+| **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
+| **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
+| **C-025 — Zoom recording credit** | **Repo ready** (117a/b) — **not installed / not verified** in live DEV or PROD |
+| **C-011 — Automatic weekly email** | **Repo ready** (118/119 + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
+| **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
+| **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
+| **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
+| **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
 
 ---
 
@@ -31,8 +51,8 @@ Last updated: **2026-07-16** (repo blocker closure pass — 066 **v3.2** paste s
 
 | Program | GitHub repo | Public URL | Vercel root |
 |---------|-------------|------------|-------------|
-| **Hoop Challenges landing** | `hoopchallenges-landing` (local: `127si-landing-page`) | https://www.hoopchallenges.com | landing project |
-| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` (local: `127-si-shooting-challenge`) | https://www.hoopchallenges.com/shoot | `web/` |
+| **Hoop Challenges landing** | `hoopchallenges-landing` | https://www.hoopchallenges.com | landing project |
+| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` | https://www.hoopchallenges.com/shoot | `web/` |
 | **JR Referee Clinics** | `127-si-jr-ref` (separate) | `/refclinic` on landing | separate project |
 
 This repo is **Shooting Challenge only** — not the multi-program hub.
@@ -47,7 +67,7 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 |------|--------|
 | Base name (Airtable UI) | `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` |
 | Base ID | `appn84sqPw03zEbTT` |
-| Role | **Live season** — system of record; V2-013 multi-year history |
+| Role | **Live season** — system of record |
 
 ### Development (V2-015)
 
@@ -55,38 +75,22 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 |------|--------|
 | Base name | `127SI - SHOOTING CHALLENGE - DEV` |
 | Base ID | `appTetnuCZlCZdTCT` |
-| Status | **Ready** — first testing environment for Phase 2 work |
-| Clone + scrub | **2026-07-05** — production **unchanged** |
-| Test enrollments retained | **6 total** — Schmidt/testing enrollment + **5** additional test enrollments |
-| Test data scope (Mike 2026-07-05) | Test rows in **registrant/pipeline tables** only — Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, etc. **Not** config/reference tables (Milestones, Levels, Gates, XP Rules, Weeks, …). Document enrollment record IDs when OMNI exports them (C-019). |
-| Setup runbook | [development-base-setup.md](./development-base-setup.md) |
-| Architecture | [v2-015-development-base-architecture.md](./v2-015-development-base-architecture.md) |
-
-**DEV is the first testing location for:**
-
-- Automation **066 v3.2** — **ON in DEV** (and PROD pasted 2026-07-06); DEV intake automations **ON** after clone (Mike 2026-07-05); **live OMNI sandbox still pending** — offline harness PASS 2026-07-16 (H-002 paste closed; confirmation open)
-- Automation merge experiments (V2-014)
-- Schema changes (Stage K, C-026, etc.)
-- Extension backfills (`CONFIRM_WRITE` rehearsal)
-- **C-020** Engineering Test Framework — justified by Fillout-shaped pipeline need; **066** test and C-020 script sequencing blocked on pipeline-ready DEV submission
-- Make dry-runs (when dev scenarios configured)
-
-**V2-015 completion gate:** base ID recorded ✓ · **066 ON in DEV** ✓ · **DEV intake automations ON** ✓ · **066 sandbox pending** — OMNI confirm Schmidt submission through pipeline + expected milestone behavior · webhook/Make isolation — verify per runbook
-
-### Phase 2 next sequence (locked 2026-07-05)
-
-| # | Step |
-|---|------|
-| 1 | **066 live OMNI sandbox confirm** — still pending (script **v3.2** already pasted DEV + PROD; offline harness PASS) |
-| 2 | Keep monitoring **066** natural PROD runs; no re-paste unless GitHub drifts |
-| 3 | Planned prod maintenance window → delete **112** (keep **OFF** until then), retire **043** |
-| 4 | **C-020** — script after pipeline-ready submission path + sequencing approval | DEV |
-
-**Testing architecture (OMNI correction):** No test flags on pipeline tables — [testing-and-intake-architecture.md § OMNI correction](./testing-and-intake-architecture.md#omni-correction--rejected-2026-07-05).
+| Status | **Ready** — first testing environment |
+| Setup | [development-base-setup.md](./development-base-setup.md) |
 
 **Deploy rule:** GitHub → paste **dev** → audit → approve → paste **prod** → `CHANGELOG.md`.
 
-### Schema snapshots (2026-07-06)
+### Schema documentation (important)
+
+| Location | Status |
+|----------|--------|
+| `airtable/schema/current/` | **Stale** — hand-maintained maps; **do not treat as current** until Agent A refreshes |
+| Latest dated snapshot (treat as current until refresh) | **`airtable/schema/snapshots/prod-20260706/`** (prod) and **`dev-20260706/`** (DEV) — export stamp `20260706_161830` / `20260706_161606` |
+| Older loose exports | Root of `snapshots/` includes `20260629_045741` and earlier |
+
+**Agent A** owns refreshing `airtable/schema/**`. This Agent B pass documents staleness only — no schema files edited.
+
+### Schema snapshot counts (2026-07-06 export notes)
 
 | Base | Folder | Tables | Views |
 |------|--------|--------|-------|
@@ -95,132 +99,43 @@ This repo is **Shooting Challenge only** — not the multi-program hub.
 
 DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md](../airtable/schema/snapshots/README.md).
 
-### Schema (legacy reference)
-
-| Item | Value |
-|------|--------|
-| Prior prod snapshot | `20260629_045741` |
-| Hand-maintained maps | `airtable/schema/current/` |
-| Web view docs | [web/docs/airtable-views.md](../web/docs/airtable-views.md) |
-
-**Web env vars (Vercel project `127-si-shooting-challenge`, never commit values):**
-
-`AIRTABLE_API_TOKEN`, `AIRTABLE_BASE_ID` (**production only on Vercel**), `NEXT_PUBLIC_BASE_PATH` (`/shoot`), `NEXT_PUBLIC_LANDING_URL`, `NEXT_PUBLIC_SITE_URL`
-
-**Local / tools:** optional dev base via `web/.env.local` or `tools/airtable/.env` — see [development-base-setup.md](./development-base-setup.md).
-
-**Schema export PAT (`tools/airtable/.env`):** `AIRTABLE_TOKEN` or `AIRTABLE_API_TOKEN` with **`schema.bases:read`** (optional `data.records:read` for audits).
-
 ---
 
-## Pipeline audit status (extension scripts)
+## Intake and upload status
 
-Last verified clean on historical repair pass (re-run after bulk imports):
-
-| Stage | Audit | Status |
-|-------|-------|--------|
-| F — Homework XP | `audit-homework-pipeline-integrity.js` | **0 issues** (12 `not_ready` expected) |
-| G — Video upload | `audit-video-pipeline-integrity.js` | **0 issues** |
-| H — Video XP | `audit-video-xp-pipeline-integrity.js` | **96 OK / 0 issues** (38 `not_ready` expected) |
-| I — Achievements | `audit-achievement-xp-pipeline-integrity.js` | Run perfection pass — see [stage-j-legacy-cleanup.md](./airtable/stage-j-legacy-cleanup.md) |
-| J — Legacy cleanup | `audit-field-coverage-report.js`, `audit-legacy-cleanup-candidates.js` | In progress |
-| **Final 090** | `audit-final-090a` … `090g` (Active enrollments) | **090A–090E PASS** · **090F PASS** (v1.1, 2026-07-05) · 090G historical weekly gaps only |
-
-Full order: [extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md)
-
-### Award Recipients close-out (2026-07-02)
-
-| Check | Status |
-|-------|--------|
-| Extension scripts 1–6 (Airtable) | **Done** — recipients, goal/conquer, catalog, cart **70/$595**, 090F hygiene, **090G reviewed** |
-| June 29 snapshot vs live (`compare_award_recipients_snapshot.py`) | **Done** — wrong award links 0, manual review 0, duplicates 0 |
-| Goal Met vs Conquered Goal | **Done** — 14/14 aligned |
-| Reference CSV | `Award Recipients-Grid view from June 29 FINAL.csv` (repo root) |
-| **Post-close hygiene backlog** | [post-close-hygiene-2025-26.md](./post-close-hygiene-2025-26.md) — **H-001 done** (audit fix) · **H-002 done** (066 **v3.2** DEV+PROD pasted; OMNI sandbox confirm still open) · H-003/H-004 deferred |
-
-**Note:** Re-linking wrong **Award** fields on historical rows fixed both the recipient table and Conquered Goal alignment (rows existed but pointed at homework/video/etc. before fix).
-
-### Individual final summary emails (2026-07-05 — complete)
-
-| Step | Status |
-|------|--------|
-| Template revision | **`final-summary-2026-07-03-v2`** |
-| Staged + sent via **074** / Make | **Done** — Mike confirmed all final summary emails sent **2026-07-05** |
-| Prior partial run (2026-07-03) | 53 armed first batch; remaining families completed in follow-up |
-
-Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json`, `arm-send-report.json`.
-
-### Wave 0 close-out (2026-07-05 — **closed**)
-
-| ID | Status |
-|----|--------|
-| C-001 Lyle Kimm shots | **Done** |
-| C-002 Final summary emails | **Done** |
-| C-003 Koen HW17 review + email | **Done** |
-| C-008 Fillout off | **Done** |
-| Newspaper + radio outreach | **Done** |
-
-**Wave 0 is closed.** No further close-out work in this wave.
-
-**Live re-audit (2026-07-05):** 090A–090E **PASS** · 090F **PASS** (v1.1 — Milestone Source Key dedupe) · 090G historical weekly gaps only (close-out complete).
-
-### Post-close hygiene (Wave 1)
-
-| ID | Status |
-|----|--------|
-| H-001 090F audit | **Done** — fix audit, not data; 0 rows deleted |
-| H-002 Automation 066 v3.2 | **Done** — GitHub + **DEV/PROD pasted** 2026-07-06 (`36a2e95`); live OMNI sandbox confirm still open (offline harness PASS 2026-07-16) |
-| H-003 / H-004 | Deferred (scope metadata, catalog bucket) |
-
-### V2 automation standard
-
-| Item | Status |
-|------|--------|
-| **066 v3.2** | Current V2-standard automation (evolved from **v3.1**) — SCRIPT/CONFIG split, batched writes, Week resolution, idempotent Source Key |
-| **Doc 06** | [v2/06-automation-standards.md](./v2/06-automation-standards.md) **Active** — 066 is canonical template |
-| **Commit** | `36a2e95` — 066 v3.2 paste line; original standard set in `45b17d7` (v3.1 pattern) |
-
-### Automation capacity (V2-014)
-
-| Item | Status |
-|------|--------|
-| **Airtable limit** | 50 automations per base |
-| **GitHub scripts** | 46 numbered files (`012` gap — deleted in Airtable) |
-| **012** | **Deleted** — legacy, unused (+1 slot) |
-| **112** | **OFF** — monitor before delete; **013** is production Video Feedback path |
-| **043** | **Retire** in planned maintenance window (legacy Next Level gate helper; keep until window) |
-| **066 deploy** | **v3.2** — DEV + PROD pasted 2026-07-06; [OMNI confirmation packet](./deploy-checklists/066-dev-omni-confirmation-packet.md) still open |
-| **Roadmap** | [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — complexity-first modernization; Category A–F; capacity secondary |
-| **Dev base (V2-015)** | **Ready** — `appTetnuCZlCZdTCT`; 6 test enrollments; prod unchanged; **066 paste complete**; OMNI sandbox confirm still open |
-
-### Multi-year architecture (2026-07-05 decision)
-
-| Decision | Detail |
+| Workflow | Status |
 |----------|--------|
-| **One Airtable base** | Multiple program years in same base — **not** separate bases per season |
-| **Season identifier** | **Program Instance** (org table; e.g. `Shooting Challenge \| 2025-2026`) — not a new Program Year table |
-| **Historical accuracy** | Config changes must not alter historical reports |
-| **Backlog** | **V2-013** — Program Instance integration; **queued**; dedicated future wave only |
-| **Do not implement now** | 2026–2027 config mixed with production — requires architecture wave, not incremental edits |
-| **Prior plan** | Archive + clone ([base-cutover](./shooting-challenge-v2-base-cutover.md)) **superseded** by V2-013 direction |
-
-**Program Instance investigation (read-only, 2026-07-05):** Reviewed Shot Milestones, Levels, Level Gate Rules, XP Reward Rules, Achievements, Weeks, Awards. No records modified; no Program Instance links created. 125% milestone briefly added; 120% rows restored Active; 125% rows reserved for future config.
+| **Fillout daily submission form** | **OFF** — contest intake closed (**C-008** done 2026-07-05) |
+| **Video upload (070b/070c + Lambda)** | **PROD complete** — async `Accepted` handoff verified 2026-07-11 |
+| **Homework upload (070a)** | **PROD intentionally OFF** — keep OFF per [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md); DEV package exists separately |
+| **C-023 Drive/attachment retirement** | Deferred |
 
 ---
 
-| Step | Status |
-|------|--------|
-| Fillout daily submission form | **OFF** — contest intake closed (**C-008** done) |
-
-### Media & publicity (2026-07-05)
+## C-025 — Zoom recording credit
 
 | Item | Status |
 |------|--------|
-| Top-level `media/` folder | **Done** — season layout under `media/2025-2026/` |
-| 2025–26 radio | **12** kits in `media/2025-2026/radio/` — **station outreach emails sent 2026-07-05** |
-| 2025–26 newspapers | **10** regional packets — **articles completed and sent 2026-07-05** |
-| Build scripts | `tools/airtable/_build_*.py` → `media_paths.py` |
-| Platform roadmap | **V2-028** — [media-kits.md](./media-kits.md), [ROADMAP](../media/2025-2026/future-enhancements/ROADMAP.md) |
+| Design / catalog | Approved (S16) — see deploy-checklists `C-025-*` |
+| Scripts | **117a / 117b** in repo |
+| Live DEV install | **Not done** |
+| Live PROD | **Blocked** until DEV evidence + Mike approval |
+| Open gaps | Perfect Week / Total Zoom / post-award conflict (see [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md)) |
+| Packet | [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) |
+
+---
+
+## C-011 — Automatic weekly parent email
+
+| Item | Status |
+|------|--------|
+| Scripts | **118 / 119** schedule arm + **072 / 074** patches — repository ready |
+| DEV paste | **Pending** |
+| Schedules | **Must remain OFF** until Mike authorizes |
+| Make DEV webhook | **Live-blocked** / requires approval |
+| Packet | [C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) |
+
+Manual Build/Send checkboxes remain the production path today.
 
 ---
 
@@ -231,52 +146,97 @@ Reports (historical): `tools/airtable/_preview/final-emails/stage-report-v2.json
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
 | `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
 | `NEXT_PUBLIC_SITE_URL` | Production shoot URL (set in Vercel) |
-| Local dev | `http://localhost:3001/shoot` |
-| Health check | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
-| Production status | Live at `/shoot` — Airtable token validated 2026-06-28 |
-| CI | `.github/workflows/web.yml` (lint, typecheck, test on `web/**` changes) |
+| `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional — game manual embed URL |
+| `SITE_ACCESS_TOKEN` | Optional preview gate (middleware + `/api/airtable`) |
+| `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` | Server-only; **production base on Vercel** |
+| Local / tools DEV base | `web/.env.local` or `tools/airtable/.env` |
 
 Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployment-notes.md](../web/docs/deployment-notes.md)
 
+### Current web routes (`/shoot` prefix)
+
+| Route | Status |
+|-------|--------|
+| `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
+| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable + Softr publish gate) |
+| `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
+| `/dashboard` | Live demo — **mock adapter** (no auth) |
+| `/athletes/[slug]` | Demo/mock — slug resolution incomplete |
+| `/admin` | Placeholder — roadmap only; **no write controls**; no sensitive diagnostics without auth |
+| `/api/airtable` | Health check only |
+
+Canonical map: [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md)  
+Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
+
+### Admin page status
+
+`/shoot/admin` is a **placeholder**. No staff authentication is wired. Until auth exists, the page must not expose private participant diagnostics. Safe future work: read-only health + aggregate pipeline readiness behind `SITE_ACCESS_TOKEN` or staff SSO — see admin roadmap.
+
 ---
 
-## Softr vs this app
+## Softr vs Next.js (dual-state)
 
 | System | Role today |
 |--------|------------|
-| **Softr.io** | Legacy public UI — still may be live for some views |
-| **This web app** | Replacement in progress; `robots: noindex` until cutover |
-| **Publish flag** | Airtable `OK to Publish on Softr` still used as public gate in queries |
+| **Softr.io** | Legacy public UI — still may serve some participant views |
+| **This Next.js app** | Replacement in progress at `/shoot` |
+| **SEO** | Sitewide `robots: noindex` until cutover approval |
+| **Publish flag** | Airtable `OK to Publish on Softr` still gates public catalog queries |
 
-Cutover checklist: Phase 6 in [web/docs/project-roadmap.md](../web/docs/project-roadmap.md)
+**Do not remove `noindex` or perform cutover** without explicit Mike approval. Checklist: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 ---
 
-## Make.com
+## Make.com (summary)
 
-| Scenario | Blueprint | Airtable scripts |
-|----------|-----------|------------------|
-| **PROD Upload Engine — Lambda v1** | `make/blueprints/upload-asset-engine-lambda-prod-v1.template.json` (sanitized) | **070b v4.4** + **070c v1.1** video; async `Accepted` handoff |
-| Legacy Upload Asset Engine | `make/blueprints/upload-asset-engine-v1.json` | 070a/070b legacy Drive path |
-| Weekly summary email | *(export pending)* | 074 |
-| Daily submission email | *(export pending)* | 077 |
-| Homework parent feedback | *(webhook)* | 071 |
-| Video parent feedback | *(webhook)* | 073 |
+| Scenario | Status |
+|----------|--------|
+| **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
+| Homework upload (070a) | PROD **OFF** |
+| Weekly summary email | Manual 072→074 path; C-011 automation pending |
+| Daily / homework / video parent emails | Make webhooks + Airtable scripts |
 
-Upload ladder: [make/documentation/upload-asset-engine.md](../make/documentation/upload-asset-engine.md)
+---
 
-### C-013 PROD status (2026-07-11) — **COMPLETE**
+## Pipeline audit status (extension scripts)
 
-- PROD Lambda direct smoke: **PASS**
-- PROD Make manual route: **PASS** on Schmidt fixture `recGQ8EjAMz3bEBiW`
-- **Airtable-triggered end-to-end:** **PASS** — 070b `Accepted` async handoff → Lambda writeback → 070c idempotent verify
-- Scripts: **070b v4.4** (no timers/polling) · **070c v1.1** (idempotent writeback verify)
-- Automation **070a OFF** (homework out of first PROD slice)
-- Repository + operational video upload workflow: **100% complete**
-- Optional hygiene: rotate exposed PROD upload secret (AWS/Make/local); update Automations table doc rows
-- C-023 attachment retirement / Drive sunset: **deferred** (separate backlog)
+Last verified clean on historical repair pass (re-run after bulk imports):
 
-Runbook: [C-013 PROD Make](../make/documentation/C-013-prod-upload-engine-lambda-runbook.md) · [closeout](./deploy-checklists/C-013-prod-closeout-2026-07-11.md)
+| Stage | Status |
+|-------|--------|
+| F — Homework XP | **0 issues** (expected `not_ready` rows) |
+| G — Video upload | **0 issues** |
+| H — Video XP | **0 issues** (expected `not_ready`) |
+| I — Achievements | Perfection pass / in progress |
+| J — Legacy cleanup | In progress |
+| **Final 090** | 090A–090E PASS · 090F PASS (v1.1) · 090G historical weekly gaps only |
+
+---
+
+## Current known risks (summary)
+
+Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
+
+| Severity | Theme |
+|----------|--------|
+| High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
+| Medium | C-025 not installed; C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr dual-run |
+| Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
+
+---
+
+## Tests and build status (web)
+
+Run from `web/`:
+
+| Command | Expectation |
+|---------|-------------|
+| `npm test` | Vitest unit tests (mappers, security, formatters, route/config helpers) |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run lint` | ESLint flat config (`eslint .`) |
+| `npm run build` | Next.js production build |
+
+CI mirrors lint / typecheck / test on `web/**` changes. Record results in the Agent B delivery report when refreshing this file.
 
 ---
 
@@ -292,9 +252,10 @@ Runbook: [C-013 PROD Make](../make/documentation/C-013-prod-upload-engine-lambda
 
 | Event | Update |
 |-------|--------|
-| Audit pass completed | This file + `CHANGELOG.md` |
-| V2 milestone (wave close, hygiene, architecture decision) | This file + [v2-change-backlog.md](./v2-change-backlog.md) + [CHATGPT-MASTER-PLAN-BRIEF.md](./CHATGPT-MASTER-PLAN-BRIEF.md) |
-| New automation deployed | [automation-index.md](./automation-index.md) + [automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md) |
-| Schema field/table change | `airtable/schema/current/` + new dated snapshot |
-| New public page | [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) + [web/docs/airtable-views.md](../web/docs/airtable-views.md) |
+| Audit pass completed | This file + `CHANGELOG.md` + [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) |
+| V2 milestone | This file + [v2-change-backlog.md](./v2-change-backlog.md) |
+| New automation deployed | [automation-index.md](./automation-index.md) (Agent A) |
+| Schema field/table change | Dated snapshot under `airtable/schema/snapshots/` (Agent A) — then refresh `current/` |
+| New public page | [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) |
 | Vercel env change | [deployment-notes.md](./deployment-notes.md) |
+| Softr cutover step | [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) |
