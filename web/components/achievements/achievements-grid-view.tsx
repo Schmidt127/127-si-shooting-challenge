@@ -4,6 +4,7 @@ import { AmbientPage } from "@/components/catalog/ambient-page";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { IconMedal } from "@/components/icons/shoot-icons";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
 
 const RARITY_STYLES: Record<string, { ring: string; chip: string; label: string }> = {
@@ -135,11 +136,8 @@ export function AchievementsEmptyState() {
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
         <div className={catalogStatePanelClass()}>
           <IconMedal size={40} className="mx-auto text-muted" />
-          <h1 className="font-display mt-4 text-2xl">Achievements coming online</h1>
-          <p className="mt-3 text-sm text-muted">
-            Achievement definitions will appear here once they are marked active and visible in
-            Airtable.
-          </p>
+          <h1 className="font-display mt-4 text-2xl">{EMPTY_STATE_COPY.achievements.title}</h1>
+          <p className="mt-3 text-sm text-muted">{EMPTY_STATE_COPY.achievements.description}</p>
           <Link href="/" className="btn-secondary mt-6">
             ← Back to overview
           </Link>

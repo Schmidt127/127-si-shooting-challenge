@@ -26,8 +26,14 @@ Airtable is the deployed/running copy.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Send Weekly Summary Email Package to Make
  *
- * Version: v2.0
+ * Version: v2.1
  * Date Written: 2026-05-29
+ * Last Updated: 2026-07-18
+ *
+ * VERSION HISTORY
+ * - v2.1 (2026-07-18): Stop clearing Weekly Email Sent? after Make handoff; emit
+ *   deterministic eventId WEEKLY_EMAIL|{enrollmentId}|{weekId} on Make payload.
+ * - v2.0: Production send-to-Make handoff package.
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
@@ -38,6 +44,8 @@ Airtable is the deployed/running copy.
  * IMPORTANT WRITEBACK RULE
  * - This script does NOT check Weekly Email Sent?.
  * - This script does NOT write Weekly Email Sent At.
+ * - This script must NOT clear Weekly Email Sent? (Make owns final sent state).
+ * - Duplicate sends are blocked when Weekly Email Sent? is already true.
  * - Make.com owns final Gmail-success writeback after the Gmail module succeeds.
  *
  * FOLDER
@@ -367,6 +375,11 @@ if (sendMode === "test" && !testRecipientEmail) {
     throw new Error("Missing testRecipientEmail for test mode.");
 }
 
+const eventId = `WEEKLY_EMAIL|${enrollmentIds[0] || ""}|${weekIds[0] || ""}`;
+if (!enrollmentIds[0] || !weekIds[0] || !String(eventId).startsWith("WEEKLY_EMAIL|")) {
+    throw new Error(`Invalid weekly email eventId: ${eventId}`);
+}
+
 /* =========================================================
    SECTION 8: BUILD MAKE PAYLOAD
    ========================================================= */
@@ -384,6 +397,11 @@ const payload = {
     enrollmentId: enrollmentIds[0] || "",
     weekId: weekIds[0] || "",
     weekLabel,
+
+    /*
+     * Deterministic Make dedupe key (C-011). Same shape as 072 package eventId.
+     */
+    eventId: eventId,
 
     /*
      * Current standardized field names
@@ -486,9 +504,10 @@ if (fieldExists(weeklySummaryTable, FIELD_EMAIL_READY)) {
     successUpdates[FIELD_EMAIL_READY] = true;
 }
 
-if (fieldExists(weeklySummaryTable, FIELD_EMAIL_SENT)) {
-    successUpdates[FIELD_EMAIL_SENT] = false;
-}
+/*
+ * Do NOT write Weekly Email Sent? = false here.
+ * Make owns final Sent? / Sent At writeback. Clearing Sent? reopened duplicate sends.
+ */
 
 if (Object.keys(successUpdates).length) {
     await weeklySummaryTable.updateRecordAsync(recordId, successUpdates);
@@ -514,5 +533,6 @@ output.set("replyTo", replyTo);
 output.set("htmlOut", htmlOut);
 output.set("textOut", textOut);
 output.set("weekLabel", weekLabel);
+output.set("eventId", eventId);
 output.set("makeResponse", responseText);
 output.set("errorOut", "");

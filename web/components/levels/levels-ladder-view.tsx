@@ -6,6 +6,7 @@ import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/c
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 
 import { LevelBadge } from "../leaderboard/level-badge";
@@ -146,10 +147,8 @@ export function LevelsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">Levels coming soon</h1>
-        <p className="mt-3 text-muted">
-          Active level tiers will appear here once marked Active in Airtable.
-        </p>
+        <h1 className="font-display text-2xl text-foreground">{EMPTY_STATE_COPY.levels.title}</h1>
+        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.levels.description}</p>
         <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>

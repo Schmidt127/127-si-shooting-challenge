@@ -7,6 +7,8 @@
 "use strict";
 
 const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 const {
   buildZoomLiveSourceKey,
   buildZoomRecordingSourceKey,
@@ -28,6 +30,8 @@ const {
   XP_BUCKET_ZOOM,
   XP_SOURCE_RECORDING,
   RULE_KEY_LIVE_BASE,
+  XP_REASON_PUBLIC_FIELD,
+  XP_REASON_DEBUG_FIELD,
 } = require("./c025-zoom-recording-credit");
 
 function test(name, fn) {
@@ -196,6 +200,26 @@ test("XP Event uses Zoom bucket + Zoom Recording source", () => {
   assert.strictEqual(fields.sourceKey, buildZoomRecordingSourceKey(M, E));
   assert.strictEqual(fields.activityDateKey, "2026-07-08");
   assert.strictEqual(RULE_KEY_LIVE_BASE, "ZOOM_ATTEND_BASE");
+  assert.strictEqual(fields.reasonPublicField, XP_REASON_PUBLIC_FIELD);
+  assert.strictEqual(fields.reasonDebugField, XP_REASON_DEBUG_FIELD);
+  assert.strictEqual(fields.reasonPublic, "Zoom recording quiz credit");
+  assert.ok(fields.reasonDebug.includes(fields.sourceKey));
+});
+
+test("117a script CONFIG maps canonical XP Reason Public/Debug fields", () => {
+  const scriptPath = path.join(
+    __dirname,
+    "..",
+    "117a-zoom-recording-credit-award-xp-from-quiz-completion.js",
+  );
+  const text = fs.readFileSync(scriptPath, "utf8");
+  assert.ok(/reasonPublic:\s*"XP Reason Public"/.test(text));
+  assert.ok(/reasonDebug:\s*"XP Reason Debug"/.test(text));
+  assert.ok(!/reasonPublic:\s*"Reason Public"/.test(text));
+  assert.ok(!/reasonDebug:\s*"Reason Debug"/.test(text));
+  assert.ok(/version:\s*"v1\.1"/.test(text));
+  assert.ok(/originalWrittenDate:\s*"2026-07-15"/.test(text));
+  assert.ok(/versionDate:\s*"2026-07-18"/.test(text));
 });
 
 test("create path when eligible", () => {

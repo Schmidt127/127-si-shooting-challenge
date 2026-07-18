@@ -1,12 +1,13 @@
 # C-011 — Automatic Weekly Email — DEV Installation Packet
 
-**Status:** Repository scripts **118/119 v1.0 + 072 v3.8** ready — **do not enable schedules**; DEV Make webhook **live-blocked**  
+**Status:** Repository scripts **118/119 v1.1 + 074 v2.1 + 072** ready — **do not enable schedules**; DEV Make webhook **live-blocked**  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Do not paste · Do **not** enable live sending  
 **Backlog:** C-011 · Wave 5 · Depends on **C-010** (072 Active? gate)  
 **Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
 **Workers:** **072** (build) + **074** (send) · **118** + **119** (schedule arm)  
-**Hard stops:** `sendMode=Test` only · `dryRun=true` default · Schmidt excluded · No secrets in git
+**Activation checklist:** [C-011-weekly-email-schedule-activation-checklist.md](../deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md)  
+**Hard stops:** `sendMode=Test` only · `dryRun=true` default · Schmidt excluded · No secrets in git · No Airtable schedule enable from agents
 
 ### Authoritative design (post-inventory)
 
@@ -20,7 +21,7 @@
 | DEV webhook | Not in env | **live-blocked** / **requires Mike approval** |
 | Test recipient mode | `sendMode=Test` + 074 testRecipientEmail | **repository-ready** |
 | 118/119 still correct? | **Yes** | **repository-ready** · **requires DEV paste** · do not activate schedule |
-| 118/119 implemented? | **Yes** (`118-…js`, `119-…js` v1.0) | **requires DEV paste** |
+| 118/119 implemented? | **Yes** (`118-…js`, `119-…js` **v1.1**) | **requires DEV paste** |
 
 ---
 

@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-16
+Last GitHub Update: 2026-07-18
 
 Purpose:
 Sunday 10:00 AM America/Denver batch: for Ready && !Sent weekly packages,
@@ -18,9 +18,13 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.0
+ * Version: v1.1
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-16
+ * Last Updated: 2026-07-18
+ *
+ * VERSION HISTORY
+ * - v1.1 (2026-07-18): Emit scheduledWeekEndKeyOut; document ready-only send gate.
+ * - v1.0 (2026-07-16): Initial schedule-arm script.
  *
  * PURPOSE
  * - Resolve prior ended Week (same Saturday-end rule as 118).
@@ -32,6 +36,7 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * - Skips Sent?, inactive, Schmidt, empty package.
  * - dryRun=true (default) counts only.
  * - eventId for Make: WEEKLY_EMAIL|{enrollmentId}|{weekId} (074 payload).
+ * - Scheduled date key = prior Saturday Week End (America/Denver).
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -55,7 +60,7 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.0",
+  version: "v1.1",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -332,6 +337,8 @@ async function main() {
   setOutputSafe("skippedCountOut", String(skipped));
   setOutputSafe("notReadyCountOut", String(notReady));
   setOutputSafe("errorCountOut", String(errors));
+  setOutputSafe("scheduledWeekEndKeyOut", targetEndKey);
+  setOutputSafe("targetWeekIdOut", targetWeek.id);
   setOutputSafe("debugStep", "complete");
 
   console.log(
@@ -340,6 +347,7 @@ async function main() {
       version: CONFIG.version,
       dryRun,
       targetWeekId: targetWeek.id,
+      scheduledWeekEndKey: targetEndKey,
       armed,
       skipped,
       notReady,

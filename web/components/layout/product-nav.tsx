@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import type { ProductNavItem } from "@/components/layout/product-shell";
+import { ACCESSIBILITY_LABELS } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 
 type ProductNavProps = {
@@ -24,8 +25,13 @@ export function ProductNav({ productName, items }: ProductNavProps) {
   return (
     <nav
       className="-mx-1 flex gap-1 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0"
-      aria-label={`${productName} navigation`}
+      aria-label={
+        productName.trim().toLowerCase() === "shooting challenge"
+          ? `${ACCESSIBILITY_LABELS.productNav} navigation`
+          : `${productName} navigation`
+      }
     >
+      <p className="sr-only">Swipe horizontally on small screens to reach every section link.</p>
       {items.map((item) => {
         const active = pathMatches(pathname, item.href);
         return (

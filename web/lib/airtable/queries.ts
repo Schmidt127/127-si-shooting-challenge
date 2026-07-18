@@ -45,18 +45,22 @@ import {
   type AchievementFields,
 } from "@/lib/data/achievements";
 
-/** Airtable table names — update as views and publish rules are finalized. */
+/** Airtable table names used by public queries + reserved for future dashboard/admin. */
 export const AIRTABLE_TABLES = {
   enrollments: "Enrollments",
+  /** Reserved — athlete dashboard / admin weekly readiness (not queried by public pages yet). */
   weeklySummary: "Weekly Athlete Summary",
+  /** Reserved — athlete activity / admin XP diagnostics (not queried by public pages yet). */
   xpEvents: "XP Events",
   levels: "Levels",
   achievements: "Achievements",
+  /** Reserved — dashboard homework widgets (not queried by public pages yet). */
   homeworkCompletions: "Homework Completions",
   homeworkCurriculum: "FBC Curriculum - SYNC",
   weeks: "Weeks",
   tutorials: "Tutorials",
   zoomMeetings: "Zoom Meetings",
+  /** Reserved — dashboard video feedback widgets (not queried by public pages yet). */
   videoFeedback: "Video Feedback",
 } as const;
 

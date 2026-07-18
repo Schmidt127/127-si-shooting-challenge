@@ -1,0 +1,12 @@
+{
+  "records": [
+    {"id": "recS3", "fields": {"Rule Key": "STREAK_3DAY", "XP Amount": 10, "Active?": true}},
+    {"id": "recS5", "fields": {"Rule Key": "STREAK_5DAY", "XP Amount": 15, "Active?": true}},
+    {"id": "recS7", "fields": {"Rule Key": "STREAK_7DAY", "XP Amount": 20, "Active?": true}},
+    {"id": "recPW", "fields": {"Rule Key": "PERFECT_WEEK", "XP Amount": 25, "Active?": true}},
+    {"id": "recHW", "fields": {"Rule Key": "HOMEWORK_SATISFACTORY", "XP Amount": 15, "Active?": true}},
+    {"id": "recZB", "fields": {"Rule Key": "ZOOM_ATTEND_BASE", "XP Amount": 40, "Active?": true}},
+    {"id": "recZB2", "fields": {"Rule Key": "ZOOM_ATTEND_BONUS_2", "XP Amount": 10, "Active?": true}},
+    {"id": "recV", "fields": {"Rule Key": "VIDEO_FEEDBACK", "XP Amount": 20, "Active?": true}}
+  ]
+}

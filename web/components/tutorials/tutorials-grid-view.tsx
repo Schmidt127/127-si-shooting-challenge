@@ -6,6 +6,7 @@ import { IconPlay } from "@/components/icons/shoot-icons";
 import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
 import { DisplayHeading } from "@/components/catalog/display-heading";
 import { formatRelativeUpdate } from "@/lib/formatters";
+import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
 
 const CATEGORY_ACCENTS: Record<string, string> = {
@@ -115,10 +116,8 @@ export function TutorialsEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-24">
       <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">No tutorials published yet</h1>
-        <p className="mt-3 text-muted">
-          Mark tutorials OK to Publish on Softr and they will appear here.
-        </p>
+        <h1 className="font-display text-2xl text-foreground">{EMPTY_STATE_COPY.tutorials.title}</h1>
+        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.tutorials.description}</p>
         <Link href="/" className="btn-secondary mt-6">
           ← Shooting Challenge
         </Link>
