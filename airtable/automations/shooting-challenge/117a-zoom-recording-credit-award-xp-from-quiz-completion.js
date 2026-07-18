@@ -3,7 +3,7 @@ Automation: 117a - Zoom Recording Credit - Award XP from Quiz Completion
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth — READY FOR DEV INSTALL (not installed/verified in live Airtable by this commit)
-Last GitHub Update: 2026-07-15
+Last GitHub Update: 2026-07-18
 
 Purpose:
 Award partial Zoom XP when a Zoom Recording Quiz Homework Completion is marked Satisfactory.
@@ -28,11 +28,13 @@ Does NOT modify automation 101 live attendance logic.
  * 117a - ZOOM RECORDING CREDIT
  * Award XP from Quiz Completion (C-025)
  *
- * Version: v1.0
+ * Version: v1.1
  * Date Written: 2026-07-15
- * Last Updated: 2026-07-15
+ * Last Updated: 2026-07-18
  *
  * VERSION HISTORY
+ * - v1.1 (2026-07-18): Align XP reason writes to canonical XP Reason Public / XP Reason Debug
+ *   (schema snapshots + other XP workflows; bare Reason Public/Debug were non-writable typos).
  * - v1.0 (2026-07-15): Initial repository package from S16-approved design.
  *
  * PURPOSE
@@ -48,6 +50,8 @@ Does NOT modify automation 101 live attendance logic.
  * - One source pair → at most one of live or recording active XP.
  * - Idempotent: rerun skips when Source Key already exists.
  * - Do not write formula/rollup/lookup/count fields.
+ * - XP Events reason fields are canonical: XP Reason Public / XP Reason Debug
+ *   (not bare Reason Public / Reason Debug).
  *
  * THIS IS NOT
  * - Live Zoom attendance award (101).
@@ -93,11 +97,11 @@ Does NOT modify automation 101 live attendance logic.
 
 const SCRIPT = {
   scriptName: "117a - Zoom Recording Credit - Award XP from Quiz Completion",
-  version: "v1.0",
-  versionNumber: "v1.0",
-  versionDate: "2026-07-15",
+  version: "v1.1",
+  versionNumber: "v1.1",
+  versionDate: "2026-07-18",
   originalWrittenDate: "2026-07-15",
-  lastUpdated: "2026-07-15",
+  lastUpdated: "2026-07-18",
   folder: "10 - Zoom Attendance and Recording Credit",
   automationName: "117a - Zoom Recording Credit - Award XP from Quiz Completion",
 };
@@ -148,8 +152,8 @@ const CONFIG = {
     xpSource: "XP Source",
     week: "Week",
     activityDate: "Activity Date",
-    reasonPublic: "Reason Public",
-    reasonDebug: "Reason Debug",
+    reasonPublic: "XP Reason Public",
+    reasonDebug: "XP Reason Debug",
     active: "Active?",
     zoomMeeting: "Zoom Meeting",
     homeworkCompletion: "Homework Completion",

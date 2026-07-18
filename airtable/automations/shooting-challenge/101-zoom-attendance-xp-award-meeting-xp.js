@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-07-18
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
@@ -24,9 +24,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.4
+ * Version: v5.5
  * Date Written: 2026-05-28
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-07-18
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -35,6 +35,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Awards base attendance XP for each qualifying attendee.
  * - Awards one-time bonus XP when an attendee reaches meeting #2.
  * - Awards one-time bonus XP when an attendee reaches meeting #3.
+ * - Writes XP Activity Date / Activity Date from meeting start (America/Denver)
+ *   when those fields exist and are writable.
  * - Supports supplemental re-runs when Create XP Events is checked again after
  *   XP Award Status is already Awarded (for example, add recording watchers).
  * - Supplemental re-runs only create XP for attendees who do not already have
@@ -166,6 +168,9 @@ const CONFIG = {
     processed: "Processed",
     error: "Error",
     zoomMeeting: "Zoom Meeting",
+    activityDate: "Activity Date",
+    xpActivityDate: "XP Activity Date",
+    xpSourceDate: "XP Source Date",
   },
 
   ruleKeys: {
@@ -879,6 +884,7 @@ function buildXpEventPayload({
   reason,
   sourceKey,
   zoomMeetingId,
+  activityDateKey,
 }) {
   const payload = {
     [CONFIG.xpEvents.enrollment]: linkedCell([enrollmentId]),
@@ -913,6 +919,20 @@ function buildXpEventPayload({
       : undefined,
   };
 
+  if (activityDateKey && /^\d{4}-\d{2}-\d{2}$/.test(String(activityDateKey))) {
+    const [y, m, d] = String(activityDateKey).split("-").map(Number);
+    const noonUtc = new Date(Date.UTC(y, m - 1, d, 12, 0, 0));
+    for (const fieldName of [
+      CONFIG.xpEvents.activityDate,
+      CONFIG.xpEvents.xpActivityDate,
+      CONFIG.xpEvents.xpSourceDate,
+    ]) {
+      if (fieldExists(xpEventsTable, fieldName)) {
+        payload[fieldName] = noonUtc;
+      }
+    }
+  }
+
   return safeUpdatePayload(xpEventsTable, payload);
 }
 
@@ -927,6 +947,7 @@ async function createOrUpdateXpEvent({
   points,
   reason,
   zoomMeetingId,
+  activityDateKey,
   allowMeetingEnrollmentFallback = false,
   skipIfExists = false,
 }) {
@@ -962,6 +983,7 @@ async function createOrUpdateXpEvent({
     reason,
     sourceKey,
     zoomMeetingId,
+    activityDateKey,
   });
 
   if (Object.keys(payload).length === 0) {
@@ -1404,6 +1426,7 @@ async function main() {
             : "Base Attendance",
         }),
         zoomMeetingId: recordId,
+        activityDateKey: meetingDateKey,
         allowMeetingEnrollmentFallback: true,
       });
 
@@ -1436,6 +1459,7 @@ async function main() {
             xpType: "Meeting Count 2 Bonus",
           }),
           zoomMeetingId: recordId,
+          activityDateKey: meetingDateKey,
           allowMeetingEnrollmentFallback: false,
           skipIfExists: supplementalAwardMode,
         });
@@ -1470,6 +1494,7 @@ async function main() {
             xpType: "Meeting Count 3 Bonus",
           }),
           zoomMeetingId: recordId,
+          activityDateKey: meetingDateKey,
           allowMeetingEnrollmentFallback: false,
           skipIfExists: supplementalAwardMode,
         });

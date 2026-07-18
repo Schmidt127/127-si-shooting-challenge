@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-16
+Last GitHub Update: 2026-07-18
 
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
@@ -22,9 +22,14 @@ PROD: do not enable from agents.
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.0
+ * Version: v1.1
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-16
+ * Last Updated: 2026-07-18
+ *
+ * VERSION HISTORY
+ * - v1.1 (2026-07-18): Emit scheduledWeekEndKeyOut; prefer Summary Key for WAS
+ *   lookup; skip duplicate WAS arms; keep dryRun default true.
+ * - v1.0 (2026-07-16): Initial schedule-arm script.
  *
  * PURPOSE
  * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
@@ -37,6 +42,8 @@ PROD: do not enable from agents.
  * - Does not clear Weekly Email Sent?.
  * - dryRun=true (default) only counts; no writes.
  * - Schmidt enrollment hard-excluded: recgP9qZYjAhE7NXm
+ * - Scheduled date key = prior Saturday Week End (America/Denver).
+ * - Idempotent: one WAS per Enrollment+Week (Summary Key when present).
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -61,7 +68,7 @@ PROD: do not enable from agents.
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.0",
+  version: "v1.1",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -267,10 +274,27 @@ async function main() {
   const wasQuery = await wasTable.selectRecordsAsync({ fields: wasFields });
 
   const wasByEnrollment = new Map();
+  const wasBySummaryKey = new Map();
+  let duplicateWasSkipped = 0;
   for (const row of wasQuery.records) {
     const eId = linkedIds(row, CONFIG.was.enrollment)[0];
     const wId = linkedIds(row, CONFIG.was.week)[0];
-    if (eId && wId === targetWeek.id) wasByEnrollment.set(eId, row);
+    if (!(eId && wId === targetWeek.id)) continue;
+    const summaryKey = fieldExists(wasTable, CONFIG.was.summaryKey)
+      ? text(row, CONFIG.was.summaryKey)
+      : "";
+    if (summaryKey) {
+      if (wasBySummaryKey.has(summaryKey)) {
+        duplicateWasSkipped += 1;
+        continue;
+      }
+      wasBySummaryKey.set(summaryKey, row);
+    }
+    if (wasByEnrollment.has(eId)) {
+      duplicateWasSkipped += 1;
+      continue;
+    }
+    wasByEnrollment.set(eId, row);
   }
 
   let armed = 0;
@@ -280,6 +304,10 @@ async function main() {
 
   debugStep = "4 - Arm builds";
   setOutputSafe("debugStep", debugStep);
+
+  const weekKey = fieldExists(weeksTable, CONFIG.weeks.weekKey)
+    ? text(targetWeek, CONFIG.weeks.weekKey)
+    : "";
 
   for (const enr of enrollmentsQuery.records) {
     try {
@@ -299,7 +327,15 @@ async function main() {
         continue;
       }
 
-      let wasRow = wasByEnrollment.get(enr.id);
+      const enrollmentKey = fieldExists(enrollmentsTable, CONFIG.enrollments.enrollmentKey)
+        ? text(enr, CONFIG.enrollments.enrollmentKey)
+        : "";
+      const expectedSummaryKey =
+        enrollmentKey && weekKey ? `${enrollmentKey}|${weekKey}` : "";
+
+      let wasRow =
+        (expectedSummaryKey && wasBySummaryKey.get(expectedSummaryKey))
+        || wasByEnrollment.get(enr.id);
       if (!wasRow) {
         if (dryRun) {
           createdWas += 1;
@@ -312,8 +348,8 @@ async function main() {
         const newId = await wasTable.createRecordAsync(createFields);
         wasRow = { id: newId };
         createdWas += 1;
-        // minimal stub for subsequent update
         wasByEnrollment.set(enr.id, wasRow);
+        if (expectedSummaryKey) wasBySummaryKey.set(expectedSummaryKey, wasRow);
       } else if (booleanish(wasRow, CONFIG.was.sent)) {
         skipped += 1;
         continue;
@@ -345,13 +381,16 @@ async function main() {
     // older runtimes
   }
 
-  setOutputSafe("statusOut", errors > 0 ? "success" : "success");
+  setOutputSafe("statusOut", "success");
   setOutputSafe("actionOut", dryRun ? "dry_run_complete" : "build_armed");
   setOutputSafe("errorOut", errors > 0 ? `${errors} enrollment errors` : "");
   setOutputSafe("armedCountOut", String(armed));
   setOutputSafe("skippedCountOut", String(skipped));
   setOutputSafe("createdWasCountOut", String(createdWas));
   setOutputSafe("errorCountOut", String(errors));
+  setOutputSafe("scheduledWeekEndKeyOut", targetEndKey);
+  setOutputSafe("targetWeekIdOut", targetWeek.id);
+  setOutputSafe("duplicateWasSkippedOut", String(duplicateWasSkipped));
   setOutputSafe("debugStep", "complete");
 
   console.log(
@@ -360,10 +399,11 @@ async function main() {
       version: CONFIG.version,
       dryRun,
       targetWeekId: targetWeek.id,
-      targetEndKey,
+      scheduledWeekEndKey: targetEndKey,
       armed,
       skipped,
       createdWas,
+      duplicateWasSkipped,
       errors,
     })
   );
