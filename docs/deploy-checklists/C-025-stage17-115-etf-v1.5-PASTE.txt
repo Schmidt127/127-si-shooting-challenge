@@ -1,29 +1,3 @@
-/*
-Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submission
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-07-07 (DEV v1.3 Tests A–D verified)
-Last GitHub Update: 2026-07-18 (v1.5 — C025 query-budget / capped polls / resume-safe)
-
-Purpose:
-Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submission, Homework, or Video),
-or runs C-025 Stage 17 downstream Zoom-credit verification (Other / Perfect Week + C025_STAGE17_DOWNSTREAM).
-
-Trigger:
-Testing Scenarios when Run Test? is checked (DEV only).
-
-Important Tables:
-Testing Scenarios, Enrollments, Athletes, Submissions
-
-Important Fields:
-Run Test?, Dry Run?, Related Enrollment, Submission Date, Shot Total, Homework Assignment,
-Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submission
-
-Notes:
-GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval.
-*/
-
 /************************************************************
  * 115 - ENGINEERING TEST FRAMEWORK
  * Run Testing Scenario — Daily Submission + Homework + Video

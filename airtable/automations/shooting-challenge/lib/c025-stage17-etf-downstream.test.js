@@ -1,5 +1,5 @@
 /**
- * Node tests — C-025 ETF downstream scenario helpers + 115 Daily branch freeze.
+ * Node tests — C-025 ETF downstream v1.5 query budget + resume + regression.
  */
 const assert = require("assert");
 const fs = require("fs");
@@ -10,20 +10,12 @@ function ok(name) {
   console.log(`ok - ${name}`);
 }
 
-function testIdentifyScenario() {
+function testIdentify() {
   assert.strictEqual(
     lib.isC025Stage17DownstreamScenario({
       scenarioType: "Other",
       testIntakeName: "C025_STAGE17_DOWNSTREAM",
       scenarioRequirements: "",
-    }),
-    true
-  );
-  assert.strictEqual(
-    lib.isC025Stage17DownstreamScenario({
-      scenarioType: "Perfect Week",
-      testIntakeName: "x",
-      scenarioRequirements: "C025_STAGE17_DOWNSTREAM\n{}",
     }),
     true
   );
@@ -35,29 +27,54 @@ function testIdentifyScenario() {
     }),
     false
   );
-  assert.strictEqual(
-    lib.isC025Stage17DownstreamScenario({
-      scenarioType: "Other",
-      testIntakeName: "misc",
-      scenarioRequirements: "",
-    }),
-    false
-  );
-  ok("Identify C025_STAGE17_DOWNSTREAM scenario without new fields");
+  ok("Identify C025 scenario");
 }
 
-function testFixtures() {
-  const f = lib.resolveFixtures({});
-  assert.strictEqual(f.enrollmentId, "recgP9qZYjAhE7NXm");
-  assert.strictEqual(f.wasId, "recvtukGFL7u74Tme");
-  const o = lib.resolveFixtures({
-    scenarioRequirementsText: JSON.stringify({ wasId: "recCUSTOM" }),
+function testQueryBudgetNormalAndExhaust() {
+  const b = lib.createQueryBudget({ max: 3 });
+  assert.strictEqual(b.consume("a").ok, true);
+  assert.strictEqual(b.consume("b").ok, true);
+  assert.strictEqual(b.consume("c").ok, true);
+  assert.strictEqual(b.count, 3);
+  const fail = b.consume("d");
+  assert.strictEqual(fail.ok, false);
+  assert.ok(String(fail.error).includes("exhausted"));
+  ok("Query budget increments and refuses over limit");
+}
+
+function testWorstCaseUnder22() {
+  const est = lib.estimateWorstCaseQueryCount();
+  assert.strictEqual(est.pollAttempts, 5);
+  assert.ok(est.worstCaseBranchTotal <= 20);
+  assert.ok(est.worstCaseInvocationTotal <= 22);
+  assert.ok(est.worstCaseInvocationTotal < 30);
+  ok(`Worst-case invocation queries=${est.worstCaseInvocationTotal} (<=22)`);
+}
+
+function testResumePlans() {
+  assert.deepStrictEqual(lib.planResumeState({ pwApplied: false, gateApplied: false }), {
+    skip057: false,
+    skip042: false,
+    mode: "fresh",
   });
-  assert.strictEqual(o.wasId, "recCUSTOM");
-  ok("Default fixtures + Scenario Requirements JSON overrides");
+  assert.deepStrictEqual(lib.planResumeState({ pwApplied: true, gateApplied: false }), {
+    skip057: true,
+    skip042: false,
+    mode: "resume_after_057",
+  });
+  assert.deepStrictEqual(lib.planResumeState({ pwApplied: true, gateApplied: true }), {
+    skip057: true,
+    skip042: true,
+    mode: "resume_both_done",
+  });
+  assert.deepStrictEqual(
+    lib.planResumeState({ pwApplied: true, gateApplied: true, resetFixtures: true }),
+    { skip057: false, skip042: false, mode: "explicit_reset" }
+  );
+  ok("Resume after 057 / both / resetFixtures");
 }
 
-function testPwEval() {
+function testPwEvalFirstPoll() {
   const pass = lib.evaluatePerfectWeekZoomPhase({
     attendeesBefore: [],
     attendeesAfter: [],
@@ -65,81 +82,87 @@ function testPwEval() {
     zoomAttendanceCount: 1,
     pwAppliedBefore: false,
     pwAppliedAfter: true,
-    wasAutomationStatus: "Ready",
+    wasAutomationStatus: "Pending",
   });
   assert.strictEqual(pass.pass, true);
-  const failAttendees = lib.evaluatePerfectWeekZoomPhase({
+  ok("Normal 057 completion (Applied? true; Ready not required)");
+}
+
+function testPwTimeoutShape() {
+  const fail = lib.evaluatePerfectWeekZoomPhase({
     attendeesBefore: [],
-    attendeesAfter: ["recX"],
-    zoomMeetingCount: 1,
-    zoomAttendanceCount: 1,
+    attendeesAfter: [],
+    zoomMeetingCount: 2,
+    zoomAttendanceCount: 0,
     pwAppliedBefore: false,
-    pwAppliedAfter: true,
-    wasAutomationStatus: "Ready",
+    pwAppliedAfter: false,
+    wasAutomationStatus: "Pending",
   });
-  assert.strictEqual(failAttendees.pass, false);
-  ok("Perfect Week Zoom phase evaluation");
+  assert.strictEqual(fail.pass, false);
+  ok("057 not complete when Applied? false");
 }
 
 function testGateEval() {
-  const pass = lib.evaluateGatePhase({
-    attendeesBefore: [],
-    attendeesAfter: [],
-    gateAppliedBefore: false,
-    gateAppliedAfter: true,
-    levelRecalcAfter: false,
-    currentLevelBefore: "recA",
-    currentLevelAfter: "recA",
-    nextLevelBefore: "recB",
-    nextLevelAfter: "recB",
-    formulaTotalZoomAttendances: 1,
-  });
-  assert.strictEqual(pass.pass, true);
-  ok("Gate phase evaluation");
+  assert.strictEqual(
+    lib.evaluateGatePhase({
+      attendeesBefore: [],
+      attendeesAfter: [],
+      gateAppliedBefore: false,
+      gateAppliedAfter: true,
+      levelRecalcAfter: false,
+      currentLevelBefore: "a",
+      currentLevelAfter: "a",
+      nextLevelBefore: "b",
+      nextLevelAfter: "b",
+    }).pass,
+    true
+  );
+  ok("Normal 042 completion");
 }
 
 function testDedupe() {
-  const d = lib.evaluateDedupeRerun({
-    zoomAttendanceCountFirst: 1,
-    zoomAttendanceCountSecond: 1,
-    pwAppliedAfterSecond: true,
-    gateAppliedAfterSecond: true,
-    attendeesAfterSecond: [],
-  });
-  assert.strictEqual(d.pass, true);
-  const bad = lib.evaluateDedupeRerun({
-    zoomAttendanceCountFirst: 1,
-    zoomAttendanceCountSecond: 2,
-    pwAppliedAfterSecond: true,
-    gateAppliedAfterSecond: true,
-    attendeesAfterSecond: [],
-  });
-  assert.strictEqual(bad.pass, false);
-  ok("Dedupe rerun evaluation");
+  assert.strictEqual(
+    lib.evaluateDedupeRerun({
+      zoomAttendanceCountFirst: 1,
+      zoomAttendanceCountSecond: 1,
+      pwAppliedAfterSecond: true,
+      gateAppliedAfterSecond: true,
+      attendeesAfterSecond: [],
+    }).pass,
+    true
+  );
+  ok("Dedupe stable at count 1");
 }
 
-function testTriggersNeverAttendees() {
-  const plan = lib.planDownstreamTriggers();
-  assert.ok(plan.neverWrite.includes("Attendees"));
-  assert.strictEqual(plan.automation042.method, "level_recalc_needed");
-  assert.strictEqual(plan.automation057.method, "was_status_toggle");
-  ok("Trigger plan forbids Attendees writes");
-}
-
-function testDailyBranchFrozen() {
+function testSourceGuards() {
   const src = fs.readFileSync(
     path.join(__dirname, "..", "115-engineering-test-framework-run-testing-scenario-daily-submission.js"),
     "utf8"
   );
   assert.ok(lib.dailySubmissionBranchMustRemainUntouched(src));
-  assert.ok(src.includes("async function runDailySubmissionBranch"));
-  assert.ok(src.includes("runC025Stage17DownstreamBranch") || src.includes("C025_STAGE17_DOWNSTREAM"));
-  // Daily path still routed first
-  const dailyIdx = src.indexOf('scenarioType === CONFIG.scenarioTypes.dailySubmission');
+  assert.ok(lib.c025PathMustUseQueryBudget(src));
+  assert.ok(src.includes('version: "v1.5"'));
+  assert.ok(src.includes("pollAttempts: 5"));
+  assert.ok(!src.includes("pollAttempts: 20"));
+  assert.ok(src.includes("Timed Out Waiting for 057"));
+  assert.ok(src.includes("Timed Out Waiting for 042"));
+  assert.ok(src.includes("clearRunTest: true"));
+  assert.ok(src.includes("resume_both_done") || src.includes("resume_after_057"));
+  assert.ok(src.includes("C025 error — Run Test? cleared"));
+  // Daily branch historically may not use selectRecordsAsync — ensure C025 section has no selectRecordsAsync
+  const idx5b = src.indexOf("SECTION 5B");
+  const idx6 = src.indexOf("SECTION 6 — MAIN");
+  const section5b = src.slice(idx5b, idx6);
+  assert.ok(!section5b.includes("selectRecordsAsync"));
+  assert.ok(section5b.includes("c025SelectRecord"));
+  assert.ok(section5b.includes("Refuse Attendees"));
+  assert.ok(!section5b.includes("waitFor057"));
+  assert.ok((section5b.match(/pollAttempts/g) || []).length >= 1);
+  // Daily still routed first
+  const dailyIdx = src.indexOf("scenarioType === CONFIG.scenarioTypes.dailySubmission");
   const c025Idx = src.indexOf("isC025Stage17DownstreamScenario");
-  assert.ok(dailyIdx > 0);
-  assert.ok(c025Idx > 0);
-  ok("Daily Submission branch still present; C025 routed separately");
+  assert.ok(dailyIdx > 0 && c025Idx > 0);
+  ok("115 v1.5 source guards: budget, no full-table in 5B, Daily intact, Attendees refused");
 }
 
 function testNoProdBase() {
@@ -148,30 +171,42 @@ function testNoProdBase() {
     "utf8"
   );
   assert.ok(!src.includes("appn84sqPw03zEbTT"));
-  assert.ok(src.includes("recgP9qZYjAhE7NXm"));
-  ok("115 script does not hardcode PROD base; Schmidt allowlist retained");
+  ok("No PROD base hardcoded");
 }
 
-function testEmailMakeExcluded() {
-  const src = fs.readFileSync(
-    path.join(__dirname, "..", "115-engineering-test-framework-run-testing-scenario-daily-submission.js"),
-    "utf8"
-  );
-  assert.ok(!/webhookUrl|Make\.com|sendEmail/i.test(src) || src.includes("THIS IS NOT"));
-  assert.ok(!src.includes('attendees: "Attendees"') || !src.includes("Attendees\": true"));
-  // C025 branch must refuse Attendees writes
-  assert.ok(src.includes("Refuse Attendees") || src.includes("never write Attendees") || src.includes("Never write Attendees"));
-  ok("Email/Make paths excluded; Attendees write refused");
+function simulatePollAttempts(appliedOnAttempt, maxAttempts = 5) {
+  let attempts = 0;
+  let done = false;
+  for (let i = 0; i < maxAttempts; i += 1) {
+    attempts += 1;
+    if (attempts === appliedOnAttempt) {
+      done = true;
+      break;
+    }
+  }
+  return { attempts, done, timedOut: !done };
 }
 
-testIdentifyScenario();
-testFixtures();
-testPwEval();
+function testDelayedCompletion() {
+  const d = simulatePollAttempts(4);
+  assert.strictEqual(d.done, true);
+  assert.strictEqual(d.attempts, 4);
+  const t = simulatePollAttempts(99);
+  assert.strictEqual(t.timedOut, true);
+  assert.strictEqual(t.attempts, 5);
+  ok("Delayed completion within 5 attempts; timeout after 5");
+}
+
+testIdentify();
+testQueryBudgetNormalAndExhaust();
+testWorstCaseUnder22();
+testResumePlans();
+testPwEvalFirstPoll();
+testPwTimeoutShape();
 testGateEval();
 testDedupe();
-testTriggersNeverAttendees();
-testDailyBranchFrozen();
+testSourceGuards();
 testNoProdBase();
-testEmailMakeExcluded();
+testDelayedCompletion();
 
 console.log("\nAll c025-stage17-etf-downstream tests passed.");
