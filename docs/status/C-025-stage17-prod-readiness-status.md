@@ -163,7 +163,10 @@ Exact first Production Airtable action: **OMNI create Zoom Attendance table scaf
 
 ## Related deliverables
 
+- [C-025-stage17-prod-schema-manifest.json](../deploy-checklists/C-025-stage17-prod-schema-manifest.json) — **executable field-level PROD implementation manifest**
+- [C-025-stage17-prod-implementation-checklist.md](../deploy-checklists/C-025-stage17-prod-implementation-checklist.md)
+- [C-025-stage17-prod-smoke-test.md](../deploy-checklists/C-025-stage17-prod-smoke-test.md)
 - [C-025-stage17-prod-schema-gap-analysis.md](../deploy-checklists/C-025-stage17-prod-schema-gap-analysis.md)
 - [C-025-stage17-production-release-packet.md](../deploy-checklists/C-025-stage17-production-release-packet.md)
 - [C-025-stage17-etf-downstream-dev-packet.md](../deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (115 **v1.8**)
-- Prior STOP (superseded on DEV gate only): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)
+- Prior STOP (DEV gate cleared): [C-025-stage17-prod-promotion-STOP-2026-07-18.md](../deploy-checklists/C-025-stage17-prod-promotion-STOP-2026-07-18.md)
