@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (Lead integration of Agent A reliability + Agent B web/docs — branch `audit-followup/lead-integration`; production master still `3ec489a` until Mike merges)
+Last updated: **2026-07-18** (Merged `audit-followup/lead-integration` to `master` and deployed web Production — Airtable automations **not** installed/enabled)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
@@ -18,7 +18,7 @@ Last updated: **2026-07-18** (Lead integration of Agent A reliability + Agent B 
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current production commit** | `3ec489a` — *Merge PR #38: reconcile #34/#35/#37 migration-safety contracts* |
+| **Current production commit** | `bd2c2b4` — *Merge shooting challenge reliability and web readiness improvements* |
 | **Public URL** | https://www.hoopchallenges.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
