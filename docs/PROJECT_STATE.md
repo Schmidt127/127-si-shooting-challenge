@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025 Stage 17 downstream: harness PASS; Mike UI paste of 057/042 still required — Automations API 403)
+Last updated: **2026-07-18** (C-025 Stage 17: Mike pasted 057/042; final Airtable UI Tests pending — Automations API 403; WAS fixture `recvtukGFL7u74Tme` ready)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17:** XP path verified · 057/042 logic harness PASS · **Airtable paste of 057 v1.3 / 042 v3.1 still Mike UI** (API 403) · 117 **v1.1.0** OFF · [downstream results](./deploy-checklists/C-025-stage17-downstream-dev-test-results-2026-07-18.md) |
+| **C-025 — Zoom recording credit** | **Stage 17:** Mike pasted **057 v1.3 / 042 v3.1 / 117 v1.1.1 OFF** · final UI Tests pending (API 403) · WAS `recvtukGFL7u74Tme` ready · [downstream results](./deploy-checklists/C-025-stage17-downstream-dev-test-results-2026-07-18.md) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
@@ -121,9 +121,9 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 | Scripts | 117 **v1.1.1** (OFF) · **057 v1.3** · **042 v3.1** — [PW/gate packet](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
 | DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
-| Live DEV paste | 117 **v1.1.0** OFF · **057/042 Airtable paste still pending** (API 403) · [downstream harness results](./deploy-checklists/C-025-stage17-downstream-dev-test-results-2026-07-18.md) |
+| Live DEV paste | **057 v1.3 · 042 v3.1 · 117 v1.1.1** pasted by Mike, all **OFF** · final UI Tests **pending** · [results + Test card](./deploy-checklists/C-025-stage17-downstream-dev-test-results-2026-07-18.md) |
 | Live PROD | **Blocked** — untouched; **101 unchanged** |
-| Downstream gaps | **Logic harness PASS** — UI paste of 057 v1.3 + 042 v3.1 required before claiming live automations updated |
+| Downstream gaps | Harness PASS · **Airtable UI Test evidence pending Mike** (API cannot enable/run) |
 | Packet | [recording](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) · [PW/gate](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
 

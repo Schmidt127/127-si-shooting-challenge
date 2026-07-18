@@ -1,9 +1,85 @@
 # C-025 Stage 17 — Downstream DEV install results (2026-07-18)
 
 **Branch:** `feature/c025-stage17-zoom-attendance`  
-**Verified tip at start:** `233bd51`  
+**Verified tip at start:** `233bd51` · docs tip before final UI attempt: `c8687e8`  
 **DEV:** `appTetnuCZlCZdTCT` · **PROD:** `appn84sqPw03zEbTT` (untouched)  
 **Packet:** [C-025-stage17-perfect-week-level-gate-dev-installation-packet.md](./C-025-stage17-perfect-week-level-gate-dev-installation-packet.md)
+
+---
+
+## Final Airtable UI Tests — STOPPED (Automations API 403)
+
+**Mike confirmed paste:** 057 **v1.3**, 042 **v3.1**, 117 **v1.1.1** (optional), `recordId` mapped, 117 `webhookUrl` blank, no post-script actions, all **OFF**.
+
+Cursor **still cannot** enable, disable, or run Airtable Automations (Meta API **403**). Controlled UI Test clicks must be done by Mike. Fixtures are prepared and Applied? flags cleared for a clean before→after.
+
+### Prepared fixtures (Records API)
+
+| Role | ID |
+|------|-----|
+| Isolated WAS (created) | `recvtukGFL7u74Tme` |
+| Enrollment (Schmidt) | `recgP9qZYjAhE7NXm` |
+| Week | `rec7fCckt1zj9CbmP` |
+| Zoom Attendance (eligible) | `reciRsLuiJGYcea3U` |
+| Zoom Meeting | `recwnEKJAW8hxPSNL` |
+| Tag | `C025-S17-DOWNSTREAM-UI-TEST` |
+
+### Before state (pre-UI-Test)
+
+| Field | Value |
+|-------|--------|
+| WAS Automation Status | `Pending` |
+| WAS Zoom Meeting / Attendance counts | null / null |
+| ZA `Perfect Week Credit Applied?` | **false/null** (cleared) |
+| ZA `Gate Credit Applied?` | **false/null** (cleared) |
+| Meeting Attendees | `[]` |
+| Enrollment Current / Next Level | `rec1iGy92ZC0jwzD4` / `rec1EJLJLmfdJLtoF` |
+| Level Status | `Assigned` |
+| Formula `Total Zoom Attendances` | `1` (live-only; unchanged) |
+| Gate Minimum Zoom Meetings | `0` (rule `reccFKwOVHZ3hn36i`) |
+| Level Recalc Needed? | unchecked |
+
+Prep JSON: `tools/airtable/_preview/c025_stage17_final_ui_test_prep.json`  
+Capture script (run after Mike Tests): `tools/airtable/_c025_stage17_capture_final_ui_tests.py`
+
+### Mike UI Test card (~5–8 min)
+
+**Do not enable 117. Do not write Attendees. Leave OFF when done.**
+
+#### Test 1 — Automation 057
+
+1. Enable **only** `057 - … Perfect Week Eligibility`.
+2. In the automation, use **Test** / Run with `recordId` = **`recvtukGFL7u74Tme`**.
+3. From run history, copy: status, outputs, error text.
+4. **Turn 057 OFF immediately.**
+5. Expect: WAS Zoom Meeting Count ≥ 1 (week has meetings), Zoom Attendance Count **1**, `Perfect Week Credit Applied?` **true** on `reciRsLuiJGYcea3U`, Attendees still `[]`.
+
+#### Test 2 — Automation 042
+
+1. Confirm 057 is **OFF**.
+2. Enable **only** `042 - … Assign Current and Next Level`.
+3. **Test** / Run with `recordId` = **`recgP9qZYjAhE7NXm`**.
+4. Copy: status, outputs, `effectiveZoomCountOut` (if configured), errors.
+5. **Turn 042 OFF immediately.**
+6. Expect: `Gate Credit Applied?` **true** on eligible ZA; Attendees still `[]`; levels follow existing rules (min zoom = 0 so gate zoom should not block).
+
+#### Dedupe rerun
+
+1. Re-enable **one** automation, Test the **same** `recordId` once more, then OFF.
+2. Expect: Zoom attendance / effective count still **1** for that meeting; Applied? stays true; no Attendees write.
+
+#### After Tests
+
+Reply in chat: **UI tests done** (paste run-history snippets + automation IDs if visible). Cursor will run the capture script and commit final evidence.
+
+### UI run evidence (pending Mike)
+
+| Item | Status |
+|------|--------|
+| 057 run status / outputs | **Pending Mike Test** |
+| 042 run status / outputs | **Pending Mike Test** |
+| Dedupe rerun | **Pending Mike Test** |
+| Automation IDs | **Pending Mike** (API 403) |
 
 ---
 
@@ -210,31 +286,29 @@ Formula field `Total Zoom Attendances` remains **1** (live link count) — **042
 
 ## Remaining gaps
 
-1. **UI paste still required** — 057 v1.3, 042 v3.1, optional 117 v1.1.1 not installed in Airtable by Cursor (API 403).
-2. **Automation IDs / prior live versions** unknown until Mike records them.
-3. **No Schmidt WAS** for week `rec7fCckt1zj9CbmP` — full Airtable Test of 057 on a real WAS not run.
-4. **Live Attendees** not written — live cases are harness-simulated (correct safety).
-5. **Gate min not-met** not demonstrable on Schmidt (min zoom = 0) without threshold changes.
-6. **Soft-void vs 057/042** — scripts trust ZA qualification flags; they do not re-check XP `Active?`.
-7. Formula `Total Zoom Attendances` still live-only until 042 v3.1 is pasted and run.
+1. **Airtable UI Tests not yet run** — Cursor cannot enable/Test automations (API 403); Mike Test card above is blocking.
+2. **Automation IDs** still unknown until Mike records them from UI.
+3. **Gate min not-met** not demonstrable on Schmidt (min zoom = 0) without threshold changes.
+4. **Soft-void vs 057/042** — scripts trust ZA qualification flags; they do not re-check XP `Active?`.
+5. Formula `Total Zoom Attendances` remains live-only by design; 042 v3.1 uses script combined count when run.
 
 ---
 
 ## Recommended next step
 
-1. Mike completes paste card (057 → 1.3, 042 → 3.1, optional 117 → 1.1.1), leave all **OFF**.
-2. Reply with automation IDs + confirmed triggers/inputs.
-3. Cursor (or Mike) runs one controlled Airtable **Test** each on 057/042, then leave **OFF** for review — or enable only after Mike approves continuous DEV use.
-4. Do **not** promote to PROD.
+1. Mike completes the **Final Airtable UI Test card** (057 then 042, leave OFF; skip 117).
+2. Reply **UI tests done** with run-history snippets + automation IDs.
+3. Cursor runs `_c025_stage17_capture_final_ui_tests.py` and commits final evidence.
+4. Do **not** promote to PROD until UI evidence is recorded PASS.
 
 ---
 
 ## Final safety state (this session)
 
-- **057** — not pasted by Cursor; presumed prior state (unknown ON/OFF)
-- **042** — not pasted by Cursor; presumed prior state
-- **117** — **OFF** (not refreshed)
+- **057 / 042 / 117** — Mike reports **OFF**; Cursor did not enable
 - **101** — unchanged
-- No recording athlete on Attendees
+- Isolated WAS `recvtukGFL7u74Tme` created in DEV only
+- Applied? cleared on eligible ZA pending UI consume
+- Attendees still `[]`
 - No Make / email
 - PROD untouched
