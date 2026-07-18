@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (Merged `audit-followup/lead-integration` to `master` and deployed web Production — Airtable automations **not** installed/enabled)
+Last updated: **2026-07-18** (C-025 Stage 17 DEV: XP Source option added + preflight PASS; paste **blocked** on Automations UI inventory / API 403)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)  
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)  
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17 Zoom Attendance path selected for DEV** (117a–f repo-ready) — **not pasted**; S16 HC path superseded; see [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
+| **C-025 — Zoom recording credit** | **Stage 17 DEV prep:** XP Source `Zoom Meeting Recording Quiz` added; preflight **PASS**; **117a–f not pasted** (Automations API 403 — UI inventory required); S16 HC superseded; [results](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) · [packet](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
@@ -116,13 +116,16 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Design / catalog | Approved (S16) — see deploy-checklists `C-025-*` |
-| Scripts | **117a / 117b** in repo |
-| Live DEV install | **Not done** |
-| Live PROD | **Blocked** until DEV evidence + Mike approval |
-| Open gaps | Perfect Week / Total Zoom / post-award conflict (see [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md)) |
-| Packet | [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) |
-| Agent A install packet | [C-025-117a-117b-dev-installation-packet.md](./deploy-checklists/C-025-117a-117b-dev-installation-packet.md) — **repository packet only**; does not mean Airtable paste occurred |
+| Architecture | **Stage 17 Zoom Attendance** (authoritative for DEV) — S16 Homework Completions path superseded |
+| Scripts | **117a–f v1.1.0** in repo |
+| DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
+| DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60 active once; Config recording % = 50 |
+| Live DEV paste | **Not done** — stopped for Automations UI inventory (Meta API **403**) |
+| Live PROD | **Blocked** — untouched |
+| Open gaps | UI inventory before paste; then controlled DEV tests; Perfect Week / totals observation (see [C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md)) |
+| Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
+| Stage 17 packet | [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
+| Historical S16 packet | [C-025-117a-117b-dev-installation-packet.md](./deploy-checklists/C-025-117a-117b-dev-installation-packet.md) — do not install on this base |
 
 ---
 

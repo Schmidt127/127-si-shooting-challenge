@@ -1,11 +1,12 @@
 # C-025 — Stage 17 Zoom Attendance recording credit — DEV installation packet
 
-**Status:** Repository-ready for **Stage 17** · **Do not paste until Mike authorizes** · **Do not enable**  
+**Status:** DEV schema preflight **PASS** (2026-07-18) · **Paste blocked** pending Automations UI inventory · **Do not enable**  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Forbidden  
 **Architecture:** **Zoom Attendance** (Stage 17) — **not** Homework Completions (S16)  
 **Supersedes for this base:** [C-025-117a-117b-dev-installation-packet.md](./C-025-117a-117b-dev-installation-packet.md) (S16 HC path)  
 **Companion design:** recovery `C-025-automation-packages-stage17.md` · [C025_ARCHITECTURE_RECONCILIATION.md](../v2/C025_ARCHITECTURE_RECONCILIATION.md)  
+**Install results (stop at Step 2):** [C-025-stage17-dev-install-results-2026-07-18.md](./C-025-stage17-dev-install-results-2026-07-18.md)  
 **Offline tests:** `node airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js`
 
 ---
@@ -164,11 +165,11 @@ In Airtable DEV → Automations, Mike should record for each of 117a–f (or sim
 
 ## 8. Smallest schema addition required before paste
 
-| Item | Action |
-|------|--------|
-| XP Events → `XP Source` option **`Zoom Meeting Recording Quiz`** | **Create in DEV UI** (only missing Stage 17-unique source) |
+| Item | Action | DEV status (2026-07-18) |
+|------|--------|-------------------------|
+| XP Events → `XP Source` option **`Zoom Meeting Recording Quiz`** | Add exact option only (no field create/rename; no legacy `Zoom Recording`) | **Done** — exact display: `Zoom Meeting Recording Quiz` |
 
-Everything else required for Stage 17 was present on DEV preflight 2026-07-18.
+Everything else required for Stage 17 was present on DEV preflight 2026-07-18. Re-preflight after option add: **PASS** (22/22 ZA fields; `ZOOM_ATTEND_BASE` active once at **60**; Config recording % **50** → expected award **30** when approved).
 
 ---
 
@@ -193,6 +194,8 @@ After any DEV verification: **all of 117a–f OFF**. 118/119 remain absent or OF
 |-------|-------|
 | Implemented in repository | **Yes** (Stage 17 117a–f v1.1.0) |
 | S16 HC packet | **Superseded for this base** (historical) |
-| Ready for DEV paste | **After** XP Source option added |
-| Installed / verified in DEV | **No** |
+| XP Source option in DEV | **Added** — `Zoom Meeting Recording Quiz` |
+| Read-only preflight | **PASS** (2026-07-18) |
+| Ready for DEV paste | **Blocked** — Automations Meta API **403**; Mike must inventory DEV Automations UI first |
+| Installed / verified in DEV | **No** — Steps 3–9 not started |
 | Ready for PROD | **No** |
