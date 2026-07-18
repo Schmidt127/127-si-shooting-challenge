@@ -116,15 +116,15 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Architecture | **Stage 17 Zoom Attendance** — single **117 Orchestrator v1.1.0** (DEV slot limit) |
+| Architecture | **Stage 17 Zoom Attendance** — 117 Orchestrator + **057/042 combined Zoom credit** (repo) |
 | Hard rule | **Never** write `Zoom Meetings.Attendees` (101 double-credit risk) |
-| Scripts | `117-zoom-recording-credit-orchestrator.js` + modular 117a–f (reference); 117d/e flag-only |
+| Scripts | 117 **v1.1.1** (OFF) · **057 v1.3** · **042 v3.1** — [PW/gate packet](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
 | DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
-| Live DEV paste | **Done (Mike UI)** — 117 Orchestrator **v1.1.0** OFF; controlled tests via REST harness **PASS** ([test results](./deploy-checklists/C-025-stage17-orchestrator-dev-test-results-2026-07-18.md)) |
+| Live DEV paste | 117 **v1.1.0** OFF + harness PASS · **057/042 not pasted yet** |
 | Live PROD | **Blocked** — untouched; **101 unchanged** |
-| Downstream gaps | **057** PW counts live Attendees only; **042** Total Zoom Attendances is live link count |
-| Packet | [C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
+| Downstream gaps | **Repo closed** — paste 057 v1.3 + 042 v3.1 after Mike review; optional clear premature Applied? flags |
+| Packet | [recording](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) · [PW/gate](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
 | Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
 
 ---
