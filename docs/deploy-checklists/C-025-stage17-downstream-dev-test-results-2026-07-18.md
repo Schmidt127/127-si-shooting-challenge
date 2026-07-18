@@ -1,8 +1,8 @@
 # C-025 Stage 17 — Downstream DEV install results (2026-07-18)
 
-**Branch:** `feature/c025-stage17-zoom-attendance`  
-**Verified tip at start:** `233bd51` · docs tip before final UI attempt: `c8687e8`  
-**DEV:** `appTetnuCZlCZdTCT` · **PROD:** `appn84sqPw03zEbTT` (untouched)  
+**Branch:** `feature/c025-stage17-zoom-attendance`
+**Verified tip at start:** `233bd51` · docs tip before final UI attempt: `c8687e8`
+**DEV:** `appTetnuCZlCZdTCT` · **PROD:** `appn84sqPw03zEbTT` (untouched)
 **Packet:** [C-025-stage17-perfect-week-level-gate-dev-installation-packet.md](./C-025-stage17-perfect-week-level-gate-dev-installation-packet.md)
 
 ---
@@ -39,7 +39,7 @@ Cursor **still cannot** enable, disable, or run Airtable Automations (Meta API *
 | Gate Minimum Zoom Meetings | `0` (rule `reccFKwOVHZ3hn36i`) |
 | Level Recalc Needed? | unchecked |
 
-Prep JSON: `tools/airtable/_preview/c025_stage17_final_ui_test_prep.json`  
+Prep JSON: `tools/airtable/_preview/c025_stage17_final_ui_test_prep.json`
 Capture script (run after Mike Tests): `tools/airtable/_c025_stage17_capture_final_ui_tests.py`
 
 ### Mike UI Test card (~5–8 min)
@@ -95,8 +95,8 @@ Automations Meta API remains **403**. Cursor **cannot** list, inspect, replace, 
 | Controlled logic tests | **Done** via REST harness mirroring **057 v1.3** / **042 v3.1** Zoom union |
 | Automations enabled by Cursor | **No** |
 
-Evidence JSON: `tools/airtable/_preview/c025_stage17_downstream_test_results.json`  
-Harness: `tools/airtable/_c025_stage17_run_downstream_tests.py`  
+Evidence JSON: `tools/airtable/_preview/c025_stage17_downstream_test_results.json`
+Harness: `tools/airtable/_c025_stage17_run_downstream_tests.py`
 Paste bodies (for Mike UI):
 
 - [C-025-stage17-057-perfect-week-v1.3-PASTE.txt](./C-025-stage17-057-perfect-week-v1.3-PASTE.txt)
@@ -209,7 +209,7 @@ Named C-025 fixtures only.
 | Week | `rec7fCckt1zj9CbmP` |
 | Eligible XP Event | `recuPdEjQv3hS8N7X` (Active?=**true**, 30 pts) |
 
-**Attendees** on both meetings: **[] → []** unchanged every case.  
+**Attendees** on both meetings: **[] → []** unchanged every case.
 **No WAS** for Schmidt linked to this week (0 hits) — Perfect Week daily/video fields not rewritten; Zoom union tested in harness logic.
 
 **Live attendance:** fixture meetings have empty Attendees. Live-only / live+recording cases used **in-memory simulated live** (explicitly **not** written to Attendees) to avoid Automation **101**.
