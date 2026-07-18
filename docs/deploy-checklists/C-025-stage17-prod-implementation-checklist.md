@@ -1,10 +1,10 @@
 # C-025 Stage 17 — PROD schema implementation checklist (executable)
 
-**Status:** Ready for Mike OMNI execution after approval  
-**PROD:** `appn84sqPw03zEbTT` · **DEV reference:** `appTetnuCZlCZdTCT`  
-**Branch tip (repo):** `feature/c025-stage17-zoom-attendance` (115 **v1.8** committed)  
-**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)  
-**Smoke:** [C-025-stage17-prod-smoke-test.md](./C-025-stage17-prod-smoke-test.md)  
+**Status:** Ready for Mike OMNI execution after approval
+**PROD:** `appn84sqPw03zEbTT` · **DEV reference:** `appTetnuCZlCZdTCT`
+**Branch tip (repo):** `feature/c025-stage17-zoom-attendance` (115 **v1.8** committed)
+**Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)
+**Smoke:** [C-025-stage17-prod-smoke-test.md](./C-025-stage17-prod-smoke-test.md)
 **Downtime:** Allowed (PROD not serving live program)
 
 ---

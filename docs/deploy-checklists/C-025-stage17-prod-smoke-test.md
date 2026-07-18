@@ -1,8 +1,8 @@
 # C-025 Stage 17 — PROD isolated smoke test
 
-**Status:** Do not execute until schema re-audit Pass + scripts pasted OFF  
-**PROD:** `appn84sqPw03zEbTT`  
-**Fixtures:** **New dedicated** PROD test athlete + Enrollment + Zoom Meeting (not historical athletes)  
+**Status:** Do not execute until schema re-audit Pass + scripts pasted OFF
+**PROD:** `appn84sqPw03zEbTT`
+**Fixtures:** **New dedicated** PROD test athlete + Enrollment + Zoom Meeting (not historical athletes)
 **Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json) · [implementation checklist](./C-025-stage17-prod-implementation-checklist.md)
 
 ---
