@@ -1,10 +1,12 @@
 # C-025 — Stage 17 Perfect Week + Level-gate DEV installation packet
 
-**Status:** Repository-ready · **Do not paste until Mike authorizes** · **Do not enable permanently**
+**Status:** Repository-ready · **Mike UI paste required (Automations API 403)** · harness verified · **Do not enable permanently**
 **Base:** DEV only `appTetnuCZlCZdTCT`
 **PROD:** Forbidden
-**Starting commit:** `1c08cfe`
+**Starting commit:** `1c08cfe` · tip at downstream attempt: `233bd51`
 **Companion:** [C-025-stage17-zoom-recording-dev-installation-packet.md](./C-025-stage17-zoom-recording-dev-installation-packet.md)
+**DEV results:** [C-025-stage17-downstream-dev-test-results-2026-07-18.md](./C-025-stage17-downstream-dev-test-results-2026-07-18.md)
+**Paste bodies:** [057 v1.3](./C-025-stage17-057-perfect-week-v1.3-PASTE.txt) · [042 v3.1](./C-025-stage17-042-level-gates-v3.1-PASTE.txt) · [117 v1.1.1](./C-025-stage17-117-orchestrator-v1.1.1-PASTE.txt)
 
 ---
 
@@ -153,5 +155,7 @@ Use Schmidt / isolated fixtures. Leave **117 OFF**.
 |-------|-------|
 | Repo implementation | **Yes** (057 v1.3 · 042 v3.1 · 117 v1.1.1 · combined lib/tests) |
 | New Airtable fields | **None** |
-| Ready for DEV paste | **After Mike review** |
+| Ready for DEV paste | **Yes — Mike UI** (API 403); paste bodies linked above |
+| Harness verification | **PASS** — [downstream results](./C-025-stage17-downstream-dev-test-results-2026-07-18.md) |
+| Airtable scripts installed | **Pending Mike paste** |
 | PROD | **No** |
