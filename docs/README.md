@@ -71,12 +71,17 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 
 | Doc | Purpose |
 |-----|---------|
+| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live ops snapshot** — commit, routes, C-025/C-011, Softr dual-state |
+| [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | **Canonical known issues** — Critical / High / Medium / Low with owners |
+| [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) | Softr → Next.js cutover checklist (no cutover until approved) |
+| [UNTRACKED-RECOVERY-TRIAGE.md](./UNTRACKED-RECOVERY-TRIAGE.md) | Triage plan for untracked recovery material (do not delete without approval) |
 | [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) | **Go-live checklist** — pre-promotion, DEV/PROD, smoke, rollback, sign-off |
 | [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md) | **Online Agent 2** DEV verification package (2026-07-16) — offline PASS; live install pending |
 | [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) | Automation # / version / trigger / DEV·PROD status / evidence |
 | [V2_END_TO_END_TEST_MATRIX.md](./V2_END_TO_END_TEST_MATRIX.md) | Full athlete-scenario launch matrix |
-| [known-issues.md](./known-issues.md) | Active gaps + **launch blockers** |
+| [known-issues.md](./known-issues.md) | Legacy pointer → [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) |
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** DEV install packet |
+| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email DEV install packet |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
@@ -92,6 +97,9 @@ node tools/validate-v2-release-readiness.js
 | Doc | Purpose |
 |-----|---------|
 | [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, Softr |
+| [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | Operational known issues with severity + ownership |
+| [deployment-notes.md](./deployment-notes.md) | Vercel env vars, health check, validation |
+| [../web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md) | `/shoot/admin` roadmap (read-only first) |
 | [../AGENTS.md](../AGENTS.md) | AI assistant instructions |
 | [../README.md](../README.md) | Repo introduction and layout |
 | [../SYSTEM_OVERVIEW.md](../SYSTEM_OVERVIEW.md) | Modules, data flow, architecture goals |
@@ -117,9 +125,10 @@ node tools/validate-v2-release-readiness.js
 
 | Doc | Purpose |
 |-----|---------|
-| [../airtable/schema/current/table-map.md](../airtable/schema/current/table-map.md) | Table relationships |
-| [../airtable/schema/current/field-map.md](../airtable/schema/current/field-map.md) | Canonical field names |
-| [../airtable/schema/current/automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md) | Automation triggers |
+| [../airtable/schema/snapshots/prod-20260706/](../airtable/schema/snapshots/prod-20260706/) | **Latest dated prod snapshot** (treat as current until Agent A refreshes) |
+| [../airtable/schema/current/table-map.md](../airtable/schema/current/table-map.md) | Table relationships — **stale**; prefer dated snapshots |
+| [../airtable/schema/current/field-map.md](../airtable/schema/current/field-map.md) | Canonical field names — **stale** until refreshed |
+| [../airtable/schema/current/automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md) | Automation triggers — **stale** until refreshed |
 | [../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md) | Production script standard |
 | [../airtable/extension-scripts/audits/README.md](../airtable/extension-scripts/audits/README.md) | **Pipeline audits (Stages A–J)** |
 | [../airtable/extension-scripts/safe-backfills/README.md](../airtable/extension-scripts/safe-backfills/README.md) | **Backfill run order** |
