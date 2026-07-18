@@ -9,13 +9,15 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117 - Zoom Recording Credit - Orchestrator (Stage 17)
  *
- * Version: v1.1.0
+ * Version: v1.1.1
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-18
  *
  * VERSION HISTORY
+ * - v1.1.1 (2026-07-18): Applied? flags no longer set here — 042/057 own
+ *   Gate Credit Applied? / Perfect Week Credit Applied? after actual consumption.
  * - v1.1.0 (2026-07-18): Eliminate live Attendees writes (Steps D/E).
- *   Recording XP via ZOOM_CREDIT only; gate/PW mark applied flags only;
+ *   Recording XP via ZOOM_CREDIT only; gate/PW eligibility reported only;
  *   never mutate Zoom Meetings.Attendees (avoids Automation 101 double-credit).
  *   Correct trigger: Zoom Attendance · Recording Quiz · links present.
  *   Email send disabled unless non-blank webhookUrl is provided.
@@ -23,7 +25,7 @@ Folder: 17 - Zoom Recording Credit
  *
  * PURPOSE
  * - Single DEV automation for Stage 17 recording-quiz credit:
- *   normalize → coach review sync → create/soft-void XP → flag gate/PW.
+ *   normalize → coach review sync → create/soft-void XP → report gate/PW eligibility.
  * - Replace incorrect "Recording Quiz Submitted At is one week from now" trigger.
  *
  * IMPORTANT DESIGN RULES
@@ -33,8 +35,8 @@ Folder: 17 - Zoom Recording Credit
  * - XP Bucket = Zoom Attendance; XP Source = Zoom Meeting Recording Quiz.
  * - Date = XP Activity Date; reasons = XP Reason Public / XP Reason Debug.
  * - Amount from Zoom XP Amount formula — do not hard-code.
- * - Gate / Perfect Week: set applied flags only; report downstream gaps
- *   (042/057 still count live Attendees — do not impersonate live attendance).
+ * - Gate / Perfect Week: report eligibility only; Applied? flags are set by 042 / 057
+ *   when those automations actually count the credit (not by this orchestrator).
  * - Email: blank webhookUrl ⇒ skip (DEV-safe default).
  * - Leave automation OFF except controlled DEV runs.
  *
@@ -75,7 +77,7 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: "117 - Zoom Recording Credit - Orchestrator",
-  version: "v1.1.0",
+  version: "v1.1.1",
   versionDate: "2026-07-18",
   originalWrittenDate: "2026-07-14",
   lastUpdated: "2026-07-18",
@@ -139,7 +141,7 @@ const CONFIG = {
     xpSource: "Zoom Meeting Recording Quiz",
     reasonPublic: "Zoom recording quiz credit",
     recordingMethod: "Recording Quiz",
-    awardedBy: "117-orchestrator-v1.1.0",
+    awardedBy: "117-orchestrator-v1.1.1",
     reviewNeedsReview: "Needs Review",
     reviewSatisfactory: "Satisfactory",
     reviewNeedsCorrection: "Needs Correction",
@@ -468,45 +470,37 @@ async function main() {
     setOutputSafe("xpPoints", String(amount));
   }
 
-  // SECTION D — Gate applied flag only (NO Attendees write)
-  debugStep = "4D - Gate applied flag only (no Attendees write)";
+  // SECTION D — Gate eligibility observation only (Applied? owned by Automation 042)
+  debugStep = "4D - Gate eligibility (Applied? set by 042, not here)";
   setOutputSafe("debugStep", debugStep);
   let gateAction = "skipped_no_gate_credit";
   const gateEarned = isTruthyFlag(rec, CONFIG.za.gateEarned);
-  const gateAlready =
-    fieldExists(zaTable, CONFIG.za.gateApplied) && getCheckbox(rec, CONFIG.za.gateApplied);
   if (conflict) {
     gateAction = "skipped_conflict";
   } else if (!gateEarned) {
     gateAction = "skipped_no_gate_credit";
-  } else if (gateAlready) {
-    gateAction = "skipped_already_applied";
-  } else if (fieldExists(zaTable, CONFIG.za.gateApplied)) {
-    await updateRecordSafe(zaTable, recordId, { [CONFIG.za.gateApplied]: true });
-    gateAction = "marked_gate_applied_flag_only";
+  } else if (fieldExists(zaTable, CONFIG.za.gateApplied) && getCheckbox(rec, CONFIG.za.gateApplied)) {
+    gateAction = "already_applied_by_downstream";
   } else {
-    gateAction = "skipped_no_gate_applied_field";
+    // Eligible for gate count — do NOT set Gate Credit Applied? here (misleading).
+    gateAction = "eligible_awaiting_042";
   }
   setOutputSafe("gateActionOut", gateAction);
 
-  // SECTION E — Perfect Week applied flag only (NO Attendees write)
-  debugStep = "4E - Perfect Week applied flag only (no Attendees write)";
+  // SECTION E — Perfect Week eligibility observation only (Applied? owned by Automation 057)
+  debugStep = "4E - Perfect Week eligibility (Applied? set by 057, not here)";
   setOutputSafe("debugStep", debugStep);
   let pwAction = "skipped_flag_off";
   const pwFlag = isTruthyFlag(rec, CONFIG.za.pwFlag);
-  const pwAlready =
-    fieldExists(zaTable, CONFIG.za.pwApplied) && getCheckbox(rec, CONFIG.za.pwApplied);
   if (conflict) {
     pwAction = "skipped_conflict";
   } else if (!approved || !pwFlag) {
     pwAction = "skipped_flag_off";
-  } else if (pwAlready) {
-    pwAction = "skipped_already_applied";
-  } else if (fieldExists(zaTable, CONFIG.za.pwApplied)) {
-    await updateRecordSafe(zaTable, recordId, { [CONFIG.za.pwApplied]: true });
-    pwAction = "marked_perfect_week_applied_flag_only";
+  } else if (fieldExists(zaTable, CONFIG.za.pwApplied) && getCheckbox(rec, CONFIG.za.pwApplied)) {
+    pwAction = "already_applied_by_downstream";
   } else {
-    pwAction = "skipped_no_pw_applied_field";
+    // Eligible for Perfect Week Zoom — do NOT set Perfect Week Credit Applied? here.
+    pwAction = "eligible_awaiting_057";
   }
   setOutputSafe("perfectWeekActionOut", pwAction);
 

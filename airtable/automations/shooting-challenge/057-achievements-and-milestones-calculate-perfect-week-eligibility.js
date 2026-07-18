@@ -24,11 +24,18 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.2
+ * Version: 1.3
  * Date written: 2026-05-30
+ * Last updated: 2026-07-18
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 1.3 updates (C-025 Stage 17):
+ * - Zoom attendance count = live Attendees ∪ qualifying Recording Quiz credits.
+ * - Never writes Zoom Meetings.Attendees.
+ * - Prefer live when both live and recording exist for the same meeting.
+ * - Sets Perfect Week Credit Applied? on Zoom Attendance rows actually counted.
  *
  * Version 1.2 updates:
  * - Keeps official Sunday-Saturday week logic from Version 1.1.
@@ -42,7 +49,8 @@ Airtable is the deployed/running copy.
  *    of the linked Week, Sunday through Saturday.
  * 2. Each official day must meet at least 1/7 of the weekly shot goal.
  * 3. Athlete must have at least 3 qualifying Video Feedback records for the week.
- * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week.
+ * 4. Athlete must attend Zoom if a Zoom meeting exists for the linked Week
+ *    (live Attendees OR Stage 17 approved recording credit that counts for Perfect Week).
  * 5. Athlete must satisfactorily complete 100% of homework assignments assigned for the week.
  *
  * Notes:
@@ -64,6 +72,7 @@ const CONFIG = {
     homeworkCompletions: "Homework Completions",
     video: "Video Feedback",
     zoom: "Zoom Meetings",
+    zoomAttendance: "Zoom Attendance",
     weeks: "Weeks",
   },
 
@@ -124,6 +133,20 @@ const CONFIG = {
     attendees: "Attendees",
   },
 
+  zoomAttendanceFields: {
+    attendanceMethod: "Attendance Method",
+    enrollment: "Enrollment",
+    zoomMeeting: "Zoom Meeting",
+    approved: "Zoom Credit Approved?",
+    conflict: "Zoom Credit Conflict?",
+    pwFlag: "Effective Recording Counts for Perfect Week?",
+    pwApplied: "Perfect Week Credit Applied?",
+    reviewStatus: "Recording Quiz Review Status",
+  },
+
+  recordingMethod: "Recording Quiz",
+  reviewNeedsCorrection: "Needs Correction",
+
   requiredVideoCount: 3,
   requiredDailyCount: 7,
 };
@@ -168,6 +191,34 @@ function getNumber(record, fieldName) {
 
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function getText(record, fieldName) {
+  try {
+    const v = record.getCellValueAsString(fieldName);
+    return v == null ? "" : String(v).trim();
+  } catch (e) {
+    return "";
+  }
+}
+
+function isTruthyFlag(record, fieldName) {
+  const v = record.getCellValue(fieldName);
+  if (v === true || v === 1 || v === "1") return true;
+  if (Array.isArray(v) && v.length === 1) {
+    const first = v[0];
+    return first === true || first === 1 || first === "1";
+  }
+  return false;
+}
+
+function fieldExists(table, name) {
+  try {
+    table.getField(name);
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 function getDateKeyFromDateOnly(value) {
@@ -237,6 +288,7 @@ const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const homeworkCompletionsTable = base.getTable(CONFIG.tables.homeworkCompletions);
 const videoTable = base.getTable(CONFIG.tables.video);
 const zoomTable = base.getTable(CONFIG.tables.zoom);
+const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
 
 const weeklyRecord = await weeklyTable.selectRecordAsync(recordId);
@@ -568,7 +620,8 @@ try {
   }
 
   /*************************************************************************************************
-   * 4D. Zoom Requirement
+   * 4D. Zoom Requirement (live Attendees ∪ Stage 17 recording credit)
+   * Never writes Zoom Meetings.Attendees.
    *************************************************************************************************/
 
   const zoomQuery = await zoomTable.selectRecordsAsync({
@@ -578,18 +631,67 @@ try {
     ],
   });
 
-  let zoomMeetingCount = 0;
-  let zoomAttendanceCount = 0;
+  const weekMeetingIds = [];
+  const liveAttendedMeetingIds = [];
 
   for (const zoom of zoomQuery.records) {
     const zoomWeekId = getFirstLinkedId(zoom, CONFIG.zoomFields.week);
     if (zoomWeekId !== weekId) continue;
 
-    zoomMeetingCount += 1;
+    weekMeetingIds.push(zoom.id);
 
     const attendeeIds = getLinkedIds(zoom, CONFIG.zoomFields.attendees);
     if (attendeeIds.includes(enrollmentId)) {
-      zoomAttendanceCount += 1;
+      liveAttendedMeetingIds.push(zoom.id);
+    }
+  }
+
+  const weekMeetingSet = new Set(weekMeetingIds);
+  const attendedMeetingSet = new Set(liveAttendedMeetingIds);
+  const recordingZaToMarkApplied = [];
+
+  const zaFieldNames = Object.values(CONFIG.zoomAttendanceFields).filter((n) =>
+    fieldExists(zoomAttendanceTable, n)
+  );
+  const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFieldNames });
+
+  for (const za of zaQuery.records) {
+    if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
+    const zaEnrollmentId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment);
+    if (zaEnrollmentId !== enrollmentId) continue;
+    const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
+    if (!meetingId || !weekMeetingSet.has(meetingId)) continue;
+    if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
+    if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
+    if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.pwFlag)) continue;
+    if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
+
+    // Prefer live: if already live-attended, do not double-count; still may mark applied if we counted recording-only.
+    if (!attendedMeetingSet.has(meetingId)) {
+      attendedMeetingSet.add(meetingId);
+      recordingZaToMarkApplied.push(za.id);
+    }
+  }
+
+  try {
+    zaQuery.unloadData();
+  } catch (e) {
+    /* older runtimes */
+  }
+
+  const zoomMeetingCount = weekMeetingIds.length;
+  const zoomAttendanceCount = attendedMeetingSet.size;
+
+  // Applied? = actually consumed by this Perfect Week calculation (not mere eligibility).
+  for (const zaId of recordingZaToMarkApplied) {
+    if (!fieldExists(zoomAttendanceTable, CONFIG.zoomAttendanceFields.pwApplied)) break;
+    const zaRec = await zoomAttendanceTable.selectRecordAsync(zaId, {
+      fields: [CONFIG.zoomAttendanceFields.pwApplied],
+    });
+    if (zaRec && !isTruthyFlag(zaRec, CONFIG.zoomAttendanceFields.pwApplied)) {
+      await zoomAttendanceTable.updateRecordAsync(zaId, {
+        [CONFIG.zoomAttendanceFields.pwApplied]: true,
+      });
     }
   }
 

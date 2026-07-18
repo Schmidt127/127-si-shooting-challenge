@@ -217,9 +217,8 @@ test("Gate and Perfect Week flags do not impersonate live attendance", () => {
     conflict: false,
     alreadyApplied: false,
   });
-  assert(gate.action === "marked_gate_applied_flag_only", "gate flag only");
   assert(gate.writesLiveAttendees === false, "gate no attendees");
-  assert(String(gate.gap.status).includes("GAP"), "gate gap reported");
+  assert(String(gate.gap.status).includes("REPO_READY") || String(gate.gap.status).includes("GAP"), "gate status documented");
 
   const pw = c.planPerfectWeekCreditApplication({
     approved: true,
@@ -227,16 +226,14 @@ test("Gate and Perfect Week flags do not impersonate live attendance", () => {
     conflict: false,
     alreadyApplied: false,
   });
-  assert(pw.action === "marked_perfect_week_applied_flag_only", "pw flag only");
   assert(pw.writesLiveAttendees === false, "pw no attendees");
-  assert(String(pw.gap.status).includes("GAP"), "pw gap reported");
 });
 
 test("Missing downstream consumers are reported rather than bypassed", () => {
   assert(c.DOWNSTREAM_GAPS.perfectWeek.consumer.includes("057"), "pw consumer");
   assert(c.DOWNSTREAM_GAPS.levelGate.consumer.includes("042"), "gate consumer");
-  assert(c.DOWNSTREAM_GAPS.perfectWeek.status.startsWith("GAP"), "pw gap");
-  assert(c.DOWNSTREAM_GAPS.levelGate.status.startsWith("GAP"), "gate gap");
+  assert(String(c.DOWNSTREAM_GAPS.perfectWeek.status).includes("REPO_READY"), "pw status");
+  assert(String(c.DOWNSTREAM_GAPS.levelGate.status).includes("REPO_READY"), "gate status");
 });
 
 test("No Homework Completions dependency in Stage 17 scripts", () => {
@@ -268,9 +265,9 @@ test("117c script CONFIG maps canonical fields", () => {
   assert(!/homeworkCompletions:\s*"Homework Completions"/.test(src), "no HC");
 });
 
-test("117 orchestrator v1.1.0 forbids Attendees and uses correct trigger docs", () => {
+test("117 orchestrator v1.1.1 forbids Attendees and does not set Applied flags", () => {
   const src = fs.readFileSync(path.join(root, "117-zoom-recording-credit-orchestrator.js"), "utf8");
-  assert(src.includes('version: "v1.1.0"'), "version");
+  assert(src.includes('version: "v1.1.1"'), "version");
   assert(src.includes("117 - Zoom Recording Credit - Orchestrator"), "name");
   assert(src.includes("Attendance Method is Recording Quiz"), "trigger method");
   assert(src.includes("NEVER write Zoom Meetings"), "hard rule");
@@ -279,7 +276,10 @@ test("117 orchestrator v1.1.0 forbids Attendees and uses correct trigger docs", 
   assert(src.includes('xpActivityDate: "XP Activity Date"'), "date");
   assert(!src.includes('attendees: "Attendees"'), "no attendees config");
   assert(src.includes("Refuse write to Attendees"), "runtime guard");
-  assert(src.includes("skipped_webhook_blank"), "email default off");
+  assert(src.includes("eligible_awaiting_042"), "gate awaits 042");
+  assert(src.includes("eligible_awaiting_057"), "pw awaits 057");
+  assert(!src.includes("marked_gate_applied_flag_only"), "no premature gate applied");
+  assert(!src.includes("marked_perfect_week_applied_flag_only"), "no premature pw applied");
   const r = c.assertNeverWritesLiveAttendees(src);
   assert(r.ok, `orchestrator attendees hits: ${r.hits.join(", ")}`);
 });

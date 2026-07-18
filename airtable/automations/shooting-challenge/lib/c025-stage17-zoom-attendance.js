@@ -17,19 +17,19 @@ const REASON_DEBUG_FIELD = "XP Reason Debug";
 const REASON_PUBLIC_TEXT = "Zoom recording quiz credit";
 const LIVE_ATTENDEES_FIELD = "Attendees";
 
-/** Documented downstream gaps — do not bypass by impersonating live attendance. */
+/** Documented downstream status — recording never writes live Attendees. */
 const DOWNSTREAM_GAPS = {
   perfectWeek: {
     recordingFlag: "Effective Recording Counts for Perfect Week?",
     appliedFlag: "Perfect Week Credit Applied?",
-    consumer: "057 counts Zoom Meetings.Attendees only",
-    status: "GAP — no downstream automation reads recording PW flags; do not write Attendees",
+    consumer: "057 v1.3 counts live Attendees ∪ qualifying recording credits",
+    status: "REPO_READY — paste 057 v1.3; Applied? set only when 057 counts the credit",
   },
   levelGate: {
     recordingFlag: "Zoom Gate Credit Earned?",
     appliedFlag: "Gate Credit Applied?",
-    consumer: "042 reads Enrollments.Total Zoom Attendances (count of live Zoom Meetings / Attendees)",
-    status: "GAP — Total Zoom Attendances ignores recording-only credits; do not write Attendees",
+    consumer: "042 v3.1 counts live meetings ∪ qualifying recording gate credits",
+    status: "REPO_READY — paste 042 v3.1; Applied? set only when 042 counts the credit",
   },
   automation101: {
     triggerFields: [
@@ -149,7 +149,7 @@ function buildRecordingXpEventFields({
 }
 
 /**
- * Gate: mark applied flag only. Never add Enrollment to live Attendees.
+ * Gate: eligibility only. Applied? is owned by Automation 042 after counting.
  */
 function planGateCreditApplication({
   gateEarned,
@@ -175,7 +175,7 @@ function planGateCreditApplication({
   if (alreadyApplied) {
     return {
       ok: true,
-      action: "skipped_already_applied",
+      action: "already_applied_by_downstream",
       writesLiveAttendees: false,
       setGateAppliedFlag: false,
       gap: DOWNSTREAM_GAPS.levelGate,
@@ -183,15 +183,15 @@ function planGateCreditApplication({
   }
   return {
     ok: true,
-    action: "marked_gate_applied_flag_only",
+    action: "eligible_awaiting_042",
     writesLiveAttendees: false,
-    setGateAppliedFlag: true,
+    setGateAppliedFlag: false,
     gap: DOWNSTREAM_GAPS.levelGate,
   };
 }
 
 /**
- * Perfect Week: mark applied flag only. Never add Enrollment to live Attendees.
+ * Perfect Week: eligibility only. Applied? is owned by Automation 057 after counting.
  */
 function planPerfectWeekCreditApplication({
   approved,
@@ -218,7 +218,7 @@ function planPerfectWeekCreditApplication({
   if (alreadyApplied) {
     return {
       ok: true,
-      action: "skipped_already_applied",
+      action: "already_applied_by_downstream",
       writesLiveAttendees: false,
       setPwAppliedFlag: false,
       gap: DOWNSTREAM_GAPS.perfectWeek,
@@ -226,9 +226,9 @@ function planPerfectWeekCreditApplication({
   }
   return {
     ok: true,
-    action: "marked_perfect_week_applied_flag_only",
+    action: "eligible_awaiting_057",
     writesLiveAttendees: false,
-    setPwAppliedFlag: true,
+    setPwAppliedFlag: false,
     gap: DOWNSTREAM_GAPS.perfectWeek,
   };
 }

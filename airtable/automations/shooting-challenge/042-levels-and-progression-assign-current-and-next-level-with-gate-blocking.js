@@ -24,13 +24,21 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 3.0
+ * Version: 3.1
  * Date Written: 2026-06-02
+ * Last Updated: 2026-07-18
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
  * but blocks advancement into a gated level unless the athlete meets that level's active
  * gate requirements.
+ *
+ * Version 3.1 (C-025 Stage 17):
+ * - Zoom gate count = live Total Zoom Attendances meetings ∪ qualifying Recording Quiz
+ *   gate credits (Zoom Gate Credit Earned?), deduped by Zoom Meeting.
+ * - Prefer live when both exist for the same meeting.
+ * - Never writes Zoom Meetings.Attendees.
+ * - Sets Gate Credit Applied? on Zoom Attendance rows actually counted for the gate total.
  *
  * Folder:
  * 04 - Levels and Progression
@@ -51,8 +59,10 @@ Airtable is the deployed/running copy.
  * Enrollments.Total Submissions
  * Enrollments.Total Homework Completions
  * Enrollments.Total Video Submissions
- * Enrollments.Total Zoom Attendances
+ * Enrollments.Total Zoom Attendances (live baseline; combined with recording in v3.1)
  * Enrollments.Longest Streak Days
+ * Zoom Meetings.Attendees (read-only live roster)
+ * Zoom Attendance recording-credit fields (Stage 17)
  *
  * Levels.XP Required (Cumulative)
  * Levels.Active?
@@ -72,6 +82,7 @@ Airtable is the deployed/running copy.
  * Enrollments.Level Gate Rule
  * Enrollments.Level Status = Assigned, Gate Blocked, or Error
  * Enrollments.Level Recalc Needed? = unchecked after processing
+ * Zoom Attendance.Gate Credit Applied? (only when recording credit counted)
  *
  * Run Order:
  * 041 = Mark Enrollment for Level Recalculation
@@ -90,13 +101,15 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "3.0",
+        version: "3.1",
     },
 
     tables: {
         enrollments: "Enrollments",
         levels: "Levels",
         levelGateRules: "Level Gate Rules",
+        zoomMeetings: "Zoom Meetings",
+        zoomAttendance: "Zoom Attendance",
     },
 
     enrollmentFields: {
@@ -130,6 +143,24 @@ const CONFIG = {
         minimumStreakDays: "Minimum Streak Days",
     },
 
+    zoomMeetingFields: {
+        attendees: "Attendees",
+    },
+
+    zoomAttendanceFields: {
+        attendanceMethod: "Attendance Method",
+        enrollment: "Enrollment",
+        zoomMeeting: "Zoom Meeting",
+        approved: "Zoom Credit Approved?",
+        conflict: "Zoom Credit Conflict?",
+        gateEarned: "Zoom Gate Credit Earned?",
+        gateApplied: "Gate Credit Applied?",
+        reviewStatus: "Recording Quiz Review Status",
+    },
+
+    recordingMethod: "Recording Quiz",
+    reviewNeedsCorrection: "Needs Correction",
+
     statusValues: {
         processing: "Processing",
         assigned: "Assigned",
@@ -151,6 +182,7 @@ const CONFIG = {
         levelGateRule: "levelGateRuleOut",
         gateBlocked: "gateBlockedOut",
         gateReason: "gateReasonOut",
+        effectiveZoomCount: "effectiveZoomCountOut",
     },
 };
 
@@ -199,6 +231,109 @@ function fieldExists(table, fieldName) {
     return table.fields.some((field) => field.name === fieldName);
 }
 
+function getLinkedIds(record, fieldName) {
+    const value = record.getCellValue(fieldName);
+    if (!value) return [];
+    if (Array.isArray(value)) return value.map((x) => (x && x.id) || x).filter(Boolean);
+    if (value.id) return [value.id];
+    return [];
+}
+
+function getFirstLinkedId(record, fieldName) {
+    const ids = getLinkedIds(record, fieldName);
+    return ids.length ? ids[0] : null;
+}
+
+function getText(record, fieldName) {
+    try {
+        const v = record.getCellValueAsString(fieldName);
+        return v == null ? "" : String(v).trim();
+    } catch (e) {
+        return "";
+    }
+}
+
+function isTruthyFlag(record, fieldName) {
+    const v = record.getCellValue(fieldName);
+    if (v === true || v === 1 || v === "1") return true;
+    if (Array.isArray(v) && v.length === 1) {
+        const first = v[0];
+        return first === true || first === 1 || first === "1";
+    }
+    return false;
+}
+
+/**
+ * Combined Zoom count for gates: live Attendees meetings ∪ qualifying recording credits.
+ * Never writes Attendees. Marks Gate Credit Applied? only when recording credit is counted.
+ */
+async function computeEffectiveZoomAttendanceCount(enrollmentId) {
+    const zoomMeetingsTable = base.getTable(CONFIG.tables.zoomMeetings);
+    const zoomAttendanceTable = base.getTable(CONFIG.tables.zoomAttendance);
+
+    const liveMeetingIds = [];
+    const zmQuery = await zoomMeetingsTable.selectRecordsAsync({
+        fields: [CONFIG.zoomMeetingFields.attendees],
+    });
+    for (const meeting of zmQuery.records) {
+        const attendees = getLinkedIds(meeting, CONFIG.zoomMeetingFields.attendees);
+        if (attendees.includes(enrollmentId)) {
+            liveMeetingIds.push(meeting.id);
+        }
+    }
+    try {
+        zmQuery.unloadData();
+    } catch (e) {
+        /* older runtimes */
+    }
+
+    const meetingSet = new Set(liveMeetingIds);
+    const recordingZaToMark = [];
+
+    const zaFields = Object.values(CONFIG.zoomAttendanceFields).filter((n) =>
+        fieldExists(zoomAttendanceTable, n)
+    );
+    const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFields });
+    for (const za of zaQuery.records) {
+        if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
+        if (getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment) !== enrollmentId) continue;
+        const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
+        if (!meetingId) continue;
+        if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
+        if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
+        if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.gateEarned)) continue;
+        if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
+
+        if (!meetingSet.has(meetingId)) {
+            meetingSet.add(meetingId);
+            recordingZaToMark.push(za.id);
+        }
+    }
+    try {
+        zaQuery.unloadData();
+    } catch (e) {
+        /* older runtimes */
+    }
+
+    for (const zaId of recordingZaToMark) {
+        if (!fieldExists(zoomAttendanceTable, CONFIG.zoomAttendanceFields.gateApplied)) break;
+        const zaRec = await zoomAttendanceTable.selectRecordAsync(zaId, {
+            fields: [CONFIG.zoomAttendanceFields.gateApplied],
+        });
+        if (zaRec && !isTruthyFlag(zaRec, CONFIG.zoomAttendanceFields.gateApplied)) {
+            await zoomAttendanceTable.updateRecordAsync(zaId, {
+                [CONFIG.zoomAttendanceFields.gateApplied]: true,
+            });
+        }
+    }
+
+    return {
+        effectiveZoomCount: meetingSet.size,
+        liveZoomCount: liveMeetingIds.length,
+        recordingMeetingsCounted: recordingZaToMark.length,
+    };
+}
+
 function assertFieldExists(table, fieldName) {
     if (!fieldExists(table, fieldName)) {
         throw new Error(`Missing field "${fieldName}" in table "${table.name}".`);
@@ -239,6 +374,7 @@ function setOutputs({
     levelGateRule = "",
     gateBlocked = false,
     gateReason = "",
+    effectiveZoomCount = "",
 }) {
     output.set(CONFIG.outputs.status, status);
     output.set(CONFIG.outputs.message, message);
@@ -249,6 +385,13 @@ function setOutputs({
     output.set(CONFIG.outputs.levelGateRule, levelGateRule);
     output.set(CONFIG.outputs.gateBlocked, gateBlocked);
     output.set(CONFIG.outputs.gateReason, gateReason);
+    if (CONFIG.outputs.effectiveZoomCount) {
+        try {
+            output.set(CONFIG.outputs.effectiveZoomCount, effectiveZoomCount);
+        } catch (e) {
+            /* optional output may not be configured yet in Airtable */
+        }
+    }
 }
 
 async function markEnrollmentError(enrollmentsTable, recordId, message) {
@@ -587,6 +730,10 @@ async function main() {
         );
 
         const stats = getEnrollmentGateStats(enrollment);
+        const zoomCombined = await computeEffectiveZoomAttendanceCount(recordId);
+        stats.totalZoomAttendances = zoomCombined.effectiveZoomCount;
+        stats.liveZoomAttendances = zoomCombined.liveZoomCount;
+        stats.recordingZoomMeetingsCounted = zoomCombined.recordingMeetingsCounted;
 
         const levelFieldsToSelect = [
             CONFIG.levelFields.xpRequired,
@@ -697,6 +844,7 @@ async function main() {
             levelGateRule: result.levelGateRule ? result.levelGateRule.name : "",
             gateBlocked: result.gateBlocked,
             gateReason: result.gateReason,
+            effectiveZoomCount: stats.totalZoomAttendances,
         });
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);

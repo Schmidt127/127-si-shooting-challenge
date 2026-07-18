@@ -9,52 +9,30 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117d - Zoom Recording Credit - Apply Zoom Gate Credit
  *
- * Version: v1.1.0
+ * Version: v1.2.0
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-18
  *
  * VERSION HISTORY
- * - v1.1.0 (2026-07-18): REMOVED Zoom Meetings.Attendees write (double-credit
- *   risk via Automation 101). Marks Gate Credit Applied? only and documents
- *   downstream gap (042 / Total Zoom Attendances still live-roster based).
- * - v1.0.0: Idempotent Attendees add (superseded — unsafe with 101).
- *
- * Architecture: Stage 17 Zoom Attendance path
- * Prefer single orchestrator: 117-zoom-recording-credit-orchestrator.js
+ * - v1.2.0 (2026-07-18): Observation-only. Gate Credit Applied? is owned by
+ *   Automation 042 after it counts the credit. Never writes Attendees.
+ * - v1.1.0: Flag-only (no Attendees) — superseded semantics for Applied?.
+ * - v1.0.0: Attendees add (unsafe with 101) — superseded.
  *
  * PURPOSE
- * - When Zoom Gate Credit Earned?, mark Gate Credit Applied? on the ZA row.
+ * - Report whether Zoom Gate Credit Earned? makes this row eligible for 042.
+ * - Do NOT set Gate Credit Applied? (that means downstream consumption).
  * - Do NOT add Enrollment to Zoom Meetings.Attendees.
  *
- * IMPORTANT DESIGN RULES
- * - Live Attendees roster is reserved for actual live attendance / Automation 101.
- * - Downstream gap: 042 reads Enrollments.Total Zoom Attendances (count of live
- *   Zoom Meetings link / Attendees). Recording flags are not consumed yet.
- *
- * INPUT
- * - recordId (Zoom Attendance record id)
- *
- * OUTPUTS
- * - statusOut: success | skipped | error
- * - errorOut
- * - debugStep
- * - actionOut
- *
- * TRIGGER
- * - Zoom Attendance (modular; DEV prefers 117 orchestrator)
- *
- * AUTOMATION NAME
- * - 117d - Zoom Recording Credit - Apply Zoom Gate Credit
- *
- * FOLDER
- * - 17 - Zoom Recording Credit
+ * Prefer Automation 042 v3.1 for actual gate counting + Applied? updates.
+ * This modular script remains for diagnostics / optional DEV runs only.
  ************************************************************/
 
 // @ts-nocheck
 
 const SCRIPT = {
   scriptName: "117d-zoom-recording-apply-zoom-gate-credit",
-  version: "v1.1.0",
+  version: "v1.2.0",
   versionDate: "2026-07-18",
   originalWrittenDate: "2026-07-14",
   lastUpdated: "2026-07-18",
@@ -71,6 +49,7 @@ const CONFIG = {
     gateEarned: "Zoom Gate Credit Earned?",
     conflict: "Zoom Credit Conflict?",
     gateApplied: "Gate Credit Applied?",
+    approved: "Zoom Credit Approved?",
   },
   methods: { recordingQuiz: "Recording Quiz" },
 };
@@ -121,27 +100,8 @@ function getCheckbox(record, fieldName) {
   return false;
 }
 
-function fieldExists(table, name) {
-  try {
-    table.getField(name);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-async function updateRecordSafe(table, recordId, fields) {
-  const keys = Object.keys(fields || {});
-  if (!keys.length) return;
-  if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
-    throw new Error("Refuse write to Attendees — live roster reserved for Automation 101");
-  }
-  await table.updateRecordAsync(recordId, fields);
-}
-
 async function main() {
-  let debugStep = "1 - Validate input";
-  setOutputSafe("debugStep", debugStep);
+  setOutputSafe("debugStep", "1 - Validate input");
   setOutputSafe("errorOut", "");
   const cfg = input.config();
   const recordId = requireRecId(cfg.recordId);
@@ -165,35 +125,22 @@ async function main() {
     setOutputSafe("actionOut", "skipped_no_gate_credit");
     return;
   }
-  if (fieldExists(zaTable, CONFIG.fields.gateApplied) && getCheckbox(rec, CONFIG.fields.gateApplied)) {
-    setOutputSafe("statusOut", "skipped");
-    setOutputSafe("actionOut", "skipped_already_applied");
+  if (!getLinkedIds(rec, CONFIG.fields.enrollment).length || !getLinkedIds(rec, CONFIG.fields.zoomMeeting).length) {
+    throw new Error("Missing Enrollment or Zoom Meeting");
+  }
+  if (getCheckbox(rec, CONFIG.fields.gateApplied)) {
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", "already_applied_by_042");
     return;
   }
-
-  const enrollIds = getLinkedIds(rec, CONFIG.fields.enrollment);
-  const meetingIds = getLinkedIds(rec, CONFIG.fields.zoomMeeting);
-  if (!enrollIds.length || !meetingIds.length) throw new Error("Missing Enrollment or Zoom Meeting");
-
-  // Flag only — never mutate Zoom Meetings.Attendees (Automation 101 risk).
-  if (fieldExists(zaTable, CONFIG.fields.gateApplied)) {
-    await updateRecordSafe(zaTable, recordId, { [CONFIG.fields.gateApplied]: true });
-  }
   setOutputSafe("statusOut", "success");
-  setOutputSafe("actionOut", "marked_gate_applied_flag_only");
+  setOutputSafe("actionOut", "eligible_awaiting_042");
   setOutputSafe("errorOut", "");
   setOutputSafe(
-    "downstreamGapOut",
-    "042/Total Zoom Attendances still counts live Attendees only — recording gate not applied to level totals"
+    "downstreamOwnerOut",
+    "Automation 042 v3.1 counts this credit and sets Gate Credit Applied?"
   );
-  console.log(
-    JSON.stringify({
-      automation: SCRIPT.scriptName,
-      version: SCRIPT.version,
-      actionOut: "marked_gate_applied_flag_only",
-      attendeesWriteAttempted: false,
-    })
-  );
+  console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, actionOut: "eligible_awaiting_042" }));
 }
 
 try {
@@ -203,6 +150,5 @@ try {
   setOutputSafe("statusOut", "error");
   setOutputSafe("errorOut", msg);
   setOutputSafe("actionOut", "error");
-  console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "error", errorOut: msg }));
   throw err;
 }

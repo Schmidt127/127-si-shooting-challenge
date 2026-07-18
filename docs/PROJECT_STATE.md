@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025 Stage 17 orchestrator v1.1.0 DEV tests PASS via REST harness; Automation 117 remains OFF)
+Last updated: **2026-07-18** (C-025 Stage 17 downstream: 057 v1.3 + 042 v3.1 repo-ready; no Attendees writes; Applied? owned by 057/042)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17 orchestrator v1.1.0** pasted in DEV (OFF) · REST harness DEV tests **PASS** · no Attendees writes · PW/gate downstream **gaps** remain · [test results](./deploy-checklists/C-025-stage17-orchestrator-dev-test-results-2026-07-18.md) · [packet](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) |
+| **C-025 — Zoom recording credit** | **Stage 17:** XP path verified · **057 v1.3 / 042 v3.1** repo-ready for PW+gate (no Attendees) · 117 **v1.1.1** OFF · [PW/gate packet](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) · [orchestrator tests](./deploy-checklists/C-025-stage17-orchestrator-dev-test-results-2026-07-18.md) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |

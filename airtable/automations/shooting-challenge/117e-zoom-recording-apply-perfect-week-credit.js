@@ -9,53 +9,29 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117e - Zoom Recording Credit - Apply Perfect Week Credit
  *
- * Version: v1.1.0
+ * Version: v1.2.0
  * Date Written: 2026-07-14
  * Last Updated: 2026-07-18
  *
  * VERSION HISTORY
- * - v1.1.0 (2026-07-18): REMOVED Zoom Meetings.Attendees write (double-credit
- *   risk via Automation 101). Marks Perfect Week Credit Applied? only and
- *   documents downstream gap (057 counts live Attendees only).
- * - v1.0.0: Idempotent Attendees add (superseded — unsafe with 101).
- *
- * Architecture: Stage 17 Zoom Attendance path
- * Prefer single orchestrator: 117-zoom-recording-credit-orchestrator.js
+ * - v1.2.0 (2026-07-18): Observation-only. Perfect Week Credit Applied? is
+ *   owned by Automation 057 after it counts the credit. Never writes Attendees.
+ * - v1.1.0: Flag-only (no Attendees) — superseded semantics for Applied?.
+ * - v1.0.0: Attendees add (unsafe with 101) — superseded.
  *
  * PURPOSE
- * - When Effective Recording Counts for Perfect Week? and approved, mark
- *   Perfect Week Credit Applied? on the ZA row.
+ * - Report whether this recording row is eligible for Perfect Week Zoom credit.
+ * - Do NOT set Perfect Week Credit Applied? (that means downstream consumption).
  * - Do NOT add Enrollment to Zoom Meetings.Attendees.
  *
- * IMPORTANT DESIGN RULES
- * - Live Attendees roster is reserved for actual live attendance / Automation 101.
- * - Downstream gap: 057 Perfect Week Zoom Attendance Count iterates
- *   Zoom Meetings.Attendees only — recording flags are not consumed yet.
- *
- * INPUT
- * - recordId (Zoom Attendance record id)
- *
- * OUTPUTS
- * - statusOut: success | skipped | error
- * - errorOut
- * - debugStep
- * - actionOut
- *
- * TRIGGER
- * - Zoom Attendance (modular; DEV prefers 117 orchestrator)
- *
- * AUTOMATION NAME
- * - 117e - Zoom Recording Credit - Apply Perfect Week Credit
- *
- * FOLDER
- * - 17 - Zoom Recording Credit
+ * Prefer Automation 057 v1.3 for actual Perfect Week Zoom counting + Applied?.
  ************************************************************/
 
 // @ts-nocheck
 
 const SCRIPT = {
   scriptName: "117e-zoom-recording-apply-perfect-week-credit",
-  version: "v1.1.0",
+  version: "v1.2.0",
   versionDate: "2026-07-18",
   originalWrittenDate: "2026-07-14",
   lastUpdated: "2026-07-18",
@@ -123,27 +99,8 @@ function getCheckbox(record, fieldName) {
   return false;
 }
 
-function fieldExists(table, name) {
-  try {
-    table.getField(name);
-    return true;
-  } catch (e) {
-    return false;
-  }
-}
-
-async function updateRecordSafe(table, recordId, fields) {
-  const keys = Object.keys(fields || {});
-  if (!keys.length) return;
-  if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
-    throw new Error("Refuse write to Attendees — live roster reserved for Automation 101");
-  }
-  await table.updateRecordAsync(recordId, fields);
-}
-
 async function main() {
-  let debugStep = "1 - Validate input";
-  setOutputSafe("debugStep", debugStep);
+  setOutputSafe("debugStep", "1 - Validate input");
   setOutputSafe("errorOut", "");
   const cfg = input.config();
   const recordId = requireRecId(cfg.recordId);
@@ -163,42 +120,28 @@ async function main() {
   }
   const approved =
     getCheckbox(rec, CONFIG.fields.approved) || getNumber(rec, CONFIG.fields.approved) === 1;
-  const pw =
-    getCheckbox(rec, CONFIG.fields.pwFlag) || getNumber(rec, CONFIG.fields.pwFlag) === 1;
+  const pw = getCheckbox(rec, CONFIG.fields.pwFlag) || getNumber(rec, CONFIG.fields.pwFlag) === 1;
   if (!approved || !pw) {
     setOutputSafe("statusOut", "skipped");
     setOutputSafe("actionOut", "skipped_flag_off");
     return;
   }
-  if (fieldExists(zaTable, CONFIG.fields.pwApplied) && getCheckbox(rec, CONFIG.fields.pwApplied)) {
-    setOutputSafe("statusOut", "skipped");
-    setOutputSafe("actionOut", "skipped_already_applied");
+  if (!getLinkedIds(rec, CONFIG.fields.enrollment).length || !getLinkedIds(rec, CONFIG.fields.zoomMeeting).length) {
+    throw new Error("Missing Enrollment or Zoom Meeting");
+  }
+  if (getCheckbox(rec, CONFIG.fields.pwApplied)) {
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", "already_applied_by_057");
     return;
   }
-
-  const enrollIds = getLinkedIds(rec, CONFIG.fields.enrollment);
-  const meetingIds = getLinkedIds(rec, CONFIG.fields.zoomMeeting);
-  if (!enrollIds.length || !meetingIds.length) throw new Error("Missing Enrollment or Zoom Meeting");
-
-  // Flag only — never mutate Zoom Meetings.Attendees (Automation 101 risk).
-  if (fieldExists(zaTable, CONFIG.fields.pwApplied)) {
-    await updateRecordSafe(zaTable, recordId, { [CONFIG.fields.pwApplied]: true });
-  }
   setOutputSafe("statusOut", "success");
-  setOutputSafe("actionOut", "marked_perfect_week_applied_flag_only");
+  setOutputSafe("actionOut", "eligible_awaiting_057");
   setOutputSafe("errorOut", "");
   setOutputSafe(
-    "downstreamGapOut",
-    "057 Perfect Week Zoom Attendance Count still iterates live Attendees only — recording PW not counted"
+    "downstreamOwnerOut",
+    "Automation 057 v1.3 counts this credit and sets Perfect Week Credit Applied?"
   );
-  console.log(
-    JSON.stringify({
-      automation: SCRIPT.scriptName,
-      version: SCRIPT.version,
-      actionOut: "marked_perfect_week_applied_flag_only",
-      attendeesWriteAttempted: false,
-    })
-  );
+  console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, actionOut: "eligible_awaiting_057" }));
 }
 
 try {
@@ -208,6 +151,5 @@ try {
   setOutputSafe("statusOut", "error");
   setOutputSafe("errorOut", msg);
   setOutputSafe("actionOut", "error");
-  console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "error", errorOut: msg }));
   throw err;
 }
