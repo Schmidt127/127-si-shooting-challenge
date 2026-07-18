@@ -24,8 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions
- * Version: 5.1
+ * Version: 5.2
  * Date Written: 2026-06-09
+ * Last Updated: 2026-07-18
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -48,6 +49,8 @@ Airtable is the deployed/running copy.
  * - Never write to formula fields such as Streak Occurrence Key.
  *
  * IMPORTANT FIX IN THIS VERSION
+ * - Activity / week date keys use America/Denver (not UTC ISO slice) so
+ *   Sunday–Saturday week boundaries match 005/034/066.
  * - Streak Occurrences → Source Status is a single-select field.
  * - This script now writes Source Status as { name: "Ready for XP" }, etc.
  ************************************************************************************************/
@@ -58,6 +61,7 @@ async function main() {
      ************************************************************************************************/
 
     const CONFIG = {
+        timeZone: "America/Denver",
         tables: {
             submissions: "Submissions",
             achievements: "Achievements",
@@ -294,13 +298,37 @@ async function main() {
             return "";
         }
 
-        const date = new Date(value);
+        if (typeof value === "string") {
+            const trimmed = String(value).trim();
+            const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (isoMatch) {
+                return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+            }
+            const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+            if (localMatch) {
+                return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+            }
+        }
 
+        const date = value instanceof Date ? value : new Date(value);
         if (Number.isNaN(date.getTime())) {
             return "";
         }
 
-        return date.toISOString().slice(0, 10);
+        const parts = new Intl.DateTimeFormat("en-CA", {
+            timeZone: CONFIG.timeZone,
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+        }).formatToParts(date);
+
+        const year = parts.find((part) => part.type === "year")?.value || "";
+        const month = parts.find((part) => part.type === "month")?.value || "";
+        const day = parts.find((part) => part.type === "day")?.value || "";
+        if (!year || !month || !day) {
+            return "";
+        }
+        return `${year}-${month}-${day}`;
     }
 
     function dateValue(dateKey) {
@@ -396,44 +424,15 @@ async function main() {
             return null;
         }
 
-        const target = new Date(`${dateKey}T12:00:00.000Z`);
-
         for (const week of weekRecords) {
-            const startRaw = week.getCellValue(CONFIG.weeks.startDate);
-            const endRaw = week.getCellValue(CONFIG.weeks.endDate);
+            const startKey = toDateKey(week.getCellValue(CONFIG.weeks.startDate));
+            const endKey = toDateKey(week.getCellValue(CONFIG.weeks.endDate));
 
-            if (!startRaw || !endRaw) {
+            if (!startKey || !endKey) {
                 continue;
             }
 
-            const start = new Date(startRaw);
-            const end = new Date(endRaw);
-
-            if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
-                continue;
-            }
-
-            const startDateOnly = new Date(Date.UTC(
-                start.getUTCFullYear(),
-                start.getUTCMonth(),
-                start.getUTCDate(),
-                0,
-                0,
-                0,
-                0
-            ));
-
-            const endDateOnly = new Date(Date.UTC(
-                end.getUTCFullYear(),
-                end.getUTCMonth(),
-                end.getUTCDate(),
-                23,
-                59,
-                59,
-                999
-            ));
-
-            if (target >= startDateOnly && target <= endDateOnly) {
+            if (dateKey >= startKey && dateKey <= endKey) {
                 return week;
             }
         }

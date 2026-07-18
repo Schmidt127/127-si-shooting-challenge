@@ -25,15 +25,16 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
  *
- * Version: v5.4
+ * Version: v5.5
  * Date Written: 2026-06-09
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-07-18
  *
  * CURRENT SCHEMA FIXES
  * - Does NOT use XP Bucket Key.
  * - Uses XP Bucket only.
  * - Uses XP Activity Date.
  * - Uses XP Activity Date Source.
+ * - Streak End Date → Source Key date segment uses America/Denver (not UTC ISO slice).
  *
  * PURPOSE
  * - Reads one Streak Occurrence.
@@ -74,7 +75,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
-    version: "v5.4",
+    version: "v5.5",
+    timeZone: "America/Denver",
 
     tables: {
         streakOccurrences: "Streak Occurrences",
@@ -385,9 +387,28 @@ function isChecked(record, table, fieldName) {
 
 function toDateKey(value) {
     if (!value) return "";
-    const date = new Date(value);
+    if (typeof value === "string") {
+        const trimmed = String(value).trim();
+        const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+        const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+        if (localMatch) {
+            return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+        }
+    }
+    const date = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(date.getTime())) return "";
-    return date.toISOString().slice(0, 10);
+    const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: CONFIG.timeZone,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+    }).formatToParts(date);
+    const year = parts.find((part) => part.type === "year")?.value || "";
+    const month = parts.find((part) => part.type === "month")?.value || "";
+    const day = parts.find((part) => part.type === "day")?.value || "";
+    if (!year || !month || !day) return "";
+    return `${year}-${month}-${day}`;
 }
 
 function dateValue(dateKey) {
