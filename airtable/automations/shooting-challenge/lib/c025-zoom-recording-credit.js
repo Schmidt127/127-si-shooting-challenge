@@ -23,6 +23,10 @@ const XP_SOURCE_RECORDING = "Zoom Recording";
 const RULE_KEY_LIVE_BASE = "ZOOM_ATTEND_BASE";
 const RULE_KEY_RECORDING_DISPLAY = "ZOOM_ATTEND_RECORDING";
 
+/** Canonical XP Events reason fields (schema snapshots + 010/065/114/054). */
+const XP_REASON_PUBLIC_FIELD = "XP Reason Public";
+const XP_REASON_DEBUG_FIELD = "XP Reason Debug";
+
 const DEFAULTS = Object.freeze({
   xpPercentOfLive: 50,
   makeupWindowDays: 7,
@@ -274,9 +278,11 @@ function buildRecordingXpEventFields({
   xpAmount,
   activityDateKey,
   homeworkCompletionId,
+  scriptVersion = "v1.1",
 }) {
+  const sourceKey = buildZoomRecordingSourceKey(meetingId, enrollmentId);
   return {
-    sourceKey: buildZoomRecordingSourceKey(meetingId, enrollmentId),
+    sourceKey,
     xpPoints: xpAmount,
     xpBucket: XP_BUCKET_ZOOM,
     xpSource: XP_SOURCE_RECORDING,
@@ -285,8 +291,10 @@ function buildRecordingXpEventFields({
     weekId: weekId || "",
     activityDateKey: activityDateKey || "",
     homeworkCompletionId: homeworkCompletionId || "",
+    reasonPublicField: XP_REASON_PUBLIC_FIELD,
+    reasonDebugField: XP_REASON_DEBUG_FIELD,
     reasonPublic: "Zoom recording quiz credit",
-    reasonDebug: `C-025 117a ZOOM_RECORDING|${meetingId}|${enrollmentId}`,
+    reasonDebug: `C-025 ${scriptVersion} ${sourceKey}`,
   };
 }
 
@@ -389,6 +397,8 @@ module.exports = {
   XP_SOURCE_RECORDING,
   RULE_KEY_LIVE_BASE,
   RULE_KEY_RECORDING_DISPLAY,
+  XP_REASON_PUBLIC_FIELD,
+  XP_REASON_DEBUG_FIELD,
   DEFAULTS,
   S16_RESPONSIBILITY_OWNERS,
   isValidRecordId,
