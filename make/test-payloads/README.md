@@ -13,7 +13,8 @@ Sample **JSON payloads** for testing webhooks and scenario branches without touc
 
 | File | eventType | Scenario |
 |------|-----------|----------|
-| `homework-submitted.sample.json` | `homework.submitted` | Video upload → Drive |
+| [homework-completion-070a-dev.sample.json](./homework-completion-070a-dev.sample.json) | `070a` / `homework_completion` | DEV Make → Lambda upload engine |
+| `homework-submitted.sample.json` | `homework.submitted` | Legacy Drive path |
 | `weekly-summary.sample.json` | `weekly.summary.ready` | Parent weekly email |
 | *(add)* | | |
 
