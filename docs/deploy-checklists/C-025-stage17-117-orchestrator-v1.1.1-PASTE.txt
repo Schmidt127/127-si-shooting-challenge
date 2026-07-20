@@ -35,6 +35,8 @@
  * INPUT
  * - recordId (required) = Zoom Attendance record id from trigger
  * - webhookUrl (optional) — leave blank to keep email send disabled
+ * - dryRun (optional) — truthy ⇒ read/calculate/log intended writes; perform no writes
+ *   Absent/blank/false ⇒ live mode (default). Opt-in only.
  *
  * OUTPUTS
  * - statusOut: success | skipped | error
@@ -44,6 +46,8 @@
  * - xpEventId, xpPoints, sourceKeyOut
  * - gateActionOut, perfectWeekActionOut, emailActionOut
  * - attendeesWriteAttempted (always false on success path)
+ * - dryRunOut (true|false)
+ * - intendedWritesOut (JSON string when dryRun)
  *
  * TRIGGER (recommended)
  * - Table: Zoom Attendance
@@ -238,14 +242,50 @@ function dateOnlyFromKey(dateKey) {
   return new Date(Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), 12, 0, 0));
 }
 
-async function updateRecordSafe(table, recordId, fields) {
+function parseDryRunFlag(cfg) {
+  const raw = cfg && (cfg.dryRun != null ? cfg.dryRun : cfg.dry_run);
+  if (raw == null || raw === "") return false;
+  if (raw === true || raw === 1) return true;
+  const s = String(raw).trim().toLowerCase();
+  return s === "true" || s === "1" || s === "yes" || s === "dry" || s === "dry-run" || s === "dryrun";
+}
+
+async function updateRecordSafe(table, recordId, fields, opts) {
   const keys = Object.keys(fields || {});
   if (!keys.length) return;
   // Hard stop: never write live Attendees via any table update from this script.
   if (Object.prototype.hasOwnProperty.call(fields, "Attendees")) {
     throw new Error("Refuse write to Attendees — live roster is reserved for Automation 101");
   }
+  if (opts && opts.dryRun) {
+    if (opts.intendedWrites) {
+      opts.intendedWrites.push({
+        op: "update",
+        table: table.name,
+        recordId,
+        fields,
+      });
+    }
+    return;
+  }
   await table.updateRecordAsync(recordId, fields);
+}
+
+async function createRecordSafe(table, fields, opts) {
+  if (Object.prototype.hasOwnProperty.call(fields || {}, "Attendees")) {
+    throw new Error("Refuse write to Attendees — live roster is reserved for Automation 101");
+  }
+  if (opts && opts.dryRun) {
+    if (opts.intendedWrites) {
+      opts.intendedWrites.push({
+        op: "create",
+        table: table.name,
+        fields,
+      });
+    }
+    return "dryrun_pending_create";
+  }
+  return table.createRecordAsync(fields);
 }
 
 async function main() {
@@ -259,8 +299,14 @@ async function main() {
   setOutputSafe("perfectWeekActionOut", "");
   setOutputSafe("emailActionOut", "");
   setOutputSafe("attendeesWriteAttempted", false);
+  setOutputSafe("dryRunOut", false);
+  setOutputSafe("intendedWritesOut", "[]");
 
   const cfg = input.config();
+  const dryRun = parseDryRunFlag(cfg);
+  const intendedWrites = [];
+  const writeOpts = { dryRun, intendedWrites };
+  setOutputSafe("dryRunOut", dryRun);
   const recordId = requireRecId(String(cfg.recordId || "").trim());
   const webhookUrl = String(cfg.webhookUrl || "").trim();
 
@@ -318,9 +364,11 @@ async function main() {
   }
   let normalizeAction = "skipped_already_normalized";
   if (Object.keys(normalizePatch).length) {
-    await updateRecordSafe(zaTable, recordId, normalizePatch);
-    normalizeAction = "normalized";
-    rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+    await updateRecordSafe(zaTable, recordId, normalizePatch, writeOpts);
+    normalizeAction = dryRun ? "dryrun_would_normalize" : "normalized";
+    if (!dryRun) {
+      rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+    }
   }
 
   // SECTION B — Coach review sync
@@ -345,8 +393,12 @@ async function main() {
     reviewAction = "marked_needs_correction";
   }
   if (Object.keys(reviewPatch).length) {
-    await updateRecordSafe(zaTable, recordId, reviewPatch);
-    rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+    await updateRecordSafe(zaTable, recordId, reviewPatch, writeOpts);
+    if (dryRun && reviewAction === "marked_satisfactory") reviewAction = "dryrun_would_mark_satisfactory";
+    if (dryRun && reviewAction === "marked_needs_correction") reviewAction = "dryrun_would_mark_needs_correction";
+    if (!dryRun) {
+      rec = await zaTable.selectRecordAsync(recordId, { fields: zaFieldNames });
+    }
   }
 
   // SECTION C — XP Event create / soft-void (never Attendees)
@@ -395,8 +447,8 @@ async function main() {
   let xpAction = "skipped_not_approved";
   if (!approved || conflict || amount <= 0) {
     if (existing && fieldExists(xpTable, CONFIG.xp.active) && getCheckbox(existing, CONFIG.xp.active)) {
-      await updateRecordSafe(xpTable, existing.id, { [CONFIG.xp.active]: false });
-      xpAction = "deactivated_on_conflict";
+      await updateRecordSafe(xpTable, existing.id, { [CONFIG.xp.active]: false }, writeOpts);
+      xpAction = dryRun ? "dryrun_would_deactivate_on_conflict" : "deactivated_on_conflict";
       setOutputSafe("xpEventId", existing.id);
       setOutputSafe("xpPoints", "0");
     } else {
@@ -422,8 +474,8 @@ async function main() {
       patch[CONFIG.xp.active] = true;
     }
     if (Object.keys(patch).length) {
-      await updateRecordSafe(xpTable, existing.id, patch);
-      xpAction = "updated";
+      await updateRecordSafe(xpTable, existing.id, patch, writeOpts);
+      xpAction = dryRun ? "dryrun_would_update" : "updated";
     } else {
       xpAction = "skipped_exists";
     }
@@ -456,8 +508,8 @@ async function main() {
     if (fieldExists(xpTable, CONFIG.xp.awardedBy)) {
       createFields[CONFIG.xp.awardedBy] = CONFIG.values.awardedBy;
     }
-    const created = await xpTable.createRecordAsync(createFields);
-    xpAction = "created";
+    const created = await createRecordSafe(xpTable, createFields, writeOpts);
+    xpAction = dryRun ? "dryrun_would_create" : "created";
     setOutputSafe("xpEventId", created);
     setOutputSafe("xpPoints", String(amount));
   }
@@ -512,8 +564,8 @@ async function main() {
       const sendKey = `ZOOM_REC_APPROVAL|${getText(rec, CONFIG.za.enrollmentRid) || enrollIds[0]}|${
         getText(rec, CONFIG.za.zoomMeetingRid) || meetingIds[0]
       }`;
-      await updateRecordSafe(zaTable, recordId, { [CONFIG.za.sendKey]: sendKey });
-      emailAction = "prepared_send_key_no_webhook_post";
+      await updateRecordSafe(zaTable, recordId, { [CONFIG.za.sendKey]: sendKey }, writeOpts);
+      emailAction = dryRun ? "dryrun_would_prepare_send_key" : "prepared_send_key_no_webhook_post";
     }
   }
   setOutputSafe("emailActionOut", emailAction);
@@ -529,6 +581,7 @@ async function main() {
   setOutputSafe("attendeesWriteAttempted", false);
   setOutputSafe("errorOut", "");
   setOutputSafe("debugStep", "complete");
+  setOutputSafe("intendedWritesOut", JSON.stringify(intendedWrites));
   console.log(
     JSON.stringify({
       automation: SCRIPT.scriptName,
@@ -541,8 +594,13 @@ async function main() {
       pwAction,
       emailAction,
       sourceKey: key,
+      dryRun,
+      intendedWriteCount: intendedWrites.length,
+      intendedWrites: dryRun ? intendedWrites : undefined,
       attendeesWriteAttempted: false,
-      note: "Never writes Zoom Meetings.Attendees; 101 trigger prerequisites untouched",
+      note: dryRun
+        ? "Dry-run: no Airtable writes; Never writes Zoom Meetings.Attendees"
+        : "Never writes Zoom Meetings.Attendees; 101 trigger prerequisites untouched",
     })
   );
 }

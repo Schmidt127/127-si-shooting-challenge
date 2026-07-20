@@ -1,0 +1,123 @@
+{
+  "package": "C-025 Stage 17 expected results",
+  "status": "Repository readiness package — PROD schema still blocked (Zoom Attendance missing). Automations remain OFF. Do not install 115 in PROD.",
+  "confirmedInvariants": {
+    "liveBasePoints": 60,
+    "recordingPercent": 50,
+    "recordingPoints": 30,
+    "recordingKey": "ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}",
+    "liveKey": "ZOOM_ATTEND_BASE|{meetingKey}|{enrollmentId}",
+    "emailKey": "ZOOM_REC_APPROVAL|{enrollmentRID}|{meetingRID}",
+    "recordingNeverWritesAttendees": true,
+    "liveWinsConflict": true,
+    "historicalLiveXpIsImmutable": true
+  },
+  "assumptions": [
+    "Automation status/action wording may vary by deployed Airtable script action; observable writes and non-writes are the acceptance criteria.",
+    "Gate outcome depends on the fixture's configured Level Gate Rules; this snapshot asserts counting and ownership, not a particular level name."
+  ],
+  "scenarios": {
+    "recordingXpCreate": {
+      "fixture": "recTestZARecordingApproved",
+      "run": "117 v1.1.1 with recordId=recTestZARecordingApproved and blank webhookUrl",
+      "expectedOutput": {
+        "statusOut": "success",
+        "sourceKeyOut": "ZOOM_CREDIT|recTestEnrollment|recTestZoomMeetingRecording",
+        "xpPoints": 30,
+        "attendeesWriteAttempted": false
+      },
+      "expectedWrites": {
+        "xpEvent": {
+          "count": 1,
+          "Source Key": "ZOOM_CREDIT|recTestEnrollment|recTestZoomMeetingRecording",
+          "XP Points": 30,
+          "XP Bucket": "Zoom Attendance",
+          "XP Source": "Zoom Meeting Recording Quiz",
+          "Active?": true,
+          "Enrollment": ["recTestEnrollment"],
+          "Zoom Meeting": ["recTestZoomMeetingRecording"]
+        }
+      },
+      "expectedNonWrites": [
+        "Zoom Meetings.recTestZoomMeetingRecording.Attendees",
+        "Zoom Attendance.recTestZARecordingApproved.Gate Credit Applied?",
+        "Zoom Attendance.recTestZARecordingApproved.Perfect Week Credit Applied?",
+        "any historical ZOOM_ATTEND_BASE XP Event"
+      ]
+    },
+    "duplicateRetry": {
+      "fixture": "recTestZARecordingApproved",
+      "precondition": "An active recording XP Event already exists with the exact recording key.",
+      "run": "Run 117 again with the same recordId.",
+      "expectedOutput": {
+        "statusOut": "skipped",
+        "actionOut": "exists_or_equivalent"
+      },
+      "expectedWrites": {
+        "xpEventCreates": 0
+      },
+      "expectedNonWrites": [
+        "second ZOOM_CREDIT|recTestEnrollment|recTestZoomMeetingRecording XP Event",
+        "Zoom Meetings.recTestZoomMeetingRecording.Attendees"
+      ]
+    },
+    "conflictSoftVoid": {
+      "fixture": "recTestZARecordingConflict",
+      "precondition": "recTestEnrollment is an Attendee of recTestZoomMeetingLive and recTestExistingLiveXP is active.",
+      "run": "Run 117 or 117c against the conflicting recording row.",
+      "expectedOutput": {
+        "statusOut": "skipped_or_successful_soft_void",
+        "conflict": true
+      },
+      "expectedWrites": {
+        "recordingXp": "No new active recording XP; if one already exists for this synthetic key, set Active? to false."
+      },
+      "expectedNonWrites": [
+        "recTestExistingLiveXP.Active?",
+        "recTestExistingLiveXP.XP Points",
+        "Zoom Meetings.recTestZoomMeetingLive.Attendees"
+      ]
+    },
+    "gateEligibility": {
+      "fixture": "recTestZARecordingApproved",
+      "run": "042 v3.1 after recTestEnrollment re-enters view 042 with Level Recalc Needed? checked.",
+      "expectedWrites": {
+        "enrollment": "Current/Next Level, Level Gate Rule, Level Status, and Level Recalc Needed? update according to existing gate rules.",
+        "zoomAttendance": "Gate Credit Applied? becomes true only if the approved non-conflicting recording meeting is actually counted."
+      },
+      "expectedNonWrites": [
+        "Zoom Meetings.recTestZoomMeetingRecording.Attendees",
+        "Perfect Week Credit Applied?",
+        "double-count of same meeting if live attendance exists"
+      ]
+    },
+    "perfectWeekEligibility": {
+      "fixture": "recTestWAS",
+      "run": "057 v1.3 after the WAS condition Perfect Week Calculation Queue? = 1 is newly matched.",
+      "expectedWrites": {
+        "weeklyAthleteSummary": "Perfect Week helper fields/status update; completion status becomes Ready when processing succeeds.",
+        "zoomAttendance": "Perfect Week Credit Applied? becomes true only if the approved non-conflicting recording meeting is actually counted."
+      },
+      "expectedNonWrites": [
+        "Zoom Meetings.recTestZoomMeetingRecording.Attendees",
+        "Gate Credit Applied?",
+        "double-count of same meeting if live attendance exists"
+      ]
+    },
+    "emailSkipWebhookBlank": {
+      "fixture": "recTestZARecordingApproved",
+      "run": "117 v1.1.1 with webhookUrl blank, or 117f with no webhook configuration.",
+      "expectedOutput": {
+        "emailActionOut": "skipped_or_equivalent"
+      },
+      "expectedWrites": {
+        "emailDelivery": 0
+      },
+      "expectedNonWrites": [
+        "Recording Approval Email Sent At",
+        "XP Event changes caused by email failure",
+        "Zoom Meetings.Attendees"
+      ]
+    }
+  }
+}

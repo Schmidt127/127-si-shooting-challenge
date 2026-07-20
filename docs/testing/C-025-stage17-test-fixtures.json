@@ -1,0 +1,124 @@
+{
+  "package": "C-025 Stage 17",
+  "status": "Repository readiness package — PROD schema still blocked (Zoom Attendance missing). Automations remain OFF. Do not install 115 in PROD.",
+  "classification": {
+    "confirmed": [
+      "All identifiers in this file are synthetic fixtures, not Airtable field IDs.",
+      "Recording XP is 30 when ZOOM_ATTEND_BASE is 60 and recording percent is 50.",
+      "Live attendance wins for the same Enrollment and Zoom Meeting."
+    ],
+    "assumptions": [
+      "The executor creates these isolated records only after the production schema re-audit passes.",
+      "Fixture labels or notes will mark every created record as a C-025 smoke-test record."
+    ]
+  },
+  "globalConfig": {
+    "id": "recTestGlobalConfig",
+    "Zoom Recording XP Percent of Live": 50,
+    "Recording Path Enabled?": true,
+    "Recording Approval Email Enabled?": false
+  },
+  "programConfig": {
+    "id": "recTestProgramConfig",
+    "Global Config": ["recTestGlobalConfig"],
+    "Recording Path Enabled?": true,
+    "Recording Counts for Perfect Week?": true,
+    "Recording Counts for Gates?": true,
+    "Recording Approval Email Enabled?": false
+  },
+  "zoomMeetings": [
+    {
+      "id": "recTestZoomMeetingRecording",
+      "Zoom Meeting Key": "recTestMeetingKeyRecording",
+      "Meeting Status": "Completed",
+      "Start Time": "2026-07-20T18:00:00-06:00",
+      "Week": ["recTestWeek"],
+      "Attendees": [],
+      "Program Config": ["recTestProgramConfig"]
+    },
+    {
+      "id": "recTestZoomMeetingLive",
+      "Zoom Meeting Key": "recTestMeetingKeyLive",
+      "Meeting Status": "Completed",
+      "Start Time": "2026-07-20T19:00:00-06:00",
+      "Week": ["recTestWeek"],
+      "Attendees": ["recTestEnrollment"],
+      "Create XP Events": true,
+      "Program Config": ["recTestProgramConfig"]
+    }
+  ],
+  "enrollment": {
+    "id": "recTestEnrollment",
+    "Enrollment RID": "recTestEnrollment",
+    "Active?": true,
+    "Level Recalc Needed?": true,
+    "Lifetime XP Total": 0,
+    "Total Zoom Attendances": 0
+  },
+  "zoomAttendance": [
+    {
+      "id": "recTestZALive",
+      "Attendance Method": "Live",
+      "Enrollment": ["recTestEnrollment"],
+      "Enrollment RID": "recTestEnrollment",
+      "Zoom Meeting": ["recTestZoomMeetingLive"],
+      "Zoom Meeting RID": "recTestZoomMeetingLive",
+      "note": "Live rows are rostered via Zoom Meetings.Attendees; this ZA Live row is optional evidence only and must not receive ZOOM_CREDIT XP."
+    },
+    {
+      "id": "recTestZARecordingApproved",
+      "Attendance Method": "Recording Quiz",
+      "Enrollment": ["recTestEnrollment"],
+      "Enrollment RID": "recTestEnrollment",
+      "Zoom Meeting": ["recTestZoomMeetingRecording"],
+      "Zoom Meeting RID": "recTestZoomMeetingRecording",
+      "Recording Quiz Review Status": "Satisfactory",
+      "Recording Quiz Satisfactory?": true,
+      "Zoom Credit Key": "ZOOM_CREDIT|recTestEnrollment|recTestZoomMeetingRecording",
+      "Zoom Credit Approved?": true,
+      "Zoom Credit Conflict?": false,
+      "Zoom XP Amount": 30,
+      "Zoom Gate Credit Earned?": true,
+      "Effective Recording Counts for Perfect Week?": true,
+      "Gate Credit Applied?": false,
+      "Perfect Week Credit Applied?": false,
+      "Recording Approval Email Send Key": "ZOOM_REC_APPROVAL|recTestEnrollment|recTestZoomMeetingRecording"
+    },
+    {
+      "id": "recTestZARecordingConflict",
+      "Attendance Method": "Recording Quiz",
+      "Enrollment": ["recTestEnrollment"],
+      "Enrollment RID": "recTestEnrollment",
+      "Zoom Meeting": ["recTestZoomMeetingLive"],
+      "Zoom Meeting RID": "recTestZoomMeetingLive",
+      "Recording Quiz Review Status": "Satisfactory",
+      "Recording Quiz Satisfactory?": true,
+      "Zoom Credit Key": "ZOOM_CREDIT|recTestEnrollment|recTestZoomMeetingLive",
+      "Zoom Credit Approved?": false,
+      "Zoom Credit Conflict?": true,
+      "Zoom XP Amount": 30
+    }
+  ],
+  "existingXpEvents": [
+    {
+      "id": "recTestExistingLiveXP",
+      "Source Key": "ZOOM_ATTEND_BASE|recTestMeetingKeyLive|recTestEnrollment",
+      "Enrollment": ["recTestEnrollment"],
+      "Zoom Meeting": ["recTestZoomMeetingLive"],
+      "XP Points": 60,
+      "XP Bucket": "Zoom Attendance",
+      "XP Source": "Zoom Meeting Attendance Base",
+      "Active?": true,
+      "XP Activity Date": "2026-07-20"
+    }
+  ],
+  "weeklyAthleteSummary": {
+    "id": "recTestWAS",
+    "Enrollment": ["recTestEnrollment"],
+    "Week": ["recTestWeek"],
+    "Perfect Week Calculation Queue?": true,
+    "Perfect Week Automation Status": "Pending",
+    "Perfect Week Zoom Meeting Count": 1,
+    "Perfect Week Zoom Attendance Count": 0
+  }
+}
