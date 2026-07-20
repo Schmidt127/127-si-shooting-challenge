@@ -1,10 +1,10 @@
 # C-025 Stage 17 — Production release packet
 
-**Status:** **BLOCKED — SCHEMA MIGRATION REQUIRED**  
-**Date:** 2026-07-18  
-**DEV:** `appTetnuCZlCZdTCT` (one-click ETF **Pass** — do not treat as PROD-ready)  
-**PROD:** `appn84sqPw03zEbTT` (untouched)  
-**Companion:** [C-025-stage17-prod-schema-gap-analysis.md](./C-025-stage17-prod-schema-gap-analysis.md) · [C-025-stage17-prod-readiness-status.md](../status/C-025-stage17-prod-readiness-status.md)
+**Status:** **COMPLETE** — Stage 17 PROD verification PASS (2026-07-20); 117 / 057 / 042 **ON**  
+**Date:** 2026-07-18 · **Updated:** 2026-07-20  
+**DEV:** `appTetnuCZlCZdTCT`  
+**PROD:** `appn84sqPw03zEbTT`  
+**Companion:** [live enablement](./C-025-stage17-prod-live-2026-07-20.md) · [progress](../status/C-025-stage17-current-prod-progress.md) · [117 verification](./C-025-stage17-prod-117-verification-2026-07-20.md) · [rollback](./C-025-stage17-rollback-plan.md)
 
 ---
 
@@ -12,14 +12,15 @@
 
 | Gate | State |
 |------|--------|
-| DEV one-click `C025_STAGE17_DOWNSTREAM` | **PASS** (`recEuHFTjBftoJGMc`, **11/22** queries, **057+042 fired**, Run Test? cleared, **117 OFF**) |
-| Repo / DEV 115 alignment | **115 v1.8** committed on feature branch with paste packet |
-| PROD Zoom Attendance table | **Missing** |
-| Curated schema blockers | **125 missing** + **1 incompatible** select option |
-| PROD automation paste | **Forbidden** until re-audit curated blockers = 0 |
-| PROD readiness | **Blocked on schema migration** |
+| DEV one-click `C025_STAGE17_DOWNSTREAM` | **PASS** |
+| PROD 117 create + idempotency | **PASS** — ZA `recfqsgM7zDobxsPf` → XP `recOceuW34jQz7suD` |
+| Preconflict rollup | **PASS** — `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; LIVE+REC tags confirmed |
+| Conflict exclusivity | **PASS** — recording Conflict=1, Approved=0; XP inactive |
+| PROD permanent enable | **DONE** — **117 / 057 / 042 ON**; **101 unchanged**; **`webhookUrl` blank** |
+| **115** | **Not installed** |
+| **Stage 17** | **COMPLETE** |
 
-**Do not paste 115 to PROD.** ETF remains DEV-only.
+**Do not paste 115 to PROD.** Email webhook remains deferred (blank) — next C-025 follow-on.
 
 ---
 

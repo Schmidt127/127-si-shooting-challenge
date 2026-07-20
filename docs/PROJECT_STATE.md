@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-18** (C-025: DEV ETF **PASS** on 115 **v1.8** — 11/22 queries; 057+042 fired; 117 OFF; PROD **blocked on schema migration** — paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt))
+Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; 117/057/042 ON; webhook blank)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
-| **C-025 — Zoom recording credit** | **Stage 17 DEV ETF PASS** (115 **v1.8**, 11/22) · 057+042 fired · 117 OFF · PROD **blocked — schema migration** ([status](./status/C-025-stage17-prod-readiness-status.md)) |
+| **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |
 | **C-011 — Automatic weekly email** | **Repo ready** (118/119 dry-run default + 072/074 patches) — **DEV paste pending**; schedules **must stay off**; Make webhook live-blocked |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
@@ -116,16 +116,14 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Architecture | **Stage 17 Zoom Attendance** — 117 Orchestrator + **057/042 combined Zoom credit** (repo) |
+| Architecture | **Stage 17 Zoom Attendance** — 117 Orchestrator + **057/042 combined Zoom credit** |
 | Hard rule | **Never** write `Zoom Meetings.Attendees` (101 double-credit risk) |
-| Scripts | 117 **v1.1.1** (OFF) · **057 v1.3** · **042 v3.1** — [PW/gate packet](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
-| DEV XP Source option | **`Zoom Meeting Recording Quiz`** added (2026-07-18) |
-| DEV preflight | **PASS** — ZA 22/22; `ZOOM_ATTEND_BASE` = 60; Config % = 50 → expect **30** XP |
-| Live DEV paste | **057 v1.3 · 042 v3.1 · 117 v1.1.1 OFF** · **115 v1.8** · scenario `recEuHFTjBftoJGMc` **PASS** (11/22) |
-| Live PROD | **Blocked — schema migration** (Zoom Attendance missing); **101 unchanged** |
-| Downstream gaps | PROD schema + XP Source option + Config % required before any Stage 17 PROD paste |
-| Packet | [recording](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md) · [PW/gate](./deploy-checklists/C-025-stage17-perfect-week-level-gate-dev-installation-packet.md) |
-| Results | [C-025-stage17-dev-install-results-2026-07-18.md](./deploy-checklists/C-025-stage17-dev-install-results-2026-07-18.md) |
+| Preconflict rollup | **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified) |
+| Scripts | 117 **v1.1.1** (**ON**) · **057 v1.3** (**ON**) · **042 v3.1** (**ON**) · **101 unchanged** |
+| PROD Stage 17 | **COMPLETE 2026-07-20** — Conflict PASS; webhook **blank** (email deferred) · **115 not installed** |
+| Final verify | ZA `recfqsgM7zDobxsPf` Conflict=1 / Approved=0; XP `recOceuW34jQz7suD` inactive; LIVE+REC tags present |
+| Immediate rollback | Attendees write from recording; dup `ZOOM_CREDIT`; live XP rewrite; unexpected email; 115 in PROD — [rollback](./deploy-checklists/C-025-stage17-rollback-plan.md) |
+| Packet | [live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md) · [verification](./deploy-checklists/C-025-stage17-prod-117-verification-2026-07-20.md) |
 
 ---
 
@@ -225,7 +223,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
-| Medium | C-025 not installed; C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr dual-run |
+| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr dual-run |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

@@ -12,7 +12,7 @@
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-07-06** (Phase 2B — Engineering Constitution; Wave 2A complete)
+Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; webhook blank deferred)
 
 ---
 
@@ -186,7 +186,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-005** | Tune Level Gate Rules | Spread gates early (e.g. 1 HW past level 1); numbers in Airtable only | C-021, V2-013 | queued |
 | **V2-006** | Tune XP Reward Rules | Per-band rules via **links**; streak economics review (**053**) | C-021 | queued |
 | **V2-007** | Tune Levels table | Thresholds for 2026–27 | V2-005 | queued |
-| **C-025** | Zoom **recording** attendance — partial credit path | Legitimate misses happen; kids should not be **fully blocked** from higher levels for one missed live Zoom. **Today:** **101** awards live **Attendees** only; docblock mentions supplemental re-run when staff manually add attendees after live award — **no parent-facing recording-watch flow**, no separate XP amount for recording. **Target:** defined alternative when athlete watches **Zoom recording** — e.g. lower XP via **XP Reward Rules**, counts toward **Level Gate Rules** zoom requirement at reduced weight (config, not script constants). Needs intake/attestation (form or coach confirm) + **Source Key** so live + recording cannot double-award. | C-024, V2-006, V2-005 | queued |
+| **C-025** | Zoom **recording** attendance — partial credit path | **Stage 17 COMPLETE in PROD (2026-07-20).** Preconflict rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; LIVE+REC tags confirmed; recording ZA `recfqsgM7zDobxsPf` Conflict=1 / Approved=0; XP `recOceuW34jQz7suD` inactive. **ON:** 117 / 057 / 042. **101 unchanged.** **`webhookUrl` blank** (email deferred = next C-025 follow-on). Ops: [live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [rollback](./deploy-checklists/C-025-stage17-rollback-plan.md). | C-024, V2-006, V2-005 | **done** (Stage 17; email webhook deferred) |
 
 ### Wave 10 — Communication & website
 
@@ -243,10 +243,9 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 
 ### Zoom recording attendance (C-025)
 
-- Live path: **101** + `Attendees` link → full zoom XP + gate credit.
-- Recording path (design TBD): attest watch → partial XP (config in **XP Reward Rules**) + partial gate credit (**Level Gate Rules**).
-- **101** already supports supplemental attendee add after live award — extend into **first-class recording workflow**, not manual-only ops.
-- **Source Key** must distinguish `ZOOM_LIVE` vs `ZOOM_RECORDING` for same meeting + enrollment.
+- Live path: **101** + `Attendees` → `ZOOM_ATTEND_BASE|…`.
+- Recording path: Zoom Attendance + **117 v1.1.1** → `ZOOM_CREDIT|…` (~30 XP at 50%) + **042/057** without writing Attendees.
+- **PROD COMPLETE 2026-07-20:** Stage 17 verification PASS — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; Conflict exclusivity confirmed. 117 / 057 / 042 **ON**; 101 unchanged; webhook **blank**. [live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md)
 
 ---
 

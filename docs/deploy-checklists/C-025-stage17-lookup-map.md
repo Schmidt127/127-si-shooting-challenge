@@ -203,7 +203,7 @@ These are referenced by Stage 17 formulas/lookups but **absent from `items[]` cr
 | `Week End Date` | Zoom Meetings | Lookup | Link `Week` → Weeks.`End Date` | ZM `Calculated Recording Quiz Deadline` |
 | `RecordId` | Zoom Meetings | Formula | `RECORD_ID()` | ZA `Zoom Meeting RID` |
 | `Record Id` | Enrollments | Formula | `RECORD_ID()` | ZA `Enrollment RID` |
-| `Approved Preconflict Pair Tags` | Zoom Meetings | Rollup | Link `Zoom Attendance` → `Preconflict Pair Tag`; agg `ARRAYJOIN(values)` | ZA `Meeting Approved Preconflict Pair Tags` |
+| `Approved Preconflict Pair Tags` | Zoom Meetings | Rollup | Link `Zoom Attendance` → `Preconflict Pair Tag`; agg **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified 2026-07-20; Meta often fails to store formula — set in UI) | ZA `Meeting Approved Preconflict Pair Tags` |
 | `Attendance Method` | Zoom Meetings | Single select | Choices include `Recording Quiz` (DEV) | ZM `Calculated Recording Quiz Deadline` |
 | `Config (Global Scope)` | Zoom Meetings | Link → Config | Mike: exists | Global Config lookups |
 | `Config (Program Scope)` | Zoom Meetings | Link → Config | Implied by Program Config lookups | Program Config lookups |

@@ -92,7 +92,7 @@ Do these in the **Airtable UI** (or OMNI with explicit UI confirmation):
 
 36. Create formula **Zoom Credit Pre-Approved?** (D1).
 37. Create formula **Preconflict Pair Tag** (D2).
-38. Create Zoom Meetings Rollup **Approved Preconflict Pair Tags** — link **Zoom Attendance** — field **Preconflict Pair Tag** — aggregation `ARRAYJOIN(values)`.
+38. Create Zoom Meetings Rollup **Approved Preconflict Pair Tags** — link **Zoom Attendance** — field **Preconflict Pair Tag** — aggregation **`ARRAYJOIN(ARRAYUNIQUE(values), "\n")`** (PROD verified 2026-07-20; set in UI — Meta often does not persist rollup formula).
 39. Create Lookup **Meeting Approved Preconflict Pair Tags** — link **Zoom Meeting** — source **Approved Preconflict Pair Tags**.
 40. Create formula **Zoom Credit Conflict?** (D3).
 41. Create formula **Zoom Credit Approved?** (D4).

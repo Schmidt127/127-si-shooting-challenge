@@ -1,8 +1,10 @@
 # C-025 Stage 17 — Automation enable order
 
-**Status:** Repository readiness package — PROD schema still blocked (Zoom Attendance missing). Automations remain OFF. Do not install 115 in PROD.
+**Status:** **COMPLETE** (2026-07-20) — Stage 17 PROD verification PASS; **117 / 057 / 042 ON**; **101 unchanged**; **`webhookUrl` blank**. Do not install 115 in PROD.
 
-**CONFIRMED:** This is the safest enablement sequence for the preferred 117 v1.1.1 orchestrator package. Use modular 117a–f only as an alternative; do not install either package alongside the other.
+**CONFIRMED:** Preferred package is 117 v1.1.1 orchestrator (not 117a–f alongside).
+
+**Evidence:** [prod-live-2026-07-20](./C-025-stage17-prod-live-2026-07-20.md) · [117 verification](./C-025-stage17-prod-117-verification-2026-07-20.md)
 
 ## Preconditions
 

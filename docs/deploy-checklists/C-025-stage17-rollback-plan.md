@@ -1,6 +1,6 @@
 # C-025 Stage 17 — Rollback plan
 
-**Status:** Repository readiness package — PROD schema still blocked (Zoom Attendance missing). Automations remain OFF. Do not install 115 in PROD.
+**Status:** PROD Stage 17 **COMPLETE** (117 / 057 / 042 ON as of 2026-07-20; verification PASS). Use this plan for **immediate containment** only. Do not install 115 in PROD.
 
 **CONFIRMED safety invariant:** Preserve legitimate history. Never delete ledger rows or rewrite historical live `ZOOM_ATTEND_BASE|…` XP. Correct only an erroneous, newly created synthetic/recording entry by soft-voiding its `Active?` value.
 
