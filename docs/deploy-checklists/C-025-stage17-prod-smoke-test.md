@@ -1,9 +1,12 @@
 # C-025 Stage 17 — PROD isolated smoke test
 
-**Status:** Do not execute until schema re-audit Pass + scripts pasted OFF
+**Status:** **COMPLETE** (2026-07-20) — Stage 17 PROD verification PASS; **117 / 057 / 042 ON**; **101** unchanged; **`webhookUrl` blank**.  
+**S3 + S5 evidence:** [verification](./C-025-stage17-prod-117-verification-2026-07-20.md) · [live](./C-025-stage17-prod-live-2026-07-20.md)  
 **PROD:** `appn84sqPw03zEbTT`
-**Fixtures:** **New dedicated** PROD test athlete + Enrollment + Zoom Meeting (not historical athletes)
+**Fixtures:** Dedicated PROD test Enrollment + Zoom Meeting (Schmidt Testing used for 117 S3/S5)
 **Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json) · [implementation checklist](./C-025-stage17-prod-implementation-checklist.md)
+
+> Procedure steps below retain controlled ON/OFF windows used during smoke. Current production posture is **COMPLETE** with Stage 17 automations **ON** (except 115 never installed; webhook blank).
 
 ---
 
@@ -24,12 +27,12 @@ Record IDs (fill during test):
 
 | Role | Record ID |
 |------|-----------|
-| Test Athlete | |
-| Test Enrollment | |
-| Test Zoom Meeting | |
-| Test Zoom Attendance (recording) | |
+| Test Athlete | (Schmidt Testing fixture) |
+| Test Enrollment | `recgP9qZYjAhE7NXm` |
+| Test Zoom Meeting | `reczeUT0AJUWMmEOb` |
+| Test Zoom Attendance (recording) | `recfqsgM7zDobxsPf` |
 | Live XP Event (if any) | |
-| Recording XP Event | |
+| Recording XP Event | `recOceuW34jQz7suD` |
 
 ---
 
@@ -59,6 +62,8 @@ Record IDs (fill during test):
 2. Turn **117 ON** briefly; Test/trigger on recording ZA; then **OFF**.
 3. **Pass if:** exactly one XP Event Source Key `ZOOM_CREDIT|…`, Points **30**, Source `Zoom Meeting Recording Quiz`, Bucket `Zoom Attendance`, Enrollment + Meeting linked; **Attendees unchanged**.
 
+**PROD result 2026-07-20:** **PASS** — ZA `recfqsgM7zDobxsPf` → XP `recOceuW34jQz7suD` (30 XP; Awarded By `117-orchestrator-v1.1.1`). 117 was returned **OFF** after the controlled smoke window (later permanently enabled for Stage 17 COMPLETE).
+
 ### S4 — No double XP (both paths)
 
 1. Same Enrollment + Meeting with live Attendees membership **and** recording ZA approved.
@@ -69,6 +74,8 @@ Record IDs (fill during test):
 
 1. Re-run 117 on same ZA.
 2. **Pass if:** no second `ZOOM_CREDIT|…` row (skip/exists).
+
+**PROD result 2026-07-20:** **PASS** — second run on `recfqsgM7zDobxsPf` → **`skipped_exists`**; still one XP Event `recOceuW34jQz7suD`.
 
 ### S6 — Perfect Week credit (057)
 
@@ -114,5 +121,5 @@ Record IDs (fill during test):
 
 | Role | Name / date | Result |
 |------|-------------|--------|
-| Executor | | |
-| Mike approval to enable 117 | | |
+| Executor | Mike / Cursor close-out 2026-07-20 | S3 + S5 **PASS**; Stage 17 **COMPLETE** |
+| Mike approval to enable 117 | 2026-07-20 | **Done** — 117 / 057 / 042 **ON** ([live](./C-025-stage17-prod-live-2026-07-20.md)) |

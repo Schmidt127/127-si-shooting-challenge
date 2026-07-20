@@ -4,7 +4,8 @@
 **Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
 **Authority:** [C-025-stage17-prod-schema-manifest.json](./C-025-stage17-prod-schema-manifest.json)  
 **Related:** [C-025-stage17-lookup-map.md](./C-025-stage17-lookup-map.md)  
-**Mode:** Documentation only — no Airtable writes · **Automations stay OFF**
+**Mode:** Documentation only — no Airtable writes from this doc  
+**Stage 17 status:** **COMPLETE** (2026-07-20) — **117 / 057 / 042 ON** in PROD; **101** unchanged; do **not** install **115**
 
 Formulas below use **field names** (not DEV field IDs). After creating PROD fields, paste into Airtable so references resolve to **PROD** field IDs automatically.
 
@@ -322,12 +323,17 @@ IF(
 **Default:** `50`  
 **Expected with live base 60:** recording XP = `FLOOR(60 * 50 / 100)` = **30** (on ZA amount formula)
 
+**PROD fix (2026-07-20):** Use Program Config XP % **only when** `Config (Program Scope)` is populated; otherwise fall back to Global Config (then 50). Do not prefer Program Config solely because the Program Config rollup cell is non-blank. Evidence: [117 PROD verification](./C-025-stage17-prod-117-verification-2026-07-20.md).
+
 ```airtable
 IF(
   {Recording XP Percentage — Meeting Override} != BLANK(),
   {Recording XP Percentage — Meeting Override},
   IF(
-    {Program Config: Recording XP %} != BLANK(),
+    AND(
+      {Config (Program Scope)} != BLANK(),
+      {Program Config: Recording XP %} != BLANK()
+    ),
     {Program Config: Recording XP %},
     IF(
       {Global Config: Recording XP %} != BLANK(),
