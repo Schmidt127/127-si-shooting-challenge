@@ -1,0 +1,23 @@
+{
+  "automationNumber": "117f",
+  "templateKey": "ZOOM_RECORDING_APPROVED",
+  "sendKey": "ZOOM_REC_EMAIL|recEnrollTest00001|recMeetingTest0001",
+  "enrollmentRid": "recEnrollTest00001",
+  "zoomMeetingRid": "recMeetingTest0001",
+  "zoomAttendanceId": "recZoomAttend00001",
+  "timing": "On Satisfactory",
+  "_meta": {
+    "purpose": "Sanitized sample for Make Run-once / offline validation — replace rec* with real DEV fixture IDs before live Airtable Gets",
+    "base": "DEV appTetnuCZlCZdTCT only",
+    "doNot": [
+      "Include real webhook URLs",
+      "Include real parent emails or PII",
+      "Point at PROD",
+      "Use parent addresses as Gmail To in sendMode=test"
+    ],
+    "testRecipient": "REPLACE_WITH_MIKE_CONTROLLED_TEST_INBOX",
+    "expectedHappyPath": "HTTP 2xx after Gmail success; Make Data store records sendKey",
+    "expectedRejectAutomation": "Change automationNumber to 999 → HTTP non-2xx",
+    "expectedRejectTemplate": "Change templateKey to OTHER → HTTP non-2xx"
+  }
+}

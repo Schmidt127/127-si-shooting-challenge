@@ -15,6 +15,7 @@ Sample **JSON payloads** for testing webhooks and scenario branches without touc
 |------|-----------|----------|
 | `homework-submitted.sample.json` | `homework.submitted` | Video upload → Drive |
 | `weekly-summary.sample.json` | `weekly.summary.ready` | Parent weekly email |
+| `c025-117f-zoom-recording-approved.sample.json` | `zoom.recording.approved` (117f) | DEV Zoom recording approval email — [contract](../../docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md) |
 | *(add)* | | |
 
 ## Example: Homework Submitted

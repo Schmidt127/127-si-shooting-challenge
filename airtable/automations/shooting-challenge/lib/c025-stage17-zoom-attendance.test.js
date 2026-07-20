@@ -282,6 +282,9 @@ test("117 orchestrator v1.1.1 forbids Attendees and does not set Applied flags",
   assert(!src.includes("marked_perfect_week_applied_flag_only"), "no premature pw applied");
   assert(src.includes("parseDryRunFlag"), "dry-run helper");
   assert(src.includes("createRecordSafe"), "dry-run create path");
+  assert(src.includes("deferred_to_117f"), "email deferred to 117f");
+  assert(!src.includes("ZOOM_REC_APPROVAL|"), "no competing ZOOM_REC_APPROVAL keys");
+  assert(!src.includes("prepared_send_key_no_webhook_post"), "no send-key prep stamps");
   const r = c.assertNeverWritesLiveAttendees(src);
   assert(r.ok, `orchestrator attendees hits: ${r.hits.join(", ")}`);
 });
@@ -335,12 +338,107 @@ test("Recording XP calculation 60 x 50% = 30 with half-up rounding", () => {
   assert(!bad.ok, "missing base");
 });
 
-test("Email send key construction", () => {
+test("Email send key construction uses ZOOM_REC_EMAIL", () => {
+  assert(c.EMAIL_SEND_PREFIX === "ZOOM_REC_EMAIL", "prefix");
   assert(
-    c.buildApprovalEmailSendKey("recE", "recM") === "ZOOM_REC_APPROVAL|recE|recM",
+    c.buildApprovalEmailSendKey("recE", "recM") === "ZOOM_REC_EMAIL|recE|recM",
     "email key"
   );
   assert(c.buildApprovalEmailSendKey("", "recM") === null, "blank enrollment");
+});
+
+function baseEmailReady(overrides = {}) {
+  return {
+    attendanceMethod: "Recording Quiz",
+    satisfactory: true,
+    emailEnabled: true,
+    templateKey: "ZOOM_RECORDING_APPROVED",
+    webhookUrl: "https://example.test/hook",
+    conflict: 0,
+    sentAt: null,
+    existingSendKey: "",
+    enrollmentRid: "recE",
+    zoomMeetingRid: "recM",
+    zoomAttendanceId: "recZA",
+    timing: "On Satisfactory",
+    ...overrides,
+  };
+}
+
+test("117f decision: blank webhook → skipped_no_webhook", () => {
+  const d = c.evaluateApprovalEmailSendDecision(baseEmailReady({ webhookUrl: "" }));
+  assert(d.actionOut === "skipped_no_webhook" && !d.mayPost && !d.mayStamp, "no webhook");
+});
+
+test("117f decision: disabled effective setting → skipped_disabled", () => {
+  const d = c.evaluateApprovalEmailSendDecision(baseEmailReady({ emailEnabled: false }));
+  assert(d.actionOut === "skipped_disabled" && !d.mayPost, "disabled");
+  const blank = c.evaluateApprovalEmailSendDecision(baseEmailReady({ emailEnabled: null }));
+  assert(blank.actionOut === "skipped_disabled", "null treated disabled");
+});
+
+test("117f decision: conflict = 1 → skipped_conflict", () => {
+  const d = c.evaluateApprovalEmailSendDecision(baseEmailReady({ conflict: 1 }));
+  assert(d.actionOut === "skipped_conflict" && !d.mayPost && !d.mayStamp, "conflict");
+  assert(c.isZoomCreditConflict(1) && !c.isZoomCreditConflict(0), "conflict helper");
+});
+
+test("117f decision: already sent (Sent At or matching key) → skipped_already_sent", () => {
+  const bySentAt = c.evaluateApprovalEmailSendDecision(
+    baseEmailReady({ sentAt: "2026-07-20T12:00:00.000Z" })
+  );
+  assert(bySentAt.actionOut === "skipped_already_sent", "sent at");
+  const byKey = c.evaluateApprovalEmailSendDecision(
+    baseEmailReady({ existingSendKey: "ZOOM_REC_EMAIL|recE|recM" })
+  );
+  assert(byKey.actionOut === "skipped_already_sent", "matching key");
+});
+
+test("117f decision: ready payload for first successful send", () => {
+  const d = c.evaluateApprovalEmailSendDecision(baseEmailReady());
+  assert(d.statusOut === "ready" && d.mayPost === true && d.mayStamp === false, "ready");
+  assert(d.sendKey === "ZOOM_REC_EMAIL|recE|recM", "send key");
+  assert(d.payload.automationNumber === "117f", "automationNumber");
+  assert(d.payload.templateKey === "ZOOM_RECORDING_APPROVED", "template");
+  assert(d.payload.enrollmentRid === "recE", "enroll");
+  assert(d.payload.zoomMeetingRid === "recM", "meeting");
+  assert(d.payload.zoomAttendanceId === "recZA", "za");
+  assert(d.payload.timing === "On Satisfactory", "timing");
+  assert(d.payload.sendKey === d.sendKey, "payload key");
+});
+
+test("117f decision: rerun after success → skipped_already_sent", () => {
+  const after = c.evaluateApprovalEmailSendDecision(
+    baseEmailReady({
+      existingSendKey: "ZOOM_REC_EMAIL|recE|recM",
+      sentAt: "2026-07-20T18:00:00.000Z",
+    })
+  );
+  assert(after.actionOut === "skipped_already_sent" && !after.mayPost, "rerun");
+});
+
+test("117f webhook outcome: 2xx stamps; non-2xx / fetch fail do not", () => {
+  const ok = c.resolveApprovalEmailWebhookOutcome({ httpStatus: 200 });
+  assert(ok.statusOut === "success" && ok.actionOut === "sent" && ok.mayStamp === true, "2xx");
+  const bad = c.resolveApprovalEmailWebhookOutcome({ httpStatus: 500 });
+  assert(bad.statusOut === "error" && bad.actionOut === "error_webhook_http" && !bad.mayStamp, "500");
+  const net = c.resolveApprovalEmailWebhookOutcome({ fetchError: new Error("timeout") });
+  assert(net.statusOut === "error" && net.actionOut === "error_webhook_network" && !net.mayStamp, "net");
+});
+
+test("117f script source matches v1.2.0 contract", () => {
+  const src = fs.readFileSync(path.join(root, "117f-zoom-recording-send-approval-email.js"), "utf8");
+  assert(src.includes('version: "v1.2.0"'), "version");
+  assert(src.includes('sendKeyPrefix: "ZOOM_REC_EMAIL"'), "prefix");
+  assert(src.includes('automationNumber: "117f"'), "payload automation");
+  assert(src.includes("skipped_no_webhook"), "blank webhook");
+  assert(src.includes("skipped_disabled"), "disabled");
+  assert(src.includes("skipped_conflict"), "conflict");
+  assert(src.includes("skipped_already_sent"), "already sent");
+  assert(src.includes('setOutputSafe("actionOut", "sent")'), "sent action");
+  assert(src.includes("error_webhook_http"), "http error");
+  assert(src.includes("error_webhook_network"), "network error");
+  assert(!src.includes("ZOOM_REC_APPROVAL"), "no approval prefix");
 });
 
 test("Lookup normalization is blank-safe and array-safe", () => {

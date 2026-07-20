@@ -7,7 +7,7 @@
     "recordingPoints": 30,
     "recordingKey": "ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}",
     "liveKey": "ZOOM_ATTEND_BASE|{meetingKey}|{enrollmentId}",
-    "emailKey": "ZOOM_REC_APPROVAL|{enrollmentRID}|{meetingRID}",
+    "emailKey": "ZOOM_REC_EMAIL|{enrollmentRID}|{meetingRID}",
     "recordingNeverWritesAttendees": true,
     "liveWinsConflict": true,
     "historicalLiveXpIsImmutable": true
@@ -106,9 +106,9 @@
     },
     "emailSkipWebhookBlank": {
       "fixture": "recTestZARecordingApproved",
-      "run": "117 v1.1.1 with webhookUrl blank, or 117f with no webhook configuration.",
+      "run": "117f v1.2.0 with webhookUrl blank; 117 emailActionOut=deferred_to_117f (no send-key stamp).",
       "expectedOutput": {
-        "emailActionOut": "skipped_or_equivalent"
+        "emailActionOut": "skipped_no_webhook"
       },
       "expectedWrites": {
         "emailDelivery": 0

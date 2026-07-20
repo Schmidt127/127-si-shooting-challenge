@@ -27,6 +27,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Make
 
+#### Added
+- **C-025 117f DEV Make package (2026-07-20)** — Sanitized blueprint `c025-117f-zoom-recording-approval-email-dev-v1.template.json`, offline simulator/tests (`make/lib/c025-117f-make-scenario*.js`), deployment checklist + Agent 2 handoff. Scenario stays **OFF**; no webhook URL in git. [contract](./docs/deploy-checklists/C-025-117f-dev-make-scenario-contract.md).
+
 #### Changed
 - **C-013 PROD upload route manual smoke PASS (2026-07-11)** — `Shooting Challenge - GAME - Upload Engine - Lambda - v1` passed upload (`actionOut=uploaded`, independent Airtable probe `allPass=true`), idempotency (`skipped_already_uploaded`, key/hash unchanged), and structured invalid-route handling (`error_invalid_route`). Sanitized blueprint documents `handleErrors=false` / complete Lambda JSON response behavior. **070b remains OFF**; exposed upload secret rotation + one Airtable-triggered Schmidt test remain.
 - **C-013 PROD Make smoke runner probe parsing (2026-07-11)** — `c013_prod_make_smoke_run.py` now reads `submissionAsset.writebackVerification` from `_probe_c013_asset_storage_fields.py` (was incorrectly keyed as `recordProbe`, causing false `make_upload` FAIL). Upload pass requires webhook Lambda JSON **and** independent Airtable probe `allPass=true`. Invalid-route diagnostics document expected `Upload Status=Error` writeback.
@@ -36,6 +39,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **C-025 117f approval-email contract v1.2.0 (2026-07-20)** — 117f owns Make webhook POST (`ZOOM_REC_EMAIL|…`); stamps Send Key / Sent At only after HTTP 2xx; skips conflict/disabled/blank webhook. Orchestrator 117 Section F → `deferred_to_117f` (no competing send-key stamps). Offline Stage 17 + Make simulator tests PASS. Do not install/enable 117f or populate webhook until DEV Make M1–M5 PASS.
 - **C-025 Stage 17 COMPLETE in PROD (2026-07-20)** — Automations **117 v1.1.1**, **057 v1.3**, and **042 v3.1** enabled and verified. **101** unchanged. **117 `webhookUrl` blank** (approval email deferred). **115** not installed. Preconflict rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; recording Conflict=1 / Approved=0; XP `recOceuW34jQz7suD` inactive. Closeout: [C-025-stage17-prod-live-2026-07-20.md](./docs/deploy-checklists/C-025-stage17-prod-live-2026-07-20.md). Rollback: [C-025-stage17-rollback-plan.md](./docs/deploy-checklists/C-025-stage17-rollback-plan.md).
 - **115 v1.8 (2026-07-18)** — C025 Phase A waits for WAS `Perfect Week Automation Status=Ready` (057’s real done write) instead of ZA `Perfect Week Credit Applied?`. v1.7 Queue re-entry retained. DEV paste: [C-025-stage17-115-etf-v1.8-PASTE.txt](./docs/deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). Do not paste to PROD.
 - **115 v1.7 (2026-07-18)** — C025 Phase A forces Automation 057 condition re-match: WAS `Perfect Week Automation Status` **Skipped → Pending** on `recvtukGFL7u74Tme` (formula `Perfect Week Calculation Queue?` is 1 for both Ready and Pending, so Ready→Pending never re-fires). DEV paste: [C-025-stage17-115-etf-v1.7-PASTE.txt](./docs/deploy-checklists/C-025-stage17-115-etf-v1.7-PASTE.txt). Do not paste to PROD.

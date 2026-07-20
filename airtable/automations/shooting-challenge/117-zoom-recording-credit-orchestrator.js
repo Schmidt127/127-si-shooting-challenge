@@ -20,7 +20,7 @@ Folder: 17 - Zoom Recording Credit
  *   Recording XP via ZOOM_CREDIT only; gate/PW eligibility reported only;
  *   never mutate Zoom Meetings.Attendees (avoids Automation 101 double-credit).
  *   Correct trigger: Zoom Attendance · Recording Quiz · links present.
- *   Email send disabled unless non-blank webhookUrl is provided.
+ *   Email send owned by 117f only — this script never POSTs or stamps email keys.
  * - v1.0.0 (2026-07-14): Initial combined orchestrator (DEV slot limit).
  *
  * PURPOSE
@@ -37,12 +37,13 @@ Folder: 17 - Zoom Recording Credit
  * - Amount from Zoom XP Amount formula — do not hard-code.
  * - Gate / Perfect Week: report eligibility only; Applied? flags are set by 042 / 057
  *   when those automations actually count the credit (not by this orchestrator).
- * - Email: blank webhookUrl ⇒ skip (DEV-safe default).
- * - Leave automation OFF except controlled DEV runs.
+ * - Email: owned by Automation 117f (ZOOM_REC_EMAIL|…). Keep webhookUrl blank here;
+ *   do not prepare or stamp Recording Approval Email Send Key / Sent At.
+ * - Leave automation OFF except controlled DEV runs (PROD: Mike-approved permanent ON OK).
  *
  * INPUT
  * - recordId (required) = Zoom Attendance record id from trigger
- * - webhookUrl (optional) — leave blank to keep email send disabled
+ * - webhookUrl (optional) — leave blank; email is not implemented in 117
  * - dryRun (optional) — truthy ⇒ read/calculate/log intended writes; perform no writes
  *   Absent/blank/false ⇒ live mode (default). Opt-in only.
  *
@@ -556,26 +557,12 @@ async function main() {
   }
   setOutputSafe("perfectWeekActionOut", pwAction);
 
-  // SECTION F — Email preparation (disabled by blank webhook)
-  debugStep = "4F - Email preparation (webhook optional)";
+  // SECTION F — Email deferred to 117f (never stamp send keys / never POST from 117)
+  debugStep = "4F - Email deferred to 117f";
   setOutputSafe("debugStep", debugStep);
-  let emailAction = "skipped_webhook_blank";
-  if (!webhookUrl) {
-    emailAction = "skipped_webhook_blank";
-  } else if (!getCheckbox(rec, CONFIG.za.satisfactory) && reviewStatus !== CONFIG.values.reviewSatisfactory) {
-    emailAction = "skipped_not_satisfactory";
-  } else {
-    // DEV-safe: still do not POST — only stamp send key preparation when webhook present
-    // Real send remains intentionally unimplemented in v1.1.0 until Mike authorizes Make.
-    emailAction = "skipped_email_send_disabled_in_v1_1_0";
-    if (fieldExists(zaTable, CONFIG.za.sendKey) && !getText(rec, CONFIG.za.sendKey)) {
-      const sendKey = `ZOOM_REC_APPROVAL|${getText(rec, CONFIG.za.enrollmentRid) || enrollIds[0]}|${
-        getText(rec, CONFIG.za.zoomMeetingRid) || meetingIds[0]
-      }`;
-      await updateRecordSafe(zaTable, recordId, { [CONFIG.za.sendKey]: sendKey }, writeOpts);
-      emailAction = dryRun ? "dryrun_would_prepare_send_key" : "prepared_send_key_no_webhook_post";
-    }
-  }
+  // Keep webhookUrl unread for send decisions; credit path must not create ZOOM_REC_* keys.
+  void webhookUrl;
+  const emailAction = "deferred_to_117f";
   setOutputSafe("emailActionOut", emailAction);
 
   setOutputSafe("statusOut", "success");

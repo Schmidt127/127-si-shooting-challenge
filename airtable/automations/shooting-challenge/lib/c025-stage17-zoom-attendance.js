@@ -322,7 +322,8 @@ function denverDateKeyFromUtcMs(utcMs, timeZone = "America/Denver") {
   return `${parts.year}-${parts.month}-${parts.day}`;
 }
 
-const EMAIL_SEND_PREFIX = "ZOOM_REC_APPROVAL";
+/** Canonical 117f approval-email idempotency prefix (not ZOOM_REC_APPROVAL). */
+const EMAIL_SEND_PREFIX = "ZOOM_REC_EMAIL";
 const REVIEW_STATUSES = Object.freeze([
   "Not Submitted",
   "Needs Review",
@@ -417,6 +418,171 @@ function calculateRecordingXp({ liveBaseXp, recordingPercent } = {}) {
 function buildApprovalEmailSendKey(enrollmentId, meetingId) {
   if (!enrollmentId || !meetingId) return null;
   return `${EMAIL_SEND_PREFIX}|${enrollmentId}|${meetingId}`;
+}
+
+/**
+ * Conflict formulas often return 1/0 numbers (or checkbox). Treat numeric 1 / true as conflict.
+ */
+function isZoomCreditConflict(value) {
+  if (value === true || value === 1 || value === "1") return true;
+  if (Array.isArray(value) && value.length === 1) return isZoomCreditConflict(value[0]);
+  const n = Number(value);
+  if (Number.isFinite(n) && n === 1) return true;
+  return false;
+}
+
+/**
+ * Pure 117f send gate. Does not POST; callers stamp only after HTTP 2xx.
+ *
+ * Required for send: Recording Quiz · Satisfactory · Effective Enabled · template ·
+ * webhook · Conflict ≠ 1 · Sent At blank · Send Key blank or ≠ canonical key.
+ */
+function evaluateApprovalEmailSendDecision({
+  attendanceMethod = "",
+  satisfactory = false,
+  emailEnabled = null,
+  templateKey = "",
+  webhookUrl = "",
+  conflict = null,
+  sentAt = null,
+  existingSendKey = "",
+  enrollmentRid = "",
+  zoomMeetingRid = "",
+  zoomAttendanceId = "",
+  timing = "",
+} = {}) {
+  const sendKey = buildApprovalEmailSendKey(enrollmentRid, zoomMeetingRid);
+
+  if (String(attendanceMethod || "").trim() !== "Recording Quiz") {
+    return { statusOut: "skipped", actionOut: "skipped_not_recording_quiz", mayPost: false, mayStamp: false };
+  }
+  if (!satisfactory) {
+    return { statusOut: "skipped", actionOut: "skipped_not_satisfactory", mayPost: false, mayStamp: false };
+  }
+  if (isZoomCreditConflict(conflict)) {
+    return { statusOut: "skipped", actionOut: "skipped_conflict", mayPost: false, mayStamp: false, sendKey };
+  }
+
+  const enabled = normalizeBoolean(emailEnabled);
+  if (enabled !== true) {
+    return { statusOut: "skipped", actionOut: "skipped_disabled", mayPost: false, mayStamp: false, sendKey };
+  }
+
+  const template = String(templateKey || "").trim();
+  if (!template) {
+    return {
+      statusOut: "skipped",
+      actionOut: "skipped_missing_template_key",
+      mayPost: false,
+      mayStamp: false,
+      sendKey,
+    };
+  }
+
+  if (!sendKey) {
+    return {
+      statusOut: "skipped",
+      actionOut: "skipped_missing_enrollment_or_meeting",
+      mayPost: false,
+      mayStamp: false,
+    };
+  }
+
+  const sentAtBlank =
+    sentAt == null || sentAt === "" || (Array.isArray(sentAt) && sentAt.length === 0);
+  if (!sentAtBlank) {
+    return {
+      statusOut: "skipped",
+      actionOut: "skipped_already_sent",
+      mayPost: false,
+      mayStamp: false,
+      sendKey,
+    };
+  }
+
+  const existing = String(existingSendKey || "").trim();
+  if (existing && existing === sendKey) {
+    return {
+      statusOut: "skipped",
+      actionOut: "skipped_already_sent",
+      mayPost: false,
+      mayStamp: false,
+      sendKey,
+    };
+  }
+
+  const webhook = String(webhookUrl || "").trim();
+  if (!webhook) {
+    return {
+      statusOut: "skipped",
+      actionOut: "skipped_no_webhook",
+      mayPost: false,
+      mayStamp: false,
+      sendKey,
+    };
+  }
+
+  const payload = buildApprovalEmailWebhookPayload({
+    templateKey: template,
+    sendKey,
+    enrollmentRid,
+    zoomMeetingRid,
+    zoomAttendanceId,
+    timing,
+  });
+
+  return {
+    statusOut: "ready",
+    actionOut: "ready_to_post",
+    mayPost: true,
+    mayStamp: false,
+    sendKey,
+    payload,
+    webhookUrl: webhook,
+  };
+}
+
+function buildApprovalEmailWebhookPayload({
+  templateKey,
+  sendKey,
+  enrollmentRid,
+  zoomMeetingRid,
+  zoomAttendanceId,
+  timing,
+} = {}) {
+  return {
+    automationNumber: "117f",
+    templateKey: String(templateKey || "").trim(),
+    sendKey: String(sendKey || "").trim(),
+    enrollmentRid: String(enrollmentRid || "").trim(),
+    zoomMeetingRid: String(zoomMeetingRid || "").trim(),
+    zoomAttendanceId: String(zoomAttendanceId || "").trim(),
+    timing: String(timing || "").trim() || "On Satisfactory",
+  };
+}
+
+/**
+ * After webhook attempt: stamp only on HTTP 2xx. Never stamp on network/timeout/non-2xx.
+ */
+function resolveApprovalEmailWebhookOutcome({ httpStatus = null, fetchError = null } = {}) {
+  if (fetchError) {
+    return {
+      statusOut: "error",
+      actionOut: "error_webhook_network",
+      mayStamp: false,
+      errorOut: String(fetchError && fetchError.message ? fetchError.message : fetchError),
+    };
+  }
+  const status = Number(httpStatus);
+  if (Number.isFinite(status) && status >= 200 && status < 300) {
+    return { statusOut: "success", actionOut: "sent", mayStamp: true, errorOut: "" };
+  }
+  return {
+    statusOut: "error",
+    actionOut: "error_webhook_http",
+    mayStamp: false,
+    errorOut: `Webhook failed HTTP ${httpStatus == null ? "unknown" : httpStatus}`,
+  };
 }
 
 /** Normalize link / lookup / collaborator arrays to record id strings. */
@@ -598,6 +764,10 @@ module.exports = {
   resolveEffectiveConfigValue,
   calculateRecordingXp,
   buildApprovalEmailSendKey,
+  isZoomCreditConflict,
+  evaluateApprovalEmailSendDecision,
+  buildApprovalEmailWebhookPayload,
+  resolveApprovalEmailWebhookOutcome,
   normalizeLookupIds,
   normalizeLookupScalar,
   compareAgainstDeadline,

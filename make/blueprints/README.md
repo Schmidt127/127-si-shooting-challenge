@@ -7,6 +7,7 @@ Export and document **Make.com scenarios** that support the shooting challenge (
 | Blueprint file | Scenario name (Make) | Trigger | Airtable / external |
 |----------------|----------------------|---------|---------------------|
 | [upload-asset-engine-v1.json](./upload-asset-engine-v1.json) | Shooting Challenge - GAME - Upload Engine | Webhook (070a/070b) | Airtable + Google Drive |
+| [c025-117f-zoom-recording-approval-email-dev-v1.template.json](./c025-117f-zoom-recording-approval-email-dev-v1.template.json) | Shooting Challenge - DEV - Zoom Recording Approval Email - 117f - v1 | Custom webhook (117f) | DEV Airtable + Gmail + Data Store — **OFF** |
 | *(add)*.json | Weekly summary email | Webhook / schedule | Airtable + Gmail |
 | *(add)*.json | Parent notification | Webhook | Gmail |
 
