@@ -1,8 +1,10 @@
-# C-025 — 117f DEV manual action sheet (one page)
+﻿# C-025 — 117f DEV manual action sheet (one page)
 
 **Use when:** Make login, webhook creation, Airtable secret entry, or Mike test inbox cannot be completed by the agent.  
 **Do not invent** webhook URLs, PATs, or email addresses.  
 **Base:** DEV only · Scenario / automation stay **OFF** until each step says otherwise.
+
+**Verified fixtures (2026-07-20 re-check):** enrollment `recgP9qZYjAhE7NXm` · happy ZA `recsEERuvtyoHmDma` / meeting `recNOsPJQVH69ibah` · disabled ZA `recAqFTWmuHF1V4Z5` · conflict ZA `recbL9e1Be4iNbCZF`. Live-field gates PASS (`skipped_no_webhook` / `skipped_disabled` / `skipped_conflict` / `ready_to_post`).
 
 ---
 
@@ -15,24 +17,26 @@
 | A3 | Webhook settings | Auto-respond / immediate 2xx | **Disabled** / wait for Webhook response module | Save | Request stays open until final response |
 | A4 | Scenario scheduling | On/Off | **OFF** | Save | Scenario not live |
 
-### B. Make — ops-only variables
+### B. Make — ops-only variables + Data Store
 
 | Step | Screen | Field | Value type | Button | Expected |
 |------|--------|-------|------------|--------|----------|
 | B1 | Scenario variables | `sendMode` | Constant text `test` | Save | Test mode |
 | B2 | Scenario variables | `testRecipientEmail` | Mike-controlled test inbox (real address, ops only) | Save | Not a parent address |
-| B3 | Data Store | Name `C025_117f_DEV_SendKeys` | Per blueprint schema | Create | Empty store |
+| B3 | Data Store | Name `C025_117f_DEV_SendKeys` | Key=`sendKey`; fields status, zoomAttendanceId, gmailMessageId, sentAt, automationNumber, templateKey | Create | Empty store |
 
-### C. Make — wire modules (OFF) then Run once
+### C. Make — wire modules (OFF) then M1–M5 Run once
 
 | Step | Screen | Field | Value type | Button | Expected |
 |------|--------|-------|------------|--------|----------|
-| C1 | Import / build | Modules 1–13 + error path | Per [deployment checklist](./C-025-117f-dev-make-deployment-checklist.md) / blueprint | Save | Scenario OFF |
-| C2 | Run once + invalid payload | Body missing/wrong `automationNumber` | JSON | Run once | HTTP **non-2xx**; no Gmail; no DS success |
-| C3 | Run once + happy payload | Use fixture IDs from evidence doc | JSON | Run once | Gmail **only** to test inbox; DS has `sendKey`; HTTP **200** `sent` |
-| C4 | Run once + same `sendKey` | Identical payload | JSON | Run once | No second Gmail; HTTP **200** `already_sent` |
+| C0 | Import / build | Modules per blueprint | Full flow + error routes | Save | Scenario OFF |
+| **M1** | Run once | Body `automationNumber` ≠ `117f` (else valid shape) | JSON | Run once | HTTP **400**; no Gmail; no DS write |
+| **M2** | Run once | `templateKey` ≠ `ZOOM_RECORDING_APPROVED` | JSON | Run once | HTTP **400**; no Gmail; no DS |
+| **M3** | Run once | Valid payload + happy fixture IDs; sendMode=test | JSON | Run once | HTTP **200** `sent`; **one** Gmail to Mike test inbox; DS success for sendKey |
+| **M4** | Run once | Identical `sendKey` as M3 | JSON | Run once | HTTP **200** `already_sent`; **no** second Gmail; no new DS overwrite required |
+| **M5** | Run once | Valid shape but conflict ZA / Conflict=1 path | JSON | Run once | HTTP **422**; no Gmail; no DS success |
 
-Happy payload IDs (DEV): enrollment `recgP9qZYjAhE7NXm` · meeting `recNOsPJQVH69ibah` · ZA `recsEERuvtyoHmDma`.
+Happy payload IDs: enrollment `recgP9qZYjAhE7NXm` · meeting `recNOsPJQVH69ibah` · ZA `recsEERuvtyoHmDma` · sendKey `ZOOM_REC_EMAIL|recgP9qZYjAhE7NXm|recNOsPJQVH69ibah`.
 
 ### D. Airtable — paste 117f (remain OFF)
 
@@ -48,12 +52,12 @@ Happy payload IDs (DEV): enrollment `recgP9qZYjAhE7NXm` · meeting `recNOsPJQVH6
 
 | Step | Screen | Field | Value type | Button | Expected |
 |------|--------|-------|------------|--------|----------|
-| E1 | 117f inputs | `webhookUrl` | Still blank; `recordId` = `recsEERuvtyoHmDma` | Test / Run | `skipped_no_webhook`; no stamps |
-| E2 | Use ZA `recAqFTWmuHF1V4Z5` | — | Run | `skipped_disabled` |
-| E3 | Use ZA `recbL9e1Be4iNbCZF` | — | Run | `skipped_conflict` |
-| E4 | Map DEV webhook (ops) | `webhookUrl` | Paste from Make ops only | Save + one Run on happy ZA | `sent`; Send Key + Sent At stamped; **one** test Gmail |
-| E5 | Identical rerun | Same ZA | Run | `skipped_already_sent` or Make `already_sent`; **no** second Gmail |
-| E6 | Rollback | `webhookUrl` clear; automation OFF; meeting override → No if needed | Save | No further mail |
+| E1 | 117f inputs | `webhookUrl` blank; `recordId`=`recsEERuvtyoHmDma` | Run | `skipped_no_webhook`; no stamps |
+| E2 | ZA `recAqFTWmuHF1V4Z5` | — | Run | `skipped_disabled` |
+| E3 | ZA `recbL9e1Be4iNbCZF` | — | Run | `skipped_conflict` |
+| E4 | Map DEV webhook (ops) | `webhookUrl` from Make ops only | Save + one Run on happy ZA | `sent`; Send Key + Sent At stamped; **one** test Gmail |
+| E5 | Identical rerun | Same ZA | Run | `skipped_already_sent`; **no** second Gmail |
+| E6 | Rollback | Clear `webhookUrl`; 117f OFF; meeting override → No if needed | Save | No further mail |
 
 ### F. Rollback triggers (immediate)
 
