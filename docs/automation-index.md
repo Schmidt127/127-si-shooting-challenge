@@ -116,8 +116,9 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award (**live Attendees only**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
-| **117** | Zoom Recording Credit — Orchestrator (**Stage 17 v1.1.0**) | Zoom Attendance · Recording Quiz · Enrollment + Meeting not empty (**DEV paste pending; keep OFF**) — **never writes Attendees** | `117-zoom-recording-credit-orchestrator.js` |
-| **117a–f** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117f-*.js` |
+| **117** | Zoom Recording Credit — Orchestrator (**Stage 17 v1.1.1**) | Zoom Attendance · Recording Quiz · Enrollment + Meeting not empty — **never writes Attendees**; email deferred to **117f** (`webhookUrl` blank) | `117-zoom-recording-credit-orchestrator.js` |
+| **117f** | Zoom Recording Credit — Send Approval Email (**v1.2.0**) | Zoom Attendance · Satisfactory recording path · inputs `recordId` + `webhookUrl` (**keep OFF**; webhook blank until controlled DEV test) | `117f-zoom-recording-send-approval-email.js` · [DEV evidence](./deploy-checklists/C-025-117f-dev-agent2-evidence-2026-07-20.md) |
+| **117a–e** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117e-*.js` |
 
 C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115 v1.8** `C025_STAGE17_DOWNSTREAM` → wait WAS Ready after 057; triggers **057**/**042** via Queue?/view re-entry; query budget ≤22; never writes `Attendees`). Live attendance remains **101** only.
 

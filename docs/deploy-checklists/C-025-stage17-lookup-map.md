@@ -162,6 +162,18 @@
 | Later formulas that depend on it | `Zoom Credit Key`; `Preconflict Pair Tag`; `Zoom Credit Debug` |
 | Notes | Source field name is **`RecordId`** (no space). **Not listed as a create item in the Stage 17 manifest** — treat as prerequisite / verify-or-create. |
 
+### 12–14. Approval email Effective lookups (117f) — DEV created 2026-07-20
+
+Required by Automation **117f v1.2.0** (reads these on Zoom Attendance). Not in original Stage 17 “11 lookups” list.
+
+| Zoom Attendance field | Linked-record field | Source (Zoom Meetings) | Automation-critical |
+|-----------------------|---------------------|------------------------|---------------------|
+| `Effective Recording Approval Email Enabled?` | `Zoom Meeting` | `Effective Recording Approval Email Enabled?` | **Yes** (117f) |
+| `Effective Recording Approval Email Timing` | `Zoom Meeting` | `Effective Recording Approval Email Timing` | **Yes** (117f) |
+| `Effective Recording Approval Email Template Key` | `Zoom Meeting` | `Effective Recording Approval Email Template Key` | **Yes** (117f) |
+
+**DEV evidence:** created via Meta API on `appTetnuCZlCZdTCT`. **PROD:** do not create until Mike authorizes PROD 117f prep.
+
 ---
 
 ## Zoom Meetings lookups / rollups that feed ZA (already claimed complete in PROD progress)

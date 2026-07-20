@@ -128,6 +128,7 @@
 | 009 SCRIPT header | Yes | N/A (existing automation) | UNKNOWN | UNKNOWN | UNKNOWN |
 | C-025 / 117a XP award | Yes | Yes | No | No | No |
 | C-025 / 117b email | Yes | Yes | No | No | No |
-| 117c–117f | Not required | — | — | — | — |
+| 117c–117e | Modular slices / reference | Prefer orchestrator **117** | — | — | — |
+| **117f** email | Yes (v1.2.0) | Yes — paste packet + DEV fixtures | **Pending UI paste** (Meta API 403); gates PASS offline | No | No |
 | 066 OMNI confirm support | Yes (packet+harness) | N/A | **Pending OMNI** | No | No |
 | 070a homework upload | Yes (existing) | DEV evidence historical | Re-verify | **No — keep OFF** | No |
