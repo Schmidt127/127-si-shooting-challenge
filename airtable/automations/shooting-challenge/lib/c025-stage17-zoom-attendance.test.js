@@ -426,18 +426,18 @@ test("117f webhook outcome: 2xx stamps; non-2xx / fetch fail do not", () => {
   assert(net.statusOut === "error" && net.actionOut === "error_webhook_network" && !net.mayStamp, "net");
 });
 
-test("117f script source matches v1.2.0 contract", () => {
+test("117f script source matches v1.1 Make handoff contract", () => {
   const src = fs.readFileSync(path.join(root, "117f-zoom-recording-send-approval-email.js"), "utf8");
-  assert(src.includes('version: "v1.2.0"'), "version");
+  assert(src.includes('version: "v1.1"'), "version");
   assert(src.includes('sendKeyPrefix: "ZOOM_REC_EMAIL"'), "prefix");
   assert(src.includes('automationNumber: "117f"'), "payload automation");
-  assert(src.includes("skipped_no_webhook"), "blank webhook");
-  assert(src.includes("skipped_disabled"), "disabled");
-  assert(src.includes("skipped_conflict"), "conflict");
-  assert(src.includes("skipped_already_sent"), "already sent");
-  assert(src.includes('setOutputSafe("actionOut", "sent")'), "sent action");
-  assert(src.includes("error_webhook_http"), "http error");
-  assert(src.includes("error_webhook_network"), "network error");
+  assert(src.includes('templateKey: "ZOOM_RECORDING_APPROVED"'), "template");
+  assert(src.includes('timing: "On Satisfactory"'), "timing");
+  assert(src.includes("hook.us1.make.com"), "US1 webhook host");
+  assert(src.includes('"already_sent"'), "already_sent success");
+  assert(src.includes("makeStatus"), "makeStatus output");
+  assert(src.includes("zoomAttendanceId"), "zoomAttendanceId output");
+  assert(!src.includes("updateRecordAsync"), "no Airtable record writes");
   assert(!src.includes("ZOOM_REC_APPROVAL"), "no approval prefix");
 });
 
