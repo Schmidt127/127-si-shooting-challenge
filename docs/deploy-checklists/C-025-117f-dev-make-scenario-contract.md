@@ -1,5 +1,7 @@
 # C-025 — DEV Make scenario contract: Zoom recording approval email (117f v1.2.0)
 
+> **⚠️ SUPERSEDED — HISTORICAL DEV RECORD (2026-07-20).** This documents the **DEV-phase** build/contract of the Zoom Recording Approval Email Make scenario. The workflow has since been **built and controlled-tested against PROD**: Airtable Automation **117** → **Make** identifier **117f** (scenario `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1`; Data Store `C025_117f_PROD_SendKeys`; canonical **four-part** send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested; not documented as fully live**. This doc uses an earlier **three-part** send key and 117f **v1.2.0** that stamped Airtable fields; the current shipped script is **v1.1**, a pure Make handoff that writes **no** Airtable records (Make owns dedupe). Retained for historical evidence. **Authoritative current state:** [PROD 117f approval-email workflow](./C-025-117f-prod-zoom-recording-approval-email.md) · [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Status:** Agent 1 package complete — blueprint + offline tests ready; **DEV scenario remains OFF** until Mike builds in Make and reviews recipient mapping  
 **Base:** DEV `appTetnuCZlCZdTCT` only  
 **Airtable sender:** Automation **117f v1.2.0** (`117f-zoom-recording-send-approval-email.js`)  

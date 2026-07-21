@@ -1,5 +1,7 @@
 # C-025 — 117a/117b DEV install preflight STOP (2026-07-18)
 
+> **⚠️ SUPERSEDED — HISTORICAL S16 DESIGN.** This preflight targets the **S16 (Homework Completions)** Zoom-recording design, which is **superseded for this base** by the **Stage 17 (Zoom Attendance)** package. Stage 17 recording **credit** is **COMPLETE in PROD** via Airtable Automation **117** (orchestrator v1.1.1 / 057 v1.3 / 042 v3.1 ON). Do **not** install these S16 117a/117b scripts alongside Stage 17. See the [117 numbering note](./C-025-117-numbering.md) and [architecture reconciliation](../v2/C025_ARCHITECTURE_RECONCILIATION.md). Retained for historical evidence. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Result:** **STOPPED before paste / enable / test writes**  
 **Repo tip:** `origin/master` @ `4b5c91a`  
 **ENV base:** `appTetnuCZlCZdTCT` (DEV) — PROD `appn84sqPw03zEbTT` **not used**  

@@ -1,5 +1,7 @@
 # C-025 Stage 17 — Production schema gap analysis (read-only)
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** This gap analysis reflects PROD **before** the Stage 17 schema migration. The gaps below (missing `Zoom Attendance` table, missing XP Source option, missing formulas/lookups) have since been **created in PROD**, and Stage 17 recording **credit** is **COMPLETE** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Status:** Audit complete — **PROD not ready** for Stage 17 automation paste  
 **Date:** 2026-07-18 (superseding refresh on feature tip; live Meta audit evidence dated 2026-07-18)  
 **Source audit commit:** `0510663` on `audit/c025-stage17-prod-readiness`  

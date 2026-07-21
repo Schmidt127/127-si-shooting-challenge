@@ -1,5 +1,7 @@
 # C-025 Stage 17 — Remaining PROD work (schema + deployment audit)
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The "remaining PROD work" below is **done**. C-025 Stage 17 Zoom recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged; schema/formulas/lookups migrated). The § 6 "Approval email" note still shows the old **three-part** send key — the canonical key is the **four-part** `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}` (Airtable Automation **117** → **Make** identifier **117f**), and the current 117f script (**v1.1**) writes **no** Airtable records (Make owns dedupe). Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Date written:** 2026-07-18  
 **Original readiness docs dated:** 2026-07-18  
 **Branch:** `feature/c025-stage17-zoom-attendance` @ `2db98a0`  
@@ -246,7 +248,7 @@ Fix descriptions in Airtable UI when convenient; do not let outdated Attendees w
 - Send only after Satisfactory approval path.
 - Respect `Effective Recording Approval Email Enabled?` (default FALSE if all blank).
 - Respect timing (default `On Satisfactory`).
-- Set `Recording Approval Email Send Key` = `ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}`.
+- Set `Recording Approval Email Send Key` = `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}` (canonical **four-part**; earlier three-part form superseded). Note: in the current PROD design the Airtable sender (Automation **117**, script v1.1) does **not** stamp this field — Make identifier **117f** owns dedupe via its Data Store.
 - Stamp `Recording Approval Email Sent At` **only after successful webhook**.
 - Prevent duplicate sends via send key / sent-at checks in 117f / orchestrator.
 

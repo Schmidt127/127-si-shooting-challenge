@@ -1,5 +1,7 @@
 # C-025 — 117a / 117b DEV Installation & Verification Packet
 
+> **⚠️ SUPERSEDED — HISTORICAL S16 DESIGN.** This packet targets the **S16 (Homework Completions)** Zoom-recording design (scripts `117a-zoom-recording-credit-award-xp-from-quiz-completion.js` / `117b-…-send-approval-email-webhook.js`), which is **superseded for this base** by the **Stage 17 (Zoom Attendance)** package. Stage 17 recording **credit** is **COMPLETE in PROD** via Airtable Automation **117** (orchestrator v1.1.1). Do **not** install these S16 117a/117b scripts alongside Stage 17. See the [117 numbering note](./C-025-117-numbering.md) and [architecture reconciliation](../v2/C025_ARCHITECTURE_RECONCILIATION.md). Retained for historical evidence. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Status:** Repository-ready — **do not install** until Mike authorizes a named DEV paste  
 **Base:** DEV only `appTetnuCZlCZdTCT`  
 **PROD:** Forbidden from this packet  

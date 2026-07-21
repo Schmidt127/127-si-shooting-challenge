@@ -1,5 +1,7 @@
 # C-025 Stage 17 — DEV current status
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** This DEV snapshot says PROD is "**Blocked on schema migration**" — that blocker has since been **resolved** and Stage 17 recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](./C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](../deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](../deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Updated:** 2026-07-18
 **Branch:** `feature/c025-stage17-zoom-attendance`
 

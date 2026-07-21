@@ -1,5 +1,7 @@
 # C-025 Stage 17 — PROD schema implementation checklist (executable)
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (executed 2026-07-20).** This schema-migration checklist has been **executed**: the PROD Stage 17 schema/formulas/select options were created and Stage 17 recording **credit** is **COMPLETE** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Retained for historical evidence and rollback reference only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Status:** Ready for Mike OMNI execution after approval
 **PROD:** `appn84sqPw03zEbTT` · **DEV reference:** `appTetnuCZlCZdTCT`
 **Branch tip (repo):** `feature/c025-stage17-zoom-attendance` (115 **v1.8** committed)

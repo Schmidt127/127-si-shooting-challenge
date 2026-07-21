@@ -1,5 +1,7 @@
 # C-025 Stage 17 — Production readiness status
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The "**BLOCKED — SCHEMA MIGRATION REQUIRED**" verdict below has been **resolved**: the PROD Stage 17 schema was migrated and recording **credit** is **COMPLETE** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Retained as the pre-migration BLOCKED snapshot for historical evidence. **Authoritative current state:** [Stage 17 current PROD progress](./C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](../deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](../deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Backlog ID:** C-025
 **Date:** 2026-07-18
 **Mode:** Read-only synthesize + document (no Airtable writes; no live Meta re-probe in this finalize pass)
