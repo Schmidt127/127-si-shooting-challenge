@@ -19,7 +19,7 @@ function test(name, fn) {
 const ENROLL = "recEnrollTest00001";
 const MEETING = "recMeetingTest0001";
 const ZA = "recZoomAttend00001";
-const SEND_KEY = `ZOOM_REC_EMAIL|${ENROLL}|${MEETING}`;
+const SEND_KEY = `ZOOM_REC_EMAIL|${ENROLL}|${MEETING}|${ZA}`;
 
 /** Synthetic Mike-controlled inbox for offline tests only — not a parent address. */
 const MIKE_TEST_INBOX = "mike-c025-117f-test@127si.invalid";

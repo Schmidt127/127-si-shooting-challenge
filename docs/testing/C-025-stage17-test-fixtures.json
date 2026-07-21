@@ -82,7 +82,7 @@
       "Effective Recording Counts for Perfect Week?": true,
       "Gate Credit Applied?": false,
       "Perfect Week Credit Applied?": false,
-      "Recording Approval Email Send Key": "ZOOM_REC_EMAIL|recTestEnrollment|recTestZoomMeetingRecording"
+      "Recording Approval Email Send Key": "ZOOM_REC_EMAIL|recTestEnrollment|recTestZoomMeetingRecording|recTestZARecordingApproved"
     },
     {
       "id": "recTestZARecordingConflict",

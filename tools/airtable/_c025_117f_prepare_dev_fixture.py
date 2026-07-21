@@ -254,7 +254,7 @@ def main() -> None:
             "id": rid,
             "fields": fields,
             "expected_send_key": (
-                f"ZOOM_REC_EMAIL|{SCHMIDT_ENROLLMENT}|{meetings[key]['id']}"
+                f"ZOOM_REC_EMAIL|{SCHMIDT_ENROLLMENT}|{meetings[key]['id']}|{rid}"
                 if meetings[key].get("id")
                 else None
             ),

@@ -1,5 +1,14 @@
 C-025 Stage 17 — Automation 117f v1.2.0 PASTE BODY
 ====================================================
+** SUPERSEDED - HISTORICAL PASTE PACKET (v1.2.0). ** The current shipped script is
+117f v1.1 (pure Make handoff, writes NO Airtable records; Make owns dedupe). The
+v1.2.0 body below (which stamped Airtable fields and used the older THREE-part send
+key ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}) is retained only for
+historical evidence. Canonical send key is now the FOUR-part
+ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}|{Zoom Attendance RID}.
+Authoritative current state: airtable/automations/shooting-challenge/117f-zoom-recording-send-approval-email.js
+and docs/deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md. Do NOT paste this v1.2.0 body.
+----------------------------------------------------
 Base: DEV appTetnuCZlCZdTCT ONLY
 Automation name: 117f - Zoom Recording Credit - Send Approval Email
 Folder: 17 - Zoom Recording Credit

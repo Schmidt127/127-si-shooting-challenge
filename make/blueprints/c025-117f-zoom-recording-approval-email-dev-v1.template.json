@@ -48,7 +48,7 @@
     "dataStore": {
       "name": "C025_117f_DEV_SendKeys",
       "keyField": "sendKey",
-      "keyPattern": "ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}",
+      "keyPattern": "ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}|{zoomAttendanceId}",
       "fields": [
         { "name": "sendKey", "type": "text", "required": true },
         { "name": "status", "type": "text", "allowed": ["sent"] },

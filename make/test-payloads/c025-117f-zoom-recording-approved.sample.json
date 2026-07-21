@@ -1,7 +1,7 @@
 {
   "automationNumber": "117f",
   "templateKey": "ZOOM_RECORDING_APPROVED",
-  "sendKey": "ZOOM_REC_EMAIL|recEnrollTest00001|recMeetingTest0001",
+  "sendKey": "ZOOM_REC_EMAIL|recEnrollTest00001|recMeetingTest0001|recZoomAttend00001",
   "enrollmentRid": "recEnrollTest00001",
   "zoomMeetingRid": "recMeetingTest0001",
   "zoomAttendanceId": "recZoomAttend00001",

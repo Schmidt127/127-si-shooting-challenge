@@ -7,7 +7,7 @@
     "recordingPoints": 30,
     "recordingKey": "ZOOM_CREDIT|{Enrollment RID}|{Zoom Meeting RID}",
     "liveKey": "ZOOM_ATTEND_BASE|{meetingKey}|{enrollmentId}",
-    "emailKey": "ZOOM_REC_EMAIL|{enrollmentRID}|{meetingRID}",
+    "emailKey": "ZOOM_REC_EMAIL|{enrollmentRID}|{meetingRID}|{zoomAttendanceRID}",
     "recordingNeverWritesAttendees": true,
     "liveWinsConflict": true,
     "historicalLiveXpIsImmutable": true
