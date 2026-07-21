@@ -14,7 +14,7 @@
 | **057** Perfect Week v1.3 | **ON** |
 | **042** Level gates v3.1 | **ON** |
 | **101** Live Zoom XP | **Unchanged** (live path) |
-| **117 `webhookUrl`** | **Blank** (approval email deferred — next C-025 follow-on) |
+| **117 `webhookUrl` / approval email** | See follow-on [PROD 117f workflow](./C-025-117f-prod-zoom-recording-approval-email.md) — **tested; not documented as fully live** |
 | **115** | **Not installed** |
 
 ---
@@ -46,7 +46,7 @@ Link: `Zoom Attendance` → field `Preconflict Pair Tag`. Conflict requires both
 
 **Stage 17 is complete.** Recording credit path is live in PROD with conflict exclusivity verified.
 
-**Deferred (not blocking Stage 17):** approval email / Make webhook (`webhookUrl` remains blank until separately approved).
+**Follow-on (not blocking Stage 17 credit COMPLETE):** Zoom recording approval email via Make **117f** — built and controlled-tested; permanent go-live not claimed here. See [C-025-117f-prod-zoom-recording-approval-email.md](./C-025-117f-prod-zoom-recording-approval-email.md).
 
 ---
 
