@@ -37,3 +37,26 @@ lambda/upload-asset/dist/
 
 # V2 DEV runbook local operator state (owned record IDs; never commit tokens)
 tools/airtable/v2_dev_runbook/.run-state/
+
+# Local recovery archives (never commit; may mirror docs/PII) — see docs/audits/SECURITY-PRIVACY-AUDIT-2026-07-21.md
+chatgpt-recovery-*.zip
+*-recovery-*.zip
+
+# Temporary JSON dumps (DEV probes / gap exports)
+**/_tmp_*.json
+
+# Reinforce local env safety
+**/.env.*.local
+
+# --- Repository health audit 2026-07-21: local artifacts (never track) ---
+# ChatGPT recovery snapshots (see docs/UNTRACKED-RECOVERY-TRIAGE.md)
+chatgpt-recovery-*/
+chatgpt-recovery-*.zip
+# Accidental nested clone of this repo (defensive; owner to delete folder)
+/127-si-shooting-challenge/
+# Temporary scratch/diagnostic files
+**/_tmp_*
+# Generated send-ready newspaper packets (already-tracked copies are unaffected)
+**/*-SEND-READY.zip
+# Test-output cache
+.pytest_cache/
