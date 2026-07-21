@@ -97,10 +97,12 @@ function validateInboundPayload(payload = {}) {
   if (!isRecId(zoomMeetingRid)) errors.push("zoomMeetingRid must be a valid rec id");
   if (!isRecId(zoomAttendanceId)) errors.push("zoomAttendanceId must be a valid rec id");
 
-  if (sendKey && enrollmentRid && zoomMeetingRid) {
-    const expected = `${SEND_KEY_PREFIX}${enrollmentRid}|${zoomMeetingRid}`;
+  if (sendKey && enrollmentRid && zoomMeetingRid && zoomAttendanceId) {
+    const expected = `${SEND_KEY_PREFIX}${enrollmentRid}|${zoomMeetingRid}|${zoomAttendanceId}`;
     if (sendKey !== expected) {
-      errors.push("sendKey must equal ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}");
+      errors.push(
+        "sendKey must equal ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}|{zoomAttendanceId}"
+      );
     }
   }
 

@@ -415,9 +415,9 @@ function calculateRecordingXp({ liveBaseXp, recordingPercent } = {}) {
   return { ok: true, xp, raw, liveBaseXp: base, recordingPercent: pct };
 }
 
-function buildApprovalEmailSendKey(enrollmentId, meetingId) {
-  if (!enrollmentId || !meetingId) return null;
-  return `${EMAIL_SEND_PREFIX}|${enrollmentId}|${meetingId}`;
+function buildApprovalEmailSendKey(enrollmentId, meetingId, zoomAttendanceId) {
+  if (!enrollmentId || !meetingId || !zoomAttendanceId) return null;
+  return `${EMAIL_SEND_PREFIX}|${enrollmentId}|${meetingId}|${zoomAttendanceId}`;
 }
 
 /**
@@ -451,7 +451,7 @@ function evaluateApprovalEmailSendDecision({
   zoomAttendanceId = "",
   timing = "",
 } = {}) {
-  const sendKey = buildApprovalEmailSendKey(enrollmentRid, zoomMeetingRid);
+  const sendKey = buildApprovalEmailSendKey(enrollmentRid, zoomMeetingRid, zoomAttendanceId);
 
   if (String(attendanceMethod || "").trim() !== "Recording Quiz") {
     return { statusOut: "skipped", actionOut: "skipped_not_recording_quiz", mayPost: false, mayStamp: false };

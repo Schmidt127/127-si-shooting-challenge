@@ -341,10 +341,11 @@ test("Recording XP calculation 60 x 50% = 30 with half-up rounding", () => {
 test("Email send key construction uses ZOOM_REC_EMAIL", () => {
   assert(c.EMAIL_SEND_PREFIX === "ZOOM_REC_EMAIL", "prefix");
   assert(
-    c.buildApprovalEmailSendKey("recE", "recM") === "ZOOM_REC_EMAIL|recE|recM",
+    c.buildApprovalEmailSendKey("recE", "recM", "recZA") === "ZOOM_REC_EMAIL|recE|recM|recZA",
     "email key"
   );
-  assert(c.buildApprovalEmailSendKey("", "recM") === null, "blank enrollment");
+  assert(c.buildApprovalEmailSendKey("", "recM", "recZA") === null, "blank enrollment");
+  assert(c.buildApprovalEmailSendKey("recE", "recM", "") === null, "blank attendance");
 });
 
 function baseEmailReady(overrides = {}) {
@@ -389,7 +390,7 @@ test("117f decision: already sent (Sent At or matching key) → skipped_already_
   );
   assert(bySentAt.actionOut === "skipped_already_sent", "sent at");
   const byKey = c.evaluateApprovalEmailSendDecision(
-    baseEmailReady({ existingSendKey: "ZOOM_REC_EMAIL|recE|recM" })
+    baseEmailReady({ existingSendKey: "ZOOM_REC_EMAIL|recE|recM|recZA" })
   );
   assert(byKey.actionOut === "skipped_already_sent", "matching key");
 });
@@ -397,7 +398,7 @@ test("117f decision: already sent (Sent At or matching key) → skipped_already_
 test("117f decision: ready payload for first successful send", () => {
   const d = c.evaluateApprovalEmailSendDecision(baseEmailReady());
   assert(d.statusOut === "ready" && d.mayPost === true && d.mayStamp === false, "ready");
-  assert(d.sendKey === "ZOOM_REC_EMAIL|recE|recM", "send key");
+  assert(d.sendKey === "ZOOM_REC_EMAIL|recE|recM|recZA", "send key");
   assert(d.payload.automationNumber === "117f", "automationNumber");
   assert(d.payload.templateKey === "ZOOM_RECORDING_APPROVED", "template");
   assert(d.payload.enrollmentRid === "recE", "enroll");
@@ -410,7 +411,7 @@ test("117f decision: ready payload for first successful send", () => {
 test("117f decision: rerun after success → skipped_already_sent", () => {
   const after = c.evaluateApprovalEmailSendDecision(
     baseEmailReady({
-      existingSendKey: "ZOOM_REC_EMAIL|recE|recM",
+      existingSendKey: "ZOOM_REC_EMAIL|recE|recM|recZA",
       sentAt: "2026-07-20T18:00:00.000Z",
     })
   );

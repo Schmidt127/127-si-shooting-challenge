@@ -127,7 +127,7 @@ console.log(JSON.stringify(out));
         "conflict_attendees": report["fixtures"]["conflict"]["meeting_attendee_count"],
         "make_m1_m5": "BLOCKED_NO_MAKE_UI",
         "gmail_count": 0,
-        "canonical_send_key_happy": f"ZOOM_REC_EMAIL|recgP9qZYjAhE7NXm|{FIXTURES['happy']['meeting']}",
+        "canonical_send_key_happy": f"ZOOM_REC_EMAIL|recgP9qZYjAhE7NXm|{FIXTURES['happy']['meeting']}|{FIXTURES['happy']['za']}",
     }
     out_path = preview / "c025_117f_reverify.json"
     out_path.write_text(json.dumps(report, indent=2), encoding="utf-8")

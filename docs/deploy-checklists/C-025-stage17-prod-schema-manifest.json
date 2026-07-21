@@ -2687,7 +2687,7 @@
       "formulaResultType": null,
       "referencedFieldIds": null,
       "exactLinkedTableTarget": {},
-      "description": "C-025 117f \u2014 ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}",
+      "description": "C-025 117f \u2014 ZOOM_REC_EMAIL|{Enrollment RID}|{Zoom Meeting RID}|{Zoom Attendance RID}",
       "action": "create",
       "requiredBeforeAutomationPaste": true,
       "requiredBeforeAutomationEnablement": true,
