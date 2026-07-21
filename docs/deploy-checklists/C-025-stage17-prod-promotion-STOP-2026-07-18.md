@@ -1,5 +1,7 @@
 # C-025 Stage 17 — PROD promotion STOP (2026-07-18)
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The STOP / BLOCKED / pre-migration conditions below have been **resolved**. C-025 Stage 17 Zoom recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). The Zoom Recording **Approval Email** is Airtable Automation **117** → **Make** identifier **117f** (canonical four-part send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested, not documented as fully live**. Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Status:** **STOPPED at Step 1** — final DEV one-click verification did not Pass  
 **Feature tip:** `3431ca9`  
 **DEV:** `appTetnuCZlCZdTCT` · **PROD:** `appn84sqPw03zEbTT` (untouched this session)

@@ -641,7 +641,7 @@ AND(
 |------|--------|
 | Recording XP Source Key | `ZOOM_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}` |
 | Live XP Source Key | `ZOOM_ATTEND_BASE\|{meetingId}\|{enrollmentId}` |
-| Approval email send key | `ZOOM_REC_EMAIL\|{Enrollment RID}\|{Zoom Meeting RID}` |
+| Approval email send key | `ZOOM_REC_EMAIL\|{EnrollmentRID}\|{ZoomMeetingRID}\|{ZoomAttendanceRID}` (canonical **four-part**; the earlier three-part form is superseded — see [PROD 117f workflow](./C-025-117f-prod-zoom-recording-approval-email.md)) |
 
 ---
 

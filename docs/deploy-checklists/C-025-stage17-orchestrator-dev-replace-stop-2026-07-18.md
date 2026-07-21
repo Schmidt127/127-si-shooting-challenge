@@ -1,5 +1,7 @@
 # C-025 Stage 17 — Orchestrator DEV replace/test STOP (2026-07-18, session 2)
 
+> **⚠️ SUPERSEDED — HISTORICAL RECORD (resolved 2026-07-20).** The STOP / BLOCKED / pre-migration conditions below have been **resolved**. C-025 Stage 17 Zoom recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). Automation **117** is now installed and ON (the "cannot list/replace via API 403" blocker was resolved by Mike in the Airtable UI). Retained for historical evidence only. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
 **Branch:** `feature/c025-stage17-zoom-attendance`  
 **Verified commit:** `c952879`  
 **This session:** Automations Meta API re-probed; fixtures refreshed; repo tests run  

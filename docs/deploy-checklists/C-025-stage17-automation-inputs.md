@@ -1,6 +1,8 @@
 # C-025 Stage 17 — Automation inputs and trigger checklist
 
-**Status:** Repository readiness package — PROD schema still blocked (Zoom Attendance missing). Automations remain OFF. Do not install 115 in PROD.
+> **⚠️ SUPERSEDED — HISTORICAL READINESS PACKAGE (resolved 2026-07-20).** The "PROD schema still blocked" status no longer holds: Stage 17 recording **credit** is **COMPLETE in PROD** (Airtable Automation **117** v1.1.1 / **057** v1.3 / **042** v3.1 ON; **101** unchanged). The "Approval email" dedupe row previously listed a **wrong** send-key prefix (`ZOOM_REC_APPROVAL`, three-part) — the canonical key is the four-part `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}` (corrected below). Retained for historical evidence. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · credit evidence [prod-live](./C-025-stage17-prod-live-2026-07-20.md) · email workflow [PROD 117f](./C-025-117f-prod-zoom-recording-approval-email.md).
+
+**Status:** Repository readiness package (historical). Original verdict: PROD schema blocked (Zoom Attendance missing); automations OFF; do not install 115 in PROD. **Now resolved — see banner above.**
 
 **CONFIRMED:** Input names and explicit conditions below come from the repository script headers. **ASSUMPTION:** Where a modular 117 script header says “see design package” rather than naming exact conditions, configure the narrowest eligible Recording Quiz condition and document the final Airtable UI condition before enabling.
 
@@ -15,7 +17,7 @@
 | 117c v1.1.0 | `recordId`: ZA record ID | None | `statusOut`, `actionOut`, `errorOut`, `debugStep`, `xpEventId`, `xpPoints`, `sourceKeyOut` |
 | 117d v1.2.0 | `recordId`: ZA record ID | None | Standard status/action/error/debug outputs; observation only |
 | 117e v1.2.0 | `recordId`: ZA record ID | None | Standard status/action/error/debug outputs; observation only |
-| 117f v1.1.0 | `recordId`: ZA record ID | None | Standard status/action/error/debug outputs |
+| 117f **v1.1** (Airtable automation `117 — Zoom — Send Recording Approval Email to Make`; Make identifier **117f**) | `recordId`: ZA record ID; `webhookUrl`; `enrollmentRid`; `zoomMeetingRid` | None | Outputs only (`makeStatus`, `sendKey`, `zoomAttendanceId`) — **no Airtable writes** |
 | 057 v1.3 | `recordId`: WAS record ID | None | Script updates WAS status/error helper fields; confirm automation output mapping in Airtable UI if needed |
 | 042 v3.1 | `recordId`: Enrollment record ID | None | `statusOut`, `messageOut`, Enrollment/lifetime XP/current/next/gate outputs |
 | 115 v1.8 — DEV only | `recordId`: Testing Scenarios record ID | Scenario data lives in Testing Scenarios; do not add PROD inputs | `statusOut`, `actionOut`, `errorOut`, `debugStep`, testing scenario/submission/scenario type outputs |
@@ -52,7 +54,7 @@
 |---|---|
 | Recording XP | `ZOOM_CREDIT\|{Enrollment RID}\|{Zoom Meeting RID}`; one ledger row; soft-void incorrect new rows. |
 | Live XP | `ZOOM_ATTEND_BASE\|{meetingKey}\|{enrollmentId}`; 60 points; preserve history. |
-| Approval email | `ZOOM_REC_APPROVAL\|{enrollmentRID}\|{meetingRID}`; blank webhook skips. |
+| Approval email | Canonical four-part send key `ZOOM_REC_EMAIL\|{EnrollmentRID}\|{ZoomMeetingRID}\|{ZoomAttendanceRID}`; blank webhook skips. (Older `ZOOM_REC_APPROVAL` / three-part forms are superseded.) |
 | Live/recording same meeting | Conflict formula suppresses recording approval; live wins; no duplicate count or XP. |
 | Applied flags | 042 only writes Gate Applied; 057 only writes PW Applied; 117/117d/117e do not claim consumption. |
 

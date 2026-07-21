@@ -1,5 +1,7 @@
 ﻿# C-025 — Agent 2 DEV evidence: 117f install & controlled-test prep (2026-07-20)
 
+> **⚠️ SUPERSEDED — HISTORICAL DEV EVIDENCE (2026-07-20).** This records the **DEV-phase** 117f prep (Make scenario not yet built; script referenced as v1.2.0). The workflow was subsequently **built and controlled-tested against PROD**: Airtable Automation **117** → **Make** identifier **117f** (canonical **four-part** send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested; not documented as fully live**. The current shipped script is **v1.1** (Make handoff, no Airtable writes). The example send key below is the older three-part form. Retained for historical evidence. **Authoritative current state:** [PROD 117f approval-email workflow](./C-025-117f-prod-zoom-recording-approval-email.md) · [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Role:** Agent 2 — Install and Test 117f in DEV Safely  
 **Branch:** `feature/c025-stage17-zoom-attendance`  
 **Base:** DEV `appTetnuCZlCZdTCT` only  

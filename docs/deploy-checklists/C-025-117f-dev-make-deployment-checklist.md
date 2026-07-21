@@ -1,5 +1,7 @@
 # C-025 — 117f DEV Make deployment checklist
 
+> **⚠️ SUPERSEDED — HISTORICAL DEV RECORD (2026-07-20).** This is the **DEV-phase** build checklist for the Zoom Recording Approval Email Make scenario. The workflow has since been **built and controlled-tested against PROD**: Airtable Automation **117** → **Make** identifier **117f** (canonical **four-part** send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested; not documented as fully live**. Retained for historical evidence. **Authoritative current state:** [PROD 117f approval-email workflow](./C-025-117f-prod-zoom-recording-approval-email.md) · [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Scenario:** `Shooting Challenge - DEV - Zoom Recording Approval Email - 117f - v1`  
 **Base:** DEV `appTetnuCZlCZdTCT` only  
 **State:** Build **OFF** — do not enable until checklist PASS  

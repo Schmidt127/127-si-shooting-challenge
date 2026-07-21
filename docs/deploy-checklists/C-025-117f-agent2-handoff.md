@@ -1,5 +1,7 @@
 # C-025 — Agent 2 handoff (117f DEV Make)
 
+> **⚠️ SUPERSEDED — HISTORICAL DEV RECORD (2026-07-20).** This DEV Make handoff has been actioned: the workflow was **built and controlled-tested against PROD** — Airtable Automation **117** → **Make** identifier **117f** (canonical **four-part** send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`), **tested; not documented as fully live**. The "117f v1.2.0 contract" referenced here is superseded by the current shipped **v1.1** Make-handoff script (no Airtable writes). Retained for historical evidence. **Authoritative current state:** [PROD 117f approval-email workflow](./C-025-117f-prod-zoom-recording-approval-email.md) · [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **From:** Agent 1 (repo package + offline validation)  
 **Branch:** `feature/c025-stage17-zoom-attendance`  
 **Date:** 2026-07-20

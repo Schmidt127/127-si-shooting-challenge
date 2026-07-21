@@ -1,5 +1,7 @@
 ﻿# C-025 — 117f DEV manual action sheet (one page)
 
+> **⚠️ SUPERSEDED — HISTORICAL DEV RECORD (2026-07-20).** This is the **DEV-phase** manual action sheet. The workflow has since been **built and controlled-tested against PROD**: Airtable Automation **117** → **Make** identifier **117f** (canonical **four-part** send key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`) — **tested; not documented as fully live**. Note step D2 references a 117f **v1.2.0** paste that stamped Airtable fields; the current shipped script is **v1.1**, a pure Make handoff that writes **no** Airtable records. The example `sendKey` below is the older three-part form. Retained for historical evidence. **Authoritative current state:** [PROD 117f approval-email workflow](./C-025-117f-prod-zoom-recording-approval-email.md) · [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md).
+
 **Use when:** Make login, webhook creation, Airtable secret entry, or Mike test inbox cannot be completed by the agent.  
 **Do not invent** webhook URLs, PATs, or email addresses.  
 **Base:** DEV only · Scenario / automation stay **OFF** until each step says otherwise.

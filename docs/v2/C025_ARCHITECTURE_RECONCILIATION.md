@@ -1,5 +1,7 @@
 # C-025 Architecture Reconciliation — 117a–f vs 117a/b-only
 
+> **✅ RESOLVED / SUPERSEDED (2026-07-20).** This analysis debated S16 (Homework Completions) vs Stage 17 (Zoom Attendance) architectures. The decision is settled: **Stage 17 shipped.** The single orchestrator **Automation 117** (`117-zoom-recording-credit-orchestrator.js` v1.1.1) is **COMPLETE and ON in PROD** (with 057 v1.3 / 042 v3.1; 101 unchanged). The recording **approval email** is Airtable Automation **117** → **Make** identifier **117f** (canonical four-part key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`), **tested — not fully live**. The body recommendation below ("keep S16 as product authority") is **superseded**; the S16 `117a/117b` scripts live under `_superseded/`. Retained for historical decision context. **Authoritative current state:** [Stage 17 current PROD progress](../status/C-025-stage17-current-prod-progress.md) · [117 numbering note](../deploy-checklists/C-025-117-numbering.md).
+
 **Date:** 2026-07-15 (addendum **2026-07-18**)
 **Branch / PR:** `feature/shooting-v2-release-readiness` · [#26](https://github.com/Schmidt127/127-si-shooting-challenge/pull/26)
 **Scope:** Repository evidence only — **no live Airtable, PROD, merge, or deploy**

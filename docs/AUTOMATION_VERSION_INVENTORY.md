@@ -1,5 +1,7 @@
 # Automation Version Inventory — Shooting Challenge V2
 
+> **⚠️ C-025 ROWS STALE (as of 2026-07-16 snapshot; superseded 2026-07-20).** The C-025 / Zoom-recording rows below predate Stage 17 completion and describe the **superseded S16** `117a/117b` (Homework Completions) design. Current reality: Stage 17 **Automation 117** (orchestrator v1.1.1) is **COMPLETE and ON in PROD** (with 057 v1.3 / 042 v3.1; 101 unchanged). The recording **approval email** is Airtable Automation **117** → **Make** identifier **117f** (script **v1.1**, no Airtable writes; canonical four-part key `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`), **tested — not fully live** (not "pending UI paste"). For C-025 automation state, defer to the [automation index](./automation-index.md) and the [authoritative Stage 17 current state](./status/C-025-stage17-current-prod-progress.md).
+
 **Status:** Living inventory (GitHub headers + existing evidence)  
 **Last updated:** 2026-07-16  
 **Source scripts:** `airtable/automations/shooting-challenge/*.js`  
