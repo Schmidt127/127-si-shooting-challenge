@@ -1,0 +1,141 @@
+{
+  "table": "Tutorials & Assets",
+  "records": [
+    {
+      "id": "recAssetDupUrl001",
+      "fields": {
+        "Name": "Form Shooting Basics",
+        "Link to Video": "https://youtube.com/watch?v=abc123&utm_source=newsletter",
+        "Type of Asset": "Tutorial",
+        "Associated Program": ["Shooting Challenge"],
+        "Brief Descriptions": "Foundational form shooting tutorial.",
+        "Detailed Description": "Athletes practice balanced stance and follow-through with ten makes.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 10,
+        "Thumbnail": [{ "id": "attThumb001", "filename": "form.jpg" }],
+        "Display Image": [{ "id": "attWeb001", "filename": "form-web.jpg" }]
+      }
+    },
+    {
+      "id": "recAssetSameTitleDiffBand001",
+      "fields": {
+        "Name": "Ball Handling Ladder",
+        "Link to Video": "https://example.com/videos/bh-ladder-k2",
+        "Type of Asset": "Tutorial",
+        "Grade Band": "K-2",
+        "Brief Descriptions": "K-2 ball handling ladder.",
+        "Detailed Description": "Age-specific ball handling progression for K-2.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 11
+      }
+    },
+    {
+      "id": "recAssetSameTitleDiffBand002",
+      "fields": {
+        "Name": "Ball Handling Ladder",
+        "Link to Video": "https://example.com/videos/bh-ladder-78",
+        "Type of Asset": "Tutorial",
+        "Grade Band": "7-8",
+        "Brief Descriptions": "7-8 ball handling ladder.",
+        "Detailed Description": "Age-specific ball handling progression for 7-8.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 12
+      }
+    },
+    {
+      "id": "recAssetDiffTitleSameUrl001",
+      "fields": {
+        "Name": "Growth Mindset Article (legacy title)",
+        "Link to Video": "https://example.com/articles/growth-mindset",
+        "Type of Asset": "FBC Article Book",
+        "Brief Descriptions": "Legacy title, same URL as canonical article.",
+        "Detailed Description": "Same media, different metadata title.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 13
+      }
+    },
+    {
+      "id": "recAssetSameMediaDiffMeta001",
+      "fields": {
+        "Name": "Character Focus Draft",
+        "Link to Video": "https://example.com/videos/character-draft",
+        "Type of Asset": "Tutorial",
+        "Brief Descriptions": "Alternate brief copy for same media.",
+        "Detailed Description": "Different detailed metadata than canonical draft.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 14
+      }
+    },
+    {
+      "id": "recAssetBlankUrl001",
+      "fields": {
+        "Name": "Warmup Notes",
+        "Link to Video": "",
+        "Type of Asset": "Informational",
+        "Brief Descriptions": "Notes without media.",
+        "Detailed Description": "Incomplete media row.",
+        "OK to Publish on Softr": "",
+        "Sort Order": 15
+      }
+    },
+    {
+      "id": "recAssetIncomplete001",
+      "fields": {
+        "Name": "",
+        "Link to Video": "",
+        "Type of Asset": "Tutorial",
+        "OK to Publish on Softr": "",
+        "Sort Order": 16
+      }
+    },
+    {
+      "id": "recAssetLinkedHw001",
+      "fields": {
+        "Name": "Homework Companion Clip",
+        "Link to Video": "https://example.com/videos/hw-companion",
+        "Type of Asset": "Tutorial",
+        "Brief Descriptions": "Companion clip referenced by homework export fixture.",
+        "Detailed Description": "Used to test linked homework detection.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 17,
+        "linkedHomeworkIds": ["recHw001"]
+      }
+    },
+    {
+      "id": "recAssetLinkedLa001",
+      "fields": {
+        "Name": "Learning Activity Clip",
+        "Link to Video": "https://example.com/videos/la-companion",
+        "Type of Asset": "Tutorial",
+        "Brief Descriptions": "Companion clip for learning activity fixture.",
+        "Detailed Description": "Used to test linked learning activity detection.",
+        "OK to Publish on Softr": "",
+        "Sort Order": 18,
+        "linkedLearningActivityIds": ["recLa001"]
+      }
+    },
+    {
+      "id": "recAssetExactId001",
+      "fields": {
+        "Name": "Athlete Shout Out - Leyton",
+        "Link to Video": "https://youtu.be/shout001",
+        "Type of Asset": "Shout Out",
+        "Athlete": "Leyton Bakken",
+        "Brief Descriptions": "Recognition shout-out.",
+        "Detailed Description": "Celebrates consistent practice habits.",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 19
+      }
+    },
+    {
+      "id": "recTutExact001",
+      "fields": {
+        "Name": "Form Shooting Basics (reimport)",
+        "Link to Video": "https://www.youtube.com/watch?v=abc123",
+        "Type of Asset": "Tutorial",
+        "OK to Publish on Softr": "checked",
+        "Sort Order": 10
+      }
+    }
+  ]
+}
