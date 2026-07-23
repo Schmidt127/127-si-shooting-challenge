@@ -1,7 +1,3 @@
-import Link from "next/link";
-
-import { BrandLogo } from "@/components/brand/brand-logo";
-import { AmbientPage } from "@/components/catalog/ambient-page";
 import {
   IconBasketball,
   IconBolt,
@@ -9,11 +5,11 @@ import {
   IconTarget,
   IconTrophy,
 } from "@/components/icons/shoot-icons";
-import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
-import type { LeaderboardData } from "@/types/leaderboard";
-
+import { CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
+import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
+import type { LeaderboardData } from "@/types/leaderboard";
 
 import { LeaderboardBoard } from "./leaderboard-board";
 import { LeaderboardTiebreakerLegend } from "./leaderboard-tiebreaker-legend";
@@ -44,80 +40,77 @@ function LeaderboardStats({ data }: LeaderboardViewProps) {
 
 export function LeaderboardView({ data }: LeaderboardViewProps) {
   return (
-    <AmbientPage variant="leaderboard">
-      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <header className="mb-10">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <BrandLogo variant="circle" className="h-10 w-10 opacity-90" />
-              <p className="text-xs uppercase tracking-[0.25em] text-muted">
-                Updated {formatRelativeUpdate(data.updatedAt)}
-              </p>
-            </div>
-            <Link
-              href="/public-display"
-              className="inline-flex min-h-[2.75rem] items-center gap-2 rounded-lg border border-border bg-brand-light-gray px-3 text-xs font-semibold text-muted transition hover:border-brand-orange/30 hover:text-accent-soft"
-            >
-              <IconRank size={14} /> Display mode
-            </Link>
-          </div>
-
-          <div className="mt-8 text-center">
-            <div className="mx-auto mb-4 inline-flex items-center justify-center rounded-2xl border border-court-gold/30 bg-court-gold/10 p-3 text-court-gold">
-              <IconTrophy size={36} />
-            </div>
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-accent-soft">
-              127 Sports Intensity
-            </p>
-            <h1 className="font-display mt-3 text-4xl text-foreground sm:text-5xl lg:text-6xl">
-              Season Leaderboard
-            </h1>
-            <p className="mt-3 inline-flex items-center gap-2 rounded-md border border-brand-orange/25 bg-brand-orange/10 px-4 py-1.5 text-sm font-medium text-accent-soft">
-              <IconBasketball size={16} />
-              {data.seasonLabel}
-            </p>
-          </div>
-
-          <div className="mt-8">
-            <LeaderboardStats data={data} />
-          </div>
-
-          <div className="mt-6">
-            <LeaderboardTiebreakerLegend />
-          </div>
-        </header>
-
+    <ProgramPage
+      eyebrow="Season standings"
+      title="Season Leaderboard"
+      description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
+      heroVariant="contrast"
+      ambientVariant="leaderboard"
+      actions={
+        <CtaLink href="/public-display" variant="cta" iconStart={<IconRank size={16} />}>
+          Display mode
+        </CtaLink>
+      }
+      meta={
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+          <span>Updated {formatRelativeUpdate(data.updatedAt)}</span>
+          <span className="text-border" aria-hidden>
+            ·
+          </span>
+          <span>{data.seasonLabel}</span>
+        </div>
+      }
+    >
+      <div className="space-y-6">
+        <LeaderboardStats data={data} />
+        <LeaderboardTiebreakerLegend />
         <LeaderboardBoard entries={data.entries} />
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
 export function LeaderboardEmptyState() {
   return (
-    <EmptyState
-      title={EMPTY_STATE_COPY.leaderboard.title}
-      description={EMPTY_STATE_COPY.leaderboard.description}
-      icon={<IconTrophy size={40} />}
-      action={
-        <Link href="/" className="btn-secondary">
-          ← Shooting Challenge
-        </Link>
-      }
-    />
+    <ProgramPage
+      eyebrow="Season standings"
+      title="Season Leaderboard"
+      description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
+      heroVariant="contrast"
+      ambientVariant="leaderboard"
+    >
+      <EmptyState
+        title={EMPTY_STATE_COPY.leaderboard.title}
+        description={EMPTY_STATE_COPY.leaderboard.description}
+        icon={<IconTrophy size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function LeaderboardErrorState({ message }: { message: string }) {
   return (
-    <ErrorState
-      title="Could not load leaderboard"
-      message={message}
-      action={
-        <Link href="/" className="btn-secondary">
-          ← Shooting Challenge
-        </Link>
-      }
-    />
+    <ProgramPage
+      eyebrow="Season standings"
+      title="Season Leaderboard"
+      description="See who is leading the season by level, XP, and total shots — ranked for fair competition."
+      heroVariant="contrast"
+      ambientVariant="leaderboard"
+    >
+      <ErrorState
+        title="Could not load leaderboard"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }

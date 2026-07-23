@@ -1,10 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconPlay } from "@/components/icons/shoot-icons";
-import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
-import { DisplayHeading } from "@/components/catalog/display-heading";
+import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { TutorialCatalogData, TutorialItem } from "@/types/tutorials";
@@ -76,63 +76,79 @@ function TutorialCard({ tutorial }: { tutorial: TutorialItem }) {
 
 export function TutorialsGridView({ data }: { data: TutorialCatalogData }) {
   return (
-    <AmbientPage variant="tutorials">
-      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <DisplayHeading
-          eyebrow="Film room"
-          title="Skills &"
-          titleAccent="storytelling"
-          icon={<IconPlay size={32} />}
-          subtitle="Shooting tutorials and technique breakdowns — curated for the challenge."
-        >
-          <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
-            {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
-          </p>
-        </DisplayHeading>
-
-        <div className="mt-14 space-y-14">
-          {data.categoryGroups.map((group) => (
-            <section key={group.category}>
-              <div className="mb-6 flex items-end justify-between gap-4">
-                <h2 className="font-display text-2xl text-foreground sm:text-3xl">
-                  {group.category}
-                </h2>
-                <span className="font-mono text-xs text-muted">{group.tutorials.length} clips</span>
-              </div>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {group.tutorials.map((tutorial) => (
-                  <TutorialCard key={tutorial.id} tutorial={tutorial} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+    <ProgramPage
+      eyebrow="Film room"
+      title="Skills & storytelling"
+      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      heroVariant="light"
+      ambientVariant="tutorials"
+      meta={
+        <>
+          {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
+        </>
+      }
+    >
+      <div className="mx-auto max-w-6xl space-y-14">
+        {data.categoryGroups.map((group) => (
+          <section key={group.category}>
+            <SectionMarker
+              label="Category"
+              title={group.category}
+              countLabel={`${group.tutorials.length} clips`}
+            />
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {group.tutorials.map((tutorial) => (
+                <TutorialCard key={tutorial.id} tutorial={tutorial} />
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
 export function TutorialsEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">{EMPTY_STATE_COPY.tutorials.title}</h1>
-        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.tutorials.description}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Shooting Challenge
-        </Link>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Film room"
+      title="Skills & storytelling"
+      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      heroVariant="light"
+      ambientVariant="tutorials"
+    >
+      <EmptyState
+        title={EMPTY_STATE_COPY.tutorials.title}
+        description={EMPTY_STATE_COPY.tutorials.description}
+        icon={<IconPlay size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function TutorialsErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass(true)}>
-        <h1 className="font-display text-2xl text-foreground">Could not load tutorials</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Film room"
+      title="Skills & storytelling"
+      description="Shooting tutorials and technique breakdowns — curated for the challenge."
+      heroVariant="light"
+      ambientVariant="tutorials"
+    >
+      <ErrorState
+        title="Could not load tutorials"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }

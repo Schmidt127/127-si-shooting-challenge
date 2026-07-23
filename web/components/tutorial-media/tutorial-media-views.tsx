@@ -2,17 +2,18 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { AmbientPage } from "@/components/catalog/ambient-page";
-import { IconMegaphone, IconPlay } from "@/components/icons/shoot-icons";
 import {
   catalogCardClass,
   catalogHeroClass,
   catalogPanelClass,
-  catalogStatePanelClass,
 } from "@/components/catalog/catalog-surface";
-import { DetailTitle, DisplayHeading, SectionHeading } from "@/components/catalog/display-heading";
+import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { MediaPanel } from "@/components/catalog/media-panel";
 import { RichContent } from "@/components/catalog/rich-content";
+import { IconMegaphone, IconPlay } from "@/components/icons/shoot-icons";
+import { CtaLink, DetailPageShell, ProgramPage, SectionMarker } from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
+import { buttonVariants } from "@/components/ui/button";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { shouldOpenExternally } from "@/lib/formatters/external-media";
 import type { TutorialMediaSectionConfig } from "@/lib/tutorial-media/config";
@@ -25,6 +26,10 @@ const CATEGORY_ACCENTS: Record<string, string> = {
   Character: "from-court-navy/30 to-brand-blue/10",
   Freethrow: "from-brand-blue/15 to-brand-light-gray",
 };
+
+function catalogPageTitle(config: TutorialMediaSectionConfig) {
+  return [config.catalog.title, config.catalog.titleAccent].filter(Boolean).join(" ");
+}
 
 function MediaCardLink({
   item,
@@ -124,47 +129,35 @@ export function TutorialMediaGridView({
   config: TutorialMediaSectionConfig;
 }) {
   return (
-    <AmbientPage variant={config.ambientVariant}>
-      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <DisplayHeading
-          eyebrow={config.catalog.eyebrow}
-          title={config.catalog.title}
-          titleAccent={config.catalog.titleAccent}
-          icon={
-            config.ambientVariant === "shoutouts" ? (
-              <IconMegaphone size={32} />
-            ) : (
-              <IconPlay size={32} />
-            )
-          }
-          subtitle={config.catalog.subtitle}
-        >
-          <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
-            {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
-          </p>
-        </DisplayHeading>
-
-        <div className="mt-14 space-y-14">
-          {data.categoryGroups.map((group) => (
-            <section key={group.category}>
-              <div className="mb-6 flex items-end justify-between gap-4">
-                <h2 className="font-display text-2xl text-foreground sm:text-3xl">
-                  {group.category}
-                </h2>
-                <span className="font-mono text-xs text-muted">
-                  {group.tutorials.length} {config.catalog.itemCountLabel}
-                </span>
-              </div>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {group.tutorials.map((item) => (
-                  <MediaCard key={item.id} item={item} config={config} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+    <ProgramPage
+      eyebrow={config.catalog.eyebrow}
+      title={catalogPageTitle(config)}
+      description={config.catalog.subtitle}
+      heroVariant="light"
+      ambientVariant={config.ambientVariant}
+      meta={
+        <>
+          {data.totalTutorials} published · Updated {formatRelativeUpdate(data.updatedAt)}
+        </>
+      }
+    >
+      <div className="mx-auto max-w-6xl space-y-14">
+        {data.categoryGroups.map((group) => (
+          <section key={group.category}>
+            <SectionMarker
+              label="Category"
+              title={group.category}
+              countLabel={`${group.tutorials.length} ${config.catalog.itemCountLabel}`}
+            />
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {group.tutorials.map((item) => (
+                <MediaCard key={item.id} item={item} config={config} />
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
@@ -178,110 +171,121 @@ export function TutorialMediaDetailView({
   const hasVideo = Boolean(item.videoUrl.trim());
 
   return (
-    <AmbientPage variant={config.ambientVariant}>
-      <div className="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6 sm:pt-12">
-        <Link
-          href={config.basePath}
-          className="inline-flex min-h-[2.75rem] items-center gap-2 text-sm font-medium text-muted transition hover:text-accent-soft"
-        >
-          <span aria-hidden>←</span> {config.detail.backLabel}
-        </Link>
+    <DetailPageShell
+      backHref={config.basePath}
+      backLabel={config.detail.backLabel}
+      ambientVariant={config.ambientVariant}
+      className="max-w-5xl"
+    >
+      <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <div>
+          <DetailTitle
+            overline={item.categories[0] ?? item.tutorialTypes[0] ?? config.catalog.title}
+            title={item.name}
+            accent={item.athlete ? `Featuring ${item.athlete}` : undefined}
+          />
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-          <div>
-            <DetailTitle
-              overline={item.categories[0] ?? item.tutorialTypes[0] ?? config.catalog.title}
-              title={item.name}
-              accent={item.athlete ? `Featuring ${item.athlete}` : undefined}
-            />
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {item.categories.map((category) => (
-                <span
-                  key={category}
-                  className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
-                >
-                  {category}
-                </span>
-              ))}
-            </div>
-
-            {item.briefDescription ? (
-              <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
-                {item.briefDescription}
-              </p>
-            ) : null}
+          <div className="mt-5 flex flex-wrap gap-2">
+            {item.categories.map((category) => (
+              <span
+                key={category}
+                className="rounded-md border border-border bg-brand-light-gray px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted"
+              >
+                {category}
+              </span>
+            ))}
           </div>
 
-          {item.athleteHeadshot ? (
-            <div className={cn(catalogHeroClass(), "relative mx-auto aspect-square w-full max-w-xs")}>
-              <Image
-                src={item.athleteHeadshot.url}
-                alt={item.athlete || "Athlete"}
-                fill
-                className="object-cover"
-                unoptimized
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-              {item.athlete ? (
-                <p className="absolute bottom-4 left-4 right-4 text-sm font-bold uppercase tracking-wider text-white">
-                  {item.athlete}
-                </p>
-              ) : null}
-            </div>
+          {item.briefDescription ? (
+            <p className="mt-6 text-base leading-relaxed text-muted sm:text-lg">
+              {item.briefDescription}
+            </p>
           ) : null}
         </div>
 
-        {hasVideo ? (
-          <section className="mt-10">
-            <SectionHeading label={config.detail.watchLabel} title={config.detail.watchTitle} />
-            <MediaPanel
-              url={item.videoUrl}
-              title={item.name}
-              openLabel={config.detail.openVideoLabel}
-              externalHint={config.detail.externalDocumentHint}
+        {item.athleteHeadshot ? (
+          <div className={cn(catalogHeroClass(), "relative mx-auto aspect-square w-full max-w-xs")}>
+            <Image
+              src={item.athleteHeadshot.url}
+              alt={item.athlete || "Athlete"}
+              fill
+              className="object-cover"
+              unoptimized
             />
-          </section>
-        ) : null}
-
-        {item.detailedDescription ? (
-          <section className={cn(catalogPanelClass(), "mt-10")}>
-            <SectionHeading
-              label={config.detail.deepDiveLabel}
-              title={config.detail.deepDiveTitle}
-            />
-            <RichContent text={item.detailedDescription} className="text-foreground/90" />
-          </section>
-        ) : null}
-
-        {hasVideo && shouldOpenExternally(item.videoUrl) ? null : hasVideo ? (
-          <div className="mt-8">
-            <a
-              href={item.videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-secondary"
-            >
-              {config.detail.openVideoLabel} ↗
-            </a>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
+            {item.athlete ? (
+              <p className="absolute bottom-4 left-4 right-4 text-sm font-bold uppercase tracking-wider text-white">
+                {item.athlete}
+              </p>
+            ) : null}
           </div>
         ) : null}
       </div>
-    </AmbientPage>
+
+      {hasVideo ? (
+        <section className="mt-10">
+          <SectionHeading label={config.detail.watchLabel} title={config.detail.watchTitle} />
+          <MediaPanel
+            url={item.videoUrl}
+            title={item.name}
+            openLabel={config.detail.openVideoLabel}
+            externalHint={config.detail.externalDocumentHint}
+          />
+        </section>
+      ) : null}
+
+      {item.detailedDescription ? (
+        <section className={cn(catalogPanelClass(), "mt-10")}>
+          <SectionHeading
+            label={config.detail.deepDiveLabel}
+            title={config.detail.deepDiveTitle}
+          />
+          <RichContent text={item.detailedDescription} className="text-foreground/90" />
+        </section>
+      ) : null}
+
+      {hasVideo && shouldOpenExternally(item.videoUrl) ? null : hasVideo ? (
+        <div className="mt-8">
+          <a
+            href={item.videoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonVariants({ variant: "secondary" })}
+          >
+            {config.detail.openVideoLabel} ↗
+          </a>
+        </div>
+      ) : null}
+    </DetailPageShell>
   );
 }
 
 export function TutorialMediaEmptyState({ config }: { config: TutorialMediaSectionConfig }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">{config.empty.title}</h1>
-        <p className="mt-3 text-muted">{config.empty.message}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Shooting Challenge
-        </Link>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow={config.catalog.eyebrow}
+      title={catalogPageTitle(config)}
+      description={config.catalog.subtitle}
+      heroVariant="light"
+      ambientVariant={config.ambientVariant}
+    >
+      <EmptyState
+        title={config.empty.title}
+        description={config.empty.message}
+        icon={
+          config.ambientVariant === "shoutouts" ? (
+            <IconMegaphone size={40} />
+          ) : (
+            <IconPlay size={40} />
+          )
+        }
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
@@ -293,25 +297,43 @@ export function TutorialMediaErrorState({
   message: string;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass(true)}>
-        <h1 className="font-display text-2xl text-foreground">{config.error.title}</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow={config.catalog.eyebrow}
+      title={catalogPageTitle(config)}
+      description={config.catalog.subtitle}
+      heroVariant="light"
+      ambientVariant={config.ambientVariant}
+    >
+      <ErrorState
+        title={config.error.title}
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function TutorialMediaNotFoundState({ config }: { config: TutorialMediaSectionConfig }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">{config.notFound.title}</h1>
-        <p className="mt-3 text-muted">{config.notFound.message}</p>
-        <Link href={config.basePath} className="btn-secondary mt-6">
-          ← {config.detail.backLabel}
-        </Link>
-      </div>
-    </div>
+    <DetailPageShell
+      backHref={config.basePath}
+      backLabel={config.detail.backLabel}
+      ambientVariant={config.ambientVariant}
+      className="max-w-5xl"
+    >
+      <EmptyState
+        title={config.notFound.title}
+        description={config.notFound.message}
+        action={
+          <CtaLink href={config.basePath} variant="secondary">
+            ← {config.detail.backLabel}
+          </CtaLink>
+        }
+      />
+    </DetailPageShell>
   );
 }

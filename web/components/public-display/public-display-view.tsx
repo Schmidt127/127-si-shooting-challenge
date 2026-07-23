@@ -1,4 +1,4 @@
-import Link from "next/link";
+import type { ReactNode } from "react";
 
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { AmbientPage } from "@/components/catalog/ambient-page";
@@ -6,6 +6,8 @@ import { IconBasketball, IconTrophy } from "@/components/icons/shoot-icons";
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { LeaderboardPodium } from "@/components/leaderboard/leaderboard-podium";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
+import { CtaLink } from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LeaderboardData } from "@/types/leaderboard";
@@ -21,7 +23,7 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
     <AmbientPage variant="leaderboard">
       <div className="min-h-[calc(100vh-8rem)] px-4 py-8 sm:px-8 sm:py-12">
         <div className="mx-auto max-w-7xl">
-          <header className="court-lines sc-contrast flex flex-wrap items-center justify-between gap-6 rounded-2xl border px-5 py-6 shadow-[0_10px_32px_-12px_rgba(0,26,92,0.35)] sm:px-8">
+          <header className="court-lines sc-contrast flex flex-wrap items-center justify-between gap-6 rounded-lg border px-5 py-6 shadow-site-md sm:px-8">
             <div className="flex items-center gap-4">
               <BrandLogo variant="circle" className="h-14 w-14" />
               <div>
@@ -40,12 +42,14 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
               <p className="mt-1 text-sm text-contrast-muted">
                 Updated {formatRelativeUpdate(data.updatedAt)}
               </p>
-              <Link
+              <CtaLink
                 href="/leaderboard"
-                className="mt-3 inline-block text-xs font-semibold text-accent-soft hover:underline"
+                variant="contrast"
+                size="sm"
+                className="mt-3"
               >
                 Full site view →
-              </Link>
+              </CtaLink>
             </div>
           </header>
 
@@ -57,7 +61,7 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
             {topTen.map((entry) => (
               <div
                 key={entry.id}
-                className={`rounded-2xl border bg-card/90 p-4 ${
+                className={`rounded-lg border bg-card p-4 shadow-site-sm ${
                   entry.rank === 1 ? "border-court-gold/35" : "border-border"
                 }`}
               >
@@ -92,30 +96,68 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
   );
 }
 
-export function PublicDisplayEmptyState() {
+function PublicDisplayChrome({ children }: { children: ReactNode }) {
   return (
     <AmbientPage variant="leaderboard">
-      <div className="mx-auto max-w-lg px-4 py-24 text-center">
-        <h1 className="font-display text-2xl">{EMPTY_STATE_COPY.publicDisplay.title}</h1>
-        <p className="mt-3 text-sm text-muted">{EMPTY_STATE_COPY.publicDisplay.description}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Back to overview
-        </Link>
+      <div className="min-h-[calc(100vh-8rem)] px-4 py-8 sm:px-8 sm:py-12">
+        <div className="mx-auto max-w-7xl">
+          <header className="court-lines sc-contrast flex flex-wrap items-center justify-between gap-6 rounded-lg border px-5 py-6 shadow-site-md sm:px-8">
+            <div className="flex items-center gap-4">
+              <BrandLogo variant="circle" className="h-14 w-14" />
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.35em] text-accent-soft">
+                  127 Sports Intensity
+                </p>
+                <h1 className="font-display mt-1 text-3xl text-contrast-fg sm:text-4xl lg:text-5xl">
+                  Public display
+                </h1>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-contrast-muted">
+                Live leaderboard
+              </p>
+              <CtaLink href="/leaderboard" variant="contrast" size="sm" className="mt-3">
+                Full site view →
+              </CtaLink>
+            </div>
+          </header>
+          <div className="mt-10">{children}</div>
+        </div>
       </div>
     </AmbientPage>
   );
 }
 
+export function PublicDisplayEmptyState() {
+  return (
+    <PublicDisplayChrome>
+      <EmptyState
+        title={EMPTY_STATE_COPY.publicDisplay.title}
+        description={EMPTY_STATE_COPY.publicDisplay.description}
+        icon={<IconTrophy size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Back to overview
+          </CtaLink>
+        }
+      />
+    </PublicDisplayChrome>
+  );
+}
+
 export function PublicDisplayErrorState({ message }: { message: string }) {
   return (
-    <AmbientPage variant="leaderboard">
-      <div className="mx-auto max-w-lg px-4 py-24 text-center">
-        <h1 className="font-display text-2xl">Display unavailable</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Back to overview
-        </Link>
-      </div>
-    </AmbientPage>
+    <PublicDisplayChrome>
+      <ErrorState
+        title="Display unavailable"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Back to overview
+          </CtaLink>
+        }
+      />
+    </PublicDisplayChrome>
   );
 }

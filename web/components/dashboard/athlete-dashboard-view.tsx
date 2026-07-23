@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { AmbientPage } from "@/components/catalog/ambient-page";
 import { catalogPanelClass } from "@/components/catalog/catalog-surface";
 import {
   IconBolt,
@@ -10,11 +9,10 @@ import {
   IconTrophy,
 } from "@/components/icons/shoot-icons";
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
+import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import {
   InteractiveCard,
   LevelIndicator,
-  PageFrame,
-  PageHeader,
   ProgressMeter,
   StatTile,
   StatusBadge,
@@ -36,92 +34,109 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
   const unlockedCount = data.achievements.filter((item) => item.unlocked).length;
 
   return (
-    <AmbientPage variant="default">
-      <PageFrame width="wide">
-        <PageHeader
-          eyebrow="Athlete dashboard"
-          title={data.athlete.displayName}
-          description={`${data.athlete.school} · ${formatGrade(data.athlete.grade)} · ${data.seasonLabel}`}
-          actions={
-            data.source === "mock" ? (
-              <StatusBadge tone="warn">Demo data — Airtable adapter pending</StatusBadge>
-            ) : null
-          }
-        />
-
-        <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
-          <div className={catalogPanelClass({ tint: "neutral" })}>
-            <div className="flex flex-wrap items-center gap-4">
-              <AthleteAvatar
-                name={data.athlete.displayName}
-                headshotUrl={data.athlete.avatarUrl}
-                size="lg"
-              />
-              <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
-                  Identity
-                </p>
-                <h2 className="font-display mt-1 truncate text-2xl text-foreground">
-                  {data.athlete.displayName}
-                </h2>
-                <p className="mt-1 text-sm text-muted">
-                  {data.athlete.school} · {formatGrade(data.athlete.grade)}
-                </p>
-                <Link
-                  href={`/athletes/${data.athlete.slug}`}
-                  className="mt-2 inline-block text-sm font-semibold text-accent-soft hover:underline"
-                >
-                  Open public profile
-                </Link>
-              </div>
-            </div>
-
-            <div className="mt-6">
-              <LevelIndicator
-                level={data.athlete.level}
-                totalXp={data.xp.total}
-                xpIntoLevel={data.xp.xpIntoLevel}
-                xpForNextLevel={data.xp.xpForNextLevel}
-                nextLevelLabel={data.xp.nextLevelLabel}
-              />
+    <ProgramPage
+      eyebrow="Athlete dashboard"
+      title={data.athlete.displayName}
+      description={`${data.athlete.school} · ${formatGrade(data.athlete.grade)} · ${data.seasonLabel}`}
+      heroVariant="contrast"
+      ambientVariant="default"
+      actions={
+        <>
+          <CtaLink href="/leaderboard" variant="cta">
+            Season leaderboard
+          </CtaLink>
+          <CtaLink href="/homework" variant="contrast">
+            Homework
+          </CtaLink>
+        </>
+      }
+      meta={
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span>
+            Lifetime XP {formatXp(data.xp.total)} · Demo slug /{data.athlete.slug}
+          </span>
+          {data.source === "mock" ? (
+            <StatusBadge tone="warn">Demo data — Airtable adapter pending</StatusBadge>
+          ) : null}
+        </div>
+      }
+    >
+      <section className="grid gap-6 lg:grid-cols-[1.4fr_1fr]" aria-label="Athlete identity">
+        <div className={catalogPanelClass({ tint: "neutral" })}>
+          <div className="flex flex-wrap items-center gap-4">
+            <AthleteAvatar
+              name={data.athlete.displayName}
+              headshotUrl={data.athlete.avatarUrl}
+              size="lg"
+            />
+            <div className="min-w-0">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
+                Identity
+              </p>
+              <h2 className="font-display mt-1 truncate text-2xl text-foreground">
+                {data.athlete.displayName}
+              </h2>
+              <p className="mt-1 text-sm text-muted">
+                {data.athlete.school} · {formatGrade(data.athlete.grade)}
+              </p>
+              <CtaLink
+                href={`/athletes/${data.athlete.slug}`}
+                variant="link"
+                className="mt-2 px-0"
+              >
+                Open public profile
+              </CtaLink>
             </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-            <StatTile
-              label={`${data.weekly.weekLabel} shots`}
-              value={`${formatShots(data.weekly.shots)} / ${formatShots(data.weekly.goal)}`}
-              icon={IconTarget}
-              tint="blue"
-              hint={`${weeklyPct}% of weekly goal`}
-            />
-            <StatTile
-              label="Current streak"
-              value={`${data.streakDays} days`}
-              icon={IconBolt}
-              tint="amber"
-            />
-            <StatTile
-              label="Perfect Weeks"
-              value={String(data.perfectWeek.seasonCount)}
-              icon={IconTrophy}
-              tint="orange"
-              hint={
-                data.perfectWeek.earnedThisWeek
-                  ? "Earned this week"
-                  : "In progress this week"
-              }
-            />
-            <StatTile
-              label="Achievements"
-              value={`${unlockedCount} unlocked`}
-              icon={IconMedal}
-              tint="muted"
+          <div className="mt-6">
+            <LevelIndicator
+              level={data.athlete.level}
+              totalXp={data.xp.total}
+              xpIntoLevel={data.xp.xpIntoLevel}
+              xpForNextLevel={data.xp.xpForNextLevel}
+              nextLevelLabel={data.xp.nextLevelLabel}
             />
           </div>
-        </section>
+        </div>
 
-        <section className="mt-6 grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+          <StatTile
+            label={`${data.weekly.weekLabel} shots`}
+            value={`${formatShots(data.weekly.shots)} / ${formatShots(data.weekly.goal)}`}
+            icon={IconTarget}
+            tint="blue"
+            hint={`${weeklyPct}% of weekly goal`}
+          />
+          <StatTile
+            label="Current streak"
+            value={`${data.streakDays} days`}
+            icon={IconBolt}
+            tint="amber"
+          />
+          <StatTile
+            label="Perfect Weeks"
+            value={String(data.perfectWeek.seasonCount)}
+            icon={IconTrophy}
+            tint="orange"
+            hint={
+              data.perfectWeek.earnedThisWeek
+                ? "Earned this week"
+                : "In progress this week"
+            }
+          />
+          <StatTile
+            label="Achievements"
+            value={`${unlockedCount} unlocked`}
+            icon={IconMedal}
+            tint="muted"
+          />
+        </div>
+      </section>
+
+      <section className="mt-10" aria-label="Weekly progress and next action">
+        <SectionMarker label="This week" title="Progress & next step" />
+        <div className="grid gap-6 lg:grid-cols-2">
           <div className={catalogPanelClass({ tint: "blue" })}>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-blue">
               Weekly progress
@@ -156,9 +171,12 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               </span>
             </InteractiveCard>
           </Link>
-        </section>
+        </div>
+      </section>
 
-        <section className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <section className="mt-10 mb-2" aria-label="Homework, feedback, and achievements">
+        <SectionMarker label="Coach desk" title="Homework, feedback & badges" />
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <div className={catalogPanelClass({ tint: "neutral" })}>
             <div className="flex items-center justify-between gap-3">
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
@@ -169,12 +187,14 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               </StatusBadge>
             </div>
             <h3 className="mt-3 text-lg font-bold text-foreground">{data.homework.title}</h3>
-            <Link
+            <CtaLink
               href={data.homework.href}
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft"
+              variant="link"
+              className="mt-4 px-0"
+              iconEnd={<IconChevronRight size={16} />}
             >
-              Open homework <IconChevronRight size={16} />
-            </Link>
+              Open homework
+            </CtaLink>
           </div>
 
           <div className={catalogPanelClass({ tint: "neutral" })}>
@@ -185,12 +205,14 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               <>
                 <h3 className="mt-3 text-lg font-bold text-foreground">{data.feedback.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{data.feedback.preview}</p>
-                <Link
+                <CtaLink
                   href={data.feedback.href}
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft"
+                  variant="link"
+                  className="mt-4 px-0"
+                  iconEnd={<IconChevronRight size={16} />}
                 >
-                  View more <IconChevronRight size={16} />
-                </Link>
+                  View more
+                </CtaLink>
               </>
             ) : (
               <p className="mt-3 text-sm text-muted">No new feedback yet.</p>
@@ -202,18 +224,15 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-accent-soft">
                 Achievements
               </p>
-              <Link
-                href="/achievements"
-                className="text-xs font-semibold text-muted hover:text-foreground"
-              >
+              <CtaLink href="/achievements" variant="link" className="px-0 text-xs">
                 All
-              </Link>
+              </CtaLink>
             </div>
             <ul className="mt-4 space-y-2">
               {data.achievements.slice(0, 3).map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between gap-2 rounded-xl border border-border bg-card px-3 py-2"
+                  className="flex items-center justify-between gap-2 rounded-md border border-border bg-card px-3 py-2"
                 >
                   <span className="text-sm text-foreground">{item.name}</span>
                   <StatusBadge tone={item.unlocked ? "success" : "neutral"}>
@@ -223,12 +242,8 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               ))}
             </ul>
           </div>
-        </section>
-
-        <p className="mt-8 text-center font-mono text-xs text-muted">
-          Lifetime XP {formatXp(data.xp.total)} · Demo slug /{data.athlete.slug}
-        </p>
-      </PageFrame>
-    </AmbientPage>
+        </div>
+      </section>
+    </ProgramPage>
   );
 }

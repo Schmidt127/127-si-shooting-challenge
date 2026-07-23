@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Web
+
+#### Changed
+- **Unified public page design system (2026-07-23)** — Remaining `/shoot` pages now share the approved home-page shell (`PageHero`, `ProgramPage`, `SiteSection`, `CtaLink`, restrained catalog surfaces). Competitive energy on Leaderboard, Achievements, Public Display, and Athlete Profile; calmer instructional styling on Homework, Tutorials, Articles, and Game Manual; balanced treatment on Dashboard, Levels, Zoom Meetings, Shoutouts, and Admin. Data wiring, routes, and Airtable queries unchanged. Loading states added for articles, shoutouts, public-display, and game-manual.
+
 ### Airtable
 
 #### Added

@@ -2,10 +2,15 @@ import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconBook } from "@/components/icons/shoot-icons";
-import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
-import { DisplayHeading } from "@/components/catalog/display-heading";
+import {
+  AccentRail,
+  CtaLink,
+  ProgramPage,
+  SectionMarker,
+} from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
@@ -132,23 +137,13 @@ function WeekSection({
 }) {
   return (
     <section className="relative">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-muted">
-            {isLatestWeek ? "Current week" : "Week archive"}
-          </p>
-          <h2 className="font-display mt-1 text-2xl text-foreground sm:text-3xl">{weekName}</h2>
-        </div>
-        <span className="rounded-md border border-border bg-brand-light-gray px-3 py-1 font-mono text-xs text-muted">
-          {assignments.length} assignment{assignments.length === 1 ? "" : "s"}
-        </span>
-      </div>
+      <SectionMarker
+        label={isLatestWeek ? "Current week" : "Week archive"}
+        title={weekName}
+        countLabel={`${assignments.length} assignment${assignments.length === 1 ? "" : "s"}`}
+      />
 
-      <div className="relative space-y-4 pl-0 sm:pl-8">
-        <div
-          className="absolute bottom-2 left-3 top-2 hidden w-px bg-gradient-to-b from-brand-orange/50 via-border to-transparent sm:block"
-          aria-hidden
-        />
+      <AccentRail tone="orange">
         {assignments.map((assignment, index) => (
           <HomeworkCard
             key={assignment.id}
@@ -157,67 +152,80 @@ function WeekSection({
             isLatestWeek={isLatestWeek}
           />
         ))}
-      </div>
+      </AccentRail>
     </section>
   );
 }
 
 export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
   return (
-    <AmbientPage variant="homework">
-      <div className="mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <DisplayHeading
-          eyebrow="Curriculum drop"
-          title="Homework"
-          titleAccent="HQ"
-          icon={<IconBook size={32} />}
-          subtitle="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
-        >
-          <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
-            {data.totalAssignments} published · Updated {formatRelativeUpdate(data.updatedAt)}
-          </p>
-        </DisplayHeading>
-
-        <div className="mt-14 space-y-14">
-          {data.weekGroups.map((group, groupIndex) => (
-            <WeekSection
-              key={group.weekId || group.weekName}
-              weekName={group.weekName}
-              assignments={group.assignments}
-              isLatestWeek={groupIndex === 0}
-            />
-          ))}
-        </div>
+    <ProgramPage
+      eyebrow="Curriculum drop"
+      title="Homework HQ"
+      description="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
+      heroVariant="light"
+      ambientVariant="homework"
+      meta={
+        <>
+          {data.totalAssignments} published · Updated {formatRelativeUpdate(data.updatedAt)}
+        </>
+      }
+    >
+      <div className="mx-auto max-w-4xl space-y-14">
+        {data.weekGroups.map((group, groupIndex) => (
+          <WeekSection
+            key={group.weekId || group.weekName}
+            weekName={group.weekName}
+            assignments={group.assignments}
+            isLatestWeek={groupIndex === 0}
+          />
+        ))}
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
 export function HomeworkEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass()}>
-        <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
-        <h1 className="font-display mt-6 text-2xl text-foreground">{EMPTY_STATE_COPY.homework.title}</h1>
-        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.homework.description}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Shooting Challenge
-        </Link>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Curriculum drop"
+      title="Homework HQ"
+      description="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
+      heroVariant="light"
+      ambientVariant="homework"
+    >
+      <EmptyState
+        title={EMPTY_STATE_COPY.homework.title}
+        description={EMPTY_STATE_COPY.homework.description}
+        icon={<IconBook size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function HomeworkErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass(true)}>
-        <h1 className="font-display text-2xl text-foreground">Could not load homework</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Shooting Challenge
-        </Link>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Curriculum drop"
+      title="Homework HQ"
+      description="Film study, faith, and basketball assignments — published from the challenge curriculum. Newest week at the top."
+      heroVariant="light"
+      ambientVariant="homework"
+    >
+      <ErrorState
+        title="Could not load homework"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }

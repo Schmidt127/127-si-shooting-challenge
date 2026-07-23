@@ -1,9 +1,9 @@
 import Link from "next/link";
 
-import { AmbientPage } from "@/components/catalog/ambient-page";
+import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconLevel } from "@/components/icons/shoot-icons";
-import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
-import { DisplayHeading } from "@/components/catalog/display-heading";
+import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -85,7 +85,11 @@ function LevelLadderCard({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={level.coverImage.url}
-                alt={level.displayName || level.name ? `${level.displayName || level.name} cover` : "Level cover"}
+                alt={
+                  level.displayName || level.name
+                    ? `${level.displayName || level.name} cover`
+                    : "Level cover"
+                }
                 className="max-h-24 max-w-32 object-contain sm:max-h-28 sm:max-w-36"
               />
             </div>
@@ -104,29 +108,28 @@ function LevelLadderCard({
 
 export function LevelsLadderView({ data }: LevelsLadderViewProps) {
   return (
-    <AmbientPage variant="levels">
-      <div className="mx-auto max-w-4xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <DisplayHeading
-          eyebrow="Progression path"
-          title="Climb the"
-          titleAccent="level ladder"
-          icon={<IconLevel size={32} />}
-          subtitle="From first shots to G.O.A.T. — every tier shows the XP threshold and what it takes to break through."
-        >
-          <p className="mt-4 text-xs uppercase tracking-[0.25em] text-muted">
-            {data.totalLevels} active tiers · pinnacle first
-          </p>
-        </DisplayHeading>
-
-        <div className="relative mt-14 space-y-5">
-          <div
-            className="absolute bottom-4 left-7 top-4 hidden w-px bg-gradient-to-b from-court-gold/50 via-brand-orange/30 to-brand-blue/20 sm:block"
-            aria-hidden
-          />
+    <ProgramPage
+      eyebrow="Progression path"
+      title={
+        <>
+          Climb the <span className="text-accent-soft">level ladder</span>
+        </>
+      }
+      description="From first shots to G.O.A.T. — every tier shows the XP threshold and what it takes to break through."
+      heroVariant="light"
+      ambientVariant="levels"
+      meta={
+        <span>
+          {data.totalLevels} active tiers · pinnacle first
+        </span>
+      }
+    >
+      <div className="mx-auto max-w-4xl">
+        <AccentRail tone="gold" className="space-y-5">
           {data.levels.map((level, index) => (
-            <div key={level.id} className="relative sm:pl-14">
+            <div key={level.id} className="relative">
               <span
-                className="absolute left-4 top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-brand-orange/50 bg-background sm:block"
+                className="absolute -left-[1.65rem] top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-brand-orange/50 bg-background sm:block"
                 aria-hidden
               />
               <LevelLadderCard
@@ -137,33 +140,61 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
               />
             </div>
           ))}
-        </div>
+        </AccentRail>
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
 export function LevelsEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass()}>
-        <h1 className="font-display text-2xl text-foreground">{EMPTY_STATE_COPY.levels.title}</h1>
-        <p className="mt-3 text-muted">{EMPTY_STATE_COPY.levels.description}</p>
-        <Link href="/" className="btn-secondary mt-6">
-          ← Shooting Challenge
-        </Link>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Progression path"
+      title={
+        <>
+          Climb the <span className="text-accent-soft">level ladder</span>
+        </>
+      }
+      description="From first shots to G.O.A.T. — every tier shows the XP threshold and what it takes to break through."
+      heroVariant="light"
+      ambientVariant="levels"
+    >
+      <EmptyState
+        title={EMPTY_STATE_COPY.levels.title}
+        description={EMPTY_STATE_COPY.levels.description}
+        icon={<IconLevel size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function LevelsErrorState({ message }: { message: string }) {
   return (
-    <div className="flex flex-col items-center justify-center px-6 py-24">
-      <div className={catalogStatePanelClass(true)}>
-        <h1 className="font-display text-2xl text-foreground">Could not load levels</h1>
-        <p className="mt-3 text-sm text-muted">{message}</p>
-      </div>
-    </div>
+    <ProgramPage
+      eyebrow="Progression path"
+      title={
+        <>
+          Climb the <span className="text-accent-soft">level ladder</span>
+        </>
+      }
+      description="From first shots to G.O.A.T. — every tier shows the XP threshold and what it takes to break through."
+      heroVariant="light"
+      ambientVariant="levels"
+    >
+      <ErrorState
+        title="Could not load levels"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
+            ← Shooting Challenge
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }

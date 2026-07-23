@@ -1,9 +1,7 @@
-import Link from "next/link";
-
-import { AmbientPage } from "@/components/catalog/ambient-page";
-import { catalogCardClass, catalogStatePanelClass } from "@/components/catalog/catalog-surface";
-import { DisplayHeading } from "@/components/catalog/display-heading";
+import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconMedal } from "@/components/icons/shoot-icons";
+import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
+import { EmptyState, ErrorState } from "@/components/ui";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
 
@@ -52,7 +50,7 @@ function AchievementCard({ achievement }: { achievement: AchievementDefinition }
       <div className="relative p-5 sm:p-6">
         <div className="flex items-start gap-4">
           <div
-            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-light-gray ring-1 ${style.ring}`}
+            className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-light-gray ring-1 ${style.ring}`}
           >
             <IconMedal size={24} className={style.label} />
           </div>
@@ -102,63 +100,85 @@ export function AchievementsGridView({ data }: AchievementsGridViewProps) {
   const groups = Object.entries(grouped).sort(([a], [b]) => a.localeCompare(b));
 
   return (
-    <AmbientPage variant="achievements">
-      <div className="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-        <DisplayHeading
-          eyebrow="Earn your badges"
-          title="Achievements"
-          subtitle="Milestones, streaks, perfect weeks, and secret unlocks — definitions from the live challenge rulebook."
-          icon={<IconMedal size={32} />}
-        />
-
-        <div className="mt-10 space-y-12">
-          {groups.map(([groupName, items]) => (
-            <section key={groupName}>
-              <h2 className="text-sm font-bold uppercase tracking-[0.24em] text-brand-blue">
-                {groupName}
-              </h2>
-              <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                {items.map((achievement) => (
-                  <AchievementCard key={achievement.id} achievement={achievement} />
-                ))}
-              </div>
-            </section>
-          ))}
-        </div>
+    <ProgramPage
+      eyebrow="Earn your badges"
+      title="Achievements"
+      description="Milestones, streaks, perfect weeks, and secret unlocks — definitions from the live challenge rulebook."
+      heroVariant="contrast"
+      ambientVariant="achievements"
+      actions={
+        <CtaLink href="/leaderboard" variant="cta">
+          View leaderboard
+        </CtaLink>
+      }
+      meta={
+        <span>
+          {data.totalAchievements} definition{data.totalAchievements === 1 ? "" : "s"} ·{" "}
+          {groups.length} categor{groups.length === 1 ? "y" : "ies"}
+        </span>
+      }
+    >
+      <div className="space-y-12">
+        {groups.map(([groupName, items]) => (
+          <section key={groupName}>
+            <SectionMarker
+              label="Category"
+              title={groupName}
+              countLabel={`${items.length} badge${items.length === 1 ? "" : "s"}`}
+            />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {items.map((achievement) => (
+                <AchievementCard key={achievement.id} achievement={achievement} />
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
-    </AmbientPage>
+    </ProgramPage>
   );
 }
 
 export function AchievementsEmptyState() {
   return (
-    <AmbientPage variant="achievements">
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <div className={catalogStatePanelClass()}>
-          <IconMedal size={40} className="mx-auto text-muted" />
-          <h1 className="font-display mt-4 text-2xl">{EMPTY_STATE_COPY.achievements.title}</h1>
-          <p className="mt-3 text-sm text-muted">{EMPTY_STATE_COPY.achievements.description}</p>
-          <Link href="/" className="btn-secondary mt-6">
+    <ProgramPage
+      eyebrow="Earn your badges"
+      title="Achievements"
+      description="Milestones, streaks, perfect weeks, and secret unlocks — definitions from the live challenge rulebook."
+      heroVariant="contrast"
+      ambientVariant="achievements"
+    >
+      <EmptyState
+        title={EMPTY_STATE_COPY.achievements.title}
+        description={EMPTY_STATE_COPY.achievements.description}
+        icon={<IconMedal size={40} />}
+        action={
+          <CtaLink href="/" variant="secondary">
             ← Back to overview
-          </Link>
-        </div>
-      </div>
-    </AmbientPage>
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
 
 export function AchievementsErrorState({ message }: { message: string }) {
   return (
-    <AmbientPage variant="achievements">
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <div className={catalogStatePanelClass()}>
-          <h1 className="font-display text-2xl text-foreground">Could not load achievements</h1>
-          <p className="mt-3 text-sm text-muted">{message}</p>
-          <Link href="/" className="btn-secondary mt-6">
+    <ProgramPage
+      eyebrow="Earn your badges"
+      title="Achievements"
+      description="Milestones, streaks, perfect weeks, and secret unlocks — definitions from the live challenge rulebook."
+      heroVariant="contrast"
+      ambientVariant="achievements"
+    >
+      <ErrorState
+        title="Could not load achievements"
+        message={message}
+        action={
+          <CtaLink href="/" variant="secondary">
             ← Back to overview
-          </Link>
-        </div>
-      </div>
-    </AmbientPage>
+          </CtaLink>
+        }
+      />
+    </ProgramPage>
   );
 }
