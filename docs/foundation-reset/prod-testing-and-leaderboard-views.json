@@ -1,0 +1,585 @@
+[
+  {
+    "table": "Automations",
+    "tableId": "tblfpqKqPEbkPnN8E",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwNr0UljU705Qqjl",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwPXhYcFAnQss6My",
+        "name": "Conditions only",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Enrollments",
+    "tableId": "tbl3PFmwbRoabu1YV",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwA2S2uJQ4VuHKS2",
+        "name": "Admin - Field Cleanup - Enrollments",
+        "type": "grid"
+      },
+      {
+        "id": "viwejxZD6gx1mQjuV",
+        "name": "Workflow - Enrollment",
+        "type": "grid"
+      },
+      {
+        "id": "viwnfnJMPboWZzIpo",
+        "name": "Operator View",
+        "type": "grid"
+      },
+      {
+        "id": "viwFxNXNs8gbNR37Z",
+        "name": "Conquered Challenge",
+        "type": "grid"
+      },
+      {
+        "id": "viwUPQyy0F1dpTG5W",
+        "name": "Fillout.com Form Info ONLY",
+        "type": "grid"
+      },
+      {
+        "id": "viwwPxTk9YRRvoMcY",
+        "name": "Form Input Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwDpVY4ZPtG0gP4k",
+        "name": "Level List",
+        "type": "grid"
+      },
+      {
+        "id": "viwNV87i8BwPBxYlq",
+        "name": "Automation - 001 - Needs Athlete Link",
+        "type": "grid"
+      },
+      {
+        "id": "viwitHfNChfwjvFkr",
+        "name": "Automation - 002 - Needs Grade Band",
+        "type": "grid"
+      },
+      {
+        "id": "viwWfoiEzXoIIcBse",
+        "name": "Automation - 003 - Grade Band Refresh Needed",
+        "type": "grid"
+      },
+      {
+        "id": "viwbi08N7HxOKkbxc",
+        "name": "ENROLLMENTS - Needs Initial Level Assignment",
+        "type": "grid"
+      },
+      {
+        "id": "viwm9OgwkPKI2bii3",
+        "name": "042 - Needs Level Assignment",
+        "type": "grid"
+      },
+      {
+        "id": "viwRCz09bEvCTxOr9",
+        "name": "ENROLLMENTS - A5 - XP Award Ready",
+        "type": "grid"
+      },
+      {
+        "id": "viw38CUFg3rFFQ03n",
+        "name": "Everything - Alpha",
+        "type": "grid"
+      },
+      {
+        "id": "viweullFf8vycYUsH",
+        "name": "Participation Certificate CSV Export",
+        "type": "grid"
+      },
+      {
+        "id": "viw2x814kxfbEdHYr",
+        "name": "Contact Emails",
+        "type": "grid"
+      },
+      {
+        "id": "viw8EBQ4Qj2hlgf3v",
+        "name": "Goal Conqured - Only",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Athletes",
+    "tableId": "tblTluxBr3DcVrh6h",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwLSS0Rb0lRPFZCW",
+        "name": "Athlete Table Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwXmpH8UIUHxz2l8",
+        "name": "Workflow Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwVS9AG1o14Y1uwG",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Submissions",
+    "tableId": "tblEVjVpGGlPTsYSt",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwtvJ6jRC344aaNa",
+        "name": "Assign Week Automation",
+        "type": "grid"
+      },
+      {
+        "id": "viwQaroOS7ymoWGLC",
+        "name": "Submissions - Weekly Athlete Summary Builder",
+        "type": "grid"
+      },
+      {
+        "id": "viwP0fsgmEzyZcKuU",
+        "name": "SUBMISSIONS - 5 - XP Award Ready",
+        "type": "grid"
+      },
+      {
+        "id": "viwPfXT0GwkI0VKV0",
+        "name": "Assign Enrollment to Submission",
+        "type": "grid"
+      },
+      {
+        "id": "viwQtHsbg5V9m8ds9",
+        "name": "Ready to Award XP",
+        "type": "grid"
+      },
+      {
+        "id": "viw2XXs7opOP2DYY3",
+        "name": "Homework Completion Create Queue",
+        "type": "grid"
+      },
+      {
+        "id": "viwzWRTwfwQrbz1NM",
+        "name": "002 - Submissions Ready for Homework Completion",
+        "type": "grid"
+      },
+      {
+        "id": "viwERev4p4vF1WtEt",
+        "name": "Workflow Check - Fields to Check Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwXGTg6oHInFPQku",
+        "name": "Workflow - Email Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwHOukunutCEKfZ5",
+        "name": "Workflow testing only",
+        "type": "grid"
+      },
+      {
+        "id": "viwFNxcOazCMT9Rvo",
+        "name": "Scenario 1",
+        "type": "grid"
+      },
+      {
+        "id": "viwdF2TnML0uSmQdL",
+        "name": "Homework 1 Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwEQACUZlZuN64mV",
+        "name": "Homework 2 Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwF65wFX1ZgLEfZz",
+        "name": "Video Upload Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwH01Z9UiwX4IMUZ",
+        "name": "Grid View - Everything",
+        "type": "grid"
+      },
+      {
+        "id": "viwtiN9dFVvf3soku",
+        "name": "Daily Submission Email Flow Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwAa7MlPtcBhqRml",
+        "name": "Todays Submissions",
+        "type": "grid"
+      },
+      {
+        "id": "viwnEPd9ZSLGq5gKd",
+        "name": "Yesterdays Submissions",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Submission Assets",
+    "tableId": "tblhMLKxQK77agtME",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viw13hPC2X2Cxcl6c",
+        "name": "020 - Ready to Link Homework Completion",
+        "type": "grid"
+      },
+      {
+        "id": "viwPlmXDSf78jt6Ht",
+        "name": "070 - Ready to Send Asset to Make",
+        "type": "grid"
+      },
+      {
+        "id": "viwZpKN6mLYMRK7oV",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "XP Events",
+    "tableId": "tblmGSiNA1akW8KnU",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwwOVqfRoiRhA8wZ",
+        "name": "Shooting Base",
+        "type": "grid"
+      },
+      {
+        "id": "viwxvBYCjalp1kOJv",
+        "name": "Homework",
+        "type": "grid"
+      },
+      {
+        "id": "viwWhmg404LSl9zfs",
+        "name": "Video",
+        "type": "grid"
+      },
+      {
+        "id": "viwo6QaxleVBop8Dl",
+        "name": "Zoom",
+        "type": "grid"
+      },
+      {
+        "id": "viwd2DjTwF9Qi9vkR",
+        "name": "Streaks",
+        "type": "grid"
+      },
+      {
+        "id": "viw6GHYU5GdX5EhRU",
+        "name": "Thresholds",
+        "type": "grid"
+      },
+      {
+        "id": "viwTGosig4vtV0ImK",
+        "name": "Workflow - Required Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwJAYg9yfAZ3FOFm",
+        "name": "Possible Duplicates",
+        "type": "grid"
+      },
+      {
+        "id": "viw7AlnknfZ2xjp2x",
+        "name": "Review View",
+        "type": "grid"
+      },
+      {
+        "id": "viweuVTaP7BWVXLtx",
+        "name": "XP Audit by Athlete",
+        "type": "grid"
+      },
+      {
+        "id": "viwXJaiAyRifGjmzC",
+        "name": "Admin - Duplicate Weekly Threshold XP",
+        "type": "grid"
+      },
+      {
+        "id": "viwxDeaSZwKZv3qna",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwKDEGG2PM2kK1GV",
+        "name": "XP Date Resolved",
+        "type": "grid"
+      },
+      {
+        "id": "viwYrrCCBDPyh44HF",
+        "name": "DUPLICATE REVIEW",
+        "type": "grid"
+      },
+      {
+        "id": "viwiyN9FImjBTB5NU",
+        "name": "Riley",
+        "type": "grid"
+      },
+      {
+        "id": "viw3inUS6g2hEDKEl",
+        "name": "Dayton",
+        "type": "grid"
+      },
+      {
+        "id": "viw28LDqQSR0E9mGS",
+        "name": "Fix Weekly Threshold Duplicates",
+        "type": "grid"
+      },
+      {
+        "id": "viw6TixZQ87bHuPja",
+        "name": "CHECK - Weekly Threshold Duplicates copy",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Athlete Achievement Unlocks",
+    "tableId": "tblyT2AQo1JbvmvZS",
+    "testingViews": [
+      {
+        "id": "viwhHkNyEPe21oMbI",
+        "name": "Testing",
+        "type": "grid"
+      }
+    ],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viw5Uwh9RbYSsMWpm",
+        "name": "CHECK - Streak Unlocks Created",
+        "type": "grid"
+      },
+      {
+        "id": "viwbXSbZjE2ksLspo",
+        "name": "CHECK - Streak Duplicate Checker",
+        "type": "grid"
+      },
+      {
+        "id": "viwGEmipO73JSfPFi",
+        "name": "Duplicate Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwjrFfhWXbljzchY",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwhHkNyEPe21oMbI",
+        "name": "Testing",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Streak Occurrences",
+    "tableId": "tbl9VxLdBiNcev4He",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwyeqqq3dZpgOjI2",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwnbMf8WykzWqg2p",
+        "name": "Streak Duplicate Cleanup",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Weeks",
+    "tableId": "tblcsKugv1cla36A6",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwWPy9HzIzMZHn6F",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Weekly Athlete Summary",
+    "tableId": "tbl9520d72adxlAKQ",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwZ3GvBXgbljXf7Q",
+        "name": "Sunday Review for Awards",
+        "type": "grid"
+      },
+      {
+        "id": "viwJaH4qwdmp5R0Me",
+        "name": "Workflow Check - Required Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwAbrB2geNH4aJwj",
+        "name": "Workflow Check - Missing - Not Publishing",
+        "type": "grid"
+      },
+      {
+        "id": "viw1aOM2e4XBF1nxQ",
+        "name": "Workflow - Mandatory Fields",
+        "type": "grid"
+      },
+      {
+        "id": "viwCn2S99q8aCciXo",
+        "name": "EMPTY Fields Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwb500G9LTW76qSF",
+        "name": "Review View",
+        "type": "grid"
+      },
+      {
+        "id": "viwGlczA6iOB2CwSw",
+        "name": "030 - Assign Grade Band and Goal Record",
+        "type": "grid"
+      },
+      {
+        "id": "viw0dSw4RPFYkHcdg",
+        "name": "SUBMISSIONS - Weekly Athlete  Summary Builder",
+        "type": "grid"
+      },
+      {
+        "id": "viwRMMfMacGcjXZ5a",
+        "name": "Weekly Summary - A6 - Calculate Official Weekly XP",
+        "type": "grid"
+      },
+      {
+        "id": "viwigjO8WzotJjmB1",
+        "name": "Weekly Summary - A6 - Award Official Weekly XP Event",
+        "type": "grid"
+      },
+      {
+        "id": "viwF8Yc51CD3JhF36",
+        "name": "Weekly Summary - A5 - Needs Goal Setup",
+        "type": "grid"
+      },
+      {
+        "id": "viwUXbIuoYqdKxHaI",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwkuKF0uwyC0hE6D",
+        "name": "Grid Testing View",
+        "type": "grid"
+      },
+      {
+        "id": "viwb3YN5G8Md20q2K",
+        "name": "ADMIN - DUPLICATE SUMMARY CLEANUP - OK TO DELTE",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Homework Completions",
+    "tableId": "tblv58ppTFDBXb3nv",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwbxi5La9rX8YQsS",
+        "name": "HOMEWORK GRADING QUEUE - FINAL",
+        "type": "grid"
+      },
+      {
+        "id": "viweDtbNeLm48qEO9",
+        "name": "Workflow - Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwvZLpuKFyivsKVy",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwAYZ4UTtdnbjjyL",
+        "name": "Grid view copy",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Video Feedback",
+    "tableId": "tblOV6pJDxQFBSQ3q",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwx3YtYb9vcxOtlk",
+        "name": "Grading Video. In Order of Checkboxes",
+        "type": "grid"
+      },
+      {
+        "id": "viwQbstr9guphkhvA",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Zoom Meetings",
+    "tableId": "tblWcSHEm8vNNIxyB",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwEj0ikcuO2VefHQ",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viw5ALBxpEl6IXRju",
+        "name": "Meeting Agenda and Related Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwh3KmPC0T8ICM7Y",
+        "name": "Create XP Event after Meeting",
+        "type": "grid"
+      }
+    ]
+  },
+  {
+    "table": "Zoom Attendance",
+    "tableId": "tblg8DPRu3j0dbuwi",
+    "testingViews": [],
+    "leaderboardViews": [],
+    "allViews": [
+      {
+        "id": "viwsAP0gT2sLzoRH6",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  }
+]

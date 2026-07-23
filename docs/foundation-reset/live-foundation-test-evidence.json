@@ -1,0 +1,201 @@
+{
+  "when": "2026-07-23T21:18:59.907664+00:00",
+  "note": "Surrogate foundation live test: API-created Fillout-shaped Submission matching 115 daily shape. Automation 115 is NOT installed in PROD yet; Testing Scenario orchestration path still blocked on Mike paste.",
+  "checks": [
+    {
+      "name": "Schmidt enrollment Active? true",
+      "expected": true,
+      "actual": true,
+      "pass": true
+    },
+    {
+      "name": "Submission created with Schmidt enrollment",
+      "expected": "recgP9qZYjAhE7NXm",
+      "actual": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Week link resolves",
+      "expected": "non-empty Week link",
+      "actual": [
+        "recVDKiYATgzsfpmE"
+      ],
+      "pass": true
+    },
+    {
+      "name": "Pipeline began XP processing or linked XP Event",
+      "expected": "XP Award Status progressed and/or XP Events linked",
+      "actual": {
+        "XP Award Status": "Awarded",
+        "XP Events": [
+          "recOqzhV4kTdsfzMf"
+        ]
+      },
+      "pass": true
+    },
+    {
+      "name": "Exactly one new submission from this run",
+      "expected": 1,
+      "actual": 0,
+      "pass": false
+    },
+    {
+      "name": "No duplicate XP storm from one submission",
+      "expected": "0 or 1 new XP events",
+      "actual": 0,
+      "pass": true
+    },
+    {
+      "name": "Testing Scenario 115 orchestration",
+      "expected": "115 creates submission from scenario",
+      "actual": "NOT INSTALLED \u2014 blocked",
+      "pass": false
+    }
+  ],
+  "baseline": {
+    "xpEventCount": 0,
+    "submissionCount": 0,
+    "xpEventIds": [],
+    "submissionIds": []
+  },
+  "createSubmission": {
+    "status": 200,
+    "response": {
+      "records": [
+        {
+          "id": "recaCcxDqtzFWjmyi",
+          "createdTime": "2026-07-23T21:19:00.000Z",
+          "fields": {
+            "Enrollment": [
+              "recgP9qZYjAhE7NXm"
+            ],
+            "Count This Submission?": 1,
+            "Submission Has Detailed Stats?": 0,
+            "Ready for 009 Asset Creation?": 0,
+            "Created": "2026-07-23T21:19:00.000Z",
+            "Submission Assets Ready?": 0,
+            "XP Award Ready?": 0,
+            "Submitted At": "2026-07-23T21:19:00.000Z",
+            "Why Not Ready for 009?": "Missing Week",
+            "Needs Week Assignment?": 1,
+            "Duplicate Key": "\"Schmidt, Testing - 2025-2026\"|2026-07-23|Simple Total|25",
+            "Counted Activity Date Key": "2026-07-23",
+            "Total Shots Canonical": 25,
+            "Has Review Assets?": 0,
+            "Total Shots Counted": 25,
+            "Submission Stat Mode": "Simple Total",
+            "3PT Attempted Counted": 0,
+            "Submitted Same Day?": 1,
+            "RecordId": "recaCcxDqtzFWjmyi",
+            "FT Attempted Counted": 0,
+            "Has Video?": 0,
+            "XP Award Status": "Pending",
+            "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recaCcxDqtzFWjmyi",
+            "FT Made Counted": 0,
+            "Activity Date Key": "2026-07-23",
+            "XP Volume Bonus": 1,
+            "Ready to Send Attachments to Make?": 0,
+            "XP Base Points": 5,
+            "3PT Made Counted": 0,
+            "Week Assignment Status": "Needs Assignment",
+            "Perfect Week Countable Submission?": 0,
+            "XP Accuracy Bonus": 0,
+            "Ready for Homework Completion Automation?": 0,
+            "XP Detailed Stats Bonus": 0,
+            "Athlete": [
+              "recgqVstObQRzgXJF"
+            ],
+            "Total Makes Counted": 0,
+            "Has HW2?": 0,
+            "XP Total Points": 5,
+            "Homework Completion Ready?": 0,
+            "XP Bonus Points": 1,
+            "Submission Key": "\"Schmidt, Testing - 2025-2026\"--recaCcxDqtzFWjmyi",
+            "Activity Date": "2026-07-23",
+            "2PT Attempted Counted": 0,
+            "Has HW1?": 0,
+            "Athlete Name": [
+              "Testing Schmidt"
+            ],
+            "Shot Total": 25,
+            "Duplicate Review Status": "Count It",
+            "Ready for Weekly Summary?": 0,
+            "Activity Date Is Future?": 0,
+            "2PT Made Counted": 0,
+            "Submission Full Name": "Testing Schmidt - 7/23/2026 - No Week"
+          }
+        }
+      ]
+    }
+  },
+  "submissionId": "recaCcxDqtzFWjmyi",
+  "polls": [
+    {
+      "poll": 1,
+      "Week": null,
+      "Needs Week Assignment?": 1,
+      "Week Assignment Status": "Needs Assignment",
+      "XP Award Status": "Pending",
+      "XP Events": null,
+      "Weekly Athlete Summary": null,
+      "Daily Email Status": null,
+      "Enrollment": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "Shot Total": 25,
+      "Duplicate Review Status": "Count It",
+      "Activity Date": "2026-07-23"
+    },
+    {
+      "poll": 2,
+      "Week": [
+        "recVDKiYATgzsfpmE"
+      ],
+      "Needs Week Assignment?": 0,
+      "Week Assignment Status": "Assigned",
+      "XP Award Status": "Pending",
+      "XP Events": null,
+      "Weekly Athlete Summary": null,
+      "Daily Email Status": null,
+      "Enrollment": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "Shot Total": 25,
+      "Duplicate Review Status": "Count It",
+      "Activity Date": "2026-07-23"
+    },
+    {
+      "poll": 3,
+      "Week": [
+        "recVDKiYATgzsfpmE"
+      ],
+      "Needs Week Assignment?": 0,
+      "Week Assignment Status": "Assigned",
+      "XP Award Status": "Awarded",
+      "XP Events": [
+        "recOqzhV4kTdsfzMf"
+      ],
+      "Weekly Athlete Summary": [
+        "rechWp330MqSgRWzN"
+      ],
+      "Daily Email Status": "Sent",
+      "Enrollment": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "Shot Total": 25,
+      "Duplicate Review Status": "Count It",
+      "Activity Date": "2026-07-23"
+    }
+  ],
+  "newXpEvents": [],
+  "newSubmissions": [],
+  "standingsExclusion": {
+    "mechanismFound": "Enrollments.Active? (website fallback filter) and optional Web - Leaderboard view filters",
+    "separateExclusionField": false,
+    "currentDecisionApplied": "Active?=true for processing eligibility",
+    "publicStandingsRisk": "With Active?=true and no Web - Leaderboard exclusion filter, Schmidt can appear on public leaderboard.",
+    "recommendedMikeAction": "In Airtable UI, ensure Enrollments view used by website (Web - Leaderboard) excludes enrollment recgP9qZYjAhE7NXm by record link/ID \u2014 do not create a new field yet."
+  }
+}

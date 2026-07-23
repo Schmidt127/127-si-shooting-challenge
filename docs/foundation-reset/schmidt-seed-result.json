@@ -1,0 +1,75 @@
+{
+  "when": "2026-07-23T21:17:49.117780+00:00",
+  "actions": [
+    {
+      "action": "set_enrollment_active_true",
+      "enrollmentId": "recgP9qZYjAhE7NXm",
+      "before": null,
+      "status": 200,
+      "after": true
+    },
+    {
+      "action": "create_week",
+      "status": 200,
+      "response": {
+        "records": [
+          {
+            "id": "recVDKiYATgzsfpmE",
+            "createdTime": "2026-07-23T21:17:51.000Z",
+            "fields": {
+              "Record ID": "recVDKiYATgzsfpmE",
+              "Week Key": "recVDKiYATgzsfpmE",
+              "End Date": "2026-07-23T06:00:00.000Z",
+              "Start Date": "2026-07-23T06:00:00.000Z"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "action": "create_scenario",
+      "id": "recPdyfYRFgDtpzQ8",
+      "fields": {
+        "Test Intake Name": "FOUNDATION-RESET-001 Daily Dry Run",
+        "Scenario Type": "Daily Submission",
+        "Test Status": "Queued",
+        "Last Run Status": "Not Run",
+        "Related Enrollment": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "Submission Date": "2026-07-23",
+        "Shot Total": 25,
+        "Dry Run?": true,
+        "Run Test?": false,
+        "Expected Result": "Dry-run of 115 creates no Submission. Live run (after 115 install) creates one Fillout-shaped Submission linked to Schmidt enrollment recgP9qZYjAhE7NXm with Shot Total 25 and Activity Date = Submission Date; no framework fields on pipeline tables.",
+        "Test Notes": "Foundation Reset Pack SC-001/SC-004 seed. Do not enable Run Test? until automation 115 is pasted in PROD.",
+        "Scenario Requirements": "Requires automation 115 v1.8 installed on Testing Scenarios / Run Test? checked."
+      }
+    }
+  ],
+  "weeksCoveringToday": [
+    {
+      "id": "recVDKiYATgzsfpmE",
+      "start": "2026-07-23",
+      "end": "2026-07-23",
+      "created": true
+    }
+  ],
+  "schmidt": {
+    "athleteId": "recgqVstObQRzgXJF",
+    "enrollmentId": "recgP9qZYjAhE7NXm",
+    "athleteActive": true,
+    "enrollmentActive": true,
+    "schoolYear": "2025-2026",
+    "grade": "Pre K",
+    "gradeBand": [
+      "recK7BDVSpHy2ipCS"
+    ],
+    "programInstance": [
+      "rec9cQQ0VKYGy4jXq"
+    ],
+    "fullNameBackward": "Schmidt, Testing - 2025-2026",
+    "parentEmail": "set",
+    "athleteEmail": "set"
+  }
+}

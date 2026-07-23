@@ -1,0 +1,127 @@
+{
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "generatedAt": "2026-07-23T15:14:59",
+  "tableCount": 30,
+  "viewCountBasic": 119,
+  "viewCountDetailed": 119,
+  "linkCount": 144,
+  "dependencyCount": 431,
+  "tables": [
+    "Automations",
+    "Enrollments",
+    "Athletes",
+    "Level Gate Rules",
+    "Grade Bands",
+    "Target Goal Shots",
+    "Submissions",
+    "Submission Assets",
+    "XP Events",
+    "Athlete Achievement Unlocks",
+    "Streak Occurrences",
+    "Achievements",
+    "Weeks",
+    "Program Instance - Synced",
+    "School - Synced",
+    "Weekly Athlete Summary",
+    "Levels",
+    "Shot Milestones",
+    "FBC Curriculum - SYNC",
+    "Homework Completions",
+    "Video Feedback",
+    "Tutorials",
+    "Tutorials & Assets",
+    "XP Reward Rules",
+    "Config",
+    "Awards",
+    "Award Recipients",
+    "Final Reflection Quiz Submissions",
+    "Zoom Meetings",
+    "Zoom Attendance"
+  ],
+  "topHubTables": [
+    {
+      "table": "Enrollments",
+      "degree": 38
+    },
+    {
+      "table": "Weeks",
+      "degree": 22
+    },
+    {
+      "table": "Submissions",
+      "degree": 20
+    },
+    {
+      "table": "XP Events",
+      "degree": 20
+    },
+    {
+      "table": "Homework Completions",
+      "degree": 18
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "degree": 18
+    },
+    {
+      "table": "Submission Assets",
+      "degree": 16
+    },
+    {
+      "table": "Grade Bands",
+      "degree": 14
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "degree": 12
+    },
+    {
+      "table": "FBC Curriculum - SYNC",
+      "degree": 12
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Enrollments",
+      "computedFieldCount": 75
+    },
+    {
+      "table": "Submissions",
+      "computedFieldCount": 54
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "computedFieldCount": 45
+    },
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 36
+    },
+    {
+      "table": "Zoom Meetings",
+      "computedFieldCount": 36
+    },
+    {
+      "table": "Homework Completions",
+      "computedFieldCount": 33
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "computedFieldCount": 25
+    },
+    {
+      "table": "Zoom Attendance",
+      "computedFieldCount": 25
+    },
+    {
+      "table": "XP Events",
+      "computedFieldCount": 22
+    },
+    {
+      "table": "Award Recipients",
+      "computedFieldCount": 15
+    }
+  ],
+  "viewsPerTable": {}
+}

@@ -1,0 +1,344 @@
+{
+  "status": 200,
+  "response": {
+    "id": "tblagI7Q5wXQm2XGS",
+    "name": "Testing Scenarios",
+    "description": "Engineering Test Framework (SC-001). Orchestration only \u2014 not a second XP/homework/email path. Framework fields stay on this table.",
+    "primaryFieldId": "fldIcGdI4M52M1Ibi",
+    "fields": [
+      {
+        "type": "singleLineText",
+        "id": "fldIcGdI4M52M1Ibi",
+        "name": "Test Intake Name"
+      },
+      {
+        "type": "checkbox",
+        "options": {
+          "icon": "thumbsUp",
+          "color": "greenBright"
+        },
+        "id": "fldTY7LvJ6NIgr7PW",
+        "name": "Run Test?"
+      },
+      {
+        "type": "checkbox",
+        "options": {
+          "icon": "thumbsUp",
+          "color": "yellowBright"
+        },
+        "id": "fld7zqxv1kmzR6thk",
+        "name": "Dry Run?"
+      },
+      {
+        "type": "singleSelect",
+        "options": {
+          "choices": [
+            {
+              "id": "selKa6Krm02NiSBrm",
+              "name": "Daily Submission",
+              "color": "blueLight2"
+            },
+            {
+              "id": "selWYPhEBQe2FeiwZ",
+              "name": "Homework",
+              "color": "cyanLight2"
+            },
+            {
+              "id": "selFdfbG7Eyoacw6T",
+              "name": "Homework + Video",
+              "color": "tealLight2"
+            },
+            {
+              "id": "selEpbx00cbTisn1q",
+              "name": "Three Video Upload",
+              "color": "greenLight2"
+            },
+            {
+              "id": "selm6oZrOChuTZeeL",
+              "name": "Milestone Crossing",
+              "color": "yellowLight2"
+            },
+            {
+              "id": "sel5bFykmVTwr7Jw8",
+              "name": "Perfect Week",
+              "color": "orangeLight2"
+            },
+            {
+              "id": "selXXteOy3qzRC3Fr",
+              "name": "Backdated Submission",
+              "color": "redLight2"
+            },
+            {
+              "id": "selXcCF7lYlk35adv",
+              "name": "Parent Feedback",
+              "color": "pinkLight2"
+            },
+            {
+              "id": "selcLxHmNnIKiGIsh",
+              "name": "Weekly Summary",
+              "color": "purpleLight2"
+            },
+            {
+              "id": "selMYfxSKL6J2dyjI",
+              "name": "Award Generation",
+              "color": "grayLight2"
+            },
+            {
+              "id": "selBU5pbf58T1RXg9",
+              "name": "Other",
+              "color": "blueLight1"
+            },
+            {
+              "id": "selBusfOpWuuloDlQ",
+              "name": "Video",
+              "color": "blueLight2"
+            }
+          ]
+        },
+        "id": "fldXhmz4AgmdReg6f",
+        "name": "Scenario Type"
+      },
+      {
+        "type": "singleSelect",
+        "options": {
+          "choices": [
+            {
+              "id": "selnP5PeTiTtGqElN",
+              "name": "Not Started",
+              "color": "blueLight2"
+            },
+            {
+              "id": "sel5f68W3CYgX0apA",
+              "name": "Queued",
+              "color": "cyanLight2"
+            },
+            {
+              "id": "selyNHCHA2yn7W2wI",
+              "name": "In Progress",
+              "color": "tealLight2"
+            },
+            {
+              "id": "sel8lksLk4VCJrPOE",
+              "name": "Blocked",
+              "color": "greenLight2"
+            },
+            {
+              "id": "seldnULGf3ej2Yn30",
+              "name": "Completed",
+              "color": "yellowLight2"
+            },
+            {
+              "id": "selMSxhwX9hARZFuv",
+              "name": "Rejected",
+              "color": "orangeLight2"
+            }
+          ]
+        },
+        "id": "fldCNT7uHAKVmIR2F",
+        "name": "Test Status"
+      },
+      {
+        "type": "singleSelect",
+        "options": {
+          "choices": [
+            {
+              "id": "selJUw9yLOLC21JaX",
+              "name": "Not Run",
+              "color": "blueLight2"
+            },
+            {
+              "id": "selmfR8yUnDNmer3W",
+              "name": "Pass",
+              "color": "cyanLight2"
+            },
+            {
+              "id": "selFWw5lqZHVSGUQl",
+              "name": "Fail",
+              "color": "tealLight2"
+            },
+            {
+              "id": "selhkkYqYzzflu1Wr",
+              "name": "Blocked",
+              "color": "greenLight2"
+            },
+            {
+              "id": "selrZAB3iSJmrwszP",
+              "name": "Error",
+              "color": "yellowLight2"
+            }
+          ]
+        },
+        "id": "fldBssLQ1Ee0KJ4p2",
+        "name": "Last Run Status"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldmnzuKxkP3jen06",
+        "name": "Expected Result"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldoLnReefNPru8TP",
+        "name": "Actual Result"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldxdmev80EhVlYPj",
+        "name": "Pass/Fail Notes"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldJACFaDQn0DgULH",
+        "name": "Operator Feedback"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldMt8vhDdeSt663g",
+        "name": "Test Notes"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldBW1zex1Upou0bj",
+        "name": "Scenario Requirements"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldzCGDAvntjxq779",
+        "name": "Last Error"
+      },
+      {
+        "type": "date",
+        "options": {
+          "dateFormat": {
+            "name": "local",
+            "format": "l"
+          }
+        },
+        "id": "fld2yMXjfI545POgD",
+        "name": "Submission Date"
+      },
+      {
+        "type": "number",
+        "options": {
+          "precision": 0
+        },
+        "id": "fldkIPEdQ1YgATdMd",
+        "name": "Shot Total"
+      },
+      {
+        "type": "dateTime",
+        "options": {
+          "dateFormat": {
+            "name": "local",
+            "format": "l"
+          },
+          "timeFormat": {
+            "name": "24hour",
+            "format": "HH:mm"
+          },
+          "timeZone": "America/Denver"
+        },
+        "id": "fldzN3Pm8BNTMidtN",
+        "name": "Last Run At"
+      },
+      {
+        "type": "singleSelect",
+        "options": {
+          "choices": [
+            {
+              "id": "selhEiDc8PLf3EHSj",
+              "name": "Form",
+              "color": "blueLight2"
+            },
+            {
+              "id": "seluXfbxJX3Ioh5mg",
+              "name": "Footwork",
+              "color": "cyanLight2"
+            },
+            {
+              "id": "selwWYSiWxclWOK9f",
+              "name": "Release",
+              "color": "tealLight2"
+            },
+            {
+              "id": "selKOgv6gqOCZfWyn",
+              "name": "Follow Through",
+              "color": "greenLight2"
+            },
+            {
+              "id": "seltk02X3k9BDzEjl",
+              "name": "Other",
+              "color": "yellowLight2"
+            }
+          ]
+        },
+        "id": "fld4j6bew5of8qWOj",
+        "name": "Video Feedback Focus"
+      },
+      {
+        "type": "multilineText",
+        "id": "fldfM9SXlRDVuhEZO",
+        "name": "Video Feedback Question"
+      },
+      {
+        "type": "multipleAttachments",
+        "options": {
+          "isReversed": false
+        },
+        "id": "fldcSy5TvSopTrcsb",
+        "name": "Intake Attachments"
+      },
+      {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tbl3PFmwbRoabu1YV",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "flddAB7TJ1rvFrMN0"
+        },
+        "id": "fldsLK59kRvPvyf7O",
+        "name": "Related Enrollment"
+      },
+      {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblEVjVpGGlPTsYSt",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldOqG2lqGtdOo6ws"
+        },
+        "id": "fldZiI5E5577IABj8",
+        "name": "Linked Submission"
+      },
+      {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblv58ppTFDBXb3nv",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fld2HwO24PSdURGEo"
+        },
+        "id": "fldiskXwhSIpsXN5o",
+        "name": "Relevant Homework Completion"
+      },
+      {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblUuxwYlX4EQ9MKE",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldU4VrmFR1D7jjvV"
+        },
+        "id": "fldGKOHeXi1m2nWMo",
+        "name": "Homework Assignment"
+      }
+    ],
+    "views": [
+      {
+        "id": "viwzqKFx2vvXTEwBw",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  }
+}

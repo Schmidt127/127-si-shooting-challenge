@@ -1,0 +1,511 @@
+{
+  "tableId": "tblEQLsXTCwx0iOd8",
+  "fields": [
+    {
+      "name": "Test Intake Name",
+      "type": "singleLineText",
+      "id": "fldqfcodjXsPpyl05",
+      "options": null
+    },
+    {
+      "name": "RecordId - Testing Scenarios",
+      "type": "formula",
+      "id": "fldbTZyPHGCLC8Ioa",
+      "options": {
+        "isValid": true,
+        "formula": "RECORD_ID()",
+        "referencedFieldIds": [],
+        "result": {
+          "type": "singleLineText"
+        }
+      }
+    },
+    {
+      "name": "Run Test?",
+      "type": "checkbox",
+      "id": "fldAjFqic7nEBWgBT",
+      "options": {
+        "icon": "thumbsUp",
+        "color": "greenBright"
+      }
+    },
+    {
+      "name": "Last Run Status",
+      "type": "singleSelect",
+      "id": "fld4tedtEbwfa1cMB",
+      "options": {
+        "choices": [
+          {
+            "id": "selU9lcUC1CmY1rsF",
+            "name": "Not Run",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selZhli6tQH2MLERa",
+            "name": "Pass",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selBPgwb3tKJoEMqj",
+            "name": "Fail",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selwzM51XXu1jEL5C",
+            "name": "Blocked",
+            "color": "greenLight2"
+          },
+          {
+            "id": "selfXOOgLMjRmXDzp",
+            "name": "Error",
+            "color": "yellowLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Test Status",
+      "type": "singleSelect",
+      "id": "fldji9YCoxcTIR6Cu",
+      "options": {
+        "choices": [
+          {
+            "id": "selvOl85gvRH9AGh4",
+            "name": "Not Started",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selhZDHo1v5u8Ttcb",
+            "name": "Queued",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selyHBfgkHUQm8YWL",
+            "name": "In Progress",
+            "color": "tealLight2"
+          },
+          {
+            "id": "seltp6wKDvBkjshFQ",
+            "name": "Blocked",
+            "color": "greenLight2"
+          },
+          {
+            "id": "selSMdzaocTgJfOWx",
+            "name": "Completed",
+            "color": "yellowLight2"
+          },
+          {
+            "id": "selwDoCcD7830t6Xv",
+            "name": "Rejected",
+            "color": "orangeLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Operator Feedback",
+      "type": "multilineText",
+      "id": "fldslXpxwlEBxousb",
+      "options": null
+    },
+    {
+      "name": "Expected Result",
+      "type": "multilineText",
+      "id": "fldvIibzIarXIOHlw",
+      "options": null
+    },
+    {
+      "name": "Actual Result",
+      "type": "multilineText",
+      "id": "fld41YuEuFYTNAaOC",
+      "options": null
+    },
+    {
+      "name": "Pass/Fail Notes",
+      "type": "multilineText",
+      "id": "fldDfIl3muCcjV8U2",
+      "options": null
+    },
+    {
+      "name": "Scenario Type",
+      "type": "singleSelect",
+      "id": "fldcTd7qaFhyKZp5Q",
+      "options": {
+        "choices": [
+          {
+            "id": "sel6EtRvFIfy8oCrT",
+            "name": "Daily Submission",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selwEylIdfit5KjGD",
+            "name": "Homework",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selLHztMDAnxKnUNo",
+            "name": "Homework + Video",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selTrpERbe6IkCMh5",
+            "name": "Three Video Upload",
+            "color": "greenLight2"
+          },
+          {
+            "id": "selPsO0ArlMklSCFm",
+            "name": "Milestone Crossing",
+            "color": "yellowLight2"
+          },
+          {
+            "id": "sel1WefZwT6joNpXV",
+            "name": "Perfect Week",
+            "color": "orangeLight2"
+          },
+          {
+            "id": "selCKL11Y6hFOWJXo",
+            "name": "Backdated Submission",
+            "color": "redLight2"
+          },
+          {
+            "id": "sel2eLHnGatmAsPNz",
+            "name": "Parent Feedback",
+            "color": "pinkLight2"
+          },
+          {
+            "id": "selgzq4EElbWvGXxJ",
+            "name": "Weekly Summary",
+            "color": "purpleLight2"
+          },
+          {
+            "id": "seluEb6Gxmz0P73vH",
+            "name": "Award Generation",
+            "color": "grayLight2"
+          },
+          {
+            "id": "selO9IS2H40DsiENi",
+            "name": "Other",
+            "color": "blueLight1"
+          },
+          {
+            "id": "selFoeh8vKmsoUrFb",
+            "name": "Video",
+            "color": "blueLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Operator Assigned",
+      "type": "singleCollaborator",
+      "id": "fldTGPN6emJvYb03J",
+      "options": null
+    },
+    {
+      "name": "Pipeline Entity Linked",
+      "type": "multipleRecordLinks",
+      "id": "fldNtyAo1tZsRQXmB",
+      "options": {
+        "linkedTableId": "tbl6ORxLs192mXEWp",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fldP6gslD5PxexV4i"
+      }
+    },
+    {
+      "name": "Related Enrollment",
+      "type": "multipleRecordLinks",
+      "id": "fldPylkKBdhFTTDCL",
+      "options": {
+        "linkedTableId": "tbl3PFmwbRoabu1YV",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fldKYVEkFcbSrwczx"
+      }
+    },
+    {
+      "name": "Submission Date",
+      "type": "date",
+      "id": "fldNCS0y5Ez4pFccA",
+      "options": {
+        "dateFormat": {
+          "name": "local",
+          "format": "l"
+        }
+      }
+    },
+    {
+      "name": "Test Notes",
+      "type": "multilineText",
+      "id": "fldD8y9YrgIhjiqfu",
+      "options": null
+    },
+    {
+      "name": "Relevant Homework Completion",
+      "type": "multipleRecordLinks",
+      "id": "fldD1xEqr5fyFluuN",
+      "options": {
+        "linkedTableId": "tblv58ppTFDBXb3nv",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fldfoQWecOLx9QKP7"
+      }
+    },
+    {
+      "name": "Scenario Requirements",
+      "type": "multilineText",
+      "id": "fldVWP6MVqrBXqa6J",
+      "options": null
+    },
+    {
+      "name": "Intake Attachments",
+      "type": "multipleAttachments",
+      "id": "fldYubBWgAKHstQ6P",
+      "options": {
+        "isReversed": true
+      }
+    },
+    {
+      "name": "Operator Priority",
+      "type": "singleSelect",
+      "id": "fldTJ17facY3V6rUf",
+      "options": {
+        "choices": [
+          {
+            "id": "selifjlLJKIkD0Atm",
+            "name": "P1 - Urgent",
+            "color": "blueLight2"
+          },
+          {
+            "id": "selC2nB9uAQhTbUfl",
+            "name": "P2 - High",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "selNFqvVTwo0f2jPg",
+            "name": "P3 - Routine",
+            "color": "tealLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Automation Platform",
+      "type": "singleSelect",
+      "id": "fldEMLXIjQYgPpB4k",
+      "options": {
+        "choices": [
+          {
+            "id": "selpVgEi2SWcdD8Cl",
+            "name": "Manual",
+            "color": "blueLight2"
+          },
+          {
+            "id": "seldt18JljB0AhHtC",
+            "name": "Fillout",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "seln5ptOqtNfUEKi8",
+            "name": "Make",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selILXg76aahSGm7b",
+            "name": "Other",
+            "color": "greenLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Last Updated",
+      "type": "lastModifiedTime",
+      "id": "fldNrhrZIVIuhCctc",
+      "options": {
+        "isValid": true,
+        "referencedFieldIds": [],
+        "result": {
+          "type": "date",
+          "options": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Test Submission Summary",
+      "type": "aiText",
+      "id": "fldcFA3EQZ4Btfvzc",
+      "options": {
+        "referencedFieldIds": [
+          "fldcTd7qaFhyKZp5Q",
+          "fldji9YCoxcTIR6Cu",
+          "fldD8y9YrgIhjiqfu",
+          "fldslXpxwlEBxousb",
+          "fldVWP6MVqrBXqa6J"
+        ],
+        "prompt": [
+          "You are an expert operations assistant responsible for documenting and summarizing testing scenario details for operator review. Maintain a clear, concise, and professional tone so operators can quickly understand key context.\n\nAnalyze the provided information to generate a cohesive summary that explains the scenario type, current test status, scenario requirements, important notes, and any operator feedback. Synthesize this information to highlight the most relevant points operators need for decision-making and efficient workflow.\n\nOutput format:\nWrite a summary in plain text, with no headings, bullet points, or extra comments. Limit the summary to 3-4 sentences, focusing on scenario, status, requirements, and feedback. If there is not enough information to summarize, write: \"Insufficient details to summarize this test submission.\"\nExample: \"This submission addresses a 'Milestone Crossing' scenario and is currently 'Blocked.' Requirements specify completion of three milestones, with notes indicating delays due to missing information. Operator feedback reports pending enrollment confirmation.\"\n\nContext and Data:\nScenario Type: ",
+          {
+            "field": {
+              "fieldId": "fldcTd7qaFhyKZp5Q"
+            }
+          },
+          "\nTest Status: ",
+          {
+            "field": {
+              "fieldId": "fldji9YCoxcTIR6Cu"
+            }
+          },
+          "\nTest Notes: ",
+          {
+            "field": {
+              "fieldId": "fldD8y9YrgIhjiqfu"
+            }
+          },
+          "\nOperator Feedback: ",
+          {
+            "field": {
+              "fieldId": "fldslXpxwlEBxousb"
+            }
+          },
+          "\nScenario Requirements: ",
+          {
+            "field": {
+              "fieldId": "fldVWP6MVqrBXqa6J"
+            }
+          },
+          "\nOutput:\n"
+        ]
+      }
+    },
+    {
+      "name": "Last Run At",
+      "type": "dateTime",
+      "id": "fld498KtmqKzJEOog",
+      "options": {
+        "dateFormat": {
+          "name": "us",
+          "format": "M/D/YYYY"
+        },
+        "timeFormat": {
+          "name": "12hour",
+          "format": "h:mma"
+        },
+        "timeZone": "utc"
+      }
+    },
+    {
+      "name": "Dry Run?",
+      "type": "checkbox",
+      "id": "fldSSRZKRBMv9UfuA",
+      "options": {
+        "icon": "thumbsUp",
+        "color": "greenBright"
+      }
+    },
+    {
+      "name": "Linked Submission",
+      "type": "multipleRecordLinks",
+      "id": "fld4DCoxCVBqmBzfh",
+      "options": {
+        "linkedTableId": "tblEVjVpGGlPTsYSt",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fldN544H8tEypxGsi"
+      }
+    },
+    {
+      "name": "Shot Total",
+      "type": "number",
+      "id": "fldoNhJ33NofMhK92",
+      "options": {
+        "precision": 0
+      }
+    },
+    {
+      "name": "Video Feedback Focus",
+      "type": "singleSelect",
+      "id": "fldBf302WTOx7pTep",
+      "options": {
+        "choices": [
+          {
+            "id": "selfXZaZyCHF7Nqgg",
+            "name": "Shooting",
+            "color": "blueLight2"
+          },
+          {
+            "id": "sel90puXVEsxSxBYn",
+            "name": "Layups / Finishing",
+            "color": "cyanLight2"
+          },
+          {
+            "id": "sel5L6BUtBUZVurby",
+            "name": "Ball Handling",
+            "color": "tealLight2"
+          },
+          {
+            "id": "selkROPWOD9OT2Aiv",
+            "name": "Free Throws",
+            "color": "greenLight2"
+          },
+          {
+            "id": "selIVjrNLQwtwxpQ8",
+            "name": "Footwork / Defense",
+            "color": "yellowLight2"
+          },
+          {
+            "id": "selbzu7prfXlPXjIG",
+            "name": "Strength / Movement",
+            "color": "orangeLight2"
+          },
+          {
+            "id": "sele5AjYILsQUHwEu",
+            "name": "General Basketball",
+            "color": "redLight2"
+          },
+          {
+            "id": "selI4ocGBSnJ5rntX",
+            "name": "Other",
+            "color": "pinkLight2"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Video Feedback Question",
+      "type": "multilineText",
+      "id": "fldnSrB9TrpbVsD42",
+      "options": null
+    },
+    {
+      "name": "Video Upload",
+      "type": "multipleAttachments",
+      "id": "fldyKFFykzNzjv3DU",
+      "options": {
+        "isReversed": true
+      }
+    },
+    {
+      "name": "Homework Assignment",
+      "type": "multipleRecordLinks",
+      "id": "fldKmXmdPtpFxP9Vm",
+      "options": {
+        "linkedTableId": "tblUuxwYlX4EQ9MKE",
+        "isReversed": false,
+        "prefersSingleRecordLink": true,
+        "inverseLinkFieldId": "fld5Qz1U6X1aO6urv"
+      }
+    },
+    {
+      "name": "Last Error",
+      "type": "multilineText",
+      "id": "fldl8UYzlLMrpd5pP",
+      "options": null
+    }
+  ]
+}

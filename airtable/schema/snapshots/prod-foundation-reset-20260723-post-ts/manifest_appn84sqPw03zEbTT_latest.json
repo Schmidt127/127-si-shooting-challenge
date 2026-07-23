@@ -1,0 +1,23 @@
+{
+  "generatedAt": "2026-07-23T15:22:30",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [],
+  "files": {
+    "rawSchema": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\schema_raw_appn84sqPw03zEbTT_20260723_152229.json",
+    "enhancedSchema": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\schema_enhanced_appn84sqPw03zEbTT_20260723_152229.json",
+    "dependencies": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\dependencies_appn84sqPw03zEbTT_20260723_152229.json",
+    "viewsBasicJson": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\views_basic_appn84sqPw03zEbTT_20260723_152229.json",
+    "viewsDetailedJson": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\views_detailed_appn84sqPw03zEbTT_20260723_152229.json",
+    "viewsMarkdown": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\views_appn84sqPw03zEbTT_20260723_152229.md",
+    "baseSummary": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\base_summary_appn84sqPw03zEbTT_20260723_152229.json",
+    "healthReport": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\export_health_report_appn84sqPw03zEbTT_20260723_152229.json",
+    "fieldIndex": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\field_index_appn84sqPw03zEbTT_20260723_152229.json",
+    "invalidFields": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\invalid_fields_appn84sqPw03zEbTT_20260723_152229.json",
+    "complexFormulas": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\complex_formulas_appn84sqPw03zEbTT_20260723_152229.json",
+    "schemaMarkdown": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\schema_doc_appn84sqPw03zEbTT_20260723_152229.md",
+    "mermaidERD": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\schema_erd_appn84sqPw03zEbTT_20260723_152229.mmd",
+    "workflowCompanion": "airtable\\schema\\snapshots\\prod-foundation-reset-20260723-post-ts\\workflow_companion_appn84sqPw03zEbTT_20260723_152229.md"
+  }
+}

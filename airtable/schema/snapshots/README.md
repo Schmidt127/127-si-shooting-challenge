@@ -4,10 +4,10 @@ Dated exports from `tools/airtable/export_airtable_schema.py`.
 
 | Base | ID | Latest snapshot |
 |------|-----|-----------------|
-| **Production** | `appn84sqPw03zEbTT` | `prod-20260706/` — `20260706_161830` — `manifest_appn84sqPw03zEbTT_latest.json` |
+| **Production** | `appn84sqPw03zEbTT` | **`prod-foundation-reset-20260723-post-ts/`** — `20260723_152229` (includes Testing Scenarios). Pre-create export: `prod-foundation-reset-20260723/`. Older: `prod-20260706/` |
 | **Development** | `appTetnuCZlCZdTCT` | `dev-20260706/` — `20260706_161606` — `manifest_appTetnuCZlCZdTCT_latest.json` |
 
-Prior snapshots: `20260629_045741` (prod), `dev-20260705/` (DEV).
+Prior snapshots: `20260629_045741` (prod), `dev-20260705/` (DEV). Foundation Reset index: [`docs/foundation-reset/README.md`](../../../docs/foundation-reset/README.md).
 
 ## Export commands
 

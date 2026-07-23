@@ -11,7 +11,8 @@ Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submissi
 or runs C-025 Stage 17 downstream Zoom-credit verification (Other / Perfect Week + C025_STAGE17_DOWNSTREAM).
 
 Trigger:
-Testing Scenarios when Run Test? is checked (DEV only).
+Testing Scenarios when Run Test? is checked.
+Allowed in PROD per SC-001 (Foundation Reset Pack) as orchestration only — not a second XP path.
 
 Important Tables:
 Testing Scenarios, Enrollments, Athletes, Submissions
@@ -114,7 +115,8 @@ GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval
  * - Submissions → production-shaped intake fields only (no test metadata)
  * - C025 may clear Applied? on the named Zoom Attendance fixture and toggle WAS/Enrollment trigger fields only
  *
- * DEV DEPENDENCY
+ * PROD/DEV DEPENDENCY
+ * - Testing Scenarios table (PROD table created 2026-07-23: tblagI7Q5wXQm2XGS).
  * - Testing Scenarios.Shot Total (number) — Daily Submission only.
  * - Testing Scenarios.Homework Assignment, Intake Attachments — Homework only.
  * - Testing Scenarios.Intake Attachments — Video file source (same field as Homework).

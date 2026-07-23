@@ -6,6 +6,8 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 **Completion plan (controlling)?** Use [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md). Older backlog files remain evidence/history only.
 
+**Foundation Reset Pack (2026-07-23):** [foundation-reset/README.md](./foundation-reset/README.md).
+
 **New session?** Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) and [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.
 
 **Four-agent run?** Start at [agent-runs/00-START-HERE.md](./agent-runs/00-START-HERE.md) and [agent-runs/CONTROL.json](./agent-runs/CONTROL.json).

@@ -1,0 +1,167 @@
+{
+  "Athletes": {
+    "id": "recgqVstObQRzgXJF",
+    "fields": {
+      "Athlete ID": "ATH-recgqVstObQRzgXJF",
+      "Athlete Match Key": "mschmidt@fairfield.k12.mt.us|testing|schmidt",
+      "Full Name": "Testing Schmidt",
+      "First Name": "Testing",
+      "Last Name": "Schmidt",
+      "Parent Email": "set",
+      "Active?": true
+    }
+  },
+  "Enrollments": {
+    "id": "recgP9qZYjAhE7NXm",
+    "fields": {
+      "Current Level XP Required": [
+        0
+      ],
+      "Lifetime XP Manual Adjustments": 0,
+      "Parent Cell Number": "set",
+      "DELETE PROBABLY - Level Name with Color (from Current Level)": [
+        "Beginner"
+      ],
+      "Athlete Folder Name": "Schmidt_Testing_2025-2026",
+      "Athlete First Name": "Testing",
+      "Athlete Cell Number": "set",
+      "Athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "Current Level XP Ceiling": 199,
+      "Gate-Test Eligible Level": [
+        "rec1EJLJLmfdJLtoF"
+      ],
+      "Welcome Email Status": "set",
+      "School Name Lookup": [
+        "Fairfield"
+      ],
+      "XP Progress in Current Level": 1,
+      "Parent Full Name Submitted": "Mike Schmidt",
+      "Athlete Email - Cleaned": "set",
+      "Parent Email - Cleaned": "set",
+      "Level Status": "Assigned",
+      "Last Grade Used for Grade Band": "Pre K",
+      "XP Needed for Next Level": 199,
+      "Parent Last Name": "Schmidt",
+      "School Year": "2025-2026",
+      "Current Shooting Streak Status": "Active",
+      "Public Progression Status": "On Track",
+      "Welcome Email Sent At": "set",
+      "School Mascot Lookup": [
+        {
+          "id": "attxEtYKOHuc5vSKc",
+          "width": 500,
+          "height": 479,
+          "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/QaQewlqno9troSHeyjYAOg/mUW_P50uPmAm6_m7DZn_cUt0AO7CyUC3aLqnnd_WWssYJblcOj9lndM4kudlmnQ_IQ9t_mfX1QINg3g88CIEj9e5QmTOzsECkvqIrtKNvo98kqDTuH0JiCWsTyPvJneTkbfKSNxtQfLxZJyvTXfXninRBzva4fzvOhhcWc09Bos/890OgKwgQgzzd-kOvnQ_SY48jcTSFdKO3MpEy-MptWA",
+          "filename": "Fairfield Eagles Eyes.png",
+          "size": 134877,
+          "type": "image/png",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/wxZ3csPVu8GjTpcG6nYkGQ/KLHl5QRzrdDZuAEc5FDHm3nCj2eqFUKnvRyP5oZXpvpAyNWb6JKp78tbGnsvmJOQAvAJmoD12EvhNTpdfj_xNBQH-y8MrW0IfWV_sWLWyb30jO_QAsSoY_6q-cns5N5u_59qCjipv69uKhLZlZdZLw/FMb_CurxV5N0ArigswcLZAEqj2_YN7Il5CDHDOozjYY",
+              "width": 38,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/dTYRbUUe6xdsqpLTqWSemQ/EQFlLiez-8OihJFcpSBp5zpBM8DUkwjAyMmTE_85rpUpGQGuxA5yIJ8rE0Zy_Zhy82-XWHmeYov6fXtozzR65iT5hx5Iq6f3zvcRJ5OVsRDvJYYRYC2ZT1WhIvskY-A7gZnp4K5c044M8koMlg5E1w/2E7n1-vEiLiTEhc6XGwr0R4JPEu30QzQzazIO-yjnI4",
+              "width": 500,
+              "height": 479
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/-nnzsbFzmlNESxkAUQAWyw/6O1KI7x0XExqWhLnxLh6J8FTauks8Pjc6zjSXVGOAl-c6kNDv0U9Ckoj22d_1kZ8hzz0QOk1Ojq2IjlzgZQP4aNRA474p12boEujmY_s-SfvLEM4RD2E02K5qvW4IHP_TAp18jS0blBaOQ9TJLgkbA/2UUty6iwlJCw4Vopc0lTVA5mM0G4L21528iiX3040CI",
+              "width": 500,
+              "height": 479
+            }
+          }
+        }
+      ],
+      "Grade Band Refresh Needed": 0,
+      "Lifetime XP Total": 1,
+      "Gate Enabled Status": "Disabled",
+      "Next Level XP Required": [
+        200
+      ],
+      "Full Athlete Name": "Testing Schmidt",
+      "Program Instance": [
+        "rec9cQQ0VKYGy4jXq"
+      ],
+      "Parent Email Subject": "set",
+      "Level Sort Order - For Softr": [
+        1
+      ],
+      "Athlete Email": "set",
+      "Current Level - Public Facing Display": "Beginner",
+      "Parent First Name": "Mike",
+      "Lifetime XP Earned": 1,
+      "Next Level": [
+        "rec1EJLJLmfdJLtoF"
+      ],
+      "Program Instance Name Only": [
+        "Shooting Challenge"
+      ],
+      "School": [
+        "recF7Vk28EexmncpC"
+      ],
+      "Grade Band Status": "Assigned",
+      "Welcome Email To": "set",
+      "Athlete Match Status": "Linked",
+      "Grade Band": [
+        "recK7BDVSpHy2ipCS"
+      ],
+      "Full Athlete Name - Backward": "Schmidt, Testing - 2025-2026",
+      "Welcome Email Ready?": "set",
+      "Level Gate Rule": [
+        "reccFKwOVHZ3hn36i"
+      ],
+      "Grade Band Label": [
+        "K-2"
+      ],
+      "Athlete Last Name": "Schmidt",
+      "Current Level": [
+        "rec1iGy92ZC0jwzD4"
+      ],
+      "Grade": "Pre K",
+      "XP Events": [
+        "recYQ10pOoFlApmjZ",
+        "recOceuW34jQz7suD"
+      ],
+      "Parent Email HTML": "set",
+      "Parent Email": "set",
+      "Athlete ID Lookup": [
+        "ATH-recgqVstObQRzgXJF"
+      ],
+      "Athlete Headshot": [
+        {
+          "id": "attGruGT5DFACgSsD",
+          "width": 1003,
+          "height": 1001,
+          "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/Bp7Fy7f5dPt_PKokJOmzUA/25OcvaRRWYqjN-KQl4JmScOo66G1fKOGPYKt-4KjY3QwkyRJvhY_ygentzaenMWybjVm0PcWjsOsThKoJUm63azJJubIfv7ulcKZy7avOgLeNy6MtG0nIO6k2Yw-gRvFxfjyW39tYLc3-WynXYJ3ujbtpS5PJPjuLXPRrLakFoExu4MWBZpCQCWrae-JZIvb/rDFG2TOOuK_wwWXn_OLWKfO3I5ioWrOXweeuL8BAK14",
+          "filename": "BlueOrangeCircleLogo.png",
+          "size": 86186,
+          "type": "image/png",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/msMM9bWr1D-oc7OODdJQ5Q/_0Fiaycz7g6UC3i2n9BnXt99Fb4VTgyzvgAIzQ40UtKB6YcYoYxKmJLdSQykmCAbZAMEbYT_PoC1PFNZNHUoSC04hSmadCpUmvbU0AjdFusUA09SlYLfgTMFntpOGwICOP9CKdi8mW8sMvJumXBbIw/E-gWBrH8ZwVfsFO-jNeSDq7zJoG4iDC1ulAVtUsXxYU",
+              "width": 36,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/gqkBUbpxXPiQF2Z46Mt_JQ/Z3VkxbfkWB7X2Qkc03lEeALOUdT1U9nA8w8HfHjbc1Cc6sQNrFdPgjbnuj1dJLelHfTTWewYHE8-WI9K3lYQXlJDwQZmWwQoOUHy2fZdaAPLw5V6BgV2sTfRxHzCWdum-mkRfoLCsAqsmL_5pRKtDQ/kcCx6AZk05oHgRhB5emqou8Tj2T8BKy8naHGJDi7_Qw",
+              "width": 513,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784851200000/TUwNILa7GMFDBnP44l7vuw/MCvzl7Q3l861uF2FI_USGEH8RNeKmK0K5G_zlN0MBIYBUMzcljTI_JBswPccMG-1PhswVLMGOW7gvsi818UZwzw3cLOeFecHlo-EWIH8kadycpyyfTt2Y-ejz-lG9SKp27BHllVsL5gSD25FeViKjw/zy3YpJBedTvC0Kas7B2qAB1YdLVIg2qiqY2FpnNLMeY",
+              "width": 1003,
+              "height": 1001
+            }
+          }
+        }
+      ],
+      "Athlete Match Key Lookup": [
+        "mschmidt@fairfield.k12.mt.us|testing|schmidt"
+      ]
+    }
+  }
+}

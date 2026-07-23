@@ -1,0 +1,54 @@
+{
+  "submission": {
+    "id": "recaCcxDqtzFWjmyi",
+    "Week": [
+      "recVDKiYATgzsfpmE"
+    ],
+    "XP Events": [
+      "recOqzhV4kTdsfzMf"
+    ],
+    "Daily Email Status": "Sent",
+    "XP Award Status": "Awarded",
+    "Weekly Athlete Summary": [
+      "rechWp330MqSgRWzN"
+    ]
+  },
+  "xpEvent": {
+    "id": "recOqzhV4kTdsfzMf",
+    "XP Activity Date Source": "Submission Activity Date",
+    "XP Dedupe Key": "recgp9qzyjahe7nxm|submission_xp|recaccxdqtzfwjmyi|submission base",
+    "XP Reason Debug": "Daily shooting submission XP awarded from XP Reward Rule: SHOOTING_BASE. XP Source: Submission Base. XP Bucket: Shooting Base. XP Points: 20. XP Date Source: Submission Activity Date. Submission Record ID: recaCcxDqtzFWjmyi. Submission Key: \"Schmidt, Testing - 2025-2026\"-Unnamed record-recaCcxDqtzFWjmyi.",
+    "Source Key": "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+    "Active XP Points": 20,
+    "Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Enrollment Record ID": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission": [
+      "recaCcxDqtzFWjmyi"
+    ],
+    "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|submission_xp|recaccxdqtzfwjmyi|submission base",
+    "XP Source": "Submission Base",
+    "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Unnamed record",
+    "XP Points": 20,
+    "Date - Submission Base Activity": [
+      "2026-07-23"
+    ],
+    "XP Reason Public": "Shooting submission completed.",
+    "Submission Record ID": [
+      "recaCcxDqtzFWjmyi"
+    ]
+  },
+  "xpEventsForSubmission": [],
+  "was": {
+    "id": "rechWp330MqSgRWzN",
+    "Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Week": [
+      "recVDKiYATgzsfpmE"
+    ]
+  }
+}

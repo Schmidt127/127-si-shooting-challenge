@@ -7,9 +7,9 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-23 |
+| Last updated | 2026-07-23 (Foundation Reset Pack) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
-| Scope | Documentation and planning only (this file does not change Airtable, Make, Lambda, Fillout, or the website) |
+| Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
 ---
 
@@ -64,11 +64,11 @@ Counts below match Section 4 as of **2026-07-23**. Recalculate when statuses cha
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **146** |
-| Complete | 9 |
-| Live Tested in PROD | 0 |
-| Installed but not tested *(Installed in PROD)* | 52 |
-| Built but not installed *(Built in Repository)* | 13 |
-| Planned | 50 |
+| Complete | 10 |
+| Live Tested in PROD | 1 |
+| Installed but not tested *(Installed in PROD)* | 53 |
+| Built but not installed *(Built in Repository)* | 14 |
+| Planned | 46 |
 | Decision Needed | 7 |
 | Deferred | 10 |
 | Superseded | 3 |
@@ -90,10 +90,10 @@ Columns:
 
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
-| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Built in Repository | Script **115** (v1.8), Testing Scenarios table design, DEV passes for daily/HW/video branches; Stage 17 ETF helpers | Confirm whether Testing Scenarios table should live in emptied PROD (old rule said DEV-only); recreate Schmidt scenarios; extend HW XP-after-review + Make/S3 coverage | SC-002, SC-004 | Do **not** create duplicate writers; keep test flags off pipeline tables | C-020, C-020a/b; `115-*.js`; `docs/testing-and-intake-architecture.md` | Decide: allow Testing Scenarios in PROD under new rules? | P0 | 2026-07-23 |
+| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Installed in PROD | **PROD table created** `tblagI7Q5wXQm2XGS`; seed scenario `recPdyfYRFgDtpzQ8`; repo **115 v1.8**; SC-001 decision approved (orchestration only) | **Mike must paste automation 115** in PROD; run Dry Run then live scenario; prove scenario-created Submission (not API surrogate); then re-test | SC-004 | No second XP path; no pipeline test flags; avoid duplicate 115 writers | `docs/foundation-reset/`; C-020; `115-*.js`; `MIKE-ACTION-INSTALL-115-PROD.md` | **Resolved:** allowed in PROD | P0 | 2026-07-23 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Planned | Expected/Actual fields sketched on Testing Scenarios; Stage 17 JSON fixtures | Scenario library table (explicitly deferred earlier); templates for enrollment→week→submission→XP→email | SC-001 | Library is config, not a second XP path | C-020 “Not Phase 2” notes; `docs/testing/C-025-stage17-*.json` | Confirm library is wanted now | P1 | 2026-07-23 |
-| SC-003 | Testing | Testing views on key pipeline tables | Planned | C-019 checklist; some views existed historically | Recreate Testing views in emptied PROD; verify filters | SC-004 | Views only — no schema rename | C-019; `C-019-testing-views-verification-checklist.md` | — | P0 | 2026-07-23 |
-| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Planned | Architecture locked (Active? false for standings-only intent; no test flags on rows) | Recreate Schmidt Athlete + Enrollment + Weeks links after wipe; document behavior vs leaderboard | SC-081 | Tension with Active? guards (SC-082 / C-010) | C-019; testing-and-intake-architecture | Confirm Active?=false still desired for Schmidt | P0 | 2026-07-23 |
+| SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist written; only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining `Testing` views with Schmidt enrollment link/ID filters; verify row visibility for foundation records | SC-004 | API cannot create views; no schema rename | `docs/foundation-reset/PROD-TESTING-VIEWS-CHECKLIST-2026-07-23.md`; C-019 | — | P0 | 2026-07-23 |
+| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven | Add **Web - Leaderboard** (or equivalent) view filter excluding Schmidt enrollment ID so Active?=true does not publish standings; confirm emails stay Schmidt-only | — | No separate exclusion field exists; do not invent one yet | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md` | **Resolved:** Active?=true for processing | P0 | 2026-07-23 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | `V2_END_TO_END_TEST_MATRIX.md` exists; almost all rows Untested; offline suite PASS 2026-07-16 | Execute matrix on Schmidt in PROD; refresh Zoom rows to Stage 17 design | SC-001–SC-004, core pipelines | Controlled data only | K-H3; `V2_END_TO_END_TEST_MATRIX.md`; `V2_RELEASE_CHECKLIST.md` | — | P0 | 2026-07-23 |
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Planned | Fields exist in design; not automated | Auto-compare outputs; fail scenario when mismatch | SC-001, SC-002 | Read-only scoring preferred | C-020 deferred automation notes | Want auto-score now or later? | P2 | 2026-07-23 |
 | SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Planned | Source Key patterns documented; offline harnesses for several scripts | Live rerun packs: submission, HW, video, Zoom, WAS, emails | SC-066, SC-096+ | Never create double XP | C-024; automation standards | — | P0 | 2026-07-23 |
@@ -135,7 +135,7 @@ Columns:
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
 | SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | 071–077 family + Make historically; 117f tested not fully live | Re-test each template on Schmidt; finish 117f go-live | SC-039, SC-124 | Webhooks not in git | automation-index; 117f checklists | — | P0 | 2026-07-23 |
-| SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Planned | Stage J notes; C-012 queued | Build matrix; enforce in reviews | — | Blocks safe cleanup | C-012; stage-j-legacy-cleanup | — | P0 | 2026-07-23 |
+| SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Initial critical-path matrix published for foundation tables | Expand to full Stage K; fix remaining multi-writer conflicts outside Schmidt foundation | SC-055 | Only Schmidt Active? corrected in this pack | `docs/foundation-reset/CRITICAL-PATH-FIELD-OWNERSHIP-MATRIX-2026-07-23.md`; C-012 | — | P0 | 2026-07-23 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
 | SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Planned | Engine principles; C-024 queued; many Source Keys in scripts | Catalog all keys; audit writers; extension audit script | SC-046 | Reruns must be safe | C-024 | — | P0 | 2026-07-23 |
@@ -144,10 +144,10 @@ Columns:
 | SC-052 | Data Integrity | Duplicate table cleanup | Planned | C-026 Tutorials vs Tutorials & Assets analysis | Audit rows; migrate; delete orphan | SC-046 | Web uses `Tutorials` only | C-026 | Confirm delete orphan | P2 | 2026-07-23 |
 | SC-053 | Data Integrity | Tutorials table merge complete | Planned | Recommendation: keep `Tutorials` | Execute migration + Softr/view check | SC-052 | Publish flag still Softr-named (SC-160) | C-026 | — | P2 | 2026-07-23 |
 | SC-054 | Data Integrity | Public Presentation fields (parent-safe labels) | Planned | C-022 design | Add fields; wire emails + web | SC-046 | Emails/web must stop using primary names | C-022; V2-003; V2-004 | — | P1 | 2026-07-23 |
-| SC-055 | Data Integrity | Fresh schema export after rebuild waves | Planned | Dated snapshots (incl. 20260706; later verify folders) | Export PROD after foundation; refresh `schema/current` | — | Treat stale maps as unsafe | PROJECT_STATE schema notes | — | P0 | 2026-07-23 |
+| SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
-| SC-058 | Data Integrity | Automation version inventory filled from live UI | Planned | `AUTOMATION_VERSION_INVENTORY.md` mostly UNKNOWN; C-025 rows partially updated | Mike/OMNI pass: record live versions | — | Inventory drift caused Stage 16 vs 17 confusion | AUTOMATION_VERSION_INVENTORY; K-H2 | — | P0 | 2026-07-23 |
+| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Fresh PROD inventory from Automations table (48 rows) + repo version crosswalk; script body match UNKNOWN via API | Mike UI attestation for live script versions; confirm whether 115/116/117/070c/118/119 exist outside Automations table | — | API cannot read live script source | `docs/foundation-reset/PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md` | Attest live versions | P0 | 2026-07-23 |
 | SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Planned | Approved retirements; 112 OFF | Maintenance window delete/disable + attest | SC-057 | 013 remains production video helper | V2-014a; AUTOMATION_112/043 docs | Authorize delete window | P2 | 2026-07-23 |
 | SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Planned | C-017 design | Stronger Fillout rules; Athletes hygiene; 001 guards | SC-081 | Bad identity breaks whole season | C-017 | — | P1 | 2026-07-23 |
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Planned | Historical intake behavior | Document + test both paths on Schmidt siblings if needed | SC-060 | Don’t create duplicate Athletes | C-017 | — | P1 | 2026-07-23 |
@@ -338,18 +338,24 @@ Only decisions that need Mike (not pure engineering choices):
 
 | ID | Decision needed | Why it matters |
 |----|-----------------|----------------|
-| SC-001 | Allow Testing Scenarios / script **115** in emptied PROD? | Old rule forbade PROD install; new operating rules may change that |
 | SC-014 | Quiz path: Fillout PDF into normal pipeline **or** attachment-less redesign? | Blocks HW17/Final Reflection reliability |
 | SC-035 | Empty-activity weeks: still send weekly parent email? | Default in design is yes |
 | SC-044 | Major-event alerts: SMS vs email; parent vs athlete; opt-in rules? | Product/comms policy |
 | SC-066 | Keep early-bird period for next season? | Calendar/config work |
-| SC-068 | How should Schmidt `Active?` interact with XP/email vs leaderboard-only hide? | Conflicts with hard Active? guards |
+| ~~SC-068~~ | ~~Schmidt Active? vs standings~~ | **Resolved in Foundation Reset:** Active?=true for processing; exclude standings via view filter (no new field) |
 | SC-081 | Change streak repeat-after-break behavior, or only tune amounts? | Code vs config |
 | SC-095 | When to turn **070a** homework S3 upload ON in PROD? | Currently intentionally OFF |
 | SC-112 | Athlete auth approach for real dashboard/profiles? | Unlocks web Phase 3 |
 | SC-114 / SC-115 | Softr cutover timing + public indexing (noindex removal)? | Public traffic / SEO |
 | SC-067 | When to schedule Program Instance multi-year wave? | Large architecture |
 | SC-002 / SC-006 | Build Scenario Library + auto Expected-vs-Actual now or later? | Testing investment level |
+
+**Resolved this pack**
+
+| ID | Decision | Outcome |
+|----|----------|---------|
+| SC-001 | Testing Scenarios / 115 in PROD? | **Allowed** — orchestration only; table created; 115 paste still required |
+| SC-004 | Schmidt Active? | **Active?=true** for core processing; public standings exclusion via existing view/`Active?` mechanisms (view filter still needed) |
 
 ---
 
@@ -406,7 +412,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 ## 9. First Recommended Work Package
 
-**Name:** Foundation Reset Pack (empty PROD)
+**Name:** Foundation Reset Pack (empty PROD) — **EXECUTED 2026-07-23** (115 paste + Testing views still open)
 
 **Goal:** Make the emptied PROD base safe and measurable for systematic rebuild — without starting website styling or Learning Activities schema yet.
 

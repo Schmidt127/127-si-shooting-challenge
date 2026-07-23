@@ -1,0 +1,16 @@
+{
+  "status": 200,
+  "response": {
+    "type": "formula",
+    "options": {
+      "isValid": true,
+      "formula": "RECORD_ID()",
+      "referencedFieldIds": [],
+      "result": {
+        "type": "singleLineText"
+      }
+    },
+    "id": "fldGb1BSHLPOnQ8Ez",
+    "name": "RecordId - Testing Scenarios"
+  }
+}
