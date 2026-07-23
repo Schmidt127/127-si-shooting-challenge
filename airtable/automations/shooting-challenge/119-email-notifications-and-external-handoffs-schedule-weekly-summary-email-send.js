@@ -18,11 +18,16 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.1
+ * Version: v1.2
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-07-23
  *
  * VERSION HISTORY
+ * - v1.2 (2026-07-23): Fix week End Date matching — Weeks End Date is a
+ *   dateTime stored as Denver 23:59 (next-day UTC); date keys now convert to
+ *   the America/Denver calendar date instead of UTC (same fix as 118 v1.2).
+ *   Add includeSchmidt input (default false) for controlled Test-mode
+ *   verification with the Schmidt test enrollment.
  * - v1.1 (2026-07-18): Emit scheduledWeekEndKeyOut; document ready-only send gate.
  * - v1.0 (2026-07-16): Initial schedule-arm script.
  *
@@ -47,6 +52,8 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * INPUT VARIABLES
  * - dryRun = "true" | "false" (default true)
  * - excludedEnrollmentIds = comma-separated
+ * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
+ *   test enrollment is NOT hard-excluded (controlled Test-mode runs only).
  *
  * OUTPUTS
  * - statusOut, actionOut, errorOut, debugStep
@@ -60,7 +67,7 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.1",
+  version: "v1.2",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -186,14 +193,27 @@ function priorSaturdayKeyDenver(now = new Date()) {
 function dateKeyFromCell(value) {
   if (!value) return "";
   if (typeof value === "string") {
-    const m = value.match(/^(\d{4}-\d{2}-\d{2})/);
+    // Pure date-only strings (YYYY-MM-DD) pass through unchanged.
+    const m = value.match(/^(\d{4}-\d{2}-\d{2})$/);
     if (m) return m[1];
   }
   const d = value instanceof Date ? value : new Date(value);
   if (isNaN(d)) return "";
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}-${String(
-    d.getUTCDate()
-  ).padStart(2, "0")}`;
+  // Weeks Start/End Date are dateTime fields in America/Denver (Saturday
+  // 23:59 Denver serializes as Sunday 05:59 UTC). Convert to the Denver
+  // calendar date — UTC parts would shift the key one day forward.
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(d);
+  const get = (type) => parts.find((p) => p.type === type)?.value || "";
+  const y = get("year");
+  const mo = get("month");
+  const day = get("day");
+  if (!y || !mo || !day) return "";
+  return `${y}-${mo}-${day}`;
 }
 
 function weeklyEmailEventId(enrollmentId, weekId) {
@@ -206,13 +226,16 @@ async function main() {
 
   const inputConfig = input.config();
   const dryRun = parseBool(inputConfig.dryRun, true);
+  const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
   const excluded = new Set(
-    String(inputConfig.excludedEnrollmentIds || CONFIG.schmidtEnrollmentId)
+    String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
       .map((s) => s.trim())
       .filter(Boolean)
   );
-  excluded.add(CONFIG.schmidtEnrollmentId);
+  if (!includeSchmidt) {
+    excluded.add(CONFIG.schmidtEnrollmentId);
+  }
 
   const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   const weeksTable = base.getTable(CONFIG.tables.weeks);

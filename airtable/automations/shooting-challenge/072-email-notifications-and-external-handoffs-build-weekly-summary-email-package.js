@@ -26,9 +26,18 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v3.8
+ * Version: v3.9
  * Date Written: 2026-05-19
- * Last Updated: 2026-07-16
+ * Last Updated: 2026-07-23
+ *
+ * VERSION HISTORY
+ * - v3.9 (2026-07-23): Declare debugStep before the comms gate (was an
+ *   undeclared assignment that throws in strict runtimes). Add optional
+ *   input allowSchmidtInput = "true" so the Schmidt test enrollment can be
+ *   built for controlled Test-mode verification; default behavior unchanged
+ *   (Schmidt still skipped).
+ * - v3.8 (2026-07-16): C-010/C-011 comms gate (Active? + Schmidt exclude);
+ *   resend-prevention when Weekly Email Sent? already checked.
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
@@ -66,6 +75,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * OPTIONAL INPUT VARIABLES
  * - sendModeInput = sendMode from the triggering Weekly Athlete Summary record
+ * - allowSchmidtInput = "true" to permit building the Schmidt test enrollment
+ *   package (controlled Test-mode verification only; default false)
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Build Weekly Email Now? = unchecked
@@ -100,10 +111,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-    version: "v3.8",
+    version: "v3.9",
     schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
     dateWritten: "2026-05-19",
-    lastUpdated: "2026-06-21",
+    lastUpdated: "2026-07-23",
 
     timeZone: "America/Denver",
 
@@ -678,10 +689,15 @@ async function main() {
     const cfg = input.config();
     const recordId = String(cfg.recordId || "").trim();
     const sendModeInput = String(cfg.sendModeInput || "").trim();
+    const allowSchmidt =
+        String(cfg.allowSchmidtInput || "").trim().toLowerCase() === "true";
 
     if (!recordId) {
         throw new Error("Missing required input: recordId");
     }
+
+    let debugStep = "1 - Input validated";
+    setOutputSafe("debugStep", debugStep);
 
     /* =========================================================
        SECTION 3: TABLES
@@ -879,15 +895,17 @@ async function main() {
         throw new Error(`Week not found: ${weekId}`);
     }
 
-    // C-010 / C-011: comms gate — Active? + Schmidt hard exclude
+    // C-010 / C-011: comms gate — Active? + Schmidt exclude (unless the
+    // allowSchmidtInput override is set for controlled Test-mode runs)
     debugStep = "Check enrollment Active? for comms";
     setOutputSafe("debugStep", debugStep);
     const isSchmidt = enrollmentId === CONFIG.schmidtEnrollmentId;
+    const schmidtBlocked = isSchmidt && !allowSchmidt;
     const activeFieldPresent = fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active);
     const enrollmentActive = !activeFieldPresent
         ? true
         : getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollmentFields.active);
-    if (isSchmidt || !enrollmentActive) {
+    if (schmidtBlocked || !enrollmentActive) {
         if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
             await summaryTable.updateRecordAsync(recordId, {
                 [CONFIG.summaryFields.buildNow]: false,
@@ -897,8 +915,8 @@ async function main() {
         setOutputSafe("actionOut", "skipped_inactive");
         setOutputSafe(
             "errorOut",
-            isSchmidt
-                ? "Skipped: Schmidt test enrollment excluded from weekly email."
+            schmidtBlocked
+                ? "Skipped: Schmidt test enrollment excluded from weekly email (set allowSchmidtInput=true for controlled tests)."
                 : "Skipped: Enrollment Active? is unchecked."
         );
         setOutputSafe("debugStep", debugStep);
