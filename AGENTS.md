@@ -174,3 +174,10 @@ When redirecting, use the **Workspace Check** block from doc 04 (Current request
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
 | Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
+
+## Cursor Cloud specific instructions
+
+- **Only runnable app is `web/`** (Next.js 15 App Router, npm, Node 22). Everything else in the repo is Airtable automation JS pasted into Airtable, Python ops CLIs (`tools/airtable/`), Make blueprints, docs, or media — none of those run as a local service.
+- **Scripts live in `web/package.json`**: `dev`, `build`, `start`, `lint`, `typecheck`, `test` (vitest). Run them from `web/` (e.g. `npm --prefix web run dev`). The startup update script already runs `npm install` for `web/`.
+- **Dev server runs on port 3001 under basePath `/shoot`** — open `http://localhost:3001/shoot` (health: `/shoot/api/airtable`). The `web/README.md` mentions port 3000 / no basePath, which is outdated; the actual dev URL is port 3001 + `/shoot`.
+- **The app boots and passes lint/typecheck/test/build with no secrets.** `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` are optional locally: without them the server starts fine and data pages (leaderboard, levels, etc.) render a graceful "Missing Airtable configuration" empty state instead of live data. Set them in `web/.env.local` (see `web/.env.example`) only when you need real Airtable data. `SITE_ACCESS_TOKEN` left unset disables the access gate locally.
