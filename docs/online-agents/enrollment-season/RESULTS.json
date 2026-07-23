@@ -1,0 +1,80 @@
+{
+  "agent": "online-agent-7-enrollment-season",
+  "date": "2026-07-23",
+  "branch": "master",
+  "baseId": "appn84sqPw03zEbTT",
+  "schmidt": {
+    "athleteId": "recgqVstObQRzgXJF",
+    "enrollmentId": "recgP9qZYjAhE7NXm",
+    "active": true,
+    "publiclyVisible": true,
+    "createExclusionRule": false
+  },
+  "scItemsAddressed": [
+    "SC-060",
+    "SC-061",
+    "SC-062",
+    "SC-063",
+    "SC-064",
+    "SC-065",
+    "SC-066",
+    "SC-067",
+    "SC-068",
+    "SC-069",
+    "SC-146"
+  ],
+  "packages": [
+    "A-pipeline-map",
+    "B-identity",
+    "C-fillout-contract",
+    "D-validation",
+    "E-new-returning",
+    "F-siblings",
+    "G-season-dates",
+    "H-weeks-seed",
+    "I-active-audit",
+    "J-schmidt-contract"
+  ],
+  "tests": {
+    "command": "python3 -m unittest discover -s tools/enrollment-season/tests -v",
+    "ran": 18,
+    "failed": 0,
+    "errors": 0,
+    "status": "OK",
+    "suites": [
+      "test_identity_matching",
+      "test_enrollment_validator",
+      "test_new_returning_and_siblings",
+      "test_season_and_weeks",
+      "test_active_and_schmidt"
+    ]
+  },
+  "risks": {
+    "identity": [
+      "parent_email_change_creates_new_athlete",
+      "spelling_creates_duplicate_athlete",
+      "no_season_enrollment_uniqueness_in_001",
+      "multiple_active_enrollments_break_023_guessing"
+    ],
+    "fillout": [
+      "form_off_pending_sc146",
+      "consent_mapping_unconfirmed",
+      "duplicate_enrollment_rows_possible"
+    ],
+    "seasonDates": [
+      "intake_vs_challenge_not_enforced_in_fillout",
+      "early_bird_mike_decision",
+      "denver_vs_utc_seed_mistakes"
+    ],
+    "activeGuards": [
+      "gaps_010_031_053_065_076",
+      "ppe_field_may_be_missing",
+      "schmidt_hard_exclude_072_118_119_conflict"
+    ]
+  },
+  "liveAirtableChanges": false,
+  "filloutChanges": false,
+  "emailsSent": false,
+  "completionMasterEdited": false,
+  "proposedStatusesFile": "MASTER-UPDATE-PROPOSAL.md"
+}
