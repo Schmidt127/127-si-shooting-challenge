@@ -14,6 +14,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
+- **Foundation Reset Pack (2026-07-23)** — PROD schema snapshots `prod-foundation-reset-20260723/` + `…-post-ts/`; Testing Scenarios table created (`tblagI7Q5wXQm2XGS`); Schmidt enrollment `recgP9qZYjAhE7NXm` set `Active?=true`; foundation Week + scenario seeded; live Fillout-shaped Submission proved Week→XP→WAS (`recaCcxDqtzFWjmyi` / `recOqzhV4kTdsfzMf` / `rechWp330MqSgRWzN`). Automation **115** paste still required. Evidence: [`docs/foundation-reset/`](./docs/foundation-reset/README.md).
 - **Repo blocker closure pass (2026-07-16)** — Contract helpers/tests for Enrollment `Active?` / Progress Processing guards (C-010), weekly-summary build/send + automatic resend prevention (C-011 / 072–074), and HW17/009 attachment-slot mapping + quiz dedupe (C-009). Release validator now enforces launch-scope version headers, duplicate automation numbers, contradictory status docs (066/059/043/112/070b–c), C-019 Testing-view documentation rules, and launch-test evidence packages. Docs reconciled: **066 v3.2** paste status, **070b v4.4 / 070c v1.1** wording, **059** created-trigger recommendation, **043** retire, **112 OFF**. No live Airtable changes.
 
 ### Docs
