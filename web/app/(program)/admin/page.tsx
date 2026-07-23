@@ -44,14 +44,19 @@ export default function AdminPage() {
             only. No write controls in the first slice.
           </p>
           <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-foreground">
-            <li>Enrollment processing readiness</li>
-            <li>Submission / asset handoff readiness</li>
-            <li>Homework completion and video feedback readiness</li>
-            <li>XP event and weekly summary readiness</li>
-            <li>Zoom attendance, level recalculation, Perfect Week state</li>
+            <li>Athlete / enrollment lookup (Airtable deep links only at first)</li>
+            <li>Test scenario access + failed automation visibility</li>
+            <li>Email / upload retry status (read-only; no write buttons)</li>
+            <li>XP and achievement audit aggregates</li>
+            <li>Weekly summary rebuild readiness + config health</li>
+            <li>Open Mike decision flags (auth, Softr, indexing, quiz path)</li>
           </ul>
           <p className="mt-4 text-sm text-muted">
-            Full auth and architecture notes live in the repo at{" "}
+            Overnight roadmap:{" "}
+            <code className="rounded bg-brand-light-gray px-1.5 py-0.5 text-xs">
+              docs/overnight/web-integration/ADMIN-ROADMAP.md
+            </code>
+            . In-app notes:{" "}
             <code className="rounded bg-brand-light-gray px-1.5 py-0.5 text-xs">
               web/docs/admin-roadmap.md
             </code>

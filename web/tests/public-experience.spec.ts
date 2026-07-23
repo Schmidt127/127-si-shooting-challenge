@@ -115,12 +115,24 @@ test.describe("empty / invalid / failure states", () => {
     });
   }
 
-  test("nonsense athlete slug still renders safe profile shell", async ({ page }) => {
+  test("nonsense athlete slug renders missing-link / empty state (not fabricated)", async ({
+    page,
+  }) => {
     const response = await page.goto("athletes/____not-a-real-athlete____", {
       waitUntil: "domcontentloaded",
     });
     expect(response?.status()).toBeLessThan(500);
     await expect(page.locator("h1").first()).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/no live link|profile not/i).first()).toBeVisible();
+  });
+
+  test("Schmidt demo profile remains visible", async ({ page }) => {
+    const response = await page.goto("athletes/schmidt", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response?.status()).toBeLessThan(500);
+    await expect(page.getByRole("heading", { level: 1 })).toContainText(/schmidt/i);
+    await expect(page.getByText(/demo data/i).first()).toBeVisible();
   });
 
   test("unknown route renders not-found page", async ({ page }) => {
