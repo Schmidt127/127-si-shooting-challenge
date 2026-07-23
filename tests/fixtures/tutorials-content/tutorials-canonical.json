@@ -1,0 +1,62 @@
+{
+  "table": "Tutorials",
+  "records": [
+    {
+      "id": "recTutExact001",
+      "fields": {
+        "Name": "Form Shooting Basics",
+        "Link to Video": "https://www.youtube.com/watch?v=abc123",
+        "Tutorial Type": ["Tutorial"],
+        "Tutorial - Category": ["Shoot"],
+        "Associated Program": ["Shooting Challenge"],
+        "Brief Description": "Foundational form shooting tutorial.",
+        "Detailed Description": "Athletes practice balanced stance and follow-through with ten makes.",
+        "OK to Publish on Softr": true,
+        "Sort Order": 10,
+        "Thumbnail": [{ "id": "attThumb001", "filename": "form.jpg" }],
+        "Website Image Resolved": [{ "id": "attWeb001", "filename": "form-web.jpg" }]
+      }
+    },
+    {
+      "id": "recTutShout001",
+      "fields": {
+        "Name": "Athlete Shout Out - Leyton",
+        "Link to Video": "https://youtu.be/shout001",
+        "Tutorial Type": ["Shout - Out"],
+        "Associated Program": ["Shooting Challenge"],
+        "Athlete": "Leyton Bakken",
+        "Brief Description": "Recognition shout-out.",
+        "Detailed Description": "Celebrates consistent practice habits.",
+        "OK to Publish on Softr": true,
+        "Sort Order": 20
+      }
+    },
+    {
+      "id": "recTutDraft001",
+      "fields": {
+        "Name": "Character Focus Draft",
+        "Link to Video": "https://example.com/videos/character-draft",
+        "Tutorial Type": ["Tutorial"],
+        "Tutorial - Category": ["Character"],
+        "Associated Program": ["Shooting Challenge"],
+        "Brief Description": "Draft character tutorial.",
+        "Detailed Description": "Unpublished draft for review.",
+        "OK to Publish on Softr": false,
+        "Sort Order": 30
+      }
+    },
+    {
+      "id": "recTutArticle001",
+      "fields": {
+        "Name": "FBC Article: Growth Mindset",
+        "Link to Video": "https://example.com/articles/growth-mindset",
+        "Tutorial Type": ["FBC Article Book"],
+        "Associated Program": ["Shooting Challenge"],
+        "Brief Description": "Article book entry.",
+        "Detailed Description": "Reading reflection for growth mindset.",
+        "OK to Publish on Softr": true,
+        "Sort Order": 40
+      }
+    }
+  ]
+}

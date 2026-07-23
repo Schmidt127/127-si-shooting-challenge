@@ -1,0 +1,41 @@
+{
+  "description": "Named scenarios for duplicate detector unit tests",
+  "cases": [
+    {
+      "id": "same_title_same_url",
+      "expect": ["exact_duplicate", "probable_duplicate", "conflicting"]
+    },
+    {
+      "id": "same_title_different_grade_band",
+      "expect": ["related_but_distinct"]
+    },
+    {
+      "id": "different_title_same_url",
+      "expect": ["probable_duplicate", "conflicting", "exact_duplicate"]
+    },
+    {
+      "id": "same_media_different_metadata",
+      "expect": ["conflicting", "probable_duplicate"]
+    },
+    {
+      "id": "blank_url",
+      "expect": ["orphan", "incomplete"]
+    },
+    {
+      "id": "incomplete_content",
+      "expect": ["incomplete"]
+    },
+    {
+      "id": "linked_homework",
+      "expect": ["orphan"]
+    },
+    {
+      "id": "linked_learning_activity",
+      "expect": ["orphan"]
+    },
+    {
+      "id": "published_versus_unpublished",
+      "expect": ["conflicting", "probable_duplicate", "exact_duplicate"]
+    }
+  ]
+}
