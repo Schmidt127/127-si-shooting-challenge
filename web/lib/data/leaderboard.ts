@@ -40,12 +40,20 @@ export function compareLeaderboardSortKeys(a: LeaderboardSortKeys, b: Leaderboar
 export function sortLeaderboardRecords<
   T extends { id: string; fields: EnrollmentLeaderboardFields },
 >(records: T[]): T[] {
-  return [...records].sort((left, right) =>
-    compareLeaderboardSortKeys(
+  return [...records].sort((left, right) => {
+    const byKeys = compareLeaderboardSortKeys(
       getLeaderboardSortKeys(left.fields),
       getLeaderboardSortKeys(right.fields),
-    ),
-  );
+    );
+    if (byKeys !== 0) return byKeys;
+
+    /* Deterministic tie order across fetches: name, then record id. */
+    const byName = asText(left.fields["Full Athlete Name"], "").localeCompare(
+      asText(right.fields["Full Athlete Name"], ""),
+    );
+    if (byName !== 0) return byName;
+    return left.id.localeCompare(right.id);
+  });
 }
 
 export function mapEnrollmentToLeaderboardEntry(
