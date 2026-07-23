@@ -1,0 +1,185 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2026-07-23",
+  "agent": "online-agent-8-tutorials-content",
+  "sourceTable": {
+    "name": "Tutorials & Assets",
+    "id": "tblDOTgsWfqPm18bw"
+  },
+  "targetTable": {
+    "name": "Tutorials",
+    "id": "tbldfoVGdhqATi4MS"
+  },
+  "policy": {
+    "keepCanonicalTable": "Tutorials",
+    "preferUpdateInPlace": true,
+    "neverDeleteByTitleAlone": true,
+    "noLiveSchemaChanges": true,
+    "defaultPublish": false
+  },
+  "fieldMaps": [
+    {
+      "sourceField": "Name",
+      "sourceFieldNotes": "Schema export may show BOM-prefixed primary name",
+      "targetField": "Name",
+      "directCopy": false,
+      "transform": "stripBom|collapseNewlines|trim",
+      "default": null,
+      "validation": "nonEmptyForPublish",
+      "collisionBehavior": "titleAloneIsNotMergeKey",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Link to Video",
+      "targetField": "Link to Video",
+      "directCopy": false,
+      "transform": "extractFirstHttpUrl|normalizeUrl",
+      "default": "",
+      "validation": "httpUrlOrEmpty",
+      "collisionBehavior": "canonicalUrlIsStrongDuplicateSignal",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Sort Order",
+      "targetField": "Sort Order",
+      "directCopy": true,
+      "transform": "toInteger",
+      "default": 0,
+      "validation": "finiteNumber",
+      "collisionBehavior": "fillTargetIfEmpty",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Type of Asset",
+      "targetField": "Tutorial Type",
+      "directCopy": false,
+      "transform": "mapAssetTypeToTutorialType|toMultiSelectArray",
+      "default": [],
+      "validation": "targetChoiceSet",
+      "collisionBehavior": "unionTypesOnUpdate",
+      "unmapped": false,
+      "valueMap": {
+        "Tutorial": "Tutorial",
+        "Shout Out": "Shout - Out",
+        "FBC Article Book": "FBC Article Book",
+        "Informational": null
+      },
+      "unmappedValues": ["Informational"]
+    },
+    {
+      "sourceField": "Associated Program",
+      "targetField": "Associated Program",
+      "directCopy": true,
+      "transform": "ensureKnownProgramChoices",
+      "default": [],
+      "validation": "programChoiceSet",
+      "collisionBehavior": "unionOnUpdate",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Detailed Description",
+      "targetField": "Detailed Description",
+      "directCopy": false,
+      "transform": "multilineToRichTextPlain",
+      "default": "",
+      "validation": "optionalUnlessPublish",
+      "collisionBehavior": "manualIfBothNonEmptyAndDiffer",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Brief Descriptions",
+      "targetField": "Brief Description",
+      "directCopy": false,
+      "transform": "multilineToRichTextPlain",
+      "default": "",
+      "validation": "optionalUnlessPublish",
+      "collisionBehavior": "manualIfBothNonEmptyAndDiffer",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Assignment Rationale",
+      "targetField": null,
+      "directCopy": false,
+      "transform": "sidecarOnly",
+      "default": null,
+      "validation": "reportUnmapped",
+      "collisionBehavior": "n/a",
+      "unmapped": true,
+      "reason": "No Tutorials field without schema addition; preserve in dry-run sidecar only"
+    },
+    {
+      "sourceField": "Athlete",
+      "targetField": "Athlete",
+      "directCopy": false,
+      "transform": "singleSelectNameToText|collapseInternalWhitespace",
+      "default": "",
+      "validation": "noEmail|publicSafeLabel",
+      "collisionBehavior": "preferExistingTarget",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Athlete Headshot",
+      "targetField": "Athlete Headshot - Lkp",
+      "directCopy": false,
+      "transform": "copyAttachments",
+      "default": [],
+      "validation": "attachmentIdsWhenPresent",
+      "collisionBehavior": "preferExistingTarget",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Thumbnail",
+      "targetField": "Thumbnail",
+      "directCopy": false,
+      "transform": "copyAttachments",
+      "default": [],
+      "validation": "attachmentIdsWhenPresent",
+      "collisionBehavior": "preferExistingTarget",
+      "unmapped": false
+    },
+    {
+      "sourceField": "Display Image",
+      "targetField": "Website Image Resolved",
+      "directCopy": false,
+      "transform": "copyAttachments",
+      "default": [],
+      "validation": "attachmentIdsWhenPresent",
+      "collisionBehavior": "preferExistingTarget",
+      "unmapped": false
+    },
+    {
+      "sourceField": "OK to Publish on Softr",
+      "targetField": "OK to Publish on Softr",
+      "directCopy": false,
+      "transform": "checkedSelectToCheckbox",
+      "default": false,
+      "validation": "boolean",
+      "collisionBehavior": "neverAutoPromotePublish",
+      "unmapped": false,
+      "valueMap": {
+        "checked": true,
+        "": false
+      }
+    }
+  ],
+  "targetFieldsWithoutSource": [
+    {
+      "targetField": "Tutorial - Category",
+      "behavior": "leaveEmpty",
+      "notes": "Web groups empty category as More to explore"
+    }
+  ],
+  "duplicateMatchKeys": [
+    "exactRecordId",
+    "canonicalUrl",
+    "normalizedTitlePlusGradeBand",
+    "normalizedTitle",
+    "contentHash",
+    "attachmentId",
+    "normalizedVideoUrl"
+  ],
+  "notes": [
+    "Grade Band is not present on either table; normalizedTitlePlusGradeBand match always degrades to title-only unless export adds a synthetic band.",
+    "Informational Type of Asset values require product decision before target write."
+  ]
+}
