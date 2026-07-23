@@ -514,6 +514,28 @@ function evaluateGate(gateRule, stats) {
   };
 }
 
+/**
+ * Build a level-id → gate-rule map from active gate rule rows (042-style).
+ * Throws when two active rules point at the same Level, mirroring the 042
+ * duplicate-active-rule guard so offline fixtures fail the same way PROD does.
+ */
+function buildGateRuleMap(gateRules = []) {
+  const map = new Map();
+  for (const rule of gateRules) {
+    if (!rule || !rule.levelId) {
+      throw new Error(`Gate rule ${rule && rule.name ? rule.name : "(unnamed)"} has no Level link.`);
+    }
+    if (map.has(rule.levelId)) {
+      const existing = map.get(rule.levelId);
+      throw new Error(
+        `Duplicate active gate rules for level ${rule.levelId}: "${existing.name}" and "${rule.name}".`
+      );
+    }
+    map.set(rule.levelId, rule);
+  }
+  return map;
+}
+
 function determineAllowedLevelWithGateBlocking(levels, gateRuleMap, lifetimeXp, stats) {
   if (!levels || levels.length === 0) {
     return {
@@ -1050,6 +1072,7 @@ module.exports = {
   orderWeeksByStartDate,
   findPreviousWeek,
   evaluateGate,
+  buildGateRuleMap,
   determineAllowedLevelWithGateBlocking,
   isValidSha256Hex,
   evaluateAssetUploadFields,
