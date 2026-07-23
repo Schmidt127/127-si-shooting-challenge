@@ -1,0 +1,138 @@
+{
+  "agent": "online-agent-8-tutorials-content",
+  "date": "2026-07-23",
+  "repo": "Schmidt127/127-si-shooting-challenge",
+  "branch": "master",
+  "packages": {
+    "A_dependencyInventory": true,
+    "B_tableComparison": true,
+    "C_migrationMap": true,
+    "D_duplicateOrphanAudit": true,
+    "E_presentationFieldSpec": true,
+    "F_contentQualityAudit": true,
+    "G_curriculumInventory": true,
+    "H_migrationRunbook": true,
+    "I_mikeDecisionPacket": true
+  },
+  "tables": {
+    "keep": {
+      "name": "Tutorials",
+      "id": "tbldfoVGdhqATi4MS",
+      "webReferences": true,
+      "automationReferences": false,
+      "makeReferences": false
+    },
+    "orphanCandidate": {
+      "name": "Tutorials & Assets",
+      "id": "tblDOTgsWfqPm18bw",
+      "webReferences": false,
+      "automationReferences": false,
+      "makeReferences": false,
+      "softrBindings": "UNKNOWN"
+    }
+  },
+  "recommendationValidated": {
+    "keepTutorials": true,
+    "basis": [
+      "web/lib/airtable/queries.ts binds AIRTABLE_TABLES.tutorials to Tutorials",
+      "public routes /tutorials /shoutouts /articles consume Tutorials fields",
+      "no automation/extension/Make references to Tutorials & Assets",
+      "schema comparison shows weaker orphan field types and hardcoded athlete select"
+    ]
+  },
+  "dependenciesFound": {
+    "critical": [
+      "D-001 website table binding",
+      "D-002 publish filter and Web - Tutorials Catalog view",
+      "D-003 tutorial field set",
+      "D-004 public routes and rec ID detail URLs",
+      "D-014 Softr/Interface unknown",
+      "D-015 live row counts unknown"
+    ],
+    "negativeEvidence": [
+      "no automation references",
+      "no Make references",
+      "no extension-script references",
+      "no Airtable link fields on either tutorials table"
+    ]
+  },
+  "duplicateRisks": [
+    "same URL across tables with metadata drift",
+    "same attachment IDs with differing descriptions",
+    "published orphan vs unpublished canonical draft",
+    "title-only false merges (mitigated by detector policy)"
+  ],
+  "orphanRisks": [
+    "Tutorials & Assets has zero code consumers (table-level orphan candidate)",
+    "Informational type cannot map into Tutorial Type",
+    "Assignment Rationale unmapped without schema addition",
+    "incomplete blank-URL rows",
+    "Softr may still bind orphan table (unproven)"
+  ],
+  "publicContentRisks": [
+    "OK to Publish on Softr naming still public gate",
+    "primary Name used as public title until Presentation fields exist",
+    "athlete emails/internal language must fail quality gate",
+    "hardcoded 2025-26 athlete names on orphan Athlete select"
+  ],
+  "tests": {
+    "command": "cd tools/tutorials-content && npm test",
+    "passed": 19,
+    "failed": 0,
+    "fixtureDuplicateSummary": {
+      "sourceCount": 11,
+      "targetCount": 4,
+      "pairCount": 5,
+      "orphanCount": 6,
+      "incompleteCount": 1,
+      "byClassification": {
+        "exact_duplicate": 2,
+        "conflicting": 3,
+        "orphan": 6,
+        "incomplete": 1
+      }
+    },
+    "fixtureQualitySummary": {
+      "recordCount": 8,
+      "passCount": 2,
+      "failCount": 6,
+      "publishedFailCount": 6
+    }
+  },
+  "proposedStatuses": {
+    "SC-052": "Ready for DEV execution (not Complete)",
+    "SC-053": "Blocked on SC-052 execution (not Complete)",
+    "SC-054": "No change — supporting spec only",
+    "SC-127_to_SC-132": "No Tutorials merge status changes"
+  },
+  "mike": {
+    "decisionsFile": "docs/online-agents/tutorials-content/MIKE-DECISIONS.md",
+    "actionsFile": "docs/online-agents/tutorials-content/MIKE-ACTIONS.md",
+    "requiredDuringAgentExecution": false
+  },
+  "migrationExecuted": false,
+  "liveAirtableChanges": false,
+  "completionMasterEdited": false,
+  "commits": [
+    {
+      "sha": "2c9f0f85603ded8a9dbac03ec52bf98e922d79e9",
+      "message": "audit: inventory tutorial table dependencies"
+    },
+    {
+      "sha": "f952f4568077b13966c5163141e9b778359bd138",
+      "message": "docs: define tutorial consolidation mapping"
+    },
+    {
+      "sha": "fd968bdb5175a241fa829286342e058c452c6b05",
+      "message": "test: add tutorial duplicate audit fixtures"
+    },
+    {
+      "sha": "a43f52126b619ec120dc744c2e27e4d99db272a2",
+      "message": "feat: add read-only tutorial content validator"
+    },
+    {
+      "sha": "5a63d62cc36711254337321a2fece170b548d22f",
+      "message": "docs: add tutorial migration runbook"
+    }
+  ]
+}
