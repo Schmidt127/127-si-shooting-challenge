@@ -174,3 +174,29 @@ When redirecting, use the **Workspace Check** block from doc 04 (Current request
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
 | Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
+
+## Cursor Cloud specific instructions
+
+Only the **Next.js app in `web/`** is a locally runnable, interactive service. The Airtable
+automation scripts (`airtable/automations/**`) and extension scripts run **inside Airtable's UI**
+and cannot be executed locally. `tools/airtable/` and `lambda/upload-asset/` are Python CLI/AWS
+utilities, not long-running services.
+
+### web/ (the app)
+- Commands are the npm scripts in `web/package.json` (`dev`, `lint`, `typecheck`, `test`, `build`);
+  CI runs lint → typecheck → test → build (see `.github/workflows/web.yml`). Node 22.
+- `npm run dev` serves on **port 3001** (not 3000 as the README says).
+- The app sets `basePath: /shoot`, so routes live under `http://localhost:3001/shoot`
+  (e.g. health check `http://localhost:3001/shoot/api/airtable`; `/` and `/api/airtable` return 404).
+- Copy `web/.env.example` → `web/.env.local` before running. A non-empty `AIRTABLE_API_TOKEN` is
+  enough for `lint`/`typecheck`/`test`/`build` and to boot the dev server.
+- **Live data needs a real Airtable PAT.** All content pages (leaderboard, homework, tutorials,
+  levels, achievements, shoutouts, articles, zoom-meetings) are server-rendered from the Airtable
+  REST API. Without a valid `AIRTABLE_API_TOKEN` (with `data.records:read` on base
+  `appn84sqPw03zEbTT`) these pages render a graceful "Could not load …" 401 error state — that is
+  expected, not a bug. Only `/shoot` (home) and `/shoot/game-manual` render fully without a token.
+
+### Python tooling (optional)
+- `tools/airtable/` and `lambda/upload-asset/`: install with `pip install -r requirements.txt` in
+  each dir. They need Airtable/AWS env vars to do real work; unit tests under each `tests/` dir run
+  with `python -m unittest`.
