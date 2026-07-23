@@ -6,6 +6,7 @@ import {
   ZoomMeetingNotFoundState,
   ZoomMeetingsErrorState,
 } from "@/components/zoom-meetings/zoom-meetings-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeeting } from "@/lib/airtable/queries";
 
 type ZoomMeetingDetailPageProps = {
@@ -42,8 +43,7 @@ export default async function ZoomMeetingDetailPage({ params }: ZoomMeetingDetai
     if (!meeting) return <ZoomMeetingNotFoundState />;
     return <ZoomMeetingDetailView meeting={meeting} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <ZoomMeetingsErrorState message={message} />;
   }
 }

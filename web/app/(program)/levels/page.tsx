@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { LevelsEmptyState, LevelsErrorState, LevelsLadderView } from "@/components/levels/levels-ladder-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelLadder } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -20,8 +21,7 @@ export default async function LevelsPage() {
 
     return <LevelsLadderView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <LevelsErrorState message={message} />;
   }
 }

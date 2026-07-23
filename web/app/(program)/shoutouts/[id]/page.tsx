@@ -6,6 +6,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaNotFoundState,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutItem } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
 
@@ -43,8 +44,7 @@ export default async function ShoutoutDetailPage({ params }: ShoutoutDetailPageP
     if (!item) return <TutorialMediaNotFoundState config={SHOUTOUTS_SECTION} />;
     return <TutorialMediaDetailView item={item} config={SHOUTOUTS_SECTION} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />;
   }
 }

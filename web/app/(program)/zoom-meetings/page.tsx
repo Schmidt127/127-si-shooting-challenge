@@ -5,6 +5,7 @@ import {
   ZoomMeetingsEmptyState,
   ZoomMeetingsErrorState,
 } from "@/components/zoom-meetings/zoom-meetings-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchZoomMeetingCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -24,8 +25,7 @@ export default async function ZoomMeetingsPage() {
 
     return <ZoomMeetingsCatalogView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <ZoomMeetingsErrorState message={message} />;
   }
 }

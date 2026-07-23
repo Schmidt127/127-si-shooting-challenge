@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { TutorialDetailView, TutorialNotFoundState } from "@/components/tutorials/tutorial-detail-view";
 import { TutorialsErrorState } from "@/components/tutorials/tutorials-grid-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialItem } from "@/lib/airtable/queries";
 
 type TutorialDetailPageProps = {
@@ -39,8 +40,7 @@ export default async function TutorialDetailPage({ params }: TutorialDetailPageP
     if (!tutorial) return <TutorialNotFoundState />;
     return <TutorialDetailView tutorial={tutorial} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialsErrorState message={message} />;
   }
 }

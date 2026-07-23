@@ -5,6 +5,7 @@ import {
   LeaderboardErrorState,
   LeaderboardView,
 } from "@/components/leaderboard/leaderboard-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -26,8 +27,7 @@ export default async function LeaderboardPage() {
 
     return <LeaderboardView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <LeaderboardErrorState message={message} />;
   }
 }

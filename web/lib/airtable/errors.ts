@@ -11,6 +11,22 @@ export class AirtableApiError extends Error {
   }
 }
 
+/**
+ * Visitor-safe error message for public pages.
+ * Never expose raw Airtable response bodies (they can include base/table/view
+ * internals). The missing-config hint is kept because it names only public
+ * env-var names and unblocks deploy debugging.
+ */
+export function publicErrorMessage(error: unknown): string {
+  if (error instanceof AirtableApiError) {
+    return "Live data is temporarily unavailable. Please try again soon.";
+  }
+  if (error instanceof Error && error.message.includes("Missing Airtable configuration")) {
+    return error.message;
+  }
+  return "An unexpected error occurred while fetching data.";
+}
+
 export function isMissingAirtableViewError(error: unknown): boolean {
   if (!(error instanceof AirtableApiError)) return false;
 

@@ -5,6 +5,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaGridView,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchShoutoutCatalog } from "@/lib/airtable/queries";
 import { SHOUTOUTS_SECTION } from "@/lib/tutorial-media/config";
 
@@ -25,8 +26,7 @@ export default async function ShoutoutsPage() {
 
     return <TutorialMediaGridView data={data} config={SHOUTOUTS_SECTION} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={SHOUTOUTS_SECTION} message={message} />;
   }
 }

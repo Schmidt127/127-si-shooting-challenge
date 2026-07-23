@@ -6,6 +6,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaNotFoundState,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleItem } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
 
@@ -43,8 +44,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
     if (!item) return <TutorialMediaNotFoundState config={ARTICLES_SECTION} />;
     return <TutorialMediaDetailView item={item} config={ARTICLES_SECTION} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={ARTICLES_SECTION} message={message} />;
   }
 }

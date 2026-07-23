@@ -5,6 +5,7 @@ import {
   TutorialsErrorState,
   TutorialsGridView,
 } from "@/components/tutorials/tutorials-grid-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchTutorialCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -24,8 +25,7 @@ export default async function TutorialsPage() {
 
     return <TutorialsGridView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialsErrorState message={message} />;
   }
 }

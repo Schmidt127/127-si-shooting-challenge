@@ -5,6 +5,7 @@ import {
   HomeworkEmptyState,
   HomeworkErrorState,
 } from "@/components/homework/homework-catalog-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchHomeworkCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -26,8 +27,7 @@ export default async function HomeworkPage() {
 
     return <HomeworkCatalogView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <HomeworkErrorState message={message} />;
   }
 }

@@ -5,6 +5,7 @@ import {
   TutorialMediaErrorState,
   TutorialMediaGridView,
 } from "@/components/tutorial-media/tutorial-media-views";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchArticleCatalog } from "@/lib/airtable/queries";
 import { ARTICLES_SECTION } from "@/lib/tutorial-media/config";
 
@@ -25,8 +26,7 @@ export default async function ArticlesPage() {
 
     return <TutorialMediaGridView data={data} config={ARTICLES_SECTION} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <TutorialMediaErrorState config={ARTICLES_SECTION} message={message} />;
   }
 }

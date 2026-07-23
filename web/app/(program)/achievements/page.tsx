@@ -5,6 +5,7 @@ import {
   AchievementsErrorState,
   AchievementsGridView,
 } from "@/components/achievements/achievements-grid-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchAchievementCatalog } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -24,8 +25,7 @@ export default async function AchievementsPage() {
 
     return <AchievementsGridView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <AchievementsErrorState message={message} />;
   }
 }

@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { LevelDetailView, LevelNotFoundState } from "@/components/levels/level-detail-view";
 import { LevelsErrorState } from "@/components/levels/levels-ladder-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLevelDefinition } from "@/lib/airtable/queries";
 
 type LevelDetailPageProps = {
@@ -39,8 +40,7 @@ export default async function LevelDetailPage({ params }: LevelDetailPageProps) 
     if (!level) return <LevelNotFoundState />;
     return <LevelDetailView level={level} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <LevelsErrorState message={message} />;
   }
 }

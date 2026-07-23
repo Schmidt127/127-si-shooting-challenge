@@ -5,6 +5,7 @@ import {
   PublicDisplayErrorState,
   PublicDisplayView,
 } from "@/components/public-display/public-display-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchLeaderboard } from "@/lib/airtable/queries";
 
 export const metadata: Metadata = {
@@ -24,8 +25,7 @@ export default async function PublicDisplayPage() {
 
     return <PublicDisplayView data={data} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <PublicDisplayErrorState message={message} />;
   }
 }

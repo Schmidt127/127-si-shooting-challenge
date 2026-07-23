@@ -6,6 +6,7 @@ import {
   HomeworkNotFoundState,
 } from "@/components/homework/homework-detail-view";
 import { HomeworkErrorState } from "@/components/homework/homework-catalog-view";
+import { publicErrorMessage } from "@/lib/airtable/errors";
 import { fetchHomeworkAssignment } from "@/lib/airtable/queries";
 
 type HomeworkDetailPageProps = {
@@ -48,8 +49,7 @@ export default async function HomeworkDetailPage({ params }: HomeworkDetailPageP
 
     return <HomeworkDetailView assignment={assignment} />;
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "An unexpected error occurred while fetching data.";
+    const message = publicErrorMessage(error);
     return <HomeworkErrorState message={message} />;
   }
 }
