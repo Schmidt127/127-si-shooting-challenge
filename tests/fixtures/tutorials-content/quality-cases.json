@@ -1,0 +1,96 @@
+{
+  "records": [
+    {
+      "id": "recQPass001",
+      "fields": {
+        "Name": "Free Throw Routine",
+        "Brief Description": "A simple free throw routine.",
+        "Detailed Description": "Athletes shoot ten free throws focusing on breath and follow-through.",
+        "Link to Video": "https://example.com/videos/ft-routine",
+        "OK to Publish on Softr": true,
+        "Sort Order": 1,
+        "Tutorial - Category": ["Freethrow"],
+        "Age Appropriate": "4-6",
+        "Thumbnail": [{ "id": "attQ1", "filename": "ft.jpg" }]
+      }
+    },
+    {
+      "id": "recQFailEmail001",
+      "fields": {
+        "Name": "Parent Contact Clip",
+        "Brief Description": "Contains private data.",
+        "Detailed Description": "Email coach at coach@example.com for questions.",
+        "Link to Video": "https://example.com/videos/contact",
+        "OK to Publish on Softr": true,
+        "Sort Order": 2
+      }
+    },
+    {
+      "id": "recQFailInternal001",
+      "fields": {
+        "Name": "Internal only draft",
+        "Brief Description": "TODO do not publish this Airtable test record",
+        "Detailed Description": "Internal only language for operators.",
+        "Link to Video": "https://example.com/videos/internal",
+        "OK to Publish on Softr": true,
+        "Sort Order": 3
+      }
+    },
+    {
+      "id": "recQBlankUrl001",
+      "fields": {
+        "Name": "Notes Without Media",
+        "Brief Description": "Description present.",
+        "Detailed Description": "Instructions are long enough to count as usable copy for athletes.",
+        "Link to Video": "",
+        "OK to Publish on Softr": false,
+        "Sort Order": 4
+      }
+    },
+    {
+      "id": "recQBadUrl001",
+      "fields": {
+        "Name": "Broken Link Item",
+        "Brief Description": "Bad URL.",
+        "Detailed Description": "This published item has an invalid media URL value.",
+        "Link to Video": "not-a-url",
+        "OK to Publish on Softr": true,
+        "Sort Order": 5
+      }
+    },
+    {
+      "id": "recQDupPublic001",
+      "duplicatePublic": true,
+      "fields": {
+        "Name": "Duplicate Public Tutorial",
+        "Brief Description": "Looks publishable but flagged duplicate.",
+        "Detailed Description": "Should fail no_duplicate_public_item when published.",
+        "Link to Video": "https://example.com/videos/dup",
+        "OK to Publish on Softr": true,
+        "Sort Order": 6
+      }
+    },
+    {
+      "id": "recQClickHere001",
+      "fields": {
+        "Name": "Click here",
+        "Brief Description": "Bad accessible name.",
+        "Detailed Description": "Title is not accessible link text for catalog cards.",
+        "Link to Video": "https://example.com/videos/click",
+        "OK to Publish on Softr": true,
+        "Sort Order": 7
+      }
+    },
+    {
+      "id": "recQMissingTitle001",
+      "fields": {
+        "Name": "",
+        "Brief Description": "Missing title.",
+        "Detailed Description": "Cannot publish without a title.",
+        "Link to Video": "https://example.com/videos/missing-title",
+        "OK to Publish on Softr": true,
+        "Sort Order": 8
+      }
+    }
+  ]
+}
