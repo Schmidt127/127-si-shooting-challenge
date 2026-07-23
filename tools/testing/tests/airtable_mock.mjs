@@ -67,6 +67,13 @@ export class MockTable {
     const rec = this.records.get(recordId);
     if (rec) Object.assign(rec.cells, payloadToCells(fields));
   }
+
+  async selectRecordsAsync(_opts) {
+    return {
+      records: Array.from(this.records.values()),
+      unloadData: () => {},
+    };
+  }
 }
 
 function payloadToCells(payload) {
