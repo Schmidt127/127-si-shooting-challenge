@@ -44,6 +44,11 @@ import {
   buildAchievementCatalog,
   type AchievementFields,
 } from "@/lib/data/achievements";
+import {
+  buildXpRuleCatalog,
+  type XpRewardRuleFields,
+  type XpRuleCatalogData,
+} from "@/lib/data/xp-rules";
 
 /** Airtable table names used by public queries + reserved for future dashboard/admin. */
 export const AIRTABLE_TABLES = {
@@ -60,6 +65,7 @@ export const AIRTABLE_TABLES = {
   weeks: "Weeks",
   tutorials: "Tutorials",
   zoomMeetings: "Zoom Meetings",
+  xpRewardRules: "XP Reward Rules",
   /** Reserved — dashboard video feedback widgets (not queried by public pages yet). */
   videoFeedback: "Video Feedback",
 } as const;
@@ -566,4 +572,54 @@ async function listVisibleAchievementRecords(): Promise<
 export async function fetchAchievementCatalog(): Promise<AchievementCatalogData> {
   const records = await listVisibleAchievementRecords();
   return buildAchievementCatalog(records);
+}
+
+const XP_RULES_VIEW = "Active Rules Only";
+const XP_RULES_ACTIVE_FILTER = "{Active?} = 1";
+const XP_RULE_FIELDS = [
+  "Reward Rule",
+  "Rule Key",
+  "XP Source Label",
+  "XP Amount",
+  "Active?",
+  "Rule Set",
+  "Sort Order",
+] as const;
+
+async function listActiveXpRuleRecords(): Promise<
+  Array<{ id: string; fields: XpRewardRuleFields }>
+> {
+  const baseParams = {
+    tableName: AIRTABLE_TABLES.xpRewardRules,
+    maxRecords: 200,
+    fields: [...XP_RULE_FIELDS],
+    revalidateSeconds: CATALOG_REVALIDATE_SECONDS,
+  };
+
+  try {
+    const response = await listAirtableRecords<XpRewardRuleFields>({
+      ...baseParams,
+      view: XP_RULES_VIEW,
+    });
+    return response.records;
+  } catch (error) {
+    if (!isMissingAirtableViewError(error)) {
+      throw error;
+    }
+
+    const response = await listAirtableRecords<XpRewardRuleFields>({
+      ...baseParams,
+      filterByFormula: XP_RULES_ACTIVE_FILTER,
+    });
+    return response.records;
+  }
+}
+
+/**
+ * Live XP Reward Rules configuration for the game manual.
+ * The Airtable table is the runtime authority — the site never hardcodes amounts.
+ */
+export async function fetchXpRuleCatalog(): Promise<XpRuleCatalogData> {
+  const records = await listActiveXpRuleRecords();
+  return buildXpRuleCatalog(records);
 }
