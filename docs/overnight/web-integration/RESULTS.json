@@ -65,6 +65,21 @@
     "SC-114 Softr inventory + cutover timing",
     "SC-115 noindex removal authorization",
     "SC-054/SC-117 Presentation fields not in schema",
-    "Agents 3/4 homework-learning and zoom-storage folders had no REPORT.md/RESULTS.json/MIKE-ACTIONS.md at reconciliation time"
-  ]
+    "PROD Config table has 4 conflicting records (Agent 2 MIKE-ACTIONS #1)",
+    "118 not installed in PROD (SC-035 empty/homework-only WAS gap)",
+    "Agent 4 zoom-storage overnight MD packet absent (commit/test only)"
+  ],
+  "followUpFromEvidenceInventory": {
+    "agent3ActualPath": "docs/online-agents/enrollment-season + docs/online-agents/tutorials-content",
+    "appliedMasterUpdates": [
+      "SC-060..SC-065 Built in Repository",
+      "SC-069 Built in Repository",
+      "SC-052 Built in Repository",
+      "SC-053 remains Planned blocked on SC-052"
+    ],
+    "dashboardAfterFollowUp": {
+      "builtInRepository": 25,
+      "planned": 34
+    }
+  }
 }

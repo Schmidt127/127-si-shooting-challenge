@@ -9,14 +9,14 @@
 
 | Agent | Expected folder | REPORT.md | RESULTS.json | MIKE-ACTIONS.md | Notes |
 |------:|-----------------|-----------|--------------|-----------------|-------|
-| 1 | `docs/overnight/testing-integrity/` | Missing | Missing | Missing | Baseline + 115 audit committed; strong live evidence |
-| 2 | `docs/overnight/config-xp/` | Missing | Missing | Missing | Full audit set committed via Agent 6 integration (`7ecb9be`) |
-| 3 | `docs/overnight/homework-learning/` | **Folder absent** | — | — | Work landed as tutorial/enrollment commits on master (see §2) |
-| 4 | `docs/overnight/zoom-storage/` | **Folder absent** | — | — | Work landed as 070a/117/storage test commits on master |
-| 5 | `docs/overnight/communications/` | Missing | Missing | Missing | Decision docs + WAS audit + results JSON committed |
+| 1 | `docs/overnight/testing-integrity/` | Missing | Missing | Missing | Baseline + 115 audit committed; strong live evidence (refs missing local MIKE-ACTIONS files) |
+| 2 | `docs/overnight/config-xp/` | Missing | Missing | Missing | Full audit set committed (`7ecb9be`); MIKE-ACTIONS #1–#10 inline across audits |
+| 3 | `docs/overnight/homework-learning/` | **Folder absent** | — | — | **Actual path:** `docs/online-agents/enrollment-season/` + `docs/online-agents/tutorials-content/` (full REPORT/RESULTS/MIKE-ACTIONS) |
+| 4 | `docs/overnight/zoom-storage/` | **Folder absent** | — | — | Commit/test only: 070a v4.4, Lambda dedupe matrix, 117 offline 22 scenarios — no overnight MD packet |
+| 5 | `docs/overnight/communications/` | Missing | Missing | Missing | Decision docs + WAS audit + results JSON; cites missing WAS-CALCULATION-AUDIT.md |
 | 6 | `docs/overnight/web-integration/` | **Present** | **Present** | **Present** | This agent |
 
-Absence of Agents 1–5 formal REPORT/RESULTS/MIKE-ACTIONS files is recorded honestly; reconciliation used their audit docs + git history.
+Follow-up from evidence inventory: Agent 3 was mis-located as “commits only”; formal packets live under `docs/online-agents/`.
 
 ---
 
@@ -32,15 +32,18 @@ Absence of Agents 1–5 formal REPORT/RESULTS/MIKE-ACTIONS files is recorded hon
 - Docs committed `7ecb9be` under `docs/overnight/config-xp/`
 - Evidence: 31 active XP rules; Levels/Gates healthy; Config table multi-row defect flagged
 
-### Agent 3 — Homework / learning / tutorials / enrollment *(folder name differed)*
-- `2c9f0f8` `f952f45` `fd968bd` `a43f521` `5a63d62` `beffb59` `6b54ae7` tutorial package
-- `9934584` `bff9e83` `43c3f06` `8d4def2` `78acee3` `c6dee7f` enrollment package
-- `babfcc7` fix: align 070a homework upload sender to v4.4
+### Agent 3 — Enrollment / tutorials *(Online Agents 7–8; not `homework-learning/`)*
+- Packets: `docs/online-agents/enrollment-season/` (18 offline tests) + `docs/online-agents/tutorials-content/` (19/19 tests)
+- Commits: `9934584`…`c6dee7f` (enrollment); `2c9f0f8`…`6b54ae7` (tutorials)
+- Proposals applied in follow-up: SC-060–065, SC-069 → Built in Repository; SC-052 → Built in Repository; **none Complete**
+- Note: `babfcc7` (070a v4.4) is Agent 4 storage work, not enrollment/tutorials
 
 ### Agent 4 — Zoom / storage
 - `00bab75` test: offline Stage 17 orchestrator 117 (22 scenarios)
 - `d69e1b5` test: storage dedupe/idempotency matrix (upload-asset)
+- `babfcc7` fix: align 070a homework upload sender to shared v4.4
 - Prior Stage 17 / 117f history already on master
+- **No overnight audit MD** — do not inflate SC-074 / SC-095 to Complete from tonight alone
 
 ### Agent 5 — Communications / WAS
 - `197b797` audit: WAS uniqueness + delete 392 orphan WAS rows
@@ -69,6 +72,8 @@ Absence of Agents 1–5 formal REPORT/RESULTS/MIKE-ACTIONS files is recorded hon
 | SC-112 / 114 / 115 | Decision Needed | **Decision Needed** | Decision docs ready; no silent choices |
 | SC-035 | Built in Repository | **Built in Repository** | 118 still not PROD-installed; orphan WAS cleanup live |
 | SC-144 / SC-133 | Planned | Planned | Unchanged |
+| SC-060–065, SC-069 | Planned | **Built in Repository** | `docs/online-agents/enrollment-season/` (follow-up apply; not Complete) |
+| SC-052 | Planned | **Built in Repository** | Tutorials consolidation package ready for execution (`tutorials-content/`); SC-053 still Planned/blocked |
 
 ### Stale statements corrected in master
 
@@ -83,20 +88,20 @@ Absence of Agents 1–5 formal REPORT/RESULTS/MIKE-ACTIONS files is recorded hon
 
 ## 4. Dashboard totals (recalculated)
 
-| Bucket | Before overnight recon | After |
-|--------|----------------------:|------:|
-| Total items | 146 | **146** |
-| Complete | 10 | **10** |
-| Live Tested in PROD | 1 | **2** |
-| Installed in PROD | 53 | **53** |
-| Built in Repository | 14 | **17** |
-| Planned | 46 | **42** |
-| Decision Needed | 7 | **7** |
-| Deferred | 10 | **10** |
-| Superseded | 3 | **3** |
-| Not Needed | 2 | **2** |
+| Bucket | Before overnight recon | After initial Agent 6 | After online-agents follow-up |
+|--------|----------------------:|----------------------:|------------------------------:|
+| Total items | 146 | 146 | **146** |
+| Complete | 10 | 10 | **10** |
+| Live Tested in PROD | 1 | 2 | **2** |
+| Installed in PROD | 53 | 53 | **53** |
+| Built in Repository | 14 | 17 | **25** |
+| Planned | 46 | 42 | **34** |
+| Decision Needed | 7 | 7 | **7** |
+| Deferred | 10 | 10 | **10** |
+| Superseded | 3 | 3 | **3** |
+| Not Needed | 2 | 2 | **2** |
 
-Arithmetic: SC-001 I→LT (−1 I +1 LT); SC-059 P→I (−1 P +1 I net I unchanged vs post-SC-001); SC-109/111/116 P→B (−3 P +3 B).
+Arithmetic: SC-001 I→LT; SC-059 P→I; SC-109/111/116 P→B; follow-up SC-060–065/069/052 P→B (+8 Built, −8 Planned).
 
 ---
 
@@ -131,7 +136,7 @@ No Agent 6 merge conflicts required resolving beyond integrating untracked overn
 
 See `docs/overnight/MIKE-ACTIONS-TOMORROW.md`.
 
-**Highest-priority morning package:** **PROD Slot / Automation Attestation + 118 paste readiness** — confirm live automation list after overnight deletes, then paste 118 (dryRun) once empty-week email decision is made or deferred with Option-1 interim.
+**Highest-priority morning package:** **Config Integrity + Automation Attestation + Weekly Email Install Gate** — collapse Config table to one row; confirm live automation list after overnight deletes; paste 118 (dryRun) once empty-week email decision is made or deferred with Option-1 interim. See updated `MIKE-ACTIONS-TOMORROW.md`.
 
 ---
 
