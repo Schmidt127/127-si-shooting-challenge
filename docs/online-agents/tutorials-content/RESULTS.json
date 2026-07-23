@@ -133,6 +133,12 @@
     {
       "sha": "5a63d62cc36711254337321a2fece170b548d22f",
       "message": "docs: add tutorial migration runbook"
+    },
+    {
+      "sha": "beffb59edfae13f1ea6c89a777d854e6f4504be9",
+      "message": "docs: propose tutorial cleanup statuses"
     }
-  ]
+  ],
+  "pushStatus": "origin/master up to date",
+  "workingTree": "clean"
 }
