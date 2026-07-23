@@ -26,3 +26,10 @@ next-env.d.ts
 Thumbs.db
 .env*
 !.env.local.example
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
