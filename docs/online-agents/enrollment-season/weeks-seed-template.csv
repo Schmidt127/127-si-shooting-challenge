@@ -1,0 +1,6 @@
+Week Name,Start Date,End Date,Sequence,Week Type,Active?,Intake Open?,Counts for XP?,Counts for Leaderboard?,Program Instance,Timezone
+Early Bird,PLACEHOLDER_EARLY_START,PLACEHOLDER_EARLY_END,0,Early Bird,true,true,false,false,PLACEHOLDER_PROGRAM_INSTANCE,America/Denver
+Week 1,PLACEHOLDER_W1_START,PLACEHOLDER_W1_END,1,Regular,true,true,true,true,PLACEHOLDER_PROGRAM_INSTANCE,America/Denver
+Week 2,PLACEHOLDER_W2_START,PLACEHOLDER_W2_END,2,Regular,true,true,true,true,PLACEHOLDER_PROGRAM_INSTANCE,America/Denver
+Week 3,PLACEHOLDER_W3_START,PLACEHOLDER_W3_END,3,Regular,true,true,true,true,PLACEHOLDER_PROGRAM_INSTANCE,America/Denver
+Final Week,PLACEHOLDER_FINAL_START,PLACEHOLDER_FINAL_END,99,Final,true,true,true,true,PLACEHOLDER_PROGRAM_INSTANCE,America/Denver
