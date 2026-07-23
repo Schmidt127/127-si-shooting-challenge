@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://127si.local/schemas/fillout-enrollment-contract.schema.json",
+  "title": "Fillout Enrollment Contract",
+  "description": "Machine-readable contract for the Shooting Challenge Enrollment Fillout form. Does not modify the live Fillout form.",
+  "type": "object",
+  "required": ["formId", "version", "timezone", "fields"],
+  "additionalProperties": false,
+  "properties": {
+    "formId": {
+      "type": "string",
+      "description": "External Fillout form identifier (operator-filled; not committed secret)."
+    },
+    "version": {
+      "type": "string",
+      "description": "Contract version for this repository package."
+    },
+    "timezone": {
+      "type": "string",
+      "const": "America/Denver"
+    },
+    "airtableBaseId": {
+      "type": "string",
+      "description": "Target Airtable base (PROD construction base)."
+    },
+    "airtableTable": {
+      "type": "string",
+      "const": "Enrollments"
+    },
+    "failureBehaviorDefaults": {
+      "type": "object",
+      "properties": {
+        "clientValidation": {
+          "type": "string",
+          "enum": ["block_submit", "warn_allow", "none"]
+        },
+        "airtableAutomation": {
+          "type": "string",
+          "enum": ["skip", "error", "partial_write"]
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/field" }
+    }
+  },
+  "$defs": {
+    "field": {
+      "type": "object",
+      "required": [
+        "externalLabel",
+        "airtableField",
+        "type",
+        "required",
+        "validation",
+        "normalization",
+        "allowedValues",
+        "failureBehavior",
+        "downstreamConsumers",
+        "privacyClassification"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "externalLabel": { "type": "string" },
+        "airtableField": { "type": "string" },
+        "type": {
+          "type": "string",
+          "enum": [
+            "singleLineText",
+            "email",
+            "phoneNumber",
+            "singleSelect",
+            "multipleRecordLinks",
+            "checkbox",
+            "multilineText",
+            "number",
+            "date"
+          ]
+        },
+        "required": { "type": "boolean" },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "rules": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "pattern": { "type": "string" }
+          }
+        },
+        "normalization": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "allowedValues": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
+        },
+        "failureBehavior": {
+          "type": "object",
+          "required": ["fillout", "automation001"],
+          "properties": {
+            "fillout": {
+              "type": "string",
+              "enum": ["block_submit", "warn_allow", "allow"]
+            },
+            "automation001": {
+              "type": "string",
+              "enum": ["skip", "error", "ignore", "n_a"]
+            }
+          }
+        },
+        "downstreamConsumers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "privacyClassification": {
+          "type": "string",
+          "enum": ["PII", "sensitive_contact", "public_safe", "internal_ops", "payment"]
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}
