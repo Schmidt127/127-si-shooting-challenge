@@ -48,4 +48,4 @@ fallback formula (`Active?`) includes Schmidt — consistent with confirmed dire
 ## Tests added
 
 - `web/lib/release/public-standings.test.ts` — Schmidt render + name-blind source scan + privacy-safe field patterns + deterministic tie ordering (5 tests).
-- Total web unit suite after this session: 100 tests, all passing.
+- Total web unit suite after Agent 6 close-out: 109 tests, all passing.

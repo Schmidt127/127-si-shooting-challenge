@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-23 (DEV↔PROD Automation Reconciliation audit — docs only) |
+| Last updated | 2026-07-23 (Overnight Agents 1–6 reconciliation — Agent 6) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,17 +65,17 @@ Counts below match Section 4 as of **2026-07-23**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **146** |
 | Complete | 10 |
-| Live Tested in PROD | 1 |
+| Live Tested in PROD | 2 |
 | Installed but not tested *(Installed in PROD)* | 53 |
-| Built but not installed *(Built in Repository)* | 14 |
-| Planned | 46 |
+| Built but not installed *(Built in Repository)* | 17 |
+| Planned | 42 |
 | Decision Needed | 7 |
 | Deferred | 10 |
 | Superseded | 3 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” is the largest queue — many pipelines were installed before the empty-base reset and must be re-proven on Schmidt test data before they can move to Live Tested or Complete.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight 2026-07-23 moved **SC-001** to Live Tested (115 dry+live PASS) and advanced several website items to Built in Repository. Evidence: `docs/overnight/FINAL-OVERNIGHT-RECONCILIATION.md`.
 
 ---
 
@@ -90,10 +90,10 @@ Columns:
 
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
-| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Installed in PROD | **PROD table created** `tblagI7Q5wXQm2XGS`; seed scenario `recPdyfYRFgDtpzQ8`; repo **115 v1.8**; SC-001 decision approved (orchestration only) | **Blocked on capacity:** free 1 PROD slot (recommended: delete **112**) then paste **115**; Dry Run + live Schmidt scenario | SC-004, SC-059 | PROD at 50/50 limit; no second XP path | `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md`; `MIKE-ACTION-INSTALL-115-PROD.md`; `115-*.js` | **Resolved:** allowed in PROD; authorize 112 delete first | P0 | 2026-07-23 |
+| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8); dry-run PASS + live-run PASS 2026-07-23 (Submission `recuuTBgstSTGg2E3`); Testing Scenarios table `tblagI7Q5wXQm2XGS`; seed `recPdyfYRFgDtpzQ8`; offline harness 14 tests | Expand scenario library coverage (HW/Video); UI-attest automation inventory after overnight deletes; keep 115 orchestration-only (no XP writes) | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `AUTOMATION-115-AUDIT.md`; `115-*.js`; commit `cadd174` | **Resolved:** allowed in PROD | P0 | 2026-07-23 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Planned | Expected/Actual fields sketched on Testing Scenarios; Stage 17 JSON fixtures | Scenario library table (explicitly deferred earlier); templates for enrollment→week→submission→XP→email | SC-001 | Library is config, not a second XP path | C-020 “Not Phase 2” notes; `docs/testing/C-025-stage17-*.json` | Confirm library is wanted now | P1 | 2026-07-23 |
 | SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist written; only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining `Testing` views with Schmidt enrollment link/ID filters; verify row visibility for foundation records | SC-004 | API cannot create views; no schema rename | `docs/foundation-reset/PROD-TESTING-VIEWS-CHECKLIST-2026-07-23.md`; C-019 | — | P0 | 2026-07-23 |
-| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven | Add **Web - Leaderboard** (or equivalent) view filter excluding Schmidt enrollment ID so Active?=true does not publish standings; confirm emails stay Schmidt-only | — | No separate exclusion field exists; do not invent one yet | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md` | **Resolved:** Active?=true for processing | P0 | 2026-07-23 |
+| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven (incl. 115 live Submission `recuuTBgstSTGg2E3`) | Keep emails Schmidt-only; **overnight direction 2026-07-23: Schmidt remains visible on public standings** (do not add leaderboard exclusion filter yet); website is name-blind | — | No separate exclusion field; web must not invent name filters | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`; `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `docs/overnight/web-integration/PUBLIC-STANDINGS-AUDIT.md` | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-07-23 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | `V2_END_TO_END_TEST_MATRIX.md` exists; almost all rows Untested; offline suite PASS 2026-07-16 | Execute matrix on Schmidt in PROD; refresh Zoom rows to Stage 17 design | SC-001–SC-004, core pipelines | Controlled data only | K-H3; `V2_END_TO_END_TEST_MATRIX.md`; `V2_RELEASE_CHECKLIST.md` | — | P0 | 2026-07-23 |
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Planned | Fields exist in design; not automated | Auto-compare outputs; fail scenario when mismatch | SC-001, SC-002 | Read-only scoring preferred | C-020 deferred automation notes | Want auto-score now or later? | P2 | 2026-07-23 |
 | SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Planned | Source Key patterns documented; offline harnesses for several scripts | Live rerun packs: submission, HW, video, Zoom, WAS, emails | SC-066, SC-096+ | Never create double XP | C-024; automation standards | — | P0 | 2026-07-23 |
@@ -147,8 +147,8 @@ Columns:
 | SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
-| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | PROD Automations table 48 rows + **DEV↔PROD reconciliation audit 2026-07-23** (docs only). Operator tables on DEV/PROD are near-identical and **not** reliable for live UI presence. Asserted: DEV≈46 (has 115), PROD=50 (no 115). | Mike paste complete DEV + PROD UI lists (name/ON-OFF/trigger); close arithmetic gap (+1 each side vs reconstructed model); attest live script versions | SC-059 | PROD at Airtable 50 limit blocks 115 until one slot freed | `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` (+ `.json`); `PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md` | Paste UI lists; confirm 112 OFF before delete | P0 | 2026-07-23 |
-| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Planned | Approved retirements; reconciliation recommends **112 delete first** to free slot for 115 | Mike confirm 112 OFF → delete 112 → smoke-test 013 → then install 115; optional later delete 043 | SC-001, SC-058 | Do **not** delete 032/033/063/070c/111 for capacity — not proven superseded | V2-014a; `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` | Authorize 112 delete window | P0 | 2026-07-23 |
+| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Overnight Agent 1 baseline: **115 installed**; ~4 free slots; deleted set claimed **043, 032, 033, 063, 111**; upgraded **013/020/030**. Prior DEV↔PROD recon docs are partly stale on capacity/115. | Mike paste complete PROD UI list (name/ON-OFF/trigger/version) to attest Agent 1 baseline; resolve conflict with earlier “do not delete 032/033/063/111” guidance | SC-059 | UI attestation is mandatory before treating deletes as Complete | `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` | Paste UI list; confirm 112 state | P0 | 2026-07-23 |
+| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Installed in PROD | **043 deleted** (Agent 1 baseline). Broader overnight deletes also claim **032, 033, 063, 111**. **115 installed** so capacity goal met. | UI-attest deletions; confirm **112** OFF/deleted; smoke-test paths that previously depended on deleted automations (esp. if 032/033/063/111 were removed contrary to earlier advice) | SC-001, SC-058 | Treat unexpected deletes as high-priority attestation, not silent Complete | `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; V2-014a | Confirm 112 + attest delete set | P0 | 2026-07-23 |
 | SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Planned | C-017 design | Stronger Fillout rules; Athletes hygiene; 001 guards | SC-081 | Bad identity breaks whole season | C-017 | — | P1 | 2026-07-23 |
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Planned | Historical intake behavior | Document + test both paths on Schmidt siblings if needed | SC-060 | Don’t create duplicate Athletes | C-017 | — | P1 | 2026-07-23 |
 | SC-062 | Enrollment | Sibling handling works | Planned | Multi-enrollment family patterns historically | Re-test parent email routing for siblings | SC-045 | Shared parent email edge cases | intake architecture | — | P2 | 2026-07-23 |
@@ -191,23 +191,23 @@ Columns:
 | SC-099 | Assets | Writeback verification (070c) | Installed in PROD | 070c v1.1 idempotent verify | Re-test Accepted→verify | SC-094 | Async handoff | C-013 | — | P0 | 2026-07-23 |
 | SC-100 | Assets | Attachment / Drive retirement strategy | Deferred | Explicitly deferred after C-013 video | Plan retirement after S3 paths stable for HW+video | SC-095 | Don’t break historical links if any remain | C-023 retirement notes | When to retire Drive? | P3 | 2026-07-23 |
 | SC-101 | Assets | Make and Lambda routing correct for video + homework | Installed in PROD | Upload engine blueprints; video live historically; homework router checklist open | Finish homework Module 2 checklist; close stale GitHub overnight issues | SC-095 | Never commit webhooks | make/documentation; issues #1/#8/#9 | — | P1 | 2026-07-23 |
-| SC-102 | Website | Airtable-backed public pages work | Installed in PROD | Next.js `/shoot` catalogs live on Vercel | Re-verify queries against emptied PROD (empty states OK) | SC-055 | Server-side token only | APP_CONTEXT; site-hierarchy | — | P1 | 2026-07-23 |
+| SC-102 | Website | Airtable-backed public pages work | Installed in PROD | Next.js `/shoot` catalogs live on Vercel; overnight empty/error hardening + visitor-safe Airtable errors | Spot-check deploy against rebuilt PROD; seed catalog content | SC-055 | Server-side token only | `docs/overnight/web-integration/CURRENT-WEB-ARCHITECTURE.md`; `WEB-SECURITY-AUDIT.md` | — | P1 | 2026-07-23 |
 | SC-103 | Website | Leaderboard | Installed in PROD | Leaderboard view live | Needs Active enrollments to be meaningful | SC-068 | — | leaderboard-view | — | P2 | 2026-07-23 |
 | SC-104 | Website | Homework catalog | Installed in PROD | Catalog routes live; design system update 2026-07-23 | Content seed; Presentation fields later | SC-054 | Publish flag | homework catalog | — | P2 | 2026-07-23 |
 | SC-105 | Website | Tutorials | Installed in PROD | Tutorials grid/detail live | Complete table merge SC-052 | SC-052 | — | C-026 | — | P2 | 2026-07-23 |
 | SC-106 | Website | Levels pages | Installed in PROD | Levels ladder/detail live | Seed Levels; gate copy | SC-024 | — | levels views | — | P2 | 2026-07-23 |
 | SC-107 | Website | Achievements pages | Installed in PROD | Achievements grid live | Seed achievements | SC-026 | — | achievements views | — | P2 | 2026-07-23 |
 | SC-108 | Website | Zoom public pages | Installed in PROD | Zoom meetings views live | Seed meetings | SC-093 | — | zoom views | — | P2 | 2026-07-23 |
-| SC-109 | Website | Game Manual from config | Planned | Route exists; content-from-config not done | Generate/publish from config tables | SC-032, SC-082 | — | V2-008 | — | P2 | 2026-07-23 |
+| SC-109 | Website | Game Manual from config | Built in Repository | `/game-manual` renders live **XP Reward Rules** + **Levels** (inactive filtered, grouped, stable sort); Adobe PDF link retained; unit tests for XP rules | Mike review deploy; editorial copy for Perfect Week/Zoom behavior (do not invent); Shot Milestones public surface later; Presentation fields when SC-054 lands | SC-032, SC-082 | Amounts from config only | `docs/overnight/web-integration/GAME-MANUAL-CONFIG-AUDIT.md`; commits `2684074`, `bf842d9` | Approve public wording | P2 | 2026-07-23 |
 | SC-110 | Website | Public display page | Installed in PROD | Public display view + loading states | Wire Presentation fields; real season data | SC-054 | — | public-display | — | P2 | 2026-07-23 |
-| SC-111 | Website | Athlete profiles (real data, not mocks) | Planned | UI shells; roadmap Phase 2 | Slug + live widgets; auth may be required | SC-112 | No browser token | K-M5; web roadmap | — | P2 | 2026-07-23 |
-| SC-112 | Website | Athlete auth + dashboard | Decision Needed | Mock dashboard today | Choose auth approach (magic link / Clerk / etc.) | — | Out of scope: web writes for submissions | K-M5; roadmap Phase 3 | **Pick auth approach** | P2 | 2026-07-23 |
+| SC-111 | Website | Athlete profiles (real data, not mocks) | Built in Repository | Demo/partial/missing-link/error states; Schmidt demo slug labelled mock; privacy-safe model; Playwright coverage | Live Airtable adapter after SC-112; published enrollment slug rules | SC-112 | No browser token; no fabricated athletes for unknown slugs | `docs/overnight/web-integration/REPORT.md`; commit `bf842d9` | — | P2 | 2026-07-23 |
+| SC-112 | Website | Athlete auth + dashboard | Decision Needed | Decision matrix + safe scaffolding (`hasAthleteSession` always false); mock dashboard/profile remain labelled demo | Mike pick approach; then schema + session implementation | — | Out of scope: web writes for submissions; no fake login UI | `docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md` | **Pick auth approach** (recommend parent magic-link) | P2 | 2026-07-23 |
 | SC-113 | Website | Loading, empty, and error states | Installed in PROD | Shared UI states + recent loading routes | Verify against empty PROD | — | — | web components | — | P2 | 2026-07-23 |
-| SC-114 | Website | Softr cutover | Decision Needed | Dual-run; cutover checklist exists | Inventory Softr; redirects; SEO; decommission | SC-102–SC-113 | Do not cut over without Mike | SOFTR-CUTOVER-READINESS; K-H4 | **Approve cutover timing** | P2 | 2026-07-23 |
-| SC-115 | Website | noindex removal / search indexing | Decision Needed | noindex concerns in known issues | Flip robots only when public-ready | SC-114 | SEO irreversible-ish | K-L4; cutover checklist | Approve indexing | P2 | 2026-07-23 |
-| SC-116 | Website | Admin roadmap (gated read-only first) | Planned | `/admin` placeholder | Gated read-only tools; no unsafe writes | SC-112 | — | K-M6 | — | P3 | 2026-07-23 |
+| SC-114 | Website | Softr cutover | Decision Needed | Dual-run; overnight decision doc + readiness checklist | Mike fill Softr inventory; soft cutover (links/redirects) when ready; keep Softr alive initially | SC-102–SC-113 | Do not cut over without Mike; **no cutover performed overnight** | `docs/overnight/web-integration/SOFTR-CUTOVER-DECISION.md`; SOFTR-CUTOVER-READINESS | **Approve cutover timing** | P2 | 2026-07-23 |
+| SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
+| SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
-| SC-118 | Website | Playwright coverage for public pages | Built in Repository | Playwright config + screenshot specs added 2026-07-23 | Expand to critical Airtable-backed assertions; CI discipline | SC-102 | — | `web/playwright.config.ts` | — | P2 | 2026-07-23 |
+| SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; commits `2ce6599`, `bf842d9` | Authorize npm install | P2 | 2026-07-23 |
 
 ### Additional cross-cutting / historical items
 
@@ -416,37 +416,28 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 Still open from that pack: **115 paste**, remaining **Testing views**, leaderboard Schmidt exclusion view filter.
 
-### 9B. DEV↔PROD Automation Reconciliation — **AUDIT COMPLETE 2026-07-23** (docs only; no Airtable mutations)
+### 9B. DEV↔PROD Automation Reconciliation — **SUPERSEDED IN PART by overnight Agent 1 baseline (2026-07-23)**
 
-**Deliverables:** `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` + `.json`
+**Prior deliverables (still useful history):** `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` + `.json`
 
-**Confirmed blockers**
+**Overnight Agent 1 live baseline (controlling for current PROD facts):** `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`
 
-- PROD at **50 / 50** Airtable automation limit → cannot install **115** until one slot is freed.
-- Complete Mike UI name lists were **not** pasted into the Cursor chat; presence model is reconstructed and has a **±1 arithmetic gap** vs asserted 46/50.
-- Automations operator table (48 rows) is **stale for presence/ON-OFF** (DEV≈PROD).
+| Prior recon claim | Overnight Agent 1 claim |
+|-------------------|-------------------------|
+| PROD 50/50; no 115 | **115 installed**; ~4 free slots |
+| Delete 112 first to free 115 | 115 already live-tested (dry+live PASS) |
+| Do not delete 032/033/063/111 for capacity | Baseline claims **032, 033, 063, 111 deleted** (plus **043**) |
+| 013/020/030 upgrade open | Baseline claims **013, 020, 030** replaced with newer versions |
 
-**Confirmed decisions (from audit + prior approvals)**
+**Required Mike action:** UI-attest the Agent 1 delete/upgrade set before treating SC-058/SC-059 as Complete. Earlier “do not delete 032/033/063/111” guidance and the overnight baseline **conflict** — do not ignore.
 
-- OFF in DEV ≠ obsolete; treat DEV set as required unless proven superseded.
-- **030 does not replace 032+033** in current scripts.
-- **063 / 111 / 070c** are **not** safe to remove for capacity.
-- Approved retirements remain **112 → 013** and **043 → 042**.
+**Next morning package:** see `docs/overnight/MIKE-ACTIONS-TOMORROW.md` — Automation Attestation + Weekly Email Install Gate (118 paste, schedules OFF).
 
-**Next approved migration package (recommended)**
+### 9C. Overnight multi-agent run — **RECONCILED 2026-07-23** (Agent 6)
 
-**Name:** PROD Slot Recovery for Automation 115 (112 delete → 115 paste)
+**Deliverables:** `docs/overnight/FINAL-OVERNIGHT-RECONCILIATION.md`, `docs/overnight/MIKE-ACTIONS-TOMORROW.md`, `docs/overnight/web-integration/*`
 
-1. Mike UI-confirm **112** is OFF and unused.  
-2. Delete PROD **112** (+1 free slot).  
-3. Smoke-test video path via **013**.  
-4. Paste **115 v1.8** per `MIKE-ACTION-INSTALL-115-PROD.md`.  
-5. Dry Run + live Schmidt Testing Scenario.  
-6. Optional later: delete **043** after **042** attestation (+1 future slot).
-
-**Explicitly excluded from that migration package:** deleting **032 / 033 / 063 / 070c / 111**; merging **030+032+033**; enabling **070a**; enabling **118/119** schedules.
-
-Migration is **not** marked complete — this reconciliation package made **no** Airtable changes.
+Confirmed direction preserved: PROD active; Schmidt visible; Weeks manual; website reads live config; athlete auth / Softr / noindex remain Mike decisions.
 
 ---
 

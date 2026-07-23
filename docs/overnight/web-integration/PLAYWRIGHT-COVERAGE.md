@@ -33,7 +33,7 @@
 **never installed on this machine**, and the overnight auto-run policy blocks
 `npm install`. Therefore this session could not execute the E2E suite locally.
 
-- Unit suite (vitest): **100/100 passing** — includes the logic these specs lean on.
+- Unit suite (vitest): **109/109 passing** — includes the logic these specs lean on (standings, XP rules, profile states, security scaffolding).
 - ESLint: passing.
 - `tsc --noEmit`: fails only on the two uninstalled packages (`tailwind-merge`, `@playwright/test`) — pre-existing environment gap, not a code defect.
 

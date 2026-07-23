@@ -1,0 +1,69 @@
+{
+  "agent": 6,
+  "role": "website-public-experience-and-final-reconciliation",
+  "date": "2026-07-23",
+  "branch": "master",
+  "prodBaseId": "appn84sqPw03zEbTT",
+  "packages": {
+    "A_architecture": "done",
+    "B_catalogs": "done",
+    "C_game_manual": "done",
+    "D_profiles": "done_demo_safe",
+    "E_auth_decision": "docs_only",
+    "F_standings": "done",
+    "G_softr_seo": "docs_only_no_prod_change",
+    "H_admin": "docs_only",
+    "I_playwright": "specs_added_not_executed",
+    "J_security": "done_fixed_error_leak",
+    "K_cross_agent": "done",
+    "L_completion_master": "done"
+  },
+  "tests": {
+    "vitest": { "passed": 109, "failed": 0, "status": "pass" },
+    "eslint": { "status": "pass", "errors": 0 },
+    "typecheck": { "status": "blocked_missing_node_modules" },
+    "nextBuild": { "status": "blocked_missing_node_modules" },
+    "playwright": { "status": "specs_present_not_executed", "reason": "npm install blocked by auto-run policy" }
+  },
+  "schmidtVisibility": {
+    "webCodeFiltersSchmidt": false,
+    "unitTestsEnforceNameBlind": true,
+    "demoProfileRoute": "/athletes/schmidt",
+    "direction": "remain_visible_everywhere"
+  },
+  "security": {
+    "criticalOpen": 0,
+    "fixedThisSession": ["public_airtable_error_message_leak"],
+    "noindexUnchanged": true,
+    "browserAirtableToken": false
+  },
+  "commits": [
+    "529acdc",
+    "2684074",
+    "da3d841",
+    "2ce6599",
+    "865fd39",
+    "b1ba957",
+    "bf842d9",
+    "7ecb9be"
+  ],
+  "scPrimaryUpdates": {
+    "SC-109": "Planned -> Built in Repository",
+    "SC-111": "Planned -> Built in Repository",
+    "SC-112": "Decision Needed (decision doc ready)",
+    "SC-114": "Decision Needed (decision doc ready)",
+    "SC-115": "Decision Needed (decision doc ready)",
+    "SC-116": "Planned -> Built in Repository",
+    "SC-118": "Built in Repository (expanded)",
+    "SC-144": "Planned (unchanged)",
+    "SC-133": "Planned (unchanged; blocked on SC-109 editorial)"
+  },
+  "unresolvedBlockers": [
+    "npm install authorization required for web typecheck/build/playwright",
+    "SC-112 athlete auth product decision",
+    "SC-114 Softr inventory + cutover timing",
+    "SC-115 noindex removal authorization",
+    "SC-054/SC-117 Presentation fields not in schema",
+    "Agents 3/4 homework-learning and zoom-storage folders had no REPORT.md/RESULTS.json/MIKE-ACTIONS.md at reconciliation time"
+  ]
+}
