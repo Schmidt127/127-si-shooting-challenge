@@ -1,0 +1,162 @@
+{
+  "generated_at": "2026-07-23",
+  "agent": "overnight-agent-2-config-xp",
+  "entries": [
+    {
+      "file": "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
+      "location": "CONFIG.requiredVideoCount (line 150)",
+      "literal": "3",
+      "purpose": "Perfect Week qualifying video minimum",
+      "current_source_of_truth": "script CONFIG",
+      "risk": "medium",
+      "classification": "should_come_from_airtable_config",
+      "recommendation": "Move to Config table field with fallback 3",
+      "fix_status": "documented; requires Config field + 057 re-paste",
+      "related_sc": "SC-080"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
+      "location": "CONFIG.requiredDailyCount (line 151)",
+      "literal": "7",
+      "purpose": "Days in Perfect Week window (Sun-Sat)",
+      "current_source_of_truth": "script CONFIG",
+      "risk": "low",
+      "classification": "valid_stable_code_constant",
+      "recommendation": "Keep",
+      "fix_status": "no fix needed",
+      "related_sc": "SC-080"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
+      "location": "getDateKeyFromDateOnly",
+      "literal": "ISO string UTC slice",
+      "purpose": "Date key extraction for week/submission dates",
+      "current_source_of_truth": "script helper",
+      "risk": "medium_latent",
+      "classification": "dangerous",
+      "recommendation": "Align to America/Denver conversion (005/034/066 pattern)",
+      "fix_status": "regression test added (overnight-xp-date-source.test.js); script fix pending Mike paste",
+      "related_sc": "SC-080"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+      "location": "grade band matching",
+      "literal": "Grade Band display labels",
+      "purpose": "Match enrollment band to Shot Milestones rows",
+      "current_source_of_truth": "display strings",
+      "risk": "medium",
+      "classification": "dangerous",
+      "recommendation": "Compare linked record IDs",
+      "fix_status": "documented; safe V2 section rewrite + re-paste required",
+      "related_sc": "SC-023, SC-078"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "location": "line 423",
+      "literal": "STREAK_${streakDays}DAY",
+      "purpose": "Derive XP rule key from threshold",
+      "current_source_of_truth": "code contract matching PROD rule keys",
+      "risk": "low",
+      "classification": "valid_stable_code_constant",
+      "recommendation": "Keep",
+      "fix_status": "no fix needed",
+      "related_sc": "SC-075"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "location": "XP rule lookup (.find on active rules)",
+      "literal": "first active match wins",
+      "purpose": "XP rule selection",
+      "current_source_of_truth": "table order",
+      "risk": "medium",
+      "classification": "dangerous",
+      "recommendation": "Throw on duplicate active rules (059 pattern)",
+      "fix_status": "documented; PROD currently has zero duplicate active keys",
+      "related_sc": "SC-075"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
+      "location": "CONFIG.values.ruleKeyDailyShootingBase (line 178)",
+      "literal": "SHOOTING_BASE",
+      "purpose": "Rule key for submission base XP",
+      "current_source_of_truth": "XP Reward Rules (amount) + code (key)",
+      "risk": "low",
+      "classification": "valid_stable_code_constant",
+      "recommendation": "Keep; correct config-over-code pattern",
+      "fix_status": "no fix needed",
+      "related_sc": "SC-070"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/lib/v2-engine-contracts.js",
+      "location": "SOURCE_KEY_PREFIXES (lines 40-54)",
+      "literal": "SUBMISSION_XP|, HOMEWORK_XP|, VIDEO_SUBMISSION|, STREAK_XP|, SHOT_MILESTONE|, PERFECT_WEEK|, WEEKLY_EMAIL|, ZOOM_*",
+      "purpose": "Source/dedupe key prefixes",
+      "current_source_of_truth": "code contract",
+      "risk": "low",
+      "classification": "valid_stable_code_constant",
+      "recommendation": "Never move to config (dedupe integrity)",
+      "fix_status": "no fix needed",
+      "related_sc": "SC-096"
+    },
+    {
+      "file": "PROD Airtable Config table",
+      "location": "4 records (recXwc19BtG1L2PzW, rechc1f9f4kVM1tHP, recq14M5hEv3TIGEj, rectmrnvo9a79wgq3)",
+      "literal": "Max Videos Per Submission = 4/6/4/5 and divergent flags",
+      "purpose": "Global feature flags",
+      "current_source_of_truth": "ambiguous",
+      "risk": "high",
+      "classification": "decision_required",
+      "recommendation": "Collapse to one record or key explicitly",
+      "fix_status": "MIKE-ACTIONS #1",
+      "related_sc": "SC-021, SC-146"
+    },
+    {
+      "file": "PROD Airtable Submissions formula fields",
+      "location": "XP Base Points / XP Volume Bonus / XP Total Points",
+      "literal": "5 base + 0.02 per shot (GOAT test setup)",
+      "purpose": "Alternate submission XP computation",
+      "current_source_of_truth": "Config record recq14M5hEv3TIGEj note",
+      "risk": "medium",
+      "classification": "stale_or_decision_required",
+      "recommendation": "XP Events pipeline (SHOOTING_BASE=20) is operative; decide fate of formula-field economics",
+      "fix_status": "MIKE-ACTIONS #7",
+      "related_sc": "SC-070"
+    },
+    {
+      "file": "PROD Airtable XP Events.XP Date Resolved formula",
+      "location": "SWITCH on XP Bucket",
+      "literal": "case \"Submission Base\" (bucket choice is \"Shooting Base\")",
+      "purpose": "Fallback XP date resolution",
+      "current_source_of_truth": "formula",
+      "risk": "low_live",
+      "classification": "stale",
+      "recommendation": "Fix case label to Shooting Base",
+      "fix_status": "MIKE-ACTIONS #3 (UI formula edit)",
+      "related_sc": "SC-096"
+    },
+    {
+      "file": "PROD Airtable Grade Bands table",
+      "location": "recOGisMZRWgk445o, recg6zvMxWsFSn7sf",
+      "literal": "\"Grades 9\u201310\", \"Grades 1\u20132\" (mojibake, inactive)",
+      "purpose": "Legacy grade bands",
+      "current_source_of_truth": "table rows",
+      "risk": "low",
+      "classification": "stale",
+      "recommendation": "Archive after dependency check (only inactive milestones link to them)",
+      "fix_status": "MIKE-ACTIONS #8",
+      "related_sc": "SC-023"
+    },
+    {
+      "file": "airtable/automations/shooting-challenge/053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js",
+      "location": "achievement threshold source",
+      "literal": "none (reads Achievements table)",
+      "purpose": "Streak thresholds",
+      "current_source_of_truth": "Achievements (Trigger Type = Streak Length)",
+      "risk": "none",
+      "classification": "config_driven_confirmed",
+      "recommendation": "None",
+      "fix_status": "verified",
+      "related_sc": "SC-075"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "generated_at": "2026-07-23",
+  "base_id": "appn84sqPw03zEbTT",
+  "active_rules": 31,
+  "duplicate_active_rule_keys": [],
+  "sources": [
+    {
+      "xp_source": "Submission Base",
+      "rule_key": "SHOOTING_BASE",
+      "xp_amount": 20,
+      "grade_band_dependency": false,
+      "writer": "010",
+      "source_key_format": "SUBMISSION_XP|{submissionId}",
+      "xp_date_source": "Submission Activity Date",
+      "missing_rule_behavior": "error",
+      "duplicate_rule_behavior": "first_match (PROD clean)",
+      "rerun_safe": true,
+      "live_evidence": "recuuTBgstSTGg2E3 -> recOodD23MQrP1O9F (20 XP, 2026-07-23T06:00Z, verified read-only 2026-07-23)",
+      "status": "healthy"
+    },
+    {
+      "xp_source": "Homework Completion",
+      "rule_key": "HOMEWORK_COMPLETION",
+      "xp_amount": 35,
+      "grade_band_dependency": false,
+      "writer": "065-family",
+      "source_key_format": "HOMEWORK_XP|{homeworkCompletionId}",
+      "xp_date_source": "submission activity date",
+      "status": "rule_present; owned by homework agent"
+    },
+    {
+      "xp_source": "Video Feedback",
+      "rule_key": "VIDEO_SUBMISSION",
+      "xp_amount": 25,
+      "writer": "video XP automation",
+      "source_key_format": "VIDEO_SUBMISSION|{videoFeedbackId}",
+      "xp_date_source": "video activity date",
+      "status": "DEFECT: live event recYQ10pOoFlApmjZ has 1 XP and blank XP Activity Date vs rule 25",
+      "action": "MIKE-ACTIONS #4"
+    },
+    {
+      "xp_source": "Zoom Attendance",
+      "rule_keys": ["ZOOM_ATTEND_BASE", "ZOOM_ATTEND_BONUS_2", "ZOOM_ATTEND_BONUS_3"],
+      "xp_amounts": [60, 30, 40],
+      "source_key_formats": [
+        "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+        "ZOOM_ATTEND_BONUS_2|{enrollmentId}",
+        "ZOOM_ATTEND_BONUS_3|{enrollmentId}"
+      ],
+      "status": "rules_present; zoom system owned by another agent"
+    },
+    {
+      "xp_source": "Zoom Recording Credit",
+      "rule_key": null,
+      "status": "no rule record; C-025 path supplies amount (live event 30 XP). Decision whether to add rule.",
+      "live_evidence": "recOceuW34jQz7suD"
+    },
+    {
+      "xp_source": "Streak",
+      "rule_keys": ["STREAK_3DAY", "STREAK_5DAY", "STREAK_7DAY", "STREAK_10DAY", "STREAK_20DAY", "STREAK_30DAY", "STREAK_40DAY", "STREAK_50DAY", "STREAK_60DAY"],
+      "xp_amounts": [10, 15, 20, 30, 50, 60, 75, 90, 105],
+      "historical_documented_amounts_stale": {"7": 35, "10": 60, "20": 90, "30": 140},
+      "writer": "054",
+      "source_key_format": "STREAK_XP|{enrollmentId}|{achievementId}|{streakEndDateKey}",
+      "xp_date_source": "streak end date",
+      "duplicate_rule_behavior": "first_match - hardening recommended (059 throws)",
+      "status": "rules_present; PROD amounts authoritative"
+    },
+    {
+      "xp_source": "Shot Milestone",
+      "rule_key": "SHOT_MILESTONE (achievement); points from Shot Milestone record",
+      "writer": "066 (unlock) + 059 (XP)",
+      "source_key_format": "SHOT_MILESTONE|{enrollmentId}|{shotMilestoneId}",
+      "xp_date_source": "latest counted submission date",
+      "duplicate_rule_behavior": "059 throws",
+      "status": "healthy design"
+    },
+    {
+      "xp_source": "Perfect Week",
+      "rule_key": "PERFECT_WEEK",
+      "xp_amount": 100,
+      "writer": "057 (eligibility) + 058 (unlock) + 059 (XP)",
+      "source_key_format": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+      "xp_date_source": "week Saturday",
+      "status": "rule_present, amount matches historical 100"
+    },
+    {
+      "xp_source": "Weekly Threshold",
+      "rule_keys_pattern": "WEEKLY_THRESHOLD_{100|125|150}_{K2|34|56|78|912}",
+      "xp_amounts": [10, 20, 30],
+      "grade_band_dependency": true,
+      "band_coverage": ["K-2", "3-4", "5-6", "7-8", "9-12"],
+      "status": "full coverage, no gaps or duplicates"
+    },
+    {
+      "xp_source": "Manual Bonus",
+      "rule_key": null,
+      "status": "no rule; Lifetime XP Manual Adjustments field carries manual XP; 'Manual Adjustment' XP Source choice exists"
+    }
+  ],
+  "defects": [
+    "Video Submission live event 1 XP vs rule 25, blank XP date",
+    "054 duplicate-active-rule lookup nondeterministic (latent)",
+    "Enrollment Lifetime XP Earned rollup appears to exclude Zoom Recording Quiz event (61 = 3x20 + 1; 30-pt event not counted)"
+  ]
+}

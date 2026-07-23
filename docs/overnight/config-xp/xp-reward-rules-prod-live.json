@@ -1,0 +1,241 @@
+{
+  "mode": "read_only",
+  "rule_count": 31,
+  "blank_rule_keys": 0,
+  "duplicate_rule_keys": [],
+  "active_duplicate_rule_keys": [],
+  "streak_rules": [
+    {
+      "rule_key": "STREAK_10DAY",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "10-Day Streak",
+      "id": "recshnu10fEtS736W"
+    },
+    {
+      "rule_key": "STREAK_20DAY",
+      "xp_amount": 50.0,
+      "active": true,
+      "source_label": "20-Day Streak",
+      "id": "recew8FaKSw9LfvyS"
+    },
+    {
+      "rule_key": "STREAK_30DAY",
+      "xp_amount": 60.0,
+      "active": true,
+      "source_label": "30-Day Streak",
+      "id": "recJjlUxPiVIwVFQC"
+    },
+    {
+      "rule_key": "STREAK_3DAY",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "3-Day Streak",
+      "id": "recRZ3UCq4LCBHtEW"
+    },
+    {
+      "rule_key": "STREAK_40DAY",
+      "xp_amount": 75.0,
+      "active": true,
+      "source_label": "40-Day Streak",
+      "id": "recaMCQTTBHXMroQI"
+    },
+    {
+      "rule_key": "STREAK_50DAY",
+      "xp_amount": 90.0,
+      "active": true,
+      "source_label": "50-Day Streak",
+      "id": "recNQWZq6G0eIVGwM"
+    },
+    {
+      "rule_key": "STREAK_5DAY",
+      "xp_amount": 15.0,
+      "active": true,
+      "source_label": "5-Day Streak",
+      "id": "recGtZyCUoPmUMzby"
+    },
+    {
+      "rule_key": "STREAK_60DAY",
+      "xp_amount": 105.0,
+      "active": true,
+      "source_label": "60-Day Streak",
+      "id": "rec12dkUdMdovwYIm"
+    },
+    {
+      "rule_key": "STREAK_7DAY",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "7-Day Streak",
+      "id": "rec5EiGTzLAt7tZdZ"
+    }
+  ],
+  "perfect_week_rules": [
+    {
+      "rule_key": "PERFECT_WEEK",
+      "xp_amount": 100.0,
+      "active": true,
+      "source_label": "Perfect Week",
+      "id": "recZVpCbWfPPXwDbU"
+    }
+  ],
+  "perfect_week_amount": 100.0,
+  "homework_rules": [
+    {
+      "rule_key": "HOMEWORK_COMPLETION",
+      "xp_amount": 35.0,
+      "active": true,
+      "source_label": "Homework Completion",
+      "id": "recXftUBrwH5U15kb"
+    }
+  ],
+  "zoom_rules": [
+    {
+      "rule_key": "ZOOM_ATTEND_BASE",
+      "xp_amount": 60.0,
+      "active": true,
+      "source_label": "Zoom Meeting Attendance Base",
+      "id": "recwwmZY5IZssmo6b"
+    },
+    {
+      "rule_key": "ZOOM_ATTEND_BONUS_2",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Zoom Meeting Attendance Bonus 2",
+      "id": "reccCLlgFT2Jl316c"
+    },
+    {
+      "rule_key": "ZOOM_ATTEND_BONUS_3",
+      "xp_amount": 40.0,
+      "active": true,
+      "source_label": "Zoom Meeting Attendance Bonus 3",
+      "id": "recRH5BMuMUWzRrKi"
+    }
+  ],
+  "video_rules": [
+    {
+      "rule_key": "VIDEO_SUBMISSION",
+      "xp_amount": 25.0,
+      "active": true,
+      "source_label": "Video Submission",
+      "id": "rec06c1tu3IO8EZqG"
+    }
+  ],
+  "other_rules": [
+    {
+      "rule_key": "SHOOTING_BASE",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Shooting Base",
+      "id": "recxCB7mVweyjWRBb"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_100_34",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "Weekly Threshold 100",
+      "id": "recYhV7yxPAAPyZMX"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_100_56",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "Weekly Threshold 100",
+      "id": "recppi8algNk0G3pL"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_100_78",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "Weekly Threshold 100",
+      "id": "recNmJ8mVXGwxCCCp"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_100_912",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "Weekly Threshold 100",
+      "id": "recY77DWJzcowF7az"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_100_K2",
+      "xp_amount": 10.0,
+      "active": true,
+      "source_label": "Weekly Threshold 100",
+      "id": "recBHUGb5TzgLKko8"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_125_34",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Weekly Threshold 125",
+      "id": "recfmfdbZphKKNN3F"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_125_56",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Weekly Threshold 125",
+      "id": "rec1oBLWraNJrfKW2"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_125_78",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Weekly Threshold 125",
+      "id": "recODGHC7DdsyoqcL"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_125_912",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Weekly Threshold 125",
+      "id": "recTapBOJTrmacldU"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_125_K2",
+      "xp_amount": 20.0,
+      "active": true,
+      "source_label": "Weekly Threshold 125",
+      "id": "recCqI0sGBzhg50Ak"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_150_34",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Weekly Threshold 150",
+      "id": "recfzeuoqZqEAYGFk"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_150_56",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Weekly Threshold 150",
+      "id": "recyyX5P6uHUZSSYL"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_150_78",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Weekly Threshold 150",
+      "id": "recTaU3UYywhHXAMh"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_150_912",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Weekly Threshold 150",
+      "id": "rech23SeTrTaceZbS"
+    },
+    {
+      "rule_key": "WEEKLY_THRESHOLD_150_K2",
+      "xp_amount": 30.0,
+      "active": true,
+      "source_label": "Weekly Threshold 150",
+      "id": "recCy2lY2nNf1d7um"
+    }
+  ],
+  "streak_ladder_discrepancy_vs_documented": [],
+  "authority_note": "Configured XP Reward Rules are authoritative for runtime awards. Documented streak ladder is informational only \u2014 do not change script amounts without Mike decision.",
+  "base_id": "appn84sqPw03zEbTT",
+  "source": "airtable:appn84sqPw03zEbTT"
+}
