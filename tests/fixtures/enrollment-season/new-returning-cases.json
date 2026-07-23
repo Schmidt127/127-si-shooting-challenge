@@ -1,0 +1,166 @@
+{
+  "description": "New vs returning athlete intended behaviors.",
+  "cases": [
+    {
+      "id": "brand_new_athlete",
+      "input": {
+        "athlete_first_name": "Nova",
+        "athlete_last_name": "Nguyen",
+        "parent_email": "nguyen@example.com",
+        "school": "New School",
+        "grade": "5",
+        "athlete_email": "nova@example.com"
+      },
+      "existingAthletes": [],
+      "expectedStatus": "create_candidate",
+      "intendedWrites": {
+        "athlete": "create First/Last/Parent Email/Active?=true",
+        "enrollment": "link Athlete + Active?=true",
+        "gradeBand": "002 assigns from Grade"
+      }
+    },
+    {
+      "id": "returning_same_data",
+      "input": {
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "school": "Same School",
+        "grade": "6",
+        "athlete_email": "alice@example.com"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recAthAlice",
+          "first_name": "Alice",
+          "last_name": "Anderson",
+          "parent_email": "parent.anderson@example.com",
+          "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+          "enrollment_ids": ["recPrev"],
+          "current_season_enrollment_ids": []
+        }
+      ],
+      "expectedStatus": "matched",
+      "intendedWrites": {
+        "athlete": "update names/parent email/Active?=true (idempotent)",
+        "enrollment": "link existing Athlete; do not create duplicate Athlete"
+      }
+    },
+    {
+      "id": "returning_changed_school",
+      "input": {
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "school": "Different School",
+        "grade": "6"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recAthAlice",
+          "first_name": "Alice",
+          "last_name": "Anderson",
+          "parent_email": "parent.anderson@example.com",
+          "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+          "enrollment_ids": ["recPrev"],
+          "current_season_enrollment_ids": []
+        }
+      ],
+      "expectedStatus": "matched",
+      "notes": "School lives on Enrollment (linked School), not Athlete identity key"
+    },
+    {
+      "id": "returning_changed_grade",
+      "input": {
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "grade": "7"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recAthAlice",
+          "first_name": "Alice",
+          "last_name": "Anderson",
+          "parent_email": "parent.anderson@example.com",
+          "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+          "enrollment_ids": ["recPrev"],
+          "current_season_enrollment_ids": []
+        }
+      ],
+      "expectedStatus": "matched",
+      "notes": "002/003 recompute Grade Band from Enrollment.Grade"
+    },
+    {
+      "id": "returning_changed_email_athlete",
+      "input": {
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "athlete_email": "new.alice@example.com"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recAthAlice",
+          "first_name": "Alice",
+          "last_name": "Anderson",
+          "parent_email": "parent.anderson@example.com",
+          "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+          "enrollment_ids": ["recPrev"],
+          "current_season_enrollment_ids": []
+        }
+      ],
+      "expectedStatus": "matched",
+      "notes": "Athlete email on Enrollment may update via Fillout; 001 does not match on it"
+    },
+    {
+      "id": "already_enrolled_current_season",
+      "input": {
+        "athlete_first_name": "Casey",
+        "athlete_last_name": "Carter",
+        "parent_email": "carter@example.com",
+        "school_year": "2025-2026"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recCasey",
+          "first_name": "Casey",
+          "last_name": "Carter",
+          "parent_email": "carter@example.com",
+          "athlete_match_key": "carter@example.com|casey|carter",
+          "enrollment_ids": ["recCaseyCurrent"],
+          "current_season_enrollment_ids": ["recCaseyCurrent"]
+        }
+      ],
+      "expectedStatus": "matched",
+      "expectWarningSubstring": "already has enrollment",
+      "operatorAction": "Do not auto-merge; Mike/ops decide whether to keep second Enrollment or void"
+    },
+    {
+      "id": "returning_after_inactive_season",
+      "input": {
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "school_year": "2026-2027"
+      },
+      "existingAthletes": [
+        {
+          "athlete_id": "recAthAlice",
+          "first_name": "Alice",
+          "last_name": "Anderson",
+          "parent_email": "parent.anderson@example.com",
+          "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+          "active": false,
+          "enrollment_ids": ["recOldInactive"],
+          "current_season_enrollment_ids": []
+        }
+      ],
+      "expectedStatus": "matched",
+      "intendedWrites": {
+        "athlete": "Active?=true on match (001 activates)",
+        "enrollment": "new season Enrollment Active?=true"
+      }
+    }
+  ]
+}

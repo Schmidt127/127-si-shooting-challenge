@@ -1,0 +1,76 @@
+{
+  "description": "Season/intake boundary cases in America/Denver. Placeholder season for offline tests only.",
+  "calendar": {
+    "enrollment_open": "2026-08-01",
+    "enrollment_close": "2026-09-15",
+    "challenge_start": "2026-09-18",
+    "challenge_end": "2027-03-15",
+    "early_bird_start": "2026-08-01",
+    "early_bird_end": "2026-08-14",
+    "preseason_access_start": "2026-09-10",
+    "allow_late_enrollment": true,
+    "late_enrollment_close": "2026-09-30",
+    "allow_backdated_submission": false,
+    "backdate_max_days": 0,
+    "timezone": "America/Denver"
+  },
+  "cases": [
+    {
+      "caseId": "one_day_before_intake",
+      "asOf": "2026-07-31T12:00:00-06:00",
+      "expectedIntakeStatus": "before_intake",
+      "expectedEnrollmentAllowed": false
+    },
+    {
+      "caseId": "intake_open",
+      "asOf": "2026-08-01T00:00:00-06:00",
+      "expectedIntakeStatus": "intake_open",
+      "expectedEnrollmentAllowed": true,
+      "expectedIsIntakeOpenDay": true
+    },
+    {
+      "caseId": "intake_close",
+      "asOf": "2026-09-15T23:59:00-06:00",
+      "expectedIntakeStatus": "intake_open",
+      "expectedEnrollmentAllowed": true,
+      "expectedIsIntakeCloseDay": true
+    },
+    {
+      "caseId": "challenge_start",
+      "asOf": "2026-09-18T00:00:00-06:00",
+      "expectedChallengeActive": true,
+      "expectedIsChallengeStartDay": true
+    },
+    {
+      "caseId": "challenge_end",
+      "asOf": "2027-03-15T23:59:00-06:00",
+      "expectedChallengeActive": true,
+      "expectedIsChallengeEndDay": true
+    },
+    {
+      "caseId": "late_enrollment",
+      "asOf": "2026-09-20T12:00:00-06:00",
+      "expectedIntakeStatus": "late_enrollment",
+      "expectedEnrollmentAllowed": true
+    },
+    {
+      "caseId": "backdated_submission_disallowed",
+      "activityDate": "2026-09-10",
+      "asOf": "2026-09-25T12:00:00-06:00",
+      "coveringWeek": {
+        "week_name": "Week 1",
+        "start": "2026-09-18",
+        "end": "2026-09-24",
+        "intake_open": true
+      },
+      "expectedSubmissionAllowed": false
+    },
+    {
+      "caseId": "timezone_boundary_utc_vs_denver",
+      "asOf": "2026-08-01T05:30:00+00:00",
+      "notes": "05:30 UTC = 23:30 prior evening MDT → still before intake open local date",
+      "expectedAsOfDate": "2026-07-31",
+      "expectedEnrollmentAllowed": false
+    }
+  ]
+}

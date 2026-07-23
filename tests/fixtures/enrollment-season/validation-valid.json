@@ -1,0 +1,58 @@
+{
+  "description": "Valid enrollment intake payloads (offline validator).",
+  "records": [
+    {
+      "id": "valid_full",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Athlete Email": "jordan.lee@example.com",
+        "Grade": "6",
+        "School": "Example Middle",
+        "Parent Cell Number": "406-555-0100",
+        "School Year": "2026-2027",
+        "Consent": true,
+        "Submission Fingerprint": "fp-valid-full-001"
+      },
+      "expectedOverall": "PASS"
+    },
+    {
+      "id": "valid_missing_athlete_email",
+      "payload": {
+        "Athlete First Name": "Sam",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Athlete Email": "",
+        "Grade": "4",
+        "School": "Example Elementary",
+        "School Year": "2026-2027",
+        "Consent": true,
+        "Submission Fingerprint": "fp-valid-sibling-002"
+      },
+      "expectedOverall": "WARNING",
+      "notes": "Missing athlete email and phone yield warnings, not hard fail"
+    },
+    {
+      "id": "valid_pre_k",
+      "payload": {
+        "athleteFirstName": "Testing",
+        "athleteLastName": "Schmidt",
+        "parentFirstName": "Mike",
+        "parentLastName": "Schmidt",
+        "parentEmail": "schmidt.parent@example.com",
+        "athleteEmail": "schmidt.athlete@example.com",
+        "grade": "Pre K",
+        "school": "Test School",
+        "schoolYear": "2025-2026",
+        "consent": true
+      },
+      "expectedOverall": "WARNING",
+      "notes": "Phone optional → WARNING overall acceptable"
+    }
+  ]
+}

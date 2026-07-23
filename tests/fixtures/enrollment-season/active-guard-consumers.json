@@ -1,0 +1,27 @@
+{
+  "description": "Repository-evidenced Active?/PPE consumers for Enrollment processing audit.",
+  "schmidtEnrollmentId": "recgP9qZYjAhE7NXm",
+  "foundationResetRules": {
+    "schmidtActive": true,
+    "schmidtPubliclyVisible": true,
+    "createSchmidtExclusionRule": false
+  },
+  "expectedConsumerIds": [
+    "023",
+    "010",
+    "031",
+    "053",
+    "056",
+    "065",
+    "066",
+    "072",
+    "076",
+    "101",
+    "114",
+    "118",
+    "119",
+    "web-leaderboard"
+  ],
+  "knownGaps": ["010", "031", "053", "065", "076"],
+  "legacySchmidtHardExclude": ["072", "118", "119"]
+}

@@ -1,0 +1,23 @@
+{
+  "athleteId": "recgqVstObQRzgXJF",
+  "enrollmentId": "recgP9qZYjAhE7NXm",
+  "active": true,
+  "publiclyVisible": true,
+  "createExclusionRule": false,
+  "processing": {
+    "xp": "eligible",
+    "weeklySummaries": "eligible to create/build for testing",
+    "emailTesting": "controlled Schmidt contacts only",
+    "levels": "eligible",
+    "achievements": "eligible",
+    "publicStandings": "visible (do not invent exclusion)",
+    "websiteProfiles": "visible when Active?=true queries apply"
+  },
+  "conflicts": [
+    {
+      "area": "072/118/119 Schmidt hard exclude",
+      "status": "repository conflict with Foundation Reset + Agent 7 direction",
+      "action": "document only — do not edit email scripts in this package"
+    }
+  ]
+}

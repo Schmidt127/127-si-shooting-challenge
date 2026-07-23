@@ -1,0 +1,4 @@
+Week Name,Start Date,End Date,Sequence,Week Type,Active?,Intake Open?,Counts for XP?,Counts for Leaderboard?,Program Instance,Timezone
+Week 1,2026-09-18,2026-09-24,1,Regular,true,true,true,true,EXAMPLE_PROGRAM_INSTANCE,America/Denver
+Week 2,2026-09-20,2026-09-27,1,Regular,true,true,true,true,EXAMPLE_PROGRAM_INSTANCE,America/Denver
+Broken Week,2026-10-10,2026-10-01,3,Regular,true,true,true,true,EXAMPLE_PROGRAM_INSTANCE,America/Denver

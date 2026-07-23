@@ -1,0 +1,142 @@
+{
+  "description": "Invalid enrollment intake payloads (offline validator).",
+  "records": [
+    {
+      "id": "missing_required_names",
+      "payload": {
+        "Athlete First Name": "",
+        "Athlete Last Name": "",
+        "Parent Email": "pat.lee@example.com",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["required_missing"]
+    },
+    {
+      "id": "malformed_parent_email",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "not-an-email",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["malformed_email"]
+    },
+    {
+      "id": "malformed_athlete_email",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Athlete Email": "jordan@",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["malformed_email"]
+    },
+    {
+      "id": "missing_grade_and_season",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Consent": true
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["required_missing"]
+    },
+    {
+      "id": "consent_false",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": false
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["consent_missing"]
+    },
+    {
+      "id": "duplicate_season_enrollment",
+      "payload": {
+        "Athlete First Name": "Casey",
+        "Athlete Last Name": "Carter",
+        "Parent First Name": "Chris",
+        "Parent Last Name": "Carter",
+        "Parent Email": "carter@example.com",
+        "Grade": "7",
+        "School Year": "2025-2026",
+        "Consent": true
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["already_enrolled_current_season"],
+      "currentSeasonEnrollmentKeys": [
+        "carter@example.com|casey|carter|2025-2026"
+      ]
+    },
+    {
+      "id": "duplicate_form_submission",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "pat.lee@example.com",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true,
+        "Submission Fingerprint": "fp-already-seen"
+      },
+      "expectedOverall": "FAIL",
+      "expectedCodes": ["duplicate_form_submission"],
+      "existingMatchKeys": ["fp-already-seen"]
+    },
+    {
+      "id": "accidental_whitespace_names",
+      "payload": {
+        "Athlete First Name": "  Jordan  ",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "  pat.lee@example.com  ",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true
+      },
+      "expectedOverall": "WARNING",
+      "expectedCodes": ["whitespace"]
+    },
+    {
+      "id": "mixed_capitalization_email",
+      "payload": {
+        "Athlete First Name": "Jordan",
+        "Athlete Last Name": "Lee",
+        "Parent First Name": "Pat",
+        "Parent Last Name": "Lee",
+        "Parent Email": "Pat.Lee@Example.COM",
+        "Grade": "6",
+        "School Year": "2026-2027",
+        "Consent": true
+      },
+      "expectedOverall": "WARNING",
+      "expectedCodes": ["capitalization_or_format"]
+    }
+  ]
+}

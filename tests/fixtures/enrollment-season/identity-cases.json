@@ -1,0 +1,221 @@
+{
+  "description": "Identity matching scenarios for Automation 001 hierarchy (read-only).",
+  "athletes": [
+    {
+      "athlete_id": "recAthAlice",
+      "first_name": "Alice",
+      "last_name": "Anderson",
+      "parent_email": "parent.anderson@example.com",
+      "athlete_match_key": "parent.anderson@example.com|alice|anderson",
+      "active": true,
+      "enrollment_ids": ["recEnrAlicePrev"],
+      "current_season_enrollment_ids": []
+    },
+    {
+      "athlete_id": "recAthBob",
+      "first_name": "Bob",
+      "last_name": "Anderson",
+      "parent_email": "parent.anderson@example.com",
+      "athlete_match_key": "parent.anderson@example.com|bob|anderson",
+      "active": true,
+      "enrollment_ids": ["recEnrBobPrev"],
+      "current_season_enrollment_ids": []
+    },
+    {
+      "athlete_id": "recAthAliceOther",
+      "first_name": "Alice",
+      "last_name": "Anderson",
+      "parent_email": "other.parent@example.com",
+      "athlete_match_key": "other.parent@example.com|alice|anderson",
+      "active": true,
+      "enrollment_ids": ["recEnrAliceOther"],
+      "current_season_enrollment_ids": []
+    },
+    {
+      "athlete_id": "recAthCaseyCurrent",
+      "first_name": "Casey",
+      "last_name": "Carter",
+      "parent_email": "carter@example.com",
+      "athlete_match_key": "carter@example.com|casey|carter",
+      "active": true,
+      "enrollment_ids": ["recEnrCaseyCurrent"],
+      "current_season_enrollment_ids": ["recEnrCaseyCurrent"]
+    },
+    {
+      "athlete_id": "recSchmidtAth",
+      "first_name": "Testing",
+      "last_name": "Schmidt",
+      "parent_email": "schmidt.parent@example.com",
+      "athlete_match_key": "schmidt.parent@example.com|testing|schmidt",
+      "active": true,
+      "enrollment_ids": ["recgP9qZYjAhE7NXm"],
+      "current_season_enrollment_ids": ["recgP9qZYjAhE7NXm"]
+    }
+  ],
+  "scenarios": [
+    {
+      "scenarioId": "exact_returning_athlete",
+      "enrollment": {
+        "enrollment_id": "recNew1",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "athlete_email": "alice@example.com"
+      },
+      "expectedStatus": "matched",
+      "expectedMethod": "formula-match-key",
+      "expectedAthleteId": "recAthAlice"
+    },
+    {
+      "scenarioId": "same_name_same_parent",
+      "enrollment": {
+        "enrollment_id": "recNew2",
+        "athlete_first_name": "  ALICE ",
+        "athlete_last_name": "Anderson",
+        "parent_email": "Parent.Anderson@example.com",
+        "athlete_email": "alice.new@example.com"
+      },
+      "expectedStatus": "matched",
+      "expectedMethod": "formula-match-key",
+      "expectedAthleteId": "recAthAlice",
+      "notes": "Whitespace/capitalization normalized; athlete email change ignored by 001"
+    },
+    {
+      "scenarioId": "same_name_different_parent",
+      "enrollment": {
+        "enrollment_id": "recNew3",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "brand.new.parent@example.com"
+      },
+      "expectedStatus": "create_candidate",
+      "expectedMethod": "none",
+      "expectWarningSubstring": "different parent email"
+    },
+    {
+      "scenarioId": "changed_athlete_email",
+      "enrollment": {
+        "enrollment_id": "recNew4",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "athlete_email": "totally-new-athlete-email@example.com"
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthAlice",
+      "notes": "Athlete email is not part of match key"
+    },
+    {
+      "scenarioId": "changed_parent_email",
+      "enrollment": {
+        "enrollment_id": "recNew5",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "new.parent.email@example.com",
+        "athlete_email": "alice@example.com"
+      },
+      "expectedStatus": "create_candidate",
+      "expectedMethod": "none",
+      "notes": "IDENTITY RISK: parent email change creates a new Athlete under 001"
+    },
+    {
+      "scenarioId": "spelling_difference",
+      "enrollment": {
+        "enrollment_id": "recNew6",
+        "athlete_first_name": "Alyce",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com"
+      },
+      "expectedStatus": "create_candidate",
+      "expectedMethod": "none",
+      "notes": "No fuzzy spelling match — duplicate risk"
+    },
+    {
+      "scenarioId": "whitespace_and_capitalization",
+      "enrollment": {
+        "enrollment_id": "recNew7",
+        "athlete_first_name": "  Bob  ",
+        "athlete_last_name": "ANDERSON",
+        "parent_email": "  Parent.Anderson@Example.COM  "
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthBob"
+    },
+    {
+      "scenarioId": "sibling_shared_parent_email",
+      "enrollment": {
+        "enrollment_id": "recNew8",
+        "athlete_first_name": "Bob",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "athlete_email": "bob@example.com"
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthBob",
+      "expectWarningSubstring": "Shared parent email"
+    },
+    {
+      "scenarioId": "duplicate_form_submission_already_linked",
+      "enrollment": {
+        "enrollment_id": "recDup",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "existing_athlete_id": "recAthAlice"
+      },
+      "expectedStatus": "matched",
+      "expectedMethod": "existing-enrollment-link",
+      "expectedAthleteId": "recAthAlice"
+    },
+    {
+      "scenarioId": "athlete_enrolled_another_season_returning",
+      "enrollment": {
+        "enrollment_id": "recReturn",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "school_year": "2026-2027"
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthAlice",
+      "expectWarningSubstring": "prior enrollment"
+    },
+    {
+      "scenarioId": "multiple_current_enrollments",
+      "enrollment": {
+        "enrollment_id": "recDupSeason",
+        "athlete_first_name": "Casey",
+        "athlete_last_name": "Carter",
+        "parent_email": "carter@example.com",
+        "school_year": "2025-2026"
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthCaseyCurrent",
+      "expectWarningSubstring": "already has enrollment"
+    },
+    {
+      "scenarioId": "missing_athlete_email",
+      "enrollment": {
+        "enrollment_id": "recNoAthEmail",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": "parent.anderson@example.com",
+        "athlete_email": ""
+      },
+      "expectedStatus": "matched",
+      "expectedAthleteId": "recAthAlice",
+      "expectWarningSubstring": "Athlete email missing"
+    },
+    {
+      "scenarioId": "missing_parent_email",
+      "enrollment": {
+        "enrollment_id": "recNoParentEmail",
+        "athlete_first_name": "Alice",
+        "athlete_last_name": "Anderson",
+        "parent_email": ""
+      },
+      "expectedStatus": "skipped_missing_required",
+      "expectedMethod": "none"
+    }
+  ]
+}
