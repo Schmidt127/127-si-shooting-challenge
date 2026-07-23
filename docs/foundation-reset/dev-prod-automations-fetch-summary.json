@@ -1,0 +1,10 @@
+{
+  "DEV": {
+    "count": 48,
+    "path": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge-integration\\docs\\foundation-reset\\dev-automations-table-raw.json"
+  },
+  "PROD": {
+    "count": 48,
+    "path": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge-integration\\docs\\foundation-reset\\prod-automations-table-raw.json"
+  }
+}

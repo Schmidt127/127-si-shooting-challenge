@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-23 (Foundation Reset Pack) |
+| Last updated | 2026-07-23 (DEV↔PROD Automation Reconciliation audit — docs only) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -90,7 +90,7 @@ Columns:
 
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
-| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Installed in PROD | **PROD table created** `tblagI7Q5wXQm2XGS`; seed scenario `recPdyfYRFgDtpzQ8`; repo **115 v1.8**; SC-001 decision approved (orchestration only) | **Mike must paste automation 115** in PROD; run Dry Run then live scenario; prove scenario-created Submission (not API surrogate); then re-test | SC-004 | No second XP path; no pipeline test flags; avoid duplicate 115 writers | `docs/foundation-reset/`; C-020; `115-*.js`; `MIKE-ACTION-INSTALL-115-PROD.md` | **Resolved:** allowed in PROD | P0 | 2026-07-23 |
+| SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Installed in PROD | **PROD table created** `tblagI7Q5wXQm2XGS`; seed scenario `recPdyfYRFgDtpzQ8`; repo **115 v1.8**; SC-001 decision approved (orchestration only) | **Blocked on capacity:** free 1 PROD slot (recommended: delete **112**) then paste **115**; Dry Run + live Schmidt scenario | SC-004, SC-059 | PROD at 50/50 limit; no second XP path | `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md`; `MIKE-ACTION-INSTALL-115-PROD.md`; `115-*.js` | **Resolved:** allowed in PROD; authorize 112 delete first | P0 | 2026-07-23 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Planned | Expected/Actual fields sketched on Testing Scenarios; Stage 17 JSON fixtures | Scenario library table (explicitly deferred earlier); templates for enrollment→week→submission→XP→email | SC-001 | Library is config, not a second XP path | C-020 “Not Phase 2” notes; `docs/testing/C-025-stage17-*.json` | Confirm library is wanted now | P1 | 2026-07-23 |
 | SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist written; only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining `Testing` views with Schmidt enrollment link/ID filters; verify row visibility for foundation records | SC-004 | API cannot create views; no schema rename | `docs/foundation-reset/PROD-TESTING-VIEWS-CHECKLIST-2026-07-23.md`; C-019 | — | P0 | 2026-07-23 |
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven | Add **Web - Leaderboard** (or equivalent) view filter excluding Schmidt enrollment ID so Active?=true does not publish standings; confirm emails stay Schmidt-only | — | No separate exclusion field exists; do not invent one yet | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md` | **Resolved:** Active?=true for processing | P0 | 2026-07-23 |
@@ -147,8 +147,8 @@ Columns:
 | SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
-| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Fresh PROD inventory from Automations table (48 rows) + repo version crosswalk; script body match UNKNOWN via API | Mike UI attestation for live script versions; confirm whether 115/116/117/070c/118/119 exist outside Automations table | — | API cannot read live script source | `docs/foundation-reset/PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md` | Attest live versions | P0 | 2026-07-23 |
-| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Planned | Approved retirements; 112 OFF | Maintenance window delete/disable + attest | SC-057 | 013 remains production video helper | V2-014a; AUTOMATION_112/043 docs | Authorize delete window | P2 | 2026-07-23 |
+| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | PROD Automations table 48 rows + **DEV↔PROD reconciliation audit 2026-07-23** (docs only). Operator tables on DEV/PROD are near-identical and **not** reliable for live UI presence. Asserted: DEV≈46 (has 115), PROD=50 (no 115). | Mike paste complete DEV + PROD UI lists (name/ON-OFF/trigger); close arithmetic gap (+1 each side vs reconstructed model); attest live script versions | SC-059 | PROD at Airtable 50 limit blocks 115 until one slot freed | `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` (+ `.json`); `PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md` | Paste UI lists; confirm 112 OFF before delete | P0 | 2026-07-23 |
+| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Planned | Approved retirements; reconciliation recommends **112 delete first** to free slot for 115 | Mike confirm 112 OFF → delete 112 → smoke-test 013 → then install 115; optional later delete 043 | SC-001, SC-058 | Do **not** delete 032/033/063/070c/111 for capacity — not proven superseded | V2-014a; `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` | Authorize 112 delete window | P0 | 2026-07-23 |
 | SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Planned | C-017 design | Stronger Fillout rules; Athletes hygiene; 001 guards | SC-081 | Bad identity breaks whole season | C-017 | — | P1 | 2026-07-23 |
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Planned | Historical intake behavior | Document + test both paths on Schmidt siblings if needed | SC-060 | Don’t create duplicate Athletes | C-017 | — | P1 | 2026-07-23 |
 | SC-062 | Enrollment | Sibling handling works | Planned | Multi-enrollment family patterns historically | Re-test parent email routing for siblings | SC-045 | Shared parent email edge cases | intake architecture | — | P2 | 2026-07-23 |
@@ -410,34 +410,43 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 ---
 
-## 9. First Recommended Work Package
+## 9. Work Packages
 
-**Name:** Foundation Reset Pack (empty PROD) — **EXECUTED 2026-07-23** (115 paste + Testing views still open)
+### 9A. Foundation Reset Pack (empty PROD) — **EXECUTED 2026-07-23** (docs/schema/Schmidt)
 
-**Goal:** Make the emptied PROD base safe and measurable for systematic rebuild — without starting website styling or Learning Activities schema yet.
+Still open from that pack: **115 paste**, remaining **Testing views**, leaderboard Schmidt exclusion view filter.
 
-**Include**
+### 9B. DEV↔PROD Automation Reconciliation — **AUDIT COMPLETE 2026-07-23** (docs only; no Airtable mutations)
 
-1. **SC-055** — Fresh PROD schema export + note what tables/fields survived the wipe.  
-2. **SC-058** — Fill automation version inventory from the live Airtable UI (stop guessing).  
-3. **SC-046 (draft)** — Field ownership matrix for the critical path only: Athletes, Enrollments, Weeks, Submissions, Submission Assets, Homework Completions, XP Events, Weekly Athlete Summaries, Zoom Meetings / Attendance.  
-4. **SC-004 + SC-065** — Recreate Schmidt testing enrollment and a minimal Weeks set for live tests.  
-5. **SC-003** — Create/restore Testing views for those core tables.  
-6. **SC-001 decision** — Mike decides whether Testing Scenarios / 115 may live in PROD under the new rules.  
-7. **SC-139 (partial)** — Banner or short note in `PROJECT_STATE.md` / `KNOWN_ISSUES.md` that this Completion Master is now controlling (optional companion edit in a follow-up commit if Mike wants).
+**Deliverables:** `docs/foundation-reset/DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` + `.json`
 
-**Explicitly out of scope for this first package**
+**Confirmed blockers**
 
-- Website visual redesign  
-- Learning Activities Airtable tables  
-- Turning on 070a  
-- Enabling weekly email schedules  
-- Program Instance multi-year architecture  
-- Softr cutover  
+- PROD at **50 / 50** Airtable automation limit → cannot install **115** until one slot is freed.
+- Complete Mike UI name lists were **not** pasted into the Cursor chat; presence model is reconstructed and has a **±1 arithmetic gap** vs asserted 46/50.
+- Automations operator table (48 rows) is **stale for presence/ON-OFF** (DEV≈PROD).
 
-**Why this package first**
+**Confirmed decisions (from audit + prior approvals)**
 
-Without a current schema map, version inventory, Schmidt enrollment, and Testing views, every later “live test” is guesswork. This pack creates the operating runway for Phases 2–14.
+- OFF in DEV ≠ obsolete; treat DEV set as required unless proven superseded.
+- **030 does not replace 032+033** in current scripts.
+- **063 / 111 / 070c** are **not** safe to remove for capacity.
+- Approved retirements remain **112 → 013** and **043 → 042**.
+
+**Next approved migration package (recommended)**
+
+**Name:** PROD Slot Recovery for Automation 115 (112 delete → 115 paste)
+
+1. Mike UI-confirm **112** is OFF and unused.  
+2. Delete PROD **112** (+1 free slot).  
+3. Smoke-test video path via **013**.  
+4. Paste **115 v1.8** per `MIKE-ACTION-INSTALL-115-PROD.md`.  
+5. Dry Run + live Schmidt Testing Scenario.  
+6. Optional later: delete **043** after **042** attestation (+1 future slot).
+
+**Explicitly excluded from that migration package:** deleting **032 / 033 / 063 / 070c / 111**; merging **030+032+033**; enabling **070a**; enabling **118/119** schedules.
+
+Migration is **not** marked complete — this reconciliation package made **no** Airtable changes.
 
 ---
 

@@ -14,6 +14,7 @@ Controlling plan: [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_C
 | 6 | Testing views checklist | `PROD-TESTING-VIEWS-CHECKLIST-2026-07-23.md` |
 | 7 | Live PROD test evidence | `FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md` |
 | 8 | Mike next action (115) | `MIKE-ACTION-INSTALL-115-PROD.md` |
+| 9 | DEV↔PROD automation reconciliation + capacity plan | `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md` (+ `.json`) |
 
 ## Approved decisions applied
 

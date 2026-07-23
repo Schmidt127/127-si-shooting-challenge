@@ -2,10 +2,18 @@
 
 **One action only for the next step**
 
+## Capacity prerequisite (2026-07-23 reconciliation)
+
+PROD is at the **50-automation limit**. Free **one slot** before creating 115.
+
+**Recommended first free:** delete PROD automation **112** (legacy duplicate of **013**), after confirming it is OFF and unused. See `DEV-PROD-AUTOMATION-RECONCILIATION-2026-07-23.md`.
+
+Do **not** delete **032 / 033 / 063 / 070c / 111** to make room — not proven superseded.
+
 ## Do this
 
 1. Open PROD base `appn84sqPw03zEbTT`.
-2. Create a new Airtable Automation in folder **12 - Engineering Test Framework** (create folder if needed).
+2. After the slot is free, create a new Airtable Automation in folder **12 - Engineering Test Framework** (create folder if needed).
 3. Name it exactly:  
    `115 - Engineering Test Framework - Run Testing Scenario Daily Submission`
 4. Trigger: **When record matches conditions**  
