@@ -3,8 +3,8 @@ Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submis
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-07-07 (DEV v1.3 Tests A–D verified)
-Last GitHub Update: 2026-07-18 (v1.8 — C025 Phase A wait on WAS Ready, not ZA Applied?)
+Last Synced From Airtable: 2026-07-23 (PROD install v1.8; dry run + live run PASS on scenario recPdyfYRFgDtpzQ8)
+Last GitHub Update: 2026-07-23 (v1.9 — stale DEV-only notes and stale "v1.4" skip message corrected; no logic changes)
 
 Purpose:
 Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submission, Homework, or Video),
@@ -22,7 +22,9 @@ Run Test?, Dry Run?, Related Enrollment, Submission Date, Shot Total, Homework A
 Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submission
 
 Notes:
-GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval.
+GitHub is the source-of-truth copy. Installed in PROD per SC-001 (2026-07-23); dry run and
+live run both PASS (live Submission recuuTBgstSTGg2E3). Airtable currently runs v1.8; v1.9 is a
+message/comment-only correction (repaste optional).
 */
 
 /************************************************************
@@ -52,6 +54,9 @@ GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval
  * - v1.8 (2026-07-18): Phase A completion waits for WAS Perfect Week Automation Status=Ready
  *   (057’s real done write). v1.7 incorrectly polled Zoom Attendance Perfect Week Credit Applied?
  *   which can stay false even after a successful 057 run.
+ * - v1.9 (2026-07-23): Message/comment corrections only (no logic change): skip message no longer
+ *   says "v1.4"; stale DEV-only header notes replaced with PROD install status (SC-001).
+ *   Airtable may keep running v1.8 — repaste optional.
  *
  * PURPOSE
  * - Runs from one Testing Scenarios record when Run Test? is checked.
@@ -132,10 +137,10 @@ GitHub is the source-of-truth copy. DEV only until promotion doc + Mike approval
 
 const SCRIPT = {
   scriptName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
-  version: "v1.8",
-  versionDate: "2026-07-18",
+  version: "v1.9",
+  versionDate: "2026-07-23",
   originalWrittenDate: "2026-07-06",
-  lastUpdated: "2026-07-18",
+  lastUpdated: "2026-07-23",
   folder: "12 - Engineering Test Framework",
   automationName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
 };
@@ -2339,7 +2344,7 @@ async function main() {
       debugStep,
       actionOut: CONFIG.actions.skippedWrongScenario,
       statusOut: CONFIG.statuses.skipped,
-      errorOut: `v1.4 supports Daily Submission, Homework, Video/Three Video Upload, and C025_STAGE17_DOWNSTREAM (Scenario Type Other or Perfect Week with that name/requirements marker). Found: "${scenarioType || "blank"}".`,
+      errorOut: `Supported scenario types: Daily Submission, Homework, Video/Three Video Upload, and C025_STAGE17_DOWNSTREAM (Scenario Type Other or Perfect Week with that name/requirements marker). Found: "${scenarioType || "blank"}".`,
       createdSubmissionId: "",
       createdRecordSummary: "",
       clearRunTest: true,
@@ -2349,7 +2354,7 @@ async function main() {
           CONFIG.testingScenarioFields.lastRunStatus,
           CONFIG.lastRunStatuses.blocked
         ),
-        [CONFIG.testingScenarioFields.actualResult]: "Skipped — scenario type not supported in v1.4.",
+        [CONFIG.testingScenarioFields.actualResult]: "Skipped — scenario type not supported by this script.",
         [CONFIG.testingScenarioFields.passFailNotes]:
           `Use Daily Submission, Homework, Video, or Other/Perfect Week named ${CONFIG.c025Stage17Downstream.scenarioKey}.`,
       },
