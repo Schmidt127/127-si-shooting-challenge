@@ -4,6 +4,8 @@
 **Generated:** 2026-07-24  
 **Do not guess from GitHub.** Fill Observed columns from the live automation panel.
 
+> **Weekly email correction:** 118/119 schedules are **ON** (verified_prod). Do not attest them OFF. Canonical season inputs: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
+
 ---
 
 ## Verified PROD findings (2026-07-24)
@@ -97,10 +99,10 @@ PROD attestation 2026-07-24 (verified partial):
 - 117: Present = v1.1 — approval email → Make only; does NOT award XP
 - 117c: Absent from PROD
 - ZOOM_CREDIT sole writer = N/A for PROD Automation 117 (email-only; not an XP writer). 117c absent. Do not apply 117-vs-117c XP XOR to PROD 117.
-- 118: OFF (installed v1.4; schedule OFF during validation) = ____
-- 119: OFF (installed v1.4; arms Send only — not webhook) = ____
+- 118: ON Sun 5:00 AM Denver (repo **v1.5**; paste if UI still v1.4; season `dryRun=false` + `sendMode=Live`) = ____
+- 119: ON Sun 10:00 AM Denver (v1.4; arms Send only — not webhook; season `dryRun=false`) = ____
 - 072: v4.0 empty-week send_short verified Schmidt = ____
-- 074: ON webhook handoff (repo v2.1 / UI cited v2.0) = ____
+- 074: ON webhook handoff (repo v2.1); PROD sendMode=Live = ____
 - Make WAS email: Bulk Email May 18 ON = ____
 - Weekly Threshold writer found? YES|NO name=____
 ```
