@@ -241,6 +241,7 @@ Columns:
 | SC-144 | Website | Rename Softr-named publish flag | Planned | Flag still Softr-named in schema | Rename in schema wave; update web queries | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-23 |
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
+| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + view/Interface **spec** + install packet; preserves `118→072→119→074→Make` ownership | Mike create Airtable views/Interface from spec (OMNI); optional controlled PROD export audit; optional formula helpers only if authorized | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface **not installed** | `docs/reliability-command-center/`; `lib/reliability-command-center/`; `tools/reliability-command-center/` | Approve view install | P0 | 2026-07-24 |
 
 ---
 
@@ -272,9 +273,9 @@ Must achieve: guaranteed WAS per enrollment/week, auto build/send, dedupe/retry,
 
 ### Data Integrity and Schema
 
-Primary SC items: **SC-046 … SC-059**, **SC-055**.
+Primary SC items: **SC-046 … SC-059**, **SC-055**, **SC-147**.
 
-Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory.
+Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory, Reliability Command Center health visibility (repo audit + future views).
 
 ### Enrollment and Season Structure
 

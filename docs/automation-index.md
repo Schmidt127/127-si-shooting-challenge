@@ -94,7 +94,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 ### Weekly Athlete Summary email (verified PROD 2026-07-24)
 
 **Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`  
-**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
+**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
+**Health / conflicts:** [reliability-command-center/](./reliability-command-center/README.md) offline audit (Ready/Sent/Make writeback mismatches, Test vs Live) — **no new automations**
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
 |---|--------------------------|--------------------|--------------|
@@ -205,3 +206,17 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 6. Update `CHANGELOG.md` and this index if trigger/name changed
 
 Runbook: [development-base-setup.md](./development-base-setup.md) (V2-015).
+
+---
+
+## Reliability Command Center (repository audits)
+
+Offline workflow-health audits (fixtures / exports) — complements in-base `airtable/extension-scripts/audits/*`. Does **not** add Airtable automations.
+
+| Tool | Path |
+|------|------|
+| Shared library | `lib/reliability-command-center/` |
+| CLI | `node tools/reliability-command-center/cli.js --fixture <path>` |
+| Dry-run repair preview | `node tools/reliability-command-center/repair-preview.js --record-ids rec…` |
+| Tests | `node tests/reliability-command-center/run-all.js` |
+| Docs | [reliability-command-center/README.md](./reliability-command-center/README.md) |

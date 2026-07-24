@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver; go-live integration)
+Last updated: **2026-07-24** (Reliability Command Center **Built/Tested** in repo — SC-147; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver; go-live integration)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -198,8 +198,25 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 |----------|--------|
 | **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
 | Homework upload (070a) | PROD **OFF** |
-| Weekly summary email | Manual 072→074 path; C-011 automation pending |
+| Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; schedules OFF; 074+Make ON; RCC monitors writeback mismatches |
 | Daily / homework / video parent emails | Make webhooks + Airtable scripts |
+
+---
+
+## Reliability Command Center
+
+| Item | Status |
+|------|--------|
+| Repository framework | **Built / Tested** — `lib/reliability-command-center/`, CLI + dry-run repair preview |
+| Docs | [reliability-command-center/README.md](./reliability-command-center/README.md) |
+| Install packet | [deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](./deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) — **Ready for Production Installation** (views) |
+| Airtable Interface / views | **Designed** only — **not installed** |
+| Live PROD export audit | Not yet run |
+
+```bash
+node tests/reliability-command-center/run-all.js
+node tools/reliability-command-center/cli.js --fixture tests/reliability-command-center/fixtures/mixed-health.json --output /tmp/rcc
+```
 
 ---
 
@@ -215,6 +232,7 @@ Last verified clean on historical repair pass (re-run after bulk imports):
 | I — Achievements | Perfection pass / in progress |
 | J — Legacy cleanup | In progress |
 | **Final 090** | 090A–090E PASS · 090F PASS (v1.1) · 090G historical weekly gaps only |
+| **RCC (repo)** | Offline fixture suite PASS — complements Stages F–J; does not replace in-base audits |
 
 ---
 
