@@ -52,6 +52,7 @@
 | [../../.github/workflows/web.yml](../../.github/workflows/web.yml) | Web CI (lint, typecheck, test) |
 | [../V2_RELEASE_CHECKLIST.md](../V2_RELEASE_CHECKLIST.md) | V2 release / promote checklist |
 | [../V2_END_TO_END_TEST_MATRIX.md](../V2_END_TO_END_TEST_MATRIX.md) | Athlete-scenario launch matrix |
+| [../testing/agent4-qc/README.md](../testing/agent4-qc/README.md) | Agent 4 QC: inventory, coverage matrix, Live/Test email regression, release/rollback |
 | [./V2_DEV_EXECUTION_RUNBOOK.md](./V2_DEV_EXECUTION_RUNBOOK.md) | Executable DEV runbook — mode taxonomy, fixtures, setup/cleanup |
 | [./V2_LAUNCH_SMOKE_TESTS.md](./V2_LAUNCH_SMOKE_TESTS.md) | Launch smoke subset before PROD promotion |
 | [../../tools/airtable/v2_dev_runbook/](../../tools/airtable/v2_dev_runbook/) | Offline fixtures + classification + **safe operator CLI** |

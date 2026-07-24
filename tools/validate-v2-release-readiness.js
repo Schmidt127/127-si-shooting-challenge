@@ -465,12 +465,13 @@ const automationIndex = exists("docs/automation-index.md") ? read("docs/automati
 const knownIssues = exists("docs/known-issues.md") ? read("docs/known-issues.md") : "";
 const inventoryText = inventory;
 
-// 066: script is v3.2; do not claim paste-not-done or v3.1-as-current in PROJECT_STATE
+// 066: script is v3.3 (PROD install recorded 2026-07-24); do not claim paste-not-done
+// or treat older versions as current in PROJECT_STATE.
 if (byNumber.has("066")) {
   const text066 = fs.readFileSync(byNumber.get("066")[0], "utf8");
   const ver066 = extractDeclaredVersion(text066) || "";
-  if (/v?3\.2/i.test(ver066)) pass("066 script declares v3.2");
-  else fail(`066 script expected v3.2, found: ${ver066 || "(none)"}`);
+  if (/v?3\.3/i.test(ver066)) pass("066 script declares v3.3");
+  else fail(`066 script expected v3.3, found: ${ver066 || "(none)"}`);
 
   if (/Airtable paste not done/i.test(projectState) && /H-002.*066/i.test(projectState)) {
     fail("PROJECT_STATE still claims H-002/066 Airtable paste not done (contradicts backlog + automation-index)");
@@ -478,10 +479,13 @@ if (byNumber.has("066")) {
     pass("PROJECT_STATE does not claim 066 paste-not-done");
   }
 
-  if (/Automation 066 v3\.1/i.test(projectState) && !/066 v3\.2/i.test(projectState)) {
-    fail("PROJECT_STATE references Automation 066 v3.1 without acknowledging v3.2 current");
+  if (
+    /Automation 066 v3\.[12]/i.test(projectState) &&
+    !/066 v3\.3/i.test(projectState)
+  ) {
+    fail("PROJECT_STATE references Automation 066 v3.1/v3.2 without acknowledging v3.3 current");
   } else {
-    pass("PROJECT_STATE 066 version wording acknowledges v3.2 (or avoids stale v3.1-only claim)");
+    pass("PROJECT_STATE 066 version wording acknowledges v3.3 (or avoids stale older-only claim)");
   }
 }
 

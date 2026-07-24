@@ -35,12 +35,12 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
-| **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
+| **H-002 — Automation 066 v3.3** | **DEV + PROD Installed** (repo v3.3; PROD install recorded 2026-07-24) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
 | **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |
 | **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules OFF**; 074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
-| **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
+| **Automation standards (doc 06)** | **Active** — **066 v3.3** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
