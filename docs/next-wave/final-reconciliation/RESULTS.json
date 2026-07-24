@@ -1,0 +1,116 @@
+{
+  "agent": "agent-13-final-reconciliation",
+  "date": "2026-07-24",
+  "branch": "agent13/final-reconciliation",
+  "base_sha": "561448a4f267523dea63830178d2f8156b76fc6c",
+  "prod_base": "appn84sqPw03zEbTT",
+  "integration_method": "path_checkout_of_agent_9_12_exclusive_deliverables",
+  "agent_tips": {
+    "agent9": "c0c0ca9",
+    "agent10": "55b33c9",
+    "agent11": "3db4b19",
+    "agent12": "fecd945",
+    "overnight_recon_online": "e06e778",
+    "testing_integrity_tip": "561448a",
+    "prod_020_copy": "444046e"
+  },
+  "dashboard": {
+    "total": 146,
+    "complete": 10,
+    "live_tested_in_prod": 6,
+    "installed_in_prod": 51,
+    "built_in_repository": 34,
+    "planned": 23,
+    "decision_needed": 7,
+    "deferred": 10,
+    "superseded": 3,
+    "not_needed": 2
+  },
+  "sc_status_changes": [
+    {
+      "id": "SC-018",
+      "old": "Planned",
+      "new": "Built in Repository",
+      "evidence": "docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md"
+    },
+    {
+      "id": "SC-019",
+      "old": "Planned",
+      "new": "Built in Repository",
+      "evidence": "docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md"
+    }
+  ],
+  "sc_annotations_only": [
+    "SC-016",
+    "SC-021",
+    "SC-035",
+    "SC-038",
+    "SC-039",
+    "SC-046",
+    "SC-058",
+    "SC-059"
+  ],
+  "fulfillment": {
+    "fulfilled": [1, 2, 6, 7, 8, 9, 10, 11, 12],
+    "partial": [4, 5],
+    "missed_path": [3],
+    "this_agent": 13
+  },
+  "writer_conflicts_remaining": [
+    "OW-D1",
+    "OW-D2",
+    "OW-D3",
+    "OW-D4",
+    "OW-D5",
+    "OW-D6",
+    "OW-D7",
+    "FW-D1"
+  ],
+  "stale_corrections": [
+    "config_year_registry_no_collapse",
+    "063_partial_020_111_full_013",
+    "020_prod_v3_0_0_canonical",
+    "115_installed_live_tested",
+    "was_hybrid_031_118_101",
+    "xp_dedupe_formula_only",
+    "065_legacy_key_risk",
+    "schmidt_visible"
+  ],
+  "tests": {
+    "passed_suites": [
+      "automation-ownership-unit-7",
+      "automation-ownership-harness-26p-2w",
+      "config-selection-15",
+      "homework-contracts",
+      "was-email-contracts",
+      "118-119-week-key-16",
+      "c011-weekly-email-schedule-v1.3",
+      "test_115_and_expected_actual-24",
+      "enrollment-season-18",
+      "tutorials-content-19",
+      "web-vitest-109",
+      "web-eslint"
+    ],
+    "failed_unfixed": [],
+    "blocked": [
+      "web-tsc-incomplete-node_modules",
+      "next-build-not-run",
+      "playwright-missing"
+    ],
+    "merge_test_defect_fixed": "c011-weekly-email-schedule.test.js v1.1→v1.3"
+  },
+  "prod_writes_this_agent": false,
+  "live_tests_this_agent": false,
+  "deliverables": [
+    "docs/next-wave/final-reconciliation/FINAL-RECONCILIATION.md",
+    "docs/next-wave/final-reconciliation/AGENT-FULFILLMENT-AUDIT.md",
+    "docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md",
+    "docs/next-wave/final-reconciliation/FINISHING-FORECAST.md",
+    "docs/next-wave/final-reconciliation/TEST-RESULTS.md",
+    "docs/next-wave/final-reconciliation/RESULTS.json",
+    "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
+    "safe stale-doc corrections"
+  ],
+  "mike_actions": "docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md",
+  "forecast": "docs/next-wave/final-reconciliation/FINISHING-FORECAST.md"
+}

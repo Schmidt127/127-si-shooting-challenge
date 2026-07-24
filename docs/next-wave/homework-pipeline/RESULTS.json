@@ -1,0 +1,41 @@
+{
+  "agent": 11,
+  "package": "homework-pipeline",
+  "date": "2026-07-24",
+  "classification_020": "PARTIALLY REPLACES 063",
+  "deletion_063_safe": false,
+  "deletion_063_forward_path_safe": true,
+  "013_replaces_111": true,
+  "quiz_recommendation": "option_b_attachment_less",
+  "quiz_product_decision_required": true,
+  "learning_activities_repo_ready": true,
+  "learning_activities_airtable_ready": false,
+  "canonical_020_version": "v3.0.0",
+  "canonical_020_commit": "444046e",
+  "020_body_edited_this_agent": false,
+  "commit_sha": "decfacbfd9a609fbf53dfde72ddaedd3b88f7234",
+  "branch": "agent11/homework-complete",
+  "tests": {
+    "command": "node tests/homework-contracts/run-all.js",
+    "result": "pass",
+    "suites": [
+      "uniqueness",
+      "learning-activity-routing",
+      "quiz-path"
+    ]
+  },
+  "deliverables": [
+    "020-PROD-VS-REPO-COMPARISON.md",
+    "HOMEWORK-PIPELINE-MAP.md",
+    "QUIZ-PATH-DECISION.md",
+    "LEARNING-ACTIVITIES-SCHEMA.md",
+    "LEARNING-ACTIVITY-ROUTING-CONTRACT.md",
+    "STALE-063-111-PATCH-MANIFEST.md",
+    "REPORT.md",
+    "RESULTS.json",
+    "MIKE-ACTIONS.md",
+    "MASTER-UPDATE-PROPOSAL.md",
+    "lib/homework-contracts/*",
+    "tests/homework-contracts/*"
+  ]
+}

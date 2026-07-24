@@ -1,5 +1,7 @@
 # Final Overnight Reconciliation — 2026-07-23
 
+> **Agent 13 banner (2026-07-24):** Authoritative completion state after next-wave Agents 9–12 lives in `docs/next-wave/final-reconciliation/FINAL-RECONCILIATION.md` and the updated Completion Master. Key supersessions: (1) Config rows are **year-specific — do not collapse**; (2) **020 v3.0.0** partially replaces **063**; **013 v2.0** replaces **111**; (3) **115** installed + live-tested; (4) WAS creators hybrid **031/118/101**; (5) XP Dedupe Key fields are formula-only.
+
 **Reconciler:** Agent 6 · Branch: `master` · Environment: PROD `appn84sqPw03zEbTT`  
 **Controlling plan:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`
 
@@ -79,8 +81,8 @@ Follow-up from evidence inventory: Agent 3 was mis-located as “commits only”
 
 1. **PROD is active** — reinforced (not DEV-first).
 2. **Automation 115** — installed + live-tested (no longer blocked solely on 50/50 slot).
-3. **Deleted automations** — Agent 1 baseline: 043, 032, 033, 063, 111 (note: earlier capacity plan warned against some of these — treat as **attestation required**).
-4. **Upgraded 013 / 020 / 030** — confirmed replaced with newer DEV versions in PROD.
+3. **Deleted automations** — Agent 1 baseline: 043, 032, 033, 063, 111 (UI attestation still required). Classification (Agent 11): **013 v2.0 fully replaces 111** for VF Grade Band; **020 v3.0.0 only partially replaces 063** (asset-path GB; orphan blank-GB HCs may need one-time repair — do not blindly restore 063).
+4. **Upgraded 013 / 020 / 030** — confirmed replaced with newer versions in PROD; **020 PROD canonical = v3.0.0** in Git (`444046e`).
 5. **Weeks** — manually seeded by design.
 6. **Schmidt visibility** — remains visible; do not add public exclusion filters yet (overrides older SC-004 “exclude from leaderboard” still-needed wording).
 
@@ -136,7 +138,7 @@ No Agent 6 merge conflicts required resolving beyond integrating untracked overn
 
 See `docs/overnight/MIKE-ACTIONS-TOMORROW.md`.
 
-**Highest-priority morning package:** **Config Integrity + Automation Attestation + Weekly Email Install Gate** — collapse Config table to one row; confirm live automation list after overnight deletes; paste 118 (dryRun) once empty-week email decision is made or deferred with Option-1 interim. See updated `MIKE-ACTIONS-TOMORROW.md`.
+**Highest-priority morning package:** **Config Year-Aware Adoption + Automation Attestation + Weekly Email Install Gate** — keep four Config year rows and adopt resolver; confirm live automation list after overnight deletes; paste 118/119 v1.3 OFF (dryRun) once empty-week email decision is made or deferred with Option-1 interim. See `docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md`.
 
 ---
 

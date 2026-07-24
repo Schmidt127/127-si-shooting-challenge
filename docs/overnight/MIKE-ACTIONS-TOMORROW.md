@@ -8,7 +8,7 @@
 
 ## 1. Urgent / blocking
 
-1. **Collapse PROD Config table to one record** (or add an explicit season/instance key). Four conflicting rows make “first record” readers order-dependent — highest Agent 2 risk (MIKE-ACTIONS #1; gates/Zoom recording flags).
+1. **~~Collapse PROD Config table to one record~~ SUPERSEDED:** Keep all four year-specific Config rows. Adopt year-aware selection (`docs/next-wave/config-selection/`). Do not delete rows to fix `records[0]` ambiguity.
 2. **UI-attest PROD automations** after overnight changes. Agent 1 baseline: deleted **043, 032, 033, 063, 111**; upgraded **013 / 020 / 030**; ~4 free slots; **115 installed** dry+live PASS. Confirm vs Airtable UI (earlier capacity plan advised keeping some of these).
 3. **Confirm Automation 112** state (OFF / deleted / still present).
 4. **Paste/install 118** (dryRun default) so empty/homework-only weeks get a WAS — do **not** enable Live schedules until SC-035 email decision (or accept Option 1 interim for Schmidt-only).
@@ -65,7 +65,7 @@
 
 **Name:** Config Integrity + Automation Attestation + Weekly Email Install Gate
 
-1. Collapse Config table to a single authoritative row (or season key).  
+1. Keep four Config year rows; adopt year-aware resolver (do **not** collapse).  
 2. Paste complete ON/OFF automation list from Airtable UI (closes SC-058 gap).  
 3. Confirm 115 + deleted/upgraded set match Agent 1 baseline; confirm 112.  
 4. Decide SC-035 empty-week email (or accept Option 1 interim).  

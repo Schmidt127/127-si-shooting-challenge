@@ -1,0 +1,42 @@
+{
+  "agent": 12,
+  "package": "was-email",
+  "date": "2026-07-24",
+  "stash": {
+    "name": "agent5-118-wip-preserve",
+    "disposition": "INTEGRATE_DOC_NOTE_ONLY",
+    "applied_as": "118/119 v1.3 Summary Key documentation correction"
+  },
+  "was_authoritative_strategy": "hybrid_031_submission_118_scheduled_101_zoom_until_118_proven",
+  "scripts": {
+    "118": "v1.3",
+    "119": "v1.3",
+    "installed_in_prod": false,
+    "schedules_enabled": false
+  },
+  "empty_week_policy": {
+    "default": "send_normal",
+    "enforced": false,
+    "mike_decision_required": true,
+    "recommendation": "send_short_seasonal_send_normal_interim"
+  },
+  "tests": {
+    "was_email_contracts": "pass",
+    "c011_weekly_email_schedule": "pass",
+    "week_key": "pass"
+  },
+  "commit_sha": "a20364811ee19576f5718f41dc7c8af059f4e5ee",
+  "branch": "agent12/was-email",
+  "deliverables": [
+    "AGENT5-STASH-REVIEW.md",
+    "WAS-CREATOR-OWNERSHIP.md",
+    "EMPTY-WEEK-EMAIL-DECISION.md",
+    "WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md",
+    "REPORT.md",
+    "RESULTS.json",
+    "MIKE-ACTIONS.md",
+    "MASTER-UPDATE-PROPOSAL.md",
+    "lib/was-email-contracts/*",
+    "tests/was-email-contracts/*"
+  ]
+}

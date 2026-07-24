@@ -30,11 +30,14 @@ test("118/119 default dryRun true and refuse Live arming", () => {
   assert.ok(/parseBool\(inputConfig\.dryRun,\s*true\)/.test(s118));
   assert.ok(/parseBool\(inputConfig\.dryRun,\s*true\)/.test(s119));
   assert.ok(/refuses sendMode=Live when dryRun=false/.test(s118));
-  assert.ok(/version:\s*"v1\.1"/.test(s118));
-  assert.ok(/version:\s*"v1\.1"/.test(s119));
+  assert.ok(/version:\s*"v1\.3"/.test(s118));
+  assert.ok(/version:\s*"v1\.3"/.test(s119));
   assert.ok(/scheduledWeekEndKeyOut/.test(s118));
   assert.ok(/scheduledWeekEndKeyOut/.test(s119));
   assert.ok(/Summary Key/.test(s118));
+  assert.ok(/emptyWeekPolicy/.test(s118));
+  assert.ok(/emptyWeekPolicy/.test(s119));
+  assert.ok(/\{Enrollment Key\}\|\{Week Key\}/.test(s118));
 });
 
 test("074 emits eventId and never clears Weekly Email Sent?", () => {

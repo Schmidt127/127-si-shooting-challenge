@@ -38,12 +38,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
-## Homework (020, 063–065, 067, 070a, 071)
+## Homework (020, 064–065, 067, 070a, 071) — 063 retired
+
+> **2026-07-24:** PROD baseline claims **063 deleted**. **020 v3.0.0** only *partially* replaces 063 (asset-driven Grade Band). Do not reinstall full 063. Repo file retained as historical.
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep | `020-homework-link-or-create-homework-completion.js` |
-| 063 | Homework Review — Copy Enrollment Grade Band to Homework Completion | *confirm in Airtable* | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` |
+| 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready (created / Processing Status Pending, Enrollment set) | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
@@ -94,12 +96,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 076 | Email — Build Daily Submission Email Package | *confirm in Airtable* | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` |
 | 077 | Email — Send Daily Submission Email Package to Make | *confirm in Airtable* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` |
 
-## Video review and XP (111–114)
+## Video review and XP (112–114) — 111 retired; 112 must stay OFF
+
+> **2026-07-24:** PROD baseline claims **111 deleted**. **013 v2.0** owns Video Feedback Grade Band create/repair. **112** must remain OFF (OW-D1). Repo 111 file retained as historical.
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 111 | Video Review — Copy Enrollment Grade Band to Video Feedback | *confirm in Airtable* | `111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js` |
-| 112 | Video Review — Create Video Feedback from Submission Asset | **OFF — monitor before delete** (legacy duplicate of **013**) | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
+| 111 | ~~Video Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / replaced by **013 v2.0** | `111-video-review-and-xp-copy-enrollment-grade-band-to-video-feedback.js` *(historical)* |
+| 112 | Video Review — Create Video Feedback from Submission Asset | **OFF / must stay OFF** (legacy duplicate of **013**) | `112-video-review-and-xp-create-video-feedback-from-submission-asset.js` |
 | 113 | Video Review — Assign Base Video XP | *confirm in Airtable* | `113-video-review-and-xp-assign-base-video-xp.js` |
 | **114** | Video Review — Create or Update Video XP Event | Video Feedback posted, XP positive, `Ready for XP Automation?` checked | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
 
@@ -133,10 +137,10 @@ C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installat
 | B — Submission XP | 010 | `audit-xp-vs-submissions.js` |
 | C — Weekly summary | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` |
 | D — Assets | 009, 021 | `audit-submission-pipeline-integrity.js` |
-| E — Homework upload | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js` |
+| E — Homework upload | 020, 070a, 022 *(063 retired)* | `audit-homework-completion-upload-edge-cases.js` |
 | F — Homework XP + email | 064, 065, 071 | `audit-homework-pipeline-integrity.js` |
 | F2 — HW17 Fillout test intake | 067 | `audit-homework17-reflection-quiz-pipeline.js` |
-| G — Video upload | **013** (not 112), 070b, 022, 111 | `audit-video-pipeline-integrity.js` |
+| G — Video upload | **013** (not 112; 111 retired), 070b, 022 | `audit-video-pipeline-integrity.js` |
 | H — Video XP + email | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` |
 | I — Achievements | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js` |
 | J — Legacy cleanup | — | `audit-field-coverage-report.js`, `audit-legacy-cleanup-candidates.js` |

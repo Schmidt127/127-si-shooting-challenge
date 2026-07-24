@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hoopchallenges.com/schemas/learning-activity.json",
+  "title": "LearningActivityDefinition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "completionMethod",
+    "homeworkId",
+    "countsAsHomework",
+    "active"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^rec[a-zA-Z0-9]{14}$" },
+    "name": { "type": "string", "minLength": 1 },
+    "completionMethod": {
+      "type": "string",
+      "enum": [
+        "fillout_questions",
+        "file_upload",
+        "video_upload",
+        "quiz",
+        "assessment",
+        "reflection",
+        "special_assignment",
+        "mixed"
+      ]
+    },
+    "homeworkId": {
+      "type": ["string", "null"],
+      "pattern": "^rec[a-zA-Z0-9]{14}$"
+    },
+    "countsAsHomework": { "type": "boolean" },
+    "active": { "type": "boolean" },
+    "xpOwner": {
+      "type": "string",
+      "const": "065",
+      "description": "No competing XP path — homework XP only via 064→065 after coach review"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "countsAsHomework": { "const": true } }
+      },
+      "then": {
+        "properties": {
+          "homeworkId": { "type": "string", "pattern": "^rec[a-zA-Z0-9]{14}$" }
+        }
+      }
+    }
+  ]
+}

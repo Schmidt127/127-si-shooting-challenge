@@ -1,0 +1,335 @@
+{
+  "agent": "agent-9-automation-ownership",
+  "generated_at": "2026-07-24T13:09:22.498Z",
+  "branch": "agent9/automation-ownership-contract",
+  "base_sha_at_start": "561448a4f267523dea63830178d2f8156b76fc6c",
+  "exclusive_paths": [
+    "docs/next-wave/automation-ownership/",
+    "tools/testing/automation-ownership/",
+    "tests/automation-ownership/"
+  ],
+  "harness_ok": true,
+  "harness": {
+    "generated_at": "2026-07-24T13:07:44.687Z",
+    "agent": "agent-9-automation-ownership",
+    "repo_root": "C:\\Users\\mschmidt_fairfield\\Documents\\GitHub\\127-si-shooting-challenge",
+    "ok": true,
+    "counts": {
+      "pass": 26,
+      "warn": 2,
+      "fail": 0
+    },
+    "findings": [
+      {
+        "severity": "warn",
+        "code": "duplicate_prefix_flagged",
+        "prefix": "ZOOM_CREDIT|",
+        "owners": [
+          "117",
+          "117c"
+        ],
+        "detail": "Duplicate ownership flagged — Mike attestation required"
+      },
+      {
+        "severity": "pass",
+        "code": "zoom_credit_flagged",
+        "detail": "ZOOM_CREDIT| marked duplicate_risk with candidates 117/117c"
+      },
+      {
+        "severity": "pass",
+        "code": "no_formula_writes_detected",
+        "detail": "Scanned 59 scripts; no formula-only write payloads detected (XP Dedupe Key, XP Dedupe Key Normalized, Summary Key, Unlock Key)"
+      },
+      {
+        "severity": "pass",
+        "code": "authoritative_identity_unique",
+        "detail": "No conflicting authoritative_writer identity families (excluding allowed splits)"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "SUBMISSION_XP|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "HOMEWORK_XP|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "VIDEO_SUBMISSION|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "STREAK_XP|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "SHOT_MILESTONE|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "PERFECT_WEEK|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "ZOOM_ATTEND_BASE|",
+        "detail": "status=canonical"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "ZOOM_CREDIT|",
+        "detail": "status=duplicate_risk"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "WEEKLY_THRESHOLD_",
+        "detail": "status=missing_writer"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "MANUAL_BONUS|",
+        "detail": "status=manual_process"
+      },
+      {
+        "severity": "pass",
+        "code": "registry_entry_present",
+        "prefix": "VIDEO_FEEDBACK|",
+        "detail": "status=canonical_identity_key"
+      },
+      {
+        "severity": "pass",
+        "code": "xp_via_059",
+        "detail": "059 is xp_via for unlock prefixes"
+      },
+      {
+        "severity": "pass",
+        "code": "065_does_not_mint_legacy",
+        "detail": "065 does not mint HOMEWORK_COMPLETION|"
+      },
+      {
+        "severity": "pass",
+        "code": "065_uses_homework_xp",
+        "detail": "065 uses HOMEWORK_XP|"
+      },
+      {
+        "severity": "warn",
+        "code": "065_ignores_legacy_keys",
+        "detail": "065 has no HOMEWORK_COMPLETION| recognition — dual-key risk with legacy rows (XP-D3)"
+      },
+      {
+        "severity": "pass",
+        "code": "was_has_lookup_before_create",
+        "automation": "031",
+        "detail": "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js"
+      },
+      {
+        "severity": "pass",
+        "code": "was_does_not_write_summary_key",
+        "automation": "031",
+        "detail": "No Summary Key write detected"
+      },
+      {
+        "severity": "pass",
+        "code": "was_has_lookup_before_create",
+        "automation": "101",
+        "detail": "101-zoom-attendance-xp-award-meeting-xp.js"
+      },
+      {
+        "severity": "pass",
+        "code": "was_does_not_write_summary_key",
+        "automation": "101",
+        "detail": "No Summary Key write detected"
+      },
+      {
+        "severity": "pass",
+        "code": "was_has_lookup_before_create",
+        "automation": "118",
+        "detail": "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"
+      },
+      {
+        "severity": "pass",
+        "code": "was_does_not_write_summary_key",
+        "automation": "118",
+        "detail": "No Summary Key write detected"
+      },
+      {
+        "severity": "pass",
+        "code": "stale-112-on-expected",
+        "detail": "112 must be classified legacy_off / expected OFF: 112 classification=legacy_off expected=OFF (must attest)"
+      },
+      {
+        "severity": "pass",
+        "code": "stale-063-not-authoritative",
+        "detail": "063 must not be authoritative_writer: 063 classification=legacy_off"
+      },
+      {
+        "severity": "pass",
+        "code": "stale-s16-zoom-recording-not-live-owner",
+        "detail": "ZOOM_RECORDING| must be legacy_superseded in registry: status=legacy_superseded"
+      }
+    ]
+  },
+  "writer_conflicts": [
+    {
+      "id": "OW-D1",
+      "area": "Video Feedback create",
+      "writers": [
+        "013",
+        "112"
+      ],
+      "severity": "critical_if_112_on",
+      "status": "112_must_be_off"
+    },
+    {
+      "id": "OW-D2",
+      "area": "ZOOM_CREDIT XP",
+      "writers": [
+        "117",
+        "117c"
+      ],
+      "severity": "critical",
+      "status": "attest_exactly_one_on"
+    },
+    {
+      "id": "OW-D3",
+      "area": "WAS create",
+      "writers": [
+        "031",
+        "101",
+        "118"
+      ],
+      "severity": "high",
+      "status": "031_primary_118_off_101_side_create"
+    },
+    {
+      "id": "OW-D4",
+      "area": "Homework Completions",
+      "writers": [
+        "020",
+        "067"
+      ],
+      "severity": "high",
+      "status": "product_open_SC013_014"
+    },
+    {
+      "id": "OW-D5",
+      "area": "Homework XP legacy keys",
+      "writers": [
+        "065",
+        "legacy HOMEWORK_COMPLETION|"
+      ],
+      "severity": "high",
+      "status": "documented_XP_D3"
+    },
+    {
+      "id": "OW-D6",
+      "area": "Upload asset fields",
+      "writers": [
+        "022",
+        "070c",
+        "MAKE upload engine"
+      ],
+      "severity": "high",
+      "status": "sequenced_handoff"
+    },
+    {
+      "id": "OW-D7",
+      "area": "Weekly Threshold XP",
+      "writers": [],
+      "severity": "critical",
+      "status": "missing_writer_in_repo"
+    },
+    {
+      "id": "OW-D8",
+      "area": "Grade Band repair",
+      "writers": [
+        "020",
+        "013",
+        "063_deleted",
+        "111_deleted"
+      ],
+      "severity": "medium",
+      "status": "attest_deleted"
+    }
+  ],
+  "authoritative_owners_proven": [
+    "010",
+    "013",
+    "020",
+    "031",
+    "042",
+    "054",
+    "058",
+    "059",
+    "065",
+    "066",
+    "101_live_xp",
+    "114",
+    "072",
+    "074",
+    "076",
+    "077",
+    "117f_send_key"
+  ],
+  "unresolved_ownership": [
+    "117_xor_117c_live_exclusivity",
+    "020_vs_067_homework_completion_product_rule",
+    "WEEKLY_THRESHOLD_writer_existence",
+    "101_WAS_side_create_long_term",
+    "MAKE_writeback_field_parity",
+    "118_119_install_state"
+  ],
+  "tests": {
+    "command": "node tests/automation-ownership/test-contract-harness.mjs",
+    "passed": 7,
+    "failed": 0,
+    "harness_command": "node tools/testing/automation-ownership/run-contract-harness.mjs",
+    "harness_counts": {
+      "pass": 26,
+      "warn": 2,
+      "fail": 0
+    }
+  },
+  "mike_attestations_required": [
+    "112 OFF/Deleted",
+    "013 ON + version",
+    "020 ON + version v3.0.0",
+    "031 ON",
+    "063 Deleted/OFF",
+    "111 Deleted/OFF",
+    "117 XOR 117c sole ZOOM_CREDIT writer",
+    "118 OFF",
+    "119 OFF",
+    "Weekly Threshold writer hunt YES/NO"
+  ],
+  "did_not_edit": [
+    "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
+    "airtable/automations/shooting-challenge/*.js (production scripts)",
+    "web/",
+    "docs/next-wave/config-selection/",
+    "docs/next-wave/homework-pipeline/",
+    "docs/next-wave/was-email/",
+    "other agents reports"
+  ],
+  "commit_sha": "0b926b96772113af6459b039c037b8ab7ad1c72c",
+  "push_status": "pushed",
+  "results_sha": "8a3f3532289d962d546959e0da67bec4893387c6",
+  "tip_sha": "8a3f3532289d962d546959e0da67bec4893387c6",
+  "remote_branch": "origin/agent9/automation-ownership-contract",
+  "clean_tree_exclusive_paths": true
+}

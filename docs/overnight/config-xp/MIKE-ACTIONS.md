@@ -5,15 +5,16 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 
 ---
 
-### 1. Collapse Config table to a single authoritative record
-- **Priority:** P0
+### 1. ~~Collapse Config table to a single authoritative record~~ **SUPERSEDED 2026-07-24 (Agent 10 / Agent 13)**
+> **Do not collapse or delete Config rows.** The four records are an intentional year registry (2025–2026 … 2028–2029) with year-specific Max Videos (4/6/5/4). Defect = ambiguous selection (`records[0]`), not multi-row existence. Adopt year-aware resolver: `docs/next-wave/config-selection/`. Keep all four rows.
+- **Priority:** P0 *(selection contract — not destructive cleanup)*
 - **System:** Airtable PROD · Config table
-- **Exact table/records:** Config — currently 4 records (`recXwc19BtG1L2PzW`, `rechc1f9f4kVM1tHP`, `recq14M5hEv3TIGEj`, `rectmrnvo9a79wgq3`) with conflicting `Max Videos Per Submission` (4/6/4/5)
-- **Exact action:** Keep one season/instance record (prefer `recq14M5hEv3TIGEj` which carries richer recording/Perfect Week flags); archive or delete the other three after confirming no script depends on record order
-- **Expected outcome:** Deterministic Config lookups for 042 recording-credit flags and related knobs
-- **Why not completed:** Product/ops decision + destructive UI cleanup
-- **Verification:** Re-run `overnight_config_xp_prod_probe.py`; Config count = 1; Max Videos single value
-- **Related SC:** SC-030, SC-033, SC-021
+- **Exact table/records:** Config — 4 year rows (`recXwc19BtG1L2PzW`, `rechc1f9f4kVM1tHP`, `recq14M5hEv3TIGEj`, `rectmrnvo9a79wgq3`)
+- **Exact action:** Keep all four; wire consumers to `lib/config-selection` hierarchy (explicit id → Program Instance year → Enrollment School Year). Do **not** archive/delete “extra” rows.
+- **Expected outcome:** Deterministic year-keyed Config lookups for 042 recording-credit flags and related knobs
+- **Why not completed:** Consumer migration + optional 042 guard paste still open
+- **Verification:** Resolver tests in `tests/config-selection/`; OMNI year-link spot-check on Zoom Config links
+- **Related SC:** SC-030, SC-033, SC-021 · Evidence: `docs/next-wave/config-selection/REPORT.md`
 
 ### 2. Paste 057 Denver date-key fix after repo change
 - **Priority:** P1
