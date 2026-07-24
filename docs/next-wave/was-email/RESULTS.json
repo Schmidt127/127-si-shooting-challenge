@@ -25,6 +25,8 @@
     "c011_weekly_email_schedule": "pass",
     "week_key": "pass"
   },
+  "commit_sha": "a20364811ee19576f5718f41dc7c8af059f4e5ee",
+  "branch": "agent12/was-email",
   "deliverables": [
     "AGENT5-STASH-REVIEW.md",
     "WAS-CREATOR-OWNERSHIP.md",
