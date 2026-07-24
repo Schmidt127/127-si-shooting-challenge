@@ -25,9 +25,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event
  *
- * Version: v5.5
+ * Version: v5.6
  * Date Written: 2026-06-09
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-07-24
  *
  * CURRENT SCHEMA FIXES
  * - Does NOT use XP Bucket Key.
@@ -35,6 +35,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Uses XP Activity Date.
  * - Uses XP Activity Date Source.
  * - Streak End Date → Source Key date segment uses America/Denver (not UTC ISO slice).
+ * - v5.6: Duplicate active XP Reward Rules for the same Rule Key now error (matches 059),
+ *   instead of silently using the first match.
  *
  * PURPOSE
  * - Reads one Streak Occurrence.
@@ -75,7 +77,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
-    version: "v5.5",
+    version: "v5.6",
     timeZone: "America/Denver",
 
     tables: {
@@ -686,19 +688,38 @@ async function main() {
             ]),
         });
 
-        const matchingRule = xpRulesQuery.records.find((rule) => {
+        const matchingRules = xpRulesQuery.records.filter((rule) => {
             const ruleActive = isChecked(rule, xpRulesTable, CONFIG.xpRules.active);
             const ruleKey = getText(rule, xpRulesTable, CONFIG.xpRules.ruleKey);
             return ruleActive && allowedRuleKeys.includes(ruleKey);
         });
 
-        if (!matchingRule) {
+        if (matchingRules.length === 0) {
             await markOccurrenceError(recordId, `No active XP Reward Rule found. Tried: ${allowedRuleKeys.join(", ")}`, debugStep, {
                 achievementName,
                 allowedRuleKeys: allowedRuleKeys.join(", "),
             });
             return;
         }
+
+        if (matchingRules.length > 1) {
+            const matchedKeys = matchingRules
+                .map((rule) => getText(rule, xpRulesTable, CONFIG.xpRules.ruleKey) || rule.id)
+                .join(", ");
+            await markOccurrenceError(
+                recordId,
+                `Multiple active XP Reward Rules found for Rule Key(s): ${matchedKeys}. Tried: ${allowedRuleKeys.join(", ")}`,
+                debugStep,
+                {
+                    achievementName,
+                    allowedRuleKeys: allowedRuleKeys.join(", "),
+                    matchingRuleIds: matchingRules.map((rule) => rule.id).join(", "),
+                }
+            );
+            return;
+        }
+
+        const matchingRule = matchingRules[0];
 
         const xpAmount = getNumber(matchingRule, xpRulesTable, CONFIG.xpRules.xpAmount);
 

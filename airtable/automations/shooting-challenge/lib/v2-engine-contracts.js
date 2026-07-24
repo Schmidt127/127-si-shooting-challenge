@@ -536,6 +536,110 @@ function buildGateRuleMap(gateRules = []) {
   return map;
 }
 
+/**
+ * Select exactly one active XP Reward Rule for the given allowed rule keys.
+ * Mirrors 059's duplicate-active throw / 054's intended hardening:
+ * - missing → { status: "missing", rule: null, matches: [] }
+ * - one match → { status: "ok", rule, matches: [rule] }
+ * - 2+ matches → { status: "duplicate", rule: null, matches }
+ *
+ * Amounts are never invented here — callers read rule.xpAmount from Airtable.
+ */
+function selectActiveXpRewardRule(rules = [], allowedRuleKeys = []) {
+  const keys = (allowedRuleKeys || []).filter(Boolean);
+  const matches = (rules || []).filter((rule) => {
+    if (!rule || rule.active === false) return false;
+    return keys.includes(rule.ruleKey);
+  });
+  if (matches.length === 0) {
+    return { status: "missing", rule: null, matches: [] };
+  }
+  if (matches.length > 1) {
+    return { status: "duplicate", rule: null, matches };
+  }
+  return { status: "ok", rule: matches[0], matches };
+}
+
+/**
+ * Normalize Grade Band display labels for comparison (K-2, 3-4, …).
+ * Prefer linked record IDs in production scripts; use this only as fallback.
+ */
+function normalizeGradeBandLabel(value) {
+  let text = String(value || "").trim();
+  if (!text) return "";
+  // Collapse whitespace and normalize common dash / en-dash / em-dash variants.
+  text = text.replace(/\s+/g, " ");
+  text = text.replace(/[–—−]/g, "-");
+  // Strip a leading "Grades " / "Grade " prefix used by legacy inactive rows.
+  text = text.replace(/^grades?\s+/i, "");
+  return text;
+}
+
+/**
+ * Grade Band match: prefer linked record IDs; fall back to normalized labels.
+ * Used by 066-style milestone filtering (config-over-code, rename-safe when IDs present).
+ */
+function gradeBandsMatch({ enrollmentBandIds = [], milestoneBandIds = [], enrollmentLabel = "", milestoneLabel = "" }) {
+  const enrIds = (enrollmentBandIds || []).filter(Boolean);
+  const msIds = (milestoneBandIds || []).filter(Boolean);
+  if (enrIds.length > 0 && msIds.length > 0) {
+    return msIds.some((id) => enrIds.includes(id));
+  }
+  const a = normalizeGradeBandLabel(enrollmentLabel);
+  const b = normalizeGradeBandLabel(milestoneLabel);
+  return Boolean(a && b && a === b);
+}
+
+/**
+ * Read-only integrity check for Athlete Achievement Unlock rows.
+ * Detects blank keys, duplicate keys, unlock-without-XP, XP-without-unlock mismatch signals.
+ */
+function auditAchievementUnlockIntegrity(unlocks = []) {
+  const findings = [];
+  const byKey = new Map();
+
+  for (const unlock of unlocks) {
+    const id = unlock && unlock.id ? unlock.id : "(missing-id)";
+    const key = String((unlock && unlock.unlockKey) || "").trim();
+    const sourceKey = String((unlock && (unlock.milestoneSourceKey || unlock.sourceKey)) || "").trim();
+    const enrollmentId = unlock && unlock.enrollmentId ? unlock.enrollmentId : "";
+    const xpEventIds = (unlock && unlock.xpEventIds) || [];
+    const awardStatus = String((unlock && unlock.awardStatus) || "").trim();
+
+    if (!key && !sourceKey) {
+      findings.push({ severity: "high", code: "blank_unlock_key", unlockId: id, detail: "No Unlock Key or Milestone Source Key." });
+    }
+    const dedupeKey = key || sourceKey;
+    if (dedupeKey) {
+      if (!byKey.has(dedupeKey)) byKey.set(dedupeKey, []);
+      byKey.get(dedupeKey).push(id);
+    }
+    if (!enrollmentId) {
+      findings.push({ severity: "high", code: "missing_enrollment", unlockId: id, detail: "Unlock has no Enrollment link." });
+    }
+    if (/awarded/i.test(awardStatus) && (!xpEventIds || xpEventIds.length === 0)) {
+      findings.push({ severity: "medium", code: "unlock_without_xp", unlockId: id, detail: `Award Status="${awardStatus}" but no XP Event link.` });
+    }
+  }
+
+  for (const [dedupeKey, ids] of byKey.entries()) {
+    if (ids.length > 1) {
+      findings.push({
+        severity: "high",
+        code: "duplicate_unlock_key",
+        unlockId: ids.join(","),
+        detail: `Duplicate unlock key "${dedupeKey}" on ${ids.length} records.`,
+      });
+    }
+  }
+
+  return {
+    unlockCount: unlocks.length,
+    findingCount: findings.length,
+    findings,
+  };
+}
+
 function determineAllowedLevelWithGateBlocking(levels, gateRuleMap, lifetimeXp, stats) {
   if (!levels || levels.length === 0) {
     return {
@@ -1073,6 +1177,10 @@ module.exports = {
   findPreviousWeek,
   evaluateGate,
   buildGateRuleMap,
+  selectActiveXpRewardRule,
+  normalizeGradeBandLabel,
+  gradeBandsMatch,
+  auditAchievementUnlockIntegrity,
   determineAllowedLevelWithGateBlocking,
   isValidSha256Hex,
   evaluateAssetUploadFields,

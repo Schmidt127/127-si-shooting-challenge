@@ -27,11 +27,12 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.2
+ * Version: v3.3
  * Date Written: 2026-06-17
- * Last Updated: 2026-07-06
+ * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v3.3 (2026-07-24): Grade Band match prefers linked record IDs; normalized label is fallback only.
  * - v3.2 (2026-07-06): Week resolution uses 005/034 America/Denver date keys (not UTC ISO slice).
  * - v3.1 (2026-07-05): SCRIPT metadata block separated from CONFIG; batched create/update (50).
  * - v3.0 (2026-07-05): V2 standard rewrite — Week write from Milestone Activity Date;
@@ -54,6 +55,7 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Do NOT write Athlete Achievement Unlocks.Unlock Key (computed/formula in this base).
  * - Skip inactive enrollments without error.
  * - Grade Band and milestone thresholds come from linked config records — config-over-code.
+ * - Grade Band matching: linked record IDs first; normalized display label only as fallback.
  * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver dateTime fields).
  *
  * THIS IS NOT
@@ -106,10 +108,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.2",
-  versionDate: "2026-07-06",
+  version: "v3.3",
+  versionDate: "2026-07-24",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-07-06",
+  lastUpdated: "2026-07-24",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -414,6 +416,34 @@ function getGradeBandLabel(record, fieldName) {
   return getText(record, fieldName);
 }
 
+function normalizeGradeBandLabel(value) {
+  let text = String(value || "").trim();
+  if (!text) return "";
+  text = text.replace(/\s+/g, " ");
+  text = text.replace(/[–—−]/g, "-");
+  text = text.replace(/^grades?\s+/i, "");
+  return text;
+}
+
+/**
+ * Prefer linked Grade Band record IDs. Fall back to normalized display labels
+ * only when one side lacks a usable link (legacy / incomplete rows).
+ */
+function gradeBandsMatchForMilestone(enrollmentRecord, milestoneRecord) {
+  const enrollmentBandIds = getLinkedIds(enrollmentRecord, CONFIG.enrollmentFields.gradeBand);
+  const milestoneBandIds = getLinkedIds(milestoneRecord, CONFIG.shotMilestoneFields.gradeBand);
+  if (enrollmentBandIds.length > 0 && milestoneBandIds.length > 0) {
+    return milestoneBandIds.some((id) => enrollmentBandIds.includes(id));
+  }
+  const enrollmentLabel = normalizeGradeBandLabel(
+    getGradeBandLabel(enrollmentRecord, CONFIG.enrollmentFields.gradeBand)
+  );
+  const milestoneLabel = normalizeGradeBandLabel(
+    getGradeBandLabel(milestoneRecord, CONFIG.shotMilestoneFields.gradeBand)
+  );
+  return Boolean(enrollmentLabel && milestoneLabel && enrollmentLabel === milestoneLabel);
+}
+
 function getDateValue(record, fieldName) {
   if (!fieldName) return null;
   const value = record.getCellValue(fieldName);
@@ -696,8 +726,12 @@ async function main() {
     enrollmentRecord,
     CONFIG.enrollmentFields.gradeBand
   );
+  const enrollmentGradeBandIds = getLinkedIds(
+    enrollmentRecord,
+    CONFIG.enrollmentFields.gradeBand
+  );
 
-  if (!enrollmentGradeBand) {
+  if (!enrollmentGradeBand && enrollmentGradeBandIds.length === 0) {
     await updateEnrollment(enrollmentsTable, enrollmentRecord, {
       [CONFIG.enrollmentFields.runCheck]: false,
     });
@@ -878,11 +912,7 @@ async function main() {
       : true;
     if (!active) continue;
 
-    const milestoneGradeBand = getGradeBandLabel(
-      milestone,
-      CONFIG.shotMilestoneFields.gradeBand
-    );
-    if (milestoneGradeBand !== enrollmentGradeBand) continue;
+    if (!gradeBandsMatchForMilestone(enrollmentRecord, milestone)) continue;
 
     const milestoneShotCount = getNumber(
       milestone,
