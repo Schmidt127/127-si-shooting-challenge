@@ -58,6 +58,7 @@
 | Testing Scenarios | Run Test? / results fields | checkbox/text | Operator + 115 | — | ETF only | No pipeline writers | Medium | Keep framework fields here only |
 | Testing Scenarios | Linked Submission | link | 115 | — | Traceability | No | Medium | None now |
 | Make handoff fields | webhook/status fields on SA/WAS/etc | various | 070*/071/074/077 | Make writebacks | External systems | Possible | High | Secrets never in git |
+| Weekly Athlete Summary | Weekly Email Sent? / Make Send Status / sent timestamp | checkbox / status / dateTime | **Make Live** (`Bulk Email - May 18`) | 074 must not clear Sent?; Test branch skips writeback | Ops + 074 duplicate guard | Sequenced | Critical | **verified_prod 2026-07-24** — PROD 074 sendMode=Live |
 | Website/public fields | Active?, publish flags, public formulas | various | Config/human | Scripts | Next.js queries | View-dependent | Medium | Schmidt standings via view filter |
 
 ## Package-specific correction performed

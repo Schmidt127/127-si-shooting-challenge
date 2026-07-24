@@ -74,6 +74,8 @@ test("074 owns webhook handoff; does not mark Sent?; blocks duplicate Sent?", ()
   assert.ok(/testRecipientEmail/.test(s074));
   assert.ok(/sendMode === "test"/.test(s074) || /sendMode === 'test'/.test(s074));
   assert.ok(/Version:\s*v2\.1/.test(s074));
+  assert.ok(/IMPORTANT PRODUCTION sendMode RULE/.test(s074));
+  assert.ok(/must not force automation input sendMode=Test/i.test(s074));
 });
 
 test("policy matrix: short / normal / suppress + non-empty full", () => {
