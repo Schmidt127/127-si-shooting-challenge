@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-18
+Last GitHub Update: 2026-07-24
 
 Purpose:
 Sunday 10:00 AM America/Denver batch: for Ready && !Sent weekly packages,
@@ -18,11 +18,15 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.2
+ * Version: v1.3
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-23
+ * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.3 (2026-07-24): Add emptyWeekPolicy input (default send_normal) as a
+ *   recorded product-decision hook; suppress/short not enforced until Mike
+ *   decides. Keep blank-subject/recipients/html as notReady (no send). Schedules
+ *   remain OFF by default.
  * - v1.2 (2026-07-23): Fix week End Date matching — Weeks End Date is a
  *   dateTime stored as Denver 23:59 (next-day UTC); date keys now convert to
  *   the America/Denver calendar date instead of UTC (same fix as 118 v1.2).
@@ -54,20 +58,24 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
  * - excludedEnrollmentIds = comma-separated
  * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
  *   test enrollment is NOT hard-excluded (controlled Test-mode runs only).
+ * - emptyWeekPolicy = "send_normal" | "send_short" | "suppress" (default
+ *   send_normal). Recorded only; not enforced until Mike decides.
  *
  * OUTPUTS
  * - statusOut, actionOut, errorOut, debugStep
  * - armedCountOut, skippedCountOut, notReadyCountOut, errorCountOut
+ * - emptyWeekPolicyOut
  *
  * AUTHORITY
  * - docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md
+ * - docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md
  ************************************************************/
 
 // @ts-nocheck
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.2",
+  version: "v1.3",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -227,6 +235,23 @@ async function main() {
   const inputConfig = input.config();
   const dryRun = parseBool(inputConfig.dryRun, true);
   const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
+  const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_normal")
+    .trim()
+    .toLowerCase();
+  const emptyWeekPolicy = ["send_normal", "send_short", "suppress"].includes(emptyWeekPolicyRaw)
+    ? emptyWeekPolicyRaw
+    : "send_normal";
+  setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
+  if (emptyWeekPolicy !== "send_normal") {
+    console.log(
+      JSON.stringify({
+        automation: CONFIG.scriptName,
+        version: CONFIG.version,
+        note: "emptyWeekPolicy recorded but not enforced until Mike decides",
+        emptyWeekPolicy,
+      })
+    );
+  }
   const excluded = new Set(
     String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
@@ -369,6 +394,7 @@ async function main() {
       automation: CONFIG.scriptName,
       version: CONFIG.version,
       dryRun,
+      emptyWeekPolicy,
       targetWeekId: targetWeek.id,
       scheduledWeekEndKey: targetEndKey,
       armed,

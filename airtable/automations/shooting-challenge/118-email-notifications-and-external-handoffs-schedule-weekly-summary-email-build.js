@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-18
+Last GitHub Update: 2026-07-24
 
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
@@ -22,19 +22,23 @@ PROD: do not enable from agents.
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.2
+ * Version: v1.3
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-23
+ * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.3 (2026-07-24): Correct Summary Key documentation — live PROD shape
+ *   verified 2026-07-23 is {Enrollment Key}|{Week Key} =
+ *   ATH-{athleteRecId}|{schoolYear}|{weekRecId}, matching expectedSummaryKey.
+ *   Enrollment+Week matching remains the fallback. Add emptyWeekPolicy input
+ *   (default send_normal) as a recorded product-decision hook; suppress/short
+ *   are NOT enforced until Mike decides. Schedules remain OFF by default.
  * - v1.2 (2026-07-23): Fix week End Date matching — Weeks End Date is a
  *   dateTime stored as Denver 23:59 (next-day UTC); date keys now convert to
  *   the America/Denver calendar date instead of UTC, so the Sunday run can
  *   actually find the prior-Saturday week. Add includeSchmidt input
  *   (default false) so the Schmidt test enrollment can be armed for
- *   controlled Test-mode email verification. Note: PROD "Summary Key" is
- *   ATH-…|season|weekRecId (not enrollmentKey|weekKey); enrollment+week
- *   matching remains the authoritative lookup.
+ *   controlled Test-mode email verification.
  * - v1.1 (2026-07-18): Emit scheduledWeekEndKeyOut; prefer Summary Key for WAS
  *   lookup; skip duplicate WAS arms; keep dryRun default true.
  * - v1.0 (2026-07-16): Initial schedule-arm script.
@@ -67,20 +71,25 @@ PROD: do not enable from agents.
  * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
  *   test enrollment is NOT hard-excluded, enabling controlled Test-mode
  *   weekly email verification. Never combine with sendMode=Live.
+ * - emptyWeekPolicy = "send_normal" | "send_short" | "suppress" (default
+ *   send_normal). Recorded only until Mike decides; this script does not
+ *   suppress empty-week arms yet.
  *
  * OUTPUTS
  * - statusOut, actionOut, errorOut, debugStep
  * - armedCountOut, skippedCountOut, createdWasCountOut, errorCountOut
+ * - emptyWeekPolicyOut
  *
  * AUTHORITY
  * - docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md
+ * - docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md
  ************************************************************/
 
 // @ts-nocheck
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.2",
+  version: "v1.3",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -242,6 +251,24 @@ async function main() {
   const dryRun = parseBool(inputConfig.dryRun, true);
   const sendMode = String(inputConfig.sendMode || "Test").trim() || "Test";
   const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
+  const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_normal")
+    .trim()
+    .toLowerCase();
+  const emptyWeekPolicy = ["send_normal", "send_short", "suppress"].includes(emptyWeekPolicyRaw)
+    ? emptyWeekPolicyRaw
+    : "send_normal";
+  setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
+  // Product decision hook only — suppress/short are not enforced here yet.
+  if (emptyWeekPolicy !== "send_normal") {
+    console.log(
+      JSON.stringify({
+        automation: CONFIG.scriptName,
+        version: CONFIG.version,
+        note: "emptyWeekPolicy recorded but not enforced until Mike decides",
+        emptyWeekPolicy,
+      })
+    );
+  }
   const excluded = new Set(
     String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
@@ -424,6 +451,7 @@ async function main() {
       automation: CONFIG.scriptName,
       version: CONFIG.version,
       dryRun,
+      emptyWeekPolicy,
       targetWeekId: targetWeek.id,
       scheduledWeekEndKey: targetEndKey,
       armed,
