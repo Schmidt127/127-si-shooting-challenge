@@ -5,9 +5,12 @@
   "branch": "master",
   "commits": [
     {"sha": "3810dcb", "message": "fix: harden XP rule duplicate detection and Grade Band ID matching"},
-    {"sha": "e42b3ce", "message": "test: add XP rule, Grade Band, and unlock integrity coverage"}
+    {"sha": "e42b3ce", "message": "test: add XP rule, Grade Band, and unlock integrity coverage"},
+    {"sha": "08920e8", "message": "docs: complete config-xp overnight audits, report, and live probes"},
+    {"sha": "6904138", "message": "docs: update completion master for configuration and XP overnight work"}
   ],
   "pushed": true,
+  "working_tree_clean": false,
   "working_tree_clean": false,
   "SC_items_reviewed": [
     "SC-021", "SC-022", "SC-023", "SC-024", "SC-025", "SC-026", "SC-027", "SC-028",
