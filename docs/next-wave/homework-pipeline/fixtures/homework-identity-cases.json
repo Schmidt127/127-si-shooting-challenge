@@ -1,0 +1,50 @@
+{
+  "cases": [
+    {
+      "id": "multi-file-same-hc",
+      "scenario": "multiple_attachments",
+      "identity": {
+        "enrollmentId": "recEnrollment0001",
+        "homeworkAssignmentId": "recHWAssign000001",
+        "itemSlot": "HW1",
+        "submissionId": "recSubmission0001",
+        "responseKind": "file"
+      },
+      "expectSufficient": true,
+      "expectOneCompletion": true
+    },
+    {
+      "id": "written-only",
+      "scenario": "written_only_response",
+      "identity": {
+        "enrollmentId": "recEnrollment0001",
+        "homeworkAssignmentId": "recHWAssign000001",
+        "itemSlot": "WRITTEN",
+        "submissionId": null,
+        "responseKind": "written"
+      },
+      "expectSufficient": true,
+      "expectOneCompletion": true
+    },
+    {
+      "id": "quiz-week-gap",
+      "scenario": "quiz",
+      "identity": {
+        "enrollmentId": "recEnrollment0001",
+        "homeworkAssignmentId": "recHWAssign000001",
+        "itemSlot": "HW1",
+        "submissionId": null,
+        "responseKind": "quiz",
+        "weekId": "recWeek0000000001"
+      },
+      "expectSufficient": false,
+      "liveWriterKey": "067|enrollment|week|homework"
+    },
+    {
+      "id": "duplicate-fillout",
+      "scenario": "duplicate_fillout_submission",
+      "expectSufficient": false,
+      "mitigation": "007 Duplicate Key / upstream Fillout submission id"
+    }
+  ]
+}
