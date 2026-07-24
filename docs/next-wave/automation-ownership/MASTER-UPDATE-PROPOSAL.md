@@ -28,7 +28,7 @@ Lead / Mike may paste or merge the following into the completion master when rea
 3. **112** must remain **OFF**; **013** owns Video Feedback create.  
 4. Exactly one of **117** / **117c** owns **`ZOOM_CREDIT`** XP.  
 5. **063** / **111** remain deleted; Grade Band owned at create by **020** / **013**.  
-6. **118/119** stay OFF until authorized.  
+6. **118/119** schedules **ON** (verified_prod 2026-07-24); paste **118 v1.5** if UI still v1.4; season inputs `dryRun=false` + 118 `sendMode=Live`.  
 7. Weekly Threshold XP writer = **missing in repo** until UI hunt closes XP-D1.
 
 ### Open decisions for master tracker
@@ -44,7 +44,7 @@ Lead / Mike may paste or merge the following into the completion master when rea
 
 ```
 [ ] Mike PROD attestation: 112 OFF; 013 ON; 020 ON; 031 ON
-[ ] Mike PROD attestation: 063/111 Deleted; 118/119 OFF
+[ ] Mike PROD attestation: 063/111 Deleted; 118/119 ON + season Live inputs; 118 v1.5 pasted
 [ ] Mike PROD attestation: exactly one of 117/117c ON for ZOOM_CREDIT
 [ ] Mike UI hunt: Weekly Threshold XP writer YES/NO
 [ ] Link Agent 9 package as authoritative ownership contract until superseded

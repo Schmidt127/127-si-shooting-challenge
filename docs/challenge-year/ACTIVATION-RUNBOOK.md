@@ -59,8 +59,9 @@ Inspect / update Config awareness where needed:
 - **041 / 042** levels  
 - **072 / 074 / 118 / 119** weekly email  
 
-Identify schedules to activate later (118/119 remain OFF until authorized).  
-Remove Test-only fixed inputs before Live season send.  
+**Current season (2026-07-24):** 118/119 schedules are already **ON** — do not disable for normal ops.  
+During a **year rollover only**, temporarily turn 118/119 OFF, then restore ON after Weeks/Config are ready.  
+Remove Test-only fixed inputs before Live season send (`dryRun=false`, 118 `sendMode=Live`, 074 Live).  
 Validate current-year filters and historical exclusion.
 
 ## Weekly email
@@ -71,20 +72,20 @@ Preserve:
 
 Checklist:
 
-- [ ] Correct Week selection (prior Saturday Week End, America/Denver)  
-- [ ] Live send mode on **074** (never fixed Test in PROD)  
-- [ ] Schmidt handling / `includeSchmidt` defaults safe  
-- [ ] Empty-week policy `send_short` (SC-035)  
-- [ ] First controlled Test send on Schmidt  
-- [ ] Sunday schedule verification only after Mike authorization  
+- [x] Correct Week selection (prior Saturday Week End, America/Denver)  
+- [x] Live send mode on **074** (never fixed Test in PROD)  
+- [ ] Confirm 118/119 season inputs (`dryRun=false`; 118 `sendMode=Live`; paste **118 v1.5** if needed)  
+- [x] Empty-week policy `send_short` (SC-035)  
+- [x] Controlled Schmidt send + Live writeback  
+- [x] Sunday schedules ON (verified_prod 2026-07-24)  
 
 ## Make
 
-- [ ] Sender scenario (Bulk Email May 18 lineage)  
+- [x] Sender scenario (Bulk Email May 18 lineage)  
 - [ ] Webhook URL present only in Make/Airtable inputs (never git)  
-- [ ] Live route + final writeback  
-- [ ] No old-year hard-coded values  
-- [ ] Controlled test before season-wide enable  
+- [x] Live route + final writeback  
+- [ ] No old-year hard-coded values after rollover  
+- [x] Controlled test before season-wide enable  
 
 ## Softr / web
 
@@ -98,14 +99,14 @@ Checklist:
 
 1. Run preflight → require PASS (or Mike-accepted PASS WITH WARNINGS).  
 2. Controlled Schmidt test (submission → Week → XP → WAS).  
-3. Controlled weekly email Test path.  
+3. Controlled weekly email path (Test then Live writeback).  
 4. Operational approval.  
-5. Only then flip current flags / schedules as authorized.  
+5. Keep 118/119 **ON** with season Live inputs (see `docs/next-wave/go-live/MIKE-ACTIONS.md`).  
 
 ## Rollback
 
 1. Keep prior Config current until new year proven.  
-2. Turn 118/119 OFF.  
+2. **Temporarily** turn 118/119 OFF only during cutover emergency; restore **ON** after.  
 3. Do not delete prior Weeks/Enrollments/WAS.  
 4. Point Fillout hidden fields back to prior year if aborting.  
 5. Re-run preflight after fixes.

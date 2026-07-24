@@ -17,11 +17,13 @@
 2. **118 / 119 schedules ON** — do not disable based on older OFF guidance.
 3. **072 / 074 / Make Bulk Email May 18 ON**.
 4. Prefer 072 `allowSchmidtInput=false` for unattended season traffic.
+5. **118** season inputs: `dryRun=false`, `sendMode=Live`, `includeSchmidt=false` (paste **v1.5** if UI still v1.4).
+6. **119** season input: `dryRun=false`.
 
 ## Monitor
 
 1. First live Sunday: WAS create volume, email volume, Sent? writebacks, duplicate WAS check.
-2. Confirm dryRun/includeSchmidt inputs match intended season posture in UI.
+2. Confirm dryRun/includeSchmidt/sendMode inputs match Live season posture in UI (see [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md)).
 
 ## Do not
 

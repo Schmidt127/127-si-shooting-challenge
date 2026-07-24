@@ -131,8 +131,9 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Scripts | **118 v1.4 / 119 v1.4 / 072 v4.0 / 074 v2.1** — installed + live-proven |
+| Scripts | **118 v1.5** (repo; paste if PROD still v1.4) / **119 v1.4** / **072 v4.0** / **074 v2.1** — live path proven |
 | PROD schedules | **ON** — 118 Sun 5:00 AM Denver; 119 Sun 10:00 AM Denver (**verified_prod** 2026-07-24) |
+| Season inputs | **118** `dryRun=false` + `sendMode=Live`; **119** `dryRun=false`; **074** `sendMode=Live` — see [`go-live/MIKE-ACTIONS.md`](./next-wave/go-live/MIKE-ACTIONS.md) |
 | 072 / 074 / Make | **ON** — Make `Weekly Athlete Summary - Bulk Email - May 18` |
 | 074 sendMode | **Live** (or blank + WAS Live) — **never** fixed Test |
 | Live writeback | **PASS** — `Weekly Email Sent?`, `Make Send Status=Sent`, timestamp |

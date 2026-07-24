@@ -51,10 +51,11 @@
 | Field | Value |
 |-------|--------|
 | Name | `118 - Email - Schedule Weekly Summary Email Build` |
-| Repo version | **v1.4** |
+| Repo version | **v1.5** |
 | Schedule | Sunday **5:00 AM** America/Denver |
 | PROD schedule state | **ON** — Sunday 5:00 AM America/Denver (**verified_prod** 2026-07-24; older “OFF until auth” notes are historical) |
-| Defaults | Confirm live inputs in UI (controlled tests used dryRun/Test/includeSchmidt gates); `emptyWeekPolicy=send_short` |
+| Season inputs | `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short` |
+| Script defaults (safe paste) | `dryRun=true`, `sendMode=Test` — must override for season Sundays |
 
 ### 072 — Build Weekly Summary Email Package
 
@@ -161,6 +162,16 @@ Week unique identifier = Config primary value + Week Name (year derived from `Co
 | **119** | **ON** — Sunday 10:00 AM America/Denver |
 | **074** | **ON**; **`sendMode=Live`** (or blank + WAS Live) — **never fixed Test in PROD** |
 | Make WAS email scenario | **ON** (`Weekly Athlete Summary - Bulk Email - May 18`) |
+
+### Season input posture (required for parent Live Sundays)
+
+| Automation | Input | Season value | Why |
+|------------|-------|--------------|-----|
+| **118** | `dryRun` | **`false`** | Default `true` only counts — no WAS create/arm |
+| **118** | `sendMode` | **`Live`** | **v1.5** writes WAS `sendMode` from this input (v1.4 hardcoded Test + refused Live+!dryRun) |
+| **118** | `includeSchmidt` | **`false`** | Never combine with Live |
+| **119** | `dryRun` | **`false`** | Default `true` only counts — no Send arm |
+| **074** | `sendMode` / `sendModeInput` | **`Live`** (or blank if WAS Live) | Fixed Test forces Make Test branch (no Sent? writeback) |
 
 > Historical note: Pre-activation docs recommended keeping 118/119 **OFF**. That guidance is **superseded** by verified PROD activation.
 

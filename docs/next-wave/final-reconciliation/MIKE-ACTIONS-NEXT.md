@@ -1,12 +1,16 @@
 # Mike Actions — Next (consolidated)
 
-**Date:** 2026-07-24  
+> **SUPERSEDED for weekly-email schedule/sendMode actions (2026-07-24).**  
+> Use [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).  
+> **118/119 schedules are ON** (verified_prod). Do not keep them OFF. Repo **118 = v1.5**.
+
+**Date:** 2026-07-24 (historical packet; weekly-email rows below are stale)  
 **Environment:** PROD `appn84sqPw03zEbTT`  
 **Schmidt Enrollment:** `recgP9qZYjAhE7NXm` · Athlete `recgqVstObQRzgXJF`
 
 **Decisions:** SC-035 = `send_short`; SC-014 = Option B.  
-**PROD installs:** 054 v5.6 · 066 v3.3 · **072 v4.0** · **118/119 v1.4**.  
-**Weekly email:** Test-mode E2E **PASS** (`118→072→119→074→Make Bulk Email May 18`). Schedules remain **OFF**.
+**PROD installs:** 054 v5.6 · 066 v3.3 · **072 v4.0** · **118 v1.5 / 119 v1.4**.  
+**Weekly email:** Live path **PASS**; schedules **ON** — see go-live MIKE-ACTIONS.
 
 Canonical: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`
 

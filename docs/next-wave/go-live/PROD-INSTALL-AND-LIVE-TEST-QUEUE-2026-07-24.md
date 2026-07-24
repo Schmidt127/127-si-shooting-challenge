@@ -29,11 +29,12 @@ Do these in Airtable / Make UI. Agent cannot complete them without Mike.
 |---|-----|--------|-------------|-----------|
 | B1 | P0 | Confirm 074 sendMode still Live | Airtable → Automations → **074** → Script inputs → `sendMode` / `sendModeInput` is **Live** or blank (WAS Live). Not fixed **Test**. | Screenshot or written OK |
 | B2 | P0 | Confirm 118/119 schedule toggles ON | Automations → **118** schedule enabled Sun 5:00 AM Denver; **119** enabled Sun 10:00 AM Denver | Both show ON |
+| B2b | P0 | Confirm 118/119 season dryRun/sendMode | **118:** `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`. **119:** `dryRun=false`. (Defaults alone = schedule runs but arms nothing / Test-only WAS.) | Written OK |
 | B3 | P0 | Confirm Make scenario ON | Make → `Weekly Athlete Summary - Bulk Email - May 18` → ON (not “Updated”) | Scenario ON |
 | B4 | P1 | Attest **112 OFF** | Automations list → 112 disabled | Written attest |
 | B5 | P1 | Attest **063 / 111** | Confirm deleted or OFF; resolve inventory conflict | Written attest |
 | B6 | P1 | Attest **117 XOR 117c** | Exactly one ON for `ZOOM_CREDIT\|` XP writer | Written attest |
-| B7 | P1 | Version header spot-check | Open scripts: 020 v3.0.0, 054 v5.6, 066 v3.3, 072 v4.0, 074 v2.1, 118/119 v1.4 | Match repo |
+| B7 | P1 | Version header spot-check | Open scripts: 020 v3.0.0, 054 v5.6, 066 v3.3, 072 v4.0, 074 v2.1, **118 v1.5**, 119 v1.4 | Match repo |
 | B8 | P1 | Re-export Automations operator table | Include 115–119 / 070c / 116 / 117 | Snapshot in repo later |
 | B9 | P1 | First Sunday watch | After next Sun: 118 counts → 072 builds → 119 arms → 074 webhooks → Make Sent? | Notes in handoff |
 
@@ -58,7 +59,7 @@ Paste only when B7 shows drift. Prefer repair over new automations.
 |---|-----|--------|-----------|-------|
 | D1 | P1 | 072 | `072-…-build-weekly-summary-email-package.js` v4.0 | Empty-week owner |
 | D2 | P1 | 074 | `074-…-send-weekly-summary-email-package-to-make.js` v2.1 | Webhook only; sendMode Live |
-| D3 | P1 | 118 | `118-…-schedule-weekly-summary-email-build.js` v1.4 | Schedule must stay ON |
+| D3 | P0 | 118 | `118-…-schedule-weekly-summary-email-build.js` **v1.5** | Paste if PROD still v1.4; then set season inputs (B2b); schedule must stay ON |
 | D4 | P1 | 119 | `119-…-schedule-weekly-summary-email-send.js` v1.4 | Arms Send only |
 | D5 | P1 | 054 | `054-…-streak-xp-event.js` v5.6 | If header drift |
 | D6 | P1 | 066 | `066-…-shot-milestone-unlocks.js` v3.3 | If header drift |

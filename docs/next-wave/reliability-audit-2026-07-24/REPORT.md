@@ -39,7 +39,7 @@ Full trigger/status rows: [`../../foundation-reset/PROD-AUTOMATION-VERSION-INVEN
 
 | Band | Meaning | Members (primary) |
 |------|---------|-------------------|
-| **A — Trustworthy (verified_prod or strong recent proof)** | Live path proven or recently pasted | **072 v4.0**, **074 v2.1** (+ Live sendMode), **118/119 v1.4** (schedules OFF), Make Bulk Email May 18 Live writeback, **070b/070c**, **117** Stage 17, **066 v3.3** / **054 v5.6** |
+| **A — Trustworthy (verified_prod or strong recent proof)** | Live path proven or recently pasted | **072 v4.0**, **074 v2.1** (+ Live sendMode), **118 v1.5 / 119 v1.4** (**schedules ON** Sun 5:00 / 10:00 AM Denver — see `STALE-CLAIM-CORRECTION.md`), Make Bulk Email May 18 Live writeback, **070b/070c**, **117** Stage 17, **066 v3.3** / **054 v5.6** |
 | **B — Likely Live, version unproven** | Operator table Live; script body not API-readable | 001–010, 020–034, 041–043, 053–059, 064–065, 071, 073, 075–077, 101, 113–114 |
 | **C — Conflict / dual evidence** | Docs disagree | **063/111** (index: deleted 2026-07-24; inventory 2026-07-23: Live); **112** (must OFF vs inventory Live); **020** repo v3.0.0 vs inventory v2.3 |
 | **D — OFF / not inventoried / testing** | Keep OFF or confirm UI | **112** must OFF; **115** not in Automations table; **116/070c/117/117f/118/119** omitted from 2026-07-23 operator table |

@@ -11,6 +11,8 @@
 | Weekly email chain | `118→072→119→074→Make Bulk Email May 18→Gmail→writeback` |
 | 072 / 074 / Make | **ON** |
 | 118 / 119 schedules | **ON** (Sun 5:00 / 10:00 AM America/Denver) |
+| 118 script | Repo **v1.5** Live-season arming — paste if PROD still v1.4 |
+| Season inputs | 118 `dryRun=false` + `sendMode=Live`; 119 `dryRun=false`; 074 Live |
 | 074 sendMode | **Live** (never fixed Test) |
 | Empty-week policy | `send_short` enforced in 072 v4.0 |
 | Live writeback | Sent? / Make Send Status=Sent / timestamp **PASS** |
@@ -35,9 +37,10 @@ Learning Activities schema (SC-018/019), some Config resolver adoption, challeng
 
 ## P0 launch blockers
 
-1. None on weekly email path if schedules stay ON and 074 stays Live.  
-2. **Do not** re-disable 118/119 based on stale docs.  
-3. Broad parent email risk if non-Schmidt enrollments exist without safe filters — confirm base still controlled-test population before first Sunday.
+1. Confirm season inputs (see [`MIKE-ACTIONS.md`](./MIKE-ACTIONS.md) M4–M5) — defaults alone arm nothing.  
+2. Paste **118 v1.5** if PROD still has the Live+!dryRun hard-stop (v1.4).  
+3. **Do not** re-disable 118/119 based on stale docs; keep 074 Live.  
+4. Broad parent email risk if non-Schmidt enrollments exist without safe filters — confirm base still controlled-test population before first Sunday.
 
 ## P1 reliability
 

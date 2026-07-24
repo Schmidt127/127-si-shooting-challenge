@@ -1,5 +1,7 @@
 # Finishing Forecast — Agent 13
 
+> **Historical.** “Paste 118/119 OFF” guidance is **superseded** — schedules are **ON** (verified_prod 2026-07-24). Current Mike list: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
+
 **Date:** 2026-07-24  
 **Method:** Item counts + dependency chains from Completion Master (146 total). No unsupported completion percentages.
 

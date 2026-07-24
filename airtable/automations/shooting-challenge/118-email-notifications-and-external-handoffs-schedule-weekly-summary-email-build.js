@@ -9,24 +9,31 @@ Last GitHub Update: 2026-07-24
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
 prior ended week and arm Build Weekly Email Now? so automation 072 builds packages.
-Does not call Make. DEV must use dryRun/Test until Mike enables.
+Does not call Make.
 
 Trigger:
 At a scheduled time — Weekly — Sunday 05:00 — America/Denver
 
 Notes:
-Never commit webhook secrets. Exclude Schmidt test enrollment.
-PROD: do not enable from agents.
+Never commit webhook secrets. Exclude Schmidt test enrollment by default.
+PROD season posture (verified schedules ON 2026-07-24): dryRun=false, sendMode=Live.
+DEV / controlled tests: dryRun=true or sendMode=Test; includeSchmidt only with Test.
 */
 
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.4
+ * Version: v1.5
  * Date Written: 2026-07-16
  * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.5 (2026-07-24): Live season arming — when dryRun=false, write WAS
+ *   sendMode from input (Test|Live) instead of hardcoding Test. Allow
+ *   sendMode=Live with dryRun=false (Mike authorized Live path). Still refuse
+ *   includeSchmidt=true with Live. Script defaults remain dryRun=true /
+ *   sendMode=Test for safe paste; PROD season inputs must be dryRun=false +
+ *   sendMode=Live.
  * - v1.4 (2026-07-24): SC-035 approved — default emptyWeekPolicy = send_short.
  *   Package branching is enforced in automation **072 v4.0** (short / full /
  *   suppress). 118 still arms Build for empty weeks; 072 applies the policy.
@@ -50,14 +57,17 @@ PROD: do not enable from agents.
  * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
  * - For each Active? enrollment (excluding Schmidt), ensure WAS exists.
  * - Skip if Weekly Email Sent? or no cleaned email.
- * - Set Build Weekly Email Now? = true and sendMode = Test when dryRun=false.
+ * - Set Build Weekly Email Now? = true and WAS sendMode from input when
+ *   dryRun=false.
  *
  * IMPORTANT DESIGN RULES
  * - Does not POST Make.
  * - Does not clear Weekly Email Sent?.
- * - dryRun=true (default) only counts; no writes.
+ * - dryRun=true (default) only counts; no writes. Season PROD must set
+ *   dryRun=false or Sunday schedule arms nothing.
  * - Schmidt enrollment excluded by default: recgP9qZYjAhE7NXm
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
+ * - Never combine includeSchmidt=true with sendMode=Live.
  * - Scheduled date key = prior Saturday Week End (America/Denver).
  * - Idempotent: one WAS per Enrollment+Week (Summary Key when present).
  *
@@ -68,8 +78,8 @@ PROD: do not enable from agents.
  * - At a scheduled time (Weekly Sunday 05:00 America/Denver)
  *
  * INPUT VARIABLES
- * - dryRun = "true" | "false" (default true)
- * - sendMode = "Test" | "Live" (DEV must be Test)
+ * - dryRun = "true" | "false" (default true; PROD season = false)
+ * - sendMode = "Test" | "Live" (default Test; PROD season = Live)
  * - excludedEnrollmentIds = comma-separated (default includes Schmidt)
  * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
  *   test enrollment is NOT hard-excluded, enabling controlled Test-mode
@@ -80,18 +90,19 @@ PROD: do not enable from agents.
  * OUTPUTS
  * - statusOut, actionOut, errorOut, debugStep
  * - armedCountOut, skippedCountOut, createdWasCountOut, errorCountOut
- * - emptyWeekPolicyOut
+ * - emptyWeekPolicyOut, sendModeOut (Test|Live written to WAS when dryRun=false)
  *
  * AUTHORITY
  * - docs/v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md
  * - docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md
+ * - docs/next-wave/go-live/MIKE-ACTIONS.md
  ************************************************************/
 
 // @ts-nocheck
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.4",
+  version: "v1.5",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -251,7 +262,11 @@ async function main() {
 
   const inputConfig = input.config();
   const dryRun = parseBool(inputConfig.dryRun, true);
-  const sendMode = String(inputConfig.sendMode || "Test").trim() || "Test";
+  const sendModeRaw = String(inputConfig.sendMode || "Test").trim() || "Test";
+  const sendModeLower = sendModeRaw.toLowerCase();
+  // WAS single-select options are Test | Live (capitalized).
+  const sendModeSelectName =
+    ["live", "l", "real", "send", "parent"].includes(sendModeLower) ? "Live" : "Test";
   const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
   const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_short")
     .trim()
@@ -260,6 +275,7 @@ async function main() {
     ? emptyWeekPolicyRaw
     : "send_short";
   setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
+  setOutputSafe("sendModeOut", sendModeSelectName);
   const excluded = new Set(
     String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
@@ -270,9 +286,10 @@ async function main() {
     excluded.add(CONFIG.schmidtEnrollmentId);
   }
 
-  if (String(sendMode).toLowerCase() === "live" && dryRun === false) {
-    // Hard stop for accidental Live arming from this package
-    throw new Error("118 refuses sendMode=Live when dryRun=false. Use Test only until Mike approves Live.");
+  if (includeSchmidt && sendModeSelectName === "Live") {
+    throw new Error(
+      "118 refuses includeSchmidt=true with sendMode=Live. Use Test for Schmidt verification."
+    );
   }
 
   const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
@@ -406,7 +423,9 @@ async function main() {
 
       const update = {};
       if (fieldExists(wasTable, CONFIG.was.buildNow)) update[CONFIG.was.buildNow] = true;
-      if (fieldExists(wasTable, CONFIG.was.sendMode)) update[CONFIG.was.sendMode] = { name: "Test" };
+      if (fieldExists(wasTable, CONFIG.was.sendMode)) {
+        update[CONFIG.was.sendMode] = { name: sendModeSelectName };
+      }
       if (Object.keys(update).length > 0) {
         await wasTable.updateRecordAsync(wasRow.id, update);
       }
@@ -442,6 +461,7 @@ async function main() {
       automation: CONFIG.scriptName,
       version: CONFIG.version,
       dryRun,
+      sendMode: sendModeSelectName,
       emptyWeekPolicy,
       targetWeekId: targetWeek.id,
       scheduledWeekEndKey: targetEndKey,

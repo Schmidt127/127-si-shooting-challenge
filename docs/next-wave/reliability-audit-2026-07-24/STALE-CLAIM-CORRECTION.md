@@ -4,6 +4,8 @@
 
 The Agent 1+2 reliability audit was written when 118/119 schedules were still **OFF**. Mike has since verified PROD activation.
 
+**Follow-up (same day):** Repo **118 v1.5** removes the v1.4 hard-stop that refused `sendMode=Live` when `dryRun=false`, and writes WAS `sendMode` from input. Paste + season inputs: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
+
 | Claim in audit package | Current verified PROD | Action |
 |------------------------|----------------------|--------|
 | Keep 118/119 schedules OFF (P0) | **118 ON** Sun 5:00 AM Denver; **119 ON** Sun 10:00 AM Denver | **Superseded** — do not disable |

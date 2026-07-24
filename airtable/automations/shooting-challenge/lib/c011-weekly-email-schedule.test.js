@@ -24,14 +24,19 @@ function test(name, fn) {
 const root = path.join(__dirname, "..");
 const read = (name) => fs.readFileSync(path.join(root, name), "utf8");
 
-test("118/119 default dryRun true and refuse Live arming", () => {
+test("118/119 default dryRun true; 118 v1.5 allows Live season arming", () => {
   const s118 = read("118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js");
   const s119 = read("119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js");
   assert.ok(/parseBool\(inputConfig\.dryRun,\s*true\)/.test(s118));
   assert.ok(/parseBool\(inputConfig\.dryRun,\s*true\)/.test(s119));
-  assert.ok(/refuses sendMode=Live when dryRun=false/.test(s118));
-  assert.ok(/version:\s*"v1\.4"/.test(s118));
+  // v1.4 hard-stop removed — Live + dryRun=false is authorized for season PROD.
+  assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
+  assert.ok(/refuses includeSchmidt=true with sendMode=Live/.test(s118));
+  assert.ok(/version:\s*"v1\.5"/.test(s118));
   assert.ok(/version:\s*"v1\.4"/.test(s119));
+  // Must write WAS sendMode from input (not hardcoded Test-only).
+  assert.ok(/sendModeSelectName/.test(s118));
+  assert.ok(!/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*"Test"\s*\}/.test(s118));
   assert.ok(/scheduledWeekEndKeyOut/.test(s118));
   assert.ok(/scheduledWeekEndKeyOut/.test(s119));
   assert.ok(/Summary Key/.test(s118));

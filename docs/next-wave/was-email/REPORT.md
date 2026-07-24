@@ -9,7 +9,7 @@
 |------|--------|
 | Flow | `118 → 072 → 119 → 074 → Make → Gmail → Make writeback` |
 | Empty-week policy | **`send_short` approved + enforced in 072 v4.0** |
-| 118 / 119 | **v1.4** installed; schedules **ON** (Sun 5:00 / 10:00 AM America/Denver) |
+| 118 / 119 | **118 v1.5** (repo; paste if PROD still v1.4) / **119 v1.4**; schedules **ON** (Sun 5:00 / 10:00 AM America/Denver); season inputs `dryRun=false` + 118 `sendMode=Live` |
 | 072 | **v4.0** verified `built_short_empty_week` |
 | 074 | Webhook handoff **ON** (repo SoT v2.1); **PROD sendMode=Live** (not fixed Test) |
 | Make | `Weekly Athlete Summary - Bulk Email - May 18` **ON**; Live writeback **PASS** |
@@ -25,7 +25,10 @@
 
 ## Remaining
 
-1. Monitor first live Sunday (118 → 072 → 119 → 074 → Make writeback volume).  
-2. Keep 074 PROD sendMode **Live** (or blank + WAS Live) — never fixed Test.  
-3. Optional: Make Test-branch Sent? writeback parity (not required for Live season).  
-4. Do **not** disable 118/119 based on stale OFF docs.
+1. Paste **118 v1.5** if PROD header is still v1.4; set season inputs (`dryRun=false`, `sendMode=Live`, `includeSchmidt=false`); 119 `dryRun=false`.  
+2. Monitor first live Sunday (118 → 072 → 119 → 074 → Make writeback volume).  
+3. Keep 074 PROD sendMode **Live** (or blank + WAS Live) — never fixed Test.  
+4. Optional: Make Test-branch Sent? writeback parity (not required for Live season).  
+5. Do **not** disable 118/119 based on stale OFF docs.
+
+Canonical Mike list: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).

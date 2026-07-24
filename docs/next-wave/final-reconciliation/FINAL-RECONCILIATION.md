@@ -7,6 +7,8 @@
 **Environment:** PROD `appn84sqPw03zEbTT` (active)  
 **Controlling plan:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`
 
+> **Historical packet.** Weekly-email “118/119 OFF” rows are **stale**. Current: schedules **ON**; **118 v1.5**; go-live [`MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
+
 ---
 
 ## 1. Mission outcome

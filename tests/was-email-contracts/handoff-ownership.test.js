@@ -59,11 +59,14 @@ test("119 v1.4 only arms Send to Make? and does not post webhook", () => {
   assert.ok(/send_short/.test(s119));
 });
 
-test("118 v1.4 does not build HTML or post webhook", () => {
-  assert.ok(/version:\s*"v1\.4"/.test(s118));
+test("118 v1.5 does not build HTML or post webhook; arms Live sendMode from input", () => {
+  assert.ok(/version:\s*"v1\.5"/.test(s118));
   assert.ok(/Build Weekly Email Now\?/.test(s118) || /buildNow/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s118));
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s118));
+  assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
+  assert.ok(/refuses includeSchmidt=true with sendMode=Live/.test(s118));
+  assert.ok(/sendModeSelectName/.test(s118));
 });
 
 test("074 owns webhook handoff; does not mark Sent?; blocks duplicate Sent?", () => {

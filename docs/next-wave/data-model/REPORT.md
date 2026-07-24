@@ -127,9 +127,11 @@ See git tip of `agent2/airtable-data-model-cleanup` after push.
 ## Recommended next actions
 
 1. **P0** Confirm 074 PROD sendMode remains Live.  
-2. **P1** Mike attest Make writeback fields; hide non-authoritative WAS status columns in ops views.  
-3. **P1** Keep 118/119 schedules OFF until race policy approved (Agent 9).  
+2. **P0** Confirm 118/119 season inputs: `dryRun=false`; 118 `sendMode=Live` (paste **118 v1.5** if still v1.4). Schedules stay **ON** — do not disable.  
+3. **P1** Mike attest Make writeback fields; hide non-authoritative WAS status columns in ops views.  
 4. **P1** Attest 117 XOR 117c.  
 5. **P2** Inventory Weeks text stubs before hide/retire.  
 6. **P3** Optional HC RID key additive migration ticket.  
 7. **P3** Hunt Weekly Threshold XP writer in Airtable UI.
+
+> **Superseded:** “Keep 118/119 OFF” — schedules are **ON** (verified_prod 2026-07-24). See `docs/next-wave/go-live/MIKE-ACTIONS.md`.
