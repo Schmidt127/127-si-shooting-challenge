@@ -6,6 +6,11 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Airtable
+
+#### Changed
+- **072 v4.0 empty-week policy enforcement (2026-07-24)** — SC-035 `send_short` builds a concise no-activity reminder; `send_normal` keeps the full empty-week report; `suppress` leaves packages not send-ready. Non-empty weeks still get the full summary. 118/119 bumped to **v1.4** (default `send_short`; package shape enforced in 072). No webhook/email from 072. Runbook: [`docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md`](./docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md). PROD paste is manual.
+
 ### Web
 
 #### Changed

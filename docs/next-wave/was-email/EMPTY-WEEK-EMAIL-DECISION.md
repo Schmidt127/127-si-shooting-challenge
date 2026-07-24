@@ -44,12 +44,18 @@ No arm/build/send when WAS has zero activity.
 
 ---
 
-## Implementation remaining (do not treat as Live-ready)
+## Implementation status (2026-07-24)
 
-Repo 118/119 v1.3 **record** `emptyWeekPolicy` but **do not yet enforce** `send_short` (short template path + skip full package for empty weeks).
+| Layer | Status |
+|-------|--------|
+| Product decision | **Approved — `send_short`** |
+| Repo enforcement | **072 v4.0** builds short reminder / full / suppress per policy |
+| 118/119 | **v1.4** default `send_short`; still arm Build/Send gates only |
+| PROD paste | Manual — see [`EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md`](./EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md) |
+| Live schedules | Remain **OFF** until Schmidt empty-week proof PASS |
 
 Before Live Sunday schedules:
 
-1. Enforce `send_short` in 118/119 (and package/template path as designed).  
-2. Keep schedules **OFF** and `dryRun=true` until Schmidt dry-run PASS.  
-3. Paste approved scripts only after enforcement + copy are ready — **do not modify PROD automations in this documentation pass**.
+1. Paste **072 v4.0** with `emptyWeekPolicy=send_short` (required).  
+2. Re-run Schmidt empty-week build — expect **Weekly Check-In**, not full zero report.  
+3. Keep schedules **OFF** and `dryRun=true` until Mike authorizes.

@@ -54,14 +54,13 @@ If a Zoom recording **XP** orchestrator or **117c** is installed later, keep exa
 **Doc:** `docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md`  
 **Still needed before Live:** enforce `send_short` in 118/119 + short template; keep schedules OFF / dryRun until Schmidt PASS.
 
-### 5. Paste 118/119 v1.3 OFF in PROD (after `send_short` enforcement ready)
+### 5. Paste 072 v4.0 + optional 118/119 v1.4 (empty-week enforcement)
 
-**Runbook:** `docs/next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md`  
-**Scripts:**  
-- `airtable/automations/shooting-challenge/118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` **v1.3**  
-- `airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js` **v1.3**  
-**Inputs:** dryRun default **true**; `includeSchmidt=true` for Test; schedules **OFF**; `emptyWeekPolicy=send_short` once enforced.  
-**Expected outcome:** Automations installed, OFF, dryRun-safe; no Sunday Live fire. **Do not modify PROD yet** until enforcement lands in repo.
+**Runbook:** `docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md`  
+**Required:** Paste **072 v4.0** with input `emptyWeekPolicy=send_short`.  
+**Optional:** 118/119 **v1.4** (defaults aligned; schedules remain **OFF**).  
+**Schmidt proof:** empty week → subject **Weekly Check-In**, not full zero report; Ready?=true; Send to Make?=false.  
+**Do not** enable Live Sunday schedules from this step.
 
 ### 6. Quiz path (SC-014) — DECIDED
 

@@ -146,10 +146,10 @@ test("link_only skips create", () => {
   );
 });
 
-test("empty week policy hook defaults", () => {
+test("empty week policy is enforced (SC-035)", () => {
   const p = resolveEmptyWeekEmailPolicy("suppress");
   assert.strictEqual(p.policy, "suppress");
-  assert.strictEqual(p.enforced, false);
+  assert.strictEqual(p.enforced, true);
 });
 
 console.log("was-uniqueness tests passed");

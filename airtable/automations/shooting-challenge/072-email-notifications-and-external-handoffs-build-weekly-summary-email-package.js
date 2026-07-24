@@ -4,10 +4,11 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-07-24
 
 Purpose:
 Builds the branded weekly parent/athlete summary email package on Weekly Athlete Summary.
+Enforces SC-035 empty-week policy (send_short / send_normal / suppress).
 
 Trigger:
 Weekly Athlete Summary when Build Weekly Email Now? is checked.
@@ -26,11 +27,17 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 072 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Build Weekly Summary Email Package
  *
- * Version: v3.9
+ * Version: v4.0
  * Date Written: 2026-05-19
- * Last Updated: 2026-07-23
+ * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v4.0 (2026-07-24): Enforce SC-035 emptyWeekPolicy on package build.
+ *   Empty + send_short → concise no-activity reminder (not full zero report).
+ *   Empty + send_normal → full weekly summary (prior behavior).
+ *   Empty + suppress → clear Build; do not set Weekly Email Ready?.
+ *   Non-empty weeks always build the full summary. Default policy send_short.
+ *   Still does not send webhooks/email (074 owns send).
  * - v3.9 (2026-07-23): Declare debugStep before the comms gate (was an
  *   undeclared assignment that throws in strict runtimes). Add optional
  *   input allowSchmidtInput = "true" so the Schmidt test enrollment can be
@@ -44,6 +51,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Builds the branded weekly parent/athlete summary email.
  * - Summarizes shooting, homework, Zoom attendance, video feedback,
  *   streaks, thresholds, XP buckets, and XP event detail.
+ * - For empty weeks, applies emptyWeekPolicy (short reminder / full / suppress).
  * - Writes the finished email package back to the Weekly Athlete Summary record.
  * - Does NOT send the email to Make.com or Gmail directly.
  * - Skips inactive enrollments and Schmidt test enrollment (C-010 / C-011).
@@ -77,14 +85,16 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - sendModeInput = sendMode from the triggering Weekly Athlete Summary record
  * - allowSchmidtInput = "true" to permit building the Schmidt test enrollment
  *   package (controlled Test-mode verification only; default false)
+ * - emptyWeekPolicy = "send_short" | "send_normal" | "suppress"
+ *   (default send_short per SC-035). Enforced here on empty weeks only.
  *
  * OUTPUT / WRITEBACK FIELDS
  * - Build Weekly Email Now? = unchecked
- * - Weekly Email Ready? = checked
- * - Weekly Email Sent? = unchecked
+ * - Weekly Email Ready? = checked (except empty+suppress → left unchecked)
+ * - Weekly Email Sent? = unchecked (on successful package build)
  * - Send to Make? = unchecked
- * - Weekly Email Sent At = cleared
- * - Weekly Email Error = cleared
+ * - Weekly Email Sent At = cleared (on successful package build)
+ * - Weekly Email Error = cleared (or suppress skip note)
  * - Weekly Email Subject = generated subject
  * - Weekly Email Recipients = parent/athlete email CSV
  * - Weekly Email HTML = generated branded HTML email
@@ -101,6 +111,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - This script must not send the email and must not arm the Make send automation.
  * - Send to Make? is left unchecked so staff can review the email HTML before manually arming send.
  * - A separate automation (074) sends the prepared package to Make/Gmail after Send to Make? is checked manually.
+ * - Keep empty-week helpers in sync with lib/was-email-contracts/empty-week-policy.js.
  ************************************************************/
 
 // @ts-nocheck
@@ -111,10 +122,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
-    version: "v3.9",
+    version: "v4.0",
     schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
     dateWritten: "2026-05-19",
-    lastUpdated: "2026-07-23",
+    lastUpdated: "2026-07-24",
+    defaultEmptyWeekPolicy: "send_short",
 
     timeZone: "America/Denver",
 
@@ -678,6 +690,142 @@ function renderCompactTable(headers, rows, emptyMessage) {
 }
 
 /* =========================================================
+   SECTION 5B: EMPTY-WEEK POLICY HELPERS (SC-035)
+   Keep in sync with lib/was-email-contracts/empty-week-policy.js
+   ========================================================= */
+
+function normalizeEmptyWeekPolicy(raw) {
+    const p = String(raw == null ? "" : raw).trim().toLowerCase();
+    if (["send_normal", "send_short", "suppress"].includes(p)) return p;
+    return CONFIG.defaultEmptyWeekPolicy || "send_short";
+}
+
+function isEmptyWeekActivity(metrics) {
+    const m = metrics || {};
+    return (
+        Number(m.countedSubmissionCount || 0) === 0 &&
+        Number(m.totalShots || 0) === 0 &&
+        Number(m.daysLogged || 0) === 0 &&
+        Number(m.homeworkSatisfactoryCount || 0) === 0 &&
+        Number(m.zoomAttendedCount || 0) === 0 &&
+        Number(m.videoFeedbackCount || 0) === 0 &&
+        Number(m.weeklyXp || 0) === 0
+    );
+}
+
+function resolveEmptyWeekBuildPlan(policy, isEmpty) {
+    const p = normalizeEmptyWeekPolicy(policy);
+    if (!isEmpty) {
+        return {
+            policy: p,
+            isEmpty: false,
+            buildMode: "full",
+            actionOut: "built_full",
+            sendReady: true,
+        };
+    }
+    if (p === "suppress") {
+        return {
+            policy: p,
+            isEmpty: true,
+            buildMode: "suppress",
+            actionOut: "skipped_empty_week_suppress",
+            sendReady: false,
+        };
+    }
+    if (p === "send_short") {
+        return {
+            policy: p,
+            isEmpty: true,
+            buildMode: "short",
+            actionOut: "built_short_empty_week",
+            sendReady: true,
+        };
+    }
+    return {
+        policy: "send_normal",
+        isEmpty: true,
+        buildMode: "full",
+        actionOut: "built_full_empty_week",
+        sendReady: true,
+    };
+}
+
+function buildShortNoActivityEmailPackage({ athleteName, weekLabel, weeklyGoalTarget }) {
+    const safeAthlete = escapeHtml(athleteName);
+    const safeWeek = escapeHtml(weekLabel);
+    const safeBrand = escapeHtml(BRAND.brandName);
+    const goalLine =
+        Number(weeklyGoalTarget || 0) > 0
+            ? `This week's shot target is <strong>${escapeHtml(String(roundWhole(weeklyGoalTarget)))}</strong> shots when you log activity.`
+            : `Log even one shooting day this week to get back on the weekly summary scoreboard.`;
+
+    const subject = `${BRAND.brandName} Weekly Check-In | ${athleteName} | ${weekLabel}`;
+
+    const html = `
+    <!doctype html>
+    <html>
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>${escapeHtml(subject)}</title>
+    </head>
+    <body style="margin:0;padding:0;background:${BRAND.bg};font-family:Arial,Helvetica,sans-serif;color:${BRAND.text};">
+      <div style="background:${BRAND.bg};padding:16px 10px;">
+        <div style="max-width:${BRAND.width};margin:0 auto;">
+          <div style="background:${BRAND.blue};border-radius:16px;padding:18px 20px;margin:0 0 12px 0;color:#FFFFFF;">
+            <div style="font-size:9px;letter-spacing:.45px;text-transform:uppercase;opacity:.95;margin:0 0 4px 0;">Weekly Check-In</div>
+            <div style="font-size:21px;line-height:1.15;font-weight:800;margin:0 0 5px 0;">${safeAthlete}</div>
+            <div style="font-size:11px;line-height:1.35;opacity:.95;">${safeWeek}</div>
+          </div>
+
+          <div style="background:${BRAND.card};border:1px solid ${BRAND.border};border-radius:14px;padding:13px 15px;margin:0 0 12px 0;">
+            <div style="font-size:14px;line-height:1.25;font-weight:800;color:${BRAND.orange};margin:0 0 8px 0;">
+              No activity logged this week
+            </div>
+            <div style="font-size:11px;line-height:1.45;color:${BRAND.text};">
+              <p style="margin:0 0 8px 0;">Hello,</p>
+              <p style="margin:0 0 8px 0;">
+                We did not record shooting, homework, Zoom, or video activity for
+                <strong>${safeAthlete}</strong> during <strong>${safeWeek}</strong>.
+              </p>
+              <p style="margin:0 0 8px 0;">
+                This is a short reminder to get back on track — not a full weekly score report.
+              </p>
+              <p style="margin:0 0 8px 0;">${goalLine}</p>
+              <p style="margin:0;">Questions are always welcome.</p>
+            </div>
+          </div>
+
+          <div style="background:${BRAND.blue};border-radius:14px;padding:12px 14px;color:#FFFFFF;">
+            <div style="font-size:10px;font-weight:700;margin:0 0 3px 0;">${safeBrand}</div>
+            <div style="font-size:9px;line-height:1.35;opacity:.95;">Empty-week reminder (send_short)</div>
+          </div>
+        </div>
+      </div>
+    </body>
+    </html>
+    `.trim();
+
+    const text = [
+        "Weekly Check-In",
+        athleteName,
+        weekLabel,
+        "",
+        "No activity logged this week.",
+        "This is a short reminder to get back on track — not a full weekly score report.",
+        Number(weeklyGoalTarget || 0) > 0
+            ? `Weekly shot target when active: ${roundWhole(weeklyGoalTarget)} shots.`
+            : "Log even one shooting day this week to return to the full weekly summary.",
+        "",
+        "Questions are always welcome.",
+        BRAND.brandName,
+    ].join("\n");
+
+    return { subject, html, text, packageKind: "short_no_activity" };
+}
+
+/* =========================================================
    SECTION 2: MAIN
    ========================================================= */
 
@@ -691,6 +839,11 @@ async function main() {
     const sendModeInput = String(cfg.sendModeInput || "").trim();
     const allowSchmidt =
         String(cfg.allowSchmidtInput || "").trim().toLowerCase() === "true";
+    const emptyWeekPolicy = normalizeEmptyWeekPolicy(
+        cfg.emptyWeekPolicy != null && String(cfg.emptyWeekPolicy).trim() !== ""
+            ? cfg.emptyWeekPolicy
+            : CONFIG.defaultEmptyWeekPolicy
+    );
 
     if (!recordId) {
         throw new Error("Missing required input: recordId");
@@ -2060,6 +2213,191 @@ async function main() {
         });
 
     /* =========================================================
+       SECTION 18.5: EMPTY-WEEK POLICY ENFORCEMENT (SC-035)
+       ========================================================= */
+
+    debugStep = "Apply empty-week email policy";
+    setOutputSafe("debugStep", debugStep);
+
+    const zoomAttendedCount = zoomRows.filter(row => row.attended).length;
+    const videoFeedbackCount = actualVideoRows.length;
+    const weekIsEmpty = isEmptyWeekActivity({
+        countedSubmissionCount: countedSubmissionRows.length,
+        totalShots,
+        daysLogged,
+        homeworkSatisfactoryCount,
+        zoomAttendedCount,
+        videoFeedbackCount,
+        weeklyXp: weeklyXpForEmail,
+    });
+    const emptyWeekPlan = resolveEmptyWeekBuildPlan(emptyWeekPolicy, weekIsEmpty);
+
+    setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
+    setOutputSafe("weekIsEmptyOut", weekIsEmpty ? "true" : "false");
+    setOutputSafe("emptyWeekBuildModeOut", emptyWeekPlan.buildMode);
+
+    if (emptyWeekPlan.buildMode === "suppress") {
+        const suppressUpdate = {};
+        if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
+            suppressUpdate[CONFIG.summaryFields.buildNow] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailReady)) {
+            suppressUpdate[CONFIG.summaryFields.emailReady] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.sendToMake)) {
+            suppressUpdate[CONFIG.summaryFields.sendToMake] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailError)) {
+            suppressUpdate[CONFIG.summaryFields.emailError] =
+                "Skipped empty-week package (emptyWeekPolicy=suppress). Not send-ready.";
+        }
+        if (Object.keys(suppressUpdate).length > 0) {
+            await summaryTable.updateRecordAsync(recordId, suppressUpdate);
+        }
+
+        setOutputSafe("statusOut", "skipped");
+        setOutputSafe("actionOut", emptyWeekPlan.actionOut);
+        setOutputSafe("errorOut", "Skipped: empty week suppressed by emptyWeekPolicy.");
+        setOutputSafe("sendMode", sendMode);
+        setOutputSafe("sendModeDebug", `FINAL SEND MODE USED BY SCRIPT = ${sendMode}`);
+        setOutputSafe("subjectOut", "");
+        setOutputSafe("htmlOut", "");
+        setOutputSafe("recipientsCsv", recipientsCsv);
+        setOutputSafe("debugStep", "skipped_empty_week_suppress");
+        console.log(JSON.stringify({
+            scriptName: CONFIG.scriptName,
+            version: CONFIG.version,
+            recordId,
+            statusOut: "skipped",
+            actionOut: emptyWeekPlan.actionOut,
+            emptyWeekPolicy,
+            weekIsEmpty,
+            sendMode,
+            sendReady: false,
+        }));
+        return;
+    }
+
+    if (emptyWeekPlan.buildMode === "short") {
+        const shortPkg = buildShortNoActivityEmailPackage({
+            athleteName,
+            weekLabel,
+            weeklyGoalTarget: baseThresholdTarget,
+        });
+        const subjectOut = shortPkg.subject;
+        const htmlOut = shortPkg.html;
+        const textOut = shortPkg.text;
+        const eventId = `WEEKLY_EMAIL|${enrollmentId}|${weekId}`;
+        const payload = {
+            sendMode,
+            eventId,
+            weeklySummaryRecordId: summaryRecord.id,
+            weeklyEmailRecordId: summaryRecord.id,
+            enrollmentId,
+            weekId,
+            athleteName,
+            weekLabel,
+            currentLevel: currentLevelText,
+            gradeBand: gradeBandText,
+            subject: subjectOut,
+            csvemail: recipientsCsv,
+            html: htmlOut,
+            text: textOut,
+            revision: CONFIG.version,
+            builtAt: new Date().toISOString(),
+            packageKind: shortPkg.packageKind,
+            emptyWeekPolicy,
+            weekIsEmpty: true,
+            summary: {
+                daysLogged,
+                totalShots,
+                weeklyXpForEmail,
+                weeklyGoalTarget: baseThresholdTarget,
+            },
+            diagnostics: {
+                weekStartKey,
+                weekEndKey,
+                notes: [
+                    "Empty-week send_short package.",
+                    "This script builds email output only.",
+                    "It does not send webhooks or email.",
+                ],
+            },
+        };
+
+        const updateFields = {};
+        if (fieldExists(summaryTable, CONFIG.summaryFields.buildNow)) {
+            updateFields[CONFIG.summaryFields.buildNow] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailReady)) {
+            updateFields[CONFIG.summaryFields.emailReady] = true;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailSent)) {
+            updateFields[CONFIG.summaryFields.emailSent] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.sendToMake)) {
+            updateFields[CONFIG.summaryFields.sendToMake] = false;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailSentAt)) {
+            updateFields[CONFIG.summaryFields.emailSentAt] = null;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailError)) {
+            updateFields[CONFIG.summaryFields.emailError] = "";
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailSubject)) {
+            updateFields[CONFIG.summaryFields.emailSubject] = subjectOut;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailRecipients)) {
+            updateFields[CONFIG.summaryFields.emailRecipients] = recipientsCsv;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailHtml)) {
+            updateFields[CONFIG.summaryFields.emailHtml] = htmlOut;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailText)) {
+            updateFields[CONFIG.summaryFields.emailText] = textOut;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailPayloadJson)) {
+            updateFields[CONFIG.summaryFields.emailPayloadJson] = JSON.stringify(payload, null, 2);
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailWeekLabel)) {
+            updateFields[CONFIG.summaryFields.emailWeekLabel] = weekLabel;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailRevision)) {
+            updateFields[CONFIG.summaryFields.emailRevision] = CONFIG.version;
+        }
+        if (fieldExists(summaryTable, CONFIG.summaryFields.emailLastBuiltAt)) {
+            updateFields[CONFIG.summaryFields.emailLastBuiltAt] = new Date().toISOString();
+        }
+
+        await summaryTable.updateRecordAsync(recordId, updateFields);
+
+        setOutputSafe("subjectOut", subjectOut);
+        setOutputSafe("htmlOut", htmlOut);
+        setOutputSafe("recipientsCsv", recipientsCsv);
+        setOutputSafe("sendMode", sendMode);
+        setOutputSafe("sendModeDebug", `FINAL SEND MODE USED BY SCRIPT = ${sendMode}`);
+        setOutputSafe("statusOut", "success");
+        setOutputSafe("actionOut", emptyWeekPlan.actionOut);
+        setOutputSafe("errorOut", "");
+        setOutputSafe("weeklyXpForEmail", weeklyXpForEmail);
+        setOutputSafe("debugStep", "built_short_empty_week");
+        console.log(JSON.stringify({
+            scriptName: CONFIG.scriptName,
+            version: CONFIG.version,
+            recordId,
+            statusOut: "success",
+            actionOut: emptyWeekPlan.actionOut,
+            emptyWeekPolicy,
+            weekIsEmpty: true,
+            sendMode,
+            packageKind: shortPkg.packageKind,
+            subjectOut,
+            recipientsCsv,
+        }));
+        return;
+    }
+
+    /* =========================================================
        SECTION 19: CARD HTML
        ========================================================= */
 
@@ -2274,6 +2612,9 @@ async function main() {
         text: textOut,
         revision: CONFIG.version,
         builtAt: new Date().toISOString(),
+        packageKind: weekIsEmpty ? "full_empty_week" : "full",
+        emptyWeekPolicy,
+        weekIsEmpty,
         summary: {
             daysLogged,
             totalShots,
@@ -2419,6 +2760,7 @@ async function main() {
     setOutputSafe("sendMode", sendMode);
     setOutputSafe("sendModeDebug", `FINAL SEND MODE USED BY SCRIPT = ${sendMode}`);
     setOutputSafe("statusOut", "success");
+    setOutputSafe("actionOut", emptyWeekPlan.actionOut);
     setOutputSafe("errorOut", "");
     setOutputSafe("weeklyXpForEmail", weeklyXpForEmail);
     setOutputSafe("storedWeeklyXp", storedWeeklyXp);

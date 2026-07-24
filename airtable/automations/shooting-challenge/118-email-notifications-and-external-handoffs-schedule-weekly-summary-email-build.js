@@ -22,11 +22,14 @@ PROD: do not enable from agents.
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.3
+ * Version: v1.4
  * Date Written: 2026-07-16
  * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.4 (2026-07-24): SC-035 approved — default emptyWeekPolicy = send_short.
+ *   Package branching is enforced in automation **072 v4.0** (short / full /
+ *   suppress). 118 still arms Build for empty weeks; 072 applies the policy.
  * - v1.3 (2026-07-24): Correct Summary Key documentation — live PROD shape
  *   verified 2026-07-23 is {Enrollment Key}|{Week Key} =
  *   ATH-{athleteRecId}|{schoolYear}|{weekRecId}, matching expectedSummaryKey.
@@ -71,9 +74,8 @@ PROD: do not enable from agents.
  * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
  *   test enrollment is NOT hard-excluded, enabling controlled Test-mode
  *   weekly email verification. Never combine with sendMode=Live.
- * - emptyWeekPolicy = "send_normal" | "send_short" | "suppress" (default
- *   send_normal). Recorded only until Mike decides; this script does not
- *   suppress empty-week arms yet.
+ * - emptyWeekPolicy = "send_short" | "send_normal" | "suppress" (default
+ *   send_short). Operator record of SC-035; **072 enforces** package shape.
  *
  * OUTPUTS
  * - statusOut, actionOut, errorOut, debugStep
@@ -89,7 +91,7 @@ PROD: do not enable from agents.
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.3",
+  version: "v1.4",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -251,24 +253,13 @@ async function main() {
   const dryRun = parseBool(inputConfig.dryRun, true);
   const sendMode = String(inputConfig.sendMode || "Test").trim() || "Test";
   const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
-  const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_normal")
+  const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_short")
     .trim()
     .toLowerCase();
   const emptyWeekPolicy = ["send_normal", "send_short", "suppress"].includes(emptyWeekPolicyRaw)
     ? emptyWeekPolicyRaw
-    : "send_normal";
+    : "send_short";
   setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
-  // Product decision hook only — suppress/short are not enforced here yet.
-  if (emptyWeekPolicy !== "send_normal") {
-    console.log(
-      JSON.stringify({
-        automation: CONFIG.scriptName,
-        version: CONFIG.version,
-        note: "emptyWeekPolicy recorded but not enforced until Mike decides",
-        emptyWeekPolicy,
-      })
-    );
-  }
   const excluded = new Set(
     String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
