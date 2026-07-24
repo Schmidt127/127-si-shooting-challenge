@@ -4,6 +4,7 @@
   "branch": "agent13/final-reconciliation",
   "base_sha": "561448a4f267523dea63830178d2f8156b76fc6c",
   "commit_sha": "f6fe328dd251c14b63debacf7c3817c87ec542ab",
+  "tip_sha": "f1a20c951f422d9744d99d27893b376968883737",
   "pushed": true,
   "remote_branch": "origin/agent13/final-reconciliation",
   "working_tree_clean_except_unrelated": true,
