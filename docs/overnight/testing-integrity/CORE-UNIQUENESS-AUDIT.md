@@ -10,9 +10,9 @@
 | Contract | One record per Enrollment + Week |
 |----------|----------------------------------|
 | Intended key | Formula `Summary Key` (Enrollment Key + season + Week Key). Scripts must **not** write it (031). |
-| Writers | **031** find-or-create from Submission; **118** (repo-ready, not installed) creates missing WAS |
-| Duplicate risk | Race if two 031 runs create before either sees the other; formula key enables detection |
-| Existing dedupe | 031 searches by Summary Key; errors if duplicates found |
+| Writers | **031** (primary from Submission); **101** (`findOrCreateWeeklySummaryId` on Zoom XP); **118** (repo-ready, not installed) |
+| Duplicate risk | Classic check-then-create race: concurrent 031×2, or **031+101**, or **031+118**, can both create before either sees the other |
+| Existing dedupe | 031/101 search by Summary Key or Enrollment+Week; throw on multiples; 118 uses Summary Key map |
 | Live PROD evidence | Schmidt: exactly **1** WAS `rechWp330MqSgRWzN` for Enrollment `recgP9qZYjAhE7NXm` + Week `recVDKiYATgzsfpmE` despite **3** Submissions |
 | Orphan pollution | 392 WAS rows with empty Enrollment (legacy) — uniqueness noise for Week-scoped scans |
 | Tests | `tools/testing/tests/test_expected_actual.mjs` (WAS uniqueness FAIL path); scenario SCN-016 |
@@ -22,7 +22,7 @@
 
 | Contract | One HC per Enrollment + assignment/asset slot (product: one assignment response) |
 |----------|----------------------------------------------------------------------------------|
-| Intended key | Enrollment + Homework (curriculum) (+ Week where used); 067 quiz uses Enrollment+Week+Homework |
+| Intended key | **020:** Submission + Homework + HW slot (not bare Enrollment+Homework). **067 quiz:** Enrollment + Week + Homework |
 | Writers | **020** (primary); **067** quiz path (possible second writer — SC-013/014 open) |
 | Multi-asset | Many Submission Assets → one HC (allowed) |
 | Duplicate risk | Dual writers 020+067; partial failure leaving extras (historical C-004) |
@@ -46,11 +46,11 @@
 
 | Contract | One VF per video submission/asset path (not per enrollment alone) |
 |----------|-------------------------------------------------------------------|
-| Writers | 013 (and historically 111/112 — **111 deleted** per overnight baseline) |
-| Duplicate risks | Duplicate assets; automation reruns; multiple upload callbacks; status transitions |
+| Writers | **013** canonical (`VIDEO_FEEDBACK\|{assetId}`). **112** is a **duplicate writer** with different key shape (raw asset RID) — keep OFF / retire |
+| Duplicate risks | If 112 ON: asset link may stay empty → 013 creates a second VF; also duplicate assets / upload callbacks |
 | XP | 114 keys on VF RID — duplicate VF ⇒ duplicate XP risk |
 | Live PROD evidence | 1 Video Feedback row (Schmidt-linked 2026-07-23 per baseline) |
-| Note | Confirm 013 alone owns create after 111 deletion (Mike UI attest) |
+| Note | Mike UI: confirm **112 OFF/deleted**; **013 alone** owns create |
 
 ## 5. Submission Base XP
 
@@ -74,10 +74,11 @@
 
 | Area | Flag | Severity |
 |------|------|----------|
-| HC 020 + 067 | Possible second writer | High (decision SC-013/014) |
-| WAS 031 + 118 | Future dual when 118 installed | Medium — must share Summary Key find-or-create |
-| VF 013 vs deleted 111 | Attest 111 gone | Medium |
-| Weekly Threshold XP | Writer missing | High (see XP audit) |
+| HC 020 + 067 | Different dedupe keys → possible two HCs for same assignment context | High (SC-013/014) |
+| WAS 031 + 101 (+ 118 later) | Concurrent check-then-create race | High |
+| VF **013 + 112** | Key-format mismatch; second VF if both ON | **Critical if 112 ON** |
+| Weekly Threshold XP | Writer missing | High (XP-D1) |
+| Zoom XP 117 + 117c | Same `ZOOM_CREDIT` family | High (XP-D2) |
 
 ## Fixes applied tonight
 

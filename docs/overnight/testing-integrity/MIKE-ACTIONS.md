@@ -10,7 +10,7 @@ Ordered. Only items Cursor could not complete without UI / product decision / un
 |--|--|
 | System | Airtable PROD |
 | Location | Automations panel |
-| Action | Paste complete list: name / ON-OFF / trigger / version. Confirm deleted set **043, 032, 033, 063, 111**; confirm **115** ON; confirm **112** state; confirm ~4 free slots |
+| Action | Paste complete list: name / ON-OFF / trigger / version. Confirm deleted set **043, 032, 033, 063, 111**; confirm **115** ON; confirm **112 OFF/deleted** (013 is canonical VF create); confirm only one of **117 / 117c** ON; confirm ~4 free slots |
 | Expected | Matches `CURRENT-PROD-BASELINE.md` |
 | Why not Cursor | Automation list not fully readable via API |
 | Evidence | Screenshot or pasted table in chat/docs |
@@ -56,7 +56,7 @@ Ordered. Only items Cursor could not complete without UI / product decision / un
 | | |
 |--|--|
 | System | Product / Automation 115 |
-| Action | Decide whether Daily 115 should leave `Duplicate Review Status` blank for 007a, or keep `Count It` |
+| Action | Decide whether Daily 115 should leave `Duplicate Review Status` blank for **007**, or keep `Count It` |
 | Expected | Documented policy; scenario SCN-005 updated |
 | Why not Cursor | Product decision |
 | Evidence | Decision in completion master / backlog |

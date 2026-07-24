@@ -175,6 +175,26 @@
       "description": "Weekly Threshold XP writer automation not found in repository despite WAS threshold fields and XP Reward Rules",
       "fix_status": "documented",
       "mike_action": "UI-attest whether Threshold XP automation still exists in PROD"
+    },
+    {
+      "id": "XP-D2",
+      "severity": "high",
+      "description": "117 and 117c both create ZOOM_CREDIT|{enrollment}|{meeting} XP Events",
+      "fix_status": "documented",
+      "mike_action": "Confirm only one of 117/117c is ON in PROD"
+    },
+    {
+      "id": "XP-D3",
+      "severity": "medium",
+      "description": "065 does not recognize legacy HOMEWORK_COMPLETION| Source Keys and can create a second HOMEWORK_XP| event",
+      "fix_status": "documented",
+      "mike_action": "After HC live tests, run dedupe extension if legacy keys appear"
     }
-  ]
+  ],
+  "inventory_notes": {
+    "xp_dedupe_key_writable": false,
+    "xp_dedupe_key_type": "formula",
+    "live_xp_creators": ["010", "054", "059", "065", "101", "114", "117", "117c"],
+    "no_repo_creator": ["Weekly Threshold", "Manual Bonus"]
+  }
 }

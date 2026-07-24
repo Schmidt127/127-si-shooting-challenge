@@ -62,8 +62,8 @@ Supersedes one stale recommendation in the foundation matrix: **do not add a Sch
 
 | Field | Type | Intended writer | Additional | Risk | Notes |
 |-------|------|-----------------|------------|------|-------|
+| XP Dedupe Key / Normalized | formula | **none (computed)** | Scripts may *read* for matching | Critical | Do not write from scripts |
 | Source Key | text | Creating XP script only | Backfills | Critical | One pattern per source |
-| XP Dedupe Key / Normalized | text | Same XP script | — | Critical | |
 | XP Points | number | Same XP script | — | Critical | Do not change economics |
 | XP Source | select | Same XP script | — | High | |
 | XP Date / Activity Date | date | Same XP script | — | High | |
@@ -92,7 +92,7 @@ Supersedes one stale recommendation in the foundation matrix: **do not add a Sch
 
 | Field | Type | Intended writer | Additional | Risk | Notes |
 |-------|------|-----------------|------------|------|-------|
-| Enrollment | link | 013 | legacy 111/112 | Medium | 111 deleted — attest |
+| Enrollment | link | **013** | **112** (retire/OFF) | Medium | 111 deleted; attest 112 OFF |
 | Submission / Submission Asset | link | 013 | — | High | |
 | Review status / Ready for XP | select/checkbox | Coach / 113 | — | High | |
 | XP Events | link | 114 | — | High | |
@@ -128,11 +128,14 @@ Supersedes one stale recommendation in the foundation matrix: **do not add a Sch
 
 | ID | Field | Writers | Severity | Action |
 |----|-------|---------|----------|--------|
-| FW-D1 | Submissions.Duplicate Review Status | 007 + 115 | High | Product decision: keep Count It preset? |
+| FW-D1 | Submissions.Duplicate Review Status | **007** + **115** (`Count It`) | High | Product decision: keep Count It preset? |
 | FW-D2 | Homework Completions create | 020 + 067 | High | SC-013/014 decision |
 | FW-D3 | Enrollments.Active? | Ops + many readers/skips | Medium | Policy documented; no exclusion field |
 | FW-D4 | WAS Threshold XP Status | Missing writer | Critical | Locate/rebuild automation |
 | FW-D5 | Foundation matrix standings filter advice | Stale doc | Medium | Superseded — Schmidt visible |
+| FW-D6 | Video Feedback create | **013 + 112** | Critical if both ON | Confirm 112 OFF; keep 013 |
+| FW-D7 | Zoom recording XP | **117 + 117c** | High | Only one ON |
+| FW-D8 | WAS create | **031 + 101** (+118) | High | Race; no DB unique index |
 
 ## Test evidence
 

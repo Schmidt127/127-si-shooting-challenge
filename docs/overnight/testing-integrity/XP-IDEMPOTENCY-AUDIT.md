@@ -7,6 +7,8 @@
 
 Honesty rule: amounts are documented as observed/config; this audit does **not** change XP economics.
 
+**Inventory follow-up (2026-07-24):** Complete writer scan of `airtable/automations/shooting-challenge/*.js` confirms **8 live XP creators** (010, 054, 059, 065, 101, 114, 117, 117c) + safe-backfill extensions. **No script writes** `XP Dedupe Key` / `XP Dedupe Key Normalized` — those are **formula fields**; scripts write `Source Key` and sometimes *read* the formulas for matching. Manual Bonus and Weekly Threshold still have **no creators in repo**.
+
 ---
 
 ## Summary
@@ -33,7 +35,7 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 | Source automation | `010-submission-intake-create-xp-event.js` |
 | Source table / record | Submissions / submission RID |
 | Source Key | `SUBMISSION_XP\|{submissionId}` |
-| XP Dedupe Key | `{enrollmentId}\|{submissionId}\|{xpSource}` (+ normalized lowercase twin) |
+| XP Dedupe Key | Logical (not written): `{enrollmentId}\|{submissionId}\|{xpSource}`; compared to **formula** `XP Dedupe Key` / `XP Dedupe Key Normalized` |
 | XP date source | Submission Activity Date (Denver) |
 | Writer | 010 only (intended) |
 | Duplicate prevention | Recheck Source Key / dedupe / submission link before create; refuse steal |
@@ -52,7 +54,7 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 | Writer | 065 after satisfactory review |
 | Duplicate prevention | Recheck-before-create by Source Key |
 | PROD evidence | **0 Homework Completions** post-reset — not live-tested |
-| Notes | Multiple Submission Assets may link one HC; XP still one-per-HC |
+| Notes | Multiple Submission Assets may link one HC; XP still one-per-HC. **Risk:** 065 ignores legacy `HOMEWORK_COMPLETION\|` keys → can create a second event under `HOMEWORK_XP\|`. |
 
 ## 3. Video Feedback
 
@@ -60,7 +62,7 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 |------|-------|
 | Source automation | `114-video-review-and-xp-create-or-update-video-xp-event.js` |
 | Source Key | `VIDEO_SUBMISSION\|{videoFeedbackId}` |
-| Also checks | `XP Dedupe Key Normalized` must reference same VF RID |
+| Also checks | Read-only formula `XP Dedupe Key Normalized` must reference same VF RID |
 | Steal guard | Refuses reuse if key owned by another VF |
 | PROD evidence | `recYQ10pOoFlApmjZ` (`VIDEO_SUBMISSION\|reccXspFIiNIPMPcm`) |
 
@@ -81,6 +83,7 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 | Source Key | `ZOOM_CREDIT\|{enrollmentId}\|{meetingId}` |
 | Disjoint from | `ZOOM_ATTEND_BASE\|…` |
 | PROD evidence | `recOceuW34jQz7suD` (`ZOOM_CREDIT\|recgP9qZYjAhE7NXm\|reczeUT0AJUWMmEOb`, 30 XP) |
+| Dual-writer risk | **117 orchestrator and 117c** both create the same `ZOOM_CREDIT` family — only one should be ON |
 
 ## 6. Streak
 
@@ -151,3 +154,12 @@ None to XP amount/key formats. Verifier + scenario fixtures encode contracts for
 2. Homework satisfactory → 065 once HC exists.
 3. Video path → 114 once VF exists.
 4. Locate/restore Weekly Threshold writer before season XP completeness claims.
+5. UI-attest only one of **117 / 117c** is ON for `ZOOM_CREDIT`.
+
+## Defects (inventory follow-up)
+
+| ID | Severity | Description | Status |
+|----|----------|-------------|--------|
+| XP-D1 | High | Weekly Threshold XP writer missing in repo | Documented |
+| XP-D2 | High | 117 + 117c both create `ZOOM_CREDIT\|…` | Documented — attest single writer ON |
+| XP-D3 | Medium | 065 ignores legacy `HOMEWORK_COMPLETION\|` keys | Documented |
