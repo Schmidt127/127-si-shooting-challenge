@@ -75,6 +75,19 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
+### Dashboard reconciliation (2026-07-24)
+
+Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Tested **10** · Installed **54** · Built **28**.
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-031 | Built in Repository | Live Tested in PROD | Go-live integration (`7c7a79a`) | 118/119 schedules **ON** + Live writeback proven |
+| SC-038 | Live Tested in PROD | Complete | Go-live integration (`7c7a79a`) | **118 ON** arms Build; **072 v4.0 ON**; season schedule active |
+| SC-039 | Live Tested in PROD | Complete | Go-live integration (`7c7a79a`) | **119 ON** → 074 → Make Live writeback PASS |
+| SC-147 | *(new)* | Built in Repository | PR #40 (RCC) | Repo framework + MVP install packet; views not Installed |
+
+**Net math:** go-live moves SC-038/039 into Complete (+2 Complete, −2 Live Tested) and SC-031 into Live Tested (+1 Live Tested from Built → Live Tested 10−2+1=9; Built 28−1=27). PR #40 adds only SC-147 (+1 Built → 28; Total 147). No silent Complete↔Live Tested swaps beyond the three go-live rows above.
+
 **Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository** (MVP views not yet Installed; not Live Tested until PROD export audit). Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---

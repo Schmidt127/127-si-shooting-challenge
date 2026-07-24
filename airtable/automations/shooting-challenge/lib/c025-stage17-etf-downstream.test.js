@@ -268,7 +268,9 @@ function testSourceGuards() {
   );
   assert.ok(lib.dailySubmissionBranchMustRemainUntouched(src));
   assert.ok(lib.c025PathMustUseQueryBudget(src));
-  assert.ok(src.includes('version: "v1.8"'));
+  // Authoritative SCRIPT.version in repo is v1.9 (message/header corrections on
+  // top of v1.8 Stage 17 logic). PROD Airtable may still run pasted v1.8.
+  assert.ok(src.includes('version: "v1.9"'));
   assert.ok(src.includes("pollAttempts: 5"));
   assert.ok(!src.includes("pollAttempts: 20"));
   assert.ok(src.includes("Timed Out Waiting for 057"));

@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Changed
+- **Stale version expectations closed (2026-07-24)** — Offline gate now expects **066 v3.3** (was v3.2); Stage 17 ETF source guard expects **115 SCRIPT v1.9** (PROD may still run pasted v1.8). PROJECT_STATE H-002 / standards rows updated to v3.3.
+
 #### Added
 - **Reliability Command Center (2026-07-24)** — Repository workflow-health framework (SC-147): normalized health statuses, shared helpers (`lib/reliability-command-center/`), offline audit CLI + dry-run repair preview (`tools/reliability-command-center/`), synthetic fixtures/tests, Airtable view/Interface **specification** (not installed), MVP production install packet using existing PROD fields (`Weekly Summary Sent At` + `Weekly Email Sent At`). Aligned with go-live: **118/119 ON**, 072/074 ON, 074 Live writeback. Complements Agent 1+2 reliability audit docs (does not replace them). Completion master total **147**. Status: **Built / Tested** (repo); views/Interface **Designed** — not Installed / not Live Tested. Docs: [`docs/reliability-command-center/`](./docs/reliability-command-center/README.md) · [`MVP-PRODUCTION-RELEASE.md`](./docs/reliability-command-center/MVP-PRODUCTION-RELEASE.md).
 - **Go-live integration + promotion lead (2026-07-24)** — Merged accepted agent branches; corrected stale **118/119 OFF** claims to verified **ON**; updated completion master + architecture + ownership; go-live readiness report. No Airtable UI mutations from agent. [`GO-LIVE-READINESS-2026-07-24.md`](./docs/next-wave/go-live/GO-LIVE-READINESS-2026-07-24.md).
