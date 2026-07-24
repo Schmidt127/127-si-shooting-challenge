@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (Agent 13 final reconciliation — Agents 1–12 integrated) |
+| Last updated | 2026-07-24 (SC-035 `send_short` + SC-014 Option B approved; dashboard recalculated) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -67,15 +67,15 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Complete | 10 |
 | Live Tested in PROD | 6 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 34 |
+| Built but not installed *(Built in Repository)* | 35 |
 | Planned | 23 |
-| Decision Needed | 7 |
+| Decision Needed | 6 |
 | Deferred | 10 |
 | Superseded | 3 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight Agents 1–2 + Online 7–8 advanced testing/config/enrollment/tutorials. Next-wave Agents 9–12 added ownership contracts, year-aware Config selection, homework/LA contracts, and 118/119 v1.3. **Agent 13 reconciliation:** `docs/next-wave/final-reconciliation/`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight Agents 1–2 + Online 7–8 advanced testing/config/enrollment/tutorials. Next-wave Agents 9–12 added ownership contracts, year-aware Config selection, homework/LA contracts, and 118/119 v1.3. **Agent 13 reconciliation:** `docs/next-wave/final-reconciliation/`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **Decisions 2026-07-24:** SC-035 empty-week = `send_short`; SC-014 quiz = Option B (attachment-less).
 
 ---
 
@@ -99,13 +99,13 @@ Columns:
 | SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Live Tested in PROD | Live 115 rerun + WAS uniqueness + one XP per Submission proven 2026-07-24; XP Source Key inventory PASS for Schmidt | Live packs still needed: HW, video, Zoom, streak/milestone, emails; 010 UI re-trigger attest | SC-066, SC-096+ | Never create double XP | `live-115-rerun-latest.json`; `XP-IDEMPOTENCY-AUDIT.md`; `CORE-UNIQUENESS-AUDIT.md` | Decide 115 Count It vs 007a policy | P0 | 2026-07-24 |
 | SC-008 | Testing | Email, Make, upload, and failure-path testing | Planned | C-013 video E2E historically PASS; Make blueprints; upload runbooks | Failure inject: webhook down, Lambda reject, blank webhook, retry; homework route; weekly email Test mode | SC-131+, SC-051+ | Route test traffic to Schmidt only | C-013 checklists; C-011 activation checklist | — | P1 | 2026-07-23 |
 | SC-009 | Homework | Photo / image homework submissions work end-to-end | Installed in PROD | Homework Completions + Submission Assets pipeline; web catalog | Re-test photo upload→asset→review→XP→email on Schmidt; enable 070a if needed | SC-019, SC-131 | One HC per assignment | LA-000; homework-flow.md | — | P0 | 2026-07-23 |
-| SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz PDF (SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-23 |
+| SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz uses Option B (no PDF asset — SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-24 |
 | SC-011 | Homework | Video submissions as homework/learning assets | Installed in PROD | Video path via 013/070b/070c/114 historically live | Re-test video as homework vs daily video rules; confirm purpose routing | SC-133 | Do not double-credit video XP | LA routing `video`; C-013 | — | P0 | 2026-07-23 |
 | SC-012 | Homework | Written / reflection responses work | Installed in PROD | Fillout questions + HC path historically used | Re-test written-only HC; coach review + 071 | SC-019 | No attachment required for written | LA `reflection` / `fillout_questions` | — | P1 | 2026-07-23 |
-| SC-013 | Homework | Online quizzes create a reviewable completion | Built in Repository | **067** v2.0 repo; Final Reflection Quiz path known broken historically without attachment | Install/update 067 in PROD; choose PDF vs attachment-less design (SC-014 decision) | SC-014 | 067 must not award XP itself | C-009; `C009_HW17_ATTACHMENT_DEV_INSTALL.md` | — | P0 | 2026-07-23 |
-| SC-014 | Homework | Fillout-generated quiz PDF enters normal asset pipeline | Decision Needed | Preferred design documented; Quiz Result PDF field may need create | Mike choose Fillout PDF vs dual-path redesign; map field; test | SC-013 | Prefer one pipeline, not a second quiz XP path | C-009 owner notes | **Choose path A (PDF) or B (attachment-less)** | P0 | 2026-07-23 |
+| SC-013 | Homework | Online quizzes create a reviewable completion | Built in Repository | **067** v2.0 attachment-less path; SC-014 Option B approved | Confirm/install 067 in PROD if drifted; coach Score/Target Score Met? review UX; Schmidt live test (HC, 0 assets → one XP) | SC-014 | 067 must not award XP itself; no fake attachments | C-009; `docs/next-wave/homework-pipeline/QUIZ-PATH-DECISION.md` | — | P0 | 2026-07-24 |
+| SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Built in Repository | **Option B approved** — attachment-less; **067** `no_attachment_field` path + quiz-path contracts; no Quiz Result PDF field; no fake attachment | PROD 067 paste confirmation + Schmidt Option B live test (tracked under SC-013); do not create Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `docs/next-wave/homework-pipeline/QUIZ-PATH-DECISION.md`; `067-…reflection-quiz.js` | **DECIDED Option B** | P0 | 2026-07-24 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
-| SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented | Live duplicate attempt test; resolve 020 vs 067 product rule (SC-014) | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
+| SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
 | SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used | Re-test full chain after wipe; align with Learning Activities later | SC-009–SC-016 | Do not invent second credit path | homework-flow.md; automation-index | — | P0 | 2026-07-23 |
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
@@ -124,10 +124,10 @@ Columns:
 | SC-032 | Config | Season settings (dates, windows) | Planned | Weeks table historically; C-018 design | Rebuild Weeks for next season; intake vs run calendars | SC-084 | 005 date mapping | C-018; V2-013 | — | P1 | 2026-07-23 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
 | SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; 066/054 hardenings; hardcode inventory | Finish V2-002 pass across 001–119; paste pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
-| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Built in Repository | **118/119 v1.3** repo-ready (Agent 12); hybrid WAS creators **031** (submission) + **118** (scheduled ensure) + **101** (Zoom side-create); uniqueness = Enrollment+Week | Paste 118/119 OFF in PROD; Schmidt dry-run; empty-week email decision | SC-004, SC-082 | Empty-week policy open; schedules OFF | `docs/next-wave/was-email/`; C-011 | Empty weeks: email yes/no? | P0 | 2026-07-24 |
+| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Built in Repository | **118/119 v1.3** repo-ready (Agent 12); hybrid WAS creators **031** + **118** + **101**; uniqueness = Enrollment+Week; **empty-week email = `send_short` approved** (short no-activity reminder; not suppress; not full normal summary) | Enforce `send_short` in 118/119 + short template; paste OFF in PROD; Schmidt dry-run before Live schedules | SC-004, SC-082 | Policy decided; enforcement not Live yet; schedules OFF | `docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md`; C-011 | **DECIDED `send_short`** | P0 | 2026-07-24 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
-| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Built in Repository | **118 v1.3** → 072 arming; dryRun default true; emptyWeekPolicy hook (not enforced) | PROD paste OFF; dryRun then Schmidt | SC-035 | dryRun default true | `docs/next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md` | — | P0 | 2026-07-24 |
+| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Built in Repository | **118 v1.3** → 072 arming; dryRun default true; emptyWeekPolicy hook present; SC-035 requires **`send_short`** for empty weeks | Enforce short empty-week package path; PROD paste OFF; dryRun then Schmidt | SC-035 | dryRun default true; do not send full normal summary on empty weeks | `docs/next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md` | — | P0 | 2026-07-24 |
 | SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Built in Repository | **119 v1.3** + **074** patches; schedules remain OFF | PROD paste OFF; Test webhook first | SC-038 | Make webhook live-blocked until approved | `docs/next-wave/was-email/`; C-011 | Authorize Live send | P0 | 2026-07-24 |
 | SC-040 | Weekly Summary | Duplicate-send protection | Built in Repository | Sent? + Make eventId / send-key patterns; overnight send-key reconciliation branch work | Confirm four-part keys live; merge any pending send-key fixes; live double-send test | SC-039 | Make Data Store ownership | C-025 117f key docs; C-011 | — | P0 | 2026-07-23 |
 | SC-041 | Weekly Summary | Retry behavior when Make/email fails | Planned | Partial failure notes in 074 (don’t clear trigger on webhook fail) | Define retry SOP; test failure then recovery | SC-039 | Don’t mark Sent on failure | 074 standard | — | P1 | 2026-07-23 |
@@ -338,8 +338,6 @@ Only decisions that need Mike (not pure engineering choices):
 
 | ID | Decision needed | Why it matters |
 |----|-----------------|----------------|
-| SC-014 | Quiz path: Fillout PDF into normal pipeline **or** attachment-less redesign? | Blocks HW17/Final Reflection reliability |
-| SC-035 | Empty-activity weeks: still send weekly parent email? | Default in design is yes |
 | SC-044 | Major-event alerts: SMS vs email; parent vs athlete; opt-in rules? | Product/comms policy |
 | SC-066 | Keep early-bird period for next season? | Calendar/config work |
 | ~~SC-068~~ | ~~Schmidt Active? vs standings~~ | **Resolved in Foundation Reset:** Active?=true for processing; exclude standings via view filter (no new field) |
@@ -356,6 +354,8 @@ Only decisions that need Mike (not pure engineering choices):
 |----|----------|---------|
 | SC-001 | Testing Scenarios / 115 in PROD? | **Allowed and Live Tested** — dry + live + rerun PASS; orchestration only |
 | SC-004 | Schmidt Active? | **Active?=true**; **keep Schmidt visible** on public standings (do not add exclusion filter) |
+| SC-014 | Quiz path A (PDF) vs B (attachment-less)? | **Option B** — attachment-less; no Quiz Result PDF field; no fake attachment; use existing 067 path |
+| SC-035 | Empty-week parent email policy? | **`send_short`** — short no-activity reminder; do not suppress; do not send full normal weekly summary |
 
 ---
 

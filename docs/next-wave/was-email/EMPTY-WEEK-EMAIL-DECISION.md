@@ -1,52 +1,55 @@
 # Empty-week weekly email — decision packet
 
 **Agent:** 12 · **Date:** 2026-07-24  
-**Status:** DECISION NEEDED — Mike  
+**Status:** APPROVED — Mike · **Policy:** `send_short`  
 **Related:** SC-035 · overnight `docs/overnight/communications/EMPTY-WEEK-EMAIL-DECISION.md`  
-**Code hook:** `emptyWeekPolicy` input on 118/119 (`send_normal` \| `send_short` \| `suppress`) — default `send_normal`; **suppress/short not enforced until Mike decides**.
+**Code hook:** `emptyWeekPolicy` input on 118/119 (`send_normal` \| `send_short` \| `suppress`) — default still `send_normal` in repo until enforcement ships.
 
 WAS records are still created for empty weeks (guarantee). This decision only controls **email send**.
 
 ---
 
-## Options
+## Approved decision (2026-07-24)
 
-### 1 — Send normal “no activity” summary (`send_normal`)
+| Field | Value |
+|-------|--------|
+| **Choice** | **`send_short`** |
+| **Meaning** | Send a **short no-activity reminder** email for empty weeks |
+| **Do not** | Suppress the email (`suppress`) |
+| **Do not** | Send the full normal weekly summary (`send_normal`) for empty weeks |
 
-Full weekly package with zeroed sections.
-
-| Lens | Implication |
-|---|---|
-| Engagement | Predictable rhythm; risk of “nagging” / ignore training |
-| Testing | Easiest Schmidt dry-run parity with live volume math |
-| Dedupe | Existing send key / Sent? stamp unchanged |
-
-### 2 — Send shortened reminder (`send_short`)
-
-Short encouragement template instead of full zero stats.
-
-| Lens | Implication |
-|---|---|
-| Engagement | Best accountability + tone (needs ChatGPT copy) |
-| Testing | Extra template path; Schmidt must cover both full + short |
-| Dedupe | Same send key; body differs — still one send/week |
-
-### 3 — Suppress email (`suppress`)
-
-No arm/build/send when WAS has zero activity.
-
-| Lens | Implication |
-|---|---|
-| Engagement | Silence during drop-off — weak for program accountability |
-| Testing | Skip counts must be monitored (`skipped_empty_week`) |
-| Dedupe | Fewer sends; “missing email” ≠ failure without skip telemetry |
+Recorded on completion master **SC-035**.
 
 ---
 
-## Recommendation (not a decision)
+## Options (reference)
 
-**Option 2** seasonally; **Option 1** interim until copy exists. Do not choose Option 3 as default.
+### 1 — Send normal “no activity” summary (`send_normal`) — rejected for empty weeks
 
-## What Mike records
+Full weekly package with zeroed sections.
 
-Pick `send_normal` | `send_short` | `suppress` into completion master SC-035. Until then keep schedules **OFF** and defaults **dryRun=true**.
+### 2 — Send shortened reminder (`send_short`) — **APPROVED**
+
+Short encouragement / no-activity reminder template instead of full zero stats.
+
+| Lens | Implication |
+|---|---|
+| Engagement | Accountability without a full empty-stats summary |
+| Testing | Schmidt must cover both full (active week) + short (empty week) |
+| Dedupe | Same send key; body differs — still one send/week |
+
+### 3 — Suppress email (`suppress`) — rejected
+
+No arm/build/send when WAS has zero activity.
+
+---
+
+## Implementation remaining (do not treat as Live-ready)
+
+Repo 118/119 v1.3 **record** `emptyWeekPolicy` but **do not yet enforce** `send_short` (short template path + skip full package for empty weeks).
+
+Before Live Sunday schedules:
+
+1. Enforce `send_short` in 118/119 (and package/template path as designed).  
+2. Keep schedules **OFF** and `dryRun=true` until Schmidt dry-run PASS.  
+3. Paste approved scripts only after enforcement + copy are ready — **do not modify PROD automations in this documentation pass**.

@@ -2,17 +2,34 @@
 
 **Agent:** 11 · **Date:** 2026-07-24  
 **Product decision owner:** Mike  
+**Status:** APPROVED — **Option B** (attachment-less completion)  
 **Machine helpers:** `lib/homework-contracts/quiz-path.js`
 
 Confirmed facts:
 
 - **067 v2.0** supports attachment-less quiz rows (`no_attachment_field` / `no_attachment_yet`)
 - PROD **Final Reflection Quiz Submissions** currently has **no** attachment field
-- Option A requires field **`Quiz Result PDF`** (multipleAttachments) + Fillout mapping
+- Option A would have required field **`Quiz Result PDF`** (multipleAttachments) + Fillout mapping — **not approved**
 
 ---
 
-## Option A — Quiz Result PDF (fully specified)
+## Approved decision (2026-07-24)
+
+| Field | Value |
+|-------|--------|
+| **Choice** | **Option B — attachment-less completion** |
+| **Automation** | Use existing **067** attachment-less processing path |
+| **Do not** | Create a **Quiz Result PDF** field |
+| **Do not** | Create a fake attachment / placeholder Submission Asset |
+| **XP** | Still **064 → 065** after coach Satisfactory + Review Complete (067 never awards) |
+
+Recorded on completion master **SC-014** → status **Built in Repository** (repo behavior + contract complete; PROD install/live test still open under SC-013).
+
+**No Automation 067 repository correction required** for this decision — the attachment-less path already exists.
+
+---
+
+## Option A — Quiz Result PDF (not chosen)
 
 | Item | Spec |
 |---|---|
@@ -24,14 +41,12 @@ Confirmed facts:
 | Upload | **020** (if asset triggers) / **070a** → **022** writeback |
 | Review | Coach reviews file via Drive URL on HC + quiz Score fields |
 | XP | **064 → 065** only; 067 never awards |
-| Testing | DEV: create field → map Fillout → run 067 → assets_created → upload ladder → Satisfactory → one XP Event → 067 rerun idempotent |
 
-**Pros:** Full parity with file homework; Drive artifact for coach.  
-**Cons:** Schema + Fillout work; depends on 070a being ON for true upload parity.
+**Status:** Rejected for current season path. Remains a possible future upgrade only if Mike later wants PDF/Drive review parity.
 
 ---
 
-## Option B — Attachment-less completion (fully specified)
+## Option B — Attachment-less completion (**APPROVED**)
 
 | Item | Spec |
 |---|---|
@@ -47,20 +62,16 @@ Confirmed facts:
 
 ---
 
-## Recommendation (not a product decision)
+## Next steps (ops / install — not decision)
 
-**Recommend Option B** for the current pipeline:
+1. Confirm PROD **067** paste matches repo attachment-less path (install/update if drifted).  
+2. Coach review Interface/view shows Score / Target Score Met? without Drive URL.  
+3. Schmidt live test: 067 → HC, 0 assets → review → one XP.  
+4. Do **not** create `Quiz Result PDF` or fake attachments.
 
-1. PROD quiz table has no attachment field today.  
-2. 067 already implements the attachment-less bridge.  
-3. Homework Make upload (**070a**) has historically been OFF — Option A’s upload parity is incomplete until that is intentional.  
-4. Option A remains the upgrade path when Mike wants PDF/Drive review parity.
-
-**Mike must choose** A or B before PROD schema / Fillout changes for Option A.
-
-Helpers:
+Helpers (historical recommendation; decision now locked):
 
 ```js
 recommendQuizPath({ quizTableHasAttachmentField: false })
-// → option_b_attachment_less (productDecisionRequired: true)
+// → option_b_attachment_less
 ```

@@ -7,6 +7,8 @@
 
 Ordered by dependency and risk. Do not skip attestation before enabling schedules or Zoom dual paths.
 
+**Decisions recorded 2026-07-24:** SC-035 = `send_short`; SC-014 = Option B (attachment-less).
+
 ---
 
 ## P0 — Blocking (do today)
@@ -24,7 +26,7 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 | 5 | **111** | Deleted/OFF — unnecessary if 013 v2.0 live |
 | 6 | **031** | ON — primary WAS creator |
 | 7 | **101** | ON for live attendance — never write Attendees from recording |
-| 8 | **117 XOR 117c** | Exactly one ON for `ZOOM_CREDIT\|` XP |
+| 8 | **117 / 117c XP path** | See attestation packet — PROD 117 is approval-email v1.1 (not XP); 117c absent; do not apply stale XOR to email-only 117 |
 | 9 | **118** | OFF until authorized |
 | 10 | **119** | OFF until authorized |
 | 11 | Weekly Threshold XP writer | YES (name/version/key) or NO (missing) |
@@ -32,11 +34,10 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 
 **Expected outcome:** Signed exclusivity list; SC-058 ready to advance after paste into notes.
 
-### 2. Choose one Zoom credit writer
+### 2. Zoom credit XP writer (if/when reinstalled)
 
-**Decision:** Keep **117** orchestrator ON and **117c** OFF (recommended), or reverse — never both.  
-**Evidence:** Agent 9 OW-D2 · `xp-source-key-registry.json` status `duplicate_risk`.  
-**Expected outcome:** Single `ZOOM_CREDIT` mint path.
+**Note:** PROD Automation **117** is attested as approval-email → Make only (**v1.1**), not a `ZOOM_CREDIT` XP writer; **117c** absent.  
+If a Zoom recording **XP** orchestrator or **117c** is installed later, keep exactly one XP mint path ON.
 
 ### 3. Keep four Config year rows (do not collapse)
 
@@ -45,28 +46,28 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 **OMNI check:** Zoom Meetings Global/Program Config links match meeting season year.  
 **Expected outcome:** No destructive Config cleanup; year-aware selection plan accepted.
 
-### 4. Decide empty-week email policy (SC-035)
+### 4. Empty-week email policy (SC-035) — DECIDED
 
-**Options:** `send_normal` / `send_short` / `suppress`  
+**Decision:** **`send_short`** — short no-activity reminder email.  
+**Do not** suppress; **do not** send the full normal weekly summary for empty weeks.  
 **Doc:** `docs/next-wave/was-email/EMPTY-WEEK-EMAIL-DECISION.md`  
-**Recommendation:** seasonal `send_short`; interim `send_normal` OK for Schmidt.  
-**Expected outcome:** Decision recorded on SC-035 before Live schedules.
+**Still needed before Live:** enforce `send_short` in 118/119 + short template; keep schedules OFF / dryRun until Schmidt PASS.
 
-### 5. Paste 118/119 v1.3 OFF in PROD
+### 5. Paste 118/119 v1.3 OFF in PROD (after `send_short` enforcement ready)
 
 **Runbook:** `docs/next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md`  
 **Scripts:**  
 - `airtable/automations/shooting-challenge/118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` **v1.3**  
 - `airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js` **v1.3**  
-**Inputs:** dryRun default **true**; `includeSchmidt=true` for Test; schedules **OFF**.  
-**Expected outcome:** Automations installed, OFF, dryRun-safe; no Sunday Live fire.
+**Inputs:** dryRun default **true**; `includeSchmidt=true` for Test; schedules **OFF**; `emptyWeekPolicy=send_short` once enforced.  
+**Expected outcome:** Automations installed, OFF, dryRun-safe; no Sunday Live fire. **Do not modify PROD yet** until enforcement lands in repo.
 
-### 6. Decide quiz path (SC-014)
+### 6. Quiz path (SC-014) — DECIDED
 
+**Decision:** **Option B** — attachment-less completion.  
 **Doc:** `docs/next-wave/homework-pipeline/QUIZ-PATH-DECISION.md`  
-**Recommendation:** **Option B** (attachment-less) given current PROD schema.  
-**If Option A:** authorize OMNI `Quiz Result PDF` field + Fillout mapping.  
-**Expected outcome:** SC-014 Decision Needed → resolved; unblocks 067 PROD confidence.
+**Rules:** Do **not** create `Quiz Result PDF`; do **not** create a fake attachment; use existing **067** attachment-less path.  
+**Still needed:** Confirm/install 067 in PROD if drifted; coach score-centric review UX; Schmidt live test (SC-013).
 
 ---
 
@@ -96,21 +97,22 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 | 9 | Homework file → HC → review → 065 XP → 071 email | One HC; one `HOMEWORK_XP\|{hcId}` |
 | 10 | Video upload → 013 VF → 114 XP | One `VIDEO_SUBMISSION\|{vfId}`; 112 stays OFF |
 | 11 | Zoom live attendance → 101 | Attendees path only; WAS link/create race OK |
-| 12 | Zoom recording → sole 117/117c | One `ZOOM_CREDIT`; conflict soft-void |
-| 13 | After 118 paste: dryRun Sunday build | WAS ensure for empty/homework-only week |
+| 12 | Zoom recording credit XP (if XP automation present) | One `ZOOM_CREDIT`; conflict soft-void — do not confuse with PROD 117 email slot |
+| 13 | After 118 paste: dryRun Sunday build | WAS ensure for empty/homework-only week; empty week uses **short** email path |
 | 14 | Supervised 3-day streak / milestone / Perfect Week | After 054/066 paste; not unattended |
 | 15 | Level gate block + clear | 042 with Zoom credit flags from correct year Config |
 | 16 | Testing views (SC-003) | Create remaining Testing views with Schmidt Enrollment filter |
+| 17 | Final Reflection quiz → 067 Option B | HC created, **0** assets; coach Score review → one XP |
 
 ---
 
 ## P1 — Product / ops decisions (record in Completion Master)
 
-| ID | Ask | Recommendation |
-|----|-----|----------------|
-| SC-035 | Empty-week email | `send_short` seasonal; `send_normal` interim |
-| SC-014 | Quiz PDF vs attachment-less | **Option B** |
-| OW-D2 | 117 vs 117c | **117 ON / 117c OFF** |
+| ID | Ask | Status |
+|----|-----|--------|
+| SC-035 | Empty-week email | **DECIDED** `send_short` (short reminder; not suppress; not full normal) |
+| SC-014 | Quiz PDF vs attachment-less | **DECIDED** **Option B** (no Quiz Result PDF; no fake attachment; 067 path) |
+| OW-D2 | 117 vs 117c XP | PROD 117 = email-only; 117c absent — see attestation packet |
 | SC-044 | Major-event channel | Email first; EMC later |
 | SC-081 | Streak repeat-after-break | Amounts=config; behavior change only if wanted |
 | SC-095 | 070a PROD ON | Keep OFF until scheduled window |
@@ -129,7 +131,8 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 4. Drop stash `agent5-118-wip-preserve` after confirming v1.3 Summary Key note.  
 5. After two proven Sunday ensures, consider 101 WAS create → link-only.  
 6. Apply remaining stale-doc patches from `STALE-063-111-PATCH-MANIFEST.md` (audit recommendedAction strings).  
-7. Optional orphan XP/Assets cleanup (dry-run first).
+7. Optional orphan XP/Assets cleanup (dry-run first).  
+8. Enforce `send_short` empty-week path in 118/119 (repo) before PROD paste/Live.
 
 ---
 
@@ -137,8 +140,9 @@ Ordered by dependency and risk. Do not skip attestation before enabling schedule
 
 - Collapse/delete Config year rows  
 - Re-enable **112**  
-- Turn on both **117** and **117c**  
+- Turn on both **117** and **117c** XP writers (if either XP path is installed)  
 - Reinstall full **063** / **111**  
-- Enable 118/119 Live schedules before SC-035 decision + Schmidt PASS  
-- Mark decision packets as resolved without recording Mike’s choice  
+- Enable 118/119 Live schedules before `send_short` enforcement + Schmidt PASS  
+- Create **Quiz Result PDF** or fake quiz attachments (SC-014 Option B)  
 - Turn **070a** ON without a scheduled window  
+- Modify PROD automations for these decisions until the next approved paste window  
