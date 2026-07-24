@@ -47,13 +47,15 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 │   ├── documentation/        # Scenario notes and webhook standards
 │   └── test-payloads/        # Sample JSON for webhook testing
 ├── lib/                      # Pure Node contracts (config-selection, challenge-year, WAS, RCC)
+│   ├── challenge-year/       # Season Launch + rollover engine (calls RCC buildIssue)
 │   └── reliability-command-center/  # Workflow health model + audit helpers
 ├── tests/
+│   ├── challenge-year/       # Challenge-Year + Season Launch Control tests
 │   └── reliability-command-center/  # Synthetic fixtures + RCC tests
 ├── tools/
 │   ├── airtable/             # Python schema export and PAT verify scripts
 │   ├── enrollment-season/    # Offline enrollment / Weeks seed validators
-│   ├── challenge-year/       # Challenge-year Week generator, preflight, manifest CLI
+│   ├── challenge-year/       # Season Launch CLI (weeks, preflight, launch-*)
 │   └── reliability-command-center/  # Offline audit CLI + dry-run repair preview
 ├── media/                    # Season publicity assets (newspapers, radio, social)
 ├── .cursor/rules/            # Canonical Cursor AI rules

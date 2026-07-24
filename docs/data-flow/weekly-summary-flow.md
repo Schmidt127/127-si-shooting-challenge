@@ -13,9 +13,9 @@ How **Weekly Athlete Summary** rows are ensured, packaged, and emailed to parent
 
 | Step | Automation / system | Role |
 |------|---------------------|------|
-| Ensure + arm build | **118** (Sun 5:00 AM Denver; currently OFF) | Create/find WAS; set `Build Weekly Email Now?` |
+| Ensure + arm build | **118** (Sun 5:00 AM Denver; **ON**) | Create/find WAS; set `Build Weekly Email Now?` |
 | Build package | **072 v4.0** | Recipients, subject, HTML/text/payload, Ready?; empty-week policy |
-| Arm send | **119** (Sun 10:00 AM Denver; currently OFF) | Set `Send to Make?` when Ready && !Sent |
+| Arm send | **119** (Sun 10:00 AM Denver; **ON**) | Set `Send to Make?` when Ready && !Sent |
 | Webhook handoff | **074** (ON) | POST to Make; clear `Send to Make?`; does **not** mark Sent? |
 | Email + writeback | Make **`Weekly Athlete Summary - Bulk Email - May 18`** (ON) | Gmail; Live branch writes Sent? after success |
 

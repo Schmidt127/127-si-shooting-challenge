@@ -95,8 +95,11 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
-| [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year Config + season rollover engine** (Built in Repository) |
+| [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year + Season Launch Control** (Built in Repository; Softr Obsolete) |
+| [challenge-year/SEASON-LAUNCH-CONTROL.md](./challenge-year/SEASON-LAUNCH-CONTROL.md) | Launch lifecycle, CLI, operator Q&A |
+| [challenge-year/WEB-SEASON-ACTIVATION.md](./challenge-year/WEB-SEASON-ACTIVATION.md) | `/shoot` season activation package |
 | [deploy-checklists/challenge-year-rollover-installation-packet.md](./deploy-checklists/challenge-year-rollover-installation-packet.md) | Annual rollover installation / usage packet |
+| [deploy-checklists/season-launch-control-installation-packet.md](./deploy-checklists/season-launch-control-installation-packet.md) | Season Launch Control PROD install packet |
 
 **Safe repo validation (no Airtable / no secrets printed):**
 
@@ -108,7 +111,7 @@ node tools/validate-v2-release-readiness.js
 
 | Doc | Purpose |
 |-----|---------|
-| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, Softr |
+| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, `/shoot` (Softr Obsolete) |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | Operational known issues with severity + ownership |
 | [deployment-notes.md](./deployment-notes.md) | Vercel env vars, health check, validation |
 | [../web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md) | `/shoot/admin` roadmap (read-only first) |

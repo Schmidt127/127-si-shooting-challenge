@@ -1,0 +1,42 @@
+{
+  "contractId": "fillout-season-routing",
+  "version": "1.0.0",
+  "timezone": "America/Denver",
+  "scope": "shooting-challenge-only",
+  "airtableBaseId": "appn84sqPw03zEbTT",
+  "forms": [
+    {
+      "formKey": "enrollment",
+      "formId": "OPERATOR_SET_IN_FILLOUT",
+      "airtableTable": "Enrollments",
+      "seasonRouting": {
+        "schoolYearField": "School Year",
+        "programInstanceField": "Program Instance",
+        "configField": "UNKNOWN_UI_ATTESTATION",
+        "challengeYearField": "UNKNOWN_UI_ATTESTATION"
+      },
+      "relatedContract": "docs/online-agents/enrollment-season/fillout-enrollment-contract.schema.json",
+      "liveMutationAllowed": false
+    },
+    {
+      "formKey": "daily_submission",
+      "formId": "OPERATOR_SET_IN_FILLOUT",
+      "airtableTable": "Submissions",
+      "statusKnown": "OFF_C008",
+      "seasonRouting": {
+        "activityDateField": "Activity Date",
+        "enrollmentLookup": "UNKNOWN_UI_ATTESTATION",
+        "configField": "UNKNOWN_UI_ATTESTATION",
+        "weekField": "Assigned by automation 005 from Activity Date — not Fillout Week pick"
+      },
+      "liveMutationAllowed": false
+    }
+  ],
+  "rules": [
+    "Do not guess undocumented mappings",
+    "Never hard-code a permanent current year as the only selectable season",
+    "Week assignment is Activity Date → Weeks via automation 005",
+    "Reopen daily form only after season launch gates (SC-146 / SC-135)"
+  ],
+  "mikeAttestations": ["F-ATT-01", "F-ATT-02", "F-ATT-03", "F-ATT-04", "F-ATT-05"]
+}

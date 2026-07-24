@@ -2,12 +2,12 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (Reliability Command Center **Built/Tested** in repo — SC-147; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver; go-live integration)
+Last updated: **2026-07-24** (Season Launch Control PR #41 rebased on RCC PR #40 tip; Softr Obsolete; SC-147 Built/Tested in repo; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 **Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
-**Softr cutover:** [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+**Softr:** Obsolete / Not Used — Historical Reference Only: [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 > **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
 
@@ -42,6 +42,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules ON** (Sun 5:00 / 10:00 AM America/Denver); 072+074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
 | **Automation standards (doc 06)** | **Active** — **066 v3.3** current V2 rewrite reference (v3.2 Week date-key retained in history) |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
+| **Challenge-Year / Season Launch** | **Built in Repository** (engine on master) + **Season Launch Control** (PR #41) — Fillout/Make/`/shoot`; Softr Obsolete; consumes canonical RCC `buildIssue` (no vendored RCC duplicate) — [`docs/challenge-year/`](./challenge-year/README.md) |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
 
@@ -163,7 +164,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | Route | Status |
 |-------|--------|
 | `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
-| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable + Softr publish gate) |
+| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable publish gate; field may still be historically Softr-named) |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
 | `/athletes/[slug]` | Demo/mock — slug resolution incomplete |
@@ -179,16 +180,16 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 
 ---
 
-## Softr vs Next.js (dual-state)
+## Front end (Softr Obsolete)
 
 | System | Role today |
 |--------|------------|
-| **Softr.io** | Legacy public UI — still may serve some participant views |
-| **This Next.js app** | Replacement in progress at `/shoot` |
-| **SEO** | Sitewide `robots: noindex` until cutover approval |
-| **Publish flag** | Airtable `OK to Publish on Softr` still gates public catalog queries |
+| **Softr.io** | **Obsolete / Not Used** — Historical Reference Only — not a season-launch gate |
+| **This Next.js app** | Active public UI at `/shoot` |
+| **SEO** | Sitewide `robots: noindex` until Mike approves indexing (SC-115) |
+| **Publish flag** | Field may still be named `OK to Publish on Softr` (SC-144 rename) — not an active Softr dependency |
 
-**Do not remove `noindex` or perform cutover** without explicit Mike approval. Checklist: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+Historical cutover checklist (do not block launch): [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) · [WEB-SEASON-ACTIVATION.md](./challenge-year/WEB-SEASON-ACTIVATION.md)
 
 ---
 
@@ -244,7 +245,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
-| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr dual-run |
+| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---
@@ -282,4 +283,4 @@ CI mirrors lint / typecheck / test on `web/**` changes. Record results in the Ag
 | Schema field/table change | Dated snapshot under `airtable/schema/snapshots/` (Agent A) — then refresh `current/` |
 | New public page | [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) |
 | Vercel env change | [deployment-notes.md](./deployment-notes.md) |
-| Softr cutover step | [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) |
+| Softr (Obsolete) | [challenge-year/SOFTR-SEASON-ACTIVATION.md](./challenge-year/SOFTR-SEASON-ACTIVATION.md) — Historical Reference Only |
