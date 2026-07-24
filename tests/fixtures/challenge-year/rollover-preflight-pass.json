@@ -1,0 +1,70 @@
+{
+  "mode": "preflight",
+  "levelPolicy": "undocumented",
+  "newConfig": {
+    "id": "recNEWCONFIG202728",
+    "activeSchoolYear": "2027-2028",
+    "startDate": "2027-05-30",
+    "endDate": "2027-08-14",
+    "enrollmentOpenDate": "2027-04-01",
+    "enrollmentCloseDate": "2027-05-29",
+    "weekZeroStart": "2027-05-30",
+    "regularWeekCount": 8,
+    "status": "Planning",
+    "isCurrent": false,
+    "testMode": false,
+    "rolloverState": "weeks_seeded"
+  },
+  "priorConfig": {
+    "id": "recOLDCONFIG202627",
+    "activeSchoolYear": "2026-2027",
+    "startDate": "2026-05-31",
+    "endDate": "2026-08-15",
+    "weekZeroStart": "2026-05-31",
+    "regularWeekCount": 9,
+    "status": "Completed",
+    "isCurrent": true,
+    "testMode": false,
+    "rolloverState": "activated"
+  },
+  "allConfigs": [
+    {
+      "id": "recOLDCONFIG202627",
+      "activeSchoolYear": "2026-2027",
+      "startDate": "2026-05-31",
+      "endDate": "2026-08-15",
+      "isCurrent": true,
+      "status": "Completed"
+    },
+    {
+      "id": "recNEWCONFIG202728",
+      "activeSchoolYear": "2027-2028",
+      "startDate": "2027-05-30",
+      "endDate": "2027-08-14",
+      "weekZeroStart": "2027-05-30",
+      "regularWeekCount": 8,
+      "isCurrent": false,
+      "status": "Planning"
+    }
+  ],
+  "generate": {
+    "weekZeroStart": "2027-05-30",
+    "regularWeeks": 8
+  },
+  "opsChecklist": {
+    "formsDocumented": true,
+    "automationsDocumented": true,
+    "weeklySchedulesDocumented": true,
+    "activeRewardRules": true,
+    "gradeBandsAvailable": true,
+    "levelRulesAvailable": true,
+    "achievementRulesAvailable": true,
+    "xpSourceValuesAvailable": true,
+    "emailTemplatesReady": true,
+    "testValuesIdentified": true,
+    "schmidtHandlingDocumented": true,
+    "currentYearViewsDocumented": true,
+    "makeNotHardCoded": true,
+    "softrNotHardCoded": true
+  }
+}
