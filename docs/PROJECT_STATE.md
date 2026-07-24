@@ -131,14 +131,16 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Scripts | **118 / 119** schedule arm + **072 / 074** patches — repository ready |
-| DEV paste | **Pending** |
-| Schedules | **Must remain OFF** until Mike authorizes |
-| Make DEV webhook | **Live-blocked** / requires approval |
-| Packet | [C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) |
-| Activation checklist | [C-011-weekly-email-schedule-activation-checklist.md](./deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md) — keep schedules off until authorized |
+| Scripts | **118 v1.4 / 119 v1.4 / 072 v4.0 / 074 v2.1** — installed + live-proven |
+| PROD schedules | **ON** — 118 Sun 5:00 AM Denver; 119 Sun 10:00 AM Denver (**verified_prod** 2026-07-24) |
+| 072 / 074 / Make | **ON** — Make `Weekly Athlete Summary - Bulk Email - May 18` |
+| 074 sendMode | **Live** (or blank + WAS Live) — **never** fixed Test |
+| Live writeback | **PASS** — `Weekly Email Sent?`, `Make Send Status=Sent`, timestamp |
+| Architecture | [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
+| Activation checklist | [C-011-weekly-email-schedule-activation-checklist.md](./deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md) — activation **COMPLETE** |
+| Stale OFF notes | Superseded — see [STALE-CLAIM-CORRECTION.md](./next-wave/reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md) |
 
-Manual Build/Send checkboxes remain the production path today.
+Manual Build/Send checkboxes remain available for controlled one-offs; scheduled path is the production path.
 
 ---
 
