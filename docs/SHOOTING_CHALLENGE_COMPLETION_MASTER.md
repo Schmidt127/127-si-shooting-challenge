@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (WAS weekly email chain Live Tested in PROD Test mode; dashboard recalculated) |
+| Last updated | 2026-07-24 (go-live integration: 118/119 schedules ON; Live writeback; dashboard recalculated) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -64,18 +64,18 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **146** |
-| Complete | 10 |
-| Live Tested in PROD | 10 |
-| Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 28 |
-| Planned | 23 |
+| Complete | 12 |
+| Live Tested in PROD | 12 |
+| Installed but not tested *(Installed in PROD)* | 52 |
+| Built but not installed *(Built in Repository)* | 27 |
+| Planned | 22 |
 | Decision Needed | 6 |
 | Deferred | 10 |
 | Superseded | 3 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback PASS; 118/119 schedules remain OFF. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -120,15 +120,15 @@ Columns:
 | SC-028 | Config | Perfect Week rules configurable | Installed in PROD | **057** v1.3 Stage 17 | Re-test with Zoom recording + live exclusivity | SC-116 | Combined Zoom credit path | C-025 Stage 17 | — | P1 | 2026-07-23 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
-| SC-031 | Config | Weekly schedule settings (build/send timing) | Built in Repository | C-011 118/119 design; activation checklist | Install schedules carefully; keep OFF until authorized | SC-051 | Accidental mass email risk | C-011 checklists | Authorize schedule enable | P1 | 2026-07-23 |
+| SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Monitor first live Sunday; keep 074 sendMode Live; Schmidt-safe defaults on dryRun/includeSchmidt as configured | SC-051 | Do **not** disable schedules based on stale OFF docs | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; `STALE-CLAIM-CORRECTION.md` | **Authorized ON** | P0 | 2026-07-24 |
 | SC-032 | Config | Season settings (dates, windows) | Planned | Weeks table historically; C-018 design | Rebuild Weeks for next season; intake vs run calendars | SC-084 | 005 date mapping | C-018; V2-013 | — | P1 | 2026-07-23 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
 | SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; **054 v5.6** + **066 v3.3** hardenings now in PROD; hardcode inventory | Finish V2-002 pass across 001–119; paste any remaining pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
-| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 v1.4** created/armed Schmidt WAS; **072 v4.0** `send_short` Check-In delivered; hybrid creators **031**+**118**+**101**; 2026–2027 Weeks exist | Authorize Sunday 118 schedule for season-wide ensure; keep dryRun/includeSchmidt safe defaults | SC-004, SC-082 | Schedules OFF; season-wide Live not yet authorized | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | **DECIDED `send_short`** | P0 | 2026-07-24 |
+| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 v1.4 ON** (Sun 5 AM); Schmidt WAS ensure + **072 v4.0** `send_short` delivered; hybrid creators **031**+**118**+**101**; 2026–2027 Weeks exist | Monitor WAS uniqueness after scheduled runs; keep safe includeSchmidt/dryRun inputs as configured | SC-004, SC-082 | Schedule ON — do not revert OFF | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | **DECIDED `send_short`**; schedules authorized | P0 | 2026-07-24 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
-| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Live Tested in PROD | **118** arms Build; **072 v4.0** built short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allowSchmidtInput=false` post-test; authorize season schedule when ready | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | — | P0 | 2026-07-24 |
-| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Live Tested in PROD | **119 v1.4** `send_armed` → **074** webhook → Make Bulk Email May 18 → Gmail; **074 sendMode=Live** writeback PASS | Authorize Sunday 119 schedule; keep 074 sendMode Live (or blank+WAS Live) | SC-038 | **119 does not post webhook**; 074 does; Make owns Live Sent? writeback; never force 074 Test in PROD | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; C-011 | Authorize Live schedules | P0 | 2026-07-24 |
+| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Complete | **118 ON** arms Build; **072 v4.0 ON** built short empty-week package; season schedule active | Keep `allowSchmidtInput=false` for normal traffic; monitor empty-week `send_short` | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | — | P0 | 2026-07-24 |
+| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Complete | **119 ON** (Sun 10 AM) arms Send → **074** webhook → Make Bulk Email May 18 → Gmail; **074 sendMode=Live** writeback PASS | Keep 074 sendMode Live; monitor first live Sunday send volume | SC-038 | **119 does not post webhook**; Make owns Live Sent? writeback; never force 074 Test | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | Schedules authorized ON | P0 | 2026-07-24 |
 | SC-040 | Weekly Summary | Duplicate-send protection | Live Tested in PROD | 074 blocks when Sent?; Make Live writeback verified (`Weekly Email Sent?`, `Make Send Status=Sent`, timestamp); eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Season-scale double-send watch after schedule auth; Test branch still no Sent? writeback (by design) | SC-039 | Make owns final Sent? on Live; PROD 074 must not force Test | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
 | SC-041 | Weekly Summary | Retry behavior when Make/email fails | Planned | Partial failure notes in 074 (don’t clear trigger on webhook fail) | Define retry SOP; test failure then recovery | SC-039 | Don’t mark Sent on failure | 074 standard | — | P1 | 2026-07-23 |
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
@@ -431,7 +431,7 @@ Still open from that pack: **115 paste**, remaining **Testing views**, leaderboa
 
 **Required Mike action:** UI-attest the Agent 1 delete/upgrade set before treating SC-058/SC-059 as Complete. Earlier “do not delete 032/033/063/111” guidance and the overnight baseline **conflict** — do not ignore.
 
-**Next package:** `docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md` — Automation Attestation + Config year-aware adoption + authorize Live Sunday 118/119 schedules (Test E2E already PASS).
+**Next package:** UI attestation (112 / 063/111 / 117 XOR 117c / Automations table re-export) + Schmidt re-test packs for installed-but-unproven pipelines. Weekly email schedules are **already ON** — do not re-authorize as OFF.
 
 ### 9C. Overnight multi-agent run — **RECONCILED 2026-07-23** (Agent 6)
 

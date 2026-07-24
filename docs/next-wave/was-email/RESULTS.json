@@ -15,11 +15,14 @@
     "074_repo": "v2.1"
   },
   "prod_scheduling": {
-    "118": "OFF",
-    "119": "OFF",
+    "118": "ON",
+    "119": "ON",
+    "118_schedule": "Sunday 5:00 AM America/Denver",
+    "119_schedule": "Sunday 10:00 AM America/Denver",
     "074": "ON",
     "074_sendMode": "Live",
-    "make_bulk_email_may_18": "ON"
+    "make_bulk_email_may_18": "ON",
+    "note": "Older OFF values in this file are superseded by verified_prod activation 2026-07-24"
   },
   "074_production_sendMode_rule": {
     "must_not": "fixed automation input sendMode=Test",

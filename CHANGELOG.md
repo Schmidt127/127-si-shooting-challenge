@@ -9,7 +9,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Added
-- **Agent 1+2 reliability + data-model audit (2026-07-24)** — Docs/tests only: automation trust bands, input/dedupe/ownership audits, ranked repairs, table/field map refresh, Mike actions. No Airtable/Make mutations. [`reliability-audit-2026-07-24/REPORT.md`](./docs/next-wave/reliability-audit-2026-07-24/REPORT.md).
+- **Go-live integration + promotion lead (2026-07-24)** — Merged accepted agent branches; corrected stale **118/119 OFF** claims to verified **ON**; updated completion master + architecture + ownership; go-live readiness report. No Airtable UI mutations from agent. [`GO-LIVE-READINESS-2026-07-24.md`](./docs/next-wave/go-live/GO-LIVE-READINESS-2026-07-24.md).
+- **Agent 1+2 reliability + data-model audit (2026-07-24)** — Docs/tests only: automation trust bands, input/dedupe/ownership audits, ranked repairs, table/field map refresh, Mike actions. No Airtable/Make mutations. [`reliability-audit-2026-07-24/REPORT.md`](./docs/next-wave/reliability-audit-2026-07-24/REPORT.md). Stale OFF schedule claims corrected in go-live integration.
 
 #### Changed
 - **074 PROD sendMode Live + Make writeback verified (2026-07-24)** — Fixed automation input `sendMode=Test` forced Make’s Test branch (email OK, no Sent? writeback). After **`sendMode=Live`**, Live writeback PASS: `Weekly Email Sent?` checked, `Make Send Status=Sent`, sent timestamp populated. **PROD rule:** 074 must use `sendMode=Live` or blank (inherit WAS `sendMode`) — never fixed Test. Docs + 074 docblock note; SC-040 → Live Tested. Architecture: [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).

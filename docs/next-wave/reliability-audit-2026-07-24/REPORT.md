@@ -104,8 +104,8 @@ No deletes/renames authorized. Cleanup classes Keep / Legacy / Do not use / Unkn
 
 | Pri | Item |
 |-----|------|
-| **P0** | Keep 118/119 schedules OFF + dryRun until activation checklist |
-| **P0** | Confirm 074 UI sendMode still **Live** (never fixed Test) |
+| **P0** | ~~Keep 118/119 OFF~~ **SUPERSEDED** — schedules **ON** (verified_prod); see `STALE-CLAIM-CORRECTION.md` |
+| **P0** | Confirm 074 UI sendMode still **Live** (never fixed Test) — already verified; do not revert |
 | **P1** | Attest 112 OFF; 063/111 deleted/OFF |
 | **P1** | Attest versions 020 v3.0.0, 054 v5.6, 066 v3.3, 072 v4.0, 074 v2.1, 118/119 v1.4 |
 | **P1** | 117 XOR 117c; 059 Created trigger |

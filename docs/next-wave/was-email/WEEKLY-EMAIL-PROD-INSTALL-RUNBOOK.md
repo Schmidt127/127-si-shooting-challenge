@@ -16,9 +16,9 @@ No agent may turn Live Sunday schedules ON without Mike authorization.
 
 | Piece | Version | PROD state |
 |-------|---------|------------|
-| **118** | v1.4 | Installed; schedule **OFF**; defaults dryRun/Test/includeSchmidt=false; `emptyWeekPolicy=send_short` |
+| **118** | v1.4 | Installed; schedule **ON** (Sun 5:00 AM Denver) — verified_prod 2026-07-24; confirm dryRun/includeSchmidt inputs in UI; `emptyWeekPolicy=send_short` |
 | **072** | v4.0 | Installed/ON (trigger); empty-week policy enforced; post-test `allowSchmidtInput=false` |
-| **119** | v1.4 | Installed; schedule **OFF**; defaults dryRun/includeSchmidt=false; `emptyWeekPolicy=send_short` |
+| **119** | v1.4 | Installed; schedule **ON** (Sun 10:00 AM Denver) — verified_prod 2026-07-24; confirm dryRun/includeSchmidt inputs in UI; `emptyWeekPolicy=send_short` |
 | **074** | Repo **v2.1** / UI cited **v2.0** | **ON** — posts webhook; does not mark Sent? |
 | Make | `Weekly Athlete Summary - Bulk Email - May 18` | **ON** |
 

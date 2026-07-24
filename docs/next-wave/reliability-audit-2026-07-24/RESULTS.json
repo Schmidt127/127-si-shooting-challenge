@@ -11,7 +11,9 @@
     "flow": "118→072→119→074→Make Bulk Email May 18→Gmail→Make writeback",
     "status": "verified_prod",
     "sendMode_correction": "074 must not remain fixed Test; Live writeback PASS 2026-07-24",
-    "docs_already_recorded_at": "a8f3b00"
+    "schedules": "118 ON / 119 ON (verified_prod; older OFF claims superseded)",
+    "docs_already_recorded_at": "a8f3b00",
+    "stale_claim_correction": "STALE-CLAIM-CORRECTION.md"
   },
   "prompt_reference_corrections": {
     "012": "retired; use 020",
@@ -20,10 +22,11 @@
   },
   "production_changes_by_agent": [],
   "open_p0_p1": [
-    "confirm_074_sendMode_Live_in_UI",
-    "keep_118_119_schedules_OFF",
+    "keep_074_sendMode_Live",
+    "do_not_disable_118_119_schedules",
     "attest_112_OFF_063_111_deleted_or_OFF",
     "attest_117_xor_117c",
-    "attest_script_versions"
+    "attest_script_versions",
+    "reexport_automations_table"
   ]
 }
