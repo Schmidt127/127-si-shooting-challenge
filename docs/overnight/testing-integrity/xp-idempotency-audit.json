@@ -1,0 +1,180 @@
+{
+  "audit_id": "xp-idempotency-2026-07-24",
+  "base_id": "appn84sqPw03zEbTT",
+  "generated_at": "2026-07-24",
+  "agent": "overnight-agent-1-testing-integrity",
+  "related_sc": ["SC-007", "SC-049", "SC-070", "SC-071", "SC-072", "SC-073", "SC-074", "SC-075", "SC-076", "SC-077", "SC-124"],
+  "inventory_snapshot_2026_07_23": {
+    "xp_events_total": 2543,
+    "blank_source_keys": 0,
+    "duplicate_source_keys": 0,
+    "duplicate_xp_dedupe_key_normalized": 0,
+    "submissions_with_gt1_xp_event": 0,
+    "orphaned_xp_events": 2538
+  },
+  "sources": [
+    {
+      "source": "Submission Base",
+      "automation": "010",
+      "script": "010-submission-intake-create-xp-event.js",
+      "source_table": "Submissions",
+      "source_key_format": "SUBMISSION_XP|{submissionId}",
+      "xp_dedupe_key_format": "{enrollmentId}|{submissionId}|{xpSource}",
+      "xp_date_source": "Submission.Activity Date (America/Denver)",
+      "writer": "010",
+      "duplicate_prevention": "recheck-before-create Source Key + dedupe + submission link; refuse steal",
+      "rerun_safety": "safe",
+      "blank_key_risk": "low",
+      "key_collision_risk": "low",
+      "test_coverage": ["tools/testing/tests/test_expected_actual.mjs", "v2-engine-contracts"],
+      "prod_evidence": [
+        {
+          "xp_event": "recOodD23MQrP1O9F",
+          "source_key": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+          "amount": 20
+        }
+      ],
+      "status": "proven_post_reset"
+    },
+    {
+      "source": "Homework Completion",
+      "automation": "065",
+      "script": "065-homework-review-and-xp-create-homework-xp-event.js",
+      "source_table": "Homework Completions",
+      "source_key_format": "HOMEWORK_XP|{homeworkCompletionId}",
+      "writer": "065",
+      "duplicate_prevention": "recheck-before-create by Source Key",
+      "rerun_safety": "code_safe_unproven_live",
+      "blank_key_risk": "low",
+      "key_collision_risk": "low",
+      "test_coverage": ["v2-engine-contracts"],
+      "prod_evidence": [],
+      "status": "installed_unproven_post_reset"
+    },
+    {
+      "source": "Video Feedback",
+      "automation": "114",
+      "script": "114-video-review-and-xp-create-or-update-video-xp-event.js",
+      "source_table": "Video Feedback",
+      "source_key_format": "VIDEO_SUBMISSION|{videoFeedbackId}",
+      "writer": "114",
+      "duplicate_prevention": "Source Key + XP Dedupe Key Normalized + steal guard",
+      "rerun_safety": "safe_update_same_event",
+      "blank_key_risk": "low",
+      "key_collision_risk": "low",
+      "test_coverage": ["v2-engine-contracts"],
+      "prod_evidence": [
+        {
+          "xp_event": "recYQ10pOoFlApmjZ",
+          "source_key": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm",
+          "amount": 1
+        }
+      ],
+      "status": "partial_evidence"
+    },
+    {
+      "source": "Zoom Attendance",
+      "automation": "101",
+      "script": "101-zoom-attendance-xp-award-meeting-xp.js",
+      "source_table": "Zoom Meetings / Attendees",
+      "source_key_format": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+      "bonus_keys": ["ZOOM_ATTEND_BONUS_2|…", "ZOOM_ATTEND_BONUS_3|…"],
+      "writer": "101",
+      "duplicate_prevention": "stable Source Keys per meeting+enrollment",
+      "rerun_safety": "code_safe_unproven_post_reset",
+      "hard_rule": "recording path must never write Zoom Meetings.Attendees",
+      "prod_evidence": [],
+      "status": "installed_unproven_post_reset"
+    },
+    {
+      "source": "Zoom Recording Credit",
+      "automation": "117/117c",
+      "script": "117-zoom-recording-credit-orchestrator.js",
+      "source_table": "Zoom Attendance",
+      "source_key_format": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
+      "writer": "117c (via 117)",
+      "duplicate_prevention": "recheck-before-create; refuse steal; soft-void on conflict",
+      "rerun_safety": "safe",
+      "disjoint_from": "ZOOM_ATTEND_BASE|…",
+      "prod_evidence": [
+        {
+          "xp_event": "recOceuW34jQz7suD",
+          "source_key": "ZOOM_CREDIT|recgP9qZYjAhE7NXm|reczeUT0AJUWMmEOb",
+          "amount": 30
+        }
+      ],
+      "status": "partial_evidence"
+    },
+    {
+      "source": "Streak",
+      "automation": "054",
+      "script": "054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "source_table": "Streak Occurrences",
+      "source_key_format": "STREAK_XP|{enrollmentId}|{achievementId}|{streakEndDate}",
+      "writer": "054",
+      "duplicate_prevention": "Source Key recheck/repair",
+      "rerun_safety": "safe_repair",
+      "prod_evidence": [],
+      "status": "installed_unproven_post_reset"
+    },
+    {
+      "source": "Shot Milestone",
+      "automation": "066+059",
+      "unlock_key_format": "SHOT_MILESTONE|{enrollmentId}|{shotMilestoneId}",
+      "xp_writer": "059",
+      "duplicate_prevention": "unlock Source Key then XP from unlock",
+      "prod_evidence": [],
+      "status": "installed_unproven_post_reset"
+    },
+    {
+      "source": "Perfect Week",
+      "automation": "058+059",
+      "unlock_key_format": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+      "xp_writer": "059",
+      "duplicate_prevention": "unlock Source Key then XP from unlock",
+      "prod_evidence": [],
+      "status": "installed_unproven_post_reset"
+    },
+    {
+      "source": "Weekly Threshold",
+      "automation": null,
+      "script": null,
+      "source_table": "Weekly Athlete Summary",
+      "source_key_format": "UNKNOWN — rules WEEKLY_THRESHOLD_{100|125|150}_{band} exist; no writer script found in repo",
+      "writer": "MISSING_IN_REPO",
+      "duplicate_prevention": "unknown",
+      "rerun_safety": "blocked",
+      "blank_key_risk": "unknown",
+      "key_collision_risk": "unknown",
+      "schema_fields": [
+        "Threshold XP Ready?",
+        "Threshold XP Status",
+        "Threshold XP Processed At",
+        "Threshold XP Error Message",
+        "Requeue Threshold XP"
+      ],
+      "prod_evidence": [],
+      "status": "defect_writer_missing",
+      "severity": "high"
+    },
+    {
+      "source": "Manual Bonus",
+      "automation": null,
+      "source_table": "Enrollments / XP Events",
+      "source_key_format": "no MANUAL_BONUS rule; Lifetime XP Manual Adjustments field",
+      "writer": "human/ops",
+      "duplicate_prevention": "process discipline",
+      "status": "manual_process",
+      "severity": "medium"
+    }
+  ],
+  "defects": [
+    {
+      "id": "XP-D1",
+      "severity": "high",
+      "description": "Weekly Threshold XP writer automation not found in repository despite WAS threshold fields and XP Reward Rules",
+      "fix_status": "documented",
+      "mike_action": "UI-attest whether Threshold XP automation still exists in PROD"
+    }
+  ]
+}
