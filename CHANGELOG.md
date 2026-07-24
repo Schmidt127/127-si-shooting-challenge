@@ -8,6 +8,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **Challenge-Year Configuration and Season Rollover Engine (2026-07-24)** — Repository engine for safe annual prep: canonical Config contract, current-Config resolver (fail-closed on multiple/overlapping), Week 0..N + Post-Challenge generator (JSON/CSV/Markdown + validation), Activity Date→Week resolution (America/Denver), enrollment-year + WAS uniqueness validators, rollover preflight (`PASS` / `PASS WITH WARNINGS` / `FAIL`), manifest generation, and dry-run Airtable preview helpers (`preview-challenge-year-*.js`). Extends `lib/config-selection` + enrollment-season + WAS contracts. **Not live-installed**; no schema creates; no schedule activation. Docs: [`docs/challenge-year/`](./docs/challenge-year/README.md) · [installation packet](./docs/deploy-checklists/challenge-year-rollover-installation-packet.md). CLI: `node tools/challenge-year/cli.js`. Tests: `node tests/challenge-year/challenge-year-engine.test.js`.
+
 #### Changed
 - **074 PROD sendMode Live + Make writeback verified (2026-07-24)** — Fixed automation input `sendMode=Test` forced Make’s Test branch (email OK, no Sent? writeback). After **`sendMode=Live`**, Live writeback PASS: `Weekly Email Sent?` checked, `Make Send Status=Sent`, sent timestamp populated. **PROD rule:** 074 must use `sendMode=Live` or blank (inherit WAS `sendMode`) — never fixed Test. Docs + 074 docblock note; SC-040 → Live Tested. Architecture: [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).
 - **Weekly WAS email chain verified in PROD (2026-07-24)** — Final flow documented as `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0** (`built_short_empty_week`); **119** arms Send only; **074** posts webhook; Make owns Live Sent? writeback. 118/119 schedules remain **OFF**; 074+Make **ON**.

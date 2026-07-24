@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; 118/119 schedules OFF)
+Last updated: **2026-07-24** (Challenge-Year rollover engine Built in Repository; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; 118/119 schedules OFF)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -42,6 +42,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 | **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules OFF**; 074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
 | **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
+| **Challenge-Year rollover engine** | **Built in Repository** (2026-07-24) — `lib/challenge-year/` + `tools/challenge-year/cli.js` + dry-run previews; **not live-installed**; docs [`challenge-year/`](./challenge-year/README.md) · [installation packet](./deploy-checklists/challenge-year-rollover-installation-packet.md) |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
 

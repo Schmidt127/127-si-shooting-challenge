@@ -1,0 +1,11 @@
+Week Name,Start Date,End Date,Sequence,Week Type,Week Key,Week End Key,Challenge Year,Config Record ID,Timezone,Active?,Intake Open?,Counts for XP?,Counts for Leaderboard?
+Week 0,2027-05-30,2027-06-05,0,Week 0,2027-2028|Week 0,2027-06-05,2027-2028,,America/Denver,true,true,false,false
+Week 1,2027-06-06,2027-06-12,1,Regular,2027-2028|Week 1,2027-06-12,2027-2028,,America/Denver,true,true,true,true
+Week 2,2027-06-13,2027-06-19,2,Regular,2027-2028|Week 2,2027-06-19,2027-2028,,America/Denver,true,true,true,true
+Week 3,2027-06-20,2027-06-26,3,Regular,2027-2028|Week 3,2027-06-26,2027-2028,,America/Denver,true,true,true,true
+Week 4,2027-06-27,2027-07-03,4,Regular,2027-2028|Week 4,2027-07-03,2027-2028,,America/Denver,true,true,true,true
+Week 5,2027-07-04,2027-07-10,5,Regular,2027-2028|Week 5,2027-07-10,2027-2028,,America/Denver,true,true,true,true
+Week 6,2027-07-11,2027-07-17,6,Regular,2027-2028|Week 6,2027-07-17,2027-2028,,America/Denver,true,true,true,true
+Week 7,2027-07-18,2027-07-24,7,Regular,2027-2028|Week 7,2027-07-24,2027-2028,,America/Denver,true,true,true,true
+Week 8,2027-07-25,2027-07-31,8,Regular,2027-2028|Week 8,2027-07-31,2027-2028,,America/Denver,true,true,true,true
+Post-Challenge,2027-08-01,2027-08-07,9,Post-Challenge,2027-2028|Post-Challenge,2027-08-07,2027-2028,,America/Denver,true,true,true,true

@@ -8,6 +8,8 @@ Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`�
 
 **Wave 2A classification (complete):** [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md) — Category A–F + complexity for all 46 scripts.
 
+**Challenge-year / annual rollover (repo engine, not scheduled automations):** [challenge-year/README.md](./challenge-year/README.md) — Config resolve, Week generate/validate, enrollment/WAS year checks, preflight + manifest (`tools/challenge-year/cli.js`). Admin dry-run previews: `airtable/extension-scripts/audits/preview-challenge-year-*.js` (require explicit Config ID + year; never delete; not for automation triggers). Year-aware consumers especially: **005**, **031**, **034**, **072**, **074**, **101**, **118**, **119**.
+
 Standard: [../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
 
 Trigger map (downstream effects): [../airtable/schema/current/automation-trigger-map.md](../airtable/schema/current/automation-trigger-map.md)
