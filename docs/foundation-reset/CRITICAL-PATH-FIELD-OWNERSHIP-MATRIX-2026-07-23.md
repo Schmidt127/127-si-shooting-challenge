@@ -48,8 +48,8 @@
 | Athlete Achievement Unlocks | Enrollment / Achievement / Week | links | 058/066/… | — | 059 XP | Possible | High | Keep H-001 dedupe rules |
 | Streak Occurrences | Enrollment | link | 053/054/055/056 | — | Streak XP | Possible | High | Active? interactions |
 | Shot milestone unlocks | via 066 | — | 066 | — | Achievements | — | High | Live OMNI still pending historically |
-| Weekly Athlete Summary | Enrollment / Week | links | 031 | 118 (not installed) | 072/074 emails | Possible after C-011 | High | None now |
-| Weekly Athlete Summary | Build/Send checkboxes | checkbox | Human / 118/119 | — | 072/074 | Future dual | High | Keep schedules off until authorized |
+| Weekly Athlete Summary | Enrollment / Week | links | 031 | **118 v1.4** (schedule OFF) | 072/074 emails | Controlled | High | Season schedules OFF until Live auth |
+| Weekly Athlete Summary | Build/Send checkboxes | checkbox | **118** Build / **119** Send arm | — | **072** package / **074** webhook | Controlled | High | 119 does not webhook; schedules OFF |
 | Levels / Level Gate Rules | config fields | various | Human/config | 042 writes enrollment level fields | Progression | Split config vs enrollment | Medium | None now |
 | Enrollments | Current Level / Next Level | links | 042 | 041 marks recalc | Gates, public formulas | Intended 042 | High | None now |
 | Zoom Meetings | Attendees | link | Live attendance only | **Forbidden:** recording path | 101 XP | Critical if violated | Critical | Never write from 117 |

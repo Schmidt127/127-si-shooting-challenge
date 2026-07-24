@@ -9,7 +9,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
-- **072 v4.0 empty-week policy enforcement (2026-07-24)** — SC-035 `send_short` builds a concise no-activity reminder; `send_normal` keeps the full empty-week report; `suppress` leaves packages not send-ready. Non-empty weeks still get the full summary. 118/119 bumped to **v1.4** (default `send_short`; package shape enforced in 072). No webhook/email from 072. Runbook: [`docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md`](./docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md). PROD paste is manual.
+- **Weekly WAS email chain verified in PROD Test mode (2026-07-24)** — Final flow documented as `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0** (`built_short_empty_week`); **119** arms Send only; **074** posts webhook; Make owns Live Sent? writeback. 118/119 schedules remain **OFF**; 074+Make **ON**. Architecture: [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).
+- **072 v4.0 empty-week policy enforcement (2026-07-24)** — SC-035 `send_short` builds a concise no-activity reminder; `send_normal` keeps the full empty-week report; `suppress` leaves packages not send-ready. Non-empty weeks still get the full summary. 118/119 **v1.4** (default `send_short`). No webhook/email from 072.
 
 ### Web
 

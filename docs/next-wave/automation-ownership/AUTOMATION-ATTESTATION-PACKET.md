@@ -97,8 +97,11 @@ PROD attestation 2026-07-24 (verified partial):
 - 117: Present = v1.1 — approval email → Make only; does NOT award XP
 - 117c: Absent from PROD
 - ZOOM_CREDIT sole writer = N/A for PROD Automation 117 (email-only; not an XP writer). 117c absent. Do not apply 117-vs-117c XP XOR to PROD 117.
-- 118: OFF = ____
-- 119: OFF = ____
+- 118: OFF (installed v1.4; schedule OFF during validation) = ____
+- 119: OFF (installed v1.4; arms Send only — not webhook) = ____
+- 072: v4.0 empty-week send_short verified Schmidt = ____
+- 074: ON webhook handoff (repo v2.1 / UI cited v2.0) = ____
+- Make WAS email: Bulk Email May 18 ON = ____
 - Weekly Threshold writer found? YES|NO name=____
 ```
 

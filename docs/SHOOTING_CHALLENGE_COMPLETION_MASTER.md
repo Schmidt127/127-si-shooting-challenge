@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (054 v5.6 + 066 v3.3 Installed in PROD; dashboard recalculated) |
+| Last updated | 2026-07-24 (WAS weekly email chain Live Tested in PROD Test mode; dashboard recalculated) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,9 +65,9 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **146** |
 | Complete | 10 |
-| Live Tested in PROD | 6 |
+| Live Tested in PROD | 9 |
 | Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 32 |
+| Built but not installed *(Built in Repository)* | 29 |
 | Planned | 23 |
 | Decision Needed | 6 |
 | Deferred | 10 |
@@ -75,7 +75,7 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight Agents 1–2 + Online 7–8 advanced testing/config/enrollment/tutorials. Next-wave Agents 9–12 added ownership contracts, year-aware Config selection, homework/LA contracts, and 118/119 v1.3. **Agent 13 reconciliation:** `docs/next-wave/final-reconciliation/`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **Decisions 2026-07-24:** SC-035 empty-week = `send_short`; SC-014 quiz = Option B (attachment-less). **PROD pastes 2026-07-24:** **054 v5.6** + **066 v3.3** Installed (not Live Tested yet).
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` Test-mode E2E PASS with empty-week **`send_short`**; 118/119 schedules remain OFF. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -124,17 +124,17 @@ Columns:
 | SC-032 | Config | Season settings (dates, windows) | Planned | Weeks table historically; C-018 design | Rebuild Weeks for next season; intake vs run calendars | SC-084 | 005 date mapping | C-018; V2-013 | — | P1 | 2026-07-23 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
 | SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; **054 v5.6** + **066 v3.3** hardenings now in PROD; hardcode inventory | Finish V2-002 pass across 001–119; paste any remaining pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
-| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Built in Repository | **118/119 v1.4** + **072 v4.0** enforce `send_short` empty-week reminder in repo; hybrid WAS creators **031** + **118** + **101**; uniqueness = Enrollment+Week | PROD paste 072 v4.0; Schmidt empty-week proof (Check-In not full report); schedules OFF until authorized | SC-004, SC-082 | Repo enforced; PROD paste/test pending; schedules OFF | `docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md` | **DECIDED `send_short`** | P0 | 2026-07-24 |
+| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 v1.4** created/armed Schmidt WAS; **072 v4.0** `send_short` Check-In delivered; hybrid creators **031**+**118**+**101**; 2026–2027 Weeks exist | Authorize Sunday 118 schedule for season-wide ensure; keep dryRun/includeSchmidt safe defaults | SC-004, SC-082 | Schedules OFF; season-wide Live not yet authorized | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | **DECIDED `send_short`** | P0 | 2026-07-24 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
-| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Built in Repository | **118 v1.4** → **072 v4.0** package build with empty-week branching; dryRun default true | PROD paste 072 v4.0 + Schmidt empty-week proof; keep schedules OFF | SC-035 | dryRun default true; empty weeks use short reminder under `send_short` | `docs/next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md` | — | P0 | 2026-07-24 |
-| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Built in Repository | **119 v1.3** + **074** patches; schedules remain OFF | PROD paste OFF; Test webhook first | SC-038 | Make webhook live-blocked until approved | `docs/next-wave/was-email/`; C-011 | Authorize Live send | P0 | 2026-07-24 |
-| SC-040 | Weekly Summary | Duplicate-send protection | Built in Repository | Sent? + Make eventId / send-key patterns; overnight send-key reconciliation branch work | Confirm four-part keys live; merge any pending send-key fixes; live double-send test | SC-039 | Make Data Store ownership | C-025 117f key docs; C-011 | — | P0 | 2026-07-23 |
+| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Live Tested in PROD | **118** arms Build; **072 v4.0** built short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allowSchmidtInput=false` post-test; authorize season schedule when ready | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | — | P0 | 2026-07-24 |
+| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Live Tested in PROD | **119 v1.4** `send_armed` → **074** webhook → Make Bulk Email May 18 → Test Gmail PASS | Authorize Sunday 119 schedule; Live sendMode still gated; optional Make Test writeback parity | SC-038 | **119 does not post webhook**; 074 does; Make owns Live Sent? writeback | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; C-011 | Authorize Live schedules | P0 | 2026-07-24 |
+| SC-040 | Weekly Summary | Duplicate-send protection | Built in Repository | 074 blocks when Sent?; Live Make writeback sets Sent?; eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Live double-send test after schedule auth; note Test branch does not write Sent? today | SC-039 | Make owns final Sent? on Live | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
 | SC-041 | Weekly Summary | Retry behavior when Make/email fails | Planned | Partial failure notes in 074 (don’t clear trigger on webhook fail) | Define retry SOP; test failure then recovery | SC-039 | Don’t mark Sent on failure | 074 standard | — | P1 | 2026-07-23 |
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | 071–077 family + Make historically; 117f tested not fully live | Re-test each template on Schmidt; finish 117f go-live | SC-039, SC-124 | Webhooks not in git | automation-index; 117f checklists | — | P0 | 2026-07-23 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS path Test-mode E2E PASS 2026-07-24 (`send_short`); 071–077 + 117f still need individual re-proof | Re-test homework/video/welcome templates; 117f go-live; authorize Live weekly schedules | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture | — | P0 | 2026-07-24 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness (26 pass / 2 warn); dual writers flagged: 112 vs 013, 117 vs 117c, 031/101/118 WAS, 020 vs 067, Threshold missing, 065 legacy keys | Mike UI attestation; fix conflicts after decisions | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer; 117 XOR 117c | P0 | 2026-07-24 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
@@ -431,7 +431,7 @@ Still open from that pack: **115 paste**, remaining **Testing views**, leaderboa
 
 **Required Mike action:** UI-attest the Agent 1 delete/upgrade set before treating SC-058/SC-059 as Complete. Earlier “do not delete 032/033/063/111” guidance and the overnight baseline **conflict** — do not ignore.
 
-**Next package:** `docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md` — Automation Attestation + Config year-aware adoption + Weekly Email Install Gate (118/119 v1.3 paste OFF).
+**Next package:** `docs/next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md` — Automation Attestation + Config year-aware adoption + authorize Live Sunday 118/119 schedules (Test E2E already PASS).
 
 ### 9C. Overnight multi-agent run — **RECONCILED 2026-07-23** (Agent 6)
 
@@ -443,7 +443,7 @@ Confirmed direction preserved: PROD active; Schmidt visible; Weeks manual; websi
 
 **Deliverables:** `docs/next-wave/final-reconciliation/` · packages under `docs/next-wave/{automation-ownership,config-selection,homework-pipeline,was-email}/`
 
-Key corrections applied: Config year registry (no collapse); 063/111 supersession classifications; 020 v3.0.0 canonical; 118/119 v1.3; formula-only XP Dedupe Keys; WAS hybrid creators; dual-writer inventory.
+Key corrections applied: Config year registry (no collapse); 063/111 supersession classifications; 020 v3.0.0 canonical; weekly email `118→072→119→074→Make` verified; formula-only XP Dedupe Keys; WAS hybrid creators; dual-writer inventory.
 
 ---
 

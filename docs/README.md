@@ -87,7 +87,8 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [status/C-025-stage17-current-prod-progress.md](./status/C-025-stage17-current-prod-progress.md) | **C-025 Stage 17 — authoritative current state** (Zoom Attendance credit COMPLETE; Automation **117** vs Make **117f**; four-part send key) |
 | [deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) | C-025 PROD Zoom Recording **Approval Email** workflow (Airtable **117** → Make **117f**) — tested, not fully live |
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** DEV install packet (**superseded S16 design** — Stage 17 is current) |
-| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email DEV install packet |
+| [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email DEV install packet (historical) |
+| [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) | **C-011 PROD verified** weekly email architecture (`118→072→119→074→Make`) |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |

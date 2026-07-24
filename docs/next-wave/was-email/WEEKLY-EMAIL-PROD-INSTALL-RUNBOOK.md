@@ -1,106 +1,122 @@
-# Weekly email PROD install runbook — 118 / 119
+# Weekly email PROD install / ops runbook — 118 / 072 / 119 / 074 / Make
 
-**Agent:** 12 · **Date:** 2026-07-24  
+**Updated:** 2026-07-24 (verified Schmidt E2E)  
 **Base:** PROD `appn84sqPw03zEbTT`  
-**Authority:** Install **OFF**; do **not** enable schedules unless Mike explicitly authorizes.  
-**Scripts:**  
-- `airtable/automations/shooting-challenge/118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` (**v1.3**)  
-- `airtable/automations/shooting-challenge/119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js` (**v1.3**)
+**Canonical architecture:** [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 
-No agent may turn Live schedules on from this package.
+```text
+118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback
+```
 
----
-
-## Preflight
-
-1. Confirm free automation slots (or reuse OFF stubs).
-2. Confirm Schmidt enrollment `recgP9qZYjAhE7NXm` exists for Test-mode.
-3. Confirm 072 (build package) and 074 (Make send) exist and behave as expected.
-4. Confirm empty-week product decision status (may remain undecided — default send_normal).
+No agent may turn Live Sunday schedules ON without Mike authorization.
 
 ---
 
-## Install 118 (Build arm) — schedule OFF
+## Current verified state
 
-1. Create automation in folder **07 - Email, Notifications, and External Handoffs**.
+| Piece | Version | PROD state |
+|-------|---------|------------|
+| **118** | v1.4 | Installed; schedule **OFF**; defaults dryRun/Test/includeSchmidt=false; `emptyWeekPolicy=send_short` |
+| **072** | v4.0 | Installed/ON (trigger); empty-week policy enforced; post-test `allowSchmidtInput=false` |
+| **119** | v1.4 | Installed; schedule **OFF**; defaults dryRun/includeSchmidt=false; `emptyWeekPolicy=send_short` |
+| **074** | Repo **v2.1** / UI cited **v2.0** | **ON** — posts webhook; does not mark Sent? |
+| Make | `Weekly Athlete Summary - Bulk Email - May 18` | **ON** |
+
+Schmidt empty-week proof PASS (2026-07-24): subject **Weekly Check-In**; Test Gmail delivery OK.
+
+---
+
+## Ownership (do not reverse)
+
+| Actor | Owns |
+|-------|------|
+| **118** | WAS ensure + arm Build |
+| **072** | Package build + **emptyWeekPolicy** |
+| **119** | Arm `Send to Make?` only (**not** webhook) |
+| **074** | Make webhook POST |
+| **Make** | Gmail + Live Sent? writeback |
+
+---
+
+## 118 — Schedule Build (Sun 5:00 AM Denver)
+
+1. Folder: **07 - Email, Notifications, and External Handoffs**
 2. Name: `118 - Email - Schedule Weekly Summary Email Build`
-3. Trigger: **At a scheduled time** — Weekly — **Sunday 05:00** — **America/Denver**
-4. **Leave automation OFF** after paste.
-5. Action: Run script — paste from GitHub (skip GitHub SoT header if present).
-6. Input variables:
+3. Trigger: Weekly — Sunday **05:00** — America/Denver — leave **OFF**
+4. Script: `118-…-schedule-weekly-summary-email-build.js` **v1.4**
+5. Inputs:
 
-| Variable | Default / install value |
+| Variable | Production-safe default |
 |---|---|
 | `dryRun` | `"true"` |
 | `sendMode` | `"Test"` |
-| `includeSchmidt` | `"false"` (set `"true"` only for Schmidt-only tests) |
-| `excludedEnrollmentIds` | blank (Schmidt hard-excluded unless includeSchmidt) |
-| `emptyWeekPolicy` | `"send_normal"` |
-
-7. Map outputs: statusOut, actionOut, errorOut, debugStep, armedCountOut, skippedCountOut, createdWasCountOut, errorCountOut, scheduledWeekEndKeyOut, targetWeekIdOut, duplicateWasSkippedOut.
-
----
-
-## Install 119 (Send arm) — schedule OFF
-
-1. Same folder.
-2. Name: `119 - Email - Schedule Weekly Summary Email Send`
-3. Trigger: Weekly — **Sunday 10:00** — **America/Denver**
-4. **Leave OFF**.
-5. Paste script v1.3.
-6. Inputs:
-
-| Variable | Default |
-|---|---|
-| `dryRun` | `"true"` |
 | `includeSchmidt` | `"false"` |
 | `excludedEnrollmentIds` | blank |
-| `emptyWeekPolicy` | `"send_normal"` |
-
-7. Map outputs: statusOut, actionOut, errorOut, debugStep, armedCountOut, skippedCountOut, notReadyCountOut, errorCountOut, scheduledWeekEndKeyOut.
+| `emptyWeekPolicy` | `"send_short"` |
 
 ---
 
-## Dry run (manual trigger while OFF)
+## 072 — Build package (required for empty-week policy)
 
-1. Keep `dryRun=true`.
-2. Manually run 118 once (Test).
-3. Expect: `actionOut=dry_run_complete`, counts only, **no** WAS creates, **no** Build Weekly Email Now? writes.
-4. Manually run 119 once. Expect dry-run counts; no Send to Make? writes.
+1. Name: `072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package`
+2. Script: **v4.0**
+3. Inputs: `recordId`, `emptyWeekPolicy=send_short`, `allowSchmidtInput=false` (normal), `sendModeInput` from WAS
+4. Does **not** call Make or Gmail
 
-## Schmidt-only test (still Test mode)
+Empty-week matrix: see architecture doc.
 
-1. Set 118/119 `includeSchmidt=true`, `sendMode=Test` (118), `dryRun=false` only when Mike authorizes a controlled write.
-2. Never combine `includeSchmidt=true` with Live sendMode.
-3. Verify one WAS for Schmidt × target week; 072 builds Test package; 119 arms Send only when Ready? && !Sent?.
-4. Confirm 074 webhook success before treating Sent? as authoritative (074 owns stamp).
+---
 
-## Expected fields touched
+## 119 — Schedule Send (Sun 10:00 AM Denver)
 
-| Script | Writes |
-|---|---|
-| 118 | May create WAS (Enrollment+Week); sets Build Weekly Email Now?; sendMode=Test |
-| 119 | Sets Send to Make? when Ready && !Sent |
-| 072/074 | Package + Make (existing) |
+1. Name: `119 - Email - Schedule Weekly Summary Email Send`
+2. Trigger: Weekly — Sunday **10:00** — America/Denver — leave **OFF**
+3. Script: **v1.4**
+4. Inputs: `dryRun=true`, `includeSchmidt=false`, `emptyWeekPolicy=send_short`
+5. Arms `Send to Make?` only when Ready && package present && !Sent
 
-## Rollback
+---
 
-1. Turn 118/119 OFF (if ever ON).
-2. Clear accidental Build/Send checkboxes on affected WAS.
-3. Revert script paste to prior version from Git history if needed.
-4. Do not delete WAS rows without dry-run evidence.
+## 074 — Webhook handoff (keep ON)
 
-## Evidence to collect
+1. Name: `074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make`
+2. Trigger table: Weekly Athlete Summary — When record matches conditions:
+   - Weekly Email Ready? checked
+   - Weekly Email Sent? unchecked
+   - Send to Make? checked
+   - Subject / Recipients / HTML not empty
+3. Inputs: `recordId`, `makeWebhookUrl` (required); `sendMode`/`sendModeInput`, `testRecipientEmail`, `replyTo`
+4. Test config: `sendMode=Test`, `testRecipientEmail=mschmidt@fairfield.k12.mt.us`
+5. Clears `Send to Make?` after successful webhook; **does not** set Sent?
 
-- Automation run JSON (statusOut, scheduledWeekEndKeyOut, counts)
-- WAS record id(s) for Schmidt
-- 072 package subject/recipients non-blank
-- 074 webhook response / Weekly Email Sent? timing
-- Screenshot of schedule remaining OFF until Live auth
+---
 
-## Remaining before Live
+## Make.com
 
-- [ ] Mike empty-week decision recorded
-- [ ] Schmidt Test-mode end-to-end PASS
-- [ ] Explicit authorization to enable Sunday schedules
+| Item | Value |
+|------|--------|
+| Scenario | `Weekly Athlete Summary - Bulk Email - May 18` |
+| Webhook | `Weekly Athlete Summary - Email - May 18` |
+| Test | `sendMode=test` → only `mschmidt@fairfield.k12.mt.us` (no Sent? writeback today) |
+| Live | `sendMode=live` → `csvemail` + CC Mike; writeback Sent? after Gmail success |
+
+Do **not** create a duplicate scenario. Do **not** use `Weekly Athlete Summary Updated` as the email sender.
+
+---
+
+## Controlled Schmidt re-test (optional)
+
+1. Set 118/119 `includeSchmidt=true`, `dryRun=false` only when Mike authorizes; never Live+Schmidt.
+2. 072 `allowSchmidtInput=true` for the build window; restore `false` after.
+3. Expect 119 `actionOut=send_armed`; 074 webhook success; Test Gmail delivery.
+4. Restore post-test safety state (architecture doc).
+
+---
+
+## Remaining before Live Sunday schedules
+
+- [x] Empty-week decision (`send_short`) + 072 v4.0 enforcement
+- [x] Schmidt Test-mode end-to-end PASS (2026-07-24)
+- [ ] Explicit Mike authorization to enable 118/119 Sunday schedules
+- [ ] Optional: Make Test-branch Sent? writeback parity (known gap)
 - [ ] Live sendMode still refused by 118 when dryRun=false until policy changes

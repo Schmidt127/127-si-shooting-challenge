@@ -1,104 +1,73 @@
-# C-011 — Weekly Email Schedule Activation Checklist (Approval Gate)
+# C-011 — Weekly email schedule activation checklist
 
-**Status:** Repository safeguards ready — **schedules must stay OFF** until Mike approves  
-**Timezone:** America/Denver  
-**Cadence:** Build Sunday **05:00** (118) · Send Sunday **10:00** (119)  
-**Scripts:** 118 v1.1 · 119 v1.1 · 074 v2.1 · 072 (existing)  
-**Authority:** [C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](../v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md)
+**Updated:** 2026-07-24  
+**Canonical architecture:** [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](../next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
+**Install/ops runbook:** [WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md](../next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md)
 
----
+**Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`
 
-## What this package does **not** do
-
-- Does **not** enable Airtable schedules.
-- Does **not** send real parent email.
-- Does **not** modify Make.com production scenarios.
-- Does **not** set `sendMode=Live`.
+**Scripts:** 118 **v1.4** · 119 **v1.4** · 072 **v4.0** · 074 repo **v2.1** (UI cited v2.0)  
+**Make:** `Weekly Athlete Summary - Bulk Email - May 18` / webhook `Weekly Athlete Summary - Email - May 18`
 
 ---
 
-## Safeguards implemented in repo
+## Ownership (locked)
 
-| Safeguard | Where |
-|-----------|--------|
-| `dryRun` defaults **true** | 118 / 119 |
-| Refuse `sendMode=Live` when `dryRun=false` | 118 |
-| Prior-Saturday scheduled date key (`scheduledWeekEndKeyOut`) | 118 / 119 |
-| Skip already-sent packages | 118 / 119 / 074 |
-| Send only Ready + package-complete rows | 119 |
-| Schmidt enrollment hard exclude | 118 / 119 / 072 / 074 |
-| Deterministic `eventId` = `WEEKLY_EMAIL\|{enrollmentId}\|{weekId}` | 074 payload (+ 072 package) |
-| 074 does **not** clear `Weekly Email Sent?` after handoff | 074 v2.1 |
-| Summary Key–aware WAS lookup / duplicate skip | 118 v1.1 |
+| Step | Owner |
+|------|--------|
+| Ensure WAS + arm Build | **118** |
+| Build package + empty-week policy | **072** |
+| Arm `Send to Make?` | **119** (does **not** post webhook) |
+| POST Make webhook | **074** |
+| Gmail + Live Sent? writeback | **Make** |
 
 ---
 
-## Activation checklist (Mike approval required)
+## Pre-activation gates
 
-### Phase 0 — Pre-flight
-
-| # | Item | Done |
-|---|------|------|
-| 0.1 | Confirm DEV base `appTetnuCZlCZdTCT` | [ ] |
-| 0.2 | Confirm prior Saturday Week row exists for target run | [ ] |
-| 0.3 | Confirm DEV Make weekly scenario writeback (`Weekly Email Sent?`, `Weekly Email Sent At`) | [ ] |
-| 0.4 | Confirm testRecipientEmail for 074 Test mode | [ ] |
-| 0.5 | Confirm 072 Active? / Schmidt guards live (C-010) | [ ] |
-
-### Phase 1 — Paste scripts (leave OFF)
-
-| # | Item | Done |
-|---|------|------|
-| 1.1 | Paste **118 v1.1** into DEV automation (schedule type configured but **OFF**) | [ ] |
-| 1.2 | Paste **119 v1.1** into DEV automation (schedule configured but **OFF**) | [ ] |
-| 1.3 | Paste **074 v2.1** (eventId + no Sent? clear) | [ ] |
-| 1.4 | Map inputs: `dryRun=true`, `sendMode=Test`, Schmidt exclude | [ ] |
-
-### Phase 2 — Dry-run smoke (manual trigger, schedules still OFF)
-
-| # | Test | Pass |
-|---|------|------|
-| 2.1 | 118 dryRun | Counts only; no Build Now flips |
-| 2.2 | 118 dryRun=false on one test enrollment | Build Now? true → 072 Ready? |
-| 2.3 | 119 dryRun | Would-arm only Ready && !Sent |
-| 2.4 | Schmidt never armed | Pass |
-| 2.5 | Already Sent? skipped | Pass |
-| 2.6 | Not Ready skipped (`notReadyCountOut`) | Pass |
-
-### Phase 3 — DEV Test webhook only (still no parent Live)
-
-| # | Test | Pass |
-|---|------|------|
-| 3.1 | 119 arms Send to Make? on Ready package | [ ] |
-| 3.2 | 074 posts DEV Make with `eventId` | [ ] |
-| 3.3 | Test inbox only (`sendMode=test`) | [ ] |
-| 3.4 | Make sets Sent? / Sent At | [ ] |
-| 3.5 | Re-run 119 / 074 | No duplicate send |
-
-### Phase 4 — Schedule enable (separate approval)
-
-| # | Item | Done |
-|---|------|------|
-| 4.1 | Mike approves Sunday 05:00 / 10:00 America/Denver | [ ] |
-| 4.2 | Enable 118 schedule in DEV only | [ ] |
-| 4.3 | Enable 119 schedule in DEV only | [ ] |
-| 4.4 | First Sunday monitored; keep `sendMode=Test` | [ ] |
-| 4.5 | Explicit separate approval before PROD / Live | [ ] |
+| # | Gate | Status 2026-07-24 |
+|---|------|-------------------|
+| 1.1 | Empty-week policy decided (`send_short`) | **PASS** |
+| 1.2 | 072 v4.0 enforces policy | **PASS** (Schmidt) |
+| 1.3 | 074 posts webhook; does not clear/set Sent? incorrectly | **PASS** (repo v2.1 design) |
+| 1.4 | Make Bulk Email May 18 is the WAS sender (not “Updated”) | **PASS** |
+| 1.5 | Schmidt Test E2E Check-In delivered | **PASS** |
+| 1.6 | 118/119 schedules remain OFF until Mike Live auth | **Required** |
 
 ---
 
-## Rollback
+## Schedule settings (when authorized)
 
-1. Turn 118/119 schedules **OFF**.
-2. Re-paste prior 074 if needed.
-3. Clear stuck `Send to Make?` on test WAS rows manually.
-4. Leave Sent? history intact.
+| Automation | Schedule | Default inputs |
+|------------|----------|----------------|
+| **118** | Sunday 5:00 AM America/Denver | dryRun→false only when authorized; sendMode starts Test; includeSchmidt=false; emptyWeekPolicy=send_short |
+| **119** | Sunday 10:00 AM America/Denver | dryRun→false only when authorized; includeSchmidt=false; emptyWeekPolicy=send_short |
+
+**074 remains ON. Make Bulk Email remains ON.**
 
 ---
 
-## Mike decisions still required
+## Activation sequence (Mike only)
 
-1. Approve schedule enablement in DEV.
-2. Confirm empty-week email policy (Active enrollments with no activity).
-3. Confirm Make already dedupes on `eventId` (or add Make filter).
-4. Explicit approval before any Live / PROD cutover.
+1. Confirm post-test safety: 072 `allowSchmidtInput=false`; 118/119 includeSchmidt=false.  
+2. One more dryRun=true manual 118/119 run (counts only).  
+3. Authorize `dryRun=false` with `sendMode=Test` for a narrow window if needed.  
+4. Enable 118 schedule OFF→ON only after written auth.  
+5. Enable 119 schedule OFF→ON only after written auth.  
+6. Live sendMode remains refused by 118 while dryRun=false until product policy changes.
+
+---
+
+## Duplicate / resend checks
+
+| Check | Expect |
+|-------|--------|
+| WAS already Sent? | 118 skips; 119 skips; 074 blocks duplicate |
+| Re-run 119 after arm | Idempotent / no double webhook if Send already cleared |
+| Re-run 074 after Sent? | Blocked |
+
+---
+
+## Known gap
+
+Make **Test** branch delivers email but does **not** currently write Airtable `Weekly Email Sent?`. Live branch does writeback after Gmail success.

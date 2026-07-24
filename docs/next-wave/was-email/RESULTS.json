@@ -1,42 +1,51 @@
 {
-  "agent": 12,
-  "package": "was-email",
-  "date": "2026-07-24",
-  "stash": {
-    "name": "agent5-118-wip-preserve",
-    "disposition": "INTEGRATE_DOC_NOTE_ONLY",
-    "applied_as": "118/119 v1.3 Summary Key documentation correction"
-  },
-  "was_authoritative_strategy": "hybrid_031_submission_118_scheduled_101_zoom_until_118_proven",
-  "scripts": {
-    "118": "v1.3",
-    "119": "v1.3",
-    "installed_in_prod": false,
-    "schedules_enabled": false
-  },
+  "agent": "was-email-verified-prod",
+  "generated_at": "2026-07-24",
+  "flow": "118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback",
   "empty_week_policy": {
-    "default": "send_normal",
-    "enforced": false,
-    "mike_decision_required": true,
-    "recommendation": "send_short_seasonal_send_normal_interim"
+    "decision": "send_short",
+    "enforced_by": "072",
+    "version": "v4.0",
+    "verified": true
   },
-  "tests": {
-    "was_email_contracts": "pass",
-    "c011_weekly_email_schedule": "pass",
-    "week_key": "pass"
+  "versions": {
+    "118": "v1.4",
+    "072": "v4.0",
+    "119": "v1.4",
+    "074_repo": "v2.1",
+    "074_prod_ui_cited": "v2.0"
   },
-  "commit_sha": "a20364811ee19576f5718f41dc7c8af059f4e5ee",
-  "branch": "agent12/was-email",
-  "deliverables": [
-    "AGENT5-STASH-REVIEW.md",
-    "WAS-CREATOR-OWNERSHIP.md",
-    "EMPTY-WEEK-EMAIL-DECISION.md",
-    "WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md",
-    "REPORT.md",
-    "RESULTS.json",
-    "MIKE-ACTIONS.md",
-    "MASTER-UPDATE-PROPOSAL.md",
-    "lib/was-email-contracts/*",
-    "tests/was-email-contracts/*"
+  "prod_scheduling": {
+    "118": "OFF",
+    "119": "OFF",
+    "074": "ON",
+    "make_bulk_email_may_18": "ON"
+  },
+  "schmidt_proof": {
+    "week_end_key": "2026-07-18",
+    "week_id": "recWeVrSabnsYaHc2",
+    "was_id": "recu4X8m6rWlEWoNy",
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "emptyWeekPolicy": "send_short",
+    "weekIsEmpty": true,
+    "packageKind": "short_no_activity",
+    "sendMode": "test",
+    "072_actionOut": "built_short_empty_week",
+    "119_actionOut": "send_armed",
+    "119_counts": { "armed": 1, "skipped": 0, "notReady": 0, "errors": 0 },
+    "delivered_subject": "127 Sports Intensity Weekly Check-In | Testing Schmidt | Testing Week",
+    "test_recipient": "mschmidt@fairfield.k12.mt.us",
+    "gmail_delivered": true
+  },
+  "ownership": {
+    "empty_week_policy": "072",
+    "send_to_make_arm": "119",
+    "webhook_post": "074",
+    "gmail_and_live_writeback": "Make Weekly Athlete Summary - Bulk Email - May 18"
+  },
+  "known_gaps": [
+    "Make Test branch does not currently perform Airtable Sent? writeback",
+    "074 PROD UI version may lag repo v2.1 (Mike cited v2.0)",
+    "118/119 Sunday schedules remain OFF until Live authorization"
   ]
 }

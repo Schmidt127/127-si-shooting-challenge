@@ -3,4 +3,5 @@
 
 require("./was-uniqueness.test.js");
 require("./empty-week-policy.test.js");
+require("./handoff-ownership.test.js");
 console.log("all was-email-contracts tests passed");

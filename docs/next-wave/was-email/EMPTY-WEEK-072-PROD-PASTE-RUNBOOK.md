@@ -1,122 +1,75 @@
-# Empty-week policy — 072 v4.0 PROD paste + Schmidt test runbook
+# Empty-week policy — 072 v4.0 PROD paste + Schmidt proof (CLOSED)
 
 **Date:** 2026-07-24  
-**Base:** PROD `appn84sqPw03zEbTT`  
-**SC:** SC-035 (`send_short` approved)  
-**Do not** enable Sunday Live schedules from this package.  
-**Do not** paste or test without Mike present for controlled writes.
+**Status:** **PROD verified** — Schmidt empty-week `send_short` E2E PASS  
+**Canonical architecture:** [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
+
+```text
+118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback
+```
 
 ---
 
-## What changed (repo)
+## Verified result (do not re-litigate)
 
-| Piece | Version | Behavior |
-|-------|---------|----------|
-| **072** | **v4.0** | Enforces `emptyWeekPolicy` when building packages |
-| **118** | **v1.4** | Default policy `send_short` (still arms Build; 072 shapes package) |
-| **119** | **v1.4** | Default policy `send_short`; only arms Send when Ready? |
-| Helpers/tests | `lib/was-email-contracts/empty-week-policy.js` | Plain-Node policy + short template tests |
+| Field | Value |
+|-------|--------|
+| Week End Key | `2026-07-18` |
+| Week ID | `recWeVrSabnsYaHc2` |
+| WAS ID | `recu4X8m6rWlEWoNy` |
+| Enrollment | `recgP9qZYjAhE7NXm` |
+| Policy | `send_short` |
+| `weekIsEmpty` | `true` |
+| `packageKind` | `short_no_activity` |
+| 072 action | `built_short_empty_week` |
+| 119 action | `send_armed` (armed=1) |
+| Delivered subject | `127 Sports Intensity Weekly Check-In \| Testing Schmidt \| Testing Week` |
+| Test recipient | `mschmidt@fairfield.k12.mt.us` |
+
+---
+
+## Repo / PROD versions
+
+| Piece | Version | Notes |
+|-------|---------|-------|
+| **072** | **v4.0** | Enforces empty-week policy |
+| **118 / 119** | **v1.4** | Defaults `send_short`; schedules OFF |
+| **074** | Repo **v2.1** / UI cited **v2.0** | Webhook handoff ON |
+| Make | Bulk Email May 18 | ON |
 
 ### Empty-week matrix (072)
 
 | Policy | Empty week | Non-empty week |
 |--------|------------|----------------|
-| **send_short** (default) | Concise **Weekly Check-In** reminder; Ready?=true; Send to Make?=false | Full weekly summary |
-| **send_normal** | Full weekly summary (prior empty-week report) | Full weekly summary |
-| **suppress** | Build cleared; **Ready?=false**; not send-ready | Full weekly summary |
+| **send_short** (default) | Concise **Weekly Check-In**; Ready?=true | Full summary |
+| **send_normal** | Full weekly summary | Full summary |
+| **suppress** | Ready?=false; not send-ready | Full summary |
 
-072 still **never** posts webhooks or sends email (074 owns send). Test/Live `sendMode` preserved. Recipients / dedupe (`WEEKLY_EMAIL|{enr}|{week}`) / Sent? resend gate unchanged.
-
----
-
-## Preflight
-
-1. Confirm Schmidt enrollment `recgP9qZYjAhE7NXm` and a zero-activity WAS for week ending **2026-07-18** (or recreate via 118 Test arm).  
-2. Confirm current PROD 072 is still building a **full** empty report (known gap before v4.0).  
-3. Keep 118/119 schedules **OFF**.  
-4. Map new 072 input if missing: `emptyWeekPolicy` (text) default **`send_short`**.  
-5. Keep `allowSchmidtInput=true` only for controlled Schmidt builds.
+072 never posts webhooks/email. 119 never posts webhooks. 074 posts Make. Make owns Live Sent? writeback.
 
 ---
 
-## Paste order (manual UI)
+## Post-test safety state (recommended)
 
-### 1) Paste 072 v4.0 (required)
-
-1. Open automation **072 - Email… Build Weekly Summary Email Package**.  
-2. Paste repo script (skip GitHub SoT header if present):  
-   `airtable/automations/shooting-challenge/072-email-notifications-and-external-handoffs-build-weekly-summary-email-package.js`  
-3. Confirm inputs:
-
-| Input | Value |
-|-------|--------|
-| `recordId` | Triggering WAS record id |
-| `sendModeInput` | From WAS `sendMode` (or blank → record/test) |
-| `allowSchmidtInput` | `"true"` for Schmidt tests only |
-| `emptyWeekPolicy` | **`send_short`** |
-
-4. Map new outputs if available: `actionOut`, `emptyWeekPolicyOut`, `weekIsEmptyOut`, `emptyWeekBuildModeOut`.  
-5. Leave automation **ON** (existing trigger) — this is the package builder, not a mass schedule.
-
-### 2) Optional: paste 118 / 119 v1.4
-
-Only if you want input defaults aligned. Not required for the Schmidt empty-week proof if 072 already has `emptyWeekPolicy=send_short`.
+| Component | Setting |
+|-----------|---------|
+| 072 `allowSchmidtInput` | **false** |
+| 118 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
+| 119 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
+| 074 | **ON** |
+| Make WAS email scenario | **ON** |
 
 ---
 
-## Schmidt empty-week proof (send_short)
+## If re-pasting 072
 
-1. Choose Schmidt WAS for week ending 2026-07-18 with **zero** activity.  
-2. Clear prior package if needed for a clean read:  
-   - Weekly Email Ready? = unchecked  
-   - Send to Make? = unchecked  
-   - Weekly Email Sent? remains unchecked  
-3. Set `sendMode` = **Test**.  
-4. Check **Build Weekly Email Now?** (or re-arm via 118 with `includeSchmidt=true`, `dryRun=false`, Test only).  
-5. Confirm 072 run:
-   - `statusOut=success`
-   - `actionOut=built_short_empty_week`
-   - `emptyWeekBuildModeOut=short`
-   - `weekIsEmptyOut=true`
-6. Confirm WAS fields:
-   - Subject contains **Weekly Check-In** (not `Weekly Summary |`)
-   - HTML contains **No activity logged this week** / short reminder
-   - HTML does **not** contain full section wall (Shooting Summary / XP Event Detail tables)
-   - Weekly Email Ready? = **checked**
-   - Send to Make? = **unchecked**
-   - Recipients still parent/athlete cleaned emails
-7. Do **not** arm 074 / Live send for this proof unless Mike explicitly wants a Test webhook send.
+1. Paste `072-…-build-weekly-summary-email-package.js` **v4.0** (skip GitHub header).  
+2. Inputs: `recordId`, `emptyWeekPolicy=send_short`, `allowSchmidtInput=false` (normal).  
+3. Map outputs: `actionOut`, `emptyWeekPolicyOut`, `weekIsEmptyOut`, `emptyWeekBuildModeOut`.
 
----
-
-## Policy spot-checks (optional, same WAS after reset)
-
-| Test | 072 `emptyWeekPolicy` | Expect |
-|------|------------------------|--------|
-| A | `send_short` | Short check-in; Ready |
-| B | `send_normal` | Full summary; Ready; subject `Weekly Summary \|` |
-| C | `suppress` | Ready unchecked; action `skipped_empty_week_suppress`; no send-ready package |
-| D | Non-empty Schmidt week (any policy) | Full summary |
-
----
-
-## Rollback
-
-1. Re-paste prior 072 **v3.9** from Git history if needed.  
-2. Clear Build / Ready / Send checkboxes on affected WAS.  
-3. Leave 118/119 OFF.
-
----
-
-## Evidence to capture
-
-- 072 run JSON (`version=v4.0`, actionOut, emptyWeekBuildModeOut)  
-- WAS subject + HTML snippet (short vs full)  
-- Ready? / Sent? / Send to Make? checkboxes  
-- Confirmation no Make webhook fired from 072  
-
-## Offline tests (repo)
+## Offline tests
 
 ```bash
 node tests/was-email-contracts/run-all.js
+node airtable/automations/shooting-challenge/lib/c011-weekly-email-schedule.test.js
 ```

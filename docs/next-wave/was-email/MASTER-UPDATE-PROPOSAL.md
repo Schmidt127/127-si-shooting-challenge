@@ -1,19 +1,19 @@
-# Master update proposal — Agent 12 (WAS / weekly email)
+# Master Update Proposal — WAS / weekly email (verified PROD)
 
-**Do not apply during concurrent overnight work.**
+**Date:** 2026-07-24  
+**Source:** `docs/next-wave/was-email/`  
+**Canonical:** [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 
-## SC rows
+## Proposed completion-master annotations
 
-| SC | Proposal |
-|---|---|
-| SC-035 | WAS guarantee: creators audited; 118 still required for empty weeks; email policy decision open |
-| Weekly email / C-011 | Repo 118/119 **v1.3** ready; PROD install OFF; schedules OFF |
+| ID | Proposal |
+|----|----------|
+| SC-035 | Live Tested in PROD — Schmidt WAS ensure + `send_short` Check-In delivered |
+| SC-038 | Live Tested in PROD — 072 v4.0 package build verified |
+| SC-039 | Live Tested in PROD — 119 arm + 074→Make→Gmail Test path verified |
+| SC-040 | Note Live writeback owns Sent?; Test branch writeback gap remains |
+| C-011 | Repo+PROD chain verified in Test mode; Sunday schedules still OFF |
 
-## One-line paste candidate
+## Paste-ready banner
 
-> WAS: Enrollment+Week uniqueness with hybrid creators (031/118/101); 118/119 v1.3 install-ready OFF; empty-week email decision still Mike’s.
-
-## Link
-
-- `docs/next-wave/was-email/REPORT.md`
-- `docs/next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md`
+> Weekly email: `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0**. 119 arms Send only; 074 posts webhook. Schedules OFF; 074+Make ON.

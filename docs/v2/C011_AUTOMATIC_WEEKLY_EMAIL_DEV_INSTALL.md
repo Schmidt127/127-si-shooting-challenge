@@ -1,11 +1,16 @@
 # C-011 — Automatic Weekly Email — DEV Installation Packet
 
-**Status:** Repository scripts **118/119 v1.1 + 074 v2.1 + 072** ready — **do not enable schedules**; DEV Make webhook **live-blocked**  
-**Base:** DEV only `appTetnuCZlCZdTCT`  
-**PROD:** Do not paste · Do **not** enable live sending  
+> **Current PROD truth (2026-07-24):** Verified Test-mode E2E on PROD —  
+> `118 → 072 v4.0 → 119 → 074 → Make Weekly Athlete Summary - Bulk Email - May 18 → Gmail`.  
+> Empty-week **`send_short`** enforced in 072. **119 arms Send only; 074 posts webhook.**  
+> Authoritative doc: [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](../next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).  
+> This packet remains historical DEV-install guidance; versions below may lag (118/119 now **v1.4**, 072 **v4.0**).
+
+**Status (historical DEV packet):** Repository scripts **118/119 + 074 + 072** — **do not enable schedules** without Mike auth  
+**Base (historical):** DEV `appTetnuCZlCZdTCT` (PROD is now the active construction base)  
 **Backlog:** C-011 · Wave 5 · Depends on **C-010** (072 Active? gate)  
 **Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  
-**Workers:** **072** (build) + **074** (send) · **118** + **119** (schedule arm)  
+**Workers:** **072** (build) + **074** (webhook) · **118** + **119** (schedule arm)  
 **Activation checklist:** [C-011-weekly-email-schedule-activation-checklist.md](../deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md)  
 **Hard stops:** `sendMode=Test` only · `dryRun=true` default · Schmidt excluded · No secrets in git · No Airtable schedule enable from agents
 

@@ -1,27 +1,28 @@
-# Agent 12 — WAS uniqueness / weekly email — REPORT
+# WAS / weekly email — Agent 12 + verified PROD close (2026-07-24)
 
-**Date:** 2026-07-24  
-**Paths:** `docs/next-wave/was-email/`, `lib/was-email-contracts/`, `tests/was-email-contracts/`  
-**Scripts touched:** 118 / 119 → **v1.3** (after confirming master had no concurrent edits beyond Agent 5 stash).
+**Status:** Controlled Schmidt E2E **PASS** for empty-week `send_short`  
+**Canonical:** [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 
-## Verdicts
+## Summary
 
-| Topic | Conclusion |
-|---|---|
-| **Stash disposition** | `INTEGRATE_DOC_NOTE_ONLY` — Summary Key wording useful; version assert stale |
-| **WAS authoritative owner** | Hybrid: **031** submission-time, **118** scheduled ensure (empty weeks), **101** Zoom create until 118 proven then prefer link-only |
-| **118/119 changes** | v1.3: Summary Key doc correction; `emptyWeekPolicy` hook (not enforced); dryRun default true; schedules remain OFF |
-| **Empty-week** | Decision needed — recommend short reminder seasonally; interim send_normal |
-| **PROD install** | Paste OFF + Schmidt dry-run only — see runbook |
+| Item | State |
+|------|--------|
+| Flow | `118 → 072 → 119 → 074 → Make → Gmail → Make writeback` |
+| Empty-week policy | **`send_short` approved + enforced in 072 v4.0** |
+| 118 / 119 | **v1.4** installed; schedules **OFF** |
+| 072 | **v4.0** verified `built_short_empty_week` |
+| 074 | Webhook handoff **ON** (repo SoT v2.1; UI cited v2.0) |
+| Make | `Weekly Athlete Summary - Bulk Email - May 18` **ON** |
+| 119 role | Arms `Send to Make?` only — **not** the webhook sender |
 
-## Tests
+## Evidence
 
-```
-node tests/was-email-contracts/run-all.js
-node airtable/automations/shooting-challenge/lib/c011-weekly-email-schedule.test.js
-node airtable/automations/shooting-challenge/lib/118-119-week-key.test.js
-```
+- WAS `recu4X8m6rWlEWoNy` · Week `recWeVrSabnsYaHc2` (End Key `2026-07-18`)
+- Subject: `127 Sports Intensity Weekly Check-In | Testing Schmidt | Testing Week`
+- Test Gmail to `mschmidt@fairfield.k12.mt.us`
 
-## Explicit non-edits
+## Remaining
 
-Completion master, Config helpers, homework scripts, Zoom scripts, website, other agents’ reports — untouched.
+1. Mike auth to enable Sunday 118/119 schedules for Live season traffic.  
+2. Optional Make Test-branch Sent? writeback parity (known gap).  
+3. Confirm 074 UI version header vs repo v2.1 on next paste window.

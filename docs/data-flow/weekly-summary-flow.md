@@ -1,77 +1,77 @@
 # Weekly Summary Flow
 
-How **weekly athlete summaries** are built, stored, and emailed to parents.
+How **Weekly Athlete Summary** rows are ensured, packaged, and emailed to parents.
 
-## Overview
+**Authoritative architecture (verified PROD 2026-07-24):**  
+[`docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](../next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 
+## Final flow
+
+```text
+118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback
 ```
-Scheduled trigger (Airtable or Make)
-    → Select active athletes (view filter)
-    → Aggregate week stats (submissions, XP, homework, streak)
-    → Create/update Weekly Summary record
-    → Make: format email → Gmail to parent
-    → Set Email Sent on summary record
-```
+
+| Step | Automation / system | Role |
+|------|---------------------|------|
+| Ensure + arm build | **118** (Sun 5:00 AM Denver; currently OFF) | Create/find WAS; set `Build Weekly Email Now?` |
+| Build package | **072 v4.0** | Recipients, subject, HTML/text/payload, Ready?; empty-week policy |
+| Arm send | **119** (Sun 10:00 AM Denver; currently OFF) | Set `Send to Make?` when Ready && !Sent |
+| Webhook handoff | **074** (ON) | POST to Make; clear `Send to Make?`; does **not** mark Sent? |
+| Email + writeback | Make **`Weekly Athlete Summary - Bulk Email - May 18`** (ON) | Gmail; Live branch writes Sent? after success |
+
+**Corrections to preserve**
+
+- **119 does not post the webhook** — it only arms `Send to Make?`.
+- **074 posts the webhook**.
+- **072 owns empty-week policy** (`send_short` / `send_normal` / `suppress`).
+- **Make owns final Gmail-success writeback** (Live branch).
+- Do **not** use Make scenario `Weekly Athlete Summary Updated` as the email sender.
 
 ## Tables
 
-- **Weekly Summaries** — one row per athlete per week ([field-map.md](../../airtable/schema/current/field-map.md))
-- **Athletes** — parent email, enrollment status
-- **Submissions / XP Events** — source data for rollups
+- **Weekly Athlete Summary** — one row per Enrollment × Week
+- **Enrollments** — Active?, cleaned parent/athlete emails
+- **Weeks** — Start/End, Week End Key, Config-linked unique id (e.g. `2026-2027|Week 1`)
+- **Submissions / Homework / XP / Zoom / Video** — activity sources for 072
 
-## Week Boundary
-
-Document the canonical week start (e.g. Monday 00:00 America/New_York). All automations and Make filters must use the same definition.
+## Week boundary
 
 | Setting | Value |
-|---------|-------|
-| Week starts | *(e.g. Monday)* |
-| Timezone | *(fill in)* |
-| Season active dates | Config table |
+|---------|--------|
+| Target week for Sunday runs | Prior Saturday Week End (America/Denver) |
+| Timezone | America/Denver |
+| Season Weeks | 2026–2027 Week 0–9 + Post-Challenge now exist |
 
-## Build Phase (Airtable)
+## Empty-week email policy (SC-035)
 
-Options:
+Default **`send_short`** (approved 2026-07-24). Enforced in **072 v4.0**.
 
-1. **Scheduled automation** — loops active athletes, writes Weekly Summary fields
-2. **Make scheduled scenario** — queries Airtable, creates summary records
+| Policy | Empty week | Non-empty |
+|--------|------------|-----------|
+| `send_short` | Concise Weekly Check-In; send-ready | Full summary |
+| `send_normal` | Full zero-activity summary | Full summary |
+| `suppress` | Not send-ready | Full summary |
 
-Aggregates typically include:
+## Verified controlled proof
 
-- Submission count and total makes
-- XP earned in week
-- Homework completed count
-- Current streak / level highlight
+Schmidt empty week ending **2026-07-18** (`recWeVrSabnsYaHc2` / WAS `recu4X8m6rWlEWoNy`) delivered:
 
-## Send Phase (Make)
+`127 Sports Intensity Weekly Check-In | Testing Schmidt | Testing Week`
 
-1. Trigger: webhook when summary row ready, or scheduled scan of unsent rows
-2. Module: Gmail with HTML from `{Summary Text}` or template
-3. Idempotency: skip if `{Email Sent}` true; set true after successful send
-4. Payload: see [weekly-summary sample](../../make/test-payloads/README.md)
+to `mschmidt@fairfield.k12.mt.us` via Test mode.
 
-## Parent Experience
-
-- Email from configured Gmail account
-- Unsubscribe / support contact documented in Make template
-- No real PII in GitHub test payloads
-
-## Failure Modes
+## Failure modes
 
 | Symptom | Action |
 |---------|--------|
-| Summary row exists, no email | Check Make ops; verify parent email |
-| Duplicate emails | Strengthen `eventId` + Email Sent guard |
-| Missing athletes | Review active enrollment view filter |
-| Wrong totals | Audit rollups vs raw submissions/XP Events |
-
-## Verification
-
-- [ ] Test athlete receives one email per week
-- [ ] Audit weekly summaries script (dry-run)
-- [ ] [Weekly maintenance checklist](../checklists/weekly-maintenance-checklist.md)
+| WAS exists, no HTML | Confirm 118 armed Build; 072 ran; check Active?/Schmidt gates |
+| Ready but never sent | Confirm 119 armed Send to Make?; 074 ON; Make scenario ON |
+| Duplicate emails | `Weekly Email Sent?` + Make Live writeback; 074 blocks when already Sent? |
+| Full zero report on empty week | Confirm 072 **v4.0** + `emptyWeekPolicy=send_short` |
 
 ## Related
 
-- [architecture-review.md](../architecture/architecture-review.md)
-- [Emergency recovery](../recovery/emergency-recovery.md)
+- [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](../next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
+- [`EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md`](../next-wave/was-email/EMPTY-WEEK-072-PROD-PASTE-RUNBOOK.md)
+- [`WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md`](../next-wave/was-email/WEEKLY-EMAIL-PROD-INSTALL-RUNBOOK.md)
+- [C-011 activation checklist](../deploy-checklists/C-011-weekly-email-schedule-activation-checklist.md)
