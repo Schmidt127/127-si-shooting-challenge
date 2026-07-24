@@ -93,14 +93,31 @@
 |-------|--------|
 | Name | `074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make` |
 | Repo SoT | **v2.1** (eventId + never clears `Weekly Email Sent?`) |
-| Mike-verified PROD UI citation | **v2.0** — confirm header on next paste window if UI lags repo |
 | Trigger | WAS matches: Ready? checked, Sent? unchecked, Send to Make? checked, Subject/Recipients/HTML not empty |
 | Required inputs | `recordId`, `makeWebhookUrl` |
 | Optional | `sendMode` / `sendModeInput`, `testRecipientEmail`, `replyTo` |
-| Controlled test | `sendMode=Test`, `testRecipientEmail=mschmidt@fairfield.k12.mt.us` |
+| Controlled test only | `sendMode=Test` + `testRecipientEmail=mschmidt@fairfield.k12.mt.us` |
 | PROD state | **ON** (automatic handoff when conditions match) |
 
 **074 posts the webhook. Make owns final Gmail-success writeback (`Weekly Email Sent?`, status, timestamp) on the Live branch.**
+
+#### Production sendMode rule (verified 2026-07-24)
+
+A fixed Airtable automation input **`sendMode = Test`** on 074 forced every handoff onto Make’s Test branch (email delivered, **no** Sent? writeback).
+
+After changing 074 to **`sendMode = Live`**, Make used the Live branch and completed writeback:
+
+- `Weekly Email Sent?` = checked  
+- `Make Send Status` = Sent  
+- sent timestamp populated  
+- email delivered  
+
+**PROD 074 must not be forced to Test.** Use one of:
+
+1. **`sendMode` / `sendModeInput` = Live**, or  
+2. **Leave the input blank** and inherit from the WAS `sendMode` field (ensure WAS is Live for production parents).
+
+Resolution order in script: input → WAS.`sendMode` → payloadJson.`sendMode` → default `test`.
 
 ---
 
@@ -122,8 +139,8 @@
 
 | Branch | Condition | Behavior |
 |--------|-----------|----------|
-| **Test** | `sendMode=test` | Sends only to `mschmidt@fairfield.k12.mt.us`; webhook subject + Raw HTML. **Known gap:** Test branch does not currently perform final Airtable Sent? writeback. |
-| **Live** | `sendMode=live` | Sends to split `csvemail`; CC `mschmidt@fairfield.k12.mt.us`; Raw HTML; after Gmail success updates WAS: `Weekly Email Sent?=true`, `Make Send Status=Sent`, sent timestamp. |
+| **Test** | `sendMode=test` | Sends only to `mschmidt@fairfield.k12.mt.us`; webhook subject + Raw HTML. **No Airtable Sent? writeback** (by design of this Make branch). |
+| **Live** | `sendMode=live` | Sends to split `csvemail`; CC `mschmidt@fairfield.k12.mt.us`; Raw HTML; after Gmail success updates WAS: `Weekly Email Sent?=true`, `Make Send Status=Sent`, sent timestamp. **Verified PASS 2026-07-24.** |
 
 ---
 
@@ -142,7 +159,7 @@ Week unique identifier = Config primary value + Week Name (year derived from `Co
 | **072** | `allowSchmidtInput=false` |
 | **118** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
 | **119** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
-| **074** | **ON** |
+| **074** | **ON**; **`sendMode=Live`** (or blank + WAS Live) — **never fixed Test in PROD** |
 | Make WAS email scenario | **ON** |
 
 ---

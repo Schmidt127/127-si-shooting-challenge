@@ -45,16 +45,18 @@
 
 **074 remains ON. Make Bulk Email remains ON.**
 
+**074 production sendMode (verified 2026-07-24):** do **not** leave a fixed automation input `sendMode=Test`. Use **`Live`**, or leave blank and inherit WAS `sendMode` (WAS must be Live for production parents). Fixed Test kept Make on the Test branch (email OK, no Sent? writeback); Live completed writeback.
+
 ---
 
 ## Activation sequence (Mike only)
 
-1. Confirm post-test safety: 072 `allowSchmidtInput=false`; 118/119 includeSchmidt=false.  
+1. Confirm post-test safety: 072 `allowSchmidtInput=false`; 118/119 includeSchmidt=false; **074 sendMode=Live** (or blank + WAS Live).  
 2. One more dryRun=true manual 118/119 run (counts only).  
-3. Authorize `dryRun=false` with `sendMode=Test` for a narrow window if needed.  
+3. Authorize `dryRun=false` with 118 `sendMode=Test` for a narrow window if needed (074 itself stays Live for writeback).  
 4. Enable 118 schedule OFF→ON only after written auth.  
 5. Enable 119 schedule OFF→ON only after written auth.  
-6. Live sendMode remains refused by 118 while dryRun=false until product policy changes.
+6. 118 Live sendMode when dryRun=false still needs product policy authorization.
 
 ---
 

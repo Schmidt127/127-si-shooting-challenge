@@ -28,12 +28,15 @@ Airtable is the deployed/running copy.
  *
  * Version: v2.1
  * Date Written: 2026-05-29
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
  * - v2.1 (2026-07-18): Stop clearing Weekly Email Sent? after Make handoff; emit
  *   deterministic eventId WEEKLY_EMAIL|{enrollmentId}|{weekId} on Make payload.
  * - v2.0: Production send-to-Make handoff package.
+ * - Docs note (2026-07-24): PROD must not force automation input sendMode=Test.
+ *   Fixed Test input kept Make on the Test branch (email OK, no Sent? writeback).
+ *   After setting sendMode=Live, Make Live writeback PASS (Sent?/status/timestamp).
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
@@ -47,6 +50,16 @@ Airtable is the deployed/running copy.
  * - This script must NOT clear Weekly Email Sent? (Make owns final sent state).
  * - Duplicate sends are blocked when Weekly Email Sent? is already true.
  * - Make.com owns final Gmail-success writeback after the Gmail module succeeds.
+ *
+ * IMPORTANT PRODUCTION sendMode RULE (2026-07-24)
+ * - Do NOT leave a fixed automation input sendMode = Test in PROD.
+ * - Production must either:
+ *   1) set sendMode / sendModeInput = Live, or
+ *   2) leave sendMode / sendModeInput blank so 074 inherits WAS.sendMode
+ *      (then payloadJson.sendMode, then default test — blank alone is not enough
+ *      if WAS.sendMode is still Test).
+ * - Resolution order: input → WAS.sendMode → payloadJson.sendMode → test.
+ * - Controlled tests may temporarily use sendMode=Test + testRecipientEmail.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -73,8 +86,9 @@ Airtable is the deployed/running copy.
  * - makeWebhookUrl = Make.com webhook URL
  *
  * OPTIONAL INPUT VARIABLES
- * - sendModeInput = Test or Live
- * - testRecipientEmail = test recipient email address
+ * - sendMode / sendModeInput = Live (PROD) or Test (controlled only); blank =
+ *   inherit from WAS.sendMode (see production sendMode rule above)
+ * - testRecipientEmail = test recipient email address (required when sendMode=test)
  * - replyTo = reply-to email address
  ************************************************************/
 

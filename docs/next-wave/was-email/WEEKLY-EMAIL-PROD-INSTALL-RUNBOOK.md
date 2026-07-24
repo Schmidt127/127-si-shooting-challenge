@@ -85,9 +85,15 @@ Empty-week matrix: see architecture doc.
    - Weekly Email Sent? unchecked
    - Send to Make? checked
    - Subject / Recipients / HTML not empty
-3. Inputs: `recordId`, `makeWebhookUrl` (required); `sendMode`/`sendModeInput`, `testRecipientEmail`, `replyTo`
-4. Test config: `sendMode=Test`, `testRecipientEmail=mschmidt@fairfield.k12.mt.us`
-5. Clears `Send to Make?` after successful webhook; **does not** set Sent?
+3. Inputs: `recordId`, `makeWebhookUrl` (required); optional `sendMode`/`sendModeInput`, `testRecipientEmail`, `replyTo`
+4. **Production sendMode (required):** do **not** leave a fixed automation input `sendMode=Test`.
+   - Prefer `sendMode` / `sendModeInput` = **Live**, **or**
+   - Leave blank and inherit WAS `sendMode` (WAS must be Live for production parents).
+   - Resolution: input → WAS → payloadJson → default `test`.
+5. Controlled-test only: `sendMode=Test` + `testRecipientEmail=mschmidt@fairfield.k12.mt.us`
+6. Clears `Send to Make?` after successful webhook; **does not** set Sent? (Make Live writeback does)
+
+**Verified 2026-07-24:** Fixed Test input → email OK, no writeback. After `sendMode=Live` → `Weekly Email Sent?` checked, `Make Send Status=Sent`, timestamp populated.
 
 ---
 
@@ -97,8 +103,8 @@ Empty-week matrix: see architecture doc.
 |------|--------|
 | Scenario | `Weekly Athlete Summary - Bulk Email - May 18` |
 | Webhook | `Weekly Athlete Summary - Email - May 18` |
-| Test | `sendMode=test` → only `mschmidt@fairfield.k12.mt.us` (no Sent? writeback today) |
-| Live | `sendMode=live` → `csvemail` + CC Mike; writeback Sent? after Gmail success |
+| Test | `sendMode=test` → only `mschmidt@fairfield.k12.mt.us` (**no** Sent? writeback — by design) |
+| Live | `sendMode=live` → `csvemail` + CC Mike; writeback Sent?/status/timestamp after Gmail (**PASS 2026-07-24**) |
 
 Do **not** create a duplicate scenario. Do **not** use `Weekly Athlete Summary Updated` as the email sender.
 
@@ -117,6 +123,7 @@ Do **not** create a duplicate scenario. Do **not** use `Weekly Athlete Summary U
 
 - [x] Empty-week decision (`send_short`) + 072 v4.0 enforcement
 - [x] Schmidt Test-mode end-to-end PASS (2026-07-24)
+- [x] 074 PROD `sendMode=Live` + Make Live writeback PASS (Sent?/status/timestamp)
 - [ ] Explicit Mike authorization to enable 118/119 Sunday schedules
-- [ ] Optional: Make Test-branch Sent? writeback parity (known gap)
-- [ ] Live sendMode still refused by 118 when dryRun=false until policy changes
+- [ ] Optional: Make Test-branch Sent? writeback parity (not required for Live season)
+- [ ] 118 Live sendMode policy when dryRun=false (product authorization)

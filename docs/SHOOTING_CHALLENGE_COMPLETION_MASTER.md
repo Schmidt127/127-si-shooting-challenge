@@ -65,9 +65,9 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **146** |
 | Complete | 10 |
-| Live Tested in PROD | 9 |
+| Live Tested in PROD | 10 |
 | Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 29 |
+| Built but not installed *(Built in Repository)* | 28 |
 | Planned | 23 |
 | Decision Needed | 6 |
 | Deferred | 10 |
@@ -75,7 +75,7 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` Test-mode E2E PASS with empty-week **`send_short`**; 118/119 schedules remain OFF. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback PASS; 118/119 schedules remain OFF. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -128,8 +128,8 @@ Columns:
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
 | SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Live Tested in PROD | **118** arms Build; **072 v4.0** built short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allowSchmidtInput=false` post-test; authorize season schedule when ready | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | — | P0 | 2026-07-24 |
-| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Live Tested in PROD | **119 v1.4** `send_armed` → **074** webhook → Make Bulk Email May 18 → Test Gmail PASS | Authorize Sunday 119 schedule; Live sendMode still gated; optional Make Test writeback parity | SC-038 | **119 does not post webhook**; 074 does; Make owns Live Sent? writeback | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; C-011 | Authorize Live schedules | P0 | 2026-07-24 |
-| SC-040 | Weekly Summary | Duplicate-send protection | Built in Repository | 074 blocks when Sent?; Live Make writeback sets Sent?; eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Live double-send test after schedule auth; note Test branch does not write Sent? today | SC-039 | Make owns final Sent? on Live | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
+| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Live Tested in PROD | **119 v1.4** `send_armed` → **074** webhook → Make Bulk Email May 18 → Gmail; **074 sendMode=Live** writeback PASS | Authorize Sunday 119 schedule; keep 074 sendMode Live (or blank+WAS Live) | SC-038 | **119 does not post webhook**; 074 does; Make owns Live Sent? writeback; never force 074 Test in PROD | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; C-011 | Authorize Live schedules | P0 | 2026-07-24 |
+| SC-040 | Weekly Summary | Duplicate-send protection | Live Tested in PROD | 074 blocks when Sent?; Make Live writeback verified (`Weekly Email Sent?`, `Make Send Status=Sent`, timestamp); eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Season-scale double-send watch after schedule auth; Test branch still no Sent? writeback (by design) | SC-039 | Make owns final Sent? on Live; PROD 074 must not force Test | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
 | SC-041 | Weekly Summary | Retry behavior when Make/email fails | Planned | Partial failure notes in 074 (don’t clear trigger on webhook fail) | Define retry SOP; test failure then recovery | SC-039 | Don’t mark Sent on failure | 074 standard | — | P1 | 2026-07-23 |
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |

@@ -34,7 +34,7 @@
 |-------|---------|-------|
 | **072** | **v4.0** | Enforces empty-week policy |
 | **118 / 119** | **v1.4** | Defaults `send_short`; schedules OFF |
-| **074** | Repo **v2.1** / UI cited **v2.0** | Webhook handoff ON |
+| **074** | Repo **v2.1** | Webhook handoff ON; PROD **sendMode=Live** (or blank + WAS Live) — never fixed Test |
 | Make | Bulk Email May 18 | ON |
 
 ### Empty-week matrix (072)
@@ -56,7 +56,7 @@
 | 072 `allowSchmidtInput` | **false** |
 | 118 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
 | 119 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
-| 074 | **ON** |
+| 074 | **ON**; **sendMode=Live** (or blank + WAS Live) |
 | Make WAS email scenario | **ON** |
 
 ---

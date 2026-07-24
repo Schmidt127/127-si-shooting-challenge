@@ -12,14 +12,26 @@
     "118": "v1.4",
     "072": "v4.0",
     "119": "v1.4",
-    "074_repo": "v2.1",
-    "074_prod_ui_cited": "v2.0"
+    "074_repo": "v2.1"
   },
   "prod_scheduling": {
     "118": "OFF",
     "119": "OFF",
     "074": "ON",
+    "074_sendMode": "Live",
     "make_bulk_email_may_18": "ON"
+  },
+  "074_production_sendMode_rule": {
+    "must_not": "fixed automation input sendMode=Test",
+    "allowed": [
+      "sendMode / sendModeInput = Live",
+      "blank input inheriting WAS.sendMode (WAS must be Live for production parents)"
+    ],
+    "resolution_order": "input → WAS.sendMode → payloadJson.sendMode → test",
+    "verified_2026_07_24": {
+      "fixed_Test": "email delivered; no Airtable Sent? writeback",
+      "Live": "Weekly Email Sent?=checked; Make Send Status=Sent; sent timestamp populated; email delivered"
+    }
   },
   "schmidt_proof": {
     "week_end_key": "2026-07-18",
@@ -29,13 +41,19 @@
     "emptyWeekPolicy": "send_short",
     "weekIsEmpty": true,
     "packageKind": "short_no_activity",
-    "sendMode": "test",
+    "sendMode_initial_test_path": "test",
+    "sendMode_live_writeback_path": "live",
     "072_actionOut": "built_short_empty_week",
     "119_actionOut": "send_armed",
     "119_counts": { "armed": 1, "skipped": 0, "notReady": 0, "errors": 0 },
     "delivered_subject": "127 Sports Intensity Weekly Check-In | Testing Schmidt | Testing Week",
     "test_recipient": "mschmidt@fairfield.k12.mt.us",
-    "gmail_delivered": true
+    "gmail_delivered": true,
+    "live_writeback": {
+      "weekly_email_sent": true,
+      "make_send_status": "Sent",
+      "sent_timestamp_populated": true
+    }
   },
   "ownership": {
     "empty_week_policy": "072",
@@ -44,8 +62,7 @@
     "gmail_and_live_writeback": "Make Weekly Athlete Summary - Bulk Email - May 18"
   },
   "known_gaps": [
-    "Make Test branch does not currently perform Airtable Sent? writeback",
-    "074 PROD UI version may lag repo v2.1 (Mike cited v2.0)",
+    "Make Test branch does not perform Airtable Sent? writeback (by design; Live path verified)",
     "118/119 Sunday schedules remain OFF until Live authorization"
   ]
 }
