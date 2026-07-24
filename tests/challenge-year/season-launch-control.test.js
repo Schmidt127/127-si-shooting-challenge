@@ -265,7 +265,10 @@ test("season finding codes catalog non-empty", () => {
     },
   });
   assert.ok(built.findings.length >= 1);
-  assert.ok(built.integration);
+  assert.strictEqual(built.integration, "reliability-command-center");
+  assert.ok(Array.isArray(built.issues) && built.issues.length >= 1);
+  assert.ok(built.issues[0].healthStatus);
+  assert.ok(built.issues[0].recommendedAction);
 });
 
 test("large fixture handling — 200 synthetic enrollments", () => {
