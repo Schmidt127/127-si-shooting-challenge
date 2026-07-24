@@ -66,6 +66,6 @@
   },
   "known_gaps": [
     "Make Test branch does not perform Airtable Sent? writeback (by design; Live path verified)",
-    "118/119 Sunday schedules remain OFF until Live authorization"
+    "First live Sunday volume / WAS uniqueness monitoring still open"
   ]
 }
