@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-23 (Overnight Agents 1–6 reconciliation — Agent 6) |
+| Last updated | 2026-07-24 (Overnight Agent 2 — config/XP/levels/achievements) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,23 +59,23 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-07-23**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **146** |
 | Complete | 10 |
-| Live Tested in PROD | 2 |
-| Installed but not tested *(Installed in PROD)* | 53 |
-| Built but not installed *(Built in Repository)* | 25 |
-| Planned | 34 |
+| Live Tested in PROD | 4 |
+| Installed but not tested *(Installed in PROD)* | 51 |
+| Built but not installed *(Built in Repository)* | 30 |
+| Planned | 29 |
 | Decision Needed | 7 |
 | Deferred | 10 |
 | Superseded | 3 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight 2026-07-23 moved **SC-001** to Live Tested (115 dry+live PASS), advanced website + enrollment/tutorial repo packages to Built in Repository, and left Mike decisions open. Evidence: `docs/overnight/FINAL-OVERNIGHT-RECONCILIATION.md`; enrollment/tutorials under `docs/online-agents/`.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. Overnight Agent 2 (2026-07-24) advanced config/XP audits (SC-021–023, SC-029, SC-034 → Built in Repository) and live-verified Submission Base XP + level baseline (SC-070, SC-078 → Live Tested). Evidence: `docs/overnight/config-xp/REPORT.md`.
 
 ---
 
@@ -110,20 +110,20 @@ Columns:
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Planned | LA-000 handoff; TypeScript types; routing helpers + unit tests | Mike-authorized schema; seed catalog; keep FBC Curriculum SYNC as homework catalog unless decided otherwise | SC-020 | No parallel XP model | LA-000; `web/types/learning-activities.ts` | Approve schema creation in PROD | P1 | 2026-07-23 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Planned | LA-001 routing contract; tests in repo | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | LA-001; PR #27 notes | — | P1 | 2026-07-23 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
-| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Planned | `shooting-challenge-v2-config-vs-code.md`; V2-002 queued | Grep scripts; migrate literals to tables; document remaining code rules | SC-022 | Changing options breaks scripts | V2-002; config-vs-code | — | P0 | 2026-07-23 |
-| SC-022 | Config | XP Reward Rules audit and cleanup | Planned | XP Reward Rules table exists historically | Verify every XP source reads rules by links; remove hardcodes | SC-021, SC-023 | Source Key uniqueness | V2-006; C-021 | — | P0 | 2026-07-23 |
-| SC-023 | Config | Grade Bands as linked source of truth | Planned | Grade Bands table; known hardcodes in 072 / normalize helpers | Link-based matching; kill band string maps | SC-021 | Renaming bands must not break XP | C-021; platform-config-improvements | — | P0 | 2026-07-23 |
+| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Built in Repository | Hardcode audit + JSON inventory; shared helpers; 054/066 safe hardenings | Paste 054/066; collapse Config table; finish remaining literals across 001–119 | SC-022 | Changing options breaks scripts | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; `config-hardcode-audit.json` | — | P0 | 2026-07-24 |
+| SC-022 | Config | XP Reward Rules audit and cleanup | Built in Repository | 31 active rules, 0 duplicate keys; source-by-source audit; 054 duplicate-rule guard in repo | Paste 054 v5.6; resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records | SC-021, SC-023 | Source Key uniqueness | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `xp-rules-audit.json` | — | P0 | 2026-07-24 |
+| SC-023 | Config | Grade Bands as linked source of truth | Built in Repository | Active bands K-2…9-12 healthy; **066 v3.3** prefers link IDs; normalize helpers + tests | Paste 066 v3.3; archive inactive mojibake bands | SC-021 | Renaming bands must not break XP | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `066-…js` v3.3 | — | P0 | 2026-07-24 |
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066** v3.2 pasted historically | Re-test natural run on Schmidt; OMNI confirmation packet | SC-096 | Week timezone America/Denver | H-002; K-H1 | — | P0 | 2026-07-23 |
 | SC-028 | Config | Perfect Week rules configurable | Installed in PROD | **057** v1.3 Stage 17 | Re-test with Zoom recording + live exclusivity | SC-116 | Combined Zoom credit path | C-025 Stage 17 | — | P1 | 2026-07-23 |
-| SC-029 | Config | Streak values in config (not buried in code) | Planned | Streak XP via **053**; amounts partly config | Review streak economics / repeat-after-break behavior | SC-022 | Behavior may remain code | config-vs-code; C-014 notes | Want behavior change or amounts only? | P2 | 2026-07-23 |
+| SC-029 | Config | Streak values in config (not buried in code) | Built in Repository | Streak XP via **053/054**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); paste 054 v5.6; supervised live 3-day test | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Built in Repository | C-011 118/119 design; activation checklist | Install schedules carefully; keep OFF until authorized | SC-051 | Accidental mass email risk | C-011 checklists | Authorize schedule enable | P1 | 2026-07-23 |
 | SC-032 | Config | Season settings (dates, windows) | Planned | Weeks table historically; C-018 design | Rebuild Weeks for next season; intake vs run calendars | SC-084 | 005 date mapping | C-018; V2-013 | — | P1 | 2026-07-23 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
-| SC-034 | Config | Remove remaining hardcoded values from automations | Planned | Partial modernization; 066 reference pattern | Finish V2-002 pass across 001–119 | SC-021 | Prefer CONFIG block + tables | V2-002; V2-014a | — | P1 | 2026-07-23 |
+| SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; 066/054 hardenings; hardcode inventory | Finish V2-002 pass across 001–119; paste pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
 | SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Built in Repository | **118** creates missing WAS then arms build | Paste/enable in PROD; prove every Active enrollment gets a WAS | SC-004, SC-082 | Empty-week policy open | C-011; H-005 | Empty weeks: email yes/no? | P0 | 2026-07-23 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
@@ -159,7 +159,7 @@ Columns:
 | SC-067 | Enrollment | Program Instance multi-year design | Deferred | V2-013 decided direction; investigation 2026-07-05 | Dedicated architecture wave later | SC-046 | Config changes must not rewrite history | V2-013 | When to schedule wave? | P3 | 2026-07-23 |
 | SC-068 | Enrollment | Inactive / processing controls (`Active?` hardened) | Built in Repository | Partial guards; C-010 packets; Online Agent 7 Active? consumer audit + offline guard contract (**no script edits**) | PPE create/backfill; paste guards; resolve 072/118/119 Schmidt hard-exclude conflict vs “Schmidt visible” web direction | SC-004 | Gaps historically in 010/031/065/053/072/076 | `docs/online-agents/enrollment-season/`; C-010; KNOWN_ISSUES | Confirm PPE field + Schmidt exception | P0 | 2026-07-23 |
 | SC-069 | Enrollment | Testing enrollment behavior documented and proven | Built in Repository | Schmidt enrollment contract aligned to Active?=true + public visibility | Live proof matrix across XP/email/standings still needed | SC-004, SC-068 | — | `docs/online-agents/enrollment-season/`; C-019 | — | P0 | 2026-07-23 |
-| SC-070 | XP | Daily submission XP awards correctly | Installed in PROD | 010 path historically | Schmidt daily submission live test + rerun | SC-049 | One submission → one XP Event | submission-to-xp-flow.md | — | P0 | 2026-07-23 |
+| SC-070 | XP | Daily submission XP awards correctly | Live Tested in PROD | 010 path; live Submission `recuuTBgstSTGg2E3` → XP `recOodD23MQrP1O9F` = 20 (SHOOTING_BASE), exact one event | Rerun pack on additional submissions; keep Schmidt-only | SC-049 | One submission → one XP Event | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `prod-config-snapshot-2026-07-24.json` | — | P0 | 2026-07-24 |
 | SC-071 | XP | Homework XP after satisfactory review | Installed in PROD | HW XP writers historically; C-020 gap = after-review | Live prove after coach satisfactory | SC-017 | — | K-M4 | — | P0 | 2026-07-23 |
 | SC-072 | XP | Video XP awards correctly | Installed in PROD | **114** Source Key `VIDEO_SUBMISSION\|` | Re-test after upload writeback | SC-133 | — | 114; C-013 | — | P0 | 2026-07-23 |
 | SC-073 | XP | Live Zoom XP awards correctly | Installed in PROD | **101** v5.5 Attendees-only path | Re-test live meeting attendance | SC-116 | Recording path must never write Attendees | 101; C-025 hard rule | — | P0 | 2026-07-23 |
@@ -167,7 +167,7 @@ Columns:
 | SC-075 | XP | Streak XP | Installed in PROD | **053** | Re-test streak create/break/repeat | SC-029, SC-068 | Active? gaps | 053; config-vs-code | — | P1 | 2026-07-23 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066** v3.2 | Live OMNI/natural run on Schmidt | SC-027 | Idempotent Source Keys | H-002; K-H1 | — | P0 | 2026-07-23 |
 | SC-077 | XP | Perfect Week XP | Installed in PROD | **057** v1.3 | Live prove with Zoom rules | SC-028, SC-074 | — | C-025 | — | P1 | 2026-07-23 |
-| SC-078 | XP | Level progression updates correctly | Installed in PROD | 041/042 chain | Live level-up on Schmidt | SC-024 | — | automation-index | — | P0 | 2026-07-23 |
+| SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
 | SC-081 | XP | Streak economics review | Decision Needed | Notes that amounts=config, repeat behavior=code | Decide whether to change repeat-after-break rules | SC-029 | — | C-014 notes | Change streak behavior? | P2 | 2026-07-23 |
