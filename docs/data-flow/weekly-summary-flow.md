@@ -41,7 +41,7 @@ How **Weekly Athlete Summary** rows are ensured, packaged, and emailed to parent
 | Target week for Sunday runs | Prior Saturday Week End (America/Denver) |
 | Timezone | America/Denver |
 | Season Weeks | 2026–2027 Week 0–9 + Post-Challenge now exist |
-| Canonical Week key (ops) | `{challengeYear}\|Week Name` e.g. `2026-2027|Week 1` — **not** the same as Airtable `Week Key` formula (`RECORD_ID()` today) |
+| Canonical Week key (ops) | `{challengeYear}` + `\|` + Week Name (example `2026-2027` + Week 1). **Not** the same as Airtable `Week Key` formula (`RECORD_ID()` today) |
 | Uniqueness | One WAS per Enrollment record ID + Week record ID |
 
 **Annual rollover / challenge-year tooling (repo):** [`docs/challenge-year/`](../challenge-year/README.md) — Config resolver, Week generator/validator, Activity Date→Week checks, WAS uniqueness validation, preflight + manifest. Does not auto-create Weeks or activate schedules.
