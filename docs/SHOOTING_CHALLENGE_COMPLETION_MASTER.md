@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (PR #41 rebased on PR #40; SC-147 Built; SC-032 Built; SC-114 Superseded; Softr Obsolete; total 147; RCC not vendored) |
+| Last updated | 2026-07-24 (Season Launch PR #41; Softr Obsolete; SC-032 Built; SC-114 Superseded; dashboard recalculated; RCC not vendored) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -63,11 +63,11 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **147** |
+| **Total items** | **146** |
 | Complete | 12 |
 | Live Tested in PROD | 9 |
 | Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 29 |
+| Built but not installed *(Built in Repository)* | 28 |
 | Planned | 22 |
 | Decision Needed | 5 |
 | Deferred | 10 |
@@ -75,24 +75,18 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-### Dashboard reconciliation (2026-07-24 — PR #40 + PR #41)
+### Dashboard reconciliation (Season Launch PR #41, pre-PR #40 merge)
 
-Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Tested **10** · Installed **54** · Built **28**.
+| SC | Old status | New status | Source | Evidence |
+|----|------------|------------|--------|----------|
+| SC-032 | Planned | Built in Repository | Season Launch Control | Launch lifecycle + CLI + packages; not live-installed |
+| SC-114 | Decision Needed | Superseded | Softr Obsolete / Not Used | `/shoot` active; Softr not a launch dependency |
+| SC-065 | Built in Repository | Built in Repository | Evidence refresh only | `generate-week-package` |
+| SC-067 | Deferred | Deferred | Notes only | Season Launch interim until Program Instance wave |
 
-| SC | Old status | New status | Source of change | Evidence |
-|----|------------|------------|------------------|----------|
-| SC-031 | Built in Repository | Live Tested in PROD | Go-live integration (`7c7a79a`) | 118/119 schedules **ON** + Live writeback proven |
-| SC-038 | Live Tested in PROD | Complete | Go-live integration (`7c7a79a`) | **118 ON** arms Build; **072 v4.0 ON**; season schedule active |
-| SC-039 | Live Tested in PROD | Complete | Go-live integration (`7c7a79a`) | **119 ON** → 074 → Make Live writeback PASS |
-| SC-147 | *(new)* | Built in Repository | PR #40 (RCC) | Repo framework + MVP install packet; views not Installed |
-| SC-032 | Planned | Built in Repository | Season Launch Control (PR #41) | Launch lifecycle + CLI + packages; not live-installed |
-| SC-114 | Decision Needed | Superseded | Softr Obsolete / Not Used (PR #41) | `/shoot` active; Softr not a launch dependency |
-| SC-065 | Built in Repository | Built in Repository | Evidence refresh only (PR #41) | `generate-week-package` |
-| SC-067 | Deferred | Deferred | Notes only (PR #41) | Season Launch interim until Program Instance wave |
+**Net math (vs master 146):** SC-032 Planned→Built (+1 Built → 28, Planned 22); SC-114 Decision→Superseded (Decision Needed 5, Superseded 4). Total remains **146** until PR #40 adds SC-147.
 
-**Net math:** go-live moves SC-038/039 into Complete (+2 Complete, −2 Live Tested) and SC-031 into Live Tested (+1 Live Tested from Built → Live Tested 10−2+1=9; Built 28−1=27). PR #40 adds only SC-147 (+1 Built → 28; Total **147**). PR #41 then moves SC-032 Planned→Built (+1 Built → **29**, Planned **22**) and SC-114 Decision→Superseded (Decision Needed **5**, Superseded **4**). SC-065/SC-067 status unchanged (evidence/notes only). No silent Complete↔Live Tested swaps beyond the three go-live rows above. PR #41 does **not** vendor RCC.
-
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository** (MVP views not yet Installed; not Live Tested until PROD export audit). **SC-032 Season Launch** is **Built in Repository** (not live-installed). Softr is **Obsolete / Not Used** and cannot block launch. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -258,7 +252,6 @@ Columns:
 | SC-144 | Website | Rename historically Softr-named publish flag | Planned | Flag still named `OK to Publish on Softr` while Softr is Obsolete | Rename in schema wave; update web queries — not a Softr launch step | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-24 |
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
-| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet (existing PROD fields); preserves `118→072→119→074→Make` with **118/119 ON**; complements Agent 1+2 reliability audit (no doc duplication) | Mike: merge PR → export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred** | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `lib/reliability-command-center/`; `tools/reliability-command-center/` | Approve MVP view install + first PROD export run | P0 | 2026-07-24 |
 
 ---
 
@@ -290,9 +283,9 @@ Must achieve: guaranteed WAS per enrollment/week, auto build/send, dedupe/retry,
 
 ### Data Integrity and Schema
 
-Primary SC items: **SC-046 … SC-059**, **SC-055**, **SC-147**.
+Primary SC items: **SC-046 … SC-059**, **SC-055**.
 
-Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory, Reliability Command Center health visibility (repo audit + future views).
+Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory.
 
 ### Enrollment and Season Structure
 

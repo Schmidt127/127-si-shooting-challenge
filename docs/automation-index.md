@@ -94,8 +94,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 ### Weekly Athlete Summary email (verified PROD 2026-07-24)
 
 **Flow:** `118 → 072 → 119 → 074 → Make.com → Gmail → Make.com writeback`  
-**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
-**Health / conflicts:** [reliability-command-center/](./reliability-command-center/README.md) offline audit (Ready/Sent/Make writeback mismatches, Test vs Live) — **no new automations**
+**Architecture:** [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
 |---|--------------------------|--------------------|--------------|
@@ -147,7 +146,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **117f** | Airtable automation `117 — Zoom — Send Recording Approval Email to Make` (script **v1.1**) — posts approval-email payload to **Make** identifier **117f**; writes **no** Airtable records | Zoom Attendance · Satisfactory recording path · inputs `recordId`, `webhookUrl`, `enrollmentRid`, `zoomMeetingRid` · send key `ZOOM_REC_EMAIL\|…\|…\|…` (four-part) | `117f-zoom-recording-send-approval-email.js` · [PROD workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) · [DEV evidence (historical)](./deploy-checklists/C-025-117f-dev-agent2-evidence-2026-07-20.md) |
 | **117a–e** | Modular Stage 17 slices (reference) | Prefer **117** on DEV (slot limit). **117d/e** are flag-only (no Attendees). | `117a`…`117e-*.js` |
 
-C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115** repo **v1.9** / PROD often still pasted **v1.8**; Stage 17 path `C025_STAGE17_DOWNSTREAM` → wait WAS Ready after 057; triggers **057**/**042** via Queue?/view re-entry; query budget ≤22; never writes `Attendees`). Live attendance remains **101** only. PROD approval-email Make path: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
+C-025 DEV install: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md) (**115 v1.8** `C025_STAGE17_DOWNSTREAM` → wait WAS Ready after 057; triggers **057**/**042** via Queue?/view re-entry; query budget ≤22; never writes `Attendees`). Live attendance remains **101** only. PROD approval-email Make path: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
 
 ---
 
@@ -206,17 +205,3 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 6. Update `CHANGELOG.md` and this index if trigger/name changed
 
 Runbook: [development-base-setup.md](./development-base-setup.md) (V2-015).
-
----
-
-## Reliability Command Center (repository audits)
-
-Offline workflow-health audits (fixtures / exports) — complements in-base `airtable/extension-scripts/audits/*`. Does **not** add Airtable automations.
-
-| Tool | Path |
-|------|------|
-| Shared library | `lib/reliability-command-center/` |
-| CLI | `node tools/reliability-command-center/cli.js --fixture <path>` |
-| Dry-run repair preview | `node tools/reliability-command-center/repair-preview.js --record-ids rec…` |
-| Tests | `node tests/reliability-command-center/run-all.js` |
-| Docs | [reliability-command-center/README.md](./reliability-command-center/README.md) |

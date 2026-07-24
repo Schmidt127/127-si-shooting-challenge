@@ -265,10 +265,24 @@ test("season finding codes catalog non-empty", () => {
     },
   });
   assert.ok(built.findings.length >= 1);
-  assert.strictEqual(built.integration, "reliability-command-center");
-  assert.ok(Array.isArray(built.issues) && built.issues.length >= 1);
-  assert.ok(built.issues[0].healthStatus);
-  assert.ok(built.issues[0].recommendedAction);
+  // Before PR #40 lands on master: portable findings only.
+  // After PR #40: must use canonical RCC buildIssue (no second issue contract).
+  let rccPresent = false;
+  try {
+    require("../../lib/reliability-command-center");
+    rccPresent = true;
+  } catch (err) {
+    if (!(err && err.code === "MODULE_NOT_FOUND")) throw err;
+  }
+  if (rccPresent) {
+    assert.strictEqual(built.integration, "reliability-command-center");
+    assert.ok(Array.isArray(built.issues) && built.issues.length >= 1);
+    assert.ok(built.issues[0].healthStatus);
+    assert.ok(built.issues[0].recommendedAction);
+  } else {
+    assert.strictEqual(built.integration, "portable_season_findings");
+    assert.ok(/RCC module not present/i.test(built.note || ""));
+  }
 });
 
 test("large fixture handling — 200 synthetic enrollments", () => {

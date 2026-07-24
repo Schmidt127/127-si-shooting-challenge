@@ -46,17 +46,12 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 │   ├── blueprints/           # Exported Make.com scenario blueprints
 │   ├── documentation/        # Scenario notes and webhook standards
 │   └── test-payloads/        # Sample JSON for webhook testing
-├── lib/                      # Pure Node contracts (config-selection, challenge-year, WAS, RCC)
-│   ├── challenge-year/       # Season Launch + rollover engine (calls RCC buildIssue)
-│   └── reliability-command-center/  # Workflow health model + audit helpers
-├── tests/
-│   ├── challenge-year/       # Challenge-Year + Season Launch Control tests
-│   └── reliability-command-center/  # Synthetic fixtures + RCC tests
+├── lib/                      # Pure Node contracts (config-selection, challenge-year, WAS email)
+│   └── challenge-year/       # Season Launch + rollover engine (optional RCC ingest)
 ├── tools/
 │   ├── airtable/             # Python schema export and PAT verify scripts
 │   ├── enrollment-season/    # Offline enrollment / Weeks seed validators
-│   ├── challenge-year/       # Season Launch CLI (weeks, preflight, launch-*)
-│   └── reliability-command-center/  # Offline audit CLI + dry-run repair preview
+│   └── challenge-year/       # Season Launch CLI (weeks, preflight, launch-*)
 ├── media/                    # Season publicity assets (newspapers, radio, social)
 ├── .cursor/rules/            # Canonical Cursor AI rules
 ├── .github/workflows/        # CI (web.yml)
@@ -73,7 +68,6 @@ See [docs/README.md](./docs/README.md) for the full documentation map and [SYSTE
 4. **Update Make.com** — Apply blueprint changes and test external workflows (Drive, Gmail, webhooks).
 5. **Document changes** — Update `CHANGELOG.md` and schema notes for any production-impacting change.
 6. **Run audit scripts** — Use dry-run audit scripts to verify data integrity before and after changes.
-7. **Reliability Command Center** — Offline workflow health audits (fixtures/exports): see [`docs/reliability-command-center/README.md`](./docs/reliability-command-center/README.md). Airtable Interface is **Designed**, not installed.
 
 ## Source-of-Truth Rule
 
