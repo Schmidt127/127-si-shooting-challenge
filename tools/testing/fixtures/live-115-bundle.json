@@ -1,0 +1,49 @@
+{
+  "kind": "daily_submission_bundle",
+  "scenario": {
+    "id": "recPdyfYRFgDtpzQ8",
+    "fields": {
+      "Last Run Status": { "name": "Pass" },
+      "Run Test?": false,
+      "Linked Submission": [{ "id": "recuuTBgstSTGg2E3" }],
+      "Shot Total": 25
+    }
+  },
+  "submission": {
+    "id": "recuuTBgstSTGg2E3",
+    "fields": {
+      "Enrollment": [{ "id": "recgP9qZYjAhE7NXm" }],
+      "Athlete": [{ "id": "recgqVstObQRzgXJF" }],
+      "Shot Total": 25,
+      "Duplicate Review Status": { "name": "Count It" },
+      "Week": [{ "id": "recVDKiYATgzsfpmE" }],
+      "Activity Date": "2026-07-23"
+    }
+  },
+  "xpEvents": [
+    {
+      "id": "recOodD23MQrP1O9F",
+      "fields": {
+        "Source Key": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+        "XP Points": 20,
+        "Submission": [{ "id": "recuuTBgstSTGg2E3" }]
+      }
+    }
+  ],
+  "wasRecords": [
+    {
+      "id": "rechWp330MqSgRWzN",
+      "fields": {
+        "Enrollment": [{ "id": "recgP9qZYjAhE7NXm" }],
+        "Week": [{ "id": "recVDKiYATgzsfpmE" }],
+        "Summary Key": "ATH-recgqVstObQRzgXJF|2025-2026|recVDKiYATgzsfpmE"
+      }
+    }
+  ],
+  "expect": {
+    "enrollmentId": "recgP9qZYjAhE7NXm",
+    "shotTotal": 25,
+    "xpAmount": 20,
+    "requireWeek": true
+  }
+}

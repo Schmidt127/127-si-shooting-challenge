@@ -152,3 +152,34 @@ test("structured console output includes automation identity JSON", async () => 
   assert.match(parsed.automation, /^115 /);
   assert.equal(parsed.statusOut, "success");
 });
+
+test("null Shot Total: skipped_missing_input", async () => {
+  const base = buildStandardBase({ scenarioCells: { "Shot Total": null } });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.actionOut, "skipped_missing_input");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 0);
+});
+
+test("high shot boundary still creates production-shaped Submission", async () => {
+  const base = buildStandardBase({ scenarioCells: { "Shot Total": 500 } });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.actionOut, "created");
+  assert.equal(base.getTable("Submissions").createdPayloads[0].payload["Shot Total"], 500);
+});
+
+test("stale Linked Submission overwritten on successful live create", async () => {
+  const base = buildStandardBase({
+    scenarioCells: {
+      "Linked Submission": [{ id: "recOLDSubmission01", name: "old" }],
+      "Actual Result": "STALE",
+      "Last Run Status": "Pass",
+    },
+  });
+  const { output } = await run115({ base, recordId: SCENARIO });
+  assert.equal(output.values.actionOut, "created");
+  const created = base.getTable("Submissions").createdPayloads[0].id;
+  assert.deepEqual(scenarioRecord(base).getCellValue("Linked Submission"), [{ id: created }]);
+  assert.notEqual(scenarioRecord(base).getCellValueAsString("Actual Result"), "STALE");
+});
