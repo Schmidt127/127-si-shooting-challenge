@@ -8,12 +8,13 @@
 
 | ID | Proposal |
 |----|----------|
-| SC-035 | Live Tested in PROD — Schmidt WAS ensure + `send_short` Check-In delivered |
-| SC-038 | Live Tested in PROD — 072 v4.0 package build verified |
-| SC-039 | Live Tested in PROD — 119 arm + 074→Make→Gmail; 074 sendMode=Live writeback PASS |
+| SC-035 | Live Tested in PROD — Schmidt WAS ensure + `send_short` Check-In; **118 ON** |
+| SC-038 | **Complete** — 118 ON + 072 v4.0 automatic build |
+| SC-039 | **Complete** — 119 ON + 074→Make→Gmail; 074 sendMode=Live writeback PASS |
 | SC-040 | Live Tested in PROD — Make Live writeback sets Sent?/status/timestamp (Test branch still no writeback) |
-| C-011 | Repo+PROD chain verified in Test mode; Sunday schedules still OFF |
+| SC-031 | Live Tested in PROD — schedules ON Sun 5:00 / 10:00 AM Denver |
+| C-011 | Repo+PROD chain verified; Sunday schedules **ON** |
 
 ## Paste-ready banner
 
-> Weekly email: `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0**. 119 arms Send only; 074 posts webhook. PROD 074 **sendMode=Live** (never fixed Test). Schedules OFF; 074+Make ON; Live writeback verified.
+> Weekly email: `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0**. 119 arms Send only; 074 posts webhook. PROD 074 **sendMode=Live** (never fixed Test). Schedules **ON**; 072+074+Make ON; Live writeback verified.
