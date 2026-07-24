@@ -3,13 +3,13 @@
  * Challenge-Year Configuration and Season Rollover Engine — CLI
  *
  * Commands:
- *   generate-weeks
- *   validate-weeks
- *   validate-enrollments
- *   validate-was
- *   resolve-config
- *   preflight
- *   manifest
+ *   generate-weeks | validate-weeks | validate-enrollments | validate-was
+ *   resolve-config | preflight | manifest
+ *   generate-week-package
+ *   validate-export
+ *   audit-automations
+ *   launch-status | launch-preflight | launch-manifest
+ *   activation-preview | rollback-preview
  *
  * Examples:
  *   node tools/challenge-year/cli.js generate-weeks \
@@ -18,7 +18,8 @@
  *     --regular-weeks 8 \
  *     --output tmp/weeks-2027-2028
  *
- *   node tools/challenge-year/cli.js preflight --config fixtures/new-year.json --mode preflight
+ *   node tools/challenge-year/cli.js launch-preflight \
+ *     --config tests/fixtures/challenge-year/launch-preflight-pass.json
  */
 
 "use strict";
@@ -34,15 +35,26 @@ Usage:
   node tools/challenge-year/cli.js <command> [options]
 
 Commands:
-  generate-weeks       Generate Week 0..N + Post-Challenge plan (json/csv/md/report)
-  validate-weeks       Validate a weeks JSON/CSV export
-  validate-enrollments Validate enrollment-year fixtures
-  validate-was         Validate WAS uniqueness fixtures
-  resolve-config       Resolve Config from fixture + resolution inputs
-  preflight            Annual rollover preflight (PASS / PASS WITH WARNINGS / FAIL)
-  manifest             Generate rollover manifest (json + md + weeks csv)
+  generate-weeks         Generate Week 0..N + Post-Challenge plan
+  generate-week-package  Full Week import package (CSV/maps/checklists)
+  validate-weeks         Validate a weeks JSON/CSV export
+  validate-export        Full season export validator
+  validate-enrollments   Enrollment-year fixtures
+  validate-was           WAS uniqueness fixtures
+  resolve-config         Resolve Config from fixture
+  audit-automations      Season-sensitive automation hard-code audit
+  preflight              Annual rollover preflight
+  manifest               Rollover manifest
+  launch-status          Season launch state + export summary
+  launch-preflight       Full season launch gate
+  launch-manifest        Launch manifest + week package
+  activation-preview     Dry-run Live activation changes
+  rollback-preview       Dry-run rollback changes
 
 Common options:
+  --config <rec|file>  Config record id and/or fixture path
+  --input <export>     Season export JSON
+  --challenge-year     YYYY-YYYY
   --output <path>      Output prefix or directory
   --json               Print JSON to stdout
   --help               Show help
@@ -380,6 +392,216 @@ function cmdManifest(args) {
   process.exit(engine.exitCodeForOverall(result.preflight?.overall || (result.ok ? "PASS" : "FAIL")));
 }
 
+function loadLaunchFixture(args) {
+  const file = args.config || args.fixture || args.input || args._[1];
+  if (!file || String(file).startsWith("rec")) {
+    const inputFile = args.input;
+    const data = inputFile ? readJson(inputFile) : {};
+    return {
+      ...data,
+      configRecordId: args.config && String(args.config).startsWith("rec") ? args.config : data.configRecordId,
+      challengeYear: args["challenge-year"] || data.challengeYear,
+    };
+  }
+  const data = readJson(file);
+  if (args.input) {
+    data.export = readJson(args.input);
+  }
+  return {
+    ...data,
+    configRecordId:
+      args.config && String(args.config).startsWith("rec")
+        ? args.config
+        : data.configRecordId || data.newConfig?.id,
+    challengeYear: args["challenge-year"] || data.challengeYear || data.newConfig?.activeSchoolYear,
+  };
+}
+
+function writeDirOutputs(dir, files) {
+  const base = path.resolve(dir);
+  fs.mkdirSync(base, { recursive: true });
+  const written = [];
+  for (const [name, content] of Object.entries(files)) {
+    if (content == null) continue;
+    const target = path.join(base, name);
+    fs.writeFileSync(
+      target,
+      typeof content === "string" ? content : `${JSON.stringify(content, null, 2)}\n`
+    );
+    written.push(target);
+  }
+  process.stdout.write(`Wrote:\n${written.map((w) => `  ${w}`).join("\n")}\n`);
+}
+
+function cmdGenerateWeekPackage(args) {
+  const data = args.config && !String(args.config).startsWith("rec") ? readJson(args.config) : {};
+  const result = engine.generateWeekImportPackage({
+    config: data.newConfig || data.config,
+    challengeYear: args["challenge-year"] || data.challengeYear || data.newConfig?.activeSchoolYear,
+    weekZeroStart: args["week-zero-start"] || data.generate?.weekZeroStart || data.newConfig?.weekZeroStart,
+    regularWeeks: Number(args["regular-weeks"] || data.generate?.regularWeeks || data.newConfig?.regularWeekCount || 0),
+    configRecordId: args.config && String(args.config).startsWith("rec") ? args.config : data.newConfig?.id,
+    generate: data.generate,
+  });
+  const out = args.output || `tmp/week-package-${result.challengeYear || "year"}`;
+  writeDirOutputs(out, {
+    "weeks-import.csv": result.files.weeksImportCsv,
+    "weeks.md": result.files.weeksMarkdown,
+    "validation-report.json": result.files.validationReport,
+    "week-code-map.json": result.weekCodeMap,
+    "week-end-key-map.json": result.weekEndKeyMap,
+    "sunday-email-dates.json": result.expectedSundayEmailDates,
+    "package.json": result,
+  });
+  process.exit(result.ok ? 0 : 1);
+}
+
+function cmdValidateExport(args) {
+  const file = args.input || args.config || args._[1];
+  if (!file) {
+    process.stderr.write("validate-export requires --input <export.json>\n");
+    process.exit(2);
+  }
+  const data = readJson(file);
+  const result = engine.validateSeasonExport(data, {
+    challengeYear: args["challenge-year"] || data.challengeYear,
+    configRecordId: args.config && String(args.config).startsWith("rec") ? args.config : data.configRecordId,
+    regularWeeks: args["regular-weeks"] ? Number(args["regular-weeks"]) : data.regularWeeks,
+  });
+  if (args.output) writeDirOutputs(args.output, { "export-validation.json": result });
+  engine.printReport({ overall: result.overall, checks: result.findings }, { json: Boolean(args.json) });
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdAuditAutomations(args) {
+  const result = engine.auditSeasonSensitiveAutomations({
+    allowYears: args["allow-years"] ? String(args["allow-years"]).split(",") : [],
+  });
+  if (args.output) writeDirOutputs(args.output, { "automation-audit.json": result });
+  engine.printReport({ overall: result.overall, checks: result.findings }, { json: Boolean(args.json) });
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdLaunchStatus(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.launchStatus({
+    launch: data.launch || data,
+    export: data.export || data,
+    challengeYear: data.challengeYear,
+    configRecordId: data.configRecordId,
+  });
+  if (args.output) {
+    writeDirOutputs(args.output, {
+      "launch-status.json": result,
+      "launch-status.md": result.markdown || engine.toMarkdownReport("Season Launch Status", result),
+    });
+  }
+  if (args.json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    process.stdout.write(result.markdown || engine.toMarkdownReport("Season Launch Status", result));
+  }
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdLaunchPreflight(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.launchPreflight({
+    ...data,
+    configRecordId: data.configRecordId || data.newConfig?.id,
+    challengeYear: data.challengeYear || data.newConfig?.activeSchoolYear,
+    newConfig: data.newConfig || data.config,
+    export: data.export,
+  });
+  if (args.output) {
+    writeDirOutputs(args.output, {
+      "launch-preflight.json": result,
+      "launch-preflight.md":
+        result.markdown || engine.toMarkdownReport("Season Launch Preflight", result),
+    });
+  }
+  if (args.json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    engine.printReport({ overall: result.overall, checks: result.checks }, { json: false });
+  }
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdLaunchManifest(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.launchManifest({
+    ...data,
+    configRecordId: data.configRecordId || data.newConfig?.id,
+    challengeYear: data.challengeYear || data.newConfig?.activeSchoolYear,
+    newConfig: data.newConfig || data.config,
+  });
+  const out = args.output || `tmp/launch-${result.preflight?.challengeYear || "year"}`;
+  writeDirOutputs(out, {
+    "launch-manifest.md": result.markdown,
+    "launch-preflight.json": result.preflight,
+    "launch-preflight.md":
+      result.preflight?.markdown ||
+      engine.toMarkdownReport("Season Launch Preflight", result.preflight || {}),
+    "rollover-manifest.json": result.manifest?.manifest || result.manifest,
+    "weeks-import.csv": result.csv,
+    "week-package.json": result.weekPackage,
+  });
+  process.stdout.write(`Overall: ${result.overall}\nWrote: ${out}\n`);
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdActivationPreview(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.activationPreview({
+    ...data,
+    configRecordId: data.configRecordId || data.newConfig?.id,
+    challengeYear: data.challengeYear || data.newConfig?.activeSchoolYear,
+    newConfig: data.newConfig || data.config,
+    completedChecks: data.completedChecks || [],
+  });
+  if (args.output) {
+    writeDirOutputs(args.output, {
+      "activation-preview.json": result,
+      "activation-preview.md":
+        result.markdown || engine.toMarkdownReport("Season Launch Activation Preview", result),
+    });
+  }
+  if (args.json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    process.stdout.write(
+      result.markdown || engine.toMarkdownReport("Season Launch Activation Preview", result)
+    );
+  }
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
+function cmdRollbackPreview(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.rollbackPreview({
+    ...data,
+    configRecordId: data.configRecordId || data.newConfig?.id,
+    challengeYear: data.challengeYear || data.newConfig?.activeSchoolYear,
+    newConfig: data.newConfig || data.config,
+  });
+  if (args.output) {
+    writeDirOutputs(args.output, {
+      "rollback-preview.json": result,
+      "rollback-preview.md":
+        result.markdown || engine.toMarkdownReport("Season Launch Rollback Preview", result),
+    });
+  }
+  if (args.json) {
+    process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+  } else {
+    process.stdout.write(
+      result.markdown || engine.toMarkdownReport("Season Launch Rollback Preview", result)
+    );
+  }
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const command = args._[0];
@@ -388,18 +610,34 @@ function main() {
   switch (command) {
     case "generate-weeks":
       return cmdGenerateWeeks(args);
+    case "generate-week-package":
+      return cmdGenerateWeekPackage(args);
     case "validate-weeks":
       return cmdValidateWeeks(args);
+    case "validate-export":
+      return cmdValidateExport(args);
     case "validate-enrollments":
       return cmdValidateEnrollments(args);
     case "validate-was":
       return cmdValidateWas(args);
     case "resolve-config":
       return cmdResolveConfig(args);
+    case "audit-automations":
+      return cmdAuditAutomations(args);
     case "preflight":
       return cmdPreflight(args);
     case "manifest":
       return cmdManifest(args);
+    case "launch-status":
+      return cmdLaunchStatus(args);
+    case "launch-preflight":
+      return cmdLaunchPreflight(args);
+    case "launch-manifest":
+      return cmdLaunchManifest(args);
+    case "activation-preview":
+      return cmdActivationPreview(args);
+    case "rollback-preview":
+      return cmdRollbackPreview(args);
     default:
       process.stderr.write(`Unknown command: ${command}\n`);
       usage(2);

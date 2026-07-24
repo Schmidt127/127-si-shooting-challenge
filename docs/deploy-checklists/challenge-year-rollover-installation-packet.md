@@ -120,7 +120,7 @@ node tools/challenge-year/cli.js manifest \
 - [ ] Create/verify Config + Program Instance dates/status
 - [ ] Import Weeks; link Program Instance
 - [ ] Update Fillout hidden year/config values
-- [ ] Update Airtable views / Softr filters for current year
+- [ ] Update Airtable views / `/shoot` query filters for current year (Softr Obsolete / Not Used)
 - [ ] Inspect Make for hard-coded old year / season slug
 - [ ] Confirm XP Reward Rules, Grade Bands, Levels, Gates, Achievements active
 - [ ] Document Schmidt test enrollment handling
@@ -166,7 +166,7 @@ Collect and store:
 
 1. Copy prior rollover fixture; set new year label + Sunday Week 0 start + regular week count.  
 2. `generate-weeks` → validate → update opsChecklist → `preflight` → `manifest`.  
-3. Import Weeks; update forms/views/Make/Softr.  
+3. Import Weeks; update forms/views/Make/`/shoot`. (Softr Obsolete / Not Used)
 4. Controlled test → activate → keep prior year historical.  
 5. Never hard-code the new year as permanent current in scripts — use resolver + Config rows.
 

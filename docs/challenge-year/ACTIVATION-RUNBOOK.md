@@ -59,7 +59,7 @@ Inspect / update Config awareness where needed:
 - **041 / 042** levels  
 - **072 / 074 / 118 / 119** weekly email  
 
-Identify schedules to activate later (118/119 remain OFF until authorized).  
+**Current verified PROD (2026-07-24):** 118 and 119 schedules are **ON** (Sun 5:00 / 10:00 AM Denver). For a *new* season, re-validate Week targeting before the first Sunday run; do not recommend disabling merely because older docs said OFF.  
 Remove Test-only fixed inputs before Live season send.  
 Validate current-year filters and historical exclusion.
 
@@ -86,13 +86,15 @@ Checklist:
 - [ ] No old-year hard-coded values  
 - [ ] Controlled test before season-wide enable  
 
-## Softr / web
+## Website (`/shoot`)
 
-- [ ] Current-year filters  
+Softr is **Obsolete / Not Used**. Do not treat Softr as a launch dependency.
+
+- [ ] Current-year filters on Airtable views / `/shoot` queries  
 - [ ] Enrollment visibility  
-- [ ] Summary visibility  
 - [ ] Levels and achievements  
 - [ ] Historical-data separation  
+- [ ] See [WEB-SEASON-ACTIVATION.md](./WEB-SEASON-ACTIVATION.md)
 
 ## Final activation
 
@@ -104,8 +106,11 @@ Checklist:
 
 ## Rollback
 
+Follow [ROLLBACK-CHECKLIST.md](./ROLLBACK-CHECKLIST.md) and `rollback-preview`.
+
 1. Keep prior Config current until new year proven.  
-2. Turn 118/119 OFF.  
+2. Turn 118/119 OFF **only for explicit abort** (not a routine launch step — schedules are verified ON for normal ops).  
 3. Do not delete prior Weeks/Enrollments/WAS.  
 4. Point Fillout hidden fields back to prior year if aborting.  
-5. Re-run preflight after fixes.
+5. Preserve Make scenario `Weekly Athlete Summary - Bulk Email - May 18`.  
+6. Re-run `launch-preflight` after fixes.

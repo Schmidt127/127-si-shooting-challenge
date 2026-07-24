@@ -76,3 +76,10 @@ Do **not** create for MVP:
 
 Name: **Reliability Command Center**  
 Status: **Designed** only. Not required for MVP. Mark **Installed** only after Mike creates it in Airtable.
+
+## Season Launch views (do not duplicate here)
+
+Season-specific Config / Week / Enrollment / cross-season views live in
+[`docs/challenge-year/SEASON-LAUNCH-DASHBOARD-VIEWS.md`](../challenge-year/SEASON-LAUNCH-DASHBOARD-VIEWS.md).
+RCC owns weekly-email / XP / achievement / level integrity views. Season Launch owns year-boundary and activation checklist views.
+Season findings integrate via `lib/challenge-year/season-findings.js` → RCC `buildIssue`.

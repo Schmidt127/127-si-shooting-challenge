@@ -73,11 +73,13 @@ Preflight: **PASS**
 - [ ] Enrollment form — hidden Config / School Year / Program Instance
 - [ ] Daily submission form — Activity Date validation + year linkage
 
-## Softr pages and filters
+## Website (`/shoot`) routes and filters
 
-- [ ] Current-year Enrollment visibility filters
-- [ ] Weekly Athlete Summary visibility
+Softr is Obsolete / Not Used.
+
+- [ ] `/shoot` leaderboard — current-year Enrollment filters
 - [ ] Levels / Achievements current-year separation
+- [ ] Airtable views backing `/shoot` (must not mix years)
 - [ ] Historical data pages (must not mix years)
 
 ## Views to inspect

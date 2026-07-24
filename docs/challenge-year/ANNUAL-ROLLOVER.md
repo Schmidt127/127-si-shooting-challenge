@@ -24,12 +24,12 @@
 - reward rules, grade bands, levels, achievements, XP sources, email templates ready  
 - Test values + Schmidt handling documented  
 - current-year views documented  
-- Make / Softr not hard-coded to old year  
+- Make / `/shoot` queries not hard-coded to old year (Softr Obsolete / Not Used)  
 - refuse multiple current Configs  
 
 ## Manifest contents
 
-Old/new Config, Weeks to create, expected keys, fields/automations/Make/Fillout/Softr/views to inspect, test retain/exclude lists, validation steps, rollback steps, proof required before activation.
+Old/new Config, Weeks to create, expected keys, fields/automations/Make/Fillout/`/shoot`/views to inspect, test retain/exclude lists, validation steps, rollback steps, proof required before activation. Softr is Obsolete.
 
 ## Safety
 

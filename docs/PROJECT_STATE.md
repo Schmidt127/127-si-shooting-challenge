@@ -2,12 +2,12 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (Reliability Command Center **Built/Tested** in repo — SC-147; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver; go-live integration)
+Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 **Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
-**Softr cutover:** [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+**Softr:** Obsolete / Not Used — Historical Reference Only: [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 > **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
 
@@ -179,14 +179,14 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 
 ---
 
-## Softr vs Next.js (dual-state)
+## Front end (Softr Obsolete)
 
 | System | Role today |
 |--------|------------|
-| **Softr.io** | Legacy public UI — still may serve some participant views |
+| **Softr.io** | **Obsolete / Not Used** — Historical Reference Only — not a season-launch gate |
 | **This Next.js app** | Replacement in progress at `/shoot` |
 | **SEO** | Sitewide `robots: noindex` until cutover approval |
-| **Publish flag** | Airtable `OK to Publish on Softr` still gates public catalog queries |
+| **Publish flag** | Field may still be named `OK to Publish on Softr` (SC-144 rename) — not an active Softr dependency |
 
 **Do not remove `noindex` or perform cutover** without explicit Mike approval. Checklist: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
@@ -244,7 +244,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
-| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr dual-run |
+| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 weekly email Live path proven (118/119 ON); 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

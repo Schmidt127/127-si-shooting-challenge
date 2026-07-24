@@ -65,6 +65,6 @@
     "schmidtHandlingDocumented": true,
     "currentYearViewsDocumented": true,
     "makeNotHardCoded": true,
-    "softrNotHardCoded": true
+    "webNotHardCoded": true
   }
 }
