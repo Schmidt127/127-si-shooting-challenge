@@ -174,3 +174,13 @@ When redirecting, use the **Workspace Check** block from doc 04 (Current request
 | Airtable views for web | `web/docs/airtable-views.md` |
 | Deploy web | `docs/deployment-notes.md` |
 | Media / publicity kits | `docs/media-kits.md`, `media/README.md` |
+
+## Cursor Cloud specific instructions
+
+The only locally runnable service is the Next.js app in `web/` (npm). Everything else in this repo (Airtable automations/extension scripts, `make/` blueprints, `lambda/`, `tools/airtable/` Python CLIs) runs on external platforms or is ad-hoc tooling — there is no local database; all data lives in Airtable (external SaaS).
+
+- Run the app from `web/`; commands are in `web/package.json`: `npm run dev` (dev server), `npm run lint`, `npm run typecheck`, `npm test` (vitest), `npm run build`.
+- The dev server listens on **port 3001** (`next dev -p 3001`), not 3000 as the `web/README.md` prose says — trust the script.
+- The app uses a **`/shoot` base path**. All routes are prefixed: home is `/shoot`, health check is `/shoot/api/airtable`. Requests to `/` return 404 — this is expected, not a bug.
+- Data is read from Airtable server-side. Without `AIRTABLE_API_TOKEN` and `AIRTABLE_BASE_ID` (set in `web/.env.local`; see `web/.env.example`), the app still boots and the home page renders fully, but data-driven pages (leaderboard, levels, tutorials, etc.) show graceful fallback cards ("Could not load…"). Use the DEV base `appTetnuCZlCZdTCT` for local UI work; never expose the token to the browser.
+- Optional: `tools/airtable/` Python CLIs need `pip install -r tools/airtable/requirements.txt` and their own `tools/airtable/.env`.
