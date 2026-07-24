@@ -1,25 +1,26 @@
 # Data model — Shooting Challenge
 
-High-level entities (detail in `airtable/schema/current/`).
+High-level pointer. Detail lives in:
+
+- **Canonical Agent 2 pack:** [`docs/next-wave/data-model/`](./next-wave/data-model/)
+- **PROD schema snapshot:** `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/`
+- **XP Source Keys:** [`docs/next-wave/automation-ownership/xp-source-key-registry.json`](./next-wave/automation-ownership/xp-source-key-registry.json)
 
 ```
-Enrollments ──┬── Submissions
-              ├── XP Events (append-only)
-              ├── Levels (lookup)
-              └── School / Program fields
-
-Weeks ──► Weekly summaries (automations)
-
-Tutorials ──► Web catalog (Tutorial Type filter)
-FBC Curriculum - SYNC ──► Homework pages
-Zoom Meetings ──► Meeting pages
+Config (Active School Year)
+Program Instance ── Weeks
+Athletes ── Enrollments ──┬── Submissions ── Submission Assets ── HC / Video Feedback
+                          ├── Weekly Athlete Summary ← Weeks
+                          ├── XP Events (append-only)
+                          ├── Achievement Unlocks / Streaks
+                          └── Zoom Attendance ← Zoom Meetings
 ```
 
 ## Web routes → tables
 
 | Route | Table | Filter / notes |
 |-------|-------|----------------|
-| `/leaderboard` | Enrollments | Sorted by XP |
+| `/leaderboard` | Enrollments | Sorted by XP; Active? view filters |
 | `/homework` | FBC Curriculum - SYNC | Published |
 | `/tutorials` | Tutorials | Tutorial Type = Tutorial |
 | `/shoutouts` | Tutorials | Tutorial Type = Shout-out |
@@ -29,3 +30,5 @@ Zoom Meetings ──► Meeting pages
 | `/achievements` | Achievements | |
 
 Paths are relative to app `basePath` `/shoot`.
+
+**Out of scope:** Team Shot Tracker inactivity-alert systems.

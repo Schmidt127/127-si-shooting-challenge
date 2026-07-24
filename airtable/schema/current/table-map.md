@@ -1,25 +1,28 @@
-# Table Map — Shooting Challenge
+# Table Map (pointer)
 
-**Last updated:** 2026-07-24  
-**Authority:** PROD schema export `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`. Prefer dated snapshot over this hand map.
+> **Status:** Detailed hand inventory lives in the Agent 2 pack.  
+> **Canonical SoT:**  
+> 1. PROD snapshot `../snapshots/prod-foundation-reset-20260723-post-ts/`  
+> 2. [`docs/next-wave/data-model/CANONICAL-TABLE-MAP.md`](../../../docs/next-wave/data-model/CANONICAL-TABLE-MAP.md)  
+> 3. Reliability audit context: [`docs/next-wave/reliability-audit-2026-07-24/REPORT.md`](../../../docs/next-wave/reliability-audit-2026-07-24/REPORT.md)
 
-## Core tables
+## Correct hub model
 
-Config, Enrollments, Athletes, Weeks, Grade Bands, Program Instance - Synced, School - Synced, Submissions, Submission Assets, Homework Completions, Video Feedback, Final Reflection Quiz Submissions, XP Events, XP Reward Rules, Levels, Level Gate Rules, Achievements, Athlete Achievement Unlocks, Streak Occurrences, Shot Milestones, Weekly Athlete Summary, Target Goal Shots, Zoom Meetings, Tutorials, Tutorials & Assets, FBC Curriculum - SYNC, Awards, Award Recipients, Automations, Testing Scenarios.
-
-## Relationships
+**Enrollment-centric** (not Athlete-centric):
 
 ```
-Config -- Weeks
-Enrollments -- Athletes / Grade Bands / Levels / Level Gate Rules
-Enrollments -- Submissions -- Submission Assets -- Homework Completions | Video Feedback -- XP Events
-Enrollments + Week -- Weekly Athlete Summary
-Zoom Meetings.Attendees -- 101 XP only (117 never writes Attendees)
-Zoom recording credit -- 117 ZOOM_CREDIT
+Athletes → Enrollments → Submissions / WAS / XP Events / HC / VF / Zoom
+Weeks ← Program Instance; Weeks → Submissions / WAS
+Config (by Active School Year) → season settings / Zoom config links
 ```
 
-Week key pattern: `2026-2027|Week 0` … Week 9 + Post-Challenge.
+Week Name pattern (human label): `Week 0` … `Post-Challenge` for 2026–2027.  
+**Week Key** formula is `RECORD_ID()` (not `2026-2027|Week N`) — see Agent 2 unique-key audit.
 
-Out of scope: Team Shot Tracker inactivity alerts.
+## Out of scope
 
-Related: `docs/next-wave/reliability-audit-2026-07-24/`
+Team Shot Tracker inactivity alerts (3/7/10-day) are not part of this base.
+
+## Legacy note
+
+Earlier drafts in this file described Athletes as the primary hub. That description is **Do not use** for V2 automation design.

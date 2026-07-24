@@ -1,20 +1,31 @@
-# Field Map — Shooting Challenge (critical path)
+# Field Map (pointer)
 
-**Last updated:** 2026-07-24  
-Full fields: schema snapshot `prod-foundation-reset-20260723`.
+> **Canonical field ownership & contracts:**  
+> - [`docs/next-wave/data-model/FIELD-OWNERSHIP-MATRIX.md`](../../../docs/next-wave/data-model/FIELD-OWNERSHIP-MATRIX.md)  
+> - [`docs/next-wave/data-model/UNIQUE-KEY-AUDIT.md`](../../../docs/next-wave/data-model/UNIQUE-KEY-AUDIT.md)  
+> - [`docs/next-wave/automation-ownership/xp-source-key-registry.json`](../../../docs/next-wave/automation-ownership/xp-source-key-registry.json)  
+> - [`docs/next-wave/reliability-audit-2026-07-24/FIELD-OWNERSHIP-AUDIT.md`](../../../docs/next-wave/reliability-audit-2026-07-24/FIELD-OWNERSHIP-AUDIT.md)  
+> - PROD schema doc in `../snapshots/prod-foundation-reset-20260723-post-ts/`
 
-## Critical ownership
+## Quick identity contracts (verified against 2026-07-23 snapshot)
 
-| Area | Fields | Writer |
-|------|--------|--------|
-| Enrollment identity | Athlete, Config/Program Instance, Grade Band, Active? | 001–003 / intake / ops |
-| Levels | Level Recalc Needed?, Current/Next Level | 041 / **042** |
-| Submission | Enrollment, Week, Activity Date, Shot Total, XP Award Status | 023 / **005** / 010 |
-| Assets | Upload Status, Canonical URL, Send to Make Trigger, Writeback Complete? | 009 / 070* / Make / 022 / 070c |
-| HC / VF Grade Band | Enrollment, Grade Band | **020** / **013** (063/111 retired) |
-| XP Events | Source Key (never write formula dedupe fields) | Creating XP script |
-| WAS identity | Enrollment, Week, Summary Key (formula) | **031** primary |
-| WAS email | Build Now?, Ready?, package, Send to Make?, Sent?, Make Send Status, sent timestamp, sendMode | 118/072/119/**074**/Make Live |
-| Zoom | Attendees (101 only); Create XP Events | 101; **117 forbidden on Attendees** |
+| Table | Field | Type | Contract |
+|-------|-------|------|----------|
+| Enrollments | Enrollment Key | formula | `{Athlete ID Lookup}\|{School Year}` |
+| Weeks | Week Key | formula | `RECORD_ID()` — **not** `2026-2027\|Week N` |
+| Weeks | Week Name | text (primary) | Human label (`Week 0` … `Post-Challenge`) |
+| WAS | Summary Key | formula | `{Enrollment Key - Lkp}\|{Week Key - Lkp}` |
+| XP Events | Source Key | text | Script-written; see registry |
+| XP Events | XP Dedupe Key / Normalized | formula | Never write |
+| Unlocks | Unlock Key | formula | Never write |
+| Unlocks | Milestone Source Key | text | `SHOT_MILESTONE\|…` via 066 |
 
-Cleanup classes: Keep / Legacy / Do not use / Unknown — see `docs/next-wave/reliability-audit-2026-07-24/CLEANUP-AND-MIGRATION-PLAN.md`.
+## Weekly email fields (WAS)
+
+See WAS architecture + ownership matrices: Build?, Ready?, Send to Make?, Sent?, Make Send Status, sendMode, package fields.
+
+**Verified PROD (2026-07-24):** 074 sendMode **Live** (never fixed Test); Make Live writeback PASS; **118 and 119 schedules ON** (Sun 5:00 / 10:00 AM America/Denver).
+
+## Submission Assets (C-013)
+
+Ownership notes for Canonical File URL / Storage Key / Drive bridge remain valid; prefer snapshot for live types.
