@@ -56,3 +56,12 @@ Coverage: uniqueness identity keys, 020/067 match keys, sufficiency matrix, LA r
 ## Explicit non-edits
 
 Completion master, Config helpers, WAS/email scripts, Zoom scripts, website code, other agents’ folders — untouched.
+
+## Git
+
+| Item | Value |
+|---|---|
+| Branch | `agent11/homework-pipeline` |
+| Package commit | `dee4206940a38fb299cd979e030518bf331cc70c` |
+| PROD 020 align (prior) | `444046e73bd8071c5cc0d7125013a1e1b0fc6630` |
+| 020 body edited by Agent 11 | No |

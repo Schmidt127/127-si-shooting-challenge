@@ -2,16 +2,19 @@
   "agent": 11,
   "package": "homework-pipeline",
   "date": "2026-07-24",
+  "branch": "agent11/homework-pipeline",
   "classification_020": "PARTIALLY REPLACES 063",
   "deletion_063_safe": false,
   "deletion_063_forward_path_safe": true,
+  "deletion_063_orphan_blank_gb_gap": true,
   "013_replaces_111": true,
+  "conclusion_013_111": "013_v2.0_REPLACES_111",
   "quiz_recommendation": "option_b_attachment_less",
   "quiz_product_decision_required": true,
   "learning_activities_repo_ready": true,
   "learning_activities_airtable_ready": false,
   "canonical_020_version": "v3.0.0",
-  "canonical_020_commit": "444046e",
+  "canonical_020_commit": "444046e73bd8071c5cc0d7125013a1e1b0fc6630",
   "020_body_edited_this_agent": false,
   "tests": {
     "command": "node tests/homework-contracts/run-all.js",
@@ -35,5 +38,11 @@
     "MASTER-UPDATE-PROPOSAL.md",
     "lib/homework-contracts/*",
     "tests/homework-contracts/*"
-  ]
+  ],
+  "commit_shas": [
+    "dee4206940a38fb299cd979e030518bf331cc70c"
+  ],
+  "related_020_prod_align_commit": "444046e73bd8071c5cc0d7125013a1e1b0fc6630",
+  "push_status": "pending",
+  "clean_tree_status": "pending"
 }
