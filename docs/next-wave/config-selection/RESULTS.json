@@ -3,6 +3,10 @@
   "completed_at": "2026-07-24T13:10:00Z",
   "branch": "agent10/config-selection",
   "base_branch": "master",
+  "commit_sha": "a07e2b74368d9f6489afd65327eafebee662f6b8",
+  "pushed": true,
+  "remote": "origin/agent10/config-selection",
+  "working_tree_clean_for_owned_paths": true,
   "config_records_modified": 0,
   "config_records_deleted": 0,
   "confirmed_year_rows": [
