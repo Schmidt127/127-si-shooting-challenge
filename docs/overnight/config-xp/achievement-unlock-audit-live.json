@@ -1,0 +1,11 @@
+{
+  "mode": "read_only",
+  "base_id": "appn84sqPw03zEbTT",
+  "captured_at": "2026-07-24T12:49:11.838171+00:00",
+  "audit": {
+    "unlockCount": 0,
+    "findingCount": 0,
+    "findings": [],
+    "uniqueKeys": 0
+  }
+}

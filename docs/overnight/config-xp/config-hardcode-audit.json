@@ -47,7 +47,7 @@
       "risk": "medium",
       "classification": "dangerous",
       "recommendation": "Compare linked record IDs",
-      "fix_status": "documented; safe V2 section rewrite + re-paste required",
+      "fix_status": "repo fixed 2026-07-24 (066 v3.3 link-ID match); PROD paste pending (MIKE-ACTIONS #6)",
       "related_sc": "SC-023, SC-078"
     },
     {
@@ -71,7 +71,7 @@
       "risk": "medium",
       "classification": "dangerous",
       "recommendation": "Throw on duplicate active rules (059 pattern)",
-      "fix_status": "documented; PROD currently has zero duplicate active keys",
+      "fix_status": "repo fixed 2026-07-24 (054 v5.6 filter+duplicate error); PROD paste pending (MIKE-ACTIONS #11)",
       "related_sc": "SC-075"
     },
     {

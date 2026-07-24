@@ -1,0 +1,2834 @@
+{
+  "mode": "read_only",
+  "base_id": "appn84sqPw03zEbTT",
+  "captured_at": "2026-07-24T12:46:24.008028+00:00",
+  "config_tables": {
+    "XP Reward Rules": [
+      {
+        "id": "rec06c1tu3IO8EZqG",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 25,
+          "Active?": true,
+          "Reward Rule": "Video Submission",
+          "XP Source Label": "Video Submission",
+          "Rule Key": "VIDEO_SUBMISSION"
+        }
+      },
+      {
+        "id": "rec12dkUdMdovwYIm",
+        "createdTime": "2026-05-27T21:11:35.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 105,
+          "Active?": true,
+          "Reward Rule": "60-Day Streak",
+          "XP Source Label": "60-Day Streak",
+          "Rule Key": "STREAK_60DAY"
+        }
+      },
+      {
+        "id": "rec1oBLWraNJrfKW2",
+        "createdTime": "2026-05-01T18:45:46.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ],
+          "Reward Rule": "Weekly Threshold 125 5-6",
+          "XP Source Label": "Weekly Threshold 125",
+          "Rule Key": "WEEKLY_THRESHOLD_125_56"
+        }
+      },
+      {
+        "id": "rec5EiGTzLAt7tZdZ",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Reward Rule": "7-Day Streak",
+          "XP Source Label": "7-Day Streak",
+          "Rule Key": "STREAK_7DAY"
+        }
+      },
+      {
+        "id": "recBHUGb5TzgLKko8",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ],
+          "Reward Rule": "Weekly Threshold 100 K-2",
+          "XP Source Label": "Weekly Threshold 100",
+          "Rule Key": "WEEKLY_THRESHOLD_100_K2"
+        }
+      },
+      {
+        "id": "recCqI0sGBzhg50Ak",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ],
+          "Reward Rule": "Weekly Threshold 125 K-2",
+          "XP Source Label": "Weekly Threshold 125",
+          "Rule Key": "WEEKLY_THRESHOLD_125_K2"
+        }
+      },
+      {
+        "id": "recCy2lY2nNf1d7um",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ],
+          "Reward Rule": "Weekly Threshold 150 K-2",
+          "XP Source Label": "Weekly Threshold 150",
+          "Rule Key": "WEEKLY_THRESHOLD_150_K2"
+        }
+      },
+      {
+        "id": "recGtZyCUoPmUMzby",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 15,
+          "Active?": true,
+          "Reward Rule": "5-Day Streak",
+          "XP Source Label": "5-Day Streak",
+          "Rule Key": "STREAK_5DAY"
+        }
+      },
+      {
+        "id": "recJjlUxPiVIwVFQC",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 60,
+          "Active?": true,
+          "Reward Rule": "30-Day Streak",
+          "XP Source Label": "30-Day Streak",
+          "Rule Key": "STREAK_30DAY"
+        }
+      },
+      {
+        "id": "recNQWZq6G0eIVGwM",
+        "createdTime": "2026-05-27T21:11:32.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 90,
+          "Active?": true,
+          "Reward Rule": "50-Day Streak",
+          "XP Source Label": "50-Day Streak",
+          "Rule Key": "STREAK_50DAY"
+        }
+      },
+      {
+        "id": "recNmJ8mVXGwxCCCp",
+        "createdTime": "2026-05-12T17:28:31.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ],
+          "Reward Rule": "Weekly Threshold 100 7-8",
+          "XP Source Label": "Weekly Threshold 100",
+          "Rule Key": "WEEKLY_THRESHOLD_100_78"
+        }
+      },
+      {
+        "id": "recODGHC7DdsyoqcL",
+        "createdTime": "2026-05-12T17:28:31.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ],
+          "Reward Rule": "Weekly Threshold 125 7-8",
+          "XP Source Label": "Weekly Threshold 125",
+          "Rule Key": "WEEKLY_THRESHOLD_125_78"
+        }
+      },
+      {
+        "id": "recRH5BMuMUWzRrKi",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 40,
+          "Active?": true,
+          "Reward Rule": "Zoom Attendance: Bonus 3",
+          "XP Source Label": "Zoom Meeting Attendance Bonus 3",
+          "Rule Key": "ZOOM_ATTEND_BONUS_3"
+        }
+      },
+      {
+        "id": "recRZ3UCq4LCBHtEW",
+        "createdTime": "2026-05-15T12:02:30.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Reward Rule": "3-Day Streak",
+          "XP Source Label": "3-Day Streak",
+          "Rule Key": "STREAK_3DAY"
+        }
+      },
+      {
+        "id": "recTaU3UYywhHXAMh",
+        "createdTime": "2026-05-12T17:28:31.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ],
+          "Reward Rule": "Weekly Threshold 150 7-8",
+          "XP Source Label": "Weekly Threshold 150",
+          "Rule Key": "WEEKLY_THRESHOLD_150_78"
+        }
+      },
+      {
+        "id": "recTapBOJTrmacldU",
+        "createdTime": "2026-05-12T21:52:03.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ],
+          "Reward Rule": "Weekly Threshold 125 9-12",
+          "XP Source Label": "Weekly Threshold 125",
+          "Rule Key": "WEEKLY_THRESHOLD_125_912"
+        }
+      },
+      {
+        "id": "recXftUBrwH5U15kb",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 35,
+          "Active?": true,
+          "Reward Rule": "Homework Completion",
+          "XP Source Label": "Homework Completion",
+          "Rule Key": "HOMEWORK_COMPLETION"
+        }
+      },
+      {
+        "id": "recY77DWJzcowF7az",
+        "createdTime": "2026-05-12T21:52:03.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ],
+          "Reward Rule": "Weekly Threshold 100 9-12",
+          "XP Source Label": "Weekly Threshold 100",
+          "Rule Key": "WEEKLY_THRESHOLD_100_912"
+        }
+      },
+      {
+        "id": "recYhV7yxPAAPyZMX",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ],
+          "Reward Rule": "Weekly Threshold 100 3-4",
+          "XP Source Label": "Weekly Threshold 100",
+          "Rule Key": "WEEKLY_THRESHOLD_100_34"
+        }
+      },
+      {
+        "id": "recZVpCbWfPPXwDbU",
+        "createdTime": "2026-05-30T14:58:00.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 100,
+          "Active?": true,
+          "Reward Rule": "Perfect Week",
+          "XP Source Label": "Perfect Week",
+          "Rule Key": "PERFECT_WEEK"
+        }
+      },
+      {
+        "id": "recaMCQTTBHXMroQI",
+        "createdTime": "2026-05-27T21:11:29.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 75,
+          "Active?": true,
+          "Reward Rule": "40-Day Streak",
+          "XP Source Label": "40-Day Streak",
+          "Rule Key": "STREAK_40DAY"
+        }
+      },
+      {
+        "id": "reccCLlgFT2Jl316c",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Reward Rule": "Zoom Attendance: Bonus 2",
+          "XP Source Label": "Zoom Meeting Attendance Bonus 2",
+          "Rule Key": "ZOOM_ATTEND_BONUS_2"
+        }
+      },
+      {
+        "id": "recew8FaKSw9LfvyS",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 50,
+          "Active?": true,
+          "Reward Rule": "20-Day Streak",
+          "XP Source Label": "20-Day Streak",
+          "Rule Key": "STREAK_20DAY"
+        }
+      },
+      {
+        "id": "recfmfdbZphKKNN3F",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ],
+          "Reward Rule": "Weekly Threshold 125 3-4",
+          "XP Source Label": "Weekly Threshold 125",
+          "Rule Key": "WEEKLY_THRESHOLD_125_34"
+        }
+      },
+      {
+        "id": "recfzeuoqZqEAYGFk",
+        "createdTime": "2026-04-27T13:28:26.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ],
+          "Reward Rule": "Weekly Threshold 150 3-4",
+          "XP Source Label": "Weekly Threshold 150",
+          "Rule Key": "WEEKLY_THRESHOLD_150_34"
+        }
+      },
+      {
+        "id": "rech23SeTrTaceZbS",
+        "createdTime": "2026-05-12T21:52:03.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ],
+          "Reward Rule": "Weekly Threshold 150 9-12",
+          "XP Source Label": "Weekly Threshold 150",
+          "Rule Key": "WEEKLY_THRESHOLD_150_912"
+        }
+      },
+      {
+        "id": "recppi8algNk0G3pL",
+        "createdTime": "2026-05-01T18:45:43.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 10,
+          "Active?": true,
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ],
+          "Reward Rule": "Weekly Threshold 100 5-6",
+          "XP Source Label": "Weekly Threshold 100",
+          "Rule Key": "WEEKLY_THRESHOLD_100_56"
+        }
+      },
+      {
+        "id": "recshnu10fEtS736W",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Reward Rule": "10-Day Streak",
+          "XP Source Label": "10-Day Streak",
+          "Rule Key": "STREAK_10DAY"
+        }
+      },
+      {
+        "id": "recwwmZY5IZssmo6b",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 60,
+          "Active?": true,
+          "Reward Rule": "Zoom Attendance: Base",
+          "XP Source Label": "Zoom Meeting Attendance Base",
+          "Rule Key": "ZOOM_ATTEND_BASE"
+        }
+      },
+      {
+        "id": "recxCB7mVweyjWRBb",
+        "createdTime": "2026-05-15T12:02:41.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 20,
+          "Active?": true,
+          "Reward Rule": "Shooting Base",
+          "XP Source Label": "Shooting Base",
+          "Rule Key": "SHOOTING_BASE"
+        }
+      },
+      {
+        "id": "recyyX5P6uHUZSSYL",
+        "createdTime": "2026-05-01T18:45:48.000Z",
+        "fields": {
+          "Rule Set": "Shooting Challenge 2026-2027",
+          "XP Amount": 30,
+          "Active?": true,
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ],
+          "Reward Rule": "Weekly Threshold 150 5-6",
+          "XP Source Label": "Weekly Threshold 150",
+          "Rule Key": "WEEKLY_THRESHOLD_150_56"
+        }
+      }
+    ],
+    "Levels": [
+      {
+        "id": "rec1EJLJLmfdJLtoF",
+        "createdTime": "2026-04-03T18:44:28.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Rookie Shooter",
+          "Rank": 2,
+          "Sort Order": 2,
+          "XP Required (Cumulative)": 200,
+          "Level Gate Rules": [
+            "reccFKwOVHZ3hn36i"
+          ]
+        }
+      },
+      {
+        "id": "rec1iGy92ZC0jwzD4",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Beginner",
+          "Rank": 1,
+          "Sort Order": 1,
+          "XP Required (Cumulative)": 0,
+          "Level Gate Rules": [
+            "recFLpmGbkwu2ZLT8"
+          ]
+        }
+      },
+      {
+        "id": "rec6aCLn33lcoUqED",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Legend",
+          "Rank": 11,
+          "Sort Order": 11,
+          "XP Required (Cumulative)": 2000,
+          "Level Gate Rules": [
+            "recnsZzzaBjpAMvA1"
+          ]
+        }
+      },
+      {
+        "id": "recAtRF5dh5bY1fo4",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Deadeye",
+          "Rank": 7,
+          "Sort Order": 7,
+          "XP Required (Cumulative)": 1200,
+          "Level Gate Rules": [
+            "recaijMoYqaZJKhLP"
+          ]
+        }
+      },
+      {
+        "id": "recOdLPbf4Vl43kP7",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Developing Shooter",
+          "Rank": 3,
+          "Sort Order": 3,
+          "XP Required (Cumulative)": 400,
+          "Level Gate Rules": [
+            "recrLcVfwPcWGflR2"
+          ]
+        }
+      },
+      {
+        "id": "recRQXN5tWtsfaIBo",
+        "createdTime": "2026-04-03T18:44:36.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Consistent Shooter",
+          "Rank": 4,
+          "Sort Order": 4,
+          "XP Required (Cumulative)": 600,
+          "Level Gate Rules": [
+            "recTxDTM9yEaZnbPS"
+          ]
+        }
+      },
+      {
+        "id": "recSYgWZotdwFxCLI",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Dangerous Shooter",
+          "Rank": 5,
+          "Sort Order": 5,
+          "XP Required (Cumulative)": 800,
+          "Level Gate Rules": [
+            "recjM3fzJr2o1qUhk"
+          ]
+        }
+      },
+      {
+        "id": "recfUQ3eh9ckexYov",
+        "createdTime": "2026-04-03T18:44:42.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "G.O.A.T.",
+          "Rank": 12,
+          "Sort Order": 12,
+          "XP Required (Cumulative)": 2200,
+          "Level Gate Rules": [
+            "reciCGdog1M6rnOAM"
+          ]
+        }
+      },
+      {
+        "id": "recgGmpBrsfX9t4UE",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Pro",
+          "Rank": 9,
+          "Sort Order": 9,
+          "XP Required (Cumulative)": 1600,
+          "Level Gate Rules": [
+            "recL1qTswiOh43U6u"
+          ]
+        }
+      },
+      {
+        "id": "reck4S1JJ6fBSlzcq",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Sharpshooter",
+          "Rank": 8,
+          "Sort Order": 8,
+          "XP Required (Cumulative)": 1400,
+          "Level Gate Rules": [
+            "recYB1nHYgAkXtPef"
+          ]
+        }
+      },
+      {
+        "id": "recsKHKSi4imjZaYG",
+        "createdTime": "2026-04-03T18:46:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "All-Star",
+          "Rank": 10,
+          "Sort Order": 10,
+          "XP Required (Cumulative)": 1800,
+          "Level Gate Rules": [
+            "rectnBYfoOSyvnNH9"
+          ]
+        }
+      },
+      {
+        "id": "recxIKcUXZQHraaCf",
+        "createdTime": "2026-03-30T13:34:33.000Z",
+        "fields": {
+          "Active?": true,
+          "Level Name": "Hot Hand",
+          "Rank": 6,
+          "Sort Order": 6,
+          "XP Required (Cumulative)": 1000,
+          "Level Gate Rules": [
+            "recQxc58QTe7xlcSs"
+          ]
+        }
+      }
+    ],
+    "Level Gate Rules": [
+      {
+        "id": "recFLpmGbkwu2ZLT8",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Beginner"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "rec1iGy92ZC0jwzD4"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 1 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "recL1qTswiOh43U6u",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "Pro"
+          ],
+          "Minimum Videos": 10,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recgGmpBrsfX9t4UE"
+          ],
+          "Minimum Homework": 10,
+          "Level Gate Rule Name": "Level 9 Gate",
+          "Minimum Submissions": 38,
+          "Minimum Streak Days": 10,
+          "Minimum Zoom Meetings": 1
+        }
+      },
+      {
+        "id": "recQxc58QTe7xlcSs",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Hot Hand"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recxIKcUXZQHraaCf"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 6 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "recTxDTM9yEaZnbPS",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Consistent Shooter"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recRQXN5tWtsfaIBo"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 4 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "recYB1nHYgAkXtPef",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "Sharpshooter"
+          ],
+          "Minimum Videos": 8,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "reck4S1JJ6fBSlzcq"
+          ],
+          "Minimum Homework": 8,
+          "Level Gate Rule Name": "Level 8 Gate",
+          "Minimum Submissions": 34,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 1
+        }
+      },
+      {
+        "id": "recaijMoYqaZJKhLP",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "Deadeye"
+          ],
+          "Minimum Videos": 6,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recAtRF5dh5bY1fo4"
+          ],
+          "Minimum Homework": 6,
+          "Level Gate Rule Name": "Level 7 Gate",
+          "Minimum Submissions": 30,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "reccFKwOVHZ3hn36i",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Rookie Shooter"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "rec1EJLJLmfdJLtoF"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 2 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "reciCGdog1M6rnOAM",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "G.O.A.T."
+          ],
+          "Minimum Videos": 20,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recfUQ3eh9ckexYov"
+          ],
+          "Minimum Homework": 18,
+          "Level Gate Rule Name": "Level 12 Gate - GOAT",
+          "Minimum Submissions": 58,
+          "Minimum Streak Days": 30,
+          "Minimum Zoom Meetings": 2
+        }
+      },
+      {
+        "id": "recjM3fzJr2o1qUhk",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Dangerous Shooter"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recSYgWZotdwFxCLI"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 5 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "recnsZzzaBjpAMvA1",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "Legend"
+          ],
+          "Minimum Videos": 16,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "rec6aCLn33lcoUqED"
+          ],
+          "Minimum Homework": 13,
+          "Level Gate Rule Name": "Level 11 Gate",
+          "Minimum Submissions": 50,
+          "Minimum Streak Days": 20,
+          "Minimum Zoom Meetings": 2
+        }
+      },
+      {
+        "id": "recrLcVfwPcWGflR2",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Level Name (Lookup)": [
+            "Developing Shooter"
+          ],
+          "Minimum Videos": 0,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recOdLPbf4Vl43kP7"
+          ],
+          "Minimum Homework": 0,
+          "Level Gate Rule Name": "Level 3 Gate",
+          "Minimum Submissions": 0,
+          "Minimum Streak Days": 0,
+          "Minimum Zoom Meetings": 0
+        }
+      },
+      {
+        "id": "rectnBYfoOSyvnNH9",
+        "createdTime": "2026-05-15T13:46:11.000Z",
+        "fields": {
+          "Version Active?": true,
+          "Gate Enabled?": true,
+          "Level Name (Lookup)": [
+            "All-Star"
+          ],
+          "Minimum Videos": 12,
+          "School Year / Rule Set": "2025-2026",
+          "Level": [
+            "recsKHKSi4imjZaYG"
+          ],
+          "Minimum Homework": 12,
+          "Level Gate Rule Name": "Level 10 Gate",
+          "Minimum Submissions": 42,
+          "Minimum Streak Days": 20,
+          "Minimum Zoom Meetings": 1
+        }
+      }
+    ],
+    "Achievements": [
+      {
+        "id": "rec1QFKxJ8XW9Z8x1",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Consistency",
+          "Trigger Type": "Goal %",
+          "Trigger Threshold": 1,
+          "Reward Rule Key": "GOAL_ACHIEVER",
+          "Repeatable?": true,
+          "Achievement Name": "Goal Achiever"
+        }
+      },
+      {
+        "id": "recJ2caP3qBUfqzEp",
+        "createdTime": "2026-05-01T18:37:45.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 20,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_20DAY",
+          "Repeatable?": true,
+          "Achievement Name": "20-Day Streak"
+        }
+      },
+      {
+        "id": "recP8QP4uhEXaiZAX",
+        "createdTime": "2026-05-01T18:37:52.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 7,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_7DAY",
+          "Repeatable?": true,
+          "Achievement Name": "7-Day Streak"
+        }
+      },
+      {
+        "id": "recQuAtXyT2wKJNGI",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 3,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_3DAY",
+          "Repeatable?": true,
+          "Achievement Name": "3-Day Streak"
+        }
+      },
+      {
+        "id": "recd2jEIVPskiRTSu",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Consistency",
+          "Trigger Type": "Weekly Challenge Completed",
+          "Trigger Threshold": 7,
+          "Active?": true,
+          "Reward Rule Key": "PERFECT_WEEK",
+          "Repeatable?": true,
+          "Achievement Name": "Perfect Week"
+        }
+      },
+      {
+        "id": "recditY5KzlQNtqbA",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Comeback",
+          "Trigger Type": "Comeback",
+          "Reward Rule Key": "COMEBACK_PLAYER",
+          "Repeatable?": true,
+          "Achievement Name": "Comeback Player"
+        }
+      },
+      {
+        "id": "recewTtymiSN7Hkhw",
+        "createdTime": "2026-05-27T21:07:55.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 50,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_50DAY",
+          "Repeatable?": true,
+          "Achievement Name": "50-Day Streak"
+        }
+      },
+      {
+        "id": "recgaun3HjV7EB2kN",
+        "createdTime": "2026-05-27T21:07:52.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 40,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_40DAY",
+          "Repeatable?": true,
+          "Achievement Name": "40-Day Streak"
+        }
+      },
+      {
+        "id": "rechOec7g8LBLcdgl",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 5,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_5DAY",
+          "Repeatable?": true,
+          "Achievement Name": "5-Day Streak"
+        }
+      },
+      {
+        "id": "rechvtS1pfT086cwW",
+        "createdTime": "2026-05-01T18:37:42.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 30,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_30DAY",
+          "Repeatable?": true,
+          "Achievement Name": "30-Day Streak"
+        }
+      },
+      {
+        "id": "reclgScxpCba3m1Mo",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Volume",
+          "Trigger Type": "Shots Total",
+          "Trigger Threshold": 100,
+          "Active?": true,
+          "Reward Rule Key": "SHOT_MILESTONE",
+          "Repeatable?": true,
+          "Achievement Name": "Shot Milestone"
+        }
+      },
+      {
+        "id": "recmry8CfbjU3PIfj",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Consistency",
+          "Trigger Type": "Goal %",
+          "Trigger Threshold": 1.2,
+          "Reward Rule Key": "GOAL_CRUSHER",
+          "Repeatable?": true,
+          "Achievement Name": "Goal Crusher"
+        }
+      },
+      {
+        "id": "recxzySdFFaAOqNNG",
+        "createdTime": "2026-05-01T18:37:49.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 10,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_10DAY",
+          "Repeatable?": true,
+          "Achievement Name": "10-Day Streak"
+        }
+      },
+      {
+        "id": "recz5At8CvV5f4iFg",
+        "createdTime": "2026-05-27T21:07:57.000Z",
+        "fields": {
+          "Category": "Streak",
+          "Trigger Type": "Streak Length",
+          "Trigger Threshold": 60,
+          "Active?": true,
+          "Reward Rule Key": "STREAK_60DAY",
+          "Repeatable?": true,
+          "Achievement Name": "60-Day Streak"
+        }
+      },
+      {
+        "id": "reczI7eluBvuQOYNL",
+        "createdTime": "2026-03-30T13:31:55.000Z",
+        "fields": {
+          "Category": "Homework",
+          "Trigger Type": "Homework Completed",
+          "Trigger Threshold": 1,
+          "Reward Rule Key": "HOMEWORK_HERO",
+          "Repeatable?": true,
+          "Achievement Name": "Homework Hero"
+        }
+      }
+    ],
+    "Shot Milestones": [
+      {
+        "id": "rec0szu7GJ8KMIuO5",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "9-12 - 12000 shots|175",
+          "Milestone Shot Count": 21000,
+          "Milestone Percent": 175,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 175%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "rec27gllvBxaXeCSO",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "7-8 - 10000 shots|200",
+          "Milestone Shot Count": 20000,
+          "Milestone Percent": 200,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 200%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "rec2hgqi7kQXh6P5i",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "9-12 - 12000 shots|200",
+          "Milestone Shot Count": 24000,
+          "Milestone Percent": 200,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 200%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "rec3mx7SyMeXzUkIp",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "K-2 - 2000 shots|25",
+          "Milestone Shot Count": 500,
+          "Milestone Percent": 25,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 25%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "rec50Yqu3GxcfFeju",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "7-8 - 10000 shots|75",
+          "Milestone Shot Count": 7500,
+          "Milestone Percent": 75,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 75%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "rec5ySmeXYWeIReJn",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "3-4 - 5000 shots|175",
+          "Milestone Shot Count": 8750,
+          "Milestone Percent": 175,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 175%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "rec697KEVaK8axCFK",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "3-4 - 5000 shots|150",
+          "Milestone Shot Count": 7500,
+          "Milestone Percent": 150,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 150%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "rec6bnwdS0IxG6b9Q",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "7-8 - 10000 shots|175",
+          "Milestone Shot Count": 17500,
+          "Milestone Percent": 175,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 175%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "rec7CwglECOcSjgSN",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "7-8 - 10000 shots|25",
+          "Milestone Shot Count": 2500,
+          "Milestone Percent": 25,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 25%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "rec7vxlT0cpgCeWFN",
+        "createdTime": "2026-07-05T21:18:07.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "9-12 - 12000 shots|125",
+          "Milestone Shot Count": 15000,
+          "Milestone Percent": 125,
+          "Milestone Label": "9-12 - 12000 shots - 125%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "recAKW4u4fQSeMRPY",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "K-2 - 2000 shots|150",
+          "Milestone Shot Count": 3000,
+          "Milestone Percent": 150,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 150%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recBxVMFBOZMGJ54E",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|100",
+          "Milestone Shot Count": 2000,
+          "Milestone Percent": 100,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 100%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recCPBILUK4T1sy0n",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "7-8 - 10000 shots|120",
+          "Milestone Shot Count": 12000,
+          "Milestone Percent": 120,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 120%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "recDO1Hp3kLC542NY",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|200",
+          "Milestone Shot Count": 4000,
+          "Milestone Percent": 200,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 200%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recDz0p58zohzKGm8",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "K-2 - 2000 shots|200",
+          "Milestone Shot Count": 4000,
+          "Milestone Percent": 200,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 200%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recEo4saaHUTV06ng",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|200",
+          "Milestone Shot Count": 20000,
+          "Milestone Percent": 200,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 200%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recHBodSFXgZalUb3",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "5-6 - 8000 shots|100",
+          "Milestone Shot Count": 8000,
+          "Milestone Percent": 100,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 100%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recHe3z6CVqypnMTs",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|25",
+          "Milestone Shot Count": 500,
+          "Milestone Percent": 25,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 25%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recI1Fes4CU9rV6tA",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "5-6 - 8000 shots|120",
+          "Milestone Shot Count": 9600,
+          "Milestone Percent": 120,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 120%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recIDUBDYKhkeqOHy",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "5-6 - 8000 shots|50",
+          "Milestone Shot Count": 4000,
+          "Milestone Percent": 50,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 50%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recJHhLOks6SPMtHg",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "K-2 - 2000 shots|175",
+          "Milestone Shot Count": 3500,
+          "Milestone Percent": 175,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 175%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recKjQPX9beDKWHTF",
+        "createdTime": "2026-07-05T21:16:43.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "3-4 - 5000 shots|125",
+          "Milestone Shot Count": 6250,
+          "Milestone Percent": 125,
+          "Milestone Label": "3-4 - 5000 shots - 125%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recL6zX7uddYGsUEU",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "K-2 - 2000 shots|50",
+          "Milestone Shot Count": 1000,
+          "Milestone Percent": 50,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 50%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recLIIzShyIFgiV5c",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "9-12 - 12000 shots|150",
+          "Milestone Shot Count": 18000,
+          "Milestone Percent": 150,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 150%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "recLaxIZObKEDt0Jd",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|50",
+          "Milestone Shot Count": 1000,
+          "Milestone Percent": 50,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 50%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recM4PNMqZxsRFTpa",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|25",
+          "Milestone Shot Count": 2500,
+          "Milestone Percent": 25,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 25%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recNEcyg9MpsiiDDQ",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "5-6 - 8000 shots|175",
+          "Milestone Shot Count": 14000,
+          "Milestone Percent": 175,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 175%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recRHdSqPZFzVvjQX",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "K-2 - 2000 shots|120",
+          "Milestone Shot Count": 2400,
+          "Milestone Percent": 120,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 120%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recSiWHRSsdjKytFU",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "9-12 - 12000 shots|100",
+          "Milestone Shot Count": 12000,
+          "Milestone Percent": 100,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 100%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "recTUM9Srdb0wRkgR",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "7-8 - 10000 shots|150",
+          "Milestone Shot Count": 15000,
+          "Milestone Percent": 150,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 150%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "recVDcGghCTdPxSoZ",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|100",
+          "Milestone Shot Count": 10000,
+          "Milestone Percent": 100,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 100%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recWGiiyPsv5wKeWd",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "3-4 - 5000 shots|120",
+          "Milestone Shot Count": 6000,
+          "Milestone Percent": 120,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 120%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recWNqhDFp0zT1ykS",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|120",
+          "Milestone Shot Count": 12000,
+          "Milestone Percent": 120,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 120%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recYTaiodCkB54jZN",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|175",
+          "Milestone Shot Count": 17500,
+          "Milestone Percent": 175,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 175%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recZBrSunFVqGfA1D",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "5-6 - 8000 shots|200",
+          "Milestone Shot Count": 16000,
+          "Milestone Percent": 200,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 200%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recaopNz7oHrDE9k2",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "5-6 - 8000 shots|150",
+          "Milestone Shot Count": 12000,
+          "Milestone Percent": 150,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 150%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recbUUwpAA6M91mH6",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "9-12 - 12000 shots|50",
+          "Milestone Shot Count": 6000,
+          "Milestone Percent": 50,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 50%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "reccezOiPdSpOQQhy",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "3-4 - 5000 shots|100",
+          "Milestone Shot Count": 5000,
+          "Milestone Percent": 100,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 100%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recf8NtYMLGvt8JrF",
+        "createdTime": "2026-07-05T21:17:16.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "7-8 - 10000 shots|125",
+          "Milestone Shot Count": 12500,
+          "Milestone Percent": 125,
+          "Milestone Label": "7-8 - 10000 shots - 125%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "recfKmH2peLPFq74T",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 65,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|175",
+          "Milestone Shot Count": 3500,
+          "Milestone Percent": 175,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 175%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recgFYkCgBy6Y57Ju",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "5-6 - 8000 shots|75",
+          "Milestone Shot Count": 6000,
+          "Milestone Percent": 75,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 75%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recgQIFfM2bWjXbiT",
+        "createdTime": "2026-07-05T21:17:02.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "5-6 - 8000 shots|125",
+          "Milestone Shot Count": 10000,
+          "Milestone Percent": 125,
+          "Milestone Label": "5-6 - 8000 shots - 125%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recgiiVu1xK0I0GNa",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "K-2 - 2000 shots|75",
+          "Milestone Shot Count": 1500,
+          "Milestone Percent": 75,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 75%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recgk1Y0p3JSH0iiz",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|50",
+          "Milestone Shot Count": 5000,
+          "Milestone Percent": 50,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 50%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "rech5iz3MmhKRAOs7",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "7-8 - 10000 shots|50",
+          "Milestone Shot Count": 5000,
+          "Milestone Percent": 50,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 50%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "rechAt3rW0rhw5aC6",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|75",
+          "Milestone Shot Count": 7500,
+          "Milestone Percent": 75,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 75%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "rechdhcSWWOUAm4yl",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "7-8 - 10000 shots|100",
+          "Milestone Shot Count": 10000,
+          "Milestone Percent": 100,
+          "Active": true,
+          "Milestone Label": "7-8 - 10000 shots - 100%",
+          "Grade Band": [
+            "rec2VQFfGJa1ofA06"
+          ]
+        }
+      },
+      {
+        "id": "recikKKWeJDTPK9uy",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|150",
+          "Milestone Shot Count": 3000,
+          "Milestone Percent": 150,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 150%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recjHsGxBGVoZ1Atb",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "9-12 - 12000 shots|25",
+          "Milestone Shot Count": 3000,
+          "Milestone Percent": 25,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 25%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "recoWGBAmWbgg9fgH",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|120",
+          "Milestone Shot Count": 2400,
+          "Milestone Percent": 120,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 120%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      },
+      {
+        "id": "recqAwNuukpqnJO6r",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 50,
+          "Milestone Unique Key": "Grades 9\u201310 - 10000 shots|150",
+          "Milestone Shot Count": 15000,
+          "Milestone Percent": 150,
+          "Milestone Label": "Grades 9\u201310 - 10000 shots - 150%",
+          "Grade Band": [
+            "recOGisMZRWgk445o"
+          ]
+        }
+      },
+      {
+        "id": "recsmKrqpCjErhR1K",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 15,
+          "Milestone Unique Key": "3-4 - 5000 shots|50",
+          "Milestone Shot Count": 2500,
+          "Milestone Percent": 50,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 50%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "rect6Rnm4NugIYzSp",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "9-12 - 12000 shots|120",
+          "Milestone Shot Count": 14400,
+          "Milestone Percent": 120,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 120%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "rectxR2DuXC3JUh74",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "5-6 - 8000 shots|25",
+          "Milestone Shot Count": 2000,
+          "Milestone Percent": 25,
+          "Active": true,
+          "Milestone Label": "5-6 - 8000 shots - 25%",
+          "Grade Band": [
+            "recv9aWnHanY2sRgk"
+          ]
+        }
+      },
+      {
+        "id": "recuLqXBSyB7PE7jC",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "9-12 - 12000 shots|75",
+          "Milestone Shot Count": 9000,
+          "Milestone Percent": 75,
+          "Active": true,
+          "Milestone Label": "9-12 - 12000 shots - 75%",
+          "Grade Band": [
+            "rec75ruo3XT5nSvaK"
+          ]
+        }
+      },
+      {
+        "id": "recuzCxUOLUU6dDGx",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "3-4 - 5000 shots|75",
+          "Milestone Shot Count": 3750,
+          "Milestone Percent": 75,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 75%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recvPCvwmMzIBogMP",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 80,
+          "Milestone Unique Key": "3-4 - 5000 shots|200",
+          "Milestone Shot Count": 10000,
+          "Milestone Percent": 200,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 200%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recvzZE04Jg1mUsof",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 10,
+          "Milestone Unique Key": "3-4 - 5000 shots|25",
+          "Milestone Shot Count": 1250,
+          "Milestone Percent": 25,
+          "Active": true,
+          "Milestone Label": "3-4 - 5000 shots - 25%",
+          "Grade Band": [
+            "reclWDQZzKbVBtdhG"
+          ]
+        }
+      },
+      {
+        "id": "recxc05LgoPWJIlhB",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 30,
+          "Milestone Unique Key": "K-2 - 2000 shots|100",
+          "Milestone Shot Count": 2000,
+          "Milestone Percent": 100,
+          "Active": true,
+          "Milestone Label": "K-2 - 2000 shots - 100%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recxlGerACTraeI3U",
+        "createdTime": "2026-07-05T21:14:47.000Z",
+        "fields": {
+          "Points Awarded": 40,
+          "Milestone Unique Key": "K-2 - 2000 shots|125",
+          "Milestone Shot Count": 2500,
+          "Milestone Percent": 125,
+          "Milestone Label": "K-2 - 2000 shots - 125%",
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ]
+        }
+      },
+      {
+        "id": "recyfAP2xoLMj7N9b",
+        "createdTime": "2026-04-03T00:29:50.000Z",
+        "fields": {
+          "Points Awarded": 20,
+          "Milestone Unique Key": "Grades 1\u20132 - 2000 shots|75",
+          "Milestone Shot Count": 1500,
+          "Milestone Percent": 75,
+          "Milestone Label": "Grades 1\u20132 - 2000 shots - 75%",
+          "Grade Band": [
+            "recg6zvMxWsFSn7sf"
+          ]
+        }
+      }
+    ],
+    "Grade Bands": [
+      {
+        "id": "rec2VQFfGJa1ofA06",
+        "createdTime": "2026-04-02T23:44:23.000Z",
+        "fields": {
+          "Sort Order": 60,
+          "Min Grade": 7,
+          "Grade Band Name": "7-8",
+          "Max Grade": 8,
+          "Total Shot Target": [
+            10000
+          ],
+          "Active?": true
+        }
+      },
+      {
+        "id": "rec75ruo3XT5nSvaK",
+        "createdTime": "2026-04-02T23:43:13.000Z",
+        "fields": {
+          "Sort Order": 80,
+          "Min Grade": 9,
+          "Grade Band Name": "9-12",
+          "Max Grade": 12,
+          "Total Shot Target": [
+            12000
+          ],
+          "Active?": true
+        }
+      },
+      {
+        "id": "recK7BDVSpHy2ipCS",
+        "createdTime": "2026-04-02T23:42:33.000Z",
+        "fields": {
+          "Sort Order": 10,
+          "Min Grade": -1,
+          "Grade Band Name": "K-2",
+          "Max Grade": 2,
+          "Total Shot Target": [
+            2000
+          ],
+          "Active?": true
+        }
+      },
+      {
+        "id": "recOGisMZRWgk445o",
+        "createdTime": "2026-03-30T13:24:52.000Z",
+        "fields": {
+          "Sort Order": 70,
+          "Min Grade": 9,
+          "Grade Band Name": "Grades 9\u201310",
+          "Max Grade": 10,
+          "Total Shot Target": [
+            10000
+          ]
+        }
+      },
+      {
+        "id": "recg6zvMxWsFSn7sf",
+        "createdTime": "2026-03-30T13:24:52.000Z",
+        "fields": {
+          "Sort Order": 20,
+          "Min Grade": 1,
+          "Grade Band Name": "Grades 1\u20132",
+          "Max Grade": 2,
+          "Total Shot Target": [
+            2000
+          ]
+        }
+      },
+      {
+        "id": "reclWDQZzKbVBtdhG",
+        "createdTime": "2026-03-30T13:24:52.000Z",
+        "fields": {
+          "Sort Order": 30,
+          "Min Grade": 3,
+          "Grade Band Name": "3-4",
+          "Max Grade": 4,
+          "Total Shot Target": [
+            5000
+          ],
+          "Active?": true
+        }
+      },
+      {
+        "id": "recv9aWnHanY2sRgk",
+        "createdTime": "2026-03-30T13:24:52.000Z",
+        "fields": {
+          "Sort Order": 50,
+          "Min Grade": 5,
+          "Grade Band Name": "5-6",
+          "Max Grade": 6,
+          "Total Shot Target": [
+            8000
+          ],
+          "Active?": true
+        }
+      }
+    ],
+    "Target Goal Shots": [
+      {
+        "_error": "422 {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Name\\\"\"}}"
+      }
+    ],
+    "Config": [
+      {
+        "id": "recXwc19BtG1L2PzW",
+        "createdTime": "2026-03-29T16:40:28.000Z",
+        "fields": {
+          "Recording Makeup Enabled YN": "No",
+          "Recording Quiz Requires Coach Approval YN": "No",
+          "Max Videos Per Submission": 4,
+          "Recording Gives Full Zoom Gate Credit YN": "No",
+          "Recording Approval Email Enabled YN": "No",
+          "Root Google Drive Folder ID": "1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Root Google Drive Folder Link": "https://drive.google.com/drive/folders/1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Recording Makeup Counts for Perfect Week YN": "No",
+          "Active School Year": "2028-2029"
+        }
+      },
+      {
+        "id": "rechc1f9f4kVM1tHP",
+        "createdTime": "2026-03-29T16:40:28.000Z",
+        "fields": {
+          "Recording Makeup Enabled YN": "No",
+          "Recording Quiz Requires Coach Approval YN": "No",
+          "Max Videos Per Submission": 6,
+          "Recording Gives Full Zoom Gate Credit YN": "No",
+          "Recording Approval Email Enabled YN": "No",
+          "Root Google Drive Folder ID": "1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Root Google Drive Folder Link": "https://drive.google.com/drive/folders/1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Recording Makeup Counts for Perfect Week YN": "No",
+          "Active School Year": "2026-2027"
+        }
+      },
+      {
+        "id": "recq14M5hEv3TIGEj",
+        "createdTime": "2026-03-29T16:40:28.000Z",
+        "fields": {
+          "Recording Gives Full Zoom Gate Credit?": true,
+          "Submission XP Notes": "GOAT starting test setup: 5 base XP per valid submission + 0.02 XP per counted shot.",
+          "Recording Makeup Enabled YN": "Yes",
+          "Recording Quiz Requires Coach Approval YN": "Yes",
+          "Max Videos Per Submission": 4,
+          "Recording Makeup Counts for Perfect Week?": true,
+          "Recording Path Enabled?": true,
+          "Zoom Meetings": [
+            "rec3ToANr5pcs2SRG",
+            "reczeUT0AJUWMmEOb"
+          ],
+          "Submission XP Active?": true,
+          "Shot XP Per Shot": 0.02,
+          "Recording Quiz Requires Coach Approval?": true,
+          "Recording Approval Email Enabled?": true,
+          "Zoom Recording XP Percent of Live": 50,
+          "Recording Gives Full Zoom Gate Credit YN": "Yes",
+          "Recording Approval Email Enabled YN": "Yes",
+          "Submission Base XP": 5,
+          "Recording Approval Email Timing": "On Satisfactory",
+          "Active XP Rule Set": "Default",
+          "Zoom Recording Deadline Mode": "Later of Both",
+          "Recording Approval Email Template Key": "ZOOM_RECORDING_APPROVED",
+          "Recording Makeup Enabled?": true,
+          "Root Google Drive Folder ID": "1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Root Google Drive Folder Link": "https://drive.google.com/drive/folders/1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Zoom Recording Makeup Window Days": 7,
+          "Recording Makeup Counts for Perfect Week YN": "Yes",
+          "Challenge Week Count": 9,
+          "Active School Year": "2025-2026"
+        }
+      },
+      {
+        "id": "rectmrnvo9a79wgq3",
+        "createdTime": "2026-03-29T16:40:28.000Z",
+        "fields": {
+          "Recording Makeup Enabled YN": "No",
+          "Recording Quiz Requires Coach Approval YN": "No",
+          "Max Videos Per Submission": 5,
+          "Recording Gives Full Zoom Gate Credit YN": "No",
+          "Recording Approval Email Enabled YN": "No",
+          "Root Google Drive Folder ID": "1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Root Google Drive Folder Link": "https://drive.google.com/drive/folders/1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80",
+          "Recording Makeup Counts for Perfect Week YN": "No",
+          "Active School Year": "2027-2028"
+        }
+      }
+    ],
+    "Weeks": [
+      {
+        "_error": "422 {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Active Week?\\\"\"}}"
+      }
+    ]
+  },
+  "schmidt": {
+    "enrollment": {
+      "id": "recgP9qZYjAhE7NXm",
+      "createdTime": "2026-05-02T02:25:38.000Z",
+      "fields": {
+        "Gate Enabled?": [
+          null
+        ],
+        "Current Level XP Required": [
+          0
+        ],
+        "Lifetime XP Manual Adjustments": 0,
+        "Parent Cell Number": "+14065902677",
+        "Meets Gate: Streak": 1,
+        "DELETE PROBABLY - Level Name with Color (from Current Level)": [
+          "Beginner"
+        ],
+        "Athlete Folder Name": "Schmidt_Testing_2025-2026",
+        "Longest Streak Days": 0,
+        "Total Shots Submitted": 75,
+        "Athlete First Name": "Testing",
+        "Athlete Cell Number": "+14065902677",
+        "Gate Summary": "Level 2 Gate is disabled. No gate requirements apply.",
+        "Gate Minimum: Submissions": [
+          0
+        ],
+        "Athlete": [
+          "recgqVstObQRzgXJF"
+        ],
+        "Current Level XP Ceiling": 199,
+        "Gate-Test Eligible Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Physical Address Submitted": "603 2nd Ave South",
+        "Welcome Email Status": "Sent",
+        "School Name Lookup": [
+          "Fairfield"
+        ],
+        "XP Progress in Current Level": 61,
+        "Parent Full Name Submitted": "Mike Schmidt",
+        "Gate Failure Summary - Formula": "Level 2 Gate is disabled. No gate requirements apply.",
+        "Athlete Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
+        "Meets Gate: Videos": 1,
+        "Parent Email - Cleaned": "mschmidt@fairfield.k12.mt.us",
+        "Level Status": "Assigned",
+        "Active?": true,
+        "Total 2PT Attempted": 0,
+        "Last Grade Used for Grade Band": "Pre K",
+        "Gate Minimum: Streak Days": [
+          0
+        ],
+        "Weekly Athlete Summary": [
+          "rechWp330MqSgRWzN"
+        ],
+        "Video Feedback": [
+          "recBqqe0uGMsqjUrF"
+        ],
+        "XP Needed for Next Level": 139,
+        "Total 3PT Attempted": 0,
+        "Total Homework Completions": 0,
+        "Total Video Submissions": 2,
+        "Enrollment Key": "ATH-recgqVstObQRzgXJF|2025-2026",
+        "Gate Debug Summary": "Rule=Level 2 Gate | Enabled=No | Sub 6/0 | HW 0/0 | Vid 2/0 | Zoom 2/0 | Streak 0/0",
+        "Parent Last Name": "Schmidt",
+        "Registered At": "2026-05-02T02:25:38.000Z",
+        "School Year": "2025-2026",
+        "Gender": "Male",
+        "Submission Assets - Enrollment": [
+          "recWZ4cHNYgbV60mL",
+          "recGQ8EjAMz3bEBiW"
+        ],
+        "Current Shooting Streak Status": "Active",
+        "Public Progression Status": "On Track",
+        "Total FT Made": 0,
+        "Price Paid to Stripe": 25,
+        "Welcome Email Sent At": "2026-05-02T18:16:30.143Z",
+        "Meets Gate: Submissions": 1,
+        "School Mascot Lookup": [
+          {
+            "id": "attxEtYKOHuc5vSKc",
+            "width": 500,
+            "height": 479,
+            "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/UOTM-zqOys6hWXy0K0nbeg/uTgmy7LVbxcYqYn38lpzheLNR7yYuwBuqyI4DKZ-n1wyAxpO2bPPua1whU7a1OEQmkRirnOVARGjt0YJK0Xn2l1cxG95Upy9dnKXNu8PUxrPDiG1NOsrwJrhRYXeT60vkx7RGCjhDddNMtn18-vTlYcCMDVLZUcMrCcX4IFY1HE/IGQjuE9PrxgbZy6PSL2pOWK6X-xKChSbzC2MK1PUtgQ",
+            "filename": "Fairfield Eagles Eyes.png",
+            "size": 134877,
+            "type": "image/png",
+            "thumbnails": {
+              "small": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/4Ynz44lBIC6Cq8Cdl8judw/MEUCvQta_DuW-_nOoqQFAEv2QLbaQNO4F5zPb8_4lh_I0ZKlS_w9J2WWZHqmKv3tlDoqRR7ACLhptU4dexVpt5Fkj4Yelr55hLsFQH9JntqpXuMTQygly3KOBllTZy4-MfHuKJthIE_8nFXVqwRrfA/Mso-fjcGFIbYrPx19dvG677DPtQ74w_IKjvfSkHQtc4",
+                "width": 38,
+                "height": 36
+              },
+              "large": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/qYvfuTN2HAf-Ye3fh-hSOw/XuEat43eV1l_4-kvjziGc3C0PFmTfS4L6FILhw2eKn_kMiWIVAMT0dHBy_bYJUeDM2ptPoSF4QJOqqVJc0sRCnOp5fHpEOzRw0hTsmVfQIOGga8tiu3zVvtVzpbKC-jSoMrLDszoDMB-exUIkCGCww/e5aNEwcSLoPmzwFBZWrwgvTPpSnwFN8rhEAgtrcTZpw",
+                "width": 500,
+                "height": 479
+              },
+              "full": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/NL80CCVjmJ2iRMTPFc6QpQ/kKQ79prV0h8kgsbJ4anq3dQmrnc_STCz4GGitxZJZqmFfqHptUFxWuk8s_3Rs6qRH7ZdLQHbAJXAMuPVK2FUDcIhcS52OgQu-l6v5s2nG44g9QMonmtzilsY1p6w-VRkSQ_xGGt_2dLwLkmOkJU34g/2CNL8eUUg4rJmKDOCzgbyjmW2qtzULeBmSv5oNyPFyw",
+                "width": 500,
+                "height": 479
+              }
+            }
+          }
+        ],
+        "Grade Band Refresh Needed": 0,
+        "Lifetime XP Total": 61,
+        "Gate Enabled Status": "Disabled",
+        "Zoom Attendance": [
+          "recfqsgM7zDobxsPf",
+          "receHkLl0cpLFLMVa",
+          "recJ8G7SOsk4XOsO9",
+          "recBA5Q6XcZDFU4dQ"
+        ],
+        "Submissions": [
+          "rec9yoDZ3DMIEhi3I",
+          "recbAVGWg0OKT7FSX",
+          "recM0GbWfptu06da1",
+          "recaCcxDqtzFWjmyi",
+          "rec6g1nth8PlSwA6z",
+          "recuuTBgstSTGg2E3"
+        ],
+        "Next Level XP Required": [
+          200
+        ],
+        "Full Athlete Name": "Testing Schmidt",
+        "Program Instance": [
+          "rec9cQQ0VKYGy4jXq"
+        ],
+        "Parent Email Subject": "Welcome to Shooting Challenge | 2025-2026",
+        "Level Sort Order - For Softr": [
+          1
+        ],
+        "Gate Minimum: Homework": [
+          0
+        ],
+        "Athlete Email": "mschmidt@fairfield.k12.mt.us",
+        "Current Level - Public Facing Display": "Beginner",
+        "Total FT Attempted": 0,
+        "Overall FG Attempted": 0,
+        "Total Shots Counted": 75,
+        "Overall FG Made": 0,
+        "Parent First Name": "Mike",
+        "Lifetime XP Earned": 61,
+        "Gate Passes": 1,
+        "Testing Scenarios": [
+          "recPdyfYRFgDtpzQ8"
+        ],
+        "Current Shooting Streak": 1,
+        "City Submitted": "Fairfield",
+        "Next Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Program Instance Name Only": [
+          "Shooting Challenge"
+        ],
+        "Gate Minimum: Videos": [
+          0
+        ],
+        "Total Submissions": 6,
+        "Target Goal Shots": [
+          2000
+        ],
+        "School": [
+          "recF7Vk28EexmncpC"
+        ],
+        "Grade Band Status": "Assigned",
+        "Zip Code Submitted": "59436",
+        "Total 3PT Made": 0,
+        "Welcome Email To": "mschmidt@fairfield.k12.mt.us",
+        "Athlete Match Status": "Linked",
+        "Gate Minimum: Zoom Meetings": [
+          0
+        ],
+        "Meets Gate: Zoom Meetings": 1,
+        "Grade Band": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "Full Athlete Name - Backward": "Schmidt, Testing - 2025-2026",
+        "Record Id": "recgP9qZYjAhE7NXm",
+        "Mailing Address Submitted": "Box 572",
+        "Welcome Email Ready?": 1,
+        "Level Gate Rule": [
+          "reccFKwOVHZ3hn36i"
+        ],
+        "Grade Band Label": [
+          "K-2"
+        ],
+        "Athlete Last Name": "Schmidt",
+        "Current Shooting Streak Last Checked At": "2026-07-24T09:15:28.217Z",
+        "Current Level": [
+          "rec1iGy92ZC0jwzD4"
+        ],
+        "Grade": "Pre K",
+        "Zoom Meetings": [
+          "reczeUT0AJUWMmEOb",
+          "rec3ToANr5pcs2SRG"
+        ],
+        "XP Events": [
+          "recYQ10pOoFlApmjZ",
+          "recOceuW34jQz7suD",
+          "recOqzhV4kTdsfzMf",
+          "recrYV19IqolkoMwT",
+          "recOodD23MQrP1O9F"
+        ],
+        "Total Makes Submitted": 0,
+        "State": [
+          "MT"
+        ],
+        "Parent Email HTML": "<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;background-color:#FFFFFF;\"><tr><td align=\"center\" style=\"padding:24px 12px;\"><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"max-width:720px;border-collapse:collapse;background-color:#F2F2F2;border-radius:14px;overflow:hidden;border:1px solid #E6E6E6;\"><tr><td style=\"padding:0;background:#F2F2F2;\"><img src=\"https://lh3.googleusercontent.com/d/1TRBKaX4vBDV3dLSFk0uWx4-VI3rJRb-T\" alt=\"Shooting Challenge | 2025-2026 Banner\" width=\"720\" style=\"display:block;width:100%;max-width:720px;height:auto;border:0;outline:none;text-decoration:none;\" /></td></tr><tr><td style=\"padding:16px 20px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px;color:#111111;line-height:1.4;background-color:#F2F2F2;\"><div style=\"margin:0 0 10px 0;font-size:14px;font-weight:800;color:#111111;\">Parent Welcome | Shooting Challenge | 2025-2026</div><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 12px 0;\"><tr><td style=\"background:#FFFFFF;border:1px solid #E6E6E6;border-radius:10px;padding:10px 12px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;\"><div style=\"font-size:12px;color:#111111;font-weight:800;margin-bottom:8px;\">Registration Confirmed</div><div><span style=\"display:inline-block;margin:0 8px 8px 0;padding:6px 10px;border-radius:999px;background:#F7F7F7;border:1px solid #E6E6E6;font-size:12px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1;\"><strong style=\"color:#111111;\">Program:</strong> Shooting Challenge | 2025-2026</span><span style=\"display:inline-block;margin:0 8px 8px 0;padding:6px 10px;border-radius:999px;background:#F7F7F7;border:1px solid #E6E6E6;font-size:12px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1;\"><strong style=\"color:#111111;\">Athlete:</strong> Testing Schmidt</span><span style=\"display:inline-block;margin:0 8px 8px 0;padding:6px 10px;border-radius:999px;background:#F7F7F7;border:1px solid #E6E6E6;font-size:12px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1;\"><strong style=\"color:#111111;\">Dates:</strong> May 1, 2026 \u2013 June 30, 2026</span><span style=\"display:inline-block;margin:0 8px 8px 0;padding:6px 10px;border-radius:999px;background:#F7F7F7;border:1px solid #E6E6E6;font-size:12px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1;\"><strong style=\"color:#111111;\">Status:</strong> Registering</span><span style=\"display:inline-block;margin:0 8px 8px 0;padding:6px 10px;border-radius:999px;background:#F7F7F7;border:1px solid #E6E6E6;font-size:12px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;line-height:1;\"><strong style=\"color:#111111;\">Email Version:</strong> V2</span></div><div style=\"margin-top:2px;font-size:11px;color:#555555;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;\">Updated: 12:16 PM MT</div></td></tr></table><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 16px 0;background-color:#FFFFFF;border-radius:8px;overflow:hidden;\"><tr><td style=\"padding:12px 16px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111111;line-height:1.45;\"><div style=\"font-size:15px;font-weight:800;margin:0 0 6px 0;color:#FF8B00;\">Welcome</div>\n        <div style=\"font-size:13px;line-height:1.6;\">\n            <div style=\"margin:0 0 10px 0;\">Hi Mike,</div>\n\n            <div style=\"margin:0 0 10px 0;\">\n                <strong>\u2705 Registration Confirmed!</strong>\n            </div>\n\n            \n        <div style=\"margin:0 0 10px 0;\">\n            Thank you for registering <strong>Testing</strong>\n            for <strong>Shooting Challenge | 2025-2026</strong>.\n        </div>\n\n        <div style=\"margin:0 0 10px 0;\">\n            This program is designed to help athletes build shooting habits through consistent repetition and daily accountability.\n        </div>\n\n        <div style=\"margin:0;\">\n            We are excited to have your family involved, and we appreciate your support in helping your athlete stay engaged throughout the program.\n        </div>\n    \n        </div>\n    </td></tr></table><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 16px 0;background-color:#FFFFFF;border-radius:8px;overflow:hidden;\"><tr><td style=\"padding:12px 16px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111111;line-height:1.45;\"><div style=\"font-size:15px;font-weight:800;margin:0 0 6px 0;color:#FF8B00;\">Participant Details</div>\n        <div style=\"font-size:13px;line-height:1.55;\">\n            \n        <div style=\"margin:0 0 12px 0;padding:10px 12px;background:#F8F8F8;border:1px solid #E6E6E6;border-radius:10px;\">\n            <table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;\">\n                <tr>\n                    <td style=\"width:68px;vertical-align:middle;\">\n                        <img src=\"https://v5.airtableusercontent.com/v3/u/52/52/1777759200000/7258dDB7HhY6to29YwplXg/Ucn955eT6rc9eCWRhon0MQ7e5WAW7f_SHlFAXRGjYPn5dAwP6IPVe3sNRAF3sbWQtHDcKZFyGcQ0E21cUCG8epFESAKFhnu5Jx33uZftyPIfxG-urJh96tPWxAQivUHc21MizTx14v5mMf-N3KDjWWj-LLIHVpaPnIC_lFFMwlo/n9rPEgNLboElfvREhwxIhbtHny6qwWmVXxBZpOcAPDE\"\n                                         alt=\"Fairfield\"\n                                         style=\"display:block;width:56px;height:56px;object-fit:contain;border:0;\" />\n                    </td>\n                    <td style=\"vertical-align:middle;\">\n                        <div style=\"font-size:12px;color:#666666;margin:0 0 2px 0;\">School</div>\n                        <div style=\"font-size:14px;font-weight:700;color:#111111;\">\n                            Fairfield\n                        </div>\n                    </td>\n                </tr>\n            </table>\n        </div>\n    \n\n            <div style=\"margin:0 0 6px 0;\"><strong>Athlete:</strong> Testing Schmidt</div>\n\n            <div style=\"margin:0 0 6px 0;\"><strong>Parent:</strong> Mike Schmidt</div>\n\n            <div style=\"margin:0 0 6px 0;\"><strong>Grade:</strong> 12</div>\n\n            <div style=\"margin:0 0 6px 0;\"><strong>Gender:</strong> Male</div>\n\n            <div style=\"margin:0 0 6px 0;\"><strong>School Year:</strong> 2025-2026</div>\n            \n            <div style=\"margin:0 0 6px 0;\"><strong>Season:</strong> Summer</div>\n            <div style=\"margin:0 0 6px 0;\"><strong>State:</strong> MT</div>\n            <div style=\"margin:0 0 6px 0;\"><strong>Program Dates:</strong> May 1, 2026 \u2013 June 30, 2026</div>\n            <div style=\"margin:0 0 6px 0;\"><strong>Cost:</strong> $20.00</div>\n            <div style=\"margin:0 0 6px 0;\"><strong>Registered:</strong> May 1, 2026 at 8:25 PM</div>\n\n            \n                <div style=\"margin:12px 0 0 0;padding:10px 12px;background:#F8FBFF;border:1px solid #D8E7FA;border-radius:10px;\">\n                    <div style=\"font-size:12px;color:#666666;margin:0 0 6px 0;\">Current Totals</div>\n                    <div style=\"margin:0 0 4px 0;\"><strong>Total Shots Submitted:</strong> 500</div>\n                    <div style=\"margin:0 0 4px 0;\"><strong>Total Makes Submitted:</strong> 0</div>\n                    \n                    \n                    \n                    \n                </div>\n              \n        </div>\n    </td></tr></table><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 16px 0;background-color:#FFFFFF;border-radius:8px;overflow:hidden;\"><tr><td style=\"padding:12px 16px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111111;line-height:1.45;\"><div style=\"font-size:15px;font-weight:800;margin:0 0 6px 0;color:#FF8B00;\">What\u2019s Next?</div>\n        <div style=\"font-size:13px;line-height:1.6;\">\n            <div style=\"margin:0 0 10px 0;\">\n                Important updates, reminders, and challenge information will be sent to this email address:\n            </div>\n\n            <div style=\"margin:0 0 14px 0;font-weight:700;\">\n                mschmidt@fairfield.k12.mt.us\n            </div>\n\n            \n        <div style=\"margin:0 0 10px 0;\">\n            Please review and save the links below so they are easy to access throughout the program.\n        </div>\n\n        <div style=\"margin:0 0 10px 0;\">\n            Families will use the daily submission link to report shooting work and keep progress current throughout the challenge.\n        </div>\n\n        <div style=\"margin:0;\">\n            Watch for future updates, reminders, and instructions throughout the challenge.\n        </div>\n    \n\n            <div style=\"margin:14px 0 6px 0;\">\n                <a href=\"https://www.fairfieldbasketballclub.com\" style=\"display:inline-block;margin:0 10px 10px 0;padding:10px 14px;border-radius:8px;background:#0034B7;color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:700;\">Program Website</a>\n                <a href=\"https://form.fillout.com/t/iwzyzj5zeMus\" style=\"display:inline-block;margin:0 10px 10px 0;padding:10px 14px;border-radius:8px;background:#FF8B00;color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:700;\">Daily Submission Link</a>\n                <a href=\"https://form.fillout.com/t/h1h6w1e1oFus\" style=\"display:inline-block;margin:0 10px 10px 0;padding:10px 14px;border-radius:8px;background:#0034B7;color:#FFFFFF;text-decoration:none;font-size:13px;font-weight:700;\">Registration Link</a>\n            </div>\n\n            <div style=\"margin:8px 0 0 0;color:#555555;\">\n                           <strong>Registration Closes:</strong> May 31, 2026\n                       </div>\n        </div>\n    </td></tr></table><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 16px 0;background-color:#FFFFFF;border-radius:8px;overflow:hidden;\"><tr><td style=\"padding:12px 16px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111111;line-height:1.45;\"><div style=\"font-size:15px;font-weight:800;margin:0 0 6px 0;color:#FF8B00;\">Why This Matters</div>\n        <div style=\"font-size:13px;line-height:1.6;\">\n            <div style=\"margin:0 0 10px 0;\">The FBC Shooting Challenge is a 60-day individual skill development and competition program that pushes athletes to complete a set goal amount of quality basketball shots over two months. Open to students in grades 1\u201312 the challenge emphasizes consistency, technique, and personal accountability. Athletes receive an online submission app to log their attempted shots from structured workouts or driveway sessions. Coach Schmidt will provide optional drills, form tips, and weekly motivation to support progress. The challenge is open to all players regardless of team placement and can be completed independently or as a member of a team. Athletes who complete the full challenge receive recognition for \"Conquering the Challenge.\" Prizes and additional honors will be awarded for effort, accuracy, and leadership.</div>\n        </div>\n    </td></tr></table><table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse:collapse;margin:0 0 px 0;background-color:#FFFFFF;border-radius:8px;overflow:hidden;\"><tr><td style=\"padding:12px 16px;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111111;line-height:1.45;\"><div style=\"font-size:15px;font-weight:800;margin:0 0 6px 0;color:#FF8B00;\">Thank You</div>\n        <div style=\"font-size:13px;line-height:1.6;\">\n            <div style=\"margin:0 0 10px 0;\">\n                Thank you for being part of Shooting Challenge | 2025-2026.\n            </div>\n\n            <div style=\"margin:0 0 10px 0;\">\n                If you have questions, reply to this email and we will be glad to help.\n            </div>\n\n            <div style=\"margin:0 0 4px 0;font-weight:700;\">Mike Schmidt</div>\n            <div style=\"margin:0 0 4px 0;\">Founder \u2013 127 Sports Intensity</div>\n            <div style=\"margin:0 0 4px 0;\">127 Sports Intensity</div>\n            <div style=\"margin:0;\">406-590-2677 (Text only)</div>\n        </div>\n    </td></tr></table></td></tr><tr><td style=\"background-color:#0034B7;padding:14px 20px;color:#FFFFFF;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;text-align:center;\"><div style=\"font-size:13px;font-weight:800;letter-spacing:0.2px;\">127 Sports Intensity</div><div style=\"font-size:11px;opacity:0.92;margin-top:4px;\">Educational Athletics</div><div style=\"margin-top:10px;font-size:11px;line-height:1.8;\"><a href=\"https://form.fillout.com/t/h1h6w1e1oFus\" style=\"color:#FFFFFF;text-decoration:none;margin:0 10px;\">\ud83d\udd17 Program Registration</a><a href=\"https://form.fillout.com/t/iwzyzj5zeMus\" style=\"color:#FFFFFF;text-decoration:none;margin:0 10px;\">\ud83d\udd17 Daily Submission</a><a href=\"https://www.fairfieldbasketballclub.com\" style=\"color:#FFFFFF;text-decoration:none;margin:0 10px;\">\ud83d\udd17 Program Website</a><a href=\"mailto:mschmidt@fairfield.k12.mt.us\" style=\"color:#FFFFFF;text-decoration:none;margin:0 10px;\">\ud83d\udd17 Contact</a></div></td></tr></table></td></tr></table>",
+        "Registration Source": "Fillout Registration",
+        "Parent Email": "mschmidt@fairfield.k12.mt.us",
+        "Meets Gate: Homework": 1,
+        "Current Shooting Streak As Of": "2026-07-23",
+        "Total Zoom Attendances": 2,
+        "Total 2PT Made": 0,
+        "Athlete ID Lookup": [
+          "ATH-recgqVstObQRzgXJF"
+        ],
+        "Athlete Headshot": [
+          {
+            "id": "attGruGT5DFACgSsD",
+            "width": 1003,
+            "height": 1001,
+            "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/wfPPJVdbHB4_VJgLfV3W4Q/RshzQ38eLO9oFSwbKmVAcjScK2F0oHN6MXZzYvFQCJthpXaNrFFYb6i2sB5fXlFqZ9aYDm2FDAyfHuUp02LAWf-w_GRia-9XjyJ50I5vKOmjcFhbyaPLZGcPzwlgZL5GZAEnYy7NkUHBGcqcE0UBane-xdk7OqTGCBOEwpP-xtd2d0sgn20LL_GdoTN_xEv2/A95LT5QkMtsOD10aMlVoycOrYD5WF08in-sa86QSHrc",
+            "filename": "BlueOrangeCircleLogo.png",
+            "size": 86186,
+            "type": "image/png",
+            "thumbnails": {
+              "small": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/Pn2IQb_f6DyycW3hgI7tcA/wj6e_so4gDMeMvTzyC8a6K03ajRGYNDh0c6zgeEFwRcOGCIc8WMn-9uADgWCXFGlazVWPnuCeBTaGMbsFEOiSdGFOtknb81ER7duk3iKeCJxrdfCvLLLA97ei8a_hRCZmadvJ7lWt7ZyVtB8Nvfp_g/i26wnKcQ3YCNcL06HPSokd877bF68xqdicTFuKI-Yj8",
+                "width": 36,
+                "height": 36
+              },
+              "large": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/PRKurCW9mEO97igkY-IDFA/UlNoW8YrGz3Cay0gPfE23xpPS_q9Uk-t2y3ALKjd-6a-lxW81VAMYmnK0ECQrMpfDdPEcmyA1LOCHadEHNKbS61uz36nViYPQGO5bWVLEo5KcIO1AauI1ARIzJu4FFIVYl8ohyP-Ir-DAodptzSSPA/23eUhrZUZlYVCU8dMTipn9LFRvzK8Xw6xhhI7yv_UTI",
+                "width": 513,
+                "height": 512
+              },
+              "full": {
+                "url": "https://v5.airtableusercontent.com/v3/u/55/55/1784908800000/u6pO_TYez9ntldZrwYWg6w/8k8Y6shTKCZzU02s6FMcNGfL7VlaVlwJ-yY2N-ZgL8B1C5W3XXtTv-DuCeVTHdYdKD2Y-UGY990_i7nlXv_xKkNmhoCA5rPFuBFSuEKzCgVjXSp62cs598FHUozA6a0BM_Cx28ADvolOi4Fxk-PGww/KIzZwK7CwhiaxBaii2084bbtYJchP7CgroSXM-7A0-M",
+                "width": 1003,
+                "height": 1001
+              }
+            }
+          }
+        ],
+        "Athlete Match Key Lookup": [
+          "mschmidt@fairfield.k12.mt.us|testing|schmidt"
+        ]
+      }
+    },
+    "live_submission": {
+      "id": "recuuTBgstSTGg2E3",
+      "createdTime": "2026-07-23T22:08:38.000Z",
+      "fields": {
+        "Enrollment": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "Count This Submission?": 1,
+        "Daily Email Status": "Ready",
+        "Submission Has Detailed Stats?": 0,
+        "Ready for 009 Asset Creation?": 0,
+        "Created": "2026-07-23T22:08:38.000Z",
+        "Submission Assets Ready?": 0,
+        "Daily Email Sent to Make.com Status": "Sent to Make.com",
+        "XP Award Ready?": 1,
+        "Submitted At": "2026-07-23T22:08:38.000Z",
+        "Why Not Ready for 009?": "No HW Sub 1, HW Sub 2, or Video Upload attachment",
+        "Needs Week Assignment?": 0,
+        "Duplicate Key": "\"Schmidt, Testing - 2025-2026\"|2026-07-23|Simple Total|25",
+        "Counted Activity Date Key": "2026-07-23",
+        "Total Shots Canonical": 25,
+        "Has Review Assets?": 0,
+        "Week": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "Total Shots Counted": 25,
+        "Submission Stat Mode": "Simple Total",
+        "3PT Attempted Counted": 0,
+        "Submitted Same Day?": 1,
+        "RecordId": "recuuTBgstSTGg2E3",
+        "FT Attempted Counted": 0,
+        "Has Video?": 0,
+        "XP Award Status": "Awarded",
+        "Edit Submission - Parent": "https://form.fillout.com/t/vNgeHardYcus?id=recuuTBgstSTGg2E3",
+        "FT Made Counted": 0,
+        "Activity Date Key": "2026-07-23",
+        "XP Volume Bonus": 1,
+        "Ready to Send Attachments to Make?": 0,
+        "Testing Scenarios": [
+          "recPdyfYRFgDtpzQ8"
+        ],
+        "XP Base Points": 5,
+        "3PT Made Counted": 0,
+        "Video Count": 0,
+        "Daily Email Subject": "Daily Submission Received - Testing Schmidt - Jul 23, 2026",
+        "Week Assignment Status": "Assigned",
+        "XP Events": [
+          "recOodD23MQrP1O9F"
+        ],
+        "Perfect Week Countable Submission?": 1,
+        "XP Accuracy Bonus": 0,
+        "Weekly Athlete Summary": [
+          "rechWp330MqSgRWzN"
+        ],
+        "Ready for Homework Completion Automation?": 0,
+        "XP Detailed Stats Bonus": 0,
+        "Daily Email To": "mschmidt@fairfield.k12.mt.us",
+        "Athlete": [
+          "recgqVstObQRzgXJF"
+        ],
+        "Total Makes Counted": 0,
+        "Has HW2?": 0,
+        "Attachment Upload Status": "No Files",
+        "XP Total Points": 5,
+        "Homework Completion Ready?": 0,
+        "XP Bonus Points": 1,
+        "Submission Key": "\"Schmidt, Testing - 2025-2026\"-Post - Testing Today-recuuTBgstSTGg2E3",
+        "Activity Date": "2026-07-23",
+        "Daily Email HTML": "<!doctype html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0\">\n  <title>Daily Submission Summary</title>\n</head>\n<body style=\"margin:0;padding:0;background:#F2F2F2;font-family:'Maven Pro',Arial,Helvetica,sans-serif;color:#262626;\">\n  <div style=\"margin:0;padding:0;background:#F2F2F2;font-family:'Maven Pro',Arial,Helvetica,sans-serif;color:#262626;\">\n    <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;padding:20px 0;\">\n      <tr>\n        <td align=\"center\">\n          <table role=\"presentation\" width=\"620\" cellspacing=\"0\" cellpadding=\"0\" style=\"width:620px;max-width:94%;background:#ffffff;border-radius:14px;overflow:hidden;border-collapse:collapse;border-spacing:0;\">\n\n            \n<tr>\n  <td style=\"background:#0034B7;padding:20px 24px;border-bottom:5px solid #FF8B00;border-radius:14px 14px 0 0;\">\n    <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"border-collapse:collapse;border-spacing:0;\">\n      <tr>\n        <td style=\"vertical-align:top;padding:0;\">\n          <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:1.3px;color:#F2F2F2;font-weight:800;\">\n            127 Sports Intensity - Shooting Challenge\n          </div>\n          <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:23px;line-height:28px;color:#ffffff;font-weight:900;margin-top:5px;\">\n            Daily Submission Summary\n          </div>\n          <div style=\"font-size:12px;line-height:18px;color:#F2F2F2;margin-top:7px;font-weight:600;\">\n            Submission Receipt and Weekly Progress Update\n          </div>\n        </td>\n        <td align=\"right\" style=\"vertical-align:top;padding:0 0 0 14px;width:68px;\">\n          <div style=\"background:#ffffff;border-radius:50%;width:62px;height:62px;display:inline-block;text-align:center;line-height:62px;\">\n            <img src=\"https://make-021891587263-us-east-2-an.s3.us-east-2.amazonaws.com/BlueOrangeCircleLogo.png\" alt=\"127 Sports Intensity Logo\" width=\"52\" height=\"52\" style=\"display:inline-block;vertical-align:middle;border:0;outline:none;text-decoration:none;border-radius:50%;\">\n          </div>\n        </td>\n      </tr>\n    </table>\n  </td>\n</tr>\n\n\n            <tr>\n              <td style=\"padding:22px 24px;background:#ffffff;border-left:1px solid #C4C4C4;border-right:1px solid #C4C4C4;\">\n                <p style=\"font-size:12px;line-height:19px;margin:0 0 12px 0;color:#262626;\">\n                  Hi <strong>Testing</strong>,\n                </p>\n\n                <p style=\"font-size:12px;line-height:19px;margin:0 0 12px 0;color:#262626;\">\n                  Your daily submission has been received and recorded.\n                </p>\n\n                <p style=\"font-size:12px;line-height:19px;margin:0 0 16px 0;color:#262626;\">\n                  Below is a summary of what was submitted and your current weekly progress.\n                </p>\n\n                \n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;border:1px solid #C4C4C4;border-left:6px solid #FF8B00;border-radius:12px;margin:16px 0;\">\n  <tr>\n    <td style=\"padding:14px 16px;\">\n      \n      <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;color:#0034B7;font-weight:900;text-transform:uppercase;letter-spacing:1px;\">\n        This Submission\n      </div>\n      \n      \n      <div style=\"font-size:12px;line-height:19px;color:#262626;font-weight:800;margin-top:4px;\">\n        Submission Received\n      </div>\n      \n      \n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Activity Date: <strong>Jul 23, 2026</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Week: <strong>Unnamed record</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Submission Type: <strong>Simple Total</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Shots: <strong>25</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Makes: <strong>0</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  XP From Submission: <strong>20 XP</strong>\n</div>\n\n    </td>\n  </tr>\n</table>\n\n\n                \n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;border:1px solid #C4C4C4;border-left:6px solid #FF8B00;border-radius:12px;margin:16px 0;\">\n  <tr>\n    <td style=\"padding:14px 16px;\">\n      \n      <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;color:#0034B7;font-weight:900;text-transform:uppercase;letter-spacing:1px;\">\n        Submitted With This Entry\n      </div>\n      \n      \n      <div style=\"font-size:12px;line-height:19px;color:#262626;font-weight:800;margin-top:4px;\">\n        Attachments and Uploads\n      </div>\n      \n      \n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  No homework or video attachments were included with this submission.\n</div>\n\n    </td>\n  </tr>\n</table>\n\n\n                \n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;border:1px solid #C4C4C4;border-left:6px solid #FF8B00;border-radius:12px;margin:16px 0;\">\n  <tr>\n    <td style=\"padding:14px 16px;\">\n      \n      <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;color:#0034B7;font-weight:900;text-transform:uppercase;letter-spacing:1px;\">\n        Homework Assigned This Week\n      </div>\n      \n      \n      <div style=\"font-size:12px;line-height:19px;color:#262626;font-weight:800;margin-top:4px;\">\n        Current Homework\n      </div>\n      \n      \n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  No active homework assignments were found in FBC Curriculum - SYNC for this week.\n</div>\n\n    </td>\n  </tr>\n</table>\n\n\n                \n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;border:1px solid #C4C4C4;border-left:6px solid #FF8B00;border-radius:12px;margin:16px 0;\">\n  <tr>\n    <td style=\"padding:14px 16px;\">\n      \n      <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;color:#0034B7;font-weight:900;text-transform:uppercase;letter-spacing:1px;\">\n        Homework Grading Status\n      </div>\n      \n      \n      <div style=\"font-size:12px;line-height:19px;color:#262626;font-weight:800;margin-top:4px;\">\n        Current Review Status\n      </div>\n      \n      \n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  No homework has been graded yet for this week.\n</div>\n\n    </td>\n  </tr>\n</table>\n\n\n                \n<table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background:#F2F2F2;border:1px solid #C4C4C4;border-left:6px solid #FF8B00;border-radius:12px;margin:16px 0;\">\n  <tr>\n    <td style=\"padding:14px 16px;\">\n      \n      <div style=\"font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-size:11px;color:#0034B7;font-weight:900;text-transform:uppercase;letter-spacing:1px;\">\n        This Week So Far\n      </div>\n      \n      \n      <div style=\"font-size:12px;line-height:19px;color:#262626;font-weight:800;margin-top:4px;\">\n        Weekly Progress\n      </div>\n      \n      \n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Shots This Week: <strong>75</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Weekly Shot Target: <strong>222 shots</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Weekly Goal Completion: <strong>34% of goal</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Weekly XP: <strong>40 XP</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Current Streak: <strong>1 days</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Streak Window: <strong>Jul 22, 2026 - Jul 22, 2026</strong>\n</div>\n\n<div style=\"font-size:12px;line-height:19px;color:#262626;margin-top:5px;\">\n  Streak Status: <strong>Active</strong>\n</div>\n\n    </td>\n  </tr>\n</table>\n\n\n                <p style=\"font-size:12px;line-height:19px;margin:0 0 16px 0;color:#262626;\">\n                  Keep building strong habits one day at a time. Consistent work is what makes progress show up.\n                </p>\n\n                \n<div style=\"text-align:center;margin:22px 0 10px 0;\">\n  <a href=\"https://form.fillout.com/t/iwzyzj5zeMus\" style=\"display:inline-block;background:#FF8B00;color:#ffffff;text-decoration:none;font-family:'Magistral','Maven Pro',Arial,Helvetica,sans-serif;font-weight:900;font-size:12px;letter-spacing:.25px;padding:8px 14px;border-radius:7px;border:2px solid #FF8B00;\">\n    Submit Shots\n  </a>\n</div>\n\n\n                \n<p style=\"font-size:12px;line-height:19px;color:#666666;margin:16px 0 0 0;text-align:center;\">\n  Keep working, keep submitting, and keep building consistency.\n</p>\n\n              </td>\n            </tr>\n\n            \n<tr>\n  <td style=\"background:#0034B7;padding:14px 24px;text-align:center;border-top:4px solid #FF8B00;border-left:1px solid #C4C4C4;border-right:1px solid #C4C4C4;border-bottom:1px solid #C4C4C4;border-radius:0 0 14px 14px;\">\n    <div style=\"font-size:11px;line-height:17px;color:#F2F2F2;font-weight:600;\">\n      127 Sports Intensity - Shooting Challenge\n    </div>\n    <div style=\"font-size:11px;line-height:17px;color:#C4C4C4;margin-top:3px;\">\n      \ud83d\udd17 <a href=\"https://form.fillout.com/t/iwzyzj5zeMus\" style=\"color:#F2F2F2;text-decoration:none;font-weight:600;\">Daily Submissions</a>\n      &nbsp;&nbsp;|&nbsp;&nbsp;\n      \ud83d\udd17 <a href=\"https://www.fairfieldbasketballclub.com/leaderboard\" style=\"color:#F2F2F2;text-decoration:none;font-weight:600;\">Shooting Challenge Website</a>\n    </div>\n  </td>\n</tr>\n\n\n          </table>\n        </td>\n      </tr>\n    </table>\n  </div>\n</body>\n</html>",
+        "2PT Attempted Counted": 0,
+        "Has HW1?": 0,
+        "Athlete Name": [
+          "Testing Schmidt"
+        ],
+        "Daily Email Sent to Make.com At": "2026-07-23T22:08:51.941Z",
+        "Daily Email Version": "v3",
+        "Shot Total": 25,
+        "Duplicate Review Status": "Count It",
+        "Ready for Weekly Summary?": 1,
+        "Activity Date Is Future?": 0,
+        "2PT Made Counted": 0,
+        "Submission Full Name": "Testing Schmidt - 7/23/2026 - Post - Testing Today"
+      }
+    },
+    "testing_scenario": {
+      "id": "recPdyfYRFgDtpzQ8",
+      "createdTime": "2026-07-23T21:17:51.000Z",
+      "fields": {
+        "Submission Date": "2026-07-23",
+        "Scenario Requirements": "Requires automation 115 v1.8 installed on Testing Scenarios / Run Test? checked.",
+        "Last Run Status": "Pass",
+        "Test Status": "Queued",
+        "RecordId - Testing Scenarios": "recPdyfYRFgDtpzQ8",
+        "Test Intake Name": "FOUNDATION-RESET-001 Daily Dry Run",
+        "Test Notes": "Foundation Reset Pack SC-001/SC-004 seed. Do not enable Run Test? until automation 115 is pasted in PROD.",
+        "Scenario Type": "Daily Submission",
+        "Linked Submission": [
+          "recuuTBgstSTGg2E3"
+        ],
+        "Shot Total": 25,
+        "Expected Result": "Dry-run of 115 creates no Submission. Live run (after 115 install) creates one Fillout-shaped Submission linked to Schmidt enrollment recgP9qZYjAhE7NXm with Shot Total 25 and Activity Date = Submission Date; no framework fields on pipeline tables.",
+        "Actual Result": "Created Submission recuuTBgstSTGg2E3.\nScenario Type: Daily Submission.\nEnrollment: recgP9qZYjAhE7NXm.\nAthlete: recgqVstObQRzgXJF.\nActivity Date: 2026-07-23T00:00:00.000Z.\nShot Total: 25.\nDuplicate Review Status: Count It.\nDownstream automations (005, 009, 010, \u2026) should run from normal triggers.",
+        "Related Enrollment": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "Pass/Fail Notes": "Verify Testing views on Submissions / assets / XP for Schmidt enrollment.",
+        "Last Run At": "2026-07-23T22:08:37.998Z"
+      }
+    },
+    "xp_events": [
+      {
+        "id": "recOceuW34jQz7suD",
+        "createdTime": "2026-07-20T14:54:09.000Z",
+        "fields": {
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|zoom_credit|recgp9qzyjahe7nxm|reczeut0ajuwmmeob|zoom meeting recording quiz",
+          "XP Reason Debug": "Method=Recording Quiz | LiveConfirmed=N | Review=Satisfactory | Satisfactory=Y | PreApproved=Y | Conflict=N | Approved=Y | Pct=50 | XP=30 | Gate=Y | Key=ZOOM_CREDIT|recgP9qZYjAhE7NXm|reczeUT0AJUWMmEOb | EnrollmentRID=recgP9qZYjAhE7NXm | MeetingRID=reczeUT0AJUWMmEOb | EffectivePct=50 | EffectiveGate=1 | EffectiveCoachApproval=1 | Deadline=",
+          "Source Key": "ZOOM_CREDIT|recgP9qZYjAhE7NXm|reczeUT0AJUWMmEOb",
+          "Active XP Points": 0,
+          "Week": [
+            "recUPkXtsDOHnY5q7"
+          ],
+          "XP Events RID": "recOceuW34jQz7suD",
+          "XP Bucket": "Zoom Attendance",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week Record ID": [
+            "recUPkXtsDOHnY5q7"
+          ],
+          "Created": "2026-07-20T14:54:09.000Z",
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|zoom_credit|recgp9qzyjahe7nxm|reczeut0ajuwmmeob|zoom meeting recording quiz",
+          "Event Identity ID": "zoom_credit|recgp9qzyjahe7nxm|reczeut0ajuwmmeob",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Zoom Meeting Recording Quiz - 30",
+          "XP Source": "Zoom Meeting Recording Quiz",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Week 5",
+          "XP Points": 30,
+          "Date - Zoom Meeting": [
+            "2026-05-25"
+          ],
+          "Awarded By": "117-orchestrator-v1.1.1",
+          "XP Event RID": "recOceuW34jQz7suD",
+          "XP Date Resolved": "2026-05-24T12:00:00.000Z",
+          "XP Activity Date": "2026-05-24T12:00:00.000Z",
+          "Zoom Meeting": [
+            "reczeUT0AJUWMmEOb"
+          ],
+          "XP Reason Public": "Zoom recording quiz credit"
+        }
+      },
+      {
+        "id": "recOodD23MQrP1O9F",
+        "createdTime": "2026-07-23T22:08:47.000Z",
+        "fields": {
+          "XP Activity Date Source": "Submission Activity Date",
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|submission_xp|recuutbgststgg2e3|submission base",
+          "XP Reason Debug": "Daily shooting submission XP awarded from XP Reward Rule: SHOOTING_BASE. XP Source: Submission Base. XP Bucket: Shooting Base. XP Points: 20. XP Date Source: Submission Activity Date. Submission Record ID: recuuTBgstSTGg2E3. Submission Key: \"Schmidt, Testing - 2025-2026\"-Unnamed record-recuuTBgstSTGg2E3.",
+          "Source Key": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+          "Active XP Points": 20,
+          "Active?": true,
+          "Week": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "XP Events RID": "recOodD23MQrP1O9F",
+          "XP Bucket": "Shooting Base",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week Record ID": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Submission": [
+            "recuuTBgstSTGg2E3"
+          ],
+          "Created": "2026-07-23T22:08:47.000Z",
+          "Date - Weekly Summary End": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Weekly Athlete Summary": [
+            "rechWp330MqSgRWzN"
+          ],
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|submission_xp|recuutbgststgg2e3|submission base",
+          "Event Identity ID": "submission_xp|recuutbgststgg2e3",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Submission Base - 20",
+          "XP Source": "Submission Base",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Post - Testing Today",
+          "XP Points": 20,
+          "XP Event RID": "recOodD23MQrP1O9F",
+          "Date - Submission Base Activity": [
+            "2026-07-23"
+          ],
+          "XP Date Resolved": "2026-07-23T06:00:00.000Z",
+          "XP Activity Date": "2026-07-23T06:00:00.000Z",
+          "XP Reason Public": "Shooting submission completed.",
+          "Submission Record ID": [
+            "recuuTBgstSTGg2E3"
+          ]
+        }
+      },
+      {
+        "id": "recOqzhV4kTdsfzMf",
+        "createdTime": "2026-07-23T21:19:12.000Z",
+        "fields": {
+          "XP Activity Date Source": "Submission Activity Date",
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|submission_xp|recaccxdqtzfwjmyi|submission base",
+          "XP Reason Debug": "Daily shooting submission XP awarded from XP Reward Rule: SHOOTING_BASE. XP Source: Submission Base. XP Bucket: Shooting Base. XP Points: 20. XP Date Source: Submission Activity Date. Submission Record ID: recaCcxDqtzFWjmyi. Submission Key: \"Schmidt, Testing - 2025-2026\"-Unnamed record-recaCcxDqtzFWjmyi.",
+          "Source Key": "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+          "Active XP Points": 20,
+          "Active?": true,
+          "Week": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "XP Events RID": "recOqzhV4kTdsfzMf",
+          "XP Bucket": "Shooting Base",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week Record ID": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Submission": [
+            "recaCcxDqtzFWjmyi"
+          ],
+          "Created": "2026-07-23T21:19:12.000Z",
+          "Date - Weekly Summary End": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Weekly Athlete Summary": [
+            "rechWp330MqSgRWzN"
+          ],
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|submission_xp|recaccxdqtzfwjmyi|submission base",
+          "Event Identity ID": "submission_xp|recaccxdqtzfwjmyi",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Submission Base - 20",
+          "XP Source": "Submission Base",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Post - Testing Today",
+          "XP Points": 20,
+          "XP Event RID": "recOqzhV4kTdsfzMf",
+          "Date - Submission Base Activity": [
+            "2026-07-23"
+          ],
+          "XP Date Resolved": "2026-07-23T06:00:00.000Z",
+          "XP Activity Date": "2026-07-23T06:00:00.000Z",
+          "XP Reason Public": "Shooting submission completed.",
+          "Submission Record ID": [
+            "recaCcxDqtzFWjmyi"
+          ]
+        }
+      },
+      {
+        "id": "recYQ10pOoFlApmjZ",
+        "createdTime": "2026-07-10T23:48:40.000Z",
+        "fields": {
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|video_submission|reccxspfiinipmpcm|video submission",
+          "XP Reason Debug": "PROD V2 Test fixture for automation 116 (PROD-V2-A116-TEST). Reference commit 992677d.\n[C-023-S5] Confirmed duplicate \u2014 XP deactivated 2026-07-11T13:52:14.804Z\n[C-023-S5] Restored \u2014 decision reversed 2026-07-11T13:53:49.615Z\n[C-023-S5] Confirmed duplicate \u2014 XP deactivated 2026-07-11T13:54:55.869Z\n[C-023-S5] Restored \u2014 decision reversed 2026-07-11T13:55:11.935Z",
+          "Source Key": "VIDEO_SUBMISSION|reccXspFIiNIPMPcm",
+          "Active XP Points": 1,
+          "Active?": true,
+          "XP Events RID": "recYQ10pOoFlApmjZ",
+          "XP Bucket": "Video Feedback",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Submission": [
+            "rec9yoDZ3DMIEhi3I"
+          ],
+          "Created": "2026-07-10T23:48:40.000Z",
+          "Duplicate Status": "Unique",
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|video_submission|reccxspfiinipmpcm|video submission",
+          "Event Identity ID": "video_submission|reccxspfiinipmpcm",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Video Submission - 1",
+          "XP Source": "Video Submission",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|",
+          "XP Points": 1,
+          "Processed": true,
+          "XP Event RID": "recYQ10pOoFlApmjZ",
+          "Date - Submission Base Activity": [
+            "2026-07-10"
+          ],
+          "XP Date Resolved": "2026-07-10T23:48:40.000Z",
+          "Submission Record ID": [
+            "rec9yoDZ3DMIEhi3I"
+          ]
+        }
+      },
+      {
+        "id": "recrYV19IqolkoMwT",
+        "createdTime": "2026-07-23T22:04:50.000Z",
+        "fields": {
+          "XP Activity Date Source": "Submission Activity Date",
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|submission_xp|rec6g1nth8plswa6z|submission base",
+          "XP Reason Debug": "Daily shooting submission XP awarded from XP Reward Rule: SHOOTING_BASE. XP Source: Submission Base. XP Bucket: Shooting Base. XP Points: 20. XP Date Source: Submission Activity Date. Submission Record ID: rec6g1nth8PlSwA6z. Submission Key: \"Schmidt, Testing - 2025-2026\"-Unnamed record-rec6g1nth8PlSwA6z.",
+          "Source Key": "SUBMISSION_XP|rec6g1nth8PlSwA6z",
+          "Active XP Points": 20,
+          "Active?": true,
+          "Week": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "XP Events RID": "recrYV19IqolkoMwT",
+          "XP Bucket": "Shooting Base",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week Record ID": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Submission": [
+            "rec6g1nth8PlSwA6z"
+          ],
+          "Created": "2026-07-23T22:04:50.000Z",
+          "Date - Weekly Summary End": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Weekly Athlete Summary": [
+            "rechWp330MqSgRWzN"
+          ],
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|submission_xp|rec6g1nth8plswa6z|submission base",
+          "Event Identity ID": "submission_xp|rec6g1nth8plswa6z",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Submission Base - 20",
+          "XP Source": "Submission Base",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Post - Testing Today",
+          "XP Points": 20,
+          "XP Event RID": "recrYV19IqolkoMwT",
+          "Date - Submission Base Activity": [
+            "2026-07-23"
+          ],
+          "XP Date Resolved": "2026-07-23T06:00:00.000Z",
+          "XP Activity Date": "2026-07-23T06:00:00.000Z",
+          "XP Reason Public": "Shooting submission completed.",
+          "Submission Record ID": [
+            "rec6g1nth8PlSwA6z"
+          ]
+        }
+      }
+    ],
+    "achievement_unlocks": [],
+    "streak_occurrences": [],
+    "weekly_athlete_summaries": [
+      {
+        "id": "rechWp330MqSgRWzN",
+        "createdTime": "2026-07-23T21:19:12.000Z",
+        "fields": {
+          "Athlete": [
+            "recgqVstObQRzgXJF"
+          ],
+          "Perfect Week Eligible?": 0,
+          "Submissions": [
+            "recaCcxDqtzFWjmyi",
+            "rec6g1nth8PlSwA6z",
+            "recuuTBgstSTGg2E3"
+          ],
+          "Email Subject": "Weekly Shooting Challenge Summary for Testing",
+          "XP Events": [
+            "recOqzhV4kTdsfzMf",
+            "recrYV19IqolkoMwT",
+            "recOodD23MQrP1O9F"
+          ],
+          "Perfect Week Homework Completion %": 1,
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ],
+          "Weekly Goal Shots Target": 222.22222222222223,
+          "Overall Awards Placeholder": {
+            "state": "empty",
+            "value": null,
+            "isStale": true
+          },
+          "Homework Satisfactory Count": 0,
+          "Zoom Meetings Summary": {
+            "state": "empty",
+            "value": null,
+            "isStale": true
+          },
+          "Weekly Email Record ID": "rechWp330MqSgRWzN",
+          "Total XP After Week": 60,
+          "Week Key - Lkp": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Grade Band - Display": "K-2",
+          "Full Name - From Enrollment - Display": [
+            "Schmidt, Testing - 2025-2026"
+          ],
+          "Activity Dates": [
+            "2026-07-23",
+            "2026-07-23",
+            "2026-07-23"
+          ],
+          "Perfect Week Homework Requirement Status": "Not Calculated",
+          "Level Number": 1,
+          "Total Makes This Week": 0,
+          "XP Earned This Week": 60,
+          "Enrollment Key - Lkp": [
+            "ATH-recgqVstObQRzgXJF|2025-2026"
+          ],
+          "Grade": [
+            "Pre K"
+          ],
+          "Parent Email - Cleaned": [
+            "mschmidt@fairfield.k12.mt.us"
+          ],
+          "Homework Display": "\ud83d\udeab No Homework",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Met Minimum Days Requirement?": 0,
+          "Created": "2026-07-23T21:19:12.000Z",
+          "Week": [
+            "recVDKiYATgzsfpmE"
+          ],
+          "Perfect Week Calculation Queue?": 0,
+          "Goal Record": [
+            "reczG19bSB6Aa3VbV"
+          ],
+          "Days Logged This Week": 1,
+          "Perfect Week Zoom Requirement Status": "Not Calculated",
+          "Momentum Status": "First Week",
+          "Total Shots This Week": 75,
+          "Weekly Athlete Summary - Display": "Schmidt, Testing - 2025-2026 - Post - Testing Today - K-2",
+          "Perfect Week Zoom Requirement Met?": 0,
+          "Goal Shots Target": [
+            2000
+          ],
+          "Goal Completion %": 0.33749999999999997,
+          "Perfect Week Video Requirement Met?": 0,
+          "Summary Calculation Status": "Complete",
+          "Threshold XP Ready?": 0,
+          "Athlete Email - Cleaned": [
+            "mschmidt@fairfield.k12.mt.us"
+          ],
+          "Week - Display": "Post - Testing Today",
+          "Combined Recipient Emails": "mschmidt@fairfield.k12.mt.us, mschmidt@fairfield.k12.mt.us",
+          "RecordId": "rechWp330MqSgRWzN",
+          "Summary Key": "ATH-recgqVstObQRzgXJF|2025-2026|recVDKiYATgzsfpmE",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Post - Testing Today",
+          "Athlete First Name": [
+            "Testing"
+          ],
+          "Athlete Last Name": [
+            "Schmidt"
+          ],
+          "Homework Assigned Count": 0
+        }
+      }
+    ],
+    "enrollment_name_used": "ATH-recgqVstObQRzgXJF|2025-2026"
+  }
+}

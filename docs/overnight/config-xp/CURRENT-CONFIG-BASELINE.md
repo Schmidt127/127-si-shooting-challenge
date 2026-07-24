@@ -1,9 +1,18 @@
 # Current Configuration Baseline — Config / XP / Levels / Gates / Achievements
 
-Overnight Agent 2 · 2026-07-23 · PROD base `appn84sqPw03zEbTT`
+Overnight Agent 2 · 2026-07-23 · re-verified 2026-07-24 · PROD base `appn84sqPw03zEbTT`
 
-Evidence: `prod-config-snapshot.json` (read-only API probe, captured 2026-07-23), schema snapshot
-`airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/`, repository scripts at commit `7e782a2`.
+Evidence: `prod-config-snapshot.json` (2026-07-23) + `prod-config-snapshot-2026-07-24.json` (read-only API probe),
+schema snapshot `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/`, repository scripts on `master`.
+
+## 0. 2026-07-24 re-verification (read-only)
+
+- Schmidt enrollment still Active; Lifetime XP 61; Current=Beginner; Next=Rookie Shooter; Level Gate Rule=Level 2 Gate; Status=Assigned; Total Shots Counted=75; Current Streak=1.
+- Submission `recuuTBgstSTGg2E3` still links exactly one Submission Base XP Event (`recOodD23MQrP1O9F`, 20 XP).
+- Athlete Achievement Unlocks still empty; Streak Occurrences still empty.
+- Config table still has **4 conflicting records** — unresolved (MIKE-ACTIONS #1).
+- Video XP defect (`recYQ10pOoFlApmjZ` = 1 pt, blank date) still present (MIKE-ACTIONS #4).
+- Repo hardenings this run: **054 v5.6** (duplicate active XP rule error), **066 v3.3** (Grade Band link-ID match). Paste still required.
 
 ## 1. Config tables (live PROD state)
 

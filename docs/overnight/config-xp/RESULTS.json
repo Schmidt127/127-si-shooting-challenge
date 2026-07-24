@@ -1,0 +1,113 @@
+{
+  "started_at": "2026-07-24T12:40:00Z",
+  "completed_at": "2026-07-24T13:15:00Z",
+  "agent_scope": "config-xp-levels-gates-achievements-streaks-milestones-perfect-week",
+  "branch": "master",
+  "commits": [
+    {"sha": "3810dcb", "message": "fix: harden XP rule duplicate detection and Grade Band ID matching"},
+    {"sha": "e42b3ce", "message": "test: add XP rule, Grade Band, and unlock integrity coverage"}
+  ],
+  "pushed": true,
+  "working_tree_clean": false,
+  "SC_items_reviewed": [
+    "SC-021", "SC-022", "SC-023", "SC-024", "SC-025", "SC-026", "SC-027", "SC-028",
+    "SC-029", "SC-030", "SC-031", "SC-032", "SC-033", "SC-034",
+    "SC-070", "SC-071", "SC-072", "SC-073", "SC-074", "SC-075", "SC-076", "SC-077",
+    "SC-078", "SC-079", "SC-080", "SC-081", "SC-082", "SC-083",
+    "SC-096", "SC-124", "SC-140", "SC-146"
+  ],
+  "SC_items_updated": [
+    {"id": "SC-021", "old": "Planned", "new": "Built in Repository"},
+    {"id": "SC-022", "old": "Planned", "new": "Built in Repository"},
+    {"id": "SC-023", "old": "Planned", "new": "Built in Repository"},
+    {"id": "SC-029", "old": "Planned", "new": "Built in Repository"},
+    {"id": "SC-034", "old": "Planned", "new": "Built in Repository"},
+    {"id": "SC-070", "old": "Installed in PROD", "new": "Live Tested in PROD"},
+    {"id": "SC-078", "old": "Installed in PROD", "new": "Live Tested in PROD"}
+  ],
+  "audits_completed": [
+    "CURRENT-CONFIG-BASELINE",
+    "CONFIG-HARDCODE-AUDIT",
+    "XP-RULES-AUDIT",
+    "GRADE-BAND-AUDIT",
+    "LEVEL-AUTOMATION-AUDIT",
+    "LEVEL-GATE-RULE-INTEGRITY",
+    "XP-DATE-SOURCE-AUDIT",
+    "STREAK-SYSTEM-AUDIT",
+    "SHOT-MILESTONE-AUDIT",
+    "PERFECT-WEEK-AUDIT",
+    "ACHIEVEMENT-UNLOCK-AUDIT"
+  ],
+  "tests_run": [
+    "overnight-level-gate-boundaries.test.js",
+    "overnight-streak-milestone-dedupe.test.js",
+    "overnight-perfect-week.test.js",
+    "overnight-xp-date-source.test.js",
+    "overnight-xp-rules-and-unlocks.test.js",
+    "v2-engine-contracts.test.js"
+  ],
+  "tests_passed": 90,
+  "tests_failed": 0,
+  "live_prod_tests": [
+    {
+      "name": "Submission Base XP re-verify",
+      "mode": "read_only",
+      "submission": "recuuTBgstSTGg2E3",
+      "xp_event": "recOodD23MQrP1O9F",
+      "result": "PASS — exactly one 20 XP Submission Base event"
+    },
+    {
+      "name": "Level baseline re-verify",
+      "mode": "read_only",
+      "enrollment": "recgP9qZYjAhE7NXm",
+      "result": "PASS — Beginner/Rookie/Level 2 Gate/Assigned/XP 61"
+    },
+    {
+      "name": "Achievement unlock integrity audit",
+      "mode": "read_only",
+      "result": "PASS — 0 unlocks, 0 findings"
+    }
+  ],
+  "records_created": 0,
+  "records_modified": 0,
+  "records_deleted": 0,
+  "hardcodes_found": 17,
+  "hardcodes_fixed": 2,
+  "XP_rules_reviewed": 31,
+  "duplicate_rules_found": 0,
+  "level_defects_found": 1,
+  "achievement_defects_found": 2,
+  "defects_fixed": [
+    "054 duplicate active XP Reward Rule first-match → explicit error (v5.6)",
+    "066 Grade Band display-label match → linked record ID preference (v3.3)",
+    "shared selectActiveXpRewardRule / gradeBandsMatch / auditAchievementUnlockIntegrity helpers"
+  ],
+  "blockers": [
+    "Airtable UI paste required for 054 v5.6 and 066 v3.3",
+    "Config table 4-record conflict needs Mike decision",
+    "Video XP 1-vs-25 defect needs writer investigation",
+    "Streak repeat-after-break is a product decision",
+    "Live streak/milestone/Perfect Week/gate-cross construction not safely reversible unattended"
+  ],
+  "manual_actions": 12,
+  "files_created": [
+    "docs/overnight/config-xp/REPORT.md",
+    "docs/overnight/config-xp/RESULTS.json",
+    "docs/overnight/config-xp/ACHIEVEMENT-UNLOCK-AUDIT.md",
+    "docs/overnight/config-xp/MIKE-ACTIONS.md",
+    "docs/overnight/config-xp/prod-config-snapshot-2026-07-24.json",
+    "docs/overnight/config-xp/achievement-unlock-audit-live.json",
+    "airtable/automations/shooting-challenge/lib/overnight-xp-rules-and-unlocks.test.js",
+    "tools/airtable/overnight_achievement_unlock_audit.py"
+  ],
+  "files_modified": [
+    "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+    "airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+    "airtable/automations/shooting-challenge/lib/v2-engine-contracts.js",
+    "docs/overnight/config-xp/CURRENT-CONFIG-BASELINE.md",
+    "docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md",
+    "docs/overnight/config-xp/config-hardcode-audit.json",
+    "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md"
+  ],
+  "final_status": "substantial_progress_repo_ready_partial_live_verified"
+}

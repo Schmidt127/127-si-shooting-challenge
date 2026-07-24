@@ -30,6 +30,9 @@ Classification key: **stable** = valid code constant · **config** = should come
 ## Fixes applied this run
 
 - `buildGateRuleMap` added to `lib/v2-engine-contracts.js` — duplicate-active gate rule and missing Level link now throw in shared logic; covered by `overnight-level-gate-boundaries.test.js`.
-- Regression tests pinning the Denver-vs-UTC date-key contract and the `STREAK_XP`/`SHOT_MILESTONE`/`PERFECT_WEEK` key formats (commit `7e782a2`).
+- Regression tests pinning the Denver-vs-UTC date-key contract and the `STREAK_XP`/`SHOT_MILESTONE`/`PERFECT_WEEK` key formats (prior overnight commit).
+- **2026-07-24:** `selectActiveXpRewardRule`, `normalizeGradeBandLabel`, `gradeBandsMatch`, `auditAchievementUnlockIntegrity` added to shared lib.
+- **2026-07-24:** **054 v5.6** — duplicate active XP Reward Rules error (matches 059) instead of first-match.
+- **2026-07-24:** **066 v3.3** — Grade Band match prefers linked record IDs; normalized label is fallback only.
 
-Items 4, 5, 7 have safe repo-side fixes but the deployed Airtable copies require a paste (Mike). Items 12–15 are UI/product actions. Nothing in this audit changes XP economics.
+Items 4, 12–15 still need Mike UI/product actions. Item 5 and item 7 are **repo-fixed**; PROD paste listed in MIKE-ACTIONS #6 / #11. Nothing in this audit changes XP economics.
