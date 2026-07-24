@@ -46,8 +46,11 @@ The app tracks athlete enrollments, shooting submissions, XP, levels, streaks, h
 │   ├── blueprints/           # Exported Make.com scenario blueprints
 │   ├── documentation/        # Scenario notes and webhook standards
 │   └── test-payloads/        # Sample JSON for webhook testing
+├── lib/                      # Pure Node contracts (config-selection, challenge-year, WAS email)
 ├── tools/
-│   └── airtable/             # Python schema export and PAT verify scripts
+│   ├── airtable/             # Python schema export and PAT verify scripts
+│   ├── enrollment-season/    # Offline enrollment / Weeks seed validators
+│   └── challenge-year/       # Challenge-year Week generator, preflight, manifest CLI
 ├── media/                    # Season publicity assets (newspapers, radio, social)
 ├── .cursor/rules/            # Canonical Cursor AI rules
 ├── .github/workflows/        # CI (web.yml)

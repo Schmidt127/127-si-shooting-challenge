@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-07-24T21:52:21.872Z",
+  "timezone": "America/Denver",
+  "oldConfig": {
+    "configRecordId": "recOLDCONFIG202627",
+    "challengeYearLabel": "2026-2027",
+    "startDate": "2026-05-31",
+    "endDate": "2026-08-15",
+    "status": "Completed",
+    "isCurrent": true
+  },
+  "newConfig": {
+    "configRecordId": "recNEWCONFIG202728",
+    "challengeYearLabel": "2027-2028",
+    "startDate": "2027-05-30",
+    "endDate": "2027-08-14",
+    "enrollmentOpenDate": "2027-04-01",
+    "enrollmentCloseDate": "2027-05-29",
+    "weekZeroStart": "2027-05-30",
+    "regularWeekCount": 8,
+    "status": "Planning",
+    "testMode": false,
+    "rolloverState": "weeks_seeded"
+  },
+  "weeksToCreate": [
+    {
+      "displayLabel": "Week 0",
+      "weekType": "week_0",
+      "startDate": "2027-05-30",
+      "endDate": "2027-06-05",
+      "weekKey": "2027-2028|Week 0",
+      "weekEndKey": "2027-06-05",
+      "sequence": 0
+    },
+    {
+      "displayLabel": "Week 1",
+      "weekType": "regular",
+      "startDate": "2027-06-06",
+      "endDate": "2027-06-12",
+      "weekKey": "2027-2028|Week 1",
+      "weekEndKey": "2027-06-12",
+      "sequence": 1
+    },
+    {
+      "displayLabel": "Week 2",
+      "weekType": "regular",
+      "startDate": "2027-06-13",
+      "endDate": "2027-06-19",
+      "weekKey": "2027-2028|Week 2",
+      "weekEndKey": "2027-06-19",
+      "sequence": 2
+    },
+    {
+      "displayLabel": "Week 3",
+      "weekType": "regular",
+      "startDate": "2027-06-20",
+      "endDate": "2027-06-26",
+      "weekKey": "2027-2028|Week 3",
+      "weekEndKey": "2027-06-26",
+      "sequence": 3
+    },
+    {
+      "displayLabel": "Week 4",
+      "weekType": "regular",
+      "startDate": "2027-06-27",
+      "endDate": "2027-07-03",
+      "weekKey": "2027-2028|Week 4",
+      "weekEndKey": "2027-07-03",
+      "sequence": 4
+    },
+    {
+      "displayLabel": "Week 5",
+      "weekType": "regular",
+      "startDate": "2027-07-04",
+      "endDate": "2027-07-10",
+      "weekKey": "2027-2028|Week 5",
+      "weekEndKey": "2027-07-10",
+      "sequence": 5
+    },
+    {
+      "displayLabel": "Week 6",
+      "weekType": "regular",
+      "startDate": "2027-07-11",
+      "endDate": "2027-07-17",
+      "weekKey": "2027-2028|Week 6",
+      "weekEndKey": "2027-07-17",
+      "sequence": 6
+    },
+    {
+      "displayLabel": "Week 7",
+      "weekType": "regular",
+      "startDate": "2027-07-18",
+      "endDate": "2027-07-24",
+      "weekKey": "2027-2028|Week 7",
+      "weekEndKey": "2027-07-24",
+      "sequence": 7
+    },
+    {
+      "displayLabel": "Week 8",
+      "weekType": "regular",
+      "startDate": "2027-07-25",
+      "endDate": "2027-07-31",
+      "weekKey": "2027-2028|Week 8",
+      "weekEndKey": "2027-07-31",
+      "sequence": 8
+    },
+    {
+      "displayLabel": "Post-Challenge",
+      "weekType": "post_challenge",
+      "startDate": "2027-08-01",
+      "endDate": "2027-08-07",
+      "weekKey": "2027-2028|Post-Challenge",
+      "weekEndKey": "2027-08-07",
+      "sequence": 9
+    }
+  ],
+  "expectedKeys": [
+    "2027-2028|Week 0",
+    "2027-2028|Week 1",
+    "2027-2028|Week 2",
+    "2027-2028|Week 3",
+    "2027-2028|Week 4",
+    "2027-2028|Week 5",
+    "2027-2028|Week 6",
+    "2027-2028|Week 7",
+    "2027-2028|Week 8",
+    "2027-2028|Post-Challenge"
+  ],
+  "fieldsToUpdate": [
+    "Config / Program Instance current flags and dates",
+    "Enrollment School Year + Program Instance / Config links",
+    "Weeks Program Instance link (and proposed Challenge Week Key if authorized)",
+    "Fillout hidden year/config fields",
+    "View filters for current year"
+  ],
+  "automationsToInspect": [
+    "005 — assign Week from Activity Date",
+    "010 — submission base XP",
+    "031 — find/create Weekly Athlete Summary",
+    "034 — previous-week helpers",
+    "041/042 — level recalc",
+    "072 — build weekly email package",
+    "074 — send weekly email to Make",
+    "101 — Zoom attendance WAS ensure",
+    "114 — video XP",
+    "118 — schedule weekly summary email build",
+    "119 — schedule weekly summary email send"
+  ],
+  "makeScenariosToInspect": [
+    "Weekly Athlete Summary - Bulk Email - May 18 (sender + writeback)",
+    "Upload Engine / Lambda routes (season slug prefixes)",
+    "Zoom Recording Approval Email 117f (if used)"
+  ],
+  "filloutFormsToInspect": [
+    "Enrollment form — hidden Config / School Year / Program Instance",
+    "Daily submission form — Activity Date validation + year linkage"
+  ],
+  "softrPagesAndFiltersToInspect": [
+    "Current-year Enrollment visibility filters",
+    "Weekly Athlete Summary visibility",
+    "Levels / Achievements current-year separation",
+    "Historical data pages (must not mix years)"
+  ],
+  "viewsToInspect": [
+    "Enrollments — current year Active?",
+    "Weeks — current challenge year",
+    "Weekly Athlete Summary — current week / current year",
+    "XP Events — current year reporting"
+  ],
+  "testRecordsToRetain": [
+    "Schmidt enrollment (testing family) — retain identity; re-link to new year intentionally"
+  ],
+  "testRecordsToExclude": [
+    "Stale Testing Scenarios tied only to prior year Weeks",
+    "Orphan WAS rows with empty Enrollment"
+  ],
+  "validationSteps": [
+    "Run week generator + validator",
+    "Run rollover preflight (expect PASS or PASS WITH WARNINGS)",
+    "Dry-run Airtable preview helpers with explicit Config ID + year label",
+    "Controlled Schmidt Activity Date → Week assignment (005)",
+    "Controlled empty-week email path in Test mode before Live schedules"
+  ],
+  "rollbackSteps": [
+    "Keep prior Config isCurrent=true until new year proven",
+    "Do not delete prior Weeks/Enrollments/WAS",
+    "Turn 118/119 schedules OFF",
+    "Point Fillout hidden fields back to prior year if activation aborted",
+    "Re-run preflight after fixes before re-attempting activation"
+  ],
+  "proofRequiredBeforeActivation": [
+    "Preflight overall PASS or accepted PASS WITH WARNINGS with Mike sign-off",
+    "Week import verified (keys, Sunday/Saturday, Config/year linkage)",
+    "No multiple current Configs",
+    "Schmidt controlled submission maps to correct new-year Week",
+    "Weekly email Test send for one summary (no season-wide Live schedule yet)"
+  ],
+  "preflightOverall": "PASS",
+  "preflightFailedChecks": []
+}

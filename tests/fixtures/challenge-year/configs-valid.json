@@ -1,0 +1,53 @@
+{
+  "configRows": [
+    {
+      "id": "recPRIORCONFIG0001",
+      "activeSchoolYear": "2025-2026",
+      "startDate": "2025-05-25",
+      "endDate": "2025-08-09",
+      "enrollmentOpenDate": "2025-04-01",
+      "enrollmentCloseDate": "2025-05-24",
+      "weekZeroStart": "2025-05-25",
+      "regularWeekCount": 8,
+      "status": "Completed",
+      "isCurrent": false,
+      "testMode": false,
+      "rolloverState": "archived"
+    },
+    {
+      "id": "recNEWCONFIG000001",
+      "activeSchoolYear": "2026-2027",
+      "startDate": "2026-05-31",
+      "endDate": "2026-08-15",
+      "enrollmentOpenDate": "2026-04-01",
+      "enrollmentCloseDate": "2026-05-30",
+      "weekZeroStart": "2026-05-31",
+      "weekZeroEnd": "2026-06-06",
+      "postChallengeStart": "2026-08-09",
+      "postChallengeEnd": "2026-08-15",
+      "regularWeekCount": 9,
+      "status": "In Progress",
+      "isCurrent": true,
+      "testMode": false,
+      "emailScheduleEnabled": false,
+      "xpEnabled": true,
+      "achievementsEnabled": true,
+      "rolloverState": "activated",
+      "priorConfigId": "recPRIORCONFIG0001"
+    },
+    {
+      "id": "recTESTCONFIG00001",
+      "activeSchoolYear": "2027-2028",
+      "startDate": "2027-05-30",
+      "endDate": "2027-08-14",
+      "enrollmentOpenDate": "2027-04-01",
+      "enrollmentCloseDate": "2027-05-29",
+      "weekZeroStart": "2027-05-30",
+      "regularWeekCount": 8,
+      "status": "Planning",
+      "isCurrent": false,
+      "testMode": true,
+      "rolloverState": "planning"
+    }
+  ]
+}
