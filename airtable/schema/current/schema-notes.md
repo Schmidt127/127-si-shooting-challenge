@@ -1,60 +1,35 @@
 # Schema Notes (Current)
 
-Living notes for the **127 SI Shooting Challenge** Airtable base. Update this file whenever production schema changes are deployed.
+Living pointer for the **127 SI Shooting Challenge** Airtable base.
 
 ## Base Identity
 
 | Item | Value |
 |------|-------|
-| Base name | *(fill in)* |
-| Base ID | *(fill in)* |
+| Base name | 127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026 |
+| Base ID | `appn84sqPw03zEbTT` |
 | Environment | Production |
-| Last reviewed | *(YYYY-MM-DD)* |
+| Last schema export reviewed | 2026-07-23 (foundation-reset post-ts) |
+| Data-model pack | [`docs/next-wave/data-model/`](../../../docs/next-wave/data-model/) |
 
 ## Design Principles
 
-- **Athlete-centric linking** — Submissions, XP Events, homework, and attendance roll up to the Athlete record.
-- **Immutable XP Events** — XP is awarded via XP Event records; do not overwrite historical totals on Athlete.
-- **Submission as source of truth** — Shooting stats and challenge progress originate from Submission records; derived fields use formulas or automations.
-- **Idempotent automations** — Scripts and Make scenarios must tolerate retries without double-awarding XP or sending duplicate emails.
+- **Enrollment-centric linking** — Submissions, XP Events, homework, Zoom, and WAS roll up to **Enrollment** (athlete × school year).
+- **Immutable XP Events** — append-only; idempotent `Source Key` patterns.
+- **Week calendar** — Start/End dateTime America/Denver; Week Key = record ID; Week Name = label.
+- **Year separation** — Config `Active School Year` + Enrollment `School Year` + Program Instance; do not collapse Config rows.
+- **Idempotent automations** — tolerate retries without double XP or duplicate emails.
 
-## Table Inventory (Summary)
+## Known doc corrections (2026-07-24 Agent 2)
 
-See [table-map.md](./table-map.md) for the full table list and relationships.
-
-Core tables typically include:
-
-- Athletes
-- Submissions
-- XP Events
-- Levels / Badges
-- Homework
-- Weekly Summaries
-- Coaches / Parents (contacts)
-- Zoom Attendance
-
-## Recent Schema Changes
-
-| Date | Table | Change | Deployed by | Notes |
-|------|-------|--------|-------------|-------|
-| | | | | |
-
-## Known Issues / Tech Debt
-
-- *(none yet)*
+- `Week Key` is `RECORD_ID()`, not `2026-2027|Week N`.
+- No `Week End Key` field on Weeks — schedulers derive Saturday from End Date.
+- Stale Athlete-hub table-map language is superseded.
 
 ## Related Docs
 
 - [table-map.md](./table-map.md)
 - [field-map.md](./field-map.md)
 - [automation-trigger-map.md](./automation-trigger-map.md)
-- [../../../docs/architecture/architecture-review.md](../../../docs/architecture/architecture-review.md)
-
-## Workflow
-
-1. Propose schema change in GitHub (update these notes + field-map).
-2. Review with ChatGPT or architecture review doc.
-3. Apply in Airtable (prefer additive changes; avoid breaking linked fields).
-4. Update automations and Make blueprints if triggers or field names change.
-5. Run audit scripts (dry-run) before and after.
-6. Snapshot schema to `../snapshots/` and note in `CHANGELOG.md`.
+- [docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md](../../../docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md)
+- [docs/next-wave/data-model/README.md](../../../docs/next-wave/data-model/README.md)
