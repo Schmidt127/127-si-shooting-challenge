@@ -36,7 +36,7 @@ _None open in repository evidence as of this refresh._
 | ID | Issue | Owner | Next action |
 |----|-------|-------|-------------|
 | K-M1 | **C-025** Zoom recording credit — repo ready (117a/b), **not installed** in live DEV/PROD; Perfect Week / Total Zoom / post-award gaps open | Mike + Agent A | Follow [ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md); leave PROD untouched |
-| K-M2 | **C-011** automatic weekly email — repo ready (118/119), schedules **must stay OFF**; Make webhook live-blocked | Mike | DEV paste only when authorized; keep manual 072→074 path |
+| K-M2 | **C-011** weekly email — **RESOLVED 2026-07-24**: 118/119 **ON**; 072/074/Make ON; 074 sendMode Live + writeback PASS. Remaining: first Sunday monitor + other email templates | Mike | Do not re-disable schedules; never force 074 Test |
 | K-M3 | **070a** homework S3 upload **PROD intentionally OFF** | Mike | Keep OFF — [AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) |
 | K-M4 | C-020 / homework+video XP after coach review not fully covered in DEV harness | Testing | Extend DEV scenarios beyond intake |
 | K-M5 | Web **dashboard / athlete profiles** still mock; no participant auth | Agent B / web | Auth design first; do not publish private data |

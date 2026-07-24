@@ -50,14 +50,16 @@
 
 ---
 
-## Activation sequence (Mike only)
+## Activation sequence — **COMPLETE** (2026-07-24)
 
-1. Confirm post-test safety: 072 `allowSchmidtInput=false`; 118/119 includeSchmidt=false; **074 sendMode=Live** (or blank + WAS Live).  
-2. One more dryRun=true manual 118/119 run (counts only).  
-3. Authorize `dryRun=false` with 118 `sendMode=Test` for a narrow window if needed (074 itself stays Live for writeback).  
-4. Enable 118 schedule OFF→ON only after written auth.  
-5. Enable 119 schedule OFF→ON only after written auth.  
-6. 118 Live sendMode when dryRun=false still needs product policy authorization.
+Historical steps below are retained for audit only. Current state: **118/119 ON**, **074 Live**, Make Bulk Email ON.
+
+1. ~~Confirm post-test safety~~ → prefer 072 `allowSchmidtInput=false`; **074 sendMode=Live**.  
+2. ~~dryRun validation~~ → completed during controlled proof.  
+3. ~~Authorize schedules~~ → **118/119 ON**.  
+4. ~~Enable 118~~ → **ON** Sun 5:00 AM America/Denver.  
+5. ~~Enable 119~~ → **ON** Sun 10:00 AM America/Denver.  
+6. Monitor first live Sunday volume; do not revert schedules OFF based on stale docs.
 
 ---
 
