@@ -83,7 +83,7 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 |--------------|---------------------------------|----------------|
 | Upload asset engine | Canonical URL, hash, Upload Status, Writeback Complete? (022 / 070c / Lambda) | `duplicate_risk` — sequenced handoff, not dual-create of business records |
 | 117f approval email | Send key/status owned by **117f**; Make must **not** write XP Events or Attendees | Make = `orchestrator`/email; Airtable 117f = authoritative for send key |
-| Weekly/daily email Make | Send status writebacks vs 074/077 | `evidence_insufficient` for exact writeback field ownership — attest in UI/Make |
+| Weekly email Make (`Weekly Athlete Summary - Bulk Email - May 18`) | Live branch writes `Weekly Email Sent?`, `Make Send Status=Sent`, sent timestamp; **074 must not clear Sent?** | `authoritative_writer` = **Make Live** (`verified_prod` 2026-07-24). PROD 074 must use **Live**. Daily 077 still attest separately. |
 
 ---
 
@@ -168,5 +168,5 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 2. **020 vs 067** HC product rule (SC-013/014)  
 3. **Weekly Threshold XP** writer existence in Airtable UI  
 4. **101 WAS side-create** long-term retention  
-5. **Make writeback** exact field list vs 074/077/022  
-6. **118/119** install state in DEV/PROD UI  
+5. **Make writeback** for **weekly** email: resolved (`verified_prod` 2026-07-24) — Make Live owns Sent?/status/timestamp; 074 owns webhook only. **Daily 077** / 022 still attest separately.  
+6. **118/119** schedules OFF until checklist; Automations operator table (2026-07-23) omitted them.  

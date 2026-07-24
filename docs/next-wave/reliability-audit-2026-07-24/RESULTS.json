@@ -1,0 +1,29 @@
+{
+  "package": "reliability-audit-2026-07-24",
+  "agents": ["agent-1-automation-reliability", "agent-2-data-model"],
+  "generated_at": "2026-07-24",
+  "repo_tip_at_start": "a8f3b001bc6ee8e6b8a2fa0dfeaaf23cc9669716",
+  "scope_exclusions": [
+    "team_shot_tracker",
+    "tst_3_7_10_day_inactivity_alerts"
+  ],
+  "weekly_email": {
+    "flow": "118→072→119→074→Make Bulk Email May 18→Gmail→Make writeback",
+    "status": "verified_prod",
+    "sendMode_correction": "074 must not remain fixed Test; Live writeback PASS 2026-07-24",
+    "docs_already_recorded_at": "a8f3b00"
+  },
+  "prompt_reference_corrections": {
+    "012": "retired; use 020",
+    "051_052": "not in repo; use 053→054",
+    "075": "welcome email, not Zoom XP"
+  },
+  "production_changes_by_agent": [],
+  "open_p0_p1": [
+    "confirm_074_sendMode_Live_in_UI",
+    "keep_118_119_schedules_OFF",
+    "attest_112_OFF_063_111_deleted_or_OFF",
+    "attest_117_xor_117c",
+    "attest_script_versions"
+  ]
+}

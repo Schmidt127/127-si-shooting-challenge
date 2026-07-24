@@ -1,12 +1,18 @@
 # Automation index — Shooting Challenge
 
-Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`116`).
+Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`–`119`, plus `070a/b/c`, `117a–f`).
 
-**C-020 test harness:** **115** v1.8 — Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**Reliability audit (2026-07-24):** [next-wave/reliability-audit-2026-07-24/REPORT.md](./next-wave/reliability-audit-2026-07-24/REPORT.md) — trust bands, input/dedupe/ownership audits, ranked repairs, Mike actions. **Do not create a second index.**
+
+**Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email (Zoom live=**101**, recording=**117/117c**).
+
+**C-020 test harness:** **115** v1.9 in repo (ETF). Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 **Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
 
 **Wave 2A classification (complete):** [v2-014-wave-2a-classification.md](./v2-014-wave-2a-classification.md) — Category A–F + complexity for all 46 scripts.
+
+**PROD operator inventory (2026-07-23):** [foundation-reset/PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md](./foundation-reset/PROD-AUTOMATION-VERSION-INVENTORY-2026-07-23.md) — triggers useful; script body match UNKNOWN via API. 063/111/112 rows may be stale vs 2026-07-24 attestations.
 
 Standard: [../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md](../airtable/automations/AUTOMATION_SCRIPT_STANDARD.md)
 
@@ -81,7 +87,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 057 | Achievements — Calculate Perfect Week Eligibility | *confirm in Airtable* | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
 | **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.2** — DEV + PROD pasted 2026-07-06, GitHub `36a2e95`; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.3** repo; Installed-in-PROD docs 2026-07-24 — attest live header; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 

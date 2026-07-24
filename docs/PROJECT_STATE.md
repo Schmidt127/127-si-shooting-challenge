@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; 118/119 schedules OFF)
+Last updated: **2026-07-24** (C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; 118/119 schedules OFF; reliability audit [next-wave/reliability-audit-2026-07-24/REPORT.md](./next-wave/reliability-audit-2026-07-24/REPORT.md))
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
