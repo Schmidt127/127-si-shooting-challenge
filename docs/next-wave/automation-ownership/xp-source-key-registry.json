@@ -1,0 +1,358 @@
+{
+  "$schema_note": "Authoritative XP / unlock / email Source Key registry for Agent 9 automation ownership contract. Scripts write Source Key (text). XP Dedupe Key and XP Dedupe Key Normalized are formula-only — never write.",
+  "generated_at": "2026-07-24",
+  "agent": "agent-9-automation-ownership",
+  "formula_only_fields": [
+    "XP Dedupe Key",
+    "XP Dedupe Key Normalized",
+    "Summary Key",
+    "Unlock Key"
+  ],
+  "date_normalization": {
+    "canonical_timezone": "America/Denver",
+    "canonical_helpers": [
+      "toDateKeyFromText",
+      "toDateKeyFromDateObject"
+    ],
+    "notes": "Streak end-date segment and activity dates must use America/Denver date keys (YYYY-MM-DD), not UTC ISO slice alone."
+  },
+  "prefixes": [
+    {
+      "prefix": "SUBMISSION_XP|",
+      "family": "submission_base_xp",
+      "format": "SUBMISSION_XP|{submissionId}",
+      "components": ["submissionId"],
+      "component_order": ["submissionId"],
+      "authoritative_writer": "010",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js",
+      "destination_table": "XP Events",
+      "reads_formula_dedupe": true,
+      "writes_formula_dedupe": false,
+      "notes": "010 reads XP Dedupe Key / Normalized for matching; does not write them."
+    },
+    {
+      "prefix": "HOMEWORK_XP|",
+      "family": "homework_completion_xp",
+      "format": "HOMEWORK_XP|{homeworkCompletionId}",
+      "components": ["homeworkCompletionId"],
+      "component_order": ["homeworkCompletionId"],
+      "authoritative_writer": "065",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/065-homework-review-and-xp-create-homework-xp-event.js",
+      "destination_table": "XP Events",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false,
+      "notes": "065 does not recognize legacy HOMEWORK_COMPLETION| keys — can create a second event."
+    },
+    {
+      "prefix": "HOMEWORK_COMPLETION|",
+      "family": "homework_completion_xp",
+      "format": "HOMEWORK_COMPLETION|{homeworkCompletionId}",
+      "components": ["homeworkCompletionId"],
+      "component_order": ["homeworkCompletionId"],
+      "authoritative_writer": null,
+      "competing_writers": ["065"],
+      "status": "legacy",
+      "legacy": true,
+      "script_path": null,
+      "destination_table": "XP Events",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false,
+      "notes": "Legacy format retained in audits/backfills only. No live creator should mint this prefix. Safe-backfill dedupe-homework-xp-events.js cleans dual legacy+canonical pairs."
+    },
+    {
+      "prefix": "VIDEO_SUBMISSION|",
+      "family": "video_feedback_xp",
+      "format": "VIDEO_SUBMISSION|{videoFeedbackId}",
+      "components": ["videoFeedbackId"],
+      "component_order": ["videoFeedbackId"],
+      "authoritative_writer": "114",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/114-video-review-and-xp-create-or-update-video-xp-event.js",
+      "destination_table": "XP Events",
+      "reads_formula_dedupe": true,
+      "writes_formula_dedupe": false,
+      "notes": "114 reads XP Dedupe Key Normalized and refuses reuse when formula references a different VF RID."
+    },
+    {
+      "prefix": "STREAK_XP|",
+      "family": "streak_xp",
+      "format": "STREAK_XP|{enrollmentId}|{achievementId}|{streakEndDate}",
+      "components": ["enrollmentId", "achievementId", "streakEndDate"],
+      "component_order": ["enrollmentId", "achievementId", "streakEndDate"],
+      "authoritative_writer": "054",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+      "destination_table": "XP Events",
+      "date_component": "streakEndDate",
+      "date_normalization": "America/Denver YYYY-MM-DD",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false
+    },
+    {
+      "prefix": "SHOT_MILESTONE|",
+      "family": "shot_milestone_unlock",
+      "format": "SHOT_MILESTONE|{enrollmentId}|{shotMilestoneId}",
+      "components": ["enrollmentId", "shotMilestoneId"],
+      "component_order": ["enrollmentId", "shotMilestoneId"],
+      "authoritative_writer": "066",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+      "destination_table": "Athlete Achievement Unlocks",
+      "field_name": "Milestone Source Key",
+      "xp_via": "059",
+      "notes": "Unlock key; 059 creates XP Event using unlock Source Key. Do not write Unlock Key formula field."
+    },
+    {
+      "prefix": "PERFECT_WEEK|",
+      "family": "perfect_week_unlock",
+      "format": "PERFECT_WEEK|{enrollmentId}|{weekId}",
+      "components": ["enrollmentId", "weekId"],
+      "component_order": ["enrollmentId", "weekId"],
+      "authoritative_writer": "058",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/058-achievements-and-milestones-create-perfect-week-unlock.js",
+      "destination_table": "Athlete Achievement Unlocks",
+      "xp_via": "059",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false
+    },
+    {
+      "prefix": "ZOOM_ATTEND_BASE|",
+      "family": "zoom_live_attendance_xp",
+      "format": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+      "components": ["meetingId", "enrollmentId"],
+      "component_order": ["meetingId", "enrollmentId"],
+      "authoritative_writer": "101",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
+      "destination_table": "XP Events",
+      "ordering_note": "meetingId before enrollmentId (opposite of ZOOM_CREDIT enrollment-first ordering)",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false
+    },
+    {
+      "prefix": "ZOOM_ATTEND_BONUS_2|",
+      "family": "zoom_live_attendance_xp",
+      "format": "ZOOM_ATTEND_BONUS_2|{enrollmentId}",
+      "components": ["enrollmentId"],
+      "component_order": ["enrollmentId"],
+      "authoritative_writer": "101",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
+      "destination_table": "XP Events"
+    },
+    {
+      "prefix": "ZOOM_ATTEND_BONUS_3|",
+      "family": "zoom_live_attendance_xp",
+      "format": "ZOOM_ATTEND_BONUS_3|{enrollmentId}",
+      "components": ["enrollmentId"],
+      "component_order": ["enrollmentId"],
+      "authoritative_writer": "101",
+      "competing_writers": [],
+      "status": "canonical",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js",
+      "destination_table": "XP Events"
+    },
+    {
+      "prefix": "ZOOM_CREDIT|",
+      "family": "zoom_recording_credit_xp",
+      "format": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
+      "components": ["enrollmentId", "meetingId"],
+      "component_order": ["enrollmentId", "meetingId"],
+      "authoritative_writer": "ATTENTION_REQUIRED",
+      "authoritative_writer_candidates": ["117", "117c"],
+      "competing_writers": ["117", "117c"],
+      "status": "duplicate_risk",
+      "legacy": false,
+      "script_paths": [
+        "airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js",
+        "airtable/automations/shooting-challenge/117c-zoom-recording-create-zoom-xp-event.js"
+      ],
+      "destination_table": "XP Events",
+      "ordering_note": "enrollmentId before meetingId (opposite of ZOOM_ATTEND_BASE meeting-first ordering)",
+      "disjoint_from": ["ZOOM_ATTEND_BASE|", "ZOOM_RECORDING|"],
+      "notes": "Exactly one of 117 (orchestrator creates XP) or 117c must be ON for this effect. Mike attestation required. Do not treat both as authoritative."
+    },
+    {
+      "prefix": "ZOOM_RECORDING|",
+      "family": "zoom_recording_credit_xp_s16_superseded",
+      "format": "ZOOM_RECORDING|{meetingId}|{enrollmentId}",
+      "components": ["meetingId", "enrollmentId"],
+      "component_order": ["meetingId", "enrollmentId"],
+      "authoritative_writer": null,
+      "competing_writers": [],
+      "status": "legacy_superseded",
+      "legacy": true,
+      "script_path": "airtable/automations/shooting-challenge/_superseded/117a-s16-homework-completions-award-xp-SUPERSEDED.js",
+      "destination_table": "XP Events",
+      "notes": "S16 design superseded by Stage 17 ZOOM_CREDIT. v2-engine-contracts still lists ZOOM_RECORDING for historical contract tests — not a live writer."
+    },
+    {
+      "prefix": "ZOOM_LIVE|",
+      "family": "zoom_live_canonical_alias",
+      "format": "ZOOM_LIVE|{meetingId}|{enrollmentId}",
+      "components": ["meetingId", "enrollmentId"],
+      "component_order": ["meetingId", "enrollmentId"],
+      "authoritative_writer": null,
+      "competing_writers": [],
+      "status": "contract_alias_unused_in_prod_writers",
+      "legacy": true,
+      "script_path": "airtable/automations/shooting-challenge/lib/v2-engine-contracts.js",
+      "notes": "Present in v2-engine-contracts as zoomLiveCanonical; live 101 writers use ZOOM_ATTEND_BASE|."
+    },
+    {
+      "prefix": "WEEKLY_THRESHOLD_",
+      "family": "weekly_threshold_xp",
+      "format": "UNKNOWN — rules exist as WEEKLY_THRESHOLD_{100|125|150}_{band}; no Source Key minting script in repo",
+      "components": ["percent", "gradeBand"],
+      "component_order": ["unknown"],
+      "authoritative_writer": null,
+      "competing_writers": [],
+      "status": "missing_writer",
+      "legacy": false,
+      "script_path": null,
+      "destination_table": "XP Events",
+      "notes": "XP Reward Rules exist; WAS has Threshold XP fields; no automation script creates WEEKLY_THRESHOLD Source Keys. Evidence insufficient to invent a writer."
+    },
+    {
+      "prefix": "MANUAL_BONUS|",
+      "family": "manual_bonus_xp",
+      "format": "UNKNOWN / operator process — Lifetime XP Manual Adjustments on Enrollments; no MANUAL_BONUS Source Key creator in repo",
+      "components": ["unknown"],
+      "component_order": ["unknown"],
+      "authoritative_writer": null,
+      "competing_writers": [],
+      "status": "manual_process",
+      "legacy": false,
+      "script_path": null,
+      "destination_table": "XP Events",
+      "notes": "Do not invent a scripted writer. Blank-key risk if operators create freeform XP Events."
+    },
+    {
+      "prefix": "WEEKLY_EMAIL|",
+      "family": "weekly_email_send",
+      "format": "WEEKLY_EMAIL|{enrollmentId}|{weekId}",
+      "components": ["enrollmentId", "weekId"],
+      "component_order": ["enrollmentId", "weekId"],
+      "authoritative_writer": "074",
+      "supporting_builders": ["072", "118", "119"],
+      "competing_writers": [],
+      "status": "canonical_email_event_id",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js",
+      "destination_table": "Make payload / WAS send status fields",
+      "notes": "Make dedupe eventId, not XP Events.Source Key."
+    },
+    {
+      "prefix": "ZOOM_REC_EMAIL|",
+      "family": "zoom_recording_approval_email",
+      "format": "ZOOM_REC_EMAIL|{enrollmentId}|{meetingId}|{zoomAttendanceId}",
+      "components": ["enrollmentId", "meetingId", "zoomAttendanceId"],
+      "component_order": ["enrollmentId", "meetingId", "zoomAttendanceId"],
+      "authoritative_writer": "117f",
+      "competing_writers": [],
+      "status": "canonical_email_send_key",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/117f-zoom-recording-send-approval-email.js",
+      "destination_table": "Zoom Attendance send-key / status fields",
+      "notes": "Four-part send key. Make scenario must not write XP Events or Attendees."
+    },
+    {
+      "prefix": "VIDEO_FEEDBACK|",
+      "family": "video_feedback_identity",
+      "format": "VIDEO_FEEDBACK|{submissionAssetId}",
+      "components": ["submissionAssetId"],
+      "component_order": ["submissionAssetId"],
+      "authoritative_writer": "013",
+      "competing_writers": ["112"],
+      "status": "canonical_identity_key",
+      "legacy": false,
+      "script_path": "airtable/automations/shooting-challenge/013-submission-intake-create-or-link-video-feedback.js",
+      "destination_table": "Video Feedback",
+      "field_name": "Video Feedback Key",
+      "notes": "Not an XP Source Key. 112 uses raw asset RID as key — incompatible. 112 must be OFF."
+    }
+  ],
+  "flags": {
+    "duplicate_prefixes": [
+      {
+        "family": "zoom_recording_credit_xp",
+        "issue": "117 and 117c both mint ZOOM_CREDIT|",
+        "severity": "critical",
+        "resolution": "mike_attest_exactly_one_on"
+      },
+      {
+        "family": "video_feedback_identity",
+        "issue": "013 uses VIDEO_FEEDBACK|{assetId}; 112 uses raw {assetId}",
+        "severity": "critical_if_112_on",
+        "resolution": "112_must_be_off"
+      }
+    ],
+    "legacy_formats": [
+      "HOMEWORK_COMPLETION|",
+      "ZOOM_RECORDING|",
+      "ZOOM_LIVE|"
+    ],
+    "variable_ordering_differences": [
+      {
+        "a": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+        "b": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
+        "note": "Intentional disjoint families with reversed component order — do not unify."
+      },
+      {
+        "a": "ZOOM_RECORDING|{meetingId}|{enrollmentId}",
+        "b": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
+        "note": "S16 vs Stage 17 ordering and prefix differ."
+      }
+    ],
+    "date_normalization_differences": [
+      {
+        "writer": "054",
+        "risk": "Streak End Date must use America/Denver; UTC ISO slice alone can collide or miss."
+      }
+    ],
+    "writers_reading_formula_dedupe": ["010", "114"],
+    "writers_attempting_formula_writes": [],
+    "known_formula_write_prohibitions": [
+      {
+        "field": "XP Dedupe Key",
+        "rule": "formula-only; scripts may read for match, never write"
+      },
+      {
+        "field": "XP Dedupe Key Normalized",
+        "rule": "formula-only; scripts may read for match, never write"
+      },
+      {
+        "field": "Summary Key",
+        "rule": "formula-only on WAS; 031/101/118 must not write"
+      },
+      {
+        "field": "Unlock Key",
+        "rule": "formula/computed on Athlete Achievement Unlocks; 066 writes Milestone Source Key only"
+      }
+    ],
+    "missing_registry_writer_gaps": [
+      "WEEKLY_THRESHOLD_",
+      "MANUAL_BONUS|"
+    ]
+  }
+}
