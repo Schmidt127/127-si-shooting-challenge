@@ -7,7 +7,8 @@
 
 Ordered by dependency and risk. Do not skip attestation before enabling schedules or Zoom dual paths.
 
-**Decisions recorded 2026-07-24:** SC-035 = `send_short`; SC-014 = Option B (attachment-less).
+**Decisions recorded 2026-07-24:** SC-035 = `send_short`; SC-014 = Option B (attachment-less).  
+**PROD installs recorded 2026-07-24:** Automation **054 v5.6** + **066 v3.3** (Installed in PROD; not Live Tested yet).
 
 ---
 
@@ -73,14 +74,16 @@ If a Zoom recording **XP** orchestrator or **117c** is installed later, keep exa
 
 ## P0 — Pastes after attestation
 
-### 7. Paste approved 054 / 066 versions
+### 7. Paste approved 054 / 066 versions — DONE (Installed in PROD)
 
-| Script | Repo version | Path |
-|--------|--------------|------|
-| 054 | v5.6 | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
-| 066 | v3.3 | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` |
+| Script | Version | PROD status | Path |
+|--------|---------|-------------|------|
+| 054 | v5.6 | **Installed in PROD** (2026-07-24) | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
+| 066 | v3.3 | **Installed in PROD** (2026-07-24) | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` |
 
-**Expected outcome:** Duplicate-rule guard (054) + Grade Band link-ID match (066) live in PROD.
+**Outcome:** Duplicate-rule guard (054) + Grade Band link-ID match (066) installed.  
+**Not Live Tested yet** — supervised Schmidt streak/milestone proofs still required (see P1 #14).  
+**Evidence:** `docs/next-wave/config-xp/MIKE-ACTIONS.md`
 
 ### 8. Resolve Video XP discrepancy
 
@@ -99,7 +102,7 @@ If a Zoom recording **XP** orchestrator or **117c** is installed later, keep exa
 | 11 | Zoom live attendance → 101 | Attendees path only; WAS link/create race OK |
 | 12 | Zoom recording credit XP (if XP automation present) | One `ZOOM_CREDIT`; conflict soft-void — do not confuse with PROD 117 email slot |
 | 13 | After 118 paste: dryRun Sunday build | WAS ensure for empty/homework-only week; empty week uses **short** email path |
-| 14 | Supervised 3-day streak / milestone / Perfect Week | After 054/066 paste; not unattended |
+| 14 | Supervised 3-day streak / milestone / Perfect Week | **054 v5.6 + 066 v3.3 installed** — live proof still required; not unattended |
 | 15 | Level gate block + clear | 042 with Zoom credit flags from correct year Config |
 | 16 | Testing views (SC-003) | Create remaining Testing views with Schmidt Enrollment filter |
 | 17 | Final Reflection quiz → 067 Option B | HC created, **0** assets; coach Score review → one XP |

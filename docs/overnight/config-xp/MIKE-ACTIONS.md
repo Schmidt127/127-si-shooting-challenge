@@ -52,14 +52,14 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Verification:** After decision, Lifetime XP matches intended sources
 - **Related SC:** SC-074, SC-078
 
-### 6. Paste 066 v3.3 (Grade Band link-ID matching)
-- **Priority:** P0
+### 6. ~~Paste 066 v3.3 (Grade Band link-ID matching)~~ **DONE 2026-07-24 — Installed in PROD**
+- **Priority:** P0 *(paste complete; live proof still open)*
 - **System:** Automation 066
-- **Exact action:** Paste GitHub `066-…js` v3.3 into PROD (skip GitHub header)
+- **Exact action:** ~~Paste GitHub `066-…js` v3.3 into PROD~~ **Completed — 066 v3.3 installed in PROD**
 - **Expected outcome:** Milestone band match uses linked record IDs; rename-safe
-- **Why not completed:** Airtable UI paste required
-- **Verification:** Run Shot Milestone Check on Schmidt (still below 500 — expect skip_no_milestones, no error)
-- **Related SC:** SC-023, SC-027, SC-076
+- **Status:** **Installed in PROD** — not Live Tested until supervised Schmidt/OMNI run
+- **Verification still needed:** Run Shot Milestone Check on Schmidt (still below 500 — expect skip_no_milestones, no error)
+- **Related SC:** SC-023, SC-027, SC-076 · Next-wave note: `docs/next-wave/config-xp/MIKE-ACTIONS.md`
 
 ### 7. Decide submission formula XP economics vs SHOOTING_BASE=20
 - **Priority:** P2
@@ -93,13 +93,13 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Why not completed:** Multi-system cascade not cleanly reversible unattended
 - **Related SC:** SC-075, SC-076, SC-027
 
-### 11. Paste 054 v5.6 (duplicate active XP rule detection)
-- **Priority:** P1
+### 11. ~~Paste 054 v5.6 (duplicate active XP rule detection)~~ **DONE 2026-07-24 — Installed in PROD**
+- **Priority:** P1 *(paste complete; live proof still open)*
 - **System:** Automation 054
-- **Exact action:** Paste GitHub 054 v5.6 into PROD
+- **Exact action:** ~~Paste GitHub 054 v5.6 into PROD~~ **Completed — 054 v5.6 installed in PROD**
 - **Expected outcome:** Duplicate active `STREAK_nDAY` rules error clearly instead of first-match
-- **Why not completed:** UI paste
-- **Related SC:** SC-022, SC-075
+- **Status:** **Installed in PROD** — not Live Tested until supervised streak proof
+- **Related SC:** SC-022, SC-075 · Next-wave note: `docs/next-wave/config-xp/MIKE-ACTIONS.md`
 
 ### 12. Early gate tuning spreadsheet (do not apply overnight)
 - **Priority:** P2
