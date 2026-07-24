@@ -198,7 +198,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 |----------|--------|
 | **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
 | Homework upload (070a) | PROD **OFF** |
-| Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; schedules OFF; 074+Make ON; RCC monitors writeback mismatches |
+| Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; **118/119 schedules ON**; 072+074+Make ON; RCC monitors writeback mismatches |
 | Daily / homework / video parent emails | Make webhooks + Airtable scripts |
 
 ---
@@ -210,8 +210,9 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | Repository framework | **Built / Tested** — `lib/reliability-command-center/`, CLI + dry-run repair preview |
 | Docs | [reliability-command-center/README.md](./reliability-command-center/README.md) |
 | Install packet | [deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](./deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) — **Ready for Production Installation** (views) |
-| Airtable Interface / views | **Designed** only — **not installed** |
-| Live PROD export audit | Not yet run |
+| Airtable Interface / views | **Designed** only — **not installed** (MVP = Weekly Email Health + P0 views; no new fields) |
+| Live PROD export audit | Not yet run — required before SC-147 → Live Tested |
+| Complements | Agent 1+2 reliability audit docs (merged via go-live); does not duplicate ownership/trust-band packets |
 
 ```bash
 node tests/reliability-command-center/run-all.js

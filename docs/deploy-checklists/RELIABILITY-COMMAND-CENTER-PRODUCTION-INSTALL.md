@@ -1,19 +1,22 @@
 # Production installation packet — Reliability Command Center
 
-**Status:** Ready for Production Installation (repository + view specs)  
+**Status:** Ready for Production Installation (repository + MVP views)  
 **Airtable Interface:** Designed only — **not installed** by this packet  
+**Optional RCC fields / Findings table:** **Deferred**  
 **Date:** 2026-07-24  
-**Scope:** Shooting Challenge only
+**Scope:** Shooting Challenge only  
+**Authoritative MVP steps:** [MVP-PRODUCTION-RELEASE.md](../reliability-command-center/MVP-PRODUCTION-RELEASE.md)
 
 ## Preconditions
 
-- [ ] On branch/PR for RCC reviewed
+- [ ] PR #40 reviewed / merged to `master` (or integration-approved)
 - [ ] `node tests/reliability-command-center/run-all.js` PASS
 - [ ] Related contract tests PASS (`tests/was-email-contracts`, `tests/homework-contracts`)
-- [ ] Mike authorizes any Airtable view/Interface creation (OMNI in-base)
+- [ ] Mike authorizes Airtable view creation (OMNI in-base)
 - [ ] No Team Shot Tracker changes
 - [ ] Weekly email ownership unchanged: `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail → writeback`
-- [ ] PROD 074 `sendMode` is **Live** (or blank inheriting WAS Live) — never fixed Test
+- [ ] PROD confirmed: **072 ON · 074 ON · 118 ON · 119 ON · 074 sendMode=Live**
+- [ ] Do **not** disable 118/119 based on older OFF docs
 
 ## Files and scripts involved
 
@@ -28,37 +31,25 @@
 
 ## Proposed new fields
 
-**None required** for repository audit usage.
+**None for MVP.** Do not create optional `RCC *` formulas or Findings table unless Mike later authorizes.
 
-Optional accelerators (Mike-authorized only) — see [AIRTABLE-VIEW-SPEC.md](../reliability-command-center/AIRTABLE-VIEW-SPEC.md):
+## Exact minimum Airtable views (create first)
 
-- `RCC Email Conflict?` (WAS formula)
-- `RCC Level Conflict?` (Enrollments formula)
-- Future `RCC Findings` table
+All use **existing PROD fields** — create directly (no helper formulas):
 
-**Do not create these fields in this install unless Mike explicitly asks.**
+1. **Weekly Email Health** — WAS filter OR(Build, Ready, Send, Sent)
+2. **P0 Ready package incomplete** — Ready AND (Subject OR Recipients OR HTML blank)
+3. **P0 Send armed not Ready** — Send to Make? AND NOT Ready
+4. **P0 Sent / Make writeback mismatch** — Sent XOR Make Sent / still armed
 
-## Proposed Airtable views
+Exact filters + visible fields: [MVP-PRODUCTION-RELEASE.md](../reliability-command-center/MVP-PRODUCTION-RELEASE.md).
 
-Create in PROD (or DEV first) using exact filters from the view spec:
-
-1. P0 Blocking Errors — Weekly Email (multiple saved filters OK)
-2. Retryable Errors (or use RCC export until helpers exist)
-3. Missing Dependencies — Submissions
-4. Duplicate Risks — XP Events grouped by Source Key
-5. Stale Processing — WAS Build flag / Enrollment recalc
-6. Weekly Email Health
-7. XP Integrity
-8. Achievement Integrity
-9. Level Integrity
-10. Current Challenge-Year Problems
-11. Recently Resolved — defer until findings log exists
-
-Interface name if created later: **Reliability Command Center** — mark status **Installed** only after Mike confirms.
+Optional day-1 aid: XP Events grouped by `Source Key`.
 
 ## Automation changes
 
-**None.** Do not add/enable/disable Airtable automations for RCC v1.
+**None.** Do not add/enable/disable Airtable automations for RCC v1.  
+118/119 remain **ON**.
 
 ## Test procedure (repository)
 
@@ -75,48 +66,34 @@ node tools/reliability-command-center/cli.js \
   --output /tmp/rcc-mixed
 ```
 
-Expect healthy fixture ≈ 0 P0; mixed fixture many P0/P1 with recommended actions.
-
 ## Controlled production validation (read-only)
 
-1. Export sanitized JSON slices (or use Scripting extension export) for:
-   - Weekly Athlete Summary (email fields)
-   - XP Events (Source Key, Enrollment, Points)
-   - Submissions (Enrollment, Week, Activity Date, XP status)
-   - Enrollments (Active?, Challenge Year, levels)
-2. Strip/replace real emails with synthetic values before committing anything.
-3. Run CLI `--input` → review P0 list.
-4. For any repair: dry-run preview with **explicit record IDs** only.
-5. Apply fixes via existing automations / Mike-authorized OMNI — not bulk RCC writes.
+1. Export sanitized JSON for at least: Weekly Athlete Summary, Enrollments, Weeks, XP Events (see MVP export format).
+2. Strip real PII before any commit.
+3. Run CLI `--input` → review P0 list + duplicate-risk findings.
+4. Create Views 1–4 in Airtable.
+5. **No automatic repairs.** Dry-run preview only with explicit record IDs if proposing fixes.
+6. Record evidence (report paths + view names) under deploy notes / operator folder.
 
 ## Expected outputs
 
 - `report.json` + `report.md` with P0–P3 counts
-- Affected record IDs
-- Retry eligibility per finding
+- Affected record IDs + retry eligibility
 - No live Airtable mutations from CLI
 
 ## Rollback procedure
 
-See [ROLLBACK.md](../reliability-command-center/ROLLBACK.md).
+See [ROLLBACK.md](../reliability-command-center/ROLLBACK.md). Delete MVP views if needed. Never clear `Weekly Email Sent?` to force resend.
 
 ## Confirm no duplicate XP / unlocks / summaries / emails
 
-After any manual repair:
+After any manual repair: re-export → re-run RCC → zero new duplicate/resend findings attributable to the repair.
 
-1. Re-export affected tables.
-2. Re-run RCC audit.
-3. Zero new `*_duplicate_*` / `already_sent_eligible_to_resend` / `sent_still_armed` findings attributable to the repair.
-4. Spot-check Source Keys for repaired records in XP Events.
+## Status gates (SC-147)
 
-## How to mark statuses
-
-| Evidence | Status to use |
-|----------|----------------|
-| Code + tests in repo | Built / Tested |
-| View spec only | Designed |
-| This packet ready | Ready for Production Installation |
-| Mike created views/Interface | Installed |
-| Controlled PROD export audit PASS | Live Tested in PROD |
-
-Do **not** mark Interface as Installed until it exists in Airtable.
+| Evidence | Status |
+|----------|--------|
+| Code + tests in repo | **Built / Tested** *(current)* |
+| MVP packet ready | **Ready for Production Installation** |
+| Views created in Airtable | **Installed** (do not mark until views exist) |
+| CLI on current PROD export + findings reviewed | **Live Tested in PROD** (do not mark until done) |

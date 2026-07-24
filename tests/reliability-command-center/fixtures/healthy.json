@@ -75,6 +75,7 @@
         "Weekly Email Subject": "127 Sports Intensity Weekly Summary | Synthetic Athlete | Week 1",
         "Weekly Email Recipients": "parent.synthetic@example.test",
         "Weekly Email HTML": "<html><body>Synthetic package</body></html>",
+        "Weekly Summary Sent At": "2026-07-20T16:00:00.000Z",
         "Weekly Email Sent At": "2026-07-20T16:00:00.000Z",
         "Make Send Status": "Sent",
         "sendMode": "Live"

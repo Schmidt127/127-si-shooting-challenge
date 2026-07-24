@@ -162,6 +162,31 @@ test("make sent without checkbox", () => {
   assert.ok(conflicts.some((c) => c.code === "make_sent_checkbox_blank"));
 });
 
+test("sent timestamp accepts Weekly Summary Sent At (PROD Make writeback field)", () => {
+  const ok = detectWeeklyEmailConflicts({
+    "Weekly Email Ready?": true,
+    "Weekly Email Subject": "s",
+    "Weekly Email Recipients": "a@b.test",
+    "Weekly Email HTML": "<p>x</p>",
+    "Weekly Email Sent?": true,
+    "Make Send Status": "Sent",
+    "Weekly Summary Sent At": "2026-07-20T16:00:00.000Z",
+    sendMode: "Live",
+  });
+  assert.ok(!ok.some((c) => c.code === "sent_timestamp_blank"));
+
+  const blank = detectWeeklyEmailConflicts({
+    "Weekly Email Ready?": true,
+    "Weekly Email Subject": "s",
+    "Weekly Email Recipients": "a@b.test",
+    "Weekly Email HTML": "<p>x</p>",
+    "Weekly Email Sent?": true,
+    "Make Send Status": "Sent",
+    sendMode: "Live",
+  });
+  assert.ok(blank.some((c) => c.code === "sent_timestamp_blank"));
+});
+
 test("level conflicts", () => {
   const conflicts = detectLevelConflicts({
     "Current Level": "L5",

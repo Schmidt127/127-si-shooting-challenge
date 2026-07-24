@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (go-live integration: 118/119 schedules ON; Live writeback; dashboard recalculated) |
+| Last updated | 2026-07-24 (SC-147 Reliability Command Center Built in Repository; total 147; 118/119 ON; dashboard recalculated) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -63,11 +63,11 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **146** |
+| **Total items** | **147** |
 | Complete | 12 |
 | Live Tested in PROD | 9 |
 | Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 27 |
+| Built but not installed *(Built in Repository)* | 28 |
 | Planned | 23 |
 | Decision Needed | 6 |
 | Deferred | 10 |
@@ -75,7 +75,7 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository** (MVP views not yet Installed; not Live Tested until PROD export audit). Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -241,7 +241,7 @@ Columns:
 | SC-144 | Website | Rename Softr-named publish flag | Planned | Flag still Softr-named in schema | Rename in schema wave; update web queries | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-23 |
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
-| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + view/Interface **spec** + install packet; preserves `118→072→119→074→Make` ownership | Mike create Airtable views/Interface from spec (OMNI); optional controlled PROD export audit; optional formula helpers only if authorized | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface **not installed** | `docs/reliability-command-center/`; `lib/reliability-command-center/`; `tools/reliability-command-center/` | Approve view install | P0 | 2026-07-24 |
+| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet (existing PROD fields); preserves `118→072→119→074→Make` with **118/119 ON**; complements Agent 1+2 reliability audit (no doc duplication) | Mike: merge PR → export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred** | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `lib/reliability-command-center/`; `tools/reliability-command-center/` | Approve MVP view install + first PROD export run | P0 | 2026-07-24 |
 
 ---
 

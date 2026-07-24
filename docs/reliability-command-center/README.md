@@ -31,6 +31,7 @@ Mike should be able to answer:
 | Dry-run repair preview | `tools/reliability-command-center/repair-preview.js` | **Built / Tested** |
 | Synthetic fixtures + tests | `tests/reliability-command-center/` | **Built / Tested** |
 | Airtable view / Interface spec | [AIRTABLE-VIEW-SPEC.md](./AIRTABLE-VIEW-SPEC.md) | **Designed** |
+| MVP PROD release (existing fields) | [MVP-PRODUCTION-RELEASE.md](./MVP-PRODUCTION-RELEASE.md) | **Ready for Production Installation** |
 | Production install packet | [../deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](../deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) | **Ready for Production Installation** (views only; no auto field creates) |
 
 ## Quick start (offline)
@@ -60,6 +61,7 @@ node tools/reliability-command-center/repair-preview.js \
 | [WORKFLOW-CHECKS.md](./WORKFLOW-CHECKS.md) | Per-workflow detection rules |
 | [RETRY-POLICY.md](./RETRY-POLICY.md) | Safe retry classification |
 | [AIRTABLE-VIEW-SPEC.md](./AIRTABLE-VIEW-SPEC.md) | Recommended views / Interface (not installed) |
+| [MVP-PRODUCTION-RELEASE.md](./MVP-PRODUCTION-RELEASE.md) | Minimum PROD release using existing fields |
 | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | Operator playbook |
 | [ROLLBACK.md](./ROLLBACK.md) | How to roll back install attempts |
 | [MAKE-INTEGRATION-OPTIONS.md](./MAKE-INTEGRATION-OPTIONS.md) | Future Make options (none required now) |
@@ -71,7 +73,7 @@ node tools/reliability-command-center/repair-preview.js \
 ```
 
 Make scenario: **Weekly Athlete Summary - Bulk Email - May 18**  
-PROD rule: 074 `sendMode=Live` (never fixed Test) so Live writeback can set `Weekly Email Sent?`, `Make Send Status=Sent`, and sent timestamp.
+PROD verified (2026-07-24): **072/074/118/119 ON**; 074 `sendMode=Live` (never fixed Test); email delivered; `Weekly Email Sent?` checked; `Make Send Status=Sent`; timestamp on `Weekly Summary Sent At` and/or `Weekly Email Sent At`. Do **not** turn 118/119 OFF.
 
 ## Explicit non-goals
 

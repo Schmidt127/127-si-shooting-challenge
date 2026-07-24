@@ -9,10 +9,16 @@
     {
       "id": "rec00000000000058",
       "fields": {
-        "Athlete": ["rec00000000000059"],
-        "Config": ["rec00000000000003"],
+        "Athlete": [
+          "rec00000000000059"
+        ],
+        "Config": [
+          "rec00000000000003"
+        ],
         "Challenge Year": "2026-2027",
-        "Grade Band": ["rec00000000000004"],
+        "Grade Band": [
+          "rec00000000000004"
+        ],
         "Active?": true,
         "Parent Email": "parent.synthetic@example.test"
       }
@@ -33,8 +39,12 @@
     {
       "id": "rec00000000000060",
       "fields": {
-        "Enrollment": ["rec00000000000058"],
-        "Week": ["rec00000000000057"],
+        "Enrollment": [
+          "rec00000000000058"
+        ],
+        "Week": [
+          "rec00000000000057"
+        ],
         "Weekly Email Ready?": true,
         "Weekly Email Sent?": false,
         "Send to Make?": true,
@@ -48,8 +58,12 @@
     {
       "id": "rec00000000000061",
       "fields": {
-        "Enrollment": ["rec00000000000058"],
-        "Week": ["rec00000000000057"],
+        "Enrollment": [
+          "rec00000000000058"
+        ],
+        "Week": [
+          "rec00000000000057"
+        ],
         "Weekly Email Ready?": true,
         "Weekly Email Sent?": true,
         "Send to Make?": false,
@@ -60,14 +74,19 @@
         "Weekly Email Sent At": "2026-07-20T16:00:00.000Z",
         "Make Send Status": "Sent",
         "sendMode": "Live",
-        "_resendEligibleFlag": true
+        "_resendEligibleFlag": true,
+        "Weekly Summary Sent At": "2026-07-20T16:00:00.000Z"
       }
     },
     {
       "id": "rec00000000000062",
       "fields": {
-        "Enrollment": ["rec00000000000058"],
-        "Week": ["rec00000000000063"],
+        "Enrollment": [
+          "rec00000000000058"
+        ],
+        "Week": [
+          "rec00000000000063"
+        ],
         "Weekly Email Ready?": true,
         "Weekly Email Sent?": false,
         "Send to Make?": false,

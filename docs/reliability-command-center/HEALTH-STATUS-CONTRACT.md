@@ -57,7 +57,8 @@ Canonical weekly-email fields (WAS):
 - `Build Weekly Email Now?`
 - `Weekly Email Ready?`
 - `Weekly Email Sent?`
-- `Weekly Email Sent At`
+- `Weekly Summary Sent At` (preferred Make Live writeback timestamp)
+- `Weekly Email Sent At` (also present in PROD; accepted as alternate)
 - `Send to Make?`
 - `Weekly Email Subject` / `Recipients` / `HTML` / `Text` / `Payload JSON`
 - `Weekly Email Error`

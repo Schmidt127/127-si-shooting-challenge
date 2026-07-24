@@ -51,15 +51,15 @@ Statuses include: Healthy, Waiting, Ready, Processing, Sent or Completed, Retrya
 ## Weekly email ownership (locked)
 
 ```text
-118 schedules/initiates build
-072 builds package + empty-week policy
-119 only arms Send to Make?
-074 posts Make webhook
+118 schedules/initiates build   (PROD ON — Sun 5:00 AM Denver)
+072 builds package + empty-week policy  (PROD ON)
+119 only arms Send to Make?     (PROD ON — Sun 10:00 AM Denver)
+074 posts Make webhook          (PROD ON; sendMode=Live)
 Make Bulk Email May 18 → Gmail
-Make Live branch → Airtable writeback (Sent? / status / timestamp)
+Make Live branch → Airtable writeback (Sent? / Make Send Status / Weekly Summary Sent At)
 ```
 
-RCC detects conflicts across this chain. It does **not** change ownership.
+RCC detects conflicts across this chain. It does **not** change ownership and must **not** recommend disabling 118/119.
 
 ## Integration with existing audits
 
@@ -68,6 +68,7 @@ RCC detects conflicts across this chain. It does **not** change ownership.
 | `airtable/extension-scripts/audits/*` | In-base dry-run audits — remain authoritative for live base scanning |
 | `lib/was-email-contracts` | Reused conceptually; RCC adds cross-workflow health |
 | `docs/overnight/testing-integrity/*` | Evidence audits; RCC is the operator-facing consolidation layer |
+| `docs/next-wave/reliability-audit-2026-07-24/*` | Agent 1+2 trust/ownership audit — complementary docs; not replaced by RCC |
 | Field ownership matrix | RCC recommends actions; does not reassign writers |
 
 ## Safety boundaries
