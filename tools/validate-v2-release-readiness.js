@@ -480,12 +480,12 @@ if (byNumber.has("066")) {
   }
 
   if (
-    (/Automation 066 v3\.1/i.test(projectState) || /Automation 066 v3\.2/i.test(projectState)) &&
+    /Automation 066 v3\.[12]/i.test(projectState) &&
     !/066 v3\.3/i.test(projectState)
   ) {
     fail("PROJECT_STATE references Automation 066 v3.1/v3.2 without acknowledging v3.3 current");
   } else {
-    pass("PROJECT_STATE 066 version wording acknowledges v3.3 (or avoids stale v3.1/v3.2-only claim)");
+    pass("PROJECT_STATE 066 version wording acknowledges v3.3 (or avoids stale older-only claim)");
   }
 }
 

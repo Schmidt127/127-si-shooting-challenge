@@ -2,6 +2,15 @@
 
 Read-only verification and offline harnesses for Automation **115** and XP/WAS integrity.
 
+## Agent 4 QC suite (contracts + weekly email Live/Test regression)
+
+Inventory, coverage matrix, release/rollback checklists:
+`docs/testing/agent4-qc/`
+
+```bash
+node tools/testing/run-agent4-suite.js
+```
+
 ## Offline tests (no Airtable)
 
 ```bash
