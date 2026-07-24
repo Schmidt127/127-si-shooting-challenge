@@ -1,7 +1,9 @@
 # Softr → Next.js cutover readiness
 
-**Status:** Checklist only — **do not cut over** and **do not change `noindex`/robots** without explicit Mike approval.  
-**As of:** 2026-07-18 · master `3ec489a`  
+**Status:** Obsolete / Superseded / Historical Reference Only / Not Used for Current Launch  
+**Product correction (2026-07-24):** Softr is **not used** by the Shooting Challenge App. Do **not** treat this checklist as a season-launch gate. Active front end: Next.js `/shoot` — see [`../challenge-year/WEB-SEASON-ACTIVATION.md`](../challenge-year/WEB-SEASON-ACTIVATION.md) and [`../challenge-year/SOFTR-SEASON-ACTIVATION.md`](../challenge-year/SOFTR-SEASON-ACTIVATION.md).  
+**Historical note:** Checklist only — **do not cut over** and **do not change `noindex`/robots** without explicit Mike approval.  
+**As of (historical):** 2026-07-18 · master `3ec489a`  
 **Companions:** [PROJECT_STATE.md](../PROJECT_STATE.md) · [web/docs/site-hierarchy.md](../../web/docs/site-hierarchy.md) · [KNOWN_ISSUES.md](../KNOWN_ISSUES.md)
 
 ---

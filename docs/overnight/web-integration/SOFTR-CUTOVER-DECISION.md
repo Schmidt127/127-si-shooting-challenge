@@ -1,10 +1,12 @@
 # Softr Cutover Decision — SC-114
 
-**Agent 6 overnight** · 2026-07-23 · **Decision owner: Mike** · No cutover action taken tonight.
+**Status:** Obsolete / Superseded / Historical Reference Only / Not Used for Current Launch  
+**Product correction (2026-07-24):** Softr is **not used** for the Shooting Challenge App. SC-114 is **Superseded**. Do not block season launch on Softr cutover. Active front end: `/shoot` — [`WEB-SEASON-ACTIVATION.md`](../../challenge-year/WEB-SEASON-ACTIVATION.md).
 
-Authoritative operational checklist: `docs/deploy-checklists/SOFTR-CUTOVER-READINESS.md`
-(2026-07-18). This doc updates the *decision picture* with overnight findings; the
-checklist remains the execution runbook.
+**Agent 6 overnight** · 2026-07-23 · **Decision owner: Mike** · No cutover action taken that night (historical).
+
+Authoritative historical checklist: `docs/deploy-checklists/SOFTR-CUTOVER-READINESS.md`
+(2026-07-18). Kept for archive only — not an execution runbook for current launch.
 
 ---
 

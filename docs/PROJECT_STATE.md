@@ -245,7 +245,7 @@ Full register: [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 | Severity | Theme |
 |----------|--------|
 | High | 066 live OMNI sandbox still unconfirmed; automation version inventory largely UNKNOWN in live bases; athlete E2E matrix mostly untested |
-| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 not live; 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used |
+| Medium | C-025 Stage 17 COMPLETE (email webhook still deferred); C-011 weekly email Live path proven (118/119 ON); 070a homework PROD off; web auth/dashboard incomplete; Softr Obsolete / Not Used |
 | Low | Root marketing URL depends on landing hub; GitHub trigger headers often “confirm in Airtable” |
 
 ---

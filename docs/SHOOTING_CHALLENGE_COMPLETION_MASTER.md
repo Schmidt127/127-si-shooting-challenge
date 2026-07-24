@@ -362,7 +362,7 @@ Only decisions that need Mike (not pure engineering choices):
 | SC-081 | Change streak repeat-after-break behavior, or only tune amounts? | Code vs config |
 | SC-095 | When to turn **070a** homework S3 upload ON in PROD? | Currently intentionally OFF |
 | SC-112 | Athlete auth approach for real dashboard/profiles? | Unlocks web Phase 3 |
-| SC-114 / SC-115 | Softr cutover timing + public indexing (noindex removal)? | Public traffic / SEO |
+| SC-115 | Public indexing (noindex removal)? (SC-114 Softr cutover is Superseded — Softr Obsolete) | Public traffic / SEO |
 | SC-067 | When to schedule Program Instance multi-year wave? | Large architecture |
 | SC-002 / SC-006 | Build Scenario Library + auto Expected-vs-Actual now or later? | Testing investment level |
 
@@ -412,7 +412,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | V2-028 | SC-130–SC-132 | Media kits |
 | C-001–C-003, C-008 | SC-123 | Wave 0 historical complete |
 | C-004/C-005/C-007 | SC-142 | Not needed after wipe |
-| Softr cutover / K-H4 / K-L4 / K-M5–M7 | SC-111–SC-116, SC-144 | Web cutover cluster |
+| Softr cutover (Obsolete) / indexing / publish-flag rename | SC-114 Superseded; SC-115; SC-144 | Web cluster — Softr not a launch gate |
 
 **Document conflicts to treat as stale (do not re-open as separate work):**
 
@@ -455,7 +455,7 @@ Still open from that pack: **115 paste**, remaining **Testing views**, leaderboa
 
 **Deliverables:** `docs/overnight/FINAL-OVERNIGHT-RECONCILIATION.md`, `docs/overnight/MIKE-ACTIONS-TOMORROW.md`, `docs/overnight/web-integration/*`
 
-Confirmed direction preserved: PROD active; Schmidt visible; Weeks manual; website reads live config; athlete auth / Softr / noindex remain Mike decisions.
+Confirmed direction preserved: PROD active; Schmidt visible; Weeks manual; website (`/shoot`) reads live config; Softr Obsolete / Not Used; athlete auth / noindex remain Mike decisions.
 
 ### 9D. Next-wave Agents 9–12 + Agent 13 final reconciliation — **2026-07-24**
 
