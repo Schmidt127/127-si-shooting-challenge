@@ -89,14 +89,14 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md](./v2/ZOOM_RECORDING_CREDIT_DEV_INSTALL.md) | C-025 / **117a–117b** DEV install packet (**superseded S16 design** — Stage 17 is current) |
 | [v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md](./v2/C011_AUTOMATIC_WEEKLY_EMAIL_DEV_INSTALL.md) | C-011 weekly email DEV install packet (historical) |
 | [next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) | **C-011 PROD verified** weekly email architecture (`118→072→119→074→Make`) |
+| [reliability-command-center/README.md](./reliability-command-center/README.md) | **Reliability Command Center** (SC-147) — workflow health model, offline audit CLI, retry policy (Interface **Designed**, not installed) |
+| [reliability-command-center/MVP-PRODUCTION-RELEASE.md](./reliability-command-center/MVP-PRODUCTION-RELEASE.md) | RCC minimum PROD release — existing fields, export format, exact views |
+| [deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](./deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) | RCC production installation packet (MVP views; no automation changes; 118/119 stay ON) |
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
-| [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year + Season Launch Control** (Built in Repository; Softr Obsolete) |
-| [challenge-year/SEASON-LAUNCH-CONTROL.md](./challenge-year/SEASON-LAUNCH-CONTROL.md) | Launch lifecycle, CLI, operator Q&A |
-| [challenge-year/WEB-SEASON-ACTIVATION.md](./challenge-year/WEB-SEASON-ACTIVATION.md) | `/shoot` season activation package |
+| [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year Config + season rollover engine** (Built in Repository) |
 | [deploy-checklists/challenge-year-rollover-installation-packet.md](./deploy-checklists/challenge-year-rollover-installation-packet.md) | Annual rollover installation / usage packet |
-| [deploy-checklists/season-launch-control-installation-packet.md](./deploy-checklists/season-launch-control-installation-packet.md) | Season Launch Control PROD install packet |
 
 **Safe repo validation (no Airtable / no secrets printed):**
 
@@ -108,7 +108,7 @@ node tools/validate-v2-release-readiness.js
 
 | Doc | Purpose |
 |-----|---------|
-| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, `/shoot` (Softr Obsolete) |
+| [PROJECT_STATE.md](./PROJECT_STATE.md) | **Live snapshot** — bases, audits, Vercel, Softr |
 | [KNOWN_ISSUES.md](./KNOWN_ISSUES.md) | Operational known issues with severity + ownership |
 | [deployment-notes.md](./deployment-notes.md) | Vercel env vars, health check, validation |
 | [../web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md) | `/shoot/admin` roadmap (read-only first) |

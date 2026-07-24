@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (Season Launch PR #41; Softr Obsolete; SC-032 Built; SC-114 Superseded; dashboard recalculated; RCC not vendored) |
+| Last updated | **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; SC-032 Built; SC-114 Superseded; SC-147 from #40; total 147) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -63,11 +63,11 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **146** |
+| **Total items** | **147** |
 | Complete | 12 |
 | Live Tested in PROD | 9 |
 | Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 28 |
+| Built but not installed *(Built in Repository)* | 29 |
 | Planned | 22 |
 | Decision Needed | 5 |
 | Deferred | 10 |
@@ -75,18 +75,24 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-### Dashboard reconciliation (Season Launch PR #41, pre-PR #40 merge)
+### Dashboard reconciliation (2026-07-24)
 
-| SC | Old status | New status | Source | Evidence |
-|----|------------|------------|--------|----------|
-| SC-032 | Planned | Built in Repository | Season Launch Control | Launch lifecycle + CLI + packages; not live-installed |
-| SC-114 | Decision Needed | Superseded | Softr Obsolete / Not Used | `/shoot` active; Softr not a launch dependency |
-| SC-065 | Built in Repository | Built in Repository | Evidence refresh only | `generate-week-package` |
-| SC-067 | Deferred | Deferred | Notes only | Season Launch interim until Program Instance wave |
+Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Tested **10** · Installed **54** · Built **28**.
 
-**Net math (vs master 146):** SC-032 Planned→Built (+1 Built → 28, Planned 22); SC-114 Decision→Superseded (Decision Needed 5, Superseded 4). Total remains **146** until PR #40 adds SC-147.
+| SC | Old status | New status | Source of change | Evidence | PR #41 alone? |
+|----|------------|------------|------------------|----------|---------------|
+| SC-031 | Built in Repository | Live Tested in PROD | Go-live (`7c7a79a`) | 118/119 schedules **ON** + Live writeback | No |
+| SC-038 | Live Tested in PROD | Complete | Go-live (`7c7a79a`) | **118 ON** + **072 v4.0 ON** | No |
+| SC-039 | Live Tested in PROD | Complete | Go-live (`7c7a79a`) | **119 ON** → 074 Live writeback PASS | No |
+| SC-147 | *(new)* | Built in Repository | PR #40 (merged) | RCC framework + MVP install packet | No |
+| SC-032 | Planned | Built in Repository | PR #41 Season Launch | Launch lifecycle + CLI + packages; not live-installed | **Yes** |
+| SC-114 | Decision Needed | Superseded | PR #41 Softr Obsolete | `/shoot` active; Softr not a launch dependency | **Yes** |
+| SC-065 | Built in Repository | Built in Repository | PR #41 evidence refresh | `generate-week-package` | Evidence only |
+| SC-067 | Deferred | Deferred | PR #41 notes | Season Launch interim until Program Instance | Notes only |
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Net math:** After PR #40 on master: Total **147**, Built **28**, Planned **23**, Decision Needed **6**, Superseded **3**. PR #41 then: SC-032 Planned→Built (Built **29**, Planned **22**); SC-114 Decision→Superseded (Decision Needed **5**, Superseded **4**). SC-147 is the only item added by PR #40. No silent Complete↔Live Tested swaps.
+
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository**. **SC-032 Season Launch** is **Built in Repository** (not live-installed). Softr is **Obsolete / Not Used** and cannot block launch (MVP views not yet Installed; not Live Tested until PROD export audit). Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
 ---
 
@@ -152,8 +158,8 @@ Columns:
 | SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Built in Repository | Full XP source catalog + JSON (`XP-IDEMPOTENCY-AUDIT.md`); Schmidt live Source Keys unique; **Weekly Threshold writer missing in repo (XP-D1)** | Locate/rebuild Threshold XP writer; live HW/video/Zoom key proofs | SC-046 | Reruns must be safe | `docs/overnight/testing-integrity/XP-IDEMPOTENCY-AUDIT.md`; `xp-idempotency-audit.json` | Attest Threshold XP automation in UI | P0 | 2026-07-24 |
 | SC-050 | Data Integrity | Safe backfills / repairs (dry-run first) | Built in Repository | `safe-backfills/` + audit extensions 090A–G | Keep dry-run default; only run when needed on empty base | SC-049 | CONFIRM_WRITE discipline | audits README; H-001 principle | — | P1 | 2026-07-23 |
 | SC-051 | Data Integrity | Obsolete field cleanup | Planned | Stage J started historically | Hide/delete after ownership matrix; update maps | SC-046 | Breaking Fillout/web risk | C-012 | — | P2 | 2026-07-23 |
-| SC-052 | Data Integrity | Duplicate table cleanup | Built in Repository | Online Agent 8 package: dependency inventory, migration map, duplicate/quality tools, runbook; keep **`Tutorials`**, orphan candidate **`Tutorials & Assets`** | Live row audit + `/shoot` publish-gate proof + migrate/delete orphan in target base | SC-046 | Web uses `Tutorials` only; Softr Obsolete | `docs/online-agents/tutorials-content/`; C-026 | Confirm delete orphan after `/shoot` proof | P2 | 2026-07-24 |
-| SC-053 | Data Integrity | Tutorials table merge complete | Planned | Recommendation: keep `Tutorials` (re-validated) | Blocked on SC-052 execution; then `/shoot`/view/publish verification | SC-052 | Publish flag still historically Softr-named (SC-144) | `docs/online-agents/tutorials-content/MASTER-UPDATE-PROPOSAL.md` | — | P2 | 2026-07-24 |
+| SC-052 | Data Integrity | Duplicate table cleanup | Built in Repository | Online Agent 8 package: dependency inventory, migration map, duplicate/quality tools, runbook; keep **`Tutorials`**, orphan candidate **`Tutorials & Assets`** | Live row audit + Softr proof + migrate/delete orphan in target base | SC-046 | Web uses `Tutorials` only | `docs/online-agents/tutorials-content/`; C-026 | Confirm delete orphan after Softr proof | P2 | 2026-07-23 |
+| SC-053 | Data Integrity | Tutorials table merge complete | Planned | Recommendation: keep `Tutorials` (re-validated) | Blocked on SC-052 execution; then Softr/view/publish verification | SC-052 | Publish flag still Softr-named (SC-144) | `docs/online-agents/tutorials-content/MASTER-UPDATE-PROPOSAL.md` | — | P2 | 2026-07-23 |
 | SC-054 | Data Integrity | Public Presentation fields (parent-safe labels) | Planned | C-022 design | Add fields; wire emails + web | SC-046 | Emails/web must stop using primary names | C-022; V2-003; V2-004 | — | P1 | 2026-07-23 |
 | SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
@@ -215,7 +221,7 @@ Columns:
 | SC-112 | Website | Athlete auth + dashboard | Decision Needed | Decision matrix + safe scaffolding (`hasAthleteSession` always false); mock dashboard/profile remain labelled demo | Mike pick approach; then schema + session implementation | — | Out of scope: web writes for submissions; no fake login UI | `docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md` | **Pick auth approach** (recommend parent magic-link) | P2 | 2026-07-23 |
 | SC-113 | Website | Loading, empty, and error states | Installed in PROD | Shared UI states + recent loading routes | Verify against empty PROD | — | — | web components | — | P2 | 2026-07-23 |
 | SC-114 | Website | Softr cutover | Superseded | Softr declared **Obsolete / Not Used**; `/shoot` is the active public UI | None — do not plan Softr activation or dual-run cutover | SC-102–SC-113 | Historical cutover docs remain Historical Reference Only | `docs/challenge-year/SOFTR-SEASON-ACTIVATION.md` | **Resolved: Softr not used** | — | 2026-07-24 |
-| SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content readiness + Mike written approval (no Softr cutover gate) | SC-102–SC-113 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-24 |
+| SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
 | SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; commits `2ce6599`, `bf842d9` | Authorize npm install | P2 | 2026-07-23 |
@@ -249,9 +255,10 @@ Columns:
 | SC-141 | Assets | C-013-SEC DEV secret rotation | Complete | Done 2026-07-09 | Optional PROD rotate remains hygiene | SC-094 | — | C-013-SEC | — | — | 2026-07-23 |
 | SC-142 | Historical | Monitoring-only close-out leftovers (C-004/C-005/C-007) | Not Needed | Season closed; data wiped | Drop unless Mike wants award history research | — | — | close-out-considerations | — | — | 2026-07-23 |
 | SC-143 | Platform | Educational Athletics multi-challenge platform (Dribble, etc.) | Deferred | Long-term vision | Separate repos/bases recommended | — | Out of this repo | master direction § long-term | — | P3 | 2026-07-23 |
-| SC-144 | Website | Rename historically Softr-named publish flag | Planned | Flag still named `OK to Publish on Softr` while Softr is Obsolete | Rename in schema wave; update web queries — not a Softr launch step | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-24 |
+| SC-144 | Website | Rename Softr-named publish flag | Planned | Flag still Softr-named in schema | Rename in schema wave; update web queries | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-23 |
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
+| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet (existing PROD fields); preserves `118→072→119→074→Make` with **118/119 ON**; complements Agent 1+2 reliability audit (no doc duplication) | Mike: merge PR → export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred** | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `lib/reliability-command-center/`; `tools/reliability-command-center/` | Approve MVP view install + first PROD export run | P0 | 2026-07-24 |
 
 ---
 
@@ -283,9 +290,9 @@ Must achieve: guaranteed WAS per enrollment/week, auto build/send, dedupe/retry,
 
 ### Data Integrity and Schema
 
-Primary SC items: **SC-046 … SC-059**, **SC-055**.
+Primary SC items: **SC-046 … SC-059**, **SC-055**, **SC-147**.
 
-Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory.
+Must achieve: ownership matrix, one writer, computed-field review, keys, safe backfills, cleanup, schema export, I/O + trigger + version inventory, Reliability Command Center health visibility (repo audit + future views).
 
 ### Enrollment and Season Structure
 

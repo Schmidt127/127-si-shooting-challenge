@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (Season Launch Control on PR #41; Softr Obsolete; C-011 weekly email: `118→072→119→074→Make Bulk Email May 18`; empty-week `send_short` PASS; **074 sendMode=Live** + Make Live writeback PASS; **118/119 schedules ON** Sun 5:00/10:00 AM Denver)
+Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -35,14 +35,13 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
-| **H-002 — Automation 066 v3.2** | **DEV + PROD pasted** (2026-07-06) — live OMNI sandbox still **pending** (offline harness PASS 2026-07-16) |
+| **H-002 — Automation 066 v3.3** | **Installed in PROD** (2026-07-24) — repo + docs v3.3 (link-ID grade-band match); live OMNI/natural Schmidt proof still open (offline harness historically PASS) |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
 | **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |
 | **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules ON** (Sun 5:00 / 10:00 AM America/Denver); 072+074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
-| **Automation standards (doc 06)** | **Active** — **066 v3.2** current V2 rewrite reference |
+| **Automation standards (doc 06)** | **Active** — **066 v3.3** current V2 rewrite reference (v3.2 Week date-key retained in history) |
 | **Multi-year architecture** | **Decided** — one base + Program Instance; **V2-013 queued** |
-| **Challenge-Year / Season Launch** | **Built in Repository** (engine on master) + **Season Launch Control** (PR #41) — Fillout/Make/`/shoot`; Softr Obsolete; does **not** vendor RCC (awaits PR #40 on master) — [`docs/challenge-year/`](./challenge-year/README.md) |
 | **Phase 2 — Platform Modernization** | Wave 2A planning + Phase 2B docs complete — implementation staged via backlog |
 | **V2-015 — Development base** | **Ready** — DEV-first pipeline permanent |
 
@@ -164,7 +163,7 @@ Deploy details: [deployment-notes.md](./deployment-notes.md), [web/docs/deployme
 | Route | Status |
 |-------|--------|
 | `/`, `/leaderboard`, `/homework`, `/homework/[id]` | Live (Airtable) |
-| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable publish gate; field may still be historically Softr-named) |
+| `/tutorials`, `/shoutouts`, `/articles` (+ detail) | Live (Airtable + Softr publish gate) |
 | `/zoom-meetings`, `/levels`, `/achievements`, `/game-manual`, `/public-display` | Live |
 | `/dashboard` | Live demo — **mock adapter** (no auth) |
 | `/athletes/[slug]` | Demo/mock — slug resolution incomplete |
@@ -185,11 +184,11 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | System | Role today |
 |--------|------------|
 | **Softr.io** | **Obsolete / Not Used** — Historical Reference Only — not a season-launch gate |
-| **This Next.js app** | Active public UI at `/shoot` |
-| **SEO** | Sitewide `robots: noindex` until Mike approves indexing (SC-115) |
+| **This Next.js app** | Replacement in progress at `/shoot` |
+| **SEO** | Sitewide `robots: noindex` until cutover approval |
 | **Publish flag** | Field may still be named `OK to Publish on Softr` (SC-144 rename) — not an active Softr dependency |
 
-Historical cutover checklist (do not block launch): [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) · [WEB-SEASON-ACTIVATION.md](./challenge-year/WEB-SEASON-ACTIVATION.md)
+**Do not remove `noindex` or perform cutover** without explicit Mike approval. Checklist: [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 
 ---
 
@@ -199,8 +198,26 @@ Historical cutover checklist (do not block launch): [SOFTR-CUTOVER-READINESS.md]
 |----------|--------|
 | **PROD Upload Engine — Lambda v1** (video) | **Live** — 070b/070c |
 | Homework upload (070a) | PROD **OFF** |
-| Weekly summary email | Manual 072→074 path; C-011 automation pending |
+| Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; **118/119 schedules ON**; 072+074+Make ON; RCC monitors writeback mismatches |
 | Daily / homework / video parent emails | Make webhooks + Airtable scripts |
+
+---
+
+## Reliability Command Center
+
+| Item | Status |
+|------|--------|
+| Repository framework | **Built / Tested** — `lib/reliability-command-center/`, CLI + dry-run repair preview |
+| Docs | [reliability-command-center/README.md](./reliability-command-center/README.md) |
+| Install packet | [deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md](./deploy-checklists/RELIABILITY-COMMAND-CENTER-PRODUCTION-INSTALL.md) — **Ready for Production Installation** (views) |
+| Airtable Interface / views | **Designed** only — **not installed** (MVP = Weekly Email Health + P0 views; no new fields) |
+| Live PROD export audit | Not yet run — required before SC-147 → Live Tested |
+| Complements | Agent 1+2 reliability audit docs (merged via go-live); does not duplicate ownership/trust-band packets |
+
+```bash
+node tests/reliability-command-center/run-all.js
+node tools/reliability-command-center/cli.js --fixture tests/reliability-command-center/fixtures/mixed-health.json --output /tmp/rcc
+```
 
 ---
 
@@ -216,6 +233,7 @@ Last verified clean on historical repair pass (re-run after bulk imports):
 | I — Achievements | Perfection pass / in progress |
 | J — Legacy cleanup | In progress |
 | **Final 090** | 090A–090E PASS · 090F PASS (v1.1) · 090G historical weekly gaps only |
+| **RCC (repo)** | Offline fixture suite PASS — complements Stages F–J; does not replace in-base audits |
 
 ---
 
@@ -264,4 +282,4 @@ CI mirrors lint / typecheck / test on `web/**` changes. Record results in the Ag
 | Schema field/table change | Dated snapshot under `airtable/schema/snapshots/` (Agent A) — then refresh `current/` |
 | New public page | [web/docs/site-hierarchy.md](../web/docs/site-hierarchy.md) |
 | Vercel env change | [deployment-notes.md](./deployment-notes.md) |
-| Softr (Obsolete) | [challenge-year/SOFTR-SEASON-ACTIVATION.md](./challenge-year/SOFTR-SEASON-ACTIVATION.md) — Historical Reference Only |
+| Softr cutover step | [SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md) |
