@@ -1,26 +1,39 @@
 # V2 End-to-End Test Matrix — Shooting Challenge
 
 **Status:** Launch athlete-scenario matrix  
-**Last updated:** 2026-07-16  
-**Environment:** DEV first (`appTetnuCZlCZdTCT`) · PROD smoke only after Mike approval  
-**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [deploy-checklists/DEV-release-readiness-verification-2026-07-16.md](./deploy-checklists/DEV-release-readiness-verification-2026-07-16.md)
+**Last updated:** 2026-07-24 (Overnight Agent 1 — testing/integrity evidence refresh)  
+**Environment:** **PROD** `appn84sqPw03zEbTT` is the active construction/testing base (completion master §1). DEV optional.  
+**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [overnight/testing-integrity/CURRENT-PROD-BASELINE.md](./overnight/testing-integrity/CURRENT-PROD-BASELINE.md) · [testing/scenarios/README.md](./testing/scenarios/README.md)
 
-**Prep status (2026-07-16):** Repository contract tests PASS. Merge gate #25/#26/#27 closed. Live matrix rows remain **U** until Mike/OMNI execute on DEV. Recommended first live DEV block: **F1–F3** (066) then **J4–J5** (117a). Do not mark P without enrollment IDs + automation output evidence.
+**Prep status (2026-07-24):** Automation **115** installed in PROD; dry + live + rerun PASS on Schmidt. Most other matrix rows remain untested post empty-base reset. Do not upgrade historical DEV passes to post-reset PROD passes without new evidence.
 
 ## How to use
 
 1. Prefer **Fillout-shaped** Submissions (C-020 / automation **115**) or verified production-shaped intake — not hand-typed incomplete rows.
-2. Use named **test enrollments** only (Schmidt + DEV sandbox enrollments).
+2. Use **Schmidt** Enrollment `recgP9qZYjAhE7NXm` (must remain Active and publicly visible).
 3. Record Pass / Fail / Blocked / N/A with enrollment ID, date, and automation versions.
 4. Repository contract tests cover pure logic only — they do **not** replace this matrix:
 
 ```bash
+node --test tools/testing/tests/
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js
 cd web && npm test
 ```
 
-**Result key:** P = Pass · F = Fail · B = Blocked · N = N/A · U = Untested
+**Result key (legacy columns):** P = Pass · F = Fail · B = Blocked · N = N/A · U = Untested
+
+**Evidence categories (prefer in notes):** historical pass · repository test pass · offline fixture pass · live PROD pass before reset · live PROD pass after reset · Mike-attested live pass · independently verified live pass · blocked · not tested
+
+### Automation 115 evidence (post-reset)
+
+| Item | Value |
+|------|-------|
+| Scenario | `recPdyfYRFgDtpzQ8` |
+| Dry-run | PASS 2026-07-23 (mode `dry_run`, shot total 25) |
+| Live-run | PASS 2026-07-23 → Submission `recuuTBgstSTGg2E3`, XP 20, WAS `rechWp330MqSgRWzN` |
+| Rerun | PASS 2026-07-24 → Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF` (`SUBMISSION_XP\|recjt6QpUcprSIxAk`), WAS remained unique (4 subs / 100 shots) |
+| Evidence | `docs/overnight/testing-integrity/live-115-rerun-latest.json`, `prod-probe-latest.json` |
 
 ---
 
@@ -30,8 +43,8 @@ cd web && npm test
 |----|------------------|-------|-------------|---------------|-----|------------|
 | A1 | New enrollment creates/links athlete | Fresh test registrant | 001–003 | Athlete linked; grade band assigned | U | U |
 | A2 | Grade change reassigns band | Change grade on enrollment | 003 | Band updates once; no loop | U | U |
-| A3 | Submission gets enrollment + week | Fillout-shaped daily log | 023, 005 | Enrollment + Week set; Denver date key correct | U | U |
-| A4 | Malformed `recordId` input | Automation test with bad id | any V2 script | `statusOut=error`; no partial writes | U | U |
+| A3 | Submission gets enrollment + week | Fillout-shaped daily log | 023, 005 (+115 pre-link) | Enrollment + Week set; Denver date key correct | U | P — live PROD pass after reset (115→005; Week `recVDKiYATgzsfpmE`) |
+| A4 | Malformed `recordId` input | Automation test with bad id | any V2 script | `statusOut=error`; no partial writes | U | P — repository test pass (115 offline harness) |
 
 ---
 
@@ -39,11 +52,11 @@ cd web && npm test
 
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| B1 | First counted submission day awards XP | Count This Submission? checked | 010 | One XP Event; Source Key `SUBMISSION_XP\|{submissionId}` | U | U |
-| B2 | Same submission automation rerun | Re-run 010 on awarded row | 010 | Skip/repair; **no second** XP Event | U | U |
-| B3 | Second submission same calendar day | Two counted logs same Denver day | 010 + rules | At most one shooting XP per enrollment per day (engine rule) | U | U |
-| B4 | Duplicate key collision | Two rows share Duplicate Key | 007 | Status Needs Review; not silently double-counted | U | U |
-| B5 | Backdated submission date | Activity date in prior week | 005, 010, 031 | Week assignment + XP activity date use normalized Denver key | U | U |
+| B1 | First counted submission day awards XP | Count This Submission? checked | 010 | One XP Event; Source Key `SUBMISSION_XP\|{submissionId}` | U | P — live PROD pass after reset (`recOodD23MQrP1O9F` / `recovVbiZynRUtDwF`) |
+| B2 | Same submission automation rerun | Re-run 010 on awarded row | 010 | Skip/repair; **no second** XP Event | U | P — independently verified inventory (0 Subs with >1 XP); UI re-trigger still MANUAL_REQUIRED |
+| B3 | Second submission same calendar day | Two counted logs same Denver day | 010 + rules | At most one shooting XP per enrollment per day (engine rule) | U | B — 115 presets `Count It`; 4 same-day Schmidt Subs each earned XP (policy decision open; not Source Key failure) |
+| B4 | Duplicate key collision | Two rows share Duplicate Key | 007 | Status Needs Review; not silently double-counted | U | U — 115 Count It bypasses 007a (see SCN-005) |
+| B5 | Backdated submission date | Activity date in prior week | 005, 010, 031 | Week assignment + XP activity date use normalized Denver key | U | B — needs manually seeded prior Week (SCN-006) |
 
 ---
 

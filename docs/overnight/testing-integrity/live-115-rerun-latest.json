@@ -1,0 +1,36 @@
+{
+  "mode": "EXECUTE",
+  "scenario": "recPdyfYRFgDtpzQ8",
+  "executed_at": "2026-07-24T12:52:14.558Z",
+  "before": {
+    "run_test": false,
+    "dry_run": false,
+    "last_run_status": "Pass",
+    "linked_submission": "recuuTBgstSTGg2E3",
+    "shot_total": 25
+  },
+  "after": {
+    "run_test": false,
+    "last_run_status": "Pass",
+    "last_run_at": "2026-07-24T12:52:14.558Z",
+    "linked_submission": "recjt6QpUcprSIxAk"
+  },
+  "downstream": {
+    "new_submission": "recjt6QpUcprSIxAk",
+    "enrollment": "recgP9qZYjAhE7NXm",
+    "week": "recVDKiYATgzsfpmE",
+    "was": "rechWp330MqSgRWzN",
+    "xp_event": "recovVbiZynRUtDwF",
+    "xp_source_key": "SUBMISSION_XP|recjt6QpUcprSIxAk",
+    "xp_points": 20,
+    "duplicate_review_status": "Count It",
+    "was_submission_count_after": 4,
+    "was_total_shots_after": 100,
+    "prior_submission_retained": true,
+    "was_remained_unique": true,
+    "xp_one_per_new_submission": true
+  },
+  "result": "PASS",
+  "related_scenarios": ["SCN-004", "SCN-005", "SCN-015", "SCN-016"],
+  "related_sc": ["SC-001", "SC-007", "SC-049", "SC-070"]
+}

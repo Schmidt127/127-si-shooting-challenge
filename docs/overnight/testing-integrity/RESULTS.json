@@ -1,0 +1,175 @@
+{
+  "started_at": "2026-07-24T12:40:00.000Z",
+  "completed_at": "2026-07-24T13:05:00.000Z",
+  "agent_scope": "overnight-agent-1-testing-integrity",
+  "branch": "master",
+  "commits": [
+    {
+      "sha": "117b0f0c540180dc8f16e5fe867267f966da20dc",
+      "message": "docs: establish current PROD testing baseline and scenario catalog",
+      "pushed": true
+    },
+    {
+      "sha": "eb30b0688fe5f1696a64eecb4b8c9d6f0cb5aa22",
+      "message": "test: add expected-actual verifier and expand 115 offline coverage",
+      "pushed": true
+    },
+    {
+      "sha": "f8362fd1db3be4ffb4b83dc50ef05cf66d608760",
+      "message": "audit: document XP idempotency, uniqueness, and field writers",
+      "pushed": true
+    }
+  ],
+  "pushed": true,
+  "working_tree_clean": false,
+  "SC_items_reviewed": [
+    "SC-001", "SC-002", "SC-003", "SC-004", "SC-005", "SC-006", "SC-007", "SC-008",
+    "SC-046", "SC-047", "SC-048", "SC-049", "SC-050", "SC-051", "SC-052", "SC-053",
+    "SC-054", "SC-055", "SC-056", "SC-057", "SC-058", "SC-059",
+    "SC-069", "SC-124", "SC-134", "SC-135", "SC-137", "SC-142"
+  ],
+  "SC_items_updated": [
+    {
+      "id": "SC-001",
+      "old_status": "Live Tested in PROD",
+      "new_status": "Live Tested in PROD",
+      "note": "rerun evidence + catalog"
+    },
+    {
+      "id": "SC-002",
+      "old_status": "Planned",
+      "new_status": "Built in Repository"
+    },
+    {
+      "id": "SC-003",
+      "old_status": "Planned",
+      "new_status": "Planned",
+      "note": "view specs added; UI still required"
+    },
+    {
+      "id": "SC-005",
+      "old_status": "Planned",
+      "new_status": "Planned",
+      "note": "matrix evidence refreshed"
+    },
+    {
+      "id": "SC-006",
+      "old_status": "Planned",
+      "new_status": "Built in Repository"
+    },
+    {
+      "id": "SC-007",
+      "old_status": "Planned",
+      "new_status": "Live Tested in PROD"
+    },
+    {
+      "id": "SC-046",
+      "old_status": "Built in Repository",
+      "new_status": "Built in Repository",
+      "note": "FIELD-WRITER-AUDIT expansion"
+    },
+    {
+      "id": "SC-049",
+      "old_status": "Planned",
+      "new_status": "Built in Repository"
+    },
+    {
+      "id": "SC-069",
+      "old_status": "Built in Repository",
+      "new_status": "Live Tested in PROD"
+    }
+  ],
+  "tests_run": 24,
+  "tests_passed": 24,
+  "tests_failed": 0,
+  "test_command": "node --test tools/testing/tests/test_115_offline.mjs tools/testing/tests/test_expected_actual.mjs",
+  "live_prod_tests": [
+    {
+      "name": "read_only_probe",
+      "result": "PASS",
+      "evidence": "prod-probe-latest.json"
+    },
+    {
+      "name": "115_rerun",
+      "result": "PASS",
+      "scenario": "recPdyfYRFgDtpzQ8",
+      "created_submission": "recjt6QpUcprSIxAk",
+      "created_xp": "recovVbiZynRUtDwF",
+      "was": "rechWp330MqSgRWzN",
+      "evidence": "live-115-rerun-latest.json"
+    }
+  ],
+  "records_created": [
+    {
+      "table": "Submissions",
+      "id": "recjt6QpUcprSIxAk",
+      "via": "Automation 115"
+    },
+    {
+      "table": "XP Events",
+      "id": "recovVbiZynRUtDwF",
+      "via": "Automation 010 downstream",
+      "source_key": "SUBMISSION_XP|recjt6QpUcprSIxAk",
+      "xp_points": 20
+    }
+  ],
+  "records_modified": [
+    {
+      "table": "Testing Scenarios",
+      "id": "recPdyfYRFgDtpzQ8",
+      "fields": ["Run Test?", "Linked Submission", "Last Run Status", "Last Run At", "Actual Result", "Pass/Fail Notes"]
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "id": "rechWp330MqSgRWzN",
+      "note": "Submissions link + rollups updated by production pipeline (4 subs / 100 shots)"
+    }
+  ],
+  "records_deleted": [],
+  "defects_found": [
+    "XP-D1",
+    "FW-D1",
+    "FW-D2",
+    "PROBE-1",
+    "115-D2",
+    "SCN-018"
+  ],
+  "defects_fixed": ["PROBE-1"],
+  "blockers": [
+    "Airtable UI required for Testing views (SC-003)",
+    "UI attest automation inventory (SC-058/059)",
+    "Weekly Threshold XP writer missing (XP-D1)",
+    "Prior Week seed required for backdate (SCN-006)",
+    "Product decision: 115 Count It vs 007a",
+    "Product decision: Test Status gate on 115"
+  ],
+  "manual_actions": "docs/overnight/testing-integrity/MIKE-ACTIONS.md",
+  "files_created": [
+    "docs/testing/scenarios/",
+    "docs/overnight/testing-integrity/REPORT.md",
+    "docs/overnight/testing-integrity/RESULTS.json",
+    "docs/overnight/testing-integrity/XP-IDEMPOTENCY-AUDIT.md",
+    "docs/overnight/testing-integrity/xp-idempotency-audit.json",
+    "docs/overnight/testing-integrity/CORE-UNIQUENESS-AUDIT.md",
+    "docs/overnight/testing-integrity/FIELD-WRITER-AUDIT.md",
+    "docs/overnight/testing-integrity/TESTING-VIEWS-MIKE-ACTIONS.md",
+    "docs/overnight/testing-integrity/MIKE-ACTIONS.md",
+    "docs/overnight/testing-integrity/live-115-rerun-latest.json",
+    "docs/overnight/testing-integrity/prod-probe-latest.json",
+    "tools/testing/lib/expected_actual.js",
+    "tools/testing/verify_scenario.mjs",
+    "tools/testing/prod_probe_read_only.mjs",
+    "tools/testing/cleanup_orphan_legacy_rows.mjs",
+    "tools/testing/live_115_rerun_probe.mjs",
+    "tools/testing/README.md",
+    "tools/testing/fixtures/live-115-bundle.json",
+    "tools/testing/tests/test_expected_actual.mjs"
+  ],
+  "files_modified": [
+    "docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md",
+    "docs/V2_END_TO_END_TEST_MATRIX.md",
+    "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
+    "tools/testing/tests/test_115_offline.mjs"
+  ],
+  "final_status": "PASS_WITH_BLOCKERS"
+}

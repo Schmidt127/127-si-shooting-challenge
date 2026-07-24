@@ -1,0 +1,295 @@
+{
+  "started_at": "2026-07-24T12:51:48.600Z",
+  "completed_at": "2026-07-24T12:51:50.924Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "read_only": true,
+  "schmidt_enrollment": {
+    "id": "recgP9qZYjAhE7NXm",
+    "active": true
+  },
+  "scenario": {
+    "id": "recPdyfYRFgDtpzQ8",
+    "last_run_status": "Pass",
+    "last_run_at": "2026-07-23T22:08:37.998Z",
+    "linked_submission": "recuuTBgstSTGg2E3",
+    "run_test": false,
+    "dry_run": false,
+    "shot_total": 25
+  },
+  "counts": {
+    "schmidt_submissions": 3,
+    "schmidt_was": 1,
+    "schmidt_xp_events": 3,
+    "was_duplicate_enrollment_week_groups": 0,
+    "submissions_with_gt1_xp": 0
+  },
+  "notes": [
+    "ARRAYJOIN on linked fields returns primary names — RID FIND filters are unreliable; probe uses Source Key / Week.Submissions / direct RID fetches."
+  ],
+  "was_duplicate_groups": [],
+  "submissions_with_gt1_xp": [],
+  "submission_ids": [
+    "recaCcxDqtzFWjmyi",
+    "rec6g1nth8PlSwA6z",
+    "recuuTBgstSTGg2E3"
+  ],
+  "xp_source_keys": [
+    "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+    "SUBMISSION_XP|rec6g1nth8PlSwA6z",
+    "SUBMISSION_XP|recuuTBgstSTGg2E3"
+  ],
+  "was_ids": [
+    "rechWp330MqSgRWzN"
+  ],
+  "verifier_bundle": {
+    "overall": "PASS",
+    "meta": {
+      "kind": "daily_submission_bundle",
+      "scenario_id": "recPdyfYRFgDtpzQ8",
+      "submission_id": "recuuTBgstSTGg2E3"
+    },
+    "counts": {
+      "PASS": 13,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    },
+    "checks": [
+      {
+        "id": "scenario.last_run_status",
+        "status": "PASS",
+        "table": "Testing Scenarios",
+        "field": "Last Run Status",
+        "expected": "Pass",
+        "actual": "Pass",
+        "record_ids": [
+          "recPdyfYRFgDtpzQ8"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "scenario.run_test_cleared",
+        "status": "PASS",
+        "table": "Testing Scenarios",
+        "field": "Run Test?",
+        "expected": false,
+        "actual": false,
+        "record_ids": [
+          "recPdyfYRFgDtpzQ8"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "scenario.linked_submission",
+        "status": "PASS",
+        "table": "Testing Scenarios",
+        "field": "Linked Submission",
+        "expected": "recuuTBgstSTGg2E3",
+        "actual": [
+          "recuuTBgstSTGg2E3"
+        ],
+        "record_ids": [
+          "recPdyfYRFgDtpzQ8",
+          "recuuTBgstSTGg2E3"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "submission.enrollment",
+        "status": "PASS",
+        "table": "Submissions",
+        "field": "Enrollment",
+        "expected": "recgP9qZYjAhE7NXm",
+        "actual": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "record_ids": [
+          "recuuTBgstSTGg2E3"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "submission.shot_total",
+        "status": "PASS",
+        "table": "Submissions",
+        "field": "Shot Total",
+        "expected": 25,
+        "actual": 25,
+        "record_ids": [
+          "recuuTBgstSTGg2E3"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "submission.duplicate_review_status",
+        "status": "PASS",
+        "table": "Submissions",
+        "field": "Duplicate Review Status",
+        "expected": "Count It",
+        "actual": "Count It",
+        "record_ids": [
+          "recuuTBgstSTGg2E3"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "submission.week",
+        "status": "PASS",
+        "table": "Submissions",
+        "field": "Week",
+        "expected": "non-empty",
+        "actual": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "record_ids": [
+          "recuuTBgstSTGg2E3",
+          "recVDKiYATgzsfpmE"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp.count_for_submission_source_key",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "count",
+        "expected": 1,
+        "actual": 1,
+        "record_ids": [
+          "recOodD23MQrP1O9F"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp.amount",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "XP Points",
+        "expected": 20,
+        "actual": 20,
+        "record_ids": [
+          "recOodD23MQrP1O9F"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp.source_key",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "Source Key",
+        "expected": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+        "actual": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+        "record_ids": [
+          "recOodD23MQrP1O9F"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "was.unique_enrollment_week",
+        "status": "PASS",
+        "table": "Weekly Athlete Summary",
+        "field": "Enrollment|Week",
+        "expected": "unique",
+        "actual": "unique",
+        "record_ids": [
+          "rechWp330MqSgRWzN"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "was.count_for_enrollment_week",
+        "status": "PASS",
+        "table": "Weekly Athlete Summary",
+        "field": "count",
+        "expected": 1,
+        "actual": 1,
+        "record_ids": [
+          "rechWp330MqSgRWzN"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp.no_duplicate_events_on_submission",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "Submission link count",
+        "expected": "<=1 Submission Base event",
+        "actual": 1,
+        "record_ids": [
+          "recOodD23MQrP1O9F"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      }
+    ],
+    "generated_at": "2026-07-24T12:51:50.923Z",
+    "read_only": true
+  },
+  "xp_inventory_schmidt": {
+    "overall": "PASS",
+    "meta": {
+      "kind": "xp_idempotency_inventory",
+      "total": 3
+    },
+    "counts": {
+      "PASS": 2,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    },
+    "checks": [
+      {
+        "id": "xp.blank_source_keys",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "count",
+        "expected": 0,
+        "actual": 0,
+        "record_ids": [],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp.unique_source_keys",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "Source Key",
+        "expected": "unique",
+        "actual": "unique",
+        "record_ids": [],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      }
+    ],
+    "generated_at": "2026-07-24T12:51:50.793Z",
+    "read_only": true
+  }
+}
