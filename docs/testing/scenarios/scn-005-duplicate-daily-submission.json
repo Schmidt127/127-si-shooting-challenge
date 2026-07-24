@@ -1,0 +1,65 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-005",
+  "name": "duplicate-daily-submission",
+  "type": "Daily Submission",
+  "description": "Same Enrollment + same Activity Date as an existing counted Submission. 115 presets Duplicate Review Status=Count It, so this tests XP-per-Submission, NOT the 007a Needs Review flow.",
+  "related_sc_items": [
+    "SC-007",
+    "SC-047"
+  ],
+  "prerequisites": [
+    "Existing counted Submission on same Denver day"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "Submissions.Duplicate Review Status": "Count It"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second XP Event on prior Submission RID"
+  ],
+  "safe_rerun_behavior": "Creates counted duplicate-day Submission by design of 115",
+  "cleanup_instructions": "Product decision needed for whether Count It preset should remain",
+  "manual_requirements": [
+    "Decision: should duplicate-day scenarios leave Duplicate Review Status blank for 007a?"
+  ],
+  "current_automation_support": "115 Count It preset bypasses 007a",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "note": "3 PROD Submissions on 2026-07-23 all Count It with 1 XP each"
+  }
+}

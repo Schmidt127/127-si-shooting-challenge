@@ -1,0 +1,58 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-014",
+  "name": "retry-after-failure",
+  "type": "Daily Submission",
+  "description": "After a hard error (Run Test? left checked), fix input and rerun. Expect success path; no duplicate from the failed attempt.",
+  "related_sc_items": [
+    "SC-007",
+    "SC-001"
+  ],
+  "prerequisites": [
+    "Induce a recoverable failure first"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {},
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "XP from failed attempt"
+  ],
+  "safe_rerun_behavior": "Failed intake should not leave partial Submission",
+  "cleanup_instructions": "Inspect for orphan partial rows",
+  "manual_requirements": [],
+  "current_automation_support": "115 error path leaves Run Test? checked",
+  "test_status": "not_tested"
+}

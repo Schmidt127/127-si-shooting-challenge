@@ -1,0 +1,60 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-016",
+  "name": "was-duplicate-attempt",
+  "type": "Daily Submission",
+  "description": "Multiple counted Submissions for same Enrollment+Week must converge on one Weekly Athlete Summary (Summary Key formula uniqueness).",
+  "related_sc_items": [
+    "SC-007",
+    "SC-035",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "≥2 counted Submissions same Week"
+  ],
+  "input_fields": {
+    "note": "Exercised by SCN-004/005 live reruns + 031"
+  },
+  "expected_created_records": [
+    {
+      "table": "Weekly Athlete Summary",
+      "count": 1,
+      "uniqueness": "Enrollment+Week"
+    }
+  ],
+  "expected_links": {
+    "Submissions.Weekly Athlete Summary": "rechWp330MqSgRWzN"
+  },
+  "expected_xp_source": null,
+  "expected_xp_amount": 0,
+  "expected_dedupe_key_pattern": "Summary Key formula (Enrollment Key|season|Week Key) — not written by scripts",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second WAS for same Enrollment+Week"
+  ],
+  "safe_rerun_behavior": "031 find-or-create by Summary Key",
+  "cleanup_instructions": "Do not manually create WAS duplicates",
+  "manual_requirements": [],
+  "current_automation_support": "031 (+ 118 when installed)",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "was": "rechWp330MqSgRWzN",
+    "submissions_in_week": 3,
+    "total_shots_rollup": 75
+  }
+}

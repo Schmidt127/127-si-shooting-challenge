@@ -1,0 +1,69 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-020",
+  "name": "scenario-with-stale-result-fields",
+  "type": "Daily Submission",
+  "description": "Prior Last Run Status/Actual Result/Linked Submission present. New run must overwrite result fields; Linked Submission becomes newest.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-006"
+  ],
+  "prerequisites": [
+    "Scenario with prior Pass evidence"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Last Run Status": "Pass",
+    "Actual Result": "STALE PRIOR RESULT",
+    "Linked Submission": [
+      "recuuTBgstSTGg2E3"
+    ],
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "Linked Submission": "newest (not stale)"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{newSubmissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Leaving stale Actual Result unchanged after success"
+  ],
+  "safe_rerun_behavior": "Result fields overwritten; prior Submission remains in table",
+  "cleanup_instructions": "None required",
+  "manual_requirements": [],
+  "current_automation_support": "115 writeback",
+  "test_status": "repository_test_pass",
+  "known_evidence": {
+    "seed_scenario": "recPdyfYRFgDtpzQ8",
+    "prior_linked": "recuuTBgstSTGg2E3"
+  }
+}

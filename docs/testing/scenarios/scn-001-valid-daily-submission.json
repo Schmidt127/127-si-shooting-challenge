@@ -1,0 +1,79 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-001",
+  "name": "valid-daily-submission",
+  "type": "Daily Submission",
+  "description": "Happy-path daily submission with Schmidt enrollment, activity date, and positive shot total.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-004",
+    "SC-005",
+    "SC-070"
+  ],
+  "prerequisites": [
+    "Schmidt Enrollment Active?=true",
+    "Manually seeded Week covering Submission Date",
+    "Automation 115 ON",
+    "Downstream 005/010/031 ON"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1,
+      "shape": "production intake"
+    }
+  ],
+  "expected_links": {
+    "Submissions.Enrollment": "recgP9qZYjAhE7NXm",
+    "Submissions.Athlete": "recgqVstObQRzgXJF",
+    "Submissions.Week": "via 005 (not written by 115)",
+    "Submissions.Weekly Athlete Summary": "via 031"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "115 must not create XP Events",
+    "115 must not create Weekly Athlete Summary",
+    "115 must not write Weeks"
+  ],
+  "safe_rerun_behavior": "Creates a NEW Submission each live run; Linked Submission overwritten; one XP per new Submission via 010 Source Key",
+  "cleanup_instructions": "Optional: delete test Submissions after verification; keep Schmidt Enrollment and seed Week",
+  "manual_requirements": [],
+  "current_automation_support": "115 Daily branch + 005/010/031",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "scenario_record": "recPdyfYRFgDtpzQ8",
+    "created_submission": "recuuTBgstSTGg2E3",
+    "xp_event": "recOodD23MQrP1O9F",
+    "was": "rechWp330MqSgRWzN",
+    "week": "recVDKiYATgzsfpmE",
+    "date": "2026-07-23"
+  }
+}

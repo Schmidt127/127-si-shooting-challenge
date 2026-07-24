@@ -1,0 +1,60 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-013",
+  "name": "partial-downstream-failure",
+  "type": "Daily Submission",
+  "description": "Simulate/observe when 115 succeeds but a downstream automation is OFF or errors. Scenario Actual Result still Pass; verifier must flag missing XP/WAS.",
+  "related_sc_items": [
+    "SC-006",
+    "SC-007"
+  ],
+  "prerequisites": [
+    "Ability to observe automation run history"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {},
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "115 writing XP to compensate"
+  ],
+  "safe_rerun_behavior": "Do not use 115 to repair XP; use production writers",
+  "cleanup_instructions": "Re-enable downstream; repair via reprocess of Submission",
+  "manual_requirements": [
+    "UI attestation of which downstream automations are ON"
+  ],
+  "current_automation_support": "Verifier (tools/testing) — not 115",
+  "test_status": "not_tested"
+}

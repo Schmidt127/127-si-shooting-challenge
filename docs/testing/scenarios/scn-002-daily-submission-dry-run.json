@@ -1,0 +1,61 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-002",
+  "name": "daily-submission-dry-run",
+  "type": "Daily Submission",
+  "description": "Dry Run? checked — preview only; no Submission created.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-006"
+  ],
+  "prerequisites": [
+    "Testing Scenarios row with Dry Run?=true"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": true,
+    "Run Test?": true
+  },
+  "expected_created_records": [],
+  "expected_links": {},
+  "expected_xp_source": null,
+  "expected_xp_amount": 0,
+  "expected_dedupe_key_pattern": null,
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "No Submissions create",
+    "No XP Events",
+    "No WAS writes"
+  ],
+  "safe_rerun_behavior": "Safe; always preview-only while Dry Run? remains checked",
+  "cleanup_instructions": "None",
+  "manual_requirements": [],
+  "current_automation_support": "115 dry-run path",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "scenario_record": "recPdyfYRFgDtpzQ8",
+    "mode": "dry_run",
+    "shot_total": 25,
+    "date": "2026-07-23"
+  }
+}

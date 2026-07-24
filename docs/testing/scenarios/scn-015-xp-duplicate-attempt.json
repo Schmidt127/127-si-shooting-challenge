@@ -1,0 +1,54 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-015",
+  "name": "xp-duplicate-attempt",
+  "type": "Daily Submission",
+  "description": "Reprocess Automation 010 against an already-awarded Submission. Expect skip/repair; Source Key SUBMISSION_XP|{rid} remains unique.",
+  "related_sc_items": [
+    "SC-007",
+    "SC-049",
+    "SC-070"
+  ],
+  "prerequisites": [
+    "Existing Submission with exactly one Submission Base XP"
+  ],
+  "input_fields": {
+    "note": "Not a 115 create — re-run 010 on existing Submission RID",
+    "submission_id_example": "recuuTBgstSTGg2E3"
+  },
+  "expected_created_records": [],
+  "expected_links": {},
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second XP Event with same Source Key",
+    "Stolen Source Key"
+  ],
+  "safe_rerun_behavior": "010 must skip or repair same Event",
+  "cleanup_instructions": "None if skip works",
+  "manual_requirements": [
+    "Re-run 010 from Airtable automation UI / test trigger"
+  ],
+  "current_automation_support": "010 Source Key + XP Dedupe Key",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "probe": "0 Submissions with >1 XP Event; 0 duplicate Source Keys (2026-07-23 baseline)"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-009",
+  "name": "missing-week",
+  "type": "Daily Submission",
+  "description": "Submission Date outside any seeded Week. 115 still creates Submission; 005 should fail/skip Week link. Verifies no invented Week.",
+  "related_sc_items": [
+    "SC-065",
+    "SC-007"
+  ],
+  "prerequisites": [
+    "Choose a date with no covering Week"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2099-01-01",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "Submissions.Week": "empty (expected until Week seeded)"
+  },
+  "expected_xp_source": "Submission Base (may be blocked if Count This Submission? requires Week — verify live)",
+  "expected_xp_amount": "verify",
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Automatic Week creation",
+    "WAS for nonexistent Week"
+  ],
+  "safe_rerun_behavior": "Creates orphan Submission without Week — clean up after",
+  "cleanup_instructions": "Delete orphan Submission; do not invent Weeks",
+  "manual_requirements": [
+    "Confirm no Week covers chosen date before run"
+  ],
+  "current_automation_support": "115 creates; 005 cannot invent Weeks",
+  "test_status": "not_tested"
+}

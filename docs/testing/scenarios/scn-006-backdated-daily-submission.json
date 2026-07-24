@@ -1,0 +1,68 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-006",
+  "name": "backdated-daily-submission",
+  "type": "Daily Submission",
+  "description": "Activity Date in a manually seeded prior Week. Verify Week assignment, XP date source, WAS linkage — no accidental current-week assignment.",
+  "related_sc_items": [
+    "SC-005",
+    "SC-007",
+    "SC-065"
+  ],
+  "prerequisites": [
+    "Second manually seeded Week with Start/End covering backdate",
+    "Do not auto-generate Weeks"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "USE_PRIOR_SEEDED_WEEK_DATE",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "Submissions.Week": "prior seeded week RID (not foundation current week unless dates overlap)"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Wrong Week assignment",
+    "XP Activity Date ignoring Activity Date"
+  ],
+  "safe_rerun_behavior": "Safe once prior Week exists",
+  "cleanup_instructions": "Keep prior Week for repeat tests",
+  "manual_requirements": [
+    "Mike/ops seed a prior Week if missing"
+  ],
+  "current_automation_support": "115 + 005 date mapping",
+  "test_status": "blocked",
+  "known_evidence": {
+    "blocker": "Only Foundation Week recVDKiYATgzsfpmE confirmed for post-reset testing window"
+  }
+}

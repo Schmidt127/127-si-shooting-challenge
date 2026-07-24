@@ -1,0 +1,70 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-004",
+  "name": "rerun-same-scenario",
+  "type": "Daily Submission",
+  "description": "Re-check Run Test? on the same scenario. Expected: second Submission; Linked Submission points to newest; WAS stays unique; XP is one-per-Submission.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-007",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "Prior live pass on same scenario row"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1,
+      "note": "additional"
+    }
+  ],
+  "expected_links": {
+    "Testing Scenarios.Linked Submission": "newest submission only",
+    "Weekly Athlete Summary uniqueness": "one Enrollment + one Week"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{newSubmissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Must not create second WAS for same Enrollment+Week",
+    "Must not duplicate Source Key on prior Submission"
+  ],
+  "safe_rerun_behavior": "115 intentionally creates another Submission; downstream XP dedupe is per Submission RID",
+  "cleanup_instructions": "Document extra Submissions; optional cleanup after verification",
+  "manual_requirements": [
+    "Re-check Run Test? in Airtable UI or API patch"
+  ],
+  "current_automation_support": "115 (no scenario-level duplicate guard)",
+  "test_status": "repository_test_pass",
+  "known_evidence": {
+    "offline_harness": "tools/testing/tests/test_115_offline.mjs (rerun test)",
+    "live_note": "PROD already has 3 same-day Schmidt Submissions (all Count It) — see CURRENT-PROD-BASELINE"
+  }
+}

@@ -1,0 +1,167 @@
+{
+  "catalog_version": "1.0.0",
+  "generated_at": "2026-07-24",
+  "base_id": "appn84sqPw03zEbTT",
+  "controlling_doc": "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
+  "field_name_policy": "Do not invent field names; confirmed from PROD schema snapshot + scripts",
+  "shared": {
+    "safe_environment": "PROD",
+    "enrollment": {
+      "enrollment_id": "recgP9qZYjAhE7NXm",
+      "athlete_id": "recgqVstObQRzgXJF",
+      "must_remain_active": true,
+      "must_remain_visible_public": true
+    },
+    "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+    "automation_support": {
+      "primary": "115",
+      "downstream_expected": [
+        "005",
+        "010",
+        "031"
+      ]
+    }
+  },
+  "scenarios": [
+    {
+      "scenario_id": "SCN-001",
+      "name": "valid-daily-submission",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-001-valid-daily-submission.json"
+    },
+    {
+      "scenario_id": "SCN-002",
+      "name": "daily-submission-dry-run",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-002-daily-submission-dry-run.json"
+    },
+    {
+      "scenario_id": "SCN-003",
+      "name": "live-daily-submission",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-003-live-daily-submission.json"
+    },
+    {
+      "scenario_id": "SCN-004",
+      "name": "rerun-same-scenario",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-004-rerun-same-scenario.json"
+    },
+    {
+      "scenario_id": "SCN-005",
+      "name": "duplicate-daily-submission",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-005-duplicate-daily-submission.json"
+    },
+    {
+      "scenario_id": "SCN-006",
+      "name": "backdated-daily-submission",
+      "type": "Daily Submission",
+      "test_status": "blocked",
+      "file": "scn-006-backdated-daily-submission.json"
+    },
+    {
+      "scenario_id": "SCN-007",
+      "name": "zero-shot-submission",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-007-zero-shot-submission.json"
+    },
+    {
+      "scenario_id": "SCN-008",
+      "name": "missing-enrollment",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-008-missing-enrollment.json"
+    },
+    {
+      "scenario_id": "SCN-009",
+      "name": "missing-week",
+      "type": "Daily Submission",
+      "test_status": "not_tested",
+      "file": "scn-009-missing-week.json"
+    },
+    {
+      "scenario_id": "SCN-010",
+      "name": "invalid-activity-date",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-010-invalid-activity-date.json"
+    },
+    {
+      "scenario_id": "SCN-011",
+      "name": "high-shot-boundary",
+      "type": "Daily Submission",
+      "test_status": "not_tested",
+      "file": "scn-011-high-shot-boundary.json"
+    },
+    {
+      "scenario_id": "SCN-012",
+      "name": "missing-required-shot-field",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-012-missing-required-shot-field.json"
+    },
+    {
+      "scenario_id": "SCN-013",
+      "name": "partial-downstream-failure",
+      "type": "Daily Submission",
+      "test_status": "not_tested",
+      "file": "scn-013-partial-downstream-failure.json"
+    },
+    {
+      "scenario_id": "SCN-014",
+      "name": "retry-after-failure",
+      "type": "Daily Submission",
+      "test_status": "not_tested",
+      "file": "scn-014-retry-after-failure.json"
+    },
+    {
+      "scenario_id": "SCN-015",
+      "name": "xp-duplicate-attempt",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-015-xp-duplicate-attempt.json"
+    },
+    {
+      "scenario_id": "SCN-016",
+      "name": "was-duplicate-attempt",
+      "type": "Daily Submission",
+      "test_status": "live_prod_pass_after_reset",
+      "file": "scn-016-was-duplicate-attempt.json"
+    },
+    {
+      "scenario_id": "SCN-017",
+      "name": "invalid-scenario-type",
+      "type": "Award Generation",
+      "test_status": "repository_test_pass",
+      "file": "scn-017-invalid-scenario-type.json"
+    },
+    {
+      "scenario_id": "SCN-018",
+      "name": "disabled-scenario",
+      "type": "Daily Submission",
+      "test_status": "decision_needed",
+      "file": "scn-018-disabled-scenario.json"
+    },
+    {
+      "scenario_id": "SCN-019",
+      "name": "scenario-already-running",
+      "type": "Daily Submission",
+      "test_status": "not_tested",
+      "file": "scn-019-scenario-already-running.json"
+    },
+    {
+      "scenario_id": "SCN-020",
+      "name": "scenario-with-stale-result-fields",
+      "type": "Daily Submission",
+      "test_status": "repository_test_pass",
+      "file": "scn-020-scenario-with-stale-result-fields.json"
+    }
+  ]
+}

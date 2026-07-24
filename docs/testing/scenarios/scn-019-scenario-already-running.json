@@ -1,0 +1,51 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-019",
+  "name": "scenario-already-running",
+  "type": "Daily Submission",
+  "description": "Test Status=In Progress / Run Test? already checked while a run is active. Airtable may queue a second automation run; document race risk for dual creates.",
+  "related_sc_items": [
+    "SC-007",
+    "SC-057"
+  ],
+  "prerequisites": [],
+  "input_fields": {
+    "Test Status": "In Progress",
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "note": "Race: two concurrent 115 runs can create two Submissions — no mutex in script"
+    }
+  ],
+  "expected_links": {},
+  "expected_xp_source": "Submission Base per Submission",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{eachSubmissionId}",
+  "expected_result_status": "Pass or Error",
+  "prohibited_side_effects": [
+    "WAS duplicates (should still not happen)"
+  ],
+  "safe_rerun_behavior": "Avoid double-trigger; wait for Last Run At update",
+  "cleanup_instructions": "Delete extra Submissions if race occurs",
+  "manual_requirements": [
+    "Do not double-click Run Test? in UI"
+  ],
+  "current_automation_support": "No lock — operator discipline",
+  "test_status": "not_tested"
+}

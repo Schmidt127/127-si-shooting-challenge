@@ -1,12 +1,12 @@
-# Current PROD Testing Baseline — 2026-07-23 (Overnight Agent 1)
+# Current PROD Testing Baseline — 2026-07-24 (Overnight Agent 1)
 
 **Base:** PROD `appn84sqPw03zEbTT` (active development, construction, and testing environment)
-**Evidence date:** 2026-07-23 (read-only API probes, evening MT)
+**Evidence date:** 2026-07-23 (initial probes) + 2026-07-24 (catalog, verifier, audits, live 115 rerun)
 **Author:** Overnight Agent 1 — unattended testing/integrity run
 
 This document supersedes stale statements in older docs (see "Stale claims corrected" below).
 Controlling source of truth: `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` + confirmed facts from
-the 2026-07-23 overnight assignment.
+the 2026-07-23/24 overnight assignment.
 
 ---
 
@@ -125,3 +125,36 @@ in `MIKE-ACTIONS.md`.
 - Schema: `airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/` (2026-07-23 15:22 export).
 - Foundation pack: `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md` (pre-115 state).
 - Confirmed 115 install/dry/live facts: 2026-07-23 overnight assignment brief (Mike-attested).
+
+## 10. 2026-07-24 continuation (this agent)
+
+| Deliverable | Path |
+|-------------|------|
+| Scenario catalog (20 fixtures) | `docs/testing/scenarios/` |
+| Expected-vs-actual verifier | `tools/testing/lib/expected_actual.js` + `verify_scenario.mjs` |
+| XP idempotency audit | `XP-IDEMPOTENCY-AUDIT.md` + `xp-idempotency-audit.json` |
+| Core uniqueness audit | `CORE-UNIQUENESS-AUDIT.md` |
+| Field writer audit | `FIELD-WRITER-AUDIT.md` |
+| Testing views Mike actions | `TESTING-VIEWS-MIKE-ACTIONS.md` |
+| Mike actions | `MIKE-ACTIONS.md` |
+| PROD read-only probe | `tools/testing/prod_probe_read_only.mjs` → `prod-probe-latest.json` |
+| Live 115 rerun | `live-115-rerun-latest.json` (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`) |
+
+### Re-verified live (2026-07-24)
+
+| Check | Result |
+|-------|--------|
+| Schmidt Active? | **true** |
+| Seed scenario | Pass; Linked Submission updated to `recjt6QpUcprSIxAk` after rerun |
+| Schmidt Submissions in foundation Week | **4** after rerun |
+| Schmidt WAS uniqueness | **1** (`rechWp330MqSgRWzN`); Total Shots 100 |
+| Submission Base XP | one `SUBMISSION_XP\|{rid}` per Submission; **0** multi-XP Subs |
+| Verifier bundle | **PASS** |
+
+### Probe lesson
+
+`FIND(recordId, ARRAYJOIN({linkedField}))` is unreliable (ARRAYJOIN returns primary names). Prefer Source Key equality, Week→Submissions links, or direct RID fetches.
+
+### Major new defect
+
+**XP-D1:** Weekly Threshold XP writer automation not found in repository despite WAS Threshold XP fields + 15 `WEEKLY_THRESHOLD_*` reward rules.

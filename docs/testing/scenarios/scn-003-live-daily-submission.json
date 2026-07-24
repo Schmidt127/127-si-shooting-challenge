@@ -1,0 +1,66 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-003",
+  "name": "live-daily-submission",
+  "type": "Daily Submission",
+  "description": "Explicit live create (Dry Run? false) producing production-shaped Submission.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-004",
+    "SC-070"
+  ],
+  "prerequisites": [
+    "Same as SCN-001"
+  ],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "Testing Scenarios.Linked Submission": "created submission id",
+    "Submissions.Duplicate Review Status": "Count It"
+  },
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "115 direct XP/WAS/Week writes"
+  ],
+  "safe_rerun_behavior": "See SCN-004",
+  "cleanup_instructions": "Optional delete of created Submission after audit",
+  "manual_requirements": [],
+  "current_automation_support": "115",
+  "test_status": "live_prod_pass_after_reset",
+  "known_evidence": {
+    "created_submission": "recuuTBgstSTGg2E3",
+    "date": "2026-07-23"
+  }
+}

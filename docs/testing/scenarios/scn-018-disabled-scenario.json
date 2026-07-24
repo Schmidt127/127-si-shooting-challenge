@@ -1,0 +1,58 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-018",
+  "name": "disabled-scenario",
+  "type": "Daily Submission",
+  "description": "Test Status=Rejected (or operator convention for disabled). 115 currently does not gate on Test Status — document gap; expect create unless product adds guard.",
+  "related_sc_items": [
+    "SC-001",
+    "SC-002"
+  ],
+  "prerequisites": [],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Test Status": "Rejected",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": 25,
+    "Run Test?": true,
+    "Dry Run?": false
+  },
+  "expected_created_records": [
+    {
+      "table": "Submissions",
+      "count": 1,
+      "note": "CURRENT BEHAVIOR: 115 ignores Test Status — product decision if this should block"
+    }
+  ],
+  "expected_links": {},
+  "expected_xp_source": "Submission Base",
+  "expected_xp_amount": 20,
+  "expected_dedupe_key_pattern": "SUBMISSION_XP|{submissionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [],
+  "safe_rerun_behavior": "Unsafe if operators rely on Test Status alone — use Dry Run? or uncheck Run Test?",
+  "cleanup_instructions": "Prefer Dry Run? for disabled scenarios until guard exists",
+  "manual_requirements": [
+    "Decision: should 115 refuse when Test Status is Rejected?"
+  ],
+  "current_automation_support": "115 — no Test Status gate (defect/gap documented)",
+  "test_status": "decision_needed"
+}

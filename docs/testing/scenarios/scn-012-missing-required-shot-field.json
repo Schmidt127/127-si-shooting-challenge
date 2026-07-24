@@ -1,0 +1,51 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-012",
+  "name": "missing-required-shot-field",
+  "type": "Daily Submission",
+  "description": "Shot Total blank/null → skipped_missing_input.",
+  "related_sc_items": [
+    "SC-001"
+  ],
+  "prerequisites": [],
+  "input_fields": {
+    "Scenario Type": "Daily Submission",
+    "Related Enrollment": [
+      "recgP9qZYjAhE7NXm"
+    ],
+    "Submission Date": "2026-07-23",
+    "Shot Total": null,
+    "Dry Run?": false,
+    "Run Test?": true
+  },
+  "expected_created_records": [],
+  "expected_links": {},
+  "expected_xp_source": null,
+  "expected_xp_amount": 0,
+  "expected_dedupe_key_pattern": null,
+  "expected_result_status": "Blocked",
+  "prohibited_side_effects": [
+    "Submission",
+    "XP"
+  ],
+  "safe_rerun_behavior": "Safe",
+  "cleanup_instructions": "None",
+  "manual_requirements": [],
+  "current_automation_support": "115",
+  "test_status": "repository_test_pass"
+}
