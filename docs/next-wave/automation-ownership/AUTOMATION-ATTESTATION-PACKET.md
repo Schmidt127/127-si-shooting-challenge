@@ -6,6 +6,23 @@
 
 ---
 
+## Verified PROD findings (2026-07-24)
+
+Recorded from live PROD UI attestation. These override prior GitHub-expected assumptions for the listed rows.
+
+| # | Verified PROD state | Ownership note |
+|---|---------------------|----------------|
+| **112** | **Absent** from PROD | No VF create competition with 013 in PROD |
+| **117** | **Present**, script **v1.1** — sends Zoom recording **approval email** payload to Make only; **does not award XP** | PROD Automation 117 is the approval-email handoff (Make **117f** path), **not** a `ZOOM_CREDIT` XP writer. Do **not** apply the 117-versus-117c XP-writer / XOR warning to this PROD automation. |
+| **117c** | **Absent** from PROD | No modular Zoom XP create automation installed |
+| **063** | **Absent** from PROD | Grade Band path owned by 020 at create/repair |
+| **111** | **Absent** from PROD | Grade Band path owned by 013 |
+| **020** | **Present**, script header version **v3.0.0** | Authoritative HC create / Grade Band writer |
+
+**ZOOM_CREDIT exclusivity (PROD):** The prior “exactly one of 117 XOR 117c ON for XP” warning does **not** apply to PROD Automation **117** as currently installed (email-only, v1.1). PROD **117c** is absent. Any future install of a Zoom recording **XP** orchestrator (repo `117-zoom-recording-credit-orchestrator.js`) or **117c** must be attested separately before treating either as a live `ZOOM_CREDIT` writer.
+
+---
+
 ## How to attest (per row)
 
 For each automation:
@@ -25,10 +42,10 @@ For each automation:
 
 | # | Automation name (expected) | Expected ON/OFF | Expected trigger | Trigger table/view | Expected script version | Ownership classification | Observed ON/OFF | Observed trigger | Observed version | Attested (initial/date) | Notes |
 |---|----------------------------|-----------------|------------------|--------------------|-------------------------|--------------------------|-----------------|------------------|------------------|-------------------------|-------|
-| **112** | 112 - Video Review and XP - Create Video Feedback from Submission Asset | **OFF** (or Deleted) | When record matches conditions | Submission Assets · Upload Destination = Video Feedback · VF empty | v2.1 (must stay OFF) | legacy_off | | | | | Must not compete with 013 |
+| **112** | 112 - Video Review and XP - Create Video Feedback from Submission Asset | **OFF** (or Deleted) | When record matches conditions | Submission Assets · Upload Destination = Video Feedback · VF empty | v2.1 (must stay OFF) | legacy_off | **Absent** | n/a | n/a | PROD 2026-07-24 | Verified absent from PROD — must not reappear ON |
 | **013** | 013 - Submission Intake - Create or Link Video Feedback | **ON** | When record matches conditions | Submission Assets · video ready for VF prep | v2.0 | authoritative_writer | | | | | Canonical VF create |
-| **117** | 117 - Zoom Recording Credit - Orchestrator | **ON XOR 117c** | When record matches conditions | Zoom Attendance · Recording Quiz · Enrollment+Meeting | v1.1.1 | duplicate_risk until sole | | | | | Prefer sole ZOOM_CREDIT owner |
-| **117c** | 117c - Zoom Recording Credit - Create Zoom XP Event | **OFF if 117 ON** | Zoom Attendance Recording Quiz | Zoom Attendance | v1.1.0 | duplicate_risk until sole | | | | | Must not both create XP |
+| **117** | 117 — Zoom — Send Recording Approval Email to Make | Present (approval email) | Zoom Attendance · Satisfactory recording path | Zoom Attendance | **v1.1** | email / Make handoff only — **not** XP writer | **Present** | Zoom Attendance → Make webhook | **v1.1** | PROD 2026-07-24 | Sends approval-email payload to Make only; **does not award XP**. Do **not** treat as 117-vs-117c XP dual-writer. |
+| **117c** | 117c - Zoom Recording Credit - Create Zoom XP Event | **Absent / OFF** | Zoom Attendance Recording Quiz | Zoom Attendance | v1.1.0 (repo only) | absent_prod / legacy_off | **Absent** | n/a | n/a | PROD 2026-07-24 | Verified absent from PROD — no XOR conflict with PROD 117 (email) |
 | **031** | 031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission | **ON** | When record matches conditions | Submissions · Count This Submission? · WAS empty | v3.1 | authoritative_writer | | | | | Primary WAS creator |
 | **101** | 101 - Zoom Attendance XP - Award Meeting XP | **ON** | When record matches conditions | Zoom Meetings · Create XP Events (live Attendees) | v5.5 | authoritative XP; WAS side-create risk | | | | | Confirm never recording Attendees |
 | **118** | 118 - Email - Schedule Weekly Summary Email Build | **OFF** until authorized | Scheduled · Sunday 5am Denver | Enrollments/Weeks batch | v1.2 | duplicate_risk / OFF | | | | | WAS create race |
@@ -38,9 +55,9 @@ For each automation:
 
 | # | Automation name (expected) | Expected ON/OFF | Expected trigger | Trigger table/view | Expected script version | Ownership classification | Observed ON/OFF | Observed trigger | Observed version | Attested (initial/date) | Notes |
 |---|----------------------------|-----------------|------------------|--------------------|-------------------------|--------------------------|-----------------|------------------|------------------|-------------------------|-------|
-| **063** | 063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion | **DELETED** (or OFF) | n/a | Homework Completions | v2.0 historical | legacy_off | | | | | 020 owns Grade Band |
-| **111** | 111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback | **DELETED** (or OFF) | n/a | Video Feedback | v1.1 historical | legacy_off | | | | | 013 owns Grade Band |
-| **020** | 020 - Homework - Link or Create Homework Completion | **ON** | When record matches conditions | Submission Assets · homework ready | **v3.0.0** (GitHub; UI may lag) | authoritative_writer | | | | | Confirm version pasted |
+| **063** | 063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion | **DELETED** (or OFF) | n/a | Homework Completions | v2.0 historical | legacy_off | **Absent** | n/a | n/a | PROD 2026-07-24 | Verified absent; 020 owns Grade Band |
+| **111** | 111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback | **DELETED** (or OFF) | n/a | Video Feedback | v1.1 historical | legacy_off | **Absent** | n/a | n/a | PROD 2026-07-24 | Verified absent; 013 owns Grade Band |
+| **020** | 020 - Homework - Link or Create Homework Completion | **ON** | When record matches conditions | Submission Assets · homework ready | **v3.0.0** | authoritative_writer | **Present** | Submission Assets · homework ready | **v3.0.0** | PROD 2026-07-24 | Present (version 3 family); exact script-header wording: `Version: v3.0.0` |
 
 ### P2 — Supporting XP / email
 
@@ -69,17 +86,17 @@ For each automation:
 Copy into overnight / next-wave status when complete:
 
 ```
-PROD attestation YYYY-MM-DD (Mike):
-- 112: OFF|Deleted = ____
+PROD attestation 2026-07-24 (verified partial):
+- 112: Absent from PROD
 - 013: ON = ____ version ____
-- 020: ON = ____ version ____
+- 020: Present = v3.0.0 (script header Version: v3.0.0)
 - 031: ON = ____ version ____
-- 063: Deleted|OFF = ____
+- 063: Absent from PROD
 - 101: ON = ____ version ____
-- 111: Deleted|OFF = ____
-- 117: ON|OFF = ____ version ____
-- 117c: ON|OFF = ____ version ____
-- ZOOM_CREDIT sole writer = 117 | 117c | UNRESOLVED
+- 111: Absent from PROD
+- 117: Present = v1.1 — approval email → Make only; does NOT award XP
+- 117c: Absent from PROD
+- ZOOM_CREDIT sole writer = N/A for PROD Automation 117 (email-only; not an XP writer). 117c absent. Do not apply 117-vs-117c XP XOR to PROD 117.
 - 118: OFF = ____
 - 119: OFF = ____
 - Weekly Threshold writer found? YES|NO name=____
@@ -90,3 +107,5 @@ PROD attestation YYYY-MM-DD (Mike):
 ## DEV cross-check (same rows)
 
 Repeat P0–P1 on DEV `appTetnuCZlCZdTCT`. Note intentional DEV-only differences (e.g. **115** ON in DEV only).
+
+**Naming caution:** Repo may still contain `117-zoom-recording-credit-orchestrator.js` (XP). PROD UI slot **117** is attested as the **approval-email** sender (**v1.1**). Do not assume number **117** always means the XP orchestrator.
