@@ -53,8 +53,8 @@
 | Name | `118 - Email - Schedule Weekly Summary Email Build` |
 | Repo version | **v1.4** |
 | Schedule | Sunday **5:00 AM** America/Denver |
-| PROD schedule state | **OFF** during controlled validation |
-| Defaults | `dryRun=true`, `sendMode=Test`, `includeSchmidt=false`, `excludedEnrollmentIds` blank, `emptyWeekPolicy=send_short` |
+| PROD schedule state | **ON** — Sunday 5:00 AM America/Denver (**verified_prod** 2026-07-24; older “OFF until auth” notes are historical) |
+| Defaults | Confirm live inputs in UI (controlled tests used dryRun/Test/includeSchmidt gates); `emptyWeekPolicy=send_short` |
 
 ### 072 — Build Weekly Summary Email Package
 
@@ -82,8 +82,8 @@
 | Name | `119 - Email - Schedule Weekly Summary Email Send` |
 | Repo version | **v1.4** |
 | Schedule | Sunday **10:00 AM** America/Denver |
-| PROD schedule state | **OFF** during controlled validation |
-| Defaults | `dryRun=true`, `includeSchmidt=false`, `excludedEnrollmentIds` blank, `emptyWeekPolicy=send_short` |
+| PROD schedule state | **ON** — Sunday 10:00 AM America/Denver (**verified_prod** 2026-07-24; older “OFF until auth” notes are historical) |
+| Defaults | Confirm live inputs in UI; `emptyWeekPolicy=send_short` |
 
 **119 only arms `Send to Make?`. It does not post the webhook.**
 
@@ -152,15 +152,17 @@ Week unique identifier = Config primary value + Week Name (year derived from `Co
 
 ---
 
-## Recommended post-test safety state
+## Current verified PROD safety state (2026-07-24)
 
 | Component | Setting |
 |-----------|---------|
-| **072** | `allowSchmidtInput=false` |
-| **118** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
-| **119** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
+| **072** | **ON**; prefer `allowSchmidtInput=false` for season traffic |
+| **118** | **ON** — Sunday 5:00 AM America/Denver |
+| **119** | **ON** — Sunday 10:00 AM America/Denver |
 | **074** | **ON**; **`sendMode=Live`** (or blank + WAS Live) — **never fixed Test in PROD** |
-| Make WAS email scenario | **ON** |
+| Make WAS email scenario | **ON** (`Weekly Athlete Summary - Bulk Email - May 18`) |
+
+> Historical note: Pre-activation docs recommended keeping 118/119 **OFF**. That guidance is **superseded** by verified PROD activation.
 
 ---
 

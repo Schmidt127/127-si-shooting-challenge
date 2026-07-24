@@ -48,8 +48,8 @@
 | Athlete Achievement Unlocks | Enrollment / Achievement / Week | links | 058/066/… | — | 059 XP | Possible | High | Keep H-001 dedupe rules |
 | Streak Occurrences | Enrollment | link | 053/054/055/056 | — | Streak XP | Possible | High | Active? interactions |
 | Shot milestone unlocks | via 066 | — | 066 | — | Achievements | — | High | Live OMNI still pending historically |
-| Weekly Athlete Summary | Enrollment / Week | links | 031 | **118 v1.4** (schedule OFF) | 072/074 emails | Controlled | High | Season schedules OFF until Live auth |
-| Weekly Athlete Summary | Build/Send checkboxes | checkbox | **118** Build / **119** Send arm | — | **072** package / **074** webhook | Controlled | High | 119 does not webhook; schedules OFF |
+| Weekly Athlete Summary | Enrollment / Week | links | 031 + **118 ON** (scheduled ensure) | 101 side-create | 072/074 emails | Controlled | High | Schedules ON verified_prod 2026-07-24 |
+| Weekly Athlete Summary | Build/Send checkboxes | checkbox | **118** Build / **119** Send arm | — | **072** package / **074** webhook | Controlled | High | 119 does not webhook; schedules **ON** |
 | Levels / Level Gate Rules | config fields | various | Human/config | 042 writes enrollment level fields | Progression | Split config vs enrollment | Medium | None now |
 | Enrollments | Current Level / Next Level | links | 042 | 041 marks recalc | Gates, public formulas | Intended 042 | High | None now |
 | Zoom Meetings | Attendees | link | Live attendance only | **Forbidden:** recording path | 101 XP | Critical if violated | Critical | Never write from 117 |
@@ -58,6 +58,7 @@
 | Testing Scenarios | Run Test? / results fields | checkbox/text | Operator + 115 | — | ETF only | No pipeline writers | Medium | Keep framework fields here only |
 | Testing Scenarios | Linked Submission | link | 115 | — | Traceability | No | Medium | None now |
 | Make handoff fields | webhook/status fields on SA/WAS/etc | various | 070*/071/074/077 | Make writebacks | External systems | Possible | High | Secrets never in git |
+| Weekly Athlete Summary | Weekly Email Sent? / Make Send Status / sent timestamp | checkbox / status / dateTime | **Make Live** (`Bulk Email - May 18`) | 074 must not clear Sent?; Test branch skips writeback | Ops + 074 duplicate guard | Sequenced | Critical | **verified_prod 2026-07-24** — PROD 074 sendMode=Live |
 | Website/public fields | Active?, publish flags, public formulas | various | Config/human | Scripts | Next.js queries | View-dependent | Medium | Schmidt standings via view filter |
 
 ## Package-specific correction performed

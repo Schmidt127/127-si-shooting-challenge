@@ -37,12 +37,12 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 |--------|------|----------------|
 | **031** | Primary create from counted Submission | `authoritative_writer` for submission-driven WAS |
 | **101** | Side-effect create when awarding live Zoom XP | `duplicate_risk` (necessary side-create; race-prone) |
-| **118** | Batch ensure WAS before weekly email | `duplicate_risk` / keep **OFF** until authorized |
+| **118** | Batch ensure WAS before weekly email | `authoritative_writer` for **scheduled ensure** (schedules **ON** verified_prod 2026-07-24); concurrent create race with 031/101 still monitored |
 
 | Contract | One WAS per **Enrollment + Week** |
 |----------|-----------------------------------|
 | Formula | `Summary Key` — **never write** |
-| Resolution | 031 remains primary. 101 may create only when none exists for live Zoom. 118 must stay OFF until race mitigation + Mike auth. Concurrent creates remain a race (no DB unique index). |
+| Resolution | **031** = submission-driven create. **118** = scheduled ensure for ended week (authorized **ON**). **101** may create only when none exists for live Zoom. Concurrent creates remain a race (no DB unique index) — monitor duplicates; do not disable 118/119 to “fix” this. |
 | Cleanup | Throw/skip on multiples when detected; no automated merge overnight |
 | Evidence | CORE-UNIQUENESS; Schmidt 1 WAS despite 3 submissions; code paths |
 
@@ -83,7 +83,7 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 |--------------|---------------------------------|----------------|
 | Upload asset engine | Canonical URL, hash, Upload Status, Writeback Complete? (022 / 070c / Lambda) | `duplicate_risk` — sequenced handoff, not dual-create of business records |
 | 117f approval email | Send key/status owned by **117f**; Make must **not** write XP Events or Attendees | Make = `orchestrator`/email; Airtable 117f = authoritative for send key |
-| Weekly/daily email Make | Send status writebacks vs 074/077 | `evidence_insufficient` for exact writeback field ownership — attest in UI/Make |
+| Weekly email Make (`Weekly Athlete Summary - Bulk Email - May 18`) | Live branch writes `Weekly Email Sent?`, `Make Send Status=Sent`, sent timestamp; **074 must not clear Sent?** | `authoritative_writer` = **Make Live** (`verified_prod` 2026-07-24). PROD 074 must use **Live**. Daily 077 still attest separately. |
 
 ---
 
@@ -101,9 +101,9 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 | XP `ZOOM_CREDIT\|…` | **one of** 117/117c | — | Both ON |
 | VF `VIDEO_FEEDBACK\|{asset}` | 013 | — | 112 ON |
 | HC Submission+Homework+slot | 020 | 067 quiz only (open) | Dual create same assignment without product rule |
-| WAS Enrollment+Week | 031 primary | 101 side-create; 118 OFF | Uncontrolled concurrent creates |
+| WAS Enrollment+Week | 031 + 118 (authorized schedule) | 101 side-create | Concurrent race — monitor |
 | Enrollment Current/Next Level | 042 | 041 flag only | Other level writers |
-| Email `WEEKLY_EMAIL\|…` | 074 (+072 build) | 118/119 OFF until auth | Double-send |
+| Email `WEEKLY_EMAIL\|…` | 074 (+072 build); 119 arms | Make Live Sent? | Double-send blocked by Sent? |
 | Email `ZOOM_REC_EMAIL\|…` | 117f | Make email delivery | Make XP/Attendees writes |
 
 ---
@@ -140,8 +140,8 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 | 117 | duplicate_risk until attest | Zoom credit XP (candidate) |
 | 117c | duplicate_risk until attest | Zoom credit XP (candidate) |
 | 117f | authoritative_writer | Zoom approval send key |
-| 118 | duplicate_risk / OFF | Batch WAS + build arm |
-| 119 | orchestrator / OFF | Send arm |
+| 118 | authoritative scheduled ensure (**ON**) | Batch WAS + build arm |
+| 119 | orchestrator (**ON**) | Send arm only |
 | WEEKLY_THRESHOLD | evidence_insufficient | Missing writer |
 | Make upload engine | duplicate_risk (field handoff) | Asset upload fields |
 
@@ -168,5 +168,5 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 2. **020 vs 067** HC product rule (SC-013/014)  
 3. **Weekly Threshold XP** writer existence in Airtable UI  
 4. **101 WAS side-create** long-term retention  
-5. **Make writeback** exact field list vs 074/077/022  
-6. **118/119** install state in DEV/PROD UI  
+5. **Make writeback** for **weekly** email: resolved (`verified_prod` 2026-07-24) — Make Live owns Sent?/status/timestamp; 074 owns webhook only. **Daily 077** / 022 still attest separately.  
+6. **118/119** schedules **ON** (verified_prod 2026-07-24). Automations operator table (2026-07-23) omitted them — re-export still needed.  

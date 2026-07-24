@@ -92,6 +92,8 @@ Legacy long-form docs below remain canonical until each v2 file is fully expande
 | [v2/AUTOMATION_070A_LAUNCH_DECISION.md](./v2/AUTOMATION_070A_LAUNCH_DECISION.md) | 070a PROD keep-OFF decision |
 | [deploy-checklists/066-dev-omni-confirmation-packet.md](./deploy-checklists/066-dev-omni-confirmation-packet.md) | 066 OMNI confirmation support |
 | [deploy-checklists/PROD-promotion-rollback-index-stage10.md](./deploy-checklists/PROD-promotion-rollback-index-stage10.md) | Track-level promotion / rollback index |
+| [challenge-year/README.md](./challenge-year/README.md) | **Challenge-Year Config + season rollover engine** (Built in Repository) |
+| [deploy-checklists/challenge-year-rollover-installation-packet.md](./deploy-checklists/challenge-year-rollover-installation-packet.md) | Annual rollover installation / usage packet |
 
 **Safe repo validation (no Airtable / no secrets printed):**
 
@@ -126,7 +128,9 @@ node tools/validate-v2-release-readiness.js
 |-----|---------|
 | [data-flow/submission-to-xp-flow.md](./data-flow/submission-to-xp-flow.md) | Submission → XP Event path |
 | [data-flow/homework-flow.md](./data-flow/homework-flow.md) | Homework upload and review |
-| [data-flow/weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) | Weekly Athlete Summary chain |
+| [data-flow/weekly-summary-flow.md](./data-flow/weekly-summary-flow.md) | Weekly Athlete Summary chain (`118→072→119→074→Make`) |
+| [challenge-year/WEEK-CONTRACT.md](./challenge-year/WEEK-CONTRACT.md) | Week key format, Sunday–Saturday, Activity Date→Week |
+| [challenge-year/ACTIVATION-RUNBOOK.md](./challenge-year/ACTIVATION-RUNBOOK.md) | Annual activation + rollback checklist |
 
 ## Airtable (backend)
 

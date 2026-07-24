@@ -1,0 +1,54 @@
+{
+  "agent": "agent-2-airtable-data-model",
+  "generated_at": "2026-07-24",
+  "base_pulled_sha": "a8f3b001bc6ee8e6b8a2fa0dfeaaf23cc9669716",
+  "branch": "agent2/airtable-data-model-cleanup",
+  "production_changes": [],
+  "canonical_snapshot": "airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/",
+  "reused_not_forked": [
+    "docs/next-wave/automation-ownership/xp-source-key-registry.json",
+    "docs/next-wave/automation-ownership/WAS-UNIQUENESS-CONTRACT.md",
+    "docs/next-wave/automation-ownership/SINGLE-WRITER-OWNERSHIP-MATRIX.md",
+    "docs/foundation-reset/CRITICAL-PATH-FIELD-OWNERSHIP-MATRIX-2026-07-23.md",
+    "docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md"
+  ],
+  "critical_corrections": [
+    {
+      "id": "week-key-formula",
+      "fact": "Weeks.Week Key formula is RECORD_ID()",
+      "not": "2026-2027|Week N as Week Key field value",
+      "evidence": "schema-snapshot"
+    },
+    {
+      "id": "week-end-key-absent",
+      "fact": "Weeks has no Week End Key field",
+      "evidence": "schema-snapshot + WAS-GUARANTEE + 118/119 tests"
+    },
+    {
+      "id": "hub-model",
+      "fact": "Enrollment-centric hub supersedes Athlete-centric hand map",
+      "evidence": "schema-snapshot"
+    }
+  ],
+  "tests": [
+    {
+      "command": "node tests/data-model/field-contracts.test.js",
+      "result": "14 passed, 0 failed"
+    },
+    {
+      "command": "node tests/was-email-contracts/run-all.js",
+      "result": "all was-email-contracts tests passed"
+    },
+    {
+      "command": "node tests/config-selection/resolve-config.test.js",
+      "result": "All config-selection tests passed"
+    },
+    {
+      "command": "node tests/automation-ownership/test-contract-harness.mjs",
+      "result": "7 passed, 0 failed"
+    }
+  ],
+  "out_of_scope_confirmed": [
+    "Team Shot Tracker 3/7/10-day inactivity alerts"
+  ]
+}

@@ -33,7 +33,7 @@
 | Piece | Version | Notes |
 |-------|---------|-------|
 | **072** | **v4.0** | Enforces empty-week policy |
-| **118 / 119** | **v1.4** | Defaults `send_short`; schedules OFF |
+| **118 / 119** | **v1.4** | Defaults `send_short`; schedules **ON** (verified_prod 2026-07-24) |
 | **074** | Repo **v2.1** | Webhook handoff ON; PROD **sendMode=Live** (or blank + WAS Live) — never fixed Test |
 | Make | Bulk Email May 18 | ON |
 
@@ -49,15 +49,17 @@
 
 ---
 
-## Post-test safety state (recommended)
+## Current verified PROD safety state (2026-07-24)
 
 | Component | Setting |
 |-----------|---------|
-| 072 `allowSchmidtInput` | **false** |
-| 118 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
-| 119 | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** |
+| 072 `allowSchmidtInput` | prefer **false** for season traffic |
+| 118 | schedule **ON** Sun 5:00 AM Denver |
+| 119 | schedule **ON** Sun 10:00 AM Denver |
 | 074 | **ON**; **sendMode=Live** (or blank + WAS Live) |
 | Make WAS email scenario | **ON** |
+
+> Older “schedules OFF” guidance in this runbook is **superseded**.
 
 ---
 
