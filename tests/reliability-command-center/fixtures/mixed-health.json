@@ -1,0 +1,420 @@
+{
+  "meta": {
+    "description": "Synthetic failing cases for Reliability Command Center — no real athlete PII",
+    "currentChallengeYear": "2026-2027"
+  },
+  "currentChallengeYear": "2026-2027",
+  "expectedWeekId": "rec00000000000007",
+  "nowMs": 1784894400000,
+  "enrollments": [
+    {
+      "id": "rec00000000000011",
+      "fields": {
+        "Athlete": ["rec00000000000002"],
+        "Active?": true,
+        "_emailRequired": true,
+        "_receivingActiveWorkflows": true
+      }
+    },
+    {
+      "id": "rec00000000000013",
+      "fields": {
+        "Athlete": ["rec00000000000014"],
+        "Config": ["rec00000000000003"],
+        "Challenge Year": "2026-2027",
+        "Grade": "6",
+        "Grade Band": ["rec00000000000004"],
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec00000000000015",
+      "fields": {
+        "Athlete": ["rec00000000000014"],
+        "Config": ["rec00000000000003"],
+        "Challenge Year": "2026-2027",
+        "Grade": "6",
+        "Grade Band": ["rec00000000000004"],
+        "Active?": true
+      }
+    },
+    {
+      "id": "rec00000000000016",
+      "fields": {
+        "Athlete": ["rec00000000000017"],
+        "Config": ["rec00000000000003"],
+        "Challenge Year": "2026-2027",
+        "Grade Band": ["rec00000000000004"],
+        "Active?": false,
+        "_receivingActiveWorkflows": true
+      }
+    },
+    {
+      "id": "rec00000000000018",
+      "fields": {
+        "Athlete": ["rec00000000000019"],
+        "Config": ["rec00000000000020"],
+        "Challenge Year": "2025-2026",
+        "Grade Band": ["rec00000000000004"],
+        "Active?": true,
+        "_receivingActiveWorkflows": true,
+        "Recalculate Level?": true,
+        "_recalcAt": "2026-07-01T00:00:00.000Z",
+        "Current Level": ["rec00000000000021"],
+        "Next Level": ["rec00000000000021"],
+        "Lifetime XP Total": 10,
+        "_currentLevelMinXp": 500,
+        "Level Gate Blocked?": true,
+        "_gateShouldRollback": true,
+        "_rolledBack": false
+      }
+    }
+  ],
+  "weeks": [
+    {
+      "id": "rec00000000000007",
+      "fields": {
+        "Week Start Date": "2026-07-13",
+        "Week End Date": "2026-07-19"
+      }
+    },
+    {
+      "id": "rec00000000000022",
+      "fields": {
+        "Week Start Date": "2026-07-20",
+        "Week End Date": "2026-07-26"
+      }
+    }
+  ],
+  "submissions": [
+    {
+      "id": "rec00000000000023",
+      "fields": {
+        "Activity Date": "2026-07-15",
+        "XP Award Status": "Pending"
+      }
+    },
+    {
+      "id": "rec00000000000024",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Activity Date": "2026-07-15",
+        "Week": ["rec00000000000022"],
+        "XP Award Status": "Awarded",
+        "Submission Source Key": "SUBMISSION|rec00000000000013|2026-07-15"
+      }
+    },
+    {
+      "id": "rec00000000000025",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Activity Date": "2026-07-16",
+        "Week": ["rec00000000000007"],
+        "Submission Source Key": "SUBMISSION|DUPKEY|001"
+      }
+    },
+    {
+      "id": "rec00000000000026",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Activity Date": "2026-07-16",
+        "Week": ["rec00000000000007"],
+        "Submission Source Key": "SUBMISSION|DUPKEY|001"
+      }
+    },
+    {
+      "id": "rec00000000000027",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Activity Date": "2026-07-14",
+        "Week": ["rec00000000000007"],
+        "Awaiting Assets?": true,
+        "_assetsUpdatedAt": "2026-07-14T00:00:00.000Z",
+        "Submission Source Key": "SUBMISSION|rec00000000000013|2026-07-14"
+      }
+    },
+    {
+      "id": "rec00000000000028",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Activity Date": "2026-07-17",
+        "Week": ["rec00000000000007"],
+        "XP Award Status": "Awarded",
+        "Submission Source Key": "SUBMISSION|rec00000000000013|2026-07-17"
+      }
+    }
+  ],
+  "xpEvents": [
+    {
+      "id": "rec00000000000029",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Submission Base",
+        "XP Points": 10,
+        "Source Key": "SUBMISSION_BASE|DUPLICATE",
+        "XP Dedupe Key": "DEDUP|SAME",
+        "Submission": ["rec00000000000024"]
+      }
+    },
+    {
+      "id": "rec00000000000030",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Submission Base",
+        "XP Points": 10,
+        "Source Key": "SUBMISSION_BASE|DUPLICATE",
+        "XP Dedupe Key": "DEDUP|SAME",
+        "Submission": ["rec00000000000024"]
+      }
+    },
+    {
+      "id": "rec00000000000031",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Homework",
+        "XP Points": 15,
+        "Source Key": "HOMEWORK|orphan"
+      }
+    },
+    {
+      "id": "rec00000000000032",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Zoom",
+        "XP Points": 25,
+        "Source Key": "ZOOM_CREDIT|rec00000000000033"
+      }
+    },
+    {
+      "id": "rec00000000000034",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Zoom",
+        "XP Points": 25,
+        "Source Key": "ZOOM_CREDIT|rec00000000000033"
+      }
+    },
+    {
+      "id": "rec00000000000035",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Streak",
+        "XP Points": 20,
+        "Source Key": "STREAK|rec00000000000013|3"
+      }
+    },
+    {
+      "id": "rec00000000000036",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Perfect Week",
+        "XP Points": 50,
+        "Source Key": "PERFECT_WEEK|rec00000000000013|rec00000000000007"
+      }
+    },
+    {
+      "id": "rec00000000000037",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "XP Source": "Perfect Week",
+        "XP Points": 50,
+        "Source Key": "PERFECT_WEEK|rec00000000000013|rec00000000000007"
+      }
+    }
+  ],
+  "submissionAssets": [
+    {
+      "id": "rec00000000000038",
+      "fields": {
+        "Purpose": "Homework",
+        "Ready for Homework?": true
+      }
+    }
+  ],
+  "homeworkCompletions": [
+    {
+      "id": "rec00000000000039",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Homework": ["rec00000000000040"],
+        "Item Slot": "HW1",
+        "XP Award Status": "Awarded"
+      }
+    },
+    {
+      "id": "rec00000000000041",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Homework": ["rec00000000000040"],
+        "Item Slot": "HW1"
+      }
+    },
+    {
+      "id": "rec00000000000042",
+      "fields": {
+        "XP Award Status": "Pending"
+      }
+    }
+  ],
+  "videoFeedback": [
+    {
+      "id": "rec00000000000043",
+      "fields": {
+        "Status": "Graded",
+        "XP Award Status": "Awarded"
+      }
+    }
+  ],
+  "zoomMeetings": [
+    {
+      "id": "rec00000000000044",
+      "fields": {
+        "Meeting Date": "2026-07-15"
+      }
+    }
+  ],
+  "zoomAttendance": [
+    {
+      "id": "rec00000000000033",
+      "fields": {
+        "_zoomRequirementApplied": true
+      }
+    },
+    {
+      "id": "rec00000000000045",
+      "fields": {
+        "Zoom Meeting": ["rec00000000000044"],
+        "Enrollment": ["rec00000000000013"],
+        "Source Date": "2026-07-15",
+        "Week": ["rec00000000000022"]
+      }
+    }
+  ],
+  "achievementUnlocks": [
+    {
+      "id": "rec00000000000046",
+      "fields": {
+        "Type": "Streak",
+        "Unlock Key": "STREAK|rec00000000000013|3",
+        "XP Award Status": "Awarded",
+        "Streak Threshold": -1
+      }
+    },
+    {
+      "id": "rec00000000000047",
+      "fields": {
+        "Type": "Streak",
+        "Unlock Key": "STREAK|rec00000000000013|3",
+        "XP Award Status": "Pending"
+      }
+    },
+    {
+      "id": "rec00000000000048",
+      "fields": {
+        "Type": "Shot Milestone",
+        "Unlock Key": "SHOT_MILESTONE|rec00000000000013|1000",
+        "Enrollment Grade Band": "3-5",
+        "Milestone Grade Band": "9-12"
+      }
+    },
+    {
+      "id": "rec00000000000049",
+      "fields": {
+        "Type": "Perfect Week",
+        "Unlock Key": "PERFECT_WEEK|rec00000000000013|rec00000000000007",
+        "Weekly Athlete Summary": ["rec00000000000050"],
+        "_eligible": false,
+        "Perfect Week Eligible?": false
+      }
+    }
+  ],
+  "weeklyAthleteSummaries": [
+    {
+      "id": "rec00000000000050",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000007"],
+        "Perfect Week Eligible?": false
+      }
+    },
+    {
+      "id": "rec00000000000051",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000022"]
+      }
+    },
+    {
+      "id": "rec00000000000052",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000022"]
+      }
+    },
+    {
+      "id": "rec00000000000070",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000007"],
+        "Perfect Week Eligible?": true
+      }
+    },
+    {
+      "id": "rec00000000000053",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000007"],
+        "Weekly Email Ready?": true,
+        "Weekly Email Sent?": false,
+        "Send to Make?": true,
+        "Weekly Email Subject": "",
+        "Weekly Email Recipients": "",
+        "Weekly Email HTML": "",
+        "sendMode": "Test",
+        "_productionParent": true,
+        "Build Weekly Email Now?": true,
+        "_buildArmedAt": "2026-07-14T00:00:00.000Z"
+      }
+    },
+    {
+      "id": "rec00000000000054",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000007"],
+        "Weekly Email Ready?": true,
+        "Weekly Email Sent?": true,
+        "Send to Make?": true,
+        "Weekly Email Subject": "Synthetic subject",
+        "Weekly Email Recipients": "parent.synthetic@example.test",
+        "Weekly Email HTML": "<p>hi</p>",
+        "Make Send Status": "Queued",
+        "Weekly Email Sent At": "",
+        "sendMode": "Live"
+      }
+    },
+    {
+      "id": "rec00000000000055",
+      "fields": {
+        "Enrollment": ["rec00000000000013"],
+        "Week": ["rec00000000000022"],
+        "Weekly Email Ready?": true,
+        "Weekly Email Sent?": false,
+        "Send to Make?": false,
+        "Weekly Email Subject": "Synthetic subject 2",
+        "Weekly Email Recipients": "parent.synthetic@example.test",
+        "Weekly Email HTML": "<p>hi2</p>",
+        "Make Send Status": "Sent",
+        "sendMode": "Live"
+      }
+    },
+    {
+      "id": "rec00000000000056",
+      "fields": {
+        "Enrollment": ["rec00000000000018"],
+        "Week": ["rec00000000000007"],
+        "Build Weekly Email Now?": true,
+        "Config Year": "2024-2025"
+      }
+    }
+  ]
+}
