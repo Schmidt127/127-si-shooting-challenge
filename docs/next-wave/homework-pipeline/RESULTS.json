@@ -13,6 +13,8 @@
   "canonical_020_version": "v3.0.0",
   "canonical_020_commit": "444046e",
   "020_body_edited_this_agent": false,
+  "commit_sha": "decfacbfd9a609fbf53dfde72ddaedd3b88f7234",
+  "branch": "agent11/homework-complete",
   "tests": {
     "command": "node tests/homework-contracts/run-all.js",
     "result": "pass",
