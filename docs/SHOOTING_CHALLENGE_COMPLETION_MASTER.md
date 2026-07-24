@@ -65,10 +65,10 @@ Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **146** |
 | Complete | 12 |
-| Live Tested in PROD | 12 |
-| Installed but not tested *(Installed in PROD)* | 52 |
+| Live Tested in PROD | 9 |
+| Installed but not tested *(Installed in PROD)* | 54 |
 | Built but not installed *(Built in Repository)* | 27 |
-| Planned | 22 |
+| Planned | 23 |
 | Decision Needed | 6 |
 | Deferred | 10 |
 | Superseded | 3 |
