@@ -1,0 +1,73 @@
+{
+  "agent": "agent10-config-selection",
+  "completed_at": "2026-07-24T13:10:00Z",
+  "branch": "agent10/config-selection",
+  "base_branch": "master",
+  "config_records_modified": 0,
+  "config_records_deleted": 0,
+  "confirmed_year_rows": [
+    { "year": "2025-2026", "max_videos": 4, "prod_id": "recq14M5hEv3TIGEj" },
+    { "year": "2026-2027", "max_videos": 6, "prod_id": "rechc1f9f4kVM1tHP" },
+    { "year": "2027-2028", "max_videos": 5, "prod_id": "rectmrnvo9a79wgq3" },
+    { "year": "2028-2029", "max_videos": 4, "prod_id": "recXwc19BtG1L2PzW" }
+  ],
+  "defect_classification": "ambiguous_selection_not_multi_row_existence",
+  "deliverables": [
+    "docs/next-wave/config-selection/CONFIG-CONSUMER-INVENTORY.md",
+    "docs/next-wave/config-selection/CONFIG-SELECTION-CONTRACT.md",
+    "docs/next-wave/config-selection/AUTOMATION-042-CONFIG-AUDIT.md",
+    "docs/next-wave/config-selection/CONFIG-ROLLOUT-RUNBOOK.md",
+    "docs/next-wave/config-selection/MASTER-UPDATE-PROPOSAL.md",
+    "docs/next-wave/config-selection/MIKE-ACTIONS.md",
+    "docs/next-wave/config-selection/REPORT.md",
+    "docs/next-wave/config-selection/RESULTS.json",
+    "docs/next-wave/config-selection/proposals/042-year-aware-zoom-gate-guard.PROPOSED.js",
+    "lib/config-selection/index.js",
+    "tests/config-selection/resolve-config.test.js"
+  ],
+  "consumers_audited_count": 18,
+  "ambiguous_readers": [
+    "117a-superseded records[0]",
+    "117b-superseded records[0]",
+    "repair-final-090g records[0]",
+    "preview_final_email.py config_rows[0]",
+    "generate_final_summary_preview.py config[0]",
+    "c025_stage17_prod_batch_deploy heuristic Config pick",
+    "Zoom Meetings Global/Program Config linkage without year key"
+  ],
+  "automation_042": {
+    "reads_config_table": false,
+    "risk": "indirect_via_za_gate_credit_stamps",
+    "prod_paste": false,
+    "proposal_path": "docs/next-wave/config-selection/proposals/042-year-aware-zoom-gate-guard.PROPOSED.js"
+  },
+  "resolver": {
+    "path": "lib/config-selection/index.js",
+    "hierarchy": [
+      "explicit_config_record_id",
+      "program_instance_school_year",
+      "enrollment_school_year",
+      "test_season_override_explicit_only"
+    ],
+    "forbids": ["first_record_fallback", "calendar_year_inference", "silent_pi_enrollment_mismatch"]
+  },
+  "tests_run": [
+    {
+      "command": "node tests/config-selection/resolve-config.test.js",
+      "passed": 15,
+      "failed": 0
+    },
+    {
+      "command": "proposed 042 guard smoke (mismatch mode=error)",
+      "passed": 1,
+      "failed": 0
+    }
+  ],
+  "scripts_needing_later_paste": [],
+  "future_paste_candidates_after_dev_dry_run": [
+    "042 with year-aware zoom gate guard (proposed only)"
+  ],
+  "mike_actions_doc": "docs/next-wave/config-selection/MIKE-ACTIONS.md",
+  "prod_automation_changes": false,
+  "shared_helpers_modified": false
+}
