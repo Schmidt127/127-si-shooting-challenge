@@ -4,6 +4,12 @@
   "branch": "agent10/config-selection",
   "base_branch": "master",
   "commit_sha": "a07e2b74368d9f6489afd65327eafebee662f6b8",
+  "tip_sha": "ed076c2e0763a3eb956afe51f2d7e97794b95e99",
+  "commits": [
+    "a07e2b74368d9f6489afd65327eafebee662f6b8",
+    "361d2331b8f1e5086c2be23f6460580438c9bcc2",
+    "ed076c2e0763a3eb956afe51f2d7e97794b95e99"
+  ],
   "pushed": true,
   "remote": "origin/agent10/config-selection",
   "working_tree_clean_for_owned_paths": true,
