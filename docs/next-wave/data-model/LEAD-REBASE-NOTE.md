@@ -1,9 +1,12 @@
 # Lead rebase — Agent 2 onto current master
 
 **Date:** 2026-07-25  
-**Base master:** `c6103e38bc9afe02144c4ddf54620eab0a1c00f6`  
+**Base master (pre-merge):** `c6103e38bc9afe02144c4ddf54620eab0a1c00f6`  
 **Method:** Reset go-live to master; cherry-pick `058c2d1` + `55795ed` (did **not** keep prior tip `63a0d89`)  
-**Branch tip:** see `git rev-parse HEAD` on `integration/go-live-promotion-2026-07-24`
+**Integration tip merged:** `713f3faf05e45ea9c6bcf41eb636536d05b88ac2`  
+**Master merge:** fast-forward (no separate merge commit)  
+**Final master SHA:** `713f3faf05e45ea9c6bcf41eb636536d05b88ac2`  
+**Ahead/behind at merge:** 3 ahead / 0 behind `origin/master`
 
 ## 119 functional proof (before paste instructions)
 
