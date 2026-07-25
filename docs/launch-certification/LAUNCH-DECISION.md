@@ -6,7 +6,7 @@
 **Branch:** `launch/final-production-certification`  
 **Master tip certified:** `267d4736a95b47273d3439a89665bd9855675395`
 
-## Preliminary decision
+## Decision
 
 # READY WITH NON-BLOCKING FOLLOW-UPS
 

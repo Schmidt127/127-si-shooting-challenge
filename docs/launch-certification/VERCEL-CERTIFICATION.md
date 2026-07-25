@@ -18,8 +18,8 @@
 
 | Item | Value |
 |------|-------|
-| Deployment ID | `dpl_82w6aASdkbKoVNXyRao7imFFxL7L` |
-| Deployed commit | `267d4736a95b47273d3439a89665bd9855675395` |
+| Deployment ID | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
+| Deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
 | State | **READY** |
 | Matches `origin/master` | **Yes** |
 
@@ -47,22 +47,12 @@ Source: [`docs/PROJECT_STATE.md`](../PROJECT_STATE.md), [`docs/deployment-notes.
 
 | Check | Result | Notes |
 |-------|--------|-------|
-| Latest production READY | **PASS** | `dpl_82w6aASdkbKoVNXyRao7imFFxL7L` |
+| Latest production READY | **PASS** | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
 | Commit = master tip | **PASS** | `267d473` |
 | Domains present | **PASS** (project domains listed) | Team aliases may also exist |
 | Public `/shoot` HTML smoke this session | **BLOCKED** | Requires Mike/browser after cert branch merge |
 | `GET /shoot/api/airtable` this session | **BLOCKED** | Requires Mike or authenticated fetch; expect `{ ok: true, airtable: { tokenValid: true } }` |
 
-## Pending after this branch
+## Post-merge confirmation
 
-Certification branch ports PR #33 web fixes under `web/`. After Mike merges to `master`:
-
-1. Confirm new Vercel production deployment READY.  
-2. Confirm production commit SHA matches new master tip.  
-3. Run public smoke (see [LIVE-SMOKE-EVIDENCE.md](./LIVE-SMOKE-EVIDENCE.md) W23–W24).
-
-## Explicit non-actions
-
-- No production redeploy from agents without Mike approval.  
-- Do not remove `robots: noindex` / Softr cutover without Mike approval.  
-- Do not print or commit env secret values.
+PR #42 merged. Production READY on 9110a71 via dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m. Public smoke PASS. See [LAUNCH-CLOSEOUT.md](./LAUNCH-CLOSEOUT.md).

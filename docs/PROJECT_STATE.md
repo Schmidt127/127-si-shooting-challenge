@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-25** (launch certification pack; production commit **267d473**; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
+Last updated: **2026-07-25** (launch certification pack; production commit **9110a71** (PR #42 merge); Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
