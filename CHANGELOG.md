@@ -8,7 +8,12 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Airtable
 
+#### Added
+- **035 Weekly Threshold XP writer v1.0 (2026-07-25)** — Rebuilds missing XP-D1 / SC-049 automation: awards met 100/125/150% weekly goal tiers from WAS `Threshold XP Ready?` using Source Key `WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}` and XP Reward Rules amounts. Offline contracts + deploy checklist. **Not installed in PROD** — Mike must UI-attest no competing Threshold automation before paste. [`035-…js`](./airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js) · [`035-weekly-threshold-xp-v1.0.md`](./docs/deploy-checklists/035-weekly-threshold-xp-v1.0.md).
+- **Testing scenario fixtures SCN-021–026 (2026-07-25)** — HW / Video / Zoom / Weekly Threshold catalog rows for SC-002. [`docs/testing/scenarios/`](./docs/testing/scenarios/).
+
 #### Changed
+- **057 Perfect Week date keys v1.4 (2026-07-25)** — `getDateKeyFromDateOnly` now uses America/Denver via Intl (no UTC ISO slice). Paste pending (MIKE-ACTIONS #2). SC-021.
 - **118 v1.5 season Live arming (2026-07-24)** — **118** no longer hardcodes WAS `sendMode=Test` or refuses `sendMode=Live` when `dryRun=false`; still refuses Live+`includeSchmidt`. **119 v1.5** is repo version/doc/CONFIG alignment only (no arming-logic change) — paste **118** for Live season; 119 paste optional. PROD schedules verified **ON**. See [`MIKE-ACTIONS.md`](./docs/next-wave/data-model/MIKE-ACTIONS.md).
 - **Agent 2 data-model continuation (2026-07-24)** — Week Key vs Week Code vs Week Name separated; Make Live owns Sent? + Make Send Status + **Weekly Summary Sent At**; WAS creators / levels / HC identity / Fillout checklist docs. Pack: [`docs/next-wave/data-model/`](./docs/next-wave/data-model/).
 - **Stale version expectations closed (2026-07-24)** — Offline gate now expects **066 v3.3** (was v3.2); Stage 17 ETF source guard expects **115 SCRIPT v1.9** (PROD may still run pasted v1.8). PROJECT_STATE H-002 / standards rows updated to v3.3.

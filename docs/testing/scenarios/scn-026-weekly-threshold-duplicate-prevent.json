@@ -1,0 +1,52 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-026",
+  "name": "weekly-threshold-duplicate-prevent",
+  "type": "Weekly Threshold",
+  "description": "Requeue Threshold XP on an already-Processed WAS that still meets thresholds. Expect skip_existing for prior tiers; no duplicate Source Keys.",
+  "related_sc_items": [
+    "SC-002",
+    "SC-007",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "WAS with Processed threshold XP for at least one tier"
+  ],
+  "input_fields": {
+    "note": "Check Requeue Threshold XP then re-run 035",
+    "was_example": "rechWp330MqSgRWzN"
+  },
+  "expected_created_records": [],
+  "expected_links": {
+    "WAS.Threshold XP Status": "Processed"
+  },
+  "expected_xp_source": "Weekly Threshold 100|125|150",
+  "expected_xp_amount": "unchanged",
+  "expected_dedupe_key_pattern": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second XP Event for same enrollment+week+percent"
+  ],
+  "safe_rerun_behavior": "skip_existing per tier Source Key",
+  "cleanup_instructions": "None if skip works",
+  "manual_requirements": [
+    "Requeue + re-run 035"
+  ],
+  "current_automation_support": "035",
+  "test_status": "repository_fixture_ready"
+}

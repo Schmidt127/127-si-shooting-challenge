@@ -1,0 +1,62 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-024",
+  "name": "zoom-attendance-xp",
+  "type": "Zoom Attendance",
+  "description": "Live Zoom attendance awards ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId} via 101. Recording path must never write Zoom Meetings.Attendees.",
+  "related_sc_items": [
+    "SC-002",
+    "SC-073",
+    "SC-084",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "Zoom Meeting for Schmidt grade band/week",
+    "Enrollment on Attendees (or attendance row that 101 consumes)",
+    "Automation 101 ON"
+  ],
+  "input_fields": {
+    "note": "Trigger 101 from Zoom Meeting / attendance path — not 115",
+    "enrollment_id": "recgP9qZYjAhE7NXm"
+  },
+  "expected_created_records": [
+    {
+      "table": "XP Events",
+      "count": "1+ (base; bonuses if configured)"
+    }
+  ],
+  "expected_links": {
+    "XP Events.Enrollment": "recgP9qZYjAhE7NXm"
+  },
+  "expected_xp_source": "Zoom Meeting Attendance Base",
+  "expected_xp_amount": "from XP Reward Rules",
+  "expected_dedupe_key_pattern": "ZOOM_ATTEND_BASE|{meetingId}|{enrollmentId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Recording credit writing Attendees",
+    "Duplicate ZOOM_ATTEND_BASE for same meeting+enrollment",
+    "Double credit with ZOOM_CREDIT| recording family"
+  ],
+  "safe_rerun_behavior": "101 recheck-before-create by Source Key",
+  "cleanup_instructions": "Remove test attendance/XP if needed; keep meeting seed",
+  "manual_requirements": [
+    "Recreate Zoom Meeting + Schmidt attend"
+  ],
+  "current_automation_support": "101 (live); 117/117c recording disjoint",
+  "test_status": "repository_fixture_ready"
+}

@@ -16,14 +16,14 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Verification:** Resolver tests in `tests/config-selection/`; OMNI year-link spot-check on Zoom Config links
 - **Related SC:** SC-030, SC-033, SC-021 · Evidence: `docs/next-wave/config-selection/REPORT.md`
 
-### 2. Paste 057 Denver date-key fix after repo change
+### 2. Paste 057 Denver date-key fix (repo ready — v1.4)
 - **Priority:** P1
 - **System:** Airtable automation 057
-- **Exact action:** After repo 057 date helper is aligned to America/Denver (005/034 pattern), paste script into PROD 057
+- **Exact action:** Paste GitHub `057-…calculate-perfect-week-eligibility.js` **v1.4** into PROD 057 (`getDateKeyFromDateOnly` now America/Denver via Intl)
 - **Expected outcome:** Perfect Week week-window keys remain correct for evening dateTimes
-- **Why not completed:** Requires Airtable UI paste; latent risk only today
-- **Verification:** Offline test already pins UTC-slice disagreement; live Perfect Week after paste
-- **Related SC:** SC-028, SC-077
+- **Why not completed:** Requires Airtable UI paste
+- **Verification:** Offline `xp-date-normalization.test.js` asserts no UTC ISO slice in 057 helper; live Perfect Week after paste
+- **Related SC:** SC-021, SC-028, SC-077 · Repo fix 2026-07-25
 
 ### 3. Fix XP Date Resolved SWITCH case "Submission Base"
 - **Priority:** P1
