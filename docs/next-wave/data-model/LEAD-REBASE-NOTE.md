@@ -5,7 +5,8 @@
 **Method:** Reset go-live to master; cherry-pick `058c2d1` + `55795ed` (did **not** keep prior tip `63a0d89`)  
 **Integration tip merged:** `713f3faf05e45ea9c6bcf41eb636536d05b88ac2`  
 **Master merge:** fast-forward (no separate merge commit)  
-**Final master SHA:** `713f3faf05e45ea9c6bcf41eb636536d05b88ac2`  
+**Master SHA immediately after FF:** `713f3faf05e45ea9c6bcf41eb636536d05b88ac2`  
+**Final master SHA (after merge closeout note):** `2ddf39511740f0e813c3e32d83ec0799d165600b`  
 **Ahead/behind at merge:** 3 ahead / 0 behind `origin/master`
 
 ## 119 functional proof (before paste instructions)
