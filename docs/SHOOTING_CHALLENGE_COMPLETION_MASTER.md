@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-07-25** (PR #43 rebased on master: SC-002 Installed SCN-001–020; repo adds SCN-021–026 Built; 035 v1.1 + 057 v1.4 Ready for PROD Paste; not Live Tested) |
+| Last updated | **2026-07-25** (PR #44 on #43: public `/shoot` smoke → SC-102 Live Tested; 067 Option B packet; SCN-027/028; 057 paste runbook only — code canonical in #43; SC-002 Installed SCN-001–020) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,15 +65,29 @@ Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **147** |
 | Complete | 12 |
-| Live Tested in PROD | 9 |
-| Installed but not tested *(Installed in PROD)* | 55 |
-| Built but not installed *(Built in Repository)* | 28 |
-| Planned | 22 |
+| Live Tested in PROD | 10 |
+| Installed but not tested *(Installed in PROD)* | 54 |
+| Built but not installed *(Built in Repository)* | 29 |
+| Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-07-25 — PROD Completion Agent)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-102 | Installed in PROD | Live Tested in PROD | Public `/shoot` smoke from cloud agent | All listed routes HTTP 200; health `tokenValid:true`; dashboard markers Weekly summary / Video feedback / Recent XP / Submission Base — `docs/prod-completion/2026-07-25/PUBLIC-SHOOT-SMOKE.md` |
+| SC-139 | Planned | Built in Repository | Stale-doc refresh pack started | Access blocker + smoke + quiz/057 paste packets under `docs/prod-completion/2026-07-25/`; homework Mike actions updated |
+| SC-013 | Built in Repository | Built in Repository | Option B PROD install packet + SCN-027/028 (not Live Tested — no Airtable API token) | `067-OPTION-B-PROD-INSTALL.md` |
+| SC-014 | Built in Repository | Built in Repository | Decision already locked; install packet wired | Same |
+| SC-028 / SC-077 | Installed in PROD | Installed in PROD | Repo **057 v1.4** Ready for PROD Paste — **code canonical in PR #43**; this PR keeps paste runbook only | `057-PERFECT-WEEK-PROD-PASTE.md` → `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; offline xp-date-normalization PASS |
+
+**Blocker (does not change SC statuses to Complete):** this cloud environment has **no** `AIRTABLE_API_TOKEN`. Live Schmidt Airtable mutations are blocked until Mike adds the PAT to the Cursor environment (`docs/prod-completion/2026-07-25/ACCESS-BLOCKER.md`). Weekly Threshold writer **035** (SC-049) is owned by PR #43 — do not duplicate.
+
+**Net math vs post–SC-002 dashboard:** Live Tested 9→**10** (SC-102); Installed 55→**54**; Built 28→**29** (SC-139); Planned 22→**21**.
 
 ### Dashboard reconciliation (2026-07-24)
 
@@ -93,7 +107,7 @@ Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Te
 
 **Net math:** After PR #40 on master: Total **147**, Built **28**, Planned **23**, Decision Needed **6**, Superseded **3**. PR #41 then: SC-032 Planned→Built (Built **29**, Planned **22**); SC-114 Decision→Superseded (Decision Needed **5**, Superseded **4**). SC-147 is the only item added by PR #40. No silent Complete↔Live Tested swaps. **2026-07-25:** SC-002 Built→Installed (Installed **55**, Built **28**) for SCN-001–020 PROD catalog; PR #43 repo fixtures SCN-021–026 remain Built pending PROD install (do not count as Live Tested).
 
-**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback PASS (`Weekly Email Sent?`, `Make Send Status=Sent`, `Weekly Summary Sent At`); **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Repo **118 v1.5** is the Live-season functional fix; **119 v1.5** is docs/CONFIG alignment only. Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository**. **SC-032 Season Launch** is **Built in Repository** (not live-installed). Softr is **Obsolete / Not Used** and cannot block launch (MVP views not yet Installed; not Live Tested until PROD export audit). Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
+**Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback PASS (`Weekly Email Sent?`, `Make Send Status=Sent`, `Weekly Summary Sent At`); **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Repo **118 v1.5** is the Live-season functional fix; **119 v1.5** is docs/CONFIG alignment only. Do not disable schedules based on older OFF guidance. **Launch certification (2026-07-25):** PR #42 merged; READY WITH NON-BLOCKING FOLLOW-UPS; public `/shoot` re-smoked PASS (SC-102 Live Tested). **SC-147** Built in Repository. **SC-032** Built (not live-installed). Softr Obsolete / Not Used. Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows year-specific (do not collapse). 115 live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed. **Cloud agent Airtable API token missing** — Schmidt mutation packages blocked until env PAT added (`docs/prod-completion/2026-07-25/ACCESS-BLOCKER.md`).
 
 ---
 
@@ -109,7 +123,7 @@ Columns:
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
 | SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8/v1.9 msg); dry+live PASS 2026-07-23; **rerun PASS 2026-07-24** (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`); offline harness 17 tests; scenario catalog 20 fixtures | Expand HW/Video live branches; UI-attest inventory; optional paste v1.9 | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/`; `live-115-rerun-latest.json`; `docs/testing/scenarios/` | **Resolved:** allowed in PROD | P0 | 2026-07-24 |
-| SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo catalog also has **SCN-021–026** (HW/Video/Zoom/Threshold) Built pending PROD install + Schmidt live-proof pack | Install/execute SCN-021–026 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md`; `SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md` | Confirm Airtable library table still wanted | P1 | 2026-07-25 |
+| SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo also has **SCN-021–026** (PR #43) + **SCN-027/028** quiz Option B (this PR) Built pending PROD install | Install/execute SCN-021–028 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md` | Confirm Airtable library table still wanted | P1 | 2026-07-25 |
 | SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist + overnight exact view specs (`TESTING-VIEWS-MIKE-ACTIONS.md`); only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining Testing views with Schmidt Enrollment RID filters; verify row visibility | SC-004 | API cannot create views; **do not hide Schmidt** | `docs/overnight/testing-integrity/TESTING-VIEWS-MIKE-ACTIONS.md`; foundation checklist | — | P0 | 2026-07-24 |
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven (incl. 115 live Submission `recuuTBgstSTGg2E3`) | Keep emails Schmidt-only; **overnight direction 2026-07-23: Schmidt remains visible on public standings** (do not add leaderboard exclusion filter yet); website is name-blind | — | No separate exclusion field; web must not invent name filters | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`; `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `docs/overnight/web-integration/PUBLIC-STANDINGS-AUDIT.md` | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-07-23 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | Matrix updated 2026-07-24 with evidence categories; A3/A4/B1/B2 partial PROD passes; B3 policy blocked; B5 backdate blocked | Execute remaining matrix on Schmidt; refresh Zoom rows | SC-001–SC-004, core pipelines | Controlled data only | `V2_END_TO_END_TEST_MATRIX.md`; testing-integrity REPORT | — | P0 | 2026-07-24 |
@@ -120,8 +134,8 @@ Columns:
 | SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz uses Option B (no PDF asset — SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-24 |
 | SC-011 | Homework | Video submissions as homework/learning assets | Installed in PROD | Video path via 013/070b/070c/114 historically live | Re-test video as homework vs daily video rules; confirm purpose routing | SC-133 | Do not double-credit video XP | LA routing `video`; C-013 | — | P0 | 2026-07-23 |
 | SC-012 | Homework | Written / reflection responses work | Installed in PROD | Fillout questions + HC path historically used | Re-test written-only HC; coach review + 071 | SC-019 | No attachment required for written | LA `reflection` / `fillout_questions` | — | P1 | 2026-07-23 |
-| SC-013 | Homework | Online quizzes create a reviewable completion | Built in Repository | **067** v2.0 attachment-less path; SC-014 Option B approved | Confirm/install 067 in PROD if drifted; coach Score/Target Score Met? review UX; Schmidt live test (HC, 0 assets → one XP) | SC-014 | 067 must not award XP itself; no fake attachments | C-009; `docs/next-wave/homework-pipeline/QUIZ-PATH-DECISION.md` | — | P0 | 2026-07-24 |
-| SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Built in Repository | **Option B approved** — attachment-less; **067** `no_attachment_field` path + quiz-path contracts; no Quiz Result PDF field; no fake attachment | PROD 067 paste confirmation + Schmidt Option B live test (tracked under SC-013); do not create Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `docs/next-wave/homework-pipeline/QUIZ-PATH-DECISION.md`; `067-…reflection-quiz.js` | **DECIDED Option B** | P0 | 2026-07-24 |
+| SC-013 | Homework | Online quizzes create a reviewable completion | Built in Repository | **067** v2.0 Option B headers refreshed; install packet + SCN-027/028; homework-contracts offline PASS | Mike paste/confirm 067 in PROD; Schmidt T1–T2 live (HC, 0 assets → one XP) — **blocked here without Airtable API token** | SC-014 | 067 must not award XP itself; no fake attachments | `067-OPTION-B-PROD-INSTALL.md`; `QUIZ-PATH-DECISION.md` | — | P0 | 2026-07-25 |
+| SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Built in Repository | **Option B approved** — attachment-less; install packet forbids Quiz Result PDF / fake assets | PROD 067 paste confirmation + Schmidt Option B live test (tracked under SC-013) | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-OPTION-B-PROD-INSTALL.md`; `067-…reflection-quiz.js` | **DECIDED Option B** | P0 | 2026-07-25 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
 | SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
 | SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used | Re-test full chain after wipe; align with Learning Activities later | SC-009–SC-016 | Do not invent second credit path | homework-flow.md; automation-index | — | P0 | 2026-07-23 |
@@ -135,7 +149,7 @@ Columns:
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066 v3.3 Installed in PROD** (2026-07-24) | Re-test natural run on Schmidt; OMNI confirmation packet (not Live Tested for v3.3 yet) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD still runs **057 v1.3**; repo **057 v1.4** Denver date-key Ready for PROD Paste (canonical in PR #43) | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week + Zoom exclusivity | SC-116 | Combined Zoom credit path | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; C-025 Stage 17 | — | P1 | 2026-07-25 |
+| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD still runs **057 v1.3**; repo **057 v1.4** Denver date-key Ready for PROD Paste (**code canonical in PR #43**; paste runbook in this PR) | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week + Zoom exclusivity | SC-116 | Combined Zoom credit path; do not UTC-shift date keys | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; `057-PERFECT-WEEK-PROD-PASTE.md`; C-025 Stage 17 | — | P1 | 2026-07-25 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
@@ -184,7 +198,7 @@ Columns:
 | SC-074 | XP | Zoom recording XP / credit path | Installed in PROD | Stage 17 **117** / **057** / **042** ON historically; conflict PASS 2026-07-20 | Re-seed Zoom fixtures; re-test conflict + exclusivity after wipe | SC-116 | Soft-void recording only | C-025 Stage 17 live docs | — | P0 | 2026-07-23 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.3**; repo **057 v1.4** Ready for PROD Paste (PR #43 canonical) | Paste v1.4; live prove with Zoom rules on Schmidt | SC-028, SC-074 | — | `057-perfect-week-denver-v1.4.md`; C-025 | — | P1 | 2026-07-25 |
+| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.3**; repo **057 v1.4** Ready for PROD Paste (PR #43 code; this PR paste runbook) | Paste v1.4; live prove 100 XP + dedupe with Zoom rules on Schmidt | SC-028, SC-074 | — | `057-perfect-week-denver-v1.4.md`; `057-PERFECT-WEEK-PROD-PASTE.md`; C-025 | — | P1 | 2026-07-25 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
@@ -209,7 +223,7 @@ Columns:
 | SC-099 | Assets | Writeback verification (070c) | Installed in PROD | 070c v1.1 idempotent verify | Re-test Accepted→verify | SC-094 | Async handoff | C-013 | — | P0 | 2026-07-23 |
 | SC-100 | Assets | Attachment / Drive retirement strategy | Deferred | Explicitly deferred after C-013 video | Plan retirement after S3 paths stable for HW+video | SC-095 | Don’t break historical links if any remain | C-023 retirement notes | When to retire Drive? | P3 | 2026-07-23 |
 | SC-101 | Assets | Make and Lambda routing correct for video + homework | Installed in PROD | Upload engine blueprints; video live historically; homework router checklist open | Finish homework Module 2 checklist; close stale GitHub overnight issues | SC-095 | Never commit webhooks | make/documentation; issues #1/#8/#9 | — | P1 | 2026-07-23 |
-| SC-102 | Website | Airtable-backed public pages work | Installed in PROD | Next.js `/shoot` catalogs live on Vercel; overnight empty/error hardening + visitor-safe Airtable errors | Spot-check deploy against rebuilt PROD; seed catalog content | SC-055 | Server-side token only | `docs/overnight/web-integration/CURRENT-WEB-ARCHITECTURE.md`; `WEB-SECURITY-AUDIT.md` | — | P1 | 2026-07-23 |
+| SC-102 | Website | Airtable-backed public pages work | Live Tested in PROD | Next.js `/shoot` on Vercel; **2026-07-25 smoke PASS** (home + catalogs + dashboard markers + `/api/airtable` tokenValid) | Seed catalog content depth; Presentation fields later (SC-054) | SC-055 | Server-side token only | `docs/prod-completion/2026-07-25/PUBLIC-SHOOT-SMOKE.md`; launch-certification LIVE-SMOKE | — | P1 | 2026-07-25 |
 | SC-103 | Website | Leaderboard | Installed in PROD | Leaderboard view live | Needs Active enrollments to be meaningful | SC-068 | — | leaderboard-view | — | P2 | 2026-07-23 |
 | SC-104 | Website | Homework catalog | Installed in PROD | Catalog routes live; design system update 2026-07-23 | Content seed; Presentation fields later | SC-054 | Publish flag | homework catalog | — | P2 | 2026-07-23 |
 | SC-105 | Website | Tutorials | Installed in PROD | Tutorials grid/detail live | Complete table merge SC-052 | SC-052 | — | C-026 | — | P2 | 2026-07-23 |
@@ -251,7 +265,7 @@ Columns:
 | SC-136 | Zoom | Stage 16 Homework Completions Zoom design | Superseded | Old 117a/117b S16 scripts moved to `_superseded/` | Do not install S16 | SC-074 | Inventory/KNOWN_ISSUES may still mention S16 (stale) | C025_ARCHITECTURE_RECONCILIATION; `_superseded/` | — | — | 2026-07-23 |
 | SC-137 | Testing | “Never install 115 in PROD” old rule | Superseded | Old DEV-only rule under DEV-first model | Replaced by SC-001 decision under empty PROD rules | SC-001 | If 115 enters PROD, isolate carefully | C-020 old guidance | Decide via SC-001 | — | 2026-07-23 |
 | SC-138 | Platform | Close stale overnight GitHub issues/PRs for 070a | Planned | Issues #1/#8/#9/#11/#17; PRs still open despite claimed PASS | Close or update with current truth | SC-095 | — | gh issues/PRs | — | P2 | 2026-07-23 |
-| SC-139 | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | Planned | Conflicts catalogued in §8 | Edit docs after each SC completes | — | Stale docs cause wrong installs | K-M1 etc. | — | P1 | 2026-07-23 |
+| SC-139 | Platform | Refresh stale status docs (KNOWN_ISSUES, inventory, E2E Zoom rows, brief) | Built in Repository | Completion master + homework Mike actions + prod-completion 2026-07-25 pack started; launch-certification already on master | Continue sweeping KNOWN_ISSUES / Zoom E2E stale rows / brief after each SC | — | Stale docs cause wrong installs | `docs/prod-completion/2026-07-25/`; K-M1 etc. | — | P1 | 2026-07-25 |
 | SC-140 | Config | One ladder decision (no dual-track) | Complete | C-014 resolved | Tuning only via SC-082 | — | — | C-014 | — | — | 2026-07-23 |
 | SC-141 | Assets | C-013-SEC DEV secret rotation | Complete | Done 2026-07-09 | Optional PROD rotate remains hygiene | SC-094 | — | C-013-SEC | — | — | 2026-07-23 |
 | SC-142 | Historical | Monitoring-only close-out leftovers (C-004/C-005/C-007) | Not Needed | Season closed; data wiped | Drop unless Mike wants award history research | — | — | close-out-considerations | — | — | 2026-07-23 |
@@ -464,23 +478,28 @@ Confirmed direction preserved: PROD active; Schmidt visible; Weeks manual; websi
 
 Key corrections applied: Config year registry (no collapse); 063/111 supersession classifications; 020 v3.0.0 canonical; weekly email `118→072→119→074→Make` verified; formula-only XP Dedupe Keys; WAS hybrid creators; dual-writer inventory.
 
-### 9E. Repository completion agent — **2026-07-25**
+### 9E. Repository completion packs — **2026-07-25** (PR #43 + PR #44)
 
-**Branch:** `cursor/sc-completion-threshold-date-311c` · **PR:** #43 (draft)  
-**Scope:** Highest-priority repo packages that do not conflict with Communications Airtable agents.
+**PR #43** (`cursor/sc-completion-threshold-date-311c`) — canonical automation code:
 
 | Package | Status | Evidence |
 |---------|--------|----------|
-| **SC-049 / XP-D1 Weekly Threshold writer** | **Ready for PROD Paste** | **035 v1.1** — semantic legacy dedupe, inactive enrollment skip, Grade Band link-ID preference, targeted Source Key recheck; `weekly-threshold-xp.test.js`; deploy checklist v1.1; Schmidt Tests 1–3 |
-| **SC-021 / 057 Denver date keys** | **Ready for PROD Paste** | **057 v1.4** Denver Intl helper; DST/evening boundary offline tests; deploy checklist `057-perfect-week-denver-v1.4.md`; Schmidt Tests 4–5 |
-| **SC-002 scenario fixtures** | Built in Repository | SCN-021–026 with exact setup/expected fields; live-proof pack; **not** Complete until live execution |
-| Levels blank/idempotent tests | Tests only | `overnight-level-gate-boundaries.test.js` blank stats + duplicate recalc |
+| **SC-049 / XP-D1 Weekly Threshold writer** | **Ready for PROD Paste** | **035 v1.1** — semantic legacy dedupe, inactive enrollment skip, Grade Band link-ID preference; deploy checklist v1.1; Schmidt Tests 1–3 |
+| **SC-021 / 057 Denver date keys** | **Ready for PROD Paste** | **057 v1.4** Denver Intl helper; DST/evening boundary offline tests; `057-perfect-week-denver-v1.4.md`; Schmidt Tests 4–5 |
+| **SC-002 fixtures SCN-021–026** | Built in Repository | HW/Video/Zoom/Threshold fixtures; **not** Live Tested |
 
-**Not claimed Complete / Pasted / Live-Tested:** No PROD Airtable paste or live Schmidt proof in this session.  
-**Avoided:** Communications base / COM-MAKE-001; inventing Manual Bonus writer; dual-writer Threshold install without Mike attest.
+**PR #44** (`cursor/prod-completion-pack-cbb3`) — stacked on #43; unique ops pack (no duplicate 057 code):
 
-**Mike next (literal):** Follow `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md` + MIKE-ACTIONS #2 / #2b.  
-**Next repo package (after PR #43 ready):** HW/video/Zoom writer contract gaps or SC-041 retry SOP — not Communications.
+| Package | Result |
+|---------|--------|
+| Public `/shoot` smoke (SC-102) | **Live Tested** — all routes 200 + health tokenValid |
+| 067 Option B install packet (SC-013/014) | **Built** — paste + Schmidt protocol ready; live proof blocked without PAT |
+| 057 v1.4 paste runbook | Points at PR #43 code + `057-PERFECT-WEEK-PROD-PASTE.md` |
+| SCN-027/028 quiz fixtures | **Built** |
+| Access blocker doc | Recorded — needs Mike env PAT |
+
+**Not claimed Complete / Pasted for 035/057/067:** No PROD Airtable paste or Schmidt mutation proof in these sessions.  
+**Next after token:** SC-013 Schmidt Option B live → paste 035/057 → SC-075/076 → SC-077 Perfect Week.
 
 ---
 

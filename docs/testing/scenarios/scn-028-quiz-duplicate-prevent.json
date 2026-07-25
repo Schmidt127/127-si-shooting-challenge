@@ -1,0 +1,55 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts + 067 identity key",
+  "automation_support": {
+    "primary": "067",
+    "downstream_expected": ["064", "065"]
+  },
+  "scenario_id": "SCN-028",
+  "name": "quiz-duplicate-prevent",
+  "type": "Homework Quiz",
+  "description": "Second quiz/process for same Enrollment+Week+HW17 must link the existing Homework Completion and must not create a second HC or second XP after award.",
+  "related_sc_items": ["SC-013", "SC-016", "SC-007"],
+  "prerequisites": [
+    "SCN-027 already created one HC for Schmidt HW17 week",
+    "Automation 067 ON"
+  ],
+  "input_fields": {
+    "Enrollment": ["recgP9qZYjAhE7NXm"],
+    "Processing Status": "Pending",
+    "attachment": null
+  },
+  "expected_created_records": [
+    {
+      "table": "Homework Completions",
+      "count": 0,
+      "shape": "reuse existing HC"
+    }
+  ],
+  "expected_links": {
+    "Final Reflection Quiz Submissions.Homework Completion": "existing HC from SCN-027"
+  },
+  "expected_xp_source": "none on bridge rerun",
+  "expected_xp_amount": 0,
+  "expected_dedupe_key_pattern": "Enrollment|Week|Homework identity via 067",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "No second Homework Completion",
+    "No second Homework XP Event",
+    "No placeholder assets"
+  ],
+  "safe_rerun_behavior": "Idempotent link; actionOut linked_existing or skipped_already_linked",
+  "cleanup_instructions": "Same as SCN-027",
+  "manual_requirements": [
+    "Compare HC record IDs before/after rerun — must match"
+  ],
+  "current_automation_support": "067 v2.0 identity key",
+  "test_status": "repository_test_pass",
+  "install_packet": "docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md"
+}

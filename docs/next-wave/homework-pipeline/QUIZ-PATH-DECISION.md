@@ -64,10 +64,13 @@ Recorded on completion master **SC-014** → status **Built in Repository** (rep
 
 ## Next steps (ops / install — not decision)
 
+**Install packet (controlling):** [`067-OPTION-B-PROD-INSTALL.md`](./067-OPTION-B-PROD-INSTALL.md)
+
 1. Confirm PROD **067** paste matches repo attachment-less path (install/update if drifted).  
 2. Coach review Interface/view shows Score / Target Score Met? without Drive URL.  
-3. Schmidt live test: 067 → HC, 0 assets → review → one XP.  
-4. Do **not** create `Quiz Result PDF` or fake attachments.
+3. Schmidt live test: 067 → HC, 0 assets → review → one XP (protocol in install packet T1–T4).  
+4. Do **not** create `Quiz Result PDF` or fake attachments.  
+5. Fixtures: `docs/testing/scenarios/scn-027-*.json`, `scn-028-*.json`.
 
 Helpers (historical recommendation; decision now locked):
 

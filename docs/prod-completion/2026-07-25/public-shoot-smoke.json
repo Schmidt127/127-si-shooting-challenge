@@ -1,0 +1,195 @@
+{
+  "date": "2026-07-25",
+  "base": "https://www.hoopchallenges.com/shoot",
+  "results": [
+    {
+      "route": "/shoot",
+      "status": 200,
+      "bytes": 128550,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Public Display",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/api/airtable",
+      "status": 200,
+      "bytes": 253,
+      "markers": [
+        "Leaderboard"
+      ],
+      "json": {
+        "ok": true,
+        "service": "127-si-shooting-challenge-web",
+        "phase": "leaderboard-live",
+        "airtable": {
+          "configured": true,
+          "hasToken": true,
+          "hasBaseId": true,
+          "baseIdPreview": "appn84\u2026",
+          "tokenValid": true,
+          "tokenError": null
+        },
+        "message": "Airtable configuration is valid."
+      }
+    },
+    {
+      "route": "/shoot/leaderboard",
+      "status": 200,
+      "bytes": 57625,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/dashboard",
+      "status": 200,
+      "bytes": 74470,
+      "markers": [
+        "Weekly summary",
+        "Video feedback",
+        "Recent XP",
+        "Submission Base",
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/achievements",
+      "status": 200,
+      "bytes": 61534,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/levels",
+      "status": 200,
+      "bytes": 103826,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/homework",
+      "status": 200,
+      "bytes": 155036,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/tutorials",
+      "status": 200,
+      "bytes": 65251,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/zoom-meetings",
+      "status": 200,
+      "bytes": 44649,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/game-manual",
+      "status": 200,
+      "bytes": 64788,
+      "markers": [
+        "Recording credit",
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    },
+    {
+      "route": "/shoot/public-display",
+      "status": 200,
+      "bytes": 44798,
+      "markers": [
+        "Leaderboard",
+        "Achievements",
+        "Levels",
+        "Homework",
+        "Tutorials",
+        "Zoom",
+        "Game Manual",
+        "Public Display",
+        "Shooting Challenge",
+        "noindex"
+      ]
+    }
+  ]
+}
