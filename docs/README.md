@@ -6,6 +6,8 @@ Central map for all documentation in this monorepo. **Start here** when you are 
 
 **Completion plan (controlling)?** Use [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md). Older backlog files remain evidence/history only.
 
+**Current reconciliation (2026-07-24):** [next-wave/agent5-lead-reconciliation-2026-07-24/](./next-wave/agent5-lead-reconciliation-2026-07-24/) · go-live [next-wave/go-live/](./next-wave/go-live/) · Mike actions [next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md](./next-wave/final-reconciliation/MIKE-ACTIONS-NEXT.md).
+
 **Foundation Reset Pack (2026-07-23):** [foundation-reset/README.md](./foundation-reset/README.md).
 
 **New session?** Read [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md) and [PROJECT_STATE.md](./PROJECT_STATE.md) first, then [v2/04-ai-development-standards.md](./v2/04-ai-development-standards.md) for the permanent AI workflow.

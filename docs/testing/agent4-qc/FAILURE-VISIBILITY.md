@@ -13,7 +13,7 @@
 | Fixed `sendMode=Test` in PROD | Email OK; no Sent? | **High** — verified 2026-07-24 incident |
 | Empty-week `suppress` | 072 skip; not Ready | Low if policy understood |
 | Weekly threshold XP never awarded | No error | **High product gap** (no writer) |
-| Schedules OFF (118/119) | No runs | Expected during controlled validation |
+| Schedules OFF (118/119) | No runs | Rollback / emergency only — current PROD state is schedules **ON** (go-live 2026-07-24) |
 
 ## Operator checks after weekly email changes
 

@@ -1,12 +1,14 @@
 # Agent 4 Report — Testing, QC, Production Safety
 
 **Date:** 2026-07-24  
-**Branch:** `agent4/testing-qc-prod-safety`  
-**Base:** `a8f3b00` (after prompt checkpoint `adfabc5`)
+**Branch:** `agent4/testing-qc-prod-safety` @ `c3bbd96` (integrated by Agent 5)  
+**Base at Agent 4 start:** `a8f3b00` (after checkpoint `adfabc5`)
 
 ## Executive summary
 
-Added repository proof for the verified weekly email Live/Test contracts (including the PROD `sendMode=Test` incident), XP dedupe matrix, Perfect Week edges, and a full Agent 4 QC documentation pack. Full Agent 4 Node suite **20/20 PASS**. Unattended parent-email activation remains **not** declared ready.
+Added repository proof for the verified weekly email Live/Test contracts (including the PROD `sendMode=Test` incident), XP dedupe matrix, Perfect Week edges, and a full Agent 4 QC documentation pack. Full Agent 4 Node suite **PASS**.
+
+**Post go-live correction (Agent 5):** 118/119 schedules are **ON** (`verified_prod`). Older Agent 4 wording that treated unattended activation as not ready is **superseded** for schedule state; first-Sunday monitoring remains required.
 
 ## Work completed
 
@@ -17,7 +19,7 @@ Added repository proof for the verified weekly email Live/Test contracts (includ
 5. Perfect Week edge supplement  
 6. Failure-visibility, release, rollback, readiness, and gap docs  
 7. Suite runner `tools/testing/run-agent4-suite.js`  
-8. Aligned release validator + PROJECT_STATE/inventory to **066 v3.3**
+8. Aligned release validator + inventory references to **066 v3.3**
 
 ## Important findings
 
@@ -26,17 +28,11 @@ Added repository proof for the verified weekly email Live/Test contracts (includ
 - Make Live owns Sent?/status/timestamp; 074 must never write Sent?.  
 - Weekly threshold XP rules exist without a repo writer (product gap).
 
-## Problems discovered
-
-- Shared primary worktree branch thrashing by concurrent agents — mitigated via dedicated worktree.  
-- Worktree lacks `web/node_modules`; web vitest re-run from primary worktree (109/109; no web edits).  
-- Possible overlap with reliability-audit `sendmode-prod-contract.test.js` if that branch merges.
-
 ## Production changes made
 
-None (no Airtable/Make/live mode changes).
+None by Agent 4 (no Airtable/Make/live mode changes).
 
 ## Production changes still required
 
 - Keep 074 PROD `sendMode=Live` (or blank + WAS Live).  
-- Complete activation checklist before turning 118/119 schedules ON.
+- Keep 118/119 **ON**; watch first Sunday; confirm dryRun/includeSchmidt policy.  

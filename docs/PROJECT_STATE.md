@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
+Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; C-011 weekly email Live; **118/119 ON**; Agent 5 reconciliation [next-wave/agent5-lead-reconciliation-2026-07-24/](./next-wave/agent5-lead-reconciliation-2026-07-24/))
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)

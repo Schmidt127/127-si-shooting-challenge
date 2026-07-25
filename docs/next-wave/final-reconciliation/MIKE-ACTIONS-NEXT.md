@@ -1,82 +1,77 @@
 # Mike Actions — Next (consolidated)
 
-**Date:** 2026-07-24  
+**Date:** 2026-07-24 (Agent 5 reconciliation)  
 **Environment:** PROD `appn84sqPw03zEbTT`  
 **Schmidt Enrollment:** `recgP9qZYjAhE7NXm` · Athlete `recgqVstObQRzgXJF`
 
-**Decisions:** SC-035 = `send_short`; SC-014 = Option B.  
-**PROD installs:** 054 v5.6 · 066 v3.3 · **072 v4.0** · **118/119 v1.4**.  
-**Weekly email:** Test-mode E2E **PASS** (`118→072→119→074→Make Bulk Email May 18`). Schedules remain **OFF**.
+**Decisions done:** SC-035 = `send_short`; SC-014 = Option B.  
+**Weekly email (verified_prod):** `118→072→119→074→Make Bulk Email May 18→Gmail→writeback`  
+**074 sendMode=Live** + Live writeback PASS · **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver)
 
-Canonical: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`
+Canonical architecture: [`../was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](../was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md)  
+Agent 5 package: [`../agent5-lead-reconciliation-2026-07-24/`](../agent5-lead-reconciliation-2026-07-24/)  
+Go-live pack: [`../go-live/GO-LIVE-READINESS-2026-07-24.md`](../go-live/GO-LIVE-READINESS-2026-07-24.md)
 
----
-
-## P0 — Blocking
-
-### 1. Automation UI attestation (remaining rows)
-
-**Packet:** `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`  
-Partial PROD findings already recorded (112/117c/063/111 absent; 117 email-only; 020 v3.0.0). Finish 013/031/101/118/119/Threshold hunt.
-
-### 2. Zoom credit XP writer (if/when reinstalled)
-
-PROD Automation **117** is approval-email v1.1 (not XP); **117c** absent. If XP orchestrator returns, keep exactly one mint path.
-
-### 3. Keep four Config year rows (do not collapse)
-
-Adopt `docs/next-wave/config-selection/`.
-
-### 4. Empty-week email — DONE / VERIFIED
-
-`send_short` enforced in **072 v4.0**; Schmidt Check-In delivered.
-
-### 5. Weekly email schedules — safety hold
-
-| Piece | State |
-|-------|--------|
-| 072 | `allowSchmidtInput=false` |
-| 118 / 119 | `dryRun=true`, `includeSchmidt=false`, schedules **OFF** |
-| 074 | **ON** |
-| Make Bulk Email May 18 | **ON** |
-
-**Do not enable Sunday Live schedules without written auth.**  
-**119 arms Send only; 074 posts webhook.**
-
-### 6. Quiz path — DECIDED Option B
-
-No Quiz Result PDF; use 067 attachment-less path; Schmidt live test still open under SC-013.
+> **Historical:** Older rows in this file that said “schedules OFF / do not enable” are **superseded**. Do not disable 118/119 based on stale packets.
 
 ---
 
-## P0 — Pastes / follow-ups
+## Exact UI verifications still needed (minimal)
 
-### 7. 054 / 066 — DONE (Installed)
+### 1. Confirm 074 sendMode still Live (P0)
 
-Live streak/milestone proofs still open.
+**Where:** Airtable → Automation **074** → Script inputs  
+**Expect:** `sendMode` / `sendModeInput` = **Live**, or blank with WAS `sendMode=Live`  
+**Must not:** fixed `Test`  
+**Proof:** note/screenshot + one WAS with Sent?/Make Send Status=Sent/timestamp after a Live send
 
-### 8. Video XP 1-vs-25 discrepancy
+### 2. Confirm 118 / 119 still ON with intended dryRun (P0)
 
-Still open (`recYQ10pOoFlApmjZ`).
+**Where:** Automations **118** and **119** schedule toggles + inputs  
+**Expect:** Schedules **ON**; confirm whether `dryRun` is still `true` (safe) or already `false` (season Live)  
+**Proof:** toggle state + dryRun values written here or in chat
+
+### 3. Confirm Make sender scenario ON (P0)
+
+**Where:** Make.com  
+**Expect:** `Weekly Athlete Summary - Bulk Email - May 18` **ON** (not `Weekly Athlete Summary Updated` for send)  
+**Proof:** scenario ON + last Live run shows Airtable writeback
+
+### 4. Attest 112 OFF + 117 XOR 117c (P0)
+
+**Where:** Automations list  
+**Expect:** **112 OFF**; exactly one `ZOOM_CREDIT|` XP creator if/when Zoom XP path is live  
+**Proof:** filled row in [`../automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`](../automation-ownership/AUTOMATION-ATTESTATION-PACKET.md)
+
+### 5. Attest script headers (P1)
+
+Confirm UI headers match: **020 v3.0.0**, **054 v5.6**, **066 v3.3**, **072 v4.0**, **074 v2.1**, **118/119 v1.4**
+
+### 6. First Sunday watch (P0 ops)
+
+After next Sunday 5 AM / 10 AM Denver: 118 counts → 072 builds → 119 arms → 074→Make→Sent?  
+Abort only if mass non-Schmidt sends appear.
 
 ---
 
-## P1 — Controlled live tests (Schmidt)
+## Done — do not reopen
 
-| # | Path | Notes |
-|---|------|-------|
-| 9–11 | HW / Video / Zoom live | As before |
-| 12 | Zoom recording XP | If XP automation present — not PROD 117 email slot |
-| 13 | Weekly email | **PASS** empty-week `send_short` Test path |
-| 14 | Streak / milestone | After 054/066 — still needed |
-| 17 | Final Reflection Option B | Still needed |
+| Item | State |
+|------|--------|
+| Empty-week `send_short` | Verified in 072 v4.0 |
+| 074 Live writeback | Verified |
+| 118/119 schedule activation | **ON** (verified_prod) |
+| SC-014 Option B | Decided |
+| 054 v5.6 / 066 v3.3 paste | Installed (live proofs still open) |
+| Config year collapse | **Do not** |
 
 ---
 
 ## Do not
 
-- Collapse Config year rows  
-- Treat 119 as Make webhook sender  
+- Force 074 to Test in PROD  
+- Disable 118/119 because an old doc said OFF  
 - Create a new Make WAS email scenario  
-- Enable 118/119 Live schedules without auth  
-- Create Quiz Result PDF / fake attachments  
+- Reinstall full 063/111  
+- Add Team Shot Tracker 3/7/10-day inactivity alerts  
+- Collapse Config year rows  
