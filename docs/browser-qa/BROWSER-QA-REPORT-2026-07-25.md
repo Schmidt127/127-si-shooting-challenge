@@ -78,6 +78,9 @@
 | WEB-QA-002 | Medium | Zoom / homework / levels copy | Bold/italic readable | Raw `**markdown**` in RichContent | Safe Markdown subset renderer |
 | WEB-QA-003 | Medium | Zoom (and other) covers | Broken remote images hidden | Airtable attachment **410 Expired Resource** left broken `<img>` | `SafeExternalImage` + icon fallback |
 | WEB-QA-004 | Low | Season label default | Neutral default when School Year missing | Hardcoded `2025–2026 Season` default in builder / demo | Default `Current Season`; demo `Demo Season` |
+| WEB-QA-005 | Medium | Empty/error a11y | One `h1` per page | `EmptyState`/`ErrorState` used `<h1>` under `ProgramPage` hero → dual `h1` | Demoted state titles to `h2` |
+| WEB-QA-006 | High | Landing hub links | Header/footer → `https://www.hoopchallenges.com` | PROD emitted `https://hooopchallenges.com` (typo env) | `resolveLandingUrl()` corrects known typo; **still fix Vercel env** |
+| WEB-QA-007 | Low | Playwright nav assertion | Landmark uniquely found | `/shooting challenge/i` matched nav + footer | Spec targets `Shooting Challenge navigation` |
 
 ### External / configuration tickets (not fixed here)
 
@@ -93,6 +96,7 @@
 | EXT-QA-008 | Product decision SC-112 | No athlete auth | Real dashboard / private XP history | Mike pick auth approach (recommend parent magic-link) | Blocks athlete journeys 2–11 |
 | EXT-QA-009 | Product decision SC-115 | Sitewide `noindex,nofollow` | Index only after Mike approval | Keep until content+cutover ready | SEO irreversible-ish |
 | EXT-QA-010 | Landing repo | Root `/favicon.ico` 404 | Optional brand favicon at apex | Fix in `hoopchallenges-landing` if desired | Low — `/shoot` icons fixed in this PR |
+| EXT-QA-011 | **Vercel env (P0)** | `NEXT_PUBLIC_LANDING_URL=https://hooopchallenges.com` (triple **o**) in live HTML | `https://www.hoopchallenges.com` | Correct env in Vercel project for `/shoot` and redeploy; repo now also self-heals this typo | **High** — broken hub links from every page |
 
 ---
 

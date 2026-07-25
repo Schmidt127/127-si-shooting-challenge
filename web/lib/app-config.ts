@@ -26,5 +26,37 @@ export function withBasePath(path: string): string {
   return `${APP_BASE_PATH}${normalized}`;
 }
 
-export const LANDING_URL =
-  process.env.NEXT_PUBLIC_LANDING_URL?.trim() || "https://www.hoopchallenges.com";
+const DEFAULT_LANDING_URL = "https://www.hoopchallenges.com";
+
+/**
+ * Normalize hub / landing URL. Guards a known PROD typo (`hooopchallenges.com`)
+ * that broke header/footer links when set via NEXT_PUBLIC_LANDING_URL.
+ */
+export function resolveLandingUrl(raw: string | undefined | null): string {
+  const trimmed = String(raw ?? "").trim();
+  if (!trimmed) return DEFAULT_LANDING_URL;
+
+  let candidate = trimmed;
+  if (!/^https?:\/\//i.test(candidate)) {
+    candidate = `https://${candidate}`;
+  }
+
+  try {
+    const url = new URL(candidate);
+    const host = url.hostname.toLowerCase();
+
+    // Known typo observed in live PROD HTML (2026-07-25 browser QA).
+    if (host === "hooopchallenges.com" || host === "www.hooopchallenges.com") {
+      url.hostname = "www.hoopchallenges.com";
+    } else if (host === "hoopchallenges.com") {
+      url.hostname = "www.hoopchallenges.com";
+    }
+
+    url.hash = "";
+    return url.toString().replace(/\/$/, "");
+  } catch {
+    return DEFAULT_LANDING_URL;
+  }
+}
+
+export const LANDING_URL = resolveLandingUrl(process.env.NEXT_PUBLIC_LANDING_URL);
