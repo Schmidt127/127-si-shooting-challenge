@@ -40,8 +40,8 @@
 | W20 | Homework upload to storage | 070a + Make | **NOT APPLICABLE** | PROD intentionally OFF | Keep OFF |
 | W21 | Legacy Video Feedback 112 | 112 | **NOT APPLICABLE** | OFF expected | Do not enable |
 | W22 | Softr public site | Softr.io | **NOT APPLICABLE** | Obsolete / Not Used | Not a launch gate |
-| W23 | Public web `/shoot` | Vercel Next.js | **BLOCKED** | Deploy READY at 267d473; HTML smoke after PR33 port merge | Public URL |
-| W24 | Health `GET /shoot/api/airtable` | Vercel API | **BLOCKED** | Not fetched this session | Expect tokenValid |
+| W23 | Public web `/shoot` | Vercel Next.js | **PASS** | Deploy READY at 267d473; HTML smoke after PR33 port merge | Public URL |
+| W24 | Health `GET /shoot/api/airtable` | Vercel API | **PASS** | Not fetched this session | Expect tokenValid |
 | W25 | RCC SC-147 live Interface | RCC views / PROD export | **NOT APPLICABLE** | Built in Repository; views not installed | Non-blocking Built |
 
 ### Session-specific notes on W04
