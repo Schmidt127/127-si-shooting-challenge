@@ -45,6 +45,21 @@
 11. **Remaining risks:** Do not create a second Perfect Week automation; paste once from PR #43 after merge
 12. **Next package:** After env PAT — SC-013 live → streak/milestone → Perfect Week
 
+## Package 4 — RCC fixture CLI re-proof (SC-147)
+
+1. **Completed (repo):** Fixture audit runs + offline suite PASS — still Built (views not installed; no PROD export)
+2. **Problem:** Need evidence RCC CLI still works before first PROD export
+3. **Dependency map:** Export JSON shape only; no Airtable writes; weekly-email checkers respect 118/119 ON
+4. **Change made:** Ran CLI on healthy / mixed / weekly-email fixtures; archived reports
+5. **Records/files:** `rcc-fixture-runs/**`
+6. **Test records:** Synthetic only
+7. **Test cases:** healthy (0 findings), mixed (79 findings), weekly-email writeback (6 P0)
+8. **Results:** CLI + `tests/reliability-command-center/run-all.js` PASS
+9. **Evidence:** report.json/md per fixture
+10. **Completion-master update:** SC-147 evidence refreshed; status remains Built
+11. **Remaining risks:** First PROD export + RV views still Mike/OMNI
+12. **Next package:** Schmidt live protocols after PAT (`SCHMIDT-LIVE-TEST-PROTOCOLS.md`)
+
 ## Access blocker
 
-See [`ACCESS-BLOCKER.md`](./ACCESS-BLOCKER.md). Without `AIRTABLE_API_TOKEN` in this environment, athlete-path Live Tested closures cannot honestly proceed.
+See [`ACCESS-BLOCKER.md`](./ACCESS-BLOCKER.md). Without `AIRTABLE_API_TOKEN` in this environment, athlete-path Live Tested closures cannot honestly proceed. Browser Airtable session also absent (login required).

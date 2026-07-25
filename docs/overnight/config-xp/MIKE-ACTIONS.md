@@ -16,12 +16,12 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Verification:** Resolver tests in `tests/config-selection/`; OMNI year-link spot-check on Zoom Config links
 - **Related SC:** SC-030, SC-033, SC-021 · Evidence: `docs/next-wave/config-selection/REPORT.md`
 
-### 2. Paste 057 Denver date-key fix (repo ready — v1.4)
+### 2. Paste 057 Denver date-key fix (repo ready — v1.4; code canonical in PR #43)
 - **Priority:** P1
 - **System:** Airtable automation 057
-- **Exact action:** Paste GitHub `057-…calculate-perfect-week-eligibility.js` **v1.4** into PROD 057 (`getDateKeyFromDateOnly` now America/Denver via Intl). Checklist: `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`.
+- **Exact action:** Paste GitHub `057-…calculate-perfect-week-eligibility.js` **v1.4** into PROD 057 (`getDateKeyFromDateOnly` now America/Denver via Intl). Checklist: `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`. Runbook: `docs/prod-completion/2026-07-25/057-PERFECT-WEEK-PROD-PASTE.md`.
 - **Expected outcome:** Perfect Week week-window keys remain correct for evening dateTimes
-- **Why not completed:** Requires Airtable UI paste
+- **Why not completed:** Requires Airtable UI paste (no Airtable API token in cloud agent)
 - **Verification:** Offline `xp-date-normalization.test.js` Denver/DST boundary suite; Schmidt pack Test 4–5 in `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md`
 - **Related SC:** SC-021, SC-028, SC-077 · Repo fix 2026-07-25
 
