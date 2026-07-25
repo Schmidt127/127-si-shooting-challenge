@@ -23,7 +23,7 @@ import {
   weeklyShotPercent,
   type AthleteDashboardModel,
 } from "@/lib/data/athlete-dashboard";
-import { formatGrade, formatShots, formatXp } from "@/lib/formatters";
+import { formatGrade, formatShots, formatXp, formatXpSourceLabel } from "@/lib/formatters";
 
 type AthleteDashboardViewProps = {
   data: AthleteDashboardModel;
@@ -53,7 +53,8 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
       meta={
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <span>
-            Lifetime XP {formatXp(data.xp.total)} · Demo slug /{data.athlete.slug}
+            Lifetime XP {formatXp(data.xp.total)}
+            {data.source === "mock" ? ` · Demo preview /${data.athlete.slug}` : null}
           </span>
           {data.source === "mock" ? (
             <StatusBadge tone="warn">Demo data — Airtable adapter pending</StatusBadge>
@@ -139,7 +140,7 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
         <div className="grid gap-6 lg:grid-cols-2">
           <div className={catalogPanelClass({ tint: "blue" })}>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-brand-blue">
-              Weekly progress
+              Weekly summary
             </p>
             <h3 className="font-display mt-2 text-xl text-foreground">Shot goal</h3>
             <div className="mt-5">
@@ -154,6 +155,10 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               {data.perfectWeek.earnedThisWeek
                 ? "Perfect Week locked in — keep the streak alive."
                 : `Need ${formatShots(Math.max(0, data.weekly.goal - data.weekly.shots))} more counted shots for Perfect Week eligibility.`}
+            </p>
+            <p className="mt-2 text-xs text-muted">
+              Season shots counted: {formatShots(data.seasonShots)}
+              {data.source === "mock" ? " · Demo weekly summary (live adapter pending)" : null}
             </p>
           </div>
 
@@ -199,20 +204,26 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
 
           <div className={catalogPanelClass({ tint: "neutral" })}>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-muted">
-              Coach feedback
+              Video feedback
             </p>
             {data.feedback ? (
               <>
                 <h3 className="mt-3 text-lg font-bold text-foreground">{data.feedback.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{data.feedback.preview}</p>
-                <CtaLink
-                  href={data.feedback.href}
-                  variant="link"
-                  className="mt-4 px-0"
-                  iconEnd={<IconChevronRight size={16} />}
-                >
-                  View more
-                </CtaLink>
+                {data.feedback.href ? (
+                  <CtaLink
+                    href={data.feedback.href}
+                    variant="link"
+                    className="mt-4 px-0"
+                    iconEnd={<IconChevronRight size={16} />}
+                  >
+                    View more
+                  </CtaLink>
+                ) : (
+                  <p className="mt-4 text-xs text-muted">
+                    Full Video Feedback history will appear when the athlete adapter is live.
+                  </p>
+                )}
               </>
             ) : (
               <p className="mt-3 text-sm text-muted">No new feedback yet.</p>
@@ -242,6 +253,42 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               ))}
             </ul>
           </div>
+        </div>
+      </section>
+
+      <section className="mt-10 mb-2" aria-labelledby="recent-xp-heading">
+        <SectionMarker label="XP" title="Recent XP" />
+        <div className={catalogPanelClass({ tint: "neutral" })}>
+          <p id="recent-xp-heading" className="sr-only">
+            Recent XP
+          </p>
+          {data.recentXp.length === 0 ? (
+            <p className="text-sm text-muted" role="status">
+              No XP events to show yet.
+            </p>
+          ) : (
+            <ul className="divide-y divide-border">
+              {data.recentXp.slice(0, 5).map((event) => (
+                <li
+                  key={event.id}
+                  className="flex flex-wrap items-baseline justify-between gap-2 py-3 first:pt-0 last:pb-0"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-foreground">
+                      {formatXpSourceLabel(event.sourceLabel)}
+                    </p>
+                    <p className="mt-0.5 text-xs text-muted">
+                      {event.reasonPublic || "XP awarded"}
+                      {event.activityDate ? ` · ${event.activityDate}` : null}
+                    </p>
+                  </div>
+                  <p className="font-mono text-sm font-bold text-brand-blue">
+                    +{formatXp(event.points)}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </section>
     </ProgramPage>

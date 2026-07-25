@@ -6,7 +6,7 @@ import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState, ErrorState, LevelIndicator, StatTile, StatusBadge } from "@/components/ui";
 import type { AthleteProfileModel } from "@/lib/data/athlete-profile";
-import { formatGrade, formatXp } from "@/lib/formatters";
+import { formatGrade, formatXp, formatXpSourceLabel } from "@/lib/formatters";
 
 type AthleteProfileViewProps = {
   data: AthleteProfileModel;
@@ -199,22 +199,61 @@ export function AthleteProfileView({ data, missing = [] }: AthleteProfileViewPro
       </section>
 
       <section className="mt-10" aria-label="Milestones">
-        <SectionMarker label="Progress" title="Milestones" />
+        <SectionMarker label="Progress" title="Shot milestones & season marks" />
         {data.milestones.length === 0 ? (
           <div className={catalogPanelClass({ tint: "neutral" })} role="status">
-            <p className="font-semibold text-foreground">No milestones to show</p>
+            <p className="font-semibold text-foreground">No milestones published yet</p>
             <p className="mt-1 text-sm text-muted">
-              Milestone progress appears when publishable season totals exist.
+              Shot milestones and Perfect Week marks appear when published for this athlete.
             </p>
           </div>
         ) : (
-          <ul className="grid gap-3 sm:grid-cols-3">
+          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {data.milestones.map((m) => (
               <li key={m.id} className={catalogPanelClass({ tint: "neutral" })}>
                 <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
                   {m.label}
                 </p>
                 <p className="mt-2 font-mono text-sm text-foreground">{m.value}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="mt-10" aria-labelledby="recent-xp-heading">
+        <div id="recent-xp-heading">
+          <SectionMarker label="XP" title="Recent XP" />
+        </div>
+        {data.recentXp.length === 0 ? (
+          <div
+            className={catalogPanelClass({ tint: "neutral" })}
+            role="status"
+            aria-live="polite"
+          >
+            <p className="font-semibold text-foreground">No public XP events yet</p>
+            <p className="mt-1 text-sm text-muted">
+              XP source labels appear here when publishable events are linked.
+            </p>
+          </div>
+        ) : (
+          <ul className="grid gap-3">
+            {data.recentXp.slice(0, 5).map((event) => (
+              <li
+                key={event.id}
+                className={`flex flex-wrap items-baseline justify-between gap-2 ${catalogPanelClass({ tint: "neutral" })}`}
+              >
+                <div className="min-w-0">
+                  <p className="font-semibold text-foreground">
+                    {formatXpSourceLabel(event.sourceLabel)}
+                  </p>
+                  <p className="mt-1 text-sm text-muted">
+                    {event.reasonPublic || "XP awarded"}
+                  </p>
+                </div>
+                <p className="font-mono text-sm font-bold text-brand-blue">
+                  +{formatXp(event.points)}
+                </p>
               </li>
             ))}
           </ul>
