@@ -1,0 +1,35 @@
+{
+  "agent": "agent-5-lead-reconciliation",
+  "generated_at": "2026-07-24",
+  "branch": "agent5/lead-recon-v2",
+  "master_tip_at_integration": "82e4a4009a0a2ad8f44c9c127202b67c999f728a",
+  "prompt_checkpoint_adfabc5": "adfabc5",
+  "agent_commits_reviewed": {
+    "agent1_reliability": "fab2bb76e6eb9af852dc8983584a8320500907fc",
+    "agent2_data_model": "63b6cd8cf830e1f25c2924fca6ba06dc46ecb838",
+    "agent3": null,
+    "agent4_qc": "c3bbd965aa42b0261268f0bee1f2140c1a61213c",
+    "go_live_integration": "f0d060c"
+  },
+  "weekly_email": {
+    "flow": "118→072→119→074→Make Bulk Email May 18→Gmail→Make writeback",
+    "sendMode": "Live",
+    "schedules": "ON",
+    "emptyWeekPolicy": "send_short",
+    "status": "verified_prod"
+  },
+  "scope_exclusions": [
+    "team_shot_tracker",
+    "tst_3_7_10_day_inactivity_alerts"
+  ],
+  "production_changes_by_agent5": [],
+  "tests": {
+    "was-email-contracts": "PASS",
+    "data-model-field-contracts": "PASS 14/14",
+    "automation-contracts": "PASS",
+    "config-selection": "PASS",
+    "homework-contracts": "PASS",
+    "agent4-suite": "PASS 20/20"
+  },
+  "overall_readiness": "Weekly email operational (controlled PROD, schedules ON). Broad season readiness still Installed-not-tested for most athlete paths."
+}
