@@ -36,8 +36,18 @@
 | [CLEANUP-CLASSIFICATION.md](./CLEANUP-CLASSIFICATION.md) | Keep / Hide / Legacy / Do not use / Unknown |
 | [SAFE-MIGRATION-PLAN.md](./SAFE-MIGRATION-PLAN.md) | Rename/merge/retire plans (no prod execution) |
 | [MIKE-ACTIONS.md](./MIKE-ACTIONS.md) | Exact Airtable/OMNI actions only |
+| [PROD-FIELD-ATTESTATION.md](./PROD-FIELD-ATTESTATION.md) | Critical field attestation sheet |
+| [SENT-FIELD-OWNERSHIP.md](./SENT-FIELD-OWNERSHIP.md) | Make Live writeback ownership |
+| [WAS-CREATOR-RESOLUTION.md](./WAS-CREATOR-RESOLUTION.md) | 031/101/118 create ownership |
+| [LEVEL-FIELD-OWNERSHIP.md](./LEVEL-FIELD-OWNERSHIP.md) | 042 vs WAS Level Number |
+| [HC-IDENTITY-AUDIT.md](./HC-IDENTITY-AUDIT.md) | 020/067 identity (no RID migration) |
+| [FILLOUT-CONFIG-VERIFICATION.md](./FILLOUT-CONFIG-VERIFICATION.md) | 2026–2027 Fillout checklist |
+| [SC-STATUS-RECOMMENDATIONS.md](./SC-STATUS-RECOMMENDATIONS.md) | Affected SC statuses |
+| [GO-LIVE-INTEGRATION.md](./GO-LIVE-INTEGRATION.md) | Merge into go-live branch |
 | [REPORT.md](./REPORT.md) | Agent 2 final report |
 | [RESULTS.json](./RESULTS.json) | Machine-readable summary |
+
+**Verified-prod:** 072/074/118/119 ON; 074 Live; Make writeback Sent? + Make Send Status + Weekly Summary Sent At.
 
 ## Related canonical (reuse, do not fork)
 

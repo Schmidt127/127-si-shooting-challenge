@@ -16,11 +16,11 @@ Classes: **Keep** · **Rename later** · **Hide** · **Legacy** · **Candidate f
 | Weekly Email Subject/Recipients/HTML/Text/Payload/Week Label/Revision/Last Built At | Keep | Package |
 | sendMode | Keep | Test/Live routing — PROD Live rule |
 | Weekly Email Sent? | Keep | Make Live writeback (authoritative sent flag) |
-| Weekly Email Sent At | Keep | Make Live timestamp |
+| Weekly Summary Sent At | Keep | Make Live timestamp (`now`) — authoritative |
 | Make Send Status | Keep | Make Live status |
 | Weekly Email Error | Keep | 074/package errors |
-| Weekly Summary Email Status | Hide / Rename later | Overlaps Sent?/Ready? — confusing for ops |
-| Weekly Summary Sent At | Unknown → Hide until ownership attested | Parallel to Weekly Email Sent At |
+| Weekly Email Sent At | Hide | Not Make-owned per blueprint |
+| Weekly Summary Email Status | Hide | Not Make-owned per blueprint |
 | Weekly Summary Send Error | Hide / merge later | Parallel error field |
 | Weekly Summary Email Type | Unknown | Preview/Test/Regular — verify writers |
 | Email Subject (formula) | Legacy / Do not use for send | 072 writes Weekly Email Subject instead |
@@ -33,7 +33,9 @@ Classes: **Keep** · **Rename later** · **Hide** · **Legacy** · **Candidate f
 | Field | Class | Rationale |
 |-------|-------|-----------|
 | Enrollment Key | Keep | Formula identity |
-| Week Key (`RECORD_ID()`) | Keep | Stable |
+| Week Key (`RECORD_ID()`) | Keep | Relational identity |
+| Week Code | Keep (when attested) | Annual ops code — not seed-only |
+| Week Name | Keep | Display primary |
 | Summary Key | Keep | WAS identity (read-only) |
 | Weekly Summary Key | Do not use (for dedupe) / Hide | Display-based; superseded by Summary Key for scripts |
 | Source Key | Keep | XP/email idempotency |

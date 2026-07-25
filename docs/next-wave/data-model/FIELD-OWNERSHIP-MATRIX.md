@@ -26,19 +26,19 @@
 
 | Field | Type | Intended writer | Readers | Multiple writers? | Risk | Notes |
 |-------|------|-----------------|---------|-------------------|------|-------|
-| Build Weekly Email Now? | checkbox | **118** (schedule) / ops | **072** trigger | Controlled | High | Clear after build per 072 pattern |
-| Weekly Email Ready? | checkbox | **072** | **119**, **074** trigger | No (intended) | High | Package ready gate |
-| Send to Make? | checkbox | **119** arm; **074** clears on webhook success | **074** | Sequenced | High | Arm ≠ send |
-| Weekly Email Subject / Recipients / HTML / Text / Payload JSON / Week Label / Last Built At / Revision | text/date | **072** | **074**, Make | No | High | Package body |
-| sendMode | singleSelect Test\|Live | **072** / ops; **074** input may override | **074**, Make | Dual possible | **Critical** | PROD 074 must not force Test (`verified-prod`) |
-| Weekly Email Sent? | checkbox | **Make Live writeback** | **074** skip-if-sent | Make owns final | Critical | 074 must not clear |
-| Weekly Email Sent At | dateTime | **Make Live writeback** | Ops / audits | Make | High | Preferred sent timestamp for email path |
-| Weekly Summary Sent At | dateTime | Unknown / legacy path | Ops | Unknown | Medium | Parallel timestamp — classify carefully |
-| Make Send Status | singleSelect Ready\|Sent | **Make Live** → Sent | Ops | Make | High | Verified Sent after Live |
-| Weekly Summary Email Status | singleSelect Not Ready\|Ready for Send\|Sent\|Error | **072** / legacy mix | Ops | Possible dual | Medium | Overlaps checkbox Sent? — Hide from casual views |
-| Weekly Summary Send Error / Weekly Email Error | text | **072** / **074** / Make | Ops | Possible | Medium | Prefer one error surface later |
+| Build Weekly Email Now? | checkbox | **118** (ON Sun 5AM) | **072** | Controlled | High | Schedule verified ON |
+| Weekly Email Ready? | checkbox | **072** | **119**, **074** | No | High | Package ready gate |
+| Send to Make? | checkbox | **119** (ON Sun 10AM); **074** clears | **074** | Sequenced | High | Arm ≠ send |
+| Package body fields | text/date | **072** | **074**, Make | No | High | Subject/HTML/recipients/payload |
+| sendMode | Test\|Live | **118 v1.5** / **072**; **074** override | **074**, Make | Sequenced | Critical | Season Live |
+| Weekly Email Sent? | checkbox | **Make Live** | **074** | Make | Critical | Authoritative flag |
+| Weekly Summary Sent At | dateTime | **Make Live** (`now`) | Ops | Make | Critical | Authoritative timestamp |
+| Weekly Email Sent At | dateTime | **Not Make Live** | Ops | Unverified | Medium | Hide |
+| Make Send Status | Ready\|Sent | **Make Live** → Sent | Ops | Make | High | Verified |
+| Weekly Summary Email Status | select | **Not Make Live** | Ops | Unverified | Medium | Hide |
+| Weekly Email Error | text | **074** | Ops | Possible | Medium | Keep |
 
-**Verified production correction (`verified-prod` 2026-07-24):** After 074 `sendMode` changed from fixed Test → Live, Make wrote `Weekly Email Sent?`, `Make Send Status=Sent`, and sent timestamp. Production must not remain forced to Test.
+**Verified-prod 2026-07-24:** 072/074/118/119 ON; Make writes Sent? + Make Send Status + Weekly Summary Sent At. Never force 074 Test. See SENT-FIELD-OWNERSHIP.md.
 
 ---
 
@@ -47,7 +47,11 @@
 | Table | Field | Type | Writer | Rule |
 |-------|-------|------|--------|------|
 | Enrollments | Enrollment Key | formula | none | Read-only |
-| Weeks | Week Key | formula `RECORD_ID()` | none | Read-only |
+| Weeks | Week Key | formula `RECORD_ID()` | none | Read-only relational identity |
+| Weeks | Week Code | formula (PROD; post-snapshot) | none | Ops annual code — OMNI attest |
+| Weeks | Week Name | text primary | Ops | Display label |
+| Enrollments | Current Level / Next Level | links | **042** | Authoritative progression |
+| WAS | Level Number | formula thresholds | none | Email snapshot only — not authoritative |
 | WAS | Summary Key | formula | none | 031/101/118 must not write |
 | WAS | Weekly Summary Key | formula | none | Display-based alternate — do not treat as primary identity |
 | XP Events | Source Key | text | Creating XP script | One pattern per family |

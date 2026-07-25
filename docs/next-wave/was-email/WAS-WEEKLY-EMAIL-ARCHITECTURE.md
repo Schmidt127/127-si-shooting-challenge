@@ -51,10 +51,10 @@
 | Field | Value |
 |-------|--------|
 | Name | `118 - Email - Schedule Weekly Summary Email Build` |
-| Repo version | **v1.4** |
+| Repo version | **v1.5** |
 | Schedule | Sunday **5:00 AM** America/Denver |
-| PROD schedule state | **OFF** during controlled validation |
-| Defaults | `dryRun=true`, `sendMode=Test`, `includeSchmidt=false`, `excludedEnrollmentIds` blank, `emptyWeekPolicy=send_short` |
+| PROD schedule state | **ON** — Sunday 5:00 AM America/Denver (**verified_prod** 2026-07-24; older “OFF until auth” notes are historical) |
+| Season inputs | `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short` |
 
 ### 072 — Build Weekly Summary Email Package
 
@@ -80,10 +80,10 @@
 | Field | Value |
 |-------|--------|
 | Name | `119 - Email - Schedule Weekly Summary Email Send` |
-| Repo version | **v1.4** |
+| Repo version | **v1.5** |
 | Schedule | Sunday **10:00 AM** America/Denver |
-| PROD schedule state | **OFF** during controlled validation |
-| Defaults | `dryRun=true`, `includeSchmidt=false`, `excludedEnrollmentIds` blank, `emptyWeekPolicy=send_short` |
+| PROD schedule state | **ON** — Sunday 10:00 AM America/Denver (**verified_prod** 2026-07-24; older “OFF until auth” notes are historical) |
+| Season inputs | `dryRun=false`, `includeSchmidt=false`, `emptyWeekPolicy=send_short` |
 
 **119 only arms `Send to Make?`. It does not post the webhook.**
 
@@ -140,27 +140,33 @@ Resolution order in script: input → WAS.`sendMode` → payloadJson.`sendMode` 
 | Branch | Condition | Behavior |
 |--------|-----------|----------|
 | **Test** | `sendMode=test` | Sends only to `mschmidt@fairfield.k12.mt.us`; webhook subject + Raw HTML. **No Airtable Sent? writeback** (by design of this Make branch). |
-| **Live** | `sendMode=live` | Sends to split `csvemail`; CC `mschmidt@fairfield.k12.mt.us`; Raw HTML; after Gmail success updates WAS: `Weekly Email Sent?=true`, `Make Send Status=Sent`, sent timestamp. **Verified PASS 2026-07-24.** |
+| **Live** | `sendMode=live` | Sends to split `csvemail`; CC `mschmidt@fairfield.k12.mt.us`; Raw HTML; after Gmail success updates WAS: `Weekly Email Sent?=true`, `Make Send Status=Sent`, `Weekly Summary Sent At=now`. **Verified PASS 2026-07-24.** Does **not** write `Weekly Email Sent At` or `Weekly Summary Email Status` (blueprint). |
 
 ---
 
-## 2026–2027 Week records
+## 2026–2027 Week identity (three concepts)
 
-Week unique identifier = Config primary value + Week Name (year derived from `Config - Lnk`, not typed):
+| Concept | Field | Role |
+|---------|-------|------|
+| Relational identity | `Week Key` = `RECORD_ID()` | Links + Summary Key segment |
+| Annual ops code | `Week Code` (Mike PROD formula; attest in OMNI) | Readable `2026-2027\|Week 0` … `Post-Challenge` |
+| Display label | `Week Name` | Primary text (`Week 0`, …) |
 
-`2026-2027|Week 0` … `2026-2027|Week 9`, `2026-2027|Post-Challenge`
+Do not collapse these. Weeks link **Program Instance** (2026-07-23 snapshot has no Weeks.`Config - Lnk`). Schedulers match prior Saturday via `End Date` (no `Week End Key` field).
 
 ---
 
-## Recommended post-test safety state
+## Current verified PROD safety state (2026-07-24)
 
 | Component | Setting |
 |-----------|---------|
-| **072** | `allowSchmidtInput=false` |
-| **118** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
-| **119** | `dryRun=true`, `includeSchmidt=false`, schedule **OFF** until production activation |
+| **072** | **ON**; prefer `allowSchmidtInput=false` for season traffic |
+| **118** | **ON** — Sunday 5:00 AM America/Denver |
+| **119** | **ON** — Sunday 10:00 AM America/Denver |
 | **074** | **ON**; **`sendMode=Live`** (or blank + WAS Live) — **never fixed Test in PROD** |
-| Make WAS email scenario | **ON** |
+| Make WAS email scenario | **ON** (`Weekly Athlete Summary - Bulk Email - May 18`) |
+
+> Historical note: Pre-activation docs recommended keeping 118/119 **OFF**. That guidance is **superseded** by verified PROD activation.
 
 ---
 

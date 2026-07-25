@@ -1,80 +1,56 @@
-# Exact Airtable Actions for Mike (Agent 2)
+# Exact Airtable / Make / Fillout Actions for Mike — Agent 2
 
-**No production schema changes are required to accept this documentation pack.**  
-Do these only when ready; prefer **OMNI** for in-base inspection.
-
----
-
-## P0 — Confirm / protect (ops, not schema)
-
-1. **074 PROD automation input `sendMode`**  
-   - Must be **Live**, or blank with WAS `sendMode=Live` for parent sends.  
-   - Must **not** be fixed `Test`.  
-   - Evidence: verified Live writeback 2026-07-24.
-
-2. **Do not enable Team Shot Tracker inactivity alerts** in this base.
+Minimal UI attestations only. No field deletes/renames.
 
 ---
 
-## P1 — Attest field ownership (OMNI / Make UI)
+## P0 — Already verified (do not undo)
 
-1. Open one successfully Live-sent WAS (Schmidt proof or equivalent).  
-2. Record exact values for:  
-   - `Weekly Email Sent?`  
-   - `Weekly Email Sent At`  
-   - `Weekly Summary Sent At` (blank or filled?)  
-   - `Make Send Status`  
-   - `Weekly Summary Email Status`  
-3. In Make scenario **Weekly Athlete Summary - Bulk Email - May 18** Live branch, list Airtable fields written on success.  
-4. Paste results into a short note under `docs/next-wave/was-email/` or reply in chat for Agent 2 follow-up classification of Unknown timestamp fields.
+1. 072 ON · 074 ON · 118 ON (Sun 5:00 AM Denver) · 119 ON (Sun 10:00 AM Denver)  
+2. Make `Weekly Athlete Summary - Bulk Email - May 18` ON  
+3. 074 sendMode **Live** (never fixed Test)  
+4. Live writeback: `Weekly Email Sent?`, `Make Send Status=Sent`, `Weekly Summary Sent At`
 
 ---
 
-## P1 — View hygiene (OMNI — no field deletes)
+## P0 — Paste 118 v1.5 (repo fix)
 
-Create or adjust **ops views** (hide only):
+GitHub `118` v1.5 allows `sendMode=Live` with `dryRun=false` and writes WAS `sendMode` from input (no longer hardcodes Test).
 
-| View purpose | Show | Hide |
-|--------------|------|------|
-| WAS Email Ops | Enrollment, Week, Build?, Ready?, Send to Make?, Sent?, Sent At, Make Send Status, sendMode, Subject, Error | Weekly Summary Email Status, Weekly Summary Sent At (until attested), Email Subject formula, Combined Recipient Emails |
-| Weeks Admin | Week Name, Record ID / Week Key, Start, End, Program Instance | Homework 2, Video Feedback text, Submission Assets text, XP Events copy |
-| Enrollment Season | School Year, Program Instance, Active?, Enrollment Key, Grade Band | Gate Failure Summary - Formula (keep Gate Summary) |
-
----
-
-## P2 — Inventory before any retirement
-
-For each Candidate-for-retirement field in [CLEANUP-CLASSIFICATION.md](./CLEANUP-CLASSIFICATION.md):
-
-1. OMNI: search field usage in Interfaces.  
-2. Repo: `rg "Field Name" airtable make docs`.  
-3. Make blueprints: search mappings.  
-4. Only then open a rename/hide ticket — **still no delete**.
+1. Paste 118 v1.5 into PROD automation (skip GitHub header).  
+2. Set inputs: `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short`.  
+3. Paste 119 v1.5 (docs/version bump; behavior same arm-only).  
+4. Set 119: `dryRun=false`, `includeSchmidt=false`.
 
 ---
 
-## P2 — Year seed check (2026–2027)
+## P1 — OMNI field attestations (one screen each)
 
-1. Config row exists with `Active School Year = 2026-2027`.  
-2. Weeks for the season linked to correct Program Instance.  
-3. Week Name labels match product (`Week 0`… / `Post-Challenge` as required).  
-4. Sample Enrollment `School Year` matches Config year.  
-5. Confirm Fillout / intake defaults do **not** hardcode `2025-2026`.
-
----
-
-## P3 — Optional later (requires explicit schema approval)
-
-- Additive HC key formula using RIDs (M-06).  
-- Rename `Registratioin Referrer`.  
-- Formula cleanup Gate Failure Summary - Formula.
+| # | Check | Pass criteria |
+|---|-------|---------------|
+| 1 | Weeks → field **Week Code** | Exists; formula shows year\|Week Name (or document actual formula) |
+| 2 | Same Week row | Week Key = record id; Week Name = label; Week Code = annual code |
+| 3 | One Live-sent WAS | Weekly Summary Sent At populated; Weekly Email Sent At may be blank |
+| 4 | Automation 043 | OFF (042 owns Level Gate Rule) |
 
 ---
 
-## Do not do
+## P1 — View hygiene (hide only)
 
-- Delete or rename `Weekly Email Sent?`, `Send to Make?`, `Summary Key`, `Source Key`, `Week Key`.  
-- Change primary fields.  
-- Force 074 to Test in PROD.  
-- Turn on 112 or dual 117+117c.  
-- Merge Config years into one row.
+WAS Email Ops: show Sent?, Make Send Status, Weekly Summary Sent At; **hide** Weekly Email Sent At + Weekly Summary Email Status.  
+Weeks Admin: show Week Name, Week Key, Week Code (if present), Start/End, Program Instance.
+
+---
+
+## P2 — Fillout 2026–2027
+
+Follow `FILLOUT-CONFIG-VERIFICATION.md` checklist (School Year + Program Instance; no hidden Config RID).
+
+---
+
+## Do not
+
+- Turn 118/119 OFF “for safety” after Live proof  
+- Force 074 Test in PROD  
+- Delete/rename Sent? / Summary Key / Week Key / Week Code  
+- Assume Week Code is only a seed convention without OMNI confirm

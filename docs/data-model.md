@@ -31,4 +31,19 @@ Athletes ── Enrollments ──┬── Submissions ── Submission Assets
 
 Paths are relative to app `basePath` `/shoot`.
 
+## Week identity (do not collapse)
+
+| Field | Meaning |
+|-------|---------|
+| Week Key | Formula `RECORD_ID()` — relational identity |
+| Week Code | Annual ops formula (e.g. `2026-2027\|Week 0`) — OMNI attest exact name/formula |
+| Week Name | Primary display label |
+
+## Weekly email sent fields (Make Live)
+
+Authoritative: `Weekly Email Sent?`, `Make Send Status`, `Weekly Summary Sent At`.  
+Hide from ops: `Weekly Email Sent At`, `Weekly Summary Email Status` (not Make-owned per blueprint).
+
+Detail: [`docs/next-wave/data-model/`](./next-wave/data-model/).
+
 **Out of scope:** Team Shot Tracker inactivity-alert systems.

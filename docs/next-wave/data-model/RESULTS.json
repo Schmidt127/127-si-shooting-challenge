@@ -1,7 +1,9 @@
 {
   "agent": "agent-2-airtable-data-model",
   "generated_at": "2026-07-24",
+  "continuation": true,
   "base_pulled_sha": "a8f3b001bc6ee8e6b8a2fa0dfeaaf23cc9669716",
+  "prior_pack_sha": "63b6cd8cf830e1f25c2924fca6ba06dc46ecb838",
   "branch": "agent2/airtable-data-model-cleanup",
   "production_changes": [],
   "canonical_snapshot": "airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/",
@@ -16,39 +18,82 @@
     {
       "id": "week-key-formula",
       "fact": "Weeks.Week Key formula is RECORD_ID()",
-      "not": "2026-2027|Week N as Week Key field value",
+      "not": "2026-2027|Week N as Week Key",
       "evidence": "schema-snapshot"
+    },
+    {
+      "id": "week-code-separate",
+      "fact": "Week Code is a separate annual ops formula (PROD; OMNI attest)",
+      "not": "seed convention only / same as Week Key",
+      "evidence": "user-verified + UNIQUE-KEY-AUDIT"
     },
     {
       "id": "week-end-key-absent",
       "fact": "Weeks has no Week End Key field",
-      "evidence": "schema-snapshot + WAS-GUARANTEE + 118/119 tests"
+      "evidence": "schema-snapshot + 118/119 End Date Denver keys"
+    },
+    {
+      "id": "schedules-on",
+      "fact": "118/119 PROD schedules ON Sun 5:00/10:00 AM Denver",
+      "not": "keep schedules OFF",
+      "evidence": "verified-prod"
+    },
+    {
+      "id": "make-sent-fields",
+      "fact": "Make Live writes Sent?, Make Send Status, Weekly Summary Sent At",
+      "not": "Weekly Email Sent At / Weekly Summary Email Status as Make-owned",
+      "evidence": "make-blueprint + verified-prod"
+    },
+    {
+      "id": "118-v1.5-live-arming",
+      "fact": "118 v1.5 allows dryRun=false + sendMode=Live; writes WAS sendMode from input",
+      "not": "hardcode Test / refuse Live when dryRun=false",
+      "evidence": "repo-script"
     },
     {
       "id": "hub-model",
       "fact": "Enrollment-centric hub supersedes Athlete-centric hand map",
       "evidence": "schema-snapshot"
+    },
+    {
+      "id": "hc-identity-no-rid-migration",
+      "fact": "020/067 use RID matching; Completion Key formula unused by scripts",
+      "evidence": "repo-script"
+    },
+    {
+      "id": "levels-042",
+      "fact": "042 owns Enrollment Current/Next Level; WAS Level Number is display",
+      "evidence": "repo-script + LEVEL-FIELD-OWNERSHIP"
     }
   ],
   "tests": [
     {
       "command": "node tests/data-model/field-contracts.test.js",
-      "result": "14 passed, 0 failed"
+      "result": "16 passed, 0 failed"
     },
     {
       "command": "node tests/was-email-contracts/run-all.js",
       "result": "all was-email-contracts tests passed"
     },
     {
-      "command": "node tests/config-selection/resolve-config.test.js",
-      "result": "All config-selection tests passed"
+      "command": "node airtable/automations/shooting-challenge/lib/c011-weekly-email-schedule.test.js",
+      "result": "all c011-weekly-email-schedule tests passed"
     },
     {
-      "command": "node tests/automation-ownership/test-contract-harness.mjs",
-      "result": "7 passed, 0 failed"
+      "command": "node tests/config-selection/resolve-config.test.js",
+      "result": "All config-selection tests passed"
     }
   ],
+  "mike_actions_remaining": [
+    "Paste 118/119 v1.5; season inputs dryRun=false sendMode=Live includeSchmidt=false",
+    "OMNI attest Weeks.Week Code formula",
+    "Confirm 043 OFF",
+    "Fillout 2026-2027 School Year + Program Instance checklist",
+    "Hide Weekly Email Sent At + Weekly Summary Email Status from ops views"
+  ],
+  "integration_note": "Re-merge continuation into integration/go-live-promotion-2026-07-24 (prior pack already at d9845a5 / 63b6cd8)",
   "out_of_scope_confirmed": [
-    "Team Shot Tracker 3/7/10-day inactivity alerts"
+    "Team Shot Tracker 3/7/10-day inactivity alerts",
+    "No prod field deletes/renames/type changes"
   ]
 }
