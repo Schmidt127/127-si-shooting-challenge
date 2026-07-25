@@ -4,6 +4,7 @@
   "continuation": true,
   "base_pulled_sha": "a8f3b001bc6ee8e6b8a2fa0dfeaaf23cc9669716",
   "prior_pack_sha": "63b6cd8cf830e1f25c2924fca6ba06dc46ecb838",
+  "continuation_sha": "058c2d1e3813c2aa652c4bb2e8af63e451e0c7d7",
   "branch": "agent2/airtable-data-model-cleanup",
   "production_changes": [],
   "canonical_snapshot": "airtable/schema/snapshots/prod-foundation-reset-20260723-post-ts/",
