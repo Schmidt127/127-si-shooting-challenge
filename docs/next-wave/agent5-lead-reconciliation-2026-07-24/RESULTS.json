@@ -12,7 +12,7 @@
     "go_live_integration": "f0d060c"
   },
   "weekly_email": {
-    "flow": "118→072→119→074→Make Bulk Email May 18→Gmail→Make writeback",
+    "flow": "118\u2192072\u2192119\u2192074\u2192Make Bulk Email May 18\u2192Gmail\u2192Make writeback",
     "sendMode": "Live",
     "schedules": "ON",
     "emptyWeekPolicy": "send_short",
@@ -31,5 +31,8 @@
     "homework-contracts": "PASS",
     "agent4-suite": "PASS 20/20"
   },
-  "overall_readiness": "Weekly email operational (controlled PROD, schedules ON). Broad season readiness still Installed-not-tested for most athlete paths."
+  "overall_readiness": "Weekly email operational (controlled PROD, schedules ON). Broad season readiness still Installed-not-tested for most athlete paths.",
+  "final_integration_commit_sha": "762a13300cbf536b8cafc685c9765d8a9f33932c",
+  "agent5_commit": "31009d1",
+  "agent4_integrated_commit": "e368ef8"
 }
