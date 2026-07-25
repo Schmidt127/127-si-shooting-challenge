@@ -76,4 +76,22 @@ test("Stage 17 117c is Denver-safe for XP Activity Date", () => {
   assert.ok(/toDenverDateKey/.test(s117c));
 });
 
+test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => {
+  const s057 = fs.readFileSync(
+    path.join(root, "057-achievements-and-milestones-calculate-perfect-week-eligibility.js"),
+    "utf8",
+  );
+  assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
+  const fnMatch = s057.match(
+    /function getDateKeyFromDateOnly\(value\) \{[\s\S]*?\n\}/
+  );
+  assert.ok(fnMatch, "getDateKeyFromDateOnly function not found");
+  const body = fnMatch[0];
+  assert.ok(/Intl\.DateTimeFormat/.test(body), "057 getDateKeyFromDateOnly must use Intl");
+  assert.ok(
+    !/toISOString\(\)\.slice\(0,\s*10\)/.test(body),
+    "057 getDateKeyFromDateOnly must not use UTC ISO slice"
+  );
+});
+
 console.log("\nAll xp-date-normalization tests passed.");
