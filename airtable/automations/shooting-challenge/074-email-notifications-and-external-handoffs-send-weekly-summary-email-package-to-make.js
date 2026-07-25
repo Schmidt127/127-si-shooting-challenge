@@ -26,11 +26,14 @@ Airtable is the deployed/running copy.
  * 074 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
  * Send Weekly Summary Email Package to Make
  *
- * Version: v2.1
+ * Version: v2.2
  * Date Written: 2026-05-29
  * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v2.2 (2026-07-24): Fix WRITEBACK doc contradiction (074 READs Sent? to block
+ *   duplicates; does not WRITE/CLEAR Sent?). Emit statusOut + debugStep so webhook
+ *   failures are visible alongside errorOut / Weekly Email Error (Agent 4 QC).
  * - v2.1 (2026-07-18): Stop clearing Weekly Email Sent? after Make handoff; emit
  *   deterministic eventId WEEKLY_EMAIL|{enrollmentId}|{weekId} on Make payload.
  * - v2.0: Production send-to-Make handoff package.
@@ -45,11 +48,13 @@ Airtable is the deployed/running copy.
  * - Clears handoff trigger/status fields after successful webhook handoff.
  *
  * IMPORTANT WRITEBACK RULE
- * - This script does NOT check Weekly Email Sent?.
+ * - This script READs Weekly Email Sent? to block duplicate handoffs.
+ * - This script does NOT write Weekly Email Sent? = true.
  * - This script does NOT write Weekly Email Sent At.
  * - This script must NOT clear Weekly Email Sent? (Make owns final sent state).
  * - Duplicate sends are blocked when Weekly Email Sent? is already true.
  * - Make.com owns final Gmail-success writeback after the Gmail module succeeds.
+ * - Required outputs: statusOut, errorOut, debugStep (plus legacy ok).
  *
  * IMPORTANT PRODUCTION sendMode RULE (2026-07-24)
  * - Do NOT leave a fixed automation input sendMode = Test in PROD.
@@ -482,6 +487,9 @@ try {
     }
 
     output.set("ok", false);
+    output.set("statusOut", "error");
+    output.set("debugStep", "webhook_failed");
+    output.set("actionOut", "error");
     output.set("recordId", recordId);
     output.set("sendType", SEND_TYPE);
     output.set("sendMode", sendMode);
@@ -532,6 +540,9 @@ if (Object.keys(successUpdates).length) {
    ========================================================= */
 
 output.set("ok", true);
+output.set("statusOut", "success");
+output.set("debugStep", "handoff_complete");
+output.set("actionOut", "sent_to_make");
 output.set("recordId", recordId);
 output.set("weeklySummaryRecordId", recordId);
 output.set("sourceTable", TABLE_WEEKLY_SUMMARY);

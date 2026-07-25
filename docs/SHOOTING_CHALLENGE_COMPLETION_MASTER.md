@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | 2026-07-24 (WAS weekly email chain Live Tested in PROD Test mode; dashboard recalculated) |
+| Last updated | 2026-07-24 (WAS weekly email Live writeback verified; Agent 4 QC suite + 074 v2.2 statusOut) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -134,7 +134,7 @@ Columns:
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS path Test-mode E2E PASS 2026-07-24 (`send_short`); 071–077 + 117f still need individual re-proof | Re-test homework/video/welcome templates; 117f go-live; authorize Live weekly schedules | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture | — | P0 | 2026-07-24 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS path: Test Gmail + **Live writeback** PASS 2026-07-24 (`send_short`); Agent 4 QC contracts in `docs/testing/agent4-qc/`; 071–077 + 117f still need individual re-proof | Re-test homework/video/welcome templates; 117f go-live; authorize Live weekly schedules | SC-039, SC-124 | Webhooks not in git; 118/119 schedules OFF | automation-index; WAS architecture; Agent 4 QC | — | P0 | 2026-07-24 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness (26 pass / 2 warn); dual writers flagged: 112 vs 013, 117 vs 117c, 031/101/118 WAS, 020 vs 067, Threshold missing, 065 legacy keys | Mike UI attestation; fix conflicts after decisions | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer; 117 XOR 117c | P0 | 2026-07-24 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |

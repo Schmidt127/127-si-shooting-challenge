@@ -7,7 +7,7 @@
 | Airtable script throw | Automation history `errorOut` | Low if watched |
 | Missing reward rule | Skip / no XP Event | **Medium** if skip looks like success |
 | 074 missing recipients/subject/HTML/links | Throw before webhook | Low |
-| Webhook failure | `errorOut`; Send to Make? kept | Medium if history ignored |
+| Webhook failure | `errorOut` + **`statusOut=error`** + `debugStep=webhook_failed` + Weekly Email Error (074 v2.2); Send to Make? kept | Low if history watched |
 | Make / Gmail failure | Make history | Medium — open Make |
 | Live writeback failure after Gmail | Email sent; Sent? false | **High** duplicate risk if re-armed |
 | Fixed `sendMode=Test` in PROD | Email OK; no Sent? | **High** — verified 2026-07-24 incident |

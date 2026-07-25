@@ -40,6 +40,14 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/agent4-perfect-week-edges.test.js"],
   },
   {
+    name: "agent4-was-summary-matrix",
+    args: ["airtable/automations/shooting-challenge/lib/agent4-was-summary-matrix.test.js"],
+  },
+  {
+    name: "agent4-level-gate-matrix",
+    args: ["airtable/automations/shooting-challenge/lib/agent4-level-gate-matrix.test.js"],
+  },
+  {
     name: "overnight-streak-milestone-dedupe",
     args: ["airtable/automations/shooting-challenge/lib/overnight-streak-milestone-dedupe.test.js"],
   },

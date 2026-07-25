@@ -51,7 +51,9 @@ test("074 emits eventId and never clears Weekly Email Sent?", () => {
   assert.ok(/WEEKLY_EMAIL\|/.test(s074));
   assert.ok(/Do NOT write Weekly Email Sent\? = false/.test(s074));
   assert.ok(!/successUpdates\[FIELD_EMAIL_SENT\]\s*=\s*false/.test(s074));
-  assert.ok(/Version:\s*v2\.1/.test(s074));
+  assert.ok(/Version:\s*v2\.2/.test(s074));
+  assert.ok(/statusOut/.test(s074));
+  assert.ok(/debugStep/.test(s074));
 });
 
 test("priorSaturdayKeyDenver Sunday→Saturday boundary", () => {

@@ -3,33 +3,44 @@
   "role": "testing-qc-production-safety",
   "date": "2026-07-24",
   "branch": "agent4/testing-qc-prod-safety",
+  "pass": 2,
   "base_sha_before_work": "a8f3b001bc6ee8e6b8a2fa0dfeaaf23cc9669716",
   "checkpoint_cited_in_prompt": "adfabc5",
+  "first_commit": "c3bbd965aa42b0261268f0bee1f2140c1a61213c",
   "scope": "Shooting Challenge only — excludes Team Shot Tracker inactivity alerts",
   "verified_weekly_email_path": "118→072→119→074→Make live→Gmail→Airtable writeback",
+  "defects_fixed": [
+    {
+      "id": "074-docblock-sent-contradiction",
+      "fix": "Doc said does NOT check Sent?; code READs Sent? for duplicate block",
+      "repo_fix": "074 v2.2 docblock + statusOut/debugStep/actionOut"
+    }
+  ],
   "suites": [
     {
       "name": "agent4-suite",
       "command": "node tools/testing/run-agent4-suite.js",
       "result": "PASS",
-      "detail": "20/20"
+      "detail": "22/22"
     },
     {
       "name": "web-vitest",
       "command": "cd web && npm test",
       "result": "PASS",
-      "detail": "109/109 in 18 files (executed from primary worktree node_modules; Agent 4 worktree lacks web/node_modules)",
-      "note": "No web source changes in Agent 4 package"
+      "detail": "109/109 prior pass; no web source changes in pass 2"
     }
   ],
-  "new_tests": [
-    "tests/was-email-contracts/send-mode-live-test-regression.test.js",
-    "airtable/automations/shooting-challenge/lib/agent4-xp-dedupe-matrix.test.js",
-    "airtable/automations/shooting-challenge/lib/agent4-perfect-week-edges.test.js"
-  ],
+  "sections_addressed": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+  "mike_actions": "docs/testing/agent4-qc/MIKE-ACTIONS.md",
   "production_changes": [],
-  "overlap_notes": [
-    "Primary worktree was contended by other agents; Agent 4 work completed in isolated worktree 127-si-shooting-challenge-agent4",
-    "Reliability audit branch may also add sendmode-prod-contract.test.js — reconcile on merge if both land"
-  ]
+  "second_pass": {
+    "stale_docs_fixed": [
+      "completion master Last updated / SC-045",
+      "V2_END_TO_END I5/I6",
+      "06-automation-standards 066 v3.3",
+      "automation-index 074 v2.2",
+      "WAS architecture 074 v2.2"
+    ],
+    "branch_drift_vs_master": "none at start of pass 2 (ahead by Agent 4 commits only)"
+  }
 }

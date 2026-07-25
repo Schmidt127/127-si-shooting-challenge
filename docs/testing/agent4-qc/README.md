@@ -18,6 +18,7 @@
 | [UNRESOLVED-TEST-GAPS.md](./UNRESOLVED-TEST-GAPS.md) | Remaining gaps |
 | [REPORT.md](./REPORT.md) | Session report |
 | [RESULTS.json](./RESULTS.json) | Machine-readable run record |
+| [MIKE-ACTIONS.md](./MIKE-ACTIONS.md) | Precise remaining UI verifications only |
 
 ## Canonical companions (reuse, do not fork)
 

@@ -151,8 +151,10 @@ test("074 must never write Weekly Email Sent? (Make owns writeback)", () => {
   assert.strictEqual(script074MayWriteSentStatus(), false);
   assert.ok(/Do NOT write Weekly Email Sent\? = false/.test(s074) || /must NOT clear Weekly Email Sent\?/.test(s074));
   assert.ok(/Make\.com owns final Gmail-success writeback/.test(s074));
-  assert.ok(!/Weekly Email Sent\?\s*[:=]\s*true/.test(s074));
-  assert.ok(!/FIELD_EMAIL_SENT[^\n]*=\s*true/.test(s074));
+  // Code must not assign Sent? true/false on successUpdates (doc lines mentioning "= true" are allowed).
+  assert.ok(!/successUpdates\[FIELD_EMAIL_SENT\]\s*=/.test(s074));
+  assert.ok(!/\[FIELD_EMAIL_SENT\]\s*=\s*true/.test(s074));
+  assert.ok(!/\[FIELD_EMAIL_SENT\]\s*=\s*false/.test(s074));
 });
 
 test("074 source keeps input → WAS → payload → test resolution order", () => {

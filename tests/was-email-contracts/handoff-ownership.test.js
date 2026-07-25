@@ -73,7 +73,11 @@ test("074 owns webhook handoff; does not mark Sent?; blocks duplicate Sent?", ()
   assert.ok(/Duplicate send blocked/.test(s074));
   assert.ok(/testRecipientEmail/.test(s074));
   assert.ok(/sendMode === "test"/.test(s074) || /sendMode === 'test'/.test(s074));
-  assert.ok(/Version:\s*v2\.1/.test(s074));
+  assert.ok(/Version:\s*v2\.2/.test(s074));
+  assert.ok(/statusOut/.test(s074));
+  assert.ok(/debugStep/.test(s074));
+  assert.ok(/This script READs Weekly Email Sent\?/.test(s074));
+  assert.ok(!/This script does NOT check Weekly Email Sent\?/.test(s074));
 });
 
 test("policy matrix: short / normal / suppress + non-empty full", () => {

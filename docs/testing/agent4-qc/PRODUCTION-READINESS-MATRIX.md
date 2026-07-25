@@ -9,6 +9,7 @@
 | Empty-week `send_short` | Verified PROD | Schmidt 2026-07-24 |
 | 074 Live sendMode writeback | Verified PROD | Mike: Sent?/status/timestamp |
 | Test route does not claim live writeback | Repo PASS | Agent 4 regression |
+| 074 failure visibility (`statusOut`/`debugStep`) | Repo PASS | **074 v2.2** — PROD paste pending (Mike) |
 | Unattended Sunday parent blast | Not ready | Schedules OFF; activation checklist open |
 | Submission → XP (115) | Verified PROD (Schmidt) | overnight testing-integrity |
 | XP Source Key dedupe families | Repo PASS | Agent 4 matrix |

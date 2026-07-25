@@ -15,7 +15,8 @@
 1. Confirm post-test inputs: 072 `allowSchmidtInput=false`; 118/119 `dryRun=true`, `includeSchmidt=false`.  
 2. Keep **118 / 119 schedules OFF** until Live season activation is authorized.  
 3. Keep **074 ON** and Make Bulk Email scenario **ON**.  
-4. Keep **074** automation input **`sendMode=Live`** (or blank + WAS Live) — **never** fixed `Test` in PROD.
+4. Keep **074** automation input **`sendMode=Live`** (or blank + WAS Live) — **never** fixed `Test` in PROD.  
+5. After Agent 4 merge: paste **074 v2.2** (adds `statusOut`/`debugStep`; see [`docs/testing/agent4-qc/MIKE-ACTIONS.md`](../../testing/agent4-qc/MIKE-ACTIONS.md)).
 
 ## Before Live Sunday schedules
 

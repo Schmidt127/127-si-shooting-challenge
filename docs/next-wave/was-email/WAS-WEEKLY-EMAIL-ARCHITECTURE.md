@@ -92,7 +92,7 @@
 | Field | Value |
 |-------|--------|
 | Name | `074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make` |
-| Repo SoT | **v2.1** (eventId + never clears `Weekly Email Sent?`) |
+| Repo SoT | **v2.2** (eventId + never clears `Weekly Email Sent?` + `statusOut`/`debugStep` on handoff) |
 | Trigger | WAS matches: Ready? checked, Sent? unchecked, Send to Make? checked, Subject/Recipients/HTML not empty |
 | Required inputs | `recordId`, `makeWebhookUrl` |
 | Optional | `sendMode` / `sendModeInput`, `testRecipientEmail`, `replyTo` |

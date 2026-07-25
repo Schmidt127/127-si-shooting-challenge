@@ -143,8 +143,8 @@ cd web && npm test
 | I2 | WAS rerun | Re-run 031 | 031 | Links existing; no duplicate WAS | U | U |
 | I3 | Goal + homework attach | Goal/homework present | 032, 033 | Links set once | U | U |
 | I4 | Previous week helpers | Multi-week history | 034 | Previous week ordered by Week Start Date | U | U |
-| I5 | Build weekly email package | Build flag checked | 072 | Package fields populated; send still OFF | U | U |
-| I6 | Send weekly package (controlled) | Make DEV webhook | 074 | Send once; failure does not clear incorrectly | U | N |
+| I5 | Build weekly email package | Build flag checked / 118 arm | 072 | Package fields populated; send still OFF; empty-week policy enforced | U | P — live PROD `send_short` empty-week build 2026-07-24 (`built_short_empty_week`) |
+| I6 | Send weekly package (controlled) | 119 arm → 074 → Make | 074 | Send once; Test no Sent? writeback; Live writeback Sent?/status/timestamp; webhook fail keeps Send to Make? | U | P — Live writeback PASS 2026-07-24; repo Agent 4 Live/Test regression |
 
 ---
 

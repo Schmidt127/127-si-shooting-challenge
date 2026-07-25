@@ -1,42 +1,40 @@
-# Agent 4 Report — Testing, QC, Production Safety
+# Agent 4 Report — Testing, QC, Production Safety (pass 2)
 
 **Date:** 2026-07-24  
 **Branch:** `agent4/testing-qc-prod-safety`  
-**Base:** `a8f3b00` (after prompt checkpoint `adfabc5`)
+**Commits:** `c3bbd96` (pass 1) + continuation commit (pass 2)
 
 ## Executive summary
 
-Added repository proof for the verified weekly email Live/Test contracts (including the PROD `sendMode=Test` incident), XP dedupe matrix, Perfect Week edges, and a full Agent 4 QC documentation pack. Full Agent 4 Node suite **20/20 PASS**. Unattended parent-email activation remains **not** declared ready.
+All ten Agent 4 sections addressed. Defect found and fixed in repo: **074** WRITEBACK doc contradiction + missing `statusOut`/`debugStep` → **v2.2**. Expanded WAS/level/failure-visibility regression coverage. Stale completion-master / E2E / standards docs synced. Suite **22/20→22 PASS**. Remaining Mike actions are paste/confirm only.
 
-## Work completed
+## Sections
 
-1. Inventory of existing test suites and stale claims  
-2. Coverage matrix across major workflows  
-3. Live/Test sendMode regression + Make writeback ownership contracts  
-4. XP/achievement dedupe matrix + weekly-threshold writer-gap assertion  
-5. Perfect Week edge supplement  
-6. Failure-visibility, release, rollback, readiness, and gap docs  
-7. Suite runner `tools/testing/run-agent4-suite.js`  
-8. Aligned release validator + PROJECT_STATE/inventory to **066 v3.3**
+| § | Deliverable | Status |
+|---|-------------|--------|
+| 1 Inventory | `TEST-INVENTORY.md` | Done |
+| 2 Coverage matrix | `COVERAGE-MATRIX.md` | Done |
+| 3 XP dedupe | `agent4-xp-dedupe-matrix.test.js` | Done |
+| 4 Levels/gates | overnight + `agent4-level-gate-matrix.test.js` | Done |
+| 5 Perfect Week | overnight + `agent4-perfect-week-edges.test.js` | Done |
+| 6 Weekly summaries | `agent4-was-summary-matrix.test.js` | Done |
+| 7 Weekly email Live/Test | send-mode + failure-visibility + 074 v2.2 | Done |
+| 8 Failure visibility | `FAILURE-VISIBILITY.md` + executable tests | Done |
+| 9 Release/rollback | checklists + `MIKE-ACTIONS.md` | Done |
+| 10 Full suite | `run-agent4-suite.js` 22/22 | Done |
 
-## Important findings
+## Defect fixed
 
-- Verified path remains `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail → writeback`.  
-- Fixed 074 `sendMode=Test` is a P0 configuration footgun (email succeeds without Sent?).  
-- Make Live owns Sent?/status/timestamp; 074 must never write Sent?.  
-- Weekly threshold XP rules exist without a repo writer (product gap).
+**074 v2.1 doc said “does NOT check Weekly Email Sent?”** while code READs it to block duplicates. Fixed in **v2.2** and added `statusOut`/`debugStep`/`actionOut` for webhook failure/success visibility.
 
-## Problems discovered
+## Production changes
 
-- Shared primary worktree branch thrashing by concurrent agents — mitigated via dedicated worktree.  
-- Worktree lacks `web/node_modules`; web vitest re-run from primary worktree (109/109; no web edits).  
-- Possible overlap with reliability-audit `sendmode-prod-contract.test.js` if that branch merges.
+None by agent. Mike must paste 074 v2.2 and confirm sendMode Live (see `MIKE-ACTIONS.md`).
 
-## Production changes made
+## Second-pass review
 
-None (no Airtable/Make/live mode changes).
-
-## Production changes still required
-
-- Keep 074 PROD `sendMode=Live` (or blank + WAS Live).  
-- Complete activation checklist before turning 118/119 schedules ON.
+- Stale docs corrected (completion master, E2E I5/I6, 066 v3.3 standards, 074 inventory/index)
+- No conflicting field-ownership invents
+- Tests expanded; suite green
+- Worktree clean of unrelated untracked agent debris (commit only Agent 4 paths)
+- Branch ready for Lead integration
