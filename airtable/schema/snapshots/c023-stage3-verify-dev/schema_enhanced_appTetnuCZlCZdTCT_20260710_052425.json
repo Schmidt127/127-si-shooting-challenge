@@ -1,0 +1,4046 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-10T05:24:26",
+    "baseId": "appTetnuCZlCZdTCT",
+    "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+    "selectedTables": [
+      "Submission Assets"
+    ],
+    "tableCount": 1,
+    "linkCount": 4,
+    "dependencyCount": 35
+  },
+  "tables": [
+    {
+      "id": "tblhMLKxQK77agtME",
+      "name": "Submission Assets",
+      "description": "Operational asset table tied to submission records.\n\nUse this table to store files, generated assets, or supporting writeback/output records connected to a Submission and related Enrollment.\n\nThis table supports downstream processing and asset management. It should be treated as an operational support table, not as the primary activity-entry table.",
+      "primaryFieldId": "fld3uqsvTrgAImBOh",
+      "primaryFieldName": "Submission Assets Full Name",
+      "fieldCount": 95,
+      "linkFieldCount": 8,
+      "computedFieldCount": 35,
+      "tableRoleGuess": "operational summary",
+      "fields": [
+        {
+          "id": "fld3uqsvTrgAImBOh",
+          "name": "Submission Assets Full Name",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": true,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldtqSPrw0ah0fCmW",
+              "fldD4JV3iXYmIQLNG",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "referencedFieldNames": [
+              "Athlete Full Name",
+              "Asset Type",
+              "Asset Purpose"
+            ],
+            "formula": "ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}",
+            "fieldReferencesById": [
+              "fldtqSPrw0ah0fCmW",
+              "fldD4JV3iXYmIQLNG",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "fieldReferencesByName": [
+              "Athlete Full Name",
+              "Asset Type",
+              "Asset Purpose"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}",
+            "referencedFieldIds": [
+              "fldtqSPrw0ah0fCmW",
+              "fldD4JV3iXYmIQLNG",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldrGt7IsWDUAKfzD",
+          "name": "Airtable Attachment",
+          "type": "multipleAttachments",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": {
+            "isReversed": true
+          }
+        },
+        {
+          "id": "fldPybPEvRcEVuNWl",
+          "name": "Upload Status",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "status",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Pending Link",
+              "Processing",
+              "Uploaded",
+              "Error",
+              "Ready",
+              "No File"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel1x03bVpyf2dCcO",
+                "name": "Pending Link",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "sel8Ccid3HKaiUqqp",
+                "name": "Processing",
+                "color": "yellowLight1"
+              },
+              {
+                "id": "self7yJ6ZRkta6Zcr",
+                "name": "Uploaded",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "sel6sFF3yc3aYm0ou",
+                "name": "Error",
+                "color": "redBright"
+              },
+              {
+                "id": "sels844XNbi9Egn4m",
+                "name": "Ready",
+                "color": "greenBright"
+              },
+              {
+                "id": "selPBWJsxhxNJvCVx",
+                "name": "No File",
+                "color": "grayDark1"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel1x03bVpyf2dCcO",
+                "name": "Pending Link",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "sel8Ccid3HKaiUqqp",
+                "name": "Processing",
+                "color": "yellowLight1"
+              },
+              {
+                "id": "self7yJ6ZRkta6Zcr",
+                "name": "Uploaded",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "sel6sFF3yc3aYm0ou",
+                "name": "Error",
+                "color": "redBright"
+              },
+              {
+                "id": "sels844XNbi9Egn4m",
+                "name": "Ready",
+                "color": "greenBright"
+              },
+              {
+                "id": "selPBWJsxhxNJvCVx",
+                "name": "No File",
+                "color": "grayDark1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldITNuxNt9xphk7j",
+          "name": "Google Drive File URL",
+          "type": "url",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldFCExyojIkXG0t9",
+          "name": "Video Feedback Focus",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Shooting",
+              "Layups / Finishing",
+              "Ball Handling",
+              "Free Throws",
+              "Footwork / Defense",
+              "Strength / Movement",
+              "General Basketball",
+              "Other"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel6RErHUELWBbmAH",
+                "name": "Shooting",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selh8tHpU5mQP4dCL",
+                "name": "Layups / Finishing",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selTOLYqfV9xjdmBP",
+                "name": "Ball Handling",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selGxlYKtW7ZDWWsL",
+                "name": "Free Throws",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selERE2BUoyeMcJPF",
+                "name": "Footwork / Defense",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selc9lXLpJIVY4ClI",
+                "name": "Strength / Movement",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "selVmFXnnGBLYRRHV",
+                "name": "General Basketball",
+                "color": "redLight2"
+              },
+              {
+                "id": "selHMCPjNpITIo39X",
+                "name": "Other",
+                "color": "pinkLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel6RErHUELWBbmAH",
+                "name": "Shooting",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selh8tHpU5mQP4dCL",
+                "name": "Layups / Finishing",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selTOLYqfV9xjdmBP",
+                "name": "Ball Handling",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selGxlYKtW7ZDWWsL",
+                "name": "Free Throws",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selERE2BUoyeMcJPF",
+                "name": "Footwork / Defense",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selc9lXLpJIVY4ClI",
+                "name": "Strength / Movement",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "selVmFXnnGBLYRRHV",
+                "name": "General Basketball",
+                "color": "redLight2"
+              },
+              {
+                "id": "selHMCPjNpITIo39X",
+                "name": "Other",
+                "color": "pinkLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldYPCnUe1RQSEzu0",
+          "name": "Asset Sequence",
+          "type": "number",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "precision": 0
+          },
+          "optionsRaw": {
+            "precision": 0
+          }
+        },
+        {
+          "id": "fldj98NjKTnwQOIgz",
+          "name": "Upload Naming Status",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "status",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Pending Metadata",
+              "Ready",
+              "Blocked",
+              "Error"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "seluA51x3tnvSwqxa",
+                "name": "Pending Metadata",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selZdSgngQJ48Q2lt",
+                "name": "Ready",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selPK4E8E8UH9Y8k4",
+                "name": "Blocked",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selkGqpYsfhty7JLn",
+                "name": "Error",
+                "color": "greenLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "seluA51x3tnvSwqxa",
+                "name": "Pending Metadata",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selZdSgngQJ48Q2lt",
+                "name": "Ready",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selPK4E8E8UH9Y8k4",
+                "name": "Blocked",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selkGqpYsfhty7JLn",
+                "name": "Error",
+                "color": "greenLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldg4HWlkdtxPANz6",
+          "name": "Canonical File URL",
+          "type": "url",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldB4X0dqVUf6lplz",
+          "name": "Storage Key",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldLAxgb6tMzC4lZH",
+          "name": "Created",
+          "type": "createdTime",
+          "description": null,
+          "roleGuess": "audit",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "resultType": "dateTime",
+            "resultOptions": {
+              "dateFormat": {
+                "name": "local",
+                "format": "l"
+              },
+              "timeFormat": {
+                "name": "12hour",
+                "format": "h:mma"
+              },
+              "timeZone": "client"
+            },
+            "dateFormat": {
+              "name": "local",
+              "format": "l"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "client"
+          },
+          "optionsRaw": {
+            "result": {
+              "type": "dateTime",
+              "options": {
+                "dateFormat": {
+                  "name": "local",
+                  "format": "l"
+                },
+                "timeFormat": {
+                  "name": "12hour",
+                  "format": "h:mma"
+                },
+                "timeZone": "client"
+              }
+            }
+          }
+        },
+        {
+          "id": "flddRCbWCegg4WCoZ",
+          "name": "Submission - Linked",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "linkedTableName": "Submissions",
+            "inverseLinkFieldId": "fld1kilHu3o3Qtlpv",
+            "inverseLinkFieldName": "Submission Assets",
+            "prefersSingleRecordLink": true,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": true,
+            "inverseLinkFieldId": "fld1kilHu3o3Qtlpv"
+          }
+        },
+        {
+          "id": "fldiEOIvxT5D7gOp4",
+          "name": "Created Time",
+          "type": "createdTime",
+          "description": null,
+          "roleGuess": "audit",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "resultType": "dateTime",
+            "resultOptions": {
+              "dateFormat": {
+                "name": "local",
+                "format": "l"
+              },
+              "timeFormat": {
+                "name": "12hour",
+                "format": "h:mma"
+              },
+              "timeZone": "America/Denver"
+            },
+            "dateFormat": {
+              "name": "local",
+              "format": "l"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "America/Denver"
+          },
+          "optionsRaw": {
+            "result": {
+              "type": "dateTime",
+              "options": {
+                "dateFormat": {
+                  "name": "local",
+                  "format": "l"
+                },
+                "timeFormat": {
+                  "name": "12hour",
+                  "format": "h:mma"
+                },
+                "timeZone": "America/Denver"
+              }
+            }
+          }
+        },
+        {
+          "id": "fldox2Rjj9YL3EYK6",
+          "name": "Upload Destination",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "referencedFieldNames": [
+              "Asset Purpose"
+            ],
+            "formula": "SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)",
+            "fieldReferencesById": [
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "fieldReferencesByName": [
+              "Asset Purpose"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)",
+            "referencedFieldIds": [
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldCpEiwVOMc8v4Vu",
+          "name": "Asset Purpose",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Homework 1",
+              "Homework 2",
+              "Video For Feedback",
+              "Registration Headshot",
+              "Other"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel0A6dcJPDDxoUVM",
+                "name": "Homework 1",
+                "color": "blueBright"
+              },
+              {
+                "id": "selkph4pgX4nZNcAU",
+                "name": "Homework 2",
+                "color": "blueBright"
+              },
+              {
+                "id": "sell0seEiDj2Pwo7J",
+                "name": "Video For Feedback",
+                "color": "yellowBright"
+              },
+              {
+                "id": "selbpbvWvqBRbAKXp",
+                "name": "Registration Headshot",
+                "color": "pinkLight1"
+              },
+              {
+                "id": "sel5onXQEDKiWXx8R",
+                "name": "Other",
+                "color": "grayDark1"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel0A6dcJPDDxoUVM",
+                "name": "Homework 1",
+                "color": "blueBright"
+              },
+              {
+                "id": "selkph4pgX4nZNcAU",
+                "name": "Homework 2",
+                "color": "blueBright"
+              },
+              {
+                "id": "sell0seEiDj2Pwo7J",
+                "name": "Video For Feedback",
+                "color": "yellowBright"
+              },
+              {
+                "id": "selbpbvWvqBRbAKXp",
+                "name": "Registration Headshot",
+                "color": "pinkLight1"
+              },
+              {
+                "id": "sel5onXQEDKiWXx8R",
+                "name": "Other",
+                "color": "grayDark1"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldOwKqDaX2cUxMxf",
+          "name": "Asset Slot",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "HW1",
+              "HW2",
+              "VIDEO",
+              "VIDEO-1",
+              "VIDEO-2",
+              "VIDEO-3",
+              "VIDEO-4"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "selkpXbhgjj36eRG1",
+                "name": "HW1",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selPvXj5ocu5hKQHo",
+                "name": "HW2",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selrSotaThLGLXQAX",
+                "name": "VIDEO",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selpvXQwiwX3GsitN",
+                "name": "VIDEO-1",
+                "color": "greenLight2"
+              },
+              {
+                "id": "sel3MMFA1oXCvLH7h",
+                "name": "VIDEO-2",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selwmjt07gzBLKq2r",
+                "name": "VIDEO-3",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel3IeSZ0U5UZe4RS",
+                "name": "VIDEO-4",
+                "color": "redLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "selkpXbhgjj36eRG1",
+                "name": "HW1",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selPvXj5ocu5hKQHo",
+                "name": "HW2",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selrSotaThLGLXQAX",
+                "name": "VIDEO",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selpvXQwiwX3GsitN",
+                "name": "VIDEO-1",
+                "color": "greenLight2"
+              },
+              {
+                "id": "sel3MMFA1oXCvLH7h",
+                "name": "VIDEO-2",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selwmjt07gzBLKq2r",
+                "name": "VIDEO-3",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel3IeSZ0U5UZe4RS",
+                "name": "VIDEO-4",
+                "color": "redLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldw8R6h6DkyEMzFR",
+          "name": "RecordId - Submission Table",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldFwXuLK18jJnT2z",
+            "fieldNameInLinkedTable": "RecordId",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldFwXuLK18jJnT2z",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldQF8OsfESrHdcUb",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "linkedTableName": "Homework Completions",
+            "inverseLinkFieldId": "fldKy5hltmJc6A8Jx",
+            "inverseLinkFieldName": "Submission Assets",
+            "prefersSingleRecordLink": false,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "isReversed": false,
+            "prefersSingleRecordLink": false,
+            "inverseLinkFieldId": "fldKy5hltmJc6A8Jx"
+          }
+        },
+        {
+          "id": "fldxapOLpLH4KaXOb",
+          "name": "Video Feedback",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblOV6pJDxQFBSQ3q",
+            "linkedTableName": "Video Feedback",
+            "inverseLinkFieldId": "fld9laOK9yRAxgsph",
+            "inverseLinkFieldName": "Submission Asset",
+            "prefersSingleRecordLink": false,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblOV6pJDxQFBSQ3q",
+            "isReversed": false,
+            "prefersSingleRecordLink": false,
+            "inverseLinkFieldId": "fld9laOK9yRAxgsph"
+          }
+        },
+        {
+          "id": "fld8pLfrA76vMP5mt",
+          "name": "Homework Completions RID",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldQF8OsfESrHdcUb",
+            "recordLinkFieldName": "Homework Completions",
+            "fieldIdInLinkedTable": "fldKjhzUPSQS9m9wG",
+            "fieldNameInLinkedTable": "Homework Completions RID",
+            "fieldTableInLinkedTable": "Homework Completions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldQF8OsfESrHdcUb",
+            "fieldIdInLinkedTable": "fldKjhzUPSQS9m9wG",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldVpRxZqGJxlAs6T",
+          "name": "Week",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multipleRecordLinks",
+            "resultOptions": {
+              "isReversed": false,
+              "prefersSingleRecordLink": false
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldA3fpXWckngZ6g1",
+            "fieldNameInLinkedTable": "Week",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldA3fpXWckngZ6g1",
+            "result": {
+              "type": "multipleRecordLinks",
+              "options": {
+                "isReversed": false,
+                "prefersSingleRecordLink": false
+              }
+            }
+          }
+        },
+        {
+          "id": "fldy8UuxWmHT7WFFJ",
+          "name": "Asset Key",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "flddRCbWCegg4WCoZ",
+              "fldhx4nDKuzuWQna6"
+            ],
+            "referencedFieldNames": [
+              "Submission - Linked",
+              "Google Drive File ID"
+            ],
+            "formula": "ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}",
+            "fieldReferencesById": [
+              "flddRCbWCegg4WCoZ",
+              "fldhx4nDKuzuWQna6"
+            ],
+            "fieldReferencesByName": [
+              "Submission - Linked",
+              "Google Drive File ID"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}",
+            "referencedFieldIds": [
+              "flddRCbWCegg4WCoZ",
+              "fldhx4nDKuzuWQna6"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldXz9TNOnGeRXEL8",
+          "name": "RecordId",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "formula": "RECORD_ID()",
+            "dependencySource": "none"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "RECORD_ID()",
+            "referencedFieldIds": [],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldJRSvui8RPg0Vyb",
+          "name": "Enrollment - Linked",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "linkedTableName": "Enrollments",
+            "inverseLinkFieldId": "fldLxLveNnVN93pia",
+            "inverseLinkFieldName": "Submission Assets - Enrollment",
+            "prefersSingleRecordLink": true,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": true,
+            "inverseLinkFieldId": "fldLxLveNnVN93pia"
+          }
+        },
+        {
+          "id": "fld6higUGAazpTX1e",
+          "name": "Asset Label",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldS0DINXc5YSHYRO",
+          "name": "Original File Name",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldD4JV3iXYmIQLNG",
+          "name": "Asset Type",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Homework PDF",
+              "Homework Image",
+              "Homework Document",
+              "Video Feedback",
+              "Submission Photo",
+              "Submission Video",
+              "Athlete Headshot",
+              "Other"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "selPeMcYVFuvjpFgN",
+                "name": "Homework PDF",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selUp9Pa4w8i25kVc",
+                "name": "Homework Image",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selA08ztoDWA2T3Pr",
+                "name": "Homework Document",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selkZpTQhawYIY5ty",
+                "name": "Video Feedback",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selqIMUBKVHIt2jol",
+                "name": "Submission Photo",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selW8qj6LPyiGf9CG",
+                "name": "Submission Video",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "selBw6uXPOaUGAbWY",
+                "name": "Athlete Headshot",
+                "color": "redLight2"
+              },
+              {
+                "id": "seloYeOdYp4iF2r5w",
+                "name": "Other",
+                "color": "pinkLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "selPeMcYVFuvjpFgN",
+                "name": "Homework PDF",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selUp9Pa4w8i25kVc",
+                "name": "Homework Image",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selA08ztoDWA2T3Pr",
+                "name": "Homework Document",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selkZpTQhawYIY5ty",
+                "name": "Video Feedback",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selqIMUBKVHIt2jol",
+                "name": "Submission Photo",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selW8qj6LPyiGf9CG",
+                "name": "Submission Video",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "selBw6uXPOaUGAbWY",
+                "name": "Athlete Headshot",
+                "color": "redLight2"
+              },
+              {
+                "id": "seloYeOdYp4iF2r5w",
+                "name": "Other",
+                "color": "pinkLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldvXvURsGG611cSK",
+          "name": "Uploaded At",
+          "type": "dateTime",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "America/Denver"
+          },
+          "optionsRaw": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "America/Denver"
+          }
+        },
+        {
+          "id": "fldtl04LTU3FoMmLL",
+          "name": "Writeback Complete?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldPybPEvRcEVuNWl",
+              "fldITNuxNt9xphk7j",
+              "fldqd2ALDtGS6gMqs",
+              "fldxx1m0zTsMfEHfj",
+              "fldvXvURsGG611cSK"
+            ],
+            "referencedFieldNames": [
+              "Upload Status",
+              "Google Drive File URL",
+              "Google Drive Folder ID",
+              "Google Drive Folder URL",
+              "Uploaded At"
+            ],
+            "formula": "AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)",
+            "fieldReferencesById": [
+              "fldPybPEvRcEVuNWl",
+              "fldITNuxNt9xphk7j",
+              "fldqd2ALDtGS6gMqs",
+              "fldxx1m0zTsMfEHfj",
+              "fldvXvURsGG611cSK"
+            ],
+            "fieldReferencesByName": [
+              "Upload Status",
+              "Google Drive File URL",
+              "Google Drive Folder ID",
+              "Google Drive Folder URL",
+              "Uploaded At"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)",
+            "referencedFieldIds": [
+              "fldPybPEvRcEVuNWl",
+              "fldITNuxNt9xphk7j",
+              "fldqd2ALDtGS6gMqs",
+              "fldxx1m0zTsMfEHfj",
+              "fldvXvURsGG611cSK"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldZiACFdNLECuRRU",
+          "name": "Upload Ready?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldrGt7IsWDUAKfzD",
+              "fldD4JV3iXYmIQLNG",
+              "fldJRSvui8RPg0Vyb"
+            ],
+            "referencedFieldNames": [
+              "Airtable Attachment",
+              "Asset Type",
+              "Enrollment - Linked"
+            ],
+            "formula": "IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "fieldReferencesById": [
+              "fldrGt7IsWDUAKfzD",
+              "fldD4JV3iXYmIQLNG",
+              "fldJRSvui8RPg0Vyb"
+            ],
+            "fieldReferencesByName": [
+              "Airtable Attachment",
+              "Asset Type",
+              "Enrollment - Linked"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "referencedFieldIds": [
+              "fldrGt7IsWDUAKfzD",
+              "fldD4JV3iXYmIQLNG",
+              "fldJRSvui8RPg0Vyb"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fld7imlYToTHK6sZA",
+          "name": "Source Attachment ID",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "identifier",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld6x0Y5s7V8X5psH",
+          "name": "Last Name",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "recordLinkFieldName": "Enrollment - Linked",
+            "fieldIdInLinkedTable": "fldpXNOzRflbkgVwV",
+            "fieldNameInLinkedTable": "Athlete Last Name",
+            "fieldTableInLinkedTable": "Enrollments"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "fieldIdInLinkedTable": "fldpXNOzRflbkgVwV",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldx2kdvgv9x3MU9A",
+          "name": "First Name",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "recordLinkFieldName": "Enrollment - Linked",
+            "fieldIdInLinkedTable": "fld4wGsfJKp7x4Bjd",
+            "fieldNameInLinkedTable": "Athlete First Name",
+            "fieldTableInLinkedTable": "Enrollments"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "fieldIdInLinkedTable": "fld4wGsfJKp7x4Bjd",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldhBiaRmBLydLNrD",
+          "name": "Program Instance - Raw",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "recordLinkFieldName": "Enrollment - Linked",
+            "fieldIdInLinkedTable": "flde31eImaWCUgNPb",
+            "fieldNameInLinkedTable": "Program Instance Name Only",
+            "fieldTableInLinkedTable": "Enrollments"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "fieldIdInLinkedTable": "flde31eImaWCUgNPb",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld7Fbq1VHNTYBqOb",
+          "name": "Program Instance - Convert to File Name",
+          "type": "formula",
+          "description": "Converts the Program Instance value to CamelCase with no spaces.",
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldhBiaRmBLydLNrD"
+            ],
+            "referencedFieldNames": [
+              "Program Instance - Raw"
+            ],
+            "formula": "IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)",
+            "fieldReferencesById": [
+              "fldhBiaRmBLydLNrD"
+            ],
+            "fieldReferencesByName": [
+              "Program Instance - Raw"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)",
+            "referencedFieldIds": [
+              "fldhBiaRmBLydLNrD"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldu3NYlcZl942oU5",
+          "name": "Date",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "date",
+            "resultOptions": {
+              "dateFormat": {
+                "name": "local",
+                "format": "l"
+              }
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldpkkSBsx8kQRZos",
+            "fieldNameInLinkedTable": "Activity Date",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldpkkSBsx8kQRZos",
+            "result": {
+              "type": "date",
+              "options": {
+                "dateFormat": {
+                  "name": "local",
+                  "format": "l"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "fldxcDBeWXEPV1rnO",
+          "name": "Date - Convert to File Name",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldu3NYlcZl942oU5"
+            ],
+            "referencedFieldNames": [
+              "Date"
+            ],
+            "formula": "IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)",
+            "fieldReferencesById": [
+              "fldu3NYlcZl942oU5"
+            ],
+            "fieldReferencesByName": [
+              "Date"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)",
+            "referencedFieldIds": [
+              "fldu3NYlcZl942oU5"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldzfpPNBX8ZmZ1sp",
+          "name": "Asset Type - Convert for File Name",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldD4JV3iXYmIQLNG"
+            ],
+            "referencedFieldNames": [
+              "Asset Type"
+            ],
+            "formula": "IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)",
+            "fieldReferencesById": [
+              "fldD4JV3iXYmIQLNG"
+            ],
+            "fieldReferencesByName": [
+              "Asset Type"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)",
+            "referencedFieldIds": [
+              "fldD4JV3iXYmIQLNG"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldv4Mhw3w84dXdxx",
+          "name": "Google Drive Folder Name",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A"
+            ],
+            "referencedFieldNames": [
+              "Last Name",
+              "First Name"
+            ],
+            "formula": "{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}",
+            "fieldReferencesById": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A"
+            ],
+            "fieldReferencesByName": [
+              "Last Name",
+              "First Name"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}",
+            "referencedFieldIds": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldV5480sMm40q0QX",
+          "name": "Create Google Drive File Name",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A",
+              "fld7Fbq1VHNTYBqOb",
+              "fldox2Rjj9YL3EYK6",
+              "fldiqTrLE7N8gjsxL",
+              "fldALREYJLGbCInMy",
+              "fldzfpPNBX8ZmZ1sp",
+              "fldxcDBeWXEPV1rnO"
+            ],
+            "referencedFieldNames": [
+              "Last Name",
+              "First Name",
+              "Program Instance - Convert to File Name",
+              "Upload Destination",
+              "Homework Name - Slot Correct",
+              "Asset Slot Base",
+              "Asset Type - Convert for File Name",
+              "Date - Convert to File Name"
+            ],
+            "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+            "fieldReferencesById": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A",
+              "fld7Fbq1VHNTYBqOb",
+              "fldox2Rjj9YL3EYK6",
+              "fldiqTrLE7N8gjsxL",
+              "fldALREYJLGbCInMy",
+              "fldzfpPNBX8ZmZ1sp",
+              "fldxcDBeWXEPV1rnO"
+            ],
+            "fieldReferencesByName": [
+              "Last Name",
+              "First Name",
+              "Program Instance - Convert to File Name",
+              "Upload Destination",
+              "Homework Name - Slot Correct",
+              "Asset Slot Base",
+              "Asset Type - Convert for File Name",
+              "Date - Convert to File Name"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+            "referencedFieldIds": [
+              "fld6x0Y5s7V8X5psH",
+              "fldx2kdvgv9x3MU9A",
+              "fld7Fbq1VHNTYBqOb",
+              "fldox2Rjj9YL3EYK6",
+              "fldiqTrLE7N8gjsxL",
+              "fldALREYJLGbCInMy",
+              "fldzfpPNBX8ZmZ1sp",
+              "fldxcDBeWXEPV1rnO"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldqd2ALDtGS6gMqs",
+          "name": "Google Drive Folder ID",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "identifier",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldtqSPrw0ah0fCmW",
+          "name": "Athlete Full Name",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "recordLinkFieldName": "Enrollment - Linked",
+            "fieldIdInLinkedTable": "fldnRDkfubz7p3gi4",
+            "fieldNameInLinkedTable": "Full Athlete Name - Backward",
+            "fieldTableInLinkedTable": "Enrollments"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "fieldIdInLinkedTable": "fldnRDkfubz7p3gi4",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldPWNhEsXP1KuMUI",
+          "name": "Record Id (from Enrollment - Linked)",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "recordLinkFieldName": "Enrollment - Linked",
+            "fieldIdInLinkedTable": "fldnsyxEUbrJjyzXU",
+            "fieldNameInLinkedTable": "Record Id",
+            "fieldTableInLinkedTable": "Enrollments"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+            "fieldIdInLinkedTable": "fldnsyxEUbrJjyzXU",
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldwOklyDaW3nN2Kz",
+          "name": "XP Events",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldpCKmuKiloOSsvd",
+          "name": "Review Complete?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fldALREYJLGbCInMy",
+          "name": "Asset Slot Base",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fld6higUGAazpTX1e"
+            ],
+            "referencedFieldNames": [
+              "Asset Label"
+            ],
+            "formula": "IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)",
+            "fieldReferencesById": [
+              "fld6higUGAazpTX1e"
+            ],
+            "fieldReferencesByName": [
+              "Asset Label"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)",
+            "referencedFieldIds": [
+              "fld6higUGAazpTX1e"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldxORUyJ7uvEgw9h",
+          "name": "DELETE POSSIBLY - Homework Completion Record ID",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "identifier",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldAkpl3cuzgz1jLP",
+          "name": "Upload Error",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldKDM3fvJsbAnUCR",
+          "name": "Coach Feedback (from Video Feedback)",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multilineText",
+            "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+            "recordLinkFieldName": "Video Feedback",
+            "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+            "fieldNameInLinkedTable": "Coach Feedback",
+            "fieldTableInLinkedTable": "Video Feedback"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+            "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+            "result": {
+              "type": "multilineText"
+            }
+          }
+        },
+        {
+          "id": "fld5Emwipb3UjAMz9",
+          "name": "XP Events copy",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldnzHLHvSwyUsnQj",
+          "name": "Homework Name 1",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multipleRecordLinks",
+            "resultOptions": {
+              "isReversed": false,
+              "prefersSingleRecordLink": false
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldBuHIpIwxTy60js",
+            "fieldNameInLinkedTable": "Homework Name 1",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldBuHIpIwxTy60js",
+            "result": {
+              "type": "multipleRecordLinks",
+              "options": {
+                "isReversed": false,
+                "prefersSingleRecordLink": false
+              }
+            }
+          }
+        },
+        {
+          "id": "fldc4VJaLJhaNFKOU",
+          "name": "Homework Name 2",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multipleRecordLinks",
+            "resultOptions": {
+              "isReversed": false,
+              "prefersSingleRecordLink": false
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldnAy8yXTFafhvnu",
+            "fieldNameInLinkedTable": "Homework Name 2",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldnAy8yXTFafhvnu",
+            "result": {
+              "type": "multipleRecordLinks",
+              "options": {
+                "isReversed": false,
+                "prefersSingleRecordLink": false
+              }
+            }
+          }
+        },
+        {
+          "id": "fldDvMkI9llIUmxFi",
+          "name": "HW Sub 1",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multipleAttachments",
+            "resultOptions": {
+              "isReversed": false
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldtJS9LW3PAyCaNC",
+            "fieldNameInLinkedTable": "HW Sub 1",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldtJS9LW3PAyCaNC",
+            "result": {
+              "type": "multipleAttachments",
+              "options": {
+                "isReversed": false
+              }
+            }
+          }
+        },
+        {
+          "id": "fldahytXWi4YuRD2I",
+          "name": "HW Sub 2",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multipleAttachments",
+            "resultOptions": {
+              "isReversed": true
+            },
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "recordLinkFieldName": "Submission - Linked",
+            "fieldIdInLinkedTable": "fldUvfAHi3e15Oxb7",
+            "fieldNameInLinkedTable": "HW Sub 2",
+            "fieldTableInLinkedTable": "Submissions"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+            "fieldIdInLinkedTable": "fldUvfAHi3e15Oxb7",
+            "result": {
+              "type": "multipleAttachments",
+              "options": {
+                "isReversed": true
+              }
+            }
+          }
+        },
+        {
+          "id": "fldYICCdWQ5xVcSk5",
+          "name": "Ready for Homework Completion Script?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldQF8OsfESrHdcUb",
+              "fldALREYJLGbCInMy",
+              "fld6higUGAazpTX1e",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "referencedFieldNames": [
+              "Upload Destination",
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Homework Completions",
+              "Asset Slot Base",
+              "Asset Label",
+              "Asset Purpose"
+            ],
+            "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "fieldReferencesById": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldQF8OsfESrHdcUb",
+              "fldALREYJLGbCInMy",
+              "fld6higUGAazpTX1e",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "fieldReferencesByName": [
+              "Upload Destination",
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Homework Completions",
+              "Asset Slot Base",
+              "Asset Label",
+              "Asset Purpose"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldQF8OsfESrHdcUb",
+              "fldALREYJLGbCInMy",
+              "fld6higUGAazpTX1e",
+              "fldCpEiwVOMc8v4Vu"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldFzYi5tKorpDzzm",
+          "name": "Coach Feedback - LKP",
+          "type": "multipleLookupValues",
+          "description": null,
+          "roleGuess": "lookup",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "multilineText",
+            "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+            "recordLinkFieldName": "Video Feedback",
+            "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+            "fieldNameInLinkedTable": "Coach Feedback",
+            "fieldTableInLinkedTable": "Video Feedback"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+            "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+            "result": {
+              "type": "multilineText"
+            }
+          }
+        },
+        {
+          "id": "fldiqTrLE7N8gjsxL",
+          "name": "Homework Name - Slot Correct",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldOwKqDaX2cUxMxf",
+              "fldnzHLHvSwyUsnQj",
+              "fldc4VJaLJhaNFKOU"
+            ],
+            "referencedFieldNames": [
+              "Asset Slot",
+              "Homework Name 1",
+              "Homework Name 2"
+            ],
+            "formula": "IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)",
+            "fieldReferencesById": [
+              "fldOwKqDaX2cUxMxf",
+              "fldnzHLHvSwyUsnQj",
+              "fldc4VJaLJhaNFKOU"
+            ],
+            "fieldReferencesByName": [
+              "Asset Slot",
+              "Homework Name 1",
+              "Homework Name 2"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)",
+            "referencedFieldIds": [
+              "fldOwKqDaX2cUxMxf",
+              "fldnzHLHvSwyUsnQj",
+              "fldc4VJaLJhaNFKOU"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldQDDzBS62Ow765c",
+          "name": "Workflow Next Step",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "referencedFieldNames": [
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Video Feedback"
+            ],
+            "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+            "fieldReferencesById": [
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "fieldReferencesByName": [
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Video Feedback"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+            "referencedFieldIds": [
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldDJN1RrVyxiKrWu",
+          "name": "Why Not Ready for Make?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fld8C43NVQQ1NeQ7Z",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "referencedFieldNames": [
+              "Send to Make Trigger",
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Video Feedback"
+            ],
+            "formula": "IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+            "fieldReferencesById": [
+              "fld8C43NVQQ1NeQ7Z",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "fieldReferencesByName": [
+              "Send to Make Trigger",
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Video Feedback"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+            "referencedFieldIds": [
+              "fld8C43NVQQ1NeQ7Z",
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld2pkXIFSlyl2i3J",
+          "name": "Ready for Video Feedback Script?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "referencedFieldNames": [
+              "Upload Destination",
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Video Feedback"
+            ],
+            "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "fieldReferencesById": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "fieldReferencesByName": [
+              "Upload Destination",
+              "Submission - Linked",
+              "Enrollment - Linked",
+              "Airtable Attachment",
+              "Video Feedback"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "flddRCbWCegg4WCoZ",
+              "fldJRSvui8RPg0Vyb",
+              "fldrGt7IsWDUAKfzD",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldG5lWlsUcrDNlIg",
+          "name": "Ready to Send to Make?",
+          "type": "formula",
+          "description": "Checks if all required fields are present for sending to Make, using correct field names.",
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "singleLineText",
+            "referencedFieldIds": [
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fld8pLfrA76vMP5mt",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "referencedFieldNames": [
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Homework Completions RID",
+              "Video Feedback"
+            ],
+            "formula": "IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+            "fieldReferencesById": [
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fld8pLfrA76vMP5mt",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "fieldReferencesByName": [
+              "Airtable Attachment",
+              "Upload Destination",
+              "Homework Completions",
+              "Homework Completions RID",
+              "Video Feedback"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+            "referencedFieldIds": [
+              "fldrGt7IsWDUAKfzD",
+              "fldox2Rjj9YL3EYK6",
+              "fldQF8OsfESrHdcUb",
+              "fld8pLfrA76vMP5mt",
+              "fldxapOLpLH4KaXOb"
+            ],
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld8C43NVQQ1NeQ7Z",
+          "name": "Send to Make Trigger",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "check",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "check",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fldxx1m0zTsMfEHfj",
+          "name": "Google Drive Folder URL",
+          "type": "url",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldhx4nDKuzuWQna6",
+          "name": "Google Drive File ID",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "identifier",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldMtYyiPhVWbQk6M",
+          "name": "File Content Hash",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld2TBSzNI6bSkKZD",
+          "name": "File Hash Algorithm",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "SHA-256"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "selxI3YFwVUmNJc1U",
+                "name": "SHA-256",
+                "color": "blueLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "selxI3YFwVUmNJc1U",
+                "name": "SHA-256",
+                "color": "blueLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldYbWjb8YI5BBIjr",
+          "name": "File Size Bytes",
+          "type": "number",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "precision": 0
+          },
+          "optionsRaw": {
+            "precision": 0
+          }
+        },
+        {
+          "id": "fldm34cEAadeJRatz",
+          "name": "File MIME Type",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldtE66EBZwDHewbl",
+          "name": "File is Duplicate?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fldQTwrLKa5YNTELl",
+          "name": "Duplicate File Status",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "status",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Not Checked",
+              "Unique",
+              "Exact Duplicate",
+              "Possible Duplicate",
+              "Allowed Reuse",
+              "Needs Review",
+              "Error"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel2DxKYf4UWNS7fy",
+                "name": "Not Checked",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selWEKp7RhN5kCJrP",
+                "name": "Unique",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selN2e0gMWSKwSrSg",
+                "name": "Exact Duplicate",
+                "color": "tealLight2"
+              },
+              {
+                "id": "sellTSlTid17ZJRr9",
+                "name": "Possible Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selTNS8sml7RvvAaY",
+                "name": "Allowed Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selYJd9sn8614ZkEP",
+                "name": "Needs Review",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel3TDdVxM5RYvCfR",
+                "name": "Error",
+                "color": "redLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel2DxKYf4UWNS7fy",
+                "name": "Not Checked",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selWEKp7RhN5kCJrP",
+                "name": "Unique",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selN2e0gMWSKwSrSg",
+                "name": "Exact Duplicate",
+                "color": "tealLight2"
+              },
+              {
+                "id": "sellTSlTid17ZJRr9",
+                "name": "Possible Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selTNS8sml7RvvAaY",
+                "name": "Allowed Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selYJd9sn8614ZkEP",
+                "name": "Needs Review",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel3TDdVxM5RYvCfR",
+                "name": "Error",
+                "color": "redLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fld1gOJTK0e3G8ulG",
+          "name": "Duplicate Match Strength",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Exact SHA-256 Hash",
+              "Same Source Attachment ID",
+              "Same Size and Filename",
+              "Filename Only Weak Match",
+              "Manual Review"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel0B2WBzj2Y0v6sb",
+                "name": "Exact SHA-256 Hash",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel51oRjkLtzpz5KY",
+                "name": "Same Source Attachment ID",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selYFSTc329ovisf8",
+                "name": "Same Size and Filename",
+                "color": "tealLight2"
+              },
+              {
+                "id": "sel9SeIW7LXkHVKbP",
+                "name": "Filename Only Weak Match",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selrwl3ctTYtbEitg",
+                "name": "Manual Review",
+                "color": "yellowLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel0B2WBzj2Y0v6sb",
+                "name": "Exact SHA-256 Hash",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel51oRjkLtzpz5KY",
+                "name": "Same Source Attachment ID",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selYFSTc329ovisf8",
+                "name": "Same Size and Filename",
+                "color": "tealLight2"
+              },
+              {
+                "id": "sel9SeIW7LXkHVKbP",
+                "name": "Filename Only Weak Match",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selrwl3ctTYtbEitg",
+                "name": "Manual Review",
+                "color": "yellowLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldVkOPvB74HbFliP",
+          "name": "Duplicate Match Notes",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "narrative",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld2DtlvzpaC4gXr5",
+          "name": "Duplicate Checked At",
+          "type": "dateTime",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          },
+          "optionsRaw": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          }
+        },
+        {
+          "id": "fld0mZJBFxJ3c0rbK",
+          "name": "Duplicate Check Error",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld8C1Wfr0BCKNxpK",
+          "name": "Duplicate Review Status",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "status",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Not Reviewed",
+              "Needs Review",
+              "Confirmed Duplicate",
+              "Not Duplicate",
+              "Allowed Reuse"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "selKIa7mo259kGL5T",
+                "name": "Not Reviewed",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selL5H79F06PWwJdE",
+                "name": "Needs Review",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "sel8WCSv1ZR90xFaa",
+                "name": "Confirmed Duplicate",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selnqtEtYv6DNOc2P",
+                "name": "Not Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selOrXHL7JjuLNyXk",
+                "name": "Allowed Reuse",
+                "color": "yellowLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "selKIa7mo259kGL5T",
+                "name": "Not Reviewed",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selL5H79F06PWwJdE",
+                "name": "Needs Review",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "sel8WCSv1ZR90xFaa",
+                "name": "Confirmed Duplicate",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selnqtEtYv6DNOc2P",
+                "name": "Not Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selOrXHL7JjuLNyXk",
+                "name": "Allowed Reuse",
+                "color": "yellowLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldsNazvec6r4mxoY",
+          "name": "Duplicate Match Record",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "linkedTableName": "Submission Assets",
+            "inverseLinkFieldId": "fldEr7Dmv42UjdMlO",
+            "inverseLinkFieldName": "From field: Duplicate Match Record",
+            "prefersSingleRecordLink": true,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": true,
+            "inverseLinkFieldId": "fldEr7Dmv42UjdMlO"
+          }
+        },
+        {
+          "id": "fldt9uMc6pM717LjQ",
+          "name": "Is True Video Feedback Asset?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "fldCpEiwVOMc8v4Vu",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "referencedFieldNames": [
+              "Upload Destination",
+              "Asset Purpose",
+              "Asset Slot"
+            ],
+            "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)",
+            "fieldReferencesById": [
+              "fldox2Rjj9YL3EYK6",
+              "fldCpEiwVOMc8v4Vu",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "fieldReferencesByName": [
+              "Upload Destination",
+              "Asset Purpose",
+              "Asset Slot"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)",
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "fldCpEiwVOMc8v4Vu",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldy8sCt6ttcMeLRD",
+          "name": "Is Homework Upload Asset?",
+          "type": "formula",
+          "description": null,
+          "roleGuess": "formula",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "isValid": true,
+            "resultType": "number",
+            "resultOptions": {
+              "precision": 0
+            },
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "referencedFieldNames": [
+              "Upload Destination",
+              "Asset Slot"
+            ],
+            "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)",
+            "fieldReferencesById": [
+              "fldox2Rjj9YL3EYK6",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "fieldReferencesByName": [
+              "Upload Destination",
+              "Asset Slot"
+            ],
+            "dependencySource": "metadata"
+          },
+          "optionsRaw": {
+            "isValid": true,
+            "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)",
+            "referencedFieldIds": [
+              "fldox2Rjj9YL3EYK6",
+              "fldOwKqDaX2cUxMxf"
+            ],
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldEr7Dmv42UjdMlO",
+          "name": "From field: Duplicate Match Record",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "linkedTableName": "Submission Assets",
+            "inverseLinkFieldId": "fldsNazvec6r4mxoY",
+            "inverseLinkFieldName": "Duplicate Match Record",
+            "prefersSingleRecordLink": false,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": false,
+            "inverseLinkFieldId": "fldsNazvec6r4mxoY"
+          }
+        },
+        {
+          "id": "fldVvlCSTDPMYKI2n",
+          "name": "Exact Hash Match Found?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fldoAF3gUaBAzPVRI",
+          "name": "Same Enrollment Match Found?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fldLMzAxwd9AffgbJ",
+          "name": "Upload Claim Run ID",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "identifier",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldSlCe9nuGvymdvQ",
+          "name": "Processing Started At",
+          "type": "dateTime",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          },
+          "optionsRaw": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          }
+        },
+        {
+          "id": "fldNjXKr8jaUXAEKR",
+          "name": "Potential Asset Reuse?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fld5RMMPKIIxYoI1L",
+          "name": "Asset Reuse Review Primary Reason",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Same Assignment Resubmission",
+              "Different Assignment Reuse",
+              "Different Week Reuse",
+              "Different Submission Reuse",
+              "Cross-Type Reuse",
+              "Homework Used for Video Feedback",
+              "Video Feedback Used for Homework",
+              "Missing Context",
+              "Multiple Prior Uses",
+              "Cross-Enrollment Match — Informational"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel1akVyEwrhjF3KN",
+                "name": "Same Assignment Resubmission",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selz3ekRlCdDlHooO",
+                "name": "Different Assignment Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selCiomapDu0NdAQB",
+                "name": "Different Week Reuse",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selrtkAPh3KzkKISr",
+                "name": "Different Submission Reuse",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selSQ71wsZIcFQwyR",
+                "name": "Cross-Type Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selqaWmP8vx6iWtDb",
+                "name": "Homework Used for Video Feedback",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel1mFkmM3MMAPBTK",
+                "name": "Video Feedback Used for Homework",
+                "color": "redLight2"
+              },
+              {
+                "id": "selDFE43P3t5bzrwB",
+                "name": "Missing Context",
+                "color": "pinkLight2"
+              },
+              {
+                "id": "selVYRuZfUbXgUr9p",
+                "name": "Multiple Prior Uses",
+                "color": "purpleLight2"
+              },
+              {
+                "id": "sel5f4tq9gY57avjT",
+                "name": "Cross-Enrollment Match — Informational",
+                "color": "grayLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel1akVyEwrhjF3KN",
+                "name": "Same Assignment Resubmission",
+                "color": "blueLight2"
+              },
+              {
+                "id": "selz3ekRlCdDlHooO",
+                "name": "Different Assignment Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selCiomapDu0NdAQB",
+                "name": "Different Week Reuse",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selrtkAPh3KzkKISr",
+                "name": "Different Submission Reuse",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selSQ71wsZIcFQwyR",
+                "name": "Cross-Type Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selqaWmP8vx6iWtDb",
+                "name": "Homework Used for Video Feedback",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "sel1mFkmM3MMAPBTK",
+                "name": "Video Feedback Used for Homework",
+                "color": "redLight2"
+              },
+              {
+                "id": "selDFE43P3t5bzrwB",
+                "name": "Missing Context",
+                "color": "pinkLight2"
+              },
+              {
+                "id": "selVYRuZfUbXgUr9p",
+                "name": "Multiple Prior Uses",
+                "color": "purpleLight2"
+              },
+              {
+                "id": "sel5f4tq9gY57avjT",
+                "name": "Cross-Enrollment Match — Informational",
+                "color": "grayLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fldIRI7T1rY5R9mdg",
+          "name": "Asset Reuse Review Reasons",
+          "type": "multipleSelects",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Same Assignment Resubmission",
+              "Different Assignment Reuse",
+              "Different Week Reuse",
+              "Different Submission Reuse",
+              "Cross-Type Reuse",
+              "Homework Used for Video Feedback",
+              "Video Feedback Used for Homework",
+              "Missing Context",
+              "Multiple Prior Uses",
+              "Cross-Enrollment Match — Informational"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "sel7p5ILJRWVT3bEY",
+                "name": "Same Assignment Resubmission",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel76dkfvPB2FOZ5d",
+                "name": "Different Assignment Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "sel02dtErSMJEzW01",
+                "name": "Different Week Reuse",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selfOxYeS0dzq71oF",
+                "name": "Different Submission Reuse",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selZbIp4YT0d3fubI",
+                "name": "Cross-Type Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selPlM8flHerCA8OS",
+                "name": "Homework Used for Video Feedback",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "seljiTgSFIEhRkmDE",
+                "name": "Video Feedback Used for Homework",
+                "color": "redLight2"
+              },
+              {
+                "id": "selnW0MqTFAH68A1F",
+                "name": "Missing Context",
+                "color": "pinkLight2"
+              },
+              {
+                "id": "selyZPDX2P2nLudIJ",
+                "name": "Multiple Prior Uses",
+                "color": "purpleLight2"
+              },
+              {
+                "id": "seloUBXdQ3M4ULtQ5",
+                "name": "Cross-Enrollment Match — Informational",
+                "color": "grayLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "sel7p5ILJRWVT3bEY",
+                "name": "Same Assignment Resubmission",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel76dkfvPB2FOZ5d",
+                "name": "Different Assignment Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "sel02dtErSMJEzW01",
+                "name": "Different Week Reuse",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selfOxYeS0dzq71oF",
+                "name": "Different Submission Reuse",
+                "color": "greenLight2"
+              },
+              {
+                "id": "selZbIp4YT0d3fubI",
+                "name": "Cross-Type Reuse",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selPlM8flHerCA8OS",
+                "name": "Homework Used for Video Feedback",
+                "color": "orangeLight2"
+              },
+              {
+                "id": "seljiTgSFIEhRkmDE",
+                "name": "Video Feedback Used for Homework",
+                "color": "redLight2"
+              },
+              {
+                "id": "selnW0MqTFAH68A1F",
+                "name": "Missing Context",
+                "color": "pinkLight2"
+              },
+              {
+                "id": "selyZPDX2P2nLudIJ",
+                "name": "Multiple Prior Uses",
+                "color": "purpleLight2"
+              },
+              {
+                "id": "seloUBXdQ3M4ULtQ5",
+                "name": "Cross-Enrollment Match — Informational",
+                "color": "grayLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "flduuIThdtc5q0a12",
+          "name": "Asset Reuse Review Summary",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fldd9Zi6WUBOedtuY",
+          "name": "Asset Reuse Decision",
+          "type": "singleSelect",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "choices": [
+              "Not Reviewed",
+              "Allowed — Legitimate Reuse",
+              "Allowed — Correction/Resubmission",
+              "Confirmed Duplicate",
+              "Unable to Determine",
+              "Resolved — Duplicate Record Error"
+            ],
+            "choicesDetailed": [
+              {
+                "id": "selzPjnNd8ZgWGHJy",
+                "name": "Not Reviewed",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel0ydjgAhKLSVokj",
+                "name": "Allowed — Legitimate Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selUonrXL34W3VBBf",
+                "name": "Allowed — Correction/Resubmission",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selPYKmmWmOhsgnAj",
+                "name": "Confirmed Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "sellQHHgzC6ZZZsFg",
+                "name": "Unable to Determine",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selVOFXUMJvx1PwA9",
+                "name": "Resolved — Duplicate Record Error",
+                "color": "orangeLight2"
+              }
+            ]
+          },
+          "optionsRaw": {
+            "choices": [
+              {
+                "id": "selzPjnNd8ZgWGHJy",
+                "name": "Not Reviewed",
+                "color": "blueLight2"
+              },
+              {
+                "id": "sel0ydjgAhKLSVokj",
+                "name": "Allowed — Legitimate Reuse",
+                "color": "cyanLight2"
+              },
+              {
+                "id": "selUonrXL34W3VBBf",
+                "name": "Allowed — Correction/Resubmission",
+                "color": "tealLight2"
+              },
+              {
+                "id": "selPYKmmWmOhsgnAj",
+                "name": "Confirmed Duplicate",
+                "color": "greenLight2"
+              },
+              {
+                "id": "sellQHHgzC6ZZZsFg",
+                "name": "Unable to Determine",
+                "color": "yellowLight2"
+              },
+              {
+                "id": "selVOFXUMJvx1PwA9",
+                "name": "Resolved — Duplicate Record Error",
+                "color": "orangeLight2"
+              }
+            ]
+          }
+        },
+        {
+          "id": "fld4N90PQqB1wVql1",
+          "name": "Asset Reuse Reviewed At",
+          "type": "dateTime",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          },
+          "optionsRaw": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          }
+        },
+        {
+          "id": "fldYpqMsyo0Dcvg0q",
+          "name": "Asset Reuse Reviewed By",
+          "type": "singleLineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld86lNScdQHsW1Ty",
+          "name": "Asset Reuse Review Notes",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "narrative",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "flde4863uUhkFHphw",
+          "name": "Duplicate Resolution Applied?",
+          "type": "checkbox",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          },
+          "optionsRaw": {
+            "icon": "thumbsUp",
+            "color": "greenBright"
+          }
+        },
+        {
+          "id": "fld83XDosRGiyzQDa",
+          "name": "Duplicate Resolution Applied At",
+          "type": "dateTime",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          },
+          "optionsRaw": {
+            "dateFormat": {
+              "name": "us",
+              "format": "M/D/YYYY"
+            },
+            "timeFormat": {
+              "name": "12hour",
+              "format": "h:mma"
+            },
+            "timeZone": "utc"
+          }
+        },
+        {
+          "id": "fld3DU4tl882h6Nql",
+          "name": "Duplicate Resolution Error",
+          "type": "multilineText",
+          "description": null,
+          "roleGuess": "standard",
+          "isPrimaryField": false,
+          "optionsSummary": {},
+          "optionsRaw": null
+        },
+        {
+          "id": "fld3mKhVv4RMIPBjc",
+          "name": "Duplicate Match Records (All)",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "linkedTableName": "Submission Assets",
+            "inverseLinkFieldId": "fldhk3rFwECkaTLrD",
+            "inverseLinkFieldName": "From field: Duplicate Match Records (All)",
+            "prefersSingleRecordLink": false,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": false,
+            "inverseLinkFieldId": "fldhk3rFwECkaTLrD"
+          }
+        },
+        {
+          "id": "fldhk3rFwECkaTLrD",
+          "name": "From field: Duplicate Match Records (All)",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "roleGuess": "link",
+          "isPrimaryField": false,
+          "optionsSummary": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "linkedTableName": "Submission Assets",
+            "inverseLinkFieldId": "fld3mKhVv4RMIPBjc",
+            "inverseLinkFieldName": "Duplicate Match Records (All)",
+            "prefersSingleRecordLink": false,
+            "isReversed": false
+          },
+          "optionsRaw": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": false,
+            "inverseLinkFieldId": "fld3mKhVv4RMIPBjc"
+          }
+        }
+      ]
+    }
+  ],
+  "links": [
+    {
+      "fromTableId": "tblhMLKxQK77agtME",
+      "fromTable": "Submission Assets",
+      "fromFieldId": "fldsNazvec6r4mxoY",
+      "fromField": "Duplicate Match Record",
+      "toTableId": "tblhMLKxQK77agtME",
+      "toTable": "Submission Assets",
+      "inverseFieldId": "fldEr7Dmv42UjdMlO",
+      "inverseField": "From field: Duplicate Match Record",
+      "prefersSingleRecordLink": true,
+      "isReversed": false,
+      "viewIdForRecordSelection": null
+    },
+    {
+      "fromTableId": "tblhMLKxQK77agtME",
+      "fromTable": "Submission Assets",
+      "fromFieldId": "fldEr7Dmv42UjdMlO",
+      "fromField": "From field: Duplicate Match Record",
+      "toTableId": "tblhMLKxQK77agtME",
+      "toTable": "Submission Assets",
+      "inverseFieldId": "fldsNazvec6r4mxoY",
+      "inverseField": "Duplicate Match Record",
+      "prefersSingleRecordLink": false,
+      "isReversed": false,
+      "viewIdForRecordSelection": null
+    },
+    {
+      "fromTableId": "tblhMLKxQK77agtME",
+      "fromTable": "Submission Assets",
+      "fromFieldId": "fld3mKhVv4RMIPBjc",
+      "fromField": "Duplicate Match Records (All)",
+      "toTableId": "tblhMLKxQK77agtME",
+      "toTable": "Submission Assets",
+      "inverseFieldId": "fldhk3rFwECkaTLrD",
+      "inverseField": "From field: Duplicate Match Records (All)",
+      "prefersSingleRecordLink": false,
+      "isReversed": false,
+      "viewIdForRecordSelection": null
+    },
+    {
+      "fromTableId": "tblhMLKxQK77agtME",
+      "fromTable": "Submission Assets",
+      "fromFieldId": "fldhk3rFwECkaTLrD",
+      "fromField": "From field: Duplicate Match Records (All)",
+      "toTableId": "tblhMLKxQK77agtME",
+      "toTable": "Submission Assets",
+      "inverseFieldId": "fld3mKhVv4RMIPBjc",
+      "inverseField": "Duplicate Match Records (All)",
+      "prefersSingleRecordLink": false,
+      "isReversed": false,
+      "viewIdForRecordSelection": null
+    }
+  ],
+  "dependencies": [
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld3uqsvTrgAImBOh",
+      "field": "Submission Assets Full Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldtqSPrw0ah0fCmW",
+        "fldD4JV3iXYmIQLNG",
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Athlete Full Name",
+        "Asset Type",
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldox2Rjj9YL3EYK6",
+      "field": "Upload Destination",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldw8R6h6DkyEMzFR",
+      "field": "RecordId - Submission Table",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldFwXuLK18jJnT2z",
+      "fieldNameInLinkedTable": "RecordId",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld8pLfrA76vMP5mt",
+      "field": "Homework Completions RID",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldQF8OsfESrHdcUb",
+      "recordLinkFieldName": "Homework Completions",
+      "fieldIdInLinkedTable": "fldKjhzUPSQS9m9wG",
+      "fieldNameInLinkedTable": "Homework Completions RID",
+      "fieldTableInLinkedTable": "Homework Completions",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldVpRxZqGJxlAs6T",
+      "field": "Week",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldA3fpXWckngZ6g1",
+      "fieldNameInLinkedTable": "Week",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldy8UuxWmHT7WFFJ",
+      "field": "Asset Key",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "flddRCbWCegg4WCoZ",
+        "fldhx4nDKuzuWQna6"
+      ],
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Google Drive File ID"
+      ],
+      "dependencySource": "metadata",
+      "formula": "ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldXz9TNOnGeRXEL8",
+      "field": "RecordId",
+      "type": "formula",
+      "dependsOnFieldIds": [],
+      "dependsOnFieldNames": [],
+      "dependencySource": "none",
+      "formula": "RECORD_ID()",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldtl04LTU3FoMmLL",
+      "field": "Writeback Complete?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldPybPEvRcEVuNWl",
+        "fldITNuxNt9xphk7j",
+        "fldqd2ALDtGS6gMqs",
+        "fldxx1m0zTsMfEHfj",
+        "fldvXvURsGG611cSK"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Status",
+        "Google Drive File URL",
+        "Google Drive Folder ID",
+        "Google Drive Folder URL",
+        "Uploaded At"
+      ],
+      "dependencySource": "metadata",
+      "formula": "AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldZiACFdNLECuRRU",
+      "field": "Upload Ready?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldrGt7IsWDUAKfzD",
+        "fldD4JV3iXYmIQLNG",
+        "fldJRSvui8RPg0Vyb"
+      ],
+      "dependsOnFieldNames": [
+        "Airtable Attachment",
+        "Asset Type",
+        "Enrollment - Linked"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld6x0Y5s7V8X5psH",
+      "field": "Last Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldpXNOzRflbkgVwV",
+      "fieldNameInLinkedTable": "Athlete Last Name",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldx2kdvgv9x3MU9A",
+      "field": "First Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fld4wGsfJKp7x4Bjd",
+      "fieldNameInLinkedTable": "Athlete First Name",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldhBiaRmBLydLNrD",
+      "field": "Program Instance - Raw",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "flde31eImaWCUgNPb",
+      "fieldNameInLinkedTable": "Program Instance Name Only",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld7Fbq1VHNTYBqOb",
+      "field": "Program Instance - Convert to File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldhBiaRmBLydLNrD"
+      ],
+      "dependsOnFieldNames": [
+        "Program Instance - Raw"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldu3NYlcZl942oU5",
+      "field": "Date",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldpkkSBsx8kQRZos",
+      "fieldNameInLinkedTable": "Activity Date",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "date",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldxcDBeWXEPV1rnO",
+      "field": "Date - Convert to File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldu3NYlcZl942oU5"
+      ],
+      "dependsOnFieldNames": [
+        "Date"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldzfpPNBX8ZmZ1sp",
+      "field": "Asset Type - Convert for File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldD4JV3iXYmIQLNG"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Type"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldv4Mhw3w84dXdxx",
+      "field": "Google Drive Folder Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6x0Y5s7V8X5psH",
+        "fldx2kdvgv9x3MU9A"
+      ],
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name"
+      ],
+      "dependencySource": "metadata",
+      "formula": "{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldV5480sMm40q0QX",
+      "field": "Create Google Drive File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6x0Y5s7V8X5psH",
+        "fldx2kdvgv9x3MU9A",
+        "fld7Fbq1VHNTYBqOb",
+        "fldox2Rjj9YL3EYK6",
+        "fldiqTrLE7N8gjsxL",
+        "fldALREYJLGbCInMy",
+        "fldzfpPNBX8ZmZ1sp",
+        "fldxcDBeWXEPV1rnO"
+      ],
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name",
+        "Program Instance - Convert to File Name",
+        "Upload Destination",
+        "Homework Name - Slot Correct",
+        "Asset Slot Base",
+        "Asset Type - Convert for File Name",
+        "Date - Convert to File Name"
+      ],
+      "dependencySource": "metadata",
+      "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldtqSPrw0ah0fCmW",
+      "field": "Athlete Full Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldnRDkfubz7p3gi4",
+      "fieldNameInLinkedTable": "Full Athlete Name - Backward",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldPWNhEsXP1KuMUI",
+      "field": "Record Id (from Enrollment - Linked)",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldnsyxEUbrJjyzXU",
+      "fieldNameInLinkedTable": "Record Id",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldALREYJLGbCInMy",
+      "field": "Asset Slot Base",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6higUGAazpTX1e"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Label"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldKDM3fvJsbAnUCR",
+      "field": "Coach Feedback (from Video Feedback)",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+      "recordLinkFieldName": "Video Feedback",
+      "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+      "fieldNameInLinkedTable": "Coach Feedback",
+      "fieldTableInLinkedTable": "Video Feedback",
+      "resultType": "multilineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldnzHLHvSwyUsnQj",
+      "field": "Homework Name 1",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldBuHIpIwxTy60js",
+      "fieldNameInLinkedTable": "Homework Name 1",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldc4VJaLJhaNFKOU",
+      "field": "Homework Name 2",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldnAy8yXTFafhvnu",
+      "fieldNameInLinkedTable": "Homework Name 2",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldDvMkI9llIUmxFi",
+      "field": "HW Sub 1",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldtJS9LW3PAyCaNC",
+      "fieldNameInLinkedTable": "HW Sub 1",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleAttachments",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldahytXWi4YuRD2I",
+      "field": "HW Sub 2",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldUvfAHi3e15Oxb7",
+      "fieldNameInLinkedTable": "HW Sub 2",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleAttachments",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "field": "Ready for Homework Completion Script?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldQF8OsfESrHdcUb",
+        "fldALREYJLGbCInMy",
+        "fld6higUGAazpTX1e",
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Homework Completions",
+        "Asset Slot Base",
+        "Asset Label",
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldFzYi5tKorpDzzm",
+      "field": "Coach Feedback - LKP",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+      "recordLinkFieldName": "Video Feedback",
+      "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+      "fieldNameInLinkedTable": "Coach Feedback",
+      "fieldTableInLinkedTable": "Video Feedback",
+      "resultType": "multilineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldiqTrLE7N8gjsxL",
+      "field": "Homework Name - Slot Correct",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldOwKqDaX2cUxMxf",
+        "fldnzHLHvSwyUsnQj",
+        "fldc4VJaLJhaNFKOU"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Slot",
+        "Homework Name 1",
+        "Homework Name 2"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "field": "Workflow Next Step",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldDJN1RrVyxiKrWu",
+      "field": "Why Not Ready for Make?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld8C43NVQQ1NeQ7Z",
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Send to Make Trigger",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld2pkXIFSlyl2i3J",
+      "field": "Ready for Video Feedback Script?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldG5lWlsUcrDNlIg",
+      "field": "Ready to Send to Make?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fld8pLfrA76vMP5mt",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Homework Completions RID",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldt9uMc6pM717LjQ",
+      "field": "Is True Video Feedback Asset?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "fldCpEiwVOMc8v4Vu",
+        "fldOwKqDaX2cUxMxf"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Asset Purpose",
+        "Asset Slot"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldy8sCt6ttcMeLRD",
+      "field": "Is Homework Upload Asset?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "fldOwKqDaX2cUxMxf"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Asset Slot"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    }
+  ]
+}

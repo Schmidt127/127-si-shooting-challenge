@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-07-10T05:24:27",
+  "scriptVersion": "2.4.0",
+  "baseId": "appTetnuCZlCZdTCT",
+  "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+  "selectedTables": [
+    "Submission Assets"
+  ],
+  "files": {
+    "rawSchema": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\schema_raw_appTetnuCZlCZdTCT_20260710_052425.json",
+    "enhancedSchema": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\schema_enhanced_appTetnuCZlCZdTCT_20260710_052425.json",
+    "dependencies": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\dependencies_appTetnuCZlCZdTCT_20260710_052425.json",
+    "viewsBasicJson": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\views_basic_appTetnuCZlCZdTCT_20260710_052425.json",
+    "viewsDetailedJson": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\views_detailed_appTetnuCZlCZdTCT_20260710_052425.json",
+    "viewsMarkdown": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\views_appTetnuCZlCZdTCT_20260710_052425.md",
+    "baseSummary": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\base_summary_appTetnuCZlCZdTCT_20260710_052425.json",
+    "healthReport": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\export_health_report_appTetnuCZlCZdTCT_20260710_052425.json",
+    "fieldIndex": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\field_index_appTetnuCZlCZdTCT_20260710_052425.json",
+    "invalidFields": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\invalid_fields_appTetnuCZlCZdTCT_20260710_052425.json",
+    "complexFormulas": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\complex_formulas_appTetnuCZlCZdTCT_20260710_052425.json",
+    "schemaMarkdown": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\schema_doc_appTetnuCZlCZdTCT_20260710_052425.md",
+    "mermaidERD": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\schema_erd_appTetnuCZlCZdTCT_20260710_052425.mmd",
+    "workflowCompanion": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify-dev\\workflow_companion_appTetnuCZlCZdTCT_20260710_052425.md"
+  }
+}

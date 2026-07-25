@@ -1,0 +1,639 @@
+# Airtable Schema Snapshot
+
+- Generated: `2026-07-10T05:24:26`
+- Script version: `2.4.0`
+- Base ID: `appTetnuCZlCZdTCT`
+- Base Name: **127SI - SHOOTING CHALLENGE - DEV**
+- Tables exported: **1**
+- Links found: **4**
+- Dependencies found: **35**
+- Basic views exported: **0**
+- Detailed view metadata exported: **0**
+- Health warnings: **8**
+
+## Base Summary
+
+### Hub Tables
+- **Submission Assets** — link degree `8`
+
+## Health Report
+
+- [WARNING] Table 'Submission Assets' has 35 computed fields. | table=`Submission Assets`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'Duplicate Match Record'. | table=`Submission Assets` | field=`Duplicate Match Record`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'From field: Duplicate Match Record'. | table=`Submission Assets` | field=`From field: Duplicate Match Record`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'Duplicate Match Records (All)'. | table=`Submission Assets` | field=`Duplicate Match Records (All)`
+- [WARNING] Self-link detected on 'Submission Assets' via field 'From field: Duplicate Match Records (All)'. | table=`Submission Assets` | field=`From field: Duplicate Match Records (All)`
+- [INFO] Field 'Create Google Drive File Name' depends on many fields (8). | table=`Submission Assets` | field=`Create Google Drive File Name`
+- [INFO] Field 'Ready for Homework Completion Script?' depends on many fields (8). | table=`Submission Assets` | field=`Ready for Homework Completion Script?`
+- [INFO] Field 'Workflow Next Step' depends on many fields (6). | table=`Submission Assets` | field=`Workflow Next Step`
+
+## Linked-record Relationships
+
+- **Submission Assets** → **Submission Assets** via **Duplicate Match Record** (inverse: _From field: Duplicate Match Record_; single?: `True`)
+- **Submission Assets** → **Submission Assets** via **Duplicate Match Records (All)** (inverse: _From field: Duplicate Match Records (All)_; single?: `False`)
+- **Submission Assets** → **Submission Assets** via **From field: Duplicate Match Record** (inverse: _Duplicate Match Record_; single?: `False`)
+- **Submission Assets** → **Submission Assets** via **From field: Duplicate Match Records (All)** (inverse: _Duplicate Match Records (All)_; single?: `False`)
+
+## Table: **Submission Assets**
+
+- id: `tblhMLKxQK77agtME`
+- primary field: **Submission Assets Full Name** (`fld3uqsvTrgAImBOh`)
+- role guess: `operational summary`
+- fields: `95`
+- link fields: `8`
+- computed fields: `35`
+- description: Operational asset table tied to submission records.
+
+Use this table to store files, generated assets, or supporting writeback/output records connected to a Submission and related Enrollment.
+
+This table supports downstream processing and asset management. It should be treated as an operational support table, not as the primary activity-entry table.
+
+### Fields
+
+- **Submission Assets Full Name**
+  - id: `fld3uqsvTrgAImBOh`
+  - type: `formula`
+  - role: `formula`
+  - primary: `True`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldtqSPrw0ah0fCmW","fldD4JV3iXYmIQLNG","fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Athlete Full Name","Asset Type","Asset Purpose"],"formula":"ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}","fieldReferencesById":["fldtqSPrw0ah0fCmW","fldD4JV3iXYmIQLNG","fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Athlete Full Name","Asset Type","Asset Purpose"],"dependencySource":"metadata"}`
+- **Airtable Attachment**
+  - id: `fldrGt7IsWDUAKfzD`
+  - type: `multipleAttachments`
+  - role: `standard`
+  - primary: `False`
+- **Upload Status**
+  - id: `fldPybPEvRcEVuNWl`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending Link","Processing","Uploaded","Error","Ready","No File"],"choicesDetailed":[{"id":"sel1x03bVpyf2dCcO","name":"Pending Link","color":"yellowLight2"},{"id":"sel8Ccid3HKaiUqqp","name":"Processing","color":"yellowLight1"},{"id":"self7yJ6ZRkta6Zcr","name":"Uploaded","color":"yellowLight2"},{"id":"sel6sFF3yc3aYm0ou","name":"Error","color":"redBright"},{"id":"sels844XNbi9Egn4m","name":"Ready","color":"greenBright"},{"id":"selPBWJsxhxNJvCVx","name":"No File","color":"grayDark1"}]}`
+- **Google Drive File URL**
+  - id: `fldITNuxNt9xphk7j`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Video Feedback Focus**
+  - id: `fldFCExyojIkXG0t9`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Shooting","Layups / Finishing","Ball Handling","Free Throws","Footwork / Defense","Strength / Movement","General Basketball","Other"],"choicesDetailed":[{"id":"sel6RErHUELWBbmAH","name":"Shooting","color":"blueLight2"},{"id":"selh8tHpU5mQP4dCL","name":"Layups / Finishing","color":"cyanLight2"},{"id":"selTOLYqfV9xjdmBP","name":"Ball Handling","color":"tealLight2"},{"id":"selGxlYKtW7ZDWWsL","name":"Free Throws","color":"greenLight2"},{"id":"selERE2BUoyeMcJPF","name":"Footwork / Defense","color":"yellowLight2"},{"id":"selc9lXLpJIVY4ClI","name":"Strength / Movement","color":"orangeLight2"},{"id":"selVmFXnnGBLYRRHV","name":"General Basketball","color":"redLight2"},{"id":"selHMCPjNpITIo39X","name":"Other","color":"pinkLight2"}]}`
+- **Asset Sequence**
+  - id: `fldYPCnUe1RQSEzu0`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **Upload Naming Status**
+  - id: `fldj98NjKTnwQOIgz`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Pending Metadata","Ready","Blocked","Error"],"choicesDetailed":[{"id":"seluA51x3tnvSwqxa","name":"Pending Metadata","color":"blueLight2"},{"id":"selZdSgngQJ48Q2lt","name":"Ready","color":"cyanLight2"},{"id":"selPK4E8E8UH9Y8k4","name":"Blocked","color":"tealLight2"},{"id":"selkGqpYsfhty7JLn","name":"Error","color":"greenLight2"}]}`
+- **Canonical File URL**
+  - id: `fldg4HWlkdtxPANz6`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Storage Key**
+  - id: `fldB4X0dqVUf6lplz`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Created**
+  - id: `fldLAxgb6tMzC4lZH`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"client"}`
+- **Submission - Linked**
+  - id: `flddRCbWCegg4WCoZ`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblEVjVpGGlPTsYSt","linkedTableName":"Submissions","inverseLinkFieldId":"fld1kilHu3o3Qtlpv","inverseLinkFieldName":"Submission Assets","prefersSingleRecordLink":true,"isReversed":false}`
+- **Created Time**
+  - id: `fldiEOIvxT5D7gOp4`
+  - type: `createdTime`
+  - role: `audit`
+  - primary: `False`
+  - options summary: `{"resultType":"dateTime","resultOptions":{"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"},"dateFormat":{"name":"local","format":"l"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Upload Destination**
+  - id: `fldox2Rjj9YL3EYK6`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Asset Purpose"],"formula":"SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)","fieldReferencesById":["fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Asset Purpose"],"dependencySource":"metadata"}`
+- **Asset Purpose**
+  - id: `fldCpEiwVOMc8v4Vu`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework 1","Homework 2","Video For Feedback","Registration Headshot","Other"],"choicesDetailed":[{"id":"sel0A6dcJPDDxoUVM","name":"Homework 1","color":"blueBright"},{"id":"selkph4pgX4nZNcAU","name":"Homework 2","color":"blueBright"},{"id":"sell0seEiDj2Pwo7J","name":"Video For Feedback","color":"yellowBright"},{"id":"selbpbvWvqBRbAKXp","name":"Registration Headshot","color":"pinkLight1"},{"id":"sel5onXQEDKiWXx8R","name":"Other","color":"grayDark1"}]}`
+- **Asset Slot**
+  - id: `fldOwKqDaX2cUxMxf`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["HW1","HW2","VIDEO","VIDEO-1","VIDEO-2","VIDEO-3","VIDEO-4"],"choicesDetailed":[{"id":"selkpXbhgjj36eRG1","name":"HW1","color":"blueLight2"},{"id":"selPvXj5ocu5hKQHo","name":"HW2","color":"cyanLight2"},{"id":"selrSotaThLGLXQAX","name":"VIDEO","color":"tealLight2"},{"id":"selpvXQwiwX3GsitN","name":"VIDEO-1","color":"greenLight2"},{"id":"sel3MMFA1oXCvLH7h","name":"VIDEO-2","color":"yellowLight2"},{"id":"selwmjt07gzBLKq2r","name":"VIDEO-3","color":"orangeLight2"},{"id":"sel3IeSZ0U5UZe4RS","name":"VIDEO-4","color":"redLight2"}]}`
+- **RecordId - Submission Table**
+  - id: `fldw8R6h6DkyEMzFR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldFwXuLK18jJnT2z","fieldNameInLinkedTable":"RecordId","fieldTableInLinkedTable":"Submissions"}`
+- **Homework Completions**
+  - id: `fldQF8OsfESrHdcUb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblv58ppTFDBXb3nv","linkedTableName":"Homework Completions","inverseLinkFieldId":"fldKy5hltmJc6A8Jx","inverseLinkFieldName":"Submission Assets","prefersSingleRecordLink":false,"isReversed":false}`
+- **Video Feedback**
+  - id: `fldxapOLpLH4KaXOb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblOV6pJDxQFBSQ3q","linkedTableName":"Video Feedback","inverseLinkFieldId":"fld9laOK9yRAxgsph","inverseLinkFieldName":"Submission Asset","prefersSingleRecordLink":false,"isReversed":false}`
+- **Homework Completions RID**
+  - id: `fld8pLfrA76vMP5mt`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldQF8OsfESrHdcUb","recordLinkFieldName":"Homework Completions","fieldIdInLinkedTable":"fldKjhzUPSQS9m9wG","fieldNameInLinkedTable":"Homework Completions RID","fieldTableInLinkedTable":"Homework Completions"}`
+- **Week**
+  - id: `fldVpRxZqGJxlAs6T`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldA3fpXWckngZ6g1","fieldNameInLinkedTable":"Week","fieldTableInLinkedTable":"Submissions"}`
+- **Asset Key**
+  - id: `fldy8UuxWmHT7WFFJ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddRCbWCegg4WCoZ","fldhx4nDKuzuWQna6"],"referencedFieldNames":["Submission - Linked","Google Drive File ID"],"formula":"ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}","fieldReferencesById":["flddRCbWCegg4WCoZ","fldhx4nDKuzuWQna6"],"fieldReferencesByName":["Submission - Linked","Google Drive File ID"],"dependencySource":"metadata"}`
+- **RecordId**
+  - id: `fldXz9TNOnGeRXEL8`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","formula":"RECORD_ID()","dependencySource":"none"}`
+- **Enrollment - Linked**
+  - id: `fldJRSvui8RPg0Vyb`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tbl3PFmwbRoabu1YV","linkedTableName":"Enrollments","inverseLinkFieldId":"fldLxLveNnVN93pia","inverseLinkFieldName":"Submission Assets - Enrollment","prefersSingleRecordLink":true,"isReversed":false}`
+- **Asset Label**
+  - id: `fld6higUGAazpTX1e`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Original File Name**
+  - id: `fldS0DINXc5YSHYRO`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Type**
+  - id: `fldD4JV3iXYmIQLNG`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Homework PDF","Homework Image","Homework Document","Video Feedback","Submission Photo","Submission Video","Athlete Headshot","Other"],"choicesDetailed":[{"id":"selPeMcYVFuvjpFgN","name":"Homework PDF","color":"blueLight2"},{"id":"selUp9Pa4w8i25kVc","name":"Homework Image","color":"cyanLight2"},{"id":"selA08ztoDWA2T3Pr","name":"Homework Document","color":"tealLight2"},{"id":"selkZpTQhawYIY5ty","name":"Video Feedback","color":"greenLight2"},{"id":"selqIMUBKVHIt2jol","name":"Submission Photo","color":"yellowLight2"},{"id":"selW8qj6LPyiGf9CG","name":"Submission Video","color":"orangeLight2"},{"id":"selBw6uXPOaUGAbWY","name":"Athlete Headshot","color":"redLight2"},{"id":"seloYeOdYp4iF2r5w","name":"Other","color":"pinkLight2"}]}`
+- **Uploaded At**
+  - id: `fldvXvURsGG611cSK`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"America/Denver"}`
+- **Writeback Complete?**
+  - id: `fldtl04LTU3FoMmLL`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldPybPEvRcEVuNWl","fldITNuxNt9xphk7j","fldqd2ALDtGS6gMqs","fldxx1m0zTsMfEHfj","fldvXvURsGG611cSK"],"referencedFieldNames":["Upload Status","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Uploaded At"],"formula":"AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)","fieldReferencesById":["fldPybPEvRcEVuNWl","fldITNuxNt9xphk7j","fldqd2ALDtGS6gMqs","fldxx1m0zTsMfEHfj","fldvXvURsGG611cSK"],"fieldReferencesByName":["Upload Status","Google Drive File URL","Google Drive Folder ID","Google Drive Folder URL","Uploaded At"],"dependencySource":"metadata"}`
+- **Upload Ready?**
+  - id: `fldZiACFdNLECuRRU`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldrGt7IsWDUAKfzD","fldD4JV3iXYmIQLNG","fldJRSvui8RPg0Vyb"],"referencedFieldNames":["Airtable Attachment","Asset Type","Enrollment - Linked"],"formula":"IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldrGt7IsWDUAKfzD","fldD4JV3iXYmIQLNG","fldJRSvui8RPg0Vyb"],"fieldReferencesByName":["Airtable Attachment","Asset Type","Enrollment - Linked"],"dependencySource":"metadata"}`
+- **Source Attachment ID**
+  - id: `fld7imlYToTHK6sZA`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Last Name**
+  - id: `fld6x0Y5s7V8X5psH`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldpXNOzRflbkgVwV","fieldNameInLinkedTable":"Athlete Last Name","fieldTableInLinkedTable":"Enrollments"}`
+- **First Name**
+  - id: `fldx2kdvgv9x3MU9A`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fld4wGsfJKp7x4Bjd","fieldNameInLinkedTable":"Athlete First Name","fieldTableInLinkedTable":"Enrollments"}`
+- **Program Instance - Raw**
+  - id: `fldhBiaRmBLydLNrD`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"flde31eImaWCUgNPb","fieldNameInLinkedTable":"Program Instance Name Only","fieldTableInLinkedTable":"Enrollments"}`
+- **Program Instance - Convert to File Name**
+  - id: `fld7Fbq1VHNTYBqOb`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Converts the Program Instance value to CamelCase with no spaces.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldhBiaRmBLydLNrD"],"referencedFieldNames":["Program Instance - Raw"],"formula":"IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldhBiaRmBLydLNrD"],"fieldReferencesByName":["Program Instance - Raw"],"dependencySource":"metadata"}`
+- **Date**
+  - id: `fldu3NYlcZl942oU5`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"date","resultOptions":{"dateFormat":{"name":"local","format":"l"}},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldpkkSBsx8kQRZos","fieldNameInLinkedTable":"Activity Date","fieldTableInLinkedTable":"Submissions"}`
+- **Date - Convert to File Name**
+  - id: `fldxcDBeWXEPV1rnO`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldu3NYlcZl942oU5"],"referencedFieldNames":["Date"],"formula":"IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldu3NYlcZl942oU5"],"fieldReferencesByName":["Date"],"dependencySource":"metadata"}`
+- **Asset Type - Convert for File Name**
+  - id: `fldzfpPNBX8ZmZ1sp`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldD4JV3iXYmIQLNG"],"referencedFieldNames":["Asset Type"],"formula":"IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)","fieldReferencesById":["fldD4JV3iXYmIQLNG"],"fieldReferencesByName":["Asset Type"],"dependencySource":"metadata"}`
+- **Google Drive Folder Name**
+  - id: `fldv4Mhw3w84dXdxx`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A"],"referencedFieldNames":["Last Name","First Name"],"formula":"{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}","fieldReferencesById":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A"],"fieldReferencesByName":["Last Name","First Name"],"dependencySource":"metadata"}`
+- **Create Google Drive File Name**
+  - id: `fldV5480sMm40q0QX`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A","fld7Fbq1VHNTYBqOb","fldox2Rjj9YL3EYK6","fldiqTrLE7N8gjsxL","fldALREYJLGbCInMy","fldzfpPNBX8ZmZ1sp","fldxcDBeWXEPV1rnO"],"referencedFieldNames":["Last Name","First Name","Program Instance - Convert to File Name","Upload Destination","Homework Name - Slot Correct","Asset Slot Base","Asset Type - Convert for File Name","Date - Convert to File Name"],"formula":"{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)","fieldReferencesById":["fld6x0Y5s7V8X5psH","fldx2kdvgv9x3MU9A","fld7Fbq1VHNTYBqOb","fldox2Rjj9YL3EYK6","fldiqTrLE7N8gjsxL","fldALREYJLGbCInMy","fldzfpPNBX8ZmZ1sp","fldxcDBeWXEPV1rnO"],"fieldReferencesByName":["Last Name","First Name","Program Instance - Convert to File Name","Upload Destination","Homework Name - Slot Correct","Asset Slot Base","Asset Type - Convert for File Name","Date - Convert to File Name"],"dependencySource":"metadata"}`
+- **Google Drive Folder ID**
+  - id: `fldqd2ALDtGS6gMqs`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Athlete Full Name**
+  - id: `fldtqSPrw0ah0fCmW`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldnRDkfubz7p3gi4","fieldNameInLinkedTable":"Full Athlete Name - Backward","fieldTableInLinkedTable":"Enrollments"}`
+- **Record Id (from Enrollment - Linked)**
+  - id: `fldPWNhEsXP1KuMUI`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","recordLinkFieldId":"fldJRSvui8RPg0Vyb","recordLinkFieldName":"Enrollment - Linked","fieldIdInLinkedTable":"fldnsyxEUbrJjyzXU","fieldNameInLinkedTable":"Record Id","fieldTableInLinkedTable":"Enrollments"}`
+- **XP Events**
+  - id: `fldwOklyDaW3nN2Kz`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Review Complete?**
+  - id: `fldpCKmuKiloOSsvd`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Asset Slot Base**
+  - id: `fldALREYJLGbCInMy`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld6higUGAazpTX1e"],"referencedFieldNames":["Asset Label"],"formula":"IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)","fieldReferencesById":["fld6higUGAazpTX1e"],"fieldReferencesByName":["Asset Label"],"dependencySource":"metadata"}`
+- **DELETE POSSIBLY - Homework Completion Record ID**
+  - id: `fldxORUyJ7uvEgw9h`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Upload Error**
+  - id: `fldAkpl3cuzgz1jLP`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Coach Feedback (from Video Feedback)**
+  - id: `fldKDM3fvJsbAnUCR`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldxapOLpLH4KaXOb","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldyXVwvXuk1SYnpg","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Video Feedback"}`
+- **XP Events copy**
+  - id: `fld5Emwipb3UjAMz9`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Homework Name 1**
+  - id: `fldnzHLHvSwyUsnQj`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldBuHIpIwxTy60js","fieldNameInLinkedTable":"Homework Name 1","fieldTableInLinkedTable":"Submissions"}`
+- **Homework Name 2**
+  - id: `fldc4VJaLJhaNFKOU`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleRecordLinks","resultOptions":{"isReversed":false,"prefersSingleRecordLink":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldnAy8yXTFafhvnu","fieldNameInLinkedTable":"Homework Name 2","fieldTableInLinkedTable":"Submissions"}`
+- **HW Sub 1**
+  - id: `fldDvMkI9llIUmxFi`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleAttachments","resultOptions":{"isReversed":false},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldtJS9LW3PAyCaNC","fieldNameInLinkedTable":"HW Sub 1","fieldTableInLinkedTable":"Submissions"}`
+- **HW Sub 2**
+  - id: `fldahytXWi4YuRD2I`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multipleAttachments","resultOptions":{"isReversed":true},"recordLinkFieldId":"flddRCbWCegg4WCoZ","recordLinkFieldName":"Submission - Linked","fieldIdInLinkedTable":"fldUvfAHi3e15Oxb7","fieldNameInLinkedTable":"HW Sub 2","fieldTableInLinkedTable":"Submissions"}`
+- **Ready for Homework Completion Script?**
+  - id: `fldYICCdWQ5xVcSk5`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldQF8OsfESrHdcUb","fldALREYJLGbCInMy","fld6higUGAazpTX1e","fldCpEiwVOMc8v4Vu"],"referencedFieldNames":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Homework Completions","Asset Slot Base","Asset Label","Asset Purpose"],"formula":"IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldQF8OsfESrHdcUb","fldALREYJLGbCInMy","fld6higUGAazpTX1e","fldCpEiwVOMc8v4Vu"],"fieldReferencesByName":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Homework Completions","Asset Slot Base","Asset Label","Asset Purpose"],"dependencySource":"metadata"}`
+- **Coach Feedback - LKP**
+  - id: `fldFzYi5tKorpDzzm`
+  - type: `multipleLookupValues`
+  - role: `lookup`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"multilineText","recordLinkFieldId":"fldxapOLpLH4KaXOb","recordLinkFieldName":"Video Feedback","fieldIdInLinkedTable":"fldyXVwvXuk1SYnpg","fieldNameInLinkedTable":"Coach Feedback","fieldTableInLinkedTable":"Video Feedback"}`
+- **Homework Name - Slot Correct**
+  - id: `fldiqTrLE7N8gjsxL`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldOwKqDaX2cUxMxf","fldnzHLHvSwyUsnQj","fldc4VJaLJhaNFKOU"],"referencedFieldNames":["Asset Slot","Homework Name 1","Homework Name 2"],"formula":"IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)","fieldReferencesById":["fldOwKqDaX2cUxMxf","fldnzHLHvSwyUsnQj","fldc4VJaLJhaNFKOU"],"fieldReferencesByName":["Asset Slot","Homework Name 1","Homework Name 2"],"dependencySource":"metadata"}`
+- **Workflow Next Step**
+  - id: `fldQDDzBS62Ow765c`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Submission - Linked","Enrollment - Linked","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"formula":"IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))","fieldReferencesById":["flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Submission - Linked","Enrollment - Linked","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"dependencySource":"metadata"}`
+- **Why Not Ready for Make?**
+  - id: `fldDJN1RrVyxiKrWu`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fld8C43NVQQ1NeQ7Z","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Send to Make Trigger","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"formula":"IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fld8C43NVQQ1NeQ7Z","fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Send to Make Trigger","Airtable Attachment","Upload Destination","Homework Completions","Video Feedback"],"dependencySource":"metadata"}`
+- **Ready for Video Feedback Script?**
+  - id: `fld2pkXIFSlyl2i3J`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Video Feedback"],"formula":"IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","flddRCbWCegg4WCoZ","fldJRSvui8RPg0Vyb","fldrGt7IsWDUAKfzD","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Upload Destination","Submission - Linked","Enrollment - Linked","Airtable Attachment","Video Feedback"],"dependencySource":"metadata"}`
+- **Ready to Send to Make?**
+  - id: `fldG5lWlsUcrDNlIg`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - desc: Checks if all required fields are present for sending to Make, using correct field names.
+  - options summary: `{"isValid":true,"resultType":"singleLineText","referencedFieldIds":["fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fld8pLfrA76vMP5mt","fldxapOLpLH4KaXOb"],"referencedFieldNames":["Airtable Attachment","Upload Destination","Homework Completions","Homework Completions RID","Video Feedback"],"formula":"IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)","fieldReferencesById":["fldrGt7IsWDUAKfzD","fldox2Rjj9YL3EYK6","fldQF8OsfESrHdcUb","fld8pLfrA76vMP5mt","fldxapOLpLH4KaXOb"],"fieldReferencesByName":["Airtable Attachment","Upload Destination","Homework Completions","Homework Completions RID","Video Feedback"],"dependencySource":"metadata"}`
+- **Send to Make Trigger**
+  - id: `fld8C43NVQQ1NeQ7Z`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"check","color":"greenBright"}`
+- **Google Drive Folder URL**
+  - id: `fldxx1m0zTsMfEHfj`
+  - type: `url`
+  - role: `standard`
+  - primary: `False`
+- **Google Drive File ID**
+  - id: `fldhx4nDKuzuWQna6`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **File Content Hash**
+  - id: `fldMtYyiPhVWbQk6M`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **File Hash Algorithm**
+  - id: `fld2TBSzNI6bSkKZD`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["SHA-256"],"choicesDetailed":[{"id":"selxI3YFwVUmNJc1U","name":"SHA-256","color":"blueLight2"}]}`
+- **File Size Bytes**
+  - id: `fldYbWjb8YI5BBIjr`
+  - type: `number`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"precision":0}`
+- **File MIME Type**
+  - id: `fldm34cEAadeJRatz`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **File is Duplicate?**
+  - id: `fldtE66EBZwDHewbl`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Duplicate File Status**
+  - id: `fldQTwrLKa5YNTELl`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Checked","Unique","Exact Duplicate","Possible Duplicate","Allowed Reuse","Needs Review","Error"],"choicesDetailed":[{"id":"sel2DxKYf4UWNS7fy","name":"Not Checked","color":"blueLight2"},{"id":"selWEKp7RhN5kCJrP","name":"Unique","color":"cyanLight2"},{"id":"selN2e0gMWSKwSrSg","name":"Exact Duplicate","color":"tealLight2"},{"id":"sellTSlTid17ZJRr9","name":"Possible Duplicate","color":"greenLight2"},{"id":"selTNS8sml7RvvAaY","name":"Allowed Reuse","color":"yellowLight2"},{"id":"selYJd9sn8614ZkEP","name":"Needs Review","color":"orangeLight2"},{"id":"sel3TDdVxM5RYvCfR","name":"Error","color":"redLight2"}]}`
+- **Duplicate Match Strength**
+  - id: `fld1gOJTK0e3G8ulG`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Exact SHA-256 Hash","Same Source Attachment ID","Same Size and Filename","Filename Only Weak Match","Manual Review"],"choicesDetailed":[{"id":"sel0B2WBzj2Y0v6sb","name":"Exact SHA-256 Hash","color":"blueLight2"},{"id":"sel51oRjkLtzpz5KY","name":"Same Source Attachment ID","color":"cyanLight2"},{"id":"selYFSTc329ovisf8","name":"Same Size and Filename","color":"tealLight2"},{"id":"sel9SeIW7LXkHVKbP","name":"Filename Only Weak Match","color":"greenLight2"},{"id":"selrwl3ctTYtbEitg","name":"Manual Review","color":"yellowLight2"}]}`
+- **Duplicate Match Notes**
+  - id: `fldVkOPvB74HbFliP`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Duplicate Checked At**
+  - id: `fld2DtlvzpaC4gXr5`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Duplicate Check Error**
+  - id: `fld0mZJBFxJ3c0rbK`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Duplicate Review Status**
+  - id: `fld8C1Wfr0BCKNxpK`
+  - type: `singleSelect`
+  - role: `status`
+  - primary: `False`
+  - options summary: `{"choices":["Not Reviewed","Needs Review","Confirmed Duplicate","Not Duplicate","Allowed Reuse"],"choicesDetailed":[{"id":"selKIa7mo259kGL5T","name":"Not Reviewed","color":"blueLight2"},{"id":"selL5H79F06PWwJdE","name":"Needs Review","color":"cyanLight2"},{"id":"sel8WCSv1ZR90xFaa","name":"Confirmed Duplicate","color":"tealLight2"},{"id":"selnqtEtYv6DNOc2P","name":"Not Duplicate","color":"greenLight2"},{"id":"selOrXHL7JjuLNyXk","name":"Allowed Reuse","color":"yellowLight2"}]}`
+- **Duplicate Match Record**
+  - id: `fldsNazvec6r4mxoY`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldEr7Dmv42UjdMlO","inverseLinkFieldName":"From field: Duplicate Match Record","prefersSingleRecordLink":true,"isReversed":false}`
+- **Is True Video Feedback Asset?**
+  - id: `fldt9uMc6pM717LjQ`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","fldCpEiwVOMc8v4Vu","fldOwKqDaX2cUxMxf"],"referencedFieldNames":["Upload Destination","Asset Purpose","Asset Slot"],"formula":"IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","fldCpEiwVOMc8v4Vu","fldOwKqDaX2cUxMxf"],"fieldReferencesByName":["Upload Destination","Asset Purpose","Asset Slot"],"dependencySource":"metadata"}`
+- **Is Homework Upload Asset?**
+  - id: `fldy8sCt6ttcMeLRD`
+  - type: `formula`
+  - role: `formula`
+  - primary: `False`
+  - options summary: `{"isValid":true,"resultType":"number","resultOptions":{"precision":0},"referencedFieldIds":["fldox2Rjj9YL3EYK6","fldOwKqDaX2cUxMxf"],"referencedFieldNames":["Upload Destination","Asset Slot"],"formula":"IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)","fieldReferencesById":["fldox2Rjj9YL3EYK6","fldOwKqDaX2cUxMxf"],"fieldReferencesByName":["Upload Destination","Asset Slot"],"dependencySource":"metadata"}`
+- **From field: Duplicate Match Record**
+  - id: `fldEr7Dmv42UjdMlO`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldsNazvec6r4mxoY","inverseLinkFieldName":"Duplicate Match Record","prefersSingleRecordLink":false,"isReversed":false}`
+- **Exact Hash Match Found?**
+  - id: `fldVvlCSTDPMYKI2n`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Same Enrollment Match Found?**
+  - id: `fldoAF3gUaBAzPVRI`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Upload Claim Run ID**
+  - id: `fldLMzAxwd9AffgbJ`
+  - type: `singleLineText`
+  - role: `identifier`
+  - primary: `False`
+- **Processing Started At**
+  - id: `fldSlCe9nuGvymdvQ`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Potential Asset Reuse?**
+  - id: `fldNjXKr8jaUXAEKR`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Asset Reuse Review Primary Reason**
+  - id: `fld5RMMPKIIxYoI1L`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Same Assignment Resubmission","Different Assignment Reuse","Different Week Reuse","Different Submission Reuse","Cross-Type Reuse","Homework Used for Video Feedback","Video Feedback Used for Homework","Missing Context","Multiple Prior Uses","Cross-Enrollment Match — Informational"],"choicesDetailed":[{"id":"sel1akVyEwrhjF3KN","name":"Same Assignment Resubmission","color":"blueLight2"},{"id":"selz3ekRlCdDlHooO","name":"Different Assignment Reuse","color":"cyanLight2"},{"id":"selCiomapDu0NdAQB","name":"Different Week Reuse","color":"tealLight2"},{"id":"selrtkAPh3KzkKISr","name":"Different Submission Reuse","color":"greenLight2"},{"id":"selSQ71wsZIcFQwyR","name":"Cross-Type Reuse","color":"yellowLight2"},{"id":"selqaWmP8vx6iWtDb","name":"Homework Used for Video Feedback","color":"orangeLight2"},{"id":"sel1mFkmM3MMAPBTK","name":"Video Feedback Used for Homework","color":"redLight2"},{"id":"selDFE43P3t5bzrwB","name":"Missing Context","color":"pinkLight2"},{"id":"selVYRuZfUbXgUr9p","name":"Multiple Prior Uses","color":"purpleLight2"},{"id":"sel5f4tq9gY57avjT","name":"Cross-Enrollment Match — Informational","color":"grayLight2"}]}`
+- **Asset Reuse Review Reasons**
+  - id: `fldIRI7T1rY5R9mdg`
+  - type: `multipleSelects`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Same Assignment Resubmission","Different Assignment Reuse","Different Week Reuse","Different Submission Reuse","Cross-Type Reuse","Homework Used for Video Feedback","Video Feedback Used for Homework","Missing Context","Multiple Prior Uses","Cross-Enrollment Match — Informational"],"choicesDetailed":[{"id":"sel7p5ILJRWVT3bEY","name":"Same Assignment Resubmission","color":"blueLight2"},{"id":"sel76dkfvPB2FOZ5d","name":"Different Assignment Reuse","color":"cyanLight2"},{"id":"sel02dtErSMJEzW01","name":"Different Week Reuse","color":"tealLight2"},{"id":"selfOxYeS0dzq71oF","name":"Different Submission Reuse","color":"greenLight2"},{"id":"selZbIp4YT0d3fubI","name":"Cross-Type Reuse","color":"yellowLight2"},{"id":"selPlM8flHerCA8OS","name":"Homework Used for Video Feedback","color":"orangeLight2"},{"id":"seljiTgSFIEhRkmDE","name":"Video Feedback Used for Homework","color":"redLight2"},{"id":"selnW0MqTFAH68A1F","name":"Missing Context","color":"pinkLight2"},{"id":"selyZPDX2P2nLudIJ","name":"Multiple Prior Uses","color":"purpleLight2"},{"id":"seloUBXdQ3M4ULtQ5","name":"Cross-Enrollment Match — Informational","color":"grayLight2"}]}`
+- **Asset Reuse Review Summary**
+  - id: `flduuIThdtc5q0a12`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Reuse Decision**
+  - id: `fldd9Zi6WUBOedtuY`
+  - type: `singleSelect`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"choices":["Not Reviewed","Allowed — Legitimate Reuse","Allowed — Correction/Resubmission","Confirmed Duplicate","Unable to Determine","Resolved — Duplicate Record Error"],"choicesDetailed":[{"id":"selzPjnNd8ZgWGHJy","name":"Not Reviewed","color":"blueLight2"},{"id":"sel0ydjgAhKLSVokj","name":"Allowed — Legitimate Reuse","color":"cyanLight2"},{"id":"selUonrXL34W3VBBf","name":"Allowed — Correction/Resubmission","color":"tealLight2"},{"id":"selPYKmmWmOhsgnAj","name":"Confirmed Duplicate","color":"greenLight2"},{"id":"sellQHHgzC6ZZZsFg","name":"Unable to Determine","color":"yellowLight2"},{"id":"selVOFXUMJvx1PwA9","name":"Resolved — Duplicate Record Error","color":"orangeLight2"}]}`
+- **Asset Reuse Reviewed At**
+  - id: `fld4N90PQqB1wVql1`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Asset Reuse Reviewed By**
+  - id: `fldYpqMsyo0Dcvg0q`
+  - type: `singleLineText`
+  - role: `standard`
+  - primary: `False`
+- **Asset Reuse Review Notes**
+  - id: `fld86lNScdQHsW1Ty`
+  - type: `multilineText`
+  - role: `narrative`
+  - primary: `False`
+- **Duplicate Resolution Applied?**
+  - id: `flde4863uUhkFHphw`
+  - type: `checkbox`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"icon":"thumbsUp","color":"greenBright"}`
+- **Duplicate Resolution Applied At**
+  - id: `fld83XDosRGiyzQDa`
+  - type: `dateTime`
+  - role: `standard`
+  - primary: `False`
+  - options summary: `{"dateFormat":{"name":"us","format":"M/D/YYYY"},"timeFormat":{"name":"12hour","format":"h:mma"},"timeZone":"utc"}`
+- **Duplicate Resolution Error**
+  - id: `fld3DU4tl882h6Nql`
+  - type: `multilineText`
+  - role: `standard`
+  - primary: `False`
+- **Duplicate Match Records (All)**
+  - id: `fld3mKhVv4RMIPBjc`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fldhk3rFwECkaTLrD","inverseLinkFieldName":"From field: Duplicate Match Records (All)","prefersSingleRecordLink":false,"isReversed":false}`
+- **From field: Duplicate Match Records (All)**
+  - id: `fldhk3rFwECkaTLrD`
+  - type: `multipleRecordLinks`
+  - role: `link`
+  - primary: `False`
+  - options summary: `{"linkedTableId":"tblhMLKxQK77agtME","linkedTableName":"Submission Assets","inverseLinkFieldId":"fld3mKhVv4RMIPBjc","inverseLinkFieldName":"Duplicate Match Records (All)","prefersSingleRecordLink":false,"isReversed":false}`
+
+## Dependencies
+
+- **Submission Assets** → **Submission Assets Full Name** (`formula`) depends on: `Athlete Full Name`, `Asset Type`, `Asset Purpose`
+- **Submission Assets** → **Upload Destination** (`formula`) depends on: `Asset Purpose`
+- **Submission Assets** → **RecordId - Submission Table** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`RecordId`
+- **Submission Assets** → **Homework Completions RID** (`multipleLookupValues`) uses recordLinkField=`Homework Completions`, linkedField=`Homework Completions RID`
+- **Submission Assets** → **Week** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Week`
+- **Submission Assets** → **Asset Key** (`formula`) depends on: `Submission - Linked`, `Google Drive File ID`
+- **Submission Assets** → **RecordId** (`formula`)
+- **Submission Assets** → **Writeback Complete?** (`formula`) depends on: `Upload Status`, `Google Drive File URL`, `Google Drive Folder ID`, `Google Drive Folder URL`, `Uploaded At`
+- **Submission Assets** → **Upload Ready?** (`formula`) depends on: `Airtable Attachment`, `Asset Type`, `Enrollment - Linked`
+- **Submission Assets** → **Last Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Athlete Last Name`
+- **Submission Assets** → **First Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Athlete First Name`
+- **Submission Assets** → **Program Instance - Raw** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Program Instance Name Only`
+- **Submission Assets** → **Program Instance - Convert to File Name** (`formula`) depends on: `Program Instance - Raw`
+- **Submission Assets** → **Date** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Activity Date`
+- **Submission Assets** → **Date - Convert to File Name** (`formula`) depends on: `Date`
+- **Submission Assets** → **Asset Type - Convert for File Name** (`formula`) depends on: `Asset Type`
+- **Submission Assets** → **Google Drive Folder Name** (`formula`) depends on: `Last Name`, `First Name`
+- **Submission Assets** → **Create Google Drive File Name** (`formula`) depends on: `Last Name`, `First Name`, `Program Instance - Convert to File Name`, `Upload Destination`, `Homework Name - Slot Correct`, `Asset Slot Base`, `Asset Type - Convert for File Name`, `Date - Convert to File Name`
+- **Submission Assets** → **Athlete Full Name** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Full Athlete Name - Backward`
+- **Submission Assets** → **Record Id (from Enrollment - Linked)** (`multipleLookupValues`) uses recordLinkField=`Enrollment - Linked`, linkedField=`Record Id`
+- **Submission Assets** → **Asset Slot Base** (`formula`) depends on: `Asset Label`
+- **Submission Assets** → **Coach Feedback (from Video Feedback)** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Coach Feedback`
+- **Submission Assets** → **Homework Name 1** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Homework Name 1`
+- **Submission Assets** → **Homework Name 2** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`Homework Name 2`
+- **Submission Assets** → **HW Sub 1** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`HW Sub 1`
+- **Submission Assets** → **HW Sub 2** (`multipleLookupValues`) uses recordLinkField=`Submission - Linked`, linkedField=`HW Sub 2`
+- **Submission Assets** → **Ready for Homework Completion Script?** (`formula`) depends on: `Upload Destination`, `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Homework Completions`, `Asset Slot Base`, `Asset Label`, `Asset Purpose`
+- **Submission Assets** → **Coach Feedback - LKP** (`multipleLookupValues`) uses recordLinkField=`Video Feedback`, linkedField=`Coach Feedback`
+- **Submission Assets** → **Homework Name - Slot Correct** (`formula`) depends on: `Asset Slot`, `Homework Name 1`, `Homework Name 2`
+- **Submission Assets** → **Workflow Next Step** (`formula`) depends on: `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Video Feedback`
+- **Submission Assets** → **Why Not Ready for Make?** (`formula`) depends on: `Send to Make Trigger`, `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Video Feedback`
+- **Submission Assets** → **Ready for Video Feedback Script?** (`formula`) depends on: `Upload Destination`, `Submission - Linked`, `Enrollment - Linked`, `Airtable Attachment`, `Video Feedback`
+- **Submission Assets** → **Ready to Send to Make?** (`formula`) depends on: `Airtable Attachment`, `Upload Destination`, `Homework Completions`, `Homework Completions RID`, `Video Feedback`
+- **Submission Assets** → **Is True Video Feedback Asset?** (`formula`) depends on: `Upload Destination`, `Asset Purpose`, `Asset Slot`
+- **Submission Assets** → **Is Homework Upload Asset?** (`formula`) depends on: `Upload Destination`, `Asset Slot`

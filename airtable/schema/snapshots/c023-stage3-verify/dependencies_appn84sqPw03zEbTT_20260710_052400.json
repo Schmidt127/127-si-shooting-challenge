@@ -1,0 +1,654 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-10T05:24:01",
+    "baseId": "appn84sqPw03zEbTT",
+    "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+    "selectedTables": [
+      "Submission Assets"
+    ],
+    "tableCount": 1,
+    "linkCount": 2,
+    "dependencyCount": 35
+  },
+  "dependencies": [
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld3uqsvTrgAImBOh",
+      "field": "Submission Assets Full Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldtqSPrw0ah0fCmW",
+        "fldD4JV3iXYmIQLNG",
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Athlete Full Name",
+        "Asset Type",
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "ARRAYJOIN({fldtqSPrw0ah0fCmW}) & \" - \" & {fldD4JV3iXYmIQLNG} & \" - \" & {fldCpEiwVOMc8v4Vu}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldox2Rjj9YL3EYK6",
+      "field": "Upload Destination",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldALREYJLGbCInMy",
+      "field": "Asset Slot Base",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6higUGAazpTX1e"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Label"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  FIND(\"-\", {fld6higUGAazpTX1e}),\r\n  LEFT({fld6higUGAazpTX1e}, FIND(\"-\", {fld6higUGAazpTX1e}) - 1),\r\n  {fld6higUGAazpTX1e}\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld8pLfrA76vMP5mt",
+      "field": "Homework Completions RID",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldQF8OsfESrHdcUb",
+      "recordLinkFieldName": "Homework Completions",
+      "fieldIdInLinkedTable": "fldKjhzUPSQS9m9wG",
+      "fieldNameInLinkedTable": "Homework Completions RID",
+      "fieldTableInLinkedTable": "Homework Completions",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "field": "Ready for Homework Completion Script?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldQF8OsfESrHdcUb",
+        "fldALREYJLGbCInMy",
+        "fld6higUGAazpTX1e",
+        "fldCpEiwVOMc8v4Vu"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Homework Completions",
+        "Asset Slot Base",
+        "Asset Label",
+        "Asset Purpose"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldVpRxZqGJxlAs6T",
+      "field": "Week",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldA3fpXWckngZ6g1",
+      "fieldNameInLinkedTable": "Week",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldy8UuxWmHT7WFFJ",
+      "field": "Asset Key",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "flddRCbWCegg4WCoZ",
+        "fldhx4nDKuzuWQna6"
+      ],
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Google Drive File ID"
+      ],
+      "dependencySource": "metadata",
+      "formula": "ARRAYJOIN({flddRCbWCegg4WCoZ}) & \"|\" & {fldhx4nDKuzuWQna6}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldXz9TNOnGeRXEL8",
+      "field": "RecordId",
+      "type": "formula",
+      "dependsOnFieldIds": [],
+      "dependsOnFieldNames": [],
+      "dependencySource": "none",
+      "formula": "RECORD_ID()",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldtl04LTU3FoMmLL",
+      "field": "Writeback Complete?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldPybPEvRcEVuNWl",
+        "fldITNuxNt9xphk7j",
+        "fldqd2ALDtGS6gMqs",
+        "fldxx1m0zTsMfEHfj",
+        "fldvXvURsGG611cSK"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Status",
+        "Google Drive File URL",
+        "Google Drive Folder ID",
+        "Google Drive Folder URL",
+        "Uploaded At"
+      ],
+      "dependencySource": "metadata",
+      "formula": "AND(\r\n  {fldPybPEvRcEVuNWl} = \"Uploaded\",\r\n  {fldITNuxNt9xphk7j} != BLANK(),\r\n  {fldqd2ALDtGS6gMqs} != BLANK(),\r\n  {fldxx1m0zTsMfEHfj} != BLANK(),\r\n  {fldvXvURsGG611cSK} != BLANK()\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldZiACFdNLECuRRU",
+      "field": "Upload Ready?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldrGt7IsWDUAKfzD",
+        "fldD4JV3iXYmIQLNG",
+        "fldJRSvui8RPg0Vyb"
+      ],
+      "dependsOnFieldNames": [
+        "Airtable Attachment",
+        "Asset Type",
+        "Enrollment - Linked"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldrGt7IsWDUAKfzD},\r\n    {fldD4JV3iXYmIQLNG},\r\n    {fldJRSvui8RPg0Vyb}\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld6x0Y5s7V8X5psH",
+      "field": "Last Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldpXNOzRflbkgVwV",
+      "fieldNameInLinkedTable": "Athlete Last Name",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldx2kdvgv9x3MU9A",
+      "field": "First Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fld4wGsfJKp7x4Bjd",
+      "fieldNameInLinkedTable": "Athlete First Name",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldhBiaRmBLydLNrD",
+      "field": "Program Instance - Raw",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "flde31eImaWCUgNPb",
+      "fieldNameInLinkedTable": "Program Instance Name Only",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld7Fbq1VHNTYBqOb",
+      "field": "Program Instance - Convert to File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldhBiaRmBLydLNrD"
+      ],
+      "dependsOnFieldNames": [
+        "Program Instance - Raw"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldhBiaRmBLydLNrD},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldhBiaRmBLydLNrD})), \" \", \"\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldu3NYlcZl942oU5",
+      "field": "Date",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldpkkSBsx8kQRZos",
+      "fieldNameInLinkedTable": "Activity Date",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "date",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldxcDBeWXEPV1rnO",
+      "field": "Date - Convert to File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldu3NYlcZl942oU5"
+      ],
+      "dependsOnFieldNames": [
+        "Date"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldu3NYlcZl942oU5},\r\n  DATETIME_FORMAT({fldu3NYlcZl942oU5}, \"YYYY_MM_DD\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldzfpPNBX8ZmZ1sp",
+      "field": "Asset Type - Convert for File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldD4JV3iXYmIQLNG"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Type"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldD4JV3iXYmIQLNG},\r\n  SUBSTITUTE(TRIM(ARRAYJOIN({fldD4JV3iXYmIQLNG})), \" \", \"\"),\r\n  BLANK()\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldv4Mhw3w84dXdxx",
+      "field": "Google Drive Folder Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6x0Y5s7V8X5psH",
+        "fldx2kdvgv9x3MU9A"
+      ],
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name"
+      ],
+      "dependencySource": "metadata",
+      "formula": "{fld6x0Y5s7V8X5psH}& \"_\" & {fldx2kdvgv9x3MU9A}",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldV5480sMm40q0QX",
+      "field": "Create Google Drive File Name",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld6x0Y5s7V8X5psH",
+        "fldx2kdvgv9x3MU9A",
+        "fld7Fbq1VHNTYBqOb",
+        "fldox2Rjj9YL3EYK6",
+        "fldiqTrLE7N8gjsxL",
+        "fldALREYJLGbCInMy",
+        "fldzfpPNBX8ZmZ1sp",
+        "fldxcDBeWXEPV1rnO"
+      ],
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name",
+        "Program Instance - Convert to File Name",
+        "Upload Destination",
+        "Homework Name - Slot Correct",
+        "Asset Slot Base",
+        "Asset Type - Convert for File Name",
+        "Date - Convert to File Name"
+      ],
+      "dependencySource": "metadata",
+      "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldtqSPrw0ah0fCmW",
+      "field": "Athlete Full Name",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldnRDkfubz7p3gi4",
+      "fieldNameInLinkedTable": "Full Athlete Name - Backward",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldPWNhEsXP1KuMUI",
+      "field": "Record Id (from Enrollment - Linked)",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldJRSvui8RPg0Vyb",
+      "recordLinkFieldName": "Enrollment - Linked",
+      "fieldIdInLinkedTable": "fldnsyxEUbrJjyzXU",
+      "fieldNameInLinkedTable": "Record Id",
+      "fieldTableInLinkedTable": "Enrollments",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldG5lWlsUcrDNlIg",
+      "field": "Ready to Send to Make?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fld8pLfrA76vMP5mt",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Homework Completions RID",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completions Link or RID\"\r\n        ),\r\n\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            COUNTA({fldxapOLpLH4KaXOb}) > 0,\r\n            \"READY_TO_SEND\",\r\n            \"Missing: Video Feedback Link\"\r\n          ),\r\n\r\n          \"Bad Destination: \" & {fldox2Rjj9YL3EYK6}\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldDJN1RrVyxiKrWu",
+      "field": "Why Not Ready for Make?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fld8C43NVQQ1NeQ7Z",
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Send to Make Trigger",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fldxapOLpLH4KaXOb}),\r\n            \"Missing Video Feedback link\",\r\n            \"\"\r\n          ),\r\n          \"Unknown upload destination\"\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldKDM3fvJsbAnUCR",
+      "field": "Coach Feedback (from Video Feedback)",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+      "recordLinkFieldName": "Video Feedback",
+      "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+      "fieldNameInLinkedTable": "Coach Feedback",
+      "fieldTableInLinkedTable": "Video Feedback",
+      "resultType": "multilineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldw8R6h6DkyEMzFR",
+      "field": "RecordId - Submission Table",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldFwXuLK18jJnT2z",
+      "fieldNameInLinkedTable": "RecordId",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldnzHLHvSwyUsnQj",
+      "field": "Homework Name 1",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldBuHIpIwxTy60js",
+      "fieldNameInLinkedTable": "Homework Name 1",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldc4VJaLJhaNFKOU",
+      "field": "Homework Name 2",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldnAy8yXTFafhvnu",
+      "fieldNameInLinkedTable": "Homework Name 2",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleRecordLinks",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldDvMkI9llIUmxFi",
+      "field": "HW Sub 1",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldtJS9LW3PAyCaNC",
+      "fieldNameInLinkedTable": "HW Sub 1",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleAttachments",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldahytXWi4YuRD2I",
+      "field": "HW Sub 2",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "flddRCbWCegg4WCoZ",
+      "recordLinkFieldName": "Submission - Linked",
+      "fieldIdInLinkedTable": "fldUvfAHi3e15Oxb7",
+      "fieldNameInLinkedTable": "HW Sub 2",
+      "fieldTableInLinkedTable": "Submissions",
+      "resultType": "multipleAttachments",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldFzYi5tKorpDzzm",
+      "field": "Coach Feedback - LKP",
+      "type": "multipleLookupValues",
+      "recordLinkFieldId": "fldxapOLpLH4KaXOb",
+      "recordLinkFieldName": "Video Feedback",
+      "fieldIdInLinkedTable": "fldyXVwvXuk1SYnpg",
+      "fieldNameInLinkedTable": "Coach Feedback",
+      "fieldTableInLinkedTable": "Video Feedback",
+      "resultType": "multilineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldiqTrLE7N8gjsxL",
+      "field": "Homework Name - Slot Correct",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldOwKqDaX2cUxMxf",
+        "fldnzHLHvSwyUsnQj",
+        "fldc4VJaLJhaNFKOU"
+      ],
+      "dependsOnFieldNames": [
+        "Asset Slot",
+        "Homework Name 1",
+        "Homework Name 2"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fld2pkXIFSlyl2i3J",
+      "field": "Ready for Video Feedback Script?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldxapOLpLH4KaXOb} = BLANK()\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "field": "Workflow Next Step",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "flddRCbWCegg4WCoZ",
+        "fldJRSvui8RPg0Vyb",
+        "fldrGt7IsWDUAKfzD",
+        "fldox2Rjj9YL3EYK6",
+        "fldQF8OsfESrHdcUb",
+        "fldxapOLpLH4KaXOb"
+      ],
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldt9uMc6pM717LjQ",
+      "field": "Is True Video Feedback Asset?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "fldCpEiwVOMc8v4Vu",
+        "fldOwKqDaX2cUxMxf"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Asset Purpose",
+        "Asset Slot"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\n    {fldCpEiwVOMc8v4Vu} = \"Video For Feedback\",\n    LEFT({fldOwKqDaX2cUxMxf}, 5) = \"VIDEO\"\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "table": "Submission Assets",
+      "fieldId": "fldy8sCt6ttcMeLRD",
+      "field": "Is Homework Upload Asset?",
+      "type": "formula",
+      "dependsOnFieldIds": [
+        "fldox2Rjj9YL3EYK6",
+        "fldOwKqDaX2cUxMxf"
+      ],
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Asset Slot"
+      ],
+      "dependencySource": "metadata",
+      "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)",
+      "resultType": "number",
+      "isValid": true
+    }
+  ]
+}

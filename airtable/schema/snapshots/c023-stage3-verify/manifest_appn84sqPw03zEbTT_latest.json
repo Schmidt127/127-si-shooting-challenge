@@ -1,0 +1,25 @@
+{
+  "generatedAt": "2026-07-10T05:24:02",
+  "scriptVersion": "2.4.0",
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "selectedTables": [
+    "Submission Assets"
+  ],
+  "files": {
+    "rawSchema": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\schema_raw_appn84sqPw03zEbTT_20260710_052400.json",
+    "enhancedSchema": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\schema_enhanced_appn84sqPw03zEbTT_20260710_052400.json",
+    "dependencies": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\dependencies_appn84sqPw03zEbTT_20260710_052400.json",
+    "viewsBasicJson": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\views_basic_appn84sqPw03zEbTT_20260710_052400.json",
+    "viewsDetailedJson": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\views_detailed_appn84sqPw03zEbTT_20260710_052400.json",
+    "viewsMarkdown": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\views_appn84sqPw03zEbTT_20260710_052400.md",
+    "baseSummary": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\base_summary_appn84sqPw03zEbTT_20260710_052400.json",
+    "healthReport": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\export_health_report_appn84sqPw03zEbTT_20260710_052400.json",
+    "fieldIndex": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\field_index_appn84sqPw03zEbTT_20260710_052400.json",
+    "invalidFields": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\invalid_fields_appn84sqPw03zEbTT_20260710_052400.json",
+    "complexFormulas": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\complex_formulas_appn84sqPw03zEbTT_20260710_052400.json",
+    "schemaMarkdown": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\schema_doc_appn84sqPw03zEbTT_20260710_052400.md",
+    "mermaidERD": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\schema_erd_appn84sqPw03zEbTT_20260710_052400.mmd",
+    "workflowCompanion": "..\\..\\airtable\\schema\\snapshots\\c023-stage3-verify\\workflow_companion_appn84sqPw03zEbTT_20260710_052400.md"
+  }
+}

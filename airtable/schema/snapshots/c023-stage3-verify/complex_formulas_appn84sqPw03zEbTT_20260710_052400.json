@@ -1,0 +1,70 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-10T05:24:02",
+    "baseId": "appn84sqPw03zEbTT",
+    "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+    "threshold": 6,
+    "complexFormulaCount": 3
+  },
+  "complexFormulas": [
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldV5480sMm40q0QX",
+      "fieldName": "Create Google Drive File Name",
+      "dependencyCount": 8,
+      "dependsOnFieldNames": [
+        "Last Name",
+        "First Name",
+        "Program Instance - Convert to File Name",
+        "Upload Destination",
+        "Homework Name - Slot Correct",
+        "Asset Slot Base",
+        "Asset Type - Convert for File Name",
+        "Date - Convert to File Name"
+      ],
+      "formula": "{fld6x0Y5s7V8X5psH} & \"_\" &\r\n{fldx2kdvgv9x3MU9A} & \"_\" &\r\n{fld7Fbq1VHNTYBqOb} & \"_\" &\r\n\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  \"VideoFeedback\",\r\n  IF(\r\n    {fldiqTrLE7N8gjsxL},\r\n    {fldALREYJLGbCInMy} & \"_\" &\r\n    REGEX_REPLACE(\r\n      SUBSTITUTE(\r\n        SUBSTITUTE(\r\n          SUBSTITUTE(\r\n            SUBSTITUTE(\r\n              TRIM({fldiqTrLE7N8gjsxL}),\r\n              \" \",\r\n              \"_\"\r\n            ),\r\n            \"/\",\r\n            \"_\"\r\n          ),\r\n          \"&\",\r\n          \"and\"\r\n        ),\r\n        \"__\",\r\n        \"_\"\r\n      ),\r\n      \"[^A-Za-z0-9_]\",\r\n      \"\"\r\n    ),\r\n    {fldzfpPNBX8ZmZ1sp}\r\n  )\r\n) & \"_\" &\r\n\r\n{fldxcDBeWXEPV1rnO} & \"_\" &\r\nRIGHT(RECORD_ID(), 6)",
+      "resultType": "singleLineText",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "fieldName": "Ready for Homework Completion Script?",
+      "dependencyCount": 8,
+      "dependsOnFieldNames": [
+        "Upload Destination",
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Homework Completions",
+        "Asset Slot Base",
+        "Asset Label",
+        "Asset Purpose"
+      ],
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 2\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+      "resultType": "number",
+      "isValid": true
+    },
+    {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "fieldName": "Workflow Next Step",
+      "dependencyCount": 6,
+      "dependsOnFieldNames": [
+        "Submission - Linked",
+        "Enrollment - Linked",
+        "Airtable Attachment",
+        "Upload Destination",
+        "Homework Completions",
+        "Video Feedback"
+      ],
+      "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n    \"Video Feedback linked\"\r\n  ),\r\n\"Upload Destination not recognized\"\r\n)))))",
+      "resultType": "singleLineText",
+      "isValid": true
+    }
+  ]
+}

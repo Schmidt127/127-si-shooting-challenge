@@ -1,0 +1,66 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-10T05:24:27",
+    "baseId": "appTetnuCZlCZdTCT",
+    "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+    "warningCount": 8
+  },
+  "warnings": [
+    {
+      "severity": "warning",
+      "category": "high_computed_field_count",
+      "table": "Submission Assets",
+      "message": "Table 'Submission Assets' has 35 computed fields."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Submission Assets",
+      "field": "Duplicate Match Record",
+      "message": "Self-link detected on 'Submission Assets' via field 'Duplicate Match Record'."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Submission Assets",
+      "field": "From field: Duplicate Match Record",
+      "message": "Self-link detected on 'Submission Assets' via field 'From field: Duplicate Match Record'."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Submission Assets",
+      "field": "Duplicate Match Records (All)",
+      "message": "Self-link detected on 'Submission Assets' via field 'Duplicate Match Records (All)'."
+    },
+    {
+      "severity": "warning",
+      "category": "self_link",
+      "table": "Submission Assets",
+      "field": "From field: Duplicate Match Records (All)",
+      "message": "Self-link detected on 'Submission Assets' via field 'From field: Duplicate Match Records (All)'."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Create Google Drive File Name",
+      "message": "Field 'Create Google Drive File Name' depends on many fields (8)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Ready for Homework Completion Script?",
+      "message": "Field 'Ready for Homework Completion Script?' depends on many fields (8)."
+    },
+    {
+      "severity": "info",
+      "category": "complex_dependency",
+      "table": "Submission Assets",
+      "field": "Workflow Next Step",
+      "message": "Field 'Workflow Next Step' depends on many fields (6)."
+    }
+  ]
+}

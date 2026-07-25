@@ -1,0 +1,2576 @@
+{
+  "exportMeta": {
+    "scriptVersion": "2.4.0",
+    "generatedAt": "2026-07-10T05:24:02",
+    "baseId": "appn84sqPw03zEbTT",
+    "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+    "tableCount": 1,
+    "fieldCount": 73
+  },
+  "byFieldId": {
+    "fld3uqsvTrgAImBOh": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld3uqsvTrgAImBOh",
+      "fieldName": "Submission Assets Full Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": true,
+      "resultType": "singleLineText"
+    },
+    "flddRCbWCegg4WCoZ": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "flddRCbWCegg4WCoZ",
+      "fieldName": "Submission - Linked",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldJRSvui8RPg0Vyb": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldJRSvui8RPg0Vyb",
+      "fieldName": "Enrollment - Linked",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld6higUGAazpTX1e": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld6higUGAazpTX1e",
+      "fieldName": "Asset Label",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldox2Rjj9YL3EYK6": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldox2Rjj9YL3EYK6",
+      "fieldName": "Upload Destination",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldCpEiwVOMc8v4Vu": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldCpEiwVOMc8v4Vu",
+      "fieldName": "Asset Purpose",
+      "fieldType": "singleSelect",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldrGt7IsWDUAKfzD": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldrGt7IsWDUAKfzD",
+      "fieldName": "Airtable Attachment",
+      "fieldType": "multipleAttachments",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldQF8OsfESrHdcUb": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldQF8OsfESrHdcUb",
+      "fieldName": "Homework Completions",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldALREYJLGbCInMy": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldALREYJLGbCInMy",
+      "fieldName": "Asset Slot Base",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldxORUyJ7uvEgw9h": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldxORUyJ7uvEgw9h",
+      "fieldName": "DELETE POSSIBLY - Homework Completion Record ID",
+      "fieldType": "singleLineText",
+      "roleGuess": "identifier",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld8pLfrA76vMP5mt": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld8pLfrA76vMP5mt",
+      "fieldName": "Homework Completions RID",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldYICCdWQ5xVcSk5": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "fieldName": "Ready for Homework Completion Script?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fldLAxgb6tMzC4lZH": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldLAxgb6tMzC4lZH",
+      "fieldName": "Created",
+      "fieldType": "createdTime",
+      "roleGuess": "audit",
+      "isPrimaryField": false,
+      "resultType": "dateTime"
+    },
+    "fldVpRxZqGJxlAs6T": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldVpRxZqGJxlAs6T",
+      "fieldName": "Week",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multipleRecordLinks"
+    },
+    "fldy8UuxWmHT7WFFJ": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldy8UuxWmHT7WFFJ",
+      "fieldName": "Asset Key",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldXz9TNOnGeRXEL8": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldXz9TNOnGeRXEL8",
+      "fieldName": "RecordId",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldS0DINXc5YSHYRO": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldS0DINXc5YSHYRO",
+      "fieldName": "Original File Name",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldD4JV3iXYmIQLNG": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldD4JV3iXYmIQLNG",
+      "fieldName": "Asset Type",
+      "fieldType": "singleSelect",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld8C43NVQQ1NeQ7Z": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld8C43NVQQ1NeQ7Z",
+      "fieldName": "Send to Make Trigger",
+      "fieldType": "checkbox",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldPybPEvRcEVuNWl": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldPybPEvRcEVuNWl",
+      "fieldName": "Upload Status",
+      "fieldType": "singleSelect",
+      "roleGuess": "status",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldAkpl3cuzgz1jLP": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldAkpl3cuzgz1jLP",
+      "fieldName": "Upload Error",
+      "fieldType": "multilineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldvXvURsGG611cSK": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldvXvURsGG611cSK",
+      "fieldName": "Uploaded At",
+      "fieldType": "dateTime",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldtl04LTU3FoMmLL": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldtl04LTU3FoMmLL",
+      "fieldName": "Writeback Complete?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fldZiACFdNLECuRRU": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldZiACFdNLECuRRU",
+      "fieldName": "Upload Ready?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fld7imlYToTHK6sZA": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld7imlYToTHK6sZA",
+      "fieldName": "Source Attachment ID",
+      "fieldType": "singleLineText",
+      "roleGuess": "identifier",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld6x0Y5s7V8X5psH": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld6x0Y5s7V8X5psH",
+      "fieldName": "Last Name",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldx2kdvgv9x3MU9A": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldx2kdvgv9x3MU9A",
+      "fieldName": "First Name",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldhBiaRmBLydLNrD": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldhBiaRmBLydLNrD",
+      "fieldName": "Program Instance - Raw",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fld7Fbq1VHNTYBqOb": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld7Fbq1VHNTYBqOb",
+      "fieldName": "Program Instance - Convert to File Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldu3NYlcZl942oU5": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldu3NYlcZl942oU5",
+      "fieldName": "Date",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "date"
+    },
+    "fldxcDBeWXEPV1rnO": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldxcDBeWXEPV1rnO",
+      "fieldName": "Date - Convert to File Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldzfpPNBX8ZmZ1sp": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldzfpPNBX8ZmZ1sp",
+      "fieldName": "Asset Type - Convert for File Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldv4Mhw3w84dXdxx": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldv4Mhw3w84dXdxx",
+      "fieldName": "Google Drive Folder Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldV5480sMm40q0QX": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldV5480sMm40q0QX",
+      "fieldName": "Create Google Drive File Name",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldqd2ALDtGS6gMqs": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldqd2ALDtGS6gMqs",
+      "fieldName": "Google Drive Folder ID",
+      "fieldType": "singleLineText",
+      "roleGuess": "identifier",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldxx1m0zTsMfEHfj": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldxx1m0zTsMfEHfj",
+      "fieldName": "Google Drive Folder URL",
+      "fieldType": "url",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldtqSPrw0ah0fCmW": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldtqSPrw0ah0fCmW",
+      "fieldName": "Athlete Full Name",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldPWNhEsXP1KuMUI": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldPWNhEsXP1KuMUI",
+      "fieldName": "Record Id (from Enrollment - Linked)",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldwOklyDaW3nN2Kz": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldwOklyDaW3nN2Kz",
+      "fieldName": "XP Events",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldiEOIvxT5D7gOp4": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldiEOIvxT5D7gOp4",
+      "fieldName": "Created Time",
+      "fieldType": "createdTime",
+      "roleGuess": "audit",
+      "isPrimaryField": false,
+      "resultType": "dateTime"
+    },
+    "fldpCKmuKiloOSsvd": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldpCKmuKiloOSsvd",
+      "fieldName": "Review Complete?",
+      "fieldType": "checkbox",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldOwKqDaX2cUxMxf": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldOwKqDaX2cUxMxf",
+      "fieldName": "Asset Slot",
+      "fieldType": "singleSelect",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldG5lWlsUcrDNlIg": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldG5lWlsUcrDNlIg",
+      "fieldName": "Ready to Send to Make?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldITNuxNt9xphk7j": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldITNuxNt9xphk7j",
+      "fieldName": "Google Drive File URL",
+      "fieldType": "url",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldhx4nDKuzuWQna6": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldhx4nDKuzuWQna6",
+      "fieldName": "Google Drive File ID",
+      "fieldType": "singleLineText",
+      "roleGuess": "identifier",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldDJN1RrVyxiKrWu": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldDJN1RrVyxiKrWu",
+      "fieldName": "Why Not Ready for Make?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldKDM3fvJsbAnUCR": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldKDM3fvJsbAnUCR",
+      "fieldName": "Coach Feedback (from Video Feedback)",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multilineText"
+    },
+    "fldw8R6h6DkyEMzFR": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldw8R6h6DkyEMzFR",
+      "fieldName": "RecordId - Submission Table",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fld5Emwipb3UjAMz9": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld5Emwipb3UjAMz9",
+      "fieldName": "XP Events copy",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldnzHLHvSwyUsnQj": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldnzHLHvSwyUsnQj",
+      "fieldName": "Homework Name 1",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multipleRecordLinks"
+    },
+    "fldc4VJaLJhaNFKOU": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldc4VJaLJhaNFKOU",
+      "fieldName": "Homework Name 2",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multipleRecordLinks"
+    },
+    "fldDvMkI9llIUmxFi": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldDvMkI9llIUmxFi",
+      "fieldName": "HW Sub 1",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multipleAttachments"
+    },
+    "fldahytXWi4YuRD2I": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldahytXWi4YuRD2I",
+      "fieldName": "HW Sub 2",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multipleAttachments"
+    },
+    "fldxapOLpLH4KaXOb": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldxapOLpLH4KaXOb",
+      "fieldName": "Video Feedback",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldFzYi5tKorpDzzm": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldFzYi5tKorpDzzm",
+      "fieldName": "Coach Feedback - LKP",
+      "fieldType": "multipleLookupValues",
+      "roleGuess": "lookup",
+      "isPrimaryField": false,
+      "resultType": "multilineText"
+    },
+    "fldiqTrLE7N8gjsxL": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldiqTrLE7N8gjsxL",
+      "fieldName": "Homework Name - Slot Correct",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fld2pkXIFSlyl2i3J": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld2pkXIFSlyl2i3J",
+      "fieldName": "Ready for Video Feedback Script?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fldQDDzBS62Ow765c": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "fieldName": "Workflow Next Step",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "singleLineText"
+    },
+    "fldMtYyiPhVWbQk6M": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldMtYyiPhVWbQk6M",
+      "fieldName": "File Content Hash",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld2TBSzNI6bSkKZD": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld2TBSzNI6bSkKZD",
+      "fieldName": "File Hash Algorithm",
+      "fieldType": "singleSelect",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldYbWjb8YI5BBIjr": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldYbWjb8YI5BBIjr",
+      "fieldName": "File Size Bytes",
+      "fieldType": "number",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldm34cEAadeJRatz": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldm34cEAadeJRatz",
+      "fieldName": "File MIME Type",
+      "fieldType": "singleLineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldtE66EBZwDHewbl": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldtE66EBZwDHewbl",
+      "fieldName": "File is Duplicate?",
+      "fieldType": "checkbox",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldQTwrLKa5YNTELl": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldQTwrLKa5YNTELl",
+      "fieldName": "Duplicate File Status",
+      "fieldType": "singleSelect",
+      "roleGuess": "status",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld1gOJTK0e3G8ulG": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld1gOJTK0e3G8ulG",
+      "fieldName": "Duplicate Match Strength",
+      "fieldType": "singleSelect",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldVkOPvB74HbFliP": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldVkOPvB74HbFliP",
+      "fieldName": "Duplicate Match Notes",
+      "fieldType": "multilineText",
+      "roleGuess": "narrative",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld2DtlvzpaC4gXr5": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld2DtlvzpaC4gXr5",
+      "fieldName": "Duplicate Checked At",
+      "fieldType": "dateTime",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld0mZJBFxJ3c0rbK": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld0mZJBFxJ3c0rbK",
+      "fieldName": "Duplicate Check Error",
+      "fieldType": "multilineText",
+      "roleGuess": "standard",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fld8C1Wfr0BCKNxpK": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fld8C1Wfr0BCKNxpK",
+      "fieldName": "Duplicate Review Status",
+      "fieldType": "singleSelect",
+      "roleGuess": "status",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldsNazvec6r4mxoY": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldsNazvec6r4mxoY",
+      "fieldName": "Duplicate Match Record",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    },
+    "fldt9uMc6pM717LjQ": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldt9uMc6pM717LjQ",
+      "fieldName": "Is True Video Feedback Asset?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fldy8sCt6ttcMeLRD": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldy8sCt6ttcMeLRD",
+      "fieldName": "Is Homework Upload Asset?",
+      "fieldType": "formula",
+      "roleGuess": "formula",
+      "isPrimaryField": false,
+      "resultType": "number"
+    },
+    "fldEr7Dmv42UjdMlO": {
+      "tableId": "tblhMLKxQK77agtME",
+      "tableName": "Submission Assets",
+      "fieldId": "fldEr7Dmv42UjdMlO",
+      "fieldName": "From field: Duplicate Match Record",
+      "fieldType": "multipleRecordLinks",
+      "roleGuess": "link",
+      "isPrimaryField": false,
+      "resultType": null
+    }
+  },
+  "byFieldName": {
+    "Airtable Attachment": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldrGt7IsWDUAKfzD",
+        "fieldName": "Airtable Attachment",
+        "fieldType": "multipleAttachments",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Asset Key": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8UuxWmHT7WFFJ",
+        "fieldName": "Asset Key",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Asset Label": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld6higUGAazpTX1e",
+        "fieldName": "Asset Label",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Asset Purpose": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldCpEiwVOMc8v4Vu",
+        "fieldName": "Asset Purpose",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Asset Slot": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldOwKqDaX2cUxMxf",
+        "fieldName": "Asset Slot",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Asset Slot Base": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldALREYJLGbCInMy",
+        "fieldName": "Asset Slot Base",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Asset Type": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldD4JV3iXYmIQLNG",
+        "fieldName": "Asset Type",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Asset Type - Convert for File Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldzfpPNBX8ZmZ1sp",
+        "fieldName": "Asset Type - Convert for File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Athlete Full Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtqSPrw0ah0fCmW",
+        "fieldName": "Athlete Full Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Coach Feedback (from Video Feedback)": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldKDM3fvJsbAnUCR",
+        "fieldName": "Coach Feedback (from Video Feedback)",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multilineText"
+      }
+    ],
+    "Coach Feedback - LKP": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldFzYi5tKorpDzzm",
+        "fieldName": "Coach Feedback - LKP",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multilineText"
+      }
+    ],
+    "Create Google Drive File Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldV5480sMm40q0QX",
+        "fieldName": "Create Google Drive File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Created": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldLAxgb6tMzC4lZH",
+        "fieldName": "Created",
+        "fieldType": "createdTime",
+        "roleGuess": "audit",
+        "isPrimaryField": false,
+        "resultType": "dateTime"
+      }
+    ],
+    "Created Time": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldiEOIvxT5D7gOp4",
+        "fieldName": "Created Time",
+        "fieldType": "createdTime",
+        "roleGuess": "audit",
+        "isPrimaryField": false,
+        "resultType": "dateTime"
+      }
+    ],
+    "DELETE POSSIBLY - Homework Completion Record ID": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxORUyJ7uvEgw9h",
+        "fieldName": "DELETE POSSIBLY - Homework Completion Record ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Date": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldu3NYlcZl942oU5",
+        "fieldName": "Date",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "date"
+      }
+    ],
+    "Date - Convert to File Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxcDBeWXEPV1rnO",
+        "fieldName": "Date - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Duplicate Check Error": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld0mZJBFxJ3c0rbK",
+        "fieldName": "Duplicate Check Error",
+        "fieldType": "multilineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate Checked At": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2DtlvzpaC4gXr5",
+        "fieldName": "Duplicate Checked At",
+        "fieldType": "dateTime",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate File Status": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQTwrLKa5YNTELl",
+        "fieldName": "Duplicate File Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate Match Notes": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldVkOPvB74HbFliP",
+        "fieldName": "Duplicate Match Notes",
+        "fieldType": "multilineText",
+        "roleGuess": "narrative",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate Match Record": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldsNazvec6r4mxoY",
+        "fieldName": "Duplicate Match Record",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate Match Strength": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld1gOJTK0e3G8ulG",
+        "fieldName": "Duplicate Match Strength",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Duplicate Review Status": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8C1Wfr0BCKNxpK",
+        "fieldName": "Duplicate Review Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Enrollment - Linked": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldJRSvui8RPg0Vyb",
+        "fieldName": "Enrollment - Linked",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "File Content Hash": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldMtYyiPhVWbQk6M",
+        "fieldName": "File Content Hash",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "File Hash Algorithm": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2TBSzNI6bSkKZD",
+        "fieldName": "File Hash Algorithm",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "File MIME Type": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldm34cEAadeJRatz",
+        "fieldName": "File MIME Type",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "File Size Bytes": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldYbWjb8YI5BBIjr",
+        "fieldName": "File Size Bytes",
+        "fieldType": "number",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "File is Duplicate?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtE66EBZwDHewbl",
+        "fieldName": "File is Duplicate?",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "First Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldx2kdvgv9x3MU9A",
+        "fieldName": "First Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "From field: Duplicate Match Record": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldEr7Dmv42UjdMlO",
+        "fieldName": "From field: Duplicate Match Record",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Google Drive File ID": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldhx4nDKuzuWQna6",
+        "fieldName": "Google Drive File ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Google Drive File URL": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldITNuxNt9xphk7j",
+        "fieldName": "Google Drive File URL",
+        "fieldType": "url",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Google Drive Folder ID": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldqd2ALDtGS6gMqs",
+        "fieldName": "Google Drive Folder ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Google Drive Folder Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldv4Mhw3w84dXdxx",
+        "fieldName": "Google Drive Folder Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Google Drive Folder URL": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxx1m0zTsMfEHfj",
+        "fieldName": "Google Drive Folder URL",
+        "fieldType": "url",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "HW Sub 1": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldDvMkI9llIUmxFi",
+        "fieldName": "HW Sub 1",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleAttachments"
+      }
+    ],
+    "HW Sub 2": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldahytXWi4YuRD2I",
+        "fieldName": "HW Sub 2",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleAttachments"
+      }
+    ],
+    "Homework Completions": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQF8OsfESrHdcUb",
+        "fieldName": "Homework Completions",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Homework Completions RID": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8pLfrA76vMP5mt",
+        "fieldName": "Homework Completions RID",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Homework Name - Slot Correct": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldiqTrLE7N8gjsxL",
+        "fieldName": "Homework Name - Slot Correct",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Homework Name 1": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldnzHLHvSwyUsnQj",
+        "fieldName": "Homework Name 1",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      }
+    ],
+    "Homework Name 2": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldc4VJaLJhaNFKOU",
+        "fieldName": "Homework Name 2",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      }
+    ],
+    "Is Homework Upload Asset?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8sCt6ttcMeLRD",
+        "fieldName": "Is Homework Upload Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "Is True Video Feedback Asset?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldt9uMc6pM717LjQ",
+        "fieldName": "Is True Video Feedback Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "Last Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld6x0Y5s7V8X5psH",
+        "fieldName": "Last Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Original File Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldS0DINXc5YSHYRO",
+        "fieldName": "Original File Name",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Program Instance - Convert to File Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld7Fbq1VHNTYBqOb",
+        "fieldName": "Program Instance - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Program Instance - Raw": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldhBiaRmBLydLNrD",
+        "fieldName": "Program Instance - Raw",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Ready for Homework Completion Script?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldYICCdWQ5xVcSk5",
+        "fieldName": "Ready for Homework Completion Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "Ready for Video Feedback Script?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2pkXIFSlyl2i3J",
+        "fieldName": "Ready for Video Feedback Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "Ready to Send to Make?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldG5lWlsUcrDNlIg",
+        "fieldName": "Ready to Send to Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Record Id (from Enrollment - Linked)": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldPWNhEsXP1KuMUI",
+        "fieldName": "Record Id (from Enrollment - Linked)",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "RecordId": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldXz9TNOnGeRXEL8",
+        "fieldName": "RecordId",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "RecordId - Submission Table": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldw8R6h6DkyEMzFR",
+        "fieldName": "RecordId - Submission Table",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Review Complete?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldpCKmuKiloOSsvd",
+        "fieldName": "Review Complete?",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Send to Make Trigger": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8C43NVQQ1NeQ7Z",
+        "fieldName": "Send to Make Trigger",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Source Attachment ID": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld7imlYToTHK6sZA",
+        "fieldName": "Source Attachment ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Submission - Linked": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "flddRCbWCegg4WCoZ",
+        "fieldName": "Submission - Linked",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Submission Assets Full Name": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld3uqsvTrgAImBOh",
+        "fieldName": "Submission Assets Full Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": true,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Upload Destination": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldox2Rjj9YL3EYK6",
+        "fieldName": "Upload Destination",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Upload Error": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldAkpl3cuzgz1jLP",
+        "fieldName": "Upload Error",
+        "fieldType": "multilineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Upload Ready?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldZiACFdNLECuRRU",
+        "fieldName": "Upload Ready?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "Upload Status": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldPybPEvRcEVuNWl",
+        "fieldName": "Upload Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Uploaded At": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldvXvURsGG611cSK",
+        "fieldName": "Uploaded At",
+        "fieldType": "dateTime",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Video Feedback": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxapOLpLH4KaXOb",
+        "fieldName": "Video Feedback",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "Week": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldVpRxZqGJxlAs6T",
+        "fieldName": "Week",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      }
+    ],
+    "Why Not Ready for Make?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldDJN1RrVyxiKrWu",
+        "fieldName": "Why Not Ready for Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Workflow Next Step": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQDDzBS62Ow765c",
+        "fieldName": "Workflow Next Step",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ],
+    "Writeback Complete?": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtl04LTU3FoMmLL",
+        "fieldName": "Writeback Complete?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "XP Events": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldwOklyDaW3nN2Kz",
+        "fieldName": "XP Events",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ],
+    "XP Events copy": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld5Emwipb3UjAMz9",
+        "fieldName": "XP Events copy",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ]
+  },
+  "byTable": {
+    "Submission Assets": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld3uqsvTrgAImBOh",
+        "fieldName": "Submission Assets Full Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": true,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "flddRCbWCegg4WCoZ",
+        "fieldName": "Submission - Linked",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldJRSvui8RPg0Vyb",
+        "fieldName": "Enrollment - Linked",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld6higUGAazpTX1e",
+        "fieldName": "Asset Label",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldox2Rjj9YL3EYK6",
+        "fieldName": "Upload Destination",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldCpEiwVOMc8v4Vu",
+        "fieldName": "Asset Purpose",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldrGt7IsWDUAKfzD",
+        "fieldName": "Airtable Attachment",
+        "fieldType": "multipleAttachments",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQF8OsfESrHdcUb",
+        "fieldName": "Homework Completions",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldALREYJLGbCInMy",
+        "fieldName": "Asset Slot Base",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxORUyJ7uvEgw9h",
+        "fieldName": "DELETE POSSIBLY - Homework Completion Record ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8pLfrA76vMP5mt",
+        "fieldName": "Homework Completions RID",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldYICCdWQ5xVcSk5",
+        "fieldName": "Ready for Homework Completion Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldLAxgb6tMzC4lZH",
+        "fieldName": "Created",
+        "fieldType": "createdTime",
+        "roleGuess": "audit",
+        "isPrimaryField": false,
+        "resultType": "dateTime"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldVpRxZqGJxlAs6T",
+        "fieldName": "Week",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8UuxWmHT7WFFJ",
+        "fieldName": "Asset Key",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldXz9TNOnGeRXEL8",
+        "fieldName": "RecordId",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldS0DINXc5YSHYRO",
+        "fieldName": "Original File Name",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldD4JV3iXYmIQLNG",
+        "fieldName": "Asset Type",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8C43NVQQ1NeQ7Z",
+        "fieldName": "Send to Make Trigger",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldPybPEvRcEVuNWl",
+        "fieldName": "Upload Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldAkpl3cuzgz1jLP",
+        "fieldName": "Upload Error",
+        "fieldType": "multilineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldvXvURsGG611cSK",
+        "fieldName": "Uploaded At",
+        "fieldType": "dateTime",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtl04LTU3FoMmLL",
+        "fieldName": "Writeback Complete?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldZiACFdNLECuRRU",
+        "fieldName": "Upload Ready?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld7imlYToTHK6sZA",
+        "fieldName": "Source Attachment ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld6x0Y5s7V8X5psH",
+        "fieldName": "Last Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldx2kdvgv9x3MU9A",
+        "fieldName": "First Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldhBiaRmBLydLNrD",
+        "fieldName": "Program Instance - Raw",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld7Fbq1VHNTYBqOb",
+        "fieldName": "Program Instance - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldu3NYlcZl942oU5",
+        "fieldName": "Date",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "date"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxcDBeWXEPV1rnO",
+        "fieldName": "Date - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldzfpPNBX8ZmZ1sp",
+        "fieldName": "Asset Type - Convert for File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldv4Mhw3w84dXdxx",
+        "fieldName": "Google Drive Folder Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldV5480sMm40q0QX",
+        "fieldName": "Create Google Drive File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldqd2ALDtGS6gMqs",
+        "fieldName": "Google Drive Folder ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxx1m0zTsMfEHfj",
+        "fieldName": "Google Drive Folder URL",
+        "fieldType": "url",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtqSPrw0ah0fCmW",
+        "fieldName": "Athlete Full Name",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldPWNhEsXP1KuMUI",
+        "fieldName": "Record Id (from Enrollment - Linked)",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldwOklyDaW3nN2Kz",
+        "fieldName": "XP Events",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldiEOIvxT5D7gOp4",
+        "fieldName": "Created Time",
+        "fieldType": "createdTime",
+        "roleGuess": "audit",
+        "isPrimaryField": false,
+        "resultType": "dateTime"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldpCKmuKiloOSsvd",
+        "fieldName": "Review Complete?",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldOwKqDaX2cUxMxf",
+        "fieldName": "Asset Slot",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldG5lWlsUcrDNlIg",
+        "fieldName": "Ready to Send to Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldITNuxNt9xphk7j",
+        "fieldName": "Google Drive File URL",
+        "fieldType": "url",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldhx4nDKuzuWQna6",
+        "fieldName": "Google Drive File ID",
+        "fieldType": "singleLineText",
+        "roleGuess": "identifier",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldDJN1RrVyxiKrWu",
+        "fieldName": "Why Not Ready for Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldKDM3fvJsbAnUCR",
+        "fieldName": "Coach Feedback (from Video Feedback)",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multilineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldw8R6h6DkyEMzFR",
+        "fieldName": "RecordId - Submission Table",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld5Emwipb3UjAMz9",
+        "fieldName": "XP Events copy",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldnzHLHvSwyUsnQj",
+        "fieldName": "Homework Name 1",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldc4VJaLJhaNFKOU",
+        "fieldName": "Homework Name 2",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleRecordLinks"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldDvMkI9llIUmxFi",
+        "fieldName": "HW Sub 1",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleAttachments"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldahytXWi4YuRD2I",
+        "fieldName": "HW Sub 2",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multipleAttachments"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxapOLpLH4KaXOb",
+        "fieldName": "Video Feedback",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldFzYi5tKorpDzzm",
+        "fieldName": "Coach Feedback - LKP",
+        "fieldType": "multipleLookupValues",
+        "roleGuess": "lookup",
+        "isPrimaryField": false,
+        "resultType": "multilineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldiqTrLE7N8gjsxL",
+        "fieldName": "Homework Name - Slot Correct",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2pkXIFSlyl2i3J",
+        "fieldName": "Ready for Video Feedback Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQDDzBS62Ow765c",
+        "fieldName": "Workflow Next Step",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldMtYyiPhVWbQk6M",
+        "fieldName": "File Content Hash",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2TBSzNI6bSkKZD",
+        "fieldName": "File Hash Algorithm",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldYbWjb8YI5BBIjr",
+        "fieldName": "File Size Bytes",
+        "fieldType": "number",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldm34cEAadeJRatz",
+        "fieldName": "File MIME Type",
+        "fieldType": "singleLineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtE66EBZwDHewbl",
+        "fieldName": "File is Duplicate?",
+        "fieldType": "checkbox",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQTwrLKa5YNTELl",
+        "fieldName": "Duplicate File Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld1gOJTK0e3G8ulG",
+        "fieldName": "Duplicate Match Strength",
+        "fieldType": "singleSelect",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldVkOPvB74HbFliP",
+        "fieldName": "Duplicate Match Notes",
+        "fieldType": "multilineText",
+        "roleGuess": "narrative",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2DtlvzpaC4gXr5",
+        "fieldName": "Duplicate Checked At",
+        "fieldType": "dateTime",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld0mZJBFxJ3c0rbK",
+        "fieldName": "Duplicate Check Error",
+        "fieldType": "multilineText",
+        "roleGuess": "standard",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld8C1Wfr0BCKNxpK",
+        "fieldName": "Duplicate Review Status",
+        "fieldType": "singleSelect",
+        "roleGuess": "status",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldsNazvec6r4mxoY",
+        "fieldName": "Duplicate Match Record",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldt9uMc6pM717LjQ",
+        "fieldName": "Is True Video Feedback Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8sCt6ttcMeLRD",
+        "fieldName": "Is Homework Upload Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldEr7Dmv42UjdMlO",
+        "fieldName": "From field: Duplicate Match Record",
+        "fieldType": "multipleRecordLinks",
+        "roleGuess": "link",
+        "isPrimaryField": false,
+        "resultType": null
+      }
+    ]
+  },
+  "formulasByResultType": {
+    "number": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldYICCdWQ5xVcSk5",
+        "fieldName": "Ready for Homework Completion Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldtl04LTU3FoMmLL",
+        "fieldName": "Writeback Complete?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldZiACFdNLECuRRU",
+        "fieldName": "Upload Ready?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld2pkXIFSlyl2i3J",
+        "fieldName": "Ready for Video Feedback Script?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldt9uMc6pM717LjQ",
+        "fieldName": "Is True Video Feedback Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8sCt6ttcMeLRD",
+        "fieldName": "Is Homework Upload Asset?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "number"
+      }
+    ],
+    "singleLineText": [
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld3uqsvTrgAImBOh",
+        "fieldName": "Submission Assets Full Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": true,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldox2Rjj9YL3EYK6",
+        "fieldName": "Upload Destination",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldALREYJLGbCInMy",
+        "fieldName": "Asset Slot Base",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldy8UuxWmHT7WFFJ",
+        "fieldName": "Asset Key",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldXz9TNOnGeRXEL8",
+        "fieldName": "RecordId",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fld7Fbq1VHNTYBqOb",
+        "fieldName": "Program Instance - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldxcDBeWXEPV1rnO",
+        "fieldName": "Date - Convert to File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldzfpPNBX8ZmZ1sp",
+        "fieldName": "Asset Type - Convert for File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldv4Mhw3w84dXdxx",
+        "fieldName": "Google Drive Folder Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldV5480sMm40q0QX",
+        "fieldName": "Create Google Drive File Name",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldG5lWlsUcrDNlIg",
+        "fieldName": "Ready to Send to Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldDJN1RrVyxiKrWu",
+        "fieldName": "Why Not Ready for Make?",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldiqTrLE7N8gjsxL",
+        "fieldName": "Homework Name - Slot Correct",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      },
+      {
+        "tableId": "tblhMLKxQK77agtME",
+        "tableName": "Submission Assets",
+        "fieldId": "fldQDDzBS62Ow765c",
+        "fieldName": "Workflow Next Step",
+        "fieldType": "formula",
+        "roleGuess": "formula",
+        "isPrimaryField": false,
+        "resultType": "singleLineText"
+      }
+    ]
+  },
+  "links": [
+    {
+      "fromTable": "Submission Assets",
+      "fromField": "Duplicate Match Record",
+      "toTable": "Submission Assets",
+      "inverseField": "From field: Duplicate Match Record",
+      "prefersSingleRecordLink": true
+    },
+    {
+      "fromTable": "Submission Assets",
+      "fromField": "From field: Duplicate Match Record",
+      "toTable": "Submission Assets",
+      "inverseField": "Duplicate Match Record",
+      "prefersSingleRecordLink": false
+    }
+  ]
+}

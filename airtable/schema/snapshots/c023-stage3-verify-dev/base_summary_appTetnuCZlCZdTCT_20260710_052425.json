@@ -1,0 +1,26 @@
+{
+  "baseId": "appTetnuCZlCZdTCT",
+  "baseName": "127SI - SHOOTING CHALLENGE - DEV",
+  "generatedAt": "2026-07-10T05:24:27",
+  "tableCount": 1,
+  "viewCountBasic": 0,
+  "viewCountDetailed": 0,
+  "linkCount": 4,
+  "dependencyCount": 35,
+  "tables": [
+    "Submission Assets"
+  ],
+  "topHubTables": [
+    {
+      "table": "Submission Assets",
+      "degree": 8
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 35
+    }
+  ],
+  "viewsPerTable": {}
+}

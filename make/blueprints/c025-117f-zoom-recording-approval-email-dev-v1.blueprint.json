@@ -1,0 +1,1002 @@
+{
+  "name": "Shooting Challenge - DEV - Zoom Recording Approval Email - 117f - v1",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": null,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0,
+          "name": "1 - Custom webhook (117f)"
+        },
+        "restore": {
+          "parameters": {
+            "hook": {
+              "data": {
+                "editable": "true"
+              },
+              "label": "REPLACE_WITH_DEV_CUSTOM_WEBHOOK"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "hook",
+            "type": "hook:gateway-webhook",
+            "label": "Webhook",
+            "required": true
+          },
+          {
+            "name": "maxResults",
+            "type": "number",
+            "label": "Maximum number of results"
+          }
+        ],
+        "interface": [
+          {
+            "name": "automationNumber",
+            "type": "text"
+          },
+          {
+            "name": "templateKey",
+            "type": "text"
+          },
+          {
+            "name": "sendKey",
+            "type": "text"
+          },
+          {
+            "name": "enrollmentRid",
+            "type": "text"
+          },
+          {
+            "name": "zoomMeetingRid",
+            "type": "text"
+          },
+          {
+            "name": "zoomAttendanceId",
+            "type": "text"
+          },
+          {
+            "name": "timing",
+            "type": "text"
+          }
+        ],
+        "notes": [
+          "MIKE_RECONNECT: create/select Custom webhook; disable automatic early 2xx",
+          "Do not commit webhook URL"
+        ],
+        "advanced": true
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "mapper": null,
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0,
+          "name": "2 - Payload validation"
+        }
+      },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 4,
+              "module": "datastore:GetRecord",
+              "version": 1,
+              "parameters": {},
+              "filter": {
+                "name": "Valid 117f payload",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.automationNumber}}",
+                      "b": "117f",
+                      "o": "text:equal"
+                    },
+                    {
+                      "a": "{{1.templateKey}}",
+                      "b": "ZOOM_RECORDING_APPROVED",
+                      "o": "text:equal"
+                    },
+                    {
+                      "a": "{{1.sendKey}}",
+                      "b": "ZOOM_REC_EMAIL|",
+                      "o": "text:startswith"
+                    },
+                    {
+                      "a": "{{1.enrollmentRid}}",
+                      "b": "rec",
+                      "o": "text:startswith"
+                    },
+                    {
+                      "a": "{{1.zoomMeetingRid}}",
+                      "b": "rec",
+                      "o": "text:startswith"
+                    },
+                    {
+                      "a": "{{1.zoomAttendanceId}}",
+                      "b": "rec",
+                      "o": "text:startswith"
+                    }
+                  ]
+                ]
+              },
+              "mapper": {
+                "datastore": "",
+                "key": "{{1.sendKey}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": -150,
+                  "name": "4 - Data Store lookup by sendKey"
+                },
+                "restore": {
+                  "expect": {
+                    "datastore": {
+                      "mode": "chose",
+                      "label": "C025_117f_DEV_SendKeys — RECONNECT"
+                    }
+                  }
+                },
+                "expect": [
+                  {
+                    "name": "datastore",
+                    "type": "select",
+                    "label": "Data store",
+                    "required": true
+                  },
+                  {
+                    "name": "key",
+                    "type": "text",
+                    "label": "Key",
+                    "required": true
+                  }
+                ],
+                "notes": [
+                  "MIKE_RECONNECT: select or create Data Store named C025_117f_DEV_SendKeys",
+                  "Schema keys: sendKey,status,zoomAttendanceId,gmailMessageId,sentAt,automationNumber,templateKey"
+                ]
+              }
+            },
+            {
+              "id": 5,
+              "module": "builtin:BasicRouter",
+              "version": 1,
+              "mapper": null,
+              "metadata": {
+                "designer": {
+                  "x": 900,
+                  "y": -150,
+                  "name": "5 - Duplicate vs new send"
+                }
+              },
+              "routes": [
+                {
+                  "flow": [
+                    {
+                      "id": 6,
+                      "module": "gateway:WebhookRespond",
+                      "version": 1,
+                      "parameters": {},
+                      "mapper": {
+                        "status": "200",
+                        "body": "{\"status\":\"already_sent\",\"sendKey\":\"{{1.sendKey}}\",\"automationNumber\":\"117f\"}",
+                        "headers": [
+                          {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1200,
+                          "y": -300,
+                          "name": "6 - HTTP 200 already_sent (skip Gmail)"
+                        },
+                        "expect": [
+                          {
+                            "name": "status",
+                            "type": "text",
+                            "label": "Status",
+                            "required": true
+                          },
+                          {
+                            "name": "body",
+                            "type": "text",
+                            "label": "Body"
+                          }
+                        ],
+                        "notes": [
+                          "No early 2xx — this module is the only HTTP response on this branch"
+                        ]
+                      },
+                      "filter": {
+                        "name": "Duplicate sendKey already sent",
+                        "conditions": [
+                          [
+                            {
+                              "a": "{{4.status}}",
+                              "b": "sent",
+                              "o": "text:equal"
+                            }
+                          ]
+                        ]
+                      }
+                    }
+                  ]
+                },
+                {
+                  "flow": [
+                    {
+                      "id": 7,
+                      "module": "airtable:ActionGetRecord",
+                      "version": 3,
+                      "parameters": {
+                        "__IMTCONN__": ""
+                      },
+                      "mapper": {
+                        "id": "{{1.zoomAttendanceId}}",
+                        "base": "appTetnuCZlCZdTCT",
+                        "table": "tblfwbt6aCDCM5gUz",
+                        "useColumnId": false
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1200,
+                          "y": 0,
+                          "name": "7 - Airtable Get Zoom Attendance"
+                        },
+                        "restore": {
+                          "expect": {
+                            "base": {
+                              "mode": "chose",
+                              "label": "DEV — Shooting Challenge (appTetnuCZlCZdTCT) — RECONNECT"
+                            },
+                            "table": {
+                              "mode": "chose",
+                              "label": "Zoom Attendance"
+                            },
+                            "useColumnId": {
+                              "mode": "chose"
+                            }
+                          },
+                          "parameters": {
+                            "__IMTCONN__": {
+                              "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                              },
+                              "label": "REPLACE_WITH_DEV_AIRTABLE_CONNECTION"
+                            }
+                          }
+                        },
+                        "parameters": [
+                          {
+                            "name": "__IMTCONN__",
+                            "type": "account:airtable3,airtable2",
+                            "label": "Connection",
+                            "required": true
+                          }
+                        ],
+                        "expect": [
+                          {
+                            "name": "base",
+                            "type": "select",
+                            "label": "Base",
+                            "required": true
+                          },
+                          {
+                            "name": "useColumnId",
+                            "type": "boolean",
+                            "label": "Use Column ID",
+                            "required": true
+                          },
+                          {
+                            "name": "table",
+                            "type": "select",
+                            "label": "Table",
+                            "required": true
+                          },
+                          {
+                            "name": "id",
+                            "type": "text",
+                            "label": "Record ID",
+                            "required": true
+                          }
+                        ],
+                        "notes": [
+                          "MIKE_RECONNECT: select DEV Airtable connection",
+                          "MIKE_VERIFY: base must remain appTetnuCZlCZdTCT (DEV only)",
+                          "Do not write Send Key / Sent At from Make"
+                        ]
+                      }
+                    },
+                    {
+                      "id": 8,
+                      "module": "airtable:ActionGetRecord",
+                      "version": 3,
+                      "parameters": {
+                        "__IMTCONN__": ""
+                      },
+                      "mapper": {
+                        "id": "{{1.enrollmentRid}}",
+                        "base": "appTetnuCZlCZdTCT",
+                        "table": "tbl3PFmwbRoabu1YV",
+                        "useColumnId": false
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1500,
+                          "y": 0,
+                          "name": "8 - Airtable Get Enrollment"
+                        },
+                        "restore": {
+                          "expect": {
+                            "base": {
+                              "mode": "chose",
+                              "label": "DEV — Shooting Challenge (appTetnuCZlCZdTCT) — RECONNECT"
+                            },
+                            "table": {
+                              "mode": "chose",
+                              "label": "Enrollments"
+                            },
+                            "useColumnId": {
+                              "mode": "chose"
+                            }
+                          },
+                          "parameters": {
+                            "__IMTCONN__": {
+                              "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                              },
+                              "label": "REPLACE_WITH_DEV_AIRTABLE_CONNECTION"
+                            }
+                          }
+                        },
+                        "parameters": [
+                          {
+                            "name": "__IMTCONN__",
+                            "type": "account:airtable3,airtable2",
+                            "label": "Connection",
+                            "required": true
+                          }
+                        ],
+                        "expect": [
+                          {
+                            "name": "base",
+                            "type": "select",
+                            "label": "Base",
+                            "required": true
+                          },
+                          {
+                            "name": "useColumnId",
+                            "type": "boolean",
+                            "label": "Use Column ID",
+                            "required": true
+                          },
+                          {
+                            "name": "table",
+                            "type": "select",
+                            "label": "Table",
+                            "required": true
+                          },
+                          {
+                            "name": "id",
+                            "type": "text",
+                            "label": "Record ID",
+                            "required": true
+                          }
+                        ],
+                        "notes": [
+                          "MIKE_RECONNECT: select DEV Airtable connection",
+                          "MIKE_VERIFY: base must remain appTetnuCZlCZdTCT (DEV only)",
+                          "Do not write Send Key / Sent At from Make"
+                        ]
+                      }
+                    },
+                    {
+                      "id": 9,
+                      "module": "airtable:ActionGetRecord",
+                      "version": 3,
+                      "parameters": {
+                        "__IMTCONN__": ""
+                      },
+                      "mapper": {
+                        "id": "{{1.zoomMeetingRid}}",
+                        "base": "appTetnuCZlCZdTCT",
+                        "table": "tblWcSHEm8vNNIxyB",
+                        "useColumnId": false
+                      },
+                      "metadata": {
+                        "designer": {
+                          "x": 1800,
+                          "y": 0,
+                          "name": "9 - Airtable Get Zoom Meeting"
+                        },
+                        "restore": {
+                          "expect": {
+                            "base": {
+                              "mode": "chose",
+                              "label": "DEV — Shooting Challenge (appTetnuCZlCZdTCT) — RECONNECT"
+                            },
+                            "table": {
+                              "mode": "chose",
+                              "label": "Zoom Meetings"
+                            },
+                            "useColumnId": {
+                              "mode": "chose"
+                            }
+                          },
+                          "parameters": {
+                            "__IMTCONN__": {
+                              "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                              },
+                              "label": "REPLACE_WITH_DEV_AIRTABLE_CONNECTION"
+                            }
+                          }
+                        },
+                        "parameters": [
+                          {
+                            "name": "__IMTCONN__",
+                            "type": "account:airtable3,airtable2",
+                            "label": "Connection",
+                            "required": true
+                          }
+                        ],
+                        "expect": [
+                          {
+                            "name": "base",
+                            "type": "select",
+                            "label": "Base",
+                            "required": true
+                          },
+                          {
+                            "name": "useColumnId",
+                            "type": "boolean",
+                            "label": "Use Column ID",
+                            "required": true
+                          },
+                          {
+                            "name": "table",
+                            "type": "select",
+                            "label": "Table",
+                            "required": true
+                          },
+                          {
+                            "name": "id",
+                            "type": "text",
+                            "label": "Record ID",
+                            "required": true
+                          }
+                        ],
+                        "notes": [
+                          "MIKE_RECONNECT: select DEV Airtable connection",
+                          "MIKE_VERIFY: base must remain appTetnuCZlCZdTCT (DEV only)",
+                          "Do not write Send Key / Sent At from Make"
+                        ]
+                      }
+                    },
+                    {
+                      "id": 10,
+                      "module": "builtin:BasicRouter",
+                      "version": 1,
+                      "mapper": null,
+                      "metadata": {
+                        "designer": {
+                          "x": 2100,
+                          "y": 0,
+                          "name": "10 - Revalidation"
+                        }
+                      },
+                      "routes": [
+                        {
+                          "flow": [
+                            {
+                              "id": 12,
+                              "module": "util:SetVariable2",
+                              "version": 1,
+                              "parameters": {},
+                              "filter": {
+                                "name": "ZA OK · Recording Quiz · Satisfactory · Conflict≠1",
+                                "conditions": [
+                                  [
+                                    {
+                                      "a": "{{7.\\Attendance Method\\}}",
+                                      "b": "Recording Quiz",
+                                      "o": "text:equal"
+                                    },
+                                    {
+                                      "a": "{{7.\\Recording Quiz Satisfactory?\\}}",
+                                      "b": "true",
+                                      "o": "boolean:equal"
+                                    },
+                                    {
+                                      "a": "{{7.\\Zoom Credit Conflict?\\}}",
+                                      "b": "1",
+                                      "o": "number:notequal"
+                                    }
+                                  ]
+                                ]
+                              },
+                              "mapper": {
+                                "scope": "roundtrip",
+                                "variables": [
+                                  {
+                                    "name": "sendMode",
+                                    "value": "test"
+                                  },
+                                  {
+                                    "name": "testRecipientEmail",
+                                    "value": "REPLACE_WITH_MIKE_CONTROLLED_TEST_INBOX"
+                                  },
+                                  {
+                                    "name": "replyTo",
+                                    "value": "coach@127sportsintensity.com"
+                                  },
+                                  {
+                                    "name": "intendedLiveRecipient",
+                                    "value": "{{ifempty(8.\\Parent Email - Cleaned\\; 8.\\Parent Email\\)}}"
+                                  }
+                                ]
+                              },
+                              "metadata": {
+                                "designer": {
+                                  "x": 2400,
+                                  "y": -150,
+                                  "name": "12 - Test-recipient resolution (ops placeholder)"
+                                },
+                                "notes": [
+                                  "MIKE_REMAP: replace REPLACE_WITH_MIKE_CONTROLLED_TEST_INBOX with Mike-controlled test inbox (ops only)",
+                                  "Never map Parent Email fields to Gmail To while sendMode=test",
+                                  "Relationship ID checks: verify Enrollment/Meeting links match payload in UI if filter operators differ",
+                                  "MIKE_REPAIR: if import fails on this module, replace with Tools > Set multiple variables and remap fields"
+                                ],
+                                "parameters": [],
+                                "expect": [
+                                  {
+                                    "name": "scope",
+                                    "type": "select",
+                                    "label": "Variable lifetime"
+                                  },
+                                  {
+                                    "name": "variables",
+                                    "type": "array",
+                                    "label": "Variables"
+                                  }
+                                ]
+                              }
+                            },
+                            {
+                              "id": 13,
+                              "module": "builtin:BasicRouter",
+                              "version": 1,
+                              "mapper": null,
+                              "metadata": {
+                                "designer": {
+                                  "x": 2700,
+                                  "y": -150,
+                                  "name": "Recipient gate"
+                                }
+                              },
+                              "routes": [
+                                {
+                                  "flow": [
+                                    {
+                                      "id": 15,
+                                      "module": "util:SetVariable2",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "filter": {
+                                        "name": "Test inbox configured",
+                                        "conditions": [
+                                          [
+                                            {
+                                              "a": "{{12.testRecipientEmail}}",
+                                              "o": "exist"
+                                            },
+                                            {
+                                              "a": "{{12.testRecipientEmail}}",
+                                              "b": "REPLACE_WITH_MIKE_CONTROLLED_TEST_INBOX",
+                                              "o": "text:notequal"
+                                            },
+                                            {
+                                              "a": "{{12.testRecipientEmail}}",
+                                              "b": "",
+                                              "o": "text:notequal"
+                                            }
+                                          ]
+                                        ]
+                                      },
+                                      "mapper": {
+                                        "scope": "roundtrip",
+                                        "variables": [
+                                          {
+                                            "name": "subject",
+                                            "value": "Zoom Recording Quiz Approved for {{8.\\Full Athlete Name\\}}"
+                                          },
+                                          {
+                                            "name": "html",
+                                            "value": "<!doctype html>\n<html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>Zoom Recording Quiz Approved</title></head>\n<body style=\"margin:0;padding:0;background:#F2F2F2;font-family:Arial,Helvetica,sans-serif;color:#262626;\">\n<div style=\"padding:20px 12px;background:#F2F2F2;\"><div style=\"max-width:640px;margin:0 auto;\">\n<div style=\"background:#fff4e8;border:1px solid #ffd3a1;color:#7a4a00;border-radius:12px;padding:12px 14px;margin:0 0 14px 0;font-size:13px;font-weight:700;\">TEST MODE — not sent to the live parent recipient (intended: {{8.\\Parent Email - Cleaned\\}}).</div>\n<div style=\"background:#0034B7;color:#ffffff;border-radius:16px;padding:18px 20px;margin:0 0 14px 0;\">\n<div style=\"font-size:21px;font-weight:800;margin:0 0 6px 0;\">Zoom Recording Quiz Approved</div>\n<div style=\"font-size:12px;opacity:0.96;\">A recording quiz review is complete for your athlete.</div>\n</div>\n<div style=\"background:#ffffff;border-radius:14px;padding:18px 20px;margin:0 0 14px 0;\">\n<div style=\"font-size:16px;font-weight:700;color:#FF8B00;margin:0 0 10px 0;\">Update</div>\n<p style=\"margin:0;line-height:1.4;\">Hello {{8.\\Parent First Name\\}},</p>\n<p style=\"margin:10px 0 0 0;line-height:1.4;\">The Zoom recording quiz for {{8.\\Full Athlete Name\\}} has been marked <strong>Satisfactory</strong>. Recording attendance credit follows Stage 17 program rules.</p>\n</div>\n<div style=\"background:#ffffff;border-radius:14px;padding:18px 20px;margin:0 0 14px 0;\">\n<div style=\"font-size:16px;font-weight:700;color:#FF8B00;margin:0 0 10px 0;\">Summary</div>\n<table role=\"presentation\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:100%;border-collapse:collapse;\">\n<tr><td style=\"padding:4px 0;font-weight:700;width:165px;\">Athlete</td><td style=\"padding:4px 0;\">{{8.\\Full Athlete Name\\}}</td></tr>\n<tr><td style=\"padding:4px 0;font-weight:700;\">Meeting</td><td style=\"padding:4px 0;\">{{9.\\Meeting Name\\}}</td></tr>\n<tr><td style=\"padding:4px 0;font-weight:700;\">Meeting Start</td><td style=\"padding:4px 0;\">{{9.\\Start Time\\}}</td></tr>\n<tr><td style=\"padding:4px 0;font-weight:700;\">Timing</td><td style=\"padding:4px 0;\">{{ifempty(1.timing; \"On Satisfactory\")}}</td></tr>\n<tr><td style=\"padding:4px 0;font-weight:700;\">Recording XP</td><td style=\"padding:4px 0;\">{{7.\\Zoom XP Amount\\}}</td></tr>\n</table>\n</div>\n<div style=\"background:#ffffff;border-radius:14px;padding:18px 20px;margin:0 0 14px 0;\">\n<div style=\"font-size:16px;font-weight:700;color:#FF8B00;margin:0 0 10px 0;\">Questions</div>\n<p style=\"margin:0 0 10px 0;\">Please reply if you have any questions about this update or next steps.</p>\n<p style=\"margin:0;\">Thank you,<br>Coach Mike</p>\n</div>\n<div style=\"background:#0034B7;color:#ffffff;border-radius:16px;padding:16px 20px;font-size:12px;\">127 Sports Intensity<br>Youth sports communication and development support</div>\n</div></div>\n</body></html>"
+                                          }
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3000,
+                                          "y": -300,
+                                          "name": "14 - Compose branded HTML"
+                                        },
+                                        "notes": [
+                                          "HTML shell mirrors 071/073 brand; full helper in make/lib/c025-117f-make-scenario.js",
+                                          "MIKE_REPAIR: if import fails on this module, replace with Tools > Set multiple variables and remap fields"
+                                        ],
+                                        "parameters": [],
+                                        "expect": [
+                                          {
+                                            "name": "scope",
+                                            "type": "select",
+                                            "label": "Variable lifetime"
+                                          },
+                                          {
+                                            "name": "variables",
+                                            "type": "array",
+                                            "label": "Variables"
+                                          }
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "id": 16,
+                                      "module": "google-email:ActionSendEmail",
+                                      "version": 2,
+                                      "parameters": {
+                                        "account": ""
+                                      },
+                                      "mapper": {
+                                        "to": [
+                                          "{{12.testRecipientEmail}}"
+                                        ],
+                                        "cc": [],
+                                        "bcc": [],
+                                        "from": "",
+                                        "replyTo": "{{12.replyTo}}",
+                                        "subject": "{{15.subject}}",
+                                        "html": "{{15.html}}",
+                                        "attachments": []
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3300,
+                                          "y": -300,
+                                          "name": "15 - Gmail send (test inbox only)"
+                                        },
+                                        "restore": {
+                                          "parameters": {
+                                            "account": {
+                                              "label": "REPLACE_WITH_DEV_GMAIL_CONNECTION"
+                                            }
+                                          }
+                                        },
+                                        "parameters": [
+                                          {
+                                            "name": "account",
+                                            "type": "account:google-restricted",
+                                            "label": "Connection"
+                                          }
+                                        ],
+                                        "notes": [
+                                          "MIKE_RECONNECT: select DEV/coach Gmail connection",
+                                          "To MUST remain testRecipientEmail — never parent address in DEV test mode"
+                                        ]
+                                      },
+                                      "onerror": [
+                                        {
+                                          "id": 17,
+                                          "module": "gateway:WebhookRespond",
+                                          "version": 1,
+                                          "parameters": {},
+                                          "mapper": {
+                                            "status": "502",
+                                            "body": "{\"status\":\"error\",\"error\":\"Gmail send failed\"}",
+                                            "headers": [
+                                              {
+                                                "name": "Content-Type",
+                                                "value": "application/json"
+                                              }
+                                            ]
+                                          },
+                                          "metadata": {
+                                            "designer": {
+                                              "x": 3600,
+                                              "y": -450,
+                                              "name": "16 - HTTP 502 Gmail failure (no Data Store write)"
+                                            },
+                                            "expect": [
+                                              {
+                                                "name": "status",
+                                                "type": "text",
+                                                "label": "Status",
+                                                "required": true
+                                              },
+                                              {
+                                                "name": "body",
+                                                "type": "text",
+                                                "label": "Body"
+                                              }
+                                            ],
+                                            "notes": [
+                                              "No early 2xx — this module is the only HTTP response on this branch"
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "id": 18,
+                                      "module": "datastore:AddRecord",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "mapper": {
+                                        "datastore": "",
+                                        "key": "{{1.sendKey}}",
+                                        "overwrite": true,
+                                        "data": {
+                                          "sendKey": "{{1.sendKey}}",
+                                          "status": "sent",
+                                          "zoomAttendanceId": "{{1.zoomAttendanceId}}",
+                                          "gmailMessageId": "{{16.id}}",
+                                          "sentAt": "{{now}}",
+                                          "automationNumber": "117f",
+                                          "templateKey": "ZOOM_RECORDING_APPROVED"
+                                        }
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3600,
+                                          "y": -300,
+                                          "name": "17 - Data Store success write (after Gmail)"
+                                        },
+                                        "restore": {
+                                          "expect": {
+                                            "datastore": {
+                                              "mode": "chose",
+                                              "label": "C025_117f_DEV_SendKeys — RECONNECT"
+                                            }
+                                          }
+                                        },
+                                        "notes": [
+                                          "MIKE_RECONNECT: same Data Store as module 4",
+                                          "Write ONLY after Gmail success — never before",
+                                          "Make must NOT write Airtable Send Key / Sent At (117f stamps after HTTP 2xx)"
+                                        ]
+                                      }
+                                    },
+                                    {
+                                      "id": 19,
+                                      "module": "gateway:WebhookRespond",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "mapper": {
+                                        "status": "200",
+                                        "body": "{\"status\":\"sent\",\"sendKey\":\"{{1.sendKey}}\",\"automationNumber\":\"117f\"}",
+                                        "headers": [
+                                          {
+                                            "name": "Content-Type",
+                                            "value": "application/json"
+                                          }
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3900,
+                                          "y": -300,
+                                          "name": "18 - HTTP 200 sent"
+                                        },
+                                        "expect": [
+                                          {
+                                            "name": "status",
+                                            "type": "text",
+                                            "label": "Status",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "body",
+                                            "type": "text",
+                                            "label": "Body"
+                                          }
+                                        ],
+                                        "notes": [
+                                          "No early 2xx — this module is the only HTTP response on this branch"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                },
+                                {
+                                  "flow": [
+                                    {
+                                      "id": 14,
+                                      "module": "gateway:WebhookRespond",
+                                      "version": 1,
+                                      "parameters": {},
+                                      "mapper": {
+                                        "status": "422",
+                                        "body": "{\"status\":\"error\",\"error\":\"Missing recipient (configure Mike test inbox for sendMode=test)\"}",
+                                        "headers": [
+                                          {
+                                            "name": "Content-Type",
+                                            "value": "application/json"
+                                          }
+                                        ]
+                                      },
+                                      "metadata": {
+                                        "designer": {
+                                          "x": 3000,
+                                          "y": 0,
+                                          "name": "13 - HTTP 422 missing recipient"
+                                        },
+                                        "expect": [
+                                          {
+                                            "name": "status",
+                                            "type": "text",
+                                            "label": "Status",
+                                            "required": true
+                                          },
+                                          {
+                                            "name": "body",
+                                            "type": "text",
+                                            "label": "Body"
+                                          }
+                                        ],
+                                        "notes": [
+                                          "No early 2xx — this module is the only HTTP response on this branch"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "flow": [
+                            {
+                              "id": 11,
+                              "module": "gateway:WebhookRespond",
+                              "version": 1,
+                              "parameters": {},
+                              "mapper": {
+                                "status": "422",
+                                "body": "{\"status\":\"error\",\"error\":\"Airtable revalidation failed (method, satisfactory, conflict, or relationship mismatch)\"}",
+                                "headers": [
+                                  {
+                                    "name": "Content-Type",
+                                    "value": "application/json"
+                                  }
+                                ]
+                              },
+                              "metadata": {
+                                "designer": {
+                                  "x": 2400,
+                                  "y": 150,
+                                  "name": "11 - HTTP 422 revalidation failed"
+                                },
+                                "expect": [
+                                  {
+                                    "name": "status",
+                                    "type": "text",
+                                    "label": "Status",
+                                    "required": true
+                                  },
+                                  {
+                                    "name": "body",
+                                    "type": "text",
+                                    "label": "Body"
+                                  }
+                                ],
+                                "notes": [
+                                  "No early 2xx — this module is the only HTTP response on this branch"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 3,
+              "module": "gateway:WebhookRespond",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "status": "400",
+                "body": "{\"status\":\"error\",\"error\":\"Invalid 117f payload (automationNumber, templateKey, sendKey, or record ids)\"}",
+                "headers": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": 300,
+                  "name": "3 - HTTP 400 invalid payload"
+                },
+                "expect": [
+                  {
+                    "name": "status",
+                    "type": "text",
+                    "label": "Status",
+                    "required": true
+                  },
+                  {
+                    "name": "body",
+                    "type": "text",
+                    "label": "Body"
+                  }
+                ],
+                "notes": [
+                  "No early 2xx — this module is the only HTTP response on this branch"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": true,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": {
+      "orphans": []
+    },
+    "zone": "us1.make.com",
+    "notes": [
+      {
+        "moduleId": 1,
+        "content": "C-025 117f DEV — keep scenario OFF. No PROD base. No parent To:. No Airtable stamp writes from Make."
+      }
+    ]
+  }
+}

@@ -1,0 +1,63 @@
+[
+  {
+    "branch": "overnight/v2-run/worker-a-s2-c024-inventory",
+    "sha": "24ad0f11730c9ce689ff9770a2e8449275cdf806",
+    "ahead": 8,
+    "files": [
+      "docs/deploy-checklists/C-024-dedupe-field-inventory-stage2.md",
+      "docs/overnight-runs/results/S2-worker-a-result.md"
+    ]
+  },
+  {
+    "branch": "overnight/v2-run/worker-c-s2-c024-idempotency-tests",
+    "sha": "15e456dba13594dbd1b1bb82b19a43c6030bc188",
+    "ahead": 6,
+    "files": [
+      "docs/overnight-runs/results/S2-worker-c-result.md",
+      "lambda/upload-asset/tests/test_c024_idempotency_stage2.py",
+      "tools/airtable/tests/test_c024_070a_double_send_mocks.py",
+      "tools/airtable/tests/test_c024_source_key_guards.py"
+    ]
+  },
+  {
+    "branch": "overnight/v2-run/worker-d-s2-c024-dedupe-contract",
+    "sha": "47c3c9ae0a00f550c6611cef80c7074de25e353f",
+    "ahead": 2,
+    "files": [
+      "docs/deploy-checklists/C-024-audit-dedupe-key-coverage-requirements.md",
+      "docs/deploy-checklists/C-024-dedupe-key-contract-stage2.md",
+      "docs/overnight-runs/results/S2-worker-d-result.md",
+      "docs/v2-change-backlog.md"
+    ]
+  },
+  {
+    "branch": "overnight/v2-run/worker-a-s6-homework-video-pipeline",
+    "sha": "8afe0927407fbfc29be62d98d22a1af2c849920d",
+    "ahead": 0,
+    "files": []
+  },
+  {
+    "branch": "overnight/v2-run/worker-b-s7-zoom-achievements-pipeline",
+    "sha": "bea7dd6be4fb2fb8163c2f54a1cfe92811f5f9f8",
+    "ahead": 0,
+    "files": []
+  },
+  {
+    "branch": "overnight/v2-run/worker-c-s8-summary-comms-pipeline",
+    "sha": "7579623bb96663c8ebb71fbc7f0187db840e694b",
+    "ahead": 0,
+    "files": []
+  },
+  {
+    "branch": "overnight/v2-run/worker-d-s9-learning-activities",
+    "sha": "eb612802715d59b9ee58ce69093cad53e435fcbb",
+    "ahead": 0,
+    "files": []
+  },
+  {
+    "branch": "overnight/v2-run/worker-a-s10-prod-rollback-docs",
+    "sha": "6b70b5183940689b17b6b702394007506c776255",
+    "ahead": 0,
+    "files": []
+  }
+]

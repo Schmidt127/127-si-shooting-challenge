@@ -1,0 +1,26 @@
+{
+  "baseId": "appn84sqPw03zEbTT",
+  "baseName": "127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026",
+  "generatedAt": "2026-07-10T05:24:02",
+  "tableCount": 1,
+  "viewCountBasic": 0,
+  "viewCountDetailed": 0,
+  "linkCount": 2,
+  "dependencyCount": 35,
+  "tables": [
+    "Submission Assets"
+  ],
+  "topHubTables": [
+    {
+      "table": "Submission Assets",
+      "degree": 4
+    }
+  ],
+  "mostComputedTables": [
+    {
+      "table": "Submission Assets",
+      "computedFieldCount": 35
+    }
+  ],
+  "viewsPerTable": {}
+}
