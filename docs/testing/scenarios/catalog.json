@@ -218,6 +218,13 @@
       "type": "Homework Quiz",
       "test_status": "repository_test_pass",
       "file": "scn-028-quiz-duplicate-prevent.json"
+    },
+    {
+      "scenario_id": "SCN-029",
+      "name": "weekly-email-retry-after-make-failure",
+      "type": "Weekly Email",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-029-weekly-email-retry-after-make-failure.json"
     }
   ]
 }

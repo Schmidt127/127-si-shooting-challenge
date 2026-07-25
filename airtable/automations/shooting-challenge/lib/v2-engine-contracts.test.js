@@ -52,6 +52,8 @@ const {
   evaluateWeeklySummaryBuildGate,
   evaluateWeeklySummarySendGate,
   decideAutomaticWeeklySummaryAction,
+  planWeeklyEmailWebhookOutcome,
+  decideWeeklyEmailRetryAction,
   mapAttachmentsToAssetSlotPlans,
   inferHomeworkAssetSlot,
   decideHw17QuizIntakeAction,
@@ -584,6 +586,97 @@ test("automatic weekly summary: resend prevention + inactive skip", () => {
     }).action,
     "build_then_send",
   );
+});
+
+test("SC-041 webhook failure keeps Send to Make? retryable", () => {
+  const failed = planWeeklyEmailWebhookOutcome({
+    webhookOk: false,
+    emailSent: false,
+    errorMessage: "Webhook failed with status 502",
+  });
+  assert.strictEqual(failed.action, "handoff_failed_retryable");
+  assert.strictEqual(failed.allowRetry, true);
+  assert.strictEqual(failed.retryClass, "automatically_retryable");
+  assert.ok(failed.mustNotClear.includes("Send to Make?"));
+  assert.ok(failed.mustNotWrite.includes("Weekly Email Sent?"));
+  assert.strictEqual(
+    failed.fields["Weekly Email Error"],
+    "Webhook failed with status 502"
+  );
+  assert.strictEqual(failed.fields["Send to Make?"], undefined);
+
+  const ok = planWeeklyEmailWebhookOutcome({ webhookOk: true, emailSent: false });
+  assert.strictEqual(ok.action, "handoff_success");
+  assert.strictEqual(ok.fields["Send to Make?"], false);
+  assert.strictEqual(ok.fields["Weekly Email Error"], "");
+  assert.ok(ok.mustNotWrite.includes("Weekly Email Sent?"));
+
+  const already = planWeeklyEmailWebhookOutcome({ webhookOk: false, emailSent: true });
+  assert.strictEqual(already.action, "never_retry_already_completed");
+  assert.strictEqual(already.allowRetry, false);
+});
+
+test("SC-041 weekly email retry decision matrix", () => {
+  assert.strictEqual(
+    decideWeeklyEmailRetryAction({ emailSent: true, sendToMake: true, emailReady: true }).action,
+    "do_not_retry"
+  );
+  assert.strictEqual(
+    decideWeeklyEmailRetryAction({
+      emailSent: false,
+      sendToMake: true,
+      emailReady: true,
+      hasErrorMessage: true,
+    }).action,
+    "rerun_074"
+  );
+  assert.strictEqual(
+    decideWeeklyEmailRetryAction({
+      emailSent: false,
+      sendToMake: false,
+      emailReady: true,
+    }).action,
+    "rearm_send_to_make"
+  );
+  assert.strictEqual(
+    decideWeeklyEmailRetryAction({
+      emailSent: false,
+      sendToMake: false,
+      emailReady: false,
+    }).action,
+    "rerun_072_then_074"
+  );
+  assert.strictEqual(
+    decideWeeklyEmailRetryAction({
+      emailSent: false,
+      sendToMake: true,
+      emailReady: true,
+      makeSendStatus: "Sent",
+    }).action,
+    "do_not_retry"
+  );
+});
+
+test("074 script keeps Send to Make? on webhook failure path", () => {
+  const fs = require("fs");
+  const path = require("path");
+  const body = fs.readFileSync(
+    path.join(
+      __dirname,
+      "..",
+      "074-email-notifications-and-external-handoffs-send-weekly-summary-email-package-to-make.js"
+    ),
+    "utf8"
+  );
+  assert.ok(body.includes("Do not uncheck Send to Make? on webhook failure"));
+  assert.ok(body.includes("Do NOT check Weekly Email Sent? here"));
+  // Failure catch block must not assign Send to Make? = false
+  const catchIdx = body.indexOf("} catch (error) {");
+  const successIdx = body.indexOf("SECTION 10: SUCCESS WRITEBACK");
+  assert.ok(catchIdx > 0 && successIdx > catchIdx);
+  const failBlock = body.slice(catchIdx, successIdx);
+  assert.ok(!/Send to Make\?\s*[:=]\s*false/.test(failBlock));
+  assert.ok(failBlock.includes("FIELD_EMAIL_ERROR"));
 });
 
 test("weekly email eventId + priorSaturdayKeyDenver match PR #35", () => {

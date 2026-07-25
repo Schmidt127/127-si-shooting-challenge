@@ -22,6 +22,7 @@
 
 1. First live Sunday: WAS create volume, email volume, Sent? writebacks, duplicate WAS check.
 2. Confirm dryRun/includeSchmidt inputs match intended season posture in UI.
+3. **SC-041 retry SOP** (repo ready): if a WAS has `Weekly Email Error` and `Send to Make?` still checked, follow [`WEEKLY-EMAIL-RETRY-SOP.md`](./WEEKLY-EMAIL-RETRY-SOP.md) — re-run **074** once after fix; never retry when `Weekly Email Sent?` is checked. Fixture: SCN-029.
 
 ## Do not
 
