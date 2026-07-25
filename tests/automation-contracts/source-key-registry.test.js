@@ -48,11 +48,16 @@ test("formula-only fields are marked never-write in registry", () => {
   }
 });
 
-test("WEEKLY_THRESHOLD remains missing_writer (do not invent automation)", () => {
+test("WEEKLY_THRESHOLD writer is canonical 035 after SC-049 rebuild", () => {
   const row = (registry.prefixes || []).find((p) => String(p.prefix).startsWith("WEEKLY_THRESHOLD"));
   assert.ok(row);
-  assert.strictEqual(row.status, "missing_writer");
-  assert.strictEqual(row.authoritative_writer, null);
+  assert.strictEqual(row.status, "canonical");
+  assert.strictEqual(row.authoritative_writer, "035");
+  assert.strictEqual(row.format, "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}");
+  assert.ok(row.script_path);
+  const body = fs.readFileSync(path.join(repoRoot, row.script_path), "utf8");
+  assert.ok(body.includes("WEEKLY_THRESHOLD|"));
+  assert.ok(body.includes("createRecordAsync"));
 });
 
 console.log("source-key-registry tests passed");

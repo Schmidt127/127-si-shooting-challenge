@@ -272,6 +272,28 @@ test("rerun with identical inputs yields identical result", () => {
   assert.deepStrictEqual(first, second);
 });
 
+test("blank/null stats treated as zero (no throw) and still gate-block", () => {
+  const blankStats = {
+    totalSubmissions: null,
+    totalHomeworkCompletions: undefined,
+    totalVideoSubmissions: "",
+    totalZoomAttendances: null,
+    longestStreakDays: undefined,
+  };
+  const result = determineAllowedLevelWithGateBlocking(LEVELS, GATE_MAP, 1200, blankStats);
+  assert.strictEqual(result.gateBlocked, true);
+  assert.strictEqual(result.currentLevel.name, "Hot Hand");
+  assert.match(result.gateReason, /Submissions 0\/30/);
+});
+
+test("duplicate recalculation request is idempotent (same XP + stats)", () => {
+  const a = determineAllowedLevelWithGateBlocking(LEVELS, GATE_MAP, 200, ZERO_STATS);
+  const b = determineAllowedLevelWithGateBlocking(LEVELS, GATE_MAP, 200, ZERO_STATS);
+  assert.deepStrictEqual(a, b);
+  assert.strictEqual(a.currentLevel.name, "Rookie Shooter");
+  assert.strictEqual(a.gateBlocked, false);
+});
+
 // --- evaluateGate unit boundaries ---
 
 test("evaluateGate: disabled gate always passes", () => {

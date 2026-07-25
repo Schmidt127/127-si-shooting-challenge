@@ -25,6 +25,8 @@
  *   (Purpose=Homework 1, Slot=HW1, Send to Make Trigger=false; Source Attachment ID)
  * - 072 / 074 / 118 / 119 — weekly email build/send + priorSaturdayKeyDenver
  *   eventId = WEEKLY_EMAIL|{enrollmentId}|{weekId}
+ * - 035 — WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}
+ *   (reconstructed SC-049 / XP-D1; one XP Event per met 100/125/150 tier)
  *
  * C-010 (authoritative PR #35):
  * - Progress scripts 010/031/053/065 → Progress Processing Enabled? only
@@ -45,6 +47,7 @@ const SOURCE_KEY_PREFIXES = Object.freeze({
   shotMilestone: "SHOT_MILESTONE|",
   perfectWeek: "PERFECT_WEEK|",
   weeklyEmail: "WEEKLY_EMAIL|",
+  weeklyThreshold: "WEEKLY_THRESHOLD|",
   zoomAttendBase: "ZOOM_ATTEND_BASE",
   zoomAttendBonus2: "ZOOM_ATTEND_BONUS_2",
   zoomAttendBonus3: "ZOOM_ATTEND_BONUS_3",
@@ -52,6 +55,9 @@ const SOURCE_KEY_PREFIXES = Object.freeze({
   zoomRecording: "ZOOM_RECORDING",
   zoomLiveCanonical: "ZOOM_LIVE",
 });
+
+/** Weekly Threshold XP tiers (percent of weekly shot goal). */
+const WEEKLY_THRESHOLD_PERCENTS = Object.freeze([100, 125, 150]);
 
 /** Schmidt sandbox enrollment — excluded from weekly email / 072 comms. */
 const SCHMIDT_ENROLLMENT_ID = "recgP9qZYjAhE7NXm";
@@ -267,6 +273,156 @@ function buildPerfectWeekSourceKey(enrollmentId, weekId) {
     assertValidRecordId(enrollmentId, "enrollmentId"),
     assertValidRecordId(weekId, "weekId"),
   ].join("|");
+}
+
+/**
+ * Weekly Threshold Source Key (SC-049 rebuild):
+ * WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}
+ * One event per enrollment × week × met percent tier (100 / 125 / 150).
+ */
+function buildWeeklyThresholdSourceKey(enrollmentId, weekId, percent) {
+  const tier = Number(percent);
+  if (!WEEKLY_THRESHOLD_PERCENTS.includes(tier)) {
+    throw new Error(`Invalid weekly threshold percent: ${percent}`);
+  }
+  return [
+    SOURCE_KEY_PREFIXES.weeklyThreshold.slice(0, -1),
+    assertValidRecordId(enrollmentId, "enrollmentId"),
+    assertValidRecordId(weekId, "weekId"),
+    String(tier),
+  ].join("|");
+}
+
+/**
+ * Map Grade Band display labels to XP Reward Rule suffix codes used by
+ * WEEKLY_THRESHOLD_{100|125|150}_{K2|34|56|78|912}.
+ */
+function normalizeThresholdGradeBandCode(label) {
+  const original = String(label || "").trim();
+  if (!original) return "";
+  const compact = original.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (compact.includes("K2") || original.includes("K-2")) return "K2";
+  if (compact.includes("34") || original.includes("3-4")) return "34";
+  if (compact.includes("56") || original.includes("5-6")) return "56";
+  if (compact.includes("78") || original.includes("7-8")) return "78";
+  if (compact.includes("912") || original.includes("9-12")) return "912";
+  return "";
+}
+
+function buildWeeklyThresholdRuleKey(percent, bandCode) {
+  const tier = Number(percent);
+  const code = String(bandCode || "").trim();
+  if (!WEEKLY_THRESHOLD_PERCENTS.includes(tier)) {
+    throw new Error(`Invalid weekly threshold percent: ${percent}`);
+  }
+  if (!code) {
+    throw new Error("Missing grade band code for weekly threshold rule key");
+  }
+  return `WEEKLY_THRESHOLD_${tier}_${code}`;
+}
+
+/**
+ * Airtable percent formulas return 1.0 for 100%, 1.25 for 125%, etc.
+ * Accept either ratio (1.25) or whole percent (125) for robustness.
+ */
+function goalCompletionMeetsThreshold(goalCompletionValue, percent) {
+  const tier = Number(percent);
+  if (!WEEKLY_THRESHOLD_PERCENTS.includes(tier)) return false;
+  const raw = Number(goalCompletionValue);
+  if (!Number.isFinite(raw)) return false;
+  const ratio = raw > 3 ? raw / 100 : raw;
+  return ratio + 1e-9 >= tier / 100;
+}
+
+/**
+ * Plan Weekly Threshold XP creates/skips for one Weekly Athlete Summary.
+ * Does not invent amounts — xpAmount comes from active XP Reward Rules.
+ */
+function planWeeklyThresholdAwards({
+  goalCompletionValue,
+  enrollmentId,
+  weekId,
+  bandCode = "",
+  existingSourceKeys = [],
+  rulesByKey = {},
+} = {}) {
+  const existing = existingSourceKeys instanceof Set
+    ? existingSourceKeys
+    : new Set(existingSourceKeys);
+  const plans = [];
+
+  for (const percent of WEEKLY_THRESHOLD_PERCENTS) {
+    const met = goalCompletionMeetsThreshold(goalCompletionValue, percent);
+    if (!met) {
+      plans.push({
+        percent,
+        met: false,
+        action: "skip_not_met",
+        sourceKey: "",
+        ruleKey: "",
+        xpAmount: 0,
+        xpSourceLabel: `Weekly Threshold ${percent}`,
+      });
+      continue;
+    }
+
+    const sourceKey = buildWeeklyThresholdSourceKey(enrollmentId, weekId, percent);
+    const ruleKey = bandCode ? buildWeeklyThresholdRuleKey(percent, bandCode) : "";
+    const rule = ruleKey ? rulesByKey[ruleKey] : null;
+    const xpAmount = rule && Number.isFinite(Number(rule.xpAmount))
+      ? Number(rule.xpAmount)
+      : null;
+
+    if (existing.has(sourceKey)) {
+      plans.push({
+        percent,
+        met: true,
+        action: "skip_existing",
+        sourceKey,
+        ruleKey,
+        xpAmount: xpAmount == null ? 0 : xpAmount,
+        xpSourceLabel: `Weekly Threshold ${percent}`,
+      });
+      continue;
+    }
+
+    if (!ruleKey || xpAmount == null || xpAmount <= 0) {
+      plans.push({
+        percent,
+        met: true,
+        action: "error_missing_rule",
+        sourceKey,
+        ruleKey,
+        xpAmount: 0,
+        xpSourceLabel: `Weekly Threshold ${percent}`,
+      });
+      continue;
+    }
+
+    plans.push({
+      percent,
+      met: true,
+      action: "create",
+      sourceKey,
+      ruleKey,
+      xpAmount,
+      xpSourceLabel: `Weekly Threshold ${percent}`,
+    });
+  }
+
+  const toCreate = plans.filter((p) => p.action === "create");
+  const errors = plans.filter((p) => p.action === "error_missing_rule");
+  const anyMet = plans.some((p) => p.met);
+
+  return {
+    anyMet,
+    plans,
+    toCreate,
+    errors,
+    createCount: toCreate.length,
+    skipExistingCount: plans.filter((p) => p.action === "skip_existing").length,
+    notMetCount: plans.filter((p) => p.action === "skip_not_met").length,
+  };
 }
 
 function buildZoomAttendBaseSourceKey(zoomMeetingId, enrollmentId) {
@@ -1162,6 +1318,12 @@ module.exports = {
   buildStreakXpSourceKey,
   buildShotMilestoneSourceKey,
   buildPerfectWeekSourceKey,
+  buildWeeklyThresholdSourceKey,
+  buildWeeklyThresholdRuleKey,
+  normalizeThresholdGradeBandCode,
+  goalCompletionMeetsThreshold,
+  planWeeklyThresholdAwards,
+  WEEKLY_THRESHOLD_PERCENTS,
   buildZoomAttendBaseSourceKey,
   buildZoomAttendBonus2SourceKey,
   buildZoomAttendBonus3SourceKey,
