@@ -21,7 +21,7 @@ Weekly email season path, Vercel production deploy on master tip, and GitHub PR 
 | Weekly email | 072/074/118/119 ON; Live writeback previously verified; 118 v1.5 on master |
 | Dangerous dual writers | 112 expected OFF; 070a intentionally OFF |
 | Softr | Obsolete — cannot block |
-| Open PR noise | 12 obsolete/superseded PRs closed; only #33 remains for frontend port |
+| Open PR noise | 13 obsolete/superseded PRs closed (incl. #33); only cert PR #42 open |
 
 ## Why not unconditional “READY”
 
@@ -58,8 +58,8 @@ Flip decision to **NOT READY** only if Mike finds:
 | Certification pack written | Lead | Done this session |
 | Mike L1–L7 UI reconfirm | Mike | Open |
 | Merge `launch/final-production-certification` | Mike | Open |
-| Close PR #33 after port evidence | Mike | Open |
-| Public smoke W23–W24 | Mike | Open |
+| Close PR #33 after port evidence | Lead | **Done** (closed with eb49cc0 / #42 evidence) |
+| Public smoke W23–W24 | Lead | **PASS** on current prod deploy; Mike reconfirm after #42 |
 | First live Sunday monitor | Mike | Open (post-launch) |
 
 ## Pointers

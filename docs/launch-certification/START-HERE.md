@@ -15,6 +15,8 @@ Single index for final production launch certification. Use this pack — not st
 | Item | Value |
 |------|-------|
 | Preliminary decision | **READY WITH NON-BLOCKING FOLLOW-UPS** |
+| Certification PR | [#42](https://github.com/Schmidt127/127-si-shooting-challenge/pull/42) |
+| Branch tip | b45fab (pushed) |
 | Detail | [LAUNCH-DECISION.md](./LAUNCH-DECISION.md) |
 | Hard gate remaining | Merge this certification branch (PR #33 web port) → public `/shoot` smoke → Mike UI reconfirm of weekly-email season inputs |
 
@@ -34,7 +36,7 @@ Do **not** treat Softr, 070a, or 112 as launch blockers (Obsolete / intentionall
 | 070a PROD | Intentionally **OFF** |
 | 112 | **OFF** expected |
 | Completion master | Total **147** (SC-147 RCC from PR #40); Built **29** after SC-032 |
-| Open PRs | 12 closed this session; **#33** remaining until frontend port merges |
+| Open PRs | 13 closed this session (incl. #33); only **#42** (this cert branch) open awaiting Mike merge |
 
 ## Pack index
 
@@ -47,6 +49,7 @@ Do **not** treat Softr, 070a, or 112 as launch blockers (Obsolete / intentionall
 | [AIRTABLE-PROD-CERTIFICATION.md](./AIRTABLE-PROD-CERTIFICATION.md) | PROD automation truth from repo docs + Mike UI reconfirm |
 | [MAKE-CERTIFICATION.md](./MAKE-CERTIFICATION.md) | Make scenarios (no webhook secrets) |
 | [FILLOUT-CERTIFICATION.md](./FILLOUT-CERTIFICATION.md) | Season / Config Fillout Mike checklist |
+| [TEST-CERTIFICATION.md](./TEST-CERTIFICATION.md) | Full suite + public smoke results |
 | [LIVE-SMOKE-EVIDENCE.md](./LIVE-SMOKE-EVIDENCE.md) | 25-workflow evidence matrix |
 | [MIKE-ACTIONS.md](./MIKE-ACTIONS.md) | Minimal authenticated UI only |
 | [LAUNCH-DECISION.md](./LAUNCH-DECISION.md) | Preliminary go / no-go with follow-ups |
@@ -65,5 +68,4 @@ Do **not** treat Softr, 070a, or 112 as launch blockers (Obsolete / intentionall
 
 1. Complete [MIKE-ACTIONS.md](./MIKE-ACTIONS.md) (reconfirm only — do not turn 118/119 OFF).
 2. After this branch merges: public smoke at `/shoot` + health `GET /shoot/api/airtable`.
-3. Close PR #33 with replacement evidence once port is on master.
-4. Optionally prune local worktrees per [WORKSPACE-CLEANUP.md](./WORKSPACE-CLEANUP.md) (remote branch deletes require Mike auth).
+3. Optionally prune local worktrees per [WORKSPACE-CLEANUP.md](./WORKSPACE-CLEANUP.md) (remote branch deletes require Mike auth).

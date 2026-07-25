@@ -21,14 +21,14 @@ Do **not** disable 118/119 based on older OFF docs.
 | L6 | Confirm Make **`Weekly Athlete Summary - Bulk Email - May 18`** is **ON** | Make.com | Scenario ON |
 | L7 | Confirm **072** and **074** automation toggles **ON** | Airtable Automations | Both ON |
 
-## P0 — after cert branch merges
+## P0 — merge + post-merge (Mike authorization required for merge)
 
 | # | Action | Where | Done when |
 |---|--------|-------|-----------|
 | L8 | Confirm Vercel production READY on new master tip | Vercel → project | Deploy READY; SHA matches master |
 | L9 | Public smoke https://www.hoopchallenges.com/shoot | Browser | Home + one list route load |
 | L10 | Health check `GET /shoot/api/airtable` | Browser or curl | `{ ok: true, airtable: { tokenValid: true } }` |
-| L11 | Close PR **#33** with port-on-master replacement evidence | GitHub | PR closed |
+| L11 | Merge **PR #42** after review (explicit auth) | GitHub → #42 | Merged to master |
 
 ## P1 — quick attests (write OK / FAIL)
 
