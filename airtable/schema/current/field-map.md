@@ -12,7 +12,8 @@
 | Table | Field | Type | Contract |
 |-------|-------|------|----------|
 | Enrollments | Enrollment Key | formula | `{Athlete ID Lookup}\|{School Year}` |
-| Weeks | Week Key | formula | `RECORD_ID()` — **not** `2026-2027\|Week N` |
+| Weeks | Week Key | formula | `RECORD_ID()` — relational identity |
+| Weeks | Week Code | formula (PROD; attest) | Annual ops code e.g. `2026-2027\|Week 0` — separate from Week Key |
 | Weeks | Week Name | text (primary) | Human label (`Week 0` … `Post-Challenge`) |
 | WAS | Summary Key | formula | `{Enrollment Key - Lkp}\|{Week Key - Lkp}` |
 | XP Events | Source Key | text | Script-written; see registry |

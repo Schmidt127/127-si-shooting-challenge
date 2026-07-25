@@ -22,8 +22,9 @@ Living pointer for the **127 SI Shooting Challenge** Airtable base.
 
 ## Known doc corrections (2026-07-24 Agent 2)
 
-- `Week Key` is `RECORD_ID()`, not `2026-2027|Week N`.
+- `Week Key` is `RECORD_ID()` (relational). `Week Code` is the annual ops formula (attest in OMNI). `Week Name` is the display label.
 - No `Week End Key` field on Weeks — schedulers derive Saturday from End Date.
+- Weekly email schedules 118/119 are ON in PROD (verified 2026-07-24).
 - Stale Athlete-hub table-map language is superseded.
 
 ## Related Docs

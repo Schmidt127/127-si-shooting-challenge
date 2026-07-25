@@ -8,18 +8,18 @@
 
 | Item | Detail |
 |------|--------|
-| Current | Confusion: Week Key vs `2026-2027\|Week N` naming |
-| Proposed | Keep fields; document: Week Key=`RECORD_ID()`; Week Name=label; composite year\|name is ops convention |
-| Reason | Prevent automations keyed on wrong string |
-| Writers | none for Week Key |
+| Current | Confusion: Week Key vs Week Code vs Week Name |
+| Proposed | Keep all three; document: Week Key=`RECORD_ID()`; Week Code=annual ops formula (OMNI attest); Week Name=label |
+| Reason | Prevent automations keyed on wrong string; keep Week Key / Week Code / Week Name distinct |
+| Writers | none for Week Key / Week Code formulas |
 | Readers | 031/118 Summary Key builders; ops views |
-| Formulas | Week Key, Summary Key |
-| Scripts | 005/031/118/119 |
-| Views | Week admin views — show Week Name + Record ID + Program Instance |
+| Formulas | Week Key, Week Code (attest), Summary Key |
+| Scripts | 005/031/118/119 (End Date date keys; optional Week Code) |
+| Views | Week admin — show Week Name + Week Key + Week Code + Program Instance |
 | Forms / Make | n/a |
 | Order | 1) Docs (this pack) 2) OMNI view labels 3) No field rename |
 | Rollback | Revert docs |
-| Verify | Field-contracts test; OMNI sample Week shows RID in Week Key |
+| Verify | Field-contracts test; OMNI: Week Key=RID, Week Code=year\|Week, Week Name=label |
 
 ---
 
@@ -28,13 +28,13 @@
 | Item | Detail |
 |------|--------|
 | Current | `Weekly Email Sent?` + `Make Send Status` + `Weekly Summary Email Status` + dual timestamps |
-| Proposed replacement | Keep Make-owned Sent? + Sent At + Make Send Status as authoritative; hide Summary* status/timestamp from default views |
-| Reason | Dual status confusion after Live writeback |
-| Writers | Make Live; 072 status possibly |
+| Proposed replacement | Keep Make-owned Sent? + Make Send Status + **Weekly Summary Sent At** as authoritative; hide `Weekly Email Sent At` + `Weekly Summary Email Status` |
+| Reason | Dual status confusion after Live writeback (blueprint does not write Email Sent At / Summary Email Status) |
+| Writers | Make Live (Sent?, Make Send Status, Weekly Summary Sent At); 074 clears Send |
 | Readers | 074, ops |
-| Migration order | 1) Attest which fields Make writes 2) Hide non-authoritative 3) Only later consider formula “Effective Send State” **if** approved |
+| Migration order | 1) Attested (SENT-FIELD-OWNERSHIP) 2) Hide non-authoritative 3) Only later consider formula “Effective Send State” **if** approved |
 | Rollback | Unhide fields |
-| Verify | Controlled Live send: Sent?=1, Make Send Status=Sent, Email Sent At set; Summary* fields documented as legacy or synced |
+| Verify | Live send: Sent?=1, Make Send Status=Sent, Weekly Summary Sent At set; Weekly Email Sent At may be blank |
 
 **Do not** rename Sent? fields while Make mappings depend on exact names.
 

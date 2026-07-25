@@ -8,7 +8,7 @@
 
 | ID | Severity | Table | Field | Issue | Class |
 |----|----------|-------|-------|-------|-------|
-| FR-01 | High | Weeks | Week Key | Equals `RECORD_ID()` only — docs that describe year\|Week Name as Week Key are wrong | Doc mismatch |
+| FR-01 | High | Weeks | Week Key | Equals `RECORD_ID()` only — year\|Week Name is **Week Code** (separate field; OMNI attest), not Week Key | Doc mismatch fixed in UNIQUE-KEY-AUDIT |
 | FR-02 | High | WAS | Summary Key vs Weekly Summary Key | Two identity formulas; second uses link **display** values | Prefer Summary Key |
 | FR-03 | High | XP Events | XP Dedupe Key vs Normalized | Different component sets; scripts must follow registry (010/114 read Normalized carefully) | Keep both; never write |
 | FR-04 | Medium | Enrollments | Gate Failure Summary - Formula vs Gate Summary | Near-duplicate gate messaging; one uses FIND("Pass") on numeric Gate Passes (suspect) | Cleanup later |

@@ -68,7 +68,7 @@
 |--------|--------|
 | Purpose | Sunday–Saturday challenge week anchors (`America/Denver` Start/End dateTime) |
 | Primary | `Week Name` (**singleLineText**, not formula) |
-| Key fields | `Week Key` = `RECORD_ID()` (**formula**) — **not** `2026-2027\|Week N` |
+| Key fields | `Week Key` = `RECORD_ID()`; `Week Code` = annual ops formula (attest); `Week Name` = display — three distinct concepts |
 | Linked | Program Instance, Submissions, WAS, XP Events, HC, Zoom Meetings, Unlocks, Streak Occurrences, FBC Curriculum, Awards |
 | Text-only stubs | `Homework 2`, `Video Feedback`, `Submission Assets`, `XP Events copy` (not links) |
 | Automation | **005** assigns Week to Submission from Activity Date |
@@ -154,7 +154,7 @@
 | Links | Enrollment, Week, Grade Band, Goal Record, Submissions, HC Link, XP Events, Perfect Week Unlock, Homework |
 | Rollups | XP Earned This Week, Total Shots/Makes, Days Logged, Homework counts |
 | Email fields | Build Weekly Email Now?, Weekly Email Ready?, Send to Make?, Weekly Email Sent?, Make Send Status, sendMode, subject/HTML/recipients/payload, timestamps |
-| Writers | **031/101/118** create; **034** chain calcs; **072** package; **119** arm; **074** clear Send; Make Live writeback Sent? |
+| Writers | **031/101/118** create; **034** chain calcs; **072** package; **119** arm; **074** clear Send; Make Live writeback Sent? + Make Send Status + Weekly Summary Sent At |
 
 ### Levels / Level Gate Rules / Shot Milestones / XP Reward Rules / Target Goal Shots / Grade Bands / Achievements
 

@@ -9,24 +9,28 @@ Last GitHub Update: 2026-07-24
 Purpose:
 Sunday 5:00 AM America/Denver batch: ensure Weekly Athlete Summary rows for the
 prior ended week and arm Build Weekly Email Now? so automation 072 builds packages.
-Does not call Make. DEV must use dryRun/Test until Mike enables.
+Does not call Make. PROD schedule verified ON 2026-07-24.
 
 Trigger:
 At a scheduled time — Weekly — Sunday 05:00 — America/Denver
 
 Notes:
 Never commit webhook secrets. Exclude Schmidt test enrollment.
-PROD: do not enable from agents.
+PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 */
 
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.4
+ * Version: v1.5
  * Date Written: 2026-07-16
  * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.5 (2026-07-24): PROD schedules verified ON. Read sendMode from input
+ *   (Test|Live) when arming WAS — do not hardcode Test. Allow dryRun=false
+ *   with sendMode=Live for parent season. Refuse Live + includeSchmidt.
+ *   Remove stale "refuse Live when dryRun=false" hard stop (blocked PROD Live).
  * - v1.4 (2026-07-24): SC-035 approved — default emptyWeekPolicy = send_short.
  *   Package branching is enforced in automation **072 v4.0** (short / full /
  *   suppress). 118 still arms Build for empty weeks; 072 applies the policy.
@@ -34,8 +38,7 @@ PROD: do not enable from agents.
  *   verified 2026-07-23 is {Enrollment Key}|{Week Key} =
  *   ATH-{athleteRecId}|{schoolYear}|{weekRecId}, matching expectedSummaryKey.
  *   Enrollment+Week matching remains the fallback. Add emptyWeekPolicy input
- *   (default send_normal) as a recorded product-decision hook; suppress/short
- *   are NOT enforced until Mike decides. Schedules remain OFF by default.
+ *   (default send_short). Older "schedules OFF" notes are historical.
  * - v1.2 (2026-07-23): Fix week End Date matching — Weeks End Date is a
  *   dateTime stored as Denver 23:59 (next-day UTC); date keys now convert to
  *   the America/Denver calendar date instead of UTC, so the Sunday run can
@@ -50,14 +53,16 @@ PROD: do not enable from agents.
  * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
  * - For each Active? enrollment (excluding Schmidt), ensure WAS exists.
  * - Skip if Weekly Email Sent? or no cleaned email.
- * - Set Build Weekly Email Now? = true and sendMode = Test when dryRun=false.
+ * - Set Build Weekly Email Now? = true and WAS sendMode from input when dryRun=false.
  *
  * IMPORTANT DESIGN RULES
  * - Does not POST Make.
  * - Does not clear Weekly Email Sent?.
  * - dryRun=true (default) only counts; no writes.
+ * - PROD season: dryRun=false and sendMode=Live (verified ON 2026-07-24).
  * - Schmidt enrollment excluded by default: recgP9qZYjAhE7NXm
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
+ * - Never combine includeSchmidt=true with sendMode=Live.
  * - Scheduled date key = prior Saturday Week End (America/Denver).
  * - Idempotent: one WAS per Enrollment+Week (Summary Key when present).
  *
@@ -69,11 +74,11 @@ PROD: do not enable from agents.
  *
  * INPUT VARIABLES
  * - dryRun = "true" | "false" (default true)
- * - sendMode = "Test" | "Live" (DEV must be Test)
+ * - sendMode = "Test" | "Live" (default Test; PROD season uses Live)
  * - excludedEnrollmentIds = comma-separated (default includes Schmidt)
  * - includeSchmidt = "true" | "false" (default false). When true, the Schmidt
- *   test enrollment is NOT hard-excluded, enabling controlled Test-mode
- *   weekly email verification. Never combine with sendMode=Live.
+ *   test enrollment is NOT hard-excluded (Test-mode verification only).
+ *   Never combine with sendMode=Live.
  * - emptyWeekPolicy = "send_short" | "send_normal" | "suppress" (default
  *   send_short). Operator record of SC-035; **072 enforces** package shape.
  *
@@ -91,7 +96,7 @@ PROD: do not enable from agents.
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.4",
+  version: "v1.5",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -112,6 +117,7 @@ const CONFIG = {
     endDate: "End Date",
     weekEndKey: "Week End Key",
     weekKey: "Week Key",
+    weekCode: "Week Code",
     active: "Active?",
   },
 
@@ -251,7 +257,8 @@ async function main() {
 
   const inputConfig = input.config();
   const dryRun = parseBool(inputConfig.dryRun, true);
-  const sendMode = String(inputConfig.sendMode || "Test").trim() || "Test";
+  const sendModeRaw = String(inputConfig.sendMode || "Test").trim().toLowerCase();
+  const sendMode = sendModeRaw === "live" ? "Live" : "Test";
   const includeSchmidt = parseBool(inputConfig.includeSchmidt, false);
   const emptyWeekPolicyRaw = String(inputConfig.emptyWeekPolicy || "send_short")
     .trim()
@@ -260,6 +267,7 @@ async function main() {
     ? emptyWeekPolicyRaw
     : "send_short";
   setOutputSafe("emptyWeekPolicyOut", emptyWeekPolicy);
+  setOutputSafe("sendModeOut", sendMode);
   const excluded = new Set(
     String(inputConfig.excludedEnrollmentIds || "")
       .split(",")
@@ -270,9 +278,9 @@ async function main() {
     excluded.add(CONFIG.schmidtEnrollmentId);
   }
 
-  if (String(sendMode).toLowerCase() === "live" && dryRun === false) {
-    // Hard stop for accidental Live arming from this package
-    throw new Error("118 refuses sendMode=Live when dryRun=false. Use Test only until Mike approves Live.");
+  // Never Live-send to Schmidt test enrollment via schedule.
+  if (sendMode === "Live" && includeSchmidt) {
+    throw new Error("118 refuses sendMode=Live when includeSchmidt=true.");
   }
 
   const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
@@ -406,7 +414,7 @@ async function main() {
 
       const update = {};
       if (fieldExists(wasTable, CONFIG.was.buildNow)) update[CONFIG.was.buildNow] = true;
-      if (fieldExists(wasTable, CONFIG.was.sendMode)) update[CONFIG.was.sendMode] = { name: "Test" };
+      if (fieldExists(wasTable, CONFIG.was.sendMode)) update[CONFIG.was.sendMode] = { name: sendMode };
       if (Object.keys(update).length > 0) {
         await wasTable.updateRecordAsync(wasRow.id, update);
       }

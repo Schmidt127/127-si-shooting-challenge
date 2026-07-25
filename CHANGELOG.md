@@ -9,6 +9,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **118 v1.5 season Live arming (2026-07-24)** — **118** no longer hardcodes WAS `sendMode=Test` or refuses `sendMode=Live` when `dryRun=false`; still refuses Live+`includeSchmidt`. **119 v1.5** is repo version/doc/CONFIG alignment only (no arming-logic change) — paste **118** for Live season; 119 paste optional. PROD schedules verified **ON**. See [`MIKE-ACTIONS.md`](./docs/next-wave/data-model/MIKE-ACTIONS.md).
+- **Agent 2 data-model continuation (2026-07-24)** — Week Key vs Week Code vs Week Name separated; Make Live owns Sent? + Make Send Status + **Weekly Summary Sent At**; WAS creators / levels / HC identity / Fillout checklist docs. Pack: [`docs/next-wave/data-model/`](./docs/next-wave/data-model/).
 - **Stale version expectations closed (2026-07-24)** — Offline gate now expects **066 v3.3** (was v3.2); Stage 17 ETF source guard expects **115 SCRIPT v1.9** (PROD may still run pasted v1.8). PROJECT_STATE H-002 / standards rows updated to v3.3.
 
 #### Added
@@ -21,9 +23,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 - **Agent 1+2 reliability + data-model audit (2026-07-24)** — Docs/tests only: automation trust bands, input/dedupe/ownership audits, ranked repairs, table/field map refresh, Mike actions. No Airtable/Make mutations. [`reliability-audit-2026-07-24/REPORT.md`](./docs/next-wave/reliability-audit-2026-07-24/REPORT.md). Stale OFF schedule claims corrected in go-live integration.
 
 #### Changed
-- **074 PROD sendMode Live + Make writeback verified (2026-07-24)** — Fixed automation input `sendMode=Test` forced Make’s Test branch (email OK, no Sent? writeback). After **`sendMode=Live`**, Live writeback PASS: `Weekly Email Sent?` checked, `Make Send Status=Sent`, sent timestamp populated. **PROD rule:** 074 must use `sendMode=Live` or blank (inherit WAS `sendMode`) — never fixed Test. Docs + 074 docblock note; SC-040 → Live Tested. Architecture: [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).
-- **Weekly WAS email chain verified in PROD (2026-07-24)** — Final flow documented as `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0** (`built_short_empty_week`); **119** arms Send only; **074** posts webhook; Make owns Live Sent? writeback. **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver); 072+074+Make **ON**.
-- **072 v4.0 empty-week policy enforcement (2026-07-24)** — SC-035 `send_short` builds a concise no-activity reminder; `send_normal` keeps the full empty-week report; `suppress` leaves packages not send-ready. Non-empty weeks still get the full summary. 118/119 **v1.4** (default `send_short`). No webhook/email from 072.
+- **074 PROD sendMode Live + Make writeback verified (2026-07-24)** — Fixed automation input `sendMode=Test` forced Make’s Test branch (email OK, no Sent? writeback). After **`sendMode=Live`**, Live writeback PASS: `Weekly Email Sent?` checked, `Make Send Status=Sent`, **`Weekly Summary Sent At`** populated. **PROD rule:** 074 must use `sendMode=Live` or blank (inherit WAS `sendMode`) — never fixed Test. Docs + 074 docblock note; SC-040 → Live Tested. Architecture: [`WAS-WEEKLY-EMAIL-ARCHITECTURE.md`](./docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md).
+- **Weekly WAS email chain verified in PROD (2026-07-24)** — Final flow documented as `118 → 072 → 119 → 074 → Make Bulk Email May 18 → Gmail`. Empty-week **`send_short`** enforced in **072 v4.0** (`built_short_empty_week`); **119** arms Send only; **074** posts webhook; Make owns Live Sent? writeback. **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver; verified-prod); 072+074+Make **ON**.
+- **072 v4.0 empty-week policy enforcement (2026-07-24)** — SC-035 `send_short` builds a concise no-activity reminder; `send_normal` keeps the full empty-week report; `suppress` leaves packages not send-ready. Non-empty weeks still get the full summary. **118 v1.5** required for Live season arming; **119 v1.5** docs/CONFIG only (default `send_short` unchanged). No webhook/email from 072.
 
 ### Web
 

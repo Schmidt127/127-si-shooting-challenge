@@ -9,7 +9,8 @@ Last GitHub Update: 2026-07-24
 Purpose:
 Sunday 10:00 AM America/Denver batch: for Ready && !Sent weekly packages,
 set Send to Make? so automation 074 posts to Make. Does not call Make itself.
-DEV: dryRun default true; never enable Live scheduling from agents.
+PROD: schedule ON (verified 2026-07-24); season dryRun=false.
+Does not POST Make (074 does). Never combine includeSchmidt with Live season.
 
 Trigger:
 At a scheduled time — Weekly — Sunday 10:00 — America/Denver
@@ -18,18 +19,18 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.4
+ * Version: v1.5
  * Date Written: 2026-07-16
  * Last Updated: 2026-07-24
  *
  * VERSION HISTORY
+ * - v1.5 (2026-07-24): PROD schedule verified ON (Sunday 10:00 AM Denver).
+ *   Docs only for ownership clarity — 119 still only arms Send to Make?.
  * - v1.4 (2026-07-24): SC-035 approved — default emptyWeekPolicy = send_short.
  *   Empty-week package shape is enforced in **072 v4.0**; 119 only arms Send
  *   when Weekly Email Ready? (suppress empty weeks never become Ready).
- * - v1.3 (2026-07-24): Add emptyWeekPolicy input (default send_normal) as a
- *   recorded product-decision hook; suppress/short not enforced until Mike
- *   decides. Keep blank-subject/recipients/html as notReady (no send). Schedules
- *   remain OFF by default.
+ * - v1.3 (2026-07-24): Add emptyWeekPolicy input (default send_short).
+ *   Keep blank-subject/recipients/html as notReady (no send).
  * - v1.2 (2026-07-23): Fix week End Date matching — Weeks End Date is a
  *   dateTime stored as Denver 23:59 (next-day UTC); date keys now convert to
  *   the America/Denver calendar date instead of UTC (same fix as 118 v1.2).
@@ -78,7 +79,9 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.4",
+  version: "v1.5",
+  versionDate: "2026-07-24",
+  lastUpdated: "2026-07-24",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -95,6 +98,7 @@ const CONFIG = {
   weeks: {
     endDate: "End Date",
     weekEndKey: "Week End Key",
+    weekCode: "Week Code",
   },
 
   was: {

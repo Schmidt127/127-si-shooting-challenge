@@ -230,10 +230,30 @@ test("074 sendMode resolution does not hardcode permanent Test as sole mode", ()
   assert.ok(/test/i.test(text));
 });
 
-test("data-model pack documents Week Key correction", () => {
+test("data-model pack documents Week Key vs Week Code vs Week Name", () => {
   const audit = read(path.join(ROOT, "docs/next-wave/data-model/UNIQUE-KEY-AUDIT.md"));
   assert.ok(/RECORD_ID\(\)/.test(audit));
-  assert.ok(/not\*\* the Week Key formula/i.test(audit) || /NOT\*\* the Week Key/i.test(audit) || /not the Week Key/i.test(audit));
+  assert.ok(/Week Code/.test(audit), "must document Week Code as separate concept");
+  assert.ok(/Week Name/.test(audit));
+  assert.ok(!/seed convention only/i.test(audit));
+});
+
+test("118 v1.5 allows Live season arming; docs say schedules ON", () => {
+  const s118 = read(path.join(AUTO_DIR, "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js"));
+  assert.ok(/version:\s*"v1\.5"/.test(s118));
+  assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
+  const s119 = read(path.join(AUTO_DIR, "119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js"));
+  assert.ok(/version:\s*"v1\.5"/.test(s119), "119 CONFIG.version must be v1.5");
+  const mike = read(path.join(ROOT, "docs/next-wave/data-model/MIKE-ACTIONS.md"));
+  assert.ok(/118 ON|schedules ON|Sun 5:00/i.test(mike));
+  assert.ok(!/keep 118\/119 OFF/i.test(mike));
+});
+
+test("sent-field ownership documents Make Weekly Summary Sent At", () => {
+  const sent = read(path.join(ROOT, "docs/next-wave/data-model/SENT-FIELD-OWNERSHIP.md"));
+  assert.ok(/Weekly Summary Sent At/.test(sent));
+  assert.ok(/Weekly Email Sent\?/.test(sent));
+  assert.ok(/Not Make-owned/i.test(sent) || /not.*Make Live/i.test(sent));
 });
 
 console.log("");

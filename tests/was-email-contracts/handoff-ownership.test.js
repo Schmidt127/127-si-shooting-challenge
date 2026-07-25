@@ -49,8 +49,8 @@ test("072 v4.0 enforces empty-week policies and does not call Make/fetch webhook
   assert.ok(!/makeWebhookUrl/.test(s072), "072 must not take Make webhook input");
 });
 
-test("119 v1.4 only arms Send to Make? and does not post webhook", () => {
-  assert.ok(/version:\s*"v1\.4"/.test(s119));
+test("119 v1.5 only arms Send to Make? and does not post webhook", () => {
+  assert.ok(/version:\s*"v1\.5"/.test(s119));
   assert.ok(/Send to Make\?/.test(s119) || /sendToMake/.test(s119));
   assert.ok(/Does not POST Make/.test(s119) || /Does not call Make itself/.test(s119));
   assert.ok(!/\bfetch\s*\(/.test(s119), "119 must not fetch/webhook");
@@ -59,11 +59,13 @@ test("119 v1.4 only arms Send to Make? and does not post webhook", () => {
   assert.ok(/send_short/.test(s119));
 });
 
-test("118 v1.4 does not build HTML or post webhook", () => {
-  assert.ok(/version:\s*"v1\.4"/.test(s118));
+test("118 v1.5 does not build HTML or post webhook; arms sendMode from input", () => {
+  assert.ok(/version:\s*"v1\.5"/.test(s118));
   assert.ok(/Build Weekly Email Now\?/.test(s118) || /buildNow/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s118));
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s118));
+  assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
+  assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
 });
 
 test("074 owns webhook handoff; does not mark Sent?; blocks duplicate Sent?", () => {
