@@ -5,19 +5,48 @@
 **Repo:** `Schmidt127/127-si-shooting-challenge`  
 **Status:** **MERGED + DEPLOYED**
 
-## Final production identifiers
+## How to read production identifiers (avoid tip-sync loops)
+
+| Concept | Meaning | Stable? |
+|---------|---------|---------|
+| **Application release commit** | PR #42 merge that landed the certified web/docs release | **Yes** — do not rewrite this when only docs change |
+| **Verified production baseline** | `master` tip that was confirmed live on Vercel during closeout | Snapshot for that verification moment |
+| **Current repository tip** | Whatever `origin/master` is now | **No** — verify dynamically |
+| **Current Vercel production deploy** | Latest READY production deployment for this project | May move on documentation-only pushes without changing app behavior |
+
+Later documentation-only commits do **not** invalidate the certified application release (`9110a71`).
+
+### Verify current tip / deploy
+
+```bash
+git fetch origin
+git rev-parse origin/master
+```
+
+In Vercel (project `127-si-shooting-challenge`, team 127 Sports Intensity): open the latest **Production** deployment and confirm **READY** + commit SHA.
+
+## Certified application release
 
 | Item | Value |
 |------|-------|
-| Final master SHA | `9110a711220fa209e3918680c7d18e936989b783` |
-| Merge commit (PR #42) | `9110a711220fa209e3918680c7d18e936989b783` |
-| Merged head tip | `30513dc3ff590efd201cbdf8361d1c30e2f40023` |
-| Vercel deployment ID | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
-| Vercel deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
+| Application release commit (PR #42 merge) | `9110a711220fa209e3918680c7d18e936989b783` |
+| PR #42 head before merge | `30513dc3ff590efd201cbdf8361d1c30e2f40023` |
+| Open PRs after merge | **0** |
+| Certification branch | Deleted (`launch/final-production-certification`) |
+
+## Verified production baseline (closeout smoke)
+
+Snapshot taken when post-merge public smoke and PR #33 frontend markers were confirmed. This is **not** an immutable forever tip.
+
+| Item | Value |
+|------|-------|
+| Verified `master` tip at closeout | `4ffad3c4b846c140a7ca24f14bc7851ce97469e1` |
+| Vercel deployment ID | `dpl_B2qc92jb8gg9wRvvixfhyDpTQKiG` |
+| Vercel deployed commit | `4ffad3c4b846c140a7ca24f14bc7851ce97469e1` |
 | Vercel status | **READY** (production) |
 | Production domains | `127-si-shooting-challenge.vercel.app` · https://www.hoopchallenges.com/shoot |
-| Open PRs | **0** |
-| Certification branch | Deleted (`launch/final-production-certification`) |
+
+Note: a later documentation correction commit may create a newer Vercel production deployment while leaving application behavior unchanged. Prefer the application release commit (`9110a71`) when asking “what release is certified?”
 
 ## Launch decision
 
@@ -25,18 +54,20 @@
 
 Detail: [LAUNCH-DECISION.md](./LAUNCH-DECISION.md) · Closeout: [LAUNCH-CLOSEOUT.md](./LAUNCH-CLOSEOUT.md)
 
-Weekly email PROD truth unchanged (do **not** disable):
+Weekly email PROD truth (do **not** disable):
 
-- 072 ON · 074 ON + Live · 118 ON Live inputs · 119 ON · Make Bulk Email May 18 ON
+- **072** ON  
+- **074** ON and Live  
+- **118** ON with `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short`  
+- **119** ON with `dryRun=false`  
+- Make **`Weekly Athlete Summary - Bulk Email - May 18`** ON  
 
 ## Authoritative production facts (post-merge)
 
 | Area | Truth |
 |------|-------|
-| Git `origin/master` | `9110a71` |
-| PR #42 | **Merged** |
+| Application release | `9110a71` (PR #42) |
 | PR #33 frontend port | On master + live (`Weekly summary`, `Recent XP`/`Submission Base` on dashboard; `Recording credit` on Zoom detail) |
-| Vercel production | READY `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` serving `9110a71` |
 | Public URL | https://www.hoopchallenges.com/shoot |
 | Softr | Obsolete / Not Used / Historical Reference Only |
 | 070a PROD | Intentionally **OFF** |

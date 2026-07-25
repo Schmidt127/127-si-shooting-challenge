@@ -4,29 +4,48 @@
 **Mike merge authorization:** Explicit for PR #42  
 **Decision:** **READY WITH NON-BLOCKING FOLLOW-UPS**
 
+## Identifier model (no tip-sync loops)
+
+| Label | SHA / ID | Role |
+|-------|----------|------|
+| **Application release commit** | `9110a711220fa209e3918680c7d18e936989b783` | PR #42 merge — certified application release |
+| **Verified production baseline** | `4ffad3c4b846c140a7ca24f14bc7851ce97469e1` | `master` tip verified on Vercel during closeout (before later doc-only corrections) |
+| **Current repository tip** | *(dynamic)* | Run `git fetch origin && git rev-parse origin/master` |
+| **Verified Vercel production deploy** | `dpl_B2qc92jb8gg9wRvvixfhyDpTQKiG` @ `4ffad3c…` | READY production deploy confirmed at closeout |
+
+Documentation-only commits after the application release do **not** invalidate the certified release. They may create a newer Vercel production deployment while application behavior remains the same.
+
+### Re-verify later
+
+1. Git tip: `git fetch origin && git rev-parse origin/master`  
+2. Vercel: project `127-si-shooting-challenge` → latest Production deployment → confirm **READY** and commit SHA  
+
 ## GitHub
 
 | Item | Value |
 |------|-------|
 | PR merged | [#42](https://github.com/Schmidt127/127-si-shooting-challenge/pull/42) |
 | Expected head SHA | `30513dc3ff590efd201cbdf8361d1c30e2f40023` (**matched**) |
-| Merge commit / final master | `9110a711220fa209e3918680c7d18e936989b783` |
+| Application release commit (merge) | `9110a711220fa209e3918680c7d18e936989b783` |
 | Parents | `267d473…` + `30513dc…` |
-| `origin/master` pushed | **Yes** (merge via GitHub) |
+| Verified production baseline tip | `4ffad3c4b846c140a7ca24f14bc7851ce97469e1` |
+| `origin/master` | Verify dynamically (see above) |
 | Open PRs remaining | **0** |
 | Certification branch | Deleted |
 
-## Vercel production
+## Vercel production (verified at closeout)
 
 | Item | Value |
 |------|-------|
 | Project | `127-si-shooting-challenge` (`prj_Qbwjx6JIazQHTHZwDxSv8zPvrTIH`) |
-| Deployment ID | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
-| Deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
+| Deployment ID | `dpl_B2qc92jb8gg9wRvvixfhyDpTQKiG` |
+| Deployed commit | `4ffad3c4b846c140a7ca24f14bc7851ce97469e1` |
 | Target | production |
 | Status | **READY** |
-| Domains | `127-si-shooting-challenge.vercel.app` · team aliases · https://www.hoopchallenges.com/shoot |
-| Auto-deploy from master | **Confirmed** (git-triggered production build) |
+| Domains | `127-si-shooting-challenge.vercel.app` · https://www.hoopchallenges.com/shoot |
+| Auto-deploy from master | **Confirmed** |
+
+Application release content landed earlier on production via merge deploy `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` @ `9110a71`. Subsequent READY deploys through `4ffad3c` were documentation/closeout follow-ups on the same release line.
 
 ## Public production checks (post-deploy)
 
@@ -55,11 +74,11 @@
 
 ## Weekly email (unchanged — do not modify)
 
-- 072 ON  
-- 074 ON and Live  
-- 118 ON with Live inputs (`dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short`)  
-- 119 ON (`dryRun=false`)  
-- Make `Weekly Athlete Summary - Bulk Email - May 18` ON  
+- **072** ON  
+- **074** ON and Live  
+- **118** ON with `dryRun=false`, `sendMode=Live`, `includeSchmidt=false`, `emptyWeekPolicy=send_short`  
+- **119** ON with `dryRun=false`  
+- Make **`Weekly Athlete Summary - Bulk Email - May 18`** ON  
 
 ## Remaining non-blocking Mike actions
 
@@ -67,4 +86,4 @@ Airtable/Make UI reconfirm only — [MIKE-ACTIONS.md](./MIKE-ACTIONS.md) L1–L7
 
 ## Rollback
 
-If needed: Vercel rollback to previous production `dpl_82w6aASdkbKoVNXyRao7imFFxL7L` (`267d473`) or GitHub revert of merge `9110a71`. Weekly-email settings are independent of this web/docs merge.
+If needed: Vercel rollback to pre-release production `dpl_82w6aASdkbKoVNXyRao7imFFxL7L` (`267d473`) or GitHub revert of application release merge `9110a71`. Weekly-email settings are independent of this web/docs merge.
