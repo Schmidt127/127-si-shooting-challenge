@@ -4,6 +4,8 @@
 **Generated:** 2026-07-24  
 **Do not guess from GitHub.** Fill Observed columns from the live automation panel.
 
+> **Weekly email correction:** 118/119 schedules are **ON** (verified_prod). Do not attest them OFF. Canonical season inputs: [`../go-live/MIKE-ACTIONS.md`](../go-live/MIKE-ACTIONS.md).
+
 ---
 
 ## Verified PROD findings (2026-07-24)
@@ -48,8 +50,8 @@ For each automation:
 | **117c** | 117c - Zoom Recording Credit - Create Zoom XP Event | **Absent / OFF** | Zoom Attendance Recording Quiz | Zoom Attendance | v1.1.0 (repo only) | absent_prod / legacy_off | **Absent** | n/a | n/a | PROD 2026-07-24 | Verified absent from PROD — no XOR conflict with PROD 117 (email) |
 | **031** | 031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission | **ON** | When record matches conditions | Submissions · Count This Submission? · WAS empty | v3.1 | authoritative_writer | | | | | Primary WAS creator |
 | **101** | 101 - Zoom Attendance XP - Award Meeting XP | **ON** | When record matches conditions | Zoom Meetings · Create XP Events (live Attendees) | v5.5 | authoritative XP; WAS side-create risk | | | | | Confirm never recording Attendees |
-| **118** | 118 - Email - Schedule Weekly Summary Email Build | **OFF** until authorized | Scheduled · Sunday 5am Denver | Enrollments/Weeks batch | v1.2 | duplicate_risk / OFF | | | | | WAS create race |
-| **119** | 119 - Email - Schedule Weekly Summary Email Send | **OFF** until authorized | Scheduled | WAS | v1.2 | orchestrator / OFF | | | | | |
+| **118** | 118 - Email - Schedule Weekly Summary Email Build | **ON** Sun 5:00 AM Denver | Scheduled · Sunday 5am Denver | Enrollments/Weeks batch | v1.5 | scheduled ensure / ON | | | | | WAS create race |
+| **119** | 119 - Email - Schedule Weekly Summary Email Send | **ON** Sun 10:00 AM Denver | Scheduled | WAS | v1.5 | scheduled send arm / ON | | | | | |
 
 ### P1 — Deleted / superseded
 
@@ -97,10 +99,10 @@ PROD attestation 2026-07-24 (verified partial):
 - 117: Present = v1.1 — approval email → Make only; does NOT award XP
 - 117c: Absent from PROD
 - ZOOM_CREDIT sole writer = N/A for PROD Automation 117 (email-only; not an XP writer). 117c absent. Do not apply 117-vs-117c XP XOR to PROD 117.
-- 118: OFF (installed v1.4; schedule OFF during validation) = ____
-- 119: OFF (installed v1.4; arms Send only — not webhook) = ____
+- 118: ON Sun 5:00 AM Denver (repo **v1.5**; paste if UI still v1.4; season `dryRun=false` + `sendMode=Live`) = ____
+- 119: ON Sun 10:00 AM Denver (v1.4; arms Send only — not webhook; season `dryRun=false`) = ____
 - 072: v4.0 empty-week send_short verified Schmidt = ____
-- 074: ON webhook handoff (repo v2.1 / UI cited v2.0) = ____
+- 074: ON webhook handoff (repo v2.1); PROD sendMode=Live = ____
 - Make WAS email: Bulk Email May 18 ON = ____
 - Weekly Threshold writer found? YES|NO name=____
 ```

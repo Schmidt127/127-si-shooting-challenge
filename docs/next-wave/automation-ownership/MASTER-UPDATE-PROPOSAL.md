@@ -1,5 +1,7 @@
 # Master Update Proposal — Agent 9 (do not auto-edit completion master)
 
+> **SUPERSEDED for 118/119 guidance (2026-07-25).** The keep-OFF bullet and attestation checklist line below are **historical**. Current PROD: **118/119 ON**. See [`../../launch-certification/START-HERE.md`](../../launch-certification/START-HERE.md) and [`../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md`](../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md). Do not use this proposal to disable schedules.
+
 **Target doc (not edited by this agent):** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`  
 **Source package:** `docs/next-wave/automation-ownership/`  
 **Date:** 2026-07-24
@@ -28,7 +30,7 @@ Lead / Mike may paste or merge the following into the completion master when rea
 3. **112** must remain **OFF**; **013** owns Video Feedback create.  
 4. Exactly one of **117** / **117c** owns **`ZOOM_CREDIT`** XP.  
 5. **063** / **111** remain deleted; Grade Band owned at create by **020** / **013**.  
-6. **118/119** stay OFF until authorized.  
+6. ~~**118/119** stay OFF until authorized.~~ **SUPERSEDED** — **118/119 ON** (verified_prod); keep schedules ON.  
 7. Weekly Threshold XP writer = **missing in repo** until UI hunt closes XP-D1.
 
 ### Open decisions for master tracker
@@ -44,7 +46,7 @@ Lead / Mike may paste or merge the following into the completion master when rea
 
 ```
 [ ] Mike PROD attestation: 112 OFF; 013 ON; 020 ON; 031 ON
-[ ] Mike PROD attestation: 063/111 Deleted; 118/119 OFF
+[ ] Mike PROD attestation: 063/111 Deleted; **118/119 ON** (reconfirm; do not attest OFF)
 [ ] Mike PROD attestation: exactly one of 117/117c ON for ZOOM_CREDIT
 [ ] Mike UI hunt: Weekly Threshold XP writer YES/NO
 [ ] Link Agent 9 package as authoritative ownership contract until superseded
