@@ -235,7 +235,7 @@
       "date_normalization": "America/Denver YYYY-MM-DD from Weeks.End Date / Week End Key",
       "reads_formula_dedupe": false,
       "writes_formula_dedupe": false,
-      "notes": "SC-049 / XP-D1 rebuild 2026-07-25. Amounts from XP Reward Rules WEEKLY_THRESHOLD_{100|125|150}_{band}. Trigger: WAS Threshold XP Ready?=1. One event per met tier. Mike must UI-attest no competing Threshold automation before PROD paste."
+      "notes": "SC-049 / XP-D1 rebuild 2026-07-25; follow-through v1.1. Amounts from XP Reward Rules WEEKLY_THRESHOLD_{100|125|150}_{band}. Trigger: WAS Threshold XP Ready?=1. One event per met tier. Dedupe: canonical Source Key PLUS semantic Enrollment+Week+XP Source label (legacy key shapes unknown after empty-base reset). Mike must UI-attest no competing Threshold automation before PROD paste; inspect any existing Weekly Threshold XP Events for legacy Source Key shapes before mass requeue."
     },
     {
       "prefix": "MANUAL_BONUS|",

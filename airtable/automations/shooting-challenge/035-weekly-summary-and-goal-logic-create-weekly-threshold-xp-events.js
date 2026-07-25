@@ -28,9 +28,15 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
  * 035 - WEEKLY SUMMARY AND GOAL LOGIC
  * Create Weekly Threshold XP Events
  *
- * Version: v1.0
+ * Version: v1.1
  * Date Written: 2026-07-25
  * Last Updated: 2026-07-25
+ *
+ * VERSION HISTORY
+ * - v1.1 (2026-07-25): Semantic legacy-key compatibility (Enrollment+Week+XP Source);
+ *   skip inactive enrollments; prefer Grade Band link-ID rule match; avoid per-create
+ *   full-table XP scans; richer outputs for Mike paste testing.
+ * - v1.0 (2026-07-25): Initial SC-049 / XP-D1 rebuild.
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary (WAS) when Threshold XP Ready? = 1.
@@ -39,16 +45,19 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
  *   WEEKLY_THRESHOLD_{100|125|150}_{K2|34|56|78|912}.
  * - Prevents duplicates with Source Key:
  *      WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}
+ * - Also skips when Enrollment+Week already has XP Source
+ *   "Weekly Threshold {100|125|150}" (legacy Source Key shape unknown / wiped).
  * - Writes XP Activity Date from Week End Date (America/Denver).
  * - Marks WAS Threshold XP Status = Processed and clears Requeue Threshold XP.
  *
  * IMPORTANT DESIGN RULES
- * - One WAS × percent tier = one XP Event (append-only; recheck-before-create).
+ * - One enrollment × week × percent tier = one XP Event (append-only).
  * - Do not write formula/rollup fields (Goal Completion %, Threshold XP Ready?).
  * - Do not invent XP amounts — missing/invalid rules error that tier.
  * - XP Bucket = "Weekly Threshold".
  * - XP Source = "Weekly Threshold 100" | "Weekly Threshold 125" | "Weekly Threshold 150".
  * - XP Activity Date Source = "Weekly Summary Week End Date" when that option exists.
+ * - Inactive Enrollment (Active?=false) → skipped (not error).
  * - This is not Perfect Week XP (058/059) and not Submission Base XP (010).
  * - Before PROD paste: Mike must UI-attest no competing Threshold automation still ON.
  *
@@ -81,7 +90,7 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
 
 const SCRIPT = {
   scriptName: "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
-  version: "v1.0",
+  version: "v1.1",
   versionDate: "2026-07-25",
   originalWrittenDate: "2026-07-25",
   lastUpdated: "2026-07-25",
@@ -236,6 +245,18 @@ function getCheckbox(record, fieldName) {
   return false;
 }
 
+/** true | false | null (blank/unknown). Blank Active? does not force skip. */
+function getCheckboxTriState(record, fieldName) {
+  const v = record.getCellValue(fieldName);
+  if (v === true || v === 1 || v === "1") return true;
+  if (v === false || v === 0 || v === "0") return false;
+  if (Array.isArray(v) && v.length === 1) {
+    if (v[0] === true || v[0] === 1 || v[0] === "1") return true;
+    if (v[0] === false || v[0] === 0 || v[0] === "0") return false;
+  }
+  return null;
+}
+
 function requireSingleSelectOption(table, fieldName, optionName) {
   const field = table.getField(fieldName);
   const choices = (field.options && field.options.choices) || [];
@@ -290,6 +311,10 @@ function normalizeGradeBandCode(label) {
   return "";
 }
 
+function xpSourceLabelForPercent(percent) {
+  return `Weekly Threshold ${percent}`;
+}
+
 function buildSourceKey(enrollmentId, weekId, percent) {
   return `${CONFIG.values.sourceKeyPrefix}${enrollmentId}|${weekId}|${percent}`;
 }
@@ -305,6 +330,26 @@ function goalMeetsPercent(goalCompletionValue, percent) {
   return ratio + 1e-9 >= percent / 100;
 }
 
+function idsIntersect(a, b) {
+  if (!a.length || !b.length) return false;
+  const setB = new Set(b);
+  return a.some((id) => setB.has(id));
+}
+
+function tierAlreadyAwarded(sourceKey, xpSourceLabel, existingKeys, existingLabels) {
+  if (sourceKey && existingKeys.has(sourceKey)) {
+    return { awarded: true, via: "source_key" };
+  }
+  if (xpSourceLabel && existingLabels.has(xpSourceLabel)) {
+    return { awarded: true, via: "xp_source_label" };
+  }
+  return { awarded: false, via: "" };
+}
+
+function escapeFormulaString(value) {
+  return String(value || "").replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+}
+
 function addIfWritable(fields, table, fieldName, value) {
   if (!fieldExists(table, fieldName)) return;
   try {
@@ -314,6 +359,39 @@ function addIfWritable(fields, table, fieldName, value) {
     return;
   }
   fields[fieldName] = value;
+}
+
+function resolveRuleForTier(rulesByKey, ruleKey, gradeBandIds) {
+  const rule = rulesByKey[ruleKey];
+  if (!rule) return null;
+  // Prefer Grade Band link-ID compatibility: if both sides have links, require overlap.
+  if (gradeBandIds.length && rule.gradeBandIds && rule.gradeBandIds.length) {
+    if (!idsIntersect(gradeBandIds, rule.gradeBandIds)) return null;
+  }
+  return rule;
+}
+
+async function findExistingBySourceKey(xpTable, sourceKey) {
+  // Targeted recheck — exact Source Key only (no full-table scan).
+  try {
+    const formula = `{${CONFIG.xp.sourceKey}} = '${escapeFormulaString(sourceKey)}'`;
+    const recheck = await xpTable.selectRecordsAsync({
+      fields: [CONFIG.xp.sourceKey],
+      filterByFormula: formula,
+    });
+    const hit = recheck.records.find((xp) => getText(xp, CONFIG.xp.sourceKey) === sourceKey);
+    const id = hit ? hit.id : null;
+    try {
+      recheck.unloadData();
+    } catch (e) {
+      // optional
+    }
+    return id;
+  } catch (e) {
+    // filterByFormula unsupported / field name issue → fall back to in-memory only.
+    console.log(`findExistingBySourceKey fallback: ${e && e.message ? e.message : e}`);
+    return null;
+  }
 }
 
 async function main() {
@@ -339,7 +417,7 @@ async function main() {
   const bucketOption = requireSingleSelectOption(xpTable, CONFIG.xp.xpBucket, CONFIG.values.xpBucket);
   const sourceOptions = {};
   for (const percent of CONFIG.thresholdPercents) {
-    const label = `Weekly Threshold ${percent}`;
+    const label = xpSourceLabelForPercent(percent);
     sourceOptions[percent] = requireSingleSelectOption(xpTable, CONFIG.xp.xpSource, label);
   }
 
@@ -360,12 +438,44 @@ async function main() {
   const enrollmentId = enrollmentIds[0];
   const weekId = weekIds[0];
 
+  setDebug("load_enrollment");
+  const enrollmentFields = [
+    CONFIG.enrollment.active,
+    CONFIG.enrollment.gradeBand,
+  ].filter((f) => fieldExists(enrollmentsTable, f));
+  const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+    fields: enrollmentFields.length ? enrollmentFields : undefined,
+  });
+  if (!enrollment) {
+    throw new Error(`Enrollment not found: ${enrollmentId}`);
+  }
+
+  if (fieldExists(enrollmentsTable, CONFIG.enrollment.active)
+    && getCheckboxTriState(enrollment, CONFIG.enrollment.active) === false) {
+    setOutputSafe("statusOut", "skipped");
+    setOutputSafe("actionOut", "skipped_inactive_enrollment");
+    setOutputSafe("errorOut", "");
+    setOutputSafe("createdCountOut", 0);
+    setOutputSafe("skippedExistingCountOut", 0);
+    setDebug("skipped_inactive_enrollment");
+    console.log(JSON.stringify({
+      automation: SCRIPT.automationName,
+      version: SCRIPT.version,
+      statusOut: "skipped",
+      actionOut: "skipped_inactive_enrollment",
+      recordId,
+      enrollmentId,
+    }));
+    return;
+  }
+
   const goalCompletion = getNumber(was, CONFIG.was.goalCompletion);
   if (goalCompletion == null || !goalMeetsPercent(goalCompletion, 100)) {
     setOutputSafe("statusOut", "skipped");
     setOutputSafe("actionOut", "skipped_goal_below_100");
     setOutputSafe("errorOut", "");
     setOutputSafe("createdCountOut", 0);
+    setOutputSafe("skippedExistingCountOut", 0);
     setDebug("skipped_goal_below_100");
     console.log(JSON.stringify({
       automation: SCRIPT.automationName,
@@ -379,16 +489,23 @@ async function main() {
   }
 
   setDebug("resolve_grade_band");
-  let gradeBandText = getText(was, CONFIG.was.gradeBand);
+  let gradeBandIds = fieldExists(wasTable, CONFIG.was.gradeBand)
+    ? getLinkedIds(was, CONFIG.was.gradeBand)
+    : [];
+  if (!gradeBandIds.length && fieldExists(enrollmentsTable, CONFIG.enrollment.gradeBand)) {
+    gradeBandIds = getLinkedIds(enrollment, CONFIG.enrollment.gradeBand);
+  }
+  let gradeBandText = fieldExists(wasTable, CONFIG.was.gradeBand)
+    ? getText(was, CONFIG.was.gradeBand)
+    : "";
   if (!gradeBandText && fieldExists(enrollmentsTable, CONFIG.enrollment.gradeBand)) {
-    const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId, {
-      fields: [CONFIG.enrollment.gradeBand],
-    });
-    if (enrollment) gradeBandText = getText(enrollment, CONFIG.enrollment.gradeBand);
+    gradeBandText = getText(enrollment, CONFIG.enrollment.gradeBand);
   }
   const bandCode = normalizeGradeBandCode(gradeBandText);
   if (!bandCode) {
-    throw new Error(`Unable to normalize Grade Band for threshold rules: "${gradeBandText}"`);
+    throw new Error(
+      `Unable to normalize Grade Band for threshold rules: text="${gradeBandText}" ids=${gradeBandIds.join(",") || "(none)"}`
+    );
   }
 
   setDebug("resolve_week_end_date");
@@ -423,12 +540,17 @@ async function main() {
     if (!active) continue;
     const ruleKey = getText(rule, CONFIG.xpRule.ruleKey);
     if (!ruleKey) continue;
+    if (!ruleKey.startsWith("WEEKLY_THRESHOLD_")) continue;
     if (rulesByKey[ruleKey]) {
       throw new Error(`Duplicate active XP Reward Rule key: ${ruleKey}`);
     }
+    const ruleGradeBandIds = fieldExists(rulesTable, CONFIG.xpRule.gradeBand)
+      ? getLinkedIds(rule, CONFIG.xpRule.gradeBand)
+      : [];
     rulesByKey[ruleKey] = {
       id: rule.id,
       xpAmount: getNumber(rule, CONFIG.xpRule.xpAmount),
+      gradeBandIds: ruleGradeBandIds,
     };
   }
   try {
@@ -437,21 +559,41 @@ async function main() {
     // optional
   }
 
-  setDebug("load_existing_source_keys");
+  setDebug("load_existing_threshold_awards");
+  // One XP load for this enrollment (in-memory). Semantic labels cover legacy key shapes.
   const existingKeys = new Set();
-  const xpQuery = await xpTable.selectRecordsAsync({
-    fields: [CONFIG.xp.sourceKey, CONFIG.xp.enrollment, CONFIG.xp.week].filter((f) =>
-      fieldExists(xpTable, f)
-    ),
-  });
+  const existingXpSourceLabels = new Set();
+  const xpFields = [
+    CONFIG.xp.sourceKey,
+    CONFIG.xp.enrollment,
+    CONFIG.xp.week,
+    CONFIG.xp.xpSource,
+    CONFIG.xp.xpBucket,
+  ].filter((f) => fieldExists(xpTable, f));
+  const xpQuery = await xpTable.selectRecordsAsync({ fields: xpFields });
   for (const xp of xpQuery.records) {
-    const key = getText(xp, CONFIG.xp.sourceKey);
-    if (!key || !key.startsWith(CONFIG.values.sourceKeyPrefix)) continue;
     const xpEnrollmentIds = fieldExists(xpTable, CONFIG.xp.enrollment)
       ? getLinkedIds(xp, CONFIG.xp.enrollment)
       : [];
     if (xpEnrollmentIds.length && !xpEnrollmentIds.includes(enrollmentId)) continue;
-    existingKeys.add(key);
+
+    const xpWeekIds = fieldExists(xpTable, CONFIG.xp.week)
+      ? getLinkedIds(xp, CONFIG.xp.week)
+      : [];
+    const sameWeek = !xpWeekIds.length || xpWeekIds.includes(weekId);
+
+    const key = getText(xp, CONFIG.xp.sourceKey);
+    if (key && key.startsWith(CONFIG.values.sourceKeyPrefix)) {
+      // Canonical keys for this enrollment (any week) block exact-key duplicates.
+      existingKeys.add(key);
+    }
+
+    if (!sameWeek) continue;
+
+    const xpSource = getText(xp, CONFIG.xp.xpSource);
+    if (xpSource && /^Weekly Threshold (100|125|150)$/.test(xpSource)) {
+      existingXpSourceLabels.add(xpSource);
+    }
   }
   try {
     xpQuery.unloadData();
@@ -462,19 +604,39 @@ async function main() {
   setDebug("plan_awards");
   const plans = [];
   for (const percent of CONFIG.thresholdPercents) {
+    const xpSourceLabel = xpSourceLabelForPercent(percent);
     if (!goalMeetsPercent(goalCompletion, percent)) {
-      plans.push({ percent, action: "skip_not_met" });
+      plans.push({ percent, action: "skip_not_met", xpSourceLabel });
       continue;
     }
     const sourceKey = buildSourceKey(enrollmentId, weekId, percent);
     const ruleKey = buildRuleKey(percent, bandCode);
-    const rule = rulesByKey[ruleKey];
-    if (existingKeys.has(sourceKey)) {
-      plans.push({ percent, action: "skip_existing", sourceKey, ruleKey });
+    const already = tierAlreadyAwarded(
+      sourceKey,
+      xpSourceLabel,
+      existingKeys,
+      existingXpSourceLabels
+    );
+    if (already.awarded) {
+      plans.push({
+        percent,
+        action: "skip_existing",
+        skipVia: already.via,
+        sourceKey,
+        ruleKey,
+        xpSourceLabel,
+      });
       continue;
     }
+    const rule = resolveRuleForTier(rulesByKey, ruleKey, gradeBandIds);
     if (!rule || !Number.isFinite(Number(rule.xpAmount)) || Number(rule.xpAmount) <= 0) {
-      plans.push({ percent, action: "error_missing_rule", sourceKey, ruleKey });
+      plans.push({
+        percent,
+        action: "error_missing_rule",
+        sourceKey,
+        ruleKey,
+        xpSourceLabel,
+      });
       continue;
     }
     plans.push({
@@ -483,7 +645,7 @@ async function main() {
       sourceKey,
       ruleKey,
       xpAmount: Number(rule.xpAmount),
-      xpSourceLabel: `Weekly Threshold ${percent}`,
+      xpSourceLabel,
     });
   }
 
@@ -495,27 +657,26 @@ async function main() {
 
   const toCreate = plans.filter((p) => p.action === "create");
   const createdIds = [];
+  let skippedByRecheck = 0;
 
   setDebug("create_xp_events");
   for (const plan of toCreate) {
-    // Recheck-before-create for this exact Source Key.
-    const recheck = await xpTable.selectRecordsAsync({
-      fields: [CONFIG.xp.sourceKey],
-    });
-    let already = null;
-    for (const xp of recheck.records) {
-      if (getText(xp, CONFIG.xp.sourceKey) === plan.sourceKey) {
-        already = xp.id;
-        break;
-      }
+    // In-memory recheck (covers this run + prior load) + targeted Source Key formula recheck.
+    const memHit = tierAlreadyAwarded(
+      plan.sourceKey,
+      plan.xpSourceLabel,
+      existingKeys,
+      existingXpSourceLabels
+    );
+    if (memHit.awarded) {
+      skippedByRecheck += 1;
+      continue;
     }
-    try {
-      recheck.unloadData();
-    } catch (e) {
-      // optional
-    }
-    if (already) {
+
+    const alreadyId = await findExistingBySourceKey(xpTable, plan.sourceKey);
+    if (alreadyId) {
       existingKeys.add(plan.sourceKey);
+      skippedByRecheck += 1;
       continue;
     }
 
@@ -558,6 +719,7 @@ async function main() {
     const created = await xpTable.createRecordAsync(fields);
     createdIds.push(created);
     existingKeys.add(plan.sourceKey);
+    existingXpSourceLabels.add(plan.xpSourceLabel);
   }
 
   setDebug("update_was_status");
@@ -583,7 +745,8 @@ async function main() {
     await wasTable.updateRecordAsync(recordId, wasUpdate);
   }
 
-  const skipExistingCount = plans.filter((p) => p.action === "skip_existing").length;
+  const skipExistingCount = plans.filter((p) => p.action === "skip_existing").length
+    + skippedByRecheck;
   const actionOut = createdIds.length > 0
     ? "created"
     : skipExistingCount > 0
@@ -595,7 +758,12 @@ async function main() {
   setOutputSafe("errorOut", "");
   setOutputSafe("createdCountOut", createdIds.length);
   setOutputSafe("skippedExistingCountOut", skipExistingCount);
-  setOutputSafe("sourceKeysOut", plans.map((p) => p.sourceKey || "").filter(Boolean).join(","));
+  setOutputSafe(
+    "sourceKeysOut",
+    plans.map((p) => p.sourceKey || "").filter(Boolean).join(",")
+  );
+  setOutputSafe("weekEndKeyOut", weekEndKey);
+  setOutputSafe("bandCodeOut", bandCode);
   setDebug("done");
 
   console.log(JSON.stringify({
@@ -608,15 +776,20 @@ async function main() {
     weekId,
     goalCompletion,
     bandCode,
+    gradeBandIds,
     weekEndKey,
     createdCount: createdIds.length,
     createdIds,
+    skipExistingCount,
+    existingXpSourceLabels: [...existingXpSourceLabels],
     plans: plans.map((p) => ({
       percent: p.percent,
       action: p.action,
+      skipVia: p.skipVia || "",
       sourceKey: p.sourceKey || "",
       ruleKey: p.ruleKey || "",
       xpAmount: p.xpAmount || 0,
+      xpSourceLabel: p.xpSourceLabel || "",
     })),
   }));
 }

@@ -58,6 +58,30 @@ test("WEEKLY_THRESHOLD writer is canonical 035 after SC-049 rebuild", () => {
   const body = fs.readFileSync(path.join(repoRoot, row.script_path), "utf8");
   assert.ok(body.includes("WEEKLY_THRESHOLD|"));
   assert.ok(body.includes("createRecordAsync"));
+  assert.ok(body.includes('version: "v1.1"'));
+  assert.ok(body.includes("existingXpSourceLabels"), "035 must semantic-dedupe via XP Source labels");
+  // Writer mint pattern must match registry format placeholders.
+  assert.ok(
+    /\$\{CONFIG\.values\.sourceKeyPrefix\}\$\{enrollmentId\}\|\$\{weekId\}\|\$\{percent\}/.test(body)
+      || /WEEKLY_THRESHOLD\|\$\{enrollmentId\}\|\$\{weekId\}\|\$\{percent\}/.test(body)
+      || body.includes("WEEKLY_THRESHOLD|") && body.includes("|${weekId}|"),
+    "035 Source Key assembly must match registry format"
+  );
+});
+
+test("every canonical registry writer with script_path mints its prefix", () => {
+  for (const row of registry.prefixes || []) {
+    if (row.status !== "canonical" || !row.script_path) continue;
+    if (row.authoritative_writer == null) continue;
+    const full = path.join(repoRoot, row.script_path);
+    assert.ok(fs.existsSync(full), `missing script for ${row.prefix}: ${row.script_path}`);
+    const body = fs.readFileSync(full, "utf8");
+    const token = String(row.prefix).replace(/\|$/, "");
+    assert.ok(
+      body.includes(token),
+      `${row.script_path} must mint/reference ${token} for registry prefix ${row.prefix}`
+    );
+  }
 });
 
 console.log("source-key-registry tests passed");

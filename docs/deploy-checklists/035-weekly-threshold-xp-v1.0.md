@@ -1,9 +1,12 @@
 # Deploy Checklist — 035 Weekly Threshold XP v1.0
 
+> **Superseded by v1.1:** use [`035-weekly-threshold-xp-v1.1.md`](./035-weekly-threshold-xp-v1.1.md) for paste.  
+> v1.1 adds semantic legacy-key dedupe, inactive-enrollment skip, Grade Band link-ID preference, and targeted Source Key recheck.
+
 **SC items:** SC-049 (XP-D1), SC-022  
 **Script:** `airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js`  
 **Date:** 2026-07-25  
-**Status:** Built in Repository — not installed in PROD
+**Status:** Superseded — see v1.1 (Ready for PROD Paste)
 
 ## Dependencies reviewed
 

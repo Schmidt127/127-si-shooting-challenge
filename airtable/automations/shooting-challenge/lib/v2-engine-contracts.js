@@ -334,6 +334,48 @@ function goalCompletionMeetsThreshold(goalCompletionValue, percent) {
   return ratio + 1e-9 >= tier / 100;
 }
 
+function weeklyThresholdXpSourceLabel(percent) {
+  return `Weekly Threshold ${Number(percent)}`;
+}
+
+/**
+ * Historical Weekly Threshold Source Key shapes are unknown in-repo after the
+ * empty-base reset (no surviving writer + no orphan Source Key samples).
+ * Semantic dedupe (Enrollment + Week + XP Source label) is the compatibility
+ * bridge until PROD inspection confirms whether older keys exist.
+ */
+function listWeeklyThresholdLegacyKeyRiskNotes() {
+  return [
+    "No historical WEEKLY_THRESHOLD Source Key samples found in repo dumps after foundation reset.",
+    "Canonical rebuild key: WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+    "Semantic duplicate guard: Enrollment + Week + XP Source in {Weekly Threshold 100|125|150}",
+    "Mike PROD inspection: filter XP Events where XP Bucket=Weekly Threshold OR XP Source contains 'Weekly Threshold'; compare Source Key shapes before mass requeue.",
+  ];
+}
+
+/**
+ * True when a tier is already awarded either by canonical Source Key or by
+ * semantic Enrollment+Week+XP Source label (legacy-key compatibility).
+ */
+function weeklyThresholdTierAlreadyAwarded({
+  sourceKey,
+  xpSourceLabel,
+  existingSourceKeys = [],
+  existingXpSourceLabels = [],
+} = {}) {
+  const keys = existingSourceKeys instanceof Set
+    ? existingSourceKeys
+    : new Set(existingSourceKeys);
+  const labels = existingXpSourceLabels instanceof Set
+    ? existingXpSourceLabels
+    : new Set(existingXpSourceLabels);
+  if (sourceKey && keys.has(sourceKey)) return { awarded: true, via: "source_key" };
+  if (xpSourceLabel && labels.has(xpSourceLabel)) {
+    return { awarded: true, via: "xp_source_label" };
+  }
+  return { awarded: false, via: "" };
+}
+
 /**
  * Plan Weekly Threshold XP creates/skips for one Weekly Athlete Summary.
  * Does not invent amounts — xpAmount comes from active XP Reward Rules.
@@ -344,14 +386,27 @@ function planWeeklyThresholdAwards({
   weekId,
   bandCode = "",
   existingSourceKeys = [],
+  existingXpSourceLabels = [],
   rulesByKey = {},
+  enrollmentActive = true,
 } = {}) {
-  const existing = existingSourceKeys instanceof Set
-    ? existingSourceKeys
-    : new Set(existingSourceKeys);
+  if (enrollmentActive === false) {
+    return {
+      anyMet: false,
+      plans: [],
+      toCreate: [],
+      errors: [],
+      createCount: 0,
+      skipExistingCount: 0,
+      notMetCount: 0,
+      action: "skipped_inactive_enrollment",
+    };
+  }
+
   const plans = [];
 
   for (const percent of WEEKLY_THRESHOLD_PERCENTS) {
+    const xpSourceLabel = weeklyThresholdXpSourceLabel(percent);
     const met = goalCompletionMeetsThreshold(goalCompletionValue, percent);
     if (!met) {
       plans.push({
@@ -361,7 +416,7 @@ function planWeeklyThresholdAwards({
         sourceKey: "",
         ruleKey: "",
         xpAmount: 0,
-        xpSourceLabel: `Weekly Threshold ${percent}`,
+        xpSourceLabel,
       });
       continue;
     }
@@ -373,15 +428,22 @@ function planWeeklyThresholdAwards({
       ? Number(rule.xpAmount)
       : null;
 
-    if (existing.has(sourceKey)) {
+    const already = weeklyThresholdTierAlreadyAwarded({
+      sourceKey,
+      xpSourceLabel,
+      existingSourceKeys,
+      existingXpSourceLabels,
+    });
+    if (already.awarded) {
       plans.push({
         percent,
         met: true,
         action: "skip_existing",
+        skipVia: already.via,
         sourceKey,
         ruleKey,
         xpAmount: xpAmount == null ? 0 : xpAmount,
-        xpSourceLabel: `Weekly Threshold ${percent}`,
+        xpSourceLabel,
       });
       continue;
     }
@@ -394,7 +456,7 @@ function planWeeklyThresholdAwards({
         sourceKey,
         ruleKey,
         xpAmount: 0,
-        xpSourceLabel: `Weekly Threshold ${percent}`,
+        xpSourceLabel,
       });
       continue;
     }
@@ -406,7 +468,7 @@ function planWeeklyThresholdAwards({
       sourceKey,
       ruleKey,
       xpAmount,
-      xpSourceLabel: `Weekly Threshold ${percent}`,
+      xpSourceLabel,
     });
   }
 
@@ -422,6 +484,7 @@ function planWeeklyThresholdAwards({
     createCount: toCreate.length,
     skipExistingCount: plans.filter((p) => p.action === "skip_existing").length,
     notMetCount: plans.filter((p) => p.action === "skip_not_met").length,
+    action: "planned",
   };
 }
 
@@ -1322,6 +1385,9 @@ module.exports = {
   buildWeeklyThresholdRuleKey,
   normalizeThresholdGradeBandCode,
   goalCompletionMeetsThreshold,
+  weeklyThresholdXpSourceLabel,
+  listWeeklyThresholdLegacyKeyRiskNotes,
+  weeklyThresholdTierAlreadyAwarded,
   planWeeklyThresholdAwards,
   WEEKLY_THRESHOLD_PERCENTS,
   buildZoomAttendBaseSourceKey,
