@@ -1,8 +1,8 @@
 # Final Reconciliation — Agents 1–12 + Agent 13
 
-> **Historical / Superseded for status (2026-07-24).**  
-> Current status authority: `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` + `docs/PROJECT_STATE.md` + Agent 5 [`../agent5-lead-reconciliation-2026-07-24/`](../agent5-lead-reconciliation-2026-07-24/) + go-live [`../go-live/`](../go-live/).  
-> Evidence in this packet is retained; do not use schedule-OFF rows as current production truth.
+> **Historical / Superseded for status (2026-07-24; banner refreshed 2026-07-25).**  
+> Current status authority: `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` + `docs/PROJECT_STATE.md` + launch certification [`../../launch-certification/START-HERE.md`](../../launch-certification/START-HERE.md) + Agent 5 [`../agent5-lead-reconciliation-2026-07-24/`](../agent5-lead-reconciliation-2026-07-24/) + go-live [`../go-live/`](../go-live/).  
+> Evidence in this packet is retained; **do not use Keep 118/119 OFF rows as current production truth** — schedules are **ON** (verified_prod).
 
 **Reconciler:** Agent 13  
 **Date:** 2026-07-24  

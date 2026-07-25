@@ -2,12 +2,13 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Softr Obsolete; C-011 weekly email Live; **118/119 ON**; Agent 5 reconciliation [next-wave/agent5-lead-reconciliation-2026-07-24/](./next-wave/agent5-lead-reconciliation-2026-07-24/))
+Last updated: **2026-07-25** (launch certification pack; production commit **267d473**; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
 **Known issues:** [KNOWN_ISSUES.md](./KNOWN_ISSUES.md)
 **Softr:** Obsolete / Not Used — Historical Reference Only: [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
+**Launch certification:** [launch-certification/START-HERE.md](./launch-certification/START-HERE.md)
 
 > **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
 
@@ -18,7 +19,7 @@ Last updated: **2026-07-24** (PR #41 Season Launch rebased on merged PR #40; Sof
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current production commit** | `bd2c2b4` — *Merge shooting challenge reliability and web readiness improvements* |
+| **Current production commit** | `267d4736a95b47273d3439a89665bd9855675395` — *origin/master tip; Vercel production READY `dpl_82w6aASdkbKoVNXyRao7imFFxL7L`* |
 | **Public URL** | https://www.hoopchallenges.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
@@ -131,7 +132,7 @@ DEV-only table vs prod: **Testing Scenarios** (C-020). See [snapshots/README.md]
 
 | Item | Status |
 |------|--------|
-| Scripts | **118 v1.4 / 119 v1.4 / 072 v4.0 / 074 v2.1** — installed + live-proven |
+| Scripts | **118 v1.5 / 119 v1.4+ / 072 v4.0 / 074 v2.1** — installed + live-proven (118 v1.5 on master) |
 | PROD schedules | **ON** — 118 Sun 5:00 AM Denver; 119 Sun 10:00 AM Denver (**verified_prod** 2026-07-24) |
 | 072 / 074 / Make | **ON** — Make `Weekly Athlete Summary - Bulk Email - May 18` |
 | 074 sendMode | **Live** (or blank + WAS Live) — **never** fixed Test |

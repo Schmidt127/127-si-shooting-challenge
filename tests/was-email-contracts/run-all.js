@@ -7,4 +7,5 @@ require("./handoff-ownership.test.js");
 require("./sendmode-prod-contract.test.js");
 require("./send-mode-helper.test.js");
 require("./send-mode-live-test-regression.test.js");
+require("./schedule-on-contract.test.js");
 console.log("all was-email-contracts tests passed");

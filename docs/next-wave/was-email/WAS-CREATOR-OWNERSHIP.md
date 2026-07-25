@@ -51,7 +51,7 @@
 
 **Hybrid with one scheduled authority + two event creators (short-term):**
 
-1. **118** = authoritative **scheduled ensure** creator for every Active enrollment × prior ended week (empty-week guarantee). Keep OFF until Mike authorizes.
+1. **118** = authoritative **scheduled ensure** creator for every Active enrollment × prior ended week (empty-week guarantee). **PROD schedules ON** (verified_prod 2026-07-24; 118 v1.5 on master) — do **not** keep OFF. See [`../../launch-certification/START-HERE.md`](../../launch-certification/START-HERE.md).
 2. **031** = authoritative **submission-time** creator (keep).
 3. **101** = keep create for Zoom-only weeks until 118 is proven in PROD for two consecutive Sundays; then convert 101 → **link-only** (find existing; error/skip soft if missing rather than create — or create only as last-resort with shared helper).
 

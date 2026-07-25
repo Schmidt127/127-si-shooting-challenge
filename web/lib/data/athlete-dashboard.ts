@@ -1,4 +1,5 @@
 import type { StatusBadgeTone } from "@/components/ui/status-badge";
+import type { XpEventSummary } from "@/types/xp";
 
 /** Presentational athlete dashboard model — mockable without Airtable auth. */
 
@@ -22,6 +23,7 @@ export type AthleteDashboardModel = {
     xpForNextLevel: number;
     nextLevelLabel: string;
   };
+  /** Weekly Athlete Summary–style shot progress (presentation). */
   weekly: {
     shots: number;
     goal: number;
@@ -32,6 +34,7 @@ export type AthleteDashboardModel = {
     earnedThisWeek: boolean;
     seasonCount: number;
   };
+  seasonShots: number;
   achievements: Array<{
     id: string;
     name: string;
@@ -42,16 +45,19 @@ export type AthleteDashboardModel = {
     status: DashboardHomeworkStatus;
     href: string;
   };
+  /** Coach Video Feedback preview — href optional until a public feedback surface exists. */
   feedback: {
     title: string;
     preview: string;
-    href: string;
+    href?: string;
   } | null;
   nextAction: {
     label: string;
     description: string;
     href: string;
   };
+  /** Recent XP Events for source-label presentation (mock until XP Events adapter). */
+  recentXp: XpEventSummary[];
 };
 
 export function homeworkStatusTone(status: DashboardHomeworkStatus): StatusBadgeTone {
@@ -81,7 +87,7 @@ export function homeworkStatusLabel(status: DashboardHomeworkStatus): string {
 }
 
 export function weeklyShotPercent(shots: number, goal: number): number {
-  if (goal <= 0) return 0;
+  if (!Number.isFinite(shots) || !Number.isFinite(goal) || goal <= 0) return 0;
   return Math.min(100, Math.round((shots / goal) * 100));
 }
 
@@ -115,6 +121,7 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
       earnedThisWeek: false,
       seasonCount: 4,
     },
+    seasonShots: 3120,
     achievements: [
       { id: "a1", name: "First 1,000 Shots", unlocked: true },
       { id: "a2", name: "3-Week Streak", unlocked: true },
@@ -128,13 +135,51 @@ export function getMockAthleteDashboard(): AthleteDashboardModel {
     feedback: {
       title: "Coach note on set point",
       preview: "Elbow stayed tight on the mid-range reps — keep that on game shots.",
-      href: "/tutorials",
+      // No public Video Feedback detail route yet — avoid linking to tutorials.
     },
     nextAction: {
-      label: "Log this week’s shots",
-      description: "You’re 88 shots from the weekly goal. Finish strong for Perfect Week.",
+      label: "Open this week’s homework",
+      description:
+        "Daily shot logging uses the external submission form. Review this week’s curriculum assignment here.",
       href: "/homework",
     },
+    recentXp: [
+      {
+        id: "xp1",
+        points: 25,
+        sourceLabel: "Submission Base",
+        reasonPublic: "Shooting submission completed.",
+        activityDate: "2026-07-14",
+      },
+      {
+        id: "xp2",
+        points: 50,
+        sourceLabel: "Homework Completion",
+        reasonPublic: "Homework marked satisfactory.",
+        activityDate: "2026-07-12",
+      },
+      {
+        id: "xp3",
+        points: 40,
+        sourceLabel: "Zoom Attendance: Base",
+        reasonPublic: "Zoom meeting attendance credit.",
+        activityDate: "2026-07-10",
+      },
+      {
+        id: "xp4",
+        points: 20,
+        sourceLabel: "Zoom Recording",
+        reasonPublic: "Recording quiz credit (partial XP vs live).",
+        activityDate: "2026-07-09",
+      },
+      {
+        id: "xp5",
+        points: 100,
+        sourceLabel: "Video Submission",
+        reasonPublic: "Coach-approved video feedback XP.",
+        activityDate: "2026-07-07",
+      },
+    ],
   };
 }
 

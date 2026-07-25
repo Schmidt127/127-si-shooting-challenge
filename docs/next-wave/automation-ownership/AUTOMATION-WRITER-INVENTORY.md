@@ -1,5 +1,8 @@
 # Automation Writer Inventory — Agent 9
 
+> **SUPERSEDED (2026-07-25):** Rows that say 118/119 **OFF** are historical. PROD truth: **118/119 ON** (Sun 5:00 / 10:00 AM America/Denver); **118 v1.5** on master; live writeback verified. Canonical: [`../../launch-certification/START-HERE.md`](../../launch-certification/START-HERE.md) · [`../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md`](../reliability-audit-2026-07-24/STALE-CLAIM-CORRECTION.md).
+
+
 **Generated:** 2026-07-24  
 **Machine twin:** [`writer-inventory.json`](./writer-inventory.json)  
 **Source Key registry:** [`xp-source-key-registry.json`](./xp-source-key-registry.json)  
@@ -44,9 +47,9 @@ Honesty rule: live ON/OFF is **not** proven from GitHub alone. Expected state is
 |---|--------|---------|----------------|----------|-------|-----------|----------|----------|------|
 | **031** | `031-…-find-or-create-weekly-athlete-summary-from-submission.js` v3.1 | Submission counted · WAS empty | Enrollment, Week, Submissions link; orphan XP links | **Enrollment + Week** (Summary Key formula) | Lookup-before-create; throw on dupes; **never write Summary Key** | 101, 118 | ON | Schmidt 1 WAS / 3 submissions | high |
 | **101** | (same as XP) | Live Zoom XP path | `findOrCreateWeeklySummaryId` | Enrollment + Week | Check-then-create | 031, 118 | ON | Race window | high |
-| **118** | `118-…-schedule-weekly-summary-email-build.js` v1.2 | Sunday 5am Denver | Enrollment, Week, Build checkbox | Enrollment + Week (Summary Key map) | Create if missing then arm | 031, 101 | **OFF** until authorized | Repo-ready / schedules OFF | high |
+| **118** | `118-…-schedule-weekly-summary-email-build.js` **v1.5** | Sunday 5am Denver | Enrollment, Week, Build checkbox | Enrollment + Week (Summary Key map) | Create if missing then arm | 031, 101 | **ON** (verified_prod) | Live season; do not disable | high |
 | **030** | `030-…-copy-enrollment-grade-band-to-weekly-summary.js` | WAS | Grade Band only | WAS RID | Repair copy | — | ON | Repair-only | low |
-| **119** | `119-…-schedule-weekly-summary-email-send.js` v1.2 | Schedule | Send arm fields | WAS RID | Does not create WAS | — | **OFF** until authorized | Schedules OFF | high |
+| **119** | `119-…-schedule-weekly-summary-email-send.js` v1.4/v1.5 | Schedule | Send arm fields | WAS RID | Does not create WAS | — | **ON** (verified_prod) | Live season; do not disable | high |
 
 ---
 
@@ -133,7 +136,7 @@ Hard rule: recording path **must never** write `Zoom Meetings.Attendees`.
 | **076/077** | Daily package + send | Daily Email Status | ON | medium |
 | **071/073** | HW / VF parent feedback webhooks | Send statuses | ON | medium |
 | **117f** | `ZOOM_REC_EMAIL\|{enr}\|{meeting}\|{za}` | When live | high |
-| **118/119** | Schedule build/send arms | **OFF** until authorized | high |
+| **118/119** | Schedule build/send arms | **ON** (verified_prod) | high |
 
 ---
 
