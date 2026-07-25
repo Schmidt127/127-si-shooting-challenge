@@ -18,7 +18,7 @@
 
 | Item | Value |
 |------|-------|
-| Deployment ID | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
+| Deployment ID | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
 | Deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
 | State | **READY** |
 | Matches `origin/master` | **Yes** |
@@ -47,7 +47,7 @@ Source: [`docs/PROJECT_STATE.md`](../PROJECT_STATE.md), [`docs/deployment-notes.
 
 | Check | Result | Notes |
 |-------|--------|-------|
-| Latest production READY | **PASS** | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
+| Latest production READY | **PASS** | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
 | Commit = master tip | **PASS** | `267d473` |
 | Domains present | **PASS** (project domains listed) | Team aliases may also exist |
 | Public `/shoot` HTML smoke this session | **BLOCKED** | Requires Mike/browser after cert branch merge |
@@ -55,4 +55,4 @@ Source: [`docs/PROJECT_STATE.md`](../PROJECT_STATE.md), [`docs/deployment-notes.
 
 ## Post-merge confirmation
 
-PR #42 merged. Production READY on 9110a71 via dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m. Public smoke PASS. See [LAUNCH-CLOSEOUT.md](./LAUNCH-CLOSEOUT.md).
+PR #42 merged. Production READY on 6aa60c9 via dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn (merge deploy was dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m @ 9110a71). Public smoke PASS. See [LAUNCH-CLOSEOUT.md](./LAUNCH-CLOSEOUT.md).

@@ -21,7 +21,7 @@
 | Item | Value |
 |------|-------|
 | Project | `127-si-shooting-challenge` (`prj_Qbwjx6JIazQHTHZwDxSv8zPvrTIH`) |
-| Deployment ID | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
+| Deployment ID | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
 | Deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
 | Target | production |
 | Status | **READY** |

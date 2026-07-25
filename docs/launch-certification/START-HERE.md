@@ -12,7 +12,7 @@
 | Final master SHA | `9110a711220fa209e3918680c7d18e936989b783` |
 | Merge commit (PR #42) | `9110a711220fa209e3918680c7d18e936989b783` |
 | Merged head tip | `30513dc3ff590efd201cbdf8361d1c30e2f40023` |
-| Vercel deployment ID | `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` |
+| Vercel deployment ID | `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` |
 | Vercel deployed commit | `9110a711220fa209e3918680c7d18e936989b783` |
 | Vercel status | **READY** (production) |
 | Production domains | `127-si-shooting-challenge.vercel.app` · https://www.hoopchallenges.com/shoot |
@@ -36,7 +36,7 @@ Weekly email PROD truth unchanged (do **not** disable):
 | Git `origin/master` | `9110a71` |
 | PR #42 | **Merged** |
 | PR #33 frontend port | On master + live (`Weekly summary`, `Recent XP`/`Submission Base` on dashboard; `Recording credit` on Zoom detail) |
-| Vercel production | READY `dpl_7srdSJxo5ubJJCEhwFrZx9zk9d3m` serving `9110a71` |
+| Vercel production | READY `dpl_GgZYPq4fVk9CMYcc4zU7tRLqDUrn` serving `9110a71` |
 | Public URL | https://www.hoopchallenges.com/shoot |
 | Softr | Obsolete / Not Used / Historical Reference Only |
 | 070a PROD | Intentionally **OFF** |
