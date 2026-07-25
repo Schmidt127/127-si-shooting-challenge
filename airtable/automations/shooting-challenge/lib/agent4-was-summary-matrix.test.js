@@ -61,23 +61,25 @@ test("missing goal/homework/level do not alone mark week non-empty", () => {
 });
 
 test("summary already exists → link; duplicate → deterministic winner", () => {
+  const rows = [
+    { id: "recWAS00000000002", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
+    { id: "recWAS00000000001", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
+  ];
   const selection = selectExistingWas({
-    rows: [
-      { id: "recWAS00000000002", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
-      { id: "recWAS00000000001", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
-    ],
+    rows,
     enrollmentId: ENR,
     weekId: WEEK,
     expectedSummaryKey: KEY,
   });
-  assert.strictEqual(selection.action, "duplicate");
-  const dups = detectWasDuplicates({
-    rows: selection.matches || [
-      { id: "recWAS00000000002", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
-      { id: "recWAS00000000001", enrollmentId: ENR, weekId: WEEK, summaryKey: KEY },
-    ],
+  assert.strictEqual(selection.action, "use_existing");
+  assert.strictEqual(selection.duplicate, true);
+  assert.strictEqual(selection.winnerId, "recWAS00000000001");
+  const dups = detectWasDuplicates(rows, {
+    enrollmentId: ENR,
+    weekId: WEEK,
+    expectedSummaryKey: KEY,
   });
-  assert.ok(dups.length >= 1 || selection.winnerId === "recWAS00000000001");
+  assert.strictEqual(dups.isDuplicate, true);
   const link = decideWasCreateOrLink({
     mode: "ensure",
     selection: selectExistingWas({
