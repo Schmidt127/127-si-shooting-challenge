@@ -15,8 +15,17 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/shoot";
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() || "https://hoopchallenges.com";
+  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
+  `https://www.hoopchallenges.com${basePath}`;
+
+/**
+ * Icon hrefs must include basePath. Production previously emitted `/favicon.png`
+ * (root 404) instead of `/shoot/favicon.png` when metadata icons omitted basePath.
+ */
+const iconPng = `${basePath}/favicon.png`;
+const iconIco = `${basePath}/favicon.ico`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -27,8 +36,11 @@ export const metadata: Metadata = {
   description:
     "127 Sports Intensity Shooting Challenge — leaderboard, homework, tutorials, levels, and more.",
   icons: {
-    icon: [{ url: "/favicon.png", type: "image/png" }],
-    apple: [{ url: "/favicon.png", type: "image/png" }],
+    icon: [
+      { url: iconIco, sizes: "any" },
+      { url: iconPng, type: "image/png" },
+    ],
+    apple: [{ url: iconPng, type: "image/png" }],
   },
   robots: {
     index: false,

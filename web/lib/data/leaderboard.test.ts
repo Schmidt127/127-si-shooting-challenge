@@ -143,4 +143,9 @@ describe("leaderboard mapping", () => {
     expect(data.seasonLabel).toBe("2025-2026 Season");
     expect(data.updatedAt).toMatch(/^\d{4}-\d{2}-\d{2}T/);
   });
+
+  it("defaults season label to Current Season when omitted", () => {
+    const data = buildLeaderboardData([]);
+    expect(data.seasonLabel).toBe("Current Season");
+  });
 });

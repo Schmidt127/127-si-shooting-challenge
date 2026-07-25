@@ -1,9 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconBook } from "@/components/icons/shoot-icons";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import {
   AccentRail,
   CtaLink,
@@ -66,15 +66,17 @@ function HomeworkCard({
         <div className="flex flex-col sm:flex-row">
           {assignment.coverImage ? (
             <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-brand-light-gray sm:aspect-auto sm:h-auto sm:w-44 md:w-52">
-              <Image
+              <SafeExternalImage
                 src={assignment.coverImage.url}
                 alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
-                fill
-                className="object-cover transition duration-500 group-hover:scale-[1.02]"
-                sizes="(max-width: 640px) 100vw, 208px"
-                unoptimized
+                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                fallback={
+                  <div className="flex h-full min-h-[8.5rem] w-full items-center justify-center bg-brand-blue/15">
+                    <span className="font-mono text-4xl font-black text-brand-blue/25">{hwLabel}</span>
+                  </div>
+                }
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
             <div className="flex w-full items-center justify-center border-b border-border-subtle bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">

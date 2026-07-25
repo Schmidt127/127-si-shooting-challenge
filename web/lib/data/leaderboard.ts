@@ -80,7 +80,7 @@ export function mapEnrollmentToLeaderboardEntry(
 
 export function buildLeaderboardData(
   records: Array<{ id: string; fields: EnrollmentLeaderboardFields }>,
-  seasonLabel = "2025–2026 Season",
+  seasonLabel = "Current Season",
 ): LeaderboardData {
   const sorted = sortLeaderboardRecords(records);
   const entries = sorted.map((record, index) =>

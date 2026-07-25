@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-07-25** (PR #44 on #43: public `/shoot` smoke → SC-102 Live Tested; 067 Option B packet; SCN-027/028; 057 paste runbook only — code canonical in #43; SC-002 Installed SCN-001–020) |
+| Last updated | **2026-07-25** (PR #45 on #44/#43: browser QA → SC-102/103/106/108/113 Live Tested; SC-109 Installed partial; web favicon/markdown/cover fixes; 035/057/067 statuses unchanged) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,9 +65,9 @@ Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **147** |
 | Complete | 12 |
-| Live Tested in PROD | 10 |
-| Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 29 |
+| Live Tested in PROD | 14 |
+| Installed but not tested *(Installed in PROD)* | 51 |
+| Built but not installed *(Built in Repository)* | 28 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
@@ -75,19 +75,23 @@ Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-### Dashboard reconciliation (2026-07-25 — PROD Completion Agent)
+### Dashboard reconciliation (2026-07-25 — PROD Completion Agent + Browser QA)
 
 | SC | Old status | New status | Source of change | Evidence |
 |----|------------|------------|------------------|----------|
-| SC-102 | Installed in PROD | Live Tested in PROD | Public `/shoot` smoke from cloud agent | All listed routes HTTP 200; health `tokenValid:true`; dashboard markers Weekly summary / Video feedback / Recent XP / Submission Base — `docs/prod-completion/2026-07-25/PUBLIC-SHOOT-SMOKE.md` |
-| SC-139 | Planned | Built in Repository | Stale-doc refresh pack started | Access blocker + smoke + quiz/057 paste packets under `docs/prod-completion/2026-07-25/`; homework Mike actions updated |
-| SC-013 | Built in Repository | Built in Repository | Option B PROD install packet + SCN-027/028 (not Live Tested — no Airtable API token) | `067-OPTION-B-PROD-INSTALL.md` |
-| SC-014 | Built in Repository | Built in Repository | Decision already locked; install packet wired | Same |
-| SC-028 / SC-077 | Installed in PROD | Installed in PROD | Repo **057 v1.4** Ready for PROD Paste — **code canonical in PR #43**; this PR keeps paste runbook only | `057-PERFECT-WEEK-PROD-PASTE.md` → `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; offline xp-date-normalization PASS |
+| SC-102 | Installed in PROD | Live Tested in PROD | Public smoke + browser QA | `PUBLIC-SHOOT-SMOKE.md`; `BROWSER-QA-REPORT-2026-07-25.md` |
+| SC-103 | Installed in PROD | Live Tested in PROD | Browser QA 2026-07-25 | Leaderboard shows Testing Schmidt |
+| SC-106 | Installed in PROD | Live Tested in PROD | Browser QA 2026-07-25 | 12 active levels |
+| SC-108 | Installed in PROD | Live Tested in PROD | Browser QA 2026-07-25 | Zoom catalog/detail |
+| SC-113 | Installed in PROD | Live Tested in PROD | Browser QA 2026-07-25 | Demo/empty/error states |
+| SC-109 | Built in Repository | Installed in PROD | Browser QA 2026-07-25 | XP/Levels live; PDF env still missing |
+| SC-139 | Planned | Built in Repository | Stale-doc refresh pack started | `docs/prod-completion/2026-07-25/` |
+| SC-013 / SC-014 | Built in Repository | Built in Repository | 067 Option B install packet (not Live Tested) | `067-OPTION-B-PROD-INSTALL.md` |
+| SC-028 / SC-077 | Installed in PROD | Installed in PROD | 057 v1.4 Ready for PROD Paste (code in PR #43) | paste runbook + deploy checklist |
 
-**Blocker (does not change SC statuses to Complete):** this cloud environment has **no** `AIRTABLE_API_TOKEN`. Live Schmidt Airtable mutations are blocked until Mike adds the PAT to the Cursor environment (`docs/prod-completion/2026-07-25/ACCESS-BLOCKER.md`). Weekly Threshold writer **035** (SC-049) is owned by PR #43 — do not duplicate.
+**Blocker:** no `AIRTABLE_API_TOKEN` in cloud agent for Schmidt mutations (`ACCESS-BLOCKER.md`). 035 owned by PR #43.
 
-**Net math vs post–SC-002 dashboard:** Live Tested 9→**10** (SC-102); Installed 55→**54**; Built 28→**29** (SC-139); Planned 22→**21**.
+**Net math vs post–SC-002:** LT 9→**14**; Installed 55→**51**; Built 28→**28** (SC-139 +1, SC-109 −1); Planned 22→**21**.
 
 ### Dashboard reconciliation (2026-07-24)
 
@@ -223,18 +227,18 @@ Columns:
 | SC-099 | Assets | Writeback verification (070c) | Installed in PROD | 070c v1.1 idempotent verify | Re-test Accepted→verify | SC-094 | Async handoff | C-013 | — | P0 | 2026-07-23 |
 | SC-100 | Assets | Attachment / Drive retirement strategy | Deferred | Explicitly deferred after C-013 video | Plan retirement after S3 paths stable for HW+video | SC-095 | Don’t break historical links if any remain | C-023 retirement notes | When to retire Drive? | P3 | 2026-07-23 |
 | SC-101 | Assets | Make and Lambda routing correct for video + homework | Installed in PROD | Upload engine blueprints; video live historically; homework router checklist open | Finish homework Module 2 checklist; close stale GitHub overnight issues | SC-095 | Never commit webhooks | make/documentation; issues #1/#8/#9 | — | P1 | 2026-07-23 |
-| SC-102 | Website | Airtable-backed public pages work | Live Tested in PROD | Next.js `/shoot` on Vercel; **2026-07-25 smoke PASS** (home + catalogs + dashboard markers + `/api/airtable` tokenValid) | Seed catalog content depth; Presentation fields later (SC-054) | SC-055 | Server-side token only | `docs/prod-completion/2026-07-25/PUBLIC-SHOOT-SMOKE.md`; launch-certification LIVE-SMOKE | — | P1 | 2026-07-25 |
-| SC-103 | Website | Leaderboard | Installed in PROD | Leaderboard view live | Needs Active enrollments to be meaningful | SC-068 | — | leaderboard-view | — | P2 | 2026-07-23 |
-| SC-104 | Website | Homework catalog | Installed in PROD | Catalog routes live; design system update 2026-07-23 | Content seed; Presentation fields later | SC-054 | Publish flag | homework catalog | — | P2 | 2026-07-23 |
-| SC-105 | Website | Tutorials | Installed in PROD | Tutorials grid/detail live | Complete table merge SC-052 | SC-052 | — | C-026 | — | P2 | 2026-07-23 |
-| SC-106 | Website | Levels pages | Installed in PROD | Levels ladder/detail live | Seed Levels; gate copy | SC-024 | — | levels views | — | P2 | 2026-07-23 |
-| SC-107 | Website | Achievements pages | Installed in PROD | Achievements grid live | Seed achievements | SC-026 | — | achievements views | — | P2 | 2026-07-23 |
-| SC-108 | Website | Zoom public pages | Installed in PROD | Zoom meetings views live | Seed meetings | SC-093 | — | zoom views | — | P2 | 2026-07-23 |
-| SC-109 | Website | Game Manual from config | Built in Repository | `/game-manual` renders live **XP Reward Rules** + **Levels** (inactive filtered, grouped, stable sort); Adobe PDF link retained; unit tests for XP rules | Mike review deploy; editorial copy for Perfect Week/Zoom behavior (do not invent); Shot Milestones public surface later; Presentation fields when SC-054 lands | SC-032, SC-082 | Amounts from config only | `docs/overnight/web-integration/GAME-MANUAL-CONFIG-AUDIT.md`; commits `2684074`, `bf842d9` | Approve public wording | P2 | 2026-07-23 |
-| SC-110 | Website | Public display page | Installed in PROD | Public display view + loading states | Wire Presentation fields; real season data | SC-054 | — | public-display | — | P2 | 2026-07-23 |
+| SC-102 | Website | Airtable-backed public pages work | Live Tested in PROD | Next.js `/shoot` on Vercel; **2026-07-25 smoke + browser QA PASS** (routes 200; API `tokenValid`; no client token leak) | Keep catalog content current; Presentation fields later (SC-054) | SC-055 | Server-side token only | `PUBLIC-SHOOT-SMOKE.md`; `BROWSER-QA-REPORT-2026-07-25.md` | — | P1 | 2026-07-25 |
+| SC-103 | Website | Leaderboard | Live Tested in PROD | Leaderboard + public-display show **Testing Schmidt** (81 XP / 100 shots); Schmidt visibility honored | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene | SC-068 | — | `BROWSER-QA-REPORT-2026-07-25.md` | — | P2 | 2026-07-25 |
+| SC-104 | Website | Homework catalog | Installed in PROD | Catalog routes live; browser smoke PASS | Unpublish stale Week 10 prior-season rows (EXT-QA-006); Presentation fields later | SC-054 | Publish flag | homework catalog; browser QA | — | P2 | 2026-07-25 |
+| SC-105 | Website | Tutorials | Installed in PROD | Tutorials grid/detail live; browser smoke PASS | Complete table merge SC-052; audit Article “Dribble” category (EXT-QA-003) | SC-052 | — | C-026; browser QA | — | P2 | 2026-07-25 |
+| SC-106 | Website | Levels pages | Live Tested in PROD | Levels ladder/detail live — **12 active tiers** verified 2026-07-25 | Gate copy polish; cover 410 graceful fallback in web | SC-024 | — | levels views; browser QA | — | P2 | 2026-07-25 |
+| SC-107 | Website | Achievements pages | Installed in PROD | Achievements grid live; browser shows **9 Streak** only | Re-seed / Active?+Visible? for Shot Milestones + Perfect Week (EXT-QA-002) | SC-026 | — | achievements views; browser QA | — | P2 | 2026-07-25 |
+| SC-108 | Website | Zoom public pages | Live Tested in PROD | Zoom meetings views live; detail pages render; recording-credit empty state OK | Refresh expired Cover Media URLs (EXT-QA-004); web now hides 410 images | SC-093 | — | zoom views; browser QA | — | P2 | 2026-07-25 |
+| SC-109 | Website | Game Manual from config | Installed in PROD | `/game-manual` renders live **XP Reward Rules** + **Levels** on PROD; Adobe PDF link env still empty (“Manual link not configured”) | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001); editorial copy; Shot Milestones surface later | SC-032, SC-082 | Amounts from config only | `GAME-MANUAL-CONFIG-AUDIT.md`; browser QA | Approve public wording + set env | P2 | 2026-07-25 |
+| SC-110 | Website | Public display page | Installed in PROD | Public display view + loading states; Schmidt visible in browser QA | Wire Presentation fields; real season year after School Year fix | SC-054 | — | public-display; browser QA | — | P2 | 2026-07-25 |
 | SC-111 | Website | Athlete profiles (real data, not mocks) | Built in Repository | Demo/partial/missing-link/error states; Schmidt demo slug labelled mock; privacy-safe model; Playwright coverage | Live Airtable adapter after SC-112; published enrollment slug rules | SC-112 | No browser token; no fabricated athletes for unknown slugs | `docs/overnight/web-integration/REPORT.md`; commit `bf842d9` | — | P2 | 2026-07-23 |
 | SC-112 | Website | Athlete auth + dashboard | Decision Needed | Decision matrix + safe scaffolding (`hasAthleteSession` always false); mock dashboard/profile remain labelled demo | Mike pick approach; then schema + session implementation | — | Out of scope: web writes for submissions; no fake login UI | `docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md` | **Pick auth approach** (recommend parent magic-link) | P2 | 2026-07-23 |
-| SC-113 | Website | Loading, empty, and error states | Installed in PROD | Shared UI states + recent loading routes | Verify against empty PROD | — | — | web components | — | P2 | 2026-07-23 |
+| SC-113 | Website | Loading, empty, and error states | Live Tested in PROD | Shared UI states + recent loading routes; **2026-07-25** verified demo/empty/error labels (dashboard demo, game-manual missing PDF, admin auth placeholder, missing athlete states) | Keep states aligned when SC-112 lands | — | — | `BROWSER-QA-REPORT-2026-07-25.md` | — | P2 | 2026-07-25 |
 | SC-114 | Website | Softr cutover | Superseded | Softr declared **Obsolete / Not Used**; `/shoot` is the active public UI | None — do not plan Softr activation or dual-run cutover | SC-102–SC-113 | Historical cutover docs remain Historical Reference Only | `docs/challenge-year/SOFTR-SEASON-ACTIVATION.md` | **Resolved: Softr not used** | — | 2026-07-24 |
 | SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |

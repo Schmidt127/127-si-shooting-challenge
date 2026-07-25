@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -10,10 +9,12 @@ import {
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
 import { IconVideoCall } from "@/components/icons/shoot-icons";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { CtaLink, DetailPageShell, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState, ErrorState, StatusBadge } from "@/components/ui";
 import { buttonVariants } from "@/components/ui/button";
 import { formatMeetingDateTime, formatRelativeUpdate } from "@/lib/formatters";
+import { plainTextFromRichText } from "@/lib/formatters/rich-text";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import { cn } from "@/lib/utils";
 import type { ZoomMeeting, ZoomMeetingCatalogData } from "@/types/zoom-meetings";
@@ -38,15 +39,17 @@ function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
         <div className="flex flex-col sm:flex-row">
           {meeting.coverImage ? (
             <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-brand-light-gray sm:aspect-auto sm:w-44 md:w-52">
-              <Image
+              <SafeExternalImage
                 src={meeting.coverImage.url}
                 alt={meeting.name ? `${meeting.name} cover` : "Zoom meeting cover"}
-                fill
-                className="object-cover transition duration-500 group-hover:scale-[1.02]"
-                sizes="(max-width: 640px) 100vw, 208px"
-                unoptimized
+                className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.02]"
+                fallback={
+                  <div className="flex h-full min-h-[8.5rem] w-full items-center justify-center bg-brand-blue/15">
+                    <IconVideoCall size={40} className="text-brand-blue/35" />
+                  </div>
+                }
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent to-card/90 sm:bg-gradient-to-t sm:to-card/90" />
             </div>
           ) : (
             <div className="flex w-full items-center justify-center border-b border-border-subtle bg-brand-blue/15 py-10 sm:w-44 sm:border-b-0 sm:border-r md:w-52">
@@ -69,7 +72,9 @@ function MeetingCard({ meeting }: { meeting: ZoomMeeting }) {
             <p className="mt-2 text-sm text-muted">{formatMeetingDateTime(meeting.startTime)}</p>
 
             {meeting.briefDescription ? (
-              <p className="mt-2 line-clamp-2 text-sm text-muted">{meeting.briefDescription}</p>
+              <p className="mt-2 line-clamp-2 text-sm text-muted">
+                {plainTextFromRichText(meeting.briefDescription)}
+              </p>
             ) : null}
 
             <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-accent-soft opacity-80 transition group-hover:translate-x-0.5 group-hover:opacity-100">
@@ -165,8 +170,7 @@ export function ZoomMeetingDetailView({ meeting }: { meeting: ZoomMeeting }) {
       <header className={cn(catalogHeroClass(), "relative")}>
         {meeting.coverImage ? (
           <div className="flex w-full items-center justify-center bg-brand-light-gray px-4 py-6 sm:px-8 sm:py-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <SafeExternalImage
               src={meeting.coverImage.url}
               alt={meeting.name ? `${meeting.name} cover` : "Zoom meeting cover"}
               className="max-h-64 w-auto max-w-full object-contain sm:max-h-80"

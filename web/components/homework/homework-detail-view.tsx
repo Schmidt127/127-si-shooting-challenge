@@ -5,6 +5,7 @@ import {
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { CtaLink, DetailPageShell } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import { buttonVariants } from "@/components/ui/button";
@@ -40,13 +41,12 @@ export function HomeworkDetailView({ assignment }: HomeworkDetailViewProps) {
       <header className={cn(catalogHeroClass(), "relative")}>
         {assignment.coverImage ? (
           <div className="relative aspect-[21/9] w-full overflow-hidden bg-black/40">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <SafeExternalImage
               src={assignment.coverImage.url}
               alt={assignment.title ? `${assignment.title} cover` : "Homework cover"}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
           </div>
         ) : null}
 
