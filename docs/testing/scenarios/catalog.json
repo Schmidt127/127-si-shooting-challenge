@@ -1,6 +1,6 @@
 {
-  "catalog_version": "1.0.0",
-  "generated_at": "2026-07-24",
+  "catalog_version": "1.1.0",
+  "generated_at": "2026-07-25",
   "base_id": "appn84sqPw03zEbTT",
   "controlling_doc": "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
   "field_name_policy": "Do not invent field names; confirmed from PROD schema snapshot + scripts",
@@ -162,6 +162,48 @@
       "type": "Daily Submission",
       "test_status": "repository_test_pass",
       "file": "scn-020-scenario-with-stale-result-fields.json"
+    },
+    {
+      "scenario_id": "SCN-021",
+      "name": "homework-satisfactory-xp",
+      "type": "Homework Completion",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-021-homework-satisfactory-xp.json"
+    },
+    {
+      "scenario_id": "SCN-022",
+      "name": "homework-duplicate-prevent",
+      "type": "Homework Completion",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-022-homework-duplicate-prevent.json"
+    },
+    {
+      "scenario_id": "SCN-023",
+      "name": "video-feedback-xp",
+      "type": "Video Feedback",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-023-video-feedback-xp.json"
+    },
+    {
+      "scenario_id": "SCN-024",
+      "name": "zoom-attendance-xp",
+      "type": "Zoom Attendance",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-024-zoom-attendance-xp.json"
+    },
+    {
+      "scenario_id": "SCN-025",
+      "name": "weekly-threshold-xp",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-025-weekly-threshold-xp.json"
+    },
+    {
+      "scenario_id": "SCN-026",
+      "name": "weekly-threshold-duplicate-prevent",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-026-weekly-threshold-duplicate-prevent.json"
     }
   ]
 }

@@ -76,4 +76,110 @@ test("Stage 17 117c is Denver-safe for XP Activity Date", () => {
   assert.ok(/toDenverDateKey/.test(s117c));
 });
 
+test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => {
+  const s057 = fs.readFileSync(
+    path.join(root, "057-achievements-and-milestones-calculate-perfect-week-eligibility.js"),
+    "utf8",
+  );
+  assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
+  assert.ok(
+    /Version:\s*v?1\.4/.test(s057) || /version:\s*"v?1\.4"/.test(s057),
+    "057 header must declare version 1.4"
+  );
+  const fnMatch = s057.match(
+    /function getDateKeyFromDateOnly\(value\) \{[\s\S]*?\n\}/
+  );
+  assert.ok(fnMatch, "getDateKeyFromDateOnly function not found");
+  const body = fnMatch[0];
+  assert.ok(/Intl\.DateTimeFormat/.test(body), "057 getDateKeyFromDateOnly must use Intl");
+  assert.ok(
+    !/toISOString\(\)\.slice\(0,\s*10\)/.test(body),
+    "057 getDateKeyFromDateOnly must not use UTC ISO slice"
+  );
+});
+
+/** Mirror of 057 getDateKeyFromDateOnly (America/Denver) for boundary proofs. */
+function getDateKeyFromDateOnly057(value) {
+  if (!value) return "";
+  if (typeof value === "string") {
+    const trimmed = String(value).trim();
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (localMatch) {
+      return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+    }
+  }
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+  const year = parts.find((part) => part.type === "year")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const day = parts.find((part) => part.type === "day")?.value || "";
+  if (!year || !month || !day) return "";
+  return `${year}-${month}-${day}`;
+}
+
+test("057 mirror: Saturday 11:59 PM Denver stays Saturday", () => {
+  // 2026-07-25 23:59 MDT = 2026-07-26 05:59 UTC
+  const ts = new Date("2026-07-26T05:59:00.000Z");
+  assert.strictEqual(getDateKeyFromDateOnly057(ts), "2026-07-25");
+  assert.strictEqual(ts.toISOString().slice(0, 10), "2026-07-26");
+});
+
+test("057 mirror: Sunday 12:01 AM Denver is Sunday (not Saturday)", () => {
+  // 2026-07-26 00:01 MDT = 2026-07-26 06:01 UTC
+  const ts = new Date("2026-07-26T06:01:00.000Z");
+  assert.strictEqual(getDateKeyFromDateOnly057(ts), "2026-07-26");
+});
+
+test("057 mirror: DST spring forward 2026-03-08 Denver", () => {
+  // 01:30 MST does not exist after spring forward; 08:30Z = 01:30 MST pre-spring
+  // 2026-03-08 02:30 never exists; 09:30Z = 03:30 MDT
+  assert.strictEqual(
+    getDateKeyFromDateOnly057(new Date("2026-03-08T08:30:00.000Z")),
+    "2026-03-08"
+  );
+  assert.strictEqual(
+    getDateKeyFromDateOnly057(new Date("2026-03-08T09:30:00.000Z")),
+    "2026-03-08"
+  );
+});
+
+test("057 mirror: DST fall back 2026-11-01 Denver", () => {
+  // 08:30Z = 01:30 MDT before fall back; 09:30Z = 01:30/02:30 ambiguity window → still 11/01
+  assert.strictEqual(
+    getDateKeyFromDateOnly057(new Date("2026-11-01T08:30:00.000Z")),
+    "2026-11-01"
+  );
+  assert.strictEqual(
+    getDateKeyFromDateOnly057(new Date("2026-11-01T09:30:00.000Z")),
+    "2026-11-01"
+  );
+});
+
+test("057 mirror: date-only string and invalid/blank", () => {
+  assert.strictEqual(getDateKeyFromDateOnly057("2026-02-28"), "2026-02-28");
+  assert.strictEqual(getDateKeyFromDateOnly057("2/29/2024"), "2024-02-29");
+  assert.strictEqual(getDateKeyFromDateOnly057(""), "");
+  assert.strictEqual(getDateKeyFromDateOnly057(null), "");
+  assert.strictEqual(getDateKeyFromDateOnly057("not-a-date"), "");
+});
+
+test("035 Weekly Threshold activity date helper uses America/Denver", () => {
+  const s035 = fs.readFileSync(
+    path.join(root, "035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js"),
+    "utf8",
+  );
+  assert.ok(/timeZone:\s*"America\/Denver"/.test(s035));
+  assert.ok(/function toDateKey\(value\)/.test(s035));
+  assert.ok(/Intl\.DateTimeFormat/.test(s035));
+  assert.ok(/version:\s*"v1\.1"/.test(s035));
+});
+
 console.log("\nAll xp-date-normalization tests passed.");

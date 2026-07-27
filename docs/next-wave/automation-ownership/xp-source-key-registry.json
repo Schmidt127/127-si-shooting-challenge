@@ -220,18 +220,22 @@
       "notes": "Present in v2-engine-contracts as zoomLiveCanonical; live 101 writers use ZOOM_ATTEND_BASE|."
     },
     {
-      "prefix": "WEEKLY_THRESHOLD_",
+      "prefix": "WEEKLY_THRESHOLD|",
       "family": "weekly_threshold_xp",
-      "format": "UNKNOWN — rules exist as WEEKLY_THRESHOLD_{100|125|150}_{band}; no Source Key minting script in repo",
-      "components": ["percent", "gradeBand"],
-      "component_order": ["unknown"],
-      "authoritative_writer": null,
+      "format": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+      "components": ["enrollmentId", "weekId", "percent"],
+      "component_order": ["enrollmentId", "weekId", "percent"],
+      "authoritative_writer": "035",
       "competing_writers": [],
-      "status": "missing_writer",
+      "status": "canonical",
       "legacy": false,
-      "script_path": null,
+      "script_path": "airtable/automations/shooting-challenge/035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
       "destination_table": "XP Events",
-      "notes": "XP Reward Rules exist; WAS has Threshold XP fields; no automation script creates WEEKLY_THRESHOLD Source Keys. Evidence insufficient to invent a writer."
+      "date_component": "weekEndDate",
+      "date_normalization": "America/Denver YYYY-MM-DD from Weeks.End Date / Week End Key",
+      "reads_formula_dedupe": false,
+      "writes_formula_dedupe": false,
+      "notes": "SC-049 / XP-D1 rebuild 2026-07-25; follow-through v1.1. Amounts from XP Reward Rules WEEKLY_THRESHOLD_{100|125|150}_{band}. Trigger: WAS Threshold XP Ready?=1. One event per met tier. Dedupe: canonical Source Key PLUS semantic Enrollment+Week+XP Source label (legacy key shapes unknown after empty-base reset). Mike must UI-attest no competing Threshold automation before PROD paste; inspect any existing Weekly Threshold XP Events for legacy Source Key shapes before mass requeue."
     },
     {
       "prefix": "MANUAL_BONUS|",
@@ -351,7 +355,6 @@
       }
     ],
     "missing_registry_writer_gaps": [
-      "WEEKLY_THRESHOLD_",
       "MANUAL_BONUS|"
     ]
   }

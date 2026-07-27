@@ -1,0 +1,63 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 035 v1.1",
+  "automation_support": {
+    "primary": "035",
+    "downstream_expected": []
+  },
+  "scenario_id": "SCN-026",
+  "name": "weekly-threshold-duplicate-prevent",
+  "type": "Weekly Threshold",
+  "description": "Requeue Threshold XP on an already-Processed WAS that still meets thresholds. Expect skip_existing (Source Key or XP Source label); no duplicate Source Keys.",
+  "related_sc_items": ["SC-002", "SC-007", "SC-049"],
+  "prerequisites": [
+    "SCN-025 passed (at least one Weekly Threshold XP Event exists for Schmidt + week)",
+    "Automation 035 v1.1 available"
+  ],
+  "setup_steps": [
+    "Open the same Weekly Athlete Summary used in SCN-025",
+    "Confirm XP Events already exist with Source Key WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|{weekId}|{percent} OR XP Source Weekly Threshold {percent}",
+    "Set field Requeue Threshold XP = true",
+    "Confirm Threshold XP Ready? = 1",
+    "Run automation 035 Test with recordId = that WAS record id"
+  ],
+  "input_fields": {
+    "automation": "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
+    "input_variable": "recordId",
+    "input_mapping": "Same WAS record id as SCN-025",
+    "was_example": "rechWp330MqSgRWzN"
+  },
+  "expected_outputs": {
+    "statusOut": "success",
+    "actionOut": "skipped_existing",
+    "createdCountOut": 0
+  },
+  "expected_created_records": [],
+  "expected_links": {
+    "WAS.Threshold XP Status": "Processed",
+    "WAS.Requeue Threshold XP": false
+  },
+  "expected_xp_source": "Weekly Threshold 100|125|150",
+  "expected_xp_amount": "unchanged",
+  "expected_dedupe_key_pattern": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second XP Event for same enrollment+week+percent",
+    "Second XP Event when only XP Source label matches (legacy key shape)"
+  ],
+  "safe_rerun_behavior": "skip_existing via source_key or xp_source_label; createdCountOut=0 for already-awarded tiers",
+  "cleanup_instructions": "None if skip works; leave Threshold XP Status=Processed",
+  "manual_requirements": [
+    "Requeue + re-run 035",
+    "Optional legacy label case: see SCHMIDT-LIVE-PROOF Test 3"
+  ],
+  "current_automation_support": "035 v1.1",
+  "test_status": "repository_fixture_ready",
+  "live_proof_pack": "docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md"
+}

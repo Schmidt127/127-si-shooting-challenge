@@ -7,7 +7,8 @@
  *   Submission Base XP, Homework XP, Zoom XP (live + recording),
  *   Video Feedback XP, Streak XP, Shot Milestone XP, Perfect Week XP
  *
- * Weekly threshold XP: writer missing in repo — documented as gap assertion.
+ * Weekly threshold XP: SC-049 rebuild via 035
+ *   WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}
  *
  * Run: node airtable/automations/shooting-challenge/lib/agent4-xp-dedupe-matrix.test.js
  */
@@ -23,6 +24,7 @@ const {
   buildStreakXpSourceKey,
   buildShotMilestoneSourceKey,
   buildPerfectWeekSourceKey,
+  buildWeeklyThresholdSourceKey,
   buildZoomAttendBaseSourceKey,
   buildZoomAttendBonus2SourceKey,
   buildZoomAttendBonus3SourceKey,
@@ -80,6 +82,21 @@ const FAMILIES = [
     name: "Perfect Week XP",
     key: buildPerfectWeekSourceKey(ENR, WEEK),
     expected: `PERFECT_WEEK|${ENR}|${WEEK}`,
+  },
+  {
+    name: "Weekly Threshold XP 100",
+    key: buildWeeklyThresholdSourceKey(ENR, WEEK, 100),
+    expected: `WEEKLY_THRESHOLD|${ENR}|${WEEK}|100`,
+  },
+  {
+    name: "Weekly Threshold XP 125",
+    key: buildWeeklyThresholdSourceKey(ENR, WEEK, 125),
+    expected: `WEEKLY_THRESHOLD|${ENR}|${WEEK}|125`,
+  },
+  {
+    name: "Weekly Threshold XP 150",
+    key: buildWeeklyThresholdSourceKey(ENR, WEEK, 150),
+    expected: `WEEKLY_THRESHOLD|${ENR}|${WEEK}|150`,
   },
   {
     name: "Zoom Attend Base XP",
@@ -141,25 +158,27 @@ test("all SOURCE_KEY_PREFIXES used by families remain defined", () => {
   assert.ok(SOURCE_KEY_PREFIXES.streakXp);
   assert.ok(SOURCE_KEY_PREFIXES.shotMilestone);
   assert.ok(SOURCE_KEY_PREFIXES.perfectWeek);
+  assert.ok(SOURCE_KEY_PREFIXES.weeklyThreshold);
   assert.ok(SOURCE_KEY_PREFIXES.zoomAttendBase);
   assert.ok(SOURCE_KEY_PREFIXES.zoomRecording);
 });
 
-test("Weekly Threshold XP writer still absent in automations folder (gap)", () => {
+test("Weekly Threshold XP writer is exactly automation 035", () => {
   const dir = path.join(__dirname, "..");
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".js"));
-  let writerHits = 0;
+  const writers = [];
   for (const file of files) {
     const text = fs.readFileSync(path.join(dir, file), "utf8");
-    if (/WEEKLY_THRESHOLD_/.test(text) && /createRecordsAsync|createRecordAsync/.test(text)) {
-      writerHits += 1;
+    if (
+      /WEEKLY_THRESHOLD\|/.test(text) &&
+      /createRecordsAsync|createRecordAsync/.test(text)
+    ) {
+      writers.push(file);
     }
   }
-  assert.strictEqual(
-    writerHits,
-    0,
-    "Unexpected WEEKLY_THRESHOLD writer appeared — update Agent 4 gap docs and add dedupe tests"
-  );
+  assert.deepStrictEqual(writers, [
+    "035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
+  ]);
 });
 
 test("duplicate keys across families remain distinct", () => {

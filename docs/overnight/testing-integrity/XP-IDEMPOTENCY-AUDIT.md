@@ -7,7 +7,9 @@
 
 Honesty rule: amounts are documented as observed/config; this audit does **not** change XP economics.
 
-**Inventory follow-up (2026-07-24):** Complete writer scan of `airtable/automations/shooting-challenge/*.js` confirms **8 live XP creators** (010, 054, 059, 065, 101, 114, 117, 117c) + safe-backfill extensions. **No script writes** `XP Dedupe Key` / `XP Dedupe Key Normalized` — those are **formula fields**; scripts write `Source Key` and sometimes *read* the formulas for matching. Manual Bonus and Weekly Threshold still have **no creators in repo**.
+**Inventory follow-up (2026-07-24):** Complete writer scan of `airtable/automations/shooting-challenge/*.js` confirms **8 live XP creators** (010, 054, 059, 065, 101, 114, 117, 117c) + safe-backfill extensions. **No script writes** `XP Dedupe Key` / `XP Dedupe Key Normalized` — those are **formula fields**; scripts write `Source Key` and sometimes *read* the formulas for matching. Manual Bonus still has **no creator in repo**.
+
+**SC-049 rebuild (2026-07-25):** Weekly Threshold writer restored in repo as **035** v1.0 — Source Key `WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}`. **Not installed in PROD yet.** Manual Bonus unchanged (operator process).
 
 ---
 
@@ -23,7 +25,7 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 | Streak | 054 | `STREAK_XP\|{enrollmentId}\|{achievementId}\|{streakEndDate}` | None post-reset | Code-safe; unproven live |
 | Shot Milestone | 066 → 059 | Unlock `SHOT_MILESTONE\|{enr}\|{ms}`; XP via unlock Source Key | None post-reset | Unlock + XP both keyed |
 | Perfect Week | 058 → 059 | `PERFECT_WEEK\|{enrollmentId}\|{weekId}` | None post-reset | Unlock + XP keyed |
-| Weekly Threshold | **writer missing in repo** | Expected family `WEEKLY_THRESHOLD_*` (rules exist) | Schema fields on WAS; no script found | **BLOCKED / Decision Needed** |
+| Weekly Threshold | **035** (repo v1.0; PROD paste pending) | `WEEKLY_THRESHOLD\|{enrollmentId}\|{weekId}\|{percent}` | Rules + WAS fields; offline tests PASS | Code-safe; unproven live |
 | Manual Bonus | Manual / field | No `MANUAL_BONUS` rule; `Lifetime XP Manual Adjustments` on Enrollments | N/A | Manual process |
 
 ---
@@ -109,17 +111,19 @@ Honesty rule: amounts are documented as observed/config; this audit does **not**
 | XP writer | 059 |
 | PROD evidence | None post-reset |
 
-## 9. Weekly Threshold — DEFECT / GAP
+## 9. Weekly Threshold — REBUILT IN REPO (PROD paste pending)
 
 | Item | Value |
 |------|-------|
 | Config | 15 `WEEKLY_THRESHOLD_{100\|125\|150}_{band}` rules live in XP Reward Rules |
 | WAS fields | `Threshold XP Ready?`, `Threshold XP Status`, `Requeue Threshold XP`, etc. |
-| Repo writer | **No automation script in `airtable/automations/shooting-challenge/` references Threshold XP fields or creates WEEKLY_THRESHOLD Source Keys** |
-| Impact | Threshold XP cannot be proven; may be missing automation, renamed, or deleted historically |
-| Severity | **High** for SC-022/SC-049 completeness |
-| Fix status | Documented only — do not invent a second writer overnight |
-| Mike action | Confirm whether a Threshold XP automation still exists in Airtable UI; if deleted, schedule rebuild |
+| Repo writer | **035** `035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js` v1.0 (2026-07-25) |
+| Source Key | `WEEKLY_THRESHOLD\|{enrollmentId}\|{weekId}\|{percent}` — one event per met 100/125/150 tier |
+| XP date | Week End Date (America/Denver) |
+| Impact | Repo gap closed; PROD still needs UI attest + paste + Schmidt live proof |
+| Severity | **High** until PROD install |
+| Fix status | Built in Repository — see `docs/deploy-checklists/035-weekly-threshold-xp-v1.0.md` |
+| Mike action | UI-attest no competing Threshold automation; paste 035; Schmidt live test |
 
 ## 10. Manual Bonus
 
@@ -160,6 +164,6 @@ None to XP amount/key formats. Verifier + scenario fixtures encode contracts for
 
 | ID | Severity | Description | Status |
 |----|----------|-------------|--------|
-| XP-D1 | High | Weekly Threshold XP writer missing in repo | Documented |
+| XP-D1 | High | Weekly Threshold XP writer missing in repo | **Repo rebuilt 035 v1.0 (2026-07-25)** — PROD paste + live proof still open |
 | XP-D2 | High | 117 + 117c both create `ZOOM_CREDIT\|…` | Documented — attest single writer ON |
 | XP-D3 | Medium | 065 ignores legacy `HOMEWORK_COMPLETION\|` keys | Documented |

@@ -32,6 +32,12 @@ See [`catalog.json`](./catalog.json) for the machine index.
 | SCN-018 | `scn-018-disabled-scenario.json` | Daily Submission | decision_needed |
 | SCN-019 | `scn-019-scenario-already-running.json` | Daily Submission | not_tested |
 | SCN-020 | `scn-020-scenario-with-stale-result-fields.json` | Daily Submission | repository_test_pass |
+| SCN-021 | `scn-021-homework-satisfactory-xp.json` | Homework Completion | repository_fixture_ready |
+| SCN-022 | `scn-022-homework-duplicate-prevent.json` | Homework Completion | repository_fixture_ready |
+| SCN-023 | `scn-023-video-feedback-xp.json` | Video Feedback | repository_fixture_ready |
+| SCN-024 | `scn-024-zoom-attendance-xp.json` | Zoom Attendance | repository_fixture_ready |
+| SCN-025 | `scn-025-weekly-threshold-xp.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-026 | `scn-026-weekly-threshold-duplicate-prevent.json` | Weekly Threshold | repository_fixture_ready |
 
 ## Known live records
 

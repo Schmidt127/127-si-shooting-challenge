@@ -24,12 +24,16 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.3
+ * Version: 1.4
  * Date written: 2026-05-30
- * Last updated: 2026-07-18
+ * Last updated: 2026-07-25
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 1.4 updates (SC-021 date normalization):
+ * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
+ * - Date-only YYYY-MM-DD / M/D/YYYY text still passes through unchanged.
  *
  * Version 1.3 updates (C-025 Stage 17):
  * - Zoom attendance count = live Attendees ∪ qualifying Recording Quiz credits.
@@ -224,20 +228,31 @@ function fieldExists(table, name) {
 function getDateKeyFromDateOnly(value) {
   if (!value) return "";
 
-  if (value instanceof Date && !Number.isNaN(value.getTime())) {
-    return value.toISOString().slice(0, 10);
+  // Prefer calendar text so date-only Airtable values never shift by timezone.
+  if (typeof value === "string") {
+    const trimmed = String(value).trim();
+    const isoMatch = trimmed.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+    const localMatch = trimmed.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (localMatch) {
+      return `${localMatch[3]}-${localMatch[1].padStart(2, "0")}-${localMatch[2].padStart(2, "0")}`;
+    }
   }
 
-  const text = String(value);
-  const match = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (match) return `${match[1]}-${match[2]}-${match[3]}`;
+  const dateValue = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(dateValue.getTime())) return "";
 
-  const parsed = new Date(value);
-  if (!Number.isNaN(parsed.getTime())) {
-    return parsed.toISOString().slice(0, 10);
-  }
-
-  return "";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(dateValue);
+  const year = parts.find((part) => part.type === "year")?.value || "";
+  const month = parts.find((part) => part.type === "month")?.value || "";
+  const day = parts.find((part) => part.type === "day")?.value || "";
+  if (!year || !month || !day) return "";
+  return `${year}-${month}-${day}`;
 }
 
 function addDaysToDateKey(dateKey, daysToAdd) {

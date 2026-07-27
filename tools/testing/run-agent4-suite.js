@@ -60,6 +60,18 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/agent4-xp-dedupe-matrix.test.js"],
   },
   {
+    name: "weekly-threshold-xp",
+    args: ["airtable/automations/shooting-challenge/lib/weekly-threshold-xp.test.js"],
+  },
+  {
+    name: "xp-date-normalization",
+    args: ["airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js"],
+  },
+  {
+    name: "source-key-registry",
+    args: ["tests/automation-contracts/source-key-registry.test.js"],
+  },
+  {
     name: "066-milestone-crossing",
     args: ["airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"],
   },

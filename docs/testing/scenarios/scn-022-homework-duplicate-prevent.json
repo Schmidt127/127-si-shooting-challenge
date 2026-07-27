@@ -1,0 +1,51 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-022",
+  "name": "homework-duplicate-prevent",
+  "type": "Homework Completion",
+  "description": "Re-run 065 on an already-awarded Homework Completion. Expect skip; HOMEWORK_XP|{hcId} remains unique.",
+  "related_sc_items": [
+    "SC-002",
+    "SC-007",
+    "SC-016",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "Homework Completion with exactly one HOMEWORK_XP event"
+  ],
+  "input_fields": {
+    "note": "Re-trigger 065 on awarded HC recordId"
+  },
+  "expected_created_records": [],
+  "expected_links": {},
+  "expected_xp_source": "Homework Completion",
+  "expected_xp_amount": "unchanged",
+  "expected_dedupe_key_pattern": "HOMEWORK_XP|{homeworkCompletionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second HOMEWORK_XP for same HC",
+    "Creating HOMEWORK_COMPLETION| legacy key as a second event"
+  ],
+  "safe_rerun_behavior": "Must skip_existing / skipped",
+  "cleanup_instructions": "None if skip works",
+  "manual_requirements": [
+    "Re-run 065 from Airtable UI"
+  ],
+  "current_automation_support": "065 Source Key",
+  "test_status": "repository_fixture_ready"
+}

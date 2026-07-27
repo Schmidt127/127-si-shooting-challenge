@@ -1,0 +1,71 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-021",
+  "name": "homework-satisfactory-xp",
+  "type": "Homework Completion",
+  "description": "Coach-reviewed satisfactory Homework Completion awards exactly one HOMEWORK_XP|{hcId} event via 065. Not a 115 Daily Submission branch.",
+  "related_sc_items": [
+    "SC-002",
+    "SC-009",
+    "SC-016",
+    "SC-071",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "Schmidt Enrollment Active?=true",
+    "Homework Completions row with Satisfactory?=true, Review Complete, Base/Total XP > 0, Award Status=Pending, XP Events empty",
+    "Automation 065 ON"
+  ],
+  "input_fields": {
+    "note": "Trigger 065 on Homework Completions recordId (not Testing Scenarios Daily Submission)",
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "Satisfactory?": true,
+    "Review Complete": true,
+    "Award Status": "Pending"
+  },
+  "expected_created_records": [
+    {
+      "table": "XP Events",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "XP Events.Enrollment": "recgP9qZYjAhE7NXm",
+    "Homework Completions.XP Events": "created event"
+  },
+  "expected_xp_source": "Homework Completion",
+  "expected_xp_amount": "from Homework Completions.Total Homework XP Awarded (rule-backed)",
+  "expected_dedupe_key_pattern": "HOMEWORK_XP|{homeworkCompletionRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second XP Event for same Homework Completion",
+    "065 inventing fake Submission Assets",
+    "065 awarding XP without Satisfactory?"
+  ],
+  "safe_rerun_behavior": "065 recheck-before-create skips when Source Key exists",
+  "cleanup_instructions": "Optional delete test HC + XP after verification; keep Schmidt Enrollment",
+  "manual_requirements": [
+    "Create/review HC for Schmidt; run 065"
+  ],
+  "current_automation_support": "065 (020/067 create HC; 064 prepares)",
+  "test_status": "repository_fixture_ready",
+  "known_evidence": {
+    "contract": "airtable/automations/shooting-challenge/lib/v2-engine-contracts.js HOMEWORK_XP|",
+    "note": "0 Homework Completions post-reset — live proof still open"
+  }
+}

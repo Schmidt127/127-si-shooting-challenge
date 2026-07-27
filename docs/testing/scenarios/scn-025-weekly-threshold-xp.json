@@ -1,0 +1,87 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 035 v1.1",
+  "automation_support": {
+    "primary": "035",
+    "downstream_expected": []
+  },
+  "scenario_id": "SCN-025",
+  "name": "weekly-threshold-xp",
+  "type": "Weekly Threshold",
+  "description": "WAS with Goal Completion % >= 100% and Threshold XP Ready?=1 awards WEEKLY_THRESHOLD|{enrollment}|{week}|{percent} tiers via 035 v1.1.",
+  "related_sc_items": ["SC-002", "SC-022", "SC-049"],
+  "prerequisites": [
+    "Table Enrollments record recgP9qZYjAhE7NXm has Active?=true",
+    "Active XP Reward Rules Rule Key WEEKLY_THRESHOLD_100_{band}, WEEKLY_THRESHOLD_125_{band}, WEEKLY_THRESHOLD_150_{band} with XP Amount 10/20/30",
+    "Automation 035 v1.1 pasted, input recordId mapped, left OFF until first test",
+    "Mike UI-attest: no other Threshold XP automation ON"
+  ],
+  "setup_steps": [
+    "Open table Weekly Athlete Summary",
+    "Select Schmidt WAS for the target Week (confirm Enrollment=recgP9qZYjAhE7NXm)",
+    "Confirm Goal Completion % >= 1; if lower, add counted Submissions until formula reaches >= 1",
+    "If Threshold XP Status = Processed, set Requeue Threshold XP = true",
+    "Confirm Threshold XP Ready? = 1",
+    "Run automation 035 Test with recordId = that WAS record id"
+  ],
+  "input_fields": {
+    "automation": "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
+    "input_variable": "recordId",
+    "input_mapping": "Triggering Weekly Athlete Summary record id",
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "was_example": "rechWp330MqSgRWzN"
+  },
+  "expected_outputs": {
+    "statusOut": "success",
+    "actionOut": "created",
+    "errorOut": ""
+  },
+  "expected_created_records": [
+    {
+      "table": "XP Events",
+      "count": "1-3 (one per met 100/125/150 tier)",
+      "fields": {
+        "Source Key": "WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|{weekId}|{100|125|150}",
+        "XP Bucket": "Weekly Threshold",
+        "XP Source": "Weekly Threshold 100|125|150",
+        "XP Points": "10|20|30 from XP Reward Rules",
+        "Enrollment": "recgP9qZYjAhE7NXm",
+        "XP Activity Date": "Week End Date (Saturday) America/Denver"
+      }
+    }
+  ],
+  "expected_links": {
+    "XP Events.Enrollment": "recgP9qZYjAhE7NXm",
+    "XP Events.Weekly Athlete Summary": "triggering WAS record id",
+    "WAS.Threshold XP Status": "Processed",
+    "WAS.Requeue Threshold XP": false
+  },
+  "expected_xp_source": "Weekly Threshold 100|125|150",
+  "expected_xp_amount": "10/20/30 from XP Reward Rules (band-specific)",
+  "expected_dedupe_key_pattern": "WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Invented XP amounts",
+    "Duplicate Source Key on requeue",
+    "Writing formula Goal Completion % / Threshold XP Ready?"
+  ],
+  "safe_rerun_behavior": "See SCN-026",
+  "cleanup_instructions": "Optional: delete created Weekly Threshold XP Events for this WAS; set Threshold XP Status blank; leave Requeue unchecked",
+  "manual_requirements": [
+    "Paste 035 v1.1 into PROD (checklist docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md)",
+    "Seed WAS shots to cross 100% (and optionally 125/150)"
+  ],
+  "current_automation_support": "035 v1.1 + WAS Threshold XP Ready? formula",
+  "test_status": "repository_fixture_ready",
+  "live_proof_pack": "docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md",
+  "known_evidence": {
+    "offline_tests": "airtable/automations/shooting-challenge/lib/weekly-threshold-xp.test.js",
+    "script": "035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js"
+  }
+}

@@ -16,14 +16,29 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Verification:** Resolver tests in `tests/config-selection/`; OMNI year-link spot-check on Zoom Config links
 - **Related SC:** SC-030, SC-033, SC-021 · Evidence: `docs/next-wave/config-selection/REPORT.md`
 
-### 2. Paste 057 Denver date-key fix after repo change
+### 2. Paste 057 Denver date-key fix (repo ready — v1.4)
 - **Priority:** P1
 - **System:** Airtable automation 057
-- **Exact action:** After repo 057 date helper is aligned to America/Denver (005/034 pattern), paste script into PROD 057
+- **Exact action:** Paste GitHub `057-…calculate-perfect-week-eligibility.js` **v1.4** into PROD 057 (`getDateKeyFromDateOnly` now America/Denver via Intl). Checklist: `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`.
 - **Expected outcome:** Perfect Week week-window keys remain correct for evening dateTimes
-- **Why not completed:** Requires Airtable UI paste; latent risk only today
-- **Verification:** Offline test already pins UTC-slice disagreement; live Perfect Week after paste
-- **Related SC:** SC-028, SC-077
+- **Why not completed:** Requires Airtable UI paste
+- **Verification:** Offline `xp-date-normalization.test.js` Denver/DST boundary suite; Schmidt pack Test 4–5 in `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md`
+- **Related SC:** SC-021, SC-028, SC-077 · Repo fix 2026-07-25
+
+### 2b. Paste 035 Weekly Threshold XP writer (repo ready — v1.1)
+- **Priority:** P0
+- **System:** Airtable automation **035** (new / empty slot)
+- **Exact action:**
+  1. UI-attest Automations: turn OFF any competing Threshold / Weekly Threshold XP writer.
+  2. Inspect XP Events where XP Bucket=`Weekly Threshold` OR XP Source contains `Weekly Threshold` — record any non-canonical Source Key shapes before mass requeue.
+  3. Create automation `035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events` in folder `03 - Weekly Summary and Goal Logic`.
+  4. Trigger: Weekly Athlete Summary when `Threshold XP Ready?` = 1; input `recordId`.
+  5. Paste GitHub `035-…create-weekly-threshold-xp-events.js` **v1.1** (skip GitHub header). Start **OFF**.
+  6. Run Schmidt Tests 1–3 in `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md`. Turn ON only after create + idempotency pass.
+- **Expected outcome:** One XP Event per met tier; Source Key `WEEKLY_THRESHOLD|{enrollmentId}|{weekId}|{percent}`; rerun creates none; semantic XP Source label blocks legacy-key duplicates.
+- **Why not completed:** Requires Airtable UI paste + Schmidt live proof
+- **Verification:** Checklist `docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md`; offline `weekly-threshold-xp.test.js`
+- **Related SC:** SC-049, SC-022, SC-002 · Repo rebuild 2026-07-25 (follow-through v1.1)
 
 ### 3. Fix XP Date Resolved SWITCH case "Submission Base"
 - **Priority:** P1

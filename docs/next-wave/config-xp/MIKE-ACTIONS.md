@@ -23,10 +23,12 @@ Scripts (repo SoT — do not change behavior in this documentation pass):
 
 ## Still needed (Mike / Cursor)
 
-1. **Supervised live streak test** (SC-075 / SC-029) — controlled 3-day chain on Schmidt; one unlock + one XP; rerun safe.  
-2. **Supervised milestone / natural run** (SC-076 / SC-027) — Schmidt approach or OMNI check; expect skip or unlock per threshold; no Grade Band rename errors.  
-3. **Video XP 1-vs-25** investigation (`recYQ10pOoFlApmjZ`) — SC-022 remaining.  
-4. **SC-081** streak repeat-after-break product decision.  
-5. Archive inactive legacy Grade Bands after dependency confirm (SC-023 remaining).
+1. **Paste 035 v1.1 Weekly Threshold writer** (SC-049) — UI-attest no competing Threshold automation; paste OFF-first; Schmidt Tests 1–3 in `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md`. Checklist: `docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md`.  
+2. **Paste 057 v1.4 Denver date keys** (SC-021) — checklist `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; Schmidt Tests 4–5.  
+3. **Supervised live streak test** (SC-075 / SC-029) — controlled 3-day chain on Schmidt; one unlock + one XP; rerun safe.  
+4. **Supervised milestone / natural run** (SC-076 / SC-027) — Schmidt approach or OMNI check; expect skip or unlock per threshold; no Grade Band rename errors.  
+5. **Video XP 1-vs-25** investigation (`recYQ10pOoFlApmjZ`) — SC-022 remaining.  
+6. **SC-081** streak repeat-after-break product decision.  
+7. Archive inactive legacy Grade Bands after dependency confirm (SC-023 remaining).
 
 Do **not** mark Live Tested in PROD until controlled records prove expected results.

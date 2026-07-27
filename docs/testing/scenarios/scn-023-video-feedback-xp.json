@@ -1,0 +1,68 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts schema + 115 script",
+  "automation_support": {
+    "primary": "115",
+    "downstream_expected": [
+      "005",
+      "010",
+      "031"
+    ]
+  },
+  "scenario_id": "SCN-023",
+  "name": "video-feedback-xp",
+  "type": "Video Feedback",
+  "description": "Posted Video Feedback with positive Total Video XP creates VIDEO_SUBMISSION|{vfId} via 114.",
+  "related_sc_items": [
+    "SC-002",
+    "SC-011",
+    "SC-072",
+    "SC-049"
+  ],
+  "prerequisites": [
+    "Video Feedback linked to Schmidt Enrollment + Submission",
+    "Feedback Posted?=true, Total Video XP Awarded > 0, Ready for XP Automation?=true",
+    "Automation 114 ON"
+  ],
+  "input_fields": {
+    "note": "Trigger 114 on Video Feedback recordId",
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "Feedback Posted?": true,
+    "Ready for XP Automation?": true
+  },
+  "expected_created_records": [
+    {
+      "table": "XP Events",
+      "count": 1
+    }
+  ],
+  "expected_links": {
+    "XP Events.Enrollment": "recgP9qZYjAhE7NXm",
+    "Video Feedback.XP Events": "created event"
+  },
+  "expected_xp_source": "Video Submission",
+  "expected_xp_amount": 25,
+  "expected_dedupe_key_pattern": "VIDEO_SUBMISSION|{videoFeedbackRecordId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Stealing another VF Source Key",
+    "Blank XP Activity Date on new awards",
+    "Double credit with homework video path"
+  ],
+  "safe_rerun_behavior": "114 skip/update same Source Key",
+  "cleanup_instructions": "Optional delete test VF + XP",
+  "manual_requirements": [
+    "Coach-complete a Schmidt video feedback row"
+  ],
+  "current_automation_support": "114 (+ 013/070b/070c upload path)",
+  "test_status": "repository_fixture_ready",
+  "known_evidence": {
+    "historical_event": "recYQ10pOoFlApmjZ (legacy/linked; amount/date defects tracked under SC-022)"
+  }
+}
