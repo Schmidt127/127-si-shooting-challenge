@@ -31,7 +31,7 @@ Still open: deliberate retryable-failure and retry-exhausted live proof. Do not 
    NEXT_PUBLIC_LANDING_URL=https://www.hoopchallenges.com
    ```
    Remove or replace any `https://hooopchallenges.com` value.
-3. Do not stop at Save. `NEXT_PUBLIC_*` is baked at build time. Merge/deploy PR #45 alone, then verify Production.
+3. Do not stop at Save. `NEXT_PUBLIC_*` is baked at build time. Merge/deploy PR stack through **#45** (or tip #47), then verify Production.
 
 Live proof already captured: production HTML at `https://www.hoopchallenges.com/shoot` contains the triple-o typo; Preview for PR #45 does not.
 
@@ -39,16 +39,16 @@ Live proof already captured: production HTML at `https://www.hoopchallenges.com/
 
 ## Exact next package
 
-**PR #45 — Browser QA production path**
+**PR stack #43→#47 — repository merge, then #45 production path**
 
 | Step | Owner | Action |
 |------|-------|--------|
-| 1 | Mike | Review draft PR #45 |
+| 1 | Mike | Review draft PRs #43–#47 (stacked; merge in order) |
 | 2 | Mike | Correct Vercel Production landing URL |
-| 3 | Mike | Approve merge of **#45 alone**; do not combine with #43/#44/#46 |
-| 4 | Mike/Cursor | Confirm Production deployment includes `18cd2df` or its merge commit |
+| 3 | Mike | Approve merge sequence **#43 → #44 → #45 → #46 → #47** (or tip #47 once) |
+| 4 | Mike/Cursor | Confirm Production deployment includes #45 tip `39df7cb` or merge commit |
 | 5 | Cursor | Rerun Playwright against Production; target **44/44**; record evidence |
-| 6 | Cursor | Only then update SC-102/103/106/108/113/109 with evidence-backed statuses |
+| 6 | Mike | Only then paste 057/035/067 and run Schmidt packs |
 
 ---
 
@@ -56,8 +56,7 @@ Live proof already captured: production HTML at `https://www.hoopchallenges.com/
 
 | Action | Why |
 |--------|-----|
-| Merge PRs #43+#44+#45+#46 together | SCN-027 collision; completion-master conflicts; 057 duplicate noise |
-| Paste 035 / 057 / 067 during the recovery-doc package | Each requires its own install + live-proof package |
+| Paste 035 / 057 / 067 without dedicated live-proof | Each requires its own install + Schmidt package |
 | Deliberately fail COM-MAKE-001 or SC-041 | Requires a named controlled failure-path package |
 | Mark SC-049 / SC-021 / SC-013 Option B Complete | PROD paste + required live evidence is missing |
 | Turn COM-MAKE-001 scheduling ON | Success path passed, but retry/failure paths are not live-proven |
@@ -74,8 +73,7 @@ Recommended sequence, one package at a time:
 2. **035 v1.1 create/paste OFF-first** — PR #43 checklist + Schmidt Tests 1–5.
 3. **067 Option B** — confirm missing automation, install from PR #44, prove HC / 0 assets / 1 XP.
 4. **COM-MAKE-001 retry/failure proof** — scheduling OFF; controlled retryable and exhausted cases.
-5. **SC-041** failure→recovery only with written Mike authorization.
-6. Rename colliding **SCN-027** fixtures before merging both #44 and #46.
+5. **SC-041** failure→recovery only with written Mike authorization (fixture **SCN-029**).
 
 ---
 

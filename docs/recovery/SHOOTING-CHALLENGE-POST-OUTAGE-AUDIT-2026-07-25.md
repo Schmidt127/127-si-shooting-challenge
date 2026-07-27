@@ -12,6 +12,19 @@
 
 **Audit rules followed:** no implementation changes, no PR merges, no Airtable writes, no automation enables, no emails/webhooks, no PROD pastes, no Complete marks without live evidence.
 
+## Post-audit reconciliation (2026-07-26)
+
+Cursor rebased PRs **#43→#47** onto `origin/master` (`c3a60b0`) as a clean stack:
+
+| Fix | Result |
+|-----|--------|
+| Duplicate 057 code (#43 vs #44) | Code canonical on **#43**; #44 keeps paste runbook only |
+| SCN-027 collision (#44 quiz vs #46 weekly email) | Weekly-email fixture renumbered to **SCN-029** |
+| Shared completion-master / catalog / CHANGELOG | Merged in stack order; statuses not promoted to Live Tested/Complete without evidence |
+| Merge guidance | Safe sequential merge **#43 → #44 → #45 → #46 → #47** (all remain draft/unmerged) |
+
+Older sections below that warn about SCN-027 collision or “do not combine PRs” are **superseded** by this reconciliation. Authoritative handoff: `SHOOTING-CHALLENGE-TOMORROW-START-2026-07-26.md`.
+
 ---
 
 ## 1. Executive summary

@@ -2,80 +2,78 @@
 
 ## Clean starting state
 
-- Recovery audit branch: `docs/post-outage-recovery-2026-07-25`
-- Recovery PR: **#47**
-- Audit baseline master: `ee9578b`, clean and synced when inspected
-- PRs #43–#46 remain separate, pushed, draft, and mergeable
-- No lost or corrupted package work was found
-- PROD Airtable read access works from desktop through `.env.local` `AIRTABLE_API_TOKEN`
-- No additional Airtable writes, automation enables, or scenario schedules were authorized at tonight’s stop
+- Recovery audit branch: `docs/post-outage-recovery-2026-07-25` (PR **#47**)
+- **2026-07-26 reconciliation:** PRs #43–#47 rebased into a clean stack on `origin/master` (`c3a60b0`)
+- Stack tips (all draft, unmerged):
 
-## Completed tonight
+| PR | Branch tip SHA |
+|----|----------------|
+| #43 | `8db4426` |
+| #44 | `92cb070` (includes #43) |
+| #45 | `39df7cb` (includes #44) |
+| #46 | `8a3cf2d` (includes #45) |
+| #47 | `c62bd1c` (includes #46) |
+
+- Duplicate **057** code removed from #44 (paste runbook only; code canonical in #43)
+- **SCN-027 collision resolved:** quiz Option B keeps SCN-027/028 (#44); weekly-email retry is **SCN-029** (#46)
+- PROD Airtable read access works from desktop through `.env.local` `AIRTABLE_API_TOKEN`
+- No Airtable writes, automation enables, emails, or Make schedule changes from the reconciliation session
+
+## Completed prior night (unchanged)
 
 ### COM-MAKE-001 — Email Delivery Queue Processor
 
-Success path passed in controlled PROD testing:
-
-1. Make selected one eligible Schmidt Delivery.
-2. Attempt Count advanced.
-3. Gmail sent the email.
-4. Delivery changed to Sent.
-5. Provider, Provider Message ID, and Sent At were recorded.
-6. A Processed Integration Event with Sent outcome was created.
-7. Integration Event Message mappings use `first(...)` in Modules 5, 8, and 10.
-8. Retry filters are numeric `< 3` and `>= 3`.
-9. Retry timing is 5 minutes after attempt 1 and 30 minutes after attempt 2.
-10. Scenario scheduling remains **OFF**.
-
-Not completed: retryable-failure and retry-exhausted live proof. Resume only as a separate named package.
+Success path passed in controlled PROD testing (scheduling remains **OFF**). Retryable-failure and retry-exhausted live proof still open.
 
 ## Exact first package tomorrow
 
-### PR #45 — Production browser QA path
+### Option A — Repository merges (no Airtable paste)
+
+Merge in order **#43 → #44 → #45 → #46 → #47** (or merge tip #47 once if reviewing the full stack). All remain draft until Mike approves.
+
+### Option B — Production browser QA path (after merge/deploy of #45+)
 
 1. In Vercel Production for `127-si-shooting-challenge`, set:
    ```text
    NEXT_PUBLIC_LANDING_URL=https://www.hoopchallenges.com
    ```
-2. Merge/deploy **PR #45 alone**.
-3. Confirm Production includes `18cd2df` or its merge commit.
+2. Deploy web changes from #45 (landing URL guard + browser-QA fixes).
+3. Confirm Production includes `39df7cb` or its merge commit.
 4. Rerun Production Playwright toward **44/44**.
-5. Capture evidence before changing completion-master statuses.
+5. Capture evidence before promoting any additional SC items beyond what browser QA already recorded.
 
 ## Authoritative package sources
 
 | Package | Source |
 |---------|--------|
-| 035 v1.1 | PR #43 only |
-| 057 v1.4 | PR #43 only; PR #44 copy is duplicate |
-| 067 Option B | PR #44 |
+| 035 v1.1 | PR #43 only — **Ready for PROD Paste** |
+| 057 v1.4 | PR #43 only — **Ready for PROD Paste**; #44 keeps paste runbook |
+| 067 Option B | PR #44 — Built / install packet |
 | Browser QA / landing URL guard | PR #45 |
-| SC-041 retry SOP | PR #46 |
+| SC-041 retry SOP | PR #46 — Built; fixture **SCN-029** |
 | Recovery state and tomorrow handoff | PR #47 |
 
 ## Known blockers and cautions
 
-- Do not combine PRs #43–#46.
-- SCN-027 collides between #44 and #46.
-- 035 is not installed in PROD.
+- 035 is **not** installed in PROD.
 - 067 is absent from the PROD Automations inventory.
-- 057 PROD version is not verified as v1.4.
+- 057 PROD version is not verified as v1.4 (assume v1.3 until UI-confirm after paste).
 - SC-041 has no deliberate failure→recovery live proof.
-- Production still serves the `hooopchallenges.com` typo until Vercel env + redeploy are completed.
+- Production may still serve the `hooopchallenges.com` typo until Vercel env + redeploy.
 - COM-MAKE-001 scheduling must remain OFF until the controlled failure package is completed.
-- The completion master on master remains the controlling source; recovery docs identify corrections that must be applied only with evidence-backed package updates.
+- Do **not** mark 035/057/067/SC-041 **Live Tested** or **Complete** without paste + Schmidt evidence.
 
-## Recommended order after PR #45
+## Recommended order after repo merges
 
-1. 057 v1.4 paste and Schmidt Perfect Week regression.
-2. 035 v1.1 OFF-first install and Schmidt Tests 1–5.
-3. 067 Option B install and HC / 0 assets / 1 XP proof.
-4. COM-MAKE-001 retryable and exhausted failure-path proof.
-5. SC-041 deliberate failure→recovery proof with explicit authorization.
-6. Resolve SCN-027 collision before merging both affected PRs.
+1. Vercel landing URL + #45 production deploy + Playwright evidence.
+2. 057 v1.4 paste (PR #43) and Schmidt Perfect Week regression.
+3. 035 v1.1 OFF-first install and Schmidt Tests 1–5.
+4. 067 Option B install and HC / 0 assets / 1 XP proof.
+5. COM-MAKE-001 retryable and exhausted failure-path proof.
+6. SC-041 deliberate failure→recovery proof with explicit authorization.
 
 ## Resume prompt
 
 Use this instruction tomorrow:
 
-> Use `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md` as controlling source and `docs/recovery/SHOOTING-CHALLENGE-TOMORROW-START-2026-07-26.md` as the current checkpoint. Start with PR #45 Production browser QA path. Complete one package, test it live, and then update the completion master and recovery evidence.
+Start from `docs/recovery/SHOOTING-CHALLENGE-TOMORROW-START-2026-07-26.md`. Merge stack #43→#47 only with Mike approval. Prefer Vercel landing URL + PR #45 production deploy next, then 057/035/067 paste packages one at a time. Do not enable Make schedules or mark Live Tested without evidence.
