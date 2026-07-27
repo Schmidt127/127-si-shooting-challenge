@@ -2,7 +2,9 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-25** (PROD completion pack: public `/shoot` re-smoke PASS; 067 Option B install packet; 057 v1.4 Denver date-key in repo; Airtable API token still required for Schmidt mutation tests; launch certification PR #42 merge 9110a71; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
+Last updated: **2026-07-27** (Agent 1 repo hardening: truth audit, SCN-030–043, integrity checker, Playwright hardening; **035/057/067 still Ready for Paste / Built — not Complete**; PRs #43–#47 merged on master `9d18b26`; Vercel Production landing URL + paste packages still Mike-owned)
+
+**Prior:** **2026-07-25** (PROD completion pack: public `/shoot` re-smoke PASS; 067 Option B install packet; 057 v1.4 Denver date-key in repo; Airtable API token still required for Schmidt mutation tests; launch certification PR #42 merge 9110a71; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)

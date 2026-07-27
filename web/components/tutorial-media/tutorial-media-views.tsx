@@ -328,6 +328,7 @@ export function TutorialMediaNotFoundState({ config }: { config: TutorialMediaSe
       <EmptyState
         title={config.notFound.title}
         description={config.notFound.message}
+        titleAs="h1"
         action={
           <CtaLink href={config.basePath} variant="secondary">
             ← {config.detail.backLabel}

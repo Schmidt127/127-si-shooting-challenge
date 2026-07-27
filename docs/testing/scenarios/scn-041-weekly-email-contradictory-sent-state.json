@@ -1,0 +1,45 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-041",
+  "name": "weekly-email-contradictory-sent-state",
+  "type": "Weekly Email",
+  "description": "Make Send Status=Sent but Weekly Email Sent?=false requires manual_review_required — no blind rearm.",
+  "related_sc_items": [
+    "SC-041"
+  ],
+  "prerequisites": [
+    "Contradictory WAS fields"
+  ],
+  "setup_steps": [
+    "Do not auto-retry",
+    "Inspect Make + fields"
+  ],
+  "input_fields": {
+    "Make Send Status": "Sent",
+    "Weekly Email Sent?": false
+  },
+  "expected_outputs": {
+    "retryClass": "manual_review_required"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Blind 074 re-run"
+  ],
+  "prohibited_side_effects": [
+    "Bulk rearm"
+  ],
+  "cleanup_instructions": "Mike reconciles fields manually",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "contract"
+  }
+}

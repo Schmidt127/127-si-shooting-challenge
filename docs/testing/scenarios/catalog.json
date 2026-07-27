@@ -1,6 +1,6 @@
 {
   "catalog_version": "1.1.0",
-  "generated_at": "2026-07-25",
+  "generated_at": "2026-07-27",
   "base_id": "appn84sqPw03zEbTT",
   "controlling_doc": "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
   "field_name_policy": "Do not invent field names; confirmed from PROD schema snapshot + scripts",
@@ -225,6 +225,104 @@
       "type": "Weekly Email",
       "test_status": "repository_fixture_ready",
       "file": "scn-029-weekly-email-retry-after-make-failure.json"
+    },
+    {
+      "scenario_id": "SCN-030",
+      "name": "weekly-threshold-missing-reward-rule",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-030-weekly-threshold-missing-reward-rule.json"
+    },
+    {
+      "scenario_id": "SCN-031",
+      "name": "weekly-threshold-duplicate-active-rules",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-031-weekly-threshold-duplicate-active-rules.json"
+    },
+    {
+      "scenario_id": "SCN-032",
+      "name": "weekly-threshold-inactive-enrollment-skip",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-032-weekly-threshold-inactive-enrollment-skip.json"
+    },
+    {
+      "scenario_id": "SCN-033",
+      "name": "weekly-threshold-legacy-xp-dedupe",
+      "type": "Weekly Threshold",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-033-weekly-threshold-legacy-xp-dedupe.json"
+    },
+    {
+      "scenario_id": "SCN-034",
+      "name": "perfect-week-dst-boundary",
+      "type": "Perfect Week",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-034-perfect-week-dst-boundary.json"
+    },
+    {
+      "scenario_id": "SCN-035",
+      "name": "perfect-week-future-date-rejection",
+      "type": "Perfect Week",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-035-perfect-week-future-date-rejection.json"
+    },
+    {
+      "scenario_id": "SCN-036",
+      "name": "perfect-week-duplicate-day-submissions",
+      "type": "Perfect Week",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-036-perfect-week-duplicate-day-submissions.json"
+    },
+    {
+      "scenario_id": "SCN-037",
+      "name": "homework-multi-asset-single-completion",
+      "type": "Homework Completion",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-037-homework-multi-asset-single-completion.json"
+    },
+    {
+      "scenario_id": "SCN-038",
+      "name": "homework-partial-processing-recovery",
+      "type": "Homework Completion",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-038-homework-partial-processing-recovery.json"
+    },
+    {
+      "scenario_id": "SCN-039",
+      "name": "weekly-email-malformed-webhook-response",
+      "type": "Weekly Email",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-039-weekly-email-malformed-webhook-response.json"
+    },
+    {
+      "scenario_id": "SCN-040",
+      "name": "weekly-email-duplicate-success-callback",
+      "type": "Weekly Email",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-040-weekly-email-duplicate-success-callback.json"
+    },
+    {
+      "scenario_id": "SCN-041",
+      "name": "weekly-email-contradictory-sent-state",
+      "type": "Weekly Email",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-041-weekly-email-contradictory-sent-state.json"
+    },
+    {
+      "scenario_id": "SCN-042",
+      "name": "lookup-array-normalization",
+      "type": "Data Integrity",
+      "test_status": "repository_test_pass",
+      "file": "scn-042-lookup-array-normalization.json"
+    },
+    {
+      "scenario_id": "SCN-043",
+      "name": "stale-week-link-mismatch",
+      "type": "Data Integrity",
+      "test_status": "repository_fixture_ready",
+      "file": "scn-043-stale-week-link-mismatch.json"
     }
   ]
 }

@@ -1,0 +1,55 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-042",
+  "name": "lookup-array-normalization",
+  "type": "Data Integrity",
+  "description": "Enrollment/Week/Grade Band lookups arriving as arrays or nested arrays must normalize to first/unique record ids before Source Key mint.",
+  "related_sc_items": [
+    "SC-049",
+    "SC-046"
+  ],
+  "prerequisites": [
+    "Offline normalizeLinkedRecordIds"
+  ],
+  "setup_steps": [
+    "Unit test arrays"
+  ],
+  "input_fields": {
+    "raw_lookup": [
+      [
+        {
+          "id": "recgP9qZYjAhE7NXm"
+        }
+      ]
+    ]
+  },
+  "expected_outputs": {
+    "normalized_ids": [
+      "recgP9qZYjAhE7NXm"
+    ]
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Malformed source keys"
+  ],
+  "prohibited_side_effects": [
+    "Using [object Object] in Source Key"
+  ],
+  "cleanup_instructions": "N/A offline",
+  "offline_only": true,
+  "requires_schmidt_live_proof": false,
+  "test_status": "repository_test_pass",
+  "known_evidence": {
+    "offline_tests": "agent1-contract-hardening.test.js"
+  },
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "contract"
+  }
+}

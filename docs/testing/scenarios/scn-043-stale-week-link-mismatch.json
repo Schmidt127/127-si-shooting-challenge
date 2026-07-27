@@ -1,0 +1,47 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-043",
+  "name": "stale-week-link-mismatch",
+  "type": "Data Integrity",
+  "description": "WAS Week link missing or Enrollment/Week relationship mismatched: 035/057 must skip or error safely without minting XP for wrong week.",
+  "related_sc_items": [
+    "SC-049",
+    "SC-035"
+  ],
+  "prerequisites": [
+    "Controlled WAS with blank Week or wrong Enrollment"
+  ],
+  "setup_steps": [
+    "Do not leave mismatched WAS in season traffic"
+  ],
+  "input_fields": {
+    "Week": null
+  },
+  "expected_outputs": {
+    "statusOut": "error|skipped"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "XP for unrelated week"
+  ],
+  "prohibited_side_effects": [
+    "Silent award"
+  ],
+  "cleanup_instructions": "Fix Week link or delete test WAS",
+  "offline_only": false,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Controlled mismatch only"
+  ],
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "contract"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-031",
+  "name": "weekly-threshold-duplicate-active-rules",
+  "type": "Weekly Threshold",
+  "description": "Two active XP Reward Rules share WEEKLY_THRESHOLD_100_{band}. 035 must throw Duplicate active XP Reward Rule key and create no XP.",
+  "related_sc_items": [
+    "SC-049",
+    "SC-022"
+  ],
+  "prerequisites": [
+    "Two active rules same Rule Key (controlled)"
+  ],
+  "setup_steps": [
+    "Do not leave duplicate rules ON after test"
+  ],
+  "input_fields": {
+    "automation": "035",
+    "input_variable": "recordId"
+  },
+  "expected_outputs": {
+    "statusOut": "error",
+    "errorOut": "Duplicate active XP Reward Rule key"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "No threshold XP Events"
+  ],
+  "prohibited_side_effects": [
+    "Silent last-wins rule selection"
+  ],
+  "cleanup_instructions": "Deactivate duplicate rule immediately",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Mike-controlled duplicate rule; rollback deactivate"
+  ],
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "035"
+  }
+}

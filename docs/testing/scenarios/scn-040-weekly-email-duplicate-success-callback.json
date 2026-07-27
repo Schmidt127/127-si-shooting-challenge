@@ -1,0 +1,45 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-040",
+  "name": "weekly-email-duplicate-success-callback",
+  "type": "Weekly Email",
+  "description": "After Weekly Email Sent?=true, duplicate success callback / 074 re-run must not send again.",
+  "related_sc_items": [
+    "SC-040",
+    "SC-041"
+  ],
+  "prerequisites": [
+    "WAS already Sent"
+  ],
+  "setup_steps": [
+    "Re-run 074 on Sent WAS"
+  ],
+  "input_fields": {
+    "automation": "074",
+    "Weekly Email Sent?": true
+  },
+  "expected_outputs": {
+    "action": "never_retry_already_completed"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Second Gmail"
+  ],
+  "prohibited_side_effects": [
+    "Clearing Sent? to force retry"
+  ],
+  "cleanup_instructions": "Do not uncheck Sent? on real Sent week",
+  "offline_only": true,
+  "requires_schmidt_live_proof": false,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "074"
+  }
+}

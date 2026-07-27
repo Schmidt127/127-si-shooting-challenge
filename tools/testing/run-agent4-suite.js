@@ -64,12 +64,24 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/weekly-threshold-xp.test.js"],
   },
   {
+    name: "agent1-contract-hardening",
+    args: ["airtable/automations/shooting-challenge/lib/agent1-contract-hardening.test.js"],
+  },
+  {
     name: "xp-date-normalization",
     args: ["airtable/automations/shooting-challenge/lib/xp-date-normalization.test.js"],
   },
   {
     name: "source-key-registry",
     args: ["tests/automation-contracts/source-key-registry.test.js"],
+  },
+  {
+    name: "scenario-catalog",
+    args: ["tools/testing/validate-scenario-catalog.js"],
+  },
+  {
+    name: "completion-master-integrity",
+    args: ["tools/testing/check-completion-master-integrity.js"],
   },
   {
     name: "066-milestone-crossing",
@@ -98,6 +110,14 @@ const COMMANDS = [
     ],
   },
   { name: "validate-v2-release-readiness", args: ["tools/validate-v2-release-readiness.js"] },
+  {
+    name: "challenge-year-engine",
+    args: ["tests/challenge-year/challenge-year-engine.test.js"],
+  },
+  {
+    name: "season-launch-control",
+    args: ["tests/challenge-year/season-launch-control.test.js"],
+  },
 ];
 
 const results = [];

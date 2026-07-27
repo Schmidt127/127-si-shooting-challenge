@@ -24,7 +24,20 @@
 | Ready? true, Send to Make? false, Sent? false | Set `Send to Make?` = true, then run **074** | retryable_after_correcting_data |
 | Ready? false | Re-run **072** (then 119/074 chain) | retryable_after_correcting_data |
 
-Contract helpers (offline): `planWeeklyEmailWebhookOutcome`, `decideWeeklyEmailRetryAction` in `lib/v2-engine-contracts.js`.
+Contract helpers (offline): `planWeeklyEmailWebhookOutcome`, `decideWeeklyEmailRetryAction`, `classifyWeeklyEmailWebhookResponse` in `lib/v2-engine-contracts.js`.
+
+### Response classes (074)
+
+| Class | Meaning | Keep `Send to Make?` | Write `Weekly Email Sent?` |
+|-------|---------|----------------------|----------------------------|
+| `success` (2xx) | Handoff OK; wait for Make writeback | Clear to false | **Never** (Make owns) |
+| `timeout` | No reliable response | **Keep checked** | Never |
+| `malformed_response` | Body/parse failure | **Keep checked** | Never |
+| `retryable_http` (408/429/5xx) | Transient | **Keep checked** | Never |
+| `client_error` (other 4xx) | Inspect payload/config | Usually keep; manual review | Never |
+
+Duplicate success after `Weekly Email Sent?` = true → `never_retry_already_completed`.  
+`Make Send Status` = Sent while Sent? false → `manual_review_required` (no blind rearm).
 
 ## Controlled failure → recovery (Schmidt)
 

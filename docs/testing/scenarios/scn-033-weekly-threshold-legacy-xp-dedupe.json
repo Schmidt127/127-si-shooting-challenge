@@ -1,0 +1,46 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-033",
+  "name": "weekly-threshold-legacy-xp-dedupe",
+  "type": "Weekly Threshold",
+  "description": "Legacy XP Event with different Source Key but XP Source=Weekly Threshold 100 blocks re-award for 100 tier.",
+  "related_sc_items": [
+    "SC-049",
+    "SC-007"
+  ],
+  "prerequisites": [
+    "Existing legacy-shaped XP Event for same Enrollment+Week+label"
+  ],
+  "setup_steps": [
+    "Confirm legacy row",
+    "Requeue Threshold XP",
+    "Run 035"
+  ],
+  "input_fields": {
+    "automation": "035"
+  },
+  "expected_outputs": {
+    "actionOut": "skipped_* or success with skip_existing"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Second Weekly Threshold 100 XP"
+  ],
+  "prohibited_side_effects": [
+    "Double award across key formats"
+  ],
+  "cleanup_instructions": "None if skip works",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "035"
+  }
+}

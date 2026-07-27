@@ -1,0 +1,54 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-037",
+  "name": "homework-multi-asset-single-completion",
+  "type": "Homework Completion",
+  "description": "Multiple Submission Assets for same Enrollment+Homework+slot+Submission link to one Homework Completion.",
+  "related_sc_items": [
+    "SC-015",
+    "SC-016"
+  ],
+  "prerequisites": [
+    "020 path ON",
+    "N assets same identity"
+  ],
+  "setup_steps": [
+    "Attach 2+ files",
+    "Process 020/009"
+  ],
+  "input_fields": {
+    "Asset_Slot": [
+      "HW1"
+    ],
+    "asset_count": 2
+  },
+  "expected_outputs": {
+    "homework_completions": 1
+  },
+  "expected_created_records": [
+    {
+      "table": "Homework Completions",
+      "count": 1
+    }
+  ],
+  "expected_non_effects": [
+    "Second HC for same identity"
+  ],
+  "prohibited_side_effects": [
+    "One HC per file"
+  ],
+  "cleanup_instructions": "Optional delete test HC/assets",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "contract"
+  }
+}

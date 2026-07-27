@@ -9,9 +9,22 @@ type EmptyStateProps = {
   icon?: ReactNode;
   action?: ReactNode;
   className?: string;
+  /**
+   * Catalog empty states under ProgramPage already have a PageHero h1 → use h2.
+   * Detail not-found shells (DetailPageShell) have no page title → use h1.
+   */
+  titleAs?: "h1" | "h2";
 };
 
-export function EmptyState({ title, description, icon, action, className }: EmptyStateProps) {
+export function EmptyState({
+  title,
+  description,
+  icon,
+  action,
+  className,
+  titleAs = "h2",
+}: EmptyStateProps) {
+  const TitleTag = titleAs;
   return (
     <div className={cn("flex flex-col items-center justify-center px-6 py-16 sm:py-20", className)}>
       <div className={catalogStatePanelClass(false)}>
@@ -22,15 +35,14 @@ export function EmptyState({ title, description, icon, action, className }: Empt
         ) : (
           <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
         )}
-        {/* h2: pages already expose a PageHero h1 via ProgramPage */}
-        <h2
+        <TitleTag
           className={cn(
             "font-display text-2xl text-foreground",
             icon ? "mt-5" : "mt-6",
           )}
         >
           {title}
-        </h2>
+        </TitleTag>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
         {action ? <div className="mt-6 flex flex-wrap justify-center gap-2">{action}</div> : null}
       </div>
