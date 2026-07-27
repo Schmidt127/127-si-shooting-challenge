@@ -122,6 +122,7 @@ export function TutorialNotFoundState() {
       <EmptyState
         title="Tutorial not found"
         description="This clip may be unpublished or the link is incorrect."
+        titleAs="h1"
         action={
           <CtaLink href="/tutorials" variant="secondary">
             ← Back to tutorials

@@ -125,6 +125,7 @@ export function LevelNotFoundState() {
       <EmptyState
         title="Level not found"
         description="This tier may be inactive or the link is incorrect."
+        titleAs="h1"
         action={
           <CtaLink href="/levels" variant="secondary">
             ← Back to levels

@@ -853,6 +853,56 @@ test("CLI generate-weeks smoke via library outputs to temp dir", () => {
   assert.ok(fs.existsSync(path.join(dir, "weeks.csv")));
 });
 
+test("variable season lengths (5 and 11 regular weeks) dry-run only", () => {
+  const fixture = JSON.parse(
+    fs.readFileSync(path.join(FIXTURES, "configs-variable-lengths.json"), "utf8")
+  );
+  for (const row of fixture.configRows) {
+    const plan = generateWeekPlanFromConfig(row);
+    assert.ok(plan.weeks && plan.weeks.length >= row.regularWeekCount + 2);
+    const validation = validateWeekPlan(plan.weeks, {
+      challengeYear: row.activeSchoolYear,
+      timezone: "America/Denver",
+    });
+    assert.ok(
+      validation.ok === true || validation.overall === "PASS",
+      JSON.stringify(validation.errors || validation.findings || validation)
+    );
+    for (const week of plan.weeks) {
+      const start = week.startDateKey || week.startDate;
+      if (!start) continue;
+      assert.strictEqual(weekdaySunday0(start), 0, week.code || week.weekName || week.displayLabel);
+    }
+  }
+});
+
+test("fail-closed when multiple isCurrent configs", () => {
+  const r = assertSingleCurrentConfig([
+    {
+      id: "recCURRENTaaaaaaa",
+      activeSchoolYear: "2026-2027",
+      startDate: "2026-05-31",
+      endDate: "2026-08-15",
+      weekZeroStart: "2026-05-31",
+      regularWeekCount: 9,
+      isCurrent: true,
+      status: "In Progress",
+    },
+    {
+      id: "recCURRENTbbbbbbb",
+      activeSchoolYear: "2027-2028",
+      startDate: "2027-05-30",
+      endDate: "2027-08-14",
+      weekZeroStart: "2027-05-30",
+      regularWeekCount: 8,
+      isCurrent: true,
+      status: "In Progress",
+    },
+  ]);
+  assert.strictEqual(r.ok, false);
+  assert.strictEqual(r.code, "multiple_active_configs");
+});
+
 // ---------------------------------------------------------------------------
 // Summary
 // ---------------------------------------------------------------------------

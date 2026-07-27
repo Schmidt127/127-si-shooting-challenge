@@ -1,0 +1,35 @@
+{
+  "configRows": [
+    {
+      "id": "recSHORTSEASON0001",
+      "activeSchoolYear": "2028-2029",
+      "startDate": "2028-06-04",
+      "endDate": "2028-07-22",
+      "enrollmentOpenDate": "2028-04-15",
+      "enrollmentCloseDate": "2028-06-03",
+      "weekZeroStart": "2028-06-04",
+      "regularWeekCount": 5,
+      "status": "Planning",
+      "isCurrent": false,
+      "testMode": true,
+      "rolloverState": "planning",
+      "timezone": "America/Denver"
+    },
+    {
+      "id": "recLONGSEASON00001",
+      "activeSchoolYear": "2029-2030",
+      "startDate": "2029-05-27",
+      "endDate": "2029-08-25",
+      "enrollmentOpenDate": "2029-04-01",
+      "enrollmentCloseDate": "2029-05-26",
+      "weekZeroStart": "2029-05-27",
+      "regularWeekCount": 11,
+      "status": "Planning",
+      "isCurrent": false,
+      "testMode": true,
+      "rolloverState": "planning",
+      "timezone": "America/Denver"
+    }
+  ],
+  "notes": "Offline-only season length fixtures for generate-weeks dry-run. Do not import to live Airtable without Mike authorization."
+}

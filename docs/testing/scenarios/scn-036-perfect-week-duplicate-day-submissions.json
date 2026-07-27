@@ -1,0 +1,45 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-036",
+  "name": "perfect-week-duplicate-day-submissions",
+  "type": "Perfect Week",
+  "description": "Seven submissions on fewer than seven distinct Denver days must fail Perfect Week.",
+  "related_sc_items": [
+    "SC-028",
+    "SC-077"
+  ],
+  "prerequisites": [
+    "Multiple same-day submissions"
+  ],
+  "setup_steps": [
+    "Create duplicate-day submissions",
+    "Run 057"
+  ],
+  "input_fields": {
+    "automation": "057"
+  },
+  "expected_outputs": {
+    "eligible": false
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Perfect Week XP"
+  ],
+  "prohibited_side_effects": [
+    "One large same-day bulk counting as seven days"
+  ],
+  "cleanup_instructions": "Optional delete extras",
+  "offline_only": true,
+  "requires_schmidt_live_proof": false,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "057"
+  }
+}

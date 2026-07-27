@@ -1,0 +1,61 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-030",
+  "name": "weekly-threshold-missing-reward-rule",
+  "type": "Weekly Threshold",
+  "description": "WAS meets 100% but active XP Reward Rule for WEEKLY_THRESHOLD_100_{band} is missing. 035 must error that tier without inventing XP amount.",
+  "related_sc_items": [
+    "SC-049",
+    "SC-022"
+  ],
+  "prerequisites": [
+    "035 v1.1 pasted",
+    "Active?=true enrollment",
+    "Goal Completion % >=1",
+    "No active WEEKLY_THRESHOLD_100 rule for band"
+  ],
+  "setup_steps": [
+    "Confirm rules missing for band",
+    "Run 035 on WAS recordId"
+  ],
+  "input_fields": {
+    "automation": "035",
+    "input_variable": "recordId",
+    "enrollment_id": "recgP9qZYjAhE7NXm"
+  },
+  "expected_outputs": {
+    "statusOut": "error|success with error_missing_rule diagnostics",
+    "actionOut": "error"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "No invented XP Points",
+    "No XP Event for missing rule tier"
+  ],
+  "prohibited_side_effects": [
+    "Invented XP amounts",
+    "Marking Processed when required tier errored without Mike policy"
+  ],
+  "cleanup_instructions": "Restore XP Reward Rules; clear Threshold XP Error Message",
+  "rollback_or_cleanup": "Re-enable missing rule; optional delete none",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Paste 035",
+    "Temporarily confirm missing rule in PROD or use offline planWeeklyThresholdAwards"
+  ],
+  "test_status": "repository_fixture_ready",
+  "known_evidence": {
+    "offline_tests": "weekly-threshold-xp.test.js + agent1-contract-hardening.test.js"
+  },
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "035"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-034",
+  "name": "perfect-week-dst-boundary",
+  "type": "Perfect Week",
+  "description": "Activity timestamp where UTC calendar day differs from America/Denver must count on Denver day (057 v1.4).",
+  "related_sc_items": [
+    "SC-021",
+    "SC-028",
+    "SC-077"
+  ],
+  "prerequisites": [
+    "057 v1.4 pasted",
+    "Submission with UTC≠Denver day"
+  ],
+  "setup_steps": [
+    "Use Activity Date 2026-07-24T03:00:00.000Z → Denver 2026-07-23",
+    "Run 057"
+  ],
+  "input_fields": {
+    "automation": "057",
+    "timezone": "America/Denver"
+  },
+  "expected_outputs": {
+    "daily_check_uses": "Denver date key"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "UTC ISO slice day used as counted key"
+  ],
+  "prohibited_side_effects": [
+    "False Perfect Week from UTC shift"
+  ],
+  "cleanup_instructions": "None",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Paste 057 v1.4 first"
+  ],
+  "test_status": "repository_fixture_ready",
+  "known_evidence": {
+    "offline_tests": "xp-date-normalization.test.js"
+  },
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "057"
+  }
+}

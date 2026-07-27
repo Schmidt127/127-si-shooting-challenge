@@ -1471,6 +1471,181 @@ function decideHw17QuizIntakeAction({
   };
 }
 
+/**
+ * Normalize Airtable linked-record / lookup cell values to record id strings.
+ * Accepts single objects, arrays, bare ids, nested lookup arrays, and blanks.
+ */
+function normalizeLinkedRecordIds(rawValue) {
+  if (rawValue == null || rawValue === "") return [];
+  const queue = Array.isArray(rawValue) ? rawValue : [rawValue];
+  const out = [];
+  for (const item of queue) {
+    if (item == null || item === "") continue;
+    if (typeof item === "string") {
+      const id = item.trim();
+      if (id) out.push(id);
+      continue;
+    }
+    if (Array.isArray(item)) {
+      out.push(...normalizeLinkedRecordIds(item));
+      continue;
+    }
+    if (typeof item === "object") {
+      const id = item.id || item.recordId || "";
+      if (id) out.push(String(id).trim());
+    }
+  }
+  return [...new Set(out.filter(Boolean))];
+}
+
+/**
+ * Detect duplicate active XP Reward Rule keys (035 throws on this).
+ * @param {Array<{ ruleKey: string, active?: boolean, id?: string }>} rules
+ */
+function detectDuplicateActiveRewardRuleKeys(rules = []) {
+  const seen = new Map();
+  const duplicates = [];
+  for (const rule of rules || []) {
+    const active = rule.active !== false;
+    if (!active) continue;
+    const ruleKey = String(rule.ruleKey || "").trim();
+    if (!ruleKey) continue;
+    if (seen.has(ruleKey)) {
+      duplicates.push({
+        ruleKey,
+        recordIds: [seen.get(ruleKey), rule.id].filter(Boolean),
+      });
+    } else {
+      seen.set(ruleKey, rule.id || null);
+    }
+  }
+  return {
+    ok: duplicates.length === 0,
+    duplicates,
+    action: duplicates.length ? "error_duplicate_active_rules" : "ok",
+  };
+}
+
+/**
+ * Classify a Make/webhook HTTP-ish response for 074 outcome planning.
+ * Does not mutate Airtable — pairs with planWeeklyEmailWebhookOutcome.
+ */
+function classifyWeeklyEmailWebhookResponse({
+  httpStatus = null,
+  timedOut = false,
+  bodyText = "",
+  parseError = false,
+} = {}) {
+  if (timedOut) {
+    return {
+      webhookOk: false,
+      retryable: true,
+      class: "timeout",
+      errorMessage: "Make webhook timed out",
+    };
+  }
+  if (parseError) {
+    return {
+      webhookOk: false,
+      retryable: true,
+      class: "malformed_response",
+      errorMessage: "Make webhook returned a malformed response",
+    };
+  }
+  const status = Number(httpStatus);
+  if (!Number.isFinite(status)) {
+    return {
+      webhookOk: false,
+      retryable: true,
+      class: "unknown_status",
+      errorMessage: String(bodyText || "Make webhook failed with unknown status"),
+    };
+  }
+  if (status >= 200 && status < 300) {
+    return {
+      webhookOk: true,
+      retryable: false,
+      class: "success",
+      errorMessage: "",
+    };
+  }
+  if (status === 408 || status === 429 || status >= 500) {
+    return {
+      webhookOk: false,
+      retryable: true,
+      class: "retryable_http",
+      errorMessage: `Webhook failed with status ${status}`,
+    };
+  }
+  return {
+    webhookOk: false,
+    retryable: status >= 400 && status < 500,
+    class: status >= 400 && status < 500 ? "client_error" : "retryable_http",
+    errorMessage: `Webhook failed with status ${status}`,
+  };
+}
+
+/**
+ * Decide homework multi-asset → single completion behavior (020/067).
+ * Zero assets (Option B quiz) and N assets still map to one Homework Completion.
+ */
+function planHomeworkMultiAssetCompletion({
+  existingCompletionIds = [],
+  assetCount = 0,
+  gradingStatus = "",
+  alreadyProcessed = false,
+  enrollmentId = "",
+  homeworkAssignmentId = "",
+} = {}) {
+  if (enrollmentId || homeworkAssignmentId) {
+    if (!isValidRecordId(enrollmentId) || !isValidRecordId(homeworkAssignmentId)) {
+      return {
+        action: "error",
+        reason: "malformed_enrollment_or_assignment",
+        assetCount: Math.max(0, Number(assetCount) || 0),
+        xpAllowed: false,
+      };
+    }
+  }
+
+  const existing = [...new Set((existingCompletionIds || []).filter(Boolean))];
+  let action = "create";
+  let reason = "no_existing_completion";
+  let completionId = null;
+  if (existing.length === 1) {
+    action = "link_existing";
+    reason = alreadyProcessed ? "partial_processing_recovery" : "duplicate_resolved";
+    completionId = existing[0];
+  } else if (existing.length > 1) {
+    return {
+      action: "error",
+      reason: "ambiguous_duplicate_completions",
+      completionIds: existing,
+      assetCount: Math.max(0, Number(assetCount) || 0),
+      xpAllowed: false,
+    };
+  }
+
+  const grade = String(gradingStatus || "").trim().toLowerCase();
+  const satisfactory = grade === "satisfactory";
+  const unsatisfactory = grade === "unsatisfactory";
+
+  return {
+    action,
+    reason,
+    completionId,
+    assetCount: Math.max(0, Number(assetCount) || 0),
+    allowsZeroAssets: true,
+    oneCompletionManyAssets: true,
+    xpAllowed: satisfactory,
+    statusTransition: unsatisfactory
+      ? "unsatisfactory_no_xp"
+      : satisfactory
+        ? "satisfactory_ready_for_xp"
+        : "ready_for_review",
+  };
+}
+
 module.exports = {
   DEFAULT_TIME_ZONE,
   SOURCE_KEY_PREFIXES,
@@ -1537,6 +1712,10 @@ module.exports = {
   decideAutomaticWeeklySummaryAction,
   planWeeklyEmailWebhookOutcome,
   decideWeeklyEmailRetryAction,
+  normalizeLinkedRecordIds,
+  detectDuplicateActiveRewardRuleKeys,
+  classifyWeeklyEmailWebhookResponse,
+  planHomeworkMultiAssetCompletion,
   mapAttachmentsToAssetSlotPlans,
   inferHomeworkAssetSlot,
   decideHw17QuizIntakeAction,

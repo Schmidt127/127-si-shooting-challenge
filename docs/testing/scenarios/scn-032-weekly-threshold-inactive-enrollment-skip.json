@@ -1,0 +1,51 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-032",
+  "name": "weekly-threshold-inactive-enrollment-skip",
+  "type": "Weekly Threshold",
+  "description": "Enrollment Active?=false skips threshold awards (skipped_inactive_enrollment).",
+  "related_sc_items": [
+    "SC-049",
+    "SC-068"
+  ],
+  "prerequisites": [
+    "Schmidt or sibling enrollment can be toggled Active?=false briefly"
+  ],
+  "setup_steps": [
+    "Set Active?=false",
+    "Run 035",
+    "Restore Active?=true"
+  ],
+  "input_fields": {
+    "automation": "035",
+    "Enrollments.Active?": false
+  },
+  "expected_outputs": {
+    "statusOut": "skipped",
+    "actionOut": "skipped_inactive_enrollment"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "No XP Events"
+  ],
+  "prohibited_side_effects": [
+    "Leaving Schmidt Active?=false"
+  ],
+  "cleanup_instructions": "Restore Active?=true immediately",
+  "offline_only": false,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Toggle Active? carefully"
+  ],
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "035"
+  }
+}

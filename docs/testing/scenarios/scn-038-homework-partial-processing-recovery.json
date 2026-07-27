@@ -1,0 +1,45 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-038",
+  "name": "homework-partial-processing-recovery",
+  "type": "Homework Completion",
+  "description": "Re-run after partial prior processing must link existing HC (not create duplicate) then allow grading/XP once.",
+  "related_sc_items": [
+    "SC-016",
+    "SC-013"
+  ],
+  "prerequisites": [
+    "Existing HC for identity"
+  ],
+  "setup_steps": [
+    "Re-trigger 020 or 067 on same quiz/submission"
+  ],
+  "input_fields": {
+    "existing_hc": "rec…"
+  },
+  "expected_outputs": {
+    "action": "link_existing"
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Second HC",
+    "Duplicate HOMEWORK_XP"
+  ],
+  "prohibited_side_effects": [
+    "067 awarding XP"
+  ],
+  "cleanup_instructions": "None if link works",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "contract"
+  }
+}

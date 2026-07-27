@@ -1,0 +1,47 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-035",
+  "name": "perfect-week-future-date-rejection",
+  "type": "Perfect Week",
+  "description": "Future-dated activity outside Sun–Sat week window must not satisfy daily Perfect Week requirement.",
+  "related_sc_items": [
+    "SC-028",
+    "SC-077"
+  ],
+  "prerequisites": [
+    "WAS week known",
+    "Submission activity date after week end"
+  ],
+  "setup_steps": [
+    "Add future-dated counted submission",
+    "Run 057"
+  ],
+  "input_fields": {
+    "automation": "057"
+  },
+  "expected_outputs": {
+    "eligible": false,
+    "dailyMet": false
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Perfect Week unlock/XP"
+  ],
+  "prohibited_side_effects": [
+    "False pass"
+  ],
+  "cleanup_instructions": "Remove or uncount future submission",
+  "offline_only": true,
+  "requires_schmidt_live_proof": false,
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "057"
+  }
+}

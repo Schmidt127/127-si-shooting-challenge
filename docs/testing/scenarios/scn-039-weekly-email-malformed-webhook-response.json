@@ -1,0 +1,51 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "scenario_id": "SCN-039",
+  "name": "weekly-email-malformed-webhook-response",
+  "type": "Weekly Email",
+  "description": "074 receives malformed Make response: keep Send to Make? checked, set Weekly Email Error, never write Weekly Email Sent?.",
+  "related_sc_items": [
+    "SC-041",
+    "SC-040"
+  ],
+  "prerequisites": [
+    "WAS Ready",
+    "Mike authorizes failure inject"
+  ],
+  "setup_steps": [
+    "Induce malformed response or use contract classifyWeeklyEmailWebhookResponse"
+  ],
+  "input_fields": {
+    "automation": "074"
+  },
+  "expected_outputs": {
+    "Send to Make?": true,
+    "Weekly Email Sent?": false
+  },
+  "expected_created_records": [],
+  "expected_non_effects": [
+    "Sent? true",
+    "Gmail send"
+  ],
+  "prohibited_side_effects": [
+    "Clearing Send to Make? on failure"
+  ],
+  "cleanup_instructions": "Restore webhook; follow WEEKLY-EMAIL-RETRY-SOP",
+  "offline_only": true,
+  "requires_schmidt_live_proof": true,
+  "manual_requirements": [
+    "Mike authorization for deliberate fail"
+  ],
+  "sop": "docs/next-wave/was-email/WEEKLY-EMAIL-RETRY-SOP.md",
+  "test_status": "repository_fixture_ready",
+  "field_names_confirmed_from": "prod schema + scripts",
+  "automation_support": {
+    "primary": "074"
+  }
+}

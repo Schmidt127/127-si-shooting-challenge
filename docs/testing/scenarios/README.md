@@ -41,8 +41,22 @@ See [`catalog.json`](./catalog.json) for the machine index.
 | SCN-027 | `scn-027-quiz-option-b-completion.json` | Homework Quiz | repository_test_pass |
 | SCN-028 | `scn-028-quiz-duplicate-prevent.json` | Homework Quiz | repository_test_pass |
 | SCN-029 | `scn-029-weekly-email-retry-after-make-failure.json` | Weekly Email | repository_fixture_ready |
+| SCN-030 | `scn-030-weekly-threshold-missing-reward-rule.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-031 | `scn-031-weekly-threshold-duplicate-active-rules.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-032 | `scn-032-weekly-threshold-inactive-enrollment-skip.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-033 | `scn-033-weekly-threshold-legacy-xp-dedupe.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-034 | `scn-034-perfect-week-dst-boundary.json` | Perfect Week | repository_fixture_ready |
+| SCN-035 | `scn-035-perfect-week-future-date-rejection.json` | Perfect Week | repository_fixture_ready |
+| SCN-036 | `scn-036-perfect-week-duplicate-day-submissions.json` | Perfect Week | repository_fixture_ready |
+| SCN-037 | `scn-037-homework-multi-asset-single-completion.json` | Homework Completion | repository_fixture_ready |
+| SCN-038 | `scn-038-homework-partial-processing-recovery.json` | Homework Completion | repository_fixture_ready |
+| SCN-039 | `scn-039-weekly-email-malformed-webhook-response.json` | Weekly Email | repository_fixture_ready |
+| SCN-040 | `scn-040-weekly-email-duplicate-success-callback.json` | Weekly Email | repository_fixture_ready |
+| SCN-041 | `scn-041-weekly-email-contradictory-sent-state.json` | Weekly Email | repository_fixture_ready |
+| SCN-042 | `scn-042-lookup-array-normalization.json` | Data Integrity | repository_test_pass |
+| SCN-043 | `scn-043-stale-week-link-mismatch.json` | Data Integrity | repository_fixture_ready |
 
-**Note:** SCN-021–026 PR #43; SCN-027–028 PR #44 quiz Option B; SCN-029 PR #46 weekly-email retry (renumbered from SCN-027 to avoid clash).
+**Note:** SCN-021–026 PR #43; SCN-027–028 PR #44 quiz Option B; SCN-029 PR #46 weekly-email retry; SCN-030–043 Agent 1 hardening wave 2026-07-27.
 
 ## Known live records
 
@@ -76,7 +90,12 @@ Each JSON file includes:
 ## Regenerate
 
 ```bash
-node docs/testing/scenarios/_generate_catalog.mjs
+# Preferred: index all scn-*.json fixtures (includes SCN-027+)
+node tools/testing/validate-scenario-catalog.js --write
+node tools/testing/validate-scenario-catalog.js
+
+# Legacy generator (SCN-001–026 only) — do not use alone after SCN-027+
+# node docs/testing/scenarios/_generate_catalog.mjs
 ```
 
 ## Verify expected vs actual

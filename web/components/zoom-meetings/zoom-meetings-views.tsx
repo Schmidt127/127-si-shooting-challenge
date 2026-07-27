@@ -373,6 +373,7 @@ export function ZoomMeetingNotFoundState() {
       <EmptyState
         title="Meeting not found"
         description="This meeting may be cancelled or the link is incorrect."
+        titleAs="h1"
         action={
           <CtaLink href="/zoom-meetings" variant="secondary">
             ← Back to zoom meetings

@@ -153,6 +153,7 @@ export function HomeworkNotFoundState() {
       <EmptyState
         title="Assignment not found"
         description="This homework may be unpublished or the link is incorrect."
+        titleAs="h1"
         action={
           <CtaLink href="/homework" variant="secondary">
             ← Back to homework
