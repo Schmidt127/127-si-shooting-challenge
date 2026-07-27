@@ -1,0 +1,234 @@
+{
+  "reportType": "shooting-challenge-reliability-command-center",
+  "version": "1.0.0",
+  "generatedAt": "2026-07-25T19:10:04.423Z",
+  "source": "fixture",
+  "fixturePath": "/workspace/tests/reliability-command-center/fixtures/weekly-email-writeback.json",
+  "summary": {
+    "total": 6,
+    "byPriority": {
+      "P0": 6,
+      "P1": 0,
+      "P2": 0,
+      "P3": 0
+    },
+    "byHealth": {
+      "Test Only": 2,
+      "Duplicate Risk": 3,
+      "Blocking Error": 1
+    },
+    "byWorkflow": {
+      "Airtable-to-Make handoff": 3,
+      "Weekly Athlete Summary": 2,
+      "Weekly email build": 1
+    }
+  },
+  "affectedRecordIds": [
+    "rec00000000000060",
+    "rec00000000000061",
+    "rec00000000000062"
+  ],
+  "workflows": [
+    "Airtable-to-Make handoff",
+    "Weekly Athlete Summary",
+    "Weekly email build"
+  ],
+  "findings": [
+    {
+      "id": "Airtable-to-Make_handoff_rec00000000000060_3",
+      "workflow": "Airtable-to-Make handoff",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000060",
+      "enrollmentRecordId": "rec00000000000058",
+      "weekRecordId": "rec00000000000057",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "Ready|SendArmed|mode:test",
+      "healthStatus": "Test Only",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "Package armed for Make with sendMode=Test — Live writeback will not run (PROD must use Live)",
+      "retryEligibility": "production_action_prohibited_without_verification",
+      "recommendedAction": "Set 074 sendMode=Live (or blank + WAS Live). Fixed Test blocks Live writeback.",
+      "evidence": [
+        "Ready=true",
+        "Sent=false",
+        "SendToMake=true",
+        "MakeStatus=",
+        "sendMode=test"
+      ],
+      "owningAutomation": "074",
+      "downstreamDependency": "119 → 074 → Make Bulk Email May 18",
+      "code": "live_forced_test_handoff",
+      "meta": {
+        "alreadyCompleted": false,
+        "duplicateRisk": false,
+        "testOnly": true,
+        "dataFixRequired": false,
+        "retryReason": "Test-only path; do not treat as Live production traffic.",
+        "allowRetry": false
+      }
+    },
+    {
+      "id": "Airtable-to-Make_handoff_rec00000000000060_4",
+      "workflow": "Airtable-to-Make handoff",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000060",
+      "enrollmentRecordId": "rec00000000000058",
+      "weekRecordId": "",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "",
+      "healthStatus": "Test Only",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "",
+      "retryEligibility": "production_action_prohibited_without_verification",
+      "recommendedAction": "PROD parents must use sendMode=Live (074 input Live or WAS Live). Test mode skips Sent? writeback.",
+      "evidence": [],
+      "owningAutomation": "074",
+      "downstreamDependency": "Make Bulk Email May 18 (Live branch)",
+      "code": "production_parent_test_send_mode",
+      "meta": {
+        "testOnly": true,
+        "retryReason": "Test-only path; do not treat as Live production traffic.",
+        "allowRetry": false
+      }
+    },
+    {
+      "id": "Airtable-to-Make_handoff_rec00000000000061_5",
+      "workflow": "Airtable-to-Make handoff",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000061",
+      "enrollmentRecordId": "rec00000000000058",
+      "weekRecordId": "rec00000000000057",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "",
+      "healthStatus": "Duplicate Risk",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "",
+      "retryEligibility": "never_retry_already_completed",
+      "recommendedAction": "Do not resend — Weekly Email Sent? is checked. Clear any accidental resend eligibility.",
+      "evidence": [],
+      "owningAutomation": "074",
+      "downstreamDependency": "",
+      "code": "already_sent_eligible_to_resend",
+      "meta": {
+        "alreadyCompleted": true,
+        "duplicateRisk": true,
+        "retryReason": "Record already completed or sent; retry would risk duplicates.",
+        "allowRetry": false
+      }
+    },
+    {
+      "id": "Weekly_Athlete_Summary_rec00000000000060_1",
+      "workflow": "Weekly Athlete Summary",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000060",
+      "enrollmentRecordId": "",
+      "weekRecordId": "",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "",
+      "healthStatus": "Duplicate Risk",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "",
+      "retryEligibility": "possible_duplicate_risk",
+      "recommendedAction": "Keep lowest-id WAS for Enrollment+Week; stop creators from inserting extras.",
+      "evidence": [
+        "key=rec00000000000058|rec00000000000057",
+        "count=2"
+      ],
+      "owningAutomation": "031/118",
+      "downstreamDependency": "",
+      "code": "duplicate_was_enrollment_week",
+      "meta": {
+        "duplicateRisk": true,
+        "retryReason": "Duplicate risk detected; do not retry until uniqueness is verified.",
+        "allowRetry": false
+      }
+    },
+    {
+      "id": "Weekly_Athlete_Summary_rec00000000000061_2",
+      "workflow": "Weekly Athlete Summary",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000061",
+      "enrollmentRecordId": "",
+      "weekRecordId": "",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "",
+      "healthStatus": "Duplicate Risk",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "",
+      "retryEligibility": "possible_duplicate_risk",
+      "recommendedAction": "Keep lowest-id WAS for Enrollment+Week; stop creators from inserting extras.",
+      "evidence": [
+        "key=rec00000000000058|rec00000000000057",
+        "count=2"
+      ],
+      "owningAutomation": "031/118",
+      "downstreamDependency": "",
+      "code": "duplicate_was_enrollment_week",
+      "meta": {
+        "duplicateRisk": true,
+        "retryReason": "Duplicate risk detected; do not retry until uniqueness is verified.",
+        "allowRetry": false
+      }
+    },
+    {
+      "id": "Weekly_email_build_rec00000000000062_6",
+      "workflow": "Weekly email build",
+      "sourceTable": "Weekly Athlete Summary",
+      "sourceRecordId": "rec00000000000062",
+      "enrollmentRecordId": "rec00000000000058",
+      "weekRecordId": "rec00000000000063",
+      "sourceKey": "",
+      "dedupeKey": "",
+      "currentStatus": "",
+      "healthStatus": "Blocking Error",
+      "priority": "P0",
+      "lastAttemptedAt": "",
+      "completedAt": "",
+      "errorMessage": "",
+      "retryEligibility": "retryable_after_correcting_data",
+      "recommendedAction": "Stop send; rebuild package for the intended Week record.",
+      "evidence": [
+        "wasWeek=rec00000000000063",
+        "expectedWeek=rec00000000000057"
+      ],
+      "owningAutomation": "072",
+      "downstreamDependency": "",
+      "code": "email_package_wrong_week",
+      "meta": {
+        "dataFixRequired": true,
+        "retryReason": "Fix missing/conflicting data first, then re-trigger owning automation.",
+        "allowRetry": false
+      }
+    }
+  ],
+  "meta": {
+    "currentChallengeYear": "2026-2027",
+    "checkersRun": [
+      "enrollment",
+      "submissions",
+      "xpEvents",
+      "homework",
+      "zoom",
+      "videoFeedback",
+      "achievements",
+      "levels",
+      "weeklyAthleteSummary",
+      "weeklyEmail"
+    ]
+  }
+}

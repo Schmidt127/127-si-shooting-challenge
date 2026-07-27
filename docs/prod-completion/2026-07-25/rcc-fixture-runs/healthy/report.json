@@ -1,0 +1,36 @@
+{
+  "reportType": "shooting-challenge-reliability-command-center",
+  "version": "1.0.0",
+  "generatedAt": "2026-07-25T19:10:04.350Z",
+  "source": "fixture",
+  "fixturePath": "/workspace/tests/reliability-command-center/fixtures/healthy.json",
+  "summary": {
+    "total": 0,
+    "byPriority": {
+      "P0": 0,
+      "P1": 0,
+      "P2": 0,
+      "P3": 0
+    },
+    "byHealth": {},
+    "byWorkflow": {}
+  },
+  "affectedRecordIds": [],
+  "workflows": [],
+  "findings": [],
+  "meta": {
+    "currentChallengeYear": "2026-2027",
+    "checkersRun": [
+      "enrollment",
+      "submissions",
+      "xpEvents",
+      "homework",
+      "zoom",
+      "videoFeedback",
+      "achievements",
+      "levels",
+      "weeklyAthleteSummary",
+      "weeklyEmail"
+    ]
+  }
+}

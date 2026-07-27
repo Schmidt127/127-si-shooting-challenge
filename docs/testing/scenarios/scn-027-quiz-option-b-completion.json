@@ -1,0 +1,63 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod-foundation-reset-20260723-post-ts + 067 v2.0 Option B",
+  "automation_support": {
+    "primary": "067",
+    "downstream_expected": ["064", "065", "071"]
+  },
+  "scenario_id": "SCN-027",
+  "name": "quiz-option-b-completion",
+  "type": "Homework Quiz",
+  "description": "Option B attachment-less Final Reflection quiz creates one Homework Completion with zero assets; XP only after coach satisfactory via 064/065.",
+  "related_sc_items": ["SC-013", "SC-014", "SC-016", "SC-071"],
+  "prerequisites": [
+    "Schmidt Enrollment Active?=true",
+    "Exactly one Active FBC Curriculum HW 17 with Week",
+    "Automation 067 ON (Option B path)",
+    "064/065 ON for after-review XP",
+    "No Quiz Result PDF field required"
+  ],
+  "input_fields": {
+    "Enrollment": ["recgP9qZYjAhE7NXm"],
+    "Processing Status": "Pending",
+    "attachment": null
+  },
+  "expected_created_records": [
+    {
+      "table": "Homework Completions",
+      "count": 1,
+      "shape": "quiz bridge, Ready for Review"
+    }
+  ],
+  "expected_links": {
+    "Final Reflection Quiz Submissions.Homework Completion": "created or linked HC",
+    "Homework Completions.Enrollment": "recgP9qZYjAhE7NXm",
+    "Homework Completions.Homework": "HW 17 curriculum",
+    "Submission Assets": "count 0"
+  },
+  "expected_xp_source": "Homework Completion (after coach Satisfactory via 064/065)",
+  "expected_xp_amount": "per active Homework XP Reward Rule",
+  "expected_dedupe_key_pattern": "HOMEWORK_*|{homeworkCompletionRecordId} (064/065 — not 067)",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "067 must not create XP Events",
+    "067 must not mark Satisfactory",
+    "067 must not mint placeholder Submission Assets",
+    "Do not create Quiz Result PDF field"
+  ],
+  "safe_rerun_behavior": "Second run links existing HC (linked_existing / skipped_already_linked); still 0 assets",
+  "cleanup_instructions": "Delete quiz + HC + XP test rows after evidence capture; keep Schmidt Enrollment",
+  "manual_requirements": [
+    "Coach marks Satisfactory? + Review Complete after HC created",
+    "Confirm actionOut includes no_attachment_field or no_attachment_yet"
+  ],
+  "current_automation_support": "067 v2.0 Option B + 064/065",
+  "test_status": "repository_test_pass",
+  "install_packet": "docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md"
+}

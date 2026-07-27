@@ -2,7 +2,7 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-25** (launch certification pack; production commit **6aa60c9** (closeout tip; PR #42 merge 9110a71); Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
+Last updated: **2026-07-25** (PROD completion pack: public `/shoot` re-smoke PASS; 067 Option B install packet; 057 v1.4 Denver date-key in repo; Airtable API token still required for Schmidt mutation tests; launch certification PR #42 merge 9110a71; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -19,7 +19,7 @@ Last updated: **2026-07-25** (launch certification pack; production commit **6aa
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current production commit** | `267d4736a95b47273d3439a89665bd9855675395` — *origin/master tip; Vercel production READY `dpl_82w6aASdkbKoVNXyRao7imFFxL7L`* |
+| **Current production commit** | Verify dynamically: `git fetch origin && git rev-parse origin/master` — application release `9110a71` (PR #42); closeout tip historically `4ffad3c` / `6aa60c9`; see [`launch-certification/LAUNCH-CLOSEOUT.md`](./launch-certification/LAUNCH-CLOSEOUT.md) |
 | **Public URL** | https://www.hoopchallenges.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |

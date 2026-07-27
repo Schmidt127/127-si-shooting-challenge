@@ -3,14 +3,16 @@ Automation: 067 - Homework - Link or Create Completion from Reflection Quiz
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: (new - not yet deployed)
-Last GitHub Update: 2026-07-16
+Last Synced From Airtable: (confirm on PROD paste — Option B path)
+Last GitHub Update: 2026-07-25
 
 Purpose:
 Links or creates one Homework Completion from a Final Reflection Quiz
-Submissions row (HW17 Fillout), then (when a quiz PDF attachment exists)
-creates/finds a parent Submission and Submission Assets so HW17 rejoins
-the normal 070a / coach file pipeline. Compatible with Fillout-aware 071.
+Submissions row (HW17 Fillout). Approved product path is Option B
+(attachment-less): completion bridge succeeds with zero assets.
+Optional attachment candidates remain in CONFIG for future Option A only —
+do NOT create Quiz Result PDF unless Mike reopens that decision.
+Compatible with Fillout-aware 071 (assets not required).
 
 Trigger:
 Final Reflection Quiz Submissions when a row is ready to process
@@ -22,16 +24,17 @@ Final Reflection Quiz Submissions, Homework Completions, Submissions,
 Submission Assets, FBC Curriculum - SYNC, Enrollments
 
 Important Fields:
-Enrollment, Homework Completion, Quiz Result PDF (recommended attachment),
-Submitted At, Processing Status, Homework, Week, Source System,
+Enrollment, Homework Completion, Submitted At, Processing Status,
+Homework, Week, Source System, Item Slot / Asset Slot,
+optional attachment candidates (unused for Option B),
 Asset Purpose/Slot/Type, Source Attachment ID, Upload Status
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 This automation NEVER creates or modifies XP Events and NEVER marks Satisfactory.
 XP is awarded only by the normal homework pipeline (064 then 065) after coach review.
-DEV schema 2026-07-06: quiz had no attachment field yet — asset path no-ops until
-Mike/OMNI creates Quiz Result PDF (or another candidate field listed in CONFIG).
+PROD install + Schmidt live protocol:
+docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
 */
 
 /************************************************************
@@ -39,7 +42,7 @@ Mike/OMNI creates Quiz Result PDF (or another candidate field listed in CONFIG).
  *
  * Version: v2.0
  * Date Written: 2026-06-28
- * Last Updated: 2026-07-16
+ * Last Updated: 2026-07-25
  *
  * PURPOSE
  * - Runs from one Final Reflection Quiz Submissions record (HW17 Fillout).
@@ -47,19 +50,23 @@ Mike/OMNI creates Quiz Result PDF (or another candidate field listed in CONFIG).
  * - Resolves the single active HW 17 record in FBC Curriculum - SYNC and its Week.
  * - Finds or creates the matching Homework Completion (Enrollment + Week + Homework).
  * - Links quiz ↔ completion; stamps Source System = Fillout; Item Slot / Asset Slot = HW1.
- * - When quiz PDF attachment(s) exist: find/create parent Submission, create Submission
- *   Assets (dedupe by Source Attachment ID), link assets ↔ completion, leave Upload Status
- *   = Pending Link and Send to Make Trigger = false (020/070a arm separately).
+ * - Approved path (SC-014 Option B): attachment-less — bridge succeeds with 0 assets
+ *   (actionOut may include no_attachment_field / no_attachment_yet).
+ * - Optional legacy attachment path: when quiz PDF attachment(s) exist, find/create parent
+ *   Submission + Submission Assets (dedupe by Source Attachment ID); Upload Status =
+ *   Pending Link; Send to Make Trigger = false (020/070a arm separately). Do not create
+ *   Quiz Result PDF field unless Mike reopens Option A.
  * - Leaves Satisfactory? / Review Complete / Coach Feedback untouched.
  *
  * IMPORTANT DESIGN RULES
- * - Parent Submission is required for Upload Ready formulas (Submission - Linked).
+ * - Option B is the current season path — never mint placeholder assets.
+ * - Parent Submission is required only when attachments are present (Upload Ready formulas).
  * - Asset Purpose = Homework 1; Asset Slot = HW1; Asset Type inferred (usually Homework PDF).
  * - Multi-attachment: one asset per file; never collapse.
- * - Missing attachment field or empty attachments → completion bridge still succeeds
- *   (actionOut may include no_attachment_field / no_attachment_yet).
+ * - Missing attachment field or empty attachments → completion bridge still succeeds.
  * - Never creates / modifies XP Events. Never marks Satisfactory or awards XP.
  * - 071 must keep Fillout path without requiring assets on its trigger.
+ * - PROD install: docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
  *
  * FOLDER
  * - 06 - Homework Review and XP

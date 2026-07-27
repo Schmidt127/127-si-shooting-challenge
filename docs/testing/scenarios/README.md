@@ -38,6 +38,10 @@ See [`catalog.json`](./catalog.json) for the machine index.
 | SCN-024 | `scn-024-zoom-attendance-xp.json` | Zoom Attendance | repository_fixture_ready |
 | SCN-025 | `scn-025-weekly-threshold-xp.json` | Weekly Threshold | repository_fixture_ready |
 | SCN-026 | `scn-026-weekly-threshold-duplicate-prevent.json` | Weekly Threshold | repository_fixture_ready |
+| SCN-027 | `scn-027-quiz-option-b-completion.json` | Homework Quiz | repository_test_pass |
+| SCN-028 | `scn-028-quiz-duplicate-prevent.json` | Homework Quiz | repository_test_pass |
+
+**Note:** SCN-021–026 from PR #43 (Threshold / HW / Video / Zoom). SCN-027–028 from PR #44 (quiz Option B).
 
 ## Known live records
 

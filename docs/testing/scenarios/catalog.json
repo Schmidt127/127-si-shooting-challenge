@@ -204,6 +204,20 @@
       "type": "Weekly Threshold",
       "test_status": "repository_fixture_ready",
       "file": "scn-026-weekly-threshold-duplicate-prevent.json"
+    },
+    {
+      "scenario_id": "SCN-027",
+      "name": "quiz-option-b-completion",
+      "type": "Homework Quiz",
+      "test_status": "repository_test_pass",
+      "file": "scn-027-quiz-option-b-completion.json"
+    },
+    {
+      "scenario_id": "SCN-028",
+      "name": "quiz-duplicate-prevent",
+      "type": "Homework Quiz",
+      "test_status": "repository_test_pass",
+      "file": "scn-028-quiz-duplicate-prevent.json"
     }
   ]
 }
