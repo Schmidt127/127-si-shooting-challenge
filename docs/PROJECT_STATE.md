@@ -10,6 +10,9 @@ Last updated: **2026-07-25** (PROD completion pack: public `/shoot` re-smoke PAS
 **Softr:** Obsolete / Not Used â€” Historical Reference Only: [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 **Launch certification:** [launch-certification/START-HERE.md](./launch-certification/START-HERE.md)
 
+**Cross-repo ops (hub):** [hoopchallenges-landing docs/ops](https://github.com/Schmidt127/hoopchallenges-landing/blob/master/docs/ops/CROSS-PROJECT-OPERATING-MANUAL.md) — inventory, smoke commands, recovery.
+
+
 > **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
 
 ---
