@@ -95,7 +95,7 @@ export function weeklyShotPercent(shots: number, goal: number): number {
 export function getMockAthleteDashboard(): AthleteDashboardModel {
   return {
     source: "mock",
-    seasonLabel: "2025–2026 Season",
+    seasonLabel: "Demo Season",
     athlete: {
       id: "recMOCKDASH",
       slug: "demo-athlete",

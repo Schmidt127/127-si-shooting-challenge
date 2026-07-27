@@ -5,6 +5,7 @@ import {
 } from "@/components/catalog/catalog-surface";
 import { DetailTitle, SectionHeading } from "@/components/catalog/display-heading";
 import { RichContent } from "@/components/catalog/rich-content";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { CtaLink, DetailPageShell } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
@@ -39,8 +40,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
       <div className={cn(catalogHeroClass(), "relative")}>
         {level.coverImage ? (
           <div className="flex w-full items-center justify-center bg-brand-light-gray px-4 py-6 sm:px-8 sm:py-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <SafeExternalImage
               src={level.coverImage.url}
               alt={
                 level.displayName || level.name
@@ -48,6 +48,7 @@ export function LevelDetailView({ level }: LevelDetailViewProps) {
                   : "Level cover"
               }
               className="max-h-72 w-auto max-w-full object-contain sm:max-h-96"
+              fallback={<div className={`h-24 w-full bg-gradient-to-br ${style.gradient}`} />}
             />
           </div>
         ) : (

@@ -36,6 +36,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Fixed
+- **Browser QA hardening (2026-07-25)** — Favicon/metadata now emit `/shoot/favicon.*` (was root `/favicon.png` 404); Airtable long-text Markdown (`**bold**`, italics, safe links) renders in `RichContent`; expired Airtable cover URLs (HTTP 410) fall back via `SafeExternalImage` on Zoom/Homework/Levels; empty/error states use `h2` (no dual `h1`); `resolveLandingUrl()` corrects live typo `hooopchallenges.com` → `www.hoopchallenges.com` (still fix Vercel `NEXT_PUBLIC_LANDING_URL`); default season label no longer hardcodes 2025–26; Playwright nav landmark assertion tightened. Report + external tickets: [`docs/browser-qa/BROWSER-QA-REPORT-2026-07-25.md`](./docs/browser-qa/BROWSER-QA-REPORT-2026-07-25.md).
+
 #### Changed
 - **Unified public page design system (2026-07-23)** — Remaining `/shoot` pages now share the approved home-page shell (`PageHero`, `ProgramPage`, `SiteSection`, `CtaLink`, restrained catalog surfaces). Competitive energy on Leaderboard, Achievements, Public Display, and Athlete Profile; calmer instructional styling on Homework, Tutorials, Articles, and Game Manual; balanced treatment on Dashboard, Levels, Zoom Meetings, Shoutouts, and Admin. Data wiring, routes, and Airtable queries unchanged. Loading states added for articles, shoutouts, public-display, and game-manual.
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconLevel } from "@/components/icons/shoot-icons";
+import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
@@ -82,8 +83,7 @@ function LevelLadderCard({
 
           {level.coverImage ? (
             <div className="flex shrink-0 items-center justify-center rounded-lg border border-border-subtle bg-brand-light-gray p-1.5">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <SafeExternalImage
                 src={level.coverImage.url}
                 alt={
                   level.displayName || level.name

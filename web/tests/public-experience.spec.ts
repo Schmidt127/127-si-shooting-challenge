@@ -75,7 +75,8 @@ test.describe("navigation and accessibility basics", () => {
   test("program nav landmark is labelled and navigates", async ({ page }) => {
     await page.goto("leaderboard", { waitUntil: "domcontentloaded" });
 
-    const nav = page.getByRole("navigation", { name: /shooting challenge/i });
+    // Exact landmark — footer uses "Shooting Challenge footer" and must not match.
+    const nav = page.getByRole("navigation", { name: "Shooting Challenge navigation" });
     await expect(nav).toBeVisible();
 
     await nav.getByRole("link", { name: /levels/i }).first().click();

@@ -22,14 +22,15 @@ export function EmptyState({ title, description, icon, action, className }: Empt
         ) : (
           <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
         )}
-        <h1
+        {/* h2: pages already expose a PageHero h1 via ProgramPage */}
+        <h2
           className={cn(
             "font-display text-2xl text-foreground",
             icon ? "mt-5" : "mt-6",
           )}
         >
           {title}
-        </h1>
+        </h2>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
         {action ? <div className="mt-6 flex flex-wrap justify-center gap-2">{action}</div> : null}
       </div>
