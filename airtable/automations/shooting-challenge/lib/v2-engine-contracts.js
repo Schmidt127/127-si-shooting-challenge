@@ -1191,6 +1191,122 @@ function decideAutomaticWeeklySummaryAction({
   };
 }
 
+/**
+ * SC-041 — 074 Make webhook outcome → WAS field plan.
+ * Make owns final Weekly Email Sent? / Sent At writeback.
+ * Webhook failure must leave Send to Make? checked so the handoff stays retryable.
+ */
+function planWeeklyEmailWebhookOutcome({
+  webhookOk = false,
+  emailSent = false,
+  errorMessage = "",
+} = {}) {
+  if (isBooleanishTrue(emailSent, false)) {
+    return {
+      action: "never_retry_already_completed",
+      retryClass: "never_retry_already_completed",
+      allowRetry: false,
+      fields: {},
+      reason: "weekly_email_already_sent",
+    };
+  }
+
+  if (webhookOk) {
+    return {
+      action: "handoff_success",
+      retryClass: "waiting_make_writeback",
+      allowRetry: false,
+      fields: {
+        "Send to Make?": false,
+        "Weekly Email Error": "",
+        "Weekly Email Ready?": true,
+      },
+      mustNotWrite: [
+        "Weekly Email Sent?",
+        "Weekly Email Sent At",
+        "Weekly Summary Sent At",
+      ],
+      reason: "clear_send_trigger_after_successful_handoff",
+    };
+  }
+
+  return {
+    action: "handoff_failed_retryable",
+    retryClass: "automatically_retryable",
+    allowRetry: true,
+    fields: {
+      "Weekly Email Error": String(errorMessage || "Make webhook failed"),
+    },
+    mustNotClear: ["Send to Make?"],
+    mustNotWrite: [
+      "Weekly Email Sent?",
+      "Weekly Email Sent At",
+      "Weekly Summary Sent At",
+    ],
+    reason: "keep_send_to_make_checked_for_retry",
+  };
+}
+
+/**
+ * SC-041 — operator retry decision after a failed or incomplete weekly email send.
+ */
+function decideWeeklyEmailRetryAction({
+  emailSent = false,
+  sendToMake = false,
+  emailReady = false,
+  hasErrorMessage = false,
+  makeSendStatus = "",
+} = {}) {
+  if (isBooleanishTrue(emailSent, false)) {
+    return {
+      action: "do_not_retry",
+      retryClass: "never_retry_already_completed",
+      reason: "weekly_email_already_sent",
+    };
+  }
+
+  const status = String(makeSendStatus || "").trim().toLowerCase();
+  if (status === "sent") {
+    return {
+      action: "do_not_retry",
+      retryClass: "manual_review_required",
+      reason: "make_send_status_sent_but_sent_checkbox_false",
+    };
+  }
+
+  if (isBooleanishTrue(sendToMake, false) && isBooleanishTrue(emailReady, false)) {
+    return {
+      action: "rerun_074",
+      retryClass: "automatically_retryable",
+      reason: hasErrorMessage
+        ? "send_armed_with_prior_error_retry_074"
+        : "send_armed_not_sent_run_074",
+    };
+  }
+
+  if (isBooleanishTrue(emailReady, false) && !isBooleanishTrue(sendToMake, false)) {
+    return {
+      action: "rearm_send_to_make",
+      retryClass: "retryable_after_correcting_data",
+      reason: "package_ready_but_send_trigger_cleared",
+    };
+  }
+
+  if (!isBooleanishTrue(emailReady, false)) {
+    return {
+      action: "rerun_072_then_074",
+      retryClass: "retryable_after_correcting_data",
+      reason: "package_not_ready",
+    };
+  }
+
+  return {
+    action: "manual_review_required",
+    retryClass: "manual_review_required",
+    reason: "ambiguous_weekly_email_state",
+  };
+}
+
 /** 009 attachment → Asset Slot mapping table. */
 const ASSET_SLOT_SOURCES = Object.freeze([
   Object.freeze({ purpose: "Homework 1", slot: "HW1", labelPrefix: "HW1", sourceKey: "hw1" }),
@@ -1419,6 +1535,8 @@ module.exports = {
   evaluateWeeklySummaryBuildGate,
   evaluateWeeklySummarySendGate,
   decideAutomaticWeeklySummaryAction,
+  planWeeklyEmailWebhookOutcome,
+  decideWeeklyEmailRetryAction,
   mapAttachmentsToAssetSlotPlans,
   inferHomeworkAssetSlot,
   decideHw17QuizIntakeAction,

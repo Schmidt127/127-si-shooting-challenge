@@ -40,8 +40,9 @@ See [`catalog.json`](./catalog.json) for the machine index.
 | SCN-026 | `scn-026-weekly-threshold-duplicate-prevent.json` | Weekly Threshold | repository_fixture_ready |
 | SCN-027 | `scn-027-quiz-option-b-completion.json` | Homework Quiz | repository_test_pass |
 | SCN-028 | `scn-028-quiz-duplicate-prevent.json` | Homework Quiz | repository_test_pass |
+| SCN-029 | `scn-029-weekly-email-retry-after-make-failure.json` | Weekly Email | repository_fixture_ready |
 
-**Note:** SCN-021–026 from PR #43 (Threshold / HW / Video / Zoom). SCN-027–028 from PR #44 (quiz Option B).
+**Note:** SCN-021–026 PR #43; SCN-027–028 PR #44 quiz Option B; SCN-029 PR #46 weekly-email retry (renumbered from SCN-027 to avoid clash).
 
 ## Known live records
 

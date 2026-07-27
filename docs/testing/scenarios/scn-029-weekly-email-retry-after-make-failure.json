@@ -1,0 +1,70 @@
+{
+  "safe_environment": "PROD",
+  "enrollment": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "must_remain_active": true,
+    "must_remain_visible_public": true
+  },
+  "field_names_confirmed_from": "prod schema + 074 script FIELD_* constants",
+  "automation_support": {
+    "primary": "074",
+    "downstream_expected": ["Make Bulk Email May 18"]
+  },
+  "scenario_id": "SCN-029",
+  "name": "weekly-email-retry-after-make-failure",
+  "type": "Weekly Email",
+  "description": "After 074 Make webhook failure, Send to Make? stays checked and Weekly Email Error is set. Fix webhook, re-run 074 once, expect single Live writeback Sent? with no duplicate email.",
+  "related_sc_items": ["SC-041", "SC-008", "SC-039", "SC-040"],
+  "prerequisites": [
+    "WAS package already built (Weekly Email Ready?=true)",
+    "Weekly Email Sent?=false",
+    "074 sendMode=Live or blank",
+    "Make scenario Weekly Athlete Summary - Bulk Email - May 18 ON"
+  ],
+  "setup_steps": [
+    "Open Weekly Athlete Summary for Schmidt Enrollment recgP9qZYjAhE7NXm",
+    "Confirm Weekly Email Ready? = true",
+    "Confirm Weekly Email Sent? = false",
+    "Set Send to Make? = true",
+    "If no prior failure: run 074 against a temporarily invalid webhook only if Mike authorizes; otherwise use a WAS that already has Weekly Email Error from a real failure",
+    "Confirm after failure: Send to Make? still true; Weekly Email Error non-empty; Weekly Email Sent? false",
+    "Restore valid makeWebhookUrl / Make path",
+    "Re-run automation 074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make with recordId = that WAS id"
+  ],
+  "input_fields": {
+    "automation": "074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make",
+    "input_variable": "recordId",
+    "input_mapping": "Weekly Athlete Summary record id",
+    "enrollment_id": "recgP9qZYjAhE7NXm"
+  },
+  "expected_outputs": {
+    "ok": true,
+    "errorOut": ""
+  },
+  "expected_created_records": [],
+  "expected_links": {
+    "WAS.Send to Make?": false,
+    "WAS.Weekly Email Error": "",
+    "WAS.Weekly Email Sent?": true,
+    "WAS.Make Send Status": "Sent"
+  },
+  "expected_xp_source": null,
+  "expected_xp_amount": null,
+  "expected_dedupe_key_pattern": "WEEKLY_EMAIL|{enrollmentId}|{weekId}",
+  "expected_result_status": "Pass",
+  "prohibited_side_effects": [
+    "Second Gmail send for same WEEKLY_EMAIL eventId",
+    "074 writing Weekly Email Sent?=true itself",
+    "Clearing Send to Make? on webhook failure"
+  ],
+  "safe_rerun_behavior": "After Sent?=true, further 074 runs must not send",
+  "cleanup_instructions": "Do not uncheck Weekly Email Sent? on a real Sent week; use another week for a second proof",
+  "manual_requirements": [
+    "Follow docs/next-wave/was-email/WEEKLY-EMAIL-RETRY-SOP.md",
+    "Mike authorization required before deliberately breaking webhook"
+  ],
+  "current_automation_support": "074 failure path + Make Live writeback",
+  "test_status": "repository_fixture_ready",
+  "sop": "docs/next-wave/was-email/WEEKLY-EMAIL-RETRY-SOP.md"
+}
