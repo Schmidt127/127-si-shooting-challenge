@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-07-25** (PR #43 follow-through: 035 v1.1 Ready for PROD Paste; 057 v1.4 Ready for PROD Paste; Schmidt live-proof pack; full suite; total 147) |
+| Last updated | **2026-07-25** (PR #43 rebased on master: SC-002 Installed SCN-001–020; repo adds SCN-021–026 Built; 035 v1.1 + 057 v1.4 Ready for PROD Paste; not Live Tested) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,15 +59,15 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-07-24**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **147** |
 | Complete | 12 |
 | Live Tested in PROD | 9 |
-| Installed but not tested *(Installed in PROD)* | 54 |
-| Built but not installed *(Built in Repository)* | 29 |
+| Installed but not tested *(Installed in PROD)* | 55 |
+| Built but not installed *(Built in Repository)* | 28 |
 | Planned | 22 |
 | Decision Needed | 5 |
 | Deferred | 10 |
@@ -89,8 +89,9 @@ Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Te
 | SC-114 | Decision Needed | Superseded | PR #41 Softr Obsolete | `/shoot` active; Softr not a launch dependency | **Yes** |
 | SC-065 | Built in Repository | Built in Repository | PR #41 evidence refresh | `generate-week-package` | Evidence only |
 | SC-067 | Deferred | Deferred | PR #41 notes | Season Launch interim until Program Instance | Notes only |
+| SC-002 | Built in Repository | Installed in PROD | PROD scenario catalog install + fresh readback | `docs/testing/scenarios/PROD-INSTALL-EVIDENCE-2026-07-25.md`; `docs/testing/scenarios/SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md` | No |
 
-**Net math:** After PR #40 on master: Total **147**, Built **28**, Planned **23**, Decision Needed **6**, Superseded **3**. PR #41 then: SC-032 Planned→Built (Built **29**, Planned **22**); SC-114 Decision→Superseded (Decision Needed **5**, Superseded **4**). SC-147 is the only item added by PR #40. No silent Complete↔Live Tested swaps.
+**Net math:** After PR #40 on master: Total **147**, Built **28**, Planned **23**, Decision Needed **6**, Superseded **3**. PR #41 then: SC-032 Planned→Built (Built **29**, Planned **22**); SC-114 Decision→Superseded (Decision Needed **5**, Superseded **4**). SC-147 is the only item added by PR #40. No silent Complete↔Live Tested swaps. **2026-07-25:** SC-002 Built→Installed (Installed **55**, Built **28**) for SCN-001–020 PROD catalog; PR #43 repo fixtures SCN-021–026 remain Built pending PROD install (do not count as Live Tested).
 
 **Reading tip:** “Installed but not tested” remains large — many pipelines still need Schmidt re-proof after the empty-base reset. **Weekly email (2026-07-24):** `118→072 v4.0→119→074→Make Bulk Email May 18` E2E PASS with empty-week **`send_short`**; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback PASS (`Weekly Email Sent?`, `Make Send Status=Sent`, `Weekly Summary Sent At`); **118/119 schedules ON** (Sun 5:00 / 10:00 AM Denver). Repo **118 v1.5** is the Live-season functional fix; **119 v1.5** is docs/CONFIG alignment only. Do not disable schedules based on older OFF guidance. **SC-147 Reliability Command Center** is **Built in Repository**. **SC-032 Season Launch** is **Built in Repository** (not live-installed). Softr is **Obsolete / Not Used** and cannot block launch (MVP views not yet Installed; not Live Tested until PROD export audit). Architecture: `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md`. Config rows are year-specific (do not collapse). 115 installed + live-tested. 020 PROD = v3.0.0. **054 v5.6** + **066 v3.3** Installed.
 
@@ -108,7 +109,7 @@ Columns:
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
 | SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8/v1.9 msg); dry+live PASS 2026-07-23; **rerun PASS 2026-07-24** (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`); offline harness 17 tests; scenario catalog 20 fixtures | Expand HW/Video live branches; UI-attest inventory; optional paste v1.9 | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/`; `live-115-rerun-latest.json`; `docs/testing/scenarios/` | **Resolved:** allowed in PROD | P0 | 2026-07-24 |
-| SC-002 | Testing | Test scenario library / templates for repeatable suites | Built in Repository | Machine-readable catalog: **26 fixtures** + README + `catalog.json` (SCN-001–026); SCN-025/026 exact setup steps + Schmidt live-proof pack | Live-execute SCN-021–026 on Schmidt; optional Airtable Scenario Library table later | SC-001 | Library is config, not a second XP path | `docs/testing/scenarios/`; `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md` | Confirm Airtable library table still wanted | P1 | 2026-07-25 |
+| SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo catalog also has **SCN-021–026** (HW/Video/Zoom/Threshold) Built pending PROD install + Schmidt live-proof pack | Install/execute SCN-021–026 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md`; `SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md` | Confirm Airtable library table still wanted | P1 | 2026-07-25 |
 | SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist + overnight exact view specs (`TESTING-VIEWS-MIKE-ACTIONS.md`); only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining Testing views with Schmidt Enrollment RID filters; verify row visibility | SC-004 | API cannot create views; **do not hide Schmidt** | `docs/overnight/testing-integrity/TESTING-VIEWS-MIKE-ACTIONS.md`; foundation checklist | — | P0 | 2026-07-24 |
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven (incl. 115 live Submission `recuuTBgstSTGg2E3`) | Keep emails Schmidt-only; **overnight direction 2026-07-23: Schmidt remains visible on public standings** (do not add leaderboard exclusion filter yet); website is name-blind | — | No separate exclusion field; web must not invent name filters | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`; `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `docs/overnight/web-integration/PUBLIC-STANDINGS-AUDIT.md` | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-07-23 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | Matrix updated 2026-07-24 with evidence categories; A3/A4/B1/B2 partial PROD passes; B3 policy blocked; B5 backdate blocked | Execute remaining matrix on Schmidt; refresh Zoom rows | SC-001–SC-004, core pipelines | Controlled data only | `V2_END_TO_END_TEST_MATRIX.md`; testing-integrity REPORT | — | P0 | 2026-07-24 |
@@ -134,7 +135,7 @@ Columns:
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066 v3.3 Installed in PROD** (2026-07-24) | Re-test natural run on Schmidt; OMNI confirmation packet (not Live Tested for v3.3 yet) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | **057** v1.3 Stage 17 | Re-test with Zoom recording + live exclusivity | SC-116 | Combined Zoom credit path | C-025 Stage 17 | — | P1 | 2026-07-23 |
+| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD still runs **057 v1.3**; repo **057 v1.4** Denver date-key Ready for PROD Paste (canonical in PR #43) | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week + Zoom exclusivity | SC-116 | Combined Zoom credit path | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; C-025 Stage 17 | — | P1 | 2026-07-25 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
@@ -183,7 +184,7 @@ Columns:
 | SC-074 | XP | Zoom recording XP / credit path | Installed in PROD | Stage 17 **117** / **057** / **042** ON historically; conflict PASS 2026-07-20 | Re-seed Zoom fixtures; re-test conflict + exclusivity after wipe | SC-116 | Soft-void recording only | C-025 Stage 17 live docs | — | P0 | 2026-07-23 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-077 | XP | Perfect Week XP | Installed in PROD | **057** v1.3 | Live prove with Zoom rules | SC-028, SC-074 | — | C-025 | — | P1 | 2026-07-23 |
+| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.3**; repo **057 v1.4** Ready for PROD Paste (PR #43 canonical) | Paste v1.4; live prove with Zoom rules on Schmidt | SC-028, SC-074 | — | `057-perfect-week-denver-v1.4.md`; C-025 | — | P1 | 2026-07-25 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
@@ -197,7 +198,7 @@ Columns:
 | SC-088 | Zoom | Recording approval email to parent | Built in Repository | **117f** + Make scenario; controlled tests PASS; webhook often blank | Permanent webhook; go-live checklist; send-key reconciliation if still pending | SC-086 | Make must not write XP | C-025 117f; overnight send-key docs | Authorize live email | P1 | 2026-07-23 |
 | SC-089 | Zoom | Total Zoom counts correct | Installed in PROD | Rollups/formulas Stage 17 | Re-verify formulas after schema export | SC-048 | Preconflict rollup formula critical | Stage 17 formula docs | — | P1 | 2026-07-23 |
 | SC-090 | Zoom | Level gate integration for Zoom credit | Installed in PROD | 042 v3.1 | Live prove | SC-080 | — | C-025 | — | P0 | 2026-07-23 |
-| SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | 057 v1.3 | Live prove | SC-077 | — | C-025 | — | P0 | 2026-07-23 |
+| SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.3; repo 057 v1.4 Ready for PROD Paste | Paste v1.4; live prove Zoom+Perfect Week | SC-077 | — | C-025; `057-perfect-week-denver-v1.4.md` | — | P0 | 2026-07-25 |
 | SC-092 | Zoom | Weekly summary shows Zoom correctly | Installed in PROD | 072 Zoom sections historically | Re-test Presentation labels | SC-036, SC-054 | — | V2-004 | — | P1 | 2026-07-23 |
 | SC-093 | Zoom | Public website Zoom pages accurate | Installed in PROD | `/shoot` Zoom catalog UI live | Confirm Airtable publish filters after wipe | SC-146 | Read-only web | web Zoom views | — | P2 | 2026-07-23 |
 | SC-094 | Assets | Video storage on program-owned S3 | Installed in PROD | Lambda upload-asset; 070b/070c PROD E2E historically | Re-test writeback on Schmidt asset | — | Auth secret hygiene | C-013 | Optional secret rotate | P0 | 2026-07-23 |
