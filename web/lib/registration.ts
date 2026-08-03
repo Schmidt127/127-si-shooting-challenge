@@ -20,14 +20,14 @@ export const PLAYER_REGISTRATION: RegistrationLink = {
   id: "player-registration",
   label: "Player Registration",
   cta: "Register for the Challenge",
-  url: "https://forms.fairfieldbasketballclub.com/shoot/playerregistration",
+  url: "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
 };
 
 export const DAILY_SUBMISSIONS: RegistrationLink = {
   id: "daily-submissions",
   label: "Already Registered?",
   cta: "Submit Today's Activity",
-  url: "https://forms.fairfieldbasketballclub.com/shoot/dailysubmissions",
+  url: "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
 };
 
 /** Ordered homepage gateway links (registration first, daily log second). */
