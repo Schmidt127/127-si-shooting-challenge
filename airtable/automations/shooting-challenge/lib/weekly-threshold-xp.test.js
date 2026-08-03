@@ -66,15 +66,86 @@ test("rule key uses band code suffix", () => {
   assert.strictEqual(normalizeThresholdGradeBandCode("3–4"), "34");
 });
 
-test("goal completion ratio and whole-percent both work", () => {
-  assert.strictEqual(goalCompletionMeetsThreshold(1.0, 100), true);
+test("goal completion uses Airtable ratio directly (v1.2)", () => {
+  // 0.99 does not meet 100%
   assert.strictEqual(goalCompletionMeetsThreshold(0.99, 100), false);
-  assert.strictEqual(goalCompletionMeetsThreshold(1.24, 125), false);
+  assert.strictEqual(goalCompletionMeetsThreshold(0.99, 125), false);
+  assert.strictEqual(goalCompletionMeetsThreshold(0.99, 150), false);
+
+  // 1 meets 100% only
+  assert.strictEqual(goalCompletionMeetsThreshold(1, 100), true);
+  assert.strictEqual(goalCompletionMeetsThreshold(1, 125), false);
+  assert.strictEqual(goalCompletionMeetsThreshold(1, 150), false);
+
+  // 1.25 meets 100% and 125%
+  assert.strictEqual(goalCompletionMeetsThreshold(1.25, 100), true);
   assert.strictEqual(goalCompletionMeetsThreshold(1.25, 125), true);
-  assert.strictEqual(goalCompletionMeetsThreshold(150, 150), true);
-  assert.strictEqual(goalCompletionMeetsThreshold(149, 150), false);
+  assert.strictEqual(goalCompletionMeetsThreshold(1.25, 150), false);
+
+  // 1.5 meets 100%, 125%, and 150%
+  assert.strictEqual(goalCompletionMeetsThreshold(1.5, 100), true);
+  assert.strictEqual(goalCompletionMeetsThreshold(1.5, 125), true);
+  assert.strictEqual(goalCompletionMeetsThreshold(1.5, 150), true);
+
+  // 83.7 = 8,370% meets all three tiers (Schmidt PROD raw value)
+  assert.strictEqual(goalCompletionMeetsThreshold(83.7, 100), true);
+  assert.strictEqual(goalCompletionMeetsThreshold(83.7, 125), true);
+  assert.strictEqual(goalCompletionMeetsThreshold(83.7, 150), true);
+
   assert.strictEqual(goalCompletionMeetsThreshold(null, 100), false);
   assert.strictEqual(goalCompletionMeetsThreshold("", 100), false);
+});
+
+test("plan awards for ratio regression cases (v1.2)", () => {
+  const below = planWeeklyThresholdAwards({
+    goalCompletionValue: 0.99,
+    enrollmentId: ENR,
+    weekId: WEEK,
+    bandCode: "K2",
+    rulesByKey: RULES,
+  });
+  assert.strictEqual(below.createCount, 0);
+  assert.strictEqual(below.anyMet, false);
+
+  const exactly100 = planWeeklyThresholdAwards({
+    goalCompletionValue: 1,
+    enrollmentId: ENR,
+    weekId: WEEK,
+    bandCode: "K2",
+    rulesByKey: RULES,
+  });
+  assert.strictEqual(exactly100.createCount, 1);
+  assert.deepStrictEqual(exactly100.toCreate.map((p) => p.percent), [100]);
+
+  const at125 = planWeeklyThresholdAwards({
+    goalCompletionValue: 1.25,
+    enrollmentId: ENR,
+    weekId: WEEK,
+    bandCode: "K2",
+    rulesByKey: RULES,
+  });
+  assert.strictEqual(at125.createCount, 2);
+  assert.deepStrictEqual(at125.toCreate.map((p) => p.percent), [100, 125]);
+
+  const at150 = planWeeklyThresholdAwards({
+    goalCompletionValue: 1.5,
+    enrollmentId: ENR,
+    weekId: WEEK,
+    bandCode: "K2",
+    rulesByKey: RULES,
+  });
+  assert.strictEqual(at150.createCount, 3);
+  assert.deepStrictEqual(at150.toCreate.map((p) => p.percent), [100, 125, 150]);
+
+  const schmidt = planWeeklyThresholdAwards({
+    goalCompletionValue: 83.7,
+    enrollmentId: ENR,
+    weekId: WEEK,
+    bandCode: "K2",
+    rulesByKey: RULES,
+  });
+  assert.strictEqual(schmidt.createCount, 3);
+  assert.deepStrictEqual(schmidt.toCreate.map((p) => p.percent), [100, 125, 150]);
 });
 
 test("below 100% creates nothing", () => {
@@ -305,7 +376,7 @@ test("legacy key risk notes are documented for Mike", () => {
   assert.ok(notes.some((n) => n.includes("XP Source")));
 });
 
-test("035 automation script v1.1 implements semantic dedupe and inactive skip", () => {
+test("035 automation script v1.2 preserves v1.1 behavior + ratio percent fix", () => {
   const scriptPath = path.join(
     __dirname,
     "..",
@@ -313,7 +384,8 @@ test("035 automation script v1.1 implements semantic dedupe and inactive skip", 
   );
   assert.ok(fs.existsSync(scriptPath), "035 script missing");
   const body = fs.readFileSync(scriptPath, "utf8");
-  assert.ok(body.includes('version: "v1.1"'));
+  assert.ok(body.includes('version: "v1.2"'));
+  assert.ok(body.includes('versionDate: "2026-08-03"'));
   assert.ok(body.includes("WEEKLY_THRESHOLD|"));
   assert.ok(body.includes("createRecordAsync"));
   assert.ok(body.includes("Threshold XP Status"));
@@ -325,6 +397,9 @@ test("035 automation script v1.1 implements semantic dedupe and inactive skip", 
   assert.ok(body.includes("filterByFormula"));
   assert.ok(body.includes("getCheckboxTriState"));
   assert.ok(body.includes("resolveRuleForTier"));
+  // v1.2 must not revive the incorrect divide-by-100 heuristic in executable code.
+  assert.ok(!/const ratio = raw > 3 \? raw \/ 100 : raw/.test(body));
+  assert.ok(body.includes("return raw + 1e-9 >= percent / 100"));
   // Must not still do per-create full-table scans of Source Key only.
   assert.ok(!/selectRecordsAsync\(\{\s*fields:\s*\[CONFIG\.xp\.sourceKey\]\s*\}\)/.test(body));
 });
