@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { HeroProgressVisual } from "@/components/home/hero-progress-visual";
+import { RegistrationGateway } from "@/components/home/registration-gateway";
 import { IconChevronRight, IconTrophy } from "@/components/icons/shoot-icons";
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
@@ -202,6 +203,8 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
         ))}
         aside={<HeroProgressVisual />}
       />
+
+      <RegistrationGateway />
 
       <SiteSection
         eyebrow="Why it works"
