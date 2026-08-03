@@ -179,7 +179,7 @@ test("035 Weekly Threshold activity date helper uses America/Denver", () => {
   assert.ok(/timeZone:\s*"America\/Denver"/.test(s035));
   assert.ok(/function toDateKey\(value\)/.test(s035));
   assert.ok(/Intl\.DateTimeFormat/.test(s035));
-  assert.ok(/version:\s*"v1\.1"/.test(s035));
+  assert.ok(/version:\s*"v1\.2"/.test(s035));
 });
 
 console.log("\nAll xp-date-normalization tests passed.");

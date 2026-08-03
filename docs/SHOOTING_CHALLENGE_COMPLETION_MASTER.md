@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-07-27** (Agent 1 repo hardening: truth audit + SCN-030–043 + integrity checker; **no** Complete/Live Tested promotions for 035/057/067/SC-041) |
+| Last updated | **2026-08-03** (035 v1.2 percent-ratio fix + Schmidt live proof; automation OFF pending merged-source reconciliation) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,13 +59,13 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-03**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **147** |
 | Complete | 12 |
-| Live Tested in PROD | 14 |
+| Live Tested in PROD | 15 |
 | Installed but not tested *(Installed in PROD)* | 51 |
 | Built but not installed *(Built in Repository)* | 28 |
 | Planned | 21 |
@@ -74,6 +74,14 @@ Counts below match Section 4 as of **2026-07-25**. Recalculate when statuses cha
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-03 — Automation 035 v1.2)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-049 | Pre-v1.2 paste-ready | Live Tested in PROD | 035 v1.2 percent-ratio fix pasted + Schmidt award + idempotency | WAS `rechWp330MqSgRWzN`; first run 3 created; rerun 0 created / 3 skipped; automation **OFF** pending PR #50 merged-source reconciliation |
+
+**Net math vs 2026-07-25 dashboard:** LT 14→**15**. SC-049 left the informal Ready-for-Paste posture (not a dashboard bucket) into Live Tested. Automation remains OFF — do not treat as season-enabled Complete.
 
 ### Dashboard reconciliation (2026-07-25 — PROD Completion Agent + Browser QA)
 
@@ -174,7 +182,7 @@ Columns:
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness (26 pass / 2 warn); dual writers flagged: 112 vs 013, 117 vs 117c, 031/101/118 WAS, 020 vs 067, Threshold missing, 065 legacy keys | Mike UI attestation; fix conflicts after decisions | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer; 117 XOR 117c | P0 | 2026-07-24 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
-| SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Ready for PROD Paste | Full XP source catalog + JSON; **035 v1.1** Weekly Threshold writer (canonical Source Key + semantic Enrollment+Week+XP Source dedupe; inactive enrollment skip); offline contracts + Agent 4 suite coverage | Mike UI-attest no competing Threshold automation; paste **035 v1.1**; Schmidt Tests 1–3; inspect legacy Source Key shapes before mass requeue | SC-046 | Reruns must be safe; do not dual-ON old Threshold automation | `035-…js` v1.1; `docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md`; `SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md` | Attest + paste 035 v1.1 | P0 | 2026-07-25 |
+| SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Live Tested in PROD | Full XP source catalog + JSON; **035 v1.2** Weekly Threshold writer (preserves full v1.1: semantic Enrollment+Week+XP Source dedupe, inactive enrollment skip, Grade Band link-ID preference, exact Source Key); percent compare uses Airtable raw ratio (no `raw>3/100` heuristic); Schmidt first-award **3 created** + duplicate rerun **0 created / 3 skipped** on WAS `rechWp330MqSgRWzN` (Goal Completion raw `83.7`) | Merge PR #50 reconciled source into Airtable header; keep **035 OFF** until enable approved; inspect legacy Source Key shapes before mass requeue | SC-046 | Reruns must be safe; do not dual-ON old Threshold automation; do not enable until merged v1.2 is pasted | `035-…js` v1.2; `docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`; `docs/testing/evidence/2026-08-03-035-v1.2-schmidt-live-proof.md`; `docs/completion-updates/2026-08-03-automation-035-v1.2.md` | Keep OFF pending merge reconcile | P0 | 2026-08-03 |
 | SC-050 | Data Integrity | Safe backfills / repairs (dry-run first) | Built in Repository | `safe-backfills/` + audit extensions 090A–G | Keep dry-run default; only run when needed on empty base | SC-049 | CONFIRM_WRITE discipline | audits README; H-001 principle | — | P1 | 2026-07-23 |
 | SC-051 | Data Integrity | Obsolete field cleanup | Planned | Stage J started historically | Hide/delete after ownership matrix; update maps | SC-046 | Breaking Fillout/web risk | C-012 | — | P2 | 2026-07-23 |
 | SC-052 | Data Integrity | Duplicate table cleanup | Built in Repository | Online Agent 8 package: dependency inventory, migration map, duplicate/quality tools, runbook; keep **`Tutorials`**, orphan candidate **`Tutorials & Assets`** | Live row audit + Softr proof + migrate/delete orphan in target base | SC-046 | Web uses `Tutorials` only | `docs/online-agents/tutorials-content/`; C-026 | Confirm delete orphan after Softr proof | P2 | 2026-07-23 |
@@ -488,7 +496,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 | Package | Status | Evidence |
 |---------|--------|----------|
-| **SC-049 / XP-D1 Weekly Threshold writer** | **Ready for PROD Paste** | **035 v1.1** — semantic legacy dedupe, inactive enrollment skip, Grade Band link-ID preference; deploy checklist v1.1; Schmidt Tests 1–3 |
+| **SC-049 / XP-D1 Weekly Threshold writer** | **Live Tested in PROD** | **035 v1.2** pasted; Schmidt first-award 3 created + duplicate rerun 0/3; automation **OFF** pending PR #50 merged-source reconciliation; evidence `2026-08-03-035-v1.2-schmidt-live-proof.md` |
 | **SC-021 / 057 Denver date keys** | **Ready for PROD Paste** | **057 v1.4** Denver Intl helper; DST/evening boundary offline tests; `057-perfect-week-denver-v1.4.md`; Schmidt Tests 4–5 |
 | **SC-002 fixtures SCN-021–026** | Built in Repository | HW/Video/Zoom/Threshold fixtures; **not** Live Tested |
 
@@ -502,8 +510,9 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SCN-027/028 quiz fixtures | **Built** |
 | Access blocker doc | Recorded — needs Mike env PAT |
 
-**Not claimed Complete / Pasted for 035/057/067:** No PROD Airtable paste or Schmidt mutation proof in these sessions.  
-**Next after token:** SC-013 Schmidt Option B live → paste 035/057 → SC-075/076 → SC-077 Perfect Week.
+**Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
+**057/067:** Still not Live Tested as Complete season paths.  
+**Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
 
 ---
 

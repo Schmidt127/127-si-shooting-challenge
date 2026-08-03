@@ -58,7 +58,7 @@ test("WEEKLY_THRESHOLD writer is canonical 035 after SC-049 rebuild", () => {
   const body = fs.readFileSync(path.join(repoRoot, row.script_path), "utf8");
   assert.ok(body.includes("WEEKLY_THRESHOLD|"));
   assert.ok(body.includes("createRecordAsync"));
-  assert.ok(body.includes('version: "v1.1"'));
+  assert.ok(body.includes('version: "v1.2"'));
   assert.ok(body.includes("existingXpSourceLabels"), "035 must semantic-dedupe via XP Source labels");
   // Writer mint pattern must match registry format placeholders.
   assert.ok(

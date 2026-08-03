@@ -2,8 +2,8 @@
 Automation: 035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth — PROD paste only after Mike UI attestation
-Last GitHub Update: 2026-07-25
+Status: GitHub Source of Truth ? PROD paste only after Mike UI attestation
+Last GitHub Update: 2026-08-03
 
 Purpose:
 Create XP Events for met Weekly Threshold tiers (100% / 125% / 150%) from one Weekly Athlete Summary.
@@ -28,11 +28,14 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
  * 035 - WEEKLY SUMMARY AND GOAL LOGIC
  * Create Weekly Threshold XP Events
  *
- * Version: v1.1
+ * Version: v1.2
  * Date Written: 2026-07-25
- * Last Updated: 2026-07-25
+ * Last Updated: 2026-08-03
  *
  * VERSION HISTORY
+ * - v1.2 (2026-08-03): Treat Airtable percent values as ratios exactly as returned
+ *   (1 = 100%, 1.25 = 125%, 83.7 = 8,370%). Removed the v1.1 `raw > 3 ? raw / 100`
+ *   heuristic that incorrectly skipped Goal Completion 83.7 as below 100%.
  * - v1.1 (2026-07-25): Semantic legacy-key compatibility (Enrollment+Week+XP Source);
  *   skip inactive enrollments; prefer Grade Band link-ID rule match; avoid per-create
  *   full-table XP scans; richer outputs for Mike paste testing.
@@ -51,13 +54,13 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
  * - Marks WAS Threshold XP Status = Processed and clears Requeue Threshold XP.
  *
  * IMPORTANT DESIGN RULES
- * - One enrollment × week × percent tier = one XP Event (append-only).
+ * - One enrollment ? week ? percent tier = one XP Event (append-only).
  * - Do not write formula/rollup fields (Goal Completion %, Threshold XP Ready?).
- * - Do not invent XP amounts — missing/invalid rules error that tier.
+ * - Do not invent XP amounts ? missing/invalid rules error that tier.
  * - XP Bucket = "Weekly Threshold".
  * - XP Source = "Weekly Threshold 100" | "Weekly Threshold 125" | "Weekly Threshold 150".
  * - XP Activity Date Source = "Weekly Summary Week End Date" when that option exists.
- * - Inactive Enrollment (Active?=false) → skipped (not error).
+ * - Inactive Enrollment (Active?=false) ? skipped (not error).
  * - This is not Perfect Week XP (058/059) and not Submission Base XP (010).
  * - Before PROD paste: Mike must UI-attest no competing Threshold automation still ON.
  *
@@ -90,10 +93,10 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
 
 const SCRIPT = {
   scriptName: "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
-  version: "v1.1",
-  versionDate: "2026-07-25",
+  version: "v1.2",
+  versionDate: "2026-08-03",
   originalWrittenDate: "2026-07-25",
-  lastUpdated: "2026-07-25",
+  lastUpdated: "2026-08-03",
   folder: "03 - Weekly Summary and Goal Logic",
   automationName: "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
 };
@@ -326,8 +329,9 @@ function buildRuleKey(percent, bandCode) {
 function goalMeetsPercent(goalCompletionValue, percent) {
   const raw = Number(goalCompletionValue);
   if (!Number.isFinite(raw)) return false;
-  const ratio = raw > 3 ? raw / 100 : raw;
-  return ratio + 1e-9 >= percent / 100;
+  // Airtable percent fields return ratios (1 = 100%, 1.25 = 125%, 83.7 = 8370%).
+  // Compare the raw numeric ratio directly ? do not divide values > 3 by 100.
+  return raw + 1e-9 >= percent / 100;
 }
 
 function idsIntersect(a, b) {
@@ -372,7 +376,7 @@ function resolveRuleForTier(rulesByKey, ruleKey, gradeBandIds) {
 }
 
 async function findExistingBySourceKey(xpTable, sourceKey) {
-  // Targeted recheck — exact Source Key only (no full-table scan).
+  // Targeted recheck ? exact Source Key only (no full-table scan).
   try {
     const formula = `{${CONFIG.xp.sourceKey}} = '${escapeFormulaString(sourceKey)}'`;
     const recheck = await xpTable.selectRecordsAsync({
@@ -388,7 +392,7 @@ async function findExistingBySourceKey(xpTable, sourceKey) {
     }
     return id;
   } catch (e) {
-    // filterByFormula unsupported / field name issue → fall back to in-memory only.
+    // filterByFormula unsupported / field name issue ? fall back to in-memory only.
     console.log(`findExistingBySourceKey fallback: ${e && e.message ? e.message : e}`);
     return null;
   }

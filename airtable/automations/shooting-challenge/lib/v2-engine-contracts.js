@@ -322,16 +322,16 @@ function buildWeeklyThresholdRuleKey(percent, bandCode) {
 }
 
 /**
- * Airtable percent formulas return 1.0 for 100%, 1.25 for 125%, etc.
- * Accept either ratio (1.25) or whole percent (125) for robustness.
+ * Airtable percent fields return ratios: 1 = 100%, 1.25 = 125%, 83.7 = 8370%.
+ * Compare the raw numeric ratio directly against percent/100.
+ * Do not treat values > 3 as whole percents (v1.1 heuristic incorrectly skipped 83.7).
  */
 function goalCompletionMeetsThreshold(goalCompletionValue, percent) {
   const tier = Number(percent);
   if (!WEEKLY_THRESHOLD_PERCENTS.includes(tier)) return false;
   const raw = Number(goalCompletionValue);
   if (!Number.isFinite(raw)) return false;
-  const ratio = raw > 3 ? raw / 100 : raw;
-  return ratio + 1e-9 >= tier / 100;
+  return raw + 1e-9 >= tier / 100;
 }
 
 function weeklyThresholdXpSourceLabel(percent) {

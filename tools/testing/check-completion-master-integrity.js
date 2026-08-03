@@ -17,7 +17,7 @@ const CHECKLISTS = [
   {
     id: "035",
     sc: "SC-049",
-    path: "docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md",
+    path: "docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md",
     readyPhrase: /Ready for PROD Paste/i,
   },
   {
