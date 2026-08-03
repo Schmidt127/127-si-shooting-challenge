@@ -12,7 +12,7 @@ describe("registration links", () => {
     expect(PLAYER_REGISTRATION.label).toBe("Player Registration");
     expect(PLAYER_REGISTRATION.cta).toBe("Register for the Challenge");
     expect(PLAYER_REGISTRATION.url).toBe(
-      "https://forms.fairfieldbasketballclub.com/shoot/playerregistration",
+      "https://forms.fairfieldbasketballclub.com/shoot-playerregistration",
     );
   });
 
@@ -20,7 +20,7 @@ describe("registration links", () => {
     expect(DAILY_SUBMISSIONS.label).toBe("Already Registered?");
     expect(DAILY_SUBMISSIONS.cta).toBe("Submit Today's Activity");
     expect(DAILY_SUBMISSIONS.url).toBe(
-      "https://forms.fairfieldbasketballclub.com/shoot/dailysubmissions",
+      "https://forms.fairfieldbasketballclub.com/shoot-dailysubmissions",
     );
   });
 
