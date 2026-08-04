@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 /**
- * Mounted at https://www.hoopchallenges.com/shoot via landing Vercel rewrite.
+ * Mounted at https://www.fairfieldbasketballclub.com/shoot via landing rewrite.
  * Local: http://localhost:3001/shoot
  *
  * Many catalog images currently pass `unoptimized` on next/image; remotePatterns

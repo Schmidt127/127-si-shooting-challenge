@@ -9,7 +9,7 @@
 | **Airtable** | Data, formulas, native automations, extension scripts |
 | **Make.com** | S3 upload (target), Gmail, webhooks — today still Google Drive in upload engine |
 | **GitHub** | Versioned scripts, schema, blueprints, docs |
-| **Next.js (`web/`)** | Public app at `/shoot` on hoopchallenges.com |
+| **Next.js (`web/`)** | Public app at `/shoot` on fairfieldbasketballclub.com |
 | **Fillout** | Submission and quiz intake |
 
 ## Core data flow

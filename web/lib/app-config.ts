@@ -9,6 +9,25 @@ export const SHOOTING_CHALLENGE = {
 } as const;
 
 /**
+ * Official public landing origin (Fairfield Basketball Club).
+ * Shooting Challenge mounts at `{PUBLIC_LANDING_ORIGIN}/shoot`.
+ */
+export const PUBLIC_LANDING_ORIGIN = "https://www.fairfieldbasketballclub.com";
+
+/** Canonical public Shooting Challenge URL prefix (landing + `/shoot`). */
+export const PUBLIC_SITE_ORIGIN = `${PUBLIC_LANDING_ORIGIN}${SHOOTING_CHALLENGE.publicPath}`;
+
+/** Hosts that must never remain as the primary public destination. */
+const LEGACY_LANDING_HOSTS = new Set([
+  "hoopchallenges.com",
+  "www.hoopchallenges.com",
+  "hooopchallenges.com",
+  "www.hooopchallenges.com",
+]);
+
+const CANONICAL_LANDING_HOST = "www.fairfieldbasketballclub.com";
+
+/**
  * Public URL prefix for static assets and routes.
  * Must match next.config `basePath` / NEXT_PUBLIC_BASE_PATH (default `/shoot`).
  */
@@ -26,15 +45,33 @@ export function withBasePath(path: string): string {
   return `${APP_BASE_PATH}${normalized}`;
 }
 
-const DEFAULT_LANDING_URL = "https://www.hoopchallenges.com";
+function stripTrailingSlash(value: string): string {
+  return value.replace(/\/$/, "");
+}
+
+function normalizePublicHostname(hostname: string): string {
+  const host = hostname.toLowerCase();
+  if (
+    LEGACY_LANDING_HOSTS.has(host) ||
+    host === "fairfieldbasketballclub.com" ||
+    host === CANONICAL_LANDING_HOST
+  ) {
+    return CANONICAL_LANDING_HOST;
+  }
+  return host;
+}
 
 /**
- * Normalize hub / landing URL. Guards a known PROD typo (`hooopchallenges.com`)
- * that broke header/footer links when set via NEXT_PUBLIC_LANDING_URL.
+ * Normalize hub / landing URL.
+ *
+ * - Missing / blank / malformed → official Fairfield landing
+ * - Legacy Hoop Challenges hosts (incl. known `hooop` typo) → Fairfield host
+ * - Bare `fairfieldbasketballclub.com` → `www.` canonical host
+ * - Path is preserved (e.g. `/programs`)
  */
 export function resolveLandingUrl(raw: string | undefined | null): string {
   const trimmed = String(raw ?? "").trim();
-  if (!trimmed) return DEFAULT_LANDING_URL;
+  if (!trimmed) return PUBLIC_LANDING_ORIGIN;
 
   let candidate = trimmed;
   if (!/^https?:\/\//i.test(candidate)) {
@@ -43,20 +80,63 @@ export function resolveLandingUrl(raw: string | undefined | null): string {
 
   try {
     const url = new URL(candidate);
-    const host = url.hostname.toLowerCase();
+    url.hostname = normalizePublicHostname(url.hostname);
+    url.hash = "";
+    return stripTrailingSlash(url.toString());
+  } catch {
+    return PUBLIC_LANDING_ORIGIN;
+  }
+}
 
-    // Known typo observed in live PROD HTML (2026-07-25 browser QA).
-    if (host === "hooopchallenges.com" || host === "www.hooopchallenges.com") {
-      url.hostname = "www.hoopchallenges.com";
-    } else if (host === "hoopchallenges.com") {
-      url.hostname = "www.hoopchallenges.com";
+/**
+ * Normalize canonical site URL used for metadata (`metadataBase`).
+ * Ensures `/shoot` basePath and never falls back to Hoop Challenges.
+ */
+export function resolveSiteUrl(
+  raw: string | undefined | null,
+  basePath: string = APP_BASE_PATH,
+): string {
+  const normalizedBase =
+    !basePath || basePath === "/"
+      ? SHOOTING_CHALLENGE.publicPath
+      : basePath.startsWith("/")
+        ? basePath
+        : `/${basePath}`;
+  const fallback = `${PUBLIC_LANDING_ORIGIN}${normalizedBase}`;
+
+  const trimmed = String(raw ?? "").trim();
+  if (!trimmed) return fallback;
+
+  let candidate = trimmed;
+  if (!/^https?:\/\//i.test(candidate)) {
+    candidate = `https://${candidate}`;
+  }
+
+  try {
+    const url = new URL(candidate);
+    url.hostname = normalizePublicHostname(url.hostname);
+    url.hash = "";
+
+    const path = stripTrailingSlash(url.pathname || "") || "";
+    if (!path || path === "/") {
+      url.pathname = normalizedBase;
+    } else if (
+      path !== normalizedBase &&
+      !path.startsWith(`${normalizedBase}/`)
+    ) {
+      // Keep an explicit non-root path (rare); otherwise prefer /shoot.
+      url.pathname = path;
     }
 
-    url.hash = "";
-    return url.toString().replace(/\/$/, "");
+    return stripTrailingSlash(url.toString());
   } catch {
-    return DEFAULT_LANDING_URL;
+    return fallback;
   }
 }
 
 export const LANDING_URL = resolveLandingUrl(process.env.NEXT_PUBLIC_LANDING_URL);
+
+export const SITE_URL = resolveSiteUrl(
+  process.env.NEXT_PUBLIC_SITE_URL,
+  APP_BASE_PATH,
+);

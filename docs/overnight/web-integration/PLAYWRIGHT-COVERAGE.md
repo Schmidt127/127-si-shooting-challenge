@@ -8,6 +8,7 @@
 
 | Area | Spec | Type |
 |------|------|------|
+| **Production smoke package** (routes, Fillout/landing URLs, assets, basePath, console, mobile/desktop, 404) | `tests/production-smoke.spec.ts` + `scripts/http-smoke.mjs` | Assertions + HTTP; runbook `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md` |
 | Landing/home, all 14 public routes, desktop | `tests/public-experience.spec.ts` | Assertions (status < 500, single h1) |
 | Same routes, mobile 390×844 + horizontal-overflow guard | `tests/public-experience.spec.ts` | Assertions |
 | Navigation (labelled nav landmark, link navigation) | `tests/public-experience.spec.ts` | Assertions |

@@ -31,7 +31,7 @@ Guidance for AI assistants (Cursor, etc.) working in **`127-si-shooting-challeng
 
 ## Repo scope
 
-- **This repo:** Shooting Challenge backend (Airtable automations, audits, backfills) + Next.js app at **`/shoot`** on hoopchallenges.com
+- **This repo:** Shooting Challenge backend (Airtable automations, audits, backfills) + Next.js app at **`/shoot`** on fairfieldbasketballclub.com
 - **Not this repo:** Hoop landing (`hoopchallenges-landing`), JR Ref (`127-si-jr-ref`), Team Shot Tracker, Dribbling, Brackets, Rankings
 
 ## Canonical brand synchronization

@@ -1,7 +1,7 @@
 # Website (/shoot) Season Activation Package
 
 **Status:** Active Season Launch package  
-**Front end:** Next.js at `https://www.hoopchallenges.com/shoot` (Vercel root `web/`)  
+**Front end:** Next.js at `https://www.fairfieldbasketballclub.com/shoot` (Vercel root `web/`)  
 **Softr:** Obsolete / Not Used — see [`SOFTR-SEASON-ACTIVATION.md`](./SOFTR-SEASON-ACTIVATION.md)
 
 ## Active systems in scope

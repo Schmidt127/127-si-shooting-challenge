@@ -9,7 +9,7 @@ Source kit: **127_SI_Brand_Kit** (Patrick Liddell). Web assets: `web/public/bran
 
 | Level | Name | Usage |
 |-------|------|--------|
-| Site | **Hoop Challenges** | Landing at www.hoopchallenges.com |
+| Site | **Fairfield Basketball Club** (official landing) | Landing at www.fairfieldbasketballclub.com (legacy hoopchallenges.com retired as primary destination) |
 | Parent | **127 Sports Intensity** | Logo, footer, org line |
 | Apps | Shooting Challenge, Dribble Challenge, etc. | Own path + app nav |
 
@@ -60,7 +60,7 @@ Constants: `lib/brand.ts` â†' `BRAND_LOGOS`
 
 Every app includes:
 
-1. **Home** link â†' `NEXT_PUBLIC_LANDING_URL` or `https://www.hoopchallenges.com`
+1. **Home** link → `NEXT_PUBLIC_LANDING_URL` or `https://www.fairfieldbasketballclub.com`
 2. 127 SI logo (horizontal, compact)
 3. App name + app-specific nav row
 4. Dark ambient background with subtle blue blur

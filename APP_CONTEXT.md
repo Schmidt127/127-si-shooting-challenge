@@ -10,7 +10,8 @@
 | Vercel project | `127-si-shooting-challenge` |
 | Default branch | `master` |
 | Vercel root directory | `web` |
-| Public route | `/shoot` on https://hoopchallenges.com/shoot |
+| Public route | `/shoot` on https://www.fairfieldbasketballclub.com/shoot |
+| Official landing | https://www.fairfieldbasketballclub.com (legacy Hoop Challenges domain retired as primary destination) |
 | `basePath` | `/shoot` (`NEXT_PUBLIC_BASE_PATH`) |
 
 ## Purpose

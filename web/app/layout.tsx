@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist_Mono, Maven_Pro } from "next/font/google";
 
 import "./globals.css";
+import { APP_BASE_PATH, SITE_URL } from "@/lib/app-config";
 import { cn } from "@/lib/utils";
 
 const mavenPro = Maven_Pro({
@@ -15,20 +16,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/shoot";
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-  `https://www.hoopchallenges.com${basePath}`;
-
 /**
  * Icon hrefs must include basePath. Production previously emitted `/favicon.png`
  * (root 404) instead of `/shoot/favicon.png` when metadata icons omitted basePath.
  */
-const iconPng = `${basePath}/favicon.png`;
-const iconIco = `${basePath}/favicon.ico`;
+const iconPng = `${APP_BASE_PATH}/favicon.png`;
+const iconIco = `${APP_BASE_PATH}/favicon.ico`;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: "Shooting Challenge | 127 Sports Intensity",
     template: "%s | Shooting Challenge",

@@ -244,9 +244,9 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
                 <p className="font-mono text-sm font-bold text-brand-orange">
                   {item.step}
                 </p>
-                <p className="font-display mt-2 text-xl text-foreground">
+                <h3 className="font-display mt-2 text-xl text-foreground">
                   {item.title}
-                </p>
+                </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
                   {item.description}
                 </p>

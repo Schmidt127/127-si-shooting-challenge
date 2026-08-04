@@ -92,7 +92,7 @@ export function DetailPageShell({
       <SiteContainer className={cn("max-w-4xl pb-20 pt-8 sm:pt-10", className)}>
         <Link
           href={backHref}
-          className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-muted-foreground transition hover:text-accent-soft"
+          className="sc-text-link inline-flex min-h-11 items-center gap-2 text-sm"
         >
           <span aria-hidden>←</span> {backLabel}
         </Link>

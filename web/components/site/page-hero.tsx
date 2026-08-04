@@ -103,7 +103,7 @@ export function PageHero({
               </div>
             ) : null}
             {actions ? (
-              <div className="motion-rise motion-delay-2 mt-6 flex flex-wrap gap-2.5">
+              <div className="motion-rise motion-delay-2 mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap [&_a]:w-full sm:[&_a]:w-auto [&_a]:justify-center">
                 {actions}
               </div>
             ) : null}

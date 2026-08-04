@@ -2,7 +2,7 @@
 
 Central map for all documentation in this monorepo. **Start here** when you are not sure which file to open.
 
-> **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on hoopchallenges.com. Landing is `hoopchallenges-landing`.
+> **Repo:** `127-si-shooting-challenge` — public app at `/shoot` on fairfieldbasketballclub.com. Official landing: https://www.fairfieldbasketballclub.com.
 
 **Completion plan (controlling)?** Use [SHOOTING_CHALLENGE_COMPLETION_MASTER.md](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md). Older backlog files remain evidence/history only.
 
@@ -181,8 +181,8 @@ Separate repo: `127-si-jr-ref` (public path `/refclinic`).
 
 | Program | Repo | Public path |
 |---------|------|-------------|
-| Hoop landing | `hoopchallenges-landing` | https://www.hoopchallenges.com |
-| Shooting Challenge | this repo | `/shoot` |
+| Club landing | landing project (historical repo name may still be `hoopchallenges-landing`) | https://www.fairfieldbasketballclub.com |
+| Shooting Challenge | this repo | `/shoot` on fairfieldbasketballclub.com |
 | JR Referee Clinics | `127-si-jr-ref` | `/refclinic` |
 
 Details: [PROJECT_STATE.md](./PROJECT_STATE.md)

@@ -22,7 +22,7 @@ const FOOTER_QUICK_LINKS: ProductNavItem[] = [
 ];
 
 /**
- * Shared program footer — brand stamp, quick links, return to Hoop Challenges.
+ * Shared program footer — brand stamp, quick links, return to club landing.
  */
 export function SiteFooter({
   productName,
@@ -57,7 +57,7 @@ export function SiteFooter({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="min-h-11 inline-flex items-center text-sm font-semibold text-foreground transition hover:text-brand-blue"
+                  className="sc-text-link inline-flex min-h-11 items-center text-sm"
                 >
                   {item.label}
                 </Link>
@@ -74,9 +74,9 @@ export function SiteFooter({
           </p>
           <a
             href={LANDING_URL}
-            className="inline-flex min-h-11 items-center text-sm font-semibold text-brand-blue transition hover:text-accent-soft"
+            className="sc-text-link inline-flex min-h-11 items-center text-sm"
           >
-            Hoop Challenges home
+            Fairfield Basketball Club home
           </a>
         </div>
       </SiteContainer>

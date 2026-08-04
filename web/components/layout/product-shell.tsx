@@ -1,5 +1,6 @@
 import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
+import { SkipToContent } from "@/components/site/skip-to-content";
 
 export type ProductNavItem = {
   label: string;
@@ -25,6 +26,7 @@ export function ProductShell({
 }: ProductShellProps) {
   return (
     <div className="relative flex min-h-screen flex-col bg-background">
+      <SkipToContent />
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-brand-blue/[0.05] blur-3xl" />
         <div className="absolute right-0 top-1/3 h-64 w-64 rounded-full bg-brand-orange/[0.05] blur-3xl" />
@@ -36,7 +38,9 @@ export function ProductShell({
         navItems={navItems}
       />
 
-      <main className="relative flex-1">{children}</main>
+      <main id="main-content" className="relative flex-1" tabIndex={-1}>
+        {children}
+      </main>
 
       <SiteFooter productName={productName} />
     </div>

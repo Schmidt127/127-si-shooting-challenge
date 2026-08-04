@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-03** (035 v1.2 percent-ratio fix + Schmidt live proof; automation OFF pending merged-source reconciliation) |
+| Last updated | **2026-08-04** (PR #52/#53/#54 integration: SC-148 mobile a11y, SC-149 landing domain, SC-118 smoke package — Built in Repository) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,21 +59,31 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-03**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **147** |
+| **Total items** | **149** |
 | Complete | 12 |
 | Live Tested in PROD | 15 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 28 |
+| Built but not installed *(Built in Repository)* | 30 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — PR #52/#53/#54 integration)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-149 | *(new)* | Built in Repository | Landing domain transition to Fairfield Basketball Club | `web/lib/app-config.ts`; Vitest + Playwright; env examples |
+| SC-148 | *(new)* | Built in Repository | Mobile usability + accessibility for public `/shoot` | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts` |
+| SC-118 | Built in Repository | Built in Repository — smoke suite successfully executed against current PROD | Production smoke package (read-only Playwright + HTTP) | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md` |
+
+**Net math vs 2026-08-03:** Total 147→**149**; Built 28→**30**. SC-118 stays Built (smoke executed against PROD is evidence, not Installed/Live Tested for web deploy of this branch). SC-148/SC-149 not Installed until Vercel deploy + Mike production check.
 
 ### Dashboard reconciliation (2026-08-03 — Automation 035 v1.2)
 
@@ -251,7 +261,7 @@ Columns:
 | SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
-| SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; commits `2ce6599`, `bf842d9` | Authorize npm install | P2 | 2026-07-23 |
+| SC-118 | Website | Production readiness smoke package for public `/shoot` | Built in Repository — smoke suite successfully executed against current PROD | **Production smoke package** (`production-smoke.spec.ts` + `http-smoke.mjs` + runbook); prior `public-experience` / hardening / registration-gateway / `mobile-a11y` specs retained; **2026-08-04** local + prod Playwright + HTTP `tokenValid` PASS on `fairfieldbasketballclub.com/shoot` (read-only). Branch deploy of this package not yet Installed/Live Tested. | Optional CI wire for `test:smoke`; axe-core later; Mike final prod check after integration deploy | SC-102 | Read-only; no form submits; no Airtable writes | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`; `PLAYWRIGHT-COVERAGE.md` | Optional CI authorize | P2 | 2026-08-04 |
 
 ### Additional cross-cutting / historical items
 
@@ -286,6 +296,8 @@ Columns:
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
 | SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet; **2026-07-25 fixture CLI runs** archived under `docs/prod-completion/2026-07-25/rcc-fixture-runs/` (healthy/mixed/weekly-email); preserves `118→072→119→074→Make` with **118/119 ON** | Mike: export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred**; PROD export blocked without API token | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `docs/prod-completion/2026-07-25/rcc-fixture-runs/` | Approve MVP view install + first PROD export run | P0 | 2026-07-25 |
+| SC-148 | Website | Mobile usability + accessibility for public `/shoot` | Built in Repository | Accessible mobile menu (open/close/Escape/focus return); skip link; 44px tap targets; overflow protection (narrow); stronger focus rings; registration CTAs in menu + gateway; footer/back text-link distinction; clearer loading/empty/error; heading hierarchy; Playwright coverage at 375/768/1440 | Merge integration PR; Vercel deploy; Mike production check; optional axe-core pass | SC-102, SC-113, SC-118 | No Airtable/XP/business-rule changes; do not use `overflow-x: clip` in ways that hide tables/leaderboards | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts` | Approve merge/deploy | P1 | 2026-08-04 |
+| SC-149 | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | Built in Repository | Repo audit + code: logo/header/footer/`BackToHubLink` → `https://www.fairfieldbasketballclub.com`; `resolveLandingUrl`/`resolveSiteUrl` rewrite legacy Hoop hosts + safe defaults; env examples; `/shoot` path preserved; Vitest + Playwright coverage | Set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield if still legacy; deploy; live smoke logo/footer; do not treat historical `hoopchallenges.com` docs as active config | SC-102 | Do not redirect in-app `/shoot/*` nav to landing; keep basePath `/shoot` | `web/lib/app-config.ts`; `web/lib/app-config.test.ts`; `web/lib/site-chrome-links.test.ts`; `web/tests/public-hardening.spec.ts` | Confirm Vercel env values | P0 | 2026-08-04 |
 
 ---
 
@@ -347,7 +359,7 @@ Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writ
 
 ### Website and Public Experience
 
-Primary SC items: **SC-102 … SC-118**, **SC-144**.
+Primary SC items: **SC-102 … SC-118**, **SC-144**, **SC-148**, **SC-149**.
 
 Must achieve: catalogs, game manual from config, real profiles/auth decision, Softr/noindex decisions, admin roadmap, Presentation wiring, Playwright growth.
 
@@ -513,6 +525,83 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 **Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
 **057/067:** Still not Live Tested as Complete season paths.  
 **Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
+
+### 9F. Landing domain / navigation branding audit — **2026-08-04** (SC-149)
+
+| Field | Value |
+|-------|--------|
+| **Status** | **Built in Repository** (not Installed / Live Tested until Vercel deploy + env confirmed) |
+| **Official landing** | `https://www.fairfieldbasketballclub.com` |
+| **Shooting Challenge route** | `https://www.fairfieldbasketballclub.com/shoot` |
+| **Retired primary destination** | `https://www.hoopchallenges.com` (and typo `hooopchallenges.com`) |
+
+**What changed (active production code / config examples):**
+
+| Area | Change |
+|------|--------|
+| Defaults | `PUBLIC_LANDING_ORIGIN` / `resolveLandingUrl` / `resolveSiteUrl` → Fairfield; never fall back to Hoop Challenges |
+| Chrome | Header logo, wordmark, footer branding, `BackToHubLink` (“Home”) → Fairfield landing |
+| Env examples | Root + `web/.env*.example` use Fairfield for `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` |
+| Active docs | `APP_CONTEXT.md`, `docs/deployment-notes.md`, `docs/PROJECT_STATE.md` URL table, selected `web/docs/*` |
+
+**Tests added/updated:**
+
+1. Logo → `https://www.fairfieldbasketballclub.com` (Playwright + chrome contract)
+2. Header/footer landing links correct (Playwright + source contract)
+3. No active code defaults to Hoop Challenges (`app-config` + chrome tests)
+4. Env-variable normalization (legacy hosts, typo host, blank, malformed)
+5. `/shoot` application path intact (`resolveSiteUrl`, `withBasePath`, Playwright URL)
+6. Internal SC nav stays app-relative (not redirected to landing)
+
+**Unresolved / Mike follow-ups:**
+
+- Confirm Vercel production env vars are Fairfield (code rewrites legacy values, but env should match).
+- Live smoke after deploy (logo + footer + `/shoot` routes).
+- Historical docs/evidence that still mention `hoopchallenges.com` remain **archives** — do not treat as active config.
+- Shared `BRAND_STANDARDS.md` still lists Hoop Challenges as public site (canonical copy lives in landing repo) — synchronize via approved cross-repo brand update when ready.
+
+### 9G. Production `/shoot` smoke package — **2026-08-04** (SC-118)
+
+**Deliverables:** `web/tests/production-smoke.spec.ts`, `web/scripts/http-smoke.mjs`, `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`, evidence under `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`
+
+| Check | Result |
+|-------|--------|
+| Production build | PASS (evidence date) |
+| Vitest | PASS (evidence date) |
+| Playwright local smoke | PASS (evidence date) |
+| Playwright prod smoke (`fairfieldbasketballclub.com/shoot`) | PASS (evidence date; read-only against then-current PROD) |
+| HTTP prod smoke | PASS — Fillout + landing URLs exact; assets 200; API `tokenValid` |
+| Material console errors | None on smoked routes |
+| Broken links / duplicated `/shoot/shoot` | None found |
+| SC-118 | **Built in Repository — smoke suite successfully executed against current PROD** (not Installed/Live Tested for this integration branch until Mike deploys + checks) |
+
+**Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
+
+### 9H. Mobile usability + accessibility package — **2026-08-04** (SC-148)
+
+**Status:** **Built in Repository** (not Installed / Live Tested until Vercel deploy + Mike smoke)
+
+| Area audited | Findings fixed | Remaining / notes |
+|--------------|----------------|-------------------|
+| Homepage hero | Full-width mobile CTAs; clearer hero muted contrast token | No redesign; brand structure preserved |
+| Registration gateway | 44px CTAs; also pinned at top of mobile menu | Fillout remains external (`target=_blank`) |
+| Header / mobile menu | Replaced horizontal-scroll nav with dialog menu; Escape + focus return; body scroll lock | Desktop/tablet keep primary + More dropdown |
+| Logo / nav links | Logo hit area ≥44px; labelled logo/wordmark; More menu aria-label | Fairfield landing links from SC-149 |
+| Buttons / CTAs | Default/sm/icon sizes raised to 44px+ | Dense `xs` left for non-primary chrome |
+| Forms / inputs | Existing `.sc-input` already 44px; focus ring strengthened | Few public forms today |
+| Cards / standings | Table header icons decorative; mobile card list unchanged structurally | Live leaderboard needs `AIRTABLE_API_TOKEN` in env |
+| Athlete dashboard | Profile text link underlined + min height | Auth still SC-112 Decision Needed |
+| Footer | Quick links use `.sc-text-link` (underlined, blue) | Fairfield home link |
+| Loading / empty / error | Clearer copy hierarchy; `role=status` / `role=alert`; mobile-friendly action stacking | — |
+
+**Viewports:** 375×812, 768×1024, 1440×900
+
+**Unresolved follow-ups (non-blocking for this package):**
+- Full axe-core audit not yet wired (tracked under SC-118)
+- Contrast of decorative court-line overlays on hero remains a visual-design judgment call
+- Athlete auth/dashboard real data blocked on SC-112
+- Production install = merge + Vercel deploy (Root Directory `web`)
+- Do not use page-wide `overflow-x: clip` in ways that hide tables/leaderboards
 
 ---
 
