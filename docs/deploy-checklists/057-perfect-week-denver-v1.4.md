@@ -5,7 +5,17 @@
 **Version before (typical PROD):** v1.3 (C-025 Stage 17 Zoom credit)  
 **Version after:** **v1.4**  
 **Date:** 2026-07-25  
-**Status:** Ready for PROD Paste — not live-tested for Denver boundary
+**Status:** **Live Tested in PROD — Denver boundary PASS 2026-08-04**
+
+## PROD closeout
+
+- Actual deployed script header confirmed Version `1.4`, Last updated `2026-07-25`.
+- `CONFIG.timezone` confirmed `America/Denver`.
+- Submission Activity Date normalization confirmed through `Intl.DateTimeFormat`.
+- Controlled Schmidt boundary test used a timestamp where UTC and Denver calendar dates differed.
+- Automation 057 counted the Submission on the correct Denver calendar date.
+- No Perfect Week unlock or XP was created by the helper test.
+- Evidence: `docs/testing/evidence/2026-08-04-package-02-critical-pastes/PACKAGE-02-PROD-CLOSEOUT.md`.
 
 ## What changes
 
@@ -17,38 +27,34 @@
 | Perfect Week rules | No product-rule change |
 | Date helper only | `getDateKeyFromDateOnly` uses `Intl` + `America/Denver` (no UTC ISO slice for activity dates) |
 
-## Trigger (confirm, do not redesign)
+## Trigger
 
 | Item | Value |
 |------|-------|
-| Automation name | `057 - Achievements and Milestones - Calculate Perfect Week Eligibility` (exact UI name may vary — match existing PROD 057) |
+| Automation name | `057 - Achievements and Milestones - Calculate Perfect Week Eligibility` |
 | Trigger table | `Weekly Athlete Summary` |
 | Input | `recordId` = triggering WAS |
 
-## Paste steps (literal)
+## Controlled Denver boundary test — completed
 
-1. Open PROD Automations → existing **057**.
-2. Open the Run script action.
-3. Copy GitHub script from production docblock (`/***************************************************************************************************`) through end (skip top GitHub header).
-4. Confirm header shows **Version: 1.4** and Last updated **2026-07-25**.
-5. Save. Leave trigger as-is.
-6. Do not change Zoom / homework / video field mappings.
+1. Confirmed the correct WAS and linked Submission.
+2. Corrected a misleading WAS `Activity Dates` lookup display from UTC formatting to America/Denver.
+3. Ensured the controlled Submission was same-day and Perfect Week countable.
+4. Used a timestamp where UTC calendar day differed from Denver calendar day.
+5. Ran 057 on the linked WAS.
+6. Confirmed `Perfect Week Daily Check Detail` used the Denver date.
 
-## Controlled Denver boundary test
+## Important diagnosis
 
-1. Pick Schmidt WAS for a known week (Sunday–Saturday).
-2. Ensure a counted Submission has Activity Date / timestamp where **UTC calendar day ≠ Denver calendar day** (example: `2026-07-24T03:00:00.000Z` → Denver `2026-07-23`).
-3. Run 057 on that WAS `recordId`.
-4. Expect Perfect Week Daily Check Detail / counted days to use **Denver** date, not UTC slice.
-5. Regression: seven distinct Denver days + 3 videos + homework + conditional Zoom still required (rules unchanged).
+An earlier `0/7` result was not a date-normalization defect. The tested WAS had no linked Submissions, while the available historical test rows were backdated and therefore failed `Submitted Same Day?`. The final proof used the correctly linked, same-day countable Submission/WAS pair.
 
 ## Rollback
 
-1. Re-paste prior **v1.3** body from git history / prior Airtable revision if available.
-2. Re-run 057 on the same WAS; confirm daily keys match pre-paste expectation for date-only fields (date-only text path was already safe).
+1. Re-paste prior v1.3 body from git history or prior Airtable revision if required.
+2. Re-run 057 on the same WAS and compare counted day keys.
 
 ## Related
 
+- Package closeout: `docs/testing/evidence/2026-08-04-package-02-critical-pastes/PACKAGE-02-PROD-CLOSEOUT.md`
 - Schmidt pack: `docs/testing/SCHMIDT-LIVE-PROOF-PR43-THRESHOLD-057.md`
 - Offline: `xp-date-normalization.test.js`, `agent4-perfect-week-edges.test.js`
-- MIKE-ACTIONS: `docs/overnight/config-xp/MIKE-ACTIONS.md` item #2
