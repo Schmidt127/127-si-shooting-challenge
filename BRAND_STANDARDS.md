@@ -131,7 +131,7 @@ Some repositories still contain older copies such as `docs/brand-system.md` or `
 
 ## Do not
 
-- Subdomains for leaf apps (use path routing under hoopchallenges.com)
+- Subdomains for leaf apps (use path routing under the official public domain; currently fairfieldbasketballclub.com)
 - Mixed multi-app navigation shells inside a leaf app
 - Treat the landing hub as the source of leaf-app business logic
 - Copy one program's dark/light or accent system wholesale into another program
