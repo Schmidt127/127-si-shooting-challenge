@@ -67,15 +67,19 @@ Browser → Next.js Server Component / Route Handler
        → React components
 ```
 
-## Slug strategy (TBD)
+## Slug strategy (SC-111)
 
-Pick one stable public key for `/athletes/[slug]`:
+Public athlete profiles use Enrollment fields:
 
-1. Enrollment record ID (opaque, stable) — easiest
-2. Custom `Public Slug` formula (athlete-name-school-year) — SEO-friendly
-3. Athlete ID + season — multi-season support
+| Field | Role |
+|-------|------|
+| `Public Profile Enabled` | Checkbox — must be checked |
+| `Public Profile Slug` | Stable public path segment for `/athletes/[slug]` |
 
-Document the chosen field here before Phase 2 ships.
+Rules: query by exact slug; require Enabled + `Active?`; duplicate enabled slugs fail closed (not-found + server log). Never use Airtable record IDs in public URLs.
+
+**Wired:** `Web - Leaderboard` preferred for standings; profile query is formula-based (no dedicated view required).  
+**Operator note:** PROD may be missing the `Web - Leaderboard` view — the app falls back to `AND({Active?}, {Lifetime XP Total} >= 0)`.
 
 ## Environment variables
 

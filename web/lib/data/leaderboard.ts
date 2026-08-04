@@ -1,7 +1,8 @@
 import type { LeaderboardData, LeaderboardEntry } from "@/types/leaderboard";
 
-import { asNumber, asText } from "./airtable-values";
+import { asBoolean, asNumber, asText } from "./airtable-values";
 import { mapAttachments } from "./homework";
+import { isValidPublicSlug, normalizeProfileSlug } from "./public-athlete-profile";
 
 /** Raw Enrollments fields consumed by the public leaderboard. */
 export type EnrollmentLeaderboardFields = {
@@ -14,6 +15,8 @@ export type EnrollmentLeaderboardFields = {
   "Lifetime XP Total"?: unknown;
   "Total Shots Counted"?: unknown;
   "School Year"?: unknown;
+  "Public Profile Enabled"?: unknown;
+  "Public Profile Slug"?: unknown;
 };
 export type LeaderboardSortKeys = {
   levelSortOrder: number;
@@ -56,6 +59,14 @@ export function sortLeaderboardRecords<
   });
 }
 
+function resolvePublicProfileSlug(fields: EnrollmentLeaderboardFields): string | null {
+  if (!asBoolean(fields["Public Profile Enabled"])) return null;
+  const raw = asText(fields["Public Profile Slug"], "");
+  if (!raw || raw === "—") return null;
+  const cleaned = normalizeProfileSlug(raw);
+  return isValidPublicSlug(cleaned) ? cleaned : null;
+}
+
 export function mapEnrollmentToLeaderboardEntry(
   record: { id: string; fields: EnrollmentLeaderboardFields },
   rank: number,
@@ -75,6 +86,7 @@ export function mapEnrollmentToLeaderboardEntry(
     headshot: headshot[0] ?? null,
     xp: sortKeys.xp,
     totalShots: sortKeys.totalShots,
+    publicProfileSlug: resolvePublicProfileSlug(fields),
   };
 }
 

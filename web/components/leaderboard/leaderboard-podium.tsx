@@ -1,3 +1,4 @@
+import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
 import { IconCrown } from "@/components/icons/shoot-icons";
 import { formatGrade, formatShots, formatXp } from "@/lib/formatters";
 import { getPodiumAccent } from "@/lib/leaderboard/level-styles";
@@ -72,7 +73,7 @@ function PodiumCard({ entry }: { entry: LeaderboardEntry }) {
             isFirst ? "text-xl sm:text-2xl" : "text-lg"
           }`}
         >
-          {entry.displayName}
+          <AthleteProfileLink name={entry.displayName} slug={entry.publicProfileSlug} />
         </h3>
 
         <p className="mt-1 text-sm text-muted">{entry.school}</p>

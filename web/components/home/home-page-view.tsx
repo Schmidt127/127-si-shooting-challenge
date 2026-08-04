@@ -12,6 +12,7 @@ import {
 
 import { HeroProgressVisual } from "@/components/home/hero-progress-visual";
 import { RegistrationGateway } from "@/components/home/registration-gateway";
+import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
 import { IconChevronRight, IconTrophy } from "@/components/icons/shoot-icons";
 import { AthleteAvatar } from "@/components/leaderboard/athlete-avatar";
 import { LevelBadge } from "@/components/leaderboard/level-badge";
@@ -161,7 +162,10 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
             />
             <div className="min-w-0 flex-1">
               <p className="truncate font-semibold text-foreground">
-                {entry.displayName}
+                <AthleteProfileLink
+                  name={entry.displayName}
+                  slug={entry.publicProfileSlug}
+                />
               </p>
               <LevelBadge level={entry.level} size="sm" />
               <p className="mt-1 font-mono text-xs text-accent-soft">

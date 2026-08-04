@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import {
-  AthleteProfileEmptyState,
   AthleteProfileErrorState,
-  AthleteProfileMissingLinkState,
   AthleteProfileView,
 } from "@/components/athlete/athlete-profile-view";
+import { PUBLIC_SITE_ORIGIN } from "@/lib/app-config";
 import { loadAthleteProfileResult } from "@/lib/data/athlete-profile";
+import { formatGrade } from "@/lib/formatters";
 
 type AthleteProfilePageProps = {
   params: Promise<{ slug: string }>;
@@ -15,40 +16,49 @@ type AthleteProfilePageProps = {
 export async function generateMetadata({ params }: AthleteProfilePageProps): Promise<Metadata> {
   const { slug } = await params;
   const result = await loadAthleteProfileResult(slug);
-  const titleName =
-    result.status === "ok" || result.status === "demo" || result.status === "partial"
-      ? result.data.athlete.displayName
-      : slug;
+
+  if (result.status !== "ok") {
+    return {
+      title: "Athlete profile | 127 SI Shooting Challenge",
+      robots: { index: false, follow: false },
+    };
+  }
+
+  const { identity, performance } = result.data;
+  const schoolBit = identity.school ? ` · ${identity.school}` : "";
+  const gradeBit = identity.grade ? ` · ${formatGrade(identity.grade)}` : "";
+  const description = `${identity.displayName}${schoolBit}${gradeBit} — ${performance.totalShots} shots, ${performance.lifetimeXp} XP in the 127 SI Shooting Challenge.`;
 
   return {
-    title: `${titleName} | 127 SI Shooting Challenge`,
+    title: `${identity.displayName} | 127 SI Shooting Challenge`,
+    description,
+    alternates: {
+      canonical: `${PUBLIC_SITE_ORIGIN}/athletes/${identity.slug}`,
+    },
+    openGraph: {
+      title: `${identity.displayName} | Shooting Challenge`,
+      description,
+      url: `${PUBLIC_SITE_ORIGIN}/athletes/${identity.slug}`,
+      type: "profile",
+    },
     robots: { index: false, follow: false },
   };
 }
 
-/**
- * Athlete profile (dynamic slug).
- * Demo slugs render labelled mock data; live athletes require SC-112 auth + published links.
- */
 export default async function AthleteProfilePage({ params }: AthleteProfilePageProps) {
   const { slug } = await params;
   const result = await loadAthleteProfileResult(slug);
 
   switch (result.status) {
     case "ok":
-    case "demo":
       return <AthleteProfileView data={result.data} />;
-    case "partial":
-      return <AthleteProfileView data={result.data} missing={result.missing} />;
     case "not_found":
-      return <AthleteProfileEmptyState slug={result.slug} />;
-    case "missing_link":
-      return (
-        <AthleteProfileMissingLinkState slug={result.slug} reason={result.reason} />
-      );
+      notFound();
+      return null;
     case "error":
       return <AthleteProfileErrorState message={result.message} />;
     default:
-      return <AthleteProfileEmptyState slug={slug} />;
+      notFound();
+      return null;
   }
 }

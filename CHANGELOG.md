@@ -39,6 +39,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Added
+- **Public athlete profiles / SC-111 (2026-08-04)** — `/shoot/athletes/[slug]` loads allowlisted public Enrollment data when `Public Profile Enabled` + `Public Profile Slug` match active standings rules; duplicate enabled slugs fail closed to not-found. Sitewide `AthleteProfileLink` on homepage standings, leaderboard, and public display. Privacy allowlist excludes contact/payment/internal IDs. Playwright `athlete-profile.spec.ts` + evidence under `docs/testing/evidence/athlete-profiles-2026-08-04/`.
+
 #### Changed
 - **Official landing domain → Fairfield Basketball Club (2026-08-04)** — Production defaults, logo/header/footer home links, metadata `SITE_URL`, and `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` examples now use `https://www.fairfieldbasketballclub.com` (Shooting Challenge remains `/shoot`). `resolveLandingUrl` / `resolveSiteUrl` rewrite legacy `hoopchallenges.com` / `hooopchallenges.com` and malformed/missing env values to the Fairfield origin. Vitest + Playwright coverage for logo/footer links, env normalization, `/shoot` path integrity, and internal nav not bouncing to the landing site. Historical docs/evidence that still mention Hoop Challenges are left as archives unless they describe active config. **SC-149.**
 

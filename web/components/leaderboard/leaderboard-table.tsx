@@ -1,3 +1,4 @@
+import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
 import { IconBolt, IconTarget } from "@/components/icons/shoot-icons";
 import { formatGrade, formatShots, formatXp } from "@/lib/formatters";
 import type { LeaderboardEntry } from "@/types/leaderboard";
@@ -85,7 +86,12 @@ export function LeaderboardTable({
                       headshotUrl={entry.headshot?.url}
                       size="sm"
                     />
-                    <span className="font-semibold text-foreground">{entry.displayName}</span>
+                    <span className="font-semibold text-foreground">
+                      <AthleteProfileLink
+                        name={entry.displayName}
+                        slug={entry.publicProfileSlug}
+                      />
+                    </span>
                   </div>
                 </td>
                 <td className="text-muted">{entry.school}</td>
@@ -120,7 +126,12 @@ export function LeaderboardTable({
                   size="md"
                 />
                 <div>
-                  <h3 className="font-semibold text-foreground">{entry.displayName}</h3>
+                  <h3 className="font-semibold text-foreground">
+                    <AthleteProfileLink
+                      name={entry.displayName}
+                      slug={entry.publicProfileSlug}
+                    />
+                  </h3>
                   <p className="mt-0.5 text-sm text-muted">{entry.school}</p>
                   <p className="text-xs text-muted/80">{formatGrade(entry.grade)}</p>
                 </div>
