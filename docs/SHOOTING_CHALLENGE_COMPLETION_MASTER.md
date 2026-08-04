@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-04** (SC-111 public athlete profiles — Built in Repository; prior: PR #52/#53/#54 integration) |
+| Last updated | **2026-08-04** (SC-111 public athlete profiles — Live Tested in PROD via PR #58 / Vercel `dpl_wakFzRMAX2HJAyzX8eBoPxquVXEj`) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,9 +65,9 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **149** |
 | Complete | 12 |
-| Live Tested in PROD | 15 |
+| Live Tested in PROD | 16 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 30 |
+| Built but not installed *(Built in Repository)* | 29 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
@@ -75,13 +75,13 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-### Dashboard reconciliation (2026-08-04 — SC-111 public athlete profiles)
+### Dashboard reconciliation (2026-08-04 — SC-111 production publish)
 
 | SC | Old status | New status | Source of change | Evidence |
 |----|------------|------------|------------------|----------|
-| SC-111 | Built in Repository (mock/demo) | Built in Repository (live Airtable adapter) | Public profiles by slug + sitewide links | `docs/testing/evidence/athlete-profiles-2026-08-04/` |
+| SC-111 | Built in Repository | Live Tested in PROD | PR #58 merge + Vercel production READY + live Playwright/HTML checks | `docs/testing/evidence/athlete-profiles-2026-08-04/`; merge `ce7723a`; deploy `dpl_wakFzRMAX2HJAyzX8eBoPxquVXEj` |
 
-**Net math:** Status label unchanged (still Built until Vercel install). Dependency on SC-112 auth removed for this public package.
+**Net math:** LT 15→**16**; Built 30→**29**. Installed briefly then immediately Live Tested after production verification the same day.
 
 ### Dashboard reconciliation (2026-08-04 — PR #52/#53/#54 integration)
 
@@ -262,7 +262,7 @@ Columns:
 | SC-108 | Website | Zoom public pages | Live Tested in PROD | Zoom meetings views live; detail pages render; recording-credit empty state OK | Refresh expired Cover Media URLs (EXT-QA-004); web now hides 410 images | SC-093 | — | zoom views; browser QA | — | P2 | 2026-07-25 |
 | SC-109 | Website | Game Manual from config | Installed in PROD | `/game-manual` renders live **XP Reward Rules** + **Levels** on PROD; Adobe PDF link env still empty (“Manual link not configured”) | Set `NEXT_PUBLIC_GAME_MANUAL_URL` (EXT-QA-001); editorial copy; Shot Milestones surface later | SC-032, SC-082 | Amounts from config only | `GAME-MANUAL-CONFIG-AUDIT.md`; browser QA | Approve public wording + set env | P2 | 2026-07-25 |
 | SC-110 | Website | Public display page | Installed in PROD | Public display view + loading states; Schmidt visible in browser QA | Wire Presentation fields; real season year after School Year fix | SC-054 | — | public-display; browser QA | — | P2 | 2026-07-25 |
-| SC-111 | Website | Athlete profiles (real data, not mocks) | Built in Repository | Live Airtable public profiles by `Public Profile Slug` + Enabled; sitewide `AthleteProfileLink`; privacy allowlist; Playwright + screenshots 2026-08-04 | Vercel deploy + Mike live URL check; optional recreate `Web - Leaderboard` view | SC-103 | No browser token; duplicate slugs fail closed; noindex unchanged | `docs/testing/evidence/athlete-profiles-2026-08-04/`; `web/lib/airtable/queries.ts` `fetchPublicAthleteProfileBySlug` | — | P2 | 2026-08-04 |
+| SC-111 | Website | Athlete profiles (real data, not mocks) | Live Tested in PROD | PR #58 merged; Vercel prod READY; live `/athletes/testing-schmidt` + standings/leaderboard/public-display links; privacy + unknown-slug checks PASS | Optional: recreate `Web - Leaderboard` view (fallback OK) | SC-103 | No browser token; duplicate slugs fail closed; noindex unchanged | `docs/testing/evidence/athlete-profiles-2026-08-04/`; merge `ce7723a2e219f63539ba3db0685ecd20bc5d28e2`; deploy `dpl_wakFzRMAX2HJAyzX8eBoPxquVXEj` | — | P2 | 2026-08-04 |
 | SC-112 | Website | Athlete auth + dashboard | Decision Needed | Decision matrix + safe scaffolding (`hasAthleteSession` always false); mock dashboard/profile remain labelled demo | Mike pick approach; then schema + session implementation | — | Out of scope: web writes for submissions; no fake login UI | `docs/overnight/web-integration/ATHLETE-AUTH-DECISION.md` | **Pick auth approach** (recommend parent magic-link) | P2 | 2026-07-23 |
 | SC-113 | Website | Loading, empty, and error states | Live Tested in PROD | Shared UI states + recent loading routes; **2026-07-25** verified demo/empty/error labels (dashboard demo, game-manual missing PDF, admin auth placeholder, missing athlete states) | Keep states aligned when SC-112 lands | — | — | `BROWSER-QA-REPORT-2026-07-25.md` | — | P2 | 2026-07-25 |
 | SC-114 | Website | Softr cutover | Superseded | Softr declared **Obsolete / Not Used**; `/shoot` is the active public UI | None — do not plan Softr activation or dual-run cutover | SC-102–SC-113 | Historical cutover docs remain Historical Reference Only | `docs/challenge-year/SOFTR-SEASON-ACTIVATION.md` | **Resolved: Softr not used** | — | 2026-07-24 |
