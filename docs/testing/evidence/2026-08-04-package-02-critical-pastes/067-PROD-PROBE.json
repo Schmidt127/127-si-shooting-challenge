@@ -1,0 +1,595 @@
+{
+  "tables": {
+    "Final Reflection Quiz Submissions": "tbl6ORxLs192mXEWp",
+    "Homework Completions": "tblv58ppTFDBXb3nv",
+    "FBC Curriculum - SYNC": "tblUuxwYlX4EQ9MKE",
+    "Enrollments": "tbl3PFmwbRoabu1YV",
+    "XP Events": "tblmGSiNA1akW8KnU",
+    "Submission Assets": "tblhMLKxQK77agtME",
+    "Submissions": "tblEVjVpGGlPTsYSt"
+  },
+  "quiz_fields": [
+    {
+      "name": "Quiz Submission Name",
+      "type": "formula"
+    },
+    {
+      "name": "Enrollment",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Homework Completion",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Submitted At",
+      "type": "createdTime"
+    },
+    {
+      "name": "Processing Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Processing Error",
+      "type": "multilineText"
+    },
+    {
+      "name": "Coach/Admin Notes",
+      "type": "multilineText"
+    },
+    {
+      "name": "How did the athlete complete this reflection quiz?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q1 \u2014 Shot Tracker Usage: A player wants to improve, but sometimes they are tempted to only count makes or leave out bad shooting days. What is the best reason to track shots honestly?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q2 \u2014 Website Exploration: Why should the athlete regularly use the challenge site to check their progress and work?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q3 \u2014 The Choice is Yours: If an athlete is having an off day in practice, what is the best mindset to use?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q4 \u2014 Shooting Form and Technique: Why should players learn to focus on their form and technique during practice, even when they feel rushed or pressured?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q5 \u2014 Self Esteem and Accomplishment: What helps a player actually build self-esteem and confidence during the challenge?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q6 \u2014 Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q7 \u2014 Touch and Talk: If a teammate looks discouraged or frustrated, what is usually the best response?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q8 \u2014 5 Spot Shooting Locations: Why do players practice shooting from all 5 main spots, and not just their favorite one?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q9 \u2014 Mikan Drill: What is the best intention for doing the Mikan Drill during the challenge?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q10 \u2014 Goal Setting \u2014 What GOATS Do!: How do the best athletes approach goal setting in a program like this?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q11 \u2014 Thank You Note: What is the biggest lesson behind the Thank You Note activity in this program?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q12 \u2014 Coach Yourself: When a player is struggling or frustrated, what is a strong approach to coaching themselves?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q13 \u2014 Visualization: Why use visualization in the challenge or before a game or practice?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q14 \u2014 Build Your Freethrow Routine: What is the purpose of building a repeatable free throw routine?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q15 \u2014 Bad Habit I Need to Fix: What is the best way to approach a bad habit noticed during the challenge?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q16 \u2014 Sportsmanship: What does true sportsmanship look like in the context of this challenge?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q17 \u2014 Final Reflection Challenge: What is the purpose of the final reflection challenge for athletes?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q18 \u2014 Shot Tracker Summary: What is the real value of completing the full Shot Tracker and reviewing its data at the end?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Q1 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q2 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q3 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q4 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q5 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q6 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q7 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q8 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q9 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q10 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q11 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q12 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q13 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q14 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q15 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q16 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q17 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Q18 Correct?",
+      "type": "formula"
+    },
+    {
+      "name": "Score",
+      "type": "formula"
+    },
+    {
+      "name": "Target Score Met?",
+      "type": "formula"
+    },
+    {
+      "name": "Quiz Result Summary",
+      "type": "formula"
+    },
+    {
+      "name": "Homework 17 Credit Earned?",
+      "type": "formula"
+    },
+    {
+      "name": "Family Discussion Bonus?",
+      "type": "formula"
+    },
+    {
+      "name": "Correct Answer Distribution",
+      "type": "multilineText"
+    },
+    {
+      "name": "Quiz Version",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Homework Credit Rule",
+      "type": "multilineText"
+    },
+    {
+      "name": "Created Time",
+      "type": "createdTime"
+    },
+    {
+      "name": "Coach Feedback",
+      "type": "multipleLookupValues"
+    }
+  ],
+  "hc_fields": [
+    {
+      "name": "Homework Completion Full Name",
+      "type": "formula"
+    },
+    {
+      "name": "Review Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Google Drive View URL",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Coach Feedback",
+      "type": "multilineText"
+    },
+    {
+      "name": "Extra Credit?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Extra Credit XP Awarded",
+      "type": "number"
+    },
+    {
+      "name": "Satisfactory?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Review Complete",
+      "type": "checkbox"
+    },
+    {
+      "name": "Base XP Awarded",
+      "type": "number"
+    },
+    {
+      "name": "Total Homework XP Awarded",
+      "type": "formula"
+    },
+    {
+      "name": "Award Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "XP Events",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Parent Feedback Ready?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Upload Ready?",
+      "type": "formula"
+    },
+    {
+      "name": "Parent Feedback Subject",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Parent Feedback Sent?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Parent Feedback Sent On",
+      "type": "dateTime"
+    },
+    {
+      "name": "Uploaded At",
+      "type": "dateTime"
+    },
+    {
+      "name": "Writeback Complete?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Submission Date",
+      "type": "date"
+    },
+    {
+      "name": "Asset Slot",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Homework Completions RID",
+      "type": "formula"
+    },
+    {
+      "name": "Submissions - Linked",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Full Athlete Name - Backward (from Enrollment)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Google Drive Download URL",
+      "type": "url"
+    },
+    {
+      "name": "Homework Completion Key",
+      "type": "formula"
+    },
+    {
+      "name": "Weekly Athlete Summary",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Enrollment",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Reviewed By",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Reviewed At",
+      "type": "dateTime"
+    },
+    {
+      "name": "Grade Band",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Weekly Athlete Summary Link",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Completion Summary",
+      "type": "formula"
+    },
+    {
+      "name": "Asset Label",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Original File Name",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Asset Type",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Asset Purpose",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Source System",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Airtable Attachment",
+      "type": "multipleAttachments"
+    },
+    {
+      "name": "Google Drive File ID",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Google Drive Folder ID",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Google Drive Folder URL",
+      "type": "url"
+    },
+    {
+      "name": "Upload Error",
+      "type": "multilineText"
+    },
+    {
+      "name": "Notes",
+      "type": "multilineText"
+    },
+    {
+      "name": "Submission Asset - Linked",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Asset Key",
+      "type": "formula"
+    },
+    {
+      "name": "Upload Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Parent Feedback Send Error",
+      "type": "multilineText"
+    },
+    {
+      "name": "Google Drive File URL",
+      "type": "url"
+    },
+    {
+      "name": "Created",
+      "type": "createdTime"
+    },
+    {
+      "name": "Item Type",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Automation Error",
+      "type": "multilineText"
+    },
+    {
+      "name": "Submission Asset: Original File Name (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submission Asset: Google Drive File URL (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submission Asset: Google Drive File ID (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submission Asset: Upload Status (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submission Asset: Uploaded At (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submission Asset: Upload Error (lookup)",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Total Linked Submission Assets (rollup)",
+      "type": "rollup"
+    },
+    {
+      "name": "Total Uploaded Submission Assets (rollup)",
+      "type": "rollup"
+    },
+    {
+      "name": "Submission Asset Review Summary (formula)",
+      "type": "formula"
+    },
+    {
+      "name": "Submitted Asset File Names",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submitted Asset File Links",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submitted Asset Upload Statuses",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submitted Asset Uploaded At",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Submitted Asset File IDs",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Week",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Item Slot",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Homework",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Submitted File Review Summary",
+      "type": "formula"
+    },
+    {
+      "name": "All Submitted Files Uploaded?",
+      "type": "formula"
+    },
+    {
+      "name": "Completion Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Submission Assets",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": " Submission Asset Count",
+      "type": "formula"
+    },
+    {
+      "name": "Final Reflection Quiz Submissions",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Linked Asset Duplicate?",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Linked Asset Duplicate Status",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Linked Asset Duplicate Notes",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Linked Asset Duplicate Match Record",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Linked Asset Duplicate Match Strength",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Linked Asset Duplicate Review Status",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Final Reflection Quiz Submissions 2",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Activity XP Display Label",
+      "type": "formula"
+    },
+    {
+      "name": "Testing Scenarios",
+      "type": "multipleRecordLinks"
+    }
+  ],
+  "hw17": [
+    {
+      "id": "rec8oexrgOV5OWCRw",
+      "createdTime": "2026-06-21T00:52:02.000Z",
+      "fields": {
+        "Homework Number": "HW 17",
+        "Active?": true,
+        "Week": [
+          "recrTwxqXz31fNZ7e"
+        ]
+      }
+    }
+  ],
+  "schmidt": {
+    "id": "recgP9qZYjAhE7NXm",
+    "createdTime": "2026-05-02T02:25:38.000Z",
+    "fields": {
+      "Athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "Active?": true,
+      "Grade Band": [
+        "recK7BDVSpHy2ipCS"
+      ]
+    }
+  },
+  "quiz_schmidt": [],
+  "hc_schmidt": []
+}

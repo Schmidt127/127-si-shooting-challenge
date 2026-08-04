@@ -94,10 +94,12 @@ Use Enrollment `recgP9qZYjAhE7NXm` only.
 
 ## Status after this packet
 
-| SC | After repo packet | After PROD paste | After Schmidt proof |
-|----|-------------------|------------------|---------------------|
-| SC-014 | Built (decision locked) | Built / install confirmed | Track under SC-013 |
-| SC-013 | Built + install packet ready | Installed in PROD | Live Tested in PROD |
+| SC | After repo packet | After PROD paste | After Schmidt proof (2026-08-04) |
+|----|-------------------|------------------|----------------------------------|
+| SC-014 | Built (decision locked) | Install confirmed | **Live Tested in PROD** |
+| SC-013 | Built + install packet ready | Installed in PROD | **Live Tested in PROD** |
+
+**PROD proof filed:** `docs/testing/evidence/2026-08-04-package-02-critical-pastes/` (quizzes `recxtTv0AD7G3XpGv` / `recFsN2KruSnerfns`; HC `recrBnHbLvDpFyIeO`; XP `rec6xE4V1t0atiTIP`).
 
 ## Offline verification already green
 
