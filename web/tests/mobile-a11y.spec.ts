@@ -161,7 +161,8 @@ test.describe("768px tablet usability", () => {
     await expect(
       page.getByRole("navigation", { name: "Shooting Challenge navigation" }),
     ).toBeVisible();
-    await expect(page.getByTestId("mobile-nav-toggle")).toHaveCount(0);
+    // Toggle remains in the DOM under md:hidden — assert it is not visible.
+    await expect(page.getByTestId("mobile-nav-toggle")).toBeHidden();
   });
 });
 
