@@ -83,7 +83,7 @@ export function AthleteDashboardView({ data }: AthleteDashboardViewProps) {
               <CtaLink
                 href={`/athletes/${data.athlete.slug}`}
                 variant="link"
-                className="mt-2 px-0"
+                className="sc-text-link mt-2 min-h-11 px-0"
               >
                 Open public profile
               </CtaLink>

@@ -95,7 +95,7 @@ export function FeatureCard({
   return (
     <Link
       href={href}
-      className="group block h-full rounded-lg focus-visible:outline-none"
+      className="group block h-full rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-orange focus-visible:ring-offset-2"
     >
       {body}
     </Link>

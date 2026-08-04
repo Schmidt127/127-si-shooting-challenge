@@ -7,3 +7,4 @@ export { SiteContainer } from "./site-container";
 export { SiteFooter } from "./site-footer";
 export { SiteHeader } from "./site-header";
 export { SiteSection } from "./site-section";
+export { SkipToContent } from "./skip-to-content";
