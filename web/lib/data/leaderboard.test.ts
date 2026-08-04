@@ -58,7 +58,40 @@ describe("leaderboard mapping", () => {
       },
       xp: 1500,
       totalShots: 900,
+      publicProfileSlug: null,
     });
+  });
+
+  it("maps enabled public profile slug onto leaderboard entries", () => {
+    const entry = mapEnrollmentToLeaderboardEntry(
+      {
+        id: "recTEST2",
+        fields: {
+          "Full Athlete Name": "Testing Schmidt",
+          "Public Profile Enabled": true,
+          "Public Profile Slug": "testing-schmidt",
+          "Lifetime XP Total": 81,
+          "Total Shots Counted": 100,
+        },
+      },
+      2,
+    );
+    expect(entry.publicProfileSlug).toBe("testing-schmidt");
+  });
+
+  it("ignores slug when public profile is disabled", () => {
+    const entry = mapEnrollmentToLeaderboardEntry(
+      {
+        id: "recTEST3",
+        fields: {
+          "Full Athlete Name": "Plain Athlete",
+          "Public Profile Enabled": false,
+          "Public Profile Slug": "should-not-link",
+        },
+      },
+      3,
+    );
+    expect(entry.publicProfileSlug).toBeNull();
   });
 
   it("ranks by level, then XP, then total shots", () => {

@@ -14,12 +14,14 @@ Rules for what the website may show on **unauthenticated** pages (leaderboard, p
 
 ## Never expose on public routes
 
-- Parent / guardian email or phone
-- Full home addresses
-- Internal record IDs in UI (URLs may use opaque slugs)
+- Never expose parent / guardian email or phone
+- Full home addresses / ZIP
+- Internal record IDs in UI or public URLs (use `Public Profile Slug`)
 - `XP Reason Debug`, automation debug fields, Source Key internals
 - Unpublished coach notes on video feedback
 - Other athletes' detailed submission stats unless leaderboard-aggregated
+
+Public profiles (`/athletes/[slug]`) may show approved Enrollment shooting totals, streaks, public gate helpers, recent counted submissions, weekly summaries, and visible achievement unlocks — never contact or payment fields.
 
 ## Auth-required (participant dashboard)
 

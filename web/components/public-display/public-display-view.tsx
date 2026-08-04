@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 
+import { AthleteProfileLink } from "@/components/athlete/athlete-profile-link";
 import { BrandLogo } from "@/components/brand/brand-logo";
 import { AmbientPage } from "@/components/catalog/ambient-page";
 import { IconBasketball, IconTrophy } from "@/components/icons/shoot-icons";
@@ -75,7 +76,10 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
                   />
                 </div>
                 <p className="mt-3 truncate text-base font-bold text-foreground">
-                  {entry.displayName}
+                  <AthleteProfileLink
+                    name={entry.displayName}
+                    slug={entry.publicProfileSlug}
+                  />
                 </p>
                 <LevelBadge level={entry.level} size="sm" />
                 <p className="mt-2 font-mono text-sm font-semibold text-accent-soft">

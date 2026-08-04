@@ -28,6 +28,26 @@ import {
   inferSeasonLabel,
   type EnrollmentLeaderboardFields,
 } from "@/lib/data/leaderboard";
+import {
+  buildPublicAthleteProfile,
+  escapeAirtableString,
+  isValidPublicSlug,
+  mapPublicAchievements,
+  mapRecentSubmissions,
+  mapRecentXpEvents,
+  mapWeeklySummaries,
+  mergeRecentActivity,
+  normalizeProfileSlug,
+  type PublicAchievementDefFields,
+  type PublicEnrollmentFields,
+  type PublicLevelFields,
+  type PublicSubmissionFields,
+  type PublicUnlockFields,
+  type PublicWasFields,
+  type PublicXpEventFields,
+} from "@/lib/data/public-athlete-profile";
+import { asText, linkedRecordIds } from "@/lib/data/airtable-values";
+import type { PublicAthleteProfile } from "@/types/public-athlete-profile";
 import type { AchievementCatalogData } from "@/types/achievements";
 import type { HomeworkAssignment, HomeworkCatalogData } from "@/types/homework";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
@@ -53,20 +73,18 @@ import {
 /** Airtable table names used by public queries + reserved for future dashboard/admin. */
 export const AIRTABLE_TABLES = {
   enrollments: "Enrollments",
-  /** Reserved — athlete dashboard / admin weekly readiness (not queried by public pages yet). */
   weeklySummary: "Weekly Athlete Summary",
-  /** Reserved — athlete activity / admin XP diagnostics (not queried by public pages yet). */
   xpEvents: "XP Events",
   levels: "Levels",
   achievements: "Achievements",
-  /** Reserved — dashboard homework widgets (not queried by public pages yet). */
+  achievementUnlocks: "Athlete Achievement Unlocks",
+  submissions: "Submissions",
   homeworkCompletions: "Homework Completions",
   homeworkCurriculum: "FBC Curriculum - SYNC",
   weeks: "Weeks",
   tutorials: "Tutorials",
   zoomMeetings: "Zoom Meetings",
   xpRewardRules: "XP Reward Rules",
-  /** Reserved — dashboard video feedback widgets (not queried by public pages yet). */
   videoFeedback: "Video Feedback",
 } as const;
 
@@ -81,6 +99,8 @@ export const LEADERBOARD_FIELDS = [
   "Lifetime XP Total",
   "Total Shots Counted",
   "School Year",
+  "Public Profile Enabled",
+  "Public Profile Slug",
 ] as const;
 
 const LEADERBOARD_VIEW = "Web - Leaderboard";
@@ -622,4 +642,325 @@ async function listActiveXpRuleRecords(): Promise<
 export async function fetchXpRuleCatalog(): Promise<XpRuleCatalogData> {
   const records = await listActiveXpRuleRecords();
   return buildXpRuleCatalog(records);
+}
+
+/** Explicit allowlist for public athlete profile enrollment reads. */
+export const PUBLIC_PROFILE_ENROLLMENT_FIELDS = [
+  "Full Athlete Name",
+  "School Name Lookup",
+  "Grade",
+  "School Year",
+  "Athlete Headshot",
+  "Public Profile Enabled",
+  "Public Profile Slug",
+  "Active?",
+  "Current Level - Public Facing Display",
+  "Level Sort Order - For Softr",
+  "Lifetime XP Total",
+  "XP Progress in Current Level",
+  "XP Needed for Next Level",
+  "Current Level XP Required",
+  "Next Level XP Required",
+  "Next Level",
+  "Total Shots Counted",
+  "Total Makes Submitted",
+  "Overall FG Attempted",
+  "Overall FG Made",
+  "Overall FG %",
+  "Total 2PT Attempted",
+  "Total 2PT Made",
+  "Overall 2PT %",
+  "Total 3PT Attempted",
+  "Total 3PT Made",
+  "Overall 3PT %",
+  "Total FT Attempted",
+  "Total FT Made",
+  "Overall FT %",
+  "Total Submissions",
+  "Current Shooting Streak",
+  "Current Shooting Streak As Of",
+  "Current Shooting Streak Status",
+  "Longest Streak Days",
+  "Target Goal Shots",
+  "Goal Met?",
+  "Public Progression Status",
+  "Public Gate Missing Reason",
+  "Public Missing Submissions",
+  "Public Missing Homework",
+  "Public Missing Videos",
+  "Public Missing Zoom",
+  "Public Missing Streak",
+  "Program Instance Name Only",
+  "Submissions",
+  "Weekly Athlete Summary",
+  "Athlete Achievement Unlocks",
+  "XP Events",
+] as const;
+
+const PUBLIC_PROFILE_REVALIDATE_SECONDS = 120;
+const PUBLIC_PROFILE_RECENT_SUBMISSIONS = 12;
+const PUBLIC_PROFILE_RECENT_XP = 12;
+const PUBLIC_PROFILE_WEEKLY_LIMIT = 8;
+
+const PUBLIC_SUBMISSION_FIELDS = [
+  "Activity Date",
+  "Total Shots Counted",
+  "Total Makes Counted",
+  "Submission Stat Mode",
+  "Count This Submission?",
+] as const;
+
+const PUBLIC_WAS_FIELDS = [
+  "Weekly Email Week Label",
+  "Total Shots This Week",
+  "Days Logged This Week",
+  "XP Earned This Week",
+  "Goal Completion %",
+  "Momentum Status",
+  "Homework Completed?",
+  "Perfect Week Eligible?",
+  "Perfect Week Unlock",
+  "Week",
+] as const;
+
+const PUBLIC_UNLOCK_FIELDS = [
+  "Active?",
+  "Visible?",
+  "Achievement",
+  "Achievement Type",
+  "Category",
+  "Rarity",
+  "Date Unlocked",
+  "XP Awarded",
+  "Trigger Value",
+  "Shot Milestone",
+] as const;
+
+const PUBLIC_XP_EVENT_FIELDS = [
+  "Active?",
+  "Active XP Points",
+  "XP Reason Public",
+  "XP Source",
+  "Created",
+] as const;
+
+/**
+ * Load one enabled public athlete profile by slug.
+ * Returns null for missing, disabled, inactive, invalid, or duplicate slugs.
+ * Duplicate enabled slugs are logged server-side and fail closed (null).
+ */
+export async function fetchPublicAthleteProfileBySlug(
+  rawSlug: string,
+): Promise<PublicAthleteProfile | null> {
+  const slug = normalizeProfileSlug(rawSlug);
+  if (!isValidPublicSlug(slug)) return null;
+
+  const escaped = escapeAirtableString(slug);
+  const filterByFormula = `AND({Public Profile Enabled}=1,{Active?},LOWER({Public Profile Slug})=LOWER("${escaped}"))`;
+
+  const enrollmentResponse = await listAirtableRecords<PublicEnrollmentFields>({
+    tableName: AIRTABLE_TABLES.enrollments,
+    maxRecords: 5,
+    fields: [...PUBLIC_PROFILE_ENROLLMENT_FIELDS],
+    filterByFormula,
+    revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+  });
+
+  if (enrollmentResponse.records.length === 0) {
+    return null;
+  }
+
+  if (enrollmentResponse.records.length > 1) {
+    console.error(
+      `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments). Correct in Airtable: ensure only one Active enrollment has this slug with Public Profile Enabled. Failing closed.`,
+    );
+    return null;
+  }
+
+  const enrollment = enrollmentResponse.records[0];
+  const fields = enrollment.fields;
+
+  const nextLevelIds = linkedRecordIds(fields["Next Level"]);
+  const nextLevelId = nextLevelIds[0] ?? null;
+  const submissionIds = linkedRecordIds(fields.Submissions).slice(0, 40);
+  const wasIds = linkedRecordIds(fields["Weekly Athlete Summary"]).slice(0, 20);
+  const unlockIds = linkedRecordIds(fields["Athlete Achievement Unlocks"]).slice(0, 50);
+  const xpIds = linkedRecordIds(fields["XP Events"]).slice(0, 40);
+
+  function recordIdOrFilter(ids: string[]): string | null {
+    if (ids.length === 0) return null;
+    if (ids.length === 1) return `RECORD_ID()="${ids[0]}"`;
+    return `OR(${ids.map((id) => `RECORD_ID()="${id}"`).join(",")})`;
+  }
+
+  const submissionFilter = recordIdOrFilter(submissionIds);
+  const wasFilter = recordIdOrFilter(wasIds);
+  const unlockFilter = recordIdOrFilter(unlockIds);
+  const xpFilter = recordIdOrFilter(xpIds);
+
+  const [
+    submissionResponse,
+    wasResponse,
+    unlockResponse,
+    xpResponse,
+    leaderboard,
+    nextLevelResponse,
+  ] = await Promise.all([
+    submissionFilter
+      ? listAirtableRecords<PublicSubmissionFields>({
+          tableName: AIRTABLE_TABLES.submissions,
+          maxRecords: PUBLIC_PROFILE_RECENT_SUBMISSIONS,
+          fields: [...PUBLIC_SUBMISSION_FIELDS],
+          filterByFormula: submissionFilter,
+          sort: [{ field: "Activity Date", direction: "desc" }],
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicSubmissionFields }> }),
+    wasFilter
+      ? listAirtableRecords<PublicWasFields>({
+          tableName: AIRTABLE_TABLES.weeklySummary,
+          maxRecords: PUBLIC_PROFILE_WEEKLY_LIMIT,
+          fields: [...PUBLIC_WAS_FIELDS],
+          filterByFormula: wasFilter,
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicWasFields }> }),
+    unlockFilter
+      ? listAirtableRecords<PublicUnlockFields>({
+          tableName: AIRTABLE_TABLES.achievementUnlocks,
+          maxRecords: 50,
+          fields: [...PUBLIC_UNLOCK_FIELDS],
+          filterByFormula: unlockFilter,
+          sort: [{ field: "Date Unlocked", direction: "desc" }],
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicUnlockFields }> }),
+    xpFilter
+      ? listAirtableRecords<PublicXpEventFields>({
+          tableName: AIRTABLE_TABLES.xpEvents,
+          maxRecords: PUBLIC_PROFILE_RECENT_XP,
+          fields: [...PUBLIC_XP_EVENT_FIELDS],
+          filterByFormula: xpFilter,
+          sort: [{ field: "Created", direction: "desc" }],
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicXpEventFields }> }),
+    fetchLeaderboard().catch(() => null),
+    nextLevelId
+      ? listAirtableRecords<PublicLevelFields>({
+          tableName: AIRTABLE_TABLES.levels,
+          maxRecords: 1,
+          fields: ["Level Name", "Level Name with Color"],
+          filterByFormula: `RECORD_ID()="${nextLevelId}"`,
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicLevelFields }> }),
+  ]);
+
+  const countedSubmissions = submissionResponse.records.filter((record) => {
+    const counted = record.fields["Count This Submission?"];
+    return counted === 1 || counted === true || Number(counted) === 1;
+  });
+
+  const visibleUnlocks = unlockResponse.records.filter(
+    (record) =>
+      (record.fields["Active?"] === true || record.fields["Active?"] === 1) &&
+      (record.fields["Visible?"] === true ||
+        record.fields["Visible?"] === 1 ||
+        (Array.isArray(record.fields["Visible?"]) &&
+          record.fields["Visible?"].some((v) => v === true || v === 1))),
+  );
+
+  const achievementIds = [
+    ...new Set(visibleUnlocks.flatMap((record) => linkedRecordIds(record.fields.Achievement))),
+  ];
+
+  const weekIds = [
+    ...new Set(wasResponse.records.flatMap((record) => linkedRecordIds(record.fields.Week))),
+  ];
+
+  const [achievementDefs, weekRecords] = await Promise.all([
+    achievementIds.length
+      ? listAirtableRecords<PublicAchievementDefFields>({
+          tableName: AIRTABLE_TABLES.achievements,
+          maxRecords: Math.min(100, achievementIds.length + 5),
+          fields: [
+            "Achievement Name",
+            "Badge Icon Name",
+            "Achievement Type",
+            "Category",
+            "Rarity",
+            "Active?",
+            "Visible?",
+          ],
+          filterByFormula:
+            achievementIds.length === 1
+              ? `RECORD_ID()="${achievementIds[0]}"`
+              : `OR(${achievementIds.map((id) => `RECORD_ID()="${id}"`).join(",")})`,
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: PublicAchievementDefFields }> }),
+    weekIds.length
+      ? listAirtableRecords<{ "Week Name"?: unknown }>({
+          tableName: AIRTABLE_TABLES.weeks,
+          maxRecords: Math.min(50, weekIds.length + 5),
+          fields: ["Week Name"],
+          filterByFormula:
+            weekIds.length === 1
+              ? `RECORD_ID()="${weekIds[0]}"`
+              : `OR(${weekIds.map((id) => `RECORD_ID()="${id}"`).join(",")})`,
+          revalidateSeconds: PUBLIC_PROFILE_REVALIDATE_SECONDS,
+        })
+      : Promise.resolve({ records: [] as Array<{ id: string; fields: { "Week Name"?: unknown } }> }),
+  ]);
+
+  const defsById = new Map(
+    achievementDefs.records.map((record) => {
+      const name = asText(record.fields["Achievement Name"], "");
+      return [
+        record.id,
+        {
+          name,
+          badgeIconName: asText(record.fields["Badge Icon Name"], "") || null,
+        },
+      ] as const;
+    }),
+  );
+
+  const weekNameById = new Map(
+    weekRecords.records.map((record) => [
+      record.id,
+      asText(record.fields["Week Name"], "Week"),
+    ]),
+  );
+
+  const nextLevelFields = nextLevelResponse.records[0]?.fields;
+  const nextLevelName =
+    asText(nextLevelFields?.["Level Name with Color"], "") ||
+    asText(nextLevelFields?.["Level Name"], "") ||
+    null;
+
+  const displayName = asText(fields["Full Athlete Name"], "");
+  const rank =
+    leaderboard?.entries.find(
+      (entry) =>
+        entry.publicProfileSlug === slug ||
+        (displayName && entry.displayName === displayName),
+    )?.rank ?? null;
+
+  const recentActivity = mergeRecentActivity(
+    mapRecentSubmissions(countedSubmissions),
+    mapRecentXpEvents(xpResponse.records),
+    12,
+  );
+
+  return buildPublicAthleteProfile({
+    slug,
+    fields,
+    rank,
+    nextLevelName: nextLevelName === "—" ? null : nextLevelName,
+    recentActivity,
+    weekly: mapWeeklySummaries(wasResponse.records, weekNameById),
+    achievements: mapPublicAchievements(visibleUnlocks, defsById),
+  });
 }
