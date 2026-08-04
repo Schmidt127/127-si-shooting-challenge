@@ -102,6 +102,7 @@ test.describe("hub and external link safety", () => {
 
     const footerHome = page.getByRole("link", {
       name: "Fairfield Basketball Club home",
+      exact: true,
     });
     await expect(footerHome).toBeVisible();
     await expect(footerHome).toHaveAttribute(

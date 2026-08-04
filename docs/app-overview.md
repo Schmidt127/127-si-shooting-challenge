@@ -10,16 +10,16 @@ The **127 Sports Intensity Shooting Challenge** participant website — leaderbo
 
 ## Public path
 
-`https://www.hoopchallenges.com/shoot` (`basePath` `/shoot`)
+`https://www.fairfieldbasketballclub.com/shoot` (`basePath` `/shoot`)
 
 ## This repo is not
 
-- The Hoop Challenges landing page → `hoopchallenges-landing`
+- The club landing page (official: fairfieldbasketballclub.com; historical repo name may still be `hoopchallenges-landing`)
 - JR REF, Brackets, Dribble, or Rankings → separate repos
 
 ## Return to landing
 
-App header **Home** uses `NEXT_PUBLIC_LANDING_URL` → www.hoopchallenges.com
+App header **Home** uses `NEXT_PUBLIC_LANDING_URL` → www.fairfieldbasketballclub.com
 
 ## Key paths in repo
 

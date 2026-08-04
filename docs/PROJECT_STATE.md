@@ -22,7 +22,7 @@ Last updated: **2026-07-27** (Agent 1 repo hardening: truth audit, SCN-030–043
 |------|--------|
 | **Production branch** | `master` |
 | **Current production commit** | Verify dynamically: `git fetch origin && git rev-parse origin/master` — application release `9110a71` (PR #42); closeout tip historically `4ffad3c` / `6aa60c9`; see [`launch-certification/LAUNCH-CLOSEOUT.md`](./launch-certification/LAUNCH-CLOSEOUT.md) |
-| **Public URL** | https://www.hoopchallenges.com/shoot |
+| **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
 | **Vercel root** | `web/` |
@@ -154,8 +154,8 @@ Manual Build/Send checkboxes remain available for controlled one-offs; scheduled
 | Setting | Value |
 |---------|--------|
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
-| `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
-| `NEXT_PUBLIC_SITE_URL` | Production shoot URL (set in Vercel) |
+| `NEXT_PUBLIC_LANDING_URL` | `https://www.fairfieldbasketballclub.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.fairfieldbasketballclub.com/shoot` (set in Vercel) |
 | `NEXT_PUBLIC_GAME_MANUAL_URL` | Optional — game manual embed URL |
 | `SITE_ACCESS_TOKEN` | Optional preview gate (middleware + `/api/airtable`) |
 | `AIRTABLE_API_TOKEN` / `AIRTABLE_BASE_ID` | Server-only; **production base on Vercel** |

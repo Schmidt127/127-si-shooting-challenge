@@ -9,7 +9,7 @@ Shared visual identity for **all** Hoop Challenges / 127 Sports Intensity applic
 The Landing Hub repository (`Schmidt127/hoopchallenges-landing`) is the **official source of truth** for shared brand standards. Leaf repositories keep a synchronized copy of this file.
 
 Parent organization: **127 Sports Intensity**  
-Public site: **Hoop Challenges** (`https://hoopchallenges.com/`)  
+Public site (Shooting Challenge / club landing): **Fairfield Basketball Club** (`https://www.fairfieldbasketballclub.com/`) — legacy Hoop Challenges domain (`hoopchallenges.com`) is retired as the primary destination. Canonical shared brand copy still lives in the landing repo; synchronize this file there when the landing brand doc is updated.  
 Source kit: **127_SI_Brand_Kit** (Patrick Liddell)
 
 This file is the **canonical shared brand foundation**. App-specific accents and layout rules live in `APP_CONTEXT.md` for each repository. Do not let one app's theme overwrite another app's theme.

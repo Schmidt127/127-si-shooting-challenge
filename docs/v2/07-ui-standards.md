@@ -4,7 +4,7 @@
 
 ## Principles
 
-- Public app path: **`/shoot`** on hoopchallenges.com (`NEXT_PUBLIC_BASE_PATH=/shoot`).
+- Public app path: **`/shoot`** on fairfieldbasketballclub.com (`NEXT_PUBLIC_BASE_PATH=/shoot`).
 - Read-only from Airtable on public pages; never expose API token to browser.
 - Respect publish gate (`OK to Publish on Softr` or successor) on public queries.
 - V2: website is the **heart** of the challenge — progress, rules, achievements, not only leaderboard.
