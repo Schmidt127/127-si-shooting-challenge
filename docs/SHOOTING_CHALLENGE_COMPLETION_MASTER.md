@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-03** (035 v1.2 percent-ratio fix + Schmidt live proof; automation OFF pending merged-source reconciliation) |
+| Last updated | **2026-08-04** (production `/shoot` smoke package + Live Tested SC-118; prior 035 v1.2 OFF pending merge reconcile) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,21 +59,29 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-03**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **147** |
 | Complete | 12 |
-| Live Tested in PROD | 15 |
+| Live Tested in PROD | 16 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 28 |
+| Built but not installed *(Built in Repository)* | 27 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — Production smoke package)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-118 | Built in Repository | Live Tested in PROD | Playwright + HTTP production smoke package run against official host | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`; 41/41 Playwright prod PASS; HTTP `tokenValid` |
+
+**Net math vs 2026-08-03:** LT 15→**16**; Built 28→**27**. Remaining launch risks: SC-112 auth, SC-115 noindex, catalog/Presentation hygiene — not blocked by route smoke.
 
 ### Dashboard reconciliation (2026-08-03 — Automation 035 v1.2)
 
@@ -251,7 +259,7 @@ Columns:
 | SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
-| SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; commits `2ce6599`, `bf842d9` | Authorize npm install | P2 | 2026-07-23 |
+| SC-118 | Website | Playwright coverage for public pages | Live Tested in PROD | **Production smoke package** (`production-smoke.spec.ts` + `http-smoke.mjs` + runbook); prior `public-experience` / hardening / registration-gateway specs retained; **2026-08-04** local 41/41 + prod 41/41 + HTTP `tokenValid` PASS on `fairfieldbasketballclub.com/shoot` | Optional CI wire for `test:smoke`; axe-core later | SC-102 | Read-only; no form submits; no Airtable writes | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`; `PLAYWRIGHT-COVERAGE.md` | Optional CI authorize | P2 | 2026-08-04 |
 
 ### Additional cross-cutting / historical items
 
@@ -513,6 +521,23 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 **Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
 **057/067:** Still not Live Tested as Complete season paths.  
 **Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
+
+### 9F. Production `/shoot` smoke package — **2026-08-04**
+
+**Deliverables:** `web/tests/production-smoke.spec.ts`, `web/scripts/http-smoke.mjs`, `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`, evidence under `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`
+
+| Check | Result |
+|-------|--------|
+| Production build | PASS |
+| Vitest | 137/137 PASS |
+| Playwright local smoke | 41/41 PASS |
+| Playwright prod smoke (`fairfieldbasketballclub.com/shoot`) | 41/41 PASS |
+| HTTP prod smoke | PASS — Fillout + landing URLs exact; assets 200; API `tokenValid` |
+| Material console errors | None on smoked routes |
+| Broken links / duplicated `/shoot/shoot` | None found |
+| SC-118 | **Live Tested in PROD** |
+
+**Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
 
 ---
 

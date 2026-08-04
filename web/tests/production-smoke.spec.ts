@@ -146,17 +146,16 @@ test.describe("production smoke — navigation, assets, basePath", () => {
     });
     await expect(nav).toBeVisible();
 
-    const labels = [
+    // Primary strip only — Dashboard / Achievements / Display live under More.
+    const primaryLabels = [
       "Leaderboard",
       "Homework",
       "Levels",
-      "Achievements",
       "Zoom Meetings",
       "Game Manual",
-      "Dashboard",
     ];
 
-    for (const label of labels) {
+    for (const label of primaryLabels) {
       const link = nav.getByRole("link", { name: label }).first();
       await expect(link, `nav link ${label}`).toBeVisible();
       const href = await link.getAttribute("href");
@@ -171,6 +170,17 @@ test.describe("production smoke — navigation, assets, basePath", () => {
       await expectSingleHeading(page, `nav→${label}`);
       await page.goto(".", { waitUntil: "domcontentloaded" });
     }
+
+    await nav.getByRole("button", { name: /More/i }).click();
+    for (const moreLabel of ["Dashboard", "Achievements", "Display"]) {
+      await expect(
+        page.getByRole("menuitem", { name: moreLabel }),
+        `More menu item ${moreLabel}`,
+      ).toBeVisible();
+    }
+    await page.getByRole("menuitem", { name: "Achievements" }).click();
+    await expect(page).toHaveURL(/\/achievements/);
+    await expectSingleHeading(page, "nav→Achievements via More");
   });
 
   test("required brand assets return success under /shoot", async ({
