@@ -26,10 +26,10 @@ export function SiteHeader({
       <div className="pointer-events-none absolute inset-0 court-lines opacity-30" aria-hidden />
       <SiteContainer className="relative flex flex-col gap-2.5 py-3 sm:gap-3 sm:py-3.5">
         <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3">
             <a
               href={LANDING_URL}
-              className="shrink-0 rounded-full transition-opacity hover:opacity-90"
+              className="inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90"
               aria-label={`${BRAND_ORG_NAME} — Hoop Challenges home`}
             >
               <BrandLogo
@@ -48,10 +48,10 @@ export function SiteHeader({
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <a
               href={LANDING_URL}
-              className="hidden transition-opacity hover:opacity-90 lg:block"
+              className="hidden transition-opacity hover:opacity-90 lg:inline-flex lg:min-h-11 lg:items-center"
               aria-label={`${BRAND_ORG_NAME} wordmark`}
             >
               <BrandLogo
@@ -59,7 +59,12 @@ export function SiteHeader({
                 className="h-7 w-auto max-w-[10rem] object-contain object-right xl:h-8 xl:max-w-[12rem]"
               />
             </a>
-            <CtaLink href="/leaderboard" variant="cta" size="sm">
+            <CtaLink
+              href="/leaderboard"
+              variant="cta"
+              size="sm"
+              className="max-w-[9.5rem] truncate sm:max-w-none"
+            >
               Leaderboard
             </CtaLink>
           </div>

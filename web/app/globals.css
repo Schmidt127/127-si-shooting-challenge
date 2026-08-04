@@ -174,9 +174,14 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+html {
+  overflow-x: clip;
+}
+
 body {
   font-family: var(--font-sans), system-ui, sans-serif;
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 /* Display headings — Maven Pro bold until Magistral web license ships */
@@ -188,13 +193,52 @@ body {
 
 /* Visible keyboard focus for interactive elements */
 :focus-visible {
-  outline: none;
+  outline: 2px solid var(--brand-orange);
+  outline-offset: 2px;
   box-shadow: var(--focus-ring);
 }
 
 :focus:not(:focus-visible) {
   outline: none;
   box-shadow: none;
+}
+
+/* Skip link — visually hidden until focused */
+.skip-to-content {
+  position: absolute;
+  left: 0.75rem;
+  top: 0.75rem;
+  z-index: 100;
+  transform: translateY(-200%);
+  border-radius: var(--radius-md);
+  background: var(--brand-orange);
+  color: var(--brand-charcoal);
+  font-size: 0.875rem;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  min-height: 2.75rem;
+  box-shadow: var(--site-shadow-md);
+  transition: transform 120ms ease;
+}
+
+.skip-to-content:focus,
+.skip-to-content:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--brand-blue);
+  outline-offset: 2px;
+}
+
+/* Inline text links — distinguishable without relying on color alone */
+.sc-text-link {
+  color: var(--brand-blue);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.sc-text-link:hover {
+  color: var(--accent-soft);
 }
 
 /* Court-line motif — subtle program theme for header/hero bands */
