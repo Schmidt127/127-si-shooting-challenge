@@ -40,6 +40,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **Mobile usability + accessibility package / SC-148 (2026-08-04)** — Focused `/shoot` improvements without redesign: accessible mobile nav dialog (Escape, focus return, registration CTAs pinned), skip-to-content, 44px tap targets, overflow clip, stronger focus rings, footer/back text-link distinction, clearer loading/empty/error states, how-it-works `h3` order. Playwright `mobile-a11y.spec.ts` covers 375/768/1440. No Airtable/XP/business-rule changes. Completion master updated.
 - **Homepage registration gateway (2026-08-03)** — Public `/shoot` home adds a registration section directly below the hero (before “Why it works”) with branded Fillout CTAs: Player Registration (`…/shoot/playerregistration`) and Daily Submissions (`…/shoot/dailysubmissions`). Canonical links in `web/lib/registration.ts`; reusable `RegistrationGateway` component; Vitest + Playwright coverage for URLs, CTA labels, `target=_blank` / `rel=noopener noreferrer`, accessible new-tab labels, and section placement. No Airtable/XP/auth/dashboard changes.
 
 #### Fixed
