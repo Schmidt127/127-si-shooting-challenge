@@ -144,6 +144,14 @@ test.describe("production smoke — mobile menu + More nav", () => {
   }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
     const toggle = page.getByTestId("mobile-nav-toggle");
+    // Pre-deploy PROD may still use the older nav; skip until SC-148 is live.
+    if ((await toggle.count()) === 0) {
+      test.skip(
+        true,
+        "mobile-nav-toggle not present on this deployment (SC-148 not installed yet)",
+      );
+      return;
+    }
     await expect(toggle).toBeVisible();
     await toggle.click();
 

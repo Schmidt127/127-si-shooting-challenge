@@ -59,6 +59,8 @@ const BENIGN_CONSOLE_PATTERNS = [
   /Third-party cookie/i,
   /favicon\.ico.*404/i,
   /Failed to load resource: the server responded with a status of 404/i,
+  // Expired Airtable cover attachments (known catalog hygiene; SafeExternalImage falls back).
+  /Failed to load resource: the server responded with a status of 410/i,
 ];
 
 export type ConsoleCapture = {
