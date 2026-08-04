@@ -57,7 +57,8 @@
   /* Isolated contrast panel (hero / stats / achievements — not page chrome) */
   --contrast-bg: var(--court-navy);
   --contrast-fg: var(--brand-white);
-  --contrast-muted: #b8c4e0;
+  /* Light enough on brand-blue / court-navy for readable hero copy */
+  --contrast-muted: #d5dcf0;
   --contrast-border: color-mix(in srgb, var(--brand-white) 18%, transparent);
 
   /* Spacing / shape scale — moderate radii (avoid pill-heavy UI) */

@@ -189,7 +189,7 @@ export function ProductNav({ productName, items }: ProductNavProps) {
           type="button"
           className={cn(
             navLinkClass(mobileOpen),
-            "inline-flex w-full min-h-11 items-center justify-between gap-2",
+            "inline-flex w-full min-h-11 items-center justify-center gap-2",
           )}
           aria-expanded={mobileOpen}
           aria-controls={panelId}
@@ -202,20 +202,12 @@ export function ProductNav({ productName, items }: ProductNavProps) {
           data-testid="mobile-nav-toggle"
           onClick={() => (mobileOpen ? closeMobile() : openMobile())}
         >
-          <span className="inline-flex items-center gap-2">
-            {mobileOpen ? (
-              <XIcon className="size-5" aria-hidden />
-            ) : (
-              <MenuIcon className="size-5" aria-hidden />
-            )}
-            <span aria-hidden>{mobileOpen ? "Close" : "Menu"}</span>
-          </span>
-          <span
-            className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground"
-            aria-hidden
-          >
-            Nav
-          </span>
+          {mobileOpen ? (
+            <XIcon className="size-5" aria-hidden />
+          ) : (
+            <MenuIcon className="size-5" aria-hidden />
+          )}
+          <span aria-hidden>{mobileOpen ? "Close menu" : "Menu"}</span>
         </button>
       </div>
 
@@ -238,7 +230,7 @@ export function ProductNav({ productName, items }: ProductNavProps) {
             aria-modal="true"
             aria-label={ACCESSIBILITY_LABELS.mobileMenuDialog}
             data-testid="mobile-nav-panel"
-            className="absolute inset-x-0 top-0 max-h-[min(100dvh,40rem)] overflow-y-auto border-b border-border bg-card shadow-site-lg"
+            className="absolute inset-x-0 top-0 flex max-h-[100dvh] flex-col border-b border-border bg-card shadow-site-lg"
             onKeyDown={trapFocus}
           >
             <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
@@ -255,27 +247,7 @@ export function ProductNav({ productName, items }: ProductNavProps) {
               </button>
             </div>
 
-            <nav className="px-3 py-3" aria-label={landmark}>
-              <ul className="flex flex-col gap-1">
-                {allItems.map((item) => {
-                  const active = pathMatches(pathname, item.href);
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        aria-current={active ? "page" : undefined}
-                        className={cn(navLinkClass(active), "w-full")}
-                        onClick={closeMobile}
-                      >
-                        {item.label}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-
-            <div className="space-y-2 border-t border-border px-4 py-4">
+            <div className="space-y-2 border-b border-border px-4 py-3">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-accent-soft">
                 Join or submit
               </p>
@@ -300,6 +272,26 @@ export function ProductNav({ productName, items }: ProductNavProps) {
                 {DAILY_SUBMISSIONS.cta}
               </a>
             </div>
+
+            <nav className="min-h-0 flex-1 overflow-y-auto px-3 py-3" aria-label={landmark}>
+              <ul className="flex flex-col gap-1">
+                {allItems.map((item) => {
+                  const active = pathMatches(pathname, item.href);
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(navLinkClass(active), "w-full")}
+                        onClick={closeMobile}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
           </div>
         </div>
       ) : null}

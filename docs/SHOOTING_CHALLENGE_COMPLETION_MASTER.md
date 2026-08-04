@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-03** (035 v1.2 percent-ratio fix + Schmidt live proof; automation OFF pending merged-source reconciliation) |
+| Last updated | **2026-08-04** (SC-148 mobile usability + accessibility package Built in Repository) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,21 +59,29 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-03**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **147** |
+| **Total items** | **148** |
 | Complete | 12 |
 | Live Tested in PROD | 15 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 28 |
+| Built but not installed *(Built in Repository)* | 29 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — Mobile usability + accessibility)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-148 | *(new)* | Built in Repository | Focused `/shoot` mobile + a11y package | Branch `cursor/mobile-a11y-usability-43a1`; Playwright `mobile-a11y.spec.ts` + registration/public suites PASS; screenshots under `/opt/cursor/artifacts/screenshots/mobile-a11y/` |
+
+**Net math vs 2026-08-03:** Total 147→**148**; Built 28→**29**. No Complete/Live Tested swaps. Deploy/Vercel promotion still required before Installed/Live Tested.
 
 ### Dashboard reconciliation (2026-08-03 — Automation 035 v1.2)
 
@@ -251,7 +259,8 @@ Columns:
 | SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
-| SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; commits `2ce6599`, `bf842d9` | Authorize npm install | P2 | 2026-07-23 |
+| SC-118 | Website | Playwright coverage for public pages | Built in Repository | `tests/public-experience.spec.ts` covers routes, mobile/desktop, nav, a11y basics, noindex, empty/missing, privacy (no emails), Schmidt demo; screenshot specs retained; **SC-148** adds `mobile-a11y.spec.ts` | Authorize `npm install` + run suite in CI; axe-core later | SC-102 | Specs CI-stable without live Airtable | `docs/overnight/web-integration/PLAYWRIGHT-COVERAGE.md`; `web/tests/mobile-a11y.spec.ts` | Authorize npm install | P2 | 2026-08-04 |
+| SC-148 | Website | Mobile usability + accessibility for public `/shoot` | Built in Repository | Accessible mobile menu (open/close/Escape/focus return); skip link; 44px tap targets; overflow clip; stronger focus rings; registration CTAs in menu + gateway; footer/back text-link distinction; clearer loading/empty/error; how-it-works h3 order; Playwright coverage at 375/768/1440 | Merge + Vercel deploy; optional axe-core pass; athlete auth pages still Decision Needed (SC-112); leaderboard Airtable env required for live data in cloud agents | SC-102, SC-113, SC-118 | No Airtable/XP/business-rule changes; visual system preserved | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts`; screenshots `mobile-a11y/` | Approve merge/deploy | P1 | 2026-08-04 |
 
 ### Additional cross-cutting / historical items
 
@@ -513,6 +522,34 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 **Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
 **057/067:** Still not Live Tested as Complete season paths.  
 **Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
+
+### 9F. Mobile usability + accessibility package — **2026-08-04** (SC-148)
+
+**Branch:** `cursor/mobile-a11y-usability-43a1`  
+**Status:** **Built in Repository** (not Installed / Live Tested until Vercel deploy + Mike smoke)
+
+| Area audited | Findings fixed | Remaining / notes |
+|--------------|----------------|-------------------|
+| Homepage hero | Full-width mobile CTAs; clearer hero muted contrast token | No redesign; brand structure preserved |
+| Registration gateway | 44px CTAs; also pinned at top of mobile menu | Fillout remains external (`target=_blank`) |
+| Header / mobile menu | Replaced horizontal-scroll nav with dialog menu; Escape + focus return; body scroll lock | Desktop/tablet keep primary + More dropdown |
+| Logo / nav links | Logo hit area ≥44px; labelled logo/wordmark; More menu aria-label | — |
+| Buttons / CTAs | Default/sm/icon sizes raised to 44px+ | Dense `xs` left for non-primary chrome |
+| Forms / inputs | Existing `.sc-input` already 44px; focus ring strengthened | Few public forms today |
+| Cards / standings | Table header icons decorative; mobile card list unchanged structurally | Live leaderboard needs `AIRTABLE_API_TOKEN` in env |
+| Athlete dashboard | Profile text link underlined + min height | Auth still SC-112 Decision Needed |
+| Footer | Quick links use `.sc-text-link` (underlined, blue) | — |
+| Loading / empty / error | Clearer copy hierarchy; `role=status` / `role=alert`; mobile-friendly action stacking | — |
+
+**Tests run (web/):** lint PASS · typecheck PASS · vitest 136 PASS · `next build` PASS · Playwright `mobile-a11y` + `registration-gateway` + `public-hardening` + `public-experience` **80 PASS**  
+**Viewports:** 375×812, 768×1024, 1440×900  
+**Screenshots:** `/opt/cursor/artifacts/screenshots/mobile-a11y/`
+
+**Unresolved follow-ups (non-blocking for this package):**
+- Full axe-core audit not yet wired (tracked under SC-118)
+- Contrast of decorative court-line overlays on hero remains a visual-design judgment call
+- Athlete auth/dashboard real data blocked on SC-112
+- Production install = merge + Vercel deploy (Root Directory `web`)
 
 ---
 
