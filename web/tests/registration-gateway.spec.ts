@@ -103,3 +103,24 @@ test.describe("homepage registration gateway", () => {
     expect(hasFocusCue, JSON.stringify(outline)).toBeTruthy();
   });
 });
+
+test.describe("homepage registration gateway (mobile)", () => {
+  test.use({ viewport: { width: 375, height: 812 } });
+
+  test("gateway CTAs remain visible without horizontal overflow", async ({ page }) => {
+    await page.goto(".", { waitUntil: "domcontentloaded" });
+    const section = page.locator("#registration-gateway");
+    await expect(section).toBeVisible({ timeout: 30_000 });
+    await expect(
+      section.getByRole("link", { name: /Register for the Challenge/i }),
+    ).toBeVisible();
+    await expect(
+      section.getByRole("link", { name: /Submit Today's Activity/i }),
+    ).toBeVisible();
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
+    expect(overflow).toBeLessThanOrEqual(8);
+  });
+});

@@ -194,5 +194,9 @@ describe("accessibility label contracts", () => {
     const { ACCESSIBILITY_LABELS } = await import("@/lib/release/public-surface");
     expect(ACCESSIBILITY_LABELS.productNav.length).toBeGreaterThan(0);
     expect(ACCESSIBILITY_LABELS.gradeBandFilter.toLowerCase()).toContain("grade");
+    expect(ACCESSIBILITY_LABELS.mobileMenuOpen.toLowerCase()).toContain("open");
+    expect(ACCESSIBILITY_LABELS.mobileMenuClose.toLowerCase()).toContain("close");
+    expect(ACCESSIBILITY_LABELS.mobileMenuDialog.toLowerCase()).toContain("navigation");
+    expect(ACCESSIBILITY_LABELS.moreNav.toLowerCase()).toContain("more");
   });
 });
