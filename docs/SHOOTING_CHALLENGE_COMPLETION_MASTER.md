@@ -2,6 +2,8 @@
 
 **Controlling source of truth** for finishing Shooting Challenge V2.
 
+**PROD operating mode:** Active construction, configuration, and testing rules for this completion effort are in [`docs/SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md`](./SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md) (PROD-first; DEV not required unless Mike asks; dependency safety still mandatory).
+
 Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, close-out notes, overnight packets, deploy checklists) remain as **evidence and history**. Do not delete them. When those files disagree with this document, **this document wins** — then update the older file later so it does not keep spreading stale status.
 
 | Field | Value |
