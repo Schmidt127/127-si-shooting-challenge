@@ -1,0 +1,66 @@
+{
+  "automations_fields": [
+    {
+      "name": "Name",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Automation Code",
+      "type": "multilineText"
+    },
+    {
+      "name": "Ran Through Cursor?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Sections",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Outputs Written back to Airtable",
+      "type": "aiText"
+    },
+    {
+      "name": "Trigger type",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Trigger table",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Conditions",
+      "type": "multilineText"
+    },
+    {
+      "name": "Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Trigger view",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Action summary",
+      "type": "multilineText"
+    },
+    {
+      "name": "Trigger field(s)",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Script step present?",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Script location / notes",
+      "type": "multilineText"
+    },
+    {
+      "name": "Related external systems",
+      "type": "multilineText"
+    }
+  ],
+  "total_rows": 48,
+  "hits_067_or_reflection": []
+}

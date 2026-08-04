@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-04** (SC-111 public athlete profiles — Live Tested in PROD via PR #58 / Vercel `dpl_wakFzRMAX2HJAyzX8eBoPxquVXEj`) |
+| Last updated | **2026-08-04** (SC-013 / SC-014 — Automation 067 v2.0 Option B Live Tested in PROD) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -67,15 +67,25 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **149** |
 | Complete | 12 |
-| Live Tested in PROD | 16 |
+| Live Tested in PROD | 18 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 29 |
-| Planned | 21 |
+| Built but not installed *(Built in Repository)* | 26 |
+| Ready for PROD Paste *(informal — SC-021)* | 1 |
+| Planned | 20 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — Automation 067 v2.0 Option B PROD proof)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-013 | Built in Repository | Live Tested in PROD | 067 v2.0 pasted; Schmidt quiz→HC→coach→064/065 XP | `docs/testing/evidence/2026-08-04-package-02-critical-pastes/`; HC `recrBnHbLvDpFyIeO`; XP `rec6xE4V1t0atiTIP` |
+| SC-014 | Built in Repository | Live Tested in PROD | Option B attachment-less proven (0 assets; multi-attempt reuse) | Same folder; quizzes `recxtTv0AD7G3XpGv`, `recFsN2KruSnerfns` |
+
+**Net math:** LT 16→**18** (SC-013 + SC-014). Built bucket recount after move: prior claimed Built 29 included status orphans; Section 4 recount now **Built 26** + **Ready for PROD Paste 1 (SC-021)** + **Planned 20**. Highest status supported by evidence is Live Tested (not Complete — Package 2 still needs 057 v1.4 paste).
 
 ### Dashboard reconciliation (2026-08-04 — SC-111 production publish)
 
@@ -114,7 +124,7 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 | SC-113 | Installed in PROD | Live Tested in PROD | Browser QA 2026-07-25 | Demo/empty/error states |
 | SC-109 | Built in Repository | Installed in PROD | Browser QA 2026-07-25 | XP/Levels live; PDF env still missing |
 | SC-139 | Planned | Built in Repository | Stale-doc refresh pack started | `docs/prod-completion/2026-07-25/` |
-| SC-013 / SC-014 | Built in Repository | Built in Repository | 067 Option B install packet (not Live Tested) | `067-OPTION-B-PROD-INSTALL.md` |
+| SC-013 / SC-014 | Built in Repository | Live Tested in PROD | 067 v2.0 Option B Schmidt PROD proof (2026-08-04) | `docs/testing/evidence/2026-08-04-package-02-critical-pastes/` |
 | SC-028 / SC-077 | Installed in PROD | Installed in PROD | 057 v1.4 Ready for PROD Paste (code in PR #43) | paste runbook + deploy checklist |
 
 **Blocker:** no `AIRTABLE_API_TOKEN` in cloud agent for Schmidt mutations (`ACCESS-BLOCKER.md`). 035 owned by PR #43.
@@ -166,8 +176,8 @@ Columns:
 | SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz uses Option B (no PDF asset — SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-24 |
 | SC-011 | Homework | Video submissions as homework/learning assets | Installed in PROD | Video path via 013/070b/070c/114 historically live | Re-test video as homework vs daily video rules; confirm purpose routing | SC-133 | Do not double-credit video XP | LA routing `video`; C-013 | — | P0 | 2026-07-23 |
 | SC-012 | Homework | Written / reflection responses work | Installed in PROD | Fillout questions + HC path historically used | Re-test written-only HC; coach review + 071 | SC-019 | No attachment required for written | LA `reflection` / `fillout_questions` | — | P1 | 2026-07-23 |
-| SC-013 | Homework | Online quizzes create a reviewable completion | Built in Repository | **067** v2.0 Option B headers refreshed; install packet + SCN-027/028; homework-contracts offline PASS | Mike paste/confirm 067 in PROD; Schmidt T1–T2 live (HC, 0 assets → one XP) — **blocked here without Airtable API token** | SC-014 | 067 must not award XP itself; no fake attachments | `067-OPTION-B-PROD-INSTALL.md`; `QUIZ-PATH-DECISION.md` | — | P0 | 2026-07-25 |
-| SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Built in Repository | **Option B approved** — attachment-less; install packet forbids Quiz Result PDF / fake assets | PROD 067 paste confirmation + Schmidt Option B live test (tracked under SC-013) | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-OPTION-B-PROD-INSTALL.md`; `067-…reflection-quiz.js` | **DECIDED Option B** | P0 | 2026-07-25 |
+| SC-013 | Homework | Online quizzes create a reviewable completion | Live Tested in PROD | **067 v2.0** pasted; Schmidt quizzes `recxtTv0AD7G3XpGv` + `recFsN2KruSnerfns` → HC `recrBnHbLvDpFyIeO` (HW1, Fillout, 0 assets); coach review → XP `rec6xE4V1t0atiTIP` (35 pts, `HOMEWORK_XP\|recrBnHbLvDpFyIeO`); multi-attempt reuse of same HC; 067 created no XP | Optional: expand to non-Schmidt enrollment; keep 071 path smoke if needed | SC-014 | 067 must not award XP itself; no fake attachments; preserve quiz attempts | `docs/testing/evidence/2026-08-04-package-02-critical-pastes/`; `067-OPTION-B-PROD-INSTALL.md` | — | P0 | 2026-08-04 |
+| SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Live Tested in PROD | **Option B proven in PROD** — attachment-less; 0 Submission Assets; Enrollment+Week+Homework HC identity; attempts preserved separately | No further path decision; do not reopen Option A / Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-HOMEWORK-XP-CONTINUATION.md`; `QUIZ-PATH-DECISION.md` | **DECIDED Option B** | P0 | 2026-08-04 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
 | SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
 | SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used | Re-test full chain after wipe; align with Learning Activities later | SC-009–SC-016 | Do not invent second credit path | homework-flow.md; automation-index | — | P0 | 2026-07-23 |
@@ -527,14 +537,14 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | Package | Result |
 |---------|--------|
 | Public `/shoot` smoke (SC-102) | **Live Tested** — all routes 200 + health tokenValid |
-| 067 Option B install packet (SC-013/014) | **Built** — paste + Schmidt protocol ready; live proof blocked without PAT |
+| 067 Option B install packet (SC-013/014) | **Live Tested in PROD** (2026-08-04) — see Package 02 evidence |
 | 057 v1.4 paste runbook | Points at PR #43 code + `057-PERFECT-WEEK-PROD-PASTE.md` |
 | SCN-027/028 quiz fixtures | **Built** |
-| Access blocker doc | Recorded — needs Mike env PAT |
+| Access blocker doc | Historical — PAT available for Package 02 |
 
-**Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
-**057/067:** Still not Live Tested as Complete season paths.  
-**Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
+**Not claimed Complete / season-enabled for 035:** Automation remains **OFF** until Mike enables.  
+**067:** Live Tested Option B (SC-013/014). **057 v1.4:** Still Ready for PROD Paste.  
+**Next:** Paste **057 v1.4** → Schmidt Denver Perfect Week boundary → enable 035 only when approved → SC-075/076 → SC-077.
 
 ### 9F. Landing domain / navigation branding audit — **2026-08-04** (SC-149)
 

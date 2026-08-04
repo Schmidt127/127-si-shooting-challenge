@@ -23,9 +23,9 @@ Confirmed facts:
 | **Do not** | Create a fake attachment / placeholder Submission Asset |
 | **XP** | Still **064 → 065** after coach Satisfactory + Review Complete (067 never awards) |
 
-Recorded on completion master **SC-014** → status **Built in Repository** (repo behavior + contract complete; PROD install/live test still open under SC-013).
+Recorded on completion master **SC-014** / **SC-013** → status **Live Tested in PROD** (2026-08-04 Schmidt proof: HC `recrBnHbLvDpFyIeO`, XP `rec6xE4V1t0atiTIP`; evidence under `docs/testing/evidence/2026-08-04-package-02-critical-pastes/`).
 
-**No Automation 067 repository correction required** for this decision — the attachment-less path already exists.
+**No Automation 067 repository correction required** for this decision — the attachment-less path already exists and is proven in PROD.
 
 ---
 
