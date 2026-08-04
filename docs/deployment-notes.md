@@ -5,11 +5,12 @@
 | Repo | `127-si-shooting-challenge` |
 | Production commit (verify) | `git rev-parse origin/master` — documented in [PROJECT_STATE.md](./PROJECT_STATE.md) |
 | Root Directory | `web` |
-| Public URL | https://www.hoopchallenges.com/shoot |
+| Public URL | https://www.fairfieldbasketballclub.com/shoot |
+| Official landing | https://www.fairfieldbasketballclub.com |
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
 | `AIRTABLE_BASE_ID` (Vercel **production only**) | `appn84sqPw03zEbTT` |
-| `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
-| `NEXT_PUBLIC_SITE_URL` | `https://www.hoopchallenges.com/shoot` |
+| `NEXT_PUBLIC_LANDING_URL` | `https://www.fairfieldbasketballclub.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.fairfieldbasketballclub.com/shoot` |
 
 ## Airtable environments (V2-015)
 
@@ -68,14 +69,14 @@ npm run build
 
 ## Root URL (`/`)
 
-The app uses `basePath` `/shoot`, so it does **not** serve a page at `https://www.hoopchallenges.com/` by itself.
+The app uses `basePath` `/shoot`, so it does **not** serve a page at `https://www.fairfieldbasketballclub.com/` by itself.
 
 | Situation | Fix |
 |-----------|-----|
 | Domain on **this** Vercel project | `web/vercel.json` redirects `/` → `/shoot` |
-| Domain on a **landing** Vercel project | Deploy `hoopchallenges-landing` with a home page, or add the same redirect there |
+| Domain on a **landing** Vercel project | Landing owns `/`; this app mounts at `/shoot` |
 
-Until a multi-program landing hub exists, `/` → `/shoot` is the expected behavior for this project alone.
+Club landing lives at https://www.fairfieldbasketballclub.com; Shooting Challenge is https://www.fairfieldbasketballclub.com/shoot.
 
 ## Softr / SEO
 

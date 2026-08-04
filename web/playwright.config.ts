@@ -4,7 +4,7 @@ const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/shoot";
 const port = Number(process.env.PLAYWRIGHT_PORT || 3001);
 /** Trailing slash required so relative navigations stay under basePath. */
 const localBaseURL = `http://127.0.0.1:${port}${basePath}/`;
-/** Optional override for live PROD/preview runs, e.g. PLAYWRIGHT_BASE_URL=https://www.hoopchallenges.com/shoot/ */
+/** Optional override for live PROD/preview runs, e.g. PLAYWRIGHT_BASE_URL=https://www.fairfieldbasketballclub.com/shoot/ */
 const externalBaseURL = process.env.PLAYWRIGHT_BASE_URL?.trim();
 const baseURL = externalBaseURL
   ? externalBaseURL.endsWith("/")

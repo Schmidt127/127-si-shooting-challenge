@@ -88,15 +88,55 @@ test.describe("reduced motion", () => {
 test.describe("hub and external link safety", () => {
   test.use({ viewport: VIEWPORTS.desktop });
 
-  test("hub / back-to-landing links use https://www.hoopchallenges.com", async ({ page }) => {
+  test("logo and landing links use https://www.fairfieldbasketballclub.com", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
-    const hubLinks = page.locator('a[href^="https://www.hoopchallenges.com"]');
+
+    const logoHome = page.getByRole("link", {
+      name: /Fairfield Basketball Club home/i,
+    });
+    await expect(logoHome.first()).toBeVisible();
+    await expect(logoHome.first()).toHaveAttribute(
+      "href",
+      "https://www.fairfieldbasketballclub.com",
+    );
+
+    const footerHome = page.getByRole("link", {
+      name: "Fairfield Basketball Club home",
+    });
+    await expect(footerHome).toBeVisible();
+    await expect(footerHome).toHaveAttribute(
+      "href",
+      "https://www.fairfieldbasketballclub.com",
+    );
+
+    const hubLinks = page.locator('a[href^="https://www.fairfieldbasketballclub.com"]');
     await expect(hubLinks.first()).toBeVisible();
     const hrefs = await hubLinks.evaluateAll((els) =>
       els.map((el) => (el as HTMLAnchorElement).href),
     );
-    expect(hrefs.some((h) => h.includes("hooopchallenges"))).toBeFalsy();
-    expect(hrefs.every((h) => h.startsWith("https://www.hoopchallenges.com"))).toBeTruthy();
+    expect(hrefs.some((h) => /hoopchallenges/i.test(h))).toBeFalsy();
+    expect(
+      hrefs.every((h) => h.startsWith("https://www.fairfieldbasketballclub.com")),
+    ).toBeTruthy();
+  });
+
+  test("internal Shooting Challenge nav stays under /shoot (not landing)", async ({ page }) => {
+    await page.goto(".", { waitUntil: "domcontentloaded" });
+    const nav = page.getByRole("navigation", { name: "Shooting Challenge navigation" });
+    await expect(nav).toBeVisible();
+
+    const internalHrefs = await nav.locator("a[href]").evaluateAll((els) =>
+      els.map((el) => (el as HTMLAnchorElement).getAttribute("href") || ""),
+    );
+    expect(internalHrefs.length).toBeGreaterThan(0);
+    for (const href of internalHrefs) {
+      expect(href, `nav href should be app-relative: ${href}`).toMatch(/^\//);
+      expect(href).not.toMatch(/fairfieldbasketballclub\.com/i);
+      expect(href).not.toMatch(/hoopchallenges/i);
+    }
+
+    await nav.getByRole("link", { name: /leaderboard/i }).first().click();
+    await expect(page).toHaveURL(/\/shoot\/leaderboard/);
   });
 
   test("external target=_blank links include noopener", async ({ page }) => {
@@ -124,8 +164,8 @@ test.describe("favicon and metadata paths under /shoot", () => {
     await expect(icon.first()).toHaveCount(1);
     const href = (await icon.first().getAttribute("href")) || "";
     expect(href.length).toBeGreaterThan(0);
-    // Prefer /shoot-prefixed or absolute https — never bare wrong host typo
-    expect(href.includes("hooopchallenges")).toBeFalsy();
+    // Prefer /shoot-prefixed or absolute https — never legacy Hoop Challenges host
+    expect(href).not.toMatch(/hoopchallenges/i);
   });
 
   test("demo athlete label remains demo (not live season claim)", async ({ page }) => {

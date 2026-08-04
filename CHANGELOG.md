@@ -39,6 +39,9 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ### Web
 
+#### Changed
+- **Official landing domain → Fairfield Basketball Club (2026-08-04)** — Production defaults, logo/header/footer home links, metadata `SITE_URL`, and `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` examples now use `https://www.fairfieldbasketballclub.com` (Shooting Challenge remains `/shoot`). `resolveLandingUrl` / `resolveSiteUrl` rewrite legacy `hoopchallenges.com` / `hooopchallenges.com` and malformed/missing env values to the Fairfield origin. Vitest + Playwright coverage for logo/footer links, env normalization, `/shoot` path integrity, and internal nav not bouncing to the landing site. Historical docs/evidence that still mention Hoop Challenges are left as archives unless they describe active config.
+
 #### Added
 - **Homepage registration gateway (2026-08-03)** — Public `/shoot` home adds a registration section directly below the hero (before “Why it works”) with branded Fillout CTAs: Player Registration (`…/shoot/playerregistration`) and Daily Submissions (`…/shoot/dailysubmissions`). Canonical links in `web/lib/registration.ts`; reusable `RegistrationGateway` component; Vitest + Playwright coverage for URLs, CTA labels, `target=_blank` / `rel=noopener noreferrer`, accessible new-tab labels, and section placement. No Airtable/XP/auth/dashboard changes.
 

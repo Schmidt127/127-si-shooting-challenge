@@ -7,7 +7,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-03** (035 v1.2 percent-ratio fix + Schmidt live proof; automation OFF pending merged-source reconciliation) |
+| Last updated | **2026-08-04** (SC-148 landing domain / nav branding audit — Fairfield Basketball Club; Built in Repository) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -59,21 +59,29 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-03**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses change.
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **147** |
+| **Total items** | **148** |
 | Complete | 12 |
 | Live Tested in PROD | 15 |
 | Installed but not tested *(Installed in PROD)* | 51 |
-| Built but not installed *(Built in Repository)* | 28 |
+| Built but not installed *(Built in Repository)* | 29 |
 | Planned | 21 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — Landing domain / nav branding)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-148 | *(new)* | Built in Repository | Production URL/nav/branding-link audit for Fairfield Basketball Club landing | `web/lib/app-config.ts`; Vitest + Playwright; env examples; completion package notes below |
+
+**Net math vs 2026-08-03:** Total 147→**148**; Built 28→**29**. Not Installed / Live Tested until Vercel env + deploy confirmed on `fairfieldbasketballclub.com`.
 
 ### Dashboard reconciliation (2026-08-03 — Automation 035 v1.2)
 
@@ -286,6 +294,7 @@ Columns:
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
 | SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet; **2026-07-25 fixture CLI runs** archived under `docs/prod-completion/2026-07-25/rcc-fixture-runs/` (healthy/mixed/weekly-email); preserves `118→072→119→074→Make` with **118/119 ON** | Mike: export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred**; PROD export blocked without API token | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `docs/prod-completion/2026-07-25/rcc-fixture-runs/` | Approve MVP view install + first PROD export run | P0 | 2026-07-25 |
+| SC-148 | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | Built in Repository | Repo audit + code: logo/header/footer/`BackToHubLink` → `https://www.fairfieldbasketballclub.com`; `resolveLandingUrl`/`resolveSiteUrl` rewrite legacy Hoop hosts + safe defaults; env examples; `/shoot` path preserved; Vitest + Playwright coverage | Merge PR; set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield if still legacy; deploy; live smoke logo/footer; do not treat historical `hoopchallenges.com` docs as active config | SC-102 | Do not redirect in-app `/shoot/*` nav to landing; keep basePath `/shoot` | `web/lib/app-config.ts`; `web/lib/app-config.test.ts`; `web/lib/site-chrome-links.test.ts`; `web/tests/public-hardening.spec.ts` | Confirm Vercel env values | P0 | 2026-08-04 |
 
 ---
 
@@ -347,7 +356,7 @@ Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writ
 
 ### Website and Public Experience
 
-Primary SC items: **SC-102 … SC-118**, **SC-144**.
+Primary SC items: **SC-102 … SC-118**, **SC-144**, **SC-148**.
 
 Must achieve: catalogs, game manual from config, real profiles/auth decision, Softr/noindex decisions, admin roadmap, Presentation wiring, Playwright growth.
 
@@ -513,6 +522,40 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 **Not claimed Complete / season-enabled for 035:** Automation remains **OFF** pending merged-source reconciliation after PR #50.  
 **057/067:** Still not Live Tested as Complete season paths.  
 **Next:** Merge/reconcile 035 v1.2 → enable only when approved → SC-013 Schmidt Option B → paste 057 → SC-075/076 → SC-077 Perfect Week.
+
+### 9F. Landing domain / navigation branding audit — **2026-08-04** (SC-148)
+
+| Field | Value |
+|-------|--------|
+| **Status** | **Built in Repository** (not Installed / Live Tested until Vercel deploy + env confirmed) |
+| **Official landing** | `https://www.fairfieldbasketballclub.com` |
+| **Shooting Challenge route** | `https://www.fairfieldbasketballclub.com/shoot` |
+| **Retired primary destination** | `https://www.hoopchallenges.com` (and typo `hooopchallenges.com`) |
+
+**What changed (active production code / config examples):**
+
+| Area | Change |
+|------|--------|
+| Defaults | `PUBLIC_LANDING_ORIGIN` / `resolveLandingUrl` / `resolveSiteUrl` → Fairfield; never fall back to Hoop Challenges |
+| Chrome | Header logo, wordmark, footer branding, `BackToHubLink` (“Home”) → Fairfield landing |
+| Env examples | Root + `web/.env*.example` use Fairfield for `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` |
+| Active docs | `APP_CONTEXT.md`, `docs/deployment-notes.md`, `docs/PROJECT_STATE.md` URL table, selected `web/docs/*` |
+
+**Tests added/updated:**
+
+1. Logo → `https://www.fairfieldbasketballclub.com` (Playwright + chrome contract)
+2. Header/footer landing links correct (Playwright + source contract)
+3. No active code defaults to Hoop Challenges (`app-config` + chrome tests)
+4. Env-variable normalization (legacy hosts, typo host, blank, malformed)
+5. `/shoot` application path intact (`resolveSiteUrl`, `withBasePath`, Playwright URL)
+6. Internal SC nav stays app-relative (not redirected to landing)
+
+**Unresolved / Mike follow-ups:**
+
+- Confirm Vercel production env vars are Fairfield (code rewrites legacy values, but env should match).
+- Live smoke after deploy (logo + footer + `/shoot` routes).
+- Historical docs/evidence that still mention `hoopchallenges.com` remain **archives** — do not treat as active config (see final PR report inventory).
+- Shared `BRAND_STANDARDS.md` still lists Hoop Challenges as public site (canonical copy lives in landing repo) — synchronize via approved cross-repo brand update when ready.
 
 ---
 

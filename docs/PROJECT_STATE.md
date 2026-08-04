@@ -54,11 +54,13 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 
 | Program | GitHub repo | Public URL | Vercel root |
 |---------|-------------|------------|-------------|
-| **Hoop Challenges landing** | `hoopchallenges-landing` | https://www.hoopchallenges.com | landing project |
-| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` | https://www.hoopchallenges.com/shoot | `web/` |
+| **Official club landing** | landing project (historical repo name may still be `hoopchallenges-landing`) | https://www.fairfieldbasketballclub.com | landing project |
+| **Shooting Challenge** (this repo) | `127-si-shooting-challenge` | https://www.fairfieldbasketballclub.com/shoot | `web/` |
 | **JR Referee Clinics** | `127-si-jr-ref` (separate) | `/refclinic` on landing | separate project |
 
 This repo is **Shooting Challenge only** — not the multi-program hub.
+
+**Domain note (2026-08-04):** Primary public destination is `fairfieldbasketballclub.com`. Legacy `hoopchallenges.com` URLs in older docs/evidence are historical unless explicitly marked active config.
 
 ---
 

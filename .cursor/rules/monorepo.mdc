@@ -15,7 +15,7 @@ This repo (`127-si-shooting-challenge`) is **Shooting Challenge only**:
 | `airtable/extension-scripts/audits/` | Dry-run pipeline audits (Stages A–J) |
 | `airtable/extension-scripts/safe-backfills/` | Controlled repair/backfill extensions |
 | `airtable/schema/` | Schema notes + dated snapshots |
-| `web/` | Next.js app — deployed at **`/shoot`** on hoopchallenges.com |
+| `web/` | Next.js app — deployed at **`/shoot`** on fairfieldbasketballclub.com |
 | `make/` | Make.com blueprints and upload/email docs |
 | `tools/airtable/` | Python schema export CLI |
 | `media/` | Season publicity assets (newspapers, radio, social) — see [media/README.md](../media/README.md) |

@@ -11,7 +11,7 @@ Sourced from **127_SI_Brand_Kit** (Patrick Liddell). Update this file when the k
 
 | Level | Name | Usage |
 |-------|------|--------|
-| Hub | **Hoop Challenges** | `hoopchallenges.com` program picker |
+| Hub / landing | **Fairfield Basketball Club** | `www.fairfieldbasketballclub.com` (official landing; legacy `hoopchallenges.com` retired as primary destination) |
 | Parent brand | **127 Sports Intensity** | Logo, footer, org line |
 | Products | Shooting Challenge, Dribbling Challenge, JR Referee Clinics | Own path + nav shell |
 
@@ -94,13 +94,13 @@ Code constants: `lib/brand.ts` → `BRAND_LOGOS`
 
 ---
 
-## Layout rules (Hoop Challenges web)
+## Layout rules (Shooting Challenge web)
 
 | Pattern | Where |
 |---------|--------|
-| Landing hub | `hoopchallenges-landing` at https://www.hoopchallenges.com |
+| Landing hub | Official site at https://www.fairfieldbasketballclub.com |
 | Shooting Challenge shell | `/shoot` (`basePath`; all catalog pages share `ProductShell` nav) |
-| Back link | **Hoop Challenges** → landing URL (`NEXT_PUBLIC_LANDING_URL`) |
+| Logo / Home / footer branding | Landing URL (`NEXT_PUBLIC_LANDING_URL`, default Fairfield) — never Hoop Challenges |
 
 ---
 

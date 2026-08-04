@@ -84,8 +84,8 @@ Document the chosen field here before Phase 2 ships.
 | `AIRTABLE_API_TOKEN` | Personal access token (`data.records:read` on `appn84sqPw03zEbTT`) — **not** `AIRTABLE_API_KEY` |
 | `AIRTABLE_BASE_ID` | `appn84sqPw03zEbTT` |
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
-| `NEXT_PUBLIC_LANDING_URL` | `https://www.hoopchallenges.com` |
-| `NEXT_PUBLIC_SITE_URL` | `https://www.hoopchallenges.com/shoot` |
+| `NEXT_PUBLIC_LANDING_URL` | `https://www.fairfieldbasketballclub.com` |
+| `NEXT_PUBLIC_SITE_URL` | `https://www.fairfieldbasketballclub.com/shoot` |
 | `SITE_ACCESS_TOKEN` | Optional gate for preview deployments |
 
 **Health check:** `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }`
