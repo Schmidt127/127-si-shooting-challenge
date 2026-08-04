@@ -40,14 +40,18 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Web
 
 #### Added
+- **Production smoke package (2026-08-04)** — Playwright `tests/production-smoke.spec.ts` + helpers, HTTP smoke `scripts/http-smoke.mjs`, npm scripts (`test:smoke`, `test:smoke:prod`, `test:smoke:http*`), and runbook [`docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`](./docs/testing/PRODUCTION-SMOKE-RUNBOOK.md). Read-only coverage for `/shoot` routes, Fillout/landing URLs, assets, basePath duplication, console errors, mobile/desktop, and 404 behavior. SC-118.
 - **Homepage registration gateway (2026-08-03)** — Public `/shoot` home adds a registration section directly below the hero (before “Why it works”) with branded Fillout CTAs: Player Registration (`…/shoot/playerregistration`) and Daily Submissions (`…/shoot/dailysubmissions`). Canonical links in `web/lib/registration.ts`; reusable `RegistrationGateway` component; Vitest + Playwright coverage for URLs, CTA labels, `target=_blank` / `rel=noopener noreferrer`, accessible new-tab labels, and section placement. No Airtable/XP/auth/dashboard changes.
+
+#### Changed
+- **Official landing host default (2026-08-04)** — `resolveLandingUrl` / env examples default to `https://www.fairfieldbasketballclub.com` (matches live PROD branding). Still repairs historical `hooopchallenges.com` typo when present in env.
 
 #### Fixed
 - **Detail not-found pages missing h1 (2026-07-27)** — After dual-h1 empty-state fix, DetailPageShell not-found views used `h2` with no page `h1`. `EmptyState` now supports `titleAs="h1"` for missing homework/levels/tutorials/zoom/articles/shoutouts detail routes.
 - **Browser QA hardening (2026-07-25)** — Favicon/metadata now emit `/shoot/favicon.*` (was root `/favicon.png` 404); Airtable long-text Markdown (`**bold**`, italics, safe links) renders in `RichContent`; expired Airtable cover URLs (HTTP 410) fall back via `SafeExternalImage` on Zoom/Homework/Levels; empty/error states use `h2` (no dual `h1`); `resolveLandingUrl()` corrects live typo `hooopchallenges.com` → `www.hoopchallenges.com` (still fix Vercel `NEXT_PUBLIC_LANDING_URL`); default season label no longer hardcodes 2025–26; Playwright nav landmark assertion tightened. Report + external tickets: [`docs/browser-qa/BROWSER-QA-REPORT-2026-07-25.md`](./docs/browser-qa/BROWSER-QA-REPORT-2026-07-25.md).
 
 #### Added
-- **Public `/shoot` Playwright hardening suite (2026-07-27)** — Tablet overflow, keyboard focus-visible, reduced motion, hub `https://www.hoopchallenges.com` links, `target=_blank` noopener, favicon/metadata, demo label, empty catalog resilience (`web/tests/public-hardening.spec.ts`). No Vercel env mutations.
+- **Public `/shoot` Playwright hardening suite (2026-07-27)** — Tablet overflow, keyboard focus-visible, reduced motion, hub landing links, `target=_blank` noopener, favicon/metadata, demo label, empty catalog resilience (`web/tests/public-hardening.spec.ts`). No Vercel env mutations.
 
 #### Changed
 - **Unified public page design system (2026-07-23)** — Remaining `/shoot` pages now share the approved home-page shell (`PageHero`, `ProgramPage`, `SiteSection`, `CtaLink`, restrained catalog surfaces). Competitive energy on Leaderboard, Achievements, Public Display, and Athlete Profile; calmer instructional styling on Homework, Tutorials, Articles, and Game Manual; balanced treatment on Dashboard, Levels, Zoom Meetings, Shoutouts, and Admin. Data wiring, routes, and Airtable queries unchanged. Loading states added for articles, shoutouts, public-display, and game-manual.

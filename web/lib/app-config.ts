@@ -26,11 +26,15 @@ export function withBasePath(path: string): string {
   return `${APP_BASE_PATH}${normalized}`;
 }
 
-const DEFAULT_LANDING_URL = "https://www.hoopchallenges.com";
+/** Official public host / logo landing target for Shooting Challenge. */
+const DEFAULT_LANDING_URL = "https://www.fairfieldbasketballclub.com";
 
 /**
- * Normalize hub / landing URL. Guards a known PROD typo (`hooopchallenges.com`)
- * that broke header/footer links when set via NEXT_PUBLIC_LANDING_URL.
+ * Normalize hub / landing URL.
+ *
+ * Defaults to the official FBC host. Still repairs the known historical
+ * `hooopchallenges.com` typo when that value appears in env, and normalizes
+ * apex hosts to `www`.
  */
 export function resolveLandingUrl(raw: string | undefined | null): string {
   const trimmed = String(raw ?? "").trim();
@@ -50,6 +54,8 @@ export function resolveLandingUrl(raw: string | undefined | null): string {
       url.hostname = "www.hoopchallenges.com";
     } else if (host === "hoopchallenges.com") {
       url.hostname = "www.hoopchallenges.com";
+    } else if (host === "fairfieldbasketballclub.com") {
+      url.hostname = "www.fairfieldbasketballclub.com";
     }
 
     url.hash = "";

@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH?.trim() || "/shoot";
 const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-  `https://www.hoopchallenges.com${basePath}`;
+  `https://www.fairfieldbasketballclub.com${basePath}`;
 
 /**
  * Icon hrefs must include basePath. Production previously emitted `/favicon.png`

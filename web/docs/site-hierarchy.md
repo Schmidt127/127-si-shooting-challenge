@@ -7,7 +7,7 @@
 | Setting | Value |
 |---------|--------|
 | `NEXT_PUBLIC_BASE_PATH` | `/shoot` |
-| Public URL prefix | `https://www.hoopchallenges.com/shoot` |
+| Public URL prefix | `https://www.fairfieldbasketballclub.com/shoot` |
 | App source routes | `web/app/(program)/` |
 | Nav definition | `web/lib/navigation/shooting-challenge-nav.ts` |
 | Shell | `ProductShell` in `web/app/(program)/layout.tsx` |

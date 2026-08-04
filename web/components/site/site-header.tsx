@@ -30,7 +30,7 @@ export function SiteHeader({
             <a
               href={LANDING_URL}
               className="shrink-0 rounded-full transition-opacity hover:opacity-90"
-              aria-label={`${BRAND_ORG_NAME} — Hoop Challenges home`}
+              aria-label={`${BRAND_ORG_NAME} home`}
             >
               <BrandLogo
                 variant="circle"

@@ -88,15 +88,21 @@ test.describe("reduced motion", () => {
 test.describe("hub and external link safety", () => {
   test.use({ viewport: VIEWPORTS.desktop });
 
-  test("hub / back-to-landing links use https://www.hoopchallenges.com", async ({ page }) => {
+  test("hub / back-to-landing links use https://www.fairfieldbasketballclub.com", async ({
+    page,
+  }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
-    const hubLinks = page.locator('a[href^="https://www.hoopchallenges.com"]');
+    const hubLinks = page.locator(
+      'a[href^="https://www.fairfieldbasketballclub.com"]',
+    );
     await expect(hubLinks.first()).toBeVisible();
     const hrefs = await hubLinks.evaluateAll((els) =>
       els.map((el) => (el as HTMLAnchorElement).href),
     );
     expect(hrefs.some((h) => h.includes("hooopchallenges"))).toBeFalsy();
-    expect(hrefs.every((h) => h.startsWith("https://www.hoopchallenges.com"))).toBeTruthy();
+    expect(
+      hrefs.every((h) => h.startsWith("https://www.fairfieldbasketballclub.com")),
+    ).toBeTruthy();
   });
 
   test("external target=_blank links include noopener", async ({ page }) => {
