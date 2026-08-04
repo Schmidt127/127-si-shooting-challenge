@@ -136,6 +136,33 @@ test.describe("production smoke — registration gateway + external URLs", () =>
   });
 });
 
+test.describe("production smoke — mobile menu + More nav", () => {
+  test.use({ viewport: VIEWPORTS.mobile });
+
+  test("mobile menu opens, shows registration CTAs, and closes on Escape", async ({
+    page,
+  }) => {
+    await page.goto(".", { waitUntil: "domcontentloaded" });
+    const toggle = page.getByTestId("mobile-nav-toggle");
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+
+    const panel = page.getByTestId("mobile-nav-panel");
+    await expect(panel).toBeVisible();
+
+    await expect(
+      panel.getByRole("link", { name: /Register for the Challenge/i }),
+    ).toBeVisible();
+    await expect(
+      panel.getByRole("link", { name: /Submit Today's Activity/i }),
+    ).toBeVisible();
+
+    await page.keyboard.press("Escape");
+    await expect(panel).toHaveCount(0);
+    await expect(toggle).toBeFocused();
+  });
+});
+
 test.describe("production smoke — navigation, assets, basePath", () => {
   test.use({ viewport: VIEWPORTS.desktop });
 

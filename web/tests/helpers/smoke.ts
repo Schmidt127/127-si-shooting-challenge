@@ -16,7 +16,8 @@ export const OFFICIAL_LANDING_URL = "https://www.fairfieldbasketballclub.com";
 
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900 },
-  mobile: { width: 390, height: 844 },
+  tablet: { width: 768, height: 1024 },
+  mobile: { width: 375, height: 812 },
 } as const;
 
 /**

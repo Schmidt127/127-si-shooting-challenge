@@ -11,20 +11,22 @@ type LoadingStateProps = {
 export function LoadingState({ label = "Loading…", className }: LoadingStateProps) {
   return (
     <div
-      className={cn("flex flex-col items-center justify-center px-6 py-24", className)}
+      className={cn("flex flex-col items-center justify-center px-4 py-16 sm:px-6 sm:py-24", className)}
       role="status"
       aria-live="polite"
       aria-busy="true"
+      aria-label={label}
     >
-      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-8 text-center shadow-site-sm">
-        <div className="relative mx-auto h-1.5 w-40 overflow-hidden rounded-full bg-brand-light-gray">
+      <div className="w-full max-w-sm rounded-lg border border-border bg-card p-6 text-center shadow-site-sm sm:p-8">
+        <p className="text-sm font-bold text-foreground">Please wait</p>
+        <div className="relative mx-auto mt-4 h-1.5 w-40 max-w-full overflow-hidden rounded-full bg-brand-light-gray">
           <div
             className="absolute inset-y-0 w-1/3 rounded-full bg-brand-orange"
             style={{ animation: "loading-bar 1.1s ease-in-out infinite" }}
             aria-hidden="true"
           />
         </div>
-        <p className="mt-5 text-sm font-medium text-muted-foreground">{label}</p>
+        <p className="mt-5 text-sm font-medium leading-relaxed text-muted-foreground">{label}</p>
       </div>
     </div>
   );

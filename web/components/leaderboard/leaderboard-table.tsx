@@ -51,7 +51,7 @@ export function LeaderboardTable({
         </p>
       </div>
 
-      <div className="sc-table-scroll hidden overflow-hidden rounded-2xl border border-border md:block">
+      <div className="sc-table-scroll hidden rounded-2xl border border-border md:block">
         <table className="sc-table">
           <thead>
             <tr>
@@ -62,12 +62,12 @@ export function LeaderboardTable({
               <th>Level</th>
               <th data-align="right">
                 <span className="inline-flex items-center justify-end gap-1">
-                  <IconBolt size={14} /> XP
+                  <IconBolt size={14} aria-hidden /> XP
                 </span>
               </th>
               <th data-align="right">
                 <span className="inline-flex items-center justify-end gap-1">
-                  <IconTarget size={14} /> Shots
+                  <IconTarget size={14} aria-hidden /> Shots
                 </span>
               </th>
             </tr>

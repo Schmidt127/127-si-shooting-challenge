@@ -80,7 +80,7 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 | SC | Old status | New status | Source of change | Evidence |
 |----|------------|------------|------------------|----------|
 | SC-149 | *(new)* | Built in Repository | Landing domain transition to Fairfield Basketball Club | `web/lib/app-config.ts`; Vitest + Playwright; env examples |
-| SC-148 | *(new)* | Built in Repository | Mobile usability + accessibility for public `/shoot` | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts` (integrated from PR #54) |
+| SC-148 | *(new)* | Built in Repository | Mobile usability + accessibility for public `/shoot` | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts` |
 | SC-118 | Built in Repository | Built in Repository — smoke suite successfully executed against current PROD | Production smoke package (read-only Playwright + HTTP) | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md` |
 
 **Net math vs 2026-08-03:** Total 147→**149**; Built 28→**30**. SC-118 stays Built (smoke executed against PROD is evidence, not Installed/Live Tested for web deploy of this branch). SC-148/SC-149 not Installed until Vercel deploy + Mike production check.
@@ -261,7 +261,7 @@ Columns:
 | SC-115 | Website | noindex removal / search indexing | Decision Needed | Sitewide `noindex` still on; Playwright asserts it; overnight decision doc | Flip robots only after content + soft cutover + Mike written approval | SC-114 | SEO irreversible-ish; **no indexing change overnight** | `docs/overnight/web-integration/INDEXING-SEO-DECISION.md` | Approve indexing | P2 | 2026-07-23 |
 | SC-116 | Website | Admin roadmap (gated read-only first) | Built in Repository | `/admin` placeholder + overnight admin roadmap inventory; staff path scaffolding only | Staff auth then read-only aggregates; no writes in first slice | SC-112 | Do not expose diagnostics behind SITE_ACCESS_TOKEN alone | `docs/overnight/web-integration/ADMIN-ROADMAP.md`; `web/docs/admin-roadmap.md` | Choose staff auth | P3 | 2026-07-23 |
 | SC-117 | Website | Public Presentation fields consumed by web | Planned | Depends C-022 | Wire queries to Presentation fields only | SC-054 | — | C-022; V2-009 | — | P1 | 2026-07-23 |
-| SC-118 | Website | Production readiness smoke package for public `/shoot` | Built in Repository — smoke suite successfully executed against current PROD | **Production smoke package** (`production-smoke.spec.ts` + `http-smoke.mjs` + runbook); prior `public-experience` / hardening / registration-gateway specs retained; **2026-08-04** local + prod Playwright + HTTP `tokenValid` PASS on `fairfieldbasketballclub.com/shoot` (read-only). Branch deploy of this package not yet Installed/Live Tested. | Optional CI wire for `test:smoke`; axe-core later; Mike final prod check after integration deploy | SC-102 | Read-only; no form submits; no Airtable writes | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`; `PLAYWRIGHT-COVERAGE.md` | Optional CI authorize | P2 | 2026-08-04 |
+| SC-118 | Website | Production readiness smoke package for public `/shoot` | Built in Repository — smoke suite successfully executed against current PROD | **Production smoke package** (`production-smoke.spec.ts` + `http-smoke.mjs` + runbook); prior `public-experience` / hardening / registration-gateway / `mobile-a11y` specs retained; **2026-08-04** local + prod Playwright + HTTP `tokenValid` PASS on `fairfieldbasketballclub.com/shoot` (read-only). Branch deploy of this package not yet Installed/Live Tested. | Optional CI wire for `test:smoke`; axe-core later; Mike final prod check after integration deploy | SC-102 | Read-only; no form submits; no Airtable writes | `docs/testing/PRODUCTION-SMOKE-RUNBOOK.md`; `docs/testing/evidence/PRODUCTION-SMOKE-2026-08-04.md`; `PLAYWRIGHT-COVERAGE.md` | Optional CI authorize | P2 | 2026-08-04 |
 
 ### Additional cross-cutting / historical items
 
@@ -576,6 +576,32 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SC-118 | **Built in Repository — smoke suite successfully executed against current PROD** (not Installed/Live Tested for this integration branch until Mike deploys + checks) |
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
+
+### 9H. Mobile usability + accessibility package — **2026-08-04** (SC-148)
+
+**Status:** **Built in Repository** (not Installed / Live Tested until Vercel deploy + Mike smoke)
+
+| Area audited | Findings fixed | Remaining / notes |
+|--------------|----------------|-------------------|
+| Homepage hero | Full-width mobile CTAs; clearer hero muted contrast token | No redesign; brand structure preserved |
+| Registration gateway | 44px CTAs; also pinned at top of mobile menu | Fillout remains external (`target=_blank`) |
+| Header / mobile menu | Replaced horizontal-scroll nav with dialog menu; Escape + focus return; body scroll lock | Desktop/tablet keep primary + More dropdown |
+| Logo / nav links | Logo hit area ≥44px; labelled logo/wordmark; More menu aria-label | Fairfield landing links from SC-149 |
+| Buttons / CTAs | Default/sm/icon sizes raised to 44px+ | Dense `xs` left for non-primary chrome |
+| Forms / inputs | Existing `.sc-input` already 44px; focus ring strengthened | Few public forms today |
+| Cards / standings | Table header icons decorative; mobile card list unchanged structurally | Live leaderboard needs `AIRTABLE_API_TOKEN` in env |
+| Athlete dashboard | Profile text link underlined + min height | Auth still SC-112 Decision Needed |
+| Footer | Quick links use `.sc-text-link` (underlined, blue) | Fairfield home link |
+| Loading / empty / error | Clearer copy hierarchy; `role=status` / `role=alert`; mobile-friendly action stacking | — |
+
+**Viewports:** 375×812, 768×1024, 1440×900
+
+**Unresolved follow-ups (non-blocking for this package):**
+- Full axe-core audit not yet wired (tracked under SC-118)
+- Contrast of decorative court-line overlays on hero remains a visual-design judgment call
+- Athlete auth/dashboard real data blocked on SC-112
+- Production install = merge + Vercel deploy (Root Directory `web`)
+- Do not use page-wide `overflow-x: clip` in ways that hide tables/leaderboards
 
 ---
 

@@ -26,25 +26,36 @@ export function EmptyState({
 }: EmptyStateProps) {
   const TitleTag = titleAs;
   return (
-    <div className={cn("flex flex-col items-center justify-center px-6 py-16 sm:py-20", className)}>
+    <div
+      className={cn("flex flex-col items-center justify-center px-4 py-16 sm:px-6 sm:py-20", className)}
+      role="status"
+      aria-live="polite"
+    >
       <div className={catalogStatePanelClass(false)}>
         {icon ? (
-          <div className="mx-auto inline-flex rounded-lg border border-border bg-brand-light-gray p-3.5 text-muted-foreground">
+          <div
+            className="mx-auto inline-flex rounded-lg border border-border bg-brand-light-gray p-3.5 text-muted-foreground"
+            aria-hidden
+          >
             {icon}
           </div>
         ) : (
-          <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" />
+          <div className="mx-auto h-0.5 w-12 rounded-full bg-brand-orange/80" aria-hidden />
         )}
         <TitleTag
           className={cn(
-            "font-display text-2xl text-foreground",
+            "font-display text-xl text-foreground sm:text-2xl",
             icon ? "mt-5" : "mt-6",
           )}
         >
           {title}
         </TitleTag>
         <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
-        {action ? <div className="mt-6 flex flex-wrap justify-center gap-2">{action}</div> : null}
+        {action ? (
+          <div className="mt-6 flex w-full flex-col justify-center gap-2 sm:w-auto sm:flex-row sm:flex-wrap [&_a]:w-full sm:[&_a]:w-auto [&_a]:justify-center">
+            {action}
+          </div>
+        ) : null}
       </div>
     </div>
   );

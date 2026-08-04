@@ -47,7 +47,7 @@ function ExternalCta({
           variant: featured ? "cta" : "default",
           size: "default",
         }),
-        "w-full justify-center sm:w-auto",
+        "min-h-11 w-full justify-center sm:w-auto",
       )}
     >
       {cta}

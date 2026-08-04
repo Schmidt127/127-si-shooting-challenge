@@ -102,4 +102,8 @@ export const LOADING_LABELS = {
 export const ACCESSIBILITY_LABELS = {
   productNav: "Shooting Challenge",
   gradeBandFilter: "Filter leaderboard by grade band",
+  moreNav: "More navigation sections",
+  mobileMenuOpen: "Open navigation menu",
+  mobileMenuClose: "Close navigation menu",
+  mobileMenuDialog: "Shooting Challenge mobile navigation",
 } as const;
