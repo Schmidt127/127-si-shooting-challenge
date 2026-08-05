@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Automation 071 v3.5 Reviewer File URL parent-email contract — Built in Repository; PROD paste pending) |
+| Last updated | **2026-08-05** (Automation 071 v3.5 PROD live closeout + SC-003 Complete; dashboard recount) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -78,14 +78,14 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (SC-009/SC-101 closeout recount). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (Automation 071 live closeout + SC-003 Complete). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
-| Complete | 15 |
-| Live Tested in PROD | 23 |
-| Installed but not tested *(Installed in PROD)* | 49 |
+| Complete | 17 |
+| Live Tested in PROD | 22 |
+| Installed but not tested *(Installed in PROD)* | 48 |
 | Built but not installed *(Built in Repository)* | 24 |
 | Ready for PROD Paste *(informal — SC-021)* | 1 |
 | Planned | 17 |
@@ -95,14 +95,26 @@ Counts below match Section 4 as of **2026-08-05** (SC-009/SC-101 closeout recoun
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
+### Dashboard reconciliation (2026-08-05 — Automation 071 live closeout and SC-003 completion)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-017 | Installed in PROD | **Complete** | 071 **v3.5** pasted PROD; operator attestation on HC `recH71jEgjxzLup6F` / asset `recaGfnTzKFnCDazA`: Reviewer File URL → Make → Gmail → Sent?/Sent On by Make; no duplicate on rerun | `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; PR #77 merge `5e17b85` |
+| SC-003 | Live Tested in PROD | **Complete** | Views installed under `02 TESTING` (short-name aliases); `--require-installed` PASS 10/10; 0 sanity fails; Schmidt rows visible; `Grid Testing View` not accepted for WAS | `TESTING-VIEWS-SPEC.json`; `TESTING-VIEWS-VERIFY.json`; evidence README closeout 2026-08-05 |
+| SC-045 | Installed in PROD | **Installed in PROD** | Homework parent email (071) live-proven; welcome / video / Zoom recording approval (117f) still need individual re-proof | Same 071 closeout |
+
+**Net math vs post–SC-009/SC-101 closeout:** Complete 15→**17**; LT 23→**22** (SC-003 −1); Installed 49→**48** (SC-017 −1); Built stays **24**.
+
+**Next package:** Paste **057 v1.4** (SC-021 / SC-028 / SC-077) — [`docs/prod-completion/2026-08-05/NEXT-PACKAGE-AFTER-071-SC003.md`](./prod-completion/2026-08-05/NEXT-PACKAGE-AFTER-071-SC003.md).
+
 ### Dashboard reconciliation (2026-08-05 — Automation 071 Reviewer File URL)
 
 | SC | Old status | New status | Source of change | Evidence |
 |----|------------|------------|------------------|----------|
-| SC-017 | Installed in PROD | **Installed in PROD** (repo advanced) | Automation **071 v3.5** uses `Reviewer File URL` → Drive View → Drive File; Google Drive no longer required when reviewer URL exists | `071-…js` v3.5; `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; offline `tests/homework/automation-071-reviewer-file-url.test.js` |
-| SC-045 | Installed in PROD | **Installed in PROD** | Homework parent email contract unblocked for AWS/Lambda assets; live Gmail proof still open | Same |
+| SC-017 | Installed in PROD | **Installed in PROD** (repo advanced; later closed) | Automation **071 v3.5** uses `Reviewer File URL` → Drive View → Drive File | `071-…js` v3.5; offline tests; superseded by live closeout above |
+| SC-045 | Installed in PROD | **Installed in PROD** | Homework parent email contract unblocked for AWS/Lambda assets | Same |
 
-**Net math:** no bucket move — package is **Built in Repository** for the 071 script fix until Mike pastes v3.5 and supplies Airtable+Make evidence for `recH71jEgjxzLup6F`. Do **not** mark Live Tested until that evidence exists.
+**Historical note:** At merge of PR #77 the package was pending PROD paste. Operator attestation 2026-08-05 closed the live gate (see reconciliation above).
 
 **Parent email asset URL priority:** `Reviewer File URL` → `Google Drive View URL` → `Google Drive File URL`. Filenames are labels only. Make owns Sent? after Gmail success.
 
@@ -248,7 +260,7 @@ Columns:
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
 | SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8/v1.9 msg); dry+live PASS 2026-07-23; **rerun PASS 2026-07-24** (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`); offline harness 17 tests; scenario catalog 20 fixtures | Expand HW/Video live branches; UI-attest inventory; optional paste v1.9 | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/`; `live-115-rerun-latest.json`; `docs/testing/scenarios/` | **Resolved:** allowed in PROD | P0 | 2026-07-24 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo also has **SCN-021–026** (PR #43) + **SCN-027/028** quiz Option B (PR #44) + **SCN-029** weekly-email retry (PR #46) + **SCN-030–043** Agent 1 hardening fixtures Built pending PROD install | Install/execute SCN-021–043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md` | Confirm Airtable library table still wanted | P1 | 2026-07-27 |
-| SC-003 | Testing | Testing views on key pipeline tables | Live Tested in PROD | PROD views under section `02 TESTING` with short names; verifier aliases match Meta API (`Schmidt Testing`, `Schmidt Submissions`, …, `Seeded Weeks`); `--require-installed` PASS 2026-08-05 (10/10 required; XP/Assets/Enrollments sanity OK; known IDs visible) | Keep short aliases in sync if Mike renames; optional rename to canonical `Testing - …` names is not required | SC-004 | API cannot create views; **do not hide Schmidt**; do not accept `Grid Testing View` for WAS | `docs/testing/views/TESTING-VIEWS-SPEC.json`; `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/TESTING-VIEWS-VERIFY.json` | — | P0 | 2026-08-05 |
+| SC-003 | Testing | Testing views on key pipeline tables | Complete | PROD views under section `02 TESTING` with short names; verifier aliases match Meta API; `--require-installed` PASS 2026-08-05 (10/10 required; 0 sanity fails; known Schmidt IDs visible); `Grid Testing View` not accepted for WAS | None required — optional rename to canonical `Testing - …` names is cosmetic only | SC-004 | API cannot create views; **do not hide Schmidt**; do not accept `Grid Testing View` for WAS | `docs/testing/views/TESTING-VIEWS-SPEC.json`; `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/` (+ 2026-08-05 Complete closeout) | — | P0 | 2026-08-05 |
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` re-verified Active; Week `recVDKiYATgzsfpmE`; WAS `recuxvGq2kY8WKcey`; Submission→XP→HW→VF→Zoom links PASS (identity verifier 17/17) | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change | — | No separate exclusion field; web must not invent name filters | `SCHMIDT-IDENTITY-VERIFY.json`; `PROD-LIVE-SNAPSHOT.json`; foundation reset evidence | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-08-04 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Live Tested in PROD | Executable runner `run_e2e_matrix.mjs`; 2026-08-04 PROD run 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL covering identity, daily XP, homework, video presence, Zoom presence, WAS, idempotency refs | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject → SC-008 | SC-001–SC-004, core pipelines | Controlled data only; no mass email | `E2E-MATRIX-RESULTS.json`; `docs/V2_END_TO_END_TEST_MATRIX.md` | B3 Count-It day policy still open | P0 | 2026-08-04 |
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Live Tested in PROD | Expanded read-only verifier (daily + Schmidt identity + homework + video + zoom + writeback policy); offline 11/11; live matrix/identity PASS | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/lib/expected_actual.js`; `airtableWritebackPolicy()`; evidence folder | **Decision:** writeback stays off for now | P2 | 2026-08-04 |
@@ -262,7 +274,7 @@ Columns:
 | SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Live Tested in PROD | **Option B proven in PROD** — attachment-less; 0 Submission Assets; Enrollment+Week+Homework HC identity; attempts preserved separately | No further path decision; do not reopen Option A / Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-HOMEWORK-XP-CONTINUATION.md`; `QUIZ-PATH-DECISION.md` | **DECIDED Option B** | P0 | 2026-08-04 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
 | SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
-| SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used; **071 v3.5** (repo) prefers Reviewer File URL for parent email links — **PROD paste + live rerun still required** (`recH71jEgjxzLup6F`) | Paste 071 v3.5; controlled rerun; verify Make/Gmail writeback | SC-009–SC-016 | Do not invent second credit path; do not require Google Drive when Reviewer File URL present | homework-flow.md; automation-index; `071-homework-feedback-email-closeout.md` | — | P0 | 2026-08-05 |
+| SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Complete | **071 v3.5** PROD paste 2026-08-05 + operator-attested live path on HC `recH71jEgjxzLup6F` / asset `recaGfnTzKFnCDazA`: Reviewer File URL → Make → Gmail → Parent Feedback Sent?/Sent On by Make; no duplicate on rerun (gates already included Satisfactory + Awarded + XP) | None for unified review→XP→parent email; optional expand non-Schmidt | SC-009–SC-016 | Do not invent second credit path; do not require Google Drive when Reviewer File URL present | `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; homework-flow.md; PR #77 | — | P0 | 2026-08-05 |
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
@@ -290,7 +302,7 @@ Columns:
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24 (`send_short` + Make writeback); 071–077 + 117f still need individual re-proof | Re-test homework/video/welcome; 117f go-live | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture; SENT-FIELD-OWNERSHIP | — | P0 | 2026-07-24 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 homework parent email Live Tested / Complete path 2026-08-05** (operator attestation); video / welcome / 117f Zoom approval still need individual re-proof | Re-test video + welcome emails; 117f go-live if still pending | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture; SENT-FIELD-OWNERSHIP; `071-homework-feedback-email-closeout.md` | — | P0 | 2026-08-05 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
@@ -471,7 +483,7 @@ Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writ
 | Viewer | PROD Function URL `GET /file/{recordId}?token=…` → 302 to ~15 min presigned `GetObject` |
 | Final status owner | **Lambda** is authoritative for successful upload writeback; successful assets finish as **`Upload Status = Uploaded`** (not Processing / Pending Link) |
 | Private access path | Coaches open private S3 objects only through the tokenized reviewer endpoint (`Reviewer File URL`) |
-| Parent homework email (071) | Parent-facing file links use the same priority: **`Reviewer File URL` → Google Drive View URL → Google Drive File URL** (v3.5+). Never Canonical/S3 keys. Make marks Sent? after Gmail. |
+| Parent homework email (071) | **Complete** — parent-facing file links use **`Reviewer File URL` → Google Drive View URL → Google Drive File URL** (v3.5). PROD paste + operator-attested live send 2026-08-05 on `recH71jEgjxzLup6F`. Make marks Sent? after Gmail. |
 | PROD proof | Submission Asset `recaXBfjeeu3bcm0t`; Lambda deploy `2026-08-04T23:57:36Z`; Interface click opened file immediately with no extra auth |
 | Security follow-up | **P0 separate:** rotate credentials exposed during terminal troubleshooting (not in this package) |
 
