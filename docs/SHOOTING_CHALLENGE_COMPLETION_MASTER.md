@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-04** (SC-009 — photo homework E2E Live Tested in PROD) |
+| Last updated | **2026-08-04** (SC-007 / SC-008 reliability + SC-009 photo homework Live Tested) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -67,16 +67,25 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 13 |
-| Live Tested in PROD | 19 |
+| Live Tested in PROD | 20 |
 | Installed but not tested *(Installed in PROD)* | 50 |
 | Built but not installed *(Built in Repository)* | 26 |
 | Ready for PROD Paste *(informal — SC-021)* | 1 |
-| Planned | 20 |
+| Planned | 19 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — SC-007 / SC-008 reliability proof)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-007 | Live Tested in PROD | **Live Tested in PROD** (expanded) | Offline idempotency pack + Schmidt XP inventory (14 keys, 0 dups) covering submission/HW/video/Zoom credit/streak/threshold | `docs/testing/evidence/2026-08-04-sc-007-008-reliability/` |
+| SC-008 | Planned | **Live Tested in PROD** | Failure-path offline pack + PROD upload success contract on `recaXBfjeeu3bcm0t`; anonymous S3 403; reviewer URL 302 | Same folder; `SC-007-008-RELIABILITY-RUNBOOK.md` |
+
+**Net math vs post–SC-009:** Planned 20→**19**; LT 19→**20**. Residual: optional Mike-authorized live 074 webhook inject (SCN-029); 010 UI re-trigger attest; milestone/Perfect Week / Zoom attend live fixtures when available.
 
 ### Dashboard reconciliation (2026-08-04 — SC-009 photo homework E2E)
 
@@ -186,8 +195,8 @@ Columns:
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven (incl. 115 live Submission `recuuTBgstSTGg2E3`) | Keep emails Schmidt-only; **overnight direction 2026-07-23: Schmidt remains visible on public standings** (do not add leaderboard exclusion filter yet); website is name-blind | — | No separate exclusion field; web must not invent name filters | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`; `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `docs/overnight/web-integration/PUBLIC-STANDINGS-AUDIT.md` | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-07-23 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | Matrix updated 2026-07-24 with evidence categories; A3/A4/B1/B2 partial PROD passes; B3 policy blocked; B5 backdate blocked | Execute remaining matrix on Schmidt; refresh Zoom rows | SC-001–SC-004, core pipelines | Controlled data only | `V2_END_TO_END_TEST_MATRIX.md`; testing-integrity REPORT | — | P0 | 2026-07-24 |
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Built in Repository | Read-only verifier `tools/testing/lib/expected_actual.js` + CLI; offline tests PASS; live probe bundle PASS | Wire auto-write of Pass/Fail onto Testing Scenarios (optional); expand check coverage | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/`; `prod-probe-latest.json` | Want Airtable writeback auto-score now? | P2 | 2026-07-24 |
-| SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Live Tested in PROD | Live 115 rerun + WAS uniqueness + one XP per Submission proven 2026-07-24; XP Source Key inventory PASS for Schmidt | Live packs still needed: HW, video, Zoom, streak/milestone, emails; 010 UI re-trigger attest | SC-066, SC-096+ | Never create double XP | `live-115-rerun-latest.json`; `XP-IDEMPOTENCY-AUDIT.md`; `CORE-UNIQUENESS-AUDIT.md` | Decide 115 Count It vs 007a policy | P0 | 2026-07-24 |
-| SC-008 | Testing | Email, Make, upload, and failure-path testing | Planned | C-013 video E2E historically PASS; Make blueprints; upload runbooks | Failure inject: webhook down, Lambda reject, blank webhook, retry; homework route; weekly email Test mode | SC-131+, SC-051+ | Route test traffic to Schmidt only | C-013 checklists; C-011 activation checklist | — | P1 | 2026-07-23 |
+| SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Live Tested in PROD | Offline SC-007 pack + matrix; Schmidt inventory **14 XP / 0 blank / 0 dup Source Keys** (submission, HW `HOMEWORK_XP\|recrBnHbLvDpFyIeO`, video, `ZOOM_CREDIT`, streak×3, threshold×3); WAS uniqueness PASS | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present | SC-066, SC-096+ | Never create double XP; do not invent new keys | `docs/testing/evidence/2026-08-04-sc-007-008-reliability/`; `tools/testing/sc-007-008/` | Decide 115 Count It vs 007a policy | P0 | 2026-08-04 |
+| SC-008 | Testing | Email, Make, upload, and failure-path testing | Live Tested in PROD | Failure-path pack (webhook null/502/malformed, blank recipient rearm, Lambda reject, incomplete writeback, retry idempotent); Lambda auth/viewer/token units; PROD asset `recaXBfjeeu3bcm0t` success contract PASS; Canonical anonymous **403**; Reviewer URL **302** | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) — offline+SOP already cover keep-Send-to-Make? | SC-131+, SC-051+, SC-150 | Schmidt-only emails; no global service disable | `docs/testing/SC-007-008-RELIABILITY-RUNBOOK.md`; evidence folder above | — | P1 | 2026-08-04 |
 | SC-009 | Homework | Photo / image homework submissions work end-to-end | Live Tested in PROD | Schmidt PNG+JPG E2E 2026-08-04: Submission→009 asset→020 HC→Lambda `homework_completion`→S3 Uploaded+Reviewer URL→coach→one XP; Writeback Complete? + HC Upload Ready? formulas fixed; 070a v4.5 Canonical skip in GitHub | Paste 070a v4.5 to Airtable; Make Module writeback follow-up (SC-101 — Accepted without Airtable writeback observed) | SC-019, SC-095, SC-101, SC-150 | One HC per assignment; Canonical stays private | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/`; `docs/deploy-checklists/SC-009-photo-homework-prod.md` | Paste 070a v4.5 | P0 | 2026-08-04 |
 | SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz uses Option B (no PDF asset — SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-24 |
 | SC-011 | Homework | Video submissions as homework/learning assets | Installed in PROD | Video path via 013/070b/070c/114 historically live | Re-test video as homework vs daily video rules; confirm purpose routing | SC-133 | Do not double-credit video XP | LA routing `video`; C-013 | — | P0 | 2026-07-23 |

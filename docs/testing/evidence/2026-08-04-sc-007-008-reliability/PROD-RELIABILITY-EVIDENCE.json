@@ -1,0 +1,197 @@
+{
+  "generated_at": "2026-08-05T00:15:48.878Z",
+  "package": "SC-007 / SC-008 reliability proof",
+  "base_id": "appn84sqPw03zEbTT",
+  "schmidt": {
+    "enrollment_id": "recgP9qZYjAhE7NXm",
+    "athlete_id": "recgqVstObQRzgXJF",
+    "active": true
+  },
+  "sc007": {
+    "xp_inventory": {
+      "schmidt_xp_events": 14,
+      "blank_source_keys": 0,
+      "unique_source_keys": 14,
+      "duplicate_source_keys": [],
+      "pass_no_duplicates": true
+    },
+    "path_coverage": [
+      {
+        "id": "daily-submission-xp",
+        "label": "Daily submission XP",
+        "expected_writer": "010-submission-intake-create-xp-event.js",
+        "schmidt_matching_xp_count": 5,
+        "schmidt_source_keys": [
+          "SUBMISSION_XP|recuuTBgstSTGg2E3",
+          "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+          "SUBMISSION_XP|rec9yoDZ3DMIEhi3I",
+          "SUBMISSION_XP|recM0GbWfptu06da1",
+          "SUBMISSION_XP|recbAVGWg0OKT7FSX"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "homework-completion",
+        "label": "Homework completion identity",
+        "expected_writer": "020-homework-link-or-create-homework-completion.js / 067-homework-link-or-create-completion-from-reflection-quiz.js",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "homework-xp",
+        "label": "Homework XP",
+        "expected_writer": "065-homework-review-and-xp-create-homework-xp-event.js",
+        "schmidt_matching_xp_count": 1,
+        "schmidt_source_keys": [
+          "HOMEWORK_XP|recrBnHbLvDpFyIeO"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "video-upload-writeback",
+        "label": "Video / asset upload writeback",
+        "expected_writer": "Lambda 127si-upload-asset (+ 070a/070b handoff, 070c clear)",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "video-xp",
+        "label": "Video Feedback XP",
+        "expected_writer": "114-video-review-and-xp-create-or-update-video-xp-event.js",
+        "schmidt_matching_xp_count": 1,
+        "schmidt_source_keys": [
+          "VIDEO_SUBMISSION|reccXspFIiNIPMPcm"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "zoom-credit",
+        "label": "Zoom recording credit XP",
+        "expected_writer": "117-zoom-recording-credit-orchestrator.js OR 117c-zoom-recording-create-zoom-xp-event.js (only one ON)",
+        "schmidt_matching_xp_count": 1,
+        "schmidt_source_keys": [
+          "ZOOM_CREDIT|recgP9qZYjAhE7NXm|reczeUT0AJUWMmEOb"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "zoom-attend-base",
+        "label": "Zoom live attendance base XP",
+        "expected_writer": "101-zoom-attendance-xp-award-meeting-xp.js",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "streak-xp",
+        "label": "Streak XP",
+        "expected_writer": "054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js",
+        "schmidt_matching_xp_count": 3,
+        "schmidt_source_keys": [
+          "STREAK_XP|recgP9qZYjAhE7NXm|rechOec7g8LBLcdgl|2026-07-17",
+          "STREAK_XP|recgP9qZYjAhE7NXm|recP8QP4uhEXaiZAX|2026-07-19",
+          "STREAK_XP|recgP9qZYjAhE7NXm|recQuAtXyT2wKJNGI|2026-07-15"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "shot-milestone",
+        "label": "Shot milestone unlock + XP",
+        "expected_writer": "066 unlock → 059 XP (Source Key SHOT_MILESTONE|{enr}|{milestoneId})",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "perfect-week",
+        "label": "Perfect Week unlock + XP",
+        "expected_writer": "058 unlock → 059 XP",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "weekly-threshold-xp",
+        "label": "Weekly threshold XP",
+        "expected_writer": "035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js",
+        "schmidt_matching_xp_count": 3,
+        "schmidt_source_keys": [
+          "WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|recVDKiYATgzsfpmE|100",
+          "WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|recVDKiYATgzsfpmE|150",
+          "WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|recVDKiYATgzsfpmE|125"
+        ],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "was-uniqueness",
+        "label": "Weekly Athlete Summary creation",
+        "expected_writer": "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      },
+      {
+        "id": "weekly-email-send",
+        "label": "Weekly email send protection",
+        "expected_writer": "072 build package → 074 webhook → Make Live writeback (eventId WEEKLY_EMAIL|…)",
+        "schmidt_matching_xp_count": 0,
+        "schmidt_source_keys": [],
+        "duplicate_keys_in_match": []
+      }
+    ],
+    "homework": {
+      "completion_id": "recrBnHbLvDpFyIeO",
+      "xp_id": "rec6xE4V1t0atiTIP",
+      "xp_source_key": "HOMEWORK_XP|recrBnHbLvDpFyIeO",
+      "xp_points": 35
+    },
+    "was_uniqueness": {
+      "foundation_was_id": "rechWp330MqSgRWzN",
+      "schmidt_was_rows_scanned": 1,
+      "duplicate_enrollment_week_groups": [],
+      "pass": true,
+      "sample_email_fields": {
+        "error": "Weekly Athlete Summary/rechWp330MqSgRWzN 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model w"
+      }
+    }
+  },
+  "sc008": {
+    "upload_success_contract": {
+      "asset_id": "recaXBfjeeu3bcm0t",
+      "verified": true,
+      "failed_checks": [],
+      "message": "Final upload success contract verified (Uploaded, trigger clear, reviewer fields).",
+      "observed": {
+        "upload_status": "Uploaded",
+        "send_to_make_trigger": false,
+        "upload_error_blank": true,
+        "canonical_file_url_present": true,
+        "storage_key_present": true,
+        "uploaded_at_present": true,
+        "reviewer_access_token_present": true,
+        "reviewer_file_url_present": true,
+        "reviewer_file_url_redacted": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recaXBfjeeu3bcm0t?token=%5BREDACTED%5D"
+      }
+    },
+    "private_s3_anonymous": {
+      "skipped": false,
+      "status": 403,
+      "inaccessibleAnonymously": true,
+      "note": "Expect AccessDenied / 403 for private bucket objects"
+    },
+    "reviewer_url_open": {
+      "skipped": false,
+      "status": 302,
+      "redirectedToPresign": true,
+      "locationHost": "shooting-challenge-assets.s3.amazonaws.com"
+    },
+    "note": "Failure injection for webhook/Lambda uses offline pack + Lambda unit tests; no global service disable."
+  },
+  "cleanup": {
+    "records_created": [],
+    "records_deleted": [],
+    "note": "Read-only probe — no cleanup required"
+  }
+}

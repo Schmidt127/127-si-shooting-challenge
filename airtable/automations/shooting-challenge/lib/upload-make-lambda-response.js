@@ -236,6 +236,56 @@ function evaluateSubmissionAssetWriteback(fields) {
 }
 
 /**
+ * SC-008 final success contract for a completed upload (post-070c / post-Lambda).
+ * Additive to evaluateSubmissionAssetWriteback — does not change 070c gate behavior.
+ * Matches the documented cross-system success fields (including SC-150 reviewer fields).
+ *
+ * @param {Record<string, unknown>} fields
+ * @returns {{
+ *   verified: boolean,
+ *   checks: Record<string, boolean>,
+ *   failedChecks: string[],
+ *   message: string,
+ * }}
+ */
+function evaluateFinalUploadSuccessContract(fields) {
+    const uploadStatus = selectName(fields["Upload Status"]);
+    const uploadError = selectName(fields["Upload Error"]);
+    const sendToMake = fields["Send to Make Trigger"];
+    const sendUnchecked =
+        sendToMake === false ||
+        sendToMake === 0 ||
+        sendToMake === "0" ||
+        sendToMake == null ||
+        sendToMake === "";
+
+    const checks = {
+        uploadStatusUploaded: uploadStatus === "Uploaded",
+        sendToMakeTriggerUnchecked: sendUnchecked,
+        uploadErrorBlank: !uploadError,
+        canonicalUrlPopulated: nonemptyText(fields["Canonical File URL"]),
+        storageKeyPopulated: nonemptyText(fields["Storage Key"]),
+        uploadedAtPopulated: fields["Uploaded At"] != null && fields["Uploaded At"] !== "",
+        reviewerAccessTokenPopulated: nonemptyText(fields["Reviewer Access Token"]),
+        reviewerFileUrlPopulated: nonemptyText(fields["Reviewer File URL"]),
+    };
+
+    const failedChecks = Object.entries(checks)
+        .filter(([, pass]) => !pass)
+        .map(([name]) => name);
+    const verified = failedChecks.length === 0;
+
+    return {
+        verified,
+        checks,
+        failedChecks,
+        message: verified
+            ? "Final upload success contract verified (Uploaded, trigger clear, reviewer fields)."
+            : `Final upload success contract incomplete: ${failedChecks.join(", ")}`,
+    };
+}
+
+/**
  * 070c writeback-only verification (independent of Send to Make Trigger state).
  * @param {Record<string, unknown>} fields
  * @returns {WritebackEvaluation}
@@ -387,6 +437,7 @@ module.exports = {
     evaluateLambdaHandoffResult,
     evaluateMakeLambdaResponseText,
     evaluateSubmissionAssetWriteback,
+    evaluateFinalUploadSuccessContract,
     evaluate070cAsyncWritebackVerification,
     buildAcceptedAsyncHandoffResult,
     decide070cAction,
