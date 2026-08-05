@@ -49,7 +49,9 @@ $env:AWS_PROFILE = $null
 
 See [deploy-and-url-test plan](../../docs/deploy-checklists/C-013-dev-lambda-deploy-and-url-test.md#lambda-environment-already-set-in-aws-console).
 
-**Auth:** Every POST must send `X-Upload-Secret` matching `UPLOAD_WEBHOOK_SECRET`. Missing/invalid → **401**, no Airtable PATCH.
+**Auth:** Upload `POST` must send `X-Upload-Secret` matching `UPLOAD_WEBHOOK_SECRET`. Missing/invalid → **401**, no Airtable PATCH.
+
+**Viewer:** `GET /file/{recordId}?token=…` does **not** use `X-Upload-Secret` (token auth). See [SC-150-prod-reviewer-file-links.md](../../docs/deploy-checklists/SC-150-prod-reviewer-file-links.md).
 
 ## Post-deploy smoke (Function URL)
 

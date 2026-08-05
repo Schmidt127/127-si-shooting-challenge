@@ -1,17 +1,22 @@
-# DEV Lambda — asset upload (C-013 / C-023)
+# Lambda — asset upload + private reviewer viewer
 
-**Function name:** `127si-dev-shooting-challenge-asset-upload`  
-**Architecture:** Airtable 070b payload → Make (later) → **this Lambda** → S3 → Airtable writeback
+**PROD function:** `127si-upload-asset` (`us-east-2`)  
+**Function URL:** `https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/`  
+**Architecture:** Airtable 070a/070b → Make → **Lambda POST upload** → private S3 → Airtable writeback; coaches open **`Reviewer File URL`** → **Lambda GET viewer** → short-lived S3 presigned redirect.
 
 ## Layout
 
 ```text
 lambda/upload-asset/
-  handler.py           # Lambda entry
-  upload_core/         # Shared logic (ported from c013_dev_s3_upload_proof.py)
+  handler.py              # Routes upload POST + viewer GET
+  upload_core/
+    processor.py          # Upload claim, S3 put, token writeback, read-back verify
+    viewer.py             # GET /file/{recordId}?token=… → 302 presigned
+    token.py              # Secure reviewer token mint / compare
+    airtable.py / auth.py / …
   tests/
-  deploy.ps1
-  iam-policy-dev.json
+  deploy.ps1 / deploy-prod.ps1
+  iam-policy-prod.json    # Includes s3:GetObject (required for presign)
 ```
 
 ## Local test (no AWS deploy)
@@ -21,50 +26,46 @@ cd lambda/upload-asset
 python -m unittest discover -s tests -p "test_*.py" -v
 ```
 
-**Stage 2A/2B (2026-07-10):** Lambda-owned upload claim (`upload_core/upload_claim.py`) and contextual asset-reuse review (`upload_core/duplicate.py`) — **38+ unit tests PASS**. Homework route (`homework_completion` / **070a**) added 2026-07-10 for H3e.
+## Routes
 
-Legacy path helpers and DEV invoke (requires env; not part of unit tests):
+| Method | Path | Auth | Purpose |
+|--------|------|------|---------|
+| `POST` | `/` (Function URL root) | `X-Upload-Secret` | Upload engine |
+| `GET` | `/file/{rec…}?token=…` | Reviewer Access Token | Private file redirect |
+| `GET` | `/` | — | `405` |
+| `POST` | `/file/…` | — | `405` |
 
-```powershell
-python tests/test_core.py
-
-cd ../../tools/airtable
-python c013_dev_h2_video_run.py --confirm-write --prepare-only
-python c013_dev_lambda_invoke.py <assetId> --out _preview/c013-dev-lambda-h2-proof-<assetId>.json
-python _probe_c013_asset_storage_fields.py --record-id <assetId> --out tools/airtable/_preview/c013-dev-lambda-h2-proof-<assetId>-verify.json
-```
-
-## Deploy (DEV)
-
-See [DEPLOY.md](./DEPLOY.md). Summary:
-
-```powershell
-cd lambda/upload-asset
-.\deploy.ps1
-```
-
-## Environment variables (Lambda console / deploy script)
+## Environment variables
 
 | Variable | Value |
 |----------|--------|
-| `AIRTABLE_BASE_ID` | `appTetnuCZlCZdTCT` |
-| `AIRTABLE_API_TOKEN` | *(Secrets Manager or env — not in Git)* |
-| `AIRTABLE_TOKEN` | Same PAT (alias) |
+| `AIRTABLE_BASE_ID` | PROD `appn84sqPw03zEbTT` / DEV `appTetnuCZlCZdTCT` |
+| `AIRTABLE_API_TOKEN` / `AIRTABLE_TOKEN` | *(secret — not in Git)* |
 | `S3_BUCKET` | `shooting-challenge-assets` |
-| `ENVIRONMENT` | `DEV` |
+| `ENVIRONMENT` | `PROD` or `DEV` |
 | `ALLOW_ROUTE_KEYS` | `video_feedback,homework_completion` |
-| `SEASON_SLUG` | `2026-2027` |
-| `CHALLENGE_SLUG` | `shooting-challenge` |
-| `UPLOAD_WEBHOOK_SECRET` | Random string (secret — Lambda env + Make header only) |
+| `SEASON_SLUG` / `CHALLENGE_SLUG` | season path segments |
+| `UPLOAD_WEBHOOK_SECRET` | Upload POST secret |
+| `VIEWER_PRESIGN_TTL_SECONDS` | Optional; default `900` |
 
-**Note:** Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function. **`X-Upload-Secret` required** on every request when `UPLOAD_WEBHOOK_SECRET` is set.
+Do not set `AWS_REGION` in Lambda env (reserved). Region = `us-east-2` on the function.
 
-## Make integration (not enabled yet)
+## Deploy
 
-Scenario: `Shooting Challenge - DEV - Upload Engine - Lambda - v1`
+- DEV: [DEPLOY.md](./DEPLOY.md)
+- PROD reviewer-link package: [SC-150-prod-reviewer-file-links.md](../../docs/deploy-checklists/SC-150-prod-reviewer-file-links.md)
 
-```text
-Webhook → Router (070b, video_feedback) → HTTP POST Lambda Function URL → 200
+```powershell
+cd lambda/upload-asset
+.\deploy-prod.ps1 -CodeOnly
 ```
 
-**070a / 070b:** OFF until Mike approves after Lambda direct test PASS.
+## Airtable formula (`Reviewer File URL`)
+
+See deploy checklist. Shape:
+
+```text
+{VIEWER_BASE}/file/{Record Id}?token={Reviewer Access Token}
+```
+
+PROD viewer base = Function URL above (no trailing slash before `/file/`).

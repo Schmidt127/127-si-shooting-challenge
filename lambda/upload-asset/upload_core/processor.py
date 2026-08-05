@@ -17,10 +17,17 @@ from upload_core.duplicate import (
 from upload_core.fields import (
     FIELD_CANONICAL_FILE_URL,
     FIELD_FILE_CONTENT_HASH,
+    FIELD_FILE_HASH_ALGORITHM,
+    FIELD_FILE_MIME_TYPE,
+    FIELD_FILE_SIZE_BYTES,
+    FIELD_REVIEWER_ACCESS_TOKEN,
+    FIELD_STORAGE_KEY,
     FIELD_UPLOAD_ERROR,
     FIELD_UPLOAD_STATUS,
+    FIELD_UPLOADED_AT,
 )
-from upload_core.routes import ROUTE_HOMEWORK_COMPLETION, ROUTE_VIDEO_FEEDBACK, resolve_upload_route
+from upload_core.routes import resolve_upload_route
+from upload_core.token import resolve_reviewer_token
 from upload_core.upload_claim import ClaimEvaluation, evaluate_upload_claim
 from upload_core.util import (
     DENVER,
@@ -74,19 +81,80 @@ def writeback_fields(
     file_hash: str,
     size_bytes: int,
     mime_type: str,
+    reviewer_access_token: str,
 ) -> dict:
     uploaded_at = datetime.now(DENVER_TZ).isoformat(timespec="milliseconds")
     return {
         FIELD_UPLOAD_STATUS: "Uploaded",
-        "Canonical File URL": canonical,
-        "Storage Key": storage_key,
+        FIELD_CANONICAL_FILE_URL: canonical,
+        FIELD_STORAGE_KEY: storage_key,
         FIELD_FILE_CONTENT_HASH: file_hash,
-        "File Hash Algorithm": "SHA-256",
-        "Uploaded At": uploaded_at,
-        "File Size Bytes": size_bytes,
-        "File MIME Type": mime_type,
+        FIELD_FILE_HASH_ALGORITHM: "SHA-256",
+        FIELD_UPLOADED_AT: uploaded_at,
+        FIELD_FILE_SIZE_BYTES: size_bytes,
+        FIELD_FILE_MIME_TYPE: mime_type,
+        FIELD_REVIEWER_ACCESS_TOKEN: reviewer_access_token,
         FIELD_UPLOAD_ERROR: None,
     }
+
+
+def verify_uploaded_writeback(
+    *,
+    token: str,
+    base_id: str,
+    record_id: str,
+    expected_storage_key: str,
+    expected_canonical: str,
+    expected_reviewer_token: str,
+) -> dict:
+    """Re-read Airtable and confirm Lambda-owned final upload state."""
+    record = get_asset(token, base_id, record_id)
+    fields = record.get("fields", {}) if isinstance(record, dict) else {}
+    status = select_name(fields.get(FIELD_UPLOAD_STATUS))
+    storage_key = str(fields.get(FIELD_STORAGE_KEY) or "").strip()
+    canonical = str(fields.get(FIELD_CANONICAL_FILE_URL) or "").strip()
+    reviewer_token = str(fields.get(FIELD_REVIEWER_ACCESS_TOKEN) or "").strip()
+
+    checks = {
+        "uploadStatusUploaded": status == "Uploaded",
+        "storageKeyMatches": storage_key == expected_storage_key and bool(storage_key),
+        "canonicalUrlMatches": canonical == expected_canonical and bool(canonical),
+        "reviewerTokenPopulated": bool(reviewer_token)
+        and reviewer_token == expected_reviewer_token,
+        "notProcessing": status != "Processing",
+        "notPendingLink": status != "Pending Link",
+    }
+    checks["allPass"] = all(checks.values())
+    if not checks["allPass"]:
+        raise UploadError(
+            "Airtable writeback verification failed: record is not in final Uploaded state",
+            status_code=500,
+            action_out="error_writeback_verification",
+        )
+    return checks
+
+
+def ensure_reviewer_token_on_existing_upload(
+    *,
+    token: str,
+    base_id: str,
+    record_id: str,
+    fields: dict,
+) -> tuple[str, bool]:
+    """If already Uploaded but token blank, mint once and patch (idempotent)."""
+    reviewer_token, created = resolve_reviewer_token(fields.get(FIELD_REVIEWER_ACCESS_TOKEN))
+    if created:
+        patched = patch_asset(
+            token,
+            base_id,
+            record_id,
+            {FIELD_REVIEWER_ACCESS_TOKEN: reviewer_token},
+        )
+        patched_fields = patched.get("fields", {})
+        fields[FIELD_REVIEWER_ACCESS_TOKEN] = patched_fields.get(
+            FIELD_REVIEWER_ACCESS_TOKEN, reviewer_token
+        )
+    return reviewer_token, created
 
 
 def upload_s3(bucket: str, region: str, key: str, body: bytes, content_type: str) -> dict:
@@ -206,6 +274,12 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
     effective_automation = automation_number or route.automation_number
 
     if already_uploaded(fields):
+        reviewer_token, token_created = ensure_reviewer_token_on_existing_upload(
+            token=token,
+            base_id=base_id,
+            record_id=record_id,
+            fields=fields,
+        )
         duration_ms = int((time.time() - started) * 1000)
         return {
             "ok": True,
@@ -216,6 +290,8 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "routeKey": route_key,
             "automationNumber": effective_automation,
             "message": "Asset already uploaded with canonical URL and hash.",
+            "reviewerTokenPopulated": bool(reviewer_token),
+            "reviewerTokenCreated": token_created,
             "durationMs": duration_ms,
         }
 
@@ -303,14 +379,33 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         mime_type,
     )
 
+    # Re-read before final writeback so retries reuse an existing reviewer token.
+    try:
+        latest = get_asset(token, base_id, record_id)
+        latest_fields = latest.get("fields", {}) if isinstance(latest, dict) else {}
+        existing_token_source = latest_fields.get(FIELD_REVIEWER_ACCESS_TOKEN)
+    except Exception:
+        existing_token_source = fields.get(FIELD_REVIEWER_ACCESS_TOKEN)
+    reviewer_token, reviewer_token_created = resolve_reviewer_token(existing_token_source)
+
     upload_wb = writeback_fields(
         canonical=canonical,
         storage_key=storage_key,
         file_hash=file_hash,
         size_bytes=size_bytes,
         mime_type=mime_type,
+        reviewer_access_token=reviewer_token,
     )
     patched_upload = patch_asset(token, base_id, record_id, upload_wb)
+
+    readback_checks = verify_uploaded_writeback(
+        token=token,
+        base_id=base_id,
+        record_id=record_id,
+        expected_storage_key=storage_key,
+        expected_canonical=canonical,
+        expected_reviewer_token=reviewer_token,
+    )
 
     review_writeback_applied = False
     review_writeback_error = ""
@@ -338,14 +433,23 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
         review_writeback_error=review_writeback_error,
     )
 
+    # Response must not include the raw reviewer token (Airtable holds it).
+    writeback_for_response = {
+        k: v for k, v in {**upload_wb, **review_wb}.items() if k != FIELD_REVIEWER_ACCESS_TOKEN
+    }
+    writeback_for_response["Reviewer Access Token Set"] = True
+
     writeback_verification = {
-        "canonicalUrlPopulated": bool(upload_wb.get("Canonical File URL")),
-        "storageKeyPopulated": bool(upload_wb.get("Storage Key")),
+        "canonicalUrlPopulated": bool(upload_wb.get(FIELD_CANONICAL_FILE_URL)),
+        "storageKeyPopulated": bool(upload_wb.get(FIELD_STORAGE_KEY)),
         "fileContentHashPopulated": verify_hash_hex(file_hash),
-        "fileHashAlgorithmSha256": upload_wb.get("File Hash Algorithm") == "SHA-256",
-        "uploadedAtPopulated": bool(upload_wb.get("Uploaded At")),
+        "fileHashAlgorithmSha256": upload_wb.get(FIELD_FILE_HASH_ALGORITHM) == "SHA-256",
+        "uploadedAtPopulated": bool(upload_wb.get(FIELD_UPLOADED_AT)),
         "uploadStatusUploaded": upload_wb.get(FIELD_UPLOAD_STATUS) == "Uploaded",
         "uploadErrorCleared": upload_wb.get(FIELD_UPLOAD_ERROR) is None,
+        "reviewerTokenPopulated": bool(reviewer_token),
+        "reviewerTokenCreated": reviewer_token_created,
+        "readbackVerified": readback_checks.get("allPass") is True,
         "hashHexLength": len(file_hash),
         "duplicateLookupPerformed": c023.get("duplicateLookupPerformed"),
         "reviewWritebackApplied": review_writeback_applied,
@@ -363,6 +467,8 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "uploadedAtPopulated",
             "uploadStatusUploaded",
             "uploadErrorCleared",
+            "reviewerTokenPopulated",
+            "readbackVerified",
             "duplicateLookupPerformed",
         )
     )
@@ -394,11 +500,16 @@ def process_upload_asset(config: UploadConfig, payload: dict) -> dict:
             "valid64CharHex": verify_hash_hex(file_hash),
         },
         "c023Duplicate": c023,
-        "writebackApplied": {**upload_wb, **review_wb},
+        "writebackApplied": writeback_for_response,
         "airtablePatchId": patched_upload.get("id"),
         "writebackVerification": writeback_verification,
         "durationMs": duration_ms,
     }
+
+
+def _should_write_error_status(action_out: str) -> bool:
+    # Do not overwrite a successful Uploaded writeback when only verification failed.
+    return action_out != "error_writeback_verification"
 
 
 def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[int, dict]:
@@ -407,7 +518,7 @@ def process_with_error_writeback(config: UploadConfig, payload: dict) -> tuple[i
         result = process_upload_asset(config, payload)
         return 200, result
     except UploadError as exc:
-        if record_id.startswith("rec"):
+        if record_id.startswith("rec") and _should_write_error_status(exc.action_out):
             try:
                 patch_asset(
                     config.airtable_token,

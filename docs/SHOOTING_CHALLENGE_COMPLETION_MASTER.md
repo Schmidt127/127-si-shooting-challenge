@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-04** (SC-013 / SC-014 — Automation 067 v2.0 Option B Live Tested in PROD) |
+| Last updated | **2026-08-04** (SC-150 — private S3 reviewer file links Complete) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -65,8 +65,8 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 
 | Bucket | Count |
 |--------|------:|
-| **Total items** | **149** |
-| Complete | 12 |
+| **Total items** | **150** |
+| Complete | 13 |
 | Live Tested in PROD | 18 |
 | Installed but not tested *(Installed in PROD)* | 51 |
 | Built but not installed *(Built in Repository)* | 26 |
@@ -77,6 +77,14 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — SC-150 private reviewer file links Complete)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-150 | Built in Repository | **Complete** | PROD Lambda `-CodeOnly` deploy `2026-08-04T23:57:36Z` + Airtable Interface open of Reviewer File URL on `recaXBfjeeu3bcm0t` | `docs/deploy-checklists/SC-150-prod-reviewer-file-links.md`; Lambda `127si-upload-asset` `us-east-2`; 78 unit tests OK |
+
+**Net math:** Built 27→**26**; Complete 12→**13**. Private S3 unchanged; coaches open files via tokenized Function URL viewer. **Separate P0 follow-up:** rotate credentials exposed during terminal troubleshooting (not part of this commit).
 
 ### Dashboard reconciliation (2026-08-04 — Automation 067 v2.0 Option B PROD proof)
 
@@ -257,14 +265,15 @@ Columns:
 | SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.3; repo 057 v1.4 Ready for PROD Paste | Paste v1.4; live prove Zoom+Perfect Week | SC-077 | — | C-025; `057-perfect-week-denver-v1.4.md` | — | P0 | 2026-07-25 |
 | SC-092 | Zoom | Weekly summary shows Zoom correctly | Installed in PROD | 072 Zoom sections historically | Re-test Presentation labels | SC-036, SC-054 | — | V2-004 | — | P1 | 2026-07-23 |
 | SC-093 | Zoom | Public website Zoom pages accurate | Installed in PROD | `/shoot` Zoom catalog UI live | Confirm Airtable publish filters after wipe | SC-146 | Read-only web | web Zoom views | — | P2 | 2026-07-23 |
-| SC-094 | Assets | Video storage on program-owned S3 | Installed in PROD | Lambda upload-asset; 070b/070c PROD E2E historically | Re-test writeback on Schmidt asset | — | Auth secret hygiene | C-013 | Optional secret rotate | P0 | 2026-07-23 |
+| SC-094 | Assets | Video storage on program-owned S3 | Installed in PROD | Lambda upload-asset; 070b/070c PROD E2E historically; **SC-150 Complete** adds private reviewer viewer on same Lambda | Re-test writeback on Schmidt asset as needed | SC-150 | Auth secret hygiene; bucket stays private | C-013; SC-150 checklist | Optional secret rotate (separate P0) | P0 | 2026-08-04 |
 | SC-095 | Assets | Homework storage on S3 (070a route) | Built in Repository | Lambda `homework_completion` route; DEV package; **PROD intentionally OFF** | Align 070a version (4.1 vs 4.4 claims); PROD enable when ready; live test | SC-094 | Keep OFF until Mike schedules | AUTOMATION_070A_LAUNCH_DECISION; issues #8/#11/#17 | Authorize PROD 070a ON | P0 | 2026-07-23 |
-| SC-096 | Assets | Canonical HTTPS URLs on assets | Installed in PROD | Canonical URL fields + Lambda writeback | Re-verify after wipe | SC-094 | Dual-truth Drive/attachment deferred | C-013; C-023 | — | P0 | 2026-07-23 |
+| SC-096 | Assets | Canonical HTTPS URLs on assets | Installed in PROD | Canonical URL fields + Lambda writeback; **Canonical File URL remains private S3 identity** (AccessDenied anonymous); clickable review uses **Reviewer File URL** (SC-150) | Re-verify after wipe; do not make Canonical public | SC-094, SC-150 | Dual-truth Drive/attachment deferred | C-013; C-023; SC-150 | — | P0 | 2026-08-04 |
 | SC-097 | Assets | SHA-256 hashes recorded | Installed in PROD | Hash pipeline + **116** consequences historically ON | Re-test hash write + review queue | SC-094 | Never filename-only dedup | C-023 | — | P1 | 2026-07-23 |
 | SC-098 | Assets | Duplicate file reuse decision (manual, safe) | Installed in PROD | Asset Reuse Decision + 116 | Re-test confirm/reversal; never auto-reuse another athlete’s object | SC-097 | Never auto-block upload incorrectly | C-023 Stage 5 | — | P1 | 2026-07-23 |
 | SC-099 | Assets | Writeback verification (070c) | Installed in PROD | 070c v1.1 idempotent verify | Re-test Accepted→verify | SC-094 | Async handoff | C-013 | — | P0 | 2026-07-23 |
 | SC-100 | Assets | Attachment / Drive retirement strategy | Deferred | Explicitly deferred after C-013 video | Plan retirement after S3 paths stable for HW+video | SC-095 | Don’t break historical links if any remain | C-023 retirement notes | When to retire Drive? | P3 | 2026-07-23 |
 | SC-101 | Assets | Make and Lambda routing correct for video + homework | Installed in PROD | Upload engine blueprints; video live historically; homework router checklist open | Finish homework Module 2 checklist; close stale GitHub overnight issues | SC-095 | Never commit webhooks | make/documentation; issues #1/#8/#9 | — | P1 | 2026-07-23 |
+| SC-150 | Assets | Secure permanent reviewer file links (private S3) | Complete | PROD Lambda `127si-upload-asset` code deployed `2026-08-04T23:57:36Z`; Interface open of `Reviewer File URL` on `recaXBfjeeu3bcm0t` opened private S3 file immediately (no extra auth); Lambda owns final `Upload Status=Uploaded`; token preserved across retries; 78 unit tests OK | Optional: credential rotation (separate P0 — values exposed in terminal troubleshooting) | SC-094, SC-096 | Never publicize bucket; never log tokens; never set Processing after Lambda success | `docs/deploy-checklists/SC-150-prod-reviewer-file-links.md`; asset `recaXBfjeeu3bcm0t` | Rotate exposed secrets separately | P0 | 2026-08-04 |
 | SC-102 | Website | Airtable-backed public pages work | Live Tested in PROD | Next.js `/shoot` on Vercel; **2026-07-25 smoke + browser QA PASS** (routes 200; API `tokenValid`; no client token leak) | Keep catalog content current; Presentation fields later (SC-054) | SC-055 | Server-side token only | `PUBLIC-SHOOT-SMOKE.md`; `BROWSER-QA-REPORT-2026-07-25.md` | — | P1 | 2026-07-25 |
 | SC-103 | Website | Leaderboard | Live Tested in PROD | Leaderboard + public-display show **Testing Schmidt** (81 XP / 100 shots); Schmidt visibility honored | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene | SC-068 | — | `BROWSER-QA-REPORT-2026-07-25.md` | — | P2 | 2026-07-25 |
 | SC-104 | Website | Homework catalog | Installed in PROD | Catalog routes live; browser smoke PASS | Unpublish stale Week 10 prior-season rows (EXT-QA-006); Presentation fields later | SC-054 | Publish flag | homework catalog; browser QA | — | P2 | 2026-07-25 |
@@ -373,9 +382,25 @@ Must achieve: live + recording exclusivity, approval email, totals, gate/Perfect
 
 ### Assets and Storage
 
-Primary SC items: **SC-094 … SC-101**, **SC-141**.
+Primary SC items: **SC-094 … SC-101**, **SC-141**, **SC-150**.
 
-Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writeback, Make/Lambda routing. Drive retirement deferred.
+Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writeback, Make/Lambda routing, **private-bucket reviewer links**. Drive retirement deferred.
+
+#### Reviewer-link architecture (SC-150) — 2026-08-04 — **Complete**
+
+| Decision | Choice |
+|----------|--------|
+| Object privacy | S3 bucket `shooting-challenge-assets` remains private |
+| Permanent coach click target | Airtable formula **`Reviewer File URL`** |
+| Permanent S3 identity | **`Canonical File URL`** (not clickable anonymously) |
+| Auth for open | Stable per-asset **`Reviewer Access Token`** (URL-safe, ≥32 random bytes; preserved on retry) |
+| Viewer | PROD Function URL `GET /file/{recordId}?token=…` → 302 to ~15 min presigned `GetObject` |
+| Final status owner | **Lambda** is authoritative for successful upload writeback; successful assets finish as **`Upload Status = Uploaded`** (not Processing / Pending Link) |
+| Private access path | Coaches open private S3 objects only through the tokenized reviewer endpoint (`Reviewer File URL`) |
+| PROD proof | Submission Asset `recaXBfjeeu3bcm0t`; Lambda deploy `2026-08-04T23:57:36Z`; Interface click opened file immediately with no extra auth |
+| Security follow-up | **P0 separate:** rotate credentials exposed during terminal troubleshooting (not in this package) |
+
+Status: **Complete** (repo + PROD install + live Interface test). Checklist: `docs/deploy-checklists/SC-150-prod-reviewer-file-links.md`.
 
 ### Website and Public Experience
 
