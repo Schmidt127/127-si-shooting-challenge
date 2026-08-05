@@ -6,7 +6,7 @@
 | Base | PROD `appn84sqPw03zEbTT` |
 | Enrollment | Testing Schmidt `recgP9qZYjAhE7NXm` |
 | Parent email | `mschmidt@fairfield.k12.mt.us` (Schmidt-only) |
-| Result | **PASS** (Live Tested) — coach review + one-time XP + S3 image writeback + reviewer URL |
+| Result | **PASS** (Complete) — coach review + one-time XP + S3 image writeback + reviewer URL; **070a v4.5 installed**; final post-paste Make→Lambda writeback **operator-attested** 2026-08-05 |
 
 ## Primary PNG proof
 
@@ -62,11 +62,29 @@ Artifact: [`SC-009-blank-attachment-failure.json`](./SC-009-blank-attachment-fai
 
 1. **Submission Assets `Writeback Complete?`** — gates on Canonical File URL + Storage Key + SHA-256 + Uploaded At (removed Google Drive gate).
 2. **Homework Completions `Upload Ready?`** — enrollment + (legacy HC attachment **OR** Fillout quiz **OR** linked assets all Uploaded).
-3. **070a script → v4.5** in GitHub — skip when Canonical/S3 already uploaded; keep Drive legacy skip. **PROD Airtable paste of v4.5 still required.**
+3. **070a script → v4.5** in GitHub — skip when Canonical/S3 already uploaded; keep Drive legacy skip. **PROD Airtable paste completed 2026-08-05 (Mike).**
 
-## Make / 070a note (dependency)
+## Closeout — Mike operator-attested final rerun (2026-08-05)
 
-Make webhook accepted a `070a` / `homework_completion` payload (`HTTP 200 Accepted`) but did **not** produce Airtable S3 writeback in this window. PROD Lambda invoke with the same payload **did** upload and write back. Treat automatic Make Module completion as **SC-101 / SC-095 follow-up**; do not block photo storage proof on that gap.
+Mike completed the remaining PROD follow-ups after the recorded PNG/JPG evidence above:
+
+| Item | Result |
+|------|--------|
+| 070a v4.5 pasted into PROD Airtable | **Done** |
+| Controlled Schmidt homework image test | **PASS** (Mike operator-attested final rerun) |
+| Make invoked working upload path / PROD Lambda | **PASS** |
+| Final Airtable writeback on Submission Asset | **PASS** (successful Uploaded state) |
+| Reviewer File URL | **PASS** |
+| Canonical File URL anonymous access | **Denied** (private S3 unchanged) |
+| Homework Completion + one-time XP | **PASS** (no duplicate XP) |
+| Second upload writer | **Not created** |
+| Earlier “Accepted without Airtable writeback” concern | **Did not remain** on this final successful test |
+
+Record IDs for this final manual rerun were **not** captured in a new JSON artifact. Do not invent IDs. Rely on Mike’s operator attestation plus the preserved 2026-08-04 PNG/JPG evidence for detailed field-level proof.
+
+## Make / 070a note (resolved 2026-08-05)
+
+Earlier session: Make webhook returned `Accepted` without Airtable S3 writeback in one window; Lambda direct invoke succeeded. **Final post-paste Schmidt rerun (Mike):** Make → Lambda → Airtable writeback completed correctly. SC-101 homework routing closed by that attestation; video routing remains covered by C-013 PROD evidence.
 
 ## Cleanup
 

@@ -1,8 +1,8 @@
-# Post-integration follow-ups (2026-08-05)
+# Post-integration follow-ups (2026-08-05) — CLOSED
 
-After squash-merging PRs **#66 → #65 → #64** into `master`.
+After squash-merging PRs **#66 → #65 → #64**, then **#71** (SC-003 aliases), then this closeout package.
 
-**Tracking issue:** https://github.com/Schmidt127/127-si-shooting-challenge/issues/70
+**Tracking issue:** https://github.com/Schmidt127/127-si-shooting-challenge/issues/70 — **closed as completed** on 2026-08-05.
 
 ## Merge SHAs
 
@@ -11,39 +11,40 @@ After squash-merging PRs **#66 → #65 → #64** into `master`.
 | #66 | SC-009 photo homework E2E | `c79d6e4` |
 | #65 | SC-007 / SC-008 reliability | `6f7f2d8` |
 | #64 | SC-003–SC-006 testing control center | `3ce180c` |
+| #71 | Recognize PROD testing view names for SC-003 | `202f1b4` |
 
 ## Final statuses (completion master)
 
 | SC | Status |
 |----|--------|
-| SC-003 | Live Tested in PROD (2026-08-05 short-name aliases) |
+| SC-003 | Live Tested in PROD |
 | SC-004 | Live Tested in PROD |
 | SC-005 | Live Tested in PROD |
 | SC-006 | Live Tested in PROD |
 | SC-007 | Live Tested in PROD |
 | SC-008 | Live Tested in PROD |
-| SC-009 | Live Tested in PROD (not Complete) |
+| SC-009 | **Complete** |
+| SC-095 | Live Tested in PROD |
+| SC-101 | **Complete** |
 | SC-150 | Complete |
 
-## Mike actions remaining
+## Completed (Issue #70 scope)
 
-### SC-003
+- [x] SC-003 Testing views installed (short names under `02 TESTING`) and verified
+- [x] `verify_testing_views.mjs --require-installed` PASS
+- [x] SC-003 advanced to Live Tested in PROD (PR #71)
+- [x] 070a v4.5 installed in PROD Airtable
+- [x] Controlled Schmidt photo upload passed (recorded E2E + Mike operator-attested final rerun)
+- [x] Make → Lambda → Airtable writeback passed on final rerun
+- [x] No second upload writer created
 
-**Done (aliases package):** PROD short names under section `02 TESTING` are accepted; `--require-installed` PASS. No further Omni recreate required unless Mike renames views.
+## Deferred (not a blocker; not keeping #70 open)
 
-### SC-009 / SC-101
+Credential rotation intentionally deferred until go-live preparation by Mike decision on 2026-08-05. Do not rotate credentials as part of this closeout. Do not create a new active issue unless Mike asks.
 
-1. Paste Airtable **070a v4.5** into PROD.
-2. One controlled Schmidt photo upload.
-3. Investigate Make **Accepted** without Airtable writeback (confirm Function URL + response consumption).
-4. Do not add a second upload writer.
+## Confirmed non-actions this closeout
 
-### Security (P0, separate)
-
-Rotate credentials exposed during terminal troubleshooting. Do not rotate as part of the already-merged PRs.
-
-## Confirmed non-actions
-
-- No Lambda redeploy in this integration package.
-- No credential commit or rotation in this package.
-- SC-009 remains **Live Tested in PROD**, not Complete.
+- No Lambda redeploy
+- No credential commit or rotation
+- No Airtable view renames
+- No invented record IDs for the Mike-attested final rerun
