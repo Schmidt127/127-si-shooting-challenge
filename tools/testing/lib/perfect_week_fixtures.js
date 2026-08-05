@@ -174,6 +174,10 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
     return evaluateTimezoneCase(caseSpec, actual);
   }
 
+  if (caseSpec.batch === "B" && caseSpec.calendarComplete === false) {
+    return makeResult(caseId, STATUSES.BLOCKED, "calendar_incomplete — Batch B day-by-day creates not finished");
+  }
+
   const was = actual.was;
   if (!caseSpec.wasId && !was) {
     return makeResult(caseId, STATUSES.BLOCKED, "WAS id not in manifest — Omni create pending");
@@ -195,6 +199,7 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
   const eligible = asNumber(field(was, "Perfect Week Eligible?"));
   const daysLogged = asNumber(field(was, "Days Logged This Week"));
   const automationStatus = String(field(was, "Perfect Week Automation Status") || "");
+  const testOverride = truthy(field(was, "Perfect Week Test Override?"));
   const unlockIds = linkIds(field(was, "Perfect Week Unlock"));
   const xpEvents = actual.xpEvents || [];
   const sourceKey = buildPerfectWeekSourceKey(enrollmentId, weekId);
@@ -205,6 +210,15 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
 
   const failures = [];
   const expectAward = caseSpec.expectAward === true;
+
+  if (testOverride) {
+    return makeResult(
+      caseId,
+      STATUSES.FAIL,
+      "test_override_must_not_be_used — Perfect Week Test Override? does not bypass same-day/countable and must stay unchecked",
+      { testOverride: true }
+    );
+  }
 
   if (automationStatus && automationStatus !== "Ready" && automationStatus !== "Error") {
     // Pending/Needs Review may mean not run yet
@@ -224,6 +238,17 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
   if (caseSpec.expectedVideoCount != null && videoCount != null) {
     if (videoCount !== caseSpec.expectedVideoCount) {
       failures.push(`Video Count ${videoCount} !== ${caseSpec.expectedVideoCount}`);
+    }
+  }
+
+  if (caseId === "CASE-07" && actual.submissions?.length) {
+    for (const sub of actual.submissions) {
+      if (truthy(field(sub, "Perfect Week Countable Submission?"))) {
+        failures.push("CASE-07 submission unexpectedly Perfect Week Countable");
+      }
+      if (truthy(field(sub, "Submitted Same Day?"))) {
+        failures.push("CASE-07 submission unexpectedly Submitted Same Day");
+      }
     }
   }
 

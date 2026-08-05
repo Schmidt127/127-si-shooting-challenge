@@ -278,4 +278,71 @@ test("missing WAS is BLOCKED not FAIL", () => {
   assert.strictEqual(result.status, STATUSES.BLOCKED);
 });
 
+test("Batch B calendar_incomplete is BLOCKED", () => {
+  const result = evaluatePerfectWeekCase(
+    "CASE-01",
+    { expectAward: true, batch: "B", calendarComplete: false, wasId: "recWas" },
+    { was: { fields: { "Perfect Week Automation Status": "Ready" } } }
+  );
+  assert.strictEqual(result.status, STATUSES.BLOCKED);
+  assert.match(result.reason, /calendar_incomplete/);
+});
+
+test("Perfect Week Test Override? checked is FAIL", () => {
+  const result = evaluatePerfectWeekCase(
+    "CASE-02",
+    { expectAward: false, batch: "A", enrollmentId: ENR, weekId: WEEK, wasId: "recWas" },
+    {
+      was: {
+        fields: {
+          Enrollment: [{ id: ENR }],
+          Week: [{ id: WEEK }],
+          "Perfect Week Automation Status": "Ready",
+          "Perfect Week Daily Requirement Met?": false,
+          "Perfect Week Video Requirement Met?": 0,
+          "Perfect Week Zoom Requirement Met?": 1,
+          "Perfect Week Eligible?": 0,
+          "Perfect Week Test Override?": true,
+          "Perfect Week Unlock": [],
+        },
+      },
+      xpEvents: [],
+    }
+  );
+  assert.strictEqual(result.status, STATUSES.FAIL);
+  assert.match(result.reason, /test_override_must_not_be_used/);
+});
+
+test("CASE-07 non-countable submission passes no-award path", () => {
+  const result = evaluatePerfectWeekCase(
+    "CASE-07",
+    { expectAward: false, batch: "A", enrollmentId: ENR, weekId: WEEK, wasId: "recWas" },
+    {
+      was: {
+        fields: {
+          Enrollment: [{ id: ENR }],
+          Week: [{ id: WEEK }],
+          "Perfect Week Automation Status": "Ready",
+          "Perfect Week Daily Requirement Met?": false,
+          "Perfect Week Video Requirement Met?": 0,
+          "Perfect Week Zoom Requirement Met?": 1,
+          "Perfect Week Eligible?": 0,
+          "Perfect Week Unlock": [],
+        },
+      },
+      xpEvents: [],
+      submissions: [
+        {
+          fields: {
+            "Submitted Same Day?": 0,
+            "Perfect Week Countable Submission?": 0,
+            "Activity Date": "2026-08-02",
+          },
+        },
+      ],
+    }
+  );
+  assert.strictEqual(result.status, STATUSES.PASS);
+});
+
 console.log("\nAll Perfect Week fixture offline tests passed.");

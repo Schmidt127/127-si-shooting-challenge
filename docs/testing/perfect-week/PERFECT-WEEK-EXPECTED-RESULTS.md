@@ -1,11 +1,27 @@
 # Perfect Week — Expected Results Matrix
 
 Fixture batch: `PWTEST|2026-08-05`  
+Method: **`LIVE_SAME_DAY_CALENDAR`** — [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md)  
 Authority: [`PERFECT-WEEK-FIXTURE-SPEC.md`](./PERFECT-WEEK-FIXTURE-SPEC.md)
 
 Statuses for verifier: **PASS** | **FAIL** | **BLOCKED**
 
-Canonical field aliases used by the verifier:
+## Method constraints
+
+| Constraint | Effect on expectations |
+|------------|------------------------|
+| `Submitted At` = `CREATED_TIME()` | Past Activity Date ⇒ Same Day=0, Countable=0 |
+| `Perfect Week Test Override?` | **Ignored** — must remain unchecked; verifier FAILs if checked expecting bypass |
+| Award cases | Require Batch B calendar creates (one per Denver day) |
+
+## Batches
+
+| Batch | Cases | Executable |
+|-------|-------|------------|
+| **A — Immediate** | CASE-02, CASE-07 (+ pilot documentation) | Today |
+| **B — Calendar** | CASE-01, 03–06, 08–16 | Daily Sun `2026-08-09` → Sat `2026-08-15` |
+
+## Canonical field aliases
 
 | Alias | Airtable field |
 |-------|----------------|
@@ -19,62 +35,47 @@ Canonical field aliases used by the verifier:
 | `automationStatus` | `Perfect Week Automation Status` |
 | `daysLogged` | `Days Logged This Week` |
 | `unlock` | `Perfect Week Unlock` |
-| `xpSourceKey` | XP Events `Source Key` pattern `PERFECT_WEEK\|{enrollmentId}\|{weekId}` |
-| `xpAmount` | XP Events `XP Points` (expect **100**) |
-| `xpDate` | Prefer `XP Date Resolved` / weekly end Saturday |
+| `testOverride` | `Perfect Week Test Override?` (must be false/empty) |
+| `xpSourceKey` | `PERFECT_WEEK\|{enrollmentId}\|{weekId}` |
+| `xpAmount` | **100** |
 
 ## Matrix
 
-| Case | Award? | Daily Met | Days Logged | Video Count | Video Met | Zoom Mtgs | Zoom Met | Eligible | Unlock | PERFECT_WEEK XP | Notes |
-|------|--------|-----------|-------------|-------------|-----------|-----------|----------|----------|--------|-----------------|-------|
-| CASE-01 | Yes | true | 7 | 3 | 1 | 0 | 1 | 1 | 1 | exactly 1 @ 100; date Sat 2026-08-08 | Clean pass; homework unassigned |
-| CASE-02 | No | false | 1 | * | * | * | * | 0 | 0 | 0 | All shots one day |
-| CASE-03 | No | false | 6 | * | * | * | * | 0 | 0 | 0 | Six of seven |
-| CASE-04 | No | false | ≤6 | * | * | * | * | 0 | 0 | 0 | Adjacent-week shots excluded |
-| CASE-05 | No | false | ≤6 | * | * | * | * | 0 | 0 | 0 | Enrollment B excluded |
-| CASE-06 | No† | false† | * | * | * | * | * | 0† | 0† | 0† | †Preferred; if awards → **DEFECT** (057 ignores Submission.Week mismatch when WAS-linked) |
-| CASE-07 | No | false | * | * | * | * | * | 0 | 0 | 0 | Backdated → not countable |
-| CASE-08 | No | true | 7 | 2 | 0 | 0 | 1 | 0 | 0 | 0 | Video fail |
-| CASE-09 | No | true | 7 | 2 | 0 | 0 | 1 | 0 | 0 | 0 | Adjacent video excluded |
-| CASE-10 | Yes | true | 7 | 3 | 1 | 0 | 1 | 1 | 1 | 1 @ 100 | Zoom not required |
-| CASE-11 | Yes | true | 7 | 3 | 1 | ≥1 | 1 | 1 | 1 | 1 @ 100 | Zoom attended |
-| CASE-12 | No | true | 7 | 3 | 1 | ≥1 | 0 | 0 | 0 | 0 | Zoom missing attendance |
-| CASE-13 | No | true | 7 | 3 | 1 | ≥1 | 0 | 0 | 0 | 0 | Other Enrollment attendance |
-| CASE-14 | Yes‡ | true | 7 | 3 | 1 | 0 | 1 | 1 | 1 | 1 @ 100 | ‡If seven distinct dates present; duplicates must not inflate days |
-| CASE-15 | Yes | true | 7 | 3 | 1 | 0 | 1 | 1 | 1 | exactly 1 | Idempotent reruns |
-| CASE-16 | N/A | boundary | — | — | — | — | — | — | — | — | Sat 23:55 Denver in ending week; Sun 00:05 in new week |
+| Case | Batch | Award? | Daily Met | Days Logged | Notes |
+|------|-------|--------|-----------|-------------|-------|
+| CASE-01 | B | Yes | true | 7 | 3 videos; no Zoom; create each day Sun–Sat |
+| CASE-02 | A | No | false | 1 | All countable shots on Denver **today** only |
+| CASE-03 | B | No | false | 6 | Omit one calendar day |
+| CASE-04 | B | No | false | ≤6 | Adjacent-week days not counted |
+| CASE-05 | B | No | false | ≤6 | Enrollment B excluded |
+| CASE-06 | B | No† | false† | * | †Preferred; if awards → **DEFECT** |
+| CASE-07 | A | No | false | * | Same Day=0; Countable=0 (pilot `recxbwkZpSJZ5eiqA`) |
+| CASE-08 | B | No | true | 7 | Video Count=2; Video Met=0 |
+| CASE-09 | B | No | true | 7 | Adjacent video excluded; Video Count=2 |
+| CASE-10 | B | Yes | true | 7 | Zoom not required |
+| CASE-11 | B | Yes | true | 7 | Zoom attended |
+| CASE-12 | B | No | true | 7 | Zoom Met=0 |
+| CASE-13 | B | No | true | 7 | Other Enrollment attendance |
+| CASE-14 | B | Yes‡ | true | 7 | ‡Seven distinct dates; duplicates don’t inflate days |
+| CASE-15 | B | Yes | true | 7 | Exactly one Unlock + one XP after reruns |
+| CASE-16 | B | N/A | boundary | — | Live midnight creates + offline Intl tests |
 
-\* = not the primary assertion (may be unset or irrelevant when daily fails first).
+## Pilot documentation row
 
-## Idempotency / dedupe (CASE-15)
-
-| Check | Expected |
-|-------|----------|
-| Unlock count for Enrollment+Week+PERFECT_WEEK | 1 |
-| XP Events with Source Key `PERFECT_WEEK\|{enr}\|{week}` | 1 |
-| Rerun 057 Automation Status | Ready (stable) |
-| Rerun 058/059 | skip / no second create |
-
-## Contamination assertions
-
-| Case | Assertion |
-|------|-----------|
-| CASE-04 | `Perfect Week Daily Check Detail` mentions ignored outside-week countable submissions **or** Days Logged excludes adjacent dates |
-| CASE-05 | Enrollment A WAS does not include Enrollment B submission IDs |
-| CASE-09 | Video Count ignores videos whose Submission ∉ WAS.Submissions |
-| CASE-13 | Zoom Attendance Count for target WAS stays 0 when only other Enrollment attended |
+| Item | Expected / observed |
+|------|---------------------|
+| Pilot id | `recxbwkZpSJZ5eiqA` (deletable after method docs) |
+| Submitted Same Day? | 0 |
+| Perfect Week Countable Submission? | 0 |
+| Verifier | Document under `pilotProof`; not a CASE FAIL if deleted |
 
 ## BLOCKED conditions
 
-Mark **BLOCKED** (not FAIL) when:
-
-- Manifest missing WAS / Enrollment / Week IDs for the case
-- Automation 057 not Ready and no run yet
-- Token / schema field missing (report field name)
-- CASE-06 product decision pending after first observation
+- Manifest missing WAS / Enrollment / Week for a case that should have run
+- Batch B case checked before calendar week complete → **BLOCKED** (not FAIL) with reason `calendar_incomplete`
+- `Perfect Week Test Override?` checked → **FAIL** (`test_override_must_not_be_used`)
+- Token / schema field missing
 
 ## Evidence
-
-After live run, store verifier JSON under:
 
 `docs/testing/evidence/YYYY-MM-DD-perfect-week-fixtures/`

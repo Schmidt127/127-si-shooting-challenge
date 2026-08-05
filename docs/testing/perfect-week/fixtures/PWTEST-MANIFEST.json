@@ -2,18 +2,36 @@
   "batchKey": "PWTEST|2026-08-05",
   "fixtureMethod": "LIVE_SAME_DAY_CALENDAR",
   "baseId": "appn84sqPw03zEbTT",
-  "athleteId": "REPLACE_WITH_SCHMIDT_ATHLETE_ID",
+  "athleteId": "recgqVstObQRzgXJF",
+  "athleteName": "Testing Schmidt",
   "timezone": "America/Denver",
+  "repoMergeShaPackage": "95216191ceb1260b5cf444472f137aa19729a048",
+  "creationStatus": "METHOD_REVISED_AWAITING_BATCH_A",
+  "pilotProof": {
+    "submissionId": "recxbwkZpSJZ5eiqA",
+    "observedSubmittedSameDay": 0,
+    "observedPerfectWeekCountable": 0,
+    "conclusion": "Historical Activity Date created later is not countable; Live same-day calendar required",
+    "mayDeleteAfterDocs": true
+  },
+  "testOverride": {
+    "field": "Perfect Week Test Override?",
+    "bypassesSameDayOrCountable": false,
+    "usedByAutomation057": false,
+    "referencedByAnyFormula": false,
+    "instruction": "Do not check"
+  },
+  "automation057TestMode": false,
   "weeklyGoalShots": null,
   "dailyMinimum": null,
   "targetWeekBatchB": {
     "sunday": "2026-08-09",
     "saturday": "2026-08-15"
   },
-  "pilotProof": {
-    "submissionId": "recxbwkZpSJZ5eiqA",
-    "observedSubmittedSameDay": 0,
-    "observedPerfectWeekCountable": 0
+  "retiredHistoricalWeek": {
+    "sunday": "2026-08-02",
+    "saturday": "2026-08-08",
+    "reason": "Cannot backfill countable submissions after the fact"
   },
   "cases": {
     "CASE-01": {
@@ -31,7 +49,7 @@
       "contaminationSubmissionIds": []
     },
     "CASE-02": {
-      "title": "All shots on one day",
+      "title": "All shots on one day (Denver today only)",
       "batch": "A",
       "expectAward": false,
       "expectedDaysLogged": 1,
@@ -103,7 +121,7 @@
       "zoomAttendanceIds": []
     },
     "CASE-07": {
-      "title": "Backdated / not same-day",
+      "title": "Not same-day / backdated Activity Date",
       "batch": "A",
       "expectAward": false,
       "enrollmentId": null,
@@ -113,7 +131,8 @@
       "backdatedSubmissionIds": [],
       "videoIds": [],
       "zoomMeetingIds": [],
-      "zoomAttendanceIds": []
+      "zoomAttendanceIds": [],
+      "pilotSubmissionId": "recxbwkZpSJZ5eiqA"
     },
     "CASE-08": {
       "title": "Video requirement failure",
@@ -238,5 +257,8 @@
       "sundayEarlySubmissionId": null,
       "enrollmentId": null
     }
-  }
+  },
+  "createdRecordIds": [],
+  "initialCalculatedResults": null,
+  "case06Observation": null
 }

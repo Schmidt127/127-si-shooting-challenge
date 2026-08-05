@@ -1,0 +1,309 @@
+{
+  "denverToday": "2026-08-05",
+  "submissionWritableDetails": {
+    "Submission Stat Mode": {
+      "type": "formula",
+      "formula": "IF(\r\n  OR(\r\n    {fldLZmCQB7vi1vTjF} != BLANK(),\r\n    {fldThGv2Y8MjgBZpp} != BLANK(),\r\n    {fldTW9qdhF8vNkDJA} != BLANK(),\r\n    {fldyS3osevRlfO2Kd} != BLANK(),\r\n    {fldzN0wgxFeuwyLIj} != BLANK(),\r\n    {fldPZu6GsysJwnXS9} != BLANK()\r\n  ),\r\n  \"Detailed Shooting\",\r\n  IF(\r\n    {fldtAIg2vtfWkyPPk} != BLANK(),\r\n    \"Simple Total\",\r\n    BLANK()\r\n  )\r\n)"
+    },
+    "Shot Total": {
+      "type": "number"
+    },
+    "Duplicate Review Status": {
+      "type": "singleSelect",
+      "choices": [
+        "Needs Review",
+        "Count It",
+        "Exclude It"
+      ]
+    },
+    "Video Count": {
+      "type": "number"
+    }
+  },
+  "goalTable": {
+    "name": "Target Goal Shots",
+    "fields": [
+      "Target Label|formula",
+      "Total Shot Target|number",
+      "Grade Band|multipleRecordLinks",
+      "Active?|checkbox",
+      "Goal Key|formula",
+      "Weekly Athlete Summary|multipleRecordLinks",
+      "Shot Milestones|multipleRecordLinks",
+      "Band Sort Order|multipleLookupValues"
+    ]
+  },
+  "sampleGoals": [
+    {
+      "id": "rec8PrnFaiKaCKtAb",
+      "createdTime": "2026-04-03T00:12:12.000Z",
+      "fields": {
+        "Band Sort Order": [
+          50
+        ],
+        "Goal Key": "SHOT_GOAL|5_6|8000",
+        "Grade Band": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "Shot Milestones": [
+          "rectxR2DuXC3JUh74",
+          "recIDUBDYKhkeqOHy",
+          "recgFYkCgBy6Y57Ju",
+          "recHBodSFXgZalUb3",
+          "recI1Fes4CU9rV6tA",
+          "recaopNz7oHrDE9k2",
+          "recNEcyg9MpsiiDDQ",
+          "recZBrSunFVqGfA1D",
+          "recgQIFfM2bWjXbiT"
+        ],
+        "Target Label": "5-6 - 8000 shots",
+        "Active?": true,
+        "Total Shot Target": 8000,
+        "Weekly Athlete Summary": [
+          "recVScyO5i1yGEjen",
+          "recAuG6j4DgvRXYc1",
+          "recb3w6q9TSz7fyKy",
+          "rec3tlMhFYIvHk6xB",
+          "recMptrN5uF0prc7W",
+          "recZ8bXJOoygbsTgz",
+          "reclQpBjAuJeZvyE1",
+          "recBn9xJl1E162PWt",
+          "rech9s8J6Aefrp53n",
+          "reclriBpm9kfRUN6o",
+          "recvtukGFL7u74Tme"
+        ]
+      }
+    },
+    {
+      "id": "recFTY07yug9AC1YM",
+      "createdTime": "2026-04-03T00:12:20.000Z",
+      "fields": {
+        "Band Sort Order": [
+          70
+        ],
+        "Goal Key": "SHOT_GOAL|GRADES9–10|10000",
+        "Grade Band": [
+          "recOGisMZRWgk445o"
+        ],
+        "Shot Milestones": [
+          "recM4PNMqZxsRFTpa",
+          "recgk1Y0p3JSH0iiz",
+          "rechAt3rW0rhw5aC6",
+          "recVDcGghCTdPxSoZ",
+          "recWNqhDFp0zT1ykS",
+          "recqAwNuukpqnJO6r",
+          "recYTaiodCkB54jZN",
+          "recEo4saaHUTV06ng"
+        ],
+        "Target Label": "Grades 9–10 - 10000 shots",
+        "Total Shot Target": 10000
+      }
+    },
+    {
+      "id": "recHE7FhreD1jqfXm",
+      "createdTime": "2026-04-03T00:12:25.000Z",
+      "fields": {
+        "Band Sort Order": [
+          80
+        ],
+        "Goal Key": "SHOT_GOAL|9_12|12000",
+        "Grade Band": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "Shot Milestones": [
+          "recjHsGxBGVoZ1Atb",
+          "recbUUwpAA6M91mH6",
+          "recuLqXBSyB7PE7jC",
+          "recSiWHRSsdjKytFU",
+          "rect6Rnm4NugIYzSp",
+          "recLIIzShyIFgiV5c",
+          "rec0szu7GJ8KMIuO5",
+          "rec2hgqi7kQXh6P5i",
+          "rec7vxlT0cpgCeWFN"
+        ],
+        "Target Label": "9-12 - 12000 shots",
+        "Active?": true,
+        "Total Shot Target": 12000,
+        "Weekly Athlete Summary": [
+          "recK9JPphZc6PFHxQ",
+          "recQzrfMm7TCZfvgk",
+          "recxQ6ha6OdAzjKqg",
+          "rec2tx58PRhMM5NOn",
+          "recVGFoxXJuP3lZp6",
+          "recoCnHIGBPXjHyhZ",
+          "recaqSqkzCnsJjHlU",
+          "recQXX9QN8vhSiK1N"
+        ]
+      }
+    },
+    {
+      "id": "recQJRxpaBgwN42Un",
+      "createdTime": "2026-04-03T00:12:08.000Z",
+      "fields": {
+        "Band Sort Order": [
+          30
+        ],
+        "Goal Key": "SHOT_GOAL|3_4|5000",
+        "Grade Band": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "Shot Milestones": [
+          "recvzZE04Jg1mUsof",
+          "recsmKrqpCjErhR1K",
+          "recuzCxUOLUU6dDGx",
+          "reccezOiPdSpOQQhy",
+          "recWGiiyPsv5wKeWd",
+          "rec697KEVaK8axCFK",
+          "rec5ySmeXYWeIReJn",
+          "recvPCvwmMzIBogMP",
+          "recKjQPX9beDKWHTF"
+        ],
+        "Target Label": "3-4 - 5000 shots",
+        "Active?": true,
+        "Total Shot Target": 5000,
+        "Weekly Athlete Summary": [
+          "recG5RZVoxLPStEdC",
+          "recK0vFUEvvdtcEiG",
+          "recEsi2E7nzuwnrYC",
+          "recfq2HA9WBxAmbOn",
+          "recAv1Rf8CK57gT1u",
+          "rec6LNbSdtQshvjEW",
+          "recZ1zBBQCRVovCcM",
+          "rectDDj3iAmAmAU94",
+          "rechmJCrjr5fVwVOu",
+          "recOTqtYMusVqz2CO",
+          "recDGUegh3SeIxOcI",
+          "rech8snLYnkaLQfZo",
+          "rec7dJZkgy8sAEikH",
+          "recmAulyCjKDx5lBm",
+          "recrFzqaOv0iaHITT",
+          "recXeXAr8EOSDcNJy",
+          "recXHItZoZiiaWr1G",
+          "recichcEwJN4gFDHw",
+          "recEsiaPSSOOmECQs",
+          "reccSQuSSRDgi0ggM"
+        ]
+      }
+    },
+    {
+      "id": "rechFso6HRLhqalFa",
+      "createdTime": "2026-04-03T00:12:16.000Z",
+      "fields": {
+        "Band Sort Order": [
+          60
+        ],
+        "Goal Key": "SHOT_GOAL|7_8|10000",
+        "Grade Band": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "Shot Milestones": [
+          "rec7CwglECOcSjgSN",
+          "rech5iz3MmhKRAOs7",
+          "rec50Yqu3GxcfFeju",
+          "rechdhcSWWOUAm4yl",
+          "recCPBILUK4T1sy0n",
+          "recTUM9Srdb0wRkgR",
+          "rec6bnwdS0IxG6b9Q",
+          "rec27gllvBxaXeCSO",
+          "recf8NtYMLGvt8JrF"
+        ],
+        "Target Label": "7-8 - 10000 shots",
+        "Active?": true,
+        "Total Shot Target": 10000,
+        "Weekly Athlete Summary": [
+          "recO33sNg0U4NI1DT",
+          "reccI8KyRcC6Htcqp",
+          "recX5CmJCfI4nKqoh",
+          "recD6nzedtIubUWbJ",
+          "recm6tgXXN4pYgjxf",
+          "rec3Fj9QUX28Je31b",
+          "reccvxfCG7OvRHRhG",
+          "recR63M2dxO7S5zJZ",
+          "recnivTKoYmmLsYfX",
+          "recuu7MCsdYcecgOp",
+          "rec5HWxJYU1tujIz7",
+          "recESabN4b1RIFJm8",
+          "recttCFF7CrKthJJT",
+          "recEUeFEqAyJgXWil",
+          "recS1Q3eUesue6fwg",
+          "rec6kayPzhlvcSpBa"
+        ]
+      }
+    }
+  ],
+  "schmidtAthlete": {
+    "id": "recgqVstObQRzgXJF",
+    "fields": {
+      "Full Name": "Testing Schmidt",
+      "First Name": "Testing",
+      "Last Name": "Schmidt",
+      "Parent Email": "mschmidt@fairfield.k12.mt.us",
+      "Active?": true
+    }
+  },
+  "programInstances": [
+    {
+      "id": "rec5mEM0YPqPqq0hZ",
+      "fields": {
+        "School Year - Linked": "2026-2027",
+        "Name - Program Instance": "Shooting Challenge | 2026-2027"
+      }
+    },
+    {
+      "id": "rec9cQQ0VKYGy4jXq",
+      "fields": {
+        "School Year - Linked": "2025-2026",
+        "Status": "In Progress",
+        "Program Code": "shooting",
+        "Name - Program Instance": "Shooting Challenge | 2025-2026"
+      }
+    },
+    {
+      "id": "recOqcyks1wThIArM",
+      "fields": {
+        "School Year - Linked": "2026-2027",
+        "Name - Program Instance": "Dribbling Challenge | 2026-2027"
+      }
+    },
+    {
+      "id": "recTPGRcCxnEoeZp3",
+      "fields": {
+        "School Year - Linked": "2025-2026",
+        "Status": "Closed",
+        "Program Code": "dribble",
+        "Name - Program Instance": "Dribbling Challenge | 2025-2026"
+      }
+    },
+    {
+      "id": "recrEbMeGwPI5tUhd",
+      "fields": {
+        "School Year - Linked": "2025-2026",
+        "Status": "Planning",
+        "Name - Program Instance": "Team Shooting Tracker | 2025-2026"
+      }
+    }
+  ],
+  "schmidtEnrollments": [],
+  "blockers": [
+    {
+      "id": "SUBMITTED_AT_CREATED_TIME",
+      "severity": "BLOCKING",
+      "detail": "Submissions.Submitted At is formula CREATED_TIME(). Cannot set same-day Submitted At for historical Activity Dates (2026-08-02..08). Perfect Week Countable Submission? requires Submitted Same Day?=1."
+    },
+    {
+      "id": "TOTAL_SHOTS_COUNTED_FORMULA",
+      "severity": "INFO",
+      "detail": "Write Shot Total + Submission Stat Mode=Simple Total instead of Total Shots Counted."
+    },
+    {
+      "id": "WEEKLY_GOAL_FORMULA",
+      "severity": "INFO",
+      "detail": "WAS Weekly Goal Shots Target = Goal Shots Target/9 lookup. Link Goal Record; do not write weekly goal directly."
+    },
+    {
+      "id": "PROGRAMS_TABLE_NAME",
+      "severity": "INFO",
+      "detail": "No Programs table. Program Instance table is 'Program Instance - Synced'."
+    }
+  ]
+}
