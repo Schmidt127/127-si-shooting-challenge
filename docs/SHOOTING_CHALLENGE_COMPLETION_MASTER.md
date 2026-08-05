@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Automation 001 v5.2 unloadData runtime fix — Built in Repository; PROD paste pending) |
+| Last updated | **2026-08-05** (Automation 002 v8.2 unloadData runtime fix — Built in Repository; PROD paste pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -240,7 +240,7 @@ Columns:
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
 | SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Ready for PROD Paste | Hardcode audit + helpers; year-aware Config resolver; **054 v5.6** + **066 v3.3** in PROD; **057 v1.4** Denver date-key fix + DST boundary offline tests | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week regression; migrate remaining consumers | SC-022 | Changing options breaks scripts | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; MIKE-ACTIONS #2 | — | P0 | 2026-07-25 |
 | SC-022 | Config | XP Reward Rules audit and cleanup | Installed in PROD | 31 active rules, 0 duplicate keys; source-by-source audit; **054 v5.6 Installed in PROD** (duplicate active streak-rule guard) | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open | SC-021, SC-023 | Source Key uniqueness | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-023 | Config | Grade Bands as linked source of truth | Installed in PROD | Active bands K-2…9-12 healthy; **066 v3.3 Installed in PROD** (link-ID band match); normalize helpers + tests | Archive inactive mojibake bands; supervised milestone/OMNI check still open | SC-021 | Renaming bands must not break XP | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
+| SC-023 | Config | Grade Bands as linked source of truth | Installed in PROD | Active bands K-2…9-12 healthy; **066 v3.3 Installed in PROD** (link-ID band match); normalize helpers + tests; **002 v8.2** repo fix for `unloadData` crash on Grade 3 Testing Schmidt enrollment `recCyFEPeATOVNlr9` | Paste **002 v8.2** to PROD; rerun enrollment; archive inactive mojibake bands; supervised milestone/OMNI check still open | SC-021 | Renaming bands must not break XP; Grade 3 must Min/Max-match **3-4** (no hard-coded band ID) | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `docs/deploy-checklists/002-unloadData-runtime-fix.md`; `tests/enrollment-intake/automation-002-unload-compat.test.js` | — | P0 | 2026-08-05 |
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
@@ -667,6 +667,22 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SC-118 | **Built in Repository — smoke suite successfully executed against current PROD** (not Installed/Live Tested for this integration branch until Mike deploys + checks) |
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
+
+### 9J. Automation 002 unloadData runtime fix — **2026-08-05** (SC-023 / enrollment Grade Band)
+
+| Field | Value |
+|-------|--------|
+| Defect | PROD Automation 002 failed while assigning Grade Band for 2026–2027 Testing Schmidt enrollment |
+| Enrollment | `recCyFEPeATOVNlr9` |
+| Athlete | `recgqVstObQRzgXJF` |
+| Error | `gradeBandQuery.unloadData is not a function` at debugStep `8 - Find Matching Grade Band` |
+| Root cause | Bare `gradeBandQuery.unloadData()` is not available in this Airtable automation runtime (same class as Automation 001 v5.2) |
+| Repo fix | **002 v8.2** — `unloadQuerySafe()`; optional typeof guard; `finally` cleanup that cannot abort successful Grade Band match/assign or mask a real match error |
+| Status | **Built in Repository** — PROD paste + live rerun still required (do not mark Live Tested/Complete from repo alone) |
+| Offline tests | `node tests/enrollment-intake/automation-002-unload-compat.test.js` |
+| Canonical paste path | `airtable/automations/shooting-challenge/002-enrollment-intake-and-setup-assign-grade-band-initial.js` |
+| Paste runbook | `docs/deploy-checklists/002-unloadData-runtime-fix.md` |
+| Follow-up | Additional bare `.unloadData()` calls remain in active scripts 031, 035, 042, 057, 114, 117, 117a, 117c, 118, 119 — compatibility cleanup package later (not expanded here) |
 
 ### 9I. Automation 001 unloadData runtime fix — **2026-08-05** (SC-060 / SC-061)
 

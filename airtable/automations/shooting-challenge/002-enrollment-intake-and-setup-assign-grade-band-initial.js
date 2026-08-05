@@ -26,11 +26,12 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 002 - Enrollment Intake and Setup - Assign Grade Band - Initial
  *
- * Version: v8.1
+ * Version: v8.2
  * Date Written: 2026-05-20
- * Date Updated: 2026-06-17
- * Updated Reason: Added safe field caching, computed-field checks, best-effort status writes,
- * guarded Grade Band writes, Enrollment recheck before assignment, clearer errors, and safer optional writes.
+ * Date Updated: 2026-08-05
+ * Updated Reason: Airtable runtime compatibility — call queryResult.unloadData() only when
+ * typeof query?.unloadData === "function". Unsupported unloadData previously crashed after Grade
+ * Band matching (PROD enrollment recCyFEPeATOVNlr9, debugStep "8 - Find Matching Grade Band").
  *
  * PURPOSE
  * - Reads one Enrollment record.
@@ -510,6 +511,22 @@ function describeGradeBandCandidates(candidates) {
         .join("; ");
 }
 
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; Function URL / some
+ * automation runtimes do not. Never let cleanup throw after successful Grade Band matching.
+ */
+function unloadQuerySafe(queryResult) {
+    if (typeof queryResult?.unloadData === "function") {
+        try {
+            queryResult.unloadData();
+        } catch (error) {
+            log("Query unloadData skipped/failed (non-fatal)", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+    }
+}
+
 async function writeRequiredGradeBandLink(targetRecordId, gradeBandId) {
     const fieldName = CONFIG.enrollments.gradeBand;
 
@@ -661,35 +678,37 @@ async function main() {
         debugStep = "7 - Load Grade Bands";
         setOutputSafe("debugStep", debugStep);
 
-        const gradeBandQuery = await gradeBandsTable.selectRecordsAsync({
-            fields: buildGradeBandFieldsToLoad(),
-        });
+        let gradeBandQuery = null;
+        let chosen = null;
 
-        debugStep = "8 - Find Matching Grade Band";
-        setOutputSafe("debugStep", debugStep);
+        try {
+            gradeBandQuery = await gradeBandsTable.selectRecordsAsync({
+                fields: buildGradeBandFieldsToLoad(),
+            });
 
-        const candidates = findMatchingGradeBands(gradeBandQuery.records, gradeNumeric);
+            debugStep = "8 - Find Matching Grade Band";
+            setOutputSafe("debugStep", debugStep);
 
-        if (candidates.length === 0) {
-            gradeBandQuery.unloadData();
+            const candidates = findMatchingGradeBands(gradeBandQuery.records, gradeNumeric);
 
-            throw new Error(
-                `No active Grade Band match found for Grade "${gradeValue}" (numeric ${gradeNumeric}).`
-            );
+            if (candidates.length === 0) {
+                throw new Error(
+                    `No active Grade Band match found for Grade "${gradeValue}" (numeric ${gradeNumeric}).`
+                );
+            }
+
+            if (candidates.length > 1) {
+                const candidateDetails = describeGradeBandCandidates(candidates);
+
+                throw new Error(
+                    `Multiple active Grade Bands matched Grade "${gradeValue}" (numeric ${gradeNumeric}): ${candidateDetails}. Review Grade Band ranges.`
+                );
+            }
+
+            chosen = candidates[0];
+        } finally {
+            unloadQuerySafe(gradeBandQuery);
         }
-
-        if (candidates.length > 1) {
-            const candidateDetails = describeGradeBandCandidates(candidates);
-            gradeBandQuery.unloadData();
-
-            throw new Error(
-                `Multiple active Grade Bands matched Grade "${gradeValue}" (numeric ${gradeNumeric}): ${candidateDetails}. Review Grade Band ranges.`
-            );
-        }
-
-        const chosen = candidates[0];
-
-        gradeBandQuery.unloadData();
 
         debugStep = "9 - Recheck Enrollment Before Write";
         setOutputSafe("debugStep", debugStep);
