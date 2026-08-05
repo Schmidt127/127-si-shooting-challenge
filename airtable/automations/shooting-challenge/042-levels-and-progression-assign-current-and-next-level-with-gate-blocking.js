@@ -24,14 +24,18 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 3.1
+ * Version: 3.2
  * Date Written: 2026-06-02
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-05
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
  * but blocks advancement into a gated level unless the athlete meets that level's active
  * gate requirements.
+ *
+ * Version 3.2 (2026-08-05):
+ * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
+ *   so unsupported cleanup cannot fail an otherwise successful automation run.
  *
  * Version 3.1 (C-025 Stage 17):
  * - Zoom gate count = live Total Zoom Attendances meetings ∪ qualifying Recording Quiz
@@ -101,7 +105,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "3.1",
+        version: "3.2",
     },
 
     tables: {
@@ -264,6 +268,25 @@ function isTruthyFlag(record, fieldName) {
 }
 
 /**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+    if (typeof queryResult?.unloadData === "function") {
+        try {
+            queryResult.unloadData();
+        } catch (error) {
+            console.log(
+                "Query unloadData skipped/failed (non-fatal)",
+                JSON.stringify({
+                    error: error instanceof Error ? error.message : String(error),
+                })
+            );
+        }
+    }
+}
+
+/**
  * Combined Zoom count for gates: live Attendees meetings ∪ qualifying recording credits.
  * Never writes Attendees. Marks Gate Credit Applied? only when recording credit is counted.
  */
@@ -275,16 +298,15 @@ async function computeEffectiveZoomAttendanceCount(enrollmentId) {
     const zmQuery = await zoomMeetingsTable.selectRecordsAsync({
         fields: [CONFIG.zoomMeetingFields.attendees],
     });
-    for (const meeting of zmQuery.records) {
-        const attendees = getLinkedIds(meeting, CONFIG.zoomMeetingFields.attendees);
-        if (attendees.includes(enrollmentId)) {
-            liveMeetingIds.push(meeting.id);
-        }
-    }
     try {
-        zmQuery.unloadData();
-    } catch (e) {
-        /* older runtimes */
+        for (const meeting of zmQuery.records) {
+            const attendees = getLinkedIds(meeting, CONFIG.zoomMeetingFields.attendees);
+            if (attendees.includes(enrollmentId)) {
+                liveMeetingIds.push(meeting.id);
+            }
+        }
+    } finally {
+        unloadQuerySafe(zmQuery);
     }
 
     const meetingSet = new Set(liveMeetingIds);
@@ -294,25 +316,24 @@ async function computeEffectiveZoomAttendanceCount(enrollmentId) {
         fieldExists(zoomAttendanceTable, n)
     );
     const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFields });
-    for (const za of zaQuery.records) {
-        if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
-        if (getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment) !== enrollmentId) continue;
-        const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
-        if (!meetingId) continue;
-        if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
-        if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
-        if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.gateEarned)) continue;
-        if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
-
-        if (!meetingSet.has(meetingId)) {
-            meetingSet.add(meetingId);
-            recordingZaToMark.push(za.id);
-        }
-    }
     try {
-        zaQuery.unloadData();
-    } catch (e) {
-        /* older runtimes */
+        for (const za of zaQuery.records) {
+            if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
+            if (getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment) !== enrollmentId) continue;
+            const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
+            if (!meetingId) continue;
+            if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
+            if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
+            if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.gateEarned)) continue;
+            if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
+
+            if (!meetingSet.has(meetingId)) {
+                meetingSet.add(meetingId);
+                recordingZaToMark.push(za.id);
+            }
+        }
+    } finally {
+        unloadQuerySafe(zaQuery);
     }
 
     for (const zaId of recordingZaToMark) {

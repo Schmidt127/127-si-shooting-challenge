@@ -22,11 +22,14 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.5
+ * Version: v1.6
  * Date Written: 2026-07-16
- * Last Updated: 2026-07-24
+ * Last Updated: 2026-08-05
  *
  * VERSION HISTORY
+ * - v1.6 (2026-08-05): Airtable runtime compatibility — guard optional
+ *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
+ *   otherwise successful automation run.
  * - v1.5 (2026-07-24): PROD schedules verified ON. Read sendMode from input
  *   (Test|Live) when arming WAS — do not hardcode Test. Allow dryRun=false
  *   with sendMode=Live for parent season. Refuse Live + includeSchmidt.
@@ -96,7 +99,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.5",
+  version: "v1.6",
   timeZone: "America/Denver",
   schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
 
@@ -138,6 +141,26 @@ function setOutputSafe(name, value) {
     // unmapped
   }
 }
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
+
 
 function fieldExists(table, fieldName) {
   try {
@@ -292,7 +315,12 @@ async function main() {
 
   const targetEndKey = priorSaturdayKeyDenver();
   const weekFields = safeFields(weeksTable, Object.values(CONFIG.weeks));
-  const weeksQuery = await weeksTable.selectRecordsAsync({ fields: weekFields });
+  let weeksQuery = null;
+  let enrollmentsQuery = null;
+  let wasQuery = null;
+
+  try {
+  weeksQuery = await weeksTable.selectRecordsAsync({ fields: weekFields });
 
   let targetWeek = null;
   for (const w of weeksQuery.records) {
@@ -320,10 +348,10 @@ async function main() {
   setOutputSafe("debugStep", debugStep);
 
   const enrFields = safeFields(enrollmentsTable, Object.values(CONFIG.enrollments));
-  const enrollmentsQuery = await enrollmentsTable.selectRecordsAsync({ fields: enrFields });
+  enrollmentsQuery = await enrollmentsTable.selectRecordsAsync({ fields: enrFields });
 
   const wasFields = safeFields(wasTable, Object.values(CONFIG.was));
-  const wasQuery = await wasTable.selectRecordsAsync({ fields: wasFields });
+  wasQuery = await wasTable.selectRecordsAsync({ fields: wasFields });
 
   const wasByEnrollment = new Map();
   const wasBySummaryKey = new Map();
@@ -425,14 +453,6 @@ async function main() {
     }
   }
 
-  try {
-    enrollmentsQuery.unloadData();
-    weeksQuery.unloadData();
-    wasQuery.unloadData();
-  } catch {
-    // older runtimes
-  }
-
   setOutputSafe("statusOut", "success");
   setOutputSafe("actionOut", dryRun ? "dry_run_complete" : "build_armed");
   setOutputSafe("errorOut", errors > 0 ? `${errors} enrollment errors` : "");
@@ -460,6 +480,11 @@ async function main() {
       errors,
     })
   );
+  } finally {
+    unloadQuerySafe(enrollmentsQuery);
+    unloadQuerySafe(weeksQuery);
+    unloadQuerySafe(wasQuery);
+  }
 }
 
 try {

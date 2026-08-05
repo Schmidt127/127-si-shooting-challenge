@@ -48,8 +48,8 @@ test("PROJECT_STATE does not instruct keeping schedules OFF", () => {
   assert.ok(/118\/119 schedules ON|118.*ON.*119.*ON/s.test(projectState) || /schedules ON/i.test(projectState));
 });
 
-test("118 v1.5 Live season: no Live+!dryRun hard-stop; writes input sendMode", () => {
-  assert.ok(/version:\s*"v1\.5"/.test(s118));
+test("118 v1.6 Live season: no Live+!dryRun hard-stop; writes input sendMode", () => {
+  assert.ok(/version:\s*"v1\.6"/.test(s118));
   assert.ok(!/refuses sendMode=Live when dryRun=false/.test(s118));
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/\{ name: sendMode \}/.test(s118));
