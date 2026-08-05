@@ -345,4 +345,87 @@ test("CASE-07 non-countable submission passes no-award path", () => {
   assert.strictEqual(result.status, STATUSES.PASS);
 });
 
+test("gated test fields on wrong enrollment FAIL", () => {
+  const result = evaluatePerfectWeekCase(
+    "CASE-01",
+    {
+      expectAward: true,
+      batch: "GATED",
+      calendarComplete: true,
+      requireGatedTestFields: true,
+      enrollmentId: "recOtherEnrollment01",
+      weekId: WEEK,
+      wasId: "recWas",
+    },
+    {
+      was: {
+        fields: {
+          Enrollment: [{ id: "recOtherEnrollment01" }],
+          Week: [{ id: WEEK }],
+          "Perfect Week Automation Status": "Ready",
+          "Perfect Week Daily Requirement Met?": true,
+          "Perfect Week Video Requirement Met?": 1,
+          "Perfect Week Zoom Requirement Met?": 1,
+          "Perfect Week Eligible?": 1,
+          "Perfect Week Unlock": ["recUnlock1"],
+        },
+      },
+      xpEvents: [{ fields: { "Source Key": `PERFECT_WEEK|recOtherEnrollment01|${WEEK}`, "XP Points": 100 } }],
+      submissions: [
+        {
+          id: "recSub1",
+          fields: {
+            Enrollment: [{ id: "recOtherEnrollment01" }],
+            "Perfect Week Test Record?": true,
+            "Perfect Week Test Submitted At": "2026-08-02T18:00:00.000Z",
+          },
+        },
+      ],
+    }
+  );
+  assert.strictEqual(result.status, STATUSES.FAIL);
+  assert.match(result.reason, /gated_test_fields_require_schmidt_enrollment|gated_fixture_wrong_enrollment/);
+});
+
+test("control case with gated test fields FAIL", () => {
+  const result = evaluatePerfectWeekCase(
+    "CASE-02",
+    {
+      expectAward: false,
+      batch: "A",
+      forbidGatedTestFields: true,
+      enrollmentId: "recCyFEPeATOVNlr9",
+      weekId: WEEK,
+      wasId: "recWas",
+    },
+    {
+      was: {
+        fields: {
+          Enrollment: [{ id: "recCyFEPeATOVNlr9" }],
+          Week: [{ id: WEEK }],
+          "Perfect Week Automation Status": "Ready",
+          "Perfect Week Daily Requirement Met?": false,
+          "Perfect Week Video Requirement Met?": 0,
+          "Perfect Week Zoom Requirement Met?": 1,
+          "Perfect Week Eligible?": 0,
+          "Perfect Week Unlock": [],
+        },
+      },
+      xpEvents: [],
+      submissions: [
+        {
+          id: "recControl",
+          fields: {
+            Enrollment: [{ id: "recCyFEPeATOVNlr9" }],
+            "Perfect Week Test Record?": true,
+            "Perfect Week Test Submitted At": "2026-08-05T18:00:00.000Z",
+          },
+        },
+      ],
+    }
+  );
+  assert.strictEqual(result.status, STATUSES.FAIL);
+  assert.match(result.reason, /non_fixture_must_not_use_gated_test_fields/);
+});
+
 console.log("\nAll Perfect Week fixture offline tests passed.");

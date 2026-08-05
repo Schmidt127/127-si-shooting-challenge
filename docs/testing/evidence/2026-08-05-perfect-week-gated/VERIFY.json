@@ -1,0 +1,131 @@
+{
+  "batchKey": "PWTEST|2026-08-05",
+  "fixtureMethod": "GATED_TEST_TIMESTAMP",
+  "baseId": "appn84sqPw03zEbTT",
+  "generatedAt": "2026-08-05T22:57:07.774Z",
+  "pilotProof": {
+    "submissionId": "recxbwkZpSJZ5eiqA",
+    "observedSubmittedSameDay": 0,
+    "observedPerfectWeekCountable": 0,
+    "conclusion": "Historical Activity Date created later is not countable without gated test timestamp path",
+    "mayDeleteAfterDocs": true
+  },
+  "notes": [
+    "GATED_TEST_TIMESTAMP is a tightly gated fixture mechanism — not athlete-facing production behavior.",
+    "Normal athletes use Submitted At (CREATED_TIME) vs Activity Date.",
+    "Perfect Week Test Override? must not be used.",
+    "Automation 057 has no test-mode path.",
+    "Verifier FAILs if gated test fields appear without Enrollment recCyFEPeATOVNlr9."
+  ],
+  "counts": {
+    "PASS": 2,
+    "FAIL": 0,
+    "BLOCKED": 14
+  },
+  "results": [
+    {
+      "caseId": "CASE-01",
+      "status": "BLOCKED",
+      "reason": "Perfect Week Automation Status not Ready yet",
+      "automationStatus": "Pending"
+    },
+    {
+      "caseId": "CASE-02",
+      "status": "PASS",
+      "reason": "No-award path matches",
+      "dailyMet": false,
+      "videoCount": null,
+      "videoMet": 0,
+      "zoomMeetings": null,
+      "zoomAttendance": null,
+      "zoomMet": 0,
+      "eligible": 0,
+      "daysLogged": 2,
+      "unlockCount": 0,
+      "xpCount": 0,
+      "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|recWeVrSabnsYaHc2"
+    },
+    {
+      "caseId": "CASE-03",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-04",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-05",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-06",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-07",
+      "status": "PASS",
+      "reason": "No-award path matches",
+      "dailyMet": false,
+      "videoCount": null,
+      "videoMet": 0,
+      "zoomMeetings": null,
+      "zoomAttendance": null,
+      "zoomMet": 1,
+      "eligible": 0,
+      "daysLogged": null,
+      "unlockCount": 0,
+      "xpCount": 0,
+      "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|undefined"
+    },
+    {
+      "caseId": "CASE-08",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-09",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-10",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-11",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-12",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-13",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-14",
+      "status": "BLOCKED",
+      "reason": "calendar_incomplete — Batch B day-by-day creates not finished"
+    },
+    {
+      "caseId": "CASE-15",
+      "status": "BLOCKED",
+      "reason": "Perfect Week Automation Status not Ready yet",
+      "automationStatus": "Pending"
+    },
+    {
+      "caseId": "CASE-16",
+      "status": "BLOCKED",
+      "reason": "Boundary submissions not loaded / missing from manifest"
+    }
+  ]
+}

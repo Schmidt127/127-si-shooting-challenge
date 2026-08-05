@@ -6,48 +6,69 @@
 | Script | `airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js` |
 | PROD version (Mike attestation 2026-08-05) | **1.5** — enabled and running |
 | Repository version | **1.5** — **matches PROD** |
-| Fixture method | **`LIVE_SAME_DAY_CALENDAR`** — [`PERFECT-WEEK-FIXTURE-METHOD.md`](../testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) |
+| Fixture method | **`GATED_TEST_TIMESTAMP`** (primary) — [`PERFECT-WEEK-FIXTURE-METHOD.md`](../testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) |
 | Prior runbook | [`057-perfect-week-denver-v1.4.md`](./057-perfect-week-denver-v1.4.md) — **historical**; do **not** paste/downgrade to v1.4 |
 | Status | **Installed in PROD / running** — Perfect Week **live verification still required** |
-| Do not mark Complete | Until required cases pass under the live same-day method |
+| Do not mark Complete | Until required cases pass |
 
-## Pilot proof (2026-08-05)
+## What this package is
 
-| Item | Result |
-|------|--------|
-| Submission | `recxbwkZpSJZ5eiqA` (may be deleted after documenting) |
-| Submitted Same Day? | **0** |
-| Perfect Week Countable Submission? | **0** |
-| Conclusion | Historical Omni backfill **cannot** test Perfect Week eligibility normally |
+A **tightly gated fixture mechanism** so historical seven-day Perfect Week fixtures can run for Enrollment `recCyFEPeATOVNlr9` only.  
+**Not** athlete-facing production behavior. Normal athletes still use `Submitted At` (`CREATED_TIME()`) vs `Activity Date`.
 
-## Hard facts (do not ignore)
+## Pilot + control evidence (preserve)
 
-1. `Submitted At` = `CREATED_TIME()` — create submissions **on** the Denver Activity Date.
-2. `Perfect Week Test Override?` does **nothing** — do not check it.
-3. Automation **057** has **no** test-mode path — do not change 057 for fixtures in this package.
+| Case | IDs | Result |
+|------|-----|--------|
+| CASE-07 | `recxbwkZpSJZ5eiqA` | Same Day **0**, Countable **0** |
+| CASE-02 | Sub `recbr8gduRKmpiDkd`, WAS `recMMeJENu6Pg8l58` | Same Day **1**, Countable **1**, Eligible **0** |
 
-## What v1.5 changed vs v1.4
+## Hard facts
 
-| Item | Change? |
-|------|---------|
-| Product Perfect Week rules | No |
-| Denver date-key helper (v1.4) | Unchanged |
-| Runtime | Guard optional `QueryResult.unloadData()` via `unloadQuerySafe` |
+1. `Submitted At` = `CREATED_TIME()` — historical Activity Dates are not same-day without the gated path.
+2. Gated path requires **all**: Enrollment RID `recCyFEPeATOVNlr9` + `Perfect Week Test Record?` + `Perfect Week Test Submitted At`.
+3. `Perfect Week Test Override?` does **nothing** — do not check it.
+4. Automation **057** has **no** test-mode path — do **not** change 057 for fixtures.
 
-## Preconditions
+## PROD field IDs (gated path)
 
-1. Confirm Automation **057** is **enabled** in PROD.
-2. Confirm script header: Version **1.5**, Last updated **2026-08-05**.
-3. Confirm repository file is also **1.5**. Do **not** paste v1.4.
-4. Read [`PERFECT-WEEK-FIXTURE-METHOD.md`](../testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md).
+| Field | ID |
+|-------|-----|
+| Perfect Week Test Record? | `fld0xNqO0ryOe7uEY` |
+| Perfect Week Test Submitted At | `fldr2msxUo1kPjROD` |
+| Enrollment Record ID Lookup | `fldHH6GDDG9DixHBT` |
 
-## Live verification steps
+Rollback: [`PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md`](../testing/perfect-week/PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md)
 
-1. **Confirm 057 enabled + v1.5.**
-2. **Batch A (today):** Omni prompt Batch A — CASE-07 + CASE-02 (and scaffolds). Save IDs to `PWTEST-MANIFEST.json`.
-3. **Batch B (calendar):** Starting Sunday **2026-08-09**, create one same-day submission per Denver day through Saturday **2026-08-15** for award cases (CASE-01, etc.).
-4. Wait for / re-run 057 → 058 → 059 as appropriate.
-5. **Run read-only verifier:**
+## CASE-01 live fixtures (2026-08-05)
+
+| Item | ID |
+|------|-----|
+| Enrollment | `recCyFEPeATOVNlr9` |
+| Week | `reci5GdxEC57vfoS3` |
+| WAS | `recKebuZ79QFTwivA` |
+| Goal Record | `recQJRxpaBgwN42Un` |
+| Submissions (7×715) | `recVLL0vDAX6WniCA`, `recPJFAC2c2JWtUp6`, `recY4Y3U10VmDwNfR`, `recA1YgNKTJ1LgTwF`, `rec9XPi5OsDRxwGuU`, `rec2f3SDemsJSkeIO`, `recbsbSR5UXhFOdjo` |
+| Videos (3) | `recNnc5jyNZhr7aMl`, `recU0fm1oWJWjjabv`, `recjxoiMZ2WTRuUmW` |
+
+Observed after formula gate:
+
+- All seven: `Submitted Same Day? = 1`, `Perfect Week Countable Submission? = 1`
+- Distinct dates: 7; week shots: 5005
+- Security probes: checkbox-only → 0; timestamp-only → 0
+
+### Mike action required if 057 stays Pending
+
+API Error→Pending / Skipped→Pending did **not** complete helpers (Status remained Pending, helpers unset).  
+
+1. Open WAS `recKebuZ79QFTwivA`.  
+2. Confirm `Perfect Week Calculation Queue? = 1`.  
+3. Open automation **057** → **Test** / **Run** with `recordId = recKebuZ79QFTwivA`, **or** inspect automation run history for errors.  
+4. Expect Status **Ready**, Daily Met, Video Count ≥ 3, Zoom Met (no meeting), Homework Met, Eligible **1**.  
+5. Confirm **058** one unlock + **059** one XP `PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3`.  
+6. Re-run 057 twice — no duplicate unlock/XP.
+
+## Verifier
 
 ```bash
 node tools/testing/verify_perfect_week_fixtures.mjs
@@ -56,30 +77,16 @@ node tools/testing/verify_perfect_week_fixtures.mjs
 Optional evidence:
 
 ```bash
-node tools/testing/verify_perfect_week_fixtures.mjs --out docs/testing/evidence/2026-08-05-perfect-week-fixtures/VERIFY.json
+node tools/testing/verify_perfect_week_fixtures.mjs --out docs/testing/evidence/2026-08-05-perfect-week-gated/VERIFY.json
 ```
 
-6. Inspect FAIL / BLOCKED (`calendar_incomplete` is expected for unfinished Batch B).
-7. Idempotency (CASE-15) after CASE-01 awards.
-8. Record evidence; delete fixtures only after capture (pilot may be deleted now that method is documented).
-9. Do not mark Perfect Week Complete from “enabled” alone.
+## Rollback readiness
 
-## Offline checks (repo)
-
-```bash
-node --check tools/testing/lib/perfect_week_fixtures.js
-node --check tools/testing/verify_perfect_week_fixtures.mjs
-node tools/testing/tests/test_perfect_week_fixtures.cjs
-node airtable/automations/shooting-challenge/lib/agent4-perfect-week-edges.test.js
-node airtable/automations/shooting-challenge/lib/overnight-perfect-week.test.js
-```
-
-## Rollback
-
-Do **not** downgrade to v1.4.
+Documented and ready — restore original Same Day formula; clear test fields on fixtures; re-check CASE-02/07; optionally delete test-only fields after verification complete.
 
 ## Related
 
 - Method: `docs/testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md`
+- Dependency audit: `docs/testing/perfect-week/PERFECT-WEEK-DEPENDENCY-AUDIT.md`
 - Omni: `docs/testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md`
 - Spec: `docs/testing/perfect-week/PERFECT-WEEK-FIXTURE-SPEC.md`

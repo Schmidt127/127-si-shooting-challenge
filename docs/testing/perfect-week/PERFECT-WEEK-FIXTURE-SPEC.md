@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Authority | [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) |
-| Method | [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md) — **`LIVE_SAME_DAY_CALENDAR`** |
+| Method | [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md) — **`GATED_TEST_TIMESTAMP`** (primary); `LIVE_SAME_DAY_CALENDAR` alternate |
 | Automation | **057** Calculate Perfect Week Eligibility (**v1.5**, PROD installed 2026-08-05) |
 | Downstream | **058** unlock → **059** XP (`PERFECT_WEEK\|{enrollmentId}\|{weekId}`) |
 | Environment | **PROD** (`appn84sqPw03zEbTT`) — controlled Schmidt test data only |

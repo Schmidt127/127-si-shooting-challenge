@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (057 v1.5 admin correction + Perfect Week fixture pack; not Complete) |
+| Last updated | **2026-08-05** (Perfect Week **gated test timestamp** fixture path in PROD; not Complete) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -94,6 +94,17 @@ Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correc
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Perfect Week gated test timestamp)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-021 | Installed in PROD | **Installed in PROD** | Gated `Submitted Same Day?` formula + CASE-01 fixtures; **tightly gated fixture mechanism — not athlete-facing**; 057→058→059 still open until Mike Run on WAS `recKebuZ79QFTwivA` |
+| SC-028 | Installed in PROD | **Installed in PROD** | Same — not Live Tested / Complete |
+| SC-077 | Installed in PROD | **Installed in PROD** | Unlock/XP not yet proven on CASE-01 |
+| SC-091 | Installed in PROD | **Installed in PROD** | Zoom+PW fixtures still pending |
+
+**Do not mark Perfect Week Complete.** Method: [`PERFECT-WEEK-FIXTURE-METHOD.md`](./testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) · Rollback: [`PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md`](./testing/perfect-week/PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md) · Runbook: [`057-perfect-week-v1.5-live-verification.md`](./deploy-checklists/057-perfect-week-v1.5-live-verification.md).
 
 ### Dashboard reconciliation (2026-08-05 — Automation 057 v1.5 install + Perfect Week fixtures)
 
@@ -291,7 +302,7 @@ Columns:
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
-| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Installed in PROD | **054 v5.6** + **066 v3.3** in PROD; **057 v1.5** installed/running in PROD (repo matches; do not downgrade to v1.4); Denver date keys retained from v1.4 | Controlled Perfect Week fixtures CASE-01…16 + verifier; migrate remaining hardcode consumers | SC-022 | Changing options breaks scripts | `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P0 | 2026-08-05 |
+| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Installed in PROD | **054 v5.6** + **066 v3.3** in PROD; **057 v1.5** installed/running; **gated test timestamp** Same Day path for Schmidt fixtures only (not athlete-facing) | Run 057 on CASE-01 WAS; CASE-01…16 + verifier; migrate remaining hardcode consumers | SC-022 | Changing options breaks scripts; do not weaken Same Day for normal athletes | `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P0 | 2026-08-05 |
 | SC-022 | Config | XP Reward Rules audit and cleanup | Installed in PROD | 31 active rules, 0 duplicate keys; source-by-source audit; **054 v5.6 Installed in PROD** (duplicate active streak-rule guard) | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open | SC-021, SC-023 | Source Key uniqueness | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
 | SC-023 | Config | Grade Bands as linked source of truth | Installed in PROD | Active bands K-2…9-12 healthy; **066 v3.3 Installed in PROD** (link-ID band match); normalize helpers + tests; **002 v8.2** repo fix for `unloadData` crash on Grade 3 Testing Schmidt enrollment `recCyFEPeATOVNlr9` | Paste **002 v8.2** to PROD; rerun enrollment; archive inactive mojibake bands; supervised milestone/OMNI check still open | SC-021 | Renaming bands must not break XP; Grade 3 must Min/Max-match **3-4** (no hard-coded band ID) | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `docs/deploy-checklists/002-unloadData-runtime-fix.md`; `tests/enrollment-intake/automation-002-unload-compat.test.js` | — | P0 | 2026-08-05 |
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |

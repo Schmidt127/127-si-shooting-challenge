@@ -2,8 +2,8 @@
 /**
  * Read-only Perfect Week PROD fixture verifier.
  *
- * Method: LIVE_SAME_DAY_CALENDAR (see docs/testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md).
- * Historical backfill is not countable (Submitted At = CREATED_TIME()).
+ * Method: GATED_TEST_TIMESTAMP (primary) — see docs/testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md.
+ * Normal athletes still use Submitted At = CREATED_TIME() vs Activity Date.
  * Perfect Week Test Override? must remain unchecked (inert; does not bypass same-day).
  *
  *   node tools/testing/verify_perfect_week_fixtures.mjs
@@ -118,32 +118,57 @@ async function loadCaseActual(baseId, token, caseId, spec) {
     };
   }
 
-  if (!spec.wasId) return { was: null, xpEvents: [] };
-
-  const was = await safe(getOne(baseId, "Weekly Athlete Summary", spec.wasId, token));
-  if (was.__error) {
-    return { was: null, xpEvents: [], loadError: was.__error };
+  if (!spec.wasId && !(spec.submissionIds || []).length && !(spec.backdatedSubmissionIds || []).length) {
+    return { was: null, xpEvents: [], submissions: [] };
   }
 
-  const enrollmentId = spec.enrollmentId || linkIds(field(was, "Enrollment"))[0];
-  const weekId = spec.weekId || linkIds(field(was, "Week"))[0];
-  const sourceKey = buildPerfectWeekSourceKey(enrollmentId, weekId);
+  let was = null;
+  if (spec.wasId) {
+    was = await safe(getOne(baseId, "Weekly Athlete Summary", spec.wasId, token));
+    if (was.__error) {
+      return { was: null, xpEvents: [], submissions: [], loadError: was.__error };
+    }
+  }
 
-  const xpEvents = await safe(
-    listByFormula(
-      baseId,
-      "XP Events",
-      `{Source Key}="${sourceKey}"`,
-      token,
-      ["Source Key", "XP Points", "XP Date Resolved", "Active?"]
-    )
-  );
+  const enrollmentId = spec.enrollmentId || (was && linkIds(field(was, "Enrollment"))[0]);
+  const weekId = spec.weekId || (was && linkIds(field(was, "Week"))[0]);
+  const sourceKey =
+    enrollmentId && weekId ? buildPerfectWeekSourceKey(enrollmentId, weekId) : null;
+
+  let xpEvents = [];
+  if (sourceKey) {
+    const listed = await safe(
+      listByFormula(
+        baseId,
+        "XP Events",
+        `{Source Key}="${sourceKey}"`,
+        token,
+        ["Source Key", "XP Points", "XP Date Resolved", "Active?"]
+      )
+    );
+    xpEvents = Array.isArray(listed) ? listed : [];
+  }
+
+  const subIds = [
+    ...new Set([
+      ...(spec.submissionIds || []),
+      ...(spec.backdatedSubmissionIds || []),
+      ...(spec.pilotSubmissionId ? [spec.pilotSubmissionId] : []),
+    ]),
+  ];
+  const submissions = [];
+  for (const id of subIds) {
+    const sub = await safe(getOne(baseId, "Submissions", id, token));
+    if (!sub.__error) submissions.push(sub);
+  }
 
   return {
     was,
-    xpEvents: Array.isArray(xpEvents) ? xpEvents : [],
-    wasSubmissionIds: linkIds(field(was, "Submissions")),
-    loadError: Array.isArray(xpEvents) ? null : xpEvents.__error,
+    xpEvents,
+    submissions,
+    allowedGatedEnrollmentId: "recCyFEPeATOVNlr9",
+    wasSubmissionIds: was ? linkIds(field(was, "Submissions")) : [],
+    loadError: null,
   };
 }
 
@@ -203,14 +228,16 @@ async function main() {
 
   const summary = {
     batchKey: manifest.batchKey,
-    fixtureMethod: manifest.fixtureMethod || "LIVE_SAME_DAY_CALENDAR",
+    fixtureMethod: manifest.fixtureMethod || "GATED_TEST_TIMESTAMP",
     baseId,
     generatedAt: new Date().toISOString(),
     pilotProof: manifest.pilotProof || null,
     notes: [
-      "Historical Activity Date backfill is non-countable (Submitted At = CREATED_TIME).",
+      "GATED_TEST_TIMESTAMP is a tightly gated fixture mechanism — not athlete-facing production behavior.",
+      "Normal athletes use Submitted At (CREATED_TIME) vs Activity Date.",
       "Perfect Week Test Override? must not be used.",
       "Automation 057 has no test-mode path.",
+      "Verifier FAILs if gated test fields appear without Enrollment recCyFEPeATOVNlr9.",
     ],
     counts: {
       PASS: results.filter((r) => r.status === "PASS").length,
