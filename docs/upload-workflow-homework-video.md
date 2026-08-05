@@ -2,7 +2,7 @@
 
 **Status:** Owner-approved architecture — **PROD photo path Live Tested (SC-009, 2026-08-04)**  
 **Backlog:** SC-009 / SC-010 / C-020 / C-013 / C-023 / SC-150  
-**Last updated:** 2026-08-04  
+**Last updated:** 2026-08-05  
 **Environment:** PROD `appn84sqPw03zEbTT` is the active construction base (see completion master)
 
 **Related:**
@@ -32,6 +32,7 @@ Fillout/API Submission (Enrollment + Week + Homework Name 1 + HW Sub 1 image)
 | Gate | Rule |
 |------|------|
 | Clickable coach file | **`Reviewer File URL`** (never make Canonical/S3 public) |
+| Parent email file link (071 v3.5+) | **`Reviewer File URL` → Google Drive View URL → Google Drive File URL**; filenames are labels only; Make marks Sent? after Gmail |
 | Writeback Complete? | Canonical + Storage Key + hash + Uploaded At (not Google Drive) |
 | HC Upload Ready? | Linked assets Uploaded **or** legacy HC attachment **or** Fillout quiz |
 | Idempotent upload | Canonical present → 070a v4.5 `skipped_already_uploaded`; Lambda retry same |

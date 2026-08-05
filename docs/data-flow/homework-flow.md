@@ -1,51 +1,69 @@
 # Homework Flow
 
-Flow for **assigned homework**, video upload, coach review, XP, and parent/coach communication.
+Flow for **assigned homework**, file upload (AWS/Lambda/S3), coach review, XP, and parent/coach communication.
 
 ## Overview
 
 ```
 Coach assigns homework (Airtable)
-    → Athlete completes / uploads video
-    → (Optional) Airtable → Make webhook
-    → Make: Google Drive storage, update Homework URL
+    → Athlete completes / uploads file
+    → Airtable 070a → Make → Lambda → private S3 writeback
+    → Submission Asset gets Reviewer File URL (tokenized viewer)
     → Coach reviews in Airtable
-    → Status → Complete triggers XP automation
-    → XP Event + optional Make email
+    → Satisfactory + XP (064/065) → Parent Feedback Ready?
+    → 071 sends parent feedback email payload to Make (Gmail)
 ```
+
+**Parent email asset URL priority (Automation 071 v3.5+):**
+
+```text
+Reviewer File URL → Google Drive View URL → Google Drive File URL
+```
+
+- Lambda/AWS is the current primary upload path.
+- Google Drive URLs remain historical fallback only.
+- Filenames (`Original File Name`, `Asset Label`) are labels, not URL substitutes.
+- Make marks `Parent Feedback Sent?` / `Parent Feedback Sent On` only after Gmail success.
 
 ## Tables & Fields
 
 See [field-map.md](../../airtable/schema/current/field-map.md):
 
-- **Homework:** Athlete, Due Date, Status, Video URL, Coach Feedback, XP Awarded
+- **Homework Completions:** Enrollment, Homework, Satisfactory?, Coach Feedback, XP Events, Parent Feedback Ready?/Sent?
+- **Submission Assets:** `Original File Name`, `Reviewer File URL`, legacy `Google Drive File URL` / View URL, `Asset Label`
 
 ## Status Progression
 
 | Status | Meaning | Automation |
 |--------|---------|------------|
 | Assigned | Coach created row | Reminder scenarios (optional) |
-| Submitted | Athlete marked done / URL set | Make may process upload |
+| Submitted | Athlete marked done / file uploaded | 070a → Make → Lambda writeback |
 | Reviewed | Coach added feedback | — |
-| Complete | Approved | XP automation fires |
+| Awarded | XP awarded; parent email armed | 064/065 → 071 |
 
 ## Make.com Role
 
-Typical scenario ([make/blueprints/](../../make/blueprints/)):
+Typical homework **upload** scenario ([make/blueprints/](../../make/blueprints/)):
 
-1. Receive webhook from Airtable on video URL or file metadata
-2. Store file in Google Drive folder per athlete/season
-3. Update Homework `{Video URL}` with share link
-4. Notify coach (Gmail)
+1. Receive webhook from Airtable **070a** with asset metadata
+2. Call Lambda upload → private S3 + Airtable writeback (`Reviewer Access Token` / formula `Reviewer File URL`)
+3. Legacy Google Drive storage may still exist on historical rows only
+
+Homework **parent feedback** scenario (Make after **071**):
+
+1. Receive `homework_feedback` / `HOMEWORK_FEEDBACK_PARENT` payload (`subjectOut`, `htmlOut`, `assetFiles`)
+2. Send Gmail
+3. On Gmail success only: check `Parent Feedback Sent?` and set `Parent Feedback Sent On`
 
 Test with [homework-submitted sample payload](../../make/test-payloads/README.md).
 
 ## XP on Completion
 
-When Status = Complete and `{XP Awarded}` is false:
+When coach marks Satisfactory and review fields arm XP:
 
-1. Create XP Event (Event Type: `Homework`, dedupe key `hw-{recordId}`)
-2. Set `{XP Awarded}` true
+1. **064** prepares homework XP fields
+2. **065** creates XP Event (`HOMEWORK_XP|{homeworkCompletionId}`) and sets Parent Feedback Ready?
+3. **071** hands email payload to Make (does not mark Sent?)
 
 Same idempotency rules as [submission → XP](./submission-to-xp-flow.md).
 
@@ -64,6 +82,7 @@ Fillout HW17 test → Final Reflection Quiz Submissions (auto-scored)
        Source System = Fillout, Completion Status = Submitted, Review Status = Ready for Review
     → coach reviews like any homework (Coach Feedback + Satisfactory? + Review Complete)
     → 064 → 065 award XP (no special path, no direct/duplicate XP)
+    → 071 may send without Submission Assets (quiz path)
 ```
 
 Key rules:
@@ -78,17 +97,5 @@ audit `airtable/extension-scripts/audits/audit-homework17-reflection-quiz-pipeli
 ## Coach Workflow (Airtable)
 
 - View: homework due this week / awaiting review
-- Extension audits: missing video URL, complete without XP
-
-## Failure Modes
-
-| Symptom | Action |
-|---------|--------|
-| Video in Drive, URL blank on Homework | Re-run Make or manual URL paste |
-| Complete but no XP | Audit + safe backfill |
-| Duplicate parent emails | Check Make filter on `eventId` and Homework flags |
-
-## Related
-
-- [Homework XP audits](../../airtable/extension-scripts/audits/README.md)
-- [Make documentation](../../make/documentation/README.md)
+- Open files via **`Reviewer File URL`** (not private Canonical/S3 URLs)
+- Deploy / closeout for parent email: [`docs/deploy-checklists/071-homework-feedback-email-closeout.md`](../deploy-checklists/071-homework-feedback-email-closeout.md)

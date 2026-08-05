@@ -52,7 +52,7 @@ HW17 quiz path (parallel intake)
 | 7 Coach review | Satisfactory? / Review Complete | Manual / Interface views | Formula views may gate 064 |
 | 8 XP prepare | Homework XP prep fields | **064** | |
 | 9 XP award | XP Events | **065** | Sole homework XP writer |
-| 10 Parent feedback | Email webhook | **071** | Fillout-aware; must not require assets for Option B |
+| 10 Parent feedback | Email webhook | **071** v3.5 | Fillout-aware; must not require assets for Option B; parent file URL priority **Reviewer File URL → Google Drive View → Google Drive File** (AWS/Lambda primary; Drive historical fallback). Filenames are labels only. Make owns Sent? after Gmail. |
 
 ---
 
