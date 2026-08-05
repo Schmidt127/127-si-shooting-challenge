@@ -1,11 +1,17 @@
 # Deploy Checklist — 057 Perfect Week Eligibility v1.4
 
+> **SUPERSEDED for current PROD paste/ops.**  
+> PROD Automation 057 is now **v1.5** (2026-08-05), installed and running.  
+> Do **not** paste or downgrade to v1.4.  
+> Current live-verification runbook: [`057-perfect-week-v1.5-live-verification.md`](./057-perfect-week-v1.5-live-verification.md)  
+> Fixture package: `docs/testing/perfect-week/`
+
 **SC items:** SC-021, SC-028, SC-077  
 **Script:** `airtable/automations/shooting-challenge/057-achievements-and-milestones-calculate-perfect-week-eligibility.js`  
 **Version before (typical PROD):** v1.3 (C-025 Stage 17 Zoom credit)  
-**Version after:** **v1.4**  
+**Version after:** **v1.4** (historical) → superseded by **v1.5** unloadData compat  
 **Date:** 2026-07-25  
-**Status:** **Live Tested in PROD — Denver boundary PASS 2026-08-04**
+**Status:** **Historical — Denver boundary PASS 2026-08-04 on v1.4; PROD now on v1.5; Perfect Week cross-boundary verification still open**
 
 ## PROD closeout
 

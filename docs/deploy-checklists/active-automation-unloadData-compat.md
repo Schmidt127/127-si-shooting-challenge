@@ -3,7 +3,7 @@
 | Field | Value |
 |-------|--------|
 | Date | 2026-08-05 (corrected 2026-08-05 — Automation 117 ownership reconcile) |
-| Status | **Built in Repository** — Airtable paste Pending for **031, 035, 042, 057, 114, 118, 119** only; Live test Not Tested |
+| Status | **Built in Repository** — Airtable paste Pending for **031, 035, 042, 114, 118, 119**; **057 v1.5 pasted/running in PROD** (Mike 2026-08-05) — Perfect Week live fixture verification still open |
 | Pattern | Same as Automation **001 v5.2** / **002 v8.2**: `unloadQuerySafe()` + `finally` |
 | Offline suite | `node tests/airtable-runtime/active-automation-unload-compat.test.js` |
 
@@ -18,7 +18,7 @@ Bare `QueryResult.unloadData()` is not reliably available in the current Airtabl
 | 031 | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` | v3.1 | **v3.2** | 1 (`xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 035 | `035-weekly-summary-and-goal-logic-create-weekly-threshold-xp-events.js` | v1.2 | **v1.3** | 3 (`recheck`, `rulesQuery`, `xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 042 | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | 3.1 | **3.2** | 2 (`zmQuery`, `zaQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
-| 057 | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` | 1.4 | **1.5** | 1 (`zaQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
+| 057 | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` | 1.4 | **1.5** | 1 (`zaQuery`) | `unloadQuerySafe` + `finally` | **Installed in PROD** (Mike 2026-08-05) | Cross-boundary fixture verification open |
 | 114 | `114-video-review-and-xp-create-or-update-video-xp-event.js` | v5.8 | **v5.9** | 1 (`xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 118 | `118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` | v1.5 | **v1.6** | 3 (`enrollmentsQuery`, `weeksQuery`, `wasQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 119 | `119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js` | v1.5 | **v1.6** | 3 (`enrQuery`, `weeksQuery`, `wasQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |

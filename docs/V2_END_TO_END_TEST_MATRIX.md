@@ -132,13 +132,15 @@ cd web && npm test
 
 ## G. Perfect Week
 
+Canonical fixture pack (PROD): `docs/testing/perfect-week/` — Automation **057 v1.5** installed/running; verification open (do not treat as Complete).
+
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| G1 | Eligible Perfect Week | Required daily days + homework (+ video/zoom if configured) | 057 | Eligible flag set; missing days empty | U | U |
-| G2 | Missing one required day | Four of five days | 057 | Not eligible; missing day listed | U | U |
+| G1 | Eligible Perfect Week | Required daily days + homework (+ video/zoom if configured) | 057 v1.5 → 058 → 059 | Eligible flag set; missing days empty; one PERFECT_WEEK XP | U | Fixture CASE-01 (pending) |
+| G2 | Missing one required day | Six of seven days (Sun–Sat product rule) | 057 | Not eligible; missing day listed | U | Fixture CASE-03 (pending) |
 | G3 | Create unlock | Eligible + unlock empty | 058 | Unlock Source Key `PERFECT_WEEK\|enr\|week` | U | U |
-| G4 | Unlock rerun | Re-run 058 | 058 | No second unlock | U | U |
-| G5 | Unlock → XP | 059 path | 059 | One XP Event | U | U |
+| G4 | Unlock rerun | Re-run 058 | 058 | No second unlock | U | Fixture CASE-15 (pending) |
+| G5 | Unlock → XP | 059 path | 059 | One XP Event | U | Fixture CASE-01/15 (pending) |
 
 ---
 

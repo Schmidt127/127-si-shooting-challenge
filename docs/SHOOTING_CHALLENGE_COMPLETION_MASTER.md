@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Automation 071 v3.5 PROD live closeout + SC-003 Complete; dashboard recount) |
+| Last updated | **2026-08-05** (057 v1.5 admin correction + Perfect Week fixture pack; not Complete) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -78,22 +78,35 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (Automation 071 live closeout + SC-003 Complete). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correction — Perfect Week verification open). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 17 |
 | Live Tested in PROD | 22 |
-| Installed but not tested *(Installed in PROD)* | 48 |
+| Installed but not tested *(Installed in PROD)* | 49 |
 | Built but not installed *(Built in Repository)* | 24 |
-| Ready for PROD Paste *(informal — SC-021)* | 1 |
+| Ready for PROD Paste *(informal)* | 0 |
 | Planned | 17 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Automation 057 v1.5 install + Perfect Week fixtures)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-021 | Ready for PROD Paste | **Installed in PROD** | PROD 057 **v1.5** enabled/running (Mike 2026-08-05); repo script **v1.5** matches; do **not** paste/downgrade to v1.4; Perfect Week cross-boundary verification still open |
+| SC-028 | Installed in PROD | **Installed in PROD** (notes corrected) | Same — not Live Tested / Complete |
+| SC-077 | Installed in PROD | **Installed in PROD** (notes corrected) | Same — XP path not fixture-proven |
+| SC-091 | Installed in PROD | **Installed in PROD** (notes corrected) | Same — Zoom+PW fixtures pending |
+
+**Net math vs post–071/SC-003 closeout:** Ready for PROD Paste 1→**0**; Installed 48→**49** (SC-021). Complete/LT unchanged. **Do not mark Perfect Week Complete.**
+
+**Next package:** Omni Perfect Week fixtures + verifier — [`docs/testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md`](./testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md) · [`docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`](./deploy-checklists/057-perfect-week-v1.5-live-verification.md).
 
 ### Dashboard reconciliation (2026-08-05 — Automation 071 live closeout and SC-003 completion)
 
@@ -105,7 +118,7 @@ Counts below match Section 4 as of **2026-08-05** (Automation 071 live closeout 
 
 **Net math vs post–SC-009/SC-101 closeout:** Complete 15→**17**; LT 23→**22** (SC-003 −1); Installed 49→**48** (SC-017 −1); Built stays **24**.
 
-**Next package:** Paste **057 v1.4** (SC-021 / SC-028 / SC-077) — [`docs/prod-completion/2026-08-05/NEXT-PACKAGE-AFTER-071-SC003.md`](./prod-completion/2026-08-05/NEXT-PACKAGE-AFTER-071-SC003.md).
+**Historical next-package note (superseded):** earlier closeout said paste **057 v1.4** — PROD is now **v1.5**; use live-verification runbook instead.
 
 ### Dashboard reconciliation (2026-08-05 — Automation 071 Reviewer File URL)
 
@@ -278,14 +291,14 @@ Columns:
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
-| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Ready for PROD Paste | Hardcode audit + helpers; year-aware Config resolver; **054 v5.6** + **066 v3.3** in PROD; **057 v1.4** Denver date-key fix + DST boundary offline tests | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week regression; migrate remaining consumers | SC-022 | Changing options breaks scripts | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; MIKE-ACTIONS #2 | — | P0 | 2026-07-25 |
+| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Installed in PROD | **054 v5.6** + **066 v3.3** in PROD; **057 v1.5** installed/running in PROD (repo matches; do not downgrade to v1.4); Denver date keys retained from v1.4 | Controlled Perfect Week fixtures CASE-01…16 + verifier; migrate remaining hardcode consumers | SC-022 | Changing options breaks scripts | `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P0 | 2026-08-05 |
 | SC-022 | Config | XP Reward Rules audit and cleanup | Installed in PROD | 31 active rules, 0 duplicate keys; source-by-source audit; **054 v5.6 Installed in PROD** (duplicate active streak-rule guard) | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open | SC-021, SC-023 | Source Key uniqueness | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
 | SC-023 | Config | Grade Bands as linked source of truth | Installed in PROD | Active bands K-2…9-12 healthy; **066 v3.3 Installed in PROD** (link-ID band match); normalize helpers + tests; **002 v8.2** repo fix for `unloadData` crash on Grade 3 Testing Schmidt enrollment `recCyFEPeATOVNlr9` | Paste **002 v8.2** to PROD; rerun enrollment; archive inactive mojibake bands; supervised milestone/OMNI check still open | SC-021 | Renaming bands must not break XP; Grade 3 must Min/Max-match **3-4** (no hard-coded band ID) | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `docs/deploy-checklists/002-unloadData-runtime-fix.md`; `tests/enrollment-intake/automation-002-unload-compat.test.js` | — | P0 | 2026-08-05 |
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066 v3.3 Installed in PROD** (2026-07-24) | Re-test natural run on Schmidt; OMNI confirmation packet (not Live Tested for v3.3 yet) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD still runs **057 v1.3**; repo **057 v1.4** Denver date-key Ready for PROD Paste (**code canonical in PR #43**; paste runbook in this PR) | Paste **057 v1.4**; Schmidt Denver boundary + Perfect Week + Zoom exclusivity | SC-116 | Combined Zoom credit path; do not UTC-shift date keys | `docs/deploy-checklists/057-perfect-week-denver-v1.4.md`; `057-PERFECT-WEEK-PROD-PASTE.md`; C-025 Stage 17 | — | P1 | 2026-07-25 |
+| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD **057 v1.5** installed/running (2026-08-05); repo **v1.5** matches; rules still partly hardcoded (`requiredVideoCount: 3`) | Run `docs/testing/perfect-week/` fixtures; do **not** mark Complete until cross-boundary cases pass | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade to v1.4 | `057-perfect-week-v1.5-live-verification.md`; `PERFECT-WEEK-FIXTURE-SPEC.md` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
@@ -334,7 +347,7 @@ Columns:
 | SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.3**; repo **057 v1.4** Ready for PROD Paste (PR #43 code; this PR paste runbook) | Paste v1.4; live prove 100 XP + dedupe with Zoom rules on Schmidt | SC-028, SC-074 | — | `057-perfect-week-denver-v1.4.md`; `057-PERFECT-WEEK-PROD-PASTE.md`; C-025 | — | P1 | 2026-07-25 |
+| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.5** running; unlock **058** → XP **059** Source Key `PERFECT_WEEK\|{enr}\|{week}` (100 from rule) | Live prove award + dedupe via fixture CASE-01/15; Zoom cases 11–13 | SC-028, SC-074 | — | `057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P1 | 2026-08-05 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
@@ -348,7 +361,7 @@ Columns:
 | SC-088 | Zoom | Recording approval email to parent | Built in Repository | Canonical Airtable **117** = email-to-Make (`117-zoom-send-recording-approval-email-to-make.js` v1.1); Make id **117f**; controlled tests PASS | Permanent webhook; go-live checklist if still pending | SC-086 | Make must not write XP | `117-zoom-recording-approval-email.md`; C-025 117f | Authorize live email | P1 | 2026-08-05 |
 | SC-089 | Zoom | Total Zoom counts correct | Installed in PROD | Rollups/formulas Stage 17 | Re-verify formulas after schema export | SC-048 | Preconflict rollup formula critical | Stage 17 formula docs | — | P1 | 2026-07-23 |
 | SC-090 | Zoom | Level gate integration for Zoom credit | Installed in PROD | 042 v3.1 | Live prove | SC-080 | — | C-025 | — | P0 | 2026-07-23 |
-| SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.3; repo 057 v1.4 Ready for PROD Paste | Paste v1.4; live prove Zoom+Perfect Week | SC-077 | — | C-025; `057-perfect-week-denver-v1.4.md` | — | P0 | 2026-07-25 |
+| SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.5 installed; Zoom Met formula + live Attendees ∪ recording credit path | Fixture CASE-10…13 (not required / attended / missing / cross-enrollment) | SC-077 | — | C-025; `057-perfect-week-v1.5-live-verification.md` | — | P0 | 2026-08-05 |
 | SC-092 | Zoom | Weekly summary shows Zoom correctly | Installed in PROD | 072 Zoom sections historically | Re-test Presentation labels | SC-036, SC-054 | — | V2-004 | — | P1 | 2026-07-23 |
 | SC-093 | Zoom | Public website Zoom pages accurate | Installed in PROD | `/shoot` Zoom catalog UI live | Confirm Airtable publish filters after wipe | SC-146 | Read-only web | web Zoom views | — | P2 | 2026-07-23 |
 | SC-094 | Assets | Video storage on program-owned S3 | Installed in PROD | Lambda upload-asset; 070b/070c PROD E2E historically; **SC-150 Complete** adds private reviewer viewer on same Lambda | Re-test writeback on Schmidt asset as needed | SC-150 | Auth secret hygiene; bucket stays private | C-013; SC-150 checklist | Optional secret rotate (separate P0) | P0 | 2026-08-04 |
@@ -641,7 +654,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | Package | Status | Evidence |
 |---------|--------|----------|
 | **SC-049 / XP-D1 Weekly Threshold writer** | **Live Tested in PROD** | **035 v1.2** pasted; Schmidt first-award 3 created + duplicate rerun 0/3; automation **OFF** pending PR #50 merged-source reconciliation; evidence `2026-08-03-035-v1.2-schmidt-live-proof.md` |
-| **SC-021 / 057 Denver date keys** | **Ready for PROD Paste** | **057 v1.4** Denver Intl helper; DST/evening boundary offline tests; `057-perfect-week-denver-v1.4.md`; Schmidt Tests 4–5 |
+| **SC-021 / 057 Denver date keys** | **Installed in PROD** | **057 v1.5** installed/running (includes v1.4 Denver Intl helper + unloadData guard); live Perfect Week fixtures still open — `057-perfect-week-v1.5-live-verification.md` |
 | **SC-002 fixtures SCN-021–026** | Built in Repository | HW/Video/Zoom/Threshold fixtures; **not** Live Tested |
 
 **PR #44** (`cursor/prod-completion-pack-cbb3`) — stacked on #43; unique ops pack (no duplicate 057 code):

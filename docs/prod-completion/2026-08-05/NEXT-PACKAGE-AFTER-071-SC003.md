@@ -3,21 +3,21 @@
 | Field | Value |
 |-------|--------|
 | Authority | [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) |
-| Selected | **SC-021** (leads Perfect Week paste pack **SC-021 / SC-028 / SC-077**) |
+| Selected | **SC-021 / SC-028 / SC-077** Perfect Week **live fixture verification** (057 **v1.5** already installed) |
 | Priority | **P0** |
-| Current status | **Ready for PROD Paste** |
-| Do not start in the closeout branch that only documents 071/SC-003 |
+| Current status | **Installed in PROD** — paste done; cross-boundary verification open |
+| Historical note | Earlier card asked to paste **057 v1.4** — superseded; PROD is **v1.5** (2026-08-05). Do not downgrade. |
 
 ---
 
 ## Why this is next
 
-1. **P0** and already **Ready for PROD Paste** (script + offline DST tests exist).
-2. Unblocks **SC-028** / **SC-077** Perfect Week live proof (dependency blocker).
-3. One coherent package: paste **057 v1.4** → Schmidt Denver boundary + Perfect Week regression.
-4. Preferable to starting a new Built-only design wave; respects PROD-first and does not create extra Airtable automations.
+1. Automation **057 v1.5** is installed and running in PROD (Mike attestation).
+2. Perfect Week is **not** Complete — prior tests crossed calendar dates, week boundaries, and programs.
+3. Next work is controlled fixtures + read-only verifier (not another paste).
+4. Do not mark SC-021 / SC-028 / SC-077 / SC-091 Complete from “enabled” alone.
 
-Runner-up (if Mike prefers live-test-only, no paste): **SC-010** PDF homework E2E — Installed, same S3/070a path as Complete SC-009, needs one Schmidt PDF controlled proof.
+Runner-up (if Mike prefers a different live path): **SC-010** PDF homework E2E — Installed, same S3/070a path as Complete SC-009, needs one Schmidt PDF controlled proof.
 
 ---
 
@@ -25,16 +25,16 @@ Runner-up (if Mike prefers live-test-only, no paste): **SC-010** PDF homework E2
 
 | Item | Detail |
 |------|--------|
-| **SC number** | **SC-021** (pack also advances **SC-028**, **SC-077** when live-proven) |
-| **Title** | Config-over-code audit / Perfect Week Denver date keys (**057 v1.4**) |
-| **Current status** | Ready for PROD Paste |
+| **SC number** | **SC-021** (pack also **SC-028**, **SC-077**, **SC-091**) |
+| **Title** | Perfect Week PROD live verification (057 **v1.5**) |
+| **Current status** | Installed in PROD / verification open |
 | **Priority** | P0 |
-| **Why next** | Paste-ready; unblocks Perfect Week + Zoom PW integration; documented next critical paste |
-| **Dependencies** | SC-022 adjacent (XP rules); Zoom exclusivity for full PW story later |
-| **Repository work** | Already merged — `057-…js` v1.4 + offline boundary tests + deploy checklist |
-| **PROD work** | Paste **057 v1.4** into existing Automation 057 (replace script body only; preserve inputs/trigger) |
-| **Live-test evidence required** | Schmidt Denver date-boundary + Perfect Week award/idempotency; file under `docs/testing/evidence/YYYY-MM-DD-057-v1.4/` |
-| **Mike actions** | 1) Open `docs/deploy-checklists/057-perfect-week-denver-v1.4.md` 2) Paste v1.4 into PROD 057 3) Run controlled Schmidt Perfect Week / Denver boundary test 4) Attest results |
-| **Cursor actions** | After Mike paste+attest: docs closeout + dashboard recount only (no silent status advance without evidence) |
+| **Why next** | Install done; need CASE-01…16 isolation proof |
+| **Dependencies** | 058 unlock, 059 XP, Schmidt athlete |
+| **Repository work** | Fixture spec + Omni prompt + verifier — `docs/testing/perfect-week/` |
+| **PROD work** | Omni creates fixtures; wait for 057/058/059; run verifier |
+| **Live-test evidence required** | Verifier PASS (or documented product exceptions); `docs/testing/evidence/YYYY-MM-DD-perfect-week-fixtures/` |
+| **Mike actions** | 1) Open `docs/testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md` 2) Paste into Omni 3) Save `PWTEST-MANIFEST.json` 4) Run `node tools/testing/verify_perfect_week_fixtures.mjs` |
+| **Cursor actions** | After evidence: Completion Master status update only |
 
-**First operator action:** Paste **057 v1.4** from [`docs/deploy-checklists/057-perfect-week-denver-v1.4.md`](../deploy-checklists/057-perfect-week-denver-v1.4.md) into PROD Automation 057.
+**First operator action:** Paste Omni prompt from [`docs/testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md`](../testing/perfect-week/PERFECT-WEEK-OMNI-PROMPT.md). Runbook: [`057-perfect-week-v1.5-live-verification.md`](../deploy-checklists/057-perfect-week-v1.5-live-verification.md).
