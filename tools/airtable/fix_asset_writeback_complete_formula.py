@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Patch Homework Completions Upload Ready? for file, Fillout quiz, and linked-asset paths."""
+"""Patch Submission Assets Writeback Complete? to gate on Canonical/S3 fields (not Drive)."""
 
 from __future__ import annotations
 
@@ -11,33 +11,16 @@ import requests
 from dotenv import load_dotenv
 
 BASE_ID = "appn84sqPw03zEbTT"
-TABLE_ID = "tblv58ppTFDBXb3nv"
-FIELD_ID = "fldv93VB39LdydxD9"
+TABLE_ID = "tblhMLKxQK77agtME"
+FIELD_ID = "fldtl04LTU3FoMmLL"
 
-# Paths (field IDs):
-# - Enrollment + HC Airtable Attachment + Asset Type (legacy file-on-HC)
-# - Enrollment + Source System=Fillout + Final Reflection Quiz link (Option B)
-# - Enrollment + All Submitted Files Uploaded? + Total Linked Submission Assets > 0 (020 photo/PDF)
-UPLOAD_READY_FORMULA_IDS = """IF(
-  AND(
-    {fldfK3h5ucx3WdFNS},
-    OR(
-      AND(
-        {fldFTRL2bgrlhxSoD},
-        {fldASKykpfYEbf3t7}
-      ),
-      AND(
-        {fldwupjoZ8fbSEMM9} = "Fillout",
-        {fldxn4crSQHzGhK3t}
-      ),
-      AND(
-        {fldpQj6QhCexD5bMx} = 1,
-        {fldcRGMdGYVPIGhgD} > 0
-      )
-    )
-  ),
-  1,
-  0
+# Upload Status=Uploaded + Canonical File URL + Storage Key + SHA-256 + Uploaded At
+WRITEBACK_COMPLETE_FORMULA_IDS = """AND(
+  {fldPybPEvRcEVuNWl} = "Uploaded",
+  {fld9NZBwDc01gxTY9} != BLANK(),
+  {fldJWFKe8ZT3TrSKQ} != BLANK(),
+  {fldMtYyiPhVWbQk6M} != BLANK(),
+  {fldvXvURsGG611cSK} != BLANK()
 )"""
 
 
@@ -60,18 +43,16 @@ def main() -> None:
     resp = requests.patch(
         url,
         headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
-        json={"options": {"formula": UPLOAD_READY_FORMULA_IDS}},
+        json={"options": {"formula": WRITEBACK_COMPLETE_FORMULA_IDS}},
         timeout=60,
     )
     if not resp.ok:
         raise SystemExit(f"PATCH failed {resp.status_code}: {resp.text[:500]}")
     formula = resp.json().get("options", {}).get("formula", "")
-    if "fldpQj6QhCexD5bMx" in formula and "fldxn4crSQHzGhK3t" in formula:
-        print(
-            "Upload Ready? updated: legacy attachment OR Fillout quiz OR linked assets uploaded."
-        )
+    if "fld9NZBwDc01gxTY9" in formula and "fldITNuxNt9xphk7j" not in formula:
+        print("Writeback Complete? updated: Canonical/S3 fields (Drive gate removed).")
     else:
-        raise SystemExit("Formula patch may have failed — expected path refs missing.")
+        raise SystemExit("Formula patch may have failed — Canonical ref missing or Drive still present.")
 
 
 if __name__ == "__main__":

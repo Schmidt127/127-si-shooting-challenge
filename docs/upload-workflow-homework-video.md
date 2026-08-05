@@ -1,16 +1,43 @@
 # Upload workflow — homework and video (accepted design)
 
-**Status:** Owner-approved architecture — planning / DEV implementation  
-**Backlog:** C-020 (test harness), C-013 (canonical storage), C-022 (presentation), C-023 (hash dedup)  
-**Last updated:** 2026-07-06  
-**Environment:** DEV `appTetnuCZlCZdTCT` first — Production untouched
+**Status:** Owner-approved architecture — **PROD photo path Live Tested (SC-009, 2026-08-04)**  
+**Backlog:** SC-009 / SC-010 / C-020 / C-013 / C-023 / SC-150  
+**Last updated:** 2026-08-04  
+**Environment:** PROD `appn84sqPw03zEbTT` is the active construction base (see completion master)
 
 **Related:**
 
-- [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) — field maps + acceptance tests
+- [SC-009 photo homework PROD evidence](./testing/evidence/2026-08-04-sc-009-photo-homework/README.md)
+- [SC-009 deploy checklist](./deploy-checklists/SC-009-photo-homework-prod.md)
+- [SC-150 reviewer file links](./deploy-checklists/SC-150-prod-reviewer-file-links.md)
+- [C-020 script checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)
 - [testing-and-intake-architecture.md](./testing-and-intake-architecture.md) — Engineering Test Framework
 - [asset-storage-migration.md](./asset-storage-migration.md) — C-013 canonical URL target
-- [development-base-setup.md](./development-base-setup.md) — DEV external automations OFF
+
+---
+
+## PROD photo homework runbook (SC-009)
+
+```
+Fillout/API Submission (Enrollment + Week + Homework Name 1 + HW Sub 1 image)
+  → 009 creates Submission Asset (Asset Type = Homework Image)
+  → 020 finds/creates ONE Homework Completion; Pending Link + Send to Make Trigger
+  → 070a payload routeKey=homework_completion → Make → PROD Lambda
+  → Lambda private S3 writeback (Uploaded + Canonical + Storage Key + SHA-256 + Reviewer Access Token)
+  → Coach: Satisfactory? + Review Complete + Coach Feedback
+  → 064/065 exactly one XP (HOMEWORK_XP|{hcId})
+  → 071 parent-feedback ready (Schmidt-only recipients)
+```
+
+| Gate | Rule |
+|------|------|
+| Clickable coach file | **`Reviewer File URL`** (never make Canonical/S3 public) |
+| Writeback Complete? | Canonical + Storage Key + hash + Uploaded At (not Google Drive) |
+| HC Upload Ready? | Linked assets Uploaded **or** legacy HC attachment **or** Fillout quiz |
+| Idempotent upload | Canonical present → 070a v4.5 `skipped_already_uploaded`; Lambda retry same |
+| One HC / one XP | Enrollment \| Week \| Homework identity; Source Key `HOMEWORK_XP\|{hcId}` |
+
+**Known follow-up:** Make may return `Accepted` without Airtable writeback — verify Module → PROD Lambda (SC-101). Direct Lambda with 070a payload is proven.
 
 ---
 
