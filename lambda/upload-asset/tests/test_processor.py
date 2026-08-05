@@ -18,6 +18,7 @@ from upload_core.fields import (
     FIELD_CANONICAL_FILE_URL,
     FIELD_FILE_CONTENT_HASH,
     FIELD_PROCESSING_STARTED_AT,
+    FIELD_REVIEWER_ACCESS_TOKEN,
     FIELD_UPLOAD_CLAIM_RUN_ID,
     FIELD_UPLOAD_STATUS,
 )
@@ -66,6 +67,9 @@ class ProcessorTests(unittest.TestCase):
         matches = matches if matches is not None else []
         config = _config()
 
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
         def patch_impl(token, base_id, record_id, patch_fields):
             if patch_side_effect:
                 patch_side_effect(token, base_id, record_id, patch_fields)
@@ -73,7 +77,7 @@ class ProcessorTests(unittest.TestCase):
             return {"id": record_id, "fields": fields}
 
         with (
-            patch("upload_core.processor.get_asset", return_value={"id": RECORD, "fields": dict(fields)}),
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
             patch("upload_core.processor.patch_asset", side_effect=patch_impl),
             patch("upload_core.processor.http_get_bytes", return_value=(b"test-bytes", "image/png")),
             patch("upload_core.processor.upload_s3", return_value={"bucket": "b", "region": "us-east-2", "etag": "x"}),
@@ -89,6 +93,21 @@ class ProcessorTests(unittest.TestCase):
         self.assertEqual(fields[FIELD_UPLOAD_STATUS], "Uploaded")
         self.assertTrue(fields[FIELD_UPLOAD_CLAIM_RUN_ID])
         self.assertTrue(fields[FIELD_PROCESSING_STARTED_AT])
+        self.assertTrue(fields[FIELD_REVIEWER_ACCESS_TOKEN])
+        self.assertTrue(result["writebackVerification"]["reviewerTokenPopulated"])
+        self.assertTrue(result["writebackVerification"]["reviewerTokenCreated"])
+        self.assertTrue(result["writebackVerification"]["readbackVerified"])
+        self.assertNotIn(FIELD_REVIEWER_ACCESS_TOKEN, result["writebackApplied"])
+        self.assertNotEqual(fields[FIELD_UPLOAD_STATUS], "Processing")
+
+    def test_new_upload_preserves_existing_reviewer_token(self):
+        existing = "existing-token-abcdefghijklmnopqrstuvwxyz012345"
+        fields = {**BASE_FIELDS, FIELD_REVIEWER_ACCESS_TOKEN: existing}
+        result = self._run_upload(fields)
+        self.assertEqual(result["actionOut"], "uploaded")
+        self.assertEqual(fields[FIELD_REVIEWER_ACCESS_TOKEN], existing)
+        self.assertFalse(result["writebackVerification"]["reviewerTokenCreated"])
+        self.assertEqual(fields[FIELD_UPLOAD_STATUS], "Uploaded")
 
     def test_already_uploaded_skips_without_s3(self):
         fields = {
@@ -96,12 +115,41 @@ class ProcessorTests(unittest.TestCase):
             FIELD_UPLOAD_STATUS: "Uploaded",
             FIELD_CANONICAL_FILE_URL: "https://example.com/x",
             FIELD_FILE_CONTENT_HASH: HASH,
+            FIELD_REVIEWER_ACCESS_TOKEN: "keep-me-token-abcdefghijklmnopqrstuvwxyz",
         }
         with patch("upload_core.processor.upload_s3") as mock_s3:
             result = self._run_upload(fields)
         self.assertEqual(result["actionOut"], "skipped_already_uploaded")
+        self.assertFalse(result["reviewerTokenCreated"])
+        self.assertEqual(fields[FIELD_REVIEWER_ACCESS_TOKEN], "keep-me-token-abcdefghijklmnopqrstuvwxyz")
         mock_s3.assert_not_called()
 
+    def test_already_uploaded_backfills_blank_reviewer_token(self):
+        fields = {
+            **BASE_FIELDS,
+            FIELD_UPLOAD_STATUS: "Uploaded",
+            FIELD_CANONICAL_FILE_URL: "https://example.com/x",
+            FIELD_FILE_CONTENT_HASH: HASH,
+        }
+        result = self._run_upload(fields)
+        self.assertEqual(result["actionOut"], "skipped_already_uploaded")
+        self.assertTrue(result["reviewerTokenCreated"])
+        self.assertTrue(fields[FIELD_REVIEWER_ACCESS_TOKEN])
+
+    def test_idempotent_retry_preserves_token_and_uploaded_status(self):
+        fields = dict(BASE_FIELDS)
+        first = self._run_upload(fields)
+        token = fields[FIELD_REVIEWER_ACCESS_TOKEN]
+        self.assertEqual(first["actionOut"], "uploaded")
+        # Simulate already-uploaded retry with same token present
+        fields[FIELD_UPLOAD_STATUS] = "Uploaded"
+        fields[FIELD_CANONICAL_FILE_URL] = first["s3"]["canonicalFileUrl"]
+        fields[FIELD_FILE_CONTENT_HASH] = HASH
+        second = self._run_upload(fields)
+        self.assertEqual(second["actionOut"], "skipped_already_uploaded")
+        self.assertEqual(fields[FIELD_REVIEWER_ACCESS_TOKEN], token)
+        self.assertEqual(fields[FIELD_UPLOAD_STATUS], "Uploaded")
+        self.assertFalse(second["reviewerTokenCreated"])
     def test_concurrent_worker_skips_s3(self):
         started = (datetime.now(DENVER) - timedelta(minutes=2)).isoformat(timespec="milliseconds")
         fields = {

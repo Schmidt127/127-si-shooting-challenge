@@ -71,12 +71,15 @@ class HomeworkRouteTests(unittest.TestCase):
         matches = matches if matches is not None else []
         config = _config()
 
+        def get_impl(token, base_id, record_id):
+            return {"id": record_id, "fields": dict(fields)}
+
         def patch_impl(token, base_id, record_id, patch_fields):
             fields.update(patch_fields)
             return {"id": record_id, "fields": fields}
 
         with (
-            patch("upload_core.processor.get_asset", return_value={"id": RECORD, "fields": dict(fields)}),
+            patch("upload_core.processor.get_asset", side_effect=get_impl),
             patch("upload_core.processor.patch_asset", side_effect=patch_impl),
             patch("upload_core.processor.http_get_bytes", return_value=(b"test-bytes", "image/png")),
             patch("upload_core.processor.upload_s3", return_value={"bucket": "b", "region": "us-east-2", "etag": "x"}),

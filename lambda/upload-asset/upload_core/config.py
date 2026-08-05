@@ -21,6 +21,8 @@ class UploadConfig:
     challenge_slug: str
     athlete_slug_override: str | None
     upload_webhook_secret: str | None
+    viewer_presign_ttl_seconds: int = 900
+    viewer_base_url: str | None = None
 
     @classmethod
     def from_env(cls) -> UploadConfig:
@@ -49,6 +51,16 @@ class UploadConfig:
         allow_raw = os.getenv("ALLOW_ROUTE_KEYS", "video_feedback,homework_completion")
         allow_route_keys = frozenset(k.strip() for k in allow_raw.split(",") if k.strip())
 
+        ttl_raw = (os.getenv("VIEWER_PRESIGN_TTL_SECONDS") or "900").strip()
+        try:
+            viewer_ttl = int(ttl_raw)
+        except ValueError as exc:
+            raise ValueError("VIEWER_PRESIGN_TTL_SECONDS must be an integer") from exc
+        if viewer_ttl < 60 or viewer_ttl > 3600:
+            raise ValueError("VIEWER_PRESIGN_TTL_SECONDS must be between 60 and 3600")
+
+        viewer_base = (os.getenv("VIEWER_BASE_URL") or "").strip() or None
+
         return cls(
             airtable_base_id=base,
             airtable_token=token,
@@ -60,4 +72,6 @@ class UploadConfig:
             challenge_slug=os.getenv("CHALLENGE_SLUG", "shooting-challenge"),
             athlete_slug_override=os.getenv("ATHLETE_SLUG_OVERRIDE") or None,
             upload_webhook_secret=os.getenv("UPLOAD_WEBHOOK_SECRET") or None,
+            viewer_presign_ttl_seconds=viewer_ttl,
+            viewer_base_url=viewer_base,
         )
