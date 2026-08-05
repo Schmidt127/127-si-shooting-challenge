@@ -30,12 +30,14 @@ function hasMeta(block, key) {
 }
 
 const root = path.join(__dirname, "..");
+const designRoot = path.join(root, "_design-alternatives/stage17-modular-reference");
 const requiredFiles = [
   "009-submission-intake-create-submission-assets.js",
-  "117a-zoom-recording-normalize-recording-quiz-submission.js",
-  "117b-zoom-recording-coach-review-and-needs-correction-handling.js",
-  "117c-zoom-recording-create-zoom-xp-event.js",
+  path.join("_design-alternatives/stage17-modular-reference", "117a-zoom-recording-normalize-recording-quiz-submission.js"),
+  path.join("_design-alternatives/stage17-modular-reference", "117b-zoom-recording-coach-review-and-needs-correction-handling.js"),
+  path.join("_design-alternatives/stage17-modular-reference", "117c-zoom-recording-create-zoom-xp-event.js"),
   "066-achievements-and-milestones-create-shot-milestone-unlocks.js",
+  "117-zoom-send-recording-approval-email-to-make.js",
 ];
 
 for (const fileName of requiredFiles) {

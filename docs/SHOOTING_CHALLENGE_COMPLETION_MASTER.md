@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Active automation unloadData compat pack — Built in Repository; PROD paste pending) |
+| Last updated | **2026-08-05** (Automation 117 ownership reconcile — email-only PROD 117; modular Stage 17 archived) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -37,8 +37,25 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
    - one writer per field (do not create competing automations)
 8. **Schmidt testing enrollment** is the primary live test athlete when records are recreated.
 9. **Code in GitHub is not the same as “working in PROD.”** A feature is only Complete when repository work, PROD installation, and live PROD testing are all satisfied where they apply.
+10. **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory and deployment inventory must distinguish deployed scripts from archived/design alternatives.
 
 ---
+
+## 1A. Zoom workflow ownership (PROD)
+
+| Function | Active owner | Airtable automation slot used? |
+| -------------------------------- | ------------------ | ------------------------------ |
+| Zoom attendance normalization (recording quiz) | No deployed Airtable automation (design alternatives only) | No |
+| Zoom attendance credit / `ZOOM_CREDIT` XP | No deployed Airtable automation | No |
+| Live Zoom meeting XP | Automation **101** | Yes |
+| Gate Applied? | Automation **042** | Yes |
+| Perfect Week Applied? | Automation **057** | Yes |
+| Recording approval email handoff | Automation **117** | Yes |
+| Make/Gmail email send + dedupe | Make workflow **117f** | No Airtable slot |
+
+Canonical file for Automation 117: `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js`.  
+Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.  
+**Do not** paste the Stage 17 orchestrator into PROD Automation 117. **Do not** create 117a/117b/117c Airtable slots.
 
 ## 2. Status Definitions
 
@@ -263,7 +280,7 @@ Columns:
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
 | SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24 (`send_short` + Make writeback); 071–077 + 117f still need individual re-proof | Re-test homework/video/welcome; 117f go-live | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture; SENT-FIELD-OWNERSHIP | — | P0 | 2026-07-24 |
-| SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness (26 pass / 2 warn); dual writers flagged: 112 vs 013, 117 vs 117c, 031/101/118 WAS, 020 vs 067, Threshold missing, 065 legacy keys | Mike UI attestation; fix conflicts after decisions | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer; 117 XOR 117c | P0 | 2026-07-24 |
+| SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
 | SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Live Tested in PROD | Full XP source catalog + JSON; **035 v1.2** Weekly Threshold writer (preserves full v1.1: semantic Enrollment+Week+XP Source dedupe, inactive enrollment skip, Grade Band link-ID preference, exact Source Key); percent compare uses Airtable raw ratio (no `raw>3/100` heuristic); Schmidt first-award **3 created** + duplicate rerun **0 created / 3 skipped** on WAS `rechWp330MqSgRWzN` (Goal Completion raw `83.7`) | Merge PR #50 reconciled source into Airtable header; keep **035 OFF** until enable approved; inspect legacy Source Key shapes before mass requeue | SC-046 | Reruns must be safe; do not dual-ON old Threshold automation; do not enable until merged v1.2 is pasted | `035-…js` v1.2; `docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`; `docs/testing/evidence/2026-08-03-035-v1.2-schmidt-live-proof.md`; `docs/completion-updates/2026-08-03-automation-035-v1.2.md` | Keep OFF pending merge reconcile | P0 | 2026-08-03 |
@@ -275,7 +292,7 @@ Columns:
 | SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
-| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Agent 1 baseline + Agent 9 attestation packet: **115 installed+live-tested**; deleted claim **043, 032, 033, 063, 111**; upgraded **013/020/030** (020=**v3.0.0**). Classifications: 111 fully superseded by 013; 063 only partially by 020. | Mike paste complete PROD UI list; complete Agent 9 attestation packet | SC-059 | UI attestation mandatory before Complete | `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`; `CURRENT-PROD-BASELINE.md` | Paste UI list; confirm 112 OFF; 117 XOR 117c | P0 | 2026-07-24 |
+| SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Agent 1 baseline + Agent 9 attestation packet; **PROD 117 attested email-only v1.1**; 117c absent | Mike paste complete PROD UI list where gaps remain | SC-059 | UI attestation mandatory before Complete | `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`; `CURRENT-PROD-BASELINE.md` | Confirm 112 OFF | P0 | 2026-08-05 |
 | SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Installed in PROD | **043 deleted**. Broader deletes claim **032, 033, 063, 111**. **112 must stay OFF** (OW-D1). **115 installed**. | UI-attest; confirm **112** OFF; do not reinstall 111; orphan blank-GB HCs may need one-time repair (not full 063 restore) | SC-001, SC-058 | Attestation required — not Complete | `docs/next-wave/homework-pipeline/STALE-063-111-PATCH-MANIFEST.md`; baseline | Confirm 112 + attest delete set | P0 | 2026-07-24 |
 | SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Built in Repository | Online Agent 7: Fillout contract + offline enrollment validator + fixtures (18 tests OK); **001 v5.2** repo fix for `unloadData` crash on 2026–27 Testing Schmidt enrollment `recQP4N5acTdK40uZ` | Paste **001 v5.2** to PROD; rerun enrollment; Live Fillout tighten; Athletes hygiene | SC-081 | Bad identity breaks whole season | `docs/online-agents/enrollment-season/`; C-017; `tests/enrollment-intake/automation-001-unload-compat.test.js` | — | P1 | 2026-08-05 |
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Built in Repository | New/returning spec + fixtures/tests mirroring 001; **001 v5.2** preserves email+first+last match and last-chance re-query; unload cleanup no longer aborts after successful match/update | Paste **001 v5.2**; live PROD rerun on `recQP4N5acTdK40uZ` must reuse existing Testing Schmidt Athlete (no duplicate) | SC-060 | Don’t create duplicate Athletes | `docs/online-agents/enrollment-season/`; 001 v5.2 header note | — | P1 | 2026-08-05 |
@@ -291,7 +308,7 @@ Columns:
 | SC-071 | XP | Homework XP after satisfactory review | Installed in PROD | HW XP writers historically; C-020 gap = after-review | Live prove after coach satisfactory | SC-017 | — | K-M4 | — | P0 | 2026-07-23 |
 | SC-072 | XP | Video XP awards correctly | Installed in PROD | **114** Source Key `VIDEO_SUBMISSION\|` | Re-test after upload writeback | SC-133 | — | 114; C-013 | — | P0 | 2026-07-23 |
 | SC-073 | XP | Live Zoom XP awards correctly | Installed in PROD | **101** v5.5 Attendees-only path | Re-test live meeting attendance | SC-116 | Recording path must never write Attendees | 101; C-025 hard rule | — | P0 | 2026-07-23 |
-| SC-074 | XP | Zoom recording XP / credit path | Installed in PROD | Stage 17 **117** / **057** / **042** ON historically; conflict PASS 2026-07-20 | Re-seed Zoom fixtures; re-test conflict + exclusivity after wipe | SC-116 | Soft-void recording only | C-025 Stage 17 live docs | — | P0 | 2026-07-23 |
+| SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
 | SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.3**; repo **057 v1.4** Ready for PROD Paste (PR #43 code; this PR paste runbook) | Paste v1.4; live prove 100 XP + dedupe with Zoom rules on Schmidt | SC-028, SC-074 | — | `057-perfect-week-denver-v1.4.md`; `057-PERFECT-WEEK-PROD-PASTE.md`; C-025 | — | P1 | 2026-07-25 |
@@ -303,9 +320,9 @@ Columns:
 | SC-083 | XP | Achievement unlock deduplication | Installed in PROD | H-001 audit fix; 066 prevention | Live re-test unlocks; keep “fix audit not data” | SC-026 | — | H-001; C-006 | — | P1 | 2026-07-23 |
 | SC-084 | Zoom | Live attendance capture works | Installed in PROD | Zoom Meetings + Attendees → 101 | Recreate meetings; Schmidt attend test | SC-073 | — | 101 | — | P0 | 2026-07-23 |
 | SC-085 | Zoom | Live bonuses (if configured) work | Installed in PROD | XP Reward Rules / meeting bonuses historically | Confirm which bonuses still desired; test | SC-022 | — | XP rules | Confirm bonus set | P2 | 2026-07-23 |
-| SC-086 | Zoom | Recording credit path works | Installed in PROD | Stage 17 orchestrator | Re-test after wipe | SC-074 | Never Attendees write | C-025 | — | P0 | 2026-07-23 |
+| SC-086 | Zoom | Recording credit path works | Built in Repository | Orchestrator not live under PROD 117; credit path is design-alt / future work | Re-open only with a new attested automation plan that does not steal email slot 117 | SC-074 | Never Attendees write | `_design-alternatives/stage17-modular-reference/` | — | P0 | 2026-08-05 |
 | SC-087 | Zoom | Live-versus-recording exclusivity | Installed in PROD | Conflict detection PASS historically | Re-prove Conflict=1 blocks double credit | SC-086 | Soft-void only | Stage 17 verification | — | P0 | 2026-07-23 |
-| SC-088 | Zoom | Recording approval email to parent | Built in Repository | **117f** + Make scenario; controlled tests PASS; webhook often blank | Permanent webhook; go-live checklist; send-key reconciliation if still pending | SC-086 | Make must not write XP | C-025 117f; overnight send-key docs | Authorize live email | P1 | 2026-07-23 |
+| SC-088 | Zoom | Recording approval email to parent | Built in Repository | Canonical Airtable **117** = email-to-Make (`117-zoom-send-recording-approval-email-to-make.js` v1.1); Make id **117f**; controlled tests PASS | Permanent webhook; go-live checklist if still pending | SC-086 | Make must not write XP | `117-zoom-recording-approval-email.md`; C-025 117f | Authorize live email | P1 | 2026-08-05 |
 | SC-089 | Zoom | Total Zoom counts correct | Installed in PROD | Rollups/formulas Stage 17 | Re-verify formulas after schema export | SC-048 | Preconflict rollup formula critical | Stage 17 formula docs | — | P1 | 2026-07-23 |
 | SC-090 | Zoom | Level gate integration for Zoom credit | Installed in PROD | 042 v3.1 | Live prove | SC-080 | — | C-025 | — | P0 | 2026-07-23 |
 | SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.3; repo 057 v1.4 Ready for PROD Paste | Paste v1.4; live prove Zoom+Perfect Week | SC-077 | — | C-025; `057-perfect-week-denver-v1.4.md` | — | P0 | 2026-07-25 |
@@ -548,7 +565,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 
 | Topic | Newer truth | Stale sources |
 |-------|-------------|---------------|
-| Zoom recording | Stage 17 orchestrator **117** (SC-074) | KNOWN_ISSUES K-M1; inventory 117a/117b S16; E2E matrix Zoom rows; brief “queued”; reconciliation body recommending S16 |
+| Zoom recording | PROD **117** = approval email → Make **117f** (SC-088). Stage 17 credit scripts are design alternatives (SC-074 / SC-086). Live Zoom XP = **101**. | Older docs that call the orchestrator “Automation 117 ON” are stale — see §1A / §9L |
 | C-013 video | PROD E2E done historically (SC-094) | Brief Wave 7 queued; some close-out “open” rows |
 | H-002 / 066 | **066 v3.3 Installed in PROD** 2026-07-24 (SC-027/076); live proof still open | Stale “paste pending” briefs |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
@@ -668,18 +685,33 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
 
+### 9L. Automation 117 ownership reconcile — **2026-08-05**
+
+| Field | Value |
+|-------|--------|
+| Root cause | Repository treated Stage 17 credit orchestrator (+ modular 117a/117c) as active Automation **117**; PROD slot **117** is the recording-approval email → Make handoff |
+| PROD Automation 117 | `117 — Zoom — Send Recording Approval Email to Make` (**v1.1** / 2026-07-20) |
+| Canonical repo file | `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js` |
+| Make identifier | `117f` (`automationNumber` / `templateKey=ZOOM_RECORDING_APPROVED`) — **not** an Airtable slot |
+| Disposition | Orchestrator + 117a–e moved to `_design-alternatives/stage17-modular-reference/` (not deleted — Stage 17 offline evidence) |
+| unloadData pack correction | §9K paste targets are **031, 035, 042, 057, 114, 118, 119** only — do **not** paste orchestrator over PROD 117 |
+| Status | **Built in Repository** — no PROD paste required when Airtable already matches v1.1 |
+| Offline tests | `node tests/zoom/automation-117-recording-approval-email.test.js` |
+| Runbook | `docs/deploy-checklists/117-zoom-recording-approval-email.md` |
+
 ### 9K. Active automation unloadData runtime compatibility pack — **2026-08-05**
 
 | Field | Value |
 |-------|--------|
 | Defect class | Bare `QueryResult.unloadData()` unsupported in current Airtable automation runtime |
 | Prior live failures that established the defect | Automation **001** (`athletesQuery.unloadData`), Automation **002** (`gradeBandQuery.unloadData`) — already fixed (v5.2 / v8.2); not modified in this pack |
-| Affected automations (this pack) | **031, 035, 042, 057, 114, 117, 117a, 117c, 118, 119** |
-| Repo fix | Each script gains `unloadQuerySafe()`; bare cleanup replaced; `finally` where the script owns the query lifecycle |
-| Status | **Built in Repository** — Airtable paste still required; live PROD tests still required (do not mark Live Tested/Complete from repo alone) |
-| Offline tests | `node tests/airtable-runtime/active-automation-unload-compat.test.js` (67 passed) + related version-pin suites |
+| Affected automations (this pack — PROD paste) | **031, 035, 042, 057, 114, 118, 119** |
+| Correction (2026-08-05) | Earlier drafts incorrectly listed **117 / 117a / 117c**. Live PROD **117** is email-only (no unloadData). Orchestrator/117a/117c are design alternatives — **do not paste** over PROD 117. See §9L. |
+| Repo fix | Each paste-target script gains `unloadQuerySafe()`; bare cleanup replaced; `finally` where the script owns the query lifecycle |
+| Status | **Built in Repository** — Airtable paste still required for the seven paste targets; live PROD tests still required |
+| Offline tests | `node tests/airtable-runtime/active-automation-unload-compat.test.js` + related version-pin suites |
 | Paste runbook | `docs/deploy-checklists/active-automation-unloadData-compat.md` |
-| Exclusions | `_superseded/*` archive copies; 001/002 already remediated |
+| Exclusions | PROD email Automation 117; `_design-alternatives/*`; `_superseded/*`; 001/002 already remediated |
 
 ### 9J. Automation 002 unloadData runtime fix — **2026-08-05** (SC-023 / enrollment Grade Band)
 

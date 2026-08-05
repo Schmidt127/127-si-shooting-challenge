@@ -143,7 +143,7 @@ test("Source keys remain distinct; recording never writes Attendees (stage17 lib
   const credit = stage17.buildZoomCreditSourceKey("e", "m");
   const live = stage17.buildLiveAttendBaseSourceKey("mk", "e");
   assert(credit !== live, "disjoint");
-  const orch = fs.readFileSync(path.join(root, "117-zoom-recording-credit-orchestrator.js"), "utf8");
+  const orch = fs.readFileSync(path.join(root, "_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js"), "utf8");
   assert(stage17.assertNeverWritesLiveAttendees(orch).ok, "orch no attendees write");
 });
 

@@ -34,13 +34,16 @@ test("current critical automations exist in repo", () => {
   }
 });
 
-test("075 is welcome email, not Zoom XP; Zoom XP is 101 / 117", () => {
+test("075 is welcome email, not Zoom XP; live Zoom XP is 101; PROD 117 is approval email", () => {
   const welcome = files.find((f) => f.startsWith("075-"));
   assert.ok(welcome);
   const body = fs.readFileSync(path.join(root, welcome), "utf8");
   assert.ok(/Welcome/i.test(welcome) || /Welcome/i.test(body));
   assert.ok(files.some((f) => f.startsWith("101-")));
-  assert.ok(files.some((f) => f.startsWith("117-") || f.startsWith("117c-")));
+  const email117 = files.find((f) => f === "117-zoom-send-recording-approval-email-to-make.js");
+  assert.ok(email117, "canonical Automation 117 email script required");
+  assert.ok(!files.some((f) => f.startsWith("117c-")), "117c must not live in active automations folder");
+  assert.ok(!files.some((f) => f.includes("orchestrator")), "orchestrator must not live in active automations folder");
 });
 
 test("no Team Shot Tracker inactivity alert scripts in SC automations folder", () => {

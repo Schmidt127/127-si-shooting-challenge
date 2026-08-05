@@ -46,12 +46,23 @@ check("deliverable docs exist", () => {
   }
 });
 
-check("registry parses and flags ZOOM_CREDIT duplicate_risk", () => {
+check("registry marks ZOOM_CREDIT as design_alternative_not_deployed", () => {
   const registry = JSON.parse(fs.readFileSync(path.join(DOCS, "xp-source-key-registry.json"), "utf8"));
   const zoom = registry.prefixes.find((p) => p.prefix === "ZOOM_CREDIT|");
-  assert.equal(zoom.status, "duplicate_risk");
-  assert.ok(zoom.authoritative_writer_candidates.includes("117"));
-  assert.ok(zoom.authoritative_writer_candidates.includes("117c"));
+  assert.equal(zoom.status, "design_alternative_not_deployed");
+  assert.equal(zoom.authoritative_writer, null);
+  assert.ok(
+    (zoom.script_paths || []).some((p) => p.includes("_design-alternatives/")),
+    "ZOOM_CREDIT scripts must live under design-alternatives"
+  );
+});
+
+check("registry marks ZOOM_REC_EMAIL writer as Automation 117", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(DOCS, "xp-source-key-registry.json"), "utf8"));
+  const email = registry.prefixes.find((p) => p.prefix === "ZOOM_REC_EMAIL|");
+  assert.equal(email.authoritative_writer, "117");
+  assert.equal(email.make_workflow_id, "117f");
+  assert.ok(String(email.script_path).includes("117-zoom-send-recording-approval-email-to-make.js"));
 });
 
 check("inventory marks 112 legacy_off and 013 authoritative", () => {
@@ -82,12 +93,16 @@ check("harness reports ok with zero fails", () => {
   assert.ok(result.counts.pass > 0);
 });
 
-check("harness warns on ZOOM_CREDIT dual ownership and 065 legacy ignore", () => {
+check("harness warns on 065 legacy ignore (ZOOM_CREDIT dual-ownership warn retired)", () => {
   const result = runHarness();
   const warns = result.findings.filter((f) => f.severity === "warn");
   assert.ok(
-    warns.some((w) => w.code === "duplicate_prefix_flagged" || w.code === "065_ignores_legacy_keys"),
-    "expected warn findings"
+    warns.some((w) => w.code === "065_ignores_legacy_keys"),
+    "expected 065 legacy-key warn"
+  );
+  assert.ok(
+    !result.findings.some((f) => f.code === "zoom_credit_not_resolved" && f.severity === "fail"),
+    "ZOOM_CREDIT must be resolved as design alternative"
   );
 });
 

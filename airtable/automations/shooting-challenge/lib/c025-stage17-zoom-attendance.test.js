@@ -17,16 +17,19 @@ function test(name, fn) {
 }
 
 const root = path.join(__dirname, "..");
+const designRoot = path.join(root, "_design-alternatives/stage17-modular-reference");
 
-const STAGE17_SCRIPTS = [
+/** Design-reference Stage 17 package (NOT live PROD Automation 117). */
+const STAGE17_DESIGN_SCRIPTS = [
   "117-zoom-recording-credit-orchestrator.js",
   "117a-zoom-recording-normalize-recording-quiz-submission.js",
   "117b-zoom-recording-coach-review-and-needs-correction-handling.js",
   "117c-zoom-recording-create-zoom-xp-event.js",
   "117d-zoom-recording-apply-zoom-gate-credit.js",
   "117e-zoom-recording-apply-perfect-week-credit.js",
-  "117f-zoom-recording-send-approval-email.js",
 ];
+
+const PROD_117_EMAIL = "117-zoom-send-recording-approval-email-to-make.js";
 
 test("Source Key ZOOM_CREDIT is deterministic and distinct from live", () => {
   const k = c.buildZoomCreditSourceKey("recE1", "recM1");
@@ -184,8 +187,8 @@ test("Idempotent rerun", () => {
 });
 
 test("Recording credit does not modify Zoom Meetings Attendees", () => {
-  for (const file of STAGE17_SCRIPTS) {
-    const src = fs.readFileSync(path.join(root, file), "utf8");
+  for (const file of STAGE17_DESIGN_SCRIPTS) {
+    const src = fs.readFileSync(path.join(designRoot, file), "utf8");
     const r = c.assertNeverWritesLiveAttendees(src);
     assert(r.ok, `${file} attendees write hits: ${r.hits.join(", ")}`);
     assert(!src.includes("linked_attendee_for_gate"), `${file} no gate attendee link`);
@@ -237,8 +240,8 @@ test("Missing downstream consumers are reported rather than bypassed", () => {
 });
 
 test("No Homework Completions dependency in Stage 17 scripts", () => {
-  for (const file of STAGE17_SCRIPTS) {
-    const src = fs.readFileSync(path.join(root, file), "utf8");
+  for (const file of STAGE17_DESIGN_SCRIPTS) {
+    const src = fs.readFileSync(path.join(designRoot, file), "utf8");
     const r = c.assertNoHomeworkCompletionsDependency(src);
     assert(r.ok, `${file} banned hits: ${r.hits.join(", ")}`);
     assert(src.includes("Zoom Attendance"), `${file} uses ZA`);
@@ -254,7 +257,7 @@ test("No legacy S16 Zoom/Zoom Recording select choices required in Stage 17 lib"
 });
 
 test("117c script CONFIG maps canonical fields", () => {
-  const src = fs.readFileSync(path.join(root, "117c-zoom-recording-create-zoom-xp-event.js"), "utf8");
+  const src = fs.readFileSync(path.join(designRoot, "117c-zoom-recording-create-zoom-xp-event.js"), "utf8");
   assert(src.includes('xpActivityDate: "XP Activity Date"'), "date");
   assert(src.includes('reasonPublic: "XP Reason Public"'), "public");
   assert(src.includes('reasonDebug: "XP Reason Debug"'), "debug");
@@ -265,8 +268,8 @@ test("117c script CONFIG maps canonical fields", () => {
   assert(!/homeworkCompletions:\s*"Homework Completions"/.test(src), "no HC");
 });
 
-test("117 orchestrator v1.1.1 forbids Attendees and does not set Applied flags", () => {
-  const src = fs.readFileSync(path.join(root, "117-zoom-recording-credit-orchestrator.js"), "utf8");
+test("117 orchestrator v1.1.2 forbids Attendees and does not set Applied flags", () => {
+  const src = fs.readFileSync(path.join(designRoot, "117-zoom-recording-credit-orchestrator.js"), "utf8");
   assert(src.includes('version: "v1.1.2"'), "version");
   assert(src.includes("117 - Zoom Recording Credit - Orchestrator"), "name");
   assert(src.includes("Attendance Method is Recording Quiz"), "trigger method");
@@ -428,7 +431,7 @@ test("117f webhook outcome: 2xx stamps; non-2xx / fetch fail do not", () => {
 });
 
 test("117f script source matches v1.1 Make handoff contract", () => {
-  const src = fs.readFileSync(path.join(root, "117f-zoom-recording-send-approval-email.js"), "utf8");
+  const src = fs.readFileSync(path.join(root, PROD_117_EMAIL), "utf8");
   assert(src.includes('version: "v1.1"'), "version");
   assert(src.includes('sendKeyPrefix: "ZOOM_REC_EMAIL"'), "prefix");
   assert(src.includes('automationNumber: "117f"'), "payload automation");

@@ -1,10 +1,8 @@
 /**
- * Loads and executes the REAL Stage 17 orchestrator (Automation 117,
- * airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js)
- * inside the offline mock environment. No alternative implementation — the
- * production .js file is evaluated as-is.
- *
- * Overnight zoom/storage run (WP-C fixtures).
+ * Loads and executes the Stage 17 recording-credit **design-reference** orchestrator
+ * (archived under `_design-alternatives/stage17-modular-reference/`).
+ * This is NOT the live PROD Airtable Automation 117 (email → Make).
+ * Production .js is evaluated as-is for behavioral regression of the archived design.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -21,7 +19,7 @@ import {
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const SCRIPT_PATH = path.resolve(
   HERE,
-  "../../../airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js"
+  "../../../airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js"
 );
 
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;

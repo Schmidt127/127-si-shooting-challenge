@@ -71,7 +71,8 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 | Homework XP | **065** | **064** prepare | authoritative_writer + orchestrator |
 | Video XP | **114** | **113** base amount | authoritative_writer + orchestrator |
 | Zoom live | **101** | — | authoritative_writer |
-| Zoom recording | **117 XOR 117c** | 117a/d/e flags | duplicate_risk |
+| Zoom recording XP (`ZOOM_CREDIT`) | **None deployed** (design-alts only) | 117a–e under `_design-alternatives/` | design_alternative_not_deployed |
+| Zoom recording approval email | **117** → Make **117f** | — | authoritative_writer (email handoff) |
 | Weekly threshold | **MISSING** | 072 reads buckets | evidence_insufficient |
 | Manual bonus | Manual / ops | Lifetime adjust field | evidence_insufficient |
 
@@ -82,7 +83,7 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 | Make surface | Airtable fields also written by | Classification |
 |--------------|---------------------------------|----------------|
 | Upload asset engine | Canonical URL, hash, Upload Status, Writeback Complete? (022 / 070c / Lambda) | `duplicate_risk` — sequenced handoff, not dual-create of business records |
-| 117f approval email | Send key/status owned by **117f**; Make must **not** write XP Events or Attendees | Make = `orchestrator`/email; Airtable 117f = authoritative for send key |
+| 117f approval email | Make owns Gmail + Data Store dedupe; Airtable **117** posts payload only (`automationNumber=117f`) | Make = email send; Airtable 117 = handoff |
 | Weekly email Make (`Weekly Athlete Summary - Bulk Email - May 18`) | Live branch writes `Weekly Email Sent?`, `Make Send Status=Sent`, sent timestamp; **074 must not clear Sent?** | `authoritative_writer` = **Make Live** (`verified_prod` 2026-07-24). PROD 074 must use **Live**. Daily 077 still attest separately. |
 
 ---
@@ -164,7 +165,7 @@ Rule: Do **not** silently choose an owner when evidence is insufficient. Mark `e
 
 ### Unresolved ownership (do not invent)
 
-1. **117 XOR 117c** live exclusivity — Mike attest  
+1. ~~**117 XOR 117c** live exclusivity~~ — **Resolved 2026-08-05:** PROD 117 is email-only; 117c not installed; ZOOM_CREDIT has no deployed Airtable writer  
 2. **020 vs 067** HC product rule (SC-013/014)  
 3. **Weekly Threshold XP** writer existence in Airtable UI  
 4. **101 WAS side-create** long-term retention  

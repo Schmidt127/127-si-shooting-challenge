@@ -33,7 +33,7 @@ const FORMULA_ONLY = [
   "Unlock Key",
 ];
 
-const LIVE_XP_CREATORS = ["010", "054", "059", "065", "101", "114", "117", "117c"];
+const LIVE_XP_CREATORS = ["010", "054", "059", "065", "101", "114"];
 
 const STALE_REFS = [
   {
@@ -108,7 +108,8 @@ function checkDuplicatePrefixOwnership(registry) {
       entry.status === "contract_alias_unused_in_prod_writers" ||
       entry.status === "canonical_email_event_id" ||
       entry.status === "canonical_email_send_key" ||
-      entry.status === "canonical_identity_key"
+      entry.status === "canonical_identity_key" ||
+      entry.status === "design_alternative_not_deployed"
     ) {
       continue;
     }
@@ -155,17 +156,18 @@ function checkDuplicatePrefixOwnership(registry) {
   }
 
   const zoomCredit = registry.prefixes.find((p) => p.prefix === "ZOOM_CREDIT|");
-  if (!zoomCredit || zoomCredit.status !== "duplicate_risk") {
+  if (!zoomCredit || zoomCredit.status !== "design_alternative_not_deployed") {
     findings.push({
       severity: "fail",
-      code: "zoom_credit_not_flagged",
-      detail: "ZOOM_CREDIT| must be status duplicate_risk until sole writer attested",
+      code: "zoom_credit_not_resolved",
+      detail:
+        "ZOOM_CREDIT| must be status design_alternative_not_deployed (PROD 117 is email-only; no deployed ZOOM_CREDIT writer)",
     });
   } else {
     findings.push({
       severity: "pass",
-      code: "zoom_credit_flagged",
-      detail: "ZOOM_CREDIT| marked duplicate_risk with candidates 117/117c",
+      code: "zoom_credit_design_alt_only",
+      detail: "ZOOM_CREDIT| marked design_alternative_not_deployed (orchestrator/117c not live PROD)",
     });
   }
 
@@ -295,8 +297,9 @@ function checkMissingRegistryEntries(registry) {
     "PERFECT_WEEK|",
     "ZOOM_ATTEND_BASE|",
     "ZOOM_CREDIT|",
-    "WEEKLY_THRESHOLD_",
+    "WEEKLY_THRESHOLD|",
     "MANUAL_BONUS|",
+    "ZOOM_REC_EMAIL|",
     "VIDEO_FEEDBACK|",
   ];
   for (const prefix of requiredFamilies) {

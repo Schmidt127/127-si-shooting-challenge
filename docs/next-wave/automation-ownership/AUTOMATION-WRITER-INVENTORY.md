@@ -32,8 +32,8 @@ Honesty rule: live ON/OFF is **not** proven from GitHub alone. Expected state is
 | **065** | `065-…-create-homework-xp-event.js` v9.2 | HC satisfactory + XP pending | HC → XP Events | `HOMEWORK_XP\|{hcId}` | Recheck; **ignores** legacy `HOMEWORK_COMPLETION\|` | Legacy keys | ON | 0 HC post-reset; XP-D3 | high |
 | **101** | `101-zoom-attendance-xp-award-meeting-xp.js` v5.5 | Zoom Meetings · Create XP Events | Meetings → XP Events (+WAS) | `ZOOM_ATTEND_BASE\|{meeting}\|{enr}` (+ bonuses) | Stable keys | WAS race vs 031/118 | ON (live) | Never write Attendees from recording | high |
 | **114** | `114-…-video-xp-event.js` v5.8 | VF Ready for XP | VF → XP Events | `VIDEO_SUBMISSION\|{vfId}` | Update same; steal-guard; **reads** formula dedupe | — | ON | PROD key observed | low |
-| **117** | `117-zoom-recording-credit-orchestrator.js` v1.1.1 | ZA Recording Quiz | ZA → XP Events | `ZOOM_CREDIT\|{enr}\|{meeting}` | Recheck; soft-void | **117c** | Exactly one ON | Dual create path | **critical** |
-| **117c** | `117c-zoom-recording-create-zoom-xp-event.js` v1.1.0 | ZA Recording Quiz (slice) | ZA → XP Events | `ZOOM_CREDIT\|{enr}\|{meeting}` | Recheck | **117** | Exactly one ON | Same family as 117 | **critical** |
+| **117** | `117-zoom-send-recording-approval-email-to-make.js` v1.1 | ZA Satisfactory → Make | ZA → Make (`117f`) | `ZOOM_REC_EMAIL\|{enr}\|{meeting}\|{za}` | Make Data Store dedupe | — | ON (email only) | **Not** a ZOOM_CREDIT writer | medium |
+| **ZOOM_CREDIT** (design) | `_design-alternatives/…/117-zoom-recording-credit-orchestrator.js` (+117c) | N/A — not installed | ZA → XP Events (design) | `ZOOM_CREDIT\|{enr}\|{meeting}` | Design only | — | **OFF / not installed** | Airtable slot limit; do not paste over 117 | low |
 | **WEEKLY_THRESHOLD** | *missing in repo* | WAS Threshold fields | WAS → XP Events? | Unknown `WEEKLY_THRESHOLD_*` | Unknown | — | UNKNOWN | XP-D1 | **critical** |
 | **MANUAL_BONUS** | *manual / none* | Ops | Enrollments adjust / freeform XP | Unknown | Manual | — | Manual only | No rule creator | medium |
 

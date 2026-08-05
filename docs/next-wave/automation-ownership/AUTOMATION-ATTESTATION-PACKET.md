@@ -21,7 +21,7 @@ Recorded from live PROD UI attestation. These override prior GitHub-expected ass
 | **111** | **Absent** from PROD | Grade Band path owned by 013 |
 | **020** | **Present**, script header version **v3.0.0** | Authoritative HC create / Grade Band writer |
 
-**ZOOM_CREDIT exclusivity (PROD):** The prior “exactly one of 117 XOR 117c ON for XP” warning does **not** apply to PROD Automation **117** as currently installed (email-only, v1.1). PROD **117c** is absent. Any future install of a Zoom recording **XP** orchestrator (repo `117-zoom-recording-credit-orchestrator.js`) or **117c** must be attested separately before treating either as a live `ZOOM_CREDIT` writer.
+**ZOOM_CREDIT exclusivity (PROD):** The prior “exactly one of 117 XOR 117c ON for XP” warning does **not** apply. PROD Automation **117** is email-only (**v1.1**). PROD **117c** is absent. Orchestrator/117c are design alternatives only. Any future install of a Zoom recording **XP** writer must use a **new** attested automation slot — never overwrite email Automation 117.
 
 ---
 
@@ -113,4 +113,4 @@ PROD attestation 2026-07-24 (verified partial):
 
 Repeat P0–P1 on DEV `appTetnuCZlCZdTCT`. Note intentional DEV-only differences (e.g. **115** ON in DEV only).
 
-**Naming caution:** Repo may still contain `117-zoom-recording-credit-orchestrator.js` (XP). PROD UI slot **117** is attested as the **approval-email** sender (**v1.1**). Do not assume number **117** always means the XP orchestrator.
+**Naming caution:** Stage 17 orchestrator lives under `_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js`. PROD UI slot **117** is attested as the **approval-email** sender (**v1.1**). Do not assume number **117** means the XP orchestrator.

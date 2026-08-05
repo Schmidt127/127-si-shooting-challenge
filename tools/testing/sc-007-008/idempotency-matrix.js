@@ -134,7 +134,7 @@ const IDEMPOTENCY_PATHS = [
     domain: "xp",
     canonicalDedupeKey: buildZoomCreditSourceKey(FIX.enrollment, FIX.zoomMeeting),
     expectedWriter:
-      "117-zoom-recording-credit-orchestrator.js OR 117c-zoom-recording-create-zoom-xp-event.js (only one ON)",
+      "117-zoom-recording-credit-orchestrator.js OR 117c (design-alts only; not deployed under PROD 117 — PROD 117 is email-to-Make)",
     firstRun: "create ZOOM_CREDIT|{enrollmentId}|{meetingId}",
     secondRun: "skip_existing",
     retryAfterPartialFailure: "soft-void + recheck Source Key; never write Attendees",
