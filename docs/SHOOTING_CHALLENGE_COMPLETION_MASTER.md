@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (SC-003 Testing Views aliases — Live Tested in PROD) |
+| Last updated | **2026-08-05** (closeout: SC-003 aliases merged; SC-009 + SC-101 Complete after Mike PROD attestation) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -61,15 +61,15 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (SC-003 view-alias live verify). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (SC-009/SC-101 closeout recount). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
-| Complete | 13 |
+| Complete | 15 |
 | Live Tested in PROD | 23 |
-| Installed but not tested *(Installed in PROD)* | 50 |
-| Built but not installed *(Built in Repository)* | 25 |
+| Installed but not tested *(Installed in PROD)* | 49 |
+| Built but not installed *(Built in Repository)* | 24 |
 | Ready for PROD Paste *(informal — SC-021)* | 1 |
 | Planned | 17 |
 | Decision Needed | 5 |
@@ -77,6 +77,16 @@ Counts below match Section 4 as of **2026-08-05** (SC-003 view-alias live verify
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — SC-009 / SC-101 final PROD closeout)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-009 | Live Tested in PROD | **Complete** | 070a v4.5 pasted; Mike operator-attested Schmidt image rerun: Make→Lambda→Airtable writeback; reviewer OK; canonical private; one HC/XP; no second writer | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/` (+ dated closeout section); `docs/deploy-checklists/SC-009-photo-homework-prod.md` |
+| SC-101 | Installed in PROD | **Complete** | Video route: C-013 PROD E2E; homework route: SC-009 evidence + Mike post-paste Make/Lambda writeback attestation | SC-009 evidence; C-013 closeout; Issue #70 closed |
+| SC-095 | Built in Repository | **Live Tested in PROD** | Homework S3 / 070a route proven in PROD (aligned with SC-009 Complete) | Same SC-009 evidence |
+
+**Net math vs post–SC-003 aliases:** Complete 13→**15**; LT 23 stays **23** (SC-009 −1, SC-095 +1); Installed 50→**49**; Built 25→**24**. Credential rotation intentionally deferred until go-live (Mike decision 2026-08-05) — not a blocker.
 
 ### Dashboard reconciliation (2026-08-05 — SC-003 Testing Views short-name aliases)
 
@@ -216,7 +226,7 @@ Columns:
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Live Tested in PROD | Expanded read-only verifier (daily + Schmidt identity + homework + video + zoom + writeback policy); offline 11/11; live matrix/identity PASS | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/lib/expected_actual.js`; `airtableWritebackPolicy()`; evidence folder | **Decision:** writeback stays off for now | P2 | 2026-08-04 |
 | SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Live Tested in PROD | Offline SC-007 pack + matrix; Schmidt inventory **14 XP / 0 blank / 0 dup Source Keys** (submission, HW `HOMEWORK_XP\|recrBnHbLvDpFyIeO`, video, `ZOOM_CREDIT`, streak×3, threshold×3); WAS uniqueness PASS | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present | SC-066, SC-096+ | Never create double XP; do not invent new keys | `docs/testing/evidence/2026-08-04-sc-007-008-reliability/`; `tools/testing/sc-007-008/` | Decide 115 Count It vs 007a policy | P0 | 2026-08-04 |
 | SC-008 | Testing | Email, Make, upload, and failure-path testing | Live Tested in PROD | Failure-path pack (webhook null/502/malformed, blank recipient rearm, Lambda reject, incomplete writeback, retry idempotent); Lambda auth/viewer/token units; PROD asset `recaXBfjeeu3bcm0t` success contract PASS; Canonical anonymous **403**; Reviewer URL **302** | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) — offline+SOP already cover keep-Send-to-Make? | SC-131+, SC-051+, SC-150 | Schmidt-only emails; no global service disable | `docs/testing/SC-007-008-RELIABILITY-RUNBOOK.md`; evidence folder above | — | P1 | 2026-08-04 |
-| SC-009 | Homework | Photo / image homework submissions work end-to-end | Live Tested in PROD | Schmidt PNG+JPG E2E 2026-08-04: Submission→009 asset→020 HC→Lambda `homework_completion`→S3 Uploaded+Reviewer URL→coach→one XP; Writeback Complete? + HC Upload Ready? formulas fixed; 070a v4.5 Canonical skip in GitHub | Paste 070a v4.5 to Airtable; Make Module writeback follow-up (SC-101 — Accepted without Airtable writeback observed) | SC-019, SC-095, SC-101, SC-150 | One HC per assignment; Canonical stays private | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/`; `docs/deploy-checklists/SC-009-photo-homework-prod.md` | Paste 070a v4.5 | P0 | 2026-08-04 |
+| SC-009 | Homework | Photo / image homework submissions work end-to-end | Complete | Schmidt PNG+JPG E2E 2026-08-04 + **070a v4.5 pasted PROD** + Mike operator-attested post-paste image rerun 2026-08-05 (Make→Lambda→Airtable writeback; reviewer OK; canonical private; one HC/XP; no second writer) | None for photo E2E; optional cleanup of controlled Schmidt rows | SC-019, SC-095, SC-101, SC-150 | One HC per assignment; Canonical stays private | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/`; `docs/deploy-checklists/SC-009-photo-homework-prod.md` | — | P0 | 2026-08-05 |
 | SC-010 | Homework | PDF / document homework submissions work end-to-end | Installed in PROD | Same file pipeline as photos | Re-test PDF path; quiz uses Option B (no PDF asset — SC-014) | SC-019 | Fillout mapping fragile | C-009 preferred path | — | P0 | 2026-07-24 |
 | SC-011 | Homework | Video submissions as homework/learning assets | Installed in PROD | Video path via 013/070b/070c/114 historically live | Re-test video as homework vs daily video rules; confirm purpose routing | SC-133 | Do not double-credit video XP | LA routing `video`; C-013 | — | P0 | 2026-07-23 |
 | SC-012 | Homework | Written / reflection responses work | Installed in PROD | Fillout questions + HC path historically used | Re-test written-only HC; coach review + 071 | SC-019 | No attachment required for written | LA `reflection` / `fillout_questions` | — | P1 | 2026-07-23 |
@@ -302,13 +312,13 @@ Columns:
 | SC-092 | Zoom | Weekly summary shows Zoom correctly | Installed in PROD | 072 Zoom sections historically | Re-test Presentation labels | SC-036, SC-054 | — | V2-004 | — | P1 | 2026-07-23 |
 | SC-093 | Zoom | Public website Zoom pages accurate | Installed in PROD | `/shoot` Zoom catalog UI live | Confirm Airtable publish filters after wipe | SC-146 | Read-only web | web Zoom views | — | P2 | 2026-07-23 |
 | SC-094 | Assets | Video storage on program-owned S3 | Installed in PROD | Lambda upload-asset; 070b/070c PROD E2E historically; **SC-150 Complete** adds private reviewer viewer on same Lambda | Re-test writeback on Schmidt asset as needed | SC-150 | Auth secret hygiene; bucket stays private | C-013; SC-150 checklist | Optional secret rotate (separate P0) | P0 | 2026-08-04 |
-| SC-095 | Assets | Homework storage on S3 (070a route) | Built in Repository | Lambda `homework_completion` route; DEV package; **PROD intentionally OFF** | Align 070a version (4.1 vs 4.4 claims); PROD enable when ready; live test | SC-094 | Keep OFF until Mike schedules | AUTOMATION_070A_LAUNCH_DECISION; issues #8/#11/#17 | Authorize PROD 070a ON | P0 | 2026-07-23 |
+| SC-095 | Assets | Homework storage on S3 (070a route) | Live Tested in PROD | Lambda `homework_completion` route live via 070a v4.5 in PROD; Schmidt photo E2E + Mike post-paste Make→Lambda writeback attestation 2026-08-05 | Keep 070a ON; monitor Make Module if routing drifts | SC-094 | One upload writer; Canonical stays private | SC-009 evidence; `SC-009-photo-homework-prod.md` | — | P0 | 2026-08-05 |
 | SC-096 | Assets | Canonical HTTPS URLs on assets | Installed in PROD | Canonical URL fields + Lambda writeback; **Canonical File URL remains private S3 identity** (AccessDenied anonymous); clickable review uses **Reviewer File URL** (SC-150) | Re-verify after wipe; do not make Canonical public | SC-094, SC-150 | Dual-truth Drive/attachment deferred | C-013; C-023; SC-150 | — | P0 | 2026-08-04 |
 | SC-097 | Assets | SHA-256 hashes recorded | Installed in PROD | Hash pipeline + **116** consequences historically ON | Re-test hash write + review queue | SC-094 | Never filename-only dedup | C-023 | — | P1 | 2026-07-23 |
 | SC-098 | Assets | Duplicate file reuse decision (manual, safe) | Installed in PROD | Asset Reuse Decision + 116 | Re-test confirm/reversal; never auto-reuse another athlete’s object | SC-097 | Never auto-block upload incorrectly | C-023 Stage 5 | — | P1 | 2026-07-23 |
 | SC-099 | Assets | Writeback verification (070c) | Installed in PROD | 070c v1.1 idempotent verify | Re-test Accepted→verify | SC-094 | Async handoff | C-013 | — | P0 | 2026-07-23 |
 | SC-100 | Assets | Attachment / Drive retirement strategy | Deferred | Explicitly deferred after C-013 video | Plan retirement after S3 paths stable for HW+video | SC-095 | Don’t break historical links if any remain | C-023 retirement notes | When to retire Drive? | P3 | 2026-07-23 |
-| SC-101 | Assets | Make and Lambda routing correct for video + homework | Installed in PROD | Upload engine blueprints; video live historically; homework router checklist open | Finish homework Module 2 checklist; close stale GitHub overnight issues | SC-095 | Never commit webhooks | make/documentation; issues #1/#8/#9 | — | P1 | 2026-07-23 |
+| SC-101 | Assets | Make and Lambda routing correct for video + homework | Complete | **Video:** C-013 PROD E2E (070b→Make→Lambda→writeback). **Homework:** SC-009 PNG/JPG + Mike operator-attested 2026-08-05 post-070a-v4.5 rerun (Make→Lambda→Airtable writeback; earlier Accepted-without-writeback did not remain) | None for routing correctness; credential rotation deferred to go-live | SC-095 | Never commit webhooks; no second writer | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/`; C-013 prod closeout; Issue #70 | Credential rotation deferred to go-live (Mike 2026-08-05) | P1 | 2026-08-05 |
 | SC-150 | Assets | Secure permanent reviewer file links (private S3) | Complete | PROD Lambda `127si-upload-asset` code deployed `2026-08-04T23:57:36Z`; Interface open of `Reviewer File URL` on `recaXBfjeeu3bcm0t` opened private S3 file immediately (no extra auth); Lambda owns final `Upload Status=Uploaded`; token preserved across retries; 78 unit tests OK | Optional: credential rotation (separate P0 — values exposed in terminal troubleshooting) | SC-094, SC-096 | Never publicize bucket; never log tokens; never set Processing after Lambda success | `docs/deploy-checklists/SC-150-prod-reviewer-file-links.md`; asset `recaXBfjeeu3bcm0t` | Rotate exposed secrets separately | P0 | 2026-08-04 |
 | SC-102 | Website | Airtable-backed public pages work | Live Tested in PROD | Next.js `/shoot` on Vercel; **2026-07-25 smoke + browser QA PASS** (routes 200; API `tokenValid`; no client token leak) | Keep catalog content current; Presentation fields later (SC-054) | SC-055 | Server-side token only | `PUBLIC-SHOOT-SMOKE.md`; `BROWSER-QA-REPORT-2026-07-25.md` | — | P1 | 2026-07-25 |
 | SC-103 | Website | Leaderboard | Live Tested in PROD | Leaderboard + public-display show **Testing Schmidt** (81 XP / 100 shots); Schmidt visibility honored | Fix Schmidt Grade/School Year (EXT-QA-005); season content hygiene | SC-068 | — | `BROWSER-QA-REPORT-2026-07-25.md` | — | P2 | 2026-07-25 |
