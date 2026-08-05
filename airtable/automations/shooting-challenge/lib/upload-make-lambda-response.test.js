@@ -12,6 +12,7 @@ const {
     evaluateLambdaHandoffResult,
     evaluateMakeLambdaResponseText,
     evaluateSubmissionAssetWriteback,
+    evaluateFinalUploadSuccessContract,
     evaluate070cAsyncWritebackVerification,
     buildAcceptedAsyncHandoffResult,
     decide070cAction,
@@ -275,6 +276,29 @@ tests.push(
     }),
 );
 
+tests.push(
+    test("18 SC-008 final upload success contract includes trigger clear + reviewer fields", () => {
+        const ok = evaluateFinalUploadSuccessContract(
+            passingWritebackFields({
+                "Send to Make Trigger": false,
+                "Reviewer Access Token": "viewer-token-abcdefghijklmnopqrstuvwxyz0123",
+                "Reviewer File URL": "https://example.lambda-url.us-east-2.on.aws/file/recX?token=abc",
+            }),
+        );
+        assert.strictEqual(ok.verified, true, ok.message);
+
+        const stillArmed = evaluateFinalUploadSuccessContract(
+            passingWritebackFields({
+                "Send to Make Trigger": true,
+                "Reviewer Access Token": "tok",
+                "Reviewer File URL": "https://example/file",
+            }),
+        );
+        assert.strictEqual(stillArmed.verified, false);
+        assert.ok(stillArmed.failedChecks.includes("sendToMakeTriggerUnchecked"));
+    }),
+);
+
 Promise.all(tests).then(() => {
-    console.log(`\nAll ${17} upload-make-lambda-response tests passed.`);
+    console.log(`\nAll ${18} upload-make-lambda-response tests passed.`);
 });

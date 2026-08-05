@@ -1552,6 +1552,15 @@ function classifyWeeklyEmailWebhookResponse({
       errorMessage: "Make webhook returned a malformed response",
     };
   }
+  // null/undefined/"" must not coerce via Number(null)===0 into a fake HTTP status.
+  if (httpStatus === null || httpStatus === undefined || httpStatus === "") {
+    return {
+      webhookOk: false,
+      retryable: true,
+      class: "unknown_status",
+      errorMessage: String(bodyText || "Make webhook failed with unknown status"),
+    };
+  }
   const status = Number(httpStatus);
   if (!Number.isFinite(status)) {
     return {

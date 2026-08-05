@@ -67,3 +67,14 @@ node tools/testing/cleanup_orphan_legacy_rows.mjs --confirm-delete
 - Never log `AIRTABLE_API_TOKEN`
 - Schmidt Enrollment `recgP9qZYjAhE7NXm` must remain Active and publicly visible
 - Do not send uncontrolled emails from these tools
+
+## SC-007 / SC-008 reliability packs
+
+Idempotency + failure-path offline suites and PROD evidence probe:
+
+```bash
+node tools/testing/sc-007-008/run-suite.js
+node tools/testing/sc-007-008/prod-reliability-evidence.mjs --check-anonymous-s3
+```
+
+Runbook: `docs/testing/SC-007-008-RELIABILITY-RUNBOOK.md`
