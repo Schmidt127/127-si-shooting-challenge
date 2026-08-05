@@ -26,11 +26,12 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment
  *
- * Version: v5.1
+ * Version: v5.2
  * Date Written: 2026-05-20
- * Date Updated: 2026-06-17
- * Updated Reason: Added safe field caching, computed-field checks, status option validation,
- * field-type guards, clearer email debugging, and a last-chance duplicate check before Athlete creation.
+ * Date Updated: 2026-08-05
+ * Updated Reason: Airtable runtime compatibility — call queryResult.unloadData() only when
+ * typeof query?.unloadData === "function". Unsupported unloadData previously crashed after a
+ * successful athlete match/update (PROD enrollment recQP4N5acTdK40uZ, debugStep 10).
  *
  * PURPOSE
  * - Reads one Enrollment record from the Enrollments table.
@@ -447,6 +448,22 @@ function findMatchingAthlete(athleteRecords, athleteMatchKey, firstName, lastNam
     };
 }
 
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; Function URL / some
+ * automation runtimes do not. Never let cleanup throw after successful business writes.
+ */
+function unloadQuerySafe(queryResult) {
+    if (typeof queryResult?.unloadData === "function") {
+        try {
+            queryResult.unloadData();
+        } catch (error) {
+            log("Query unloadData skipped/failed (non-fatal)", {
+                error: error instanceof Error ? error.message : String(error),
+            });
+        }
+    }
+}
+
 /* =========================================================
    SECTION 5: MAIN
    ========================================================= */
@@ -616,66 +633,25 @@ async function main() {
                 fields: athleteFieldsToLoad,
             });
 
-            debugStep = "9 - Match Existing Athlete";
-            setOutputSafe("debugStep", debugStep);
-
-            const matchResult = findMatchingAthlete(
-                athletesQuery.records,
-                athleteMatchKey,
-                athleteFirstName,
-                athleteLastName,
-                parentEmailToUse
-            );
-
-            matchMethod = matchResult.matchMethod;
-
-            if (matchResult.record) {
-                debugStep = "10 - Update Existing Athlete";
+            try {
+                debugStep = "9 - Match Existing Athlete";
                 setOutputSafe("debugStep", debugStep);
 
-                athleteId = matchResult.record.id;
-
-                const athleteUpdates = {};
-
-                if (fieldExists(athletesTable, CONFIG.athletes.firstName)) {
-                    athleteUpdates[CONFIG.athletes.firstName] = athleteFirstName;
-                }
-
-                if (fieldExists(athletesTable, CONFIG.athletes.lastName)) {
-                    athleteUpdates[CONFIG.athletes.lastName] = athleteLastName;
-                }
-
-                if (fieldExists(athletesTable, CONFIG.athletes.parentEmail)) {
-                    athleteUpdates[CONFIG.athletes.parentEmail] = parentEmailToUse;
-                }
-
-                if (fieldExists(athletesTable, CONFIG.athletes.active)) {
-                    athleteUpdates[CONFIG.athletes.active] = true;
-                }
-
-                await updateRecordSafe(athletesTable, athleteId, athleteUpdates);
-
-                actionTaken = "matched-existing-and-linked";
-            } else {
-                debugStep = "11 - Last-Chance Duplicate Check Before Create";
-                setOutputSafe("debugStep", debugStep);
-
-                const latestAthletesQuery = await athletesTable.selectRecordsAsync({
-                    fields: athleteFieldsToLoad,
-                });
-
-                const latestMatchResult = findMatchingAthlete(
-                    latestAthletesQuery.records,
+                const matchResult = findMatchingAthlete(
+                    athletesQuery.records,
                     athleteMatchKey,
                     athleteFirstName,
                     athleteLastName,
                     parentEmailToUse
                 );
 
-                if (latestMatchResult.record) {
-                    athleteId = latestMatchResult.record.id;
-                    matchMethod = latestMatchResult.matchMethod;
-                    actionTaken = "matched-existing-and-linked";
+                matchMethod = matchResult.matchMethod;
+
+                if (matchResult.record) {
+                    debugStep = "10 - Update Existing Athlete";
+                    setOutputSafe("debugStep", debugStep);
+
+                    athleteId = matchResult.record.id;
 
                     const athleteUpdates = {};
 
@@ -696,38 +672,83 @@ async function main() {
                     }
 
                     await updateRecordSafe(athletesTable, athleteId, athleteUpdates);
+
+                    actionTaken = "matched-existing-and-linked";
                 } else {
-                    debugStep = "12 - Create New Athlete";
+                    debugStep = "11 - Last-Chance Duplicate Check Before Create";
                     setOutputSafe("debugStep", debugStep);
 
-                    const athleteCreate = {};
+                    const latestAthletesQuery = await athletesTable.selectRecordsAsync({
+                        fields: athleteFieldsToLoad,
+                    });
 
-                    if (fieldExists(athletesTable, CONFIG.athletes.firstName)) {
-                        athleteCreate[CONFIG.athletes.firstName] = athleteFirstName;
+                    try {
+                        const latestMatchResult = findMatchingAthlete(
+                            latestAthletesQuery.records,
+                            athleteMatchKey,
+                            athleteFirstName,
+                            athleteLastName,
+                            parentEmailToUse
+                        );
+
+                        if (latestMatchResult.record) {
+                            athleteId = latestMatchResult.record.id;
+                            matchMethod = latestMatchResult.matchMethod;
+                            actionTaken = "matched-existing-and-linked";
+
+                            const athleteUpdates = {};
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.firstName)) {
+                                athleteUpdates[CONFIG.athletes.firstName] = athleteFirstName;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.lastName)) {
+                                athleteUpdates[CONFIG.athletes.lastName] = athleteLastName;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.parentEmail)) {
+                                athleteUpdates[CONFIG.athletes.parentEmail] = parentEmailToUse;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.active)) {
+                                athleteUpdates[CONFIG.athletes.active] = true;
+                            }
+
+                            await updateRecordSafe(athletesTable, athleteId, athleteUpdates);
+                        } else {
+                            debugStep = "12 - Create New Athlete";
+                            setOutputSafe("debugStep", debugStep);
+
+                            const athleteCreate = {};
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.firstName)) {
+                                athleteCreate[CONFIG.athletes.firstName] = athleteFirstName;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.lastName)) {
+                                athleteCreate[CONFIG.athletes.lastName] = athleteLastName;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.parentEmail)) {
+                                athleteCreate[CONFIG.athletes.parentEmail] = parentEmailToUse;
+                            }
+
+                            if (fieldExists(athletesTable, CONFIG.athletes.active)) {
+                                athleteCreate[CONFIG.athletes.active] = true;
+                            }
+
+                            athleteId = await createRecordSafe(athletesTable, athleteCreate);
+
+                            actionTaken = "created-and-linked";
+                            matchMethod = "created-new";
+                        }
+                    } finally {
+                        unloadQuerySafe(latestAthletesQuery);
                     }
-
-                    if (fieldExists(athletesTable, CONFIG.athletes.lastName)) {
-                        athleteCreate[CONFIG.athletes.lastName] = athleteLastName;
-                    }
-
-                    if (fieldExists(athletesTable, CONFIG.athletes.parentEmail)) {
-                        athleteCreate[CONFIG.athletes.parentEmail] = parentEmailToUse;
-                    }
-
-                    if (fieldExists(athletesTable, CONFIG.athletes.active)) {
-                        athleteCreate[CONFIG.athletes.active] = true;
-                    }
-
-                    athleteId = await createRecordSafe(athletesTable, athleteCreate);
-
-                    actionTaken = "created-and-linked";
-                    matchMethod = "created-new";
                 }
-
-                latestAthletesQuery.unloadData();
+            } finally {
+                unloadQuerySafe(athletesQuery);
             }
-
-            athletesQuery.unloadData();
         }
 
         debugStep = "13 - Link Enrollment and Activate Enrollment";
