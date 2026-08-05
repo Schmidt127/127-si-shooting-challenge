@@ -1,25 +1,43 @@
 # V2 End-to-End Test Matrix — Shooting Challenge
 
-**Status:** Launch athlete-scenario matrix  
-**Last updated:** 2026-07-24 (Overnight Agent 1 — testing/integrity evidence refresh)  
+**Status:** Launch athlete-scenario matrix + executable PROD runner (SC-005)  
+**Last updated:** 2026-08-04 (SC-003–SC-006 testing control center)  
 **Environment:** **PROD** `appn84sqPw03zEbTT` is the active construction/testing base (completion master §1). DEV optional.  
-**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [overnight/testing-integrity/CURRENT-PROD-BASELINE.md](./overnight/testing-integrity/CURRENT-PROD-BASELINE.md) · [testing/scenarios/README.md](./testing/scenarios/README.md)
+**Companions:** [V2_RELEASE_CHECKLIST.md](./V2_RELEASE_CHECKLIST.md) · [AUTOMATION_VERSION_INVENTORY.md](./AUTOMATION_VERSION_INVENTORY.md) · [v2/08-testing-standards.md](./v2/08-testing-standards.md) · [v2/V2_DEV_EXECUTION_RUNBOOK.md](./v2/V2_DEV_EXECUTION_RUNBOOK.md) · [v2/V2_LAUNCH_SMOKE_TESTS.md](./v2/V2_LAUNCH_SMOKE_TESTS.md) · [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md) · [overnight/testing-integrity/CURRENT-PROD-BASELINE.md](./overnight/testing-integrity/CURRENT-PROD-BASELINE.md) · [testing/scenarios/README.md](./testing/scenarios/README.md) · [testing/evidence/2026-08-04-sc-003-006-testing-control-center/](./testing/evidence/2026-08-04-sc-003-006-testing-control-center/)
 
-**Prep status (2026-07-24):** Automation **115** installed in PROD; dry + live + rerun PASS on Schmidt. Most other matrix rows remain untested post empty-base reset. Do not upgrade historical DEV passes to post-reset PROD passes without new evidence.
+**Prep status (2026-08-04):** Automation **115** installed in PROD; dry + live + rerun PASS on Schmidt. Executable matrix runner lives at `tools/testing/run_e2e_matrix.mjs` (read-only safe rows). Do not upgrade BLOCKED/NOT_TESTED rows to PASS without new evidence.
 
 ## How to use
 
 1. Prefer **Fillout-shaped** Submissions (C-020 / automation **115**) or verified production-shaped intake — not hand-typed incomplete rows.
 2. Use **Schmidt** Enrollment `recgP9qZYjAhE7NXm` (must remain Active and publicly visible).
 3. Record Pass / Fail / Blocked / N/A with enrollment ID, date, and automation versions.
-4. Repository contract tests cover pure logic only — they do **not** replace this matrix:
+4. Run the executable matrix (preferred for SC-005 evidence):
 
 ```bash
+node tools/testing/run_e2e_matrix.mjs
+node tools/testing/verify_schmidt_identity.mjs
 node --test tools/testing/tests/
+```
+
+5. Repository contract tests cover pure logic only — they do **not** replace live matrix rows:
+
+```bash
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/upload-make-lambda-response.test.js
 cd web && npm test
 ```
+
+### Executable matrix evidence (2026-08-04)
+
+| Item | Value |
+|------|-------|
+| Runner | `tools/testing/run_e2e_matrix.mjs` |
+| Results | `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/E2E-MATRIX-RESULTS.json` |
+| Counts | 11 PASS · 4 BLOCKED · 2 NOT_TESTED · 0 FAIL |
+| PASS rows | A3, A4, B1, B2, C4, C6, D1, I1, J1, L1, SC006-WRITEBACK |
+| BLOCKED | B3 (policy), B5 (backdate week), I6 (email/SC-008), L3 (failure inject/SC-008) |
+| NOT_TESTED | E1 streak unlocks, F1 milestone unlocks (no unlock rows on Schmidt yet) |
 
 **Result key (legacy columns):** P = Pass · F = Fail · B = Blocked · N = N/A · U = Untested
 
@@ -43,8 +61,8 @@ cd web && npm test
 |----|------------------|-------|-------------|---------------|-----|------------|
 | A1 | New enrollment creates/links athlete | Fresh test registrant | 001–003 | Athlete linked; grade band assigned | U | U |
 | A2 | Grade change reassigns band | Change grade on enrollment | 003 | Band updates once; no loop | U | U |
-| A3 | Submission gets enrollment + week | Fillout-shaped daily log | 023, 005 (+115 pre-link) | Enrollment + Week set; Denver date key correct | U | P — live PROD pass after reset (115→005; Week `recVDKiYATgzsfpmE`) |
-| A4 | Malformed `recordId` input | Automation test with bad id | any V2 script | `statusOut=error`; no partial writes | U | P — repository test pass (115 offline harness) |
+| A3 | Submission gets enrollment + week | Fillout-shaped daily log | 023, 005 (+115 pre-link) | Enrollment + Week set; Denver date key correct | U | P — re-verified 2026-08-04 (`run_e2e_matrix` A3 PASS; Week `recVDKiYATgzsfpmE`) |
+| A4 | Malformed `recordId` input | Automation test with bad id | any V2 script | `statusOut=error`; no partial writes | U | P — repository test pass (115 offline harness; matrix A4) |
 
 ---
 
@@ -67,9 +85,9 @@ cd web && npm test
 | C1 | Homework asset creates completion | Homework attachment path | 009/020 | One Homework Completion linked | U | U |
 | C2 | Homework asset rerun / duplicate | Re-trigger 020 | 020 | Links existing; no second completion | U | U |
 | C3 | Unsatisfactory review — no XP | Mark not satisfactory | 064/065 | No `HOMEWORK_XP\|…` Event | U | U |
-| C4 | Satisfactory review awards XP | Coach marks satisfactory | 064/065 | One Event `HOMEWORK_XP\|{completionId}` | U | U |
+| C4 | Satisfactory review awards XP | Coach marks satisfactory | 064/065 | One Event `HOMEWORK_XP\|{completionId}` | U | P — 2026-08-04 HC `recrBnHbLvDpFyIeO` → XP `rec6xE4V1t0atiTIP` |
 | C5 | Homework XP rerun | Re-run 065 after Awarded | 065 | Skip/link existing; no duplicate | U | U |
-| C6 | Reflection quiz → completion | Final reflection path | 067 | Completion linked/created once | U | U |
+| C6 | Reflection quiz → completion | Final reflection path | 067 | Completion linked/created once | U | P — Option B quiz links on HC (matrix C6) |
 | C7 | Homework upload to storage (optional wave) | 070a enabled in DEV only | 070a | Payload accepted; PROD remains OFF until scheduled | U | N |
 
 ---
@@ -78,7 +96,7 @@ cd web && npm test
 
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| D1 | Video asset → Video Feedback | Video upload on submission | 013/112 | Feedback row linked once | U | U |
+| D1 | Video asset → Video Feedback | Video upload on submission | 013/112 | Feedback row linked once | U | P — VF `recBqqe0uGMsqjUrF` linked to Schmidt (enrollment presence; 114 award still open) |
 | D2 | Base video XP assigned | Review path | 113 | Base XP field set per rules | U | U |
 | D3 | Posted feedback creates XP | Ready for XP Automation? | 114 | `VIDEO_SUBMISSION\|{vfId}` once | U | U |
 | D4 | Video XP steal-guard | Linked XP belongs to other VF | 114 | Error / manual review; no steal | U | U |
@@ -139,7 +157,7 @@ cd web && npm test
 
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| I1 | WAS create from counted submission | New week submission | 031 | One WAS per enrollment+week | U | U |
+| I1 | WAS create from counted submission | New week submission | 031 | One WAS per enrollment+week | U | P — WAS `recuxvGq2kY8WKcey` unique Enrollment+Week (2026-08-04) |
 | I2 | WAS rerun | Re-run 031 | 031 | Links existing; no duplicate WAS | U | U |
 | I3 | Goal + homework attach | Goal/homework present | 032, 033 | Links set once | U | U |
 | I4 | Previous week helpers | Multi-week history | 034 | Previous week ordered by Week Start Date | U | U |
@@ -152,7 +170,7 @@ cd web && npm test
 
 | ID | Athlete scenario | Setup | Automations | Pass criteria | DEV | PROD smoke |
 |----|------------------|-------|-------------|---------------|-----|------------|
-| J1 | Live attendance base XP | Meeting + enrollment attendance | 101 | `ZOOM_ATTEND_BASE\|meeting\|enr` once | U | U |
+| J1 | Live attendance base XP | Meeting + enrollment attendance | 101 | `ZOOM_ATTEND_BASE\|meeting\|enr` once | U | P — attendance rows linked (XP key assert optional/not forced 2026-08-04) |
 | J2 | Live attendance bonuses | 2nd / 3rd meeting rules | 101 | Bonus keys once per enrollment rules | U | U |
 | J3 | Attendance rerun | Re-run Create XP Events | 101 | No duplicate live XP Events | U | U |
 | J4 | Zoom recording credit | Recording quiz Satisfactory | **117a** | `ZOOM_RECORDING\|…` once; blocked if live exists; Config % of live | U (repo ready) | N |
@@ -200,5 +218,6 @@ Do not use this matrix to redesign frontend styling.
 |------|----------|------|--------|-------|
 | DEV full matrix | | | | |
 | PROD smoke subset (B1–B2, C4, D3, F1, G3, H2, J1, M1–M2) | | | | |
+| PROD executable safe matrix (SC-005) | Cursor agent | 2026-08-04 | 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL | `E2E-MATRIX-RESULTS.json`; views install still Mike/Omni (SC-003) |
 
 **Known launch blockers:** see [known-issues.md](./known-issues.md) § Launch blockers.

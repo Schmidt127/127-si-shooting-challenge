@@ -1,0 +1,272 @@
+{
+  "schema_version": 1,
+  "sc": "SC-003",
+  "base_id": "appn84sqPw03zEbTT",
+  "schmidt_enrollment_id": "recgP9qZYjAhE7NXm",
+  "schmidt_athlete_id": "recgqVstObQRzgXJF",
+  "foundation_week_id": "recVDKiYATgzsfpmE",
+  "rule": "Do not create views that hide Schmidt from public standings or leaderboards.",
+  "api_limits": {
+    "can_list_view_names": true,
+    "can_read_filter_definitions": false,
+    "can_create_or_update_views": false,
+    "can_count_rows_via_view_id": true
+  },
+  "filter_pattern_preferred": "Enrollment is (linked record) Schmidt, Testing - 2025-2026 / recgP9qZYjAhE7NXm",
+  "filter_pattern_formula_fallback": "FIND(\"recgP9qZYjAhE7NXm\", ARRAYJOIN({Enrollment}))",
+  "views": [
+    {
+      "priority": 1,
+      "table": "Testing Scenarios",
+      "view_name": "Testing - Schmidt Scenarios",
+      "type": "grid",
+      "filter_field": "Related Enrollment",
+      "filter": "contains/is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Last Run At", "direction": "desc" }],
+      "visible_fields": [
+        "Test Intake Name",
+        "Scenario Type",
+        "Run Test?",
+        "Dry Run?",
+        "Test Status",
+        "Last Run Status",
+        "Last Run At",
+        "Submission Date",
+        "Shot Total",
+        "Related Enrollment",
+        "Linked Submission",
+        "Actual Result",
+        "Pass/Fail Notes",
+        "Expected Result"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_record_ids_any": ["recPdyfYRFgDtpzQ8"],
+      "purpose": "Drive 115 runs; see result writeback"
+    },
+    {
+      "priority": 2,
+      "table": "Submissions",
+      "view_name": "Testing - Schmidt Submissions",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [
+        { "field": "Activity Date", "direction": "desc" },
+        { "field": "Created", "direction": "desc" }
+      ],
+      "visible_fields": [
+        "Activity Date",
+        "Shot Total",
+        "Enrollment",
+        "Athlete",
+        "Week",
+        "Duplicate Review Status",
+        "Count This Submission?",
+        "Weekly Athlete Summary",
+        "XP Events",
+        "Submission Assets",
+        "Testing Scenarios"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_record_ids_any": [
+        "recuuTBgstSTGg2E3",
+        "recjt6QpUcprSIxAk",
+        "recaCcxDqtzFWjmyi"
+      ],
+      "purpose": "Confirm 115 creates + downstream links",
+      "acceptable_interim_views": ["Workflow testing only"]
+    },
+    {
+      "priority": 3,
+      "table": "XP Events",
+      "view_name": "Testing - Schmidt XP Events",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Created", "direction": "desc" }],
+      "visible_fields": [
+        "Source Key",
+        "XP Dedupe Key Normalized",
+        "XP Points",
+        "XP Source",
+        "Enrollment",
+        "Submission",
+        "Week",
+        "Weekly Athlete Summary",
+        "Awarded By",
+        "XP Activity Date"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_max_rows_sanity": 100,
+      "sanity_note": "If row count is ~2500, filter is broken (legacy orphans). Schmidt-only should be a small handful.",
+      "purpose": "Idempotency proof; one SUBMISSION_XP per Submission"
+    },
+    {
+      "priority": 4,
+      "table": "Weekly Athlete Summary",
+      "view_name": "Testing - Schmidt WAS",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Week Start", "direction": "desc" }],
+      "visible_fields": [
+        "Summary Key",
+        "Enrollment",
+        "Week",
+        "Total Shots This Week",
+        "Calculation Status",
+        "Submissions",
+        "XP Events",
+        "Perfect Week Automation Status",
+        "Threshold XP Status"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_record_ids_any": ["recuxvGq2kY8WKcey"],
+      "purpose": "Uniqueness Enrollment+Week",
+      "name_aliases_unacceptable_without_filter": ["Grid Testing View"]
+    },
+    {
+      "priority": 5,
+      "table": "Submission Assets",
+      "view_name": "Testing - Schmidt Assets",
+      "type": "grid",
+      "filter_field": "Enrollment - Linked",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Created", "direction": "desc" }],
+      "visible_fields": [
+        "Asset Slot",
+        "Purpose",
+        "Upload Status",
+        "Canonical URL",
+        "Hash",
+        "Homework Completions",
+        "Video Feedback",
+        "Submission - Linked"
+      ],
+      "expected_min_rows_when_seeded": 0,
+      "expected_max_rows_sanity": 50,
+      "sanity_note": "If row count is ~280, filter is broken (legacy orphans)."
+    },
+    {
+      "priority": 6,
+      "table": "Homework Completions",
+      "view_name": "Testing - Schmidt Homework Completions",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Submission Date", "direction": "desc" }],
+      "visible_fields": [
+        "Enrollment",
+        "Homework",
+        "Week",
+        "Satisfactory?",
+        "Submission Assets",
+        "XP Events"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_record_ids_any": ["recrBnHbLvDpFyIeO"],
+      "name_aliases_acceptable": ["Testing - Schmidt Homework"]
+    },
+    {
+      "priority": 7,
+      "table": "Video Feedback",
+      "view_name": "Testing - Schmidt Video Feedback",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Created", "direction": "desc" }],
+      "visible_fields": [
+        "Enrollment",
+        "Submission",
+        "Submission Asset",
+        "Ready for XP Automation?",
+        "XP Events"
+      ],
+      "expected_min_rows_when_seeded": 0,
+      "expected_record_ids_any": ["recBqqe0uGMsqjUrF"]
+    },
+    {
+      "priority": 8,
+      "table": "Athlete Achievement Unlocks",
+      "view_name": "Testing - Schmidt Unlocks",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Date Unlocked", "direction": "desc" }],
+      "visible_fields": [
+        "Achievement",
+        "Source/Unlock Key",
+        "Week",
+        "XP Award Status",
+        "XP Events"
+      ],
+      "expected_min_rows_when_seeded": 0,
+      "name_aliases_acceptable": ["Testing"],
+      "purpose": "Empty post-reset until milestones/streaks is OK"
+    },
+    {
+      "priority": 9,
+      "table": "Enrollments",
+      "view_name": "Testing - Schmidt Enrollment",
+      "type": "grid",
+      "filter_field": "RECORD_ID()",
+      "filter": "RECORD_ID() = 'recgP9qZYjAhE7NXm' OR Athlete is Testing Schmidt",
+      "sort": [{ "field": "Full Athlete Name - Backward", "direction": "asc" }],
+      "visible_fields": [
+        "Active?",
+        "Athlete",
+        "Grade Band",
+        "Lifetime XP Total",
+        "Current Level",
+        "Next Level",
+        "Level Gate Rule",
+        "Submissions",
+        "Weekly Athlete Summary"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_max_rows_sanity": 1,
+      "expected_record_ids_any": ["recgP9qZYjAhE7NXm"],
+      "name_aliases_acceptable": ["Testing - Schmidt Only"]
+    },
+    {
+      "priority": 10,
+      "table": "Weeks",
+      "view_name": "Testing - Seeded Weeks",
+      "type": "grid",
+      "filter": "Manual include Foundation Week recVDKiYATgzsfpmE + Testing Week recWeVrSabnsYaHc2 + any backdate weeks",
+      "sort": [{ "field": "Week Start Date", "direction": "asc" }],
+      "visible_fields": [
+        "Week Name",
+        "Start Date",
+        "End Date",
+        "Week Key",
+        "Submissions",
+        "Weekly Athlete Summary"
+      ],
+      "expected_min_rows_when_seeded": 1,
+      "expected_record_ids_any": ["recVDKiYATgzsfpmE", "recWeVrSabnsYaHc2"],
+      "purpose": "Manual Week seeding verification"
+    },
+    {
+      "priority": 11,
+      "table": "Zoom Attendance",
+      "view_name": "Testing - Schmidt Zoom Attendance",
+      "type": "grid",
+      "filter_field": "Enrollment",
+      "filter": "is Schmidt Enrollment recgP9qZYjAhE7NXm",
+      "sort": [{ "field": "Created", "direction": "desc" }],
+      "visible_fields": ["Enrollment", "Zoom Meeting", "XP Events", "Attendance Status"],
+      "expected_min_rows_when_seeded": 0,
+      "optional": true
+    },
+    {
+      "priority": 12,
+      "table": "XP Events",
+      "view_name": "Admin - Orphan XP Events (no Enrollment)",
+      "type": "grid",
+      "filter": "Enrollment is empty",
+      "optional": true,
+      "purpose": "Legacy wipe candidates — not for Schmidt testing"
+    }
+  ]
+}

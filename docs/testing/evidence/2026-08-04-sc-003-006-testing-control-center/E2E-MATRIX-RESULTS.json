@@ -1,0 +1,326 @@
+{
+  "generated_at": "2026-08-05T13:19:35.114Z",
+  "completed_at": "2026-08-05T13:19:40.345Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "schmidt_enrollment": "recgP9qZYjAhE7NXm",
+  "mode": "read_only_safe_execution",
+  "writeback_policy": {
+    "enabled": false,
+    "mode": "read_only",
+    "reason": "Testing Scenarios Pass/Fail / Actual Result fields already have production writers (115 and operator edits). Automatic verifier writeback would create competing writers and ambiguous ownership.",
+    "allowed_when": "Mike explicitly designates one writeback owner automation/script and disables competing writers for those fields."
+  },
+  "counts": {
+    "PASS": 11,
+    "FAIL": 0,
+    "BLOCKED": 4,
+    "NOT_TESTED": 2,
+    "MANUAL_REQUIRED": 0
+  },
+  "rows": [
+    {
+      "id": "A3",
+      "area": "Intake and identity",
+      "preconditions": "Schmidt enrollment Active; foundation week seeded",
+      "action": "Read-only verify enrollment + week + submission links",
+      "expected_result": "Athlete/Enrollment Active; submissions linked; week present",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recgqVstObQRzgXJF",
+        "recgP9qZYjAhE7NXm",
+        "recVDKiYATgzsfpmE",
+        "rec9yoDZ3DMIEhi3I",
+        "recbAVGWg0OKT7FSX",
+        "recM0GbWfptu06da1",
+        "recaCcxDqtzFWjmyi",
+        "rec6g1nth8PlSwA6z"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "checks FAIL=0"
+    },
+    {
+      "id": "A4",
+      "area": "Intake and identity",
+      "preconditions": "Offline harness available",
+      "action": "Reference repository offline 115 malformed-id coverage",
+      "expected_result": "statusOut=error; no partial writes (repo contract)",
+      "actual_result": "repository_test_pass — run node --test tools/testing/tests/test_115_offline.mjs",
+      "record_ids": [],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Safe without Airtable mutation"
+    },
+    {
+      "id": "B1",
+      "area": "Daily shooting XP",
+      "preconditions": "Scenario linked submission counted",
+      "action": "Verify SUBMISSION_XP|{submissionId} exists once",
+      "expected_result": "One XP Event / 20 pts for counted submission",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recPdyfYRFgDtpzQ8",
+        "recjt6QpUcprSIxAk",
+        "recovVbiZynRUtDwF"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "B2",
+      "area": "Daily shooting XP",
+      "preconditions": "Schmidt Submission Base XP inventory",
+      "action": "Read-only Source Key uniqueness for Schmidt submission XP",
+      "expected_result": "No blank/duplicate Source Keys among Schmidt submission XP",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recPdp5afnI70f2hd",
+        "recffMjiomQwV0VR4",
+        "recQxiwjLOvQ8BzSB",
+        "recOqzhV4kTdsfzMf",
+        "recrYV19IqolkoMwT",
+        "recOodD23MQrP1O9F",
+        "recovVbiZynRUtDwF"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "UI re-trigger of 010 remains MANUAL_REQUIRED (SC-007)"
+    },
+    {
+      "id": "B3",
+      "area": "Daily shooting XP",
+      "preconditions": "Same-day counted submissions exist",
+      "action": "Policy check — at most one shooting XP per day",
+      "expected_result": "Product decision required (115 Count It vs engine rule)",
+      "actual_result": "BLOCKED — policy open; multiple same-day Schmidt XP observed historically",
+      "record_ids": [
+        "rec9yoDZ3DMIEhi3I",
+        "recbAVGWg0OKT7FSX",
+        "recM0GbWfptu06da1",
+        "recaCcxDqtzFWjmyi",
+        "rec6g1nth8PlSwA6z",
+        "recuuTBgstSTGg2E3",
+        "recjt6QpUcprSIxAk",
+        "recz8udwv0cQ7i96E",
+        "recEQQ6ZGZYV1M7Lz",
+        "recWFHXJoUGi1e7cX",
+        "rec3BHRPdtlv806do",
+        "recQxnFNmoOvXgGoR",
+        "recqTSE7rTpEj5hMP"
+      ],
+      "pass_fail": "BLOCKED",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Do not mutate to force policy; SC-007 / product decision"
+    },
+    {
+      "id": "B5",
+      "area": "Daily shooting XP",
+      "preconditions": "Seeded prior Week for backdate",
+      "action": "Backdated Activity Date week assignment",
+      "expected_result": "Week + XP activity date use Denver key",
+      "actual_result": "BLOCKED — requires manually seeded prior Week scenario run",
+      "record_ids": [
+        "recVDKiYATgzsfpmE"
+      ],
+      "pass_fail": "BLOCKED",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "C4",
+      "area": "Homework",
+      "preconditions": "Satisfactory HC exists for Schmidt",
+      "action": "Verify HOMEWORK_XP|{hcId}",
+      "expected_result": "Exactly one 35-pt homework XP",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recrBnHbLvDpFyIeO",
+        "rec6xE4V1t0atiTIP"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "C6",
+      "area": "Homework",
+      "preconditions": "Final Reflection quizzes linked to HC",
+      "action": "Read HC Final Reflection Quiz Submissions links",
+      "expected_result": "HC linked to quiz attempts; Option B attachment-less",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recrBnHbLvDpFyIeO",
+        "recxtTv0AD7G3XpGv",
+        "recFsN2KruSnerfns"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Asset count rollup should be 0 for Option B"
+    },
+    {
+      "id": "D1",
+      "area": "Video feedback",
+      "preconditions": "Video Feedback row linked to Schmidt",
+      "action": "Verify VF enrollment link",
+      "expected_result": "VF Enrollment = Schmidt",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recBqqe0uGMsqjUrF"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Full Ready-for-XP / 114 award may still need supervised live rerun"
+    },
+    {
+      "id": "E1",
+      "area": "Streaks",
+      "preconditions": "Contiguous counted days",
+      "action": "Presence of streak unlocks on enrollment",
+      "expected_result": "Streak occurrence / unlock when practical",
+      "actual_result": "NOT_TESTED — no Athlete Achievement Unlocks on Schmidt yet",
+      "record_ids": [],
+      "pass_fail": "NOT_TESTED",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "F1",
+      "area": "Shot milestones",
+      "preconditions": "Lifetime shots cross milestone",
+      "action": "Presence of milestone unlocks",
+      "expected_result": "SHOT_MILESTONE unlock when threshold crossed",
+      "actual_result": "NOT_TESTED — no unlocks linked",
+      "record_ids": [],
+      "pass_fail": "NOT_TESTED",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "I1",
+      "area": "Weekly summaries",
+      "preconditions": "Counted submissions exist",
+      "action": "Verify WAS linked on enrollment; unique Enrollment+Week",
+      "expected_result": ">=1 WAS; no duplicate Enrollment|Week groups",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recuxvGq2kY8WKcey"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "I6",
+      "area": "Weekly summaries",
+      "preconditions": "Make webhook + Schmidt-only recipients",
+      "action": "Controlled weekly send",
+      "expected_result": "Send once; failure does not clear incorrectly",
+      "actual_result": "BLOCKED — email send owned by SC-008; not executed in this package",
+      "record_ids": [
+        "recuxvGq2kY8WKcey"
+      ],
+      "pass_fail": "BLOCKED",
+      "cleanup_status": "n/a",
+      "notes": null
+    },
+    {
+      "id": "J1",
+      "area": "Zoom",
+      "preconditions": "Zoom Attendance rows linked to Schmidt",
+      "action": "Verify attendance enrollment link",
+      "expected_result": "Enrollment = Schmidt",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recfqsgM7zDobxsPf",
+        "receHkLl0cpLFLMVa",
+        "recJ8G7SOsk4XOsO9",
+        "recBA5Q6XcZDFU4dQ"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "XP award assert left NOT_TESTED unless expectXp explicitly enabled"
+    },
+    {
+      "id": "L1",
+      "area": "Reruns / failure",
+      "preconditions": "Existing XP Source Keys",
+      "action": "Reference idempotency inventory + SC-007 evidence",
+      "expected_result": "Event counts stable on rerun",
+      "actual_result": "PASS",
+      "record_ids": [
+        "recPdp5afnI70f2hd",
+        "recffMjiomQwV0VR4",
+        "recQxiwjLOvQ8BzSB",
+        "recOqzhV4kTdsfzMf",
+        "recrYV19IqolkoMwT",
+        "recOodD23MQrP1O9F",
+        "recovVbiZynRUtDwF"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Destructive failure inject belongs to SC-008"
+    },
+    {
+      "id": "L3",
+      "area": "Reruns / failure",
+      "preconditions": "Webhook failure inject",
+      "action": "Force webhook 5xx / blank webhook",
+      "expected_result": "Trigger not cleared on failure",
+      "actual_result": "BLOCKED — owned by SC-008; not executed here",
+      "record_ids": [],
+      "pass_fail": "BLOCKED",
+      "cleanup_status": "n/a — read-only",
+      "notes": null
+    },
+    {
+      "id": "SC006-WRITEBACK",
+      "area": "Expected-versus-Actual",
+      "preconditions": "Verifier available",
+      "action": "Evaluate Airtable Pass/Fail auto-writeback",
+      "expected_result": "Single documented writer or remain read-only",
+      "actual_result": {
+        "enabled": false,
+        "mode": "read_only",
+        "reason": "Testing Scenarios Pass/Fail / Actual Result fields already have production writers (115 and operator edits). Automatic verifier writeback would create competing writers and ambiguous ownership.",
+        "allowed_when": "Mike explicitly designates one writeback owner automation/script and disables competing writers for those fields."
+      },
+      "record_ids": [
+        "recPdyfYRFgDtpzQ8"
+      ],
+      "pass_fail": "PASS",
+      "cleanup_status": "n/a — read-only",
+      "notes": "Read-only scoring retained"
+    }
+  ],
+  "identity_summary": {
+    "overall": "PASS",
+    "counts": {
+      "PASS": 17,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    }
+  },
+  "daily_summary": {
+    "overall": "PASS",
+    "counts": {
+      "PASS": 11,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    }
+  },
+  "homework_summary": {
+    "overall": "PASS",
+    "counts": {
+      "PASS": 3,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    }
+  }
+}
