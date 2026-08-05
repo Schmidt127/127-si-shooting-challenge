@@ -1,0 +1,38 @@
+{
+  "image": "jpg",
+  "submissionId": "recQxnFNmoOvXgGoR",
+  "assetId": "recoitXYwn2CWxrtc",
+  "hcId": "recR4RaQNukzAcCi7",
+  "fields": {
+    "Upload Status": "Uploaded",
+    "Upload Error": null,
+    "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-recoitXYwn2CWxrtc-sc009-controlled-w3c.jpg",
+    "Storage Key": "shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-recoitXYwn2CWxrtc-sc009-controlled-w3c.jpg",
+    "Uploaded At": "2026-08-05T00:26:04.092Z",
+    "File Content Hash": "12be6cf1c26b883fa0395fc9dac0138bcb111ebb8e7b92add4cef096e1540ed2",
+    "File MIME Type": "image/jpeg",
+    "Reviewer Access Token": "FaBP-61Aw9HRlpY0HozeQctA6TrR3SiUrr-Nm6JkhsM",
+    "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/recoitXYwn2CWxrtc?token=FaBP-61Aw9HRlpY0HozeQctA6TrR3SiUrr-Nm6JkhsM",
+    "Asset Type": "Homework Image"
+  },
+  "checks": {
+    "uploaded": true,
+    "mimeJpeg": true,
+    "sha": true,
+    "reviewer": true
+  },
+  "reviewerLink": {
+    "statusCode": 200,
+    "contentType": "image/jpeg",
+    "ok": true
+  },
+  "canonicalAnonymous": {
+    "statusCode": 403,
+    "ok": false
+  },
+  "xp": {
+    "id": "recj3WDcOlELESgew",
+    "sourceKey": "HOMEWORK_XP|recR4RaQNukzAcCi7"
+  },
+  "pass": true
+}

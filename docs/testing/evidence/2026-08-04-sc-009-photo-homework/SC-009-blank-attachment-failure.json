@@ -1,0 +1,10 @@
+{
+  "assetId": "recyQ7ssrJ04hvOgl",
+  "hcId": "recrEd8bz3ic7Ihc8",
+  "statusCode": 400,
+  "actionOut": "error_missing_attachment",
+  "errorOut": "Airtable Attachment is missing",
+  "Upload Status": "Error",
+  "Upload Error": "Airtable Attachment is missing",
+  "pass": true
+}

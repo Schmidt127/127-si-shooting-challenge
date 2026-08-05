@@ -1,0 +1,219 @@
+{
+  "submissionId": "rec3BHRPdtlv806do",
+  "assetId": "rec9qz0QHSUzgWA1y",
+  "hcId": "recRi12lcH2epFi2L",
+  "enrollmentId": "recgP9qZYjAhE7NXm",
+  "uploadPath": "lambda_direct_prod_070a_payload",
+  "makeNote": "Make returned Accepted earlier without writeback; PROD Lambda direct invoke used with homework_completion route",
+  "lambdaResponse": {
+    "ok": true,
+    "statusOut": "success",
+    "actionOut": "uploaded",
+    "runtime": "lambda",
+    "environment": "PROD",
+    "baseId": "appn84sqPw03zEbTT",
+    "table": "Submission Assets",
+    "submissionAssetRecordId": "rec9qz0QHSUzgWA1y",
+    "targetRecordId": "recRi12lcH2epFi2L",
+    "routeKey": "homework_completion",
+    "automationNumber": "070a",
+    "uploadClaimRunId": "6904ae22-f1be-401d-8d92-c22cf444ed47",
+    "claimActionOut": "claim_acquired",
+    "s3": {
+      "bucket": "shooting-challenge-assets",
+      "region": "us-east-2",
+      "storageKey": "shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png",
+      "canonicalFileUrl": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png"
+    },
+    "hash": {
+      "algorithm": "SHA-256",
+      "hex": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "valid64CharHex": true
+    },
+    "c023Duplicate": {
+      "currentAssetId": "rec9qz0QHSUzgWA1y",
+      "computedSha256": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "duplicateLookupPerformed": true,
+      "exactHashMatchFound": false,
+      "sameEnrollmentMatchCount": 0,
+      "crossEnrollmentMatchCount": 0,
+      "duplicateMatchCount": 0,
+      "duplicateMatches": [],
+      "reviewReasons": [],
+      "primaryReason": null,
+      "primaryMatchId": null,
+      "potentialAssetReuse": false,
+      "reviewSummary": "No same-enrollment contextual reuse detected.",
+      "reviewWritebackApplied": true,
+      "reviewWritebackError": "",
+      "uploadBlocked": false,
+      "notes": "C-023 \u2014 independent upload; potential reuse is warning-only."
+    },
+    "writebackApplied": {
+      "Upload Status": "Uploaded",
+      "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png",
+      "Storage Key": "shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png",
+      "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+      "File Hash Algorithm": "SHA-256",
+      "Uploaded At": "2026-08-04T18:24:41.605-06:00",
+      "File Size Bytes": 67730,
+      "File MIME Type": "image/png",
+      "Upload Error": null,
+      "Exact Hash Match Found?": false,
+      "Same Enrollment Match Found?": false,
+      "Duplicate File Status": "Unique",
+      "Duplicate Match Strength": "Exact SHA-256 Hash",
+      "Duplicate Match Record": [],
+      "Duplicate Match Records (All)": [],
+      "Potential Asset Reuse?": false,
+      "Duplicate Match Notes": "No matching file hash found.",
+      "Duplicate Checked At": "2026-08-05T00:24:40.838+00:00",
+      "Duplicate Check Error": "",
+      "Asset Reuse Review Summary": "",
+      "Asset Reuse Review Reasons": [],
+      "Asset Reuse Review Primary Reason": null,
+      "Asset Reuse Decision": "Not Reviewed",
+      "Reviewer Access Token Set": true
+    },
+    "airtablePatchId": "rec9qz0QHSUzgWA1y",
+    "writebackVerification": {
+      "canonicalUrlPopulated": true,
+      "storageKeyPopulated": true,
+      "fileContentHashPopulated": true,
+      "fileHashAlgorithmSha256": true,
+      "uploadedAtPopulated": true,
+      "uploadStatusUploaded": true,
+      "uploadErrorCleared": true,
+      "reviewerTokenPopulated": true,
+      "reviewerTokenCreated": true,
+      "readbackVerified": true,
+      "hashHexLength": 64,
+      "duplicateLookupPerformed": true,
+      "reviewWritebackApplied": true,
+      "attachmentRetained": true,
+      "uploadClaimRunId": "6904ae22-f1be-401d-8d92-c22cf444ed47",
+      "claimContinuation": false,
+      "allPass": true
+    },
+    "durationMs": 3206
+  },
+  "fields": {
+    "Upload Status": "Uploaded",
+    "Upload Error": null,
+    "Canonical File URL": "https://shooting-challenge-assets.s3.us-east-2.amazonaws.com/shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png",
+    "Storage Key": "shooting-challenge/2025-2026/shooting-challenge/schmidt-testing/2026-08-04-homework-rec9qz0QHSUzgWA1y-sc009-controlled-logo.png",
+    "Uploaded At": "2026-08-05T00:24:41.605Z",
+    "File Content Hash": "448c3126df730cf6b0cf6875f77f1f726b1fa3a2b4c36bb631b326981b25f967",
+    "File MIME Type": "image/png",
+    "Reviewer Access Token": "0YGeQyR_Md20_NuPKBoHTilpj5EdaoOyMnJbZJS5gSU",
+    "Reviewer File URL": "https://qzfaiyaq7a2cugh6alpov7iyfu0nrwbf.lambda-url.us-east-2.on.aws/file/rec9qz0QHSUzgWA1y?token=0YGeQyR_Md20_NuPKBoHTilpj5EdaoOyMnJbZJS5gSU",
+    "Writeback Complete?": 1,
+    "Asset Type": "Homework Image"
+  },
+  "checks": {
+    "uploadStatusUploaded": true,
+    "uploadErrorBlank": true,
+    "canonicalPresent": true,
+    "storageKeyPresent": true,
+    "uploadedAtPresent": true,
+    "sha256Present": true,
+    "mimeIsImage": true,
+    "reviewerTokenPresent": true,
+    "reviewerUrlPresent": true,
+    "allPass": true
+  },
+  "reviewerLink": {
+    "statusCode": 200,
+    "contentType": "image/png",
+    "ok": true,
+    "n": 256
+  },
+  "canonicalAnonymous": {
+    "statusCode": 403,
+    "ok": false,
+    "error": "Forbidden"
+  },
+  "invalidReviewerToken": {
+    "statusCode": 403,
+    "ok": false,
+    "error": "Forbidden"
+  },
+  "retry": {
+    "actionOut": "skipped_already_uploaded",
+    "statusCode": 200,
+    "hashUnchanged": true,
+    "storageKeyUnchanged": true,
+    "stillUploaded": true
+  },
+  "xp": {
+    "id": "recuG91F7fKXKtV74",
+    "fields": {
+      "XP Activity Date Source": "Homework Submission Activity Date",
+      "XP Dedupe Key": "recgp9qzyjahe7nxm|homework_xp|recri12lch2epfi2l|homework completion",
+      "Awarded At": "2026-08-05T00:25:03.475Z",
+      "XP Reason Debug": "Homework XP created from Homework Completion recRi12lcH2epFi2L.\nAthlete: Schmidt, Testing - 2025-2026\nWeek: Week 1\nHomework: SA - Personal Game Plan - Shot Tracker Usage\nBase XP: 35\nExtra Credit XP: 0\nTotal XP: 35\nHomework Completion Key: \"Schmidt, Testing - 2025-2026\"|Week 1|SA - Personal Game Plan - Shot Tracker Usage\nSource Key: HOMEWORK_XP|recRi12lcH2epFi2L\nXP Activity Date Field: XP Activity Date\nXP Activity Date Source Field: XP Activity Date Source\nXP Activity Date Source: Homework Submission Activity Date\nXP Activity Date: 2026-08-04T00:00:00.000Z",
+      "Source Key": "HOMEWORK_XP|recRi12lcH2epFi2L",
+      "Active XP Points": 35,
+      "Active?": true,
+      "Week": [
+        "recnMGC2JBHjO0ay6"
+      ],
+      "XP Events RID": "recuG91F7fKXKtV74",
+      "XP Bucket": "Homework Completion",
+      "Enrollment": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "Homework Completion": [
+        "recRi12lcH2epFi2L"
+      ],
+      "Enrollment Record ID": [
+        "recgP9qZYjAhE7NXm"
+      ],
+      "Week Record ID": [
+        "recnMGC2JBHjO0ay6"
+      ],
+      "Submission": [
+        "rec3BHRPdtlv806do"
+      ],
+      "Created": "2026-08-05T00:25:04.000Z",
+      "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|homework_xp|recri12lch2epfi2l|homework completion",
+      "Event Identity ID": "homework_xp|recri12lch2epfi2l",
+      "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Homework Completion - 35",
+      "XP Source": "Homework Completion",
+      "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Week 1",
+      "Date - Homework Submission Activity": [
+        "2026-08-04"
+      ],
+      "XP Points": 35,
+      "Processed": true,
+      "XP Event RID": "recuG91F7fKXKtV74",
+      "Date - Submission Base Activity": [
+        "2026-08-04"
+      ],
+      "XP Date Resolved": "2026-08-04T00:00:00.000Z",
+      "XP Activity Date": "2026-08-04T00:00:00.000Z",
+      "XP Reason Public": "Homework completed: SA - Personal Game Plan - Shot Tracker Usage",
+      "Submission Record ID": [
+        "rec3BHRPdtlv806do"
+      ]
+    }
+  },
+  "idempotency": {
+    "xpCount": 1,
+    "hcCount": 1,
+    "assetCount": 1,
+    "pass": true,
+    "note": "HC identity filterByFormula on linked fields returned 0; verified via direct record reads (HC recRi12lcH2epFi2L, XP recuG91F7fKXKtV74, one asset on submission)"
+  },
+  "emailReadyPath": {
+    "Upload Ready?": 1,
+    "Parent Feedback Ready?": true,
+    "Award Status": "Awarded",
+    "Base XP Awarded": 35,
+    "Total Homework XP Awarded": 35,
+    "Satisfactory?": true,
+    "parentEmail": "mschmidt@fairfield.k12.mt.us",
+    "schmidtOnly": true
+  },
+  "pass": true
+}

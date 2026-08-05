@@ -4,10 +4,10 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-27
-Last GitHub Update: 2026-07-23
+Last GitHub Update: 2026-08-04
 
 Purpose:
-Sends one homework Submission Asset to the shared Make Upload Engine (v4.4 async Accepted handoff).
+Sends one homework Submission Asset to the shared Make Upload Engine (v4.5 Canonical/S3 already-uploaded gate + v4.4 async Accepted handoff).
 
 Trigger:
 Submission Assets when Send to Make Trigger is checked and homework asset is ready.
@@ -16,7 +16,7 @@ Important Tables:
 Submission Assets
 
 Important Fields:
-Upload Status, Send to Make Trigger, Homework Completions, Google Drive File URL
+Upload Status, Send to Make Trigger, Homework Completions, Canonical File URL, Google Drive File URL
 
 Notes:
 Same script body as 070b - set input automationNumber to 070a in Airtable.
@@ -36,15 +36,21 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Submission Assets
  *
  * VERSION:
- * v4.4 - Make Accepted async handoff (070c verifies writeback)
+ * v4.5 - Canonical/S3 already-uploaded skip (SC-009)
  *
  * CREATED:
  * 2026-06-27
  *
  * LAST UPDATED:
- * 2026-07-11
+ * 2026-08-04
  *
  * CHANGE HISTORY:
+ * 2026-08-04 - v4.5 (070a / SC-009 photo homework E2E)
+ * - Treat Canonical File URL or Upload Status=Uploaded + Storage Key as already uploaded.
+ * - Keep legacy Google Drive File URL / File ID skip for bridge rows.
+ * - Route key remains homework_completion for 070a (unchanged).
+ * - Still never writes Upload Status=Processing after Make 2xx (Lambda owns claim/final status).
+ *
  * 2026-07-11 - v4.4 (070b / C-013 Make async Accepted + 070c companion)
  * - Make HTTP 2xx body "Accepted" returns pending handoff (no setTimeout poll).
  * - Retains Send to Make Trigger; automation 070c verifies writeback and clears trigger.
@@ -64,7 +70,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Kept one shared script body for 070a and 070b.
  * - Kept minimal canonical webhook payload.
  * - Sends only submissionAssetRecordId and targetRecordId for Make routing.
- * - Prevents duplicate uploads if Google Drive File URL or File ID already exists.
+ * - Prevents duplicate uploads if Canonical File URL / Uploaded+Storage Key or legacy Drive URL/ID already exists.
  * - Stops safely with Pending Link if target Homework Completion or Video Feedback record is missing.
  *
  * 2026-06-27 - v4.0
@@ -120,7 +126,7 @@ async function main() {
 
     const CONFIG = {
         scriptName: "070a/070b - Send Upload Asset Payload to Make",
-        version: "v4.4",
+        version: "v4.5",
 
         tables: {
             submissionAssets: "Submission Assets",
@@ -138,6 +144,9 @@ async function main() {
 
             homeworkCompletions: "Homework Completions",
             videoFeedback: "Video Feedback",
+
+            canonicalFileUrl: "Canonical File URL",
+            storageKey: "Storage Key",
 
             googleDriveFileId: "Google Drive File ID",
             googleDriveFileUrl: "Google Drive File URL",
@@ -688,6 +697,9 @@ async function main() {
     const uploadDestination = getText(assetRecord, assetsTable, CONFIG.fields.uploadDestination);
     const submissionRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.submissionLinked);
     const enrollmentRecordIds = getLinkedIds(assetRecord, assetsTable, CONFIG.fields.enrollmentLinked);
+    const uploadStatusExisting = getText(assetRecord, assetsTable, CONFIG.fields.uploadStatus);
+    const canonicalFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.canonicalFileUrl);
+    const storageKey = getText(assetRecord, assetsTable, CONFIG.fields.storageKey);
     const googleDriveFileId = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileId);
     const googleDriveFileUrl = getText(assetRecord, assetsTable, CONFIG.fields.googleDriveFileUrl);
     const attachments = getRaw(assetRecord, assetsTable, CONFIG.fields.airtableAttachment);
@@ -714,6 +726,31 @@ async function main() {
      ************************************************************/
 
     setDebug("4 - Safety Checks");
+
+    const alreadyUploadedCanonical =
+        Boolean(canonicalFileUrl) ||
+        (uploadStatusExisting === CONFIG.values.statusUploaded && Boolean(storageKey));
+
+    if (alreadyUploadedCanonical) {
+        await stopWithAssetUpdate({
+            statusOut: "skipped",
+            actionOut: "skipped_already_uploaded",
+            uploadStatus: CONFIG.values.statusUploaded,
+            uploadError: "",
+            uncheckTrigger: true,
+            message: "Duplicate upload blocked — Canonical/S3 upload already present.",
+            extra: {
+                uploadDestination,
+                routeKey: route.routeKey,
+                targetTable: route.targetTable,
+                targetRecordId,
+                canonicalFileUrl,
+                storageKey,
+                uploadStatusExisting,
+            },
+        });
+        return;
+    }
 
     if (googleDriveFileId || googleDriveFileUrl) {
         await stopWithAssetUpdate({
