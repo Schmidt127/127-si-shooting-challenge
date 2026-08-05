@@ -1,0 +1,337 @@
+{
+  "generated_at": "2026-08-05T00:12:42.570Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "read_only": true,
+  "ids": {
+    "athlete": "recgqVstObQRzgXJF",
+    "enrollment": "recgP9qZYjAhE7NXm",
+    "foundationWeek": "recVDKiYATgzsfpmE",
+    "scenario": "recPdyfYRFgDtpzQ8",
+    "homeworkCompletion": "recrBnHbLvDpFyIeO",
+    "homeworkXp": "rec6xE4V1t0atiTIP"
+  },
+  "live_links": {
+    "submission_ids": [
+      "rec9yoDZ3DMIEhi3I",
+      "recbAVGWg0OKT7FSX",
+      "recM0GbWfptu06da1",
+      "recaCcxDqtzFWjmyi",
+      "rec6g1nth8PlSwA6z",
+      "recuuTBgstSTGg2E3",
+      "recjt6QpUcprSIxAk",
+      "recz8udwv0cQ7i96E",
+      "recEQQ6ZGZYV1M7Lz"
+    ],
+    "was_ids": [
+      "recuxvGq2kY8WKcey"
+    ],
+    "video_feedback_ids": [
+      "recBqqe0uGMsqjUrF"
+    ],
+    "zoom_attendance_ids": [
+      "recfqsgM7zDobxsPf",
+      "receHkLl0cpLFLMVa",
+      "recJ8G7SOsk4XOsO9",
+      "recBA5Q6XcZDFU4dQ"
+    ],
+    "homework_completion_ids": [
+      "recrBnHbLvDpFyIeO",
+      "rec47dIoMkobsSM0T",
+      "rec7Nr2M69SwwgBV8"
+    ]
+  },
+  "foundation_week_fetch": {
+    "ok": true,
+    "id": "recVDKiYATgzsfpmE"
+  },
+  "result": {
+    "overall": "PASS",
+    "meta": {
+      "kind": "schmidt_identity",
+      "enrollment_id": "recgP9qZYjAhE7NXm",
+      "athlete_id": "recgqVstObQRzgXJF"
+    },
+    "counts": {
+      "PASS": 17,
+      "FAIL": 0,
+      "BLOCKED": 0,
+      "NOT_TESTED": 0,
+      "MANUAL_REQUIRED": 0
+    },
+    "checks": [
+      {
+        "id": "athlete.id",
+        "status": "PASS",
+        "table": "Athletes",
+        "field": "id",
+        "expected": "recgqVstObQRzgXJF",
+        "actual": "recgqVstObQRzgXJF",
+        "record_ids": [
+          "recgqVstObQRzgXJF"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "athlete.active",
+        "status": "PASS",
+        "table": "Athletes",
+        "field": "Active?",
+        "expected": true,
+        "actual": true,
+        "record_ids": [
+          "recgqVstObQRzgXJF"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "enrollment.id",
+        "status": "PASS",
+        "table": "Enrollments",
+        "field": "id",
+        "expected": "recgP9qZYjAhE7NXm",
+        "actual": "recgP9qZYjAhE7NXm",
+        "record_ids": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "enrollment.athlete",
+        "status": "PASS",
+        "table": "Enrollments",
+        "field": "Athlete",
+        "expected": "recgqVstObQRzgXJF",
+        "actual": [
+          "recgqVstObQRzgXJF"
+        ],
+        "record_ids": [
+          "recgP9qZYjAhE7NXm",
+          "recgqVstObQRzgXJF"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "enrollment.active",
+        "status": "PASS",
+        "table": "Enrollments",
+        "field": "Active?",
+        "expected": true,
+        "actual": true,
+        "record_ids": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "enrollment.grade_band",
+        "status": "PASS",
+        "table": "Enrollments",
+        "field": "Grade Band",
+        "expected": "non-empty",
+        "actual": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "record_ids": [
+          "recgP9qZYjAhE7NXm",
+          "recK7BDVSpHy2ipCS"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "foundation_week.id",
+        "status": "PASS",
+        "table": "Weeks",
+        "field": "id",
+        "expected": "recVDKiYATgzsfpmE",
+        "actual": "recVDKiYATgzsfpmE",
+        "record_ids": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "submission_path.count",
+        "status": "PASS",
+        "table": "Submissions",
+        "field": null,
+        "expected": ">=1",
+        "actual": 9,
+        "record_ids": [
+          "rec9yoDZ3DMIEhi3I",
+          "recbAVGWg0OKT7FSX",
+          "recM0GbWfptu06da1",
+          "recaCcxDqtzFWjmyi",
+          "rec6g1nth8PlSwA6z",
+          "recuuTBgstSTGg2E3",
+          "recjt6QpUcprSIxAk",
+          "recz8udwv0cQ7i96E",
+          "recEQQ6ZGZYV1M7Lz"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "xp_path.counted_submissions_have_one_event",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": null,
+        "expected": "each counted submission has exactly one SUBMISSION_XP|{id}",
+        "actual": {
+          "countedWithXp": 7,
+          "countedWithoutXp": 0
+        },
+        "record_ids": [
+          "recPdp5afnI70f2hd",
+          "recffMjiomQwV0VR4",
+          "recQxiwjLOvQ8BzSB",
+          "recOqzhV4kTdsfzMf",
+          "recrYV19IqolkoMwT",
+          "recOodD23MQrP1O9F",
+          "recovVbiZynRUtDwF"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "was.unique_enrollment_week",
+        "status": "PASS",
+        "table": "Weekly Athlete Summary",
+        "field": "Enrollment|Week",
+        "expected": "unique",
+        "actual": "unique",
+        "record_ids": [
+          "recuxvGq2kY8WKcey"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "was_path.linked_from_enrollment",
+        "status": "PASS",
+        "table": "Weekly Athlete Summary",
+        "field": null,
+        "expected": ">=1",
+        "actual": 1,
+        "record_ids": [
+          "recuxvGq2kY8WKcey"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "homework.enrollment",
+        "status": "PASS",
+        "table": "Homework Completions",
+        "field": "Enrollment",
+        "expected": "recgP9qZYjAhE7NXm",
+        "actual": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "record_ids": [
+          "recrBnHbLvDpFyIeO"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "homework.xp_source_key",
+        "status": "PASS",
+        "table": "XP Events",
+        "field": "Source Key",
+        "expected": "HOMEWORK_XP|recrBnHbLvDpFyIeO",
+        "actual": "HOMEWORK_XP|recrBnHbLvDpFyIeO",
+        "record_ids": [
+          "recrBnHbLvDpFyIeO",
+          "rec6xE4V1t0atiTIP"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "video.path_presence",
+        "status": "PASS",
+        "table": "Video Feedback",
+        "field": null,
+        "expected": ">=0 linked rows (presence check)",
+        "actual": 1,
+        "record_ids": [
+          "recBqqe0uGMsqjUrF"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "zoom.path_presence",
+        "status": "PASS",
+        "table": "Zoom Attendance",
+        "field": null,
+        "expected": ">=0 linked rows (presence check)",
+        "actual": 4,
+        "record_ids": [
+          "recfqsgM7zDobxsPf",
+          "receHkLl0cpLFLMVa",
+          "recJ8G7SOsk4XOsO9",
+          "recBA5Q6XcZDFU4dQ"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "scenario.related_enrollment",
+        "status": "PASS",
+        "table": "Testing Scenarios",
+        "field": "Related Enrollment",
+        "expected": "recgP9qZYjAhE7NXm",
+        "actual": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "record_ids": [
+          "recPdyfYRFgDtpzQ8"
+        ],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": null
+      },
+      {
+        "id": "policy.schmidt_visible_on_standings",
+        "status": "PASS",
+        "table": null,
+        "field": null,
+        "expected": "Schmidt remains visible on public standings",
+        "actual": "policy_keep_visible",
+        "record_ids": [],
+        "probable_cause": null,
+        "suggested_next_action": null,
+        "notes": "Completion master SC-004: do not hide Schmidt unless Mike changes the decision. This check records policy compliance only."
+      }
+    ],
+    "generated_at": "2026-08-05T00:12:42.569Z",
+    "read_only": true
+  },
+  "policy": {
+    "hide_schmidt_from_public_standings": false,
+    "note": "Completion master SC-004: keep Schmidt visible unless Mike changes the decision."
+  }
+}

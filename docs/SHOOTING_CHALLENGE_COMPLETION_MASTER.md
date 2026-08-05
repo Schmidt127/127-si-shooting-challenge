@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-04** (SC-007 / SC-008 reliability + SC-009 photo homework Live Tested) |
+| Last updated | **2026-08-05** (integrate PRs #66/#65/#64 — SC-003–SC-009 testing + reliability + photo homework) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -67,16 +67,27 @@ Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses cha
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 13 |
-| Live Tested in PROD | 20 |
+| Live Tested in PROD | 22 |
 | Installed but not tested *(Installed in PROD)* | 50 |
 | Built but not installed *(Built in Repository)* | 26 |
 | Ready for PROD Paste *(informal — SC-021)* | 1 |
-| Planned | 19 |
+| Planned | 17 |
 | Decision Needed | 5 |
 | Deferred | 10 |
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-04 — SC-003–SC-006 testing control center)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-003 | Planned | **Built in Repository** | Views install package + Meta API verifier; canonical views **not** present in PROD | `docs/testing/views/`; `TESTING-VIEWS-VERIFY.json` (9/10 required missing) |
+| SC-004 | Live Tested in PROD | **Live Tested in PROD** | Fresh identity verifier PASS (17/17); Active athlete+enrollment; WAS `recuxvGq2kY8WKcey` | `SCHMIDT-IDENTITY-VERIFY.json` |
+| SC-005 | Planned | **Live Tested in PROD** | Executable matrix ran on PROD: 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL | `E2E-MATRIX-RESULTS.json`; `run_e2e_matrix.mjs` |
+| SC-006 | Built in Repository | **Live Tested in PROD** | Expanded read-only verifier + live runs; writeback remains off | `tools/testing/lib/expected_actual.js`; offline 11/11 |
+
+**Net math vs post–SC-007/008/009:** Planned 19→**17**; LT 20→**22**; Built stays **26** (SC-003 +1, SC-006 −1). SC-003 must not advance to Installed until Omni/Mike creates views and `--require-installed` passes.
 
 ### Dashboard reconciliation (2026-08-04 — SC-007 / SC-008 reliability proof)
 
@@ -191,10 +202,10 @@ Columns:
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
 | SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8/v1.9 msg); dry+live PASS 2026-07-23; **rerun PASS 2026-07-24** (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`); offline harness 17 tests; scenario catalog 20 fixtures | Expand HW/Video live branches; UI-attest inventory; optional paste v1.9 | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/`; `live-115-rerun-latest.json`; `docs/testing/scenarios/` | **Resolved:** allowed in PROD | P0 | 2026-07-24 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo also has **SCN-021–026** (PR #43) + **SCN-027/028** quiz Option B (PR #44) + **SCN-029** weekly-email retry (PR #46) + **SCN-030–043** Agent 1 hardening fixtures Built pending PROD install | Install/execute SCN-021–043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md` | Confirm Airtable library table still wanted | P1 | 2026-07-27 |
-| SC-003 | Testing | Testing views on key pipeline tables | Planned | PROD checklist + overnight exact view specs (`TESTING-VIEWS-MIKE-ACTIONS.md`); only Athlete Achievement Unlocks currently has a `Testing` view | Mike/OMNI create remaining Testing views with Schmidt Enrollment RID filters; verify row visibility | SC-004 | API cannot create views; **do not hide Schmidt** | `docs/overnight/testing-integrity/TESTING-VIEWS-MIKE-ACTIONS.md`; foundation checklist | — | P0 | 2026-07-24 |
-| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` verified; **Active?=true**; Week `recVDKiYATgzsfpmE`; live Submission→Week→XP→WAS proven (incl. 115 live Submission `recuuTBgstSTGg2E3`) | Keep emails Schmidt-only; **overnight direction 2026-07-23: Schmidt remains visible on public standings** (do not add leaderboard exclusion filter yet); website is name-blind | — | No separate exclusion field; web must not invent name filters | `docs/foundation-reset/FOUNDATION-RESET-PACK-TEST-EVIDENCE-2026-07-23.md`; `docs/overnight/testing-integrity/CURRENT-PROD-BASELINE.md`; `docs/overnight/web-integration/PUBLIC-STANDINGS-AUDIT.md` | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-07-23 |
-| SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Planned | Matrix updated 2026-07-24 with evidence categories; A3/A4/B1/B2 partial PROD passes; B3 policy blocked; B5 backdate blocked | Execute remaining matrix on Schmidt; refresh Zoom rows | SC-001–SC-004, core pipelines | Controlled data only | `V2_END_TO_END_TEST_MATRIX.md`; testing-integrity REPORT | — | P0 | 2026-07-24 |
-| SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Built in Repository | Read-only verifier `tools/testing/lib/expected_actual.js` + CLI; offline tests PASS; live probe bundle PASS | Wire auto-write of Pass/Fail onto Testing Scenarios (optional); expand check coverage | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/`; `prod-probe-latest.json` | Want Airtable writeback auto-score now? | P2 | 2026-07-24 |
+| SC-003 | Testing | Testing views on key pipeline tables | Built in Repository | Exact view spec JSON + Omni install prompt + operator checklist + Meta/Data API verifier; live PROD Meta scan shows canonical Schmidt Testing views **mostly absent** (only Unlocks `Testing` alias / interim Submissions `Workflow testing only`) | Mike/OMNI create remaining Testing views per `docs/testing/views/OMNI-INSTALL-PROMPT.md`; re-run `verify_testing_views.mjs --require-installed`; confirm Schmidt visibility | SC-004 | API cannot create views; **do not hide Schmidt** | `docs/testing/views/`; `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/TESTING-VIEWS-VERIFY.json`; `TESTING-VIEWS-MIKE-ACTIONS.md` | — | P0 | 2026-08-04 |
+| SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` re-verified Active; Week `recVDKiYATgzsfpmE`; WAS `recuxvGq2kY8WKcey`; Submission→XP→HW→VF→Zoom links PASS (identity verifier 17/17) | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change | — | No separate exclusion field; web must not invent name filters | `SCHMIDT-IDENTITY-VERIFY.json`; `PROD-LIVE-SNAPSHOT.json`; foundation reset evidence | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-08-04 |
+| SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Live Tested in PROD | Executable runner `run_e2e_matrix.mjs`; 2026-08-04 PROD run 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL covering identity, daily XP, homework, video presence, Zoom presence, WAS, idempotency refs | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject → SC-008 | SC-001–SC-004, core pipelines | Controlled data only; no mass email | `E2E-MATRIX-RESULTS.json`; `docs/V2_END_TO_END_TEST_MATRIX.md` | B3 Count-It day policy still open | P0 | 2026-08-04 |
+| SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Live Tested in PROD | Expanded read-only verifier (daily + Schmidt identity + homework + video + zoom + writeback policy); offline 11/11; live matrix/identity PASS | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/lib/expected_actual.js`; `airtableWritebackPolicy()`; evidence folder | **Decision:** writeback stays off for now | P2 | 2026-08-04 |
 | SC-007 | Testing | Duplicate and rerun testing (idempotency proof) | Live Tested in PROD | Offline SC-007 pack + matrix; Schmidt inventory **14 XP / 0 blank / 0 dup Source Keys** (submission, HW `HOMEWORK_XP\|recrBnHbLvDpFyIeO`, video, `ZOOM_CREDIT`, streak×3, threshold×3); WAS uniqueness PASS | Optional: 010 UI re-trigger attest; milestone/PW/Zoom-attend live fixtures when present | SC-066, SC-096+ | Never create double XP; do not invent new keys | `docs/testing/evidence/2026-08-04-sc-007-008-reliability/`; `tools/testing/sc-007-008/` | Decide 115 Count It vs 007a policy | P0 | 2026-08-04 |
 | SC-008 | Testing | Email, Make, upload, and failure-path testing | Live Tested in PROD | Failure-path pack (webhook null/502/malformed, blank recipient rearm, Lambda reject, incomplete writeback, retry idempotent); Lambda auth/viewer/token units; PROD asset `recaXBfjeeu3bcm0t` success contract PASS; Canonical anonymous **403**; Reviewer URL **302** | Optional Mike-authorized live 074 invalid-webhook inject (SCN-029) — offline+SOP already cover keep-Send-to-Make? | SC-131+, SC-051+, SC-150 | Schmidt-only emails; no global service disable | `docs/testing/SC-007-008-RELIABILITY-RUNBOOK.md`; evidence folder above | — | P1 | 2026-08-04 |
 | SC-009 | Homework | Photo / image homework submissions work end-to-end | Live Tested in PROD | Schmidt PNG+JPG E2E 2026-08-04: Submission→009 asset→020 HC→Lambda `homework_completion`→S3 Uploaded+Reviewer URL→coach→one XP; Writeback Complete? + HC Upload Ready? formulas fixed; 070a v4.5 Canonical skip in GitHub | Paste 070a v4.5 to Airtable; Make Module writeback follow-up (SC-101 — Accepted without Airtable writeback observed) | SC-019, SC-095, SC-101, SC-150 | One HC per assignment; Canonical stays private | `docs/testing/evidence/2026-08-04-sc-009-photo-homework/`; `docs/deploy-checklists/SC-009-photo-homework-prod.md` | Paste 070a v4.5 | P0 | 2026-08-04 |

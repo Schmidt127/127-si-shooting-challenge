@@ -1,0 +1,233 @@
+{
+  "generated_at": "2026-08-05T00:12:38.328Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "read_only": true,
+  "schmidt_enrollment_id": "recgP9qZYjAhE7NXm",
+  "summary": {
+    "required_views": 10,
+    "canonical_or_alias_present": 1,
+    "missing_required": 9,
+    "sanity_fails": 0,
+    "installed_in_prod": false,
+    "note": "Filter definitions are not readable via API. Presence + sane counts + known IDs are the strongest automated evidence."
+  },
+  "results": [
+    {
+      "table": "Testing Scenarios",
+      "view_name": "Testing - Schmidt Scenarios",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Grid view"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Submissions",
+      "view_name": "Testing - Schmidt Submissions",
+      "status": "INTERIM_ONLY",
+      "installed": false,
+      "match_kind": "interim_only",
+      "matched_view_name": "Workflow testing only",
+      "matched_view_id": "viwHOukunutCEKfZ5",
+      "row_count_sampled": 9,
+      "truncated": false,
+      "expected_ids_found": [
+        "recuuTBgstSTGg2E3",
+        "recjt6QpUcprSIxAk",
+        "recaCcxDqtzFWjmyi"
+      ],
+      "expected_ids_missing": [],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
+    },
+    {
+      "table": "XP Events",
+      "view_name": "Testing - Schmidt XP Events",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Shooting Base",
+        "Homework",
+        "Video",
+        "Zoom",
+        "Streaks",
+        "Thresholds",
+        "Workflow - Required Fields Only",
+        "Possible Duplicates",
+        "Review View",
+        "XP Audit by Athlete",
+        "Admin - Duplicate Weekly Threshold XP",
+        "Grid view",
+        "XP Date Resolved",
+        "DUPLICATE REVIEW",
+        "Riley",
+        "Dayton",
+        "Fix Weekly Threshold Duplicates",
+        "CHECK - Weekly Threshold Duplicates copy"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "view_name": "Testing - Schmidt WAS",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Sunday Review for Awards",
+        "Workflow Check - Required Fields Only",
+        "Workflow Check - Missing - Not Publishing",
+        "Workflow - Mandatory Fields",
+        "EMPTY Fields Check",
+        "Review View",
+        "030 - Assign Grade Band and Goal Record",
+        "SUBMISSIONS - Weekly Athlete  Summary Builder",
+        "Weekly Summary - A6 - Calculate Official Weekly XP",
+        "Weekly Summary - A6 - Award Official Weekly XP Event",
+        "Weekly Summary - A5 - Needs Goal Setup",
+        "Grid view",
+        "Grid Testing View",
+        "ADMIN - DUPLICATE SUMMARY CLEANUP - OK TO DELTE"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Submission Assets",
+      "view_name": "Testing - Schmidt Assets",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "020 - Ready to Link Homework Completion",
+        "070 - Ready to Send Asset to Make",
+        "Grid view"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Homework Completions",
+      "view_name": "Testing - Schmidt Homework Completions",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "HOMEWORK GRADING QUEUE - FINAL",
+        "Workflow - Check",
+        "Grid view",
+        "Grid view copy"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Video Feedback",
+      "view_name": "Testing - Schmidt Video Feedback",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Grading Video. In Order of Checkboxes",
+        "Grid view"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "view_name": "Testing - Schmidt Unlocks",
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Testing",
+      "matched_view_id": "viwhHkNyEPe21oMbI",
+      "row_count_sampled": 0,
+      "truncated": false,
+      "expected_ids_found": [],
+      "expected_ids_missing": [],
+      "sanity": "PASS_COUNT_ONLY",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
+    },
+    {
+      "table": "Enrollments",
+      "view_name": "Testing - Schmidt Enrollment",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Admin - Field Cleanup - Enrollments",
+        "Workflow - Enrollment",
+        "Operator View",
+        "Conquered Challenge",
+        "Fillout.com Form Info ONLY",
+        "Form Input Only",
+        "Level List",
+        "Automation - 001 - Needs Athlete Link",
+        "Automation - 002 - Needs Grade Band",
+        "Automation - 003 - Grade Band Refresh Needed",
+        "ENROLLMENTS - Needs Initial Level Assignment",
+        "042 - Needs Level Assignment",
+        "ENROLLMENTS - A5 - XP Award Ready",
+        "Everything - Alpha",
+        "Participation Certificate CSV Export",
+        "Contact Emails",
+        "Goal Conqured - Only"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Weeks",
+      "view_name": "Testing - Seeded Weeks",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Grid view"
+      ],
+      "optional": false
+    },
+    {
+      "table": "Zoom Attendance",
+      "view_name": "Testing - Schmidt Zoom Attendance",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Grid view"
+      ],
+      "optional": true
+    },
+    {
+      "table": "XP Events",
+      "view_name": "Admin - Orphan XP Events (no Enrollment)",
+      "status": "VIEW_MISSING",
+      "installed": false,
+      "match_kind": "missing",
+      "available_views": [
+        "Shooting Base",
+        "Homework",
+        "Video",
+        "Zoom",
+        "Streaks",
+        "Thresholds",
+        "Workflow - Required Fields Only",
+        "Possible Duplicates",
+        "Review View",
+        "XP Audit by Athlete",
+        "Admin - Duplicate Weekly Threshold XP",
+        "Grid view",
+        "XP Date Resolved",
+        "DUPLICATE REVIEW",
+        "Riley",
+        "Dayton",
+        "Fix Weekly Threshold Duplicates",
+        "CHECK - Weekly Threshold Duplicates copy"
+      ],
+      "optional": true
+    }
+  ]
+}

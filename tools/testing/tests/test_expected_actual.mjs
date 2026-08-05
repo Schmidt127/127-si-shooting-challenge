@@ -7,6 +7,11 @@ import assert from "node:assert/strict";
 import {
   verifyDailySubmissionBundle,
   verifyXpIdempotencyInventory,
+  verifySchmidtIdentity,
+  verifyHomeworkBundle,
+  verifyVideoFeedbackBundle,
+  verifyZoomAttendanceBundle,
+  airtableWritebackPolicy,
   expectedSourceKey,
   STATUSES,
 } from "../lib/expected_actual.js";
@@ -195,4 +200,88 @@ test("expectedSourceKey contracts match documented prefixes", () => {
 test("missing scenario is BLOCKED", () => {
   const result = verifyDailySubmissionBundle({ scenario: null });
   assert.equal(result.overall, STATUSES.BLOCKED);
+});
+
+test("schmidt identity PASS for linked active enrollment", () => {
+  const result = verifySchmidtIdentity({
+    athlete: { id: "recgqVstObQRzgXJF", fields: { "Active?": true } },
+    enrollment: {
+      id: ENR,
+      fields: {
+        "Active?": true,
+        Athlete: [{ id: "recgqVstObQRzgXJF" }],
+        "Grade Band": [{ id: "recK7BDVSpHy2ipCS" }],
+      },
+    },
+    foundationWeek: { id: WEEK, fields: {} },
+    submissions: [
+      {
+        id: SUB,
+        fields: {
+          "Count This Submission?": true,
+          "Duplicate Review Status": { name: "Count It" },
+        },
+      },
+    ],
+    wasRecords: [{ id: WAS, fields: { Enrollment: [{ id: ENR }], Week: [{ id: WEEK }] } }],
+    xpBySubmission: [
+      {
+        submissionId: SUB,
+        events: [{ id: "recXP", fields: { "Source Key": `SUBMISSION_XP|${SUB}`, "XP Points": 20 } }],
+      },
+    ],
+    homeworkCompletion: {
+      id: "recHC",
+      fields: {
+        Enrollment: [{ id: ENR }],
+        "Satisfactory?": true,
+        "Award Status": "Awarded",
+      },
+    },
+    homeworkXp: {
+      id: "recHWXP",
+      fields: { "Source Key": "HOMEWORK_XP|recHC", "XP Points": 35 },
+    },
+    videoFeedbackIds: ["recVF"],
+    zoomAttendanceIds: ["recZA"],
+    expect: { requirePublicStandingsVisibilityPolicy: true },
+  });
+  assert.equal(result.overall, STATUSES.PASS);
+});
+
+test("homework bundle PASS for HOMEWORK_XP source key", () => {
+  const result = verifyHomeworkBundle({
+    homeworkCompletion: {
+      id: "recHC",
+      fields: { Enrollment: [{ id: ENR }], "Satisfactory?": true },
+    },
+    xpEvents: [{ id: "recHWXP", fields: { "Source Key": "HOMEWORK_XP|recHC", "XP Points": 35 } }],
+    expect: { enrollmentId: ENR, expectXp: true, xpAmount: 35 },
+  });
+  assert.equal(result.overall, STATUSES.PASS);
+});
+
+test("video and zoom bundles stay NOT_TESTED without expectXp", () => {
+  const video = verifyVideoFeedbackBundle({
+    videoFeedback: { id: "recVF", fields: { Enrollment: [{ id: ENR }] } },
+    expect: { enrollmentId: ENR },
+  });
+  assert.equal(video.checks.find((c) => c.id === "video.enrollment").status, STATUSES.PASS);
+  assert.equal(video.checks.find((c) => c.id === "video.xp_count_for_source_key").status, STATUSES.NOT_TESTED);
+
+  const zoom = verifyZoomAttendanceBundle({
+    attendance: {
+      id: "recZA",
+      fields: { Enrollment: [{ id: ENR }], "Zoom Meeting": [{ id: "recM" }] },
+    },
+    expect: { enrollmentId: ENR },
+  });
+  assert.equal(zoom.checks.find((c) => c.id === "zoom.enrollment").status, STATUSES.PASS);
+});
+
+test("airtable writeback policy remains read-only", () => {
+  const policy = airtableWritebackPolicy();
+  assert.equal(policy.enabled, false);
+  assert.equal(policy.mode, "read_only");
+  assert.match(policy.reason, /competing writers/i);
 });

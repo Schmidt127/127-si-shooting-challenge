@@ -1,6 +1,6 @@
 # Shooting Challenge Testing Tools
 
-Read-only verification and offline harnesses for Automation **115** and XP/WAS integrity.
+Read-only verification and offline harnesses for Automation **115**, Schmidt identity, Testing views, E2E matrix, and XP/WAS integrity.
 
 ## Agent 4 QC suite (contracts + weekly email Live/Test regression)
 
@@ -19,11 +19,39 @@ node --test tools/testing/tests/
 
 Includes:
 
-- `test_115_offline.mjs` — runs the **real** `115-*.js` script under mocks (14 tests)
-- `test_expected_actual.mjs` — expected-versus-actual verifier (7 tests)
+- `test_115_offline.mjs` — runs the **real** `115-*.js` script under mocks
+- `test_expected_actual.mjs` — expected-versus-actual verifier (daily, identity, homework, video/zoom, writeback policy)
 - `test_117_offline.mjs` — Stage 17 orchestrator offline suite (separate owner area)
 
-## Expected-versus-actual verifier
+## SC-003 Testing views
+
+Spec + Omni install + checklist: `docs/testing/views/`
+
+```bash
+node tools/testing/verify_testing_views.mjs
+node tools/testing/verify_testing_views.mjs --require-installed
+```
+
+Airtable API **cannot** create views or read filter definitions. Verifier checks Meta API names + Data API row counts through existing views.
+
+## SC-004 Schmidt identity
+
+```bash
+node tools/testing/verify_schmidt_identity.mjs
+node tools/testing/probe_schmidt_control_center.mjs
+```
+
+## SC-005 executable E2E matrix
+
+Companion narrative matrix: `docs/V2_END_TO_END_TEST_MATRIX.md`
+
+```bash
+node tools/testing/run_e2e_matrix.mjs
+```
+
+Records preconditions / action / expected / actual / record IDs / pass-fail / cleanup for each safe row. Policy and email failure injects remain BLOCKED (SC-007/SC-008).
+
+## Expected-versus-actual verifier (SC-006)
 
 Library: `lib/expected_actual.js`  
 CLI: `verify_scenario.mjs`
@@ -38,7 +66,7 @@ node tools/testing/verify_scenario.mjs --live --scenario recPdyfYRFgDtpzQ8
 
 Statuses: `PASS` | `FAIL` | `BLOCKED` | `NOT_TESTED` | `MANUAL_REQUIRED`
 
-The verifier **never writes** to Airtable.
+The verifier **never writes** to Airtable. Pass/Fail auto-writeback stays disabled — see `airtableWritebackPolicy()` (competing writers on Testing Scenarios result fields).
 
 ## PROD read-only probe
 
@@ -60,7 +88,7 @@ node tools/testing/cleanup_orphan_legacy_rows.mjs --confirm-delete
 
 ## Scenario catalog
 
-`docs/testing/scenarios/` — 20 machine-readable fixtures + README.
+`docs/testing/scenarios/` — machine-readable fixtures + README.
 
 ## Safety
 

@@ -510,6 +510,542 @@ function expectedSourceKey(source, parts = {}) {
   }
 }
 
+/**
+ * Verify permanent Schmidt testing identity + pipeline links (read-only).
+ */
+function verifySchmidtIdentity(input = {}) {
+  const {
+    athlete,
+    enrollment,
+    foundationWeek = null,
+    scenario = null,
+    submissions = [],
+    wasRecords = [],
+    xpBySubmission = [],
+    homeworkCompletion = null,
+    homeworkXp = null,
+    videoFeedbackIds = [],
+    zoomAttendanceIds = [],
+    expect = {},
+  } = input;
+
+  const checks = [];
+  const athleteId = expect.athleteId || "recgqVstObQRzgXJF";
+  const enrollmentId = expect.enrollmentId || "recgP9qZYjAhE7NXm";
+  const foundationWeekId = expect.foundationWeekId || "recVDKiYATgzsfpmE";
+
+  if (!athlete) {
+    checks.push(
+      makeCheck({
+        id: "athlete.exists",
+        table: "Athletes",
+        expected: athleteId,
+        actual: null,
+        status: STATUSES.FAIL,
+        probable_cause: "Schmidt athlete missing",
+        suggested_next_action: "Recreate Testing Schmidt athlete in PROD",
+      })
+    );
+  } else {
+    checks.push(
+      compareEqual("athlete.id", {
+        table: "Athletes",
+        field: "id",
+        expected: athleteId,
+        actual: athlete.id,
+        record_ids: [athlete.id],
+      })
+    );
+    const active = field(athlete, "Active?");
+    checks.push(
+      compareEqual("athlete.active", {
+        table: "Athletes",
+        field: "Active?",
+        expected: true,
+        actual: Boolean(active),
+        record_ids: [athlete.id],
+      })
+    );
+  }
+
+  if (!enrollment) {
+    checks.push(
+      makeCheck({
+        id: "enrollment.exists",
+        table: "Enrollments",
+        expected: enrollmentId,
+        actual: null,
+        status: STATUSES.FAIL,
+        probable_cause: "Schmidt enrollment missing",
+        suggested_next_action: "Recreate Schmidt testing enrollment",
+      })
+    );
+    return summarize(checks, { kind: "schmidt_identity" });
+  }
+
+  checks.push(
+    compareEqual("enrollment.id", {
+      table: "Enrollments",
+      field: "id",
+      expected: enrollmentId,
+      actual: enrollment.id,
+      record_ids: [enrollment.id],
+    })
+  );
+  checks.push(
+    compareIncludes("enrollment.athlete", {
+      table: "Enrollments",
+      field: "Athlete",
+      expectedId: athleteId,
+      actualLinks: field(enrollment, "Athlete"),
+      record_ids: [enrollment.id, athleteId],
+    })
+  );
+  if (expect.requireActiveEnrollment !== false) {
+    checks.push(
+      compareEqual("enrollment.active", {
+        table: "Enrollments",
+        field: "Active?",
+        expected: true,
+        actual: Boolean(field(enrollment, "Active?")),
+        record_ids: [enrollment.id],
+      })
+    );
+  }
+
+  const band = linkIds(field(enrollment, "Grade Band"));
+  checks.push(
+    makeCheck({
+      id: "enrollment.grade_band",
+      table: "Enrollments",
+      field: "Grade Band",
+      expected: "non-empty",
+      actual: band,
+      status: band.length ? STATUSES.PASS : STATUSES.FAIL,
+      record_ids: [enrollment.id, ...band],
+      probable_cause: band.length ? null : "Grade Band missing on Schmidt enrollment",
+      suggested_next_action: band.length ? null : "Run/repair grade-band assignment (003)",
+    })
+  );
+
+  if (foundationWeek) {
+    checks.push(
+      compareEqual("foundation_week.id", {
+        table: "Weeks",
+        field: "id",
+        expected: foundationWeekId,
+        actual: foundationWeek.id,
+        record_ids: [foundationWeek.id],
+      })
+    );
+  } else {
+    checks.push(
+      makeCheck({
+        id: "foundation_week.id",
+        table: "Weeks",
+        expected: foundationWeekId,
+        actual: null,
+        status: STATUSES.FAIL,
+        probable_cause: "Foundation week missing",
+        suggested_next_action: "Reseed foundation week or update verifier IDs",
+      })
+    );
+  }
+
+  checks.push(
+    makeCheck({
+      id: "submission_path.count",
+      table: "Submissions",
+      expected: ">=1",
+      actual: submissions.length,
+      status: submissions.length >= 1 ? STATUSES.PASS : STATUSES.FAIL,
+      record_ids: submissions.map((s) => s.id).filter(Boolean),
+      probable_cause: submissions.length ? null : "No Schmidt submissions linked on enrollment",
+      suggested_next_action: submissions.length ? null : "Run 115 live or create Fillout-shaped submission",
+    })
+  );
+
+  let countedWithXp = 0;
+  let countedWithoutXp = 0;
+  for (const row of xpBySubmission) {
+    const sub = submissions.find((s) => s.id === row.submissionId);
+    const countIt =
+      Boolean(field(sub, "Count This Submission?")) ||
+      String(
+        typeof field(sub, "Duplicate Review Status") === "object"
+          ? field(sub, "Duplicate Review Status")?.name
+          : field(sub, "Duplicate Review Status") || ""
+      ) === "Count It";
+    const xpCount = (row.events || []).length;
+    if (countIt) {
+      if (xpCount === 1) countedWithXp += 1;
+      else countedWithoutXp += 1;
+    }
+  }
+  checks.push(
+    makeCheck({
+      id: "xp_path.counted_submissions_have_one_event",
+      table: "XP Events",
+      expected: "each counted submission has exactly one SUBMISSION_XP|{id}",
+      actual: { countedWithXp, countedWithoutXp },
+      status: countedWithoutXp === 0 && countedWithXp >= 1 ? STATUSES.PASS : countedWithXp >= 1 ? STATUSES.FAIL : STATUSES.NOT_TESTED,
+      record_ids: xpBySubmission.flatMap((r) => (r.events || []).map((e) => e.id)),
+      probable_cause: countedWithoutXp ? "Counted submission missing Submission Base XP" : null,
+      suggested_next_action: countedWithoutXp ? "Re-run 010 on affected Submission only" : null,
+    })
+  );
+
+  const wasGroups = {};
+  for (const w of wasRecords) {
+    const enr = linkIds(field(w, "Enrollment"))[0] || "";
+    const week = linkIds(field(w, "Week"))[0] || "";
+    const key = `${enr}|${week}`;
+    wasGroups[key] = wasGroups[key] || [];
+    wasGroups[key].push(w.id);
+  }
+  checks.push(
+    compareUnique("was.unique_enrollment_week", {
+      table: "Weekly Athlete Summary",
+      key: "Enrollment|Week",
+      groups: wasGroups,
+      record_ids: wasRecords.map((w) => w.id),
+    })
+  );
+  checks.push(
+    makeCheck({
+      id: "was_path.linked_from_enrollment",
+      table: "Weekly Athlete Summary",
+      expected: ">=1",
+      actual: wasRecords.length,
+      status: wasRecords.length >= 1 ? STATUSES.PASS : STATUSES.FAIL,
+      record_ids: wasRecords.map((w) => w.id),
+      probable_cause: wasRecords.length ? null : "No WAS linked on Schmidt enrollment",
+      suggested_next_action: wasRecords.length ? null : "Run WAS builder (031) for a counted Schmidt submission week",
+    })
+  );
+
+  if (homeworkCompletion) {
+    checks.push(
+      compareIncludes("homework.enrollment", {
+        table: "Homework Completions",
+        field: "Enrollment",
+        expectedId: enrollmentId,
+        actualLinks: field(homeworkCompletion, "Enrollment"),
+        record_ids: [homeworkCompletion.id],
+      })
+    );
+    const expectedHwKey = expectedSourceKey("Homework Completion", {
+      homeworkCompletionId: homeworkCompletion.id,
+    });
+    const hwXpKey = homeworkXp ? field(homeworkXp, "Source Key") : null;
+    if (field(homeworkCompletion, "Satisfactory?") && field(homeworkCompletion, "Award Status") === "Awarded") {
+      checks.push(
+        compareEqual("homework.xp_source_key", {
+          table: "XP Events",
+          field: "Source Key",
+          expected: expectedHwKey,
+          actual: hwXpKey,
+          record_ids: [homeworkCompletion.id, homeworkXp?.id].filter(Boolean),
+        })
+      );
+    } else {
+      checks.push(
+        makeCheck({
+          id: "homework.xp_source_key",
+          table: "XP Events",
+          expected: expectedHwKey,
+          actual: hwXpKey,
+          status: STATUSES.NOT_TESTED,
+          record_ids: [homeworkCompletion.id],
+          notes: "Homework not in Awarded/Satisfactory state for XP assert",
+        })
+      );
+    }
+  } else {
+    checks.push(
+      makeCheck({
+        id: "homework.path",
+        table: "Homework Completions",
+        expected: "optional live proof",
+        actual: null,
+        status: STATUSES.NOT_TESTED,
+        notes: "No homework completion provided to verifier",
+      })
+    );
+  }
+
+  checks.push(
+    makeCheck({
+      id: "video.path_presence",
+      table: "Video Feedback",
+      expected: ">=0 linked rows (presence check)",
+      actual: videoFeedbackIds.length,
+      status: videoFeedbackIds.length >= 1 ? STATUSES.PASS : STATUSES.NOT_TESTED,
+      record_ids: videoFeedbackIds,
+      notes: videoFeedbackIds.length ? null : "No Video Feedback linked yet",
+    })
+  );
+  checks.push(
+    makeCheck({
+      id: "zoom.path_presence",
+      table: "Zoom Attendance",
+      expected: ">=0 linked rows (presence check)",
+      actual: zoomAttendanceIds.length,
+      status: zoomAttendanceIds.length >= 1 ? STATUSES.PASS : STATUSES.NOT_TESTED,
+      record_ids: zoomAttendanceIds,
+      notes: zoomAttendanceIds.length ? null : "No Zoom Attendance linked yet",
+    })
+  );
+
+  if (scenario) {
+    checks.push(
+      compareIncludes("scenario.related_enrollment", {
+        table: "Testing Scenarios",
+        field: "Related Enrollment",
+        expectedId: enrollmentId,
+        actualLinks: field(scenario, "Related Enrollment"),
+        record_ids: [scenario.id],
+      })
+    );
+  }
+
+  if (expect.requirePublicStandingsVisibilityPolicy) {
+    checks.push(
+      makeCheck({
+        id: "policy.schmidt_visible_on_standings",
+        table: null,
+        field: null,
+        expected: "Schmidt remains visible on public standings",
+        actual: "policy_keep_visible",
+        status: STATUSES.PASS,
+        notes:
+          "Completion master SC-004: do not hide Schmidt unless Mike changes the decision. This check records policy compliance only.",
+      })
+    );
+  }
+
+  return summarize(checks, {
+    kind: "schmidt_identity",
+    enrollment_id: enrollmentId,
+    athlete_id: athleteId,
+  });
+}
+
+/**
+ * Verify homework completion → XP bundle (read-only).
+ */
+function verifyHomeworkBundle(input = {}) {
+  const {
+    homeworkCompletion,
+    xpEvents = [],
+    expect = {},
+  } = input;
+  const checks = [];
+  const enrollmentId = expect.enrollmentId || "recgP9qZYjAhE7NXm";
+
+  if (!homeworkCompletion) {
+    return summarize(
+      [
+        makeCheck({
+          id: "homework.exists",
+          table: "Homework Completions",
+          expected: "present",
+          actual: null,
+          status: STATUSES.BLOCKED,
+          probable_cause: "Homework Completion not provided",
+          suggested_next_action: "Pass HC record into verifier",
+        }),
+      ],
+      { kind: "homework_bundle" }
+    );
+  }
+
+  const hcId = homeworkCompletion.id;
+  checks.push(
+    compareIncludes("homework.enrollment", {
+      table: "Homework Completions",
+      field: "Enrollment",
+      expectedId: enrollmentId,
+      actualLinks: field(homeworkCompletion, "Enrollment"),
+      record_ids: [hcId],
+    })
+  );
+
+  const expectedKey = expectedSourceKey("Homework Completion", { homeworkCompletionId: hcId });
+  const matching = xpEvents.filter((e) => field(e, "Source Key") === expectedKey);
+  const expectXp = expect.expectXp !== false && Boolean(field(homeworkCompletion, "Satisfactory?"));
+
+  checks.push(
+    compareCount("homework.xp_count_for_source_key", {
+      table: "XP Events",
+      expected: expectXp ? 1 : 0,
+      actual: matching.length,
+      record_ids: matching.map((e) => e.id),
+    })
+  );
+
+  if (matching.length === 1 && expectXp) {
+    const pts = field(matching[0], "XP Points") ?? field(matching[0], "Active XP Points");
+    if (expect.xpAmount != null) {
+      checks.push(
+        compareEqual("homework.xp_amount", {
+          table: "XP Events",
+          field: "XP Points",
+          expected: expect.xpAmount,
+          actual: pts,
+          record_ids: [matching[0].id],
+        })
+      );
+    }
+  }
+
+  return summarize(checks, { kind: "homework_bundle", homework_completion_id: hcId });
+}
+
+/**
+ * Verify video feedback presence / XP key when awarded (read-only).
+ */
+function verifyVideoFeedbackBundle(input = {}) {
+  const { videoFeedback, xpEvents = [], expect = {} } = input;
+  const checks = [];
+  const enrollmentId = expect.enrollmentId || "recgP9qZYjAhE7NXm";
+
+  if (!videoFeedback) {
+    return summarize(
+      [
+        makeCheck({
+          id: "video.exists",
+          table: "Video Feedback",
+          expected: "present",
+          actual: null,
+          status: STATUSES.NOT_TESTED,
+          notes: "No Video Feedback record provided",
+        }),
+      ],
+      { kind: "video_feedback_bundle" }
+    );
+  }
+
+  const vfId = videoFeedback.id;
+  checks.push(
+    compareIncludes("video.enrollment", {
+      table: "Video Feedback",
+      field: "Enrollment",
+      expectedId: enrollmentId,
+      actualLinks: field(videoFeedback, "Enrollment"),
+      record_ids: [vfId],
+    })
+  );
+
+  const expectedKey = expectedSourceKey("Video Feedback", { videoFeedbackId: vfId });
+  const matching = xpEvents.filter((e) => field(e, "Source Key") === expectedKey);
+  if (expect.expectXp === true) {
+    checks.push(
+      compareCount("video.xp_count_for_source_key", {
+        table: "XP Events",
+        expected: 1,
+        actual: matching.length,
+        record_ids: matching.map((e) => e.id),
+      })
+    );
+  } else {
+    checks.push(
+      makeCheck({
+        id: "video.xp_count_for_source_key",
+        table: "XP Events",
+        expected: expect.expectXp === false ? 0 : "optional",
+        actual: matching.length,
+        status: STATUSES.NOT_TESTED,
+        record_ids: matching.map((e) => e.id),
+        notes: "Video XP assert skipped unless expect.expectXp=true",
+      })
+    );
+  }
+
+  return summarize(checks, { kind: "video_feedback_bundle", video_feedback_id: vfId });
+}
+
+/**
+ * Verify Zoom attendance enrollment link / optional XP key (read-only).
+ */
+function verifyZoomAttendanceBundle(input = {}) {
+  const { attendance, xpEvents = [], expect = {} } = input;
+  const checks = [];
+  const enrollmentId = expect.enrollmentId || "recgP9qZYjAhE7NXm";
+
+  if (!attendance) {
+    return summarize(
+      [
+        makeCheck({
+          id: "zoom.exists",
+          table: "Zoom Attendance",
+          expected: "present",
+          actual: null,
+          status: STATUSES.NOT_TESTED,
+          notes: "No Zoom Attendance record provided",
+        }),
+      ],
+      { kind: "zoom_attendance_bundle" }
+    );
+  }
+
+  const zaId = attendance.id;
+  checks.push(
+    compareIncludes("zoom.enrollment", {
+      table: "Zoom Attendance",
+      field: "Enrollment",
+      expectedId: enrollmentId,
+      actualLinks: field(attendance, "Enrollment"),
+      record_ids: [zaId],
+    })
+  );
+
+  const meetingId = linkIds(field(attendance, "Zoom Meeting"))[0];
+  if (expect.expectXp === true && meetingId) {
+    const expectedKey = expectedSourceKey("Zoom Attendance", {
+      meetingId,
+      enrollmentId,
+    });
+    const matching = xpEvents.filter((e) => field(e, "Source Key") === expectedKey);
+    checks.push(
+      compareCount("zoom.xp_count_for_source_key", {
+        table: "XP Events",
+        expected: 1,
+        actual: matching.length,
+        record_ids: matching.map((e) => e.id),
+      })
+    );
+  } else {
+    checks.push(
+      makeCheck({
+        id: "zoom.xp_count_for_source_key",
+        table: "XP Events",
+        expected: "optional",
+        actual: (xpEvents || []).length,
+        status: STATUSES.NOT_TESTED,
+        record_ids: [zaId],
+        notes: "Zoom XP assert skipped unless expect.expectXp=true and meeting linked",
+      })
+    );
+  }
+
+  return summarize(checks, { kind: "zoom_attendance_bundle", zoom_attendance_id: zaId });
+}
+
+/**
+ * Documented decision: Pass/Fail writeback stays off unless a single writer is approved.
+ */
+function airtableWritebackPolicy() {
+  return {
+    enabled: false,
+    mode: "read_only",
+    reason:
+      "Testing Scenarios Pass/Fail / Actual Result fields already have production writers (115 and operator edits). Automatic verifier writeback would create competing writers and ambiguous ownership.",
+    allowed_when:
+      "Mike explicitly designates one writeback owner automation/script and disables competing writers for those fields.",
+  };
+}
+
 export {
   STATUSES,
   linkIds,
@@ -521,6 +1057,11 @@ export {
   compareUnique,
   verifyDailySubmissionBundle,
   verifyXpIdempotencyInventory,
+  verifySchmidtIdentity,
+  verifyHomeworkBundle,
+  verifyVideoFeedbackBundle,
+  verifyZoomAttendanceBundle,
+  airtableWritebackPolicy,
   expectedSourceKey,
   summarize,
 };

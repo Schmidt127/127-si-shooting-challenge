@@ -1,0 +1,1015 @@
+{
+  "started_at": "2026-08-05T00:09:11.061Z",
+  "completed_at": "2026-08-05T00:09:16.204Z",
+  "base_id": "appn84sqPw03zEbTT",
+  "read_only": true,
+  "schmidt": {
+    "athlete": {
+      "id": "recgqVstObQRzgXJF",
+      "name": "Testing Schmidt",
+      "active": true
+    },
+    "enrollment": {
+      "id": "recgP9qZYjAhE7NXm",
+      "active": true,
+      "athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "gradeBand": [
+        "recK7BDVSpHy2ipCS"
+      ],
+      "primary": "Testing Schmidt",
+      "submissionIds": [
+        "rec9yoDZ3DMIEhi3I",
+        "recbAVGWg0OKT7FSX",
+        "recM0GbWfptu06da1",
+        "recaCcxDqtzFWjmyi",
+        "rec6g1nth8PlSwA6z",
+        "recuuTBgstSTGg2E3",
+        "recjt6QpUcprSIxAk",
+        "recz8udwv0cQ7i96E",
+        "recEQQ6ZGZYV1M7Lz"
+      ],
+      "wasIds": [
+        "recuxvGq2kY8WKcey"
+      ],
+      "xpLinkCount": 16,
+      "homeworkCompletionIds": [
+        "recrBnHbLvDpFyIeO",
+        "rec47dIoMkobsSM0T",
+        "rec7Nr2M69SwwgBV8"
+      ],
+      "assetLinkCount": 0,
+      "videoFeedbackIds": [
+        "recBqqe0uGMsqjUrF"
+      ],
+      "unlockIds": [],
+      "zoomAttendanceIds": [
+        "recfqsgM7zDobxsPf",
+        "receHkLl0cpLFLMVa",
+        "recJ8G7SOsk4XOsO9",
+        "recBA5Q6XcZDFU4dQ"
+      ]
+    },
+    "foundationWeek": {
+      "id": "recVDKiYATgzsfpmE",
+      "name": "Post - Testing Today",
+      "start": "2026-07-23T06:00:00.000Z",
+      "end": "2026-07-23T06:00:00.000Z",
+      "submissions": [
+        "recaCcxDqtzFWjmyi",
+        "rec6g1nth8PlSwA6z",
+        "recuuTBgstSTGg2E3",
+        "recjt6QpUcprSIxAk"
+      ],
+      "was": []
+    },
+    "scenario": {
+      "id": "recPdyfYRFgDtpzQ8",
+      "lastRunStatus": "Pass",
+      "lastRunAt": "2026-07-24T12:52:14.558Z",
+      "linkedSubmission": [
+        "recjt6QpUcprSIxAk"
+      ],
+      "relatedEnrollment": [
+        "recgP9qZYjAhE7NXm"
+      ]
+    },
+    "foundationWas": {
+      "ok": false,
+      "error": "Weekly Athlete Summary/rechWp330MqSgRWzN 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are ",
+      "status": 403
+    },
+    "homeworkCompletion": {
+      "ok": true,
+      "record": {
+        "id": "recrBnHbLvDpFyIeO",
+        "createdTime": "2026-08-04T21:23:27.000Z",
+        "fields": {
+          "Homework Completion Full Name": "Schmidt, Testing - 2025-2026 - SA - Mastery - Shooting Challenge Final Reflection Quiz - Week 10",
+          "Review Status": "Reviewed",
+          "Completion Status": "Submitted",
+          "Activity XP Display Label": "Unable to generate formula",
+          "Item Type": "Homework",
+          "Coach Feedback": "PROD test: Final Reflection Quiz reviewed and marked satisfactory for Automation 067 v2.0 continuation proof.",
+          "Parent Feedback Subject": "New Homework Feedback for Testing Schmidt",
+          "XP Events": [
+            "rec6xE4V1t0atiTIP"
+          ],
+          "Parent Feedback Ready?": true,
+          "Submitted File Review Summary": "Files: \n\nLinks:\n",
+          "Homework Completions RID": "recrBnHbLvDpFyIeO",
+          "Review Complete": true,
+          "Homework Completion Key": "\"Schmidt, Testing - 2025-2026\"|Week 10|SA - Mastery - Shooting Challenge Final Reflection Quiz",
+          "Base XP Awarded": 35,
+          "Created": "2026-08-04T21:23:27.000Z",
+          "Submission Date": "2026-08-04",
+          "Total Linked Submission Assets (rollup)": 0,
+          " Submission Asset Count": 0,
+          "Award Status": "Awarded",
+          "Week": [
+            "recrTwxqXz31fNZ7e"
+          ],
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Satisfactory?": true,
+          "Reviewed At": "2026-08-04T21:37:51.225Z",
+          "Reviewed By": "Mike Schmidt",
+          "Item Slot": "HW1",
+          "Homework": [
+            "rec8oexrgOV5OWCRw"
+          ],
+          "All Submitted Files Uploaded?": 0,
+          "Asset Key": "AST-recrBnHbLvDpFyIeO",
+          "Completion Summary": "Satisfactory",
+          "Upload Ready?": 0,
+          "Grade Band": [
+            "recK7BDVSpHy2ipCS"
+          ],
+          "Total Homework XP Awarded": 35,
+          "Source System": "Fillout",
+          "Final Reflection Quiz Submissions": [
+            "recxtTv0AD7G3XpGv",
+            "recFsN2KruSnerfns"
+          ],
+          "Full Athlete Name - Backward (from Enrollment)": [
+            "Schmidt, Testing - 2025-2026"
+          ],
+          "Total Uploaded Submission Assets (rollup)": 0,
+          "Asset Slot": "HW1"
+        }
+      }
+    },
+    "homeworkXp": {
+      "ok": true,
+      "record": {
+        "id": "rec6xE4V1t0atiTIP",
+        "createdTime": "2026-08-04T21:37:56.000Z",
+        "fields": {
+          "XP Activity Date Source": "Homework Submission Activity Date",
+          "XP Dedupe Key": "recgp9qzyjahe7nxm|homework_xp|recrbnhblvdpfyieo|homework completion",
+          "Awarded At": "2026-08-04T21:37:56.369Z",
+          "XP Reason Debug": "Homework XP created from Homework Completion recrBnHbLvDpFyIeO.\nAthlete: Schmidt, Testing - 2025-2026\nWeek: Week 10\nHomework: SA - Mastery - Shooting Challenge Final Reflection Quiz\nBase XP: 35\nExtra Credit XP: 0\nTotal XP: 35\nHomework Completion Key: \"Schmidt, Testing - 2025-2026\"|Week 10|SA - Mastery - Shooting Challenge Final Reflection Quiz\nSource Key: HOMEWORK_XP|recrBnHbLvDpFyIeO\nXP Activity Date Field: XP Activity Date\nXP Activity Date Source Field: XP Activity Date Source\nXP Activity Date Source: Homework Submission Activity Date\nXP Activity Date: 2026-08-04T00:00:00.000Z",
+          "Source Key": "HOMEWORK_XP|recrBnHbLvDpFyIeO",
+          "Active XP Points": 35,
+          "Active?": true,
+          "Week": [
+            "recrTwxqXz31fNZ7e"
+          ],
+          "XP Events RID": "rec6xE4V1t0atiTIP",
+          "XP Bucket": "Homework Completion",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Homework Completion": [
+            "recrBnHbLvDpFyIeO"
+          ],
+          "Enrollment Record ID": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week Record ID": [
+            "recrTwxqXz31fNZ7e"
+          ],
+          "Created": "2026-08-04T21:37:56.000Z",
+          "XP Dedupe Key Normalized": "recgp9qzyjahe7nxm|homework_xp|recrbnhblvdpfyieo|homework completion",
+          "Event Identity ID": "homework_xp|recrbnhblvdpfyieo",
+          "XP Event Display": "\"Schmidt, Testing - 2025-2026\" - Homework Completion - 35",
+          "XP Source": "Homework Completion",
+          "Weekly Summary Key": "\"Schmidt, Testing - 2025-2026\"|Week 10",
+          "Date - Homework Submission Activity": [
+            "2026-08-04"
+          ],
+          "XP Points": 35,
+          "Processed": true,
+          "XP Event RID": "rec6xE4V1t0atiTIP",
+          "XP Date Resolved": "2026-08-04T00:00:00.000Z",
+          "XP Activity Date": "2026-08-04T00:00:00.000Z",
+          "XP Reason Public": "Homework completed: SA - Mastery - Shooting Challenge Final Reflection Quiz"
+        }
+      }
+    },
+    "homeworkXpBySourceKey": [
+      {
+        "id": "rec6xE4V1t0atiTIP",
+        "fields": {
+          "Source Key": "HOMEWORK_XP|recrBnHbLvDpFyIeO",
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Homework Completion": [
+            "recrBnHbLvDpFyIeO"
+          ],
+          "XP Points": 35
+        }
+      }
+    ],
+    "submissions": [
+      {
+        "id": "rec9yoDZ3DMIEhi3I",
+        "shotTotal": 100,
+        "activityDate": "2026-07-17T03:00:00.000Z",
+        "week": [
+          "rec7fCckt1zj9CbmP"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recYQ10pOoFlApmjZ",
+          "recPdp5afnI70f2hd"
+        ]
+      },
+      {
+        "id": "recbAVGWg0OKT7FSX",
+        "shotTotal": 100,
+        "activityDate": "2026-07-18T03:00:00.000Z",
+        "week": [
+          "rec7fCckt1zj9CbmP"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recffMjiomQwV0VR4"
+        ]
+      },
+      {
+        "id": "recM0GbWfptu06da1",
+        "shotTotal": 100,
+        "activityDate": "2026-07-19T03:00:00.000Z",
+        "week": [
+          "rec7fCckt1zj9CbmP"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recQxiwjLOvQ8BzSB"
+        ]
+      },
+      {
+        "id": "recaCcxDqtzFWjmyi",
+        "shotTotal": 6000,
+        "activityDate": "2026-07-14T03:00:00.000Z",
+        "week": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recOqzhV4kTdsfzMf"
+        ]
+      },
+      {
+        "id": "rec6g1nth8PlSwA6z",
+        "shotTotal": 6000,
+        "activityDate": "2026-07-15T03:00:00.000Z",
+        "week": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recrYV19IqolkoMwT"
+        ]
+      },
+      {
+        "id": "recuuTBgstSTGg2E3",
+        "shotTotal": 6000,
+        "activityDate": "2026-07-13T03:00:00.000Z",
+        "week": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recOodD23MQrP1O9F"
+        ]
+      },
+      {
+        "id": "recjt6QpUcprSIxAk",
+        "shotTotal": 600,
+        "activityDate": "2026-07-16T03:00:00.000Z",
+        "week": [
+          "recVDKiYATgzsfpmE"
+        ],
+        "duplicateReviewStatus": "Count It",
+        "xpEvents": [
+          "recovVbiZynRUtDwF"
+        ]
+      },
+      {
+        "id": "recz8udwv0cQ7i96E",
+        "activityDate": "2026-07-23T00:00:00.000Z",
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "xpEvents": []
+      },
+      {
+        "id": "recEQQ6ZGZYV1M7Lz",
+        "activityDate": "2026-07-23T00:00:00.000Z",
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "xpEvents": []
+      }
+    ],
+    "wasRows": [
+      {
+        "id": "recuxvGq2kY8WKcey",
+        "enrollment": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "week": [
+          "recWeVrSabnsYaHc2"
+        ],
+        "shots": 18900,
+        "summaryKey": "ATH-recgqVstObQRzgXJF|2025-2026|2026-2027|Testing Week"
+      }
+    ],
+    "xpBySubmission": [
+      {
+        "submissionId": "rec9yoDZ3DMIEhi3I",
+        "sourceKey": "SUBMISSION_XP|rec9yoDZ3DMIEhi3I",
+        "events": [
+          {
+            "id": "recPdp5afnI70f2hd",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|rec9yoDZ3DMIEhi3I",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "rec9yoDZ3DMIEhi3I"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recbAVGWg0OKT7FSX",
+        "sourceKey": "SUBMISSION_XP|recbAVGWg0OKT7FSX",
+        "events": [
+          {
+            "id": "recffMjiomQwV0VR4",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|recbAVGWg0OKT7FSX",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "recbAVGWg0OKT7FSX"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recM0GbWfptu06da1",
+        "sourceKey": "SUBMISSION_XP|recM0GbWfptu06da1",
+        "events": [
+          {
+            "id": "recQxiwjLOvQ8BzSB",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|recM0GbWfptu06da1",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "recM0GbWfptu06da1"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recaCcxDqtzFWjmyi",
+        "sourceKey": "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+        "events": [
+          {
+            "id": "recOqzhV4kTdsfzMf",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|recaCcxDqtzFWjmyi",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "recaCcxDqtzFWjmyi"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "rec6g1nth8PlSwA6z",
+        "sourceKey": "SUBMISSION_XP|rec6g1nth8PlSwA6z",
+        "events": [
+          {
+            "id": "recrYV19IqolkoMwT",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|rec6g1nth8PlSwA6z",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "rec6g1nth8PlSwA6z"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recuuTBgstSTGg2E3",
+        "sourceKey": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+        "events": [
+          {
+            "id": "recOodD23MQrP1O9F",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|recuuTBgstSTGg2E3",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "recuuTBgstSTGg2E3"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recjt6QpUcprSIxAk",
+        "sourceKey": "SUBMISSION_XP|recjt6QpUcprSIxAk",
+        "events": [
+          {
+            "id": "recovVbiZynRUtDwF",
+            "fields": {
+              "Source Key": "SUBMISSION_XP|recjt6QpUcprSIxAk",
+              "Enrollment": [
+                "recgP9qZYjAhE7NXm"
+              ],
+              "Submission": [
+                "recjt6QpUcprSIxAk"
+              ],
+              "XP Points": 20
+            }
+          }
+        ]
+      },
+      {
+        "submissionId": "recz8udwv0cQ7i96E",
+        "sourceKey": "SUBMISSION_XP|recz8udwv0cQ7i96E",
+        "events": []
+      },
+      {
+        "submissionId": "recEQQ6ZGZYV1M7Lz",
+        "sourceKey": "SUBMISSION_XP|recEQQ6ZGZYV1M7Lz",
+        "events": []
+      }
+    ]
+  },
+  "viewsByTable": {
+    "Enrollments": [
+      {
+        "id": "viwA2S2uJQ4VuHKS2",
+        "name": "Admin - Field Cleanup - Enrollments",
+        "type": "grid"
+      },
+      {
+        "id": "viwejxZD6gx1mQjuV",
+        "name": "Workflow - Enrollment",
+        "type": "grid"
+      },
+      {
+        "id": "viwnfnJMPboWZzIpo",
+        "name": "Operator View",
+        "type": "grid"
+      },
+      {
+        "id": "viwFxNXNs8gbNR37Z",
+        "name": "Conquered Challenge",
+        "type": "grid"
+      },
+      {
+        "id": "viwUPQyy0F1dpTG5W",
+        "name": "Fillout.com Form Info ONLY",
+        "type": "grid"
+      },
+      {
+        "id": "viwwPxTk9YRRvoMcY",
+        "name": "Form Input Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwDpVY4ZPtG0gP4k",
+        "name": "Level List",
+        "type": "grid"
+      },
+      {
+        "id": "viwNV87i8BwPBxYlq",
+        "name": "Automation - 001 - Needs Athlete Link",
+        "type": "grid"
+      },
+      {
+        "id": "viwitHfNChfwjvFkr",
+        "name": "Automation - 002 - Needs Grade Band",
+        "type": "grid"
+      },
+      {
+        "id": "viwWfoiEzXoIIcBse",
+        "name": "Automation - 003 - Grade Band Refresh Needed",
+        "type": "grid"
+      },
+      {
+        "id": "viwbi08N7HxOKkbxc",
+        "name": "ENROLLMENTS - Needs Initial Level Assignment",
+        "type": "grid"
+      },
+      {
+        "id": "viwm9OgwkPKI2bii3",
+        "name": "042 - Needs Level Assignment",
+        "type": "grid"
+      },
+      {
+        "id": "viwRCz09bEvCTxOr9",
+        "name": "ENROLLMENTS - A5 - XP Award Ready",
+        "type": "grid"
+      },
+      {
+        "id": "viw38CUFg3rFFQ03n",
+        "name": "Everything - Alpha",
+        "type": "grid"
+      },
+      {
+        "id": "viweullFf8vycYUsH",
+        "name": "Participation Certificate CSV Export",
+        "type": "grid"
+      },
+      {
+        "id": "viw2x814kxfbEdHYr",
+        "name": "Contact Emails",
+        "type": "grid"
+      },
+      {
+        "id": "viw8EBQ4Qj2hlgf3v",
+        "name": "Goal Conqured - Only",
+        "type": "grid"
+      }
+    ],
+    "Athletes": [
+      {
+        "id": "viwLSS0Rb0lRPFZCW",
+        "name": "Athlete Table Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwXmpH8UIUHxz2l8",
+        "name": "Workflow Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwVS9AG1o14Y1uwG",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ],
+    "Submissions": [
+      {
+        "id": "viwtvJ6jRC344aaNa",
+        "name": "Assign Week Automation",
+        "type": "grid"
+      },
+      {
+        "id": "viwQaroOS7ymoWGLC",
+        "name": "Submissions - Weekly Athlete Summary Builder",
+        "type": "grid"
+      },
+      {
+        "id": "viwP0fsgmEzyZcKuU",
+        "name": "SUBMISSIONS - 5 - XP Award Ready",
+        "type": "grid"
+      },
+      {
+        "id": "viwPfXT0GwkI0VKV0",
+        "name": "Assign Enrollment to Submission",
+        "type": "grid"
+      },
+      {
+        "id": "viwQtHsbg5V9m8ds9",
+        "name": "Ready to Award XP",
+        "type": "grid"
+      },
+      {
+        "id": "viw2XXs7opOP2DYY3",
+        "name": "Homework Completion Create Queue",
+        "type": "grid"
+      },
+      {
+        "id": "viwzWRTwfwQrbz1NM",
+        "name": "002 - Submissions Ready for Homework Completion",
+        "type": "grid"
+      },
+      {
+        "id": "viwERev4p4vF1WtEt",
+        "name": "Workflow Check - Fields to Check Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwXGTg6oHInFPQku",
+        "name": "Workflow - Email Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwHOukunutCEKfZ5",
+        "name": "Workflow testing only",
+        "type": "grid"
+      },
+      {
+        "id": "viwFNxcOazCMT9Rvo",
+        "name": "Scenario 1",
+        "type": "grid"
+      },
+      {
+        "id": "viwdF2TnML0uSmQdL",
+        "name": "Homework 1 Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwEQACUZlZuN64mV",
+        "name": "Homework 2 Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwF65wFX1ZgLEfZz",
+        "name": "Video Upload Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwH01Z9UiwX4IMUZ",
+        "name": "Grid View - Everything",
+        "type": "grid"
+      },
+      {
+        "id": "viwtiN9dFVvf3soku",
+        "name": "Daily Submission Email Flow Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwAa7MlPtcBhqRml",
+        "name": "Todays Submissions",
+        "type": "grid"
+      },
+      {
+        "id": "viwnEPd9ZSLGq5gKd",
+        "name": "Yesterdays Submissions",
+        "type": "grid"
+      }
+    ],
+    "Submission Assets": [
+      {
+        "id": "viw13hPC2X2Cxcl6c",
+        "name": "020 - Ready to Link Homework Completion",
+        "type": "grid"
+      },
+      {
+        "id": "viwPlmXDSf78jt6Ht",
+        "name": "070 - Ready to Send Asset to Make",
+        "type": "grid"
+      },
+      {
+        "id": "viwZpKN6mLYMRK7oV",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ],
+    "XP Events": [
+      {
+        "id": "viwwOVqfRoiRhA8wZ",
+        "name": "Shooting Base",
+        "type": "grid"
+      },
+      {
+        "id": "viwxvBYCjalp1kOJv",
+        "name": "Homework",
+        "type": "grid"
+      },
+      {
+        "id": "viwWhmg404LSl9zfs",
+        "name": "Video",
+        "type": "grid"
+      },
+      {
+        "id": "viwo6QaxleVBop8Dl",
+        "name": "Zoom",
+        "type": "grid"
+      },
+      {
+        "id": "viwd2DjTwF9Qi9vkR",
+        "name": "Streaks",
+        "type": "grid"
+      },
+      {
+        "id": "viw6GHYU5GdX5EhRU",
+        "name": "Thresholds",
+        "type": "grid"
+      },
+      {
+        "id": "viwTGosig4vtV0ImK",
+        "name": "Workflow - Required Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwJAYg9yfAZ3FOFm",
+        "name": "Possible Duplicates",
+        "type": "grid"
+      },
+      {
+        "id": "viw7AlnknfZ2xjp2x",
+        "name": "Review View",
+        "type": "grid"
+      },
+      {
+        "id": "viweuVTaP7BWVXLtx",
+        "name": "XP Audit by Athlete",
+        "type": "grid"
+      },
+      {
+        "id": "viwXJaiAyRifGjmzC",
+        "name": "Admin - Duplicate Weekly Threshold XP",
+        "type": "grid"
+      },
+      {
+        "id": "viwxDeaSZwKZv3qna",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwKDEGG2PM2kK1GV",
+        "name": "XP Date Resolved",
+        "type": "grid"
+      },
+      {
+        "id": "viwYrrCCBDPyh44HF",
+        "name": "DUPLICATE REVIEW",
+        "type": "grid"
+      },
+      {
+        "id": "viwiyN9FImjBTB5NU",
+        "name": "Riley",
+        "type": "grid"
+      },
+      {
+        "id": "viw3inUS6g2hEDKEl",
+        "name": "Dayton",
+        "type": "grid"
+      },
+      {
+        "id": "viw28LDqQSR0E9mGS",
+        "name": "Fix Weekly Threshold Duplicates",
+        "type": "grid"
+      },
+      {
+        "id": "viw6TixZQ87bHuPja",
+        "name": "CHECK - Weekly Threshold Duplicates copy",
+        "type": "grid"
+      }
+    ],
+    "Athlete Achievement Unlocks": [
+      {
+        "id": "viw5Uwh9RbYSsMWpm",
+        "name": "CHECK - Streak Unlocks Created",
+        "type": "grid"
+      },
+      {
+        "id": "viwbXSbZjE2ksLspo",
+        "name": "CHECK - Streak Duplicate Checker",
+        "type": "grid"
+      },
+      {
+        "id": "viwGEmipO73JSfPFi",
+        "name": "Duplicate Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwjrFfhWXbljzchY",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwhHkNyEPe21oMbI",
+        "name": "Testing",
+        "type": "grid"
+      }
+    ],
+    "Streak Occurrences": [
+      {
+        "id": "viwyeqqq3dZpgOjI2",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwnbMf8WykzWqg2p",
+        "name": "Streak Duplicate Cleanup",
+        "type": "grid"
+      }
+    ],
+    "Weeks": [
+      {
+        "id": "viwWPy9HzIzMZHn6F",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ],
+    "Weekly Athlete Summary": [
+      {
+        "id": "viwZ3GvBXgbljXf7Q",
+        "name": "Sunday Review for Awards",
+        "type": "grid"
+      },
+      {
+        "id": "viwJaH4qwdmp5R0Me",
+        "name": "Workflow Check - Required Fields Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwAbrB2geNH4aJwj",
+        "name": "Workflow Check - Missing - Not Publishing",
+        "type": "grid"
+      },
+      {
+        "id": "viw1aOM2e4XBF1nxQ",
+        "name": "Workflow - Mandatory Fields",
+        "type": "grid"
+      },
+      {
+        "id": "viwCn2S99q8aCciXo",
+        "name": "EMPTY Fields Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwb500G9LTW76qSF",
+        "name": "Review View",
+        "type": "grid"
+      },
+      {
+        "id": "viwGlczA6iOB2CwSw",
+        "name": "030 - Assign Grade Band and Goal Record",
+        "type": "grid"
+      },
+      {
+        "id": "viw0dSw4RPFYkHcdg",
+        "name": "SUBMISSIONS - Weekly Athlete  Summary Builder",
+        "type": "grid"
+      },
+      {
+        "id": "viwRMMfMacGcjXZ5a",
+        "name": "Weekly Summary - A6 - Calculate Official Weekly XP",
+        "type": "grid"
+      },
+      {
+        "id": "viwigjO8WzotJjmB1",
+        "name": "Weekly Summary - A6 - Award Official Weekly XP Event",
+        "type": "grid"
+      },
+      {
+        "id": "viwF8Yc51CD3JhF36",
+        "name": "Weekly Summary - A5 - Needs Goal Setup",
+        "type": "grid"
+      },
+      {
+        "id": "viwUXbIuoYqdKxHaI",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwkuKF0uwyC0hE6D",
+        "name": "Grid Testing View",
+        "type": "grid"
+      },
+      {
+        "id": "viwb3YN5G8Md20q2K",
+        "name": "ADMIN - DUPLICATE SUMMARY CLEANUP - OK TO DELTE",
+        "type": "grid"
+      }
+    ],
+    "Homework Completions": [
+      {
+        "id": "viwbxi5La9rX8YQsS",
+        "name": "HOMEWORK GRADING QUEUE - FINAL",
+        "type": "grid"
+      },
+      {
+        "id": "viweDtbNeLm48qEO9",
+        "name": "Workflow - Check",
+        "type": "grid"
+      },
+      {
+        "id": "viwvZLpuKFyivsKVy",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viwAYZ4UTtdnbjjyL",
+        "name": "Grid view copy",
+        "type": "grid"
+      }
+    ],
+    "Video Feedback": [
+      {
+        "id": "viwx3YtYb9vcxOtlk",
+        "name": "Grading Video. In Order of Checkboxes",
+        "type": "grid"
+      },
+      {
+        "id": "viwQbstr9guphkhvA",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ],
+    "Zoom Meetings": [
+      {
+        "id": "viwEj0ikcuO2VefHQ",
+        "name": "Grid view",
+        "type": "grid"
+      },
+      {
+        "id": "viw5ALBxpEl6IXRju",
+        "name": "Meeting Agenda and Related Only",
+        "type": "grid"
+      },
+      {
+        "id": "viwh3KmPC0T8ICM7Y",
+        "name": "Create XP Event after Meeting",
+        "type": "grid"
+      }
+    ],
+    "Zoom Attendance": [
+      {
+        "id": "viwsAP0gT2sLzoRH6",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ],
+    "Testing Scenarios": [
+      {
+        "id": "viwzqKFx2vvXTEwBw",
+        "name": "Grid view",
+        "type": "grid"
+      }
+    ]
+  },
+  "viewRowChecks": [
+    {
+      "table": "Submissions",
+      "viewId": "viwHOukunutCEKfZ5",
+      "viewName": "Workflow testing only",
+      "rowCountSampled": 9,
+      "truncated": false,
+      "schmidtLinkedCount": 9,
+      "schmidtHints": {
+        "enrollmentIdPresent": false,
+        "athleteIdPresent": false,
+        "knownSubmissionPresent": true,
+        "knownWasPresent": false,
+        "knownHcPresent": false,
+        "knownScenarioPresent": false,
+        "knownWeekPresent": false
+      },
+      "suspectWideFilter": false
+    },
+    {
+      "table": "Athlete Achievement Unlocks",
+      "viewId": "viwhHkNyEPe21oMbI",
+      "viewName": "Testing",
+      "rowCountSampled": 0,
+      "truncated": false,
+      "schmidtLinkedCount": null,
+      "schmidtHints": {
+        "enrollmentIdPresent": false,
+        "athleteIdPresent": false,
+        "knownSubmissionPresent": false,
+        "knownWasPresent": false,
+        "knownHcPresent": false,
+        "knownScenarioPresent": false,
+        "knownWeekPresent": false
+      },
+      "suspectWideFilter": false
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "viewId": "viwkuKF0uwyC0hE6D",
+      "viewName": "Grid Testing View",
+      "rowCountSampled": 0,
+      "truncated": false,
+      "schmidtLinkedCount": null,
+      "schmidtHints": {
+        "enrollmentIdPresent": false,
+        "athleteIdPresent": false,
+        "knownSubmissionPresent": false,
+        "knownWasPresent": false,
+        "knownHcPresent": false,
+        "knownScenarioPresent": false,
+        "knownWeekPresent": false
+      },
+      "suspectWideFilter": false
+    }
+  ]
+}
