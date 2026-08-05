@@ -2,6 +2,10 @@
 /**
  * Read-only Perfect Week PROD fixture verifier.
  *
+ * Method: LIVE_SAME_DAY_CALENDAR (see docs/testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md).
+ * Historical backfill is not countable (Submitted At = CREATED_TIME()).
+ * Perfect Week Test Override? must remain unchecked (inert; does not bypass same-day).
+ *
  *   node tools/testing/verify_perfect_week_fixtures.mjs
  *   node tools/testing/verify_perfect_week_fixtures.mjs --manifest path/to/PWTEST-MANIFEST.json
  *   node tools/testing/verify_perfect_week_fixtures.mjs --offline  (fixture JSON only, no Airtable)
@@ -199,8 +203,15 @@ async function main() {
 
   const summary = {
     batchKey: manifest.batchKey,
+    fixtureMethod: manifest.fixtureMethod || "LIVE_SAME_DAY_CALENDAR",
     baseId,
     generatedAt: new Date().toISOString(),
+    pilotProof: manifest.pilotProof || null,
+    notes: [
+      "Historical Activity Date backfill is non-countable (Submitted At = CREATED_TIME).",
+      "Perfect Week Test Override? must not be used.",
+      "Automation 057 has no test-mode path.",
+    ],
     counts: {
       PASS: results.filter((r) => r.status === "PASS").length,
       FAIL: results.filter((r) => r.status === "FAIL").length,

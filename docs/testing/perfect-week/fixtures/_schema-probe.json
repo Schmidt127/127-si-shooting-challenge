@@ -1,0 +1,3067 @@
+{
+  "baseId": "appTetnuCZlCZdTCT",
+  "tables": {
+    "Weeks": {
+      "id": "tblcsKugv1cla36A6",
+      "fields": [
+        {
+          "name": "Week Name",
+          "type": "singleLineText",
+          "id": "fldvNgDbrO0yWuWrr"
+        },
+        {
+          "name": "Start Date",
+          "type": "dateTime",
+          "id": "fldbvSVciJzE7DnxF",
+          "options": {}
+        },
+        {
+          "name": "End Date",
+          "type": "dateTime",
+          "id": "fldKvPoOKSDcvuii7",
+          "options": {}
+        },
+        {
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "id": "fld8hxWh7fATBLghL",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "id": "fld6YRmWGdKPQk8Vg",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Athlete Achievement Unlocks",
+          "type": "multipleRecordLinks",
+          "id": "fldgUOHI9XmxtmWmD",
+          "options": {
+            "linkedTableId": "tblyT2AQo1JbvmvZS",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Homework 2",
+          "type": "singleLineText",
+          "id": "fldMnijLN0ozCGhjb"
+        },
+        {
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "id": "fldBCFzjforqsWunR",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Submission Assets",
+          "type": "singleLineText",
+          "id": "fldo906P9t7nj9xmn"
+        },
+        {
+          "name": "Week Key",
+          "type": "formula",
+          "id": "fldHpANf8BGrg64kb",
+          "options": {}
+        },
+        {
+          "name": "Program Instance",
+          "type": "multipleRecordLinks",
+          "id": "fldBsA60l4ONazDba",
+          "options": {
+            "linkedTableId": "tblMfALZa4YYUy70P",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        }
+      ],
+      "allFieldNames": [
+        "Week Name",
+        "Record ID",
+        "Start Date",
+        "End Date",
+        "Submissions",
+        "Award Recipients",
+        "Weekly Athlete Summary",
+        "Achievements",
+        "Athlete Achievement Unlocks",
+        "XP Events",
+        "Homework 2",
+        "Homework Completions",
+        "FBC Curriculum - SYNC",
+        "Video Feedback",
+        "Submission Assets",
+        "Zoom Meetings",
+        "Week Key",
+        "XP Events copy",
+        "Streak Occurrences",
+        "Program Instance"
+      ]
+    },
+    "Enrollments": {
+      "id": "tbl3PFmwbRoabu1YV",
+      "fields": [
+        {
+          "name": "Full Athlete Name - Backward",
+          "type": "formula",
+          "id": "fldnRDkfubz7p3gi4",
+          "options": {}
+        },
+        {
+          "name": "Full Athlete Name",
+          "type": "formula",
+          "id": "fldVLV5YMCB2CHhai",
+          "options": {}
+        },
+        {
+          "name": "Level Status",
+          "type": "singleSelect",
+          "id": "fldE6vqsroUqVXqCP",
+          "options": {
+            "choices": [
+              "Pending",
+              "Processing",
+              "Assigned",
+              "Error",
+              "Gate Blocked"
+            ]
+          }
+        },
+        {
+          "name": "Meets Gate: Submissions",
+          "type": "formula",
+          "id": "fldPjhNtkxEqM4QDk",
+          "options": {}
+        },
+        {
+          "name": "Meets Gate: Homework",
+          "type": "formula",
+          "id": "flduFi1oyDDsOBZLE",
+          "options": {}
+        },
+        {
+          "name": "Current Level - Public Facing Display",
+          "type": "formula",
+          "id": "fldYmEdB2mWoQqYNQ",
+          "options": {}
+        },
+        {
+          "name": "Athlete",
+          "type": "multipleRecordLinks",
+          "id": "fld7TFNgzmESOhTOu",
+          "options": {
+            "linkedTableId": "tblTluxBr3DcVrh6h",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Athlete First Name",
+          "type": "singleLineText",
+          "id": "fld4wGsfJKp7x4Bjd"
+        },
+        {
+          "name": "Athlete Last Name",
+          "type": "singleLineText",
+          "id": "fldpXNOzRflbkgVwV"
+        },
+        {
+          "name": "Athlete ID Lookup",
+          "type": "multipleLookupValues",
+          "id": "fldyO2uatMRG0YT6Q",
+          "options": {}
+        },
+        {
+          "name": "Athlete Match Key Lookup",
+          "type": "multipleLookupValues",
+          "id": "fldzrnixaUB5FDc48",
+          "options": {}
+        },
+        {
+          "name": "Enrollment Key",
+          "type": "formula",
+          "id": "fldHlwaNU793Uojti",
+          "options": {}
+        },
+        {
+          "name": "Athlete Match Status",
+          "type": "singleSelect",
+          "id": "fldk9rjaC9lvauCjr",
+          "options": {
+            "choices": [
+              "Pending",
+              "Processing",
+              "Linked",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Gender",
+          "type": "singleSelect",
+          "id": "fldL8nWI03ESXQbOj",
+          "options": {
+            "choices": [
+              "Male",
+              "Female"
+            ]
+          }
+        },
+        {
+          "name": "School Name Lookup",
+          "type": "multipleLookupValues",
+          "id": "fld9UrsPNK8cH6Irw",
+          "options": {}
+        },
+        {
+          "name": "Parent First Name",
+          "type": "singleLineText",
+          "id": "fldb0m8iUTNRkHkZg"
+        },
+        {
+          "name": "Parent Last Name",
+          "type": "singleLineText",
+          "id": "fldIvtRxvN4Bsixeh"
+        },
+        {
+          "name": "Parent Email",
+          "type": "email",
+          "id": "fldu2bZt8776rNYZ0"
+        },
+        {
+          "name": "Athlete Folder Name",
+          "type": "formula",
+          "id": "fld3YquzsXawXKcyB",
+          "options": {}
+        },
+        {
+          "name": "Athlete Email",
+          "type": "email",
+          "id": "fldY4U6QlqLc0GMLA"
+        },
+        {
+          "name": "Athlete Cell Number",
+          "type": "phoneNumber",
+          "id": "fld71CIyihF3TAHWq"
+        },
+        {
+          "name": "Athlete Email - Cleaned",
+          "type": "formula",
+          "id": "fldCAx18QSO4sIsfP",
+          "options": {}
+        },
+        {
+          "name": "Parent Email - Cleaned",
+          "type": "formula",
+          "id": "fldDaqe8xOpDoQo7S",
+          "options": {}
+        },
+        {
+          "name": "Parent Cell Number",
+          "type": "phoneNumber",
+          "id": "fld31gfPJGHT0KJ67"
+        },
+        {
+          "name": "Active?",
+          "type": "checkbox",
+          "id": "fldEtpoueSb3dDSit",
+          "options": {}
+        },
+        {
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "id": "fldUDk0RrT58rKgQ5",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Total Shots Submitted",
+          "type": "rollup",
+          "id": "fld4Jni2Ec7yatLsr",
+          "options": {}
+        },
+        {
+          "name": "Total Makes Submitted",
+          "type": "rollup",
+          "id": "fldrouKwocjULrb3b",
+          "options": {}
+        },
+        {
+          "name": "Program Instance",
+          "type": "multipleRecordLinks",
+          "id": "fldVMwSfH8r9S0afA",
+          "options": {
+            "linkedTableId": "tblMfALZa4YYUy70P",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Mailing Address Submitted",
+          "type": "multilineText",
+          "id": "fldoFf0Sm8ruGgWrz"
+        },
+        {
+          "name": "Physical Address Submitted",
+          "type": "multilineText",
+          "id": "fld8luvFTA4599iWl"
+        },
+        {
+          "name": "City Submitted",
+          "type": "singleLineText",
+          "id": "flddlRLfuQ393fWrt"
+        },
+        {
+          "name": "Zip Code Submitted",
+          "type": "singleLineText",
+          "id": "fldfgRQ1jKGHVCl5o"
+        },
+        {
+          "name": "Parent Full Name Submitted",
+          "type": "formula",
+          "id": "fldBJ2pwawWFHpstQ",
+          "options": {}
+        },
+        {
+          "name": "Athlete Headshot",
+          "type": "multipleAttachments",
+          "id": "fldyR7IYFX9CY34XK",
+          "options": {
+            "isReversed": false
+          }
+        },
+        {
+          "name": "Parent Email Subject",
+          "type": "singleLineText",
+          "id": "fldWYUYAOudslfXa0"
+        },
+        {
+          "name": "Parent Email HTML",
+          "type": "multilineText",
+          "id": "fldt3egwi2fqgpDY8"
+        },
+        {
+          "name": "Welcome Email Status",
+          "type": "singleSelect",
+          "id": "fld8q4102HlqFssGt",
+          "options": {
+            "choices": [
+              "Pending Build",
+              "Ready",
+              "Sent",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Welcome Email Sent At",
+          "type": "dateTime",
+          "id": "fldOtPlE3QeBTkua0",
+          "options": {}
+        },
+        {
+          "name": "Welcome Email Error",
+          "type": "multilineText",
+          "id": "fldlTvIjixfP4bfvL"
+        },
+        {
+          "name": "Welcome Email To",
+          "type": "formula",
+          "id": "fldj7JuUQiiRUqo5j",
+          "options": {}
+        },
+        {
+          "name": "Welcome Email Ready?",
+          "type": "formula",
+          "id": "fldoXWryfQ32rsx3x",
+          "options": {}
+        },
+        {
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "id": "fldGMZrlmjEhzueQ5",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Athlete Achievement Unlocks",
+          "type": "multipleRecordLinks",
+          "id": "fldelG3oIUxOwE7dv",
+          "options": {
+            "linkedTableId": "tblyT2AQo1JbvmvZS",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Grade Band Label",
+          "type": "multipleLookupValues",
+          "id": "fldpOdEjLc64L3BZ5",
+          "options": {}
+        },
+        {
+          "name": "Total Shots Counted",
+          "type": "rollup",
+          "id": "fldaD4H9PBE8VVWG3",
+          "options": {}
+        },
+        {
+          "name": "Grade Band Status",
+          "type": "singleSelect",
+          "id": "fldfZQwSek9WL8Pec",
+          "options": {
+            "choices": [
+              "Pending",
+              "Processing",
+              "Assigned",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "DELETE PROBABLY - Level Name with Color (from Current Level)",
+          "type": "multipleLookupValues",
+          "id": "fld3V0eLW4YOyNkbq",
+          "options": {}
+        },
+        {
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "id": "fldUC0bYq2Bws0q5s",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Submission Assets - Enrollment",
+          "type": "multipleRecordLinks",
+          "id": "fldLxLveNnVN93pia",
+          "options": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Program Instance Name Only",
+          "type": "multipleLookupValues",
+          "id": "flde31eImaWCUgNPb",
+          "options": {}
+        },
+        {
+          "name": "Total Submissions",
+          "type": "count",
+          "id": "fldewNyKEMDMt9Ger",
+          "options": {}
+        },
+        {
+          "name": "Total Homework Completions",
+          "type": "count",
+          "id": "fldHEMvcX18c99Adk",
+          "options": {}
+        },
+        {
+          "name": "Total Video Submissions",
+          "type": "count",
+          "id": "fldHI9QxnerBFkKzK",
+          "options": {}
+        },
+        {
+          "name": "Total Zoom Attendances",
+          "type": "count",
+          "id": "fldvEHpfO4ModNQoJ",
+          "options": {}
+        },
+        {
+          "name": "Gate Minimum: Submissions",
+          "type": "multipleLookupValues",
+          "id": "fld7FaC0osGX9CxGp",
+          "options": {}
+        },
+        {
+          "name": "Gate Minimum: Homework",
+          "type": "multipleLookupValues",
+          "id": "fldXhkxJ9Po3E5CTb",
+          "options": {}
+        },
+        {
+          "name": "Current Shooting Streak Status",
+          "type": "singleSelect",
+          "id": "fldMEJlsJobYGhQln",
+          "options": {
+            "choices": [
+              "Active",
+              "Broken",
+              "No Submissions"
+            ]
+          }
+        },
+        {
+          "name": "Run Shot Milestone Check?",
+          "type": "checkbox",
+          "id": "fldwsuKGoypFBn2w4",
+          "options": {}
+        },
+        {
+          "name": "Target Goal Shots",
+          "type": "multipleLookupValues",
+          "id": "fldf15uPDVk174UrY",
+          "options": {}
+        },
+        {
+          "name": "Goal Met?",
+          "type": "formula",
+          "id": "fldhmHDeQwtRt2Aqk",
+          "options": {}
+        },
+        {
+          "name": "Gate Enabled Status",
+          "type": "formula",
+          "id": "fldTAalsTtSVumJF9",
+          "options": {}
+        },
+        {
+          "name": "Public Progression Status",
+          "type": "formula",
+          "id": "fldMidMyM0NS0iIOy",
+          "options": {}
+        },
+        {
+          "name": "Public Missing Submissions",
+          "type": "formula",
+          "id": "fldid87attaGLbc92",
+          "options": {}
+        },
+        {
+          "name": "Public Missing Homework",
+          "type": "formula",
+          "id": "fldozKoW3osO7eORu",
+          "options": {}
+        },
+        {
+          "name": "Goal Met Date",
+          "type": "multipleLookupValues",
+          "id": "fldohCsXsrU4hYqrJ",
+          "options": {}
+        },
+        {
+          "name": "Final Reflection Quiz Submissions",
+          "type": "multipleRecordLinks",
+          "id": "fldWRTWkBAvUu1ECx",
+          "options": {
+            "linkedTableId": "tbl6ORxLs192mXEWp",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Zoom Attendance",
+          "type": "multipleRecordLinks",
+          "id": "fldfMmRhD7Ubyhs5r",
+          "options": {
+            "linkedTableId": "tblfwbt6aCDCM5gUz",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        }
+      ],
+      "allFieldNames": [
+        "Full Athlete Name - Backward",
+        "Full Athlete Name",
+        "Level Status",
+        "Current Level",
+        "Meets Gate: Submissions",
+        "Meets Gate: Homework",
+        "Meets Gate: Videos",
+        "Meets Gate: Zoom Meetings",
+        "Meets Gate: Streak",
+        "Gate Passes",
+        "Level Recalc Needed?",
+        "Current Level - Public Facing Display",
+        "Gate Failure Summary - Formula",
+        "Gate Summary",
+        "Athlete",
+        "Athlete First Name",
+        "Athlete Last Name",
+        "XP Events",
+        "Registratioin Referrer",
+        "Athlete ID Lookup",
+        "Athlete Match Key Lookup",
+        "Enrollment Key",
+        "Athlete Match Status",
+        "Gender",
+        "Grade",
+        "School",
+        "School Mascot Lookup",
+        "School Name Lookup",
+        "State",
+        "Parent First Name",
+        "Parent Last Name",
+        "Parent Email",
+        "Athlete Folder Name",
+        "School Year",
+        "Athlete Email",
+        "Athlete Cell Number",
+        "Athlete Email - Cleaned",
+        "Parent Email - Cleaned",
+        "Parent Cell Number",
+        "Active?",
+        "Submissions",
+        "Total Shots Submitted",
+        "Total Makes Submitted",
+        "Total 2PT Attempted",
+        "Total 2PT Made",
+        "Total 3PT Attempted",
+        "Total 3PT Made",
+        "Total FT Attempted",
+        "Total FT Made",
+        "Overall FG Attempted",
+        "Overall FG Made",
+        "Overall FG %",
+        "Overall 2PT %",
+        "Overall 3PT %",
+        "Overall FT %",
+        "Program Instance",
+        "Mailing Address Submitted",
+        "Physical Address Submitted",
+        "City Submitted",
+        "Zip Code Submitted",
+        "Registration Source",
+        "Parent Full Name Submitted",
+        "Registered At",
+        "Athlete Headshot",
+        "Parent Email Subject",
+        "Parent Email HTML",
+        "Welcome Email Status",
+        "Welcome Email Sent At",
+        "Welcome Email Error",
+        "Welcome Email To",
+        "Welcome Email Ready?",
+        "Weekly Athlete Summary",
+        "Athlete Achievement Unlocks",
+        "Grade Band",
+        "Last Grade Used for Grade Band",
+        "Grade Band Label",
+        "Total Shots Counted",
+        "Price Paid to Stripe",
+        "Grade Band Refresh Needed",
+        "Grade Band Status",
+        "Lifetime XP Manual Adjustments",
+        "Lifetime XP Earned",
+        "Lifetime XP Total",
+        "Level Sort Order - For Softr",
+        "DELETE PROBABLY - Level Name with Color (from Current Level)",
+        "Current Level XP Required",
+        "Next Level",
+        "Current Level XP Ceiling",
+        "Next Level XP Required",
+        "XP Progress in Current Level",
+        "XP Needed for Next Level",
+        "Homework Completions",
+        "Submission Assets - Enrollment",
+        "Program Instance Name Only",
+        "Record Id",
+        "Zoom Meetings",
+        "Video Feedback",
+        "Award Recipients",
+        "Total Submissions",
+        "Total Homework Completions",
+        "Total Video Submissions",
+        "Total Zoom Attendances",
+        "Level Gate Rule",
+        "Gate Minimum: Submissions",
+        "Gate Minimum: Homework",
+        "Gate Minimum: Videos",
+        "Gate Minimum: Zoom Meetings",
+        "Gate Minimum: Streak Days",
+        "Gate Enabled?",
+        "Gate-Test Eligible Level",
+        "Gate Debug Summary",
+        "Streak Occurrences",
+        "Current Shooting Streak",
+        "Current Shooting Streak As Of",
+        "Current Shooting Streak Status",
+        "Current Shooting Streak Last Checked At",
+        "Run Shot Milestone Check?",
+        "Longest Streak Days",
+        "Target Goal Shots",
+        "Goal Met?",
+        "Gate Enabled Status",
+        "Public Progression Status",
+        "Public Missing Submissions",
+        "Public Missing Homework",
+        "Public Missing Videos",
+        "Public Missing Zoom",
+        "Public Missing Streak",
+        "Public Gate Missing Reason",
+        "Goal Met Date",
+        "Final Reflection Quiz Submissions",
+        "Testing Scenarios",
+        "Zoom Attendance",
+        "Public Profile Enabled",
+        "Public Profile Slug"
+      ]
+    },
+    "Submissions": {
+      "id": "tblEVjVpGGlPTsYSt",
+      "fields": [
+        {
+          "name": "Submission Full Name",
+          "type": "formula",
+          "id": "fldzxmk634hDNrtiB",
+          "options": {}
+        },
+        {
+          "name": "Enrollment",
+          "type": "multipleRecordLinks",
+          "id": "fld0fKiO62UiztNQH",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Activity Date",
+          "type": "date",
+          "id": "fldpkkSBsx8kQRZos",
+          "options": {}
+        },
+        {
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "id": "fldA3fpXWckngZ6g1",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Submission Assets",
+          "type": "multipleRecordLinks",
+          "id": "fld1kilHu3o3Qtlpv",
+          "options": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Submission Key",
+          "type": "formula",
+          "id": "fldpO1vUHB675k6nm",
+          "options": {}
+        },
+        {
+          "name": "Athlete Name",
+          "type": "multipleLookupValues",
+          "id": "fldrylk2Fy2G8hUst",
+          "options": {}
+        },
+        {
+          "name": "Submitted At",
+          "type": "formula",
+          "id": "fld7JJ7neI0YYmB7i",
+          "options": {}
+        },
+        {
+          "name": "Shot Total",
+          "type": "number",
+          "id": "fldtAIg2vtfWkyPPk",
+          "options": {}
+        },
+        {
+          "name": "Homework Name 1",
+          "type": "multipleRecordLinks",
+          "id": "fldBuHIpIwxTy60js",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "HW 1 - Parent Note",
+          "type": "multilineText",
+          "id": "fldeygBOVv5bHnkfe"
+        },
+        {
+          "name": "HW 2 - Parent Note",
+          "type": "multilineText",
+          "id": "fldOgBoi9vbzX6B23"
+        },
+        {
+          "name": "Submission Stat Mode",
+          "type": "formula",
+          "id": "fldAw7146HvSLBxGF",
+          "options": {}
+        },
+        {
+          "name": "Total Shots Canonical",
+          "type": "formula",
+          "id": "fld98cbVpYc5lqrN6",
+          "options": {}
+        },
+        {
+          "name": "Submission Has Detailed Stats?",
+          "type": "formula",
+          "id": "fld2onHVrtviMDOP8",
+          "options": {}
+        },
+        {
+          "name": "Total Shots Counted",
+          "type": "formula",
+          "id": "fldAqC1oUKKFZdU3p",
+          "options": {}
+        },
+        {
+          "name": "Duplicate Key",
+          "type": "formula",
+          "id": "fld8c3ay4tdaQXdSa",
+          "options": {}
+        },
+        {
+          "name": "Duplicate Review Status",
+          "type": "singleSelect",
+          "id": "fldteuTQmE6z5ep2g",
+          "options": {
+            "choices": [
+              "Needs Review",
+              "Count It",
+              "Exclude It"
+            ]
+          }
+        },
+        {
+          "name": "Count This Submission?",
+          "type": "formula",
+          "id": "fld1gQ2c04pndnTKe",
+          "options": {}
+        },
+        {
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "id": "fldZXSYorbG7BdDEo",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Daily Email HTML",
+          "type": "multilineText",
+          "id": "fldqEXmSicovfwoAA"
+        },
+        {
+          "name": "Activity Date Is Future?",
+          "type": "formula",
+          "id": "fldyFAjhbfaC4LlPb",
+          "options": {}
+        },
+        {
+          "name": "Needs Week Assignment?",
+          "type": "formula",
+          "id": "fld8D24l3EqGzBqqK",
+          "options": {}
+        },
+        {
+          "name": "Week Assignment Status",
+          "type": "formula",
+          "id": "fldVbtRu7O8CtaS06",
+          "options": {}
+        },
+        {
+          "name": "Ready for Weekly Summary?",
+          "type": "formula",
+          "id": "fldxIoYn3PeIX314F",
+          "options": {}
+        },
+        {
+          "name": "XP Award Status",
+          "type": "singleSelect",
+          "id": "fldHss7nASESJFI8Z",
+          "options": {
+            "choices": [
+              "Pending",
+              "Processing",
+              "Awarded",
+              "Error",
+              "Completed",
+              "No Shots Submitted"
+            ]
+          }
+        },
+        {
+          "name": "XP Notes",
+          "type": "multilineText",
+          "id": "fldjiftqj4mhyRMQL"
+        },
+        {
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "id": "fldBRAvpbYfBSPyZH",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Athlete",
+          "type": "multipleRecordLinks",
+          "id": "fldfWvl8g0JO5ObuB",
+          "options": {
+            "linkedTableId": "tblTluxBr3DcVrh6h",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Video Feedback Note",
+          "type": "multilineText",
+          "id": "fld4BMvxuViJL9VAx"
+        },
+        {
+          "name": "Daily Email Version",
+          "type": "singleLineText",
+          "id": "fldsc3K0We5VohQTS"
+        },
+        {
+          "name": "Attachment Upload Status",
+          "type": "singleSelect",
+          "id": "fldkPLE3eLyQZsTCq",
+          "options": {
+            "choices": [
+              "Processing",
+              "Sent",
+              "Error",
+              "No Files"
+            ]
+          }
+        },
+        {
+          "name": "Ready to Send Attachments to Make?",
+          "type": "formula",
+          "id": "fldNuRzPUPYEpaHyG",
+          "options": {}
+        },
+        {
+          "name": "Daily Email Subject",
+          "type": "singleLineText",
+          "id": "fldV5jYeKARHR5CBD"
+        },
+        {
+          "name": "Daily Email To",
+          "type": "singleLineText",
+          "id": "fldek7wYvoMXYyVgu"
+        },
+        {
+          "name": "Daily Email Status",
+          "type": "singleSelect",
+          "id": "fld23EZnHgQMa79jV",
+          "options": {
+            "choices": [
+              "Error",
+              "Ready",
+              "Sending",
+              "Sent",
+              "Sent from Make.com",
+              "Sent to Make.com"
+            ]
+          }
+        },
+        {
+          "name": "Daily Email Sent At",
+          "type": "multilineText",
+          "id": "fldwgak9nLSYiUGXL"
+        },
+        {
+          "name": "Week Lkp",
+          "type": "multipleLookupValues",
+          "id": "fldmopSNL9aZf6K1A",
+          "options": {}
+        },
+        {
+          "name": "Video Upload Note",
+          "type": "multilineText",
+          "id": "fldnUvkgsPsdrowqx"
+        },
+        {
+          "name": "Activity Date Key",
+          "type": "formula",
+          "id": "fldLBZHH23uSm9qDs",
+          "options": {}
+        },
+        {
+          "name": "Homework Completion Ready?",
+          "type": "formula",
+          "id": "fldmrxhhChP7DiySK",
+          "options": {}
+        },
+        {
+          "name": "Homework Name 2",
+          "type": "multipleRecordLinks",
+          "id": "fldnAy8yXTFafhvnu",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Ready for Homework Completion Automation?",
+          "type": "formula",
+          "id": "fldZjS3FyJm18Pu1f",
+          "options": {}
+        },
+        {
+          "name": "Submission Assets Ready?",
+          "type": "formula",
+          "id": "fld4ZArf6KicJSpxE",
+          "options": {}
+        },
+        {
+          "name": "Edit Submission - Parent",
+          "type": "formula",
+          "id": "fldK5ZxoOiEYfMlay",
+          "options": {}
+        },
+        {
+          "name": "Daily Email Sent to Make.com At",
+          "type": "dateTime",
+          "id": "fldsHqzPgybIBWoQg",
+          "options": {}
+        },
+        {
+          "name": "Daily Email Sent to Make.com Status",
+          "type": "singleSelect",
+          "id": "fld67PP4NfQT7Ls35",
+          "options": {
+            "choices": [
+              "Error",
+              "Ready",
+              "Sent to Make.com",
+              "Sent"
+            ]
+          }
+        },
+        {
+          "name": "Counted Activity Date Key",
+          "type": "formula",
+          "id": "fld93oigqY19Z6zqN",
+          "options": {}
+        },
+        {
+          "name": "Build Daily Email Now?",
+          "type": "checkbox",
+          "id": "flddsovM5dq6naBQ2",
+          "options": {}
+        },
+        {
+          "name": "Send Daily Email to Make Now?",
+          "type": "checkbox",
+          "id": "fldgGWB0sjWGFuPJK",
+          "options": {}
+        },
+        {
+          "name": "Submitted Same Day?",
+          "type": "formula",
+          "id": "fldE7G8H1O7HPYuIi",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Countable Submission?",
+          "type": "formula",
+          "id": "fldYDitgQr6jgoDMk",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Submission Full Name",
+        "Enrollment",
+        "Activity Date",
+        "Week",
+        "HW Sub 1",
+        "HW Sub 2",
+        "Video Upload",
+        "HW1 Coach Feedback",
+        "Submission Assets",
+        "Ready for 009 Asset Creation?",
+        "RecordId",
+        "Submission Key",
+        "Athlete Name",
+        "Submitted At",
+        "Shot Total",
+        "Homework Name 1",
+        "HW 1 - Parent Note",
+        "HW 2 - Parent Note",
+        "HW2 Coach Feedback",
+        "Has Review Assets?",
+        "Video Count",
+        "Has HW1?",
+        "Has HW2?",
+        "Has Video?",
+        "Submission Stat Mode",
+        "2PT Made",
+        "2PT Attempted",
+        "3PT Made",
+        "3PT Attempted",
+        "FT Made",
+        "FT Attempted",
+        "Total Shots Canonical",
+        "Total Makes Canonical",
+        "Submission Has Detailed Stats?",
+        "Detailed Stats Valid?",
+        "2PT %",
+        "3PT %",
+        "FT %",
+        "Total Shots Counted",
+        "Review Queue Sort",
+        "Duplicate Key",
+        "Duplicate Review Status",
+        "Count This Submission?",
+        "Total Makes Counted",
+        "2PT Made Counted",
+        "2PT Attempted Counted",
+        "3PT Made Counted",
+        "3PT Attempted Counted",
+        "FT Made Counted",
+        "FT Attempted Counted",
+        "Weekly Athlete Summary",
+        "Daily Email HTML",
+        "Activity Date Is Future?",
+        "Needs Week Assignment?",
+        "Week Assignment Status",
+        "Ready for Weekly Summary?",
+        "XP Events",
+        "XP Base Points",
+        "XP Bonus Points",
+        "XP Award Status",
+        "XP Notes",
+        "XP Total Points",
+        "XP Award Ready?",
+        "XP Volume Bonus",
+        "XP Accuracy Bonus",
+        "XP Detailed Stats Bonus",
+        "Homework Completions",
+        "Athlete",
+        "Video Feedback Note",
+        "Daily Email Version",
+        "Attachment Upload Status",
+        "Attachment Upload Error",
+        "Ready to Send Attachments to Make?",
+        "Daily Email Subject",
+        "Daily Email To",
+        "Daily Email Status",
+        "Daily Email Sent At",
+        "Week Lkp",
+        "Video Upload Note",
+        "Activity Date Key",
+        "Created",
+        "Homework Completion Ready?",
+        "Homework Name 2",
+        "Ready for Homework Completion Automation?",
+        "Submission Assets Ready?",
+        "Video Feedback",
+        "Edit Submission - Parent",
+        "Daily Email Sent to Make.com At",
+        "Daily Email Sent to Make.com Status",
+        "Counted Activity Date Key",
+        "Coach Feedback (from Video Feedback)",
+        "Build Daily Email Now?",
+        "Send Daily Email to Make Now?",
+        "Submitted Same Day?",
+        "Perfect Week Countable Submission?",
+        "Why Not Ready for 009?",
+        "Testing Scenarios",
+        "Video Feedback Focus",
+        "Garbage Temp can be delted safely at any time."
+      ]
+    },
+    "Video Feedback": {
+      "id": "tblOV6pJDxQFBSQ3q",
+      "fields": [
+        {
+          "name": "Video Feedback Name",
+          "type": "formula",
+          "id": "fldKl1zQNuTwcPAlH",
+          "options": {}
+        },
+        {
+          "name": "Submission Asset",
+          "type": "multipleRecordLinks",
+          "id": "fld9laOK9yRAxgsph",
+          "options": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Video Feedback Key",
+          "type": "singleLineText",
+          "id": "fldY0Jmc6aU4q5waJ"
+        },
+        {
+          "name": "Submission",
+          "type": "multipleRecordLinks",
+          "id": "fldIa3kwvQGwxnh1U",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Enrollment",
+          "type": "multipleRecordLinks",
+          "id": "fldQuw8dRQnPmb5yU",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Week",
+          "type": "multipleLookupValues",
+          "id": "fldLvfkoNR3cbxa6E",
+          "options": {}
+        },
+        {
+          "name": "Activity Date - Lkp",
+          "type": "multipleLookupValues",
+          "id": "fldVpRPcp5PZDtQ7s",
+          "options": {}
+        },
+        {
+          "name": "Award Status",
+          "type": "singleSelect",
+          "id": "fldKwZPrVTxGGc9Wf",
+          "options": {
+            "choices": [
+              "Pending",
+              "Awarded",
+              "Do Not Award"
+            ]
+          }
+        },
+        {
+          "name": "Active?",
+          "type": "checkbox",
+          "id": "fld5vB8UQwrwTG6bm",
+          "options": {}
+        },
+        {
+          "name": "Video Asset File Name",
+          "type": "singleLineText",
+          "id": "fldo2WZ7LzF8fmrtL"
+        },
+        {
+          "name": "Video Feedback Workflow Status",
+          "type": "singleSelect",
+          "id": "fldDyFRAykPxujAjN",
+          "options": {
+            "choices": [
+              "Needs Review",
+              "Feedback Given",
+              "Ready for XP",
+              "Completed"
+            ]
+          }
+        },
+        {
+          "name": "Upload Status",
+          "type": "singleSelect",
+          "id": "fld1QFG4TX1fdN2h9",
+          "options": {
+            "choices": [
+              "Pending",
+              "Processing",
+              "Uploaded",
+              "Error",
+              "Ready",
+              "No File"
+            ]
+          }
+        },
+        {
+          "name": "Parent Feedback Ready?",
+          "type": "checkbox",
+          "id": "fld8DOjFEpfaaRIrb",
+          "options": {}
+        },
+        {
+          "name": "Parent Feedback Sent?",
+          "type": "checkbox",
+          "id": "fldrrXO7wS5f0RPV5",
+          "options": {}
+        },
+        {
+          "name": "Parent Feedback Sent On",
+          "type": "dateTime",
+          "id": "fld8b77cC15oc0mZE",
+          "options": {}
+        },
+        {
+          "name": "Parent Feedback Subject",
+          "type": "singleLineText",
+          "id": "fldrW1L6jXRIE3dGF"
+        },
+        {
+          "name": "Parent Feedback Send Error",
+          "type": "multilineText",
+          "id": "flduORgXj4l3fuTV0"
+        },
+        {
+          "name": "Linked Asset Duplicate Status",
+          "type": "multipleLookupValues",
+          "id": "fldiXBO7YNebVaqjB",
+          "options": {}
+        },
+        {
+          "name": "Linked Asset Duplicate Notes",
+          "type": "multipleLookupValues",
+          "id": "fldBGvZh1XwONBNyn",
+          "options": {}
+        },
+        {
+          "name": "Linked Asset Duplicate Review Status",
+          "type": "multipleLookupValues",
+          "id": "flde1rKFOxJ3PVrrr",
+          "options": {}
+        },
+        {
+          "name": "Activity XP Display Label",
+          "type": "formula",
+          "id": "fldGU27IKWxKIElqF",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Video Feedback Name",
+        "Record Id",
+        "Grade Band",
+        "Submission Asset",
+        "Video Feedback Key",
+        "Submission",
+        "Enrollment",
+        "Week",
+        "Activity Date - Lkp",
+        "XP Events",
+        "Asset Type",
+        "Video URL or Drive Link",
+        "Coach Feedback",
+        "Do Not Award XP?",
+        "Feedback Posted?",
+        "Reviewed At",
+        "Reviewed By",
+        "Base XP Awarded",
+        "Extra Credit XP Awarded",
+        "Total Video XP Awarded",
+        "Award Status",
+        "Active?",
+        "Video Asset File Name",
+        "Video Asset Uploaded At",
+        "Auto-link Eligible?",
+        "Ready for XP Automation?",
+        "Video Feedback Workflow Status",
+        "Created",
+        "Upload Status",
+        "Google Drive File ID",
+        "Google Drive File URL",
+        "Google Drive View URL",
+        "Google Drive Download URL",
+        "Google Drive Folder ID",
+        "Google Drive Folder URL",
+        "Parent Feedback Ready?",
+        "Upload Error",
+        "Writeback Complete?",
+        "Parent Feedback Sent?",
+        "Parent Feedback Sent On",
+        "Parent Feedback Subject",
+        "Parent Feedback Send Error",
+        "DELETE MAYBE - XP Events copy",
+        "Linked Asset Duplicate?",
+        "Linked Asset Duplicate Status",
+        "Linked Asset Duplicate Notes",
+        "Linked Asset Duplicate Match Record",
+        "Linked Asset Duplicate Match Strength",
+        "Linked Asset Duplicate Review Status",
+        "Video Feedback Focus",
+        "Video Feedback Question",
+        "Coach Video Title",
+        "Linked Asset Reuse Decision",
+        "Activity XP Display Label"
+      ]
+    },
+    "Zoom Meetings": {
+      "id": "tblWcSHEm8vNNIxyB",
+      "fields": [
+        {
+          "name": "Meeting Name",
+          "type": "singleLineText",
+          "id": "fldCX0aHQq1xQDg1J"
+        },
+        {
+          "name": "Effective Recording Counts for Perfect Week?",
+          "type": "formula",
+          "id": "fldEfs9Xk4cIm7sqA",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Enabled?",
+          "type": "formula",
+          "id": "fldqPzKXweQISK4ZR",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Timing",
+          "type": "formula",
+          "id": "fldT2SG7GRc7sT32u",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Template Key",
+          "type": "formula",
+          "id": "fldQtvxkRPGCJ7pq8",
+          "options": {}
+        },
+        {
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "id": "fldOi0gQkrvoBiuHs",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Start Time",
+          "type": "dateTime",
+          "id": "fld1VGAi6PUxMv6aH",
+          "options": {}
+        },
+        {
+          "name": "End Time",
+          "type": "dateTime",
+          "id": "fldU3xfWq2zMkkFy1",
+          "options": {}
+        },
+        {
+          "name": "Host Name",
+          "type": "singleLineText",
+          "id": "fldAPtvKCXit7WCy2"
+        },
+        {
+          "name": "Host Email",
+          "type": "email",
+          "id": "flduo3ocrVlp64XsZ"
+        },
+        {
+          "name": "Meeting Agenda",
+          "type": "multilineText",
+          "id": "fldhLdcsIFYuz1bkL"
+        },
+        {
+          "name": "Meeting Agenda Link",
+          "type": "url",
+          "id": "fldnPq1fkAIGriDws"
+        },
+        {
+          "name": "Meeting Agenda - Coach Version",
+          "type": "multipleAttachments",
+          "id": "fldZJPcOmryEzdoe0",
+          "options": {
+            "isReversed": false
+          }
+        },
+        {
+          "name": "Meeting Agenda - Coach Version URL",
+          "type": "url",
+          "id": "fldamJljzG2BWQ2Wp"
+        },
+        {
+          "name": "Meeting Status",
+          "type": "singleSelect",
+          "id": "fldacwAjVOVvf6GL3",
+          "options": {
+            "choices": [
+              "Scheduled",
+              "In Progress",
+              "Completed",
+              "Cancelled"
+            ]
+          }
+        },
+        {
+          "name": "Attendees",
+          "type": "multipleRecordLinks",
+          "id": "fldbkE5FL3vz8bM7H",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "XP Award Status",
+          "type": "singleSelect",
+          "id": "fldvCIwwE5jOzAWhW",
+          "options": {
+            "choices": [
+              "Pending",
+              "Awarded"
+            ]
+          }
+        },
+        {
+          "name": "Zoom Meeting Key",
+          "type": "formula",
+          "id": "fldPM4rI6gDjYsTnB",
+          "options": {}
+        },
+        {
+          "name": "Attendance Method",
+          "type": "singleSelect",
+          "id": "fldpsIjB9bnNRa8vW",
+          "options": {
+            "choices": [
+              "Live",
+              "Recording Quiz"
+            ]
+          }
+        },
+        {
+          "name": "Recording Quiz Submitted At",
+          "type": "dateTime",
+          "id": "fldArnQlsGthSKmBb",
+          "options": {}
+        },
+        {
+          "name": "Recording Quiz Review Status",
+          "type": "singleSelect",
+          "id": "fld1XgDCkjjxB9R9z",
+          "options": {
+            "choices": [
+              "Not Submitted",
+              "Needs Review",
+              "Satisfactory",
+              "Needs Correction"
+            ]
+          }
+        },
+        {
+          "name": "Live Attendance Confirmed?",
+          "type": "checkbox",
+          "id": "fldT9c1FO5TtZ12jE",
+          "options": {}
+        },
+        {
+          "name": "Zoom Credit Approved?",
+          "type": "formula",
+          "id": "fldCJUXrLJEGyjxiA",
+          "options": {}
+        },
+        {
+          "name": "Zoom Credit Key",
+          "type": "formula",
+          "id": "fldlZGADtQ4VIfBy9",
+          "options": {}
+        },
+        {
+          "name": "Zoom Attendance",
+          "type": "multipleRecordLinks",
+          "id": "fldELpIe5BwPhXaTA",
+          "options": {
+            "linkedTableId": "tblfwbt6aCDCM5gUz",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Approved Preconflict Pair Tags",
+          "type": "rollup",
+          "id": "fldcM3v5VOjjW002p",
+          "options": {}
+        },
+        {
+          "name": "Week End Date",
+          "type": "multipleLookupValues",
+          "id": "fldmeNbIm6UVQZI9Y",
+          "options": {}
+        },
+        {
+          "name": "Config (Program Scope)",
+          "type": "multipleRecordLinks",
+          "id": "fldDZPEVVJkNLE82d",
+          "options": {
+            "linkedTableId": "tblRB6sh77NxjS568",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Perfect Week Credit — Meeting Override",
+          "type": "singleSelect",
+          "id": "flderax8CZZC0T7Io",
+          "options": {
+            "choices": [
+              "Yes",
+              "No"
+            ]
+          }
+        },
+        {
+          "name": "Approval Email Enabled — Meeting Override",
+          "type": "singleSelect",
+          "id": "fldCWlEwhEZsJq3CJ",
+          "options": {
+            "choices": [
+              "Yes",
+              "No"
+            ]
+          }
+        },
+        {
+          "name": "Approval Email Timing — Meeting Override",
+          "type": "singleSelect",
+          "id": "fldcItCULgDHSaXvk",
+          "options": {
+            "choices": [
+              "On Satisfactory"
+            ]
+          }
+        },
+        {
+          "name": "Approval Email Template Key — Meeting Override",
+          "type": "singleLineText",
+          "id": "fld1W33MG1RjFYMlT"
+        },
+        {
+          "name": "Program Config: Recording XP %",
+          "type": "rollup",
+          "id": "fld5KGepq4YRRck99",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Full Gate Credit — legacy rollup",
+          "type": "rollup",
+          "id": "fldErkg4mbk91xH1a",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Perfect Week Credit — legacy rollup",
+          "type": "rollup",
+          "id": "fldMuSSdKQ4UnPqoa",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Global Config: Perfect Week Credit — legacy rollup",
+          "type": "rollup",
+          "id": "fldCUG40Uf5bA8BgR",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Coach Approval Required — legacy rollup",
+          "type": "rollup",
+          "id": "fldx2vYJlA1z7K2yA",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Makeup Enabled — legacy rollup",
+          "type": "rollup",
+          "id": "fldx5OoDjuzf9CgJO",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Makeup Window Days",
+          "type": "rollup",
+          "id": "fldN1opjsr97wPfTK",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Deadline Mode",
+          "type": "rollup",
+          "id": "fldiUsPQwJAXfI7VX",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Approval Email Enabled — legacy rollup",
+          "type": "rollup",
+          "id": "fldQQVXD2XWtjKhyF",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Global Config: Approval Email Enabled — legacy rollup",
+          "type": "rollup",
+          "id": "fldQknOoi6Hdw3n34",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Approval Email Timing",
+          "type": "rollup",
+          "id": "fldJOR8XjFq3Lk2HI",
+          "options": {}
+        },
+        {
+          "name": "Global Config: Approval Email Timing",
+          "type": "rollup",
+          "id": "fldkHtwI3H00k59wN",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Approval Email Template Key",
+          "type": "rollup",
+          "id": "fldk358UEFdwq66X7",
+          "options": {}
+        },
+        {
+          "name": "Global Config: Approval Email Template Key",
+          "type": "rollup",
+          "id": "fldpeBcgvOcDCniy1",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Effective Recording Counts for Perfect Week? (Config formula draft)",
+          "type": "formula",
+          "id": "fldu0WoqcTKfqO2tt",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Effective Recording Approval Email Enabled? (Config formula draft)",
+          "type": "formula",
+          "id": "fldo5Xdcjj41CrAPD",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Effective Recording Approval Email Timing (Config formula draft)",
+          "type": "formula",
+          "id": "fldaQ6UUYpfYJTyhV",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Effective Recording Approval Email Template Key (Config formula draft)",
+          "type": "formula",
+          "id": "fldeQAQg531QgEsXf",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Full Gate Credit — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fldQLiHJc5nX5TQpj",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Perfect Week Credit — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fld1efNhLOGotLjOP",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Global Config: Perfect Week Credit — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fld3jqrfP0NOMs4DI",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Coach Approval Required — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fldDLZyrwZgVx3UEB",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Makeup Enabled — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "flduyH2xCQbWwRRvj",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Program Config: Approval Email Enabled — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fldUgXs1Zpa1zCk1k",
+          "options": {}
+        },
+        {
+          "name": "ZZZ C025 Archive — Global Config: Approval Email Enabled — pre-YN",
+          "type": "multipleLookupValues",
+          "id": "fldQ9PergUCN5Kx6z",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Full Gate Credit",
+          "type": "multipleLookupValues",
+          "id": "fldcVNVocMh0Ciq9a",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Perfect Week Credit",
+          "type": "multipleLookupValues",
+          "id": "fld1JXcc1VIFrbprj",
+          "options": {}
+        },
+        {
+          "name": "Global Config: Perfect Week Credit",
+          "type": "multipleLookupValues",
+          "id": "fldRbQVOK2hkn4XfI",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Coach Approval Required",
+          "type": "multipleLookupValues",
+          "id": "fldSIq2ipNOe6wwK9",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Makeup Enabled",
+          "type": "multipleLookupValues",
+          "id": "fldU0awkqf7dBtCMx",
+          "options": {}
+        },
+        {
+          "name": "Program Config: Approval Email Enabled",
+          "type": "multipleLookupValues",
+          "id": "flduT63RW6F4ZEo0N",
+          "options": {}
+        },
+        {
+          "name": "Global Config: Approval Email Enabled",
+          "type": "multipleLookupValues",
+          "id": "fld8NYdy0eIEkFFav",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Meeting Name",
+        "Effective Recording XP Percentage",
+        "Effective Recording Makeup Enabled?",
+        "Effective Recording Makeup Window Days",
+        "Effective Recording Deadline Mode",
+        "Effective Recording Counts for Level Gate?",
+        "Effective Recording Counts for Perfect Week?",
+        "Effective Recording Quiz Requires Coach Approval?",
+        "Effective Recording Approval Email Enabled?",
+        "Effective Recording Approval Email Timing",
+        "Effective Recording Approval Email Template Key",
+        "Cover Media",
+        "Week",
+        "Start Time",
+        "End Time",
+        "Full Description",
+        "Brief Description",
+        "Zoom Link",
+        "Host Name",
+        "Host Email",
+        "Meeting Agenda",
+        "Meeting Agenda Link",
+        "Meeting Agenda - Coach Version",
+        "Meeting Agenda - Coach Version URL",
+        "Attachments",
+        "Recording Link - Video",
+        "Recording Link - Audio Only",
+        "Meeting Summary",
+        "Meeting Status",
+        "Attendees",
+        "Create XP Events",
+        "XP Events",
+        "XP Award Status",
+        "Zoom Meeting Key",
+        "Participant Count",
+        "RecordId",
+        "Recording URL",
+        "Recording Quiz Available?",
+        "Recording Quiz Deadline",
+        "Recording XP Percentage",
+        "Attendance Method",
+        "Recording Quiz Response",
+        "Recording Quiz Submitted At",
+        "Recording Quiz Review Status",
+        "Recording Quiz Satisfactory?",
+        "Recording Quiz Coach Feedback",
+        "Recording Quiz Attempt Number",
+        "Live Attendance Confirmed?",
+        "Zoom Credit Approved?",
+        "Zoom XP Percentage",
+        "Zoom XP Amount",
+        "Zoom Gate Credit Earned?",
+        "Zoom Credit Key",
+        "Zoom Credit Conflict?",
+        "Zoom Credit Debug",
+        "Zoom Attendance",
+        "Recording Available At",
+        "Calculated Recording Quiz Deadline",
+        "Approved Preconflict Pair Tags",
+        "Week End Date",
+        "Config (Program Scope)",
+        "Config (Global Scope)",
+        "Recording XP Percentage — Meeting Override",
+        "Full Gate Credit — Meeting Override",
+        "Perfect Week Credit — Meeting Override",
+        "Coach Approval Required — Meeting Override",
+        "Makeup Enabled — Meeting Override",
+        "Makeup Window Days — Meeting Override",
+        "Deadline Mode — Meeting Override",
+        "Approval Email Enabled — Meeting Override",
+        "Approval Email Timing — Meeting Override",
+        "Approval Email Template Key — Meeting Override",
+        "Program Config: Recording XP %",
+        "Global Config: Recording XP %",
+        "ZZZ C025 Archive — Program Config: Full Gate Credit — legacy rollup",
+        "ZZZ C025 Archive — Global Config: Full Gate Credit — legacy rollup",
+        "ZZZ C025 Archive — Program Config: Perfect Week Credit — legacy rollup",
+        "ZZZ C025 Archive — Global Config: Perfect Week Credit — legacy rollup",
+        "ZZZ C025 Archive — Program Config: Coach Approval Required — legacy rollup",
+        "ZZZ C025 Archive — Global Config: Coach Approval Required — legacy rollup",
+        "ZZZ C025 Archive — Program Config: Makeup Enabled — legacy rollup",
+        "ZZZ C025 Archive — Global Config: Makeup Enabled — legacy rollup",
+        "Program Config: Makeup Window Days",
+        "Global Config: Makeup Window Days",
+        "Program Config: Deadline Mode",
+        "Global Config: Deadline Mode",
+        "ZZZ C025 Archive — Program Config: Approval Email Enabled — legacy rollup",
+        "ZZZ C025 Archive — Global Config: Approval Email Enabled — legacy rollup",
+        "Program Config: Approval Email Timing",
+        "Global Config: Approval Email Timing",
+        "Program Config: Approval Email Template Key",
+        "Global Config: Approval Email Template Key",
+        "ZZZ C025 Archive — Effective Recording XP Percentage (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Counts for Level Gate? (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Counts for Perfect Week? (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Quiz Requires Coach Approval? (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Makeup Enabled? (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Makeup Window Days (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Deadline Mode (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Approval Email Enabled? (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Approval Email Timing (Config formula draft)",
+        "ZZZ C025 Archive — Effective Recording Approval Email Template Key (Config formula draft)",
+        "ZZZ C025 Archive — C025 Checkbox Rollup Probe",
+        "ZZZ C025 Archive — Program Config: Full Gate Credit — pre-YN",
+        "ZZZ C025 Archive — Global Config: Full Gate Credit — pre-YN",
+        "ZZZ C025 Archive — Program Config: Perfect Week Credit — pre-YN",
+        "ZZZ C025 Archive — Global Config: Perfect Week Credit — pre-YN",
+        "ZZZ C025 Archive — Program Config: Coach Approval Required — pre-YN",
+        "ZZZ C025 Archive — Global Config: Coach Approval Required — pre-YN",
+        "ZZZ C025 Archive — Program Config: Makeup Enabled — pre-YN",
+        "ZZZ C025 Archive — Global Config: Makeup Enabled — pre-YN",
+        "ZZZ C025 Archive — Program Config: Approval Email Enabled — pre-YN",
+        "ZZZ C025 Archive — Global Config: Approval Email Enabled — pre-YN",
+        "Program Config: Full Gate Credit",
+        "Global Config: Full Gate Credit",
+        "Program Config: Perfect Week Credit",
+        "Global Config: Perfect Week Credit",
+        "Program Config: Coach Approval Required",
+        "Global Config: Coach Approval Required",
+        "Program Config: Makeup Enabled",
+        "Global Config: Makeup Enabled",
+        "Program Config: Approval Email Enabled",
+        "Global Config: Approval Email Enabled",
+        "ZZZ C025 Archive — C025 Select Probe AJ Prog",
+        "ZZZ C025 Archive — C025 Select Probe Raw Prog",
+        "ZZZ C025 Archive — C025 Select Probe OverrideBlank",
+        "ZZZ C025 Archive — C025 Select Probe Nested",
+        "ZZZ C025 Archive — C025 Select Probe AJ Glob",
+        "ZZZ C025 Archive — C025 Select Probe OverrideRaw",
+        "ZZZ C025 Archive — C025 Select Probe BlankCmp",
+        "ZZZ C025 Archive — C025 Select Probe Len",
+        "ZZZ C025 Archive — C025 Select Probe LenPath"
+      ]
+    },
+    "Zoom Attendance": {
+      "id": "tblfwbt6aCDCM5gUz",
+      "fields": [
+        {
+          "name": "Recording Quiz Submitted At",
+          "type": "dateTime",
+          "id": "fldvLxpqK9IOwERvQ",
+          "options": {}
+        },
+        {
+          "name": "Recording Quiz Review Status",
+          "type": "singleSelect",
+          "id": "fldWcpZKa0Qq0jnYV",
+          "options": {
+            "choices": [
+              "Not Submitted",
+              "Needs Review",
+              "Satisfactory",
+              "Needs Correction"
+            ]
+          }
+        },
+        {
+          "name": "Live Attendance Confirmed?",
+          "type": "checkbox",
+          "id": "fldPNJzsEy6cMzYxd",
+          "options": {}
+        },
+        {
+          "name": "Zoom Credit Approved?",
+          "type": "formula",
+          "id": "fldJpQxQQuibUdi5w",
+          "options": {}
+        },
+        {
+          "name": "Zoom Credit Key",
+          "type": "formula",
+          "id": "fldhaYb9gaCndiQvx",
+          "options": {}
+        },
+        {
+          "name": "Enrollment",
+          "type": "multipleRecordLinks",
+          "id": "fld6VA8craEkzgl8y",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Attendance Method",
+          "type": "singleSelect",
+          "id": "fld3bxJqGs4E8jB7j",
+          "options": {
+            "choices": [
+              "Live",
+              "Recording Quiz"
+            ]
+          }
+        },
+        {
+          "name": "Effective Recording Counts for Perfect Week?",
+          "type": "multipleLookupValues",
+          "id": "fld3OF6y2q49jI2xg",
+          "options": {}
+        },
+        {
+          "name": "Enrollment RID",
+          "type": "multipleLookupValues",
+          "id": "fldovPSREAUf4TkeY",
+          "options": {}
+        },
+        {
+          "name": "Zoom Credit Pre-Approved?",
+          "type": "formula",
+          "id": "fldpukA5h9bxCw2L6",
+          "options": {}
+        },
+        {
+          "name": "Meeting Approved Preconflict Pair Tags",
+          "type": "multipleLookupValues",
+          "id": "fld08lAdEm1TQElUC",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Credit Applied?",
+          "type": "checkbox",
+          "id": "fldVEcA37Q0o2OcDb",
+          "options": {}
+        },
+        {
+          "name": "Recording Approval Email Send Key",
+          "type": "singleLineText",
+          "id": "fldH6vzD8T8e5sLzx"
+        },
+        {
+          "name": "Recording Approval Email Sent At",
+          "type": "dateTime",
+          "id": "fldOTeh4WIMxW9HqA",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Enabled?",
+          "type": "multipleLookupValues",
+          "id": "fldBt02PeTgL3cw6o",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Timing",
+          "type": "multipleLookupValues",
+          "id": "fldgcaQGTka5RkD5o",
+          "options": {}
+        },
+        {
+          "name": "Effective Recording Approval Email Template Key",
+          "type": "multipleLookupValues",
+          "id": "fldUs1EDTRkAYt79j",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Id",
+        "Recording Quiz Response",
+        "Recording Quiz Submitted At",
+        "Recording Quiz Review Status",
+        "Recording Quiz Satisfactory?",
+        "Recording Quiz Coach Feedback",
+        "Recording Quiz Attempt Number",
+        "Live Attendance Confirmed?",
+        "Zoom Credit Approved?",
+        "Zoom XP Percentage",
+        "Zoom XP Amount",
+        "Zoom Gate Credit Earned?",
+        "Zoom Credit Key",
+        "Zoom Credit Conflict?",
+        "Zoom Credit Debug",
+        "Enrollment",
+        "Zoom Meeting",
+        "Normal Live Zoom XP",
+        "Attendance Method",
+        "Effective Recording XP Percentage",
+        "Effective Recording Counts for Level Gate?",
+        "Effective Recording Counts for Perfect Week?",
+        "Effective Recording Quiz Requires Coach Approval?",
+        "Effective Recording Makeup Enabled?",
+        "Effective Recording Makeup Window Days",
+        "Effective Recording Deadline Mode",
+        "Zoom Meeting RID",
+        "Enrollment RID",
+        "Calculated Recording Quiz Deadline",
+        "Zoom Recording Quiz — Past Deadline (view marker)",
+        "Zoom Credit Pre-Approved?",
+        "Preconflict Pair Tag",
+        "Meeting Approved Preconflict Pair Tags",
+        "Gate Credit Applied?",
+        "Perfect Week Credit Applied?",
+        "Recording Approval Email Send Key",
+        "Recording Approval Email Sent At",
+        "Recording Quiz Correction Count",
+        "Recording Quiz Reviewed At",
+        "Recording Quiz Needs Correction At",
+        "Effective Recording Approval Email Enabled?",
+        "Effective Recording Approval Email Timing",
+        "Effective Recording Approval Email Template Key"
+      ]
+    },
+    "Weekly Athlete Summary": {
+      "id": "tbl9520d72adxlAKQ",
+      "fields": [
+        {
+          "name": "Weekly Athlete Summary - Display",
+          "type": "formula",
+          "id": "fldSjFnZpuBfkoCja",
+          "options": {}
+        },
+        {
+          "name": "XP Earned This Week",
+          "type": "rollup",
+          "id": "fldIvSQR4O6a0jtsN",
+          "options": {}
+        },
+        {
+          "name": "Summary Key",
+          "type": "formula",
+          "id": "fldpgOrqgGkryjrdi",
+          "options": {}
+        },
+        {
+          "name": "Enrollment",
+          "type": "multipleRecordLinks",
+          "id": "fldNH81lfwL5dBnAw",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Full Name - From Enrollment - Display",
+          "type": "multipleLookupValues",
+          "id": "fldFx9VxabAod1DkZ",
+          "options": {}
+        },
+        {
+          "name": "Athlete",
+          "type": "multipleLookupValues",
+          "id": "fld0VGe6Swc0vA3ze",
+          "options": {}
+        },
+        {
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "id": "fldNUSqzr3H0PE5Ex",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Goal Record",
+          "type": "multipleRecordLinks",
+          "id": "fldNvhGv57qOqbsfN",
+          "options": {
+            "linkedTableId": "tbleCfuAt3rY8unU3",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Homework",
+          "type": "multipleRecordLinks",
+          "id": "fld3h3FZAoEVvDM4q",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "id": "fld1zvk4QAmdrYSUC",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Total Shots This Week",
+          "type": "rollup",
+          "id": "fldR3esaWcZ7LmOrR",
+          "options": {}
+        },
+        {
+          "name": "Total Makes This Week",
+          "type": "rollup",
+          "id": "fldGxsKbU51LY1P1K",
+          "options": {}
+        },
+        {
+          "name": "Goal Shots Target",
+          "type": "multipleLookupValues",
+          "id": "fldY0WlLxwGh7WID5",
+          "options": {}
+        },
+        {
+          "name": "Goal Completion %",
+          "type": "formula",
+          "id": "flda0ZXW1Bf7OvRAK",
+          "options": {}
+        },
+        {
+          "name": "Activity Dates",
+          "type": "multipleLookupValues",
+          "id": "fldFyPZN7A1qmxNg6",
+          "options": {}
+        },
+        {
+          "name": "Days Logged This Week",
+          "type": "rollup",
+          "id": "fldOLza7ol65TidXd",
+          "options": {}
+        },
+        {
+          "name": "Homework Assigned Count",
+          "type": "rollup",
+          "id": "fldxA1xQQlui2XXi4",
+          "options": {}
+        },
+        {
+          "name": "Summary Calculation Status",
+          "type": "singleSelect",
+          "id": "fldclTKmuQPSM9Pj6",
+          "options": {
+            "choices": [
+              "Pending",
+              "Calculating",
+              "Complete",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Weekly Improvement Value",
+          "type": "formula",
+          "id": "fldDAqp5woNqEdzE3",
+          "options": {}
+        },
+        {
+          "name": "Momentum Status",
+          "type": "formula",
+          "id": "fldR3egEbDyiE2CPn",
+          "options": {}
+        },
+        {
+          "name": "Homework Completed?",
+          "type": "formula",
+          "id": "fld6yhWfsDQUFn0k5",
+          "options": {}
+        },
+        {
+          "name": "Homework Satisfactory Count",
+          "type": "rollup",
+          "id": "fldAZvnZo9xAXyw5o",
+          "options": {}
+        },
+        {
+          "name": "Previous Week Shots",
+          "type": "number",
+          "id": "fldvJmTvqvJTtdYjE",
+          "options": {}
+        },
+        {
+          "name": "Total XP After Week",
+          "type": "formula",
+          "id": "fldDlAuaaIYmx7Q44",
+          "options": {}
+        },
+        {
+          "name": "Homework Completions",
+          "type": "singleLineText",
+          "id": "fldzaABiiuRE3TUKN"
+        },
+        {
+          "name": "Homework Display",
+          "type": "formula",
+          "id": "fldKxl8nguJzqulJD",
+          "options": {}
+        },
+        {
+          "name": "Homework Completions Link",
+          "type": "multipleRecordLinks",
+          "id": "fld7IEpY1KsacJTM6",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Weekly Goal Shots Target",
+          "type": "formula",
+          "id": "fld9QMaqcgCzIAJhE",
+          "options": {}
+        },
+        {
+          "name": "Threshold XP Status",
+          "type": "singleSelect",
+          "id": "fldLWHZDNekE0eDN9",
+          "options": {
+            "choices": [
+              "",
+              "Processed",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Enrollment Key - Lkp",
+          "type": "multipleLookupValues",
+          "id": "fldJG5q0ZibCkprwC",
+          "options": {}
+        },
+        {
+          "name": "Week Key - Lkp",
+          "type": "multipleLookupValues",
+          "id": "fldEBGRSNqMPE459s",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Ready?",
+          "type": "checkbox",
+          "id": "fldRXzo9QveAAEudP",
+          "options": {}
+        },
+        {
+          "name": "Weekly Summary Email Status",
+          "type": "singleSelect",
+          "id": "fldzuHDdCi6YCvRbn",
+          "options": {
+            "choices": [
+              "Not Ready",
+              "Ready for Send",
+              "Sent",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Weekly Summary Sent At",
+          "type": "dateTime",
+          "id": "fldW0OwybJ0ZRMy5K",
+          "options": {}
+        },
+        {
+          "name": "Weekly Summary Send Error",
+          "type": "multilineText",
+          "id": "fldh1gWZcD554JgqP"
+        },
+        {
+          "name": "Weekly Summary Email Type",
+          "type": "singleSelect",
+          "id": "fldOwzaH8G35chFpL",
+          "options": {
+            "choices": [
+              "Regular",
+              "Preview",
+              "Test"
+            ]
+          }
+        },
+        {
+          "name": "Parent Email - Cleaned",
+          "type": "multipleLookupValues",
+          "id": "fldKXsaqFMEXMAwpd",
+          "options": {}
+        },
+        {
+          "name": "Athlete Email - Cleaned",
+          "type": "multipleLookupValues",
+          "id": "fldkwUWbSTLQM12BF",
+          "options": {}
+        },
+        {
+          "name": "Combined Recipient Emails",
+          "type": "formula",
+          "id": "fldnNEwvyEht6BDtU",
+          "options": {}
+        },
+        {
+          "name": "Athlete First Name",
+          "type": "multipleLookupValues",
+          "id": "fldrvgVniDFGHXITX",
+          "options": {}
+        },
+        {
+          "name": "Athlete Last Name",
+          "type": "multipleLookupValues",
+          "id": "fldwBU1zPMwUogHGR",
+          "options": {}
+        },
+        {
+          "name": "Email Subject",
+          "type": "formula",
+          "id": "fld22Iv3MqYjIzkFn",
+          "options": {}
+        },
+        {
+          "name": "Make Send Status",
+          "type": "singleSelect",
+          "id": "fldVI44vj8KmMxLVi",
+          "options": {
+            "choices": [
+              "Ready",
+              "Sent"
+            ]
+          }
+        },
+        {
+          "name": "Weekly Awards Placeholder",
+          "type": "multilineText",
+          "id": "fld0BFUkwusYhbMZ7"
+        },
+        {
+          "name": "Weekly Summary Overall Section",
+          "type": "multilineText",
+          "id": "fldIy0dLusRCZxqet"
+        },
+        {
+          "name": "Weekly Awards Display",
+          "type": "richText",
+          "id": "fldnsoxTePJh6gUPX"
+        },
+        {
+          "name": "Overall Awards Display",
+          "type": "richText",
+          "id": "fld6rcoqhQ6GmZQR7"
+        },
+        {
+          "name": "Upcoming Zoom Display",
+          "type": "richText",
+          "id": "fldSiIx55xQE5dMqY"
+        },
+        {
+          "name": "Week - Display",
+          "type": "formula",
+          "id": "fldn7FMpyz3ZDMxly",
+          "options": {}
+        },
+        {
+          "name": "Grade Band - Display",
+          "type": "formula",
+          "id": "fldEIVNQFxcOnEuNP",
+          "options": {}
+        },
+        {
+          "name": "Weekly Summary Key",
+          "type": "formula",
+          "id": "fldpwIfJ8Mq2u3rfn",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Sent?",
+          "type": "checkbox",
+          "id": "fldCCgjkgoPt7N4eK",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Sent At",
+          "type": "dateTime",
+          "id": "fld9dzmOqNfXzRom1",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Error",
+          "type": "multilineText",
+          "id": "fldzZnqYAoDDrUQFm"
+        },
+        {
+          "name": "Weekly Email Revision",
+          "type": "singleLineText",
+          "id": "fldeP5OD0H90VhrM2"
+        },
+        {
+          "name": "Send to Make?",
+          "type": "checkbox",
+          "id": "fldcQzkAcrJXwRTgC",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Subject",
+          "type": "singleLineText",
+          "id": "fldxRkHo6fdqLNjPB"
+        },
+        {
+          "name": "Weekly Email Recipients",
+          "type": "multilineText",
+          "id": "flduEBKX6UoJpEBMy"
+        },
+        {
+          "name": "Weekly Email HTML",
+          "type": "multilineText",
+          "id": "fldBbRJTBH7fjOsFk"
+        },
+        {
+          "name": "Weekly Email Text",
+          "type": "multilineText",
+          "id": "fldvllIaaj1WNZQaX"
+        },
+        {
+          "name": "Weekly Email Payload JSON",
+          "type": "multilineText",
+          "id": "fldeVsUfvry5alYG7"
+        },
+        {
+          "name": "Weekly Email Week Label",
+          "type": "singleLineText",
+          "id": "fldQcTW5jStDqUuwn"
+        },
+        {
+          "name": "Weekly Email Last Built At",
+          "type": "dateTime",
+          "id": "fldrwJEsWcqqYb124",
+          "options": {}
+        },
+        {
+          "name": "Weekly Email Record ID",
+          "type": "formula",
+          "id": "fldDFKGuHdQ61ELqg",
+          "options": {}
+        },
+        {
+          "name": "Build Weekly Email Now?",
+          "type": "checkbox",
+          "id": "fldBE60blHuUfAQa4",
+          "options": {}
+        },
+        {
+          "name": "sendMode",
+          "type": "singleSelect",
+          "id": "fldW8sTqbsSYJyjcD",
+          "options": {
+            "choices": [
+              "Test",
+              "Live"
+            ]
+          }
+        },
+        {
+          "name": "Perfect Week Daily Check Status",
+          "type": "singleSelect",
+          "id": "fldEEYFHEBlVnNAV0",
+          "options": {
+            "choices": [
+              "Pending",
+              "Pass",
+              "Fail",
+              "Needs Review"
+            ]
+          }
+        },
+        {
+          "name": "Perfect Week Daily Check Detail",
+          "type": "multilineText",
+          "id": "fldtASmByMBMCPXvp"
+        },
+        {
+          "name": "Perfect Week Daily Requirement Met?",
+          "type": "checkbox",
+          "id": "fld9whhW2WYo6Z3wD",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Video Count",
+          "type": "number",
+          "id": "flds8k6TuRScMWW79",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Zoom Meeting Count",
+          "type": "number",
+          "id": "fld1sBnbfMiunNlcW",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Zoom Attendance Count",
+          "type": "number",
+          "id": "fldVs5IgC7PnCXCYM",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Homework Requirement Met?",
+          "type": "number",
+          "id": "fldK2cIQXX18OTdhS",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Automation Status",
+          "type": "singleSelect",
+          "id": "fldyFlpiRQiTpCKJz",
+          "options": {
+            "choices": [
+              "Pending",
+              "Ready",
+              "Created",
+              "Skipped",
+              "Error"
+            ]
+          }
+        },
+        {
+          "name": "Perfect Week Automation Error",
+          "type": "multilineText",
+          "id": "fldIZgWPIPwpBv0hb"
+        },
+        {
+          "name": "Perfect Week Video Requirement Met?",
+          "type": "formula",
+          "id": "fldat2jCxT2sc9pms",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Zoom Requirement Met?",
+          "type": "formula",
+          "id": "fldWok1MQBND9z0r9",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Eligible?",
+          "type": "formula",
+          "id": "fld0re4ydFGq2vvZC",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Unlock",
+          "type": "multipleRecordLinks",
+          "id": "fldJVKEeziY9l5Dbq",
+          "options": {
+            "linkedTableId": "tblyT2AQo1JbvmvZS",
+            "isReversed": false,
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "name": "Perfect Week Calculation Queue?",
+          "type": "formula",
+          "id": "fldNvOVO3WidABUXS",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Zoom Requirement Status",
+          "type": "formula",
+          "id": "fldPWqUmCAWpwKX6t",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Homework Assigned Count",
+          "type": "number",
+          "id": "fldZmafiSNvvDOBLi",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Homework Satisfactory Count",
+          "type": "number",
+          "id": "fldqNVE7X7uBED4XR",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Homework Completion %",
+          "type": "formula",
+          "id": "fld3eEpTebFgqTWYy",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Homework Requirement Status",
+          "type": "formula",
+          "id": "fldG3EmD6uueWmtRl",
+          "options": {}
+        },
+        {
+          "name": "Perfect Week Test Override?",
+          "type": "checkbox",
+          "id": "fldowpElOxgvOisY0",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Weekly Athlete Summary - Display",
+        "XP Earned This Week",
+        "XP Events",
+        "Summary Key",
+        "Enrollment",
+        "Full Name - From Enrollment - Display",
+        "Athlete",
+        "Week",
+        "Grade",
+        "Grade Band",
+        "Goal Record",
+        "Homework",
+        "Submissions",
+        "Total Shots This Week",
+        "Total Makes This Week",
+        "Goal Shots Target",
+        "Goal Completion %",
+        "Activity Dates",
+        "Days Logged This Week",
+        "Met Minimum Days Requirement?",
+        "Homework Assigned Count",
+        "Summary Calculation Status",
+        "Weekly Improvement Value",
+        "Momentum Status",
+        "Homework Completed?",
+        "Homework Satisfactory Count",
+        "Level Number",
+        "Previous Week Shots",
+        "Total XP After Week",
+        "Previous Total XP",
+        "Homework Completions",
+        "Homework Display",
+        "Homework Completions Link",
+        "Created",
+        "Weekly Goal Shots Target",
+        "Threshold XP Status",
+        "Threshold XP Processed At",
+        "Threshold XP Error Message",
+        "Requeue Threshold XP",
+        "Threshold XP Ready?",
+        "RecordId",
+        "Enrollment Key - Lkp",
+        "Week Key - Lkp",
+        "Weekly Email Ready?",
+        "Weekly Summary Email Status",
+        "Weekly Summary Sent At",
+        "Weekly Summary Send Error",
+        "Weekly Summary Email Type",
+        "Parent Email - Cleaned",
+        "Athlete Email - Cleaned",
+        "Overall Awards Placeholder",
+        "Zoom Meetings Summary",
+        "Combined Recipient Emails",
+        "Athlete First Name",
+        "Athlete Last Name",
+        "Email Subject",
+        "Make Send Status",
+        "Weekly Awards Placeholder",
+        "Weekly Summary Overall Section",
+        "Weekly Awards Display",
+        "Overall Awards Display",
+        "Upcoming Zoom Display",
+        "Upcoming Zoom Link",
+        "Week - Display",
+        "Grade Band - Display",
+        "Weekly Summary Key",
+        "Weekly Email Sent?",
+        "Weekly Email Sent At",
+        "Weekly Email Error",
+        "Weekly Email Revision",
+        "Send to Make?",
+        "Weekly Email Subject",
+        "Weekly Email Recipients",
+        "Weekly Email HTML",
+        "Weekly Email Text",
+        "Weekly Email Payload JSON",
+        "Weekly Email Week Label",
+        "Weekly Email Last Built At",
+        "Weekly Email Record ID",
+        "Build Weekly Email Now?",
+        "sendMode",
+        "Perfect Week Daily Check Status",
+        "Perfect Week Daily Check Detail",
+        "Perfect Week Daily Requirement Met?",
+        "Perfect Week Video Count",
+        "Perfect Week Zoom Meeting Count",
+        "Perfect Week Zoom Attendance Count",
+        "Perfect Week Homework Requirement Met?",
+        "Perfect Week Automation Status",
+        "Perfect Week Automation Error",
+        "Perfect Week Video Requirement Met?",
+        "Perfect Week Zoom Requirement Met?",
+        "Perfect Week Eligible?",
+        "Perfect Week Unlock",
+        "Perfect Week Calculation Queue?",
+        "Perfect Week Zoom Requirement Status",
+        "Perfect Week Homework Assigned Count",
+        "Perfect Week Homework Satisfactory Count",
+        "Perfect Week Homework Completion %",
+        "Perfect Week Homework Requirement Status",
+        "Perfect Week Test Override?"
+      ]
+    },
+    "Athletes": {
+      "id": "tblTluxBr3DcVrh6h",
+      "fields": [
+        {
+          "name": "Full Name",
+          "type": "formula",
+          "id": "fldOQpa4GxVcU9ggc",
+          "options": {}
+        },
+        {
+          "name": "First Name",
+          "type": "singleLineText",
+          "id": "fldS9q8hUiaaq6VjH"
+        },
+        {
+          "name": "Last Name",
+          "type": "singleLineText",
+          "id": "fldkigdfHbHNmTg6L"
+        },
+        {
+          "name": "Parent Email",
+          "type": "email",
+          "id": "fldoJwkFLxsU4vdAe"
+        },
+        {
+          "name": "Athlete Match Key",
+          "type": "formula",
+          "id": "fldAZn3tPwDF1ZNrs",
+          "options": {}
+        },
+        {
+          "name": "Athlete ID",
+          "type": "formula",
+          "id": "fld4iy35C7tZalyEk",
+          "options": {}
+        },
+        {
+          "name": "Active?",
+          "type": "checkbox",
+          "id": "fldtt04Fxk7MC9WdC",
+          "options": {}
+        },
+        {
+          "name": "Enrollments",
+          "type": "multipleRecordLinks",
+          "id": "fldU1pdEoxT7INud9",
+          "options": {
+            "linkedTableId": "tbl3PFmwbRoabu1YV",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "id": "fldJbbZw7U6r246Zz",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        }
+      ],
+      "allFieldNames": [
+        "Full Name",
+        "First Name",
+        "Last Name",
+        "Parent Email",
+        "Athlete Match Key",
+        "Athlete ID",
+        "Active?",
+        "Register Date",
+        "Enrollments",
+        "Submissions",
+        "RecordId"
+      ]
+    },
+    "Programs": {
+      "missing": true
+    },
+    "Program Instances": {
+      "missing": true
+    },
+    "Config": {
+      "id": "tblRB6sh77NxjS568",
+      "fields": [
+        {
+          "name": "Active School Year",
+          "type": "singleLineText",
+          "id": "fldzmpiqjR4etQ24C"
+        },
+        {
+          "name": "Max Videos Per Submission",
+          "type": "number",
+          "id": "fld8IwARVKdshaLzH",
+          "options": {}
+        },
+        {
+          "name": "Submission Base XP",
+          "type": "number",
+          "id": "fldXk7fRSgpir8iwZ",
+          "options": {}
+        },
+        {
+          "name": "Shot XP Per Shot",
+          "type": "number",
+          "id": "fldP7lyb4xfxW6vXR",
+          "options": {}
+        },
+        {
+          "name": "Submission XP Active?",
+          "type": "checkbox",
+          "id": "fldNo8Innj9RKdgbJ",
+          "options": {}
+        },
+        {
+          "name": "Submission XP Notes",
+          "type": "multilineText",
+          "id": "fld0VA71ymOcxhg6X"
+        },
+        {
+          "name": "Challenge Week Count",
+          "type": "number",
+          "id": "fldxXVEXMSInASsiB",
+          "options": {}
+        },
+        {
+          "name": "Active XP Rule Set",
+          "type": "singleLineText",
+          "id": "fldhbswhXMrXPCJ0G"
+        },
+        {
+          "name": "Recording Makeup Counts for Perfect Week?",
+          "type": "checkbox",
+          "id": "fldmahedrTcx111aX",
+          "options": {}
+        },
+        {
+          "name": "Recording Approval Email Enabled?",
+          "type": "checkbox",
+          "id": "fldWGs5xDGD4UwIDM",
+          "options": {}
+        },
+        {
+          "name": "Recording Approval Email Timing",
+          "type": "singleSelect",
+          "id": "fld3m4sPbI5xHint3",
+          "options": {
+            "choices": [
+              "On Satisfactory"
+            ]
+          }
+        },
+        {
+          "name": "Recording Approval Email Template Key",
+          "type": "singleLineText",
+          "id": "fldzmMcbHHJ77yz0v"
+        },
+        {
+          "name": "Program Instance",
+          "type": "multipleRecordLinks",
+          "id": "fld9KuUMhOAavlk2Y",
+          "options": {
+            "linkedTableId": "tblMfALZa4YYUy70P",
+            "isReversed": false,
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "name": "Recording Makeup Counts for Perfect Week YN",
+          "type": "formula",
+          "id": "fldZfMa3MHCr23Flu",
+          "options": {}
+        },
+        {
+          "name": "Recording Approval Email Enabled YN",
+          "type": "formula",
+          "id": "fldW69DD0odzxMURh",
+          "options": {}
+        }
+      ],
+      "allFieldNames": [
+        "Active School Year",
+        "Root Google Drive Folder ID",
+        "Root Google Drive Folder Link",
+        "Max Videos Per Submission",
+        "File",
+        "File Naming Pattern",
+        "Detailed Stat Tracking Enabled?",
+        "Require Detailed Stats?",
+        "HW Review Enabled?",
+        "Video Review Enabled?",
+        "Submission Base XP",
+        "Shot XP Per Shot",
+        "Submission XP Active?",
+        "Submission XP Notes",
+        "Challenge Week Count",
+        "Active XP Rule Set",
+        "Zoom Recording XP Percent of Live",
+        "Recording Gives Full Zoom Gate Credit?",
+        "Recording Makeup Counts for Perfect Week?",
+        "Recording Quiz Requires Coach Approval?",
+        "Recording Makeup Enabled?",
+        "Zoom Recording Makeup Window Days",
+        "Zoom Recording Deadline Mode",
+        "Recording Approval Email Enabled?",
+        "Recording Approval Email Timing",
+        "Recording Approval Email Template Key",
+        "Recording Path Enabled?",
+        "Program Instance",
+        "Is Global Default?",
+        "Zoom Meetings",
+        "Zoom Meetings 2",
+        "Recording Gives Full Zoom Gate Credit YN",
+        "Recording Makeup Counts for Perfect Week YN",
+        "Recording Quiz Requires Coach Approval YN",
+        "Recording Makeup Enabled YN",
+        "Recording Approval Email Enabled YN"
+      ]
+    }
+  }
+}
