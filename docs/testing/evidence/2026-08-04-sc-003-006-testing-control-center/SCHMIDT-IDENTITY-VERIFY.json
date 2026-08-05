@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T00:12:42.570Z",
+  "generated_at": "2026-08-05T13:19:35.065Z",
   "base_id": "appn84sqPw03zEbTT",
   "read_only": true,
   "ids": {
@@ -20,7 +20,11 @@
       "recuuTBgstSTGg2E3",
       "recjt6QpUcprSIxAk",
       "recz8udwv0cQ7i96E",
-      "recEQQ6ZGZYV1M7Lz"
+      "recEQQ6ZGZYV1M7Lz",
+      "recWFHXJoUGi1e7cX",
+      "rec3BHRPdtlv806do",
+      "recQxnFNmoOvXgGoR",
+      "recqTSE7rTpEj5hMP"
     ],
     "was_ids": [
       "recuxvGq2kY8WKcey"
@@ -37,7 +41,11 @@
     "homework_completion_ids": [
       "recrBnHbLvDpFyIeO",
       "rec47dIoMkobsSM0T",
-      "rec7Nr2M69SwwgBV8"
+      "rec7Nr2M69SwwgBV8",
+      "recegwuST5lyFNLX4",
+      "recRi12lcH2epFi2L",
+      "recR4RaQNukzAcCi7",
+      "recrEd8bz3ic7Ihc8"
     ]
   },
   "foundation_week_fetch": {
@@ -169,7 +177,7 @@
         "table": "Submissions",
         "field": null,
         "expected": ">=1",
-        "actual": 9,
+        "actual": 13,
         "record_ids": [
           "rec9yoDZ3DMIEhi3I",
           "recbAVGWg0OKT7FSX",
@@ -179,7 +187,11 @@
           "recuuTBgstSTGg2E3",
           "recjt6QpUcprSIxAk",
           "recz8udwv0cQ7i96E",
-          "recEQQ6ZGZYV1M7Lz"
+          "recEQQ6ZGZYV1M7Lz",
+          "recWFHXJoUGi1e7cX",
+          "rec3BHRPdtlv806do",
+          "recQxnFNmoOvXgGoR",
+          "recqTSE7rTpEj5hMP"
         ],
         "probable_cause": null,
         "suggested_next_action": null,
@@ -327,7 +339,7 @@
         "notes": "Completion master SC-004: do not hide Schmidt unless Mike changes the decision. This check records policy compliance only."
       }
     ],
-    "generated_at": "2026-08-05T00:12:42.569Z",
+    "generated_at": "2026-08-05T13:19:35.064Z",
     "read_only": true
   },
   "policy": {

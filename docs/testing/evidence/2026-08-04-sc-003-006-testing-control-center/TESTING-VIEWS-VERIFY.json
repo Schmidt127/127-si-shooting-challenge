@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-05T00:12:38.328Z",
+  "generated_at": "2026-08-05T13:19:29.697Z",
   "base_id": "appn84sqPw03zEbTT",
   "read_only": true,
   "schmidt_enrollment_id": "recgP9qZYjAhE7NXm",
@@ -31,7 +31,7 @@
       "match_kind": "interim_only",
       "matched_view_name": "Workflow testing only",
       "matched_view_id": "viwHOukunutCEKfZ5",
-      "row_count_sampled": 9,
+      "row_count_sampled": 13,
       "truncated": false,
       "expected_ids_found": [
         "recuuTBgstSTGg2E3",
