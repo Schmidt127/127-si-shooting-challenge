@@ -61,7 +61,7 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-04**. Recalculate when statuses change.
+Counts below match Section 4 as of **2026-08-05** (post-integration recount of PRs #66/#65/#64). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
