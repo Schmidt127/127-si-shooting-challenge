@@ -16,7 +16,7 @@ After squash-merging PRs **#66 → #65 → #64** into `master`.
 
 | SC | Status |
 |----|--------|
-| SC-003 | Built in Repository |
+| SC-003 | Live Tested in PROD (2026-08-05 short-name aliases) |
 | SC-004 | Live Tested in PROD |
 | SC-005 | Live Tested in PROD |
 | SC-006 | Live Tested in PROD |
@@ -29,10 +29,7 @@ After squash-merging PRs **#66 → #65 → #64** into `master`.
 
 ### SC-003
 
-1. Paste `docs/testing/views/OMNI-INSTALL-PROMPT.md` into Omni.
-2. Complete `docs/testing/views/OPERATOR-CHECKLIST.md`.
-3. Run `node tools/testing/verify_testing_views.mjs --require-installed`.
-4. Advance SC-003 only after that passes.
+**Done (aliases package):** PROD short names under section `02 TESTING` are accepted; `--require-installed` PASS. No further Omni recreate required unless Mike renames views.
 
 ### SC-009 / SC-101
 

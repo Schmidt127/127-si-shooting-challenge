@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (integrate PRs #66/#65/#64 — SC-003–SC-009 testing + reliability + photo homework) |
+| Last updated | **2026-08-05** (SC-003 Testing Views aliases — Live Tested in PROD) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -61,15 +61,15 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (post-integration recount of PRs #66/#65/#64). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (SC-003 view-alias live verify). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 13 |
-| Live Tested in PROD | 22 |
+| Live Tested in PROD | 23 |
 | Installed but not tested *(Installed in PROD)* | 50 |
-| Built but not installed *(Built in Repository)* | 26 |
+| Built but not installed *(Built in Repository)* | 25 |
 | Ready for PROD Paste *(informal — SC-021)* | 1 |
 | Planned | 17 |
 | Decision Needed | 5 |
@@ -77,6 +77,14 @@ Counts below match Section 4 as of **2026-08-05** (post-integration recount of P
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — SC-003 Testing Views short-name aliases)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-003 | Built in Repository | **Live Tested in PROD** | Meta API listed short names under section `02 TESTING`; aliases added; `--require-installed` PASS (10/10 required, 0 sanity fails) | `docs/testing/views/TESTING-VIEWS-SPEC.json`; `TESTING-VIEWS-VERIFY.json` |
+
+**Net math:** Built 26→**25**; LT 22→**23**. Live matches include `Schmidt Testing` (not `Schmidt Scenarios`), `Schmidt Submissions`, `Schmidt WAS`, etc. `Grid Testing View` remains unacceptable for WAS.
 
 ### Dashboard reconciliation (2026-08-04 — SC-003–SC-006 testing control center)
 
@@ -202,7 +210,7 @@ Columns:
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
 | SC-001 | Testing | Universal Testing Scenarios framework so Mike can run Fillout-shaped tests without Fillout | Live Tested in PROD | **115 installed in PROD** (v1.8/v1.9 msg); dry+live PASS 2026-07-23; **rerun PASS 2026-07-24** (Submission `recjt6QpUcprSIxAk`, XP `recovVbiZynRUtDwF`); offline harness 17 tests; scenario catalog 20 fixtures | Expand HW/Video live branches; UI-attest inventory; optional paste v1.9 | SC-004, SC-059 | No second XP path; reruns create additional Submissions by design | `docs/overnight/testing-integrity/`; `live-115-rerun-latest.json`; `docs/testing/scenarios/` | **Resolved:** allowed in PROD | P0 | 2026-07-24 |
 | SC-002 | Testing | Test scenario library / templates for repeatable suites | Installed in PROD | PROD has SCN-001–020 installed and revalidated 2026-07-25 (`Run Test?` off; Schmidt-linked); repo also has **SCN-021–026** (PR #43) + **SCN-027/028** quiz Option B (PR #44) + **SCN-029** weekly-email retry (PR #46) + **SCN-030–043** Agent 1 hardening fixtures Built pending PROD install | Install/execute SCN-021–043 on Schmidt; expand matrix; optional Airtable fields/UI only if approved | SC-001 | Library is config, not a second XP path; do not mark Live Tested from install alone | `docs/testing/scenarios/`; `PROD-INSTALL-EVIDENCE-2026-07-25.md`; `SC-002-COMPLETION-MASTER-RECONCILIATION-2026-07-25.md` | Confirm Airtable library table still wanted | P1 | 2026-07-27 |
-| SC-003 | Testing | Testing views on key pipeline tables | Built in Repository | Exact view spec JSON + Omni install prompt + operator checklist + Meta/Data API verifier; live PROD Meta scan shows canonical Schmidt Testing views **mostly absent** (only Unlocks `Testing` alias / interim Submissions `Workflow testing only`) | Mike/OMNI create remaining Testing views per `docs/testing/views/OMNI-INSTALL-PROMPT.md`; re-run `verify_testing_views.mjs --require-installed`; confirm Schmidt visibility | SC-004 | API cannot create views; **do not hide Schmidt** | `docs/testing/views/`; `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/TESTING-VIEWS-VERIFY.json`; `TESTING-VIEWS-MIKE-ACTIONS.md` | — | P0 | 2026-08-04 |
+| SC-003 | Testing | Testing views on key pipeline tables | Live Tested in PROD | PROD views under section `02 TESTING` with short names; verifier aliases match Meta API (`Schmidt Testing`, `Schmidt Submissions`, …, `Seeded Weeks`); `--require-installed` PASS 2026-08-05 (10/10 required; XP/Assets/Enrollments sanity OK; known IDs visible) | Keep short aliases in sync if Mike renames; optional rename to canonical `Testing - …` names is not required | SC-004 | API cannot create views; **do not hide Schmidt**; do not accept `Grid Testing View` for WAS | `docs/testing/views/TESTING-VIEWS-SPEC.json`; `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/TESTING-VIEWS-VERIFY.json` | — | P0 | 2026-08-05 |
 | SC-004 | Testing | Permanent Schmidt testing enrollment for live PROD tests | Live Tested in PROD | Athlete `recgqVstObQRzgXJF` + Enrollment `recgP9qZYjAhE7NXm` re-verified Active; Week `recVDKiYATgzsfpmE`; WAS `recuxvGq2kY8WKcey`; Submission→XP→HW→VF→Zoom links PASS (identity verifier 17/17) | Keep emails Schmidt-only; **Schmidt remains visible on public standings**; optional refresh when foundation WAS IDs change | — | No separate exclusion field; web must not invent name filters | `SCHMIDT-IDENTITY-VERIFY.json`; `PROD-LIVE-SNAPSHOT.json`; foundation reset evidence | **Resolved:** Active?=true; standings visibility = keep Schmidt for now | P0 | 2026-08-04 |
 | SC-005 | Testing | Full end-to-end live PROD matrix (all major paths) | Live Tested in PROD | Executable runner `run_e2e_matrix.mjs`; 2026-08-04 PROD run 11 PASS / 4 BLOCKED / 2 NOT_TESTED / 0 FAIL covering identity, daily XP, homework, video presence, Zoom presence, WAS, idempotency refs | Unblock B3 policy / B5 backdate week; streak+milestone when unlocks exist; email/failure inject → SC-008 | SC-001–SC-004, core pipelines | Controlled data only; no mass email | `E2E-MATRIX-RESULTS.json`; `docs/V2_END_TO_END_TEST_MATRIX.md` | B3 Count-It day policy still open | P0 | 2026-08-04 |
 | SC-006 | Testing | Automatic Expected-versus-Actual results on scenarios | Live Tested in PROD | Expanded read-only verifier (daily + Schmidt identity + homework + video + zoom + writeback policy); offline 11/11; live matrix/identity PASS | Keep read-only unless Mike designates one Pass/Fail writer; optional wire CLI report into scenario UI manually | SC-001, SC-002 | Read-only scoring preferred — no competing production writer | `tools/testing/lib/expected_actual.js`; `airtableWritebackPolicy()`; evidence folder | **Decision:** writeback stays off for now | P2 | 2026-08-04 |
