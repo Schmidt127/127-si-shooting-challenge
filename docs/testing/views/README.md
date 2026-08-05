@@ -49,13 +49,13 @@ node tools/testing/verify_testing_views.mjs --require-installed
 
 | Field | Value |
 |-------|--------|
-| Operator | |
-| Date | |
+| Operator | (PROD short-name install attested 2026-08-05) |
+| Date | 2026-08-05 |
 | Omni used? | ☐ |
 | Manual UI used? | ☐ |
-| Verifier JSON path | `docs/testing/evidence/.../TESTING-VIEWS-VERIFY.json` |
-| SC-003 may advance to Installed in PROD? | ☐ only if names exist + counts sane + Schmidt visible |
+| Verifier JSON path | `docs/testing/evidence/2026-08-04-sc-003-006-testing-control-center/TESTING-VIEWS-VERIFY.json` (+ aliases pass 2026-08-05) |
+| SC-003 final status | **Complete** (2026-08-05) — 10/10 `--require-installed`; optional canonical rename not required |
 
 ## Honesty gate
 
-Do **not** mark SC-003 Installed / Live Tested / Complete from Omni text alone. Require Meta API name presence + sane view row counts + known Schmidt IDs visible.
+Do **not** mark SC-003 Installed / Live Tested / Complete from Omni text alone. Require Meta API name presence + sane view row counts + known Schmidt IDs visible. **That bar was met 2026-08-05** (short aliases under `02 TESTING`). Current completion-master status is **Complete**; re-run verifier after renames.

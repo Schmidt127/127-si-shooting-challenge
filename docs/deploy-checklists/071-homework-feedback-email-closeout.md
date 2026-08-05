@@ -1,10 +1,18 @@
 # Automation 071 — Homework Feedback Email (Reviewer File URL) closeout
 
-**Status:** Built in Repository — **PROD paste + live rerun still required**  
-**Date:** 2026-08-05  
+**Status: Complete**  
+**PROD deployed:** 2026-08-05  
+**Live tested:** 2026-08-05  
 **Canonical script:** `airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js`  
-**Expected version after paste:** **v3.5**  
-**Prior version (rollback):** **v3.4**
+**Version deployed:** **v3.5**  
+**Prior version (rollback):** **v3.4**  
+**Evidence type:** Operator attestation (2026-08-05). Screenshots / detailed Make execution logs were **not** captured in-repo.
+
+| Git | Value |
+|-----|--------|
+| PR | [#77](https://github.com/Schmidt127/127-si-shooting-challenge/pull/77) |
+| Code commit | `e3f96f8e8d195aeb66ec808c458e41e5abc903d5` |
+| Merge SHA | `5e17b85c169058b8a56e30c12aca064366f0ce1a` |
 
 ---
 
@@ -48,17 +56,47 @@ Original File Name → Asset Label → "View submitted homework"
 
 ---
 
-## Script paste (PROD)
+## Live PROD closeout (operator attestation — 2026-08-05)
 
-1. Open merged GitHub file:
-   `airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js`
+Controlled records:
+
+```text
+Homework Completion: recH71jEgjxzLup6F
+Submission Asset: recaGfnTzKFnCDazA
+```
+
+Operator confirmed the complete live path:
+
+```text
+Automation 071 selected Reviewer File URL
+Parent Feedback Subject populated
+Make webhook received
+Gmail sent
+Parent Feedback Sent? checked by Make
+Parent Feedback Sent On populated by Make
+Parent Feedback Send Error blank
+No duplicate email on rerun
+```
+
+### SC items advanced by this proof
+
+| SC | Status after closeout | Notes |
+|----|----------------------|-------|
+| **SC-017** | **Complete** | Unified coach review → satisfactory → XP → parent email proven on controlled HC |
+| **SC-045** | **Installed in PROD** (unchanged bucket) | Homework parent email re-proven; **welcome / video / 117f** still need individual re-proof |
+
+---
+
+## Script paste (PROD) — completed 2026-08-05
+
+Historical paste steps (for rollback / reinstall):
+
+1. Open merged GitHub file (v3.5).
 2. Confirm header/docblock **Version: v3.5** and `CONFIG.version = "v3.5"`.
-3. Copy from the production docblock (`/************************************************************`) through end of file.
-4. **Skip** the GitHub-only header block at the very top (lines before the production docblock).
-5. In Airtable → Automations → **071** → Scripting action → replace the **full** script body.
-6. Preserve existing automation inputs (`recordId`, `makeWebhookUrl`, `sendMode`, `testRecipientEmail`, optional `replyTo`) and trigger conditions.
-7. Save → run Airtable syntax check.
-8. Do **not** change Make scenario unless a separate contract failure appears (payload still uses `assetFiles` / `htmlOut` / `subjectOut`).
+3. Copy from the production docblock through end of file.
+4. **Skip** the GitHub-only header block at the very top.
+5. Replace full Airtable 071 script body; preserve inputs and trigger.
+6. Save → syntax-check.
 
 Recommended trigger conditions (unchanged):
 
@@ -73,55 +111,22 @@ Do **not** require Upload Ready / Writeback Complete / Submission Assets not emp
 
 ---
 
-## Controlled rerun
+## Idempotency
 
-Use:
-
-```text
-Homework Completion: recH71jEgjxzLup6F
-Submission Asset: recaGfnTzKFnCDazA
-```
-
-### Expected Automation 071 result
-
-- Pre-send validation passes
-- **Reviewer File URL** selected for the linked asset
-- `Parent Feedback Subject` populated
-- Make webhook accepted (2xx + validated body)
-- `Parent Feedback Send Error` blank
-- **`Parent Feedback Sent?` still unchecked** until Make/Gmail succeeds
-
-### Expected Make result
-
-- Gmail sent
-- `Parent Feedback Sent?` checked
-- `Parent Feedback Sent On` populated
-
----
-
-## Idempotency rerun
-
-A second run should:
-
-- skip because `Parent Feedback Sent?` is already checked (`skipped_already_sent`), **or**
-- Make dedupe safely prevents a duplicate email
+Second run after Make writeback: skip because `Parent Feedback Sent?` is checked (`skipped_already_sent`), or Make dedupe prevents duplicate email. **Operator attested: no duplicate email on rerun.**
 
 ---
 
 ## Rollback
 
-1. Open prior GitHub revision of the same file at **v3.4** (parent of the v3.5 merge commit, or tagged history).
+1. Open prior GitHub revision of the same file at **v3.4**.
 2. Paste full v3.4 script into Airtable 071 (skip GitHub-only header).
 3. Save + syntax-check.
 4. Note: rollback restores the Google Drive–only requirement and will again fail AWS/Lambda assets without Drive URLs.
 
 ---
 
-## Live Tested gate
-
-Do **not** mark this package Live Tested / Complete in the completion master until Mike supplies successful Airtable 071 + Make/Gmail evidence for `recH71jEgjxzLup6F` (or equivalent Schmidt controlled rerun).
-
-Offline tests:
+## Offline tests (repo)
 
 ```bash
 node --check airtable/automations/shooting-challenge/071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js
