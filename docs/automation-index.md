@@ -50,7 +50,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep | `020-homework-link-or-create-homework-completion.js` |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.1.0** (PHA link; paste pending) | `020-homework-link-or-create-homework-completion.js` (**v3.1.0**) |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
@@ -65,7 +65,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 030 | Weekly Summary — Copy Enrollment Grade Band to Weekly Summary | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js` |
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when `Count This Submission?` checked and WAS empty | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` |
 | 032 | Weekly Summary — Link Challenge Goal to WAS | *confirm in Airtable* | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` |
-| 033 | Weekly Summary — Assign Homework to WAS | *confirm in Airtable* | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` |
+| 033 | Weekly Summary — Assign Homework to WAS | *confirm in Airtable* — **repo v3.2** (PHA-first; paste pending) | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v3.2**) |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)

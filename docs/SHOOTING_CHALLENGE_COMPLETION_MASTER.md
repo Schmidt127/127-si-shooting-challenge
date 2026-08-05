@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (057 v1.5 admin correction + Perfect Week fixture pack; not Complete) |
+| Last updated | **2026-08-05** (Program Homework Assignments MVP live in PROD; Perfect Week resume next) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -94,6 +94,17 @@ Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correc
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Program Homework Assignments MVP)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Junction table `Program Homework Assignments` | **Live in PROD** `tblhA3maf7xOa8EUS` | Additive scheduling; library Week links untouched |
+| Automation 033 / 020 | **Built in Repository** (v3.2 / v3.1.0) — PROD paste still required | Prefer PHA; legacy fallback retained |
+| Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA `reca5GM1JkROhXOiy` + `reccQhrgOK8e8Yngv`; HC `recqXxlOpATQI3sD4` + `rechzFmWrUp1tonto` |
+| Perfect Week 057 | **Do not run in this package** | Resume Perfect Week next (gated path / PR #81) |
+
+Runbook: [`docs/deploy-checklists/program-homework-assignments-mvp.md`](./deploy-checklists/program-homework-assignments-mvp.md).
 
 ### Dashboard reconciliation (2026-08-05 — Automation 057 v1.5 install + Perfect Week fixtures)
 

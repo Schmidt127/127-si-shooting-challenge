@@ -2,9 +2,9 @@
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.0.0
+ * Version: v3.1.0
  * Date Written: 2026-05-20
- * Last Updated: 2026-07-14
+ * Last Updated: 2026-08-05
  * Supersedes: separate 063 (copy Enrollment Grade Band → HC)
  *
  * PURPOSE
@@ -13,9 +13,15 @@
  * - Finds the homework assignment from the linked Submission.
  * - Finds or creates the matching Homework Completion.
  * - Links the Submission Asset to the Homework Completion.
+ * - When Program Homework Assignments exist, resolves the active junction
+ *   record (Program Instance + Week + Grade Band + Slot) and links it on HC.
  * - Marks the asset Pending Link and checks Send to Make Trigger for 070a.
  * - Sets or repairs Homework Completions → Grade Band from Submission
  *   Grade Band when present, else Enrollment Grade Band (former 063).
+ *
+ * Version 3.1.0 updates (2026-08-05):
+ * - Additive link to Program Homework Assignment on create/update when resolvable.
+ * - Legacy Homework library link on HC retained.
  *
  * IMPORTANT DESIGN RULES
  * - Upload Status Make send gate is Pending Link (same ladder as 009, 013, 070a, 070b).
@@ -81,13 +87,14 @@
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.0.0",
+  version: "v3.1.0",
 
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
     homework: "Homework Completions",
     enrollments: "Enrollments",
+    programHomeworkAssignments: "Program Homework Assignments",
   },
 
   assets: {
@@ -123,10 +130,21 @@ const CONFIG = {
 
   enrollments: {
     gradeBand: "Grade Band",
+    programInstance: "Program Instance",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    gradeBand: "Grade Band",
+    slot: "Homework Slot",
+    active: "Active?",
   },
 
   homework: {
     homework: "Homework",
+    programHomeworkAssignment: "Program Homework Assignment",
     submission: "Submissions - Linked",
     uploadStatus: "Upload Status",
     submissionAssets: "Submission Assets",
@@ -171,6 +189,7 @@ let assetsTable;
 let submissionsTable;
 let homeworkTable;
 let enrollmentsTable;
+let phaTable;
 
 /* =========================================================
    SECTION 2 — HELPERS
@@ -311,6 +330,63 @@ function homeworkFieldForSlot(slot) {
   if (slot === "HW1") return CONFIG.submissions.homeworkName1;
   if (slot === "HW2") return CONFIG.submissions.homeworkName2;
   return "";
+}
+
+async function resolveProgramHomeworkAssignmentId({
+  weekId,
+  gradeBandId,
+  programInstanceId,
+  slot,
+  homeworkLibraryId,
+}) {
+  if (!phaTable || !fieldExists(homeworkTable, CONFIG.homework.programHomeworkAssignment)) {
+    return "";
+  }
+  if (!weekId || !slot || !homeworkLibraryId) return "";
+
+  const fields = safeFields(phaTable, Object.values(CONFIG.pha));
+  const query = await phaTable.selectRecordsAsync({ fields });
+
+  const matches = query.records.filter(record => {
+    if (firstLinkedId(record, CONFIG.pha.week) !== weekId) return false;
+    if (firstLinkedId(record, CONFIG.pha.homeworkAssignment) !== homeworkLibraryId) return false;
+
+    const recordSlot = selectName(record, CONFIG.pha.slot);
+    if (recordSlot !== slot) return false;
+
+    if (gradeBandId) {
+      const gb = firstLinkedId(record, CONFIG.pha.gradeBand);
+      if (gb && gb !== gradeBandId) return false;
+    }
+
+    if (programInstanceId) {
+      const pi = firstLinkedId(record, CONFIG.pha.programInstance);
+      if (pi && pi !== programInstanceId) return false;
+    }
+
+    if (fieldExists(phaTable, CONFIG.pha.active)) {
+      const active = cell(record, CONFIG.pha.active);
+      if (!(active === true || active === 1 || active === "1")) return false;
+    }
+
+    return true;
+  });
+
+  if (matches.length === 0) return "";
+  if (matches.length > 1) {
+    console.log(
+      JSON.stringify({
+        automation: CONFIG.scriptName,
+        version: CONFIG.version,
+        warning: "multiple_pha_matches_using_first",
+        slot,
+        weekId,
+        homeworkLibraryId,
+        ids: matches.map(r => r.id),
+      })
+    );
+  }
+  return matches[0].id;
 }
 
 function getHomeworkSlot(homeworkRecord) {
@@ -583,6 +659,11 @@ async function main() {
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   homeworkTable = base.getTable(CONFIG.tables.homework);
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+  try {
+    phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+  } catch {
+    phaTable = null;
+  }
 
   debugStep = "load_submission_asset";
   setOutputSafe("debugStep", debugStep);
@@ -716,6 +797,28 @@ async function main() {
     );
   }
 
+  const weekIds = linkedIds(submission, CONFIG.submissions.week);
+  const submissionGradeBandIds = linkedIds(submission, CONFIG.submissions.gradeBand);
+  let programInstanceId = "";
+  if (enrollmentIds[0] && fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
+    try {
+      const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentIds[0]);
+      if (enrollmentRecord) {
+        programInstanceId = firstLinkedId(enrollmentRecord, CONFIG.enrollments.programInstance);
+      }
+    } catch {
+      programInstanceId = "";
+    }
+  }
+
+  const phaId = await resolveProgramHomeworkAssignmentId({
+    weekId: weekIds[0] || "",
+    gradeBandId: submissionGradeBandIds[0] || "",
+    programInstanceId,
+    slot,
+    homeworkLibraryId: homeworkId,
+  });
+
   debugStep = "find_homework_completion";
   setOutputSafe("debugStep", debugStep);
 
@@ -793,6 +896,9 @@ async function main() {
 
     if (!firstLinkedId(homeworkCompletion, CONFIG.homework.homework)) {
       setLink(updateFields, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    if (phaId) {
+      setLink(updateFields, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
+    }
     }
 
     if (!text(homeworkCompletion, CONFIG.homework.assetLabel)) {
@@ -875,6 +981,9 @@ async function main() {
     const createFields = {};
 
     setLink(createFields, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    if (phaId) {
+      setLink(createFields, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
+    }
     setLink(createFields, homeworkTable, CONFIG.homework.submission, [submission.id]);
     setLink(createFields, homeworkTable, CONFIG.homework.enrollment, enrollmentIds);
     setLink(createFields, homeworkTable, CONFIG.homework.week, linkedIds(submission, CONFIG.submissions.week));

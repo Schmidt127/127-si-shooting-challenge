@@ -26,28 +26,30 @@ Airtable is the deployed/running copy.
  * 033 - WEEKLY SUMMARY AND GOAL LOGIC
  * Assign Homework to Weekly Athlete Summary
  *
- * Version: v3.1
+ * Version: v3.2
  * Date Written: 2026-05-27
- * Last Updated: 2026-05-27
+ * Last Updated: 2026-08-05
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
- * - Reads the linked Week.
- * - Reads the linked Grade Band.
- * - Finds matching homework/curriculum records in FBC Curriculum - SYNC.
- * - Matches homework by Week + Grade Band.
- * - Filters to Active? = checked, if that field exists.
- * - Filters to Published? = checked, if that field exists.
- * - Sorts homework by Assignment Number, if that field exists.
- * - Writes matching homework records to Weekly Athlete Summary → Homework.
+ * - Reads the linked Week and Grade Band.
+ * - Prefers matching active Program Homework Assignments (MVP junction) by
+ *   Program Instance (from Enrollment when available) + Week + Grade Band.
+ * - Falls back to legacy FBC Curriculum - SYNC Week + Grade Band matching when
+ *   no junction matches exist (or the junction table is absent).
+ * - Writes matched reusable library homework records to Weekly Athlete Summary → Homework.
+ *
+ * Version 3.2 updates (2026-08-05):
+ * - Additive Program Homework Assignments resolution path for scheduling reuse.
+ * - Legacy curriculum Week link path retained as fallback (not deleted).
  *
  * IMPORTANT DESIGN RULES
  * - This automation only assigns homework to the Weekly Athlete Summary.
- * - Match by BOTH Week and Grade Band.
- * - Do not match by Week only.
- * - Do not match by Grade Band only.
- * - Do not create homework records here.
- * - Do not write to formula, lookup, rollup, or other read-only fields.
+ * - Match by Program Instance + Week + Grade Band when using the junction table.
+ * - Legacy path still matches by BOTH Week and Grade Band on FBC Curriculum - SYNC.
+ * - Do not create homework library records here.
+ * - Do not write to formula, rollup, lookup, or other read-only fields.
+ * - Do not modify FBC Curriculum - SYNC.Week links.
  *
  * FOLDER
  * - 03 - Weekly Summary and Goal Logic
@@ -96,17 +98,33 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
-  version: "v3.1",
+  version: "v3.2",
 
   tables: {
     weeklySummary: "Weekly Athlete Summary",
     curriculum: "FBC Curriculum - SYNC",
+    programHomeworkAssignments: "Program Homework Assignments",
+    enrollments: "Enrollments",
   },
 
   weeklySummary: {
     week: "Week",
     gradeBand: "Grade Band",
     homework: "Homework",
+    enrollment: "Enrollment",
+  },
+
+  enrollments: {
+    programInstance: "Program Instance",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    gradeBand: "Grade Band",
+    slot: "Homework Slot",
+    active: "Active?",
   },
 
   curriculum: {
@@ -126,6 +144,7 @@ const CONFIG = {
 
   actions: {
     assignedHomework: "assigned_homework",
+    assignedHomeworkFromPha: "assigned_homework_from_pha",
     alreadyAssigned: "already_assigned",
     skippedNoMatches: "skipped_no_matching_homework",
   },
@@ -154,6 +173,20 @@ if (!recordId) {
 
 const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
 const curriculumTable = base.getTable(CONFIG.tables.curriculum);
+
+let phaTable = null;
+try {
+  phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+} catch {
+  phaTable = null;
+}
+
+let enrollmentsTable = null;
+try {
+  enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+} catch {
+  enrollmentsTable = null;
+}
 
 /* =========================================================
    SECTION 4: HELPER FUNCTIONS
@@ -380,32 +413,35 @@ requireWritableField(
   "Weekly Athlete Summary -> Homework"
 );
 
-requireField(
-  curriculumTable,
-  CONFIG.curriculum.week,
-  "FBC Curriculum - SYNC -> Week"
-);
-
-requireField(
-  curriculumTable,
-  CONFIG.curriculum.gradeBand,
-  "FBC Curriculum - SYNC -> Grade Band"
-);
-
-if (CONFIG.debug.requireActive && fieldExists(curriculumTable, CONFIG.curriculum.active)) {
+// Curriculum Week/Grade Band remain required only for legacy fallback validation when PHA is absent.
+if (!phaTable) {
   requireField(
     curriculumTable,
-    CONFIG.curriculum.active,
-    "FBC Curriculum - SYNC -> Active?"
+    CONFIG.curriculum.week,
+    "FBC Curriculum - SYNC -> Week"
   );
-}
 
-if (CONFIG.debug.requirePublished && fieldExists(curriculumTable, CONFIG.curriculum.published)) {
   requireField(
     curriculumTable,
-    CONFIG.curriculum.published,
-    "FBC Curriculum - SYNC -> Published?"
+    CONFIG.curriculum.gradeBand,
+    "FBC Curriculum - SYNC -> Grade Band"
   );
+
+  if (CONFIG.debug.requireActive && fieldExists(curriculumTable, CONFIG.curriculum.active)) {
+    requireField(
+      curriculumTable,
+      CONFIG.curriculum.active,
+      "FBC Curriculum - SYNC -> Active?"
+    );
+  }
+
+  if (CONFIG.debug.requirePublished && fieldExists(curriculumTable, CONFIG.curriculum.published)) {
+    requireField(
+      curriculumTable,
+      CONFIG.curriculum.published,
+      "FBC Curriculum - SYNC -> Published?"
+    );
+  }
 }
 
 /* =========================================================
@@ -507,74 +543,180 @@ async function main() {
       throw new Error("Weekly Athlete Summary is missing Grade Band.");
     }
 
-    debugStep = "5 - Load Curriculum Records";
-    setOutputSafe("debugStep", debugStep);
-
-    const curriculumQuery = await curriculumTable.selectRecordsAsync({
-      fields: buildCurriculumFieldsToLoad(),
-    });
-
-    debugStep = "6 - Find Matching Homework";
-    setOutputSafe("debugStep", debugStep);
-
-    const matchingHomework = curriculumQuery.records.filter(homeworkRecord => {
-      const homeworkWeekId = getFirstLinkedRecordId(
-        homeworkRecord,
-        curriculumTable,
-        CONFIG.curriculum.week
+    let programInstanceId = "";
+    if (
+      enrollmentsTable &&
+      fieldExists(weeklySummaryTable, CONFIG.weeklySummary.enrollment) &&
+      fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)
+    ) {
+      const enrollmentId = getFirstLinkedRecordId(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.enrollment
       );
-
-      const homeworkGradeBandIds = getLinkedRecordIds(
-        homeworkRecord,
-        curriculumTable,
-        CONFIG.curriculum.gradeBand
-      );
-
-      if (homeworkWeekId !== weekId) return false;
-      if (!homeworkGradeBandIds.includes(gradeBandId)) return false;
-
-      if (
-        CONFIG.debug.requireActive &&
-        fieldExists(curriculumTable, CONFIG.curriculum.active)
-      ) {
-        if (!getBooleanish(homeworkRecord, curriculumTable, CONFIG.curriculum.active)) {
-          return false;
+      if (enrollmentId) {
+        const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
+        if (enrollmentRecord) {
+          programInstanceId = getFirstLinkedRecordId(
+            enrollmentRecord,
+            enrollmentsTable,
+            CONFIG.enrollments.programInstance
+          );
         }
       }
+    }
 
-      if (
-        CONFIG.debug.requirePublished &&
-        fieldExists(curriculumTable, CONFIG.curriculum.published)
-      ) {
-        if (!getBooleanish(homeworkRecord, curriculumTable, CONFIG.curriculum.published)) {
-          return false;
+    let matchSource = "legacy_curriculum";
+
+    if (
+      phaTable &&
+      fieldExists(phaTable, CONFIG.pha.homeworkAssignment) &&
+      fieldExists(phaTable, CONFIG.pha.week) &&
+      fieldExists(phaTable, CONFIG.pha.gradeBand)
+    ) {
+      debugStep = "5 - Load Program Homework Assignments";
+      setOutputSafe("debugStep", debugStep);
+
+      const phaFields = [
+        CONFIG.pha.homeworkAssignment,
+        CONFIG.pha.programInstance,
+        CONFIG.pha.week,
+        CONFIG.pha.gradeBand,
+        CONFIG.pha.slot,
+        CONFIG.pha.active,
+      ].filter(name => fieldExists(phaTable, name));
+
+      const phaQuery = await phaTable.selectRecordsAsync({ fields: phaFields });
+
+      debugStep = "6 - Find Matching Homework via PHA";
+      setOutputSafe("debugStep", debugStep);
+
+      const matchingPha = phaQuery.records.filter(phaRecord => {
+        const phaWeekId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.week);
+        const phaGradeBandId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.gradeBand);
+        if (phaWeekId !== weekId) return false;
+        if (phaGradeBandId !== gradeBandId) return false;
+
+        if (programInstanceId && fieldExists(phaTable, CONFIG.pha.programInstance)) {
+          const phaPi = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.programInstance);
+          if (phaPi && phaPi !== programInstanceId) return false;
         }
+
+        if (fieldExists(phaTable, CONFIG.pha.active)) {
+          if (!getBooleanish(phaRecord, phaTable, CONFIG.pha.active)) return false;
+        }
+
+        return Boolean(getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.homeworkAssignment));
+      });
+
+      matchingPha.sort((a, b) => {
+        const aSlot = String(
+          (a.getCellValue(CONFIG.pha.slot) && a.getCellValue(CONFIG.pha.slot).name) || ""
+        );
+        const bSlot = String(
+          (b.getCellValue(CONFIG.pha.slot) && b.getCellValue(CONFIG.pha.slot).name) || ""
+        );
+        const rank = s => (s === "HW1" ? 1 : s === "HW2" ? 2 : 9);
+        if (rank(aSlot) !== rank(bSlot)) return rank(aSlot) - rank(bSlot);
+        return a.id.localeCompare(b.id);
+      });
+
+      const seenLibrary = new Set();
+      matchedHomeworkIds = [];
+      homeworkTitles = [];
+      for (const phaRecord of matchingPha) {
+        const libraryId = getFirstLinkedRecordId(
+          phaRecord,
+          phaTable,
+          CONFIG.pha.homeworkAssignment
+        );
+        if (!libraryId || seenLibrary.has(libraryId)) continue;
+        seenLibrary.add(libraryId);
+        matchedHomeworkIds.push(libraryId);
+        const slotName = String(
+          (phaRecord.getCellValue(CONFIG.pha.slot) &&
+            phaRecord.getCellValue(CONFIG.pha.slot).name) ||
+            ""
+        );
+        homeworkTitles.push(slotName ? `${slotName}:${libraryId}` : libraryId);
       }
 
-      return true;
-    });
+      if (matchedHomeworkIds.length > 0) {
+        matchSource = "program_homework_assignments";
+      }
+    }
 
-    matchingHomework.sort((a, b) => {
-      const aOrder = getNumber(a, curriculumTable, CONFIG.curriculum.assignmentNumber, 999999);
-      const bOrder = getNumber(b, curriculumTable, CONFIG.curriculum.assignmentNumber, 999999);
+    if (matchedHomeworkIds.length === 0) {
+      debugStep = "5b - Load Curriculum Records (legacy fallback)";
+      setOutputSafe("debugStep", debugStep);
 
-      if (aOrder !== bOrder) return aOrder - bOrder;
+      const curriculumQuery = await curriculumTable.selectRecordsAsync({
+        fields: buildCurriculumFieldsToLoad(),
+      });
 
-      const aName = getText(a, curriculumTable, CONFIG.curriculum.assignmentFullName) || a.name;
-      const bName = getText(b, curriculumTable, CONFIG.curriculum.assignmentFullName) || b.name;
+      debugStep = "6b - Find Matching Homework (legacy)";
+      setOutputSafe("debugStep", debugStep);
 
-      return aName.localeCompare(bName);
-    });
+      const matchingHomework = curriculumQuery.records.filter(homeworkRecord => {
+        const homeworkWeekId = getFirstLinkedRecordId(
+          homeworkRecord,
+          curriculumTable,
+          CONFIG.curriculum.week
+        );
 
-    matchedHomeworkIds = matchingHomework.map(record => record.id);
+        const homeworkGradeBandIds = getLinkedRecordIds(
+          homeworkRecord,
+          curriculumTable,
+          CONFIG.curriculum.gradeBand
+        );
 
-    homeworkTitles = matchingHomework.map(record => {
-      return (
-        getText(record, curriculumTable, CONFIG.curriculum.assignmentFullName) ||
-        record.name ||
-        record.id
-      );
-    });
+        if (homeworkWeekId !== weekId) return false;
+        if (!homeworkGradeBandIds.includes(gradeBandId)) return false;
+
+        if (
+          CONFIG.debug.requireActive &&
+          fieldExists(curriculumTable, CONFIG.curriculum.active)
+        ) {
+          if (!getBooleanish(homeworkRecord, curriculumTable, CONFIG.curriculum.active)) {
+            return false;
+          }
+        }
+
+        if (
+          CONFIG.debug.requirePublished &&
+          fieldExists(curriculumTable, CONFIG.curriculum.published)
+        ) {
+          if (!getBooleanish(homeworkRecord, curriculumTable, CONFIG.curriculum.published)) {
+            return false;
+          }
+        }
+
+        return true;
+      });
+
+      matchingHomework.sort((a, b) => {
+        const aOrder = getNumber(a, curriculumTable, CONFIG.curriculum.assignmentNumber, 999999);
+        const bOrder = getNumber(b, curriculumTable, CONFIG.curriculum.assignmentNumber, 999999);
+
+        if (aOrder !== bOrder) return aOrder - bOrder;
+
+        const aName = getText(a, curriculumTable, CONFIG.curriculum.assignmentFullName) || a.name;
+        const bName = getText(b, curriculumTable, CONFIG.curriculum.assignmentFullName) || b.name;
+
+        return aName.localeCompare(bName);
+      });
+
+      matchedHomeworkIds = matchingHomework.map(record => record.id);
+
+      homeworkTitles = matchingHomework.map(record => {
+        return (
+          getText(record, curriculumTable, CONFIG.curriculum.assignmentFullName) ||
+          record.name ||
+          record.id
+        );
+      });
+      matchSource = "legacy_curriculum";
+    }
 
     if (matchedHomeworkIds.length === 0) {
       actionTaken = CONFIG.actions.skippedNoMatches;
@@ -590,7 +732,8 @@ async function main() {
         updatedOut: false,
         actionTaken,
         statusOut: CONFIG.statuses.skipped,
-        errorOut: "No active/published homework found for this Week + Grade Band.",
+        errorOut:
+          "No active Program Homework Assignments (or legacy curriculum matches) for this Week + Grade Band.",
         debugStep,
       });
 
@@ -598,6 +741,8 @@ async function main() {
         recordId,
         weekId,
         gradeBandId,
+        programInstanceId,
+        matchSource,
       });
 
       return;
@@ -610,7 +755,10 @@ async function main() {
       [CONFIG.weeklySummary.homework]: linkedCell(matchedHomeworkIds),
     });
 
-    actionTaken = CONFIG.actions.assignedHomework;
+    actionTaken =
+      matchSource === "program_homework_assignments"
+        ? CONFIG.actions.assignedHomeworkFromPha
+        : CONFIG.actions.assignedHomework;
 
     debugStep = "8 - Outputs";
     setOutputSafe("debugStep", debugStep);
@@ -636,6 +784,8 @@ async function main() {
       weeklySummaryId: recordId,
       weekId,
       gradeBandId,
+      programInstanceId,
+      matchSource,
       matchedCountOut: matchedHomeworkIds.length,
       homeworkIdsOut: matchedHomeworkIds,
       homeworkTitlesOut: homeworkTitles,
