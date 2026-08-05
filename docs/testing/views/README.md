@@ -8,6 +8,7 @@
 | Omni prompt | [`OMNI-INSTALL-PROMPT.md`](./OMNI-INSTALL-PROMPT.md) |
 | Verifier | `node tools/testing/verify_testing_views.mjs` |
 | Rule | Do **not** hide Schmidt from public standings |
+| PROD naming | Views may live under Airtable section **`02 TESTING`** with **short names** (e.g. `Schmidt WAS`). Canonical `Testing - …` names remain preferred; short names are accepted aliases in `TESTING-VIEWS-SPEC.json`. Section names are not API-visible — match by table + view name only. |
 
 ## Before you start
 
@@ -17,19 +18,19 @@
 
 ## Install checklist
 
-| # | Table | Canonical view name | Filter | Created? | Rows look Schmidt-only? | Known ID visible? |
-|---|-------|---------------------|--------|----------|-------------------------|-------------------|
-| 1 | Testing Scenarios | `Testing - Schmidt Scenarios` | Related Enrollment = Schmidt | ☐ | ☐ | `recPdyfYRFgDtpzQ8` ☐ |
-| 2 | Submissions | `Testing - Schmidt Submissions` | Enrollment = Schmidt | ☐ | ☐ | any of `recuuTBgstSTGg2E3` / `recjt6QpUcprSIxAk` ☐ |
-| 3 | XP Events | `Testing - Schmidt XP Events` | Enrollment = Schmidt | ☐ | ☐ **not ~2500** | Source Key `SUBMISSION_XP\|…` ☐ |
-| 4 | Weekly Athlete Summary | `Testing - Schmidt WAS` | Enrollment = Schmidt | ☐ | ☐ | `recuxvGq2kY8WKcey` ☐ |
-| 5 | Submission Assets | `Testing - Schmidt Assets` | Enrollment - Linked = Schmidt | ☐ | ☐ **not ~280** | (0 OK) ☐ |
-| 6 | Homework Completions | `Testing - Schmidt Homework Completions` | Enrollment = Schmidt | ☐ | ☐ | `recrBnHbLvDpFyIeO` ☐ |
-| 7 | Video Feedback | `Testing - Schmidt Video Feedback` | Enrollment = Schmidt | ☐ | ☐ | `recBqqe0uGMsqjUrF` ☐ |
-| 8 | Athlete Achievement Unlocks | `Testing - Schmidt Unlocks` (or filtered `Testing`) | Enrollment = Schmidt | ☐ | ☐ | (0 OK) ☐ |
-| 9 | Enrollments | `Testing - Schmidt Enrollment` | RID / Athlete Schmidt | ☐ | ☐ **exactly 1** | `recgP9qZYjAhE7NXm` ☐ |
-| 10 | Weeks | `Testing - Seeded Weeks` | Manual seeded weeks | ☐ | ☐ | `recVDKiYATgzsfpmE` ☐ |
-| 11 | Zoom Attendance (optional) | `Testing - Schmidt Zoom Attendance` | Enrollment = Schmidt | ☐ | ☐ | any ZA ☐ |
+| # | Table | Canonical view name | Accepted short alias (PROD) | Filter | Created? | Rows look Schmidt-only? | Known ID visible? |
+|---|-------|---------------------|----------------------------|--------|----------|-------------------------|-------------------|
+| 1 | Testing Scenarios | `Testing - Schmidt Scenarios` | `Schmidt Testing` | Related Enrollment = Schmidt | ☐ | ☐ | `recPdyfYRFgDtpzQ8` ☐ |
+| 2 | Submissions | `Testing - Schmidt Submissions` | `Schmidt Submissions` | Enrollment = Schmidt | ☐ | ☐ | any of `recuuTBgstSTGg2E3` / `recjt6QpUcprSIxAk` ☐ |
+| 3 | XP Events | `Testing - Schmidt XP Events` | `Schmidt XP Events` | Enrollment = Schmidt | ☐ | ☐ **not ~2500** | Source Key `SUBMISSION_XP\|…` ☐ |
+| 4 | Weekly Athlete Summary | `Testing - Schmidt WAS` | `Schmidt WAS` | Enrollment = Schmidt | ☐ | ☐ | `recuxvGq2kY8WKcey` ☐ |
+| 5 | Submission Assets | `Testing - Schmidt Assets` | `Schmidt Assets` | Enrollment - Linked = Schmidt | ☐ | ☐ **not ~280** | (0 OK) ☐ |
+| 6 | Homework Completions | `Testing - Schmidt Homework Completions` | `Schmidt Homework Completions` | Enrollment = Schmidt | ☐ | ☐ | `recrBnHbLvDpFyIeO` ☐ |
+| 7 | Video Feedback | `Testing - Schmidt Video Feedback` | `Schmidt Video Feedback` | Enrollment = Schmidt | ☐ | ☐ | `recBqqe0uGMsqjUrF` ☐ |
+| 8 | Athlete Achievement Unlocks | `Testing - Schmidt Unlocks` | `Schmidt Unlocks` (or `Testing`) | Enrollment = Schmidt | ☐ | ☐ | (0 OK) ☐ |
+| 9 | Enrollments | `Testing - Schmidt Enrollment` | `Schmidt Enrollment` | RID / Athlete Schmidt | ☐ | ☐ **exactly 1** | `recgP9qZYjAhE7NXm` ☐ |
+| 10 | Weeks | `Testing - Seeded Weeks` | `Seeded Weeks` | Manual seeded weeks | ☐ | ☐ | `recVDKiYATgzsfpmE` ☐ |
+| 11 | Zoom Attendance (optional) | `Testing - Schmidt Zoom Attendance` | `Schmidt Zoom Attendance` | Enrollment = Schmidt | ☐ | ☐ | any ZA ☐ |
 
 ## Verification after install
 
@@ -38,10 +39,11 @@ node tools/testing/verify_testing_views.mjs
 node tools/testing/verify_testing_views.mjs --require-installed
 ```
 
-- [ ] Verifier reports each canonical view **present** by Meta API name
+- [ ] Verifier reports each required view **present** (canonical name or accepted short alias)
 - [ ] View row counts via Data API are not orphan-scale for XP/Assets
 - [ ] Expected Schmidt record IDs appear when counting through the view (where data exists)
 - [ ] No new public-standings exclusion of Schmidt was added
+- [ ] Do **not** treat `Grid Testing View` on WAS as a match unless Schmidt IDs + sane counts are proven separately (default: unacceptable)
 
 ## Sign-off
 

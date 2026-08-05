@@ -32,7 +32,7 @@ node tools/testing/verify_testing_views.mjs
 node tools/testing/verify_testing_views.mjs --require-installed
 ```
 
-Airtable API **cannot** create views or read filter definitions. Verifier checks Meta API names + Data API row counts through existing views.
+Airtable API **cannot** create views or read filter definitions. Verifier checks Meta API names + Data API row counts through existing views. Canonical `Testing - …` names and shorter PROD aliases (section `02 TESTING`) both count; matching is exact and table-specific. Offline: `node --test tools/testing/tests/test_testing_views.mjs`.
 
 ## SC-004 Schmidt identity
 

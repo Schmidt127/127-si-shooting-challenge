@@ -41,7 +41,9 @@
       ],
       "expected_min_rows_when_seeded": 1,
       "expected_record_ids_any": ["recPdyfYRFgDtpzQ8"],
-      "purpose": "Drive 115 runs; see result writeback"
+      "purpose": "Drive 115 runs; see result writeback",
+      "name_aliases_acceptable": ["Schmidt Testing"],
+      "prod_section_note": "Views live under Airtable section 02 TESTING; short names are accepted aliases."
     },
     {
       "priority": 2,
@@ -74,6 +76,7 @@
         "recaCcxDqtzFWjmyi"
       ],
       "purpose": "Confirm 115 creates + downstream links",
+      "name_aliases_acceptable": ["Schmidt Submissions"],
       "acceptable_interim_views": ["Workflow testing only"]
     },
     {
@@ -99,7 +102,8 @@
       "expected_min_rows_when_seeded": 1,
       "expected_max_rows_sanity": 100,
       "sanity_note": "If row count is ~2500, filter is broken (legacy orphans). Schmidt-only should be a small handful.",
-      "purpose": "Idempotency proof; one SUBMISSION_XP per Submission"
+      "purpose": "Idempotency proof; one SUBMISSION_XP per Submission",
+      "name_aliases_acceptable": ["Schmidt XP Events"]
     },
     {
       "priority": 4,
@@ -123,6 +127,7 @@
       "expected_min_rows_when_seeded": 1,
       "expected_record_ids_any": ["recuxvGq2kY8WKcey"],
       "purpose": "Uniqueness Enrollment+Week",
+      "name_aliases_acceptable": ["Schmidt WAS"],
       "name_aliases_unacceptable_without_filter": ["Grid Testing View"]
     },
     {
@@ -145,7 +150,8 @@
       ],
       "expected_min_rows_when_seeded": 0,
       "expected_max_rows_sanity": 50,
-      "sanity_note": "If row count is ~280, filter is broken (legacy orphans)."
+      "sanity_note": "If row count is ~280, filter is broken (legacy orphans).",
+      "name_aliases_acceptable": ["Schmidt Assets"]
     },
     {
       "priority": 6,
@@ -165,7 +171,10 @@
       ],
       "expected_min_rows_when_seeded": 1,
       "expected_record_ids_any": ["recrBnHbLvDpFyIeO"],
-      "name_aliases_acceptable": ["Testing - Schmidt Homework"]
+      "name_aliases_acceptable": [
+        "Schmidt Homework Completions",
+        "Testing - Schmidt Homework"
+      ]
     },
     {
       "priority": 7,
@@ -183,7 +192,8 @@
         "XP Events"
       ],
       "expected_min_rows_when_seeded": 0,
-      "expected_record_ids_any": ["recBqqe0uGMsqjUrF"]
+      "expected_record_ids_any": ["recBqqe0uGMsqjUrF"],
+      "name_aliases_acceptable": ["Schmidt Video Feedback"]
     },
     {
       "priority": 8,
@@ -201,7 +211,7 @@
         "XP Events"
       ],
       "expected_min_rows_when_seeded": 0,
-      "name_aliases_acceptable": ["Testing"],
+      "name_aliases_acceptable": ["Schmidt Unlocks", "Testing"],
       "purpose": "Empty post-reset until milestones/streaks is OK"
     },
     {
@@ -226,7 +236,7 @@
       "expected_min_rows_when_seeded": 1,
       "expected_max_rows_sanity": 1,
       "expected_record_ids_any": ["recgP9qZYjAhE7NXm"],
-      "name_aliases_acceptable": ["Testing - Schmidt Only"]
+      "name_aliases_acceptable": ["Schmidt Enrollment", "Testing - Schmidt Only"]
     },
     {
       "priority": 10,
@@ -245,7 +255,8 @@
       ],
       "expected_min_rows_when_seeded": 1,
       "expected_record_ids_any": ["recVDKiYATgzsfpmE", "recWeVrSabnsYaHc2"],
-      "purpose": "Manual Week seeding verification"
+      "purpose": "Manual Week seeding verification",
+      "name_aliases_acceptable": ["Seeded Weeks"]
     },
     {
       "priority": 11,
@@ -257,7 +268,8 @@
       "sort": [{ "field": "Created", "direction": "desc" }],
       "visible_fields": ["Enrollment", "Zoom Meeting", "XP Events", "Attendance Status"],
       "expected_min_rows_when_seeded": 0,
-      "optional": true
+      "optional": true,
+      "name_aliases_acceptable": ["Schmidt Zoom Attendance"]
     },
     {
       "priority": 12,

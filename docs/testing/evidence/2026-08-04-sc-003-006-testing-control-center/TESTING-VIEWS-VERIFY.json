@@ -1,36 +1,44 @@
 {
-  "generated_at": "2026-08-05T13:19:29.697Z",
+  "generated_at": "2026-08-05T14:05:05.138Z",
   "base_id": "appn84sqPw03zEbTT",
   "read_only": true,
   "schmidt_enrollment_id": "recgP9qZYjAhE7NXm",
   "summary": {
     "required_views": 10,
-    "canonical_or_alias_present": 1,
-    "missing_required": 9,
+    "canonical_or_alias_present": 11,
+    "missing_required": 0,
     "sanity_fails": 0,
-    "installed_in_prod": false,
+    "installed_in_prod": true,
     "note": "Filter definitions are not readable via API. Presence + sane counts + known IDs are the strongest automated evidence."
   },
   "results": [
     {
       "table": "Testing Scenarios",
       "view_name": "Testing - Schmidt Scenarios",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Grid view"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Testing",
+      "matched_view_id": "viwhdVht5xyTopSw9",
+      "row_count_sampled": 22,
+      "truncated": false,
+      "expected_ids_found": [
+        "recPdyfYRFgDtpzQ8"
       ],
-      "optional": false
+      "expected_ids_missing": [],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Submissions",
       "view_name": "Testing - Schmidt Submissions",
-      "status": "INTERIM_ONLY",
-      "installed": false,
-      "match_kind": "interim_only",
-      "matched_view_name": "Workflow testing only",
-      "matched_view_id": "viwHOukunutCEKfZ5",
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Submissions",
+      "matched_view_id": "viw5V3lD1DOJtHuNO",
       "row_count_sampled": 13,
       "truncated": false,
       "expected_ids_found": [
@@ -47,93 +55,93 @@
     {
       "table": "XP Events",
       "view_name": "Testing - Schmidt XP Events",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Shooting Base",
-        "Homework",
-        "Video",
-        "Zoom",
-        "Streaks",
-        "Thresholds",
-        "Workflow - Required Fields Only",
-        "Possible Duplicates",
-        "Review View",
-        "XP Audit by Athlete",
-        "Admin - Duplicate Weekly Threshold XP",
-        "Grid view",
-        "XP Date Resolved",
-        "DUPLICATE REVIEW",
-        "Riley",
-        "Dayton",
-        "Fix Weekly Threshold Duplicates",
-        "CHECK - Weekly Threshold Duplicates copy"
-      ],
-      "optional": false
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt XP Events",
+      "matched_view_id": "viwbnwphqkG2Z67HN",
+      "row_count_sampled": 18,
+      "truncated": false,
+      "expected_ids_found": [],
+      "expected_ids_missing": [],
+      "sanity": "PASS",
+      "sanity_note": "If row count is ~2500, filter is broken (legacy orphans). Schmidt-only should be a small handful.",
+      "optional": false,
+      "error": null
     },
     {
       "table": "Weekly Athlete Summary",
       "view_name": "Testing - Schmidt WAS",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Sunday Review for Awards",
-        "Workflow Check - Required Fields Only",
-        "Workflow Check - Missing - Not Publishing",
-        "Workflow - Mandatory Fields",
-        "EMPTY Fields Check",
-        "Review View",
-        "030 - Assign Grade Band and Goal Record",
-        "SUBMISSIONS - Weekly Athlete  Summary Builder",
-        "Weekly Summary - A6 - Calculate Official Weekly XP",
-        "Weekly Summary - A6 - Award Official Weekly XP Event",
-        "Weekly Summary - A5 - Needs Goal Setup",
-        "Grid view",
-        "Grid Testing View",
-        "ADMIN - DUPLICATE SUMMARY CLEANUP - OK TO DELTE"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt WAS",
+      "matched_view_id": "viwsKFKnM25Dw7fCr",
+      "row_count_sampled": 1,
+      "truncated": false,
+      "expected_ids_found": [
+        "recuxvGq2kY8WKcey"
       ],
-      "optional": false
+      "expected_ids_missing": [],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Submission Assets",
       "view_name": "Testing - Schmidt Assets",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "020 - Ready to Link Homework Completion",
-        "070 - Ready to Send Asset to Make",
-        "Grid view"
-      ],
-      "optional": false
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Assets",
+      "matched_view_id": "viw6zQ0AfLSn6t2TO",
+      "row_count_sampled": 8,
+      "truncated": false,
+      "expected_ids_found": [],
+      "expected_ids_missing": [],
+      "sanity": "PASS",
+      "sanity_note": "If row count is ~280, filter is broken (legacy orphans).",
+      "optional": false,
+      "error": null
     },
     {
       "table": "Homework Completions",
       "view_name": "Testing - Schmidt Homework Completions",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "HOMEWORK GRADING QUEUE - FINAL",
-        "Workflow - Check",
-        "Grid view",
-        "Grid view copy"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Homework Completions",
+      "matched_view_id": "viwOhQnoJME483ARd",
+      "row_count_sampled": 7,
+      "truncated": false,
+      "expected_ids_found": [
+        "recrBnHbLvDpFyIeO"
       ],
-      "optional": false
+      "expected_ids_missing": [],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Video Feedback",
       "view_name": "Testing - Schmidt Video Feedback",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Grading Video. In Order of Checkboxes",
-        "Grid view"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Video Feedback",
+      "matched_view_id": "viwvQOZeHvOMYI5Tk",
+      "row_count_sampled": 1,
+      "truncated": false,
+      "expected_ids_found": [
+        "recBqqe0uGMsqjUrF"
       ],
-      "optional": false
+      "expected_ids_missing": [],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Athlete Achievement Unlocks",
@@ -141,8 +149,8 @@
       "status": "PRESENT",
       "installed": true,
       "match_kind": "acceptable_alias",
-      "matched_view_name": "Testing",
-      "matched_view_id": "viwhHkNyEPe21oMbI",
+      "matched_view_name": "Schmidt Unlocks",
+      "matched_view_id": "viwVhSVcWYCvg7ETs",
       "row_count_sampled": 0,
       "truncated": false,
       "expected_ids_found": [],
@@ -155,51 +163,59 @@
     {
       "table": "Enrollments",
       "view_name": "Testing - Schmidt Enrollment",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Admin - Field Cleanup - Enrollments",
-        "Workflow - Enrollment",
-        "Operator View",
-        "Conquered Challenge",
-        "Fillout.com Form Info ONLY",
-        "Form Input Only",
-        "Level List",
-        "Automation - 001 - Needs Athlete Link",
-        "Automation - 002 - Needs Grade Band",
-        "Automation - 003 - Grade Band Refresh Needed",
-        "ENROLLMENTS - Needs Initial Level Assignment",
-        "042 - Needs Level Assignment",
-        "ENROLLMENTS - A5 - XP Award Ready",
-        "Everything - Alpha",
-        "Participation Certificate CSV Export",
-        "Contact Emails",
-        "Goal Conqured - Only"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Enrollment",
+      "matched_view_id": "viwtUKuvjTvhoI0qG",
+      "row_count_sampled": 1,
+      "truncated": false,
+      "expected_ids_found": [
+        "recgP9qZYjAhE7NXm"
       ],
-      "optional": false
+      "expected_ids_missing": [],
+      "sanity": "PASS",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Weeks",
       "view_name": "Testing - Seeded Weeks",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Grid view"
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Seeded Weeks",
+      "matched_view_id": "viw2TSXJTdYnqFtA0",
+      "row_count_sampled": 12,
+      "truncated": false,
+      "expected_ids_found": [
+        "recWeVrSabnsYaHc2"
       ],
-      "optional": false
+      "expected_ids_missing": [
+        "recVDKiYATgzsfpmE"
+      ],
+      "sanity": "PASS_KNOWN_ID_VISIBLE",
+      "sanity_note": null,
+      "optional": false,
+      "error": null
     },
     {
       "table": "Zoom Attendance",
       "view_name": "Testing - Schmidt Zoom Attendance",
-      "status": "VIEW_MISSING",
-      "installed": false,
-      "match_kind": "missing",
-      "available_views": [
-        "Grid view"
-      ],
-      "optional": true
+      "status": "PRESENT",
+      "installed": true,
+      "match_kind": "acceptable_alias",
+      "matched_view_name": "Schmidt Zoom Attendance",
+      "matched_view_id": "viwUH6orRS8vLXJZX",
+      "row_count_sampled": 4,
+      "truncated": false,
+      "expected_ids_found": [],
+      "expected_ids_missing": [],
+      "sanity": "PASS_COUNT_ONLY",
+      "sanity_note": null,
+      "optional": true,
+      "error": null
     },
     {
       "table": "XP Events",
@@ -208,6 +224,7 @@
       "installed": false,
       "match_kind": "missing",
       "available_views": [
+        "Schmidt XP Events",
         "Shooting Base",
         "Homework",
         "Video",

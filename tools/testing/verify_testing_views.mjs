@@ -18,6 +18,7 @@
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { findMatchingView } from "./lib/testing_views.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
@@ -91,26 +92,6 @@ async function listViaView(baseId, table, viewId, maxRecords = 500) {
     records: records.slice(0, maxRecords),
     truncated: Boolean(offset) || records.length >= maxRecords,
   };
-}
-
-function normalizeName(s) {
-  return String(s || "")
-    .trim()
-    .toLowerCase()
-    .replace(/\s+/g, " ");
-}
-
-function findMatchingView(tableViews, specView) {
-  const wanted = normalizeName(specView.view_name);
-  const aliases = (specView.name_aliases_acceptable || []).map(normalizeName);
-  const exact = tableViews.find((v) => normalizeName(v.name) === wanted);
-  if (exact) return { match: exact, match_kind: "canonical" };
-  const alias = tableViews.find((v) => aliases.includes(normalizeName(v.name)));
-  if (alias) return { match: alias, match_kind: "acceptable_alias" };
-  const interim = (specView.acceptable_interim_views || []).map(normalizeName);
-  const interimHit = tableViews.find((v) => interim.includes(normalizeName(v.name)));
-  if (interimHit) return { match: interimHit, match_kind: "interim_only" };
-  return { match: null, match_kind: "missing" };
 }
 
 async function main() {
