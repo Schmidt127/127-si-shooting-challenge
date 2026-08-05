@@ -2,37 +2,61 @@
 
 | Field | Value |
 |-------|--------|
+| Status | **PASS** (2026-08-05) |
 | WAS record | `recKebuZ79QFTwivA` |
 | Enrollment | `recCyFEPeATOVNlr9` |
 | Week | `reci5GdxEC57vfoS3` |
-| Script | Do **not** change unless a verified defect appears |
-| Preconditions | CASE-01 homework Link verify **PASS** (2026-08-05) |
+| Script | **No code change** — live PROD 057 succeeded |
+| Package | HC WAS Link clarification — **closed** |
 
-## Preconditions checklist (already proven)
+## Test attempts
 
-- [x] Both HCs use **`Weekly Athlete Summary Link`** → this WAS (not the empty text field)
-- [x] HC `recqXxlOpATQI3sD4`, `rechzFmWrUp1tonto` — Satisfactory?
-- [x] WAS Homework library IDs = `rechVLOeyEVIqmy2v`, `rec6WmXjpLtIWDERo`
-- [x] Rollups Assigned **2** / Satisfactory **2**
-- [x] Days Logged **7**; 3 videos on WAS submissions; 0 Zoom meetings for week
+### Attempt 1 — trigger only (no record updates)
 
-## Safe manual steps
+Tested the automation **trigger** only. The **Run a script** action did **not** execute against the target WAS. No Perfect Week helper fields were written.
 
-1. In Airtable PROD, open **Weekly Athlete Summary** record `recKebuZ79QFTwivA`.
-2. Confirm `Perfect Week Automation Status` is `Pending` (or set Error → Pending if stuck) and `Perfect Week Calculation Queue?` = 1.
-3. Open automation **057 - Achievements and Milestones - Calculate Perfect Week Eligibility**.
-4. Use **Test** / Run with input `recordId` = `recKebuZ79QFTwivA` (prefer Test so you can inspect outputs).
-5. After success, on the WAS record confirm:
-   - `Perfect Week Automation Status` = **Ready**
-   - `Perfect Week Automation Error` blank
-   - `Perfect Week Daily Requirement Met?` checked
-   - `Perfect Week Homework Requirement Met?` = **1**
-   - `Perfect Week Video Count` ≥ **3**
-   - `Perfect Week Zoom Meeting Count` = **0** → Zoom Met formula = **1**
-   - `Perfect Week Eligible?` = **1**
-6. If Status = Error, copy `Perfect Week Automation Error` into the Perfect Week evidence folder — do not edit 057 until the error proves a script bug.
+### Attempt 2 — script action (PASS)
+
+Tested the **Run a script** action correctly:
+
+| Input | Value |
+|-------|--------|
+| Variable name | `recordId` |
+| Value source | Airtable record ID from the tested trigger record |
+| Resolved value | `recKebuZ79QFTwivA` |
+
+Script completed successfully and populated Perfect Week helper fields on WAS `recKebuZ79QFTwivA`.
+
+## Verified CASE-01 result (WAS `recKebuZ79QFTwivA`)
+
+| Field | Confirmed value |
+|-------|-----------------|
+| Perfect Week Daily Check Status | Pass |
+| Perfect Week Daily Requirement Met? | true |
+| Perfect Week Video Count | 3 |
+| Perfect Week Zoom Meeting Count | 0 |
+| Perfect Week Homework Assigned Count | 2 |
+| Perfect Week Homework Satisfactory Count | 2 |
+| Perfect Week Homework Requirement Met? | 1 |
+| Perfect Week Automation Status | Ready |
+| Perfect Week Eligible? | 1 |
+
+**Final CASE-01 status:** fully **PASS**.
+
+## Homework Completion relationship (unchanged / correct)
+
+| Field | ID | Type |
+|-------|-----|------|
+| `Weekly Athlete Summary` | `fldhpGNYnu2l3bpUP` | singleLineText (empty — expected) |
+| `Weekly Athlete Summary Link` | `fldkoEbVnCugcMCCi` | multipleRecordLinks → both HCs → `recKebuZ79QFTwivA` |
+
+Do **not** delete or rename either field.
 
 ## What 057 does / does not do
 
-- **Does:** write daily/homework/video/zoom helper fields + Status Ready (+ mark Zoom Attendance Applied? when recording credit counted).
+- **Does:** write daily/homework/video/zoom helper fields + Status Ready (+ Zoom Attendance Applied? when recording credit counted).
 - **Does not:** write Eligible (formula); create Perfect Week unlock (058) or XP (059).
+
+## Operator note for future Tests
+
+Prefer testing the **Run a script** action with `recordId` bound to the trigger record’s Airtable record ID. Testing the trigger alone does not update the WAS.

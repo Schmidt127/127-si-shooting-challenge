@@ -96,7 +96,7 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 | Automation **012** | N/A | Deleted / unused (index) |
 | Automation **033** | **Yes** (GitHub v3.2) | Prefer PHA; legacy curriculum fallback |
 | Automation **020** | **Yes** (GitHub v3.1.0) | Link PHA on HC create/update when resolvable |
-| Automation **057** | No | Still reads WAS.`Homework` + WAS.`Homework Completions Link` (inverse of HC **`Weekly Athlete Summary Link`**). HC text field unused. Manual 057 test ready after CASE-01 Link verify PASS |
+| Automation **057** | No | Reads WAS.`Homework` + Completions Link. CASE-01 manual Test **PASS** 2026-08-05 — no code change |
 | Automation **065** XP | No | Still uses HC.Homework library link |
 | 009 assets / 071 email | No | Legacy library links |
 | Fillout / Softr / Make / weekly email | No | No junction exposure required for MVP |
@@ -153,9 +153,11 @@ Do not delete/rename/convert either field in this package. Evidence: `docs/testi
 |--------|-------|
 | Assigned count (rollup) | **2** |
 | Satisfactory count (rollup) | **2** |
-| Perfect Week Homework Requirement Met? | Awaits Automation **057** (next package) |
+| Perfect Week Homework Requirement Met? | **1** (057 PASS) |
+| Perfect Week Eligible? | **1** |
+| Perfect Week Automation Status | **Ready** |
 
-**Perfect Week can resume** now: CASE-01 Link verify **PASS**; homework gates satisfied under current 057 logic. Exact steps: `docs/testing/evidence/2026-08-05-pha-was-link-clarification/057-MANUAL-TEST.md`. Paste 033/020 still required for *future* automated PHA path — not a blocker for this manual 057 Test.
+**CASE-01 + 057 manual Test:** **PASS** — package evidence `docs/testing/evidence/2026-08-05-pha-was-link-clarification/` (**COMPLETE**). Paste 033/020 still required for future automated PHA path.
 
 ## Rollback
 
