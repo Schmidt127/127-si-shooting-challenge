@@ -2,9 +2,9 @@
 Automation: 117 — Zoom — Send Recording Approval Email to Make
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: GitHub Source of Truth
+Status: GitHub Source of Truth — canonical PROD Automation 117
 Last Synced From Airtable: 2026-07-20
-Last GitHub Update: 2026-07-20
+Last GitHub Update: 2026-08-05 (ownership reconcile — filename only; no behavior change)
 
 Purpose:
 POSTs a Zoom recording approval email handoff payload to Make (US1 webhook).
@@ -23,6 +23,9 @@ Notes:
 GitHub is the source-of-truth copy.
 Airtable is the deployed/running copy.
 Webhook URL is an Airtable input variable only — never hard-code or commit secrets.
+Former repository filename: 117f-zoom-recording-send-approval-email.js
+Make route key remains automationNumber="117f" (not a second Airtable slot).
+Do NOT paste the Stage 17 orchestrator or modular 117a–e over this automation.
 */
 
 /************************************************************

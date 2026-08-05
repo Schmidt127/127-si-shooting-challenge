@@ -68,7 +68,7 @@ test("text date keys parse without timezone shift", () => {
 
 test("Stage 17 117c is Denver-safe for XP Activity Date", () => {
   const s117c = fs.readFileSync(
-    path.join(root, "117c-zoom-recording-create-zoom-xp-event.js"),
+    path.join(root, "_design-alternatives/stage17-modular-reference/117c-zoom-recording-create-zoom-xp-event.js"),
     "utf8",
   );
   assert.ok(/timeZone:\s*"America\/Denver"/.test(s117c));

@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 /**
  * Active automation unloadData runtime compatibility pack.
- * Covers: 031, 035, 042, 057, 114, 117, 117a, 117c, 118, 119
+ * Covers deployed/canonical scripts: 031, 035, 042, 057, 114, 118, 119
+ *
+ * Corrected 2026-08-05: PROD Automation 117 is the recording-approval email handoff
+ * (no queries / no unloadData). The Stage 17 orchestrator and modular 117a/117c are
+ * design alternatives under `_design-alternatives/` — not active paste targets.
+ *
  * Run: node tests/airtable-runtime/active-automation-unload-compat.test.js
  */
 
@@ -44,24 +49,6 @@ const TARGETS = [
     num: "114",
     file: "114-video-review-and-xp-create-or-update-video-xp-event.js",
     versionRe: /Version:\s*v5\.9/,
-    queryVars: ["xpQuery"],
-  },
-  {
-    num: "117",
-    file: "117-zoom-recording-credit-orchestrator.js",
-    versionRe: /Version:\s*v1\.1\.2/,
-    queryVars: ["xpQuery"],
-  },
-  {
-    num: "117a",
-    file: "117a-zoom-recording-normalize-recording-quiz-submission.js",
-    versionRe: /Version:\s*v1\.1\.1/,
-    queryVars: ["query"],
-  },
-  {
-    num: "117c",
-    file: "117c-zoom-recording-create-zoom-xp-event.js",
-    versionRe: /Version:\s*v1\.1\.1/,
     queryVars: ["xpQuery"],
   },
   {
@@ -239,10 +226,10 @@ for (const target of TARGETS) {
   });
 }
 
-test("active shooting-challenge tree has no bare unloadData outside helpers/superseded", () => {
+test("active shooting-challenge tree has no bare unloadData outside helpers/superseded/design-alts", () => {
   const files = fs
     .readdirSync(AUTO_DIR)
-    .filter((f) => f.endsWith(".js") && !f.includes("SUPERSEDED"));
+    .filter((f) => f.endsWith(".js") && !f.startsWith("_"));
   const offenders = [];
   for (const file of files) {
     const source = fs.readFileSync(path.join(AUTO_DIR, file), "utf8");
@@ -252,6 +239,21 @@ test("active shooting-challenge tree has no bare unloadData outside helpers/supe
     }
   }
   assert.deepStrictEqual(offenders, [], offenders.join("\n"));
+});
+
+test("PROD Automation 117 email script has no unloadData concern", () => {
+  const email = path.join(AUTO_DIR, "117-zoom-send-recording-approval-email-to-make.js");
+  assert.ok(fs.existsSync(email));
+  const source = fs.readFileSync(email, "utf8");
+  assert.doesNotMatch(source, /selectRecordsAsync/);
+  assert.doesNotMatch(source, /\.unloadData\(/);
+  assert.match(source, /automationNumber:\s*"117f"/);
+});
+
+test("stage17 modular unloadData scripts are design-alternatives only (not paste targets)", () => {
+  const design = path.join(AUTO_DIR, "_design-alternatives/stage17-modular-reference");
+  assert.ok(fs.existsSync(path.join(design, "117-zoom-recording-credit-orchestrator.js")));
+  assert.ok(!fs.existsSync(path.join(AUTO_DIR, "117-zoom-recording-credit-orchestrator.js")));
 });
 
 test("superseded unloadData occurrences remain excluded from this package", () => {

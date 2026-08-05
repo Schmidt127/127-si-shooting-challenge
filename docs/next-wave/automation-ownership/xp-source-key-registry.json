@@ -178,19 +178,19 @@
       "format": "ZOOM_CREDIT|{enrollmentId}|{meetingId}",
       "components": ["enrollmentId", "meetingId"],
       "component_order": ["enrollmentId", "meetingId"],
-      "authoritative_writer": "ATTENTION_REQUIRED",
-      "authoritative_writer_candidates": ["117", "117c"],
-      "competing_writers": ["117", "117c"],
-      "status": "duplicate_risk",
+      "authoritative_writer": null,
+      "authoritative_writer_candidates": [],
+      "competing_writers": [],
+      "status": "design_alternative_not_deployed",
       "legacy": false,
       "script_paths": [
-        "airtable/automations/shooting-challenge/117-zoom-recording-credit-orchestrator.js",
-        "airtable/automations/shooting-challenge/117c-zoom-recording-create-zoom-xp-event.js"
+        "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117-zoom-recording-credit-orchestrator.js",
+        "airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/117c-zoom-recording-create-zoom-xp-event.js"
       ],
       "destination_table": "XP Events",
       "ordering_note": "enrollmentId before meetingId (opposite of ZOOM_ATTEND_BASE meeting-first ordering)",
       "disjoint_from": ["ZOOM_ATTEND_BASE|", "ZOOM_RECORDING|"],
-      "notes": "Exactly one of 117 (orchestrator creates XP) or 117c must be ON for this effect. Mike attestation required. Do not treat both as authoritative."
+      "notes": "PROD Automation 117 is the recording-approval email handoff only (not ZOOM_CREDIT). Orchestrator/117c are repository design alternatives under _design-alternatives/; not installed because of Airtable automation-count limit. Live Zoom XP remains 101 (ZOOM_ATTEND_BASE). Do not invent a deployed ZOOM_CREDIT writer without a new attested automation slot."
     },
     {
       "prefix": "ZOOM_RECORDING|",
@@ -272,13 +272,14 @@
       "format": "ZOOM_REC_EMAIL|{enrollmentId}|{meetingId}|{zoomAttendanceId}",
       "components": ["enrollmentId", "meetingId", "zoomAttendanceId"],
       "component_order": ["enrollmentId", "meetingId", "zoomAttendanceId"],
-      "authoritative_writer": "117f",
+      "authoritative_writer": "117",
+      "make_workflow_id": "117f",
       "competing_writers": [],
       "status": "canonical_email_send_key",
       "legacy": false,
-      "script_path": "airtable/automations/shooting-challenge/117f-zoom-recording-send-approval-email.js",
-      "destination_table": "Zoom Attendance send-key / status fields",
-      "notes": "Four-part send key. Make scenario must not write XP Events or Attendees."
+      "script_path": "airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js",
+      "destination_table": "Make Data Store send-key (script writes no Airtable fields)",
+      "notes": "Airtable Automation 117 posts payload with automationNumber=117f (Make route id, not a second Airtable slot). Four-part send key. Make scenario must not write XP Events or Attendees."
     },
     {
       "prefix": "VIDEO_FEEDBACK|",
@@ -300,9 +301,9 @@
     "duplicate_prefixes": [
       {
         "family": "zoom_recording_credit_xp",
-        "issue": "117 and 117c both mint ZOOM_CREDIT|",
-        "severity": "critical",
-        "resolution": "mike_attest_exactly_one_on"
+        "issue": "Historical dual-path design (orchestrator vs 117c) for ZOOM_CREDIT|; neither is a live PROD Airtable automation under slot 117",
+        "severity": "resolved_not_deployed",
+        "resolution": "design_alternatives_only_prod_117_is_email_handoff"
       },
       {
         "family": "video_feedback_identity",

@@ -4,7 +4,7 @@
 
 **Status:** Agent 1 package complete — blueprint + offline tests ready; **DEV scenario remains OFF** until Mike builds in Make and reviews recipient mapping  
 **Base:** DEV `appTetnuCZlCZdTCT` only  
-**Airtable sender:** Automation **117f v1.2.0** (`117f-zoom-recording-send-approval-email.js`)  
+**Airtable sender:** Automation **117** v1.1 (`117-zoom-send-recording-approval-email-to-make.js`; Make payload `automationNumber=117f`)  
 **PROD:** Do not build, enable, or point webhooks at PROD yet  
 **Webhook URL:** Ops-only — **never** commit, paste into git, or display in docs  
 

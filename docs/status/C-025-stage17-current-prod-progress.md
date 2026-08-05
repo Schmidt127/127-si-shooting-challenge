@@ -1,16 +1,21 @@
 # C-025 Stage 17 — Current PROD progress
 
-> **✅ AUTHORITATIVE CURRENT-STATE DOCUMENT for C-025 Stage 17 Zoom Attendance + the Zoom Recording Approval Email workflow.** Older STOP / BLOCKED / DEV-phase documents are historical and link back here. If any other document conflicts with this one, this document (plus its two linked evidence docs) wins.
+> **UPDATED 2026-08-05 — Automation 117 ownership reconcile.**  
+> Authoritative PROD Automation **117** is **only** `117 — Zoom — Send Recording Approval Email to Make` (script **v1.1**).  
+> The Stage 17 credit **orchestrator** is a repository **design alternative**, not the live Automation 117 slot.  
+> See [`C-025-117-numbering.md`](../deploy-checklists/C-025-117-numbering.md) and [`117-zoom-recording-approval-email.md`](../deploy-checklists/117-zoom-recording-approval-email.md).  
+> Historical Stage 17 credit live evidence (2026-07-20) remains useful for recording-credit behavior, but **do not** treat the orchestrator filename as the current PROD Automation 117 paste target.
 >
 > **Automation vs Make identifier — keep distinct:**
-> - **Automation 117** = the Airtable automation (`117 - Zoom Recording Credit - Orchestrator`, v1.1.1) — recording credit; **ON** in PROD.
-> - **117a–117f** = workflow components / identifiers. **117f** is the **Make** workflow identifier for the recording approval email (Make scenario `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1`). There is **no separate Airtable "Automation 117f"** driving PROD — the Airtable sender is Automation **117** (`117 — Zoom — Send Recording Approval Email to Make`, script **v1.1**, which writes **no** Airtable records; Make owns send/dedupe).
-> - **Canonical send key (four-part):** `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`. Older DEV docs used a three-part key and/or a `ZOOM_REC_APPROVAL` prefix — both are **superseded**.
-> - **Make does not write back to Airtable** (no XP Events, no `Attendees`, no Send Key / Sent At). Duplicate protection is the Make **Data Store** `C025_117f_PROD_SendKeys` (first send → `sent`; duplicate → `already_sent`).
-> - **Live claim guard:** the approval email is **tested / built — not documented as fully live** until both Automation 117 (email handoff) and the Make scenario are confirmed permanently enabled in-repo. See the [go-live checklist](../deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md#7-remaining-go-live-checklist).
+> - **Automation 117** = Airtable email handoff → Make (`117-zoom-send-recording-approval-email-to-make.js` v1.1). Writes **no** Airtable records.
+> - **117f** = Make workflow identifier only (`automationNumber` in the payload). Not an Airtable slot.
+> - Stage 17 orchestrator / 117a–e = `_design-alternatives/stage17-modular-reference/` — **not installed** (automation-count limit).
+> - **Canonical send key (four-part):** `ZOOM_REC_EMAIL|{EnrollmentRID}|{ZoomMeetingRID}|{ZoomAttendanceRID}`.
+> - **Make does not write back to Airtable** (no XP Events, no `Attendees`). Duplicate protection is the Make **Data Store** `C025_117f_PROD_SendKeys` (`sent` / `already_sent`).
+> - Live Zoom XP remains **101**. Gate / Perfect Week Applied? remain **042** / **057**.
 
 **Date written:** 2026-07-18  
-**Last updated:** 2026-07-20 (**COMPLETE** — Stage 17 credit; approval-email Make path tested, not claimed fully live)  
+**Last updated:** 2026-08-05 (117 ownership reconcile)  
 **Preserves prior readiness date:** 2026-07-18 ([C-025-stage17-prod-readiness-status.md](./C-025-stage17-prod-readiness-status.md))  
 **PROD:** `appn84sqPw03zEbTT` · **DEV:** `appTetnuCZlCZdTCT`
 
@@ -18,22 +23,20 @@
 
 ## Current verdict
 
-# COMPLETE — Stage 17 recording credit verified in PROD
+# Automation 117 = email handoff; Stage 17 credit scripts are design alternatives
 
-Enablement + conflict exclusivity verified. Evidence: [C-025-stage17-prod-live-2026-07-20.md](../deploy-checklists/C-025-stage17-prod-live-2026-07-20.md)
+Historical Stage 17 recording-credit enablement evidence: [C-025-stage17-prod-live-2026-07-20.md](../deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) (do not re-paste orchestrator into slot 117).
 
-**Live automation posture:**
+**Live automation posture (2026-08-05):**
 
 | Automation / input | State |
 |--------------------|--------|
-| 101 | **Unchanged** live path |
-| 117 (credit) | **ON** (v1.1.1) |
-| 057 | **ON** (v1.3) |
-| 042 | **ON** (v3.1) |
-| 115 | **Not installed** |
-| Approval email (Make 117f) | **Built + controlled tests PASS** — not documented as fully live; see [PROD 117f workflow](../deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
----
-
+| 101 | **ON** — live Zoom meeting XP |
+| 117 | **ON** — recording approval email → Make (**v1.1**); **not** credit orchestrator |
+| 117a–e | **Not installed** (design alternatives only) |
+| 057 | **ON** (Perfect Week Applied?) |
+| 042 | **ON** (Gate Applied?) |
+| Approval email Make **117f** | Controlled tests PASS — go-live checklist may still apply |
 ## Confirmed complete
 
 - Schema + formulas (incl. Effective Recording XP % Program Config link gate)

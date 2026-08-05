@@ -2,16 +2,16 @@
 
 | Field | Value |
 |-------|--------|
-| Date | 2026-08-05 |
-| Status | **Built in Repository** — Airtable paste Pending; Live test Not Tested |
+| Date | 2026-08-05 (corrected 2026-08-05 — Automation 117 ownership reconcile) |
+| Status | **Built in Repository** — Airtable paste Pending for **031, 035, 042, 057, 114, 118, 119** only; Live test Not Tested |
 | Pattern | Same as Automation **001 v5.2** / **002 v8.2**: `unloadQuerySafe()` + `finally` |
-| Offline suite | `node tests/airtable-runtime/active-automation-unload-compat.test.js` (67 passed) |
+| Offline suite | `node tests/airtable-runtime/active-automation-unload-compat.test.js` |
 
 ## Defect
 
-Bare `QueryResult.unloadData()` is not reliably available in the current Airtable automation runtime. Unsupported cleanup already caused live PROD failures in Automations **001** and **002**. This package hardens every remaining active canonical script known to call bare `.unloadData()`.
+Bare `QueryResult.unloadData()` is not reliably available in the current Airtable automation runtime. Unsupported cleanup already caused live PROD failures in Automations **001** and **002**. This package hardens every remaining **deployed** active canonical script known to call bare `.unloadData()`.
 
-## Compatibility table
+## Compatibility table (PROD paste targets)
 
 | Automation | Canonical file | Old version | New version | Bare calls before | Safe cleanup after | Airtable paste status | Live test status |
 | ---------- | -------------- | ----------: | ----------: | ----------------: | ------------------ | --------------------- | ---------------- |
@@ -20,21 +20,41 @@ Bare `QueryResult.unloadData()` is not reliably available in the current Airtabl
 | 042 | `042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | 3.1 | **3.2** | 2 (`zmQuery`, `zaQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 057 | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` | 1.4 | **1.5** | 1 (`zaQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 114 | `114-video-review-and-xp-create-or-update-video-xp-event.js` | v5.8 | **v5.9** | 1 (`xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
-| 117 | `117-zoom-recording-credit-orchestrator.js` | v1.1.1 | **v1.1.2** | 1 (`xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
-| 117a | `117a-zoom-recording-normalize-recording-quiz-submission.js` | v1.1.0 | **v1.1.1** | 1 (`query`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
-| 117c | `117c-zoom-recording-create-zoom-xp-event.js` | v1.1.0 | **v1.1.1** | 1 (`xpQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 118 | `118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js` | v1.5 | **v1.6** | 3 (`enrollmentsQuery`, `weeksQuery`, `wasQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 | 119 | `119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js` | v1.5 | **v1.6** | 3 (`enrQuery`, `weeksQuery`, `wasQuery`) | `unloadQuerySafe` + `finally` | Pending | Not Tested |
 
-GitHub base path for every file:
+GitHub base path for every paste target:
 
 `airtable/automations/shooting-challenge/<file>`
+
+## Correction — Automation 117 family (do not paste)
+
+Earlier drafts of this package incorrectly listed **117 / 117a / 117c** as active PROD unloadData paste targets. That was wrong.
+
+| Claim (incorrect) | Fact |
+|-------------------|------|
+| Live PROD Automation 117 is the Stage 17 credit orchestrator | **False.** PROD Automation **117** is **Zoom — Send Recording Approval Email to Make** (script **v1.1**, 2026-07-20) |
+| 117a / 117c are installed PROD automations | **False.** Modular slices were never installed (Airtable automation-count limit) |
+| Orchestrator / 117a / 117c need PROD paste for unloadData | **False.** They are repository design alternatives only |
+| PROD 117 has an unloadData defect | **False.** The live email script has **no** Airtable query and **no** `.unloadData()` |
+
+Design-alternative paths (hardened in repo for offline Stage 17 tests only — **never paste over PROD 117**):
+
+`airtable/automations/shooting-challenge/_design-alternatives/stage17-modular-reference/`
+
+Canonical PROD Automation 117 source:
+
+`airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js`
+
+See: `docs/deploy-checklists/117-zoom-recording-approval-email.md`
 
 ## Exclusions (do not paste / do not rewrite in this package)
 
 | Path | Reason |
 |------|--------|
-| `_superseded/117a-s16-…SUPERSEDED.js` | Superseded S16 homework path; not deployed |
+| `117-zoom-send-recording-approval-email-to-make.js` | Live PROD 117; no unloadData; leave unchanged |
+| `_design-alternatives/stage17-modular-reference/*` | Not deployed; not Airtable paste targets |
+| `_superseded/117a-s16-…SUPERSEDED.js` | Superseded S16 homework path |
 | `_superseded/117b-…SUPERSEDED.js` | Superseded |
 | Automations **001**, **002** | Already fixed (v5.2 / v8.2); not modified here |
 
@@ -42,22 +62,15 @@ GitHub base path for every file:
 
 Paste all in one operator session if desired, but **save and syntax-check each script separately** before the next.
 
-1. **031** — WAS find/create from submission  
-2. **035** — Weekly Threshold XP (depends on WAS)  
-3. **042** — Level assignment / gate blocking  
-4. **057** — Perfect Week eligibility  
-5. **114** — Video XP  
-6. **117** — Zoom recording orchestrator (owns combined Stage 17 path when used)  
-7. **117a** — Normalize recording quiz (modular path; do not dual-ON with overlapping writers)  
-8. **117c** — Create Zoom XP (modular; mutually exclusive ownership with 117 for XP writes)  
-9. **118** — Schedule weekly email build  
-10. **119** — Schedule weekly email send  
+1. **031** — WAS find/create from submission
+2. **035** — Weekly Threshold XP (depends on WAS)
+3. **042** — Level assignment / gate blocking
+4. **057** — Perfect Week eligibility
+5. **114** — Video XP
+6. **118** — Schedule weekly email build
+7. **119** — Schedule weekly email send
 
-### Special caution: 117 / 117a / 117c
-
-- This package does **not** change triggers, ownership, or enable overlapping writers.
-- If PROD uses orchestrator **117**, keep modular **117c** OFF (or vice versa) per existing Stage 17 operating rules.
-- **117a** normalize may run as part of orchestrator or modular chain — do not invent a second credit path.
+**Do not** paste the Stage 17 orchestrator or modular 117a/117c into Airtable as part of this package.
 
 ## Per-automation paste notes
 
@@ -95,24 +108,6 @@ Paste all in one operator session if desired, but **save and syntax-check each s
 - Trigger: Video Feedback ready for XP
 - Safe test: one Schmidt video feedback with XP > 0; rerun updates same Source Key (no steal)
 - Expected: one XP Event; Awarded status
-
-### 117 — Zoom Recording Credit Orchestrator
-- Airtable name: `117 - Zoom Recording Credit - Orchestrator`
-- Confirm **v1.1.2**
-- Trigger: Zoom Attendance recording quiz path
-- Safe test: dryRun=true first if available; then controlled approved recording credit
-- Expected: normalize + XP create/soft-void; never writes Zoom Meetings.Attendees
-
-### 117a — Normalize Recording Quiz Submission
-- Airtable name: `117a - Zoom Recording Credit - Normalize Recording Quiz Submission`
-- Confirm **v1.1.1**
-- Safe test: recording quiz row → Needs Review when blank; duplicate pair skip
-
-### 117c — Create Zoom XP Event
-- Airtable name: `117c - Zoom Recording Credit - Create Zoom XP Event`
-- Confirm **v1.1.1**
-- Safe test: only if modular path is the active PROD writer (not dual with 117)
-- Expected: Source Key `ZOOM_CREDIT|…` idempotent
 
 ### 118 — Schedule Weekly Summary Email Build
 - Airtable name: `118 - Email - Schedule Weekly Summary Email Build`

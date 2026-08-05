@@ -17,7 +17,7 @@ Use checklist: [`AUTOMATION-ATTESTATION-PACKET.md`](./AUTOMATION-ATTESTATION-PAC
 | 5 | Confirm **111** Deleted/OFF | Do not reinstall |
 | 6 | Confirm **031** ON | Primary WAS creator |
 | 7 | Confirm **101** ON (live attendance) | Recording path never writes Attendees |
-| 8 | Confirm **117 XOR 117c** | Exactly one creates `ZOOM_CREDIT` XP |
+| 8 | Confirm **117** is email-to-Make only | Name ≈ `Send Recording Approval Email to Make`; **v1.1**; do **not** install 117a/117c; do **not** paste orchestrator |
 | 9 | Confirm **118** OFF | Until weekly schedule authorized |
 | 10 | Confirm **119** OFF | Until weekly schedule authorized |
 | 11 | Hunt Weekly Threshold XP automation | YES (name/version/key) or NO (missing) |

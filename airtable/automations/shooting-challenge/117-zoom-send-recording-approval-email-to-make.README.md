@@ -1,7 +1,9 @@
-# Automation 117f — Airtable input variables
+# Automation 117 — Airtable input variables
 
-Companion config for `117f-zoom-recording-send-approval-email.js`  
+Companion config for `117-zoom-send-recording-approval-email-to-make.js`  
 (**Automation name:** 117 — Zoom — Send Recording Approval Email to Make · **v1.1**).
+
+This is the **only** active Airtable Automation 117. Make workflow identifier remains **`117f`** in the JSON payload (`automationNumber`).
 
 Configure these four **Scripting** action input variables in Airtable. Do not paste webhook URLs into git.
 
@@ -18,3 +20,4 @@ Configure these four **Scripting** action input variables in Airtable. Do not pa
 - Fixed payload values (not inputs): `automationNumber=117f`, `templateKey=ZOOM_RECORDING_APPROVED`, `timing=On Satisfactory`.
 - Send key: `ZOOM_REC_EMAIL|{enrollmentRid}|{zoomMeetingRid}|{zoomAttendanceId}`.
 - Script outputs only (`makeStatus`, `sendKey`, `zoomAttendanceId`) — no Airtable record writes.
+- Do **not** create Airtable automations 117a/117b/117c/117d/117e — automation-count limit; modular scripts live under `_design-alternatives/stage17-modular-reference/` only.

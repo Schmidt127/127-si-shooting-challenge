@@ -13,6 +13,7 @@ XP_SOURCE = "Zoom Meeting Recording Quiz"
 DATE_FIELD = "XP Activity Date"
 
 ROOT = Path(__file__).resolve().parents[3] / "airtable" / "automations" / "shooting-challenge"
+DESIGN = ROOT / "_design-alternatives" / "stage17-modular-reference"
 
 
 def build_credit_key(enrollment_id: str, meeting_id: str) -> str:
@@ -44,7 +45,7 @@ class TestStage17Contracts(unittest.TestCase):
             "117a-zoom-recording-normalize-recording-quiz-submission.js",
             "117c-zoom-recording-create-zoom-xp-event.js",
         ]:
-            text = (ROOT / name).read_text(encoding="utf-8")
+            text = (DESIGN / name).read_text(encoding="utf-8")
             self.assertNotIn('homeworkCompletions: "Homework Completions"', text)
             self.assertIn("Zoom Attendance", text)
             self.assertNotIn("ZOOM_RECORDING|", text)
@@ -59,6 +60,11 @@ class TestStage17Contracts(unittest.TestCase):
             "117-zoom-recording-credit-orchestrator.js",
             "117d-zoom-recording-apply-zoom-gate-credit.js",
             "117e-zoom-recording-apply-perfect-week-credit.js",
+        ]:
+            text = (DESIGN / name).read_text(encoding="utf-8")
+            for snip in forbidden_snippets:
+                self.assertNotIn(snip, text, msg=f"{name} contains {snip}")
+        for name in [
             "057-achievements-and-milestones-calculate-perfect-week-eligibility.js",
             "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
         ]:
@@ -67,8 +73,8 @@ class TestStage17Contracts(unittest.TestCase):
                 self.assertNotIn(snip, text, msg=f"{name} contains {snip}")
 
     def test_orchestrator_version_and_labels(self):
-        text = (ROOT / "117-zoom-recording-credit-orchestrator.js").read_text(encoding="utf-8")
-        self.assertIn('version: "v1.1.1"', text)
+        text = (DESIGN / "117-zoom-recording-credit-orchestrator.js").read_text(encoding="utf-8")
+        self.assertIn('version: "v1.1.2"', text)
         self.assertIn('xpSource: "Zoom Meeting Recording Quiz"', text)
         self.assertIn('xpBucket: "Zoom Attendance"', text)
         self.assertIn('xpActivityDate: "XP Activity Date"', text)
@@ -83,10 +89,10 @@ class TestStage17Contracts(unittest.TestCase):
         s42 = (ROOT / "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js").read_text(
             encoding="utf-8"
         )
-        self.assertIn("Version: 1.3", s57)
+        self.assertIn("Version: 1.5", s57)
         self.assertIn("Zoom Attendance", s57)
         self.assertIn("Perfect Week Credit Applied?", s57)
-        self.assertIn('version: "3.1"', s42)
+        self.assertIn('version: "3.2"', s42)
         self.assertIn("computeEffectiveZoomAttendanceCount", s42)
         self.assertIn("Gate Credit Applied?", s42)
 
