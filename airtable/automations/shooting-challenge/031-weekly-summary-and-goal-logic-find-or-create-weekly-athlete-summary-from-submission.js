@@ -26,9 +26,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Find or Create Weekly Athlete Summary from Submission
  *
- * Version: v3.1
+ * Version: v3.2
  * Date Written: 2026-05-20
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-08-05
+ * Updated Reason: Airtable runtime compatibility: guard optional QueryResult.unloadData()
+ * cleanup so unsupported cleanup cannot fail an otherwise successful automation run.
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -95,7 +97,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.1",
+  version: "v3.2",
 
   tables: {
     submissions: "Submissions",
@@ -192,6 +194,22 @@ function log(message, data = null) {
     console.log(message);
   } else {
     console.log(message, JSON.stringify(data, null, 2));
+  }
+}
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      log("Query unloadData skipped/failed (non-fatal)", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 }
 
@@ -433,31 +451,31 @@ async function linkOrphanXpEventsForEnrollmentWeek(enrollmentId, weekId, weeklyS
   const xpQuery = await xpEventsTable.selectRecordsAsync({ fields: xpFields });
   const toLink = [];
 
-  for (const xpRecord of xpQuery.records) {
-    const xpEnrollmentId = getFirstLinkedRecordId(
-      xpRecord,
-      xpEventsTable,
-      CONFIG.xpEvents.enrollment
-    );
-    const xpWeekId = getFirstLinkedRecordId(
-      xpRecord,
-      xpEventsTable,
-      CONFIG.xpEvents.week
-    );
-    const xpSummaryId = getFirstLinkedRecordId(
-      xpRecord,
-      xpEventsTable,
-      CONFIG.xpEvents.weeklySummary
-    );
+  try {
+    for (const xpRecord of xpQuery.records) {
+      const xpEnrollmentId = getFirstLinkedRecordId(
+        xpRecord,
+        xpEventsTable,
+        CONFIG.xpEvents.enrollment
+      );
+      const xpWeekId = getFirstLinkedRecordId(
+        xpRecord,
+        xpEventsTable,
+        CONFIG.xpEvents.week
+      );
+      const xpSummaryId = getFirstLinkedRecordId(
+        xpRecord,
+        xpEventsTable,
+        CONFIG.xpEvents.weeklySummary
+      );
 
-    if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
-    if (xpSummaryId) continue;
+      if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
+      if (xpSummaryId) continue;
 
-    toLink.push(xpRecord.id);
-  }
-
-  if (typeof xpQuery.unloadData === "function") {
-    xpQuery.unloadData();
+      toLink.push(xpRecord.id);
+    }
+  } finally {
+    unloadQuerySafe(xpQuery);
   }
 
   const linkedIds = [];

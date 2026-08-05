@@ -83,8 +83,8 @@ test("057 Perfect Week date keys use America/Denver (not UTC ISO slice)", () => 
   );
   assert.ok(/timezone:\s*"America\/Denver"/.test(s057));
   assert.ok(
-    /Version:\s*v?1\.4/.test(s057) || /version:\s*"v?1\.4"/.test(s057),
-    "057 header must declare version 1.4"
+    /Version:\s*v?1\.5/.test(s057) || /version:\s*"v?1\.5"/.test(s057),
+    "057 header must declare version 1.5"
   );
   const fnMatch = s057.match(
     /function getDateKeyFromDateOnly\(value\) \{[\s\S]*?\n\}/
@@ -179,7 +179,7 @@ test("035 Weekly Threshold activity date helper uses America/Denver", () => {
   assert.ok(/timeZone:\s*"America\/Denver"/.test(s035));
   assert.ok(/function toDateKey\(value\)/.test(s035));
   assert.ok(/Intl\.DateTimeFormat/.test(s035));
-  assert.ok(/version:\s*"v1\.2"/.test(s035));
+  assert.ok(/version:\s*"v1\.3"/.test(s035));
 });
 
 console.log("\nAll xp-date-normalization tests passed.");

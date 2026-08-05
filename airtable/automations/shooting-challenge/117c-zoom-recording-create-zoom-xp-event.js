@@ -26,11 +26,14 @@ Skip GitHub header when pasting into Airtable.
 /************************************************************
  * 117c - Zoom Recording Credit - Create Zoom XP Event (Stage 17)
  *
- * Version: v1.1.0
+ * Version: v1.1.1
  * Date Written: 2026-07-14
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-05
  *
  * VERSION HISTORY
+ * - v1.1.1 (2026-08-05): Airtable runtime compatibility — guard optional
+ *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
+ *   otherwise successful automation run.
  * - v1.1.0 (2026-07-18): Canonical XP Activity Date + XP Bucket/Source for DEV;
  *   link Zoom Meeting; America/Denver date; validate select options; no HC writes.
  * - v1.0.0 (2026-07-14): Initial Stage 17 XP create/soft-void.
@@ -71,10 +74,10 @@ Skip GitHub header when pasting into Airtable.
 
 const SCRIPT = {
   scriptName: "117c - Zoom Recording Credit - Create Zoom XP Event",
-  version: "v1.1.0",
-  versionDate: "2026-07-18",
+  version: "v1.1.1",
+  versionDate: "2026-08-05",
   originalWrittenDate: "2026-07-14",
-  lastUpdated: "2026-07-18",
+  lastUpdated: "2026-08-05",
   folder: "17 - Zoom Recording Credit",
   automationName: "117c - Zoom Recording Credit - Create Zoom XP Event",
 };
@@ -130,6 +133,26 @@ function setOutputSafe(key, value) {
     console.log(`setOutputSafe(${key}) failed: ${e && e.message ? e.message : e}`);
   }
 }
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
+
 
 function requireRecId(recordId) {
   if (!recordId || typeof recordId !== "string" || !recordId.startsWith("rec")) {
@@ -327,12 +350,12 @@ async function main() {
     CONFIG.xp.awardedBy,
   ].filter((n) => fieldExists(xpTable, n));
   const xpQuery = await xpTable.selectRecordsAsync({ fields: xpFieldList });
-  const matches = xpQuery.records.filter((r) => getText(r, CONFIG.xp.sourceKey) === key);
-  const existing = matches[0] || null;
+  let existing = null;
   try {
-    xpQuery.unloadData();
-  } catch (e) {
-    /* older runtimes */
+    const matches = xpQuery.records.filter((r) => getText(r, CONFIG.xp.sourceKey) === key);
+    existing = matches[0] || null;
+  } finally {
+    unloadQuerySafe(xpQuery);
   }
 
   debugStep = "6 - Branch approved / conflict";

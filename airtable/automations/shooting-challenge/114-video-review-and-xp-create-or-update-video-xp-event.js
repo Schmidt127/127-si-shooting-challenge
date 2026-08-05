@@ -26,9 +26,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.8
+ * Version: v5.9
  * Date Written: 2026-05-23
- * Last Updated: 2026-06-21
+ * Last Updated: 2026-08-05
+ * Updated Reason: Airtable runtime compatibility: guard optional QueryResult.unloadData()
+ * cleanup so unsupported cleanup cannot fail an otherwise successful automation run.
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -110,7 +112,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "114 - Video Review and XP - Create or Update Video XP Event",
-  version: "v5.8",
+  version: "v5.9",
 
   tables: {
     videoFeedback: "Video Feedback",
@@ -190,6 +192,22 @@ function log(message, data = null) {
     console.log(message);
   } else {
     console.log(message, JSON.stringify(data, null, 2));
+  }
+}
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      log("Query unloadData skipped/failed (non-fatal)", {
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }
 }
 
@@ -906,9 +924,7 @@ async function findExistingXpEventOrThrow(matchContext) {
 
     return matches[0] || null;
   } finally {
-    if (xpQuery && typeof xpQuery.unloadData === "function") {
-      xpQuery.unloadData();
-    }
+    unloadQuerySafe(xpQuery);
   }
 }
 

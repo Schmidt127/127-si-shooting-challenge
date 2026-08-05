@@ -267,7 +267,7 @@ test("117c script CONFIG maps canonical fields", () => {
 
 test("117 orchestrator v1.1.1 forbids Attendees and does not set Applied flags", () => {
   const src = fs.readFileSync(path.join(root, "117-zoom-recording-credit-orchestrator.js"), "utf8");
-  assert(src.includes('version: "v1.1.1"'), "version");
+  assert(src.includes('version: "v1.1.2"'), "version");
   assert(src.includes("117 - Zoom Recording Credit - Orchestrator"), "name");
   assert(src.includes("Attendance Method is Recording Quiz"), "trigger method");
   assert(src.includes("NEVER write Zoom Meetings"), "hard rule");

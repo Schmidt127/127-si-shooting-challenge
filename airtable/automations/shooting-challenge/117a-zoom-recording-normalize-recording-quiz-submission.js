@@ -9,11 +9,16 @@ Folder: 17 - Zoom Recording Credit
 /************************************************************
  * 117a - Zoom Recording Credit - Normalize Recording Quiz Submission
  *
- * Version: v1.1.0
+ * Version: v1.1.1
  * Date Written: 2026-07-14
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-05
  *
  * Architecture: Stage 17 Zoom Attendance path (S16 HC path superseded)
+ *
+ * VERSION HISTORY
+ * - v1.1.1 (2026-08-05): Airtable runtime compatibility — guard optional
+ *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
+ *   otherwise successful automation run.
  *
  * PURPOSE
  * - Find-or-normalize one Zoom Attendance Recording Quiz row per Enrollment+Meeting.
@@ -45,10 +50,10 @@ Folder: 17 - Zoom Recording Credit
 
 const SCRIPT = {
   scriptName: '117a-zoom-recording-normalize-recording-quiz-submission',
-  version: 'v1.1.0',
-  versionDate: '2026-07-18',
+  version: 'v1.1.1',
+  versionDate: '2026-08-05',
   originalWrittenDate: '2026-07-14',
-  lastUpdated: '2026-07-18',
+  lastUpdated: '2026-08-05',
   folder: "17 - Zoom Recording Credit",
   automationName: '117a - Zoom Recording Credit - Normalize Recording Quiz Submission',
 };
@@ -78,6 +83,26 @@ function setOutputSafe(key, value) {
     console.log(`setOutputSafe(${key}) failed: ${e && e.message ? e.message : e}`);
   }
 }
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
+
 
 function requireRecId(recordId) {
   if (!recordId || typeof recordId !== "string" || !recordId.startsWith("rec")) {
@@ -175,14 +200,18 @@ async function main() {
   debugStep = "5 - Query sibling rows for pair";
   setOutputSafe("debugStep", debugStep);
   const query = await zaTable.selectRecordsAsync({ fields: [CONFIG.fields.enrollmentRid, CONFIG.fields.zoomMeetingRid, CONFIG.fields.reviewStatus, CONFIG.fields.attendanceMethod] });
-  const siblings = query.records.filter((r) => {
-    return (
-      getText(r, CONFIG.fields.attendanceMethod) === CONFIG.methods.recordingQuiz &&
-      getText(r, CONFIG.fields.enrollmentRid) === enrollRid &&
-      getText(r, CONFIG.fields.zoomMeetingRid) === meetingRid
-    );
-  });
-  query.unloadData();
+  let siblings;
+  try {
+    siblings = query.records.filter((r) => {
+      return (
+        getText(r, CONFIG.fields.attendanceMethod) === CONFIG.methods.recordingQuiz &&
+        getText(r, CONFIG.fields.enrollmentRid) === enrollRid &&
+        getText(r, CONFIG.fields.zoomMeetingRid) === meetingRid
+      );
+    });
+  } finally {
+    unloadQuerySafe(query);
+  }
 
   const older = siblings
     .filter((r) => r.id !== recordId)

@@ -24,12 +24,16 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.4
+ * Version: 1.5
  * Date written: 2026-05-30
- * Last updated: 2026-07-25
+ * Last updated: 2026-08-05
  *
  * Purpose:
  * Calculates Perfect Week helper fields on one Weekly Athlete Summary record.
+ *
+ * Version 1.5 updates (2026-08-05):
+ * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
+ *   so unsupported cleanup cannot fail an otherwise successful automation run.
  *
  * Version 1.4 updates (SC-021 date normalization):
  * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
@@ -222,6 +226,25 @@ function fieldExists(table, name) {
     return true;
   } catch (e) {
     return false;
+  }
+}
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
   }
 }
 
@@ -670,28 +693,26 @@ try {
   );
   const zaQuery = await zoomAttendanceTable.selectRecordsAsync({ fields: zaFieldNames });
 
-  for (const za of zaQuery.records) {
-    if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
-    const zaEnrollmentId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment);
-    if (zaEnrollmentId !== enrollmentId) continue;
-    const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
-    if (!meetingId || !weekMeetingSet.has(meetingId)) continue;
-    if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
-    if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
-    if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.pwFlag)) continue;
-    if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
-
-    // Prefer live: if already live-attended, do not double-count; still may mark applied if we counted recording-only.
-    if (!attendedMeetingSet.has(meetingId)) {
-      attendedMeetingSet.add(meetingId);
-      recordingZaToMarkApplied.push(za.id);
-    }
-  }
-
   try {
-    zaQuery.unloadData();
-  } catch (e) {
-    /* older runtimes */
+    for (const za of zaQuery.records) {
+      if (getText(za, CONFIG.zoomAttendanceFields.attendanceMethod) !== CONFIG.recordingMethod) continue;
+      const zaEnrollmentId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.enrollment);
+      if (zaEnrollmentId !== enrollmentId) continue;
+      const meetingId = getFirstLinkedId(za, CONFIG.zoomAttendanceFields.zoomMeeting);
+      if (!meetingId || !weekMeetingSet.has(meetingId)) continue;
+      if (isTruthyFlag(za, CONFIG.zoomAttendanceFields.conflict)) continue;
+      if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.approved)) continue;
+      if (!isTruthyFlag(za, CONFIG.zoomAttendanceFields.pwFlag)) continue;
+      if (getText(za, CONFIG.zoomAttendanceFields.reviewStatus) === CONFIG.reviewNeedsCorrection) continue;
+
+      // Prefer live: if already live-attended, do not double-count; still may mark applied if we counted recording-only.
+      if (!attendedMeetingSet.has(meetingId)) {
+        attendedMeetingSet.add(meetingId);
+        recordingZaToMarkApplied.push(za.id);
+      }
+    }
+  } finally {
+    unloadQuerySafe(zaQuery);
   }
 
   const zoomMeetingCount = weekMeetingIds.length;

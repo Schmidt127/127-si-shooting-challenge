@@ -28,11 +28,14 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
  * 035 - WEEKLY SUMMARY AND GOAL LOGIC
  * Create Weekly Threshold XP Events
  *
- * Version: v1.2
+ * Version: v1.3
  * Date Written: 2026-07-25
- * Last Updated: 2026-08-03
+ * Last Updated: 2026-08-05
  *
  * VERSION HISTORY
+ * - v1.3 (2026-08-05): Airtable runtime compatibility — guard optional
+ *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
+ *   otherwise successful automation run.
  * - v1.2 (2026-08-03): Treat Airtable percent values as ratios exactly as returned
  *   (1 = 100%, 1.25 = 125%, 83.7 = 8,370%). Removed the v1.1 `raw > 3 ? raw / 100`
  *   heuristic that incorrectly skipped Goal Completion 83.7 as below 100%.
@@ -93,10 +96,10 @@ Reconstructed for SC-049 / XP-D1 (writer was missing from repo).
 
 const SCRIPT = {
   scriptName: "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
-  version: "v1.2",
-  versionDate: "2026-08-03",
+  version: "v1.3",
+  versionDate: "2026-08-05",
   originalWrittenDate: "2026-07-25",
-  lastUpdated: "2026-08-03",
+  lastUpdated: "2026-08-05",
   folder: "03 - Weekly Summary and Goal Logic",
   automationName: "035 - Weekly Summary and Goal Logic - Create Weekly Threshold XP Events",
 };
@@ -177,6 +180,25 @@ function setOutputSafe(key, value) {
     output.set(key, value);
   } catch (e) {
     console.log(`setOutputSafe(${key}) failed: ${e && e.message ? e.message : e}`);
+  }
+}
+
+/**
+ * Airtable Scripting sometimes exposes unloadData on QueryResult; some automation
+ * runtimes do not. Never let cleanup throw after successful business work.
+ */
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
   }
 }
 
@@ -383,14 +405,12 @@ async function findExistingBySourceKey(xpTable, sourceKey) {
       fields: [CONFIG.xp.sourceKey],
       filterByFormula: formula,
     });
-    const hit = recheck.records.find((xp) => getText(xp, CONFIG.xp.sourceKey) === sourceKey);
-    const id = hit ? hit.id : null;
     try {
-      recheck.unloadData();
-    } catch (e) {
-      // optional
+      const hit = recheck.records.find((xp) => getText(xp, CONFIG.xp.sourceKey) === sourceKey);
+      return hit ? hit.id : null;
+    } finally {
+      unloadQuerySafe(recheck);
     }
-    return id;
   } catch (e) {
     // filterByFormula unsupported / field name issue ? fall back to in-memory only.
     console.log(`findExistingBySourceKey fallback: ${e && e.message ? e.message : e}`);
@@ -538,29 +558,28 @@ async function main() {
     ].filter((f) => fieldExists(rulesTable, f)),
   });
   const rulesByKey = {};
-  for (const rule of rulesQuery.records) {
-    const active = !fieldExists(rulesTable, CONFIG.xpRule.active)
-      || getCheckbox(rule, CONFIG.xpRule.active);
-    if (!active) continue;
-    const ruleKey = getText(rule, CONFIG.xpRule.ruleKey);
-    if (!ruleKey) continue;
-    if (!ruleKey.startsWith("WEEKLY_THRESHOLD_")) continue;
-    if (rulesByKey[ruleKey]) {
-      throw new Error(`Duplicate active XP Reward Rule key: ${ruleKey}`);
-    }
-    const ruleGradeBandIds = fieldExists(rulesTable, CONFIG.xpRule.gradeBand)
-      ? getLinkedIds(rule, CONFIG.xpRule.gradeBand)
-      : [];
-    rulesByKey[ruleKey] = {
-      id: rule.id,
-      xpAmount: getNumber(rule, CONFIG.xpRule.xpAmount),
-      gradeBandIds: ruleGradeBandIds,
-    };
-  }
   try {
-    rulesQuery.unloadData();
-  } catch (e) {
-    // optional
+    for (const rule of rulesQuery.records) {
+      const active = !fieldExists(rulesTable, CONFIG.xpRule.active)
+        || getCheckbox(rule, CONFIG.xpRule.active);
+      if (!active) continue;
+      const ruleKey = getText(rule, CONFIG.xpRule.ruleKey);
+      if (!ruleKey) continue;
+      if (!ruleKey.startsWith("WEEKLY_THRESHOLD_")) continue;
+      if (rulesByKey[ruleKey]) {
+        throw new Error(`Duplicate active XP Reward Rule key: ${ruleKey}`);
+      }
+      const ruleGradeBandIds = fieldExists(rulesTable, CONFIG.xpRule.gradeBand)
+        ? getLinkedIds(rule, CONFIG.xpRule.gradeBand)
+        : [];
+      rulesByKey[ruleKey] = {
+        id: rule.id,
+        xpAmount: getNumber(rule, CONFIG.xpRule.xpAmount),
+        gradeBandIds: ruleGradeBandIds,
+      };
+    }
+  } finally {
+    unloadQuerySafe(rulesQuery);
   }
 
   setDebug("load_existing_threshold_awards");
@@ -575,34 +594,33 @@ async function main() {
     CONFIG.xp.xpBucket,
   ].filter((f) => fieldExists(xpTable, f));
   const xpQuery = await xpTable.selectRecordsAsync({ fields: xpFields });
-  for (const xp of xpQuery.records) {
-    const xpEnrollmentIds = fieldExists(xpTable, CONFIG.xp.enrollment)
-      ? getLinkedIds(xp, CONFIG.xp.enrollment)
-      : [];
-    if (xpEnrollmentIds.length && !xpEnrollmentIds.includes(enrollmentId)) continue;
-
-    const xpWeekIds = fieldExists(xpTable, CONFIG.xp.week)
-      ? getLinkedIds(xp, CONFIG.xp.week)
-      : [];
-    const sameWeek = !xpWeekIds.length || xpWeekIds.includes(weekId);
-
-    const key = getText(xp, CONFIG.xp.sourceKey);
-    if (key && key.startsWith(CONFIG.values.sourceKeyPrefix)) {
-      // Canonical keys for this enrollment (any week) block exact-key duplicates.
-      existingKeys.add(key);
-    }
-
-    if (!sameWeek) continue;
-
-    const xpSource = getText(xp, CONFIG.xp.xpSource);
-    if (xpSource && /^Weekly Threshold (100|125|150)$/.test(xpSource)) {
-      existingXpSourceLabels.add(xpSource);
-    }
-  }
   try {
-    xpQuery.unloadData();
-  } catch (e) {
-    // optional
+    for (const xp of xpQuery.records) {
+      const xpEnrollmentIds = fieldExists(xpTable, CONFIG.xp.enrollment)
+        ? getLinkedIds(xp, CONFIG.xp.enrollment)
+        : [];
+      if (xpEnrollmentIds.length && !xpEnrollmentIds.includes(enrollmentId)) continue;
+
+      const xpWeekIds = fieldExists(xpTable, CONFIG.xp.week)
+        ? getLinkedIds(xp, CONFIG.xp.week)
+        : [];
+      const sameWeek = !xpWeekIds.length || xpWeekIds.includes(weekId);
+
+      const key = getText(xp, CONFIG.xp.sourceKey);
+      if (key && key.startsWith(CONFIG.values.sourceKeyPrefix)) {
+        // Canonical keys for this enrollment (any week) block exact-key duplicates.
+        existingKeys.add(key);
+      }
+
+      if (!sameWeek) continue;
+
+      const xpSource = getText(xp, CONFIG.xp.xpSource);
+      if (xpSource && /^Weekly Threshold (100|125|150)$/.test(xpSource)) {
+        existingXpSourceLabels.add(xpSource);
+      }
+    }
+  } finally {
+    unloadQuerySafe(xpQuery);
   }
 
   setDebug("plan_awards");

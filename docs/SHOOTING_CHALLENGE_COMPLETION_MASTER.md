@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Automation 002 v8.2 unloadData runtime fix — Built in Repository; PROD paste pending) |
+| Last updated | **2026-08-05** (Active automation unloadData compat pack — Built in Repository; PROD paste pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -668,6 +668,19 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
 
+### 9K. Active automation unloadData runtime compatibility pack — **2026-08-05**
+
+| Field | Value |
+|-------|--------|
+| Defect class | Bare `QueryResult.unloadData()` unsupported in current Airtable automation runtime |
+| Prior live failures that established the defect | Automation **001** (`athletesQuery.unloadData`), Automation **002** (`gradeBandQuery.unloadData`) — already fixed (v5.2 / v8.2); not modified in this pack |
+| Affected automations (this pack) | **031, 035, 042, 057, 114, 117, 117a, 117c, 118, 119** |
+| Repo fix | Each script gains `unloadQuerySafe()`; bare cleanup replaced; `finally` where the script owns the query lifecycle |
+| Status | **Built in Repository** — Airtable paste still required; live PROD tests still required (do not mark Live Tested/Complete from repo alone) |
+| Offline tests | `node tests/airtable-runtime/active-automation-unload-compat.test.js` (67 passed) + related version-pin suites |
+| Paste runbook | `docs/deploy-checklists/active-automation-unloadData-compat.md` |
+| Exclusions | `_superseded/*` archive copies; 001/002 already remediated |
+
 ### 9J. Automation 002 unloadData runtime fix — **2026-08-05** (SC-023 / enrollment Grade Band)
 
 | Field | Value |
@@ -682,7 +695,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | Offline tests | `node tests/enrollment-intake/automation-002-unload-compat.test.js` |
 | Canonical paste path | `airtable/automations/shooting-challenge/002-enrollment-intake-and-setup-assign-grade-band-initial.js` |
 | Paste runbook | `docs/deploy-checklists/002-unloadData-runtime-fix.md` |
-| Follow-up | Additional bare `.unloadData()` calls remain in active scripts 031, 035, 042, 057, 114, 117, 117a, 117c, 118, 119 — compatibility cleanup package later (not expanded here) |
+| Follow-up | ~~Additional bare `.unloadData()` in 031–119~~ → remediated in §9K (2026-08-05). Superseded archive copies remain excluded. |
 
 ### 9I. Automation 001 unloadData runtime fix — **2026-08-05** (SC-060 / SC-061)
 
