@@ -4,8 +4,12 @@ System: 127 SI Shooting Challenge
 Purpose:
   Read-only check for why automation 071 may not fire on Homework Completions.
   Reports script-level send gates vs common Airtable trigger blockers (upload fields).
+  Also reports per-linked Submission Asset parent-facing URL resolution
+  (Reviewer File URL → Google Drive View URL → Google Drive File URL).
 
 Default: read-only (no writes)
+Version: v1.1
+Last Updated: 2026-08-05
 */
 
 // @ts-nocheck
@@ -14,10 +18,12 @@ const SAMPLE_LIMIT = 30;
 
 const CONFIG = {
   scriptName: "audit-homework071-trigger-readiness",
-  version: "v1.0",
+  version: "v1.1",
+  expectedAutomationVersion: "v3.5",
 
   tables: {
     homework: "Homework Completions",
+    submissionAssets: "Submission Assets",
   },
 
   homework: {
@@ -39,6 +45,14 @@ const CONFIG = {
     airtableAttachment: "Airtable Attachment",
     completionKey: "Homework Completion Key",
     parentError: "Parent Feedback Send Error",
+  },
+
+  asset: {
+    originalFileName: "Original File Name",
+    assetLabel: "Asset Label",
+    reviewerFileUrl: "Reviewer File URL",
+    googleDriveViewUrl: "Google Drive View URL",
+    googleDriveFileUrl: "Google Drive File URL",
   },
 
   values: {
@@ -86,6 +100,21 @@ function getNumberish(record, table, fieldName) {
   if (typeof raw === "number") return raw;
   const parsed = Number(String(record.getCellValueAsString(fieldName) || "").replace(/,/g, ""));
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function resolveParentFacingAssetUrl(fields) {
+  if (fields.reviewerFileUrl) return { source: "reviewerFileUrl", present: true };
+  if (fields.googleDriveViewUrl) return { source: "googleDriveViewUrl", present: true };
+  if (fields.googleDriveFileUrl) return { source: "googleDriveFileUrl", present: true };
+  return { source: "(none)", present: false };
+}
+
+function resolveAssetDisplayLabel(fields) {
+  return (
+    String(fields.originalFileName || "").trim() ||
+    String(fields.assetLabel || "").trim() ||
+    "View submitted homework"
+  );
 }
 
 function scriptSendReady(record, table) {
@@ -151,8 +180,38 @@ function triggerBlockers(record, table) {
   return blockers;
 }
 
+function diagnoseAssetLinks(assetRecord, assetsTable) {
+  const reviewerPresent = Boolean(
+    getText(assetRecord, assetsTable, CONFIG.asset.reviewerFileUrl)
+  );
+  const viewPresent = Boolean(
+    getText(assetRecord, assetsTable, CONFIG.asset.googleDriveViewUrl)
+  );
+  const filePresent = Boolean(
+    getText(assetRecord, assetsTable, CONFIG.asset.googleDriveFileUrl)
+  );
+  const originalFileName = getText(assetRecord, assetsTable, CONFIG.asset.originalFileName);
+  const assetLabel = getText(assetRecord, assetsTable, CONFIG.asset.assetLabel);
+  const resolved = resolveParentFacingAssetUrl({
+    reviewerFileUrl: reviewerPresent ? "present" : "",
+    googleDriveViewUrl: viewPresent ? "present" : "",
+    googleDriveFileUrl: filePresent ? "present" : "",
+  });
+
+  return {
+    assetRecordId: assetRecord.id,
+    reviewerFileUrlPresent: reviewerPresent,
+    googleDriveViewUrlPresent: viewPresent,
+    googleDriveFileUrlPresent: filePresent,
+    resolvedUrlSource: resolved.source,
+    resolvedDisplayLabel: resolveAssetDisplayLabel({ originalFileName, assetLabel }),
+  };
+}
+
 async function main() {
   const homeworkTable = base.getTable(CONFIG.tables.homework);
+  const assetsTable = base.getTable(CONFIG.tables.submissionAssets);
+
   const query = await homeworkTable.selectRecordsAsync({
     fields: Object.values(CONFIG.homework),
   });
@@ -165,15 +224,20 @@ async function main() {
     );
   });
 
+  console.log(`Audit ${CONFIG.scriptName} ${CONFIG.version}`);
+  console.log(`Expected Automation 071: ${CONFIG.expectedAutomationVersion}`);
   console.log(`Graded + parent-ready + not-sent: ${candidates.length}`);
 
   let scriptReady = 0;
   let likelyTriggerBlocked = 0;
+  let assetsWithResolvedUrl = 0;
+  let assetsMissingUrl = 0;
 
   for (const record of candidates.slice(0, SAMPLE_LIMIT)) {
     const send = scriptSendReady(record, homeworkTable);
     const blockers = triggerBlockers(record, homeworkTable);
     const key = getText(record, homeworkTable, CONFIG.homework.completionKey) || record.id;
+    const assetIds = getLinkedIds(record, homeworkTable, CONFIG.homework.submissionAssets);
 
     if (send.ready) scriptReady += 1;
     if (blockers.length) likelyTriggerBlocked += 1;
@@ -181,16 +245,49 @@ async function main() {
     console.log(`\n${key}`);
     console.log(`  id: ${record.id}`);
     console.log(`  quiz path: ${send.isQuiz}`);
-    console.log(`  script v3.4 send ready: ${send.ready}`);
+    console.log(`  script ${CONFIG.expectedAutomationVersion} send ready: ${send.ready}`);
     if (send.issues.length) console.log(`  script issues: ${send.issues.join(", ")}`);
     console.log(`  likely trigger blockers (if used in 071 UI): ${blockers.join(", ") || "(none)"}`);
     console.log(`  parent error: ${getText(record, homeworkTable, CONFIG.homework.parentError) || "(none)"}`);
+
+    if (!assetIds.length) {
+      console.log(`  linked assets: (none)`);
+      continue;
+    }
+
+    console.log(`  linked assets: ${assetIds.length}`);
+
+    for (const assetId of assetIds) {
+      const assetRecord = await assetsTable.selectRecordAsync(assetId);
+      if (!assetRecord) {
+        console.log(`    assetRecordId: ${assetId} (missing)`);
+        assetsMissingUrl += 1;
+        continue;
+      }
+
+      const diag = diagnoseAssetLinks(assetRecord, assetsTable);
+      if (diag.resolvedUrlSource === "(none)") assetsMissingUrl += 1;
+      else assetsWithResolvedUrl += 1;
+
+      // Presence/source only — do not log full private/tokenized URLs.
+      console.log(`    assetRecordId: ${diag.assetRecordId}`);
+      console.log(`      Reviewer File URL present?: ${diag.reviewerFileUrlPresent}`);
+      console.log(`      Google Drive View URL present?: ${diag.googleDriveViewUrlPresent}`);
+      console.log(`      Google Drive File URL present?: ${diag.googleDriveFileUrlPresent}`);
+      console.log(`      resolved URL source: ${diag.resolvedUrlSource}`);
+      console.log(`      resolved display label: ${diag.resolvedDisplayLabel}`);
+    }
   }
 
   console.log("\n---");
+  console.log(`script-ready sample count: ${scriptReady}`);
+  console.log(`likely-trigger-blocked sample count: ${likelyTriggerBlocked}`);
+  console.log(`assets with resolved parent URL: ${assetsWithResolvedUrl}`);
+  console.log(`assets missing parent URL: ${assetsMissingUrl}`);
   console.log(`If 071 trigger includes Upload Ready / Writeback / Submission Assets,`);
   console.log(`quiz rows show blockers above and the automation will NOT run on checkbox toggle.`);
   console.log(`Fix: edit 071 trigger in Airtable — use only conditions in automation-trigger-map.md.`);
+  console.log(`Parent email asset URL priority: Reviewer File URL → Google Drive View URL → Google Drive File URL.`);
   console.log(`Then uncheck + recheck Parent Feedback Ready? on each row.`);
 }
 

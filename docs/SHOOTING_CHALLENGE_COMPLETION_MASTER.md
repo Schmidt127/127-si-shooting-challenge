@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Automation 117 ownership reconcile — email-only PROD 117; modular Stage 17 archived) |
+| Last updated | **2026-08-05** (Automation 071 v3.5 Reviewer File URL parent-email contract — Built in Repository; PROD paste pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -94,6 +94,17 @@ Counts below match Section 4 as of **2026-08-05** (SC-009/SC-101 closeout recoun
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Automation 071 Reviewer File URL)
+
+| SC | Old status | New status | Source of change | Evidence |
+|----|------------|------------|------------------|----------|
+| SC-017 | Installed in PROD | **Installed in PROD** (repo advanced) | Automation **071 v3.5** uses `Reviewer File URL` → Drive View → Drive File; Google Drive no longer required when reviewer URL exists | `071-…js` v3.5; `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; offline `tests/homework/automation-071-reviewer-file-url.test.js` |
+| SC-045 | Installed in PROD | **Installed in PROD** | Homework parent email contract unblocked for AWS/Lambda assets; live Gmail proof still open | Same |
+
+**Net math:** no bucket move — package is **Built in Repository** for the 071 script fix until Mike pastes v3.5 and supplies Airtable+Make evidence for `recH71jEgjxzLup6F`. Do **not** mark Live Tested until that evidence exists.
+
+**Parent email asset URL priority:** `Reviewer File URL` → `Google Drive View URL` → `Google Drive File URL`. Filenames are labels only. Make owns Sent? after Gmail success.
 
 ### Dashboard reconciliation (2026-08-05 — SC-009 / SC-101 final PROD closeout)
 
@@ -251,7 +262,7 @@ Columns:
 | SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Live Tested in PROD | **Option B proven in PROD** — attachment-less; 0 Submission Assets; Enrollment+Week+Homework HC identity; attempts preserved separately | No further path decision; do not reopen Option A / Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-HOMEWORK-XP-CONTINUATION.md`; `QUIZ-PATH-DECISION.md` | **DECIDED Option B** | P0 | 2026-08-04 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
 | SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
-| SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used | Re-test full chain after wipe; align with Learning Activities later | SC-009–SC-016 | Do not invent second credit path | homework-flow.md; automation-index | — | P0 | 2026-07-23 |
+| SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Installed in PROD | 020 / 064–065 / 071 chain historically used; **071 v3.5** (repo) prefers Reviewer File URL for parent email links — **PROD paste + live rerun still required** (`recH71jEgjxzLup6F`) | Paste 071 v3.5; controlled rerun; verify Make/Gmail writeback | SC-009–SC-016 | Do not invent second credit path; do not require Google Drive when Reviewer File URL present | homework-flow.md; automation-index; `071-homework-feedback-email-closeout.md` | — | P0 | 2026-08-05 |
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
@@ -460,6 +471,7 @@ Must achieve: video + homework S3, canonical URLs, hashes, reuse decisions, writ
 | Viewer | PROD Function URL `GET /file/{recordId}?token=…` → 302 to ~15 min presigned `GetObject` |
 | Final status owner | **Lambda** is authoritative for successful upload writeback; successful assets finish as **`Upload Status = Uploaded`** (not Processing / Pending Link) |
 | Private access path | Coaches open private S3 objects only through the tokenized reviewer endpoint (`Reviewer File URL`) |
+| Parent homework email (071) | Parent-facing file links use the same priority: **`Reviewer File URL` → Google Drive View URL → Google Drive File URL** (v3.5+). Never Canonical/S3 keys. Make marks Sent? after Gmail. |
 | PROD proof | Submission Asset `recaXBfjeeu3bcm0t`; Lambda deploy `2026-08-04T23:57:36Z`; Interface click opened file immediately with no extra auth |
 | Security follow-up | **P0 separate:** rotate credentials exposed during terminal troubleshooting (not in this package) |
 

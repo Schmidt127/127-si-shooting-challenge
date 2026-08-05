@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-08-05
 
 Purpose:
 Sends homework parent feedback email payload to Make when homework is awarded and ready; skips gracefully if already sent.
@@ -27,9 +27,13 @@ Airtable is the deployed/running copy.
  * 071 - Email, Notifications, and External Handoffs
  * Send Homework Feedback Email Webhook
  *
- * Version: v3.4
+ * Version: v3.5
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-30
+ * Last Updated: 2026-08-05
+ *
+ * UPDATE REASON (v3.5)
+ * - Use AWS/Lambda Reviewer File URL as the primary homework asset link,
+ *   with Google Drive URLs retained as historical fallbacks.
  *
  * PURPOSE
  * - Reads one Homework Completions record.
@@ -47,6 +51,8 @@ Airtable is the deployed/running copy.
  * - Reads the linked Enrollment record.
  * - Reads the linked Homework curriculum record.
  * - Reads all linked Submission Assets.
+ * - Resolves parent-facing file URLs in priority order:
+ *      Reviewer File URL → Google Drive View URL → Google Drive File URL
  * - Builds a branded parent homework feedback email.
  * - Sends the email payload to Make.com.
  * - Writes Parent Feedback Subject and clears Parent Feedback Send Error after successful handoff.
@@ -74,8 +80,16 @@ Airtable is the deployed/running copy.
  * - Airtable Attachment is not empty
  *
  * Parent Feedback Ready? is set by automation 065 when XP is awarded.
- * For already-graded rows: fix trigger above, deploy v3.4, then uncheck/recheck
+ * For already-graded rows: fix trigger above, deploy v3.5, then uncheck/recheck
  * Parent Feedback Ready? (or run repair-homework17-retrigger-parent-email.js).
+ *
+ * PARENT EMAIL ASSET URL PRIORITY (Submission Assets)
+ * 1. Reviewer File URL (AWS/Lambda tokenized viewer — current primary)
+ * 2. Google Drive View URL (historical fallback)
+ * 3. Google Drive File URL (historical fallback)
+ * Do not use Canonical File URL, Storage Key, private S3 object URLs, or filenames as links.
+ * Display label: Original File Name → Asset Label → "View submitted homework"
+ * (No Stored File Name field exists on Submission Assets in current schema.)
  *
  * REQUIRED INPUT VARIABLES
  * - recordId
@@ -93,7 +107,7 @@ Airtable is the deployed/running copy.
    ========================================================= */
 
 const CONFIG = {
-    version: "v3.4",
+    version: "v3.5",
 
     tables: {
         homeworkCompletions: "Homework Completions",
@@ -145,9 +159,13 @@ const CONFIG = {
 
     assetFields: {
         originalFileName: "Original File Name",
+        reviewerFileUrl: "Reviewer File URL",
         googleFileUrl: "Google Drive File URL",
         googleDriveViewUrl: "Google Drive View URL",
         assetLabel: "Asset Label",
+        // Intentionally unused for parent links (private / internal):
+        // canonicalFileUrl: "Canonical File URL",
+        // storageKey: "Storage Key",
     },
 
     quizFields: {
@@ -371,6 +389,87 @@ function getNumber(record, table, fieldName) {
     return Number.isFinite(parsed) ? parsed : 0;
 }
 
+/**
+ * Parent-facing Submission Asset URL priority (v3.5+):
+ * Reviewer File URL → Google Drive View URL → Google Drive File URL
+ * Never prefers Canonical File URL / Storage Key / raw S3 keys.
+ */
+function resolveParentFacingAssetUrl(fields = {}) {
+    const reviewerFileUrl = String(fields.reviewerFileUrl ?? "").trim();
+    const googleDriveViewUrl = String(fields.googleDriveViewUrl ?? "").trim();
+    const googleDriveFileUrl = String(fields.googleDriveFileUrl ?? "").trim();
+
+    if (reviewerFileUrl) {
+        return { url: reviewerFileUrl, source: "reviewerFileUrl" };
+    }
+    if (googleDriveViewUrl) {
+        return { url: googleDriveViewUrl, source: "googleDriveViewUrl" };
+    }
+    if (googleDriveFileUrl) {
+        return { url: googleDriveFileUrl, source: "googleDriveFileUrl" };
+    }
+    return { url: "", source: "" };
+}
+
+/**
+ * Parent-facing display label.
+ * Schema has Original File Name + Asset Label (no Stored File Name field).
+ */
+function resolveAssetDisplayLabel(fields = {}, fallbackIndex = 1) {
+    const originalFileName = String(fields.originalFileName ?? "").trim();
+    const assetLabel = String(fields.assetLabel ?? "").trim();
+    return firstNonBlank(
+        originalFileName,
+        assetLabel,
+        "View submitted homework"
+    ) || `Homework File ${fallbackIndex}`;
+}
+
+/**
+ * Build deduped parent-facing asset link list from raw asset field rows.
+ * Skips assets with no usable URL; does not fail the whole set for one blank row.
+ */
+function buildParentFacingAssetFiles(rawAssets = []) {
+    const assetFiles = [];
+    const seenUrls = new Set();
+
+    for (let index = 0; index < rawAssets.length; index += 1) {
+        const raw = rawAssets[index] || {};
+        const assetId = String(raw.id || "").trim();
+        const originalFileName = String(raw.originalFileName ?? "").trim();
+        const assetLabel = String(raw.assetLabel ?? "").trim();
+        const resolved = resolveParentFacingAssetUrl({
+            reviewerFileUrl: raw.reviewerFileUrl,
+            googleDriveViewUrl: raw.googleDriveViewUrl,
+            googleDriveFileUrl: raw.googleDriveFileUrl,
+        });
+
+        if (!resolved.url) {
+            continue;
+        }
+
+        if (seenUrls.has(resolved.url)) {
+            continue;
+        }
+        seenUrls.add(resolved.url);
+
+        const displayLabel = resolveAssetDisplayLabel(
+            { originalFileName, assetLabel },
+            index + 1
+        );
+
+        assetFiles.push({
+            id: assetId,
+            fileName: originalFileName,
+            url: resolved.url,
+            label: displayLabel,
+            urlSource: resolved.source,
+        });
+    }
+
+    return assetFiles;
+}
+
 function firstNonBlank(...values) {
     for (const value of values) {
         const s = String(value ?? "").trim();
@@ -462,7 +561,12 @@ function buildFileListHtml(assetFiles, quizResultSummary = "") {
 
     if (filesWithUrls.length) {
         const rows = filesWithUrls.map((file, index) => {
-            const label = firstNonBlank(file.label, file.fileName, `Homework File ${index + 1}`);
+            const label = firstNonBlank(
+                file.label,
+                file.fileName,
+                "View submitted homework",
+                `Homework File ${index + 1}`
+            );
 
             return `
             <tr>
@@ -1008,7 +1112,7 @@ async function main() {
             }
         }
 
-        const assetFiles = [];
+        const rawAssetRows = [];
 
         for (const assetId of submissionAssetIds) {
             const assetRecord = await submissionAssetsTable.selectRecordAsync(assetId);
@@ -1017,42 +1121,59 @@ async function main() {
                 continue;
             }
 
-            const assetFileName = getText(
-                assetRecord,
-                submissionAssetsTable,
-                CONFIG.assetFields.originalFileName
-            );
-
-            const assetFileUrl = firstNonBlank(
-                getText(assetRecord, submissionAssetsTable, CONFIG.assetFields.googleFileUrl),
-                fieldExists(submissionAssetsTable, CONFIG.assetFields.googleDriveViewUrl)
-                    ? getText(assetRecord, submissionAssetsTable, CONFIG.assetFields.googleDriveViewUrl)
-                    : ""
-            );
-
-            const assetLabel = getText(
-                assetRecord,
-                submissionAssetsTable,
-                CONFIG.assetFields.assetLabel
-            );
-
-            assetFiles.push({
+            rawAssetRows.push({
                 id: assetId,
-                fileName: assetFileName,
-                url: assetFileUrl,
-                label: assetLabel,
+                originalFileName: getText(
+                    assetRecord,
+                    submissionAssetsTable,
+                    CONFIG.assetFields.originalFileName
+                ),
+                assetLabel: getText(
+                    assetRecord,
+                    submissionAssetsTable,
+                    CONFIG.assetFields.assetLabel
+                ),
+                reviewerFileUrl: fieldExists(
+                    submissionAssetsTable,
+                    CONFIG.assetFields.reviewerFileUrl
+                )
+                    ? getText(
+                        assetRecord,
+                        submissionAssetsTable,
+                        CONFIG.assetFields.reviewerFileUrl
+                    )
+                    : "",
+                googleDriveViewUrl: fieldExists(
+                    submissionAssetsTable,
+                    CONFIG.assetFields.googleDriveViewUrl
+                )
+                    ? getText(
+                        assetRecord,
+                        submissionAssetsTable,
+                        CONFIG.assetFields.googleDriveViewUrl
+                    )
+                    : "",
+                googleDriveFileUrl: getText(
+                    assetRecord,
+                    submissionAssetsTable,
+                    CONFIG.assetFields.googleFileUrl
+                ),
             });
         }
 
+        const assetFiles = buildParentFacingAssetFiles(rawAssetRows);
+
         if (!isReflectionQuizCompletion) {
-            if (!assetFiles.length) {
-                throw new Error("No readable Submission Asset records were found.");
+            if (!rawAssetRows.length) {
+                throw new Error(
+                    `No readable Submission Asset records were found. Homework Completion: ${recordId}. Linked asset IDs: ${submissionAssetIds.join(", ") || "(none)"}`
+                );
             }
 
-            const assetFilesWithUrls = assetFiles.filter(file => file.url);
-
-            if (!assetFilesWithUrls.length) {
-                throw new Error("No Google Drive File URL or View URL was found on linked Submission Assets.");
+            if (!assetFiles.length) {
+                throw new Error(
+                    `No Reviewer File URL, Google Drive View URL, or Google Drive File URL was found on linked Submission Assets. Homework Completion: ${recordId}. Asset IDs: ${rawAssetRows.map(a => a.id).join(", ")}`
+                );
             }
         }
 
