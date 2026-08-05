@@ -1,0 +1,88 @@
+{
+  "verifiedAt": "2026-08-05T23:38:06.022Z",
+  "fieldClarification": {
+    "weeklyAthleteSummaryText": {
+      "id": "fldhpGNYnu2l3bpUP",
+      "type": "singleLineText",
+      "note": "Empty on CASE-01 HCs is expected; not the relationship field"
+    },
+    "weeklyAthleteSummaryLink": {
+      "id": "fldkoEbVnCugcMCCi",
+      "type": "multipleRecordLinks",
+      "note": "Canonical HC→WAS relationship; written by Automation 020"
+    }
+  },
+  "homeworkCompletions": [
+    {
+      "id": "recqXxlOpATQI3sD4",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": [
+        "recKebuZ79QFTwivA"
+      ],
+      "homework": [
+        "rechVLOeyEVIqmy2v"
+      ],
+      "pha": [
+        "reca5GM1JkROhXOiy"
+      ],
+      "satisfactory": true
+    },
+    {
+      "id": "rechzFmWrUp1tonto",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": [
+        "recKebuZ79QFTwivA"
+      ],
+      "homework": [
+        "rec6WmXjpLtIWDERo"
+      ],
+      "pha": [
+        "reccQhrgOK8e8Yngv"
+      ],
+      "satisfactory": true
+    }
+  ],
+  "was": {
+    "id": "recKebuZ79QFTwivA",
+    "homework": [
+      "rechVLOeyEVIqmy2v",
+      "rec6WmXjpLtIWDERo"
+    ],
+    "homeworkAssignedCount": 2,
+    "homeworkSatisfactoryCount": 2,
+    "homeworkCompletionsLink": [
+      "recqXxlOpATQI3sD4",
+      "rechzFmWrUp1tonto"
+    ],
+    "daysLogged": 7,
+    "automationStatus": "Pending",
+    "calculationQueue": 1,
+    "eligible": 0,
+    "videoMetFormula": 0,
+    "zoomMetFormula": 0
+  },
+  "perfectWeekEligibleFormula": {
+    "id": "fld0re4ydFGq2vvZC",
+    "type": "formula",
+    "formula": "IF(\n  AND(\n    {fldyFlpiRQiTpCKJz} = \"Ready\",\n    {fld9whhW2WYo6Z3wD},\n    {fldK2cIQXX18OTdhS} = 1,\n    {fldat2jCxT2sc9pms} = 1,\n    {fldWok1MQBND9z0r9} = 1\n  ),\n  1,\n  0\n)"
+  },
+  "videoRequirementMetFormula": {
+    "id": "fldat2jCxT2sc9pms",
+    "type": "formula",
+    "formula": "IF({flds8k6TuRScMWW79} >= 3, 1, 0)"
+  },
+  "zoomRequirementMetFormula": {
+    "id": "fldWok1MQBND9z0r9",
+    "type": "formula",
+    "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  0,\n  IF(\n    VALUE({fld1sBnbfMiunNlcW} & \"\") = 0,\n    1,\n    IF(\n      VALUE({fldVs5IgC7PnCXCYM} & \"\") >= 1,\n      1,\n      0\n    )\n  )\n)"
+  },
+  "dailyRequirementMetField": {
+    "id": "fld9whhW2WYo6Z3wD",
+    "type": "checkbox"
+  },
+  "verification": {
+    "status": "PASS",
+    "failures": [],
+    "textFieldEmptyAsExpected": true
+  }
+}

@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Program Homework Assignments MVP live in PROD; Perfect Week resume next) |
+| Last updated | **2026-08-05** (HC WAS Link clarification; CASE-01 verify PASS; 057 manual test ready) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -95,14 +95,26 @@ Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correc
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
+### Dashboard reconciliation (2026-08-05 — HC WAS Link clarification + CASE-01)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| HC `Weekly Athlete Summary` (`fldhpGNYnu2l3bpUP`) | **singleLineText** — empty on CASE-01; **unused/legacy** | Not the relationship; do not delete this package |
+| HC `Weekly Athlete Summary Link` (`fldkoEbVnCugcMCCi`) | **multipleRecordLinks** — both HCs → `recKebuZ79QFTwivA` | Canonical; Automation **020** writer |
+| CASE-01 homework verify | **PASS** | Assigned/Satisfactory **2/2**; Link field checked (not text) |
+| Automation 057 | **Ready for manual Test** — no script change | Gates: daily 7 + homework 100% when assigned + video ≥3 + Zoom if meetings; Eligible is formula |
+| Next Mike action | Run/Test **057** on WAS `recKebuZ79QFTwivA` | [`057-MANUAL-TEST.md`](./testing/evidence/2026-08-05-pha-was-link-clarification/057-MANUAL-TEST.md) |
+
+Evidence: [`docs/testing/evidence/2026-08-05-pha-was-link-clarification/`](./testing/evidence/2026-08-05-pha-was-link-clarification/).
+
 ### Dashboard reconciliation (2026-08-05 — Program Homework Assignments MVP)
 
 | Item | Status | Evidence |
 |------|--------|----------|
 | Junction table `Program Homework Assignments` | **Live in PROD** `tblhA3maf7xOa8EUS` | Additive scheduling; library Week links untouched |
 | Automation 033 / 020 | **Built in Repository** (v3.2 / v3.1.0) — PROD paste still required | Prefer PHA; legacy fallback retained |
-| Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA `reca5GM1JkROhXOiy` + `reccQhrgOK8e8Yngv`; HC `recqXxlOpATQI3sD4` + `rechzFmWrUp1tonto` |
-| Perfect Week 057 | **Do not run in this package** | Resume Perfect Week next (gated path / PR #81) |
+| Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA `reca5GM1JkROhXOiy` + `reccQhrgOK8e8Yngv`; HC `recqXxlOpATQI3sD4` + `rechzFmWrUp1tonto` via **Link** field |
+| Perfect Week 057 | **Manual Test authorized** (no code change) | Link clarification complete; see 057-MANUAL-TEST.md |
 
 Runbook: [`docs/deploy-checklists/program-homework-assignments-mvp.md`](./deploy-checklists/program-homework-assignments-mvp.md).
 
