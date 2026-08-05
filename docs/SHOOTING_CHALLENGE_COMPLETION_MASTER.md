@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (closeout: SC-003 aliases merged; SC-009 + SC-101 Complete after Mike PROD attestation) |
+| Last updated | **2026-08-05** (Automation 001 v5.2 unloadData runtime fix — Built in Repository; PROD paste pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -277,8 +277,8 @@ Columns:
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
 | SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Agent 1 baseline + Agent 9 attestation packet: **115 installed+live-tested**; deleted claim **043, 032, 033, 063, 111**; upgraded **013/020/030** (020=**v3.0.0**). Classifications: 111 fully superseded by 013; 063 only partially by 020. | Mike paste complete PROD UI list; complete Agent 9 attestation packet | SC-059 | UI attestation mandatory before Complete | `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`; `CURRENT-PROD-BASELINE.md` | Paste UI list; confirm 112 OFF; 117 XOR 117c | P0 | 2026-07-24 |
 | SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Installed in PROD | **043 deleted**. Broader deletes claim **032, 033, 063, 111**. **112 must stay OFF** (OW-D1). **115 installed**. | UI-attest; confirm **112** OFF; do not reinstall 111; orphan blank-GB HCs may need one-time repair (not full 063 restore) | SC-001, SC-058 | Attestation required — not Complete | `docs/next-wave/homework-pipeline/STALE-063-111-PATCH-MANIFEST.md`; baseline | Confirm 112 + attest delete set | P0 | 2026-07-24 |
-| SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Built in Repository | Online Agent 7: Fillout contract + offline enrollment validator + fixtures (18 tests OK) | Live Fillout tighten; 001 paste drift check; Athletes hygiene in PROD | SC-081 | Bad identity breaks whole season | `docs/online-agents/enrollment-season/`; C-017 | — | P1 | 2026-07-23 |
-| SC-061 | Enrollment | New vs returning athletes handled correctly | Built in Repository | New/returning spec + fixtures/tests mirroring 001 | Live PROD proof on Schmidt + sibling/returning case | SC-060 | Don’t create duplicate Athletes | `docs/online-agents/enrollment-season/` | — | P1 | 2026-07-23 |
+| SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Built in Repository | Online Agent 7: Fillout contract + offline enrollment validator + fixtures (18 tests OK); **001 v5.2** repo fix for `unloadData` crash on 2026–27 Testing Schmidt enrollment `recQP4N5acTdK40uZ` | Paste **001 v5.2** to PROD; rerun enrollment; Live Fillout tighten; Athletes hygiene | SC-081 | Bad identity breaks whole season | `docs/online-agents/enrollment-season/`; C-017; `tests/enrollment-intake/automation-001-unload-compat.test.js` | — | P1 | 2026-08-05 |
+| SC-061 | Enrollment | New vs returning athletes handled correctly | Built in Repository | New/returning spec + fixtures/tests mirroring 001; **001 v5.2** preserves email+first+last match and last-chance re-query; unload cleanup no longer aborts after successful match/update | Paste **001 v5.2**; live PROD rerun on `recQP4N5acTdK40uZ` must reuse existing Testing Schmidt Athlete (no duplicate) | SC-060 | Don’t create duplicate Athletes | `docs/online-agents/enrollment-season/`; 001 v5.2 header note | — | P1 | 2026-08-05 |
 | SC-062 | Enrollment | Sibling handling works | Built in Repository | Sibling handling spec + fixtures/tests; no Family table | Live sibling parent-email routing test | SC-045 | Shared parent email edge cases | `docs/online-agents/enrollment-season/` | — | P2 | 2026-07-23 |
 | SC-063 | Enrollment | Email validation (parent/athlete) | Built in Repository | Email validation rules in contract + validator FAIL paths | Fillout email rules ON; bounce SOP still open | SC-060 | Bad emails break Make | `docs/online-agents/enrollment-season/` | — | P1 | 2026-07-23 |
 | SC-064 | Enrollment | Intake-open dates separate from challenge run dates | Built in Repository | Season date contract + Denver boundary tests | Wire intake-open into Fillout/web gate; Weeks flags if authorized | SC-032 | 005 must stay date-range based | `docs/online-agents/enrollment-season/`; C-018 | — | P1 | 2026-07-23 |
@@ -667,6 +667,20 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SC-118 | **Built in Repository — smoke suite successfully executed against current PROD** (not Installed/Live Tested for this integration branch until Mike deploys + checks) |
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
+
+### 9I. Automation 001 unloadData runtime fix — **2026-08-05** (SC-060 / SC-061)
+
+| Field | Value |
+|-------|--------|
+| Defect | PROD Automation 001 failed on 2026–2027 Testing Schmidt enrollment |
+| Enrollment | `recQP4N5acTdK40uZ` |
+| Error | `athletesQuery.unloadData is not a function` at debugStep `10 - Update Existing Athlete` |
+| Root cause | Bare `queryResult.unloadData()` is not available in this Airtable automation runtime |
+| Repo fix | **001 v5.2** — `unloadQuerySafe()`; optional typeof guard; finally cleanup that cannot abort successful match/link |
+| Status | **Built in Repository** — PROD paste + live rerun still required (do not mark Live Tested/Complete from repo alone) |
+| Offline tests | `node tests/enrollment-intake/automation-001-unload-compat.test.js` |
+| Canonical paste path | `airtable/automations/shooting-challenge/001-enrollment-intake-and-setup-find-or-create-athlete-and-link-enrollment.js` |
+| Paste runbook | `docs/deploy-checklists/001-v5.2-unloadData-runtime-fix.md` |
 
 ### 9H. Mobile usability + accessibility package — **2026-08-04** (SC-148)
 
