@@ -112,7 +112,7 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (pending merge) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
