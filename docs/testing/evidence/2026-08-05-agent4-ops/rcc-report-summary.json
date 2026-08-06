@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-08-06T00:07:42.536Z",
+  "source": "export",
+  "summary": {
+    "total": 5260,
+    "byPriority": {
+      "P0": 137,
+      "P1": 5123,
+      "P2": 0,
+      "P3": 0
+    },
+    "byHealth": {
+      "Blocking Error": 133,
+      "Duplicate Risk": 4,
+      "Missing Dependency": 5123
+    },
+    "byWorkflow": {
+      "Perfect Week": 1,
+      "Shot milestones": 132,
+      "Weekly Athlete Summary": 4,
+      "Enrollment intake": 6,
+      "Submission Base XP": 5117
+    }
+  },
+  "topP0Sample": [
+    {
+      "workflow": "Perfect Week",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    },
+    {
+      "workflow": "Shot milestones",
+      "code": "achievement_xp_without_unlock",
+      "message": ""
+    }
+  ],
+  "note": "Full report.json/md omitted from git (5MB+); regenerate via ops_rcc_export_prod.mjs --run-cli"
+}

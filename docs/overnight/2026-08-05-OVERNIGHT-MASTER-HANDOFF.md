@@ -100,4 +100,69 @@ Evidence: `docs/testing/evidence/2026-08-05-agent4-ops/`
 
 ---
 
-*(Other agents append after each work package.)*
+### Agent 1 — homework MVP checkpoints (2026-08-05)
+
+| Package | Result |
+|---------|--------|
+| PHA operator model | PASS — descriptions, Operator Status, Notes, Completions Count |
+| PHA season seed | PASS — **92** active rows; 0 Schedule Key dups; 0 slot collisions |
+| 033 v3.3 + 020 v3.2.0 | Built in Repository (paste pending) |
+| 033 PHA live match/write | PASS on WAS `recKebuZ79QFTwivA` |
+| SC-016 cleanup | PASS — 4 extras deleted; 0 remaining dupes |
+| CASE-01 | PASS — Assigned/Sat **2/2**; Eligible **1**; PHA HW2 aligned |
+| Offline SC-016 identity test | PASS |
+
+Evidence: `docs/testing/evidence/2026-08-05-agent1-homework/`
+
+---
+
+## Agent 1 — Final handoff
+
+### Executive summary
+
+MVP homework scheduling is operable in PROD (PHA operator fields + 92 season rows). SC-016 duplicates cleaned; repo 020/033 hardened for paste. CASE-01 Perfect Week homework still healthy.
+
+### SC items addressed
+
+- **SC-016** → Live Tested in PROD (not Complete until 020 paste + re-submit)
+- PHA MVP operator model + seed (supporting work)
+
+### PROD changes
+
+- PHA: Operator Status, Operator Notes, Completions Count, descriptions; 92 Active rows
+- HC/WAS descriptions; CASE-01 PHA HW2 → `rec6WmXjpLtIWDERo`
+- Deleted 4 duplicate HCs + orphan HOMEWORK_XP events
+
+### Repository / automations
+
+- **020 v3.2.0**, **033 v3.3** (paste required)
+- Tools + operator guide + evidence + offline identity test
+
+### Tests / IDs
+
+- WAS `recKebuZ79QFTwivA`; HCs `recqXxlOpATQI3sD4`, `rechzFmWrUp1tonto`; PHA `reca5GM1JkROhXOiy`, `reccQhrgOK8e8Yngv`
+- PASS: seed, 033 match, CASE-01 verify, SC-016 post-audit 0 dupes, offline identity
+
+### Remaining gaps / blockers
+
+- **Mike:** paste 033 v3.3 + 020 v3.2.0
+- Live re-submit for SC-016 Complete
+- SC-010/012/015 re-tests; LA SC-018/019/020 untouched
+
+### Decisions without Mike
+
+- Seed all bands from curriculum Week links; SC-016 identity = Enr+Week+HW+Slot; delete Schmidt HC dupes
+
+### Status changes in completion master
+
+- SC-016 Installed → Live Tested; dashboard LT 25 / Installed 46
+
+### Recommended next
+
+1. Paste 033/020  
+2. Schmidt re-submit → one HC  
+3. Optional PDF SC-010
+
+---
+
+*(End Agent 1 final handoff.)*

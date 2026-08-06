@@ -1,0 +1,101 @@
+{
+  "generatedAt": "2026-08-06T00:07:56.922Z",
+  "rows": [
+    {
+      "id": "recBpJc27P9QKoke5",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    },
+    {
+      "id": "recKebuZ79QFTwivA",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    },
+    {
+      "id": "recMMeJENu6Pg8l58",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    },
+    {
+      "id": "recWi4FtZhPqQHCC1",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    },
+    {
+      "id": "recbvmjaNsYzUYAUT",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    },
+    {
+      "id": "recuxvGq2kY8WKcey",
+      "enr": [
+        null
+      ],
+      "week": [
+        null
+      ],
+      "ready": false,
+      "sent": false,
+      "send": false,
+      "make": "",
+      "subj": "",
+      "err": "",
+      "mode": null
+    }
+  ]
+}
