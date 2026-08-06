@@ -40,13 +40,9 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Verification:** Checklist `docs/deploy-checklists/035-weekly-threshold-xp-v1.1.md`; offline `weekly-threshold-xp.test.js`
 - **Related SC:** SC-049, SC-022, SC-002 · Repo rebuild 2026-07-25 (follow-through v1.1)
 
-### 3. Fix XP Date Resolved SWITCH case "Submission Base"
-- **Priority:** P1
-- **System:** Airtable · XP Events · formula field `XP Date Resolved`
-- **Exact action:** Change SWITCH case from `"Submission Base"` to `"Shooting Base"` (matches XP Bucket choice)
-- **Expected outcome:** Fallback date resolution works if explicit XP Activity Date is blank
-- **Why not completed:** Formula UI edit only
-- **Verification:** Create test event without explicit date; resolver uses submission lookup
+### 3. ~~Fix XP Date Resolved SWITCH case "Submission Base"~~ **DONE 2026-08-05 — Overnight Agent 2**
+> **Fixed in PROD via Meta API.** SWITCH is on **XP Bucket** (not XP Source). Case corrected from `"Submission Base"` → `"Shooting Base"`. Field `fldvh9pv1oTIp24IJ`; `isValid=true`. Evidence: `docs/testing/evidence/2026-08-05-agent2-foundation/XP-DATE-RESOLVED-FORMULA-FIX.json`.
+- **Priority:** P1 *(closed)*
 - **Related SC:** SC-070, SC-048
 
 ### 4. Investigate Video Submission XP = 1 (rule = 25) + blank date

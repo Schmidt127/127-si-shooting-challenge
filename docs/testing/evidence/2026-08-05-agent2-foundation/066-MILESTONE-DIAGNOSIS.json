@@ -1,0 +1,1007 @@
+{
+  "enrollment": {
+    "id": "recCyFEPeATOVNlr9",
+    "gradeBand": [
+      "reclWDQZzKbVBtdhG"
+    ],
+    "shots": 10721,
+    "runCheck": true,
+    "levelStatus": "Gate Blocked",
+    "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+    "gateDebug": "Rule=Level 2 Gate | Enabled=Yes | Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0",
+    "gateFailure": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+    "meets": {
+      "submissions": 0,
+      "streak": 1,
+      "videos": 0,
+      "homework": 1,
+      "zoom": 1
+    },
+    "gateMinimums": {
+      "submissions": [
+        10
+      ],
+      "streak": [
+        0
+      ],
+      "videos": [
+        6
+      ],
+      "homework": [
+        0
+      ],
+      "zoom": [
+        0
+      ]
+    },
+    "currentLevel": [
+      "rec1iGy92ZC0jwzD4"
+    ],
+    "nextLevel": [
+      "rec1EJLJLmfdJLtoF"
+    ],
+    "currentStreak": 8
+  },
+  "shotMilestoneCount": 61,
+  "activeMilestones": 0,
+  "band34Milestones": [
+    {
+      "id": "rec5ySmeXYWeIReJn",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "rec697KEVaK8axCFK",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recKjQPX9beDKWHTF",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recWGiiyPsv5wKeWd",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "reccezOiPdSpOQQhy",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recsmKrqpCjErhR1K",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recuzCxUOLUU6dDGx",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recvPCvwmMzIBogMP",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    },
+    {
+      "id": "recvzZE04Jg1mUsof",
+      "active": false,
+      "gradeBand": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "matchesBand34": true,
+      "allKeys": [
+        "Milestone Tier",
+        "Points Awarded",
+        "Milestone Unique Key",
+        "Milestone Shot Count",
+        "Milestone Percent",
+        "Active",
+        "Band Sort Order",
+        "Target Shots Lookup",
+        "XP Events",
+        "Milestone Label",
+        "Grade Band",
+        "Target Goal Shot",
+        "Sort Order"
+      ]
+    }
+  ],
+  "eligibleByShots": [],
+  "sampleMilestoneFieldKeys": [
+    "Milestone Tier",
+    "Points Awarded",
+    "Milestone Unique Key",
+    "Milestone Shot Count",
+    "Milestone Percent",
+    "Active",
+    "Band Sort Order",
+    "Target Shots Lookup",
+    "Milestone Label",
+    "Grade Band",
+    "Target Goal Shot",
+    "Sort Order"
+  ],
+  "achievementsSample": [],
+  "automationsTable": [
+    {
+      "id": "rec0qiy0iXVqrU3c2",
+      "name": "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "rec1nBt85M0EiFpUO",
+      "name": "058 - Achievements and Milestones - Create Perfect Week Unlock",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "rec225JiTrNmomB4G",
+      "name": "055 - Achievements and Milestones - Update Current Shooting Streak",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "rec76tTSgevtnY4pO",
+      "name": "030 - Weekly Summary and Goal Logic - Copy Enrollment Grade Band to Weekly Summary",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "rec7VaJ1aP9tN4n2e",
+      "name": "074 - Email, Notifications, and External Handoffs - Send Weekly Summary Email Package to Make",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recA7fDceZZnfn9XN",
+      "name": "021 - Submission Intake and Asset Creation - Set Attachment Upload Status",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recAA5iKxyr98msbi",
+      "name": "007 - Submission Intake and Asset Creation - Duplicate Checker for Submissions",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recDiyVUvVIaee6Lf",
+      "name": "076 - Email, Notifications, and External Handoffs - Build Daily Submission Email Package",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recEDmrytsoCyfoFB",
+      "name": "013 - Submission Intake - Create or Link Video Feedback",
+      "keys": [
+        "Automation Code",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recFTk9CJM6J8sMrB",
+      "name": "023 - Submission Intake and Asset Creation - Assign Enrollment to Submission",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recFpmZOqUaeUtFJQ",
+      "name": "072 - Email, Notifications, and External Handoffs - Build Weekly Summary Email Package",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recG5HO86DbCPjr8T",
+      "name": "061 - Homework Review and XP - Mark Homework Completion as Reviewed",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recIiu9B03aL3NVDC",
+      "name": "075 - Email, Notifications, and External Handoffs - Build Challenge Welcome Email",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recIkAzMDMOYzSrox",
+      "name": "020 - Submission Intake and Asset Creation - Link or Create Homework Completion from Submission Asset",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Trigger view",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recKdkmlHNBrC5Xsm",
+      "name": "006 - Submission Intake and Asset Creation - Set Video Count",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recLaT9ykniiSw2cJ",
+      "name": "003 - Enrollment Intake and Setup - Assign Grade Band - If Grade Changes",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Trigger view",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recM0EuOxc9ydtM5S",
+      "name": "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions",
+        "Trigger field(s)"
+      ]
+    },
+    {
+      "id": "recNUvkyi3dABPX9f",
+      "name": "112 - Video Review and XP - Create Video Feedback from Submission Asset",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recPlQxFrwrgeUHFE",
+      "name": "056 - Achievements and Milestones - Refresh Current Shooting Streaks Daily",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recRvFLcDIez37YUp",
+      "name": "070a - Email, Notifications, and External Handoffs - Send Homework Asset Payload to Make",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recTuUvV1XUi9cM7p",
+      "name": "113 - Video Review and XP - Assign Base Video XP by Grade Band",
+      "status": "Live",
+      "keys": [
+        "Ran Through Cursor?",
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recUkhGPzQvh8VcGb",
+      "name": "111 - Video Review and XP - Copy Enrollment Grade Band to Video Feedback",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recUu0el5XmtmLTX0",
+      "name": "070b - Email, Notifications, and External Handoffs - Send Video Asset Payload to Make",
+      "status": "Off",
+      "keys": [
+        "Related external systems",
+        "Script step present?",
+        "Automation Code",
+        "Script location / notes",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Action summary",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recVGJmHDLAFfsEHc",
+      "name": "002 - Enrollment Intake and Setup - Assign Grade Band - Initial",
+      "status": "Live",
+      "keys": [
+        "Ran Through Cursor?",
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Trigger view",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recVdiwO2B9maOk6s",
+      "name": "042 - Levels and Progression - Assign Current and Next Level",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recW72AyCvn3dos9f",
+      "name": "077 - Email, Notifications, and External Handoffs - Send Daily Submission Email Package to Make",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Action summary",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recWBENzSbwKnJV6F",
+      "name": "101 - Zoom / Attendance XP - Award Meeting XP",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recXbsqr0GkuseZZT",
+      "name": "065 - Homework Review and XP - Create or Update Homework XP Event",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recXe0fCpXweqIwFs",
+      "name": "009 - Submission Intake and Asset Creation - Create Submission Assets from Submission",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recY2BtVINqo1MP7X",
+      "name": "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recZWrVJTi2ovc3uM",
+      "name": "043 - Levels and Progression - Set Level Gate Rule from Next Level",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "reca0djOUrylR0Nn6",
+      "name": "078 - Email, Notifications, and External Handoffs - Mark Homework Parent Feedback Ready",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recb8cKBqAPjh1A2J",
+      "name": "054 - Achievements and Milestones - Streak Occurrences - Create or Repair Streak XP Event",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "receLtoo7MsDOWCMw",
+      "name": "114 - Video Review and XP - Create or Update Video XP Event",
+      "status": "Live",
+      "keys": [
+        "Ran Through Cursor?",
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "reced7TrUiVjIA97q",
+      "name": "064 - Homework Review and XP - Assign Base Homework XP",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recfxxUD50a5rbIRr",
+      "name": "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recgH5hQgJA9IfLQE",
+      "name": "053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recieNXUCjhOMm1RT",
+      "name": "034 - Weekly Summary and Goal Logic - Set Previous Week Helper Values",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "reclLJs0th8P5Z1Kj",
+      "name": "073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recmT8Ye7TIhmmn7X",
+      "name": " 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment",
+      "status": "Live",
+      "keys": [
+        "Ran Through Cursor?",
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Trigger view",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recnGzS8CLuBthtNM",
+      "name": "057 - Achievements and Milestones - Calculate Perfect Week Eligibility",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recpa0O3XPxkEP9IG",
+      "name": "008 - Submission Intake and Asset Creation - Mark Submission XP Award as Processing",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Action summary",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recto9WHVNTs2OBr8",
+      "name": "063 - Homework Review and XP - Copy Enrollment Grade Band to Homework Completion",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recuXhBl6WGImtwo8",
+      "name": "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Trigger view",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recvAefnPtnWHrnIb",
+      "name": "071 - Email, Notifications, and External Handoffs - Send Homework Feedback Email Webhook",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recvBjw910MFTsPgT",
+      "name": "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions",
+        "Trigger field(s)"
+      ]
+    },
+    {
+      "id": "recxDRvpiuvCeeAhC",
+      "name": "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    },
+    {
+      "id": "recz5ITpBbCl0xAve",
+      "name": "032 - Weekly Summary and Goal Logic - Link Goal Record to Weekly Athlete Summary",
+      "status": "Live",
+      "keys": [
+        "Automation Code",
+        "Status",
+        "Name",
+        "Outputs Written back to Airtable",
+        "Trigger type",
+        "Trigger table",
+        "Sections",
+        "Conditions"
+      ]
+    }
+  ]
+}

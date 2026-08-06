@@ -1,0 +1,179 @@
+{
+  "formulaFieldResolution": [
+    {
+      "id": "fldOQBVTSNODRhRcd",
+      "name": "XP Bucket",
+      "type": "singleSelect",
+      "choices": [
+        "Homework Completion",
+        "Manual Bonus",
+        "Perfect Week",
+        "Shooting Base",
+        "Shot Milestone",
+        "Streak",
+        "Video Feedback",
+        "Weekly Threshold",
+        "Zoom Attendance"
+      ]
+    },
+    {
+      "id": "fldxVAackD0buQIba",
+      "name": "XP Activity Date",
+      "type": "dateTime"
+    },
+    {
+      "id": "fldOhbn1yIJLQOWHm",
+      "name": "Enrollment",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "id": "fldjpB3lkXSV6apkp",
+      "name": "XP Source",
+      "type": "singleSelect",
+      "choices": [
+        "3-Day Streak",
+        "5-Day Streak",
+        "7-Day Streak",
+        "10-Day Streak",
+        "20-Day Streak",
+        "30-Day Streak",
+        "40-Day Streak",
+        "50-Day Streak",
+        "60-Day Streak",
+        "Achievement Unlock",
+        "Coach Bonus",
+        "Homework Bonus",
+        "Homework Completion",
+        "Manual Adjustment",
+        "Perfect Week",
+        "Shot Milestone",
+        "Shot Volume Bonus",
+        "Streak Bonus",
+        "Submission Base",
+        "Video Bonus",
+        "Video Submission",
+        "Video Submissions for Feedback",
+        "Weekly Threshold 100",
+        "Weekly Threshold 125",
+        "Weekly Threshold 150",
+        "Zoom Meeting Attendance Base",
+        "Zoom Meeting Attendance Bonus 2",
+        "Zoom Meeting Attendance Bonus 3",
+        "Zoom Meeting Recording Quiz"
+      ]
+    },
+    {
+      "id": "fldEz2RLvrYqyj2vB",
+      "name": "Source Key",
+      "type": "singleLineText"
+    },
+    {
+      "id": "fldvA0LSFK6uDlreq",
+      "name": "Date - Submission Base Activity",
+      "type": "multipleLookupValues"
+    },
+    {
+      "id": "fldvh9pv1oTIp24IJ",
+      "name": "XP Date Resolved",
+      "type": "formula"
+    }
+  ],
+  "enrollmentLikeFields": [
+    {
+      "id": "fldOhbn1yIJLQOWHm",
+      "name": "Enrollment",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "id": "flddGQd4FJQNn0OkY",
+      "name": "Weekly Athlete Summary",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "id": "fldRXY0HwfMxkv6cT",
+      "name": "Enrollment Record ID",
+      "type": "multipleLookupValues"
+    }
+  ],
+  "bucketChoices": [
+    "Homework Completion",
+    "Manual Bonus",
+    "Perfect Week",
+    "Shooting Base",
+    "Shot Milestone",
+    "Streak",
+    "Video Feedback",
+    "Weekly Threshold",
+    "Zoom Attendance"
+  ],
+  "sourceChoices": [
+    "3-Day Streak",
+    "5-Day Streak",
+    "7-Day Streak",
+    "10-Day Streak",
+    "20-Day Streak",
+    "30-Day Streak",
+    "40-Day Streak",
+    "50-Day Streak",
+    "60-Day Streak",
+    "Achievement Unlock",
+    "Coach Bonus",
+    "Homework Bonus",
+    "Homework Completion",
+    "Manual Adjustment",
+    "Perfect Week",
+    "Shot Milestone",
+    "Shot Volume Bonus",
+    "Streak Bonus",
+    "Submission Base",
+    "Video Bonus",
+    "Video Submission",
+    "Video Submissions for Feedback",
+    "Weekly Threshold 100",
+    "Weekly Threshold 125",
+    "Weekly Threshold 150",
+    "Zoom Meeting Attendance Base",
+    "Zoom Meeting Attendance Bonus 2",
+    "Zoom Meeting Attendance Bonus 3",
+    "Zoom Meeting Recording Quiz"
+  ],
+  "switchFieldIs": "XP Bucket",
+  "filterCounts": {
+    "FIND(\"recgqVstObQRzgXJF\", ARRAYJOIN({Enrollment} & \"\"))": {
+      "ok": true,
+      "n": 0,
+      "sampleKeys": []
+    },
+    "OR(FIND(\"recgP9qZYjAhE7NXm\", {Source Key} & \"\"), FIND(\"recCyFEPeATOVNlr9\", {Source Key} & \"\"))": {
+      "ok": true,
+      "n": 15,
+      "sampleKeys": [
+        "STREAK_XP|recCyFEPeATOVNlr9|recQuAtXyT2wKJNGI|2026-08-04",
+        "ZOOM_ATTEND_BONUS_3|recgP9qZYjAhE7NXm",
+        "WEEKLY_THRESHOLD|recgP9qZYjAhE7NXm|recVDKiYATgzsfpmE|100"
+      ]
+    },
+    "{Active?} = 1": {
+      "ok": true,
+      "n": 100,
+      "sampleKeys": [
+        "SUBMISSION_XP|recInGVxh1tsRVAK5",
+        "SUBMISSION_XP|recQd95JIHotMlQ7V",
+        "VIDEO_SUBMISSION|recsGX3LuMJR4nvKT"
+      ]
+    }
+  },
+  "activeXp": 2578,
+  "byBucket": {
+    "Shooting Base": 1741,
+    "Video Feedback": 119,
+    "Streak": 371,
+    "Zoom Attendance": 46,
+    "Shot Milestone": 132,
+    "Homework Completion": 151,
+    "Weekly Threshold": 18
+  },
+  "shootingBaseBlankDate": 8,
+  "submissionBaseBucketMismatch": 0,
+  "formulaVerdict": "SWITCH is on XP Bucket; case should be \"Shooting Base\". Current \"Submission Base\" is a BUG."
+}

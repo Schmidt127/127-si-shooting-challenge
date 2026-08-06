@@ -1,0 +1,189 @@
+{
+  "shots": 10721,
+  "runCheck": true,
+  "band34": [
+    {
+      "id": "recvzZE04Jg1mUsof",
+      "label": "3-4 - 5000 shots - 25%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 1250,
+      "points": 10,
+      "key": "3-4 - 5000 shots|25",
+      "crossed": true
+    },
+    {
+      "id": "recsmKrqpCjErhR1K",
+      "label": "3-4 - 5000 shots - 50%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 2500,
+      "points": 15,
+      "key": "3-4 - 5000 shots|50",
+      "crossed": true
+    },
+    {
+      "id": "recuzCxUOLUU6dDGx",
+      "label": "3-4 - 5000 shots - 75%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 3750,
+      "points": 20,
+      "key": "3-4 - 5000 shots|75",
+      "crossed": true
+    },
+    {
+      "id": "reccezOiPdSpOQQhy",
+      "label": "3-4 - 5000 shots - 100%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 5000,
+      "points": 30,
+      "key": "3-4 - 5000 shots|100",
+      "crossed": true
+    },
+    {
+      "id": "recWGiiyPsv5wKeWd",
+      "label": "3-4 - 5000 shots - 120%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 6000,
+      "points": 40,
+      "key": "3-4 - 5000 shots|120",
+      "crossed": true
+    },
+    {
+      "id": "recKjQPX9beDKWHTF",
+      "label": "3-4 - 5000 shots - 125%",
+      "active": false,
+      "shots": 6250,
+      "points": 40,
+      "key": "3-4 - 5000 shots|125",
+      "crossed": true
+    },
+    {
+      "id": "rec697KEVaK8axCFK",
+      "label": "3-4 - 5000 shots - 150%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 7500,
+      "points": 50,
+      "key": "3-4 - 5000 shots|150",
+      "crossed": true
+    },
+    {
+      "id": "rec5ySmeXYWeIReJn",
+      "label": "3-4 - 5000 shots - 175%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 8750,
+      "points": 65,
+      "key": "3-4 - 5000 shots|175",
+      "crossed": true
+    },
+    {
+      "id": "recvPCvwmMzIBogMP",
+      "label": "3-4 - 5000 shots - 200%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 10000,
+      "points": 80,
+      "key": "3-4 - 5000 shots|200",
+      "crossed": true
+    }
+  ],
+  "eligibleCount": 8,
+  "eligible": [
+    {
+      "id": "recvzZE04Jg1mUsof",
+      "label": "3-4 - 5000 shots - 25%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 1250,
+      "points": 10,
+      "key": "3-4 - 5000 shots|25",
+      "crossed": true
+    },
+    {
+      "id": "recsmKrqpCjErhR1K",
+      "label": "3-4 - 5000 shots - 50%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 2500,
+      "points": 15,
+      "key": "3-4 - 5000 shots|50",
+      "crossed": true
+    },
+    {
+      "id": "recuzCxUOLUU6dDGx",
+      "label": "3-4 - 5000 shots - 75%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 3750,
+      "points": 20,
+      "key": "3-4 - 5000 shots|75",
+      "crossed": true
+    },
+    {
+      "id": "reccezOiPdSpOQQhy",
+      "label": "3-4 - 5000 shots - 100%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 5000,
+      "points": 30,
+      "key": "3-4 - 5000 shots|100",
+      "crossed": true
+    },
+    {
+      "id": "recWGiiyPsv5wKeWd",
+      "label": "3-4 - 5000 shots - 120%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 6000,
+      "points": 40,
+      "key": "3-4 - 5000 shots|120",
+      "crossed": true
+    },
+    {
+      "id": "rec697KEVaK8axCFK",
+      "label": "3-4 - 5000 shots - 150%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 7500,
+      "points": 50,
+      "key": "3-4 - 5000 shots|150",
+      "crossed": true
+    },
+    {
+      "id": "rec5ySmeXYWeIReJn",
+      "label": "3-4 - 5000 shots - 175%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 8750,
+      "points": 65,
+      "key": "3-4 - 5000 shots|175",
+      "crossed": true
+    },
+    {
+      "id": "recvPCvwmMzIBogMP",
+      "label": "3-4 - 5000 shots - 200%",
+      "active": true,
+      "activeRaw": true,
+      "shots": 10000,
+      "points": 80,
+      "key": "3-4 - 5000 shots|200",
+      "crossed": true
+    }
+  ],
+  "inactiveBand34": [
+    {
+      "id": "recKjQPX9beDKWHTF",
+      "label": "3-4 - 5000 shots - 125%",
+      "active": false,
+      "shots": 6250,
+      "points": 40,
+      "key": "3-4 - 5000 shots|125",
+      "crossed": true
+    }
+  ]
+}
