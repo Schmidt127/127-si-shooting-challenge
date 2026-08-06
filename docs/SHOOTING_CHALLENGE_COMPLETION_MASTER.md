@@ -6,10 +6,23 @@
 
 Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, close-out notes, overnight packets, deploy checklists) remain as **evidence and history**. Do not delete them. When those files disagree with this document, **this document wins** — then update the older file later so it does not keep spreading stale status.
 
+### Dashboard reconciliation (2026-08-06 — Automation 005 v4.1 Program Instance Week scope)
+
+| Item | Old | New | Evidence |
+|------|-----|-----|----------|
+| Automation **005** | v4.0 date-range-only Activity Date fallback (multi-match on Early Bird + PWTEST) | **v4.1 Built in Repository** — Activity Date fallback scoped to Enrollment → Program Instance | [`005-…js`](../airtable/automations/shooting-challenge/005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js); [`005-program-instance-week-scope.md`](./deploy-checklists/005-program-instance-week-scope.md) |
+| Offline contracts | — | **8/8 PASS** | `node tools/testing/test_005_program_instance_week_scope.mjs` |
+| Live PROD Tests 1–7 | Blocked (multi-match error on `recElDBcFvuE6jWwc`) | **Pending** Mike paste + PAT/UI Test | Evidence folder; `PROD-PROBE-BLOCKED.json` without token |
+| SC-064 notes | “005 must stay date-range based” | Updated: Program Instance then date range | This master SC-064 row |
+
+**Do not mark Complete / Live Tested until PROD paste + Tests 1–7 evidence exist.**
+
+Evidence: [`docs/testing/evidence/2026-08-06-005-program-instance-week-scope/`](./testing/evidence/2026-08-06-005-program-instance-week-scope/).
+
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Overnight merge Agents 1–4 + Perfect Week gated test timestamp; not Complete) |
+| Last updated | **2026-08-06** (Automation 005 v4.1 Program Instance Week scope — Built in Repository; PROD paste + live Tests 1–7 pending PAT) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -466,7 +479,7 @@ Columns:
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Live Tested in PROD | **001 v5.2** returning-athlete match proven on Testing Schmidt (no duplicate Athlete) | Additional non-Schmidt returning case optional | SC-060 | Don’t create duplicate Athletes | `docs/online-agents/enrollment-season/`; 001 v5.2 header note | — | P1 | 2026-08-05 |
 | SC-062 | Enrollment | Sibling handling works | Built in Repository | Sibling handling spec + fixtures/tests; no Family table | Live sibling parent-email routing test | SC-045 | Shared parent email edge cases | `docs/online-agents/enrollment-season/` | — | P2 | 2026-07-23 |
 | SC-063 | Enrollment | Email validation (parent/athlete) | Built in Repository | Email validation rules in contract + validator FAIL paths | Fillout email rules ON; bounce SOP still open | SC-060 | Bad emails break Make | `docs/online-agents/enrollment-season/` | — | P1 | 2026-07-23 |
-| SC-064 | Enrollment | Intake-open dates separate from challenge run dates | Built in Repository | Season date contract + Denver boundary tests | Wire intake-open into Fillout/web gate; Weeks flags if authorized | SC-032 | 005 must stay date-range based | `docs/online-agents/enrollment-season/`; C-018 | — | P1 | 2026-07-23 |
+| SC-064 | Enrollment | Intake-open dates separate from challenge run dates | Built in Repository | Season date contract + Denver boundary tests; **005 v4.1** Program Instance–scoped Activity Date fallback in repo | Wire intake-open into Fillout/web gate; Weeks flags if authorized; **paste + live-test 005 v4.1** | SC-032 | 005 Activity Date fallback = Program Instance then date range (homework-first unchanged) | `docs/online-agents/enrollment-season/`; C-018; `005-program-instance-week-scope.md` | — | P1 | 2026-08-06 |
 | SC-065 | Enrollment | Challenge dates / Weeks configuration rebuilt | Built in Repository | Weeks seed spec + **Challenge-Year week generator/validator** + **generate-week-package** (CSV, Week-code map, Week End Key map, Sunday email dates) | Manually import generated Weeks in PROD; verify Sunday–Saturday + Week 0 + Post-Challenge; link Program Instance (may need record IDs) | SC-032 | Denver timezone; Weeks remain manual import | `docs/challenge-year/`; `tools/challenge-year/cli.js generate-week-package`; enrollment-season seed | — | P0 | 2026-07-24 |
 | SC-066 | Enrollment | Early-bird periods supported if desired | Decision Needed | Mentioned in season planning materials | Decide if 2026–27 uses early-bird; config if yes | SC-065 | — | season-configuration-design | Keep early-bird? | P3 | 2026-07-23 |
 | SC-067 | Enrollment | Program Instance multi-year design | Deferred | V2-013 decided direction; investigation 2026-07-05; **Season Launch Control** is interim ops layer until Program Instance wave | Dedicated architecture wave later — do not block season launch on PI redesign | SC-032, SC-046 | Config changes must not rewrite history | V2-013; `docs/challenge-year/SEASON-LAUNCH-CONTROL.md` | When to schedule wave? | P3 | 2026-07-24 |

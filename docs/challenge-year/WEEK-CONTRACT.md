@@ -56,4 +56,4 @@ Outputs: `weeks.json`, `weeks.csv` (Airtable import oriented), `weeks.md`, `vali
 - Reject cross-year matches  
 - Exact unresolved reasons: `before_week_0`, `after_post_challenge`, `outside_configured_challenge`, `malformed_activity_date`, `overlapping_or_duplicate_weeks`
 
-Automation **005** remains the live writer that assigns Week on Submissions (homework-first, Activity Date fallback). This engine validates and plans offline; it does not replace 005.
+Automation **005** remains the live writer that assigns Week on Submissions (homework-first, then Activity Date fallback **scoped to Enrollment → Program Instance** as of v4.1). This engine validates and plans offline; it does not replace 005. See [`docs/deploy-checklists/005-program-instance-week-scope.md`](../deploy-checklists/005-program-instance-week-scope.md).

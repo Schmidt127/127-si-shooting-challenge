@@ -44,7 +44,7 @@ For each test: record pass/fail, record IDs, cleanup notes, and update repositor
 
 ### 7. Backdated Submission
 - **Action:** Submission with Activity Date in Week 0  
-- **Expected:** 005 maps to Week 0; no cross-year Week  
+- **Expected:** 005 maps to Week 0 within the Enrollment's Program Instance; no cross-year / other-PI Week  
 
 ### 8. Week assignment
 - **Inspect:** Submission.Week matches Activity Date range  

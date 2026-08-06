@@ -84,12 +84,12 @@ Early bird may be a **partial week** — still one **Weeks** row with start/end 
 
 - **All boundaries in Weeks config** — start date, end date, America/Denver, optional `Week Type` (e.g. `Early Bird`, `Regular`, `Final`).
 - Optional per-row flags (Configuration): `Intake Open?`, `Counts for XP?`, `Counts for Leaderboard?` — tune per season without code changes.
-- Automation **005** maps activity date → Weeks row by **date range only** — no hardcoded calendar in scripts.
+- Automation **005** maps activity date → Weeks row by **Enrollment Program Instance first**, then **date range** within that Program Instance — no hardcoded calendar in scripts (v4.1+).
 - **Fillout / web** gate “form open” on intake-open date from config (not challenge-run date alone).
 
 ### Engine contract
 
-*Submission activity date maps to the active Weeks row whose date range contains that date.*
+*Submission activity date maps to the active Weeks row for the Enrollment's Program Instance whose date range contains that date (Automation 005 v4.1+).*
 
 Exact 2026–27 dates live only in **Weeks** rows at launch.
 
@@ -232,7 +232,7 @@ After **Testing Scenarios** creates a Submission, the **normal** chain should ru
 | # | Automation | Expected when | Notes |
 |---|------------|---------------|-------|
 | **023** | Assign Enrollment to Submission | Submission created **without** Enrollment | **Skipped** if scenario pre-linked **Related Enrollment** |
-| **005** | Assign Week to Submission | Submission created / activity date set | Week from **Activity Date** |
+| **005** | Assign Week to Submission | Submission created / activity date set | Homework-first, then Activity Date **scoped to Enrollment Program Instance** (v4.1+) |
 | **007** | Duplicate checker | Submission created | May flag duplicate stats for same enrollment/date |
 | **006** | Set Video Count | After attachments processed | Video count from submission |
 | **021** | Set Attachment Upload Status | Asset prep | Upload status seeds |

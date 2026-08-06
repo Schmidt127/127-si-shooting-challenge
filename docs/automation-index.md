@@ -34,7 +34,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 005 | Submission Intake — Assign Week to Submission — Homework First | *confirm in Airtable* | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` |
+| **005** | Submission Intake — Assign Week to Submission — Homework First | *confirm in Airtable* — **repo v4.1** (Activity Date fallback scoped to Enrollment Program Instance; **PROD paste required**) | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v4.1**) |
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |

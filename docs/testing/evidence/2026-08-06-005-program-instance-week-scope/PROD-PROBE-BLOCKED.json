@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-08-06T15:12:37.163Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "tokenPresent": false,
+  "live": {
+    "submissionId": "recElDBcFvuE6jWwc",
+    "enrollmentId": "recCyFEPeATOVNlr9",
+    "programInstanceId": "rec5mEM0YPqPqq0hZ",
+    "expectedWeekId": "recWeVrSabnsYaHc2",
+    "expectedWeekName": "Early Bird",
+    "activityDateKey": "2026-08-05"
+  },
+  "args": [],
+  "steps": [],
+  "blocked": true,
+  "blocker": "AIRTABLE_API_TOKEN missing in this environment. Offline contracts still pass; live PROD Tests 1–7 require PAT + paste of 005 v4.1."
+}

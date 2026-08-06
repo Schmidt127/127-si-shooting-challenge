@@ -22,7 +22,7 @@
 | Late enrollment | Optional window after enrollment-close | Season config |
 | Backdated submission | Activity date earlier than “today” / outside week | Policy flag — default **disallow** in offline contract |
 
-**C-018 / testing-and-intake-architecture:** intake open ≠ challenge run. Automation **005** maps by **date range only**.
+**C-018 / testing-and-intake-architecture:** intake open ≠ challenge run. Automation **005 v4.1+** Activity Date fallback scopes Weeks by Enrollment **Program Instance**, then date range (homework-first unchanged).
 
 ---
 
