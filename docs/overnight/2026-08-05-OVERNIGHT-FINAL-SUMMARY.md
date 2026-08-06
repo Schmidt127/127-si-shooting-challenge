@@ -17,7 +17,7 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 | Field | Value |
 |-------|--------|
 | **Starting `master`** | `d4d1ee271603a8eb7fda082a09034b86e74b7afb` (merge PR #80) |
-| **Ending `master`** | `bb93618aa7ba49b4adf7b8a5d68b748a1ce3e2e3` |
+| **Ending `master`** | `f7a98c258429825a740a3e902dca01745a1eab7e` |
 | **Merge branch** | `cursor/overnight-merge-reconciliation-3b0c` |
 
 ### Merge order (executed)
