@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-06** (Program Instance isolation — PR #92 merged; 005 PASS; remaining pastes 023→053→066→118→119) |
+| Last updated | **2026-08-06** (023 v3.1 Week→PI fix; 005 PASS; 023 INCOMPLETE until Week path retest; then 053→066→118→119) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -101,8 +101,9 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 |------|--------|----------|
 | Architecture rule | Documented | Athlete → Enrollment → Program Instance scopes all challenge progress |
 | Automation **005 v4.1** | **Live Tested in PROD** | Activity Date Fallback → Early Bird `recWeVrSabnsYaHc2`; 12 same-PI / 13 other-PI excluded on `recElDBcFvuE6jWwc` |
-| Automations **023 v3.0**, **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste remaining | PI-scoped Enrollment/Week matching |
-| Remaining PROD paste order | **023 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
+| Automation **023 v3.1** | **Built in Repository** — re-paste required | v3.0 live = **PARTIAL** (fallback only). Week→PI path **NOT YET VALIDATED**. Do not start 053 until PASS. |
+| Automations **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste after 023 PASS | PI-scoped Enrollment/Week matching |
+| Remaining PROD paste order | **023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
@@ -111,7 +112,7 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Yes | No | No | — |
+| 023 v3.1 | Yes | Yes (pending merge) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
