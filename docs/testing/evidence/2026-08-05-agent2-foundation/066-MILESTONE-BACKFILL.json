@@ -1,0 +1,55 @@
+{
+  "dryRun": false,
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "shots": 10721,
+  "shotAchievementId": "reclgScxpCba3m1Mo",
+  "shotAchievementName": null,
+  "shotAchievementKeys": [
+    "Category",
+    "Trigger Type",
+    "Trigger Threshold",
+    "Achievement Type",
+    "Achievement Key",
+    "Active?",
+    "Reward Rule Key",
+    "Repeatable?",
+    "Sort Order",
+    "Achievement Name",
+    "Visible?",
+    "Athlete Achievement Unlocks"
+  ],
+  "milestoneEligible": 8,
+  "existingUnlockCount": 8,
+  "existingKeys": [
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|recuzCxUOLUU6dDGx",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|recWGiiyPsv5wKeWd",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|recsmKrqpCjErhR1K",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec5ySmeXYWeIReJn",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|reccezOiPdSpOQQhy",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec697KEVaK8axCFK",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvzZE04Jg1mUsof",
+    "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvPCvwmMzIBogMP"
+  ],
+  "toCreateCount": 0,
+  "toCreate": [],
+  "activityDate": "2026-08-05",
+  "created": [],
+  "clearedRunCheck": true,
+  "xpPoll": {
+    "poll": 1,
+    "at": "2026-08-06T00:12:48.368Z",
+    "count": 8,
+    "keys": [
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|recWGiiyPsv5wKeWd",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|recsmKrqpCjErhR1K",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvPCvwmMzIBogMP",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|recuzCxUOLUU6dDGx",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec697KEVaK8axCFK",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvzZE04Jg1mUsof",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|reccezOiPdSpOQQhy",
+      "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec5ySmeXYWeIReJn"
+    ],
+    "points": 310
+  },
+  "result": "XP_AWARDED"
+}

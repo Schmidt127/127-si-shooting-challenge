@@ -1,0 +1,23 @@
+{
+  "bands": [
+    {
+      "id": "recg6zvMxWsFSn7sf",
+      "name": "Grades 1–2",
+      "active": false,
+      "linkCounts": {
+        "Target Goal Shots": 1
+      },
+      "hasLiveAthletePathLinks": false
+    },
+    {
+      "id": "recOGisMZRWgk445o",
+      "name": "Grades 9–10",
+      "active": false,
+      "linkCounts": {
+        "Target Goal Shots": 1
+      },
+      "hasLiveAthletePathLinks": false
+    }
+  ],
+  "safeToHide": true
+}

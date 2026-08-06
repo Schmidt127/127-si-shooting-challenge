@@ -1,0 +1,325 @@
+{
+  "enrollmentRecordIdField": {
+    "id": "fldRXY0HwfMxkv6cT",
+    "type": "multipleLookupValues",
+    "options": {
+      "isValid": true,
+      "recordLinkFieldId": "fldOhbn1yIJLQOWHm",
+      "fieldIdInLinkedTable": "fldnsyxEUbrJjyzXU",
+      "result": {
+        "type": "singleLineText"
+      }
+    }
+  },
+  "enrollmentField": {
+    "id": "fldOhbn1yIJLQOWHm",
+    "type": "multipleRecordLinks"
+  },
+  "samples": [
+    {
+      "id": "rec2aA0eASdI7kg7V",
+      "Enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Enrollment Record ID": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Source Key": "HOMEWORK_XP|rechzFmWrUp1tonto",
+      "XP Bucket": "Homework Completion"
+    },
+    {
+      "id": "rec38iZMxQFiJJKNl",
+      "Enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Enrollment Record ID": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Source Key": "SUBMISSION_XP|recVLL0vDAX6WniCA",
+      "XP Bucket": "Shooting Base"
+    },
+    {
+      "id": "rec4EJUNz9EmRvmiD",
+      "Enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Enrollment Record ID": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Source Key": "STREAK_XP|recCyFEPeATOVNlr9|recQuAtXyT2wKJNGI|2026-08-04",
+      "XP Bucket": "Streak"
+    },
+    {
+      "id": "rec6hhgZoXukWgFDp",
+      "Enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Enrollment Record ID": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Source Key": "SUBMISSION_XP|recY4Y3U10VmDwNfR",
+      "XP Bucket": "Shooting Base"
+    }
+  ],
+  "missingEnrollmentLink": [],
+  "beforeMilestoneFlag": true,
+  "beforeLevelStatus": "Gate Blocked",
+  "beforeGateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+  "beforeGateDebug": "Rule=Level 2 Gate | Enabled=Yes | Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0",
+  "totalShotsCounted": 10721,
+  "steps": [
+    {
+      "action": "toggled-run-shot-milestone-check"
+    },
+    {
+      "action": "set-level-recalc-needed"
+    },
+    {
+      "poll": 1,
+      "at": "2026-08-06T00:08:14.135Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 2,
+      "at": "2026-08-06T00:08:19.851Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 3,
+      "at": "2026-08-06T00:08:25.368Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 4,
+      "at": "2026-08-06T00:08:30.926Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 5,
+      "at": "2026-08-06T00:08:36.424Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 6,
+      "at": "2026-08-06T00:08:42.027Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 7,
+      "at": "2026-08-06T00:08:47.619Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 8,
+      "at": "2026-08-06T00:08:53.161Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 9,
+      "at": "2026-08-06T00:08:58.695Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 10,
+      "at": "2026-08-06T00:09:04.185Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 11,
+      "at": "2026-08-06T00:09:09.909Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 12,
+      "at": "2026-08-06T00:09:15.457Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 13,
+      "at": "2026-08-06T00:09:20.991Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 14,
+      "at": "2026-08-06T00:09:26.560Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 15,
+      "at": "2026-08-06T00:09:32.054Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 16,
+      "at": "2026-08-06T00:09:37.595Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 17,
+      "at": "2026-08-06T00:09:43.120Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 18,
+      "at": "2026-08-06T00:09:48.710Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 19,
+      "at": "2026-08-06T00:09:54.243Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 20,
+      "at": "2026-08-06T00:09:59.867Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 21,
+      "at": "2026-08-06T00:10:05.466Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 22,
+      "at": "2026-08-06T00:10:11.171Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 23,
+      "at": "2026-08-06T00:10:16.676Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    },
+    {
+      "poll": 24,
+      "at": "2026-08-06T00:10:22.308Z",
+      "runCheck": true,
+      "levelStatus": "Gate Blocked",
+      "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "milestoneXpCount": 0,
+      "milestoneXpKeys": [],
+      "unlockCount": 0
+    }
+  ],
+  "after": {
+    "runCheck": true,
+    "levelStatus": "Gate Blocked",
+    "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+    "gateDebug": "Rule=Level 2 Gate | Enabled=Yes | Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0"
+  },
+  "result": "TIMEOUT_FLAGS_STILL_SET"
+}

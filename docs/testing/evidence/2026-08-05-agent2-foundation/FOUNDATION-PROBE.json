@@ -1,0 +1,282 @@
+{
+  "generatedAt": "2026-08-06T00:04:59.436Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "enrollments": {
+    "recgP9qZYjAhE7NXm": {
+      "Athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "Active?": true,
+      "Grade": "Pre K",
+      "Grade Band": [
+        "recK7BDVSpHy2ipCS"
+      ],
+      "Last Grade Used for Grade Band": "Pre K",
+      "Grade Band Status": "Assigned",
+      "School Year": "2025-2026",
+      "Current Level": [
+        "recOdLPbf4Vl43kP7"
+      ],
+      "Next Level": [
+        "recRQXN5tWtsfaIBo"
+      ],
+      "Lifetime XP Earned": 726,
+      "Parent Email": "mschmidt@fairfield.k12.mt.us",
+      "Parent Email - Cleaned": "mschmidt@fairfield.k12.mt.us"
+    },
+    "recCyFEPeATOVNlr9": {
+      "Athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "Active?": true,
+      "Grade": "3",
+      "Grade Band": [
+        "reclWDQZzKbVBtdhG"
+      ],
+      "Last Grade Used for Grade Band": "3",
+      "Grade Band Status": "Assigned",
+      "School Year": "2026-2027",
+      "Current Level": [
+        "rec1iGy92ZC0jwzD4"
+      ],
+      "Next Level": [
+        "rec1EJLJLmfdJLtoF"
+      ],
+      "Lifetime XP Earned": 278,
+      "Parent Email": "mschmidt@fairfield.k12.mt.us",
+      "Parent Email - Cleaned": "mschmidt@fairfield.k12.mt.us"
+    },
+    "recQP4N5acTdK40uZ": {
+      "error": "GET Enrollments/recQP4N5acTdK40uZ 403: {\"error\":{\"type\":\"INVALID_PERMISSIONS_OR_MODEL_NOT_FOUND\",\"message\":\"Invalid permissions, or the requested model was not found. Check that both your user and your token have the required permissions, and that the model names and/or ids are correct.\"}}"
+    }
+  },
+  "gradeBands": [
+    {
+      "id": "rec2VQFfGJa1ofA06",
+      "name": "7-8",
+      "active": true,
+      "min": 7,
+      "max": 8,
+      "enrollmentCount": 0,
+      "notes": "Intended for athletes preparing for stronger levels of competition, with increased discipline, advanced skill work, and performance-based goals."
+    },
+    {
+      "id": "rec75ruo3XT5nSvaK",
+      "name": "9-12",
+      "active": true,
+      "min": 9,
+      "max": 12,
+      "enrollmentCount": 0,
+      "notes": "Reserved for top-level athletes with exceptional ability, commitment, and performance goals at the highest level of the program."
+    },
+    {
+      "id": "recK7BDVSpHy2ipCS",
+      "name": "K-2",
+      "active": true,
+      "min": -1,
+      "max": 2,
+      "enrollmentCount": 1,
+      "notes": "Intended for brand-new or very early learners who are just beginning to build basic movement patterns, confidence, and introductory sport skills."
+    },
+    {
+      "id": "recOGisMZRWgk445o",
+      "name": "Grades 9–10",
+      "active": false,
+      "min": 9,
+      "max": 10,
+      "enrollmentCount": 0,
+      "notes": "LEGACY INACTIVE BAND — do not reactivate. Overlaps the active 9-12 band and remains only for historical reference. No current links were found during the 2026-07-25 PROD review."
+    },
+    {
+      "id": "recg6zvMxWsFSn7sf",
+      "name": "Grades 1–2",
+      "active": false,
+      "min": 1,
+      "max": 2,
+      "enrollmentCount": 0,
+      "notes": "LEGACY INACTIVE BAND — do not reactivate. Overlaps the active K-2 band and remains only for historical reference. No current links were found during the 2026-07-25 PROD review."
+    },
+    {
+      "id": "reclWDQZzKbVBtdhG",
+      "name": "3-4",
+      "active": true,
+      "min": 3,
+      "max": 4,
+      "enrollmentCount": 1,
+      "notes": "Builds on foundational skills by increasing repetition, coordination, and age-appropriate challenge as athletes continue to develop."
+    },
+    {
+      "id": "recv9aWnHanY2sRgk",
+      "name": "5-6",
+      "active": true,
+      "min": 5,
+      "max": 6,
+      "enrollmentCount": 0,
+      "notes": "For athletes who show a solid base of skills and are ready for more focused refinement, stronger habits, and higher expectations."
+    }
+  ],
+  "athlete": {
+    "id": "recgqVstObQRzgXJF",
+    "First Name": "Testing",
+    "Last Name": "Schmidt",
+    "Parent Email": "mschmidt@fairfield.k12.mt.us",
+    "Active?": true
+  },
+  "xpInventory": {
+    "total": 0,
+    "bySourcePrefix": {},
+    "blankSourceKeys": 0,
+    "duplicateSourceKeys": []
+  },
+  "streakXp": [],
+  "milestoneXp": [],
+  "formulaSuspects": [
+    {
+      "table": "Enrollments",
+      "field": "Lifetime XP Earned",
+      "type": "rollup",
+      "formula": null
+    },
+    {
+      "table": "XP Events",
+      "field": "XP Date Resolved",
+      "type": "formula",
+      "formula": "IF(\r\n  {fldxVAackD0buQIba},\r\n  {fldxVAackD0buQIba},\r\n  SWITCH(\r\n    {fldOQBVTSNODRhRcd},\r\n    \"Submission Base\",\r\n      IF(\r\n        {fldvA0LSFK6uDlreq},\r\n        DATETIME_PARSE(ARRAYJOIN({fldvA0LSFK6uDlreq})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Homework Completion\",\r\n      IF(\r\n        {fldl6CyUiKYtqvHfz},\r\n        DATETIME_PARSE(ARRAYJOIN({fldl6CyUiKYtqvHfz})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Video Feedback\",\r\n      IF(\r\n        {fldXH9MGmbeE6Y7OS},\r\n        DATETIME_PARSE(ARRAYJOIN({fldXH9MGmbeE6Y7OS})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Streak\",\r\n      IF(\r\n        {fldHvhlnWHKlvNQDW},\r\n        DATETIME_PARSE(ARRAYJOIN({fldHvhlnWHKlvNQDW})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Weekly Threshold\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Perfect Week\",\r\n      IF(\r\n        {fldbyfXAlNtDtEc6q},\r\n        DATETIME_PARSE(ARRAYJOIN({fldbyfXAlNtDtEc6q})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Zoom Attendance\",\r\n      IF(\r\n        {fldoP1I4zEXKF70DC},\r\n        DATETIME_PARSE(ARRAYJOIN({fldoP1I4zEXKF70DC})),\r\n        CREATED_TIME()\r\n      ),\r\n    \"Shot Milestone\",\r\n      IF(\r\n        {fldjNc2VdVl96AShM},\r\n        DATETIME_PARSE(ARRAYJOIN({fldjNc2VdVl96AShM})),\r\n        IF(\r\n          {fldfOBZ6TB0ifLZXx},\r\n          DATETIME_PARSE(ARRAYJOIN({fldfOBZ6TB0ifLZXx})),\r\n          CREATED_TIME()\r\n        )\r\n      ),\r\n    CREATED_TIME()\r\n  )\r\n)",
+      "hasSubmissionBase": true,
+      "hasShootingBase": false
+    }
+  ],
+  "tables": {
+    "Automations": {
+      "id": "tblfpqKqPEbkPnN8E",
+      "fieldCount": 15
+    },
+    "Enrollments": {
+      "id": "tbl3PFmwbRoabu1YV",
+      "fieldCount": 134
+    },
+    "Athletes": {
+      "id": "tblTluxBr3DcVrh6h",
+      "fieldCount": 11
+    },
+    "Level Gate Rules": {
+      "id": "tblWIb8JCuQ842HI8",
+      "fieldCount": 16
+    },
+    "Grade Bands": {
+      "id": "tblOhHrIqpjcsk2WG",
+      "fieldCount": 17
+    },
+    "Target Goal Shots": {
+      "id": "tbleCfuAt3rY8unU3",
+      "fieldCount": 8
+    },
+    "Submissions": {
+      "id": "tblEVjVpGGlPTsYSt",
+      "fieldCount": 101
+    },
+    "Submission Assets": {
+      "id": "tblhMLKxQK77agtME",
+      "fieldCount": 99
+    },
+    "XP Events": {
+      "id": "tblmGSiNA1akW8KnU",
+      "fieldCount": 51
+    },
+    "Athlete Achievement Unlocks": {
+      "id": "tblyT2AQo1JbvmvZS",
+      "fieldCount": 35
+    },
+    "Streak Occurrences": {
+      "id": "tbl9VxLdBiNcev4He",
+      "fieldCount": 24
+    },
+    "Achievements": {
+      "id": "tblrADEQbvH9kBfMZ",
+      "fieldCount": 23
+    },
+    "Weeks": {
+      "id": "tblcsKugv1cla36A6",
+      "fieldCount": 20
+    },
+    "Program Instance - Synced": {
+      "id": "tblMfALZa4YYUy70P",
+      "fieldCount": 36
+    },
+    "School - Synced": {
+      "id": "tblyAJ36QvA7Wa2gU",
+      "fieldCount": 31
+    },
+    "Weekly Athlete Summary": {
+      "id": "tbl9520d72adxlAKQ",
+      "fieldCount": 99
+    },
+    "Levels": {
+      "id": "tblU6EWmc1jCpgRHe",
+      "fieldCount": 20
+    },
+    "Shot Milestones": {
+      "id": "tbl5C4TsQpOigIyRz",
+      "fieldCount": 17
+    },
+    "FBC Curriculum - SYNC": {
+      "id": "tblUuxwYlX4EQ9MKE",
+      "fieldCount": 32
+    },
+    "Homework Completions": {
+      "id": "tblv58ppTFDBXb3nv",
+      "fieldCount": 85
+    },
+    "Program Homework Assignments": {
+      "id": "tblhA3maf7xOa8EUS",
+      "fieldCount": 14
+    },
+    "Video Feedback": {
+      "id": "tblOV6pJDxQFBSQ3q",
+      "fieldCount": 50
+    },
+    "Tutorials": {
+      "id": "tbldfoVGdhqATi4MS",
+      "fieldCount": 13
+    },
+    "Tutorials & Assets": {
+      "id": "tblDOTgsWfqPm18bw",
+      "fieldCount": 13
+    },
+    "XP Reward Rules": {
+      "id": "tblnTLz8eDcyi8f3j",
+      "fieldCount": 9
+    },
+    "Config": {
+      "id": "tblRB6sh77NxjS568",
+      "fieldCount": 38
+    },
+    "Awards": {
+      "id": "tbltlhInAQPtOB8hx",
+      "fieldCount": 29
+    },
+    "Award Recipients": {
+      "id": "tblTyQXl8aEP93ubK",
+      "fieldCount": 23
+    },
+    "Final Reflection Quiz Submissions": {
+      "id": "tbl6ORxLs192mXEWp",
+      "fieldCount": 54
+    },
+    "Zoom Meetings": {
+      "id": "tblWcSHEm8vNNIxyB",
+      "fieldCount": 86
+    },
+    "Zoom Attendance": {
+      "id": "tblg8DPRu3j0dbuwi",
+      "fieldCount": 45
+    },
+    "Testing Scenarios": {
+      "id": "tblagI7Q5wXQm2XGS",
+      "fieldCount": 24
+    }
+  },
+  "orphanSignals": {
+    "error": "GET Enrollments?pageSize=100&fields%5B%5D=Name&fields%5B%5D=Athlete&fields%5B%5D=Active%3F&fields%5B%5D=Grade+Band&fields%5B%5D=Grade 422: {\"error\":{\"type\":\"UNKNOWN_FIELD_NAME\",\"message\":\"Unknown field name: \\\"Name\\\"\"}}"
+  }
+}

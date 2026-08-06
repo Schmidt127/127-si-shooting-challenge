@@ -1,0 +1,98 @@
+{
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "athleteId": "recgqVstObQRzgXJF",
+  "lifetimeXp": 278,
+  "lifetimeShots": null,
+  "gradeBand": [
+    "reclWDQZzKbVBtdhG"
+  ],
+  "currentLevel": [
+    "rec1iGy92ZC0jwzD4"
+  ],
+  "nextLevel": [
+    "rec1EJLJLmfdJLtoF"
+  ],
+  "gateStatus": null,
+  "xpCount": 3,
+  "streakXp": [
+    {
+      "id": "rec4EJUNz9EmRvmiD",
+      "key": "STREAK_XP|recCyFEPeATOVNlr9|recQuAtXyT2wKJNGI|2026-08-04",
+      "points": 10,
+      "bucket": "Streak",
+      "source": "3-Day Streak",
+      "date": "2026-08-04T12:00:00.000Z",
+      "dateResolved": "2026-08-04T12:00:00.000Z"
+    },
+    {
+      "id": "recPpgYv8Prc67nvP",
+      "key": "STREAK_XP|recCyFEPeATOVNlr9|recP8QP4uhEXaiZAX|2026-08-08",
+      "points": 20,
+      "bucket": "Streak",
+      "source": "7-Day Streak",
+      "date": "2026-08-08T12:00:00.000Z",
+      "dateResolved": "2026-08-08T12:00:00.000Z"
+    },
+    {
+      "id": "recqzIkftOsyIPhkM",
+      "key": "STREAK_XP|recCyFEPeATOVNlr9|rechOec7g8LBLcdgl|2026-08-06",
+      "points": 15,
+      "bucket": "Streak",
+      "source": "5-Day Streak",
+      "date": "2026-08-06T12:00:00.000Z",
+      "dateResolved": "2026-08-06T12:00:00.000Z"
+    }
+  ],
+  "milestoneXp": [],
+  "streakOccurrences": [],
+  "activeShotMilestones": [],
+  "duplicateSourceKeys": [],
+  "byBucket": {
+    "Streak": 3
+  },
+  "enrollmentShotLikeFields": [
+    "Gate Enabled?",
+    "Current Level XP Required",
+    "Meets Gate: Streak",
+    "DELETE PROBABLY - Level Name with Color (from Current Level)",
+    "Longest Streak Days",
+    "Total Shots Submitted",
+    "Public Gate Missing Reason",
+    "Gate Summary",
+    "Gate Minimum: Submissions",
+    "Current Level XP Ceiling",
+    "Gate-Test Eligible Level",
+    "XP Progress in Current Level",
+    "Gate Failure Summary - Formula",
+    "Meets Gate: Videos",
+    "Level Status",
+    "Gate Minimum: Streak Days",
+    "XP Needed for Next Level",
+    "Gate Debug Summary",
+    "Current Shooting Streak Status",
+    "Meets Gate: Submissions",
+    "Lifetime XP Total",
+    "Gate Enabled Status",
+    "Next Level XP Required",
+    "Level Sort Order - For Softr",
+    "Gate Minimum: Homework",
+    "Current Level - Public Facing Display",
+    "Total Shots Counted",
+    "Streak Occurrences",
+    "Lifetime XP Earned",
+    "Gate Passes",
+    "Current Shooting Streak",
+    "Next Level",
+    "Gate Minimum: Videos",
+    "Target Goal Shots",
+    "Gate Minimum: Zoom Meetings",
+    "Meets Gate: Zoom Meetings",
+    "Level Gate Rule",
+    "Current Shooting Streak Last Checked At",
+    "Current Level",
+    "Meets Gate: Homework",
+    "Current Shooting Streak As Of",
+    "Run Shot Milestone Check?",
+    "Athlete Headshot"
+  ]
+}

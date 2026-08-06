@@ -1,0 +1,96 @@
+{
+  "lifetimeXpEarned": 688,
+  "lifetimeXpTotal": 688,
+  "totalShotsCounted": 10721,
+  "totalShotsSubmitted": 10721,
+  "currentStreak": 8,
+  "longestStreak": 7,
+  "levelStatus": "Gate Blocked",
+  "gateSummary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+  "results": {
+    "FIND(\"recCyFEPeATOVNlr9\", ARRAYJOIN({Enrollment}))": {
+      "n": 0,
+      "byBucket": {},
+      "keys": [],
+      "sumPoints": 0,
+      "blankDates": 0,
+      "sample": []
+    },
+    "{Enrollment Record ID} = \"recCyFEPeATOVNlr9\"": {
+      "n": 20,
+      "byBucket": {
+        "Shot Milestone": 8,
+        "Homework Completion": 2,
+        "Shooting Base": 6,
+        "Streak": 3,
+        "Perfect Week": 1
+      },
+      "keys": [
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|recWGiiyPsv5wKeWd",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|recsmKrqpCjErhR1K",
+        "HOMEWORK_XP|rechzFmWrUp1tonto",
+        "SUBMISSION_XP|recVLL0vDAX6WniCA",
+        "STREAK_XP|recCyFEPeATOVNlr9|recQuAtXyT2wKJNGI|2026-08-04",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvPCvwmMzIBogMP",
+        "SUBMISSION_XP|recY4Y3U10VmDwNfR",
+        "HOMEWORK_XP|recqXxlOpATQI3sD4",
+        "SUBMISSION_XP|recbr8gduRKmpiDkd",
+        "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+        "STREAK_XP|recCyFEPeATOVNlr9|recP8QP4uhEXaiZAX|2026-08-08",
+        "SUBMISSION_XP|recA1YgNKTJ1LgTwF",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|recuzCxUOLUU6dDGx",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec697KEVaK8axCFK",
+        "SUBMISSION_XP|recPJFAC2c2JWtUp6",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|recvzZE04Jg1mUsof",
+        "STREAK_XP|recCyFEPeATOVNlr9|rechOec7g8LBLcdgl|2026-08-06",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|reccezOiPdSpOQQhy",
+        "SUBMISSION_XP|recQGFTQGx1HX7SVF",
+        "SHOT_MILESTONE|recCyFEPeATOVNlr9|rec5ySmeXYWeIReJn"
+      ],
+      "sumPoints": 688,
+      "blankDates": 0,
+      "sample": [
+        {
+          "id": "rec0GSUNBQVJwREIv",
+          "key": "SHOT_MILESTONE|recCyFEPeATOVNlr9|recWGiiyPsv5wKeWd",
+          "bucket": "Shot Milestone",
+          "pts": 40,
+          "date": "2026-08-05T06:00:00.000Z",
+          "dateResolved": "2026-08-05T06:00:00.000Z"
+        },
+        {
+          "id": "rec2SVkBxoPzyw6ou",
+          "key": "SHOT_MILESTONE|recCyFEPeATOVNlr9|recsmKrqpCjErhR1K",
+          "bucket": "Shot Milestone",
+          "pts": 15,
+          "date": "2026-08-05T06:00:00.000Z",
+          "dateResolved": "2026-08-05T06:00:00.000Z"
+        },
+        {
+          "id": "rec2aA0eASdI7kg7V",
+          "key": "HOMEWORK_XP|rechzFmWrUp1tonto",
+          "bucket": "Homework Completion",
+          "pts": 57,
+          "date": "2026-08-06T00:00:00.000Z",
+          "dateResolved": "2026-08-06T00:00:00.000Z"
+        },
+        {
+          "id": "rec38iZMxQFiJJKNl",
+          "key": "SUBMISSION_XP|recVLL0vDAX6WniCA",
+          "bucket": "Shooting Base",
+          "pts": 20,
+          "date": "2026-08-02T06:00:00.000Z",
+          "dateResolved": "2026-08-02T06:00:00.000Z"
+        },
+        {
+          "id": "rec4EJUNz9EmRvmiD",
+          "key": "STREAK_XP|recCyFEPeATOVNlr9|recQuAtXyT2wKJNGI|2026-08-04",
+          "bucket": "Streak",
+          "pts": 10,
+          "date": "2026-08-04T12:00:00.000Z",
+          "dateResolved": "2026-08-04T12:00:00.000Z"
+        }
+      ]
+    }
+  }
+}

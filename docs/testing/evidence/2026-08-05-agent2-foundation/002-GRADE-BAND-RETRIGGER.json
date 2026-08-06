@@ -1,0 +1,59 @@
+{
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "dryRun": false,
+  "startedAt": "2026-08-06T00:06:48.807Z",
+  "before": {
+    "Grade": "3",
+    "Grade Band": [
+      "reclWDQZzKbVBtdhG"
+    ],
+    "Grade Band Status": "Assigned",
+    "Grade Band Assignment Status": null,
+    "Last Grade Used for Grade Band": "3",
+    "Grade Band (Auto Assign)": null,
+    "Ready for Grade Band Assignment?": null,
+    "Grade Band Refresh Needed": 0
+  },
+  "expectedBandId": "reclWDQZzKbVBtdhG",
+  "steps": [
+    {
+      "action": "cleared-grade-band-fields",
+      "fields": [
+        "Grade Band"
+      ]
+    },
+    {
+      "action": "retouched-grade-3"
+    },
+    {
+      "poll": 1,
+      "at": "2026-08-06T00:06:54.826Z",
+      "snap": {
+        "Grade": "3",
+        "Grade Band": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "Grade Band Status": "Assigned",
+        "Grade Band Assignment Status": null,
+        "Last Grade Used for Grade Band": "3",
+        "Grade Band (Auto Assign)": null,
+        "Ready for Grade Band Assignment?": null,
+        "Grade Band Refresh Needed": 0
+      }
+    }
+  ],
+  "result": "PASS_REASSIGNED_3_4",
+  "after": {
+    "Grade": "3",
+    "Grade Band": [
+      "reclWDQZzKbVBtdhG"
+    ],
+    "Grade Band Status": "Assigned",
+    "Grade Band Assignment Status": null,
+    "Last Grade Used for Grade Band": "3",
+    "Grade Band (Auto Assign)": null,
+    "Ready for Grade Band Assignment?": null,
+    "Grade Band Refresh Needed": 0
+  },
+  "finishedAt": "2026-08-06T00:06:54.826Z"
+}
