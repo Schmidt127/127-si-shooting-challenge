@@ -26,7 +26,7 @@ Airtable is the deployed/running copy.
  * 033 - WEEKLY SUMMARY AND GOAL LOGIC
  * Assign Homework to Weekly Athlete Summary
  *
- * Version: v3.2
+ * Version: v3.3
  * Date Written: 2026-05-27
  * Last Updated: 2026-08-05
  *
@@ -38,6 +38,11 @@ Airtable is the deployed/running copy.
  * - Falls back to legacy FBC Curriculum - SYNC Week + Grade Band matching when
  *   no junction matches exist (or the junction table is absent).
  * - Writes matched reusable library homework records to Weekly Athlete Summary → Homework.
+ *
+ * Version 3.3 updates (2026-08-05):
+ * - unloadQuerySafe for PHA/curriculum selectRecordsAsync cleanup.
+ * - matchSourceOut output (program_homework_assignments | legacy_curriculum).
+ * - Operator-facing titles prefer Assignment Full Name when available via library load.
  *
  * Version 3.2 updates (2026-08-05):
  * - Additive Program Homework Assignments resolution path for scheduling reuse.
@@ -88,6 +93,7 @@ Airtable is the deployed/running copy.
  * - statusOut
  * - errorOut
  * - debugStep
+ * - matchSourceOut
  ************************************************************/
 
 // @ts-nocheck
@@ -98,7 +104,7 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
-  version: "v3.2",
+  version: "v3.3",
 
   tables: {
     weeklySummary: "Weekly Athlete Summary",
@@ -191,6 +197,21 @@ try {
 /* =========================================================
    SECTION 4: HELPER FUNCTIONS
 ========================================================= */
+
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
 
 function log(message, data = null) {
   if (!CONFIG.debug.logToConsole) return;
@@ -376,6 +397,7 @@ function setFinalOutputs({
   statusOut,
   errorOut,
   debugStep,
+  matchSourceOut = "",
 }) {
   setOutputSafe("ok", ok);
   setOutputSafe("weeklySummaryId", weeklySummaryId || recordId);
@@ -389,6 +411,7 @@ function setFinalOutputs({
   setOutputSafe("statusOut", statusOut || "");
   setOutputSafe("errorOut", errorOut || "");
   setOutputSafe("debugStep", debugStep || "");
+  setOutputSafe("matchSourceOut", matchSourceOut || "");
 }
 
 /* =========================================================
@@ -641,6 +664,8 @@ async function main() {
         homeworkTitles.push(slotName ? `${slotName}:${libraryId}` : libraryId);
       }
 
+      unloadQuerySafe(phaQuery);
+
       if (matchedHomeworkIds.length > 0) {
         matchSource = "program_homework_assignments";
       }
@@ -716,6 +741,7 @@ async function main() {
         );
       });
       matchSource = "legacy_curriculum";
+      unloadQuerySafe(curriculumQuery);
     }
 
     if (matchedHomeworkIds.length === 0) {
@@ -776,6 +802,7 @@ async function main() {
       statusOut: CONFIG.statuses.success,
       errorOut: "",
       debugStep,
+      matchSourceOut: matchSource,
     });
 
     log("033 completed", {

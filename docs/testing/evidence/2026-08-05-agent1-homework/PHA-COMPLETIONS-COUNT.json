@@ -1,0 +1,18 @@
+{
+  "steps": [
+    {
+      "create": true,
+      "status": 200,
+      "body": {
+        "type": "count",
+        "options": {
+          "isValid": true,
+          "recordLinkFieldId": "fldDg9PXNr0i9YnX7"
+        },
+        "id": "fldleqxCUeC5EsLdZ",
+        "name": "Completions Count",
+        "description": "How many Homework Completions link to this scheduled assignment."
+      }
+    }
+  ]
+}

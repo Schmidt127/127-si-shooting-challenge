@@ -1,0 +1,2539 @@
+{
+  "probedAt": "2026-08-06T00:08:18.866Z",
+  "base": "appn84sqPw03zEbTT",
+  "tables": {
+    "pha": {
+      "id": "tblhA3maf7xOa8EUS",
+      "fieldCount": 17,
+      "fields": [
+        {
+          "id": "fldNlOuvCiLmQRt1e",
+          "name": "Program Homework Assignment",
+          "type": "singleLineText",
+          "description": "Primary label Mike edits (or leave blank and use Display). Prefer one row per Program Instance + Week + Grade Band + Slot.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld32hpKiGx5l8ZhI",
+          "name": "Homework Assignment",
+          "type": "multipleRecordLinks",
+          "description": "Link ONE reusable FBC Curriculum - SYNC library record. Do not put season Week scheduling only on the library — schedule here.",
+          "formula": null,
+          "linkedTableId": "tblUuxwYlX4EQ9MKE"
+        },
+        {
+          "id": "fldrB2gcduTaqxnsl",
+          "name": "Program Instance",
+          "type": "multipleRecordLinks",
+          "description": "Which season/program this assignment belongs to (e.g. Shooting Challenge | 2026-2027).",
+          "formula": null,
+          "linkedTableId": "tblMfALZa4YYUy70P"
+        },
+        {
+          "id": "fld3S4XdwY6sq4BPZ",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "description": "Challenge week this homework is due/assigned. Reuse the same library across weeks by creating separate PHA rows.",
+          "formula": null,
+          "linkedTableId": "tblcsKugv1cla36A6"
+        },
+        {
+          "id": "fldWNwh6Z3pxVwTes",
+          "name": "Grade Band",
+          "type": "multipleRecordLinks",
+          "description": "Grade band that receives this assignment (K-2, 3-4, 5-6, 7-8, 9-12).",
+          "formula": null,
+          "linkedTableId": "tblOhHrIqpjcsk2WG"
+        },
+        {
+          "id": "fldtNNM0a6DoxmuaF",
+          "name": "Homework Slot",
+          "type": "singleSelect",
+          "description": "HW1 or HW2 — matches Submission Asset Purpose / Fillout slot.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldxXLOeCHh09iObk",
+          "name": "Active?",
+          "type": "checkbox",
+          "description": "Unchecked = ignored by Automation 033 / 020. Use to retire without deleting.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld37Vw1oLvknFRHj",
+          "name": "Program Instance RID",
+          "type": "multipleLookupValues",
+          "description": "Lookup helper for Schedule Key — do not edit.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldFCQ2z9Bwg1Y8YY",
+          "name": "Week RID",
+          "type": "multipleLookupValues",
+          "description": "Lookup helper for Schedule Key — do not edit.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld4Dpsd837yGkoPX",
+          "name": "Grade Band RID",
+          "type": "multipleLookupValues",
+          "description": "Lookup helper for Schedule Key — do not edit.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld0fcG9TDBXBlVDc",
+          "name": "Homework Assignment RID",
+          "type": "multipleLookupValues",
+          "description": "Lookup helper for Schedule Key — do not edit.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldSgoJUI37aPnvrJ",
+          "name": "Schedule Key",
+          "type": "formula",
+          "description": "Auto dedupe fingerprint: ProgramInstance|Week|GradeBand|Slot|Homework. Two Active rows with the same key = operator error.",
+          "formula": "IF(\n  AND(\n    {fld37Vw1oLvknFRHj},\n    {fldFCQ2z9Bwg1Y8YY},\n    {fld4Dpsd837yGkoPX},\n    {fldtNNM0a6DoxmuaF},\n    {fld0fcG9TDBXBlVDc}\n  ),\n  ARRAYJOIN({fld37Vw1oLvknFRHj}) & \"|\" & ARRAYJOIN({fldFCQ2z9Bwg1Y8YY}) & \"|\" & ARRAYJOIN({fld4Dpsd837yGkoPX}) & \"|\" & {fldtNNM0a6DoxmuaF} & \"|\" & ARRAYJOIN({fld0fcG9TDBXBlVDc}),\n  BLANK()\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldp3eQIQQKi6StzU",
+          "name": "Program Homework Assignment Display",
+          "type": "formula",
+          "description": "Read-only human summary: Library | Program | Week | Grade Band | Slot.",
+          "formula": "ARRAYJOIN({fld32hpKiGx5l8ZhI}) & \" | \" & ARRAYJOIN({fldrB2gcduTaqxnsl}) & \" | \" & ARRAYJOIN({fld3S4XdwY6sq4BPZ}) & \" | \" & ARRAYJOIN({fldWNwh6Z3pxVwTes}) & \" | \" & IF({fldtNNM0a6DoxmuaF}, {fldtNNM0a6DoxmuaF}, \"\")",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldDg9PXNr0i9YnX7",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "description": "Inverse link — completions that resolved to this scheduled assignment.",
+          "formula": null,
+          "linkedTableId": "tblv58ppTFDBXb3nv"
+        },
+        {
+          "id": "fldQj0sRVkpXY1aZ4",
+          "name": "Operator Status",
+          "type": "formula",
+          "description": "At-a-glance health for Mike: Incomplete / Active / Inactive. Fix Incomplete before relying on Automation 033.",
+          "formula": "IF(\n  OR(\n    NOT({fld32hpKiGx5l8ZhI}),\n    NOT({fldrB2gcduTaqxnsl}),\n    NOT({fld3S4XdwY6sq4BPZ}),\n    NOT({fldWNwh6Z3pxVwTes}),\n    NOT({fldtNNM0a6DoxmuaF})\n  ),\n  \"Incomplete — fill Homework, Program, Week, Grade Band, Slot\",\n  IF(\n    {fldxXLOeCHh09iObk},\n    \"Active — will assign via 033 / resolve via 020\",\n    \"Inactive — ignored by automations\"\n  )\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldrYbahF9R1CPTL2",
+          "name": "Operator Notes",
+          "type": "multilineText",
+          "description": "Freeform notes for why this week/slot uses this library record. Not read by automations.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldleqxCUeC5EsLdZ",
+          "name": "Completions Count",
+          "type": "count",
+          "description": "How many Homework Completions link to this scheduled assignment.",
+          "formula": null,
+          "linkedTableId": null
+        }
+      ]
+    },
+    "curriculum": {
+      "id": "tblUuxwYlX4EQ9MKE",
+      "fieldCount": 32
+    },
+    "hc": {
+      "id": "tblv58ppTFDBXb3nv",
+      "fieldCount": 85,
+      "fieldsOfInterest": [
+        {
+          "id": "fld2ngOdaAmhpieZk",
+          "name": "Homework Completion Full Name",
+          "type": "formula",
+          "description": null,
+          "formula": "{fldxpl7aW59DOZVP9} & \" - \" & {fldotQdQqQ7RKVQGg} & \" - \" & {fldesgOUPcUoo9S2q}",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldSxUIDwVd6xUhhC",
+          "name": "Homework Completion Key",
+          "type": "formula",
+          "description": "Identity helper: Enrollment|Week|Homework. One HC per enrollment+week+library preferred; 020 also scopes by Submission+slot.",
+          "formula": "ARRAYJOIN({fldfK3h5ucx3WdFNS}) & \"|\" & ARRAYJOIN({fldesgOUPcUoo9S2q}) & \"|\" & ARRAYJOIN({fldotQdQqQ7RKVQGg})",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldwcbjY7YjJaAZGy",
+          "name": "Grade Band",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "formula": null,
+          "linkedTableId": "tblOhHrIqpjcsk2WG"
+        },
+        {
+          "id": "fldhpGNYnu2l3bpUP",
+          "name": "Weekly Athlete Summary",
+          "type": "singleLineText",
+          "description": "LEGACY unused text field. Do not write. Canonical relationship is Weekly Athlete Summary Link.",
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld3QgYcH4AqQh6gP",
+          "name": "Completion Status",
+          "type": "singleSelect",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "flds8qfFNyCAzYgzT",
+          "name": "Completion Summary",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  {fldh4ohAiEdp8oejg},\n    IF(\n      {fldLgx4GGYyfsajd5},\n      \"Satisfactory + Extra Credit\",\n      \"Satisfactory\"\n    ),\n    IF(\n      {fld3QgYcH4AqQh6gP},\n        {fld3QgYcH4AqQh6gP},\n        BLANK()\n    )\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldkoEbVnCugcMCCi",
+          "name": "Weekly Athlete Summary Link",
+          "type": "multipleRecordLinks",
+          "description": "Canonical link to Weekly Athlete Summary. Written by Automation 020 (from Submission) / maintained for quiz via 067 patterns.",
+          "formula": null,
+          "linkedTableId": "tbl9520d72adxlAKQ"
+        },
+        {
+          "id": "fldzbzik42JGLQzpX",
+          "name": "Asset Slot",
+          "type": "singleSelect",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldwiaO5UWbg9IIka",
+          "name": "Total Homework XP Awarded",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\r\n  {fldWVAQIgZPsaHZi5},\r\n  {fldWVAQIgZPsaHZi5},\r\n  0\r\n)\r\n+\r\nIF(\r\n  {fldVCbbqo9pWnyvZM},\r\n  {fldVCbbqo9pWnyvZM},\r\n  0\r\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldKjhzUPSQS9m9wG",
+          "name": "Homework Completions RID",
+          "type": "formula",
+          "description": null,
+          "formula": "RECORD_ID()",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldesgOUPcUoo9S2q",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "formula": null,
+          "linkedTableId": "tblcsKugv1cla36A6"
+        },
+        {
+          "id": "fldnxt05lxlVRuj7p",
+          "name": "Item Slot",
+          "type": "singleSelect",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldotQdQqQ7RKVQGg",
+          "name": "Homework",
+          "type": "multipleRecordLinks",
+          "description": "Reusable FBC Curriculum - SYNC library record (not the schedule row).",
+          "formula": null,
+          "linkedTableId": "tblUuxwYlX4EQ9MKE"
+        },
+        {
+          "id": "fldh4ohAiEdp8oejg",
+          "name": "Satisfactory?",
+          "type": "checkbox",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldmhkFv4qVxfnROP",
+          "name": "Program Homework Assignment",
+          "type": "multipleRecordLinks",
+          "description": "Scheduled junction row (PHA). Written by Automation 020 when resolvable. Library Homework link remains required for XP/display.",
+          "formula": null,
+          "linkedTableId": "tblhA3maf7xOa8EUS"
+        }
+      ]
+    },
+    "was": {
+      "id": "tbl9520d72adxlAKQ",
+      "fieldCount": 99,
+      "fieldsOfInterest": [
+        {
+          "id": "fld3h3FZAoEVvDM4q",
+          "name": "Homework",
+          "type": "multipleRecordLinks",
+          "description": "Assigned reusable library homework for this week (from Automation 033 via Program Homework Assignments when present, else legacy curriculum Week+Grade Band match). Perfect Week / rollups read this list.",
+          "formula": null,
+          "linkedTableId": "tblUuxwYlX4EQ9MKE"
+        },
+        {
+          "id": "fldxA1xQQlui2XXi4",
+          "name": "Homework Assigned Count",
+          "type": "rollup",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldEEYFHEBlVnNAV0",
+          "name": "Perfect Week Daily Check Status",
+          "type": "singleSelect",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldtASmByMBMCPXvp",
+          "name": "Perfect Week Daily Check Detail",
+          "type": "multilineText",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld9whhW2WYo6Z3wD",
+          "name": "Perfect Week Daily Requirement Met?",
+          "type": "checkbox",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "flds8k6TuRScMWW79",
+          "name": "Perfect Week Video Count",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld1sBnbfMiunNlcW",
+          "name": "Perfect Week Zoom Meeting Count",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldVs5IgC7PnCXCYM",
+          "name": "Perfect Week Zoom Attendance Count",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldK2cIQXX18OTdhS",
+          "name": "Perfect Week Homework Requirement Met?",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldyFlpiRQiTpCKJz",
+          "name": "Perfect Week Automation Status",
+          "type": "singleSelect",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldIZgWPIPwpBv0hb",
+          "name": "Perfect Week Automation Error",
+          "type": "multilineText",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldat2jCxT2sc9pms",
+          "name": "Perfect Week Video Requirement Met?",
+          "type": "formula",
+          "description": null,
+          "formula": "IF({flds8k6TuRScMWW79} >= 3, 1, 0)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldWok1MQBND9z0r9",
+          "name": "Perfect Week Zoom Requirement Met?",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  0,\n  IF(\n    VALUE({fld1sBnbfMiunNlcW} & \"\") = 0,\n    1,\n    IF(\n      VALUE({fldVs5IgC7PnCXCYM} & \"\") >= 1,\n      1,\n      0\n    )\n  )\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldPWqUmCAWpwKX6t",
+          "name": "Perfect Week Zoom Requirement Status",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fld1sBnbfMiunNlcW} = 0,\n    \"No Zoom This Week\",\n    IF(\n      {fldVs5IgC7PnCXCYM} >= 1,\n      \"Attended\",\n      \"Missed\"\n    )\n  )\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fld0re4ydFGq2vvZC",
+          "name": "Perfect Week Eligible?",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  AND(\n    {fldyFlpiRQiTpCKJz} = \"Ready\",\n    {fld9whhW2WYo6Z3wD},\n    {fldK2cIQXX18OTdhS} = 1,\n    {fldat2jCxT2sc9pms} = 1,\n    {fldWok1MQBND9z0r9} = 1\n  ),\n  1,\n  0\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldJVKEeziY9l5Dbq",
+          "name": "Perfect Week Unlock",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "formula": null,
+          "linkedTableId": "tblyT2AQo1JbvmvZS"
+        },
+        {
+          "id": "fldNvOVO3WidABUXS",
+          "name": "Perfect Week Calculation Queue?",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\r\n  AND(\r\n    LEN(ARRAYJOIN({fldNH81lfwL5dBnAw})) > 0,\r\n    LEN(ARRAYJOIN({fldNUSqzr3H0PE5Ex})) > 0,\r\n    LEN(ARRAYJOIN({fldNvhGv57qOqbsfN})) > 0,\r\n    OR(\r\n      {fldyFlpiRQiTpCKJz} = \"Pending\",\r\n      {fldyFlpiRQiTpCKJz} = \"Ready\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldZmafiSNvvDOBLi",
+          "name": "Perfect Week Homework Assigned Count",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldqNVE7X7uBED4XR",
+          "name": "Perfect Week Homework Satisfactory Count",
+          "type": "number",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fld3eEpTebFgqTWYy",
+          "name": "Perfect Week Homework Completion %",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  {fldZmafiSNvvDOBLi} > 0,\n  {fldqNVE7X7uBED4XR} / {fldZmafiSNvvDOBLi},\n  1\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldG3EmD6uueWmtRl",
+          "name": "Perfect Week Homework Requirement Status",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fldZmafiSNvvDOBLi} = 0,\n    \"Not Required - No Homework This Week\",\n    IF(\n      {fldK2cIQXX18OTdhS} = 1,\n      \"Complete - 100%\",\n      \"Incomplete - \" & ROUND({fld3eEpTebFgqTWYy} * 100, 0) & \"%\"\n    )\n  )\n)\n",
+          "linkedTableId": null
+        },
+        {
+          "id": "fld6yhWfsDQUFn0k5",
+          "name": "Homework Completed?",
+          "type": "formula",
+          "description": null,
+          "formula": "IF(\r\n  {fldxA1xQQlui2XXi4} > 0,\r\n  {fldAZvnZo9xAXyw5o} >= {fldxA1xQQlui2XXi4},\r\n  BLANK()\r\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fldAZvnZo9xAXyw5o",
+          "name": "Homework Satisfactory Count",
+          "type": "rollup",
+          "description": null,
+          "formula": null,
+          "linkedTableId": null
+        },
+        {
+          "id": "fldKxl8nguJzqulJD",
+          "name": "Homework Display",
+          "type": "formula",
+          "description": "Shows homework name(s) or a red no symbol with 'No Homework' if none assigned.",
+          "formula": "IF(\r\n  {fld3h3FZAoEVvDM4q},\r\n  ARRAYJOIN({fld3h3FZAoEVvDM4q}),\r\n  \"🚫 No Homework\"\r\n)",
+          "linkedTableId": null
+        },
+        {
+          "id": "fld7IEpY1KsacJTM6",
+          "name": "Homework Completions Link",
+          "type": "multipleRecordLinks",
+          "description": null,
+          "formula": null,
+          "linkedTableId": "tblv58ppTFDBXb3nv"
+        }
+      ]
+    },
+    "assets": {
+      "id": "tblhMLKxQK77agtME"
+    },
+    "submissions": {
+      "id": "tblEVjVpGGlPTsYSt"
+    }
+  },
+  "pha": {
+    "total": 92,
+    "active": 92,
+    "duplicateScheduleKeys": [],
+    "records": [
+      {
+        "id": "rec07HlC9CJM1z5Uz",
+        "name": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | Week 9 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|recv9aWnHanY2sRgk|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec1QPj5ScsxZUFNf",
+        "name": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3",
+        "display": "SA - Personal Game Plan - Shooting Form and Technique | Shooting Challenge | 2026-2027 | Week 3 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|rec2VQFfGJa1ofA06|HW2|rechZeLk7iNQMGZAs",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec1VAymVlWWdaCDA",
+        "name": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4",
+        "display": "SA - Growth Mindset - Layup Series Homework | Shooting Challenge | 2026-2027 | Week 4 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|rec2VQFfGJa1ofA06|HW2|rec9cOETen8FxO724",
+        "homework": [
+          "rec9cOETen8FxO724"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec30vho6DmBA59oe",
+        "name": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4",
+        "display": "SA - Growth Mindset - Self Esteem and Accomplisment | Shooting Challenge | 2026-2027 | Week 4 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|recv9aWnHanY2sRgk|HW1|reca016CCQwKClY1K",
+        "homework": [
+          "reca016CCQwKClY1K"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec3CwuvR4Dd5F0Ny",
+        "name": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10",
+        "display": "SA - Mastery - Shooting Challenge Final Reflection Quiz | Shooting Challenge | 2026-2027 | Week 10 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|rec75ruo3XT5nSvaK|HW1|rec8oexrgOV5OWCRw",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec3QFeS8kQkADJLD",
+        "name": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9",
+        "display": "SA - Sportsmanship - Bad Habit I Need to Fix | Shooting Challenge | 2026-2027 | Week 9 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|rec75ruo3XT5nSvaK|HW1|rect6zryAP3IF5tTI",
+        "homework": [
+          "rect6zryAP3IF5tTI"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec4SNxP0Qlr1YLua",
+        "name": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3",
+        "display": "Char33 - Responsibility - The Choice is Yours | Shooting Challenge | 2026-2027 | Week 3 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|recv9aWnHanY2sRgk|HW1|reck6ahIq4ArLuNeH",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec517EFlawEXB2gF",
+        "name": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee",
+        "display": "\"SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim\" | Shooting Challenge | 2026-2027 | Week 6 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|recK7BDVSpHy2ipCS|HW1|rechqjA9SKlHRVBBM",
+        "homework": [
+          "rechqjA9SKlHRVBBM"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec53rpfgupBJ4V3b",
+        "name": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9",
+        "display": "SA - Sportsmanship - Bad Habit I Need to Fix | Shooting Challenge | 2026-2027 | Week 9 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|recv9aWnHanY2sRgk|HW1|rect6zryAP3IF5tTI",
+        "homework": [
+          "rect6zryAP3IF5tTI"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec5IkbClIKD1V7lq",
+        "name": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Week 1 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|recK7BDVSpHy2ipCS|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec6TMkd0iQXYgxWE",
+        "name": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4",
+        "display": "SA - Growth Mindset - Layup Series Homework | Shooting Challenge | 2026-2027 | Week 4 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|reclWDQZzKbVBtdhG|HW2|rec9cOETen8FxO724",
+        "homework": [
+          "rec9cOETen8FxO724"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec6hqMSRlZLG1piD",
+        "name": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7",
+        "display": "SA - Growth Mindset - Coach Yourself | Shooting Challenge | 2026-2027 | Week 7 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|rec75ruo3XT5nSvaK|HW2|recuKQPsGXUvhvlm9",
+        "homework": [
+          "recuKQPsGXUvhvlm9"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec7OLxtAxU0scagx",
+        "name": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10",
+        "display": "SA - Mastery - Shooting Challenge Final Reflection Quiz | Shooting Challenge | 2026-2027 | Week 10 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|reclWDQZzKbVBtdhG|HW1|rec8oexrgOV5OWCRw",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec8CMrSWycy9JflA",
+        "name": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5",
+        "display": "SA - Intentional Practice - 5 Spot Shooting Locations | Shooting Challenge | 2026-2027 | Week 5 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|recv9aWnHanY2sRgk|HW2|reccGb6KbwG6lmeLs",
+        "homework": [
+          "reccGb6KbwG6lmeLs"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec8dvaLtokPAtXua",
+        "name": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10",
+        "display": "SA - Mastery - Shooting Challenge Final Reflection Quiz | Shooting Challenge | 2026-2027 | Week 10 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|recv9aWnHanY2sRgk|HW1|rec8oexrgOV5OWCRw",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec8tW0z8G7dittNR",
+        "name": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5",
+        "display": "SA - Intentional Practice - 5 Spot Shooting Locations | Shooting Challenge | 2026-2027 | Week 5 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|recK7BDVSpHy2ipCS|HW2|reccGb6KbwG6lmeLs",
+        "homework": [
+          "reccGb6KbwG6lmeLs"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rec9Ty6cT7E7nFaOh",
+        "name": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee",
+        "display": "\"SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim\" | Shooting Challenge | 2026-2027 | Week 6 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|rec75ruo3XT5nSvaK|HW1|rechqjA9SKlHRVBBM",
+        "homework": [
+          "rechqjA9SKlHRVBBM"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recA7LdQmPaNvjiLV",
+        "name": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10",
+        "display": "SA - Mastery - Shot Tracker: Summary and What You Learned | Shooting Challenge | 2026-2027 | Week 10 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|recv9aWnHanY2sRgk|HW2|rec1KJZYvonmdZGZ7",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recABIVYok42tnOHI",
+        "name": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7",
+        "display": "SA - Growth Mindset - Coach Yourself | Shooting Challenge | 2026-2027 | Week 7 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|recv9aWnHanY2sRgk|HW2|recuKQPsGXUvhvlm9",
+        "homework": [
+          "recuKQPsGXUvhvlm9"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recBs074DiCnUjtZP",
+        "name": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7",
+        "display": "SA - Growth Mindset - Coach Yourself | Shooting Challenge | 2026-2027 | Week 7 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|rec2VQFfGJa1ofA06|HW2|recuKQPsGXUvhvlm9",
+        "homework": [
+          "recuKQPsGXUvhvlm9"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recC4H3eTWPLkcvCT",
+        "name": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Week 1 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|recv9aWnHanY2sRgk|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recDnSCSRGwbRWjoU",
+        "name": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7",
+        "display": "SA - Growth Mindset - Coach Yourself | Shooting Challenge | 2026-2027 | Week 7 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|recK7BDVSpHy2ipCS|HW2|recuKQPsGXUvhvlm9",
+        "homework": [
+          "recuKQPsGXUvhvlm9"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recEDFPGMEKrLeAbn",
+        "name": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4",
+        "display": "SA - Growth Mindset - Self Esteem and Accomplisment | Shooting Challenge | 2026-2027 | Week 4 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|recK7BDVSpHy2ipCS|HW1|reca016CCQwKClY1K",
+        "homework": [
+          "reca016CCQwKClY1K"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recFYhSsF7HzHO1ex",
+        "name": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4",
+        "display": "SA - Growth Mindset - Layup Series Homework | Shooting Challenge | 2026-2027 | Week 4 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|recv9aWnHanY2sRgk|HW2|rec9cOETen8FxO724",
+        "homework": [
+          "rec9cOETen8FxO724"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recGP5vYfdMS3VQAp",
+        "name": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4",
+        "display": "SA - Growth Mindset - Self Esteem and Accomplisment | Shooting Challenge | 2026-2027 | Week 4 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|rec75ruo3XT5nSvaK|HW1|reca016CCQwKClY1K",
+        "homework": [
+          "reca016CCQwKClY1K"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recHL5jvVqNWestsx",
+        "name": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6",
+        "display": "SA - Growth Mindset - Goal Setting - What GOATS do! | Shooting Challenge | 2026-2027 | Week 6 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|recK7BDVSpHy2ipCS|HW2|reczzzcR1Ru8MqbmH",
+        "homework": [
+          "reczzzcR1Ru8MqbmH"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recHThiw5cFzTKnlY",
+        "name": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5",
+        "display": "SA - Intentional Practice - 5 Spot Shooting Locations | Shooting Challenge | 2026-2027 | Week 5 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|reclWDQZzKbVBtdhG|HW2|reccGb6KbwG6lmeLs",
+        "homework": [
+          "reccGb6KbwG6lmeLs"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recHYj13CmSNciJmO",
+        "name": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | Week 9 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|rec75ruo3XT5nSvaK|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recHi3fUIz6hOmQsN",
+        "name": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5",
+        "display": "SA - Intentional Practice - 5 Spot Shooting Locations | Shooting Challenge | 2026-2027 | Week 5 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|rec2VQFfGJa1ofA06|HW2|reccGb6KbwG6lmeLs",
+        "homework": [
+          "reccGb6KbwG6lmeLs"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recIJn3sB9bLPI734",
+        "name": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10",
+        "display": "SA - Mastery - Shooting Challenge Final Reflection Quiz | Shooting Challenge | 2026-2027 | Week 10 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|rec2VQFfGJa1ofA06|HW1|rec8oexrgOV5OWCRw",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recJFS4BQ1hTwYsRN",
+        "name": "HW1 | SA - Relationships - Thank You Note | Week 7",
+        "display": "SA - Relationships - Thank You Note | Shooting Challenge | 2026-2027 | Week 7 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|rec2VQFfGJa1ofA06|HW1|rec1iHGFpNLdu9Lyk",
+        "homework": [
+          "rec1iHGFpNLdu9Lyk"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recJWMCK1W9seqlpe",
+        "name": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3",
+        "display": "SA - Personal Game Plan - Shooting Form and Technique | Shooting Challenge | 2026-2027 | Week 3 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|rec75ruo3XT5nSvaK|HW2|rechZeLk7iNQMGZAs",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recJptuOuPGpd1Eg5",
+        "name": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8",
+        "display": "SA - Growth Mindset - Build Your Freethrow Routine | Shooting Challenge | 2026-2027 | Week 8 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|reclWDQZzKbVBtdhG|HW2|recydsZbHevk4Ts50",
+        "homework": [
+          "recydsZbHevk4Ts50"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recMPUdnUKUDxLzuG",
+        "name": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee",
+        "display": "\"SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim\" | Shooting Challenge | 2026-2027 | Week 6 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|rec2VQFfGJa1ofA06|HW1|rechqjA9SKlHRVBBM",
+        "homework": [
+          "rechqjA9SKlHRVBBM"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recNqdq6QBBFFDOHF",
+        "name": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1",
+        "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Week 1 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|recv9aWnHanY2sRgk|HW2|rec6WmXjpLtIWDERo",
+        "homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recODjPWkdex1bJwj",
+        "name": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3",
+        "display": "Char33 - Responsibility - The Choice is Yours | Shooting Challenge | 2026-2027 | Week 3 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|reclWDQZzKbVBtdhG|HW1|reck6ahIq4ArLuNeH",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recQSCRyB562bX7gr",
+        "name": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | Week 9 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|recK7BDVSpHy2ipCS|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recSgO2WoGbQ9Y0im",
+        "name": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9",
+        "display": "SA - Sportsmanship - Bad Habit I Need to Fix | Shooting Challenge | 2026-2027 | Week 9 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|rec2VQFfGJa1ofA06|HW1|rect6zryAP3IF5tTI",
+        "homework": [
+          "rect6zryAP3IF5tTI"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recT1fuQ6eEtyfzAa",
+        "name": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3",
+        "display": "SA - Personal Game Plan - Shooting Form and Technique | Shooting Challenge | 2026-2027 | Week 3 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|recK7BDVSpHy2ipCS|HW2|rechZeLk7iNQMGZAs",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recU3boUazeaDUX8Q",
+        "name": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Week 1 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|rec75ruo3XT5nSvaK|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recUN1aDI0eRhetso",
+        "name": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5",
+        "display": "SA - Growth Mindset - Touch and Talk | Shooting Challenge | 2026-2027 | Week 5 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|recv9aWnHanY2sRgk|HW1|recHbROQu2tAtUzMg",
+        "homework": [
+          "recHbROQu2tAtUzMg"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recUWm8Gcr9gE7qVh",
+        "name": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6",
+        "display": "SA - Growth Mindset - Goal Setting - What GOATS do! | Shooting Challenge | 2026-2027 | Week 6 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|rec75ruo3XT5nSvaK|HW2|reczzzcR1Ru8MqbmH",
+        "homework": [
+          "reczzzcR1Ru8MqbmH"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recUaPtCf57MKaY7x",
+        "name": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10",
+        "display": "SA - Mastery - Shot Tracker: Summary and What You Learned | Shooting Challenge | 2026-2027 | Week 10 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|rec2VQFfGJa1ofA06|HW2|rec1KJZYvonmdZGZ7",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recUkC6jS129f82mZ",
+        "name": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6",
+        "display": "SA - Growth Mindset - Goal Setting - What GOATS do! | Shooting Challenge | 2026-2027 | Week 6 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|recv9aWnHanY2sRgk|HW2|reczzzcR1Ru8MqbmH",
+        "homework": [
+          "reczzzcR1Ru8MqbmH"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recV6cNL67NBaltG3",
+        "name": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4",
+        "display": "SA - Growth Mindset - Self Esteem and Accomplisment | Shooting Challenge | 2026-2027 | Week 4 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|rec2VQFfGJa1ofA06|HW1|reca016CCQwKClY1K",
+        "homework": [
+          "reca016CCQwKClY1K"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recVrD0LnORWmQfaF",
+        "name": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3",
+        "display": "Char33 - Responsibility - The Choice is Yours | Shooting Challenge | 2026-2027 | Week 3 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|rec75ruo3XT5nSvaK|HW1|reck6ahIq4ArLuNeH",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recWO4PNQAp1EQx0v",
+        "name": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10",
+        "display": "SA - Mastery - Shot Tracker: Summary and What You Learned | Shooting Challenge | 2026-2027 | Week 10 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|recK7BDVSpHy2ipCS|HW2|rec1KJZYvonmdZGZ7",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recWcgIQUKmlABXeo",
+        "name": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8",
+        "display": "SA - Growth Mindset - Build Your Freethrow Routine | Shooting Challenge | 2026-2027 | Week 8 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|recK7BDVSpHy2ipCS|HW2|recydsZbHevk4Ts50",
+        "homework": [
+          "recydsZbHevk4Ts50"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recXNERl1d9GkOWAk",
+        "name": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8",
+        "display": "SA - Growth Mindset - Build Your Freethrow Routine | Shooting Challenge | 2026-2027 | Week 8 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|recv9aWnHanY2sRgk|HW2|recydsZbHevk4Ts50",
+        "homework": [
+          "recydsZbHevk4Ts50"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recXmzyqJq5Dm7bL0",
+        "name": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1",
+        "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Week 1 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|recK7BDVSpHy2ipCS|HW2|rec6WmXjpLtIWDERo",
+        "homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recXzjHredNI7LARq",
+        "name": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4",
+        "display": "SA - Growth Mindset - Layup Series Homework | Shooting Challenge | 2026-2027 | Week 4 | K-2 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|recK7BDVSpHy2ipCS|HW2|rec9cOETen8FxO724",
+        "homework": [
+          "rec9cOETen8FxO724"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recYiNFqUezSbfcvW",
+        "name": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4",
+        "display": "SA - Growth Mindset - Self Esteem and Accomplisment | Shooting Challenge | 2026-2027 | Week 4 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|reclWDQZzKbVBtdhG|HW1|reca016CCQwKClY1K",
+        "homework": [
+          "reca016CCQwKClY1K"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recYxwp2F6g5CbHUi",
+        "name": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5",
+        "display": "SA - Growth Mindset - Touch and Talk | Shooting Challenge | 2026-2027 | Week 5 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|recK7BDVSpHy2ipCS|HW1|recHbROQu2tAtUzMg",
+        "homework": [
+          "recHbROQu2tAtUzMg"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reca5GM1JkROhXOiy",
+        "name": "HW1 | Shot Tracker Usage | PWTEST CASE-01",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | PWTEST|2026-08-05|CASE-01|WEEK | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "reci5GdxEC57vfoS3"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 1
+      },
+      {
+        "id": "recaUqQXJ8eoVo46x",
+        "name": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1",
+        "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Week 1 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|rec75ruo3XT5nSvaK|HW2|rec6WmXjpLtIWDERo",
+        "homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recbRZzjsqvP0YR67",
+        "name": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10",
+        "display": "SA - Mastery - Shooting Challenge Final Reflection Quiz | Shooting Challenge | 2026-2027 | Week 10 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|recK7BDVSpHy2ipCS|HW1|rec8oexrgOV5OWCRw",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recbRkUvjgTjqLUeY",
+        "name": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Week 1 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|rec2VQFfGJa1ofA06|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recbY6hLvJZNh4eet",
+        "name": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8",
+        "display": "\"SA - Growth Mindset - Visualization: Read, Reflect, Discuss\" | Shooting Challenge | 2026-2027 | Week 8 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|rec2VQFfGJa1ofA06|HW1|rechajyOFJf3WsN5f",
+        "homework": [
+          "rechajyOFJf3WsN5f"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reccGxhS7lkH3cQmW",
+        "name": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9",
+        "display": "SA - Sportsmanship - Bad Habit I Need to Fix | Shooting Challenge | 2026-2027 | Week 9 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|recK7BDVSpHy2ipCS|HW1|rect6zryAP3IF5tTI",
+        "homework": [
+          "rect6zryAP3IF5tTI"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reccOxTZAhLjYAzIJ",
+        "name": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | Week 9 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|rec2VQFfGJa1ofA06|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reccQhrgOK8e8Yngv",
+        "name": "HW2 | Website Exploration | PWTEST CASE-01",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | PWTEST|2026-08-05|CASE-01|WEEK | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "reci5GdxEC57vfoS3"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 1
+      },
+      {
+        "id": "reccSafOcEIzTjlpy",
+        "name": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4",
+        "display": "SA - Growth Mindset - Layup Series Homework | Shooting Challenge | 2026-2027 | Week 4 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|rec75ruo3XT5nSvaK|HW2|rec9cOETen8FxO724",
+        "homework": [
+          "rec9cOETen8FxO724"
+        ],
+        "week": [
+          "reciDzF3dUk32AoeD"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reccU7NxIDqogvjbL",
+        "name": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5",
+        "display": "SA - Growth Mindset - Touch and Talk | Shooting Challenge | 2026-2027 | Week 5 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|reclWDQZzKbVBtdhG|HW1|recHbROQu2tAtUzMg",
+        "homework": [
+          "recHbROQu2tAtUzMg"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recd5siR3bKKTxbEb",
+        "name": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7",
+        "display": "SA - Growth Mindset - Coach Yourself | Shooting Challenge | 2026-2027 | Week 7 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|reclWDQZzKbVBtdhG|HW2|recuKQPsGXUvhvlm9",
+        "homework": [
+          "recuKQPsGXUvhvlm9"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recdD8icLalEndNI3",
+        "name": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5",
+        "display": "SA - Growth Mindset - Touch and Talk | Shooting Challenge | 2026-2027 | Week 5 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|rec2VQFfGJa1ofA06|HW1|recHbROQu2tAtUzMg",
+        "homework": [
+          "recHbROQu2tAtUzMg"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recdQRZVi7hoH0bTD",
+        "name": "HW1 | SA - Relationships - Thank You Note | Week 7",
+        "display": "SA - Relationships - Thank You Note | Shooting Challenge | 2026-2027 | Week 7 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|recK7BDVSpHy2ipCS|HW1|rec1iHGFpNLdu9Lyk",
+        "homework": [
+          "rec1iHGFpNLdu9Lyk"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recdoOVUBFnxM19jC",
+        "name": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8",
+        "display": "SA - Growth Mindset - Build Your Freethrow Routine | Shooting Challenge | 2026-2027 | Week 8 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|rec75ruo3XT5nSvaK|HW2|recydsZbHevk4Ts50",
+        "homework": [
+          "recydsZbHevk4Ts50"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recdxh8TBGFiMIVUw",
+        "name": "HW1 | SA - Relationships - Thank You Note | Week 7",
+        "display": "SA - Relationships - Thank You Note | Shooting Challenge | 2026-2027 | Week 7 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|reclWDQZzKbVBtdhG|HW1|rec1iHGFpNLdu9Lyk",
+        "homework": [
+          "rec1iHGFpNLdu9Lyk"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recfGHA7BPJBfdzXJ",
+        "name": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3",
+        "display": "Char33 - Responsibility - The Choice is Yours | Shooting Challenge | 2026-2027 | Week 3 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|recK7BDVSpHy2ipCS|HW1|reck6ahIq4ArLuNeH",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recfQ2NUR0G9f7QIM",
+        "name": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1",
+        "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | Week 1 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recfVZ4P1F4xPIJbO",
+        "name": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5",
+        "display": "SA - Intentional Practice - 5 Spot Shooting Locations | Shooting Challenge | 2026-2027 | Week 5 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|rec75ruo3XT5nSvaK|HW2|reccGb6KbwG6lmeLs",
+        "homework": [
+          "reccGb6KbwG6lmeLs"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recg0X8Wj21HD8tWY",
+        "name": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3",
+        "display": "SA - Personal Game Plan - Shooting Form and Technique | Shooting Challenge | 2026-2027 | Week 3 | 5-6 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|recv9aWnHanY2sRgk|HW2|rechZeLk7iNQMGZAs",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recgfepkBVZgqYmqh",
+        "name": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10",
+        "display": "SA - Mastery - Shot Tracker: Summary and What You Learned | Shooting Challenge | 2026-2027 | Week 10 | 9-12 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|rec75ruo3XT5nSvaK|HW2|rec1KJZYvonmdZGZ7",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rechvVbFI1ZshKunG",
+        "name": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8",
+        "display": "SA - Growth Mindset - Build Your Freethrow Routine | Shooting Challenge | 2026-2027 | Week 8 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|rec2VQFfGJa1ofA06|HW2|recydsZbHevk4Ts50",
+        "homework": [
+          "recydsZbHevk4Ts50"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reci9LPyVr4wisJH6",
+        "name": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee",
+        "display": "\"SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim\" | Shooting Challenge | 2026-2027 | Week 6 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|recv9aWnHanY2sRgk|HW1|rechqjA9SKlHRVBBM",
+        "homework": [
+          "rechqjA9SKlHRVBBM"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reciCHzcNWEcV01Xk",
+        "name": "HW1 | SA - Relationships - Thank You Note | Week 7",
+        "display": "SA - Relationships - Thank You Note | Shooting Challenge | 2026-2027 | Week 7 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|recv9aWnHanY2sRgk|HW1|rec1iHGFpNLdu9Lyk",
+        "homework": [
+          "rec1iHGFpNLdu9Lyk"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reciCmbJFxtzX3INn",
+        "name": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6",
+        "display": "SA - Growth Mindset - Goal Setting - What GOATS do! | Shooting Challenge | 2026-2027 | Week 6 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|reclWDQZzKbVBtdhG|HW2|reczzzcR1Ru8MqbmH",
+        "homework": [
+          "reczzzcR1Ru8MqbmH"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recj7d99PVTpoVbuE",
+        "name": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1",
+        "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Week 1 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|rec2VQFfGJa1ofA06|HW2|rec6WmXjpLtIWDERo",
+        "homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reclH8pWuEmbhgCiG",
+        "name": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8",
+        "display": "\"SA - Growth Mindset - Visualization: Read, Reflect, Discuss\" | Shooting Challenge | 2026-2027 | Week 8 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|rec75ruo3XT5nSvaK|HW1|rechajyOFJf3WsN5f",
+        "homework": [
+          "rechajyOFJf3WsN5f"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reclOgKZzUtTUkxzG",
+        "name": "HW1 | SA - Relationships - Thank You Note | Week 7",
+        "display": "SA - Relationships - Thank You Note | Shooting Challenge | 2026-2027 | Week 7 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|rec75ruo3XT5nSvaK|HW1|rec1iHGFpNLdu9Lyk",
+        "homework": [
+          "rec1iHGFpNLdu9Lyk"
+        ],
+        "week": [
+          "recbw58r8MlnhbBx7"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "reclZOOi3ixe8vqU8",
+        "name": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8",
+        "display": "\"SA - Growth Mindset - Visualization: Read, Reflect, Discuss\" | Shooting Challenge | 2026-2027 | Week 8 | K-2 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|recK7BDVSpHy2ipCS|HW1|rechajyOFJf3WsN5f",
+        "homework": [
+          "rechajyOFJf3WsN5f"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "recK7BDVSpHy2ipCS"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recnC2sbu9AC1kgCO",
+        "name": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9",
+        "display": "SA - Sportsmanship - Bad Habit I Need to Fix | Shooting Challenge | 2026-2027 | Week 9 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|reclWDQZzKbVBtdhG|HW1|rect6zryAP3IF5tTI",
+        "homework": [
+          "rect6zryAP3IF5tTI"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recnMduwxjniVcoJK",
+        "name": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3",
+        "display": "SA - Personal Game Plan - Shooting Form and Technique | Shooting Challenge | 2026-2027 | Week 3 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|reclWDQZzKbVBtdhG|HW2|rechZeLk7iNQMGZAs",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recp4VeZCO1aHpR0M",
+        "name": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6",
+        "display": "SA - Growth Mindset - Goal Setting - What GOATS do! | Shooting Challenge | 2026-2027 | Week 6 | 7-8 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|rec2VQFfGJa1ofA06|HW2|reczzzcR1Ru8MqbmH",
+        "homework": [
+          "reczzzcR1Ru8MqbmH"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recpnJC8NdclCPwwp",
+        "name": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee",
+        "display": "\"SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim\" | Shooting Challenge | 2026-2027 | Week 6 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|reclWDQZzKbVBtdhG|HW1|rechqjA9SKlHRVBBM",
+        "homework": [
+          "rechqjA9SKlHRVBBM"
+        ],
+        "week": [
+          "recEYLwDOOYMMsDNf"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recqPBTPatNJp5j3B",
+        "name": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8",
+        "display": "\"SA - Growth Mindset - Visualization: Read, Reflect, Discuss\" | Shooting Challenge | 2026-2027 | Week 8 | 3-4 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|reclWDQZzKbVBtdhG|HW1|rechajyOFJf3WsN5f",
+        "homework": [
+          "rechajyOFJf3WsN5f"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recqlY8Il3Yy6p63R",
+        "name": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9",
+        "display": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Shooting Challenge | 2026-2027 | Week 9 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|reclWDQZzKbVBtdhG|HW2|rec4MHWKWwsGOw26q",
+        "homework": [
+          "rec4MHWKWwsGOw26q"
+        ],
+        "week": [
+          "recd1V4C5KDJm87b1"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recr512TYhE2gvH75",
+        "name": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3",
+        "display": "Char33 - Responsibility - The Choice is Yours | Shooting Challenge | 2026-2027 | Week 3 | 7-8 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|rec2VQFfGJa1ofA06|HW1|reck6ahIq4ArLuNeH",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "gradeBand": [
+          "rec2VQFfGJa1ofA06"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recsdBmk0lwZjSxQx",
+        "name": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10",
+        "display": "SA - Mastery - Shot Tracker: Summary and What You Learned | Shooting Challenge | 2026-2027 | Week 10 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|reclWDQZzKbVBtdhG|HW2|rec1KJZYvonmdZGZ7",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "rectdMP7qAf9zQ3GN",
+        "name": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5",
+        "display": "SA - Growth Mindset - Touch and Talk | Shooting Challenge | 2026-2027 | Week 5 | 9-12 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|rec75ruo3XT5nSvaK|HW1|recHbROQu2tAtUzMg",
+        "homework": [
+          "recHbROQu2tAtUzMg"
+        ],
+        "week": [
+          "recUPkXtsDOHnY5q7"
+        ],
+        "gradeBand": [
+          "rec75ruo3XT5nSvaK"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recthujQ41BOyzcJi",
+        "name": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1",
+        "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | Week 1 | 3-4 | HW2",
+        "slot": "HW2",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|reclWDQZzKbVBtdhG|HW2|rec6WmXjpLtIWDERo",
+        "homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "gradeBand": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      },
+      {
+        "id": "recy4rem1gijxKp0l",
+        "name": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8",
+        "display": "\"SA - Growth Mindset - Visualization: Read, Reflect, Discuss\" | Shooting Challenge | 2026-2027 | Week 8 | 5-6 | HW1",
+        "slot": "HW1",
+        "active": true,
+        "scheduleKey": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|recv9aWnHanY2sRgk|HW1|rechajyOFJf3WsN5f",
+        "homework": [
+          "rechajyOFJf3WsN5f"
+        ],
+        "week": [
+          "recNmS6xlp3HOWPAE"
+        ],
+        "gradeBand": [
+          "recv9aWnHanY2sRgk"
+        ],
+        "programInstance": [
+          "rec5mEM0YPqPqq0hZ"
+        ],
+        "hcCount": 0
+      }
+    ]
+  },
+  "curriculum": {
+    "total": 76,
+    "withWeekLinks": 18,
+    "publishedActive": 18
+  },
+  "homeworkCompletions": {
+    "total": 8,
+    "withPhaLink": 2,
+    "schmidtCount": 6,
+    "schmidt": [
+      {
+        "id": "rec7Nr2M69SwwgBV8",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "slot": "HW1"
+      },
+      {
+        "id": "recH71jEgjxzLup6F",
+        "homework": [
+          "reck6ahIq4ArLuNeH"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "slot": "HW1",
+        "wasLink": [
+          "recBpJc27P9QKoke5"
+        ],
+        "satisfactory": true
+      },
+      {
+        "id": "recR4RaQNukzAcCi7",
+        "homework": [
+          "rechZeLk7iNQMGZAs"
+        ],
+        "week": [
+          "recaX4EyJ7BWWKfSq"
+        ],
+        "slot": "HW1"
+      },
+      {
+        "id": "recRPyRlv3oopyrT4",
+        "homework": [
+          "rec1KJZYvonmdZGZ7"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "slot": "HW1"
+      },
+      {
+        "id": "recRi12lcH2epFi2L",
+        "homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "week": [
+          "recnMGC2JBHjO0ay6"
+        ],
+        "slot": "HW1",
+        "satisfactory": true
+      },
+      {
+        "id": "recrBnHbLvDpFyIeO",
+        "homework": [
+          "rec8oexrgOV5OWCRw"
+        ],
+        "week": [
+          "recrTwxqXz31fNZ7e"
+        ],
+        "slot": "HW1",
+        "satisfactory": true
+      }
+    ]
+  },
+  "schmidt": {
+    "enrollment": {
+      "status": 422,
+      "ok": false,
+      "json": {
+        "error": {
+          "type": "INVALID_REQUEST_UNKNOWN",
+          "message": "Invalid request: parameter validation failed. Check your request data."
+        }
+      }
+    },
+    "wasPerfectWeek": {
+      "status": 422,
+      "ok": false,
+      "json": {
+        "error": {
+          "type": "INVALID_REQUEST_UNKNOWN",
+          "message": "Invalid request: parameter validation failed. Check your request data."
+        }
+      }
+    },
+    "wasCurrent": {
+      "status": 422,
+      "ok": false,
+      "json": {
+        "error": {
+          "type": "INVALID_REQUEST_UNKNOWN",
+          "message": "Invalid request: parameter validation failed. Check your request data."
+        }
+      }
+    }
+  }
+}

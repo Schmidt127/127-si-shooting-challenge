@@ -1,5 +1,5 @@
 {
-  "verifiedAt": "2026-08-05T23:38:06.022Z",
+  "verifiedAt": "2026-08-06T00:09:37.498Z",
   "fieldClarification": {
     "weeklyAthleteSummaryText": {
       "id": "fldhpGNYnu2l3bpUP",
@@ -55,11 +55,11 @@
       "rechzFmWrUp1tonto"
     ],
     "daysLogged": 7,
-    "automationStatus": "Pending",
+    "automationStatus": "Ready",
     "calculationQueue": 1,
-    "eligible": 0,
-    "videoMetFormula": 0,
-    "zoomMetFormula": 0
+    "eligible": 1,
+    "videoMetFormula": 1,
+    "zoomMetFormula": 1
   },
   "perfectWeekEligibleFormula": {
     "id": "fld0re4ydFGq2vvZC",

@@ -4,7 +4,7 @@
 |-------|--------|
 | Date | 2026-08-05 |
 | PROD base | `appn84sqPw03zEbTT` |
-| Status | **MVP live in PROD** (table + backfill + proof) — paste **033 v3.2** / **020 v3.1.0** for ongoing automation path |
+| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof) — paste **033 v3.3** / **020 v3.2.0** for ongoing automation path |
 | Separate from | Perfect Week PR #81 |
 
 ## Architecture before
@@ -106,8 +106,8 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 
 | Asset | Change |
 |-------|--------|
-| `033-…js` | **v3.2** — PHA-first assign to WAS.Homework |
-| `020-…js` | **v3.1.0** — resolve + link Program Homework Assignment |
+| `033-…js` | **v3.3** — PHA-first assign to WAS.Homework + unloadQuerySafe |
+| `020-…js` | **v3.2.0** — Enrollment+Week+Homework+Slot identity (SC-016) + PHA link |
 | PROD Same Day / Perfect Week formulas | Not part of this package |
 
 **PROD paste still required** for 033/020 before live submissions use the junction automatically.

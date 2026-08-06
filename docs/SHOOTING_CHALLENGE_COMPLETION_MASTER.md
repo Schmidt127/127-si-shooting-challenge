@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (HC WAS Link package **COMPLETE**; CASE-01 + 057 manual Test **PASS**) |
+| Last updated | **2026-08-05** (Overnight Agent 1 homework MVP / SC-016; Agent 4 ops; Agent 3 Perfect Week 058→059) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -78,14 +78,14 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correction — Perfect Week verification open). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (Agent 1 SC-016 Live Tested + Agent 3 Perfect Week LT + Agent 4 ops notes). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 17 |
-| Live Tested in PROD | 22 |
-| Installed but not tested *(Installed in PROD)* | 49 |
+| Live Tested in PROD | 25 |
+| Installed but not tested *(Installed in PROD)* | 46 |
 | Built but not installed *(Built in Repository)* | 24 |
 | Ready for PROD Paste *(informal)* | 0 |
 | Planned | 17 |
@@ -94,6 +94,54 @@ Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correc
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Overnight Agent 1 homework MVP)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Program Homework Assignments | **Live in PROD** — **92** active rows; Operator Status / Notes / Completions Count; descriptions | `tblhA3maf7xOa8EUS` |
+| Automation **033** | **Built in Repository** **v3.3** — paste pending | PHA match PASS WAS `recKebuZ79QFTwivA` |
+| Automation **020** | **Built in Repository** **v3.2.0** — paste pending | Offline SC-016 identity PASS |
+| SC-016 | Installed → **Live Tested in PROD** | 3 dupe groups cleaned; 0 remaining; not Complete until 020 paste + re-submit |
+| CASE-01 homework | **2/2** assigned/satisfactory; Eligible **1** | PHA HW2 aligned to `rec6WmXjpLtIWDERo` |
+
+**Net math vs Agent 3 closeout:** LT 24→**25**; Installed 47→**46**.
+
+Evidence: [`docs/testing/evidence/2026-08-05-agent1-homework/`](./testing/evidence/2026-08-05-agent1-homework/) · [`program-homework-assignments-operator-guide.md`](./deploy-checklists/program-homework-assignments-operator-guide.md).
+
+### Dashboard reconciliation (2026-08-05 — Overnight Agent 4 ops / launch readiness)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-088 | Built in Repository | **Built in Repository** (offline Live-ready) | 117 email handoff offline **7/7 PASS**; [`117-ZOOM-APPROVAL-GO-LIVE.md`](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md); live Gmail **not** executed |
+| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; welcome package present but **2025-2026** subject; Schmidt WAS×4 all stale-season labels; 073/117f fixtures missing |
+| SC-041 | Built in Repository | **Built in Repository** (executable packet) | [`SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`](./deploy-checklists/SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md); probe found no armed retry candidates |
+| SC-058 | Built in Repository | **Built in Repository** (drift auditor) | Operator-table audit 48 rows; **112** shows Live in operator table (UI attest OFF); 117/118/119 absent from operator table; version drift = weak signal |
+| SC-147 | Built in Repository | **Built in Repository** (PROD export+CLI) | Sanitized export + RCC CLI exit 0; views not installed — [`RCC-OMNI-VIEW-INSTALL.md`](./deploy-checklists/RCC-OMNI-VIEW-INSTALL.md) |
+| SC-032 / SC-065 | Built in Repository | **Built in Repository** (startup checklist) | [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) |
+| SC-139 | Built in Repository | **Built in Repository** (partial) | automation-index 117/117c wording corrected |
+
+**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f/welcome-rebuild still need Mike-authorized fixtures.
+
+**Do not claim:** live Gmail sends, Make webhook posts, RCC views installed, SC-088 Complete.
+
+Evidence: [`docs/testing/evidence/2026-08-05-agent4-ops/`](./testing/evidence/2026-08-05-agent4-ops/).
+
+### Dashboard reconciliation (2026-08-05 — Agent 3 Perfect Week 058→059 chain)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-028 | Installed in PROD | **Live Tested in PROD** | CASE-01: Eligible→Unlock `recALZFQNL3XicEOX`→XP `recMdcI5lN8gJ6830` (100); multi-case fixtures still open |
+| SC-077 | Installed in PROD | **Live Tested in PROD** | Same XP path; Source Key exact; idempotent re-award; **059 UI trigger still blocks auto-fire** |
+| SC-021 | Installed in PROD | **Installed in PROD** | Unchanged — broader config audit; PW slice advanced under SC-028/077 |
+| SC-091 | Installed in PROD | **Installed in PROD** | Zoom+PW fixtures CASE-10…13 not run this package |
+| SC-026 / SC-107 | Installed | **Installed** (Visible? fixed) | Perfect Week + Shot Milestone `Visible?`=true in PROD |
+
+**Net math vs post–HC WAS Link closeout:** Installed 49→**47**; LT 22→**24**. Complete unchanged. **Do not mark Perfect Week Complete** until 059 trigger covers Perfect Week auto-fire + remaining fixture cases.
+
+**Next package:** Mike UI — remove Shot Milestone filter on 059 ([`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md)); then Batch A/B fixtures + level-gate soak (Schmidt Gate Blocked: Sub 9/10, Vid 5/6).
+
+Evidence: [`docs/testing/evidence/2026-08-05-agent3-perfect-week/`](./testing/evidence/2026-08-05-agent3-perfect-week/).
 
 ### Dashboard reconciliation (2026-08-05 — HC WAS Link clarification + CASE-01 + 057 PASS) — **PACKAGE COMPLETE**
 
@@ -114,11 +162,11 @@ Evidence: [`docs/testing/evidence/2026-08-05-pha-was-link-clarification/`](./tes
 | Item | Status | Evidence |
 |------|--------|----------|
 | Junction table `Program Homework Assignments` | **Live in PROD** `tblhA3maf7xOa8EUS` | Additive scheduling; library Week links untouched |
-| Automation 033 / 020 | **Built in Repository** (v3.2 / v3.1.0) — PROD paste still required | Prefer PHA; legacy fallback retained |
-| Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA + HC via **Link** field |
+| Automation 033 / 020 | **Built in Repository** (**033 v3.3** / **020 v3.2.0**) — PROD paste still required | Prefer PHA; legacy fallback retained; SC-016 identity in 020 |
+| Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA + HC via **Link** field; **92** PHA rows seeded season-wide |
 | Perfect Week 057 on CASE-01 | **PASS** (manual Test) | See HC WAS Link closeout above |
 
-Runbook: [`docs/deploy-checklists/program-homework-assignments-mvp.md`](./deploy-checklists/program-homework-assignments-mvp.md).
+Runbook: [`docs/deploy-checklists/program-homework-assignments-mvp.md`](./deploy-checklists/program-homework-assignments-mvp.md) · Operator guide: [`program-homework-assignments-operator-guide.md`](./deploy-checklists/program-homework-assignments-operator-guide.md).
 
 ### Dashboard reconciliation (2026-08-05 — Automation 057 v1.5 install + Perfect Week fixtures)
 
@@ -311,7 +359,7 @@ Columns:
 | SC-013 | Homework | Online quizzes create a reviewable completion | Live Tested in PROD | **067 v2.0** pasted; Schmidt quizzes `recxtTv0AD7G3XpGv` + `recFsN2KruSnerfns` → HC `recrBnHbLvDpFyIeO` (HW1, Fillout, 0 assets); coach review → XP `rec6xE4V1t0atiTIP` (35 pts, `HOMEWORK_XP\|recrBnHbLvDpFyIeO`); multi-attempt reuse of same HC; 067 created no XP | Optional: expand to non-Schmidt enrollment; keep 071 path smoke if needed | SC-014 | 067 must not award XP itself; no fake attachments; preserve quiz attempts | `docs/testing/evidence/2026-08-04-package-02-critical-pastes/`; `067-OPTION-B-PROD-INSTALL.md` | — | P0 | 2026-08-04 |
 | SC-014 | Homework | Final Reflection quiz completion path (PDF vs attachment-less) | Live Tested in PROD | **Option B proven in PROD** — attachment-less; 0 Submission Assets; Enrollment+Week+Homework HC identity; attempts preserved separately | No further path decision; do not reopen Option A / Quiz Result PDF | SC-013 | Do not invent a second quiz XP path; do not mint placeholder assets | `067-HOMEWORK-XP-CONTINUATION.md`; `QUIZ-PATH-DECISION.md` | **DECIDED Option B** | P0 | 2026-08-04 |
 | SC-015 | Homework | Multiple files per homework response | Installed in PROD | Submission Assets fan-out pattern; C-020 multi-file DEV tests | Re-test N files → N assets → one HC | SC-019 | One HC, many assets | LA-001; C-020b | — | P1 | 2026-07-23 |
-| SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Installed in PROD | PROD **020 v3.0.0** canonical (`444046e`); identity contracts + fixtures (Agent 11); 020 vs 067 dual-key risk documented; SC-014 Option B (quiz attachment-less) | Live duplicate attempt test; resolve remaining 020 vs 067 identity product rule if still open | SC-066, SC-014 | Competing writers create extras | `docs/next-wave/homework-pipeline/`; C-004 | — | P0 | 2026-07-24 |
+| SC-016 | Homework | Exactly one Homework Completion per assignment per enrollment | Live Tested in PROD | **020 v3.2.0** repo: prefer Enrollment+Week+Homework+Slot (re-submits merge onto one HC); PROD duplicate audit found 3 groups / consolidated keepers + deleted 4 extras + orphan XP; post-cleanup **0** dupes on Enr/Week/HW/Slot and Submission lenses; offline identity test PASS | Paste **020 v3.2.0**; live Schmidt re-submit proof that second Submission attaches to same HC (no new row / no second XP) | SC-066, SC-014 | Competing writers create extras; quiz **067** remains Enr+Week+HW | `docs/testing/evidence/2026-08-05-agent1-homework/`; `tests/homework/automation-020-sc016-identity.test.js` | — | P0 | 2026-08-05 |
 | SC-017 | Homework | Unified coach review → satisfactory → XP → parent email | Complete | **071 v3.5** PROD paste 2026-08-05 + operator-attested live path on HC `recH71jEgjxzLup6F` / asset `recaGfnTzKFnCDazA`: Reviewer File URL → Make → Gmail → Parent Feedback Sent?/Sent On by Make; no duplicate on rerun (gates already included Satisfactory + Awarded + XP) | None for unified review→XP→parent email; optional expand non-Schmidt | SC-009–SC-016 | Do not invent second credit path; do not require Google Drive when Reviewer File URL present | `docs/deploy-checklists/071-homework-feedback-email-closeout.md`; homework-flow.md; PR #77 | — | P0 | 2026-08-05 |
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
@@ -323,11 +371,11 @@ Columns:
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066 v3.3 Installed in PROD** (2026-07-24) | Re-test natural run on Schmidt; OMNI confirmation packet (not Live Tested for v3.3 yet) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD **057 v1.5** installed/running (2026-08-05); repo **v1.5** matches; rules still partly hardcoded (`requiredVideoCount: 3`) | Run `docs/testing/perfect-week/` fixtures; do **not** mark Complete until cross-boundary cases pass | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade to v1.4 | `057-perfect-week-v1.5-live-verification.md`; `PERFECT-WEEK-FIXTURE-SPEC.md` | — | P1 | 2026-08-05 |
+| SC-028 | Config | Perfect Week rules configurable | Live Tested in PROD | CASE-01 award path proven (057→058→XP); PROD **057 v1.5**; **059 auto-fire blocked** until trigger drops Shot Milestone filter; multi-case fixtures still open | Mike 059 UI trigger fix; Batch A/B fixtures | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade 057 to v1.4 | `059-perfect-week-trigger-coverage.md`; `docs/testing/evidence/2026-08-05-agent3-perfect-week/` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
-| SC-032 | Config | Season settings (dates, windows) | Built in Repository | **Season Launch Control System** + Challenge-Year engine: launch state machine (`Web Validated`), export validators, week import package, launch CLI, Fillout/Make/`/shoot` packages (Softr Obsolete), Schmidt test + go-live/rollback | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation | SC-065, SC-084 | 005 date mapping; fail closed on multiple active Configs; does not vendor RCC | `docs/challenge-year/SEASON-LAUNCH-CONTROL.md`; `lib/challenge-year/`; install packet | Authorize schema + Live flip | P0 | 2026-07-24 |
+| SC-032 | Config | Season settings (dates, windows) | Built in Repository | **Season Launch Control System** + Challenge-Year engine + **Agent 4** [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) executable checklist | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation | SC-065, SC-084 | 005 date mapping; fail closed on multiple active Configs; does not vendor RCC | `docs/challenge-year/SEASON-LAUNCH-CONTROL.md`; `lib/challenge-year/`; install packet; Agent 4 startup checklist | Authorize schema + Live flip | P0 | 2026-08-05 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
 | SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; **054 v5.6** + **066 v3.3** hardenings now in PROD; hardcode inventory | Finish V2-002 pass across 001–119; paste any remaining pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
 | SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 ON** (Sun 5 AM) + **072 v4.0** `send_short`; hybrid creators **031**+**118**+**101** (Agent 2 WAS-CREATOR-RESOLUTION); 2026–2027 Weeks exist | Paste **118 v1.5**; season `dryRun=false` `sendMode=Live` `includeSchmidt=false`; monitor WAS uniqueness | SC-004, SC-082 | Schedule ON — do not revert OFF; bounded create concurrency residual | `docs/next-wave/data-model/WAS-CREATOR-RESOLUTION.md` | **DECIDED `send_short`**; schedules authorized | P0 | 2026-07-24 |
@@ -336,11 +384,11 @@ Columns:
 | SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Complete | **118 ON** arms Build; **072 v4.0 ON** short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allowSchmidtInput=false` for normal traffic; season dryRun=false after 118 v1.5 paste; monitor empty-week `send_short` | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | Schedules ON | P0 | 2026-07-24 |
 | SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Complete | **119 ON** (Sun 10 AM) arms Send → **074** webhook → Make Bulk Email May 18 → Gmail; **074 sendMode=Live** writeback PASS | Keep 074 sendMode Live; set 119 `dryRun=false`; 119 v1.5 paste optional (no arming-logic change); monitor first live Sunday | SC-038 | **119 does not post webhook**; Make owns Sent? + Make Send Status + Weekly Summary Sent At; never force 074 Test | `docs/next-wave/data-model/SENT-FIELD-OWNERSHIP.md` | Schedules authorized ON | P0 | 2026-07-24 |
 | SC-040 | Weekly Summary | Duplicate-send protection | Live Tested in PROD | 074 blocks when Sent?; Make Live writeback verified (`Weekly Email Sent?`, `Make Send Status=Sent`, timestamp); eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Season-scale double-send watch after schedule auth; Test branch still no Sent? writeback (by design) | SC-039 | Make owns final Sent? on Live; PROD 074 must not force Test | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
-| SC-041 | Weekly Summary | Retry behavior when Make/email fails | Built in Repository | Retry SOP + contract helpers (`planWeeklyEmailWebhookOutcome`, `decideWeeklyEmailRetryAction`); 074 failure-path assertions; **SCN-029** fixture | Schmidt controlled failure→recovery live proof; do not bulk retry | SC-039 | Don’t mark Sent on failure; keep Send to Make? on webhook fail | `docs/next-wave/was-email/WEEKLY-EMAIL-RETRY-SOP.md`; `scn-029-…json` | Authorize deliberate webhook-fail test if needed | P1 | 2026-07-25 |
+| SC-041 | Weekly Summary | Retry behavior when Make/email fails | Built in Repository | Retry SOP + contract helpers; SCN-029; **Agent 4** executable Schmidt packet + live readiness probe (no armed retry candidates 2026-08-05) | Schmidt controlled failure→recovery live proof; do not bulk retry | SC-039 | Don’t mark Sent on failure; keep Send to Make? on webhook fail | `WEEKLY-EMAIL-RETRY-SOP.md`; `SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`; `EMAIL-READINESS-PROBE.json` | Authorize deliberate webhook-fail test if needed | P1 | 2026-08-05 |
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 homework parent email Live Tested / Complete path 2026-08-05** (operator attestation); video / welcome / 117f Zoom approval still need individual re-proof | Re-test video + welcome emails; 117f go-live if still pending | SC-039, SC-124 | Webhooks not in git | automation-index; WAS architecture; SENT-FIELD-OWNERSHIP; `071-homework-feedback-email-closeout.md` | — | P0 | 2026-08-05 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; Agent 4 probe: welcome package exists but **2025-2026** subject; Schmidt WAS×4 stale labels / not armed; **073/117f fixtures missing** | Rebuild welcome for new year; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | Webhooks not in git; Schmidt-only | `071-homework-feedback-email-closeout.md`; `EMAIL-READINESS-PROBE.json`; `117-ZOOM-APPROVAL-GO-LIVE.md` | — | P0 | 2026-08-05 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Planned | Schema snapshots exist but `schema/current` stale | Fresh export; review computed fields; fix broken refs after wipe | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-07-23 |
@@ -372,7 +420,7 @@ Columns:
 | SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.5** running; unlock **058** → XP **059** Source Key `PERFECT_WEEK\|{enr}\|{week}` (100 from rule) | Live prove award + dedupe via fixture CASE-01/15; Zoom cases 11–13 | SC-028, SC-074 | — | `057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P1 | 2026-08-05 |
+| SC-077 | XP | Perfect Week XP | Live Tested in PROD | Unlock `recALZFQNL3XicEOX` → XP `recMdcI5lN8gJ6830` (100, bucket/source Perfect Week, Source Key `PERFECT_WEEK\|{enr}\|{week}`); idempotent; WAS XP 213→313; **059 UI trigger still needs Pending-only** for auto-fire | Mike removes Shot Milestone filter on 059; optional Test button soak | SC-028, SC-074 | — | `059-perfect-week-trigger-coverage.md`; Agent 3 evidence folder | — | P1 | 2026-08-05 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
@@ -383,7 +431,7 @@ Columns:
 | SC-085 | Zoom | Live bonuses (if configured) work | Installed in PROD | XP Reward Rules / meeting bonuses historically | Confirm which bonuses still desired; test | SC-022 | — | XP rules | Confirm bonus set | P2 | 2026-07-23 |
 | SC-086 | Zoom | Recording credit path works | Built in Repository | Orchestrator not live under PROD 117; credit path is design-alt / future work | Re-open only with a new attested automation plan that does not steal email slot 117 | SC-074 | Never Attendees write | `_design-alternatives/stage17-modular-reference/` | — | P0 | 2026-08-05 |
 | SC-087 | Zoom | Live-versus-recording exclusivity | Installed in PROD | Conflict detection PASS historically | Re-prove Conflict=1 blocks double credit | SC-086 | Soft-void only | Stage 17 verification | — | P0 | 2026-07-23 |
-| SC-088 | Zoom | Recording approval email to parent | Built in Repository | Canonical Airtable **117** = email-to-Make (`117-zoom-send-recording-approval-email-to-make.js` v1.1); Make id **117f**; controlled tests PASS | Permanent webhook; go-live checklist if still pending | SC-086 | Make must not write XP | `117-zoom-recording-approval-email.md`; C-025 117f | Authorize live email | P1 | 2026-08-05 |
+| SC-088 | Zoom | Recording approval email to parent | Built in Repository | Canonical **117** email-to-Make v1.1; Make **117f**; historical controlled PASS; **Agent 4 offline 7/7 PASS** + go-live one-pager | Mike: create Recording Quiz Satisfactory fixture → Test 117 → expect sent/already_sent; no XP | SC-086 | Make must not write XP | `117-ZOOM-APPROVAL-GO-LIVE.md`; offline suite | Authorize live email | P1 | 2026-08-05 |
 | SC-089 | Zoom | Total Zoom counts correct | Installed in PROD | Rollups/formulas Stage 17 | Re-verify formulas after schema export | SC-048 | Preconflict rollup formula critical | Stage 17 formula docs | — | P1 | 2026-07-23 |
 | SC-090 | Zoom | Level gate integration for Zoom credit | Installed in PROD | 042 v3.1 | Live prove | SC-080 | — | C-025 | — | P0 | 2026-07-23 |
 | SC-091 | Zoom | Perfect Week integration for Zoom credit | Installed in PROD | PROD 057 v1.5 installed; Zoom Met formula + live Attendees ∪ recording credit path | Fixture CASE-10…13 (not required / attended / missing / cross-enrollment) | SC-077 | — | C-025; `057-perfect-week-v1.5-live-verification.md` | — | P0 | 2026-08-05 |
@@ -448,7 +496,7 @@ Columns:
 | SC-144 | Website | Rename Softr-named publish flag | Planned | Flag still Softr-named in schema | Rename in schema wave; update web queries | SC-054 | Breaking rename | K-M7 | — | P2 | 2026-07-23 |
 | SC-145 | Platform | Repo health / security audit follow-ups | Planned | Audits dated 2026-07-21 on master | Triage findings into SC items as needed | — | Secrets discipline | REPOSITORY-HEALTH / SECURITY audits | — | P2 | 2026-07-23 |
 | SC-146 | Enrollment | Re-open Fillout daily intake when season ready | Deferred | Form OFF since C-008 | Turn on only after SC-135 dry-run | SC-060, SC-135 | — | C-008 | When to reopen intake? | P2 | 2026-07-23 |
-| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | Unified health model + helpers + offline audit CLI + dry-run repair preview + tests + MVP view/install packet; **2026-07-25 fixture CLI runs** archived under `docs/prod-completion/2026-07-25/rcc-fixture-runs/` (healthy/mixed/weekly-email); preserves `118→072→119→074→Make` with **118/119 ON** | Mike: export PROD JSON → run RCC CLI → create Weekly Email Health + P0 views (OMNI); review duplicate-risk findings; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; no live writes from CLI; Interface/views **not installed**; optional RCC formulas **deferred**; PROD export blocked without API token | `docs/reliability-command-center/` (esp. MVP-PRODUCTION-RELEASE.md); `docs/prod-completion/2026-07-25/rcc-fixture-runs/` | Approve MVP view install + first PROD export run | P0 | 2026-07-25 |
+| SC-147 | Data Integrity | Reliability Command Center — workflow health visibility before prod failures | Built in Repository | RCC framework + MVP packet; **Agent 4** sanitized PROD export + CLI run exit 0; OMNI view-install prompt ready | Mike/OMNI create views 1–4; review first Sunday health; **no auto repairs** | SC-040, SC-046 | No auto bulk retry; views **not installed** | `RCC-OMNI-VIEW-INSTALL.md`; `rcc-prod-export.sanitized.json`; `rcc-report/` | Approve MVP view install | P0 | 2026-08-05 |
 | SC-148 | Website | Mobile usability + accessibility for public `/shoot` | Built in Repository | Accessible mobile menu (open/close/Escape/focus return); skip link; 44px tap targets; overflow protection (narrow); stronger focus rings; registration CTAs in menu + gateway; footer/back text-link distinction; clearer loading/empty/error; heading hierarchy; Playwright coverage at 375/768/1440 | Merge integration PR; Vercel deploy; Mike production check; optional axe-core pass | SC-102, SC-113, SC-118 | No Airtable/XP/business-rule changes; do not use `overflow-x: clip` in ways that hide tables/leaderboards | `web/components/layout/product-nav.tsx`; `web/tests/mobile-a11y.spec.ts` | Approve merge/deploy | P1 | 2026-08-04 |
 | SC-149 | Website | Official landing + branding links use Fairfield Basketball Club (not Hoop Challenges) | Built in Repository | Repo audit + code: logo/header/footer/`BackToHubLink` → `https://www.fairfieldbasketballclub.com`; `resolveLandingUrl`/`resolveSiteUrl` rewrite legacy Hoop hosts + safe defaults; env examples; `/shoot` path preserved; Vitest + Playwright coverage | Set Vercel `NEXT_PUBLIC_LANDING_URL` / `NEXT_PUBLIC_SITE_URL` to Fairfield if still legacy; deploy; live smoke logo/footer; do not treat historical `hoopchallenges.com` docs as active config | SC-102 | Do not redirect in-app `/shoot/*` nav to landing; keep basePath `/shoot` | `web/lib/app-config.ts`; `web/lib/app-config.test.ts`; `web/lib/site-chrome-links.test.ts`; `web/tests/public-hardening.spec.ts` | Confirm Vercel env values | P0 | 2026-08-04 |
 

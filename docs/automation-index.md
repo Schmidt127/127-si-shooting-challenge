@@ -4,7 +4,7 @@ Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`�
 
 **Reliability audit (2026-07-24):** [next-wave/reliability-audit-2026-07-24/REPORT.md](./next-wave/reliability-audit-2026-07-24/REPORT.md) — trust bands, input/dedupe/ownership audits, ranked repairs, Mike actions. **Do not create a second index.**
 
-**Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email (Zoom live=**101**, recording=**117/117c**).
+**Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email (Zoom live=**101**, recording approval email=**117→Make 117f**; recording XP credit has **no** deployed Airtable writer under slot 117).
 
 **C-020 test harness:** **115** v1.9 in repo (ETF). Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -50,7 +50,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.1.0** (PHA link; paste pending) | `020-homework-link-or-create-homework-completion.js` (**v3.1.0**) |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.2.0** (SC-016 enrollment identity + PHA link; paste pending) | `020-homework-link-or-create-homework-completion.js` (**v3.2.0**) |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
@@ -65,7 +65,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 030 | Weekly Summary — Copy Enrollment Grade Band to Weekly Summary | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js` |
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when `Count This Submission?` checked and WAS empty | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` |
 | 032 | Weekly Summary — Link Challenge Goal to WAS | *confirm in Airtable* | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` |
-| 033 | Weekly Summary — Assign Homework to WAS | *confirm in Airtable* — **repo v3.2** (PHA-first; paste pending) | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v3.2**) |
+| 033 | Weekly Summary — Assign Homework to WAS | *confirm in Airtable* — **repo v3.3** (PHA-first + unloadQuerySafe; paste pending) | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v3.3**) |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)
@@ -142,7 +142,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **101** | Zoom Attendance XP — Award Meeting XP | Zoom Meetings when `Create XP Events` checked and meeting ready to award (**live Attendees only**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
-| **117** | Zoom — Send Recording Approval Email to Make (**v1.1**) | Zoom Attendance · Satisfactory recording path · inputs `webhookUrl`, `recordId`, `enrollmentRid`, `zoomMeetingRid` · payload `automationNumber=117f` · send key `ZOOM_REC_EMAIL\|…\|…\|…` · **writes no Airtable records** | `117-zoom-send-recording-approval-email-to-make.js` · [deploy runbook](./deploy-checklists/117-zoom-recording-approval-email.md) · [PROD Make workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) |
+| **117** | Zoom — Send Recording Approval Email to Make (**v1.1**) | Zoom Attendance · Satisfactory recording path · inputs `webhookUrl`, `recordId`, `enrollmentRid`, `zoomMeetingRid` · payload `automationNumber=117f` · send key `ZOOM_REC_EMAIL\|…\|…\|…` · **writes no Airtable records** | `117-zoom-send-recording-approval-email-to-make.js` · [deploy runbook](./deploy-checklists/117-zoom-recording-approval-email.md) · [go-live one-pager](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md) · [PROD Make workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) · offline suite `tools/testing/tests/test_117_email_handoff_offline.mjs` |
 | **117f** | **Make** workflow identifier only (not an Airtable automation slot) | Receives Airtable 117 payload; Gmail send + Data Store dedupe (`sent` / `already_sent`) | Make: `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1` |
 | **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
 

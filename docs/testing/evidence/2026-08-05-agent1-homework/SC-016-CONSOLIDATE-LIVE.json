@@ -1,0 +1,81 @@
+{
+  "write": true,
+  "groups": 3,
+  "actions": [
+    {
+      "type": "merge_keeper",
+      "id": "rec7Nr2M69SwwgBV8",
+      "ok": false,
+      "body": {
+        "error": {
+          "type": "INVALID_RECORD_ID",
+          "message": "Value \"[object Object]\" is not a valid record ID."
+        }
+      }
+    },
+    {
+      "type": "delete_xp",
+      "id": "recR8a4Qll7saXlmM",
+      "hc": "rec47dIoMkobsSM0T",
+      "ok": true
+    },
+    {
+      "type": "delete_hc",
+      "id": "rec47dIoMkobsSM0T",
+      "ok": true,
+      "body": null
+    },
+    {
+      "type": "merge_keeper",
+      "id": "recH71jEgjxzLup6F",
+      "ok": false,
+      "body": {
+        "error": {
+          "type": "INVALID_RECORD_ID",
+          "message": "Value \"[object Object]\" is not a valid record ID."
+        }
+      }
+    },
+    {
+      "type": "delete_hc",
+      "id": "recrEd8bz3ic7Ihc8",
+      "ok": true,
+      "body": null
+    },
+    {
+      "type": "merge_keeper",
+      "id": "recRi12lcH2epFi2L",
+      "ok": false,
+      "body": {
+        "error": {
+          "type": "INVALID_RECORD_ID",
+          "message": "Value \"[object Object]\" is not a valid record ID."
+        }
+      }
+    },
+    {
+      "type": "delete_xp",
+      "id": "recSBFgnZGcBztQfs",
+      "hc": "recegwuST5lyFNLX4",
+      "ok": true
+    },
+    {
+      "type": "delete_hc",
+      "id": "recegwuST5lyFNLX4",
+      "ok": true,
+      "body": null
+    },
+    {
+      "type": "delete_xp",
+      "id": "recQQQP1xSyEMN2r7",
+      "hc": "recYSFokuvE6Ed0FC",
+      "ok": true
+    },
+    {
+      "type": "delete_hc",
+      "id": "recYSFokuvE6Ed0FC",
+      "ok": true,
+      "body": null
+    }
+  ]
+}
