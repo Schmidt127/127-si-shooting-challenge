@@ -26,25 +26,44 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-05-20
+ * Last Updated: 2026-08-06
+ * Updated Reason: Program Instance isolation — Activity Date fallback scopes Weeks
+ *   by Enrollment → Program Instance (never cross-year date overlap).
  *
  * PURPOSE
  * - Reads one Submission record.
  * - Assigns Week primarily from the selected homework record.
  * - Uses Homework Name 1 -> FBC Curriculum - SYNC.Week first.
  * - Uses Homework Name 2 -> FBC Curriculum - SYNC.Week second.
- * - Falls back to Activity Date -> Weeks date range only if needed.
+ * - Falls back to Activity Date → Weeks date range ONLY within the Enrollment's
+ *   Program Instance (Active Week? + Start/End Date match).
  * - Writes the resulting Week link back to Submissions.Week.
  * - Clears Submissions.Week only when no match is found and an incorrect week already exists.
  *
+ * IMPORTANT DESIGN RULES — PROGRAM INSTANCE ISOLATION
+ * - Activity Date fallback path:
+ *     Submission → Enrollment → Enrollment.Program Instance
+ *     → Weeks with the same Program Instance → Active Week? → Start/End Date match
+ * - Reject missing Enrollment on Activity Date fallback.
+ * - Reject missing Enrollment Program Instance on Activity Date fallback.
+ * - Ignore Weeks from other Program Instances.
+ * - Still throw when multiple active overlaps exist inside the same Program Instance.
+ * - Homework-linked Weeks are preferred; when Enrollment Program Instance is known,
+ *   a homework Week from a different Program Instance is rejected (continue fallback).
+ * - Do not treat Week Name as globally unique.
+ *
  * CURRENT SCHEMA NOTES
  * - Submissions.Week is a writable linked-record field.
+ * - Submissions.Enrollment is a linked-record field (required for date fallback).
  * - Submissions.Activity Date is a writable date field and can be read safely.
  * - Submissions.Homework Name 1 links to FBC Curriculum - SYNC.
  * - Submissions.Homework Name 2 links to FBC Curriculum - SYNC.
  * - FBC Curriculum - SYNC.Week links to Weeks.
- * - Weeks.Week Name is the primary field.
+ * - Enrollments.Program Instance links to Program Instance - Synced.
+ * - Weeks.Program Instance links to Program Instance - Synced.
+ * - Weeks.Week Name is the primary field (NOT unique across years).
  * - Weeks.Start Date and Weeks.End Date are dateTime fields using America/Denver.
  * - Submissions.Week Assignment Status is a formula field and must NOT be written by script.
  *
@@ -64,10 +83,21 @@ Airtable is the deployed/running copy.
  * - homework1Id
  * - homework2Id
  * - activityDateKey
+ * - enrollmentIdOut
+ * - programInstanceIdOut
  * - updatedFields
  * - statusOut
  * - errorOut
  * - debugStep
+ *
+ * SCRIPT
+ * - scriptName: 005 - Submission Intake — Assign Week (Homework First)
+ * - version: v4.1
+ * - versionDate: 2026-08-06
+ * - originalWrittenDate: 2026-05-20
+ * - lastUpdated: 2026-08-06
+ * - folder: 02 - Submission Intake and Asset Creation
+ * - automationName: 005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First
  ************************************************************/
 
 /// <reference path="../../Welcome Email/airtable-automation-script.d.ts" />
@@ -77,19 +107,36 @@ Airtable is the deployed/running copy.
    SECTION 1: CONFIG
    ========================================================= */
 
+const SCRIPT = {
+    scriptName: "005 - Submission Intake — Assign Week (Homework First)",
+    version: "v4.1",
+    versionDate: "2026-08-06",
+    originalWrittenDate: "2026-05-20",
+    lastUpdated: "2026-08-06",
+    folder: "02 - Submission Intake and Asset Creation",
+    automationName:
+        "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
+};
+
 const CONFIG = {
     tables: {
         submissions: "Submissions",
+        enrollments: "Enrollments",
         homework: "FBC Curriculum - SYNC",
         weeks: "Weeks",
     },
 
     submissions: {
         week: "Week",
+        enrollment: "Enrollment",
         activityDate: "Activity Date",
         homework1: "Homework Name 1",
         homework2: "Homework Name 2",
         weekAssignmentStatus: "Week Assignment Status", // formula; read only
+    },
+
+    enrollments: {
+        programInstance: "Program Instance",
     },
 
     homework: {
@@ -101,6 +148,8 @@ const CONFIG = {
         startDate: "Start Date",
         endDate: "End Date",
         active: "Active Week?",
+        activeAlt: "Active?",
+        programInstance: "Program Instance",
     },
 
     statuses: {
@@ -137,6 +186,7 @@ if (!recordId) {
    ========================================================= */
 
 const submissionsTable = base.getTable(CONFIG.tables.submissions);
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 const homeworkTable = base.getTable(CONFIG.tables.homework);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
 
@@ -335,6 +385,7 @@ async function updateSubmissionSafe(targetRecordId, updates) {
 function buildSubmissionFieldsToLoad() {
     return [
         CONFIG.submissions.week,
+        CONFIG.submissions.enrollment,
         CONFIG.submissions.activityDate,
         CONFIG.submissions.homework1,
         CONFIG.submissions.homework2,
@@ -348,16 +399,60 @@ function buildHomeworkFieldsToLoad() {
     );
 }
 
+function weekActiveFieldName() {
+    if (fieldExists(weeksTable, CONFIG.weeks.active)) {
+        return CONFIG.weeks.active;
+    }
+    if (fieldExists(weeksTable, CONFIG.weeks.activeAlt)) {
+        return CONFIG.weeks.activeAlt;
+    }
+    return "";
+}
+
 function buildWeekFieldsToLoad(includeDateRange = true) {
     const fields = [CONFIG.weeks.name];
 
     if (includeDateRange) {
         fields.push(CONFIG.weeks.startDate);
         fields.push(CONFIG.weeks.endDate);
-        fields.push(CONFIG.weeks.active);
+        const activeField = weekActiveFieldName();
+        if (activeField) fields.push(activeField);
+        fields.push(CONFIG.weeks.programInstance);
+    } else {
+        fields.push(CONFIG.weeks.programInstance);
     }
 
     return fields.filter((fieldName) => fieldExists(weeksTable, fieldName));
+}
+
+function buildEnrollmentFieldsToLoad() {
+    return [CONFIG.enrollments.programInstance].filter((fieldName) =>
+        fieldExists(enrollmentsTable, fieldName)
+    );
+}
+
+async function loadEnrollmentProgramInstanceId(enrollmentId) {
+    if (!enrollmentId) return "";
+
+    if (!fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
+        throw new Error(
+            `Enrollments is missing required field: ${CONFIG.enrollments.programInstance}`
+        );
+    }
+
+    const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+        fields: buildEnrollmentFieldsToLoad(),
+    });
+
+    if (!enrollmentRecord) {
+        throw new Error(`Enrollment not found: ${enrollmentId}`);
+    }
+
+    return getFirstLinkedRecordId(
+        enrollmentRecord,
+        enrollmentsTable,
+        CONFIG.enrollments.programInstance
+    );
 }
 
 async function loadWeekName(weekId) {
@@ -372,7 +467,24 @@ async function loadWeekName(weekId) {
     return getText(weekRecord, weeksTable, CONFIG.weeks.name);
 }
 
-async function loadHomeworkWeekFromHomeworkId(homeworkId, sourceLabel) {
+async function loadWeekProgramInstanceId(weekId) {
+    if (!weekId) return "";
+    if (!fieldExists(weeksTable, CONFIG.weeks.programInstance)) return "";
+
+    const weekRecord = await weeksTable.selectRecordAsync(weekId, {
+        fields: buildWeekFieldsToLoad(false),
+    });
+
+    if (!weekRecord) return "";
+
+    return getFirstLinkedRecordId(
+        weekRecord,
+        weeksTable,
+        CONFIG.weeks.programInstance
+    );
+}
+
+async function loadHomeworkWeekFromHomeworkId(homeworkId, sourceLabel, programInstanceId) {
     if (!homeworkId) return null;
 
     const homeworkRecord = await homeworkTable.selectRecordAsync(homeworkId, {
@@ -393,6 +505,20 @@ async function loadHomeworkWeekFromHomeworkId(homeworkId, sourceLabel) {
         return null;
     }
 
+    if (programInstanceId) {
+        const weekPi = await loadWeekProgramInstanceId(weekId);
+        if (weekPi && weekPi !== programInstanceId) {
+            log("Rejected homework-linked Week from other Program Instance", {
+                homeworkId,
+                weekId,
+                weekPi,
+                programInstanceId,
+                sourceLabel,
+            });
+            return null;
+        }
+    }
+
     const weekName = await loadWeekName(weekId);
 
     return {
@@ -402,21 +528,41 @@ async function loadHomeworkWeekFromHomeworkId(homeworkId, sourceLabel) {
     };
 }
 
-async function findWeekByActivityDate(activityDateKey) {
+async function findWeekByActivityDate(activityDateKey, programInstanceId) {
     if (!activityDateKey) return null;
+
+    if (!programInstanceId) {
+        throw new Error(
+            "Activity Date Week fallback requires Enrollment Program Instance. " +
+                "Cannot safely match Weeks across Program Instances by date alone."
+        );
+    }
+
+    if (!fieldExists(weeksTable, CONFIG.weeks.programInstance)) {
+        throw new Error(
+            `Weeks is missing required field: ${CONFIG.weeks.programInstance}. ` +
+                "Program Instance isolation cannot run without it."
+        );
+    }
 
     const weekQuery = await weeksTable.selectRecordsAsync({
         fields: buildWeekFieldsToLoad(true),
     });
 
+    const activeField = weekActiveFieldName();
     const candidates = weekQuery.records
         .map((record) => {
             const weekName = getText(record, weeksTable, CONFIG.weeks.name);
             const startKey = toSafeDateKey(record, weeksTable, CONFIG.weeks.startDate);
             const endKey = toSafeDateKey(record, weeksTable, CONFIG.weeks.endDate);
+            const weekProgramInstanceId = getFirstLinkedRecordId(
+                record,
+                weeksTable,
+                CONFIG.weeks.programInstance
+            );
 
-            const isActive = fieldExists(weeksTable, CONFIG.weeks.active)
-                ? getBooleanish(record, weeksTable, CONFIG.weeks.active)
+            const isActive = activeField
+                ? getBooleanish(record, weeksTable, activeField)
                 : true;
 
             return {
@@ -425,10 +571,12 @@ async function findWeekByActivityDate(activityDateKey) {
                 startKey,
                 endKey,
                 isActive,
+                programInstanceId: weekProgramInstanceId,
             };
         })
         .filter((item) => {
             return (
+                item.programInstanceId === programInstanceId &&
                 item.isActive &&
                 item.startKey &&
                 item.endKey &&
@@ -447,19 +595,31 @@ async function findWeekByActivityDate(activityDateKey) {
         });
 
     if (candidates.length === 0) {
+        log("No Program Instance-scoped Week date match", {
+            activityDateKey,
+            programInstanceId,
+        });
         return null;
     }
 
     if (candidates.length > 1) {
+        const diag = candidates
+            .map(
+                (c) =>
+                    `${c.id}:${c.weekName || "?"}[${c.startKey}..${c.endKey}]`
+            )
+            .join("; ");
         throw new Error(
-            `Multiple active Weeks matched Activity Date ${activityDateKey}. Review Week date ranges.`
+            `Multiple active Weeks matched Activity Date ${activityDateKey} ` +
+                `inside Program Instance ${programInstanceId} (${candidates.length}): ${diag}. ` +
+                `Review Week date ranges / Active Week? for this Program Instance only.`
         );
     }
 
     return {
         id: candidates[0].id,
         weekName: candidates[0].weekName,
-        sourceUsed: "Activity Date Fallback",
+        sourceUsed: "Activity Date Fallback (Program Instance scoped)",
     };
 }
 
@@ -473,6 +633,8 @@ async function main() {
     let homeworkId1 = "";
     let homeworkId2 = "";
     let activityDateKey = "";
+    let enrollmentId = "";
+    let programInstanceId = "";
     let matchedWeek = null;
     let sourceUsed = "";
     let updatedFields = [];
@@ -503,6 +665,8 @@ async function main() {
             setOutputSafe("homework1Id", "");
             setOutputSafe("homework2Id", "");
             setOutputSafe("activityDateKey", "");
+            setOutputSafe("enrollmentIdOut", "");
+            setOutputSafe("programInstanceIdOut", "");
             setOutputSafe("updatedFields", "");
             setOutputSafe("statusOut", CONFIG.statuses.skipped);
             setOutputSafe("errorOut", `Submission not found: ${recordId}`);
@@ -512,6 +676,12 @@ async function main() {
 
         debugStep = "3 - Read Submission Values";
         setOutputSafe("debugStep", debugStep);
+
+        enrollmentId = getFirstLinkedRecordId(
+            submission,
+            submissionsTable,
+            CONFIG.submissions.enrollment
+        );
 
         homeworkId1 = getFirstLinkedRecordId(
             submission,
@@ -531,8 +701,16 @@ async function main() {
             CONFIG.submissions.activityDate
         );
 
+        if (enrollmentId) {
+            debugStep = "3b - Load Enrollment Program Instance";
+            setOutputSafe("debugStep", debugStep);
+            programInstanceId = await loadEnrollmentProgramInstanceId(enrollmentId);
+        }
+
         log("Week assignment input", {
             recordId,
+            enrollmentId,
+            programInstanceId,
             homeworkId1,
             homeworkId2,
             activityDateKey,
@@ -541,6 +719,7 @@ async function main() {
                 submissionsTable,
                 CONFIG.submissions.week
             ),
+            scriptVersion: SCRIPT.version,
         });
 
         debugStep = "4 - Try Homework Name 1";
@@ -549,7 +728,8 @@ async function main() {
         if (homeworkId1) {
             matchedWeek = await loadHomeworkWeekFromHomeworkId(
                 homeworkId1,
-                "Homework Name 1"
+                "Homework Name 1",
+                programInstanceId
             );
         }
 
@@ -559,15 +739,31 @@ async function main() {
         if (!matchedWeek && homeworkId2) {
             matchedWeek = await loadHomeworkWeekFromHomeworkId(
                 homeworkId2,
-                "Homework Name 2"
+                "Homework Name 2",
+                programInstanceId
             );
         }
 
-        debugStep = "6 - Try Activity Date Fallback";
+        debugStep = "6 - Try Activity Date Fallback (Program Instance scoped)";
         setOutputSafe("debugStep", debugStep);
 
         if (!matchedWeek && activityDateKey) {
-            matchedWeek = await findWeekByActivityDate(activityDateKey);
+            if (!enrollmentId) {
+                throw new Error(
+                    "Activity Date Week fallback requires Submission.Enrollment. " +
+                        "Run automation 023 (Assign Enrollment) before 005, or link Enrollment manually."
+                );
+            }
+            if (!programInstanceId) {
+                throw new Error(
+                    `Enrollment ${enrollmentId} is missing Program Instance. ` +
+                        "Cannot safely match Weeks by Activity Date across Program Instances."
+                );
+            }
+            matchedWeek = await findWeekByActivityDate(
+                activityDateKey,
+                programInstanceId
+            );
         }
 
         debugStep = "7 - Handle No Match";
@@ -601,16 +797,20 @@ async function main() {
             setOutputSafe("homework1Id", homeworkId1);
             setOutputSafe("homework2Id", homeworkId2);
             setOutputSafe("activityDateKey", activityDateKey);
+            setOutputSafe("enrollmentIdOut", enrollmentId);
+            setOutputSafe("programInstanceIdOut", programInstanceId);
             setOutputSafe("updatedFields", updatedFields.join(", "));
             setOutputSafe("statusOut", CONFIG.statuses.complete);
             setOutputSafe(
                 "errorOut",
-                "No Week found from Homework Name 1, Homework Name 2, or Activity Date fallback."
+                "No Week found from Homework Name 1, Homework Name 2, or Program Instance-scoped Activity Date fallback."
             );
             setOutputSafe("debugStep", "Done - No Week Match");
 
             log("No Week match found", {
                 recordId,
+                enrollmentId,
+                programInstanceId,
                 homeworkId1,
                 homeworkId2,
                 activityDateKey,
@@ -653,12 +853,18 @@ async function main() {
         setOutputSafe("homework1Id", homeworkId1);
         setOutputSafe("homework2Id", homeworkId2);
         setOutputSafe("activityDateKey", activityDateKey);
+        setOutputSafe("enrollmentIdOut", enrollmentId);
+        setOutputSafe("programInstanceIdOut", programInstanceId);
         setOutputSafe("updatedFields", updatedFields.join(", "));
         setOutputSafe("statusOut", CONFIG.statuses.complete);
         setOutputSafe("errorOut", "");
 
         log("Week assignment completed", {
+            automation: SCRIPT.scriptName,
+            version: SCRIPT.version,
             recordId,
+            enrollmentId,
+            programInstanceId,
             matchedWeekId: matchedWeek.id,
             matchedWeekName: matchedWeek.weekName,
             sourceUsed,
@@ -676,12 +882,16 @@ async function main() {
         setOutputSafe("homework1Id", homeworkId1);
         setOutputSafe("homework2Id", homeworkId2);
         setOutputSafe("activityDateKey", activityDateKey);
+        setOutputSafe("enrollmentIdOut", enrollmentId);
+        setOutputSafe("programInstanceIdOut", programInstanceId);
         setOutputSafe("updatedFields", updatedFields.join(", "));
         setOutputSafe("statusOut", CONFIG.statuses.error);
         setOutputSafe("errorOut", message);
         setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
 
         log("Week assignment failed", {
+            automation: SCRIPT.scriptName,
+            version: SCRIPT.version,
             recordId,
             debugStep,
             error: message,
