@@ -27,11 +27,13 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.4
+ * Version: v3.5
  * Date Written: 2026-06-17
  * Last Updated: 2026-08-06
  *
  * VERSION HISTORY
+ * - v3.5 (2026-08-06): Program Instance isolation — Week date match scoped to
+ *   Enrollment.Program Instance; throw on ambiguous overlaps inside one PI.
  * - v3.4 (2026-08-06): Defensive createRecordsInBatches — accept raw field maps or
  *   { fields } objects; always call createRecordsAsync with { fields }. Fixes live error
  *   "records[0] should have a 'fields' property" when creating 2+ unlocks.
@@ -45,11 +47,12 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  *
  * PURPOSE
  * - Runs from one Enrollment record when Run Shot Milestone Check? is checked.
- * - Calculates total counted shots from linked Submissions (Activity Date + Total Shots Counted).
+ * - Calculates total counted shots from Submissions linked to THIS Enrollment only
+ *   (prior-year Athlete submissions on other Enrollments are excluded).
  * - Finds active Shot Milestones for the enrollment Grade Band (config table — not hardcoded).
  * - Determines which milestones were crossed and on which submission date.
  * - Creates one Athlete Achievement Unlock per milestone using Milestone Source Key dedupe.
- * - Writes Milestone Activity Date, Week (from Weeks date ranges), and Pending XP status.
+ * - Writes Milestone Activity Date, Week (from Weeks date ranges within Program Instance), and Pending XP status.
  * - Clears Run Shot Milestone Check? when finished (except on error — leave checked for triage).
  *
  * IMPORTANT DESIGN RULES
@@ -59,7 +62,8 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Skip inactive enrollments without error.
  * - Grade Band and milestone thresholds come from linked config records — config-over-code.
  * - Grade Band matching: linked record IDs first; normalized display label only as fallback.
- * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver dateTime fields).
+ * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver) scoped by
+ *   Enrollment.Program Instance — never date-only across years.
  *
  * THIS IS NOT
  * - XP award automation (059 / achievement-to-XP chain handles Pending unlocks).
@@ -111,7 +115,7 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.4",
+  version: "v3.5",
   versionDate: "2026-08-06",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-08-06",
@@ -146,6 +150,7 @@ const CONFIG = {
     gradeBand: "Grade Band",
     totalShots: "Total Shots Submitted",
     runCheck: "Run Shot Milestone Check?",
+    programInstance: "Program Instance",
   },
 
   submissionFields: {
@@ -187,6 +192,8 @@ const CONFIG = {
     startDate: "Start Date",
     endDate: "End Date",
     active: "Active Week?",
+    activeAlt: "Active?",
+    programInstance: "Program Instance",
   },
 
   statuses: {
@@ -559,27 +566,40 @@ function buildMilestoneSourceKey(enrollmentId, shotMilestoneId) {
    SECTION 6 — WEEK RESOLUTION
 ========================================================= */
 
-function findWeekForDate(weekRecords, weeksTable, activityDateKey) {
+function findWeekForDate(weekRecords, weeksTable, activityDateKey, programInstanceId) {
   if (!activityDateKey) return null;
+
+  const activeField = fieldExists(weeksTable, CONFIG.weekFields.active)
+    ? CONFIG.weekFields.active
+    : fieldExists(weeksTable, CONFIG.weekFields.activeAlt)
+      ? CONFIG.weekFields.activeAlt
+      : "";
 
   const candidates = weekRecords
     .map((week) => {
       const startKey = toSafeDateKey(week, weeksTable, CONFIG.weekFields.startDate);
       const endKey = toSafeDateKey(week, weeksTable, CONFIG.weekFields.endDate);
-      const isActive = fieldExists(weeksTable, CONFIG.weekFields.active)
-        ? getBooleanish(week, CONFIG.weekFields.active, true)
+      const weekPi = fieldExists(weeksTable, CONFIG.weekFields.programInstance)
+        ? getLinkedIds(week, CONFIG.weekFields.programInstance)[0] || ""
+        : "";
+      const isActive = activeField
+        ? getBooleanish(week, activeField, true)
         : true;
 
-      return { week, startKey, endKey, isActive };
+      return { week, startKey, endKey, isActive, weekPi };
     })
-    .filter(
-      (item) =>
+    .filter((item) => {
+      if (programInstanceId && item.weekPi && item.weekPi !== programInstanceId) {
+        return false;
+      }
+      return (
         item.isActive &&
         item.startKey &&
         item.endKey &&
         compareDateKeys(activityDateKey, item.startKey) >= 0 &&
         compareDateKeys(activityDateKey, item.endKey) <= 0
-    )
+      );
+    })
     .sort((a, b) => {
       const startCompare = compareDateKeys(a.startKey, b.startKey);
       if (startCompare !== 0) return startCompare;
@@ -590,13 +610,31 @@ function findWeekForDate(weekRecords, weeksTable, activityDateKey) {
       return String(a.week.name || "").localeCompare(String(b.week.name || ""));
     });
 
+  if (candidates.length > 1) {
+    throw new Error(
+      `Multiple active Weeks matched Activity Date ${activityDateKey}` +
+        (programInstanceId ? ` inside Program Instance ${programInstanceId}` : "") +
+        ` (${candidates.length}): ${candidates.map((c) => c.week.id).join(", ")}`
+    );
+  }
+
   return candidates.length > 0 ? candidates[0].week : null;
 }
 
-function resolveWeekIdForActivityDate(weekRecords, weeksTable, activityDate) {
+function resolveWeekIdForActivityDate(
+  weekRecords,
+  weeksTable,
+  activityDate,
+  programInstanceId
+) {
   const dateKey = toDateKeyFromDateObject(activityDate, CONFIG.timeZone);
   if (!dateKey) return { weekId: "", dateKey: "" };
-  const weekRecord = findWeekForDate(weekRecords, weeksTable, dateKey);
+  const weekRecord = findWeekForDate(
+    weekRecords,
+    weeksTable,
+    dateKey,
+    programInstanceId
+  );
   return {
     weekId: weekRecord ? weekRecord.id : "",
     dateKey,
@@ -756,6 +794,7 @@ async function main() {
     CONFIG.enrollmentFields.gradeBand,
     CONFIG.enrollmentFields.totalShots,
     CONFIG.enrollmentFields.runCheck,
+    CONFIG.enrollmentFields.programInstance,
   ]);
 
   const enrollmentRecord = await enrollmentsTable.selectRecordAsync(recordId, {
@@ -805,6 +844,17 @@ async function main() {
     enrollmentRecord,
     CONFIG.enrollmentFields.gradeBand
   );
+  const enrollmentProgramInstanceId = getLinkedIds(
+    enrollmentRecord,
+    CONFIG.enrollmentFields.programInstance
+  )[0] || "";
+
+  if (!enrollmentProgramInstanceId) {
+    throw new Error(
+      `Enrollment ${enrollmentId} is missing Program Instance. ` +
+        "Cannot safely resolve Weeks for shot milestone unlocks across Program Instances."
+    );
+  }
 
   if (!enrollmentGradeBand && enrollmentGradeBandIds.length === 0) {
     await updateEnrollment(enrollmentsTable, enrollmentRecord, {
@@ -836,6 +886,8 @@ async function main() {
           CONFIG.weekFields.startDate,
           CONFIG.weekFields.endDate,
           CONFIG.weekFields.active,
+          CONFIG.weekFields.activeAlt,
+          CONFIG.weekFields.programInstance,
         ]),
       }),
       unlocksTable.selectRecordsAsync({
@@ -1072,7 +1124,8 @@ async function main() {
     const weekResolved = resolveWeekIdForActivityDate(
       weekQuery.records,
       weeksTable,
-      crossing.activityDate
+      crossing.activityDate,
+      enrollmentProgramInstanceId
     );
 
     const existingUnlock = existingUnlockBySourceKey.get(milestone.sourceKey);
