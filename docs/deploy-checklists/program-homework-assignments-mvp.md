@@ -4,7 +4,7 @@
 |-------|--------|
 | Date | 2026-08-05 |
 | PROD base | `appn84sqPw03zEbTT` |
-| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof) — paste **033 v3.3** / **020 v3.2.0** for ongoing automation path |
+| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof). **033 v3.3 pasted** (Mike 2026-08-06). Paste **020 v3.2.0** still required for HC identity path on new assets. |
 | Separate from | Perfect Week PR #81 |
 
 ## Architecture before
@@ -110,7 +110,7 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 | `020-…js` | **v3.2.0** — Enrollment+Week+Homework+Slot identity (SC-016) + PHA link |
 | PROD Same Day / Perfect Week formulas | Not part of this package |
 
-**PROD paste still required** for 033/020 before live submissions use the junction automatically.
+**PROD paste:** **033 v3.3 pasted** (Mike 2026-08-06). **020 v3.2.0** still required before live submissions use the HC identity path automatically.
 
 ## Backfilled junction + HC (Perfect Week CASE-01)
 

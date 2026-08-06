@@ -156,21 +156,28 @@ Destructive PROD fixture recreation was **not** re-run.
 
 ## 6. What Mike needs to do next (Airtable UI only)
 
-1. **Paste** Automation **033 v3.3** and **020 v3.2.0** from GitHub into PROD.
-2. **Fix Automation 059 trigger:** remove `Shot Milestone is not empty`; keep **XP Award Status = Pending** (created preferred).  
-   - When using **Test**, `recordId` must be an **Athlete Achievement Unlock** ID (e.g. `recALZFQNL3XicEOX`), **never** a Weekly Athlete Summary ID such as `recKebuZ79QFTwivA`.
-3. **UI-attest/enable Automation 066** for natural shot-milestone checkbox path.
-4. Confirm **Automation 112 OFF** in UI.
-5. Optional: 117 go-live with Schmidt Recording Quiz fixture; 073 video parent email fixture; RCC OMNI views; unloadData paste pack (031/035/042/114/118/119).
+**Superseded 2026-08-06** — see [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](../deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md).
+
+Already done:
+
+1. ~~Paste 033 v3.3~~ — **Mike pasted** (operator-attested).
+2. ~~Fix Automation 059 trigger~~ — **Mike corrected** (Pending-only; Unlock ID for Test).
+
+Still required:
+
+1. **Paste Automation 066 v3.4** (merged via PR #88) — full script replace; Test `recordId=recCyFEPeATOVNlr9` (not `recgP9qZYjAhE7NXm`); expect skip/link existing unlocks — no duplicate XP.
+2. **Paste Automation 020 v3.2.0** — full script replace; confirm SC-016 identity on re-submit.
+3. Confirm **Automation 112 OFF** in UI.
+4. Optional: 033 live WAS assign verify; 117 go-live; unloadData paste pack (031/035/042/114/118/119).
 
 ---
 
 ## 7. Remaining technical blockers
 
-1. 059 Perfect Week auto-fire blocked by Shot Milestone trigger filter.
-2. 066 checkbox path does not clear/run after toggle.
-3. 020/033 not pasted — PHA automation path not live for new submissions.
-4. Dual Schmidt enrollments / stale 2025–26 WAS labels in email probes.
+1. ~~059 Perfect Week auto-fire blocked by Shot Milestone trigger filter~~ — **Mike corrected** (attest remaining soak if desired).
+2. **066 natural path** — v3.3 FAILED (`createRecordsAsync` missing `fields`); **v3.4 on `master` awaiting PROD paste + rerun**.
+3. **020 v3.2.0** not confirmed pasted — HC identity path for new assets.
+4. Dual Schmidt enrollments / stale 2025–26 WAS labels in email probes — use **`recCyFEPeATOVNlr9`** for current tests.
 5. Operator automation table drift (112 Live in table; 117/118/119 absent).
 6. Level 2 gate clear (SC-080) needs Sub 10/10 + Vid 6/6.
 

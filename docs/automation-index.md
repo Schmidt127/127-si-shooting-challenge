@@ -50,7 +50,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.2.0** (SC-016 enrollment identity + PHA link; paste pending) | `020-homework-link-or-create-homework-completion.js` (**v3.2.0**) |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.2.0** (SC-016 enrollment identity + PHA link; **PROD paste not confirmed**) | `020-homework-link-or-create-homework-completion.js` (**v3.2.0**) |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
@@ -65,7 +65,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 030 | Weekly Summary — Copy Enrollment Grade Band to Weekly Summary | *confirm in Airtable* | `030-weekly-summary-and-goal-logic-copy-enrollment-grade-band-to-weekly-summary.js` |
 | **031** | Weekly Summary — Find or Create WAS from Submission | Submissions when `Count This Submission?` checked and WAS empty | `031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` |
 | 032 | Weekly Summary — Link Challenge Goal to WAS | *confirm in Airtable* | `032-weekly-summary-and-goal-logic-link-challenge-goal-record-to-weekly-athlete-summary.js` |
-| 033 | Weekly Summary — Assign Homework to WAS | *confirm in Airtable* — **repo v3.3** (PHA-first + unloadQuerySafe; paste pending) | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v3.3**) |
+| 033 | Weekly Summary — Assign Homework to WAS | **Installed in PROD v3.3** (Mike operator-attested paste 2026-08-06) — PHA-first + unloadQuerySafe | `033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js` (**v3.3**) |
 | 034 | Weekly Summary — Set Previous Week Helper Values | *confirm in Airtable* | `034-weekly-summary-and-goal-logic-set-previous-week-helper-values.js` |
 
 ## Levels and progression (041–043)
@@ -87,7 +87,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc — **ON** (PROD **v1.5**, 2026-08-05) | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.5** — repo matches PROD; live cross-boundary fixtures still open — `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`) |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
 | **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** repo — paste required; PROD may still run v3.3. Natural path **FAILED** on v3.3 multi-create `fields` contract; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** on `master` via PR #88 — **PROD paste required**; natural path failed on v3.3 `fields` contract; [paste checklist](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md)) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 

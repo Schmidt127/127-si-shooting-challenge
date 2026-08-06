@@ -74,10 +74,11 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 ### 6b. Paste 066 v3.4 (createRecords fields contract) — **REQUIRED**
 - **Priority:** P0
 - **System:** Automation 066
-- **Exact action:** Replace entire Airtable script with GitHub `066-…js` **v3.4** ([checklist](../../deploy-checklists/066-v3.4-create-records-fields-fix.md))
+- **Exact action:** Replace entire Airtable script with GitHub `066-…js` **v3.4** ([checklist](../../deploy-checklists/066-v3.4-create-records-fields-fix.md) · [final paste list](../../deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md))
+- **Repo:** Merged to `master` via PR **#88** (`23642a6`)
 - **Test enrollment:** `recCyFEPeATOVNlr9` (not older `recgP9qZYjAhE7NXm`)
 - **Expected outcome:** Natural Run Check? succeeds; existing unlocks skipped/linked; **0 duplicate milestone XP**; console `"version": "v3.4"`
-- **Status:** Built in Repository — paste + rerun not done; do **not** mark natural path Live Tested until success
+- **Status:** On `master` — paste + rerun not done; do **not** mark natural path Live Tested until success
 - **Related SC:** SC-027, SC-076 · H-002
 
 ### 7. Decide submission formula XP economics vs SHOOTING_BASE=20
