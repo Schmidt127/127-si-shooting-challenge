@@ -1,0 +1,271 @@
+[
+  {
+    "name": "XP Event Display",
+    "type": "formula"
+  },
+  {
+    "name": "Created",
+    "type": "createdTime"
+  },
+  {
+    "name": "Zoom Meeting",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "XP Events RID",
+    "type": "formula"
+  },
+  {
+    "name": "Submission",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Week",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "XP Dedupe Key",
+    "type": "formula"
+  },
+  {
+    "name": "XP Bucket",
+    "type": "singleSelect",
+    "options": [
+      "Homework Completion",
+      "Manual Bonus",
+      "Perfect Week",
+      "Shooting Base",
+      "Shot Milestone",
+      "Streak",
+      "Video Feedback",
+      "Weekly Threshold",
+      "Zoom Attendance"
+    ]
+  },
+  {
+    "name": "Homework Completion",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Submission Record ID",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "XP Activity Date",
+    "type": "dateTime"
+  },
+  {
+    "name": "Achievement Unlock",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Enrollment",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Weekly Athlete Summary",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "XP Source",
+    "type": "singleSelect",
+    "options": [
+      "3-Day Streak",
+      "5-Day Streak",
+      "7-Day Streak",
+      "10-Day Streak",
+      "20-Day Streak",
+      "30-Day Streak",
+      "40-Day Streak",
+      "50-Day Streak",
+      "60-Day Streak",
+      "Achievement Unlock",
+      "Coach Bonus",
+      "Homework Bonus",
+      "Homework Completion",
+      "Manual Adjustment",
+      "Perfect Week",
+      "Shot Milestone",
+      "Shot Volume Bonus",
+      "Streak Bonus",
+      "Submission Base",
+      "Video Bonus",
+      "Video Submission",
+      "Video Submissions for Feedback",
+      "Weekly Threshold 100",
+      "Weekly Threshold 125",
+      "Weekly Threshold 150",
+      "Zoom Meeting Attendance Base",
+      "Zoom Meeting Attendance Bonus 2",
+      "Zoom Meeting Attendance Bonus 3",
+      "Zoom Meeting Recording Quiz"
+    ]
+  },
+  {
+    "name": "XP Points",
+    "type": "number"
+  },
+  {
+    "name": "XP Reason Debug",
+    "type": "multilineText"
+  },
+  {
+    "name": "Active?",
+    "type": "checkbox"
+  },
+  {
+    "name": "Processed",
+    "type": "checkbox"
+  },
+  {
+    "name": "Award Mode",
+    "type": "singleSelect",
+    "options": [
+      "Automatic",
+      "Manual"
+    ]
+  },
+  {
+    "name": "Awarded By",
+    "type": "singleLineText"
+  },
+  {
+    "name": "Shot Milestones",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Source Key",
+    "type": "singleLineText"
+  },
+  {
+    "name": "Video Feedback",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Weekly Summary Key",
+    "type": "formula"
+  },
+  {
+    "name": "XP Dedupe Key Normalized",
+    "type": "formula"
+  },
+  {
+    "name": "Week Record ID",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Enrollment Record ID",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Streak Occurrence",
+    "type": "multipleRecordLinks"
+  },
+  {
+    "name": "Streak Occurrence Key",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Event Identity ID",
+    "type": "formula"
+  },
+  {
+    "name": "Duplicate Count",
+    "type": "number"
+  },
+  {
+    "name": "Duplicate Status",
+    "type": "singleSelect",
+    "options": [
+      "Unique",
+      "Duplicate - Keeper",
+      "Duplicate - Remove",
+      "Duplicate - Review"
+    ]
+  },
+  {
+    "name": "Keep Record?",
+    "type": "checkbox"
+  },
+  {
+    "name": "Approved for Delete",
+    "type": "checkbox"
+  },
+  {
+    "name": "Needs Dedupe Review",
+    "type": "formula"
+  },
+  {
+    "name": "Date - Submission Base Activity",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "XP Date Resolved",
+    "type": "formula"
+  },
+  {
+    "name": "XP Activity Date Source",
+    "type": "singleSelect",
+    "options": [
+      "Achievement Unlock Date",
+      "Fallback Created Time",
+      "Homework Submission Activity Date",
+      "Manual Date",
+      "Perfect Week End Date",
+      "Shot Milestone Activity Date",
+      "Streak End Date",
+      "Submission Activity Date",
+      "Video Submission Activity Date",
+      "Weekly Summary Week End Date",
+      "Zoom Meeting Date"
+    ]
+  },
+  {
+    "name": "Date - Homework Submission Activity",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Date - Video Submission Activity",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Date - Streak End",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Date - Achievement Unlock",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Date - Weekly Summary End",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "Date - Zoom Meeting",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "XP Reason Public",
+    "type": "multilineText"
+  },
+  {
+    "name": "Awarded At",
+    "type": "dateTime"
+  },
+  {
+    "name": "Date - Shot Milestone Activity",
+    "type": "multipleLookupValues"
+  },
+  {
+    "name": "XP Award Status",
+    "type": "singleLineText"
+  },
+  {
+    "name": "XP Event RID",
+    "type": "formula"
+  },
+  {
+    "name": "Active XP Points",
+    "type": "formula"
+  }
+]

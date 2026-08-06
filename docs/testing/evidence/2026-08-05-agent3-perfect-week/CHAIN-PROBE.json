@@ -1,0 +1,244 @@
+{
+  "probedAt": "2026-08-06T00:07:10.711Z",
+  "wasId": "recKebuZ79QFTwivA",
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "weekId": "reci5GdxEC57vfoS3",
+  "expectedXpSourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+  "was": {
+    "eligible": 1,
+    "automationStatus": "Ready",
+    "automationError": null,
+    "unlockIds": [
+      "recALZFQNL3XicEOX"
+    ],
+    "xpEarnedThisWeek": 213
+  },
+  "unlock": {
+    "id": "recALZFQNL3XicEOX",
+    "fields": {
+      "Category": [
+        "Consistency"
+      ],
+      "Unlock Key": "\"Schmidt, Testing - 2026-2027\"|Perfect Week|WEEK:PWTEST|2026-08-05|CASE-01|WEEK",
+      "Athlete": [
+        "recgqVstObQRzgXJF"
+      ],
+      "XP Award Status": "Pending",
+      "Visible?": [
+        null
+      ],
+      "Source Status": "Ready for XP",
+      "Weekly Athlete Summary": [
+        "recKebuZ79QFTwivA"
+      ],
+      "Achievement": [
+        "recd2jEIVPskiRTSu"
+      ],
+      "Achievement Unlock Display - RID": "recALZFQNL3XicEOX",
+      "Active?": true,
+      "Achievement Type": [
+        "Behavior"
+      ],
+      "Week": [
+        "reci5GdxEC57vfoS3"
+      ],
+      "Ready for 059 XP?": 1,
+      "Included in Summary?": true,
+      "Enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "Achievement Unlock Display": "\"Schmidt, Testing - 2026-2027\" - Perfect Week - PWTEST|2026-08-05|CASE-01|WEEK",
+      "Display in Dashboard?": true
+    }
+  },
+  "unlockFieldNames": [
+    {
+      "name": "Achievement Unlock Display",
+      "type": "formula"
+    },
+    {
+      "name": "XP Events",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Unlock Key",
+      "type": "formula"
+    },
+    {
+      "name": "Enrollment",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Athlete",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Achievement",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Week",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "XP Award Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Date Unlocked",
+      "type": "dateTime"
+    },
+    {
+      "name": "XP Awarded",
+      "type": "number"
+    },
+    {
+      "name": "Display in Weekly Email?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Display in Dashboard?",
+      "type": "checkbox"
+    },
+    {
+      "name": "First Time Unlock?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Repeat Unlock Count",
+      "type": "number"
+    },
+    {
+      "name": "Achievement Type",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Category",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Visible?",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Rarity",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Week Summary",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Trigger Value",
+      "type": "number"
+    },
+    {
+      "name": "Trigger Context",
+      "type": "multilineText"
+    },
+    {
+      "name": "Included in Summary?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Active?",
+      "type": "checkbox"
+    },
+    {
+      "name": "Coach Note",
+      "type": "multilineText"
+    },
+    {
+      "name": "Streak Instance Key",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Streak Start Date",
+      "type": "date"
+    },
+    {
+      "name": "XP Events copy",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Weekly Athlete Summary",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Source Status",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Shot Milestone",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Milestone Source Key",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Ready for 059 XP?",
+      "type": "formula"
+    },
+    {
+      "name": "Milestone Activity Date",
+      "type": "dateTime"
+    },
+    {
+      "name": "Achievement Unlock Display - RID",
+      "type": "formula"
+    },
+    {
+      "name": "Unlock Source Date",
+      "type": "formula"
+    }
+  ],
+  "unlocksSameEnrollmentWeek": [],
+  "unlockCountSameEnrWeek": 0,
+  "achievements": [
+    {
+      "id": "recd2jEIVPskiRTSu",
+      "fields": {
+        "Category": "Consistency",
+        "Trigger Type": "Weekly Challenge Completed",
+        "Trigger Threshold": 7,
+        "Achievement Type": "Behavior",
+        "Achievement Key": "perfect_week",
+        "Active?": true,
+        "Reward Rule Key": "PERFECT_WEEK",
+        "Repeatable?": true,
+        "Trigger Operator": "=",
+        "Sort Order": 50,
+        "Achievement Name": "Perfect Week",
+        "Athlete Achievement Unlocks": [
+          "recALZFQNL3XicEOX"
+        ]
+      }
+    }
+  ],
+  "rules": [
+    {
+      "id": "recZVpCbWfPPXwDbU",
+      "fields": {
+        "Rule Set": "Shooting Challenge 2026-2027",
+        "XP Amount": 100,
+        "Active?": true,
+        "Sort Order": 0,
+        "Reward Rule": "Perfect Week",
+        "XP Source Label": "Perfect Week",
+        "Rule Key": "PERFECT_WEEK"
+      }
+    }
+  ],
+  "xpLinkedFromUnlock": [],
+  "xpByExpectedSourceKey": [],
+  "xpPerfectOnWas": [],
+  "verdict": {
+    "unlockCount": 0,
+    "unlockExactlyOne": false,
+    "xpByKeyCount": 0,
+    "xpExactlyOne": false,
+    "unlockHasXpLink": false,
+    "chainComplete": false
+  }
+}

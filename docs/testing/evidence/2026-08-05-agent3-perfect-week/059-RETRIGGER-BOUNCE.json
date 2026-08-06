@@ -1,0 +1,61 @@
+{
+  "probedAt": "2026-08-06T00:06:58.093Z",
+  "unlockId": "recALZFQNL3XicEOX",
+  "bounced": true,
+  "before": {
+    "status": "Pending",
+    "ready": 1,
+    "shotMilestone": []
+  },
+  "polls": [
+    {
+      "t": "2026-08-06T00:06:20.988Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:26.324Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:31.565Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:36.801Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:42.068Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:47.319Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:52.819Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    },
+    {
+      "t": "2026-08-06T00:06:58.093Z",
+      "status": "Pending",
+      "ready": 1,
+      "xp": []
+    }
+  ],
+  "autoFired": false
+}

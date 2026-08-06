@@ -1,0 +1,536 @@
+{
+  "probedAt": "2026-08-06T00:08:44.145Z",
+  "achievements": [
+    {
+      "id": "rec1QFKxJ8XW9Z8x1",
+      "name": "Goal Achiever",
+      "key": "goal_achiever",
+      "ruleKey": "GOAL_ACHIEVER",
+      "type": "Progress",
+      "category": "Consistency",
+      "unlockCount": 0
+    },
+    {
+      "id": "recJ2caP3qBUfqzEp",
+      "name": "20-Day Streak",
+      "key": "20-day_streak",
+      "ruleKey": "STREAK_20DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "recP8QP4uhEXaiZAX",
+      "name": "7-Day Streak",
+      "key": "7-day_streak",
+      "ruleKey": "STREAK_7DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "recQuAtXyT2wKJNGI",
+      "name": "3-Day Streak",
+      "key": "3-day_streak",
+      "ruleKey": "STREAK_3DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "recd2jEIVPskiRTSu",
+      "name": "Perfect Week",
+      "key": "perfect_week",
+      "ruleKey": "PERFECT_WEEK",
+      "active": true,
+      "type": "Behavior",
+      "category": "Consistency",
+      "unlockCount": 1
+    },
+    {
+      "id": "recditY5KzlQNtqbA",
+      "name": "Comeback Player",
+      "key": "comeback_player",
+      "ruleKey": "COMEBACK_PLAYER",
+      "type": "Secret",
+      "category": "Comeback",
+      "unlockCount": 0
+    },
+    {
+      "id": "recewTtymiSN7Hkhw",
+      "name": "50-Day Streak",
+      "key": "50-day_streak",
+      "ruleKey": "STREAK_50DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "recgaun3HjV7EB2kN",
+      "name": "40-Day Streak",
+      "key": "40-day_streak",
+      "ruleKey": "STREAK_40DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "rechOec7g8LBLcdgl",
+      "name": "5-Day Streak",
+      "key": "5-day_streak",
+      "ruleKey": "STREAK_5DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "rechvtS1pfT086cwW",
+      "name": "30-Day Streak",
+      "key": "30-day_streak",
+      "ruleKey": "STREAK_30DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "reclgScxpCba3m1Mo",
+      "name": "Shot Milestone",
+      "key": "shot_milestone",
+      "ruleKey": "SHOT_MILESTONE",
+      "active": true,
+      "type": "Milestone",
+      "category": "Volume",
+      "unlockCount": 0
+    },
+    {
+      "id": "recmry8CfbjU3PIfj",
+      "name": "Goal Crusher",
+      "key": "goal_crusher",
+      "ruleKey": "GOAL_CRUSHER",
+      "type": "Progress",
+      "category": "Consistency",
+      "unlockCount": 0
+    },
+    {
+      "id": "recxzySdFFaAOqNNG",
+      "name": "10-Day Streak",
+      "key": "10-day_streak",
+      "ruleKey": "STREAK_10DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "recz5At8CvV5f4iFg",
+      "name": "60-Day Streak",
+      "key": "60-day_streak",
+      "ruleKey": "STREAK_60DAY",
+      "active": true,
+      "visible": true,
+      "type": "Behavior",
+      "category": "Streak",
+      "unlockCount": 0
+    },
+    {
+      "id": "reczI7eluBvuQOYNL",
+      "name": "Homework Hero",
+      "key": "homework_hero",
+      "ruleKey": "HOMEWORK_HERO",
+      "type": "Behavior",
+      "category": "Homework",
+      "unlockCount": 0
+    }
+  ],
+  "achievementsNeedingVisible": [
+    {
+      "id": "recd2jEIVPskiRTSu",
+      "name": "Perfect Week",
+      "ruleKey": "PERFECT_WEEK"
+    },
+    {
+      "id": "reclgScxpCba3m1Mo",
+      "name": "Shot Milestone",
+      "ruleKey": "SHOT_MILESTONE"
+    }
+  ],
+  "pendingUnlocksTotal": 0,
+  "pendingSchmidt": [],
+  "enrollmentLevelSnapshot": {
+    "enrollmentId": "recCyFEPeATOVNlr9",
+    "keys": [
+      "Gate Enabled?",
+      "Current Level XP Required",
+      "Meets Gate: Streak",
+      "DELETE PROBABLY - Level Name with Color (from Current Level)",
+      "Public Gate Missing Reason",
+      "Gate Summary",
+      "Gate Minimum: Submissions",
+      "Current Level XP Ceiling",
+      "Gate-Test Eligible Level",
+      "XP Progress in Current Level",
+      "Gate Failure Summary - Formula",
+      "Meets Gate: Videos",
+      "Level Status",
+      "Gate Minimum: Streak Days",
+      "XP Needed for Next Level",
+      "Gate Debug Summary",
+      "Public Progression Status",
+      "Meets Gate: Submissions",
+      "Lifetime XP Total",
+      "Gate Enabled Status",
+      "Next Level XP Required",
+      "Level Sort Order - For Softr",
+      "Gate Minimum: Homework",
+      "Current Level - Public Facing Display",
+      "Lifetime XP Earned",
+      "Gate Passes",
+      "Next Level",
+      "Gate Minimum: Videos",
+      "Gate Minimum: Zoom Meetings",
+      "Meets Gate: Zoom Meetings",
+      "Level Gate Rule",
+      "Current Level",
+      "XP Events",
+      "Meets Gate: Homework"
+    ],
+    "snapshot": {
+      "Gate Enabled?": [
+        true
+      ],
+      "Current Level XP Required": [
+        0
+      ],
+      "Meets Gate: Streak": 1,
+      "DELETE PROBABLY - Level Name with Color (from Current Level)": [
+        "Beginner"
+      ],
+      "Public Gate Missing Reason": "Missing: 1 submission, 1 video review",
+      "Gate Summary": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "Gate Minimum: Submissions": [
+        10
+      ],
+      "Current Level XP Ceiling": 199,
+      "Gate-Test Eligible Level": [
+        "rec1EJLJLmfdJLtoF"
+      ],
+      "XP Progress in Current Level": 378,
+      "Gate Failure Summary - Formula": "Level 2 Gate: Gate requirements not met. See Gate Debug Summary.",
+      "Meets Gate: Videos": 0,
+      "Level Status": "Gate Blocked",
+      "Gate Minimum: Streak Days": [
+        0
+      ],
+      "XP Needed for Next Level": 0,
+      "Gate Debug Summary": "Rule=Level 2 Gate | Enabled=Yes | Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0",
+      "Public Progression Status": "Paused",
+      "Meets Gate: Submissions": 0,
+      "Lifetime XP Total": 378,
+      "Gate Enabled Status": "Enabled",
+      "Next Level XP Required": [
+        200
+      ],
+      "Level Sort Order - For Softr": [
+        1
+      ],
+      "Gate Minimum: Homework": [
+        0
+      ],
+      "Current Level - Public Facing Display": "Beginner",
+      "Lifetime XP Earned": 378
+    }
+  },
+  "levelsActive": [
+    {
+      "id": "rec1EJLJLmfdJLtoF",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Rookie Shooter",
+        "Previous Level XP Required": [
+          0
+        ],
+        "Previous Level": [
+          "rec1iGy92ZC0jwzD4"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 10 shooting submissions\n• 0 homework completions\n• 6 video submissions\n• 0 Zoom meeting(s)\n• A 0-day shooting streak",
+        "Level Name with Color": "Rookie Shooter",
+        "XP Required (Cumulative)": 200,
+        "Next Level": [
+          "recOdLPbf4Vl43kP7"
+        ],
+        "Level Gate Rules": [
+          "reccFKwOVHZ3hn36i"
+        ]
+      }
+    },
+    {
+      "id": "rec1iGy92ZC0jwzD4",
+      "fieldsSample": {
+        "XP From Previous Level": 0,
+        "Active?": true,
+        "Level Name": "Beginner",
+        "Level Name with Color": "Beginner",
+        "XP Required (Cumulative)": 0,
+        "Next Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Level Gate Rules": [
+          "recFLpmGbkwu2ZLT8"
+        ]
+      }
+    },
+    {
+      "id": "rec6aCLn33lcoUqED",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Legend",
+        "Previous Level XP Required": [
+          1800
+        ],
+        "Previous Level": [
+          "recsKHKSi4imjZaYG"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 52 shooting submissions\n• 18 homework completions\n• 24 video submissions\n• 2 Zoom meeting(s)\n• A 45-day shooting streak",
+        "Level Name with Color": "Legend",
+        "XP Required (Cumulative)": 2000,
+        "Next Level": [
+          "recfUQ3eh9ckexYov"
+        ],
+        "Level Gate Rules": [
+          "recnsZzzaBjpAMvA1"
+        ]
+      }
+    },
+    {
+      "id": "recAtRF5dh5bY1fo4",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Deadeye",
+        "Previous Level XP Required": [
+          1000
+        ],
+        "Previous Level": [
+          "recxIKcUXZQHraaCf"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 35 shooting submissions\n• 10 homework completions\n• 16 video submissions\n• 1 Zoom meeting(s)\n• A 25-day shooting streak",
+        "Level Name with Color": "Deadeye",
+        "XP Required (Cumulative)": 1200,
+        "Next Level": [
+          "reck4S1JJ6fBSlzcq"
+        ],
+        "Level Gate Rules": [
+          "recaijMoYqaZJKhLP"
+        ]
+      }
+    },
+    {
+      "id": "recOdLPbf4Vl43kP7",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Developing Shooter",
+        "Previous Level XP Required": [
+          200
+        ],
+        "Previous Level": [
+          "rec1EJLJLmfdJLtoF"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 15 shooting submissions\n• 2 homework completions\n• 8 video submissions\n• 0 Zoom meeting(s)\n• A 0-day shooting streak",
+        "Level Name with Color": "Developing Shooter",
+        "XP Required (Cumulative)": 400,
+        "Next Level": [
+          "recRQXN5tWtsfaIBo"
+        ],
+        "Level Gate Rules": [
+          "recrLcVfwPcWGflR2"
+        ]
+      }
+    },
+    {
+      "id": "recRQXN5tWtsfaIBo",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Consistent Shooter",
+        "Previous Level XP Required": [
+          400
+        ],
+        "Previous Level": [
+          "recOdLPbf4Vl43kP7"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 20 shooting submissions\n• 4 homework completions\n• 10 video submissions\n• 0 Zoom meeting(s)\n• A 10-day shooting streak",
+        "Level Name with Color": "Consistent Shooter",
+        "XP Required (Cumulative)": 600,
+        "Next Level": [
+          "recSYgWZotdwFxCLI"
+        ],
+        "Level Gate Rules": [
+          "recTxDTM9yEaZnbPS"
+        ]
+      }
+    },
+    {
+      "id": "recSYgWZotdwFxCLI",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Dangerous Shooter",
+        "Previous Level XP Required": [
+          600
+        ],
+        "Previous Level": [
+          "recRQXN5tWtsfaIBo"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 25 shooting submissions\n• 6 homework completions\n• 12 video submissions\n• 0 Zoom meeting(s)\n• A 15-day shooting streak",
+        "Level Name with Color": "Dangerous Shooter",
+        "XP Required (Cumulative)": 800,
+        "Next Level": [
+          "recxIKcUXZQHraaCf"
+        ],
+        "Level Gate Rules": [
+          "recjM3fzJr2o1qUhk"
+        ]
+      }
+    },
+    {
+      "id": "recfUQ3eh9ckexYov",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "G.O.A.T.",
+        "Previous Level XP Required": [
+          2000
+        ],
+        "Previous Level": [
+          "rec6aCLn33lcoUqED"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 60 shooting submissions\n• 20 homework completions\n• 28 video submissions\n• 2 Zoom meeting(s)\n• A 50-day shooting streak",
+        "Level Name with Color": "G.O.A.T.",
+        "XP Required (Cumulative)": 2200,
+        "Level Gate Rules": [
+          "reciCGdog1M6rnOAM"
+        ]
+      }
+    },
+    {
+      "id": "recgGmpBrsfX9t4UE",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Pro",
+        "Previous Level XP Required": [
+          1400
+        ],
+        "Previous Level": [
+          "reck4S1JJ6fBSlzcq"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 44 shooting submissions\n• 14 homework completions\n• 20 video submissions\n• 1 Zoom meeting(s)\n• A 35-day shooting streak",
+        "Level Name with Color": "Pro",
+        "XP Required (Cumulative)": 1600,
+        "Next Level": [
+          "recsKHKSi4imjZaYG"
+        ],
+        "Level Gate Rules": [
+          "recL1qTswiOh43U6u"
+        ]
+      }
+    },
+    {
+      "id": "reck4S1JJ6fBSlzcq",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Sharpshooter",
+        "Previous Level XP Required": [
+          1200
+        ],
+        "Previous Level": [
+          "recAtRF5dh5bY1fo4"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 40 shooting submissions\n• 12 homework completions\n• 18 video submissions\n• 1 Zoom meeting(s)\n• A 30-day shooting streak",
+        "Level Name with Color": "Sharpshooter",
+        "XP Required (Cumulative)": 1400,
+        "Next Level": [
+          "recgGmpBrsfX9t4UE"
+        ],
+        "Level Gate Rules": [
+          "recYB1nHYgAkXtPef"
+        ]
+      }
+    },
+    {
+      "id": "recsKHKSi4imjZaYG",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "All-Star",
+        "Previous Level XP Required": [
+          1600
+        ],
+        "Previous Level": [
+          "recgGmpBrsfX9t4UE"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 48 shooting submissions\n• 16 homework completions\n• 22 video submissions\n• 2 Zoom meeting(s)\n• A 40-day shooting streak",
+        "Level Name with Color": "All-Star",
+        "XP Required (Cumulative)": 1800,
+        "Next Level": [
+          "rec6aCLn33lcoUqED"
+        ],
+        "Level Gate Rules": [
+          "rectnBYfoOSyvnNH9"
+        ]
+      }
+    },
+    {
+      "id": "recxIKcUXZQHraaCf",
+      "fieldsSample": {
+        "XP From Previous Level": 200,
+        "Active?": true,
+        "Level Name": "Hot Hand",
+        "Previous Level XP Required": [
+          800
+        ],
+        "Previous Level": [
+          "recSYgWZotdwFxCLI"
+        ],
+        "Public Gate Criteria": "To unlock this level, athletes must complete:\n• 30 shooting submissions\n• 8 homework completions\n• 14 video submissions\n• 1 Zoom meeting(s)\n• A 20-day shooting streak",
+        "Level Name with Color": "Hot Hand",
+        "XP Required (Cumulative)": 1000,
+        "Next Level": [
+          "recAtRF5dh5bY1fo4"
+        ],
+        "Level Gate Rules": [
+          "recQxc58QTe7xlcSs"
+        ]
+      }
+    }
+  ],
+  "perfectWeekVisibleFix": {
+    "needed": true,
+    "after": true
+  },
+  "visibleBlankActivated": [
+    {
+      "id": "reclgScxpCba3m1Mo",
+      "name": "Shot Milestone"
+    }
+  ]
+}

@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (HC WAS Link package **COMPLETE**; CASE-01 + 057 manual Test **PASS**) |
+| Last updated | **2026-08-05** (Overnight Agent 4 ops/launch-readiness; Agent 3 Perfect Week 058→059 earlier) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -78,14 +78,14 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correction — Perfect Week verification open). Recalculate when statuses change. Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (Agent 3 Perfect Week chain — SC-028/SC-077 → Live Tested; Agent 4 ops pack advanced docs/tools without bucket moves). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 17 |
-| Live Tested in PROD | 22 |
-| Installed but not tested *(Installed in PROD)* | 49 |
+| Live Tested in PROD | 24 |
+| Installed but not tested *(Installed in PROD)* | 47 |
 | Built but not installed *(Built in Repository)* | 24 |
 | Ready for PROD Paste *(informal)* | 0 |
 | Planned | 17 |
@@ -94,6 +94,40 @@ Counts below match Section 4 as of **2026-08-05** (057 v1.5 install admin correc
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-05 — Overnight Agent 4 ops / launch readiness)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-088 | Built in Repository | **Built in Repository** (offline Live-ready) | 117 email handoff offline **7/7 PASS**; [`117-ZOOM-APPROVAL-GO-LIVE.md`](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md); live Gmail **not** executed |
+| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; welcome package present but **2025-2026** subject; Schmidt WAS×4 all stale-season labels; 073/117f fixtures missing |
+| SC-041 | Built in Repository | **Built in Repository** (executable packet) | [`SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`](./deploy-checklists/SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md); probe found no armed retry candidates |
+| SC-058 | Built in Repository | **Built in Repository** (drift auditor) | Operator-table audit 48 rows; **112** shows Live in operator table (UI attest OFF); 117/118/119 absent from operator table; version drift = weak signal |
+| SC-147 | Built in Repository | **Built in Repository** (PROD export+CLI) | Sanitized export + RCC CLI exit 0; views not installed — [`RCC-OMNI-VIEW-INSTALL.md`](./deploy-checklists/RCC-OMNI-VIEW-INSTALL.md) |
+| SC-032 / SC-065 | Built in Repository | **Built in Repository** (startup checklist) | [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) |
+| SC-139 | Built in Repository | **Built in Repository** (partial) | automation-index 117/117c wording corrected |
+
+**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f/welcome-rebuild still need Mike-authorized fixtures.
+
+**Do not claim:** live Gmail sends, Make webhook posts, RCC views installed, SC-088 Complete.
+
+Evidence: [`docs/testing/evidence/2026-08-05-agent4-ops/`](./testing/evidence/2026-08-05-agent4-ops/).
+
+### Dashboard reconciliation (2026-08-05 — Agent 3 Perfect Week 058→059 chain)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-028 | Installed in PROD | **Live Tested in PROD** | CASE-01: Eligible→Unlock `recALZFQNL3XicEOX`→XP `recMdcI5lN8gJ6830` (100); multi-case fixtures still open |
+| SC-077 | Installed in PROD | **Live Tested in PROD** | Same XP path; Source Key exact; idempotent re-award; **059 UI trigger still blocks auto-fire** |
+| SC-021 | Installed in PROD | **Installed in PROD** | Unchanged — broader config audit; PW slice advanced under SC-028/077 |
+| SC-091 | Installed in PROD | **Installed in PROD** | Zoom+PW fixtures CASE-10…13 not run this package |
+| SC-026 / SC-107 | Installed | **Installed** (Visible? fixed) | Perfect Week + Shot Milestone `Visible?`=true in PROD |
+
+**Net math vs post–HC WAS Link closeout:** Installed 49→**47**; LT 22→**24**. Complete unchanged. **Do not mark Perfect Week Complete** until 059 trigger covers Perfect Week auto-fire + remaining fixture cases.
+
+**Next package:** Mike UI — remove Shot Milestone filter on 059 ([`059-perfect-week-trigger-coverage.md`](./deploy-checklists/059-perfect-week-trigger-coverage.md)); then Batch A/B fixtures + level-gate soak (Schmidt Gate Blocked: Sub 9/10, Vid 5/6).
+
+Evidence: [`docs/testing/evidence/2026-08-05-agent3-perfect-week/`](./testing/evidence/2026-08-05-agent3-perfect-week/).
 
 ### Dashboard reconciliation (2026-08-05 — HC WAS Link clarification + CASE-01 + 057 PASS) — **PACKAGE COMPLETE**
 
@@ -323,7 +357,7 @@ Columns:
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
 | SC-027 | Config | Shot Milestones config + awards | Installed in PROD | Shot Milestones + **066 v3.3 Installed in PROD** (2026-07-24) | Re-test natural run on Schmidt; OMNI confirmation packet (not Live Tested for v3.3 yet) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-028 | Config | Perfect Week rules configurable | Installed in PROD | PROD **057 v1.5** installed/running (2026-08-05); repo **v1.5** matches; rules still partly hardcoded (`requiredVideoCount: 3`) | Run `docs/testing/perfect-week/` fixtures; do **not** mark Complete until cross-boundary cases pass | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade to v1.4 | `057-perfect-week-v1.5-live-verification.md`; `PERFECT-WEEK-FIXTURE-SPEC.md` | — | P1 | 2026-08-05 |
+| SC-028 | Config | Perfect Week rules configurable | Live Tested in PROD | CASE-01 award path proven (057→058→XP); PROD **057 v1.5**; **059 auto-fire blocked** until trigger drops Shot Milestone filter; multi-case fixtures still open | Mike 059 UI trigger fix; Batch A/B fixtures | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade 057 to v1.4 | `059-perfect-week-trigger-coverage.md`; `docs/testing/evidence/2026-08-05-agent3-perfect-week/` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Installed in PROD | Streak XP via **053** + **054 v5.6 Installed in PROD**; amounts from XP Reward Rules (3–60 day ladder); offline streak suite PASS | Mike decide repeat-after-break (SC-081); supervised live 3-day test (not Live Tested for v5.6 yet) | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-07-24 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
@@ -372,7 +406,7 @@ Columns:
 | SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Installed in PROD | **053** + **054 v5.6 Installed in PROD** (2026-07-24) | Supervised live streak create/break/repeat (v5.6 not Live Tested yet) | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-07-24 |
 | SC-076 | XP | Milestone XP (shot milestones) | Installed in PROD | **066 v3.3 Installed in PROD** (2026-07-24) | Live OMNI/natural run on Schmidt (v3.3 not Live Tested yet) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
-| SC-077 | XP | Perfect Week XP | Installed in PROD | PROD **057 v1.5** running; unlock **058** → XP **059** Source Key `PERFECT_WEEK\|{enr}\|{week}` (100 from rule) | Live prove award + dedupe via fixture CASE-01/15; Zoom cases 11–13 | SC-028, SC-074 | — | `057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P1 | 2026-08-05 |
+| SC-077 | XP | Perfect Week XP | Live Tested in PROD | Unlock `recALZFQNL3XicEOX` → XP `recMdcI5lN8gJ6830` (100, bucket/source Perfect Week, Source Key `PERFECT_WEEK\|{enr}\|{week}`); idempotent; WAS XP 213→313; **059 UI trigger still needs Pending-only** for auto-fire | Mike removes Shot Milestone filter on 059; optional Test button soak | SC-028, SC-074 | — | `059-perfect-week-trigger-coverage.md`; Agent 3 evidence folder | — | P1 | 2026-08-05 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Installed in PROD | 042 gate logic | Live prove blocked state messaging | SC-025 | — | V2-005 | — | P0 | 2026-07-23 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |

@@ -10,9 +10,9 @@ Purpose:
 Creates one XP Event from one Athlete Achievement Unlock for Perfect Week or Shot Milestone.
 
 Trigger:
-Athlete Achievement Unlocks when record is created, Shot Milestone is not empty,
-and XP Award Status is Pending.
-(Do NOT filter on Ready for 059 XP — formula flips mid-run; see RECOMMENDED TRIGGER.)
+Athlete Achievement Unlocks when record is created and XP Award Status is Pending.
+Do NOT require Shot Milestone (blocks Perfect Week). Do NOT filter Ready for 059 XP
+(formula flips mid-run). See RECOMMENDED TRIGGER.
 
 Important Tables:
 Athlete Achievement Unlocks, Achievements, XP Reward Rules, XP Events, Shot Milestones, Weeks, Weekly Athlete Summary
@@ -29,12 +29,15 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * Version: v3.5
  * Date Written: 2026-06-05
- * Last Updated: 2026-06-24
+ * Last Updated: 2026-08-05
  *
  * PURPOSE
  * - Creates one XP Event from one Athlete Achievement Unlock.
  * - Links XP Event to Weekly Athlete Summary from unlock or Enrollment + Week lookup.
  * - Supports Perfect Week and Shot Milestone achievement types.
+ *
+ * CHANGELOG
+ * - 2026-08-05: Recommended trigger lock — Pending only (no Shot Milestone filter) so Perfect Week unlocks from 058 fire 059.
  *
  * IMPORTANT DESIGN RULES
  * - Never writes a field named "undefined".
@@ -57,14 +60,16 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * TRIGGER TYPE
  * - When record matches conditions
  *
- * RECOMMENDED TRIGGER (Airtable UI - 2026-06-24)
- * - When a record is **created** (not "matches conditions" on formula fields)
+ * RECOMMENDED TRIGGER (Airtable UI - 2026-08-05 Agent 3 lock)
+ * - When a record is **created** (preferred; not "matches conditions" on formula fields)
  * - Table: Athlete Achievement Unlocks
- * - Shot Milestone is not empty
  * - XP Award Status is Pending
+ * - Do NOT require Shot Milestone not empty — that filter blocks Perfect Week (058) unlocks.
+ *   Script routes by Achievement Reward Rule Key (PERFECT_WEEK vs SHOT_MILESTONE).
  * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires
  *   empty XP Events; creating XP auto-links back and flips the formula to 0 mid-run.
  * - Script handles existing XP (marks Awarded) and duplicate protection.
+ * - PROD closeout: docs/deploy-checklists/059-perfect-week-trigger-coverage.md
  *
  * STUCK ROW REPAIR
  * - Pending + XP Events linked + Ready for 059 XP? = 0 → run extension script

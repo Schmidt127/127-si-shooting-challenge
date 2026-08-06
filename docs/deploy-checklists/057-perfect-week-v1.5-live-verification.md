@@ -8,7 +8,7 @@
 | Repository version | **1.5** — **matches PROD** |
 | Fixture method | **`LIVE_SAME_DAY_CALENDAR`** — [`PERFECT-WEEK-FIXTURE-METHOD.md`](../testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) |
 | Prior runbook | [`057-perfect-week-denver-v1.4.md`](./057-perfect-week-denver-v1.4.md) — **historical**; do **not** paste/downgrade to v1.4 |
-| Status | **Installed in PROD / running** — Perfect Week **live verification still required** |
+| Status | **Installed in PROD / running** — CASE-01 eligibility + unlock + XP data path proven (Agent 3); **059 auto-fire still open** |
 | Do not mark Complete | Until required cases pass under the live same-day method |
 
 ## Pilot proof (2026-08-05)
