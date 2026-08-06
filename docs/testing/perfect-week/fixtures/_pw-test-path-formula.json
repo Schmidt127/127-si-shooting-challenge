@@ -1,0 +1,29 @@
+{
+  "testRecordField": {
+    "name": "Perfect Week Test Record?",
+    "id": "fld0xNqO0ryOe7uEY",
+    "type": "checkbox"
+  },
+  "testSubmittedAtField": {
+    "name": "Perfect Week Test Submitted At",
+    "id": "fldr2msxUo1kPjROD",
+    "type": "dateTime",
+    "timeZone": "America/Denver"
+  },
+  "originalFormulaFieldIds": "IF(\n  AND(\n    {fld7JJ7neI0YYmB7i},\n    {fldpkkSBsx8kQRZos}\n  ),\n  IF(\n    DATETIME_FORMAT(SET_TIMEZONE({fld7JJ7neI0YYmB7i}, \"America/Denver\"), \"YYYY-MM-DD\") =\n    DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"YYYY-MM-DD\"),\n    1,\n    0\n  ),\n  0\n)",
+  "productionUsesSubmittedAtNotCreated": true,
+  "submittedAtId": "fld7JJ7neI0YYmB7i",
+  "createdId": "fld4G2aFUD8mxwjJ5",
+  "lookupStatus": "exists",
+  "lookup": {
+    "id": "fldHH6GDDG9DixHBT",
+    "type": "multipleLookupValues"
+  },
+  "newFormulaNamed": "IF(\n  AND(\n    {Perfect Week Test Record?},\n    {Perfect Week Test Submitted At},\n    FIND(\"recCyFEPeATOVNlr9\", ARRAYJOIN({Enrollment Record ID Lookup})) > 0\n  ),\n  IF(\n    AND(\n      {Perfect Week Test Submitted At},\n      {Activity Date}\n    ),\n    IF(\n      DATETIME_FORMAT(SET_TIMEZONE({Perfect Week Test Submitted At}, \"America/Denver\"), \"YYYY-MM-DD\") =\n      DATETIME_FORMAT({Activity Date}, \"YYYY-MM-DD\"),\n      1,\n      0\n    ),\n    0\n  ),\n  IF(\n    AND(\n      {Submitted At},\n      {Activity Date}\n    ),\n    IF(\n      DATETIME_FORMAT(SET_TIMEZONE({Submitted At}, \"America/Denver\"), \"YYYY-MM-DD\") =\n      DATETIME_FORMAT({Activity Date}, \"YYYY-MM-DD\"),\n      1,\n      0\n    ),\n    0\n  )\n)",
+  "originalFormulaNamed": "IF(\n  AND(\n    {Submitted At},\n    {Activity Date}\n  ),\n  IF(\n    DATETIME_FORMAT(SET_TIMEZONE({Submitted At}, \"America/Denver\"), \"YYYY-MM-DD\") =\n    DATETIME_FORMAT({Activity Date}, \"YYYY-MM-DD\"),\n    1,\n    0\n  ),\n  0\n)",
+  "lookupId": "fldHH6GDDG9DixHBT",
+  "applyFormula": {
+    "status": 200,
+    "body": "{\"type\":\"formula\",\"options\":{\"isValid\":true,\"formula\":\"IF(\\n  AND(\\n    {fld0xNqO0ryOe7uEY},\\n    {fldr2msxUo1kPjROD},\\n    FIND(\\\"recCyFEPeATOVNlr9\\\", ARRAYJOIN({fldHH6GDDG9DixHBT})) > 0\\n  ),\\n  IF(\\n    AND(\\n      {fldr2msxUo1kPjROD},\\n      {fldpkkSBsx8kQRZos}\\n    ),\\n    IF(\\n      DATETIME_FORMAT(SET_TIMEZONE({fldr2msxUo1kPjROD}, \\\"America/Denver\\\"), \\\"YYYY-MM-DD\\\") =\\n      DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \\\"YYYY-MM-DD\\\"),\\n      1,\\n      0\\n    ),\\n    0\\n  ),\\n  IF(\\n    AND(\\n      {fld7JJ7neI0YYmB7i},\\n      {fldpkkSBsx8kQRZos}\\n    ),\\n    IF(\\n      DATETIME_FORMAT(SET_TIMEZONE({fld7JJ7neI0YYmB7i}, \\\"America/Denver\\\"), \\\"YYYY-MM-DD\\\") =\\n      DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \\\"YYYY-MM-DD\\\"),\\n      1,\\n      0\\n    ),\\n    0\\n  )\\n)\",\"referencedFieldIds\":[\"fld0xNqO0ryOe7uEY\",\"fldr2msxUo1kPjROD\",\"fldHH6GDDG9DixHBT\",\"fldpkkSBsx8kQRZos\",\"fld7JJ7neI0YYmB7i\"],\"result\":{\"type\":\"number\",\"options\":{\"precision\":0}}},\"id\":\"fldE7G8H1O7HPYuIi\",\"name\":\"Submitted Same Day?\",\"description\":\"Same Denver calendar day for submit vs activity. Gated PW fixtures for Enrollment recCyFEPeATOVNlr9 may use Perfect Week Test Submitted At when Test Record? is checked; all other records use Submitted At (CREATED_TIME).\"}"
+  }
+}

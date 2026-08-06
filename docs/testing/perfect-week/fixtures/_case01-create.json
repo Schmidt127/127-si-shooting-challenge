@@ -1,0 +1,52 @@
+{
+  "batchKey": "PWTEST|2026-08-05",
+  "case": "CASE-01",
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "programInstanceId": "rec5mEM0YPqPqq0hZ",
+  "goalRecordId": "recQJRxpaBgwN42Un",
+  "shotsPerDay": 715,
+  "weekTotalShots": 5005,
+  "weekId": "reci5GdxEC57vfoS3",
+  "wasId": "recKebuZ79QFTwivA",
+  "submissionIds": [
+    "recVLL0vDAX6WniCA",
+    "recPJFAC2c2JWtUp6",
+    "recY4Y3U10VmDwNfR",
+    "recA1YgNKTJ1LgTwF",
+    "rec9XPi5OsDRxwGuU",
+    "rec2f3SDemsJSkeIO",
+    "recbsbSR5UXhFOdjo"
+  ],
+  "videoIds": [
+    "recNnc5jyNZhr7aMl",
+    "recU0fm1oWJWjjabv",
+    "recjxoiMZ2WTRuUmW"
+  ],
+  "zoomMeetingIds": [],
+  "evidencePreserved": {
+    "case07": {
+      "id": "recxbwkZpSJZ5eiqA",
+      "submittedSameDay": 0,
+      "countable": 0,
+      "shotTotal": 286,
+      "activityDate": "2026-05-03T06:00:00.000Z"
+    },
+    "case02sub": {
+      "id": "recbr8gduRKmpiDkd",
+      "submittedSameDay": 1,
+      "countable": 1,
+      "shotTotal": 5001,
+      "activityDate": "2026-08-05T12:00:00.000Z"
+    },
+    "case02was": {
+      "id": "recMMeJENu6Pg8l58",
+      "eligible": 0
+    }
+  },
+  "fieldIds": {
+    "testRecord": "fld0xNqO0ryOe7uEY",
+    "testSubmittedAt": "fldr2msxUo1kPjROD",
+    "enrollmentRecordIdLookup": "fldHH6GDDG9DixHBT"
+  },
+  "next": "Wait for formulas + Automation 057; then poll WAS helpers / Eligible / Unlock / XP"
+}

@@ -1,18 +1,40 @@
 {
   "batchKey": "PWTEST|2026-08-05",
-  "fixtureMethod": "LIVE_SAME_DAY_CALENDAR",
+  "fixtureMethod": "GATED_TEST_TIMESTAMP",
   "baseId": "appn84sqPw03zEbTT",
   "athleteId": "recgqVstObQRzgXJF",
   "athleteName": "Testing Schmidt",
   "timezone": "America/Denver",
+  "allowedGatedEnrollmentId": "recCyFEPeATOVNlr9",
   "repoMergeShaPackage": "95216191ceb1260b5cf444472f137aa19729a048",
-  "creationStatus": "METHOD_REVISED_AWAITING_BATCH_A",
+  "creationStatus": "CASE01_FIXTURES_CREATED_AWAITING_057",
+  "gatedTestFields": {
+    "perfectWeekTestRecord": { "name": "Perfect Week Test Record?", "id": "fld0xNqO0ryOe7uEY" },
+    "perfectWeekTestSubmittedAt": { "name": "Perfect Week Test Submitted At", "id": "fldr2msxUo1kPjROD" },
+    "enrollmentRecordIdLookup": { "name": "Enrollment Record ID Lookup", "id": "fldHH6GDDG9DixHBT" }
+  },
   "pilotProof": {
     "submissionId": "recxbwkZpSJZ5eiqA",
     "observedSubmittedSameDay": 0,
     "observedPerfectWeekCountable": 0,
-    "conclusion": "Historical Activity Date created later is not countable; Live same-day calendar required",
+    "conclusion": "Historical Activity Date created later is not countable without gated test timestamp path",
     "mayDeleteAfterDocs": true
+  },
+  "preservedEvidence": {
+    "CASE-07": {
+      "submissionId": "recxbwkZpSJZ5eiqA",
+      "submittedSameDay": 0,
+      "countable": 0
+    },
+    "CASE-02": {
+      "submissionId": "recbr8gduRKmpiDkd",
+      "wasId": "recMMeJENu6Pg8l58",
+      "activityDate": "2026-08-05",
+      "shotTotal": 5001,
+      "submittedSameDay": 1,
+      "countable": 1,
+      "eligible": 0
+    }
   },
   "testOverride": {
     "field": "Perfect Week Test Override?",
@@ -22,48 +44,84 @@
     "instruction": "Do not check"
   },
   "automation057TestMode": false,
-  "weeklyGoalShots": null,
-  "dailyMinimum": null,
+  "weeklyGoalShots": 555.5555555555555,
+  "goalRecordShots": 5000,
+  "dailyMinimum": 80,
+  "targetWeekGatedCase01": {
+    "sunday": "2026-08-02",
+    "saturday": "2026-08-08"
+  },
   "targetWeekBatchB": {
     "sunday": "2026-08-09",
-    "saturday": "2026-08-15"
+    "saturday": "2026-08-15",
+    "note": "Optional LIVE_SAME_DAY_CALENDAR alternate week"
   },
   "retiredHistoricalWeek": {
     "sunday": "2026-08-02",
     "saturday": "2026-08-08",
-    "reason": "Cannot backfill countable submissions after the fact"
+    "reason": "Superseded for award path by GATED_TEST_TIMESTAMP on same week dates"
   },
   "cases": {
     "CASE-01": {
       "title": "Clean passing week",
-      "batch": "B",
+      "batch": "GATED",
+      "fixtureMethod": "GATED_TEST_TIMESTAMP",
       "calendarComplete": true,
       "expectAward": true,
+      "requireGatedTestFields": true,
       "enrollmentId": "recCyFEPeATOVNlr9",
       "weekId": "reci5GdxEC57vfoS3",
       "wasId": "recKebuZ79QFTwivA",
+      "goalRecordId": "recQJRxpaBgwN42Un",
       "unlockId": "recALZFQNL3XicEOX",
       "xpEventId": "recMdcI5lN8gJ6830",
       "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
       "agent3ChainStatus": "DATA_PATH_PASS_059_TRIGGER_OPEN",
-      "submissionIds": [],
-      "videoIds": [],
+      "submissionIds": [
+        "recVLL0vDAX6WniCA",
+        "recPJFAC2c2JWtUp6",
+        "recY4Y3U10VmDwNfR",
+        "recA1YgNKTJ1LgTwF",
+        "rec9XPi5OsDRxwGuU",
+        "rec2f3SDemsJSkeIO",
+        "recbsbSR5UXhFOdjo"
+      ],
+      "videoIds": [
+        "recNnc5jyNZhr7aMl",
+        "recU0fm1oWJWjjabv",
+        "recjxoiMZ2WTRuUmW"
+      ],
       "zoomMeetingIds": [],
       "zoomAttendanceIds": [],
-      "contaminationSubmissionIds": []
+      "contaminationSubmissionIds": [],
+      "observed": {
+        "allSubmittedSameDay": 1,
+        "allCountable": 1,
+        "distinctDates": 7,
+        "weekTotalShots": 5005,
+        "automationStatus": "Pending",
+        "eligible": 0,
+        "note": "057 helpers not yet Ready — Mike Run required if API retrigger does not fire"
+      }
     },
     "CASE-02": {
       "title": "All shots on one day (Denver today only)",
       "batch": "A",
       "expectAward": false,
-      "expectedDaysLogged": 1,
-      "enrollmentId": null,
+      "forbidGatedTestFields": true,
+      "enrollmentId": "recCyFEPeATOVNlr9",
       "weekId": null,
-      "wasId": null,
-      "submissionIds": [],
+      "wasId": "recMMeJENu6Pg8l58",
+      "submissionIds": ["recbr8gduRKmpiDkd"],
       "videoIds": [],
       "zoomMeetingIds": [],
-      "zoomAttendanceIds": []
+      "zoomAttendanceIds": [],
+      "preserved": {
+        "submittedSameDay": 1,
+        "countable": 1,
+        "eligible": 0,
+        "shotTotal": 5001
+      }
     },
     "CASE-03": {
       "title": "Six of seven days",
@@ -128,11 +186,12 @@
       "title": "Not same-day / backdated Activity Date",
       "batch": "A",
       "expectAward": false,
-      "enrollmentId": null,
+      "forbidGatedTestFields": true,
+      "enrollmentId": "recCyFEPeATOVNlr9",
       "weekId": null,
       "wasId": null,
-      "submissionIds": [],
-      "backdatedSubmissionIds": [],
+      "submissionIds": ["recxbwkZpSJZ5eiqA"],
+      "backdatedSubmissionIds": ["recxbwkZpSJZ5eiqA"],
       "videoIds": [],
       "zoomMeetingIds": [],
       "zoomAttendanceIds": [],
@@ -236,13 +295,13 @@
     },
     "CASE-15": {
       "title": "Idempotency",
-      "batch": "B",
-      "calendarComplete": false,
+      "batch": "GATED",
+      "calendarComplete": true,
       "expectAward": true,
       "reuseCase": "CASE-01",
-      "enrollmentId": null,
-      "weekId": null,
-      "wasId": null,
+      "enrollmentId": "recCyFEPeATOVNlr9",
+      "weekId": "reci5GdxEC57vfoS3",
+      "wasId": "recKebuZ79QFTwivA",
       "submissionIds": [],
       "videoIds": [],
       "zoomMeetingIds": [],
@@ -262,7 +321,33 @@
       "enrollmentId": null
     }
   },
-  "createdRecordIds": [],
-  "initialCalculatedResults": null,
+  "createdRecordIds": [
+    "reci5GdxEC57vfoS3",
+    "recKebuZ79QFTwivA",
+    "recVLL0vDAX6WniCA",
+    "recPJFAC2c2JWtUp6",
+    "recY4Y3U10VmDwNfR",
+    "recA1YgNKTJ1LgTwF",
+    "rec9XPi5OsDRxwGuU",
+    "rec2f3SDemsJSkeIO",
+    "recbsbSR5UXhFOdjo",
+    "recNnc5jyNZhr7aMl",
+    "recU0fm1oWJWjjabv",
+    "recjxoiMZ2WTRuUmW"
+  ],
+  "initialCalculatedResults": {
+    "allSubmittedSameDay": true,
+    "allCountable": true,
+    "distinctDates": 7,
+    "eligible": 0,
+    "unlockCount": 0,
+    "xpCount": 0,
+    "automationStatus": "Pending"
+  },
+  "securityProbes": {
+    "checkboxOnly": "PASS",
+    "timestampOnly": "PASS",
+    "evidenceFile": "_security-probes.json"
+  },
   "case06Observation": null
 }
