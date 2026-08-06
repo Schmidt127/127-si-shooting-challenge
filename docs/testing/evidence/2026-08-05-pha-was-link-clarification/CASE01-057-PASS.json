@@ -1,0 +1,62 @@
+{
+  "verifiedAt": "2026-08-05T23:55:00.000Z",
+  "source": "Mike PROD operator attestation",
+  "packageStatus": "COMPLETE",
+  "case01Status": "PASS",
+  "automation057Status": "PASS",
+  "wasId": "recKebuZ79QFTwivA",
+  "testAttempts": [
+    {
+      "attempt": 1,
+      "result": "NO_OP",
+      "note": "Tested automation trigger only; Run a script action did not execute; no WAS helper field updates"
+    },
+    {
+      "attempt": 2,
+      "result": "PASS",
+      "scriptAction": {
+        "inputVariableName": "recordId",
+        "valueSource": "Airtable record ID from the tested trigger record",
+        "resolvedValue": "recKebuZ79QFTwivA"
+      },
+      "note": "Script completed successfully and populated Perfect Week helper fields"
+    }
+  ],
+  "wasConfirmed": {
+    "Perfect Week Daily Check Status": "Pass",
+    "Perfect Week Daily Requirement Met?": true,
+    "Perfect Week Video Count": 3,
+    "Perfect Week Zoom Meeting Count": 0,
+    "Perfect Week Homework Assigned Count": 2,
+    "Perfect Week Homework Satisfactory Count": 2,
+    "Perfect Week Homework Requirement Met?": 1,
+    "Perfect Week Automation Status": "Ready",
+    "Perfect Week Eligible?": 1
+  },
+  "homeworkCompletions": [
+    {
+      "id": "recqXxlOpATQI3sD4",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": ["recKebuZ79QFTwivA"]
+    },
+    {
+      "id": "rechzFmWrUp1tonto",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": ["recKebuZ79QFTwivA"]
+    }
+  ],
+  "fieldClarification": {
+    "weeklyAthleteSummaryText": {
+      "id": "fldhpGNYnu2l3bpUP",
+      "type": "singleLineText",
+      "classification": "unused_legacy_eligible_for_later_cleanup"
+    },
+    "weeklyAthleteSummaryLink": {
+      "id": "fldkoEbVnCugcMCCi",
+      "type": "multipleRecordLinks",
+      "classification": "actively_used"
+    }
+  },
+  "automation057CodeChanged": false,
+  "fieldsDeletedOrRenamed": false
+}

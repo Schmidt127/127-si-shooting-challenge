@@ -4,16 +4,23 @@
 Do not invent field names. Inspect schema first. Report mismatches before creating records.
 
 **Authoritative method:** [`PERFECT-WEEK-FIXTURE-METHOD.md`](./PERFECT-WEEK-FIXTURE-METHOD.md)  
-**Do not** use historical backfill. **Do not** rely on `Perfect Week Test Override?` (it does nothing).
+
+**Primary method for historical 7-day award fixtures:** `GATED_TEST_TIMESTAMP`  
+**Alternate:** `LIVE_SAME_DAY_CALENDAR` (true same-day creates only)
+
+This is a **tightly gated fixture mechanism**, not athlete-facing production behavior.
+
+**Do not** rely on `Perfect Week Test Override?` (it does nothing).  
+**Do not** put `Perfect Week Test Record?` or `Perfect Week Test Submitted At` on Fillout or public interfaces.
 
 ---
 
 ## Mission
 
-Create controlled Perfect Week fixtures in **PROD** for Automation **057 v1.5** using **live same-day calendar** creation only.
+Create controlled Perfect Week fixtures in **PROD** for Automation **057 v1.5**.
 
 Batch key prefix: `PWTEST|2026-08-05`  
-Athlete: Schmidt testing athlete only (`recgqVstObQRzgXJF` — verify). Do **not** email real parents.
+**Only** Enrollment `recCyFEPeATOVNlr9` (`Schmidt, Testing - 2026-2027`). Do **not** email real parents.
 
 ---
 
@@ -21,115 +28,69 @@ Athlete: Schmidt testing athlete only (`recgqVstObQRzgXJF` — verify). Do **not
 
 1. Work in **PROD** for controlled Schmidt fixtures only.
 2. Inspect current PROD schema before any create. Stop and report mismatches — do not guess.
-3. **Same-day rule (blocking):** `Submitted At` is `CREATED_TIME()`. A submission is Perfect Week countable only when Denver calendar of Activity Date equals Denver calendar of create time.  
-   - **Never** set Activity Date to a past day and expect `Perfect Week Countable Submission? = 1`.  
-   - Pilot `recxbwkZpSJZ5eiqA` proved past Activity Date → Same Day=0, Countable=0.
-4. **`Perfect Week Test Override?`:** Do **not** check it. It is an unused checkbox (no formula / no 057 read). It does **not** bypass same-day or countable.
-5. Create isolated Enrollments / Weeks / Submissions / Video Feedback / Zoom / WAS. Let unlocks/XP come from automations 058/059.
-6. Label every record `PWTEST|2026-08-05|CASE-XX` in writable Name/Notes fields.
-7. Leave Parent Email blank. Do not arm Welcome / Daily / Weekly send checkboxes or Make sends.
-8. Do **not** manually write formula, lookup, rollup, or Perfect Week result fields / Unlock / XP.
-9. Record every created record ID into the manifest shape.
-10. Safe to delete only after verifier evidence is captured.
+3. **Gated path (CASE-01 historical week):** For each fixture Submission, set **all** of:
+   - Enrollment = `recCyFEPeATOVNlr9`
+   - `Perfect Week Test Record?` = checked
+   - `Perfect Week Test Submitted At` = Denver date/time matching that day’s `Activity Date`
+4. If any gate condition is missing, Same Day falls back to real `Submitted At` (`CREATED_TIME()`).
+5. **`Perfect Week Test Override?`:** Do **not** check it.
+6. Write shots via **`Shot Total`**, not `Total Shots Counted`.
+7. No parent emails; do not arm Build/Send weekly email checkboxes.
+8. Do not manually write formula results, Eligible, Unlock, or XP.
 
 ---
 
-## Writable field adaptations (PROD)
+## Field IDs (verify in PROD)
 
-| Need | Write | Do not write |
-|------|-------|--------------|
-| Shots | `Shot Total` | `Total Shots Counted` (formula) |
-| Submit time | (automatic `CREATED_TIME`) | `Submitted At` (formula) |
-| Weekly goal | WAS `Goal Record` → row in `Target Goal Shots` | Invent weekly=70 |
-| Program | `Program Instance - Synced` | Table `Programs` |
-| Shooting PI | `rec5mEM0YPqPqq0hZ` (Shooting Challenge \| 2026-2027) — verify name | |
-| Other program (CASE-05/13) | `recOqcyks1wThIArM` (Dribbling Challenge \| 2026-2027) — verify | |
-
-Daily minimum = `ceil((Goal Total Shot Target / 9) / 7)`. Use `Shot Total` ≥ that each countable day.
+| Field | Expected ID |
+|-------|-------------|
+| Perfect Week Test Record? | `fld0xNqO0ryOe7uEY` |
+| Perfect Week Test Submitted At | `fldr2msxUo1kPjROD` |
+| Enrollment Record ID Lookup | `fldHH6GDDG9DixHBT` |
 
 ---
 
-## Staged batches
+## CASE-01 (gated — create all seven today)
 
-### Batch A — Immediate (run today)
+Week: Sunday `2026-08-02` → Saturday `2026-08-08`  
+Goal: link Goal Record with 5000 target; each day ≥ daily min; week total ≥ 5000.
 
-Create scaffolds + cases that do **not** need seven countable days.
+Order:
 
-| Case | Create today | Expected |
-|------|--------------|----------|
-| CASE-07 | One Submission with Activity Date **before** Denver today; Enrollment+Week+WAS | Same Day=0; Countable=0; no award |
-| CASE-02 | Week Sun–Sat containing today; Enrollment; WAS+Goal; **only today** countable with high `Shot Total` | Days Logged=1; Daily Met=false; no award |
-| Optional shells | Weeks/Enrollments for later Batch B | No email arms |
+1. Week + WAS + Goal Record link  
+2. Seven Submissions (gated fields as above)  
+3. Three Video Feedback rows  
+4. No Zoom Meeting  
+5. Confirm Same Day=1 and Countable=1 on all seven  
+6. Rearm / Run Automation **057** on the WAS (`Perfect Week Automation Status` → Pending after Error/Skipped if needed)  
+7. Confirm Ready + Eligible=1 → Unlock **058** → XP **059** (`PERFECT_WEEK|recCyFEPeATOVNlr9|{weekId}`)
 
-Return IDs after Batch A. **Stop** and wait for Mike before Batch B if asked.
+Preserve evidence (do not alter):
 
-### Batch B — Calendar (award path; one create per Denver day)
-
-**Target week:** Sunday `2026-08-09` through Saturday `2026-08-15` (next full Sun–Sat).
-
-| Day | Action |
-|-----|--------|
-| Before/on Sun | Week + Enrollment(s) + WAS + Goal Record; Zoom Meeting shell if case needs it |
-| Each day Sun→Sat | Create that day’s Submission with `Activity Date` = **that Denver day** (created that same day) |
-| As needed | Video Feedback on submissions (3 for award cases by Sat) |
-| After Sat | Allow 057→058→059; run verifier |
-
-Cases on Batch B: **CASE-01, 03–06, 08–16** (and CASE-15 after CASE-01 awards).
-
-CASE-03: create only six of the seven calendar days (omit one day entirely).  
-CASE-04: six in-week days + create adjacent-day rows **on** those adjacent Denver days (or accept they are non-countable if created early — prefer create-on-day).  
-CASE-06: on a calendar day, create submission with Activity Date=today, Week=**wrong** week, still link to target WAS; do not repair; report whether 057 counts it.
+| Case | IDs |
+|------|-----|
+| CASE-07 | Sub `recxbwkZpSJZ5eiqA` — Same Day 0, Countable 0 |
+| CASE-02 | Sub `recbr8gduRKmpiDkd`, WAS `recMMeJENu6Pg8l58` — Same Day 1, Countable 1, Eligible 0 |
 
 ---
 
-## CASE-01 record-creation order (Batch B — live same-day)
+## Batch A still valid without gated fields
 
-**Not** historical. Do this across the week:
-
-1. **Once (before Sunday or Sunday morning):**  
-   - Week: `Week Name`=`PWTEST|2026-08-05|CASE-01|WEEK`, `Start Date`=`2026-08-09` (Sunday), `End Date`=`2026-08-15`, Program Instance = Shooting Challenge 2026-2027  
-   - Enrollment: Athlete=Schmidt, Program Instance=Shooting, **no Parent Email**, Active? as needed for links, label `…|CASE-01|ENR`  
-   - WAS: Enrollment + Week + Goal Record; Homework empty; no email build/send flags; **do not** set Perfect Week helpers; **do not** check Test Override  
-2. **Each Denver day Sun–Sat:** Submission: Enrollment, Week, `Activity Date`=that day, `Shot Total`≥ daily min  
-3. **Any three of those days:** Video Feedback with Enrollment + that day’s Submission  
-4. **No Zoom Meeting** for CASE-01  
-5. After Saturday: ensure WAS.Submissions includes the seven; wait for/run 057  
-
-Expected after Saturday: Daily Met true; Video Met 1; Zoom Met 1 (not required); Eligible 1; one Unlock; one XP 100.
+| Case | Method | Notes |
+|------|--------|-------|
+| CASE-07 | Backdated Activity Date, **no** test fields | Same Day 0 |
+| CASE-02 | Same-day create today, **no** test fields | One-day dump; Eligible 0 |
 
 ---
 
-## Schema inspection checklist (do first)
+## Return
 
-Confirm types. Stop if missing:
+IDs for Week, WAS, Submissions, Videos, Unlock, XP Event.  
+JSON matching `fixtures/PWTEST-MANIFEST.template.json` with `fixtureMethod: "GATED_TEST_TIMESTAMP"`.
 
-**Weeks:** Week Name, Start Date, End Date, Program Instance  
-**Enrollments:** Athlete, Program Instance, Active?, Parent Email (leave blank)  
-**Submissions:** Enrollment, Week, Activity Date, Shot Total (writable); Submitted At / Countable / Same Day are formulas  
-**Video Feedback:** Enrollment, Submission  
-**Zoom Meetings:** Week, Attendees  
-**Zoom Attendance:** Enrollment, Zoom Meeting (if present), Attendance Method  
-**WAS:** Enrollment, Week, Submissions, Goal Record, Homework (empty)
+Also confirm:
 
-Do **not** write Perfect Week * Met? / Eligible / Unlock / XP / Test Override.
-
----
-
-## Required return table
-
-| Case | Batch | Enrollment | Week | WAS | Submissions | Videos | Zoom | Expected |
-| ---- | ----- | ---------- | ---- | --- | ----------- | ------ | ---- | -------- |
-
-Also return JSON matching `fixtures/PWTEST-MANIFEST.template.json` (include `fixtureMethod: "LIVE_SAME_DAY_CALENDAR"`).
-
----
-
-## After creates
-
-1. Confirm 057 enabled, Version **1.5**.  
-2. Wait for or re-run 057 on each fixture WAS.  
-3. Allow 058/059 for awarding cases.  
-4. Run: `node tools/testing/verify_perfect_week_fixtures.mjs`  
-5. Do not delete until evidence saved.  
-6. Do **not** mark Perfect Week Complete yet.  
-7. Pilot `recxbwkZpSJZ5eiqA` may be deleted after this method is documented.
+1. 057 enabled, Version **1.5**  
+2. Test Override unchecked  
+3. Test fields absent from Fillout/public UI  
+4. Rollback doc known: `PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md`

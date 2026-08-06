@@ -1,0 +1,88 @@
+{
+  "wasSubmissions": [
+    "recVLL0vDAX6WniCA",
+    "recPJFAC2c2JWtUp6",
+    "recY4Y3U10VmDwNfR",
+    "recA1YgNKTJ1LgTwF",
+    "rec9XPi5OsDRxwGuU",
+    "rec2f3SDemsJSkeIO",
+    "recbsbSR5UXhFOdjo"
+  ],
+  "knownVideos": [
+    {
+      "id": "recNnc5jyNZhr7aMl",
+      "ok": true,
+      "enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "submission": [
+        "recVLL0vDAX6WniCA"
+      ],
+      "enrollmentMatch": true,
+      "submissionOnWas": true,
+      "fieldsPresent": [
+        "Record Id",
+        "Submission",
+        "Video Feedback Name",
+        "Week",
+        "Enrollment",
+        "Total Video XP Awarded",
+        "Activity Date - Lkp",
+        "Activity XP Display Label",
+        "Created",
+        "Writeback Complete?"
+      ]
+    },
+    {
+      "id": "recU0fm1oWJWjjabv",
+      "ok": true,
+      "enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "submission": [
+        "recPJFAC2c2JWtUp6"
+      ],
+      "enrollmentMatch": true,
+      "submissionOnWas": true,
+      "fieldsPresent": [
+        "Record Id",
+        "Submission",
+        "Video Feedback Name",
+        "Week",
+        "Enrollment",
+        "Total Video XP Awarded",
+        "Activity Date - Lkp",
+        "Activity XP Display Label",
+        "Created",
+        "Writeback Complete?"
+      ]
+    },
+    {
+      "id": "recjxoiMZ2WTRuUmW",
+      "ok": true,
+      "enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "submission": [
+        "recY4Y3U10VmDwNfR"
+      ],
+      "enrollmentMatch": true,
+      "submissionOnWas": true,
+      "fieldsPresent": [
+        "Record Id",
+        "Submission",
+        "Video Feedback Name",
+        "Week",
+        "Enrollment",
+        "Total Video XP Awarded",
+        "Activity Date - Lkp",
+        "Activity XP Display Label",
+        "Created",
+        "Writeback Complete?"
+      ]
+    }
+  ],
+  "enrollmentVideos": [],
+  "enrollmentVideosOnWasSubs": [],
+  "countFor057": 0
+}

@@ -1,0 +1,48 @@
+{
+  "ranAt": "2026-08-06T00:07:33.589Z",
+  "live": true,
+  "unlockId": "recALZFQNL3XicEOX",
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "weekId": "reci5GdxEC57vfoS3",
+  "wasId": "recKebuZ79QFTwivA",
+  "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+  "xpAmount": 100,
+  "weekEnd": "2026-08-09T05:59:00.000Z",
+  "pre": {
+    "xpAwardStatus": "Awarded",
+    "readyFor059": 0,
+    "existingXpIds": [
+      "recMdcI5lN8gJ6830"
+    ],
+    "byKeyCount": 1,
+    "byKeyIds": [
+      "recMdcI5lN8gJ6830"
+    ]
+  },
+  "action": "idempotent_link_existing",
+  "xpEventId": "recMdcI5lN8gJ6830",
+  "unlockAfter": {
+    "xpAwardStatus": "Awarded",
+    "xpAwarded": 100,
+    "xpEvents": [
+      "recMdcI5lN8gJ6830"
+    ],
+    "readyFor059": 0
+  },
+  "wasAfter": {
+    "unlockIds": [
+      "recALZFQNL3XicEOX"
+    ],
+    "xpEarnedThisWeek": 313,
+    "totalXpAfterWeek": 313,
+    "hasXpEvent": true,
+    "xpEventCount": 8
+  },
+  "post": {
+    "byKeyCount": 1,
+    "byKeyIds": [
+      "recMdcI5lN8gJ6830"
+    ],
+    "exactlyOneXp": true
+  }
+}

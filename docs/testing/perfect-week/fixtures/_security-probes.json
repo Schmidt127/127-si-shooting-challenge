@@ -1,0 +1,52 @@
+{
+  "probes": [
+    {
+      "name": "checkbox_only",
+      "id": "recQGFTQGx1HX7SVF",
+      "submittedSameDay": 0,
+      "countable": 0,
+      "expectSameDay": 0,
+      "pass": true
+    },
+    {
+      "name": "timestamp_only",
+      "id": "recaZo3EBcAJcUqkQ",
+      "submittedSameDay": 0,
+      "countable": 0,
+      "expectSameDay": 0,
+      "pass": true
+    }
+  ],
+  "evidence": {
+    "case07": {
+      "id": "recxbwkZpSJZ5eiqA",
+      "submittedSameDay": 0,
+      "countable": 0,
+      "testRecord": false,
+      "testSubmittedAt": null,
+      "activityDate": "2026-05-03T06:00:00.000Z"
+    },
+    "case02sub": {
+      "id": "recbr8gduRKmpiDkd",
+      "submittedSameDay": 1,
+      "countable": 1,
+      "testRecord": false,
+      "testSubmittedAt": null,
+      "activityDate": "2026-08-05T12:00:00.000Z"
+    },
+    "case02was": {
+      "id": "recMMeJENu6Pg8l58",
+      "eligible": 0,
+      "testOverride": false
+    },
+    "case01wasOverride": false
+  },
+  "cleanup": [
+    "recQGFTQGx1HX7SVF",
+    "recaZo3EBcAJcUqkQ"
+  ],
+  "deleted": [
+    "recQGFTQGx1HX7SVF",
+    "recaZo3EBcAJcUqkQ"
+  ]
+}

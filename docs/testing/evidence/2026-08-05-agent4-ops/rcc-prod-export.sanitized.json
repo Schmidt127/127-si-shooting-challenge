@@ -1,0 +1,619 @@
+{
+  "currentChallengeYear": "2026-2027",
+  "expectedWeekId": null,
+  "nowMs": 1785974862437,
+  "baseId": "appn84sqPw03zEbTT",
+  "sanitized": true,
+  "tables": {
+    "Weekly Athlete Summary": [
+      {
+        "id": "recBpJc27P9QKoke5",
+        "fields": {
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ]
+        }
+      },
+      {
+        "id": "recKebuZ79QFTwivA",
+        "fields": {
+          "Enrollment": [
+            "recCyFEPeATOVNlr9"
+          ],
+          "Week": [
+            "reci5GdxEC57vfoS3"
+          ]
+        }
+      },
+      {
+        "id": "recMMeJENu6Pg8l58",
+        "fields": {
+          "Enrollment": [
+            "recCyFEPeATOVNlr9"
+          ],
+          "Week": [
+            "recWeVrSabnsYaHc2"
+          ]
+        }
+      },
+      {
+        "id": "recWi4FtZhPqQHCC1",
+        "fields": {
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ]
+        }
+      },
+      {
+        "id": "recbvmjaNsYzUYAUT",
+        "fields": {
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ]
+        }
+      },
+      {
+        "id": "recuxvGq2kY8WKcey",
+        "fields": {
+          "Enrollment": [
+            "recgP9qZYjAhE7NXm"
+          ],
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ]
+        }
+      }
+    ],
+    "Enrollments": [
+      {
+        "id": "recCyFEPeATOVNlr9",
+        "fields": {
+          "Athlete": [
+            "recgqVstObQRzgXJF"
+          ],
+          "Active?": true,
+          "Parent Email": "[email]"
+        }
+      },
+      {
+        "id": "recgP9qZYjAhE7NXm",
+        "fields": {
+          "Athlete": [
+            "recgqVstObQRzgXJF"
+          ],
+          "Active?": true,
+          "Parent Email": "[email]"
+        }
+      }
+    ],
+    "Weeks": [
+      {
+        "id": "rec2Rewxt21z7dI9f",
+        "fields": {
+          "Week Key": "2026-2027|Week 2",
+          "End Date": "2027-05-09T05:30:00.000Z",
+          "Start Date": "2027-05-02T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "rec7RpUMVLbcrmn4h",
+        "fields": {
+          "Week Key": "2026-2027|Week 3",
+          "End Date": "2027-05-16T05:30:00.000Z",
+          "Start Date": "2027-05-09T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "rec7fCckt1zj9CbmP",
+        "fields": {
+          "Week Key": "2025-2026|Post Challenge",
+          "End Date": "2026-07-01T23:54:00.000Z",
+          "Start Date": "2026-07-01T23:54:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recBrZ1sV8byWEHZU",
+        "fields": {
+          "Week Key": "2026-2027|Week 1",
+          "End Date": "2027-05-02T05:30:00.000Z",
+          "Start Date": "2027-04-25T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recCCpyqPKA580sdk",
+        "fields": {
+          "Week Key": "2026-2027|Week 4",
+          "End Date": "2027-05-23T05:30:00.000Z",
+          "Start Date": "2027-05-16T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recEYLwDOOYMMsDNf",
+        "fields": {
+          "Week Key": "2025-2026|Week 6",
+          "End Date": "2026-06-07T05:59:00.000Z",
+          "Start Date": "2026-05-31T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recEapVpi6u0oxuPy",
+        "fields": {
+          "Week Key": "2026-2027|Week 5",
+          "End Date": "2027-05-30T05:30:00.000Z",
+          "Start Date": "2027-05-23T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recGDQrxlKHxHDs8f",
+        "fields": {
+          "Week Key": "2025-2026|Week 0",
+          "End Date": "2026-04-26T05:59:00.000Z",
+          "Start Date": "2026-04-19T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recKJMGYbEzGHyXfd",
+        "fields": {
+          "Week Key": "2026-2027|Week 6",
+          "End Date": "2027-06-06T05:30:00.000Z",
+          "Start Date": "2027-05-30T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recNmS6xlp3HOWPAE",
+        "fields": {
+          "Week Key": "2025-2026|Week 8",
+          "End Date": "2026-06-21T05:59:00.000Z",
+          "Start Date": "2026-06-14T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recRp4y42EpLvtwk5",
+        "fields": {
+          "Week Key": "2026-2027|Week 7",
+          "End Date": "2027-06-13T05:30:00.000Z",
+          "Start Date": "2027-06-06T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recUPkXtsDOHnY5q7",
+        "fields": {
+          "Week Key": "2025-2026|Week 5",
+          "End Date": "2026-05-31T05:59:00.000Z",
+          "Start Date": "2026-05-24T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recVDKiYATgzsfpmE",
+        "fields": {
+          "Week Key": "2025-2026|Post - Testing Today",
+          "End Date": "2026-07-23T06:00:00.000Z",
+          "Start Date": "2026-07-23T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recW3irij491AIPrl",
+        "fields": {
+          "Week Key": "2026-2027|Week 8",
+          "End Date": "2027-06-20T05:30:00.000Z",
+          "Start Date": "2027-06-13T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recWeVrSabnsYaHc2",
+        "fields": {
+          "Week Key": "2026-2027|Early Bird",
+          "End Date": "2026-08-09T05:30:00.000Z",
+          "Start Date": "2026-08-02T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recZwSGoAiERDdTMr",
+        "fields": {
+          "Week Key": "2025-2026|Week 2",
+          "End Date": "2026-05-10T05:59:00.000Z",
+          "Start Date": "2026-05-03T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recaX4EyJ7BWWKfSq",
+        "fields": {
+          "Week Key": "2025-2026|Week 3",
+          "End Date": "2026-05-17T05:59:00.000Z",
+          "Start Date": "2026-05-10T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recbw58r8MlnhbBx7",
+        "fields": {
+          "Week Key": "2025-2026|Week 7",
+          "End Date": "2026-06-14T05:59:00.000Z",
+          "Start Date": "2026-06-07T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recd1V4C5KDJm87b1",
+        "fields": {
+          "Week Key": "2025-2026|Week 9",
+          "End Date": "2026-06-28T05:59:00.000Z",
+          "Start Date": "2026-06-21T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recfu3dpVJAnVBvCB",
+        "fields": {
+          "Week Key": "2026-2027|Week 9",
+          "End Date": "2027-06-27T05:30:00.000Z",
+          "Start Date": "2027-06-20T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "rech8lgJkNMStWh9A",
+        "fields": {
+          "Week Key": "2026-2027|Week 10",
+          "End Date": "2027-07-01T05:30:00.000Z",
+          "Start Date": "2027-06-27T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "reci5GdxEC57vfoS3",
+        "fields": {
+          "Week Key": "|PWTEST|2026-08-05|CASE-01|WEEK",
+          "End Date": "2026-08-09T05:59:00.000Z",
+          "Start Date": "2026-08-02T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "reciDzF3dUk32AoeD",
+        "fields": {
+          "Week Key": "2025-2026|Week 4",
+          "End Date": "2026-05-24T05:59:00.000Z",
+          "Start Date": "2026-05-17T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recnMGC2JBHjO0ay6",
+        "fields": {
+          "Week Key": "2025-2026|Week 1",
+          "End Date": "2026-05-03T05:59:00.000Z",
+          "Start Date": "2026-04-26T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recrTwxqXz31fNZ7e",
+        "fields": {
+          "Week Key": "2025-2026|Week 10",
+          "End Date": "2026-07-01T05:59:00.000Z",
+          "Start Date": "2026-06-28T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      },
+      {
+        "id": "recsWuPMbRH0W5aRU",
+        "fields": {
+          "Week Key": "2026-2027|Post-Challenge",
+          "End Date": "2027-07-01T05:30:00.000Z",
+          "Start Date": "2027-07-01T06:00:00.000Z",
+          "Week Name": "[redacted]"
+        }
+      }
+    ],
+    "XP Events": [
+      {
+        "id": "rec02f6xn0H4YdAOa",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recInGVxh1tsRVAK5",
+          "Active?": true,
+          "Week": [
+            "recUPkXtsDOHnY5q7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec07BdnNfvubhewJ",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recQd95JIHotMlQ7V",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec07buhmp2hvDztn",
+        "fields": {
+          "Source Key": "VIDEO_SUBMISSION|recsGX3LuMJR4nvKT",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 30
+        }
+      },
+      {
+        "id": "rec0AO3exipg0yiIB",
+        "fields": {
+          "Source Key": "STREAK_XP|recJsYuNK6HY0tUku|rechOec7g8LBLcdgl|2026-05-23",
+          "Active?": true,
+          "Week": [
+            "reciDzF3dUk32AoeD"
+          ],
+          "XP Points": 15
+        }
+      },
+      {
+        "id": "rec0B4yE7HBDXUXDj",
+        "fields": {
+          "Source Key": "STREAK_XP|recK2dzcWqj5oFGHc|rechOec7g8LBLcdgl|2026-06-30",
+          "Active?": true,
+          "Week": [
+            "recrTwxqXz31fNZ7e"
+          ],
+          "XP Points": 15
+        }
+      },
+      {
+        "id": "rec0BsJGiWXQkeALM",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|rec3FlupZAP9Ga9Ls",
+          "Active?": true,
+          "Week": [
+            "reciDzF3dUk32AoeD"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0CHMJFyjIADTJt",
+        "fields": {
+          "Source Key": "STREAK_XP|rec2gnfAuY1xTodO6|recQuAtXyT2wKJNGI|2026-05-19",
+          "Active?": true,
+          "Week": [
+            "reciDzF3dUk32AoeD"
+          ],
+          "XP Points": 10
+        }
+      },
+      {
+        "id": "rec0D46peB7uZbWeY",
+        "fields": {
+          "Source Key": "ZOOM_ATTEND_BONUS_2|recLt8puScXPL3sjF",
+          "Active?": true,
+          "Week": [
+            "recd1V4C5KDJm87b1"
+          ],
+          "XP Points": 30
+        }
+      },
+      {
+        "id": "rec0DkWhaNVVd2Ywc",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recLVKfl7H5OYWyb1",
+          "Active?": true,
+          "Week": [
+            "recNmS6xlp3HOWPAE"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0EqtnHMeo9tIg5",
+        "fields": {
+          "Source Key": "STREAK_XP|rec85c7i6Bhjo1DO4|recQuAtXyT2wKJNGI|2026-06-03",
+          "Active?": true,
+          "Week": [
+            "recEYLwDOOYMMsDNf"
+          ],
+          "XP Points": 10
+        }
+      },
+      {
+        "id": "rec0Fu9ILnC6L40gv",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recpz2pecyftFRNZb",
+          "Active?": true,
+          "Week": [
+            "recaX4EyJ7BWWKfSq"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0GZ9qnxjOZXTuh",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|reco5nzueNLrxyB3T",
+          "Active?": true,
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0HjzFoP85a0g10",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recUbprnxWltaFAsb",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0KHotVtQVCTwNI",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|rec61xD6XswFPdXik",
+          "Active?": true,
+          "Week": [
+            "recEYLwDOOYMMsDNf"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0LNemDVLlSs1TN",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|rec0HYr74fDC6IDJJ",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0LnffG4tfUxn1T",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recyuRYmALWquiDif",
+          "Active?": true,
+          "Week": [
+            "recNmS6xlp3HOWPAE"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0LwEB77ccI48rA",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recfpnpvfuPT7HWRP",
+          "Active?": true,
+          "Week": [
+            "recNmS6xlp3HOWPAE"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0N4UuFPRDllMvH",
+        "fields": {
+          "Source Key": "ZOOM_ATTEND_BASE|rec3ToANr5pcs2SRG|recOSUwW9lXQx6nWL",
+          "Active?": true,
+          "Week": [
+            "recd1V4C5KDJm87b1"
+          ],
+          "XP Points": 60
+        }
+      },
+      {
+        "id": "rec0NqY7F5nm84kKl",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|rec2IGigyjRJUpjZh",
+          "Active?": true,
+          "Week": [
+            "recrTwxqXz31fNZ7e"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0QWSDuOf8z1747",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recj8swhTPjM1CFP5",
+          "Active?": true,
+          "Week": [
+            "recEYLwDOOYMMsDNf"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0QuPkg6eLnAvqR",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recTqQnnpLqrMmqek",
+          "Active?": true,
+          "Week": [
+            "recZwSGoAiERDdTMr"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0RG4eVaB2AK7Qx",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|reclzM9GAtyA2Fc3B",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0TNF1qqY8JlPc3",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recDSavu86fuiaVSL",
+          "Active?": true,
+          "Week": [
+            "recbw58r8MlnhbBx7"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0UTVTl3WuHmfAE",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recrij2HGqkuhTV3o",
+          "Active?": true,
+          "Week": [
+            "recEYLwDOOYMMsDNf"
+          ],
+          "XP Points": 20
+        }
+      },
+      {
+        "id": "rec0VCggt628IRrhs",
+        "fields": {
+          "Source Key": "SUBMISSION_XP|recfbK5VIxIuhN3Nq",
+          "Active?": true,
+          "Week": [
+            "recaX4EyJ7BWWKfSq"
+          ],
+          "XP Points": 20
+        }
+      }
+    ]
+  },
+  "counts": {
+    "was": 6,
+    "enrollments": 2,
+    "weeks": 26,
+    "xp": 2579
+  },
+  "note": "XP Events truncated to 25 sample rows for git size; regenerate full export via ops_rcc_export_prod.mjs"
+}

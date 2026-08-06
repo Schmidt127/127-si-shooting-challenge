@@ -1,0 +1,87 @@
+{
+  "verifiedAt": "2026-08-06T00:07:56.999Z",
+  "xpEvent": {
+    "id": "recMdcI5lN8gJ6830",
+    "points": 100,
+    "bucket": "Perfect Week",
+    "source": "Perfect Week",
+    "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+    "activityDate": "2026-08-09T05:59:00.000Z",
+    "activityDateSource": "Perfect Week End Date",
+    "enrollment": [
+      "recCyFEPeATOVNlr9"
+    ],
+    "week": [
+      "reci5GdxEC57vfoS3"
+    ],
+    "was": [
+      "recKebuZ79QFTwivA"
+    ],
+    "unlock": [
+      "recALZFQNL3XicEOX"
+    ],
+    "awardMode": "Automatic",
+    "active": true,
+    "reasonPublic": "Perfect Week completed."
+  },
+  "unlock": {
+    "id": "recALZFQNL3XicEOX",
+    "xpAwardStatus": "Awarded",
+    "xpAwarded": 100,
+    "xpEvents": [
+      "recMdcI5lN8gJ6830"
+    ]
+  },
+  "was": {
+    "eligible": 1,
+    "unlock": [
+      "recALZFQNL3XicEOX"
+    ],
+    "xpEarnedThisWeek": 313,
+    "totalXpAfterWeek": 313,
+    "hasXp": true
+  },
+  "achievement": {
+    "id": "recd2jEIVPskiRTSu",
+    "name": "Perfect Week",
+    "active": true,
+    "rewardRuleKey": "PERFECT_WEEK"
+  },
+  "unlockUniqueness": {
+    "matchingCount": 0,
+    "matchingIds": [],
+    "exactlyOne": false
+  },
+  "xpUniqueness": {
+    "byKeyCount": 1,
+    "byKeyIds": [
+      "recMdcI5lN8gJ6830"
+    ],
+    "exactlyOne": true
+  },
+  "unlockRelinkSimulation": {
+    "beforeLink": [
+      "recALZFQNL3XicEOX"
+    ],
+    "clearedLink": [],
+    "restoredLink": [
+      "recALZFQNL3XicEOX"
+    ],
+    "pass": true
+  },
+  "checks": {
+    "xpAmount100": true,
+    "xpBucketPerfectWeek": true,
+    "xpSourcePerfectWeek": true,
+    "sourceKeyCorrect": true,
+    "activityDateSource": true,
+    "linkedEnrollment": true,
+    "linkedWeek": true,
+    "linkedWas": true,
+    "linkedUnlock": true,
+    "unlockAwarded": true,
+    "unlockHasXp": true,
+    "wasReflectsAward": true
+  },
+  "allChecksPass": false
+}

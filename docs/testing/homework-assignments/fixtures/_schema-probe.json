@@ -1,0 +1,2670 @@
+{
+  "probedAt": "2026-08-05T23:06:00.354Z",
+  "tables": {
+    "FBC Curriculum - SYNC": {
+      "id": "tblUuxwYlX4EQ9MKE",
+      "name": "FBC Curriculum - SYNC",
+      "fieldCount": 30,
+      "interesting": [
+        {
+          "id": "fldBv0SCf7KX47g9W",
+          "name": "Assignment Full Name",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldYbEFE6YJgWqJbW",
+          "name": "Assignment Full Name - Display",
+          "type": "formula",
+          "options": {
+            "formula": "{flddMQ8OZdvSsvak8} & \" |  \" & {fld2mYDUtnIO238c4} & \" | \" & {fld3w0F60Pijeo63p}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "flddMQ8OZdvSsvak8",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fld2mYDUtnIO238c4",
+          "name": "Homework Number",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "HW 1",
+              "HW 2",
+              "HW 3",
+              "HW 4",
+              "HW 5",
+              "HW 6",
+              "HW 7",
+              "HW 8",
+              "HW 9",
+              "HW 10",
+              "HW 11",
+              "HW 12",
+              "HW 13",
+              "HW 14",
+              "HW 15",
+              "HW 16",
+              "HW 17",
+              "HW 18"
+            ]
+          }
+        },
+        {
+          "id": "fldISOkTeqLmrFqRF",
+          "name": "Assignment Number",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fld3w0F60Pijeo63p",
+          "name": "Assignment Title",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldmE4y7TL8ENzlIN",
+          "name": "Assignment Topic",
+          "type": "multipleSelects",
+          "options": {
+            "choices": [
+              "Growth Mindset",
+              "Leadership",
+              "Relationships",
+              "Sportsmanship",
+              "Teamwork",
+              "Mastery",
+              "Patience",
+              "Encouragement",
+              "Care",
+              "Responsibility",
+              "Legacy",
+              "Mindset",
+              "Self Awareness",
+              "Confidence Equation",
+              "Say It, Believe It, Be It!",
+              "Personal Game Plan",
+              "Performance Breathing",
+              "Refocusing Commands",
+              "Resilience Technique",
+              "Drive",
+              "Intentional Practice",
+              "Mental Imagery",
+              "Performance Playlists",
+              "Mental and Emotional Stamina",
+              "Play Grounded"
+            ]
+          }
+        },
+        {
+          "id": "fldDnS1EhUdUgsYhD",
+          "name": "Full Assignment Description",
+          "type": "richText"
+        },
+        {
+          "id": "fldrSPaUFQEuEV4i3",
+          "name": "Assignment Rationale",
+          "type": "richText"
+        },
+        {
+          "id": "fld69DQxhTVlmGoWh",
+          "name": "Grade Band",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblOhHrIqpjcsk2WG",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldOZBsTWKKH3jtEd",
+          "name": "Active?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldQAfy0BnTQVvpGT",
+          "name": "Published?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldC2SjcSsN839oUW",
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fld4swY3XDC0Bn4Er",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldtclW1JHRfNfAVw",
+          "name": "Submissions copy",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldt2z0Lt95YbJ2kl",
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldUY2qoIiD8Dlq7A",
+          "name": "Assignment Description",
+          "type": "richText"
+        }
+      ],
+      "allNames": [
+        "Assignment Full Name",
+        "Assignment Full Name - Display",
+        "Week",
+        "Homework Number",
+        "Assignment Number",
+        "Assignment Title",
+        "Book",
+        "Assignment Topic",
+        "Cover Images",
+        "Docs",
+        "URL",
+        "URL Additional",
+        "Age Appropriate",
+        "Full Assignment Description",
+        "Brief Description - Display",
+        "Assignment Rationale",
+        "Specific Steps",
+        "Book Abbreviation",
+        "Grade Band",
+        "Active?",
+        "Published?",
+        "Lesson Key",
+        "Submissions",
+        "Homework Completions",
+        "Submissions copy",
+        "Weekly Athlete Summary",
+        "Assignment Description",
+        "Order",
+        "Testing Scenarios",
+        "Global Config"
+      ]
+    },
+    "Homework Completions": {
+      "id": "tblv58ppTFDBXb3nv",
+      "name": "Homework Completions",
+      "fieldCount": 84,
+      "interesting": [
+        {
+          "id": "fld2ngOdaAmhpieZk",
+          "name": "Homework Completion Full Name",
+          "type": "formula",
+          "options": {
+            "formula": "{fldxpl7aW59DOZVP9} & \" - \" & {fldotQdQqQ7RKVQGg} & \" - \" & {fldesgOUPcUoo9S2q}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldSxUIDwVd6xUhhC",
+          "name": "Homework Completion Key",
+          "type": "formula",
+          "options": {
+            "formula": "ARRAYJOIN({fldfK3h5ucx3WdFNS}) & \"|\" & ARRAYJOIN({fldesgOUPcUoo9S2q}) & \"|\" & ARRAYJOIN({fldotQdQqQ7RKVQGg})",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldwcbjY7YjJaAZGy",
+          "name": "Grade Band",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblOhHrIqpjcsk2WG",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldhpGNYnu2l3bpUP",
+          "name": "Weekly Athlete Summary",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldqG5ScbJkSrwonN",
+          "name": "Submissions - Linked",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fld3QgYcH4AqQh6gP",
+          "name": "Completion Status",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Not Submitted",
+              "Submitted",
+              "Under Review",
+              "Satisfactory",
+              "Needs Revision",
+              "Not Accepted"
+            ]
+          }
+        },
+        {
+          "id": "flds8qfFNyCAzYgzT",
+          "name": "Completion Summary",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldh4ohAiEdp8oejg},\n    IF(\n      {fldLgx4GGYyfsajd5},\n      \"Satisfactory + Extra Credit\",\n      \"Satisfactory\"\n    ),\n    IF(\n      {fld3QgYcH4AqQh6gP},\n        {fld3QgYcH4AqQh6gP},\n        BLANK()\n    )\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldWyWWX9DQ3988EN",
+          "name": "Original File Name",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldKI8IN30Ogye1E7",
+          "name": "Writeback Complete?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fld9epQi6hrHq3pke",
+          "name": "Submission Asset - Linked",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldxpl7aW59DOZVP9",
+          "name": "Full Athlete Name - Backward (from Enrollment)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldkoEbVnCugcMCCi",
+          "name": "Weekly Athlete Summary Link",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldzbzik42JGLQzpX",
+          "name": "Asset Slot",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "HW1",
+              "HW2"
+            ]
+          }
+        },
+        {
+          "id": "fldNi16ZUb3ldONNW",
+          "name": "Review Complete",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldwiaO5UWbg9IIka",
+          "name": "Total Homework XP Awarded",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fldWVAQIgZPsaHZi5},\r\n  {fldWVAQIgZPsaHZi5},\r\n  0\r\n)\r\n+\r\nIF(\r\n  {fldVCbbqo9pWnyvZM},\r\n  {fldVCbbqo9pWnyvZM},\r\n  0\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldKjhzUPSQS9m9wG",
+          "name": "Homework Completions RID",
+          "type": "formula",
+          "options": {
+            "formula": "RECORD_ID()",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldFS46avqRlCYc4i",
+          "name": "Submission Asset: Original File Name (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld6NBbAwicqJ1nhf",
+          "name": "Submission Asset: Google Drive File URL (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "url"
+            }
+          }
+        },
+        {
+          "id": "fldKw0Gj4Hf8qhnGR",
+          "name": "Submission Asset: Google Drive File ID (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldI8bGAf7c1eMwvz",
+          "name": "Submission Asset: Upload Status (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldfBm12yOSogVp6g",
+          "name": "Submission Asset: Uploaded At (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "date",
+              "options": {
+                "dateFormat": {
+                  "name": "us",
+                  "format": "M/D/YYYY"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": "fldtReawZBREtYrKz",
+          "name": "Submission Asset: Upload Error (lookup)",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "multilineText"
+            }
+          }
+        },
+        {
+          "id": "fldcRGMdGYVPIGhgD",
+          "name": "Total Linked Submission Assets (rollup)",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldz6pzDPOBEyQPIR",
+          "name": "Total Uploaded Submission Assets (rollup)",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldHchlovIaPlGKLk",
+          "name": "Submission Asset Review Summary (formula)",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  AND(\n    {fldFS46avqRlCYc4i},\n    {fld6NBbAwicqJ1nhf}\n  ),\n  ARRAYJOIN(\n    ARRAYCOMPACT(\n      IF(\n        {fldFS46avqRlCYc4i},\n        {fldFS46avqRlCYc4i} & \" – \" & {fld6NBbAwicqJ1nhf}\n      )\n    ),\n    \"\\n\"\n  ),\n  BLANK()\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldq8HdodVgQMlylM",
+          "name": "Submitted Asset File Names",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldXNjet2ItpCfAZr",
+          "name": "Submission Date",
+          "type": "date",
+          "options": {}
+        },
+        {
+          "id": "fldesgOUPcUoo9S2q",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldnxt05lxlVRuj7p",
+          "name": "Item Slot",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "HW1",
+              "HW2",
+              "Video-1",
+              "Video-2",
+              "Video-3"
+            ]
+          }
+        },
+        {
+          "id": "fldotQdQqQ7RKVQGg",
+          "name": "Homework",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldKy5hltmJc6A8Jx",
+          "name": "Submission Assets",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldczbWDjNmiH8riS",
+          "name": " Submission Asset Count",
+          "type": "formula",
+          "options": {
+            "formula": "COUNTA({fldKy5hltmJc6A8Jx})",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldxn4crSQHzGhK3t",
+          "name": "Final Reflection Quiz Submissions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl6ORxLs192mXEWp",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldTXDGG63jE9cGW0",
+          "name": "Final Reflection Quiz Submissions 2",
+          "type": "singleLineText"
+        }
+      ],
+      "allNames": [
+        "Homework Completion Full Name",
+        "Created",
+        "Homework Completion Key",
+        "Reviewed At",
+        "Grade Band",
+        "Weekly Athlete Summary",
+        "Submissions - Linked",
+        "Completion Status",
+        "Base XP Awarded",
+        "Extra Credit XP Awarded",
+        "Reviewed By",
+        "Completion Summary",
+        "Asset Label",
+        "Original File Name",
+        "Asset Type",
+        "Asset Purpose",
+        "Source System",
+        "Airtable Attachment",
+        "Google Drive File ID",
+        "Google Drive File URL",
+        "Google Drive View URL",
+        "Google Drive Download URL",
+        "Google Drive Folder ID",
+        "Google Drive Folder URL",
+        "Upload Status",
+        "Upload Error",
+        "Uploaded At",
+        "Writeback Complete?",
+        "Notes",
+        "Submission Asset - Linked",
+        "Asset Key",
+        "Upload Ready?",
+        "Full Athlete Name - Backward (from Enrollment)",
+        "Weekly Athlete Summary Link",
+        "Asset Slot",
+        "Review Complete",
+        "Total Homework XP Awarded",
+        "Item Type",
+        "Parent Feedback Sent On",
+        "Parent Feedback Send Error",
+        "Parent Feedback Subject",
+        "Homework Completions RID",
+        "Automation Error",
+        "Submission Asset: Original File Name (lookup)",
+        "Submission Asset: Google Drive File URL (lookup)",
+        "Submission Asset: Google Drive File ID (lookup)",
+        "Submission Asset: Upload Status (lookup)",
+        "Submission Asset: Uploaded At (lookup)",
+        "Submission Asset: Upload Error (lookup)",
+        "Total Linked Submission Assets (rollup)",
+        "Total Uploaded Submission Assets (rollup)",
+        "Submission Asset Review Summary (formula)",
+        "Submitted Asset File Names",
+        "Submitted Asset File Links",
+        "Submitted Asset Upload Statuses",
+        "Submitted Asset Uploaded At",
+        "Submitted Asset File IDs",
+        "Review Status",
+        "Submission Date",
+        "Enrollment",
+        "Week",
+        "Item Slot",
+        "Homework",
+        "Submitted File Review Summary",
+        "All Submitted Files Uploaded?",
+        "Submission Assets",
+        "Satisfactory?",
+        "Extra Credit?",
+        "Coach Feedback",
+        "Award Status",
+        "Parent Feedback Ready?",
+        "Parent Feedback Sent?",
+        "XP Events",
+        " Submission Asset Count",
+        "Final Reflection Quiz Submissions",
+        "Linked Asset Duplicate?",
+        "Linked Asset Duplicate Status",
+        "Linked Asset Duplicate Notes",
+        "Linked Asset Duplicate Match Record",
+        "Linked Asset Duplicate Match Strength",
+        "Linked Asset Duplicate Review Status",
+        "Final Reflection Quiz Submissions 2",
+        "Activity XP Display Label",
+        "Testing Scenarios"
+      ]
+    },
+    "Submissions": {
+      "id": "tblEVjVpGGlPTsYSt",
+      "name": "Submissions",
+      "fieldCount": 101,
+      "interesting": [
+        {
+          "id": "fldzxmk634hDNrtiB",
+          "name": "Submission Full Name",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fldrylk2Fy2G8hUst},\r\n  {fldrylk2Fy2G8hUst},\r\n  \"Unknown Athlete\"\r\n) &\r\n\" - \" &\r\nIF(\r\n  {fldpkkSBsx8kQRZos},\r\n  DATETIME_FORMAT({fldpkkSBsx8kQRZos}, \"M/D/YYYY\"),\r\n  \"No Date\"\r\n) &\r\n\" - \" &\r\nIF(\r\n  {fldA3fpXWckngZ6g1},\r\n  {fldA3fpXWckngZ6g1},\r\n  \"No Week\"\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldpO1vUHB675k6nm",
+          "name": "Submission Key",
+          "type": "formula",
+          "options": {
+            "formula": "{fld0fKiO62UiztNQH} & '-' & {fldA3fpXWckngZ6g1} & '-' & RECORD_ID()",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldrylk2Fy2G8hUst",
+          "name": "Athlete Name",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldA3fpXWckngZ6g1",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldAw7146HvSLBxGF",
+          "name": "Submission Stat Mode",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  OR(\r\n    {fldLZmCQB7vi1vTjF} != BLANK(),\r\n    {fldThGv2Y8MjgBZpp} != BLANK(),\r\n    {fldTW9qdhF8vNkDJA} != BLANK(),\r\n    {fldyS3osevRlfO2Kd} != BLANK(),\r\n    {fldzN0wgxFeuwyLIj} != BLANK(),\r\n    {fldPZu6GsysJwnXS9} != BLANK()\r\n  ),\r\n  \"Detailed Shooting\",\r\n  IF(\r\n    {fldtAIg2vtfWkyPPk} != BLANK(),\r\n    \"Simple Total\",\r\n    BLANK()\r\n  )\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld2onHVrtviMDOP8",
+          "name": "Submission Has Detailed Stats?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n  OR(\n    {fldLZmCQB7vi1vTjF} != BLANK(),\n    {fldThGv2Y8MjgBZpp} != BLANK(),\n    {fldTW9qdhF8vNkDJA} != BLANK(),\n    {fldyS3osevRlfO2Kd} != BLANK(),\n    {fldzN0wgxFeuwyLIj} != BLANK(),\n    {fldPZu6GsysJwnXS9} != BLANK()\n  ),\n  FALSE()\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fld1gQ2c04pndnTKe",
+          "name": "Count This Submission?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\nOR(\n  {fldteuTQmE6z5ep2g} = \"Exclude It\",\n  {fldteuTQmE6z5ep2g} = \"Needs Review\"\n),\n0,\nIF(\n  {fldAw7146HvSLBxGF} = \"Simple Total\",\n  IF(\n    AND(\n      {fldtAIg2vtfWkyPPk} != BLANK(),\n      {fldtAIg2vtfWkyPPk} >= 0\n    ),\n    1,\n    0\n  ),\n  IF(\n    {fldAw7146HvSLBxGF} = \"Detailed Shooting\",\n    IF(\n      {fldiTf8V6Jf5bBKeP},\n      1,\n      0\n    ),\n    0\n  )\n)\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldZXSYorbG7BdDEo",
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldtJS9LW3PAyCaNC",
+          "name": "HW Sub 1",
+          "type": "multipleAttachments",
+          "options": {}
+        },
+        {
+          "id": "fldUvfAHi3e15Oxb7",
+          "name": "HW Sub 2",
+          "type": "multipleAttachments",
+          "options": {}
+        },
+        {
+          "id": "fldeygBOVv5bHnkfe",
+          "name": "HW 1 - Parent Note",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldOgBoi9vbzX6B23",
+          "name": "HW 2 - Parent Note",
+          "type": "multilineText"
+        },
+        {
+          "id": "fld1uL11xDEJDnsti",
+          "name": "HW1 Coach Feedback",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "multilineText"
+            }
+          }
+        },
+        {
+          "id": "fldf7fTc3pTIrak0Q",
+          "name": "HW2 Coach Feedback",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldrtEjfavdXyySkw",
+          "name": "Has HW1?",
+          "type": "formula",
+          "options": {
+            "formula": "IF({fldtJS9LW3PAyCaNC}, TRUE(), FALSE())",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldjPJ8Xzr28t5VDN",
+          "name": "Has HW2?",
+          "type": "formula",
+          "options": {
+            "formula": "IF({fldUvfAHi3e15Oxb7}, TRUE(), FALSE())",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fld8D24l3EqGzBqqK",
+          "name": "Needs Week Assignment?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(AND({fldpkkSBsx8kQRZos}, NOT({fldA3fpXWckngZ6g1})), 1, 0)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldVbtRu7O8CtaS06",
+          "name": "Week Assignment Status",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  NOT({fldpkkSBsx8kQRZos}),\n  \"No Activity Date\",\n  IF(\n    {fldyFAjhbfaC4LlPb} = 1,\n    \"Activity Date in Future\",\n    IF(\n      {fldA3fpXWckngZ6g1},\n      \"Assigned\",\n      \"Needs Assignment\"\n    )\n  )\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldxIoYn3PeIX314F",
+          "name": "Ready for Weekly Summary?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(AND({fldA3fpXWckngZ6g1}, {fld1gQ2c04pndnTKe} = 1), 1, 0)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldBRAvpbYfBSPyZH",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fld1kilHu3o3Qtlpv",
+          "name": "Submission Assets",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblhMLKxQK77agtME",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldBuHIpIwxTy60js",
+          "name": "Homework Name 1",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldmopSNL9aZf6K1A",
+          "name": "Week Lkp",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "multipleRecordLinks",
+              "options": {
+                "isReversed": false,
+                "prefersSingleRecordLink": false
+              }
+            }
+          }
+        },
+        {
+          "id": "fldmrxhhChP7DiySK",
+          "name": "Homework Completion Ready?",
+          "type": "formula",
+          "options": {
+            "formula": "AND(\r\n  {fld0fKiO62UiztNQH},\r\n  {fldA3fpXWckngZ6g1},\r\n  OR(\r\n    {fldBuHIpIwxTy60js},\r\n    {fldnAy8yXTFafhvnu}\r\n  ),\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7}\r\n  )\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldnAy8yXTFafhvnu",
+          "name": "Homework Name 2",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldZjS3FyJm18Pu1f",
+          "name": "Ready for Homework Completion Automation?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    {fldpkkSBsx8kQRZos},\r\n    {fld1kilHu3o3Qtlpv},\r\n    OR(\r\n      {fldBuHIpIwxTy60js},\r\n      {fldnAy8yXTFafhvnu}\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fld4ZArf6KicJSpxE",
+          "name": "Submission Assets Ready?",
+          "type": "formula",
+          "options": {
+            "formula": "AND(\r\n  {fldmrxhhChP7DiySK},\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7},\r\n    {fld0pxr2NoMx2MxBu}\r\n  )\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldK5ZxoOiEYfMlay",
+          "name": "Edit Submission - Parent",
+          "type": "formula",
+          "options": {
+            "formula": "\"https://form.fillout.com/t/vNgeHardYcus?id=\" & RECORD_ID()",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldYDitgQr6jgoDMk",
+          "name": "Perfect Week Countable Submission?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  AND(\n    {fld1gQ2c04pndnTKe} = 1,\n    {fldE7G8H1O7HPYuIi} = 1,\n    {fldAqC1oUKKFZdU3p} > 0,\n    {fld0fKiO62UiztNQH},\n    {fldA3fpXWckngZ6g1},\n    {fldpkkSBsx8kQRZos}\n  ),\n  1,\n  0\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldm47Ar3rKitJ1KE",
+          "name": "Program Instance - Synced",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblMfALZa4YYUy70P",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldr2msxUo1kPjROD",
+          "name": "Perfect Week Test Submitted At",
+          "type": "dateTime",
+          "options": {}
+        },
+        {
+          "id": "fld0xNqO0ryOe7uEY",
+          "name": "Perfect Week Test Record?",
+          "type": "checkbox",
+          "options": {}
+        }
+      ],
+      "allNames": [
+        "Submission Full Name",
+        "Submission Key",
+        "Enrollment",
+        "Athlete Name",
+        "Activity Date",
+        "Submitted At",
+        "Week",
+        "Has Review Assets?",
+        "Submission Stat Mode",
+        "2PT Made",
+        "2PT Attempted",
+        "3PT Made",
+        "3PT Attempted",
+        "FT Made",
+        "FT Attempted",
+        "Total Shots Canonical",
+        "Total Makes Canonical",
+        "Submission Has Detailed Stats?",
+        "Detailed Stats Valid?",
+        "2PT %",
+        "3PT %",
+        "FT %",
+        "Total Shots Counted",
+        "Review Queue Sort",
+        "Duplicate Key",
+        "Duplicate Review Status",
+        "RecordId",
+        "Count This Submission?",
+        "Total Makes Counted",
+        "2PT Made Counted",
+        "2PT Attempted Counted",
+        "3PT Made Counted",
+        "3PT Attempted Counted",
+        "FT Made Counted",
+        "FT Attempted Counted",
+        "Weekly Athlete Summary",
+        "Daily Email HTML",
+        "Shot Total",
+        "HW Sub 1",
+        "HW Sub 2",
+        "Video Upload",
+        "HW 1 - Parent Note",
+        "HW 2 - Parent Note",
+        "HW1 Coach Feedback",
+        "HW2 Coach Feedback",
+        "Video Count",
+        "Has HW1?",
+        "Has HW2?",
+        "Has Video?",
+        "Activity Date Is Future?",
+        "Needs Week Assignment?",
+        "Week Assignment Status",
+        "Ready for Weekly Summary?",
+        "XP Events",
+        "XP Base Points",
+        "XP Bonus Points",
+        "XP Award Status",
+        "XP Notes",
+        "XP Total Points",
+        "XP Award Ready?",
+        "XP Volume Bonus",
+        "XP Accuracy Bonus",
+        "XP Detailed Stats Bonus",
+        "Homework Completions",
+        "Athlete",
+        "Submission Assets",
+        "Video Feedback Note",
+        "Daily Email Version",
+        "Attachment Upload Status",
+        "Attachment Upload Error",
+        "Ready to Send Attachments to Make?",
+        "Daily Email Subject",
+        "Daily Email To",
+        "Daily Email Status",
+        "Daily Email Sent At",
+        "Homework Name 1",
+        "Week Lkp",
+        "Video Upload Note",
+        "Activity Date Key",
+        "Created",
+        "Homework Completion Ready?",
+        "Homework Name 2",
+        "Ready for Homework Completion Automation?",
+        "Submission Assets Ready?",
+        "Video Feedback",
+        "Edit Submission - Parent",
+        "Daily Email Sent to Make.com At",
+        "Daily Email Sent to Make.com Status",
+        "Counted Activity Date Key",
+        "Coach Feedback (from Video Feedback)",
+        "Build Daily Email Now?",
+        "Send Daily Email to Make Now?",
+        "Submitted Same Day?",
+        "Perfect Week Countable Submission?",
+        "Ready for 009 Asset Creation?",
+        "Why Not Ready for 009?",
+        "Testing Scenarios",
+        "Program Instance - Synced",
+        "Perfect Week Test Submitted At",
+        "Perfect Week Test Record?",
+        "Enrollment Record ID Lookup"
+      ]
+    },
+    "Weekly Athlete Summary": {
+      "id": "tbl9520d72adxlAKQ",
+      "name": "Weekly Athlete Summary",
+      "fieldCount": 101,
+      "interesting": [
+        {
+          "id": "fldSjFnZpuBfkoCja",
+          "name": "Weekly Athlete Summary - Display",
+          "type": "formula",
+          "options": {
+            "formula": "ARRAYJOIN({fldFx9VxabAod1DkZ}) & \" - \" & ARRAYJOIN({fldNUSqzr3H0PE5Ex}) & \" - \" & ARRAYJOIN({fld7CARd7rE7S3f8P})",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldNUSqzr3H0PE5Ex",
+          "name": "Week",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldEEYFHEBlVnNAV0",
+          "name": "Perfect Week Daily Check Status",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Pending",
+              "Pass",
+              "Fail",
+              "Needs Review"
+            ]
+          }
+        },
+        {
+          "id": "fldtASmByMBMCPXvp",
+          "name": "Perfect Week Daily Check Detail",
+          "type": "multilineText"
+        },
+        {
+          "id": "fld9whhW2WYo6Z3wD",
+          "name": "Perfect Week Daily Requirement Met?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "flds8k6TuRScMWW79",
+          "name": "Perfect Week Video Count",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fld1sBnbfMiunNlcW",
+          "name": "Perfect Week Zoom Meeting Count",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldVs5IgC7PnCXCYM",
+          "name": "Perfect Week Zoom Attendance Count",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldK2cIQXX18OTdhS",
+          "name": "Perfect Week Homework Requirement Met?",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldyFlpiRQiTpCKJz",
+          "name": "Perfect Week Automation Status",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Pending",
+              "Ready",
+              "Created",
+              "Skipped",
+              "Error"
+            ]
+          }
+        },
+        {
+          "id": "fldIZgWPIPwpBv0hb",
+          "name": "Perfect Week Automation Error",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldat2jCxT2sc9pms",
+          "name": "Perfect Week Video Requirement Met?",
+          "type": "formula",
+          "options": {
+            "formula": "IF({flds8k6TuRScMWW79} >= 3, 1, 0)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldWok1MQBND9z0r9",
+          "name": "Perfect Week Zoom Requirement Met?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  0,\n  IF(\n    VALUE({fld1sBnbfMiunNlcW} & \"\") = 0,\n    1,\n    IF(\n      VALUE({fldVs5IgC7PnCXCYM} & \"\") >= 1,\n      1,\n      0\n    )\n  )\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldPWqUmCAWpwKX6t",
+          "name": "Perfect Week Zoom Requirement Status",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fld1sBnbfMiunNlcW} = 0,\n    \"No Zoom This Week\",\n    IF(\n      {fldVs5IgC7PnCXCYM} >= 1,\n      \"Attended\",\n      \"Missed\"\n    )\n  )\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld0re4ydFGq2vvZC",
+          "name": "Perfect Week Eligible?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  AND(\n    {fldyFlpiRQiTpCKJz} = \"Ready\",\n    {fld9whhW2WYo6Z3wD},\n    {fldK2cIQXX18OTdhS} = 1,\n    {fldat2jCxT2sc9pms} = 1,\n    {fldWok1MQBND9z0r9} = 1\n  ),\n  1,\n  0\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldJVKEeziY9l5Dbq",
+          "name": "Perfect Week Unlock",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblyT2AQo1JbvmvZS",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fldNvOVO3WidABUXS",
+          "name": "Perfect Week Calculation Queue?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  AND(\r\n    LEN(ARRAYJOIN({fldNH81lfwL5dBnAw})) > 0,\r\n    LEN(ARRAYJOIN({fldNUSqzr3H0PE5Ex})) > 0,\r\n    LEN(ARRAYJOIN({fldNvhGv57qOqbsfN})) > 0,\r\n    OR(\r\n      {fldyFlpiRQiTpCKJz} = \"Pending\",\r\n      {fldyFlpiRQiTpCKJz} = \"Ready\"\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldZmafiSNvvDOBLi",
+          "name": "Perfect Week Homework Assigned Count",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldqNVE7X7uBED4XR",
+          "name": "Perfect Week Homework Satisfactory Count",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fld3eEpTebFgqTWYy",
+          "name": "Perfect Week Homework Completion %",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldZmafiSNvvDOBLi} > 0,\n  {fldqNVE7X7uBED4XR} / {fldZmafiSNvvDOBLi},\n  1\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldG3EmD6uueWmtRl",
+          "name": "Perfect Week Homework Requirement Status",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fldZmafiSNvvDOBLi} = 0,\n    \"Not Required - No Homework This Week\",\n    IF(\n      {fldK2cIQXX18OTdhS} = 1,\n      \"Complete - 100%\",\n      \"Incomplete - \" & ROUND({fld3eEpTebFgqTWYy} * 100, 0) & \"%\"\n    )\n  )\n)\n",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldowpElOxgvOisY0",
+          "name": "Perfect Week Test Override?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldFx9VxabAod1DkZ",
+          "name": "Full Name - From Enrollment - Display",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldBE60blHuUfAQa4",
+          "name": "Build Weekly Email Now?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldJfPaSIyESTaPph",
+          "name": "Grade",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld7CARd7rE7S3f8P",
+          "name": "Grade Band",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblOhHrIqpjcsk2WG",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fld3h3FZAoEVvDM4q",
+          "name": "Homework",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fld1zvk4QAmdrYSUC",
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldR3esaWcZ7LmOrR",
+          "name": "Total Shots This Week",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldGxsKbU51LY1P1K",
+          "name": "Total Makes This Week",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "flda0ZXW1Bf7OvRAK",
+          "name": "Goal Completion %",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fld9QMaqcgCzIAJhE},\r\n  {fldR3esaWcZ7LmOrR} / {fld9QMaqcgCzIAJhE},\r\n  BLANK()\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "percent",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldOLza7ol65TidXd",
+          "name": "Days Logged This Week",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldxA1xQQlui2XXi4",
+          "name": "Homework Assigned Count",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldDAqp5woNqEdzE3",
+          "name": "Weekly Improvement Value",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fldvJmTvqvJTtdYjE},\r\n  {fldR3esaWcZ7LmOrR} - {fldvJmTvqvJTtdYjE},\r\n  BLANK()\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fld6yhWfsDQUFn0k5",
+          "name": "Homework Completed?",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fldxA1xQQlui2XXi4} > 0,\r\n  {fldAZvnZo9xAXyw5o} >= {fldxA1xQQlui2XXi4},\r\n  BLANK()\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldAZvnZo9xAXyw5o",
+          "name": "Homework Satisfactory Count",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldDlAuaaIYmx7Q44",
+          "name": "Total XP After Week",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fldV13HNGyfbbDcz7},\r\n  {fldV13HNGyfbbDcz7} + {fldIvSQR4O6a0jtsN},\r\n  {fldIvSQR4O6a0jtsN}\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldGmzzmlGHVB53SE",
+          "name": "Level Number",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\n{fldDlAuaaIYmx7Q44} >= 4500, 8,\nIF(\n  {fldDlAuaaIYmx7Q44} >= 3000, 7,\n  IF(\n    {fldDlAuaaIYmx7Q44} >= 2000, 6,\n    IF(\n      {fldDlAuaaIYmx7Q44} >= 1400, 5,\n      IF(\n        {fldDlAuaaIYmx7Q44} >= 900, 4,\n        IF(\n          {fldDlAuaaIYmx7Q44} >= 500, 3,\n          IF(\n            {fldDlAuaaIYmx7Q44} >= 200, 2,\n            1\n          )\n        )\n      )\n    )\n  )\n)\n)",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldvJmTvqvJTtdYjE",
+          "name": "Previous Week Shots",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldzaABiiuRE3TUKN",
+          "name": "Homework Completions",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldKxl8nguJzqulJD",
+          "name": "Homework Display",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  {fld3h3FZAoEVvDM4q},\r\n  ARRAYJOIN({fld3h3FZAoEVvDM4q}),\r\n  \"🚫 No Homework\"\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld7IEpY1KsacJTM6",
+          "name": "Homework Completions Link",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "prefersSingleRecordLink": true
+          }
+        },
+        {
+          "id": "fld9QMaqcgCzIAJhE",
+          "name": "Weekly Goal Shots Target",
+          "type": "formula",
+          "options": {
+            "formula": "{fldY0WlLxwGh7WID5}/9",
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldIvSQR4O6a0jtsN",
+          "name": "XP Earned This Week",
+          "type": "rollup",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "number",
+              "options": {
+                "precision": 0
+              }
+            }
+          }
+        },
+        {
+          "id": "fldEBGRSNqMPE459s",
+          "name": "Week Key - Lkp",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldzuHDdCi6YCvRbn",
+          "name": "Weekly Summary Email Status",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Not Ready",
+              "Ready for Send",
+              "Sent",
+              "Error"
+            ]
+          }
+        },
+        {
+          "id": "fldW0OwybJ0ZRMy5K",
+          "name": "Weekly Summary Sent At",
+          "type": "dateTime",
+          "options": {}
+        },
+        {
+          "id": "fldh1gWZcD554JgqP",
+          "name": "Weekly Summary Send Error",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldOwzaH8G35chFpL",
+          "name": "Weekly Summary Email Type",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Regular",
+              "Preview",
+              "Test"
+            ]
+          }
+        },
+        {
+          "id": "fldrvgVniDFGHXITX",
+          "name": "Athlete First Name",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldwBU1zPMwUogHGR",
+          "name": "Athlete Last Name",
+          "type": "multipleLookupValues",
+          "options": {
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld0BFUkwusYhbMZ7",
+          "name": "Weekly Awards Placeholder",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldIy0dLusRCZxqet",
+          "name": "Weekly Summary Overall Section",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldnsoxTePJh6gUPX",
+          "name": "Weekly Awards Display",
+          "type": "richText"
+        },
+        {
+          "id": "fldn7FMpyz3ZDMxly",
+          "name": "Week - Display",
+          "type": "formula",
+          "options": {
+            "formula": "{fldNUSqzr3H0PE5Ex}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldEIVNQFxcOnEuNP",
+          "name": "Grade Band - Display",
+          "type": "formula",
+          "options": {
+            "formula": "{fld7CARd7rE7S3f8P}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldpwIfJ8Mq2u3rfn",
+          "name": "Weekly Summary Key",
+          "type": "formula",
+          "options": {
+            "formula": "{fldNH81lfwL5dBnAw} & \"|\" & {fldNUSqzr3H0PE5Ex}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fldzZnqYAoDDrUQFm",
+          "name": "Weekly Email Error",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldeP5OD0H90VhrM2",
+          "name": "Weekly Email Revision",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldxRkHo6fdqLNjPB",
+          "name": "Weekly Email Subject",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldvllIaaj1WNZQaX",
+          "name": "Weekly Email Text",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldeVsUfvry5alYG7",
+          "name": "Weekly Email Payload JSON",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldQcTW5jStDqUuwn",
+          "name": "Weekly Email Week Label",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldrwJEsWcqqYb124",
+          "name": "Weekly Email Last Built At",
+          "type": "dateTime",
+          "options": {}
+        },
+        {
+          "id": "fldDFKGuHdQ61ELqg",
+          "name": "Weekly Email Record ID",
+          "type": "formula",
+          "options": {
+            "formula": "RECORD_ID()",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld9dzmOqNfXzRom1",
+          "name": "Weekly Email Sent At",
+          "type": "dateTime",
+          "options": {}
+        },
+        {
+          "id": "flduEBKX6UoJpEBMy",
+          "name": "Weekly Email Recipients",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldBbRJTBH7fjOsFk",
+          "name": "Weekly Email HTML",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldRXzo9QveAAEudP",
+          "name": "Weekly Email Ready?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldCCgjkgoPt7N4eK",
+          "name": "Weekly Email Sent?",
+          "type": "checkbox",
+          "options": {}
+        }
+      ],
+      "allNames": [
+        "Weekly Athlete Summary - Display",
+        "Week",
+        "Activity Dates",
+        "Created",
+        "Perfect Week Daily Check Status",
+        "Perfect Week Daily Check Detail",
+        "Perfect Week Daily Requirement Met?",
+        "Perfect Week Video Count",
+        "Perfect Week Zoom Meeting Count",
+        "Perfect Week Zoom Attendance Count",
+        "Perfect Week Homework Requirement Met?",
+        "Perfect Week Automation Status",
+        "Perfect Week Automation Error",
+        "Perfect Week Video Requirement Met?",
+        "Perfect Week Zoom Requirement Met?",
+        "Perfect Week Zoom Requirement Status",
+        "Perfect Week Eligible?",
+        "Perfect Week Unlock",
+        "Perfect Week Calculation Queue?",
+        "Perfect Week Homework Assigned Count",
+        "Perfect Week Homework Satisfactory Count",
+        "Perfect Week Homework Completion %",
+        "Perfect Week Homework Requirement Status",
+        "Perfect Week Test Override?",
+        "Summary Key",
+        "Enrollment",
+        "Full Name - From Enrollment - Display",
+        "Athlete",
+        "Build Weekly Email Now?",
+        "Grade",
+        "Grade Band",
+        "Goal Record",
+        "Homework",
+        "Submissions",
+        "Total Shots This Week",
+        "Total Makes This Week",
+        "Goal Shots Target",
+        "Goal Completion %",
+        "Days Logged This Week",
+        "Met Minimum Days Requirement?",
+        "Homework Assigned Count",
+        "Summary Calculation Status",
+        "Weekly Improvement Value",
+        "Momentum Status",
+        "Homework Completed?",
+        "Homework Satisfactory Count",
+        "Total XP After Week",
+        "Level Number",
+        "Previous Week Shots",
+        "Previous Total XP",
+        "Homework Completions",
+        "Homework Display",
+        "Homework Completions Link",
+        "Weekly Goal Shots Target",
+        "Threshold XP Status",
+        "Threshold XP Processed At",
+        "Threshold XP Error Message",
+        "Requeue Threshold XP",
+        "Threshold XP Ready?",
+        "XP Earned This Week",
+        "RecordId",
+        "Enrollment Key - Lkp",
+        "Week Key - Lkp",
+        "Weekly Summary Email Status",
+        "Weekly Summary Sent At",
+        "Weekly Summary Send Error",
+        "Weekly Summary Email Type",
+        "Parent Email - Cleaned",
+        "Athlete Email - Cleaned",
+        "Overall Awards Placeholder",
+        "Zoom Meetings Summary",
+        "Combined Recipient Emails",
+        "Athlete First Name",
+        "Athlete Last Name",
+        "Email Subject",
+        "Weekly Awards Placeholder",
+        "Weekly Summary Overall Section",
+        "Weekly Awards Display",
+        "Overall Awards Display",
+        "Upcoming Zoom Display",
+        "Upcoming Zoom Link",
+        "Week - Display",
+        "Grade Band - Display",
+        "Weekly Summary Key",
+        "XP Events",
+        "Weekly Email Error",
+        "Weekly Email Revision",
+        "Weekly Email Subject",
+        "Weekly Email Text",
+        "Weekly Email Payload JSON",
+        "Weekly Email Week Label",
+        "Weekly Email Last Built At",
+        "Weekly Email Record ID",
+        "Weekly Email Sent At",
+        "sendMode",
+        "Weekly Email Recipients",
+        "Weekly Email HTML",
+        "Weekly Email Ready?",
+        "Send to Make?",
+        "Make Send Status",
+        "Weekly Email Sent?"
+      ]
+    },
+    "Weeks": {
+      "id": "tblcsKugv1cla36A6",
+      "name": "Weeks",
+      "fieldCount": 19,
+      "interesting": [
+        {
+          "id": "fldvNgDbrO0yWuWrr",
+          "name": "Week Name",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldo906P9t7nj9xmn",
+          "name": "Submission Assets",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldHpANf8BGrg64kb",
+          "name": "Week Key",
+          "type": "formula",
+          "options": {
+            "formula": "ARRAYJOIN({fldmxGJwgb8zOREWP}) & \"|\" & {fldvNgDbrO0yWuWrr}",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld8hxWh7fATBLghL",
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fld6YRmWGdKPQk8Vg",
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldBCFzjforqsWunR",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldTJZEWORITbiZKe",
+          "name": "FBC Curriculum - SYNC",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldBsA60l4ONazDba",
+          "name": "Program Instance",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblMfALZa4YYUy70P",
+            "prefersSingleRecordLink": true
+          }
+        }
+      ],
+      "allNames": [
+        "Week Name",
+        "Record ID",
+        "Start Date",
+        "End Date",
+        "Video Feedback",
+        "Submission Assets",
+        "Week Key",
+        "Config - Lnk",
+        "Submissions",
+        "Award Recipients",
+        "Weekly Athlete Summary",
+        "Achievements",
+        "Athlete Achievement Unlocks",
+        "XP Events",
+        "Homework Completions",
+        "FBC Curriculum - SYNC",
+        "Zoom Meetings",
+        "Streak Occurrences",
+        "Program Instance"
+      ]
+    },
+    "Program Instance - Synced": {
+      "id": "tblMfALZa4YYUy70P",
+      "name": "Program Instance - Synced",
+      "fieldCount": 34,
+      "interesting": [
+        {
+          "id": "fldrLB3z3EcgeLS72",
+          "name": "Name - Program Instance",
+          "type": "multilineText"
+        },
+        {
+          "id": "fldYXOVK4BgbWdP8A",
+          "name": "Program - Linked",
+          "type": "singleLineText"
+        },
+        {
+          "id": "fldgjw0b4OF5Dbxa1",
+          "name": "Program Code",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "character",
+              "dribble",
+              "freethrow",
+              "shooting"
+            ]
+          }
+        },
+        {
+          "id": "fldIvI3K0RhOFJKCJ",
+          "name": "Program Instance Key",
+          "type": "multilineText"
+        },
+        {
+          "id": "fld4c6AyYxQMEH29y",
+          "name": "Daily Submission URL",
+          "type": "url"
+        },
+        {
+          "id": "fld1Vcr2wdEs7BftY",
+          "name": "Weeks",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblcsKugv1cla36A6",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldMm8XUX9o5xXOE0",
+          "name": "Submissions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblEVjVpGGlPTsYSt",
+            "prefersSingleRecordLink": false
+          }
+        }
+      ],
+      "allNames": [
+        "Name - Program Instance",
+        "Program - Linked",
+        "Event - Linked",
+        "School Year - Linked",
+        "Start Date",
+        "End Date",
+        "Registration Open",
+        "Registration Closes",
+        "Status",
+        "Cost",
+        "Season",
+        "Registration Required",
+        "Price - Early Bird",
+        "Deadline - Early Bird",
+        "Price - Regular",
+        "Deadline - Regular Price",
+        "Price - Late",
+        "Calendar Integration",
+        "Roster Group",
+        "Description",
+        "Cover Image",
+        "QR - Registration",
+        "Program Code",
+        "Program Instance Key",
+        "Registration URL",
+        "Daily Submission URL",
+        "Welcome - Website URL",
+        "Enrollments",
+        "Welcome - Subject Line",
+        "Welcome - Intro Note",
+        "Why This Matters",
+        "Award Recipients",
+        "Weeks",
+        "Submissions"
+      ]
+    },
+    "Grade Bands": {
+      "id": "tblOhHrIqpjcsk2WG",
+      "name": "Grade Bands",
+      "fieldCount": 15,
+      "interesting": [
+        {
+          "id": "fldAVvaQKlXmP22FW",
+          "name": "Grade Band Name",
+          "type": "formula",
+          "options": {
+            "formula": "IF(\r\n  AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=2),\r\n  \"K-2\",\r\n  IF(\r\n    AND({fld9Cdv1f3QbbmYYJ}=3,{fldKu3VXWBuD1DTDf}=4),\r\n    \"3-4\",\r\n    IF(\r\n      AND({fld9Cdv1f3QbbmYYJ}=5,{fldKu3VXWBuD1DTDf}=6),\r\n      \"5-6\",\r\n      IF(\r\n        AND({fld9Cdv1f3QbbmYYJ}=7,{fldKu3VXWBuD1DTDf}=8),\r\n        \"7-8\",\r\n        IF(\r\n          AND({fld9Cdv1f3QbbmYYJ}=9,{fldKu3VXWBuD1DTDf}=12),\r\n          \"9-12\",\r\n          IF(\r\n            AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=0),\r\n            \"PreK–K\",\r\n            IF(\r\n              {fld9Cdv1f3QbbmYYJ}=0,\r\n              \"Kindergarten\",\r\n              IF(\r\n                {fld9Cdv1f3QbbmYYJ}={fldKu3VXWBuD1DTDf},\r\n                \"Grade \" & {fld9Cdv1f3QbbmYYJ},\r\n                \"Grades \" & {fld9Cdv1f3QbbmYYJ} & \"–\" & {fldKu3VXWBuD1DTDf}\r\n              )\r\n            )\r\n          )\r\n        )\r\n      )\r\n    )\r\n  )\r\n)",
+            "isValid": true,
+            "result": {
+              "type": "singleLineText"
+            }
+          }
+        },
+        {
+          "id": "fld9Cdv1f3QbbmYYJ",
+          "name": "Min Grade",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldKu3VXWBuD1DTDf",
+          "name": "Max Grade",
+          "type": "number",
+          "options": {}
+        },
+        {
+          "id": "fldYnwZNQDYXIJ21Q",
+          "name": "Default Homework Tier",
+          "type": "singleSelect",
+          "options": {
+            "choices": [
+              "Early Childhood",
+              "Primary",
+              "Elementary",
+              "Upper Elementary",
+              "Middle School",
+              "Underclassmen",
+              "Upperclassmen"
+            ]
+          }
+        },
+        {
+          "id": "fldfylpen9IDKwEQy",
+          "name": "Active?",
+          "type": "checkbox",
+          "options": {}
+        },
+        {
+          "id": "fldDFUmzJjKUGwBD7",
+          "name": "Weekly Athlete Summary",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tbl9520d72adxlAKQ",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldf2972XUiIOSDKH",
+          "name": "Homework Completions",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblv58ppTFDBXb3nv",
+            "prefersSingleRecordLink": false
+          }
+        },
+        {
+          "id": "fldYEIig2j86Ewsvc",
+          "name": "FBC Curriculum - SYNC",
+          "type": "multipleRecordLinks",
+          "options": {
+            "linkedTableId": "tblUuxwYlX4EQ9MKE",
+            "prefersSingleRecordLink": false
+          }
+        }
+      ],
+      "allNames": [
+        "Grade Band Name",
+        "Target Goal Shots",
+        "Total Shot Target",
+        "Min Grade",
+        "Max Grade",
+        "Default Homework Tier",
+        "Notes",
+        "Active?",
+        "Weekly Athlete Summary",
+        "Enrollments",
+        "Homework Completions",
+        "FBC Curriculum - SYNC",
+        "XP Reward Rules",
+        "Video Feedback",
+        "Sort Order"
+      ]
+    },
+    "Program Homework Assignments": null
+  },
+  "formulaRefs": [
+    {
+      "table": "Enrollments",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "field": "Homework Completions",
+      "fieldId": "fldUC0bYq2Bws0q5s",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Enrollments",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "field": "Total Homework Completions",
+      "fieldId": "fldHEMvcX18c99Adk",
+      "type": "count"
+    },
+    {
+      "table": "Enrollments",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "field": "Gate Minimum: Homework",
+      "fieldId": "fldXhkxJ9Po3E5CTb",
+      "type": "multipleLookupValues"
+    },
+    {
+      "table": "Enrollments",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "field": "Meets Gate: Homework",
+      "fieldId": "flduFi1oyDDsOBZLE",
+      "type": "formula",
+      "formula": "IF(\r\n  {fldTAalsTtSVumJF9} = \"Disabled\",\r\n  1,\r\n  IF(\r\n    {fldHEMvcX18c99Adk} >= VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})),\r\n    1,\r\n    0\r\n  )\r\n)"
+    },
+    {
+      "table": "Enrollments",
+      "tableId": "tbl3PFmwbRoabu1YV",
+      "field": "Public Missing Homework",
+      "fieldId": "fldozKoW3osO7eORu",
+      "type": "formula",
+      "formula": "IF(\n  OR(\n    {fldcpQWJ9g315rQg1},\n    VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) = 0,\n    {fldHEMvcX18c99Adk} >= VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb}))\n  ),\n  \"\",\n  VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) - {fldHEMvcX18c99Adk} &\n  \" homework completion\" &\n  IF(\n    VALUE(ARRAYJOIN({fldXhkxJ9Po3E5CTb})) - {fldHEMvcX18c99Adk} = 1,\n    \"\",\n    \"s\"\n  )\n)"
+    },
+    {
+      "table": "Level Gate Rules",
+      "tableId": "tblWIb8JCuQ842HI8",
+      "field": "Minimum Homework",
+      "fieldId": "fldn9GN6ggEwENF1p",
+      "type": "number"
+    },
+    {
+      "table": "Level Gate Rules",
+      "tableId": "tblWIb8JCuQ842HI8",
+      "field": "Public Gate Criteria",
+      "fieldId": "fldLHztmV49d5v4Pq",
+      "type": "formula",
+      "formula": "IF(\r\n  NOT({fldGwszPuPkmo2ROq}),\r\n  \"\",\r\n  \"To unlock this level, athletes must complete:\" & \"\\n\" &\r\n  \"• \" & {fldvWKeUf1xf2H0JK} & \" shooting submissions\" & \"\\n\" &\r\n  \"• \" & {fldn9GN6ggEwENF1p} & \" homework completions\" & \"\\n\" &\r\n  \"• \" & {fldZqzsPncNyN0gBQ} & \" video submissions\" & \"\\n\" &\r\n  \"• \" & {fldyWZ77e9BgnHuBz} & \" Zoom meeting(s)\" & \"\\n\" &\r\n  \"• A \" & {fldy0V8N8vuLs0ggc} & \"-day shooting streak\"\r\n)"
+    },
+    {
+      "table": "Grade Bands",
+      "tableId": "tblOhHrIqpjcsk2WG",
+      "field": "Default Homework Tier",
+      "fieldId": "fldYnwZNQDYXIJ21Q",
+      "type": "singleSelect"
+    },
+    {
+      "table": "Grade Bands",
+      "tableId": "tblOhHrIqpjcsk2WG",
+      "field": "Homework Completions",
+      "fieldId": "fldf2972XUiIOSDKH",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Grade Bands",
+      "tableId": "tblOhHrIqpjcsk2WG",
+      "field": "FBC Curriculum - SYNC",
+      "fieldId": "fldYEIig2j86Ewsvc",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Week Assignment Status",
+      "fieldId": "fldVbtRu7O8CtaS06",
+      "type": "formula",
+      "formula": "IF(\n  NOT({fldpkkSBsx8kQRZos}),\n  \"No Activity Date\",\n  IF(\n    {fldyFAjhbfaC4LlPb} = 1,\n    \"Activity Date in Future\",\n    IF(\n      {fldA3fpXWckngZ6g1},\n      \"Assigned\",\n      \"Needs Assignment\"\n    )\n  )\n)"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Homework Completions",
+      "fieldId": "fldBRAvpbYfBSPyZH",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Homework Name 1",
+      "fieldId": "fldBuHIpIwxTy60js",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Homework Completion Ready?",
+      "fieldId": "fldmrxhhChP7DiySK",
+      "type": "formula",
+      "formula": "AND(\r\n  {fld0fKiO62UiztNQH},\r\n  {fldA3fpXWckngZ6g1},\r\n  OR(\r\n    {fldBuHIpIwxTy60js},\r\n    {fldnAy8yXTFafhvnu}\r\n  ),\r\n  OR(\r\n    {fldtJS9LW3PAyCaNC},\r\n    {fldUvfAHi3e15Oxb7}\r\n  )\r\n)"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Homework Name 2",
+      "fieldId": "fldnAy8yXTFafhvnu",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Submissions",
+      "tableId": "tblEVjVpGGlPTsYSt",
+      "field": "Ready for Homework Completion Automation?",
+      "fieldId": "fldZjS3FyJm18Pu1f",
+      "type": "formula",
+      "formula": "IF(\r\n  AND(\r\n    {fld0fKiO62UiztNQH},\r\n    {fldA3fpXWckngZ6g1},\r\n    {fldpkkSBsx8kQRZos},\r\n    {fld1kilHu3o3Qtlpv},\r\n    OR(\r\n      {fldBuHIpIwxTy60js},\r\n      {fldnAy8yXTFafhvnu}\r\n    )\r\n  ),\r\n  1,\r\n  0\r\n)"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Homework Completions",
+      "fieldId": "fldQF8OsfESrHdcUb",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Homework Name 1",
+      "fieldId": "fldnzHLHvSwyUsnQj",
+      "type": "multipleLookupValues"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Homework Name 2",
+      "fieldId": "fldc4VJaLJhaNFKOU",
+      "type": "multipleLookupValues"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Ready for Homework Completion Script?",
+      "fieldId": "fldYICCdWQ5xVcSk5",
+      "type": "formula",
+      "formula": "IF(\r\n  AND(\r\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n    {flddRCbWCegg4WCoZ},\r\n    {fldJRSvui8RPg0Vyb},\r\n    COUNTA({fldrGt7IsWDUAKfzD}) > 0,\r\n    {fldQF8OsfESrHdcUb} = BLANK(),\r\n    OR(\r\n      {fldALREYJLGbCInMy} = \"HW1\",\r\n      {fldALREYJLGbCInMy} = \"HW2\",\r\n      {fld6higUGAazpTX1e} = \"HW1\",\r\n      {fld6higUGAazpTX1e} = \"HW2\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW1-\",\r\n      LEFT({fld6higUGAazpTX1e} & \"\", 4) = \"HW2-\",\r\n      {fldCpEiwVOMc8v4Vu} = \"Homework 1\",\r\n      {fldCp"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Homework Name - Slot Correct",
+      "fieldId": "fldiqTrLE7N8gjsxL",
+      "type": "formula",
+      "formula": "IF(\r\n  {fldOwKqDaX2cUxMxf} = \"HW1\",\r\n  ARRAYJOIN({fldnzHLHvSwyUsnQj}),\r\n  IF(\r\n    {fldOwKqDaX2cUxMxf} = \"HW2\",\r\n    ARRAYJOIN({fldc4VJaLJhaNFKOU}),\r\n    BLANK()\r\n  )\r\n)"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Ready to Send to Make?",
+      "fieldId": "fldG5lWlsUcrDNlIg",
+      "type": "formula",
+      "formula": "IF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing: Airtable Attachment\",\r\n\r\n  IF(\r\n    {fldox2Rjj9YL3EYK6} = \"\",\r\n    \"Missing: Upload Destination\",\r\n\r\n    IF(\r\n      {fldox2Rjj9YL3EYK6} = \"Ignore\",\r\n      \"Skipped: Destination Ignore\",\r\n\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          OR(\r\n            COUNTA({fldQF8OsfESrHdcUb}) > 0,\r\n            {fld8pLfrA76vMP5mt} != \"\"\r\n          ),\r\n          \"READY_TO_SEND\",\r\n          \"Missing: Homework Completi"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Upload Destination",
+      "fieldId": "fldox2Rjj9YL3EYK6",
+      "type": "formula",
+      "formula": "SWITCH(\r\n  {fldCpEiwVOMc8v4Vu},\r\n  \"Homework 1\", \"Homework Completions\",\r\n  \"Homework 2\", \"Homework Completions\",\r\n  \"Video For Feedback\", \"Video Feedback\",\r\n  \"Registration Headshot\", \"Ignore\",\r\n  \"Other\", \"Ignore\",\r\n  \"Ignore\"\r\n)"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Homework Completions RID",
+      "fieldId": "fld8pLfrA76vMP5mt",
+      "type": "multipleLookupValues"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "DELETE POSSIBLY - Homework Completion Record ID",
+      "fieldId": "fldxORUyJ7uvEgw9h",
+      "type": "singleLineText"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Workflow Next Step",
+      "fieldId": "fldQDDzBS62Ow765c",
+      "type": "formula",
+      "formula": "IF(\r\n  NOT({flddRCbWCegg4WCoZ}),\r\n  \"Missing Submission link\",\r\nIF(\r\n  NOT({fldJRSvui8RPg0Vyb}),\r\n  \"Missing Enrollment link\",\r\nIF(\r\n  COUNTA({fldrGt7IsWDUAKfzD}) = 0,\r\n  \"Missing Airtable Attachment\",\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n  IF(\r\n    COUNTA({fldQF8OsfESrHdcUb}) = 0,\r\n    \"Needs Homework Completion\",\r\n    \"Homework Completion linked\"\r\n  ),\r\nIF(\r\n  {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n  IF(\r\n    COUNTA({fldxapOLpLH4KaXOb}) = 0,\r\n    \"Needs Video Feedback\",\r\n  "
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Why Not Ready for Make?",
+      "fieldId": "fldDJN1RrVyxiKrWu",
+      "type": "formula",
+      "formula": "IF(\r\n  NOT({fld8C43NVQQ1NeQ7Z}),\r\n  \"Send trigger is off\",\r\n  IF(\r\n    NOT({fldrGt7IsWDUAKfzD}),\r\n    \"Missing Airtable attachment\",\r\n    IF(\r\n      NOT({fldox2Rjj9YL3EYK6}),\r\n      \"Missing upload destination\",\r\n      IF(\r\n        {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\r\n        IF(\r\n          NOT({fldQF8OsfESrHdcUb}),\r\n          \"Missing Homework Completion link\",\r\n          \"\"\r\n        ),\r\n        IF(\r\n          {fldox2Rjj9YL3EYK6} = \"Video Feedback\",\r\n          IF(\r\n            NOT({fl"
+    },
+    {
+      "table": "Submission Assets",
+      "tableId": "tblhMLKxQK77agtME",
+      "field": "Is Homework Upload Asset?",
+      "fieldId": "fldy8sCt6ttcMeLRD",
+      "type": "formula",
+      "formula": "IF(\n  AND(\n    {fldox2Rjj9YL3EYK6} = \"Homework Completions\",\n    OR(\n      {fldOwKqDaX2cUxMxf} = \"HW1\",\n      {fldOwKqDaX2cUxMxf} = \"HW2\"\n    )\n  ),\n  1,\n  0\n)"
+    },
+    {
+      "table": "XP Events",
+      "tableId": "tblmGSiNA1akW8KnU",
+      "field": "Homework Completion",
+      "fieldId": "fldPl5VKHznvYwJtg",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "XP Events",
+      "tableId": "tblmGSiNA1akW8KnU",
+      "field": "Date - Homework Submission Activity",
+      "fieldId": "fldl6CyUiKYtqvHfz",
+      "type": "multipleLookupValues"
+    },
+    {
+      "table": "Weeks",
+      "tableId": "tblcsKugv1cla36A6",
+      "field": "Homework Completions",
+      "fieldId": "fldBCFzjforqsWunR",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Weeks",
+      "tableId": "tblcsKugv1cla36A6",
+      "field": "FBC Curriculum - SYNC",
+      "fieldId": "fldTJZEWORITbiZKe",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Perfect Week Homework Requirement Met?",
+      "fieldId": "fldK2cIQXX18OTdhS",
+      "type": "number"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Perfect Week Homework Assigned Count",
+      "fieldId": "fldZmafiSNvvDOBLi",
+      "type": "number"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Perfect Week Homework Satisfactory Count",
+      "fieldId": "fldqNVE7X7uBED4XR",
+      "type": "number"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Perfect Week Homework Completion %",
+      "fieldId": "fld3eEpTebFgqTWYy",
+      "type": "formula",
+      "formula": "IF(\n  {fldZmafiSNvvDOBLi} > 0,\n  {fldqNVE7X7uBED4XR} / {fldZmafiSNvvDOBLi},\n  1\n)"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Perfect Week Homework Requirement Status",
+      "fieldId": "fldG3EmD6uueWmtRl",
+      "type": "formula",
+      "formula": "IF(\n  {fldyFlpiRQiTpCKJz} != \"Ready\",\n  \"Not Calculated\",\n  IF(\n    {fldZmafiSNvvDOBLi} = 0,\n    \"Not Required - No Homework This Week\",\n    IF(\n      {fldK2cIQXX18OTdhS} = 1,\n      \"Complete - 100%\",\n      \"Incomplete - \" & ROUND({fld3eEpTebFgqTWYy} * 100, 0) & \"%\"\n    )\n  )\n)\n"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework",
+      "fieldId": "fld3h3FZAoEVvDM4q",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Assigned Count",
+      "fieldId": "fldxA1xQQlui2XXi4",
+      "type": "rollup"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Completed?",
+      "fieldId": "fld6yhWfsDQUFn0k5",
+      "type": "formula",
+      "formula": "IF(\r\n  {fldxA1xQQlui2XXi4} > 0,\r\n  {fldAZvnZo9xAXyw5o} >= {fldxA1xQQlui2XXi4},\r\n  BLANK()\r\n)"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Satisfactory Count",
+      "fieldId": "fldAZvnZo9xAXyw5o",
+      "type": "rollup"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Completions",
+      "fieldId": "fldzaABiiuRE3TUKN",
+      "type": "singleLineText"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Display",
+      "fieldId": "fldKxl8nguJzqulJD",
+      "type": "formula",
+      "formula": "IF(\r\n  {fld3h3FZAoEVvDM4q},\r\n  ARRAYJOIN({fld3h3FZAoEVvDM4q}),\r\n  \"🚫 No Homework\"\r\n)"
+    },
+    {
+      "table": "Weekly Athlete Summary",
+      "tableId": "tbl9520d72adxlAKQ",
+      "field": "Homework Completions Link",
+      "fieldId": "fld7IEpY1KsacJTM6",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "FBC Curriculum - SYNC",
+      "tableId": "tblUuxwYlX4EQ9MKE",
+      "field": "Homework Number",
+      "fieldId": "fld2mYDUtnIO238c4",
+      "type": "singleSelect"
+    },
+    {
+      "table": "FBC Curriculum - SYNC",
+      "tableId": "tblUuxwYlX4EQ9MKE",
+      "field": "Homework Completions",
+      "fieldId": "fld4swY3XDC0Bn4Er",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Homework Completion Full Name",
+      "fieldId": "fld2ngOdaAmhpieZk",
+      "type": "formula",
+      "formula": "{fldxpl7aW59DOZVP9} & \" - \" & {fldotQdQqQ7RKVQGg} & \" - \" & {fldesgOUPcUoo9S2q}"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Homework Completion Key",
+      "fieldId": "fldSxUIDwVd6xUhhC",
+      "type": "formula",
+      "formula": "ARRAYJOIN({fldfK3h5ucx3WdFNS}) & \"|\" & ARRAYJOIN({fldesgOUPcUoo9S2q}) & \"|\" & ARRAYJOIN({fldotQdQqQ7RKVQGg})"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Completion Summary",
+      "fieldId": "flds8qfFNyCAzYgzT",
+      "type": "formula",
+      "formula": "IF(\n  {fldh4ohAiEdp8oejg},\n    IF(\n      {fldLgx4GGYyfsajd5},\n      \"Satisfactory + Extra Credit\",\n      \"Satisfactory\"\n    ),\n    IF(\n      {fld3QgYcH4AqQh6gP},\n        {fld3QgYcH4AqQh6gP},\n        BLANK()\n    )\n)"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Total Homework XP Awarded",
+      "fieldId": "fldwiaO5UWbg9IIka",
+      "type": "formula",
+      "formula": "IF(\r\n  {fldWVAQIgZPsaHZi5},\r\n  {fldWVAQIgZPsaHZi5},\r\n  0\r\n)\r\n+\r\nIF(\r\n  {fldVCbbqo9pWnyvZM},\r\n  {fldVCbbqo9pWnyvZM},\r\n  0\r\n)"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Homework Completions RID",
+      "fieldId": "fldKjhzUPSQS9m9wG",
+      "type": "formula",
+      "formula": "RECORD_ID()"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Homework",
+      "fieldId": "fldotQdQqQ7RKVQGg",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Homework Completions",
+      "tableId": "tblv58ppTFDBXb3nv",
+      "field": "Satisfactory?",
+      "fieldId": "fldh4ohAiEdp8oejg",
+      "type": "checkbox"
+    },
+    {
+      "table": "Config",
+      "tableId": "tblRB6sh77NxjS568",
+      "field": "FBC Curriculum - SYNC",
+      "fieldId": "fldUaPCKGrb1sGdnf",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "tableId": "tbl6ORxLs192mXEWp",
+      "field": "Homework Completion",
+      "fieldId": "fldu8A4cwo5R237QL",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "tableId": "tbl6ORxLs192mXEWp",
+      "field": "Q6 — Layup Series Homework: Why does the Layup Homework matter for every participant, even if they already make a lot of layups?",
+      "fieldId": "fldwGCnnpHkmiwC5n",
+      "type": "singleSelect"
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "tableId": "tbl6ORxLs192mXEWp",
+      "field": "Homework 17 Credit Earned?",
+      "fieldId": "fldVGAmZzbfn89Ilp",
+      "type": "formula",
+      "formula": "IF({fldEG71aWxpM4hrGL}, 1, 0)"
+    },
+    {
+      "table": "Final Reflection Quiz Submissions",
+      "tableId": "tbl6ORxLs192mXEWp",
+      "field": "Homework Credit Rule",
+      "fieldId": "fldX2QfKwWWz8aacw",
+      "type": "multilineText"
+    },
+    {
+      "table": "Zoom Meetings",
+      "tableId": "tblWcSHEm8vNNIxyB",
+      "field": "Recording Quiz Satisfactory?",
+      "fieldId": "fldYZNLn1SZ8QclIb",
+      "type": "checkbox"
+    },
+    {
+      "table": "Zoom Meetings",
+      "tableId": "tblWcSHEm8vNNIxyB",
+      "field": "Effective Recording Approval Email Timing",
+      "fieldId": "fldF4UdKxWWCS2q1S",
+      "type": "formula",
+      "formula": "IF(\n  LEN(TRIM({fldxeD4uUyeNxDYUi} & \"\")) > 0,\n  {fldxeD4uUyeNxDYUi} & \"\",\n  IF(\n    LEN(TRIM(ARRAYJOIN({fldK3g86JczsyeMS8}) & \"\")) > 0,\n    ARRAYJOIN({fldK3g86JczsyeMS8}),\n    IF(\n      LEN(TRIM(ARRAYJOIN({fldEADIMYzpIBlY4y}) & \"\")) > 0,\n      ARRAYJOIN({fldEADIMYzpIBlY4y}),\n      \"On Satisfactory\"\n    )\n  )\n)"
+    },
+    {
+      "table": "Zoom Attendance",
+      "tableId": "tblg8DPRu3j0dbuwi",
+      "field": "Recording Quiz Satisfactory?",
+      "fieldId": "fld7pi4lBq4TZ7XRd",
+      "type": "checkbox"
+    },
+    {
+      "table": "Zoom Attendance",
+      "tableId": "tblg8DPRu3j0dbuwi",
+      "field": "Zoom Credit Pre-Approved?",
+      "fieldId": "fldMMI9AAczoBN1EA",
+      "type": "formula",
+      "formula": "IF(\n  {fldVLhbecKJEVuK69} = \"Live\",\n  IF({fldMoPqGdSDTiqykE} = 1, 1, 0),\n  IF(\n    {fldVLhbecKJEVuK69} = \"Recording Quiz\",\n    IF(\n      AND(\n        OR(\n          {fldwFa2dHFPPNIw21} = BLANK(),\n          {fldwFa2dHFPPNIw21} = 1\n        ),\n        IF(\n          OR(\n            {fldN2CJ9PeiIzrlkG} = BLANK(),\n            {fldN2CJ9PeiIzrlkG} = 1\n          ),\n          AND(\n            {fldubXT8wpBSO4HrP} = \"Satisfactory\",\n            {fld7pi4lBq4TZ7XRd} = 1\n          ),\n          OR(\n            {f"
+    },
+    {
+      "table": "Zoom Attendance",
+      "tableId": "tblg8DPRu3j0dbuwi",
+      "field": "Zoom Credit Debug",
+      "fieldId": "fldzScDCIQbTdKCyi",
+      "type": "formula",
+      "formula": "\"Method=\" & {fldVLhbecKJEVuK69} &\n\" | LiveConfirmed=\" &\nIF({fldMoPqGdSDTiqykE} = 1, \"Y\", \"N\") &\n\" | Review=\" & {fldubXT8wpBSO4HrP} &\n\" | Satisfactory=\" &\nIF({fld7pi4lBq4TZ7XRd} = 1, \"Y\", \"N\") &\n\" | PreApproved=\" &\nIF({fldMMI9AAczoBN1EA} = 1, \"Y\", \"N\") &\n\" | Conflict=\" &\nIF({flduFM1TcM8HSLI7f} = 1, \"Y\", \"N\") &\n\" | Approved=\" &\nIF({fldKqYetPbSwuPQLl} = 1, \"Y\", \"N\") &\n\" | Pct=\" & {fldiXwWcqYe9vmvvh} &\n\" | XP=\" & {fldYwqPcCxo2GjTtG} &\n\" | Gate=\" &\nIF({fldYQcu7ACNBsLhbJ} = 1, \"Y\", \"N\") &\n\" | Key=\" & "
+    },
+    {
+      "table": "Testing Scenarios",
+      "tableId": "tblagI7Q5wXQm2XGS",
+      "field": "Relevant Homework Completion",
+      "fieldId": "fldiskXwhSIpsXN5o",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "table": "Testing Scenarios",
+      "tableId": "tblagI7Q5wXQm2XGS",
+      "field": "Homework Assignment",
+      "fieldId": "fldGKOHeXi1m2nWMo",
+      "type": "multipleRecordLinks"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+{
+  "ranAt": "2026-08-06T00:06:06.942Z",
+  "live": false,
+  "unlockId": "recALZFQNL3XicEOX",
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "weekId": "reci5GdxEC57vfoS3",
+  "wasId": "recKebuZ79QFTwivA",
+  "sourceKey": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+  "xpAmount": 100,
+  "weekEnd": "2026-08-09T05:59:00.000Z",
+  "pre": {
+    "xpAwardStatus": "Pending",
+    "readyFor059": 1,
+    "existingXpIds": [],
+    "byKeyCount": 0,
+    "byKeyIds": []
+  },
+  "action": "dry_run_would_create",
+  "xpEventId": null,
+  "unlockAfter": {
+    "xpAwardStatus": "Pending",
+    "xpEvents": [],
+    "readyFor059": 1
+  },
+  "wasAfter": {
+    "unlockIds": [
+      "recALZFQNL3XicEOX"
+    ],
+    "xpEarnedThisWeek": 213,
+    "totalXpAfterWeek": 213,
+    "hasXpEvent": null,
+    "xpEventCount": 7
+  },
+  "xpPayload": {
+    "Enrollment": [
+      {
+        "id": "recCyFEPeATOVNlr9"
+      }
+    ],
+    "Week": [
+      {
+        "id": "reci5GdxEC57vfoS3"
+      }
+    ],
+    "Achievement Unlock": [
+      {
+        "id": "recALZFQNL3XicEOX"
+      }
+    ],
+    "XP Points": 100,
+    "XP Source": "Perfect Week",
+    "XP Bucket": "Perfect Week",
+    "Source Key": "PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3",
+    "XP Activity Date": "2026-08-09T05:59:00.000Z",
+    "XP Activity Date Source": "Perfect Week End Date",
+    "XP Reason Public": "Perfect Week completed.",
+    "XP Reason Debug": "Created by award_perfect_week_059.mjs (059 v3.5 contract).\nType: Perfect Week\nAchievement: Perfect Week\nReward Rule Key: PERFECT_WEEK\nEnrollment ID: recCyFEPeATOVNlr9\nWeek ID: reci5GdxEC57vfoS3\nXP Points: 100\nSource Key: PERFECT_WEEK|recCyFEPeATOVNlr9|reci5GdxEC57vfoS3\nXP Activity Date: 2026-08-09T05:59:00.000Z\nXP Activity Date Source: Perfect Week End Date\nNote: Used because Automation 059 did not auto-fire (likely Shot Milestone trigger filter).",
+    "Awarded At": "2026-08-06T00:06:06.941Z",
+    "Active?": true,
+    "Processed": true,
+    "Award Mode": "Automatic",
+    "Awarded By": "059-contract-agent3",
+    "Weekly Athlete Summary": [
+      {
+        "id": "recKebuZ79QFTwivA"
+      }
+    ]
+  },
+  "post": {
+    "byKeyCount": 0,
+    "byKeyIds": [],
+    "exactlyOneXp": false
+  }
+}

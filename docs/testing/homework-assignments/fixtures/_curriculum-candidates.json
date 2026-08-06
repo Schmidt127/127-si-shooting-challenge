@@ -1,0 +1,72 @@
+{
+  "byNameCount": 18,
+  "hw12Count": 2,
+  "hw12WithGb34": [
+    {
+      "id": "rec6WmXjpLtIWDERo",
+      "title": "Website Exploration",
+      "hw": "HW 2",
+      "active": true,
+      "published": true,
+      "weeks": [
+        "recnMGC2JBHjO0ay6"
+      ],
+      "bands": [
+        "recK7BDVSpHy2ipCS",
+        "reclWDQZzKbVBtdhG",
+        "recv9aWnHanY2sRgk",
+        "rec2VQFfGJa1ofA06",
+        "rec75ruo3XT5nSvaK"
+      ],
+      "n": 2
+    },
+    {
+      "id": "rechVLOeyEVIqmy2v",
+      "title": "Shot Tracker Usage",
+      "hw": "HW 1",
+      "active": true,
+      "published": true,
+      "weeks": [
+        "recnMGC2JBHjO0ay6"
+      ],
+      "bands": [
+        "recK7BDVSpHy2ipCS",
+        "reclWDQZzKbVBtdhG",
+        "recv9aWnHanY2sRgk",
+        "rec2VQFfGJa1ofA06",
+        "rec75ruo3XT5nSvaK"
+      ],
+      "n": 1
+    }
+  ],
+  "sampleHw12": [
+    {
+      "id": "rec6WmXjpLtIWDERo",
+      "title": "Website Exploration",
+      "hw": "HW 2",
+      "bands": [
+        "recK7BDVSpHy2ipCS",
+        "reclWDQZzKbVBtdhG",
+        "recv9aWnHanY2sRgk",
+        "rec2VQFfGJa1ofA06",
+        "rec75ruo3XT5nSvaK"
+      ],
+      "active": true,
+      "published": true
+    },
+    {
+      "id": "rechVLOeyEVIqmy2v",
+      "title": "Shot Tracker Usage",
+      "hw": "HW 1",
+      "bands": [
+        "recK7BDVSpHy2ipCS",
+        "reclWDQZzKbVBtdhG",
+        "recv9aWnHanY2sRgk",
+        "rec2VQFfGJa1ofA06",
+        "rec75ruo3XT5nSvaK"
+      ],
+      "active": true,
+      "published": true
+    }
+  ]
+}

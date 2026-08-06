@@ -1,0 +1,165 @@
+{
+  "steps": [
+    "rid_helpers",
+    "table_exists",
+    "hc_link_created"
+  ],
+  "piRecordId": {
+    "type": "formula",
+    "options": {
+      "isValid": true,
+      "formula": "RECORD_ID()",
+      "referencedFieldIds": [],
+      "result": {
+        "type": "singleLineText"
+      }
+    },
+    "id": "fldIR3bOa82zrGrmt",
+    "name": "Record Id",
+    "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+  },
+  "gbRecordId": {
+    "type": "formula",
+    "options": {
+      "isValid": true,
+      "formula": "RECORD_ID()",
+      "referencedFieldIds": [],
+      "result": {
+        "type": "singleLineText"
+      }
+    },
+    "id": "fld6ZJh9vcNXgk1d4",
+    "name": "Record Id",
+    "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+  },
+  "curRecordId": {
+    "type": "formula",
+    "options": {
+      "isValid": true,
+      "formula": "RECORD_ID()",
+      "referencedFieldIds": [],
+      "result": {
+        "type": "singleLineText"
+      }
+    },
+    "id": "fld7CcreHRXc4ZXeg",
+    "name": "Record Id",
+    "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+  },
+  "result": {
+    "tableId": "tblhA3maf7xOa8EUS",
+    "tableName": "Program Homework Assignments",
+    "fields": {
+      "Program Homework Assignment": {
+        "id": "fldNlOuvCiLmQRt1e",
+        "type": "singleLineText"
+      },
+      "Homework Assignment": {
+        "id": "fld32hpKiGx5l8ZhI",
+        "type": "multipleRecordLinks"
+      },
+      "Program Instance": {
+        "id": "fldrB2gcduTaqxnsl",
+        "type": "multipleRecordLinks"
+      },
+      "Week": {
+        "id": "fld3S4XdwY6sq4BPZ",
+        "type": "multipleRecordLinks"
+      },
+      "Grade Band": {
+        "id": "fldWNwh6Z3pxVwTes",
+        "type": "multipleRecordLinks"
+      },
+      "Homework Slot": {
+        "id": "fldtNNM0a6DoxmuaF",
+        "type": "singleSelect"
+      },
+      "Active?": {
+        "id": "fldxXLOeCHh09iObk",
+        "type": "checkbox"
+      },
+      "Program Instance RID": {
+        "id": "fld37Vw1oLvknFRHj",
+        "type": "multipleLookupValues"
+      },
+      "Week RID": {
+        "id": "fldFCQ2z9Bwg1Y8YY",
+        "type": "multipleLookupValues"
+      },
+      "Grade Band RID": {
+        "id": "fld4Dpsd837yGkoPX",
+        "type": "multipleLookupValues"
+      },
+      "Homework Assignment RID": {
+        "id": "fld0fcG9TDBXBlVDc",
+        "type": "multipleLookupValues"
+      },
+      "Schedule Key": {
+        "id": "fldSgoJUI37aPnvrJ",
+        "type": "formula",
+        "formula": "IF(\n  AND(\n    {fld37Vw1oLvknFRHj},\n    {fldFCQ2z9Bwg1Y8YY},\n    {fld4Dpsd837yGkoPX},\n    {fldtNNM0a6DoxmuaF},\n    {fld0fcG9TDBXBlVDc}\n  ),\n  ARRAYJOIN({fld37Vw1oLvknFRHj}) & \"|\" & ARRAYJOIN({fldFCQ2z9Bwg1Y8YY}) & \"|\" & ARRAYJOIN({fld4Dpsd837yGkoPX}) & \"|\" & {fldtNNM0a6DoxmuaF} & \"|\" & ARRAYJOIN({fld0fcG9TDBXBlVDc}),\n  BLANK()\n)"
+      },
+      "Program Homework Assignment Display": {
+        "id": "fldp3eQIQQKi6StzU",
+        "type": "formula",
+        "formula": "ARRAYJOIN({fld32hpKiGx5l8ZhI}) & \" | \" & ARRAYJOIN({fldrB2gcduTaqxnsl}) & \" | \" & ARRAYJOIN({fld3S4XdwY6sq4BPZ}) & \" | \" & ARRAYJOIN({fldWNwh6Z3pxVwTes}) & \" | \" & IF({fldtNNM0a6DoxmuaF}, {fldtNNM0a6DoxmuaF}, \"\")"
+      },
+      "Homework Completions": {
+        "id": "fldDg9PXNr0i9YnX7",
+        "type": "multipleRecordLinks"
+      }
+    },
+    "scheduleKeyNamed": "IF(\n  AND(\n    {Program Instance RID},\n    {Week RID},\n    {Grade Band RID},\n    {Homework Slot},\n    {Homework Assignment RID}\n  ),\n  ARRAYJOIN({Program Instance RID}) & \"|\" & ARRAYJOIN({Week RID}) & \"|\" & ARRAYJOIN({Grade Band RID}) & \"|\" & {Homework Slot} & \"|\" & ARRAYJOIN({Homework Assignment RID}),\n  BLANK()\n)",
+    "scheduleKeyFieldIds": "IF(\n  AND(\n    {fld37Vw1oLvknFRHj},\n    {fldFCQ2z9Bwg1Y8YY},\n    {fld4Dpsd837yGkoPX},\n    {fldtNNM0a6DoxmuaF},\n    {fld0fcG9TDBXBlVDc}\n  ),\n  ARRAYJOIN({fld37Vw1oLvknFRHj}) & \"|\" & ARRAYJOIN({fldFCQ2z9Bwg1Y8YY}) & \"|\" & ARRAYJOIN({fld4Dpsd837yGkoPX}) & \"|\" & {fldtNNM0a6DoxmuaF} & \"|\" & ARRAYJOIN({fld0fcG9TDBXBlVDc}),\n  BLANK()\n)",
+    "homeworkCompletionsLink": {
+      "name": "Program Homework Assignment",
+      "id": "fldmhkFv4qVxfnROP",
+      "type": "multipleRecordLinks"
+    },
+    "ridHelpers": {
+      "programInstance": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "RECORD_ID()",
+          "referencedFieldIds": [],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldIR3bOa82zrGrmt",
+        "name": "Record Id",
+        "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+      },
+      "gradeBands": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "RECORD_ID()",
+          "referencedFieldIds": [],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fld6ZJh9vcNXgk1d4",
+        "name": "Record Id",
+        "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+      },
+      "curriculum": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "RECORD_ID()",
+          "referencedFieldIds": [],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fld7CcreHRXc4ZXeg",
+        "name": "Record Id",
+        "description": "Local RECORD_ID() helper for Program Homework Assignments Schedule Key lookups."
+      },
+      "weeksExisting": "fld5u278sXt1d4QvM"
+    }
+  }
+}

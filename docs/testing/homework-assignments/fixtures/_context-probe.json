@@ -1,0 +1,183 @@
+{
+  "weeksHasRecordId": false,
+  "weeksFields": [
+    {
+      "name": "Week Name",
+      "id": "fldvNgDbrO0yWuWrr",
+      "type": "singleLineText"
+    },
+    {
+      "name": "Record ID",
+      "id": "fld5u278sXt1d4QvM",
+      "type": "formula",
+      "formula": "RECORD_ID()"
+    },
+    {
+      "name": "Start Date",
+      "id": "fldbvSVciJzE7DnxF",
+      "type": "dateTime"
+    },
+    {
+      "name": "End Date",
+      "id": "fldKvPoOKSDcvuii7",
+      "type": "dateTime"
+    },
+    {
+      "name": "Program Instance",
+      "id": "fldBsA60l4ONazDba",
+      "type": "multipleRecordLinks"
+    }
+  ],
+  "gbFields": [
+    {
+      "name": "Grade Band Name",
+      "id": "fldAVvaQKlXmP22FW",
+      "type": "formula",
+      "formula": "IF(\r\n  AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=2),\r\n  \"K-2\",\r\n  IF(\r\n    AND({fld9Cdv1f3QbbmYYJ}=3,{fldKu3VXWBuD1DTDf}=4),\r\n    \"3-4\",\r\n    IF(\r\n      AND({fld9Cdv1f3QbbmYYJ}=5,{fldKu3VXWBuD1DTDf}=6),\r\n      \"5-6\",\r\n      IF(\r\n        AND({fld9Cdv1f3QbbmYYJ}=7,{fldKu3VXWBuD1DTDf}=8),\r\n        \"7-8\",\r\n        IF(\r\n          AND({fld9Cdv1f3QbbmYYJ}=9,{fldKu3VXWBuD1DTDf}=12),\r\n          \"9-12\",\r\n          IF(\r\n            AND({fld9Cdv1f3QbbmYYJ}=-1,{fldKu3VXWBuD1DTDf}=0),\r\n            \"PreK–K\",\r\n            IF(\r\n              {fld9Cdv1f3QbbmYYJ}=0,\r\n              \"Kindergarten\",\r\n              IF(\r\n                {fld9Cdv1f3QbbmYYJ}={fldKu3VXWBuD1DTDf},\r\n                \"Grade \" & {fld9Cdv1f3QbbmYYJ},\r\n                \"Grades \" & {fld9Cdv1f3QbbmYYJ} & \"–\" & {fldKu3VXWBuD1DTDf}\r\n              )\r\n            )\r\n          )\r\n        )\r\n      )\r\n    )\r\n  )\r\n)"
+    },
+    {
+      "name": "Video Feedback",
+      "id": "fldF4e4QyPEqqWjyq",
+      "type": "multipleRecordLinks"
+    }
+  ],
+  "piFields": [
+    {
+      "name": "Name - Program Instance",
+      "id": "fldrLB3z3EcgeLS72",
+      "type": "multilineText"
+    },
+    {
+      "name": "Program Instance Key",
+      "id": "fldIvI3K0RhOFJKCJ",
+      "type": "multilineText"
+    }
+  ],
+  "curRecordId": [
+    {
+      "name": "Lesson Key",
+      "id": "fldimsdazEpj0Z8Av",
+      "type": "formula",
+      "formula": "ARRAYJOIN({flddMQ8OZdvSsvak8}) & \"|\" & ARRAYJOIN({fld69DQxhTVlmGoWh}) & \"|\" & {fld3w0F60Pijeo63p}"
+    }
+  ],
+  "enrFields": [
+    {
+      "name": "Record Id",
+      "id": "fldnsyxEUbrJjyzXU",
+      "type": "formula"
+    },
+    {
+      "name": "Grade",
+      "id": "fldqzUx0ZwsciCh95",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Program Instance",
+      "id": "fldVMwSfH8r9S0afA",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Grade Band",
+      "id": "fldmM5UET9wsL1lwy",
+      "type": "multipleRecordLinks"
+    },
+    {
+      "name": "Grade Band Label",
+      "id": "fldpOdEjLc64L3BZ5",
+      "type": "multipleLookupValues"
+    },
+    {
+      "name": "Last Grade Used for Grade Band",
+      "id": "fldFKOBjkCckjyQy1",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Grade Band Status",
+      "id": "fldfZQwSek9WL8Pec",
+      "type": "singleSelect"
+    },
+    {
+      "name": "Grade Band Refresh Needed",
+      "id": "fldR81v7KJasuSzVz",
+      "type": "formula"
+    },
+    {
+      "name": "Program Instance Name Only",
+      "id": "flde31eImaWCUgNPb",
+      "type": "multipleLookupValues"
+    }
+  ],
+  "enrollment": {
+    "programInstance": [
+      "rec5mEM0YPqPqq0hZ"
+    ],
+    "gradeBand": [
+      "reclWDQZzKbVBtdhG"
+    ]
+  },
+  "was": {
+    "week": [
+      "reci5GdxEC57vfoS3"
+    ],
+    "gradeBand": [
+      "reclWDQZzKbVBtdhG"
+    ],
+    "enrollment": [
+      "recCyFEPeATOVNlr9"
+    ],
+    "homeworkAssignedCount": 0,
+    "homeworkSatisfactoryCount": 0
+  },
+  "gradeBands": [
+    {
+      "id": "rec2VQFfGJa1ofA06",
+      "name": "7-8",
+      "min": 7,
+      "max": 8,
+      "active": true
+    },
+    {
+      "id": "rec75ruo3XT5nSvaK",
+      "name": "9-12",
+      "min": 9,
+      "max": 12,
+      "active": true
+    },
+    {
+      "id": "recK7BDVSpHy2ipCS",
+      "name": "K-2",
+      "min": -1,
+      "max": 2,
+      "active": true
+    },
+    {
+      "id": "recOGisMZRWgk445o",
+      "name": "Grades 9–10",
+      "min": 9,
+      "max": 10
+    },
+    {
+      "id": "recg6zvMxWsFSn7sf",
+      "name": "Grades 1–2",
+      "min": 1,
+      "max": 2
+    },
+    {
+      "id": "reclWDQZzKbVBtdhG",
+      "name": "3-4",
+      "min": 3,
+      "max": 4,
+      "active": true
+    },
+    {
+      "id": "recv9aWnHanY2sRgk",
+      "name": "5-6",
+      "min": 5,
+      "max": 6,
+      "active": true
+    }
+  ],
+  "gradeBand34Id": "reclWDQZzKbVBtdhG",
+  "curriculumCandidates": []
+}

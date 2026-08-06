@@ -1,0 +1,83 @@
+{
+  "probedAt": "2026-08-05T23:35:26.957Z",
+  "fields": {
+    "weeklyAthleteSummary": {
+      "name": "Weekly Athlete Summary",
+      "id": "fldhpGNYnu2l3bpUP",
+      "type": "singleLineText"
+    },
+    "weeklyAthleteSummaryLink": {
+      "name": "Weekly Athlete Summary Link",
+      "id": "fldkoEbVnCugcMCCi",
+      "type": "multipleRecordLinks",
+      "linkedTableId": "tbl9520d72adxlAKQ",
+      "prefersSingleRecordLink": true
+    }
+  },
+  "homeworkCompletions": [
+    {
+      "id": "recqXxlOpATQI3sD4",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": [
+        "recKebuZ79QFTwivA"
+      ],
+      "enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "week": [
+        "reci5GdxEC57vfoS3"
+      ],
+      "homework": [
+        "rechVLOeyEVIqmy2v"
+      ],
+      "pha": [
+        "reca5GM1JkROhXOiy"
+      ],
+      "satisfactory": true,
+      "completionStatus": "Satisfactory",
+      "assetSlot": "HW1"
+    },
+    {
+      "id": "rechzFmWrUp1tonto",
+      "weeklyAthleteSummaryText": null,
+      "weeklyAthleteSummaryLink": [
+        "recKebuZ79QFTwivA"
+      ],
+      "enrollment": [
+        "recCyFEPeATOVNlr9"
+      ],
+      "week": [
+        "reci5GdxEC57vfoS3"
+      ],
+      "homework": [
+        "rec6WmXjpLtIWDERo"
+      ],
+      "pha": [
+        "reccQhrgOK8e8Yngv"
+      ],
+      "satisfactory": true,
+      "completionStatus": "Satisfactory",
+      "assetSlot": "HW2"
+    }
+  ],
+  "bothLinkTargetWas": true,
+  "was": {
+    "id": "recKebuZ79QFTwivA",
+    "homework": [
+      "rechVLOeyEVIqmy2v",
+      "rec4MHWKWwsGOw26q"
+    ],
+    "homeworkAssignedCount": 2,
+    "homeworkSatisfactoryCount": 2,
+    "homeworkCompletionsLink": [
+      "recqXxlOpATQI3sD4",
+      "rechzFmWrUp1tonto"
+    ],
+    "automationStatus": "Pending",
+    "eligible": 0,
+    "videoMet": 0,
+    "zoomMet": 0,
+    "daysLogged": 7,
+    "calculationQueue": 1
+  }
+}

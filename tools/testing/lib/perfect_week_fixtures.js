@@ -159,6 +159,83 @@ function makeResult(caseId, status, reason, details = {}) {
   return { caseId, status, reason, ...details };
 }
 
+const GATED_ENROLLMENT_ID = "recCyFEPeATOVNlr9";
+
+function submissionUsesGatedTestFields(sub) {
+  const checked = truthy(field(sub, "Perfect Week Test Record?"));
+  const ts = field(sub, "Perfect Week Test Submitted At");
+  return checked || (ts != null && ts !== "");
+}
+
+/**
+ * Security checks for gated Perfect Week test timestamp fields.
+ * Returns FAIL result or null if OK.
+ */
+function evaluateGatedTestFieldSecurity(caseId, caseSpec, actual, enrollmentId) {
+  const submissions = actual.submissions || [];
+  const allowedEnrollment =
+    caseSpec.allowedGatedEnrollmentId ||
+    actual.allowedGatedEnrollmentId ||
+    GATED_ENROLLMENT_ID;
+
+  for (const sub of submissions) {
+    const uses = submissionUsesGatedTestFields(sub);
+    if (!uses) continue;
+
+    const subEnroll =
+      linkIds(field(sub, "Enrollment"))[0] ||
+      String(field(sub, "Enrollment Record ID Lookup") || "").trim() ||
+      enrollmentId;
+
+    if (subEnroll && subEnroll !== allowedEnrollment) {
+      return makeResult(
+        caseId,
+        STATUSES.FAIL,
+        "gated_test_fields_require_schmidt_enrollment — Perfect Week Test fields used without Enrollment recCyFEPeATOVNlr9",
+        { submissionId: sub.id, enrollmentId: subEnroll }
+      );
+    }
+  }
+
+  if (caseSpec.forbidGatedTestFields) {
+    for (const sub of submissions) {
+      if (submissionUsesGatedTestFields(sub)) {
+        return makeResult(
+          caseId,
+          STATUSES.FAIL,
+          "non_fixture_must_not_use_gated_test_fields — CASE control record has Perfect Week Test Record? or Test Submitted At",
+          { submissionId: sub.id }
+        );
+      }
+    }
+  }
+
+  if (caseSpec.requireGatedTestFields && submissions.length) {
+    for (const sub of submissions) {
+      const checked = truthy(field(sub, "Perfect Week Test Record?"));
+      const ts = field(sub, "Perfect Week Test Submitted At");
+      if (!checked || ts == null || ts === "") {
+        return makeResult(
+          caseId,
+          STATUSES.FAIL,
+          "gated_fixture_missing_test_fields — CASE-01 gated path requires checkbox + Perfect Week Test Submitted At",
+          { submissionId: sub.id }
+        );
+      }
+      if (enrollmentId && enrollmentId !== allowedEnrollment) {
+        return makeResult(
+          caseId,
+          STATUSES.FAIL,
+          "gated_fixture_wrong_enrollment — gated CASE-01 must use Enrollment recCyFEPeATOVNlr9",
+          { enrollmentId }
+        );
+      }
+    }
+  }
+
+  return null;
+}
+
 /**
  * Evaluate one fixture case from already-fetched records (no network).
  *
@@ -180,27 +257,47 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
 
   const was = actual.was;
   if (!caseSpec.wasId && !was) {
-    return makeResult(caseId, STATUSES.BLOCKED, "WAS id not in manifest — Omni create pending");
+    if (
+      (caseSpec.forbidGatedTestFields || caseId === "CASE-07") &&
+      (actual.submissions || []).length
+    ) {
+      // Submission-only control evidence (e.g. CASE-07 pilot) — no WAS required
+      actual.was = {
+        fields: {
+          Enrollment: caseSpec.enrollmentId ? [{ id: caseSpec.enrollmentId }] : [],
+          Week: caseSpec.weekId ? [{ id: caseSpec.weekId }] : [],
+          "Perfect Week Automation Status": "Ready",
+          "Perfect Week Daily Requirement Met?": false,
+          "Perfect Week Video Requirement Met?": 0,
+          "Perfect Week Zoom Requirement Met?": 1,
+          "Perfect Week Eligible?": 0,
+          "Perfect Week Unlock": [],
+        },
+      };
+    } else {
+      return makeResult(caseId, STATUSES.BLOCKED, "WAS id not in manifest — Omni create pending");
+    }
   }
-  if (!was) {
+  const wasRecord = actual.was;
+  if (!wasRecord) {
     return makeResult(caseId, STATUSES.BLOCKED, "WAS record not loaded", {
       wasId: caseSpec.wasId,
     });
   }
 
-  const enrollmentId = caseSpec.enrollmentId || linkIds(field(was, "Enrollment"))[0];
-  const weekId = caseSpec.weekId || linkIds(field(was, "Week"))[0];
-  const dailyMet = truthy(field(was, "Perfect Week Daily Requirement Met?"));
-  const videoCount = asNumber(field(was, "Perfect Week Video Count"));
-  const videoMet = asNumber(field(was, "Perfect Week Video Requirement Met?"));
-  const zoomMeetings = asNumber(field(was, "Perfect Week Zoom Meeting Count"));
-  const zoomAttendance = asNumber(field(was, "Perfect Week Zoom Attendance Count"));
-  const zoomMet = asNumber(field(was, "Perfect Week Zoom Requirement Met?"));
-  const eligible = asNumber(field(was, "Perfect Week Eligible?"));
-  const daysLogged = asNumber(field(was, "Days Logged This Week"));
-  const automationStatus = String(field(was, "Perfect Week Automation Status") || "");
-  const testOverride = truthy(field(was, "Perfect Week Test Override?"));
-  const unlockIds = linkIds(field(was, "Perfect Week Unlock"));
+  const enrollmentId = caseSpec.enrollmentId || linkIds(field(wasRecord, "Enrollment"))[0];
+  const weekId = caseSpec.weekId || linkIds(field(wasRecord, "Week"))[0];
+  const dailyMet = truthy(field(wasRecord, "Perfect Week Daily Requirement Met?"));
+  const videoCount = asNumber(field(wasRecord, "Perfect Week Video Count"));
+  const videoMet = asNumber(field(wasRecord, "Perfect Week Video Requirement Met?"));
+  const zoomMeetings = asNumber(field(wasRecord, "Perfect Week Zoom Meeting Count"));
+  const zoomAttendance = asNumber(field(wasRecord, "Perfect Week Zoom Attendance Count"));
+  const zoomMet = asNumber(field(wasRecord, "Perfect Week Zoom Requirement Met?"));
+  const eligible = asNumber(field(wasRecord, "Perfect Week Eligible?"));
+  const daysLogged = asNumber(field(wasRecord, "Days Logged This Week"));
+  const automationStatus = String(field(wasRecord, "Perfect Week Automation Status") || "");
+  const testOverride = truthy(field(wasRecord, "Perfect Week Test Override?"));
+  const unlockIds = linkIds(field(wasRecord, "Perfect Week Unlock"));
   const xpEvents = actual.xpEvents || [];
   const sourceKey = buildPerfectWeekSourceKey(enrollmentId, weekId);
   const matchingXp = xpEvents.filter((ev) => {
@@ -220,10 +317,10 @@ function evaluatePerfectWeekCase(caseId, caseSpec, actual = {}) {
     );
   }
 
-  if (automationStatus && automationStatus !== "Ready" && automationStatus !== "Error") {
-    // Pending/Needs Review may mean not run yet
-  }
-  if (!automationStatus || automationStatus === "Pending") {
+  const gatedSecurity = evaluateGatedTestFieldSecurity(caseId, caseSpec, actual, enrollmentId);
+  if (gatedSecurity) return gatedSecurity;
+
+  if (expectAward && (!automationStatus || automationStatus === "Pending")) {
     return makeResult(caseId, STATUSES.BLOCKED, "Perfect Week Automation Status not Ready yet", {
       automationStatus,
     });
@@ -394,4 +491,7 @@ module.exports = {
   aggregateCountableShotsByDate,
   evaluateDailyRequirement,
   evaluatePerfectWeekCase,
+  evaluateGatedTestFieldSecurity,
+  submissionUsesGatedTestFields,
+  GATED_ENROLLMENT_ID,
 };

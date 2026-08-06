@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-05** (Overnight Agent 2 foundation + Agent 1/3/4 concurrent packages) |
+| Last updated | **2026-08-05** (Overnight merge Agents 1–4 + Perfect Week gated test timestamp; not Complete) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -78,7 +78,7 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (Overnight Agent 2 foundation + Agent 1/3/4 concurrent). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-05** (Overnight merge: Agent 2 foundation + Agent 1 SC-016/PHA + Agent 3 Perfect Week + Agent 4 ops). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
@@ -107,6 +107,15 @@ Counts below match Section 4 as of **2026-08-05** (Overnight Agent 2 foundation 
 **Do not award duplicate milestone XP during retest** — existing `SHOT_MILESTONE\|recCyFEPeATOVNlr9\|*` unlocks/XP must be linked/skipped, not recreated.
 
 Evidence: script `066-achievements-and-milestones-create-shot-milestone-unlocks.js` · overnight Agent 2 backfill pack [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evidence/2026-08-05-agent2-foundation/).
+
+### Dashboard reconciliation (2026-08-05 — Perfect Week gated test timestamp)
+
+| SC | Old status | New status | Evidence |
+|----|------------|------------|----------|
+| SC-021 | Installed in PROD | **Installed in PROD** | Gated `Submitted Same Day?` formula for Schmidt enrollment `recCyFEPeATOVNlr9` only when both test fields set; **not athlete-facing**; normal athletes stay on Submitted At vs Activity Date |
+| SC-028 / SC-077 | *(see Agent 3)* | **Live Tested in PROD** | CASE-01 used gated fixtures; unlock/XP proven; do not revert to Installed from this gated-path note |
+
+**Do not mark Perfect Week Complete.** Method: [`PERFECT-WEEK-FIXTURE-METHOD.md`](./testing/perfect-week/PERFECT-WEEK-FIXTURE-METHOD.md) · Rollback: [`PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md`](./testing/perfect-week/PERFECT-WEEK-GATED-TEST-TIMESTAMP-ROLLBACK.md).
 
 ### Dashboard reconciliation (2026-08-05 — Overnight Agent 2 foundation)
 
@@ -138,7 +147,7 @@ Evidence: [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evid
 | SC-016 | Installed → **Live Tested in PROD** | 3 dupe groups cleaned; 0 remaining; not Complete until 020 paste + re-submit |
 | CASE-01 homework | **2/2** assigned/satisfactory; Eligible **1** | PHA HW2 aligned to `rec6WmXjpLtIWDERo` |
 
-**Net math vs Agent 3 closeout:** LT 24→**25**; Installed 47→**46**.
+**Net math vs Agent 3 closeout (intermediate, before Agent 2):** LT 24→**25**; Installed 47→**46**. Final dashboard after Agent 2: LT **34** / Installed **40** / Built **22** / Planned **16**.
 
 Evidence: [`docs/testing/evidence/2026-08-05-agent1-homework/`](./testing/evidence/2026-08-05-agent1-homework/) · [`program-homework-assignments-operator-guide.md`](./deploy-checklists/program-homework-assignments-operator-guide.md).
 
@@ -397,7 +406,7 @@ Columns:
 | SC-018 | Homework | Learning Activities table (catalog of activities) | Built in Repository | Agent 11: LA schema MD + JSON schema + fixtures/tests; LA-000 types remain | Mike-authorized Airtable schema; seed catalog; keep FBC Curriculum SYNC unless decided otherwise | SC-020 | No parallel XP model | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITIES-SCHEMA.md` | Approve schema creation in PROD | P1 | 2026-07-24 |
 | SC-019 | Homework | Learning Activity Responses table + Response→asset routing | Built in Repository | Agent 11 routing contract + helpers/tests (`countsAsHomework` gate; XP via 064/065 only) | Schema; automations; Fillout/web intake; route to Submission Assets / optional HC | SC-018 | `countsAsHomework` gate | `docs/next-wave/homework-pipeline/LEARNING-ACTIVITY-ROUTING-CONTRACT.md` | — | P1 | 2026-07-24 |
 | SC-020 | Homework | Activities that count as homework vs stand-alone | Planned | Contract: HC only if Homework link **and** `countsAsHomework` | Implement flag + automation filters + coach views | SC-018, SC-019 | Stand-alone must not steal HW XP | LA-001 | Confirm product language for methods | P1 | 2026-07-23 |
-| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Installed in PROD | **054 v5.6** + **066 v3.3** in PROD; **057 v1.5** installed/running in PROD (repo matches; do not downgrade to v1.4); Denver date keys retained from v1.4 | Controlled Perfect Week fixtures CASE-01…16 + verifier; migrate remaining hardcode consumers | SC-022 | Changing options breaks scripts | `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P0 | 2026-08-05 |
+| SC-021 | Config | Config-over-code audit (no hardcoded season numbers in scripts) | Installed in PROD | **054 v5.6** + **066 v3.3** in PROD; **057 v1.5** installed/running; **gated test timestamp** Same Day path for Schmidt fixtures only (not athlete-facing) | Run 057 on CASE-01 WAS; CASE-01…16 + verifier; migrate remaining hardcode consumers | SC-022 | Changing options breaks scripts; do not weaken Same Day for normal athletes | `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`; `docs/testing/perfect-week/` | — | P0 | 2026-08-05 |
 | SC-022 | Config | XP Reward Rules audit and cleanup | Installed in PROD | 31 active rules, 0 duplicate keys; source-by-source audit; **054 v5.6 Installed in PROD** (duplicate active streak-rule guard) | Resolve Video XP 1-vs-25; decide Zoom Recording / Manual Bonus rule records; supervised streak proof still open | SC-021, SC-023 | Source Key uniqueness | `docs/overnight/config-xp/XP-RULES-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-07-24 |
 | SC-023 | Config | Grade Bands as linked source of truth | Live Tested in PROD | Active bands K-2…9-12 healthy; **066 v3.3** link-ID match; **002** live reassign Grade 3→**3-4** on `recCyFEPeATOVNlr9` (~6s); legacy inactive bands have no athlete-path links | Archive inactive legacy bands when ready; keep Min/Max match (no hard-coded band ID) | SC-021 | Renaming bands must not break XP; Grade 3 must Min/Max-match **3-4** (no hard-coded band ID) | `docs/overnight/config-xp/GRADE-BAND-AUDIT.md`; `docs/deploy-checklists/002-unloadData-runtime-fix.md`; `tests/enrollment-intake/automation-002-unload-compat.test.js` | — | P0 | 2026-08-05 |
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
@@ -406,6 +415,7 @@ Columns:
 | SC-027 | Config | Shot Milestones config + awards | Live Tested in PROD *(backfill path)* | Shot Milestones config; unlocks+XP proven via controlled create→059 on `recCyFEPeATOVNlr9`; **066 natural path FAILED** on v3.3 (`createRecordsAsync` missing `fields`); repo **v3.4** awaiting paste | Paste **066 v3.4**; natural Run Check? proof on current Schmidt enrollment (expect link/skip existing — no duplicate XP) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-06 |
 | SC-028 | Config | Perfect Week rules configurable | Live Tested in PROD | CASE-01 award path proven (057→058→XP); PROD **057 v1.5**; **059 auto-fire blocked** until trigger drops Shot Milestone filter; multi-case fixtures still open | Mike 059 UI trigger fix; Batch A/B fixtures | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade 057 to v1.4 | `059-perfect-week-trigger-coverage.md`; `docs/testing/evidence/2026-08-05-agent3-perfect-week/` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Live Tested in PROD | Streak XP via **053** + **054 v5.6**; Schmidt Current Streak **8**; 3 STREAK_XP events on `recCyFEPeATOVNlr9` | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-08-05 |
+
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
 | SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
 | SC-032 | Config | Season settings (dates, windows) | Built in Repository | **Season Launch Control System** + Challenge-Year engine + **Agent 4** [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) executable checklist | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation | SC-065, SC-084 | 005 date mapping; fail closed on multiple active Configs; does not vendor RCC | `docs/challenge-year/SEASON-LAUNCH-CONTROL.md`; `lib/challenge-year/`; install packet; Agent 4 startup checklist | Authorize schema + Live flip | P0 | 2026-08-05 |
