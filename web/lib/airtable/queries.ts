@@ -99,6 +99,7 @@ export const LEADERBOARD_FIELDS = [
   "Lifetime XP Total",
   "Total Shots Counted",
   "School Year",
+  "Program Instance Name Only",
   "Public Profile Enabled",
   "Public Profile Slug",
 ] as const;
@@ -106,6 +107,26 @@ export const LEADERBOARD_FIELDS = [
 const LEADERBOARD_VIEW = "Web - Leaderboard";
 const LEADERBOARD_MAX_RECORDS = 200;
 const LEADERBOARD_REVALIDATE_SECONDS = 120;
+
+/**
+ * Optional season scope for website queries.
+ * Prefer Airtable Web views that already filter by active Program Instance.
+ * When AIRTABLE_ACTIVE_SCHOOL_YEAR is set, fallback formulas also require that
+ * School Year so prior-year Active? enrollments cannot leak into the public UI.
+ */
+function activeSchoolYearFilterClause(): string {
+  const year = String(process.env.AIRTABLE_ACTIVE_SCHOOL_YEAR || "").trim();
+  if (!year) return "";
+  const escaped = year.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+  return `{School Year} = "${escaped}"`;
+}
+
+function andFormula(...clauses: Array<string | false | null | undefined>): string {
+  const parts = clauses.filter((c): c is string => typeof c === "string" && c.length > 0);
+  if (parts.length === 0) return "";
+  if (parts.length === 1) return parts[0];
+  return `AND(${parts.join(", ")})`;
+}
 
 const HOMEWORK_VIEW = "Web - Homework Catalog";
 const HOMEWORK_REVALIDATE_SECONDS = 300;
@@ -219,7 +240,9 @@ const ZOOM_MEETING_FIELDS = [
 ] as const;
 
 /** Fallback when the Web view is missing — mirrors view intent in docs/airtable-data-map.md. */
-const LEADERBOARD_FALLBACK_FILTER = "AND({Active?}, {Lifetime XP Total} >= 0)";
+const LEADERBOARD_FALLBACK_FILTER =
+  andFormula("{Active?}", "{Lifetime XP Total} >= 0", activeSchoolYearFilterClause()) ||
+  "AND({Active?}, {Lifetime XP Total} >= 0)";
 
 /**
  * Public season leaderboard — active enrollments ranked level → XP → shots.
@@ -756,7 +779,13 @@ export async function fetchPublicAthleteProfileBySlug(
   if (!isValidPublicSlug(slug)) return null;
 
   const escaped = escapeAirtableString(slug);
-  const filterByFormula = `AND({Public Profile Enabled}=1,{Active?},LOWER({Public Profile Slug})=LOWER("${escaped}"))`;
+  const schoolYearClause = activeSchoolYearFilterClause();
+  const filterByFormula = andFormula(
+    "{Public Profile Enabled}=1",
+    "{Active?}",
+    `LOWER({Public Profile Slug})=LOWER("${escaped}")`,
+    schoolYearClause
+  );
 
   const enrollmentResponse = await listAirtableRecords<PublicEnrollmentFields>({
     tableName: AIRTABLE_TABLES.enrollments,
@@ -772,7 +801,9 @@ export async function fetchPublicAthleteProfileBySlug(
 
   if (enrollmentResponse.records.length > 1) {
     console.error(
-      `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments). Correct in Airtable: ensure only one Active enrollment has this slug with Public Profile Enabled. Failing closed.`,
+      `[public-athlete-profile] Duplicate enabled Public Profile Slug "${slug}" (${enrollmentResponse.records.length} enrollments` +
+        `${schoolYearClause ? ` after School Year filter` : ""}). ` +
+        `Do not select Enrollment by Athlete alone — ensure one Active enrollment per Program Instance/slug. Failing closed.`
     );
     return null;
   }
