@@ -55,6 +55,12 @@ Dependency audit: [`PERFECT-WEEK-DEPENDENCY-AUDIT.md`](./PERFECT-WEEK-DEPENDENCY
 
 Enrollment: `recCyFEPeATOVNlr9` · Program Instance: `rec5mEM0YPqPqq0hZ`
 
+### Program Instance isolation note (2026-08-06)
+
+Test Weeks that **overlap operational Weeks** in the same Program Instance (example: `reci5GdxEC57vfoS3` PWTEST vs Early Bird `recWeVrSabnsYaHc2`) will block Automation **005** Activity Date matching if both remain Active.
+
+**Convention:** Prefer a **dedicated testing Program Instance** for overlapping date fixtures. Otherwise deactivate/delete the fixture Week after the test (inspect dependencies first). See [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](../prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
+
 1. Week Sun–Sat (e.g. `2026-08-02` … `2026-08-08`) + WAS + Goal Record (5000 target).
 2. Create **seven** Submissions today, one per day:
    - `Perfect Week Test Record?` = checked
