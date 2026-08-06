@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-06 (v3.4 createRecordsAsync fields contract)
+Last GitHub Update: 2026-08-06 (v3.5 Program Instance Week isolation + v3.4 createRecords fix)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.

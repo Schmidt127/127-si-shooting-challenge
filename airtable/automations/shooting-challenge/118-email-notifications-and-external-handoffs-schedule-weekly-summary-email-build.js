@@ -22,11 +22,14 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.6
+ * Version: v1.7
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-05
+ * Last Updated: 2026-08-06
  *
  * VERSION HISTORY
+ * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
+ *   multi-PI collisions; enrollments armed only when Enrollment.Program Instance
+ *   matches the target Week. Exclude both Schmidt test enrollment RIDs.
  * - v1.6 (2026-08-05): Airtable runtime compatibility — guard optional
  *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
  *   otherwise successful automation run.
@@ -99,9 +102,11 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.6",
+  version: "v1.7",
   timeZone: "America/Denver",
-  schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
+  // Exclude both historical and current Schmidt test enrollments by default.
+  schmidtEnrollmentId: "recCyFEPeATOVNlr9",
+  schmidtEnrollmentIds: ["recCyFEPeATOVNlr9", "recgP9qZYjAhE7NXm"],
 
   tables: {
     enrollments: "Enrollments",
@@ -114,6 +119,7 @@ const CONFIG = {
     enrollmentKey: "Enrollment Key",
     parentEmail: "Parent Email - Cleaned",
     athleteEmail: "Athlete Email - Cleaned",
+    programInstance: "Program Instance",
   },
 
   weeks: {
@@ -122,6 +128,8 @@ const CONFIG = {
     weekKey: "Week Key",
     weekCode: "Week Code",
     active: "Active?",
+    activeWeek: "Active Week?",
+    programInstance: "Program Instance",
   },
 
   was: {
@@ -298,7 +306,9 @@ async function main() {
       .filter(Boolean)
   );
   if (!includeSchmidt) {
-    excluded.add(CONFIG.schmidtEnrollmentId);
+    for (const id of CONFIG.schmidtEnrollmentIds || [CONFIG.schmidtEnrollmentId]) {
+      excluded.add(id);
+    }
   }
 
   // Never Live-send to Schmidt test enrollment via schedule.
@@ -322,14 +332,51 @@ async function main() {
   try {
   weeksQuery = await weeksTable.selectRecordsAsync({ fields: weekFields });
 
-  let targetWeek = null;
+  function weekIsActive(w) {
+    if (fieldExists(weeksTable, CONFIG.weeks.activeWeek) && booleanish(w, CONFIG.weeks.activeWeek)) {
+      return true;
+    }
+    if (fieldExists(weeksTable, CONFIG.weeks.active) && booleanish(w, CONFIG.weeks.active)) {
+      return true;
+    }
+    // If neither Active field exists, treat as eligible.
+    if (
+      !fieldExists(weeksTable, CONFIG.weeks.activeWeek) &&
+      !fieldExists(weeksTable, CONFIG.weeks.active)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const endDateMatches = [];
   for (const w of weeksQuery.records) {
     const endKey = text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate));
     if (endKey === targetEndKey) {
-      targetWeek = w;
-      break;
+      endDateMatches.push(w);
     }
   }
+
+  let targetCandidates = endDateMatches.filter((w) => weekIsActive(w));
+  if (targetCandidates.length === 0) {
+    targetCandidates = endDateMatches;
+  }
+
+  if (targetCandidates.length > 1) {
+    const diag = targetCandidates
+      .map((w) => {
+        const pi = linkedIds(w, CONFIG.weeks.programInstance)[0] || "no-pi";
+        return `${w.id}|PI=${pi}`;
+      })
+      .join("; ");
+    throw new Error(
+      `Multiple Weeks matched End Date/Key ${targetEndKey} (${targetCandidates.length}). ` +
+        `Program Instance collision — deactivate overlapping fixtures or use a dedicated test PI. ` +
+        `Candidates: ${diag}`
+    );
+  }
+
+  const targetWeek = targetCandidates[0] || null;
 
   if (!targetWeek) {
     setOutputSafe("statusOut", "skipped");
@@ -343,6 +390,10 @@ async function main() {
     console.log(JSON.stringify({ automation: CONFIG.scriptName, version: CONFIG.version, targetEndKey, dryRun }));
     return;
   }
+
+  const targetWeekProgramInstanceId = fieldExists(weeksTable, CONFIG.weeks.programInstance)
+    ? linkedIds(targetWeek, CONFIG.weeks.programInstance)[0] || ""
+    : "";
 
   debugStep = "3 - Load enrollments + WAS";
   setOutputSafe("debugStep", debugStep);
@@ -398,6 +449,13 @@ async function main() {
       if (fieldExists(enrollmentsTable, CONFIG.enrollments.active) && !booleanish(enr, CONFIG.enrollments.active)) {
         skipped += 1;
         continue;
+      }
+      if (targetWeekProgramInstanceId && fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
+        const enrPi = linkedIds(enr, CONFIG.enrollments.programInstance)[0] || "";
+        if (enrPi !== targetWeekProgramInstanceId) {
+          skipped += 1;
+          continue;
+        }
       }
 
       const parent = text(enr, CONFIG.enrollments.parentEmail);

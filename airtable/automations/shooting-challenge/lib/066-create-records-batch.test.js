@@ -74,10 +74,10 @@ function makeStrictTable() {
 }
 
 (async () => {
-  test("repo script declares v3.4 and normalizeCreateRecordPayload", () => {
+  test("repo script declares v3.5 and normalizeCreateRecordPayload", () => {
     const text = fs.readFileSync(SCRIPT_PATH, "utf8");
-    assert.match(text, /Version:\s*v3\.4/);
-    assert.match(text, /version:\s*"v3\.4"/);
+    assert.match(text, /Version:\s*v3\.5/);
+    assert.match(text, /version:\s*"v3\.5"/);
     assert.match(text, /function normalizeCreateRecordPayload/);
     assert.match(text, /await table\.createRecordsAsync\(batch\)/);
     // Historical bug: raw payloads passed straight to createRecordsAsync in multi-path
@@ -280,7 +280,7 @@ function makeStrictTable() {
 
   console.log("\nAll 066-create-records-batch regression tests passed.");
   console.log(
-    "NOTE: Do not mark Automation 066 natural path Live Tested until v3.4 is pasted and rerun on recCyFEPeATOVNlr9.",
+    "NOTE: Do not mark Automation 066 natural path Live Tested until v3.5 is pasted and rerun on recCyFEPeATOVNlr9.",
   );
 })().catch((error) => {
   console.error(error);
