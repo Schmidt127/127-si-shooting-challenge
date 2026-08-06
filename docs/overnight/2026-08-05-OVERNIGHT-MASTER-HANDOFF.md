@@ -80,4 +80,21 @@ Evidence: `docs/testing/evidence/2026-08-05-agent3-perfect-week/`
 
 ## Progress checkpoints
 
-*(Agents append after each work package.)*
+### Agent 4 — ops / launch readiness (2026-08-05)
+
+| Package | Result |
+|---------|--------|
+| Claim | SC-045, SC-088, SC-041, SC-058, SC-147, SC-032/065, SC-139 |
+| 117 offline email handoff | **7/7 PASS** (prepared — not live emailed) |
+| Email readiness probe | PASS read-only; **0 emails sent**; welcome stale 2025-2026; WAS×4 stale labels; no VF/Zoom fixtures |
+| Automation inventory audit | 48 operator rows; P0: 112 operator shows Live; 117/118/119 missing from operator table |
+| RCC | Sanitized PROD export + CLI exit 0; views **not** installed (OMNI prompt ready) |
+| Runbooks | Next-season reset, 117 go-live, RCC OMNI views, SC-041 retry executable |
+| PROD schema/data writes | **None** this package (read-only probes) |
+| Status bucket moves | **None** (honest — advanced Built packages toward Live Test readiness) |
+
+Evidence: `docs/testing/evidence/2026-08-05-agent4-ops/`
+
+---
+
+*(Other agents append after each work package.)*
