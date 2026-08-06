@@ -75,16 +75,17 @@ Diagnostic: `audit-pending-shot-milestone-unlocks.js`.
 6. Map `recordId` + required outputs.  
 7. DEV soak ON after one fixture unlock.
 
-### 4.2 Perfect Week caveat
+### 4.2 Perfect Week caveat — **RESOLVED (Agent 3 MVP lock, 2026-08-05)**
 
-Recommended trigger is **shot-milestone-scoped**. Perfect Week unlocks from **058** may have empty Shot Milestone.
+Recommended trigger must **not** require Shot Milestone. Perfect Week unlocks from **058** have empty Shot Milestone.
 
-| Option | When |
-|--------|------|
-| **P1** | Second automation or broader created-trigger without Shot Milestone filter (Pending only) |
-| **P2** | Separate matches-conditions path for Perfect Week achievement type |
+| Decision | Detail |
+|----------|--------|
+| **P1 locked** | Single 059 automation; created trigger; **Pending only** (covers Shot Milestone + Perfect Week) |
+| PROD evidence | CASE-01 unlock `recALZFQNL3XicEOX` stayed Pending until 059-contract award; bounce did not auto-fire |
+| Closeout | [`docs/deploy-checklists/059-perfect-week-trigger-coverage.md`](../deploy-checklists/059-perfect-week-trigger-coverage.md) |
 
-**UNKNOWN** whether live UI already covers Perfect Week — confirm with OMNI before PROD.
+**Mike:** Apply P1 trigger in PROD UI (remove Shot Milestone filter). Script paste not required for this change.
 
 ### 4.3 Post-check
 

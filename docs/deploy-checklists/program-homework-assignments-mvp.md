@@ -94,8 +94,8 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 | Dependency | Must change for MVP? | Notes |
 |------------|----------------------|-------|
 | Automation **012** | N/A | Deleted / unused (index) |
-| Automation **033** | **Yes** (GitHub v3.2) | Prefer PHA; legacy curriculum fallback |
-| Automation **020** | **Yes** (GitHub v3.1.0) | Link PHA on HC create/update when resolvable |
+| Automation **033** | **Yes** (GitHub v3.3) | Prefer PHA; legacy curriculum fallback |
+| Automation **020** | **Yes** (GitHub v3.2.0) | Link PHA on HC create/update when resolvable |
 | Automation **057** | No | Reads WAS.`Homework` + Completions Link. CASE-01 manual Test **PASS** 2026-08-05 — no code change |
 | Automation **065** XP | No | Still uses HC.Homework library link |
 | 009 assets / 071 email | No | Legacy library links |

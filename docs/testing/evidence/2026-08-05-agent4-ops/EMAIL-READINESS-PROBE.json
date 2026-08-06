@@ -1,0 +1,256 @@
+{
+  "generatedAt": "2026-08-06T00:09:16.870Z",
+  "baseId": "appn84sqPw03zEbTT",
+  "schmidtEnrollmentId": "recgP9qZYjAhE7NXm",
+  "emailsSentThisProbe": 0,
+  "sendSuppression": "read-only probe — no webhook POST, no Gmail",
+  "enrollment": {
+    "id": "recgP9qZYjAhE7NXm",
+    "active": true,
+    "hasParentEmail": true,
+    "parentEmailRedacted": "[email]",
+    "welcomeStatus": "Sent",
+    "welcomeReady": false,
+    "welcomeSentAt": "2026-05-02T18:16:30.143Z",
+    "welcomeToRedacted": "[email]",
+    "welcomeError": "",
+    "welcomePackage": {
+      "hasSubject": true,
+      "hasRecipients": true,
+      "hasHtml": true,
+      "htmlChars": 13240,
+      "recipientsRedacted": "[email]",
+      "subjectPreview": "Welcome to Shooting Challenge | 2025-2026"
+    },
+    "hasProgramInstance": false
+  },
+  "weekly": {
+    "wasCount": 4,
+    "sentCount": 0,
+    "readyUnsent": 0,
+    "packageIncompleteReady": 0,
+    "staleSeasonLabelCount": 4,
+    "retryCandidates": [],
+    "samples": [
+      {
+        "id": "recBpJc27P9QKoke5",
+        "display": "Schmidt, Testing - 2025-2026 - Week 2 - K-2",
+        "enrollmentIds": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "weekIds": [
+          "recZwSGoAiERDdTMr"
+        ],
+        "buildNow": false,
+        "ready": false,
+        "sendToMake": false,
+        "emailSent": false,
+        "makeSendStatus": "",
+        "error": "",
+        "sendMode": null,
+        "package": {
+          "hasSubject": false,
+          "hasRecipients": false,
+          "hasHtml": false,
+          "htmlChars": 0,
+          "recipientsRedacted": "",
+          "subjectPreview": ""
+        },
+        "retryDecision": {
+          "action": "rerun_072_then_074",
+          "retryClass": "retryable_after_correcting_data",
+          "reason": "package_not_ready"
+        },
+        "successWebhookWould": {
+          "action": "handoff_success",
+          "retryClass": "waiting_make_writeback",
+          "allowRetry": false,
+          "fields": {
+            "Send to Make?": false,
+            "Weekly Email Error": "",
+            "Weekly Email Ready?": true
+          },
+          "mustNotWrite": [
+            "Weekly Email Sent?",
+            "Weekly Email Sent At",
+            "Weekly Summary Sent At"
+          ],
+          "reason": "clear_send_trigger_after_successful_handoff"
+        },
+        "staleSeasonLabel": true
+      },
+      {
+        "id": "recWi4FtZhPqQHCC1",
+        "display": "Schmidt, Testing - 2025-2026 - Week 2 - K-2",
+        "enrollmentIds": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "weekIds": [
+          "recZwSGoAiERDdTMr"
+        ],
+        "buildNow": false,
+        "ready": false,
+        "sendToMake": false,
+        "emailSent": false,
+        "makeSendStatus": "",
+        "error": "",
+        "sendMode": null,
+        "package": {
+          "hasSubject": false,
+          "hasRecipients": false,
+          "hasHtml": false,
+          "htmlChars": 0,
+          "recipientsRedacted": "",
+          "subjectPreview": ""
+        },
+        "retryDecision": {
+          "action": "rerun_072_then_074",
+          "retryClass": "retryable_after_correcting_data",
+          "reason": "package_not_ready"
+        },
+        "successWebhookWould": {
+          "action": "handoff_success",
+          "retryClass": "waiting_make_writeback",
+          "allowRetry": false,
+          "fields": {
+            "Send to Make?": false,
+            "Weekly Email Error": "",
+            "Weekly Email Ready?": true
+          },
+          "mustNotWrite": [
+            "Weekly Email Sent?",
+            "Weekly Email Sent At",
+            "Weekly Summary Sent At"
+          ],
+          "reason": "clear_send_trigger_after_successful_handoff"
+        },
+        "staleSeasonLabel": true
+      },
+      {
+        "id": "recbvmjaNsYzUYAUT",
+        "display": "Schmidt, Testing - 2025-2026 - Week 2 - K-2",
+        "enrollmentIds": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "weekIds": [
+          "recZwSGoAiERDdTMr"
+        ],
+        "buildNow": false,
+        "ready": false,
+        "sendToMake": false,
+        "emailSent": false,
+        "makeSendStatus": "",
+        "error": "",
+        "sendMode": null,
+        "package": {
+          "hasSubject": false,
+          "hasRecipients": false,
+          "hasHtml": false,
+          "htmlChars": 0,
+          "recipientsRedacted": "",
+          "subjectPreview": ""
+        },
+        "retryDecision": {
+          "action": "rerun_072_then_074",
+          "retryClass": "retryable_after_correcting_data",
+          "reason": "package_not_ready"
+        },
+        "successWebhookWould": {
+          "action": "handoff_success",
+          "retryClass": "waiting_make_writeback",
+          "allowRetry": false,
+          "fields": {
+            "Send to Make?": false,
+            "Weekly Email Error": "",
+            "Weekly Email Ready?": true
+          },
+          "mustNotWrite": [
+            "Weekly Email Sent?",
+            "Weekly Email Sent At",
+            "Weekly Summary Sent At"
+          ],
+          "reason": "clear_send_trigger_after_successful_handoff"
+        },
+        "staleSeasonLabel": true
+      },
+      {
+        "id": "recuxvGq2kY8WKcey",
+        "display": "Schmidt, Testing - 2025-2026 - Week 2 - K-2",
+        "enrollmentIds": [
+          "recgP9qZYjAhE7NXm"
+        ],
+        "weekIds": [
+          "recZwSGoAiERDdTMr"
+        ],
+        "buildNow": false,
+        "ready": false,
+        "sendToMake": false,
+        "emailSent": false,
+        "makeSendStatus": "",
+        "error": "",
+        "sendMode": null,
+        "package": {
+          "hasSubject": false,
+          "hasRecipients": false,
+          "hasHtml": false,
+          "htmlChars": 0,
+          "recipientsRedacted": "",
+          "subjectPreview": ""
+        },
+        "retryDecision": {
+          "action": "rerun_072_then_074",
+          "retryClass": "retryable_after_correcting_data",
+          "reason": "package_not_ready"
+        },
+        "successWebhookWould": {
+          "action": "handoff_success",
+          "retryClass": "waiting_make_writeback",
+          "allowRetry": false,
+          "fields": {
+            "Send to Make?": false,
+            "Weekly Email Error": "",
+            "Weekly Email Ready?": true
+          },
+          "mustNotWrite": [
+            "Weekly Email Sent?",
+            "Weekly Email Sent At",
+            "Weekly Summary Sent At"
+          ],
+          "reason": "clear_send_trigger_after_successful_handoff"
+        },
+        "staleSeasonLabel": true
+      }
+    ]
+  },
+  "homeworkFeedback": {
+    "hcCount": 0,
+    "sentCount": 0,
+    "readyUnsentCount": 0,
+    "readyUnsentIds": []
+  },
+  "videoFeedback": {
+    "vfCount": 0,
+    "sentCount": 0,
+    "readyUnsentCount": 0,
+    "readyUnsentIds": [],
+    "note": "073 video parent email still needs controlled live re-proof (SC-045)"
+  },
+  "zoomRecordingApproval": {
+    "attendanceCount": 0,
+    "recordingSatisfactoryCount": 0,
+    "eligibleIds": [],
+    "note": "117 live send not executed by this probe — use Schmidt-only go-live checklist"
+  },
+  "nextActions": [
+    {
+      "owner": "Mike",
+      "mikeRequired": true,
+      "action": "Create or arm one Schmidt Video Feedback with Parent Feedback Ready?=true and Sent?=false, then Test automation 073"
+    },
+    {
+      "owner": "Mike",
+      "mikeRequired": true,
+      "action": "Create Schmidt Zoom Attendance (Recording Quiz + Satisfactory) then Test automation 117 → Make 117f"
+    }
+  ]
+}

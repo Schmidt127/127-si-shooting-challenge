@@ -13,8 +13,8 @@ Shared coordination file for overnight agents finishing Shooting Challenge V2.
 |-------|------------------|---------------|--------|
 | **Agent 1** | Homework Library / PHA / SC-016 / 020 / 033 | MVP Homework + Program Homework Assignments | **Merged via PR #85** |
 | **Agent 2** | SC-023, SC-027, SC-029, SC-048, SC-060, SC-061, SC-075, SC-076, SC-079 (+ attempted SC-046/047/078/080) | Foundational enrollment / Grade Band / XP integrity / streaks / milestones / formulas / gates | **Package complete — see final section** |
-| **Agent 3** | Perfect Week 058→059 / SC-028/077 | Perfect Week award chain | Pending merge via PR #84 (superset) |
-| **Agent 4** | Ops / SC-088/041/058/147 | Launch readiness | Pending merge via PR #84 |
+| **Agent 3** | Perfect Week 058→059 / SC-028/077 | Perfect Week award chain | **Merged via PR #84** |
+| **Agent 4** | Ops / SC-088/041/058/147 | Launch readiness | **Merged via PR #84** |
 
 ---
 
