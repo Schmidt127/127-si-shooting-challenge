@@ -270,3 +270,14 @@ MVP homework scheduling is operable in PROD (PHA operator fields + 92 season row
 
 *(End Agent 1 final handoff.)*
 
+
+
+---
+
+## Overnight Merge Agent — closeout (2026-08-06)
+
+Merged to integration branch then `master`: **#86 → #85 → #84 → #81**. Closed **#82** (⊂ #85) and **#83** (⊂ #84). PR **#87** pre-merge summary superseded by [`2026-08-05-OVERNIGHT-FINAL-SUMMARY.md`](./2026-08-05-OVERNIGHT-FINAL-SUMMARY.md).
+
+Retained scripts: **020 v3.2.0**, **033 v3.3**, **057 v1.5**, **059 v3.5**, **117 v1.1**.
+
+**059 Test input reminder:** Athlete Achievement Unlock record ID — never Weekly Athlete Summary.
