@@ -6,16 +6,16 @@ Status: Production Copy
 Last Synced From Airtable: 2026-06-20
 
 Purpose:
-To be confirmed from production script.
+Assigns the correct Enrollment to a Submission with Program Instance isolation.
 
 Trigger:
 To be confirmed from Airtable automation.
 
 Important Tables:
-To be confirmed from production script.
+Submissions, Enrollments
 
 Important Fields:
-To be confirmed from production script.
+Athlete, Enrollment, Program Instance, Active?, Enrollment Key, School Year
 
 Notes:
 GitHub is the source-of-truth copy.
@@ -26,32 +26,53 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 023 - Submission Intake and Asset Creation - Assign Enrollment to Submission
  *
- * Version: v2.0
+ * Version: v3.0
  * Date Written: 2026-05-20
+ * Last Updated: 2026-08-06
+ * Updated Reason: Program Instance isolation — never select Enrollment by Athlete
+ *   alone when multiple Program Instances / active Enrollments are possible.
  *
  * PURPOSE
  * - Reads one Submission record.
- * - Reads the linked Athlete on the Submission.
- * - Finds the matching active Enrollment for that Athlete.
- * - If Program Instance exists on both Submission and Enrollment, uses it to narrow the match.
+ * - Resolves exactly one Enrollment using a strict priority order.
  * - Writes the matching Enrollment link back to the Submission.
- * - Does not guess if zero or multiple active Enrollments match.
+ * - Never guesses between multiple Enrollments.
+ *
+ * MATCHING ORDER (preferred → last resort)
+ * 1. Existing valid Submission.Enrollment (Athlete match + Active? + has Program Instance)
+ * 2. Submission.Program Instance + Athlete (when Submission PI field exists and is set)
+ * 3. Submission Program/Year key (School Year) + Athlete (when year field exists and is set)
+ * 4. Fillout-supplied Enrollment record ID (optional text/link field when present)
+ * 5. Explicit safe fallback ONLY when exactly one valid active candidate exists for Athlete
+ *
+ * IMPORTANT DESIGN RULES — PROGRAM INSTANCE ISOLATION
+ * - Athlete-only matching is NOT the normal production selector when multiple
+ *   Program Instances / Enrollments exist.
+ * - Do not rely only on deactivating prior Enrollments.
+ * - Ambiguous matches → skip with diagnostics (do not pick).
+ * - Prefer durable record IDs over names/emails.
+ *
+ * FILLOUT MAPPING IMPROVEMENT (recommended)
+ * - Daily submission Fillout should map Program Instance and/or Enrollment RID
+ *   when known (hidden field → Submissions.Program Instance or Fillout Enrollment Id).
+ * - Repo contracts currently mark submission Fillout enrollmentLookup as
+ *   UNKNOWN_UI_ATTESTATION — Mike should confirm live mapping (F-ATT-04).
+ * - Schema snapshot (2026-07-23): Submissions has Enrollment + Athlete but NO
+ *   native Program Instance field. PI is resolved via Enrollment when linked,
+ *   or via optional Submission fields if added later (fieldExists-guarded).
  *
  * CURRENT SCHEMA NOTES
  * - Submissions.Athlete is a writable linked-record field.
  * - Submissions.Enrollment is a writable linked-record field.
- * - Submissions.Program Instance is treated as optional because it is not present in the current schema snapshot.
- * - Enrollments.Athlete is a linked-record field.
- * - Enrollments.Active? is a writable checkbox.
- * - Enrollments.Program Instance is a linked-record field.
- * - Enrollments.Enrollment Key is a formula field and is read only.
+ * - Submissions.Program Instance may be absent; treated as optional via fieldExists.
+ * - Enrollments.Athlete / Active? / Program Instance / Enrollment Key / School Year.
  *
  * REQUIRED AUTOMATION INPUT
  * - recordId: Airtable record ID from Submissions
  *
  * RECOMMENDED TRIGGER VIEW CONDITIONS
  * - Athlete is not empty.
- * - Enrollment is empty.
+ * - Enrollment is empty OR Needs Enrollment Assignment.
  *
  * OUTPUTS
  * - ok
@@ -65,6 +86,15 @@ Airtable is the deployed/running copy.
  * - statusOut
  * - errorOut
  * - debugStep
+ *
+ * SCRIPT
+ * - scriptName: 023 - Submission Intake — Assign Enrollment
+ * - version: v3.0
+ * - versionDate: 2026-08-06
+ * - originalWrittenDate: 2026-05-20
+ * - lastUpdated: 2026-08-06
+ * - folder: 02 - Submission Intake and Asset Creation
+ * - automationName: 023 - Submission Intake and Asset Creation - Assign Enrollment to Submission
  ************************************************************/
 
 /// <reference path="../../Welcome Email/airtable-automation-script.d.ts" />
@@ -73,6 +103,17 @@ Airtable is the deployed/running copy.
 /* =========================================================
    SECTION 1: CONFIG
    ========================================================= */
+
+const SCRIPT = {
+    scriptName: "023 - Submission Intake — Assign Enrollment",
+    version: "v3.0",
+    versionDate: "2026-08-06",
+    originalWrittenDate: "2026-05-20",
+    lastUpdated: "2026-08-06",
+    folder: "02 - Submission Intake and Asset Creation",
+    automationName:
+        "023 - Submission Intake and Asset Creation - Assign Enrollment to Submission",
+};
 
 const CONFIG = {
     tables: {
@@ -83,7 +124,12 @@ const CONFIG = {
     submissions: {
         athlete: "Athlete",
         enrollment: "Enrollment",
-        programInstance: "Program Instance", // optional; not present in current schema snapshot
+        // Optional — may be absent on current PROD schema; fieldExists-guarded.
+        programInstance: "Program Instance",
+        schoolYear: "School Year",
+        // Optional Fillout-supplied Enrollment RID (text or link); fieldExists-guarded.
+        filloutEnrollmentId: "Fillout Enrollment Id",
+        filloutEnrollmentIdAlt: "Enrollment Record ID",
     },
 
     enrollments: {
@@ -91,6 +137,7 @@ const CONFIG = {
         active: "Active?",
         programInstance: "Program Instance",
         enrollmentKey: "Enrollment Key", // formula; read only
+        schoolYear: "School Year",
     },
 
     statuses: {
@@ -203,16 +250,6 @@ function getText(record, table, fieldName) {
     return String(record.getCellValueAsString(fieldName) || "").trim();
 }
 
-function getSingleLinkedId(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-
-    if (Array.isArray(raw) && raw.length > 0 && raw[0]?.id) {
-        return raw[0].id;
-    }
-
-    return "";
-}
-
 function getLinkedRecordIds(record, table, fieldName) {
     const raw = getRaw(record, table, fieldName);
 
@@ -221,6 +258,10 @@ function getLinkedRecordIds(record, table, fieldName) {
     }
 
     return raw.map((item) => item?.id).filter(Boolean);
+}
+
+function getSingleLinkedId(record, table, fieldName) {
+    return getLinkedRecordIds(record, table, fieldName)[0] || "";
 }
 
 function getBooleanish(record, table, fieldName) {
@@ -233,6 +274,14 @@ function getBooleanish(record, table, fieldName) {
 
     const value = String(raw ?? "").trim().toLowerCase();
     return ["1", "true", "yes", "checked", "active"].includes(value);
+}
+
+function normalizeYearKey(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/–/g, "-");
 }
 
 async function updateSubmissionSafe(targetRecordId, updates) {
@@ -300,6 +349,7 @@ function buildEnrollmentFieldsToLoad() {
         CONFIG.enrollments.active,
         CONFIG.enrollments.programInstance,
         CONFIG.enrollments.enrollmentKey,
+        CONFIG.enrollments.schoolYear,
     ].filter((fieldName) => fieldExists(enrollmentsTable, fieldName));
 }
 
@@ -321,6 +371,10 @@ function buildCandidateFromEnrollment(record) {
         ? getText(record, enrollmentsTable, CONFIG.enrollments.enrollmentKey)
         : "";
 
+    const schoolYear = fieldExists(enrollmentsTable, CONFIG.enrollments.schoolYear)
+        ? getText(record, enrollmentsTable, CONFIG.enrollments.schoolYear)
+        : "";
+
     const isActive = fieldExists(enrollmentsTable, CONFIG.enrollments.active)
         ? getBooleanish(record, enrollmentsTable, CONFIG.enrollments.active)
         : true;
@@ -330,8 +384,49 @@ function buildCandidateFromEnrollment(record) {
         enrollmentKey,
         athleteId: enrollmentAthleteId,
         programInstanceId: enrollmentProgramInstanceId,
+        schoolYear,
         isActive,
     };
+}
+
+function readFilloutEnrollmentId(submissionRecord) {
+    const candidates = [
+        CONFIG.submissions.filloutEnrollmentId,
+        CONFIG.submissions.filloutEnrollmentIdAlt,
+    ];
+
+    for (const fieldName of candidates) {
+        if (!fieldExists(submissionsTable, fieldName)) continue;
+
+        const linked = getSingleLinkedId(submissionRecord, submissionsTable, fieldName);
+        if (linked && linked.startsWith("rec")) return linked;
+
+        const text = getText(submissionRecord, submissionsTable, fieldName);
+        if (text && text.startsWith("rec")) return text;
+    }
+
+    return "";
+}
+
+function emitSkipOutputs({
+    athleteId,
+    submissionProgramInstanceId,
+    matchMode,
+    candidateCount,
+    errorOut,
+    debugLabel,
+}) {
+    setOutputSafe("ok", false);
+    setOutputSafe("recordId", recordId);
+    setOutputSafe("athleteIdOut", athleteId || "");
+    setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId || "");
+    setOutputSafe("matchedEnrollmentId", "");
+    setOutputSafe("matchedEnrollmentKey", "");
+    setOutputSafe("candidateCountOut", candidateCount || 0);
+    setOutputSafe("matchModeOut", matchMode || "");
+    setOutputSafe("statusOut", CONFIG.statuses.skipped);
+    setOutputSafe("errorOut", errorOut || "");
+    setOutputSafe("debugStep", debugLabel || "Skipped");
 }
 
 /* =========================================================
@@ -344,6 +439,8 @@ async function main() {
     let athleteId = "";
     let existingEnrollmentId = "";
     let submissionProgramInstanceId = "";
+    let submissionSchoolYear = "";
+    let filloutEnrollmentId = "";
     let matchedEnrollmentId = "";
     let matchedEnrollmentKey = "";
     let candidateCount = 0;
@@ -365,17 +462,14 @@ async function main() {
         submission = await submissionsTable.selectRecordAsync(recordId);
 
         if (!submission) {
-            setOutputSafe("ok", false);
-            setOutputSafe("recordId", recordId);
-            setOutputSafe("athleteIdOut", "");
-            setOutputSafe("submissionProgramInstanceIdOut", "");
-            setOutputSafe("matchedEnrollmentId", "");
-            setOutputSafe("matchedEnrollmentKey", "");
-            setOutputSafe("candidateCountOut", 0);
-            setOutputSafe("matchModeOut", "");
-            setOutputSafe("statusOut", CONFIG.statuses.skipped);
-            setOutputSafe("errorOut", `Submission not found: ${recordId}`);
-            setOutputSafe("debugStep", "Skipped: Submission not found");
+            emitSkipOutputs({
+                athleteId: "",
+                submissionProgramInstanceId: "",
+                matchMode: "",
+                candidateCount: 0,
+                errorOut: `Submission not found: ${recordId}`,
+                debugLabel: "Skipped: Submission not found",
+            });
             return;
         }
 
@@ -405,15 +499,24 @@ async function main() {
               )
             : "";
 
+        submissionSchoolYear = fieldExists(submissionsTable, CONFIG.submissions.schoolYear)
+            ? getText(submission, submissionsTable, CONFIG.submissions.schoolYear)
+            : "";
+
+        filloutEnrollmentId = readFilloutEnrollmentId(submission);
+
         log("Submission input", {
             recordId,
             athleteId,
             existingEnrollmentId,
             submissionProgramInstanceId,
+            submissionSchoolYear,
+            filloutEnrollmentId,
             hasSubmissionProgramInstanceField: fieldExists(
                 submissionsTable,
                 CONFIG.submissions.programInstance
             ),
+            scriptVersion: SCRIPT.version,
         });
 
         debugStep = "4 - Validate Athlete";
@@ -421,18 +524,14 @@ async function main() {
 
         if (!athleteId) {
             await clearSubmissionEnrollmentIfNeeded(submission);
-
-            setOutputSafe("ok", false);
-            setOutputSafe("recordId", recordId);
-            setOutputSafe("athleteIdOut", "");
-            setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId);
-            setOutputSafe("matchedEnrollmentId", "");
-            setOutputSafe("matchedEnrollmentKey", "");
-            setOutputSafe("candidateCountOut", 0);
-            setOutputSafe("matchModeOut", "no-athlete");
-            setOutputSafe("statusOut", CONFIG.statuses.skipped);
-            setOutputSafe("errorOut", "Submission is missing Athlete.");
-            setOutputSafe("debugStep", "Skipped: Submission missing Athlete");
+            emitSkipOutputs({
+                athleteId: "",
+                submissionProgramInstanceId,
+                matchMode: "no-athlete",
+                candidateCount: 0,
+                errorOut: "Submission is missing Athlete.",
+                debugLabel: "Skipped: Submission missing Athlete",
+            });
             return;
         }
 
@@ -443,88 +542,201 @@ async function main() {
             fields: buildEnrollmentFieldsToLoad(),
         });
 
-        debugStep = "6 - Find Active Athlete Matches";
+        const allCandidates = enrollmentQuery.records.map((record) =>
+            buildCandidateFromEnrollment(record)
+        );
+
+        const byId = new Map(allCandidates.map((c) => [c.id, c]));
+
+        const activeForAthlete = allCandidates.filter((candidate) => {
+            return candidate.athleteId === athleteId && candidate.isActive;
+        });
+
+        debugStep = "6 - Resolve Enrollment (priority order)";
         setOutputSafe("debugStep", debugStep);
 
-        let candidates = enrollmentQuery.records
-            .map((record) => buildCandidateFromEnrollment(record))
-            .filter((candidate) => {
-                return candidate.athleteId === athleteId && candidate.isActive;
-            });
+        let chosen = null;
 
-        matchMode = "athlete-only";
-
-        const canUseProgramInstance =
-            fieldExists(submissionsTable, CONFIG.submissions.programInstance) &&
-            fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance) &&
-            !!submissionProgramInstanceId;
-
-        if (canUseProgramInstance) {
-            const narrowed = candidates.filter((candidate) => {
-                return candidate.programInstanceId === submissionProgramInstanceId;
-            });
-
-            if (narrowed.length > 0) {
-                candidates = narrowed;
-                matchMode = "athlete-plus-program-instance";
+        // 1) Existing valid Submission.Enrollment
+        if (existingEnrollmentId) {
+            const existing = byId.get(existingEnrollmentId);
+            if (
+                existing &&
+                existing.athleteId === athleteId &&
+                existing.isActive &&
+                existing.programInstanceId
+            ) {
+                chosen = existing;
+                matchMode = "existing-valid-enrollment";
+                candidateCount = 1;
             } else {
-                matchMode = "athlete-only-program-instance-no-match";
+                log("Existing Enrollment rejected", {
+                    existingEnrollmentId,
+                    existing: existing || null,
+                    reason: !existing
+                        ? "not-found"
+                        : existing.athleteId !== athleteId
+                          ? "athlete-mismatch"
+                          : !existing.isActive
+                            ? "inactive"
+                            : "missing-program-instance",
+                });
             }
         }
 
-        candidateCount = candidates.length;
-
-        log("Enrollment match candidates", {
-            candidateCount,
-            matchMode,
-            candidates,
-        });
-
-        debugStep = "7 - Resolve Candidate Count";
-        setOutputSafe("debugStep", debugStep);
-
-        if (candidates.length === 0) {
-            await clearSubmissionEnrollmentIfNeeded(submission);
-
-            setOutputSafe("ok", false);
-            setOutputSafe("recordId", recordId);
-            setOutputSafe("athleteIdOut", athleteId);
-            setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId);
-            setOutputSafe("matchedEnrollmentId", "");
-            setOutputSafe("matchedEnrollmentKey", "");
-            setOutputSafe("candidateCountOut", 0);
-            setOutputSafe("matchModeOut", matchMode);
-            setOutputSafe("statusOut", CONFIG.statuses.skipped);
-            setOutputSafe("errorOut", "No matching active Enrollment found for this Submission.");
-            setOutputSafe("debugStep", "Skipped: No matching Enrollment");
-            return;
+        // 2) Submission.Program Instance + Athlete
+        if (!chosen && submissionProgramInstanceId) {
+            const narrowed = activeForAthlete.filter((candidate) => {
+                return candidate.programInstanceId === submissionProgramInstanceId;
+            });
+            candidateCount = narrowed.length;
+            if (narrowed.length === 1) {
+                chosen = narrowed[0];
+                matchMode = "athlete-plus-program-instance";
+            } else if (narrowed.length > 1) {
+                matchMode = "ambiguous-athlete-plus-program-instance";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount,
+                    errorOut:
+                        `Multiple active Enrollments for Athlete ${athleteId} ` +
+                        `and Program Instance ${submissionProgramInstanceId} ` +
+                        `(${narrowed.length}): ${narrowed.map((c) => c.id).join(", ")}. ` +
+                        `Submission was not updated.`,
+                    debugLabel: "Skipped: Ambiguous Program Instance match",
+                });
+                return;
+            } else {
+                matchMode = "no-match-athlete-plus-program-instance";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount: 0,
+                    errorOut:
+                        `No active Enrollment for Athlete ${athleteId} ` +
+                        `and Program Instance ${submissionProgramInstanceId}.`,
+                    debugLabel: "Skipped: No Program Instance Enrollment",
+                });
+                return;
+            }
         }
 
-        if (candidates.length > 1) {
-            await clearSubmissionEnrollmentIfNeeded(submission);
-
-            setOutputSafe("ok", false);
-            setOutputSafe("recordId", recordId);
-            setOutputSafe("athleteIdOut", athleteId);
-            setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId);
-            setOutputSafe("matchedEnrollmentId", "");
-            setOutputSafe("matchedEnrollmentKey", "");
-            setOutputSafe("candidateCountOut", candidates.length);
-            setOutputSafe("matchModeOut", matchMode);
-            setOutputSafe("statusOut", CONFIG.statuses.skipped);
-            setOutputSafe(
-                "errorOut",
-                `Multiple matching active Enrollments found (${candidates.length}). Submission was not updated.`
-            );
-            setOutputSafe("debugStep", "Skipped: Multiple matching Enrollments");
-            return;
+        // 3) Submission Program/Year key + Athlete
+        if (!chosen && submissionSchoolYear) {
+            const yearKey = normalizeYearKey(submissionSchoolYear);
+            const narrowed = activeForAthlete.filter((candidate) => {
+                return normalizeYearKey(candidate.schoolYear) === yearKey;
+            });
+            candidateCount = narrowed.length;
+            if (narrowed.length === 1) {
+                chosen = narrowed[0];
+                matchMode = "athlete-plus-school-year";
+            } else if (narrowed.length > 1) {
+                matchMode = "ambiguous-athlete-plus-school-year";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount,
+                    errorOut:
+                        `Multiple active Enrollments for Athlete ${athleteId} ` +
+                        `and School Year ${submissionSchoolYear} (${narrowed.length}): ` +
+                        `${narrowed.map((c) => c.id).join(", ")}. Submission was not updated.`,
+                    debugLabel: "Skipped: Ambiguous School Year match",
+                });
+                return;
+            }
         }
 
-        const chosen = candidates[0];
+        // 4) Fillout-supplied Enrollment record ID
+        if (!chosen && filloutEnrollmentId) {
+            const filloutCandidate = byId.get(filloutEnrollmentId);
+            if (
+                filloutCandidate &&
+                filloutCandidate.athleteId === athleteId &&
+                filloutCandidate.isActive &&
+                filloutCandidate.programInstanceId
+            ) {
+                chosen = filloutCandidate;
+                matchMode = "fillout-enrollment-id";
+                candidateCount = 1;
+            } else {
+                log("Fillout Enrollment Id rejected", {
+                    filloutEnrollmentId,
+                    filloutCandidate: filloutCandidate || null,
+                });
+                matchMode = "fillout-enrollment-id-invalid";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount: 0,
+                    errorOut:
+                        `Fillout Enrollment Id ${filloutEnrollmentId} is invalid for Athlete ` +
+                        `${athleteId} (missing, inactive, athlete mismatch, or no Program Instance).`,
+                    debugLabel: "Skipped: Invalid Fillout Enrollment Id",
+                });
+                return;
+            }
+        }
+
+        // 5) Safe fallback — exactly one valid active Enrollment for Athlete
+        if (!chosen) {
+            const valid = activeForAthlete.filter((c) => !!c.programInstanceId);
+            candidateCount = valid.length;
+            if (valid.length === 1) {
+                chosen = valid[0];
+                matchMode = "single-active-enrollment-safe-fallback";
+            } else if (valid.length === 0) {
+                matchMode = "no-active-enrollment-with-program-instance";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount: 0,
+                    errorOut:
+                        `No matching active Enrollment with Program Instance for Athlete ${athleteId}. ` +
+                        `Active-without-PI count=${activeForAthlete.length}.`,
+                    debugLabel: "Skipped: No matching Enrollment",
+                });
+                return;
+            } else {
+                matchMode = "ambiguous-multiple-active-enrollments";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                const diag = valid
+                    .map(
+                        (c) =>
+                            `${c.id}|PI=${c.programInstanceId}|key=${c.enrollmentKey || "?"}|year=${c.schoolYear || "?"}`
+                    )
+                    .join("; ");
+                emitSkipOutputs({
+                    athleteId,
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount,
+                    errorOut:
+                        `Multiple active Enrollments for Athlete ${athleteId} (${valid.length}). ` +
+                        `Cannot safely choose without Program Instance / School Year / Fillout Enrollment Id. ` +
+                        `Candidates: ${diag}`,
+                    debugLabel: "Skipped: Multiple matching Enrollments",
+                });
+                return;
+            }
+        }
+
         matchedEnrollmentId = chosen.id;
         matchedEnrollmentKey = chosen.enrollmentKey;
+        candidateCount = 1;
 
-        debugStep = "8 - Write Enrollment Link";
+        debugStep = "7 - Write Enrollment Link";
         setOutputSafe("debugStep", debugStep);
 
         const shouldWrite =
@@ -536,7 +748,7 @@ async function main() {
             });
         }
 
-        debugStep = "9 - Outputs";
+        debugStep = "8 - Outputs";
         setOutputSafe("debugStep", debugStep);
 
         setOutputSafe("ok", true);
@@ -551,11 +763,14 @@ async function main() {
         setOutputSafe("errorOut", "");
 
         log("Submission Enrollment assignment completed", {
+            automation: SCRIPT.scriptName,
+            version: SCRIPT.version,
             recordId,
             athleteId,
             matchedEnrollmentId,
             matchedEnrollmentKey,
             matchMode,
+            programInstanceId: chosen.programInstanceId,
             wroteUpdate: shouldWrite,
         });
     } catch (error) {
@@ -574,6 +789,8 @@ async function main() {
         setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
 
         log("Submission Enrollment assignment failed", {
+            automation: SCRIPT.scriptName,
+            version: SCRIPT.version,
             recordId,
             debugStep,
             error: message,

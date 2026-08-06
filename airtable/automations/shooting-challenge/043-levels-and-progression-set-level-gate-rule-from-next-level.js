@@ -26,14 +26,19 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 043 - Levels and Progression - Set Level Gate Rule from Next Level
  *
- * Version: v2.0
+ * Version: v2.1
  * Date Written: 2026-05-20
+ * Last Updated: 2026-08-06
+ * Updated Reason: Prefer School Year / Rule Set when matching Level Gate Rules
+ *   across Program Instance years (Program Instance isolation).
  *
  * PURPOSE
  * - Reads one Enrollment record.
  * - Reads the linked Next Level.
  * - Finds the matching Level Gate Rules record where Level = Next Level.
  * - Preferably uses only active Level Gate Rules when Version Active? exists.
+ * - When Enrollment.School Year and Level Gate Rules.School Year / Rule Set exist,
+ *   prefers rules whose Rule Set matches the Enrollment School Year.
  * - Writes the matching Level Gate Rule into Enrollments.Level Gate Rule.
  *
  * CURRENT SCHEMA NOTES
@@ -80,12 +85,14 @@ const CONFIG = {
         nextLevel: "Next Level",
         levelGateRule: "Level Gate Rule",
         active: "Active?",
+        schoolYear: "School Year",
     },
 
     levelGateRules: {
         level: "Level",
         versionActive: "Version Active?",
         name: "Level Gate Rule Name",
+        schoolYearRuleSet: "School Year / Rule Set",
     },
 
     statuses: {
@@ -273,6 +280,7 @@ function buildEnrollmentFieldsToLoad() {
         CONFIG.enrollments.nextLevel,
         CONFIG.enrollments.levelGateRule,
         CONFIG.enrollments.active,
+        CONFIG.enrollments.schoolYear,
     ].filter((fieldName) => fieldExists(enrollmentsTable, fieldName));
 }
 
@@ -281,7 +289,16 @@ function buildGateRuleFieldsToLoad() {
         CONFIG.levelGateRules.level,
         CONFIG.levelGateRules.versionActive,
         CONFIG.levelGateRules.name,
+        CONFIG.levelGateRules.schoolYearRuleSet,
     ].filter((fieldName) => fieldExists(levelGateRulesTable, fieldName));
+}
+
+function normalizeYearKey(value) {
+    return String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/–/g, "-");
 }
 
 /* =========================================================
@@ -410,7 +427,14 @@ async function main() {
         debugStep = "6 - Find Matching Level Gate Rule";
         setOutputSafe("debugStep", debugStep);
 
-        const matches = gateRuleQuery.records.filter((ruleRecord) => {
+        const enrollmentSchoolYear = fieldExists(
+            enrollmentsTable,
+            CONFIG.enrollments.schoolYear
+        )
+            ? getText(enrollment, enrollmentsTable, CONFIG.enrollments.schoolYear)
+            : "";
+
+        let matches = gateRuleQuery.records.filter((ruleRecord) => {
             const linkedLevelIds = getLinkedRecordIds(
                 ruleRecord,
                 levelGateRulesTable,
@@ -434,6 +458,26 @@ async function main() {
 
             return true;
         });
+
+        // Prefer School Year / Rule Set when Enrollment year is known and field exists.
+        if (
+            enrollmentSchoolYear &&
+            fieldExists(levelGateRulesTable, CONFIG.levelGateRules.schoolYearRuleSet)
+        ) {
+            const yearKey = normalizeYearKey(enrollmentSchoolYear);
+            const yearScoped = matches.filter((ruleRecord) => {
+                const ruleSet = getText(
+                    ruleRecord,
+                    levelGateRulesTable,
+                    CONFIG.levelGateRules.schoolYearRuleSet
+                );
+                if (!ruleSet) return false;
+                return normalizeYearKey(ruleSet).includes(yearKey) || normalizeYearKey(ruleSet) === yearKey;
+            });
+            if (yearScoped.length > 0) {
+                matches = yearScoped;
+            }
+        }
 
         matchCount = matches.length;
 

@@ -19,11 +19,13 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 /************************************************************
  * 119 - Email - Schedule Weekly Summary Email Send
  *
- * Version: v1.6
+ * Version: v1.7
  * Date Written: 2026-07-16
- * Last Updated: 2026-08-05
+ * Last Updated: 2026-08-06
  *
  * VERSION HISTORY
+ * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
+ *   multi-PI collisions; exclude both Schmidt test enrollment RIDs.
  * - v1.6 (2026-08-05): Airtable runtime compatibility — guard optional
  *   QueryResult.unloadData() cleanup so unsupported cleanup cannot fail an
  *   otherwise successful automation run.
@@ -82,11 +84,12 @@ At a scheduled time — Weekly — Sunday 10:00 — America/Denver
 
 const CONFIG = {
   scriptName: "119 - Email - Schedule Weekly Summary Email Send",
-  version: "v1.6",
-  versionDate: "2026-08-05",
-  lastUpdated: "2026-08-05",
+  version: "v1.7",
+  versionDate: "2026-08-06",
+  lastUpdated: "2026-08-06",
   timeZone: "America/Denver",
-  schmidtEnrollmentId: "recgP9qZYjAhE7NXm",
+  schmidtEnrollmentId: "recCyFEPeATOVNlr9",
+  schmidtEnrollmentIds: ["recCyFEPeATOVNlr9", "recgP9qZYjAhE7NXm"],
 
   tables: {
     enrollments: "Enrollments",
@@ -96,12 +99,16 @@ const CONFIG = {
 
   enrollments: {
     active: "Active?",
+    programInstance: "Program Instance",
   },
 
   weeks: {
     endDate: "End Date",
     weekEndKey: "Week End Key",
     weekCode: "Week Code",
+    active: "Active?",
+    activeWeek: "Active Week?",
+    programInstance: "Program Instance",
   },
 
   was: {
@@ -279,7 +286,9 @@ async function main() {
       .filter(Boolean)
   );
   if (!includeSchmidt) {
-    excluded.add(CONFIG.schmidtEnrollmentId);
+    for (const id of CONFIG.schmidtEnrollmentIds || [CONFIG.schmidtEnrollmentId]) {
+      excluded.add(id);
+    }
   }
 
   const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
@@ -299,14 +308,50 @@ async function main() {
     fields: safeFields(weeksTable, Object.values(CONFIG.weeks)),
   });
 
-  let targetWeek = null;
+  function weekIsActive(w) {
+    if (fieldExists(weeksTable, CONFIG.weeks.activeWeek) && booleanish(w, CONFIG.weeks.activeWeek)) {
+      return true;
+    }
+    if (fieldExists(weeksTable, CONFIG.weeks.active) && booleanish(w, CONFIG.weeks.active)) {
+      return true;
+    }
+    if (
+      !fieldExists(weeksTable, CONFIG.weeks.activeWeek) &&
+      !fieldExists(weeksTable, CONFIG.weeks.active)
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  const endDateMatches = [];
   for (const w of weeksQuery.records) {
     const endKey = text(w, CONFIG.weeks.weekEndKey) || dateKeyFromCell(cell(w, CONFIG.weeks.endDate));
     if (endKey === targetEndKey) {
-      targetWeek = w;
-      break;
+      endDateMatches.push(w);
     }
   }
+
+  let targetCandidates = endDateMatches.filter((w) => weekIsActive(w));
+  if (targetCandidates.length === 0) {
+    targetCandidates = endDateMatches;
+  }
+
+  if (targetCandidates.length > 1) {
+    const diag = targetCandidates
+      .map((w) => {
+        const pi = linkedIds(w, CONFIG.weeks.programInstance)[0] || "no-pi";
+        return `${w.id}|PI=${pi}`;
+      })
+      .join("; ");
+    throw new Error(
+      `Multiple Weeks matched End Date/Key ${targetEndKey} (${targetCandidates.length}). ` +
+        `Program Instance collision — deactivate overlapping fixtures or use a dedicated test PI. ` +
+        `Candidates: ${diag}`
+    );
+  }
+
+  const targetWeek = targetCandidates[0] || null;
 
   if (!targetWeek) {
     setOutputSafe("statusOut", "skipped");

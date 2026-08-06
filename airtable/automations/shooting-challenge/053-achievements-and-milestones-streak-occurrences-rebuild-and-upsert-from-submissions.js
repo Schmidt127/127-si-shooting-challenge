@@ -24,9 +24,10 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions
- * Version: 5.2
+ * Version: 5.3
  * Date Written: 2026-06-09
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-06
+ * Updated Reason: Program Instance isolation — Week date match scoped to Enrollment PI.
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -34,6 +35,8 @@ Airtable is the deployed/running copy.
  *
  * PURPOSE
  * - Rebuild streak milestone occurrences for one Enrollment after a valid Submission changes.
+ * - Count only valid shooting Submissions for THAT Enrollment (prior-year Athlete
+ *   submissions on other Enrollments are excluded).
  * - Count only valid shooting Submissions:
  *      Count This Submission? = 1
  *      Total Shots Counted > 0
@@ -44,7 +47,8 @@ Airtable is the deployed/running copy.
  *      Enrollment + Achievement + Streak End Date
  * - Allow the same streak achievement to be earned again only after a streak breaks
  *   and a new streak block reaches the threshold again.
- * - Set Week based on the week containing the Streak End Date.
+ * - Set Week based on the week containing the Streak End Date within the Enrollment's
+ *   Program Instance (never date-only across years).
  * - Never create XP Events directly.
  * - Never write to formula fields such as Streak Occurrence Key.
  *
@@ -53,6 +57,7 @@ Airtable is the deployed/running copy.
  *   Sunday–Saturday week boundaries match 005/034/066.
  * - Streak Occurrences → Source Status is a single-select field.
  * - This script now writes Source Status as { name: "Ready for XP" }, etc.
+ * - Week resolution filters by Enrollment.Program Instance.
  ************************************************************************************************/
 
 async function main() {
@@ -67,6 +72,7 @@ async function main() {
             achievements: "Achievements",
             streakOccurrences: "Streak Occurrences",
             weeks: "Weeks",
+            enrollments: "Enrollments",
         },
 
         submissions: {
@@ -103,6 +109,13 @@ async function main() {
         weeks: {
             startDate: "Start Date",
             endDate: "End Date",
+            programInstance: "Program Instance",
+            active: "Active Week?",
+            activeAlt: "Active?",
+        },
+
+        enrollments: {
+            programInstance: "Program Instance",
         },
 
         values: {
@@ -141,6 +154,7 @@ async function main() {
     const achievementsTable = base.getTable(CONFIG.tables.achievements);
     const streakOccurrencesTable = base.getTable(CONFIG.tables.streakOccurrences);
     const weeksTable = base.getTable(CONFIG.tables.weeks);
+    const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 
 
     /************************************************************************************************
@@ -419,12 +433,41 @@ async function main() {
         return choices.includes(choiceName);
     }
 
-    function findWeekForDate(weekRecords, dateKey) {
+    function getLinkedIdFromRecord(record, fieldName) {
+        const raw = record.getCellValue(fieldName);
+        if (!Array.isArray(raw) || raw.length === 0) return "";
+        return raw[0]?.id || "";
+    }
+
+    function isWeekActive(week) {
+        if (fieldExists(weeksTable, CONFIG.weeks.active)) {
+            return !!week.getCellValue(CONFIG.weeks.active);
+        }
+        if (fieldExists(weeksTable, CONFIG.weeks.activeAlt)) {
+            return !!week.getCellValue(CONFIG.weeks.activeAlt);
+        }
+        return true;
+    }
+
+    function findWeekForDate(weekRecords, dateKey, programInstanceId) {
         if (!dateKey) {
             return null;
         }
 
+        const candidates = [];
+
         for (const week of weekRecords) {
+            if (programInstanceId && fieldExists(weeksTable, CONFIG.weeks.programInstance)) {
+                const weekPi = getLinkedIdFromRecord(week, CONFIG.weeks.programInstance);
+                if (weekPi !== programInstanceId) {
+                    continue;
+                }
+            }
+
+            if (!isWeekActive(week)) {
+                continue;
+            }
+
             const startKey = toDateKey(week.getCellValue(CONFIG.weeks.startDate));
             const endKey = toDateKey(week.getCellValue(CONFIG.weeks.endDate));
 
@@ -433,11 +476,25 @@ async function main() {
             }
 
             if (dateKey >= startKey && dateKey <= endKey) {
-                return week;
+                candidates.push(week);
             }
         }
 
-        return null;
+        if (candidates.length === 0) {
+            return null;
+        }
+
+        if (candidates.length > 1) {
+            throw new Error(
+                `Multiple Weeks matched streak end date ${dateKey}` +
+                    (programInstanceId
+                        ? ` inside Program Instance ${programInstanceId}`
+                        : "") +
+                    ` (${candidates.length}): ${candidates.map((w) => w.id).join(", ")}`
+            );
+        }
+
+        return candidates[0];
     }
 
     function buildStreakBlocks(dateKeys) {
@@ -538,6 +595,27 @@ async function main() {
         return;
     }
 
+    let programInstanceId = "";
+    if (fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
+        const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+            fields: optionalFields(enrollmentsTable, [CONFIG.enrollments.programInstance]),
+        });
+        if (enrollmentRecord) {
+            programInstanceId = getLinkedRecordId(
+                enrollmentRecord,
+                enrollmentsTable,
+                CONFIG.enrollments.programInstance
+            );
+        }
+    }
+
+    if (!programInstanceId) {
+        throw new Error(
+            `Enrollment ${enrollmentId} is missing Program Instance. ` +
+                "Cannot safely resolve Weeks for streak occurrences across Program Instances."
+        );
+    }
+
 
     /************************************************************************************************
      * SECTION 7 — LOAD RECORDS
@@ -587,6 +665,9 @@ async function main() {
             fields: optionalFields(weeksTable, [
                 CONFIG.weeks.startDate,
                 CONFIG.weeks.endDate,
+                CONFIG.weeks.programInstance,
+                CONFIG.weeks.active,
+                CONFIG.weeks.activeAlt,
             ]),
         }),
     ]);
@@ -721,7 +802,11 @@ async function main() {
             }
 
             const streakEndDateKey = block[threshold - 1];
-            const week = findWeekForDate(weeksQuery.records, streakEndDateKey);
+            const week = findWeekForDate(
+                weeksQuery.records,
+                streakEndDateKey,
+                programInstanceId
+            );
 
             const occurrenceKey = makeOccurrenceKey(
                 enrollmentId,

@@ -35,7 +35,9 @@
   "rules": [
     "Do not guess undocumented mappings",
     "Never hard-code a permanent current year as the only selectable season",
-    "Week assignment is Activity Date → Weeks via automation 005",
+    "Week assignment is Activity Date → Weeks via automation 005 scoped by Enrollment Program Instance (v4.1+)",
+    "Enrollment assignment is automation 023 priority order — never Athlete-only when multiple Enrollments exist (v3.0+)",
+    "Prefer mapping Submission Program Instance and/or Enrollment RID from Fillout (F-ATT-04)",
     "Reopen daily form only after season launch gates (SC-146 / SC-135)"
   ],
   "mikeAttestations": ["F-ATT-01", "F-ATT-02", "F-ATT-03", "F-ATT-04", "F-ATT-05"]

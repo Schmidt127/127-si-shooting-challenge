@@ -15,6 +15,7 @@ export type EnrollmentLeaderboardFields = {
   "Lifetime XP Total"?: unknown;
   "Total Shots Counted"?: unknown;
   "School Year"?: unknown;
+  "Program Instance Name Only"?: unknown;
   "Public Profile Enabled"?: unknown;
   "Public Profile Slug"?: unknown;
 };
