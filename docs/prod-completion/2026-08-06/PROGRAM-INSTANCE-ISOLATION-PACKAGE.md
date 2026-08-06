@@ -2,7 +2,21 @@
 
 **PROD base:** `appn84sqPw03zEbTT`  
 **Branch:** `cursor/program-instance-isolation-b956`  
+**PR:** [#92](https://github.com/Schmidt127/127-si-shooting-challenge/pull/92)  
 **Controlling doc:** `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`
+
+### Commit SHAs (branch)
+
+| Commit | Message |
+|--------|---------|
+| `3046baa` | fix: scope submission enrollment and week matching by program instance |
+| `5821ab7` | fix: isolate summaries streaks perfect week and milestones by enrollment |
+| `8e95f68` | fix: scope xp homework zoom email and level rules |
+| `66b9bc2` | fix: scope website queries to program instance |
+| `3c48a24` | test: add program instance isolation audit and prod evidence |
+| `94dbac6` | docs: complete program instance isolation package |
+
+**Merge commit / final master SHA:** not merged — awaiting Mike approval + CI.
 
 ## Architecture rule
 
