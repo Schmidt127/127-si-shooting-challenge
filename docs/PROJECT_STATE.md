@@ -38,7 +38,7 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
-| **H-002 — Automation 066 v3.4** | **Repo fixed 2026-08-06 (v3.4)** — PROD still runs pasted **v3.3** until Mike pastes v3.4. Natural path **FAILED** live test (`records[0] should have a 'fields' property` on `createRecordsAsync`). Do **not** call natural path Live Tested until v3.4 paste + successful rerun on `recCyFEPeATOVNlr9`. Unlock/XP evidence via controlled backfill remains separate. |
+| **H-002 — Automation 066 v3.4** | **Merged to `master` (PR #88, `23642a6`)** — PROD still runs pasted **v3.3** until Mike pastes v3.4. Natural path **FAILED** live (`records[0] should have a 'fields' property`). Do **not** call natural path Live Tested until v3.4 paste + successful rerun on `recCyFEPeATOVNlr9`. |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
 | **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
 | **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |

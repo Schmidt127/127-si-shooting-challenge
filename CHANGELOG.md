@@ -9,6 +9,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **Repository finalization 2026-08-06** — Merged PR **#88** (Automation **066 v3.4** fields contract). Closed PR **#87** as superseded by post-merge overnight summary. Operator-attested: **033 v3.3 pasted**, **059 trigger corrected**. Remaining Mike pastes: **066 v3.4**, **020 v3.2.0**. Checklist: [`2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](./docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md). Report: [`2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md`](./docs/overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md).
 - **Automation 066 v3.4 (2026-08-06)** — Fix live `createRecordsAsync` failure: callers pushed raw unlock field maps; multi-create path required `{ fields: {...} }`. Defensive `createRecordsInBatches` accepts either shape and always sends Airtable-wrapped records; diagnostic JSON log; offline regression `lib/066-create-records-batch.test.js`. **Natural path not Live Tested** until Mike pastes entire script and reruns on `recCyFEPeATOVNlr9` (expect existing unlocks linked/skipped — no duplicate milestone XP). [`066-…js`](./airtable/automations/shooting-challenge/066-achievements-and-milestones-create-shot-milestone-unlocks.js).
 
 #### Added

@@ -78,15 +78,15 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-05** (Overnight merge: Agent 2 foundation + Agent 1 SC-016/PHA + Agent 3 Perfect Week + Agent 4 ops). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-attested **033 v3.3** paste). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
 
 | Bucket | Count |
 |--------|------:|
 | **Total items** | **150** |
 | Complete | 17 |
 | Live Tested in PROD | 34 |
-| Installed but not tested *(Installed in PROD)* | 40 |
-| Built but not installed *(Built in Repository)* | 22 |
+| Installed but not tested *(Installed in PROD)* | 41 |
+| Built but not installed *(Built in Repository)* | 21 |
 | Ready for PROD Paste *(informal)* | 0 |
 | Planned | 16 |
 | Decision Needed | 5 |
@@ -94,6 +94,22 @@ Counts below match Section 4 as of **2026-08-05** (Overnight merge: Agent 2 foun
 | Superseded | 4 |
 | Not Needed | 2 |
 | Brainstormed | 0 |
+
+### Dashboard reconciliation (2026-08-06 — Repository finalization / PR #88)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| PR **#88** | **Merged** to `master` | Merge `23642a6` — Automation **066 v3.4** + offline regression on `master` |
+| PR **#87** | **Closed** (superseded) | Replaced by post-merge `2026-08-05-OVERNIGHT-FINAL-SUMMARY.md` + merge reconciliation |
+| Automation **033 v3.3** | **Installed in PROD** (operator-attested paste) | Mike pasted — do not paste again; live WAS assign verification optional |
+| Automation **059** trigger | **Operator-attested corrected** | Pending-only; no Shot Milestone filter; Test input = Unlock ID (never WAS) |
+| Automation **066 v3.4** | **Built/merged on `master` — not Installed until paste** | Natural path remains **FAILED** until successful PROD rerun on `recCyFEPeATOVNlr9` |
+| Automation **020 v3.2.0** | **Built in Repository** — paste not confirmed | Still required Mike paste |
+| SC-027 / SC-076 | Unchanged bucket | Unlock/XP Live Tested via backfill→059 only; natural 066 not advanced by PR merge |
+
+**Net math:** no Section 4 Complete/LT/Installed bucket moves from PR #88 alone. 033 Installed attestation is operator paste (was Built paste-pending).
+
+Checklist: [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md) · Report: [`docs/overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md`](./overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md).
 
 ### Dashboard reconciliation (2026-08-06 — Automation 066 v3.4 createRecords fields fix)
 
@@ -142,8 +158,8 @@ Evidence: [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evid
 | Item | Status | Evidence |
 |------|--------|----------|
 | Program Homework Assignments | **Live in PROD** — **92** active rows; Operator Status / Notes / Completions Count; descriptions | `tblhA3maf7xOa8EUS` |
-| Automation **033** | **Built in Repository** **v3.3** — paste pending | PHA match PASS WAS `recKebuZ79QFTwivA` |
-| Automation **020** | **Built in Repository** **v3.2.0** — paste pending | Offline SC-016 identity PASS |
+| Automation **033** | **Installed in PROD** **v3.3** (Mike operator-attested paste 2026-08-06) — do not re-paste; optional live WAS assign verify | PHA match previously PASS WAS `recKebuZ79QFTwivA` |
+| Automation **020** | **Built in Repository** **v3.2.0** — paste **not** confirmed | Offline SC-016 identity PASS |
 | SC-016 | Installed → **Live Tested in PROD** | 3 dupe groups cleaned; 0 remaining; not Complete until 020 paste + re-submit |
 | CASE-01 homework | **2/2** assigned/satisfactory; Eligible **1** | PHA HW2 aligned to `rec6WmXjpLtIWDERo` |
 
@@ -204,7 +220,7 @@ Evidence: [`docs/testing/evidence/2026-08-05-pha-was-link-clarification/`](./tes
 | Item | Status | Evidence |
 |------|--------|----------|
 | Junction table `Program Homework Assignments` | **Live in PROD** `tblhA3maf7xOa8EUS` | Additive scheduling; library Week links untouched |
-| Automation 033 / 020 | **Built in Repository** (**033 v3.3** / **020 v3.2.0**) — PROD paste still required | Prefer PHA; legacy fallback retained; SC-016 identity in 020 |
+| Automation 033 / 020 | **033 v3.3 Installed in PROD** (Mike paste attested); **020 v3.2.0 Built** — paste still required | Prefer PHA; legacy fallback retained; SC-016 identity in 020 |
 | Perfect Week WAS `recKebuZ79QFTwivA` homework | Assigned **2** / Satisfactory **2** | PHA + HC via **Link** field; **92** PHA rows seeded season-wide |
 | Perfect Week 057 on CASE-01 | **PASS** (manual Test) | See HC WAS Link closeout above |
 
