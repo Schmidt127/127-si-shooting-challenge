@@ -28,9 +28,10 @@ Overnight PRs **#81–#86** were already on `master` before this session (ending
 
 | PR | Final status | Notes |
 |----|--------------|-------|
-| **#88** | **MERGED** | Automation 066 v3.4 + regression + honesty docs. Marked ready then merged. Head before merge: `a3dc307`. |
+| **#88** | **MERGED** | Automation 066 v3.4 + regression + honesty docs. Marked ready then merged. Head before merge: `a3dc307`. Merge: `23642a6`. |
 | **#87** | **CLOSED** (superseded) | Pre-merge overnight consolidation draft conflicted with `master`. Replaced by `2026-08-05-OVERNIGHT-FINAL-SUMMARY.md` + `OVERNIGHT-MERGE-RECONCILIATION.md`. |
-| Other open PRs | See `gh pr list --state open` at end of session | Not part of this closeout unless newly opened |
+| **#89** | **MERGED** | This finalization package (checklist + report + honesty). Merge: `118c47a`. |
+| Other open PRs | **None** at package close | `gh pr list --state open` empty |
 
 ---
 
