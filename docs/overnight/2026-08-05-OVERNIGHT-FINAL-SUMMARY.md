@@ -17,7 +17,7 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 | Field | Value |
 |-------|--------|
 | **Starting `master`** | `d4d1ee271603a8eb7fda082a09034b86e74b7afb` (merge PR #80) |
-| **Ending `master`** | `639fa3e4dd19b232000eb8445fe50003bdb351a6` |
+| **Ending `master`** | `bb93618aa7ba49b4adf7b8a5d68b748a1ce3e2e3` |
 | **Merge branch** | `cursor/overnight-merge-reconciliation-3b0c` |
 
 ### Merge order (executed)
@@ -26,7 +26,7 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 2. PR **#85** → `1d873ff10bbd5b4d5767fec7df963016a8e014b4`
 3. PR **#84** → `8ad11a74339b8a1d85fc938ef070b1adc6649cc8`
 4. PR **#81** → `022dfa53559946d89820add08f0637f9af657d1c`
-5. Final summary + reconciliation → `93e61971f1ffb1c9ca5a669856d13bdbd4876e0e` / `639fa3e4dd19b232000eb8445fe50003bdb351a6`
+5. Final summary + reconciliation → `93e6197` / `639fa3e`; ending tip `bb93618` (SHA note)
 
 ### PRs merged
 
