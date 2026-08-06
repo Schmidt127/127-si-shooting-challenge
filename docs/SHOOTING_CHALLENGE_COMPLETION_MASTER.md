@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-06** (Program Instance isolation package — repository updated; PROD paste pending) |
+| Last updated | **2026-08-06** (Program Instance isolation — 005 v4.1 PROD PASS; remaining pastes in progress via PR #92) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -100,14 +100,25 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Item | Status | Evidence |
 |------|--------|----------|
 | Architecture rule | Documented | Athlete → Enrollment → Program Instance scopes all challenge progress |
-| Automations **005 v4.1**, **023 v3.0**, **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** | PI-scoped Week/Enrollment matching |
-| PROD Airtable paste | **Required** — not completed by agent | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
+| Automation **005 v4.1** | **Live Tested in PROD** | Activity Date Fallback → Early Bird `recWeVrSabnsYaHc2`; 12 same-PI / 13 other-PI excluded on `recElDBcFvuE6jWwc` |
+| Automations **023 v3.0**, **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste remaining | PI-scoped Enrollment/Week matching |
+| Remaining PROD paste order | **023 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
-| Live PROD retest | **Blocked** until paste + fixture cleanup | Schmidt IDs in package report |
+| PR **#92** | Open — merge authorized for this close-out | Branch `cursor/program-instance-isolation-b956` |
 
-**Do not mark isolation Complete** until paste + controlled Schmidt retest evidence exists. Built bucket increases for the rewritten scripts (still paste-pending). Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
+| Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
+| ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
+| 005 v4.1 | Yes | Pending package merge | Yes | Yes | **PASS** |
+| 023 v3.0 | Yes | Pending package merge | No | No | — |
+| 053 5.3 | Yes | Pending package merge | No | No | — |
+| 066 v3.5 | Yes | Pending package merge | No | No | — |
+| 118 v1.7 | Yes | Pending package merge | No | No | — |
+| 119 v1.7 | Yes | Pending package merge | No | No | — |
+| 043 v2.1 | Yes | Pending package merge | TBD | TBD | — |
+
+**Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
 ### Dashboard reconciliation (2026-08-06 — Repository finalization / PR #88)
 

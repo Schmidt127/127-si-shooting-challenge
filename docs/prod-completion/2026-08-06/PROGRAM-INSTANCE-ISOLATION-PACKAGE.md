@@ -15,8 +15,36 @@
 | `66b9bc2` | fix: scope website queries to program instance |
 | `3c48a24` | test: add program instance isolation audit and prod evidence |
 | `94dbac6` | docs: complete program instance isolation package |
+| `80a35e7` | docs: record PR #92 and commit SHAs on isolation package |
 
-**Merge commit / final master SHA:** not merged — awaiting Mike approval + CI.
+**Merge commit / final master SHA:** pending this package close-out (PR #92 authorized to merge).
+
+## Deployment matrix (authoritative)
+
+| Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
+| ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
+| 005 v4.1 | Yes | Pending until this package is merged | Yes | Yes | **PASS** |
+| 023 v3.0 | Yes | Pending until this package is merged | No | No | — |
+| 053 5.3 | Yes | Pending until this package is merged | No | No | — |
+| 066 v3.5 | Yes | Pending until this package is merged | No | No | — |
+| 118 v1.7 | Yes | Pending until this package is merged | No | No | — |
+| 119 v1.7 | Yes | Pending until this package is merged | No | No | — |
+| 043 v2.1 | Yes | Pending until this package is merged | TBD (if Live) | TBD | — |
+
+### 005 live PROD test evidence (do not retest unless dependency break)
+
+```text
+Submission: recElDBcFvuE6jWwc
+Enrollment: recCyFEPeATOVNlr9
+Program Instance: rec5mEM0YPqPqq0hZ
+Activity Date: 2026-08-05
+Selected Week: recWeVrSabnsYaHc2
+Selected Week Name: Early Bird
+Source: Activity Date Fallback
+Status: Complete
+Same-Program-Instance Weeks reviewed: 12
+Weeks excluded from other Program Instances: 13
+```
 
 ## Architecture rule
 
@@ -68,13 +96,13 @@ Never assume Athlete, Week Name, Activity Date, Grade Band, homework title, XP r
 
 | Script | New version | Repository | PROD Airtable |
 |--------|-------------|------------|---------------|
-| 005 | v4.1 | Updated | **Not pasted by this agent — paste required** |
-| 023 | v3.0 | Updated | **Not pasted by this agent — paste required** |
-| 053 | 5.3 | Updated | **Not pasted by this agent — paste required** |
-| 066 | v3.5 | Updated | **Not pasted by this agent — paste required** (also still needs prior v3.4 createRecords fix if not pasted) |
-| 043 | v2.1 | Updated | **Not pasted — confirm if 043 still live** |
-| 118 | v1.7 | Updated | **Not pasted by this agent — paste required** |
-| 119 | v1.7 | Updated | **Not pasted by this agent — paste required** |
+| 005 | v4.1 | Updated | **Pasted + Live Tested PASS** (see evidence above) |
+| 023 | v3.0 | Updated | **Paste next** (remaining order: 023 → 053 → 066 → 118 → 119 → 043 if Live) |
+| 053 | 5.3 | Updated | Paste after 023 |
+| 066 | v3.5 | Updated | Paste after 053 (includes v3.4 createRecords fix) |
+| 043 | v2.1 | Updated | Paste only if still Live and PROD version stale |
+| 118 | v1.7 | Updated | Paste after 066 |
+| 119 | v1.7 | Updated | Paste after 118 |
 | web queries | — | Updated | Deploy with Vercel on merge |
 
 ## Scripts confirmed safe without logic changes
@@ -147,11 +175,11 @@ Do not delete until dependencies inspected (WAS, unlocks, XP Source Keys referen
 
 | Area | Status | Notes |
 |------|--------|-------|
-| Live Airtable API from this agent | **Unavailable** (no `AIRTABLE_API_TOKEN` in environment) | Offline repo validation + paste checklist only |
+| Live Airtable API from this agent | **Unavailable** (no `AIRTABLE_API_TOKEN`) | Interactive Mike paste + Test Automation in Airtable UI |
+| 005 v4.1 | **Live Tested PASS** | Early Bird via Activity Date Fallback; 12 same-PI weeks; 13 other-PI excluded |
+| Remaining pastes | **In progress** | 023 → 053 → 066 → 118 → 119 → 043-if-Live |
 | Known live-test context | Documented | Submission `recElDBcFvuE6jWwc`, Athlete `recgqVstObQRzgXJF`, Enrollment `recCyFEPeATOVNlr9`, PI `rec5mEM0YPqPqq0hZ`, Week Early Bird `recWeVrSabnsYaHc2` |
-| Email sends | **Not executed** | Controlled packages only; no uncontrolled parent email |
-
-After paste, run Schmidt checks listed in the deploy checklist.
+| Email sends | **Not executed for 118/119** | Controlled dryRun packages only; no uncontrolled parent email |
 
 ## Repository audit tooling
 
@@ -165,10 +193,10 @@ See `tools/program-instance-isolation/README.md`.
 
 | Layer | Status |
 |-------|--------|
-| GitHub repository | Updated on feature branch / PR |
-| PROD Airtable automation scripts | **Not updated by this agent** — Mike paste required per checklist |
+| GitHub repository | PR #92 branch updated; merge to `master` in this close-out |
+| PROD Airtable | **005 pasted + PASS**; remaining scripts paste with Mike interactively |
 | Website | Ships on Vercel after merge to `master` (Root Directory `web`) |
-| Completion Master | Updated to record this package |
+| Completion Master | Updated with 005 PASS + remaining paste order |
 
 ## Rollback
 
