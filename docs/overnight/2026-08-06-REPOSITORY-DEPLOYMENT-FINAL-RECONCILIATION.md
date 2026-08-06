@@ -16,7 +16,9 @@
 | **Starting `master`** (session start, pre-#88) | `0804c882da31e702724c221ed776ef0da874626f` |
 | **Merge commit PR #88** | `23642a6bc312e0b2d6dd3de26aa74ab03dd011fe` |
 | **Ending `master` after #88** | `23642a6bc312e0b2d6dd3de26aa74ab03dd011fe` |
-| **Finalization branch** | `cursor/repo-finalization-deploy-recon-e22f` (docs/checklist/report; tip recorded after push) |
+| **Finalization PR #89 merge** | `118c47a77025f17dbe57d33a6d7eccd2c2235222` |
+| **Ending `master` (package complete)** | `118c47a77025f17dbe57d33a6d7eccd2c2235222` |
+| **Finalization branch** | `cursor/repo-finalization-deploy-recon-e22f` |
 
 Overnight PRs **#81–#86** were already on `master` before this session (ending tip before #88 was `0804c88`).
 
