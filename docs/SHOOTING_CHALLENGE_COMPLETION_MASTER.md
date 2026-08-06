@@ -106,7 +106,7 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
-| PR **#92** | Open — merge authorized for this close-out | Branch `cursor/program-instance-isolation-b956` |
+| PR **#92** | **Merged** to `master` | Merge `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`) |
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |

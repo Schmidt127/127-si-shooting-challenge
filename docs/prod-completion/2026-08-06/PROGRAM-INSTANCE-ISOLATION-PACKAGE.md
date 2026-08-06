@@ -193,7 +193,7 @@ See `tools/program-instance-isolation/README.md`.
 
 | Layer | Status |
 |-------|--------|
-| GitHub repository | PR #92 branch updated; merge to `master` in this close-out |
+| GitHub repository | **Merged to `master`** — PR #92 @ `3c3e5d3` |
 | PROD Airtable | **005 pasted + PASS**; remaining scripts paste with Mike interactively |
 | Website | Ships on Vercel after merge to `master` (Root Directory `web`) |
 | Completion Master | Updated with 005 PASS + remaining paste order |
