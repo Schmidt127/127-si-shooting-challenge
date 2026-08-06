@@ -8,7 +8,7 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 ## Paste order (remaining)
 
 1. ~~**005** Assign Week~~ — **DONE** (pasted + Live Tested **PASS**)
-2. **023** Assign Enrollment ← **NEXT**
+2. **023** Assign Enrollment ← **NEXT** (paste **v3.1** — do not proceed to 053 until Week-derived PI path PASSes)
 3. **053** Streak occurrences
 4. **066** Shot milestones (v3.5 includes v3.4 createRecords fix)
 5. **118** / **119** Weekly email schedules
@@ -19,12 +19,34 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Yes | No | No | — |
+| 023 v3.1 | Yes | Yes (pending this merge) | No (re-paste v3.1) | PARTIAL (v3.0 fallback only) | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
 | 119 v1.7 | Yes | Yes | No | No | — |
 | 043 v2.1 | Yes | Yes | TBD | TBD | — |
+
+### 023 live PROD status (honest)
+
+```text
+Repository v3.0: merged
+PROD v3.0: pasted
+Live test: PARTIAL — fallback path passed
+Program Instance-safe Week path: NOT YET VALIDATED
+Final result: INCOMPLETE
+```
+
+**Why incomplete:** Live run on `recElDBcFvuE6jWwc` used `matchMode = single-active-enrollment-safe-fallback` with empty `submissionProgramInstanceId` / no Week→PI derivation. That is not sufficient Program Instance isolation when the Submission has a linked Week.
+
+**After v3.1 PROD paste + Week path PASS, update to:**
+
+```text
+Repository updated: Yes
+Merged to master: Yes
+PROD pasted: Yes
+Live PROD tested: Yes
+Result: PASS
+```
 
 ### 005 evidence (do not retest)
 
@@ -49,24 +71,30 @@ Result: PASS
 
 ---
 
-### 023 — Assign Enrollment to Submission ← NEXT
+### 023 — Assign Enrollment to Submission ← NEXT (v3.1)
 
 | | |
 |--|--|
 | File | `airtable/automations/shooting-challenge/023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
-| Version | **v3.0** |
+| Version | **v3.1** |
 | Trigger | Submission; Athlete present; Enrollment empty (recommended) |
 | Input | `recordId` |
-| Test record | Submission `recElDBcFvuE6jWwc` / Athlete `recgqVstObQRzgXJF` |
+| Test record | Submission `recElDBcFvuE6jWwc` / Athlete `recgqVstObQRzgXJF` / Week `recWeVrSabnsYaHc2` |
 | Expected Enrollment | `recCyFEPeATOVNlr9` (Program Instance `rec5mEM0YPqPqq0hZ`) |
-| Expected | `matchModeOut` = `existing-valid-enrollment` (or single safe fallback); Enrollment unchanged if already correct; ambiguous multi-active → skipped (never guess) |
+| Expected (Week path) | `programInstanceSource` = `submission-week`; `resolvedProgramInstanceId` = `rec5mEM0YPqPqq0hZ`; `matchModeOut` = `athlete-program-instance`; `weekId` = `recWeVrSabnsYaHc2`; `candidateCountOut` = 1; `statusOut` = `Complete` |
 
-**Live test steps (Mike):**
+**PROD paste block:** production docblock (`/***` …) through `await main();` — **skip** the GitHub header (`/* Automation: … */`).
 
-1. Paste v3.0 into PROD Automation 023 scripting action; Save.
-2. Open Automations → 023 → Test / Run with `recordId` = `recElDBcFvuE6jWwc`.
-3. Paste the full console / output JSON back to the agent.
-4. Confirm Submission `recElDBcFvuE6jWwc` still (or again) links Enrollment `recCyFEPeATOVNlr9`.
+**Live retest steps (Mike) — clear Enrollment first so Week path is exercised:**
+
+1. Paste **v3.1** into PROD Automation 023 scripting action; Save.
+2. On Submission `recElDBcFvuE6jWwc`, clear **Enrollment** (leave Athlete + Week Early Bird linked).
+3. Open Automations → 023 → Test / Run with `recordId` = `recElDBcFvuE6jWwc`.
+4. Confirm outputs/console show `programInstanceSource = submission-week` (not `single-active-enrollment-safe-fallback`).
+5. Confirm Enrollment written = `recCyFEPeATOVNlr9`.
+6. Rerun without clearing — expect `existing-valid-enrollment` / no destructive change.
+7. Paste full console / output JSON back to the agent.
+8. **Do not start Automation 053** until this Week-derived path PASSes.
 
 ### 005 — Assign Week (Homework First) — COMPLETE
 

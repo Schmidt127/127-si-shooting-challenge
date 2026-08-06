@@ -12,10 +12,10 @@ Trigger:
 To be confirmed from Airtable automation.
 
 Important Tables:
-Submissions, Enrollments
+Submissions, Enrollments, Weeks
 
 Important Fields:
-Athlete, Enrollment, Program Instance, Active?, Enrollment Key, School Year
+Athlete, Enrollment, Week, Program Instance, Active?, Enrollment Key, School Year
 
 Notes:
 GitHub is the source-of-truth copy.
@@ -26,28 +26,34 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 023 - Submission Intake and Asset Creation - Assign Enrollment to Submission
  *
- * Version: v3.0
+ * Version: v3.1
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-06
- * Updated Reason: Program Instance isolation — never select Enrollment by Athlete
- *   alone when multiple Program Instances / active Enrollments are possible.
+ * Updated Reason: Derive Program Instance from Submission.Week → Weeks.Program
+ *   Instance before single-active-Enrollment fallback (PROD live-test gap).
  *
  * PURPOSE
  * - Reads one Submission record.
+ * - Resolves Program Instance context (Enrollment / Fillout / native / Week / Year).
  * - Resolves exactly one Enrollment using a strict priority order.
  * - Writes the matching Enrollment link back to the Submission.
  * - Never guesses between multiple Enrollments.
  *
- * MATCHING ORDER (preferred → last resort)
+ * PROGRAM INSTANCE RESOLUTION + MATCHING ORDER (preferred → last resort)
  * 1. Existing valid Submission.Enrollment (Athlete match + Active? + has Program Instance)
- * 2. Submission.Program Instance + Athlete (when Submission PI field exists and is set)
- * 3. Submission Program/Year key (School Year) + Athlete (when year field exists and is set)
- * 4. Fillout-supplied Enrollment record ID (optional text/link field when present)
- * 5. Explicit safe fallback ONLY when exactly one valid active candidate exists for Athlete
+ * 2. Explicit Fillout Enrollment ID (optional text/link field when present)
+ * 3. Native Submission.Program Instance field, if present and set
+ * 4. Submission.Week → Weeks.Program Instance (required when Week is linked)
+ * 5. Submission School Year, if available and unambiguous
+ * 6. Single-active-Enrollment safe fallback ONLY when no Program Instance or
+ *    School Year context can be derived
  *
  * IMPORTANT DESIGN RULES — PROGRAM INSTANCE ISOLATION
- * - Athlete-only matching is NOT the normal production selector when multiple
- *   Program Instances / Enrollments exist.
+ * - Athlete-only matching is NOT the normal production selector when Week or
+ *   Program Instance context exists.
+ * - When Week.Program Instance is available: filter Enrollments by Athlete + that
+ *   PI; require exactly one active match; do NOT fall back to another PI.
+ * - Two linked Weeks with different Program Instances → safe skip (ambiguity).
  * - Do not rely only on deactivating prior Enrollments.
  * - Ambiguous matches → skip with diagnostics (do not pick).
  * - Prefer durable record IDs over names/emails.
@@ -57,14 +63,15 @@ Airtable is the deployed/running copy.
  *   when known (hidden field → Submissions.Program Instance or Fillout Enrollment Id).
  * - Repo contracts currently mark submission Fillout enrollmentLookup as
  *   UNKNOWN_UI_ATTESTATION — Mike should confirm live mapping (F-ATT-04).
- * - Schema snapshot (2026-07-23): Submissions has Enrollment + Athlete but NO
- *   native Program Instance field. PI is resolved via Enrollment when linked,
- *   or via optional Submission fields if added later (fieldExists-guarded).
+ * - Schema snapshot (2026-07-23): Submissions has Enrollment + Athlete + Week but
+ *   NO native Program Instance field. PI is resolved via Enrollment when linked,
+ *   via Week.Program Instance, or via optional Submission fields if added later
+ *   (fieldExists-guarded).
  *
  * CURRENT SCHEMA NOTES
- * - Submissions.Athlete is a writable linked-record field.
- * - Submissions.Enrollment is a writable linked-record field.
+ * - Submissions.Athlete / Enrollment / Week are writable linked-record fields.
  * - Submissions.Program Instance may be absent; treated as optional via fieldExists.
+ * - Weeks.Program Instance links to Program Instance - Synced.
  * - Enrollments.Athlete / Active? / Program Instance / Enrollment Key / School Year.
  *
  * REQUIRED AUTOMATION INPUT
@@ -78,6 +85,9 @@ Airtable is the deployed/running copy.
  * - ok
  * - recordId
  * - athleteIdOut
+ * - weekId
+ * - resolvedProgramInstanceId
+ * - programInstanceSource
  * - submissionProgramInstanceIdOut
  * - matchedEnrollmentId
  * - matchedEnrollmentKey
@@ -89,7 +99,7 @@ Airtable is the deployed/running copy.
  *
  * SCRIPT
  * - scriptName: 023 - Submission Intake — Assign Enrollment
- * - version: v3.0
+ * - version: v3.1
  * - versionDate: 2026-08-06
  * - originalWrittenDate: 2026-05-20
  * - lastUpdated: 2026-08-06
@@ -106,7 +116,7 @@ Airtable is the deployed/running copy.
 
 const SCRIPT = {
     scriptName: "023 - Submission Intake — Assign Enrollment",
-    version: "v3.0",
+    version: "v3.1",
     versionDate: "2026-08-06",
     originalWrittenDate: "2026-05-20",
     lastUpdated: "2026-08-06",
@@ -119,11 +129,13 @@ const CONFIG = {
     tables: {
         submissions: "Submissions",
         enrollments: "Enrollments",
+        weeks: "Weeks",
     },
 
     submissions: {
         athlete: "Athlete",
         enrollment: "Enrollment",
+        week: "Week",
         // Optional — may be absent on current PROD schema; fieldExists-guarded.
         programInstance: "Program Instance",
         schoolYear: "School Year",
@@ -138,6 +150,11 @@ const CONFIG = {
         programInstance: "Program Instance",
         enrollmentKey: "Enrollment Key", // formula; read only
         schoolYear: "School Year",
+    },
+
+    weeks: {
+        programInstance: "Program Instance",
+        name: "Week Name",
     },
 
     statuses: {
@@ -173,6 +190,7 @@ if (!recordId) {
 
 const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const weeksTable = base.getTable(CONFIG.tables.weeks);
 
 /* =========================================================
    SECTION 4: HELPERS
@@ -408,25 +426,132 @@ function readFilloutEnrollmentId(submissionRecord) {
     return "";
 }
 
-function emitSkipOutputs({
+/**
+ * Resolve Program Instance from linked Week record(s).
+ * Fail safely when two Weeks point at different Program Instances.
+ */
+async function resolveProgramInstanceFromWeeks(weekIds) {
+    if (!weekIds || weekIds.length === 0) {
+        return {
+            weekId: "",
+            programInstanceId: "",
+            error: null,
+            weekNames: [],
+        };
+    }
+
+    if (!fieldExists(weeksTable, CONFIG.weeks.programInstance)) {
+        return {
+            weekId: weekIds[0] || "",
+            programInstanceId: "",
+            error: "Weeks.Program Instance field is missing; cannot derive Program Instance from Week.",
+            weekNames: [],
+        };
+    }
+
+    const piIds = [];
+    const weekNames = [];
+    const piByWeek = [];
+
+    for (const weekId of weekIds) {
+        const weekRecord = await weeksTable.selectRecordAsync(weekId);
+        if (!weekRecord) {
+            return {
+                weekId,
+                programInstanceId: "",
+                error: `Linked Week not found: ${weekId}`,
+                weekNames,
+            };
+        }
+
+        const weekName = fieldExists(weeksTable, CONFIG.weeks.name)
+            ? getText(weekRecord, weeksTable, CONFIG.weeks.name)
+            : "";
+        weekNames.push(weekName || weekId);
+
+        const piId = getSingleLinkedId(
+            weekRecord,
+            weeksTable,
+            CONFIG.weeks.programInstance
+        );
+        piByWeek.push({ weekId, weekName, programInstanceId: piId || "" });
+        if (piId) {
+            piIds.push(piId);
+        }
+    }
+
+    const uniquePi = [...new Set(piIds.filter(Boolean))];
+
+    if (uniquePi.length > 1) {
+        return {
+            weekId: weekIds[0] || "",
+            programInstanceId: "",
+            error:
+                `Submission links Weeks with different Program Instances ` +
+                `(${uniquePi.join(", ")}). Week details: ${piByWeek
+                    .map((w) => `${w.weekId}|PI=${w.programInstanceId || "none"}`)
+                    .join("; ")}. Submission was not updated.`,
+            weekNames,
+        };
+    }
+
+    return {
+        weekId: weekIds[0] || "",
+        programInstanceId: uniquePi[0] || "",
+        error: null,
+        weekNames,
+        piByWeek,
+    };
+}
+
+function emitCommonOutputs({
     athleteId,
+    weekId,
+    resolvedProgramInstanceId,
+    programInstanceSource,
     submissionProgramInstanceId,
-    matchMode,
+    matchedEnrollmentId,
+    matchedEnrollmentKey,
     candidateCount,
+    matchMode,
+    statusOut,
     errorOut,
     debugLabel,
+    ok,
 }) {
-    setOutputSafe("ok", false);
+    setOutputSafe("ok", ok === true);
     setOutputSafe("recordId", recordId);
     setOutputSafe("athleteIdOut", athleteId || "");
-    setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId || "");
-    setOutputSafe("matchedEnrollmentId", "");
-    setOutputSafe("matchedEnrollmentKey", "");
+    setOutputSafe("weekId", weekId || "");
+    setOutputSafe("resolvedProgramInstanceId", resolvedProgramInstanceId || "");
+    setOutputSafe("programInstanceSource", programInstanceSource || "");
+    setOutputSafe(
+        "submissionProgramInstanceIdOut",
+        submissionProgramInstanceId || resolvedProgramInstanceId || ""
+    );
+    setOutputSafe("matchedEnrollmentId", matchedEnrollmentId || "");
+    setOutputSafe("matchedEnrollmentKey", matchedEnrollmentKey || "");
     setOutputSafe("candidateCountOut", candidateCount || 0);
     setOutputSafe("matchModeOut", matchMode || "");
-    setOutputSafe("statusOut", CONFIG.statuses.skipped);
+    setOutputSafe("statusOut", statusOut || "");
     setOutputSafe("errorOut", errorOut || "");
-    setOutputSafe("debugStep", debugLabel || "Skipped");
+    setOutputSafe("debugStep", debugLabel || "");
+}
+
+function emitSkipOutputs(args) {
+    emitCommonOutputs({
+        ...args,
+        matchedEnrollmentId: "",
+        matchedEnrollmentKey: "",
+        statusOut: CONFIG.statuses.skipped,
+        ok: false,
+    });
+}
+
+function matchActiveByProgramInstance(activeForAthlete, programInstanceId) {
+    return activeForAthlete.filter((candidate) => {
+        return candidate.programInstanceId === programInstanceId;
+    });
 }
 
 /* =========================================================
@@ -437,10 +562,14 @@ async function main() {
     let debugStep = "Start";
     let submission = null;
     let athleteId = "";
+    let weekId = "";
+    let weekIds = [];
     let existingEnrollmentId = "";
     let submissionProgramInstanceId = "";
     let submissionSchoolYear = "";
     let filloutEnrollmentId = "";
+    let resolvedProgramInstanceId = "";
+    let programInstanceSource = "";
     let matchedEnrollmentId = "";
     let matchedEnrollmentKey = "";
     let candidateCount = 0;
@@ -464,6 +593,9 @@ async function main() {
         if (!submission) {
             emitSkipOutputs({
                 athleteId: "",
+                weekId: "",
+                resolvedProgramInstanceId: "",
+                programInstanceSource: "",
                 submissionProgramInstanceId: "",
                 matchMode: "",
                 candidateCount: 0,
@@ -488,6 +620,11 @@ async function main() {
             CONFIG.submissions.enrollment
         );
 
+        weekIds = fieldExists(submissionsTable, CONFIG.submissions.week)
+            ? getLinkedRecordIds(submission, submissionsTable, CONFIG.submissions.week)
+            : [];
+        weekId = weekIds[0] || "";
+
         submissionProgramInstanceId = fieldExists(
             submissionsTable,
             CONFIG.submissions.programInstance
@@ -508,6 +645,8 @@ async function main() {
         log("Submission input", {
             recordId,
             athleteId,
+            weekId,
+            weekIds,
             existingEnrollmentId,
             submissionProgramInstanceId,
             submissionSchoolYear,
@@ -516,6 +655,7 @@ async function main() {
                 submissionsTable,
                 CONFIG.submissions.programInstance
             ),
+            hasSubmissionWeekField: fieldExists(submissionsTable, CONFIG.submissions.week),
             scriptVersion: SCRIPT.version,
         });
 
@@ -526,6 +666,9 @@ async function main() {
             await clearSubmissionEnrollmentIfNeeded(submission);
             emitSkipOutputs({
                 athleteId: "",
+                weekId,
+                resolvedProgramInstanceId: "",
+                programInstanceSource: "",
                 submissionProgramInstanceId,
                 matchMode: "no-athlete",
                 candidateCount: 0,
@@ -569,6 +712,8 @@ async function main() {
                 chosen = existing;
                 matchMode = "existing-valid-enrollment";
                 candidateCount = 1;
+                resolvedProgramInstanceId = existing.programInstanceId;
+                programInstanceSource = "existing-enrollment";
             } else {
                 log("Existing Enrollment rejected", {
                     existingEnrollmentId,
@@ -584,20 +729,64 @@ async function main() {
             }
         }
 
-        // 2) Submission.Program Instance + Athlete
-        if (!chosen && submissionProgramInstanceId) {
-            const narrowed = activeForAthlete.filter((candidate) => {
-                return candidate.programInstanceId === submissionProgramInstanceId;
-            });
-            candidateCount = narrowed.length;
-            if (narrowed.length === 1) {
-                chosen = narrowed[0];
-                matchMode = "athlete-plus-program-instance";
-            } else if (narrowed.length > 1) {
-                matchMode = "ambiguous-athlete-plus-program-instance";
+        // 2) Fillout-supplied Enrollment record ID
+        if (!chosen && filloutEnrollmentId) {
+            const filloutCandidate = byId.get(filloutEnrollmentId);
+            if (
+                filloutCandidate &&
+                filloutCandidate.athleteId === athleteId &&
+                filloutCandidate.isActive &&
+                filloutCandidate.programInstanceId
+            ) {
+                chosen = filloutCandidate;
+                matchMode = "fillout-enrollment-id";
+                candidateCount = 1;
+                resolvedProgramInstanceId = filloutCandidate.programInstanceId;
+                programInstanceSource = "fillout-enrollment-id";
+            } else {
+                log("Fillout Enrollment Id rejected", {
+                    filloutEnrollmentId,
+                    filloutCandidate: filloutCandidate || null,
+                });
+                matchMode = "fillout-enrollment-id-invalid";
                 await clearSubmissionEnrollmentIfNeeded(submission);
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId: "",
+                    programInstanceSource: "fillout-enrollment-id",
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount: 0,
+                    errorOut:
+                        `Fillout Enrollment Id ${filloutEnrollmentId} is invalid for Athlete ` +
+                        `${athleteId} (missing, inactive, athlete mismatch, or no Program Instance).`,
+                    debugLabel: "Skipped: Invalid Fillout Enrollment Id",
+                });
+                return;
+            }
+        }
+
+        // 3) Native Submission.Program Instance + Athlete
+        if (!chosen && submissionProgramInstanceId) {
+            resolvedProgramInstanceId = submissionProgramInstanceId;
+            programInstanceSource = "submission-program-instance";
+            const narrowed = matchActiveByProgramInstance(
+                activeForAthlete,
+                submissionProgramInstanceId
+            );
+            candidateCount = narrowed.length;
+            if (narrowed.length === 1) {
+                chosen = narrowed[0];
+                matchMode = "athlete-program-instance";
+            } else if (narrowed.length > 1) {
+                matchMode = "ambiguous-athlete-program-instance";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    weekId,
+                    resolvedProgramInstanceId,
+                    programInstanceSource,
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount,
@@ -610,10 +799,13 @@ async function main() {
                 });
                 return;
             } else {
-                matchMode = "no-match-athlete-plus-program-instance";
+                matchMode = "no-match-athlete-program-instance";
                 await clearSubmissionEnrollmentIfNeeded(submission);
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId,
+                    programInstanceSource,
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount: 0,
@@ -626,8 +818,103 @@ async function main() {
             }
         }
 
-        // 3) Submission Program/Year key + Athlete
+        // 4) Submission.Week → Weeks.Program Instance
+        if (!chosen && weekIds.length > 0) {
+            debugStep = "6b - Resolve Program Instance from Week";
+            setOutputSafe("debugStep", debugStep);
+
+            const weekPi = await resolveProgramInstanceFromWeeks(weekIds);
+            weekId = weekPi.weekId || weekId;
+
+            if (weekPi.error) {
+                matchMode = "ambiguous-week-program-instances";
+                await clearSubmissionEnrollmentIfNeeded(submission);
+                emitSkipOutputs({
+                    athleteId,
+                    weekId,
+                    resolvedProgramInstanceId: "",
+                    programInstanceSource: "submission-week",
+                    submissionProgramInstanceId,
+                    matchMode,
+                    candidateCount: 0,
+                    errorOut: weekPi.error,
+                    debugLabel: "Skipped: Ambiguous Week Program Instances",
+                });
+                return;
+            }
+
+            if (weekPi.programInstanceId) {
+                resolvedProgramInstanceId = weekPi.programInstanceId;
+                programInstanceSource = "submission-week";
+
+                const narrowed = matchActiveByProgramInstance(
+                    activeForAthlete,
+                    weekPi.programInstanceId
+                );
+                candidateCount = narrowed.length;
+
+                log("Week-derived Program Instance match", {
+                    weekId,
+                    weekIds,
+                    resolvedProgramInstanceId,
+                    programInstanceSource,
+                    candidateCount,
+                    candidateIds: narrowed.map((c) => c.id),
+                });
+
+                if (narrowed.length === 1) {
+                    chosen = narrowed[0];
+                    matchMode = "athlete-program-instance";
+                } else if (narrowed.length > 1) {
+                    matchMode = "ambiguous-athlete-program-instance";
+                    await clearSubmissionEnrollmentIfNeeded(submission);
+                    emitSkipOutputs({
+                        athleteId,
+                        weekId,
+                        resolvedProgramInstanceId,
+                        programInstanceSource,
+                        submissionProgramInstanceId,
+                        matchMode,
+                        candidateCount,
+                        errorOut:
+                            `Multiple active Enrollments for Athlete ${athleteId} ` +
+                            `and Week-derived Program Instance ${weekPi.programInstanceId} ` +
+                            `(${narrowed.length}): ${narrowed.map((c) => c.id).join(", ")}. ` +
+                            `Submission was not updated. No fallback to another Program Instance.`,
+                        debugLabel: "Skipped: Ambiguous Week Program Instance match",
+                    });
+                    return;
+                } else {
+                    matchMode = "no-match-athlete-program-instance";
+                    await clearSubmissionEnrollmentIfNeeded(submission);
+                    emitSkipOutputs({
+                        athleteId,
+                        weekId,
+                        resolvedProgramInstanceId,
+                        programInstanceSource,
+                        submissionProgramInstanceId,
+                        matchMode,
+                        candidateCount: 0,
+                        errorOut:
+                            `No active Enrollment for Athlete ${athleteId} ` +
+                            `and Week-derived Program Instance ${weekPi.programInstanceId} ` +
+                            `(Week ${weekId}). No fallback to another Program Instance.`,
+                        debugLabel: "Skipped: No Week Program Instance Enrollment",
+                    });
+                    return;
+                }
+            } else {
+                log("Linked Week(s) have no Program Instance; continuing", {
+                    weekId,
+                    weekIds,
+                    weekNames: weekPi.weekNames || [],
+                });
+            }
+        }
+
+        // 5) Submission Program/Year key + Athlete
         if (!chosen && submissionSchoolYear) {
+            programInstanceSource = programInstanceSource || "submission-school-year";
             const yearKey = normalizeYearKey(submissionSchoolYear);
             const narrowed = activeForAthlete.filter((candidate) => {
                 return normalizeYearKey(candidate.schoolYear) === yearKey;
@@ -636,11 +923,16 @@ async function main() {
             if (narrowed.length === 1) {
                 chosen = narrowed[0];
                 matchMode = "athlete-plus-school-year";
+                resolvedProgramInstanceId = chosen.programInstanceId || "";
+                programInstanceSource = "submission-school-year";
             } else if (narrowed.length > 1) {
                 matchMode = "ambiguous-athlete-plus-school-year";
                 await clearSubmissionEnrollmentIfNeeded(submission);
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId: "",
+                    programInstanceSource: "submission-school-year",
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount,
@@ -654,51 +946,51 @@ async function main() {
             }
         }
 
-        // 4) Fillout-supplied Enrollment record ID
-        if (!chosen && filloutEnrollmentId) {
-            const filloutCandidate = byId.get(filloutEnrollmentId);
-            if (
-                filloutCandidate &&
-                filloutCandidate.athleteId === athleteId &&
-                filloutCandidate.isActive &&
-                filloutCandidate.programInstanceId
-            ) {
-                chosen = filloutCandidate;
-                matchMode = "fillout-enrollment-id";
-                candidateCount = 1;
-            } else {
-                log("Fillout Enrollment Id rejected", {
-                    filloutEnrollmentId,
-                    filloutCandidate: filloutCandidate || null,
-                });
-                matchMode = "fillout-enrollment-id-invalid";
+        // 6) Safe fallback — exactly one valid active Enrollment for Athlete
+        //    ONLY when no Program Instance or School Year context was derived.
+        if (!chosen) {
+            const hasPiOrYearContext = !!(
+                resolvedProgramInstanceId ||
+                submissionProgramInstanceId ||
+                submissionSchoolYear
+            );
+
+            if (hasPiOrYearContext) {
+                matchMode = "no-match-with-context";
                 await clearSubmissionEnrollmentIfNeeded(submission);
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId,
+                    programInstanceSource,
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount: 0,
                     errorOut:
-                        `Fillout Enrollment Id ${filloutEnrollmentId} is invalid for Athlete ` +
-                        `${athleteId} (missing, inactive, athlete mismatch, or no Program Instance).`,
-                    debugLabel: "Skipped: Invalid Fillout Enrollment Id",
+                        `Program Instance / School Year context was present but no Enrollment ` +
+                        `was matched for Athlete ${athleteId}. Safe fallback is disabled when ` +
+                        `context exists. resolvedProgramInstanceId=${resolvedProgramInstanceId || "none"}; ` +
+                        `schoolYear=${submissionSchoolYear || "none"}.`,
+                    debugLabel: "Skipped: Context present but no Enrollment match",
                 });
                 return;
             }
-        }
 
-        // 5) Safe fallback — exactly one valid active Enrollment for Athlete
-        if (!chosen) {
             const valid = activeForAthlete.filter((c) => !!c.programInstanceId);
             candidateCount = valid.length;
             if (valid.length === 1) {
                 chosen = valid[0];
                 matchMode = "single-active-enrollment-safe-fallback";
+                resolvedProgramInstanceId = chosen.programInstanceId;
+                programInstanceSource = "single-active-enrollment-safe-fallback";
             } else if (valid.length === 0) {
                 matchMode = "no-active-enrollment-with-program-instance";
                 await clearSubmissionEnrollmentIfNeeded(submission);
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId: "",
+                    programInstanceSource: "",
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount: 0,
@@ -719,13 +1011,16 @@ async function main() {
                     .join("; ");
                 emitSkipOutputs({
                     athleteId,
+                    weekId,
+                    resolvedProgramInstanceId: "",
+                    programInstanceSource: "",
                     submissionProgramInstanceId,
                     matchMode,
                     candidateCount,
                     errorOut:
                         `Multiple active Enrollments for Athlete ${athleteId} (${valid.length}). ` +
-                        `Cannot safely choose without Program Instance / School Year / Fillout Enrollment Id. ` +
-                        `Candidates: ${diag}`,
+                        `Cannot safely choose without Program Instance (Week/native), School Year, ` +
+                        `or Fillout Enrollment Id. Candidates: ${diag}`,
                     debugLabel: "Skipped: Multiple matching Enrollments",
                 });
                 return;
@@ -735,6 +1030,9 @@ async function main() {
         matchedEnrollmentId = chosen.id;
         matchedEnrollmentKey = chosen.enrollmentKey;
         candidateCount = 1;
+        if (!resolvedProgramInstanceId) {
+            resolvedProgramInstanceId = chosen.programInstanceId || "";
+        }
 
         debugStep = "7 - Write Enrollment Link";
         setOutputSafe("debugStep", debugStep);
@@ -751,22 +1049,30 @@ async function main() {
         debugStep = "8 - Outputs";
         setOutputSafe("debugStep", debugStep);
 
-        setOutputSafe("ok", true);
-        setOutputSafe("recordId", recordId);
-        setOutputSafe("athleteIdOut", athleteId);
-        setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId);
-        setOutputSafe("matchedEnrollmentId", matchedEnrollmentId);
-        setOutputSafe("matchedEnrollmentKey", matchedEnrollmentKey);
-        setOutputSafe("candidateCountOut", 1);
-        setOutputSafe("matchModeOut", matchMode);
-        setOutputSafe("statusOut", CONFIG.statuses.complete);
-        setOutputSafe("errorOut", "");
+        emitCommonOutputs({
+            athleteId,
+            weekId,
+            resolvedProgramInstanceId,
+            programInstanceSource,
+            submissionProgramInstanceId,
+            matchedEnrollmentId,
+            matchedEnrollmentKey,
+            candidateCount: 1,
+            matchMode,
+            statusOut: CONFIG.statuses.complete,
+            errorOut: "",
+            debugLabel: debugStep,
+            ok: true,
+        });
 
         log("Submission Enrollment assignment completed", {
             automation: SCRIPT.scriptName,
             version: SCRIPT.version,
             recordId,
             athleteId,
+            weekId,
+            resolvedProgramInstanceId,
+            programInstanceSource,
             matchedEnrollmentId,
             matchedEnrollmentKey,
             matchMode,
@@ -776,17 +1082,21 @@ async function main() {
     } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
 
-        setOutputSafe("ok", false);
-        setOutputSafe("recordId", recordId);
-        setOutputSafe("athleteIdOut", athleteId);
-        setOutputSafe("submissionProgramInstanceIdOut", submissionProgramInstanceId);
-        setOutputSafe("matchedEnrollmentId", matchedEnrollmentId);
-        setOutputSafe("matchedEnrollmentKey", matchedEnrollmentKey);
-        setOutputSafe("candidateCountOut", candidateCount);
-        setOutputSafe("matchModeOut", matchMode);
-        setOutputSafe("statusOut", CONFIG.statuses.error);
-        setOutputSafe("errorOut", message);
-        setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
+        emitCommonOutputs({
+            athleteId,
+            weekId,
+            resolvedProgramInstanceId,
+            programInstanceSource,
+            submissionProgramInstanceId,
+            matchedEnrollmentId,
+            matchedEnrollmentKey,
+            candidateCount,
+            matchMode,
+            statusOut: CONFIG.statuses.error,
+            errorOut: message,
+            debugLabel: `FAILED AT: ${debugStep}`,
+            ok: false,
+        });
 
         log("Submission Enrollment assignment failed", {
             automation: SCRIPT.scriptName,

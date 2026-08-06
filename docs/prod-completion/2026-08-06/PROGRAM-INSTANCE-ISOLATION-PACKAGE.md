@@ -24,12 +24,34 @@
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Yes | No | No | — |
+| 023 v3.1 | Yes | Yes (pending merge) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
 | 119 v1.7 | Yes | Yes | No | No | — |
 | 043 v2.1 | Yes | Yes | TBD (if Live) | TBD | — |
+
+### 023 status (honest — do not advance to 053 yet)
+
+```text
+Repository v3.0: merged
+PROD v3.0: pasted
+Live test: PARTIAL — fallback path passed
+Program Instance-safe Week path: NOT YET VALIDATED
+Final result: INCOMPLETE
+```
+
+**Gap:** Live PROD test used `matchMode = single-active-enrollment-safe-fallback` with empty Submission Program Instance fields. Submission has linked Week `recWeVrSabnsYaHc2` (Early Bird) whose Program Instance is `rec5mEM0YPqPqq0hZ`. **v3.1** derives PI from `Submission.Week → Weeks.Program Instance` before any Athlete-only fallback.
+
+**After v3.1 Week path PASSes in PROD:**
+
+```text
+Repository updated: Yes
+Merged to master: Yes
+PROD pasted: Yes
+Live PROD tested: Yes
+Result: PASS
+```
 
 ### 005 live PROD test evidence (do not retest unless dependency break)
 
@@ -75,7 +97,7 @@ Never assume Athlete, Week Name, Activity Date, Grade Band, homework title, XP r
 | # | File | Verdict |
 |---|------|---------|
 | 005 | `…assign-week-to-submission-homework-first.js` | **Rewritten v4.1** |
-| 023 | `…assign-enrollment-to-submission.js` | **Rewritten v3.0** |
+| 023 | `…assign-enrollment-to-submission.js` | **Rewritten v3.1** (Week → PI before fallback) |
 | 031 | `…find-or-create-weekly-athlete-summary…js` | SAFE (Enrollment RID + Week RID / Summary Key) |
 | 035 | `…create-weekly-threshold-xp-events.js` | SAFE for identity; XP Rule Key treated **global** |
 | 053 | `…streak-occurrences-rebuild…js` | **Updated 5.3** (Week PI scope) |
@@ -97,7 +119,7 @@ Never assume Athlete, Week Name, Activity Date, Grade Band, homework title, XP r
 | Script | New version | Repository | PROD Airtable |
 |--------|-------------|------------|---------------|
 | 005 | v4.1 | Updated | **Pasted + Live Tested PASS** (see evidence above) |
-| 023 | v3.0 | Updated | **Paste next** (remaining order: 023 → 053 → 066 → 118 → 119 → 043 if Live) |
+| 023 | v3.1 | Updated | **Re-paste v3.1 next** — clear Enrollment on test Submission so Week→PI path runs; do not start 053 until PASS |
 | 053 | 5.3 | Updated | Paste after 023 |
 | 066 | v3.5 | Updated | Paste after 053 (includes v3.4 createRecords fix) |
 | 043 | v2.1 | Updated | Paste only if still Live and PROD version stale |
@@ -158,7 +180,7 @@ Recommended durable mapping:
 2. Hidden Enrollment RID → Fillout Enrollment Id / Enrollment Record ID text field, **or**
 3. Ensure only one Active Enrollment per Athlete until mapping exists (fragile — not preferred).
 
-023 v3.0 supports optional Submission PI / School Year / Fillout Enrollment Id via `fieldExists` when those fields are added.
+023 v3.1 resolves PI from: existing Enrollment → Fillout Enrollment Id → native Submission PI (if present) → **Submission.Week → Weeks.Program Instance** → School Year → single-active safe fallback only when no PI/Year context exists.
 
 ## Test fixture isolation (Phase 3)
 
@@ -177,7 +199,8 @@ Do not delete until dependencies inspected (WAS, unlocks, XP Source Keys referen
 |------|--------|-------|
 | Live Airtable API from this agent | **Unavailable** (no `AIRTABLE_API_TOKEN`) | Interactive Mike paste + Test Automation in Airtable UI |
 | 005 v4.1 | **Live Tested PASS** | Early Bird via Activity Date Fallback; 12 same-PI weeks; 13 other-PI excluded |
-| Remaining pastes | **In progress** | 023 → 053 → 066 → 118 → 119 → 043-if-Live |
+| 023 v3.0 live | **PARTIAL / INCOMPLETE** | Fallback passed; Week→PI path not validated — blocked on v3.1 paste + retest |
+| Remaining pastes | **In progress** | 023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live |
 | Known live-test context | Documented | Submission `recElDBcFvuE6jWwc`, Athlete `recgqVstObQRzgXJF`, Enrollment `recCyFEPeATOVNlr9`, PI `rec5mEM0YPqPqq0hZ`, Week Early Bird `recWeVrSabnsYaHc2` |
 | Email sends | **Not executed for 118/119** | Controlled dryRun packages only; no uncontrolled parent email |
 
