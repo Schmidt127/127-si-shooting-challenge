@@ -17,7 +17,7 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 | Field | Value |
 |-------|--------|
 | **Starting `master`** | `d4d1ee271603a8eb7fda082a09034b86e74b7afb` (merge PR #80) |
-| **Ending `master`** | `ea2b2b8a1fa6757857558d4b51d09473956ac1cd` |
+| **Ending `master`** | `23a6e4ebf4691c495d272756a9e0de1ed0cff54e` |
 | **Merge branch** | `cursor/overnight-merge-reconciliation-3b0c` |
 
 ### Merge order (executed)
@@ -26,7 +26,7 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 2. PR **#85** → `1d873ff10bbd5b4d5767fec7df963016a8e014b4`
 3. PR **#84** → `8ad11a74339b8a1d85fc938ef070b1adc6649cc8`
 4. PR **#81** → `022dfa53559946d89820add08f0637f9af657d1c`
-5. Final summary + reconciliation → `93e6197` / `639fa3e`; tip `ea2b2b8`
+5. Final summary + reconciliation → `93e6197` / `639fa3e`; tip `23a6e4e`
 
 ### PRs merged
 
@@ -36,6 +36,10 @@ This document replaces the **pre-merge** consolidation draft from PR #87. Claims
 | #85 | Agent 1 homework PHA + SC-016 | **Merged** (supersedes #82) |
 | #84 | Agent 3 Perfect Week + Agent 4 ops | **Merged** (supersedes #83) |
 | #81 | Perfect Week gated test timestamp | **Merged** (Schmidt-only; still useful) |
+
+### PRs closed as superseded / absorbed
+
+GitHub marked #81–#86 **MERGED** when their commits landed on `master` through this integration branch (including #82/#83 as ancestral commits inside #85/#84 — scripts remain **020 v3.2.0 / 033 v3.3**, not the older tip versions).
 
 ### PRs closed as superseded
 
