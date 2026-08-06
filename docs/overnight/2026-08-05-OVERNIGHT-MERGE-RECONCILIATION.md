@@ -109,3 +109,9 @@ No Stage 17 orchestrator as active 117. No active 117a/117b/117c slots.
 ## 8. Remaining Mike-only / blockers
 
 See final summary §6–§7. Highest priority: paste 020/033; fix 059 trigger (Unlock ID, not WAS); attest 066.
+
+## 9. Final master tip
+
+`8dd6be4fe8d93ee4de87a6aa42c5b8fdfcb6b93e` (post-merge docs; package complete).
+
+PR **#87** remains OPEN — GitHub integration token cannot close/comment; Mike should close as superseded by the post-merge final summary.
