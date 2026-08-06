@@ -76,6 +76,9 @@ Shared coordination file for overnight agents finishing Shooting Challenge V2.
 
 Evidence: `docs/testing/evidence/2026-08-05-agent3-perfect-week/`
 
+**Commit:** `a4547a9` (+ handoff `3eafdd1`) on `overnight/2026-08-05/agent3-perfect-week`  
+**PR:** https://github.com/Schmidt127/127-si-shooting-challenge/pull/83
+
 ---
 
 ## Progress checkpoints
