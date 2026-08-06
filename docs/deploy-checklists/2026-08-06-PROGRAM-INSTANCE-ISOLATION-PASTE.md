@@ -18,13 +18,13 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
-| 005 v4.1 | Yes | Pending package merge | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Pending package merge | No | No | — |
-| 053 5.3 | Yes | Pending package merge | No | No | — |
-| 066 v3.5 | Yes | Pending package merge | No | No | — |
-| 118 v1.7 | Yes | Pending package merge | No | No | — |
-| 119 v1.7 | Yes | Pending package merge | No | No | — |
-| 043 v2.1 | Yes | Pending package merge | TBD | TBD | — |
+| 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
+| 023 v3.0 | Yes | Yes | No | No | — |
+| 053 5.3 | Yes | Yes | No | No | — |
+| 066 v3.5 | Yes | Yes | No | No | — |
+| 118 v1.7 | Yes | Yes | No | No | — |
+| 119 v1.7 | Yes | Yes | No | No | — |
+| 043 v2.1 | Yes | Yes | TBD | TBD | — |
 
 ### 005 evidence (do not retest)
 

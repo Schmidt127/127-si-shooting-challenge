@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-06** (Program Instance isolation — 005 v4.1 PROD PASS; remaining pastes in progress via PR #92) |
+| Last updated | **2026-08-06** (Program Instance isolation — PR #92 merged; 005 PASS; remaining pastes 023→053→066→118→119) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -110,13 +110,13 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
-| 005 v4.1 | Yes | Pending package merge | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Pending package merge | No | No | — |
-| 053 5.3 | Yes | Pending package merge | No | No | — |
-| 066 v3.5 | Yes | Pending package merge | No | No | — |
-| 118 v1.7 | Yes | Pending package merge | No | No | — |
-| 119 v1.7 | Yes | Pending package merge | No | No | — |
-| 043 v2.1 | Yes | Pending package merge | TBD | TBD | — |
+| 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
+| 023 v3.0 | Yes | Yes | No | No | — |
+| 053 5.3 | Yes | Yes | No | No | — |
+| 066 v3.5 | Yes | Yes | No | No | — |
+| 118 v1.7 | Yes | Yes | No | No | — |
+| 119 v1.7 | Yes | Yes | No | No | — |
+| 043 v2.1 | Yes | Yes | TBD | TBD | — |
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 

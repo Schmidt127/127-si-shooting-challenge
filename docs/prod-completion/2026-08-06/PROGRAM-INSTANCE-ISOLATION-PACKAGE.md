@@ -17,19 +17,19 @@
 | `94dbac6` | docs: complete program instance isolation package |
 | `80a35e7` | docs: record PR #92 and commit SHAs on isolation package |
 
-**Merge commit / final master SHA:** pending this package close-out (PR #92 authorized to merge).
+**Merge commit / final master SHA:** `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`) — PR #92 merged.
 
 ## Deployment matrix (authoritative)
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
-| 005 v4.1 | Yes | Pending until this package is merged | Yes | Yes | **PASS** |
-| 023 v3.0 | Yes | Pending until this package is merged | No | No | — |
-| 053 5.3 | Yes | Pending until this package is merged | No | No | — |
-| 066 v3.5 | Yes | Pending until this package is merged | No | No | — |
-| 118 v1.7 | Yes | Pending until this package is merged | No | No | — |
-| 119 v1.7 | Yes | Pending until this package is merged | No | No | — |
-| 043 v2.1 | Yes | Pending until this package is merged | TBD (if Live) | TBD | — |
+| 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
+| 023 v3.0 | Yes | Yes | No | No | — |
+| 053 5.3 | Yes | Yes | No | No | — |
+| 066 v3.5 | Yes | Yes | No | No | — |
+| 118 v1.7 | Yes | Yes | No | No | — |
+| 119 v1.7 | Yes | Yes | No | No | — |
+| 043 v2.1 | Yes | Yes | TBD (if Live) | TBD | — |
 
 ### 005 live PROD test evidence (do not retest unless dependency break)
 
