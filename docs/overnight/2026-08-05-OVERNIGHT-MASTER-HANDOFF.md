@@ -98,6 +98,9 @@ Evidence: `docs/testing/evidence/2026-08-05-agent3-perfect-week/`
 
 Evidence: `docs/testing/evidence/2026-08-05-agent4-ops/`
 
+**Commit:** `ca30134`  
+**PR:** https://github.com/Schmidt127/127-si-shooting-challenge/pull/84
+
 ---
 
 ### Agent 1 — homework MVP checkpoints (2026-08-05)
