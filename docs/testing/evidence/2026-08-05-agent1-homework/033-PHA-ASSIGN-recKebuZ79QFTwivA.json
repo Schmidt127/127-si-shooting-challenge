@@ -1,0 +1,19 @@
+{
+  "wasId": "recKebuZ79QFTwivA",
+  "weekId": "reci5GdxEC57vfoS3",
+  "gradeBandId": "reclWDQZzKbVBtdhG",
+  "enrollmentId": "recCyFEPeATOVNlr9",
+  "programInstanceId": "rec5mEM0YPqPqq0hZ",
+  "existingHomework": [
+    "rechVLOeyEVIqmy2v",
+    "rec6WmXjpLtIWDERo"
+  ],
+  "phaMatchCount": 2,
+  "matchedLibraryIds": [
+    "rechVLOeyEVIqmy2v",
+    "rec6WmXjpLtIWDERo"
+  ],
+  "matchSource": "program_homework_assignments",
+  "write": false,
+  "writeResult": null
+}

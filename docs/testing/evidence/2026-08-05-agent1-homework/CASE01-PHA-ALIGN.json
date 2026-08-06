@@ -1,0 +1,26 @@
+{
+  "steps": [
+    {
+      "pha2Align": true,
+      "hw": [
+        "rec6WmXjpLtIWDERo"
+      ]
+    },
+    {
+      "wasRestore": true,
+      "homework": [
+        "rechVLOeyEVIqmy2v",
+        "rec6WmXjpLtIWDERo"
+      ]
+    }
+  ],
+  "after": {
+    "homework": [
+      "rechVLOeyEVIqmy2v",
+      "rec6WmXjpLtIWDERo"
+    ],
+    "assigned": 2,
+    "sat": 2,
+    "eligible": 1
+  }
+}

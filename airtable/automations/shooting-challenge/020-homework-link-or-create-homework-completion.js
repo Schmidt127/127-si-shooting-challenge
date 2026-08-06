@@ -2,9 +2,9 @@
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.0.0
+ * Version: v3.2.0
  * Date Written: 2026-05-20
- * Last Updated: 2026-07-14
+ * Last Updated: 2026-08-05
  * Supersedes: separate 063 (copy Enrollment Grade Band → HC)
  *
  * PURPOSE
@@ -13,15 +13,29 @@
  * - Finds the homework assignment from the linked Submission.
  * - Finds or creates the matching Homework Completion.
  * - Links the Submission Asset to the Homework Completion.
+ * - When Program Homework Assignments exist, resolves the active junction
+ *   record (Program Instance + Week + Grade Band + Slot) and links it on HC.
  * - Marks the asset Pending Link and checks Send to Make Trigger for 070a.
  * - Sets or repairs Homework Completions → Grade Band from Submission
  *   Grade Band when present, else Enrollment Grade Band (former 063).
+ *
+ * Version 3.2.0 updates (2026-08-05):
+ * - SC-016: Prefer Enrollment + Week + Homework + Slot identity so re-submits
+ *   in the same week attach to one HC (not one HC per Submission).
+ * - Still accepts exact Submission+Homework+Slot and blank-slot matches.
+ * - unloadQuerySafe for large selectRecordsAsync results.
+ *
+ * Version 3.1.0 updates (2026-08-05):
+ * - Additive link to Program Homework Assignment on create/update when resolvable.
+ * - Legacy Homework library link on HC retained.
  *
  * IMPORTANT DESIGN RULES
  * - Upload Status Make send gate is Pending Link (same ladder as 009, 013, 070a, 070b).
  * - Asset-driven: does not stop because the parent Submission already has another Homework Completion.
  * - Does not write Homework Completions → Airtable Attachment (files stay on Submission Assets).
  * - When asset is already linked, syncs upload writeback fields from the asset (022 also runs post-Make).
+ * - SC-016 product rule: one Homework Completion per Enrollment + Week + Homework + Slot.
+ *   Multiple Submissions in the same week for the same slot merge onto that HC.
  * - Re-queries Homework Completions immediately before create to avoid duplicate rows when 009
  *   creates multiple assets for the same HW slot in parallel (020 race guard).
  * - When multiple matching Homework Completions exist, links to the preferred row instead of erroring.
@@ -81,13 +95,14 @@
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.0.0",
+  version: "v3.2.0",
 
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
     homework: "Homework Completions",
     enrollments: "Enrollments",
+    programHomeworkAssignments: "Program Homework Assignments",
   },
 
   assets: {
@@ -123,10 +138,21 @@ const CONFIG = {
 
   enrollments: {
     gradeBand: "Grade Band",
+    programInstance: "Program Instance",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    gradeBand: "Grade Band",
+    slot: "Homework Slot",
+    active: "Active?",
   },
 
   homework: {
     homework: "Homework",
+    programHomeworkAssignment: "Program Homework Assignment",
     submission: "Submissions - Linked",
     uploadStatus: "Upload Status",
     submissionAssets: "Submission Assets",
@@ -152,6 +178,7 @@ const CONFIG = {
     itemSlot: "Item Slot",
     reviewStatus: "Review Status",
     writebackComplete: "Writeback Complete?",
+    satisfactory: "Satisfactory?",
   },
 
   values: {
@@ -171,6 +198,7 @@ let assetsTable;
 let submissionsTable;
 let homeworkTable;
 let enrollmentsTable;
+let phaTable;
 
 /* =========================================================
    SECTION 2 — HELPERS
@@ -313,6 +341,63 @@ function homeworkFieldForSlot(slot) {
   return "";
 }
 
+async function resolveProgramHomeworkAssignmentId({
+  weekId,
+  gradeBandId,
+  programInstanceId,
+  slot,
+  homeworkLibraryId,
+}) {
+  if (!phaTable || !fieldExists(homeworkTable, CONFIG.homework.programHomeworkAssignment)) {
+    return "";
+  }
+  if (!weekId || !slot || !homeworkLibraryId) return "";
+
+  const fields = safeFields(phaTable, Object.values(CONFIG.pha));
+  const query = await phaTable.selectRecordsAsync({ fields });
+
+  const matches = query.records.filter(record => {
+    if (firstLinkedId(record, CONFIG.pha.week) !== weekId) return false;
+    if (firstLinkedId(record, CONFIG.pha.homeworkAssignment) !== homeworkLibraryId) return false;
+
+    const recordSlot = selectName(record, CONFIG.pha.slot);
+    if (recordSlot !== slot) return false;
+
+    if (gradeBandId) {
+      const gb = firstLinkedId(record, CONFIG.pha.gradeBand);
+      if (gb && gb !== gradeBandId) return false;
+    }
+
+    if (programInstanceId) {
+      const pi = firstLinkedId(record, CONFIG.pha.programInstance);
+      if (pi && pi !== programInstanceId) return false;
+    }
+
+    if (fieldExists(phaTable, CONFIG.pha.active)) {
+      const active = cell(record, CONFIG.pha.active);
+      if (!(active === true || active === 1 || active === "1")) return false;
+    }
+
+    return true;
+  });
+
+  if (matches.length === 0) return "";
+  if (matches.length > 1) {
+    console.log(
+      JSON.stringify({
+        automation: CONFIG.scriptName,
+        version: CONFIG.version,
+        warning: "multiple_pha_matches_using_first",
+        slot,
+        weekId,
+        homeworkLibraryId,
+        ids: matches.map(r => r.id),
+      })
+    );
+  }
+  return matches[0].id;
+}
+
 function getHomeworkSlot(homeworkRecord) {
   return (
     selectName(homeworkRecord, CONFIG.homework.assetSlot) ||
@@ -320,11 +405,38 @@ function getHomeworkSlot(homeworkRecord) {
   );
 }
 
+function unloadQuerySafe(queryResult) {
+  if (typeof queryResult?.unloadData === "function") {
+    try {
+      queryResult.unloadData();
+    } catch (error) {
+      console.log(
+        "Query unloadData skipped/failed (non-fatal)",
+        JSON.stringify({
+          error: error instanceof Error ? error.message : String(error),
+        })
+      );
+    }
+  }
+}
+
 function pickPreferredHomeworkCompletion(candidates) {
   if (!candidates || candidates.length === 0) return null;
   if (candidates.length === 1) return candidates[0];
 
   const ranked = [...candidates].sort((a, b) => {
+    const aSat =
+      fieldExists(homeworkTable, CONFIG.homework.satisfactory) &&
+      cell(a, CONFIG.homework.satisfactory) === true
+        ? 1
+        : 0;
+    const bSat =
+      fieldExists(homeworkTable, CONFIG.homework.satisfactory) &&
+      cell(b, CONFIG.homework.satisfactory) === true
+        ? 1
+        : 0;
+    if (bSat !== aSat) return bSat - aSat;
+
     const aAssets = linkedIds(a, CONFIG.homework.submissionAssets).length;
     const bAssets = linkedIds(b, CONFIG.homework.submissionAssets).length;
     if (bAssets !== aAssets) return bAssets - aAssets;
@@ -344,7 +456,39 @@ function pickPreferredHomeworkCompletion(candidates) {
   return ranked[0];
 }
 
-function findHomeworkCompletionMatch(homeworkRecords, submissionId, homeworkId, slot) {
+/**
+ * SC-016 identity preference:
+ * 1) Enrollment + Week + Homework + Slot  (canonical assignment identity)
+ * 2) Submission + Homework + Slot         (legacy exact)
+ * 3) Submission + Homework + blank slot
+ */
+function findHomeworkCompletionMatch(
+  homeworkRecords,
+  { submissionId, enrollmentId, weekId, homeworkId, slot }
+) {
+  if (enrollmentId && weekId && homeworkId && slot) {
+    const enrollmentCandidates = homeworkRecords.filter(hw => {
+      const hwEnrollmentId = firstLinkedId(hw, CONFIG.homework.enrollment);
+      const hwWeekId = firstLinkedId(hw, CONFIG.homework.week);
+      const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
+      const hwSlot = getHomeworkSlot(hw);
+      return (
+        hwEnrollmentId === enrollmentId &&
+        hwWeekId === weekId &&
+        hwHomeworkId === homeworkId &&
+        hwSlot === slot
+      );
+    });
+
+    if (enrollmentCandidates.length > 0) {
+      return {
+        homeworkCompletion: pickPreferredHomeworkCompletion(enrollmentCandidates),
+        matchType: "enrollment_week_homework_slot",
+        candidateCount: enrollmentCandidates.length,
+      };
+    }
+  }
+
   const exactCandidates = homeworkRecords.filter(hw => {
     const hwSubmissionId = firstLinkedId(hw, CONFIG.homework.submission);
     const hwHomeworkId = firstLinkedId(hw, CONFIG.homework.homework);
@@ -583,6 +727,11 @@ async function main() {
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   homeworkTable = base.getTable(CONFIG.tables.homework);
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+  try {
+    phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+  } catch {
+    phaTable = null;
+  }
 
   debugStep = "load_submission_asset";
   setOutputSafe("debugStep", debugStep);
@@ -703,6 +852,7 @@ async function main() {
   const submission = submissionsQuery.getRecord(submissionId);
 
   if (!submission) {
+    unloadQuerySafe(submissionsQuery);
     await markAssetError(asset, `Linked Submission could not be loaded: ${submissionId}`);
   }
 
@@ -716,6 +866,28 @@ async function main() {
     );
   }
 
+  const weekIds = linkedIds(submission, CONFIG.submissions.week);
+  const submissionGradeBandIds = linkedIds(submission, CONFIG.submissions.gradeBand);
+  let programInstanceId = "";
+  if (enrollmentIds[0] && fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
+    try {
+      const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentIds[0]);
+      if (enrollmentRecord) {
+        programInstanceId = firstLinkedId(enrollmentRecord, CONFIG.enrollments.programInstance);
+      }
+    } catch {
+      programInstanceId = "";
+    }
+  }
+
+  const phaId = await resolveProgramHomeworkAssignmentId({
+    weekId: weekIds[0] || "",
+    gradeBandId: submissionGradeBandIds[0] || "",
+    programInstanceId,
+    slot,
+    homeworkLibraryId: homeworkId,
+  });
+
   debugStep = "find_homework_completion";
   setOutputSafe("debugStep", debugStep);
 
@@ -725,12 +897,15 @@ async function main() {
     fields: homeworkFieldsToLoad,
   });
 
-  let matchResult = findHomeworkCompletionMatch(
-    homeworkQuery.records,
-    submission.id,
+  const matchArgs = {
+    submissionId: submission.id,
+    enrollmentId: enrollmentIds[0] || "",
+    weekId: weekIds[0] || "",
     homeworkId,
-    slot
-  );
+    slot,
+  };
+
+  let matchResult = findHomeworkCompletionMatch(homeworkQuery.records, matchArgs);
   let homeworkCompletion = matchResult.homeworkCompletion;
 
   if (!homeworkCompletion) {
@@ -741,13 +916,9 @@ async function main() {
       fields: homeworkFieldsToLoad,
     });
 
-    matchResult = findHomeworkCompletionMatch(
-      recheckQuery.records,
-      submission.id,
-      homeworkId,
-      slot
-    );
+    matchResult = findHomeworkCompletionMatch(recheckQuery.records, matchArgs);
     homeworkCompletion = matchResult.homeworkCompletion;
+    unloadQuerySafe(recheckQuery);
 
     if (homeworkCompletion) {
       console.log(
@@ -764,6 +935,9 @@ async function main() {
     }
   }
 
+  unloadQuerySafe(homeworkQuery);
+  unloadQuerySafe(submissionsQuery);
+
   debugStep = "create_or_link_homework_completion";
   setOutputSafe("debugStep", debugStep);
 
@@ -773,15 +947,22 @@ async function main() {
 
   if (homeworkCompletion) {
     actionOut =
-      matchResult.matchType === "exact" && matchResult.candidateCount > 1
+      matchResult.candidateCount > 1
         ? "linked_existing_duplicate_resolved"
-        : "linked_existing";
+        : matchResult.matchType === "enrollment_week_homework_slot"
+          ? "linked_existing_enrollment_identity"
+          : "linked_existing";
 
     const updateFields = {};
     const existingAssetIds = linkedIds(homeworkCompletion, CONFIG.homework.submissionAssets);
     const mergedAssetIds = [...new Set([...existingAssetIds, asset.id])];
 
     setLink(updateFields, homeworkTable, CONFIG.homework.submissionAssets, mergedAssetIds);
+
+    // Keep all Submissions that contributed assets (multi-day re-submit merge).
+    const existingSubmissionIds = linkedIds(homeworkCompletion, CONFIG.homework.submission);
+    const mergedSubmissionIds = [...new Set([...existingSubmissionIds, submission.id])];
+    setLink(updateFields, homeworkTable, CONFIG.homework.submission, mergedSubmissionIds);
 
     if (!selectName(homeworkCompletion, CONFIG.homework.assetSlot)) {
       setSingleSelect(updateFields, homeworkTable, CONFIG.homework.assetSlot, slot);
@@ -793,6 +974,13 @@ async function main() {
 
     if (!firstLinkedId(homeworkCompletion, CONFIG.homework.homework)) {
       setLink(updateFields, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    }
+
+    if (
+      phaId &&
+      !firstLinkedId(homeworkCompletion, CONFIG.homework.programHomeworkAssignment)
+    ) {
+      setLink(updateFields, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
     }
 
     if (!text(homeworkCompletion, CONFIG.homework.assetLabel)) {
@@ -875,6 +1063,9 @@ async function main() {
     const createFields = {};
 
     setLink(createFields, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    if (phaId) {
+      setLink(createFields, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
+    }
     setLink(createFields, homeworkTable, CONFIG.homework.submission, [submission.id]);
     setLink(createFields, homeworkTable, CONFIG.homework.enrollment, enrollmentIds);
     setLink(createFields, homeworkTable, CONFIG.homework.week, linkedIds(submission, CONFIG.submissions.week));

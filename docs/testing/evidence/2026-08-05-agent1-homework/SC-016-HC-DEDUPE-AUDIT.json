@@ -1,0 +1,19 @@
+{
+  "probedAt": "2026-08-06T00:08:16.479Z",
+  "totalHc": 7,
+  "duplicateGroups": {
+    "enrollmentWeekHomework": {
+      "count": 0,
+      "groups": []
+    },
+    "enrollmentWeekHomeworkSlot": {
+      "count": 0,
+      "groups": []
+    },
+    "submissionHomeworkSlot": {
+      "count": 0,
+      "groups": []
+    }
+  },
+  "sc016Verdict": "PASS_NO_DUPES_ON_020_OR_SLOT_LENS"
+}

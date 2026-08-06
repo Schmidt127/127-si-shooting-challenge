@@ -1,0 +1,36 @@
+{
+  "probedAt": "2026-08-05T23:38:27.861Z",
+  "wasId": "recKebuZ79QFTwivA",
+  "daysLogged": 7,
+  "homeworkAssignedLibrary": [
+    "rechVLOeyEVIqmy2v",
+    "rec6WmXjpLtIWDERo"
+  ],
+  "homeworkCompletionsLink": [
+    "recqXxlOpATQI3sD4",
+    "rechzFmWrUp1tonto"
+  ],
+  "homeworkAssignedCountRollup": 2,
+  "homeworkSatisfactoryCountRollup": 2,
+  "submissionCount": 7,
+  "videoFeedbackMatchingEnrollmentWeek": [],
+  "videoCountFor057Logic": 3,
+  "zoomMeetingsForWeek": [],
+  "zoomMeetingCount": 0,
+  "automationStatus": "Pending",
+  "calculationQueue": 1,
+  "assessment": {
+    "homeworkReadyFor057": true,
+    "dailyLikelyReady": true,
+    "videoLikelyReady": true,
+    "zoomLikelyReady": true,
+    "readyToRun057Manually": true,
+    "note": "057 writes helpers + Status Ready; Eligible formula then evaluates. Do not change 057."
+  },
+  "videoFeedbackIds": [
+    "recNnc5jyNZhr7aMl",
+    "recU0fm1oWJWjjabv",
+    "recjxoiMZ2WTRuUmW"
+  ],
+  "note": "Video list filterByFormula failed; direct IDs confirm 3 videos on WAS submissions. See 057-VIDEO-PROBE.json"
+}

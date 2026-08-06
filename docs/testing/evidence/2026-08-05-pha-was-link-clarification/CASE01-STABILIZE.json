@@ -1,0 +1,51 @@
+{
+  "stabilizedAt": "2026-08-05T23:38:02.613Z",
+  "patches": {
+    "hc1": false,
+    "hc2": false,
+    "wasHomeworkPatched": false
+  },
+  "fieldClarification": {
+    "weeklyAthleteSummaryText": {
+      "id": "fldhpGNYnu2l3bpUP",
+      "type": "singleLineText",
+      "valueHc1": null,
+      "valueHc2": null,
+      "classification": "unused_legacy_eligible_for_later_cleanup",
+      "note": "Empty is expected; not the relationship. Do not delete/rename in this package."
+    },
+    "weeklyAthleteSummaryLink": {
+      "id": "fldkoEbVnCugcMCCi",
+      "type": "multipleRecordLinks",
+      "valueHc1": [
+        "recKebuZ79QFTwivA"
+      ],
+      "valueHc2": [
+        "recKebuZ79QFTwivA"
+      ],
+      "classification": "actively_used",
+      "note": "Canonical HC→WAS; written by Automation 020; inverse of WAS Homework Completions Link"
+    }
+  },
+  "was": {
+    "id": "recKebuZ79QFTwivA",
+    "homework": [
+      "rechVLOeyEVIqmy2v",
+      "rec6WmXjpLtIWDERo"
+    ],
+    "homeworkAssignedCount": 2,
+    "homeworkSatisfactoryCount": 2,
+    "homeworkCompletionsLink": [
+      "recqXxlOpATQI3sD4",
+      "rechzFmWrUp1tonto"
+    ],
+    "daysLogged": 7,
+    "automationStatus": "Pending",
+    "calculationQueue": 1,
+    "eligible": 0
+  },
+  "verification": {
+    "status": "PASS",
+    "failures": []
+  }
+}

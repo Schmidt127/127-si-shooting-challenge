@@ -1,0 +1,733 @@
+{
+  "dryRun": false,
+  "allBands": true,
+  "created": [
+    {
+      "id": "recbRZzjsqvP0YR67",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rec8oexrgOV5OWCRw",
+      "name": "SA - Mastery - Shooting Challenge Final Reflection Quiz",
+      "primary": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10"
+    },
+    {
+      "id": "recWO4PNQAp1EQx0v",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "rec1KJZYvonmdZGZ7",
+      "name": "SA - Mastery - Shot Tracker: Summary and What You Learned",
+      "primary": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10"
+    },
+    {
+      "id": "rec8dvaLtokPAtXua",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rec8oexrgOV5OWCRw",
+      "name": "SA - Mastery - Shooting Challenge Final Reflection Quiz",
+      "primary": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10"
+    },
+    {
+      "id": "recA7LdQmPaNvjiLV",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "rec1KJZYvonmdZGZ7",
+      "name": "SA - Mastery - Shot Tracker: Summary and What You Learned",
+      "primary": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10"
+    },
+    {
+      "id": "recIJn3sB9bLPI734",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rec8oexrgOV5OWCRw",
+      "name": "SA - Mastery - Shooting Challenge Final Reflection Quiz",
+      "primary": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10"
+    },
+    {
+      "id": "recUaPtCf57MKaY7x",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "rec1KJZYvonmdZGZ7",
+      "name": "SA - Mastery - Shot Tracker: Summary and What You Learned",
+      "primary": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10"
+    },
+    {
+      "id": "rec3CwuvR4Dd5F0Ny",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rec8oexrgOV5OWCRw",
+      "name": "SA - Mastery - Shooting Challenge Final Reflection Quiz",
+      "primary": "HW1 | SA - Mastery - Shooting Challenge Final Reflection Quiz | Week 10"
+    },
+    {
+      "id": "recgfepkBVZgqYmqh",
+      "weekId": "recrTwxqXz31fNZ7e",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "rec1KJZYvonmdZGZ7",
+      "name": "SA - Mastery - Shot Tracker: Summary and What You Learned",
+      "primary": "HW2 | SA - Mastery - Shot Tracker: Summary and What You Learned | Week 10"
+    },
+    {
+      "id": "recdQRZVi7hoH0bTD",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rec1iHGFpNLdu9Lyk",
+      "name": "SA - Relationships - Thank You Note",
+      "primary": "HW1 | SA - Relationships - Thank You Note | Week 7"
+    },
+    {
+      "id": "recDnSCSRGwbRWjoU",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "recuKQPsGXUvhvlm9",
+      "name": "SA - Growth Mindset - Coach Yourself",
+      "primary": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7"
+    },
+    {
+      "id": "reciCHzcNWEcV01Xk",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rec1iHGFpNLdu9Lyk",
+      "name": "SA - Relationships - Thank You Note",
+      "primary": "HW1 | SA - Relationships - Thank You Note | Week 7"
+    },
+    {
+      "id": "recABIVYok42tnOHI",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "recuKQPsGXUvhvlm9",
+      "name": "SA - Growth Mindset - Coach Yourself",
+      "primary": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7"
+    },
+    {
+      "id": "recJFS4BQ1hTwYsRN",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rec1iHGFpNLdu9Lyk",
+      "name": "SA - Relationships - Thank You Note",
+      "primary": "HW1 | SA - Relationships - Thank You Note | Week 7"
+    },
+    {
+      "id": "recBs074DiCnUjtZP",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "recuKQPsGXUvhvlm9",
+      "name": "SA - Growth Mindset - Coach Yourself",
+      "primary": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7"
+    },
+    {
+      "id": "reclOgKZzUtTUkxzG",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rec1iHGFpNLdu9Lyk",
+      "name": "SA - Relationships - Thank You Note",
+      "primary": "HW1 | SA - Relationships - Thank You Note | Week 7"
+    },
+    {
+      "id": "rec6hqMSRlZLG1piD",
+      "weekId": "recbw58r8MlnhbBx7",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "recuKQPsGXUvhvlm9",
+      "name": "SA - Growth Mindset - Coach Yourself",
+      "primary": "HW2 | SA - Growth Mindset - Coach Yourself | Week 7"
+    },
+    {
+      "id": "reccGxhS7lkH3cQmW",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rect6zryAP3IF5tTI",
+      "name": "SA - Sportsmanship - Bad Habit I Need to Fix",
+      "primary": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9"
+    },
+    {
+      "id": "recQSCRyB562bX7gr",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "rec4MHWKWwsGOw26q",
+      "name": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person",
+      "primary": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9"
+    },
+    {
+      "id": "rec53rpfgupBJ4V3b",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rect6zryAP3IF5tTI",
+      "name": "SA - Sportsmanship - Bad Habit I Need to Fix",
+      "primary": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9"
+    },
+    {
+      "id": "rec07HlC9CJM1z5Uz",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "rec4MHWKWwsGOw26q",
+      "name": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person",
+      "primary": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9"
+    },
+    {
+      "id": "recSgO2WoGbQ9Y0im",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rect6zryAP3IF5tTI",
+      "name": "SA - Sportsmanship - Bad Habit I Need to Fix",
+      "primary": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9"
+    },
+    {
+      "id": "reccOxTZAhLjYAzIJ",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "rec4MHWKWwsGOw26q",
+      "name": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person",
+      "primary": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9"
+    },
+    {
+      "id": "rec3QFeS8kQkADJLD",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rect6zryAP3IF5tTI",
+      "name": "SA - Sportsmanship - Bad Habit I Need to Fix",
+      "primary": "HW1 | SA - Sportsmanship - Bad Habit I Need to Fix | Week 9"
+    },
+    {
+      "id": "recHYj13CmSNciJmO",
+      "weekId": "recd1V4C5KDJm87b1",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "rec4MHWKWwsGOw26q",
+      "name": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person",
+      "primary": "HW2 | SA - Leadership - Sportsmanship: Being a Great Teammate and Person | Week 9"
+    },
+    {
+      "id": "rec5IkbClIKD1V7lq",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rechVLOeyEVIqmy2v",
+      "name": "SA - Personal Game Plan - Shot Tracker Usage",
+      "primary": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1"
+    },
+    {
+      "id": "recXmzyqJq5Dm7bL0",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "rec6WmXjpLtIWDERo",
+      "name": "SA - Personal Game Plan - Website Exploration",
+      "primary": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1"
+    },
+    {
+      "id": "recC4H3eTWPLkcvCT",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rechVLOeyEVIqmy2v",
+      "name": "SA - Personal Game Plan - Shot Tracker Usage",
+      "primary": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1"
+    },
+    {
+      "id": "recNqdq6QBBFFDOHF",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "rec6WmXjpLtIWDERo",
+      "name": "SA - Personal Game Plan - Website Exploration",
+      "primary": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1"
+    },
+    {
+      "id": "recbRkUvjgTjqLUeY",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rechVLOeyEVIqmy2v",
+      "name": "SA - Personal Game Plan - Shot Tracker Usage",
+      "primary": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1"
+    },
+    {
+      "id": "recj7d99PVTpoVbuE",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "rec6WmXjpLtIWDERo",
+      "name": "SA - Personal Game Plan - Website Exploration",
+      "primary": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1"
+    },
+    {
+      "id": "recU3boUazeaDUX8Q",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rechVLOeyEVIqmy2v",
+      "name": "SA - Personal Game Plan - Shot Tracker Usage",
+      "primary": "HW1 | SA - Personal Game Plan - Shot Tracker Usage | Week 1"
+    },
+    {
+      "id": "recaUqQXJ8eoVo46x",
+      "weekId": "recnMGC2JBHjO0ay6",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "rec6WmXjpLtIWDERo",
+      "name": "SA - Personal Game Plan - Website Exploration",
+      "primary": "HW2 | SA - Personal Game Plan - Website Exploration | Week 1"
+    },
+    {
+      "id": "recEDFPGMEKrLeAbn",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "reca016CCQwKClY1K",
+      "name": "SA - Growth Mindset - Self Esteem and Accomplisment",
+      "primary": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4"
+    },
+    {
+      "id": "recXzjHredNI7LARq",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "rec9cOETen8FxO724",
+      "name": "SA - Growth Mindset - Layup Series Homework",
+      "primary": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4"
+    },
+    {
+      "id": "rec30vho6DmBA59oe",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "reca016CCQwKClY1K",
+      "name": "SA - Growth Mindset - Self Esteem and Accomplisment",
+      "primary": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4"
+    },
+    {
+      "id": "recFYhSsF7HzHO1ex",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "rec9cOETen8FxO724",
+      "name": "SA - Growth Mindset - Layup Series Homework",
+      "primary": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4"
+    },
+    {
+      "id": "recV6cNL67NBaltG3",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "reca016CCQwKClY1K",
+      "name": "SA - Growth Mindset - Self Esteem and Accomplisment",
+      "primary": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4"
+    },
+    {
+      "id": "rec1VAymVlWWdaCDA",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "rec9cOETen8FxO724",
+      "name": "SA - Growth Mindset - Layup Series Homework",
+      "primary": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4"
+    },
+    {
+      "id": "recGP5vYfdMS3VQAp",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "reca016CCQwKClY1K",
+      "name": "SA - Growth Mindset - Self Esteem and Accomplisment",
+      "primary": "HW1 | SA - Growth Mindset - Self Esteem and Accomplisment | Week 4"
+    },
+    {
+      "id": "reccSafOcEIzTjlpy",
+      "weekId": "reciDzF3dUk32AoeD",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "rec9cOETen8FxO724",
+      "name": "SA - Growth Mindset - Layup Series Homework",
+      "primary": "HW2 | SA - Growth Mindset - Layup Series Homework | Week 4"
+    },
+    {
+      "id": "recYxwp2F6g5CbHUi",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "recHbROQu2tAtUzMg",
+      "name": "SA - Growth Mindset - Touch and Talk",
+      "primary": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5"
+    },
+    {
+      "id": "rec8tW0z8G7dittNR",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "reccGb6KbwG6lmeLs",
+      "name": "SA - Intentional Practice - 5 Spot Shooting Locations",
+      "primary": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5"
+    },
+    {
+      "id": "recUN1aDI0eRhetso",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "recHbROQu2tAtUzMg",
+      "name": "SA - Growth Mindset - Touch and Talk",
+      "primary": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5"
+    },
+    {
+      "id": "rec8CMrSWycy9JflA",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "reccGb6KbwG6lmeLs",
+      "name": "SA - Intentional Practice - 5 Spot Shooting Locations",
+      "primary": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5"
+    },
+    {
+      "id": "recdD8icLalEndNI3",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "recHbROQu2tAtUzMg",
+      "name": "SA - Growth Mindset - Touch and Talk",
+      "primary": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5"
+    },
+    {
+      "id": "recHi3fUIz6hOmQsN",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "reccGb6KbwG6lmeLs",
+      "name": "SA - Intentional Practice - 5 Spot Shooting Locations",
+      "primary": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5"
+    },
+    {
+      "id": "rectdMP7qAf9zQ3GN",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "recHbROQu2tAtUzMg",
+      "name": "SA - Growth Mindset - Touch and Talk",
+      "primary": "HW1 | SA - Growth Mindset - Touch and Talk | Week 5"
+    },
+    {
+      "id": "recfVZ4P1F4xPIJbO",
+      "weekId": "recUPkXtsDOHnY5q7",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "reccGb6KbwG6lmeLs",
+      "name": "SA - Intentional Practice - 5 Spot Shooting Locations",
+      "primary": "HW2 | SA - Intentional Practice - 5 Spot Shooting Locations | Week 5"
+    },
+    {
+      "id": "recfGHA7BPJBfdzXJ",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "reck6ahIq4ArLuNeH",
+      "name": "Char33 - Responsibility - The Choice is Yours",
+      "primary": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3"
+    },
+    {
+      "id": "recT1fuQ6eEtyfzAa",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "rechZeLk7iNQMGZAs",
+      "name": "SA - Personal Game Plan - Shooting Form and Technique",
+      "primary": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3"
+    },
+    {
+      "id": "rec4SNxP0Qlr1YLua",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "reck6ahIq4ArLuNeH",
+      "name": "Char33 - Responsibility - The Choice is Yours",
+      "primary": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3"
+    },
+    {
+      "id": "recg0X8Wj21HD8tWY",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "rechZeLk7iNQMGZAs",
+      "name": "SA - Personal Game Plan - Shooting Form and Technique",
+      "primary": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3"
+    },
+    {
+      "id": "recr512TYhE2gvH75",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "reck6ahIq4ArLuNeH",
+      "name": "Char33 - Responsibility - The Choice is Yours",
+      "primary": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3"
+    },
+    {
+      "id": "rec1QPj5ScsxZUFNf",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "rechZeLk7iNQMGZAs",
+      "name": "SA - Personal Game Plan - Shooting Form and Technique",
+      "primary": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3"
+    },
+    {
+      "id": "recVrD0LnORWmQfaF",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "reck6ahIq4ArLuNeH",
+      "name": "Char33 - Responsibility - The Choice is Yours",
+      "primary": "HW1 | Char33 - Responsibility - The Choice is Yours | Week 3"
+    },
+    {
+      "id": "recJWMCK1W9seqlpe",
+      "weekId": "recaX4EyJ7BWWKfSq",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "rechZeLk7iNQMGZAs",
+      "name": "SA - Personal Game Plan - Shooting Form and Technique",
+      "primary": "HW2 | SA - Personal Game Plan - Shooting Form and Technique | Week 3"
+    },
+    {
+      "id": "reclZOOi3ixe8vqU8",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rechajyOFJf3WsN5f",
+      "name": "SA - Growth Mindset - Visualization: Read, Reflect, Discuss",
+      "primary": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8"
+    },
+    {
+      "id": "recWcgIQUKmlABXeo",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "recydsZbHevk4Ts50",
+      "name": "SA - Growth Mindset - Build Your Freethrow Routine",
+      "primary": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8"
+    },
+    {
+      "id": "recy4rem1gijxKp0l",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rechajyOFJf3WsN5f",
+      "name": "SA - Growth Mindset - Visualization: Read, Reflect, Discuss",
+      "primary": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8"
+    },
+    {
+      "id": "recXNERl1d9GkOWAk",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "recydsZbHevk4Ts50",
+      "name": "SA - Growth Mindset - Build Your Freethrow Routine",
+      "primary": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8"
+    },
+    {
+      "id": "recbY6hLvJZNh4eet",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rechajyOFJf3WsN5f",
+      "name": "SA - Growth Mindset - Visualization: Read, Reflect, Discuss",
+      "primary": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8"
+    },
+    {
+      "id": "rechvVbFI1ZshKunG",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "recydsZbHevk4Ts50",
+      "name": "SA - Growth Mindset - Build Your Freethrow Routine",
+      "primary": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8"
+    },
+    {
+      "id": "reclH8pWuEmbhgCiG",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rechajyOFJf3WsN5f",
+      "name": "SA - Growth Mindset - Visualization: Read, Reflect, Discuss",
+      "primary": "HW1 | SA - Growth Mindset - Visualization: Read, Reflect, Discuss | Week 8"
+    },
+    {
+      "id": "recdoOVUBFnxM19jC",
+      "weekId": "recNmS6xlp3HOWPAE",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "recydsZbHevk4Ts50",
+      "name": "SA - Growth Mindset - Build Your Freethrow Routine",
+      "primary": "HW2 | SA - Growth Mindset - Build Your Freethrow Routine | Week 8"
+    },
+    {
+      "id": "rec517EFlawEXB2gF",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW1",
+      "hwId": "rechqjA9SKlHRVBBM",
+      "name": "SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim",
+      "primary": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee"
+    },
+    {
+      "id": "recHL5jvVqNWestsx",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "recK7BDVSpHy2ipCS",
+      "slot": "HW2",
+      "hwId": "reczzzcR1Ru8MqbmH",
+      "name": "SA - Growth Mindset - Goal Setting - What GOATS do!",
+      "primary": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6"
+    },
+    {
+      "id": "reci9LPyVr4wisJH6",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW1",
+      "hwId": "rechqjA9SKlHRVBBM",
+      "name": "SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim",
+      "primary": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee"
+    },
+    {
+      "id": "recUkC6jS129f82mZ",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "recv9aWnHanY2sRgk",
+      "slot": "HW2",
+      "hwId": "reczzzcR1Ru8MqbmH",
+      "name": "SA - Growth Mindset - Goal Setting - What GOATS do!",
+      "primary": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6"
+    },
+    {
+      "id": "recMPUdnUKUDxLzuG",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW1",
+      "hwId": "rechqjA9SKlHRVBBM",
+      "name": "SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim",
+      "primary": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee"
+    },
+    {
+      "id": "recp4VeZCO1aHpR0M",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "rec2VQFfGJa1ofA06",
+      "slot": "HW2",
+      "hwId": "reczzzcR1Ru8MqbmH",
+      "name": "SA - Growth Mindset - Goal Setting - What GOATS do!",
+      "primary": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6"
+    },
+    {
+      "id": "rec9Ty6cT7E7nFaOh",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW1",
+      "hwId": "rechqjA9SKlHRVBBM",
+      "name": "SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim",
+      "primary": "HW1 | SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim | Wee"
+    },
+    {
+      "id": "recUWm8Gcr9gE7qVh",
+      "weekId": "recEYLwDOOYMMsDNf",
+      "gbId": "rec75ruo3XT5nSvaK",
+      "slot": "HW2",
+      "hwId": "reczzzcR1Ru8MqbmH",
+      "name": "SA - Growth Mindset - Goal Setting - What GOATS do!",
+      "primary": "HW2 | SA - Growth Mindset - Goal Setting - What GOATS do! | Week 6"
+    }
+  ],
+  "skippedExisting": [
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|reclWDQZzKbVBtdhG|HW1|rec8oexrgOV5OWCRw",
+      "name": "SA - Mastery - Shooting Challenge Final Reflection Quiz"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recrTwxqXz31fNZ7e|reclWDQZzKbVBtdhG|HW2|rec1KJZYvonmdZGZ7",
+      "name": "SA - Mastery - Shot Tracker: Summary and What You Learned"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|reclWDQZzKbVBtdhG|HW1|rec1iHGFpNLdu9Lyk",
+      "name": "SA - Relationships - Thank You Note"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recbw58r8MlnhbBx7|reclWDQZzKbVBtdhG|HW2|recuKQPsGXUvhvlm9",
+      "name": "SA - Growth Mindset - Coach Yourself"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|reclWDQZzKbVBtdhG|HW1|rect6zryAP3IF5tTI",
+      "name": "SA - Sportsmanship - Bad Habit I Need to Fix"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recd1V4C5KDJm87b1|reclWDQZzKbVBtdhG|HW2|rec4MHWKWwsGOw26q",
+      "name": "SA - Leadership - Sportsmanship: Being a Great Teammate and Person"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+      "name": "SA - Personal Game Plan - Shot Tracker Usage"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recnMGC2JBHjO0ay6|reclWDQZzKbVBtdhG|HW2|rec6WmXjpLtIWDERo",
+      "name": "SA - Personal Game Plan - Website Exploration"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|reclWDQZzKbVBtdhG|HW1|reca016CCQwKClY1K",
+      "name": "SA - Growth Mindset - Self Esteem and Accomplisment"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|reciDzF3dUk32AoeD|reclWDQZzKbVBtdhG|HW2|rec9cOETen8FxO724",
+      "name": "SA - Growth Mindset - Layup Series Homework"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|reclWDQZzKbVBtdhG|HW1|recHbROQu2tAtUzMg",
+      "name": "SA - Growth Mindset - Touch and Talk"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recUPkXtsDOHnY5q7|reclWDQZzKbVBtdhG|HW2|reccGb6KbwG6lmeLs",
+      "name": "SA - Intentional Practice - 5 Spot Shooting Locations"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|reclWDQZzKbVBtdhG|HW1|reck6ahIq4ArLuNeH",
+      "name": "Char33 - Responsibility - The Choice is Yours"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recaX4EyJ7BWWKfSq|reclWDQZzKbVBtdhG|HW2|rechZeLk7iNQMGZAs",
+      "name": "SA - Personal Game Plan - Shooting Form and Technique"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|reclWDQZzKbVBtdhG|HW1|rechajyOFJf3WsN5f",
+      "name": "SA - Growth Mindset - Visualization: Read, Reflect, Discuss"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recNmS6xlp3HOWPAE|reclWDQZzKbVBtdhG|HW2|recydsZbHevk4Ts50",
+      "name": "SA - Growth Mindset - Build Your Freethrow Routine"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|reclWDQZzKbVBtdhG|HW1|rechqjA9SKlHRVBBM",
+      "name": "SA - Intentional Practice - Mikan Drill -  Footwork, Weak Hand, and Touch Around the Rim"
+    },
+    {
+      "sk": "rec5mEM0YPqPqq0hZ|recEYLwDOOYMMsDNf|reclWDQZzKbVBtdhG|HW2|reczzzcR1Ru8MqbmH",
+      "name": "SA - Growth Mindset - Goal Setting - What GOATS do!"
+    }
+  ],
+  "skippedNoSlot": [],
+  "errors": [],
+  "plannedCreate": 72,
+  "bucketCount": 45,
+  "finishedAt": "2026-08-06T00:07:19.185Z"
+}

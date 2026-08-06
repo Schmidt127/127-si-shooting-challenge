@@ -1,0 +1,479 @@
+{
+  "steps": [
+    "desc_Program Homework Assignment",
+    "desc_Homework Assignment",
+    "desc_Program Instance",
+    "desc_Week",
+    "desc_Grade Band",
+    "desc_Homework Slot",
+    "desc_Active?",
+    "desc_Schedule Key",
+    "desc_Program Homework Assignment Display",
+    "desc_Homework Completions",
+    "desc_Program Instance RID",
+    "desc_Week RID",
+    "desc_Grade Band RID",
+    "desc_Homework Assignment RID",
+    "create_operator_status",
+    "create_operator_notes",
+    "create_completions_count",
+    "hc_desc_Weekly Athlete Summary",
+    "hc_desc_Weekly Athlete Summary Link",
+    "hc_desc_Program Homework Assignment",
+    "hc_desc_Homework Completion Key",
+    "hc_desc_Homework",
+    "was_homework_desc"
+  ],
+  "created": [
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "name": "Operator Status",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "IF(\n  OR(\n    NOT({fld32hpKiGx5l8ZhI}),\n    NOT({fldrB2gcduTaqxnsl}),\n    NOT({fld3S4XdwY6sq4BPZ}),\n    NOT({fldWNwh6Z3pxVwTes}),\n    NOT({fldtNNM0a6DoxmuaF})\n  ),\n  \"Incomplete — fill Homework, Program, Week, Grade Band, Slot\",\n  IF(\n    {fldxXLOeCHh09iObk},\n    \"Active — will assign via 033 / resolve via 020\",\n    \"Inactive — ignored by automations\"\n  )\n)",
+          "referencedFieldIds": [
+            "fld32hpKiGx5l8ZhI",
+            "fldrB2gcduTaqxnsl",
+            "fld3S4XdwY6sq4BPZ",
+            "fldWNwh6Z3pxVwTes",
+            "fldtNNM0a6DoxmuaF",
+            "fldxXLOeCHh09iObk"
+          ],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldQj0sRVkpXY1aZ4",
+        "name": "Operator Status",
+        "description": "At-a-glance health for Mike: Incomplete / Active / Inactive. Fix Incomplete before relying on Automation 033."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "name": "Operator Notes",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multilineText",
+        "id": "fldrYbahF9R1CPTL2",
+        "name": "Operator Notes",
+        "description": "Freeform notes for why this week/slot uses this library record. Not read by automations."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "name": "Completions Count",
+      "ok": false,
+      "status": 422,
+      "body": {
+        "error": {
+          "type": "INVALID_FIELD_TYPE_OPTIONS_FOR_CREATE",
+          "message": "Invalid options for Program Homework Assignments.Completions Count: Failed schema validation: isValid is not included in the Completions Count.options schema"
+        }
+      }
+    }
+  ],
+  "updated": [
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldNlOuvCiLmQRt1e",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "singleLineText",
+        "id": "fldNlOuvCiLmQRt1e",
+        "name": "Program Homework Assignment",
+        "description": "Primary label Mike edits (or leave blank and use Display). Prefer one row per Program Instance + Week + Grade Band + Slot."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fld32hpKiGx5l8ZhI",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblUuxwYlX4EQ9MKE",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fld5hN5VT8gCyyqM7"
+        },
+        "id": "fld32hpKiGx5l8ZhI",
+        "name": "Homework Assignment",
+        "description": "Link ONE reusable FBC Curriculum - SYNC library record. Do not put season Week scheduling only on the library — schedule here."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldrB2gcduTaqxnsl",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblMfALZa4YYUy70P",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldE0QGSS6yfUKEDO"
+        },
+        "id": "fldrB2gcduTaqxnsl",
+        "name": "Program Instance",
+        "description": "Which season/program this assignment belongs to (e.g. Shooting Challenge | 2026-2027)."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fld3S4XdwY6sq4BPZ",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblcsKugv1cla36A6",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldhoZuVOZgvRZv5c"
+        },
+        "id": "fld3S4XdwY6sq4BPZ",
+        "name": "Week",
+        "description": "Challenge week this homework is due/assigned. Reuse the same library across weeks by creating separate PHA rows."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldWNwh6Z3pxVwTes",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblOhHrIqpjcsk2WG",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fld3Hei3Fko4J1wYd"
+        },
+        "id": "fldWNwh6Z3pxVwTes",
+        "name": "Grade Band",
+        "description": "Grade band that receives this assignment (K-2, 3-4, 5-6, 7-8, 9-12)."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldtNNM0a6DoxmuaF",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "singleSelect",
+        "options": {
+          "choices": [
+            {
+              "id": "selPXG4DCyYpH5wQm",
+              "name": "HW1",
+              "color": "grayLight2"
+            },
+            {
+              "id": "selwaoo0P83Q6r8dB",
+              "name": "HW2",
+              "color": "grayLight2"
+            }
+          ]
+        },
+        "id": "fldtNNM0a6DoxmuaF",
+        "name": "Homework Slot",
+        "description": "HW1 or HW2 — matches Submission Asset Purpose / Fillout slot."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldxXLOeCHh09iObk",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "checkbox",
+        "options": {
+          "icon": "check",
+          "color": "greenBright"
+        },
+        "id": "fldxXLOeCHh09iObk",
+        "name": "Active?",
+        "description": "Unchecked = ignored by Automation 033 / 020. Use to retire without deleting."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldSgoJUI37aPnvrJ",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "IF(\n  AND(\n    {fld37Vw1oLvknFRHj},\n    {fldFCQ2z9Bwg1Y8YY},\n    {fld4Dpsd837yGkoPX},\n    {fldtNNM0a6DoxmuaF},\n    {fld0fcG9TDBXBlVDc}\n  ),\n  ARRAYJOIN({fld37Vw1oLvknFRHj}) & \"|\" & ARRAYJOIN({fldFCQ2z9Bwg1Y8YY}) & \"|\" & ARRAYJOIN({fld4Dpsd837yGkoPX}) & \"|\" & {fldtNNM0a6DoxmuaF} & \"|\" & ARRAYJOIN({fld0fcG9TDBXBlVDc}),\n  BLANK()\n)",
+          "referencedFieldIds": [
+            "fld37Vw1oLvknFRHj",
+            "fldFCQ2z9Bwg1Y8YY",
+            "fld4Dpsd837yGkoPX",
+            "fldtNNM0a6DoxmuaF",
+            "fld0fcG9TDBXBlVDc"
+          ],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldSgoJUI37aPnvrJ",
+        "name": "Schedule Key",
+        "description": "Auto dedupe fingerprint: ProgramInstance|Week|GradeBand|Slot|Homework. Two Active rows with the same key = operator error."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldp3eQIQQKi6StzU",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "ARRAYJOIN({fld32hpKiGx5l8ZhI}) & \" | \" & ARRAYJOIN({fldrB2gcduTaqxnsl}) & \" | \" & ARRAYJOIN({fld3S4XdwY6sq4BPZ}) & \" | \" & ARRAYJOIN({fldWNwh6Z3pxVwTes}) & \" | \" & IF({fldtNNM0a6DoxmuaF}, {fldtNNM0a6DoxmuaF}, \"\")",
+          "referencedFieldIds": [
+            "fld32hpKiGx5l8ZhI",
+            "fldrB2gcduTaqxnsl",
+            "fld3S4XdwY6sq4BPZ",
+            "fldWNwh6Z3pxVwTes",
+            "fldtNNM0a6DoxmuaF"
+          ],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldp3eQIQQKi6StzU",
+        "name": "Program Homework Assignment Display",
+        "description": "Read-only human summary: Library | Program | Week | Grade Band | Slot."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldDg9PXNr0i9YnX7",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblv58ppTFDBXb3nv",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldmhkFv4qVxfnROP"
+        },
+        "id": "fldDg9PXNr0i9YnX7",
+        "name": "Homework Completions",
+        "description": "Inverse link — completions that resolved to this scheduled assignment."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fld37Vw1oLvknFRHj",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleLookupValues",
+        "options": {
+          "isValid": true,
+          "recordLinkFieldId": "fldrB2gcduTaqxnsl",
+          "fieldIdInLinkedTable": "fldIR3bOa82zrGrmt",
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fld37Vw1oLvknFRHj",
+        "name": "Program Instance RID",
+        "description": "Lookup helper for Schedule Key — do not edit."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fldFCQ2z9Bwg1Y8YY",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleLookupValues",
+        "options": {
+          "isValid": true,
+          "recordLinkFieldId": "fld3S4XdwY6sq4BPZ",
+          "fieldIdInLinkedTable": "fld5u278sXt1d4QvM",
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldFCQ2z9Bwg1Y8YY",
+        "name": "Week RID",
+        "description": "Lookup helper for Schedule Key — do not edit."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fld4Dpsd837yGkoPX",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleLookupValues",
+        "options": {
+          "isValid": true,
+          "recordLinkFieldId": "fldWNwh6Z3pxVwTes",
+          "fieldIdInLinkedTable": "fld6ZJh9vcNXgk1d4",
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fld4Dpsd837yGkoPX",
+        "name": "Grade Band RID",
+        "description": "Lookup helper for Schedule Key — do not edit."
+      }
+    },
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "fieldId": "fld0fcG9TDBXBlVDc",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleLookupValues",
+        "options": {
+          "isValid": true,
+          "recordLinkFieldId": "fld32hpKiGx5l8ZhI",
+          "fieldIdInLinkedTable": "fld7CcreHRXc4ZXeg",
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fld0fcG9TDBXBlVDc",
+        "name": "Homework Assignment RID",
+        "description": "Lookup helper for Schedule Key — do not edit."
+      }
+    },
+    {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldhpGNYnu2l3bpUP",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "singleLineText",
+        "id": "fldhpGNYnu2l3bpUP",
+        "name": "Weekly Athlete Summary",
+        "description": "LEGACY unused text field. Do not write. Canonical relationship is Weekly Athlete Summary Link."
+      }
+    },
+    {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldkoEbVnCugcMCCi",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tbl9520d72adxlAKQ",
+          "isReversed": false,
+          "prefersSingleRecordLink": true,
+          "inverseLinkFieldId": "fld7IEpY1KsacJTM6"
+        },
+        "id": "fldkoEbVnCugcMCCi",
+        "name": "Weekly Athlete Summary Link",
+        "description": "Canonical link to Weekly Athlete Summary. Written by Automation 020 (from Submission) / maintained for quiz via 067 patterns."
+      }
+    },
+    {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldmhkFv4qVxfnROP",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblhA3maf7xOa8EUS",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldDg9PXNr0i9YnX7"
+        },
+        "id": "fldmhkFv4qVxfnROP",
+        "name": "Program Homework Assignment",
+        "description": "Scheduled junction row (PHA). Written by Automation 020 when resolvable. Library Homework link remains required for XP/display."
+      }
+    },
+    {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldSxUIDwVd6xUhhC",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "formula",
+        "options": {
+          "isValid": true,
+          "formula": "ARRAYJOIN({fldfK3h5ucx3WdFNS}) & \"|\" & ARRAYJOIN({fldesgOUPcUoo9S2q}) & \"|\" & ARRAYJOIN({fldotQdQqQ7RKVQGg})",
+          "referencedFieldIds": [
+            "fldfK3h5ucx3WdFNS",
+            "fldesgOUPcUoo9S2q",
+            "fldotQdQqQ7RKVQGg"
+          ],
+          "result": {
+            "type": "singleLineText"
+          }
+        },
+        "id": "fldSxUIDwVd6xUhhC",
+        "name": "Homework Completion Key",
+        "description": "Identity helper: Enrollment|Week|Homework. One HC per enrollment+week+library preferred; 020 also scopes by Submission+slot."
+      }
+    },
+    {
+      "tableId": "tblv58ppTFDBXb3nv",
+      "fieldId": "fldotQdQqQ7RKVQGg",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblUuxwYlX4EQ9MKE",
+          "isReversed": false,
+          "prefersSingleRecordLink": true,
+          "inverseLinkFieldId": "fld4swY3XDC0Bn4Er"
+        },
+        "id": "fldotQdQqQ7RKVQGg",
+        "name": "Homework",
+        "description": "Reusable FBC Curriculum - SYNC library record (not the schedule row)."
+      }
+    },
+    {
+      "tableId": "tbl9520d72adxlAKQ",
+      "fieldId": "fld3h3FZAoEVvDM4q",
+      "ok": true,
+      "status": 200,
+      "body": {
+        "type": "multipleRecordLinks",
+        "options": {
+          "linkedTableId": "tblUuxwYlX4EQ9MKE",
+          "isReversed": false,
+          "prefersSingleRecordLink": false,
+          "inverseLinkFieldId": "fldt2z0Lt95YbJ2kl"
+        },
+        "id": "fld3h3FZAoEVvDM4q",
+        "name": "Homework",
+        "description": "Assigned reusable library homework for this week (from Automation 033 via Program Homework Assignments when present, else legacy curriculum Week+Grade Band match). Perfect Week / rollups read this list."
+      }
+    }
+  ],
+  "errors": [
+    {
+      "tableId": "tblhA3maf7xOa8EUS",
+      "name": "Completions Count",
+      "body": {
+        "error": {
+          "type": "INVALID_FIELD_TYPE_OPTIONS_FOR_CREATE",
+          "message": "Invalid options for Program Homework Assignments.Completions Count: Failed schema validation: isValid is not included in the Completions Count.options schema"
+        }
+      }
+    }
+  ],
+  "finishedAt": "2026-08-06T00:05:14.207Z"
+}

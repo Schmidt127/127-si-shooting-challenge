@@ -62,7 +62,7 @@ flowchart LR
 | REL-02 | High | Concurrent WAS create race: **031 + 101 + 118** | Agent 9 WAS contract |
 | REL-03 | Critical | Recording path must never write Zoom Meetings.`Attendees` | foundation matrix; 101 double-credit |
 | REL-04 | High | Text stubs on Weeks (`Video Feedback`, `Submission Assets`, `Homework 2`, `XP Events copy`) look like links but are singleLineText | `schema-snapshot` |
-| REL-05 | Medium | HC `Weekly Athlete Summary` text field vs `Weekly Athlete Summary Link` — text pretending to be relationship | `schema-snapshot` |
+| REL-05 | Medium | HC `Weekly Athlete Summary` text (`fldhpGNYnu2l3bpUP`) vs Link (`fldkoEbVnCugcMCCi`) — text is unused/legacy; Link is canonical (020/065/057 via inverse). Do not treat empty text as missing WAS. Cleanup later. | `schema-snapshot` + 2026-08-05 evidence |
 | REL-06 | High | Enrollment↔Config is **not** a direct link; year mismatches possible if School Year text drifts from Config / Program Instance | `schema-snapshot` + config-selection tests |
 | REL-07 | Medium | Submissions may link Athlete and Enrollment; Athlete-only paths are ambiguous for multi-year athletes | `schema-snapshot` |
 | REL-08 | High | Homework Completions key uses ARRAYJOIN of linked primaries (display names), not RIDs — rename of Week Name / Homework title changes key display identity | formula audit |
@@ -75,7 +75,7 @@ flowchart LR
 | Location | Text / formula | Prefer |
 |----------|---------------|--------|
 | Weeks | `Video Feedback`, `Submission Assets` text | Real links if still needed; else Hide |
-| HC | `Weekly Athlete Summary` text | Use `Weekly Athlete Summary Link` only |
+| HC | `Weekly Athlete Summary` text (`fldhpGNYnu2l3bpUP`) | Use `Weekly Athlete Summary Link` only (`fldkoEbVnCugcMCCi`); text unused — later cleanup |
 | Ach Unlocks | `Week Summary`, `XP Events copy` text | Links already exist |
 | XP / WAS | Display-based `Weekly Summary Key` | Prefer `Summary Key` (Enrollment Key + Week Key RIDs) |
 

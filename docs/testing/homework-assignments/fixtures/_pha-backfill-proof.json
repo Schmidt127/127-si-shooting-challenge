@@ -1,0 +1,174 @@
+{
+  "created": {
+    "phaHw1": {
+      "id": "reca5GM1JkROhXOiy",
+      "created": true,
+      "scheduleKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+      "display": "SA - Personal Game Plan - Shot Tracker Usage | Shooting Challenge | 2026-2027 | PWTEST|2026-08-05|CASE-01|WEEK | 3-4 | HW1"
+    },
+    "phaHw2": {
+      "id": "reccQhrgOK8e8Yngv",
+      "created": true,
+      "scheduleKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW2|rec6WmXjpLtIWDERo",
+      "display": "SA - Personal Game Plan - Website Exploration | Shooting Challenge | 2026-2027 | PWTEST|2026-08-05|CASE-01|WEEK | 3-4 | HW2"
+    },
+    "hcHw1": {
+      "id": "recqXxlOpATQI3sD4",
+      "created": true
+    },
+    "hcHw2": {
+      "id": "rechzFmWrUp1tonto",
+      "created": true
+    }
+  },
+  "tests": {
+    "dedupe": {
+      "originalKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+      "duplicateId": "recJereeSCdlwlNzk",
+      "duplicateKey": "rec5mEM0YPqPqq0hZ|reci5GdxEC57vfoS3|reclWDQZzKbVBtdhG|HW1|rechVLOeyEVIqmy2v",
+      "keysMatch": true,
+      "duplicateDeleted": true
+    },
+    "reuse": {
+      "pass": true,
+      "libraryId": "rechVLOeyEVIqmy2v",
+      "phaA": "reca5GM1JkROhXOiy",
+      "phaB": "rec0PFh6YAGHMt7Ie",
+      "weekA": "reci5GdxEC57vfoS3",
+      "weekB": "rec2Rewxt21z7dI9f",
+      "note": "Same library scheduled on two Weeks via two junction records; library Week field untouched.",
+      "cleanupDeleted": "rec0PFh6YAGHMt7Ie"
+    },
+    "historicalSafety": {
+      "pass": true
+    },
+    "slotResolution": {
+      "pha1Slot": "HW1",
+      "pha2Slot": "HW2",
+      "pass": true
+    },
+    "completionLinkage": {
+      "hc1": {
+        "Homework Completion Full Name": "Schmidt, Testing - 2026-2027 - SA - Personal Game Plan - Shot Tracker Usage - PWTEST|2026-08-05|CASE-01|WEEK",
+        "Review Status": "Reviewed",
+        "Completion Status": "Satisfactory",
+        "Activity XP Display Label": "Unable to generate formula",
+        "Submitted File Review Summary": "Files: \n\nLinks:\n",
+        "Homework Completions RID": "recqXxlOpATQI3sD4",
+        "Review Complete": true,
+        "Homework Completion Key": "\"Schmidt, Testing - 2026-2027\"|PWTEST|2026-08-05|CASE-01|WEEK|SA - Personal Game Plan - Shot Tracker Usage",
+        "Created": "2026-08-05T23:10:52.000Z",
+        "Total Linked Submission Assets (rollup)": 0,
+        " Submission Asset Count": 0,
+        "Week": [
+          "reci5GdxEC57vfoS3"
+        ],
+        "Enrollment": [
+          "recCyFEPeATOVNlr9"
+        ],
+        "Satisfactory?": true,
+        "Weekly Athlete Summary Link": [
+          "recKebuZ79QFTwivA"
+        ],
+        "Program Homework Assignment": [
+          "reca5GM1JkROhXOiy"
+        ],
+        "Item Slot": "HW1",
+        "Homework": [
+          "rechVLOeyEVIqmy2v"
+        ],
+        "All Submitted Files Uploaded?": 0,
+        "Asset Key": "AST-recqXxlOpATQI3sD4",
+        "Completion Summary": "Satisfactory",
+        "Upload Ready?": 0,
+        "Grade Band": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "Total Homework XP Awarded": 0,
+        "Full Athlete Name - Backward (from Enrollment)": [
+          "Schmidt, Testing - 2026-2027"
+        ],
+        "Total Uploaded Submission Assets (rollup)": 0,
+        "Asset Slot": "HW1"
+      },
+      "hc2": {
+        "Homework Completion Full Name": "Schmidt, Testing - 2026-2027 - SA - Personal Game Plan - Website Exploration - PWTEST|2026-08-05|CASE-01|WEEK",
+        "Review Status": "Reviewed",
+        "Completion Status": "Satisfactory",
+        "Activity XP Display Label": "Unable to generate formula",
+        "Submitted File Review Summary": "Files: \n\nLinks:\n",
+        "Homework Completions RID": "rechzFmWrUp1tonto",
+        "Review Complete": true,
+        "Homework Completion Key": "\"Schmidt, Testing - 2026-2027\"|PWTEST|2026-08-05|CASE-01|WEEK|SA - Personal Game Plan - Website Exploration",
+        "Created": "2026-08-05T23:10:53.000Z",
+        "Total Linked Submission Assets (rollup)": 0,
+        " Submission Asset Count": 0,
+        "Week": [
+          "reci5GdxEC57vfoS3"
+        ],
+        "Enrollment": [
+          "recCyFEPeATOVNlr9"
+        ],
+        "Satisfactory?": true,
+        "Weekly Athlete Summary Link": [
+          "recKebuZ79QFTwivA"
+        ],
+        "Program Homework Assignment": [
+          "reccQhrgOK8e8Yngv"
+        ],
+        "Item Slot": "HW2",
+        "Homework": [
+          "rec6WmXjpLtIWDERo"
+        ],
+        "All Submitted Files Uploaded?": 0,
+        "Asset Key": "AST-rechzFmWrUp1tonto",
+        "Completion Summary": "Satisfactory",
+        "Upload Ready?": 0,
+        "Grade Band": [
+          "reclWDQZzKbVBtdhG"
+        ],
+        "Total Homework XP Awarded": 0,
+        "Full Athlete Name - Backward (from Enrollment)": [
+          "Schmidt, Testing - 2026-2027"
+        ],
+        "Total Uploaded Submission Assets (rollup)": 0,
+        "Asset Slot": "HW2"
+      }
+    },
+    "perfectWeekHomeworkCounts": {
+      "assigned": 2,
+      "satisfactory": 2,
+      "pass": true,
+      "note": "Perfect Week Homework Requirement Met? is written by Automation 057 — do not run in this package."
+    }
+  },
+  "legacyWeekLinksBefore": {
+    "rechVLOeyEVIqmy2v": [
+      "recnMGC2JBHjO0ay6"
+    ],
+    "rec6WmXjpLtIWDERo": [
+      "recnMGC2JBHjO0ay6"
+    ]
+  },
+  "wasAfter": {
+    "homework": [
+      "rechVLOeyEVIqmy2v",
+      "rec6WmXjpLtIWDERo"
+    ],
+    "homeworkAssignedCount": 2,
+    "homeworkSatisfactoryCount": 2,
+    "homeworkCompletionsLink": [
+      "recqXxlOpATQI3sD4",
+      "rechzFmWrUp1tonto"
+    ],
+    "automationStatus": "Pending"
+  },
+  "legacyWeekLinksAfter": {
+    "rechVLOeyEVIqmy2v": [
+      "recnMGC2JBHjO0ay6"
+    ],
+    "rec6WmXjpLtIWDERo": [
+      "recnMGC2JBHjO0ay6"
+    ]
+  }
+}
