@@ -19,7 +19,7 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (pending this merge) | No (re-paste v3.1) | PARTIAL (v3.0 fallback only) | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL (v3.0 fallback only) | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |

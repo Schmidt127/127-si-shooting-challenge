@@ -17,14 +17,15 @@
 | `94dbac6` | docs: complete program instance isolation package |
 | `80a35e7` | docs: record PR #92 and commit SHAs on isolation package |
 
-**Merge commit / final master SHA:** `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`) — PR #92 merged.
+**Merge commit / final master SHA (isolation package #92):** `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`).
+**023 v3.1 merge (PR #93):** `1d5ca1a` (`1d5ca1abfff923351b6bbd7db1690da541d7cb84`) — Week→PI fix on `master`.
 
 ## Deployment matrix (authoritative)
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (pending merge) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
