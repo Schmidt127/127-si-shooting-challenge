@@ -210,8 +210,8 @@ MVP homework scheduling is operable in PROD (PHA operator fields + 92 season row
 | Field | Value |
 |-------|--------|
 | Branch | `cursor/final-overnight-summary-1a1b` |
-| Commit | *(appended after push)* |
-| PR | *(appended after PR create)* |
+| Commit | `66a55c9` |
+| PR | [#87](https://github.com/Schmidt127/127-si-shooting-challenge/pull/87) |
 
 ### Merge order (consolidator recommendation)
 

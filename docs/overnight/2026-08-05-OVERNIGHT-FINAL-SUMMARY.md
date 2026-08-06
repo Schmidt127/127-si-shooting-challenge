@@ -651,4 +651,4 @@ Email fixtures → SC-045/088 live proof
 
 ---
 
-*Consolidation commit and PR will be appended to [`2026-08-05-OVERNIGHT-MASTER-HANDOFF.md`](./2026-08-05-OVERNIGHT-MASTER-HANDOFF.md).*
+*Consolidation commit: `66a55c9` · PR [#87](https://github.com/Schmidt127/127-si-shooting-challenge/pull/87)*
