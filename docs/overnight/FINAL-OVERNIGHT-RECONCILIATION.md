@@ -1,5 +1,7 @@
 # Final Overnight Reconciliation — 2026-07-23
 
+> **2026-08-06 addendum (066 natural path):** Automation **066 v3.3** live natural-path test **FAILED** (`createRecordsAsync` missing `fields`). Repo **v3.4** fixes the contract. Do **not** call 066 natural path Live Tested until paste + successful rerun on `recCyFEPeATOVNlr9`. Unlock/XP Live Tested claims remain backfill-path only (overnight Agent 2). See `docs/overnight/2026-08-05-OVERNIGHT-MASTER-HANDOFF.md` and completion master 2026-08-06 reconciliation.
+
 > **Agent 13 banner (2026-07-24):** Authoritative completion state after next-wave Agents 9–12 lives in `docs/next-wave/final-reconciliation/FINAL-RECONCILIATION.md` and the updated Completion Master. Key supersessions: (1) Config rows are **year-specific — do not collapse**; (2) **020 v3.0.0** partially replaces **063**; **013 v2.0** replaces **111**; (3) **115** installed + live-tested; (4) WAS creators hybrid **031/118/101**; (5) XP Dedupe Key fields are formula-only.
 
 **Reconciler:** Agent 6 · Branch: `master` · Environment: PROD `appn84sqPw03zEbTT`  

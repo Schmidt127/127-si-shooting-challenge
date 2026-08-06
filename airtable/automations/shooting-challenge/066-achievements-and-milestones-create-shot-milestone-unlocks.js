@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-07-06 (v3.2 Week date-key fix)
+Last GitHub Update: 2026-08-06 (v3.4 createRecordsAsync fields contract)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,11 +27,14 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.3
+ * Version: v3.4
  * Date Written: 2026-06-17
- * Last Updated: 2026-07-24
+ * Last Updated: 2026-08-06
  *
  * VERSION HISTORY
+ * - v3.4 (2026-08-06): Defensive createRecordsInBatches — accept raw field maps or
+ *   { fields } objects; always call createRecordsAsync with { fields }. Fixes live error
+ *   "records[0] should have a 'fields' property" when creating 2+ unlocks.
  * - v3.3 (2026-07-24): Grade Band match prefers linked record IDs; normalized label is fallback only.
  * - v3.2 (2026-07-06): Week resolution uses 005/034 America/Denver date keys (not UTC ISO slice).
  * - v3.1 (2026-07-05): SCRIPT metadata block separated from CONFIG; batched create/update (50).
@@ -108,10 +111,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.3",
-  versionDate: "2026-07-24",
+  version: "v3.4",
+  versionDate: "2026-08-06",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-07-24",
+  lastUpdated: "2026-08-06",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -605,17 +608,80 @@ function resolveWeekIdForActivityDate(weekRecords, weeksTable, activityDate) {
    SECTION 7 — BATCH WRITE HELPERS
 ========================================================= */
 
+/**
+ * Normalize one create payload to Airtable createRecordsAsync shape.
+ * Accepts either a raw field map OR `{ fields: {...} }` (optional unused `id`).
+ * Keep in sync with lib/066-create-records-batch.js (offline tests).
+ */
+function normalizeCreateRecordPayload(payload, index) {
+  if (payload == null || typeof payload !== "object" || Array.isArray(payload)) {
+    throw new Error(
+      `createRecordsInBatches: payloads[${index}] must be a non-null object ` +
+        `(got ${payload == null ? String(payload) : Array.isArray(payload) ? "array" : typeof payload})`
+    );
+  }
+
+  const keys = Object.keys(payload);
+  const hasFieldsProp = Object.prototype.hasOwnProperty.call(payload, "fields");
+  const fieldsValue = hasFieldsProp ? payload.fields : undefined;
+  const fieldsIsPlainObject =
+    fieldsValue != null && typeof fieldsValue === "object" && !Array.isArray(fieldsValue);
+
+  if (hasFieldsProp && fieldsIsPlainObject) {
+    const siblingKeys = keys.filter((k) => k !== "fields" && k !== "id");
+    if (siblingKeys.length === 0) {
+      if (Object.keys(fieldsValue).length === 0) {
+        throw new Error(`createRecordsInBatches: payloads[${index}].fields is empty`);
+      }
+      return { fields: fieldsValue };
+    }
+  }
+
+  if (keys.length === 0) {
+    throw new Error(`createRecordsInBatches: payloads[${index}] has no fields`);
+  }
+
+  return { fields: payload };
+}
+
+/**
+ * Defensive batch create for Athlete Achievement Unlocks.
+ * Callers may push raw field maps (historical 066) or `{ fields }` objects.
+ * Airtable always receives createRecordsAsync([{ fields: {...} }, ...]).
+ */
 async function createRecordsInBatches(table, payloads) {
   const batchSize = CONFIG.batchSize || 50;
   if (!payloads.length) return;
 
-  for (let i = 0; i < payloads.length; i += batchSize) {
-    const batch = payloads.slice(i, i + batchSize);
-    if (batch.length === 1) {
-      await table.createRecordAsync(batch[0]);
-    } else {
-      await table.createRecordsAsync(batch);
+  const normalized = payloads.map((payload, index) =>
+    normalizeCreateRecordPayload(payload, index)
+  );
+
+  console.log(
+    JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      debugStep: "createRecordsInBatches",
+      payloadCount: payloads.length,
+      normalizedCount: normalized.length,
+      batchSize,
+      sampleFieldKeys: Object.keys(normalized[0].fields).slice(0, 12),
+      inputShape: Object.prototype.hasOwnProperty.call(payloads[0], "fields")
+        ? "fields-wrapped-or-ambiguous"
+        : "raw-field-map",
+    })
+  );
+
+  for (let i = 0; i < normalized.length; i += batchSize) {
+    const batch = normalized.slice(i, i + batchSize);
+    for (let j = 0; j < batch.length; j += 1) {
+      if (!batch[j] || !batch[j].fields || typeof batch[j].fields !== "object") {
+        throw new Error(
+          `createRecordsInBatches: internal normalize failed at absolute index ${i + j} — missing fields`
+        );
+      }
     }
+    await table.createRecordsAsync(batch);
   }
 }
 
@@ -625,6 +691,15 @@ async function updateRecordsInBatches(table, updates) {
 
   for (let i = 0; i < updates.length; i += batchSize) {
     const batch = updates.slice(i, i + batchSize);
+    for (let j = 0; j < batch.length; j += 1) {
+      const row = batch[j];
+      if (!row || !row.id || !row.fields || typeof row.fields !== "object") {
+        throw new Error(
+          `updateRecordsInBatches: updates[${i + j}] must be { id, fields } ` +
+            `(got keys: ${row && typeof row === "object" ? Object.keys(row).join(",") : String(row)})`
+        );
+      }
+    }
     if (batch.length === 1) {
       await table.updateRecordAsync(batch[0].id, batch[0].fields);
     } else {

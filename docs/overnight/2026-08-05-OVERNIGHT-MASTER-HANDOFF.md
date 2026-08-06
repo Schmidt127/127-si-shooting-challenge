@@ -23,7 +23,7 @@
 1. **Grade Band (SC-023):** Live cleared `Grade Band` on `recCyFEPeATOVNlr9`; Automation 002 reassigned **3-4** (`reclWDQZzKbVBtdhG`) in ~6s. PASS.
 2. **XP Date Resolved (SC-048):** Meta API patched SWITCH case `Submission Base`→`Shooting Base` on XP Bucket. `isValid=true`.
 3. **Streaks (SC-029/075):** Inventory PASS — 3 STREAK_XP; Current Streak 8.
-4. **Milestones (SC-027/076):** 066 checkbox path did not fire (blocker). Controlled unlock backfill (066 Source Key contract) → **059** created 8 XP (310 pts). Idempotent rerun 0 creates.
+4. **Milestones (SC-027/076):** Controlled unlock backfill (066 Source Key contract) → **059** created 8 XP (310 pts). Idempotent rerun 0 creates. **2026-08-06 update:** 066 natural path live test **FAILED** on v3.3 — `createRecordsAsync` error `records[0] should have a 'fields' property`. Repo **v3.4** fixes batch create contract. Do **not** call natural path Live Tested until paste + successful rerun.
 5. **Gate block (SC-079):** Level Status Gate Blocked; Gate Debug Sub 9/10, Vid 5/6. PASS for blocking.
 6. **Enrollment 001 (SC-060/061):** Status aligned to Live Tested per existing PROD paste evidence.
 
@@ -33,7 +33,7 @@
 
 | SC | Missing | Mike required? | Next action |
 |----|---------|----------------|-------------|
-| SC-076 natural path | Automation **066** does not clear/run on `Run Shot Milestone Check?` toggle | **Yes** (UI) | Attest 066 ON + trigger; Test with Schmidt; paste if script stale |
+| SC-076 natural path | **066 v3.3 FAILED** live (`fields` property); repo **v3.4** not pasted | **Yes** (UI paste + Test) | Paste entire `066-…js` v3.4; Test with `recordId=recCyFEPeATOVNlr9` (not `recgP9qZYjAhE7NXm`); expect link/skip existing unlocks — **no duplicate XP** |
 | SC-080 gate clear | Needs Sub 10/10 + Vid 6/6 (currently 9 + 5) | No for Sub; Yes for video fixture | Add one counted submission; add one video feedback |
 | unloadData paste pack | 031/035/042/114/118/119 still Pending paste | **Yes** (UI paste) | Follow `active-automation-unloadData-compat.md` |
 | SC-046/047 | Remaining multi-writer UI attestation | Yes | Continue ownership packet |
@@ -57,9 +57,10 @@ See completion master Dashboard reconciliation “Overnight Agent 2 foundation�
 - 8 Athlete Achievement Unlocks + 8 Shot Milestone XP Events (310 pts); Lifetime XP 378→688
 
 ### Scripts / automations
-- No Airtable script paste this session (002 already functional in PROD)
+- No Airtable script paste in Agent 2 overnight session (002 already functional in PROD)
 - Repo tools: `tools/testing/agent2_*.mjs`
-- 059 **did** auto-fire on new unlocks (milestone path); 066 checkbox path did not
+- 059 **did** auto-fire on new unlocks (milestone path); 066 natural multi-create later **FAILED** live (v3.3 `fields` contract) — repo **v3.4** pending paste
+- Follow-up: `cursor/066-create-records-fields-fix-e22f`
 
 ### Formulas / relationships
 - Fixed `XP Date Resolved` SWITCH case for Shooting Base
@@ -76,27 +77,43 @@ See completion master Dashboard reconciliation “Overnight Agent 2 foundation�
 `docs/testing/evidence/2026-08-05-agent2-foundation/`
 
 ### Blockers bypassed
-066 not firing → unlock backfill with identical Source Keys → 059 XP
+066 natural create failed / earlier checkbox confusion → unlock backfill with identical Source Keys → 059 XP
 
 ### Unresolved blockers
-066 UI enable; SC-080 gate clear (need 1 submission + 1 video); unloadData paste pack for 031/035/042/114/118/119
+**Paste 066 v3.4** (fields contract) + prove natural checkbox on `recCyFEPeATOVNlr9` without duplicate XP; SC-080 gate clear (need 1 submission + 1 video); unloadData paste pack for 031/035/042/114/118/119
 
 ### Independent decisions
 1. Treat MIKE-ACTIONS “change Submission Base→Shooting Base” as correct (SWITCH is on XP Bucket, not XP Source).
 2. Prefer controlled unlock backfill over inventing a second XP writer when 066 is dead.
 3. Do not delete legacy Grade Bands tonight (only Target Goal Shots links remain).
+4. **(2026-08-06)** Do not mark 066 natural path Live Tested from backfill evidence; require v3.4 paste + successful natural rerun.
 
 ### Commits / PRs
-Branch: `overnight/2026-08-05-agent2-foundation` (push + PR after commit)
+Branch: `overnight/2026-08-05-agent2-foundation` (PR #86) · follow-up fix branch: `cursor/066-create-records-fields-fix-e22f`
 
 ### High-risk remaining foundational work
 1. Paste unloadData pack (031/035/042/114/118/119) before Sunday schedules / heavy WAS traffic
-2. Enable 066 + prove natural milestone checkbox
+2. Paste **066 v3.4** + prove natural milestone checkbox (existing unlocks → skip/link only)
 3. Clear Level 2 gate (Sub+Vid) then prove SC-080
 4. One-writer attestation (112 OFF, etc.)
 
 ### Recommended order for tomorrow
-1. Mike: enable/attest Automation **066**; Test on Schmidt
+1. Mike: paste **066 v3.4** entire script; Test on `recCyFEPeATOVNlr9` (current Schmidt — not older `recgP9qZYjAhE7NXm`)
 2. Mike: paste unloadData pack per runbook
 3. Agent: one more counted submission + video to clear gate → SC-080
 4. Continue SC-046/047 ownership conflicts
+
+---
+
+## 2026-08-06 — 066 natural-path failure + v3.4 repo fix
+
+| Field | Value |
+|-------|-------|
+| Failure | Live Airtable Test of 066 v3.3 threw `Invalid arguments passed to table.createRecordsAsync(records): records[0] should have a 'fields' property` |
+| Stack | `createRecordsInBatches` (~617) → `main` (~1121) → runner (~1178) |
+| Root cause | Callers pushed **raw field maps** into `unlockCreatesPending`; multi-create path passed them to `createRecordsAsync` without wrapping `{ fields: ... }` |
+| Repo fix | **v3.4** defensive normalize — accepts raw or `{ fields }`; always sends `{ fields }` |
+| Test enrollment (wrong) | `recgP9qZYjAhE7NXm` (older 2025–26 Schmidt) |
+| Test enrollment (correct) | `recCyFEPeATOVNlr9` (current controlled Schmidt) |
+| Natural path Live Tested? | **No** — failed; awaiting paste + rerun |
+| Duplicate XP risk on retest | Low if existing unlocks present — expect skip/link; do not construct new crossings for XP re-proof |

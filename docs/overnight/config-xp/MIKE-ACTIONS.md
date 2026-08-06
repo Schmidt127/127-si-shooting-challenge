@@ -64,13 +64,21 @@ Items Cursor could not complete unattended (UI paste, formula edit, or product d
 - **Related SC:** SC-074, SC-078
 
 ### 6. ~~Paste 066 v3.3 (Grade Band link-ID matching)~~ **DONE 2026-07-24 — Installed in PROD**
-- **Priority:** P0 *(paste complete; live proof still open)*
+- **Priority:** P0 *(paste complete; natural path later FAILED — see 6b)*
 - **System:** Automation 066
 - **Exact action:** ~~Paste GitHub `066-…js` v3.3 into PROD~~ **Completed — 066 v3.3 installed in PROD**
 - **Expected outcome:** Milestone band match uses linked record IDs; rename-safe
-- **Status:** **Installed in PROD** — not Live Tested until supervised Schmidt/OMNI run
-- **Verification still needed:** Run Shot Milestone Check on Schmidt (still below 500 — expect skip_no_milestones, no error)
+- **Status:** **Installed in PROD** — **natural path FAILED** live 2026-08-06 (`createRecordsAsync` missing `fields`). Repo **v3.4** awaits paste — see #6b.
 - **Related SC:** SC-023, SC-027, SC-076 · Next-wave note: `docs/next-wave/config-xp/MIKE-ACTIONS.md`
+
+### 6b. Paste 066 v3.4 (createRecords fields contract) — **REQUIRED**
+- **Priority:** P0
+- **System:** Automation 066
+- **Exact action:** Replace entire Airtable script with GitHub `066-…js` **v3.4** ([checklist](../../deploy-checklists/066-v3.4-create-records-fields-fix.md))
+- **Test enrollment:** `recCyFEPeATOVNlr9` (not older `recgP9qZYjAhE7NXm`)
+- **Expected outcome:** Natural Run Check? succeeds; existing unlocks skipped/linked; **0 duplicate milestone XP**; console `"version": "v3.4"`
+- **Status:** Built in Repository — paste + rerun not done; do **not** mark natural path Live Tested until success
+- **Related SC:** SC-027, SC-076 · H-002
 
 ### 7. Decide submission formula XP economics vs SHOOTING_BASE=20
 - **Priority:** P2

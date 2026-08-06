@@ -87,7 +87,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc — **ON** (PROD **v1.5**, 2026-08-05) | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.5** — repo matches PROD; live cross-boundary fixtures still open — `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`) |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
 | **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.3** repo; Installed-in-PROD docs 2026-07-24 — attest live header; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** repo — paste required; PROD may still run v3.3. Natural path **FAILED** on v3.3 multi-create `fields` contract; [deploy checklist](./deploy-checklists/066-v3.1-dev-deploy.md)) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 

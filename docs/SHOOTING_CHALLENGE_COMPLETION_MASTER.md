@@ -95,23 +95,36 @@ Counts below match Section 4 as of **2026-08-05** (Overnight Agent 2 foundation 
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
+### Dashboard reconciliation (2026-08-06 — Automation 066 v3.4 createRecords fields fix)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **066** natural path | **FAILED** on live Airtable test (v3.3) | Error: `records[0] should have a 'fields' property` at `createRecordsInBatches` → `createRecordsAsync`. Test input used older enrollment `recgP9qZYjAhE7NXm`; controlled enrollment is `recCyFEPeATOVNlr9`. |
+| Repo fix | **Built in Repository — v3.4** | Defensive batch helper accepts raw field maps or `{ fields }`; always sends `{ fields }` to Airtable. Offline regression: `lib/066-create-records-batch.test.js`. |
+| SC-027 / SC-076 Live Tested claim | **Unlock/XP Live Tested via controlled backfill only** — **not** via 066 natural checkbox path | Do **not** treat natural path as Live Tested until Mike pastes **v3.4** entire script and reruns successfully on `recCyFEPeATOVNlr9` with existing unlocks (expect link/skip, **0 duplicate XP**). |
+| PROD paste | **Required** | Replace entire Airtable 066 script body (docblock through end; skip GitHub header) with repo v3.4. |
+
+**Do not award duplicate milestone XP during retest** — existing `SHOT_MILESTONE\|recCyFEPeATOVNlr9\|*` unlocks/XP must be linked/skipped, not recreated.
+
+Evidence: script `066-achievements-and-milestones-create-shot-milestone-unlocks.js` · overnight Agent 2 backfill pack [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evidence/2026-08-05-agent2-foundation/).
+
 ### Dashboard reconciliation (2026-08-05 — Overnight Agent 2 foundation)
 
 | SC | Old status | New status | Evidence |
 |----|------------|------------|----------|
 | SC-023 | Installed in PROD | **Live Tested in PROD** | Cleared Grade Band on `recCyFEPeATOVNlr9`; Automation **002** reassigned **3-4** (`reclWDQZzKbVBtdhG`) within ~6s |
-| SC-027 | Installed in PROD | **Live Tested in PROD** | 8 active 3-4 milestones crossed at 10,721 shots; unlocks + XP |
+| SC-027 | Installed in PROD | **Live Tested in PROD** *(unlock/XP via backfill — **066 natural path NOT proven**; see 2026-08-06 failed natural test)* | 8 active 3-4 milestones crossed at 10,721 shots; unlocks + XP |
 | SC-029 | Installed in PROD | **Live Tested in PROD** | Schmidt streak ladder XP present (3 Source Keys); Current Streak **8** |
 | SC-048 | Planned | **Live Tested in PROD** | PROD formula `XP Date Resolved` SWITCH case fixed `Submission Base`→`Shooting Base` (Meta API); `isValid=true` |
 | SC-060 | Built in Repository | **Live Tested in PROD** | Align with existing 001 v5.2 PROD paste + live proof (`recCyFEPeATOVNlr9`) |
 | SC-061 | Built in Repository | **Live Tested in PROD** | Same — matched-existing athlete, no duplicate |
 | SC-075 | Installed in PROD | **Live Tested in PROD** | Streak XP Events on enrollment; Current Streak 8 / Longest 7 |
-| SC-076 | Installed in PROD | **Live Tested in PROD** | 8× SHOT_MILESTONE XP (310 pts) via unlock→059; idempotent rerun 0 creates |
+| SC-076 | Installed in PROD | **Live Tested in PROD** *(059 after controlled unlock create — **066 natural path FAILED / not Live Tested**)* | 8× SHOT_MILESTONE XP (310 pts) via unlock→059; idempotent rerun 0 creates |
 | SC-079 | Installed in PROD | **Live Tested in PROD** | Level Status **Gate Blocked**; Gate Debug `Sub 9/10 \| Vid 5/6` |
 
 **Net math vs concurrent Agent 1/3/4 dashboard (LT 25 / Installed 46 / Built 24 / Planned 17):** LT →**34**; Installed →**40**; Built →**22**; Planned →**16**. Complete unchanged.
 
-**Blocker (bypassed for SC-076):** Automation **066** did not clear `Run Shot Milestone Check?` after toggle (likely OFF or trigger mismatch). Controlled unlock backfill used 066 Source Key contract; **059 awarded XP**. Mike must UI-attest/enable 066 for natural checkbox path.
+**Blocker (updated 2026-08-06):** Automation **066** natural path **FAILED** live with `createRecordsAsync` missing `fields` (v3.3). Earlier overnight note that checkbox “did not fire” is superseded by this hard error when creates were attempted. Controlled unlock backfill + **059** XP remains the only proven milestone award path. Repo **v3.4** fixes the contract — paste + rerun required before any natural-path Live Tested claim.
 
 Evidence: [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evidence/2026-08-05-agent2-foundation/) · Handoff: [`docs/overnight/2026-08-05-OVERNIGHT-MASTER-HANDOFF.md`](./overnight/2026-08-05-OVERNIGHT-MASTER-HANDOFF.md).
 
@@ -390,7 +403,7 @@ Columns:
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
-| SC-027 | Config | Shot Milestones config + awards | Live Tested in PROD | Shot Milestones config; **066/059** path; Schmidt 2026-27: 8 unlocks + 8 XP (310 pts) at 10,721 shots; Source Keys `SHOT_MILESTONE|{enr}|{ms}` | Enable/attest Automation **066** checkbox path (currently does not fire); natural Run Check? proof | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-05 |
+| SC-027 | Config | Shot Milestones config + awards | Live Tested in PROD *(backfill path)* | Shot Milestones config; unlocks+XP proven via controlled create→059 on `recCyFEPeATOVNlr9`; **066 natural path FAILED** on v3.3 (`createRecordsAsync` missing `fields`); repo **v3.4** awaiting paste | Paste **066 v3.4**; natural Run Check? proof on current Schmidt enrollment (expect link/skip existing — no duplicate XP) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-06 |
 | SC-028 | Config | Perfect Week rules configurable | Live Tested in PROD | CASE-01 award path proven (057→058→XP); PROD **057 v1.5**; **059 auto-fire blocked** until trigger drops Shot Milestone filter; multi-case fixtures still open | Mike 059 UI trigger fix; Batch A/B fixtures | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade 057 to v1.4 | `059-perfect-week-trigger-coverage.md`; `docs/testing/evidence/2026-08-05-agent3-perfect-week/` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Live Tested in PROD | Streak XP via **053** + **054 v5.6**; Schmidt Current Streak **8**; 3 STREAK_XP events on `recCyFEPeATOVNlr9` | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-08-05 |
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
@@ -439,7 +452,7 @@ Columns:
 | SC-073 | XP | Live Zoom XP awards correctly | Installed in PROD | **101** v5.5 Attendees-only path | Re-test live meeting attendance | SC-116 | Recording path must never write Attendees | 101; C-025 hard rule | — | P0 | 2026-07-23 |
 | SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Live Tested in PROD | **053/054** streak XP live on Schmidt 2026-27 (3 events; Current Streak 8) | Optional break/rebuild supervised test; SC-081 decision | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-08-05 |
-| SC-076 | XP | Milestone XP (shot milestones) | Live Tested in PROD | 8 Shot Milestone XP Events (310 pts) on `recCyFEPeATOVNlr9`; idempotent Source Keys; 059 awarded after unlock create | UI-enable Automation **066** so checkbox path matches unlock backfill | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-05 |
+| SC-076 | XP | Milestone XP (shot milestones) | Live Tested in PROD *(059 after backfill unlocks — not 066 natural)* | 8 Shot Milestone XP Events (310 pts) on `recCyFEPeATOVNlr9`; idempotent Source Keys; **066 natural path currently failed** until v3.4 paste+rerun | Paste **066 v3.4**; retest checkbox with existing unlocks only (no new XP) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-06 |
 | SC-077 | XP | Perfect Week XP | Live Tested in PROD | Unlock `recALZFQNL3XicEOX` → XP `recMdcI5lN8gJ6830` (100, bucket/source Perfect Week, Source Key `PERFECT_WEEK\|{enr}\|{week}`); idempotent; WAS XP 213→313; **059 UI trigger still needs Pending-only** for auto-fire | Mike removes Shot Milestone filter on 059; optional Test button soak | SC-028, SC-074 | — | `059-perfect-week-trigger-coverage.md`; Agent 3 evidence folder | — | P1 | 2026-08-05 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Live Tested in PROD | 042 gate logic; Schmidt Level Status **Gate Blocked**; Gate Debug `Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0` | Clear gate after Sub 10 + Vid 6 (SC-080) | SC-025 | — | V2-005 | — | P0 | 2026-08-05 |
@@ -697,7 +710,7 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 |-------|-------------|---------------|
 | Zoom recording | PROD **117** = approval email → Make **117f** (SC-088). Stage 17 credit scripts are design alternatives (SC-074 / SC-086). Live Zoom XP = **101**. | Older docs that call the orchestrator “Automation 117 ON” are stale — see §1A / §9L |
 | C-013 video | PROD E2E done historically (SC-094) | Brief Wave 7 queued; some close-out “open” rows |
-| H-002 / 066 | **066 v3.3 Installed in PROD** 2026-07-24 (SC-027/076); live proof still open | Stale “paste pending” briefs |
+| H-002 / 066 | **066 v3.4 repo fix 2026-08-06** (createRecords `fields` contract); PROD still v3.3 until paste; natural path **FAILED** live — not Live Tested via natural path | Stale “paste pending” / “checkbox didn’t fire” briefs without the fields error |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
 | C-023 / 116 | Largely installed historically (SC-097) | Some backlog “prod paste pending” lines |
 | DEV-first forever | **Superseded by §1 operating rules** | ENGINEERING_CONSTITUTION / doc 04 DEV-first language until those docs are revised |

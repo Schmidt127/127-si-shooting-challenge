@@ -88,6 +88,10 @@ const COMMANDS = [
     args: ["airtable/automations/shooting-challenge/lib/066-milestone-crossing-harness.test.js"],
   },
   {
+    name: "066-create-records-batch",
+    args: ["airtable/automations/shooting-challenge/lib/066-create-records-batch.test.js"],
+  },
+  {
     name: "script-header-contract",
     args: ["airtable/automations/shooting-challenge/lib/script-header-contract.test.js"],
   },
