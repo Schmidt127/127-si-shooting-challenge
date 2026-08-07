@@ -32,7 +32,7 @@ Status: Repository preparation only. No Airtable records, schema, views, automat
 2. Run 067 for both quiz rows.
 3. Both quiz rows must link to one HW17 Homework Completion; no Submission Asset may be created.
 4. 067 must link that completion to the one existing canonical Weekly Athlete Summary when available, but must create no XP.
-5. If 067 reports `deferred_no_canonical_summary`, establish the canonical summary through the applicable upstream weekly-summary flow. Do not manually rerun 067.
+5. If 067 reports `deferred_no_canonical_summary`, establish the canonical summary through the applicable upstream weekly-summary flow, then wait for the scheduled 068 run; no operator re-entry is required.
 6. Wait for the scheduled **068 - Homework - Reconcile Deferred Weekly Summary Links** run. It scans only HW17 completions with an empty `Weekly Athlete Summary Link`, links only when exactly one canonical summary matches the same Enrollment + Week, and creates no summaries or XP Events.
 7. With zero or multiple matching summaries, require the completion to remain unlinked. A replay after a successful link must create no write.
 8. After coach review, run 064 then 065 once; rerun both and require the same single homework XP event.
