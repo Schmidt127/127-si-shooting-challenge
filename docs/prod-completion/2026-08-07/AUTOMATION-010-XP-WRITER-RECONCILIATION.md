@@ -85,7 +85,7 @@ Added focused offline harness/tests:
 Repository-only verification completed:
 
 - Command: `node --test tools/testing/tests/test_010_offline.mjs`
-- Result: **PASS** (7/7 tests)
+- Result: **PASS** (9/9 tests)
 - Covered cases:
   - stale single summary link repairs to the canonical Enrollment + Week + Program Instance summary;
   - stale single summary link with no valid replacement fails closed without writes;
