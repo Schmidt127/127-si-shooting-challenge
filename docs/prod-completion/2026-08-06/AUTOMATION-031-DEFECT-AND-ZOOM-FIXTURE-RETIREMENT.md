@@ -43,8 +43,26 @@ The platform blocked destructive deletion, so the fixture was retired non-destru
 
 The records no longer participate in active XP totals or summary-key matching.
 
+## Repository repair status — 2026-08-07
+
+Issue #96 repository repair is now complete on a focused branch:
+
+- repository script updated to `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.4;
+- existing Submission -> Weekly Athlete Summary links are now validated against the current Enrollment + Week + Summary Key;
+- stale links repair to the one canonical summary when exactly one safe replacement exists;
+- matching non-Submission-Base XP Events for the same Enrollment + Week repair from blank/stale summary linkage to the canonical summary; Submission Base XP Events remain owned by Automation 010 via the structured `XP Source` option ID `selZw4nOkwMJCgGyR`;
+- stale repair fails closed when no canonical summary can be resolved safely;
+- offline regression passed: `node --test tools/testing/tests/test_031_offline.mjs`.
+
+No Airtable automation editor paste has been performed from that package.
+No controlled PROD live test has been performed from that package.
+
+Paste/test packet:
+
+- `docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md`
+
 ## Completion status
 
-No Completion Master status advanced.
+No Completion Master status advanced from repository work alone.
 
-Automation 031 remains unsafe for stale-link repair until issue #96 is implemented, merged, pasted into the actual Airtable automation editor, and proven with a controlled wrong-summary test and replay.
+Automation 031 remains unconfirmed in Airtable until the repaired script is pasted into the actual Airtable automation editor and proven with a controlled wrong-summary test and replay.
