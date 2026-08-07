@@ -25,9 +25,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
  *
- * Version: 10.4
+ * Version: 10.5
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-08-07
  *
  * PURPOSE
  * - Reads one Submission record.
@@ -103,7 +103,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-    version: "10.4",
+    version: "10.5",
 
     tables: {
         submissions: "Submissions",
@@ -485,16 +485,45 @@ async function findWeeklySummaryId(enrollmentId, weekId) {
     return matches.length === 1 ? matches[0].id : "";
 }
 
-async function resolveWeeklySummaryId({
+async function findWeeklySummaryRecordById(summaryId) {
+    const cleanSummaryId = String(summaryId || "").trim();
+
+    if (!cleanSummaryId) {
+        return null;
+    }
+
+    const query = await loadWeeklySummaryQuery();
+    return query.records.find((record) => record.id === cleanSummaryId) || null;
+}
+
+function weeklySummaryMatchesEnrollmentWeek(summaryRecord, enrollmentId, weekId) {
+    if (!summaryRecord || !enrollmentId || !weekId) {
+        return false;
+    }
+
+    const summaryEnrollmentId = getFirstLinkedRecordId(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.enrollment
+    );
+    const summaryWeekId = getFirstLinkedRecordId(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.week
+    );
+
+    return (
+        summaryEnrollmentId === String(enrollmentId).trim() &&
+        summaryWeekId === String(weekId).trim()
+    );
+}
+
+async function resolveWeeklySummaryContext({
     sourceWeeklySummaryIds = [],
     enrollmentId = "",
     weekId = "",
 }) {
     const fromSource = uniqueIds(sourceWeeklySummaryIds);
-
-    if (fromSource.length === 1) {
-        return fromSource[0];
-    }
 
     if (fromSource.length > 1) {
         throw new Error(
@@ -502,7 +531,47 @@ async function resolveWeeklySummaryId({
         );
     }
 
-    return findWeeklySummaryId(enrollmentId, weekId);
+    if (fromSource.length === 1) {
+        const sourceWeeklySummaryId = fromSource[0];
+        const sourceSummaryRecord = await findWeeklySummaryRecordById(sourceWeeklySummaryId);
+
+        if (
+            sourceSummaryRecord &&
+            weeklySummaryMatchesEnrollmentWeek(sourceSummaryRecord, enrollmentId, weekId)
+        ) {
+            return {
+                weeklySummaryId: sourceWeeklySummaryId,
+                resolutionSource: "source_valid",
+                repairedStaleLink: false,
+            };
+        }
+
+        const canonicalWeeklySummaryId = await findWeeklySummaryId(enrollmentId, weekId);
+
+        if (!canonicalWeeklySummaryId) {
+            const problem = sourceSummaryRecord
+                ? `does not match Enrollment ${enrollmentId} + Week ${weekId}`
+                : "references a missing Weekly Athlete Summary record";
+            throw new Error(
+                `Submission Weekly Athlete Summary ${sourceWeeklySummaryId} ${problem}, and no canonical Weekly Athlete Summary exists for repair.`
+            );
+        }
+
+        return {
+            weeklySummaryId: canonicalWeeklySummaryId,
+            resolutionSource: "source_repaired_to_canonical",
+            repairedStaleLink: canonicalWeeklySummaryId !== sourceWeeklySummaryId,
+        };
+    }
+
+    const fallbackWeeklySummaryId = await findWeeklySummaryId(enrollmentId, weekId);
+    return {
+        weeklySummaryId: fallbackWeeklySummaryId,
+        resolutionSource: fallbackWeeklySummaryId
+            ? "lookup_enrollment_week"
+            : "not_found",
+        repairedStaleLink: false,
+    };
 }
 
 function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
@@ -1166,15 +1235,18 @@ async function main() {
             )
             : [];
 
-        const weeklySummaryId = await resolveWeeklySummaryId({
+        const weeklySummaryContext = await resolveWeeklySummaryContext({
             sourceWeeklySummaryIds: submissionWeeklySummaryIds,
             enrollmentId,
             weekId,
         });
+        const weeklySummaryId = weeklySummaryContext.weeklySummaryId;
 
         log("Weekly Athlete Summary resolution", {
             submissionWeeklySummaryIds,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
+            repairedSubmissionSummaryLink: weeklySummaryContext.repairedStaleLink,
             enrollmentId,
             weekId,
         });
@@ -1284,6 +1356,13 @@ async function main() {
                 CONFIG.submissions.xpAwardStatus,
                 CONFIG.values.statusAwarded
             ),
+            ...(weeklySummaryId &&
+            fieldExists(submissionsTable, CONFIG.submissions.weeklySummary) &&
+            isWritableField(submissionsTable, CONFIG.submissions.weeklySummary)
+                ? {
+                    [CONFIG.submissions.weeklySummary]: linkedCell([weeklySummaryId]),
+                }
+                : {}),
         });
 
         debugStep = "14 - Re-arm Shot Milestone Check";
@@ -1311,6 +1390,8 @@ async function main() {
 
             xpEventId,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
+            repairedSubmissionSummaryLink: weeklySummaryContext.repairedStaleLink,
             sourceKey,
             dedupeKey,
             normalizedDedupeKey,
@@ -1337,6 +1418,7 @@ async function main() {
             submissionId: recordId,
             xpEventId,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
             sourceKey,
             debugStep,
         }));
