@@ -140,6 +140,48 @@ test("correct key with wrong Enrollment, Week, or Program Instance fails closed 
   assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
 });
 
+test("same athlete and week labels in another Program Instance are rejected", async () => {
+  const base = build010Base({
+    weeklySummaries: [
+      new MockRecord(IDS.SUMMARY_CANONICAL, {
+        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+        Week: [{ id: "recOtherWeek", name: "Early Bird" }],
+        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
+      }),
+    ],
+  });
+  base.getTable("Weeks").records.set(
+    "recOtherWeek",
+    new MockRecord("recOtherWeek", {
+      "Week Key": "WEEK-EARLY-BIRD",
+      "Program Instance": [{ id: "recPI2025", name: "2025-2026" }],
+    })
+  );
+
+  const { error } = await run010({ base });
+  assert.ok(error);
+  assert.equal(totalWrites(base), 0);
+  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
+});
+
+test("missing or ambiguous Program Instance fails before any writes", async () => {
+  const missingPiBase = build010Base();
+  missingPiBase.getTable("Enrollments").records.get(IDS.ENROLLMENT).cells[
+    "Program Instance"
+  ] = [];
+  const missing = await run010({ base: missingPiBase });
+  assert.ok(missing.error);
+  assert.equal(totalWrites(missingPiBase), 0);
+
+  const ambiguousPiBase = build010Base();
+  ambiguousPiBase.getTable("Weeks").records.get(IDS.WEEK).cells[
+    "Program Instance"
+  ] = [{ id: "recPI2026" }, { id: "recPI2025" }];
+  const ambiguous = await run010({ base: ambiguousPiBase });
+  assert.ok(ambiguous.error);
+  assert.equal(totalWrites(ambiguousPiBase), 0);
+});
+
 test("replay preserves XP Event and summary record counts", async () => {
   const base = build010Base();
   const first = await run010({ base });
