@@ -77,7 +77,7 @@ Use Enrollment `recgP9qZYjAhE7NXm` only.
 
 1. Run 067 while no canonical Weekly Athlete Summary exists; expect `weeklySummaryLinkStatus=deferred_no_canonical_summary`.
 2. Allow the applicable upstream flow to establish the one canonical summary.
-3. Wait for the next scheduled 068 run; do not manually rerun 067.
+3. Wait for the next scheduled 068 run; no operator re-entry is required.
 4. Expect 068 to link the existing HW17 completion exactly once.
 5. With zero or multiple matching summaries, expect no link. A replay after a successful link must produce no write.
 
