@@ -85,7 +85,7 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
  *               skipped_already_linked | needs_review | no_attachment_field |
  *               no_attachment_yet | error
  * - errorOut, debugStep, quizSubmissionId, homeworkCompletionId, weeklySummaryId,
- *   submissionIdOut, assetIdsOut
+ *   weeklySummaryLinkStatus, submissionIdOut, assetIdsOut
  *
  * AUTHORITY
  * - docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md
@@ -484,14 +484,13 @@ async function resolveWeeklySummaryId(enrollmentId, weekId) {
   return matches[0]?.id || "";
 }
 
-async function ensureWeeklySummaryLink(homeworkCompletionId, enrollmentId, weekId) {
+async function ensureWeeklySummaryLink(homeworkCompletionId, enrollmentId, weekId, weeklySummaryId = "") {
   if (!fieldExists(homeworkTable, CONFIG.homework.weeklySummaryLink)) {
     throw new Error(
       `Required Homework Completions field is missing: ${CONFIG.homework.weeklySummaryLink}`
     );
   }
 
-  const weeklySummaryId = await resolveWeeklySummaryId(enrollmentId, weekId);
   if (!weeklySummaryId) {
     console.log(
       JSON.stringify({
@@ -703,6 +702,10 @@ async function main() {
   debugStep = "resolve_hw17";
   setOutputSafe("debugStep", debugStep);
   const { hw17Id, hw17WeekId } = await resolveHw17();
+  const canonicalWeeklySummaryId = await resolveWeeklySummaryId(enrollmentId, hw17WeekId);
+  const weeklySummaryLinkStatus = canonicalWeeklySummaryId
+    ? "linked"
+    : "deferred_no_canonical_summary";
 
   debugStep = "resolve_grade_band";
   setOutputSafe("debugStep", debugStep);
@@ -822,9 +825,11 @@ async function main() {
   const weeklySummaryId = await ensureWeeklySummaryLink(
     homeworkCompletionId,
     enrollmentId,
-    hw17WeekId
+    hw17WeekId,
+    canonicalWeeklySummaryId
   );
   setOutputSafe("weeklySummaryId", weeklySummaryId);
+  setOutputSafe("weeklySummaryLinkStatus", weeklySummaryLinkStatus);
 
   // ---- Asset / Submission intake (C-009) ----
   debugStep = "resolve_attachment_field";
@@ -841,6 +846,8 @@ async function main() {
       debugStep: "no_attachment_field",
       quizSubmissionId: quiz.id,
       homeworkCompletionId,
+      weeklySummaryId,
+      weeklySummaryLinkStatus,
     });
     return;
   }
@@ -859,6 +866,8 @@ async function main() {
       debugStep: "no_attachment_yet",
       quizSubmissionId: quiz.id,
       homeworkCompletionId,
+      weeklySummaryId,
+      weeklySummaryLinkStatus,
     });
     return;
   }
@@ -923,6 +932,8 @@ async function main() {
     debugStep: "complete",
     quizSubmissionId: quiz.id,
     homeworkCompletionId,
+    weeklySummaryId,
+    weeklySummaryLinkStatus,
     submissionIdOut,
     assetIdsOut,
   });
