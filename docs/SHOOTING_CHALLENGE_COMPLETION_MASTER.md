@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-06** (023 v3.1 Week→PI fix; 005 PASS; 023 INCOMPLETE until Week path retest; then 053→066→118→119) |
+| Last updated | **2026-08-07** (031 v3.3 stale-link repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -120,6 +120,17 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | 043 v2.1 | Yes | Yes | TBD | TBD | — |
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
+
+### Dashboard reconciliation (2026-08-07 — Automation 031 stale-link repo repair)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **031 v3.3** | **Built in Repository** | Issue **#96** repair validates existing Submission summary links against Enrollment + Week + Summary Key, repairs safe stale links to the canonical summary, removes the source Submission from the stale summary, and repairs matching XP Event summary links |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` |
+| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
+| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+
+Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`docs/prod-completion/2026-08-06/AUTOMATION-031-DEFECT-AND-ZOOM-FIXTURE-RETIREMENT.md`](./prod-completion/2026-08-06/AUTOMATION-031-DEFECT-AND-ZOOM-FIXTURE-RETIREMENT.md).
 
 ### Dashboard reconciliation (2026-08-06 — Repository finalization / PR #88)
 
