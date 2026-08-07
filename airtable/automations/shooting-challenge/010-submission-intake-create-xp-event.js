@@ -1400,7 +1400,7 @@ async function main() {
             submissionWeeklySummaryIds,
             weeklySummaryId: weeklySummaryId || "",
             weeklySummaryResolution: weeklySummaryContext.resolutionSource,
-            repairedSubmissionSummaryLink: weeklySummaryContext.repairedStaleLink,
+            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
             enrollmentId,
             weekId,
             programInstanceId: programInstanceContext.programInstanceId,
@@ -1514,13 +1514,6 @@ async function main() {
                 CONFIG.submissions.xpAwardStatus,
                 CONFIG.values.statusAwarded
             ),
-            ...(weeklySummaryId &&
-            fieldExists(submissionsTable, CONFIG.submissions.weeklySummary) &&
-            isWritableField(submissionsTable, CONFIG.submissions.weeklySummary)
-                ? {
-                    [CONFIG.submissions.weeklySummary]: linkedCell([weeklySummaryId]),
-                }
-                : {}),
         });
 
         debugStep = "14 - Re-arm Shot Milestone Check";
@@ -1549,7 +1542,8 @@ async function main() {
             xpEventId,
             weeklySummaryId: weeklySummaryId || "",
             weeklySummaryResolution: weeklySummaryContext.resolutionSource,
-            repairedSubmissionSummaryLink: weeklySummaryContext.repairedStaleLink,
+            repairedSubmissionSummaryLink: false,
+            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
             sourceKey,
             dedupeKey,
             normalizedDedupeKey,
