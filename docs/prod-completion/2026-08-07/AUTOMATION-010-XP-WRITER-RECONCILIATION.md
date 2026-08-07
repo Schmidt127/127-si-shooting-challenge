@@ -11,7 +11,7 @@ Controlling source remains `docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`.
 - Airtable automation inventory record: `recfxxUD50a5rbIRr`
 - Airtable inventory Status: Live
 - Stored inventory code: v10.1
-- Repository source of truth: `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.5
+- Repository source of truth: `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.6
 - `Ran Through Cursor?` was cleared in the Airtable inventory.
 - The inventory notes now explicitly warn that `Live` does not prove the actual Airtable automation editor contains current/replay-safe code.
 
@@ -67,12 +67,12 @@ This is a repair/replay correctness defect, not evidence of current data corrupt
 
 Repository repair is now complete on the focused issue branch for Automation 010.
 
-Implemented in `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.5:
+Implemented in `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.6:
 
-1. Validate a pre-existing single Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week.
-2. If the existing summary is stale/wrong, resolve the unique canonical Enrollment + Week summary before continuing.
+1. Validate a pre-existing single Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance.
+2. If the existing summary is stale/wrong, resolve exactly one fully-valid canonical Enrollment + Week + Program Instance summary before continuing.
 3. Repair both the Submission and Submission Base XP Event summary links to that canonical summary.
-4. Fail closed when a stale/missing source summary exists but no canonical repair target can be resolved safely.
+4. Fail closed on zero or multiple fully-valid candidates before any XP or backlink write.
 5. Preserve existing duplicate-XP protections and source-key behavior.
 
 Added focused offline harness/tests:
@@ -85,10 +85,11 @@ Added focused offline harness/tests:
 Repository-only verification completed:
 
 - Command: `node --test tools/testing/tests/test_010_offline.mjs`
-- Result: **PASS** (2/2 tests)
+- Result: **PASS** (7/7 tests)
 - Covered cases:
-  - stale single summary link repairs to the canonical Enrollment + Week summary;
-  - stale single summary link with no canonical replacement fails closed.
+  - stale single summary link repairs to the canonical Enrollment + Week + Program Instance summary;
+  - stale single summary link with no valid replacement fails closed without writes;
+  - no existing link, zero/multiple candidates, wrong Week/Program Instance, and replay count preservation.
 
 No Airtable automation editor paste was performed for this package.
 No controlled PROD live test was performed for this package.
@@ -99,10 +100,10 @@ Issue #106 — `Automation 010 must validate existing Weekly Summary link before
 
 Required repair:
 
-1. Validate a pre-existing single summary link against Submission Enrollment + Week.
-2. If stale/wrong, resolve the unique canonical Enrollment + Week summary.
+1. Validate a pre-existing single summary link against Submission Enrollment + Week + Program Instance.
+2. If stale/wrong, resolve exactly one fully-valid canonical Enrollment + Week + Program Instance summary.
 3. Repair both Submission and XP Event summary linkage.
-4. Fail closed on zero/multiple canonical summaries when a summary is required.
+4. Fail closed on zero/multiple canonical summaries when a summary is required, before any XP or backlink write.
 5. Preserve duplicate XP protections.
 6. Prove replay creates zero duplicate XP Events on the controlled Schmidt enrollment.
 
@@ -116,7 +117,7 @@ Repository repair is complete, but Airtable installation remains unconfirmed.
 
 Next required operator steps:
 
-1. Paste the full `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.5 script into the live Airtable automation editor for Automation 010.
+1. Paste the full `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` v10.6 script into the live Airtable automation editor for Automation 010.
 2. Verify the actual trigger, conditions, and input variable mapping in Airtable.
 3. Run the controlled Schmidt first-run and replay tests.
 4. Record resulting Submission/XP/Weekly Summary evidence before advancing any completion status.

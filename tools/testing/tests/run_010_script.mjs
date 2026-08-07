@@ -92,13 +92,25 @@ function xpRulesFields() {
 }
 
 function enrollmentsFields() {
-  return [{ name: "Run Shot Milestone Check?", type: "checkbox" }];
+  return [
+    { name: "Run Shot Milestone Check?", type: "checkbox" },
+    { name: "Enrollment Key", type: "formula", isComputed: true },
+    { name: "Program Instance", type: "multipleRecordLinks" },
+  ];
+}
+
+function weeksFields() {
+  return [
+    { name: "Week Key", type: "formula", isComputed: true },
+    { name: "Program Instance", type: "multipleRecordLinks" },
+  ];
 }
 
 function weeklySummaryFields() {
   return [
     { name: "Enrollment", type: "multipleRecordLinks" },
     { name: "Week", type: "multipleRecordLinks" },
+    { name: "Summary Key", type: "formula", isComputed: true },
   ];
 }
 
@@ -158,6 +170,15 @@ export function build010Base(opts = {}) {
   const enrollments = new MockTable("Enrollments", enrollmentsFields(), [
     new MockRecord(IDS.ENROLLMENT, {
       "Run Shot Milestone Check?": false,
+      "Enrollment Key": "ENR-2026-2027",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
+    }),
+  ]);
+
+  const weeks = new MockTable("Weeks", weeksFields(), [
+    new MockRecord(IDS.WEEK, {
+      "Week Key": "WEEK-EARLY-BIRD",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
     }),
   ]);
 
@@ -167,10 +188,12 @@ export function build010Base(opts = {}) {
         new MockRecord(IDS.SUMMARY_CANONICAL, {
           Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
           Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
         }),
         new MockRecord(IDS.SUMMARY_STALE, {
           Enrollment: [{ id: "recWrongEnrollment0001", name: "Wrong Enrollment" }],
           Week: [{ id: "recWrongWeek0000001", name: "Wrong Week" }],
+        "Summary Key": "ENR-OLD|WEEK-OLD",
         }),
       ];
 
@@ -180,7 +203,14 @@ export function build010Base(opts = {}) {
     summaryRecords
   );
 
-  return new MockBase([submissions, xpEvents, xpRules, enrollments, weeklySummary]);
+  return new MockBase([
+    submissions,
+    xpEvents,
+    xpRules,
+    enrollments,
+    weeks,
+    weeklySummary,
+  ]);
 }
 
 export async function run010({ base, recordId = IDS.SUBMISSION }) {
