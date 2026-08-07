@@ -12,7 +12,7 @@
 |------|-------|
 | Problem | HW17 Final Reflection quiz must create a reviewable Homework Completion without inventing PDF/assets |
 | Tables | Final Reflection Quiz Submissions, Homework Completions, FBC Curriculum - SYNC, Enrollments, Submissions, Submission Assets |
-| Automations | **067** (bridge), **064→065** (XP after coach review), **071** (parent email Fillout-aware) |
+| Automations | **067** (bridge), **068** (automatic deferred-summary reconciliation), **064→065** (XP after coach review), **071** (parent email Fillout-aware) |
 | External | Fillout quiz form (or manual quiz row for Schmidt test) |
 | Expected final behavior | Quiz row → one HC (Enrollment+Week+HW17), 0 assets, Ready for Review → coach Satisfactory → exactly one Homework XP → optional 071 |
 | Completion criteria | PROD 067 paste confirmed + Schmidt live proof of HC/0 assets/one XP/no fake assets |
@@ -24,7 +24,8 @@
 | Enrollment link on quiz | Required — 067 never guesses athlete |
 | Active HW 17 curriculum row | Exactly one Active `Homework Number=HW 17` with Week |
 | HC identity | Enrollment + Week + Homework (067 key) — distinct from 020 asset key |
-| XP writers | **064/065 only** — 067 must never create XP Events |
+| XP writers | **064/065 only** — 067 and 068 must never create XP Events |
+| Deferred summary retry | Scheduled **068** scans HW17 completions with an empty summary link; it links only an exact-one Enrollment + Week summary |
 | Assets / 070a | Optional; Option B expects **no** Quiz Result PDF field and **no** fake assets |
 | 071 | Must stay Fillout-aware without requiring assets |
 | Make | Not required for Option B bridge |
@@ -46,6 +47,8 @@
 4. Paste repo script **from production docblock through end** (skip GitHub header comments above the Airtable docblock).  
 5. Confirm version header shows **v2.0** and Option B / `no_attachment_*` path.  
 6. Leave automation **ON** for Schmidt testing.  
+7. Install **068 - Homework - Reconcile Deferred Weekly Summary Links** as a separate scheduled automation. It requires no record input and must run on the committed 068 script.
+8. Keep 068 scoped to HW17 completions with an empty `Weekly Athlete Summary Link`; it must fail closed on zero or multiple matching summaries and must never create summaries or XP Events.
 7. Confirm **064**, **065**, **071** remain the only XP/email writers for this path.
 
 ## Schmidt live test protocol
@@ -69,6 +72,14 @@ Use Enrollment `recgP9qZYjAhE7NXm` only.
 
 1. Re-trigger 067 on the same quiz row (or create second quiz pointing at same Enrollment+Week+HW17).  
 2. Expect link to **same** HC; no second HC; no second XP after review already awarded.
+
+### T2b — Automatic deferred-summary retry
+
+1. Run 067 while no canonical Weekly Athlete Summary exists; expect `weeklySummaryLinkStatus=deferred_no_canonical_summary`.
+2. Allow the applicable upstream flow to establish the one canonical summary.
+3. Wait for the next scheduled 068 run; do not manually rerun 067.
+4. Expect 068 to link the existing HW17 completion exactly once.
+5. With zero or multiple matching summaries, expect no link. A replay after a successful link must produce no write.
 
 ### T3 — Blank enrollment
 

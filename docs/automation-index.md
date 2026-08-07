@@ -44,7 +44,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
-## Homework (020, 064–065, 067, 070a, 071) — 063 retired
+## Homework (020, 064–065, 067–068, 070a, 071) — 063 retired
 
 > **2026-07-24:** PROD baseline claims **063 deleted**. **020 v3.0.0** only *partially* replaces 063 (asset-driven Grade Band). Do not reinstall full 063. Repo file retained as historical.
 
@@ -55,6 +55,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready (created / Processing Status Pending, Enrollment set) | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
+| **068** | Homework — Reconcile Deferred Weekly Summary Links | Scheduled; scans HW17 completions with an empty Weekly Athlete Summary Link | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook (v3.5: Reviewer File URL → Drive View → Drive File) | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
 
