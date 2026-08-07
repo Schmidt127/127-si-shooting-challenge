@@ -5,7 +5,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { MockRecord } from "./airtable_mock.mjs";
-import { build031Base, run031, IDS } from "./run_031_script.mjs";
+import {
+  build031Base,
+  run031,
+  IDS,
+  XP_SOURCE_IDS,
+} from "./run_031_script.mjs";
 
 function submissionSummaryIds(base) {
   return base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Weekly Athlete Summary");
@@ -17,6 +22,13 @@ function summarySubmissionIds(base, summaryId) {
 
 function xpSummaryIds(base, xpId) {
   return base.getTable("XP Events").records.get(xpId).getCellValue("Weekly Athlete Summary");
+}
+
+function totalWrites(base) {
+  return [...base.tables.values()].reduce(
+    (count, table) => count + table.updates.length + table.createdPayloads.length,
+    0
+  );
 }
 
 test("valid existing link stays canonical and repairs missing back-links", async () => {
@@ -50,6 +62,95 @@ test("no existing link selects one fully valid canonical replacement", async () 
   assert.equal(output.values.actionTaken, "found_existing_summary");
   assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+});
+
+test("no existing link with zero valid candidates fails closed without writes", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Weekly Athlete Summary": [],
+    },
+    summaries: [
+      new MockRecord(IDS.SUMMARY_STALE, {
+        "Summary Key": "ENR-OLD|WEEK-OLD",
+        Enrollment: [{ id: "recWrongEnrollment031", name: "Wrong Enrollment" }],
+        Week: [{ id: "recWrongWeek031", name: "Wrong Week" }],
+        Submissions: [{ id: "recUnrelatedSubmission031", name: "Unrelated" }],
+        "Summary Calculation Status": "",
+        Created: "2026-08-06T00:00:00.000Z",
+      }),
+    ],
+  });
+  const beforeXpLinks = [
+    xpSummaryIds(base, IDS.XP_ORPHAN),
+    xpSummaryIds(base, IDS.XP_STALE),
+  ];
+
+  const { output, error } = await run031({ base });
+
+  assert.ok(error);
+  assert.match(String(error.message), /no unique canonical weekly athlete summary exists/i);
+  assert.match(String(output.values.errorOut), /found 0 fully valid candidates/i);
+  assert.equal(totalWrites(base), 0);
+  assert.equal(base.getTable("Weekly Athlete Summary").records.size, 1);
+  assert.deepEqual(submissionSummaryIds(base), []);
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
+    { id: "recUnrelatedSubmission031", name: "Unrelated" },
+  ]);
+  assert.deepEqual(xpSummaryIds(base, IDS.XP_ORPHAN), beforeXpLinks[0]);
+  assert.deepEqual(xpSummaryIds(base, IDS.XP_STALE), beforeXpLinks[1]);
+});
+
+test("repairs non-Submission-Base XP Events but leaves Submission Base untouched", async () => {
+  const xpBase = new MockRecord("recXp031SubmissionBase", {
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+    "XP Source": {
+      id: XP_SOURCE_IDS.submissionBase,
+      name: "Submission Base",
+    },
+  });
+  const xpBlank = new MockRecord("recXp031BlankNonSubmission", {
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    "Weekly Athlete Summary": [],
+    "XP Source": {
+      id: XP_SOURCE_IDS.homeworkCompletion,
+      name: "Homework Completion",
+    },
+  });
+  const xpStale = new MockRecord("recXp031StaleNonSubmission", {
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+    "XP Source": {
+      id: XP_SOURCE_IDS.shotMilestone,
+      name: "Shot Milestone",
+    },
+  });
+  const base = build031Base({
+    submissionCells: {
+      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+    },
+    xpEvents: [xpBase, xpBlank, xpStale],
+  });
+
+  const { error } = await run031({ base });
+
+  assert.equal(error, null, error && error.message);
+  assert.deepEqual(xpSummaryIds(base, xpBlank.id), [
+    { id: IDS.SUMMARY_CANONICAL },
+  ]);
+  assert.deepEqual(xpSummaryIds(base, xpStale.id), [
+    { id: IDS.SUMMARY_CANONICAL },
+  ]);
+  assert.deepEqual(xpSummaryIds(base, xpBase.id), [
+    { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
+  ]);
+  assert.equal(
+    base.getTable("XP Events").updates.some(update => update.recordId === xpBase.id),
+    false
+  );
 });
 
 test("stale existing link repairs to the canonical summary and moves matching XP", async () => {
@@ -89,7 +190,7 @@ test("stale existing link fails closed on zero valid candidates without writes",
 
   const { output, error } = await run031({ base });
   assert.ok(error);
-  assert.match(String(error.message), /no canonical summary can be resolved safely/i);
+  assert.match(String(error.message), /no unique canonical weekly athlete summary exists/i);
   assert.equal(output.values.statusOut, "error");
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [

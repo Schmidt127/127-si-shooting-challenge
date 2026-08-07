@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-08-07
 
 Purpose:
 Finds or creates Weekly Athlete Summary from counted submissions and repairs orphan XP links.
@@ -17,7 +17,7 @@ Important Tables:
 Submissions, Enrollments, Weeks, Weekly Athlete Summary, XP Events
 
 Important Fields:
-Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key
+Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key, XP Source
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
@@ -56,6 +56,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Multiple counted Submissions for the same Enrollment + Week should link to the same Weekly Athlete Summary.
  * - A stale existing Weekly Athlete Summary link must not survive replay when the script can
  *   prove the one canonical Enrollment + Week summary; otherwise fail closed.
+ * - Automation 031 repairs only non-Submission-Base XP Event summary links. Automation 010
+ *   owns Submission Base XP Events, identified by XP Source option ID selZw4nOkwMJCgGyR.
  *
  * FOLDER
  * - 03 - Weekly Summary and Goal Logic
@@ -145,6 +147,8 @@ const CONFIG = {
     enrollment: "Enrollment",
     week: "Week",
     weeklySummary: "Weekly Athlete Summary",
+    xpSource: "XP Source",
+    submissionBaseSourceOptionId: "selZw4nOkwMJCgGyR",
   },
 
   statusValues: {
@@ -280,6 +284,17 @@ function requireField(table, fieldName, label) {
   }
 }
 
+function requireFieldType(table, fieldName, expectedType, label) {
+  requireField(table, fieldName, label);
+
+  const field = getFieldSafe(table, fieldName);
+  if (field?.type !== expectedType) {
+    throw new Error(
+      `Required field has unexpected type: ${label} (${table.name} -> ${fieldName}); expected ${expectedType}, found ${field?.type || "unknown"}.`
+    );
+  }
+}
+
 function requireWritableField(table, fieldName, label) {
   requireField(table, fieldName, label);
 
@@ -310,6 +325,26 @@ function getLinkedRecordIds(record, table, fieldName) {
 
 function getFirstLinkedRecordId(record, table, fieldName) {
   return getLinkedRecordIds(record, table, fieldName)[0] || "";
+}
+
+function getSingleSelectOptionId(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+
+  if (!raw || Array.isArray(raw) || typeof raw !== "object") {
+    return "";
+  }
+
+  return String(raw.id || "").trim();
+}
+
+function isSubmissionBaseXpEvent(record) {
+  return (
+    getSingleSelectOptionId(
+      record,
+      xpEventsTable,
+      CONFIG.xpEvents.xpSource
+    ) === CONFIG.xpEvents.submissionBaseSourceOptionId
+  );
 }
 
 function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
@@ -590,6 +625,7 @@ async function repairXpEventsForEnrollmentWeek({
     CONFIG.xpEvents.enrollment,
     CONFIG.xpEvents.week,
     CONFIG.xpEvents.weeklySummary,
+    CONFIG.xpEvents.xpSource,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 
   const xpQuery = await xpEventsTable.selectRecordsAsync({ fields: xpFields });
@@ -614,6 +650,7 @@ async function repairXpEventsForEnrollmentWeek({
       );
 
       if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
+      if (isSubmissionBaseXpEvent(xpRecord)) continue;
       if (xpSummaryId && xpSummaryId !== staleSummaryId) continue;
       if (xpSummaryId === weeklySummaryId) continue;
 
@@ -723,6 +760,13 @@ requireWritableField(
   summariesTable,
   CONFIG.summaries.submissions,
   "Weekly Athlete Summary -> Submissions"
+);
+
+requireFieldType(
+  xpEventsTable,
+  CONFIG.xpEvents.xpSource,
+  "singleSelect",
+  "XP Events -> XP Source"
 );
 
 /* =========================================================
@@ -934,6 +978,10 @@ async function main() {
         existingSubmissionSummaryId && existingSubmissionSummaryId !== matchingSummary.id
           ? existingSubmissionSummaryId
           : "";
+    } else if (matchingSummaries.length === 0) {
+      throw new Error(
+        `No unique canonical Weekly Athlete Summary exists for Submission ${recordId}; found 0 fully valid candidates.`
+      );
     } else if (existingSubmissionSummaryId) {
       throw new Error(
         `Submission ${recordId} has stale Weekly Athlete Summary ${existingSubmissionSummaryId}, and no canonical summary can be resolved safely for Summary Key ${targetSummaryKey}.`

@@ -22,16 +22,17 @@ This packet documents repository repair status only.
 
 ## Repository repair completed
 
-The v3.3 repair now:
+The v3.4 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
 3. repairs a stale Submission link to the canonical summary when exactly one safe replacement exists;
 4. removes the source Submission from the stale summary when repair occurs;
-5. repairs matching XP Events for the same Enrollment + Week when they are blank or still linked to the stale summary;
+5. repairs matching non-Submission-Base XP Events for the same Enrollment + Week when they are blank or still linked to the stale summary;
 6. derives Program Instance from authoritative Enrollment and Week links and requires exactly one matching ID;
 7. validates candidate summaries before any Submission, Summary, or XP Event write;
-8. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist.
+8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
+9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist.
 
 ## Offline verification
 
@@ -41,21 +42,23 @@ Command run:
 
 Result:
 
-- **PASS** (`11/11`)
+- **PASS** (`13/13`)
 
 Covered cases:
 
 1. valid existing link;
 2. no existing link with one valid replacement;
-3. stale link with canonical replacement;
-4. stale link with zero valid candidates;
-5. replay after repair;
-6. multiple valid candidates;
-7. wrong Enrollment;
-8. wrong Week;
-9. wrong Program Instance;
-10. same athlete/week in another Program Instance;
-11. missing or ambiguous Program Instance.
+3. no existing link with zero valid candidates and no writes;
+4. non-Submission-Base XP Event repair with Submission Base exclusion;
+5. stale link with canonical replacement;
+6. stale link with zero valid candidates;
+7. replay after repair;
+8. multiple valid candidates;
+9. wrong Enrollment;
+10. wrong Week;
+11. wrong Program Instance;
+12. same athlete/week in another Program Instance;
+13. missing or ambiguous Program Instance.
 
 ## Paste instructions
 
@@ -92,7 +95,8 @@ Expected first-run result:
 - `Submissions.Weekly Athlete Summary` changes to the canonical Early Bird summary for the same Enrollment + Week;
 - canonical `Weekly Athlete Summary.Submissions` contains the source Submission;
 - stale `Weekly Athlete Summary.Submissions` no longer contains that Submission;
-- matching `XP Events` with the same Enrollment + Week and blank/stale summary linkage now link to the canonical summary;
+- matching non-Submission-Base `XP Events` with the same Enrollment + Week and blank/stale summary linkage now link to the canonical summary;
+- the Submission Base XP Event is not modified by Automation 031; Automation 010 owns that event and its summary link;
 - unrelated XP Events remain untouched.
 
 ### Test B — replay after repair
@@ -137,12 +141,13 @@ Primary fields expected to change on a successful stale-link repair:
 - `Submissions -> Weekly Athlete Summary`
 - `Weekly Athlete Summary -> Submissions` on the canonical summary
 - `Weekly Athlete Summary -> Submissions` on the stale summary
-- `XP Events -> Weekly Athlete Summary` for matching Enrollment + Week rows that were blank or stale-linked
+- `XP Events -> Weekly Athlete Summary` for matching non-Submission-Base Enrollment + Week rows that were blank or stale-linked
 
 Fields expected to remain unchanged:
 
 - unrelated Weekly Athlete Summary records
 - unrelated XP Events for other Enrollment/Week pairs
+- Submission Base XP Events owned by Automation 010
 - formula Summary Key values
 - Enrollment and Week ownership on the source Submission
 

@@ -125,8 +125,8 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.4** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key before any Submission, Summary, or XP Event write, then repairs only one fully-valid canonical target |
-| Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` (11/11) |
+| Automation **031 v3.4** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key before any Submission, Summary, or XP Event write, then repairs only one fully-valid canonical target; non-Submission-Base XP Event repairs exclude Automation 010-owned events by structured `XP Source` option ID |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` (13/13) |
 | Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
 | Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
 

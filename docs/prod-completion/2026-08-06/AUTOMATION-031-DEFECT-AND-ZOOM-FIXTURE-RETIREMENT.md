@@ -47,10 +47,10 @@ The records no longer participate in active XP totals or summary-key matching.
 
 Issue #96 repository repair is now complete on a focused branch:
 
-- repository script updated to `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.3;
+- repository script updated to `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.4;
 - existing Submission -> Weekly Athlete Summary links are now validated against the current Enrollment + Week + Summary Key;
 - stale links repair to the one canonical summary when exactly one safe replacement exists;
-- matching XP Events for the same Enrollment + Week repair from blank/stale summary linkage to the canonical summary;
+- matching non-Submission-Base XP Events for the same Enrollment + Week repair from blank/stale summary linkage to the canonical summary; Submission Base XP Events remain owned by Automation 010 via the structured `XP Source` option ID `selZw4nOkwMJCgGyR`;
 - stale repair fails closed when no canonical summary can be resolved safely;
 - offline regression passed: `node --test tools/testing/tests/test_031_offline.mjs`.
 
