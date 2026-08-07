@@ -71,7 +71,7 @@ Implemented in `airtable/automations/shooting-challenge/010-submission-intake-cr
 
 1. Validate a pre-existing single Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance.
 2. If the existing summary is stale/wrong, resolve exactly one fully-valid canonical Enrollment + Week + Program Instance summary before continuing.
-3. Repair both the Submission and Submission Base XP Event summary links to that canonical summary.
+3. Leave the Submission summary link unchanged and link only the Submission Base XP Event to the validated canonical summary; Automation 031 exclusively owns Submission summary repair.
 4. Fail closed on zero or multiple fully-valid candidates before any XP or backlink write.
 5. Preserve existing duplicate-XP protections and source-key behavior.
 
@@ -87,7 +87,7 @@ Repository-only verification completed:
 - Command: `node --test tools/testing/tests/test_010_offline.mjs`
 - Result: **PASS** (9/9 tests)
 - Covered cases:
-  - stale single summary link repairs to the canonical Enrollment + Week + Program Instance summary;
+  - stale single Submission summary link remains unchanged while the Submission Base XP Event links to the canonical Enrollment + Week + Program Instance summary;
   - stale single summary link with no valid replacement fails closed without writes;
   - no existing link, zero/multiple candidates, wrong Week/Program Instance, and replay count preservation.
 
@@ -102,7 +102,7 @@ Required repair:
 
 1. Validate a pre-existing single summary link against Submission Enrollment + Week + Program Instance.
 2. If stale/wrong, resolve exactly one fully-valid canonical Enrollment + Week + Program Instance summary.
-3. Repair both Submission and XP Event summary linkage.
+3. Preserve the Submission summary link for Automation 031 and repair only the Submission Base XP Event summary linkage.
 4. Fail closed on zero/multiple canonical summaries when a summary is required, before any XP or backlink write.
 5. Preserve duplicate XP protections.
 6. Prove replay creates zero duplicate XP Events on the controlled Schmidt enrollment.
