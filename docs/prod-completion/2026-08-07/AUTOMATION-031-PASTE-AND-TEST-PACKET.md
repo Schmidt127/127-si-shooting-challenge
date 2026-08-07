@@ -4,7 +4,7 @@
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.3
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.4
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -18,18 +18,20 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.3`
+- Repository version in this package: `v3.4`
 
 ## Repository repair completed
 
 The v3.3 repair now:
 
-1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Summary Key;
+1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
 3. repairs a stale Submission link to the canonical summary when exactly one safe replacement exists;
 4. removes the source Submission from the stale summary when repair occurs;
 5. repairs matching XP Events for the same Enrollment + Week when they are blank or still linked to the stale summary;
-6. fails closed when no canonical replacement exists or duplicate canonical matches are found.
+6. derives Program Instance from authoritative Enrollment and Week links and requires exactly one matching ID;
+7. validates candidate summaries before any Submission, Summary, or XP Event write;
+8. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist.
 
 ## Offline verification
 
@@ -39,15 +41,21 @@ Command run:
 
 Result:
 
-- **PASS** (`5/5`)
+- **PASS** (`11/11`)
 
 Covered cases:
 
 1. valid existing link;
-2. stale link with canonical replacement;
-3. stale link without canonical replacement;
-4. replay after repair;
-5. ambiguous canonical matches.
+2. no existing link with one valid replacement;
+3. stale link with canonical replacement;
+4. stale link with zero valid candidates;
+5. replay after repair;
+6. multiple valid candidates;
+7. wrong Enrollment;
+8. wrong Week;
+9. wrong Program Instance;
+10. same athlete/week in another Program Instance;
+11. missing or ambiguous Program Instance.
 
 ## Paste instructions
 
@@ -109,6 +117,18 @@ Expected result:
 - the Submission keeps its current link until an operator resolves the ambiguity or missing canonical summary safely;
 - no new Weekly Athlete Summary is created;
 - no XP Events are reassigned.
+- every affected link and backlink remains unchanged.
+
+### Test D — wrong-context candidate
+
+Run a controlled stale-link scenario where a candidate has the expected Summary Key
+but a different Enrollment, Week, or Program Instance.
+
+Expected result:
+
+- the candidate is rejected before any write;
+- the stale Submission link, stale Summary backlink, and XP Event links remain unchanged;
+- the script fails closed unless exactly one fully valid replacement remains.
 
 ## Expected records and fields
 
@@ -131,7 +151,9 @@ Fields expected to remain unchanged:
 If the Airtable paste or controlled test fails:
 
 1. turn the automation Off or stop further test runs immediately;
-2. paste the prior repository version from `origin/master` (`031` v3.2) back into the Airtable editor;
+2. paste the exact prior repository version from commit
+   `30e7397ba75dfe98f57f34610c63941f83755b6a`
+   (`031` v3.2) back into the Airtable editor;
 3. on the controlled source Submission only, restore the previous `Weekly Athlete Summary` link if the repair was incorrect;
 4. move any incorrectly reassigned `XP Events -> Weekly Athlete Summary` links back to their prior state for the controlled record set only;
 5. confirm the canonical and stale summaries no longer contain accidental Submission link changes;

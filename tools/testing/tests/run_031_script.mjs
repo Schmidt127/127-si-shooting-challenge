@@ -44,13 +44,17 @@ function submissionsFields() {
 }
 
 function enrollmentsFields() {
-  return [{ name: "Enrollment Key", type: "formula", isComputed: true }];
+  return [
+    { name: "Enrollment Key", type: "formula", isComputed: true },
+    { name: "Program Instance", type: "multipleRecordLinks" },
+  ];
 }
 
 function weeksFields() {
   return [
     { name: "Week Key", type: "formula", isComputed: true },
     { name: "Week Name", type: "singleLineText" },
+    { name: "Program Instance", type: "multipleRecordLinks" },
   ];
 }
 
@@ -133,6 +137,7 @@ export function build031Base(opts = {}) {
   const enrollments = new MockTable("Enrollments", enrollmentsFields(), [
     new MockRecord(IDS.ENROLLMENT, {
       "Enrollment Key": "ENR-2026-2027",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
     }),
   ]);
 
@@ -140,6 +145,7 @@ export function build031Base(opts = {}) {
     new MockRecord(IDS.WEEK, {
       "Week Key": "WEEK-EARLY-BIRD",
       "Week Name": "Early Bird",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
     }),
   ]);
 

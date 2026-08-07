@@ -27,7 +27,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Find or Create Weekly Athlete Summary from Submission
  *
- * Version: v3.3
+ * Version: v3.4
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-07
  * Updated Reason: Validate stale Submission -> Weekly Athlete Summary links before replay,
@@ -104,7 +104,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.3",
+  version: "v3.4",
 
   tables: {
     submissions: "Submissions",
@@ -123,11 +123,13 @@ const CONFIG = {
 
   enrollments: {
     enrollmentKey: "Enrollment Key",
+    programInstance: "Program Instance",
   },
 
   weeks: {
     weekKey: "Week Key",
     weekName: "Week Name",
+    programInstance: "Program Instance",
   },
 
   summaries: {
@@ -310,6 +312,18 @@ function getFirstLinkedRecordId(record, table, fieldName) {
   return getLinkedRecordIds(record, table, fieldName)[0] || "";
 }
 
+function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
+  const ids = uniqueIds(getLinkedRecordIds(record, table, fieldName));
+
+  if (ids.length !== 1) {
+    throw new Error(
+      `${label} must have exactly one linked ${fieldName}; found ${ids.length}.`
+    );
+  }
+
+  return ids[0];
+}
+
 function uniqueIds(ids) {
   return [...new Set((ids || []).filter(Boolean))];
 }
@@ -417,24 +431,64 @@ async function createRecordSafe(table, createFields) {
   return await table.createRecordAsync(safeCreateFields);
 }
 
-function summaryMatchesSubmissionContext(summaryRecord, {
+async function loadProgramInstanceContext(enrollmentId, weekId) {
+  const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  if (!enrollment) {
+    throw new Error(`Enrollment not found: ${enrollmentId}`);
+  }
+
+  const week = await weeksTable.selectRecordAsync(weekId);
+  if (!week) {
+    throw new Error(`Week not found: ${weekId}`);
+  }
+
+  const enrollmentProgramInstanceId = getExactlyOneLinkedRecordId(
+    enrollment,
+    enrollmentsTable,
+    CONFIG.enrollments.programInstance,
+    `Enrollment ${enrollmentId}`
+  );
+  const weekProgramInstanceId = getExactlyOneLinkedRecordId(
+    week,
+    weeksTable,
+    CONFIG.weeks.programInstance,
+    `Week ${weekId}`
+  );
+
+  if (enrollmentProgramInstanceId !== weekProgramInstanceId) {
+    throw new Error(
+      `Enrollment ${enrollmentId} and Week ${weekId} belong to different Program Instances.`
+    );
+  }
+
+  return {
+    enrollmentProgramInstanceId,
+    weekProgramInstanceId,
+    programInstanceId: enrollmentProgramInstanceId,
+  };
+}
+
+async function validateSummaryForContext(summaryRecord, {
   enrollmentId,
   weekId,
+  programInstanceId,
   summaryKey,
 }) {
   if (!summaryRecord) {
     return false;
   }
 
-  const summaryEnrollmentId = getFirstLinkedRecordId(
+  const summaryEnrollmentId = getExactlyOneLinkedRecordId(
     summaryRecord,
     summariesTable,
-    CONFIG.summaries.enrollment
+    CONFIG.summaries.enrollment,
+    `Weekly Athlete Summary ${summaryRecord.id}`
   );
-  const summaryWeekId = getFirstLinkedRecordId(
+  const summaryWeekId = getExactlyOneLinkedRecordId(
     summaryRecord,
     summariesTable,
-    CONFIG.summaries.week
+    CONFIG.summaries.week,
+    `Weekly Athlete Summary ${summaryRecord.id}`
   );
   const existingSummaryKey = getText(
     summaryRecord,
@@ -442,11 +496,32 @@ function summaryMatchesSubmissionContext(summaryRecord, {
     CONFIG.summaries.summaryKey
   );
 
-  return (
-    summaryEnrollmentId === enrollmentId &&
-    summaryWeekId === weekId &&
-    existingSummaryKey === summaryKey
+  if (
+    summaryEnrollmentId !== enrollmentId ||
+    summaryWeekId !== weekId ||
+    existingSummaryKey !== summaryKey
+  ) {
+    return false;
+  }
+
+  const summaryProgramInstance = await loadProgramInstanceContext(
+    summaryEnrollmentId,
+    summaryWeekId
   );
+
+  return summaryProgramInstance.programInstanceId === programInstanceId;
+}
+
+async function findValidCanonicalSummaries(summaryRecords, context) {
+  const valid = [];
+
+  for (const summary of summaryRecords || []) {
+    if (await validateSummaryForContext(summary, context)) {
+      valid.push(summary);
+    }
+  }
+
+  return valid;
 }
 
 function findSummaryRecordById(summaryRecords, summaryId) {
@@ -603,9 +678,21 @@ requireField(
 );
 
 requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.programInstance,
+  "Enrollments -> Program Instance"
+);
+
+requireField(
   weeksTable,
   CONFIG.weeks.weekKey,
   "Weeks -> Week Key"
+);
+
+requireField(
+  weeksTable,
+  CONFIG.weeks.programInstance,
+  "Weeks -> Program Instance"
 );
 
 requireField(
@@ -770,6 +857,26 @@ async function main() {
       throw new Error(`Week Key is blank for Week ${submissionWeekId}.`);
     }
 
+    const enrollmentProgramInstanceId = getExactlyOneLinkedRecordId(
+      enrollment,
+      enrollmentsTable,
+      CONFIG.enrollments.programInstance,
+      `Enrollment ${submissionEnrollmentId}`
+    );
+    const weekProgramInstanceId = getExactlyOneLinkedRecordId(
+      weekRecord,
+      weeksTable,
+      CONFIG.weeks.programInstance,
+      `Week ${submissionWeekId}`
+    );
+
+    if (enrollmentProgramInstanceId !== weekProgramInstanceId) {
+      throw new Error(
+        `Submission ${recordId} links Enrollment and Week from different Program Instances.`
+      );
+    }
+
+    const programInstanceId = enrollmentProgramInstanceId;
     targetSummaryKey = `${enrollmentKey}|${resolvedWeekKey}`;
 
     debugStep = "7 - Load Weekly Athlete Summaries";
@@ -782,24 +889,20 @@ async function main() {
     debugStep = "8 - Find Matching Summary";
     setOutputSafe("debugStep", debugStep);
 
-    const matchingSummaries = summariesQuery.records.filter(summary => {
-      const summaryKey = getText(
-        summary,
-        summariesTable,
-        CONFIG.summaries.summaryKey
-      );
+    const matchingSummaries = await findValidCanonicalSummaries(
+      summariesQuery.records,
+      {
+        enrollmentId: submissionEnrollmentId,
+        weekId: submissionWeekId,
+        programInstanceId,
+        summaryKey: targetSummaryKey,
+      }
+    );
 
-      return summaryKey === targetSummaryKey;
-    });
-
-    if (
-      matchingSummaries.length > 1 &&
-      CONFIG.flags.throwOnDuplicateSummaryKey
-    ) {
+    if (matchingSummaries.length > 1 && CONFIG.flags.throwOnDuplicateSummaryKey) {
       const duplicateIds = matchingSummaries.map(record => record.id).join(", ");
-
       throw new Error(
-        `Duplicate Weekly Athlete Summary records found for Summary Key ${targetSummaryKey}. Record IDs: ${duplicateIds}`
+        `Multiple fully valid Weekly Athlete Summary records found for Summary Key ${targetSummaryKey} and Program Instance ${programInstanceId}: ${duplicateIds}`
       );
     }
 
@@ -810,9 +913,10 @@ async function main() {
       ? findSummaryRecordById(summariesQuery.records, existingSubmissionSummaryId)
       : null;
     const existingSummaryIsValid = existingSubmissionSummaryId
-      ? summaryMatchesSubmissionContext(existingSummaryRecord, {
+      ? await validateSummaryForContext(existingSummaryRecord, {
         enrollmentId: submissionEnrollmentId,
         weekId: submissionWeekId,
+        programInstanceId,
         summaryKey: targetSummaryKey,
       })
       : false;
