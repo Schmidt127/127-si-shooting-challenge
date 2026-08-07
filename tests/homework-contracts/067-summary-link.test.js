@@ -169,7 +169,7 @@ async function run067(base) {
       base,
       { config: () => ({ recordId: "recQuiz067" }) },
       output,
-      { log: () => {}, log: () => {} }
+      { log: () => {} }
     );
   } catch (caught) {
     error = caught;
