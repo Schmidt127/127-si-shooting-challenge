@@ -32,7 +32,8 @@ The v3.4 repair now:
 6. derives Program Instance from authoritative Enrollment and Week links and requires exactly one matching ID;
 7. validates candidate summaries before any Submission, Summary, or XP Event write;
 8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
-9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist.
+9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist;
+10. never creates a Weekly Athlete Summary; a unique canonical record must already exist.
 
 ## Offline verification
 
@@ -157,7 +158,7 @@ If the Airtable paste or controlled test fails:
 
 1. turn the automation Off or stop further test runs immediately;
 2. paste the exact prior repository version from commit
-   `30e7397ba75dfe98f57f34610c63941f83755b6a`
+   `30e7397ba75dfe98f57e34610c63941f83755b6a`
    (`031` v3.2) back into the Airtable editor;
 3. on the controlled source Submission only, restore the previous `Weekly Athlete Summary` link if the repair was incorrect;
 4. move any incorrectly reassigned `XP Events -> Weekly Athlete Summary` links back to their prior state for the controlled record set only;
