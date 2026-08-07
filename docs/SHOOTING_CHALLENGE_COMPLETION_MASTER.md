@@ -148,6 +148,17 @@ Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET
 
 Checklist: [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md) · Report: [`docs/overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md`](./overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md).
 
+### Dashboard reconciliation (2026-08-07 — Automation 010 replay-safety repo repair)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **010 v10.6** | **Built in Repository** | Issue **#106** repair validates stale Summary links against Submission Enrollment + Week + Program Instance + canonical Summary Key, repairs Submission + XP Event links only after full validation, and fails closed without partial writes |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_010_offline.mjs` |
+| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
+| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+
+Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md`](./prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md).
+
 ### Dashboard reconciliation (2026-08-06 — Automation 066 v3.4 createRecords fields fix)
 
 | Item | Status | Evidence |

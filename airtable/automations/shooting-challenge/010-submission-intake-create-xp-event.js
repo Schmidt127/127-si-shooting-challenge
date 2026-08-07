@@ -25,9 +25,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /************************************************************************************************
  * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
  *
- * Version: 10.4
+ * Version: 10.6
  * Date Written: 2026-06-06
- * Last Updated: 2026-06-22
+ * Last Updated: 2026-08-07
  *
  * PURPOSE
  * - Reads one Submission record.
@@ -103,13 +103,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-    version: "10.4",
+    version: "10.6",
 
     tables: {
         submissions: "Submissions",
         xpEvents: "XP Events",
         xpRules: "XP Reward Rules",
         enrollments: "Enrollments",
+        weeks: "Weeks",
         weeklySummary: "Weekly Athlete Summary",
     },
 
@@ -130,10 +131,18 @@ const CONFIG = {
     weeklySummary: {
         enrollment: "Enrollment",
         week: "Week",
+        summaryKey: "Summary Key",
     },
 
     enrollments: {
         runShotMilestoneCheck: "Run Shot Milestone Check?",
+        programInstance: "Program Instance",
+        enrollmentKey: "Enrollment Key",
+    },
+
+    weeks: {
+        programInstance: "Program Instance",
+        weekKey: "Week Key",
     },
 
     xpRules: {
@@ -207,6 +216,7 @@ let submissionsTable = null;
 let xpEventsTable = null;
 let xpRulesTable = null;
 let enrollmentsTable = null;
+let weeksTable = null;
 let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
 let writableXpDateField = "";
@@ -442,59 +452,163 @@ async function loadWeeklySummaryQuery() {
         fields: [
             CONFIG.weeklySummary.enrollment,
             CONFIG.weeklySummary.week,
+            CONFIG.weeklySummary.summaryKey,
         ],
     });
 
     return weeklySummaryQueryCache;
 }
 
-async function findWeeklySummaryId(enrollmentId, weekId) {
-    const cleanEnrollmentId = String(enrollmentId || "").trim();
-    const cleanWeekId = String(weekId || "").trim();
+async function getProgramInstanceContext(enrollmentId, weekId) {
+    const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId);
+    const week = await weeksTable.selectRecordAsync(weekId);
 
-    if (!cleanEnrollmentId || !cleanWeekId) {
-        return "";
+    if (!enrollment) {
+        throw new Error(`Enrollment not found: ${enrollmentId}`);
+    }
+
+    if (!week) {
+        throw new Error(`Week not found: ${weekId}`);
+    }
+
+    const enrollmentProgramInstances = getLinkedRecordIds(
+        enrollment,
+        enrollmentsTable,
+        CONFIG.enrollments.programInstance
+    );
+    const weekProgramInstances = getLinkedRecordIds(
+        week,
+        weeksTable,
+        CONFIG.weeks.programInstance
+    );
+
+    if (enrollmentProgramInstances.length !== 1) {
+        throw new Error(
+            `Enrollment ${enrollmentId} must have exactly one Program Instance; found ${enrollmentProgramInstances.length}.`
+        );
+    }
+
+    if (weekProgramInstances.length !== 1) {
+        throw new Error(
+            `Week ${weekId} must have exactly one Program Instance; found ${weekProgramInstances.length}.`
+        );
+    }
+
+    if (enrollmentProgramInstances[0] !== weekProgramInstances[0]) {
+        throw new Error(
+            `Enrollment ${enrollmentId} and Week ${weekId} belong to different Program Instances.`
+        );
+    }
+
+    const enrollmentKey = getText(
+        enrollment,
+        enrollmentsTable,
+        CONFIG.enrollments.enrollmentKey
+    );
+    const weekKey = getText(week, weeksTable, CONFIG.weeks.weekKey);
+
+    if (!enrollmentKey || !weekKey) {
+        throw new Error(
+            `Cannot derive canonical Summary Key for Enrollment ${enrollmentId} + Week ${weekId}.`
+        );
+    }
+
+    return {
+        enrollmentProgramInstanceId: enrollmentProgramInstances[0],
+        weekProgramInstanceId: weekProgramInstances[0],
+        programInstanceId: enrollmentProgramInstances[0],
+        canonicalSummaryKey: `${enrollmentKey}|${weekKey}`,
+    };
+}
+
+async function validateWeeklySummary(summaryRecord, {
+    enrollmentId,
+    weekId,
+    programInstanceId,
+    canonicalSummaryKey,
+}) {
+    if (!summaryRecord) {
+        return false;
+    }
+
+    const summaryEnrollmentIds = getLinkedRecordIds(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.enrollment
+    );
+    const summaryWeekIds = getLinkedRecordIds(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.week
+    );
+    const summaryKey = getText(
+        summaryRecord,
+        weeklySummaryTable,
+        CONFIG.weeklySummary.summaryKey
+    );
+
+    if (
+        summaryEnrollmentIds.length !== 1 ||
+        summaryWeekIds.length !== 1 ||
+        summaryEnrollmentIds[0] !== enrollmentId ||
+        summaryWeekIds[0] !== weekId ||
+        summaryKey !== canonicalSummaryKey
+    ) {
+        return false;
+    }
+
+    const summaryProgramInstance = await getProgramInstanceContext(
+        summaryEnrollmentIds[0],
+        summaryWeekIds[0]
+    );
+
+    return summaryProgramInstance.programInstanceId === programInstanceId;
+}
+
+async function findValidWeeklySummaryIds(
+    enrollmentId,
+    weekId,
+    programInstanceId,
+    canonicalSummaryKey
+) {
+    const query = await loadWeeklySummaryQuery();
+    const validIds = [];
+
+    for (const record of query.records) {
+        if (
+            await validateWeeklySummary(record, {
+                enrollmentId,
+                weekId,
+                programInstanceId,
+                canonicalSummaryKey,
+            })
+        ) {
+            validIds.push(record.id);
+        }
+    }
+
+    return validIds;
+}
+
+async function findWeeklySummaryRecordById(summaryId) {
+    const cleanSummaryId = String(summaryId || "").trim();
+
+    if (!cleanSummaryId) {
+        return null;
     }
 
     const query = await loadWeeklySummaryQuery();
-
-    const matches = query.records.filter((record) => {
-        const summaryEnrollmentId = getFirstLinkedRecordId(
-            record,
-            weeklySummaryTable,
-            CONFIG.weeklySummary.enrollment
-        );
-        const summaryWeekId = getFirstLinkedRecordId(
-            record,
-            weeklySummaryTable,
-            CONFIG.weeklySummary.week
-        );
-
-        return (
-            summaryEnrollmentId === cleanEnrollmentId &&
-            summaryWeekId === cleanWeekId
-        );
-    });
-
-    if (matches.length > 1) {
-        throw new Error(
-            `Multiple Weekly Athlete Summary records for Enrollment ${cleanEnrollmentId} + Week ${cleanWeekId}: ${matches.map((record) => record.id).join(", ")}`
-        );
-    }
-
-    return matches.length === 1 ? matches[0].id : "";
+    return query.records.find((record) => record.id === cleanSummaryId) || null;
 }
 
-async function resolveWeeklySummaryId({
+async function resolveWeeklySummaryContext({
     sourceWeeklySummaryIds = [],
     enrollmentId = "",
     weekId = "",
+    programInstanceId = "",
+    canonicalSummaryKey = "",
 }) {
     const fromSource = uniqueIds(sourceWeeklySummaryIds);
-
-    if (fromSource.length === 1) {
-        return fromSource[0];
-    }
 
     if (fromSource.length > 1) {
         throw new Error(
@@ -502,7 +616,67 @@ async function resolveWeeklySummaryId({
         );
     }
 
-    return findWeeklySummaryId(enrollmentId, weekId);
+    if (fromSource.length === 1) {
+        const sourceWeeklySummaryId = fromSource[0];
+        const sourceSummaryRecord = await findWeeklySummaryRecordById(sourceWeeklySummaryId);
+
+        if (
+            sourceSummaryRecord &&
+            await validateWeeklySummary(sourceSummaryRecord, {
+                enrollmentId,
+                weekId,
+                programInstanceId,
+                canonicalSummaryKey,
+            })
+        ) {
+            return {
+                weeklySummaryId: sourceWeeklySummaryId,
+                resolutionSource: "source_valid",
+                repairedStaleLink: false,
+            };
+        }
+
+        const validCanonicalSummaryIds = await findValidWeeklySummaryIds(
+            enrollmentId,
+            weekId,
+            programInstanceId,
+            canonicalSummaryKey
+        );
+
+        if (validCanonicalSummaryIds.length !== 1) {
+            const problem = sourceSummaryRecord
+                ? `does not match Enrollment ${enrollmentId} + Week ${weekId} + Program Instance ${programInstanceId}`
+                : "references a missing Weekly Athlete Summary record";
+            throw new Error(
+                `Submission Weekly Athlete Summary ${sourceWeeklySummaryId} ${problem}; expected exactly one valid canonical summary, found ${validCanonicalSummaryIds.length}.`
+            );
+        }
+
+        return {
+            weeklySummaryId: validCanonicalSummaryIds[0],
+            resolutionSource: "source_repaired_to_canonical",
+            repairedStaleLink: validCanonicalSummaryIds[0] !== sourceWeeklySummaryId,
+        };
+    }
+
+    const validCanonicalSummaryIds = await findValidWeeklySummaryIds(
+        enrollmentId,
+        weekId,
+        programInstanceId,
+        canonicalSummaryKey
+    );
+
+    if (validCanonicalSummaryIds.length !== 1) {
+        throw new Error(
+            `Expected exactly one valid canonical Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekId} + Program Instance ${programInstanceId}; found ${validCanonicalSummaryIds.length}.`
+        );
+    }
+
+    return {
+        weeklySummaryId: validCanonicalSummaryIds[0],
+        resolutionSource: "lookup_enrollment_week",
+        repairedStaleLink: false,
+    };
 }
 
 function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
@@ -755,6 +929,46 @@ function assertRequiredSchema() {
     );
 
     requireWritableField(
+        submissionsTable,
+        CONFIG.submissions.weeklySummary
+    );
+
+    requireWritableField(
+        weeklySummaryTable,
+        CONFIG.weeklySummary.enrollment
+    );
+
+    requireWritableField(
+        weeklySummaryTable,
+        CONFIG.weeklySummary.week
+    );
+
+    requireField(
+        weeklySummaryTable,
+        CONFIG.weeklySummary.summaryKey
+    );
+
+    requireField(
+        enrollmentsTable,
+        CONFIG.enrollments.programInstance
+    );
+
+    requireField(
+        enrollmentsTable,
+        CONFIG.enrollments.enrollmentKey
+    );
+
+    requireField(
+        weeksTable,
+        CONFIG.weeks.programInstance
+    );
+
+    requireField(
+        weeksTable,
+        CONFIG.weeks.weekKey
+    );
+
+    requireWritableField(
         enrollmentsTable,
         CONFIG.enrollments.runShotMilestoneCheck,
         "Run Shot Milestone Check?"
@@ -804,6 +1018,7 @@ async function main() {
     let submission = null;
     let debugStep = "1 - Start";
     let recordId = "";
+    let writeStarted = false;
 
     try {
         setOutputSafe("debugStep", debugStep);
@@ -829,6 +1044,7 @@ async function main() {
         xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
         xpRulesTable = base.getTable(CONFIG.tables.xpRules);
         enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+        weeksTable = base.getTable(CONFIG.tables.weeks);
         weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
         weeklySummaryQueryCache = null;
 
@@ -935,6 +1151,11 @@ async function main() {
         if (!weekId) {
             throw new Error(`Submission ${recordId} is missing Week.`);
         }
+
+        const programInstanceContext = await getProgramInstanceContext(
+            enrollmentId,
+            weekId
+        );
 
         if (!submissionKey) {
             throw new Error(`Submission ${recordId} has a blank Submission Key.`);
@@ -1166,17 +1387,24 @@ async function main() {
             )
             : [];
 
-        const weeklySummaryId = await resolveWeeklySummaryId({
+        const weeklySummaryContext = await resolveWeeklySummaryContext({
             sourceWeeklySummaryIds: submissionWeeklySummaryIds,
             enrollmentId,
             weekId,
+            programInstanceId: programInstanceContext.programInstanceId,
+            canonicalSummaryKey: programInstanceContext.canonicalSummaryKey,
         });
+        const weeklySummaryId = weeklySummaryContext.weeklySummaryId;
 
         log("Weekly Athlete Summary resolution", {
             submissionWeeklySummaryIds,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
+            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
             enrollmentId,
             weekId,
+            programInstanceId: programInstanceContext.programInstanceId,
+            canonicalSummaryKey: programInstanceContext.canonicalSummaryKey,
         });
 
         const publicReason = buildPublicReason();
@@ -1250,6 +1478,7 @@ async function main() {
         if (candidateEvents.length === 1) {
             xpEventId = candidateEvents[0].id;
 
+            writeStarted = true;
             await xpEventsTable.updateRecordAsync(
                 xpEventId,
                 xpEventFields
@@ -1258,6 +1487,7 @@ async function main() {
             actionOut = "updated_existing_xp_event";
             statusOut = CONFIG.outputStatuses.updated;
         } else {
+            writeStarted = true;
             xpEventId = await xpEventsTable.createRecordAsync(
                 xpEventFields
             );
@@ -1311,6 +1541,9 @@ async function main() {
 
             xpEventId,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
+            repairedSubmissionSummaryLink: false,
+            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
             sourceKey,
             dedupeKey,
             normalizedDedupeKey,
@@ -1337,6 +1570,7 @@ async function main() {
             submissionId: recordId,
             xpEventId,
             weeklySummaryId: weeklySummaryId || "",
+            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
             sourceKey,
             debugStep,
         }));
@@ -1347,7 +1581,7 @@ async function main() {
             error: error.message,
         });
 
-        if (submission) {
+        if (submission && writeStarted) {
             try {
                 await markSubmissionStatus(recordId, CONFIG.values.statusError);
             } catch (statusError) {
