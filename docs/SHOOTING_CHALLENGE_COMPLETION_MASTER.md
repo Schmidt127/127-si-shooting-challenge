@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-07** (010 v10.5 replay-safety repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
+| Last updated | **2026-08-06** (023 v3.1 Week→PI fix; 005 PASS; 023 INCOMPLETE until Week path retest; then 053→066→118→119) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -121,17 +121,6 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
-### Dashboard reconciliation (2026-08-07 — Automation 010 replay-safety repo repair)
-
-| Item | Status | Evidence |
-|------|--------|----------|
-| Automation **010 v10.5** | **Built in Repository** | Issue **#106** repair validates stale single Summary links against Submission Enrollment + Week, repairs Submission + XP Event links to the canonical summary, and fails closed when no canonical repair target exists |
-| Offline regression | **PASS** | `node --test tools/testing/tests/test_010_offline.mjs` |
-| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
-| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
-
-Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md`](./prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md).
-
 ### Dashboard reconciliation (2026-08-06 — Repository finalization / PR #88)
 
 | Item | Status | Evidence |
@@ -147,6 +136,17 @@ Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIAT
 **Net math:** no Section 4 Complete/LT/Installed bucket moves from PR #88 alone. 033 Installed attestation is operator paste (was Built paste-pending).
 
 Checklist: [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md) · Report: [`docs/overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md`](./overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md).
+
+### Dashboard reconciliation (2026-08-07 — Automation 010 replay-safety repo repair)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **010 v10.6** | **Built in Repository** | Issue **#106** repair validates stale Summary links against Submission Enrollment + Week + Program Instance + canonical Summary Key, repairs Submission + XP Event links only after full validation, and fails closed without partial writes |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_010_offline.mjs` |
+| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
+| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+
+Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md`](./prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md).
 
 ### Dashboard reconciliation (2026-08-06 — Automation 066 v3.4 createRecords fields fix)
 
