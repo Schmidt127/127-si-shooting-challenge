@@ -41,7 +41,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Validates any pre-existing Submission -> Weekly Athlete Summary link against the
  *   current Submission Enrollment + Week + Summary Key.
  * - Finds the matching Weekly Athlete Summary record.
- * - Creates a Weekly Athlete Summary if one does not exist.
+ * - Fails closed when no unique canonical Weekly Athlete Summary already exists.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
@@ -436,34 +436,6 @@ async function updateRecordSafe(table, targetRecordId, updates) {
   await table.updateRecordAsync(targetRecordId, safeUpdates);
 
   return Object.keys(safeUpdates);
-}
-
-async function createRecordSafe(table, createFields) {
-  const safeCreateFields = {};
-
-  for (const [fieldName, value] of Object.entries(createFields || {})) {
-    if (!fieldExists(table, fieldName)) {
-      log(`Skipped missing create field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (!isWritableField(table, fieldName)) {
-      log(`Skipped non-writable create field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (value === undefined) {
-      continue;
-    }
-
-    safeCreateFields[fieldName] = value;
-  }
-
-  if (Object.keys(safeCreateFields).length === 0) {
-    throw new Error(`No writable fields available to create record in ${table.name}.`);
-  }
-
-  return await table.createRecordAsync(safeCreateFields);
 }
 
 async function loadProgramInstanceContext(enrollmentId, weekId) {
@@ -988,44 +960,32 @@ async function main() {
       );
     }
 
-    if (weeklySummaryId) {
-      const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId);
-      if (!matchingSummary) {
-        throw new Error(`Resolved Weekly Athlete Summary not found in loaded query: ${weeklySummaryId}`);
-      }
-
-      const existingSubmissionIds = getLinkedRecordIds(
-        matchingSummary,
-        summariesTable,
-        CONFIG.summaries.submissions
-      );
-
-      const mergedSubmissionIds = uniqueIds([...existingSubmissionIds, recordId]);
-
-      const summaryUpdates = {
-        ...buildSummaryStatusUpdate(),
-      };
-
-      if (!sameIdArray(existingSubmissionIds, mergedSubmissionIds)) {
-        summaryUpdates[CONFIG.summaries.submissions] = linkedCell(mergedSubmissionIds);
-      }
-
-      updatedFields = await updateRecordSafe(
-        summariesTable,
-        weeklySummaryId,
-        summaryUpdates
-      );
-    } else {
-      const createFields = {
-        [CONFIG.summaries.enrollment]: [{ id: submissionEnrollmentId }],
-        [CONFIG.summaries.week]: [{ id: submissionWeekId }],
-        [CONFIG.summaries.submissions]: [{ id: recordId }],
-        ...buildSummaryStatusUpdate(),
-      };
-
-      weeklySummaryId = await createRecordSafe(summariesTable, createFields);
-      actionTaken = "created_new_summary";
+    const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId);
+    if (!matchingSummary) {
+      throw new Error(`Resolved Weekly Athlete Summary not found in loaded query: ${weeklySummaryId}`);
     }
+
+    const existingSubmissionIds = getLinkedRecordIds(
+      matchingSummary,
+      summariesTable,
+      CONFIG.summaries.submissions
+    );
+
+    const mergedSubmissionIds = uniqueIds([...existingSubmissionIds, recordId]);
+
+    const summaryUpdates = {
+      ...buildSummaryStatusUpdate(),
+    };
+
+    if (!sameIdArray(existingSubmissionIds, mergedSubmissionIds)) {
+      summaryUpdates[CONFIG.summaries.submissions] = linkedCell(mergedSubmissionIds);
+    }
+
+    updatedFields = await updateRecordSafe(
+      summariesTable,
+      weeklySummaryId,
+      summaryUpdates
+    );
 
     debugStep = "10 - Link Summary Back to Submission";
     setOutputSafe("debugStep", debugStep);
