@@ -44,6 +44,14 @@ const CONFIG = {
   hw17Number: "HW 17",
 };
 
+function setOutputSafe(name, value) {
+  try {
+    output.set(name, value);
+  } catch {
+    // Output variables are optional for scheduled reconciliation runs.
+  }
+}
+
 function linkedIds(record, fieldName) {
   const value = record.getCellValue(fieldName);
   return Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [];
@@ -149,10 +157,10 @@ async function main() {
     linked += 1;
   }
 
-  output.set("statusOut", "success");
-  output.set("actionOut", linked > 0 ? "linked_deferred" : "no_changes");
-  output.set("errorOut", "");
-  output.set("debugStep", "complete");
+  setOutputSafe("statusOut", "success");
+  setOutputSafe("actionOut", linked > 0 ? "linked_deferred" : "no_changes");
+  setOutputSafe("errorOut", "");
+  setOutputSafe("debugStep", "complete");
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
     version: CONFIG.version,
@@ -167,10 +175,10 @@ try {
   await main();
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);
-  output.set("statusOut", "error");
-  output.set("actionOut", "error");
-  output.set("errorOut", message);
-  output.set("debugStep", "error");
+  setOutputSafe("statusOut", "error");
+  setOutputSafe("actionOut", "error");
+  setOutputSafe("errorOut", message);
+  setOutputSafe("debugStep", "error");
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
     version: CONFIG.version,
