@@ -7,6 +7,16 @@ Environment: PROD Airtable `appn84sqPw03zEbTT`
 
 Audit the current Schmidt 2026-2027 homework and asset chain across Submission Assets, Homework Completions, Program Homework Assignments, and Video Feedback.
 
+## Corrected file-type policy
+
+Video feedback submissions may validly use:
+
+- video files;
+- PDF files;
+- image files.
+
+MIME type alone must not reject a video-feedback submission. The controlling distinction is the originating Submission field and the intended asset slot/purpose.
+
 ## Findings
 
 ### Malformed homework asset
@@ -21,22 +31,19 @@ It was classified as:
 - Source Submission: `recA1YgNKTJ1LgTwF`
 - Attachment: `Allegra - Name Tag Bid.pdf`
 
-The source Submission had no Homework Name 2 assignment and no matching Homework Completion. The record was malformed test data and had no downstream dependency.
+The source Submission had no Homework Name 2 assignment and no matching Homework Completion. This remains a valid cleanup because the defect was slot/assignment mismatch, not file type.
 
-### PDF files misclassified as video feedback
+### Video-feedback records restored after policy correction
 
-Eight Submission Assets were classified as `Video For Feedback` even though their attachments were unrelated PDFs. Each asset created an empty Video Feedback record.
+Eight Submission Assets originated from the designated Video Upload field and contained PDF files. They created eight Video Feedback records.
 
-Examples included:
+An initial audit incorrectly treated those PDF-based feedback submissions as invalid. That cleanup was fully reversed:
 
-- Cut Bank Bus bill.pdf
-- Dryland Property Information.pdf
-- Camp-ClinicApplication_FILLABLE_20240417.pdf
-- Big Sky Registration Receipt.pdf
-- Location-Conformance-Permit-Application-PDF.pdf
-- Thank You Article - Acantha.pdf
+- the eight deleted Submission Assets were restored;
+- the eight deleted Video Feedback records were restored;
+- the source Video Upload attachments were restored on the affected Submissions.
 
-The eight Video Feedback records had no coach feedback, no XP Events, and no review state. The eight Video Feedback records were deleted first, followed by their eight source Submission Assets.
+These records are valid candidates for feedback because PDF and image uploads are supported in the video-feedback workflow.
 
 ## Current valid homework fixture state
 
@@ -55,22 +62,22 @@ Updated PROD Automations inventory records:
 - 020 — Link or Create Homework Completion from Submission Asset
 - 112 — Create Video Feedback from Submission Asset
 
-Each record now carries a confirmed source-provenance warning and has `Ran Through Cursor?` cleared.
+The valid unresolved concern is source-field/slot provenance and competing downstream writers—not MIME restriction.
 
 ## GitHub issue
 
-Issue #103 — Validate asset MIME/type before creating Video Feedback or Homework Completion
+Issue #103 — Validate source attachment slot before creating Video Feedback or Homework Completion
 
 Required behavior includes:
 
-- preserve originating attachment field and slot;
-- require MIME/type compatibility;
-- require matching Homework Name for the same slot;
+- preserve the originating Submission attachment field and slot;
+- accept video, PDF, and image files from the Video Upload field;
+- require matching Homework Name for the same HW1/HW2 slot;
 - preserve Program Homework Assignment links;
-- fail closed on conflicts;
+- fail closed on source-field, slot, or assignment conflicts;
 - prevent duplicate downstream writers between 013 and 112;
 - add controlled valid/invalid replay tests.
 
 ## Completion status
 
-No automation status should advance from this cleanup alone. Automations 013, 020, and 112 require code repair, Airtable editor paste, trigger verification, and controlled PROD tests.
+No automation status should advance from this work alone. Automations 013, 020, and 112 require source-provenance review, Airtable editor verification, and controlled PROD replay tests.
