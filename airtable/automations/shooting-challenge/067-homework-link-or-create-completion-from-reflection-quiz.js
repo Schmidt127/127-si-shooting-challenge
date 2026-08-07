@@ -50,6 +50,8 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
  * - Resolves the single active HW 17 record in FBC Curriculum - SYNC and its Week.
  * - Finds or creates the matching Homework Completion (Enrollment + Week + Homework).
  * - Links quiz ↔ completion; stamps Source System = Fillout; Item Slot / Asset Slot = HW1.
+ * - Links the Homework Completion to the unique existing Weekly Athlete Summary for
+ *   the same Enrollment + Week when that summary is available; never creates a summary.
  * - Approved path (SC-014 Option B): attachment-less — bridge succeeds with 0 assets
  *   (actionOut may include no_attachment_field / no_attachment_yet).
  * - Optional legacy attachment path: when quiz PDF attachment(s) exist, find/create parent
@@ -82,7 +84,8 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
  * - actionOut = created_new | linked_existing | assets_created | assets_linked |
  *               skipped_already_linked | needs_review | no_attachment_field |
  *               no_attachment_yet | error
- * - errorOut, debugStep, quizSubmissionId, homeworkCompletionId, submissionIdOut, assetIdsOut
+ * - errorOut, debugStep, quizSubmissionId, homeworkCompletionId, weeklySummaryId,
+ *   submissionIdOut, assetIdsOut
  *
  * AUTHORITY
  * - docs/v2/C009_HW17_ATTACHMENT_DEV_INSTALL.md
@@ -106,6 +109,7 @@ const CONFIG = {
     enrollments: "Enrollments",
     submissions: "Submissions",
     assets: "Submission Assets",
+    weeklySummaries: "Weekly Athlete Summary",
   },
 
   quiz: {
@@ -137,6 +141,7 @@ const CONFIG = {
     submissionDate: "Submission Date",
     submissionAssets: "Submission Assets",
     submissionsLinked: "Submissions - Linked",
+    weeklySummaryLink: "Weekly Athlete Summary Link",
     itemSlot: "Item Slot",
     assetSlot: "Asset Slot",
   },
@@ -201,6 +206,7 @@ let curriculumTable;
 let enrollmentsTable;
 let submissionsTable;
 let assetsTable;
+let weeklySummariesTable;
 
 /* =========================================================
    SECTION 2 — HELPERS
@@ -455,6 +461,68 @@ function findCompletionMatch(homeworkRecords, enrollmentId, weekId, homeworkId) 
   });
 }
 
+async function resolveWeeklySummaryId(enrollmentId, weekId) {
+  const fields = safeFields(weeklySummariesTable, ["Enrollment", "Week"]);
+  const query = await weeklySummariesTable.selectRecordsAsync({ fields });
+  const matches = query.records.filter((summary) => {
+    const summaryEnrollmentIds = linkedIds(summary, "Enrollment");
+    const summaryWeekIds = linkedIds(summary, "Week");
+    return summaryEnrollmentIds.length === 1 &&
+      summaryWeekIds.length === 1 &&
+      summaryEnrollmentIds[0] === enrollmentId &&
+      summaryWeekIds[0] === weekId;
+  });
+
+  if (matches.length > 1) {
+    throw new Error(
+      `Multiple Weekly Athlete Summary records for Enrollment ${enrollmentId} + Week ${weekId}: ${matches
+        .map((record) => record.id)
+        .join(", ")}`
+    );
+  }
+
+  return matches[0]?.id || "";
+}
+
+async function ensureWeeklySummaryLink(homeworkCompletionId, enrollmentId, weekId) {
+  if (!fieldExists(homeworkTable, CONFIG.homework.weeklySummaryLink)) {
+    throw new Error(
+      `Required Homework Completions field is missing: ${CONFIG.homework.weeklySummaryLink}`
+    );
+  }
+
+  const weeklySummaryId = await resolveWeeklySummaryId(enrollmentId, weekId);
+  if (!weeklySummaryId) {
+    console.log(
+      JSON.stringify({
+        automation: CONFIG.scriptName,
+        version: CONFIG.version,
+        event: "weekly_summary_link_deferred",
+        homeworkCompletionId,
+        enrollmentId,
+        weekId,
+        reason: "No canonical Weekly Athlete Summary exists yet.",
+      })
+    );
+    return "";
+  }
+
+  const homeworkCompletion = await homeworkTable.selectRecordAsync(homeworkCompletionId, {
+    fields: safeFields(homeworkTable, [CONFIG.homework.weeklySummaryLink]),
+  });
+  const currentIds = linkedIds(homeworkCompletion, CONFIG.homework.weeklySummaryLink);
+  if (currentIds.length === 1 && currentIds[0] === weeklySummaryId) {
+    return weeklySummaryId;
+  }
+
+  const update = {};
+  setLink(update, homeworkTable, CONFIG.homework.weeklySummaryLink, [weeklySummaryId]);
+  if (Object.keys(update).length > 0) {
+    await homeworkTable.updateRecordAsync(homeworkCompletionId, update);
+  }
+  return weeklySummaryId;
+}
+
 async function findOrCreateParentSubmission(enrollmentId, weekId, homeworkId, files) {
   const fieldsToLoad = safeFields(submissionsTable, Object.values(CONFIG.submissions));
   const query = await submissionsTable.selectRecordsAsync({ fields: fieldsToLoad });
@@ -573,6 +641,7 @@ async function main() {
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   assetsTable = base.getTable(CONFIG.tables.assets);
+  weeklySummariesTable = base.getTable(CONFIG.tables.weeklySummaries);
 
   debugStep = "load_quiz_submission";
   setOutputSafe("debugStep", debugStep);
@@ -747,6 +816,15 @@ async function main() {
       await quizTable.updateRecordAsync(quiz.id, quizUpdate);
     }
   }
+
+  debugStep = "link_homework_completion_to_weekly_summary";
+  setOutputSafe("debugStep", debugStep);
+  const weeklySummaryId = await ensureWeeklySummaryLink(
+    homeworkCompletionId,
+    enrollmentId,
+    hw17WeekId
+  );
+  setOutputSafe("weeklySummaryId", weeklySummaryId);
 
   // ---- Asset / Submission intake (C-009) ----
   debugStep = "resolve_attachment_field";
