@@ -25,14 +25,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
- * Find or Create Weekly Athlete Summary from Submission
+ * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.4
+ * Version: v3.5
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-07
- * Updated Reason: Validate stale Submission -> Weekly Athlete Summary links before replay,
- * repair the Submission and matching XP links to the canonical summary when safe, and
- * fail closed when no safe canonical repair target exists.
+ * Updated Reason: Ignore malformed unrelated summary candidates, repair the Submission and
+ * matching XP links to one canonical summary when safe, and fail closed when zero/multiple
+ * valid candidates exist.
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -40,8 +40,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Builds the target Summary Key from Enrollment Key + Week Key.
  * - Validates any pre-existing Submission -> Weekly Athlete Summary link against the
  *   current Submission Enrollment + Week + Summary Key.
- * - Finds the matching Weekly Athlete Summary record.
- * - Fails closed when no unique canonical Weekly Athlete Summary already exists.
+ * - Finds exactly one fully valid matching Weekly Athlete Summary record.
+ * - Fails closed when zero or multiple fully valid candidates exist; it never creates one.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
@@ -106,7 +106,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.4",
+  version: "v3.5",
 
   tables: {
     submissions: "Submissions",
@@ -523,8 +523,15 @@ async function findValidCanonicalSummaries(summaryRecords, context) {
   const valid = [];
 
   for (const summary of summaryRecords || []) {
-    if (await validateSummaryForContext(summary, context)) {
-      valid.push(summary);
+    try {
+      if (await validateSummaryForContext(summary, context)) {
+        valid.push(summary);
+      }
+    } catch (error) {
+      log("Ignored malformed Weekly Athlete Summary candidate", {
+        candidateRecordId: summary?.id || "(unknown)",
+        reason: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 
@@ -928,14 +935,9 @@ async function main() {
     const existingSummaryRecord = existingSubmissionSummaryId
       ? findSummaryRecordById(summariesQuery.records, existingSubmissionSummaryId)
       : null;
-    const existingSummaryIsValid = existingSubmissionSummaryId
-      ? await validateSummaryForContext(existingSummaryRecord, {
-        enrollmentId: submissionEnrollmentId,
-        weekId: submissionWeekId,
-        programInstanceId,
-        summaryKey: targetSummaryKey,
-      })
-      : false;
+    const existingSummaryIsValid =
+      !!existingSummaryRecord &&
+      matchingSummaries.some(summary => summary.id === existingSummaryRecord.id);
 
     if (existingSummaryIsValid) {
       weeklySummaryId = existingSubmissionSummaryId;

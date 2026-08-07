@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-07** (031 v3.4 Program Instance-safe stale-link repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
+| Last updated | **2026-08-07** (031 v3.5 malformed-candidate resilience repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -125,7 +125,7 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.4** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key before any Submission, Summary, or XP Event write, then repairs only one fully-valid canonical target; non-Submission-Base XP Event repairs exclude Automation 010-owned events by structured `XP Source` option ID |
+| Automation **031 v3.5** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key, ignores/logs malformed candidates, fails closed unless exactly one fully-valid canonical target exists, never creates a summary, and repairs only non-Submission-Base XP Event links; Automation 010-owned events remain excluded by structured `XP Source` option ID |
 | Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` (13/13) |
 | Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
 | Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
