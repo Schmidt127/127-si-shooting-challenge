@@ -7,7 +7,7 @@ Last Synced From Airtable: 2026-06-20
 Last GitHub Update: 2026-08-07
 
 Purpose:
-Finds or creates Weekly Athlete Summary from counted submissions and repairs orphan XP links.
+Finds the unique canonical Weekly Athlete Summary for counted submissions and repairs orphan XP links.
 
 Trigger:
 Submissions when Count This Submission? is checked and Weekly Athlete Summary is empty,
@@ -1090,15 +1090,10 @@ async function main() {
     setOutputSafe("actionTaken", actionTaken);
     setOutputSafe("actionOut", actionTaken || "");
     setOutputSafe("orphanXpLinkedCount", orphanXpLinkedCount);
-    setOutputSafe(
-      "statusOut",
-      actionTaken === "created_new_summary"
-        ? CONFIG.outputStatuses.created
-        : CONFIG.outputStatuses.found
-    );
+    setOutputSafe("statusOut", CONFIG.outputStatuses.found);
     setOutputSafe("errorOut", "");
 
-    log("Weekly Summary find/create completed", {
+    log("Weekly Summary canonical resolution completed", {
       recordId,
       weeklySummaryId,
       summaryKeyOut: targetSummaryKey,
