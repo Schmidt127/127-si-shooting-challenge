@@ -22,7 +22,7 @@ function totalWrites(base) {
   );
 }
 
-test("repairs a stale Submission summary link to the canonical Enrollment+Week summary", async () => {
+test("keeps a stale Submission summary link unchanged while linking the XP Event canonically", async () => {
   const base = build010Base();
 
   const { output, error } = await run010({ base });
@@ -31,9 +31,10 @@ test("repairs a stale Submission summary link to the canonical Enrollment+Week s
   assert.equal(output.values.actionOut, "updated_existing_xp_event");
   assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
   assert.equal(output.values.weeklySummaryResolution, "source_repaired_to_canonical");
-  assert.equal(output.values.repairedSubmissionSummaryLink, true);
+  assert.equal(output.values.repairedSubmissionSummaryLink, false);
+  assert.equal(output.values.submissionSummaryLinkNeedsRepair, true);
 
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
   assert.deepEqual(xpEventWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
 });
 
@@ -74,7 +75,8 @@ test("no existing Submission summary link requires one valid replacement", async
   const { output, error } = await run010({ base });
   assert.equal(error, null, error && error.message);
   assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.deepEqual(submissionWeeklySummary(base), []);
+  assert.deepEqual(xpEventWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
 });
 
 test("zero valid candidates fails closed before XP writes", async () => {
