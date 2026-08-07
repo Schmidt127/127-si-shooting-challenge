@@ -4,7 +4,9 @@ Status: Repository preparation only. No Airtable records, schema, views, automat
 
 ## Safety boundaries
 
-- Use the DEV base only after Mike pastes the committed scripts and confirms the exact installed versions.
+- Work directly in the cleared Airtable PROD testing base.
+- Use controlled Schmidt testing records only.
+- Historical data preservation is not required for this cleared testing base.
 - Do not enable Automation 053.
 - Do not use `Perfect Week Test Override?`; the repository verifier treats that as a failed bypass.
 - Create only the controlled Schmidt records listed below, then remove or reset test-only records according to the approved rollback packet.
@@ -24,13 +26,14 @@ Status: Repository preparation only. No Airtable records, schema, views, automat
 
 ### Reflection quiz path
 
-`067 → 031 → 064 → 065`
+`067 → (deferred if no summary) → canonical WAS established by the applicable upstream flow → retry 067 → 064 → 065`
 
 1. Create two Final Reflection Quiz Submissions for the same Schmidt Enrollment and HW17 Week, with no attachment.
 2. Run 067 for both quiz rows.
 3. Both quiz rows must link to one HW17 Homework Completion; no Submission Asset may be created.
 4. 067 must link that completion to the one existing canonical Weekly Athlete Summary when available, but must create no XP.
-5. After coach review, run 064 then 065 once; rerun both and require the same single homework XP event.
+5. If 067 reports `deferred_no_canonical_summary`, establish the canonical summary through the applicable upstream weekly-summary flow, then rerun 067. Do not make 067 create a summary.
+6. After coach review, run 064 then 065 once; rerun both and require the same single homework XP event.
 
 ### Perfect Week path
 
@@ -92,7 +95,7 @@ Any missing Airtable editor/run-history screenshot, record export, or competing-
 ## Airtable evidence Mike must supply
 
 - Automation editor screenshots showing the installed version, exact trigger, `recordId` input mapping, and ON/OFF state for 067, 057, 058, 059, and 035.
-- DEV run-history screenshots for first run and replay for each path.
+- PROD run-history screenshots for first run and replay for each path.
 - Record exports showing Homework Completion links, Submission Asset links, unlock links, XP amounts, XP Source, and Source Keys.
 - For 057: CASE-01 through CASE-16 results, including the still-blocked cases from the v1.5 verification packet.
 - For 035: installed version confirmation and explicit confirmation that no competing Threshold XP writer is enabled.
