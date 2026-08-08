@@ -18,7 +18,7 @@ This is an evidence-weighted estimate, not a release approval. Core daily submis
 |---|---|---|
 | Repository source and offline contracts | **Built-Merged** | Current branch work includes 023/031 repairs and current-version contract assertions. Focused suite passes: 17 automation tests; 51 runtime-compat tests; 16 data-model tests; 6 weekly-email ownership/schedule tests. |
 | `023 → 005` submission intake | **Live Tested** | 005 v4.1 and 023 v3.1 have controlled PROD proof on `recElDBcFvuE6jWwc`; 023 assigned `recCyFEPeATOVNlr9` through `submission-week` PI resolution and replay made no write. |
-| `031` canonical Weekly Athlete Summary | **Built-Merged / Needs UI Proof** | v3.3 stale-link repair and fail-closed tests pass. Airtable paste and controlled stale-link replay remain unconfirmed. |
+| `031` canonical Weekly Athlete Summary | **Built-Merged / Needs UI Proof** | Current v3.5 malformed-candidate/stale-link repair and fail-closed tests pass. Airtable paste and controlled stale-link replay remain unconfirmed. |
 | `010` Submission Base XP | **Built-Merged / Needs UI Proof** | Current repository replay validation and ownership tests pass; controlled PROD re-trigger and editor-version proof remain required. |
 | `053/054` streaks | **Installed / Live Tested with residual scope** | Schmidt streak proof exists; PI-scoped 053 v5.3 still requires paste/replay proof for the current package. |
 | `066 → 059` shot milestones | **Defect fixed in repo / Needs UI Proof** | v3.5 create-record contract regression passes. PROD natural path previously failed on raw `createRecordsAsync` payloads; paste v3.5 and rerun on `recCyFEPeATOVNlr9` are required. |
@@ -102,7 +102,7 @@ These actions require Airtable Automation Editor, Airtable trigger/view controls
    - Expected: existing unlocks link/skip, no duplicate milestone XP, no `records[0] should have a 'fields' property`.
 3. **Automation 031 — Find/Create Weekly Athlete Summary**  
    - Table/trigger: `Submissions`; input `recordId` from the triggering Submission.  
-   - Paste: repository `031...js`, v3.3.  
+   - Paste: repository `031...js`, v3.5.
    - Test: stale-summary controlled fixture, then replay.  
    - Expected: exactly one canonical Enrollment+Week summary; safe stale repair; ambiguous/no replacement fails closed.
 4. **Automation 118 / 119 — scheduled weekly build/send**  

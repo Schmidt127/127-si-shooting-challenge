@@ -33,6 +33,11 @@ export const IDS = {
 };
 
 const TARGET_SUMMARY_KEY = "ENR-2026-2027|WEEK-EARLY-BIRD";
+export const XP_SOURCE_IDS = {
+  submissionBase: "selZw4nOkwMJCgGyR",
+  homeworkCompletion: "selJO9UFSgtwmjbqU",
+  shotMilestone: "selzPfBbqh18UvK3Y",
+};
 
 function submissionsFields() {
   return [
@@ -44,13 +49,17 @@ function submissionsFields() {
 }
 
 function enrollmentsFields() {
-  return [{ name: "Enrollment Key", type: "formula", isComputed: true }];
+  return [
+    { name: "Enrollment Key", type: "formula", isComputed: true },
+    { name: "Program Instance", type: "multipleRecordLinks" },
+  ];
 }
 
 function weeksFields() {
   return [
     { name: "Week Key", type: "formula", isComputed: true },
     { name: "Week Name", type: "singleLineText" },
+    { name: "Program Instance", type: "multipleRecordLinks" },
   ];
 }
 
@@ -74,6 +83,17 @@ function xpEventsFields() {
     { name: "Enrollment", type: "multipleRecordLinks" },
     { name: "Week", type: "multipleRecordLinks" },
     { name: "Weekly Athlete Summary", type: "multipleRecordLinks" },
+    {
+      name: "XP Source",
+      type: "singleSelect",
+      options: {
+        choices: [
+          { id: XP_SOURCE_IDS.submissionBase, name: "Submission Base" },
+          { id: XP_SOURCE_IDS.homeworkCompletion, name: "Homework Completion" },
+          { id: XP_SOURCE_IDS.shotMilestone, name: "Shot Milestone" },
+        ],
+      },
+    },
   ];
 }
 
@@ -104,11 +124,19 @@ function defaultXpEvents() {
       Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Weekly Athlete Summary": [],
+      "XP Source": {
+        id: XP_SOURCE_IDS.homeworkCompletion,
+        name: "Homework Completion",
+      },
     }),
     new MockRecord(IDS.XP_STALE, {
       Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+      "XP Source": {
+        id: XP_SOURCE_IDS.shotMilestone,
+        name: "Shot Milestone",
+      },
     }),
   ];
 }
@@ -133,6 +161,7 @@ export function build031Base(opts = {}) {
   const enrollments = new MockTable("Enrollments", enrollmentsFields(), [
     new MockRecord(IDS.ENROLLMENT, {
       "Enrollment Key": "ENR-2026-2027",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
     }),
   ]);
 
@@ -140,6 +169,7 @@ export function build031Base(opts = {}) {
     new MockRecord(IDS.WEEK, {
       "Week Key": "WEEK-EARLY-BIRD",
       "Week Name": "Early Bird",
+      "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
     }),
   ]);
 

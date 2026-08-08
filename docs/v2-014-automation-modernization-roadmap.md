@@ -309,7 +309,7 @@ Target after Phase 2: **lower average complexity tier** and **~37–38 automatio
 | 072 | Build Weekly Summary Email | Build HTML package | Weekly Athlete Summary | Build Weekly Email Now? | WAS, many | WAS (email fields) | v3.7 | Partial | Med | **Move → EMC builder** | 074, C-011 | XL | P1 |
 | 073 | Video Feedback Parent Email | Build + send | Video Feedback | Feedback ready | VF, Enrollments | VF | v3.2 | Partial | Med | **Move → EMC** | 114, Make | M | P2 |
 | 074 | Send Weekly Summary to Make | Webhook send | Weekly Athlete Summary | Send to Make? + ready | WAS | WAS (handoff) | v2.0 | Legacy | Med | **Move → EMC sender** | 072 | M | P1 |
-| 075 | Build Welcome Email | Welcome package | Enrollments | Program Instance + empty package | Enrollments | Enrollments | v3.0 | Partial | Low | **Move → EMC** | 001 | M | P3 |
+| 075 | Build Welcome Email | Welcome package | Enrollments | Program Instance + empty package | Enrollments | Enrollments | v3.0 | Partial | Low | **Move → EMC** (build); **send → 079 / Communications Hub** | 001, 079 | M | P3 |
 | 076 | Build Daily Submission Email | Build daily receipt | Submissions | Build Daily Email Now? | Submissions, WAS | Submissions | v6.4 | Partial | Med | **Move → EMC builder** | 077 | M | P1 |
 | 077 | Send Daily Email to Make | Webhook send | Submissions | Send Daily Email Now? | Submissions | Submissions | v5.0 | Partial | Med | **Move → EMC sender** | 076 | M | P1 |
 

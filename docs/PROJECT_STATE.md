@@ -205,6 +205,7 @@ Admin roadmap: [web/docs/admin-roadmap.md](../web/docs/admin-roadmap.md)
 | Homework upload (070a) | PROD **OFF** |
 | Weekly summary email | Verified `118→072→119→074→Make Bulk Email May 18`; **118/119 schedules ON**; 072+074+Make ON; RCC monitors writeback mismatches |
 | Daily / homework / video parent emails | Make webhooks + Airtable scripts |
+| **Welcome email** | **Communications Hub** via Automation **079** (Make welcome scenario **OFF**) — controlled test proven; participant activation pending |
 
 ---
 

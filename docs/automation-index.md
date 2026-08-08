@@ -4,7 +4,7 @@ Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`�
 
 **Reliability audit (2026-07-24):** [next-wave/reliability-audit-2026-07-24/REPORT.md](./next-wave/reliability-audit-2026-07-24/REPORT.md) — trust bands, input/dedupe/ownership audits, ranked repairs, Mike actions. **Do not create a second index.**
 
-**Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email (Zoom live=**101**, recording approval email=**117→Make 117f**; recording XP credit has **no** deployed Airtable writer under slot 117).
+**Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email **build** (Zoom live=**101**, recording approval email=**117→Make 117f**; **WELCOME send=079→Communications Hub**, not Make); recording XP credit has **no** deployed Airtable writer under slot 117).
 
 **C-020 test harness:** **115** v1.9 in repo (ETF). Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
@@ -44,7 +44,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
 | 023 | Submission Intake — Assign Enrollment to Submission | *confirm in Airtable* | `023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js` |
 
-## Homework (020, 064–065, 067, 070a, 071) — 063 retired
+## Homework (020, 064–065, 067–068, 070a, 071) — 063 retired
 
 > **2026-07-24:** PROD baseline claims **063 deleted**. **020 v3.0.0** only *partially* replaces 063 (asset-driven Grade Band). Do not reinstall full 063. Repo file retained as historical.
 
@@ -55,6 +55,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready (created / Processing Status Pending, Enrollment set) | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
+| **068** | Homework — Reconcile Deferred Weekly Summary Links | Scheduled; scans HW17 completions with an empty Weekly Athlete Summary Link | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook (v3.5: Reviewer File URL → Drive View → Drive File) | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
 
@@ -114,7 +115,8 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 070b | Email — Send Video Asset Payload to Make | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Pending Link` · `Upload Destination = Video Feedback` | `070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` (**v4.4**) |
 | **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.1** — idempotent; `Send to Make Trigger` optional on trigger) |
 | 073 | Email — Send Video Feedback Parent Email Webhook | *confirm in Airtable* | `073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js` |
-| 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` |
+| 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — **build only**; does not send |
+| **079** | Email — Send WELCOME Handoff to Communications Hub | Email Handoff Queue — *confirm trigger in Airtable* | **PROD only** — script not yet in GitHub; see `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` |
 | 076 | Email — Build Daily Submission Email Package | *confirm in Airtable* | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` |
 | 077 | Email — Send Daily Submission Email Package to Make | *confirm in Airtable* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` |
 

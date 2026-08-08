@@ -423,19 +423,25 @@ function checkWasUniquenessGuards() {
       /createFields\[[^\]]*summaryKey\s*\]\s*=/.test(text) ||
       /createFields\[CONFIG\.[^\]]*summaryKey\]/.test(text);
 
-    if (!hasLookup || !hasCreate) {
+    const noCreateFailClosed = num === "031" && !hasCreate;
+
+    if (!hasLookup || (!hasCreate && !noCreateFailClosed)) {
       findings.push({
         severity: "fail",
         code: "was_missing_uniqueness_guard",
         automation: num,
-        detail: `lookup=${hasLookup} create=${hasCreate}`,
+        detail: `lookup=${hasLookup} create=${hasCreate} findOnly=${findOnly}`,
       });
     } else {
       findings.push({
         severity: "pass",
-        code: "was_has_lookup_before_create",
+        code: noCreateFailClosed
+          ? "was_has_lookup_and_fail_closed_without_create"
+          : "was_has_lookup_before_create",
         automation: num,
-        detail: path.basename(filePath),
+        detail: noCreateFailClosed
+          ? `${path.basename(filePath)}; no summary creation path`
+          : path.basename(filePath),
       });
     }
     if (writesSummaryKey) {

@@ -1,3 +1,6 @@
+Warning: truncated output (original token count: 31885)
+Total output lines: 1039
+
 # Shooting Challenge Completion Master
 
 **Controlling source of truth** for finishing Shooting Challenge V2.
@@ -9,7 +12,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-08** (Issue #116 full truth audit; 023 controlled proof reconciled; stale repository contract assertions repaired; remaining UI gates documented) |
+| Last updated | **2026-08-08** (Issue #116 full truth audit; Communications Hub WELCOME handoff §9M documented; 031 v3.5 repository repair packaged; Airtable paste/live proof remains explicitly gated) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -101,18 +104,20 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 |------|--------|----------|
 | Architecture rule | Documented | Athlete → Enrollment → Program Instance scopes all challenge progress |
 | Automation **005 v4.1** | **Live Tested in PROD** | Activity Date Fallback → Early Bird `recWeVrSabnsYaHc2`; 12 same-PI / 13 other-PI excluded on `recElDBcFvuE6jWwc` |
-| Automation **023 v3.1** | **Installed in PROD** / **Live Tested PASS** | Primary controlled run on `recElDBcFvuE6jWwc` assigned `recCyFEPeATOVNlr9` with `programInstanceSource = submission-week`; replay PASS with `existing-valid-enrollment` / `wroteUpdate = false` |
+| Automation **023 v3.1** | **Installed in PROD** / **Live Tested PASS** | Primary controlled run on `recElDBcFvuE6jWwc` assigned `recCyFEPeATOVNlr9` with `programInstanceSource=submission-week`; replay returned `existing-valid-enrollment` with `wroteUpdate=false`. |
 | Automations **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste after 023 PASS | PI-scoped Enrollment/Week matching |
-| Remaining PROD paste order | **053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
+| Remaining PROD paste order | **023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
+
+**Issue #116 correction:** 023 has cleared its controlled gate. The current remaining paste order is **053 → 066 → 118 → 119 → 043-if-Live**; the older 023-first wording above is historical.
 | PR **#92** | **Merged** to `master` | Merge `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`) |
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes | **PASS** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes — primary Week→PI path and replay no-write proof | **PASS** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
@@ -125,8 +130,8 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.3** | **Built in Repository** | Issue **#96** repair validates existing Submission summary links against Enrollment + Week + Summary Key, repairs safe stale links to the canonical summary, removes the source Submission from the stale summary, and repairs matching XP Event summary links |
-| Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` |
+| Automation **031 v3.5** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key, ignores/logs malformed candidates, fails closed unless exactly one fully-valid canonical target exists, never creates a summary, and repairs only non-Submission-Base XP Event links; Automation 010-owned events remain excluded by structured `XP Source` option ID |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` (13/13) |
 | Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
 | Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
 
@@ -147,6 +152,17 @@ Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET
 **Net math:** no Section 4 Complete/LT/Installed bucket moves from PR #88 alone. 033 Installed attestation is operator paste (was Built paste-pending).
 
 Checklist: [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md`](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md) · Report: [`docs/overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md`](./overnight/2026-08-06-REPOSITORY-DEPLOYMENT-FINAL-RECONCILIATION.md).
+
+### Dashboard reconciliation (2026-08-07 — Automation 010 replay-safety repo repair)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **010 v10.6** | **Built in Repository** | Issue **#106** repair validates stale Summary links against Submission Enrollment + Week + Program Instance + canonical Summary Key, repairs Submission + XP Event links only after full validation, and fails closed without partial writes |
+| Offline regression | **PASS** | `node --test tools/testing/tests/test_010_offline.mjs` |
+| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
+| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+
+Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md`](./prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md).
 
 ### Dashboard reconciliation (2026-08-06 — Automation 066 v3.4 createRecords fields fix)
 
@@ -209,14 +225,14 @@ Evidence: [`docs/testing/evidence/2026-08-05-agent1-homework/`](./testing/eviden
 | SC | Old status | New status | Evidence |
 |----|------------|------------|----------|
 | SC-088 | Built in Repository | **Built in Repository** (offline Live-ready) | 117 email handoff offline **7/7 PASS**; [`117-ZOOM-APPROVAL-GO-LIVE.md`](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md); live Gmail **not** executed |
-| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; welcome package present but **2025-2026** subject; Schmidt WAS×4 all stale-season labels; 073/117f fixtures missing |
+| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; **WELCOME send path** live-proven controlled-test via **079→Communications Hub→Resend** (§9M); participant activation + approved Hub template pending; 073/117f fixtures missing |
 | SC-041 | Built in Repository | **Built in Repository** (executable packet) | [`SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`](./deploy-checklists/SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md); probe found no armed retry candidates |
 | SC-058 | Built in Repository | **Built in Repository** (drift auditor) | Operator-table audit 48 rows; **112** shows Live in operator table (UI attest OFF); 117/118/119 absent from operator table; version drift = weak signal |
 | SC-147 | Built in Repository | **Built in Repository** (PROD export+CLI) | Sanitized export + RCC CLI exit 0; views not installed — [`RCC-OMNI-VIEW-INSTALL.md`](./deploy-checklists/RCC-OMNI-VIEW-INSTALL.md) |
 | SC-032 / SC-065 | Built in Repository | **Built in Repository** (startup checklist) | [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) |
 | SC-139 | Built in Repository | **Built in Repository** (partial) | automation-index 117/117c wording corrected |
 
-**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f/welcome-rebuild still need Mike-authorized fixtures.
+**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f still need Mike-authorized fixtures. **WELCOME send** is Communications Hub (079), not Make — see §9M.
 
 **Do not claim:** live Gmail sends, Make webhook posts, RCC views installed, SC-088 Complete.
 
@@ -477,24 +493,7 @@ Columns:
 | SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 ON** (Sun 5 AM) + **072 v4.0** `send_short`; hybrid creators **031**+**118**+**101** (Agent 2 WAS-CREATOR-RESOLUTION); 2026–2027 Weeks exist | Paste **118 v1.5**; season `dryRun=false` `sendMode=Live` `includeSchmidt=false`; monitor WAS uniqueness | SC-004, SC-082 | Schedule ON — do not revert OFF; bounded create concurrency residual | `docs/next-wave/data-model/WAS-CREATOR-RESOLUTION.md` | **DECIDED `send_short`**; schedules authorized | P0 | 2026-07-24 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
-| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Complete | **118 ON** arms Build; **072 v4.0 ON** short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allowSchmidtInput=false` for normal traffic; season dryRun=false after 118 v1.5 paste; monitor empty-week `send_short` | SC-035 | 072 does not call Make | `docs/next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md` | Schedules ON | P0 | 2026-07-24 |
-| SC-039 | Weekly Summary | Automatic send (no Send checkbox) | Complete | **119 ON** (Sun 10 AM) arms Send → **074** webhook → Make Bulk Email May 18 → Gmail; **074 sendMode=Live** writeback PASS | Keep 074 sendMode Live; set 119 `dryRun=false`; 119 v1.5 paste optional (no arming-logic change); monitor first live Sunday | SC-038 | **119 does not post webhook**; Make owns Sent? + Make Send Status + Weekly Summary Sent At; never force 074 Test | `docs/next-wave/data-model/SENT-FIELD-OWNERSHIP.md` | Schedules authorized ON | P0 | 2026-07-24 |
-| SC-040 | Weekly Summary | Duplicate-send protection | Live Tested in PROD | 074 blocks when Sent?; Make Live writeback verified (`Weekly Email Sent?`, `Make Send Status=Sent`, timestamp); eventId `WEEKLY_EMAIL\|{enr}\|{week}` | Season-scale double-send watch after schedule auth; Test branch still no Sent? writeback (by design) | SC-039 | Make owns final Sent? on Live; PROD 074 must not force Test | WAS architecture; 074 v2.1 | — | P0 | 2026-07-24 |
-| SC-041 | Weekly Summary | Retry behavior when Make/email fails | Built in Repository | Retry SOP + contract helpers; SCN-029; **Agent 4** executable Schmidt packet + live readiness probe (no armed retry candidates 2026-08-05) | Schmidt controlled failure→recovery live proof; do not bulk retry | SC-039 | Don’t mark Sent on failure; keep Send to Make? on webhook fail | `WEEKLY-EMAIL-RETRY-SOP.md`; `SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`; `EMAIL-READINESS-PROBE.json` | Authorize deliberate webhook-fail test if needed | P1 | 2026-08-05 |
-| SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
-| SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
-| SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; Agent 4 probe: welcome package exists but **2025-2026** subject; Schmidt WAS×4 stale labels / not armed; **073/117f fixtures missing** | Rebuild welcome for new year; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | Webhooks not in git; Schmidt-only | `071-homework-feedback-email-closeout.md`; `EMAIL-READINESS-PROBE.json`; `117-ZOOM-APPROVAL-GO-LIVE.md` | — | P0 | 2026-08-05 |
-| SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
-| SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
-| SC-048 | Data Integrity | Formula / lookup / rollup / count review | Live Tested in PROD | PROD `XP Date Resolved` formula fixed 2026-08-05: SWITCH on XP Bucket now uses **Shooting Base** (was incorrect Submission Base); schema snapshots exist | Continue computed-field review pass; refresh `schema/current/` later | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-08-05 |
-| SC-049 | Data Integrity | Duplicate-prevention keys documented and audited | Live Tested in PROD | Full XP source catalog + JSON; **035 v1.2** Weekly Threshold writer (preserves full v1.1: semantic Enrollment+Week+XP Source dedupe, inactive enrollment skip, Grade Band link-ID preference, exact Source Key); percent compare uses Airtable raw ratio (no `raw>3/100` heuristic); Schmidt first-award **3 created** + duplicate rerun **0 created / 3 skipped** on WAS `rechWp330MqSgRWzN` (Goal Completion raw `83.7`) | Merge PR #50 reconciled source into Airtable header; keep **035 OFF** until enable approved; inspect legacy Source Key shapes before mass requeue | SC-046 | Reruns must be safe; do not dual-ON old Threshold automation; do not enable until merged v1.2 is pasted | `035-…js` v1.2; `docs/deploy-checklists/035-weekly-threshold-xp-v1.2.md`; `docs/testing/evidence/2026-08-03-035-v1.2-schmidt-live-proof.md`; `docs/completion-updates/2026-08-03-automation-035-v1.2.md` | Keep OFF pending merge reconcile | P0 | 2026-08-03 |
-| SC-050 | Data Integrity | Safe backfills / repairs (dry-run first) | Built in Repository | `safe-backfills/` + audit extensions 090A–G | Keep dry-run default; only run when needed on empty base | SC-049 | CONFIRM_WRITE discipline | audits README; H-001 principle | — | P1 | 2026-07-23 |
-| SC-051 | Data Integrity | Obsolete field cleanup | Planned | Stage J started historically | Hide/delete after ownership matrix; update maps | SC-046 | Breaking Fillout/web risk | C-012 | — | P2 | 2026-07-23 |
-| SC-052 | Data Integrity | Duplicate table cleanup | Built in Repository | Online Agent 8 package: dependency inventory, migration map, duplicate/quality tools, runbook; keep **`Tutorials`**, orphan candidate **`Tutorials & Assets`** | Live row audit + Softr proof + migrate/delete orphan in target base | SC-046 | Web uses `Tutorials` only | `docs/online-agents/tutorials-content/`; C-026 | Confirm delete orphan after Softr proof | P2 | 2026-07-23 |
-| SC-053 | Data Integrity | Tutorials table merge complete | Planned | Recommendation: keep `Tutorials` (re-validated) | Blocked on SC-052 execution; then Softr/view/publish verification | SC-052 | Publish flag still Softr-named (SC-144) | `docs/online-agents/tutorials-content/MASTER-UPDATE-PROPOSAL.md` | — | P2 | 2026-07-23 |
-| SC-054 | Data Integrity | Public Presentation fields (parent-safe labels) | Planned | C-022 design | Add fields; wire emails + web | SC-046 | Emails/web must stop using primary names | C-022; V2-003; V2-004 | — | P1 | 2026-07-23 |
-| SC-055 | Data Integrity | Fresh schema export after rebuild waves | Complete | PROD exports `prod-foundation-reset-20260723/` + post-Testing-Scenarios `prod-foundation-reset-20260723-post-ts/` | Optional: refresh hand-maintained `schema/current/` later | — | Historical snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
+| SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Complete | **118 ON** arms Build; **072 v4.0 ON** short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allow…1885 tokens truncated…l snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
 | SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Agent 1 baseline + Agent 9 attestation packet; **PROD 117 attested email-only v1.1**; 117c absent | Mike paste complete PROD UI list where gaps remain | SC-059 | UI attestation mandatory before Complete | `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`; `CURRENT-PROD-BASELINE.md` | Confirm 112 OFF | P0 | 2026-08-05 |
@@ -696,7 +695,7 @@ Optimized for **speed in the emptied PROD base**. Stop criteria are listed per p
 | **9** | Levels and gates | Block + clear proven; Zoom credit participates correctly |
 | **10** | Zoom | Live + recording exclusivity + approval email path decided/tested |
 | **11** | Weekly summaries | Guaranteed WAS create + calc proven |
-| **12** | Emails and communication center | Auto send Test-mode proven; Live send authorized for Schmidt only; EMC still deferred |
+| **12** | Emails and communication center | Weekly WAS Live proven; **WELCOME Hub handoff (079) controlled-test proven**; participant welcome + approved Hub template pending; homework/video/Zoom paths per SC-045; EMC still deferred |
 | **13** | Website integrations | Empty/error states OK; catalogs read live config; Presentation wiring as available |
 | **14** | Full live end-to-end test | SC-005 matrix mostly green on Schmidt |
 | **15** | Cleanup and final sign-off | Obsolete fields/tables, inventory filled, stale docs refreshed, intake reopen decision |
@@ -891,6 +890,53 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
 
+### 9M. Communications Hub WELCOME email integration — **2026-08-08**
+
+| Field | Value |
+|-------|--------|
+| **Scope** | Shooting Challenge enrollment **WELCOME** email handoff to **Communications Hub** (not Make.com) |
+| **PROD flow** | `Email Handoff Queue` → Automation **079** → Communications Hub → Resend → **Delivery** audit record |
+| **Make.com** | **OFF** — must remain off for welcome delivery |
+| **Controlled test** | **Live Tested in PROD** — end-to-end handoff, Hub dedupe (parent/athlete same email → one Delivery), replay protection (same Handoff Key → no duplicate send) |
+| **Participant sends** | **Not authorized** — **Test Mode?** + allowlist only |
+| **Hub content** | Hub **WELCOME** template renders subject/HTML from `templateKey: WELCOME` + Payload JSON (`athleteName`, `programName`, `message`) — final approved design pending |
+| **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode` |
+| **Accepted vs delivery** | Queue/Hub Event **Accepted** = intake only; success = one Hub **Delivery** in **`Sent`**, provider id, one attempt, no stale error/retry fields |
+| **Source-table issue** | Earlier Hub Event missing source table = **Hub-side mapping omission** — **not** a 079 defect; no 079 change required |
+| **Legacy build** | Automation **075** still builds welcome package on Enrollments — **does not send**; optional input to queue payload |
+| **Repo gap** | Automation **079** script **not yet in GitHub** — export recommended before next code change |
+| **SC-079 naming** | Completion item SC-079 (*gate blocking*) uses Automation **042** — unrelated to Automation slot **079** |
+| **Docs** | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` · `docs/deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md` · `docs/deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md` |
+| **Status** | **Installed in PROD + Live Tested (controlled only)** — participant activation blocked on checklist § activation doc |
+
+**Proven live (controlled test only):**
+
+1. 079 posts WELCOME handoff from Email Handoff Queue to Communications Hub.
+2. Hub creates Hub Event, sends via Resend, writes Delivery audit.
+3. Duplicate parent/athlete email → one Delivery.
+4. Same Handoff Key replay → no second send.
+
+**Still required before participant welcome emails:**
+
+1. Final approved welcome copy and branding.
+2. Hub **WELCOME** template implementation and review (Hub-owned subject/HTML from `templateKey: WELCOME`).
+3. Recipient / consent / authorization review.
+4. New controlled test after template change.
+5. Explicit Mike approval for non-test participant sends.
+6. Post-send Delivery audit and opt-out/suppression verification.
+
+**Do not claim:** participant-wide welcome sends enabled; Make.com welcome path active; **Accepted** alone equals delivered email; operator supplies subject/HTML/`sendMode` on the queue row.
+
+### 9N. GitHub Issue #116 full audit — **2026-08-08**
+
+The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md`](./prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md) is the current repository-wide truth and execution handoff.
+
+- Core submission chain: **023 Live Tested**; 031 and 010 repository repairs are **Built-Merged / Needs UI Proof**.
+- Remaining high-risk defects: orphan/eligibility-loss XP (**#100/#102**), video source validation (**#101**), downstream homework/email source safety (**#104/#105**).
+- Repository contract drift was repaired: tests now assert current **031 v3.5** and **118/119 v1.7** contracts where applicable.
+- Repository evidence does not prove Airtable editor installation, trigger configuration, Make state, Vercel environment values, or live email delivery.
+- The audit packet contains the ranked blockers, shortest execution path, exact UI-only actions, and stale queue removals.
+
 ### 9L. Automation 117 ownership reconcile — **2026-08-05**
 
 | Field | Value |
@@ -976,18 +1022,6 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 - Do not use page-wide `overflow-x: clip` in ways that hide tables/leaderboards
 
 ---
-
-### 9M. GitHub Issue #116 full audit — **2026-08-08**
-
-The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md`](./prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md) is the current execution handoff for the repository-wide truth pass.
-
-Key reconciliations:
-
-- The canonical submission chain is now accurately recorded as **023 live-tested**, with primary `submission-week` PI resolution and replay no-write proof.
-- Current repository contract suites now assert **031 v3.3** and **118/119 v1.7**, eliminating stale v3.2/v1.6 expectations.
-- Open defects remain real for orphan/eligibility-loss XP (**#100/#102**), video-source validation (**#101**), downstream homework/email source safety (**#104/#105**), and Airtable editor proof for merged code.
-- **#96/#106** are repository-fixed/superseded by merged canonical-summary hardening; their remaining paste/replay work is UI proof, not an unimplemented repository defect.
-- No repository result is counted as Airtable installation, trigger proof, Make readiness, or live email proof.
 
 ## Maintenance
 

@@ -4,10 +4,10 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-08-07
 
 Purpose:
-Finds or creates Weekly Athlete Summary from counted submissions and repairs orphan XP links.
+Finds the unique canonical Weekly Athlete Summary for counted submissions and repairs orphan XP links.
 
 Trigger:
 Submissions when Count This Submission? is checked and Weekly Athlete Summary is empty,
@@ -17,7 +17,7 @@ Important Tables:
 Submissions, Enrollments, Weeks, Weekly Athlete Summary, XP Events
 
 Important Fields:
-Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key
+Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key, XP Source
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
@@ -25,14 +25,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
- * Find or Create Weekly Athlete Summary from Submission
+ * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.3
+ * Version: v3.5
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-07
- * Updated Reason: Validate stale Submission -> Weekly Athlete Summary links before replay,
- * repair the Submission and matching XP links to the canonical summary when safe, and
- * fail closed when no safe canonical repair target exists.
+ * Updated Reason: Ignore malformed unrelated summary candidates, repair the Submission and
+ * matching XP links to one canonical summary when safe, and fail closed when zero/multiple
+ * valid candidates exist.
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -40,8 +40,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Builds the target Summary Key from Enrollment Key + Week Key.
  * - Validates any pre-existing Submission -> Weekly Athlete Summary link against the
  *   current Submission Enrollment + Week + Summary Key.
- * - Finds the matching Weekly Athlete Summary record.
- * - Creates a Weekly Athlete Summary if one does not exist.
+ * - Finds exactly one fully valid matching Weekly Athlete Summary record.
+ * - Fails closed when zero or multiple fully valid candidates exist; it never creates one.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
@@ -56,6 +56,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Multiple counted Submissions for the same Enrollment + Week should link to the same Weekly Athlete Summary.
  * - A stale existing Weekly Athlete Summary link must not survive replay when the script can
  *   prove the one canonical Enrollment + Week summary; otherwise fail closed.
+ * - Automation 031 repairs only non-Submission-Base XP Event summary links. Automation 010
+ *   owns Submission Base XP Events, identified by XP Source option ID selZw4nOkwMJCgGyR.
  *
  * FOLDER
  * - 03 - Weekly Summary and Goal Logic
@@ -104,7 +106,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.3",
+  version: "v3.5",
 
   tables: {
     submissions: "Submissions",
@@ -123,11 +125,13 @@ const CONFIG = {
 
   enrollments: {
     enrollmentKey: "Enrollment Key",
+    programInstance: "Program Instance",
   },
 
   weeks: {
     weekKey: "Week Key",
     weekName: "Week Name",
+    programInstance: "Program Instance",
   },
 
   summaries: {
@@ -143,6 +147,8 @@ const CONFIG = {
     enrollment: "Enrollment",
     week: "Week",
     weeklySummary: "Weekly Athlete Summary",
+    xpSource: "XP Source",
+    submissionBaseSourceOptionId: "selZw4nOkwMJCgGyR",
   },
 
   statusValues: {
@@ -278,6 +284,17 @@ function requireField(table, fieldName, label) {
   }
 }
 
+function requireFieldType(table, fieldName, expectedType, label) {
+  requireField(table, fieldName, label);
+
+  const field = getFieldSafe(table, fieldName);
+  if (field?.type !== expectedType) {
+    throw new Error(
+      `Required field has unexpected type: ${label} (${table.name} -> ${fieldName}); expected ${expectedType}, found ${field?.type || "unknown"}.`
+    );
+  }
+}
+
 function requireWritableField(table, fieldName, label) {
   requireField(table, fieldName, label);
 
@@ -308,6 +325,38 @@ function getLinkedRecordIds(record, table, fieldName) {
 
 function getFirstLinkedRecordId(record, table, fieldName) {
   return getLinkedRecordIds(record, table, fieldName)[0] || "";
+}
+
+function getSingleSelectOptionId(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+
+  if (!raw || Array.isArray(raw) || typeof raw !== "object") {
+    return "";
+  }
+
+  return String(raw.id || "").trim();
+}
+
+function isSubmissionBaseXpEvent(record) {
+  return (
+    getSingleSelectOptionId(
+      record,
+      xpEventsTable,
+      CONFIG.xpEvents.xpSource
+    ) === CONFIG.xpEvents.submissionBaseSourceOptionId
+  );
+}
+
+function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
+  const ids = uniqueIds(getLinkedRecordIds(record, table, fieldName));
+
+  if (ids.length !== 1) {
+    throw new Error(
+      `${label} must have exactly one linked ${fieldName}; found ${ids.length}.`
+    );
+  }
+
+  return ids[0];
 }
 
 function uniqueIds(ids) {
@@ -389,52 +438,64 @@ async function updateRecordSafe(table, targetRecordId, updates) {
   return Object.keys(safeUpdates);
 }
 
-async function createRecordSafe(table, createFields) {
-  const safeCreateFields = {};
-
-  for (const [fieldName, value] of Object.entries(createFields || {})) {
-    if (!fieldExists(table, fieldName)) {
-      log(`Skipped missing create field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (!isWritableField(table, fieldName)) {
-      log(`Skipped non-writable create field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (value === undefined) {
-      continue;
-    }
-
-    safeCreateFields[fieldName] = value;
+async function loadProgramInstanceContext(enrollmentId, weekId) {
+  const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  if (!enrollment) {
+    throw new Error(`Enrollment not found: ${enrollmentId}`);
   }
 
-  if (Object.keys(safeCreateFields).length === 0) {
-    throw new Error(`No writable fields available to create record in ${table.name}.`);
+  const week = await weeksTable.selectRecordAsync(weekId);
+  if (!week) {
+    throw new Error(`Week not found: ${weekId}`);
   }
 
-  return await table.createRecordAsync(safeCreateFields);
+  const enrollmentProgramInstanceId = getExactlyOneLinkedRecordId(
+    enrollment,
+    enrollmentsTable,
+    CONFIG.enrollments.programInstance,
+    `Enrollment ${enrollmentId}`
+  );
+  const weekProgramInstanceId = getExactlyOneLinkedRecordId(
+    week,
+    weeksTable,
+    CONFIG.weeks.programInstance,
+    `Week ${weekId}`
+  );
+
+  if (enrollmentProgramInstanceId !== weekProgramInstanceId) {
+    throw new Error(
+      `Enrollment ${enrollmentId} and Week ${weekId} belong to different Program Instances.`
+    );
+  }
+
+  return {
+    enrollmentProgramInstanceId,
+    weekProgramInstanceId,
+    programInstanceId: enrollmentProgramInstanceId,
+  };
 }
 
-function summaryMatchesSubmissionContext(summaryRecord, {
+async function validateSummaryForContext(summaryRecord, {
   enrollmentId,
   weekId,
+  programInstanceId,
   summaryKey,
 }) {
   if (!summaryRecord) {
     return false;
   }
 
-  const summaryEnrollmentId = getFirstLinkedRecordId(
+  const summaryEnrollmentId = getExactlyOneLinkedRecordId(
     summaryRecord,
     summariesTable,
-    CONFIG.summaries.enrollment
+    CONFIG.summaries.enrollment,
+    `Weekly Athlete Summary ${summaryRecord.id}`
   );
-  const summaryWeekId = getFirstLinkedRecordId(
+  const summaryWeekId = getExactlyOneLinkedRecordId(
     summaryRecord,
     summariesTable,
-    CONFIG.summaries.week
+    CONFIG.summaries.week,
+    `Weekly Athlete Summary ${summaryRecord.id}`
   );
   const existingSummaryKey = getText(
     summaryRecord,
@@ -442,11 +503,39 @@ function summaryMatchesSubmissionContext(summaryRecord, {
     CONFIG.summaries.summaryKey
   );
 
-  return (
-    summaryEnrollmentId === enrollmentId &&
-    summaryWeekId === weekId &&
-    existingSummaryKey === summaryKey
+  if (
+    summaryEnrollmentId !== enrollmentId ||
+    summaryWeekId !== weekId ||
+    existingSummaryKey !== summaryKey
+  ) {
+    return false;
+  }
+
+  const summaryProgramInstance = await loadProgramInstanceContext(
+    summaryEnrollmentId,
+    summaryWeekId
   );
+
+  return summaryProgramInstance.programInstanceId === programInstanceId;
+}
+
+async function findValidCanonicalSummaries(summaryRecords, context) {
+  const valid = [];
+
+  for (const summary of summaryRecords || []) {
+    try {
+      if (await validateSummaryForContext(summary, context)) {
+        valid.push(summary);
+      }
+    } catch (error) {
+      log("Ignored malformed Weekly Athlete Summary candidate", {
+        candidateRecordId: summary?.id || "(unknown)",
+        reason: error instanceof Error ? error.message : String(error),
+      });
+    }
+  }
+
+  return valid;
 }
 
 function findSummaryRecordById(summaryRecords, summaryId) {
@@ -515,6 +604,7 @@ async function repairXpEventsForEnrollmentWeek({
     CONFIG.xpEvents.enrollment,
     CONFIG.xpEvents.week,
     CONFIG.xpEvents.weeklySummary,
+    CONFIG.xpEvents.xpSource,
   ].filter(fieldName => fieldExists(xpEventsTable, fieldName));
 
   const xpQuery = await xpEventsTable.selectRecordsAsync({ fields: xpFields });
@@ -539,6 +629,7 @@ async function repairXpEventsForEnrollmentWeek({
       );
 
       if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
+      if (isSubmissionBaseXpEvent(xpRecord)) continue;
       if (xpSummaryId && xpSummaryId !== staleSummaryId) continue;
       if (xpSummaryId === weeklySummaryId) continue;
 
@@ -603,9 +694,21 @@ requireField(
 );
 
 requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.programInstance,
+  "Enrollments -> Program Instance"
+);
+
+requireField(
   weeksTable,
   CONFIG.weeks.weekKey,
   "Weeks -> Week Key"
+);
+
+requireField(
+  weeksTable,
+  CONFIG.weeks.programInstance,
+  "Weeks -> Program Instance"
 );
 
 requireField(
@@ -636,6 +739,13 @@ requireWritableField(
   summariesTable,
   CONFIG.summaries.submissions,
   "Weekly Athlete Summary -> Submissions"
+);
+
+requireFieldType(
+  xpEventsTable,
+  CONFIG.xpEvents.xpSource,
+  "singleSelect",
+  "XP Events -> XP Source"
 );
 
 /* =========================================================
@@ -770,6 +880,26 @@ async function main() {
       throw new Error(`Week Key is blank for Week ${submissionWeekId}.`);
     }
 
+    const enrollmentProgramInstanceId = getExactlyOneLinkedRecordId(
+      enrollment,
+      enrollmentsTable,
+      CONFIG.enrollments.programInstance,
+      `Enrollment ${submissionEnrollmentId}`
+    );
+    const weekProgramInstanceId = getExactlyOneLinkedRecordId(
+      weekRecord,
+      weeksTable,
+      CONFIG.weeks.programInstance,
+      `Week ${submissionWeekId}`
+    );
+
+    if (enrollmentProgramInstanceId !== weekProgramInstanceId) {
+      throw new Error(
+        `Submission ${recordId} links Enrollment and Week from different Program Instances.`
+      );
+    }
+
+    const programInstanceId = enrollmentProgramInstanceId;
     targetSummaryKey = `${enrollmentKey}|${resolvedWeekKey}`;
 
     debugStep = "7 - Load Weekly Athlete Summaries";
@@ -782,24 +912,20 @@ async function main() {
     debugStep = "8 - Find Matching Summary";
     setOutputSafe("debugStep", debugStep);
 
-    const matchingSummaries = summariesQuery.records.filter(summary => {
-      const summaryKey = getText(
-        summary,
-        summariesTable,
-        CONFIG.summaries.summaryKey
-      );
+    const matchingSummaries = await findValidCanonicalSummaries(
+      summariesQuery.records,
+      {
+        enrollmentId: submissionEnrollmentId,
+        weekId: submissionWeekId,
+        programInstanceId,
+        summaryKey: targetSummaryKey,
+      }
+    );
 
-      return summaryKey === targetSummaryKey;
-    });
-
-    if (
-      matchingSummaries.length > 1 &&
-      CONFIG.flags.throwOnDuplicateSummaryKey
-    ) {
+    if (matchingSummaries.length > 1 && CONFIG.flags.throwOnDuplicateSummaryKey) {
       const duplicateIds = matchingSummaries.map(record => record.id).join(", ");
-
       throw new Error(
-        `Duplicate Weekly Athlete Summary records found for Summary Key ${targetSummaryKey}. Record IDs: ${duplicateIds}`
+        `Multiple fully valid Weekly Athlete Summary records found for Summary Key ${targetSummaryKey} and Program Instance ${programInstanceId}: ${duplicateIds}`
       );
     }
 
@@ -809,13 +935,9 @@ async function main() {
     const existingSummaryRecord = existingSubmissionSummaryId
       ? findSummaryRecordById(summariesQuery.records, existingSubmissionSummaryId)
       : null;
-    const existingSummaryIsValid = existingSubmissionSummaryId
-      ? summaryMatchesSubmissionContext(existingSummaryRecord, {
-        enrollmentId: submissionEnrollmentId,
-        weekId: submissionWeekId,
-        summaryKey: targetSummaryKey,
-      })
-      : false;
+    const existingSummaryIsValid =
+      !!existingSummaryRecord &&
+      matchingSummaries.some(summary => summary.id === existingSummaryRecord.id);
 
     if (existingSummaryIsValid) {
       weeklySummaryId = existingSubmissionSummaryId;
@@ -830,50 +952,42 @@ async function main() {
         existingSubmissionSummaryId && existingSubmissionSummaryId !== matchingSummary.id
           ? existingSubmissionSummaryId
           : "";
+    } else if (matchingSummaries.length === 0) {
+      throw new Error(
+        `No unique canonical Weekly Athlete Summary exists for Submission ${recordId}; found 0 fully valid candidates.`
+      );
     } else if (existingSubmissionSummaryId) {
       throw new Error(
         `Submission ${recordId} has stale Weekly Athlete Summary ${existingSubmissionSummaryId}, and no canonical summary can be resolved safely for Summary Key ${targetSummaryKey}.`
       );
     }
 
-    if (weeklySummaryId) {
-      const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId);
-      if (!matchingSummary) {
-        throw new Error(`Resolved Weekly Athlete Summary not found in loaded query: ${weeklySummaryId}`);
-      }
-
-      const existingSubmissionIds = getLinkedRecordIds(
-        matchingSummary,
-        summariesTable,
-        CONFIG.summaries.submissions
-      );
-
-      const mergedSubmissionIds = uniqueIds([...existingSubmissionIds, recordId]);
-
-      const summaryUpdates = {
-        ...buildSummaryStatusUpdate(),
-      };
-
-      if (!sameIdArray(existingSubmissionIds, mergedSubmissionIds)) {
-        summaryUpdates[CONFIG.summaries.submissions] = linkedCell(mergedSubmissionIds);
-      }
-
-      updatedFields = await updateRecordSafe(
-        summariesTable,
-        weeklySummaryId,
-        summaryUpdates
-      );
-    } else {
-      const createFields = {
-        [CONFIG.summaries.enrollment]: [{ id: submissionEnrollmentId }],
-        [CONFIG.summaries.week]: [{ id: submissionWeekId }],
-        [CONFIG.summaries.submissions]: [{ id: recordId }],
-        ...buildSummaryStatusUpdate(),
-      };
-
-      weeklySummaryId = await createRecordSafe(summariesTable, createFields);
-      actionTaken = "created_new_summary";
+    const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId);
+    if (!matchingSummary) {
+      throw new Error(`Resolved Weekly Athlete Summary not found in loaded query: ${weeklySummaryId}`);
     }
+
+    const existingSubmissionIds = getLinkedRecordIds(
+      matchingSummary,
+      summariesTable,
+      CONFIG.summaries.submissions
+    );
+
+    const mergedSubmissionIds = uniqueIds([...existingSubmissionIds, recordId]);
+
+    const summaryUpdates = {
+      ...buildSummaryStatusUpdate(),
+    };
+
+    if (!sameIdArray(existingSubmissionIds, mergedSubmissionIds)) {
+      summaryUpdates[CONFIG.summaries.submissions] = linkedCell(mergedSubmissionIds);
+    }
+
+    updatedFields = await updateRecordSafe(
+      summariesTable,
+      weeklySummaryId,
+      summaryUpdates
+    );
 
     debugStep = "10 - Link Summary Back to Submission";
     setOutputSafe("debugStep", debugStep);
@@ -978,15 +1092,10 @@ async function main() {
     setOutputSafe("actionTaken", actionTaken);
     setOutputSafe("actionOut", actionTaken || "");
     setOutputSafe("orphanXpLinkedCount", orphanXpLinkedCount);
-    setOutputSafe(
-      "statusOut",
-      actionTaken === "created_new_summary"
-        ? CONFIG.outputStatuses.created
-        : CONFIG.outputStatuses.found
-    );
+    setOutputSafe("statusOut", CONFIG.outputStatuses.found);
     setOutputSafe("errorOut", "");
 
-    log("Weekly Summary find/create completed", {
+    log("Weekly Summary canonical resolution completed", {
       recordId,
       weeklySummaryId,
       summaryKeyOut: targetSummaryKey,
