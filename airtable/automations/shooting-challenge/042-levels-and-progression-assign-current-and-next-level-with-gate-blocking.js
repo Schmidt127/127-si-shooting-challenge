@@ -43,6 +43,9 @@ Airtable is the deployed/running copy.
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
  *   so unsupported cleanup cannot fail an otherwise successful automation run.
+ * - Read explicit primary-field values for Level and Level Gate Rule labels. This
+ *   avoids the Airtable automation runtime's occasional generic record.name label
+ *   ("Unnamed record") in logs, outputs, and gate explanations.
  *
  * Version 3.1 (C-025 Stage 17):
  * - Zoom gate count = live Total Zoom Attendances meetings ∪ qualifying Recording Quiz
