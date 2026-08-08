@@ -37,7 +37,7 @@ This is an evidence-weighted estimate, not a release approval. Core daily submis
 
 1. **Airtable paste and controlled proof for 053 → 066 → 118 → 119** after the successful 023 gate.
 2. **Install and rerun 066 v3.5** on `recCyFEPeATOVNlr9`; confirm existing unlock links and zero duplicate XP.
-3. **Install and controlled replay-test 031 v3.3** on a stale-summary fixture; confirm safe repair and fail-closed ambiguity.
+3. **Install and controlled replay-test 031 v3.5** on a stale-summary fixture; confirm safe repair and fail-closed ambiguity.
 4. **Implement reconciliation for active orphan XP** from Issue #100, with dry-run, explicit write mode, and 041 recalculation.
 5. **Implement eligibility-loss reconciliation** for threshold/Perfect Week awards from Issue #102.
 6. **Harden 113/114 source validation** from Issue #101 before the next video XP award.
@@ -53,7 +53,7 @@ This is an evidence-weighted estimate, not a release approval. Core daily submis
 1. Paste and verify 053 v5.3.
 2. Paste 066 v3.5 and rerun the controlled Schmidt milestone test.
 3. Paste 118 v1.7 and 119 v1.7 with current Program Instance/season inputs.
-4. Run 031 v3.3 and 010 current-editor replay tests.
+4. Run 031 v3.5 and 010 current-editor replay tests.
 5. Recheck no duplicate Submission Base XP, no duplicate WAS, and correct Enrollment/Week/PI links.
 
 ### Package B — make invalid awards self-healing
@@ -80,7 +80,7 @@ This is an evidence-weighted estimate, not a release approval. Core daily submis
 
 | Work | Result |
 |---|---|
-| Stale contract assertions | Updated tests from superseded 031 v3.2 and 118/119 v1.6 expectations to current 031 v3.3 and 118/119 v1.7. |
+| Stale contract assertions | Updated tests from superseded 031 v3.2 and 118/119 v1.6 expectations to current 031 v3.5 and 118/119 v1.7. |
 | Focused automation suite | PASS: `test_023_offline`, `test_031_offline`, 066 batch regression, 020 identity, and 117 email handoff. |
 | Runtime compatibility suite | PASS: 51 checks, including active-tree no-bare-`unloadData` enforcement. |
 | Weekly email/data-model contracts | PASS: ownership, schedule, and field-contract suites. |
