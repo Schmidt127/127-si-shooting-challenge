@@ -73,16 +73,38 @@ The Airtable `Automations` table was reconciled against the controlling reposito
 
 | Automation | Airtable inventory record | Stored inventory code | Required repository/master target | Inventory disposition |
 |---|---|---:|---:|---|
-| 023 Assign Enrollment to Submission | `recFTk9CJM6J8sMrB` | v2.0 | v3.1 | Stale warning stamped; requires editor paste/verification and Schmidt test |
+| 023 Assign Enrollment to Submission | `recFTk9CJM6J8sMrB` | v2.0 | v3.1 | **Pasted + controlled Schmidt test PASS**; primary assignment and replay evidence preserved |
 | 053 Rebuild/Upsert Streak Occurrences | `recgH5hQgJA9IfLQE` | v5.0 | v5.3 | Stale warning stamped; requires Program Instance-scoped editor paste/test |
 | 066 Create Shot Milestone Unlocks | `rec0qiy0iXVqrU3c2` | v2.1 | v3.5 | Stale warning stamped; requires corrected createRecords + PI isolation + replay proof |
 | 118 Schedule Weekly Summary Build | `recl5DLUTHPnsccls` | not pasted | v1.7 | Status remains Off; requires editor paste/input verification/controlled run |
 | 119 Schedule Weekly Summary Send | `recGZKmAHjkU2LCs3` | not pasted | v1.7 | Status remains Off; requires editor paste/input verification/controlled run |
 | 043 Set Level Gate Rule from Next Level | `recZWrVJTi2ovc3uM` | v2.0 | v2.1 | Data year repaired, but stale-link code defect remains; requires editor repair/test |
 
-Required deployment/test order remains:
+### 6. Automation 023 controlled verification
 
-`023 v3.1 -> 053 v5.3 -> 066 v3.5 -> 118 v1.7 -> 119 v1.7 -> 043 v2.1 if Live`
+Automation 023 has now cleared the required controlled PROD verification gate:
+
+- **Primary assignment PASS**
+  - Submission: `recElDBcFvuE6jWwc`
+  - Enrollment assigned: `recCyFEPeATOVNlr9`
+  - Program Instance: `rec5mEM0YPqPqq0hZ`
+  - `programInstanceSource = submission-week`
+- **Replay PASS**
+  - version: `v3.1`
+  - `existingEnrollmentId = recCyFEPeATOVNlr9`
+  - `resolvedProgramInstanceId = rec5mEM0YPqPqq0hZ`
+  - `programInstanceSource = existing-enrollment`
+  - `matchedEnrollmentId = recCyFEPeATOVNlr9`
+  - `matchedEnrollmentKey = ATH-recgqVstObQRzgXJF|2026-2027`
+  - `matchMode = existing-valid-enrollment`
+  - `wroteUpdate = false`
+  - `status = Complete`
+
+The 023 inventory disposition is therefore no longer a stale-warning gate for the paste queue.
+
+Required deployment/test order now remains:
+
+`053 v5.3 -> 066 v3.5 -> 118 v1.7 -> 119 v1.7 -> 043 v2.1 if Live`
 
 ## Important non-claims
 

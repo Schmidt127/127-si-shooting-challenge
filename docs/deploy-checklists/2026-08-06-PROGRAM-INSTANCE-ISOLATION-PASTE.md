@@ -8,8 +8,8 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 ## Paste order (remaining)
 
 1. ~~**005** Assign Week~~ — **DONE** (pasted + Live Tested **PASS**)
-2. **023** Assign Enrollment ← **NEXT** (paste **v3.1** — do not proceed to 053 until Week-derived PI path PASSes)
-3. **053** Streak occurrences
+2. ~~**023** Assign Enrollment~~ — **DONE** (pasted **v3.1** + controlled Week-derived PI test **PASS**)
+3. **053** Streak occurrences ← **NEXT**
 4. **066** Shot milestones (v3.5 includes v3.4 createRecords fix)
 5. **118** / **119** Weekly email schedules
 6. **043** only if still Live in PROD (otherwise skip)
@@ -19,33 +19,47 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL (v3.0 fallback only) | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes | **PASS** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
 | 119 v1.7 | Yes | Yes | No | No | — |
 | 043 v2.1 | Yes | Yes | TBD | TBD | — |
 
-### 023 live PROD status (honest)
+### 023 live PROD status
 
 ```text
-Repository v3.0: merged
-PROD v3.0: pasted
-Live test: PARTIAL — fallback path passed
-Program Instance-safe Week path: NOT YET VALIDATED
-Final result: INCOMPLETE
+Repository v3.1: merged
+PROD v3.1: pasted
+Primary controlled test: PASS — Week-derived Program Instance path
+Replay test: PASS — existing Enrollment path / no-write replay
+Final result: PASS
 ```
 
-**Why incomplete:** Live run on `recElDBcFvuE6jWwc` used `matchMode = single-active-enrollment-safe-fallback` with empty `submissionProgramInstanceId` / no Week→PI derivation. That is not sufficient Program Instance isolation when the Submission has a linked Week.
+**Controlled evidence preserved below:** primary assignment run proved `programInstanceSource = submission-week`; replay proved `existing-valid-enrollment` with `wroteUpdate = false`.
 
-**After v3.1 PROD paste + Week path PASS, update to:**
+### 023 evidence — primary assignment PASS
 
 ```text
-Repository updated: Yes
-Merged to master: Yes
-PROD pasted: Yes
-Live PROD tested: Yes
-Result: PASS
+Submission: recElDBcFvuE6jWwc
+Enrollment assigned: recCyFEPeATOVNlr9
+Program Instance: rec5mEM0YPqPqq0hZ
+programInstanceSource: submission-week
+Status: Complete
+```
+
+### 023 evidence — replay PASS
+
+```text
+version: v3.1
+existingEnrollmentId: recCyFEPeATOVNlr9
+resolvedProgramInstanceId: rec5mEM0YPqPqq0hZ
+programInstanceSource: existing-enrollment
+matchedEnrollmentId: recCyFEPeATOVNlr9
+matchedEnrollmentKey: ATH-recgqVstObQRzgXJF|2026-2027
+matchMode: existing-valid-enrollment
+wroteUpdate: false
+status: Complete
 ```
 
 ### 005 evidence (do not retest)
@@ -71,7 +85,7 @@ Result: PASS
 
 ---
 
-### 023 — Assign Enrollment to Submission ← NEXT (v3.1)
+### 023 — Assign Enrollment to Submission — COMPLETE (v3.1)
 
 | | |
 |--|--|
@@ -83,18 +97,19 @@ Result: PASS
 | Expected Enrollment | `recCyFEPeATOVNlr9` (Program Instance `rec5mEM0YPqPqq0hZ`) |
 | Expected (Week path) | `programInstanceSource` = `submission-week`; `resolvedProgramInstanceId` = `rec5mEM0YPqPqq0hZ`; `matchModeOut` = `athlete-program-instance`; `weekId` = `recWeVrSabnsYaHc2`; `candidateCountOut` = 1; `statusOut` = `Complete` |
 
-**PROD paste block:** production docblock (`/***` …) through `await main();` — **skip** the GitHub header (`/* Automation: … */`).
+**PROD result:** pasted + controlled verification complete.
 
-**Live retest steps (Mike) — clear Enrollment first so Week path is exercised:**
+**Primary controlled run (assignment path):**
 
-1. Paste **v3.1** into PROD Automation 023 scripting action; Save.
-2. On Submission `recElDBcFvuE6jWwc`, clear **Enrollment** (leave Athlete + Week Early Bird linked).
-3. Open Automations → 023 → Test / Run with `recordId` = `recElDBcFvuE6jWwc`.
-4. Confirm outputs/console show `programInstanceSource = submission-week` (not `single-active-enrollment-safe-fallback`).
-5. Confirm Enrollment written = `recCyFEPeATOVNlr9`.
-6. Rerun without clearing — expect `existing-valid-enrollment` / no destructive change.
-7. Paste full console / output JSON back to the agent.
-8. **Do not start Automation 053** until this Week-derived path PASSes.
+1. Submission `recElDBcFvuE6jWwc` entered with Enrollment cleared and Week `recWeVrSabnsYaHc2`.
+2. Automation assigned Enrollment `recCyFEPeATOVNlr9`.
+3. Output/console confirmed `programInstanceSource = submission-week` and Program Instance `rec5mEM0YPqPqq0hZ`.
+
+**Replay run (idempotency path):**
+
+1. Replay used the same Submission with existing Enrollment `recCyFEPeATOVNlr9`.
+2. Output/console confirmed `programInstanceSource = existing-enrollment`.
+3. `matchMode = existing-valid-enrollment`, `wroteUpdate = false`, `status = Complete`.
 
 ### 005 — Assign Week (Homework First) — COMPLETE
 

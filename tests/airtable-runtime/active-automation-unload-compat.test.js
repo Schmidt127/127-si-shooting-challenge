@@ -24,7 +24,7 @@ const TARGETS = [
   {
     num: "031",
     file: "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
-    versionRe: /Version:\s*v3\.2/,
+    versionRe: /Version:\s*v3\.3/,
     queryVars: ["xpQuery"],
   },
   {
@@ -54,13 +54,13 @@ const TARGETS = [
   {
     num: "118",
     file: "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js",
-    versionRe: /Version:\s*v1\.6/,
+    versionRe: /Version:\s*v1\.7/,
     queryVars: ["enrollmentsQuery", "weeksQuery", "wasQuery"],
   },
   {
     num: "119",
     file: "119-email-notifications-and-external-handoffs-schedule-weekly-summary-email-send.js",
-    versionRe: /Version:\s*v1\.6/,
+    versionRe: /Version:\s*v1\.7/,
     queryVars: ["enrQuery", "weeksQuery", "wasQuery"],
   },
 ];
@@ -184,7 +184,7 @@ for (const target of TARGETS) {
   test(`${target.num} exists and declares patched version`, () => {
     assert.ok(fs.existsSync(scriptPath), target.file);
     assert.match(source, target.versionRe);
-    assert.match(source, /2026-08-05/);
+    assert.match(source, /2026-08-05|2026-08-06|2026-08-07/);
     assert.match(source, /unloadData|unloadQuerySafe/);
   });
 

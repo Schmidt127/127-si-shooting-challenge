@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-07** (031 v3.3 stale-link repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
+| Last updated | **2026-08-08** (Issue #116 full truth audit; 023 controlled proof reconciled; stale repository contract assertions repaired; remaining UI gates documented) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -101,9 +101,9 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 |------|--------|----------|
 | Architecture rule | Documented | Athlete → Enrollment → Program Instance scopes all challenge progress |
 | Automation **005 v4.1** | **Live Tested in PROD** | Activity Date Fallback → Early Bird `recWeVrSabnsYaHc2`; 12 same-PI / 13 other-PI excluded on `recElDBcFvuE6jWwc` |
-| Automation **023 v3.1** | **Built in Repository** — re-paste required | v3.0 live = **PARTIAL** (fallback only). Week→PI path **NOT YET VALIDATED**. Do not start 053 until PASS. |
+| Automation **023 v3.1** | **Installed in PROD** / **Live Tested PASS** | Primary controlled run on `recElDBcFvuE6jWwc` assigned `recCyFEPeATOVNlr9` with `programInstanceSource = submission-week`; replay PASS with `existing-valid-enrollment` / `wroteUpdate = false` |
 | Automations **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste after 023 PASS | PI-scoped Enrollment/Week matching |
-| Remaining PROD paste order | **023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
+| Remaining PROD paste order | **053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
@@ -112,7 +112,7 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes | **PASS** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
@@ -976,6 +976,18 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 - Do not use page-wide `overflow-x: clip` in ways that hide tables/leaderboards
 
 ---
+
+### 9M. GitHub Issue #116 full audit — **2026-08-08**
+
+The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md`](./prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md) is the current execution handoff for the repository-wide truth pass.
+
+Key reconciliations:
+
+- The canonical submission chain is now accurately recorded as **023 live-tested**, with primary `submission-week` PI resolution and replay no-write proof.
+- Current repository contract suites now assert **031 v3.3** and **118/119 v1.7**, eliminating stale v3.2/v1.6 expectations.
+- Open defects remain real for orphan/eligibility-loss XP (**#100/#102**), video-source validation (**#101**), downstream homework/email source safety (**#104/#105**), and Airtable editor proof for merged code.
+- **#96/#106** are repository-fixed/superseded by merged canonical-summary hardening; their remaining paste/replay work is UI proof, not an unimplemented repository defect.
+- No repository result is counted as Airtable installation, trigger proof, Make readiness, or live email proof.
 
 ## Maintenance
 

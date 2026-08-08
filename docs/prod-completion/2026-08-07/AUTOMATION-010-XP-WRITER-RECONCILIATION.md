@@ -80,6 +80,6 @@ Required repair:
 
 Do not insert Automation 010 ahead of the controlling Program Instance isolation paste order:
 
-`023 v3.1 -> 053 v5.3 -> 066 v3.5 -> 118 v1.7 -> 119 v1.7 -> 043 v2.1 if Live`
+`053 v5.3 -> 066 v3.5 -> 118 v1.7 -> 119 v1.7 -> 043 v2.1 if Live`
 
 Repair/merge issue #106, then paste/attest current Automation 010 editor code as a separate controlled package.
