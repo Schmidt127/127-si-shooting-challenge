@@ -495,7 +495,7 @@ Columns:
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; **WELCOME:** Automation **079→Communications Hub** controlled test PASS (dedupe + replay protection); Hub stub template only — **not** participant-ready; **073/117f fixtures missing** | Finalize approved welcome content in Hub; run activation checklist; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | **Make.com OFF** for welcome; **Accepted ≠ delivery**; webhooks not in git | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md`; `WELCOME-EMAIL-ACTIVATION-CHECKLIST.md`; `071-homework-feedback-email-closeout.md`; `117-ZOOM-APPROVAL-GO-LIVE.md` | Approve participant welcome sends | P0 | 2026-08-08 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; **WELCOME:** Automation **079→Communications Hub** controlled test PASS (dedupe + replay protection); Hub **WELCOME** template + final copy pending — **not** participant-ready; **073/117f fixtures missing** | Finalize approved welcome content in Hub WELCOME template; run activation checklist; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | **Make.com OFF** for welcome; **Accepted ≠ delivery**; 079 does not supply subject/HTML/sendMode | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md`; `WELCOME-EMAIL-ACTIVATION-CHECKLIST.md`; `071-homework-feedback-email-closeout.md`; `117-ZOOM-APPROVAL-GO-LIVE.md` | Approve participant welcome sends | P0 | 2026-08-08 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Live Tested in PROD | PROD `XP Date Resolved` formula fixed 2026-08-05: SWITCH on XP Bucket now uses **Shooting Base** (was incorrect Submission Base); schema snapshots exist | Continue computed-field review pass; refresh `schema/current/` later | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-08-05 |
@@ -910,9 +910,10 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **PROD flow** | `Email Handoff Queue` → Automation **079** → Communications Hub → Resend → **Delivery** audit record |
 | **Make.com** | **OFF** — must remain off for welcome delivery |
 | **Controlled test** | **Live Tested in PROD** — end-to-end handoff, Hub dedupe (parent/athlete same email → one Delivery), replay protection (same Handoff Key → no duplicate send) |
-| **Participant sends** | **Not authorized** — test mode + allowlist only |
-| **Hub content** | Simple Hub-rendered WELCOME from 079 payload — **not** final approved Shooting Challenge design |
-| **Accepted vs delivery** | Queue/Hub **Accepted** proves handoff received — **not** delivery; require Hub **Delivery** success |
+| **Participant sends** | **Not authorized** — **Test Mode?** + allowlist only |
+| **Hub content** | Hub **WELCOME** template renders subject/HTML from `templateKey: WELCOME` + Payload JSON (`athleteName`, `programName`, `message`) — final approved design pending |
+| **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode` |
+| **Accepted vs delivery** | Queue/Hub Event **Accepted** = intake only; success = one Hub **Delivery** in **`Sent`**, provider id, one attempt, no stale error/retry fields |
 | **Source-table issue** | Earlier Hub Event missing source table = **Hub-side mapping omission** — **not** a 079 defect; no 079 change required |
 | **Legacy build** | Automation **075** still builds welcome package on Enrollments — **does not send**; optional input to queue payload |
 | **Repo gap** | Automation **079** script **not yet in GitHub** — export recommended before next code change |
@@ -930,13 +931,13 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 **Still required before participant welcome emails:**
 
 1. Final approved welcome copy and branding.
-2. Hub template implementation and review (replace stub render).
+2. Hub **WELCOME** template implementation and review (Hub-owned subject/HTML from `templateKey: WELCOME`).
 3. Recipient / consent / authorization review.
 4. New controlled test after template change.
 5. Explicit Mike approval for non-test participant sends.
 6. Post-send Delivery audit and opt-out/suppression verification.
 
-**Do not claim:** participant-wide welcome sends enabled; Make.com welcome path active; **Accepted** alone equals delivered email.
+**Do not claim:** participant-wide welcome sends enabled; Make.com welcome path active; **Accepted** alone equals delivered email; operator supplies subject/HTML/`sendMode` on the queue row.
 
 ### 9L. Automation 117 ownership reconcile — **2026-08-05**
 

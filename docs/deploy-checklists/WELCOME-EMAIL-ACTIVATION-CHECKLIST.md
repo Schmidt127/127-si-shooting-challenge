@@ -23,7 +23,7 @@ Do **not** enable participant-wide sends until every required row below is check
 
 | # | Gate | Owner | Evidence |
 |---|------|-------|----------|
-| 2.1 | Communications Hub WELCOME template implements approved design (not payload-only stub) | Hub operator | Hub template version id |
+| 2.1 | Communications Hub **WELCOME** template implements approved design (Hub-owned subject/HTML — not operator-supplied queue fields) | Hub operator | Hub template version id |
 | 2.2 | Template review in **test mode** with allowlist recipient | Mike | Delivery record + rendered email screenshot |
 | 2.3 | Parent + athlete **same email** dedupes to **one** Delivery (regression) | Operator | Hub Delivery count = 1 |
 | 2.4 | Hub Event **source table** mapping populated for Shooting Challenge rows | Hub operator | Hub Event export |
@@ -61,9 +61,9 @@ Run [WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md](./WELCOME-EMAIL-CONTROLLED-TEST-R
 |---|------|---------------|
 | 5.1 | Unique Handoff Key used | New key suffix documented |
 | 5.2 | Queue → 079 → Hub Event → Delivery | Full chain in one run |
-| 5.3 | **Accepted** on queue + **Delivery success** on Hub | Both required |
-| 5.4 | Replay with **same** Handoff Key | No second Delivery |
-| 5.5 | Test mode honored | Only allowlisted inbox received mail |
+| 5.3 | Queue **Accepted** + Hub Delivery **`Sent`** | Intake **Accepted** alone is insufficient |
+| 5.4 | Replay with **same** Handoff Key (after initial **Sent**) | No second Delivery |
+| 5.5 | **Test Mode?** + allowlist honored | Only allowlisted inbox received mail |
 
 Store evidence under `docs/testing/evidence/YYYY-MM-DD-welcome-hub/`.
 
@@ -86,7 +86,7 @@ Only after sections 1–5 pass:
 
 | # | Check | When |
 |---|-------|------|
-| 7.1 | Hub Delivery records for each send — terminal success | Within 24h of first batch |
+| 7.1 | Hub Delivery records — terminal **`Sent`** + provider id; one per Handoff Key | Within 24h of first batch |
 | 7.2 | No duplicate Deliveries per Handoff Key | Same window |
 | 7.3 | Queue rows show **Accepted**; error rate acceptable | Same window |
 | 7.4 | Opt-out / bounce handling verified | First week |
@@ -99,7 +99,7 @@ Only after sections 1–5 pass:
 If unintended sends occur:
 
 1. Disable **079** trigger or stop arming Email Handoff Queue rows immediately.
-2. Confirm Hub test mode / allowlist re-enabled.
+2. Confirm Hub **Test Mode?** / allowlist re-enabled.
 3. Do **not** bulk-delete Delivery audit records — use for forensics.
 4. Document incident in completion master §9M.
 
