@@ -36,6 +36,9 @@ Airtable is the deployed/running copy.
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
  *   so unsupported cleanup cannot fail an otherwise successful automation run.
+ * - Read explicit primary-field values for Level and Level Gate Rule labels. This
+ *   avoids the Airtable automation runtime's occasional generic record.name label
+ *   ("Unnamed record") in logs, outputs, and gate explanations.
  *
  * Version 3.1 (C-025 Stage 17):
  * - Zoom gate count = live Total Zoom Attendances meetings ∪ qualifying Recording Quiz
@@ -132,11 +135,13 @@ const CONFIG = {
     },
 
     levelFields: {
+        name: "Level Name",
         xpRequired: "XP Required (Cumulative)",
         active: "Active?",
     },
 
     gateFields: {
+        name: "Level Gate Rule Name",
         level: "Level",
         versionActive: "Version Active?",
         gateEnabled: "Gate Enabled?",
@@ -255,6 +260,20 @@ function getText(record, fieldName) {
     } catch (e) {
         return "";
     }
+}
+
+/**
+ * Do not use record.name for human-facing labels. In automation runs Airtable
+ * can return its generic fallback even when the actual primary field is set.
+ */
+function getRecordLabel(record, primaryFieldName, fallbackLabel) {
+    const explicitName = getText(record, primaryFieldName);
+    if (explicitName) return explicitName;
+
+    const recordName = cleanString(record?.name);
+    if (recordName && recordName !== "Unnamed record") return recordName;
+
+    return fallbackLabel;
 }
 
 function isTruthyFlag(record, fieldName) {
@@ -449,10 +468,12 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
     ];
 
     const levelRequiredFields = [
+        CONFIG.levelFields.name,
         CONFIG.levelFields.xpRequired,
     ];
 
     const gateRequiredFields = [
+        CONFIG.gateFields.name,
         CONFIG.gateFields.level,
         CONFIG.gateFields.gateEnabled,
         CONFIG.gateFields.minimumSubmissions,
@@ -496,7 +517,11 @@ function buildLevelList(levelRecords, levelsTable) {
 
             return {
                 id: levelRecord.id,
-                name: levelRecord.name,
+                name: getRecordLabel(
+                    levelRecord,
+                    CONFIG.levelFields.name,
+                    `Level ${levelRecord.id}`
+                ),
                 xpRequired,
                 active: Boolean(activeValue),
             };
@@ -549,13 +574,17 @@ function buildGateRuleMap(gateRecords, gateRulesTable) {
             const existing = gateRuleMap.get(linkedLevelId);
 
             throw new Error(
-                `Multiple active gate rules found for the same level: "${existing.name}" and "${gateRecord.name}".`
+                `Multiple active gate rules found for the same level: "${existing.name}" and "${getRecordLabel(gateRecord, CONFIG.gateFields.name, `Gate rule ${gateRecord.id}`)}".`
             );
         }
 
         gateRuleMap.set(linkedLevelId, {
             id: gateRecord.id,
-            name: gateRecord.name,
+            name: getRecordLabel(
+                gateRecord,
+                CONFIG.gateFields.name,
+                `Gate rule ${gateRecord.id}`
+            ),
             levelId: linkedLevelId,
             gateEnabled: booleanValue(gateRecord.getCellValue(CONFIG.gateFields.gateEnabled)),
             minimumSubmissions: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumSubmissions), 0),
@@ -757,6 +786,7 @@ async function main() {
         stats.recordingZoomMeetingsCounted = zoomCombined.recordingMeetingsCounted;
 
         const levelFieldsToSelect = [
+            CONFIG.levelFields.name,
             CONFIG.levelFields.xpRequired,
         ];
 
@@ -765,6 +795,7 @@ async function main() {
         }
 
         const gateFieldsToSelect = [
+            CONFIG.gateFields.name,
             CONFIG.gateFields.level,
             CONFIG.gateFields.gateEnabled,
             CONFIG.gateFields.minimumSubmissions,
