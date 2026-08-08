@@ -31,6 +31,68 @@ function totalWrites(base) {
   );
 }
 
+function baseCanonicalSummary() {
+  return new MockRecord(IDS.SUMMARY_CANONICAL, {
+    "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+    Submissions: [],
+    "Summary Calculation Status": "",
+    Created: "2026-08-07T00:00:00.000Z",
+  });
+}
+
+test("unrelated malformed summary with no Week is ignored", async () => {
+  const malformed = new MockRecord("recSummary031MalformedNoWeek", {
+    "Summary Key": "",
+    Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+    Week: [],
+    Submissions: [],
+    "Summary Calculation Status": "",
+    Created: "2026-08-07T00:00:00.000Z",
+  });
+  const base = build031Base({
+    summaries: [
+      baseCanonicalSummary(),
+      malformed,
+    ],
+    xpEvents: [],
+  });
+
+  const { output, error, console: cap } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
+  assert.deepEqual(summarySubmissionIds(base, malformed.id), []);
+  assert.match(cap.lines.join("\n"), /Ignored malformed Weekly Athlete Summary candidate/);
+});
+
+test("malformed existing Submission summary link repairs to the valid canonical summary", async () => {
+  const malformedId = "recSummary031MalformedLinked";
+  const base = build031Base({
+    submissionCells: {
+      "Weekly Athlete Summary": [{ id: malformedId, name: "Malformed Summary" }],
+    },
+    summaries: [
+      baseCanonicalSummary(),
+      new MockRecord(malformedId, {
+        "Summary Key": "",
+        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+        Week: [],
+        Submissions: [{ id: IDS.SUBMISSION, name: "Submission" }],
+        "Summary Calculation Status": "",
+        Created: "2026-08-07T00:00:00.000Z",
+      }),
+    ],
+    xpEvents: [],
+  });
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "repaired_stale_summary_link");
+  assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.deepEqual(summarySubmissionIds(base, malformedId), []);
+});
+
 test("valid existing link stays canonical and repairs missing back-links", async () => {
   const base = build031Base({
     submissionCells: {
