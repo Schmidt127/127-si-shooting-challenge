@@ -2,790 +2,195 @@
 Automation: 073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Status: GitHub Source of Truth
 
-Purpose:
-To be confirmed from production script.
+Version: v3.3
+Date: 2026-08-08
 
-Trigger:
-To be confirmed from Airtable automation.
-
-Important Tables:
-To be confirmed from production script.
-
-Important Fields:
-To be confirmed from production script.
-
-Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+Issue #105 hardening:
+- Fail closed unless Video Feedback is Active and has one canonical Submission Asset.
+- Validate VIDEO_FEEDBACK|{asset RID}, asset/submission/enrollment ownership, countable/non-future submission, and Week.
+- Require active Video Feedback-linked XP evidence with matching Enrollment + Week.
+- Treat HTTP 200 semantic failures ({ok:false}/{success:false}/{sent:false}) as failures.
+- Preserve Test/Live recipient isolation and Make ownership of final Sent writeback.
 */
-
-/************************************************************
- * 073 - EMAIL, NOTIFICATIONS, AND EXTERNAL HANDOFFS
- * Send Video Feedback Parent Email Webhook
- *
- * Version: v3.2
- * Date Written: 2026-06-17
- *
- * PURPOSE
- * - Runs from one Video Feedback record.
- * - Reads the linked Enrollment record.
- * - Reads the linked Submission record.
- * - Reads the linked Submission Asset record when available.
- * - Builds a branded parent video-feedback email.
- * - Sends the email payload to a Make.com webhook.
- * - Writes only handoff-level status back to the Video Feedback record.
- *
- * IMPORTANT WRITEBACK RULE
- * - This script does NOT check Parent Feedback Sent?.
- * - This script does NOT write Parent Feedback Sent On.
- * - Make.com owns final Gmail-success writeback after the Gmail module succeeds.
- *
- * FOLDER
- * - 07 - Email, Notifications, and External Handoffs
- *
- * AUTOMATION NAME
- * - 073 - Email, Notifications, and External Handoffs - Send Video Feedback Parent Email Webhook
- *
- * TRIGGER TABLE
- * - Video Feedback
- *
- * TRIGGER TYPE
- * - When record matches conditions
- *
- * REQUIRED TRIGGER CONDITIONS
- * - Parent Feedback Ready? is checked
- * - Parent Feedback Sent? is unchecked
- * - Feedback Posted? is checked
- * - Coach Feedback is not empty
- * - Enrollment is not empty
- * - Submission is not empty
- * - Total Video XP Awarded > 0
- * - Base XP Awarded > 0
- *
- * REQUIRED INPUT VARIABLES
- * - recordId = Airtable record ID from the triggering Video Feedback record
- * - makeWebhookUrl = Make.com webhook URL
- * - sendMode = Test or Live
- * - testRecipientEmail = test recipient email address
- *
- * OPTIONAL INPUT VARIABLES
- * - replyTo = reply-to email address
- ************************************************************/
 
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1: CONSTANTS
-   ========================================================= */
+const VERSION = "v3.3";
+const TABLES = {
+  videoFeedback: "Video Feedback",
+  enrollments: "Enrollments",
+  submissions: "Submissions",
+  assets: "Submission Assets",
+  xpEvents: "XP Events",
+};
 
-const VIDEO_FEEDBACK_TABLE = "Video Feedback";
-const ENROLLMENTS_TABLE = "Enrollments";
-const SUBMISSIONS_TABLE = "Submissions";
-const SUBMISSION_ASSETS_TABLE = "Submission Assets";
-
-/* ---------- Video Feedback fields ---------- */
-
-const FIELD_VF_ENROLLMENT = "Enrollment";
-const FIELD_VF_SUBMISSION = "Submission";
-const FIELD_VF_SUBMISSION_ASSET = "Submission Asset";
-const FIELD_VF_NAME = "Video Feedback Name";
-const FIELD_VF_COACH_FEEDBACK = "Coach Feedback";
-const FIELD_VF_FEEDBACK_POSTED = "Feedback Posted?";
-const FIELD_VF_REVIEWED_AT = "Reviewed At";
-const FIELD_VF_VIDEO_URL = "Video URL or Drive Link";
-const FIELD_VF_WEEK = "Week";
-const FIELD_VF_TOTAL_XP = "Total Video XP Awarded";
-const FIELD_VF_BASE_XP = "Base XP Awarded";
-
-/* ---------- Parent feedback tracking fields on Video Feedback ---------- */
-
-const FIELD_VF_PARENT_READY = "Parent Feedback Ready?";
-const FIELD_VF_PARENT_SENT = "Parent Feedback Sent?";
-const FIELD_VF_PARENT_SENT_ON = "Parent Feedback Sent On";
-const FIELD_VF_PARENT_ERROR = "Parent Feedback Send Error";
-const FIELD_VF_PARENT_SUBJECT = "Parent Feedback Subject";
-
-/* ---------- Enrollment fields ---------- */
-
-const FIELD_ENR_PARENT_EMAIL_CLEAN = "Parent Email - Cleaned";
-const FIELD_ENR_PARENT_EMAIL = "Parent Email";
-const FIELD_ENR_PARENT_FIRST_NAME = "Parent First Name";
-const FIELD_ENR_ATHLETE_NAME = "Full Athlete Name";
-
-/* ---------- Submission Asset fields ---------- */
-
-const FIELD_ASSET_ORIGINAL_FILE_NAME = "Original File Name";
-const FIELD_ASSET_GOOGLE_FILE_URL = "Google Drive File URL";
-
-/* ---------- Submission fields ---------- */
-
-const FIELD_SUB_VIDEO_SUBMISSION_NOTE = "Video Submission Note";
-
-/* ---------- Defaults ---------- */
+const F = {
+  vf: {
+    enrollment: "Enrollment", submission: "Submission", asset: "Submission Asset",
+    key: "Video Feedback Key", active: "Active?", coach: "Coach Feedback",
+    posted: "Feedback Posted?", reviewedAt: "Reviewed At", week: "Week",
+    ready: "Parent Feedback Ready?", sent: "Parent Feedback Sent?",
+    error: "Parent Feedback Send Error", subject: "Parent Feedback Subject",
+    xpEvents: "XP Events", totalXp: "Total Video XP Awarded", baseXp: "Base XP Awarded",
+    name: "Video Feedback Name", videoUrl: "Video URL or Drive Link",
+  },
+  enr: {
+    active: "Active?", parentClean: "Parent Email - Cleaned", parent: "Parent Email",
+    parentFirst: "Parent First Name", athlete: "Full Athlete Name",
+  },
+  sub: {
+    enrollment: "Enrollment", week: "Week", activityDate: "Activity Date",
+    countable: "Count This Submission?", videoUpload: "Video Upload", note: "Video Upload Note",
+  },
+  asset: {
+    submission: "Submission - Linked", enrollment: "Enrollment - Linked", videoFeedback: "Video Feedback",
+    trueVideo: "Is True Video Feedback Asset?", original: "Original File Name",
+    reviewer: "Reviewer File URL", driveView: "Google Drive View URL", driveFile: "Google Drive File URL",
+  },
+  xp: {
+    active: "Active?", enrollment: "Enrollment", week: "Week", videoFeedback: "Video Feedback",
+    points: "XP Points",
+  },
+};
 
 const DEFAULT_REPLY_TO = "mschmidt@fairfield.k12.mt.us";
 
-const AWS_LOGO_URL = "https://make-021891587263-us-east-2-an.s3.us-east-2.amazonaws.com/BlueOrangeCircleLogo.png";
-
-const BRAND = {
-    orgName: "127 Sports Intensity",
-    primaryBlue: "#0034B7",
-    darkBlue: "#00257F",
-    accentOrange: "#FF8B00",
-    softOrange: "#FFF4E8",
-    orangeBorder: "#FFB457",
-    lightGray: "#F2F2F2",
-    cardBorder: "#E7E7E7",
-    darkText: "#262626",
-    mutedText: "#5F6470",
-    containerWidth: "640px",
-};
-
-/* =========================================================
-   SECTION 2: HELPERS
-   ========================================================= */
-
-function fieldExists(table, fieldName) {
-    if (!table || !fieldName) return false;
-
-    try {
-        table.getField(fieldName);
-        return true;
-    } catch {
-        return false;
-    }
+function hasField(table, name) { try { table.getField(name); return true; } catch { return false; } }
+function raw(rec, table, name) { return rec && hasField(table, name) ? rec.getCellValue(name) : null; }
+function text(rec, table, name) { return rec && hasField(table, name) ? String(rec.getCellValueAsString(name) || "").trim() : ""; }
+function linkedIds(rec, table, name) { const v = raw(rec, table, name); return Array.isArray(v) ? v.map(x => x?.id).filter(Boolean) : []; }
+function oneLinkedId(rec, table, name, label) {
+  const ids = linkedIds(rec, table, name);
+  if (ids.length !== 1) throw new Error(`${label} must contain exactly one linked record; found ${ids.length}.`);
+  return ids[0];
 }
-
-function getRaw(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) return null;
-    return record.getCellValue(fieldName);
+function checked(rec, table, name) { return raw(rec, table, name) === true; }
+function number(rec, table, name) { const v = raw(rec, table, name); const n = typeof v === "number" ? v : Number(text(rec, table, name).replace(/,/g, "")); return Number.isFinite(n) ? n : 0; }
+function first(...values) { return values.map(v => String(v ?? "").trim()).find(Boolean) || ""; }
+function cleanEmails(v) { return [...new Set(String(v || "").split(/[,;\n]+/).map(s => s.trim()).filter(Boolean))].join(","); }
+function esc(v) { return String(v ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;"); }
+function sameSet(a,b) { return a.length === b.length && a.every(x => b.includes(x)); }
+function truthyFormula(rec, table, name) {
+  const v = raw(rec, table, name);
+  if (v === true || v === 1) return true;
+  const s = text(rec, table, name).toLowerCase();
+  return ["1","true","yes","y","count","counted"].includes(s);
 }
-
-function getText(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) return "";
-    return String(record.getCellValueAsString(fieldName) || "").trim();
+function parseDate(v) { const d = v instanceof Date ? v : new Date(v); return Number.isNaN(d.getTime()) ? null : d; }
+function denverDateKey(v) {
+  const d = parseDate(v); if (!d) return "";
+  return new Intl.DateTimeFormat("en-CA", {timeZone:"America/Denver",year:"numeric",month:"2-digit",day:"2-digit"}).format(d);
 }
-
-function getNumber(record, table, fieldName, fallback = 0) {
-    const raw = getRaw(record, table, fieldName);
-
-    if (typeof raw === "number" && Number.isFinite(raw)) {
-        return raw;
-    }
-
-    const text = String(raw ?? "").replace(/,/g, "").trim();
-    if (!text) return fallback;
-
-    const n = Number(text);
-    return Number.isFinite(n) ? n : fallback;
+function todayDenverKey() { return denverDateKey(new Date()); }
+function normalizeSendMode(v) {
+  const s = String(v || "").trim().toLowerCase();
+  if (["live","l","real","send","parent"].includes(s)) return "live";
+  if (["test","t","preview","practice","draft"].includes(s)) return "test";
+  return "";
 }
-
-function getLinkedIds(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-    if (!Array.isArray(raw)) return [];
-    return raw.map(item => item?.id).filter(Boolean);
+function semanticFailure(body) {
+  const s = String(body || "").trim(); if (!s) return "";
+  try {
+    const j = JSON.parse(s);
+    for (const k of ["ok","success","sent"]) if (Object.prototype.hasOwnProperty.call(j,k) && j[k] === false) return `${k}=false`;
+  } catch {}
+  return "";
 }
-
-function getFirstLinkedId(record, table, fieldName) {
-    const ids = getLinkedIds(record, table, fieldName);
-    return ids[0] || "";
-}
-
-function getCheckboxValue(record, table, fieldName) {
-    return getRaw(record, table, fieldName) === true;
-}
-
-function firstNonBlank(...values) {
-    for (const value of values) {
-        const s = String(value ?? "").trim();
-        if (s) return s;
-    }
-
-    return "";
-}
-
-function cleanCsvEmails(value) {
-    const items = String(value || "")
-        .split(/[,\n;]+/)
-        .map(v => v.trim())
-        .filter(Boolean);
-
-    return [...new Set(items)].join(",");
-}
-
-function escapeHtml(value) {
-    return String(value ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
-}
-
-function nlToBr(value) {
-    return escapeHtml(value).replace(/\n/g, "<br>");
-}
-
-function formatDateTime(value) {
-    if (!value) return "";
-
-    const d = value instanceof Date ? value : new Date(value);
-    if (Number.isNaN(d.getTime())) return "";
-
-    return new Intl.DateTimeFormat("en-US", {
-        timeZone: "America/Denver",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        hour: "numeric",
-        minute: "2-digit",
-    }).format(d);
-}
-
-function summaryRow(label, value) {
-    if (!String(value || "").trim()) return "";
-
-    return `
-        <tr>
-            <td style="padding:4px 0; font-size:12px; font-weight:700; color:${BRAND.darkText}; width:165px; vertical-align:top; line-height:1.2;">
-                ${escapeHtml(label)}
-            </td>
-            <td style="padding:4px 0; font-size:12px; color:${BRAND.darkText}; line-height:1.2;">
-                ${escapeHtml(value)}
-            </td>
-        </tr>
-    `;
-}
-
 async function postJson(url, payload) {
-    const request = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-    };
-
-    if (typeof fetch === "function") {
-        return await fetch(url, request);
-    }
-
-    if (typeof remoteFetchAsync === "function") {
-        return await remoteFetchAsync(url, request);
-    }
-
-    throw new Error("No supported HTTP method is available in this Airtable automation environment.");
+  const req = {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)};
+  if (typeof fetch === "function") return await fetch(url, req);
+  if (typeof remoteFetchAsync === "function") return await remoteFetchAsync(url, req);
+  throw new Error("No supported HTTP method is available in this Airtable automation environment.");
 }
-
-function normalizeSendMode(value) {
-    const raw = String(value || "").trim().toLowerCase();
-
-    if (["live", "l", "real", "send", "parent"].includes(raw)) {
-        return "live";
-    }
-
-    if (["test", "t", "preview", "practice", "draft"].includes(raw)) {
-        return "test";
-    }
-
-    return "";
+function parentVideoUrl(assetRec, assetTable) {
+  return first(text(assetRec,assetTable,F.asset.reviewer), text(assetRec,assetTable,F.asset.driveView), text(assetRec,assetTable,F.asset.driveFile));
 }
-
-/* =========================================================
-   SECTION 3: EMAIL HTML BUILDER
-   ========================================================= */
-
-function buildEmailHtml({
-    parentFirstName,
-    athleteName,
-    reviewedAtText,
-    weekText,
-    coachFeedback,
-    videoUrl,
-    totalXpText,
-    sendMode,
-    originalFileName,
-    videoSubmissionNote,
-}) {
-    const greetingName = parentFirstName || "Parent";
-
-    const modeBanner = sendMode === "test"
-        ? `
-            <div style="background:${BRAND.softOrange}; border:1px solid ${BRAND.orangeBorder}; color:#7a4a00; border-radius:14px; padding:12px 14px; margin:0 0 14px 0; font-size:12px; font-weight:700; line-height:1.35;">
-                TEST MODE — This email was generated for review and was not sent to the real parent recipient.
-            </div>
-        `
-        : "";
-
-    const headerLogoHtml = AWS_LOGO_URL
-        ? `
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right" style="border-collapse:collapse;">
-                <tr>
-                    <td align="center" valign="middle" width="76" height="76"
-                        style="width:76px; height:76px; background:#ffffff; border-radius:999px; text-align:center; vertical-align:middle; overflow:hidden;">
-                        <img src="${escapeHtml(AWS_LOGO_URL)}"
-                             alt="127 Sports Intensity Logo"
-                             width="56"
-                             height="56"
-                             style="display:block; width:56px; height:56px; max-width:56px; max-height:56px; margin:10px auto; border:0; outline:none; text-decoration:none;">
-                    </td>
-                </tr>
-            </table>
-        `
-        : "";
-
-    const introHtml = `
-        <p style="margin:0; font-size:12px; line-height:1.45;">
-            Hello ${escapeHtml(greetingName)},
-        </p>
-        <p style="margin:10px 0 0 0; font-size:12px; line-height:1.45;">
-            I have finished reviewing the video submission from ${escapeHtml(athleteName || "your athlete")} and have included the feedback below.
-        </p>
-    `;
-
-    const summaryHtml = `
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:collapse;">
-            ${summaryRow("Athlete", athleteName)}
-            ${summaryRow("Reviewed At", reviewedAtText)}
-            ${summaryRow("Week", weekText)}
-            ${summaryRow("File Name", originalFileName)}
-            ${summaryRow("Video Submission Note", videoSubmissionNote)}
-            ${summaryRow("XP Awarded", totalXpText)}
-        </table>
-    `;
-
-    const feedbackHtml = coachFeedback
-        ? `<div style="font-size:12px; line-height:1.5;">${nlToBr(coachFeedback)}</div>`
-        : `<div style="font-size:12px; line-height:1.5;">No coach feedback text was included on this record.</div>`;
-
-    const actionHtml = videoUrl
-        ? `
-            <p style="margin:0 0 12px 0; font-size:12px; line-height:1.45;">You can review the linked video here:</p>
-            <p style="margin:0;">
-                <a href="${escapeHtml(videoUrl)}"
-                   style="display:inline-block; background:${BRAND.primaryBlue}; color:#ffffff; text-decoration:none; padding:10px 16px; border-radius:10px; font-weight:700; font-size:12px;">
-                    Open Video
-                </a>
-            </p>
-        `
-        : `
-            <p style="margin:0; font-size:12px; line-height:1.45;">
-                The feedback has been posted, but no video link was included on this record.
-            </p>
-        `;
-
-    const closingHtml = `
-        <p style="margin:0 0 10px 0; font-size:12px; line-height:1.45;">
-            Please reply if you have any questions about this feedback or next steps.
-        </p>
-        <p style="margin:0; font-size:12px; line-height:1.45;">
-            Thank you,<br>
-            Coach Mike
-        </p>
-    `;
-
-    function brandedCard(title, bodyHtml) {
-        return `
-            <div style="background:#ffffff; border:1px solid ${BRAND.cardBorder}; border-left:6px solid ${BRAND.accentOrange}; border-radius:16px; padding:18px 20px; margin:0 0 14px 0;">
-                <div style="font-size:15px; font-weight:800; color:${BRAND.primaryBlue}; margin:0 0 10px 0; line-height:1.25;">
-                    <span style="color:${BRAND.accentOrange};">●</span>
-                    ${escapeHtml(title)}
-                </div>
-                <div style="font-size:12px; line-height:1.45; color:${BRAND.darkText};">
-                    ${bodyHtml}
-                </div>
-            </div>
-        `;
-    }
-
-    return `
-<!doctype html>
-<html>
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Feedback</title>
-</head>
-<body style="margin:0; padding:0; background:${BRAND.lightGray}; font-family:Arial, Helvetica, sans-serif; color:${BRAND.darkText};">
-    <div style="padding:20px 12px; background:${BRAND.lightGray};">
-        <div style="max-width:${BRAND.containerWidth}; margin:0 auto;">
-            ${modeBanner}
-
-            <div style="background:${BRAND.primaryBlue}; color:#ffffff; border-radius:18px; padding:0; margin:0 0 14px 0; overflow:hidden;">
-                <div style="height:6px; background:${BRAND.accentOrange}; line-height:6px; font-size:6px;">&nbsp;</div>
-                <div style="padding:18px 20px;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="width:100%; border-collapse:collapse;">
-                        <tr>
-                            <td style="vertical-align:middle; padding:0 16px 0 0;">
-                                <div style="font-size:21px; font-weight:900; margin:0 0 6px 0; line-height:1.2; color:#ffffff;">
-                                    Video Feedback Posted
-                                </div>
-                                <div style="font-size:12px; line-height:1.35; color:#ffffff; opacity:0.96;">
-                                    A new coach review is available for your athlete.
-                                </div>
-                            </td>
-                            <td style="width:76px; vertical-align:middle; text-align:right;">
-                                ${headerLogoHtml}
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-
-            ${brandedCard("Update", introHtml)}
-
-            ${brandedCard("Summary", summaryHtml)}
-
-            ${brandedCard("Coach Feedback - Please Read to Your Child", feedbackHtml)}
-
-            <div style="display:none; mso-hide:all;">
-                ${brandedCard("Review Link", actionHtml)}
-            </div>
-
-            ${brandedCard("Questions", closingHtml)}
-
-            <div style="background:${BRAND.darkBlue}; color:#ffffff; border-radius:18px; padding:14px 18px; font-size:11px; line-height:1.4; border-top:5px solid ${BRAND.accentOrange}; text-align:center;">
-                <div style="font-size:11px; font-weight:700; margin:0 0 7px 0; color:#ffffff; text-align:center;">
-                    127 Sports Intensity | Youth sports communication and development support
-                </div>
-                <div style="font-size:11px; margin:0; color:#ffffff; text-align:center;">
-                    &#128279;
-                    <a href="https://form.fillout.com/t/iwzyzj5zeMus" style="color:#ffffff; text-decoration:underline; font-weight:700;">
-                        Daily Submissions
-                    </a>
-                    <span style="color:${BRAND.orangeBorder};">&nbsp;|&nbsp;</span>
-                    &#128279;
-                    <a href="https://fairfieldbasketballclub.com/leaderboard" style="color:#ffffff; text-decoration:underline; font-weight:700;">
-                        Shooting Challenge Website
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-    `.trim();
+function emailHtml({parentFirstName, athleteName, coachFeedback, totalXp, fileName, sendMode}) {
+  const banner = sendMode === "test" ? `<p><strong>TEST MODE — not sent to the real parent.</strong></p>` : "";
+  return `<!doctype html><html><body style="font-family:Arial,sans-serif;color:#262626">${banner}<h2 style="color:#0034B7">Video Feedback Posted</h2><p>Hello ${esc(parentFirstName || "Parent")},</p><p>I finished reviewing ${esc(athleteName || "your athlete")}'s video submission.</p><p><strong>File:</strong> ${esc(fileName || "Video submission")}<br><strong>XP Awarded:</strong> ${esc(totalXp)}</p><h3 style="color:#0034B7">Coach Feedback</h3><p>${esc(coachFeedback).replace(/\n/g,"<br>")}</p><p>Thank you,<br>Coach Mike</p></body></html>`;
 }
-
-/* =========================================================
-   SECTION 4: MAIN
-   ========================================================= */
 
 async function main() {
-    const cfg = input.config();
+  const cfg = input.config();
+  const recordId = String(cfg.recordId || "").trim();
+  const makeWebhookUrl = String(cfg.makeWebhookUrl || "").trim();
+  const sendMode = normalizeSendMode(cfg.sendMode);
+  const testRecipientEmail = String(cfg.testRecipientEmail || "").trim();
+  const replyTo = String(cfg.replyTo || DEFAULT_REPLY_TO).trim();
+  if (!recordId) throw new Error("Missing required input: recordId");
+  if (!makeWebhookUrl) throw new Error("Missing required input: makeWebhookUrl");
+  if (!sendMode) throw new Error("Invalid sendMode. Expected Test or Live.");
+  if (sendMode === "test" && !testRecipientEmail) throw new Error("Missing testRecipientEmail for Test mode.");
 
-    const recordId = String(cfg.recordId || "").trim();
-    const makeWebhookUrl = String(cfg.makeWebhookUrl || "").trim();
-    const sendModeRaw = String(cfg.sendMode || "").trim();
-    const testRecipientEmail = String(cfg.testRecipientEmail || "").trim();
-    const replyTo = String(cfg.replyTo || DEFAULT_REPLY_TO).trim();
+  const vfT = base.getTable(TABLES.videoFeedback), enrT = base.getTable(TABLES.enrollments), subT = base.getTable(TABLES.submissions), assetT = base.getTable(TABLES.assets), xpT = base.getTable(TABLES.xpEvents);
+  const vf = await vfT.selectRecordAsync(recordId); if (!vf) throw new Error(`Video Feedback not found: ${recordId}`);
 
-    if (!recordId) {
-        throw new Error("Missing required input: recordId");
-    }
+  if (!checked(vf,vfT,F.vf.active)) throw new Error("Video Feedback is inactive/retired. Email blocked.");
+  if (!checked(vf,vfT,F.vf.posted)) throw new Error("Feedback Posted? is not checked. Email blocked.");
+  if (!checked(vf,vfT,F.vf.ready)) throw new Error("Parent Feedback Ready? is not checked. Email blocked.");
+  if (checked(vf,vfT,F.vf.sent)) throw new Error("Parent Feedback Sent? is already checked. Duplicate send blocked.");
+  const coachFeedback = text(vf,vfT,F.vf.coach); if (!coachFeedback) throw new Error("Coach Feedback is blank. Email blocked.");
 
-    if (!makeWebhookUrl) {
-        throw new Error("Missing required input: makeWebhookUrl");
-    }
+  const enrollmentId = oneLinkedId(vf,vfT,F.vf.enrollment,"Video Feedback Enrollment");
+  const submissionId = oneLinkedId(vf,vfT,F.vf.submission,"Video Feedback Submission");
+  const assetId = oneLinkedId(vf,vfT,F.vf.asset,"Video Feedback Submission Asset");
+  const [enr, sub, asset] = await Promise.all([enrT.selectRecordAsync(enrollmentId), subT.selectRecordAsync(submissionId), assetT.selectRecordAsync(assetId)]);
+  if (!enr || !sub || !asset) throw new Error("Canonical Video Feedback source chain contains a missing record.");
+  if (!checked(enr,enrT,F.enr.active)) throw new Error("Enrollment is inactive. Email blocked.");
 
-    if (!sendModeRaw) {
-        throw new Error("Missing required input: sendMode");
-    }
+  const expectedKey = `VIDEO_FEEDBACK|${assetId}`;
+  if (text(vf,vfT,F.vf.key) !== expectedKey) throw new Error(`Video Feedback Key mismatch. Expected ${expectedKey}.`);
+  if (!sameSet(linkedIds(asset,assetT,F.asset.submission),[submissionId])) throw new Error("Submission Asset does not belong exclusively to the linked Submission.");
+  if (!sameSet(linkedIds(asset,assetT,F.asset.enrollment),[enrollmentId])) throw new Error("Submission Asset Enrollment does not match Video Feedback Enrollment.");
+  if (!linkedIds(asset,assetT,F.asset.videoFeedback).includes(recordId)) throw new Error("Submission Asset does not link back to this canonical Video Feedback.");
+  if (!truthyFormula(asset,assetT,F.asset.trueVideo)) throw new Error("Submission Asset is not a true Video Feedback asset.");
 
-    const sendMode = normalizeSendMode(sendModeRaw);
+  if (!sameSet(linkedIds(sub,subT,F.sub.enrollment),[enrollmentId])) throw new Error("Submission Enrollment does not match Video Feedback Enrollment.");
+  const weekIds = linkedIds(sub,subT,F.sub.week); if (weekIds.length !== 1) throw new Error(`Submission must have exactly one Week; found ${weekIds.length}.`);
+  const weekId = weekIds[0];
+  if (!text(vf,vfT,F.vf.week)) throw new Error("Video Feedback Week lookup is blank. Email blocked.");
+  if (!truthyFormula(sub,subT,F.sub.countable)) throw new Error("Linked Submission is not countable/current. Email blocked.");
+  if (!Array.isArray(raw(sub,subT,F.sub.videoUpload)) || raw(sub,subT,F.sub.videoUpload).length === 0) throw new Error("Linked Submission has no Video Upload. Email blocked.");
+  const activityDate = raw(sub,subT,F.sub.activityDate); if (!parseDate(activityDate)) throw new Error("Submission Activity Date is missing/invalid.");
+  if (denverDateKey(activityDate) > todayDenverKey()) throw new Error("Submission Activity Date is in the future. Email blocked.");
 
-    if (!["test", "live"].includes(sendMode)) {
-        throw new Error(`Invalid sendMode input. Expected Test or Live, received: ${sendModeRaw}`);
-    }
+  const xpIds = linkedIds(vf,vfT,F.vf.xpEvents); if (!xpIds.length) throw new Error("Video Feedback has no linked XP Events. Email blocked.");
+  let activeVideoXp = 0;
+  for (const xpId of xpIds) {
+    const xp = await xpT.selectRecordAsync(xpId); if (!xp || !checked(xp,xpT,F.xp.active)) continue;
+    if (!sameSet(linkedIds(xp,xpT,F.xp.enrollment),[enrollmentId])) continue;
+    if (!sameSet(linkedIds(xp,xpT,F.xp.week),[weekId])) continue;
+    if (!linkedIds(xp,xpT,F.xp.videoFeedback).includes(recordId)) continue;
+    activeVideoXp += Math.max(0, number(xp,xpT,F.xp.points));
+  }
+  if (activeVideoXp <= 0) throw new Error("No active Video Feedback XP Event matches Enrollment + Week + source. Email blocked.");
+  if (number(vf,vfT,F.vf.totalXp) <= 0 || number(vf,vfT,F.vf.baseXp) <= 0) throw new Error("Video Feedback XP award fields are not positive. Email blocked.");
 
-    if (sendMode === "test" && !testRecipientEmail) {
-        throw new Error("Missing required input: testRecipientEmail for Test mode");
-    }
+  const parentEmailsCsv = cleanEmails(first(text(enr,enrT,F.enr.parentClean),text(enr,enrT,F.enr.parent)));
+  if (!parentEmailsCsv) throw new Error("No parent recipient email found on linked Enrollment.");
+  const toEmail = sendMode === "test" ? testRecipientEmail : parentEmailsCsv;
+  const athleteName = first(text(enr,enrT,F.enr.athlete),text(vf,vfT,F.vf.name));
+  const subjectBase = `New Video Feedback for ${athleteName || "Athlete"}`;
+  const subjectOut = sendMode === "test" ? `[TEST] ${subjectBase}` : subjectBase;
+  const originalFileName = text(asset,assetT,F.asset.original);
+  const videoUrl = parentVideoUrl(asset,assetT);
+  const htmlOut = emailHtml({parentFirstName:text(enr,enrT,F.enr.parentFirst),athleteName,coachFeedback,totalXp:activeVideoXp,fileName:originalFileName,sendMode});
+  const payload = {recordId,sourceTable:TABLES.videoFeedback,sendType:"video_feedback",sendMode,sendTag:"VIDEO_FEEDBACK_PARENT",toEmail,liveRecipientEmail:parentEmailsCsv,testRecipientEmail,athleteName,subjectOut,htmlOut,replyTo,videoUrl,originalFileName,videoSubmissionNote:text(sub,subT,F.sub.note),totalVideoXpAwarded:activeVideoXp,baseXpAwarded:number(vf,vfT,F.vf.baseXp),canonicalSubmissionId:submissionId,canonicalSubmissionAssetId:assetId,canonicalWeekId:weekId,videoFeedbackKey:expectedKey};
 
-    const videoFeedbackTable = base.getTable(VIDEO_FEEDBACK_TABLE);
-    const enrollmentsTable = base.getTable(ENROLLMENTS_TABLE);
-    const submissionsTable = base.getTable(SUBMISSIONS_TABLE);
-    const submissionAssetsTable = base.getTable(SUBMISSION_ASSETS_TABLE);
-
-    const videoFeedbackRecord = await videoFeedbackTable.selectRecordAsync(recordId);
-
-    if (!videoFeedbackRecord) {
-        throw new Error(`Video Feedback record not found: ${recordId}`);
-    }
-
-    const enrollmentId = getFirstLinkedId(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_ENROLLMENT
-    );
-
-    if (!enrollmentId) {
-        throw new Error("Video Feedback record is missing linked Enrollment.");
-    }
-
-    const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
-
-    if (!enrollmentRecord) {
-        throw new Error(`Linked Enrollment record not found: ${enrollmentId}`);
-    }
-
-    const submissionId = getFirstLinkedId(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_SUBMISSION
-    );
-
-    if (!submissionId) {
-        throw new Error("Video Feedback record is missing linked Submission.");
-    }
-
-    const submissionRecord = await submissionsTable.selectRecordAsync(submissionId);
-
-    if (!submissionRecord) {
-        throw new Error(`Linked Submission record not found: ${submissionId}`);
-    }
-
-    const submissionAssetId = getFirstLinkedId(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_SUBMISSION_ASSET
-    );
-
-    const submissionAssetRecord = submissionAssetId
-        ? await submissionAssetsTable.selectRecordAsync(submissionAssetId)
-        : null;
-
-    const parentFeedbackReady = fieldExists(videoFeedbackTable, FIELD_VF_PARENT_READY)
-        ? getCheckboxValue(videoFeedbackRecord, videoFeedbackTable, FIELD_VF_PARENT_READY)
-        : true;
-
-    const parentFeedbackSent = fieldExists(videoFeedbackTable, FIELD_VF_PARENT_SENT)
-        ? getCheckboxValue(videoFeedbackRecord, videoFeedbackTable, FIELD_VF_PARENT_SENT)
-        : false;
-
-    const feedbackPosted = getCheckboxValue(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_FEEDBACK_POSTED
-    );
-
-    const totalVideoXpAwarded = getNumber(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_TOTAL_XP,
-        0
-    );
-
-    const baseXpAwarded = getNumber(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_BASE_XP,
-        0
-    );
-
-    const athleteName = firstNonBlank(
-        getText(enrollmentRecord, enrollmentsTable, FIELD_ENR_ATHLETE_NAME),
-        getText(videoFeedbackRecord, videoFeedbackTable, FIELD_VF_NAME)
-    );
-
-    const parentFirstName = getText(
-        enrollmentRecord,
-        enrollmentsTable,
-        FIELD_ENR_PARENT_FIRST_NAME
-    );
-
-    const parentEmailsCsv = cleanCsvEmails(
-        firstNonBlank(
-            getText(enrollmentRecord, enrollmentsTable, FIELD_ENR_PARENT_EMAIL_CLEAN),
-            getText(enrollmentRecord, enrollmentsTable, FIELD_ENR_PARENT_EMAIL)
-        )
-    );
-
-    const coachFeedback = getText(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_COACH_FEEDBACK
-    );
-
-    const reviewedAtText = formatDateTime(
-        getRaw(videoFeedbackRecord, videoFeedbackTable, FIELD_VF_REVIEWED_AT)
-    );
-
-    const weekText = getText(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_WEEK
-    );
-
-    const totalXpText = getText(
-        videoFeedbackRecord,
-        videoFeedbackTable,
-        FIELD_VF_TOTAL_XP
-    );
-
-    const videoUrl = firstNonBlank(
-        getText(videoFeedbackRecord, videoFeedbackTable, FIELD_VF_VIDEO_URL),
-        submissionAssetRecord
-            ? getText(submissionAssetRecord, submissionAssetsTable, FIELD_ASSET_GOOGLE_FILE_URL)
-            : ""
-    );
-
-    const originalFileName = submissionAssetRecord
-        ? getText(submissionAssetRecord, submissionAssetsTable, FIELD_ASSET_ORIGINAL_FILE_NAME)
-        : "";
-
-    const videoSubmissionNote = submissionRecord
-        ? getText(submissionRecord, submissionsTable, FIELD_SUB_VIDEO_SUBMISSION_NOTE)
-        : "";
-
-    if (!feedbackPosted) {
-        throw new Error("Feedback Posted? is not checked. Email not sent.");
-    }
-
-    if (!parentFeedbackReady) {
-        throw new Error("Parent Feedback Ready? is not checked. Email not sent.");
-    }
-
-    if (parentFeedbackSent) {
-        throw new Error("Parent Feedback Sent? is already checked. Duplicate send blocked.");
-    }
-
-    if (!coachFeedback) {
-        throw new Error("Coach Feedback is blank. Email not sent.");
-    }
-
-    if (!parentEmailsCsv) {
-        throw new Error("No parent recipient email found on linked Enrollment.");
-    }
-
-    if (totalVideoXpAwarded <= 0) {
-        throw new Error("Total Video XP Awarded must be greater than 0. Email not sent.");
-    }
-
-    if (baseXpAwarded <= 0) {
-        throw new Error("Base XP Awarded must be greater than 0. Email not sent.");
-    }
-
-    const sourceTable = VIDEO_FEEDBACK_TABLE;
-    const sendType = "video_feedback";
-    const sendTag = "VIDEO_FEEDBACK_PARENT";
-
-    const subjectBase = `New Video Feedback for ${athleteName || "Athlete"}`;
-    const subjectOut = sendMode === "test"
-        ? `[TEST] ${subjectBase}`
-        : subjectBase;
-
-    const htmlOut = buildEmailHtml({
-        parentFirstName,
-        athleteName,
-        reviewedAtText,
-        weekText,
-        coachFeedback,
-        videoUrl,
-        totalXpText,
-        sendMode,
-        originalFileName,
-        videoSubmissionNote,
-    });
-
-    const payload = {
-        recordId,
-        sourceTable,
-        sendType,
-        sendMode,
-        sendTag,
-
-        athleteName,
-        parentEmailsCsv,
-        testRecipientEmail,
-
-        toEmail: sendMode === "test" ? testRecipientEmail : parentEmailsCsv,
-        liveRecipientEmail: parentEmailsCsv,
-        testRecipientEmail,
-
-        subjectOut,
-        htmlOut,
-        replyTo,
-
-        videoUrl,
-        originalFileName,
-        videoSubmissionNote,
-        totalVideoXpAwarded,
-        baseXpAwarded,
-    };
-
-    let response;
-    let responseText = "";
-
-    try {
-        response = await postJson(makeWebhookUrl, payload);
-        responseText = await response.text();
-
-        if (!response.ok) {
-            throw new Error(`Webhook failed with status ${response.status}: ${responseText}`);
-        }
-    } catch (error) {
-        const updates = {};
-
-        if (fieldExists(videoFeedbackTable, FIELD_VF_PARENT_ERROR)) {
-            updates[FIELD_VF_PARENT_ERROR] = String(error.message || error);
-        }
-
-        if (Object.keys(updates).length) {
-            await videoFeedbackTable.updateRecordAsync(recordId, updates);
-        }
-
-        output.set("ok", false);
-        output.set("recordId", recordId);
-        output.set("sourceTable", sourceTable);
-        output.set("sendType", sendType);
-        output.set("sendMode", sendMode);
-        output.set("sendTag", sendTag);
-        output.set("athleteName", athleteName);
-        output.set("parentEmailsCsv", parentEmailsCsv);
-        output.set("testRecipientEmail", testRecipientEmail);
-        output.set("subjectOut", subjectOut);
-        output.set("htmlOut", htmlOut);
-        output.set("replyTo", replyTo);
-        output.set("errorOut", String(error.message || error));
-
-        throw error;
-    }
-
-    const successUpdates = {};
-
-    if (fieldExists(videoFeedbackTable, FIELD_VF_PARENT_ERROR)) {
-        successUpdates[FIELD_VF_PARENT_ERROR] = "";
-    }
-
-    if (fieldExists(videoFeedbackTable, FIELD_VF_PARENT_SUBJECT)) {
-        successUpdates[FIELD_VF_PARENT_SUBJECT] = subjectOut;
-    }
-
-    if (Object.keys(successUpdates).length) {
-        await videoFeedbackTable.updateRecordAsync(recordId, successUpdates);
-    }
-
-    output.set("ok", true);
-    output.set("recordId", recordId);
-    output.set("sourceTable", sourceTable);
-    output.set("sendType", sendType);
-    output.set("sendMode", sendMode);
-    output.set("sendTag", sendTag);
-    output.set("athleteName", athleteName);
-    output.set("parentEmailsCsv", parentEmailsCsv);
-    output.set("testRecipientEmail", testRecipientEmail);
-    output.set("toEmail", payload.toEmail);
-    output.set("subjectOut", subjectOut);
-    output.set("htmlOut", htmlOut);
-    output.set("replyTo", replyTo);
-    output.set("videoUrl", videoUrl);
-    output.set("originalFileName", originalFileName);
-    output.set("totalVideoXpAwarded", totalVideoXpAwarded);
-    output.set("baseXpAwarded", baseXpAwarded);
-    output.set("makeResponse", responseText);
-    output.set("errorOut", "");
+  try {
+    const response = await postJson(makeWebhookUrl,payload); const body = await response.text();
+    if (!response.ok) throw new Error(`Webhook failed with status ${response.status}: ${body}`);
+    const sem = semanticFailure(body); if (sem) throw new Error(`Webhook semantic failure: ${sem}: ${body}`);
+    const updates = {}; if (hasField(vfT,F.vf.error)) updates[F.vf.error] = ""; if (hasField(vfT,F.vf.subject)) updates[F.vf.subject] = subjectOut;
+    if (Object.keys(updates).length) await vfT.updateRecordAsync(recordId,updates);
+    for (const [k,v] of Object.entries({ok:true,version:VERSION,recordId,sendMode,toEmail,subjectOut,activeVideoXp,canonicalSubmissionId:submissionId,canonicalSubmissionAssetId:assetId,canonicalWeekId:weekId,makeResponse:body,errorOut:""})) output.set(k,v);
+  } catch (err) {
+    if (hasField(vfT,F.vf.error)) await vfT.updateRecordAsync(recordId,{[F.vf.error]:String(err.message || err)});
+    output.set("ok",false); output.set("version",VERSION); output.set("recordId",recordId); output.set("errorOut",String(err.message || err));
+    throw err;
+  }
 }
 
 await main();
