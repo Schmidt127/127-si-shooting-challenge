@@ -35,7 +35,7 @@ Both are recorded as **Off**, with repository source and required version **v1.7
 
 Controlling deployment order remains:
 
-`023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live`
+`053 → 066 → 118 → 119 → 043-if-Live`
 
 ### Level-gate consistency
 

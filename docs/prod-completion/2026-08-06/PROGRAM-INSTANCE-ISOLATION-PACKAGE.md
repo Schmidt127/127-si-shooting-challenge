@@ -25,33 +25,45 @@
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
 | ---------- | ------------------ | ---------------- | ----------- | ----------- | ------ |
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
-| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | No (re-paste v3.1) | PARTIAL — v3.0 fallback only | **INCOMPLETE** |
+| 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes | **PASS** |
 | 053 5.3 | Yes | Yes | No | No | — |
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
 | 119 v1.7 | Yes | Yes | No | No | — |
 | 043 v2.1 | Yes | Yes | TBD (if Live) | TBD | — |
 
-### 023 status (honest — do not advance to 053 yet)
+### 023 status
 
 ```text
-Repository v3.0: merged
-PROD v3.0: pasted
-Live test: PARTIAL — fallback path passed
-Program Instance-safe Week path: NOT YET VALIDATED
-Final result: INCOMPLETE
+Repository v3.1: merged
+PROD v3.1: pasted
+Primary controlled test: PASS — Week-derived Program Instance path
+Replay test: PASS — existing Enrollment path / no-write replay
+Final result: PASS
 ```
 
-**Gap:** Live PROD test used `matchMode = single-active-enrollment-safe-fallback` with empty Submission Program Instance fields. Submission has linked Week `recWeVrSabnsYaHc2` (Early Bird) whose Program Instance is `rec5mEM0YPqPqq0hZ`. **v3.1** derives PI from `Submission.Week → Weeks.Program Instance` before any Athlete-only fallback.
-
-**After v3.1 Week path PASSes in PROD:**
+**Controlled primary assignment evidence:**
 
 ```text
-Repository updated: Yes
-Merged to master: Yes
-PROD pasted: Yes
-Live PROD tested: Yes
-Result: PASS
+Submission: recElDBcFvuE6jWwc
+Enrollment assigned: recCyFEPeATOVNlr9
+Program Instance: rec5mEM0YPqPqq0hZ
+programInstanceSource: submission-week
+Status: Complete
+```
+
+**Controlled replay evidence:**
+
+```text
+version: v3.1
+existingEnrollmentId: recCyFEPeATOVNlr9
+resolvedProgramInstanceId: rec5mEM0YPqPqq0hZ
+programInstanceSource: existing-enrollment
+matchedEnrollmentId: recCyFEPeATOVNlr9
+matchedEnrollmentKey: ATH-recgqVstObQRzgXJF|2026-2027
+matchMode: existing-valid-enrollment
+wroteUpdate: false
+status: Complete
 ```
 
 ### 005 live PROD test evidence (do not retest unless dependency break)
@@ -120,7 +132,7 @@ Never assume Athlete, Week Name, Activity Date, Grade Band, homework title, XP r
 | Script | New version | Repository | PROD Airtable |
 |--------|-------------|------------|---------------|
 | 005 | v4.1 | Updated | **Pasted + Live Tested PASS** (see evidence above) |
-| 023 | v3.1 | Updated | **Re-paste v3.1 next** — clear Enrollment on test Submission so Week→PI path runs; do not start 053 until PASS |
+| 023 | v3.1 | Updated | **Pasted + Live Tested PASS** — primary Week-derived PI assignment PASS and existing-Enrollment replay PASS |
 | 053 | 5.3 | Updated | Paste after 023 |
 | 066 | v3.5 | Updated | Paste after 053 (includes v3.4 createRecords fix) |
 | 043 | v2.1 | Updated | Paste only if still Live and PROD version stale |
@@ -200,8 +212,8 @@ Do not delete until dependencies inspected (WAS, unlocks, XP Source Keys referen
 |------|--------|-------|
 | Live Airtable API from this agent | **Unavailable** (no `AIRTABLE_API_TOKEN`) | Interactive Mike paste + Test Automation in Airtable UI |
 | 005 v4.1 | **Live Tested PASS** | Early Bird via Activity Date Fallback; 12 same-PI weeks; 13 other-PI excluded |
-| 023 v3.0 live | **PARTIAL / INCOMPLETE** | Fallback passed; Week→PI path not validated — blocked on v3.1 paste + retest |
-| Remaining pastes | **In progress** | 023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live |
+| 023 v3.1 live | **PASS** | Week-derived PI assignment PASS on `recElDBcFvuE6jWwc`; replay PASS with `existing-valid-enrollment` and `wroteUpdate=false` |
+| Remaining pastes | **In progress** | 053 → 066 → 118 → 119 → 043-if-Live |
 | Known live-test context | Documented | Submission `recElDBcFvuE6jWwc`, Athlete `recgqVstObQRzgXJF`, Enrollment `recCyFEPeATOVNlr9`, PI `rec5mEM0YPqPqq0hZ`, Week Early Bird `recWeVrSabnsYaHc2` |
 | Email sends | **Not executed for 118/119** | Controlled dryRun packages only; no uncontrolled parent email |
 
@@ -218,7 +230,7 @@ See `tools/program-instance-isolation/README.md`.
 | Layer | Status |
 |-------|--------|
 | GitHub repository | **Merged to `master`** — PR #92 @ `3c3e5d3` |
-| PROD Airtable | **005 pasted + PASS**; remaining scripts paste with Mike interactively |
+| PROD Airtable | **005 pasted + PASS; 023 pasted + PASS**; remaining scripts paste with Mike interactively |
 | Website | Ships on Vercel after merge to `master` (Root Directory `web`) |
 | Completion Master | Updated with 005 PASS + remaining paste order |
 
