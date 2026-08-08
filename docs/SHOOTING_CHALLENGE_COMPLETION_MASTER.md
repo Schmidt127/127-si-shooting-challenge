@@ -12,7 +12,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-08** (Issue #116 full truth audit; Communications Hub WELCOME handoff §9M documented; 031 v3.5 repository repair packaged; Airtable paste/live proof remains explicitly gated) |
+| Last updated | **2026-08-08** (live PROD reconciliation for 010/031/066/118/119; 043 not-deployed disposition; Issue #116 audit and Communications Hub WELCOME handoff §9M retained) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -79,9 +79,29 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ---
 
+### Current PROD reconciliation (2026-08-08)
+
+This is the controlling current-state correction for the affected automations. Older dashboard reconciliations below remain historical evidence and must not be read as current paste-pending status.
+
+| Item | Current status | Current truth |
+|------|----------------|---------------|
+| Automation **010 v10.6** | **Installed in PROD / live replay PASS** | Controlled replay of `recElDBcFvuE6jWwc` reused/updated existing XP Event `recHHhpkgQS1hhIHo`; candidate count `1`, no duplicate, operator restored 010 ON. This proves idempotent replay/update behavior, not separate first-create proof. |
+| Automation **031 v3.5** | **Installed in PROD / canonical resolution PASS** | Empty-link controlled run resolved the canonical summary, rejected a malformed zero-Week candidate, created no duplicate summary, and caused no XP churn; operator restored 031 ON. Already-linked stale-summary repair remains offline-tested only. |
+| Automation **053 v5.3** | **Existing verified PROD status retained** | Prior operator-confirmed current status remains controlling for this reconciliation. |
+| Automation **066 v3.5** | **Live Tested in PROD (existing-unlock replay)** | Controlled enrollment replay found 8 eligible milestones, skipped all 8 existing unlocks, created no duplicates, and did not reproduce the prior `records[0].fields` error. |
+| Automation **118 v1.7** | **Installed/active in PROD; no-target fail-safe PASS** | Production inputs were restored and the schedule is ON. `skipped_no_target_week` produced zero writes and zero armed builds; the positive `build_armed` branch awaits a real eligible completed Week. |
+| Automation **119 v1.7** | **Installed/active in PROD; no-target fail-safe PASS** | Production inputs were restored and the schedule is ON. `skipped_no_target_week` produced zero writes and zero armed sends; the positive send-arm branch awaits a real eligible completed Week/package. |
+| Automation **043** | **Not deployed / not required** | No native Airtable automation was found. The stale governance row is not deployment proof. Do not recreate 043; 042 remains the preferred single progression writer. Issue #95 is superseded/not planned; real progression defects in #97 and #98 remain open. |
+
+Evidence: [`docs/prod-completion/2026-08-08/PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md`](./prod-completion/2026-08-08/PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md), [`AUTOMATION-010-V10.6-LIVE-REPLAY-PROOF.md`](./prod-completion/2026-08-08/AUTOMATION-010-V10.6-LIVE-REPLAY-PROOF.md), [`AUTOMATION-031-V3.5-CANONICAL-RESOLUTION-LIVE-PROOF.md`](./prod-completion/2026-08-08/AUTOMATION-031-V3.5-CANONICAL-RESOLUTION-LIVE-PROOF.md), [`AUTOMATION-066-V3.5-LIVE-PROOF.md`](./prod-completion/2026-08-08/AUTOMATION-066-V3.5-LIVE-PROOF.md).
+
+**Issue boundaries:** #97 and #98 remain unresolved/open. Do not reintroduce the stale orphan-XP bulk count from #100; remaining #100 scope is recurrence prevention only.
+
+---
+
 ## 3. Completion Dashboard
 
-Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-attested **033 v3.3** paste). Built bucket includes one informal “Built in Repository — smoke suite…” row (counts as Built).
+The bucket counts below are the historical **2026-08-06** snapshot. For the affected automations, the dated Current PROD reconciliation above supersedes these older aggregate counts and rows.
 
 | Bucket | Count |
 |--------|------:|
@@ -98,20 +118,21 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | Not Needed | 2 |
 | Brainstormed | 0 |
 
-### Dashboard reconciliation (2026-08-06 — Program Instance isolation package)
+### Historical dashboard reconciliation (2026-08-06 — Program Instance isolation package)
 
 | Item | Status | Evidence |
 |------|--------|----------|
 | Architecture rule | Documented | Athlete → Enrollment → Program Instance scopes all challenge progress |
 | Automation **005 v4.1** | **Live Tested in PROD** | Activity Date Fallback → Early Bird `recWeVrSabnsYaHc2`; 12 same-PI / 13 other-PI excluded on `recElDBcFvuE6jWwc` |
 | Automation **023 v3.1** | **Installed in PROD** / **Live Tested PASS** | Primary controlled run on `recElDBcFvuE6jWwc` assigned `recCyFEPeATOVNlr9` with `programInstanceSource=submission-week`; replay returned `existing-valid-enrollment` with `wroteUpdate=false`. |
-| Automations **053 5.3**, **066 v3.5**, **118/119 v1.7**, **043 v2.1** | **Built in Repository** — paste after 023 PASS | PI-scoped Enrollment/Week matching |
-| Remaining PROD paste order | **023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
+| Automations **053 5.3**, **066 v3.5**, **118/119 v1.7** | **Current PROD state recorded above** | PI-scoped Enrollment/Week matching |
+| Automation **043** | **Not deployed / do not recreate** | Stale governance row is not native automation proof; 042 remains the single progression writer |
+| Historical PROD paste order | **Superseded: 023 v3.1 → 053 → 066 → 118 → 119 → 043-if-Live** | [`docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md`](./deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md) |
 | Website queries | **Built in Repository** | Optional `AIRTABLE_ACTIVE_SCHOOL_YEAR` |
 | Static audit tool | **Built in Repository** | `tools/program-instance-isolation/` |
 | Test fixture Week `reci5GdxEC57vfoS3` | Operator cleanup required | Must not stay Active overlapping Early Bird in same PI |
 
-**Issue #116 correction:** 023 has cleared its controlled gate. The current remaining paste order is **053 → 066 → 118 → 119 → 043-if-Live**; the older 023-first wording above is historical.
+**Issue #116 correction (historical):** 023 cleared its controlled gate. The old remaining paste order is retained only as history; the 2026-08-08 reconciliation records the current state through 119 and removes 043 from the deployment sequence.
 | PR **#92** | **Merged** to `master` | Merge `3c3e5d3` (`3c3e5d33a589f23048db874d10c8f9a141aeee85`) |
 
 | Automation | Repository Updated | Merged to Master | PROD Pasted | Live Tested | Result |
@@ -119,10 +140,10 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 | 005 v4.1 | Yes | Yes | Yes | Yes | **PASS** |
 | 023 v3.1 | Yes | Yes (`1d5ca1a` / PR #93) | Yes | Yes — primary Week→PI path and replay no-write proof | **PASS** |
 | 053 5.3 | Yes | Yes | No | No | — |
-| 066 v3.5 | Yes | Yes | No | No | — |
-| 118 v1.7 | Yes | Yes | No | No | — |
-| 119 v1.7 | Yes | Yes | No | No | — |
-| 043 v2.1 | Yes | Yes | TBD | TBD | — |
+| 066 v3.5 | Yes | Yes | Yes | Yes — existing-unlock replay | **PASS** |
+| 118 v1.7 | Yes | Yes | Yes | No-target fail-safe PASS; positive build arm pending eligible Week | — |
+| 119 v1.7 | Yes | Yes | Yes | No-target fail-safe PASS; positive send arm pending eligible Week/package | — |
+| 043 | Yes | Yes | No native automation found | Not applicable | **Do not recreate** |
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
@@ -130,10 +151,10 @@ Counts below match Section 4 as of **2026-08-06** (post PR #88 merge + operator-
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.5** | **Built in Repository** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key, ignores/logs malformed candidates, fails closed unless exactly one fully-valid canonical target exists, never creates a summary, and repairs only non-Submission-Base XP Event links; Automation 010-owned events remain excluded by structured `XP Source` option ID |
+| Automation **031 v3.5** | **Historical: Built in Repository; now Installed in PROD / canonical resolution PASS** | Issue **#96** repair validates existing/candidate summaries against Enrollment + Week + Program Instance + Summary Key; 2026-08-08 live proof confirms malformed-candidate rejection and canonical empty-link resolution. Already-linked stale-summary repair remains offline-tested only. |
 | Offline regression | **PASS** | `node --test tools/testing/tests/test_031_offline.mjs` (13/13) |
-| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
-| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+| Airtable editor installation | **Confirmed v3.5** | Operator restored 031 ON after controlled test |
+| Controlled PROD live test | **PASS for canonical empty-link path** | Do not claim already-linked stale-summary repair live-proven |
 
 Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`docs/prod-completion/2026-08-06/AUTOMATION-031-DEFECT-AND-ZOOM-FIXTURE-RETIREMENT.md`](./prod-completion/2026-08-06/AUTOMATION-031-DEFECT-AND-ZOOM-FIXTURE-RETIREMENT.md).
 
@@ -145,7 +166,7 @@ Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET
 | PR **#87** | **Closed** (superseded) | Replaced by post-merge `2026-08-05-OVERNIGHT-FINAL-SUMMARY.md` + merge reconciliation |
 | Automation **033 v3.3** | **Installed in PROD** (operator-attested paste) | Mike pasted — do not paste again; live WAS assign verification optional |
 | Automation **059** trigger | **Operator-attested corrected** | Pending-only; no Shot Milestone filter; Test input = Unlock ID (never WAS) |
-| Automation **066 v3.4** | **Built/merged on `master` — not Installed until paste** | Natural path remains **FAILED** until successful PROD rerun on `recCyFEPeATOVNlr9` |
+| Automation **066 v3.4** | **Historical/superseded by v3.5 live proof** | Prior natural-path failure was corrected; 2026-08-08 v3.5 replay passed with 8 existing unlocks skipped and no duplicates |
 | Automation **020 v3.2.0** | **Built in Repository** — paste not confirmed | Still required Mike paste |
 | SC-027 / SC-076 | Unchanged bucket | Unlock/XP Live Tested via backfill→059 only; natural 066 not advanced by PR merge |
 
@@ -157,10 +178,10 @@ Checklist: [`docs/deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.m
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **010 v10.6** | **Built in Repository** | Issue **#106** repair validates stale Summary links against Submission Enrollment + Week + Program Instance + canonical Summary Key, repairs Submission + XP Event links only after full validation, and fails closed without partial writes |
+| Automation **010 v10.6** | **Historical: Built in Repository; now Installed in PROD / replay PASS** | 2026-08-08 controlled replay reused/updated the existing XP Event with one candidate and no duplicate; first-create proof remains separate |
 | Offline regression | **PASS** | `node --test tools/testing/tests/test_010_offline.mjs` |
-| Airtable editor installation | **Unconfirmed** | No Airtable paste performed from this package |
-| Controlled PROD live test | **Not performed** | Do **not** advance Installed / Live Tested / Complete from repository work alone |
+| Airtable editor installation | **Confirmed v10.6** | Operator restored 010 ON after controlled test |
+| Controlled PROD live test | **PASS for idempotent existing-event replay** | Do not claim first-create behavior proven from replay alone |
 
 Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md`](./prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIATION.md).
 
@@ -168,10 +189,10 @@ Evidence: [`docs/prod-completion/2026-08-07/AUTOMATION-010-XP-WRITER-RECONCILIAT
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **066** natural path | **FAILED** on live Airtable test (v3.3) | Error: `records[0] should have a 'fields' property` at `createRecordsInBatches` → `createRecordsAsync`. Test input used older enrollment `recgP9qZYjAhE7NXm`; controlled enrollment is `recCyFEPeATOVNlr9`. |
-| Repo fix | **Built in Repository — v3.4** | Defensive batch helper accepts raw field maps or `{ fields }`; always sends `{ fields }` to Airtable. Offline regression: `lib/066-create-records-batch.test.js`. |
-| SC-027 / SC-076 Live Tested claim | **Unlock/XP Live Tested via controlled backfill only** — **not** via 066 natural checkbox path | Do **not** treat natural path as Live Tested until Mike pastes **v3.4** entire script and reruns successfully on `recCyFEPeATOVNlr9` with existing unlocks (expect link/skip, **0 duplicate XP**). |
-| PROD paste | **Required** | Replace entire Airtable 066 script body (docblock through end; skip GitHub header) with repo v3.4. |
+| Automation **066** natural path | **Historical failure — superseded by v3.5 live proof** | v3.3 previously failed on raw `createRecordsAsync` payloads; the 2026-08-08 v3.5 controlled replay passed on `recCyFEPeATOVNlr9`. |
+| Repo fix | **Installed and Live Tested in PROD — v3.5** | Existing-unlock replay detected 8 eligible milestones, skipped all 8, created 0 duplicates, and reproduced no `records[0] should have a 'fields' property` error. |
+| SC-027 / SC-076 current claim | **Live Tested in PROD for existing-unlock replay** | This proves the controlled replay/idempotency path; retain the separate distinction between backfill-created awards and natural first-create behavior. |
+| PROD paste | **Complete for this proof** | No further 066 paste/replay is required unless source, trigger, schema, or milestone data changes. |
 
 **Do not award duplicate milestone XP during retest** — existing `SHOT_MILESTONE\|recCyFEPeATOVNlr9\|*` unlocks/XP must be linked/skipped, not recreated.
 
@@ -191,18 +212,18 @@ Evidence: script `066-achievements-and-milestones-create-shot-milestone-unlocks.
 | SC | Old status | New status | Evidence |
 |----|------------|------------|----------|
 | SC-023 | Installed in PROD | **Live Tested in PROD** | Cleared Grade Band on `recCyFEPeATOVNlr9`; Automation **002** reassigned **3-4** (`reclWDQZzKbVBtdhG`) within ~6s |
-| SC-027 | Installed in PROD | **Live Tested in PROD** *(unlock/XP via backfill — **066 natural path NOT proven**; see 2026-08-06 failed natural test)* | 8 active 3-4 milestones crossed at 10,721 shots; unlocks + XP |
+| SC-027 | **Live Tested in PROD** | 066 v3.5 controlled replay on `recCyFEPeATOVNlr9`: 8 eligible milestones, 8 existing unlocks skipped, 0 duplicates; prior v3.3 failure is historical |
 | SC-029 | Installed in PROD | **Live Tested in PROD** | Schmidt streak ladder XP present (3 Source Keys); Current Streak **8** |
 | SC-048 | Planned | **Live Tested in PROD** | PROD formula `XP Date Resolved` SWITCH case fixed `Submission Base`→`Shooting Base` (Meta API); `isValid=true` |
 | SC-060 | Built in Repository | **Live Tested in PROD** | Align with existing 001 v5.2 PROD paste + live proof (`recCyFEPeATOVNlr9`) |
 | SC-061 | Built in Repository | **Live Tested in PROD** | Same — matched-existing athlete, no duplicate |
 | SC-075 | Installed in PROD | **Live Tested in PROD** | Streak XP Events on enrollment; Current Streak 8 / Longest 7 |
-| SC-076 | Installed in PROD | **Live Tested in PROD** *(059 after controlled unlock create — **066 natural path FAILED / not Live Tested**)* | 8× SHOT_MILESTONE XP (310 pts) via unlock→059; idempotent rerun 0 creates |
+| SC-076 | **Live Tested in PROD** | Existing-unlock replay through 066 v3.5 passed with 8 skips and 0 new unlocks; prior 059/backfill proof remains historical context |
 | SC-079 | Installed in PROD | **Live Tested in PROD** | Level Status **Gate Blocked**; Gate Debug `Sub 9/10 \| Vid 5/6` |
 
 **Net math vs concurrent Agent 1/3/4 dashboard (LT 25 / Installed 46 / Built 24 / Planned 17):** LT →**34**; Installed →**40**; Built →**22**; Planned →**16**. Complete unchanged.
 
-**Blocker (updated 2026-08-06):** Automation **066** natural path **FAILED** live with `createRecordsAsync` missing `fields` (v3.3). Earlier overnight note that checkbox “did not fire” is superseded by this hard error when creates were attempted. Controlled unlock backfill + **059** XP remains the only proven milestone award path. Repo **v3.4** fixes the contract — paste + rerun required before any natural-path Live Tested claim.
+**Historical blocker (superseded 2026-08-08):** Automation **066** v3.3 previously failed live with `createRecordsAsync` missing `fields`. Automation 066 v3.5 now has a controlled PROD replay/idempotency PASS; do not carry the old v3.3/v3.4 paste-required state forward as current truth.
 
 Evidence: [`docs/testing/evidence/2026-08-05-agent2-foundation/`](./testing/evidence/2026-08-05-agent2-foundation/) · Handoff: [`docs/overnight/2026-08-05-OVERNIGHT-MASTER-HANDOFF.md`](./overnight/2026-08-05-OVERNIGHT-MASTER-HANDOFF.md).
 
@@ -227,7 +248,7 @@ Evidence: [`docs/testing/evidence/2026-08-05-agent1-homework/`](./testing/eviden
 | SC-088 | Built in Repository | **Built in Repository** (offline Live-ready) | 117 email handoff offline **7/7 PASS**; [`117-ZOOM-APPROVAL-GO-LIVE.md`](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md); live Gmail **not** executed |
 | SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; **WELCOME send path** live-proven controlled-test via **079→Communications Hub→Resend** (§9M); participant activation + approved Hub template pending; 073/117f fixtures missing |
 | SC-041 | Built in Repository | **Built in Repository** (executable packet) | [`SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`](./deploy-checklists/SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md); probe found no armed retry candidates |
-| SC-058 | Built in Repository | **Built in Repository** (drift auditor) | Operator-table audit 48 rows; **112** shows Live in operator table (UI attest OFF); 117/118/119 absent from operator table; version drift = weak signal |
+| SC-058 | Built in Repository | **Historical drift-auditor snapshot** | Operator-table audit 48 rows; the 117/118/119 absence is superseded by the 2026-08-08 direct editor/schedule proof; 112 still requires UI attestation |
 | SC-147 | Built in Repository | **Built in Repository** (PROD export+CLI) | Sanitized export + RCC CLI exit 0; views not installed — [`RCC-OMNI-VIEW-INSTALL.md`](./deploy-checklists/RCC-OMNI-VIEW-INSTALL.md) |
 | SC-032 / SC-065 | Built in Repository | **Built in Repository** (startup checklist) | [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) |
 | SC-139 | Built in Repository | **Built in Repository** (partial) | automation-index 117/117c wording corrected |
@@ -428,9 +449,9 @@ Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Te
 
 | SC | Old status | New status | Source of change | Evidence | PR #41 alone? |
 |----|------------|------------|------------------|----------|---------------|
-| SC-031 | Built in Repository | Live Tested in PROD | Go-live (`7c7a79a`) | 118/119 schedules **ON** + Live writeback | No |
-| SC-038 | Live Tested in PROD | Complete | Go-live (`7c7a79a`) | **118 ON** + **072 v4.0 ON** | No |
-| SC-039 | Live Tested in PROD | Complete | Go-live (`7c7a79a`) | **119 ON** → 074 Live writeback PASS | No |
+| SC-031 | Historical: Built in Repository | **Historical live-tested claim; current status is Installed in PROD** | Go-live (`7c7a79a`) | 118/119 schedules ON + prior Live writeback | Superseded by 2026-08-08 no-target/positive-path distinction |
+| SC-038 | Historical: Live Tested in PROD | **Historical Complete claim; current positive 118 build arm remains unproven** | Go-live (`7c7a79a`) | Prior 118/072 package evidence | Superseded by 2026-08-08 reconciliation |
+| SC-039 | Historical: Live Tested in PROD | **Historical Complete claim; current positive 119 send arm remains unproven** | Go-live (`7c7a79a`) | Prior 119/074 writeback evidence | Superseded by 2026-08-08 reconciliation |
 | SC-147 | *(new)* | Built in Repository | PR #40 (merged) | RCC framework + MVP install packet | No |
 | SC-032 | Planned | Built in Repository | PR #41 Season Launch | Launch lifecycle + CLI + packages; not live-installed | **Yes** |
 | SC-114 | Decision Needed | Superseded | PR #41 Softr Obsolete | `/shoot` active; Softr not a launch dependency | **Yes** |
@@ -481,23 +502,23 @@ Columns:
 | SC-024 | Config | Levels table reliable for progression | Installed in PROD | Levels table + 041/042 historically | Re-seed after wipe if needed; tune thresholds (SC-027) | SC-022 | Thresholds are config, not code | V2-007 | — | P1 | 2026-07-23 |
 | SC-025 | Config | Level Gate Rules work and are tunable | Installed in PROD | Gate rules + **042** v3.1 Stage 17 paste | Re-test gate block/clear with Schmidt; early-gate tuning | SC-024, SC-116 | Recording credit must not write Attendees | V2-005; C-014 decision | — | P1 | 2026-07-23 |
 | SC-026 | Config | Achievements catalog + unlock rules | Installed in PROD | Achievements + 059/066 paths | Re-seed; re-test unlocks; dedupe keys | SC-066 | Fix audit not data | H-001; H-002 | — | P1 | 2026-07-23 |
-| SC-027 | Config | Shot Milestones config + awards | Live Tested in PROD *(backfill path)* | Shot Milestones config; unlocks+XP proven via controlled create→059 on `recCyFEPeATOVNlr9`; **066 natural path FAILED** on v3.3 (`createRecordsAsync` missing `fields`); repo **v3.4** awaiting paste | Paste **066 v3.4**; natural Run Check? proof on current Schmidt enrollment (expect link/skip existing — no duplicate XP) | SC-096 | Week timezone America/Denver | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-06 |
+| SC-027 | Config | Shot Milestones config + awards | **Live Tested in PROD** | 066 v3.5 controlled replay on `recCyFEPeATOVNlr9`: 8 eligible milestones, 8 existing unlocks skipped, 0 duplicates; prior v3.3 create-record failure is historical | Continue recurrence monitoring; no further 066 paste/replay unless source, trigger, schema, or milestone data changes | SC-096 | Week timezone America/Denver; preserve idempotent Source Keys | `docs/prod-completion/2026-08-08/AUTOMATION-066-V3.5-LIVE-PROOF.md` | — | P0 | 2026-08-08 |
 | SC-028 | Config | Perfect Week rules configurable | Live Tested in PROD | CASE-01 award path proven (057→058→XP); PROD **057 v1.5**; **059 auto-fire blocked** until trigger drops Shot Milestone filter; multi-case fixtures still open | Mike 059 UI trigger fix; Batch A/B fixtures | SC-116 | Combined Zoom credit path; do not UTC-shift date keys; do not downgrade 057 to v1.4 | `059-perfect-week-trigger-coverage.md`; `docs/testing/evidence/2026-08-05-agent3-perfect-week/` | — | P1 | 2026-08-05 |
 | SC-029 | Config | Streak values in config (not buried in code) | Live Tested in PROD | Streak XP via **053** + **054 v5.6**; Schmidt Current Streak **8**; 3 STREAK_XP events on `recCyFEPeATOVNlr9` | Mike decide repeat-after-break (SC-081); optional supervised break/rebuild test | SC-022 | Behavior may remain code | `docs/overnight/config-xp/STREAK-SYSTEM-AUDIT.md`; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | Want behavior change or amounts only? | P2 | 2026-08-05 |
 
 | SC-030 | Config | Zoom percentage / credit settings in config | Installed in PROD | Stage 17 config linkage work; effective fields | Re-verify config rows after wipe; document operator knobs | SC-116 | Never hardcode % in 117 | C-025 config linkage docs | — | P1 | 2026-07-23 |
-| SC-031 | Config | Weekly schedule settings (build/send timing) | Live Tested in PROD | **118/119 schedules ON** Sun 5:00/10:00 AM America/Denver; activation authorized + Live email/writeback proven | Paste **118 v1.5** (functional Live arming); set season inputs; 119 v1.5 paste optional (docs/CONFIG only); monitor first live Sunday; keep 074 sendMode Live | SC-051 | Do **not** disable schedules based on stale OFF docs; never Live+includeSchmidt | `WAS-WEEKLY-EMAIL-ARCHITECTURE.md`; Agent 2 data-model | **Authorized ON** | P0 | 2026-07-24 |
+| SC-031 | Config | Weekly schedule settings (build/send timing) | **Installed in PROD** | **118/119 v1.7 schedules ON**; production inputs restored; no-target fail-safe path passed with zero writes | Prove the normal `build_armed` and send-arm branches after a real eligible completed Week/package exists; keep 074 `sendMode=Live` where approved | SC-051 | Do not disable schedules; never Live+includeSchmidt | `docs/prod-completion/2026-08-08/PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md` | **Authorized ON** | P0 | 2026-08-08 |
 | SC-032 | Config | Season settings (dates, windows) | Built in Repository | **Season Launch Control System** + Challenge-Year engine + **Agent 4** [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) executable checklist | Import Weeks in PROD; Mike UI attestations; authorize Launch Status fields; controlled activation | SC-065, SC-084 | 005 date mapping; fail closed on multiple active Configs; does not vendor RCC | `docs/challenge-year/SEASON-LAUNCH-CONTROL.md`; `lib/challenge-year/`; install packet; Agent 4 startup checklist | Authorize schema + Live flip | P0 | 2026-08-05 |
 | SC-033 | Config | Enable/disable switches for major features | Planned | Various checkboxes / Active? patterns | Inventory switches; document operator map | SC-066 | Duplicate toggles confuse ops | V2-014 roadmap | — | P2 | 2026-07-23 |
-| SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; **054 v5.6** + **066 v3.3** hardenings now in PROD; hardcode inventory | Finish V2-002 pass across 001–119; paste any remaining pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-07-24 |
-| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | Live Tested in PROD | **118 ON** (Sun 5 AM) + **072 v4.0** `send_short`; hybrid creators **031**+**118**+**101** (Agent 2 WAS-CREATOR-RESOLUTION); 2026–2027 Weeks exist | Paste **118 v1.5**; season `dryRun=false` `sendMode=Live` `includeSchmidt=false`; monitor WAS uniqueness | SC-004, SC-082 | Schedule ON — do not revert OFF; bounded create concurrency residual | `docs/next-wave/data-model/WAS-CREATOR-RESOLUTION.md` | **DECIDED `send_short`**; schedules authorized | P0 | 2026-07-24 |
+| SC-034 | Config | Remove remaining hardcoded values from automations | Built in Repository | Partial modernization; **054 v5.6** + **066 v3.5** hardenings now in PROD; hardcode inventory | Finish V2-002 pass across 001–119; paste any remaining pending scripts | SC-021 | Prefer CONFIG block + tables | `docs/overnight/config-xp/CONFIG-HARDCODE-AUDIT.md`; V2-002 | — | P1 | 2026-08-08 |
+| SC-035 | Weekly Summary | Guaranteed Weekly Athlete Summary for every enrollment × ended week | **Installed in PROD** | **118 v1.7 ON** with production inputs restored; no-target fail-safe PASS; 031 canonical resolution and 072 package ownership remain documented | Prove 118 `build_armed` with a real eligible completed Week; monitor WAS uniqueness and the downstream 072→119→074 handoff | SC-004, SC-082 | Schedule ON — do not revert OFF; bounded positive-path proof is still pending | `docs/prod-completion/2026-08-08/PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md` | **DECIDED `send_short`**; schedules authorized | P0 | 2026-08-08 |
 | SC-036 | Weekly Summary | Weekly summary calculations correct | Installed in PROD | **072** v3.8 manual path historically proven (final emails) | Re-test calc fields on Schmidt; Presentation columns (SC-054) | SC-054 | Don’t write rollup/formula totals from scripts incorrectly | 072; weekly-summary-flow.md | — | P0 | 2026-07-23 |
 | SC-037 | Weekly Summary | Previous-week helpers reliable | Installed in PROD | Week linking patterns in 034 chain / 072 | Re-verify after Weeks rebuild | SC-084 | Denver date keys | 005/034 patterns | — | P1 | 2026-07-23 |
 | SC-038 | Weekly Summary | Automatic package build (no Build checkbox) | Complete | **118 ON** arms Build; **072 v4.0 ON** short empty-week package (`built_short_empty_week`, `packageKind=short_no_activity`) | Keep `allow…1885 tokens truncated…l snapshots preserved | `docs/foundation-reset/PROD-SCHEMA-EXPORT-2026-07-23.md`; snapshot folders | — | P0 | 2026-07-23 |
 | SC-056 | Data Integrity | Script input/output variables standardized | Built in Repository | Automation script standard; many scripts updated | Inventory Airtable automation I/O vs GitHub; fix drift | SC-057 | Missing outputs hide failures | AUTOMATION_SCRIPT_STANDARD; K-H2 | — | P1 | 2026-07-23 |
 | SC-057 | Data Integrity | Automation trigger review (no duplicate triggers) | Planned | V2-014a classification; retirements approved for 112/043 | UI attest triggers; delete duplicates | SC-058 | Slot limits / double runs | V2-014a; REMAINING packages | — | P1 | 2026-07-23 |
 | SC-058 | Data Integrity | Automation version inventory filled from live UI | Built in Repository | Agent 1 baseline + Agent 9 attestation packet; **PROD 117 attested email-only v1.1**; 117c absent | Mike paste complete PROD UI list where gaps remain | SC-059 | UI attestation mandatory before Complete | `docs/next-wave/automation-ownership/AUTOMATION-ATTESTATION-PACKET.md`; `CURRENT-PROD-BASELINE.md` | Confirm 112 OFF | P0 | 2026-08-05 |
-| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | Installed in PROD | **043 deleted**. Broader deletes claim **032, 033, 063, 111**. **112 must stay OFF** (OW-D1). **115 installed**. | UI-attest; confirm **112** OFF; do not reinstall 111; orphan blank-GB HCs may need one-time repair (not full 063 restore) | SC-001, SC-058 | Attestation required — not Complete | `docs/next-wave/homework-pipeline/STALE-063-111-PATCH-MANIFEST.md`; baseline | Confirm 112 + attest delete set | P0 | 2026-07-24 |
+| SC-059 | Data Integrity | Retire legacy automations 112 and 043 | **Installed in PROD / 043 not deployed** | No native 043 automation was found; stale governance inventory is not deployment proof. 112 remains OFF and 042 remains the preferred single progression writer | Confirm 112 OFF and retain the no-recreate-043 disposition; do not restore 043 or the stale orphan-XP bulk count from #100 | SC-001, SC-058 | Real progression defects #97/#98 remain open; #100 is recurrence prevention only | `docs/prod-completion/2026-08-08/PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md` | Confirm 112 + retain 043 disposition | P0 | 2026-08-08 |
 | SC-060 | Enrollment | Fillout enrollment validation is trustworthy | Live Tested in PROD | **001 v5.2** pasted + live-tested: enrollment `recCyFEPeATOVNlr9` → Athlete `recgqVstObQRzgXJF` matched-existing; unloadData safe | Live Fillout tighten when intake reopens; Athletes hygiene | SC-081 | Bad identity breaks whole season | `docs/online-agents/enrollment-season/`; C-017; `tests/enrollment-intake/automation-001-unload-compat.test.js` | — | P1 | 2026-08-05 |
 | SC-061 | Enrollment | New vs returning athletes handled correctly | Live Tested in PROD | **001 v5.2** returning-athlete match proven on Testing Schmidt (no duplicate Athlete) | Additional non-Schmidt returning case optional | SC-060 | Don’t create duplicate Athletes | `docs/online-agents/enrollment-season/`; 001 v5.2 header note | — | P1 | 2026-08-05 |
 | SC-062 | Enrollment | Sibling handling works | Built in Repository | Sibling handling spec + fixtures/tests; no Family table | Live sibling parent-email routing test | SC-045 | Shared parent email edge cases | `docs/online-agents/enrollment-season/` | — | P2 | 2026-07-23 |
@@ -514,14 +535,14 @@ Columns:
 | SC-073 | XP | Live Zoom XP awards correctly | Installed in PROD | **101** v5.5 Attendees-only path | Re-test live meeting attendance | SC-116 | Recording path must never write Attendees | 101; C-025 hard rule | — | P0 | 2026-07-23 |
 | SC-074 | XP | Zoom recording XP / credit path | Built in Repository | Stage 17 orchestrator/117c are **design alternatives only** (not PROD Airtable slots). Live Zoom XP = **101**. Recording `ZOOM_CREDIT` has no deployed Airtable writer under slot 117 (slot used by approval email). | Decide whether to deploy a future dedicated recording-credit automation (new slot) or keep email-only 117 | SC-116 | Soft-void recording only; never Attendees | C-025 Stage 17 design-alts; `C-025-117-numbering.md` | — | P0 | 2026-08-05 |
 | SC-075 | XP | Streak XP | Live Tested in PROD | **053/054** streak XP live on Schmidt 2026-27 (3 events; Current Streak 8) | Optional break/rebuild supervised test; SC-081 decision | SC-029, SC-068 | Active? gaps | 053; 054 v5.6; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P1 | 2026-08-05 |
-| SC-076 | XP | Milestone XP (shot milestones) | Live Tested in PROD *(059 after backfill unlocks — not 066 natural)* | 8 Shot Milestone XP Events (310 pts) on `recCyFEPeATOVNlr9`; idempotent Source Keys; **066 natural path currently failed** until v3.4 paste+rerun | Paste **066 v3.4**; retest checkbox with existing unlocks only (no new XP) | SC-027 | Idempotent Source Keys | H-002; K-H1; `docs/next-wave/config-xp/MIKE-ACTIONS.md` | — | P0 | 2026-08-06 |
+| SC-076 | XP | Milestone XP (shot milestones) | **Live Tested in PROD** | 066 v3.5 existing-unlock replay detected 8 eligible milestones, skipped 8 existing unlocks, and created no duplicates; prior v3.3 failure is historical | Continue recurrence monitoring; no further paste/replay unless 066 source, trigger, schema, or milestone model changes | SC-027 | Preserve Source Keys and idempotency; distinguish replay proof from any future first-create proof | `docs/prod-completion/2026-08-08/AUTOMATION-066-V3.5-LIVE-PROOF.md` | — | P0 | 2026-08-08 |
 | SC-077 | XP | Perfect Week XP | Live Tested in PROD | Unlock `recALZFQNL3XicEOX` → XP `recMdcI5lN8gJ6830` (100, bucket/source Perfect Week, Source Key `PERFECT_WEEK\|{enr}\|{week}`); idempotent; WAS XP 213→313; **059 UI trigger still needs Pending-only** for auto-fire | Mike removes Shot Milestone filter on 059; optional Test button soak | SC-028, SC-074 | — | `059-perfect-week-trigger-coverage.md`; Agent 3 evidence folder | — | P1 | 2026-08-05 |
 | SC-078 | XP | Level progression updates correctly | Live Tested in PROD | 041/042 chain; Schmidt baseline: Beginner→Rookie, Gate=Level 2, Status=Assigned, XP=61 (matches offline engine) | Live level-up past Rookie still needs controlled XP; paste Config cleanup for 042 flags | SC-024 | — | `docs/overnight/config-xp/LEVEL-AUTOMATION-AUDIT.md`; overnight-level-gate-boundaries.test.js | — | P0 | 2026-07-24 |
 | SC-079 | XP | Gate blocking when requirements unmet | Live Tested in PROD | 042 gate logic; Schmidt Level Status **Gate Blocked**; Gate Debug `Sub 9/10 | HW 2/0 | Vid 5/6 | Zoom 0/0 | Streak 7/0` | Clear gate after Sub 10 + Vid 6 (SC-080) | SC-025 | — | V2-005 | — | P0 | 2026-08-05 |
 | SC-080 | XP | Gate clearing when requirements met | Installed in PROD | 042 + Zoom credit integration | Live prove clear after HW/Zoom credit | SC-074 | — | C-025 | — | P0 | 2026-07-23 |
 | SC-081 | XP | Streak economics review | Decision Needed | Notes that amounts=config, repeat behavior=code | Decide whether to change repeat-after-break rules | SC-029 | — | C-014 notes | Change streak behavior? | P2 | 2026-07-23 |
 | SC-082 | XP | Early level-gate tuning for next season | Planned | C-014 decision: one ladder; tune Q1 2027 | Load numbers when season config ready | SC-025 | Numbers in Airtable only | V2-005–007; season-configuration-design | Approve gate spreadsheet | P2 | 2026-07-23 |
-| SC-083 | XP | Achievement unlock deduplication | Installed in PROD | H-001 audit fix; 066 prevention | Live re-test unlocks; keep “fix audit not data” | SC-026 | — | H-001; C-006 | — | P1 | 2026-07-23 |
+| SC-083 | XP | Achievement unlock deduplication | **Live Tested in PROD** | 066 v3.5 replay skipped all 8 existing milestone unlocks with 0 duplicate creates; H-001 audit fix remains in place | Monitor recurrence; do not reintroduce stale orphan-XP bulk counts from #100 | SC-026 | Preserve Source Keys and one-source/one-event idempotency | `docs/prod-completion/2026-08-08/AUTOMATION-066-V3.5-LIVE-PROOF.md` | — | P1 | 2026-08-08 |
 | SC-084 | Zoom | Live attendance capture works | Installed in PROD | Zoom Meetings + Attendees → 101 | Recreate meetings; Schmidt attend test | SC-073 | — | 101 | — | P0 | 2026-07-23 |
 | SC-085 | Zoom | Live bonuses (if configured) work | Installed in PROD | XP Reward Rules / meeting bonuses historically | Confirm which bonuses still desired; test | SC-022 | — | XP rules | Confirm bonus set | P2 | 2026-07-23 |
 | SC-086 | Zoom | Recording credit path works | Built in Repository | Orchestrator not live under PROD 117; credit path is design-alt / future work | Re-open only with a new attested automation plan that does not steal email slot 117 | SC-074 | Never Attendees write | `_design-alternatives/stage17-modular-reference/` | — | P0 | 2026-08-05 |
@@ -801,7 +822,7 @@ Still open from that pack: **115 paste**, remaining **Testing views**, leaderboa
 
 **Required Mike action:** UI-attest the Agent 1 delete/upgrade set before treating SC-058/SC-059 as Complete. Earlier “do not delete 032/033/063/111” guidance and the overnight baseline **conflict** — do not ignore.
 
-**Next package:** `docs/next-wave/data-model/MIKE-ACTIONS.md` — paste **118 v1.5** + season inputs (119 v1.5 optional); Week Code OMNI attest; Fillout 2026–2027 checklist. Also UI attestation (112 / 063/111 / 117 XOR 117c / Automations table re-export) + Schmidt re-test packs. Schedules already ON (verified-prod) — do not re-authorize as OFF.
+**Historical next package (superseded for 118/119):** `docs/next-wave/data-model/MIKE-ACTIONS.md` — the old v1.5 paste instruction is retained as history. Current 118/119 v1.7 installation, restored production inputs, schedules, and no-target proofs are recorded in the 2026-08-08 reconciliation; positive arming still awaits an eligible completed Week/package.
 
 ### 9C. Overnight multi-agent run — **RECONCILED 2026-07-23** (Agent 6)
 
