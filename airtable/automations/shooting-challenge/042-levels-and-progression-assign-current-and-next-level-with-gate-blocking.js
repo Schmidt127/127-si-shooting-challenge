@@ -37,13 +37,12 @@ Airtable is the deployed/running copy.
  * - Selects active Level Gate Rules by the Enrollment School Year / Rule Set.
  * - Allows only explicit shared/default rules as fallback; never uses a prior-year
  *   rule silently and fails closed on duplicate applicable rules.
+ * - Reads explicit primary-field values for Level and Level Gate Rule labels.
+ *   This avoids generic Airtable record labels in logs and gate explanations.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
  *   so unsupported cleanup cannot fail an otherwise successful automation run.
- * - Read explicit primary-field values for Level and Level Gate Rule labels. This
- *   avoids the Airtable automation runtime's occasional generic record.name label
- *   ("Unnamed record") in logs, outputs, and gate explanations.
  *
  * Version 3.1 (C-025 Stage 17):
  * - Zoom gate count = live Total Zoom Attendances meetings ∪ qualifying Recording Quiz
