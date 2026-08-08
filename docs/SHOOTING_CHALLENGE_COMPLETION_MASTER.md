@@ -9,7 +9,7 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-07** (031 v3.4 Program Instance-safe stale-link repo repair packaged; offline regression PASS; Airtable paste/live test still pending) |
+| Last updated | **2026-08-08** (Communications Hub WELCOME handoff §9M documented; controlled test proven; participant activation pending) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -220,14 +220,14 @@ Evidence: [`docs/testing/evidence/2026-08-05-agent1-homework/`](./testing/eviden
 | SC | Old status | New status | Evidence |
 |----|------------|------------|----------|
 | SC-088 | Built in Repository | **Built in Repository** (offline Live-ready) | 117 email handoff offline **7/7 PASS**; [`117-ZOOM-APPROVAL-GO-LIVE.md`](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md); live Gmail **not** executed |
-| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; welcome package present but **2025-2026** subject; Schmidt WAS×4 all stale-season labels; 073/117f fixtures missing |
+| SC-045 | Installed in PROD | **Installed in PROD** (notes) | 071 Complete; **WELCOME send path** live-proven controlled-test via **079→Communications Hub→Resend** (§9M); participant activation + approved Hub template pending; 073/117f fixtures missing |
 | SC-041 | Built in Repository | **Built in Repository** (executable packet) | [`SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md`](./deploy-checklists/SC-041-WEEKLY-EMAIL-RETRY-EXECUTABLE.md); probe found no armed retry candidates |
 | SC-058 | Built in Repository | **Built in Repository** (drift auditor) | Operator-table audit 48 rows; **112** shows Live in operator table (UI attest OFF); 117/118/119 absent from operator table; version drift = weak signal |
 | SC-147 | Built in Repository | **Built in Repository** (PROD export+CLI) | Sanitized export + RCC CLI exit 0; views not installed — [`RCC-OMNI-VIEW-INSTALL.md`](./deploy-checklists/RCC-OMNI-VIEW-INSTALL.md) |
 | SC-032 / SC-065 | Built in Repository | **Built in Repository** (startup checklist) | [`NEXT-SEASON-RESET-STARTUP.md`](./deploy-checklists/NEXT-SEASON-RESET-STARTUP.md) |
 | SC-139 | Built in Repository | **Built in Repository** (partial) | automation-index 117/117c wording corrected |
 
-**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f/welcome-rebuild still need Mike-authorized fixtures.
+**Net math:** no bucket moves. Packages reduce Mike setup friction; live 073/117f still need Mike-authorized fixtures. **WELCOME send** is Communications Hub (079), not Make — see §9M.
 
 **Do not claim:** live Gmail sends, Make webhook posts, RCC views installed, SC-088 Complete.
 
@@ -495,7 +495,7 @@ Columns:
 | SC-042 | Weekly Summary | Email Message Center (replace many 071–077 scripts) | Deferred | V2-014b queued design | Design session after C-011 stable | SC-039 | Large rewrite — capacity risk | V2-014b | When to start EMC? | P3 | 2026-07-23 |
 | SC-043 | Weekly Summary | Parent-facing Presentation fields in weekly email | Planned | C-022 / V2-004 design | Schema Presentation fields; 072 consumes only those | SC-054 | Never `record.name` fallback | C-022; V2-004 | — | P1 | 2026-07-23 |
 | SC-044 | Weekly Summary | Major-event notifications (level-up / milestones), not daily XP | Decision Needed | C-027 brainstorm; cell number fields exist | Channel (SMS vs email vs later web push); recipient; opt-in | SC-066 | Idempotent send keys required | C-027 | **Twilio vs Make; parent vs athlete; opt-in** | P2 | 2026-07-23 |
-| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; Agent 4 probe: welcome package exists but **2025-2026** subject; Schmidt WAS×4 stale labels / not armed; **073/117f fixtures missing** | Rebuild welcome for new year; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | Webhooks not in git; Schmidt-only | `071-homework-feedback-email-closeout.md`; `EMAIL-READINESS-PROBE.json`; `117-ZOOM-APPROVAL-GO-LIVE.md` | — | P0 | 2026-08-05 |
+| SC-045 | Weekly Summary | Welcome, homework, video, Zoom, and weekly emails all work | Installed in PROD | Weekly WAS Live E2E PASS 2026-07-24; **071 Complete**; **WELCOME:** Automation **079→Communications Hub** controlled test PASS (dedupe + replay protection); Hub **WELCOME** template + final copy pending — **not** participant-ready; **073/117f fixtures missing** | Finalize approved welcome content in Hub WELCOME template; run activation checklist; create VF + Recording Quiz fixtures; run 073 + 117 go-live checklists | SC-039, SC-124 | **Make.com OFF** for welcome; **Accepted ≠ delivery**; 079 does not supply subject/HTML/sendMode | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md`; `WELCOME-EMAIL-ACTIVATION-CHECKLIST.md`; `071-homework-feedback-email-closeout.md`; `117-ZOOM-APPROVAL-GO-LIVE.md` | Approve participant welcome sends | P0 | 2026-08-08 |
 | SC-046 | Data Integrity | Field ownership matrix (one correct writer per field) | Built in Repository | Agent 9 ownership contract + harness; **117 ownership reconciled 2026-08-05** (PROD 117 = email-only; ZOOM_CREDIT design-alts only; no 117 XOR 117c PROD dual-writer) | Mike UI attestation for remaining conflicts (112 vs 013, etc.) | SC-055 | Do not remove writers without proof; Schmidt remains visible | `docs/next-wave/automation-ownership/`; `FIELD-WRITER-AUDIT.md` | Decide Count It + HC dual-writer | P0 | 2026-08-05 |
 | SC-047 | Data Integrity | One writer per field enforced | Planned | Principle in standards; gaps known (Active? partial) | Fix multi-writer conflicts found by SC-046 | SC-046 | Competing automations | C-010 gaps list | — | P0 | 2026-07-23 |
 | SC-048 | Data Integrity | Formula / lookup / rollup / count review | Live Tested in PROD | PROD `XP Date Resolved` formula fixed 2026-08-05: SWITCH on XP Bucket now uses **Shooting Base** (was incorrect Submission Base); schema snapshots exist | Continue computed-field review pass; refresh `schema/current/` later | SC-052 | Don’t write computed fields from scripts | K-M8; schema snapshots | — | P0 | 2026-08-05 |
@@ -707,7 +707,7 @@ Optimized for **speed in the emptied PROD base**. Stop criteria are listed per p
 | **9** | Levels and gates | Block + clear proven; Zoom credit participates correctly |
 | **10** | Zoom | Live + recording exclusivity + approval email path decided/tested |
 | **11** | Weekly summaries | Guaranteed WAS create + calc proven |
-| **12** | Emails and communication center | Auto send Test-mode proven; Live send authorized for Schmidt only; EMC still deferred |
+| **12** | Emails and communication center | Weekly WAS Live proven; **WELCOME Hub handoff (079) controlled-test proven**; participant welcome + approved Hub template pending; homework/video/Zoom paths per SC-045; EMC still deferred |
 | **13** | Website integrations | Empty/error states OK; catalogs read live config; Presentation wiring as available |
 | **14** | Full live end-to-end test | SC-005 matrix mostly green on Schmidt |
 | **15** | Cleanup and final sign-off | Obsolete fields/tables, inventory filled, stale docs refreshed, intake reopen decision |
@@ -901,6 +901,43 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SC-118 | **Built in Repository — smoke suite successfully executed against current PROD** (not Installed/Live Tested for this integration branch until Mike deploys + checks) |
 
 **Remaining launch risks (separate work packages):** SC-112 athlete auth (dashboard still demo); SC-115 noindex decision; SC-109 Game Manual PDF env if Adobe URL still unset; catalog Presentation fields (SC-054/SC-117); optional CI wiring for `npm run test:smoke`.
+
+### 9M. Communications Hub WELCOME email integration — **2026-08-08**
+
+| Field | Value |
+|-------|--------|
+| **Scope** | Shooting Challenge enrollment **WELCOME** email handoff to **Communications Hub** (not Make.com) |
+| **PROD flow** | `Email Handoff Queue` → Automation **079** → Communications Hub → Resend → **Delivery** audit record |
+| **Make.com** | **OFF** — must remain off for welcome delivery |
+| **Controlled test** | **Live Tested in PROD** — end-to-end handoff, Hub dedupe (parent/athlete same email → one Delivery), replay protection (same Handoff Key → no duplicate send) |
+| **Participant sends** | **Not authorized** — **Test Mode?** + allowlist only |
+| **Hub content** | Hub **WELCOME** template renders subject/HTML from `templateKey: WELCOME` + Payload JSON (`athleteName`, `programName`, `message`) — final approved design pending |
+| **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode` |
+| **Accepted vs delivery** | Queue/Hub Event **Accepted** = intake only; success = one Hub **Delivery** in **`Sent`**, provider id, one attempt, no stale error/retry fields |
+| **Source-table issue** | Earlier Hub Event missing source table = **Hub-side mapping omission** — **not** a 079 defect; no 079 change required |
+| **Legacy build** | Automation **075** still builds welcome package on Enrollments — **does not send**; optional input to queue payload |
+| **Repo gap** | Automation **079** script **not yet in GitHub** — export recommended before next code change |
+| **SC-079 naming** | Completion item SC-079 (*gate blocking*) uses Automation **042** — unrelated to Automation slot **079** |
+| **Docs** | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` · `docs/deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md` · `docs/deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md` |
+| **Status** | **Installed in PROD + Live Tested (controlled only)** — participant activation blocked on checklist § activation doc |
+
+**Proven live (controlled test only):**
+
+1. 079 posts WELCOME handoff from Email Handoff Queue to Communications Hub.
+2. Hub creates Hub Event, sends via Resend, writes Delivery audit.
+3. Duplicate parent/athlete email → one Delivery.
+4. Same Handoff Key replay → no second send.
+
+**Still required before participant welcome emails:**
+
+1. Final approved welcome copy and branding.
+2. Hub **WELCOME** template implementation and review (Hub-owned subject/HTML from `templateKey: WELCOME`).
+3. Recipient / consent / authorization review.
+4. New controlled test after template change.
+5. Explicit Mike approval for non-test participant sends.
+6. Post-send Delivery audit and opt-out/suppression verification.
+
+**Do not claim:** participant-wide welcome sends enabled; Make.com welcome path active; **Accepted** alone equals delivered email; operator supplies subject/HTML/`sendMode` on the queue row.
 
 ### 9L. Automation 117 ownership reconcile — **2026-08-05**
 
