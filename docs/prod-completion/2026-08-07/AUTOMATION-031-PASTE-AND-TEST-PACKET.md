@@ -4,7 +4,7 @@
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.4
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.5
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -18,11 +18,11 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.4`
+- Repository version in this package: `v3.5`
 
 ## Repository repair completed
 
-The v3.4 repair now:
+The v3.5 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -30,7 +30,7 @@ The v3.4 repair now:
 4. removes the source Submission from the stale summary when repair occurs;
 5. repairs matching non-Submission-Base XP Events for the same Enrollment + Week when they are blank or still linked to the stale summary;
 6. derives Program Instance from authoritative Enrollment and Week links and requires exactly one matching ID;
-7. validates candidate summaries before any Submission, Summary, or XP Event write;
+7. ignores and logs malformed unrelated candidate summaries before any Submission, Summary, or XP Event write;
 8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
 9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist;
 10. never creates a Weekly Athlete Summary; a unique canonical record must already exist.
