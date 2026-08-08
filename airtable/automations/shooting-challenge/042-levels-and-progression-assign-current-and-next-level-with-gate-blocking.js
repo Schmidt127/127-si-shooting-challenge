@@ -24,14 +24,19 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 3.2
+ * Version: 3.3
  * Date Written: 2026-06-02
- * Last Updated: 2026-08-05
+ * Last Updated: 2026-08-08
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
  * but blocks advancement into a gated level unless the athlete meets that level's active
  * gate requirements.
+ *
+ * Version 3.3 (2026-08-08):
+ * - Selects active Level Gate Rules by the Enrollment School Year / Rule Set.
+ * - Allows only explicit shared/default rules as fallback; never uses a prior-year
+ *   rule silently and fails closed on duplicate applicable rules.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -65,6 +70,7 @@ Airtable is the deployed/running copy.
  * Enrollments.Total Video Submissions
  * Enrollments.Total Zoom Attendances (live baseline; combined with recording in v3.1)
  * Enrollments.Longest Streak Days
+ * Enrollments.School Year
  * Zoom Meetings.Attendees (read-only live roster)
  * Zoom Attendance recording-credit fields (Stage 17)
  *
@@ -79,6 +85,7 @@ Airtable is the deployed/running copy.
  * Level Gate Rules.Minimum Zoom Meetings
  * Level Gate Rules.Minimum Streak Days
  * Level Gate Rules.Version Active?
+ * Level Gate Rules.School Year / Rule Set
  *
  * Writes:
  * Enrollments.Current Level
@@ -105,7 +112,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "3.2",
+        version: "3.3",
     },
 
     tables: {
@@ -129,6 +136,7 @@ const CONFIG = {
         totalVideoSubmissions: "Total Video Submissions",
         totalZoomAttendances: "Total Zoom Attendances",
         longestStreakDays: "Longest Streak Days",
+        schoolYear: "School Year",
     },
 
     levelFields: {
@@ -139,6 +147,7 @@ const CONFIG = {
     gateFields: {
         level: "Level",
         versionActive: "Version Active?",
+        schoolYear: "School Year / Rule Set",
         gateEnabled: "Gate Enabled?",
         minimumSubmissions: "Minimum Submissions",
         minimumHomework: "Minimum Homework",
@@ -385,6 +394,28 @@ function booleanValue(value) {
     return value === true;
 }
 
+function normalizeSchoolYear(value) {
+    const normalized = cleanString(value).replace(/[–—−]/g, "-");
+    if (!normalized) return "";
+
+    const match = normalized.match(/^(\d{4})-(\d{4})$/);
+    if (!match || Number(match[2]) !== Number(match[1]) + 1) {
+        throw new Error(`Malformed school year / rule set: "${value}".`);
+    }
+
+    return `${match[1]}-${match[2]}`;
+}
+
+function isSharedSchoolYear(value) {
+    const normalized = cleanString(value).toLowerCase();
+    return (
+        normalized === "" ||
+        normalized === "shared" ||
+        normalized === "default" ||
+        normalized === "all years"
+    );
+}
+
 function setOutputs({
     status = "",
     message = "",
@@ -446,6 +477,7 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
         CONFIG.enrollmentFields.totalVideoSubmissions,
         CONFIG.enrollmentFields.totalZoomAttendances,
         CONFIG.enrollmentFields.longestStreakDays,
+        CONFIG.enrollmentFields.schoolYear,
     ];
 
     const levelRequiredFields = [
@@ -460,6 +492,7 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
         CONFIG.gateFields.minimumVideos,
         CONFIG.gateFields.minimumZoomMeetings,
         CONFIG.gateFields.minimumStreakDays,
+        CONFIG.gateFields.schoolYear,
     ];
 
     for (const fieldName of enrollmentRequiredFields) {
@@ -526,9 +559,14 @@ function buildLevelList(levelRecords, levelsTable) {
     return levels;
 }
 
-function buildGateRuleMap(gateRecords, gateRulesTable) {
+function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear) {
     const versionActiveFieldExists = fieldExists(gateRulesTable, CONFIG.gateFields.versionActive);
-    const gateRuleMap = new Map();
+    const targetSchoolYear = normalizeSchoolYear(enrollmentSchoolYear);
+    if (!targetSchoolYear) {
+        throw new Error("Enrollment School Year is required for gate-rule selection.");
+    }
+
+    const candidatesByLevel = new Map();
 
     for (const gateRecord of gateRecords) {
         const versionActive = versionActiveFieldExists
@@ -545,25 +583,58 @@ function buildGateRuleMap(gateRecords, gateRulesTable) {
             continue;
         }
 
-        if (gateRuleMap.has(linkedLevelId)) {
-            const existing = gateRuleMap.get(linkedLevelId);
-
-            throw new Error(
-                `Multiple active gate rules found for the same level: "${existing.name}" and "${gateRecord.name}".`
-            );
+        const schoolYear = getText(gateRecord, CONFIG.gateFields.schoolYear);
+        if (schoolYear && !isSharedSchoolYear(schoolYear)) {
+            normalizeSchoolYear(schoolYear);
         }
 
-        gateRuleMap.set(linkedLevelId, {
+        const rule = {
             id: gateRecord.id,
             name: gateRecord.name,
             levelId: linkedLevelId,
+            schoolYear,
             gateEnabled: booleanValue(gateRecord.getCellValue(CONFIG.gateFields.gateEnabled)),
             minimumSubmissions: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumSubmissions), 0),
             minimumHomework: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumHomework), 0),
             minimumVideos: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumVideos), 0),
             minimumZoomMeetings: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumZoomMeetings), 0),
             minimumStreakDays: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumStreakDays), 0),
-        });
+        };
+
+        if (!candidatesByLevel.has(linkedLevelId)) {
+            candidatesByLevel.set(linkedLevelId, []);
+        }
+        candidatesByLevel.get(linkedLevelId).push(rule);
+    }
+
+    const gateRuleMap = new Map();
+    for (const [levelId, candidates] of candidatesByLevel.entries()) {
+        const exact = candidates.filter(
+            (candidate) =>
+                !isSharedSchoolYear(candidate.schoolYear) &&
+                normalizeSchoolYear(candidate.schoolYear) === targetSchoolYear
+        );
+        const shared = candidates.filter((candidate) =>
+            isSharedSchoolYear(candidate.schoolYear)
+        );
+        const applicable = exact.length > 0 ? exact : shared;
+
+        if (applicable.length > 1) {
+            throw new Error(
+                `Multiple active gate rules found for level "${levelId}" and school year "${targetSchoolYear}": ` +
+                    applicable.map((candidate) => `"${candidate.name}"`).join(", ") +
+                    "."
+            );
+        }
+
+        if (applicable.length === 0) {
+            throw new Error(
+                `No active gate rule found for level "${levelId}" and school year "${targetSchoolYear}". ` +
+                    "A prior-year rule cannot be used."
+            );
+        }
+
+        gateRuleMap.set(levelId, applicable[0]);
     }
 
     return gateRuleMap;
@@ -730,6 +801,7 @@ async function main() {
                 CONFIG.enrollmentFields.totalVideoSubmissions,
                 CONFIG.enrollmentFields.totalZoomAttendances,
                 CONFIG.enrollmentFields.longestStreakDays,
+                CONFIG.enrollmentFields.schoolYear,
             ],
         });
 
@@ -772,6 +844,7 @@ async function main() {
             CONFIG.gateFields.minimumVideos,
             CONFIG.gateFields.minimumZoomMeetings,
             CONFIG.gateFields.minimumStreakDays,
+            CONFIG.gateFields.schoolYear,
         ];
 
         if (fieldExists(gateRulesTable, CONFIG.gateFields.versionActive)) {
@@ -787,7 +860,15 @@ async function main() {
         });
 
         const levels = buildLevelList(levelsQuery.records, levelsTable);
-        const gateRuleMap = buildGateRuleMap(gateRulesQuery.records, gateRulesTable);
+        const enrollmentSchoolYear = getText(
+            enrollment,
+            CONFIG.enrollmentFields.schoolYear
+        );
+        const gateRuleMap = buildGateRuleMap(
+            gateRulesQuery.records,
+            gateRulesTable,
+            enrollmentSchoolYear
+        );
 
         const result = determineAllowedLevelWithGateBlocking(
             levels,

@@ -756,6 +756,54 @@ function buildGateRuleMap(gateRules = []) {
 }
 
 /**
+ * Select active 042 gate rules for one enrollment school year.
+ * Exact year wins; blank/Shared/Default/All Years is the only fallback.
+ * Prior-year-only rules and duplicate applicable rules fail closed.
+ */
+function selectYearAwareGateRules(gateRules = [], enrollmentSchoolYear = "") {
+  const normalizeYear = (value) => {
+    const normalized = String(value || "").trim().replace(/[–—−]/g, "-");
+    if (!normalized) return "";
+    const match = normalized.match(/^(\d{4})-(\d{4})$/);
+    if (!match || Number(match[2]) !== Number(match[1]) + 1) {
+      throw new Error(`Malformed school year / rule set: "${value}".`);
+    }
+    return `${match[1]}-${match[2]}`;
+  };
+  const targetYear = normalizeYear(enrollmentSchoolYear);
+  if (!targetYear) throw new Error("Enrollment School Year is required.");
+  const isShared = (value) =>
+    ["", "shared", "default", "all years"].includes(String(value || "").trim().toLowerCase());
+  const byLevel = new Map();
+
+  for (const rule of gateRules || []) {
+    if (!rule || rule.active === false) continue;
+    if (!rule.levelId) throw new Error(`Gate rule ${rule.name || "(unnamed)"} has no Level link.`);
+    const year = String(rule.schoolYear || "").trim();
+    if (year && !isShared(year)) normalizeYear(year);
+    if (!byLevel.has(rule.levelId)) byLevel.set(rule.levelId, []);
+    byLevel.get(rule.levelId).push(rule);
+  }
+
+  const selected = new Map();
+  for (const [levelId, candidates] of byLevel.entries()) {
+    const exact = candidates.filter(
+      (rule) => !isShared(rule.schoolYear) && normalizeYear(rule.schoolYear) === targetYear
+    );
+    const shared = candidates.filter((rule) => isShared(rule.schoolYear));
+    const applicable = exact.length > 0 ? exact : shared;
+    if (applicable.length > 1) {
+      throw new Error(`Multiple active gate rules for level ${levelId} and school year ${targetYear}.`);
+    }
+    if (applicable.length === 0) {
+      throw new Error(`No active gate rule for level ${levelId} and school year ${targetYear}.`);
+    }
+    selected.set(levelId, applicable[0]);
+  }
+  return selected;
+}
+
+/**
  * Select exactly one active XP Reward Rule for the given allowed rule keys.
  * Mirrors 059's duplicate-active throw / 054's intended hardening:
  * - missing → { status: "missing", rule: null, matches: [] }
@@ -1705,6 +1753,7 @@ module.exports = {
   findPreviousWeek,
   evaluateGate,
   buildGateRuleMap,
+  selectYearAwareGateRules,
   selectActiveXpRewardRule,
   normalizeGradeBandLabel,
   gradeBandsMatch,
