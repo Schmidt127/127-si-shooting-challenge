@@ -18,8 +18,9 @@ Fillout Enrollment form
   → Automation 001: find/create Athlete + link + Active?=true
   → Automation 002: assign Grade Band (initial, when blank)
   → Automation 003: re-assign Grade Band if Grade changes
-  → Automation 075: build welcome email package (Parent Email)
-  → Make/Gmail (out of scope here): send welcome when armed
+  → Automation 075: build welcome email package on Enrollment (subject/HTML; does not send)
+  → Email Handoff Queue + Automation 079 → Communications Hub → Resend (WELCOME send — controlled test proven; see docs/communications-hub/)
+  → (Legacy / not active) Make/Gmail welcome scenario — superseded by Communications Hub path
   → Downstream eligibility: Active? / PPE / Program Instance / Weeks
 ```
 
@@ -114,7 +115,8 @@ Fillout Enrollment form
 |---------|----------|
 | Parent email source for identity | 001: Cleaned → Parent Email → Submitted |
 | Athlete email | Stored on Enrollment; **not** used by 001 matching |
-| Welcome email | 075 builds subject/HTML; requires Parent Email + Program Instance; does not mark Sent |
+| Welcome email build | 075 builds subject/HTML on Enrollment; does not mark Sent |
+| Welcome email send | **Email Handoff Queue + Automation 079 → Communications Hub** (Make.com welcome **OFF**; controlled test only until activation checklist) |
 | Daily / weekly emails | 076/072+ — Active?/Schmidt rules (see ACTIVE-PROCESSING-AUDIT.md) |
 
 ---
