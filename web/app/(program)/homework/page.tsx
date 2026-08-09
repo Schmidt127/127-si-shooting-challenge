@@ -6,20 +6,20 @@ import {
   HomeworkErrorState,
 } from "@/components/homework/homework-catalog-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
-import { fetchHomeworkCatalog } from "@/lib/airtable/queries";
+import { fetchScheduledHomeworkCatalog } from "@/lib/airtable/homework-queries";
 
 export const metadata: Metadata = {
   title: "Homework",
   description:
-    "Published shooting challenge homework assignments — film study, faith, and basketball curriculum by week.",
+    "Current Shooting Challenge homework assignments — scheduled from the active program and published curriculum.",
 };
 
-/** ISR: refresh homework catalog every 5 minutes. */
+/** ISR: refresh homework assignments every 5 minutes. */
 export const revalidate = 300;
 
 export default async function HomeworkPage() {
   try {
-    const data = await fetchHomeworkCatalog();
+    const data = await fetchScheduledHomeworkCatalog();
 
     if (data.totalAssignments === 0) {
       return <HomeworkEmptyState />;
