@@ -1,501 +1,292 @@
 /*
-Automation: 009 - Submission Intake - Create Submission Assets
-System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-07-15 (v1.0 SCRIPT metadata established; runtime unchanged)
-
-Purpose:
-Create one Submission Assets row per uploaded file on a Submission (HW Sub 1/2, Video Upload).
-
-Trigger:
-Submissions — confirm exact conditions in Airtable UI (*confirm in Airtable*).
-
-Important Tables:
-Submissions, Submission Assets
-
-Important Fields:
-HW Sub 1, HW Sub 2, Video Upload, Attachment Upload Status, Source Attachment ID
-
-Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
-*/
-
-/************************************************************
  * 009 - Submission Intake - Create Submission Assets
- * Trigger Table: Submissions
+ * Version: v1.1
+ * Rebuilt: 2026-08-09
+ * Contract: GitHub issue #103
  *
- * Version: v1.0
- * Date Written: 2026-06-20
- * Last Updated: 2026-07-15
- *
- * VERSION HISTORY
- * - v1.0 (2026-07-15): Established SCRIPT metadata header for release inventory
- *   (runtime behavior unchanged from GitHub production copy synced 2026-06-20).
+ * REQUIRED INPUT
+ * - recordId = triggering Submissions record ID
  *
  * PURPOSE
- * For one Submission record:
- * - Create one Submission Assets record per uploaded file.
- * - Supports:
- *   - HW Sub 1 -> Homework 1 assets
- *   - HW Sub 2 -> Homework 2 assets
- *   - Video Upload -> Video For Feedback assets
- *
- * IMPORTANT
- * This script does NOT send files to Make.
- * This script does NOT mark homework assets Ready.
- * This script does NOT check Send to Make Trigger.
- *
- * Correct sequence:
- * 009 creates Submission Assets.
- * 020 creates/links Homework Completions and marks homework assets Ready.
- * 070a sends homework assets to Make only after Homework Completion link exists.
- *
- * FOLDER
- * - 02 - Submission Intake and Asset Creation
- *
- * AUTOMATION NAME
- * - 009 - Submission Intake - Create Submission Assets
- *
- * REQUIRED INPUT VARIABLES
- * - recordId = Airtable record ID from the triggering Submission record
- ************************************************************/
-
+ * - Create one Submission Asset per source attachment/slot.
+ * - Preserve source-field provenance.
+ * - Reject homework attachments when the same-slot Homework Name is not exactly one link.
+ * - Replay safely when Airtable replaces an attachment ID.
+ */
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1 — SCRIPT METADATA
-========================================================= */
-
 const SCRIPT = {
-    scriptName: "009 - Submission Intake - Create Submission Assets",
-    version: "v1.0",
-    versionNumber: "v1.0",
-    versionDate: "2026-07-15",
-    originalWrittenDate: "2026-06-20",
-    lastUpdated: "2026-07-15",
-    folder: "02 - Submission Intake and Asset Creation",
-    automationName: "009 - Submission Intake - Create Submission Assets",
+  scriptName: "009 - Submission Intake - Create Submission Assets",
+  version: "v1.1",
+  versionDate: "2026-08-09",
 };
-
-/* =========================================================
-   SECTION 2 — CONFIGURATION
-========================================================= */
 
 const { recordId } = input.config();
-
-if (!recordId) {
-    throw new Error("Missing required input variable: recordId");
-}
+if (!recordId) throw new Error("Missing required input variable: recordId");
 
 const CONFIG = {
-    tables: {
-        submissions: "Submissions",
-        assets: "Submission Assets",
-    },
-
-    submissions: {
-        name: "Submission Full Name",
-        enrollment: "Enrollment",
-        week: "Week",
-        hwSub1: "HW Sub 1",
-        hwSub2: "HW Sub 2",
-        videoUpload: "Video Upload",
-        homeworkName1: "Homework Name 1",
-        homeworkName2: "Homework Name 2",
-        submissionAssets: "Submission Assets",
-        attachmentUploadStatus: "Attachment Upload Status",
-        attachmentUploadError: "Attachment Upload Error",
-    },
-
-    assets: {
-        name: "Submission Assets Full Name",
-        submission: "Submission - Linked",
-        enrollment: "Enrollment - Linked",
-        assetLabel: "Asset Label",
-        assetPurpose: "Asset Purpose",
-        attachment: "Airtable Attachment",
-        sourceAttachmentId: "Source Attachment ID",
-        originalFileName: "Original File Name",
-        assetType: "Asset Type",
-        uploadStatus: "Upload Status",
-        uploadError: "Upload Error",
-        assetSlot: "Asset Slot",
-        sendToMakeTrigger: "Send to Make Trigger",
-    },
+  tables: { submissions: "Submissions", assets: "Submission Assets" },
+  submissions: {
+    enrollment: "Enrollment",
+    week: "Week",
+    hwSub1: "HW Sub 1",
+    hwSub2: "HW Sub 2",
+    videoUpload: "Video Upload",
+    homeworkName1: "Homework Name 1",
+    homeworkName2: "Homework Name 2",
+    attachmentUploadStatus: "Attachment Upload Status",
+    attachmentUploadError: "Attachment Upload Error",
+  },
+  assets: {
+    submission: "Submission - Linked",
+    enrollment: "Enrollment - Linked",
+    assetLabel: "Asset Label",
+    assetPurpose: "Asset Purpose",
+    attachment: "Airtable Attachment",
+    sourceAttachmentId: "Source Attachment ID",
+    originalFileName: "Original File Name",
+    assetType: "Asset Type",
+    uploadStatus: "Upload Status",
+    uploadError: "Upload Error",
+    assetSlot: "Asset Slot",
+    sendToMakeTrigger: "Send to Make Trigger",
+  },
 };
 
-/************************************************************
- * Utility helpers
- ************************************************************/
-
-function getField(table, fieldName) {
-    return table.fields.find(f => f.name === fieldName);
+function getField(table, name) { return table.fields.find(f => f.name === name); }
+function fieldExists(table, name) { return Boolean(getField(table, name)); }
+function isWritable(table, name) {
+  const f = getField(table, name);
+  if (!f) return false;
+  return !new Set(["formula","rollup","count","lookup","multipleLookupValues","createdTime",
+    "lastModifiedTime","autoNumber","createdBy","lastModifiedBy","button","externalSyncSource"]).has(f.type);
 }
-
-function fieldExists(table, fieldName) {
-    return Boolean(getField(table, fieldName));
+function safeFields(table, names) { return [...new Set(names)].filter(n => fieldExists(table, n)); }
+function cell(rec, name) { try { return rec.getCellValue(name); } catch { return null; } }
+function text(rec, name) { try { return String(rec.getCellValueAsString(name) || "").trim(); } catch { return ""; } }
+function linkedIds(rec, name) {
+  const v = cell(rec, name);
+  return Array.isArray(v) ? v.map(x => x?.id).filter(Boolean) : [];
 }
-
-function isWritable(table, fieldName) {
-    const field = getField(table, fieldName);
-    if (!field) return false;
-
-    const readOnlyTypes = new Set([
-        "formula",
-        "rollup",
-        "count",
-        "lookup",
-        "multipleLookupValues",
-        "createdTime",
-        "lastModifiedTime",
-        "autoNumber",
-        "createdBy",
-        "lastModifiedBy",
-        "button",
-        "externalSyncSource",
-    ]);
-
-    return !readOnlyTypes.has(field.type);
+function attachments(rec, name) {
+  const v = cell(rec, name);
+  return Array.isArray(v) ? v : [];
 }
-
-function safeFields(table, fieldNames) {
-    return [...new Set(fieldNames)].filter(name => fieldExists(table, name));
+function choiceExists(table, name, choice) {
+  const f = getField(table, name);
+  return Boolean(f?.options?.choices?.some(c => c.name === choice));
 }
-
-function cell(record, fieldName) {
-    try {
-        return record.getCellValue(fieldName);
-    } catch {
-        return null;
-    }
+function setLink(fields, table, name, ids) {
+  if (isWritable(table, name)) fields[name] = [...new Set(ids.filter(Boolean))].map(id => ({id}));
 }
-
-function text(record, fieldName) {
-    try {
-        return record.getCellValueAsString(fieldName) || "";
-    } catch {
-        return "";
-    }
+function setText(fields, table, name, value, allowBlank=false) {
+  if (!isWritable(table, name)) return;
+  if (!allowBlank && (value === null || value === undefined || value === "")) return;
+  fields[name] = String(value ?? "");
 }
-
-function linkedIds(record, fieldName) {
-    const value = cell(record, fieldName);
-    if (!Array.isArray(value)) return [];
-    return value.map(v => v.id).filter(Boolean);
+function setChoice(fields, table, name, value) {
+  if (isWritable(table, name) && choiceExists(table, name, value)) fields[name] = {name:value};
 }
-
-function attachments(record, fieldName) {
-    const value = cell(record, fieldName);
-    return Array.isArray(value) ? value : [];
+function setCheckbox(fields, table, name, value) {
+  if (isWritable(table, name)) fields[name] = Boolean(value);
 }
-
-function choiceExists(table, fieldName, choiceName) {
-    const field = getField(table, fieldName);
-    if (!field || !field.options || !field.options.choices) return false;
-    return field.options.choices.some(choice => choice.name === choiceName);
+function setAttachment(fields, table, name, file) {
+  if (!isWritable(table, name) || !file?.url) return;
+  fields[name] = [{url:file.url, filename:file.filename || "uploaded_file"}];
 }
-
-function setLink(fields, table, fieldName, ids) {
-    if (!isWritable(table, fieldName)) return;
-
-    const cleanIds = [...new Set((ids || []).filter(Boolean))];
-    fields[fieldName] = cleanIds.map(id => ({ id }));
+function normalizeFilename(v) {
+  return String(v || "").trim().toLowerCase().replace(/\s+/g, " ");
 }
-
-function setSingleSelect(fields, table, fieldName, choiceName) {
-    if (!isWritable(table, fieldName)) return;
-    if (!choiceName) return;
-    if (!choiceExists(table, fieldName, choiceName)) return;
-
-    fields[fieldName] = { name: choiceName };
+function ext(filename) {
+  const p = String(filename || "").toLowerCase().split(".");
+  return p.length > 1 ? p.pop() : "";
 }
-
-function setCheckbox(fields, table, fieldName, value) {
-    if (!isWritable(table, fieldName)) return;
-    fields[fieldName] = Boolean(value);
-}
-
-function setText(fields, table, fieldName, value) {
-    if (!isWritable(table, fieldName)) return;
-    if (value === undefined || value === null || value === "") return;
-
-    fields[fieldName] = String(value);
-}
-
-function setAttachment(fields, table, fieldName, file) {
-    if (!isWritable(table, fieldName)) return;
-    if (!file || !file.url) return;
-
-    fields[fieldName] = [
-        {
-            url: file.url,
-            filename: file.filename || "uploaded_file",
-        },
-    ];
-}
-
-function fileExtension(filename) {
-    const clean = String(filename || "").toLowerCase();
-    const parts = clean.split(".");
-    if (parts.length < 2) return "";
-    return parts.pop();
-}
-
 function inferAssetType(file, purpose) {
-    const type = String(file.type || "").toLowerCase();
-    const ext = fileExtension(file.filename);
-
-    const imageExts = new Set(["jpg", "jpeg", "png", "gif", "webp", "heic"]);
-    const videoExts = new Set(["mp4", "mov", "m4v", "avi", "webm"]);
-    const pdfExts = new Set(["pdf"]);
-    const docExts = new Set(["doc", "docx", "pages"]);
-
-    if (purpose === "Video For Feedback") return "Video Feedback";
-
-    if (type.startsWith("image/") || imageExts.has(ext)) return "Homework Image";
-    if (type.startsWith("video/") || videoExts.has(ext)) return "Video Feedback";
-    if (type === "application/pdf" || pdfExts.has(ext)) return "Homework PDF";
-    if (docExts.has(ext)) return "Homework Document";
-
-    return "Other";
+  if (purpose === "Video For Feedback") return "Video Feedback";
+  const type = String(file?.type || "").toLowerCase();
+  const e = ext(file?.filename);
+  if (type.startsWith("image/") || ["jpg","jpeg","png","gif","webp","heic"].includes(e)) return "Homework Image";
+  if (type.startsWith("video/") || ["mp4","mov","m4v","avi","webm"].includes(e)) return "Video Feedback";
+  if (type === "application/pdf" || e === "pdf") return "Homework PDF";
+  if (["doc","docx","pages"].includes(e)) return "Homework Document";
+  return "Other";
 }
-
-function sourceAttachmentId(file) {
-    return file && file.id ? file.id : "";
+function attachmentDescriptor(file) {
+  return {
+    id: String(file?.id || ""),
+    filename: normalizeFilename(file?.filename),
+    type: String(file?.type || "").toLowerCase(),
+    size: Number.isFinite(Number(file?.size)) ? Number(file.size) : null,
+  };
 }
-
-function originalFileName(file) {
-    return file && file.filename ? file.filename : "";
+function storedDescriptor(asset) {
+  const stored = attachments(asset, CONFIG.assets.attachment)[0] || null;
+  return {
+    filename: normalizeFilename(text(asset, CONFIG.assets.originalFileName) || stored?.filename),
+    type: String(stored?.type || "").toLowerCase(),
+    size: Number.isFinite(Number(stored?.size)) ? Number(stored.size) : null,
+  };
 }
-
-/************************************************************
- * Load tables and triggering Submission
- ************************************************************/
+function compatibleRestoration(asset, file, expectedLabel) {
+  const a = storedDescriptor(asset);
+  const f = attachmentDescriptor(file);
+  if (!a.filename || a.filename !== f.filename) return false;
+  const label = text(asset, CONFIG.assets.assetLabel);
+  if (label && expectedLabel && label !== expectedLabel) return false;
+  if (a.size !== null && f.size !== null && a.size !== f.size) return false;
+  if (a.type && f.type && a.type !== f.type) return false;
+  return true;
+}
 
 const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const assetsTable = base.getTable(CONFIG.tables.assets);
 
-const submissionsQuery = await submissionsTable.selectRecordsAsync({
-    fields: safeFields(submissionsTable, Object.values(CONFIG.submissions)),
+const submissionQuery = await submissionsTable.selectRecordsAsync({
+  fields: safeFields(submissionsTable, Object.values(CONFIG.submissions)),
 });
-
-const submission = submissionsQuery.getRecord(recordId);
-
-if (!submission) {
-    throw new Error(`Submission not found: ${recordId}`);
-}
+const submission = submissionQuery.getRecord(recordId);
+if (!submission) throw new Error(`Submission not found: ${recordId}`);
 
 const enrollmentIds = linkedIds(submission, CONFIG.submissions.enrollment);
 const weekIds = linkedIds(submission, CONFIG.submissions.week);
+if (enrollmentIds.length !== 1) throw new Error(`Submission must have exactly one Enrollment; found ${enrollmentIds.length}`);
+if (weekIds.length !== 1) throw new Error(`Submission must have exactly one Week; found ${weekIds.length}`);
 
-if (enrollmentIds.length === 0) {
-    throw new Error(`Submission is missing Enrollment: ${recordId}`);
-}
-
-if (weekIds.length === 0) {
-    throw new Error(`Submission is missing Week: ${recordId}`);
-}
-
-/************************************************************
- * Load existing assets to prevent duplicates
- ************************************************************/
-
-const assetsQuery = await assetsTable.selectRecordsAsync({
-    fields: safeFields(assetsTable, Object.values(CONFIG.assets)),
-});
-
-const existingAssetKeys = new Set();
-
-for (const asset of assetsQuery.records) {
-    const linkedSubmissionIds = linkedIds(asset, CONFIG.assets.submission);
-    if (!linkedSubmissionIds.includes(submission.id)) continue;
-
-    const sourceId = text(asset, CONFIG.assets.sourceAttachmentId);
-    if (sourceId) {
-        existingAssetKeys.add(sourceId);
-    }
-}
-
-/************************************************************
- * Build asset creation list
- ************************************************************/
-
-const assetSources = [
-    {
-        fieldName: CONFIG.submissions.hwSub1,
-        purpose: "Homework 1",
-        slot: "HW1",
-        labelPrefix: "HW1",
-    },
-    {
-        fieldName: CONFIG.submissions.hwSub2,
-        purpose: "Homework 2",
-        slot: "HW2",
-        labelPrefix: "HW2",
-    },
-    {
-        fieldName: CONFIG.submissions.videoUpload,
-        purpose: "Video For Feedback",
-        slot: "VIDEO",
-        labelPrefix: "VID",
-    },
+const sources = [
+  { field: CONFIG.submissions.hwSub1, slot:"HW1", purpose:"Homework 1", prefix:"HW1", homeworkField:CONFIG.submissions.homeworkName1 },
+  { field: CONFIG.submissions.hwSub2, slot:"HW2", purpose:"Homework 2", prefix:"HW2", homeworkField:CONFIG.submissions.homeworkName2 },
+  { field: CONFIG.submissions.videoUpload, slot:"VIDEO", purpose:"Video For Feedback", prefix:"VID", homeworkField:null },
 ];
 
-const creates = [];
-const skipped = [];
-
-for (const source of assetSources) {
-    const files = attachments(submission, source.fieldName);
-
-    files.forEach((file, index) => {
-        const sourceId = sourceAttachmentId(file);
-
-        if (!sourceId) {
-            skipped.push({
-                Reason: "Missing Airtable attachment ID",
-                Field: source.fieldName,
-                File: originalFileName(file),
-            });
-            return;
-        }
-
-        if (existingAssetKeys.has(sourceId)) {
-            skipped.push({
-                Reason: "Asset already exists",
-                Field: source.fieldName,
-                File: originalFileName(file),
-                SourceAttachmentId: sourceId,
-            });
-            return;
-        }
-
-        const assetLabel = `${source.labelPrefix}-${index + 1}`;
-        const assetType = inferAssetType(file, source.purpose);
-
-        const fields = {};
-
-        setLink(fields, assetsTable, CONFIG.assets.submission, [submission.id]);
-        setLink(fields, assetsTable, CONFIG.assets.enrollment, enrollmentIds);
-
-        setText(fields, assetsTable, CONFIG.assets.assetLabel, assetLabel);
-        setText(fields, assetsTable, CONFIG.assets.sourceAttachmentId, sourceId);
-        setText(fields, assetsTable, CONFIG.assets.originalFileName, originalFileName(file));
-
-        setSingleSelect(fields, assetsTable, CONFIG.assets.assetPurpose, source.purpose);
-        setSingleSelect(fields, assetsTable, CONFIG.assets.assetType, assetType);
-        setSingleSelect(fields, assetsTable, CONFIG.assets.assetSlot, source.slot);
-
-        /*
-         * CRITICAL:
-         * Do not set Upload Status to Ready here.
-         * Do not check Send to Make Trigger here.
-         *
-         * 020 must link/create the Homework Completion first.
-         * 020 keeps homework assets at Pending Link and checks Send to Make Trigger.
-         */
-        setSingleSelect(fields, assetsTable, CONFIG.assets.uploadStatus, "Pending Link");
-        setCheckbox(fields, assetsTable, CONFIG.assets.sendToMakeTrigger, false);
-
-        setAttachment(fields, assetsTable, CONFIG.assets.attachment, file);
-
-        creates.push({
-            fields,
-            _meta: {
-                field: source.fieldName,
-                purpose: source.purpose,
-                slot: source.slot,
-                label: assetLabel,
-                file: originalFileName(file),
-                sourceAttachmentId: sourceId,
-            },
-        });
-    });
+const slotAuthorization = {};
+for (const s of sources) {
+  if (!s.homeworkField) { slotAuthorization[s.slot] = {ok:true}; continue; }
+  const ids = linkedIds(submission, s.homeworkField);
+  slotAuthorization[s.slot] = {
+    ok: ids.length === 1,
+    reason: ids.length === 0 ? `No ${s.homeworkField} assignment` : `${s.homeworkField} has ${ids.length} links`,
+  };
 }
 
-/************************************************************
- * Create records
- ************************************************************/
+const assetQuery = await assetsTable.selectRecordsAsync({
+  fields: safeFields(assetsTable, Object.values(CONFIG.assets)),
+});
+const existing = assetQuery.records.filter(a => linkedIds(a, CONFIG.assets.submission).includes(submission.id));
 
-console.log("===== 009 CREATE SUBMISSION ASSETS =====");
-console.log(`Submission: ${submission.name}`);
-console.log(`Submission ID: ${submission.id}`);
-console.log(`Assets to create: ${creates.length}`);
-console.log(`Skipped: ${skipped.length}`);
+const creates = [];
+const repairs = [];
+const skipped = [];
+const needsReview = [];
 
-if (skipped.length > 0) {
-    console.table(skipped);
+for (const source of sources) {
+  const files = attachments(submission, source.field);
+  if (files.length === 0) continue;
+
+  if (!slotAuthorization[source.slot].ok) {
+    for (const file of files) {
+      skipped.push({
+        slot: source.slot, field: source.field, file: file?.filename || "",
+        reason: `UNASSIGNED_SLOT: ${slotAuthorization[source.slot].reason}`,
+      });
+    }
+    continue;
+  }
+
+  for (let index=0; index<files.length; index++) {
+    const file = files[index];
+    const d = attachmentDescriptor(file);
+    const label = `${source.prefix}-${index+1}`;
+
+    if (!d.id) {
+      needsReview.push({slot:source.slot, field:source.field, file:file?.filename||"", reason:"Missing Airtable attachment ID"});
+      continue;
+    }
+
+    const sameSlot = existing.filter(a => text(a, CONFIG.assets.assetSlot) === source.slot);
+    const exact = sameSlot.filter(a => text(a, CONFIG.assets.sourceAttachmentId) === d.id);
+    if (exact.length === 1) {
+      skipped.push({slot:source.slot, field:source.field, file:file?.filename||"", reason:"Exact source already exists", assetId:exact[0].id});
+      continue;
+    }
+    if (exact.length > 1) {
+      needsReview.push({slot:source.slot, field:source.field, file:file?.filename||"", reason:"Multiple exact source assets", assetIds:exact.map(a=>a.id)});
+      continue;
+    }
+
+    const recovery = sameSlot.filter(a => compatibleRestoration(a, file, label));
+    if (recovery.length === 1) {
+      const fields = {};
+      setText(fields, assetsTable, CONFIG.assets.sourceAttachmentId, d.id);
+      setText(fields, assetsTable, CONFIG.assets.originalFileName, file?.filename || "");
+      setChoice(fields, assetsTable, CONFIG.assets.assetPurpose, source.purpose);
+      setChoice(fields, assetsTable, CONFIG.assets.assetSlot, source.slot);
+      setChoice(fields, assetsTable, CONFIG.assets.assetType, inferAssetType(file, source.purpose));
+      setAttachment(fields, assetsTable, CONFIG.assets.attachment, file);
+      repairs.push({id:recovery[0].id, fields, slot:source.slot, file:file?.filename||""});
+      continue;
+    }
+    if (recovery.length > 1) {
+      needsReview.push({
+        slot:source.slot, field:source.field, file:file?.filename||"",
+        reason:"Ambiguous attachment-restoration fallback", assetIds:recovery.map(a=>a.id),
+      });
+      continue;
+    }
+
+    const fields = {};
+    setLink(fields, assetsTable, CONFIG.assets.submission, [submission.id]);
+    setLink(fields, assetsTable, CONFIG.assets.enrollment, enrollmentIds);
+    setText(fields, assetsTable, CONFIG.assets.assetLabel, label);
+    setText(fields, assetsTable, CONFIG.assets.sourceAttachmentId, d.id);
+    setText(fields, assetsTable, CONFIG.assets.originalFileName, file?.filename || "");
+    setChoice(fields, assetsTable, CONFIG.assets.assetPurpose, source.purpose);
+    setChoice(fields, assetsTable, CONFIG.assets.assetType, inferAssetType(file, source.purpose));
+    setChoice(fields, assetsTable, CONFIG.assets.assetSlot, source.slot);
+    setChoice(fields, assetsTable, CONFIG.assets.uploadStatus, "Pending Link");
+    setCheckbox(fields, assetsTable, CONFIG.assets.sendToMakeTrigger, false);
+    setAttachment(fields, assetsTable, CONFIG.assets.attachment, file);
+    creates.push({fields, slot:source.slot, field:source.field, file:file?.filename||"", sourceId:d.id});
+  }
+}
+
+if (repairs.length) {
+  for (let i=0;i<repairs.length;i+=50) {
+    await assetsTable.updateRecordsAsync(repairs.slice(i,i+50).map(r => ({id:r.id, fields:r.fields})));
+  }
 }
 
 let createdIds = [];
-
-if (creates.length > 0) {
-    for (let i = 0; i < creates.length; i += 50) {
-        const batch = creates.slice(i, i + 50);
-        const ids = await assetsTable.createRecordsAsync(
-            batch.map(item => ({ fields: item.fields }))
-        );
-        createdIds.push(...ids);
-    }
+if (creates.length) {
+  for (let i=0;i<creates.length;i+=50) {
+    const ids = await assetsTable.createRecordsAsync(creates.slice(i,i+50).map(r => ({fields:r.fields})));
+    createdIds.push(...ids);
+  }
 }
 
-/************************************************************
- * Update parent Submission status
- ************************************************************/
-
-const submissionUpdateFields = {};
-
-if (createdIds.length > 0 || skipped.length > 0) {
-    setSingleSelect(
-        submissionUpdateFields,
-        submissionsTable,
-        CONFIG.submissions.attachmentUploadStatus,
-        "Processing"
-    );
-
-    setText(
-        submissionUpdateFields,
-        submissionsTable,
-        CONFIG.submissions.attachmentUploadError,
-        ""
-    );
+const parentUpdate = {};
+if (needsReview.length) {
+  setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, "Processing");
+  setText(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadError,
+    `009 needs review: ${needsReview.map(x => `${x.slot}:${x.reason}`).join(" | ")}`, true);
+} else if (createdIds.length || repairs.length || skipped.length) {
+  setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, "Processing");
+  if (isWritable(submissionsTable, CONFIG.submissions.attachmentUploadError)) {
+    parentUpdate[CONFIG.submissions.attachmentUploadError] = "";
+  }
 } else {
-    setSingleSelect(
-        submissionUpdateFields,
-        submissionsTable,
-        CONFIG.submissions.attachmentUploadStatus,
-        "No Files"
-    );
+  setChoice(parentUpdate, submissionsTable, CONFIG.submissions.attachmentUploadStatus, "No Files");
 }
+if (Object.keys(parentUpdate).length) await submissionsTable.updateRecordAsync(submission.id, parentUpdate);
 
-if (Object.keys(submissionUpdateFields).length > 0) {
-    await submissionsTable.updateRecordAsync(submission.id, submissionUpdateFields);
-}
+console.log(JSON.stringify({
+  automation: SCRIPT.scriptName, version: SCRIPT.version, submissionId:submission.id,
+  created:createdIds.length, repaired:repairs.length, skipped:skipped.length, needsReview:needsReview.length,
+  repairs:repairs.map(r=>({id:r.id,slot:r.slot,file:r.file})), skipped, needsReview,
+}, null, 2));
 
-/************************************************************
- * Output
- ************************************************************/
-
-if (createdIds.length > 0) {
-    console.log("Created Submission Asset IDs:");
-    console.table(createdIds.map((id, index) => ({
-        CreatedAssetId: id,
-        Field: creates[index]._meta.field,
-        Purpose: creates[index]._meta.purpose,
-        Slot: creates[index]._meta.slot,
-        Label: creates[index]._meta.label,
-        File: creates[index]._meta.file,
-        SourceAttachmentId: creates[index]._meta.sourceAttachmentId,
-    })));
-} else {
-    console.log("No new Submission Assets created.");
-}
-
-output.set("status", createdIds.length > 0 ? "assets_created" : "no_new_assets");
+output.set("status", needsReview.length ? "needs_review" : (createdIds.length || repairs.length ? "assets_processed" : "no_new_assets"));
 output.set("submissionId", submission.id);
 output.set("createdAssetCount", createdIds.length);
 output.set("createdAssetIds", createdIds);
-
-console.log("009 complete.");
+output.set("repairedAssetCount", repairs.length);
+output.set("needsReviewCount", needsReview.length);
