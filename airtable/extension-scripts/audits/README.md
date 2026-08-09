@@ -30,7 +30,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **B. Submission XP** | 010 | `audit-xp-vs-submissions.js` | `backfill-submission-xp-events.js` |
 | **C. Weekly summary link** | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` | `backfill-missing-weekly-summaries-and-xp-links.js`, `backfill-xp-event-weekly-summary-links.js` |
 | **D. Assets created** | 009, 021 | `audit-submission-pipeline-integrity.js` | *(manual / re-trigger 009)* |
-| **E. Homework upload** | 020, 070a, 022, 063 | `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
+| **E. Homework upload** | 020, 070a, 022, 063 | `audit-curriculum-pha-cross-year-integrity.js`, `audit-homework-completion-upload-edge-cases.js`, `audit-stuck-upload-processing.js` | `backfill-homework-completion-upload-status.js`, `backfill-homework-completion-upload-edge-cases.js` |
 | **F. Homework XP + email** | 064, 065, 071 | `audit-homework-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-homework-xp-from-reviewed.js`, `dedupe-homework-xp-events.js` |
 | **F2. HW17 Fillout test intake** | 067 | `audit-homework17-reflection-quiz-pipeline.js` | `backfill-homework17-completions-from-reflection-quiz.js` |
 | **G. Video upload** | 013, 070b, 022, 111 | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
