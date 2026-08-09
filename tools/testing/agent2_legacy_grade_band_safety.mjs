@@ -51,7 +51,7 @@ async function main() {
       "Video Feedback",
       "Target Goal Shots",
       "XP Reward Rules",
-      "FBC Curriculum - SYNC",
+      "Homework Library",
       "Shot Milestones",
     ];
     const links = {};

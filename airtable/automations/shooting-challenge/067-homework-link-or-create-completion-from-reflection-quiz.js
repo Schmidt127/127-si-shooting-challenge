@@ -40,7 +40,7 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
 /************************************************************
  * 067 - Homework - Link or Create Completion from Reflection Quiz
  *
- * Version: v3.0
+ * Version: v3.1
  * Date Written: 2026-06-28
  * Last Updated: 2026-08-09
  *
@@ -48,7 +48,7 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
  * - Runs from one Final Reflection Quiz Submissions record (HW17 Fillout).
  * - Uses the quiz row's Enrollment link to identify the athlete (never guesses).
  * - Resolves the single active HW 17 record in Homework Library (content identity only).
- * - Resolves Week from active Program Homework Assignments for Enrollment PI + Grade Band.
+ * - Resolves Week from exactly one active PHA for HW17 with Homework Slot = HW1.
  * - Never reads Homework Library.Week for scheduling.
  * - Finds or creates the matching Homework Completion (Enrollment + Week + Homework).
  * - Links quiz ↔ completion; stamps Source System = Fillout; Item Slot / Asset Slot = HW1.
@@ -102,7 +102,7 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
 
 const CONFIG = {
   scriptName: "067 - Homework - Link or Create Completion from Reflection Quiz",
-  version: "v3.0",
+  version: "v3.1",
 
   tables: {
     quiz: "Final Reflection Quiz Submissions",
@@ -182,6 +182,7 @@ const CONFIG = {
     programInstance: "Program Instance",
     week: "Week",
     gradeBand: "Grade Band",
+    slot: "Homework Slot",
     active: "Active?",
   },
 
@@ -483,12 +484,14 @@ async function resolveHw17WeekFromPha(enrollmentId, hw17Id) {
     const libraryId = linkedIds(phaRecord, CONFIG.pha.homeworkAssignment)[0] || "";
     const phaPi = linkedIds(phaRecord, CONFIG.pha.programInstance)[0] || "";
     const phaGb = linkedIds(phaRecord, CONFIG.pha.gradeBand)[0] || "";
+    const phaSlot = selectName(phaRecord, CONFIG.pha.slot);
     const active = booleanish(phaRecord, CONFIG.pha.active);
 
     return (
       libraryId === hw17Id &&
       phaPi === programInstanceId &&
       phaGb === gradeBandId &&
+      phaSlot === CONFIG.values.slotHw1 &&
       active
     );
   });
@@ -496,7 +499,7 @@ async function resolveHw17WeekFromPha(enrollmentId, hw17Id) {
   if (matches.length !== 1) {
     throw new Error(
       `Expected exactly one active PHA for HW17 library ${hw17Id} ` +
-        `(PI ${programInstanceId}, Grade Band ${gradeBandId}); found ${matches.length}.`
+        `(PI ${programInstanceId}, Grade Band ${gradeBandId}, Slot ${CONFIG.values.slotHw1}); found ${matches.length}.`
     );
   }
 

@@ -5,7 +5,7 @@
  * - Operator Status formula
  * - Operator Notes field
  * - Completions Count rollup (if possible)
- * Does NOT modify FBC Curriculum - SYNC.Week.
+ * Does NOT modify Homework Library.Week.
  */
 import { readFileSync, existsSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -88,7 +88,7 @@ const DESCRIPTIONS = {
   "Program Homework Assignment":
     "Primary label Mike edits (or leave blank and use Display). Prefer one row per Program Instance + Week + Grade Band + Slot.",
   "Homework Assignment":
-    "Link ONE reusable FBC Curriculum - SYNC library record. Do not put season Week scheduling only on the library — schedule here.",
+    "Link ONE reusable Homework Library library record. Do not put season Week scheduling only on the library — schedule here.",
   "Program Instance":
     "Which season/program this assignment belongs to (e.g. Shooting Challenge | 2026-2027).",
   Week: "Challenge week this homework is due/assigned. Reuse the same library across weeks by creating separate PHA rows.",
@@ -186,7 +186,7 @@ const HC_DESC = {
     "Scheduled junction row (PHA). Written by Automation 020 when resolvable. Library Homework link remains required for XP/display.",
   "Homework Completion Key":
     "Identity helper: Enrollment|Week|Homework. One HC per enrollment+week+library preferred; 020 also scopes by Submission+slot.",
-  Homework: "Reusable FBC Curriculum - SYNC library record (not the schedule row).",
+  Homework: "Reusable Homework Library library record (not the schedule row).",
 };
 
 for (const [name, description] of Object.entries(HC_DESC)) {

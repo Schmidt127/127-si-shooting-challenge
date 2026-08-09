@@ -26,22 +26,27 @@ Airtable is the deployed/running copy.
  * 033 - WEEKLY SUMMARY AND GOAL LOGIC
  * Assign Homework to Weekly Athlete Summary
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-05-27
  * Last Updated: 2026-08-09
  *
  * PURPOSE
  * - Runs from one Weekly Athlete Summary record.
+ * - Requires exactly one Enrollment with exactly one Program Instance.
  * - Reads the linked Week and Grade Band.
- * - Matches active Program Homework Assignments by Program Instance (from Enrollment
- *   when available) + Week + Grade Band.
+ * - Matches active Program Homework Assignments by Enrollment Program Instance +
+ *   Week + Grade Band (strict — no PI wildcard).
  * - Writes matched Homework Library records to Weekly Athlete Summary → Homework.
  * - Fails closed when no active PHA exists. Never reads Homework Library.Week.
+ *
+ * Version 4.1 updates (2026-08-09):
+ * - Fail closed when Enrollment or Program Instance is missing/ambiguous.
+ * - PHA match requires exact Program Instance (never optional / wildcard).
+ * - Fail closed on duplicate active PHA for the same Homework Slot.
  *
  * Version 4.0 updates (2026-08-09):
  * - Homework Library architecture cleanup — PHA is sole scheduling authority.
  * - Removed legacy Homework Library Week + Grade Band fallback path.
- * - Table rename: FBC Curriculum - SYNC → Homework Library.
  *
  * Version 3.3 updates (2026-08-05):
  * - unloadQuerySafe for PHA selectRecordsAsync cleanup.
@@ -103,7 +108,7 @@ Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
-  version: "v4.0",
+  version: "v4.1",
 
   tables: {
     weeklySummary: "Weekly Athlete Summary",
@@ -369,6 +374,14 @@ async function updateRecordSafe(table, targetRecordId, updates) {
   return Object.keys(safeUpdates);
 }
 
+function getPhaSlotName(phaRecord) {
+  const raw = getRaw(phaRecord, phaTable, CONFIG.pha.slot);
+  if (raw && typeof raw === "object" && raw.name) {
+    return String(raw.name).trim();
+  }
+  return getText(phaRecord, phaTable, CONFIG.pha.slot);
+}
+
 function buildHomeworkLibraryFieldsToLoad() {
   if (!homeworkLibraryTable) return [];
 
@@ -439,6 +452,28 @@ requireWritableField(
   weeklySummaryTable,
   CONFIG.weeklySummary.homework,
   "Weekly Athlete Summary -> Homework"
+);
+
+requireField(
+  weeklySummaryTable,
+  CONFIG.weeklySummary.enrollment,
+  "Weekly Athlete Summary -> Enrollment"
+);
+
+if (!enrollmentsTable) {
+  throw new Error("Enrollments table is required for Program Instance resolution.");
+}
+
+requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.programInstance,
+  "Enrollments -> Program Instance"
+);
+
+requireField(
+  phaTable,
+  CONFIG.pha.programInstance,
+  "Program Homework Assignments -> Program Instance"
 );
 
 requireField(
@@ -550,27 +585,41 @@ async function main() {
       throw new Error("Weekly Athlete Summary is missing Grade Band.");
     }
 
-    let programInstanceId = "";
-    if (
-      enrollmentsTable &&
-      fieldExists(weeklySummaryTable, CONFIG.weeklySummary.enrollment) &&
-      fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)
-    ) {
-      const enrollmentId = getFirstLinkedRecordId(
-        summaryRecord,
-        weeklySummaryTable,
-        CONFIG.weeklySummary.enrollment
+    debugStep = "4b - Resolve Enrollment Program Instance";
+    setOutputSafe("debugStep", debugStep);
+
+    const enrollmentIds = getLinkedRecordIds(
+      summaryRecord,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.enrollment
+    );
+
+    if (enrollmentIds.length !== 1) {
+      throw new Error(
+        `Weekly Athlete Summary must have exactly one Enrollment; found ${enrollmentIds.length}.`
       );
-      if (enrollmentId) {
-        const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
-        if (enrollmentRecord) {
-          programInstanceId = getFirstLinkedRecordId(
-            enrollmentRecord,
-            enrollmentsTable,
-            CONFIG.enrollments.programInstance
-          );
-        }
-      }
+    }
+
+    const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentIds[0], {
+      fields: [CONFIG.enrollments.programInstance].filter(fieldName =>
+        fieldExists(enrollmentsTable, fieldName)
+      ),
+    });
+
+    if (!enrollmentRecord) {
+      throw new Error(`Enrollment not found: ${enrollmentIds[0]}`);
+    }
+
+    const programInstanceId = getFirstLinkedRecordId(
+      enrollmentRecord,
+      enrollmentsTable,
+      CONFIG.enrollments.programInstance
+    );
+
+    if (!programInstanceId) {
+      throw new Error(
+        `Enrollment ${enrollmentIds[0]} is missing Program Instance. PHA matching requires exact PI.`
+      );
     }
 
     let matchSource = "program_homework_assignments";
@@ -595,28 +644,47 @@ async function main() {
     const matchingPha = phaQuery.records.filter(phaRecord => {
       const phaWeekId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.week);
       const phaGradeBandId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.gradeBand);
+      const phaProgramInstanceId = getFirstLinkedRecordId(
+        phaRecord,
+        phaTable,
+        CONFIG.pha.programInstance
+      );
+      const libraryIds = getLinkedRecordIds(
+        phaRecord,
+        phaTable,
+        CONFIG.pha.homeworkAssignment
+      );
+
       if (phaWeekId !== weekId) return false;
       if (phaGradeBandId !== gradeBandId) return false;
-
-      if (programInstanceId && fieldExists(phaTable, CONFIG.pha.programInstance)) {
-        const phaPi = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.programInstance);
-        if (phaPi && phaPi !== programInstanceId) return false;
-      }
+      if (phaProgramInstanceId !== programInstanceId) return false;
+      if (libraryIds.length !== 1) return false;
 
       if (fieldExists(phaTable, CONFIG.pha.active)) {
         if (!getBooleanish(phaRecord, phaTable, CONFIG.pha.active)) return false;
       }
 
-      return Boolean(getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.homeworkAssignment));
+      return true;
     });
 
+    const slotCounts = new Map();
+    for (const phaRecord of matchingPha) {
+      const slotName = getPhaSlotName(phaRecord) || "(blank)";
+      slotCounts.set(slotName, (slotCounts.get(slotName) || 0) + 1);
+    }
+
+    const duplicateSlots = [...slotCounts.entries()].filter(([, count]) => count > 1);
+    if (duplicateSlots.length > 0) {
+      throw new Error(
+        `Multiple active Program Homework Assignments for the same slot: ${duplicateSlots
+          .map(([slot, count]) => `${slot}(${count})`)
+          .join(", ")}`
+      );
+    }
+
     matchingPha.sort((a, b) => {
-      const aSlot = String(
-        (a.getCellValue(CONFIG.pha.slot) && a.getCellValue(CONFIG.pha.slot).name) || ""
-      );
-      const bSlot = String(
-        (b.getCellValue(CONFIG.pha.slot) && b.getCellValue(CONFIG.pha.slot).name) || ""
-      );
+      const aSlot = getPhaSlotName(a);
+      const bSlot = getPhaSlotName(b);
       const rank = s => (s === "HW1" ? 1 : s === "HW2" ? 2 : 9);
       if (rank(aSlot) !== rank(bSlot)) return rank(aSlot) - rank(bSlot);
       return a.id.localeCompare(b.id);
@@ -634,11 +702,7 @@ async function main() {
       if (!libraryId || seenLibrary.has(libraryId)) continue;
       seenLibrary.add(libraryId);
       matchedHomeworkIds.push(libraryId);
-      const slotName = String(
-        (phaRecord.getCellValue(CONFIG.pha.slot) &&
-          phaRecord.getCellValue(CONFIG.pha.slot).name) ||
-          ""
-      );
+      const slotName = getPhaSlotName(phaRecord);
       homeworkTitles.push(slotName ? `${slotName}:${libraryId}` : libraryId);
     }
 

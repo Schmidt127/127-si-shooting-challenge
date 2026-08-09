@@ -9,8 +9,8 @@ Purpose:
     - already linked to a Homework Completion
     - safe Enrollment match (exactly one Enrollment link)
     - no Enrollment / multiple Enrollment (needs review)
-    - HW 17 assignment found / missing in FBC Curriculum - SYNC
-    - HW 17 Week found / missing
+    - HW 17 Homework Library content record found / missing
+    - HW 17 PHA schedule (PI + GB + HW1 slot) found / missing per Enrollment
     - would-create vs would-update a Homework Completion (native dedupe:
       Enrollment | Week | Homework, mirroring Homework Completion Key)
     - duplicate-risk (more than one existing completion for the same key)
@@ -33,7 +33,9 @@ const CONFIG = {
   tables: {
     quiz: "Final Reflection Quiz Submissions",
     homework: "Homework Completions",
-    curriculum: "FBC Curriculum - SYNC",
+    homeworkLibrary: "Homework Library",
+    programHomeworkAssignments: "Program Homework Assignments",
+    enrollments: "Enrollments",
   },
 
   quiz: {
@@ -54,15 +56,29 @@ const CONFIG = {
     completionStatus: "Completion Status",
   },
 
-  curriculum: {
+  homeworkLibrary: {
     homeworkNumber: "Homework Number",
     active: "Active?",
-    week: "Week",
     title: "Assignment Title",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    gradeBand: "Grade Band",
+    slot: "Homework Slot",
+    active: "Active?",
+  },
+
+  enrollments: {
+    gradeBand: "Grade Band",
+    programInstance: "Program Instance",
   },
 
   values: {
     homeworkNumber17: "HW 17",
+    slotHw1: "HW1",
   },
 };
 
@@ -106,33 +122,80 @@ function buildDedupeKey(enrollmentId, weekId, homeworkId) {
 async function main() {
   const quizTable = base.getTable(CONFIG.tables.quiz);
   const homeworkTable = base.getTable(CONFIG.tables.homework);
-  const curriculumTable = base.getTable(CONFIG.tables.curriculum);
+  const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+  const phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+  const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 
   const quizFields = Object.values(CONFIG.quiz).filter(name => fieldExists(quizTable, name));
   const homeworkFields = Object.values(CONFIG.homework).filter(name => fieldExists(homeworkTable, name));
-  const curriculumFields = Object.values(CONFIG.curriculum).filter(name => fieldExists(curriculumTable, name));
+  const libraryFields = Object.values(CONFIG.homeworkLibrary).filter(name =>
+    fieldExists(homeworkLibraryTable, name)
+  );
+  const phaFields = Object.values(CONFIG.pha).filter(name => fieldExists(phaTable, name));
+  const enrollmentFields = Object.values(CONFIG.enrollments).filter(name =>
+    fieldExists(enrollmentsTable, name)
+  );
 
-  const [quizQuery, homeworkQuery, curriculumQuery] = await Promise.all([
+  const [quizQuery, homeworkQuery, libraryQuery, phaQuery, enrollmentQuery] = await Promise.all([
     quizTable.selectRecordsAsync({ fields: quizFields }),
     homeworkTable.selectRecordsAsync({ fields: homeworkFields }),
-    curriculumTable.selectRecordsAsync({ fields: curriculumFields }),
+    homeworkLibraryTable.selectRecordsAsync({ fields: libraryFields }),
+    phaTable.selectRecordsAsync({ fields: phaFields }),
+    enrollmentsTable.selectRecordsAsync({ fields: enrollmentFields }),
   ]);
 
-  // 1. Resolve the single active HW 17 curriculum record.
-  const hw17Records = curriculumQuery.records.filter(record => {
-    const number = getSelectName(record, curriculumTable, CONFIG.curriculum.homeworkNumber);
-    const active = getBooleanish(record, curriculumTable, CONFIG.curriculum.active);
+  const hw17Records = libraryQuery.records.filter(record => {
+    const number = getSelectName(record, homeworkLibraryTable, CONFIG.homeworkLibrary.homeworkNumber);
+    const active = getBooleanish(record, homeworkLibraryTable, CONFIG.homeworkLibrary.active);
     return number === CONFIG.values.homeworkNumber17 && active;
   });
 
   const hw17ResolvedOne = hw17Records.length === 1;
   const hw17Record = hw17ResolvedOne ? hw17Records[0] : null;
   const hw17Id = hw17Record ? hw17Record.id : "";
-  const hw17WeekIds = hw17Record
-    ? getLinkedIds(hw17Record, curriculumTable, CONFIG.curriculum.week)
-    : [];
-  const hw17WeekId = hw17WeekIds[0] || "";
-  const hw17WeekResolvedOne = hw17WeekIds.length === 1;
+
+  const enrollmentById = new Map(enrollmentQuery.records.map(record => [record.id, record]));
+
+  function resolvePhaWeekForEnrollment(enrollmentId) {
+    const enrollment = enrollmentById.get(enrollmentId);
+    if (!enrollment) return { error: "enrollment_not_found" };
+
+    const programInstanceId =
+      getLinkedIds(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance)[0] || "";
+    const gradeBandId =
+      getLinkedIds(enrollment, enrollmentsTable, CONFIG.enrollments.gradeBand)[0] || "";
+
+    if (!programInstanceId || !gradeBandId) {
+      return { error: "missing_pi_or_grade_band" };
+    }
+
+    const matches = phaQuery.records.filter(record => {
+      const libraryId = getLinkedIds(record, phaTable, CONFIG.pha.homeworkAssignment)[0] || "";
+      const phaPi = getLinkedIds(record, phaTable, CONFIG.pha.programInstance)[0] || "";
+      const phaGb = getLinkedIds(record, phaTable, CONFIG.pha.gradeBand)[0] || "";
+      const phaSlot = getSelectName(record, phaTable, CONFIG.pha.slot);
+      const active = getBooleanish(record, phaTable, CONFIG.pha.active);
+
+      return (
+        libraryId === hw17Id &&
+        phaPi === programInstanceId &&
+        phaGb === gradeBandId &&
+        phaSlot === CONFIG.values.slotHw1 &&
+        active
+      );
+    });
+
+    if (matches.length !== 1) {
+      return { error: "pha_not_exactly_one", matchCount: matches.length };
+    }
+
+    const weekIds = getLinkedIds(matches[0], phaTable, CONFIG.pha.week);
+    if (weekIds.length !== 1) {
+      return { error: "pha_week_not_exactly_one", weekCount: weekIds.length };
+    }
+
+    return { hw17WeekId: weekIds[0], phaId: matches[0].id };
+  }
 
   // 2. Index existing Homework Completions by dedupe key (Enrollment|Week|Homework).
   const completionsByKey = new Map();
@@ -200,22 +263,27 @@ async function main() {
     if (!hw17ResolvedOne) {
       buckets.blockedNoHw17.push({
         ...row,
-        recommendedAction: "Fix FBC Curriculum - SYNC so exactly one active HW 17 exists",
-      });
-      continue;
-    }
-
-    // Week must come from the HW 17 curriculum record.
-    if (!hw17WeekResolvedOne) {
-      buckets.missingWeek.push({
-        ...row,
-        hw17WeekCount: hw17WeekIds.length,
-        recommendedAction: "Link exactly one Week to the HW 17 curriculum record",
+        recommendedAction: "Fix Homework Library so exactly one active HW 17 exists",
       });
       continue;
     }
 
     const enrollmentId = enrollmentIds[0];
+    const schedule = resolvePhaWeekForEnrollment(enrollmentId);
+
+    if (schedule.error) {
+      buckets.missingWeek.push({
+        ...row,
+        scheduleError: schedule.error,
+        matchCount: schedule.matchCount,
+        weekCount: schedule.weekCount,
+        recommendedAction:
+          "Create exactly one active PHA for HW17 (PI + Grade Band + HW1 slot) with one Week",
+      });
+      continue;
+    }
+
+    const hw17WeekId = schedule.hw17WeekId;
     const key = buildDedupeKey(enrollmentId, hw17WeekId, hw17Id);
     const existing = completionsByKey.get(key) || [];
 
@@ -255,10 +323,10 @@ async function main() {
       activeRecordsFound: hw17Records.length,
       resolvedToSingleRecord: hw17ResolvedOne,
       hw17RecordId: hw17Id,
-      hw17Title: hw17Record ? getText(hw17Record, curriculumTable, CONFIG.curriculum.title) : "",
-      weekLinkCount: hw17WeekIds.length,
-      weekResolvedToSingle: hw17WeekResolvedOne,
-      hw17WeekId,
+      hw17Title: hw17Record
+        ? getText(hw17Record, homeworkLibraryTable, CONFIG.homeworkLibrary.title)
+        : "",
+      scheduleSource: "Program Homework Assignments per Enrollment (HW1 slot)",
     },
 
     totals: {

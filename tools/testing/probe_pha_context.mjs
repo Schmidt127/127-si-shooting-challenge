@@ -48,7 +48,7 @@ function fieldRid(t, name) {
 const weeks = table("Weeks");
 const gb = table("Grade Bands");
 const pi = table("Program Instance - Synced");
-const cur = table("FBC Curriculum - SYNC");
+const cur = table("Homework Library");
 const enr = table("Enrollments");
 
 const out = {
@@ -96,7 +96,7 @@ out.gradeBand34Id = gb34?.id;
 
 if (gb34) {
   const curr = await list(
-    "FBC Curriculum - SYNC",
+    "Homework Library",
     `AND({Active?}, FIND("${gb34.id}", ARRAYJOIN({Grade Band})))`,
     ["Assignment Full Name", "Assignment Title", "Homework Number", "Grade Band", "Week", "Active?", "Published?", "Assignment Number"]
   );

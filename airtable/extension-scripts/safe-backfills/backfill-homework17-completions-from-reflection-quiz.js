@@ -14,7 +14,8 @@ Design:
   - Native dedupe key: Enrollment | Week | Homework (mirrors Homework Completion Key).
   - Matching: uses the Enrollment link on the quiz row only. If missing/ambiguous,
     the row is flagged Needs Review and skipped (never guesses the child).
-  - Week: taken from the single active HW 17 record in FBC Curriculum - SYNC.
+  - Week: taken from exactly one active PHA for HW17 (Homework Slot = HW1).
+  - Homework Library provides content identity only; never Homework Library.Week.
   - New completions are created as Completion Status = Submitted,
     Review Status = Ready for Review. Satisfactory? / Review Complete / Coach Feedback
     are left untouched so the normal coach review + 064/065 XP pipeline runs.
@@ -44,12 +45,13 @@ const MARK_REVIEW_STATUS = true;
 
 const CONFIG = {
   scriptName: "backfill-homework17-completions-from-reflection-quiz",
-  version: "v1.0",
+  version: "v1.1",
 
   tables: {
     quiz: "Final Reflection Quiz Submissions",
     homework: "Homework Completions",
-    curriculum: "FBC Curriculum - SYNC",
+    homeworkLibrary: "Homework Library",
+    programHomeworkAssignments: "Program Homework Assignments",
     enrollments: "Enrollments",
   },
 
@@ -74,18 +76,28 @@ const CONFIG = {
     submissionDate: "Submission Date",
   },
 
-  curriculum: {
+  homeworkLibrary: {
     homeworkNumber: "Homework Number",
     active: "Active?",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
     week: "Week",
+    gradeBand: "Grade Band",
+    slot: "Homework Slot",
+    active: "Active?",
   },
 
   enrollments: {
     gradeBand: "Grade Band",
+    programInstance: "Program Instance",
   },
 
   values: {
     homeworkNumber17: "HW 17",
+    slotHw1: "HW1",
     sourceSystemFillout: "Fillout",
     itemTypeHomework: "Homework",
     completionStatusSubmitted: "Submitted",
@@ -185,28 +197,104 @@ function buildDedupeKey(enrollmentId, weekId, homeworkId) {
   return `${enrollmentId || ""}|${weekId || ""}|${homeworkId || ""}`;
 }
 
+async function resolveHw17WeekForEnrollment({
+  hw17Id,
+  enrollmentId,
+  homeworkLibraryTable,
+  phaTable,
+  enrollmentsTable,
+}) {
+  const enrollment = enrollmentsTable.records
+    ? enrollmentsTable.records.find(r => r.id === enrollmentId)
+    : null;
+  const enrollmentRecord =
+    enrollment ||
+    (await enrollmentsTable.selectRecordAsync(enrollmentId, {
+      fields: Object.values(CONFIG.enrollments).filter(name =>
+        fieldExists(enrollmentsTable, name)
+      ),
+    }));
+
+  if (!enrollmentRecord) {
+    return { error: `Enrollment not found: ${enrollmentId}` };
+  }
+
+  const programInstanceId =
+    getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.programInstance)[0] || "";
+  const gradeBandId =
+    getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.gradeBand)[0] || "";
+
+  if (!programInstanceId || !gradeBandId) {
+    return {
+      error: `Enrollment ${enrollmentId} missing Program Instance or Grade Band for PHA scheduling.`,
+    };
+  }
+
+  const phaFields = Object.values(CONFIG.pha).filter(name => fieldExists(phaTable, name));
+  const phaQuery = await phaTable.selectRecordsAsync({ fields: phaFields });
+
+  const matches = phaQuery.records.filter(record => {
+    const libraryId =
+      getLinkedIds(record, phaTable, CONFIG.pha.homeworkAssignment)[0] || "";
+    const phaPi = getLinkedIds(record, phaTable, CONFIG.pha.programInstance)[0] || "";
+    const phaGb = getLinkedIds(record, phaTable, CONFIG.pha.gradeBand)[0] || "";
+    const phaSlot = getSelectName(record, phaTable, CONFIG.pha.slot);
+    const active = getBooleanish(record, phaTable, CONFIG.pha.active);
+
+    return (
+      libraryId === hw17Id &&
+      phaPi === programInstanceId &&
+      phaGb === gradeBandId &&
+      phaSlot === CONFIG.values.slotHw1 &&
+      active
+    );
+  });
+
+  if (matches.length !== 1) {
+    return {
+      error:
+        `Expected exactly one active PHA for HW17 (PI ${programInstanceId}, GB ${gradeBandId}, Slot ${CONFIG.values.slotHw1}); found ${matches.length}.`,
+    };
+  }
+
+  const weekIds = getLinkedIds(matches[0], phaTable, CONFIG.pha.week);
+  if (weekIds.length !== 1) {
+    return {
+      error: `Expected exactly one Week on HW17 PHA ${matches[0].id}, found ${weekIds.length}.`,
+    };
+  }
+
+  return { hw17WeekId: weekIds[0], phaId: matches[0].id, programInstanceId, gradeBandId };
+}
+
 async function main() {
   const quizTable = base.getTable(CONFIG.tables.quiz);
   const homeworkTable = base.getTable(CONFIG.tables.homework);
-  const curriculumTable = base.getTable(CONFIG.tables.curriculum);
+  const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+  const phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
   const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
 
   const quizFields = Object.values(CONFIG.quiz).filter(name => fieldExists(quizTable, name));
   const homeworkFields = Object.values(CONFIG.homework).filter(name => fieldExists(homeworkTable, name));
-  const curriculumFields = Object.values(CONFIG.curriculum).filter(name => fieldExists(curriculumTable, name));
-  const enrollmentFields = Object.values(CONFIG.enrollments).filter(name => fieldExists(enrollmentsTable, name));
+  const libraryFields = Object.values(CONFIG.homeworkLibrary).filter(name =>
+    fieldExists(homeworkLibraryTable, name)
+  );
+  const enrollmentFields = Object.values(CONFIG.enrollments).filter(name =>
+    fieldExists(enrollmentsTable, name)
+  );
 
-  const [quizQuery, homeworkQuery, curriculumQuery, enrollmentQuery] = await Promise.all([
+  const [quizQuery, homeworkQuery, libraryQuery, enrollmentQuery] = await Promise.all([
     quizTable.selectRecordsAsync({ fields: quizFields }),
     homeworkTable.selectRecordsAsync({ fields: homeworkFields }),
-    curriculumTable.selectRecordsAsync({ fields: curriculumFields }),
+    homeworkLibraryTable.selectRecordsAsync({ fields: libraryFields }),
     enrollmentsTable.selectRecordsAsync({ fields: enrollmentFields }),
   ]);
 
-  // Resolve the single active HW 17 curriculum record + its Week.
-  const hw17Records = curriculumQuery.records.filter(record => {
-    const number = getSelectName(record, curriculumTable, CONFIG.curriculum.homeworkNumber);
-    const active = getBooleanish(record, curriculumTable, CONFIG.curriculum.active);
+  enrollmentsTable.records = enrollmentQuery.records;
+
+  const hw17Records = libraryQuery.records.filter(record => {
+    const number = getSelectName(record, homeworkLibraryTable, CONFIG.homeworkLibrary.homeworkNumber);
+    const active = getBooleanish(record, homeworkLibraryTable, CONFIG.homeworkLibrary.active);
     return number === CONFIG.values.homeworkNumber17 && active;
   });
 
@@ -215,28 +303,13 @@ async function main() {
     console.log(JSON.stringify({
       script: CONFIG.scriptName,
       version: CONFIG.version,
-      error: `Expected exactly one active HW 17 record in FBC Curriculum - SYNC, found ${hw17Records.length}.`,
-      recommendedAction: "Fix the curriculum so exactly one active HW 17 exists, then re-run.",
+      error: `Expected exactly one active HW 17 record in Homework Library, found ${hw17Records.length}.`,
+      recommendedAction: "Fix Homework Library so exactly one active HW 17 exists, then re-run.",
     }, null, 2));
     return;
   }
 
-  const hw17Record = hw17Records[0];
-  const hw17Id = hw17Record.id;
-  const hw17WeekIds = getLinkedIds(hw17Record, curriculumTable, CONFIG.curriculum.week);
-
-  if (hw17WeekIds.length !== 1) {
-    console.log("===== BACKFILL HOMEWORK 17 COMPLETIONS — ABORTED =====");
-    console.log(JSON.stringify({
-      script: CONFIG.scriptName,
-      version: CONFIG.version,
-      error: `Expected exactly one Week linked to HW 17, found ${hw17WeekIds.length}.`,
-      recommendedAction: "Link exactly one Week to the HW 17 curriculum record, then re-run.",
-    }, null, 2));
-    return;
-  }
-
-  const hw17WeekId = hw17WeekIds[0];
+  const hw17Id = hw17Records[0].id;
 
   // Index existing completions by Enrollment|Week|Homework, and grade band by enrollment.
   const completionsByKey = new Map();
@@ -286,6 +359,26 @@ async function main() {
     }
 
     const enrollmentId = enrollmentIds[0];
+    const schedule = await resolveHw17WeekForEnrollment({
+      hw17Id,
+      enrollmentId,
+      homeworkLibraryTable,
+      phaTable,
+      enrollmentsTable,
+    });
+
+    if (schedule.error) {
+      countSkip("needs_review_pha_schedule");
+      reviewMarks.push({
+        quizId,
+        quizName: quiz.name,
+        status: CONFIG.values.processingNeedsReview,
+        note: schedule.error,
+      });
+      continue;
+    }
+
+    const hw17WeekId = schedule.hw17WeekId;
     const key = buildDedupeKey(enrollmentId, hw17WeekId, hw17Id);
     const existing = completionsByKey.get(key) || [];
     const submittedAt = getDateValue(quiz, quizTable, CONFIG.quiz.submittedAt);
@@ -296,9 +389,10 @@ async function main() {
         quizId,
         quizName: quiz.name,
         enrollmentId,
-        gradeBandId: gradeBandByEnrollment.get(enrollmentId) || "",
+        gradeBandId: schedule.gradeBandId || gradeBandByEnrollment.get(enrollmentId) || "",
         submittedAt,
         dedupeKey: key,
+        hw17WeekId,
       });
     } else {
       // Link the quiz to the existing completion (prefer one already linked to a quiz).
@@ -327,7 +421,7 @@ async function main() {
         const createFields = {};
         setLinkSafe(createFields, homeworkTable, CONFIG.homework.enrollment, [row.enrollmentId]);
         setLinkSafe(createFields, homeworkTable, CONFIG.homework.homework, [hw17Id]);
-        setLinkSafe(createFields, homeworkTable, CONFIG.homework.week, [hw17WeekId]);
+        setLinkSafe(createFields, homeworkTable, CONFIG.homework.week, [row.hw17WeekId]);
         if (row.gradeBandId) {
           setLinkSafe(createFields, homeworkTable, CONFIG.homework.gradeBand, [row.gradeBandId]);
         }
@@ -411,7 +505,7 @@ async function main() {
     batchLimit: BATCH_LIMIT,
 
     hw17RecordId: hw17Id,
-    hw17WeekId,
+    scheduleSource: "Program Homework Assignments (HW1 slot per Enrollment)",
 
     candidateCount: candidates.length,
     batchCount: batch.length,

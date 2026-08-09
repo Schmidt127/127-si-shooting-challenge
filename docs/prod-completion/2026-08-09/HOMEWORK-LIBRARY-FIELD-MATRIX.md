@@ -1,102 +1,124 @@
-# Homework Library — Field KEEP / DELETE / REVIEW Matrix
+# Homework Library — Field Matrix (Final Cutover)
 
 Date: 2026-08-09  
-Table: `FBC Curriculum - SYNC` → **`Homework Library`** (`tblUuxwYlX4EQ9MKE`)
-
-After PHA owns all scheduling, Homework Library is **content-only**. No historical 2025–2026 row preservation is required.
-
----
-
-## KEEP — reusable content
-
-| Field | Type | Role |
-|-------|------|------|
-| `Assignment Full Name` | text | Primary human label; operator editing |
-| `Assignment Title` | text | Short content title (e.g. Shot Tracker Usage) |
-| `Assignment Topic` | text | Content grouping |
-| `Book` / `Book Abbreviation` | text / select | Curriculum structure |
-| `Full Assignment Description` | long text | Coach/athlete content |
-| `Assignment Description` / `Brief Description - Display` | text | Summaries |
-| `Specific Steps` | long text | Instructions |
-| `Assignment Rationale` | long text | Coach context |
-| `Age Appropriate` | text | Content metadata |
-| `Docs` / `URL` / `URL Additional` | url / text | Resources |
-| `Cover Images` | attachment | Public display |
-| `Homework Number` | single select | **Content slot hint** (HW 1…HW 18) — not schedule authority |
-| `Assignment Number` / `Order` | number | Sort order within book/topic |
-| `Active?` | checkbox | Operator content lifecycle |
-| `Published?` | checkbox | Public catalog gate (`/shoot`) |
-| `Record Id` | formula | Stable RID helper for PHA / tooling |
-| `Submissions` / `Submissions copy` | link | Inverse HW1/HW2 intake |
-| `Homework Completions` | link | Inverse completion bridge |
-| `Weekly Athlete Summary` | link | Inverse (legacy link path; PHA assigns via 033) |
-| `Program Homework Assignments` | link | Inverse PHA scheduling |
+Table: **Homework Library** (`tblUuxwYlX4EQ9MKE`)  
+PROD table rename: **complete** (operator)
 
 ---
 
-## DELETE — scheduling-only / obsolete
+## KEEP — reusable content (required after cutover)
 
-Delete only **after** automations in this PR are pasted to PROD and controlled proof passes.
-
-| Field | Why obsolete |
-|-------|----------------|
-| `Week` | PHA.`Week` is sole schedule week |
-| `Grade Band` | PHA.`Grade Band` is sole schedule band |
-| `Program` | Season scope lives on PHA + Program Instance |
-| `Program Instance` | If present — never belonged on reusable library |
-| School-year fields | Season belongs on PI / PHA |
-| `Lesson Key` | Formula embeds Week + Grade Band — schedule identity |
-| Slot-specific schedule helpers | Any field encoding HW1/HW2 **week** assignment on library |
-
----
-
-## REVIEW — ambiguous / display / external sync
-
-| Field | Issue | Recommendation |
-|-------|-------|----------------|
-| `Assignment Full Name - Display` | Formula `{Week} \| {Homework Number} \| {Assignment Title}` embeds schedule + PWTEST context | **Refactor** to content identity, e.g. `{Book Abbreviation} - {Assignment Title} - {Assignment Topic}` or `{Assignment Full Name}` only. Do **not** include Week, PI, season, or PWTEST. |
-| `Homework Number` | Looks like schedule slot | **KEEP** as content metadata; PHA.`Homework Slot` owns HW1/HW2 schedule |
-| `Active?` | Was used by 033 legacy path | **KEEP** for content lifecycle; PHA.`Active?` owns schedule activation |
-| `Published?` | Public + legacy 033 | **KEEP** for `/shoot` content gate |
-| `Assignment Full Name` (primary) | May contain pasted schedule text | **Audit rows**; normalize to content-only labels |
-| External sync source fields | If FBC sync still connected | **REVIEW** with Mike — may block deletes |
-| Lookups from Submissions (`Week Lkp`) | On Submissions table, not library | **DELETE on Submissions** after Fillout/005 proof (separate step) |
+| Field | Purpose |
+|-------|---------|
+| `Assignment Title` | Short content name |
+| `Assignment Full Name` | Primary editable content label |
+| `Assignment Topic` | Content grouping |
+| `Book` / `Book Abbreviation` | Curriculum structure |
+| `Full Assignment Description` | Long-form instructions |
+| `Assignment Description` / `Brief Description - Display` | Summaries |
+| `Specific Steps` | Athlete instructions |
+| `Assignment Rationale` | Coach context |
+| `Age Appropriate` | Content metadata |
+| `Docs` / `URL` / `URL Additional` | Resources |
+| `Cover Images` | Public display |
+| `Homework Number` | Reusable content identifier (HW 1…HW 18) — **not** schedule slot |
+| `Assignment Number` / `Order` | Content sort order within book/topic |
+| `Active?` | Content lifecycle |
+| `Published?` | Public `/shoot` catalog gate |
+| `Record Id` | Stable RID helper |
+| Inverse links: `Submissions`, `Homework Completions`, `Weekly Athlete Summary`, `Program Homework Assignments` | System dependencies |
 
 ---
 
-## PHA display (schedule context allowed)
+## DELETE — obsolete scheduling (delete after PROD paste + proof)
 
-PHA fields **may** include scheduling context:
-
-- `Program Homework Assignment Display` — Library \| PI \| Week \| GB \| Slot
-- `Schedule Key` — canonical composite
-
-Homework Library display formulas **must not** mirror PHA schedule context.
-
----
-
-## Exact field deletion order (PROD)
-
-Execute only after checklist proof steps 1–8 pass.
-
-1. Remove `Week` from any Homework Library interfaces/views used by operators for scheduling.
-2. Confirm PHA has JIT assignments for current proof week (see checklist).
-3. Paste automations `005` v5.0, `033` v4.0, `067` v3.0.
-4. Run controlled submission + 020 proof.
-5. Delete `Lesson Key` (formula — depends on Week/Grade Band).
-6. Delete `Week` link field on Homework Library.
-7. Delete `Grade Band` link field on Homework Library.
-8. Delete `Program` / `Program Instance` / school-year fields if present.
-9. Refactor `Assignment Full Name - Display` formula (content-only).
-10. Delete Submissions.`Week Lkp` lookup if no longer referenced.
+| Field | Reason |
+|-------|--------|
+| `Week` | PHA.`Week` owns schedule |
+| `Grade Band` | PHA.`Grade Band` owns schedule |
+| `Program` | Season on PI / PHA |
+| `Program Instance` | If present on library |
+| School-year scheduling fields | PI / PHA scope |
+| `Homework Slot` | If on library — PHA.`Homework Slot` owns HW1/HW2 |
+| `Lesson Key` | Formula embeds Week + Grade Band |
+| PWTEST / historical test-only fields | No preservation required |
 
 ---
 
-## Controlled proof library rows (content)
+## REWRITE — display formulas (content-only)
 
-| Slot | Library RID | Content label (target) |
-|------|-------------|------------------------|
-| HW1 | `rechVLOeyEVIqmy2v` | SA - Personal Game Plan - Shot Tracker Usage |
-| HW2 | `rec6WmXjpLtIWDERo` | Website Exploration (normalize display) |
+### `Assignment Full Name - Display`
 
-Do **not** hardcode PHA record IDs — create fresh JIT rows per checklist.
+**Current (obsolete):** embeds `{Week} | {Homework Number} | {Assignment Title}`
+
+**Replace with (after DELETE fields removed):**
+
+```text
+CONCATENATE(
+  IF({Book Abbreviation}, {Book Abbreviation} & " - ", ""),
+  IF({Assignment Topic}, {Assignment Topic} & " - ", ""),
+  {Assignment Title}
+)
+```
+
+**Example output:** `SA - Personal Game Plan - Shot Tracker Usage`
+
+**Rules:**
+
+- No Week, Program Instance, School Year, HW1/HW2 slot, or PWTEST strings
+- Must work after `Week` and schedule fields are deleted
+- If `Assignment Full Name` is already clean content text, operators may alternatively set primary display to `{Assignment Full Name}` only:
+
+```text
+IF({Assignment Full Name}, {Assignment Full Name}, CONCATENATE(
+  IF({Book Abbreviation}, {Book Abbreviation} & " - ", ""),
+  IF({Assignment Topic}, {Assignment Topic} & " - ", ""),
+  {Assignment Title}
+))
+```
+
+### Other formulas to review
+
+| Field | Action |
+|-------|--------|
+| `Brief Description - Display` | Ensure no Week/PI references |
+| Any lookup from library.`Week` on Submissions | Delete `Week Lkp` on Submissions after proof |
+
+---
+
+## REVIEW — external / ambiguous
+
+| Field | Notes |
+|-------|-------|
+| External sync source | May block field deletes — confirm with Mike |
+| `Submissions copy` inverse | Keep if still used by Fillout HW2 |
+| Historical `Assignment Full Name` text | Normalize rows with embedded PWTEST/week strings |
+
+---
+
+## PHA required fields (unchanged)
+
+| Field | Role |
+|-------|------|
+| `Homework Assignment` | Link → Homework Library RID |
+| `Program Instance` | Schedule PI |
+| `Week` | Schedule week |
+| `Grade Band` | Schedule band |
+| `Homework Slot` | HW1 / HW2 |
+| `Active?` | Current assignment gate |
+| `Schedule Key` | Formula identity |
+
+---
+
+## Deletion order (PROD)
+
+1. Paste automations 005 v5.1, 033 v4.1, 067 v3.1
+2. Create JIT PHA proof rows
+3. Run live regression (checklist §D)
+4. Update Fillout choice filters
+5. Rewrite `Assignment Full Name - Display` formula
+6. Delete `Lesson Key`
+7. Delete `Week` on Homework Library
+8. Delete `Grade Band` on Homework Library
+9. Delete remaining schedule fields on library
+10. Delete Submissions.`Week Lkp` if unused

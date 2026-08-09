@@ -142,6 +142,7 @@ function buildBase({ summaries = [], homework = [], quizFields = {} } = {}) {
         field("Program Instance"),
         field("Week"),
         field("Grade Band"),
+        field("Homework Slot", "singleSelect", { choices: [{ name: "HW1" }, { name: "HW2" }] }),
         field("Active?", "checkbox"),
       ],
       [
@@ -150,6 +151,7 @@ function buildBase({ summaries = [], homework = [], quizFields = {} } = {}) {
           "Program Instance": link("recPi067", "PI"),
           Week: link("recWeek067", "Week 10"),
           "Grade Band": link("recGb067", "3-4"),
+          "Homework Slot": { name: "HW1" },
           "Active?": true,
         }),
       ]

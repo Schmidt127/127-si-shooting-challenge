@@ -23,6 +23,14 @@ Last Updated: 2026-07-03 — skip final email when Total Shots Counted ≤ 50
 
 // @ts-nocheck
 
+const OBSOLETE_LIBRARY_WEEK_SCHEDULING = true;
+if (OBSOLETE_LIBRARY_WEEK_SCHEDULING) {
+  throw new Error(
+    "OBSOLETE: repair-final-090g derives homework schedule from Homework Library.Week. " +
+      "Full cutover requires PHA-based homework resolution. See docs/prod-completion/2026-08-09/HOMEWORK-LIBRARY-ARCHITECTURE-DEPENDENCY-REPORT.md"
+  );
+}
+
 const DRY_RUN = true;
 const CONFIRM_BUILD = false;
 const BATCH_LIMIT = 25;
@@ -60,7 +68,7 @@ const CONFIG = {
     weeks: "Weeks",
     submissions: "Submissions",
     homeworkCompletions: "Homework Completions",
-    curriculum: "FBC Curriculum - SYNC",
+    curriculum: "Homework Library",
     streakOccurrences: "Streak Occurrences",
     achievementUnlocks: "Athlete Achievement Unlocks",
     achievements: "Achievements",
@@ -227,7 +235,7 @@ const REQUIRED_FIELDS = [
   ["Submissions", "Count This Submission?"],
   ["Homework Completions", "Enrollment"],
   ["Homework Completions", "Homework"],
-  ["FBC Curriculum - SYNC", "Week"],
+  ["Homework Library", "Week"],
   ["Streak Occurrences", "Enrollment"],
   ["Athlete Achievement Unlocks", "Enrollment"],
   ["Video Feedback", "Enrollment"],

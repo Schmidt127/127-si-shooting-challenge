@@ -26,7 +26,7 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First
  *
- * Version: v5.0
+ * Version: v5.1
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-09
  * Updated Reason: Homework Library architecture — Week assignment no longer uses
@@ -88,8 +88,8 @@ Airtable is the deployed/running copy.
  * - debugStep
  *
  * SCRIPT
- * - scriptName: 005 - Submission Intake — Assign Week (Homework First)
- * - version: v5.0
+ * - scriptName: 005 - Submission Intake — Assign Week (Activity Date + PHA validate)
+ * - version: v5.1
  * - versionDate: 2026-08-09
  * - originalWrittenDate: 2026-05-20
  * - lastUpdated: 2026-08-09
@@ -106,7 +106,7 @@ Airtable is the deployed/running copy.
 
 const SCRIPT = {
     scriptName: "005 - Submission Intake — Assign Week (Activity Date + PHA validate)",
-    version: "v5.0",
+    version: "v5.1",
     versionDate: "2026-08-09",
     originalWrittenDate: "2026-05-20",
     lastUpdated: "2026-08-09",
@@ -812,6 +812,13 @@ async function main() {
         setOutputSafe("debugStep", debugStep);
 
         if (!matchedWeek) {
+            if (homeworkId1 || homeworkId2) {
+                throw new Error(
+                    "Homework Name 1/2 linked but no Week could be assigned from Activity Date. " +
+                        "Activity Date is required; Homework Library Week is never used for scheduling."
+                );
+            }
+
             const existingWeekLinks = getLinkedRecordIds(
                 submission,
                 submissionsTable,

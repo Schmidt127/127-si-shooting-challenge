@@ -43,7 +43,7 @@ async function listAll(formula) {
       params.append("fields[]", f);
     }
     const res = await fetch(
-      `https://api.airtable.com/v0/${BASE}/${encodeURIComponent("FBC Curriculum - SYNC")}?${params}`,
+      `https://api.airtable.com/v0/${BASE}/${encodeURIComponent("Homework Library")}?${params}`,
       { headers }
     );
     const j = await res.json();

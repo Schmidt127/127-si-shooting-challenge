@@ -66,8 +66,8 @@ async function listPha(formula) {
 const evidence = { created: {}, tests: {} };
 
 // --- Test 4 baseline: capture curriculum Week links before any edit ---
-const cur1 = await api("GET", `${encodeURIComponent("FBC Curriculum - SYNC")}/${CTX.hw1Library}`);
-const cur2 = await api("GET", `${encodeURIComponent("FBC Curriculum - SYNC")}/${CTX.hw2Library}`);
+const cur1 = await api("GET", `${encodeURIComponent("Homework Library")}/${CTX.hw1Library}`);
+const cur2 = await api("GET", `${encodeURIComponent("Homework Library")}/${CTX.hw2Library}`);
 evidence.legacyWeekLinksBefore = {
   [CTX.hw1Library]: cur1.fields.Week,
   [CTX.hw2Library]: cur2.fields.Week,
@@ -250,8 +250,8 @@ evidence.wasAfter = {
   automationStatus: was.fields["Perfect Week Automation Status"],
 };
 
-const cur1After = await api("GET", `${encodeURIComponent("FBC Curriculum - SYNC")}/${CTX.hw1Library}`);
-const cur2After = await api("GET", `${encodeURIComponent("FBC Curriculum - SYNC")}/${CTX.hw2Library}`);
+const cur1After = await api("GET", `${encodeURIComponent("Homework Library")}/${CTX.hw1Library}`);
+const cur2After = await api("GET", `${encodeURIComponent("Homework Library")}/${CTX.hw2Library}`);
 evidence.legacyWeekLinksAfter = {
   [CTX.hw1Library]: cur1After.fields.Week,
   [CTX.hw2Library]: cur2After.fields.Week,

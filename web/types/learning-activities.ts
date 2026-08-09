@@ -2,7 +2,7 @@
  * Learning Activities contract types (LA-001).
  *
  * These types prepare the routing / completion-method layer that will sit
- * beside the existing Homework catalog (`FBC Curriculum - SYNC`, linked as
+ * beside the existing Homework catalog (`Homework Library`, linked as
  * `Homework` on Homework Completions). They do not imply Airtable schema
  * exists yet — see docs/learning-activities/LA-000-current-state-handoff.md.
  */
@@ -36,7 +36,7 @@ export type LearningActivityDefinition = {
   id: string;
   name: string;
   completionMethod: LearningActivityCompletionMethod;
-  /** Airtable record id of `FBC Curriculum - SYNC` when this activity is homework-linked. */
+  /** Airtable record id of `Homework Library` when this activity is homework-linked. */
   homeworkId: string | null;
   /**
    * When true AND homeworkId is set, a Response must create/update the

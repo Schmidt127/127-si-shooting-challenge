@@ -80,7 +80,7 @@ export const AIRTABLE_TABLES = {
   achievementUnlocks: "Athlete Achievement Unlocks",
   submissions: "Submissions",
   homeworkCompletions: "Homework Completions",
-  homeworkCurriculum: "FBC Curriculum - SYNC",
+  homeworkLibrary: "Homework Library",
   weeks: "Weeks",
   tutorials: "Tutorials",
   zoomMeetings: "Zoom Meetings",
@@ -282,7 +282,7 @@ async function listPublishedHomeworkRecords(): Promise<
   Array<{ id: string; fields: FbcCurriculumFields }>
 > {
   const baseParams = {
-    tableName: AIRTABLE_TABLES.homeworkCurriculum,
+    tableName: AIRTABLE_TABLES.homeworkLibrary,
     maxRecords: 200,
     fields: [...HOMEWORK_CATALOG_FIELDS],
     revalidateSeconds: HOMEWORK_REVALIDATE_SECONDS,
@@ -338,7 +338,7 @@ export async function fetchHomeworkAssignment(recordId: string): Promise<Homewor
 
   const [assignmentResponse, weekRecords] = await Promise.all([
     listAirtableRecords<FbcCurriculumFields>({
-      tableName: AIRTABLE_TABLES.homeworkCurriculum,
+      tableName: AIRTABLE_TABLES.homeworkLibrary,
       maxRecords: 1,
       fields: [...HOMEWORK_DETAIL_FIELDS],
       filterByFormula: `AND({Published?}, RECORD_ID()='${recordId}')`,

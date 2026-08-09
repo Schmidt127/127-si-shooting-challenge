@@ -89,7 +89,7 @@ function fieldSummary(table) {
 }
 
 const pha = byName["Program Homework Assignments"];
-const curriculum = byName["FBC Curriculum - SYNC"];
+const curriculum = byName["Homework Library"];
 const hc = byName["Homework Completions"];
 const was = byName["Weekly Athlete Summary"];
 const enrollments = byName["Enrollments"];

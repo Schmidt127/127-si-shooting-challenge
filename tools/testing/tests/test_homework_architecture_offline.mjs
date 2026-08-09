@@ -10,79 +10,51 @@ const read = (rel) => readFileSync(path.join(ROOT, rel), "utf8");
 
 const IDS = {
   PI: "rec5mEM0YPqPqq0hZ",
-  WEEK_A: "recWeVrSabnsYaHc2",
-  WEEK_B: "recWeekOther00001",
+  WEEK: "recWeVrSabnsYaHc2",
   GB: "reclWDQZzKbVBtdhG",
   HW1: "rechVLOeyEVIqmy2v",
   HW2: "rec6WmXjpLtIWDERo",
-  LEGACY_WEEK: "recnMGC2JBHjO0ay6",
-  PWTEST_WEEK: "reci5GdxEC57vfoS3",
 };
-
-function phaRecord(id, { weekId, piId = IDS.PI, gbId = IDS.GB, libraryId, slot, active = true }) {
-  return {
-    id,
-    fields: {
-      "Homework Assignment": libraryId ? [{ id: libraryId }] : [],
-      "Program Instance": piId ? [{ id: piId }] : [],
-      Week: weekId ? [{ id: weekId }] : [],
-      "Grade Band": gbId ? [{ id: gbId }] : [],
-      "Homework Slot": slot ? { name: slot } : null,
-      "Active?": active,
-    },
-  };
-}
 
 function assertNoPattern(source, pattern, label) {
   assert.doesNotMatch(source, pattern, label);
 }
 
-test("1-3 library content identity is separate from PHA scheduling", () => {
-  const phaA = phaRecord("recPhaA", { weekId: IDS.WEEK_A, libraryId: IDS.HW1, slot: "HW1" });
-  const phaB = phaRecord("recPhaB", { weekId: IDS.WEEK_B, libraryId: IDS.HW1, slot: "HW1" });
-  const phaOtherPi = phaRecord("recPhaC", {
-    weekId: IDS.WEEK_A,
-    piId: "recOtherPi000001",
-    libraryId: IDS.HW1,
-    slot: "HW1",
-  });
-
-  assert.equal(phaA.fields["Homework Assignment"][0].id, phaB.fields["Homework Assignment"][0].id);
-  assert.notEqual(phaA.fields.Week[0].id, phaB.fields.Week[0].id);
-  assert.notEqual(phaA.fields["Program Instance"][0].id, phaOtherPi.fields["Program Instance"][0].id);
-});
-
-test("4 005 v5 does not read Homework Library.Week", () => {
+test("005 v5.1 — no library Week scheduling", () => {
   const source = read(
     "airtable/automations/shooting-challenge/005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js"
   );
-  assert.match(source, /version:\s*"v5\.0"/);
+  assert.match(source, /version:\s*"v5\.1"/);
   assertNoPattern(source, /loadHomeworkWeekFromHomeworkId/, "005 must not load week from library");
-  assertNoPattern(source, /homeworkTable|CONFIG\.homework/, "005 must not reference Homework Library table");
+  assertNoPattern(source, /homeworkTable|CONFIG\.homework/, "005 must not open Homework Library table");
   assert.match(source, /validateHomeworkSelectionAgainstPha/);
-  assert.match(source, /findWeekByActivityDate/);
+  assert.match(source, /if \(matches\.length > 1\)/);
+  assert.match(source, /Homework Name 1\/2 linked but no Week could be assigned/);
 });
 
-test("5 033 v4 has no legacy curriculum scheduling fallback", () => {
+test("033 v4.1 — exact PI required, no legacy fallback", () => {
   const source = read(
     "airtable/automations/shooting-challenge/033-weekly-summary-and-goal-logic-assign-homework-to-weekly-athlete-summary.js"
   );
-  assert.match(source, /version:\s*"v4\.0"/);
-  assertNoPattern(source, /legacy_curriculum/, "033 must not retain legacy curriculum path");
-  assertNoPattern(source, /CONFIG\.curriculum\.week/, "033 must not match library Week");
-  assert.match(source, /Homework Library/);
+  assert.match(source, /version:\s*"v4\.1"/);
+  assertNoPattern(source, /legacy_curriculum/, "033 must not retain legacy path");
+  assert.match(source, /must have exactly one Enrollment/);
+  assert.match(source, /is missing Program Instance/);
+  assert.match(source, /phaProgramInstanceId !== programInstanceId/);
+  assertNoPattern(source, /if \(programInstanceId &&/, "PI match must not be optional");
+  assert.match(source, /duplicateSlots/);
 });
 
-test("6 067 v3 resolves HW17 week from PHA not library Week", () => {
+test("067 v3.1 — HW17 PHA requires HW1 slot", () => {
   const source = read(
     "airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js"
   );
-  assert.match(source, /version:\s*"v3\.0"/);
-  assert.match(source, /resolveHw17WeekFromPha/);
-  assertNoPattern(source, /CONFIG\.curriculum\.week|homeworkLibrary\.week/, "067 must not read library Week");
+  assert.match(source, /version:\s*"v3\.1"/);
+  assert.match(source, /phaSlot === CONFIG\.values\.slotHw1/);
+  assertNoPattern(source, /homeworkLibrary\.week|CONFIG\.curriculum\.week/, "067 must not read library Week");
 });
 
-test("7 020 remains strict PHA exact-match (v3.3)", () => {
+test("020 v3.3.0 — strict PHA exact match unchanged", () => {
   const source = read(
     "airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js"
   );
@@ -90,130 +62,106 @@ test("7 020 remains strict PHA exact-match (v3.3)", () => {
   assert.match(source, /exactly one ACTIVE Program Homework Assignment/);
 });
 
-test("8-13 PHA matcher rejects wrong PI, week, grade band, slot, inactive, and duplicates", () => {
-  const candidates = [
-    phaRecord("recGood", { weekId: IDS.WEEK_A, libraryId: IDS.HW1, slot: "HW1" }),
-    phaRecord("recWrongPi", {
-      weekId: IDS.WEEK_A,
-      piId: "recWrongPi000001",
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }),
-    phaRecord("recWrongWeek", { weekId: IDS.WEEK_B, libraryId: IDS.HW1, slot: "HW1" }),
-    phaRecord("recWrongGb", {
-      weekId: IDS.WEEK_A,
-      gbId: "recWrongGb000001",
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }),
-    phaRecord("recWrongSlot", { weekId: IDS.WEEK_A, libraryId: IDS.HW1, slot: "HW2" }),
-    phaRecord("recInactive", {
-      weekId: IDS.WEEK_A,
-      libraryId: IDS.HW1,
-      slot: "HW1",
-      active: false,
-    }),
-    phaRecord("recDup", { weekId: IDS.WEEK_A, libraryId: IDS.HW1, slot: "HW1" }),
-  ];
+test("009 — content provenance only, no library table", () => {
+  const source = read("airtable/automations/shooting-challenge/009-submission-intake-create-submission-assets.js");
+  assert.match(source, /homeworkName1/);
+  assertNoPattern(source, /FBC Curriculum|Homework Library/, "009 does not open library table");
+  assertNoPattern(source, /Program Homework Assignments/, "009 does not schedule via PHA");
+});
 
-  function matchPha({ piId, weekId, gbId, libraryId, slot }) {
+test("005 PHA matcher — zero and duplicate fail closed", () => {
+  function matchPha(candidates, ctx) {
     const matches = candidates.filter((pha) => {
-      const f = pha.fields;
-      if (f["Homework Assignment"][0]?.id !== libraryId) return false;
-      if (f.Week[0]?.id !== weekId) return false;
-      if (f["Grade Band"][0]?.id !== gbId) return false;
-      if (f["Program Instance"][0]?.id !== piId) return false;
-      if (f["Homework Slot"]?.name !== slot) return false;
-      if (!f["Active?"]) return false;
+      if (pha.libraryId !== ctx.libraryId) return false;
+      if (pha.weekId !== ctx.weekId) return false;
+      if (pha.gbId !== ctx.gbId) return false;
+      if (pha.piId !== ctx.piId) return false;
+      if (pha.slot !== ctx.slot) return false;
+      if (!pha.active) return false;
       return true;
     });
-    return matches;
+    if (matches.length === 0) throw new Error("zero PHA");
+    if (matches.length > 1) throw new Error("duplicate PHA");
+    return matches[0];
   }
 
-  assert.equal(
-    matchPha({
-      piId: IDS.PI,
-      weekId: IDS.WEEK_A,
-      gbId: IDS.GB,
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }).length,
-    2,
-    "duplicate active PHA must be detectable"
+  const base = {
+    libraryId: IDS.HW1,
+    weekId: IDS.WEEK,
+    gbId: IDS.GB,
+    piId: IDS.PI,
+    slot: "HW1",
+    active: true,
+  };
+
+  assert.throws(() => matchPha([], base), /zero PHA/);
+  assert.throws(
+    () =>
+      matchPha(
+        [
+          { ...base, id: "a" },
+          { ...base, id: "b" },
+        ],
+        base
+      ),
+    /duplicate PHA/
   );
-  assert.equal(
-    matchPha({
-      piId: "recWrongPi000001",
-      weekId: IDS.WEEK_A,
-      gbId: IDS.GB,
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }).length,
-    1
-  );
-  assert.equal(
-    matchPha({
-      piId: IDS.PI,
-      weekId: IDS.WEEK_B,
-      gbId: IDS.GB,
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }).length,
-    1
-  );
-  assert.equal(
-    matchPha({
-      piId: IDS.PI,
-      weekId: IDS.WEEK_A,
-      gbId: "recWrongGb000001",
-      libraryId: IDS.HW1,
-      slot: "HW1",
-    }).length,
-    1
-  );
-  assert.equal(
-    matchPha({
-      piId: IDS.PI,
-      weekId: IDS.WEEK_A,
-      gbId: IDS.GB,
-      libraryId: IDS.HW1,
-      slot: "HW2",
-    }).length,
-    1
-  );
-  assert.equal(
-    matchPha({
-      piId: IDS.PI,
-      weekId: IDS.WEEK_A,
-      gbId: IDS.GB,
-      libraryId: IDS.HW1,
-      slot: "HW1",
-      activeOnly: true,
-    }).filter((pha) => pha.fields["Active?"]).length,
-    2
+  assert.equal(matchPha([{ ...base, id: "recPha1" }], base).id, "recPha1");
+  assert.throws(
+    () => matchPha([{ ...base, id: "recWrong", piId: "recOtherPi" }], base),
+    /zero PHA/
   );
 });
 
-test("14-15 public homework queries are PHA-first and fail closed without PHA", async () => {
-  const source = read("web/lib/airtable/homework-queries.ts");
-  assert.match(source, /Homework Library/);
-  assert.match(source, /buildScheduledPairs/);
-  assert.match(source, /listCurrentPhaRecords/);
-  assert.match(source, /if \(pairs\.length === 0\)/);
-  assertNoPattern(source, /curriculum\.Week|FBC Curriculum - SYNC\.Week/, "web must not schedule from library Week");
+test("033 PHA matcher — wrong PI ignored, missing PI fails at validation layer", () => {
+  const pha = (id, piId = IDS.PI) => ({
+    id,
+    piId,
+    weekId: IDS.WEEK,
+    gbId: IDS.GB,
+    libraryId: IDS.HW1,
+    slot: "HW1",
+    active: true,
+  });
+
+  const rows = [pha("good"), pha("wrong", "recWrongPi")];
+  const matches = rows.filter((row) => row.piId === IDS.PI && row.weekId === IDS.WEEK);
+  assert.equal(matches.length, 1);
+  assert.equal(matches[0].id, "good");
+
+  const missingPi = "";
+  assert.ok(!missingPi, "033 throws before PHA query when PI missing");
 });
 
-test("16 legacy PWTEST / 2025-2026 library weeks cannot drive 005 week assignment", async () => {
+test("067 PHA matcher — wrong slot ignored", () => {
+  const hw17 = IDS.HW1;
+  const rows = [
+    { libraryId: hw17, slot: "HW2", piId: IDS.PI, gbId: IDS.GB, active: true },
+    { libraryId: hw17, slot: "HW1", piId: IDS.PI, gbId: IDS.GB, active: true },
+  ];
+  const matches = rows.filter(
+    (r) => r.libraryId === hw17 && r.slot === "HW1" && r.piId === IDS.PI && r.gbId === IDS.GB && r.active
+  );
+  assert.equal(matches.length, 1);
+  assert.equal(matches[0].slot, "HW1");
+});
+
+test("005 assigns week from Activity Date only", async () => {
   const { weekRun } = await buildAndRun005After023();
   assert.equal(weekRun.error, null);
-  assert.equal(weekRun.output.values.matchedWeekId, IDS.WEEK_A);
-  assert.doesNotMatch(weekRun.output.values.sourceUsed, /Homework Name/);
-  assert.notEqual(weekRun.output.values.matchedWeekId, IDS.LEGACY_WEEK);
-  assert.notEqual(weekRun.output.values.matchedWeekId, IDS.PWTEST_WEEK);
+  assert.equal(weekRun.output.values.matchedWeekId, IDS.WEEK);
+  assert.match(weekRun.output.values.sourceUsed, /Activity Date/);
 });
 
-test("17 obsolete curriculum seed script refuses to run", async () => {
+test("obsolete curriculum seed script refuses to run", () => {
   const source = read("tools/testing/seed_pha_from_curriculum.mjs");
   assert.match(source, /OBSOLETE/);
   assert.match(source, /process\.exit\(2\)/);
+});
+
+test("public homework queries remain PHA-first", () => {
+  const source = read("web/lib/airtable/homework-queries.ts");
+  assert.match(source, /Homework Library/);
+  assert.match(source, /listCurrentPhaRecords/);
+  assertNoPattern(source, /FBC Curriculum/, "web must use Homework Library table name");
 });

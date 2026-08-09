@@ -241,7 +241,7 @@ for (const [key, items] of buckets) {
         "Active?": true,
         "Operator Notes": DRY
           ? undefined
-          : `Seeded 2026-08-05 Agent1 from curriculum Week link. Library Week retained on FBC Curriculum - SYNC.`,
+          : `Seeded from obsolete curriculum Week architecture (historical log only).`,
       },
       sk,
       meta: { weekId, gbId, slot, hwId: item.hwId, name: item.name },

@@ -64,7 +64,7 @@ function summarizeTable(t, nameHints = []) {
 
 const tables = await meta();
 const want = [
-  "FBC Curriculum - SYNC",
+  "Homework Library",
   "Homework Completions",
   "Submissions",
   "Weekly Athlete Summary",
@@ -113,7 +113,7 @@ writeFileSync(
 console.log(
   JSON.stringify(
     {
-      curriculum: out.tables["FBC Curriculum - SYNC"],
+      curriculum: out.tables["Homework Library"],
       completions: out.tables["Homework Completions"]?.interesting,
       was: out.tables["Weekly Athlete Summary"]?.interesting?.filter((f) =>
         /homework|assigned|satisfactory/i.test(f.name)

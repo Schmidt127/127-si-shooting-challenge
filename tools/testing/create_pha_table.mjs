@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Create Program Homework Assignments MVP table + HC link in PROD.
- * Additive only — does not modify FBC Curriculum - SYNC.Week.
+ * Additive only — does not modify Homework Library.Week.
  */
 import { readFileSync, existsSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -101,7 +101,7 @@ if (!pha) {
   const create = await api("POST", `https://api.airtable.com/v0/meta/bases/${BASE}/tables`, {
     name: "Program Homework Assignments",
     description:
-      "MVP junction: reusable FBC Curriculum - SYNC assignment scheduled for one Program Instance + Week + Grade Band + Slot. Additive; does not replace curriculum Week links.",
+      "MVP junction: reusable Homework Library assignment scheduled for one Program Instance + Week + Grade Band + Slot.",
     fields: [
       {
         name: "Program Homework Assignment",
@@ -136,7 +136,7 @@ async function ensureField(def) {
 const fHomework = await ensureField({
   name: "Homework Assignment",
   type: "multipleRecordLinks",
-  description: "One reusable library assignment from FBC Curriculum - SYNC.",
+  description: "One reusable library assignment from Homework Library.",
   options: {
     linkedTableId: IDS.curriculum,
   },
