@@ -7,7 +7,7 @@ import {
 } from "@/components/homework/homework-detail-view";
 import { HomeworkErrorState } from "@/components/homework/homework-catalog-view";
 import { publicErrorMessage } from "@/lib/airtable/errors";
-import { fetchHomeworkAssignment } from "@/lib/airtable/queries";
+import { fetchScheduledHomeworkAssignment } from "@/lib/airtable/homework-queries";
 
 type HomeworkDetailPageProps = {
   params: Promise<{ id: string }>;
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: HomeworkDetailPageProps): Pro
   const { id } = await params;
 
   try {
-    const assignment = await fetchHomeworkAssignment(id);
+    const assignment = await fetchScheduledHomeworkAssignment(id);
     if (!assignment) {
       return { title: "Homework not found" };
     }
@@ -41,7 +41,7 @@ export default async function HomeworkDetailPage({ params }: HomeworkDetailPageP
   }
 
   try {
-    const assignment = await fetchHomeworkAssignment(id);
+    const assignment = await fetchScheduledHomeworkAssignment(id);
 
     if (!assignment) {
       return <HomeworkNotFoundState />;
