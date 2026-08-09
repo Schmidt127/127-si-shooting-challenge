@@ -914,7 +914,7 @@ async function runHomeworkBranch({
       actionOut: CONFIG.actions.skippedMissingInput,
       errorOut: "Homework Assignment is required.",
       actualResult: "Missing Homework Assignment link on Testing Scenarios.",
-      passFailNotes: "Link one FBC Curriculum - SYNC record to Homework Assignment.",
+      passFailNotes: "Link one Homework Library record to Homework Assignment.",
     });
     return;
   }

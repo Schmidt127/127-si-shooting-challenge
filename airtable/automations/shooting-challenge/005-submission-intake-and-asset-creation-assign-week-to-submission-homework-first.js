@@ -26,42 +26,39 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First
  *
- * Version: v4.1
+ * Version: v5.0
  * Date Written: 2026-05-20
- * Last Updated: 2026-08-06
- * Updated Reason: Program Instance isolation — Activity Date fallback scopes Weeks
- *   by Enrollment → Program Instance (never cross-year date overlap).
+ * Last Updated: 2026-08-09
+ * Updated Reason: Homework Library architecture — Week assignment no longer uses
+ *   Homework Library.Week. Activity Date + Program Instance calendar is authoritative.
+ *   Homework Name 1/2 selections are validated against active PHA when present.
  *
  * PURPOSE
  * - Reads one Submission record.
- * - Assigns Week primarily from the selected homework record.
- * - Uses Homework Name 1 -> FBC Curriculum - SYNC.Week first.
- * - Uses Homework Name 2 -> FBC Curriculum - SYNC.Week second.
- * - Falls back to Activity Date → Weeks date range ONLY within the Enrollment's
- *   Program Instance (Active Week? + Start/End Date match).
+ * - Assigns Week from Activity Date → Weeks date range within Enrollment Program Instance.
+ * - Never reads Homework Library.Week for scheduling.
+ * - When Homework Name 1/2 are linked, requires exactly one active Program Homework
+ *   Assignment for Enrollment PI + assigned Week + Grade Band + slot + library RID.
  * - Writes the resulting Week link back to Submissions.Week.
  * - Clears Submissions.Week only when no match is found and an incorrect week already exists.
  *
  * IMPORTANT DESIGN RULES — PROGRAM INSTANCE ISOLATION
- * - Activity Date fallback path:
+ * - Week assignment path:
  *     Submission → Enrollment → Enrollment.Program Instance
  *     → Weeks with the same Program Instance → Active Week? → Start/End Date match
- * - Reject missing Enrollment on Activity Date fallback.
- * - Reject missing Enrollment Program Instance on Activity Date fallback.
+ * - Reject missing Enrollment.
+ * - Reject missing Enrollment Program Instance.
  * - Ignore Weeks from other Program Instances.
- * - Still throw when multiple active overlaps exist inside the same Program Instance.
- * - Homework-linked Weeks are preferred; when Enrollment Program Instance is known,
- *   a homework Week from a different Program Instance is rejected (continue fallback).
+ * - Throw when multiple active overlaps exist inside the same Program Instance.
+ * - Homework Library is content-only; Program Homework Assignments is sole schedule authority.
  * - Do not treat Week Name as globally unique.
  *
  * CURRENT SCHEMA NOTES
  * - Submissions.Week is a writable linked-record field.
- * - Submissions.Enrollment is a linked-record field (required for date fallback).
- * - Submissions.Activity Date is a writable date field and can be read safely.
- * - Submissions.Homework Name 1 links to FBC Curriculum - SYNC.
- * - Submissions.Homework Name 2 links to FBC Curriculum - SYNC.
- * - FBC Curriculum - SYNC.Week links to Weeks.
- * - Enrollments.Program Instance links to Program Instance - Synced.
+ * - Submissions.Enrollment is a linked-record field (required).
+ * - Submissions.Activity Date is required for Week assignment.
+ * - Submissions.Homework Name 1/2 link to Homework Library (content identity only).
+ * - Enrollments.Program Instance and Grade Band scope PHA validation.
  * - Weeks.Program Instance links to Program Instance - Synced.
  * - Weeks.Week Name is the primary field (NOT unique across years).
  * - Weeks.Start Date and Weeks.End Date are dateTime fields using America/Denver.
@@ -92,10 +89,10 @@ Airtable is the deployed/running copy.
  *
  * SCRIPT
  * - scriptName: 005 - Submission Intake — Assign Week (Homework First)
- * - version: v4.1
- * - versionDate: 2026-08-06
+ * - version: v5.0
+ * - versionDate: 2026-08-09
  * - originalWrittenDate: 2026-05-20
- * - lastUpdated: 2026-08-06
+ * - lastUpdated: 2026-08-09
  * - folder: 02 - Submission Intake and Asset Creation
  * - automationName: 005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First
  ************************************************************/
@@ -108,11 +105,11 @@ Airtable is the deployed/running copy.
    ========================================================= */
 
 const SCRIPT = {
-    scriptName: "005 - Submission Intake — Assign Week (Homework First)",
-    version: "v4.1",
-    versionDate: "2026-08-06",
+    scriptName: "005 - Submission Intake — Assign Week (Activity Date + PHA validate)",
+    version: "v5.0",
+    versionDate: "2026-08-09",
     originalWrittenDate: "2026-05-20",
-    lastUpdated: "2026-08-06",
+    lastUpdated: "2026-08-09",
     folder: "02 - Submission Intake and Asset Creation",
     automationName:
         "005 - Submission Intake and Asset Creation - Assign Week to Submission - Homework First",
@@ -122,8 +119,8 @@ const CONFIG = {
     tables: {
         submissions: "Submissions",
         enrollments: "Enrollments",
-        homework: "FBC Curriculum - SYNC",
         weeks: "Weeks",
+        programHomeworkAssignments: "Program Homework Assignments",
     },
 
     submissions: {
@@ -137,10 +134,16 @@ const CONFIG = {
 
     enrollments: {
         programInstance: "Program Instance",
+        gradeBand: "Grade Band",
     },
 
-    homework: {
+    pha: {
+        homeworkAssignment: "Homework Assignment",
+        programInstance: "Program Instance",
         week: "Week",
+        gradeBand: "Grade Band",
+        slot: "Homework Slot",
+        active: "Active?",
     },
 
     weeks: {
@@ -187,8 +190,14 @@ if (!recordId) {
 
 const submissionsTable = base.getTable(CONFIG.tables.submissions);
 const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-const homeworkTable = base.getTable(CONFIG.tables.homework);
 const weeksTable = base.getTable(CONFIG.tables.weeks);
+
+let phaTable = null;
+try {
+    phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+} catch {
+    phaTable = null;
+}
 
 /* =========================================================
    SECTION 4: HELPERS
@@ -393,12 +402,6 @@ function buildSubmissionFieldsToLoad() {
     ].filter((fieldName) => fieldExists(submissionsTable, fieldName));
 }
 
-function buildHomeworkFieldsToLoad() {
-    return [CONFIG.homework.week].filter((fieldName) =>
-        fieldExists(homeworkTable, fieldName)
-    );
-}
-
 function weekActiveFieldName() {
     if (fieldExists(weeksTable, CONFIG.weeks.active)) {
         return CONFIG.weeks.active;
@@ -426,13 +429,15 @@ function buildWeekFieldsToLoad(includeDateRange = true) {
 }
 
 function buildEnrollmentFieldsToLoad() {
-    return [CONFIG.enrollments.programInstance].filter((fieldName) =>
-        fieldExists(enrollmentsTable, fieldName)
+    return [CONFIG.enrollments.programInstance, CONFIG.enrollments.gradeBand].filter(
+        (fieldName) => fieldExists(enrollmentsTable, fieldName)
     );
 }
 
-async function loadEnrollmentProgramInstanceId(enrollmentId) {
-    if (!enrollmentId) return "";
+async function loadEnrollmentContext(enrollmentId) {
+    if (!enrollmentId) {
+        return { programInstanceId: "", gradeBandId: "" };
+    }
 
     if (!fieldExists(enrollmentsTable, CONFIG.enrollments.programInstance)) {
         throw new Error(
@@ -448,11 +453,18 @@ async function loadEnrollmentProgramInstanceId(enrollmentId) {
         throw new Error(`Enrollment not found: ${enrollmentId}`);
     }
 
-    return getFirstLinkedRecordId(
-        enrollmentRecord,
-        enrollmentsTable,
-        CONFIG.enrollments.programInstance
-    );
+    return {
+        programInstanceId: getFirstLinkedRecordId(
+            enrollmentRecord,
+            enrollmentsTable,
+            CONFIG.enrollments.programInstance
+        ),
+        gradeBandId: getFirstLinkedRecordId(
+            enrollmentRecord,
+            enrollmentsTable,
+            CONFIG.enrollments.gradeBand
+        ),
+    };
 }
 
 async function loadWeekName(weekId) {
@@ -484,48 +496,99 @@ async function loadWeekProgramInstanceId(weekId) {
     );
 }
 
-async function loadHomeworkWeekFromHomeworkId(homeworkId, sourceLabel, programInstanceId) {
-    if (!homeworkId) return null;
+function buildPhaFieldsToLoad() {
+    if (!phaTable) return [];
 
-    const homeworkRecord = await homeworkTable.selectRecordAsync(homeworkId, {
-        fields: buildHomeworkFieldsToLoad(),
+    return [
+        CONFIG.pha.homeworkAssignment,
+        CONFIG.pha.programInstance,
+        CONFIG.pha.week,
+        CONFIG.pha.gradeBand,
+        CONFIG.pha.slot,
+        CONFIG.pha.active,
+    ].filter((fieldName) => fieldExists(phaTable, fieldName));
+}
+
+function getPhaSlotName(phaRecord) {
+    const raw = getRaw(phaRecord, phaTable, CONFIG.pha.slot);
+    if (raw && typeof raw === "object" && raw.name) {
+        return String(raw.name).trim();
+    }
+    return getText(phaRecord, phaTable, CONFIG.pha.slot);
+}
+
+async function validateHomeworkSelectionAgainstPha({
+    libraryId,
+    slot,
+    programInstanceId,
+    weekId,
+    gradeBandId,
+}) {
+    if (!libraryId) return { ok: true, phaId: "" };
+
+    if (!phaTable) {
+        throw new Error(
+            "Program Homework Assignments table is required when Homework Name 1/2 are linked."
+        );
+    }
+
+    if (!programInstanceId || !weekId || !gradeBandId) {
+        throw new Error(
+            `PHA validation for ${slot} requires Enrollment Program Instance, assigned Week, and Grade Band.`
+        );
+    }
+
+    const phaQuery = await phaTable.selectRecordsAsync({
+        fields: buildPhaFieldsToLoad(),
     });
 
-    if (!homeworkRecord) {
-        return null;
-    }
+    const matches = phaQuery.records.filter((phaRecord) => {
+        const phaLibraryId = getFirstLinkedRecordId(
+            phaRecord,
+            phaTable,
+            CONFIG.pha.homeworkAssignment
+        );
+        const phaWeekId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.week);
+        const phaGradeBandId = getFirstLinkedRecordId(
+            phaRecord,
+            phaTable,
+            CONFIG.pha.gradeBand
+        );
+        const phaProgramInstanceId = getFirstLinkedRecordId(
+            phaRecord,
+            phaTable,
+            CONFIG.pha.programInstance
+        );
+        const phaSlot = getPhaSlotName(phaRecord);
 
-    const weekId = getFirstLinkedRecordId(
-        homeworkRecord,
-        homeworkTable,
-        CONFIG.homework.week
-    );
+        if (phaLibraryId !== libraryId) return false;
+        if (phaWeekId !== weekId) return false;
+        if (phaGradeBandId !== gradeBandId) return false;
+        if (phaProgramInstanceId !== programInstanceId) return false;
+        if (phaSlot !== slot) return false;
 
-    if (!weekId) {
-        return null;
-    }
-
-    if (programInstanceId) {
-        const weekPi = await loadWeekProgramInstanceId(weekId);
-        if (weekPi && weekPi !== programInstanceId) {
-            log("Rejected homework-linked Week from other Program Instance", {
-                homeworkId,
-                weekId,
-                weekPi,
-                programInstanceId,
-                sourceLabel,
-            });
-            return null;
+        if (fieldExists(phaTable, CONFIG.pha.active)) {
+            if (!getBooleanish(phaRecord, phaTable, CONFIG.pha.active)) return false;
         }
+
+        return true;
+    });
+
+    if (matches.length === 0) {
+        throw new Error(
+            `No active Program Homework Assignment for ${slot} library ${libraryId} ` +
+                `(PI ${programInstanceId}, Week ${weekId}, Grade Band ${gradeBandId}).`
+        );
     }
 
-    const weekName = await loadWeekName(weekId);
+    if (matches.length > 1) {
+        throw new Error(
+            `Multiple active Program Homework Assignments for ${slot} library ${libraryId}: ` +
+                `${matches.map((record) => record.id).join(", ")}`
+        );
+    }
 
-    return {
-        id: weekId,
-        weekName,
-        sourceUsed: sourceLabel,
-    };
+    return { ok: true, phaId: matches[0].id };
 }
 
 async function findWeekByActivityDate(activityDateKey, programInstanceId) {
@@ -635,6 +698,7 @@ async function main() {
     let activityDateKey = "";
     let enrollmentId = "";
     let programInstanceId = "";
+    let gradeBandId = "";
     let matchedWeek = null;
     let sourceUsed = "";
     let updatedFields = [];
@@ -702,15 +766,18 @@ async function main() {
         );
 
         if (enrollmentId) {
-            debugStep = "3b - Load Enrollment Program Instance";
+            debugStep = "3b - Load Enrollment Program Instance + Grade Band";
             setOutputSafe("debugStep", debugStep);
-            programInstanceId = await loadEnrollmentProgramInstanceId(enrollmentId);
+            const enrollmentContext = await loadEnrollmentContext(enrollmentId);
+            programInstanceId = enrollmentContext.programInstanceId;
+            gradeBandId = enrollmentContext.gradeBandId;
         }
 
         log("Week assignment input", {
             recordId,
             enrollmentId,
             programInstanceId,
+            gradeBandId,
             homeworkId1,
             homeworkId2,
             activityDateKey,
@@ -722,35 +789,13 @@ async function main() {
             scriptVersion: SCRIPT.version,
         });
 
-        debugStep = "4 - Try Homework Name 1";
+        debugStep = "4 - Assign Week from Activity Date (Program Instance scoped)";
         setOutputSafe("debugStep", debugStep);
 
-        if (homeworkId1) {
-            matchedWeek = await loadHomeworkWeekFromHomeworkId(
-                homeworkId1,
-                "Homework Name 1",
-                programInstanceId
-            );
-        }
-
-        debugStep = "5 - Try Homework Name 2";
-        setOutputSafe("debugStep", debugStep);
-
-        if (!matchedWeek && homeworkId2) {
-            matchedWeek = await loadHomeworkWeekFromHomeworkId(
-                homeworkId2,
-                "Homework Name 2",
-                programInstanceId
-            );
-        }
-
-        debugStep = "6 - Try Activity Date Fallback (Program Instance scoped)";
-        setOutputSafe("debugStep", debugStep);
-
-        if (!matchedWeek && activityDateKey) {
+        if (activityDateKey) {
             if (!enrollmentId) {
                 throw new Error(
-                    "Activity Date Week fallback requires Submission.Enrollment. " +
+                    "Activity Date Week assignment requires Submission.Enrollment. " +
                         "Run automation 023 (Assign Enrollment) before 005, or link Enrollment manually."
                 );
             }
@@ -760,13 +805,10 @@ async function main() {
                         "Cannot safely match Weeks by Activity Date across Program Instances."
                 );
             }
-            matchedWeek = await findWeekByActivityDate(
-                activityDateKey,
-                programInstanceId
-            );
+            matchedWeek = await findWeekByActivityDate(activityDateKey, programInstanceId);
         }
 
-        debugStep = "7 - Handle No Match";
+        debugStep = "5 - Handle No Week Match";
         setOutputSafe("debugStep", debugStep);
 
         if (!matchedWeek) {
@@ -803,7 +845,7 @@ async function main() {
             setOutputSafe("statusOut", CONFIG.statuses.complete);
             setOutputSafe(
                 "errorOut",
-                "No Week found from Homework Name 1, Homework Name 2, or Program Instance-scoped Activity Date fallback."
+                "No Week found from Program Instance-scoped Activity Date. Homework Library Week is not used for scheduling."
             );
             setOutputSafe("debugStep", "Done - No Week Match");
 
@@ -822,7 +864,30 @@ async function main() {
 
         sourceUsed = matchedWeek.sourceUsed || "";
 
-        debugStep = "8 - Write Week Result";
+        debugStep = "6 - Validate Homework selections against active PHA";
+        setOutputSafe("debugStep", debugStep);
+
+        if (homeworkId1) {
+            await validateHomeworkSelectionAgainstPha({
+                libraryId: homeworkId1,
+                slot: "HW1",
+                programInstanceId,
+                weekId: matchedWeek.id,
+                gradeBandId,
+            });
+        }
+
+        if (homeworkId2) {
+            await validateHomeworkSelectionAgainstPha({
+                libraryId: homeworkId2,
+                slot: "HW2",
+                programInstanceId,
+                weekId: matchedWeek.id,
+                gradeBandId,
+            });
+        }
+
+        debugStep = "7 - Write Week Result";
         setOutputSafe("debugStep", debugStep);
 
         const existingWeekLinks = getLinkedRecordIds(
@@ -842,7 +907,7 @@ async function main() {
 
         updatedFields = await updateSubmissionSafe(recordId, updates);
 
-        debugStep = "9 - Outputs";
+        debugStep = "8 - Outputs";
         setOutputSafe("debugStep", debugStep);
 
         setOutputSafe("ok", true);

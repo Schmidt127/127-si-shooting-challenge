@@ -13,7 +13,7 @@ const TABLES = {
   config: "Config",
   programInstances: "Program Instance - Synced",
   programHomeworkAssignments: "Program Homework Assignments",
-  curriculum: "FBC Curriculum - SYNC",
+  homeworkLibrary: "Homework Library",
   weeks: "Weeks",
 } as const;
 
@@ -233,7 +233,7 @@ async function listCurriculumByIds(
 ): Promise<Array<{ id: string; fields: FbcCurriculumFields }>> {
   if (ids.length === 0) return [];
   const response = await listAirtableRecords<FbcCurriculumFields>({
-    tableName: TABLES.curriculum,
+    tableName: TABLES.homeworkLibrary,
     maxRecords: 200,
     fields: detail ? [...CURRICULUM_DETAIL_FIELDS] : [...CURRICULUM_CATALOG_FIELDS],
     filterByFormula: `AND({Published?}=1,${recordIdFormula(ids)})`,
@@ -245,7 +245,7 @@ async function listCurriculumByIds(
 /**
  * Current public homework catalog.
  *
- * PHA owns current-season scheduling. Curriculum owns reusable content. Equivalent
+ * PHA owns current-season scheduling. Homework Library owns reusable content. Equivalent
  * grade-band PHA rows collapse to one public Homework+Week card.
  */
 export async function fetchScheduledHomeworkCatalog(): Promise<HomeworkCatalogData> {

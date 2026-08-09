@@ -30,13 +30,13 @@ const CONFIG = {
   scriptName: "068 - Homework - Reconcile Deferred Weekly Summary Links",
   version: "v1.1",
   tables: {
-    curriculum: "FBC Curriculum - SYNC",
+    homeworkLibrary: "Homework Library",
     homework: "Homework Completions",
     weeklySummaries: "Weekly Athlete Summary",
   },
   fields: {
-    curriculumNumber: "Homework Number",
-    curriculumActive: "Active?",
+    homeworkLibraryNumber: "Homework Number",
+    homeworkLibraryActive: "Active?",
     homeworkEnrollment: "Enrollment",
     homeworkWeek: "Week",
     homeworkHomework: "Homework",
@@ -72,17 +72,17 @@ function fields(table, names) {
 async function resolveHw17Id(table) {
   const query = await table.selectRecordsAsync({
     fields: fields(table, [
-      CONFIG.fields.curriculumNumber,
-      CONFIG.fields.curriculumActive,
+      CONFIG.fields.homeworkLibraryNumber,
+      CONFIG.fields.homeworkLibraryActive,
     ]),
   });
   const matches = query.records.filter(
     (record) =>
-      selectName(record, CONFIG.fields.curriculumNumber) === CONFIG.hw17Number &&
-      record.getCellValue(CONFIG.fields.curriculumActive) === true
+      selectName(record, CONFIG.fields.homeworkLibraryNumber) === CONFIG.hw17Number &&
+      record.getCellValue(CONFIG.fields.homeworkLibraryActive) === true
   );
   if (matches.length !== 1) {
-    throw new Error(`Expected exactly one active HW17 curriculum record, found ${matches.length}.`);
+    throw new Error(`Expected exactly one active HW17 Homework Library record, found ${matches.length}.`);
   }
   return matches[0].id;
 }
@@ -102,10 +102,10 @@ function canonicalSummaryByKey(summaryRecords) {
 }
 
 async function main() {
-  const curriculumTable = base.getTable(CONFIG.tables.curriculum);
+  const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
   const homeworkTable = base.getTable(CONFIG.tables.homework);
   const summariesTable = base.getTable(CONFIG.tables.weeklySummaries);
-  const homeworkId = await resolveHw17Id(curriculumTable);
+  const homeworkId = await resolveHw17Id(homeworkLibraryTable);
 
   const homeworkQuery = await homeworkTable.selectRecordsAsync({
     fields: fields(homeworkTable, [

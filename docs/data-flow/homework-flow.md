@@ -77,7 +77,7 @@ response lands in **`Final Reflection Quiz Submissions`** (auto-scored: `Score` 
 ```
 Fillout HW17 test → Final Reflection Quiz Submissions (auto-scored)
     → 067 (or one-time backfill) matches the row's Enrollment link
-    → resolves the single active HW 17 in FBC Curriculum - SYNC + its Week
+    → resolves the single active HW 17 in **Homework Library** (content) + Week from **Program Homework Assignments**
     → link-or-create ONE Homework Completion (Enrollment | Week | Homework dedupe)
        Source System = Fillout, Completion Status = Submitted, Review Status = Ready for Review
     → coach reviews like any homework (Coach Feedback + Satisfactory? + Review Complete)
@@ -87,7 +87,7 @@ Fillout HW17 test → Final Reflection Quiz Submissions (auto-scored)
 
 Key rules:
 - Matching uses the quiz row's `Enrollment` link only. Blank/ambiguous → `Processing Status = Needs Review` (never guesses the child).
-- Week comes from the HW 17 curriculum record; if it cannot be resolved the row is reported, not created.
+- Week comes from the active **Program Homework Assignment** for HW17 (Enrollment PI + Grade Band); Homework Library.Week is never used.
 - `067` and the backfill **never** create or modify XP Events and **never** mark Satisfactory — XP stays gated behind normal coach review.
 
 Scripts: automation `067-homework-link-or-create-completion-from-reflection-quiz.js`;

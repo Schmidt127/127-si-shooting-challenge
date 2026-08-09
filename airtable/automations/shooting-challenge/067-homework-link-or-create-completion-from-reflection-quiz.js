@@ -21,7 +21,7 @@ with Enrollment not empty).
 
 Important Tables:
 Final Reflection Quiz Submissions, Homework Completions, Submissions,
-Submission Assets, FBC Curriculum - SYNC, Enrollments
+Submission Assets, Homework Library, Enrollments, Program Homework Assignments
 
 Important Fields:
 Enrollment, Homework Completion, Submitted At, Processing Status,
@@ -40,14 +40,16 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
 /************************************************************
  * 067 - Homework - Link or Create Completion from Reflection Quiz
  *
- * Version: v2.0
+ * Version: v3.0
  * Date Written: 2026-06-28
- * Last Updated: 2026-07-25
+ * Last Updated: 2026-08-09
  *
  * PURPOSE
  * - Runs from one Final Reflection Quiz Submissions record (HW17 Fillout).
  * - Uses the quiz row's Enrollment link to identify the athlete (never guesses).
- * - Resolves the single active HW 17 record in FBC Curriculum - SYNC and its Week.
+ * - Resolves the single active HW 17 record in Homework Library (content identity only).
+ * - Resolves Week from active Program Homework Assignments for Enrollment PI + Grade Band.
+ * - Never reads Homework Library.Week for scheduling.
  * - Finds or creates the matching Homework Completion (Enrollment + Week + Homework).
  * - Links quiz ↔ completion; stamps Source System = Fillout; Item Slot / Asset Slot = HW1.
  * - Links the Homework Completion to the unique existing Weekly Athlete Summary for
@@ -100,12 +102,13 @@ docs/next-wave/homework-pipeline/067-OPTION-B-PROD-INSTALL.md
 
 const CONFIG = {
   scriptName: "067 - Homework - Link or Create Completion from Reflection Quiz",
-  version: "v2.0",
+  version: "v3.0",
 
   tables: {
     quiz: "Final Reflection Quiz Submissions",
     homework: "Homework Completions",
-    curriculum: "FBC Curriculum - SYNC",
+    homeworkLibrary: "Homework Library",
+    programHomeworkAssignments: "Program Homework Assignments",
     enrollments: "Enrollments",
     submissions: "Submissions",
     assets: "Submission Assets",
@@ -169,14 +172,22 @@ const CONFIG = {
     homeworkCompletions: "Homework Completions",
   },
 
-  curriculum: {
+  homeworkLibrary: {
     homeworkNumber: "Homework Number",
     active: "Active?",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
     week: "Week",
+    gradeBand: "Grade Band",
+    active: "Active?",
   },
 
   enrollments: {
     gradeBand: "Grade Band",
+    programInstance: "Program Instance",
   },
 
   values: {
@@ -202,7 +213,8 @@ const CONFIG = {
 
 let quizTable;
 let homeworkTable;
-let curriculumTable;
+let homeworkLibraryTable;
+let phaTable;
 let enrollmentsTable;
 let submissionsTable;
 let assetsTable;
@@ -425,29 +437,80 @@ function buildDedupeKey(enrollmentId, weekId, homeworkId) {
   return `${enrollmentId || ""}|${weekId || ""}|${homeworkId || ""}`;
 }
 
-async function resolveHw17() {
-  const curriculumQuery = await curriculumTable.selectRecordsAsync({
-    fields: safeFields(curriculumTable, Object.values(CONFIG.curriculum)),
+async function resolveHw17Library() {
+  const libraryQuery = await homeworkLibraryTable.selectRecordsAsync({
+    fields: safeFields(homeworkLibraryTable, Object.values(CONFIG.homeworkLibrary)),
   });
 
-  const hw17Records = curriculumQuery.records.filter((record) => {
-    const number = selectName(record, CONFIG.curriculum.homeworkNumber);
-    const active = booleanish(record, CONFIG.curriculum.active);
+  const hw17Records = libraryQuery.records.filter((record) => {
+    const number = selectName(record, CONFIG.homeworkLibrary.homeworkNumber);
+    const active = booleanish(record, CONFIG.homeworkLibrary.active);
     return number === CONFIG.values.homeworkNumber17 && active;
   });
 
   if (hw17Records.length !== 1) {
     throw new Error(
-      `Expected exactly one active HW 17 record in FBC Curriculum - SYNC, found ${hw17Records.length}.`
+      `Expected exactly one active HW 17 record in Homework Library, found ${hw17Records.length}.`
     );
   }
 
-  const weekIds = linkedIds(hw17Records[0], CONFIG.curriculum.week);
-  if (weekIds.length !== 1) {
-    throw new Error(`Expected exactly one Week linked to HW 17, found ${weekIds.length}.`);
+  return { hw17Id: hw17Records[0].id };
+}
+
+async function resolveHw17WeekFromPha(enrollmentId, hw17Id) {
+  const enrollmentFields = safeFields(enrollmentsTable, Object.values(CONFIG.enrollments));
+  const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+    fields: enrollmentFields,
+  });
+
+  if (!enrollment) {
+    throw new Error(`Enrollment not found: ${enrollmentId}`);
   }
 
-  return { hw17Id: hw17Records[0].id, hw17WeekId: weekIds[0] };
+  const programInstanceId = linkedIds(enrollment, CONFIG.enrollments.programInstance)[0] || "";
+  const gradeBandId = linkedIds(enrollment, CONFIG.enrollments.gradeBand)[0] || "";
+
+  if (!programInstanceId || !gradeBandId) {
+    throw new Error(
+      `Enrollment ${enrollmentId} must have Program Instance and Grade Band for HW17 PHA scheduling.`
+    );
+  }
+
+  const phaFields = safeFields(phaTable, Object.values(CONFIG.pha));
+  const phaQuery = await phaTable.selectRecordsAsync({ fields: phaFields });
+
+  const matches = phaQuery.records.filter((phaRecord) => {
+    const libraryId = linkedIds(phaRecord, CONFIG.pha.homeworkAssignment)[0] || "";
+    const phaPi = linkedIds(phaRecord, CONFIG.pha.programInstance)[0] || "";
+    const phaGb = linkedIds(phaRecord, CONFIG.pha.gradeBand)[0] || "";
+    const active = booleanish(phaRecord, CONFIG.pha.active);
+
+    return (
+      libraryId === hw17Id &&
+      phaPi === programInstanceId &&
+      phaGb === gradeBandId &&
+      active
+    );
+  });
+
+  if (matches.length !== 1) {
+    throw new Error(
+      `Expected exactly one active PHA for HW17 library ${hw17Id} ` +
+        `(PI ${programInstanceId}, Grade Band ${gradeBandId}); found ${matches.length}.`
+    );
+  }
+
+  const weekIds = linkedIds(matches[0], CONFIG.pha.week);
+  if (weekIds.length !== 1) {
+    throw new Error(`Expected exactly one Week on HW17 PHA ${matches[0].id}, found ${weekIds.length}.`);
+  }
+
+  return {
+    hw17WeekId: weekIds[0],
+    phaId: matches[0].id,
+    programInstanceId,
+    gradeBandId,
+  };
 }
 
 function findCompletionMatch(homeworkRecords, enrollmentId, weekId, homeworkId) {
@@ -636,7 +699,8 @@ async function main() {
 
   quizTable = base.getTable(CONFIG.tables.quiz);
   homeworkTable = base.getTable(CONFIG.tables.homework);
-  curriculumTable = base.getTable(CONFIG.tables.curriculum);
+  homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+  phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
   enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   submissionsTable = base.getTable(CONFIG.tables.submissions);
   assetsTable = base.getTable(CONFIG.tables.assets);
@@ -701,7 +765,8 @@ async function main() {
 
   debugStep = "resolve_hw17";
   setOutputSafe("debugStep", debugStep);
-  const { hw17Id, hw17WeekId } = await resolveHw17();
+  const { hw17Id } = await resolveHw17Library();
+  const { hw17WeekId } = await resolveHw17WeekFromPha(enrollmentId, hw17Id);
   const canonicalWeeklySummaryId = await resolveWeeklySummaryId(enrollmentId, hw17WeekId);
   const weeklySummaryLinkStatus = canonicalWeeklySummaryId
     ? "linked"

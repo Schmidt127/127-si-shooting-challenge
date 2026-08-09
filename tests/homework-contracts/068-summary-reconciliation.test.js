@@ -49,7 +49,7 @@ function summary(id, weekId = "recWeek9") {
 function buildBase(summaries = [], homeworkSummary = [], completionWeek = "recWeek9") {
   // The reusable curriculum record intentionally carries a stale/legacy Week 10 link.
   // 068 must ignore it and reconcile from the Homework Completion's season-scoped Week.
-  const curriculum = new TableMock("FBC Curriculum - SYNC", [
+  const homeworkLibrary = new TableMock("Homework Library", [
     "Homework Number",
     "Active?",
     "Week",
@@ -75,7 +75,7 @@ function buildBase(summaries = [], homeworkSummary = [], completionWeek = "recWe
   ], summaries);
   return {
     tables: new Map([
-      [curriculum.name, curriculum],
+      [homeworkLibrary.name, homeworkLibrary],
       [homework.name, homework],
       [weeklySummaries.name, weeklySummaries],
     ]),

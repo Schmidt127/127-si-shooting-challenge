@@ -50,8 +50,8 @@ export async function buildAndRun005After023() {
   });
 
   base.tables.set(
-    "FBC Curriculum - SYNC",
-    new MockTable("FBC Curriculum - SYNC", [
+    "Homework Library",
+    new MockTable("Homework Library", [
       { name: "Week", type: "multipleRecordLinks" },
     ])
   );

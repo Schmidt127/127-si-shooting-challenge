@@ -20,7 +20,7 @@ Issue #104 repair:
 
 // @ts-nocheck
 const VERSION="v7.0",TZ="America/Denver";
-const T={sub:"Submissions",enr:"Enrollments",was:"Weekly Athlete Summary",week:"Weeks",xp:"XP Events",hc:"Homework Completions",pha:"Program Homework Assignments",curr:"FBC Curriculum - SYNC"};
+const T={sub:"Submissions",enr:"Enrollments",was:"Weekly Athlete Summary",week:"Weeks",xp:"XP Events",hc:"Homework Completions",pha:"Program Homework Assignments",curr:"Homework Library"};
 const F={
  sub:{enr:"Enrollment",week:"Week",was:"Weekly Athlete Summary",activity:"Activity Date",mode:"Submission Stat Mode",count:"Count This Submission?",shots:"Total Shots Counted",makes:"Total Makes Counted",hw1:"HW Sub 1",hw2:"HW Sub 2",video:"Video Upload",hcs:"Homework Completions",xps:"XP Events",build:"Build Daily Email Now?",send:"Send Daily Email to Make Now?",to:"Daily Email To",subject:"Daily Email Subject",html:"Daily Email HTML",version:"Daily Email Version",status:"Daily Email Status",makeStatus:"Daily Email Sent to Make.com Status",makeAt:"Daily Email Sent to Make.com At"},
  enr:{active:"Active?",program:"Program Instance",grade:"Grade Band",parentClean:"Parent Email - Cleaned",parent:"Parent Email",athleteClean:"Athlete Email - Cleaned",athleteEmail:"Athlete Email",name:"Full Athlete Name",first:"Athlete First Name",streak:"Current Shooting Streak",streakStatus:"Current Shooting Streak Status"},

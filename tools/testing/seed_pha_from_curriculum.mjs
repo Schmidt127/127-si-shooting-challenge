@@ -1,5 +1,26 @@
 #!/usr/bin/env node
 /**
+ * OBSOLETE — DO NOT USE FOR CURRENT SEASON SEEDING
+ *
+ * This script embodied the incorrect architecture of creating PHA rows from
+ * Homework Library.Week links. PHA is now assigned just-in-time by operators.
+ * Homework Library.Week must never be scheduling truth.
+ *
+ * Archived for historical evidence only. Use docs/prod-completion/2026-08-09/
+ * HOMEWORK-LIBRARY-PROD-EXECUTION-CHECKLIST.md for controlled JIT PHA creation.
+ *
+ * @deprecated 2026-08-09 Homework Library architecture cleanup
+ */
+console.error(
+  [
+    "REFUSED: tools/testing/seed_pha_from_curriculum.mjs is obsolete.",
+    "PHA must be created just-in-time — never seeded from Homework Library.Week.",
+    "See docs/prod-completion/2026-08-09/HOMEWORK-LIBRARY-PROD-EXECUTION-CHECKLIST.md",
+  ].join("\n")
+);
+process.exit(2);
+
+/**
  * Seed Program Homework Assignments from curriculum Week links for the active Program Instance.
  * Additive / idempotent by Schedule Key. Does not modify FBC Curriculum Week links.
  *

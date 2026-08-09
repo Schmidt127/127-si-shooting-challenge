@@ -44,7 +44,7 @@ function installBaseMocks(phaRecords: Array<{ id: string; fields: Record<string,
       return { records: phaRecords } as never;
     }
 
-    if (params.tableName === "FBC Curriculum - SYNC") {
+    if (params.tableName === "Homework Library") {
       return {
         records: [
           {

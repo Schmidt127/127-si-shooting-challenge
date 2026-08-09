@@ -19,7 +19,7 @@ Issue #104 repair:
 
 // @ts-nocheck
 const VERSION="v4.1",TZ="America/Denver",SCHMIDT="recCyFEPeATOVNlr9";
-const T={was:"Weekly Athlete Summary",enr:"Enrollments",week:"Weeks",sub:"Submissions",hc:"Homework Completions",xp:"XP Events",pha:"Program Homework Assignments",curr:"FBC Curriculum - SYNC"};
+const T={was:"Weekly Athlete Summary",enr:"Enrollments",week:"Weeks",sub:"Submissions",hc:"Homework Completions",xp:"XP Events",pha:"Program Homework Assignments",curr:"Homework Library"};
 const F={
  was:{enr:"Enrollment",week:"Week",subs:"Submissions",hcs:"Homework Completions Link",xps:"XP Events",weeklyXp:"XP Earned This Week",days:"Days Logged This Week",shots:"Total Shots This Week",goal:"Weekly Goal Shots Target",goalPct:"Goal Completion %",weekDisplay:"Week - Display",homeworkAssigned:"Homework Assigned Count",homeworkSat:"Homework Satisfactory Count",build:"Build Weekly Email Now?",sendMode:"sendMode",ready:"Weekly Email Ready?",sent:"Weekly Email Sent?",sentAt:"Weekly Email Sent At",error:"Weekly Email Error",revision:"Weekly Email Revision",send:"Send to Make?",subject:"Weekly Email Subject",recipients:"Weekly Email Recipients",html:"Weekly Email HTML",text:"Weekly Email Text",payload:"Weekly Email Payload JSON",weekLabel:"Weekly Email Week Label",builtAt:"Weekly Email Last Built At"},
  enr:{active:"Active?",program:"Program Instance",grade:"Grade Band",parent:"Parent Email - Cleaned",parentRaw:"Parent Email",athlete:"Athlete Email - Cleaned",athleteRaw:"Athlete Email",name:"Full Athlete Name",first:"Athlete First Name",level:"Current Level",streak:"Current Shooting Streak",streakStatus:"Current Shooting Streak Status"},

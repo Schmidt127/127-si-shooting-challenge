@@ -123,24 +123,46 @@ function buildBase({ summaries = [], homework = [], quizFields = {} } = {}) {
     ),
     homeworkTable,
     new MockTable(
-      "FBC Curriculum - SYNC",
+      "Homework Library",
       [
         field("Homework Number", "singleLineText"),
         field("Active?", "checkbox"),
-        field("Week"),
       ],
       [
         new MockRecord("recHw17", {
           "Homework Number": { name: "HW 17" },
           "Active?": true,
+        }),
+      ]
+    ),
+    new MockTable(
+      "Program Homework Assignments",
+      [
+        field("Homework Assignment"),
+        field("Program Instance"),
+        field("Week"),
+        field("Grade Band"),
+        field("Active?", "checkbox"),
+      ],
+      [
+        new MockRecord("recPhaHw17", {
+          "Homework Assignment": link("recHw17", "HW 17"),
+          "Program Instance": link("recPi067", "PI"),
           Week: link("recWeek067", "Week 10"),
+          "Grade Band": link("recGb067", "3-4"),
+          "Active?": true,
         }),
       ]
     ),
     new MockTable(
       "Enrollments",
-      [field("Grade Band")],
-      [new MockRecord("recEnrollment067", { "Grade Band": [] })]
+      [field("Grade Band"), field("Program Instance")],
+      [
+        new MockRecord("recEnrollment067", {
+          "Grade Band": link("recGb067", "3-4"),
+          "Program Instance": link("recPi067", "PI"),
+        }),
+      ]
     ),
     new MockTable("Submissions", [field("Enrollment"), field("Week"), field("Homework Name 1"), field("HW Sub 1"), field("Submission Assets")]),
     new MockTable("Submission Assets", [field("Enrollment - Linked"), field("Submission - Linked"), field("Airtable Attachment"), field("Source Attachment ID")]),
