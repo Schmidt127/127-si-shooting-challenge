@@ -27,6 +27,8 @@ The following governance rows were updated directly in PROD on 2026-08-08.
 
 | Automation | Governance record | Current truth recorded |
 |---|---|---|
+| 001 | `recmT8Ye7TIhmmn7X` | Governance trigger metadata corrected to athlete-link intent; repository source v5.2; native UI trigger attestation remains separate |
+| 002 | `recVGJmHDLAFfsEHc` | Governance trigger metadata corrected to Grade Band intent; repository source v8.2; native UI trigger attestation remains separate |
 | 010 | `recfxxUD50a5rbIRr` | v10.6 confirmed in PROD; controlled existing-event replay PASS; no duplicate; first-create not overclaimed |
 | 023 | `recFTk9CJM6J8sMrB` | v3.1 installed/live-tested; Program Instance-scoped Enrollment assignment and replay PASS |
 | 031 | `recuXhBl6WGImtwo8` | v3.5 confirmed; canonical empty-link/malformed-candidate live proof PASS; stale-linked repair remains offline-only |
@@ -113,31 +115,39 @@ Commits:
 
 This is repository truth only. Do **not** create a governance row claiming 068 is deployed until the native Airtable automation slot is attested.
 
-## Trigger/view metadata discrepancy requiring UI attestation
+## 001 / 002 governance trigger correction
 
-The governance rows for Automations 001 and 002 appear cross-wired:
+The governance rows for Automations 001 and 002 were found cross-wired and were corrected on 2026-08-08.
 
-### Row named 001
+### Automation 001
 
-Governance record `recmT8Ye7TIhmmn7X` currently lists:
+Governance record `recmT8Ye7TIhmmn7X` had incorrectly contained Automation 002's Grade Band trigger metadata.
 
-- Trigger view: `Automation - 002 - Needs Grade Band`
-- Conditions: Grade Band empty, Grade present, Athlete present
-
-Those conditions describe the Grade Band assignment stage rather than the named `001 - Find or Create Athlete and Link Enrollment` stage.
-
-### Row named 002
-
-Governance record `recVGJmHDLAFfsEHc` currently lists:
+It now records:
 
 - Trigger view: `Automation - 001 - Needs Athlete Link`
-- Conditions: Athlete empty, first/last/parent email present, match Pending
+- Athlete is empty
+- Athlete First Name present
+- Athlete Last Name present
+- Parent Email present
+- Athlete Match Status Pending
 
-Those conditions describe the athlete-link stage rather than the named `002 - Assign Grade Band` stage.
+This matches the canonical 001 purpose: `Find or Create Athlete and Link Enrollment` (repository v5.2).
 
-This may be governance metadata copied onto the wrong rows, or the native automation names may have been swapped historically. **Do not rewrite the trigger/view metadata by inference.** Attest the native 001 and 002 automation names, trigger views, and `recordId` mappings before correcting these fields.
+### Automation 002
 
-Repository/live functional evidence for v5.2/v8.2 is separate from this governance naming discrepancy.
+Governance record `recVGJmHDLAFfsEHc` had incorrectly contained Automation 001's athlete-link trigger metadata.
+
+It now records:
+
+- Trigger view: `Automation - 002 - Needs Grade Band`
+- Grade Band empty
+- Grade present
+- Athlete present
+
+This matches the canonical 002 purpose: `Assign Grade Band - Initial` (repository v8.2). Repository source additionally recommends the optional `Ready for Grade Band Assignment? = 1` helper where that view uses it.
+
+**Boundary:** these changes corrected the governance documentation table only. They do not prove the native Airtable Automation Editor currently uses those exact view names/conditions. Native trigger/view/input attestation remains a separate SC-058 evidence task.
 
 ## Other rows still carrying stale-version language
 
@@ -161,7 +171,7 @@ Do not mutate Config Challenge Week Count or Program Instance dates by inference
 
 1. Finish #98 live proof, then finalize 041 row as fully proven.
 2. When #100–105 agents land, update only affected rows after repository + PROD installation/proof.
-3. Attest native 001/002 trigger names/views and correct the cross-wired governance metadata.
+3. Attest native 001/002 trigger names/views/input mappings; governance intent is now corrected but native UI proof remains open.
 4. Attest whether native 067 and 068 automation slots exist before creating governance deployment claims.
 5. Retain 043/061/112 historical rows as Off / do-not-recreate rather than deleting the audit trail.
 6. Periodically compare governance `Live` rows to actual native editor versions; do not use the governance table as the deployment source of truth.
