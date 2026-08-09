@@ -2,132 +2,58 @@
 Automation: 033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
-Status: Production Copy
-Last Synced From Airtable: 2026-06-20
+Status: GitHub Source of Truth
+
+Version: v4.2
+Last Updated: 2026-08-09
 
 Purpose:
-To be confirmed from production script.
+- Runs from one Weekly Athlete Summary record.
+- Requires exactly one Enrollment, Week, Grade Band, and Enrollment Program Instance.
+- Uses Program Homework Assignments as the sole homework scheduling authority.
+- Assigns the exact active PHA Homework Library records to Weekly Athlete Summary.Homework.
+- Reconciles deferred Homework Completions for the same Enrollment + Week + assigned homework
+  when Weekly Athlete Summary Link is still empty.
+- Absorbs the former standalone Automation 068 behavior so no additional Airtable slot is needed.
 
-Trigger:
-To be confirmed from Airtable automation.
+Safety:
+- Never reads Homework Library.Week or library Grade Band for scheduling.
+- Exact Program Instance + Week + Grade Band matching only; no wildcards.
+- Fails closed on duplicate active PHA rows for the same Homework Slot.
+- Never creates Homework Library records, Homework Completions, Weekly Athlete Summaries, or XP Events.
+- Existing non-empty Homework Completion -> Weekly Athlete Summary links are never changed.
+- Existing Weekly Athlete Summary.Homework is not overwritten when it conflicts with current PHA truth.
 
-Important Tables:
-To be confirmed from production script.
-
-Important Fields:
-To be confirmed from production script.
-
-Notes:
-GitHub is the source-of-truth copy.
-Airtable is the deployed/running copy.
+Trigger / input:
+- Existing Automation 033 trigger remains unchanged.
+- recordId = triggering Weekly Athlete Summary record ID.
 */
-
-/************************************************************
- * 033 - WEEKLY SUMMARY AND GOAL LOGIC
- * Assign Homework to Weekly Athlete Summary
- *
- * Version: v4.1
- * Date Written: 2026-05-27
- * Last Updated: 2026-08-09
- *
- * PURPOSE
- * - Runs from one Weekly Athlete Summary record.
- * - Requires exactly one Enrollment with exactly one Program Instance.
- * - Reads the linked Week and Grade Band.
- * - Matches active Program Homework Assignments by Enrollment Program Instance +
- *   Week + Grade Band (strict — no PI wildcard).
- * - Writes matched Homework Library records to Weekly Athlete Summary → Homework.
- * - Fails closed when no active PHA exists. Never reads Homework Library.Week.
- *
- * Version 4.1 updates (2026-08-09):
- * - Fail closed when Enrollment or Program Instance is missing/ambiguous.
- * - PHA match requires exact Program Instance (never optional / wildcard).
- * - Fail closed on duplicate active PHA for the same Homework Slot.
- *
- * Version 4.0 updates (2026-08-09):
- * - Homework Library architecture cleanup — PHA is sole scheduling authority.
- * - Removed legacy Homework Library Week + Grade Band fallback path.
- *
- * Version 3.3 updates (2026-08-05):
- * - unloadQuerySafe for PHA selectRecordsAsync cleanup.
- * - matchSourceOut output (program_homework_assignments only).
- *
- * IMPORTANT DESIGN RULES
- * - This automation only assigns homework to the Weekly Athlete Summary.
- * - Match by Program Instance + Week + Grade Band on Program Homework Assignments only.
- * - Do not create Homework Library records here.
- * - Do not write to formula, rollup, lookup, or other read-only fields.
- * - Do not use Homework Library.Week or Grade Band for scheduling.
- *
- * FOLDER
- * - 03 - Weekly Summary and Goal Logic
- *
- * AUTOMATION NAME
- * - 033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary
- *
- * TRIGGER TABLE
- * - Weekly Athlete Summary
- *
- * TRIGGER TYPE
- * - When record enters view
- *
- * RECOMMENDED TRIGGER VIEW CONDITIONS
- * - Week is not empty
- * - Grade Band is not empty
- * - Homework is empty
- *
- * REQUIRED AUTOMATION INPUT
- * - recordId = Airtable record ID from the triggering Weekly Athlete Summary record
- *
- * TABLES USED
- * - Weekly Athlete Summary
- * - Homework Library
- * - Program Homework Assignments
- *
- * OUTPUTS
- * - ok
- * - weeklySummaryId
- * - weekId
- * - gradeBandId
- * - matchedCountOut
- * - homeworkIdsOut
- * - homeworkTitlesOut
- * - updatedOut
- * - actionTaken
- * - statusOut
- * - errorOut
- * - debugStep
- * - matchSourceOut
- ************************************************************/
 
 // @ts-nocheck
 
-/* =========================================================
-   SECTION 1: CONFIG
-========================================================= */
+const SCRIPT = {
+  scriptName: "033 - Weekly Summary and Goal Logic - Assign Homework + Reconcile Completions",
+  version: "v4.2",
+  versionDate: "2026-08-09",
+};
 
 const CONFIG = {
-  scriptName: "033 - Weekly Summary and Goal Logic - Assign Homework to Weekly Athlete Summary",
-  version: "v4.1",
-
   tables: {
     weeklySummary: "Weekly Athlete Summary",
-    homeworkLibrary: "Homework Library",
-    programHomeworkAssignments: "Program Homework Assignments",
     enrollments: "Enrollments",
+    pha: "Program Homework Assignments",
+    homeworkLibrary: "Homework Library",
+    homeworkCompletions: "Homework Completions",
   },
-
   weeklySummary: {
     week: "Week",
     gradeBand: "Grade Band",
     homework: "Homework",
     enrollment: "Enrollment",
   },
-
   enrollments: {
     programInstance: "Program Instance",
   },
-
   pha: {
     homeworkAssignment: "Homework Assignment",
     programInstance: "Program Instance",
@@ -136,157 +62,39 @@ const CONFIG = {
     slot: "Homework Slot",
     active: "Active?",
   },
-
   homeworkLibrary: {
     assignmentFullName: "Assignment Full Name",
     assignmentTitle: "Assignment Title",
   },
-
-  statuses: {
-    success: "success",
-    skipped: "skipped",
-    error: "error",
-  },
-
-  actions: {
-    assignedHomework: "assigned_homework",
-    assignedHomeworkFromPha: "assigned_homework_from_pha",
-    alreadyAssigned: "already_assigned",
-    skippedNoMatches: "skipped_no_matching_homework",
-  },
-
-  debug: {
-    logToConsole: true,
-    requireActive: true,
-    requirePublished: true,
+  homeworkCompletions: {
+    enrollment: "Enrollment",
+    week: "Week",
+    homework: "Homework",
+    weeklySummary: "Weekly Athlete Summary Link",
   },
 };
 
-/* =========================================================
-   SECTION 2: INPUTS
-========================================================= */
-
 const cfg = input.config();
 const recordId = String(cfg.recordId || "").trim();
-
-if (!recordId) {
-  throw new Error("Missing required input: recordId");
-}
-
-/* =========================================================
-   SECTION 3: TABLE REFERENCES
-========================================================= */
+if (!recordId) throw new Error("Missing required input: recordId");
 
 const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-
-let homeworkLibraryTable = null;
-try {
-  homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
-} catch {
-  homeworkLibraryTable = null;
-}
-
-const phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
-
-let enrollmentsTable = null;
-try {
-  enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-} catch {
-  enrollmentsTable = null;
-}
-
-/* =========================================================
-   SECTION 4: HELPER FUNCTIONS
-========================================================= */
-
-function unloadQuerySafe(queryResult) {
-  if (typeof queryResult?.unloadData === "function") {
-    try {
-      queryResult.unloadData();
-    } catch (error) {
-      console.log(
-        "Query unloadData skipped/failed (non-fatal)",
-        JSON.stringify({
-          error: error instanceof Error ? error.message : String(error),
-        })
-      );
-    }
-  }
-}
-
-function log(message, data = null) {
-  if (!CONFIG.debug.logToConsole) return;
-
-  if (data === null || data === undefined) {
-    console.log(message);
-  } else {
-    console.log(message, JSON.stringify(data, null, 2));
-  }
-}
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const phaTable = base.getTable(CONFIG.tables.pha);
+const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+const homeworkCompletionsTable = base.getTable(CONFIG.tables.homeworkCompletions);
 
 function setOutputSafe(key, value) {
-  try {
-    output.set(key, value);
-  } catch {
-    // Ignore output mapping errors.
-  }
+  try { output.set(key, value); } catch {}
 }
 
 function fieldExists(table, fieldName) {
-  if (!table || !fieldName) return false;
-
-  try {
-    table.getField(fieldName);
-    return true;
-  } catch {
-    return false;
-  }
+  try { table.getField(fieldName); return true; } catch { return false; }
 }
 
-function getFieldSafe(table, fieldName) {
-  if (!table || !fieldName) return null;
-
-  try {
-    return table.getField(fieldName);
-  } catch {
-    return null;
-  }
-}
-
-function isWritableField(table, fieldName) {
-  const field = getFieldSafe(table, fieldName);
-  if (!field) return false;
-
-  const nonWritableTypes = new Set([
-    "formula",
-    "rollup",
-    "count",
-    "lookup",
-    "multipleLookupValues",
-    "createdTime",
-    "lastModifiedTime",
-    "createdBy",
-    "lastModifiedBy",
-    "autoNumber",
-    "button",
-    "aiText",
-    "externalSyncSource",
-  ]);
-
-  return !nonWritableTypes.has(field.type);
-}
-
-function requireField(table, fieldName, label) {
+function requireField(table, fieldName) {
   if (!fieldExists(table, fieldName)) {
-    throw new Error(`Missing required field: ${label} (${table.name} -> ${fieldName})`);
-  }
-}
-
-function requireWritableField(table, fieldName, label) {
-  requireField(table, fieldName, label);
-
-  if (!isWritableField(table, fieldName)) {
-    throw new Error(`Required field is not writable: ${label} (${table.name} -> ${fieldName})`);
+    throw new Error(`Missing required field: ${table.name}.${fieldName}`);
   }
 }
 
@@ -300,100 +108,45 @@ function getText(record, table, fieldName) {
   return String(record.getCellValueAsString(fieldName) || "").trim();
 }
 
-function getNumber(record, table, fieldName, fallback = 999999) {
-  const raw = getRaw(record, table, fieldName);
+function linkedIds(record, table, fieldName) {
+  const value = getRaw(record, table, fieldName);
+  return Array.isArray(value) ? value.map(v => v?.id).filter(Boolean) : [];
+}
 
-  if (typeof raw === "number" && Number.isFinite(raw)) {
-    return raw;
+function oneLinkedId(record, table, fieldName, label) {
+  const ids = linkedIds(record, table, fieldName);
+  if (ids.length !== 1) {
+    throw new Error(`${label} must have exactly one linked record; found ${ids.length}.`);
   }
-
-  const text = String(raw ?? "").replace(/,/g, "").trim();
-  if (!text) return fallback;
-
-  const parsed = Number(text);
-  return Number.isFinite(parsed) ? parsed : fallback;
+  return ids[0];
 }
 
-function getBooleanish(record, table, fieldName) {
+function booleanish(record, table, fieldName) {
   const raw = getRaw(record, table, fieldName);
-
-  if (raw === true) return true;
-  if (raw === false) return false;
-  if (raw === 1) return true;
-  if (raw === 0) return false;
-
-  const text = String(raw ?? "").trim().toLowerCase();
-  return ["1", "true", "yes", "checked", "active"].includes(text);
+  if (raw === true || raw === 1) return true;
+  if (raw === false || raw === 0 || raw == null) return false;
+  const text = String(raw).trim().toLowerCase();
+  return ["true", "yes", "checked", "active", "1"].includes(text);
 }
 
-function getLinkedRecordIds(record, table, fieldName) {
-  const raw = getRaw(record, table, fieldName);
-
-  if (!Array.isArray(raw)) return [];
-
-  return raw
-    .map(item => item?.id)
-    .filter(Boolean);
+function slotName(record) {
+  const raw = getRaw(record, phaTable, CONFIG.pha.slot);
+  if (raw && typeof raw === "object" && raw.name) return String(raw.name).trim();
+  return getText(record, phaTable, CONFIG.pha.slot);
 }
 
-function getFirstLinkedRecordId(record, table, fieldName) {
-  const ids = getLinkedRecordIds(record, table, fieldName);
-  return ids[0] || "";
+function sameSet(a, b) {
+  const aa = [...new Set(a)].sort();
+  const bb = [...new Set(b)].sort();
+  return aa.length === bb.length && aa.every((v, i) => v === bb[i]);
 }
 
 function linkedCell(ids) {
-  return [...new Set((ids || []).filter(Boolean))].map(id => ({ id }));
+  return [...new Set(ids)].map(id => ({ id }));
 }
 
-async function updateRecordSafe(table, targetRecordId, updates) {
-  const safeUpdates = {};
-
-  for (const [fieldName, value] of Object.entries(updates || {})) {
-    if (!fieldExists(table, fieldName)) {
-      log(`Skipped missing field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (!isWritableField(table, fieldName)) {
-      log(`Skipped non-writable field: ${table.name}.${fieldName}`);
-      continue;
-    }
-
-    if (value === undefined || value === null) {
-      continue;
-    }
-
-    safeUpdates[fieldName] = value;
-  }
-
-  if (Object.keys(safeUpdates).length === 0) {
-    return [];
-  }
-
-  await table.updateRecordAsync(targetRecordId, safeUpdates);
-  return Object.keys(safeUpdates);
-}
-
-function getPhaSlotName(phaRecord) {
-  const raw = getRaw(phaRecord, phaTable, CONFIG.pha.slot);
-  if (raw && typeof raw === "object" && raw.name) {
-    return String(raw.name).trim();
-  }
-  return getText(phaRecord, phaTable, CONFIG.pha.slot);
-}
-
-function buildHomeworkLibraryFieldsToLoad() {
-  if (!homeworkLibraryTable) return [];
-
-  return [
-    CONFIG.homeworkLibrary.assignmentFullName,
-    CONFIG.homeworkLibrary.assignmentTitle,
-  ].filter(fieldName => fieldExists(homeworkLibraryTable, fieldName));
-}
-
-function libraryDisplayNameFromRecord(record) {
-  if (!record || !homeworkLibraryTable) return "";
-
+function libraryDisplayName(record) {
+  if (!record) return "";
   return (
     getText(record, homeworkLibraryTable, CONFIG.homeworkLibrary.assignmentFullName) ||
     getText(record, homeworkLibraryTable, CONFIG.homeworkLibrary.assignmentTitle) ||
@@ -402,432 +155,235 @@ function libraryDisplayNameFromRecord(record) {
   );
 }
 
-function setFinalOutputs({
-  ok,
-  weeklySummaryId,
-  weekId,
-  gradeBandId,
-  matchedCountOut,
-  homeworkIdsOut,
-  homeworkTitlesOut,
-  updatedOut,
-  actionTaken,
-  statusOut,
-  errorOut,
-  debugStep,
-  matchSourceOut = "",
-}) {
-  setOutputSafe("ok", ok);
-  setOutputSafe("weeklySummaryId", weeklySummaryId || recordId);
-  setOutputSafe("weekId", weekId || "");
-  setOutputSafe("gradeBandId", gradeBandId || "");
-  setOutputSafe("matchedCountOut", matchedCountOut || 0);
-  setOutputSafe("homeworkIdsOut", homeworkIdsOut || "");
-  setOutputSafe("homeworkTitlesOut", homeworkTitlesOut || "");
-  setOutputSafe("updatedOut", Boolean(updatedOut));
-  setOutputSafe("actionTaken", actionTaken || "");
-  setOutputSafe("statusOut", statusOut || "");
-  setOutputSafe("errorOut", errorOut || "");
-  setOutputSafe("debugStep", debugStep || "");
-  setOutputSafe("matchSourceOut", matchSourceOut || "");
+for (const [table, fields] of [
+  [weeklySummaryTable, Object.values(CONFIG.weeklySummary)],
+  [enrollmentsTable, Object.values(CONFIG.enrollments)],
+  [phaTable, Object.values(CONFIG.pha)],
+  [homeworkCompletionsTable, Object.values(CONFIG.homeworkCompletions)],
+]) {
+  for (const field of fields) requireField(table, field);
 }
-
-/* =========================================================
-   SECTION 5: FIELD VALIDATION
-========================================================= */
-
-requireField(
-  weeklySummaryTable,
-  CONFIG.weeklySummary.week,
-  "Weekly Athlete Summary -> Week"
-);
-
-requireField(
-  weeklySummaryTable,
-  CONFIG.weeklySummary.gradeBand,
-  "Weekly Athlete Summary -> Grade Band"
-);
-
-requireWritableField(
-  weeklySummaryTable,
-  CONFIG.weeklySummary.homework,
-  "Weekly Athlete Summary -> Homework"
-);
-
-requireField(
-  weeklySummaryTable,
-  CONFIG.weeklySummary.enrollment,
-  "Weekly Athlete Summary -> Enrollment"
-);
-
-if (!enrollmentsTable) {
-  throw new Error("Enrollments table is required for Program Instance resolution.");
-}
-
-requireField(
-  enrollmentsTable,
-  CONFIG.enrollments.programInstance,
-  "Enrollments -> Program Instance"
-);
-
-requireField(
-  phaTable,
-  CONFIG.pha.programInstance,
-  "Program Homework Assignments -> Program Instance"
-);
-
-requireField(
-  phaTable,
-  CONFIG.pha.homeworkAssignment,
-  "Program Homework Assignments -> Homework Assignment"
-);
-
-requireField(phaTable, CONFIG.pha.week, "Program Homework Assignments -> Week");
-
-requireField(phaTable, CONFIG.pha.gradeBand, "Program Homework Assignments -> Grade Band");
-
-/* =========================================================
-   SECTION 6: MAIN
-========================================================= */
 
 async function main() {
-  let debugStep = "Start";
-
+  let debugStep = "start";
   let weekId = "";
   let gradeBandId = "";
+  let enrollmentId = "";
+  let programInstanceId = "";
   let matchedHomeworkIds = [];
-  let homeworkTitles = [];
-  let actionTaken = "";
-  let updatedFields = [];
+  let reconciledCompletionIds = [];
+  let homeworkWritten = false;
 
   try {
-    debugStep = "1 - Validate recordId";
+    if (!recordId.startsWith("rec")) throw new Error(`Invalid recordId: ${recordId}`);
+
+    debugStep = "load_summary";
     setOutputSafe("debugStep", debugStep);
-
-    if (!recordId.startsWith("rec")) {
-      throw new Error(`Invalid Weekly Athlete Summary recordId input: ${recordId}`);
-    }
-
-    debugStep = "2 - Load Weekly Athlete Summary";
-    setOutputSafe("debugStep", debugStep);
-
-    const summaryRecord = await weeklySummaryTable.selectRecordAsync(recordId);
-
-    if (!summaryRecord) {
-      setFinalOutputs({
-        ok: false,
-        weeklySummaryId: recordId,
-        actionTaken: "summary_not_found",
-        statusOut: CONFIG.statuses.error,
-        errorOut: `Weekly Athlete Summary record not found: ${recordId}`,
-        debugStep,
-      });
-      return;
-    }
-
-    debugStep = "3 - Read Summary Links";
-    setOutputSafe("debugStep", debugStep);
-
-    weekId = getFirstLinkedRecordId(
-      summaryRecord,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.week
-    );
-
-    gradeBandId = getFirstLinkedRecordId(
-      summaryRecord,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.gradeBand
-    );
-
-    const existingHomeworkIds = getLinkedRecordIds(
-      summaryRecord,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.homework
-    );
-
-    log("033 input", {
-      recordId,
-      weekId,
-      gradeBandId,
-      existingHomeworkIds,
+    const summary = await weeklySummaryTable.selectRecordAsync(recordId, {
+      fields: Object.values(CONFIG.weeklySummary),
     });
+    if (!summary) throw new Error(`Weekly Athlete Summary not found: ${recordId}`);
 
-    debugStep = "4 - Validate Summary State";
-    setOutputSafe("debugStep", debugStep);
-
-    if (existingHomeworkIds.length > 0) {
-      actionTaken = CONFIG.actions.alreadyAssigned;
-
-      setFinalOutputs({
-        ok: true,
-        weeklySummaryId: recordId,
-        weekId,
-        gradeBandId,
-        matchedCountOut: existingHomeworkIds.length,
-        homeworkIdsOut: existingHomeworkIds.join(", "),
-        homeworkTitlesOut: "",
-        updatedOut: false,
-        actionTaken,
-        statusOut: CONFIG.statuses.skipped,
-        errorOut: "",
-        debugStep: "Done - Already assigned",
-      });
-
-      return;
-    }
-
-    if (!weekId) {
-      throw new Error("Weekly Athlete Summary is missing Week.");
-    }
-
-    if (!gradeBandId) {
-      throw new Error("Weekly Athlete Summary is missing Grade Band.");
-    }
-
-    debugStep = "4b - Resolve Enrollment Program Instance";
-    setOutputSafe("debugStep", debugStep);
-
-    const enrollmentIds = getLinkedRecordIds(
-      summaryRecord,
+    enrollmentId = oneLinkedId(
+      summary,
       weeklySummaryTable,
-      CONFIG.weeklySummary.enrollment
+      CONFIG.weeklySummary.enrollment,
+      "Weekly Athlete Summary.Enrollment"
+    );
+    weekId = oneLinkedId(
+      summary,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.week,
+      "Weekly Athlete Summary.Week"
+    );
+    gradeBandId = oneLinkedId(
+      summary,
+      weeklySummaryTable,
+      CONFIG.weeklySummary.gradeBand,
+      "Weekly Athlete Summary.Grade Band"
     );
 
-    if (enrollmentIds.length !== 1) {
-      throw new Error(
-        `Weekly Athlete Summary must have exactly one Enrollment; found ${enrollmentIds.length}.`
-      );
-    }
-
-    const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentIds[0], {
-      fields: [CONFIG.enrollments.programInstance].filter(fieldName =>
-        fieldExists(enrollmentsTable, fieldName)
-      ),
+    debugStep = "resolve_program_instance";
+    setOutputSafe("debugStep", debugStep);
+    const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId, {
+      fields: [CONFIG.enrollments.programInstance],
     });
-
-    if (!enrollmentRecord) {
-      throw new Error(`Enrollment not found: ${enrollmentIds[0]}`);
-    }
-
-    const programInstanceId = getFirstLinkedRecordId(
-      enrollmentRecord,
+    if (!enrollment) throw new Error(`Enrollment not found: ${enrollmentId}`);
+    programInstanceId = oneLinkedId(
+      enrollment,
       enrollmentsTable,
-      CONFIG.enrollments.programInstance
+      CONFIG.enrollments.programInstance,
+      "Enrollment.Program Instance"
     );
 
-    if (!programInstanceId) {
-      throw new Error(
-        `Enrollment ${enrollmentIds[0]} is missing Program Instance. PHA matching requires exact PI.`
-      );
-    }
-
-    let matchSource = "program_homework_assignments";
-
-    debugStep = "5 - Load Program Homework Assignments";
+    debugStep = "resolve_exact_pha";
     setOutputSafe("debugStep", debugStep);
+    const phaQuery = await phaTable.selectRecordsAsync({
+      fields: Object.values(CONFIG.pha),
+    });
 
-    const phaFields = [
-      CONFIG.pha.homeworkAssignment,
-      CONFIG.pha.programInstance,
-      CONFIG.pha.week,
-      CONFIG.pha.gradeBand,
-      CONFIG.pha.slot,
-      CONFIG.pha.active,
-    ].filter(name => fieldExists(phaTable, name));
-
-    const phaQuery = await phaTable.selectRecordsAsync({ fields: phaFields });
-
-    debugStep = "6 - Find Matching Homework via PHA";
-    setOutputSafe("debugStep", debugStep);
-
-    const matchingPha = phaQuery.records.filter(phaRecord => {
-      const phaWeekId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.week);
-      const phaGradeBandId = getFirstLinkedRecordId(phaRecord, phaTable, CONFIG.pha.gradeBand);
-      const phaProgramInstanceId = getFirstLinkedRecordId(
-        phaRecord,
-        phaTable,
-        CONFIG.pha.programInstance
-      );
-      const libraryIds = getLinkedRecordIds(
-        phaRecord,
-        phaTable,
-        CONFIG.pha.homeworkAssignment
-      );
-
-      if (phaWeekId !== weekId) return false;
-      if (phaGradeBandId !== gradeBandId) return false;
-      if (phaProgramInstanceId !== programInstanceId) return false;
-      if (libraryIds.length !== 1) return false;
-
-      if (fieldExists(phaTable, CONFIG.pha.active)) {
-        if (!getBooleanish(phaRecord, phaTable, CONFIG.pha.active)) return false;
-      }
-
+    const matches = phaQuery.records.filter(record => {
+      const hwIds = linkedIds(record, phaTable, CONFIG.pha.homeworkAssignment);
+      const piIds = linkedIds(record, phaTable, CONFIG.pha.programInstance);
+      const weekIds = linkedIds(record, phaTable, CONFIG.pha.week);
+      const gbIds = linkedIds(record, phaTable, CONFIG.pha.gradeBand);
+      if (hwIds.length !== 1 || piIds.length !== 1 || weekIds.length !== 1 || gbIds.length !== 1) return false;
+      if (piIds[0] !== programInstanceId) return false;
+      if (weekIds[0] !== weekId) return false;
+      if (gbIds[0] !== gradeBandId) return false;
+      if (!booleanish(record, phaTable, CONFIG.pha.active)) return false;
       return true;
     });
 
-    const slotCounts = new Map();
-    for (const phaRecord of matchingPha) {
-      const slotName = getPhaSlotName(phaRecord) || "(blank)";
-      slotCounts.set(slotName, (slotCounts.get(slotName) || 0) + 1);
+    const countsBySlot = new Map();
+    for (const record of matches) {
+      const slot = slotName(record) || "(blank)";
+      countsBySlot.set(slot, (countsBySlot.get(slot) || 0) + 1);
     }
-
-    const duplicateSlots = [...slotCounts.entries()].filter(([, count]) => count > 1);
-    if (duplicateSlots.length > 0) {
+    const duplicateSlots = [...countsBySlot.entries()].filter(([, count]) => count > 1);
+    if (duplicateSlots.length) {
       throw new Error(
-        `Multiple active Program Homework Assignments for the same slot: ${duplicateSlots
+        `Multiple active PHA rows for same slot: ${duplicateSlots
           .map(([slot, count]) => `${slot}(${count})`)
           .join(", ")}`
       );
     }
 
-    matchingPha.sort((a, b) => {
-      const aSlot = getPhaSlotName(a);
-      const bSlot = getPhaSlotName(b);
+    matches.sort((a, b) => {
       const rank = s => (s === "HW1" ? 1 : s === "HW2" ? 2 : 9);
-      if (rank(aSlot) !== rank(bSlot)) return rank(aSlot) - rank(bSlot);
+      const ar = rank(slotName(a));
+      const br = rank(slotName(b));
+      if (ar !== br) return ar - br;
       return a.id.localeCompare(b.id);
     });
 
-    const seenLibrary = new Set();
-    matchedHomeworkIds = [];
-    homeworkTitles = [];
-    for (const phaRecord of matchingPha) {
-      const libraryId = getFirstLinkedRecordId(
-        phaRecord,
-        phaTable,
-        CONFIG.pha.homeworkAssignment
-      );
-      if (!libraryId || seenLibrary.has(libraryId)) continue;
-      seenLibrary.add(libraryId);
-      matchedHomeworkIds.push(libraryId);
-      const slotName = getPhaSlotName(phaRecord);
-      homeworkTitles.push(slotName ? `${slotName}:${libraryId}` : libraryId);
-    }
-
-    unloadQuerySafe(phaQuery);
-
-    if (homeworkLibraryTable && matchedHomeworkIds.length > 0) {
-      const libraryQuery = await homeworkLibraryTable.selectRecordsAsync({
-        fields: buildHomeworkLibraryFieldsToLoad(),
-      });
-      const libraryById = new Map(libraryQuery.records.map(record => [record.id, record]));
-      homeworkTitles = matchedHomeworkIds.map((libraryId, index) => {
-        const slotPrefix = homeworkTitles[index]?.includes(":")
-          ? `${homeworkTitles[index].split(":")[0]}: `
-          : "";
-        const libraryRecord = libraryById.get(libraryId);
-        const displayName = libraryDisplayNameFromRecord(libraryRecord) || libraryId;
-        return slotPrefix ? `${slotPrefix}${displayName}` : displayName;
-      });
-      unloadQuerySafe(libraryQuery);
-    }
+    matchedHomeworkIds = matches.map(record =>
+      oneLinkedId(record, phaTable, CONFIG.pha.homeworkAssignment, `PHA ${record.id}.Homework Assignment`)
+    );
 
     if (matchedHomeworkIds.length === 0) {
-      actionTaken = CONFIG.actions.skippedNoMatches;
-
-      setFinalOutputs({
-        ok: true,
-        weeklySummaryId: recordId,
-        weekId,
-        gradeBandId,
-        matchedCountOut: 0,
-        homeworkIdsOut: "",
-        homeworkTitlesOut: "",
-        updatedOut: false,
-        actionTaken,
-        statusOut: CONFIG.statuses.skipped,
-        errorOut:
-          "No active Program Homework Assignments for this Program Instance + Week + Grade Band.",
-        debugStep,
-      });
-
-      log("033 skipped: no matching homework", {
-        recordId,
-        weekId,
-        gradeBandId,
-        programInstanceId,
-        matchSource,
-      });
-
+      setOutputSafe("ok", true);
+      setOutputSafe("statusOut", "skipped");
+      setOutputSafe("actionTaken", "skipped_no_matching_homework");
+      setOutputSafe("errorOut", "No active exact PHA rows for Program Instance + Week + Grade Band.");
+      setOutputSafe("matchedCountOut", 0);
+      setOutputSafe("reconciledCompletionCountOut", 0);
+      setOutputSafe("debugStep", "done_no_pha");
       return;
     }
 
-    debugStep = "7 - Write Homework Links";
+    debugStep = "write_or_validate_summary_homework";
     setOutputSafe("debugStep", debugStep);
+    const existingHomeworkIds = linkedIds(summary, weeklySummaryTable, CONFIG.weeklySummary.homework);
+    if (existingHomeworkIds.length === 0) {
+      await weeklySummaryTable.updateRecordAsync(recordId, {
+        [CONFIG.weeklySummary.homework]: linkedCell(matchedHomeworkIds),
+      });
+      homeworkWritten = true;
+    } else if (!sameSet(existingHomeworkIds, matchedHomeworkIds)) {
+      throw new Error(
+        `Weekly Athlete Summary.Homework conflicts with current PHA truth. ` +
+        `Existing=[${existingHomeworkIds.join(",")}], PHA=[${matchedHomeworkIds.join(",")}].`
+      );
+    }
 
-    updatedFields = await updateRecordSafe(weeklySummaryTable, recordId, {
-      [CONFIG.weeklySummary.homework]: linkedCell(matchedHomeworkIds),
+    debugStep = "reconcile_deferred_homework_completions";
+    setOutputSafe("debugStep", debugStep);
+    const completionQuery = await homeworkCompletionsTable.selectRecordsAsync({
+      fields: Object.values(CONFIG.homeworkCompletions),
+    });
+    const allowedHomework = new Set(matchedHomeworkIds);
+
+    const deferred = completionQuery.records.filter(completion => {
+      const enrollmentIds = linkedIds(completion, homeworkCompletionsTable, CONFIG.homeworkCompletions.enrollment);
+      const weekIds = linkedIds(completion, homeworkCompletionsTable, CONFIG.homeworkCompletions.week);
+      const homeworkIds = linkedIds(completion, homeworkCompletionsTable, CONFIG.homeworkCompletions.homework);
+      const summaryIds = linkedIds(completion, homeworkCompletionsTable, CONFIG.homeworkCompletions.weeklySummary);
+      return (
+        enrollmentIds.length === 1 && enrollmentIds[0] === enrollmentId &&
+        weekIds.length === 1 && weekIds[0] === weekId &&
+        homeworkIds.length === 1 && allowedHomework.has(homeworkIds[0]) &&
+        summaryIds.length === 0
+      );
     });
 
-    actionTaken = CONFIG.actions.assignedHomeworkFromPha;
+    for (const completion of deferred) {
+      await homeworkCompletionsTable.updateRecordAsync(completion.id, {
+        [CONFIG.homeworkCompletions.weeklySummary]: [{ id: recordId }],
+      });
+      reconciledCompletionIds.push(completion.id);
+    }
 
-    debugStep = "8 - Outputs";
+    debugStep = "load_titles";
     setOutputSafe("debugStep", debugStep);
+    const libraryFields = [
+      CONFIG.homeworkLibrary.assignmentFullName,
+      CONFIG.homeworkLibrary.assignmentTitle,
+    ].filter(name => fieldExists(homeworkLibraryTable, name));
+    const libraryQuery = await homeworkLibraryTable.selectRecordsAsync({ fields: libraryFields });
+    const libraryById = new Map(libraryQuery.records.map(r => [r.id, r]));
+    const titles = matchedHomeworkIds.map(id => libraryDisplayName(libraryById.get(id)) || id);
 
-    setFinalOutputs({
-      ok: true,
-      weeklySummaryId: recordId,
-      weekId,
-      gradeBandId,
-      matchedCountOut: matchedHomeworkIds.length,
-      homeworkIdsOut: matchedHomeworkIds.join(", "),
-      homeworkTitlesOut: homeworkTitles.join(" | "),
-      updatedOut: updatedFields.length > 0,
-      actionTaken,
-      statusOut: CONFIG.statuses.success,
-      errorOut: "",
-      debugStep,
-      matchSourceOut: matchSource,
-    });
+    setOutputSafe("ok", true);
+    setOutputSafe("weeklySummaryId", recordId);
+    setOutputSafe("weekId", weekId);
+    setOutputSafe("gradeBandId", gradeBandId);
+    setOutputSafe("enrollmentIdOut", enrollmentId);
+    setOutputSafe("programInstanceIdOut", programInstanceId);
+    setOutputSafe("matchedCountOut", matchedHomeworkIds.length);
+    setOutputSafe("homeworkIdsOut", matchedHomeworkIds.join(", "));
+    setOutputSafe("homeworkTitlesOut", titles.join(" | "));
+    setOutputSafe("reconciledCompletionCountOut", reconciledCompletionIds.length);
+    setOutputSafe("reconciledCompletionIdsOut", reconciledCompletionIds.join(", "));
+    setOutputSafe("updatedOut", homeworkWritten || reconciledCompletionIds.length > 0);
+    setOutputSafe(
+      "actionTaken",
+      homeworkWritten
+        ? "assigned_homework_and_reconciled"
+        : reconciledCompletionIds.length
+          ? "reconciled_deferred_completions"
+          : "already_aligned"
+    );
+    setOutputSafe("statusOut", "success");
+    setOutputSafe("errorOut", "");
+    setOutputSafe("debugStep", "complete");
 
-    log("033 completed", {
-      scriptName: CONFIG.scriptName,
-      version: CONFIG.version,
+    console.log(JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
       weeklySummaryId: recordId,
-      weekId,
-      gradeBandId,
+      enrollmentId,
       programInstanceId,
-      matchSource,
-      matchedCountOut: matchedHomeworkIds.length,
-      homeworkIdsOut: matchedHomeworkIds,
-      homeworkTitlesOut: homeworkTitles,
-      updatedFields,
-      actionTaken,
-    });
+      weekId,
+      gradeBandId,
+      matchedHomeworkIds,
+      homeworkWritten,
+      reconciledCompletionIds,
+      xpEventsCreated: 0,
+    }));
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-
-    setFinalOutputs({
-      ok: false,
-      weeklySummaryId: recordId,
-      weekId,
-      gradeBandId,
-      matchedCountOut: matchedHomeworkIds.length,
-      homeworkIdsOut: matchedHomeworkIds.join(", "),
-      homeworkTitlesOut: homeworkTitles.join(" | "),
-      updatedOut: updatedFields.length > 0,
-      actionTaken: actionTaken || "error",
-      statusOut: CONFIG.statuses.error,
-      errorOut: message,
-      debugStep: `FAILED AT: ${debugStep}`,
-    });
-
-    log("033 failed", {
-      scriptName: CONFIG.scriptName,
-      version: CONFIG.version,
-      weeklySummaryId: recordId,
+    setOutputSafe("ok", false);
+    setOutputSafe("weeklySummaryId", recordId);
+    setOutputSafe("weekId", weekId);
+    setOutputSafe("gradeBandId", gradeBandId);
+    setOutputSafe("enrollmentIdOut", enrollmentId);
+    setOutputSafe("programInstanceIdOut", programInstanceId);
+    setOutputSafe("matchedCountOut", matchedHomeworkIds.length);
+    setOutputSafe("reconciledCompletionCountOut", reconciledCompletionIds.length);
+    setOutputSafe("statusOut", "error");
+    setOutputSafe("actionTaken", "error");
+    setOutputSafe("errorOut", message);
+    setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
+    console.log(JSON.stringify({
+      automation: SCRIPT.scriptName,
+      version: SCRIPT.version,
+      statusOut: "error",
       debugStep,
-      error: message,
-    });
-
+      errorOut: message,
+    }));
     throw error;
   }
 }
-
-/* =========================================================
-   SECTION 7: RUN
-========================================================= */
 
 await main();
