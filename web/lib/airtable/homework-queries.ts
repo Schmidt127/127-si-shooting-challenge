@@ -17,12 +17,12 @@ const TABLES = {
   weeks: "Weeks",
 } as const;
 
+// Homework Library is reusable content only. Week/Grade Band are intentionally absent.
 const CURRICULUM_CATALOG_FIELDS = [
   "Assignment Full Name",
   "Assignment Full Name - Display",
   "Assignment Title",
   "Brief Description - Display",
-  "Week",
   "Homework Number",
   "Assignment Number",
   "Order",
@@ -43,9 +43,9 @@ const CURRICULUM_DETAIL_FIELDS = [
   "Docs",
   "URL",
   "URL Additional",
-  "Grade Band",
 ] as const;
 
+// Grade Band may exist on PHA as eligibility metadata but is not required for schedule identity.
 const PHA_FIELDS = [
   "Homework Assignment",
   "Program Instance",
@@ -61,9 +61,7 @@ const WEEK_FIELDS = ["Week Name", "Start Date"] as const;
 
 type LinkedRecord = { id?: unknown };
 
-type ConfigFields = {
-  "Active School Year"?: unknown;
-};
+type ConfigFields = { "Active School Year"?: unknown };
 
 type ProgramInstanceFields = {
   "Name - Program Instance"?: unknown;
@@ -136,25 +134,16 @@ async function getActiveSchoolYear(): Promise<string> {
     fields: ["Active School Year"],
     revalidateSeconds: REVALIDATE_SECONDS,
   });
-
-  const years = response.records
-    .map((record) => asString(record.fields["Active School Year"]))
-    .filter(Boolean);
-  const uniqueYears = [...new Set(years)];
-
+  const uniqueYears = [...new Set(response.records.map(r => asString(r.fields["Active School Year"])).filter(Boolean))];
   if (uniqueYears.length !== 1) {
-    throw new Error(
-      `Public homework requires exactly one active Config school year; found ${uniqueYears.length}.`,
-    );
+    throw new Error(`Public homework requires exactly one active Config school year; found ${uniqueYears.length}.`);
   }
-
   return uniqueYears[0];
 }
 
 async function getCurrentProgramInstance(): Promise<{ id: string; name: string; schoolYear: string }> {
   const schoolYear = await getActiveSchoolYear();
   const expectedName = `Shooting Challenge | ${schoolYear}`;
-
   const response = await listAirtableRecords<ProgramInstanceFields>({
     tableName: TABLES.programInstances,
     maxRecords: 10,
@@ -162,25 +151,17 @@ async function getCurrentProgramInstance(): Promise<{ id: string; name: string; 
     filterByFormula: `AND({Name - Program Instance}='${escapeAirtableString(expectedName)}',{School Year - Linked}='${escapeAirtableString(schoolYear)}')`,
     revalidateSeconds: REVALIDATE_SECONDS,
   });
-
   if (response.records.length !== 1) {
-    throw new Error(
-      `Public homework requires exactly one current Shooting Challenge Program Instance for ${schoolYear}; found ${response.records.length}.`,
-    );
+    throw new Error(`Public homework requires exactly one current Shooting Challenge Program Instance for ${schoolYear}; found ${response.records.length}.`);
   }
-
   const record = response.records[0];
   const name = asString(record.fields["Name - Program Instance"]);
   if (!name) throw new Error("Current Shooting Challenge Program Instance has no name.");
-
   return { id: record.id, name, schoolYear };
 }
 
-async function listCurrentPhaRecords(): Promise<
-  Array<{ id: string; fields: ProgramHomeworkAssignmentFields }>
-> {
+async function listCurrentPhaRecords(): Promise<Array<{ id: string; fields: ProgramHomeworkAssignmentFields }>> {
   const programInstance = await getCurrentProgramInstance();
-
   const response = await listAirtableRecords<ProgramHomeworkAssignmentFields>({
     tableName: TABLES.programHomeworkAssignments,
     maxRecords: 500,
@@ -188,7 +169,6 @@ async function listCurrentPhaRecords(): Promise<
     filterByFormula: `AND({Active?}=1,FIND('${escapeAirtableString(programInstance.id)}',ARRAYJOIN({Program Instance RID})))`,
     revalidateSeconds: REVALIDATE_SECONDS,
   });
-
   return response.records;
 }
 
@@ -196,17 +176,25 @@ function buildScheduledPairs(
   phaRecords: Array<{ id: string; fields: ProgramHomeworkAssignmentFields }>,
 ): Array<{ homeworkId: string; weekId: string }> {
   const pairs = new Map<string, { homeworkId: string; weekId: string }>();
+  const slots = new Map<string, string>();
 
   for (const pha of phaRecords) {
     const homeworkId = firstLinkedId(pha.fields["Homework Assignment"]);
     const weekId = firstLinkedId(pha.fields.Week);
     const programInstanceId = firstLinkedId(pha.fields["Program Instance"]);
-    const gradeBandId = firstLinkedId(pha.fields["Grade Band"]);
     const slot = asString(pha.fields["Homework Slot"]);
 
-    if (!homeworkId || !weekId || !programInstanceId || !gradeBandId || !slot) {
+    if (!homeworkId || !weekId || !programInstanceId || !slot) {
       throw new Error(`Active PHA ${pha.id} is incomplete; public homework fails closed.`);
     }
+
+    // Duplicate active assignments for the same PI+Week+slot are ambiguous even if Grade Band metadata differs.
+    const slotKey = `${programInstanceId}|${weekId}|${slot}`;
+    const prior = slots.get(slotKey);
+    if (prior && prior !== pha.id) {
+      throw new Error(`Multiple active PHA rows exist for ${slotKey}; public homework fails closed.`);
+    }
+    slots.set(slotKey, pha.id);
 
     const key = `${homeworkId}|${weekId}`;
     if (!pairs.has(key)) pairs.set(key, { homeworkId, weekId });
@@ -242,62 +230,40 @@ async function listCurriculumByIds(
   return response.records;
 }
 
-/**
- * Current public homework catalog.
- *
- * PHA owns current-season scheduling. Homework Library owns reusable content. Equivalent
- * grade-band PHA rows collapse to one public Homework+Week card.
- */
 export async function fetchScheduledHomeworkCatalog(): Promise<HomeworkCatalogData> {
   const pairs = buildScheduledPairs(await listCurrentPhaRecords());
   if (pairs.length === 0) {
     return { weekGroups: [], totalAssignments: 0, updatedAt: new Date().toISOString() };
   }
 
-  const homeworkIds = [...new Set(pairs.map((pair) => pair.homeworkId))];
-  const weekIds = [...new Set(pairs.map((pair) => pair.weekId))];
+  const homeworkIds = [...new Set(pairs.map(pair => pair.homeworkId))];
+  const weekIds = [...new Set(pairs.map(pair => pair.weekId))];
   const [curriculumRecords, weekRecords] = await Promise.all([
     listCurriculumByIds(homeworkIds),
     listWeeksByIds(weekIds),
   ]);
 
-  const curriculumById = new Map(curriculumRecords.map((record) => [record.id, record]));
+  const curriculumById = new Map(curriculumRecords.map(record => [record.id, record]));
   const scheduledCurriculum = pairs.map(({ homeworkId, weekId }) => {
     const curriculum = curriculumById.get(homeworkId);
     if (!curriculum) {
-      throw new Error(
-        `Active PHA references unpublished or missing curriculum ${homeworkId}; public homework fails closed.`,
-      );
+      throw new Error(`Active PHA references unpublished or missing curriculum ${homeworkId}; public homework fails closed.`);
     }
-    return {
-      id: curriculum.id,
-      fields: { ...curriculum.fields, Week: [weekId] },
-    };
+    // Week is injected from PHA for the mapper. It is not read from Homework Library.
+    return { id: curriculum.id, fields: { ...curriculum.fields, Week: [weekId] } };
   });
 
   return buildHomeworkCatalog(scheduledCurriculum, weekRecords);
 }
 
-/**
- * Scheduled detail lookup. Returns null when the curriculum item is not currently
- * assigned. If the same item is scheduled to multiple distinct Weeks, fail closed
- * rather than displaying an arbitrary Week on a grade-agnostic public detail page.
- */
-export async function fetchScheduledHomeworkAssignment(
-  recordId: string,
-): Promise<HomeworkAssignment | null> {
+export async function fetchScheduledHomeworkAssignment(recordId: string): Promise<HomeworkAssignment | null> {
   if (!/^rec[a-zA-Z0-9]{14}$/.test(recordId)) return null;
-
-  const pairs = buildScheduledPairs(await listCurrentPhaRecords()).filter(
-    (pair) => pair.homeworkId === recordId,
-  );
+  const pairs = buildScheduledPairs(await listCurrentPhaRecords()).filter(pair => pair.homeworkId === recordId);
   if (pairs.length === 0) return null;
 
-  const distinctWeekIds = [...new Set(pairs.map((pair) => pair.weekId))];
+  const distinctWeekIds = [...new Set(pairs.map(pair => pair.weekId))];
   if (distinctWeekIds.length !== 1) {
-    throw new Error(
-      `Homework ${recordId} is scheduled to ${distinctWeekIds.length} distinct Weeks; public detail is ambiguous.`,
-    );
+    throw new Error(`Homework ${recordId} is scheduled to ${distinctWeekIds.length} distinct Weeks; public detail is ambiguous.`);
   }
 
   const [curriculumRecords, weekRecords] = await Promise.all([
@@ -308,12 +274,11 @@ export async function fetchScheduledHomeworkAssignment(
   if (!curriculum) return null;
 
   const weekIndex = new Map(
-    weekRecords.map((week) => [
+    weekRecords.map(week => [
       week.id,
       {
         name: asString(week.fields["Week Name"]) || "Week",
-        startDate:
-          typeof week.fields["Start Date"] === "string" ? week.fields["Start Date"] : null,
+        startDate: typeof week.fields["Start Date"] === "string" ? week.fields["Start Date"] : null,
       },
     ]),
   );
