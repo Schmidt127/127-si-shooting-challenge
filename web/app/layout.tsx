@@ -31,6 +31,9 @@ export const metadata: Metadata = {
   },
   description:
     "127 Sports Intensity Shooting Challenge — leaderboard, homework, tutorials, levels, and more.",
+  alternates: {
+    canonical: SITE_URL,
+  },
   icons: {
     icon: [
       { url: iconIco, sizes: "any" },
@@ -39,8 +42,12 @@ export const metadata: Metadata = {
     apple: [{ url: iconPng, type: "image/png" }],
   },
   robots: {
-    index: false,
-    follow: false,
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
   },
 };
 
