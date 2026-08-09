@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { APP_BASE_PATH, SITE_URL } from "@/lib/app-config";
 
+/** Public crawl policy for the Fairfield-hosted Shooting Challenge application. */
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
