@@ -42,11 +42,13 @@ function link(id) {
   return [{ id }];
 }
 
-function summary(id) {
-  return new RecordMock(id, { Enrollment: link("recEnrollment"), Week: link("recWeek") });
+function summary(id, weekId = "recWeek9") {
+  return new RecordMock(id, { Enrollment: link("recEnrollment"), Week: link(weekId) });
 }
 
-function buildBase(summaries = [], homeworkSummary = []) {
+function buildBase(summaries = [], homeworkSummary = [], completionWeek = "recWeek9") {
+  // The reusable curriculum record intentionally carries a stale/legacy Week 10 link.
+  // 068 must ignore it and reconcile from the Homework Completion's season-scoped Week.
   const curriculum = new TableMock("FBC Curriculum - SYNC", [
     "Homework Number",
     "Active?",
@@ -54,7 +56,7 @@ function buildBase(summaries = [], homeworkSummary = []) {
   ], [new RecordMock("recHw17", {
     "Homework Number": { name: "HW 17" },
     "Active?": true,
-    Week: link("recWeek"),
+    Week: link("recLegacyWeek10"),
   })]);
   const homework = new TableMock("Homework Completions", [
     "Enrollment",
@@ -63,7 +65,7 @@ function buildBase(summaries = [], homeworkSummary = []) {
     "Weekly Athlete Summary Link",
   ], [new RecordMock("recCompletion", {
     Enrollment: link("recEnrollment"),
-    Week: link("recWeek"),
+    Week: completionWeek ? link(completionWeek) : [],
     Homework: link("recHw17"),
     "Weekly Athlete Summary Link": homeworkSummary,
   })]);
@@ -92,6 +94,7 @@ async function run(base) {
 }
 
 (async () => {
+  // PHA/season Week 9 wins even while the reusable library record still points at legacy Week 10.
   {
     const base = buildBase([summary("recSummary")]);
     const output = await run(base);
@@ -140,6 +143,14 @@ async function run(base) {
     assert.equal(base.tables.get("Homework Completions").updates.length, 1);
   }
 
+  // Missing completion Week fails closed instead of borrowing the library Week.
+  {
+    const base = buildBase([summary("recSummary")], [], "");
+    await run(base);
+    assert.equal(base.tables.get("Homework Completions").updates.length, 0);
+  }
+
+  assert.doesNotMatch(source, /curriculumWeek/);
   assert.doesNotMatch(source, /createRecordAsync/);
   assert.doesNotMatch(source, /getTable\(["']XP Events["']\)/);
   console.log("068 deferred-summary reconciliation behavioral tests passed");
