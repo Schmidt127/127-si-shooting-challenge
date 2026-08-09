@@ -7,7 +7,7 @@ Status: GitHub Source of Truth
 Purpose:
 Finds HW17 Homework Completions created by 067 that still have an empty
 Weekly Athlete Summary Link, and links them only when exactly one canonical
-Weekly Athlete Summary matches the same Enrollment + Week.
+Weekly Athlete Summary matches the completion's own Enrollment + Week.
 
 Trigger:
 Scheduled automation run (recommended: every 15 minutes or hourly).
@@ -15,7 +15,11 @@ This is the automatic retry for 067 deferred_no_canonical_summary results.
 
 Safety:
 - Never creates Weekly Athlete Summary records.
-- Fails closed on zero or multiple matching summaries.
+- Resolves only the active HW17 curriculum record identity; it does NOT use the
+  reusable curriculum record's legacy Week link as season scheduling truth.
+- Uses each Homework Completion's own Week, allowing Program Homework Assignments
+  to remain the season-specific scheduling source of truth.
+- Fails closed on missing/ambiguous Enrollment or Week and on zero/multiple summaries.
 - Never creates or modifies XP Events. Homework XP remains owned by 064/065.
 - Existing non-empty Homework Completion links are not changed.
 */
@@ -24,7 +28,7 @@ Safety:
 
 const CONFIG = {
   scriptName: "068 - Homework - Reconcile Deferred Weekly Summary Links",
-  version: "v1.0",
+  version: "v1.1",
   tables: {
     curriculum: "FBC Curriculum - SYNC",
     homework: "Homework Completions",
@@ -33,7 +37,6 @@ const CONFIG = {
   fields: {
     curriculumNumber: "Homework Number",
     curriculumActive: "Active?",
-    curriculumWeek: "Week",
     homeworkEnrollment: "Enrollment",
     homeworkWeek: "Week",
     homeworkHomework: "Homework",
@@ -66,12 +69,11 @@ function fields(table, names) {
   return names.filter((name) => table.fields.some((field) => field.name === name));
 }
 
-async function resolveHw17(table) {
+async function resolveHw17Id(table) {
   const query = await table.selectRecordsAsync({
     fields: fields(table, [
       CONFIG.fields.curriculumNumber,
       CONFIG.fields.curriculumActive,
-      CONFIG.fields.curriculumWeek,
     ]),
   });
   const matches = query.records.filter(
@@ -82,11 +84,7 @@ async function resolveHw17(table) {
   if (matches.length !== 1) {
     throw new Error(`Expected exactly one active HW17 curriculum record, found ${matches.length}.`);
   }
-  const weekIds = linkedIds(matches[0], CONFIG.fields.curriculumWeek);
-  if (weekIds.length !== 1) {
-    throw new Error(`Expected exactly one Week for active HW17, found ${weekIds.length}.`);
-  }
-  return { homeworkId: matches[0].id, weekId: weekIds[0] };
+  return matches[0].id;
 }
 
 function canonicalSummaryByKey(summaryRecords) {
@@ -107,7 +105,7 @@ async function main() {
   const curriculumTable = base.getTable(CONFIG.tables.curriculum);
   const homeworkTable = base.getTable(CONFIG.tables.homework);
   const summariesTable = base.getTable(CONFIG.tables.weeklySummaries);
-  const { homeworkId, weekId } = await resolveHw17(curriculumTable);
+  const homeworkId = await resolveHw17Id(curriculumTable);
 
   const homeworkQuery = await homeworkTable.selectRecordsAsync({
     fields: fields(homeworkTable, [
@@ -135,12 +133,11 @@ async function main() {
     const existingSummaryIds = linkedIds(completion, CONFIG.fields.homeworkSummary);
 
     if (homeworkIds.length !== 1 || homeworkIds[0] !== homeworkId) continue;
-    if (completionWeekIds.length !== 1 || completionWeekIds[0] !== weekId) continue;
     if (existingSummaryIds.length > 0) {
       skipped += 1;
       continue;
     }
-    if (enrollmentIds.length !== 1) {
+    if (enrollmentIds.length !== 1 || completionWeekIds.length !== 1) {
       deferred += 1;
       continue;
     }
@@ -164,6 +161,7 @@ async function main() {
   console.log(JSON.stringify({
     automation: CONFIG.scriptName,
     version: CONFIG.version,
+    homeworkId,
     linked,
     deferred,
     skipped,
