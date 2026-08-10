@@ -4,13 +4,14 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v3.3
+Version: v3.4
 Last Updated: 2026-08-10
 
 Scheduling rule:
 - Submissions.Homework Name 1 stores Program Homework Assignment (PHA) record IDs.
 - HW17 schedule is resolved PI-first from active PHA rows (HW1 slot), then content-checked via PHA.Homework Assignment → Homework Library HW 17.
 - Homework Completions.Homework = library ID; Program Homework Assignment = PHA ID when field exists.
+- Quiz-linked and discovered Homework Completions must match Enrollment + Week + Library + PHA exactly; duplicate matches fail closed.
 - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve the schedule.
 - Athlete Grade Band may still be copied to Homework Completion as metadata.
 
@@ -22,7 +23,7 @@ Optional attachment handling is retained when a quiz attachment field/file is pr
 
 const CONFIG = {
   scriptName: "067 - Homework - Link or Create Completion from Reflection Quiz",
-  version: "v3.3",
+  version: "v3.4",
   tables: {
     quiz: "Final Reflection Quiz Submissions",
     homework: "Homework Completions",
@@ -193,6 +194,40 @@ function findCompletionMatch(records,enrollmentId,weekId,homeworkId){
   const target=buildDedupeKey(enrollmentId,weekId,homeworkId);
   return records.filter(hw=>buildDedupeKey(linkedIds(hw,CONFIG.homework.enrollment)[0]||"",linkedIds(hw,CONFIG.homework.week)[0]||"",linkedIds(hw,CONFIG.homework.homework)[0]||"")===target);
 }
+function requireSingleCompletionMatch(matches,contextLabel){
+  if(matches.length>1)throw new Error(`Multiple Homework Completions match ${contextLabel}: ${matches.map(r=>r.id).join(", ")}`);
+  return matches[0]||null;
+}
+async function validateLinkedHomeworkCompletion(hcId,{enrollmentId,weekId,libraryId,phaId}){
+  const fields=safeFields(homeworkTable,[CONFIG.homework.enrollment,CONFIG.homework.week,CONFIG.homework.homework,CONFIG.homework.programHomeworkAssignment]);
+  const hc=await homeworkTable.selectRecordAsync(hcId,{fields});
+  if(!hc)throw new Error(`Homework Completion not found: ${hcId}`);
+  const hcEnrollment=linkedIds(hc,CONFIG.homework.enrollment)[0]||"";
+  const hcWeek=linkedIds(hc,CONFIG.homework.week)[0]||"";
+  const hcHomework=linkedIds(hc,CONFIG.homework.homework)[0]||"";
+  const hcPhaIds=fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment)?linkedIds(hc,CONFIG.homework.programHomeworkAssignment):[];
+  if(hcEnrollment!==enrollmentId)throw new Error(`Homework Completion ${hcId} Enrollment mismatch: expected ${enrollmentId}, got ${hcEnrollment||"blank"}.`);
+  if(hcWeek!==weekId)throw new Error(`Homework Completion ${hcId} Week mismatch: expected ${weekId}, got ${hcWeek||"blank"}.`);
+  if(hcHomework!==libraryId)throw new Error(`Homework Completion ${hcId} Homework mismatch: expected ${libraryId}, got ${hcHomework||"blank"}.`);
+  let populatePha=false;
+  if(fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment)){
+    if(!hcPhaIds.length)populatePha=true;
+    else if(hcPhaIds.length!==1||hcPhaIds[0]!==phaId)throw new Error(`Homework Completion ${hcId} Program Homework Assignment mismatch: expected ${phaId}, got ${hcPhaIds.join(", ")||"blank"}.`);
+  }
+  return {hc,populatePha};
+}
+async function populateBlankPhaOnCompletion(hcId,phaId){
+  const u={};setLink(u,homeworkTable,CONFIG.homework.programHomeworkAssignment,[phaId]);if(Object.keys(u).length)await homeworkTable.updateRecordAsync(hcId,u);
+}
+async function linkQuizToCompletion(quiz,hcId,hcRecord){
+  const u={};
+  setLink(u,homeworkTable,CONFIG.homework.finalQuiz,[...linkedIds(hcRecord,CONFIG.homework.finalQuiz),quiz.id]);
+  if(!selectName(hcRecord,CONFIG.homework.sourceSystem))setSingleSelect(u,homeworkTable,CONFIG.homework.sourceSystem,CONFIG.values.sourceSystemFillout);
+  setSingleSelect(u,homeworkTable,CONFIG.homework.itemSlot,CONFIG.values.slotHw1);
+  setSingleSelect(u,homeworkTable,CONFIG.homework.assetSlot,CONFIG.values.slotHw1);
+  if(Object.keys(u).length)await homeworkTable.updateRecordAsync(hcId,u);
+  const qu={};setLink(qu,quizTable,CONFIG.quiz.homeworkCompletion,[hcId]);setSingleSelect(qu,quizTable,CONFIG.quiz.processingStatus,CONFIG.values.processingProcessed);setText(qu,quizTable,CONFIG.quiz.processingError,"");if(Object.keys(qu).length)await quizTable.updateRecordAsync(quiz.id,qu);
+}
 async function resolveWeeklySummaryId(enrollmentId,weekId){
   const q=await weeklySummariesTable.selectRecordsAsync({fields:safeFields(weeklySummariesTable,["Enrollment","Week"])});
   const matches=q.records.filter(s=>{const e=linkedIds(s,"Enrollment"),w=linkedIds(s,"Week");return e.length===1&&w.length===1&&e[0]===enrollmentId&&w[0]===weekId;});
@@ -239,7 +274,10 @@ async function main(){
   const quiz=await quizTable.selectRecordAsync(recordId,{fields:quizFields});
   if(!quiz)throw new Error(`Final Reflection Quiz Submission not found: ${recordId}`);
 
-  const alreadyLinked=linkedIds(quiz,CONFIG.quiz.homeworkCompletion);let homeworkCompletionId=alreadyLinked[0]||"";let actionOut=alreadyLinked.length?"linked_existing":"";
+  const alreadyLinked=linkedIds(quiz,CONFIG.quiz.homeworkCompletion);
+  if(alreadyLinked.length>1)throw new Error(`Quiz links multiple Homework Completions (${alreadyLinked.length}): ${alreadyLinked.join(", ")}`);
+  let homeworkCompletionId=alreadyLinked[0]||"";
+  let actionOut=homeworkCompletionId?"linked_existing_quiz":"";
   const enrollmentIds=linkedIds(quiz,CONFIG.quiz.enrollment);
   if(enrollmentIds.length!==1){const note=enrollmentIds.length?`Multiple Enrollments linked: ${enrollmentIds.join(", ")}. Resolve to one.`:"No Enrollment linked on quiz row.";await markQuizReview(quiz.id,CONFIG.values.processingNeedsReview,note);setFinalOutputs({statusOut:CONFIG.outputStatuses.skipped,actionOut:"needs_review",errorOut:note,debugStep:"needs_review_enrollment",quizSubmissionId:quiz.id});return;}
   const enrollmentId=enrollmentIds[0];
@@ -247,11 +285,52 @@ async function main(){
   const canonicalWeeklySummaryId=await resolveWeeklySummaryId(enrollmentId,hw17WeekId);
   const weeklySummaryLinkStatus=canonicalWeeklySummaryId?"linked":"deferred_no_canonical_summary";
 
+  if(homeworkCompletionId){
+    const {hc,populatePha}=await validateLinkedHomeworkCompletion(homeworkCompletionId,{enrollmentId,weekId:hw17WeekId,libraryId:hw17LibraryId,phaId});
+    if(populatePha){await populateBlankPhaOnCompletion(homeworkCompletionId,phaId);actionOut="linked_existing_quiz_populated_pha";}
+  }
+
   if(!homeworkCompletionId){
-    const fields=safeFields(homeworkTable,Object.values(CONFIG.homework));let q=await homeworkTable.selectRecordsAsync({fields});let matches=findCompletionMatch(q.records,enrollmentId,hw17WeekId,hw17LibraryId);
-    if(matches.length){homeworkCompletionId=matches[0].id;actionOut="linked_existing";const u={};setLink(u,homeworkTable,CONFIG.homework.finalQuiz,[...linkedIds(matches[0],CONFIG.homework.finalQuiz),quiz.id]);if(!selectName(matches[0],CONFIG.homework.sourceSystem))setSingleSelect(u,homeworkTable,CONFIG.homework.sourceSystem,CONFIG.values.sourceSystemFillout);setSingleSelect(u,homeworkTable,CONFIG.homework.itemSlot,CONFIG.values.slotHw1);setSingleSelect(u,homeworkTable,CONFIG.homework.assetSlot,CONFIG.values.slotHw1);if(fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment)&&!linkedIds(matches[0],CONFIG.homework.programHomeworkAssignment).length)setLink(u,homeworkTable,CONFIG.homework.programHomeworkAssignment,[phaId]);if(Object.keys(u).length)await homeworkTable.updateRecordAsync(homeworkCompletionId,u);}
-    else{q=await homeworkTable.selectRecordsAsync({fields});matches=findCompletionMatch(q.records,enrollmentId,hw17WeekId,hw17LibraryId);if(matches.length){homeworkCompletionId=matches[0].id;actionOut="linked_existing";}else{actionOut="created_new";const f={};setLink(f,homeworkTable,CONFIG.homework.enrollment,[enrollmentId]);setLink(f,homeworkTable,CONFIG.homework.homework,[hw17LibraryId]);if(fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment))setLink(f,homeworkTable,CONFIG.homework.programHomeworkAssignment,[phaId]);setLink(f,homeworkTable,CONFIG.homework.week,[hw17WeekId]);if(gradeBandId)setLink(f,homeworkTable,CONFIG.homework.gradeBand,[gradeBandId]);setLink(f,homeworkTable,CONFIG.homework.finalQuiz,[quiz.id]);setSingleSelect(f,homeworkTable,CONFIG.homework.sourceSystem,CONFIG.values.sourceSystemFillout);setSingleSelect(f,homeworkTable,CONFIG.homework.itemType,CONFIG.values.itemTypeHomework);setSingleSelect(f,homeworkTable,CONFIG.homework.completionStatus,CONFIG.values.completionStatusSubmitted);setSingleSelect(f,homeworkTable,CONFIG.homework.reviewStatus,CONFIG.values.reviewStatusReady);setSingleSelect(f,homeworkTable,CONFIG.homework.itemSlot,CONFIG.values.slotHw1);setSingleSelect(f,homeworkTable,CONFIG.homework.assetSlot,CONFIG.values.slotHw1);setDate(f,homeworkTable,CONFIG.homework.submissionDate,dateValue(quiz,CONFIG.quiz.submittedAt));homeworkCompletionId=await homeworkTable.createRecordAsync(f);}}
-    const qu={};setLink(qu,quizTable,CONFIG.quiz.homeworkCompletion,[homeworkCompletionId]);setSingleSelect(qu,quizTable,CONFIG.quiz.processingStatus,CONFIG.values.processingProcessed);setText(qu,quizTable,CONFIG.quiz.processingError,"");if(Object.keys(qu).length)await quizTable.updateRecordAsync(quiz.id,qu);
+    const fields=safeFields(homeworkTable,Object.values(CONFIG.homework));
+    let q=await homeworkTable.selectRecordsAsync({fields});
+    let matches=findCompletionMatch(q.records,enrollmentId,hw17WeekId,hw17LibraryId);
+    let match=requireSingleCompletionMatch(matches,"Enrollment + Week + Homework Library");
+    if(match){
+      homeworkCompletionId=match.id;
+      actionOut="linked_existing";
+      const validated=await validateLinkedHomeworkCompletion(homeworkCompletionId,{enrollmentId,weekId:hw17WeekId,libraryId:hw17LibraryId,phaId});
+      if(validated.populatePha)await populateBlankPhaOnCompletion(homeworkCompletionId,phaId);
+      await linkQuizToCompletion(quiz,homeworkCompletionId,match);
+    }else{
+      q=await homeworkTable.selectRecordsAsync({fields});
+      matches=findCompletionMatch(q.records,enrollmentId,hw17WeekId,hw17LibraryId);
+      match=requireSingleCompletionMatch(matches,"Enrollment + Week + Homework Library (recheck)");
+      if(match){
+        homeworkCompletionId=match.id;
+        actionOut="linked_existing";
+        const validated=await validateLinkedHomeworkCompletion(homeworkCompletionId,{enrollmentId,weekId:hw17WeekId,libraryId:hw17LibraryId,phaId});
+        if(validated.populatePha)await populateBlankPhaOnCompletion(homeworkCompletionId,phaId);
+        await linkQuizToCompletion(quiz,homeworkCompletionId,match);
+      }else{
+        actionOut="created_new";
+        const f={};
+        setLink(f,homeworkTable,CONFIG.homework.enrollment,[enrollmentId]);
+        setLink(f,homeworkTable,CONFIG.homework.homework,[hw17LibraryId]);
+        if(fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment))setLink(f,homeworkTable,CONFIG.homework.programHomeworkAssignment,[phaId]);
+        setLink(f,homeworkTable,CONFIG.homework.week,[hw17WeekId]);
+        if(gradeBandId)setLink(f,homeworkTable,CONFIG.homework.gradeBand,[gradeBandId]);
+        setLink(f,homeworkTable,CONFIG.homework.finalQuiz,[quiz.id]);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.sourceSystem,CONFIG.values.sourceSystemFillout);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.itemType,CONFIG.values.itemTypeHomework);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.completionStatus,CONFIG.values.completionStatusSubmitted);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.reviewStatus,CONFIG.values.reviewStatusReady);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.itemSlot,CONFIG.values.slotHw1);
+        setSingleSelect(f,homeworkTable,CONFIG.homework.assetSlot,CONFIG.values.slotHw1);
+        setDate(f,homeworkTable,CONFIG.homework.submissionDate,dateValue(quiz,CONFIG.quiz.submittedAt));
+        homeworkCompletionId=await homeworkTable.createRecordAsync(f);
+        const qu={};setLink(qu,quizTable,CONFIG.quiz.homeworkCompletion,[homeworkCompletionId]);setSingleSelect(qu,quizTable,CONFIG.quiz.processingStatus,CONFIG.values.processingProcessed);setText(qu,quizTable,CONFIG.quiz.processingError,"");if(Object.keys(qu).length)await quizTable.updateRecordAsync(quiz.id,qu);
+      }
+    }
   }
 
   const weeklySummaryId=await ensureWeeklySummaryLink(homeworkCompletionId,enrollmentId,hw17WeekId,canonicalWeeklySummaryId);

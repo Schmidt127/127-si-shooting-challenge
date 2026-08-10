@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Offline tests for 067 v3.3 PHA-first HW17 quiz path.
+ * Offline tests for 067 v3.4 PHA-first HW17 quiz path.
  */
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -11,25 +11,35 @@ import {
   build067PhaBase,
   run067,
   goodHw17Pha,
+  goodHc,
   QUIZ_ID,
   HW17_PHA,
   HW17_LIBRARY,
   HW17_WEEK,
+  HC_GOOD,
+  ENROLLMENT_ID,
+  ENROLLMENT_OTHER,
+  WEEK_OTHER,
+  PHA_OTHER,
   PI,
 } from "../../tools/testing/tests/run_067_pha_script.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const read = (rel) => readFileSync(path.join(ROOT, rel), "utf8");
 
-test("067 v3.3 source contract — PI-first HW17 PHA resolution", () => {
+test("067 v3.4 source contract — PI-first HW17 PHA resolution + fail-closed linked HC", () => {
   const source = read(
     "airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js"
   );
-  assert.match(source, /version:\s*"v3\.3"/);
+  assert.match(source, /version:\s*"v3\.4"/);
   assert.match(source, /resolveHw17PhaForEnrollment/);
   assert.match(source, /homeworkName1.*PHA record ID/s);
+  assert.match(source, /validateLinkedHomeworkCompletion/);
+  assert.match(source, /requireSingleCompletionMatch/);
   assert.doesNotMatch(source, /resolveHw17WeekFromPha/);
   assert.doesNotMatch(source, /hw\[0\]===hw17Id/);
+  assert.doesNotMatch(source, /let match=matches\[0\]/);
+  assert.doesNotMatch(source, /homeworkCompletionId=matches\[0\]/);
 });
 
 test("067 — resolves HW17 PHA and library IDs", async () => {
@@ -111,4 +121,103 @@ test("067 — ambiguous Homework Assignment links fail closed", async () => {
   const { error } = await run067({ base });
   assert.ok(error);
   assert.match(String(error.message), /HW17 PHA/i);
+});
+
+test("067 — already-linked correct Homework Completion succeeds", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD)],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { output, error } = await run067({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.phaId, HW17_PHA);
+  assert.equal(output.values.libraryId, HW17_LIBRARY);
+  assert.equal(base.tables.get("Homework Completions").createdPayloads.length, 0);
+});
+
+test("067 — already-linked wrong Enrollment fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD, { Enrollment: [{ id: ENROLLMENT_OTHER }] })],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Enrollment mismatch/i);
+});
+
+test("067 — already-linked wrong Week fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD, { Week: [{ id: WEEK_OTHER }] })],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Week mismatch/i);
+});
+
+test("067 — already-linked wrong Homework Library fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD, { Homework: [{ id: "recOtherLibrary001" }] })],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Homework mismatch/i);
+});
+
+test("067 — already-linked wrong PHA fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD, { "Program Homework Assignment": [{ id: PHA_OTHER }] })],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Program Homework Assignment mismatch/i);
+});
+
+test("067 — blank PHA on otherwise exact linked completion is populated", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD, { "Program Homework Assignment": [] })],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { output, error } = await run067({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "linked_existing_quiz_populated_pha");
+  const homework = base.tables.get("Homework Completions");
+  const phaUpdate = homework.updates.find(
+    (u) => u.recordId === HC_GOOD && u.fields["Program Homework Assignment"]
+  );
+  assert.ok(phaUpdate);
+  assert.deepEqual(phaUpdate.fields["Program Homework Assignment"], [{ id: HW17_PHA }]);
+});
+
+test("067 — multiple matching completions fail closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc("recHcDup067001"), goodHc("recHcDup067002")],
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Multiple Homework Completions match/i);
+  assert.match(String(error.message), /recHcDup067001/);
+  assert.match(String(error.message), /recHcDup067002/);
+});
+
+test("067 — replay remains idempotent when quiz already links correct completion", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [goodHc(HC_GOOD)],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const first = await run067({ base });
+  assert.equal(first.error, null, first.error && first.error.message);
+  const homework = base.tables.get("Homework Completions");
+  const createdAfterFirst = homework.createdPayloads.length;
+  const updatesAfterFirst = homework.updates.length;
+
+  const second = await run067({ base });
+  assert.equal(second.error, null, second.error && second.error.message);
+  assert.equal(second.output.values.statusOut, "success");
+  assert.equal(homework.createdPayloads.length, createdAfterFirst);
+  assert.equal(homework.updates.length, updatesAfterFirst);
 });

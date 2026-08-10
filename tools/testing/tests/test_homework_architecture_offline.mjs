@@ -49,15 +49,19 @@ test("033 v4.3 — exact PI required, no legacy fallback", () => {
   assert.match(source, /duplicateSlots/);
 });
 
-test("067 v3.3 — HW17 PHA PI-first resolution, Submission stores PHA", () => {
+test("067 v3.4 — HW17 PHA PI-first resolution, Submission stores PHA, linked HC fail-closed", () => {
   const source = read(
     "airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js"
   );
-  assert.match(source, /version:\s*"v3\.3"/);
+  assert.match(source, /version:\s*"v3\.4"/);
   assert.match(source, /resolveHw17PhaForEnrollment/);
   assert.match(source, /CONFIG\.values\.slotHw1/);
+  assert.match(source, /validateLinkedHomeworkCompletion/);
+  assert.match(source, /requireSingleCompletionMatch/);
   assertNoPattern(source, /resolveHw17WeekFromPha/, "067 must not reverse-search PHA by library ID");
   assertNoPattern(source, /homeworkLibrary\.week|CONFIG\.curriculum\.week/, "067 must not read library Week");
+  assertNoPattern(source, /let match=matches\[0\]/, "067 must not silently pick first duplicate match");
+  assertNoPattern(source, /homeworkCompletionId=matches\[0\]/, "067 must not assign completion from raw duplicate list");
 });
 
 test("020 v3.5 — PHA direct validate + library dereference", () => {

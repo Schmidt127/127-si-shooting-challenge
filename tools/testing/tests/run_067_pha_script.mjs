@@ -1,5 +1,5 @@
 /**
- * Offline harness for Automation 067 PHA-first HW17 path (v3.3+).
+ * Offline harness for Automation 067 PHA-first HW17 path (v3.4+).
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -27,6 +27,10 @@ export const HW17_LIBRARY = "rechVLOeyEVIqmy2v";
 export const HW17_PHA = "recgj8dPk4ouTwCOj";
 export const HW17_WEEK = PHA_IDS.WEEK;
 export const PI = PHA_IDS.PI;
+export const HC_GOOD = "recHcGood067001";
+export const ENROLLMENT_OTHER = "recEnrollOther06701";
+export const WEEK_OTHER = PHA_IDS.WRONG_WEEK;
+export const PHA_OTHER = "recWrongPha0670001";
 
 function phaFields() {
   return [
@@ -49,7 +53,18 @@ export function goodHw17Pha(id, overrides = {}) {
   });
 }
 
-export function build067PhaBase({ phaRecords = [], quizCells = {} } = {}) {
+export function goodHc(id, overrides = {}) {
+  return new MockRecord(id, {
+    Enrollment: [{ id: ENROLLMENT_ID }],
+    Homework: [{ id: HW17_LIBRARY }],
+    "Program Homework Assignment": [{ id: HW17_PHA }],
+    Week: [{ id: HW17_WEEK }],
+    "Final Reflection Quiz Submissions": [],
+    ...overrides,
+  });
+}
+
+export function build067PhaBase({ phaRecords = [], quizCells = {}, homeworkCompletions = [] } = {}) {
   const quiz = new MockTable(
     "Final Reflection Quiz Submissions",
     [
@@ -71,23 +86,27 @@ export function build067PhaBase({ phaRecords = [], quizCells = {} } = {}) {
     ]
   );
 
-  const homework = new MockTable("Homework Completions", [
-    { name: "Enrollment", type: "multipleRecordLinks" },
-    { name: "Homework", type: "multipleRecordLinks" },
-    { name: "Program Homework Assignment", type: "multipleRecordLinks" },
-    { name: "Week", type: "multipleRecordLinks" },
-    { name: "Final Reflection Quiz Submissions", type: "multipleRecordLinks" },
-    { name: "Source System", type: "singleSelect", options: { choices: [{ name: "Fillout" }] } },
-    { name: "Item Type", type: "singleSelect", options: { choices: [{ name: "Homework" }] } },
-    { name: "Completion Status", type: "singleSelect", options: { choices: [{ name: "Submitted" }] } },
-    { name: "Review Status", type: "singleSelect", options: { choices: [{ name: "Ready for Review" }] } },
-    { name: "Item Slot", type: "singleSelect", options: { choices: [{ name: "HW1" }] } },
-    { name: "Asset Slot", type: "singleSelect", options: { choices: [{ name: "HW1" }] } },
-    { name: "Submission Date", type: "date" },
-    { name: "Submission Assets", type: "multipleRecordLinks" },
-    { name: "Submissions - Linked", type: "multipleRecordLinks" },
-    { name: "Weekly Athlete Summary Link", type: "multipleRecordLinks" },
-  ]);
+  const homework = new MockTable(
+    "Homework Completions",
+    [
+      { name: "Enrollment", type: "multipleRecordLinks" },
+      { name: "Homework", type: "multipleRecordLinks" },
+      { name: "Program Homework Assignment", type: "multipleRecordLinks" },
+      { name: "Week", type: "multipleRecordLinks" },
+      { name: "Final Reflection Quiz Submissions", type: "multipleRecordLinks" },
+      { name: "Source System", type: "singleSelect", options: { choices: [{ name: "Fillout" }] } },
+      { name: "Item Type", type: "singleSelect", options: { choices: [{ name: "Homework" }] } },
+      { name: "Completion Status", type: "singleSelect", options: { choices: [{ name: "Submitted" }] } },
+      { name: "Review Status", type: "singleSelect", options: { choices: [{ name: "Ready for Review" }] } },
+      { name: "Item Slot", type: "singleSelect", options: { choices: [{ name: "HW1" }] } },
+      { name: "Asset Slot", type: "singleSelect", options: { choices: [{ name: "HW1" }] } },
+      { name: "Submission Date", type: "date" },
+      { name: "Submission Assets", type: "multipleRecordLinks" },
+      { name: "Submissions - Linked", type: "multipleRecordLinks" },
+      { name: "Weekly Athlete Summary Link", type: "multipleRecordLinks" },
+    ],
+    homeworkCompletions
+  );
 
   const library = new MockTable(
     "Homework Library",
