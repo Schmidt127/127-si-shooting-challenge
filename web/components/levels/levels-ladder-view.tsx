@@ -4,6 +4,7 @@ import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconLevel } from "@/components/icons/shoot-icons";
 import { SafeExternalImage } from "@/components/media/safe-external-image";
 import { AccentRail, CtaLink, ProgramPage } from "@/components/site";
+import { ProgramFeatureImage } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatXp } from "@/lib/formatters";
 import { getLevelStyle } from "@/lib/leaderboard/level-styles";
@@ -124,23 +125,30 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
         </span>
       }
     >
-      <div className="mx-auto max-w-4xl">
-        <AccentRail tone="gold" className="space-y-5">
-          {data.levels.map((level, index) => (
-            <div key={level.id} className="relative">
-              <span
-                className="absolute -left-[1.65rem] top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-brand-orange/50 bg-background sm:block"
-                aria-hidden
-              />
-              <LevelLadderCard
-                level={level}
-                maxXp={data.maxXp}
-                index={index}
-                isPinnacle={index === 0}
-              />
-            </div>
-          ))}
-        </AccentRail>
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-levels.webp"
+          alt="Shooting Challenge levels progression showing XP tiers and advancement"
+          caption="See the progression path from first shots to the highest tier."
+        />
+        <div className="mx-auto max-w-4xl">
+          <AccentRail tone="gold" className="space-y-5">
+            {data.levels.map((level, index) => (
+              <div key={level.id} className="relative">
+                <span
+                  className="absolute -left-[1.65rem] top-1/2 hidden h-3 w-3 -translate-y-1/2 rounded-full border-2 border-brand-orange/50 bg-background sm:block"
+                  aria-hidden
+                />
+                <LevelLadderCard
+                  level={level}
+                  maxXp={data.maxXp}
+                  index={index}
+                  isPinnacle={index === 0}
+                />
+              </div>
+            ))}
+          </AccentRail>
+        </div>
       </div>
     </ProgramPage>
   );
@@ -159,16 +167,23 @@ export function LevelsEmptyState() {
       heroVariant="light"
       ambientVariant="levels"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.levels.title}
-        description={EMPTY_STATE_COPY.levels.description}
-        icon={<IconLevel size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-levels.webp"
+          alt="Shooting Challenge levels progression showing XP tiers and advancement"
+          caption="See the progression path from first shots to the highest tier."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.levels.title}
+          description={EMPTY_STATE_COPY.levels.description}
+          icon={<IconLevel size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -186,15 +201,22 @@ export function LevelsErrorState({ message }: { message: string }) {
       heroVariant="light"
       ambientVariant="levels"
     >
-      <ErrorState
-        title="Could not load levels"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-levels.webp"
+          alt="Shooting Challenge levels progression showing XP tiers and advancement"
+          caption="See the progression path from first shots to the highest tier."
+        />
+        <ErrorState
+          title="Could not load levels"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }

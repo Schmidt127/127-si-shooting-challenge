@@ -6,6 +6,7 @@ import {
   IconTrophy,
 } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage } from "@/components/site";
+import { ProgramFeatureImage } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -62,6 +63,11 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       }
     >
       <div className="space-y-6">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-leaderboard.webp"
+          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
+          caption="Track the season standings and celebrate every shot logged."
+        />
         <LeaderboardStats data={data} />
         <LeaderboardTiebreakerLegend />
         <LeaderboardBoard entries={data.entries} />
@@ -79,16 +85,23 @@ export function LeaderboardEmptyState() {
       heroVariant="contrast"
       ambientVariant="leaderboard"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.leaderboard.title}
-        description={EMPTY_STATE_COPY.leaderboard.description}
-        icon={<IconTrophy size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-leaderboard.webp"
+          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
+          caption="Track the season standings and celebrate every shot logged."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.leaderboard.title}
+          description={EMPTY_STATE_COPY.leaderboard.description}
+          icon={<IconTrophy size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -102,15 +115,22 @@ export function LeaderboardErrorState({ message }: { message: string }) {
       heroVariant="contrast"
       ambientVariant="leaderboard"
     >
-      <ErrorState
-        title="Could not load leaderboard"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-leaderboard.webp"
+          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
+          caption="Track the season standings and celebrate every shot logged."
+        />
+        <ErrorState
+          title="Could not load leaderboard"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }

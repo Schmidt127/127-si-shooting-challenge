@@ -264,3 +264,26 @@ Shell / pages typically `px-4 sm:px-6` — adequate at 320px. Error/not-found `p
 **Broken assets repaired:** Favicon path/metadata; BrandLogo contain; Airtable image host allowlist.
 
 **Not verified live:** Exact production attachment host hostname variants beyond standard Airtable CDN; visual contrast screenshots.
+
+---
+
+## 8. Shooting Challenge feature imagery — SCV2-WEB-PLAYER-PROFILES-001
+
+The four approved 1672×941 WebP assets are served from `web/public/images/` and
+rendered through `ProgramFeatureImage`. The component:
+
+- prefixes local paths with `NEXT_PUBLIC_BASE_PATH` (`/shoot` by default);
+- keeps the source ratio in explicit `width`/`height` attributes to reserve
+  layout space before the image loads;
+- uses responsive `sizes` and Next Image optimization rather than a fixed
+  desktop-sized download;
+- supplies meaningful alt text and a visible caption; and
+- preloads the single feature image on each affected route because it is the
+  first content block after the page hero.
+
+The images appear on the populated, empty, and error states for leaderboard,
+levels, homework, and achievements so those routes retain their visual identity
+when Airtable data is unavailable. Browser regression coverage lives in
+`web/tests/feature-images.spec.ts` and checks desktop and 375px mobile
+rendering, `/shoot` URL mounting, intrinsic dimensions, successful decoding, and
+stable aspect-ratio geometry.

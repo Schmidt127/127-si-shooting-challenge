@@ -30,6 +30,11 @@ Maps Airtable tables and fields to web app features.
 
 ## Publish / visibility fields
 
+Registration consent authorizes publication of game-related participant
+information. It does not authorize exposure of birthday, exact age, contact
+information, guardian information, addresses, internal notes, administrative
+fields, debug fields, or Airtable record IDs.
+
 Softr-era fields to honor until renamed:
 
 | Field | Table | Use |
@@ -40,7 +45,8 @@ Softr-era fields to honor until renamed:
 | `Active?` | Enrollments, Levels | Leaderboard and levels ladder |
 | `Level Sort Order - For Softr` | Enrollments (lookup) | Leaderboard / level ordering |
 
-**Rule:** Public routes must filter on publish flags. Never expose parent email, phone, or internal debug fields.
+**Rule:** Public routes must apply the relevant catalog visibility filters and
+the active-season rules. Never expose private or operational fields.
 
 ## Airtable views used by the web app
 
@@ -55,7 +61,7 @@ These names must match `web/lib/airtable/queries.ts`. Full fallback formulas: [a
 | `Web - Zoom Meetings` | Zoom Meetings | Zoom list | `NOT({Meeting Status} = 'Cancelled')` |
 | `Web - Achievements` | Achievements | Achievements grid | `AND({Active?}, {Visible?})` |
 
-**Not wired yet:** `Web - Public Profiles` (future athlete slug routes).
+**Not wired yet:** `Web - Public Profiles` (future player slug routes).
 
 ## API access pattern
 
@@ -69,14 +75,16 @@ Browser → Next.js Server Component / Route Handler
 
 ## Slug strategy (SC-111)
 
-Public athlete profiles use Enrollment fields:
+Public player profiles use a stable public slug from Enrollment:
 
 | Field | Role |
 |-------|------|
-| `Public Profile Enabled` | Checkbox — must be checked |
-| `Public Profile Slug` | Stable public path segment for `/athletes/[slug]` |
+| `Public Profile Slug` | Stable public path segment for `/players/[publicPlayerId]` |
 
-Rules: query by exact slug; require Enabled + `Active?`; duplicate enabled slugs fail closed (not-found + server log). Never use Airtable record IDs in public URLs.
+Registration consent is the publication basis for game-related profile data;
+`Public Profile Enabled` is not a required consent gate. Query by exact slug;
+require `Active?`; duplicate slugs fail closed (not-found + server log).
+Never use Airtable record IDs in public URLs.
 
 **Wired:** `Web - Leaderboard` preferred for standings; profile query is formula-based (no dedicated view required).  
 **Operator note:** PROD may be missing the `Web - Leaderboard` view — the app falls back to `AND({Active?}, {Lifetime XP Total} >= 0)`.

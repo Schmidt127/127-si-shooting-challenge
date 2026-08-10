@@ -1,6 +1,7 @@
 import { catalogCardClass } from "@/components/catalog/catalog-surface";
 import { IconMedal } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
+import { ProgramFeatureImage } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { AchievementCatalogData, AchievementDefinition } from "@/types/achievements";
@@ -118,21 +119,28 @@ export function AchievementsGridView({ data }: AchievementsGridViewProps) {
         </span>
       }
     >
-      <div className="space-y-12">
-        {groups.map(([groupName, items]) => (
-          <section key={groupName}>
-            <SectionMarker
-              label="Category"
-              title={groupName}
-              countLabel={`${items.length} badge${items.length === 1 ? "" : "s"}`}
-            />
-            <div className="grid gap-4 sm:grid-cols-2">
-              {items.map((achievement) => (
-                <AchievementCard key={achievement.id} achievement={achievement} />
-              ))}
-            </div>
-          </section>
-        ))}
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-achievements-profile.webp"
+          alt="Shooting Challenge achievements and player profile view showing earned progress"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+        />
+        <div className="space-y-12">
+          {groups.map(([groupName, items]) => (
+            <section key={groupName}>
+              <SectionMarker
+                label="Category"
+                title={groupName}
+                countLabel={`${items.length} badge${items.length === 1 ? "" : "s"}`}
+              />
+              <div className="grid gap-4 sm:grid-cols-2">
+                {items.map((achievement) => (
+                  <AchievementCard key={achievement.id} achievement={achievement} />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
       </div>
     </ProgramPage>
   );
@@ -147,16 +155,23 @@ export function AchievementsEmptyState() {
       heroVariant="contrast"
       ambientVariant="achievements"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.achievements.title}
-        description={EMPTY_STATE_COPY.achievements.description}
-        icon={<IconMedal size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Back to overview
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-achievements-profile.webp"
+          alt="Shooting Challenge achievements and player profile view showing earned progress"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.achievements.title}
+          description={EMPTY_STATE_COPY.achievements.description}
+          icon={<IconMedal size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Back to overview
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -170,15 +185,22 @@ export function AchievementsErrorState({ message }: { message: string }) {
       heroVariant="contrast"
       ambientVariant="achievements"
     >
-      <ErrorState
-        title="Could not load achievements"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Back to overview
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-achievements-profile.webp"
+          alt="Shooting Challenge achievements and player profile view showing earned progress"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+        />
+        <ErrorState
+          title="Could not load achievements"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Back to overview
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
