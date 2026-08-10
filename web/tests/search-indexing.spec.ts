@@ -3,18 +3,18 @@ import { expect, test } from "@playwright/test";
 const OFFICIAL_ORIGIN = "https://www.fairfieldbasketballclub.com";
 const OFFICIAL_BASE = `${OFFICIAL_ORIGIN}/shoot`;
 
-test.describe("public search indexing", () => {
-  test("home is indexable and canonical points to Fairfield /shoot", async ({ page }) => {
+test.describe("pre-launch search exclusion", () => {
+  test("home remains noindex while canonical points to Fairfield /shoot", async ({ page }) => {
     const response = await page.goto(".", { waitUntil: "domcontentloaded" });
     expect(response?.status()).toBeLessThan(400);
 
     const robots = page.locator('meta[name="robots"]');
-    await expect(robots).toHaveAttribute("content", /index/i);
-    await expect(robots).toHaveAttribute("content", /follow/i);
+    await expect(robots).toHaveAttribute("content", /noindex/i);
+    await expect(robots).toHaveAttribute("content", /nofollow/i);
 
     const googlebot = page.locator('meta[name="googlebot"]');
-    await expect(googlebot).toHaveAttribute("content", /index/i);
-    await expect(googlebot).toHaveAttribute("content", /follow/i);
+    await expect(googlebot).toHaveAttribute("content", /noindex/i);
+    await expect(googlebot).toHaveAttribute("content", /nofollow/i);
 
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", OFFICIAL_BASE);
   });
