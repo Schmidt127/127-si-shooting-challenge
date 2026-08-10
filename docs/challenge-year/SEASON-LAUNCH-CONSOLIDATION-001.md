@@ -1,7 +1,7 @@
 # Season-launch consolidation — SCV2-SEASON-LAUNCH-CONSOLIDATION-001
 
-**Authoritative PR:** #137 (`agent/season-launch-control-closeout`)  
-**Scope:** Offline tooling, import preview/reconciliation, tests, and controlled-launch instructions only.  
+**Authoritative PR:** #137 (`agent/season-launch-control-closeout`)
+**Scope:** Offline tooling, import preview/reconciliation, tests, and controlled-launch instructions only.
 **Not evidence of:** Airtable state, automation installation/testing, Fillout state, web/Vercel state, production activation, or final Mike approvals.
 
 ## PR #130 / #137 reconciliation
