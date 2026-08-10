@@ -14,6 +14,12 @@
 
 Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; webhook blank deferred)
 
+## Approved closeout packages
+
+| ID | Request | Approved scope | Status |
+|----|---------|----------------|--------|
+| **SCV2-APP-BASE-CLOSEOUT-001** | Airtable app/base closeout and operator proof packet | Reconcile current repository evidence; preserve completed results; prepare exact PROD proof cards for Automations 067 v3.4 and 115 v2.0; no production writes, automation redesign, web work, merge, or deployment | **in-progress** — Phase 2 approved by Mike 2026-08-10; repository packet in implementation |
+
 ---
 
 ## Wave status (2026-07-05)
