@@ -1,5 +1,10 @@
 # Launch Certification — START HERE
 
+> **Historical reference only — not an active source of truth.**
+> This certification packet is retained as dated evidence. Use the
+> [`Completion Master`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) for current
+> release status and the [`Authority Map`](../AUTHORITY-MAP.md) for ownership.
+
 **Authority:** Final Launch Closure Lead  
 **Date:** 2026-07-25  
 **Repo:** `Schmidt127/127-si-shooting-challenge`  

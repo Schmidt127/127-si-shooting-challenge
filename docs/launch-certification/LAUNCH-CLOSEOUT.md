@@ -1,5 +1,10 @@
 # Launch Closeout Report — 2026-07-25
 
+> **Historical reference only — not an active source of truth.**
+> This closeout records a prior release snapshot. Current release status is in
+> [`../SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md);
+> current live Vercel state must be checked in Vercel.
+
 **Authority:** Final Launch Closure Lead  
 **Mike merge authorization:** Explicit for PR #42  
 **Decision:** **READY WITH NON-BLOCKING FOLLOW-UPS**

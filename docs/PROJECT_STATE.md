@@ -2,9 +2,11 @@
 
 **Read this first** in new Cursor sessions. Update after major deploys, audit passes, or architecture changes.
 
-Last updated: **2026-07-27** (Agent 1 repo hardening: truth audit, SCN-030–043, integrity checker, Playwright hardening; **035/057/067 still Ready for Paste / Built — not Complete**; PRs #43–#47 merged on master `9d18b26`; Vercel Production landing URL + paste packages still Mike-owned)
+Last updated: **2026-08-10** (merged PRs #137–#139; 067 v3.4 and 115 v2.1 controlled PROD evidence reconciled; 2027 season policy recorded)
 
-**Prior:** **2026-07-25** (PROD completion pack: public `/shoot` re-smoke PASS; 067 Option B install packet; 057 v1.4 Denver date-key in repo; Airtable API token still required for Schmidt mutation tests; launch certification PR #42 merge 9110a71; Softr Obsolete; C-011 weekly email Live; **118/119 ON**)
+**Release status authority:** [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
+**Authority map:** [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
+**Prior snapshots and dated evidence:** historical unless explicitly identified as current live-system evidence.
 
 **Engineering law:** [ENGINEERING_CONSTITUTION.md](./ENGINEERING_CONSTITUTION.md)
 **New session:** [SESSION_HANDOFF-2026-07-06.md](./SESSION_HANDOFF-2026-07-06.md)
@@ -12,7 +14,7 @@ Last updated: **2026-07-27** (Agent 1 repo hardening: truth audit, SCN-030–043
 **Softr:** Obsolete / Not Used — Historical Reference Only: [deploy-checklists/SOFTR-CUTOVER-READINESS.md](./deploy-checklists/SOFTR-CUTOVER-READINESS.md)
 **Launch certification:** [launch-certification/START-HERE.md](./launch-certification/START-HERE.md)
 
-> **Do not treat** [agent-runs/CONTROL.json](./agent-runs/CONTROL.json) as live production truth. CONTROL is for four-agent run coordination only. This file and git `origin/master` are the ops snapshot.
+> **Do not treat** this repository file, `CONTROL.json`, or any dated packet as live production truth. Current Airtable, Fillout, Make, Gmail, Lambda, and Vercel state must be verified in those systems. This file is a live-ops pointer; the Completion Master owns release status.
 
 ---
 
@@ -21,7 +23,7 @@ Last updated: **2026-07-27** (Agent 1 repo hardening: truth audit, SCN-030–043
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current production commit** | Verify dynamically: `git fetch origin && git rev-parse origin/master` — application release `9110a71` (PR #42); closeout tip historically `4ffad3c` / `6aa60c9`; see [`launch-certification/LAUNCH-CLOSEOUT.md`](./launch-certification/LAUNCH-CLOSEOUT.md) |
+| **Current repository baseline** | `origin/master` `3aea908bc1674b54959254d2f6756acc3f51ff97` at reconciliation start; verify dynamically before relying on it |
 | **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
@@ -38,9 +40,9 @@ Verify with: `git fetch origin && git rev-parse origin/master`
 |-----------|--------|
 | **Wave 0 — 2025–26 close-out** | **Closed** — C-001, C-002, C-003, C-008, newspaper + radio outreach complete |
 | **H-001 — 090F audit fix** | **Complete** |
-| **H-002 — Automation 066 v3.4** | **Merged to `master` (PR #88, `23642a6`)** — PROD still runs pasted **v3.3** until Mike pastes v3.4. Natural path **FAILED** live (`records[0] should have a 'fields' property`). Do **not** call natural path Live Tested until v3.4 paste + successful rerun on `recCyFEPeATOVNlr9`. |
+| **H-002 — Automation 066** | Historical v3.3 failure and v3.4 repository correction are preserved; current 066 live status belongs to the dated controlled evidence and Airtable UI, not this snapshot alone |
 | **C-013 — Video upload Lambda** | **COMPLETE** (2026-07-11) — 070b v4.4 + 070c v1.1 PROD E2E PASS |
-| **C-020 — Engineering Test Framework** | Schema on DEV complete — pipeline-ready Fillout-shaped Submission still blocking live sequencing |
+| **C-020 — Engineering Test Framework** | 115 v2.1 controlled PROD proof passed twice; this proves the test harness path only, not downstream XP, summary, Make, email, or full-season behavior |
 | **C-025 — Zoom recording credit** | **Stage 17 COMPLETE** — rollup `ARRAYJOIN(ARRAYUNIQUE(values), "\n")`; conflict PASS (ZA `recfqsgM7zDobxsPf` Conflict=1/Approved=0; XP `recOceuW34jQz7suD` inactive); **117 / 057 / 042 ON**; 101 unchanged; webhook blank ([live](./deploy-checklists/C-025-stage17-prod-live-2026-07-20.md) · [progress](./status/C-025-stage17-current-prod-progress.md)) |
 | **C-011 — Automatic weekly email** | **PROD E2E PASS** (2026-07-24) — flow `118→072 v4.0→119→074→Make Bulk Email May 18→Gmail`; empty-week **`send_short`** verified; **074 PROD sendMode=Live** (never fixed Test) + Make Live writeback (`Sent?` / status / timestamp) **PASS**; **118/119 schedules ON** (Sun 5:00 / 10:00 AM America/Denver); 072+074+Make **ON**; architecture [WAS-WEEKLY-EMAIL-ARCHITECTURE.md](./next-wave/was-email/WAS-WEEKLY-EMAIL-ARCHITECTURE.md) |
 | **Automation standards (doc 06)** | **Active** — **066 v3.4** current V2 rewrite reference (v3.3 Grade Band ID match + v3.4 createRecords fields contract) |

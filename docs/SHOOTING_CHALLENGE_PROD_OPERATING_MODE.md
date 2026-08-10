@@ -1,10 +1,19 @@
 # Shooting Challenge PROD Operating Mode
 
-**Authority:** Controlling working rules for finishing Shooting Challenge while PROD is the active construction environment.
+> **Historical reference only — not an active source of truth.**
+> The historical PROD-first experiment is preserved here for context. The
+> current release-status authority is the
+> [`Completion Master`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md), and
+> ownership/evidence boundaries are defined in the
+> [`Authority Map`](./AUTHORITY-MAP.md).
 
-**Controlling completion source of truth:** [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
+This document records the temporary operating posture used during the 2026
+empty-base rebuild. It does not override the repository's DEV-first,
+Mike-approval, no-production-mutation, or historical-preservation guardrails.
+Do not use its old PROD-first instructions for new work.
 
-When older workflow docs (including DEV-first defaults in `docs/v2/04-ai-development-standards.md`, agent guardrails, or close-out notes) disagree with this document for **Shooting Challenge completion work**, **this document wins** for the duration of the PROD completion effort — then update the older file later so it does not keep spreading stale posture.
+All sections below are retained as historical evidence of that temporary
+posture. They are not current operating instructions.
 
 | Field | Value |
 |-------|--------|

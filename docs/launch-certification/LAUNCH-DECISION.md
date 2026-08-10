@@ -1,5 +1,11 @@
 # Launch Certification — Launch Decision
 
+> **Historical reference only — not an active source of truth.**
+> This 2026-07-25 certification snapshot is preserved for evidence. Current
+> release status is maintained in
+> [`../SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md);
+> current live Vercel state must be checked in Vercel.
+
 **Authority:** Final Launch Closure Lead  
 **Date:** 2026-07-25  
 **Repo:** `Schmidt127/127-si-shooting-challenge`  

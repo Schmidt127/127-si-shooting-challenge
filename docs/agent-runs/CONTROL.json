@@ -1,13 +1,43 @@
 {
   "schema_version": 1,
-  "updated_at": "2026-07-16T13:03:46Z",
+  "updated_at": "2026-08-10T22:35:00Z",
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "a4b32ca2ebf8ed47d11d790faa2c9a03866e3129",
-    "remote_sha": "a4b32ca2ebf8ed47d11d790faa2c9a03866e3129",
+    "sha": "3aea908bc1674b54959254d2f6756acc3f51ff97",
+    "remote_sha": "3aea908bc1674b54959254d2f6756acc3f51ff97",
     "match": true,
-    "note": "Lead tip-sync to master after #25\u2013#29 (CONTROL tip-sync PR included)."
+    "note": "Fresh reconciliation baseline after merged PRs #137, #138, and #139."
+  },
+  "release_control": {
+    "backlog_id": "SCV2-SEASON-LAUNCH-CONSOLIDATION-001",
+    "human_status_authority": "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
+    "authority_map": "docs/AUTHORITY-MAP.md",
+    "live_system_authority": {
+      "airtable": "Airtable UI and named-base exports",
+      "fillout": "Fillout UI",
+      "make_gmail_lambda": "Respective service UI and logs",
+      "vercel": "Vercel project 127-si-shooting-challenge"
+    },
+    "season_calendar_authority": "Airtable Weeks table, manually maintained",
+    "season_policy": {
+      "challenge_window": "2027-05-01 through 2027-06-30",
+      "early_bird": "2027-04-25 through 2027-05-01",
+      "week_1_start": "2027-05-02",
+      "fixed_week_count": false,
+      "new_season_level": 1,
+      "new_season_xp": 0,
+      "fillout_enrollment_control": "manual",
+      "temporary_fixture_warning": "Current today-based Early Bird record must be shortened or replaced before 2027 launch."
+    },
+    "evidence_boundaries": [
+      "Repository text does not prove current live-system configuration.",
+      "Controlled automation-action testing is not natural-trigger proof.",
+      "Offline tests are not controlled PROD proof.",
+      "Automation 115 creates one new Submission per explicit checked Run Test request by design; this is not idempotency.",
+      "115 creation success does not prove 005, 009, 020, 064, XP, summary, Make, or email behavior."
+    ],
+    "stale_reference_audit": "tools/testing/audit-source-of-truth.mjs"
   },
   "integration": {
     "branch": "master",
@@ -101,7 +131,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "PRs #25\u2013#28 merged to master. Kit idle. Next: Mike-authorized DEV live C-025/066 verification per DEV-release-readiness-verification-2026-07-16.md. Keep 070a/117a/117b OFF in PROD.",
+  "next_action": "Reconciliation package SCV2-SEASON-LAUNCH-CONSOLIDATION-001: review stale-reference audit and focused draft PR. Keep all live-system changes Mike-owned.",
   "stop_reason": null,
   "merge_order": [
     "research",

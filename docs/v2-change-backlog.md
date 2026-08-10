@@ -2,6 +2,11 @@
 
 **Purpose:** Living list of **everything you want changed** before and during 2026–27 build. Use this to plan **order of work** — some items block others.
 
+**Release-status boundary:** This is the live change backlog, not the release
+status authority. Current release status is maintained in
+[`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md);
+ownership and evidence boundaries are in [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md).
+
 **How to use**
 
 1. **Add requests here first** — one row per request, even if rough.
@@ -82,6 +87,12 @@ flowchart TD
 | **11** | Full audit pack + dry-run season | Gate before May 2027 |
 
 ---
+
+## Reconciliation package
+
+| ID | Request | Detail | Depends on | Status |
+|----|---------|--------|------------|--------|
+| **SCV2-SEASON-LAUNCH-CONSOLIDATION-001** | Repository source-of-truth reconciliation | Consolidate release authority, preserve historical evidence, reconcile 2027 season policy and PHA-first evidence, and add deterministic stale-reference auditing. No live-system or web implementation changes. | Merged PRs #137–#139; Mike Phase 2 approval 2026-08-10 | **done** |
 
 ## Full backlog (all owner requests)
 

@@ -5,9 +5,13 @@ Total output lines: 1039
 
 **Controlling source of truth** for finishing Shooting Challenge V2.
 
-**PROD operating mode:** Active construction, configuration, and testing rules for this completion effort are in [`docs/SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md`](./SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md) (PROD-first; DEV not required unless Mike asks; dependency safety still mandatory).
+**Authority map:** [`docs/AUTHORITY-MAP.md`](./AUTHORITY-MAP.md)
 
-Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, close-out notes, overnight packets, deploy checklists) remain as **evidence and history**. Do not delete them. When those files disagree with this document, **this document wins** — then update the older file later so it does not keep spreading stale status.
+Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`,
+close-out notes, overnight packets, deploy checklists) remain as **narrow
+purpose documents, evidence, or history**. Do not delete them. When they
+describe release status, this document wins; when they describe live-system
+state, the named live system wins.
 
 | Field | Value |
 |-------|--------|
@@ -20,15 +24,16 @@ Older files (`docs/v2-change-backlog.md`, `docs/CHATGPT-MASTER-PLAN-BRIEF.md`, c
 
 ## 1. Operating Rules
 
-These rules replace the old “DEV-first forever / never touch PROD data” posture for the current rebuild.
+These rules apply to this reconciliation and future release-status maintenance.
 
-1. **PROD is the active construction and testing base.** Work directly in the production Airtable base.
-2. **Historical data preservation is not required.** Old athlete, enrollment, submission, homework, XP, email, and achievement records have been removed (or may be removed freely).
-3. **Old participant data is gone.** Do not delay work to protect 2025–26 season rows.
-4. **Direct PROD development is approved.** DEV (`appTetnuCZlCZdTCT`) is optional and not required unless Mike specifically asks for it later.
-5. **Live records may be created and deleted freely** for controlled testing (especially the Schmidt testing enrollment).
-6. **Live emails and automations may stay enabled** because only controlled testing data should exist. Still avoid accidental mass emails to real parents outside the Schmidt test family.
-7. **System dependency safety remains mandatory.** Protect structure and connected workflows:
+1. **GitHub is the source of truth for committed code, scripts, and documentation.**
+2. **Airtable, Fillout, Make, Gmail, Lambda, and Vercel live state belongs to those systems.** Repository text must not be used to claim current live configuration.
+3. **DEV-first and Mike approval rules remain in force.** This reconciliation makes no live-system changes.
+4. **Historical evidence is preserved.** Do not delete historical documents, records, or useful test evidence as a documentation cleanup.
+5. **Controlled tests, natural triggers, offline tests, and full end-to-end proof are distinct evidence classes.**
+6. **Automation 115 is intentionally request-based, not idempotent:** every explicit checked Run Test request creates one new production-shaped Submission; downstream dedupe is a separate contract.
+7. **A successful 115 creation does not prove 005, 009, 020, 064, XP, weekly summary, Make, or email behavior.**
+8. **System dependency safety remains mandatory.** Protect structure and connected workflows:
    - table links, formulas, lookups, rollups, counts
    - automation scripts and triggers
    - Make scenarios
@@ -38,9 +43,9 @@ These rules replace the old “DEV-first forever / never touch PROD data” post
    - field names and single-select options used by scripts
    - duplicate-prevention keys (Source Keys / XP Dedupe Keys)
    - one writer per field (do not create competing automations)
-8. **Schmidt testing enrollment** is the primary live test athlete when records are recreated.
-9. **Code in GitHub is not the same as “working in PROD.”** A feature is only Complete when repository work, PROD installation, and live PROD testing are all satisfied where they apply.
-10. **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory and deployment inventory must distinguish deployed scripts from archived/design alternatives.
+9. **Schmidt testing enrollment** is the primary controlled live test athlete when Mike runs an authorized check.
+10. **Code in GitHub is not the same as “working in PROD.”** A feature is only Complete when repository work, installation, and live testing are all satisfied where they apply.
+11. **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory and deployment inventory must distinguish deployed scripts from archived/design alternatives.
 
 ---
 
@@ -79,9 +84,70 @@ Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 
 ---
 
+## 2A. Current release-control truth — 2026-08-10
+
+This section is the current release-status overlay. Dated sections below are
+historical evidence ledgers and technical records; they do not supersede this
+overlay.
+
+### Proven
+
+- PR [#137](https://github.com/Schmidt127/127-si-shooting-challenge/pull/137),
+  [#138](https://github.com/Schmidt127/127-si-shooting-challenge/pull/138),
+  and [#139](https://github.com/Schmidt127/127-si-shooting-challenge/pull/139)
+  are merged to `master`.
+- Automation 067 v3.4 controlled PROD first pass and replay passed.
+- Automation 115 v2.1 controlled PROD proof passed twice. Each explicit checked
+  request intentionally created one distinct Submission.
+- Testing Scenarios.Homework Assignment links **Program Homework Assignments**.
+- The `/shoot` web release includes PR #138 imagery and retains the approved
+  pre-launch `noindex, nofollow` policy. Deployment state must still be verified
+  in Vercel.
+
+### Not proven by this package
+
+- 067/115 creation does not prove 005/009/020/064, Homework XP, summaries,
+  Make/S3, email, or full season behavior.
+- Controlled automation-action tests do not prove natural-trigger behavior.
+- Offline tests do not prove controlled PROD behavior.
+- Repository text does not prove current Airtable, Fillout, Make, Gmail, or
+  Vercel configuration.
+
+### Open / blocked / deferred
+
+- Fresh Schmidt athlete-path proof after the current base reset remains open.
+- 2027 Weeks/config validation, Fillout activation, season-sensitive
+  automation review, Make/email safety, and final Mike launch approval remain
+  open.
+- The current today-based Early Bird record is a temporary testing fixture and
+  must be shortened or replaced before the 2027 launch.
+- No fixed week count is authoritative; Airtable Weeks is manually maintained.
+
+### 2027 season authority
+
+Challenge window is May 1–June 30, 2027; Early Bird is April 25–May 1, 2027;
+Week 1 starts May 2, 2027. Every new season begins at Level 1 with 0 season XP.
+Fillout manually controls enrollment availability. See the
+[authority map](./AUTHORITY-MAP.md) for ownership and evidence boundaries.
+
+### Rolling next actions
+
+| Owner | Next action |
+|---|---|
+| Mike | Verify live Weeks/config, temporary Early Bird fixture, Fillout availability, and launch approval in the named live systems |
+| Cursor Desktop | Maintain the Completion Master, CONTROL, authority map, and deterministic stale-reference audit |
+| Cursor Online | Review the focused reconciliation PR and its evidence boundaries |
+| Airtable | Supply a read-only current export or UI attestation for live configuration and controlled test results |
+| Codex | No action until a named, approved repository task is assigned |
+
+---
+
 ### Current PROD reconciliation (2026-08-08)
 
-This is the controlling current-state correction for the affected automations. Older dashboard reconciliations below remain historical evidence and must not be read as current paste-pending status. For Issue #97, the PROD-first operating rules supersede the older DEV-install requirement; the documented PROD installation and controlled Schmidt proof are the governing release evidence.
+This is a dated evidence record for the affected automations. Older dashboard
+reconciliations below remain historical evidence and must not be read as
+current paste-pending status. Live installation and controlled Schmidt proof
+must be verified in Airtable; repository text records the evidence boundary only.
 
 | Item | Current status | Current truth |
 |------|----------------|---------------|
@@ -809,17 +875,17 @@ Map older IDs into SC items so they are not tracked as separate unfinished work.
 | C-004/C-005/C-007 | SC-142 | Not needed after wipe |
 | Softr cutover (Obsolete) / indexing / publish-flag rename | SC-114 Superseded; SC-115; SC-144 | Web cluster — Softr not a launch gate |
 
-**Document conflicts to treat as stale (do not re-open as separate work):**
+**Historical conflicts and their current disposition (do not re-open as separate work):**
 
 | Topic | Newer truth | Stale sources |
 |-------|-------------|---------------|
 | Zoom recording | PROD **117** = approval email → Make **117f** (SC-088). Stage 17 credit scripts are design alternatives (SC-074 / SC-086). Live Zoom XP = **101**. | Older docs that call the orchestrator “Automation 117 ON” are stale — see §1A / §9L |
 | C-013 video | PROD E2E done historically (SC-094) | Brief Wave 7 queued; some close-out “open” rows |
-| H-002 / 066 | **066 v3.4 repo fix 2026-08-06** (createRecords `fields` contract); PROD still v3.3 until paste; natural path **FAILED** live — not Live Tested via natural path | Stale “paste pending” / “checkbox didn’t fire” briefs without the fields error |
+| H-002 / 066 | The v3.3 `createRecords` failure is historical; current controlled 066 evidence is recorded in the dated release evidence and must be verified against live Airtable state | Older “paste pending” / “checkbox didn’t fire” briefs |
 | C-011 | Repo ready (SC-035+) | Backlog plain “queued” without repo-ready nuance |
-| C-023 / 116 | Largely installed historically (SC-097) | Some backlog “prod paste pending” lines |
-| DEV-first forever | **Superseded by §1 operating rules** | ENGINEERING_CONSTITUTION / doc 04 DEV-first language until those docs are revised |
-| Testing Scenarios PROD ban | **Under review via SC-001** | C-020 “never paste 115 to PROD” |
+| C-023 / 116 | Historical installation and DEV evidence remain evidence only; current live state belongs to Airtable and the named release package | Older install and paste queues |
+| DEV-first workflow | Remains the repository guardrail; this reconciliation made no live-system change | Historical PROD-first operating-mode packet |
+| Testing Scenarios / 115 | Controlled PROD proof for 115 v2.1 is recorded in §2A; one explicit checked request creates one Submission by design | Older “never paste 115” or v2.0 status text |
 
 ---
 

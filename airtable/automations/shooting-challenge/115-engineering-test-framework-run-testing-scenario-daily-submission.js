@@ -3,7 +3,7 @@ Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submis
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-08-10 (PROD install v2.0; v2.1 allowlist correction pending paste)
+Last Synced From Airtable: 2026-08-10 (controlled PROD proof passed for v2.1)
 Last GitHub Update: 2026-08-10 (v2.1 — controlled enrollment allowlist correction)
 
 Purpose:
@@ -22,15 +22,15 @@ Run Test?, Dry Run?, Related Enrollment, Submission Date, Shot Total, Homework A
 Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submission
 
 Notes:
-GitHub is the source-of-truth copy. Automation 115 v2.0 was pasted into PROD on 2026-08-10.
-Version v2.1 adds the current controlled Schmidt enrollment to the allowlist; paste/install in PROD is still Mike-owned.
+GitHub is the source-of-truth copy. Controlled PROD proof passed for v2.1 on
+2026-08-10; current installed state remains a live-system claim owned by Mike.
 */
 
 /************************************************************
  * 115 - ENGINEERING TEST FRAMEWORK
  * Run Testing Scenario — Daily Submission + Homework + Video
  *
- * Version: v2.0
+ * Version: v2.1
  * Date Written: 2026-07-06
  * Last Updated: 2026-08-10
  *
