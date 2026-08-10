@@ -1,8 +1,8 @@
 # PKG-003 Controlled-Proof Specification
 
-**Workstream:** PKG-003 proof-gap design only  
-**Baseline:** `origin/master` `080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b`  
-**Environment:** Mike-owned controlled check only; no live test was performed for this report  
+**Workstream:** PKG-003 proof-gap design only
+**Baseline:** `origin/master` `080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b`
+**Environment:** Mike-owned controlled check only; no live test was performed for this report
 **Owner:** Mike executes named Airtable / Fillout / Make checks; Lead records matrix evidence
 
 ## 1. Evidence contract
@@ -132,4 +132,3 @@ The authoritative policy is Challenge Window **2027-05-01 through 2027-06-30**, 
 - `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 - `docs/challenge-year/SEASON-LAUNCH-CONTROL.md`, `FILLOUT-SEASON-ACTIVATION.md`, `SCHMIDT-SEASON-LAUNCH-TEST-PLAN.md`, and `docs/deploy-checklists/NEXT-SEASON-RESET-STARTUP.md`.
 - Offline suites referenced by `docs/v2/V2_LAUNCH_SMOKE_TESTS.md` and `docs/testing/SC-007-008-RELIABILITY-RUNBOOK.md`.
-
