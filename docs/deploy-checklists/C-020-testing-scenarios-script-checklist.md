@@ -57,7 +57,7 @@ When implemented, the Cursor script **must** follow these steps in order:
 | **6** | Write **Last Run Status**, **Last Run At**, **Actual Result**, and **Pass/Fail Notes** back to **Testing Scenarios** only | **Testing Scenarios** only |
 | **7** | **Never** write test metadata to pipeline tables (Submissions, Submission Assets, Homework Completions, Video Feedback, XP Events, Weekly Athlete Summary, etc.) | — |
 
-**After successful run:** uncheck **`Run Test?`** (operator trigger lives on **Testing Scenarios** only).  
+**After successful run:** uncheck **`Run Test?`** (operator trigger lives on **Testing Scenarios** only). A later explicit request (re-checking the box) is a new controlled test request and intentionally creates a new production-shaped Submission; 115 is not an idempotent Submission processor. Leaving the box unchecked and re-executing the script performs no create.
 **Dry Run?:** if checked, preview/log without pipeline writes — design detail at implementation time.
 
 ---
@@ -440,7 +440,7 @@ Testing Scenarios intake fields are **complete** on DEV. Pipeline tables still n
 | **070a** | OFF (expected; **Make/S3 upload not tested**) |
 | Result | **PASS** — downstream verified via API 2026-07-07 |
 
-**Key acceptance proof:** 2 files → 2 Submission Assets → **1** Homework Completion (not 2).
+**Key acceptance proof:** 2 files → 2 Submission Assets → **1** Homework Completion (not 2). This is the downstream 009/020 identity contract for one request; a second explicit `Run Test?` request may create another controlled Submission by design.
 
 **Note:** Distinct from formal Test B (`recP51mbE5KEGngxQ` / `reca8SxXfri7aRZiB`, 1 file) — this is the operator **2-file functional live** retest for Wave 6.
 

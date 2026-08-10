@@ -86,7 +86,7 @@ test("live create never touches XP Events / WAS / Weeks tables (daily path)", as
   assert.ok(!touched.has("Weeks"));
 });
 
-test("rerun: second live run creates a second Submission and repoints Linked Submission", async () => {
+test("second explicit Run Test request creates a second Submission", async () => {
   const base = buildStandardBase();
   const first = await run115({ base, recordId: SCENARIO });
   assert.equal(first.output.values.actionOut, "created");
@@ -100,7 +100,7 @@ test("rerun: second live run creates a second Submission and repoints Linked Sub
   assert.deepEqual(scen.getCellValue("Linked Submission"), [{ id: created[1].id }]);
 });
 
-test("replay without re-checking Run Test? is idempotent and performs no action", async () => {
+test("re-execution without re-checking Run Test? is skipped without a create", async () => {
   const base = buildStandardBase();
   const first = await run115({ base, recordId: SCENARIO });
   assert.equal(first.output.values.actionOut, "created");
@@ -108,7 +108,6 @@ test("replay without re-checking Run Test? is idempotent and performs no action"
   assert.equal(second.output.values.statusOut, "skipped");
   assert.equal(base.getTable("Submissions").createdPayloads.length, 1);
 });
-
 test("invalid scenario type: skipped_wrong_scenario, no version-stale message", async () => {
   const base = buildStandardBase({ scenarioCells: { "Scenario Type": "Award Generation" } });
   const { output, error } = await run115({ base, recordId: SCENARIO });
@@ -233,8 +232,33 @@ test("homework live create writes PHA RID to Homework Name 1", async () => {
   assert.equal(output.values.actionOut, "created");
   const payload = base.getTable("Submissions").createdPayloads[0].payload;
   assert.deepEqual(payload["Homework Name 1"], [{ id: IDS.PHA_HW1 }]);
+  assert.deepEqual(payload["HW Sub 1"], [
+    { url: "https://example.com/hw1.png", filename: "hw1.png" },
+  ]);
   assert.match(scenarioRecord(base).getCellValueAsString("Actual Result"), /PHA/);
   assert.match(scenarioRecord(base).getCellValueAsString("Actual Result"), new RegExp(IDS.LIBRARY_HW1));
+});
+
+test("one explicit Homework request creates one Submission and no XP, Week, or WAS writes", async () => {
+  const base = buildHomeworkBase();
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionOut, "created");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 1);
+  const touched = new Set(base.getTableCalls);
+  assert.ok(!touched.has("XP Events"));
+  assert.ok(!touched.has("Weekly Athlete Summary"));
+  assert.ok(!touched.has("Weeks"));
+});
+
+test("two explicit Homework requests intentionally create two controlled Submissions", async () => {
+  const base = buildHomeworkBase();
+  const first = await run115({ base, recordId: SCENARIO });
+  assert.equal(first.output.values.actionOut, "created");
+  scenarioRecord(base).cells["Run Test?"] = true;
+  const second = await run115({ base, recordId: SCENARIO });
+  assert.equal(second.output.values.actionOut, "created");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 2);
 });
 
 test("homework dry run preview labels PHA and library separately", async () => {

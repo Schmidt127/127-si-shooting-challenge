@@ -15,11 +15,11 @@ The current baseline below supersedes stale historical wording, but it does not 
 | Automation 005 | Installed in PROD, path proven | `005 → 009 → 020` path passed on the initial and replay submissions |
 | Automation 009 | Installed in PROD, path proven | Initial and replay submissions reused the same Homework Completion |
 | Automation 020 | Installed in PROD, path proven | Exact Homework Completion reuse confirmed; no duplicate created |
-| Automation 067 v3.4 | Installed in PROD; focused proof pending | Do not redesign; Mike must run the reflection-quiz card below |
-| Automation 115 v2.1 | Repository corrected; PROD paste/install pending | Approved allowlist now includes both `recgP9qZYjAhE7NXm` and `recCyFEPeATOVNlr9`; Mike must paste v2.1 before proof |
+| Automation 067 v3.4 | **Live Tested in PROD** | Quiz `recAO1S9TdZHupl7t` created/reused Homework Completion `reckpeVV9G3M13j5U`; controlled proof passed, including idempotency. This does not prove Homework XP or full downstream completion. |
+| Automation 115 v2.1 | **Live Tested in PROD** | Scenario `recXjRRg8n0NodziZ` created Submissions `rec7e5X7QaVDZLpiL` and `recbbO685zSEuyzM9` from two explicit checked requests. Each request intentionally creates a new Submission; 115 is not an idempotent Submission processor. |
 | Homework Completion reuse | Proven | Initial `rectWmGA1K2RSN4bp` and replay `recPPrwds0oz0EB4C` both reused `recyU1G9mWC1rQSst` |
-| Homework Library relationship | Proven in prior closeout evidence | Historical library record `rechVLOeyEVIqmy2v`; resolve the current live record before 067 proof |
-| PHA relationship | Proven in prior closeout evidence | Historical PHA `recgj8dPk4ouTwCOj`; resolve the current active PHA and its Week/Library links before 067 proof |
+| Homework Library relationship | **Proven in current controlled paths** | Current 067/115 evidence preserves the PHA-linked Homework Library identity; historical IDs are not used as current-record claims |
+| PHA relationship | **Proven in current controlled paths** | Testing Scenarios Homework Assignment links Program Homework Assignments; 115 carries the PHA RID and 005/020 preserve PHA + Library identity |
 | Package 10 | Closed / preserved | PR #133 merged and deployed; PR #134 corrected Automation 115's stale header; do not reopen |
 | Production writes | Mike-only | Cursor did not modify PROD Airtable data or simulate either test |
 
@@ -30,8 +30,8 @@ The current baseline below supersedes stale historical wording, but it does not 
 | Testing Views | **Complete** | Completion Master evidence: 10/10 required views, zero sanity failures, Schmidt rows visible |
 | Automation 057 | **Controlled PROD proof exists** | Denver-boundary behavior was proven; current operational/version attestation remains a separate UI check |
 | Automation 035 v1.2 | **Creation/idempotency proof exists; OFF** | Creation and rerun/idempotency passed; operational posture remains OFF pending Mike approval |
-| Automation 067 v3.4 | Installed in PROD; focused proof pending | Current enrollment and active PHA identity must be resolved from PROD at test time |
-| Automation 115 v2.1 | **PROD paste/install pending** | Repository allowlist includes `recgP9qZYjAhE7NXm` and `recCyFEPeATOVNlr9`; focused proof follows paste |
+| Automation 067 v3.4 | **Live Tested in PROD** | Controlled quiz `recAO1S9TdZHupl7t` → Homework Completion `reckpeVV9G3M13j5U`; idempotency passed |
+| Automation 115 v2.1 | **Live Tested in PROD** | Controlled Homework scenario `recXjRRg8n0NodziZ`; explicit requests created `rec7e5X7QaVDZLpiL` and `recbbO685zSEuyzM9`; no claim of processor idempotency |
 
 The first three rows are not lacking repository evidence and must not be reported as open for lack of proof.
 
@@ -39,10 +39,8 @@ The first three rows are not lacking repository evidence and must not be reporte
 
 These remain open because they require a new PROD decision, current-record lookup, or launch approval:
 
-1. Focused PROD proof for Automation 067 v3.4.
-2. PROD paste/install and focused proof for Automation 115 v2.1.
-3. Fresh Schmidt athlete-path proof after the base reset, using current enrollment `recCyFEPeATOVNlr9`.
-4. Season-launch readiness: Weeks/config import and validation, Fillout activation, season-sensitive automation review, Make/email safety, and final Mike approval.
+1. Fresh Schmidt athlete-path proof after the base reset, using current enrollment `recCyFEPeATOVNlr9`.
+2. Season-launch readiness: Weeks/config import and validation, Fillout activation, season-sensitive automation review, Make/email safety, and final Mike approval.
 
 No item above is marked complete from a governance-table row, old install packet, or repository-only script header.
 
@@ -142,7 +140,7 @@ Do not paste v2.0 after this package. Do not alter fields or schema.
 - 020 links or reuses exactly one Homework Completion for the enrollment + Week + Homework + slot identity.
 - The Homework Completion is the current matching row resolved during setup.
 - Homework Completion links separately to the resolved PHA and Homework Library records.
-- No duplicate Homework Completion is created on replay.
+- A second explicit checked `Run Test?` request creates a second controlled Submission by design; this is not 115 idempotency. Downstream 020 still must reuse the correct Homework Completion identity.
 - No XP Event is expected from intake alone. Coach review and 064/065 XP are outside this focused 115 card.
 - 070a/Make/S3 is not tested, and no real email or upload send is authorized.
 
@@ -156,4 +154,4 @@ Do not delete the scenario or pipeline rows until all links and replay counts ar
 
 ## Closeout rule
 
-This package can advance 067 and 115 from **Installed in PROD** to **Live Tested in PROD** only after Mike returns the requested IDs and console output and the evidence is reviewed. It cannot mark the overall season launch ready; that requires the separate launch checklist and Mike approval.
+067 and 115 are now **Live Tested in PROD** based on the controlled IDs recorded above. This package does not mark the overall season launch ready; fresh athlete-path proof, season configuration, intake, email safety, and Mike launch approval remain separate.
