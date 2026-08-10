@@ -12,7 +12,7 @@
 |------|-------|
 | Branch | `cursor/automation-launch-closeout-bffb` |
 | Base | `master` @ `ee635a3` |
-| Commit | *(see `git log -1` after push)* |
+| Commit | `437ea97` |
 
 ---
 
