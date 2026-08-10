@@ -36,6 +36,8 @@ test("067 v3.4 source contract — PI-first HW17 PHA resolution + fail-closed li
   assert.match(source, /homeworkName1.*PHA record ID/s);
   assert.match(source, /validateLinkedHomeworkCompletion/);
   assert.match(source, /requireSingleCompletionMatch/);
+  assert.match(source, /isExactCompletionIdentity/);
+  assert.match(source, /must have exactly one link/);
   assert.doesNotMatch(source, /resolveHw17WeekFromPha/);
   assert.doesNotMatch(source, /hw\[0\]===hw17Id/);
   assert.doesNotMatch(source, /let match=matches\[0\]/);
@@ -174,6 +176,66 @@ test("067 — already-linked wrong PHA fails closed", async () => {
   const { error } = await run067({ base });
   assert.ok(error);
   assert.match(String(error.message), /Program Homework Assignment mismatch/i);
+});
+
+test("067 — already-linked multiple Enrollments fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [
+      goodHc(HC_GOOD, { Enrollment: [{ id: ENROLLMENT_ID }, { id: ENROLLMENT_OTHER }] }),
+    ],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Enrollment must have exactly one link/i);
+});
+
+test("067 — already-linked multiple Weeks fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [
+      goodHc(HC_GOOD, { Week: [{ id: HW17_WEEK }, { id: WEEK_OTHER }] }),
+    ],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Week must have exactly one link/i);
+});
+
+test("067 — already-linked multiple Homework Library links fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [
+      goodHc(HC_GOOD, { Homework: [{ id: HW17_LIBRARY }, { id: "recOtherLibrary001" }] }),
+    ],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Homework must have exactly one link/i);
+});
+
+test("067 — already-linked multiple PHA links fails closed", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [
+      goodHc(HC_GOOD, { "Program Homework Assignment": [{ id: HW17_PHA }, { id: PHA_OTHER }] }),
+    ],
+    quizCells: { "Homework Completion": [{ id: HC_GOOD }] },
+  });
+  const { error } = await run067({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /Program Homework Assignment must have exactly one link/i);
+});
+
+test("067 — discovery ignores completion with ambiguous identity links", async () => {
+  const base = build067PhaBase({
+    homeworkCompletions: [
+      goodHc("recHcMultiWeek0671", { Week: [{ id: HW17_WEEK }, { id: WEEK_OTHER }] }),
+    ],
+  });
+  const { output, error } = await run067({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(base.tables.get("Homework Completions").createdPayloads.length, 1);
 });
 
 test("067 — blank PHA on otherwise exact linked completion is populated", async () => {

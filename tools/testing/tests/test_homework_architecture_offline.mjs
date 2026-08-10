@@ -58,6 +58,8 @@ test("067 v3.4 — HW17 PHA PI-first resolution, Submission stores PHA, linked H
   assert.match(source, /CONFIG\.values\.slotHw1/);
   assert.match(source, /validateLinkedHomeworkCompletion/);
   assert.match(source, /requireSingleCompletionMatch/);
+  assert.match(source, /isExactCompletionIdentity/);
+  assert.match(source, /must have exactly one link/);
   assertNoPattern(source, /resolveHw17WeekFromPha/, "067 must not reverse-search PHA by library ID");
   assertNoPattern(source, /homeworkLibrary\.week|CONFIG\.curriculum\.week/, "067 must not read library Week");
   assertNoPattern(source, /let match=matches\[0\]/, "067 must not silently pick first duplicate match");

@@ -11,7 +11,7 @@ Scheduling rule:
 - Submissions.Homework Name 1 stores Program Homework Assignment (PHA) record IDs.
 - HW17 schedule is resolved PI-first from active PHA rows (HW1 slot), then content-checked via PHA.Homework Assignment → Homework Library HW 17.
 - Homework Completions.Homework = library ID; Program Homework Assignment = PHA ID when field exists.
-- Quiz-linked and discovered Homework Completions must match Enrollment + Week + Library + PHA exactly; duplicate matches fail closed.
+- Quiz-linked and discovered Homework Completions must match Enrollment + Week + Library + PHA exactly (exactly one link each); duplicate matches fail closed.
 - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve the schedule.
 - Athlete Grade Band may still be copied to Homework Completion as metadata.
 
@@ -190,9 +190,15 @@ async function resolveHw17PhaForEnrollment(enrollmentId) {
   return { hw17WeekId: weekIds[0], phaId: pha.id, hw17LibraryId, programInstanceId, gradeBandId };
 }
 
+function isExactCompletionIdentity(record,enrollmentId,weekId,homeworkId){
+  const enrollmentIds=linkedIds(record,CONFIG.homework.enrollment);
+  const weekIds=linkedIds(record,CONFIG.homework.week);
+  const homeworkIds=linkedIds(record,CONFIG.homework.homework);
+  if(enrollmentIds.length!==1||weekIds.length!==1||homeworkIds.length!==1)return false;
+  return buildDedupeKey(enrollmentIds[0],weekIds[0],homeworkIds[0])===buildDedupeKey(enrollmentId,weekId,homeworkId);
+}
 function findCompletionMatch(records,enrollmentId,weekId,homeworkId){
-  const target=buildDedupeKey(enrollmentId,weekId,homeworkId);
-  return records.filter(hw=>buildDedupeKey(linkedIds(hw,CONFIG.homework.enrollment)[0]||"",linkedIds(hw,CONFIG.homework.week)[0]||"",linkedIds(hw,CONFIG.homework.homework)[0]||"")===target);
+  return records.filter(hw=>isExactCompletionIdentity(hw,enrollmentId,weekId,homeworkId));
 }
 function requireSingleCompletionMatch(matches,contextLabel){
   if(matches.length>1)throw new Error(`Multiple Homework Completions match ${contextLabel}: ${matches.map(r=>r.id).join(", ")}`);
@@ -202,17 +208,21 @@ async function validateLinkedHomeworkCompletion(hcId,{enrollmentId,weekId,librar
   const fields=safeFields(homeworkTable,[CONFIG.homework.enrollment,CONFIG.homework.week,CONFIG.homework.homework,CONFIG.homework.programHomeworkAssignment]);
   const hc=await homeworkTable.selectRecordAsync(hcId,{fields});
   if(!hc)throw new Error(`Homework Completion not found: ${hcId}`);
-  const hcEnrollment=linkedIds(hc,CONFIG.homework.enrollment)[0]||"";
-  const hcWeek=linkedIds(hc,CONFIG.homework.week)[0]||"";
-  const hcHomework=linkedIds(hc,CONFIG.homework.homework)[0]||"";
+  const hcEnrollmentIds=linkedIds(hc,CONFIG.homework.enrollment);
+  const hcWeekIds=linkedIds(hc,CONFIG.homework.week);
+  const hcHomeworkIds=linkedIds(hc,CONFIG.homework.homework);
   const hcPhaIds=fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment)?linkedIds(hc,CONFIG.homework.programHomeworkAssignment):[];
-  if(hcEnrollment!==enrollmentId)throw new Error(`Homework Completion ${hcId} Enrollment mismatch: expected ${enrollmentId}, got ${hcEnrollment||"blank"}.`);
-  if(hcWeek!==weekId)throw new Error(`Homework Completion ${hcId} Week mismatch: expected ${weekId}, got ${hcWeek||"blank"}.`);
-  if(hcHomework!==libraryId)throw new Error(`Homework Completion ${hcId} Homework mismatch: expected ${libraryId}, got ${hcHomework||"blank"}.`);
+  if(hcEnrollmentIds.length!==1)throw new Error(`Homework Completion ${hcId} Enrollment must have exactly one link, found ${hcEnrollmentIds.length}: ${hcEnrollmentIds.join(", ")||"blank"}.`);
+  if(hcEnrollmentIds[0]!==enrollmentId)throw new Error(`Homework Completion ${hcId} Enrollment mismatch: expected ${enrollmentId}, got ${hcEnrollmentIds[0]}.`);
+  if(hcWeekIds.length!==1)throw new Error(`Homework Completion ${hcId} Week must have exactly one link, found ${hcWeekIds.length}: ${hcWeekIds.join(", ")||"blank"}.`);
+  if(hcWeekIds[0]!==weekId)throw new Error(`Homework Completion ${hcId} Week mismatch: expected ${weekId}, got ${hcWeekIds[0]}.`);
+  if(hcHomeworkIds.length!==1)throw new Error(`Homework Completion ${hcId} Homework must have exactly one link, found ${hcHomeworkIds.length}: ${hcHomeworkIds.join(", ")||"blank"}.`);
+  if(hcHomeworkIds[0]!==libraryId)throw new Error(`Homework Completion ${hcId} Homework mismatch: expected ${libraryId}, got ${hcHomeworkIds[0]}.`);
   let populatePha=false;
   if(fieldExists(homeworkTable,CONFIG.homework.programHomeworkAssignment)){
     if(!hcPhaIds.length)populatePha=true;
-    else if(hcPhaIds.length!==1||hcPhaIds[0]!==phaId)throw new Error(`Homework Completion ${hcId} Program Homework Assignment mismatch: expected ${phaId}, got ${hcPhaIds.join(", ")||"blank"}.`);
+    else if(hcPhaIds.length>1)throw new Error(`Homework Completion ${hcId} Program Homework Assignment must have exactly one link, found ${hcPhaIds.length}: ${hcPhaIds.join(", ")}.`);
+    else if(hcPhaIds[0]!==phaId)throw new Error(`Homework Completion ${hcId} Program Homework Assignment mismatch: expected ${phaId}, got ${hcPhaIds[0]}.`);
   }
   return {hc,populatePha};
 }
