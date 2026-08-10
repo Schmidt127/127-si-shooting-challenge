@@ -58,4 +58,3 @@ node --test tools/testing/tests/test_homework_architecture_offline.mjs
 Result: **12/12 PASS**.
 
 No tiny test-only fix was necessary. No merge or PR was attempted.
-
