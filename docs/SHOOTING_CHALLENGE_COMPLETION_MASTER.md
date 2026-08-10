@@ -108,14 +108,14 @@ The dated packet [`SCV2-APP-BASE-CLOSEOUT-001.md`](./prod-completion/2026-08-10/
 |---|---|---|
 | 005 → 009 → 020 | **Installed in PROD / path proven** | Initial `rectWmGA1K2RSN4bp` and replay `recPPrwds0oz0EB4C` reused Homework Completion `recyU1G9mWC1rQSst`; no duplicate created |
 | 067 v3.4 | **Installed in PROD / focused proof pending** | Mike-only reflection-quiz card in the dated closeout packet |
-| 115 v2.0 | **Installed in PROD / focused proof pending** | Mike-only Testing Scenarios card in the dated closeout packet; do not redesign the executable logic |
-| Homework Library | **Proven relationship** | Canonical library record `rechVLOeyEVIqmy2v` |
-| Program Homework Assignment | **Proven relationship** | Current PHA record `recgj8dPk4ouTwCOj` |
+| 115 v2.0 | **Installed in PROD / blocked before proof** | Current Schmidt enrollment `recCyFEPeATOVNlr9` is not in the installed allowlist; 115 v2.0 currently allows only `recgP9qZYjAhE7NXm` |
+| Homework Library | **Proven relationship in prior evidence** | Historical record `rechVLOeyEVIqmy2v`; resolve the current PROD record before the 067 card |
+| Program Homework Assignment | **Proven relationship in prior evidence** | Historical record `recgj8dPk4ouTwCOj`; resolve the current active PHA before the 067 card |
 | Package 10 | **Closed / preserved** | PR #133 merged/deployed; PR #134 corrected 115's stale header; no reopen |
 
 ### Closeout items still requiring Mike evidence
 
-Native Airtable automation UI/status attestation, required Testing views and filters, actual 057 v1.4 status, actual 035 OFF/ON status, fresh Schmidt athlete-path proof after the reset, and season-launch readiness remain open. Repository evidence alone does not advance these items.
+Focused 067 PROD proof, the 115 enrollment decision, fresh Schmidt athlete-path proof after the reset, and season-launch readiness remain open. Testing Views (10/10, zero sanity failures), Automation 057 controlled PROD proof, and Automation 035 v1.2 creation/idempotency proof are preserved evidence. Automation 035 remains OFF pending approval. Repository evidence does not replace the remaining current-record lookup or Mike decisions.
 
 No status in this overlay is marked Complete or Live Tested solely from a governance-table row, stale install packet, or script header. The full test cards, expected links, duplicate checks, returned record IDs, and console-output requirements are in the dated packet.
 

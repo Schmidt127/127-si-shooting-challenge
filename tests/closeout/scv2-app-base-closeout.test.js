@@ -49,6 +49,13 @@ test("each Mike production test card contains the required safety contract", () 
   ]) {
     assert.match(packet, new RegExp(requiredText, "i"));
   }
+
+  assert.match(packet, /Automation 115 v2\.0 — BLOCKED/);
+  assert.match(packet, /recCyFEPeATOVNlr9/);
+  assert.match(packet, /recgP9qZYjAhE7NXm/);
+  assert.match(packet, /authorize a separate code-change package/i);
+  assert.match(packet, /constructing a valid current PHA test fixture/i);
+  assert.match(packet, /Do not substitute the current enrollment into 115/i);
 });
 
 test("closeout packet keeps production mutations Mike-owned", () => {
