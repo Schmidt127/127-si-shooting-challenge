@@ -19,13 +19,14 @@ The command always reports `Dry run: true; Airtable writes: 0` and creates only 
 
 - `season-launch-dry-run.md` — approval-ready summary
 - `season-launch-dry-run.json` — machine-readable checks and blockers
+- `mike-decision-sheet.md` — concise sign-off sheet; fixture values are proposed, not approved
 - `weeks-import.csv` — proposed manual import file, not an automatic import
 
 It fails closed when the Config is invalid, Week 0 is not a Sunday, the regular-week count is absent/invalid, the level policy is not explicitly `reset` or `carry`, or supplied existing Weeks conflict by label, canonical key, or date range. If no existing-Week export is supplied, it reports a warning and the later reconciliation gate remains required.
 
 ## 2. Mike approval required
 
-Before any import, Mike records all three decisions:
+Before any import, Mike completes the generated `mike-decision-sheet.md` and records all three decisions:
 
 1. The Early Bird (Week 0) Sunday (`YYYY-MM-DD`).
 2. The number of regular Weeks.

@@ -617,6 +617,7 @@ function cmdLaunchDryRun(args) {
   writeDirOutputs(out, {
     "season-launch-dry-run.json": result,
     "season-launch-dry-run.md": result.markdown,
+    "mike-decision-sheet.md": result.decisionSheet,
     "weeks-import.csv": result.weekPackage?.files?.weeksImportCsv,
   });
   process.stdout.write(`Overall: ${result.overall}\nDry run: true; Airtable writes: 0\n`);

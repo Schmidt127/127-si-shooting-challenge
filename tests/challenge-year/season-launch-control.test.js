@@ -25,6 +25,7 @@ const {
   activationPreview,
   rollbackPreview,
   buildSeasonLaunchDryRun,
+  buildMikeDecisionSheet,
   findWeekConflicts,
   buildSeasonReliabilityFindings,
   SEASON_FINDING_CODES,
@@ -227,7 +228,18 @@ test("season launch dry run produces a no-write Week import preview", () => {
   assert.strictEqual(r.weekZero.displayLabel, "Early Bird");
   assert.strictEqual(r.timezone, "America/Denver");
   assert.ok(r.markdown.includes("Proposed Week import"));
+  assert.ok(r.decisionSheet.includes("Mike season-launch decision sheet"));
+  assert.ok(r.decisionSheet.includes("`reset` (confirm)"));
   assert.ok(r.checks.some((check) => check.code === "existing_weeks_not_supplied"));
+});
+
+test("decision sheet visibly blocks missing dates and level policy", () => {
+  const sheet = buildMikeDecisionSheet({
+    config: { challengeYearLabel: "2026-2027", weekZeroStart: null, regularWeekCount: null },
+    levelPolicy: "undocumented",
+  });
+  assert.ok(sheet.includes("MISSING — blocks import and activation"));
+  assert.ok(sheet.includes("choose `reset` or `carry`; blocks import and activation"));
 });
 
 test("season launch dry run blocks import on duplicate existing Week", () => {
