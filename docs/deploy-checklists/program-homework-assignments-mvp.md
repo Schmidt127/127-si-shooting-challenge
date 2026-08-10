@@ -4,7 +4,7 @@
 |-------|--------|
 | Date | 2026-08-10 (updated for PHA-first intake package) |
 | PROD base | `appn84sqPw03zEbTT` |
-| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof). **033 v3.3 pasted** (Mike 2026-08-06). **PHA-first package installed in PROD:** **005 v5.3**, **020 v3.5**, **067 v3.4**, **115 v2.0**; **115 v2.1 repository correction pending Mike paste/install**. The 005 → 009 → 020 path passed and the initial/replay submissions reused one Homework Completion; focused 067 and 115 PROD proof remains Mike-owned. See [`SCV2-APP-BASE-CLOSEOUT-001.md`](../prod-completion/2026-08-10/SCV2-APP-BASE-CLOSEOUT-001.md). |
+| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof). **033 v3.3 pasted** (Mike 2026-08-06). **PHA-first package current state:** **005 v5.3**, **020 v3.5**, **067 v3.4**, and **115 v2.1** are installed/live-tested for the documented controlled paths. The 005 → 009 → 020 path passed; 067 proof passed with idempotent Homework Completion reuse; 115 produced one Submission per explicit checked request (not an idempotent processor). Broader athlete-path and season-launch proof remain separate. See [`SCV2-APP-BASE-CLOSEOUT-001.md`](../prod-completion/2026-08-10/SCV2-APP-BASE-CLOSEOUT-001.md). |
 | Separate from | Perfect Week PR #81 |
 
 ## Architecture before

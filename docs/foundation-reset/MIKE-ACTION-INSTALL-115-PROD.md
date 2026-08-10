@@ -1,4 +1,6 @@
-# Mike action — Install Automation 115 in PROD
+# Historical Mike action — Install Automation 115 in PROD
+
+> **Superseded 2026-08-10.** This packet predates Automation 115 v2.1 and the controlled PROD proof. Do not use its v1.8 instructions or fixed historical scenario/enrollment IDs. Current status and evidence are in [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) §2A and [`docs/prod-completion/2026-08-10/SCV2-APP-BASE-CLOSEOUT-001.md`](../prod-completion/2026-08-10/SCV2-APP-BASE-CLOSEOUT-001.md).
 
 **One action only for the next step**
 

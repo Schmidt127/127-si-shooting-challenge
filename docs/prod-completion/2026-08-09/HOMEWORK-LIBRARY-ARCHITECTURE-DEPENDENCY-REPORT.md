@@ -1,6 +1,6 @@
 # Homework Library Architecture — Dependency Report
 
-Date: 2026-08-10 (PHA-first intake contract)
+Date: 2026-08-10 (PHA-first intake contract; current proof reconciled in the 2026-08-10 closeout packet)
 Environment: PROD `appn84sqPw03zEbTT` (code/repo side; no live writes from agents)
 Related audit: [HOMEWORK-CURRICULUM-PHA-CROSS-YEAR-AUDIT.md](./HOMEWORK-CURRICULUM-PHA-CROSS-YEAR-AUDIT.md)
 
@@ -34,8 +34,8 @@ Submissions.Homework Name 1/2 — PHA record ID (Fillout / 115 ETF intake)
 | **005** | v5.3 | Reads PHA IDs; validates; outputs PHA + library IDs | — | Week from Activity Date + PI |
 | **009** | v1.1 | Slot guard (exactly one link) | — | Unchanged |
 | **020** | v3.5 | Reads PHA from Submission | Library + PHA | Enrollment idempotency |
-| **067** | v3.3 | Writes PHA ID on parent Submission | Library + PHA | HW17 PI-first PHA scan |
-| **115** | v2.0 | Writes PHA ID from scenario link | — | Fail closed on library-only |
+| **067** | v3.4 | Writes PHA ID on parent Submission | Library + PHA | HW17 PI-first PHA scan; linked Completion validation is fail-closed |
+| **115** | v2.1 | Writes PHA ID from scenario link | — | Authorized enrollment allowlist; fail closed on library-only |
 | **033** | v4.3 | — | WAS homework links via PHA | Unchanged in this package |
 
 ---
@@ -60,10 +60,10 @@ Submissions created before this contract may still have **Homework Library** RID
 
 ## Operator actions (post-paste)
 
-1. Paste **005 v5.3** → **020 v3.5** → **067 v3.3** → **115 v2.0** (DEV first).
+1. Treat the historical paste sequence above as superseded by the current committed package versions.
 2. Update Fillout choice lists to PHA record IDs.
 3. Update Testing Scenarios homework rows to link PHA (not library).
-4. Run C-020 homework harness; verify 005 → 009 → 020 chain.
+4. Use the current [C-020 checklist](../../deploy-checklists/C-020-testing-scenarios-script-checklist.md) and closeout packet for controlled proof; one explicit 115 request creates one Submission, while a second explicit request creates another by design.
 5. Plan historical Submission backfill separately.
 
 See also: [HOMEWORK-FILLOUT-INTEGRATION.md](./HOMEWORK-FILLOUT-INTEGRATION.md)

@@ -3,8 +3,9 @@
 | Field | Value |
 |-------|--------|
 | Date | 2026-08-10 |
-| Package | **005 v5.3** · **020 v3.5** · **067 v3.4** · **115 v2.0** |
-| Repository status | **Built / Verified** (offline tests PASS) |
+| Package | **005 v5.3** · **020 v3.5** · **067 v3.4** · **115 v2.1** |
+| Repository status | **Built / Verified** (offline contract tests PASS) |
+| PROD status | **Controlled proof recorded 2026-08-10** — 067 quiz→Homework Completion idempotency passed; 115 produced one Submission per explicit checked request. This is not full downstream or season E2E proof. |
 | Completion Master | **Do not** mark Installed or Live Tested until Mike captures live evidence |
 | PROD base | `appn84sqPw03zEbTT` |
 | DEV base | per `docs/PROJECT_STATE.md` |

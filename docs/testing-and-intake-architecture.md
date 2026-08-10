@@ -133,7 +133,7 @@ Automations **056**, **066**, **101** skip inactive enrollments today. Upload/vi
 **Build order:** Step **4** in [Phase 2 next sequence](./v2-015-development-base-architecture.md#phase-2-next-sequence-postwave-2a) — **after** pipeline-ready submission path exists for **066** DEV test (C-020 scenario or verified existing DEV row) and approved **112**/**043** maintenance (unless Mike reprioritizes).  
 **Environment:** **DEV first** (`appTetnuCZlCZdTCT`).
 
-**Status (2026-07-07):** **DEV functional complete** — Automation **115** v1.3 on DEV; formal Tests A–D + functional live **E/F/G** PASS ([checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md)). **Not in scope:** Homework XP after review; **070a/070b** Make/S3; combined Homework + Video; Production paste.
+**Status (2026-08-10):** **Repository contract and controlled PROD Homework proof complete** — Automation **115** v2.1 uses the authorized enrollment allowlist and PHA-first Homework identity. The controlled PROD Homework proof created one Submission per explicit `Run Test?` request; two explicit requests intentionally produced two Submissions. This is not an idempotent Submission processor. **Not in scope:** Homework XP after review; **070a/070b** Make/S3; combined Homework + Video; public season launch.
 
 ### What this is (and is not)
 
@@ -211,7 +211,7 @@ Create a **Testing Scenarios** table (DEV) and a future **automation + extension
 
 **Trigger field:** **`Run Test?`** on **Testing Scenarios** (Automation **115**).
 
-### Automation 115 behavior (implemented — DEV functional complete 2026-07-07)
+### Automation 115 behavior (implemented — v2.1, PROD-controlled 2026-08-10)
 
 See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-checklists/C-020-testing-scenarios-script-checklist.md):
 
@@ -222,6 +222,8 @@ See [deploy-checklists/C-020-testing-scenarios-script-checklist.md](./deploy-che
 5. Let normal pipeline automations run  
 6. Write **Last Run Status**, **Last Run At**, **Actual Result**, **Pass/Fail Notes** to **Testing Scenarios** only  
 7. Never write test metadata to pipeline tables  
+
+An unchecked `Run Test?` is a no-op guard. Re-checking it is an explicit new request, so 115 creates a new production-shaped Submission; do not describe repeated explicit requests as idempotent. Idempotency belongs to downstream identity contracts such as 020's Homework Completion reuse and the XP writers, not to 115's Submission creation.
 
 ### Downstream automations expected to fire
 
