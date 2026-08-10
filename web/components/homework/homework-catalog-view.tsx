@@ -10,6 +10,7 @@ import {
   ProgramPage,
   SectionMarker,
 } from "@/components/site";
+import { ProgramFeatureImage } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -173,15 +174,22 @@ export function HomeworkCatalogView({ data }: HomeworkCatalogViewProps) {
         </>
       }
     >
-      <div className="mx-auto max-w-4xl space-y-14">
-        {data.weekGroups.map((group, groupIndex) => (
-          <WeekSection
-            key={group.weekId || group.weekName}
-            weekName={group.weekName}
-            assignments={group.assignments}
-            isLatestWeek={groupIndex === 0}
-          />
-        ))}
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-homework.webp"
+          alt="Shooting Challenge homework page showing published assignments and curriculum"
+          caption="Find the current curriculum and keep every assignment moving forward."
+        />
+        <div className="mx-auto max-w-4xl space-y-14">
+          {data.weekGroups.map((group, groupIndex) => (
+            <WeekSection
+              key={group.weekId || group.weekName}
+              weekName={group.weekName}
+              assignments={group.assignments}
+              isLatestWeek={groupIndex === 0}
+            />
+          ))}
+        </div>
       </div>
     </ProgramPage>
   );
@@ -196,16 +204,23 @@ export function HomeworkEmptyState() {
       heroVariant="light"
       ambientVariant="homework"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.homework.title}
-        description={EMPTY_STATE_COPY.homework.description}
-        icon={<IconBook size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-homework.webp"
+          alt="Shooting Challenge homework page showing published assignments and curriculum"
+          caption="Find the current curriculum and keep every assignment moving forward."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.homework.title}
+          description={EMPTY_STATE_COPY.homework.description}
+          icon={<IconBook size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -219,15 +234,22 @@ export function HomeworkErrorState({ message }: { message: string }) {
       heroVariant="light"
       ambientVariant="homework"
     >
-      <ErrorState
-        title="Could not load homework"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-homework.webp"
+          alt="Shooting Challenge homework page showing published assignments and curriculum"
+          caption="Find the current curriculum and keep every assignment moving forward."
+        />
+        <ErrorState
+          title="Could not load homework"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }

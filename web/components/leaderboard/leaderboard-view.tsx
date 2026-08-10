@@ -6,6 +6,7 @@ import {
   IconTrophy,
 } from "@/components/icons/shoot-icons";
 import { CtaLink, ProgramPage } from "@/components/site";
+import { ProgramFeatureImage } from "@/components/site/program-feature-image";
 import { EmptyState, ErrorState, StatTile } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
@@ -62,6 +63,11 @@ export function LeaderboardView({ data }: LeaderboardViewProps) {
       }
     >
       <div className="space-y-6">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-leaderboard.webp"
+          alt="Shooting Challenge leaderboard showing athlete rankings, XP, levels, and shots"
+          caption="Track the season standings and celebrate every shot logged."
+        />
         <LeaderboardStats data={data} />
         <LeaderboardTiebreakerLegend />
         <LeaderboardBoard entries={data.entries} />
