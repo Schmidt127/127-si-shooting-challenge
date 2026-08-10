@@ -1,23 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+const listAirtableRecordsMock = vi.hoisted(() => vi.fn());
+
 vi.mock("@/lib/airtable/client", () => ({
-  listAirtableRecords: vi.fn(),
+  listAirtableRecords: listAirtableRecordsMock,
 }));
 
-import { listAirtableRecords } from "@/lib/airtable/client";
 import {
   fetchScheduledHomeworkAssignment,
   fetchScheduledHomeworkCatalog,
 } from "@/lib/airtable/homework-queries";
-
-const mockedList = vi.mocked(listAirtableRecords);
 
 const CURRENT_PI_ID = "rec5mEM0YPqPqq0hZ";
 const HOMEWORK_ID = "rechVLOeyEVIqmy2v";
 const WEEK_ID = "recWeVrSabnsYaHc2";
 
 function installBaseMocks(phaRecords: Array<{ id: string; fields: Record<string, unknown> }>) {
-  mockedList.mockImplementation(async (params) => {
+  listAirtableRecordsMock.mockImplementation(async (params) => {
     if (params.tableName === "Config") {
       return { records: [{ id: "rechc1f9f4kVM1tHP", fields: { "Active School Year": "2026-2027" } }] } as never;
     }
@@ -93,7 +92,9 @@ function pha(
 }
 
 describe("PHA-backed public homework scheduling", () => {
-  beforeEach(() => mockedList.mockReset());
+  beforeEach(() => {
+    listAirtableRecordsMock.mockReset();
+  });
 
   it("shows no curriculum items when there is no active PHA", async () => {
     installBaseMocks([]);
