@@ -1,7 +1,7 @@
 # Backend Release-Readiness Handoff — 2026-08-10
 
 **Branch:** `agent/backend-release-readiness-20260810`
-**Branch SHA:** recorded after the release-readiness commit
+**Branch SHA:** `0d82d73`
 **Base:** `origin/master` at session start (`eb53542`)
 **Scope:** non-web backend/docs/tests only
 
