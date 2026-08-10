@@ -78,7 +78,7 @@ test("valid structured trace entry passes", () => {
       "+implementation change",
       "diff --git a/docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md b/docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
       "+++ b/docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md",
-      "@@ -1,1 +1,2 @@",
+      "+++ not a file header",
       "+Execution matrix IDs advanced: PKG-001",
     ].join("\n"),
   );
