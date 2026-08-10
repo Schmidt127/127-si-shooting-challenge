@@ -7,6 +7,7 @@
  * Usage:
  *   node scripts/http-smoke.mjs
  *   SMOKE_BASE_URL=https://www.fairfieldbasketballclub.com/shoot node scripts/http-smoke.mjs
+ *   SMOKE_REQUIRE_AIRTABLE_CONFIG=true node scripts/http-smoke.mjs
  *   SMOKE_BASE_URL=https://<preview>.vercel.app/shoot node scripts/http-smoke.mjs
  *
  * Exit 0 on pass, 1 on failure. Writes JSON summary to stdout (and optional file).
@@ -15,6 +16,7 @@
 const DEFAULT_BASE = "http://127.0.0.1:3001/shoot";
 const base = (process.env.SMOKE_BASE_URL || DEFAULT_BASE).replace(/\/$/, "");
 const outPath = process.env.SMOKE_OUT || "";
+const requireAirtableConfig = process.env.SMOKE_REQUIRE_AIRTABLE_CONFIG === "true";
 
 const ROUTES = [
   "",
@@ -82,11 +84,15 @@ async function main() {
         assert(status === 200, `api health status ${status}`, failures);
         try {
           const json = JSON.parse(text);
-          assert(json.ok === true, "api health ok!==true", failures);
+          assert(typeof json.ok === "boolean", "api health ok is not boolean", failures);
+          if (requireAirtableConfig) {
+            assert(json.ok === true, "api health ok!==true", failures);
+          }
           results.checks.push({
             name: "airtable-health",
             tokenValid: Boolean(json?.airtable?.tokenValid),
             configured: Boolean(json?.airtable?.configured),
+            required: requireAirtableConfig,
           });
         } catch {
           failures.push("api health response is not JSON");
@@ -144,6 +150,9 @@ async function main() {
     results,
     notes: [
       "Read-only HTTP smoke — no form submissions, no Airtable writes.",
+      requireAirtableConfig
+        ? "Airtable health is required for this run."
+        : "Airtable health is reported but not required for this configuration-free local run.",
       "Browser console and interactive nav coverage live in Playwright production-smoke.spec.ts.",
     ],
   };

@@ -190,4 +190,11 @@ test.describe("missing cover / malformed rich text resilience", () => {
     expect(response?.status()).toBeLessThan(500);
     await expectSingleH1(page, "articles");
   });
+
+  test("game manual missing-link state is public-safe and announced", async ({ page }) => {
+    const response = await page.goto("game-manual", { waitUntil: "domcontentloaded" });
+    expect(response?.status()).toBeLessThan(500);
+    await expect(page.getByRole("status")).toContainText(/temporarily unavailable/i);
+    await expect(page.getByRole("status")).not.toContainText(/NEXT_PUBLIC_GAME_MANUAL_URL/i);
+  });
 });

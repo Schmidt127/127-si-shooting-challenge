@@ -20,14 +20,16 @@ Next.js site for **127 Sports Intensity** programs. The **Shooting Challenge** i
 ```bash
 cd web
 cp .env.example .env.local
-# Add AIRTABLE_API_TOKEN and AIRTABLE_BASE_ID to .env.local
-npm install
+# Add AIRTABLE_API_TOKEN and AIRTABLE_BASE_ID to .env.local when testing Airtable-backed routes
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+For a clean, lockfile-based install, use `npm ci` instead of `npm install`.
 
-Health check: [http://localhost:3000/api/airtable](http://localhost:3000/api/airtable)
+Open [http://localhost:3001/shoot](http://localhost:3001/shoot).
+
+Health check: [http://localhost:3001/shoot/api/airtable](http://localhost:3001/shoot/api/airtable)
 
 ## Project structure
 
