@@ -33,6 +33,10 @@ const historicalRoots = [
 const historicalFiles = new Set([
   "docs/SHOOTING_CHALLENGE_PROD_OPERATING_MODE.md",
 ]);
+const traceabilityInfrastructureFiles = new Set([
+  "tools/testing/audit-source-of-truth.mjs",
+  "tools/testing/tests/test-source-of-truth-audit.mjs",
+]);
 const stalePatterns = [
   ["115 references v2.0", /115[^\r\n]{0,80}v2\.0|v2\.0[^\r\n]{0,80}115/i],
   ["PROD-first authority claim", /PROD-first/i],
@@ -139,12 +143,13 @@ const traceabilityDiff = diffAgainstOrigin();
 const changedFiles = changedFilesFromDiff(traceabilityDiff);
 const implementationChanged = changedFiles.some(
   (path) =>
-    path.startsWith("airtable/") ||
-    path.startsWith("web/") ||
-    path.startsWith("make/") ||
-    path.startsWith("tools/") ||
-    path.startsWith("tests/") ||
-    path.startsWith("docs/deploy-checklists/"),
+    !traceabilityInfrastructureFiles.has(path) &&
+    (path.startsWith("airtable/") ||
+      path.startsWith("web/") ||
+      path.startsWith("make/") ||
+      path.startsWith("tools/") ||
+      path.startsWith("tests/") ||
+      path.startsWith("docs/deploy-checklists/")),
 );
 if (
   implementationChanged
