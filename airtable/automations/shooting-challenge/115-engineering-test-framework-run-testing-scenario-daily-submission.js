@@ -57,6 +57,9 @@ message/comment-only correction (repaste optional).
  * - v1.9 (2026-07-23): Message/comment corrections only (no logic change): skip message no longer
  *   says "v1.4"; stale DEV-only header notes replaced with PROD install status (SC-001).
  *   Airtable may keep running v1.8 — repaste optional.
+ * - v2.0 (2026-08-10): Homework scenarios require Testing Scenarios.Homework Assignment to link
+ *   an active Program Homework Assignment (PHA) record ID. Submissions.Homework Name 1 receives
+ *   the PHA RID (not Homework Library RID). Fail closed when only a Library RID is supplied.
  *
  * PURPOSE
  * - Runs from one Testing Scenarios record when Run Test? is checked.
@@ -70,7 +73,8 @@ message/comment-only correction (repaste optional).
  * - MVP allowlist: Related Enrollment must be Schmidt test enrollment (recgP9qZYjAhE7NXm).
  * - Pre-link Enrollment on Submission (023 skipped for inactive Schmidt enrollment).
  * - Daily: writable fields — Enrollment, Athlete, Activity Date, Shot Total, Duplicate Review Status.
- * - Homework: writable fields — Enrollment, Athlete, Activity Date, Homework Name 1, HW Sub 1.
+ * - Homework: writable fields — Enrollment, Athlete, Activity Date, Homework Name 1 (PHA RID), HW Sub 1.
+ *   Testing Scenarios.Homework Assignment must link an active PHA row (not Homework Library).
  *   Omit Shot Total and Duplicate Review Status (homework-only; no shot-count XP path).
  * - Homework: max 3 Intake Attachments; do not write Homework Name 2 / HW Sub 2.
  * - Video: read **Intake Attachments** on Testing Scenarios; copy to Submissions **Video Upload**.
@@ -137,10 +141,10 @@ message/comment-only correction (repaste optional).
 
 const SCRIPT = {
   scriptName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
-  version: "v1.9",
-  versionDate: "2026-07-23",
+  version: "v2.0",
+  versionDate: "2026-08-10",
   originalWrittenDate: "2026-07-06",
-  lastUpdated: "2026-07-23",
+  lastUpdated: "2026-08-10",
   folder: "12 - Engineering Test Framework",
   automationName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
 };
@@ -158,6 +162,8 @@ const CONFIG = {
     testingScenarios: "Testing Scenarios",
     enrollments: "Enrollments",
     submissions: "Submissions",
+    programHomeworkAssignments: "Program Homework Assignments",
+    homeworkLibrary: "Homework Library",
     weeklyAthleteSummary: "Weekly Athlete Summary",
     zoomAttendance: "Zoom Attendance",
     zoomMeetings: "Zoom Meetings",
@@ -260,7 +266,7 @@ const CONFIG = {
     athlete: "Athlete",
     activityDate: "Activity Date",
     shotTotal: "Shot Total",
-    homeworkName1: "Homework Name 1",
+    homeworkName1: "Homework Name 1", // PHA record ID
     hwSub1: "HW Sub 1",
     videoFeedbackFocus: "Video Feedback Focus",
     videoFeedbackNote: "Video Feedback Note",
@@ -270,6 +276,19 @@ const CONFIG = {
 
   duplicateReviewStatus: {
     countIt: "Count It",
+  },
+
+  pha: {
+    homeworkAssignment: "Homework Assignment",
+    programInstance: "Program Instance",
+    week: "Week",
+    slot: "Homework Slot",
+    active: "Active?",
+  },
+
+  homeworkLibrary: {
+    homeworkNumber: "Homework Number",
+    active: "Active?",
   },
 
   lastRunStatuses: {
@@ -294,6 +313,7 @@ const CONFIG = {
     skippedMissingInput: "skipped_missing_input",
     blockedNoFiles: "blocked_no_files",
     blockedTooManyFiles: "blocked_too_many_files",
+    blockedHomeworkLibraryRid: "blocked_homework_library_rid",
     c025Pass: "c025_pass",
     c025Fail: "c025_fail",
     c025Awaiting057: "c025_awaiting_057",
@@ -570,7 +590,8 @@ function buildHomeworkDryRunPreview({
   enrollmentId,
   athleteId,
   activityDate,
-  homeworkAssignmentId,
+  phaId,
+  libraryId,
   intakeFiles,
 }) {
   const attachmentPayload = buildAttachmentWritePayload(intakeFiles);
@@ -580,18 +601,48 @@ function buildHomeworkDryRunPreview({
     enrollmentId,
     athleteId,
     activityDate: activityDate ? activityDate.toISOString() : "",
-    homeworkAssignmentId,
+    phaId,
+    homeworkLibraryId: libraryId,
     fileCount: attachmentPayload.length,
     submissionPayload: {
       [CONFIG.submissionFields.enrollment]: [{ id: enrollmentId }],
       [CONFIG.submissionFields.athlete]: [{ id: athleteId }],
       [CONFIG.submissionFields.activityDate]: activityDate,
-      [CONFIG.submissionFields.homeworkName1]: [{ id: homeworkAssignmentId }],
+      [CONFIG.submissionFields.homeworkName1]: [{ id: phaId }],
       [CONFIG.submissionFields.hwSub1]: attachmentPayload,
     },
     omittedFields: ["Shot Total", "Duplicate Review Status", "Homework Name 2", "HW Sub 2"],
-    note: "No Submission created. Uncheck Dry Run? and re-trigger to create.",
+    note: "No Submission created. Homework Name 1 receives PHA RID; library content is derived by 005/020.",
   };
+}
+
+async function resolveHomeworkScenarioPha({ phaTable, homeworkLibraryTable, linkedId }) {
+  if (!linkedId) return null;
+  const phaFieldNames = [
+    CONFIG.pha.homeworkAssignment,
+    CONFIG.pha.active,
+    CONFIG.pha.slot,
+    CONFIG.pha.programInstance,
+    CONFIG.pha.week,
+  ].filter((name) => fieldExists(phaTable, name));
+  const pha = await phaTable.selectRecordAsync(linkedId, { fields: phaFieldNames });
+  if (pha) {
+    if (fieldExists(phaTable, CONFIG.pha.active) && !getBooleanish(pha, CONFIG.pha.active)) {
+      throw new Error(`Program Homework Assignment ${linkedId} is inactive. Grade Band is not part of scheduling.`);
+    }
+    const libraryIds = getLinkedIds(pha, CONFIG.pha.homeworkAssignment);
+    if (libraryIds.length !== 1) {
+      throw new Error(
+        `Program Homework Assignment ${linkedId} must link exactly one Homework Assignment; found ${libraryIds.length}.`
+      );
+    }
+    return { phaId: linkedId, libraryId: libraryIds[0] };
+  }
+  const library = await homeworkLibraryTable.selectRecordAsync(linkedId);
+  if (library) {
+    return { rejectLibraryOnly: true, libraryId: linkedId };
+  }
+  throw new Error(`Homework Assignment record not found: ${linkedId}`);
 }
 
 function buildVideoDryRunPreview({
@@ -899,6 +950,9 @@ async function runHomeworkBranch({
     submissions: submissionsTable,
   });
 
+  const phaTable = base.getTable(CONFIG.tables.programHomeworkAssignments);
+  const homeworkLibraryTable = base.getTable(CONFIG.tables.homeworkLibrary);
+
   const homeworkAssignmentIds = getLinkedIds(
     scenarioRecord,
     CONFIG.testingScenarioFields.homeworkAssignment
@@ -914,7 +968,52 @@ async function runHomeworkBranch({
       actionOut: CONFIG.actions.skippedMissingInput,
       errorOut: "Homework Assignment is required.",
       actualResult: "Missing Homework Assignment link on Testing Scenarios.",
-      passFailNotes: "Link one Homework Library record to Homework Assignment.",
+      passFailNotes: "Link one active Program Homework Assignment (PHA) record to Homework Assignment.",
+    });
+    return;
+  }
+
+  let phaId = "";
+  let libraryId = "";
+  try {
+    const resolved = await resolveHomeworkScenarioPha({
+      phaTable,
+      homeworkLibraryTable,
+      linkedId: homeworkAssignmentId,
+    });
+    if (!resolved) {
+      throw new Error(`Homework Assignment record not found: ${homeworkAssignmentId}`);
+    }
+    if (resolved.rejectLibraryOnly) {
+      await blockScenarioRun({
+        testingScenariosTable,
+        scenarioId: recordId,
+        scenarioType: CONFIG.scenarioTypes.homework,
+        debugStep,
+        actionOut: CONFIG.actions.blockedHomeworkLibraryRid,
+        errorOut:
+          "Homework Assignment must be a Program Homework Assignment (PHA) record ID, not a Homework Library record ID.",
+        actualResult: `Blocked — linked Library RID ${resolved.libraryId} cannot be written to Homework Name 1.`,
+        passFailNotes:
+          "Link an active PHA row to Testing Scenarios.Homework Assignment. Library RIDs are content-only.",
+        lastRunStatus: CONFIG.lastRunStatuses.blocked,
+      });
+      return;
+    }
+    phaId = resolved.phaId;
+    libraryId = resolved.libraryId;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await blockScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType: CONFIG.scenarioTypes.homework,
+      debugStep,
+      actionOut: CONFIG.actions.error,
+      errorOut: message,
+      actualResult: `Blocked — invalid Homework Assignment: ${message}`,
+      passFailNotes: "Link one active PHA with exactly one Homework Assignment library link.",
+      lastRunStatus: CONFIG.lastRunStatuses.fail,
     });
     return;
   }
@@ -977,7 +1076,8 @@ async function runHomeworkBranch({
       enrollmentId,
       athleteId,
       activityDate,
-      homeworkAssignmentId,
+      phaId,
+      libraryId,
       intakeFiles,
     });
 
@@ -990,7 +1090,7 @@ async function runHomeworkBranch({
       statusOut: CONFIG.statuses.success,
       errorOut: "",
       createdSubmissionId: "",
-      createdRecordSummary: `Dry run — Homework; ${hwSub1Payload.length} file(s); assignment ${homeworkAssignmentId}.`,
+      createdRecordSummary: `Dry run — Homework; ${hwSub1Payload.length} file(s); PHA ${phaId}; Library ${libraryId}.`,
       clearRunTest: true,
       runMetadata: {
         [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
@@ -1032,7 +1132,7 @@ async function runHomeworkBranch({
     activityDate
   );
   addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.homeworkName1, [
-    { id: homeworkAssignmentId },
+    { id: phaId },
   ]);
   addIfWritable(submissionsTable, submissionPayload, CONFIG.submissionFields.hwSub1, hwSub1Payload);
 
@@ -1048,13 +1148,14 @@ async function runHomeworkBranch({
     `Enrollment: ${enrollmentId}.`,
     `Athlete: ${athleteId}.`,
     `Activity Date: ${activityDate.toISOString()}.`,
-    `Homework Name 1: ${homeworkAssignmentId}.`,
+    `Homework Name 1 (PHA): ${phaId}.`,
+    `Homework Library (derived): ${libraryId}.`,
     `HW Sub 1 file count: ${hwSub1Payload.length}.`,
     "Omitted: Shot Total, Duplicate Review Status, Homework Name 2, HW Sub 2, Video fields.",
     "Downstream: 005 (Week) → 009 (assets) → 020 (one Homework Completion). 070a OFF on DEV.",
   ];
 
-  const summary = `Homework Submission ${createdSubmissionId}; ${hwSub1Payload.length} file(s); assignment ${homeworkAssignmentId}.`;
+  const summary = `Homework Submission ${createdSubmissionId}; ${hwSub1Payload.length} file(s); PHA ${phaId}; Library ${libraryId}.`;
 
   await finishScenarioRun({
     testingScenariosTable,
@@ -1092,7 +1193,8 @@ async function runHomeworkBranch({
         createdSubmissionId,
         enrollmentId,
         athleteId,
-        homeworkAssignmentId,
+        homeworkPhaId: phaId,
+        homeworkLibraryId: libraryId,
         fileCount: hwSub1Payload.length,
       },
       null,

@@ -1,16 +1,22 @@
 /************************************************************
  * 020 - Homework - Link or Create Homework Completion
  *
- * Version: v3.4.0
- * Last Updated: 2026-08-09
+ * Version: v3.5
+ * Last Updated: 2026-08-10
+ *
+ * INTAKE CONTRACT
+ * - Submissions.Homework Name 1/2 store Program Homework Assignment (PHA) record IDs.
+ * - 020 loads the selected PHA directly and validates PI + Week + Slot + Active.
+ * - Homework Library content ID comes from PHA.Homework Assignment (exactly one link).
+ * - HC.Homework = library ID; HC.Program Homework Assignment = PHA ID.
  *
  * SCHEDULING RULE
- * - PHA schedule identity is Homework + Program Instance + Week + Slot + Active.
+ * - PHA is the sole scheduling authority (PI + Week + Slot + Active).
  * - PHA Grade Band is eligibility/descriptive metadata only and is NEVER used to resolve schedule ownership.
  * - Athlete Grade Band may still be copied to Homework Completions as athlete metadata when available.
  *
  * PRODUCT RULE
- * - One Homework Completion per Enrollment + Week + Homework + Slot.
+ * - One Homework Completion per Enrollment + Week + Homework (library) + Slot.
  * - Re-submits in the same week merge onto the same Homework Completion.
  ************************************************************/
 
@@ -18,7 +24,7 @@
 
 const CONFIG = {
   scriptName: "020 - Homework - Link or Create Homework Completion",
-  version: "v3.4.0",
+  version: "v3.5",
   tables: {
     assets: "Submission Assets",
     submissions: "Submissions",
@@ -52,8 +58,8 @@ const CONFIG = {
     activityDate: "Activity Date",
     gradeBand: "Grade Band",
     weeklySummary: "Weekly Athlete Summary",
-    homeworkName1: "Homework Name 1",
-    homeworkName2: "Homework Name 2",
+    homeworkName1: "Homework Name 1", // PHA record ID (Program Homework Assignments)
+    homeworkName2: "Homework Name 2", // PHA record ID (Program Homework Assignments)
   },
   enrollments: {
     gradeBand: "Grade Band",
@@ -153,28 +159,38 @@ function homeworkFieldForSlot(slot) { return slot === "HW1" ? CONFIG.submissions
 function getHomeworkSlot(hw) { return selectName(hw, CONFIG.homework.assetSlot) || selectName(hw, CONFIG.homework.itemSlot); }
 function unloadQuerySafe(q) { if (typeof q?.unloadData === "function") try { q.unloadData(); } catch {} }
 
-async function resolveProgramHomeworkAssignmentId({ weekId, programInstanceId, slot, homeworkLibraryId }) {
+async function validateSelectedPha({ phaId, slot, programInstanceId, weekId }) {
   if (!phaTable) throw new Error("Program Homework Assignments table is unavailable; cannot validate scheduled homework.");
-  if (!fieldExists(homeworkTable, CONFIG.homework.programHomeworkAssignment)) throw new Error("Homework Completions.Program Homework Assignment field is unavailable.");
-  if (!weekId || !programInstanceId || !slot || !homeworkLibraryId) {
-    throw new Error(`Cannot resolve PHA without Week, Program Instance, slot, and Homework. week=${weekId || "blank"}, programInstance=${programInstanceId || "blank"}, slot=${slot || "blank"}, homework=${homeworkLibraryId || "blank"}`);
+  if (!fieldExists(homeworkTable, CONFIG.homework.programHomeworkAssignment)) {
+    throw new Error("Homework Completions.Program Homework Assignment field is unavailable.");
+  }
+  if (!phaId) throw new Error(`Submission must link exactly one Program Homework Assignment for ${slot || "homework"}.`);
+  if (!weekId || !programInstanceId || !slot) {
+    throw new Error(`Cannot validate PHA without Week, Program Instance, and slot. week=${weekId || "blank"}, programInstance=${programInstanceId || "blank"}, slot=${slot || "blank"}, pha=${phaId || "blank"}`);
   }
   const fields = [CONFIG.pha.homeworkAssignment, CONFIG.pha.programInstance, CONFIG.pha.week, CONFIG.pha.slot, CONFIG.pha.active];
-  if (fieldExists(phaTable, CONFIG.pha.gradeBand)) fields.push(CONFIG.pha.gradeBand);
-  const query = await phaTable.selectRecordsAsync({ fields: safeFields(phaTable, fields) });
-  const matches = query.records.filter(record => {
-    const weekIds = linkedIds(record, CONFIG.pha.week);
-    const homeworkIds = linkedIds(record, CONFIG.pha.homeworkAssignment);
-    const piIds = linkedIds(record, CONFIG.pha.programInstance);
-    const recordSlot = selectName(record, CONFIG.pha.slot);
-    return weekIds.length === 1 && weekIds[0] === weekId &&
-      homeworkIds.length === 1 && homeworkIds[0] === homeworkLibraryId &&
-      piIds.length === 1 && piIds[0] === programInstanceId &&
-      recordSlot === slot && booleanish(record, CONFIG.pha.active);
-  });
-  if (matches.length === 0) throw new Error(`No active Program Homework Assignment matches Homework=${homeworkLibraryId}, Program Instance=${programInstanceId}, Week=${weekId}, Slot=${slot}. Grade Band is not part of scheduling.`);
-  if (matches.length > 1) throw new Error(`Multiple active Program Homework Assignments match the same schedule context: ${matches.map(r => r.id).join(", ")}`);
-  return matches[0].id;
+  const pha = await phaTable.selectRecordAsync(phaId, { fields: safeFields(phaTable, fields) });
+  if (!pha) throw new Error(`Program Homework Assignment not found: ${phaId}. Grade Band is not part of scheduling.`);
+  if (fieldExists(phaTable, CONFIG.pha.active) && !booleanish(pha, CONFIG.pha.active)) {
+    throw new Error(`Program Homework Assignment ${phaId} is inactive. Grade Band is not part of scheduling.`);
+  }
+  const phaPi = firstLinkedId(pha, CONFIG.pha.programInstance);
+  const phaWeek = firstLinkedId(pha, CONFIG.pha.week);
+  const recordSlot = selectName(pha, CONFIG.pha.slot);
+  const libraryIds = linkedIds(pha, CONFIG.pha.homeworkAssignment);
+  if (phaPi !== programInstanceId) {
+    throw new Error(`Program Homework Assignment ${phaId} Program Instance mismatch: expected ${programInstanceId}, got ${phaPi || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (phaWeek !== weekId) {
+    throw new Error(`Program Homework Assignment ${phaId} Week mismatch: expected ${weekId}, got ${phaWeek || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (recordSlot !== slot) {
+    throw new Error(`Program Homework Assignment ${phaId} slot mismatch: expected ${slot}, got ${recordSlot || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (libraryIds.length !== 1) {
+    throw new Error(`Program Homework Assignment ${phaId} must link exactly one Homework Assignment; found ${libraryIds.length}. Grade Band is not part of scheduling.`);
+  }
+  return { phaId, libraryId: libraryIds[0] };
 }
 
 function pickPreferredHomeworkCompletion(candidates) {
@@ -267,9 +283,9 @@ async function main() {
   if (!submission) await markAssetError(asset, `Linked Submission could not be loaded: ${submissionId}`);
 
   const homeworkField = homeworkFieldForSlot(slot);
-  const homeworkIds = linkedIds(submission, homeworkField);
-  if (homeworkIds.length !== 1) await markAssetError(asset, `Submission must have exactly one ${homeworkField}; found ${homeworkIds.length}.`);
-  const homeworkId = homeworkIds[0];
+  const phaIds = linkedIds(submission, homeworkField);
+  if (phaIds.length !== 1) await markAssetError(asset, `Submission must have exactly one ${homeworkField}; found ${phaIds.length}.`);
+  const phaIdFromSubmission = phaIds[0];
 
   const submissionEnrollmentIds = linkedIds(submission, CONFIG.submissions.enrollment);
   if (submissionEnrollmentIds.length !== 1 || submissionEnrollmentIds[0] !== enrollmentIds[0]) await markAssetError(asset, "Submission Enrollment does not match Submission Asset Enrollment.");
@@ -285,11 +301,16 @@ async function main() {
   const athleteGradeBandIds = fieldExists(enrollmentsTable, CONFIG.enrollments.gradeBand) ? linkedIds(enrollment, CONFIG.enrollments.gradeBand) : [];
   const gradeBandId = athleteGradeBandIds.length === 1 ? athleteGradeBandIds[0] : "";
 
-  const phaId = await resolveProgramHomeworkAssignmentId({ weekId: weekIds[0], programInstanceId: programInstanceIds[0], slot, homeworkLibraryId: homeworkId });
+  const { phaId, libraryId } = await validateSelectedPha({
+    phaId: phaIdFromSubmission,
+    slot,
+    programInstanceId: programInstanceIds[0],
+    weekId: weekIds[0],
+  });
 
   const homeworkFields = safeFields(homeworkTable, Object.values(CONFIG.homework));
   const homeworkQuery = await homeworkTable.selectRecordsAsync({ fields: homeworkFields });
-  const matchArgs = { submissionId, enrollmentId: enrollmentIds[0], weekId: weekIds[0], homeworkId, slot };
+  const matchArgs = { submissionId, enrollmentId: enrollmentIds[0], weekId: weekIds[0], homeworkId: libraryId, slot };
   let match = findHomeworkCompletionMatch(homeworkQuery.records, matchArgs);
   let homeworkCompletion = match.homeworkCompletion;
   if (!homeworkCompletion) {
@@ -315,7 +336,7 @@ async function main() {
     setLink(updates, homeworkTable, CONFIG.homework.submission, [...linkedIds(homeworkCompletion, CONFIG.homework.submission), submissionId]);
     if (!selectName(homeworkCompletion, CONFIG.homework.assetSlot)) setSingleSelect(updates, homeworkTable, CONFIG.homework.assetSlot, slot);
     if (!selectName(homeworkCompletion, CONFIG.homework.itemSlot)) setSingleSelect(updates, homeworkTable, CONFIG.homework.itemSlot, slot);
-    if (!firstLinkedId(homeworkCompletion, CONFIG.homework.homework)) setLink(updates, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    if (!firstLinkedId(homeworkCompletion, CONFIG.homework.homework)) setLink(updates, homeworkTable, CONFIG.homework.homework, [libraryId]);
     const existingPhaIds = linkedIds(homeworkCompletion, CONFIG.homework.programHomeworkAssignment);
     if (!existingPhaIds.length) setLink(updates, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
     else if (existingPhaIds.length !== 1 || existingPhaIds[0] !== phaId) await markAssetError(asset, `Homework Completion ${homeworkCompletion.id} has conflicting Program Homework Assignment ownership.`);
@@ -327,7 +348,7 @@ async function main() {
   } else {
     actionOut = "created_new";
     const fields = {};
-    setLink(fields, homeworkTable, CONFIG.homework.homework, [homeworkId]);
+    setLink(fields, homeworkTable, CONFIG.homework.homework, [libraryId]);
     setLink(fields, homeworkTable, CONFIG.homework.programHomeworkAssignment, [phaId]);
     setLink(fields, homeworkTable, CONFIG.homework.submission, [submissionId]);
     setLink(fields, homeworkTable, CONFIG.homework.enrollment, enrollmentIds);
@@ -365,7 +386,7 @@ async function main() {
   setCheckbox(assetUpdates, assetsTable, CONFIG.assets.sendToMakeTrigger, true);
   if (Object.keys(assetUpdates).length) await assetsTable.updateRecordAsync(asset.id, assetUpdates);
 
-  setFinalOutputs({ statusOut: CONFIG.outputStatuses.success, actionOut, errorOut: "", debugStep: "complete", submissionAssetId: asset.id, homeworkCompletionId, slot, gradeBandActionOut, gradeBandSchedulingUsed: false, phaId });
+  setFinalOutputs({ statusOut: CONFIG.outputStatuses.success, actionOut, errorOut: "", debugStep: "complete", submissionAssetId: asset.id, homeworkCompletionId, slot, gradeBandActionOut, gradeBandSchedulingUsed: false, phaId, libraryId });
 }
 
 try { await main(); }
