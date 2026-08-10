@@ -4,13 +4,14 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 
-Version: v5.2
-Last Updated: 2026-08-09
+Version: v5.3
+Last Updated: 2026-08-10
 
 Scheduling authority:
 - Week comes from Activity Date within the Enrollment Program Instance calendar.
-- Program Homework Assignments (PHA) validates selected homework.
-- Exact PHA schedule identity is Program Instance + Week + Homework Slot + Homework Assignment.
+- Submissions.Homework Name 1/2 store Program Homework Assignment (PHA) record IDs.
+- 005 loads each selected PHA directly and validates Program Instance + Week + Homework Slot + Active.
+- Homework Library content identity comes from PHA.Homework Assignment (exactly one link).
 - PHA Grade Band is eligibility/descriptive metadata only and is never used for scheduling matches.
 
 Input:
@@ -21,8 +22,8 @@ Input:
 
 const SCRIPT = {
   scriptName: "005 - Submission Intake — Assign Week (Activity Date + PHA validate)",
-  version: "v5.2",
-  versionDate: "2026-08-09",
+  version: "v5.3",
+  versionDate: "2026-08-10",
 };
 
 const CONFIG = {
@@ -36,8 +37,8 @@ const CONFIG = {
     week: "Week",
     enrollment: "Enrollment",
     activityDate: "Activity Date",
-    homework1: "Homework Name 1",
-    homework2: "Homework Name 2",
+    homework1: "Homework Name 1", // PHA record ID (Program Homework Assignments)
+    homework2: "Homework Name 2", // PHA record ID (Program Homework Assignments)
     weekAssignmentStatus: "Week Assignment Status",
   },
   enrollments: {
@@ -172,30 +173,42 @@ async function findWeekByActivityDate(activityDateKey, programInstanceId) {
   return { id: candidates[0].id, weekName: getText(candidates[0], weeksTable, CONFIG.weeks.name), sourceUsed: "Activity Date Fallback (Program Instance scoped)" };
 }
 
-async function validateHomeworkSelectionAgainstPha({ libraryId, slot, programInstanceId, weekId }) {
-  if (!libraryId) return { ok: true, phaId: "" };
+async function validateSelectedPha({ phaId, slot, programInstanceId, weekId }) {
+  if (!phaId) return { phaId: "", libraryId: "" };
   if (!phaTable) throw new Error("Program Homework Assignments table is required when Homework Name 1/2 are linked.");
   if (!programInstanceId || !weekId) throw new Error(`PHA validation for ${slot} requires Program Instance and Week.`);
   const fields = [CONFIG.pha.homeworkAssignment, CONFIG.pha.programInstance, CONFIG.pha.week, CONFIG.pha.slot, CONFIG.pha.active];
-  if (fieldExists(phaTable, CONFIG.pha.gradeBand)) fields.push(CONFIG.pha.gradeBand);
-  const query = await phaTable.selectRecordsAsync({ fields: fields.filter(f => fieldExists(phaTable, f)) });
-  const matches = query.records.filter(r => {
-    return firstLinkedId(r, phaTable, CONFIG.pha.homeworkAssignment) === libraryId &&
-      firstLinkedId(r, phaTable, CONFIG.pha.programInstance) === programInstanceId &&
-      firstLinkedId(r, phaTable, CONFIG.pha.week) === weekId &&
-      phaSlot(r) === slot &&
-      (!fieldExists(phaTable, CONFIG.pha.active) || booleanish(r, phaTable, CONFIG.pha.active));
-  });
-  if (matches.length === 0) throw new Error(`No active Program Homework Assignment for ${slot} library ${libraryId} (PI ${programInstanceId}, Week ${weekId}). Grade Band is not part of scheduling.`);
-  if (matches.length > 1) throw new Error(`Multiple active Program Homework Assignments for ${slot} library ${libraryId}: ${matches.map(r => r.id).join(", ")}`);
-  return { ok: true, phaId: matches[0].id };
+  const pha = await phaTable.selectRecordAsync(phaId, { fields: fields.filter(f => fieldExists(phaTable, f)) });
+  if (!pha) throw new Error(`Program Homework Assignment not found: ${phaId} (${slot}).`);
+  if (fieldExists(phaTable, CONFIG.pha.active) && !booleanish(pha, phaTable, CONFIG.pha.active)) {
+    throw new Error(`Program Homework Assignment ${phaId} is inactive (${slot}). Grade Band is not part of scheduling.`);
+  }
+  const phaPi = firstLinkedId(pha, phaTable, CONFIG.pha.programInstance);
+  const phaWeek = firstLinkedId(pha, phaTable, CONFIG.pha.week);
+  const phaSlotValue = phaSlot(pha);
+  const libraryIds = linkedIds(pha, phaTable, CONFIG.pha.homeworkAssignment);
+  if (phaPi !== programInstanceId) {
+    throw new Error(`Program Homework Assignment ${phaId} Program Instance mismatch: expected ${programInstanceId}, got ${phaPi || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (phaWeek !== weekId) {
+    throw new Error(`Program Homework Assignment ${phaId} Week mismatch: expected ${weekId}, got ${phaWeek || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (phaSlotValue !== slot) {
+    throw new Error(`Program Homework Assignment ${phaId} slot mismatch: expected ${slot}, got ${phaSlotValue || "blank"}. Grade Band is not part of scheduling.`);
+  }
+  if (libraryIds.length !== 1) {
+    throw new Error(`Program Homework Assignment ${phaId} must link exactly one Homework Assignment; found ${libraryIds.length}. Grade Band is not part of scheduling.`);
+  }
+  return { phaId, libraryId: libraryIds[0] };
 }
 
 async function main() {
   let debugStep = "Start";
   let submission = null;
-  let homeworkId1 = "";
-  let homeworkId2 = "";
+  let phaId1 = "";
+  let phaId2 = "";
+  let homework1LibraryId = "";
+  let homework2LibraryId = "";
   let activityDateKey = "";
   let enrollmentId = "";
   let programInstanceId = "";
@@ -214,8 +227,8 @@ async function main() {
     }
 
     enrollmentId = firstLinkedId(submission, submissionsTable, CONFIG.submissions.enrollment);
-    homeworkId1 = firstLinkedId(submission, submissionsTable, CONFIG.submissions.homework1);
-    homeworkId2 = firstLinkedId(submission, submissionsTable, CONFIG.submissions.homework2);
+    phaId1 = firstLinkedId(submission, submissionsTable, CONFIG.submissions.homework1);
+    phaId2 = firstLinkedId(submission, submissionsTable, CONFIG.submissions.homework2);
     activityDateKey = safeDateKey(submission, submissionsTable, CONFIG.submissions.activityDate);
 
     if (enrollmentId) {
@@ -231,7 +244,7 @@ async function main() {
     }
 
     if (!matchedWeek) {
-      if (homeworkId1 || homeworkId2) throw new Error("Homework is selected but no Week could be assigned from Activity Date. Homework Library is never used for scheduling.");
+      if (phaId1 || phaId2) throw new Error("Homework is selected but no Week could be assigned from Activity Date. Week is assigned from Activity Date only; PHA validates schedule selection.");
       const existingWeekLinks = linkedIds(submission, submissionsTable, CONFIG.submissions.week);
       const updates = {};
       if (CONFIG.debug.clearWeekWhenNoMatch && existingWeekLinks.length && isWritableField(submissionsTable, CONFIG.submissions.week)) updates[CONFIG.submissions.week] = [];
@@ -242,8 +255,14 @@ async function main() {
 
     sourceUsed = matchedWeek.sourceUsed || "";
     debugStep = "Validate Homework selections against PHA";
-    if (homeworkId1) await validateHomeworkSelectionAgainstPha({ libraryId: homeworkId1, slot: "HW1", programInstanceId, weekId: matchedWeek.id });
-    if (homeworkId2) await validateHomeworkSelectionAgainstPha({ libraryId: homeworkId2, slot: "HW2", programInstanceId, weekId: matchedWeek.id });
+    if (phaId1) {
+      const hw1 = await validateSelectedPha({ phaId: phaId1, slot: "HW1", programInstanceId, weekId: matchedWeek.id });
+      homework1LibraryId = hw1.libraryId;
+    }
+    if (phaId2) {
+      const hw2 = await validateSelectedPha({ phaId: phaId2, slot: "HW2", programInstanceId, weekId: matchedWeek.id });
+      homework2LibraryId = hw2.libraryId;
+    }
 
     const existingWeekLinks = linkedIds(submission, submissionsTable, CONFIG.submissions.week);
     const updates = {};
@@ -255,8 +274,10 @@ async function main() {
     setOutputSafe("matchedWeekId", matchedWeek.id);
     setOutputSafe("matchedWeekName", matchedWeek.weekName);
     setOutputSafe("sourceUsed", sourceUsed);
-    setOutputSafe("homework1Id", homeworkId1);
-    setOutputSafe("homework2Id", homeworkId2);
+    setOutputSafe("homework1PhaId", phaId1);
+    setOutputSafe("homework1LibraryId", homework1LibraryId);
+    setOutputSafe("homework2PhaId", phaId2);
+    setOutputSafe("homework2LibraryId", homework2LibraryId);
     setOutputSafe("activityDateKey", activityDateKey);
     setOutputSafe("enrollmentIdOut", enrollmentId);
     setOutputSafe("programInstanceIdOut", programInstanceId);
@@ -274,8 +295,10 @@ async function main() {
     setOutputSafe("matchedWeekId", matchedWeek?.id || "");
     setOutputSafe("matchedWeekName", matchedWeek?.weekName || "");
     setOutputSafe("sourceUsed", sourceUsed);
-    setOutputSafe("homework1Id", homeworkId1);
-    setOutputSafe("homework2Id", homeworkId2);
+    setOutputSafe("homework1PhaId", phaId1);
+    setOutputSafe("homework1LibraryId", homework1LibraryId);
+    setOutputSafe("homework2PhaId", phaId2);
+    setOutputSafe("homework2LibraryId", homework2LibraryId);
     setOutputSafe("activityDateKey", activityDateKey);
     setOutputSafe("enrollmentIdOut", enrollmentId);
     setOutputSafe("programInstanceIdOut", programInstanceId);

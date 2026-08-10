@@ -4,7 +4,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildStandardBase, run115, IDS } from "./run_115_script.mjs";
+import { buildStandardBase, buildHomeworkBase, run115, IDS } from "./run_115_script.mjs";
 
 const SCENARIO = "recSCENARIO000001";
 
@@ -182,4 +182,38 @@ test("stale Linked Submission overwritten on successful live create", async () =
   const created = base.getTable("Submissions").createdPayloads[0].id;
   assert.deepEqual(scenarioRecord(base).getCellValue("Linked Submission"), [{ id: created }]);
   assert.notEqual(scenarioRecord(base).getCellValueAsString("Actual Result"), "STALE");
+});
+
+test("homework live create writes PHA RID to Homework Name 1", async () => {
+  const base = buildHomeworkBase();
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionOut, "created");
+  const payload = base.getTable("Submissions").createdPayloads[0].payload;
+  assert.deepEqual(payload["Homework Name 1"], [{ id: IDS.PHA_HW1 }]);
+  assert.match(scenarioRecord(base).getCellValueAsString("Actual Result"), /PHA/);
+  assert.match(scenarioRecord(base).getCellValueAsString("Actual Result"), new RegExp(IDS.LIBRARY_HW1));
+});
+
+test("homework dry run preview labels PHA and library separately", async () => {
+  const base = buildHomeworkBase({ scenarioCells: { "Dry Run?": true } });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.actionOut, "dry_run");
+  const actual = scenarioRecord(base).getCellValueAsString("Actual Result");
+  const preview = JSON.parse(actual);
+  assert.equal(preview.phaId, IDS.PHA_HW1);
+  assert.equal(preview.homeworkLibraryId, IDS.LIBRARY_HW1);
+  assert.deepEqual(preview.submissionPayload["Homework Name 1"], [{ id: IDS.PHA_HW1 }]);
+});
+
+test("homework blocks when Testing Scenarios links library RID only", async () => {
+  const base = buildHomeworkBase({
+    scenarioCells: { "Homework Assignment": [{ id: IDS.LIBRARY_HW1 }] },
+  });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.actionOut, "blocked_homework_library_rid");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 0);
+  assert.match(scenarioRecord(base).getCellValueAsString("Actual Result"), /Library RID/);
 });
