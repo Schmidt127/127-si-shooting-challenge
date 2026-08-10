@@ -1,5 +1,13 @@
 # Homework Library / Program Homework Assignments — Cross-Year Contamination Audit
 
+> **Historical reference only — not an active source of truth.**
+> This dated audit preserves repository, schema-probe, and fixture evidence from
+> 2026-08-09. Current release status is maintained in the
+> [`Completion Master`](../../SHOOTING_CHALLENGE_COMPLETION_MASTER.md), current
+> machine-readable release control is in
+> [`agent-runs/CONTROL.json`](../../agent-runs/CONTROL.json), and current live
+> configuration must be verified in the named external system.
+
 Date: 2026-08-09  
 Environment: PROD `appn84sqPw03zEbTT`  
 Controlling doc: [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) (audit only — **not** updated per instructions)
