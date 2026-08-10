@@ -264,7 +264,7 @@ test("RECORD_ID-shaped Week Key rejected as canonical", () => {
   assert.strictEqual(parsed.code, "record_id_week_key");
 });
 
-test("generate Week 0 + regular + Post-Challenge Sunday/Saturday", () => {
+test("generate Early Bird (Week 0) + regular + Post-Challenge Sunday/Saturday", () => {
   // 2027-05-30 is Sunday
   assert.strictEqual(weekdaySunday0("2027-05-30"), 0);
   const plan = generateWeekPlan({
@@ -274,7 +274,7 @@ test("generate Week 0 + regular + Post-Challenge Sunday/Saturday", () => {
     configRecordId: "recNEWCONFIG202728",
   });
   assert.strictEqual(plan.ok, true);
-  assert.strictEqual(plan.weeks[0].displayLabel, "Week 0");
+  assert.strictEqual(plan.weeks[0].displayLabel, "Early Bird");
   assert.strictEqual(plan.weeks[0].startDate, "2027-05-30");
   assert.strictEqual(plan.weeks[0].endDate, "2027-06-05");
   assert.strictEqual(plan.weeks[1].displayLabel, "Week 1");
@@ -312,7 +312,7 @@ test("CSV and Markdown outputs include keys", () => {
   });
   const csv = weeksToCsv(plan.weeks);
   assert.ok(csv.includes("Week Key"));
-  assert.ok(csv.includes("2027-2028|Week 0"));
+  assert.ok(csv.includes("2027-2028|Early Bird"));
   const md = weeksToMarkdown(plan);
   assert.ok(md.includes("Post-Challenge"));
 });
@@ -417,7 +417,7 @@ test("Activity Date Sunday and Saturday boundaries", () => {
     challengeYear: "2027-2028",
   });
   assert.strictEqual(sun.ok, true);
-  assert.strictEqual(sun.week.displayLabel, "Week 0");
+  assert.strictEqual(sun.week.displayLabel, "Early Bird");
 
   const sat = resolveWeekForActivityDate({
     activityDate: "2027-06-05",
@@ -425,7 +425,7 @@ test("Activity Date Sunday and Saturday boundaries", () => {
     challengeYear: "2027-2028",
   });
   assert.strictEqual(sat.ok, true);
-  assert.strictEqual(sat.week.displayLabel, "Week 0");
+  assert.strictEqual(sat.week.displayLabel, "Early Bird");
 });
 
 test("midnight / ISO datetime uses America/Denver date key", () => {
@@ -442,7 +442,7 @@ test("midnight / ISO datetime uses America/Denver date key", () => {
   });
   assert.strictEqual(toDateKey("2027-06-06T05:59:00.000Z"), "2027-06-05");
   assert.strictEqual(r.ok, true);
-  assert.strictEqual(r.week.displayLabel, "Week 0");
+  assert.strictEqual(r.week.displayLabel, "Early Bird");
 });
 
 test("backdated submission uses Activity Date not Submitted At", () => {
@@ -458,7 +458,7 @@ test("backdated submission uses Activity Date not Submitted At", () => {
     challengeYear: "2027-2028",
   });
   assert.strictEqual(r.ok, true);
-  assert.strictEqual(r.week.displayLabel, "Week 0");
+  assert.strictEqual(r.week.displayLabel, "Early Bird");
   assert.strictEqual(r.debug.submittedAtIgnored, true);
 });
 
@@ -500,7 +500,7 @@ test("leap year Activity Date resolves", () => {
     challengeYear: "2027-2028",
   });
   assert.strictEqual(r.ok, true);
-  assert.strictEqual(r.week.displayLabel, "Week 0");
+  assert.strictEqual(r.week.displayLabel, "Early Bird");
 });
 
 test("year boundary and DST-relevant Denver key", () => {
@@ -813,7 +813,7 @@ test("manifest generation writes json/md/csv content", () => {
   const result = generateRolloverManifest(preflightPass);
   assert.ok(result.manifest);
   assert.ok(result.markdown.includes("rollover manifest"));
-  assert.ok(result.csv.includes("2027-2028|Week 0"));
+  assert.ok(result.csv.includes("2027-2028|Early Bird"));
   assert.ok(result.manifest.expectedKeys.includes("2027-2028|Post-Challenge"));
   assert.ok(result.manifest.rollbackSteps.length > 0);
   assert.ok(result.manifest.automationsToInspect.some((a) => a.includes("118")));
@@ -868,7 +868,7 @@ test("variable season lengths (5 and 11 regular weeks) dry-run only", () => {
       validation.ok === true || validation.overall === "PASS",
       JSON.stringify(validation.errors || validation.findings || validation)
     );
-    for (const week of plan.weeks) {
+    for (const week of plan.weeks.filter((entry) => entry.weekType !== "post_challenge")) {
       const start = week.startDateKey || week.startDate;
       if (!start) continue;
       assert.strictEqual(weekdaySunday0(start), 0, week.code || week.weekName || week.displayLabel);
