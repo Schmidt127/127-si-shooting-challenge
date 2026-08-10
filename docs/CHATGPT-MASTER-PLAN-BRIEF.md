@@ -1,5 +1,12 @@
 # ChatGPT Master Plan Brief — 127 Sports Intensity Shooting Challenge
 
+> **Planning aggregate only — not a release-status source of truth.**
+> Current release status is maintained in the
+> [`Completion Master`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md), and
+> ownership/evidence boundaries are in the
+> [`Authority Map`](./AUTHORITY-MAP.md). The live backlog remains
+> [`v2-change-backlog.md`](./v2-change-backlog.md).
+
 **Purpose:** Single consolidated index of every planned change, improvement, and roadmap item in this repository. Paste this document (plus `docs/chatgpt-sources/` Project Sources) into ChatGPT to produce an overall **2026–27 implementation plan** through **May 1, 2027 launch**.
 
 **Canonical backlog:** [v2-change-backlog.md](./v2-change-backlog.md) — this brief aggregates it; do not treat this file as the live backlog editor. Add new requests to the backlog first.

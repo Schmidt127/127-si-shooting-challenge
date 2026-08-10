@@ -6,6 +6,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 ## [Unreleased]
 
+### Docs
+
+#### Changed
+- **Source-of-truth reconciliation (2026-08-10)** — Added the authority map,
+  reconciled the Completion Master and CONTROL release metadata to merged
+  PRs #137–#139, recorded the 2027 season policy and evidence boundaries, and
+  marked superseded status packets as historical or planning-only. No live
+  Airtable, Fillout, Make, Vercel, secret, deployment, or web implementation
+  changes were made.
+
 ### Airtable
 
 #### Changed
