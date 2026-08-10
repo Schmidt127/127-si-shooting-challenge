@@ -32,7 +32,7 @@ test("closeout packet preserves the verified homework identity chain", () => {
 test("each Mike production test card contains the required safety contract", () => {
   for (const title of [
     "Mike-only PROD test card: Automation 067 v3.4",
-    "Mike-only PROD test card: Automation 115 v2.0",
+    "Mike-only PROD paste/install and test card: Automation 115 v2.1",
   ]) {
     assert.match(packet, new RegExp(title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   }
@@ -50,12 +50,12 @@ test("each Mike production test card contains the required safety contract", () 
     assert.match(packet, new RegExp(requiredText, "i"));
   }
 
-  assert.match(packet, /Automation 115 v2\.0 — BLOCKED/);
+  assert.match(packet, /Automation 115 v2\.1/);
   assert.match(packet, /recCyFEPeATOVNlr9/);
   assert.match(packet, /recgP9qZYjAhE7NXm/);
-  assert.match(packet, /authorize a separate code-change package/i);
-  assert.match(packet, /constructing a valid current PHA test fixture/i);
-  assert.match(packet, /Do not substitute the current enrollment into 115/i);
+  assert.match(packet, /Corrected v2\.1 allowlist/i);
+  assert.match(packet, /all other enrollments must fail closed/i);
+  assert.match(packet, /Paste the committed v2\.1 body/i);
 });
 
 test("closeout packet keeps production mutations Mike-owned", () => {

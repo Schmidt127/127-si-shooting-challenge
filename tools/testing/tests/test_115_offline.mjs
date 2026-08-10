@@ -44,6 +44,39 @@ test("live create: one production-shaped Submission, linked back, Count It prese
   assert.equal(output.values.createdSubmissionIdOut, created[0].id);
 });
 
+test("current controlled Schmidt enrollment is accepted", async () => {
+  const base = buildStandardBase({
+    scenarioCells: {
+      "Related Enrollment": [{ id: IDS.CURRENT_SCHMIDT_ENROLLMENT, name: "Schmidt, Testing - 2026-2027" }],
+    },
+  });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "created");
+  assert.deepEqual(
+    base.getTable("Submissions").createdPayloads[0].payload.Enrollment,
+    [{ id: IDS.CURRENT_SCHMIDT_ENROLLMENT }],
+  );
+});
+
+test("original permitted Schmidt enrollment remains accepted", async () => {
+  const base = buildStandardBase();
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "created");
+});
+
+test("Run Test? unchecked performs no production-shaped create", async () => {
+  const base = buildStandardBase({ scenarioCells: { "Run Test?": false } });
+  const { output, error } = await run115({ base, recordId: SCENARIO });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 0);
+  assert.equal(scenarioRecord(base).getCellValue("Run Test?"), false);
+});
+
 test("live create never touches XP Events / WAS / Weeks tables (daily path)", async () => {
   const base = buildStandardBase();
   await run115({ base, recordId: SCENARIO });
@@ -65,6 +98,15 @@ test("rerun: second live run creates a second Submission and repoints Linked Sub
   assert.equal(created.length, 2, "rerun is expected to create a new Submission (documented behavior)");
   const scen = scenarioRecord(base);
   assert.deepEqual(scen.getCellValue("Linked Submission"), [{ id: created[1].id }]);
+});
+
+test("replay without re-checking Run Test? is idempotent and performs no action", async () => {
+  const base = buildStandardBase();
+  const first = await run115({ base, recordId: SCENARIO });
+  assert.equal(first.output.values.actionOut, "created");
+  const second = await run115({ base, recordId: SCENARIO });
+  assert.equal(second.output.values.statusOut, "skipped");
+  assert.equal(base.getTable("Submissions").createdPayloads.length, 1);
 });
 
 test("invalid scenario type: skipped_wrong_scenario, no version-stale message", async () => {
@@ -103,7 +145,7 @@ test("missing Related Enrollment: skipped_missing_input, no Submission", async (
   assert.equal(base.getTable("Submissions").createdPayloads.length, 0);
 });
 
-test("non-allowlisted enrollment: skipped_invalid_enrollment (Schmidt-only MVP)", async () => {
+test("non-allowlisted enrollment: skipped_invalid_enrollment (controlled allowlist)", async () => {
   const base = buildStandardBase({
     scenarioCells: { "Related Enrollment": [{ id: "recSOMEOTHERKID99", name: "Other Kid" }] },
   });

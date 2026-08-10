@@ -118,7 +118,7 @@ Authoritative export: DEV base `appTetnuCZlCZdTCT`, table **Testing Scenarios** 
 
 | Testing Scenarios field | Maps to / use |
 |-------------------------|---------------|
-| **Related Enrollment** | Must be Schmidt MVP allowlist: `recgP9qZYjAhE7NXm` |
+| **Related Enrollment** | Must be one approved controlled Schmidt enrollment: `recgP9qZYjAhE7NXm` or `recCyFEPeATOVNlr9` |
 | **Submission Date** | Submission **Activity Date** |
 | **Shot Total** | Submission **Shot Total** (number — added DEV 2026-07-06) |
 | **Run Test?** | Trigger; cleared after run |
@@ -162,7 +162,7 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 | Testing Scenarios field | Maps to / use |
 |-------------------------|---------------|
-| **Related Enrollment** | Schmidt MVP allowlist: `recgP9qZYjAhE7NXm` |
+| **Related Enrollment** | Controlled Schmidt allowlist: `recgP9qZYjAhE7NXm` or `recCyFEPeATOVNlr9` |
 | **Submission Date** | Submission **Activity Date** |
 | **Homework Assignment** | Submission **Homework Name 1** (single link) |
 | **Intake Attachments** | Submission **HW Sub 1** (1–3 files, same assignment) |
@@ -220,7 +220,7 @@ Week, Submission Assets, XP Events, Homework/Video attachment fields, computed/f
 
 | Testing Scenarios field | Maps to / use |
 |-------------------------|---------------|
-| **Related Enrollment** | Schmidt MVP allowlist |
+| **Related Enrollment** | Controlled Schmidt allowlist: `recgP9qZYjAhE7NXm` or `recCyFEPeATOVNlr9` |
 | **Submission Date** | **Activity Date** |
 | **Video Feedback Focus** | Submission **Video Feedback Focus** |
 | **Video Feedback Question** | Submission **Video Feedback Note** |

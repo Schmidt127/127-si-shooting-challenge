@@ -25,11 +25,18 @@ const SCRIPT_PATH = path.resolve(
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 const SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm";
+const CURRENT_SCHMIDT_ENROLLMENT = "recCyFEPeATOVNlr9";
 const SCHMIDT_ATHLETE = "recgqVstObQRzgXJF";
 export const PHA_HW1 = "recgj8dPk4ouTwCOj";
 export const LIBRARY_HW1 = "rechVLOeyEVIqmy2v";
 
-export const IDS = { SCHMIDT_ENROLLMENT, SCHMIDT_ATHLETE, PHA_HW1, LIBRARY_HW1 };
+export const IDS = {
+  SCHMIDT_ENROLLMENT,
+  CURRENT_SCHMIDT_ENROLLMENT,
+  SCHMIDT_ATHLETE,
+  PHA_HW1,
+  LIBRARY_HW1,
+};
 
 /** Build the standard PROD-shaped mock tables (field names from the
  *  2026-07-23 post-TS PROD schema snapshot). */
@@ -99,6 +106,9 @@ export function buildStandardBase({ scenarioCells = {}, scenarioId = "recSCENARI
     ],
     [
       new MockRecord(SCHMIDT_ENROLLMENT, {
+        Athlete: [{ id: SCHMIDT_ATHLETE, name: "Testing Schmidt" }],
+      }),
+      new MockRecord(CURRENT_SCHMIDT_ENROLLMENT, {
         Athlete: [{ id: SCHMIDT_ATHLETE, name: "Testing Schmidt" }],
       }),
     ]

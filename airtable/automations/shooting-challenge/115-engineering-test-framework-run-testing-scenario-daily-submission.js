@@ -3,8 +3,8 @@ Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submis
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-08-10 (PROD install v2.0; PHA-first script pasted; focused 115 scenario rerun pending)
-Last GitHub Update: 2026-08-10 (v2.0 — PHA-first Homework scenario contract)
+Last Synced From Airtable: 2026-08-10 (PROD install v2.0; v2.1 allowlist correction pending paste)
+Last GitHub Update: 2026-08-10 (v2.1 — controlled enrollment allowlist correction)
 
 Purpose:
 Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submission, Homework, or Video),
@@ -23,7 +23,7 @@ Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submis
 
 Notes:
 GitHub is the source-of-truth copy. Automation 115 v2.0 was pasted into PROD on 2026-08-10.
-The PHA-first Homework scenario logic is installed; a focused live 115 scenario rerun remains pending.
+Version v2.1 adds the current controlled Schmidt enrollment to the allowlist; paste/install in PROD is still Mike-owned.
 */
 
 /************************************************************
@@ -59,6 +59,8 @@ The PHA-first Homework scenario logic is installed; a focused live 115 scenario 
  * - v2.0 (2026-08-10): Homework scenarios require Testing Scenarios.Homework Assignment to link
  *   an active Program Homework Assignment (PHA) record ID. Submissions.Homework Name 1 receives
  *   the PHA RID (not Homework Library RID). Fail closed when only a Library RID is supplied.
+ * - v2.1 (2026-08-10): Add current controlled Schmidt enrollment to the explicit allowlist;
+ *   retain the existing permitted enrollment and fail closed for all others.
  *
  * PURPOSE
  * - Runs from one Testing Scenarios record when Run Test? is checked.
@@ -69,7 +71,8 @@ The PHA-first Homework scenario logic is installed; a focused live 115 scenario 
  * - Never writes test flags or framework fields to pipeline tables.
  *
  * IMPORTANT DESIGN RULES
- * - MVP allowlist: Related Enrollment must be Schmidt test enrollment (recgP9qZYjAhE7NXm).
+ * - Controlled allowlist: Related Enrollment must be one of the two approved Schmidt test
+ *   enrollments (recgP9qZYjAhE7NXm or recCyFEPeATOVNlr9).
  * - Pre-link Enrollment on Submission (023 skipped for inactive Schmidt enrollment).
  * - Daily: writable fields — Enrollment, Athlete, Activity Date, Shot Total, Duplicate Review Status.
  * - Homework: writable fields — Enrollment, Athlete, Activity Date, Homework Name 1 (PHA RID), HW Sub 1.
@@ -140,7 +143,7 @@ The PHA-first Homework scenario logic is installed; a focused live 115 scenario 
 
 const SCRIPT = {
   scriptName: "115 - Engineering Test Framework - Run Testing Scenario Daily Submission",
-  version: "v2.0",
+  version: "v2.1",
   versionDate: "2026-08-10",
   originalWrittenDate: "2026-07-06",
   lastUpdated: "2026-08-10",
@@ -169,8 +172,8 @@ const CONFIG = {
     targetGoalShots: "Target Goal Shots",
   },
 
-  /** MVP Schmidt-only. Expanded allowlist deferred (C-019 / post-MVP). */
-  allowedEnrollmentIds: ["recgP9qZYjAhE7NXm"],
+  /** Mike-approved controlled Schmidt allowlist; all other enrollments fail closed. */
+  allowedEnrollmentIds: ["recgP9qZYjAhE7NXm", "recCyFEPeATOVNlr9"],
 
   scenarioTypes: {
     dailySubmission: "Daily Submission",
@@ -310,6 +313,7 @@ const CONFIG = {
     skippedInvalidEnrollment: "skipped_invalid_enrollment",
     skippedWrongScenario: "skipped_wrong_scenario",
     skippedMissingInput: "skipped_missing_input",
+    skippedRunNotRequested: "skipped_run_not_requested",
     blockedNoFiles: "blocked_no_files",
     blockedTooManyFiles: "blocked_too_many_files",
     blockedHomeworkLibraryRid: "blocked_homework_library_rid",
@@ -2393,6 +2397,33 @@ async function main() {
   );
   setOutputSafe("scenarioTypeOut", normalizeScenarioTypeForOutput(scenarioType));
 
+  if (!getBooleanish(scenarioRecord, CONFIG.testingScenarioFields.runTest, false)) {
+    await finishScenarioRun({
+      testingScenariosTable,
+      scenarioId: recordId,
+      scenarioType,
+      debugStep,
+      actionOut: CONFIG.actions.skippedRunNotRequested,
+      statusOut: CONFIG.statuses.skipped,
+      errorOut: "Run Test? is not checked; no production-shaped action was performed.",
+      createdSubmissionId: "",
+      createdRecordSummary: "",
+      clearRunTest: false,
+      runMetadata: {
+        [CONFIG.testingScenarioFields.lastRunStatus]: singleSelectValue(
+          testingScenariosTable,
+          CONFIG.testingScenarioFields.lastRunStatus,
+          CONFIG.lastRunStatuses.blocked
+        ),
+        [CONFIG.testingScenarioFields.actualResult]:
+          "Skipped — Run Test? is not checked. No Submission created and no downstream action requested.",
+        [CONFIG.testingScenarioFields.passFailNotes]:
+          "Check Run Test? and re-trigger only for an intentional controlled test.",
+      },
+    });
+    return;
+  }
+
   // C-025 Stage 17 downstream — routed before intake Scenario Type allowlist.
   if (isC025Stage17DownstreamScenario(scenarioType, testIntakeName, scenarioRequirements)) {
     const enrollmentIdsC025 = getLinkedIds(
@@ -2419,8 +2450,8 @@ async function main() {
         scenarioType: CONFIG.c025Stage17Downstream.scenarioKey,
         debugStep,
         actionOut: CONFIG.actions.skippedInvalidEnrollment,
-        errorOut: `Enrollment ${enrollmentIdC025} is not in MVP allowlist.`,
-        actualResult: "Enrollment not allowed for MVP.",
+        errorOut: `Enrollment ${enrollmentIdC025} is not in the controlled allowlist.`,
+        actualResult: "Enrollment not allowed for controlled testing.",
       });
       return;
     }
@@ -2489,10 +2520,10 @@ async function main() {
       scenarioType,
       debugStep,
       actionOut: CONFIG.actions.skippedInvalidEnrollment,
-      errorOut: `Enrollment ${enrollmentId} is not in MVP allowlist. Schmidt only: ${CONFIG.allowedEnrollmentIds.join(", ")}.`,
+      errorOut: `Enrollment ${enrollmentId} is not in the controlled allowlist. Approved Schmidt enrollments: ${CONFIG.allowedEnrollmentIds.join(", ")}.`,
       actualResult: "Enrollment not allowed for MVP.",
       passFailNotes:
-        "Use Schmidt test enrollment recgP9qZYjAhE7NXm. Expanded allowlist deferred.",
+        `Use one approved Schmidt test enrollment: ${CONFIG.allowedEnrollmentIds.join(", ")}.`,
     });
     return;
   }

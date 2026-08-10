@@ -16,7 +16,7 @@ The current baseline below supersedes stale historical wording, but it does not 
 | Automation 009 | Installed in PROD, path proven | Initial and replay submissions reused the same Homework Completion |
 | Automation 020 | Installed in PROD, path proven | Exact Homework Completion reuse confirmed; no duplicate created |
 | Automation 067 v3.4 | Installed in PROD; focused proof pending | Do not redesign; Mike must run the reflection-quiz card below |
-| Automation 115 v2.0 | Installed in PROD; **blocked before proof** | Current Schmidt enrollment is not in the installed allowlist; see the blocked card below |
+| Automation 115 v2.1 | Repository corrected; PROD paste/install pending | Approved allowlist now includes both `recgP9qZYjAhE7NXm` and `recCyFEPeATOVNlr9`; Mike must paste v2.1 before proof |
 | Homework Completion reuse | Proven | Initial `rectWmGA1K2RSN4bp` and replay `recPPrwds0oz0EB4C` both reused `recyU1G9mWC1rQSst` |
 | Homework Library relationship | Proven in prior closeout evidence | Historical library record `rechVLOeyEVIqmy2v`; resolve the current live record before 067 proof |
 | PHA relationship | Proven in prior closeout evidence | Historical PHA `recgj8dPk4ouTwCOj`; resolve the current active PHA and its Week/Library links before 067 proof |
@@ -31,7 +31,7 @@ The current baseline below supersedes stale historical wording, but it does not 
 | Automation 057 | **Controlled PROD proof exists** | Denver-boundary behavior was proven; current operational/version attestation remains a separate UI check |
 | Automation 035 v1.2 | **Creation/idempotency proof exists; OFF** | Creation and rerun/idempotency passed; operational posture remains OFF pending Mike approval |
 | Automation 067 v3.4 | Installed in PROD; focused proof pending | Current enrollment and active PHA identity must be resolved from PROD at test time |
-| Automation 115 v2.0 | **Blocked** | Installed allowlist is only `recgP9qZYjAhE7NXm`; current controlled Schmidt enrollment is `recCyFEPeATOVNlr9` |
+| Automation 115 v2.1 | **PROD paste/install pending** | Repository allowlist includes `recgP9qZYjAhE7NXm` and `recCyFEPeATOVNlr9`; focused proof follows paste |
 
 The first three rows are not lacking repository evidence and must not be reported as open for lack of proof.
 
@@ -40,7 +40,7 @@ The first three rows are not lacking repository evidence and must not be reporte
 These remain open because they require a new PROD decision, current-record lookup, or launch approval:
 
 1. Focused PROD proof for Automation 067 v3.4.
-2. Decision and follow-up package for the Automation 115 enrollment mismatch.
+2. PROD paste/install and focused proof for Automation 115 v2.1.
 3. Fresh Schmidt athlete-path proof after the base reset, using current enrollment `recCyFEPeATOVNlr9`.
 4. Season-launch readiness: Weeks/config import and validation, Fillout activation, season-sensitive automation review, Make/email safety, and final Mike approval.
 
@@ -97,9 +97,9 @@ Return the fresh quiz record ID, the linked Homework Completion ID, PHA ID, Home
 
 Do not delete the quiz or Homework Completion automatically. If the test created an unintended duplicate or malformed row, stop and return IDs for review. Cleanup is safe only after confirming no coach-review or XP record depends on the row.
 
-## Mike-only PROD test card: Automation 115 v2.0 — BLOCKED
+## Mike-only PROD paste/install and test card: Automation 115 v2.1
 
-**Purpose:** Prove the PHA-first Homework branch only after the enrollment mismatch is resolved. No 115 PROD run is authorized by this card while the installed allowlist remains unchanged.
+**Purpose:** Install the approved allowlist correction, then prove the PHA-first Homework branch with the current controlled Schmidt enrollment.
 
 ### Setup
 
@@ -108,32 +108,34 @@ Do not delete the quiz or Homework Completion automatically. If the test created
 - Trigger table: **Testing Scenarios**.
 - Trigger: **Run Test? is checked**.
 - Current controlled Schmidt Enrollment: `recCyFEPeATOVNlr9`.
-- Installed 115 v2.0 allowlist: **only** `recgP9qZYjAhE7NXm`.
-- Because `recCyFEPeATOVNlr9` is not allowlisted, 115 will reject the current Schmidt row. Do **not** create the row or check `Run Test?`.
+- Approved retained enrollment: `recgP9qZYjAhE7NXm`.
+- Corrected v2.1 allowlist: **both** IDs above; all other enrollments must fail closed.
 
-### One decision is required before any 115 test
+### Exact PROD paste/install instructions
 
-Mike must choose exactly one:
+1. Open PROD base `appn84sqPw03zEbTT` → Automations.
+2. Open the existing automation named `115 - Engineering Test Framework - Run Testing Scenario Daily Submission`; do not create a second 115.
+3. Confirm trigger table **Testing Scenarios**, condition **Run Test? is checked**, and input `recordId` is the triggering record ID.
+4. Turn the automation OFF while replacing the script body.
+5. Paste the committed v2.1 body from `airtable/automations/shooting-challenge/115-engineering-test-framework-run-testing-scenario-daily-submission.js`, excluding only the GitHub-only header if Airtable paste convention requires it.
+6. Confirm the pasted header and `SCRIPT.version` both show **v2.1**.
+7. Save, turn the automation ON, and do not enable any unrelated automation or send path.
+8. Verify the editor is running v2.1 before creating the Testing Scenarios record.
 
-- **A — authorize a separate code-change package** to add `recCyFEPeATOVNlr9` to 115's allowlist. That package must include approved scope, source change, focused tests, paste/install instructions, and Mike approval. This PR does not expand the allowlist.
-- **B — use the old allowlisted enrollment** `recgP9qZYjAhE7NXm` by constructing a valid current PHA test fixture for that enrollment, if that remains operationally appropriate. This requires Mike to confirm the old enrollment is still safe and valid for controlled testing.
-
-Until A or B is approved, this card is **BLOCKED**. Do not substitute the current enrollment into 115 and do not silently alter the script.
+Do not paste v2.0 after this package. Do not alter fields or schema.
 
 ### Run order
 
-1. Stop: do not run 115 until Mike approves A or B above.
-2. After approval, use only the enrollment authorized by that decision.
-3. Resolve the active PHA, Library, Week, and matching Homework Completion from current PROD records; do not use fixed historical IDs.
-4. Confirm 115 is the installed **v2.0** automation and is ON.
-5. Save the Testing Scenarios row with `Run Test?` checked.
-6. Let 115 create the Submission. Do not manually chain 005, 009, or 020.
-7. Allow the normal downstream order to settle: **005 → 009 → 020**.
-8. Inspect the Testing Scenarios row and all linked pipeline records.
+1. Resolve the active PHA, Library, Week, and matching Homework Completion from current PROD records; do not use fixed historical IDs.
+2. Confirm 115 is the installed **v2.1** automation and is ON.
+3. Save the Testing Scenarios row with `Run Test?` checked.
+4. Let 115 create the Submission. Do not manually chain 005, 009, or 020.
+5. Allow the normal downstream order to settle: **005 → 009 → 020**.
+6. Inspect the Testing Scenarios row and all linked pipeline records.
 
 ### Expected result
 
-- 115 output: `statusOut=success`; `actionOut=created`; `Run Test?` is cleared; `Created Submission` and `Linked Submission` contain the created Submission ID.
+- 115 output: `version=v2.1`, `statusOut=success`; `actionOut=created`; `Run Test?` is cleared; `Created Submission` and `Linked Submission` contain the created Submission ID.
 - Submission is linked to the authorized enrollment and carries the resolved PHA RID in `Homework Name 1`.
 - 005 assigns the correct Week from Activity Date and Program Instance.
 - 009 creates one Submission Asset for one attachment, or N assets for N attachments.
