@@ -151,11 +151,11 @@ test("067 PHA matcher — wrong slot ignored (PI-first scan)", () => {
   assert.equal(matches[0].slot, "HW1");
 });
 
-test("115 v2.0 — homework ETF writes PHA RID, rejects library-only", () => {
+test("115 v2.1 — homework ETF writes PHA RID, rejects library-only", () => {
   const source = read(
     "airtable/automations/shooting-challenge/115-engineering-test-framework-run-testing-scenario-daily-submission.js"
   );
-  assert.match(source, /version:\s*"v2\.0"/);
+  assert.match(source, /version:\s*"v2\.1"/);
   assert.match(source, /resolveHomeworkScenarioPha/);
   assert.match(source, /blocked_homework_library_rid/);
   assert.match(source, /phaId/);
