@@ -3,8 +3,8 @@ Automation: 115 - Engineering Test Framework - Run Testing Scenario Daily Submis
 System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
-Last Synced From Airtable: 2026-07-23 (PROD install v1.8; dry run + live run PASS on scenario recPdyfYRFgDtpzQ8)
-Last GitHub Update: 2026-07-23 (v1.9 — stale DEV-only notes and stale "v1.4" skip message corrected; no logic changes)
+Last Synced From Airtable: 2026-08-10 (PROD install v2.0; PHA-first script pasted; focused 115 scenario rerun pending)
+Last GitHub Update: 2026-08-10 (v2.0 — PHA-first Homework scenario contract)
 
 Purpose:
 Creates a Fillout-shaped Submission from a Testing Scenarios row (Daily Submission, Homework, or Video),
@@ -22,18 +22,17 @@ Run Test?, Dry Run?, Related Enrollment, Submission Date, Shot Total, Homework A
 Intake Attachments, Video Feedback Focus, Video Feedback Question, Linked Submission
 
 Notes:
-GitHub is the source-of-truth copy. Installed in PROD per SC-001 (2026-07-23); dry run and
-live run both PASS (live Submission recuuTBgstSTGg2E3). Airtable currently runs v1.8; v1.9 is a
-message/comment-only correction (repaste optional).
+GitHub is the source-of-truth copy. Automation 115 v2.0 was pasted into PROD on 2026-08-10.
+The PHA-first Homework scenario logic is installed; a focused live 115 scenario rerun remains pending.
 */
 
 /************************************************************
  * 115 - ENGINEERING TEST FRAMEWORK
  * Run Testing Scenario — Daily Submission + Homework + Video
  *
- * Version: v1.8
+ * Version: v2.0
  * Date Written: 2026-07-06
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-10
  *
  * VERSION HISTORY
  * - v1.0 (2026-07-06): MVP — Schmidt-only allowlist; Daily Submission; dry-run preview.
