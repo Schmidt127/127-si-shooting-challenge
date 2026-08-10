@@ -24,6 +24,9 @@ const {
   launchManifest,
   activationPreview,
   rollbackPreview,
+  buildSeasonLaunchDryRun,
+  buildMikeDecisionSheet,
+  findWeekConflicts,
   buildSeasonReliabilityFindings,
   SEASON_FINDING_CODES,
 } = require("../../lib/challenge-year");
@@ -196,7 +199,7 @@ test("week import package includes maps and warnings", () => {
   });
   assert.strictEqual(pkg.ok, true);
   assert.ok(pkg.files.weeksImportCsv.includes("Week Name"));
-  assert.ok(pkg.weekCodeMap.some((w) => w.weekCode === "2027-2028|Week 0"));
+  assert.ok(pkg.weekCodeMap.some((w) => w.weekCode === "2027-2028|Early Bird"));
   assert.ok(pkg.expectedSundayEmailDates.length > 0);
   assert.ok(pkg.warnings.some((w) => /record IDs/i.test(w)));
   assert.ok(pkg.rollback.steps.length > 0);
@@ -207,6 +210,57 @@ test("launch-preflight PASS WITH WARNINGS on fixture without export", () => {
   assert.ok(r.overall === "PASS" || r.overall === "PASS WITH WARNINGS");
   assert.strictEqual(r.configRecordId, "recNEWCONFIG202728");
   assert.ok(r.reliabilityFindings);
+});
+
+test("launch-preflight fails closed until Mike selects a level policy", () => {
+  const fixture = { ...launchPass, levelPolicy: "undocumented" };
+  const r = launchPreflight(fixture);
+  assert.strictEqual(r.overall, "FAIL");
+  assert.ok(r.failedChecks.some((check) => check.code === "level_policy_decision_required"));
+});
+
+test("season launch dry run produces a no-write Week import preview", () => {
+  const r = buildSeasonLaunchDryRun(launchPass);
+  assert.strictEqual(r.dryRun, true);
+  assert.strictEqual(r.writesPerformed, 0);
+  assert.strictEqual(r.levelPolicy, "reset");
+  assert.strictEqual(r.expectedRecordCount, 10); // Week 0 + eight regular + post-challenge
+  assert.strictEqual(r.weekZero.displayLabel, "Early Bird");
+  assert.strictEqual(r.timezone, "America/Denver");
+  assert.ok(r.markdown.includes("Proposed Week import"));
+  assert.ok(r.decisionSheet.includes("Mike season-launch decision sheet"));
+  assert.ok(r.decisionSheet.includes("`reset` (confirm)"));
+  assert.ok(r.checks.some((check) => check.code === "existing_weeks_not_supplied"));
+});
+
+test("decision sheet visibly blocks missing dates and level policy", () => {
+  const sheet = buildMikeDecisionSheet({
+    config: { challengeYearLabel: "2026-2027", weekZeroStart: null, regularWeekCount: null },
+    levelPolicy: "undocumented",
+  });
+  assert.ok(sheet.includes("MISSING — blocks import and activation"));
+  assert.ok(sheet.includes("choose `reset` or `carry`; blocks import and activation"));
+});
+
+test("season launch dry run blocks import on duplicate existing Week", () => {
+  const proposed = buildSeasonLaunchDryRun(launchPass).proposedWeeks;
+  const conflicts = findWeekConflicts(proposed, [{
+    id: "recExistingWeek0",
+    "Week Name": "Early Bird",
+    "Start Date": "2027-05-30",
+    "End Date": "2027-06-05",
+    "Challenge Year": "2027-2028",
+  }]);
+  assert.strictEqual(conflicts.length, 1);
+  const r = buildSeasonLaunchDryRun({ ...launchPass, existingWeeks: [{
+    id: "recExistingWeek0",
+    "Week Name": "Early Bird",
+    "Start Date": "2027-05-30",
+    "End Date": "2027-06-05",
+    "Challenge Year": "2027-2028",
+  }] });
+  assert.strictEqual(r.overall, "FAIL");
+  assert.ok(r.activationBlockers.some((check) => check.code === "existing_week_conflicts"));
 });
 
 test("launch-preflight FAIL without config id", () => {
@@ -224,7 +278,7 @@ test("launch-status returns launch record", () => {
 test("launch-manifest produces markdown and csv", () => {
   const r = launchManifest(launchPass);
   assert.ok(r.markdown.includes("Season Launch Manifest"));
-  assert.ok(r.csv.includes("2027-2028|Week 0"));
+  assert.ok(r.csv.includes("2027-2028|Early Bird"));
 });
 
 test("activation-preview dry-run lists proposed changes", () => {

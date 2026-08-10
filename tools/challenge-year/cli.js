@@ -9,7 +9,7 @@
  *   validate-export
  *   audit-automations
  *   launch-status | launch-preflight | launch-manifest
- *   activation-preview | rollback-preview
+ *   activation-preview | rollback-preview | launch-dry-run
  *
  * Examples:
  *   node tools/challenge-year/cli.js generate-weeks \
@@ -50,6 +50,7 @@ Commands:
   launch-manifest        Launch manifest + week package
   activation-preview     Dry-run Live activation changes
   rollback-preview       Dry-run rollback changes
+  launch-dry-run         No-write proposed Week import + approval packet
 
 Common options:
   --config <rec|file>  Config record id and/or fixture path
@@ -602,6 +603,28 @@ function cmdRollbackPreview(args) {
   process.exit(engine.exitCodeForOverall(result.overall));
 }
 
+function cmdLaunchDryRun(args) {
+  const data = loadLaunchFixture(args);
+  const result = engine.buildSeasonLaunchDryRun({
+    ...data,
+    configRecordId: data.configRecordId || data.newConfig?.id,
+    challengeYear: data.challengeYear || data.newConfig?.activeSchoolYear,
+    newConfig: data.newConfig || data.config,
+    levelPolicy: args["level-policy"] || data.levelPolicy,
+    existingWeeks: data.existingWeeks || data.export?.weeks || data.weeks,
+  });
+  const out = args.output || `tmp/season-launch-dry-run-${result.challengeYear || "year"}`;
+  writeDirOutputs(out, {
+    "season-launch-dry-run.json": result,
+    "season-launch-dry-run.md": result.markdown,
+    "mike-decision-sheet.md": result.decisionSheet,
+    "weeks-import.csv": result.weekPackage?.files?.weeksImportCsv,
+  });
+  process.stdout.write(`Overall: ${result.overall}\nDry run: true; Airtable writes: 0\n`);
+  if (result.approvalQuestion) process.stdout.write(`Mike approval: ${result.approvalQuestion}\n`);
+  process.exit(engine.exitCodeForOverall(result.overall));
+}
+
 function main() {
   const args = parseArgs(process.argv.slice(2));
   const command = args._[0];
@@ -638,6 +661,8 @@ function main() {
       return cmdActivationPreview(args);
     case "rollback-preview":
       return cmdRollbackPreview(args);
+    case "launch-dry-run":
+      return cmdLaunchDryRun(args);
     default:
       process.stderr.write(`Unknown command: ${command}\n`);
       usage(2);
