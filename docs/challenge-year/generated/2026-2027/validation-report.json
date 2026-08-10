@@ -1,0 +1,111 @@
+{
+  "validatedAt": "2026-08-10T12:48:49.718Z",
+  "packagePath": "docs/challenge-year/generated/2026-2027",
+  "overall": "PASS WITH WARNINGS",
+  "failN": 0,
+  "warnN": 4,
+  "passN": 15,
+  "findings": [
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "season-manifest.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "program-instance.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "challenge-config.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "weeks-prod-as-installed.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "week-record-id-map.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "xp-reward-rules-summary.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "level-gate-rules-status.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "zoom-config.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "feature-switches.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "file_present",
+      "message": "fillout-field-mappings.json"
+    },
+    {
+      "severity": "PASS",
+      "code": "manifest_id",
+      "message": "rec5mEM0YPqPqq0hZ",
+      "field": "programInstanceId"
+    },
+    {
+      "severity": "PASS",
+      "code": "manifest_id",
+      "message": "rechc1f9f4kVM1tHP",
+      "field": "configId"
+    },
+    {
+      "severity": "PASS",
+      "code": "manifest_id",
+      "message": "2026-2027",
+      "field": "schoolYear"
+    },
+    {
+      "severity": "PASS",
+      "code": "canonical_plan_valid",
+      "message": "11 weeks generated"
+    },
+    {
+      "severity": "WARN",
+      "code": "regular_week_count_mismatch",
+      "message": "PROD has 10 numbered weeks; canonical target has 9",
+      "recommendation": "Mike: align Challenge Week Count on Config + PROD Week rows"
+    },
+    {
+      "severity": "PASS",
+      "code": "video_xp_25",
+      "message": "VIDEO_SUBMISSION = 25 XP"
+    },
+    {
+      "severity": "WARN",
+      "code": "level_gates_2026_2027_missing",
+      "message": "No Level Gate Rules with School Year / Rule Set 2026-2027 in package — PROD may still use 2025-2026 gates via 043 global Rule Key",
+      "decisionRequired": "Mike must approve 2026-2027 gate numbers before load"
+    },
+    {
+      "severity": "WARN",
+      "code": "zoom_config_sparse",
+      "message": "2026-2027 Config lacks full Zoom/recording fields populated on 2025-2026 row — copy from prior year or set explicitly before recording season",
+      "configId": "rechc1f9f4kVM1tHP"
+    },
+    {
+      "severity": "WARN",
+      "code": "zoom_approval_email_off",
+      "message": "Recording Approval Email Enabled = No on 2026-2027 Config snapshot"
+    }
+  ]
+}

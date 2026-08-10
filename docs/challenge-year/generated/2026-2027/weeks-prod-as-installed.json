@@ -1,0 +1,142 @@
+{
+  "source": "docs/testing/evidence/2026-08-05-agent4-ops/rcc-prod-export.sanitized.json",
+  "capturedAt": "2026-08-05",
+  "programInstanceId": "rec5mEM0YPqPqq0hZ",
+  "schoolYear": "2026-2027",
+  "weekCount": 12,
+  "weeks": [
+    {
+      "recordId": "recWeVrSabnsYaHc2",
+      "weekName": "Early Bird",
+      "weekKey": "2026-2027|Early Bird",
+      "weekType": "early_bird",
+      "startDateIso": "2026-08-02T06:00:00.000Z",
+      "endDateIso": "2026-08-09T05:30:00.000Z",
+      "denverStart": "2026-08-02",
+      "denverEnd": "2026-08-08",
+      "note": "Controlled test / intake window — NOT canonical May 2027 Early Bird"
+    },
+    {
+      "recordId": "recBrZ1sV8byWEHZU",
+      "weekName": "Week 1",
+      "weekKey": "2026-2027|Week 1",
+      "weekType": "regular",
+      "startDateIso": "2027-04-25T06:00:00.000Z",
+      "endDateIso": "2027-05-02T05:30:00.000Z",
+      "denverStart": "2027-04-25",
+      "denverEnd": "2027-05-01"
+    },
+    {
+      "recordId": "rec2Rewxt21z7dI9f",
+      "weekName": "Week 2",
+      "weekKey": "2026-2027|Week 2",
+      "weekType": "regular",
+      "startDateIso": "2027-05-02T06:00:00.000Z",
+      "endDateIso": "2027-05-09T05:30:00.000Z",
+      "denverStart": "2027-05-02",
+      "denverEnd": "2027-05-08"
+    },
+    {
+      "recordId": "rec7RpUMVLbcrmn4h",
+      "weekName": "Week 3",
+      "weekKey": "2026-2027|Week 3",
+      "weekType": "regular",
+      "startDateIso": "2027-05-09T06:00:00.000Z",
+      "endDateIso": "2027-05-16T05:30:00.000Z",
+      "denverStart": "2027-05-09",
+      "denverEnd": "2027-05-15"
+    },
+    {
+      "recordId": "recCCpyqPKA580sdk",
+      "weekName": "Week 4",
+      "weekKey": "2026-2027|Week 4",
+      "weekType": "regular",
+      "startDateIso": "2027-05-16T06:00:00.000Z",
+      "endDateIso": "2027-05-23T05:30:00.000Z",
+      "denverStart": "2027-05-16",
+      "denverEnd": "2027-05-22"
+    },
+    {
+      "recordId": "recEapVpi6u0oxuPy",
+      "weekName": "Week 5",
+      "weekKey": "2026-2027|Week 5",
+      "weekType": "regular",
+      "startDateIso": "2027-05-23T06:00:00.000Z",
+      "endDateIso": "2027-05-30T05:30:00.000Z",
+      "denverStart": "2027-05-23",
+      "denverEnd": "2027-05-29"
+    },
+    {
+      "recordId": "recKJMGYbEzGHyXfd",
+      "weekName": "Week 6",
+      "weekKey": "2026-2027|Week 6",
+      "weekType": "regular",
+      "startDateIso": "2027-05-30T06:00:00.000Z",
+      "endDateIso": "2027-06-06T05:30:00.000Z",
+      "denverStart": "2027-05-30",
+      "denverEnd": "2027-06-05"
+    },
+    {
+      "recordId": "recRp4y42EpLvtwk5",
+      "weekName": "Week 7",
+      "weekKey": "2026-2027|Week 7",
+      "weekType": "regular",
+      "startDateIso": "2027-06-06T06:00:00.000Z",
+      "endDateIso": "2027-06-13T05:30:00.000Z",
+      "denverStart": "2027-06-06",
+      "denverEnd": "2027-06-12"
+    },
+    {
+      "recordId": "recW3irij491AIPrl",
+      "weekName": "Week 8",
+      "weekKey": "2026-2027|Week 8",
+      "weekType": "regular",
+      "startDateIso": "2027-06-13T06:00:00.000Z",
+      "endDateIso": "2027-06-20T05:30:00.000Z",
+      "denverStart": "2027-06-13",
+      "denverEnd": "2027-06-19"
+    },
+    {
+      "recordId": "recfu3dpVJAnVBvCB",
+      "weekName": "Week 9",
+      "weekKey": "2026-2027|Week 9",
+      "weekType": "regular",
+      "startDateIso": "2027-06-20T06:00:00.000Z",
+      "endDateIso": "2027-06-27T05:30:00.000Z",
+      "denverStart": "2027-06-20",
+      "denverEnd": "2027-06-26"
+    },
+    {
+      "recordId": "rech8lgJkNMStWh9A",
+      "weekName": "Week 10",
+      "weekKey": "2026-2027|Week 10",
+      "weekType": "regular",
+      "startDateIso": "2027-06-27T06:00:00.000Z",
+      "endDateIso": "2027-07-01T05:30:00.000Z",
+      "denverStart": "2027-06-27",
+      "denverEnd": "2027-06-30",
+      "note": "Terminal partial week ending Jun 30"
+    },
+    {
+      "recordId": "recsWuPMbRH0W5aRU",
+      "weekName": "Post-Challenge",
+      "weekKey": "2026-2027|Post-Challenge",
+      "weekType": "post_challenge",
+      "startDateIso": "2027-07-01T06:00:00.000Z",
+      "endDateIso": "2027-07-08T05:30:00.000Z",
+      "denverStart": "2027-07-01",
+      "denverEnd": "2027-07-07",
+      "note": "RCC export had end before start — canonical 7-day post window applied here; VERIFY LIVE in OMNI"
+    }
+  ],
+  "hazardWeeks": [
+    {
+      "recordId": "reci5GdxEC57vfoS3",
+      "weekKey": "|PWTEST|2026-08-05|CASE-01|WEEK",
+      "reason": "Overlaps Early Bird Aug 2026 — blocks 005 multi-match if Active",
+      "action": "Deactivate or delete before public launch"
+    }
+  ],
+  "canonicalTargetFile": "weeks-canonical-target.json",
+  "validationCommand": "node tools/season-launch/validate-2026-2027-package.mjs"
+}

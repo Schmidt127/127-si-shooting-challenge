@@ -1,0 +1,35 @@
+{
+  "recordId": "rechc1f9f4kVM1tHP",
+  "activeSchoolYear": "2026-2027",
+  "snapshotDate": "2026-07-24",
+  "status": "PROD_EXISTS_SPARSE_ZOOM_FIELDS",
+  "fieldsFromSnapshot": {
+    "Active School Year": "2026-2027",
+    "Max Videos Per Submission": 6,
+    "Recording Makeup Enabled YN": "No",
+    "Recording Quiz Requires Coach Approval YN": "No",
+    "Recording Gives Full Zoom Gate Credit YN": "No",
+    "Recording Approval Email Enabled YN": "No",
+    "Recording Makeup Counts for Perfect Week YN": "No",
+    "Root Google Drive Folder ID": "1e4ymb1M4IlAMBgjAhSMiuYdaSiUtYM80"
+  },
+  "missingVs2025_2026Config": [
+    "Challenge Week Count",
+    "Submission XP Active?",
+    "Submission Base XP / Shot XP Per Shot",
+    "Zoom Meetings links",
+    "Zoom Recording XP Percent of Live",
+    "Recording Path Enabled?",
+    "Recording Approval Email Template Key",
+    "Active XP Rule Set linkage"
+  ],
+  "activeXpRuleSet": "Shooting Challenge 2026-2027",
+  "xpRewardRulesCount": 31,
+  "levelGateRuleSet2026_2027": "NOT_IN_SNAPSHOT — gates may still resolve via global Rule Key / 043 School Year prefer",
+  "featureSwitchesFile": "feature-switches.json",
+  "operatorActions": [
+    "OMNI: compare rechc1f9f4kVM1tHP to recq14M5hEv3TIGEj (2025-2026) and copy season-appropriate Zoom/recording fields",
+    "Set Challenge Week Count to match numbered Week rows (9 canonical vs 10 PROD — Mike decision)",
+    "Confirm only one 'current' Config for 2026-2027 at launch"
+  ]
+}

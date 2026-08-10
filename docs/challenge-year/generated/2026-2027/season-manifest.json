@@ -1,0 +1,45 @@
+{
+  "packageId": "season-launch-2026-2027",
+  "schoolYear": "2026-2027",
+  "challengeYearLabel": "2026-2027",
+  "timezone": "America/Denver",
+  "baseId": "appn84sqPw03zEbTT",
+  "status": "repository_ready_prod_partially_installed",
+  "generatedAt": "2026-08-10",
+  "generatedBy": "Worker 2 — season intake closeout",
+  "recordIds": {
+    "programInstanceId": "rec5mEM0YPqPqq0hZ",
+    "programInstanceName": "Shooting Challenge | 2026-2027",
+    "configId": "rechc1f9f4kVM1tHP",
+    "schoolYear": "2026-2027",
+    "schmidtAthleteId": "recgqVstObQRzgXJF",
+    "schmidtEnrollment2026_2027": "recCyFEPeATOVNlr9",
+    "schmidtEnrollmentLegacy": "recgP9qZYjAhE7NXm",
+    "earlyBirdWeekId": "recWeVrSabnsYaHc2",
+    "pwtestWeekId": "reci5GdxEC57vfoS3"
+  },
+  "canonicalWeekPlan": {
+    "weekZeroStart": "2027-04-25",
+    "regularWeeks": 9,
+    "challengeEndDate": "2027-06-30",
+    "postChallengeDays": 7,
+    "earlyBirdLabel": "Early Bird",
+    "note": "Generator contract: May 1–Jun 30 program window; Early Bird ends on program start (2027-05-01 Saturday → Early Bird Sun 4/25–Sat 5/1). PROD currently has 10 numbered weeks — see weeks-prod-as-installed.json."
+  },
+  "intakeDates": {
+    "enrollmentOpen": "MIKE_DECISION_REQUIRED",
+    "enrollmentClose": "MIKE_DECISION_REQUIRED",
+    "challengeStart": "2027-05-02",
+    "challengeEnd": "2027-06-30",
+    "earlyBirdDecision": "SC-066 — keep Early Bird week row or rename to Week 0",
+    "source": "docs/online-agents/enrollment-season/SEASON-DATE-CONTRACT.md"
+  },
+  "evidenceSources": [
+    "docs/overnight/config-xp/prod-config-snapshot-2026-07-24.json",
+    "docs/testing/evidence/2026-08-05-agent4-ops/rcc-prod-export.sanitized.json",
+    "docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md",
+    "docs/prod-completion/2026-08-08/PROGRAM-HOMEWORK-ASSIGNMENTS-2026-2027-RESTORATION.md"
+  ],
+  "launchLifecycleState": "Weeks Imported (partial) — Config Validated (offline) — Test Ready (Schmidt residual)",
+  "operatorStartHere": "docs/season-launch/2026-2027/README.md"
+}

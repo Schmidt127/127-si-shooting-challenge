@@ -1,0 +1,31 @@
+{
+  "configId": "rechc1f9f4kVM1tHP",
+  "schoolYear": "2026-2027",
+  "snapshotDate": "2026-07-24",
+  "prodSnapshotNote": "sparse — 2026-2027 Config row lacks most Zoom/recording fields present on 2025-2026 Config recq14M5hEv3TIGEj",
+  "recordingApprovalEmailEnabled": false,
+  "recordingMakeupEnabled": false,
+  "recordingQuizRequiresCoachApproval": false,
+  "recordingGivesFullZoomGateCredit": false,
+  "recordingMakeupCountsForPerfectWeek": false,
+  "maxVideosPerSubmission": 6,
+  "referenceConfig2025_2026": {
+    "recordId": "recq14M5hEv3TIGEj",
+    "zoomRecordingXpPercentOfLive": 50,
+    "recordingPathEnabled": true,
+    "recordingApprovalEmailEnabled": true,
+    "recordingApprovalEmailTemplateKey": "ZOOM_RECORDING_APPROVED",
+    "zoomRecordingMakeupWindowDays": 7,
+    "challengeWeekCount": 9
+  },
+  "prodAutomations": {
+    "101": "ON — live Zoom attendance XP",
+    "117": "ON — recording approval email handoff only (not Stage 17 orchestrator)",
+    "057": "ON — Perfect Week + recording credit combined",
+    "042": "ON — level recalc"
+  },
+  "seasonMeetings": "MIKE_DECISION_REQUIRED — link Zoom Meetings rows to 2026-2027 Config before season",
+  "crossEnrollmentIsolation": "Enrollment-scoped — verify Schmidt uses recCyFEPeATOVNlr9 only",
+  "liveVsRecordingExclusivity": "Stage 17 PASS — conflict rollup; never write Zoom Meetings.Attendees from recording path",
+  "finalTestProcedure": "docs/season-launch/2026-2027/ZOOM-FINAL-TEST.md"
+}

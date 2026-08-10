@@ -1,0 +1,23 @@
+{
+  "schoolYear": "2026-2027",
+  "programInstanceId": "rec5mEM0YPqPqq0hZ",
+  "weeks": {
+    "Early Bird": "recWeVrSabnsYaHc2",
+    "Week 1": "recBrZ1sV8byWEHZU",
+    "Week 2": "rec2Rewxt21z7dI9f",
+    "Week 3": "rec7RpUMVLbcrmn4h",
+    "Week 4": "recCCpyqPKA580sdk",
+    "Week 5": "recEapVpi6u0oxuPy",
+    "Week 6": "recKJMGYbEzGHyXfd",
+    "Week 7": "recRp4y42EpLvtwk5",
+    "Week 8": "recW3irij491AIPrl",
+    "Week 9": "recfu3dpVJAnVBvCB",
+    "Week 10": "rech8lgJkNMStWh9A",
+    "Post-Challenge": "recsWuPMbRH0W5aRU"
+  },
+  "hazard": {
+    "PWTEST": "reci5GdxEC57vfoS3"
+  },
+  "source": "RCC export 2026-08-05 + isolation package evidence",
+  "verifyLiveBeforeUse": true
+}

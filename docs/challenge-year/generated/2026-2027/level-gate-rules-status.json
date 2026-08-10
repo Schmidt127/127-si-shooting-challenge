@@ -1,0 +1,13 @@
+{
+  "snapshotDate": "2026-07-24",
+  "ruleSets": {
+    "2025-2026": { "count": 12, "status": "in_prod_snapshot" },
+    "2026-2027": { "count": 0, "status": "NOT_IN_SNAPSHOT" }
+  },
+  "decision": "MIKE_DECISION_REQUIRED",
+  "recommendedDefault": "Clone 2025-2026 gate structure with spread early gates per C-014 (e.g. 1 HW past level 1) — tune numbers in docs/v2/level-gate-rules-config-template.csv before PROD load",
+  "consequenceIfUnresolved": "043 may prefer School Year / Rule Set but global Rule Key can still apply 2025-2026 thresholds to 2026-2027 athletes — risk of wrong gate friction",
+  "templateCsv": "docs/v2/level-gate-rules-config-template.csv",
+  "designDoc": "docs/v2/season-configuration-design.md",
+  "status": "DRAFT — do not load TBD rows"
+}

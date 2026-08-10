@@ -1,0 +1,24 @@
+{
+  "recordId": "rec5mEM0YPqPqq0hZ",
+  "name": "Shooting Challenge | 2026-2027",
+  "schoolYear": "2026-2027",
+  "status": "PROD_EXISTS_VERIFY_LIVE",
+  "timezone": "America/Denver",
+  "fieldsToVerifyInOmni": [
+    "School Year - Linked",
+    "Start Date",
+    "End Date",
+    "Registration Open",
+    "Registration Closes",
+    "Status"
+  ],
+  "notes": [
+    "Program Instance isolation live-tested for 005/023 (2026-08-06).",
+    "PHA schedule restored 2026-08-08: 90 Week 1–9 rows + 2 Early Bird fixtures.",
+    "Do not delete prior-year Program Instance rows."
+  ],
+  "relatedRecordIds": {
+    "configId": "rechc1f9f4kVM1tHP",
+    "schmidtEnrollment": "recCyFEPeATOVNlr9"
+  }
+}

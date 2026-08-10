@@ -1,0 +1,286 @@
+{
+  "ruleSet": "Shooting Challenge 2026-2027",
+  "snapshotDate": "2026-07-24",
+  "verifyLiveBeforePaste": true,
+  "count": 31,
+  "rules": [
+    {
+      "id": "recXftUBrwH5U15kb",
+      "ruleKey": "HOMEWORK_COMPLETION",
+      "rewardRule": "Homework Completion",
+      "xpAmount": 35,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recZVpCbWfPPXwDbU",
+      "ruleKey": "PERFECT_WEEK",
+      "rewardRule": "Perfect Week",
+      "xpAmount": 100,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recxCB7mVweyjWRBb",
+      "ruleKey": "SHOOTING_BASE",
+      "rewardRule": "Shooting Base",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recshnu10fEtS736W",
+      "ruleKey": "STREAK_10DAY",
+      "rewardRule": "10-Day Streak",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recew8FaKSw9LfvyS",
+      "ruleKey": "STREAK_20DAY",
+      "rewardRule": "20-Day Streak",
+      "xpAmount": 50,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recJjlUxPiVIwVFQC",
+      "ruleKey": "STREAK_30DAY",
+      "rewardRule": "30-Day Streak",
+      "xpAmount": 60,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recRZ3UCq4LCBHtEW",
+      "ruleKey": "STREAK_3DAY",
+      "rewardRule": "3-Day Streak",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recaMCQTTBHXMroQI",
+      "ruleKey": "STREAK_40DAY",
+      "rewardRule": "40-Day Streak",
+      "xpAmount": 75,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recNQWZq6G0eIVGwM",
+      "ruleKey": "STREAK_50DAY",
+      "rewardRule": "50-Day Streak",
+      "xpAmount": 90,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recGtZyCUoPmUMzby",
+      "ruleKey": "STREAK_5DAY",
+      "rewardRule": "5-Day Streak",
+      "xpAmount": 15,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "rec12dkUdMdovwYIm",
+      "ruleKey": "STREAK_60DAY",
+      "rewardRule": "60-Day Streak",
+      "xpAmount": 105,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "rec5EiGTzLAt7tZdZ",
+      "ruleKey": "STREAK_7DAY",
+      "rewardRule": "7-Day Streak",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "rec06c1tu3IO8EZqG",
+      "ruleKey": "VIDEO_SUBMISSION",
+      "rewardRule": "Video Submission",
+      "xpAmount": 25,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recYhV7yxPAAPyZMX",
+      "ruleKey": "WEEKLY_THRESHOLD_100_34",
+      "rewardRule": "Weekly Threshold 100 3-4",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": [
+        "reclWDQZzKbVBtdhG"
+      ]
+    },
+    {
+      "id": "recppi8algNk0G3pL",
+      "ruleKey": "WEEKLY_THRESHOLD_100_56",
+      "rewardRule": "Weekly Threshold 100 5-6",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": [
+        "recv9aWnHanY2sRgk"
+      ]
+    },
+    {
+      "id": "recNmJ8mVXGwxCCCp",
+      "ruleKey": "WEEKLY_THRESHOLD_100_78",
+      "rewardRule": "Weekly Threshold 100 7-8",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": [
+        "rec2VQFfGJa1ofA06"
+      ]
+    },
+    {
+      "id": "recY77DWJzcowF7az",
+      "ruleKey": "WEEKLY_THRESHOLD_100_912",
+      "rewardRule": "Weekly Threshold 100 9-12",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": [
+        "rec75ruo3XT5nSvaK"
+      ]
+    },
+    {
+      "id": "recBHUGb5TzgLKko8",
+      "ruleKey": "WEEKLY_THRESHOLD_100_K2",
+      "rewardRule": "Weekly Threshold 100 K-2",
+      "xpAmount": 10,
+      "active": true,
+      "gradeBandIds": [
+        "recK7BDVSpHy2ipCS"
+      ]
+    },
+    {
+      "id": "recfmfdbZphKKNN3F",
+      "ruleKey": "WEEKLY_THRESHOLD_125_34",
+      "rewardRule": "Weekly Threshold 125 3-4",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": [
+        "reclWDQZzKbVBtdhG"
+      ]
+    },
+    {
+      "id": "rec1oBLWraNJrfKW2",
+      "ruleKey": "WEEKLY_THRESHOLD_125_56",
+      "rewardRule": "Weekly Threshold 125 5-6",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": [
+        "recv9aWnHanY2sRgk"
+      ]
+    },
+    {
+      "id": "recODGHC7DdsyoqcL",
+      "ruleKey": "WEEKLY_THRESHOLD_125_78",
+      "rewardRule": "Weekly Threshold 125 7-8",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": [
+        "rec2VQFfGJa1ofA06"
+      ]
+    },
+    {
+      "id": "recTapBOJTrmacldU",
+      "ruleKey": "WEEKLY_THRESHOLD_125_912",
+      "rewardRule": "Weekly Threshold 125 9-12",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": [
+        "rec75ruo3XT5nSvaK"
+      ]
+    },
+    {
+      "id": "recCqI0sGBzhg50Ak",
+      "ruleKey": "WEEKLY_THRESHOLD_125_K2",
+      "rewardRule": "Weekly Threshold 125 K-2",
+      "xpAmount": 20,
+      "active": true,
+      "gradeBandIds": [
+        "recK7BDVSpHy2ipCS"
+      ]
+    },
+    {
+      "id": "recfzeuoqZqEAYGFk",
+      "ruleKey": "WEEKLY_THRESHOLD_150_34",
+      "rewardRule": "Weekly Threshold 150 3-4",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": [
+        "reclWDQZzKbVBtdhG"
+      ]
+    },
+    {
+      "id": "recyyX5P6uHUZSSYL",
+      "ruleKey": "WEEKLY_THRESHOLD_150_56",
+      "rewardRule": "Weekly Threshold 150 5-6",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": [
+        "recv9aWnHanY2sRgk"
+      ]
+    },
+    {
+      "id": "recTaU3UYywhHXAMh",
+      "ruleKey": "WEEKLY_THRESHOLD_150_78",
+      "rewardRule": "Weekly Threshold 150 7-8",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": [
+        "rec2VQFfGJa1ofA06"
+      ]
+    },
+    {
+      "id": "rech23SeTrTaceZbS",
+      "ruleKey": "WEEKLY_THRESHOLD_150_912",
+      "rewardRule": "Weekly Threshold 150 9-12",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": [
+        "rec75ruo3XT5nSvaK"
+      ]
+    },
+    {
+      "id": "recCy2lY2nNf1d7um",
+      "ruleKey": "WEEKLY_THRESHOLD_150_K2",
+      "rewardRule": "Weekly Threshold 150 K-2",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": [
+        "recK7BDVSpHy2ipCS"
+      ]
+    },
+    {
+      "id": "recwwmZY5IZssmo6b",
+      "ruleKey": "ZOOM_ATTEND_BASE",
+      "rewardRule": "Zoom Attendance: Base",
+      "xpAmount": 60,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "reccCLlgFT2Jl316c",
+      "ruleKey": "ZOOM_ATTEND_BONUS_2",
+      "rewardRule": "Zoom Attendance: Bonus 2",
+      "xpAmount": 30,
+      "active": true,
+      "gradeBandIds": null
+    },
+    {
+      "id": "recRH5BMuMUWzRrKi",
+      "ruleKey": "ZOOM_ATTEND_BONUS_3",
+      "rewardRule": "Zoom Attendance: Bonus 3",
+      "xpAmount": 40,
+      "active": true,
+      "gradeBandIds": null
+    }
+  ]
+}

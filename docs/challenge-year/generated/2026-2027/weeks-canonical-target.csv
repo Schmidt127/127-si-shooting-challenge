@@ -1,0 +1,12 @@
+Week Name,Start Date,End Date,Sequence,Week Type,Week Key,Week End Key,Challenge Year,Config Record ID,Timezone,Active?,Intake Open?,Counts for XP?,Counts for Leaderboard?
+Early Bird,2027-04-25,2027-05-01,0,Early Bird,2026-2027|Early Bird,2027-05-01,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,false,false
+Week 1,2027-05-02,2027-05-08,1,Regular,2026-2027|Week 1,2027-05-08,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 2,2027-05-09,2027-05-15,2,Regular,2026-2027|Week 2,2027-05-15,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 3,2027-05-16,2027-05-22,3,Regular,2026-2027|Week 3,2027-05-22,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 4,2027-05-23,2027-05-29,4,Regular,2026-2027|Week 4,2027-05-29,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 5,2027-05-30,2027-06-05,5,Regular,2026-2027|Week 5,2027-06-05,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 6,2027-06-06,2027-06-12,6,Regular,2026-2027|Week 6,2027-06-12,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 7,2027-06-13,2027-06-19,7,Regular,2026-2027|Week 7,2027-06-19,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 8,2027-06-20,2027-06-26,8,Regular,2026-2027|Week 8,2027-06-26,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Week 9,2027-06-27,2027-06-30,9,Regular,2026-2027|Week 9,2027-06-30,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true
+Post-Challenge,2027-07-01,2027-07-07,10,Post-Challenge,2026-2027|Post-Challenge,2027-07-07,2026-2027,rechc1f9f4kVM1tHP,America/Denver,true,true,true,true

@@ -1,0 +1,38 @@
+{
+  "contractVersion": "1.0.0-enrollment-season",
+  "filloutFormId": "UNKNOWN — F-ATT-01 Mike attestation required",
+  "registrationUrl": "UNKNOWN — record in Fillout UI before reopen",
+  "airtableBaseId": "appn84sqPw03zEbTT",
+  "airtableTable": "Enrollments",
+  "currentState": {
+    "enrollmentForm": "OFF",
+    "dailySubmissionForm": "OFF",
+    "source": "docs/PROJECT_STATE.md C-008 / SC-146"
+  },
+  "requiredHiddenDefaults": {
+    "schoolYear": "2026-2027",
+    "programInstanceId": "rec5mEM0YPqPqq0hZ",
+    "configId": "rechc1f9f4kVM1tHP — F-ATT-02 confirm if mapped"
+  },
+  "fieldMappings": [
+    { "filloutLabel": "Athlete First Name", "airtableField": "Athlete First Name", "required": true },
+    { "filloutLabel": "Athlete Last Name", "airtableField": "Athlete Last Name", "required": true },
+    { "filloutLabel": "Parent Email", "airtableField": "Parent Email", "required": true },
+    { "filloutLabel": "Parent First Name", "airtableField": "Parent First Name", "required": true },
+    { "filloutLabel": "Parent Last Name", "airtableField": "Parent Last Name", "required": true },
+    { "filloutLabel": "Grade", "airtableField": "Grade", "required": true, "downstream": "002 Grade Band" },
+    { "filloutLabel": "School Year / Season", "airtableField": "School Year", "required": true, "default": "2026-2027" },
+    { "filloutLabel": "Program / Challenge", "airtableField": "Program Instance", "required": true, "defaultRecordId": "rec5mEM0YPqPqq0hZ" },
+    { "filloutLabel": "Athlete Email", "airtableField": "Athlete Email", "required": false },
+    { "filloutLabel": "Parent Cell", "airtableField": "Parent Cell Number", "required": false },
+    { "filloutLabel": "Consent / Terms", "airtableField": "CONFIRM_IN_UI", "required": true }
+  ],
+  "paths": {
+    "newAthlete": "001 find-or-create Athlete + link Enrollment",
+    "returningAthlete": "001 match on Parent Email + Athlete identity",
+    "sibling": "001 creates new Athlete under same Parent Email",
+    "emailValidation": "Fillout block + Parent Email - Cleaned formula"
+  },
+  "offlineValidator": "python3 -m unittest discover -s tools/enrollment-season/tests -v",
+  "reopenChecklist": "docs/season-launch/2026-2027/FILLOUT-REOPEN-CHECKLIST.md"
+}

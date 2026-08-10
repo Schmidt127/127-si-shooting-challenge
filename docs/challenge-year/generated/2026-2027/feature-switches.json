@@ -1,0 +1,62 @@
+{
+  "schoolYear": "2026-2027",
+  "configId": "rechc1f9f4kVM1tHP",
+  "switches": [
+    {
+      "name": "Submission XP",
+      "field": "Submission XP Active?",
+      "snapshotValue": "MISSING_ON_2026_2027_ROW",
+      "recommended": true,
+      "verifyLive": true
+    },
+    {
+      "name": "XP Rule Set",
+      "field": "Active XP Rule Set / Rule Set link",
+      "snapshotValue": "Shooting Challenge 2026-2027 (31 rules in snapshot)",
+      "recommended": "Shooting Challenge 2026-2027",
+      "verifyLive": true
+    },
+    {
+      "name": "Achievements",
+      "field": "Achievements enabled via config / rules",
+      "snapshotValue": "15 achievement rows base-wide — year linkage verify in OMNI",
+      "recommended": true,
+      "verifyLive": true
+    },
+    {
+      "name": "Weekly email schedules",
+      "field": "Automations 118/119",
+      "snapshotValue": "ON in PROD",
+      "recommended": "Keep ON — sendMode=Live on 074",
+      "verifyLive": true
+    },
+    {
+      "name": "Fillout enrollment",
+      "field": "Fillout form published",
+      "snapshotValue": "OFF",
+      "recommended": "OFF until SC-146 gates pass",
+      "verifyLive": true
+    },
+    {
+      "name": "Fillout daily submission",
+      "field": "Daily form published",
+      "snapshotValue": "OFF (C-008)",
+      "recommended": "OFF until SC-135 dry-run",
+      "verifyLive": true
+    },
+    {
+      "name": "Homework upload 070a",
+      "field": "Automation 070a",
+      "snapshotValue": "PROD OFF by policy",
+      "recommended": "Keep OFF",
+      "verifyLive": true
+    },
+    {
+      "name": "Welcome auto-send",
+      "field": "079 + Hub WELCOME",
+      "snapshotValue": "Controlled test only",
+      "recommended": "Test Mode until Mike approves participant sends",
+      "verifyLive": true
+    }
+  ]
+}
