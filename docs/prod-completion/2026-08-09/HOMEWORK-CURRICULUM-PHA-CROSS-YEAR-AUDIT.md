@@ -288,21 +288,21 @@ flowchart TD
   SUB --> HC
 ```
 
-### 6.2 RID match rules (020 v3.3)
+### 6.2 RID match rules (020 v3.4.1)
 
 At **020** execution, these must all agree:
 
 | Step | Must match |
 |------|------------|
 | Asset → Submission | exactly 1 |
-| Asset → Enrollment | exactly 1 = Submission.Enrollment |
+| Asset → Enrollment | exactly 1 = Submission.Enrollment (no legacy fallback) |
 | Slot | HW1 or HW2 from asset |
-| Submission → Library | exactly 1 `Homework Name {slot}` RID |
+| Submission → PHA | exactly 1 `Homework Name {slot}` **PHA record ID** |
 | Submission → Week | exactly 1 Week RID |
-| Enrollment → PI | exactly 1 = `rec5mEM0YPqPqq0hZ` (Schmidt) |
-| Enrollment → GB | exactly 1 |
-| PHA lookup | exactly 1 **active** row: `{library, PI, week, GB, slot}` |
-| HC create/update | `Homework` = library; `Program Homework Assignment` = PHA; `Week` = submission week |
+| Enrollment → PI | exactly 1 |
+| PHA validation | active; PHA.Week = Submission.Week; PHA.PI = Enrollment.PI; PHA.Slot = asset slot |
+| Curriculum derive | `Homework` = PHA.Homework Assignment |
+| HC create/update | `Homework` + `Program Homework Assignment` + `Week` + Enrollment identity |
 
 **Schedule Key** (PHA):
 

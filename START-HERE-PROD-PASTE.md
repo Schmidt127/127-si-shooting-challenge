@@ -12,7 +12,7 @@
 | 2 | 033 — Assign Homework to WAS + reconcile deferred completions | **v4.2** | **Needs paste over v4.1** | Paste current master file |
 | 3 | 067 — Link/Create Completion from Reflection Quiz | **v3.1** | Mike pasted | Keep current |
 | — | 068 — Reconcile Deferred Weekly Summary Links | **RETIRED** | Do not create | Logic absorbed into 033 v4.2 |
-| — | 020 — Link/Create Homework Completion | **v3.3.0** | Existing | Do not downgrade |
+| — | 020 — Link/Create Homework Completion | **v3.4.1** | **Needs paste** — PHA-authoritative Homework Name 1/2 | Paste current master file |
 | — | 009 — Create Submission Assets | **v1.1** | Existing | Do not downgrade |
 
 ### Copy/paste files
@@ -26,8 +26,10 @@
 - **067 v3.1**  
   [`airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js`](./airtable/automations/shooting-challenge/067-homework-link-or-create-completion-from-reflection-quiz.js)
 
-- **020 v3.3.0 — unchanged / strict PHA**  
+- **020 v3.4.1 — PHA-authoritative (paste after 033)**  
   [`airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js`](./airtable/automations/shooting-challenge/020-homework-link-or-create-homework-completion.js)
+
+  **Schema:** `Submissions.Homework Name 1/2` link to **Program Homework Assignments** (not FBC Curriculum). 020 validates PHA against Week + Program Instance + slot, then derives curriculum Homework from PHA.
 
 - **009 v1.1 — unchanged**  
   [`airtable/automations/shooting-challenge/009-submission-intake-create-submission-assets.js`](./airtable/automations/shooting-challenge/009-submission-intake-create-submission-assets.js)

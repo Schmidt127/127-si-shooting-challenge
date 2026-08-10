@@ -1,84 +1,71 @@
 # Homework Fillout Integration — Post-Cutover Architecture
 
-Date: 2026-08-09  
+Date: 2026-08-09 (updated 2026-08-10 for PHA-linked Homework Name fields)  
 Related: [HOMEWORK-LIBRARY-PROD-EXECUTION-CHECKLIST.md](./HOMEWORK-LIBRARY-PROD-EXECUTION-CHECKLIST.md)
 
 ## Principle
 
-Fillout continues to write **Homework Library record IDs** to:
+Fillout writes **Program Homework Assignment (PHA) record IDs** to:
 
 - `Submissions.Homework Name 1`
 - `Submissions.Homework Name 2`
 
-These fields store **reusable content identity**, not schedule.
+These fields store **authoritative schedule identity** for the selected slot. Automation **020 v3.4.1** validates the PHA against Submission Week, Enrollment Program Instance, and HW1/HW2 slot, then derives curriculum content from `PHA.Homework Assignment`.
 
-**Program Homework Assignments** is the sole scheduling authority for what homework is currently assigned.
+> **2026-08-10 schema correction:** Production links Homework Name 1/2 to **Program Homework Assignments**, not directly to `FBC Curriculum - SYNC`. Older docs that described library RIDs in these fields are superseded.
+
+**Program Homework Assignments** remains the scheduling authority; Fillout must offer only PHA rows valid for the athlete's current context.
 
 ## Required participant experience
 
-Athletes must only **see and select** homework that is **currently assigned** to them via active PHA for their context:
+Athletes must only **see and select** active PHA rows for their context:
 
 | PHA dimension | Source |
 |---------------|--------|
 | Program Instance | Enrollment.Program Instance |
-| Week | Resolved by automation 005 from Activity Date + PI calendar (not library Week) |
-| Grade Band | Enrollment.Grade Band |
+| Week | Resolved by automation 005 from Activity Date + PI calendar |
+| Grade Band | Enrollment.Grade Band (eligibility on PHA; not used by 020 for schedule match) |
 | Slot | HW1 / HW2 |
-| Content | Homework Library RID |
+| Content | PHA → Homework Assignment (library) |
 
 ## Validation chain (server-side)
 
 ```text
-Fillout writes Homework Name 1/2 (library RID)
+Fillout writes Homework Name 1/2 (PHA rec…)
     → 005 assigns Submission.Week from Activity Date + PI
-    → 005 validates library RID against active PHA (exact PI + Week + GB + slot)
     → 009 creates assets (content/slot provenance only)
-    → 020 exact PHA match (fail closed if misaligned)
+    → 020 validates PHA (active; Week + PI + slot match) → derives library Homework from PHA
 ```
 
 Misaligned Fillout choices **must fail closed** — do not weaken 020.
 
 ## Fillout configuration options
 
-### Option A — Preferred: dynamic choice filter (Fillout)
+### Option A — Preferred: PHA-linked choices (Fillout)
 
-If Fillout supports filtering linked-record choices per respondent:
+Filter linked-record choices to **active PHA** rows matching respondent Enrollment Program Instance + resolved Week + slot.
 
-1. Pre-filter Homework Library choices to RIDs with an **active PHA** matching respondent Enrollment PI + current Week + Grade Band + slot.
-2. Store selected **library RID** in Homework Name 1/2.
+Store selected **PHA record ID** in Homework Name 1/2.
 
-This may require Fillout logic outside Airtable or a maintained "current assignments" helper view — **do not** add schedule fields back to Homework Library.
-
-### Option B — Operator-maintained choice lists (interim)
-
-Until dynamic PHA filtering exists:
+### Option B — Operator-maintained PHA lists (interim)
 
 1. Coach creates JIT PHA rows for the current week.
-2. Operator updates Fillout choice lists weekly to only the **currently assigned library RIDs** for each slot.
-3. 005 + 020 still validate server-side — stale Fillout choices fail closed.
-
-### Option C — Automation-mediated intake (future)
-
-If Fillout cannot filter cleanly:
-
-1. Fillout writes a **slot selection** or **PHA-aware helper field** (not library Week).
-2. An automation maps slot → active PHA → library RID before 005/020.
-
-This is **not implemented** in this PR. Document as future work if Option A/B are insufficient.
+2. Operator updates Fillout choice lists weekly to only the **currently assigned PHA records** for each slot.
+3. 005 + 020 still validate server-side — stale choices fail closed.
 
 ## What NOT to do
 
-- Do not write PHA record IDs into Homework Name 1/2 (PHA is schedule, library is content).
+- Do not write **library RIDs** directly into Homework Name 1/2 (superseded schema).
 - Do not restore `Homework Library.Week` for Fillout filtering.
 - Do not show the full Homework Library catalog as current homework.
 
 ## Controlled proof (JIT PHA)
 
-After operator creates JIT PHA rows for Early Bird week:
+After operator creates JIT PHA rows for Early Bird week, Fillout should offer the **PHA record IDs** (not library RIDs), e.g.:
 
-| Slot | Library RID |
-|------|-------------|
-| HW1 | `rechVLOeyEVIqmy2v` |
-| HW2 | `rec6WmXjpLtIWDERo` |
+| Slot | PHA record (example) |
+|------|----------------------|
+| HW1 | `reca5GM1JkROhXOiy` |
+| HW2 | `reccQhrgOK8e8Yngv` |
 
-Fillout choices for Schmidt 3-4 Early Bird should offer **only these two** library records until PHA changes.
+See [PROGRAM-HOMEWORK-ASSIGNMENTS-2026-2027-RESTORATION.md](../2026-08-08/PROGRAM-HOMEWORK-ASSIGNMENTS-2026-2027-RESTORATION.md).
