@@ -74,6 +74,19 @@ function scanText(issues, path, text, patterns) {
   });
 }
 
+function changedFilesAgainstOrigin() {
+  try {
+    return execFileSync("git", ["diff", "--name-only", "origin/master...HEAD"], {
+      cwd: ROOT,
+    })
+      .toString("utf8")
+      .split(/\r?\n/)
+      .filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
 const issues = [];
 
 for (const path of canonicalFiles) {
@@ -91,6 +104,8 @@ if (!existsSync(resolve(ROOT, "docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md"))) 
     "2027 season authority",
     "Automation 115",
     "Controlled automation-action tests do not prove natural-trigger behavior",
+    "Active Execution Matrix",
+    "Execution matrix IDs advanced:",
   ]) {
     if (!completion.includes(required)) {
       issues.push(`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md: missing required marker "${required}"`);
@@ -111,6 +126,25 @@ try {
   }
 } catch (error) {
   issues.push(`docs/agent-runs/CONTROL.json: invalid JSON (${error.message})`);
+}
+
+const changedFiles = changedFilesAgainstOrigin();
+const implementationChanged = changedFiles.some(
+  (path) =>
+    path.startsWith("airtable/") ||
+    path.startsWith("web/") ||
+    path.startsWith("make/") ||
+    path.startsWith("tools/") ||
+    path.startsWith("tests/") ||
+    path.startsWith("docs/deploy-checklists/"),
+);
+if (
+  implementationChanged &&
+  !changedFiles.includes("docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md")
+) {
+  issues.push(
+    "traceability guard: implementation/package changes must update the Completion Master evidence row and name Execution matrix IDs advanced",
+  );
 }
 
 for (const path of canonicalFiles) {
