@@ -16,7 +16,7 @@ export function ProgramFeatureImage({ src, alt, caption }: ProgramFeatureImagePr
         alt={alt}
         width={1672}
         height={941}
-        unoptimized
+        priority
         sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) calc(100vw - 4rem), 1024px"
         className="h-auto w-full"
       />

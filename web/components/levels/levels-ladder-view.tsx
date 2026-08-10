@@ -167,16 +167,23 @@ export function LevelsEmptyState() {
       heroVariant="light"
       ambientVariant="levels"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.levels.title}
-        description={EMPTY_STATE_COPY.levels.description}
-        icon={<IconLevel size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-levels.webp"
+          alt="Shooting Challenge levels progression showing XP tiers and advancement"
+          caption="See the progression path from first shots to the highest tier."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.levels.title}
+          description={EMPTY_STATE_COPY.levels.description}
+          icon={<IconLevel size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -194,15 +201,22 @@ export function LevelsErrorState({ message }: { message: string }) {
       heroVariant="light"
       ambientVariant="levels"
     >
-      <ErrorState
-        title="Could not load levels"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Shooting Challenge
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-levels.webp"
+          alt="Shooting Challenge levels progression showing XP tiers and advancement"
+          caption="See the progression path from first shots to the highest tier."
+        />
+        <ErrorState
+          title="Could not load levels"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Shooting Challenge
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }

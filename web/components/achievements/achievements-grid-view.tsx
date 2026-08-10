@@ -155,16 +155,23 @@ export function AchievementsEmptyState() {
       heroVariant="contrast"
       ambientVariant="achievements"
     >
-      <EmptyState
-        title={EMPTY_STATE_COPY.achievements.title}
-        description={EMPTY_STATE_COPY.achievements.description}
-        icon={<IconMedal size={40} />}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Back to overview
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-achievements-profile.webp"
+          alt="Shooting Challenge achievements and player profile view showing earned progress"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+        />
+        <EmptyState
+          title={EMPTY_STATE_COPY.achievements.title}
+          description={EMPTY_STATE_COPY.achievements.description}
+          icon={<IconMedal size={40} />}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Back to overview
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }
@@ -178,15 +185,22 @@ export function AchievementsErrorState({ message }: { message: string }) {
       heroVariant="contrast"
       ambientVariant="achievements"
     >
-      <ErrorState
-        title="Could not load achievements"
-        message={message}
-        action={
-          <CtaLink href="/" variant="secondary">
-            ← Back to overview
-          </CtaLink>
-        }
-      />
+      <div className="space-y-8">
+        <ProgramFeatureImage
+          src="/images/shooting-challenge-achievements-profile.webp"
+          alt="Shooting Challenge achievements and player profile view showing earned progress"
+          caption="Celebrate milestones, streaks, and the progress behind every achievement."
+        />
+        <ErrorState
+          title="Could not load achievements"
+          message={message}
+          action={
+            <CtaLink href="/" variant="secondary">
+              ← Back to overview
+            </CtaLink>
+          }
+        />
+      </div>
     </ProgramPage>
   );
 }

@@ -84,12 +84,13 @@ test.describe("navigation and accessibility basics", () => {
     await expectPageChrome(page, "levels via nav");
   });
 
-  test("root layout keeps sitewide noindex until cutover decision", async ({ page }) => {
+  test("root layout exposes the approved indexable public surface", async ({ page }) => {
     await page.goto(".", { waitUntil: "domcontentloaded" });
     const robots = page.locator('meta[name="robots"]');
     await expect(robots).toHaveCount(1);
     const content = (await robots.getAttribute("content")) ?? "";
-    expect(content).toContain("noindex");
+    expect(content).toContain("index");
+    expect(content).toContain("follow");
   });
 
   test("html lang attribute is set", async ({ page }) => {
