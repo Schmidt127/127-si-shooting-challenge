@@ -280,7 +280,7 @@ function makeStrictTable() {
 
   console.log("\nAll 066-create-records-batch regression tests passed.");
   console.log(
-    "NOTE: Do not mark Automation 066 natural path Live Tested until v3.5 is pasted and rerun on recCyFEPeATOVNlr9.",
+    "NOTE: Live PROD replay PASS documented 2026-08-08 — see docs/prod-completion/2026-08-08/AUTOMATION-066-V3.5-LIVE-PROOF.md",
   );
 })().catch((error) => {
   console.error(error);
