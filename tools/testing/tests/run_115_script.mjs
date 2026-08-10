@@ -26,8 +26,10 @@ const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
 const SCHMIDT_ENROLLMENT = "recgP9qZYjAhE7NXm";
 const SCHMIDT_ATHLETE = "recgqVstObQRzgXJF";
+export const PHA_HW1 = "recgj8dPk4ouTwCOj";
+export const LIBRARY_HW1 = "rechVLOeyEVIqmy2v";
 
-export const IDS = { SCHMIDT_ENROLLMENT, SCHMIDT_ATHLETE };
+export const IDS = { SCHMIDT_ENROLLMENT, SCHMIDT_ATHLETE, PHA_HW1, LIBRARY_HW1 };
 
 /** Build the standard PROD-shaped mock tables (field names from the
  *  2026-07-23 post-TS PROD schema snapshot). */
@@ -120,6 +122,43 @@ export function buildStandardBase({ scenarioCells = {}, scenarioId = "recSCENARI
   ]);
 
   return new MockBase([testingScenarios, enrollments, submissions]);
+}
+
+export function buildHomeworkBase({ scenarioCells = {}, scenarioId = "recSCENARIO000001" } = {}) {
+  const base = buildStandardBase({
+    scenarioId,
+    scenarioCells: {
+      "Scenario Type": "Homework",
+      "Shot Total": null,
+      "Homework Assignment": [{ id: PHA_HW1 }],
+      "Intake Attachments": [{ id: "attHw1", url: "https://example.com/hw1.png", filename: "hw1.png", type: "image/png" }],
+      ...scenarioCells,
+    },
+  });
+
+  const pha = new MockTable(
+    "Program Homework Assignments",
+    [
+      { name: "Homework Assignment", type: "multipleRecordLinks" },
+      { name: "Active?", type: "checkbox" },
+    ],
+    [
+      new MockRecord(PHA_HW1, {
+        "Homework Assignment": [{ id: LIBRARY_HW1 }],
+        "Active?": true,
+      }),
+    ]
+  );
+
+  const library = new MockTable(
+    "Homework Library",
+    [{ name: "Homework Number", type: "singleSelect", options: { choices: [{ name: "HW 1" }] } }],
+    [new MockRecord(LIBRARY_HW1, { "Homework Number": { name: "HW 1" } })]
+  );
+
+  base.tables.set("Program Homework Assignments", pha);
+  base.tables.set("Homework Library", library);
+  return base;
 }
 
 /** Execute the real 115 script. Returns { output, console, error, base }. */

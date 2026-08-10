@@ -2,9 +2,9 @@
 
 | Field | Value |
 |-------|--------|
-| Date | 2026-08-05 |
+| Date | 2026-08-10 (updated for PHA-first intake package) |
 | PROD base | `appn84sqPw03zEbTT` |
-| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof). **033 v3.3 pasted** (Mike 2026-08-06). Paste **020 v3.2.0** still required for HC identity path on new assets. |
+| Status | **MVP live in PROD** (table + season seed + operator fields + CASE-01 proof). **033 v3.3 pasted** (Mike 2026-08-06). **PHA-first package Built/Verified in repo:** **005 v5.3**, **020 v3.5**, **067 v3.4**, **115 v2.0** — **DEV paste + live proof pending**. See [`pha-first-homework-package-promotion.md`](./pha-first-homework-package-promotion.md). |
 | Separate from | Perfect Week PR #81 |
 
 ## Architecture before
@@ -25,15 +25,18 @@ Problem: library `Week` links overwrite historical scheduling context across Pro
 ```text
 Outside HOMEWORK base
         ↓ sync
-FBC Curriculum - SYNC   (reusable library; Week links retained, untouched)
+FBC Curriculum - SYNC / Homework Library   (reusable content; no scheduling authority)
         ↓
-Program Homework Assignments   (local junction: PI + Week + Grade Band + Slot)
+Program Homework Assignments   (local junction: PI + Week + Slot → library content)
         ↓
-Homework Completions.Program Homework Assignment
+Submissions.Homework Name 1/2 = PHA record ID (Fillout / ETF)
+        ↓
+005 validates PHA → dereferences library ID
+020 / 067 write HC.Homework = library ID, HC.Program Homework Assignment = PHA ID
 WAS.Homework still links library records (assigned list for 057 / rollups)
 ```
 
-This is an **additive** junction. Legacy curriculum Week matching remains as **033 fallback**.
+This is an **additive** junction. **033** PHA-first assign remains for WAS; legacy curriculum Week matching retained as **033 fallback** where applicable.
 
 ## Actual PROD IDs
 
@@ -94,23 +97,29 @@ No fields added to Submissions or WAS (context derived via Enrollment + HC + PHA
 | Dependency | Must change for MVP? | Notes |
 |------------|----------------------|-------|
 | Automation **012** | N/A | Deleted / unused (index) |
-| Automation **033** | **Yes** (GitHub v3.3) | Prefer PHA; legacy curriculum fallback |
-| Automation **020** | **Yes** (GitHub v3.2.0) | Link PHA on HC create/update when resolvable |
+| Automation **033** | **Yes** (GitHub v3.3) | Prefer PHA; legacy curriculum fallback — **pasted in PROD** |
+| Automation **005** | **Yes** (GitHub **v5.3**) | PHA-direct validation; Homework Name 1/2 = PHA IDs |
+| Automation **020** | **Yes** (GitHub **v3.5**) | PHA dereference; HC.Homework = library, HC.Program Homework Assignment = PHA |
+| Automation **067** | **Yes** (GitHub **v3.4**) | HW17 quiz bridge; PI-first PHA; linked HC fail-closed |
+| Automation **115** | **Yes** (GitHub **v2.0**) | ETF Homework scenarios require PHA RID |
 | Automation **057** | No | Reads WAS.`Homework` + Completions Link. CASE-01 manual Test **PASS** 2026-08-05 — no code change |
 | Automation **065** XP | No | Still uses HC.Homework library link |
-| 009 assets / 071 email | No | Legacy library links |
-| Fillout / Softr / Make / weekly email | No | No junction exposure required for MVP |
+| 009 assets / 071 email | No | Legacy library links; 009 unchanged in PHA package |
+| Fillout / Softr / Make / weekly email | **Fillout choices** | Must offer PHA RIDs (not library RIDs) for Homework Name 1/2 |
 | FBC Curriculum.Week | **Retain** | Untouched; historical safety PASS |
 
 ## Scripts / formulas changed
 
 | Asset | Change |
 |-------|--------|
-| `033-…js` | **v3.3** — PHA-first assign to WAS.Homework + unloadQuerySafe |
-| `020-…js` | **v3.2.0** — Enrollment+Week+Homework+Slot identity (SC-016) + PHA link |
+| `033-…js` | **v3.3** — PHA-first assign to WAS.Homework + unloadQuerySafe (**PROD pasted**) |
+| `005-…js` | **v5.3** — Homework Name 1/2 = PHA IDs; validate + dereference library |
+| `020-…js` | **v3.5** — PHA direct load; HC.Homework = library, HC.Program Homework Assignment = PHA |
+| `067-…js` | **v3.4** — HW17 PI-first PHA; quiz-linked HC fail-closed; duplicate match guard |
+| `115-…js` | **v2.0** — ETF Homework scenarios require PHA RID |
 | PROD Same Day / Perfect Week formulas | Not part of this package |
 
-**PROD paste:** **033 v3.3 pasted** (Mike 2026-08-06). **020 v3.2.0** still required before live submissions use the HC identity path automatically.
+**DEV/PROD paste:** Follow [`pha-first-homework-package-promotion.md`](./pha-first-homework-package-promotion.md) — order **005 → 020 → 067 → 115**. Repository status **Built/Verified** only until Mike live evidence.
 
 ## Backfilled junction + HC (Perfect Week CASE-01)
 
@@ -145,7 +154,7 @@ Do not delete/rename/convert either field in this package. Evidence: `docs/testi
 | 3 Slot resolution | PASS — HW1/HW2 distinct |
 | 4 Historical safety | PASS — curriculum Week still `recnMGC2JBHjO0ay6` |
 | 5 Completion linkage | PASS — Enrollment, Week, Homework, PHA, **`Weekly Athlete Summary Link`** → WAS (text field `Weekly Athlete Summary` may be empty — not a failure) |
-| 6 No regression (grading/XP/assets/email) | **Not live-reproven** — scripts additive; legacy fields retained; Mike should spot-check after 020/033 paste |
+| 6 No regression (grading/XP/assets/email) | **Not live-reproven** for v5.3/v3.5/v3.4 package — scripts additive; legacy fields retained; Mike should spot-check after full package paste |
 
 ## Perfect Week homework results
 
@@ -157,12 +166,12 @@ Do not delete/rename/convert either field in this package. Evidence: `docs/testi
 | Perfect Week Eligible? | **1** |
 | Perfect Week Automation Status | **Ready** |
 
-**CASE-01 + 057 manual Test:** **PASS** — package evidence `docs/testing/evidence/2026-08-05-pha-was-link-clarification/` (**COMPLETE**). Paste 033/020 still required for future automated PHA path.
+**CASE-01 + 057 manual Test:** **PASS** — package evidence `docs/testing/evidence/2026-08-05-pha-was-link-clarification/` (**COMPLETE**). PHA-first intake package (**005/020/067/115**) paste still required — see promotion checklist.
 
 ## Rollback
 
 1. Leave table in place; uncheck `Active?` on junction rows or clear WAS.Homework / HC.Program Homework Assignment links.
-2. Restore PROD paste of **033 v3.1** and **020 v3.0.0** from git history if pasted.
+2. Restore PROD paste of prior automation versions per [`pha-first-homework-package-promotion.md`](./pha-first-homework-package-promotion.md) rollback table.
 3. Do **not** delete the table until rollback verification complete.
 4. Do **not** touch FBC Curriculum Week links.
 

@@ -6,7 +6,7 @@ Production scripts: `airtable/automations/shooting-challenge/` (numbered `001`�
 
 **Reference corrections:** 012→**020**; 051/052→**053→054**; 075 is Welcome Email **build** (Zoom live=**101**, recording approval email=**117→Make 117f**; **WELCOME send=079→Communications Hub**, not Make); recording XP credit has **no** deployed Airtable writer under slot 117).
 
-**C-020 test harness:** **115** v1.9 in repo (ETF). Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
+**C-020 test harness:** **115** v2.0 in repo (ETF; Homework scenarios require PHA RID). Daily Submission + Homework + Video (+ C025 Stage 17 downstream; Phase A waits WAS Ready). Daily/HW/Video DEV verified 2026-07-07; C025 paste [v1.8](./deploy-checklists/C-025-stage17-115-etf-v1.8-PASTE.txt). [upload workflow](./upload-workflow-homework-video.md), [checklist](./deploy-checklists/C-020-testing-scenarios-script-checklist.md).
 
 **Modernization roadmap:** [v2-014-automation-modernization-roadmap.md](./v2-014-automation-modernization-roadmap.md) — master inventory, disposition, capacity plan (Phase 2).
 
@@ -34,7 +34,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 005 | Submission Intake — Assign Week (Activity Date + PHA validate) | **paste v5.1 pending** | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v5.1**) |
+| 005 | Submission Intake — Assign Week (Activity Date + PHA validate) | **paste v5.3 pending** | `005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js` (**v5.3** — Homework Name 1/2 = PHA IDs; library via dereference) |
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
@@ -50,11 +50,11 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.2.0** (SC-016 enrollment identity + PHA link; **PROD paste not confirmed**) | `020-homework-link-or-create-homework-completion.js` (**v3.2.0**) |
+| **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.5** (PHA-first intake; HC.Homework = library, HC.Program Homework Assignment = PHA; **PROD paste not confirmed**) | `020-homework-link-or-create-homework-completion.js` (**v3.5**) |
 | 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
 | 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
 | **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
-| **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready (created / Processing Status Pending, Enrollment set) | `067-homework-link-or-create-completion-from-reflection-quiz.js` |
+| **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** (PHA-first HW17; linked HC fail-closed; **PROD paste not confirmed**) | `067-homework-link-or-create-completion-from-reflection-quiz.js` (**v3.4**) |
 | **068** | Homework — Reconcile Deferred Weekly Summary Links | Scheduled; scans HW17 completions with an empty Weekly Athlete Summary Link | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook (v3.5: Reviewer File URL → Drive View → Drive File) | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
@@ -193,7 +193,7 @@ Full audit order: [../airtable/extension-scripts/audits/README.md](../airtable/e
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **115** | Engineering Test Framework — Run Testing Scenario | Testing Scenarios when **Run Test?** checked | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` |
+| **115** | Engineering Test Framework — Run Testing Scenario | Testing Scenarios when **Run Test?** checked — **repo v2.0** (Homework → PHA RID on Submission.Homework Name 1) | `115-engineering-test-framework-run-testing-scenario-daily-submission.js` (**v2.0**) |
 
 **Scenario types:** `Daily Submission`, `Homework`, `Video` (alias `Three Video Upload`) — DEV verified v1.3. [upload workflow](./upload-workflow-homework-video.md).
 

@@ -1,130 +1,69 @@
 # Homework Library Architecture — Dependency Report
 
-Date: 2026-08-09  
-Environment: PROD `appn84sqPw03zEbTT` (code/repo side; no live writes from this PR)  
+Date: 2026-08-10 (PHA-first intake contract)
+Environment: PROD `appn84sqPw03zEbTT` (code/repo side; no live writes from agents)
 Related audit: [HOMEWORK-CURRICULUM-PHA-CROSS-YEAR-AUDIT.md](./HOMEWORK-CURRICULUM-PHA-CROSS-YEAR-AUDIT.md)
 
 ## Canonical model (target)
 
 ```text
-Homework Library (tblUuxwYlX4EQ9MKE) — reusable content identity
+Program Homework Assignments — sole scheduling authority
         ↓
-Program Homework Assignments (tblhA3maf7xOa8EUS) — sole current scheduling authority
+Submissions.Homework Name 1/2 — PHA record ID (Fillout / 115 ETF intake)
         ↓
-Submissions.Homework Name 1/2 — library RID (Fillout intake)
+005 validates PHA + assigns Week from Activity Date + PI
         ↓
-Submission Assets → Homework Completions
+009 creates Submission Assets (slot guard only)
+        ↓
+020 / 067 write Homework Completions:
+  HC.Homework = Homework Library ID (via PHA.Homework Assignment)
+  HC.Program Homework Assignment = PHA ID
 ```
 
-**Schedule Key:** `Program Instance RID | Week RID | Grade Band RID | Homework Slot | Homework Library RID`
+**Schedule identity:** `Program Instance | Week | Homework Slot | Active` (+ PHA record ID at intake).
+**Grade Band** is eligibility/metadata only — never used for scheduling matches in 005/020/067.
 
-**Current PROD truth (reconciled):** PHA table is **empty**. No 90-row season seed. No historical PHA IDs are protected. Homework is assigned **just-in-time**.
-
----
-
-## Classification legend
-
-| Class | Meaning |
-|-------|---------|
-| **content** | Reads/writes reusable Homework Library fields only |
-| **scheduling** | Uses PHA or Weeks/PI/calendar for when homework applies |
-| **legacy-fallback** | Used library Week/Grade Band as schedule (removed in this PR) |
-| **test-fixture** | Test harness / PWTEST / schema probes |
-| **documentation** | Docs, snapshots, deploy checklists |
-| **public-website** | `/shoot` homework catalog |
-| **fillout** | External intake writing Homework Name 1/2 |
-| **automation** | Airtable automation scripts |
-| **migration** | Seed/backfill tools |
+**Homework Library** is content-only. Do not write library RIDs to `Submissions.Homework Name 1/2`.
 
 ---
 
-## `FBC Curriculum - SYNC` / Homework Library
+## Automation contract summary (repo)
 
-| Location | Reference | Class | Action in this PR |
-|----------|-----------|-------|-------------------|
-| `005-…assign-week…js` | Removed library Week read | legacy-fallback → **removed** | v5.0 Activity Date + PHA validate |
-| `033-…assign-homework…js` | Legacy Week+GB match | legacy-fallback → **removed** | v4.0 PHA-only |
-| `067-…reflection-quiz.js` | `curriculum.Week` for HW17 | legacy-fallback → **removed** | v3.0 PHA week |
-| `068-…deferred-summary…js` | HW17 library identity only | content | Renamed table; no Week read |
-| `009-…create-submission-assets.js` | Homework Name 1/2 slot guard | content | **No change** (content only) |
-| `020-…homework-completion.js` | Library via Submission HW Name | scheduling via PHA | **No weakening** (v3.3.0) |
-| `072` / `076` email builders | `curr` table alias | content lookup | Renamed to Homework Library |
-| `115` ETF scenario | pass/fail notes | test-fixture | Renamed |
-| `web/lib/airtable/homework-queries.ts` | Catalog content load | public-website + PHA scheduling | Renamed; PHA-first unchanged |
-| `web/lib/data/homework.ts` | Maps library → display | public-website | Content fields only |
-| Extension audits / backfills | Historical probes | migration / documentation | Table name updates where active |
-| Schema snapshots `airtable/schema/snapshots/**` | Historical schema | documentation | **Not edited** (point-in-time) |
-| `tools/testing/seed_pha_from_curriculum.mjs` | Seeds PHA from library Week | migration | **Fail-fast obsolete** |
-| Fillout forms (external) | Writes Homework Name 1/2 RIDs | fillout | **Operator:** filter choices to current PHA-assigned library RIDs per athlete context |
-
----
-
-## `Program Homework Assignments`
-
-| Location | Class | Notes |
-|----------|-------|-------|
-| `020` v3.3.0 | scheduling | Exact active PHA match; duplicate → fail closed |
-| `033` v4.0 | scheduling | Sole WAS homework assign path |
-| `005` v5.0 | scheduling | Validates HW1/HW2 selections against PHA after Week assignment |
-| `067` v3.0 | scheduling | HW17 Week from PHA |
-| `072` / `076` | scheduling | Email package reads PHA for display context |
-| `web/…/homework-queries.ts` | public-website | Only active current-PI PHA rows surface on `/shoot` |
-| HC.`Program Homework Assignment` | scheduling | Written by 020 |
+| Automation | Version | Homework Name 1/2 | HC writes | Notes |
+|------------|---------|-------------------|-----------|-------|
+| **005** | v5.3 | Reads PHA IDs; validates; outputs PHA + library IDs | — | Week from Activity Date + PI |
+| **009** | v1.1 | Slot guard (exactly one link) | — | Unchanged |
+| **020** | v3.5 | Reads PHA from Submission | Library + PHA | Enrollment idempotency |
+| **067** | v3.3 | Writes PHA ID on parent Submission | Library + PHA | HW17 PI-first PHA scan |
+| **115** | v2.0 | Writes PHA ID from scenario link | — | Fail closed on library-only |
+| **033** | v4.3 | — | WAS homework links via PHA | Unchanged in this package |
 
 ---
 
 ## Homework Name 1 / Homework Name 2
 
-| Location | Class | Notes |
-|----------|-------|-------|
-| Fillout → Submissions | fillout | Stores **library RID** (content identity) |
-| `005` v5.0 | content + scheduling validation | Does not derive Week from names; validates PHA |
-| `009` | content | Requires name for attachment slot |
-| `020` | content + scheduling | Exact library RID + PHA provenance |
-| Submission Assets lookups | content | Display only |
+| Location | Class | Contract |
+|----------|-------|----------|
+| Fillout → Submissions | fillout | Stores **PHA record ID** |
+| 115 ETF → Submissions | test-fixture | Testing Scenarios.Homework Assignment must link PHA |
+| 005 | scheduling | Direct PHA load + validate + dereference library |
+| 020 | scheduling | PHA from Submission → HC library + PHA fields |
+| 067 | scheduling | HW17 PHA discovery → Submission + HC |
 
 ---
 
-## Library scheduling fields (obsolete)
+## Legacy data
 
-| Field | Class | Recommendation |
-|-------|-------|----------------|
-| `Week` | legacy-fallback | **DELETE** after PROD paste + proof |
-| `Grade Band` | legacy-fallback | **DELETE** |
-| `Homework Number` | content hint | **REVIEW** — keep as content metadata, not schedule |
-| `Assignment Number` / `Order` | content | **KEEP** |
-| `Active?` / `Published?` | content gate | **KEEP** (public catalog) |
-| `Program` / `Program Instance` | legacy | **DELETE** if present |
-| School-year fields | legacy | **DELETE** |
-| `Assignment Full Name - Display` | display | **REVIEW** — refactor formula (see field matrix) |
-| `Lesson Key` | legacy identity | **DELETE** or refactor without Week |
-| Linked PHA / Submissions / Completions | inverse | **KEEP** |
+Submissions created before this contract may still have **Homework Library** RIDs in `Homework Name 1/2`. Those rows will fail 005 validation until a **controlled backfill** replaces library RIDs with the correct PHA RIDs. **No runtime fallback** is implemented.
 
 ---
 
-## Fillout integration (repository trace)
+## Operator actions (post-paste)
 
-Fillout writes directly to `Submissions.Homework Name 1/2` as linked Homework Library records. There is **no** in-repo Fillout webhook code; integration is configured in Fillout + Airtable.
+1. Paste **005 v5.3** → **020 v3.5** → **067 v3.3** → **115 v2.0** (DEV first).
+2. Update Fillout choice lists to PHA record IDs.
+3. Update Testing Scenarios homework rows to link PHA (not library).
+4. Run C-020 homework harness; verify 005 → 009 → 020 chain.
+5. Plan historical Submission backfill separately.
 
-**Required behavioral change (operator / Fillout config, not repo):**
-
-1. Participant sees only homework **currently assigned** via active PHA for their enrollment context.
-2. Stored value remains the **Homework Library RID**.
-3. `005` validates that RID against PHA after Activity Date assigns Week.
-4. `020` requires exact PHA match — misaligned Fillout choices fail closed (intentional).
-
----
-
-## Regression coverage
-
-`tools/testing/tests/test_homework_architecture_offline.mjs` — 17 cases per work package H.
-
----
-
-## Files changed in this PR (active code)
-
-- Automations: `005` v5.0, `033` v4.0, `067` v3.0, `068`, `072`, `076`, `115`
-- Web: `homework-queries.ts`, `homework-queries.test.ts`
-- Tests: `067`/`068` contracts, `test_homework_architecture_offline.mjs`, `run_005_023_chain.mjs`
-- Tools: `seed_pha_from_curriculum.mjs` (obsolete guard)
-- Docs: this report, field matrix, PROD checklist
+See also: [HOMEWORK-FILLOUT-INTEGRATION.md](./HOMEWORK-FILLOUT-INTEGRATION.md)

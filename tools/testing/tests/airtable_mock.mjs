@@ -69,8 +69,11 @@ export class MockTable {
   }
 
   async selectRecordsAsync(_opts) {
+    const records = Array.from(this.records.values());
+    const byId = new Map(records.map((r) => [r.id, r]));
     return {
-      records: Array.from(this.records.values()),
+      records,
+      getRecord: (recordId) => byId.get(recordId) || null,
       unloadData: () => {},
     };
   }
