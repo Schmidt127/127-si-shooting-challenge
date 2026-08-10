@@ -74,17 +74,24 @@ function scanText(issues, path, text, patterns) {
   });
 }
 
-function changedFilesAgainstOrigin() {
-  try {
-    return execFileSync("git", ["diff", "--name-only", "origin/master...HEAD"], {
-      cwd: ROOT,
-    })
-      .toString("utf8")
-      .split(/\r?\n/)
-      .filter(Boolean);
-  } catch {
-    return [];
+function diffAgainstOrigin() {
+  if (process.env.SOT_AUDIT_DIFF !== undefined) {
+    return process.env.SOT_AUDIT_DIFF;
   }
+
+  try {
+    return execFileSync("git", ["diff", "--unified=0", "origin/master...HEAD"], {
+      cwd: ROOT,
+    }).toString("utf8");
+  } catch {
+    return "";
+  }
+}
+
+function changedFilesFromDiff(diff) {
+  return [...diff.matchAll(/^diff --git a\/(.+) b\/(.+)$/gm)].map(
+    ([, oldPath, newPath]) => (newPath === "/dev/null" ? oldPath : newPath),
+  );
 }
 
 const issues = [];
@@ -128,7 +135,8 @@ try {
   issues.push(`docs/agent-runs/CONTROL.json: invalid JSON (${error.message})`);
 }
 
-const changedFiles = changedFilesAgainstOrigin();
+const traceabilityDiff = diffAgainstOrigin();
+const changedFiles = changedFilesFromDiff(traceabilityDiff);
 const implementationChanged = changedFiles.some(
   (path) =>
     path.startsWith("airtable/") ||
@@ -139,12 +147,26 @@ const implementationChanged = changedFiles.some(
     path.startsWith("docs/deploy-checklists/"),
 );
 if (
-  implementationChanged &&
-  !changedFiles.includes("docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md")
+  implementationChanged
 ) {
-  issues.push(
-    "traceability guard: implementation/package changes must update the Completion Master evidence row and name Execution matrix IDs advanced",
-  );
+  if (!changedFiles.includes("docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md")) {
+    issues.push(
+      "traceability guard: implementation/package changes must update the Completion Master evidence row",
+    );
+  }
+
+  const hasStructuredTraceEntry = traceabilityDiff
+    .split(/\r?\n/)
+    .some(
+      (line) =>
+        /^\+\s*Execution matrix IDs advanced:\s+PKG-\d{3}\b/.test(line) &&
+        !line.startsWith("+++"),
+    );
+  if (!hasStructuredTraceEntry) {
+    issues.push(
+      "traceability guard: Completion Master diff must add \"Execution matrix IDs advanced: PKG-###\"",
+    );
+  }
 }
 
 for (const path of canonicalFiles) {
