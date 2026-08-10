@@ -40,7 +40,9 @@ export default defineConfig({
            * Prefer an already-running server during local redesign work.
            * Using `next dev` here can overwrite a production `.next` build mid-session.
            */
-          command: `npx next start -p ${port}`,
+          // Bind explicitly so local/CI verification does not depend on network-interface
+          // discovery. The public app itself remains mounted at `/shoot` via basePath.
+          command: `npx next start -p ${port} -H 127.0.0.1`,
           url: localBaseURL,
           reuseExistingServer: true,
           timeout: 120_000,

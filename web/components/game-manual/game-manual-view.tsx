@@ -135,8 +135,8 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
           />
         ) : (
           <EmptyState
-            title="Manual link not configured"
-            description="Paste your Adobe-hosted manual link into NEXT_PUBLIC_GAME_MANUAL_URL and it will display here with an open button. Share the public Adobe link (from Share → Anyone can view). Typical formats: documentcloud.adobe.com or acrobat.adobe.com."
+            title="Game manual temporarily unavailable"
+            description="The official game manual link is being prepared. Please check back soon or return to the Shooting Challenge overview."
             icon={<IconBook size={40} />}
             action={
               <CtaLink href="/" variant="secondary">
