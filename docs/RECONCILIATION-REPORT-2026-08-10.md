@@ -1,9 +1,9 @@
 # Repository Reconciliation Report — 2026-08-10
 
-**Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`  
-**Phase 2 approval:** Mike, 2026-08-10  
-**Branch:** `reconcile/scv2-season-launch-consolidation-001`  
-**Fresh `origin/master` baseline:** `3aea908bc1674b54959254d2f6756acc3f51ff97`  
+**Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`
+**Phase 2 approval:** Mike, 2026-08-10
+**Branch:** `reconcile/scv2-season-launch-consolidation-001`
+**Fresh `origin/master` baseline:** `3aea908bc1674b54959254d2f6756acc3f51ff97`
 **Scope:** Documentation, release-control metadata, one automation header
 correction, and a deterministic offline audit. No live-system changes.
 
@@ -11,7 +11,7 @@ correction, and a deterministic offline audit. No live-system changes.
 
 1. GitHub committed code and scripts are the source for repository behavior.
 2. [`SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](./SHOOTING_CHALLENGE_COMPLETION_MASTER.md)
-   is the sole human-readable release-status authority.
+   remains the release-status owner.
 3. [`agent-runs/CONTROL.json`](./agent-runs/CONTROL.json) is the
    machine-readable run-control and release-control file.
 4. [`AUTHORITY-MAP.md`](./AUTHORITY-MAP.md) defines system ownership and

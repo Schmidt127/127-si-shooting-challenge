@@ -1,7 +1,7 @@
 # Shooting Challenge Authority Map
 
-**Status:** Active  
-**Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`  
+**Status:** Active
+**Backlog:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`
 **Last updated:** 2026-08-10
 
 This map defines ownership. It does not assert that a repository document proves
