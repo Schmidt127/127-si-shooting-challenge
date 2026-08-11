@@ -170,6 +170,9 @@ Current traceability entry dated 2026-08-10:
 Matrix initialized 2026-08-10 — no implementation package has started; all
 rows remain at their queued baseline.
 
+Execution matrix IDs advanced: PKG-025 — repository-only Levels orientation
+added; no live deployment, smoke proof, or activation claim.
+
 Execution matrix IDs advanced: PKG-025 — repository-only Public Display
 refresh control added; no live deployment, smoke proof, or activation claim.
 
