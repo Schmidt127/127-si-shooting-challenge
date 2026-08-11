@@ -26,12 +26,13 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment
  *
- * Version: v5.2
+ * Version: v5.3
  * Date Written: 2026-05-20
- * Date Updated: 2026-08-05
- * Updated Reason: Airtable runtime compatibility — call queryResult.unloadData() only when
- * typeof query?.unloadData === "function". Unsupported unloadData previously crashed after a
- * successful athlete match/update (PROD enrollment recQP4N5acTdK40uZ, debugStep 10).
+ * Date Updated: 2026-08-11
+ * Updated Reason: Prevent a repeat form submission from creating a second active Enrollment
+ * for the same Athlete + School Year. The earlier Enrollment remains canonical; the repeat row
+ * is left inactive and unlinked so its computed Enrollment Key cannot collide downstream.
+ * v5.2 retained: unloadData runtime compatibility fix for PROD Enrollment recQP4N5acTdK40uZ.
  *
  * PURPOSE
  * - Reads one Enrollment record from the Enrollments table.
@@ -81,6 +82,7 @@ const CONFIG = {
         parentEmailCleaned: "Parent Email - Cleaned",
         parentEmailSubmitted: "Parent Email Submitted",
         athleteLink: "Athlete",
+        schoolYear: "School Year",
         active: "Active?",
         athleteMatchStatus: "Athlete Match Status",
     },
@@ -387,6 +389,57 @@ function buildAthleteFieldList() {
     );
 }
 
+function buildEnrollmentDedupeFieldList() {
+    const possibleFields = [
+        CONFIG.enrollments.athleteLink,
+        CONFIG.enrollments.schoolYear,
+        CONFIG.enrollments.active,
+    ];
+
+    return possibleFields.filter((fieldName) =>
+        fieldExists(enrollmentsTable, fieldName)
+    );
+}
+
+function findExistingEnrollmentForSeason(enrollmentRecords, athleteId, schoolYear) {
+    if (!athleteId || !schoolYear) return null;
+
+    const matches = enrollmentRecords.filter((candidate) => {
+        if (!candidate || candidate.id === recordId) return false;
+
+        const candidateAthleteId = getFirstLinkedRecordId(
+            candidate,
+            enrollmentsTable,
+            CONFIG.enrollments.athleteLink
+        );
+        const candidateSchoolYear = getText(
+            candidate,
+            enrollmentsTable,
+            CONFIG.enrollments.schoolYear
+        );
+
+        return (
+            candidateAthleteId === athleteId &&
+            valuesEqual(candidateSchoolYear, schoolYear)
+        );
+    });
+
+    matches.sort((a, b) => {
+        const aActive = getRaw(a, enrollmentsTable, CONFIG.enrollments.active) === true;
+        const bActive = getRaw(b, enrollmentsTable, CONFIG.enrollments.active) === true;
+        if (aActive !== bActive) return aActive ? -1 : 1;
+
+        const createdComparison = String(a.createdTime || "").localeCompare(
+            String(b.createdTime || "")
+        );
+        if (createdComparison !== 0) return createdComparison;
+
+        return String(a.id || "").localeCompare(String(b.id || ""));
+    });
+
+    return matches[0] || null;
+}
+
 function findMatchingAthlete(athleteRecords, athleteMatchKey, firstName, lastName, parentEmail) {
     const normalizedFirstName = normalizeText(firstName);
     const normalizedLastName = normalizeText(lastName);
@@ -532,6 +585,12 @@ async function main() {
 
         const parentEmailToUse = normalizeEmail(parentEmailResult.value);
 
+        const schoolYear = getText(
+            enrollment,
+            enrollmentsTable,
+            CONFIG.enrollments.schoolYear
+        );
+
         const existingLinkedAthleteId = getFirstLinkedRecordId(
             enrollment,
             enrollmentsTable,
@@ -557,13 +616,14 @@ async function main() {
             parentEmailToUse,
             parentEmailSourceField: parentEmailResult.fieldName,
             existingLinkedAthleteId,
+            schoolYear,
             athleteMatchKey,
         });
 
         debugStep = "5 - Validate Required Enrollment Values";
         setOutputSafe("debugStep", debugStep);
 
-        if (!athleteFirstName || !athleteLastName || !parentEmailToUse) {
+        if (!athleteFirstName || !athleteLastName || !parentEmailToUse || !schoolYear) {
             const missing = [];
 
             if (!athleteFirstName) missing.push(CONFIG.enrollments.athleteFirstName);
@@ -571,6 +631,7 @@ async function main() {
             if (!parentEmailToUse) {
                 missing.push("Parent Email - Cleaned / Parent Email / Parent Email Submitted");
             }
+            if (!schoolYear) missing.push(CONFIG.enrollments.schoolYear);
 
             const message = `Missing required Enrollment data: ${missing.join(", ")}`;
 
@@ -600,6 +661,13 @@ async function main() {
         debugStep = "6 - Set Processing Status";
         setOutputSafe("debugStep", debugStep);
         await setEnrollmentStatus(CONFIG.statuses.processing);
+
+        // Fail closed while identity and season uniqueness are being resolved. This keeps
+        // downstream grade-band and welcome-email automations from treating a repeat form row
+        // as participation-ready before the duplicate check completes.
+        await updateRecordSafe(enrollmentsTable, recordId, {
+            [CONFIG.enrollments.active]: false,
+        });
 
         let athleteId = "";
         let actionTaken = "";
@@ -751,7 +819,7 @@ async function main() {
             }
         }
 
-        debugStep = "13 - Link Enrollment and Activate Enrollment";
+        debugStep = "13 - Link Enrollment Pending Duplicate Check";
         setOutputSafe("debugStep", debugStep);
 
         if (!athleteId) {
@@ -770,18 +838,66 @@ async function main() {
             enrollmentUpdates[CONFIG.enrollments.athleteLink] = [{ id: athleteId }];
         }
 
-        if (fieldExists(enrollmentsTable, CONFIG.enrollments.active)) {
-            enrollmentUpdates[CONFIG.enrollments.active] = true;
-        }
-
         await updateRecordSafe(enrollmentsTable, recordId, enrollmentUpdates);
 
-        debugStep = "14 - Set Linked Status";
+        debugStep = "14 - Enforce One Enrollment Per Athlete and School Year";
+        setOutputSafe("debugStep", debugStep);
+
+        const enrollmentsQuery = await enrollmentsTable.selectRecordsAsync({
+            fields: buildEnrollmentDedupeFieldList(),
+        });
+
+        let existingSeasonEnrollment = null;
+        try {
+            existingSeasonEnrollment = findExistingEnrollmentForSeason(
+                enrollmentsQuery.records,
+                athleteId,
+                schoolYear
+            );
+        } finally {
+            unloadQuerySafe(enrollmentsQuery);
+        }
+
+        if (existingSeasonEnrollment) {
+            await updateRecordSafe(enrollmentsTable, recordId, {
+                [CONFIG.enrollments.athleteLink]: [],
+                [CONFIG.enrollments.active]: false,
+            });
+
+            await setEnrollmentStatus(CONFIG.statuses.error);
+
+            setOutputSafe("athleteId", athleteId);
+            setOutputSafe("athleteMatchKey", athleteMatchKey);
+            setOutputSafe("actionTaken", "duplicate-enrollment-blocked");
+            setOutputSafe("matchMethod", matchMethod);
+            setOutputSafe("duplicateOfEnrollmentId", existingSeasonEnrollment.id);
+            setOutputSafe("parentEmailUsed", parentEmailToUse);
+            setOutputSafe("statusOut", CONFIG.statuses.skipped);
+            setOutputSafe(
+                "errorOut",
+                `Duplicate Enrollment blocked: Athlete ${athleteId} already has Enrollment ${existingSeasonEnrollment.id} for ${schoolYear}.`
+            );
+            setOutputSafe("debugStep", "Skipped: Existing Enrollment for School Year");
+
+            log("Duplicate Enrollment blocked", {
+                enrollmentId: recordId,
+                duplicateOfEnrollmentId: existingSeasonEnrollment.id,
+                athleteId,
+                schoolYear,
+            });
+            return;
+        }
+
+        await updateRecordSafe(enrollmentsTable, recordId, {
+            [CONFIG.enrollments.active]: true,
+        });
+
+        debugStep = "15 - Set Linked Status";
         setOutputSafe("debugStep", debugStep);
 
         await setEnrollmentStatus(CONFIG.statuses.linked);
 
-        debugStep = "15 - Outputs";
+        debugStep = "16 - Outputs";
         setOutputSafe("debugStep", debugStep);
 
         setOutputSafe("athleteId", athleteId);
