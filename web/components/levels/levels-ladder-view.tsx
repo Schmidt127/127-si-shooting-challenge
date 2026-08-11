@@ -12,6 +12,7 @@ import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LevelDefinition, LevelLadderData } from "@/types/levels";
 
 import { LevelBadge } from "../leaderboard/level-badge";
+import { LEVELS_ORIENTATION_STEPS } from "./levels-orientation";
 
 type LevelsLadderViewProps = {
   data: LevelLadderData;
@@ -107,6 +108,37 @@ function LevelLadderCard({
   );
 }
 
+function LevelsOrientation() {
+  return (
+    <section aria-labelledby="levels-orientation-heading">
+      <div className="mb-4">
+        <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-accent-soft">
+          Read the ladder
+        </p>
+        <h2 id="levels-orientation-heading" className="font-display mt-1 text-2xl text-foreground">
+          Your path from current level to next level
+        </h2>
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-muted">
+          Level names, XP thresholds, and gate criteria below come from the configured progression
+          ladder. Open any card for the requirements behind that tier.
+        </p>
+      </div>
+      <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {LEVELS_ORIENTATION_STEPS.map((step, index) => (
+          <li
+            key={step.title}
+            className="rounded-lg border border-border bg-card p-4 shadow-site-sm"
+          >
+            <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
+            <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
 export function LevelsLadderView({ data }: LevelsLadderViewProps) {
   return (
     <ProgramPage
@@ -131,6 +163,7 @@ export function LevelsLadderView({ data }: LevelsLadderViewProps) {
           alt="Shooting Challenge levels progression showing XP tiers and advancement"
           caption="See the progression path from first shots to the highest tier."
         />
+        <LevelsOrientation />
         <div className="mx-auto max-w-4xl">
           <AccentRail tone="gold" className="space-y-5">
             {data.levels.map((level, index) => (
