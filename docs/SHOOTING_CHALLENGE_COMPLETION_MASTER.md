@@ -170,6 +170,9 @@ Current traceability entry dated 2026-08-10:
 Matrix initialized 2026-08-10 — no implementation package has started; all
 rows remain at their queued baseline.
 
+Execution matrix IDs advanced: PKG-002 — repository-only configuration
+inventory and DEV-safe local configuration boundary; no live-system proof.
+
 ### Recommended sequence
 
 1. **Next package — `PKG-001` (P0): Automation 005 / SC-076 failure
