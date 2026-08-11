@@ -12,6 +12,7 @@ import { EmptyState, ErrorState } from "@/components/ui";
 import { formatRelativeUpdate, formatXp } from "@/lib/formatters";
 import { EMPTY_STATE_COPY } from "@/lib/release/public-surface";
 import type { LeaderboardData } from "@/types/leaderboard";
+import { PublicDisplayRefreshButton } from "./public-display-refresh-button";
 
 type PublicDisplayViewProps = {
   data: LeaderboardData;
@@ -51,6 +52,7 @@ export function PublicDisplayView({ data }: PublicDisplayViewProps) {
               >
                 Full site view →
               </CtaLink>
+              <PublicDisplayRefreshButton />
             </div>
           </header>
 
