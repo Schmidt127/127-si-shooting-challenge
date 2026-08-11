@@ -18,6 +18,6 @@ describe("levels orientation", () => {
 
   it("keeps progression values sourced from the configured ladder", () => {
     expect(LEVELS_ORIENTATION_STEPS[2].description).toContain("program configuration");
-    expect(LEVELS_ORIENTATION_STEPS[3].description).toContain("configured progression ladder");
+    expect(LEVELS_ORIENTATION_STEPS[3].description).toContain("source for the current path");
   });
 });
