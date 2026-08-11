@@ -7,6 +7,10 @@ import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
 import type { LevelLadderData } from "@/types/levels";
+import {
+  GAME_MANUAL_QUICK_START,
+  GAME_MANUAL_QUICK_START_TITLE,
+} from "./game-manual-quick-start";
 
 type GameManualViewProps = {
   manualUrl: string | null;
@@ -116,6 +120,31 @@ function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
   );
 }
 
+function QuickStartSection() {
+  return (
+    <section className="mt-12" aria-labelledby="game-manual-quick-start">
+        <SectionMarker label="Quick start" title={GAME_MANUAL_QUICK_START_TITLE} />
+      <div
+        className="grid gap-4 md:grid-cols-3"
+        role="list"
+        aria-label="Shooting Challenge quick start steps"
+      >
+        {GAME_MANUAL_QUICK_START.map((step, index) => (
+          <article
+            key={step.title}
+            role="listitem"
+            className={catalogPanelClass({ tint: index === 0 ? "blue" : "neutral" })}
+          >
+            <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
+            <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewProps) {
   return (
     <ProgramPage
@@ -134,18 +163,29 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
             externalHint="The manual is hosted on Adobe. Open it in a new tab — Adobe blocks embedding on other sites, which causes the Bad Gateway error in iframes."
           />
         ) : (
-          <EmptyState
-            title="Game manual temporarily unavailable"
-            description="The official game manual link is being prepared. Please check back soon or return to the Shooting Challenge overview."
-            icon={<IconBook size={40} />}
-            action={
-              <CtaLink href="/" variant="secondary">
-                ← Back to Shooting Challenge
-              </CtaLink>
-            }
-          />
+          <section
+            className="rounded-lg border border-border bg-card p-5 sm:p-6"
+            aria-labelledby="game-manual-link-status"
+          >
+            <div className="flex items-start gap-4">
+              <IconBook size={32} className="mt-0.5 shrink-0 text-brand-blue" />
+              <div>
+                <h2 id="game-manual-link-status" className="text-lg font-semibold text-foreground">
+                  Official manual link coming soon
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-muted">
+                  The configured PDF link is not available yet. The live XP rules and level ladder
+                  below are still ready to help you understand the program.
+                </p>
+                <CtaLink href="/" variant="link" className="mt-3 px-0">
+                  ← Back to Shooting Challenge
+                </CtaLink>
+              </div>
+            </div>
+          </section>
         )}
 
+        <QuickStartSection />
         <XpRulesSection xpCatalog={xpCatalog} />
         <LevelLadderSection levels={levels} />
       </div>

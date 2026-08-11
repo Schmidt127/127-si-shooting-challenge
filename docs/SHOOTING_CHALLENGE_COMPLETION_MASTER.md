@@ -170,6 +170,10 @@ Current traceability entry dated 2026-08-10:
 Matrix initialized 2026-08-10 — no implementation package has started; all
 rows remain at their queued baseline.
 
+Execution matrix IDs advanced: PKG-021 — repository-only Game Manual
+quick-start orientation added; no approved 2027 rules, live proof, or
+activation claim.
+
 Execution matrix IDs advanced: PKG-002 — repository-only configuration
 inventory and DEV-safe local configuration boundary; no live-system proof.
 
