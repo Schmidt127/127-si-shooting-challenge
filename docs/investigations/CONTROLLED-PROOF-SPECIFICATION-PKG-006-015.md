@@ -1,7 +1,7 @@
-# PKG-003 Controlled-Proof Specification
+# Controlled-Proof Specification for PKG-006 through PKG-015
 
-**Workstream:** PKG-003 proof-gap design only
-**Baseline:** `origin/master` `080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b`
+**Workstream:** Evidence design supporting the existing PKG-006 through PKG-015 live-proof rows
+**Baseline:** `origin/master` `410fa21cadaec67cd36489536487a0dd38f49607`
 **Environment:** Mike-owned controlled check only; no live test was performed for this report
 **Owner:** Mike executes named Airtable / Fillout / Make checks; Lead records matrix evidence
 
