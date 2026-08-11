@@ -4,8 +4,8 @@
   "mode": "controlled-four-agent",
   "canonical": {
     "branch": "master",
-    "sha": "080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b",
-    "remote_sha": "080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b",
+    "sha": "410fa21cadaec67cd36489536487a0dd38f49607",
+    "remote_sha": "410fa21cadaec67cd36489536487a0dd38f49607",
     "match": true,
     "note": "Fresh execution-control baseline after merged reconciliation/retirement PRs #137 through #141."
   },
