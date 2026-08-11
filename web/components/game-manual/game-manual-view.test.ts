@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { GAME_MANUAL_QUICK_START } from "./game-manual-view";
+import { GAME_MANUAL_QUICK_START } from "./game-manual-quick-start";
 
 describe("game manual quick start", () => {
   it("provides three ordered, user-facing progression steps", () => {

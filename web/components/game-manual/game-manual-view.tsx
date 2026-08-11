@@ -7,6 +7,7 @@ import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
 import type { LevelLadderData } from "@/types/levels";
+import { GAME_MANUAL_QUICK_START } from "./game-manual-quick-start";
 
 type GameManualViewProps = {
   manualUrl: string | null;
@@ -15,21 +16,6 @@ type GameManualViewProps = {
   /** Live level ladder configuration; null when Airtable is unavailable. */
   levels: LevelLadderData | null;
 };
-
-export const GAME_MANUAL_QUICK_START = [
-  {
-    title: "Start with the shot goal",
-    description: "Log your counted shots each week and use the progress ladder to see how close you are to the target.",
-  },
-  {
-    title: "Build the full athlete profile",
-    description: "Homework, videos, feedback, and Zoom participation can contribute to progress beyond shooting volume.",
-  },
-  {
-    title: "Check the next gate",
-    description: "XP moves you up the ladder, while some levels also require the program activities shown in the level details.",
-  },
-] as const;
 
 function formatXp(amount: number): string {
   return `${amount.toLocaleString("en-US")} XP`;
