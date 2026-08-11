@@ -3,7 +3,7 @@
 ## Scope and evidence boundary
 
 - **Package:** PKG-002
-- **Baseline:** `080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b` (`origin/master` after fetch)
+- **Baseline:** `410fa21cadaec67cd36489536487a0dd38f49607` (`origin/master` after fetch)
 - **Branch:** `docs/pkg-002-hardcode-inventory`
 - **Method:** Offline text/code inspection only; no Airtable, Make, Vercel, Fillout, Lambda, Gmail, deployment, or external write access.
 - **Repository inventory:** 55 root production automation sources; 94 automation JavaScript files including `lib/`, `_superseded/`, and `_design-alternatives/`; 260 `tools/` scripts; 37 `tests/` sources; 735 docs/config files under `docs/`.
@@ -48,7 +48,7 @@
 - `docs/PROJECT_STATE.md` marks `airtable/schema/current/` stale and identifies dated snapshots as historical evidence. Snapshot IDs and field names need live verification before use.
 - Older `hoopchallenges.com`/`hooopchallenges.com` URLs in docs/evidence are historical compatibility references. The active public origin is `https://www.fairfieldbasketballclub.com/shoot`.
 - Evidence directories dated `2026-08-04`/`2026-08-05` and media under `media/2025-2026/` are historical artifacts. Their dates, counts, record IDs, and claims are not current configuration.
-- `docs/agent-runs/CONTROL.json` records canonical `master` SHA `3aea908...`, which differs from this requested package baseline because the package intentionally starts at the fetched `origin/master` tip `080e78c...`; CONTROL is workflow evidence, not a reason to rewrite the requested baseline.
+- `docs/agent-runs/CONTROL.json` and `docs/PROJECT_STATE.md` now record the verified `origin/master` baseline `410fa21cadaec67cd36489536487a0dd38f49607`; dated reports and evidence retain their historical baselines.
 
 ## Ordered follow-up recommendation
 

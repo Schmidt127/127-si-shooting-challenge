@@ -7,6 +7,7 @@
 "use strict";
 
 const assert = require("assert");
+const fs = require("fs");
 const path = require("path");
 const {
   normalizeSchoolYear,
@@ -249,6 +250,15 @@ test("fields-map Active School Year is accepted", () => {
   });
   assert.strictEqual(result.ok, true);
   assert.strictEqual(result.configRecordId, "rectmrnvo9a79wgq3");
+});
+
+test("local environment example defaults to the DEV base", () => {
+  const example = fs.readFileSync(
+    path.join(__dirname, "..", "..", "web", ".env.local.example"),
+    "utf8",
+  );
+  assert.match(example, /^AIRTABLE_BASE_ID=appTetnuCZlCZdTCT$/m);
+  assert.doesNotMatch(example, /^AIRTABLE_BASE_ID=appn84sqPw03zEbTT$/m);
 });
 
 console.log("\nAll config-selection tests passed.");
