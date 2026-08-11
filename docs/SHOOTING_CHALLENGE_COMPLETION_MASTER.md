@@ -142,6 +142,96 @@ Fillout manually controls enrollment availability. See the
 
 ---
 
+## 2B. Active Execution Matrix — 2026-08-10
+
+This is the execution queue for approved work that is still incomplete,
+blocked, awaiting live proof, awaiting a Mike decision, or explicitly deferred.
+It is a traceability index, not a second status authority or a production
+activation plan. Complete items are intentionally omitted from the active queue;
+their historical evidence remains below.
+
+**State vocabulary:** `ready` means a bounded repository package can start;
+`needs repo work` means implementation or documentation is incomplete;
+`needs live proof` means repository work exists but live-system evidence is
+missing; `Mike decision` means product, activation, schema, or external-service
+authorization is required; `blocked` means a dependency prevents safe work;
+`deferred` means intentionally postponed.
+
+**Package traceability rule:** Every implementation PR must state
+`Execution matrix IDs advanced: <PKG-* IDs>` in its description (reviewer
+convention; the local audit cannot inspect GitHub PR descriptions). The PR must
+also update the corresponding row's state and **Current evidence / updated**
+field with a dated entry beginning `Execution matrix IDs advanced: PKG-###`.
+A repository or offline test cannot promote an item to controlled PROD proof,
+natural-trigger proof, or activation.
+
+Current traceability entry dated 2026-08-10:
+
+Matrix initialized 2026-08-10 — no implementation package has started; all
+rows remain at their queued baseline.
+
+### Recommended sequence
+
+1. **Next package — `PKG-001` (P0): Automation 005 / SC-076 failure
+   investigation.** Reproduce the unresolved failure classes with current
+   source contracts and offline fixtures, document the root cause and exact
+   live proof still needed, and add only deterministic tests or evidence
+   boundaries. This is the highest-value unresolved item that can advance in
+   the repository without Airtable, Fillout, Make, Vercel, or production
+   changes.
+2. **Following package — `PKG-002` (P1): Config-over-code and automation
+   hardcode inventory.** Complete the bounded V2-002 / SC-034 inventory and
+   contract checks after `PKG-001`; do not rewrite automations or change
+   configuration in that package.
+
+Neither package is started by this traceability PR. `PKG-005` (Learning
+Activities schema) and `PKG-009` (2027 Weeks/activation) remain later because
+they require Mike-owned schema or live-system decisions.
+
+| ID | Exact feature / fix / improvement | State | Source section / link | Dependency | Owner | Evidence required for completion | Current evidence / updated | Systems involved | Recommended next action | Order |
+|---|---|---|---|---|---|---|---|---|---|---:|
+| `PKG-001` | Investigate unresolved Automation 005 failure behavior and the remaining SC-076 first-create versus replay boundary | `ready` | §4 SC-005, SC-076; §5 Testing / XP | Current 005/066 source and fixtures; no live write | Cursor | Reproducible offline result, source-level root cause, explicit controlled-proof card, and separate natural-trigger requirement | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Build a read-only investigation package; do not change automations or live records | 1 |
+| `PKG-002` | Finish the config-over-code and hardcoded-value inventory across active automations | `needs repo work` | §4 SC-021, SC-034; backlog V2-002 | `PKG-001`; current automation inventory | Cursor | Complete inventory, contract tests, exception list, and evidence row; no unsupported PROD claim | 2026-08-10 — queued; no package evidence yet | Repo | Add deterministic inventory/tests only; defer rewrites to separately approved packages | 2 |
+| `PKG-003` | Reconcile remaining stale operational/status references after each approved package | `needs repo work` | §4 SC-139; [Authority Map](./AUTHORITY-MAP.md) | `PKG-001` and later package evidence | Cursor | Audit pass, corrected active wording, preserved historical notices, and changed-file traceability | 2026-08-10 — queued; no package evidence yet | Repo | Sweep only named stale rows; do not create another status document | 3 |
+| `PKG-004` | Establish field ownership and dedupe-key contracts before new schema/features | `blocked` | §4 C-012, C-024; backlog Wave 2 | V2-013 architecture boundary and Mike schema authority | Cursor; Mike | Ownership matrix, one-writer decisions, key contract, safe rerun tests, and approved schema scope | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Keep as a gate for schema work; do not modify Airtable schema here | 4 |
+| `PKG-005` | Add Learning Activities catalog, response routing, and `countsAsHomework` behavior without a second XP pipeline | `Mike decision` | §4 SC-018–SC-020; backlog C-009 / LA-000–002 | `PKG-004`; Mike authorization for schema | Cursor; Mike | Approved schema, seed/readback evidence, routing tests, Fillout/web mapping, and coach-view proof | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Mike | Mike approves schema direction; then implement repo contract before any base change | 5 |
+| `PKG-006` | Prove natural Fillout-shaped intake from identity through Submission, Enrollment, Week, and PHA | `needs live proof` | §4 SC-001, SC-004, SC-060, SC-064, SC-069 | `PKG-004`; valid 2027/Testing Weeks; Fillout availability decision | Mike; Cursor | Controlled Fillout-shaped run, identity/no-duplicate evidence, date-boundary proof, and natural-trigger evidence | 2026-08-10 — queued; no package evidence yet | Airtable; Fillout; Mike | Prepare a Schmidt-only proof card; do not reopen intake from this PR | 6 |
+| `PKG-007` | Prove homework, video, written, multi-file, HC reuse, and post-review XP positive paths | `needs live proof` | §4 SC-010–SC-016, SC-071–SC-072; [Authority Map](./AUTHORITY-MAP.md) | `PKG-005` where Learning Activities are used; `PKG-006` intake | Mike; Cursor | One controlled run per path, correct HC/asset/XP identity, no duplicate, and explicit Make/S3/email boundaries | 2026-08-10 — queued; no package evidence yet | Airtable; Fillout; Make; Mike | Execute separate Schmidt-only test cards; do not combine unrelated proof claims | 7 |
+| `PKG-008` | Prove weekly summary build/send positive branches and retry/failure behavior | `needs live proof` | §4 SC-031, SC-035–SC-037, SC-041, SC-045 | Eligible completed Week/package; `PKG-006` | Mike; Cursor | `build_armed` and send-arm results, WAS uniqueness, 072→119→074/Make evidence, and no-target safety | 2026-08-10 — queued; no package evidence yet | Airtable; Make; Gmail; Mike | Wait for an eligible package, then run bounded live proof with Schmidt-only recipients | 8 |
+| `PKG-009` | Reconcile Airtable Weeks and prepare final 2027 season activation package | `Mike decision` | §2A 2027 season authority; §4 SC-032, SC-065, SC-146 | Mike-maintained Weeks; `PKG-006`; final launch approval | Mike; Cursor | Weeks export/UI attestation for May 1–June 30, Early Bird Apr 25–May 1, Week 1 May 2, no fixed count, and temporary-fixture cleanup | 2026-08-10 — queued; no package evidence yet | Airtable; Fillout; Mike | Mike verifies Weeks and fixture; Cursor records the approved activation checklist only | 9 |
+| `PKG-010` | Decide the future Zoom recording-credit writer without taking the email slot or writing Attendees | `Mike decision` | §4 SC-074, SC-086; C-025 | C-024 dedupe contract; C-025 email ownership | Mike; Cursor | Written product decision, slot/owner contract, rollback, and no-double-credit test plan | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Choose dedicated future writer or retain email-only 117; do not revive Stage 16/117a alternatives | 10 |
+| `PKG-011` | Define major-event notifications for level-up, milestones, Perfect Week, and gate-clear events | `Mike decision` | §4 SC-044; backlog C-027 | `PKG-004`; V2-008 game-manual language | Mike; Cursor | Recipient, channel, consent, quiet hours, template, and idempotent-send decision | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Mike chooses SMS/email and recipient policy before implementation | 11 |
+| `PKG-012` | Remove the 059 Shot Milestone filter and prove Perfect Week auto-fire plus Batch A/B fixtures | `needs live proof` | §4 SC-028, SC-077; `059-perfect-week-trigger-coverage.md` | Mike UI action; C-025 Zoom policy | Mike; Cursor | Trigger-only and end-to-end fixture results, date-key correctness, and no duplicate XP | 2026-08-10 — queued; no package evidence yet | Airtable; Mike | Mike performs the narrowly scoped trigger edit; Cursor reviews evidence afterward | 12 |
+| `PKG-013` | Resolve XP/config choices: Video XP amount, recording/manual rules, streak economics, and next-season gate tuning | `Mike decision` | §4 SC-022, SC-029, SC-081–SC-082; V2-005–007 | Grade-band ownership; 2027 season policy | Mike | Written decisions plus approved Airtable rule/config evidence and controlled regression proof | 2026-08-10 — queued; no package evidence yet | Airtable; Mike | Decide amounts and repeat-after-break behavior before any config edit | 13 |
+| `PKG-014` | Prove level progression beyond the current baseline, blocked-gate clear, and Zoom-credit participation | `needs live proof` | §4 SC-024, SC-078–SC-080 | `PKG-009`; `PKG-010`; eligible Schmidt fixtures | Mike; Cursor | Controlled level-up, gate-clear, and replay/no-churn evidence | 2026-08-10 — queued; no package evidence yet | Airtable; Mike | Create a bounded fixture plan; do not infer completion from current Gate Blocked state | 14 |
+| `PKG-015` | Re-prove live attendance, live/recording exclusivity, Zoom totals, gate, Perfect Week, and public-page integrations | `needs live proof` | §4 SC-073, SC-084–SC-093; C-025 | `PKG-010`, `PKG-012`, `PKG-014` | Mike; Cursor | Meeting/recording conflict cases, no Attendees write, XP/source keys, rollup totals, and web readback | 2026-08-10 — queued; no package evidence yet | Airtable; Vercel; Mike | Execute only after the recording-credit decision and eligible fixtures exist | 15 |
+| `PKG-016` | Complete live automation trigger/version inventory and retain the 112 OFF / 043 no-recreate disposition | `needs live proof` | §4 SC-057–SC-059; `PROD-STATE-RECONCILIATION-010-031-066-118-119-043.md` | Current UI access and automation ownership | Mike; Cursor | Dated UI attestation for trigger/version state and explicit 112/043 disposition | 2026-08-10 — queued; no package evidence yet | Airtable; Mike | Mike supplies UI evidence; do not restore retired slots | 16 |
+| `PKG-017` | Finish sibling/email validation and inactive-processing controls without excluding Schmidt from public standings | `needs repo work` | §4 SC-062–SC-069; C-010, C-017, C-018 | `PKG-004`; Fillout policy; Schmidt visibility decision | Cursor; Mike | Contract tests, Fillout rules, sibling live case, Active? consumer audit, and email-path proof | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Make; Mike | Close repo contract gaps first, then schedule live cases | 17 |
+| `PKG-018` | Make Grade Bands the linked source of truth and complete the C-021/V2-002 consumer audit | `needs repo work` | §4 SC-021–SC-023; backlog C-021 | `PKG-004`; `PKG-002` inventory | Cursor | No hardcoded band strings, linked-rule tests, rename safety, and later live verification | 2026-08-10 — queued; no package evidence yet | Repo; Airtable | Add tests/inventory only; defer schema renames and production changes | 18 |
+| `PKG-019` | Complete content-hash dedupe verification while keeping the later Drive/attachment retirement separate | `needs live proof` | §4 SC-094, SC-096–SC-099; backlog C-023 | `PKG-004`; S3/reviewer-link contracts | Cursor; Mike | 116 live proof, hash write/review evidence, and safe confirm/reversal; no auto-reuse | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Verify 116 and writeback without auto-reuse; leave SC-100 deferred | 19 |
+| `PKG-020` | Implement Presentation fields and consume them in homework, weekly, video, Zoom, and public web labels | `needs repo work` | §4 SC-054, SC-092, SC-102, SC-110, SC-117; C-022 | `PKG-004`; Learning Activities and Weeks field decisions | Cursor | Query/source tests showing Presentation-only labels and no primary-field fallback | 2026-08-10 — queued; no package evidence yet | Repo; Airtable | Build a bounded query/contract package after field ownership is approved | 20 |
+| `PKG-021` | Publish the game manual from config and expose the approved 2027 rules | `Mike decision` | §4 SC-109; V2-008 | `PKG-013`; `PKG-020` | Mike; Cursor | Approved copy, config readback, `NEXT_PUBLIC_GAME_MANUAL_URL` decision, and web smoke | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Vercel; Mike | Mike approves wording and URL before any public-indexing change | 21 |
+| `PKG-022` | Choose and implement real athlete authentication for dashboard/profile data | `Mike decision` | §4 SC-112, SC-116; [admin roadmap](../web/docs/admin-roadmap.md) | Privacy boundary; no web writes; auth architecture choice | Mike; Cursor | Auth decision, threat/model review, read-only data proof, and no mock-data confusion | 2026-08-10 — queued; no package evidence yet | Repo; Vercel; Mike | Mike chooses parent magic-link or another approved approach | 22 |
+| `PKG-023` | Decide whether and when to remove sitewide `noindex` | `Mike decision` | §4 SC-115; `INDEXING-SEO-DECISION.md` | `/shoot` noindex policy and content readiness; `PKG-009`, `PKG-021`, `PKG-022` | Mike | Written SEO approval, content/soft-cutover checklist, and post-change crawl evidence | 2026-08-10 — queued; no package evidence yet | Repo; Vercel; Mike | Keep `noindex` until written approval; no activation in this queue PR | 23 |
+| `PKG-024` | Install and review Reliability Command Center views without automatic repairs | `Mike decision` | §4 SC-147; `RCC-OMNI-VIEW-INSTALL.md` | Repo CLI/export and dry-run report | Mike/OMNI; Cursor | View installation/readback and first health review; no auto-repair permission | 2026-08-10 — queued; no package evidence yet | Airtable; Mike | Mike uses OMNI to install/review views if approved | 24 |
+| `PKG-025` | Install and live-check the read-only `/shoot` smoke/accessibility package | `needs live proof` | §4 SC-118, SC-148 | Current web merge line; `SC-102` | Cursor; Mike | Vercel deployment, HTTP/Playwright/optional axe results, and Mike production smoke | 2026-08-10 — queued; no package evidence yet | Repo; Vercel; Mike | Keep tests read-only; schedule after an approved web integration merge | 25 |
+| `PKG-026` | Verify Fairfield landing/site environment values and public catalog/content hygiene | `needs live proof` | §4 SC-103–SC-110, SC-149; EXT-QA-001–006 | Repo URL/config tests; `/shoot` base path; `PKG-020`, `PKG-021` | Cursor; Mike | Vercel env inspection, public smoke, stale rows/media cleanup evidence | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Vercel; Mike | Read-only inspect first; no env or content changes in this queue | 26 |
+| `PKG-027` | Run the full pre-season audit pack and dry-run season before public intake | `blocked` | §4 SC-134–SC-135; V2-011–012 | Stages A–J tooling; test cards; current authority boundaries; `PKG-006` through `PKG-026`; Mike launch approval | Mike; Cursor | Green dry-run, explicit blocked/not-tested ledger, controlled email results, rollback/activation checklist | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Make; Vercel; Mike | Do not start until dependency packages and 2027 Weeks proof are complete | 27 |
+| `PKG-028` | Export Automation 079 and reconcile the Communications Hub welcome contract | `needs repo work` | §9M; SC-045 | Controlled test evidence; participant activation remains blocked; final approved copy and recipient authorization | Cursor; Mike | GitHub source, template review, consent, test-mode proof, Delivery audit, suppression check | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Export/document 079 before its next code change; keep participant sends disabled | 28 |
+| `PKG-029` | Program Instance multi-year architecture and migration wave | `deferred` | §4 SC-067; backlog V2-013 | Decision direction and Season Launch Control interim layer; `PKG-004`, `PKG-009`; dedicated approved architecture wave | Mike; Cursor | Approved architecture, schema migration plan, historical-data proof, views/interfaces, automation isolation | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Do not start incremental PI edits or block 2027 launch on this wave | 29 |
+| `PKG-030` | Retire or merge Tutorials tables, rename Softr-named publish flag, and other breaking schema cleanup | `deferred` | §4 SC-105, SC-144; backlog C-026 | Current `Tutorials` web ownership; Softr is obsolete; `PKG-004`, `PKG-020`, V2-013 where schema-wide | Mike; Cursor | Row/field diff, migration, repointed views/interfaces, web regression, and approved schema change | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Vercel; Mike | Keep deferred until field ownership and season architecture are approved | 30 |
+| `PKG-031` | Future communications/message-center and media-kit platform work | `deferred` | §4 SC-131, SC-133; backlog V2-014b, V2-028 | Manual 2025–26 kits and current email paths; `PKG-008`, `PKG-011`, `PKG-021` | Mike; Cursor | Product scope, templates, config model, delivery/dedupe evidence, and separate activation approval | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Do not expand scope during season launch; revisit after core proof | 31 |
+| `PKG-032` | Low-priority deferred cleanup: Drive/attachment retirement, archive/clone rollover, Award Recipients scope, duplicate award bucket, conquered-goal lookup, repo-health follow-ups, and multi-challenge vision | `deferred` | §4 SC-100, SC-125, SC-127–SC-129, SC-143, SC-145; backlog V2-001, H-003, H-004, H-006 | Core 2027 launch and higher-priority reliability work | Mike; Cursor | Explicit reactivation request, narrow scope, impact review, and independent evidence package | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Leave deferred; do not let these items compete with season launch or core proof | 32 |
+
+The matrix preserves the final 2027 rules: challenge season **May 1–June 30,
+2027**; normal Early Bird **April 25–May 1, 2027**; Week 1 begins **May 2,
+2027**; Airtable Weeks is manually maintained and authoritative; there is no
+fixed season-week count; every new season starts at Level 1 with 0 season XP;
+Fillout availability is manually controlled; and the current today-based Early
+Bird record is temporary testing only.
+
+---
+
 ### Current PROD reconciliation (2026-08-08)
 
 This is a dated evidence record for the affected automations. Older dashboard
