@@ -16,6 +16,21 @@ type GameManualViewProps = {
   levels: LevelLadderData | null;
 };
 
+export const GAME_MANUAL_QUICK_START = [
+  {
+    title: "Start with the shot goal",
+    description: "Log your counted shots each week and use the progress ladder to see how close you are to the target.",
+  },
+  {
+    title: "Build the full athlete profile",
+    description: "Homework, videos, feedback, and Zoom participation can contribute to progress beyond shooting volume.",
+  },
+  {
+    title: "Check the next gate",
+    description: "XP moves you up the ladder, while some levels also require the program activities shown in the level details.",
+  },
+] as const;
+
 function formatXp(amount: number): string {
   return `${amount.toLocaleString("en-US")} XP`;
 }
@@ -116,6 +131,31 @@ function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
   );
 }
 
+function QuickStartSection() {
+  return (
+    <section className="mt-12" aria-labelledby="game-manual-quick-start">
+      <SectionMarker label="Quick start" title="How progress works" />
+      <div
+        className="grid gap-4 md:grid-cols-3"
+        role="list"
+        aria-label="Shooting Challenge quick start steps"
+      >
+        {GAME_MANUAL_QUICK_START.map((step, index) => (
+          <article
+            key={step.title}
+            role="listitem"
+            className={catalogPanelClass({ tint: index === 0 ? "blue" : "neutral" })}
+          >
+            <p className="font-mono text-xs font-semibold text-brand-blue">0{index + 1}</p>
+            <h3 className="mt-3 text-base font-semibold text-foreground">{step.title}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted">{step.description}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewProps) {
   return (
     <ProgramPage
@@ -146,6 +186,7 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
           />
         )}
 
+        <QuickStartSection />
         <XpRulesSection xpCatalog={xpCatalog} />
         <LevelLadderSection levels={levels} />
       </div>
