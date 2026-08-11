@@ -74,13 +74,83 @@ function findMatchingAthleteByIdentity(athletes, athleteMatchKey, firstName, las
   return { record: null, matchMethod: "none" };
 }
 
+function findExistingEnrollmentForSeason(enrollments, currentRecordId, athleteId, schoolYear) {
+  const matches = enrollments.filter((candidate) =>
+    candidate.id !== currentRecordId &&
+    candidate.athlete_id === athleteId &&
+    candidate.school_year === schoolYear
+  );
+
+  matches.sort((a, b) => {
+    if (Boolean(a.active) !== Boolean(b.active)) return a.active ? -1 : 1;
+    const createdComparison = String(a.createdTime || "").localeCompare(String(b.createdTime || ""));
+    if (createdComparison !== 0) return createdComparison;
+    return String(a.id).localeCompare(String(b.id));
+  });
+
+  return matches[0] || null;
+}
+
 const source = fs.readFileSync(SCRIPT_PATH, "utf8");
 
-test("001 is version v5.2 with unloadData compatibility note", () => {
-  assert.match(source, /Version:\s*v5\.2/);
+test("001 is version v5.3 with unloadData compatibility retained", () => {
+  assert.match(source, /Version:\s*v5\.3/);
   assert.match(source, /unloadData/);
   assert.match(source, /typeof queryResult\?\.unloadData === "function"/);
   assert.match(source, /recQP4N5acTdK40uZ/);
+});
+
+test("repeat registration is blocked against the active enrollment in the same school year", () => {
+  const existing = findExistingEnrollmentForSeason(
+    [
+      { id: "recOld", athlete_id: "recAthlete", school_year: "2026-2027", active: true, createdTime: "2026-08-01T00:00:00.000Z" },
+      { id: "recCurrent", athlete_id: "recAthlete", school_year: "2026-2027", active: false, createdTime: "2026-08-11T00:00:00.000Z" },
+    ],
+    "recCurrent",
+    "recAthlete",
+    "2026-2027"
+  );
+  assert.strictEqual(existing.id, "recOld");
+  assert.match(source, /duplicate-enrollment-blocked/);
+  assert.match(source, /duplicateOfEnrollmentId/);
+  assert.match(source, /\[CONFIG\.enrollments\.athleteLink\]: \[\]/);
+  assert.match(source, /\[CONFIG\.enrollments\.active\]: false/);
+});
+
+test("a returning athlete may enroll in a different school year", () => {
+  const existing = findExistingEnrollmentForSeason(
+    [
+      { id: "recPrior", athlete_id: "recAthlete", school_year: "2025-2026", active: true },
+      { id: "recCurrent", athlete_id: "recAthlete", school_year: "2026-2027", active: false },
+    ],
+    "recCurrent",
+    "recAthlete",
+    "2026-2027"
+  );
+  assert.strictEqual(existing, null);
+});
+
+test("duplicate selection is deterministic and prefers an active canonical enrollment", () => {
+  const existing = findExistingEnrollmentForSeason(
+    [
+      { id: "recInactiveOlder", athlete_id: "recAthlete", school_year: "2026-2027", active: false, createdTime: "2026-07-01T00:00:00.000Z" },
+      { id: "recActive", athlete_id: "recAthlete", school_year: "2026-2027", active: true, createdTime: "2026-08-01T00:00:00.000Z" },
+      { id: "recCurrent", athlete_id: "recAthlete", school_year: "2026-2027", active: false, createdTime: "2026-08-11T00:00:00.000Z" },
+    ],
+    "recCurrent",
+    "recAthlete",
+    "2026-2027"
+  );
+  assert.strictEqual(existing.id, "recActive");
+});
+
+test("enrollment is inactive while uniqueness is checked and activates only after passing", () => {
+  const deactivateIndex = source.indexOf("downstream grade-band and welcome-email automations");
+  const dedupeIndex = source.indexOf("Enforce One Enrollment Per Athlete and School Year");
+  const activateIndex = source.lastIndexOf("[CONFIG.enrollments.active]: true");
+  assert.ok(deactivateIndex > 0);
+  assert.ok(dedupeIndex > deactivateIndex);
+  assert.ok(activateIndex > dedupeIndex);
 });
 
 test("001 has no bare query.unloadData() calls outside unloadQuerySafe", () => {
