@@ -23,7 +23,7 @@ Last updated: **2026-08-10** (merged PRs #137–#139; 067 v3.4 and 115 v2.1 cont
 | Item | Value |
 |------|--------|
 | **Production branch** | `master` |
-| **Current repository baseline** | `origin/master` `3aea908bc1674b54959254d2f6756acc3f51ff97` at reconciliation start; verify dynamically before relying on it |
+| **Current repository baseline** | `origin/master` `410fa21cadaec67cd36489536487a0dd38f49607` at reconciliation start; verify dynamically before relying on it |
 | **Public URL** | https://www.fairfieldbasketballclub.com/shoot |
 | **Local dev** | http://localhost:3001/shoot |
 | **Health check** | `GET /shoot/api/airtable` → `{ ok: true, airtable: { tokenValid: true } }` |
