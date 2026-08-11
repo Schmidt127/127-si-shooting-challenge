@@ -90,7 +90,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
 | 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** on `master` via PR #88 — **PROD paste required**; natural path failed on v3.3 `fields` contract; [paste checklist](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md)) |
 
-## Email and Make handoffs (070b, 070c, 072–077, 118–119)
+## Email and Make handoffs (070b, 070c, 072–079, 118–119)
 
 ### Weekly Athlete Summary email (verified PROD 2026-07-24)
 
@@ -115,8 +115,9 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 070b | Email — Send Video Asset Payload to Make | Submission Assets · `Send to Make Trigger` checked · `Upload Status = Pending Link` · `Upload Destination = Video Feedback` | `070b-email-notifications-and-external-handoffs-send-video-asset-payload-to-make.js` (**v4.4**) |
 | **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.1** — idempotent; `Send to Make Trigger` optional on trigger) |
 | 073 | Email — Send Video Feedback Parent Email Webhook | *confirm in Airtable* | `073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js` |
-| 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — **build only**; does not send |
-| **079** | Email — Send WELCOME Handoff to Communications Hub | Email Handoff Queue — *confirm trigger in Airtable* | **PROD only** — script not yet in GitHub; see `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` |
+| 075 | ~~Email — Build Challenge Welcome Email~~ | **Retired** — legacy subject/HTML builder; do not restore | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — historical only |
+| **078A** | **Enrollment → Create WELCOME Email Handoff** | Enrollments when `Athlete`, `Parent Email - Cleaned`, and `Program Instance` are populated after 001 | `078a-enrollment-create-welcome-email-handoff.js` — creates one `Ready` queue row per Enrollment using `WELCOME|ENROLLMENTS|{Enrollment Record ID}` |
+| **079** | Email — Send WELCOME Handoff to Communications Hub | Email Handoff Queue when `Status = Ready` | `079-email-notifications-and-external-handoffs-send-welcome-handoff-to-communications-hub.js` (**v1.1**) — requires `recordId` + secret input; sends `SHOOTING_CHALLENGE` sourceSystem |
 | 076 | Email — Build Daily Submission Email Package | *confirm in Airtable* | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` |
 | 077 | Email — Send Daily Submission Email Package to Make | *confirm in Airtable* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` |
 

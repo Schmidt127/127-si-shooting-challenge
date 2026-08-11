@@ -29,7 +29,7 @@ Create or arm one row on **Email Handoff Queue**. These are the **operator-suppl
 | **Handoff Key** | Unique for this run — see §2 |
 | **Source Table** | Shooting Challenge source table name (e.g. `Enrollments`) |
 | **Source Record ID** | `rec…` of test enrollment or source row |
-| **Recipients JSON** | Valid JSON; use allowlisted address(es) while **Test Mode?** is checked |
+| **Recipients JSON** | Valid role-qualified JSON; use allowlisted address(es) while **Test Mode?** is checked |
 | **Payload JSON** | See §1A |
 | **Test Mode?** | **Checked** (required for controlled tests) |
 | **Arm / status** | Set fields that trigger **079** per live automation conditions |
@@ -53,6 +53,17 @@ The Hub uses **`templateKey: WELCOME`** to render Hub-owned **subject**, **HTML*
 ### 1B. What 079 forwards (not operator queue columns)
 
 079 posts the queue contract to the Communications Hub, including `templateKey`, `handoffKey`, source mapping, **Recipients JSON**, and **Payload JSON**. It does **not** supply subject, HTML, plain-text, or `sendMode`.
+
+The exact recipient shape is:
+
+```json
+[
+  {"role":"PARENT","email":"allowlisted@example.com"},
+  {"role":"ATHLETE","email":"allowlisted@example.com"}
+]
+```
+
+Roles are case-sensitive: use exactly `PARENT` and `ATHLETE`.
 
 ---
 

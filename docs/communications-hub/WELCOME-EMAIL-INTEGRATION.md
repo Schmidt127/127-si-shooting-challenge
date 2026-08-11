@@ -1,6 +1,6 @@
 # WELCOME email — Communications Hub integration (Shooting Challenge)
 
-**Last updated:** 2026-08-08  
+**Last updated:** 2026-08-11
 **PROD base:** `appn84sqPw03zEbTT`  
 **Controlling doc:** [`docs/SHOOTING_CHALLENGE_COMPLETION_MASTER.md`](../SHOOTING_CHALLENGE_COMPLETION_MASTER.md) §9M
 
@@ -15,7 +15,8 @@
 | **Participant-wide welcome sends** | **Not authorized** — **Test Mode?** + allowlist only |
 | **Approved Shooting Challenge welcome design in Hub** | **Pending** — Hub **WELCOME** template renders subject/HTML; payload supplies template data only |
 | **Make.com welcome send** | **OFF / not current path** — legacy assumption only |
-| **Automation 079 script in GitHub** | **Gap** — live PROD script not yet exported to `airtable/automations/shooting-challenge/` |
+| **Automation 079 script in GitHub** | **Implemented** — requires `recordId` and `ingressSecret`; Mike must paste/configure/test it |
+| **Automation 078A script in GitHub** | **Implemented** — creates one `Ready` WELCOME queue row per eligible Enrollment; Mike must paste/configure/test it |
 
 **Critical distinction:** Queue or Hub Event **Accepted** proves **intake only** — not delivery. Success requires exactly **one** Hub **Delivery** in terminal **`Sent`** state, a Resend/provider ID, **one** send attempt, and no stale delivery error/retry fields.
 
@@ -24,10 +25,12 @@
 ## Architecture
 
 ```text
-[Optional legacy build]
-  Enrollments ──► Automation 075 (build subject/HTML on Enrollment; does not send)
+[Retired legacy build]
+  Enrollments ──► Automation 075 (retired; do not restore)
 
 [Current send path — controlled test only]
+  Enrollments ──► Automation 001 (match/create Athlete + link Enrollment)
+        ──► Automation 078A (create one idempotent queue row)
   Email Handoff Queue row (armed; Test Mode? checked)
     ──► Automation 079 (POST handoff to Communications Hub)
           ──► Communications Hub (Hub Event; templateKey WELCOME)
@@ -77,10 +80,102 @@ See [WELCOME-EMAIL-ACTIVATION-CHECKLIST.md](../deploy-checklists/WELCOME-EMAIL-A
 
 ---
 
-## Automation 079 — contract audit (Shooting Challenge side)
+## Automation 078A — Enrollment WELCOME queue producer
 
-**Audit date:** 2026-08-08  
-**Method:** Operator-verified live behavior. **No 079 script in repository** — field names below match live PROD unless marked *confirm in Airtable UI*.
+The repository source is
+[`airtable/automations/shooting-challenge/078a-enrollment-create-welcome-email-handoff.js`](../../airtable/automations/shooting-challenge/078a-enrollment-create-welcome-email-handoff.js).
+
+### Exact setup contract
+
+| Item | Required value |
+|---|---|
+| Trigger table | `Enrollments` |
+| Trigger type | When record matches conditions |
+| Conditions | `Athlete` is not empty; `Parent Email - Cleaned` is not empty; `Program Instance` is not empty |
+| Timing | Run after Automation 001 has linked the Athlete; Airtable automation ordering/conditions must prevent a pre-link run |
+| Input variable | `recordId` |
+| Input value | Record ID from the triggering `Enrollments` record |
+| Idempotency key | `WELCOME\|ENROLLMENTS\|{Enrollment Record ID}` |
+| Recipient | The cleaned value in `Parent Email - Cleaned`, normalized to lowercase |
+| Template key | `WELCOME` |
+| Test mode | `Test Mode?` checked (`true`) for Mike's controlled test and Hub allowlist |
+
+078A validates the queue table and field types before reading/writing data. It requires the
+linked Athlete, cleaned parent email, and linked `Program Instance` value with both a record ID
+and displayed record name. The linked ID is written to `Program Instance Record ID`; the
+displayed linked-record name supplies `payload.programName`. It performs a duplicate lookup
+and an immediate pre-create recheck.
+It never calls the Hub, sends email, writes subject/HTML, changes Enrollment fields, or
+modifies 079.
+
+### Exact WELCOME JSON contracts
+
+`Recipients JSON`:
+
+```json
+[
+  {"role":"PARENT","email":"<Parent Email - Cleaned>"},
+  {"role":"ATHLETE","email":"<Parent Email - Cleaned>"}
+]
+```
+
+`Payload JSON`:
+
+```json
+{
+  "athleteName": "<Athlete.Full Name>",
+  "programName": "<displayed name from Enrollment.Program Instance>",
+  "message": "Welcome to <programName>, <athleteName>."
+}
+```
+
+The three payload properties are the minimum proven Hub WELCOME template contract.
+The Hub owns subject, HTML, plain-text rendering, deduplication, and delivery.
+Recipient roles are case-sensitive and must be exactly `PARENT` and `ATHLETE`.
+
+### Queue row written by 078A
+
+`Handoff Key`, `Status = Ready`, `Event Type = WELCOME`, `Source Table = Enrollments`,
+`Source Record ID`, `Enrollment Record ID`, `Program Instance Record ID`,
+`Recipients JSON`, `Template Key = WELCOME`, `Payload JSON`, `Test Mode? = true`,
+and `Attempt Count = 0`.
+
+### Manual test expectation
+
+Mike should configure 078A with the trigger and `recordId` input, then use one approved
+test Enrollment. A valid run creates exactly one queue row and reports `created-ready`.
+A retry or duplicate trigger for the same Enrollment reports `duplicate-skipped` and
+returns the existing queue record ID. Missing required data fails before queue creation.
+079 then owns dispatch; verify the controlled-test runbook for Hub Event and Delivery proof.
+
+### Exact Airtable setup
+
+**Automation 078A**
+
+1. Create a script action named `078A - Enrollment -> Create WELCOME Email Handoff`.
+2. Table: `Enrollments`; trigger: **When record matches conditions**.
+3. Conditions: `Athlete` is not empty, `Parent Email - Cleaned` is not empty, and
+   `Program Instance` is not empty. Ensure it runs after 001 links the Athlete.
+4. Add input variable `recordId` mapped to the triggering Enrollment record ID.
+5. Paste `078a-enrollment-create-welcome-email-handoff.js` after reviewing the
+   DEV schema. Keep `Test Mode?` true for controlled tests.
+
+**Automation 079**
+
+1. Create a script action named `079 - Email, Notifications, and External Handoffs - Send WELCOME Handoff to Communications Hub`.
+2. Table: `Email Handoff Queue`; trigger: **When record matches conditions**.
+3. Condition: `Status` is `Ready`.
+4. Add `recordId` mapped to the triggering Email Handoff Queue record ID.
+5. Add `ingressSecret` as a secret automation input. Never paste it into source,
+   logs, outputs, or queue fields.
+6. Paste `079-email-notifications-and-external-handoffs-send-welcome-handoff-to-communications-hub.js`.
+7. Keep the Hub allowlist and queue `Test Mode?` checked until participant-send
+   authorization is separately approved.
+
+## Automation 079 — repository contract and contract audit
+
+**Audit date:** 2026-08-11
+**Method:** Operator-verified live behavior plus the repository implementation from the supplied ingress contract.
 
 ### Trigger
 
@@ -136,6 +231,47 @@ Example:
 
 The Communications Hub uses **`templateKey: WELCOME`** to produce Hub-owned **subject**, **HTML**, and **plain-text** content. **079** forwards this payload; it does not build or send email bodies.
 
+### 079 request body
+
+Automation 079 sends this JSON body to
+`https://communications-two-blue.vercel.app/api/events/ingest`:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "sourceSystem": "SHOOTING_CHALLENGE",
+  "eventType": "WELCOME",
+  "handoffKey": "WELCOME|ENROLLMENTS|<Enrollment Record ID>",
+  "source": {
+    "table": "Enrollments",
+    "recordId": "<Enrollment Record ID>"
+  },
+  "enrollmentRecordId": "<Enrollment Record ID>",
+  "programInstanceRecordId": "<Program Instance Record ID>",
+  "templateKey": "WELCOME",
+  "recipients": [
+    {"role": "PARENT", "email": "<Parent Email - Cleaned>"},
+    {"role": "ATHLETE", "email": "<Parent Email - Cleaned>"}
+  ],
+  "data": {
+    "athleteName": "<Athlete.Full Name>",
+    "programName": "<displayed Program Instance name>",
+    "message": "Welcome to <programName>, <athleteName>."
+  },
+  "testMode": true
+}
+```
+
+The `Authorization` header is `Bearer <ingressSecret>`, configured as an
+Automation 079 input variable. The secret is never stored or logged.
+The current Hub normalizes `sourceSystem` to uppercase for ingress validation,
+then bridges it internally to `source_system: "shooting_challenge"`.
+`Integration Events.Source = "Program Base"` is an internal Airtable
+classification, not the ingress value.
+Successful responses must contain `accepted: true` and a non-empty `eventId`.
+`duplicate: true` maps to `accepted_duplicate`; otherwise the action returns
+`accepted_new`.
+
 ### Handoff key shape
 
 - Must be **unique** per intended send for controlled tests (append `TEST-{date}-{seq}` suffix).
@@ -147,7 +283,7 @@ The Communications Hub uses **`templateKey: WELCOME`** to produce Hub-owned **su
 | Outcome | Expected Shooting Challenge writeback |
 |---------|--------------------------------------|
 | Hub accepts handoff | Status → **Accepted**; clear or set handoff timestamp; clear arm/trigger if applicable |
-| Hub rejects / HTTP error | Status → **Error**; **Error message** populated; retry only with **new** Handoff Key |
+| Hub rejects / HTTP error | Status → **Failed**; **Last Error** populated; after the configured threshold, **Needs Review** |
 | Successful Resend delivery | **Not** written by 079 — Hub **Delivery** in **`Sent`** is proof |
 
 ### Test-mode behavior
@@ -176,18 +312,19 @@ An earlier Hub Event showed a missing or blank **source table** on the Hub side.
 |----------|--------|
 | Does 079 need a change for the source-table issue? | **No** — Hub-side fix |
 | Does 079 need a change for proven controlled test? | **No** — contract performed as designed |
-| Repo follow-up | **Export live 079 script to GitHub** when Mike approves paste-back |
+| Repo follow-up | Paste and configure the repository 079 script, then run the controlled test |
 
 ---
 
-## Legacy path (do not use for welcome send)
+## Retired legacy path (do not use for welcome send)
 
 | Component | Role today |
 |-----------|------------|
-| **075** — Build Challenge Welcome Email | Builds `Parent Email Subject` / `Parent Email HTML` on **Enrollments**; sets `Welcome Email Status = Ready`; optional legacy Make webhook input — **does not mark Sent** |
+| **075** — Build Challenge Welcome Email | **Retired.** Historical subject/HTML builder; do not restore or use for the current WELCOME handoff |
 | **Make.com welcome scenario** | **Not active** for welcome delivery; historical docs may still mention Make/Gmail — superseded by Communications Hub path for welcome **send** |
 
-**075** is **not** the current send owner. Queue rows for **079** use **Payload JSON** template data, not 075 HTML fields.
+**075** is retired and is **not** the current send owner. Queue rows for **079** use
+**Payload JSON** template data, not 075 HTML fields.
 
 ---
 
@@ -220,6 +357,6 @@ Store under `docs/testing/evidence/YYYY-MM-DD-welcome-hub/`:
 |---|----------|
 | 1 | Approve final welcome email copy/design in Hub **WELCOME** template |
 | 2 | Whether **075** remains in use or queue rows are populated without it |
-| 3 | Export **079** from PROD to GitHub (recommended before next code change) |
+| 3 | Paste/configure the repository **079** script and complete the controlled test |
 | 4 | Explicit authorization date for non-test participant welcome sends |
 | 5 | Opt-out / suppression source of truth (Hub vs Shooting Challenge base) |

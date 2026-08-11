@@ -12,7 +12,7 @@
 
 **Status key:** `queued` · `planned` · `in-progress` · `done` · `deferred` · `wont-fix`
 
-Last updated: **2026-07-20** (C-025 Stage 17 **COMPLETE** in PROD — verification PASS; webhook blank deferred)
+Last updated: **2026-08-11** (SCV2-078A-079-PRODUCTION-HARDENING implemented in GitHub; no Airtable or PROD changes)
 
 ---
 
@@ -196,6 +196,8 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | **V2-009** | `/shoot` rules + progress hub | Website mirrors config; not rankings-only | Wave 9, C-022 | queued |
 | **V2-010** | Pre-season parent comms | Rules explained before first submission | V2-008 | queued |
 | **C-027** | **Major-event** notifications — level up, milestones (not daily XP) | **Today:** parent comms are **email** via Make (**071**, **072**, **074**) — batch/weekly or coach-triggered; **no instant athlete alert** on level change (**041** → **042**) or achievement unlock (**059**, **066**). **Owner idea:** notify kids **immediately** on meaningful events (level up, shot milestone, perfect week, gate cleared) — **not** every daily submission. **Possible channel:** SMS/text — **`Athlete Cell Number`** / **`Parent Cell Number`** exist on Enrollments/Athletes. **TBD discussion:** Twilio vs Make vs other; parent vs athlete recipient; opt-in/consent; quiet hours; message templates; idempotent send key (**C-024**); web push later. | C-010, C-024, V2-008 | queued |
+| **SCV2-078A-WELCOME-HANDOFF** | **Enrollment → Create WELCOME Email Handoff** | Implement repository source for 078A. After 001 links `Athlete`, create one `Ready` `Email Handoff Queue` row keyed by `WELCOME\|ENROLLMENTS\|{Enrollment Record ID}`; 079 remains the dispatcher, Hub owns rendering/delivery, and 075 remains retired. Mike must paste and validate manually; no PROD change is included here. | Approved Phase 2 plan: `Automation 078A — Enrollment → Create WELCOME Email Handoff Implementation Plan` | **in-progress** |
+| **SCV2-078A-079-PRODUCTION-HARDENING** | **Harden 078A + 079 WELCOME handoff contract** | Rewrite both repository scripts with runtime schema validation, role-qualified `PARENT`/`ATHLETE` recipients, safe retry/writeback behavior, and documented Hub request contract. Mike must paste/configure/test manually; no Airtable or PROD change is included here. | SCV2-078A-WELCOME-HANDOFF | **in-progress** |
 | **V2-028** | **Generate Media Kits** — end-of-season publicity from Airtable | **2025–26 manual phase done** — 10 newspaper packets + 12 radio kits sent **2026-07-05**. Platform automation (config-driven generate) remains future work. | C-013, C-022, Wave 0 close-out | **done** (2025–26) / queued (platform) |
 
 ### Wave 11 — Launch gate
