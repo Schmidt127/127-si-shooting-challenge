@@ -1,3 +1,5 @@
+export const GAME_MANUAL_QUICK_START_TITLE = "Your first week at a glance";
+
 export const GAME_MANUAL_QUICK_START = [
   {
     title: "Start with the shot goal",

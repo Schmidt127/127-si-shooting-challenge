@@ -7,7 +7,10 @@ import { CtaLink, ProgramPage, SectionMarker } from "@/components/site";
 import { EmptyState } from "@/components/ui";
 import type { XpRuleCatalogData } from "@/lib/data/xp-rules";
 import type { LevelLadderData } from "@/types/levels";
-import { GAME_MANUAL_QUICK_START } from "./game-manual-quick-start";
+import {
+  GAME_MANUAL_QUICK_START,
+  GAME_MANUAL_QUICK_START_TITLE,
+} from "./game-manual-quick-start";
 
 type GameManualViewProps = {
   manualUrl: string | null;
@@ -120,7 +123,7 @@ function LevelLadderSection({ levels }: { levels: LevelLadderData | null }) {
 function QuickStartSection() {
   return (
     <section className="mt-12" aria-labelledby="game-manual-quick-start">
-      <SectionMarker label="Quick start" title="How progress works" />
+        <SectionMarker label="Quick start" title={GAME_MANUAL_QUICK_START_TITLE} />
       <div
         className="grid gap-4 md:grid-cols-3"
         role="list"
