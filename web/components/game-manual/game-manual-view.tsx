@@ -163,16 +163,26 @@ export function GameManualView({ manualUrl, xpCatalog, levels }: GameManualViewP
             externalHint="The manual is hosted on Adobe. Open it in a new tab — Adobe blocks embedding on other sites, which causes the Bad Gateway error in iframes."
           />
         ) : (
-          <EmptyState
-            title="Game manual temporarily unavailable"
-            description="The official game manual link is being prepared. Please check back soon or return to the Shooting Challenge overview."
-            icon={<IconBook size={40} />}
-            action={
-              <CtaLink href="/" variant="secondary">
-                ← Back to Shooting Challenge
-              </CtaLink>
-            }
-          />
+          <section
+            className="rounded-lg border border-border bg-card p-5 sm:p-6"
+            aria-labelledby="game-manual-link-status"
+          >
+            <div className="flex items-start gap-4">
+              <IconBook size={32} className="mt-0.5 shrink-0 text-brand-blue" />
+              <div>
+                <h2 id="game-manual-link-status" className="text-lg font-semibold text-foreground">
+                  Official manual link coming soon
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-muted">
+                  The configured PDF link is not available yet. The live XP rules and level ladder
+                  below are still ready to help you understand the program.
+                </p>
+                <CtaLink href="/" variant="link" className="mt-3 px-0">
+                  ← Back to Shooting Challenge
+                </CtaLink>
+              </div>
+            </div>
+          </section>
         )}
 
         <QuickStartSection />
