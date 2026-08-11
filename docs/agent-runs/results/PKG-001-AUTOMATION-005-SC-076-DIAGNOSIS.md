@@ -5,8 +5,8 @@
 ## Question and baseline
 
 - Package: `PKG-001`; scope: Automation 005 and the SC-076 dependency boundary.
-- Branch baseline: `origin/master` at `080e78c0e3ecf2f790ee6e9a2b9f550a692c5e7b` (fresh fetch; worktree HEAD matched).
-- CONTROL was read but not edited. Its canonical SHA is stale relative to the requested baseline; this report does not reconcile that control record.
+- Branch baseline: `origin/master` at `410fa21cadaec67cd36489536487a0dd38f49607` (fresh fetch; worktree HEAD matched).
+- CONTROL was read but not edited by this package; its baseline is reconciled separately by PKG-003.
 
 ## Sources consulted
 
