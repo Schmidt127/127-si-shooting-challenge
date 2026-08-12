@@ -1,8 +1,8 @@
 # PKG-028 — Generic Email Handoff Dispatcher
 
-**Status:** Post-app improvement; not approved or installed in Production  
-**Automation:** 079 v3.0  
-**Production blocker:** No  
+**Status:** Post-app improvement; not approved or installed in Production
+**Automation:** 079 v3.0
+**Production blocker:** No
 **Last updated:** 2026-08-12
 
 ## Scope
@@ -53,4 +53,3 @@ handoff keys, enable legacy senders, or change Hub secrets as rollback steps.
 - No schema or single-select option is added.
 - No HOMEWORK_FEEDBACK, VIDEO_FEEDBACK, WEEKLY_SUMMARY, or other source producer
   is implemented here.
-

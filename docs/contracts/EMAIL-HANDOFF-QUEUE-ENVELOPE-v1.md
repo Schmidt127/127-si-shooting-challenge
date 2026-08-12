@@ -1,8 +1,8 @@
 # Email Handoff Queue Envelope v1
 
-**Status:** Post-app architecture contract; repository implementation only  
-**Backlog:** PKG-028  
-**Production blocker:** No  
+**Status:** Post-app architecture contract; repository implementation only
+**Backlog:** PKG-028
+**Production blocker:** No
 **Last updated:** 2026-08-12
 
 ## Purpose
@@ -91,4 +91,3 @@ Each Airtable base may require its own installed automation and local queue
 table, but each installation should use the same authoritative Automation 079
 source and this envelope contract. Secrets remain local Airtable inputs and are
 never placed in queue records or GitHub.
-
