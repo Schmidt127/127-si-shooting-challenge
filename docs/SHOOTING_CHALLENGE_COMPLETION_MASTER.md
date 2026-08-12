@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-10** (067/115 controlled PROD proof reconciliation; PHA-first package and release-readiness closeout) |
+| Last updated | **2026-08-12** (Automation 031 v3.7 formula-readiness hotfix; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -363,6 +363,15 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 | 043 | Yes | Yes | No native automation found | Not applicable | **Do not recreate** |
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
+
+### Dashboard reconciliation (2026-08-12 — Automation 031 v3.7 formula-readiness hotfix)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **031 v3.7** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` uses required-field existence plus `isChecked()` evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Focused validation | **PASS with ESLint unavailable** | 031 tests: **22/22 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors; repository ESLint was unavailable because no `eslint.config.*` exists; broad lint was stopped after hanging; broad email suite retains the unrelated existing 072 v4.0/v4.1 mismatch. |
+
+Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
 ### Dashboard reconciliation (2026-08-07 — Automation 031 stale-link repo repair)
 
@@ -1271,6 +1280,46 @@ The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md
 - Athlete auth/dashboard real data blocked on SC-112
 - Production install = merge + Vercel deploy (Root Directory `web`)
 - Do not use page-wide `overflow-x: clip` in ways that hide tables/leaderboards
+
+---
+
+## 10. Post-app / backlog considerations
+
+### Decouple Daily Submission email readiness from Automation 031
+
+**Status:** **POST-APP consideration — not a blocker for Shooting Challenge
+completion, Production promotion, or PKG-006 controlled proof.**
+
+**Current design:** Automation 031 is the final proven processing checkpoint.
+After validating the counted Submission's canonical Enrollment, Week, Program
+Instance, Weekly Athlete Summary linkage, and eligible XP links, it checks
+`Build Daily Email Now?`. Automation 076 consumes that signal and creates the
+`DAILY_SUBMISSION` Communications Hub handoff.
+
+**Reason for later review:** Although safe and practical, Automation 031 belongs
+to Weekly Summary processing and now also owns the Daily Submission
+email-readiness signal.
+
+**Future options to evaluate:**
+
+- A formula-backed `Daily Submission Processing Complete?` readiness field
+- A dedicated workflow coordinator
+- Another existing final-processing owner
+- A durable source-status/writeback design that prevents premature sends and
+  duplicate processing
+
+**Acceptance criteria for any future change:**
+
+- No new Airtable automation slot unless justified
+- Email cannot trigger before canonical Submission processing finishes
+- Pending XP remains supported
+- Deterministic queue/replay protection remains intact
+- 031 returns to Weekly Athlete Summary responsibilities only
+- 076 and shared 079/Communications Hub architecture remains intact
+
+This is technical-debt cleanup only. It must not block merging the v3.7
+hotfix, installing 031/076, running the controlled Production Daily Submission
+test, completing PKG-006, or finishing the app.
 
 ---
 
