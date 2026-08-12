@@ -18,7 +18,9 @@ from v3.6 to **v3.7**. It fixes the field-type contract only:
 - No schema, formula, Automation 076, Automation 077, Make, Gmail, or email
   change is included.
 
-Before any Production paste, Mike must complete the DEV test packet for v3.7.
+Before any Production replacement, Mike must complete the controlled Production
+test packet for v3.7 using the existing Schmidt test Submission and Mike's
+allowlisted email. No DEV Airtable evidence is required or claimed.
 
 ## Controlled Production promotion order
 
@@ -56,7 +58,7 @@ Production Airtable is the only Airtable environment for this integration.
 8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
    consider 077 a retirement candidate; it is not retired by this PR.
 
-## 031 v3.7 replacement steps (after DEV PASS and Mike approval)
+## 031 v3.7 replacement steps (after controlled Production test and Mike approval)
 
 1. Open the existing Production Automation 031 slot; do not create a new slot.
 2. Replace the full script with the committed v3.7 source, omitting only the
@@ -69,9 +71,11 @@ Production Airtable is the only Airtable environment for this integration.
    `Build Daily Email Now?` only after final summary validation.
 6. Run one controlled Submission with `Count This Submission?` evaluating to `0`;
    verify 031 skips and leaves `Build Daily Email Now?` unchanged.
-7. If any step fails, turn off 031 and restore the prior committed v3.6 source
-   after recording the exact record ID and output/error evidence. Do not change
-   the formula or field type.
+7. If any step fails, turn Automation 031 OFF and preserve the failed
+   Submission and output/error evidence. Do not change the formula or field
+   type. Restore v3.5 only if immediate restoration of the pre-email-readiness
+   behavior is necessary; otherwise leave 031 OFF until a corrected repository
+   version is approved.
 
 This v3.7 hotfix packet authorizes repository replacement instructions only. It
 does not authorize a Production Airtable paste, a live record mutation, a queue
@@ -79,6 +83,13 @@ dispatch, an email send, a Make/Gmail action, or enabling 077.
 
 ## Rollback
 
+- Turn Automation 031 OFF.
+- Preserve the failed Submission and all output/error evidence.
+- Do not change the Airtable formula or field type.
+- Restore Automation 031 v3.5 only if immediate restoration of the
+  pre-email-readiness behavior is necessary. Otherwise leave 031 OFF until a
+  corrected repository version is approved.
+- Do not enable 077 or Make/Gmail as a rollback.
 - Stop arming new `Email Handoff Queue` rows and disable the 076 trigger if
   needed; leave Hub Delivery history intact.
 - Do not re-enable 077 or any Make/Gmail daily sender as an automatic rollback.

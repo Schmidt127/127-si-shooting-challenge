@@ -12,6 +12,10 @@ This packet documents repository repair status only.
 
 - Airtable installation: **unconfirmed**
 - Controlled PROD live testing: **not performed**
+- Production Airtable is the only Airtable environment for this integration.
+- The required test is a controlled Production test using the existing Schmidt
+  test Submission and Mike's allowlisted email.
+- No DEV Airtable evidence is required or claimed.
 
 ## Airtable automation identity
 
@@ -104,11 +108,16 @@ Before any Airtable mutation, state the exact source Submission, current linked 
 
 ### Test A — stale-link repair
 
-Prepare one controlled counted Submission on the Schmidt enrollment with:
+Use the existing Schmidt test Submission as the controlled counted Submission
+with:
 
 - `Enrollment = recCyFEPeATOVNlr9`
 - `Week = recWeVrSabnsYaHc2`
 - `Weekly Athlete Summary` intentionally linked to a stale/wrong summary
+
+Use Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`) and `testMode=true`
+for the controlled Production email-path test. Do not send to any other
+recipient.
 
 Expected first-run result:
 
@@ -175,11 +184,12 @@ Fields expected to remain unchanged:
 
 If the Airtable paste or controlled test fails:
 
-1. turn the automation Off or stop further test runs immediately;
-2. paste the exact prior repository version from commit
-   `30e7397ba75dfe98f57e34610c63941f83755b6a`
-   (`031` v3.2) back into the Airtable editor;
-3. on the controlled source Submission only, restore the previous `Weekly Athlete Summary` link if the repair was incorrect;
-4. move any incorrectly reassigned `XP Events -> Weekly Athlete Summary` links back to their prior state for the controlled record set only;
-5. confirm the canonical and stale summaries no longer contain accidental Submission link changes;
-6. record the exact failing Submission ID, summary IDs, XP Event IDs, and output/error text before retrying.
+1. turn Automation 031 OFF;
+2. preserve the failed Submission and all output/error evidence;
+3. do not change the Airtable formula or field type;
+4. restore v3.5 only if immediate restoration of the pre-email-readiness
+   behavior is necessary;
+5. otherwise leave 031 OFF until a corrected repository version is approved;
+6. do not enable 077 or Make/Gmail as a rollback;
+7. record the exact failing Submission ID, summary IDs, XP Event IDs, and
+   output/error text before retrying.

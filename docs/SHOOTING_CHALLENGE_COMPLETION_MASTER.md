@@ -369,7 +369,7 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 | Item | Status | Evidence |
 |------|--------|----------|
 | Automation **031 v3.7** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` uses required-field existence plus `isChecked()` evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
-| Focused offline regression | **PASS — 22/22** | `node --test tools/testing/tests/test_031_offline.mjs`; Automation 010 **9/9**; 076 canonical reporting **14/14**; syntax, lints, and `git diff --check` pass. The broader email-contract runner retains an unrelated 072 v4.0-v4.1 assertion mismatch. |
+| Focused validation | **PASS with ESLint unavailable** | 031 tests: **22/22 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors; repository ESLint was unavailable because no `eslint.config.*` exists; broad lint was stopped after hanging; broad email suite retains the unrelated existing 072 v4.0/v4.1 mismatch. |
 
 Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
