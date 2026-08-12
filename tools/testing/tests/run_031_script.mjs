@@ -157,10 +157,10 @@ export function build031Base(opts = {}) {
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Activity Date": "2026-08-07",
       "Weekly Athlete Summary": [],
-      // Formula results; v3.8 must read evaluated values rather than require
+      // Formula results; v3.9 must read evaluated values rather than require
       // physical readiness-input field types.
       "Count This Submission?": "1",
-      "Submission Stat Mode": "Counted",
+      "Submission Stat Mode": "Simple Total",
       "Build Daily Email Now?": false,
       ...submissionCells,
     }),

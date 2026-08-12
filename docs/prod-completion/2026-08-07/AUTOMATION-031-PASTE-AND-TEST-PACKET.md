@@ -1,10 +1,11 @@
-# Automation 031 Paste and Test Packet — v3.8 — 2026-08-12
+# Automation 031 Paste and Test Packet — v3.9 / 076 v8.2 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.8
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.9
+- `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.2
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -23,11 +24,12 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.8`
+- Repository version in this package: `v3.9`
+- Companion handoff version: `076 v8.2`
 
 ## Repository repair completed
 
-The v3.8 repair now:
+The v3.9 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -42,20 +44,21 @@ The v3.8 repair now:
 11. requires `Count This Submission?` to exist but accepts its existing formula type; `isChecked()`
     reads raw `true`, raw `1`, and checked/true/1 formula text;
 12. requires `Submission Stat Mode` to exist as a formula/read-only readiness
-    input and accepts only its trimmed, case-insensitive evaluated text `Counted`;
+    input and accepts only its trimmed, case-insensitive evaluated text
+    `Simple Total` or `Detailed Shooting`;
 13. requires `Build Daily Email Now?` to remain a writable physical `checkbox`;
 14. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
     is the sole owner of that readiness check; Automation 076 consumes and clears it.
 
-## v3.8 startup field-role audit
+## v3.9 startup field-role audit
 
-| Field | Role | v3.8 contract |
+| Field | Role | v3.9 contract |
 |---|---|---|
 | `Submissions -> Enrollment` | Required linked input | Required field existence |
 | `Submissions -> Week` | Required linked input | Required field existence |
 | `Submissions -> Weekly Athlete Summary` | Writable output | Required and writable link |
 | `Submissions -> Count This Submission?` | Required formula/read-only input | Required field existence; evaluated through `isChecked()` |
-| `Submissions -> Submission Stat Mode` | Required formula/read-only input | Required field existence; evaluated text must equal `Counted` after trim/case normalization |
+| `Submissions -> Submission Stat Mode` | Required formula/read-only input | Required field existence; evaluated text must equal `Simple Total` or `Detailed Shooting` after trim/case normalization |
 | `Submissions -> Build Daily Email Now?` | Writable output | Required physical `checkbox` and writable; checked only after final validation |
 | `Enrollments -> Enrollment Key` | Required formula/read-only input | Required field existence |
 | `Enrollments -> Program Instance` | Required linked input | Required field existence |
@@ -78,7 +81,14 @@ Command run:
 
 Result:
 
-- **PASS** (`23/23`)
+- **PASS** (`25/25`)
+
+Companion Automation 076 v8.2 offline verification:
+
+- **PASS** (`6/6`)
+- Covers `Simple Total` and `Detailed Shooting`, normalization, count-zero and
+  unsupported-mode skips, deterministic replay, payload numbers, readiness
+  clearing, and the no-network contract.
 
 Covered cases:
 
@@ -95,13 +105,33 @@ Covered cases:
 11. wrong Program Instance;
 12. same athlete/week in another Program Instance;
 13. missing or ambiguous Program Instance;
-14. formula `Count This Submission?` returning `1` and formula `Submission Stat Mode` returning `Counted`;
-15. formula `Count This Submission?` returning `0` without email readiness;
-16. formula `Submission Stat Mode` returning another value without email readiness;
-17. formula readiness values with ordinary whitespace/case normalization;
-18. writable-checkbox contract, valid completion readiness, and unchanged readiness on errors before final validation.
+14. formula `Count This Submission?` returning `1` and formula `Submission Stat Mode` returning `Simple Total`;
+15. formula `Submission Stat Mode` returning `Detailed Shooting`;
+16. formula `Count This Submission?` returning `0` without email readiness;
+17. blank or unknown formula mode without email readiness;
+18. formula readiness values with ordinary whitespace/case normalization;
+19. writable-checkbox contract, valid completion readiness, and unchanged readiness on errors before final validation.
 
 ## Paste instructions
+
+Paste order is **076 v8.2 first, then 031 v3.9**. For both automations,
+`recordId` must remain dynamically mapped to the Airtable record ID from the
+triggering Submission; never permanently hardcode
+`rec58gdymfPKKeVRI`. The recommended trigger conditions are
+`Build Daily Email Now?` checked and `Count This Submission?` evaluating `1`.
+Do not configure the trigger to require `Submission Stat Mode = Counted`; if
+mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
+
+### 076 v8.2
+
+1. Open the existing Production automation slot for
+   `076 - Daily Submission Communications Hub Handoff`.
+2. Copy the script from
+   `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js`.
+3. Paste the full script body, skipping only the GitHub header comment, and save.
+4. Verify `recordId` remains dynamically mapped to the triggering Submission.
+
+### 031 v3.9
 
 1. Open the actual Airtable automation editor for `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`.
 2. Copy the script from `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`.
@@ -117,7 +147,7 @@ Covered cases:
 
 ## Controlled test procedure
 
-For Airtable's Test action after installing v3.8, `rec58gdymfPKKeVRI` may be
+For Airtable's Test action after installing v3.9, `rec58gdymfPKKeVRI` may be
 selected or supplied temporarily as the test record. After testing, verify the
 saved Production automation input remains dynamically mapped to the triggering
 Submission.
@@ -136,7 +166,7 @@ manually change formula results or intentionally alter the Submission to
 exercise negative cases.
 
 Run Airtable's Test action with that record and Mike's allowlisted email.
-Verify the formulas evaluate to count `1` and stat mode `Counted`, then verify
+Verify the formulas evaluate to count `1` and stat mode `Simple Total`, then verify
 031 checks `Build Daily Email Now?` only after final summary validation.
 
 Use Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`) and `testMode=true`

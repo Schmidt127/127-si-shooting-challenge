@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 031 v3.8 formula-readiness hotfix; no Production change) |
+| Last updated | **2026-08-12** (Automation 031 v3.9 / 076 v8.2 formula-readiness correction; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -364,12 +364,12 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
-### Dashboard reconciliation (2026-08-12 — Automation 031 v3.8 formula-readiness hotfix)
+### Dashboard reconciliation (2026-08-12 — Automation 031 v3.9 / 076 v8.2 formula-readiness correction)
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.8** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` and `Submission Stat Mode` use required-field existence plus evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. Permanent `recordId` mapping remains dynamic; `rec58gdymfPKKeVRI` is temporary manual-test-only. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
-| Focused validation | **PASS — 23/23** | 031 tests: **23/23 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. |
+| Automation **031 v3.9 / 076 v8.2** | **Built in Repository; Production replacement pending** | Both formula-backed readiness inputs use required-field existence plus evaluated-value handling; only `Simple Total` and `Detailed Shooting` are accepted; `Build Daily Email Now?` remains a writable checkbox. Permanent `recordId` mapping remains dynamic; `rec58gdymfPKKeVRI` is temporary manual-test-only. No schema/formula or Production Airtable change. Paste order is 076 v8.2 first, then 031 v3.9. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Focused validation | **PASS — 031 25/25; 076 6/6** | 031 tests: **25/25 passed**; 076 tests: **6/6 passed**; 010 tests: **9/9 passed**; 076 canonical contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. Repository ESLint remains unavailable because no `eslint.config.*` exists; broad lint is not claimed. |
 
 Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
@@ -1183,7 +1183,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **079** | Existing shared dispatcher; no code change required |
 | **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
 | **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
-| **Trigger** | Automation 031 is the sole owner that checks `Build Daily Email Now?` after counted/stat-mode validation, canonical summary linkage, eligible XP-link repair, and final summary validation; 076 consumes and clears it |
+| **Trigger** | Recommended trigger requires `Build Daily Email Now?` checked plus `Count This Submission?` evaluating `1`; 031 validates `Simple Total`/`Detailed Shooting`, final summary linkage, eligible XP-link repair, and final validation; 076 applies the same guard and consumes/clears the signal |
 | **Status** | **Repository-ready / controlled Production promotion blocked pending trigger-owner/timing verification** — no Production paste performed |
 | **Promotion** | [`docs/deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
 

@@ -29,13 +29,13 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.8
+ * Version: v3.9
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-12
  * Updated Reason: Treat both Count This Submission? and Submission Stat Mode as
- * required formula-backed readiness inputs while preserving strict writable-checkbox
- * validation for Build Daily Email Now?; arm Build Daily Email Now? only after
- * counted/stat-mode validation,
+ * required formula-backed readiness inputs; accept the authoritative Simple Total
+ * and Detailed Shooting modes while preserving strict writable-checkbox validation
+ * for Build Daily Email Now?; arm Build Daily Email Now? only after counted/stat-mode validation,
  * canonical summary resolution, eligible XP-link repair, and final summary validation.
  *
  * PURPOSE
@@ -115,7 +115,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.8",
+  version: "v3.9",
 
   tables: {
     submissions: "Submissions",
@@ -331,6 +331,10 @@ function isChecked(record, table, fieldName) {
   return ["true", "yes", "checked", "1"].includes(
     getText(record, table, fieldName).toLowerCase()
   );
+}
+
+function normalizeSubmissionStatMode(record, table, fieldName) {
+  return getText(record, table, fieldName).toLowerCase();
 }
 
 function getLinkedRecordIds(record, table, fieldName) {
@@ -874,18 +878,23 @@ async function main() {
       return;
     }
 
-    if (
-      getText(submission, submissionsTable, CONFIG.submissions.submissionStatMode).toLowerCase() !==
-      "counted"
-    ) {
+    const submissionStatMode = normalizeSubmissionStatMode(
+      submission,
+      submissionsTable,
+      CONFIG.submissions.submissionStatMode
+    );
+    if (!["simple total", "detailed shooting"].includes(submissionStatMode)) {
       setOutputSafe("ok", false);
       setOutputSafe("recordId", recordId);
-      setOutputSafe("actionTaken", "skipped_non_counted_stat_mode");
-      setOutputSafe("actionOut", "skipped_non_counted_stat_mode");
+      setOutputSafe("actionTaken", "skipped_unsupported_stat_mode");
+      setOutputSafe("actionOut", "skipped_unsupported_stat_mode");
       setOutputSafe("readinessOut", "unchanged");
       setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
       setOutputSafe("errorOut", "");
-      setOutputSafe("debugStep", "Skipped: Submission Stat Mode is not Counted");
+      setOutputSafe(
+        "debugStep",
+        "Skipped: Submission Stat Mode is blank or unsupported"
+      );
       return;
     }
 
