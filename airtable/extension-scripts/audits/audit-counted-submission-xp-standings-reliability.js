@@ -25,7 +25,12 @@ const links = (r, t, n) => Array.isArray(raw(r, t, n)) ? raw(r, t, n).map((v) =>
 const one = (r, t, n) => links(r, t, n)[0] || "";
 const yes = (r, t, n) => { const v = raw(r, t, n); return v === true || v === 1 || String(v).toLowerCase() === "true"; };
 const numberState = (r, t, n) => {
-  const v = raw(r, t, n);
+  let v = raw(r, t, n);
+  if (Array.isArray(v)) {
+    if (v.length === 0) return { kind: "blank", value: null };
+    if (v.length !== 1) return { kind: "invalid", value: null };
+    [v] = v;
+  }
   if (v === null || v === undefined || v === "") return { kind: "blank", value: null };
   const value = typeof v === "number" ? v : Number(String(v).replace(/,/g, ""));
   return Number.isFinite(value) ? { kind: "number", value } : { kind: "invalid", value: null };
