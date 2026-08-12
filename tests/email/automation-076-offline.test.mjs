@@ -35,7 +35,8 @@ function singleSelect(name, choices) {
 function build076Base(
   queueRecords = [],
   submissionCells = {},
-  includeProgramInstanceTable = true
+  includeProgramInstanceTable = true,
+  enrollmentCells = {}
 ) {
   const submissions = new MockTable(
     "Submissions",
@@ -88,6 +89,7 @@ function build076Base(
         "Current Shooting Streak": 0,
         "Current Level": "Beginner",
         "Next Level": "Rookie Shooter",
+        ...enrollmentCells,
       }),
     ]
   );
@@ -120,7 +122,7 @@ function build076Base(
       { name: "Handoff Key", type: "singleLineText" },
       singleSelect("Status", ["Draft", "Ready", "Needs Review"]),
       { name: "Source Table", type: "singleLineText" },
-      { name: "Event Type", type: "singleLineText" },
+      singleSelect("Event Type", ["DAILY_SUBMISSION"]),
       { name: "Payload JSON", type: "multilineText" },
       { name: "Attempt Count", type: "number" },
       { name: "Program Instance Record ID", type: "singleLineText" },
@@ -184,7 +186,7 @@ test("076 fails before queue creation when the required Program Instance table i
   );
 });
 
-test("076 creates one deterministic queue row and clears the readiness checkbox", async () => {
+test("076 creates one deterministic queue row from a valid cleaned parent email", async () => {
   const base = build076Base();
   const result = await run076({ base });
 
@@ -193,12 +195,34 @@ test("076 creates one deterministic queue row and clears the readiness checkbox"
   const submission = base.getTable("Submissions").records.get(SUBMISSION_ID);
   assert.equal(queue.records.size, 1);
   assert.equal(queue.records.values().next().value.cells["Handoff Key"], `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}`);
-  assert.equal(queue.records.values().next().value.cells.Status.id, "Ready");
+  assert.equal(queue.records.values().next().value.cells.Status, "Ready");
   const payload = JSON.parse(queue.records.values().next().value.cells["Payload JSON"]);
+  const recipients = JSON.parse(queue.records.values().next().value.cells["Recipients JSON"]);
   assert.equal(payload.shots, 20);
   assert.equal(payload.makes, 10);
+  assert.deepEqual(recipients, [{
+    email: "mschmidt@fairfield.k12.mt.us",
+    role: "guardian",
+    displayName: "Schmidt Test Athlete",
+  }]);
   assert.equal(submission.cells["Build Daily Email Now?"], false);
   assert.equal(result.output.values.actionOut, "created_handoff");
+});
+
+test("076 writes Event Type and Status as Airtable-compatible single-select objects", async () => {
+  const base = build076Base();
+  const queue = base.getTable("Email Handoff Queue");
+  const originalCreate = queue.createRecordAsync.bind(queue);
+  queue.createRecordAsync = async (payload) => {
+    assert.deepEqual(payload["Event Type"], { name: "DAILY_SUBMISSION" });
+    assert.deepEqual(payload.Status, { name: "Draft" });
+    return originalCreate(payload);
+  };
+
+  const result = await run076({ base });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.deepEqual(queue.updates.at(-1).fields.Status, { name: "Ready" });
 });
 
 test("076 reuses the deterministic queue row and clears the readiness checkbox on replay", async () => {
@@ -214,6 +238,57 @@ test("076 reuses the deterministic queue row and clears the readiness checkbox o
   assert.equal(base.getTable("Email Handoff Queue").records.size, 1);
   assert.equal(submission.cells["Build Daily Email Now?"], false);
   assert.equal(second.output.values.actionOut, "existing_handoff");
+});
+
+test("076 does not use raw Parent Email when the cleaned parent field is blank", async () => {
+  const base = build076Base([], {}, true, {
+    "Parent Email - Cleaned": "",
+    "Parent Email": "raw-parent@example.com",
+  });
+  const result = await run076({ base });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /cleaned parent recipient/);
+  assert.equal(base.getTable("Email Handoff Queue").records.size, 0);
+  assert.equal(
+    base.getTable("Submissions").records.get(SUBMISSION_ID).cells["Build Daily Email Now?"],
+    true
+  );
+});
+
+test("076 deduplicates identical cleaned parent and athlete emails case-insensitively", async () => {
+  const base = build076Base([], {}, true, {
+    "Parent Email - Cleaned": "Mike@Example.com",
+    "Athlete Email - Cleaned": " mike@example.com ",
+  });
+  const result = await run076({ base });
+
+  assert.equal(result.error, null, result.error?.message);
+  const recipients = JSON.parse(
+    base.getTable("Email Handoff Queue").records.values().next().value.cells["Recipients JSON"]
+  );
+  assert.deepEqual(recipients, [{
+    email: "mike@example.com",
+    role: "guardian",
+    displayName: "Schmidt Test Athlete",
+  }]);
+});
+
+test("076 rejects missing or invalid cleaned parent email before queue creation", async () => {
+  for (const parent of ["", "not-an-email", "one@example.com, two@example.com"]) {
+    const base = build076Base([], {}, true, {
+      "Parent Email - Cleaned": parent,
+    });
+    const result = await run076({ base });
+
+    assert.ok(result.error);
+    assert.match(result.error.message, /cleaned parent recipient/);
+    assert.equal(base.getTable("Email Handoff Queue").records.size, 0);
+    assert.equal(
+      base.getTable("Submissions").records.get(SUBMISSION_ID).cells["Build Daily Email Now?"],
+      true
+    );
+  }
 });
 
 test("076 accepts Detailed Shooting mode and preserves payload numbers", async () => {

@@ -2,7 +2,7 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.3
+Version: v8.5
 Date Written: 2026-05-29
 Last Updated: 2026-08-12
 
@@ -16,6 +16,8 @@ IMPORTANT DESIGN RULES
 - One Submission maps to `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}`.
 - Active XP only; missing Submission XP is represented as null plus pending status.
 - Program Instance, Enrollment, Week, Weekly Athlete Summary, and PHA ownership are fail-closed.
+- Enrollment `Parent Email - Cleaned` is the authoritative parent recipient;
+  raw `Parent Email` is never used as a fallback.
 - 077 is retired as a pending retirement candidate and is never armed by this script.
 
 INPUT
@@ -42,13 +44,13 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.3", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.5", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
   tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Sync", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
   fields: {
     sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", build: "Build Daily Email Now?", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
-    enr: { active: "Active?", program: "Program Instance", grade: "Grade Band", parent: "Parent Email - Cleaned", parentFallback: "Parent Email", athlete: "Athlete Email - Cleaned", athleteFallback: "Athlete Email", name: "Full Athlete Name", first: "Athlete First Name", streak: "Current Shooting Streak", currentLevel: "Current Level", nextLevel: "Next Level" },
+    enr: { active: "Active?", program: "Program Instance", grade: "Grade Band", parent: "Parent Email - Cleaned", athlete: "Athlete Email - Cleaned", name: "Full Athlete Name", first: "Athlete First Name", streak: "Current Shooting Streak", currentLevel: "Current Level", nextLevel: "Next Level" },
     was: { enrollment: "Enrollment", week: "Week", hcs: "Homework Completions Link", xps: "XP Events", shots: "Total Shots This Week", goal: "Weekly Goal Shots Target", weekName: "Week - Display" },
     week: { name: "Week Name", start: "Start Date", end: "End Date", program: "Program Instance" },
     pi: { name: "Name - Program Instance" },
@@ -73,11 +75,13 @@ const one = (values, label) => { if (values.length !== 1) throw new Error(`${lab
 const same = (left, right) => left.length === right.length && left.every((value) => right.includes(value));
 const first = (...values) => values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
 const cleanEmail = (value) => String(value || "").trim().toLowerCase();
+const validEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+const recipientEmail = (r, t, name) => { const email = cleanEmail(text(r, t, name)); return validEmail(email) ? email : ""; };
 const dateText = (value) => { const date = value instanceof Date ? value : new Date(value); return !value || Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric", year: "numeric" }).format(date); };
 const pct = (value, target) => Number(target) > 0 ? Math.round((Number(value) / Number(target)) * 100) : 0;
 const setOutput = (name, value) => { try { output.set(name, value); } catch {} };
 const debug = (value) => setOutput("debugStep", value);
-const selectValue = (t, name, value) => { const field = t.getField(name); if (field.type !== "singleSelect") return value; const choice = field.options.choices.find((item) => item.name.toLowerCase() === value.toLowerCase()); if (!choice) throw new Error(`Missing option ${value} on ${t.name}.${name}`); return { id: choice.id }; };
+const selectValue = (t, name, value) => { const field = t.getField(name); if (field.type !== "singleSelect") return value; const choice = field.options.choices.find((item) => item.name.toLowerCase() === value.toLowerCase()); if (!choice) throw new Error(`Missing option ${value} on ${t.name}.${name}`); return { name: choice.name }; };
 const formula = (field, value) => `{${field}}='${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
 const load = (t, fields) => t.selectRecordsAsync({ fields: fields.filter((name) => exists(t, name)) });
 const slot = (value) => String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -129,10 +133,14 @@ async function main() {
   const currQuery = phaRows.length ? null : await load(currT, Object.values(CONFIG.fields.curr));
   const legacyAssignments = currQuery ? currQuery.records.filter((row) => same(ids(row, currT, CONFIG.fields.curr.week), [weekId]) && (!exists(currT, CONFIG.fields.curr.active) || bool(row, currT, CONFIG.fields.curr.active)) && (!gradeId || !ids(row, currT, CONFIG.fields.curr.grade).length || ids(row, currT, CONFIG.fields.curr.grade).includes(gradeId))).sort((a, b) => num(a, currT, CONFIG.fields.curr.order, 9999) - num(b, currT, CONFIG.fields.curr.order, 9999)).slice(0, 2).map((row, index) => `HW${index + 1}: ${first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name)}`) : [];
   const assignments = [...homeworkAssignments, ...legacyAssignments];
-  const parent = cleanEmail(first(text(enrollment, enrT, CONFIG.fields.enr.parent), text(enrollment, enrT, CONFIG.fields.enr.parentFallback)));
-  const athlete = cleanEmail(first(text(enrollment, enrT, CONFIG.fields.enr.athlete), text(enrollment, enrT, CONFIG.fields.enr.athleteFallback)));
-  const recipients = [...new Map([[parent, { email: parent, role: "guardian", displayName: text(enrollment, enrT, CONFIG.fields.enr.name) }], [athlete, { email: athlete, role: "athlete", displayName: text(enrollment, enrT, CONFIG.fields.enr.name) }]].filter(([email]) => email).map(([email, value]) => [email, value])).values()];
-  if (!recipients.some((recipient) => recipient.role === "guardian")) throw new Error("No usable parent recipient.");
+  const parent = recipientEmail(enrollment, enrT, CONFIG.fields.enr.parent);
+  const athlete = recipientEmail(enrollment, enrT, CONFIG.fields.enr.athlete);
+  const displayName = text(enrollment, enrT, CONFIG.fields.enr.name);
+  const recipients = [];
+  for (const [email, role] of [[parent, "guardian"], [athlete, "athlete"]]) {
+    if (email && !recipients.some((recipient) => recipient.email === email)) recipients.push({ email, role, displayName });
+  }
+  if (!parent) throw new Error("No usable cleaned parent recipient.");
   const payload = {
     athleteName: first(text(enrollment, enrT, CONFIG.fields.enr.name), "Athlete"),
     activityDate: dateText(raw(sub, subT, CONFIG.fields.sub.activity)),
@@ -149,7 +157,7 @@ async function main() {
   if (payload.makes > payload.shots) throw new Error("Total Makes Counted cannot exceed Total Shots Counted.");
   const queueData = queueFields(queueT, {
     [CONFIG.fields.queue.key]: handoffKey, [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
-    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: "DAILY_SUBMISSION", [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: selectValue(queueT, CONFIG.fields.queue.eventType, "DAILY_SUBMISSION"), [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
     [CONFIG.fields.queue.source]: recordId, [CONFIG.fields.queue.enrollment]: enrollmentId, [CONFIG.fields.queue.pi]: programId,
     [CONFIG.fields.queue.recipients]: JSON.stringify(recipients), [CONFIG.fields.queue.payload]: JSON.stringify(payload),
     [CONFIG.fields.queue.testMode]: cfg.testMode === undefined ? true : Boolean(cfg.testMode), [CONFIG.fields.queue.attempts]: 0,

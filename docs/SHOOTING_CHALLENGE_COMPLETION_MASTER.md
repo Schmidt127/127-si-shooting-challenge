@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 076 v8.3 Production table-name hotfix; no Production change) |
+| Last updated | **2026-08-12** (Automation 076 v8.5 single-select write hotfix; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -364,12 +364,12 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
-### Dashboard reconciliation (2026-08-12 — Automation 076 v8.3 table-name hotfix)
+### Dashboard reconciliation (2026-08-12 — Automation 076 v8.5 single-select write hotfix)
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v4.0 / 076 v8.3** | **Built in Repository; Production replacement pending** | 031 remains the approved authoritative normal-athlete-activity WAS creator. 076 v8.3 changes only its configured Program Instance table to the verified Production table `Program Instance - Sync`; the Submission field `Program Instance - Synced` remains unchanged. Queue behavior, readiness guards, dynamic `recordId`, and deterministic replay remain intact. `rec58gdymfPKKeVRI` is temporary manual-test-only. Paste order is 076 v8.3 first, then 031 v4.0. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
-| Focused validation | **PASS — 031 28/28; 076 v8.3 focused suite; 010 9/9** | 031 tests: **28/28 passed**; 076 focused tests cover exact table naming, missing-table fail-closed behavior, Simple Total queue creation, and deterministic replay; 010 tests: **9/9 passed**; 076 canonical contracts passed; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. Repository ESLint remains unavailable because no `eslint.config.*` exists; broad lint is not claimed. |
+| Automation **031 v4.0 / 076 v8.5** | **Built in Repository; Production replacement pending** | 031 remains the approved authoritative normal-athlete-activity WAS creator. 076 v8.5 retains the v8.4 cleaned-recipient correction and writes queue `Event Type` and `Status` single-selects using Airtable-compatible `{ name: ... }` objects. The verified `Program Instance - Sync` table, queue behavior, readiness guards, dynamic `recordId`, and deterministic replay remain intact. `rec58gdymfPKKeVRI` is temporary manual-test-only. Paste order is 076 v8.5 first, then 031 v4.0. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Focused validation | **PASS — 031 28/28; 076 v8.5 focused suite; 010 9/9** | 031 tests: **28/28 passed**; 076 focused tests cover cleaned-parent success, raw-parent rejection, recipient deduplication, invalid/missing parent fail-closed behavior, Airtable-compatible single-select writes, and deterministic replay; 010 tests: **9/9 passed**; 076 canonical contracts passed; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. Repository ESLint remains unavailable because no `eslint.config.*` exists; broad lint is not claimed. |
 
 Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
@@ -1184,7 +1184,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
 | **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
 | **Trigger** | Recommended trigger requires `Build Daily Email Now?` checked plus `Count This Submission?` evaluating `1`; 031 validates `Simple Total`/`Detailed Shooting`, final summary linkage, eligible XP-link repair, and final validation; 076 applies the same guard and consumes/clears the signal |
-| **Status** | **Repository-ready / controlled Production promotion blocked pending trigger-owner/timing verification** — 076 v8.3 table-name correction complete; no Production paste performed |
+| **Status** | **Repository-ready / controlled Production promotion blocked pending trigger-owner/timing verification** — 076 v8.5 single-select write correction complete; no Production paste performed |
 | **Promotion** | [`docs/deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
 
 ### 9N. GitHub Issue #116 full audit — **2026-08-08**
