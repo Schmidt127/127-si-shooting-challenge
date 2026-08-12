@@ -48,6 +48,7 @@ Run stages **A → J** in order when doing a full historical repair pass.
 |--------|--------|--------|
 | `audit-submission-pipeline-integrity.js` | Counted submissions: Enrollment, Week, WAS, XP, assets, homework/video links | **Ready** |
 | `audit-xp-vs-submissions.js` | Submission ↔ XP Event parity, Source Key, duplicates | **Ready** |
+| `audit-counted-submission-xp-standings-reliability.js` | Counted Submission → Submission Base XP → canonical WAS → lifetime XP → progression/standings inputs; classifies zero goals without collapsing missing, blank lookup, configured zero, and formula settlement | **Ready** |
 | `audit-field-coverage-report.js` | Fill % on canonical fields per table profile (v1.1: video + achievement profiles) | **Ready** |
 | `audit-xp-linkage-coverage.js` | XP Events classified by source type and link completeness | **Ready** |
 | `audit-orphan-xp-events.js` | XP Events missing Weekly Athlete Summary link (v1.1 samples) | **Ready** |
