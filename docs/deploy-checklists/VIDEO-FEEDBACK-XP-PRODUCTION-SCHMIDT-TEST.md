@@ -1,9 +1,9 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
-**Status:** Draft — repository readiness only; Production evidence pending  
-**Scope:** `013 → 111 (when Grade Band is blank) → 113 → 114 → rollups → 041 → 042`  
-**Production base:** `appn84sqPw03zEbTT`  
-**Owner/executor:** Mike only. Mike alone pastes scripts, changes native Production automations, or initiates this test.  
+**Status:** Draft — repository readiness only; Production evidence pending
+**Scope:** `013 → 111 (when Grade Band is blank) → 113 → 114 → rollups → 041 → 042`
+**Production base:** `appn84sqPw03zEbTT`
+**Owner/executor:** Mike only. Mike alone pastes scripts, changes native Production automations, or initiates this test.
 **Safety boundary:** This packet does not authorize schema, data, view, trigger, deployment, Make, Gmail, or email-queue changes by an agent.
 
 ## Evidence labels
