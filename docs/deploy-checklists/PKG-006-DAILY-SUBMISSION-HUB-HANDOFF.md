@@ -4,11 +4,16 @@ Status: **Repository-ready / promotion pending**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
 
-## DEV-first order
+## Controlled Production promotion order
 
-1. Mike pastes committed Automation 076 v8.0 into the DEV Airtable
-   `Submissions` automation slot. Do not create a new numbered automation.
-2. Trigger recommendation: use the existing `Submissions.Build Daily Email Now?`
+Production Airtable is the only Airtable environment for this integration.
+Do not require a DEV paste or claim DEV evidence.
+
+1. Mike pastes the exact committed Automation 076 v8.1 source into the
+   existing Production `Submissions` automation slot. Do not create a new
+   numbered automation or schema field.
+2. Trigger recommendation: use the existing Production
+   `Submissions.Build Daily Email Now?`
    checkbox as the final source signal, with `Count This Submission?` checked and
    `Submission Stat Mode` equal to `Counted` as supporting guards. Repository
    evidence does **not** identify an automation in the 023 → 005 → 007 → 010 →
@@ -17,8 +22,9 @@ Production change: **Not applied by Cursor**
    owner and that it fires only after Enrollment, Week, duplicate review,
    counted totals, and the 010/031 downstream processing have settled.
    Until that is verified, permanent 076 enablement is blocked.
-3. Run one Schmidt-only, allowlisted DEV Submission through the completed intake
-   path. Verify exactly one `Email Handoff Queue` row:
+3. Run one controlled Production test using a Schmidt test Submission and
+   Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`), with `testMode=true`.
+   Verify exactly one `Email Handoff Queue` row:
    - `Handoff Key` = `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}`
    - `Status` = `Ready`
    - `Event Type` / `Template Key` = `DAILY_SUBMISSION`
@@ -26,8 +32,8 @@ Production change: **Not applied by Cursor**
    - `Recipients JSON` and `Payload JSON` parse successfully
    - `Attempt Count` = `0`
    - `Build Daily Email Now?` is cleared after create or existing-row reuse
-4. Allow the existing Automation 079 dispatcher to process the row. Do not
-   modify 079, enable 077, call Make, or call the Hub from 076.
+4. Allow the existing Production Automation 079 dispatcher to process the row.
+   Do not modify 079, enable 077, call Make, or call the Hub from 076.
 5. In Communications Hub, verify one Hub Event, one `Sent` Delivery, one Resend
    provider id, and one attempt. Queue `Accepted` alone is intake evidence, not
    delivery proof.
@@ -37,18 +43,7 @@ Production change: **Not applied by Cursor**
    conflict/Needs Review without mutating existing records or sending again.
 7. Provider failure retries the existing Delivery and creates a Delivery Attempt;
    it does not replay the source Event or create another Message/Delivery.
-
-## Production promotion order (Mike-owned)
-
-1. Confirm Communications PR is merged and the Hub `DAILY_SUBMISSION` contract
-   is deployed and independently reviewed.
-2. Confirm the DEV 076 run and Hub Delivery proof above.
-3. Confirm Automation 077 remains OFF/unused and Make/Gmail are not in the path.
-4. Mike pastes the exact committed 076 v8.1 source into the existing Production
-   076 slot. Do not create an automation or schema field.
-5. Run one controlled Schmidt Production test with `Test Mode?` checked and an
-   allowlisted recipient only.
-6. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
+8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
    consider 077 a retirement candidate; it is not retired by this PR.
 
 ## Rollback
@@ -62,10 +57,10 @@ Production change: **Not applied by Cursor**
   076 stages a new row as `Draft`, rechecks exact-key matches, marks concurrent
   matches `Needs Review`, and only then promotes the single row to `Ready`.
   This reduces the dispatch race but does not eliminate a narrow simultaneous
-  execution window; no production concurrency-safety claim is made until the
-  queue/079 behavior is proven in DEV.
-- Restore the prior committed 076 source only through the normal DEV-first
-  review path.
+  execution window; no concurrency-safety claim is made until the
+  Production queue/079 behavior is proven.
+- Restore the prior committed 076 source only through the normal Production
+  review and controlled-test path.
 
 ## Schema decision
 
