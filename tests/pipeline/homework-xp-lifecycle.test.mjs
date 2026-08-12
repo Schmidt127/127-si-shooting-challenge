@@ -186,7 +186,7 @@ test("formula-backed trigger schema propagates linked state without polling", ()
   assert.match(d, /When record matches conditions/);
   assert.match(d, /Item Slot.*canonical assignment identity/);
   assert.match(d, /No view, scheduled polling, or new automation slot/);
-  assert.match(d, /consistency checks inside one 065 execution/);
+  assert.match(d, /inside one 065 execution are short consistency checks/);
   assert.match(d, /initialize-homework-xp-reconciliation-signatures/);
 });
 test("065 settles post-write formula state before acknowledgement", () => {
