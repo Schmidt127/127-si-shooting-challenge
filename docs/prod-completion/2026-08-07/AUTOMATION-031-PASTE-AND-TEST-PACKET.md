@@ -1,11 +1,11 @@
-# Automation 031 Paste and Test Packet — v4.0 / 076 v8.2 — 2026-08-12
+# Automation 031 Paste and Test Packet — v4.0 / 076 v8.3 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
 - `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v4.0
-- `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.2
+- `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.3
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -25,7 +25,7 @@ This packet documents repository repair status only.
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
 - Repository version in this package: `v4.0`
-- Companion handoff version: `076 v8.2`
+- Companion handoff version: `076 v8.3`
 
 ## Repository repair completed
 
@@ -84,9 +84,9 @@ Result:
 
 - **PASS** (`28/28`)
 
-Companion Automation 076 v8.2 offline verification:
+Companion Automation 076 v8.3 offline verification:
 
-- **PASS** (`6/6`)
+- **PASS** (`8/8`)
 - Covers `Simple Total` and `Detailed Shooting`, normalization, count-zero and
   unsupported-mode skips, deterministic replay, payload numbers, readiness
   clearing, and the no-network contract.
@@ -116,7 +116,7 @@ Covered cases:
 
 ## Paste instructions
 
-Paste order is **076 v8.2 first, then 031 v4.0**. For both automations,
+Paste order is **076 v8.3 first, then 031 v4.0**. For both automations,
 `recordId` must remain dynamically mapped to the Airtable record ID from the
 triggering Submission; never permanently hardcode
 `rec58gdymfPKKeVRI`. The recommended trigger conditions are
@@ -124,7 +124,7 @@ triggering Submission; never permanently hardcode
 Do not configure the trigger to require `Submission Stat Mode = Counted`; if
 mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
 
-### 076 v8.2
+### 076 v8.3
 
 1. Open the existing Production automation slot for
    `076 - Daily Submission Communications Hub Handoff`.
