@@ -96,7 +96,8 @@ Submission
   -> 010 create/repair shooting XP
   -> 031 find/create Weekly Athlete Summary
   -> 030/032/033/034 complete weekly-summary context
-  -> 041/042/043 recalculate level and gate state
+  -> 041 queues recalculation
+  -> 042 exclusively assigns Current Level, Next Level, Level Gate Rule, and Level Status
   -> 053/054/055/056 rebuild or award streak participation
   -> 066/058/059 create milestone or Perfect Week achievement XP
 ```
@@ -129,7 +130,8 @@ Progression is then consumed through:
 
 - Enrollment rollups/formulas for Lifetime XP, shots, makes, percentages, streaks, and level state;
 - Weekly Athlete Summary fields for weekly shots, days logged, XP, goal percentage, homework, and Perfect Week;
-- Automation 042 level and gate assignment, with 043 gate-rule linkage;
+- Automation 041 queues recalculation, and Automation 042 exclusively assigns `Current Level`, `Next Level`, `Level Gate Rule`, and `Level Status`;
+- Automation 043 is retired and not deployed. It must not be recreated; Automation 042 owns the `Level Gate Rule` assignment;
 - 053–059 and 066 for streak, Perfect Week, and shot-milestone participation;
 - homework/video/Zoom XP paths where their independent eligibility and review rules are satisfied.
 
