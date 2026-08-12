@@ -1,7 +1,7 @@
 # PKG-006 — Daily Submission Communications Hub promotion
 
-Status: **Repository-ready / promotion pending**  
-Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration  
+Status: **Repository-ready / promotion pending**
+Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
 
 ## DEV-first order
