@@ -186,6 +186,21 @@ async function main() {
       (x) =>
         text(x, xpT, C.x.key) === key || ids(x, xpT, C.x.hc).includes(h.id),
     );
+    if (!canonical.length)
+      issues.push({
+        type: "zero_canonical_was",
+        homeworkCompletionId: h.id,
+        enrollmentId: enr[0] || "",
+        weekId: week[0] || "",
+      });
+    else if (canonical.length > 1)
+      issues.push({
+        type: "multiple_canonical_was_candidates",
+        homeworkCompletionId: h.id,
+        enrollmentId: enr[0] || "",
+        weekId: week[0] || "",
+        weeklySummaryIds: canonical,
+      });
     if (exact.length !== 1 && eligible)
       issues.push({
         type: exact.length ? "duplicate_exact_event" : "missing_exact_event",
@@ -209,8 +224,10 @@ async function main() {
       const xs = ids(x, xpT, C.x.sub);
       if (xs.length !== 1 || !subs.includes(xs[0])) p.push("Submission");
       const ws = ids(x, xpT, C.x.was);
-      if (canonical.length !== 1 || ws.length !== 1 || ws[0] !== canonical[0])
-        p.push("Weekly Athlete Summary");
+      if (!ws.length) p.push("blank event WAS");
+      else if (ws.length > 1) p.push("multiple event WAS links");
+      else if (canonical.length === 1 && ws[0] !== canonical[0])
+        p.push("wrong event WAS");
       if (num(x, xpT, C.x.points) !== total) p.push("XP Points");
       if (text(x, xpT, C.x.source) !== "Homework Completion")
         p.push("XP Source");

@@ -6,6 +6,8 @@
  * One Homework Completion = one HOMEWORK_XP|<Homework Completion ID> XP Event.
  * Creates, replays, repairs, deactivates, or reactivates that exact canonical row.
  * Validates PHA-first identity when Program Homework Assignment exists.
+ * Requires exactly one canonical Weekly Athlete Summary before any positive award or reactivation.
+ * Ineligible corrections deactivate an owned event without requiring a Weekly Athlete Summary.
  *
  * TRIGGER: Homework XP Reconciliation Needed? = 1. The formula compares the current
  * local/linked eligibility signature with Last Homework XP Reconciled Signature.
@@ -225,24 +227,33 @@ function assertOwned(x, c) {
   if (num(x, xpT, C.x.points) !== c.total)
     throw new Error(`XP Event ${x.id} points mismatch.`);
 }
-async function canonicalWas(enr, week) {
+async function canonicalWasCandidates(enr, week) {
   const q = await wasT.selectRecordsAsync({ fields: [C.w.enr, C.w.week] });
-  const m = q.records.filter(
+  return q.records.filter(
     (r) =>
       same(ids(r, wasT, C.w.enr), [enr]) &&
       same(ids(r, wasT, C.w.week), [week]),
   );
-  if (m.length > 1)
+}
+async function requireCanonicalWas(enr, week) {
+  const candidates = await canonicalWasCandidates(enr, week);
+  if (!candidates.length)
     throw new Error(
-      `Multiple canonical Weekly Athlete Summaries: ${m.map((x) => x.id).join(", ")}`,
+      `No canonical Weekly Athlete Summary exists for Enrollment ${enr} + Week ${week}; positive Homework XP is blocked.`,
     );
-  return m[0]?.id || "";
+  if (candidates.length !== 1)
+    throw new Error(
+      `Multiple canonical Weekly Athlete Summaries for Enrollment ${enr} + Week ${week}; Needs Review: ${candidates.map((x) => x.id).join(", ")}`,
+    );
+  return candidates[0].id;
 }
 async function pause(ms) {
   if (typeof setTimeout !== "function") return;
   await new Promise((resolve) => setTimeout(resolve, ms));
 }
 async function settleAndAcknowledge(id, xpId, expectedActive) {
+  // These bounded re-reads only wait for Airtable's formula consistency inside
+  // this invocation. They are not scheduled polling or another automation slot.
   let settled = "";
   for (let attempt = 1; attempt <= 10; attempt += 1) {
     const fresh = await hcT.selectRecordAsync(id);
@@ -420,12 +431,9 @@ async function main() {
     throw new Error(
       `New Homework XP requires exactly one canonical Submission; found ${subs.length}.`,
     );
-  const was = await canonicalWas(enrs[0], weeks[0]);
+  const was = await requireCanonicalWas(enrs[0], weeks[0]);
   if (xp) {
     assertOwned(xp, ctx);
-    const ws = ids(xp, xpT, C.x.was);
-    if (!was && ws.length)
-      throw new Error(`XP Event links WAS but no unique canonical WAS exists.`);
   }
   const payload = {
     [C.x.enr]: link(enrs),
@@ -441,7 +449,7 @@ async function main() {
     [C.x.reason]: "Homework completed.",
     [C.x.debug]: `Canonical Homework XP ${k}`,
   };
-  if (was) payload[C.x.was] = link([was]);
+  payload[C.x.was] = link([was]);
   step = "last-chance recheck";
   q = await xpT.selectRecordsAsync({
     fields: [

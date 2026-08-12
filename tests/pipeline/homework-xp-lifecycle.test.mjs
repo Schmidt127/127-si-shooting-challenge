@@ -34,11 +34,16 @@ function state() {
       event: "",
     },
     events: [],
-    was: "recWAS0000000001",
+    wasCandidates: ["recWAS0000000001"],
     lifetime: 0,
   };
 }
 const key = (h) => `HOMEWORK_XP|${h.id}`;
+function requireCanonicalWas(s) {
+  if (!s.wasCandidates.length) throw Error("zero canonical WAS");
+  if (s.wasCandidates.length !== 1) throw Error("multiple canonical WAS");
+  return s.wasCandidates[0];
+}
 function run(s) {
   const h = s.hc,
     e = s.events.filter((x) => x.key === key(h) || x.hc === h.id);
@@ -66,6 +71,7 @@ function run(s) {
   }
   if (!h.enr || !h.week || !h.subs.length) throw Error("links");
   if (h.subs.length > 1 && !e[0]) throw Error("canonical Submission");
+  const was = requireCanonicalWas(s);
   let x = e[0];
   if (!x) {
     x = {
@@ -75,7 +81,7 @@ function run(s) {
       enr: h.enr,
       week: h.week,
       sub: h.subs[0],
-      was: s.was,
+      was,
       points: h.xp,
       active: true,
     };
@@ -89,7 +95,7 @@ function run(s) {
       x.points !== h.xp
     )
       throw Error("ownership");
-    Object.assign(x, { was: s.was, active: true });
+    Object.assign(x, { was, active: true });
   }
   h.event = x.id;
   s.lifetime = s.events
@@ -154,6 +160,11 @@ test("authoritative audit is read-only and checks full ownership", () => {
     "Program Homework Assignments",
     "inactive_or_invalid_enrollment_pha",
     "reconciliation_signature_formula_mismatch",
+    "zero_canonical_was",
+    "multiple_canonical_was_candidates",
+    "blank event WAS",
+    "wrong event WAS",
+    "multiple event WAS links",
   ])
     assert.match(a, new RegExp(x));
   assert.doesNotMatch(a, /updateRecord|createRecord|deleteRecord/);
@@ -174,7 +185,8 @@ test("formula-backed trigger schema propagates linked state without polling", ()
     assert.match(d, new RegExp(field.replace("?", "\\?")));
   assert.match(d, /When record matches conditions/);
   assert.match(d, /Item Slot.*canonical assignment identity/);
-  assert.match(d, /No view, polling, or new automation slot/);
+  assert.match(d, /No view, scheduled polling, or new automation slot/);
+  assert.match(d, /consistency checks inside one 065 execution/);
   assert.match(d, /initialize-homework-xp-reconciliation-signatures/);
 });
 test("065 settles post-write formula state before acknowledgement", () => {
@@ -224,6 +236,18 @@ test("eligible completion creates one event and totals", () => {
   assert.equal(run(s), "created");
   assert.equal(s.events.length, 1);
   assert.equal(s.lifetime, 35);
+});
+test("eligible new award with zero canonical WAS fails without XP creation", () => {
+  const s = state();
+  s.wasCandidates = [];
+  assert.throws(() => run(s), /zero canonical WAS/);
+  assert.equal(s.events.length, 0);
+});
+test("eligible new award with multiple canonical WAS records fails", () => {
+  const s = state();
+  s.wasCandidates.push("recWAS0000000002");
+  assert.throws(() => run(s), /multiple canonical WAS/);
+  assert.equal(s.events.length, 0);
 });
 test("replay reuses", () => {
   const s = state();
@@ -323,10 +347,42 @@ test("existing award may retain one owned resubmission", () => {
 test("WAS repair preserves same event", () => {
   const s = state();
   run(s);
+  const id = s.events[0].id;
   s.events[0].was = "";
   run(s);
-  assert.equal(s.events[0].was, s.was);
+  assert.equal(s.events[0].was, s.wasCandidates[0]);
+  assert.equal(s.events[0].id, id);
+  s.events[0].was = "recWrongWAS000001";
+  run(s);
+  assert.equal(s.events[0].was, s.wasCandidates[0]);
   assert.equal(s.events.length, 1);
+});
+test("ineligible correction deactivates even when canonical WAS is missing or ambiguous", () => {
+  const s = state();
+  run(s);
+  s.hc.sat = false;
+  s.wasCandidates = [];
+  assert.equal(run(s), "deactivated");
+  assert.equal(s.events[0].active, false);
+  s.wasCandidates = ["recWAS0000000001", "recWAS0000000002"];
+  assert.equal(run(s), "deactivated");
+  assert.equal(s.events[0].active, false);
+});
+test("restoration remains blocked until exactly one canonical WAS exists", () => {
+  const s = state();
+  run(s);
+  const id = s.events[0].id;
+  s.hc.sat = false;
+  run(s);
+  s.hc.sat = true;
+  s.wasCandidates = [];
+  assert.throws(() => run(s), /zero canonical WAS/);
+  s.wasCandidates = ["recWAS0000000001", "recWAS0000000002"];
+  assert.throws(() => run(s), /multiple canonical WAS/);
+  s.wasCandidates = ["recWAS0000000001"];
+  assert.equal(run(s), "updated");
+  assert.equal(s.events[0].id, id);
+  assert.equal(s.events[0].active, true);
 });
 test("duplicate exact events fail", () => {
   const s = state();

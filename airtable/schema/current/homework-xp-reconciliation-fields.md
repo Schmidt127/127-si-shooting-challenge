@@ -44,11 +44,13 @@ Nine fields are the minimum honest package: three source formulas expose linked 
 
 ## Trigger and behavior
 
-Automation 065 uses `When record matches conditions` on Homework Completions: `Homework XP Reconciliation Needed? = 1`. Input `recordId` is the triggering record's Airtable record ID. No view, polling, or new automation slot is required.
+Automation 065 uses `When record matches conditions` on Homework Completions: `Homework XP Reconciliation Needed? = 1`. Input `recordId` is the triggering record's Airtable record ID. No view, scheduled polling, or new automation slot is required. The bounded formula rereads inside one 065 execution are short consistency checks after writes, not scheduled polling and not another automation.
 
 For Production installation, keep 065 OFF while creating fields. Run the authoritative audit and resolve every ownership/duplicate/active-state issue. Then run `initialize-homework-xp-reconciliation-signatures.js` dry, review its candidate IDs, explicitly set `CONFIRM_WRITE = true`, run once, and restore it to false. Require every existing row to evaluate Needed = 0 before enabling 065. This prevents field creation from treating all historical rows as new work and does not disguise known audit failures.
 
-065 validates exact identity from actual links, not signature text. After changing the XP Event and HC business fields, it performs a bounded short reload loop until the current signature proves the expected active/inactive XP state, acknowledges that fresh value, and verifies Needed returns to 0 in the same run. If Airtable formulas do not settle within the bound, it throws without acknowledging and leaves Needed = 1 for operator review. Ownership/duplicate/schema errors are likewise never acknowledged.
+065 validates exact identity from actual links, not signature text. Before any create, repair, or reactivation, it requires exactly one canonical Weekly Athlete Summary for the exact Enrollment + Week. Zero or multiple candidates block positive XP and leave reconciliation unacknowledged; multiple candidates are reported with their record IDs. An ineligible correction still deactivates an exact owned event even when WAS is missing or ambiguous. When exactly one canonical WAS exists, a blank or wrong event WAS is repaired on that same event ID.
+
+After changing the XP Event and HC business fields, 065 performs a bounded short reload loop until the current signature proves the expected active/inactive XP state, acknowledges that fresh value, and verifies Needed returns to 0 in the same run. If Airtable formulas do not settle within the bound, it preserves the event and run evidence, throws without acknowledging, and leaves Needed = 1. Mike should wait briefly for formula settlement and manually rerun the same Homework Completion through 065 once. Ownership/duplicate/schema errors are likewise never acknowledged.
 
 If formula settlement times out, preserve the run output and records, wait for Airtable formulas to finish, then manually rerun that same Homework Completion through 065 once. Do not edit Last Reconciled Signature manually and do not create a replacement XP Event.
 
@@ -56,11 +58,12 @@ If formula settlement times out, preserve the run output and records, wait for A
 
 | Current state | Existing canonical event | Needed | 065 result |
 |---|---:|---:|---|
-| Eligible, valid ownership | none | 1 | Create once, acknowledge |
-| Eligible, valid ownership | inactive | 1 | Reactivate same ID, acknowledge |
-| Eligible, already correct | active | 1 after any source change | Replay/repair, acknowledge |
+| Eligible, exactly one canonical WAS, valid ownership | none | 1 | Create once, acknowledge |
+| Eligible, exactly one canonical WAS, valid ownership | inactive | 1 | Reactivate same ID, acknowledge |
+| Eligible, exactly one canonical WAS, active | 1 after any source change | Replay/repair same event, acknowledge |
 | Review withdrawn | active | 1 | Deactivate same ID, acknowledge |
 | Enrollment/PHA inactive or mismatched | active | 1 | Validate event ownership, deactivate same ID, acknowledge |
+| Eligible, zero or multiple canonical WAS | any | 1 | Block positive award/reactivation; do not acknowledge |
 | Enrollment/PHA invalid | none | 1 | Fail closed; do not acknowledge |
 | Duplicate/stolen event | any | 1 | Fail closed; do not acknowledge |
 | Current signature equals last reconciled | any | 0 | Automation does not run |

@@ -276,7 +276,8 @@ test("067 retry links a deferred completion after the canonical summary appears"
 
 test("067 keeps XP ownership outside the reflection bridge", () => {
   assert.doesNotMatch(source, /xpEvents\s*:/);
-  assert.match(source, /Never creates \/ modifies XP Events/);
+  assert.doesNotMatch(source, /["']XP Events["']/);
+  assert.doesNotMatch(source, /HOMEWORK_XP\|/);
 });
 
 (async () => {
