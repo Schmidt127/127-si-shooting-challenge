@@ -24,6 +24,7 @@ const SCRIPT_PATH = path.resolve(
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 const WELCOME_QUEUE_ID = "recWelcome07900001";
 const DAILY_QUEUE_ID = "recaZyyMx9Tf6zzNU";
+const FUTURE_QUEUE_ID = "recFuture07900001";
 const SUBMISSION_ID = "rec58gdymfPKKeVRI";
 
 function singleSelect(name, choices) {
@@ -43,6 +44,8 @@ function buildQueueRecord({
   sourceRecordId,
   recipients,
   payload,
+  enrollmentRecordId = "recEnrollment079001",
+  programInstanceRecordId = "recProgram0790001",
 }) {
   return new MockRecord(id, {
     Status: { name: "Ready" },
@@ -50,8 +53,8 @@ function buildQueueRecord({
     "Handoff Key": handoffKey,
     "Source Table": sourceTable,
     "Source Record ID": sourceRecordId,
-    "Enrollment Record ID": "recEnrollment079001",
-    "Program Instance Record ID": "recProgram0790001",
+    "Enrollment Record ID": enrollmentRecordId,
+    "Program Instance Record ID": programInstanceRecordId,
     "Recipients JSON": JSON.stringify(recipients),
     "Template Key": templateKey,
     "Payload JSON": JSON.stringify(payload),
@@ -70,7 +73,7 @@ function build079Base(record) {
     "Email Handoff Queue",
     [
       singleSelect("Status", ["Ready", "Sending", "Accepted", "Failed", "Needs Review"]),
-      singleSelect("Event Type", ["WELCOME", "DAILY_SUBMISSION"]),
+      singleSelect("Event Type", ["WELCOME", "DAILY_SUBMISSION", "HOMEWORK_FEEDBACK"]),
       { name: "Handoff Key", type: "singleLineText" },
       { name: "Source Table", type: "singleLineText" },
       { name: "Source Record ID", type: "singleLineText" },
@@ -122,6 +125,22 @@ function dailyRecord(overrides = {}) {
   });
 }
 
+function futureRecord(overrides = {}) {
+  return buildQueueRecord({
+    id: FUTURE_QUEUE_ID,
+    eventType: "HOMEWORK_FEEDBACK",
+    templateKey: "HOMEWORK_FEEDBACK_V1",
+    handoffKey: "HOMEWORK_FEEDBACK|HOMEWORK_COMPLETIONS|recHomework0790001",
+    sourceTable: "Homework Completions",
+    sourceRecordId: "recHomework0790001",
+    enrollmentRecordId: "",
+    programInstanceRecordId: "",
+    recipients: [{ email: "parent@example.com", role: "guardian", displayName: "Parent" }],
+    payload: { reviewStatus: "Approved", xpAwarded: 25 },
+    ...overrides,
+  });
+}
+
 function acceptedResponse({ duplicate = false } = {}) {
   return {
     ok: true,
@@ -165,6 +184,17 @@ test("079 dispatches an existing WELCOME row and accepts replay without duplicat
   assert.equal(second.output.values.actionOut, "skipped_not_ready");
 });
 
+test("079 preserves compatibility for a legacy WELCOME-prefixed handoff key", async () => {
+  const record = welcomeRecord();
+  record.cells["Handoff Key"] = "WELCOME|recEnrollment079001";
+  const result = await run079({ record });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].handoffKey, "WELCOME|recEnrollment079001");
+  assert.equal(result.queue.records.get(WELCOME_QUEUE_ID).cells.Status, "Accepted");
+});
+
 test("079 dispatches DAILY_SUBMISSION using stored event, recipients, payload, and source IDs", async () => {
   const record = dailyRecord();
   const result = await run079({ record });
@@ -186,15 +216,31 @@ test("079 dispatches DAILY_SUBMISSION using stored event, recipients, payload, a
   assert.equal(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, "Accepted");
 });
 
-test("079 requires the exact DAILY_SUBMISSION handoff key format", async () => {
+test("079 requires the exact canonical handoff key format", async () => {
   const result = await run079({
     record: dailyRecord({ handoffKey: `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}|extra` }),
   });
 
   assert.ok(result.error);
-  assert.match(result.error.message, /Invalid DAILY_SUBMISSION Handoff Key/);
+  assert.match(result.error.message, /Invalid canonical Handoff Key/);
   assert.equal(result.requests.length, 0);
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
+});
+
+test("079 rejects duplicate recipient emails before calling the Hub", async () => {
+  const result = await run079({
+    record: futureRecord({
+      recipients: [
+        { email: "Parent@Example.com", role: "guardian" },
+        { email: "parent@example.com", role: "athlete" },
+      ],
+    }),
+  });
+
+  assert.ok(result.error);
+  assert.match(result.error.message, /Duplicate recipient email/);
+  assert.equal(result.requests.length, 0);
+  assert.deepEqual(result.queue.records.get(FUTURE_QUEUE_ID).cells.Status, { name: "Ready" });
 });
 
 test("079 rejects a DAILY_SUBMISSION key whose suffix differs from Source Record ID", async () => {
@@ -203,20 +249,41 @@ test("079 rejects a DAILY_SUBMISSION key whose suffix differs from Source Record
   });
 
   assert.ok(result.error);
-  assert.match(result.error.message, /does not match Source Record ID/);
+  assert.match(result.error.message, /Invalid canonical Handoff Key/);
   assert.equal(result.requests.length, 0);
   assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
 });
 
-test("079 rejects unknown event types without sending", async () => {
+test("079 dispatches a synthetic future event without event-specific code", async () => {
+  const result = await run079({ record: futureRecord() });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.requests[0].eventType, "HOMEWORK_FEEDBACK");
+  assert.equal(result.requests[0].templateKey, "HOMEWORK_FEEDBACK_V1");
+  assert.deepEqual(result.requests[0].source, {
+    table: "Homework Completions",
+    recordId: "recHomework0790001",
+  });
+  assert.equal("enrollmentRecordId" in result.requests[0], false);
+  assert.equal("programInstanceRecordId" in result.requests[0], false);
+  assert.equal(result.queue.records.get(FUTURE_QUEUE_ID).cells.Status, "Accepted");
+});
+
+test("079 lets the Hub reject an unsupported future event and records the failure", async () => {
   const result = await run079({
-    record: dailyRecord({ eventType: "UNKNOWN", templateKey: "UNKNOWN" }),
+    record: futureRecord(),
+    response: {
+      ok: false,
+      status: 422,
+      text: async () => JSON.stringify({ error: "unsupported event type" }),
+    },
   });
 
   assert.ok(result.error);
-  assert.match(result.error.message, /Unknown Email Handoff Queue Event Type/);
-  assert.equal(result.requests.length, 0);
-  assert.deepEqual(result.queue.records.get(DAILY_QUEUE_ID).cells.Status, { name: "Ready" });
+  assert.equal(result.requests.length, 1);
+  assert.equal(result.queue.records.get(FUTURE_QUEUE_ID).cells.Status, "Failed");
+  assert.match(result.queue.records.get(FUTURE_QUEUE_ID).cells["Last Error"], /HTTP 422/);
 });
 
 test("079 writes failed status and error after a Hub error", async () => {

@@ -2,18 +2,19 @@
 GitHub header
 Automation: 079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub
 System: 127 SI Shooting Challenge
-Version: v2.0
+Version: v3.0
 Date Written: 2026-08-11
 Last Updated: 2026-08-12
 
 PURPOSE
 - Dispatch one Ready Email Handoff Queue row to the Communications Hub.
-- Remain the single shared dispatcher for WELCOME and DAILY_SUBMISSION.
+- Remain the single shared dispatcher for every Communications Hub event type.
 
 IMPORTANT DESIGN RULES
-- Preserve the existing WELCOME envelope, validation, retry, and replay behavior.
-- DAILY_SUBMISSION accepts only DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>
-  and requires the key suffix to equal Source Record ID.
+- Validate one universal queue envelope instead of branching by email type.
+- Canonical handoff keys use <EVENT_TYPE>|<SOURCE_TABLE_TOKEN>|<SOURCE_RECORD_ID>.
+- Preserve a narrow compatibility path for legacy WELCOME keys that begin WELCOME|.
+- The Hub owns event/template/payload-specific validation.
 - The Hub owns rendering and delivery; this script never rebuilds email content.
 - The ingress secret is an Airtable input and is never logged or stored.
 
@@ -36,7 +37,7 @@ FOLDER
 
 const SCRIPT = {
     scriptName: "079 - Email, Notifications, and External Handoffs - Send Queue Handoff to Communications Hub",
-    version: "v2.0",
+    version: "v3.0",
     versionDate: "2026-08-12",
     originalWrittenDate: "2026-08-11",
     lastUpdated: "2026-08-12",
@@ -72,11 +73,6 @@ const CONFIG = {
         statusFailed: "Failed",
         statusNeedsReview: "Needs Review",
         eventWelcome: "WELCOME",
-        eventDailySubmission: "DAILY_SUBMISSION",
-        templateWelcome: "WELCOME",
-        templateDailySubmission: "DAILY_SUBMISSION",
-        sourceEnrollments: "Enrollments",
-        sourceSubmissions: "Submissions",
         sourceSystem: "SHOOTING_CHALLENGE",
         schemaVersion: "1.0",
         maxAttemptsBeforeReview: 3,
@@ -187,52 +183,44 @@ function parseJson(value, fieldName) {
     }
 }
 
-function parseWelcomeRecipients(value) {
+function parseRecipients(value) {
     const recipients = parseJson(value, CONFIG.fields.recipientsJson);
     if (!Array.isArray(recipients) || recipients.length === 0) {
         throw new Error(`${CONFIG.fields.recipientsJson} must be a non-empty array`);
     }
-    const seenRoles = new Set();
-    return recipients.map((recipient, index) => {
-        if (!recipient || typeof recipient !== "object" || Array.isArray(recipient)) {
-            throw new Error(`Recipient ${index + 1} must be an object`);
-        }
-        if (recipient.role !== "PARENT" && recipient.role !== "ATHLETE") {
-            throw new Error(`Invalid recipient role for ${recipient.email || "blank"}`);
-        }
-        if (seenRoles.has(recipient.role)) throw new Error(`Duplicate recipient role: ${recipient.role}`);
-        seenRoles.add(recipient.role);
-        return { role: recipient.role, email: requireEmail(recipient.email, `recipient ${recipient.role}`) };
-    });
-}
-
-function parseDailyRecipients(value) {
-    const recipients = parseJson(value, CONFIG.fields.recipientsJson);
-    if (!Array.isArray(recipients) || recipients.length === 0) {
-        throw new Error(`${CONFIG.fields.recipientsJson} must be a non-empty array`);
-    }
+    const seenEmails = new Set();
     return recipients.map((recipient, index) => {
         if (!recipient || typeof recipient !== "object" || Array.isArray(recipient)) {
             throw new Error(`Recipient ${index + 1} must be an object`);
         }
         const email = requireEmail(recipient.email, `recipient ${index + 1}`);
+        if (seenEmails.has(email)) throw new Error(`Duplicate recipient email: ${email}`);
+        seenEmails.add(email);
         return { ...recipient, email };
     });
 }
 
-function parsePayload(value, eventType) {
+function parsePayload(value) {
     const payload = parseJson(value, CONFIG.fields.payloadJson);
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
         throw new Error(`${CONFIG.fields.payloadJson} must be an object`);
     }
-    if (eventType === CONFIG.values.eventWelcome) {
-        for (const key of ["athleteName", "programName", "message"]) {
-            if (!String(payload?.[key] || "").trim()) {
-                throw new Error(`${CONFIG.fields.payloadJson} is missing ${key}`);
-            }
-        }
-    }
     return payload;
+}
+
+function getOptionalRecordId(value, label) {
+    const recordId = String(value || "").trim();
+    return recordId ? requireRecordId(recordId, label) : "";
+}
+
+function toEnvelopeToken(value, label) {
+    const token = String(value || "")
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "_")
+        .replace(/^_+|_+$/g, "");
+    if (!token) throw new Error(`${label} must not be blank`);
+    return token;
 }
 
 function sanitizeText(value, secret = "") {
@@ -266,29 +254,21 @@ async function postJson(url, secret, payload) {
 }
 
 function validateHandoff(eventType, templateKey, handoffKey, sourceTable, sourceRecordId) {
-    if (eventType === CONFIG.values.eventWelcome) {
-        if (!handoffKey.startsWith("WELCOME|")) throw new Error(`Invalid WELCOME Handoff Key: ${handoffKey || "blank"}`);
-        if (templateKey !== CONFIG.values.templateWelcome) throw new Error("Template Key must be WELCOME");
-        if (sourceTable !== CONFIG.values.sourceEnrollments) {
-            throw new Error(`Source Table must be ${CONFIG.values.sourceEnrollments}`);
+    const eventToken = toEnvelopeToken(eventType, "Event Type");
+    toEnvelopeToken(templateKey, "Template Key");
+    const sourceToken = toEnvelopeToken(sourceTable, "Source Table");
+    const canonicalKey = `${eventToken}|${sourceToken}|${sourceRecordId}`;
+    if (handoffKey === canonicalKey) return { keyFormat: "canonical" };
+
+    // Compatibility only: previously accepted WELCOME rows required only a
+    // WELCOME| prefix. New producers must always create the canonical key.
+    if (eventToken === CONFIG.values.eventWelcome && handoffKey.startsWith("WELCOME|")) {
+        if (normalizeText(templateKey) !== "welcome" || normalizeText(sourceTable) !== "enrollments") {
+            throw new Error("Legacy WELCOME requires Template Key WELCOME and Source Table Enrollments");
         }
-        return;
+        return { keyFormat: "legacy_welcome" };
     }
-    if (eventType === CONFIG.values.eventDailySubmission) {
-        const match = /^DAILY_SUBMISSION\|SUBMISSIONS\|(rec[A-Za-z0-9]{14})$/.exec(handoffKey);
-        if (!match) throw new Error(`Invalid DAILY_SUBMISSION Handoff Key: ${handoffKey || "blank"}`);
-        if (match[1] !== sourceRecordId) {
-            throw new Error("DAILY_SUBMISSION Handoff Key does not match Source Record ID");
-        }
-        if (templateKey !== CONFIG.values.templateDailySubmission) {
-            throw new Error("Template Key must be DAILY_SUBMISSION");
-        }
-        if (sourceTable !== CONFIG.values.sourceSubmissions) {
-            throw new Error(`Source Table must be ${CONFIG.values.sourceSubmissions}`);
-        }
-        return;
-    }
-    throw new Error(`Unknown Email Handoff Queue Event Type: ${eventType || "blank"}`);
+    throw new Error(`Invalid canonical Handoff Key: expected ${canonicalKey}`);
 }
 
 async function main() {
@@ -335,9 +315,6 @@ async function main() {
             CONFIG.values.statusReady, CONFIG.values.statusSending, CONFIG.values.statusAccepted,
             CONFIG.values.statusFailed, CONFIG.values.statusNeedsReview,
         ]) requireSingleSelectValue(queueTable, CONFIG.fields.status, status);
-        for (const eventType of [CONFIG.values.eventWelcome, CONFIG.values.eventDailySubmission]) {
-            requireSingleSelectValue(queueTable, CONFIG.fields.eventType, eventType);
-        }
 
         debugStep = "3 - Load queue record";
         setOutputSafe("debugStep", debugStep);
@@ -359,15 +336,13 @@ async function main() {
         const templateKey = getText(row, CONFIG.fields.templateKey);
         const sourceTable = getText(row, CONFIG.fields.sourceTable);
         const sourceRecordId = requireRecordId(getText(row, CONFIG.fields.sourceRecordId), "source");
-        validateHandoff(eventType, templateKey, context.handoffKey, sourceTable, sourceRecordId);
-        const enrollmentRecordId = requireRecordId(getText(row, CONFIG.fields.enrollmentRecordId), "Enrollment");
-        const programInstanceRecordId = requireRecordId(
+        const { keyFormat } = validateHandoff(eventType, templateKey, context.handoffKey, sourceTable, sourceRecordId);
+        const enrollmentRecordId = getOptionalRecordId(getText(row, CONFIG.fields.enrollmentRecordId), "Enrollment");
+        const programInstanceRecordId = getOptionalRecordId(
             getText(row, CONFIG.fields.programInstanceRecordId), "Program Instance"
         );
-        const recipients = eventType === CONFIG.values.eventWelcome
-            ? parseWelcomeRecipients(getText(row, CONFIG.fields.recipientsJson))
-            : parseDailyRecipients(getText(row, CONFIG.fields.recipientsJson));
-        const payload = parsePayload(getText(row, CONFIG.fields.payloadJson), eventType);
+        const recipients = parseRecipients(getText(row, CONFIG.fields.recipientsJson));
+        const payload = parsePayload(getText(row, CONFIG.fields.payloadJson));
         const testMode = getBoolean(row, CONFIG.fields.testMode);
         context.attemptCount = getNumber(row, CONFIG.fields.attemptCount) + 1;
 
@@ -395,6 +370,8 @@ async function main() {
             data: payload,
             testMode,
         };
+        if (!enrollmentRecordId) delete requestPayload.enrollmentRecordId;
+        if (!programInstanceRecordId) delete requestPayload.programInstanceRecordId;
         const response = await postJson(CONFIG.communicationsHub.ingestUrl, ingressSecret, requestPayload);
         const responseText = await response.text();
         const safeResponseText = sanitizeText(responseText, ingressSecret);
@@ -425,7 +402,7 @@ async function main() {
         setOutputSafe("statusOut", "accepted");
         setOutputSafe("actionOut", actionOut);
         setOutputSafe("errorOut", "");
-        log("079 result", { queueRecordId: recordId, handoffKey: context.handoffKey, hubEventId: context.hubEventId, attemptCount: context.attemptCount, statusOut: "accepted", actionOut });
+        log("079 result", { queueRecordId: recordId, handoffKey: context.handoffKey, keyFormat, hubEventId: context.hubEventId, attemptCount: context.attemptCount, statusOut: "accepted", actionOut });
     } catch (error) {
         const message = sanitizeText(error instanceof Error ? error.message : String(error), ingressSecret);
         if (queueTable && recordId && context.attemptCount > 0) {

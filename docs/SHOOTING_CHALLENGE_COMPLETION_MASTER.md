@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 079 v2.0 shared dispatcher; no Production change) |
+| Last updated | **2026-08-12** (Automation 079 v3.0 generic-dispatcher repository candidate; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -230,7 +230,7 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-025` | Install and live-check the read-only `/shoot` smoke/accessibility package | `needs live proof` | §4 SC-118, SC-148 | Current web merge line; `SC-102` | Cursor; Mike | Vercel deployment, HTTP/Playwright/optional axe results, and Mike production smoke | 2026-08-10 — queued; no package evidence yet | Repo; Vercel; Mike | Keep tests read-only; schedule after an approved web integration merge | 25 |
 | `PKG-026` | Verify Fairfield landing/site environment values and public catalog/content hygiene | `needs live proof` | §4 SC-103–SC-110, SC-149; EXT-QA-001–006 | Repo URL/config tests; `/shoot` base path; `PKG-020`, `PKG-021` | Cursor; Mike | Vercel env inspection, public smoke, stale rows/media cleanup evidence | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Vercel; Mike | Read-only inspect first; no env or content changes in this queue | 26 |
 | `PKG-027` | Run the full pre-season audit pack and dry-run season before public intake | `blocked` | §4 SC-134–SC-135; V2-011–012 | Stages A–J tooling; test cards; current authority boundaries; `PKG-006` through `PKG-026`; Mike launch approval | Mike; Cursor | Green dry-run, explicit blocked/not-tested ledger, controlled email results, rollback/activation checklist | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Make; Vercel; Mike | Do not start until dependency packages and 2027 Weeks proof are complete | 27 |
-| `PKG-028` | Export Automation 079 and reconcile the Communications Hub welcome contract | `needs repo work` | §9M; SC-045 | Controlled test evidence; participant activation remains blocked; final approved copy and recipient authorization | Cursor; Mike | GitHub source, template review, consent, test-mode proof, Delivery audit, suppression check | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Export/document 079 before its next code change; keep participant sends disabled | 28 |
+| `PKG-028` | Export Automation 079 and reconcile the generic Communications Hub queue contract | `repo candidate; post-app` | §9M; SC-045; §10 | v2.0 Production proof; Hub remains event-contract authority; Production promotion requires separate approval | Cursor; Mike | Generic envelope source/tests/contract; template review, consent, test-mode proof, Delivery audit, suppression check | 2026-08-12 — v3.0 repository candidate adds event-agnostic dispatch and synthetic-future-event proof; no Production change | Repo; Airtable; Communications Hub; Mike | Keep non-blocking; review and promote only after core app completion and explicit Mike approval | 28 |
 | `PKG-029` | Program Instance multi-year architecture and migration wave | `deferred` | §4 SC-067; backlog V2-013 | Decision direction and Season Launch Control interim layer; `PKG-004`, `PKG-009`; dedicated approved architecture wave | Mike; Cursor | Approved architecture, schema migration plan, historical-data proof, views/interfaces, automation isolation | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Do not start incremental PI edits or block 2027 launch on this wave | 29 |
 | `PKG-030` | Retire or merge Tutorials tables, rename Softr-named publish flag, and other breaking schema cleanup | `deferred` | §4 SC-105, SC-144; backlog C-026 | Current `Tutorials` web ownership; Softr is obsolete; `PKG-004`, `PKG-020`, V2-013 where schema-wide | Mike; Cursor | Row/field diff, migration, repointed views/interfaces, web regression, and approved schema change | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Vercel; Mike | Keep deferred until field ownership and season architecture are approved | 30 |
 | `PKG-031` | Future communications/message-center and media-kit platform work | `deferred` | §4 SC-131, SC-133; backlog V2-014b, V2-028 | Manual 2025–26 kits and current email paths; `PKG-008`, `PKG-011`, `PKG-021` | Mike; Cursor | Product scope, templates, config model, delivery/dedupe evidence, and separate activation approval | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Do not expand scope during season launch; revisit after core proof | 31 |
@@ -1285,6 +1285,25 @@ The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md
 ---
 
 ## 10. Post-app / backlog considerations
+
+### Generic Communications Hub queue dispatcher
+
+**Status:** **POST-APP repository candidate — not a blocker for Registration,
+Daily Submission, XP/progression, standings, or app completion.**
+
+Production Automation 079 v2.0 proved WELCOME and DAILY_SUBMISSION delivery but
+contains event-specific branches. The v3.0 repository candidate validates the
+universal [`Email Handoff Queue Envelope v1`](./contracts/EMAIL-HANDOFF-QUEUE-ENVELOPE-v1.md)
+and forwards future event types without dispatcher code changes. The
+Communications Hub remains responsible for deciding whether an event type,
+template, and payload are supported.
+
+The candidate includes offline proof for existing WELCOME and DAILY_SUBMISSION,
+legacy WELCOME compatibility, a synthetic HOMEWORK_FEEDBACK event, Hub rejection
+writeback, and replay. It does not create homework/video/weekly producers or Hub
+processors and has not been installed in Production. Promotion and rollback are
+documented in
+[`PKG-028-GENERIC-EMAIL-HANDOFF-DISPATCHER.md`](./deploy-checklists/PKG-028-GENERIC-EMAIL-HANDOFF-DISPATCHER.md).
 
 ### Decouple Daily Submission email readiness from Automation 031
 
