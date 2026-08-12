@@ -17,6 +17,10 @@ import test from "node:test";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const source = (name) => readFileSync(path.join(ROOT, "airtable/automations/shooting-challenge", name), "utf8");
+const auditSource = () => readFileSync(
+  path.join(ROOT, "airtable/extension-scripts/audits/audit-counted-submission-xp-standings-reliability.js"),
+  "utf8",
+);
 const SUBMISSION_ID = "recPipelineSubmission01";
 const ENROLLMENT_ID = "recPipelineEnrollment1";
 const WEEK_ID = "recPipelineWeek00001";
@@ -109,6 +113,20 @@ test("source contracts preserve the approved pending-XP receipt behavior", () =>
   assert.match(s010, /SUBMISSION_XP\|/);
   assert.match(s076, /submissionXp === null/);
   assert.match(s076, /Pending \/ not yet awarded/);
+});
+
+test("audit includes checked checkbox Submissions and excludes unchecked ones", () => {
+  const priorNumericOnlyGate = (value) => Number(String(value)) === 1;
+  const checkboxGate = (value) => value === true || value === 1 || String(value).toLowerCase() === "true";
+
+  assert.equal(priorNumericOnlyGate(true), false, "regression: prior gate skips Airtable checkbox true");
+  assert.equal(checkboxGate(true), true);
+  assert.equal(checkboxGate(false), false);
+  assert.match(
+    auditSource(),
+    /if \(!yes\(sub, subT, CONFIG\.f\.sub\.count\)\) continue;/,
+    "audit must use the boolean checkbox helper, not numberState",
+  );
 });
 
 test("010 before 031/076 settles one XP event, one WAS, progression, and standings inputs", () => {

@@ -55,7 +55,7 @@ async function main() {
     if (e && yes(xp, xpT, CONFIG.f.xp.active)) activeXpByEnrollment.set(e, [...(activeXpByEnrollment.get(e) || []), xp]);
   }
   for (const sub of subs.records) {
-    if (numberState(sub, subT, CONFIG.f.sub.count).value !== 1) continue;
+    if (!yes(sub, subT, CONFIG.f.sub.count)) continue;
     const enrollmentId = one(sub, subT, CONFIG.f.sub.enrollment), weekId = one(sub, subT, CONFIG.f.sub.week);
     if (!enrollmentId || !weekId) { add("counted_submission_missing_identity", "error", sub, { enrollmentId, weekId }, "Repair intake links before XP replay."); continue; }
     const canonicalWas = wasByPair.get(`${enrollmentId}|${weekId}`) || [];
