@@ -45,6 +45,13 @@ function submissionsFields() {
     { name: "Week", type: "multipleRecordLinks" },
     { name: "Activity Date", type: "date" },
     { name: "Weekly Athlete Summary", type: "multipleRecordLinks" },
+    { name: "Count This Submission?", type: "checkbox" },
+    {
+      name: "Submission Stat Mode",
+      type: "singleSelect",
+      options: { choices: [{ id: "selCounted", name: "Counted" }] },
+    },
+    { name: "Build Daily Email Now?", type: "checkbox" },
   ];
 }
 
@@ -154,6 +161,9 @@ export function build031Base(opts = {}) {
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Activity Date": "2026-08-07",
       "Weekly Athlete Summary": [],
+      "Count This Submission?": true,
+      "Submission Stat Mode": { id: "selCounted", name: "Counted" },
+      "Build Daily Email Now?": false,
       ...submissionCells,
     }),
   ]);

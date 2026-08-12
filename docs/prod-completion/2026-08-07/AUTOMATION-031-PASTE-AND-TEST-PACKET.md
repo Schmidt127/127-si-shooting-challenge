@@ -1,10 +1,10 @@
-# Automation 031 Paste and Test Packet — 2026-08-07
+# Automation 031 Paste and Test Packet — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.5
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.6
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -18,11 +18,11 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.5`
+- Repository version in this package: `v3.6`
 
 ## Repository repair completed
 
-The v3.5 repair now:
+The v3.6 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -33,7 +33,10 @@ The v3.5 repair now:
 7. ignores and logs malformed unrelated candidate summaries before any Submission, Summary, or XP Event write;
 8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
 9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist;
-10. never creates a Weekly Athlete Summary; a unique canonical record must already exist.
+10. never creates a Weekly Athlete Summary; a unique canonical record must already exist;
+11. independently validates `Count This Submission?` and `Submission Stat Mode = Counted`;
+12. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
+    is the sole owner of that readiness check; Automation 076 consumes and clears it.
 
 ## Offline verification
 
@@ -43,7 +46,7 @@ Command run:
 
 Result:
 
-- **PASS** (`13/13`)
+- **PASS** (`20/20`)
 
 Covered cases:
 

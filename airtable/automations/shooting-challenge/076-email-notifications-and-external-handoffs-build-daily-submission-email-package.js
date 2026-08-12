@@ -1,71 +1,183 @@
 /*
-Automation: 076 - Email, Notifications, and External Handoffs - Build Daily Submission Email Package
+GitHub header
+Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Source: Airtable Automation
-Status: GitHub Source of Truth
+Version: v8.1
+Date Written: 2026-05-29
+Last Updated: 2026-08-12
 
-Version: v7.0
-Date: 2026-08-08
+PURPOSE
+- Validate a fully processed Submission and create exactly one Ready Email Handoff Queue row.
+- Hand off template data to Automation 079 / Communications Hub.
 
-Issue #104 repair:
-- XP reporting uses Active XP Events only and validates Enrollment + Week + source ownership.
-- Missing Submission XP is reported as pending; configured/base XP is never synthesized as earned.
-- Weekly XP is the direct sum of active Enrollment+Week XP; no Math.max masking of disagreeing sources.
-- Weekly Summary link is accepted only when it matches the same Enrollment + Week.
-- Homework schedule uses active Program Homework Assignments for Program Instance + Week + Grade Band.
-- Legacy Curriculum-by-Week fallback is used only when no current PHA schedule rows exist.
-- Homework completion reporting validates Enrollment + Week before display.
-- 077 remains the send-to-Make owner; this builder prepares fields only.
+IMPORTANT DESIGN RULES
+- Hub owns subject, HTML, plain text, branding, validation, delivery, and Delivery proof.
+- This script never calls Hub, Make, Gmail, or writes legacy daily email fields.
+- One Submission maps to `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}`.
+- Active XP only; missing Submission XP is represented as null plus pending status.
+- Program Instance, Enrollment, Week, Weekly Athlete Summary, and PHA ownership are fail-closed.
+- 077 is retired as a pending retirement candidate and is never armed by this script.
+
+INPUT
+- `recordId` (required Airtable Submission record ID)
+
+OUTPUTS
+- `statusOut`: success | skipped | error
+- `actionOut`: created_handoff | existing_handoff | needs_review | skipped_not_ready | error
+- `queueRecordId`, `handoffKey`, `errorOut`, `debugStep`
+
+TRIGGER
+- Automation 031 is the sole upstream owner that checks `Build Daily Email Now?`,
+  only after the 023 → 005 → 007 → 010 → 031 chain has settled.
+- `Count This Submission?` and `Submission Stat Mode` remain supporting guards,
+  and 076 fail-closes when either is not ready.
+- Clear `Build Daily Email Now?` after an existing or newly created handoff so
+  a successful replay cannot retrigger the source signal.
+
+AUTOMATION NAME
+- 076 - Daily Submission Communications Hub Handoff
+FOLDER
+- 07 - Email, Notifications, and External Handoffs
 */
 
 // @ts-nocheck
-const VERSION="v7.0",TZ="America/Denver";
-const T={sub:"Submissions",enr:"Enrollments",was:"Weekly Athlete Summary",week:"Weeks",xp:"XP Events",hc:"Homework Completions",pha:"Program Homework Assignments",curr:"Homework Library"};
-const F={
- sub:{enr:"Enrollment",week:"Week",was:"Weekly Athlete Summary",activity:"Activity Date",mode:"Submission Stat Mode",count:"Count This Submission?",shots:"Total Shots Counted",makes:"Total Makes Counted",hw1:"HW Sub 1",hw2:"HW Sub 2",video:"Video Upload",hcs:"Homework Completions",xps:"XP Events",build:"Build Daily Email Now?",send:"Send Daily Email to Make Now?",to:"Daily Email To",subject:"Daily Email Subject",html:"Daily Email HTML",version:"Daily Email Version",status:"Daily Email Status",makeStatus:"Daily Email Sent to Make.com Status",makeAt:"Daily Email Sent to Make.com At"},
- enr:{active:"Active?",program:"Program Instance",grade:"Grade Band",parentClean:"Parent Email - Cleaned",parent:"Parent Email",athleteClean:"Athlete Email - Cleaned",athleteEmail:"Athlete Email",name:"Full Athlete Name",first:"Athlete First Name",streak:"Current Shooting Streak",streakStatus:"Current Shooting Streak Status"},
- was:{enr:"Enrollment",week:"Week",hcs:"Homework Completions Link",xps:"XP Events",shots:"Total Shots This Week",goal:"Weekly Goal Shots Target",weekDisplay:"Week - Display"},
- week:{name:"Week Name",start:"Start Date",end:"End Date"},
- xp:{active:"Active?",points:"XP Points",enr:"Enrollment",week:"Week",sub:"Submission",reason:"XP Reason Public",source:"XP Source"},
- hc:{enr:"Enrollment",week:"Week",homework:"Homework",slot:"Item Slot",pha:"Program Homework Assignment",sat:"Satisfactory?",status:"Completion Status",coach:"Coach Feedback"},
- pha:{homework:"Homework Assignment",program:"Program Instance",week:"Week",grade:"Grade Band",slot:"Homework Slot",active:"Active?"},
- curr:{title:"Assignment Title",full:"Assignment Full Name",week:"Week",grade:"Grade Band",active:"Active?",published:"Published?",order:"Order"}
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.1", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const CONFIG = {
+  tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Synced", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
+  statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
+  fields: {
+    sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", build: "Build Daily Email Now?", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
+    enr: { active: "Active?", program: "Program Instance", grade: "Grade Band", parent: "Parent Email - Cleaned", parentFallback: "Parent Email", athlete: "Athlete Email - Cleaned", athleteFallback: "Athlete Email", name: "Full Athlete Name", first: "Athlete First Name", streak: "Current Shooting Streak", currentLevel: "Current Level", nextLevel: "Next Level" },
+    was: { enrollment: "Enrollment", week: "Week", hcs: "Homework Completions Link", xps: "XP Events", shots: "Total Shots This Week", goal: "Weekly Goal Shots Target", weekName: "Week - Display" },
+    week: { name: "Week Name", start: "Start Date", end: "End Date", program: "Program Instance" },
+    pi: { name: "Name - Program Instance" },
+    xp: { active: "Active?", points: "XP Points", enrollment: "Enrollment", week: "Week", submission: "Submission" },
+    pha: { homework: "Homework Assignment", program: "Program Instance", week: "Week", grade: "Grade Band", slot: "Homework Slot", active: "Active?" },
+    curr: { title: "Assignment Title", full: "Assignment Full Name", week: "Week", grade: "Grade Band", active: "Active?", published: "Published?", order: "Order" },
+    queue: { key: "Handoff Key", status: "Status", sourceTable: "Source Table", eventType: "Event Type", payload: "Payload JSON", attempts: "Attempt Count", pi: "Program Instance Record ID", source: "Source Record ID", enrollment: "Enrollment Record ID", recipients: "Recipients JSON", template: "Template Key", testMode: "Test Mode?" },
+  },
 };
-function field(t,n){try{t.getField(n);return true}catch{return false}}
-function raw(r,t,n){return r&&field(t,n)?r.getCellValue(n):null}
-function text(r,t,n){return r&&field(t,n)?String(r.getCellValueAsString(n)||"").trim():""}
-function ids(r,t,n){const v=raw(r,t,n);return Array.isArray(v)?v.map(x=>x?.id).filter(Boolean):[]}
-function num(r,t,n,fb=0){const v=raw(r,t,n);const x=typeof v==="number"?v:Number(String(v??"").replace(/[$,%]/g,"").replace(/,/g,"").trim());return Number.isFinite(x)?x:fb}
-function bool(r,t,n){const v=raw(r,t,n);if(v===true||v===1)return true;if(v===false||v===0)return false;return["1","true","yes","checked","y","count","counted"].includes(text(r,t,n).toLowerCase())}
-function one(a,label){if(a.length!==1)throw new Error(`${label} must have exactly one link; found ${a.length}.`);return a[0]}
-function same(a,b){return a.length===b.length&&a.every(x=>b.includes(x))}
-function first(...v){return v.map(x=>String(x??"").trim()).find(Boolean)||""}
-function emails(v){return[...new Set(String(v||"").split(/[,;\n]+/).map(s=>s.trim().toLowerCase()).filter(Boolean))].join(",")}
-function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#39;")}
-function fmtDate(v){const d=v instanceof Date?v:new Date(v);if(!v||Number.isNaN(d.getTime()))return"";return new Intl.DateTimeFormat("en-US",{timeZone:TZ,month:"short",day:"numeric",year:"numeric"}).format(d)}
-function fmtN(v){const n=Number(v||0);return Number.isFinite(n)?Math.round(n).toLocaleString("en-US"):"0"}
-function pct(a,b){return Number(b)>0?`${Math.round((Number(a||0)/Number(b))*100)}%`:""}
-function setSelect(t,n,value){const f=t.getField(n);if(f.type!=="singleSelect")return value;const c=(f.options?.choices||[]).find(x=>x.name.toLowerCase()===String(value).toLowerCase());if(!c)throw new Error(`Missing option ${value} on ${t.name}.${n}`);return{id:c.id}}
-async function loadMap(t,names){return await t.selectRecordsAsync({fields:names.filter(n=>field(t,n))})}
-function slot(v){const s=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(["HW1","HOMEWORK1"].includes(s))return"HW1";if(["HW2","HOMEWORK2"].includes(s))return"HW2";return s}
-function htmlList(items){return items.length?`<ul>${items.map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`:"<p>None</p>"}
-function buildHtml(d){return`<!doctype html><html><body style="margin:0;background:#F2F2F2;font-family:Arial,sans-serif;color:#262626"><div style="max-width:640px;margin:auto;background:#fff"><div style="background:#0034B7;color:#fff;padding:20px;border-bottom:6px solid #FF8B00"><h2 style="margin:0">Daily Submission Summary</h2></div><div style="padding:20px"><p>Hi <strong>${esc(d.firstName||d.athleteName)}</strong>, your submission was received.</p><h3>This Submission</h3><p>Activity Date: <strong>${esc(d.activityDate)}</strong><br>Week: <strong>${esc(d.weekLabel)}</strong><br>Shots: <strong>${fmtN(d.shots)}</strong><br>Makes: <strong>${fmtN(d.makes)}</strong><br>XP From Submission: <strong>${esc(d.submissionXpText)}</strong></p><h3>Submitted With This Entry</h3>${htmlList(d.submitted)}<h3>Homework Assigned This Week</h3>${htmlList(d.assignments)}<h3>Homework Review Status</h3>${htmlList(d.homeworkStatus)}<h3>This Week So Far</h3><p>Shots This Week: <strong>${fmtN(d.weekShots)}</strong><br>Weekly Shot Target: <strong>${d.goal?fmtN(d.goal):"—"}</strong><br>Weekly Goal Completion: <strong>${esc(d.goalPct||"—")}</strong><br>Weekly XP: <strong>${fmtN(d.weekXp)} XP</strong><br>Current Streak: <strong>${fmtN(d.streak)} days</strong>${d.streakStatus?`<br>Streak Status: <strong>${esc(d.streakStatus)}</strong>`:""}</p><p style="margin-top:24px">Keep building strong habits one day at a time.</p></div></div></body></html>`}
-async function main(){
- const cfg=input.config(),recordId=String(cfg.recordId||"").trim(),emailVersion=String(cfg.emailVersion||VERSION).trim()||VERSION;if(!recordId)throw new Error("Missing required input: recordId");
- const subT=base.getTable(T.sub),enrT=base.getTable(T.enr),wasT=base.getTable(T.was),weekT=base.getTable(T.week),xpT=base.getTable(T.xp),hcT=base.getTable(T.hc),phaT=base.getTable(T.pha),currT=base.getTable(T.curr);
- const sub=await subT.selectRecordAsync(recordId);if(!sub)throw new Error(`Submission not found: ${recordId}`);
- const enrollmentId=one(ids(sub,subT,F.sub.enr),"Submission Enrollment"),weekId=one(ids(sub,subT,F.sub.week),"Submission Week");const enr=await enrT.selectRecordAsync(enrollmentId),week=await weekT.selectRecordAsync(weekId);if(!enr||!week)throw new Error("Submission source Enrollment/Week not found.");if(field(enrT,F.enr.active)&&!bool(enr,enrT,F.enr.active))throw new Error("Enrollment inactive; daily email build blocked.");
- const programId=one(ids(enr,enrT,F.enr.program),"Enrollment Program Instance"),gradeId=one(ids(enr,enrT,F.enr.grade),"Enrollment Grade Band");
- const wasIds=ids(sub,subT,F.sub.was);let was=null;if(wasIds.length>1)throw new Error("Submission links multiple Weekly Athlete Summaries.");if(wasIds.length===1){was=await wasT.selectRecordAsync(wasIds[0]);if(!was||!same(ids(was,wasT,F.was.enr),[enrollmentId])||!same(ids(was,wasT,F.was.week),[weekId]))throw new Error("Linked Weekly Athlete Summary is noncanonical for this Enrollment + Week.");}
- const xpQ=await loadMap(xpT,[F.xp.active,F.xp.points,F.xp.enr,F.xp.week,F.xp.sub,F.xp.reason,F.xp.source]);const activeWeekXp=xpQ.records.filter(x=>bool(x,xpT,F.xp.active)&&same(ids(x,xpT,F.xp.enr),[enrollmentId])&&same(ids(x,xpT,F.xp.week),[weekId]));const weekXp=activeWeekXp.reduce((s,x)=>s+num(x,xpT,F.xp.points),0);const submissionXpRows=activeWeekXp.filter(x=>ids(x,xpT,F.xp.sub).includes(recordId));const submissionXp=submissionXpRows.reduce((s,x)=>s+num(x,xpT,F.xp.points),0);const submissionXpText=submissionXpRows.length?`${fmtN(submissionXp)} XP`:"Pending / not yet awarded";
- if(was){const linked=ids(was,wasT,F.was.xps);for(const xid of linked){const x=xpQ.getRecord(xid);if(!x)throw new Error(`WAS linked XP Event not found: ${xid}`);if(bool(x,xpT,F.xp.active)&&(!same(ids(x,xpT,F.xp.enr),[enrollmentId])||!same(ids(x,xpT,F.xp.week),[weekId])))throw new Error(`WAS contains active XP Event ${xid} owned by another Enrollment/Week.`);}}
- const phaQ=await loadMap(phaT,[F.pha.homework,F.pha.program,F.pha.week,F.pha.grade,F.pha.slot,F.pha.active]);const phaRows=phaQ.records.filter(x=>bool(x,phaT,F.pha.active)&&same(ids(x,phaT,F.pha.program),[programId])&&same(ids(x,phaT,F.pha.week),[weekId])&&same(ids(x,phaT,F.pha.grade),[gradeId]));let assignmentSource="PHA",assignments=[];if(phaRows.length){const seen=new Set();for(const p of phaRows.sort((a,b)=>slot(text(a,phaT,F.pha.slot)).localeCompare(slot(text(b,phaT,F.pha.slot))))){const hids=ids(p,phaT,F.pha.homework);if(hids.length!==1)throw new Error(`PHA ${p.id} must link exactly one Homework Assignment.`);const label=`${slot(text(p,phaT,F.pha.slot))||"Homework"}: ${text(p,phaT,F.pha.homework)}`;if(!seen.has(label)){seen.add(label);assignments.push(label)}}}else{assignmentSource="LEGACY_CURRICULUM_NO_PHA";const cq=await loadMap(currT,[F.curr.title,F.curr.full,F.curr.week,F.curr.grade,F.curr.active,F.curr.published,F.curr.order]);assignments=cq.records.filter(x=>same(ids(x,currT,F.curr.week),[weekId])&&(!field(currT,F.curr.active)||bool(x,currT,F.curr.active))&&(!field(currT,F.curr.published)||bool(x,currT,F.curr.published))&&(ids(x,currT,F.curr.grade).length===0||ids(x,currT,F.curr.grade).includes(gradeId))).sort((a,b)=>num(a,currT,F.curr.order,9999)-num(b,currT,F.curr.order,9999)).slice(0,2).map((x,i)=>`HW${i+1}: ${first(text(x,currT,F.curr.title),text(x,currT,F.curr.full),x.name)}`)}if(!assignments.length)assignments=["No scheduled homework found."];
- const hcIds=[...new Set([...(was?ids(was,wasT,F.was.hcs):[]),...ids(sub,subT,F.sub.hcs)])];const hcQ=await loadMap(hcT,[F.hc.enr,F.hc.week,F.hc.homework,F.hc.slot,F.hc.pha,F.hc.sat,F.hc.status,F.hc.coach]);const homeworkStatus=[];for(const hid of hcIds){const h=hcQ.getRecord(hid);if(!h)continue;if(!same(ids(h,hcT,F.hc.enr),[enrollmentId])||!same(ids(h,hcT,F.hc.week),[weekId]))throw new Error(`Homework Completion ${hid} has wrong Enrollment/Week.`);const linkedPha=ids(h,hcT,F.hc.pha);if(phaRows.length&&linkedPha.length!==1)throw new Error(`Homework Completion ${hid} lacks canonical PHA while PHA schedule exists.`);const label=first(text(h,hcT,F.hc.homework),slot(text(h,hcT,F.hc.slot)),"Homework"),st=bool(h,hcT,F.hc.sat)?"Satisfactory":first(text(h,hcT,F.hc.status),"Pending review");homeworkStatus.push(`${label}: ${st}${text(h,hcT,F.hc.coach)?` — ${text(h,hcT,F.hc.coach)}`:""}`)}if(!homeworkStatus.length)homeworkStatus.push("No homework has been graded yet for this week.");
- const recipientCsv=emails([first(text(enr,enrT,F.enr.parentClean),text(enr,enrT,F.enr.parent)),first(text(enr,enrT,F.enr.athleteClean),text(enr,enrT,F.enr.athleteEmail))].join(","));if(!recipientCsv)throw new Error("No parent or athlete email found.");
- const shots=num(sub,subT,F.sub.shots),makes=num(sub,subT,F.sub.makes),weekShots=was?num(was,wasT,F.was.shots):0,goal=was?num(was,wasT,F.was.goal):0,submitted=[];if((raw(sub,subT,F.sub.hw1)||[]).length)submitted.push(`Homework 1: ${(raw(sub,subT,F.sub.hw1)||[]).length} file(s)`);if((raw(sub,subT,F.sub.hw2)||[]).length)submitted.push(`Homework 2: ${(raw(sub,subT,F.sub.hw2)||[]).length} file(s)`);if((raw(sub,subT,F.sub.video)||[]).length)submitted.push(`Video: ${(raw(sub,subT,F.sub.video)||[]).length} file(s)`);if(!submitted.length)submitted.push("No files attached to this entry.");
- const athleteName=first(text(enr,enrT,F.enr.name),"Athlete"),activityDate=fmtDate(raw(sub,subT,F.sub.activity)),weekLabel=first(was?text(was,wasT,F.was.weekDisplay):"",text(week,weekT,F.week.name),`${fmtDate(raw(week,weekT,F.week.start))} - ${fmtDate(raw(week,weekT,F.week.end))}`),subject=`Daily Submission Received - ${athleteName} - ${activityDate||"Submission"}`;
- const html=buildHtml({firstName:text(enr,enrT,F.enr.first),athleteName,activityDate,weekLabel,shots,makes,submissionXpText,submitted,assignments,homeworkStatus,weekShots,goal,goalPct:pct(weekShots,goal),weekXp,streak:num(enr,enrT,F.enr.streak),streakStatus:text(enr,enrT,F.enr.streakStatus)});
- const updates={[F.sub.subject]:subject,[F.sub.html]:html,[F.sub.to]:recipientCsv,[F.sub.version]:emailVersion,[F.sub.send]:true,[F.sub.status]:setSelect(subT,F.sub.status,"Ready"),[F.sub.makeStatus]:setSelect(subT,F.sub.makeStatus,"Ready")};if(field(subT,F.sub.build))updates[F.sub.build]=false;if(field(subT,F.sub.makeAt))updates[F.sub.makeAt]=null;await subT.updateRecordAsync(recordId,updates);
- for(const[k,v]of Object.entries({statusOut:"success",actionOut:"built_canonical",version:VERSION,recordId,enrollmentId,weekId,weeklySummaryId:was?.id||"",assignmentSource,activeWeekXpCount:activeWeekXp.length,submissionXpEventCount:submissionXpRows.length,submissionXp,weekXp,errorOut:""}))output.set(k,v);
+const TZ = "America/Denver";
+const table = (name) => base.getTable(name);
+const exists = (t, name) => { try { t.getField(name); return true; } catch { return false; } };
+const raw = (r, t, name) => r && exists(t, name) ? r.getCellValue(name) : null;
+const text = (r, t, name) => r && exists(t, name) ? String(r.getCellValueAsString(name) || "").trim() : "";
+const ids = (r, t, name) => Array.isArray(raw(r, t, name)) ? raw(r, t, name).map((v) => v?.id).filter(Boolean) : [];
+const num = (r, t, name, fallback = 0) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/[$,%]/g, "").replace(/,/g, "").trim()); return Number.isFinite(n) ? n : fallback; };
+const nonnegativeInteger = (r, t, name) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/,/g, "").trim()); if (v === null || v === undefined || v === "" || !Number.isInteger(n) || n < 0) throw new Error(`${name} must be a settled nonnegative integer.`); return n; };
+const bool = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; if (v === false || v === 0) return false; return ["true", "yes", "checked", "1", "counted", "count"].includes(text(r, t, name).toLowerCase()); };
+const one = (values, label) => { if (values.length !== 1) throw new Error(`${label} must have exactly one link; found ${values.length}.`); return values[0]; };
+const same = (left, right) => left.length === right.length && left.every((value) => right.includes(value));
+const first = (...values) => values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
+const cleanEmail = (value) => String(value || "").trim().toLowerCase();
+const dateText = (value) => { const date = value instanceof Date ? value : new Date(value); return !value || Number.isNaN(date.getTime()) ? "" : new Intl.DateTimeFormat("en-US", { timeZone: TZ, month: "short", day: "numeric", year: "numeric" }).format(date); };
+const pct = (value, target) => Number(target) > 0 ? Math.round((Number(value) / Number(target)) * 100) : 0;
+const setOutput = (name, value) => { try { output.set(name, value); } catch {} };
+const debug = (value) => setOutput("debugStep", value);
+const selectValue = (t, name, value) => { const field = t.getField(name); if (field.type !== "singleSelect") return value; const choice = field.options.choices.find((item) => item.name.toLowerCase() === value.toLowerCase()); if (!choice) throw new Error(`Missing option ${value} on ${t.name}.${name}`); return { id: choice.id }; };
+const formula = (field, value) => `{${field}}='${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
+const load = (t, fields) => t.selectRecordsAsync({ fields: fields.filter((name) => exists(t, name)) });
+const slot = (value) => String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+const queueFields = (queueT, values) => Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueT, name)));
+const stableJson = (value) => Array.isArray(value) ? `[${value.map(stableJson).join(",")}]` : value && typeof value === "object" ? `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}` : JSON.stringify(value);
+const samePayload = (left, right) => { try { return stableJson(JSON.parse(left || "{}")) === stableJson(right); } catch { return false; } };
+const clearBuildSignal = async (submissionTable, submissionId) => { if (exists(submissionTable, CONFIG.fields.sub.build) && submissionTable.getField(CONFIG.fields.sub.build).type === "checkbox") await submissionTable.updateRecordAsync(submissionId, { [CONFIG.fields.sub.build]: false }); };
+const markQueueNeedsReview = async (queueTable, rows) => { for (const row of rows) if (exists(queueTable, CONFIG.fields.queue.status)) await queueTable.updateRecordAsync(row.id, { [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.needsReview) }); };
+
+async function main() {
+  const cfg = input.config();
+  const recordId = String(cfg.recordId || "").trim();
+  if (!/^rec[A-Za-z0-9]{14}$/.test(recordId)) throw new Error("recordId must be a valid Airtable record ID.");
+  const subT = table(CONFIG.tables.sub), enrT = table(CONFIG.tables.enr), wasT = table(CONFIG.tables.was), weekT = table(CONFIG.tables.week), piT = table(CONFIG.tables.pi), xpT = table(CONFIG.tables.xp), phaT = table(CONFIG.tables.pha), currT = table(CONFIG.tables.curr), queueT = table(CONFIG.tables.queue);
+  const sub = await subT.selectRecordAsync(recordId);
+  if (!sub) throw new Error(`Submission not found: ${recordId}`);
+  const handoffKey = `DAILY_SUBMISSION|SUBMISSIONS|${recordId}`;
+  debug("01 - Validate Submission readiness");
+  if (!exists(subT, CONFIG.fields.sub.build)) throw new Error(`Missing required readiness signal: ${CONFIG.fields.sub.build}.`);
+  if (!bool(sub, subT, CONFIG.fields.sub.build)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
+  if (exists(subT, CONFIG.fields.sub.count) && !bool(sub, subT, CONFIG.fields.sub.count)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
+  if (exists(subT, CONFIG.fields.sub.mode) && !["counted", "count", "ready"].includes(text(sub, subT, CONFIG.fields.sub.mode).toLowerCase())) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
+  const enrollmentId = one(ids(sub, subT, CONFIG.fields.sub.enrollment), "Submission Enrollment");
+  const weekId = one(ids(sub, subT, CONFIG.fields.sub.week), "Submission Week");
+  const [enrollment, week] = await Promise.all([enrT.selectRecordAsync(enrollmentId), weekT.selectRecordAsync(weekId)]);
+  if (!enrollment || !week) throw new Error("Submission Enrollment/Week not found.");
+  if (exists(enrT, CONFIG.fields.enr.active) && !bool(enrollment, enrT, CONFIG.fields.enr.active)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_inactive_enrollment");
+  const programId = one(ids(enrollment, enrT, CONFIG.fields.enr.program), "Enrollment Program Instance");
+  const gradeId = ids(enrollment, enrT, CONFIG.fields.enr.grade)[0] || "";
+  const program = await piT.selectRecordAsync(programId);
+  if (!program) throw new Error("Program Instance not found.");
+  if (ids(week, weekT, CONFIG.fields.week.program).length && !same(ids(week, weekT, CONFIG.fields.week.program), [programId])) throw new Error("Week Program Instance does not match Enrollment.");
+  const wasIds = ids(sub, subT, CONFIG.fields.sub.was);
+  if (wasIds.length > 1) throw new Error("Submission links multiple Weekly Athlete Summaries.");
+  const was = wasIds.length ? await wasT.selectRecordAsync(wasIds[0]) : null;
+  if (was && (!same(ids(was, wasT, CONFIG.fields.was.enrollment), [enrollmentId]) || !same(ids(was, wasT, CONFIG.fields.was.week), [weekId]))) throw new Error("Weekly Athlete Summary is not canonical for Enrollment + Week.");
+  debug("02 - Reconcile active XP and weekly summary");
+  const xpQuery = await load(xpT, Object.values(CONFIG.fields.xp));
+  const activeXp = xpQuery.records.filter((row) => bool(row, xpT, CONFIG.fields.xp.active) && same(ids(row, xpT, CONFIG.fields.xp.enrollment), [enrollmentId]) && same(ids(row, xpT, CONFIG.fields.xp.week), [weekId]));
+  const submissionXpRows = activeXp.filter((row) => ids(row, xpT, CONFIG.fields.xp.submission).includes(recordId));
+  const submissionXp = submissionXpRows.length ? submissionXpRows.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0) : null;
+  const weeklyXp = activeXp.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0);
+  const weeklyShots = was ? num(was, wasT, CONFIG.fields.was.shots) : 0;
+  const weeklyGoal = was ? num(was, wasT, CONFIG.fields.was.goal) : 0;
+  debug("03 - Resolve PHA-first homework context");
+  const phaQuery = await load(phaT, Object.values(CONFIG.fields.pha));
+  const phaRows = phaQuery.records.filter((row) => bool(row, phaT, CONFIG.fields.pha.active) && same(ids(row, phaT, CONFIG.fields.pha.program), [programId]) && same(ids(row, phaT, CONFIG.fields.pha.week), [weekId]) && (!gradeId || same(ids(row, phaT, CONFIG.fields.pha.grade), [gradeId])));
+  const homeworkAssignments = phaRows.sort((a, b) => slot(text(a, phaT, CONFIG.fields.pha.slot)).localeCompare(slot(text(b, phaT, CONFIG.fields.pha.slot)))).map((row) => `${slot(text(row, phaT, CONFIG.fields.pha.slot)) || "Homework"}: ${text(row, phaT, CONFIG.fields.pha.homework)}`).filter(Boolean);
+  const currQuery = phaRows.length ? null : await load(currT, Object.values(CONFIG.fields.curr));
+  const legacyAssignments = currQuery ? currQuery.records.filter((row) => same(ids(row, currT, CONFIG.fields.curr.week), [weekId]) && (!exists(currT, CONFIG.fields.curr.active) || bool(row, currT, CONFIG.fields.curr.active)) && (!gradeId || !ids(row, currT, CONFIG.fields.curr.grade).length || ids(row, currT, CONFIG.fields.curr.grade).includes(gradeId))).sort((a, b) => num(a, currT, CONFIG.fields.curr.order, 9999) - num(b, currT, CONFIG.fields.curr.order, 9999)).slice(0, 2).map((row, index) => `HW${index + 1}: ${first(text(row, currT, CONFIG.fields.curr.title), text(row, currT, CONFIG.fields.curr.full), row.name)}`) : [];
+  const assignments = [...homeworkAssignments, ...legacyAssignments];
+  const parent = cleanEmail(first(text(enrollment, enrT, CONFIG.fields.enr.parent), text(enrollment, enrT, CONFIG.fields.enr.parentFallback)));
+  const athlete = cleanEmail(first(text(enrollment, enrT, CONFIG.fields.enr.athlete), text(enrollment, enrT, CONFIG.fields.enr.athleteFallback)));
+  const recipients = [...new Map([[parent, { email: parent, role: "guardian", displayName: text(enrollment, enrT, CONFIG.fields.enr.name) }], [athlete, { email: athlete, role: "athlete", displayName: text(enrollment, enrT, CONFIG.fields.enr.name) }]].filter(([email]) => email).map(([email, value]) => [email, value])).values()];
+  if (!recipients.some((recipient) => recipient.role === "guardian")) throw new Error("No usable parent recipient.");
+  const payload = {
+    athleteName: first(text(enrollment, enrT, CONFIG.fields.enr.name), "Athlete"),
+    activityDate: dateText(raw(sub, subT, CONFIG.fields.sub.activity)),
+    weekName: first(text(was, wasT, CONFIG.fields.was.weekName), text(week, weekT, CONFIG.fields.week.name)),
+    shots: nonnegativeInteger(sub, subT, CONFIG.fields.sub.shots),
+    makes: nonnegativeInteger(sub, subT, CONFIG.fields.sub.makes),
+    submissionXp, ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
+    weeklyShots, weeklyGoal, weeklyGoalPercentage: pct(weeklyShots, weeklyGoal), weeklyXp,
+    currentStreak: num(enrollment, enrT, CONFIG.fields.enr.streak), currentLevel: text(enrollment, enrT, CONFIG.fields.enr.currentLevel), nextLevel: text(enrollment, enrT, CONFIG.fields.enr.nextLevel),
+    programName: first(text(program, piT, CONFIG.fields.pi.name), program.name, "Shooting Challenge"),
+    ...(assignments.length ? { homeworkAssignments: assignments } : {}),
+  };
+  if (!payload.activityDate || !payload.weekName) throw new Error("Submission Activity Date and Week Name are required.");
+  if (payload.makes > payload.shots) throw new Error("Total Makes Counted cannot exceed Total Shots Counted.");
+  const queueData = queueFields(queueT, {
+    [CONFIG.fields.queue.key]: handoffKey, [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: "DAILY_SUBMISSION", [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
+    [CONFIG.fields.queue.source]: recordId, [CONFIG.fields.queue.enrollment]: enrollmentId, [CONFIG.fields.queue.pi]: programId,
+    [CONFIG.fields.queue.recipients]: JSON.stringify(recipients), [CONFIG.fields.queue.payload]: JSON.stringify(payload),
+    [CONFIG.fields.queue.testMode]: cfg.testMode === undefined ? true : Boolean(cfg.testMode), [CONFIG.fields.queue.attempts]: 0,
+  });
+  debug("04 - Idempotent Email Handoff Queue create");
+  const existing = (await queueT.selectRecordsAsync({ fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (existing.length > 1) {
+    await markQueueNeedsReview(queueT, existing);
+    setOutput("statusOut", "error"); setOutput("actionOut", "needs_review"); throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
+  }
+  if (existing.length === 1) {
+    if (!samePayload(text(existing[0], queueT, CONFIG.fields.queue.payload), payload)) {
+      await markQueueNeedsReview(queueT, existing);
+      throw new Error(`Conflicting Email Handoff Queue payload for ${handoffKey}.`);
+    }
+    await clearBuildSignal(subT, recordId);
+    setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", existing[0].id); setOutput("handoffKey", handoffKey); return;
+  }
+  const recheck = (await queueT.selectRecordsAsync({ fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (recheck.length) {
+    if (recheck.length > 1) { await markQueueNeedsReview(queueT, recheck); throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`); }
+    await clearBuildSignal(subT, recordId);
+    setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", recheck[0].id); setOutput("handoffKey", handoffKey); return;
+  }
+  const created = await queueT.createRecordAsync(queueData);
+  const afterCreate = (await queueT.selectRecordsAsync({ fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (afterCreate.length !== 1) { await markQueueNeedsReview(queueT, afterCreate); throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`); }
+  await queueT.updateRecordAsync(created, { [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready) });
+  await clearBuildSignal(subT, recordId);
+  setOutput("statusOut", "success"); setOutput("actionOut", "created_handoff"); setOutput("queueRecordId", created); setOutput("handoffKey", handoffKey); setOutput("errorOut", "");
+  console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "success", actionOut: "created_handoff", queueRecordId: created, handoffKey }));
 }
-main().catch(async err=>{try{const cfg=input.config(),id=String(cfg.recordId||"").trim();if(id){const t=base.getTable(T.sub),u={};if(field(t,F.sub.send))u[F.sub.send]=false;if(field(t,F.sub.status))u[F.sub.status]=setSelect(t,F.sub.status,"Error");if(Object.keys(u).length)await t.updateRecordAsync(id,u)}}catch{}output.set("statusOut","error");output.set("errorOut",String(err.message||err));throw err});
+
+try { await main(); } catch (error) { setOutput("statusOut", "error"); setOutput("actionOut", "error"); setOutput("errorOut", String(error.message || error)); throw error; }
