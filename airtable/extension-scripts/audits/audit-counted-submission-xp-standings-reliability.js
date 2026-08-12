@@ -7,11 +7,12 @@ Default: read-only. This script never creates, updates, deletes, or sends.
 */
 // @ts-nocheck
 const SAMPLE_LIMIT = 25;
+const SCHEMA_SNAPSHOT = "20260629_045741";
 const CONFIG = {
   tables: { submissions: "Submissions", xp: "XP Events", was: "Weekly Athlete Summary", enrollments: "Enrollments" },
   f: {
     sub: { count: "Count This Submission?", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
-    xp: { key: "Source Key", active: "Active?", points: "XP Points", submission: "Submission", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
+    xp: { key: "Source Key", active: "Active?", points: "XP Points", activePoints: "Active XP Points", submission: "Submission", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
     was: { enrollment: "Enrollment", week: "Week", goalRecord: "Goal Record", goalLookup: "Goal Shots Target", weeklyGoal: "Weekly Goal Shots Target", weeklyXp: "XP Earned This Week" },
     enr: { active: "Active?", xp: "Lifetime XP Total", manual: "Lifetime XP Manual Adjustments", recalc: "Level Recalc Needed?", status: "Level Status", current: "Current Level", sort: "Level Sort Order - For Softr", program: "Program Instance", schoolYear: "School Year" },
   },
@@ -83,13 +84,13 @@ async function main() {
   }
   for (const enrollment of enrollments.records) {
     const id = enrollment.id, activeXp = activeXpByEnrollment.get(id) || [];
-    const computed = activeXp.reduce((sum, xp) => sum + (numberState(xp, xpT, CONFIG.f.xp.points).value || 0), 0);
+    const computed = activeXp.reduce((sum, xp) => sum + (numberState(xp, xpT, CONFIG.f.xp.activePoints).value || 0), 0);
     const total = numberState(enrollment, enrT, CONFIG.f.enr.xp), manual = numberState(enrollment, enrT, CONFIG.f.enr.manual);
     const expected = computed + (manual.value || 0);
     if (total.kind === "number" && total.value !== expected) add("lifetime_xp_discrepancy", "error", enrollment, { expected, actual: total.value, activeXp: computed, manualAdjustment: manual.value || 0 }, "Run 090E and inspect rollup links/active flags.");
     if (yes(enrollment, enrT, CONFIG.f.enr.recalc)) add("progression_recalc_pending", "warn", enrollment, { levelStatus: text(enrollment, enrT, CONFIG.f.enr.status) }, "041 has queued work; verify 042 consumes it. No timestamp field means age is not inferable.");
     if (yes(enrollment, enrT, CONFIG.f.enr.active) && (!text(enrollment, enrT, CONFIG.f.enr.current) || numberState(enrollment, enrT, CONFIG.f.enr.sort).kind !== "number" || !one(enrollment, enrT, CONFIG.f.enr.program) || !text(enrollment, enrT, CONFIG.f.enr.schoolYear))) add("likely_absent_from_standings", "warn", enrollment, { active: true }, "Check Web - Leaderboard view and required standings inputs; this audit cannot read view membership.");
   }
-  console.log(JSON.stringify({ audit: "counted-submission-xp-standings-reliability", readOnly: true, counts, findingCount: Object.values(counts).reduce((a, b) => a + b, 0), samples: findings, limitations: ["Formula/rollup timing cannot be proved from one read; formula_unsettled_or_invalid is intentionally distinct from missing configuration.", "Standings view membership is not available to Scripting extension reads."] }, null, 2));
+  console.log(JSON.stringify({ audit: "counted-submission-xp-standings-reliability", schemaSnapshot: SCHEMA_SNAPSHOT, readOnly: true, counts, findingCount: Object.values(counts).reduce((a, b) => a + b, 0), samples: findings, limitations: ["Formula/rollup timing cannot be proved from one read; formula_unsettled_or_invalid is intentionally distinct from missing configuration.", "Standings view membership is not available to Scripting extension reads."] }, null, 2));
 }
 await main();
