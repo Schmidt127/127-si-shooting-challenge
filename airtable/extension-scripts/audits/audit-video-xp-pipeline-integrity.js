@@ -337,6 +337,7 @@ async function main() {
     xp_points_mismatch: [],
     award_status_gap: [],
     missing_weekly_summary_on_xp: [],
+    canonical_was_unresolved: [],
     invalid_source_identity: [],
     inactive_or_ineligible_source: [],
     inactive_xp_event: [],
@@ -367,7 +368,6 @@ async function main() {
         totalVideoXp: getNumberish(videoRecord, videoTable, CONFIG.video.totalVideoXp),
         recommendedAction: "Complete video review (113/114) or skip if Do Not Award XP",
       });
-      continue;
     }
 
     const linkedXpIds = getLinkedIds(videoRecord, videoTable, CONFIG.video.xpEvents);
@@ -439,15 +439,21 @@ async function main() {
       hasIssue = true;
     }
 
-    const sourceIneligible = !enrollmentRecord ||
+    const videoIneligible =
+      !getBooleanish(videoRecord, videoTable, CONFIG.video.active) ||
+      !getBooleanish(videoRecord, videoTable, CONFIG.video.feedbackPosted) ||
+      getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp);
+    const sourceIneligible = videoIneligible || !enrollmentRecord ||
       !getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active) ||
-      !submissionRecord ||
-      !getBooleanish(submissionRecord, submissionsTable, CONFIG.submissions.countThisSubmission);
+      !submissionRecord;
 
     if (sourceIneligible) {
       bump("inactive_or_ineligible_source");
       pushSample("inactive_or_ineligible_source", {
         videoFeedbackId,
+        videoActive: getBooleanish(videoRecord, videoTable, CONFIG.video.active),
+        feedbackPosted: getBooleanish(videoRecord, videoTable, CONFIG.video.feedbackPosted),
+        doNotAwardXp: getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp),
         enrollmentActive: enrollmentRecord
           ? getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active)
           : null,
@@ -463,14 +469,16 @@ async function main() {
     }
 
     if (xpIds.length === 0) {
-      bump("missing_xp_event");
-      pushSample("missing_xp_event", {
-        videoFeedbackId,
-        name: videoRecord.name,
-        expectedSourceKey: expectedKey,
-        totalVideoXp: totalXp,
-        recommendedAction: "Run 114 or backfill-video-xp-from-posted-feedback.js (planned)",
-      });
+      if (readiness.ready) {
+        bump("missing_xp_event");
+        pushSample("missing_xp_event", {
+          videoFeedbackId,
+          name: videoRecord.name,
+          expectedSourceKey: expectedKey,
+          totalVideoXp: totalXp,
+          recommendedAction: "Run 114 or backfill-video-xp-from-posted-feedback.js (planned)",
+        });
+      }
       continue;
     }
 
@@ -499,9 +507,9 @@ async function main() {
     const primaryPoints = primaryXp
       ? getNumberish(primaryXp, xpEventsTable, CONFIG.xpEvents.xpPoints)
       : 0;
-    const primaryWasId = primaryXp
-      ? getFirstLinkedId(primaryXp, xpEventsTable, CONFIG.xpEvents.weeklySummary)
-      : "";
+    const primaryWasIds = primaryXp
+      ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.weeklySummary)
+      : [];
     const primaryEnrollmentIds = primaryXp
       ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.enrollment)
       : [];
@@ -609,14 +617,38 @@ async function main() {
       hasIssue = true;
     }
 
-    if (weeklySummaryId && primaryXp && !primaryWasId) {
+    const canonicalWasCandidates = enrollmentId && weekId
+      ? summaryIndex.get(buildSummaryIndexKey(enrollmentId, weekId)) || []
+      : [];
+    if (canonicalWasCandidates.length !== 1) {
+      bump("canonical_was_unresolved");
+      pushSample("canonical_was_unresolved", {
+        videoFeedbackId,
+        xpEventId: primaryXpId,
+        enrollmentId,
+        weekId,
+        canonicalWasCandidates,
+        recommendedAction: "Manual review. Exactly one canonical Weekly Athlete Summary is required before repair or replay.",
+      });
+      hasIssue = true;
+    }
+
+    if (
+      primaryXp &&
+      (
+        !weeklySummaryId ||
+        primaryWasIds.length !== 1 ||
+        primaryWasIds[0] !== weeklySummaryId
+      )
+    ) {
       bump("missing_weekly_summary_on_xp");
       pushSample("missing_weekly_summary_on_xp", {
         videoFeedbackId,
         name: videoRecord.name,
         xpEventId: primaryXpId,
-        expectedWeeklySummaryId: weeklySummaryId,
-        recommendedAction: "Link XP Event to Weekly Athlete Summary",
+        expectedWeeklySummaryId: weeklySummaryId || "",
+        actualWeeklySummaryIds: primaryWasIds,
+        recommendedAction: "Manual review. Link the XP Event to exactly the canonical Weekly Athlete Summary only.",
       });
       hasIssue = true;
     }
@@ -655,6 +687,7 @@ async function main() {
     xpPointsMismatchSample: buckets.xp_points_mismatch,
     awardStatusGapSample: buckets.award_status_gap,
     missingWasSample: buckets.missing_weekly_summary_on_xp,
+    canonicalWasUnresolvedSample: buckets.canonical_was_unresolved,
     invalidSourceIdentitySample: buckets.invalid_source_identity,
     inactiveOrIneligibleSourceSample: buckets.inactive_or_ineligible_source,
     inactiveXpSample: buckets.inactive_xp_event,

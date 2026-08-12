@@ -48,7 +48,7 @@ const TARGETS = [
   {
     num: "114",
     file: "114-video-review-and-xp-create-or-update-video-xp-event.js",
-    versionRe: /Version:\s*v5\.9/,
+    versionRe: /Version:\s*v6\.1/,
     queryVars: ["xpQuery"],
   },
   {

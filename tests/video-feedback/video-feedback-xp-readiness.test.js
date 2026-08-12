@@ -48,7 +48,7 @@ function eligibleForVideoXp(row) {
   if (row.videoEnrollmentIds.length !== 1 || row.videoSubmissionIds.length !== 1) return false;
   if (!row.enrollmentActive || row.submissionEnrollmentIds.length !== 1) return false;
   if (row.submissionEnrollmentIds[0] !== row.videoEnrollmentIds[0]) return false;
-  if (row.submissionWeekIds.length !== 1 || !row.countThisSubmission) return false;
+  if (row.submissionWeekIds.length !== 1) return false;
   return Boolean(row.activityDate) && row.activityDate <= row.today;
 }
 
@@ -72,7 +72,7 @@ test("114 syntax", () => checkSyntax(scriptPath));
 test("Video XP audit syntax", () => checkSyntax(auditPath));
 
 test("stable writer and source key are documented", () => {
-  assert.match(source, /Version: v6\.0/);
+  assert.match(source, /Version: v6\.1/);
   assert.match(source, /sourceKey = `VIDEO_SUBMISSION\|\$\{recordId\}`/);
   assert.match(source, /One Video Feedback record = one XP Event/);
   assert.match(source, /Last-Chance XP Event Recheck Before Create/);
@@ -111,7 +111,6 @@ test("inactive, rejected, incomplete, mismatched, uncountable, and future inputs
     { enrollmentActive: false },
     { submissionEnrollmentIds: ["recOther"] },
     { submissionWeekIds: [] },
-    { countThisSubmission: false },
     { activityDate: "2026-08-13" },
   ];
   for (const change of cases) {
@@ -125,13 +124,13 @@ test("114 implements all source eligibility guards before XP Event matching", ()
     "skipped_invalid_enrollment_link",
     "skipped_inactive_enrollment",
     "skipped_submission_enrollment_mismatch",
-    "skipped_submission_not_countable",
     "skipped_submission_activity_date_missing",
     "skipped_submission_activity_date_future",
     "Submission Week",
   ]) {
     assert.ok(source.includes(token), `missing 114 guard: ${token}`);
   }
+  assert.doesNotMatch(source, /skipped_submission_not_countable/);
 });
 
 test("114 writes the active Video Submission / Video Feedback contract links", () => {

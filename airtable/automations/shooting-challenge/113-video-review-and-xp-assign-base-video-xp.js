@@ -26,21 +26,22 @@ Airtable is the deployed/running copy.
  * 113 - VIDEO REVIEW AND XP
  * Assign Base Video XP
  *
- * Version: v6.2
- * Date Updated: 2026-06-20
+ * Version: v6.4
+ * Date Updated: 2026-08-12
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
  * - Confirms video feedback has been posted.
  * - Confirms the record should receive XP.
- * - Reads the active shared video XP rule from XP Reward Rules.
+ * - Requires exactly one active canonical video XP rule from XP Reward Rules.
  * - Uses Rule Key = VIDEO_SUBMISSION.
  * - Does NOT use Grade Band.
  * - Writes XP Reward Rules -> XP Amount into Video Feedback -> Base XP Awarded.
  * - Sets Award Status to Pending.
  * - Checks Ready for XP Automation? so Automation 114 can create/update the XP Event.
  * - Writes Reviewed By and Reviewed At when the review is completed.
- * - Does NOT create the XP Event.
+ * - Does NOT create, deactivate, or reactivate the XP Event.
+ * - May re-arm 114 only for one correctly owned inactive canonical XP Event.
  *
  * REQUIRED INPUT VARIABLE
  * - recordId = Airtable record ID from the triggering Video Feedback record
@@ -51,11 +52,13 @@ Airtable is the deployed/running copy.
 async function main() {
     const CONFIG = {
         automation: "113 - Video Review and XP - Assign Base Video XP",
-        version: "v6.2",
+        version: "v6.4",
 
         tables: {
             videoFeedback: "Video Feedback",
             xpRewardRules: "XP Reward Rules",
+            submissions: "Submissions",
+            xpEvents: "XP Events",
         },
 
         videoFields: {
@@ -84,6 +87,16 @@ async function main() {
             xpAmount: "XP Amount",
         },
 
+        submissionFields: {
+            enrollment: "Enrollment",
+        },
+
+        xpEventFields: {
+            sourceKey: "Source Key",
+            videoFeedback: "Video Feedback",
+            active: "Active?",
+        },
+
         values: {
             ruleKeyVideoSubmission: "VIDEO_SUBMISSION",
             awardStatusPending: "Pending",
@@ -103,6 +116,8 @@ async function main() {
 
     const videoTable = base.getTable(CONFIG.tables.videoFeedback);
     const rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
+    const submissionsTable = base.getTable(CONFIG.tables.submissions);
+    const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
 
     function log(label, data = null) {
         if (data === null || data === undefined) {
@@ -301,13 +316,9 @@ async function main() {
     }
 
     function ruleKeyMatches(ruleRecord) {
-        const ruleKeyText = getText(ruleRecord, rulesTable, CONFIG.ruleFields.ruleKey);
-        const rewardRuleText = getText(ruleRecord, rulesTable, CONFIG.ruleFields.rewardRule);
-
-        return (
-            normalize(ruleKeyText) === normalize(CONFIG.values.ruleKeyVideoSubmission) ||
-            normalize(rewardRuleText) === normalize("Video Submission")
-        );
+        return normalize(
+            getText(ruleRecord, rulesTable, CONFIG.ruleFields.ruleKey)
+        ) === normalize(CONFIG.values.ruleKeyVideoSubmission);
     }
 
     function getRuleDisplayName(ruleRecord) {
@@ -343,6 +354,13 @@ async function main() {
         CONFIG.ruleFields.ruleKey,
         CONFIG.ruleFields.xpAmount,
     ].forEach(fieldName => requireField(rulesTable, fieldName));
+
+    requireField(submissionsTable, CONFIG.submissionFields.enrollment);
+    [
+        CONFIG.xpEventFields.sourceKey,
+        CONFIG.xpEventFields.videoFeedback,
+        CONFIG.xpEventFields.active,
+    ].forEach(fieldName => requireField(xpEventsTable, fieldName));
 
     /* =========================================================
        Load Video Feedback record
@@ -442,27 +460,90 @@ async function main() {
         return;
     }
 
-    if (!enrollmentIds.length) {
-        finish("skipped", "missing_enrollment", { error: "Enrollment is empty." });
-        return;
-    }
-
-    if (!submissionIds.length) {
-        finish("skipped", "missing_submission", { error: "Submission is empty." });
-        return;
-    }
-
-    if (normalize(currentAwardStatus) === normalize(CONFIG.values.awardStatusAwarded)) {
-        finish("skipped", "already_awarded", {
-            error: "Award Status is already Awarded.",
-            baseXp: currentBaseXp || 0,
+    if (enrollmentIds.length !== 1) {
+        finish("skipped", "invalid_enrollment_link", {
+            error: "Enrollment must contain exactly one linked record.",
         });
         return;
     }
 
-    if (existingXpEventIds.length > 0) {
-        finish("skipped", "xp_event_already_exists", {
-            error: "XP Events already linked. 113 will not re-arm 114.",
+    if (submissionIds.length !== 1) {
+        finish("skipped", "invalid_submission_link", {
+            error: "Submission must contain exactly one linked record.",
+        });
+        return;
+    }
+
+    const enrollmentId = enrollmentIds[0];
+    const submissionId = submissionIds[0];
+    const submissionRecord = await submissionsTable.selectRecordAsync(submissionId);
+    if (!submissionRecord) {
+        throw new Error(`Linked Submission record not found: ${submissionId}`);
+    }
+
+    const submissionEnrollmentIds = getLinkedIds(
+        submissionRecord,
+        submissionsTable,
+        CONFIG.submissionFields.enrollment
+    );
+    if (
+        submissionEnrollmentIds.length !== 1 ||
+        submissionEnrollmentIds[0] !== enrollmentId
+    ) {
+        finish("skipped", "submission_enrollment_mismatch", {
+            error: "Submission Enrollment must contain exactly the Video Feedback Enrollment.",
+        });
+        return;
+    }
+
+    const expectedSourceKey = `VIDEO_SUBMISSION|${recordId}`;
+    if (existingXpEventIds.length > 1) {
+        throw new Error(
+            `Video Feedback has multiple linked XP Events: ${existingXpEventIds.join(", ")}.`
+        );
+    }
+
+    let rearmingInactiveCanonicalEvent = false;
+    if (existingXpEventIds.length === 1) {
+        const linkedXpEvent = await xpEventsTable.selectRecordAsync(existingXpEventIds[0]);
+        if (!linkedXpEvent) {
+            throw new Error(`Video Feedback links missing XP Event: ${existingXpEventIds[0]}.`);
+        }
+        const linkedSourceKey = getText(
+            linkedXpEvent,
+            xpEventsTable,
+            CONFIG.xpEventFields.sourceKey
+        );
+        const linkedVideoFeedbackIds = getLinkedIds(
+            linkedXpEvent,
+            xpEventsTable,
+            CONFIG.xpEventFields.videoFeedback
+        );
+        if (
+            linkedSourceKey !== expectedSourceKey ||
+            linkedVideoFeedbackIds.length !== 1 ||
+            linkedVideoFeedbackIds[0] !== recordId
+        ) {
+            throw new Error(
+                "Linked XP Event is not the exact canonical Video Feedback XP Event. Manual review required."
+            );
+        }
+        if (getCheckbox(linkedXpEvent, xpEventsTable, CONFIG.xpEventFields.active)) {
+            finish("skipped", "xp_event_already_active", {
+                error: "Exact canonical Video Feedback XP Event is already active.",
+                baseXp: currentBaseXp || 0,
+            });
+            return;
+        }
+        rearmingInactiveCanonicalEvent = true;
+    }
+
+    if (
+        normalize(currentAwardStatus) === normalize(CONFIG.values.awardStatusAwarded) &&
+        !rearmingInactiveCanonicalEvent
+    ) {
+        finish("skipped", "already_awarded", {
+            error: "Award Status is already Awarded.",
             baseXp: currentBaseXp || 0,
         });
         return;
@@ -483,20 +564,13 @@ async function main() {
 
     const matchingRules = rulesQuery.records.filter(ruleRecord => {
         const active = getCheckbox(ruleRecord, rulesTable, CONFIG.ruleFields.active);
-        const xpAmount = getNumber(ruleRecord, rulesTable, CONFIG.ruleFields.xpAmount);
-
-        return active && ruleKeyMatches(ruleRecord) && typeof xpAmount === "number" && xpAmount > 0;
+        return active && ruleKeyMatches(ruleRecord);
     });
 
-    if (!matchingRules.length) {
-        throw new Error(`No active XP Reward Rule found for Rule Key = ${CONFIG.values.ruleKeyVideoSubmission}`);
-    }
-
-    if (matchingRules.length > 1) {
-        log("113 warning - multiple matching rules found. Using first.", {
-            matchingRuleIds: matchingRules.map(record => record.id),
-            matchingRuleNames: matchingRules.map(record => getRuleDisplayName(record)),
-        });
+    if (matchingRules.length !== 1) {
+        throw new Error(
+            `Expected exactly one active XP Reward Rule with Rule Key = ${CONFIG.values.ruleKeyVideoSubmission}; found ${matchingRules.length}.`
+        );
     }
 
     const matchedRule = matchingRules[0];
@@ -608,7 +682,7 @@ try {
 
     console.log("113 failed", JSON.stringify({
         automation: "113 - Video Review and XP - Assign Base Video XP",
-        version: "v6.2",
+        version: "v6.4",
         statusOut: "error",
         actionOut: "error",
         errorOut: message,
