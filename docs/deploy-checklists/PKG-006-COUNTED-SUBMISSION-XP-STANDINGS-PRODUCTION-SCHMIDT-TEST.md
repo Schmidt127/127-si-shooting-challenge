@@ -5,7 +5,8 @@ Status: Production-only packet; no DEV Airtable evidence is claimed or required.
 ## Scope and safety
 
 This packet verifies eventual pipeline settlement for one existing, eligible
-Schmidt Submission. Mike owns every Production action. Do not change formulas,
+Schmidt Submission and Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`).
+Mike alone owns every Production action. Do not change formulas,
 schema, views, trigger settings, or automation enablement. Do not re-arm an
 email queue row or allow 079 to dispatch as part of this packet.
 
@@ -15,8 +16,8 @@ XP statement and is not a failure by itself.
 
 ## Preflight readback
 
-1. Capture the current deployed code/version and trigger conditions for 023,
-   005, 010, 031, 076, 041, and 042.
+1. Capture the current deployed code/version and trigger conditions for 010,
+   031, 035, 041, and 042. Confirm Automation 043 remains OFF/retired.
 2. Select one existing counted Schmidt Submission; record its Submission,
    Enrollment, Week, and current WAS record IDs. Do not hardcode those IDs into
    an automation input.
@@ -38,14 +39,28 @@ XP statement and is not a failure by itself.
    - Goal Shots Target and Weekly Goal Shots Target both zero = configured zero;
    - nonzero Goal Shots Target but blank/zero Weekly Goal Shots Target = wait for
      formula settlement, then investigate if persistent.
-5. After Airtable settles, compare WAS active weekly XP to active XP Events for
-   the Enrollment + Week, then compare Enrollment Lifetime XP Total to active
-   ledger XP plus manual adjustment.
-6. Confirm 041 queues recalculation following the changed lifetime total, then
+5. After Airtable settles, calculate expected weekly XP as the sum of
+   `Active XP Points` for all XP Events linked to the Enrollment + Week,
+   including eligible Submission Base and any prior eligible award; inactive
+   or duplicate-removed events contribute zero. Compare that sum with WAS
+   `XP Earned This Week`.
+6. Calculate expected Enrollment Lifetime XP as all Enrollment-linked `Active
+   XP Points` plus the approved `Lifetime XP Manual Adjustments`; compare it to
+   `Lifetime XP Total`.
+7. When `Threshold XP Ready? = 1`, record Goal Completion % and the active
+   threshold rule keys, then run only Mike's explicitly approved Automation
+   035 test. Verify one event per met 100/125/150 tier, source key
+   `WEEKLY_THRESHOLD|{Enrollment ID}|{Week ID}|{Percent}`, correct WAS link,
+   and a replay that creates zero additional events. If readiness is not set,
+   do not force it merely to test 035.
+8. Confirm 041 queues recalculation following the changed lifetime total, then
    confirm 042 clears the queue and assigns Current Level/Next Level from the
    settled value.
-7. Confirm the active Enrollment has the fields required by `Web - Leaderboard`:
-   current level/sort, Lifetime XP Total, Program Instance, and School Year.
+9. Confirm the active Enrollment has the repository standings inputs:
+   Full Athlete Name, Grade, Current Level - Public Facing Display, Level Sort
+   Order - For Softr, Lifetime XP Total, Total Shots Counted, School Year, and
+   Program Instance Name Only. This proves underlying inputs only; Production
+   view membership and public rendering remain separate evidence.
 
 ## Replay and evidence
 
@@ -55,9 +70,10 @@ XP statement and is not a failure by itself.
    canonical WAS are created.
 3. Verify no new Email Handoff Queue row is dispatched. A historical pending
    receipt is expected to remain unchanged.
-4. Save record IDs, 010/031/041/042 run timestamps and outputs, source key,
-   WAS goal classification, active XP sums, Enrollment total, and final level
-   values. Run the new read-only audit and save its JSON output.
+4. Save record IDs, 010/031/035/041/042 run timestamps and outputs, source
+   keys, WAS goal classification, weekly/lifetime active-XP calculations,
+   Enrollment total, final level values, and standings input values. Run the
+   new read-only audit and save its JSON output.
 
 ## Stop conditions
 
