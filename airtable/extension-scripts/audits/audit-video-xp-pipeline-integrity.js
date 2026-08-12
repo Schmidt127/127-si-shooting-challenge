@@ -20,7 +20,7 @@ const SAMPLE_LIMIT = 25;
 
 const CONFIG = {
   scriptName: "audit-video-xp-pipeline-integrity",
-  version: "v1.2",
+  version: "v1.3",
 
   tables: {
     video: "Video Feedback",
@@ -134,6 +134,17 @@ function getBooleanish(record, table, fieldName) {
 
 function normalizeText(value) {
   return String(value || "").trim().toLowerCase();
+}
+
+function denverDateKey(value) {
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
 function buildSourceKey(videoFeedbackId) {
@@ -443,9 +454,16 @@ async function main() {
       !getBooleanish(videoRecord, videoTable, CONFIG.video.active) ||
       !getBooleanish(videoRecord, videoTable, CONFIG.video.feedbackPosted) ||
       getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp);
+    const activityDate = submissionRecord && fieldExists(submissionsTable, CONFIG.submissions.activityDate)
+      ? submissionRecord.getCellValue(CONFIG.submissions.activityDate)
+      : null;
+    const activityDateKey = denverDateKey(activityDate);
+    const futureActivityDate =
+      Boolean(activityDateKey) && activityDateKey > denverDateKey(new Date());
     const sourceIneligible = videoIneligible || !enrollmentRecord ||
       !getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active) ||
-      !submissionRecord;
+      !submissionRecord ||
+      futureActivityDate;
 
     if (sourceIneligible) {
       bump("inactive_or_ineligible_source");
@@ -463,6 +481,7 @@ async function main() {
         activityDate: submissionRecord
           ? getText(submissionRecord, submissionsTable, CONFIG.submissions.activityDate)
           : "",
+        futureActivityDate,
         recommendedAction: "Do not replay 114. Review any existing active XP Event manually before a controlled correction.",
       });
       hasIssue = true;
