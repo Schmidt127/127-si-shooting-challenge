@@ -182,6 +182,15 @@ export function build031Base(opts = {}) {
   ]);
 
   const summariesTable = new MockTable("Weekly Athlete Summary", summariesFields(), summaries);
+  const createSummary = summariesTable.createRecordAsync.bind(summariesTable);
+  summariesTable.createRecordAsync = async (payload) => {
+    const createdId = await createSummary(payload);
+    // Simulate Airtable evaluating the read-only Summary Key formula after
+    // create; the payload itself must never contain Summary Key.
+    const created = summariesTable.records.get(createdId);
+    created.cells["Summary Key"] = TARGET_SUMMARY_KEY;
+    return createdId;
+  };
   const xpEventsTable = new MockTable("XP Events", xpEventsFields(), xpEvents);
 
   return new MockBase([

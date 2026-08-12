@@ -109,7 +109,7 @@ test("valid existing link stays canonical and repairs missing back-links", async
 
   const { output, error } = await run031({ base });
   assert.equal(error, null, error && error.message);
-  assert.equal(output.values.actionTaken, "found_existing_valid_summary");
+  assert.equal(output.values.actionTaken, "found_existing_summary");
   assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_CANONICAL), [{ id: IDS.SUBMISSION }]);
@@ -292,6 +292,7 @@ test("missing Enrollment or Week fails before readiness is armed", async () => {
       base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
       false
     );
+    assert.equal(base.getTable("Weekly Athlete Summary").createdPayloads.length, 0);
     assert.equal(totalWrites(base), 0);
   }
 });
@@ -349,40 +350,88 @@ test("final summary validation failure leaves readiness unchanged", async () => 
   );
 });
 
-test("no existing link with zero valid candidates fails closed without writes", async () => {
+test("first valid Simple Total Submission creates one canonical summary", async () => {
   const base = build031Base({
     submissionCells: {
       "Weekly Athlete Summary": [],
     },
-    summaries: [
-      new MockRecord(IDS.SUMMARY_STALE, {
-        "Summary Key": "ENR-OLD|WEEK-OLD",
-        Enrollment: [{ id: "recWrongEnrollment031", name: "Wrong Enrollment" }],
-        Week: [{ id: "recWrongWeek031", name: "Wrong Week" }],
-        Submissions: [{ id: "recUnrelatedSubmission031", name: "Unrelated" }],
-        "Summary Calculation Status": "",
-        Created: "2026-08-06T00:00:00.000Z",
-      }),
-    ],
+    summaries: [],
   });
-  const beforeXpLinks = [
-    xpSummaryIds(base, IDS.XP_ORPHAN),
-    xpSummaryIds(base, IDS.XP_STALE),
-  ];
 
   const { output, error } = await run031({ base });
 
-  assert.ok(error);
-  assert.match(String(error.message), /no unique canonical weekly athlete summary exists/i);
-  assert.match(String(output.values.errorOut), /found 0 fully valid candidates/i);
-  assert.equal(totalWrites(base), 0);
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "created");
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.ok(output.values.weeklySummaryId);
   assert.equal(base.getTable("Weekly Athlete Summary").records.size, 1);
-  assert.deepEqual(submissionSummaryIds(base), []);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: "recUnrelatedSubmission031", name: "Unrelated" },
+  const created = base.getTable("Weekly Athlete Summary").records.get(output.values.weeklySummaryId);
+  const payload = base.getTable("Weekly Athlete Summary").createdPayloads[0].payload;
+  assert.deepEqual(payload.Enrollment, [{ id: IDS.ENROLLMENT }]);
+  assert.deepEqual(payload.Week, [{ id: IDS.WEEK }]);
+  assert.equal(payload["Summary Key"], undefined);
+  assert.equal(payload["Summary Calculation Status"].id, "selComplete");
+  assert.equal(created.cells["Summary Key"], "ENR-2026-2027|WEEK-EARLY-BIRD");
+  assert.deepEqual(submissionSummaryIds(base), [{ id: output.values.weeklySummaryId }]);
+  assert.deepEqual(summarySubmissionIds(base, output.values.weeklySummaryId), [
+    { id: IDS.SUBMISSION },
   ]);
-  assert.deepEqual(xpSummaryIds(base, IDS.XP_ORPHAN), beforeXpLinks[0]);
-  assert.deepEqual(xpSummaryIds(base, IDS.XP_STALE), beforeXpLinks[1]);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
+});
+
+test("first valid Detailed Shooting Submission creates one canonical summary", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Submission Stat Mode": "Detailed Shooting",
+      "Weekly Athlete Summary": [],
+    },
+    summaries: [],
+  });
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.equal(base.getTable("Weekly Athlete Summary").records.size, 1);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
+});
+
+test("post-create concurrent canonical duplicate fails before readiness", async () => {
+  const base = build031Base({ summaries: [] });
+  const summaries = base.getTable("Weekly Athlete Summary");
+  const originalCreate = summaries.createRecordAsync.bind(summaries);
+  summaries.createRecordAsync = async (payload) => {
+    const createdId = await originalCreate(payload);
+    summaries.records.set(
+      IDS.SUMMARY_DUPLICATE,
+      new MockRecord(IDS.SUMMARY_DUPLICATE, {
+        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
+        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+        Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+        Submissions: [],
+        "Summary Calculation Status": "",
+        Created: "2026-08-07T00:01:00.000Z",
+      })
+    );
+    return createdId;
+  };
+
+  const { output, error } = await run031({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /create conflict/i);
+  assert.match(String(error.message), new RegExp(IDS.SUMMARY_DUPLICATE));
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.equal(output.values.readinessOut, "error");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
+  assert.equal(base.getTable("Weekly Athlete Summary").createdPayloads.length, 1);
 });
 
 test("repairs non-Submission-Base XP Events but leaves Submission Base untouched", async () => {
@@ -456,7 +505,7 @@ test("stale existing link repairs to the canonical summary and moves matching XP
   assert.deepEqual(xpSummaryIds(base, IDS.XP_STALE), [{ id: IDS.SUMMARY_CANONICAL }]);
 });
 
-test("stale existing link fails closed on zero valid candidates without writes", async () => {
+test("stale existing link creates canonical summary and repairs the stale link", async () => {
   const base = build031Base({
     submissionCells: {
       "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
@@ -474,15 +523,16 @@ test("stale existing link fails closed on zero valid candidates without writes",
   });
 
   const { output, error } = await run031({ base });
-  assert.ok(error);
-  assert.match(String(error.message), /no unique canonical weekly athlete summary exists/i);
-  assert.equal(output.values.statusOut, "error");
-  assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: IDS.SUBMISSION, name: "Submission" },
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.equal(base.getTable("Weekly Athlete Summary").records.size, 2);
+  assert.deepEqual(submissionSummaryIds(base), [{ id: output.values.weeklySummaryId }]);
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
+  assert.deepEqual(summarySubmissionIds(base, output.values.weeklySummaryId), [
+    { id: IDS.SUBMISSION },
   ]);
   assert.deepEqual(xpSummaryIds(base, IDS.XP_STALE), [
-    { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
+    { id: output.values.weeklySummaryId },
   ]);
 });
 
@@ -499,7 +549,7 @@ test("replay after repair is idempotent", async () => {
 
   const second = await run031({ base });
   assert.equal(second.error, null, second.error && second.error.message);
-  assert.equal(second.output.values.actionTaken, "found_existing_valid_summary");
+  assert.equal(second.output.values.actionTaken, "found_existing_summary");
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_CANONICAL), [{ id: IDS.SUBMISSION }]);
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
@@ -546,9 +596,13 @@ test("ambiguous canonical matches fail closed", async () => {
   const { error } = await run031({ base });
   assert.ok(error);
   assert.match(String(error.message), /Multiple fully valid Weekly Athlete Summary records found/i);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
 });
 
-test("correct Summary Key with wrong Enrollment fails closed without writes", async () => {
+test("wrong-Enrollment candidate is ignored and canonical summary is created", async () => {
   const wrongContext = new MockRecord("recSummaryWrongEnrollment", {
     "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
     Enrollment: [{ id: "recOtherEnrollment", name: "Other Enrollment" }],
@@ -574,17 +628,16 @@ test("correct Summary Key with wrong Enrollment fails closed without writes", as
     ],
   });
 
-  const { error } = await run031({ base });
-  assert.ok(error);
-  assert.deepEqual(submissionSummaryIds(base), [
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.notDeepEqual(submissionSummaryIds(base), [
     { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
   ]);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: IDS.SUBMISSION, name: "Submission" },
-  ]);
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
 });
 
-test("correct Summary Key with wrong Week fails closed without writes", async () => {
+test("wrong-Week candidate is ignored and canonical summary is created", async () => {
   const wrongContext = new MockRecord("recSummaryWrongWeek", {
     "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
     Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
@@ -610,17 +663,13 @@ test("correct Summary Key with wrong Week fails closed without writes", async ()
     ],
   });
 
-  const { error } = await run031({ base });
-  assert.ok(error);
-  assert.deepEqual(submissionSummaryIds(base), [
-    { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
-  ]);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: IDS.SUBMISSION, name: "Submission" },
-  ]);
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
 });
 
-test("correct Summary Key with wrong Program Instance fails closed without writes", async () => {
+test("wrong-Program-Instance candidate is ignored and canonical summary is created", async () => {
   const wrongProgramInstanceWeek = new MockRecord("recOtherWeek", {
     "Week Key": "WEEK-EARLY-BIRD",
     "Week Name": "Early Bird",
@@ -655,14 +704,10 @@ test("correct Summary Key with wrong Program Instance fails closed without write
     wrongProgramInstanceWeek
   );
 
-  const { error } = await run031({ base });
-  assert.ok(error);
-  assert.deepEqual(submissionSummaryIds(base), [
-    { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
-  ]);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: IDS.SUBMISSION, name: "Submission" },
-  ]);
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
 });
 
 test("same athlete and week in another Program Instance is not a valid candidate", async () => {
@@ -697,14 +742,10 @@ test("same athlete and week in another Program Instance is not a valid candidate
   });
   base.getTable("Weeks").records.set(otherWeek.id, otherWeek);
 
-  const { error } = await run031({ base });
-  assert.ok(error);
-  assert.deepEqual(submissionSummaryIds(base), [
-    { id: IDS.SUMMARY_STALE, name: "Stale Summary" },
-  ]);
-  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), [
-    { id: IDS.SUBMISSION, name: "Submission" },
-  ]);
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.actionTaken, "created_canonical_summary");
+  assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
 });
 
 test("missing or ambiguous Program Instance fails before any writes", async () => {
@@ -723,6 +764,26 @@ test("missing or ambiguous Program Instance fails before any writes", async () =
   const ambiguous = await run031({ base: ambiguousPiBase });
   assert.ok(ambiguous.error);
   assert.equal(missingBaseWrites(ambiguousPiBase), 0);
+});
+
+test("invalid Enrollment or Week links create nothing", async () => {
+  for (const [fieldName, missingId] of [
+    ["Enrollment", "recMissingEnrollment031"],
+    ["Week", "recMissingWeek031"],
+  ]) {
+    const base = build031Base({
+      submissionCells: {
+        [fieldName]: [{ id: missingId }],
+      },
+    });
+    const result = await run031({ base });
+    assert.ok(result.error);
+    assert.equal(missingBaseWrites(base), 0);
+    assert.equal(
+      base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+      false
+    );
+  }
 });
 
 function missingBaseWrites(base) {

@@ -1,10 +1,10 @@
-# Automation 031 Paste and Test Packet — v3.9 / 076 v8.2 — 2026-08-12
+# Automation 031 Paste and Test Packet — v4.0 / 076 v8.2 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.9
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v4.0
 - `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.2
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
@@ -24,12 +24,12 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.9`
+- Repository version in this package: `v4.0`
 - Companion handoff version: `076 v8.2`
 
 ## Repository repair completed
 
-The v3.9 repair now:
+The v4.0 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -39,20 +39,21 @@ The v3.9 repair now:
 6. derives Program Instance from authoritative Enrollment and Week links and requires exactly one matching ID;
 7. ignores and logs malformed unrelated candidate summaries before any Submission, Summary, or XP Event write;
 8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
-9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist;
-10. never creates a Weekly Athlete Summary; a unique canonical record must already exist;
-11. requires `Count This Submission?` to exist but accepts its existing formula type; `isChecked()`
+9. fails closed when Program Instance is missing/ambiguous or multiple fully valid replacements exist; zero valid candidates enter the creator path;
+10. creates one Weekly Athlete Summary after a confirmed zero-candidate query, writing only Enrollment, Week, and optional writable `Complete` status;
+11. never writes formula `Summary Key`; after creation, requeries and requires exactly one fully valid canonical result, reporting created/conflicting IDs on a residual race;
+12. requires `Count This Submission?` to exist but accepts its existing formula type; `isChecked()`
     reads raw `true`, raw `1`, and checked/true/1 formula text;
-12. requires `Submission Stat Mode` to exist as a formula/read-only readiness
+13. requires `Submission Stat Mode` to exist as a formula/read-only readiness
     input and accepts only its trimmed, case-insensitive evaluated text
     `Simple Total` or `Detailed Shooting`;
-13. requires `Build Daily Email Now?` to remain a writable physical `checkbox`;
-14. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
+14. requires `Build Daily Email Now?` to remain a writable physical `checkbox`;
+15. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
     is the sole owner of that readiness check; Automation 076 consumes and clears it.
 
-## v3.9 startup field-role audit
+## v4.0 startup field-role audit
 
-| Field | Role | v3.9 contract |
+| Field | Role | v4.0 contract |
 |---|---|---|
 | `Submissions -> Enrollment` | Required linked input | Required field existence |
 | `Submissions -> Week` | Required linked input | Required field existence |
@@ -81,7 +82,7 @@ Command run:
 
 Result:
 
-- **PASS** (`25/25`)
+- **PASS** (`28/28`)
 
 Companion Automation 076 v8.2 offline verification:
 
@@ -92,17 +93,17 @@ Companion Automation 076 v8.2 offline verification:
 
 Covered cases:
 
-1. valid existing link;
-2. no existing link with one valid replacement;
-3. no existing link with zero valid candidates and no writes;
+1. valid existing link reuse;
+2. first valid `Simple Total` Submission creates one canonical summary;
+3. first valid `Detailed Shooting` Submission creates one canonical summary;
 4. non-Submission-Base XP Event repair with Submission Base exclusion;
 5. stale link with canonical replacement;
-6. stale link with zero valid candidates;
+6. stale link with zero valid candidates creates and repairs the canonical link;
 7. replay after repair;
 8. multiple valid candidates;
-9. wrong Enrollment;
-10. wrong Week;
-11. wrong Program Instance;
+9. wrong Enrollment candidate ignored and canonical summary created;
+10. wrong Week candidate ignored and canonical summary created;
+11. wrong Program Instance candidate ignored and canonical summary created;
 12. same athlete/week in another Program Instance;
 13. missing or ambiguous Program Instance;
 14. formula `Count This Submission?` returning `1` and formula `Submission Stat Mode` returning `Simple Total`;
@@ -110,11 +111,12 @@ Covered cases:
 16. formula `Count This Submission?` returning `0` without email readiness;
 17. blank or unknown formula mode without email readiness;
 18. formula readiness values with ordinary whitespace/case normalization;
-19. writable-checkbox contract, valid completion readiness, and unchanged readiness on errors before final validation.
+19. writable-checkbox contract, valid completion readiness, and unchanged readiness on errors before final validation;
+20. post-create concurrent canonical duplicate reports all IDs and leaves readiness unchanged.
 
 ## Paste instructions
 
-Paste order is **076 v8.2 first, then 031 v3.9**. For both automations,
+Paste order is **076 v8.2 first, then 031 v4.0**. For both automations,
 `recordId` must remain dynamically mapped to the Airtable record ID from the
 triggering Submission; never permanently hardcode
 `rec58gdymfPKKeVRI`. The recommended trigger conditions are
@@ -131,7 +133,7 @@ mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
 3. Paste the full script body, skipping only the GitHub header comment, and save.
 4. Verify `recordId` remains dynamically mapped to the triggering Submission.
 
-### 031 v3.9
+### 031 v4.0
 
 1. Open the actual Airtable automation editor for `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`.
 2. Copy the script from `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`.
@@ -147,7 +149,7 @@ mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
 
 ## Controlled test procedure
 
-For Airtable's Test action after installing v3.9, `rec58gdymfPKKeVRI` may be
+For Airtable's Test action after installing v4.0, `rec58gdymfPKKeVRI` may be
 selected or supplied temporarily as the test record. After testing, verify the
 saved Production automation input remains dynamically mapped to the triggering
 Submission.
@@ -166,8 +168,10 @@ manually change formula results or intentionally alter the Submission to
 exercise negative cases.
 
 Run Airtable's Test action with that record and Mike's allowlisted email.
-Verify the formulas evaluate to count `1` and stat mode `Simple Total`, then verify
-031 checks `Build Daily Email Now?` only after final summary validation.
+Verify the formulas evaluate to count `1` and stat mode `Simple Total`, then
+verify 031 reuses the existing canonical Weekly Athlete Summary or creates
+exactly one if none exists, and checks `Build Daily Email Now?` only after final
+summary validation.
 
 Use Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`) and `testMode=true`
 for the controlled Production email-path test. Do not send to any other
@@ -175,9 +179,9 @@ recipient.
 
 Expected first-run result:
 
-- `Submissions.Weekly Athlete Summary` remains linked to the canonical Early Bird summary for the same Enrollment + Week;
+- `Submissions.Weekly Athlete Summary` remains linked to the canonical Early Bird summary for the same Enrollment + Week, or exactly one canonical summary is created if none exists;
 - canonical `Weekly Athlete Summary.Submissions` contains the source Submission exactly once;
-- no new Weekly Athlete Summary is created and no stale-link repair is induced;
+- no second Weekly Athlete Summary is created and no stale-link repair is induced;
 - matching non-Submission-Base `XP Events` remain correctly linked without unnecessary churn;
 - the Submission Base XP Event is not modified by Automation 031; Automation 010 owns that event and its summary link;
 - unrelated XP Events remain untouched.
@@ -201,6 +205,10 @@ another stat mode, and do not intentionally alter the Submission merely to
 exercise them. These negative cases are covered by the offline regression:
 formula count `0`, another stat-mode value, whitespace/case normalization, and
 pre-final-validation failure all leave email readiness unchanged.
+
+Do not manually create the missing Weekly Athlete Summary in Production.
+Creation, post-create requery, and residual concurrency handling are covered
+by the v4.0 repository test suite.
 
 ### Offline-only fail-closed contract case
 
