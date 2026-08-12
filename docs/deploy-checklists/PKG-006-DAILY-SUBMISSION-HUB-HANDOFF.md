@@ -99,8 +99,8 @@ Production Airtable is the only Airtable environment for this integration.
    - `Recipients JSON` and `Payload JSON` parse successfully
    - `Attempt Count` = `0`
    - `Build Daily Email Now?` is cleared after create or existing-row reuse
-4. Allow the existing Production Automation 079 dispatcher to process the row.
-   Do not modify 079, enable 077, call Make, or call the Hub from 076.
+4. Allow the shared Production Automation 079 dispatcher to process the row.
+   Do not enable 077, call Make, or call the Hub directly from 076.
 5. In Communications Hub, verify one Hub Event, one `Sent` Delivery, one Resend
    provider id, and one attempt. Queue `Accepted` alone is intake evidence, not
    delivery proof.
@@ -112,6 +112,53 @@ Production Airtable is the only Airtable environment for this integration.
    it does not replay the source Event or create another Message/Delivery.
 8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
    consider 077 a retirement candidate; it is not retired by this PR.
+
+## Automation 079 v2.0 shared dispatcher replacement and recovery
+
+This bounded PKG-006 / PKG-028 correction keeps Automation 079 as the single
+Communications Hub dispatcher. It preserves the proven WELCOME contract and
+adds the exact DAILY_SUBMISSION contract required by the v8.5 queue creator:
+
+- WELCOME keeps its existing `WELCOME|...` key validation, PARENT/ATHLETE
+  recipient roles, payload requirements, retry state, Hub acceptance writeback,
+  and replay behavior.
+- DAILY_SUBMISSION requires
+  `DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>`, with the final segment
+  equal to `Source Record ID`, `Source Table = Submissions`, and
+  `Template Key = DAILY_SUBMISSION`.
+- 079 forwards the stored Event Type, Template Key, Handoff Key, source IDs,
+  Recipients JSON, Payload JSON, and Test Mode?; it does not rebuild email
+  content and does not call Make/Gmail.
+- Unknown event types and invalid keys fail before the Hub request. Hub errors
+  preserve attempt counting and write Failed or Needs Review plus Last Error.
+
+### Paste and recover existing queue record `recaZyyMx9Tf6zzNU`
+
+1. Do not rerun Automation 031. Preserve the existing queue row, its
+   `DAILY_SUBMISSION|SUBMISSIONS|rec58gdymfPKKeVRI` Handoff Key, payload,
+   recipients, attempt history, and error evidence.
+2. Open the existing Production Automation 079 slot; do not create a new slot.
+3. Replace the full script with the committed 079 v2.0 source, omitting only
+   the GitHub header comment.
+4. Preserve the existing dynamic `recordId` mapping to the triggering
+   Email Handoff Queue record and the secret/input mapping for `ingressSecret`.
+   Never hardcode the secret or the Submission ID in the script.
+5. Save 079. Confirm the trigger remains Email Handoff Queue with
+   `Status = Ready`; do not enable 077 or Make/Gmail.
+6. For the controlled recovery, use Airtable's Test action against
+   `recaZyyMx9Tf6zzNU` with its existing `Test Mode?` value. If the failed run
+   left the row in `Failed`, re-arm only this existing row to `Ready` after
+   preserving the failed-run evidence; do not create a replacement row or
+   change its Handoff Key.
+7. Verify 079 sends one stored DAILY_SUBMISSION envelope to the Hub and writes
+   `Status = Accepted`, `Hub Event ID`, `Hub Response JSON`, `Accepted At`, and
+   a single incremented Attempt Count. Accepted proves Hub intake, not final
+   Delivery.
+8. If the recovery fails, turn 079 OFF, preserve the row and Last Error,
+   do not rerun 031, do not create another queue row, and do not send through
+   077 or Make/Gmail. Resume only after the source/input issue is reviewed.
+9. For replay proof, re-arm the same row only after the first acceptance and
+   confirm the Hub returns its duplicate result without a second Delivery.
 
 ## 031 v4.0 replacement steps (after controlled Production test and Mike approval)
 

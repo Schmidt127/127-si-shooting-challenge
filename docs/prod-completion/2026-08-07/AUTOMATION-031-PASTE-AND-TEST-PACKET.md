@@ -1,4 +1,4 @@
-# Automation 031 Paste and Test Packet — v4.0 / 076 v8.5 — 2026-08-12
+# Automation 031 / 076 / 079 Paste and Test Packet — v4.0 / v8.5 / v2.0 — 2026-08-12
 
 ## Scope
 
@@ -6,6 +6,7 @@ Focused repository package for issue #96:
 
 - `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v4.0
 - `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.5
+- `airtable/automations/shooting-challenge/079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js` v2.0
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -26,6 +27,7 @@ This packet documents repository repair status only.
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
 - Repository version in this package: `v4.0`
 - Companion handoff version: `076 v8.5`
+- Shared dispatcher version: `079 v2.0`
 
 ## Repository repair completed
 
@@ -91,6 +93,13 @@ Companion Automation 076 v8.5 offline verification:
   unsupported-mode skips, deterministic replay, payload numbers, readiness
   clearing, and the no-network contract.
 
+Companion Automation 079 v2.0 offline verification:
+
+- **PASS** (`7/7`)
+- Covers WELCOME success/replay, DAILY_SUBMISSION forwarding, exact key and
+  Source Record ID validation, unknown-event rejection, Hub error writeback,
+  and accepted-duplicate replay protection.
+
 Covered cases:
 
 1. valid existing link reuse;
@@ -116,7 +125,9 @@ Covered cases:
 
 ## Paste instructions
 
-Paste order is **076 v8.5 first, then 031 v4.0**. For both automations,
+Paste order for the full package is **076 v8.5, then 079 v2.0, then 031 v4.0**. For
+the existing DAILY_SUBMISSION recovery, paste/test **079 v2.0 only**; do not
+rerun Automation 031. For 076 and 031,
 `recordId` must remain dynamically mapped to the Airtable record ID from the
 triggering Submission; never permanently hardcode
 `rec58gdymfPKKeVRI`. The recommended trigger conditions are
@@ -137,6 +148,27 @@ mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
 5. Verify queue `Event Type` and `Status` writes use Airtable-compatible
    `{ name: ... }` objects for `DAILY_SUBMISSION`, `Draft`, and `Ready`.
 6. Verify `recordId` remains dynamically mapped to the triggering Submission.
+
+### 079 v2.0 shared dispatcher
+
+1. Open the existing Production slot for Automation 079; do not create a new
+   automation slot.
+2. Copy the script from
+   `airtable/automations/shooting-challenge/079-email-notifications-and-external-handoffs-send-queue-handoff-to-communications-hub.js`.
+3. Paste the full script body, skipping only the GitHub header comment, and save.
+4. Preserve the dynamic `recordId` mapping to the triggering Email Handoff
+   Queue record and the `ingressSecret` input/secret mapping.
+5. The script preserves WELCOME and accepts only the exact
+   `DAILY_SUBMISSION|SUBMISSIONS|<Submission Record ID>` key when Event Type is
+   `DAILY_SUBMISSION`; the suffix must equal Source Record ID.
+6. For existing queue record `recaZyyMx9Tf6zzNU`, preserve the row and
+   `DAILY_SUBMISSION|SUBMISSIONS|rec58gdymfPKKeVRI` key. If the prior failure
+   left Status `Failed`, re-arm only that row to `Ready` after preserving its
+   error/attempt evidence, then use Airtable Test on that queue record.
+7. Verify one Hub Event, `Status = Accepted`, Hub Event ID, response JSON,
+   Accepted At, and a single incremented Attempt Count. Do not rerun 031.
+8. If the recovery fails, turn 079 OFF and preserve the queue row/error; do not
+   create a replacement row or enable 077/Make/Gmail.
 
 ### 031 v4.0
 
