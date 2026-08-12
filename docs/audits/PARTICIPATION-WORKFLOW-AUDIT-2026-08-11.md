@@ -1,7 +1,7 @@
 # Post-Registration Participation Workflow Audit
 
 **Date:** 2026-08-11
-**Backlog package:** `SCV2-SEASON-LAUNCH-CONSOLIDATION-001`
+**Backlog package:** `PKG-006`
 **Branch:** `agent/participation-workflow-audit`
 **Repository baseline:** `origin/master` at `9138b48e4fc129e98220029680b48ae5fe9908fe`
 **Scope:** Repository evidence only. No Production Airtable, Fillout, Make, email, Vercel, or live-traffic access was used.
@@ -10,7 +10,7 @@
 
 This document describes what the repository records, not what is currently installed or enabled in an external service. The repository itself says that current Airtable, Fillout, Make, Gmail/Lambda, and Vercel state must be verified in those systems. Dated schema snapshots are preferred over the hand-maintained `airtable/schema/current/` maps, which are marked stale.
 
-Automation 001 and registration-test files were intentionally left outside this workstream's writable paths. Enrollment identity details below use the repository's enrollment pipeline documentation, read-only identity helper, fixtures, and downstream consumers; they are not a new audit or change to Automation 001.
+Automation 001 and registration-test files were intentionally left outside this workstream's writable paths. Enrollment identity details below use the repository's enrollment pipeline documentation, read-only identity helper, fixtures, and downstream consumers; they are not a new audit or change to Automation 001. Automation 001 was not independently audited in PR #151.
 
 ## Current workflow
 
@@ -39,7 +39,9 @@ The web participant dashboard is not authenticated or Airtable-backed: `web/lib/
 
 ### 2. Athlete and enrollment identity
 
-Repository documentation and the read-only helper in `tools/enrollment-season/identity_matching.py` describe this evidence-backed identity order:
+PR #151 did not independently audit Automation 001. The current Production-tested duplicate guard from PR #150 applies after the athlete match: a repeat registration for the same Athlete and School Year is blocked, the original Enrollment remains canonical and linked, and the repeat row is left inactive and unlinked. The blocked repeat does not trigger another welcome email. A returning Athlete in a different School Year remains allowed.
+
+For the identity portion of this audit, repository documentation and the read-only helper in `tools/enrollment-season/identity_matching.py` describe this evidence-backed order:
 
 1. Preserve an existing Enrollment → Athlete link.
 2. Try an exact normalized athlete match key.
@@ -47,7 +49,7 @@ Repository documentation and the read-only helper in `tools/enrollment-season/id
 4. Re-query before creation.
 5. Treat an unmatched athlete as a create candidate; do not merge or delete automatically.
 
-Parent email is normalized and used for matching; athlete email is not part of the documented match key. Siblings sharing a parent email remain separate when their names differ. Same-season duplicate Enrollment rows are warned about rather than silently merged.
+Parent email is normalized and used for matching; athlete email is not part of the documented match key. Siblings sharing a parent email remain separate when their names differ. The duplicate guard's same-Athlete + School-Year check is distinct from the identity-match order above.
 
 Relevant evidence:
 
