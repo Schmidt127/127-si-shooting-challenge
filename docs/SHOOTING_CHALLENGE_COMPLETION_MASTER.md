@@ -1283,6 +1283,46 @@ The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md
 
 ---
 
+## 10. Post-app / backlog considerations
+
+### Decouple Daily Submission email readiness from Automation 031
+
+**Status:** **POST-APP consideration — not a blocker for Shooting Challenge
+completion, Production promotion, or PKG-006 controlled proof.**
+
+**Current design:** Automation 031 is the final proven processing checkpoint.
+After validating the counted Submission's canonical Enrollment, Week, Program
+Instance, Weekly Athlete Summary linkage, and eligible XP links, it checks
+`Build Daily Email Now?`. Automation 076 consumes that signal and creates the
+`DAILY_SUBMISSION` Communications Hub handoff.
+
+**Reason for later review:** Although safe and practical, Automation 031 belongs
+to Weekly Summary processing and now also owns the Daily Submission
+email-readiness signal.
+
+**Future options to evaluate:**
+
+- A formula-backed `Daily Submission Processing Complete?` readiness field
+- A dedicated workflow coordinator
+- Another existing final-processing owner
+- A durable source-status/writeback design that prevents premature sends and
+  duplicate processing
+
+**Acceptance criteria for any future change:**
+
+- No new Airtable automation slot unless justified
+- Email cannot trigger before canonical Submission processing finishes
+- Pending XP remains supported
+- Deterministic queue/replay protection remains intact
+- 031 returns to Weekly Athlete Summary responsibilities only
+- 076 and shared 079/Communications Hub architecture remains intact
+
+This is technical-debt cleanup only. It must not block merging the v3.7
+hotfix, installing 031/076, running the controlled Production Daily Submission
+test, completing PKG-006, or finishing the app.
+
+---
+
 ## Maintenance
 
 When finishing an SC item:
