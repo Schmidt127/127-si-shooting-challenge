@@ -32,7 +32,11 @@ function singleSelect(name, choices) {
   };
 }
 
-function build076Base(queueRecords = [], submissionCells = {}) {
+function build076Base(
+  queueRecords = [],
+  submissionCells = {},
+  includeProgramInstanceTable = true
+) {
   const submissions = new MockTable(
     "Submissions",
     [
@@ -105,7 +109,7 @@ function build076Base(queueRecords = [], submissionCells = {}) {
   );
 
   const programInstances = new MockTable(
-    "Program Instance - Synced",
+    "Program Instance - Sync",
     [{ name: "Name - Program Instance", type: "singleLineText" }],
     [new MockRecord("recProgram0760001", { "Name - Program Instance": "2026-2027" })]
   );
@@ -138,7 +142,7 @@ function build076Base(queueRecords = [], submissionCells = {}) {
     new MockTable("Homework Completions", []),
     new MockTable("Program Homework Assignments", []),
     new MockTable("Homework Library", []),
-    programInstances,
+    ...(includeProgramInstanceTable ? [programInstances] : []),
     queue,
   ]);
 }
@@ -156,6 +160,29 @@ async function run076({ base }) {
   }
   return { output, error, console: capturedConsole };
 }
+
+test("076 uses the exact Production Program Instance table name", async () => {
+  const source = readFileSync(SCRIPT_PATH, "utf8");
+  const base = build076Base();
+
+  assert.match(source, /pi:\s*"Program Instance - Sync"/);
+  assert.doesNotMatch(source, /getTable\(\s*"Program Instance - Synced"\s*\)/);
+  assert.equal(base.tables.has("Program Instance - Sync"), true);
+  assert.equal(base.tables.has("Program Instance - Synced"), false);
+});
+
+test("076 fails before queue creation when the required Program Instance table is missing", async () => {
+  const base = build076Base([], {}, false);
+  const result = await run076({ base });
+
+  assert.ok(result.error);
+  assert.equal(result.output.values.statusOut, "error");
+  assert.equal(base.getTable("Email Handoff Queue").records.size, 0);
+  assert.equal(
+    base.getTable("Submissions").records.get(SUBMISSION_ID).cells["Build Daily Email Now?"],
+    true
+  );
+});
 
 test("076 creates one deterministic queue row and clears the readiness checkbox", async () => {
   const base = build076Base();

@@ -2,7 +2,7 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.2
+Version: v8.3
 Date Written: 2026-05-29
 Last Updated: 2026-08-12
 
@@ -42,9 +42,9 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.2", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.3", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
-  tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Synced", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
+  tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Sync", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
   fields: {
     sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", build: "Build Daily Email Now?", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
