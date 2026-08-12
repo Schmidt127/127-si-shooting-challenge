@@ -35,6 +35,7 @@ See [safe-backfills/README.md](../safe-backfills/README.md) for the full backfil
 | **F2. HW17 Fillout test intake** | 067 | `audit-homework17-reflection-quiz-pipeline.js` | `backfill-homework17-completions-from-reflection-quiz.js` |
 | **G. Video upload** | 013, 070b, 022 *(111 retired; 112 OFF)* | `audit-video-pipeline-integrity.js` | `backfill-video-pipeline-links.js` |
 | **H. Video XP + email** | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js`, `audit-submission-asset-pipeline-duplicate-xp.js` | `backfill-video-xp-from-posted-feedback.js`, `repair-video-feedback-xp-link.js` |
+| **Homework XP authority** | 064, 065 | `audit-homework-xp-pipeline-integrity.js` (exact identity, reversal, WAS, points, active state) | Preserve canonical event; no automatic destructive repair |
 | **I. Achievements / streaks** | 053–059, 066 | `audit-achievement-xp-pipeline-integrity.js`, `audit-pending-shot-milestone-unlocks.js` | `backfill-legacy-streak-xp-week-and-was.js`, `backfill-legacy-streak-xp-source-keys.js`, `backfill-shot-milestone-xp-week-and-was.js`, `backfill-shot-milestone-unlock-mark-awarded.js` |
 | **J. Field cleanup discovery** | — | `audit-field-coverage-report.js`, `audit-xp-linkage-coverage.js`, `audit-legacy-cleanup-candidates.js` | `archive-legacy-streak-unlock-records.js` + manual field delete |
 

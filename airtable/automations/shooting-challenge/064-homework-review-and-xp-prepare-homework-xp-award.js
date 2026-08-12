@@ -24,7 +24,7 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 064 - Homework Review and XP - Prepare Homework XP Award
- * Version: 2026-06-17 v12.1
+ * Version: 2026-08-12 v12.2
  *
  * PURPOSE
  * - Reads one Homework Completions record.
@@ -510,9 +510,9 @@ async function main() {
         debugStep = "4 - Validate Grading Gate";
         setOutputSafe("debugStep", debugStep);
 
-        if (!enrollmentIds.length) throw new Error("Missing Enrollment.");
-        if (!homeworkIds.length) throw new Error("Missing Homework.");
-        if (!weekIds.length) throw new Error("Missing Week.");
+        if (enrollmentIds.length !== 1) throw new Error(`Enrollment must contain exactly one link; found ${enrollmentIds.length}.`);
+        if (homeworkIds.length !== 1) throw new Error(`Homework must contain exactly one link; found ${homeworkIds.length}.`);
+        if (weekIds.length !== 1) throw new Error(`Week must contain exactly one link; found ${weekIds.length}.`);
         if (!submissionDate) throw new Error("Missing Submission Date.");
         if (!coachFeedback) throw new Error("Coach Feedback is blank.");
         if (!satisfactory) throw new Error("Satisfactory? is not checked.");
@@ -523,10 +523,17 @@ async function main() {
             setOutputSafe("debugStep", debugStep);
 
             const shotMilestoneRearmed = await rearmShotMilestoneCheck(enrollmentId);
+            await homeworkTable.updateRecordAsync(recordId, {
+                [CONFIG.homework.awardStatus]: buildCellValueForField(
+                    homeworkTable,
+                    CONFIG.homework.awardStatus,
+                    CONFIG.values.pendingStatus
+                ),
+            });
 
             setOutputs({
                 ok: true,
-                result: "Skipped: Base XP Awarded is already filled. Shot milestone check re-armed.",
+                result: "Existing Base XP retained. Award Status reset to Pending so 065 can safely reconcile/reactivate the canonical event.",
                 homeworkCompletionId: recordId,
                 enrollmentId,
                 existingBaseXp,

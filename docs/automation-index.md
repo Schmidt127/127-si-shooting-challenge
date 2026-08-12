@@ -51,11 +51,11 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
 | **020** | Homework — Link or Create Homework Completion | Submission Assets when homework asset ready for Homework Completion prep — **repo v3.5** (PHA-first intake; HC.Homework = library, HC.Program Homework Assignment = PHA; **PROD paste not confirmed**) | `020-homework-link-or-create-homework-completion.js` (**v3.5**) |
-| 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **DELETED in PROD (attest)** / partial absorb by 020 | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
-| 064 | Homework Review — Prepare Homework XP Award | *confirm in Airtable* | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
-| **065** | Homework Review — Create Homework XP Event | Homework Completions when review complete, satisfactory, XP pending | `065-homework-review-and-xp-create-homework-xp-event.js` |
+| 063 | ~~Homework Review — Copy Enrollment Grade Band~~ | **RETIRED / DELETED in PROD; keep OFF**; repository runtime stop | `063-homework-review-and-xp-copy-enrollment-grade-band-to-homework-completion.js` *(historical)* |
+| 064 | Homework Review — Prepare Homework XP Award | v12.2; positive preparation only, exact Enrollment/Homework/Week and exact active rule; re-arms 065 restoration but does not own correction | `064-homework-review-and-xp-prepare-homework-xp-award.js` |
+| **065** | Homework Review — Create/Reconcile Homework XP Event | v10.1; formula-backed automatic award/correction; exact `HOMEWORK_XP\|<HC ID>` ownership | `065-homework-review-and-xp-create-homework-xp-event.js` |
 | **067** | Homework — Link or Create Completion from Reflection Quiz | Final Reflection Quiz Submissions when ready — **repo v3.4** (PHA-first HW17; linked HC fail-closed; **PROD paste not confirmed**) | `067-homework-link-or-create-completion-from-reflection-quiz.js` (**v3.4**) |
-| **068** | Homework — Reconcile Deferred Weekly Summary Links | Scheduled; scans HW17 completions with an empty Weekly Athlete Summary Link | `068-homework-reconcile-deferred-weekly-summary-links.js` |
+| **068** | Homework — Reconcile Deferred Weekly Summary Links | **RETIRED / keep OFF**; 033 v4.2 owns deferred WAS reconciliation | `068-homework-reconcile-deferred-weekly-summary-links.js` |
 | **070a** | Email — Send Homework Asset Payload to Make | Submission Assets when Send to Make Trigger checked and homework asset ready | `070a-email-notifications-and-external-handoffs-send-homework-asset-payload-to-make.js` |
 | **071** | Email — Send Homework Feedback Email Webhook (v3.5: Reviewer File URL → Drive View → Drive File) | Homework Completions when parent feedback ready and not yet sent | `071-email-notifications-and-external-handoffs-send-homework-feedback-email-webhook.js` |
 
@@ -165,7 +165,7 @@ C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recordi
 | C — Weekly summary | 031, 032, 033, 030, 034 | `audit-submission-pipeline-integrity.js`, `audit-orphan-xp-events.js` |
 | D — Assets | 009, 021 | `audit-submission-pipeline-integrity.js` |
 | E — Homework upload | 020, 070a, 022 *(063 retired)* | `audit-homework-completion-upload-edge-cases.js` |
-| F — Homework XP + email | 064, 065, 071 | `audit-homework-pipeline-integrity.js` |
+| F — Homework XP + email | 064, 065, 071 | `audit-homework-xp-pipeline-integrity.js` (XP authority); 071 email separate |
 | F2 — HW17 Fillout test intake | 067 | `audit-homework17-reflection-quiz-pipeline.js` |
 | G — Video upload | **013** (not 112; 111 retired), 070b, 022 | `audit-video-pipeline-integrity.js` |
 | H — Video XP + email | 113, 114, 073 | `audit-video-xp-pipeline-integrity.js` |
