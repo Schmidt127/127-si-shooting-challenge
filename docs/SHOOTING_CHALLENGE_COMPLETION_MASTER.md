@@ -1173,7 +1173,9 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **Handoff key** | `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` |
 | **079** | Existing shared dispatcher; no code change required |
 | **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
-| **Status** | **Repository-ready / promotion pending** — no DEV or Production paste performed |
+| **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
+| **Trigger** | Existing `Build Daily Email Now?` signal plus Counted/Stat Mode guards; repository evidence does not identify its upstream owner or prove it fires after 023 → 005 → 007 → 010 → 031 |
+| **Status** | **Repository-ready / promotion blocked pending trigger-owner/timing verification** — no DEV or Production paste performed |
 | **Promotion** | [`docs/deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
 
 ### 9N. GitHub Issue #116 full audit — **2026-08-08**

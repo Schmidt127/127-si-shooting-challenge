@@ -2,7 +2,7 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.0
+Version: v8.1
 Date Written: 2026-05-29
 Last Updated: 2026-08-12
 
@@ -27,8 +27,14 @@ OUTPUTS
 - `queueRecordId`, `handoffKey`, `errorOut`, `debugStep`
 
 TRIGGER
-- Recommended: Submissions when `Count This Submission?` is checked and
-  `Submission Stat Mode` is Counted. The script remains the final readiness gate.
+- Use the existing `Build Daily Email Now?` checkbox only after Mike verifies
+  which upstream owner sets it after the 023 → 005 → 007 → 010 → 031 chain.
+- `Count This Submission?` and `Submission Stat Mode` remain supporting guards,
+  not proof that downstream ownership and XP/summary processing have settled.
+- The repository does not currently prove an automation owner for the Build
+  checkbox; production enablement is blocked pending that verification.
+- Clear `Build Daily Email Now?` after an existing or newly created handoff so
+  a successful replay cannot retrigger the source signal.
 
 AUTOMATION NAME
 - 076 - Daily Submission Communications Hub Handoff
@@ -37,12 +43,12 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.0", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.1", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
   tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Synced", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
-  statuses: { ready: "Ready", needsReview: "Needs Review" },
+  statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
   fields: {
-    sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
+    sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", build: "Build Daily Email Now?", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
     enr: { active: "Active?", program: "Program Instance", grade: "Grade Band", parent: "Parent Email - Cleaned", parentFallback: "Parent Email", athlete: "Athlete Email - Cleaned", athleteFallback: "Athlete Email", name: "Full Athlete Name", first: "Athlete First Name", streak: "Current Shooting Streak", currentLevel: "Current Level", nextLevel: "Next Level" },
     was: { enrollment: "Enrollment", week: "Week", hcs: "Homework Completions Link", xps: "XP Events", shots: "Total Shots This Week", goal: "Weekly Goal Shots Target", weekName: "Week - Display" },
     week: { name: "Week Name", start: "Start Date", end: "End Date", program: "Program Instance" },
@@ -60,6 +66,7 @@ const raw = (r, t, name) => r && exists(t, name) ? r.getCellValue(name) : null;
 const text = (r, t, name) => r && exists(t, name) ? String(r.getCellValueAsString(name) || "").trim() : "";
 const ids = (r, t, name) => Array.isArray(raw(r, t, name)) ? raw(r, t, name).map((v) => v?.id).filter(Boolean) : [];
 const num = (r, t, name, fallback = 0) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/[$,%]/g, "").replace(/,/g, "").trim()); return Number.isFinite(n) ? n : fallback; };
+const nonnegativeInteger = (r, t, name) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/,/g, "").trim()); if (v === null || v === undefined || v === "" || !Number.isInteger(n) || n < 0) throw new Error(`${name} must be a settled nonnegative integer.`); return n; };
 const bool = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; if (v === false || v === 0) return false; return ["true", "yes", "checked", "1", "counted", "count"].includes(text(r, t, name).toLowerCase()); };
 const one = (values, label) => { if (values.length !== 1) throw new Error(`${label} must have exactly one link; found ${values.length}.`); return values[0]; };
 const same = (left, right) => left.length === right.length && left.every((value) => right.includes(value));
@@ -74,6 +81,10 @@ const formula = (field, value) => `{${field}}='${String(value).replace(/\\/g, "\
 const load = (t, fields) => t.selectRecordsAsync({ fields: fields.filter((name) => exists(t, name)) });
 const slot = (value) => String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
 const queueFields = (queueT, values) => Object.fromEntries(Object.entries(values).filter(([name]) => exists(queueT, name)));
+const stableJson = (value) => Array.isArray(value) ? `[${value.map(stableJson).join(",")}]` : value && typeof value === "object" ? `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableJson(value[key])}`).join(",")}}` : JSON.stringify(value);
+const samePayload = (left, right) => { try { return stableJson(JSON.parse(left || "{}")) === stableJson(right); } catch { return false; } };
+const clearBuildSignal = async (submissionTable, submissionId) => { if (exists(submissionTable, CONFIG.fields.sub.build) && submissionTable.getField(CONFIG.fields.sub.build).type === "checkbox") await submissionTable.updateRecordAsync(submissionId, { [CONFIG.fields.sub.build]: false }); };
+const markQueueNeedsReview = async (queueTable, rows) => { for (const row of rows) if (exists(queueTable, CONFIG.fields.queue.status)) await queueTable.updateRecordAsync(row.id, { [CONFIG.fields.queue.status]: selectValue(queueTable, CONFIG.fields.queue.status, CONFIG.statuses.needsReview) }); };
 
 async function main() {
   const cfg = input.config();
@@ -84,6 +95,8 @@ async function main() {
   if (!sub) throw new Error(`Submission not found: ${recordId}`);
   const handoffKey = `DAILY_SUBMISSION|SUBMISSIONS|${recordId}`;
   debug("01 - Validate Submission readiness");
+  if (!exists(subT, CONFIG.fields.sub.build)) throw new Error(`Missing required readiness signal: ${CONFIG.fields.sub.build}.`);
+  if (!bool(sub, subT, CONFIG.fields.sub.build)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
   if (exists(subT, CONFIG.fields.sub.count) && !bool(sub, subT, CONFIG.fields.sub.count)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
   if (exists(subT, CONFIG.fields.sub.mode) && !["counted", "count", "ready"].includes(text(sub, subT, CONFIG.fields.sub.mode).toLowerCase())) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
   const enrollmentId = one(ids(sub, subT, CONFIG.fields.sub.enrollment), "Submission Enrollment");
@@ -123,18 +136,18 @@ async function main() {
     athleteName: first(text(enrollment, enrT, CONFIG.fields.enr.name), "Athlete"),
     activityDate: dateText(raw(sub, subT, CONFIG.fields.sub.activity)),
     weekName: first(text(was, wasT, CONFIG.fields.was.weekName), text(week, weekT, CONFIG.fields.week.name)),
-    shots: num(sub, subT, CONFIG.fields.sub.shots),
-    makes: num(sub, subT, CONFIG.fields.sub.makes),
-    shootingPercentage: num(sub, subT, CONFIG.fields.sub.shots) > 0 ? Math.round((num(sub, subT, CONFIG.fields.sub.makes) / num(sub, subT, CONFIG.fields.sub.shots)) * 100) : 0,
+    shots: nonnegativeInteger(sub, subT, CONFIG.fields.sub.shots),
+    makes: nonnegativeInteger(sub, subT, CONFIG.fields.sub.makes),
     submissionXp, ...(submissionXp === null ? { submissionXpStatus: "Pending / not yet awarded" } : {}),
     weeklyShots, weeklyGoal, weeklyGoalPercentage: pct(weeklyShots, weeklyGoal), weeklyXp,
     currentStreak: num(enrollment, enrT, CONFIG.fields.enr.streak), currentLevel: text(enrollment, enrT, CONFIG.fields.enr.currentLevel), nextLevel: text(enrollment, enrT, CONFIG.fields.enr.nextLevel),
-    programName: first(text(program, piT, CONFIG.fields.pi.name), program.name, "Shooting Challenge"), sourceSubmissionId: recordId,
+    programName: first(text(program, piT, CONFIG.fields.pi.name), program.name, "Shooting Challenge"),
     ...(assignments.length ? { homeworkAssignments: assignments } : {}),
   };
   if (!payload.activityDate || !payload.weekName) throw new Error("Submission Activity Date and Week Name are required.");
+  if (payload.makes > payload.shots) throw new Error("Total Makes Counted cannot exceed Total Shots Counted.");
   const queueData = queueFields(queueT, {
-    [CONFIG.fields.queue.key]: handoffKey, [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready),
+    [CONFIG.fields.queue.key]: handoffKey, [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
     [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: "DAILY_SUBMISSION", [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
     [CONFIG.fields.queue.source]: recordId, [CONFIG.fields.queue.enrollment]: enrollmentId, [CONFIG.fields.queue.pi]: programId,
     [CONFIG.fields.queue.recipients]: JSON.stringify(recipients), [CONFIG.fields.queue.payload]: JSON.stringify(payload),
@@ -143,13 +156,28 @@ async function main() {
   debug("04 - Idempotent Email Handoff Queue create");
   const existing = (await queueT.selectRecordsAsync({ fields: Object.values(CONFIG.fields.queue).filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
   if (existing.length > 1) {
-    for (const row of existing) if (exists(queueT, CONFIG.fields.queue.status)) await queueT.updateRecordAsync(row.id, { [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.needsReview) });
+    await markQueueNeedsReview(queueT, existing);
     setOutput("statusOut", "error"); setOutput("actionOut", "needs_review"); throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey}.`);
   }
-  if (existing.length === 1) { setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", existing[0].id); setOutput("handoffKey", handoffKey); return; }
+  if (existing.length === 1) {
+    if (!samePayload(text(existing[0], queueT, CONFIG.fields.queue.payload), payload)) {
+      await markQueueNeedsReview(queueT, existing);
+      throw new Error(`Conflicting Email Handoff Queue payload for ${handoffKey}.`);
+    }
+    await clearBuildSignal(subT, recordId);
+    setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", existing[0].id); setOutput("handoffKey", handoffKey); return;
+  }
   const recheck = (await queueT.selectRecordsAsync({ fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
-  if (recheck.length) { setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", recheck[0].id); setOutput("handoffKey", handoffKey); return; }
+  if (recheck.length) {
+    if (recheck.length > 1) { await markQueueNeedsReview(queueT, recheck); throw new Error(`Multiple Email Handoff Queue rows match ${handoffKey} after recheck.`); }
+    await clearBuildSignal(subT, recordId);
+    setOutput("statusOut", "success"); setOutput("actionOut", "existing_handoff"); setOutput("queueRecordId", recheck[0].id); setOutput("handoffKey", handoffKey); return;
+  }
   const created = await queueT.createRecordAsync(queueData);
+  const afterCreate = (await queueT.selectRecordsAsync({ fields: [CONFIG.fields.queue.key].filter((name) => exists(queueT, name)) })).records.filter((row) => text(row, queueT, CONFIG.fields.queue.key) === handoffKey);
+  if (afterCreate.length !== 1) { await markQueueNeedsReview(queueT, afterCreate); throw new Error(`Concurrent Email Handoff Queue creation requires review for ${handoffKey}.`); }
+  await queueT.updateRecordAsync(created, { [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.ready) });
+  await clearBuildSignal(subT, recordId);
   setOutput("statusOut", "success"); setOutput("actionOut", "created_handoff"); setOutput("queueRecordId", created); setOutput("handoffKey", handoffKey); setOutput("errorOut", "");
   console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "success", actionOut: "created_handoff", queueRecordId: created, handoffKey }));
 }
