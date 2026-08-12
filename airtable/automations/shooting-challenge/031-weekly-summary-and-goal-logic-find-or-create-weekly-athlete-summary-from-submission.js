@@ -29,13 +29,13 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.9
+ * Version: v4.0
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-12
- * Updated Reason: Treat both Count This Submission? and Submission Stat Mode as
- * required formula-backed readiness inputs; accept the authoritative Simple Total
- * and Detailed Shooting modes while preserving strict writable-checkbox validation
- * for Build Daily Email Now?; arm Build Daily Email Now? only after counted/stat-mode validation,
+ * Updated Reason: Restore authoritative Weekly Athlete Summary find-or-create behavior
+ * when no fully valid canonical summary exists, while preserving formula-backed
+ * readiness inputs, strict writable-checkbox validation, and post-create concurrency
+ * revalidation before arming Build Daily Email Now?;
  * canonical summary resolution, eligible XP-link repair, and final summary validation.
  *
  * PURPOSE
@@ -91,7 +91,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  *
  * OUTPUTS
  * - statusOut = created | found | skipped | error
- * - actionOut
+ * - actionOut = created_canonical_summary | found_existing_summary |
+ *   repaired_stale_summary_link | skipped_* | error
  * - readinessOut = set | unchanged | error
  * - errorOut
  * - debugStep
@@ -115,7 +116,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.9",
+  version: "v4.0",
 
   tables: {
     submissions: "Submissions",
@@ -607,6 +608,36 @@ function buildSummaryStatusUpdate() {
   return updates;
 }
 
+async function createCanonicalSummary({ enrollmentId, weekId }) {
+  const fields = {
+    [CONFIG.summaries.enrollment]: linkedCell([enrollmentId]),
+    [CONFIG.summaries.week]: linkedCell([weekId]),
+    ...buildSummaryStatusUpdate(),
+  };
+
+  // Summary Key is intentionally omitted: Airtable computes it from the
+  // authoritative Enrollment and Week links.
+  const createdId = await summariesTable.createRecordAsync(fields);
+  log("Created candidate Weekly Athlete Summary", {
+    createdSummaryId: createdId,
+    enrollmentId,
+    weekId,
+    wroteSummaryKey: false,
+  });
+  return createdId;
+}
+
+async function loadCanonicalSummaries(context) {
+  const query = await summariesTable.selectRecordsAsync({
+    fields: buildSummaryFieldsToLoad(),
+  });
+
+  return {
+    query,
+    matches: await findValidCanonicalSummaries(query.records, context),
+  };
+}
+
 async function repairXpEventsForEnrollmentWeek({
   enrollmentId,
   weekId,
@@ -1007,14 +1038,14 @@ async function main() {
     debugStep = "8 - Load Weekly Athlete Summaries";
     setOutputSafe("debugStep", debugStep);
 
-    const summariesQuery = await summariesTable.selectRecordsAsync({
+    let summariesQuery = await summariesTable.selectRecordsAsync({
       fields: buildSummaryFieldsToLoad(),
     });
 
     debugStep = "9 - Find Matching Summary";
     setOutputSafe("debugStep", debugStep);
 
-    const matchingSummaries = await findValidCanonicalSummaries(
+    let matchingSummaries = await findValidCanonicalSummaries(
       summariesQuery.records,
       {
         enrollmentId: submissionEnrollmentId,
@@ -1043,7 +1074,7 @@ async function main() {
 
     if (existingSummaryIsValid) {
       weeklySummaryId = existingSubmissionSummaryId;
-      actionTaken = "found_existing_valid_summary";
+      actionTaken = "found_existing_summary";
     } else if (matchingSummaries.length === 1) {
       const matchingSummary = matchingSummaries[0];
       weeklySummaryId = matchingSummary.id;
@@ -1055,16 +1086,45 @@ async function main() {
           ? existingSubmissionSummaryId
           : "";
     } else if (matchingSummaries.length === 0) {
-      throw new Error(
-        `No unique canonical Weekly Athlete Summary exists for Submission ${recordId}; found 0 fully valid candidates.`
-      );
+      debugStep = "10 - Create Canonical Summary";
+      setOutputSafe("debugStep", debugStep);
+
+      weeklySummaryId = await createCanonicalSummary({
+        enrollmentId: submissionEnrollmentId,
+        weekId: submissionWeekId,
+      });
+      actionTaken = "created_canonical_summary";
+      staleSummaryIdRepaired = existingSubmissionSummaryId || "";
+
+      const postCreate = await loadCanonicalSummaries({
+        enrollmentId: submissionEnrollmentId,
+        weekId: submissionWeekId,
+        programInstanceId,
+        summaryKey: targetSummaryKey,
+      });
+      summariesQuery = postCreate.query;
+      matchingSummaries = postCreate.matches;
+
+      if (matchingSummaries.length !== 1) {
+        const postCreateIds = matchingSummaries.map(record => record.id).join(", ") || "(none)";
+        throw new Error(
+          `Canonical Weekly Athlete Summary create conflict for Submission ${recordId}; created ${weeklySummaryId}; found ${matchingSummaries.length} valid candidates after requery: ${postCreateIds}. Airtable has no unique constraint; stop for review.`
+        );
+      }
+
+      if (matchingSummaries[0].id !== weeklySummaryId) {
+        throw new Error(
+          `Canonical Weekly Athlete Summary create race for Submission ${recordId}; created ${weeklySummaryId}, but post-create canonical result was ${matchingSummaries[0].id}. Stop for review.`
+        );
+      }
     } else if (existingSubmissionSummaryId) {
       throw new Error(
         `Submission ${recordId} has stale Weekly Athlete Summary ${existingSubmissionSummaryId}, and no canonical summary can be resolved safely for Summary Key ${targetSummaryKey}.`
       );
     }
 
-    const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId);
+    const matchingSummary = findSummaryRecordById(summariesQuery.records, weeklySummaryId) ||
+      matchingSummaries.find(summary => summary.id === weeklySummaryId);
     if (!matchingSummary) {
       throw new Error(`Resolved Weekly Athlete Summary not found in loaded query: ${weeklySummaryId}`);
     }
@@ -1178,6 +1238,27 @@ async function main() {
       );
     }
 
+    const finalSummaryKey = getText(
+      finalSummary,
+      summariesTable,
+      CONFIG.summaries.summaryKey
+    );
+    if (finalSummaryKey !== targetSummaryKey) {
+      throw new Error(
+        `Weekly Athlete Summary has wrong Summary Key. Expected ${targetSummaryKey}, got ${finalSummaryKey || "(blank)"}`
+      );
+    }
+
+    const finalProgramInstance = await loadProgramInstanceContext(
+      finalEnrollmentId,
+      finalWeekId
+    );
+    if (finalProgramInstance.programInstanceId !== programInstanceId) {
+      throw new Error(
+        `Weekly Athlete Summary has wrong Program Instance. Expected ${programInstanceId}, got ${finalProgramInstance.programInstanceId || "(blank)"}`
+      );
+    }
+
     if (!finalSubmissionIds.includes(recordId)) {
       throw new Error("Weekly Athlete Summary is missing the source Submission link.");
     }
@@ -1205,7 +1286,12 @@ async function main() {
     setOutputSafe("actionTaken", actionTaken);
     setOutputSafe("actionOut", actionTaken || "");
     setOutputSafe("orphanXpLinkedCount", orphanXpLinkedCount);
-    setOutputSafe("statusOut", CONFIG.outputStatuses.found);
+    setOutputSafe(
+      "statusOut",
+      actionTaken === "created_canonical_summary"
+        ? CONFIG.outputStatuses.created
+        : CONFIG.outputStatuses.found
+    );
     setOutputSafe("errorOut", "");
 
     log("Weekly Summary canonical resolution completed", {
