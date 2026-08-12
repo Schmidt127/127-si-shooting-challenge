@@ -2,7 +2,7 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.1
+Version: v8.2
 Date Written: 2026-05-29
 Last Updated: 2026-08-12
 
@@ -30,7 +30,8 @@ TRIGGER
 - Automation 031 is the sole upstream owner that checks `Build Daily Email Now?`,
   only after the 023 → 005 → 007 → 010 → 031 chain has settled.
 - `Count This Submission?` and `Submission Stat Mode` remain supporting guards,
-  and 076 fail-closes when either is not ready.
+  and 076 fail-closes unless count evaluates checked/1 and the mode is exactly
+  `Simple Total` or `Detailed Shooting` after trim/case normalization.
 - Clear `Build Daily Email Now?` after an existing or newly created handoff so
   a successful replay cannot retrigger the source signal.
 
@@ -41,7 +42,7 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.1", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.2", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
   tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Synced", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
@@ -66,6 +67,8 @@ const ids = (r, t, name) => Array.isArray(raw(r, t, name)) ? raw(r, t, name).map
 const num = (r, t, name, fallback = 0) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/[$,%]/g, "").replace(/,/g, "").trim()); return Number.isFinite(n) ? n : fallback; };
 const nonnegativeInteger = (r, t, name) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/,/g, "").trim()); if (v === null || v === undefined || v === "" || !Number.isInteger(n) || n < 0) throw new Error(`${name} must be a settled nonnegative integer.`); return n; };
 const bool = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; if (v === false || v === 0) return false; return ["true", "yes", "checked", "1", "counted", "count"].includes(text(r, t, name).toLowerCase()); };
+const checkedReadiness = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; return ["true", "yes", "checked", "1"].includes(text(r, t, name).toLowerCase()); };
+const normalizedStatMode = (r, t, name) => text(r, t, name).toLowerCase();
 const one = (values, label) => { if (values.length !== 1) throw new Error(`${label} must have exactly one link; found ${values.length}.`); return values[0]; };
 const same = (left, right) => left.length === right.length && left.every((value) => right.includes(value));
 const first = (...values) => values.map((value) => String(value ?? "").trim()).find(Boolean) || "";
@@ -95,8 +98,8 @@ async function main() {
   debug("01 - Validate Submission readiness");
   if (!exists(subT, CONFIG.fields.sub.build)) throw new Error(`Missing required readiness signal: ${CONFIG.fields.sub.build}.`);
   if (!bool(sub, subT, CONFIG.fields.sub.build)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
-  if (exists(subT, CONFIG.fields.sub.count) && !bool(sub, subT, CONFIG.fields.sub.count)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
-  if (exists(subT, CONFIG.fields.sub.mode) && !["counted", "count", "ready"].includes(text(sub, subT, CONFIG.fields.sub.mode).toLowerCase())) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
+  if (!exists(subT, CONFIG.fields.sub.count) || !checkedReadiness(sub, subT, CONFIG.fields.sub.count)) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
+  if (!exists(subT, CONFIG.fields.sub.mode) || !["simple total", "detailed shooting"].includes(normalizedStatMode(sub, subT, CONFIG.fields.sub.mode))) return setOutput("statusOut", "skipped"), setOutput("actionOut", "skipped_not_ready");
   const enrollmentId = one(ids(sub, subT, CONFIG.fields.sub.enrollment), "Submission Enrollment");
   const weekId = one(ids(sub, subT, CONFIG.fields.sub.week), "Submission Week");
   const [enrollment, week] = await Promise.all([enrT.selectRecordAsync(enrollmentId), weekT.selectRecordAsync(weekId)]);

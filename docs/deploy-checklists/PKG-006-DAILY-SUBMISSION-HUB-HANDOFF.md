@@ -4,29 +4,44 @@ Status: **Repository-ready / promotion pending**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
 
-## Automation 031 v3.7 hotfix
+## Automation 031 v3.9 + Automation 076 v8.2 readiness correction
 
 This bounded corrective child scope replaces the repository 031 source version
-from v3.6 to **v3.7**. It fixes the field-type contract only:
+from v3.8 to **v3.9** and 076 from v8.1 to **v8.2**. It fixes the
+formula-derived shooting-mode readiness contract:
 
 - `Submissions -> Count This Submission?` remains the existing formula field;
-  v3.7 requires field existence and reads its evaluated result through
+  v3.9 requires field existence and reads its evaluated result through
   `isChecked()`.
-- `Submissions -> Submission Stat Mode` remains a required `singleSelect`.
+- `Submissions -> Submission Stat Mode` remains the existing formula field;
+  v3.9 requires field existence and accepts only trimmed, case-insensitive
+  evaluated text equal to `Simple Total` or `Detailed Shooting`.
 - `Submissions -> Build Daily Email Now?` remains a required writable
   `checkbox` and is still checked only after final summary validation.
-- No schema, formula, Automation 076, Automation 077, Make, Gmail, or email
-  change is included.
+- Automation 076 v8.2 applies the same count/mode guard before queue work,
+  preserves deterministic Draft/recheck/Ready behavior, and clears the
+  readiness checkbox only after successful queue create/reuse.
+- No schema, formula, Automation 010, Automation 077, Make, Gmail, Hub, or
+  email change is included.
 
 Before any Production replacement, Mike must complete the controlled Production
-test packet for v3.7 using the existing Schmidt test Submission and Mike's
+test packet for v3.9/v8.2 using the existing valid Schmidt Submission and Mike's
 allowlisted email. No DEV Airtable evidence is required or claimed.
+
+Recommended Production trigger conditions:
+
+- `Build Daily Email Now?` is checked;
+- `Count This Submission?` evaluates to `1`.
+
+Do not require `Submission Stat Mode = Counted`. The scripts remain the final
+guard and accept only `Simple Total` or `Detailed Shooting`. If the trigger
+also filters on mode, configure an OR group for those two values.
 
 ## Controlled Production promotion order
 
 Production Airtable is the only Airtable environment for this integration.
 
-1. Mike pastes the exact committed Automation 076 v8.1 source into the
+1. Mike pastes the exact committed Automation 076 v8.2 source first into the
    existing Production `Submissions` automation slot. Do not create a new
    numbered automation or schema field.
 2. Automation 031 is the sole owner that checks
@@ -58,26 +73,33 @@ Production Airtable is the only Airtable environment for this integration.
 8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
    consider 077 a retirement candidate; it is not retired by this PR.
 
-## 031 v3.7 replacement steps (after controlled Production test and Mike approval)
+## 031 v3.9 replacement steps (after controlled Production test and Mike approval)
 
 1. Open the existing Production Automation 031 slot; do not create a new slot.
-2. Replace the full script with the committed v3.7 source, omitting only the
+2. Replace the full script with the committed v3.9 source, omitting only the
    GitHub header comment when pasting into Airtable.
-3. Verify the input mapping remains `recordId`.
-4. Verify the existing formula `Count This Submission?` is unchanged and that
-   `Build Daily Email Now?` is still a physical writable checkbox.
-5. Run one controlled counted Submission with `Count This Submission?` evaluating
-   to `1` and `Submission Stat Mode = Counted`; verify 031 checks
-   `Build Daily Email Now?` only after final summary validation.
-6. Run one controlled Submission with `Count This Submission?` evaluating to `0`;
-   verify 031 skips and leaves `Build Daily Email Now?` unchanged.
-7. If any step fails, turn Automation 031 OFF and preserve the failed
-   Submission and output/error evidence. Do not change the formula or field
-   type. Restore v3.5 only if immediate restoration of the pre-email-readiness
-   behavior is necessary; otherwise leave 031 OFF until a corrected repository
+3. Verify the permanent input mapping is dynamic: `recordId` must receive the
+   Airtable record ID from the triggering Submission. Never permanently
+   hardcode `rec58gdymfPKKeVRI` into Automation 031.
+4. Verify the existing formulas `Count This Submission?` and
+   `Submission Stat Mode` are unchanged, and that `Build Daily Email Now?` is
+   still a physical writable checkbox.
+5. Use Airtable's Test action to select or temporarily supply
+   `rec58gdymfPKKeVRI` as the test record, then rerun only that existing valid
+   Schmidt Submission. Verify its count evaluates to `1` and its mode evaluates
+   to `Simple Total` (the controlled evidence) and
+   031 checks `Build Daily Email Now?` only after final summary validation.
+6. Do not manually change formula results to exercise count `0` or another stat
+   mode in Production. Those negative cases are covered offline; do not
+   intentionally alter the Submission merely to exercise them.
+7. After testing, verify the saved Production automation input remains
+   dynamically mapped to the triggering Submission.
+8. If any step fails, turn Automation 031 OFF and preserve the failed
+   Submission and output/error evidence. Do not alter either formula or field
+   type. Do not restore v3.6 or v3.7; leave 031 OFF until a corrected repository
    version is approved.
 
-This v3.7 hotfix packet authorizes repository replacement instructions only. It
+This v3.9/v8.2 hotfix packet authorizes repository replacement instructions only. It
 does not authorize a Production Airtable paste, a live record mutation, a queue
 dispatch, an email send, a Make/Gmail action, or enabling 077.
 
@@ -85,10 +107,11 @@ dispatch, an email send, a Make/Gmail action, or enabling 077.
 
 - Turn Automation 031 OFF.
 - Preserve the failed Submission and all output/error evidence.
-- Do not change the Airtable formula or field type.
-- Restore Automation 031 v3.5 only if immediate restoration of the
-  pre-email-readiness behavior is necessary. Otherwise leave 031 OFF until a
-  corrected repository version is approved.
+- Do not change either Airtable formula or field type.
+- Do not restore Automation 031 v3.6 or v3.7; leave 031 OFF until a corrected
+  repository version is approved.
+- Do not treat or restore the superseded 031 v3.8 or 076 v8.1 versions as the
+  corrected Production pair.
 - Do not enable 077 or Make/Gmail as a rollback.
 - Stop arming new `Email Handoff Queue` rows and disable the 076 trigger if
   needed; leave Hub Delivery history intact.

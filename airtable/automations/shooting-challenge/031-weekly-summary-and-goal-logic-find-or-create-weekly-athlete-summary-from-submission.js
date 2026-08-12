@@ -29,12 +29,13 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.7
+ * Version: v3.9
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-12
- * Updated Reason: Treat formula-backed Count This Submission? as a required readiness
- * field while preserving strict writable-checkbox validation for Build Daily Email Now?;
- * arm Build Daily Email Now? only after counted/stat-mode validation,
+ * Updated Reason: Treat both Count This Submission? and Submission Stat Mode as
+ * required formula-backed readiness inputs; accept the authoritative Simple Total
+ * and Detailed Shooting modes while preserving strict writable-checkbox validation
+ * for Build Daily Email Now?; arm Build Daily Email Now? only after counted/stat-mode validation,
  * canonical summary resolution, eligible XP-link repair, and final summary validation.
  *
  * PURPOSE
@@ -114,7 +115,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.7",
+  version: "v3.9",
 
   tables: {
     submissions: "Submissions",
@@ -330,6 +331,10 @@ function isChecked(record, table, fieldName) {
   return ["true", "yes", "checked", "1"].includes(
     getText(record, table, fieldName).toLowerCase()
   );
+}
+
+function normalizeSubmissionStatMode(record, table, fieldName) {
+  return getText(record, table, fieldName).toLowerCase();
 }
 
 function getLinkedRecordIds(record, table, fieldName) {
@@ -688,6 +693,8 @@ function buildSummaryFieldsToLoad() {
    SECTION 5: FIELD VALIDATION
 ========================================================= */
 
+// Submission Enrollment and Week are required linked inputs.
+// Weekly Athlete Summary is a writable output link.
 requireField(
   submissionsTable,
   CONFIG.submissions.enrollment,
@@ -715,16 +722,17 @@ requireField(
   "Submissions -> Count This Submission?"
 );
 
-// Submission Stat Mode is a configuration/readiness input, not a writable output.
-requireFieldType(
+// Submission Stat Mode is a formula/read-only readiness input. Its evaluated
+// text is read through getText(); do not require the physical field type to be
+// singleSelect.
+requireField(
   submissionsTable,
   CONFIG.submissions.submissionStatMode,
-  "singleSelect",
   "Submissions -> Submission Stat Mode"
 );
 
-// Build Daily Email Now? is the only Submission readiness field this
-// automation writes, so retain both its physical checkbox and writability gates.
+// Build Daily Email Now? is the writable readiness output; retain both its
+// physical checkbox and writability gates.
 requireFieldType(
   submissionsTable,
   CONFIG.submissions.buildDailyEmailNow,
@@ -738,6 +746,8 @@ requireWritableField(
   "Submissions -> Build Daily Email Now?"
 );
 
+// Enrollment Key is a required read-only/formula input; Program Instance is a
+// required linked input.
 requireField(
   enrollmentsTable,
   CONFIG.enrollments.enrollmentKey,
@@ -750,6 +760,8 @@ requireField(
   "Enrollments -> Program Instance"
 );
 
+// Week Key is a required read-only/formula input; Program Instance is a
+// required linked input; Week Name is a required read-only input.
 requireField(
   weeksTable,
   CONFIG.weeks.weekKey,
@@ -768,6 +780,8 @@ requireField(
   "Weeks -> Week Name"
 );
 
+// Summary Key is a required read-only/formula input. Summary Enrollment, Week,
+// and Submissions are writable outputs.
 requireField(
   summariesTable,
   CONFIG.summaries.summaryKey,
@@ -792,6 +806,8 @@ requireWritableField(
   "Weekly Athlete Summary -> Submissions"
 );
 
+// XP Source is a required read-only configuration input used to preserve
+// Automation 010 ownership boundaries.
 requireFieldType(
   xpEventsTable,
   CONFIG.xpEvents.xpSource,
@@ -862,18 +878,23 @@ async function main() {
       return;
     }
 
-    if (
-      getText(submission, submissionsTable, CONFIG.submissions.submissionStatMode).toLowerCase() !==
-      "counted"
-    ) {
+    const submissionStatMode = normalizeSubmissionStatMode(
+      submission,
+      submissionsTable,
+      CONFIG.submissions.submissionStatMode
+    );
+    if (!["simple total", "detailed shooting"].includes(submissionStatMode)) {
       setOutputSafe("ok", false);
       setOutputSafe("recordId", recordId);
-      setOutputSafe("actionTaken", "skipped_non_counted_stat_mode");
-      setOutputSafe("actionOut", "skipped_non_counted_stat_mode");
+      setOutputSafe("actionTaken", "skipped_unsupported_stat_mode");
+      setOutputSafe("actionOut", "skipped_unsupported_stat_mode");
       setOutputSafe("readinessOut", "unchanged");
       setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
       setOutputSafe("errorOut", "");
-      setOutputSafe("debugStep", "Skipped: Submission Stat Mode is not Counted");
+      setOutputSafe(
+        "debugStep",
+        "Skipped: Submission Stat Mode is blank or unsupported"
+      );
       return;
     }
 

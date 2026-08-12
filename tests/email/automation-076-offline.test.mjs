@@ -32,7 +32,7 @@ function singleSelect(name, choices) {
   };
 }
 
-function build076Base(queueRecords = []) {
+function build076Base(queueRecords = [], submissionCells = {}) {
   const submissions = new MockTable(
     "Submissions",
     [
@@ -41,8 +41,8 @@ function build076Base(queueRecords = []) {
       { name: "Weekly Athlete Summary", type: "multipleRecordLinks" },
       { name: "Activity Date", type: "date" },
       { name: "Build Daily Email Now?", type: "checkbox" },
-      { name: "Count This Submission?", type: "checkbox" },
-      singleSelect("Submission Stat Mode", ["Counted"]),
+      { name: "Count This Submission?", type: "formula", isComputed: true },
+      { name: "Submission Stat Mode", type: "formula", isComputed: true },
       { name: "Total Shots Counted", type: "number" },
       { name: "Total Makes Counted", type: "number" },
     ],
@@ -54,9 +54,10 @@ function build076Base(queueRecords = []) {
         "Activity Date": "2026-08-07",
         "Build Daily Email Now?": true,
         "Count This Submission?": true,
-        "Submission Stat Mode": { id: "Counted", name: "Counted" },
+        "Submission Stat Mode": "Simple Total",
         "Total Shots Counted": 20,
         "Total Makes Counted": 10,
+        ...submissionCells,
       }),
     ]
   );
@@ -166,6 +167,9 @@ test("076 creates one deterministic queue row and clears the readiness checkbox"
   assert.equal(queue.records.size, 1);
   assert.equal(queue.records.values().next().value.cells["Handoff Key"], `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}`);
   assert.equal(queue.records.values().next().value.cells.Status.id, "Ready");
+  const payload = JSON.parse(queue.records.values().next().value.cells["Payload JSON"]);
+  assert.equal(payload.shots, 20);
+  assert.equal(payload.makes, 10);
   assert.equal(submission.cells["Build Daily Email Now?"], false);
   assert.equal(result.output.values.actionOut, "created_handoff");
 });
@@ -183,6 +187,54 @@ test("076 reuses the deterministic queue row and clears the readiness checkbox o
   assert.equal(base.getTable("Email Handoff Queue").records.size, 1);
   assert.equal(submission.cells["Build Daily Email Now?"], false);
   assert.equal(second.output.values.actionOut, "existing_handoff");
+});
+
+test("076 accepts Detailed Shooting mode and preserves payload numbers", async () => {
+  const base = build076Base([], {
+    "Submission Stat Mode": "  dEtAiLeD sHoOtInG  ",
+  });
+  const result = await run076({ base });
+
+  assert.equal(result.error, null, result.error?.message);
+  const queue = base.getTable("Email Handoff Queue");
+  const submission = base.getTable("Submissions").records.get(SUBMISSION_ID);
+  const payload = JSON.parse(queue.records.values().next().value.cells["Payload JSON"]);
+  assert.equal(queue.records.size, 1);
+  assert.equal(payload.shots, 20);
+  assert.equal(payload.makes, 10);
+  assert.equal(submission.cells["Build Daily Email Now?"], false);
+});
+
+test("076 skips count formula 0 without creating a queue row", async () => {
+  const base = build076Base([], {
+    "Count This Submission?": "0",
+  });
+  const result = await run076({ base });
+
+  assert.equal(result.error, null);
+  assert.equal(result.output.values.actionOut, "skipped_not_ready");
+  assert.equal(base.getTable("Email Handoff Queue").records.size, 0);
+  assert.equal(
+    base.getTable("Submissions").records.get(SUBMISSION_ID).cells["Build Daily Email Now?"],
+    true
+  );
+});
+
+test("076 skips blank and unknown stat modes without creating a queue row", async () => {
+  for (const mode of ["", "Pending"]) {
+    const base = build076Base([], {
+      "Submission Stat Mode": mode,
+    });
+    const result = await run076({ base });
+
+    assert.equal(result.error, null);
+    assert.equal(result.output.values.actionOut, "skipped_not_ready");
+    assert.equal(base.getTable("Email Handoff Queue").records.size, 0);
+    assert.equal(
+      base.getTable("Submissions").records.get(SUBMISSION_ID).cells["Build Daily Email Now?"],
+      true
+    );
+  }
 });
 
 test("076 contains no direct Make, Gmail, Resend, Hub, or network call", () => {
