@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 031 v3.7 formula-readiness hotfix; no Production change) |
+| Last updated | **2026-08-12** (Automation 031 v3.8 formula-readiness hotfix; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -364,12 +364,12 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
 
-### Dashboard reconciliation (2026-08-12 — Automation 031 v3.7 formula-readiness hotfix)
+### Dashboard reconciliation (2026-08-12 — Automation 031 v3.8 formula-readiness hotfix)
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.7** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` uses required-field existence plus `isChecked()` evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
-| Focused validation | **PASS with ESLint unavailable** | 031 tests: **22/22 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors; repository ESLint was unavailable because no `eslint.config.*` exists; broad lint was stopped after hanging; broad email suite retains the unrelated existing 072 v4.0/v4.1 mismatch. |
+| Automation **031 v3.8** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` and `Submission Stat Mode` use required-field existence plus evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. Controlled Production test record: `rec58gdymfPKKeVRI`. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Focused validation | **PASS — 23/23** | 031 tests: **23/23 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. |
 
 Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
@@ -1317,7 +1317,7 @@ email-readiness signal.
 - 031 returns to Weekly Athlete Summary responsibilities only
 - 076 and shared 079/Communications Hub architecture remains intact
 
-This is technical-debt cleanup only. It must not block merging the v3.7
+This is technical-debt cleanup only. It must not block merging the v3.8
 hotfix, installing 031/076, running the controlled Production Daily Submission
 test, completing PKG-006, or finishing the app.
 

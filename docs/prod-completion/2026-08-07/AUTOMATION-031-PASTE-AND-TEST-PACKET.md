@@ -1,10 +1,10 @@
-# Automation 031 Paste and Test Packet — v3.7 — 2026-08-12
+# Automation 031 Paste and Test Packet — v3.8 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.7
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.8
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -13,8 +13,8 @@ This packet documents repository repair status only.
 - Airtable installation: **unconfirmed**
 - Controlled PROD live testing: **not performed**
 - Production Airtable is the only Airtable environment for this integration.
-- The required test is a controlled Production test using the existing Schmidt
-  test Submission and Mike's allowlisted email.
+- The required test is a controlled Production test using Submission
+  `rec58gdymfPKKeVRI` and Mike's allowlisted email.
 - No DEV Airtable evidence is required or claimed.
 
 ## Airtable automation identity
@@ -22,11 +22,11 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.7`
+- Repository version in this package: `v3.8`
 
 ## Repository repair completed
 
-The v3.7 repair now:
+The v3.8 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -40,18 +40,32 @@ The v3.7 repair now:
 10. never creates a Weekly Athlete Summary; a unique canonical record must already exist;
 11. requires `Count This Submission?` to exist but accepts its existing formula type; `isChecked()`
     reads raw `true`, raw `1`, and checked/true/1 formula text;
-12. validates `Submission Stat Mode` as the existing `singleSelect` readiness input;
+12. requires `Submission Stat Mode` to exist as a formula/read-only readiness
+    input and accepts only its trimmed, case-insensitive evaluated text `Counted`;
 13. requires `Build Daily Email Now?` to remain a writable physical `checkbox`;
 14. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
     is the sole owner of that readiness check; Automation 076 consumes and clears it.
 
-## v3.7 field-type audit
+## v3.8 startup field-role audit
 
-| Field | Role | v3.7 contract |
+| Field | Role | v3.8 contract |
 |---|---|---|
-| `Submissions -> Count This Submission?` | Formula/read-only readiness input | Required field existence; evaluated through `isChecked()` |
-| `Submissions -> Submission Stat Mode` | Readiness/configuration input | Required `singleSelect`; must evaluate to `Counted` |
-| `Submissions -> Build Daily Email Now?` | Writable readiness output | Required `checkbox` and writable; checked only after final validation |
+| `Submissions -> Enrollment` | Required linked input | Required field existence |
+| `Submissions -> Week` | Required linked input | Required field existence |
+| `Submissions -> Weekly Athlete Summary` | Writable output | Required and writable link |
+| `Submissions -> Count This Submission?` | Required formula/read-only input | Required field existence; evaluated through `isChecked()` |
+| `Submissions -> Submission Stat Mode` | Required formula/read-only input | Required field existence; evaluated text must equal `Counted` after trim/case normalization |
+| `Submissions -> Build Daily Email Now?` | Writable output | Required physical `checkbox` and writable; checked only after final validation |
+| `Enrollments -> Enrollment Key` | Required formula/read-only input | Required field existence |
+| `Enrollments -> Program Instance` | Required linked input | Required field existence |
+| `Weeks -> Week Key` | Required formula/read-only input | Required field existence |
+| `Weeks -> Program Instance` | Required linked input | Required field existence |
+| `Weeks -> Week Name` | Required read-only input | Required field existence |
+| `Weekly Athlete Summary -> Summary Key` | Required formula/read-only input | Required field existence |
+| `Weekly Athlete Summary -> Enrollment` | Writable output | Required and writable link |
+| `Weekly Athlete Summary -> Week` | Writable output | Required and writable link |
+| `Weekly Athlete Summary -> Submissions` | Writable output | Required and writable link |
+| `XP Events -> XP Source` | Required read-only configuration input | Required `singleSelect`; preserves Automation 010 ownership |
 
 No Airtable schema or formula changes are included.
 
@@ -63,7 +77,7 @@ Command run:
 
 Result:
 
-- **PASS** (`22/22`)
+- **PASS** (`23/23`)
 
 Covered cases:
 
@@ -80,9 +94,11 @@ Covered cases:
 11. wrong Program Instance;
 12. same athlete/week in another Program Instance;
 13. missing or ambiguous Program Instance;
-14. formula `Count This Submission?` returning `1`;
+14. formula `Count This Submission?` returning `1` and formula `Submission Stat Mode` returning `Counted`;
 15. formula `Count This Submission?` returning `0` without email readiness;
-16. writable-checkbox contract and unchanged readiness on final-validation failure.
+16. formula `Submission Stat Mode` returning another value without email readiness;
+17. formula readiness values with ordinary whitespace/case normalization;
+18. writable-checkbox contract, valid completion readiness, and unchanged readiness on errors before final validation.
 
 ## Paste instructions
 
@@ -108,8 +124,8 @@ Before any Airtable mutation, state the exact source Submission, current linked 
 
 ### Test A — stale-link repair
 
-Use the existing Schmidt test Submission as the controlled counted Submission
-with:
+Use the controlled Production Submission `rec58gdymfPKKeVRI` as the existing
+Schmidt test Submission with:
 
 - `Enrollment = recCyFEPeATOVNlr9`
 - `Week = recWeVrSabnsYaHc2`
@@ -187,9 +203,9 @@ If the Airtable paste or controlled test fails:
 1. turn Automation 031 OFF;
 2. preserve the failed Submission and all output/error evidence;
 3. do not change the Airtable formula or field type;
-4. restore v3.5 only if immediate restoration of the pre-email-readiness
-   behavior is necessary;
-5. otherwise leave 031 OFF until a corrected repository version is approved;
-6. do not enable 077 or Make/Gmail as a rollback;
-7. record the exact failing Submission ID, summary IDs, XP Event IDs, and
+4. do not restore v3.6 or v3.7;
+5. leave 031 OFF until a corrected repository version is approved;
+6. do not alter formulas;
+7. do not enable 077 or Make/Gmail as a rollback;
+8. record the exact failing Submission ID, summary IDs, XP Event IDs, and
    output/error text before retrying.

@@ -46,11 +46,7 @@ function submissionsFields() {
     { name: "Activity Date", type: "date" },
     { name: "Weekly Athlete Summary", type: "multipleRecordLinks" },
     { name: "Count This Submission?", type: "formula", isComputed: true },
-    {
-      name: "Submission Stat Mode",
-      type: "singleSelect",
-      options: { choices: [{ id: "selCounted", name: "Counted" }] },
-    },
+    { name: "Submission Stat Mode", type: "formula", isComputed: true },
     { name: "Build Daily Email Now?", type: "checkbox" },
   ];
 }
@@ -161,10 +157,10 @@ export function build031Base(opts = {}) {
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
       "Activity Date": "2026-08-07",
       "Weekly Athlete Summary": [],
-      // Formula result; v3.7 must read the evaluated value rather than require
-      // the physical field type to be checkbox.
+      // Formula results; v3.8 must read evaluated values rather than require
+      // physical readiness-input field types.
       "Count This Submission?": "1",
-      "Submission Stat Mode": { id: "selCounted", name: "Counted" },
+      "Submission Stat Mode": "Counted",
       "Build Daily Email Now?": false,
       ...submissionCells,
     }),

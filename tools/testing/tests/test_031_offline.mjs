@@ -135,16 +135,38 @@ test("formula Count This Submission? returning 1 passes readiness validation", a
   const base = build031Base({
     submissionCells: {
       "Count This Submission?": "1",
+      "Submission Stat Mode": "Counted",
       "Build Daily Email Now?": false,
     },
   });
 
   const countField = base.getTable("Submissions").getField("Count This Submission?");
+  const statModeField = base.getTable("Submissions").getField("Submission Stat Mode");
   const emailField = base.getTable("Submissions").getField("Build Daily Email Now?");
   assert.equal(countField.type, "formula");
   assert.equal(countField.isComputed, true);
+  assert.equal(statModeField.type, "formula");
+  assert.equal(statModeField.isComputed, true);
   assert.equal(emailField.type, "checkbox");
   assert.equal(emailField.isComputed, false);
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.readinessOut, "set");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
+});
+
+test("formula readiness values normalize ordinary whitespace and case", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Count This Submission?": " 1 ",
+      "Submission Stat Mode": "  cOuNtEd  ",
+      "Build Daily Email Now?": false,
+    },
+  });
 
   const { output, error } = await run031({ base });
   assert.equal(error, null, error && error.message);
@@ -198,7 +220,7 @@ test("uncounted Submission skips without changing email readiness", async () => 
 test("non-Counted Submission Stat Mode skips without changing email readiness", async () => {
   const base = build031Base({
     submissionCells: {
-      "Submission Stat Mode": { id: "selPending", name: "Pending" },
+      "Submission Stat Mode": "Pending",
       "Build Daily Email Now?": false,
     },
   });
