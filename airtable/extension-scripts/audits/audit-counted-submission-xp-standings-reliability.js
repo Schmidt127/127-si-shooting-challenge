@@ -25,7 +25,12 @@ const links = (r, t, n) => Array.isArray(raw(r, t, n)) ? raw(r, t, n).map((v) =>
 const one = (r, t, n) => links(r, t, n)[0] || "";
 const yes = (r, t, n) => { const v = raw(r, t, n); return v === true || v === 1 || String(v).toLowerCase() === "true"; };
 const numberState = (r, t, n) => {
-  const v = raw(r, t, n);
+  let v = raw(r, t, n);
+  if (Array.isArray(v)) {
+    if (v.length === 0) return { kind: "blank", value: null };
+    if (v.length !== 1) return { kind: "invalid", value: null };
+    [v] = v;
+  }
   if (v === null || v === undefined || v === "") return { kind: "blank", value: null };
   const value = typeof v === "number" ? v : Number(String(v).replace(/,/g, ""));
   return Number.isFinite(value) ? { kind: "number", value } : { kind: "invalid", value: null };
@@ -75,6 +80,16 @@ async function main() {
   for (const was of summaries.records) {
     const goalRecordIds = links(was, wasT, CONFIG.f.was.goalRecord);
     const lookup = numberState(was, wasT, CONFIG.f.was.goalLookup), formula = numberState(was, wasT, CONFIG.f.was.weeklyGoal);
+    const wasEnrollmentId = one(was, wasT, CONFIG.f.was.enrollment);
+    const wasWeekId = one(was, wasT, CONFIG.f.was.week);
+    const expectedWeeklyXp = xps.records
+      .filter((xp) => yes(xp, xpT, CONFIG.f.xp.active)
+        && sameOne(links(xp, xpT, CONFIG.f.xp.enrollment), wasEnrollmentId)
+        && sameOne(links(xp, xpT, CONFIG.f.xp.week), wasWeekId))
+      .reduce((sum, xp) => sum + (numberState(xp, xpT, CONFIG.f.xp.activePoints).value || 0), 0);
+    const weeklyXp = numberState(was, wasT, CONFIG.f.was.weeklyXp);
+    if (weeklyXp.kind === "blank") add("weekly_xp_rollup_blank_or_unsettled", "warn", was, { expectedWeeklyXp }, "Reread after Airtable rollup settlement; inspect XP links if persistent.");
+    else if (weeklyXp.kind === "number" && weeklyXp.value !== expectedWeeklyXp) add("weekly_xp_rollup_mismatch", "error", was, { expectedWeeklyXp, actualWeeklyXp: weeklyXp.value }, "Inspect Active XP Points and Enrollment/Week/WAS XP links.");
     if (!goalRecordIds.length) add("weekly_goal_missing_goal_record", "warn", was, {}, "030/032 configuration link is missing; zero is not treated as configured.");
     else if (goalRecordIds.length !== 1) add("weekly_goal_ambiguous_goal_record", "error", was, { goalRecordIds }, "Resolve to exactly one goal record.");
     else if (lookup.kind === "blank") add("weekly_goal_blank_lookup", "warn", was, { goalRecordId: goalRecordIds[0] }, "Goal Record exists but lookup is blank; inspect source goal configuration.");

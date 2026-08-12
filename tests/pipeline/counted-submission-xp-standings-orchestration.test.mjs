@@ -129,6 +129,35 @@ test("audit includes checked checkbox Submissions and excludes unchecked ones", 
   );
 });
 
+test("audit lookup parsing distinguishes blank, one-value, and multi-value states", () => {
+  const numberState = (value) => {
+    let current = value;
+    if (Array.isArray(current)) {
+      if (current.length === 0) return { kind: "blank", value: null };
+      if (current.length !== 1) return { kind: "invalid", value: null };
+      [current] = current;
+    }
+    if (current === null || current === undefined || current === "") return { kind: "blank", value: null };
+    const parsed = typeof current === "number" ? current : Number(String(current).replace(/,/g, ""));
+    return Number.isFinite(parsed) ? { kind: "number", value: parsed } : { kind: "invalid", value: null };
+  };
+  const goalState = (lookup, formula) => {
+    if (lookup.kind === "blank") return "blank_lookup";
+    if (lookup.value === 0 && formula.kind === "number" && formula.value === 0) return "configured_zero";
+    if (lookup.value > 0 && formula.kind === "number" && formula.value === 0) return "persistent_formula_mismatch";
+    return "other";
+  };
+
+  assert.deepEqual(numberState([]), { kind: "blank", value: null });
+  assert.deepEqual(numberState([500]), { kind: "number", value: 500 });
+  assert.deepEqual(numberState([0]), { kind: "number", value: 0 });
+  assert.deepEqual(numberState([500, 600]), { kind: "invalid", value: null });
+  assert.equal(goalState(numberState([]), numberState([0])), "blank_lookup");
+  assert.equal(goalState(numberState([0]), numberState([0])), "configured_zero");
+  assert.equal(goalState(numberState([500]), numberState([0])), "persistent_formula_mismatch");
+  assert.match(auditSource(), /if \(v\.length !== 1\) return \{ kind: "invalid", value: null \};/);
+});
+
 test("010 before 031/076 settles one XP event, one WAS, progression, and standings inputs", () => {
   const state = pipeline();
   step023(state); step005(state); canonicalSummary(state); step010(state); step031(state);
