@@ -13,8 +13,9 @@ This packet documents repository repair status only.
 - Airtable installation: **unconfirmed**
 - Controlled PROD live testing: **not performed**
 - Production Airtable is the only Airtable environment for this integration.
-- The required test is a controlled Production test using Submission
-  `rec58gdymfPKKeVRI` and Mike's allowlisted email.
+- The required test is a controlled Production test using the existing valid
+  Schmidt Submission; `rec58gdymfPKKeVRI` is a temporary manual-test record
+  selection only, with Mike's allowlisted email.
 - No DEV Airtable evidence is required or claimed.
 
 ## Airtable automation identity
@@ -107,29 +108,36 @@ Covered cases:
 3. Paste the full Airtable docblock-through-end body into the editor, skipping the GitHub header comment.
 4. Save the automation.
 5. Verify the automation input variable:
-   - `recordId`
+   - `recordId` is dynamically mapped to the Airtable record ID from the
+     triggering Submission;
+   - never permanently hardcode `rec58gdymfPKKeVRI` into Automation 031.
 6. Verify the trigger path supports controlled stale-link repair:
    - an empty-only trigger/view is **not sufficient** to exercise issue #96;
    - use a temporary repair view, test button path, or another controlled operator method that can run the repaired script against an already-linked Submission.
 
 ## Controlled test procedure
 
+For Airtable's Test action after installing v3.8, `rec58gdymfPKKeVRI` may be
+selected or supplied temporarily as the test record. After testing, verify the
+saved Production automation input remains dynamically mapped to the triggering
+Submission.
+
 Use only:
 
-- Enrollment `recCyFEPeATOVNlr9`
-- Program Instance `rec5mEM0YPqPqq0hZ`
-- Week `recWeVrSabnsYaHc2`
+- Existing valid Schmidt Submission `rec58gdymfPKKeVRI`
+- Mike's allowlisted email
 
 Before any Airtable mutation, state the exact source Submission, current linked summary, expected canonical summary, and any XP Event IDs expected to move.
 
-### Test A — stale-link repair
+### Test A — existing valid Schmidt Submission
 
-Use the controlled Production Submission `rec58gdymfPKKeVRI` as the existing
-Schmidt test Submission with:
+Use only the existing valid Schmidt Submission `rec58gdymfPKKeVRI`. Do not
+manually change formula results or intentionally alter the Submission to
+exercise negative cases.
 
-- `Enrollment = recCyFEPeATOVNlr9`
-- `Week = recWeVrSabnsYaHc2`
-- `Weekly Athlete Summary` intentionally linked to a stale/wrong summary
+Run Airtable's Test action with that record and Mike's allowlisted email.
+Verify the formulas evaluate to count `1` and stat mode `Counted`, then verify
+031 checks `Build Daily Email Now?` only after final summary validation.
 
 Use Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`) and `testMode=true`
 for the controlled Production email-path test. Do not send to any other
@@ -137,14 +145,14 @@ recipient.
 
 Expected first-run result:
 
-- `Submissions.Weekly Athlete Summary` changes to the canonical Early Bird summary for the same Enrollment + Week;
-- canonical `Weekly Athlete Summary.Submissions` contains the source Submission;
-- stale `Weekly Athlete Summary.Submissions` no longer contains that Submission;
-- matching non-Submission-Base `XP Events` with the same Enrollment + Week and blank/stale summary linkage now link to the canonical summary;
+- `Submissions.Weekly Athlete Summary` remains linked to the canonical Early Bird summary for the same Enrollment + Week;
+- canonical `Weekly Athlete Summary.Submissions` contains the source Submission exactly once;
+- no new Weekly Athlete Summary is created and no stale-link repair is induced;
+- matching non-Submission-Base `XP Events` remain correctly linked without unnecessary churn;
 - the Submission Base XP Event is not modified by Automation 031; Automation 010 owns that event and its summary link;
 - unrelated XP Events remain untouched.
 
-### Test B — replay after repair
+### Test B — replay after the valid run
 
 Run the same Submission again with no other changes.
 
@@ -156,11 +164,18 @@ Expected replay result:
 - no XP Event link churn beyond the already-repaired canonical state;
 - outputs indicate an existing valid summary path rather than a second repair.
 
-### Test C — fail-closed
+### Offline-only negative cases
 
-Run a controlled stale-link scenario where the Submission points to a stale summary but no unique canonical summary exists for the Submission Enrollment + Week.
+Do not manually change Production formula results to exercise count `0` or
+another stat mode, and do not intentionally alter the Submission merely to
+exercise them. These negative cases are covered by the offline regression:
+formula count `0`, another stat-mode value, whitespace/case normalization, and
+pre-final-validation failure all leave email readiness unchanged.
 
-Expected result:
+### Offline-only fail-closed contract case
+
+Run this case only in the offline harness; do not alter the valid Production
+Schmidt Submission to exercise it.
 
 - the script errors/fails closed;
 - the Submission keeps its current link until an operator resolves the ambiguity or missing canonical summary safely;
@@ -168,10 +183,10 @@ Expected result:
 - no XP Events are reassigned.
 - every affected link and backlink remains unchanged.
 
-### Test D — wrong-context candidate
+### Offline-only wrong-context candidate case
 
-Run a controlled stale-link scenario where a candidate has the expected Summary Key
-but a different Enrollment, Week, or Program Instance.
+Run this case only in the offline harness. Do not create or alter a Production
+candidate merely to exercise it.
 
 Expected result:
 
@@ -179,7 +194,7 @@ Expected result:
 - the stale Submission link, stale Summary backlink, and XP Event links remain unchanged;
 - the script fails closed unless exactly one fully valid replacement remains.
 
-## Expected records and fields
+## Expected records and fields (offline repair-contract cases)
 
 Primary fields expected to change on a successful stale-link repair:
 

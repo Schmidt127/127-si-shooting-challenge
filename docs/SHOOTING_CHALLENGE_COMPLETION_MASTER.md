@@ -368,7 +368,7 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 
 | Item | Status | Evidence |
 |------|--------|----------|
-| Automation **031 v3.8** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` and `Submission Stat Mode` use required-field existence plus evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. Controlled Production test record: `rec58gdymfPKKeVRI`. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Automation **031 v3.8** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` and `Submission Stat Mode` use required-field existence plus evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. Permanent `recordId` mapping remains dynamic; `rec58gdymfPKKeVRI` is temporary manual-test-only. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
 | Focused validation | **PASS — 23/23** | 031 tests: **23/23 passed**; 010 tests: **9/9 passed**; 076 contracts: **14/14 passed**; syntax passed; `git diff --check` passed; IDE diagnostics reported no errors. |
 
 Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.

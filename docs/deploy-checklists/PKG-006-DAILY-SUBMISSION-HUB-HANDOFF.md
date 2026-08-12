@@ -21,7 +21,7 @@ from v3.7 to **v3.8**. It fixes the field-type contract only:
   change is included.
 
 Before any Production replacement, Mike must complete the controlled Production
-test packet for v3.8 using Submission `rec58gdymfPKKeVRI` and Mike's
+test packet for v3.8 using the existing valid Schmidt Submission and Mike's
 allowlisted email. No DEV Airtable evidence is required or claimed.
 
 ## Controlled Production promotion order
@@ -65,17 +65,22 @@ Production Airtable is the only Airtable environment for this integration.
 1. Open the existing Production Automation 031 slot; do not create a new slot.
 2. Replace the full script with the committed v3.8 source, omitting only the
    GitHub header comment when pasting into Airtable.
-3. Verify the input mapping remains `recordId`.
+3. Verify the permanent input mapping is dynamic: `recordId` must receive the
+   Airtable record ID from the triggering Submission. Never permanently
+   hardcode `rec58gdymfPKKeVRI` into Automation 031.
 4. Verify the existing formulas `Count This Submission?` and
    `Submission Stat Mode` are unchanged, and that `Build Daily Email Now?` is
    still a physical writable checkbox.
-5. Run one controlled counted Submission with `Count This Submission?` evaluating
-   to `1` and `Submission Stat Mode` evaluating to `Counted`; verify 031 checks
-   `Build Daily Email Now?` only after final summary validation.
-6. Run one controlled Submission with `Count This Submission?` evaluating to `0`;
-   verify 031 skips and leaves `Build Daily Email Now?` unchanged. Also verify
-   another `Submission Stat Mode` formula value skips without setting readiness.
-7. If any step fails, turn Automation 031 OFF and preserve the failed
+5. Use Airtable's Test action to select or temporarily supply
+   `rec58gdymfPKKeVRI` as the test record, then rerun only that existing valid
+   Schmidt Submission. Verify its formulas evaluate to counted/`Counted` and
+   031 checks `Build Daily Email Now?` only after final summary validation.
+6. Do not manually change formula results to exercise count `0` or another stat
+   mode in Production. Those negative cases are covered offline; do not
+   intentionally alter the Submission merely to exercise them.
+7. After testing, verify the saved Production automation input remains
+   dynamically mapped to the triggering Submission.
+8. If any step fails, turn Automation 031 OFF and preserve the failed
    Submission and output/error evidence. Do not alter either formula or field
    type. Do not restore v3.6 or v3.7; leave 031 OFF until a corrected repository
    version is approved.
