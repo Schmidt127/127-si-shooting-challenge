@@ -93,8 +93,8 @@ function findExistingEnrollmentForSeason(enrollments, currentRecordId, athleteId
 
 const source = fs.readFileSync(SCRIPT_PATH, "utf8");
 
-test("001 is version v5.3 with unloadData compatibility retained", () => {
-  assert.match(source, /Version:\s*v5\.3/);
+test("001 is version v5.4 with unloadData compatibility retained", () => {
+  assert.match(source, /Version:\s*v5\.4/);
   assert.match(source, /unloadData/);
   assert.match(source, /typeof queryResult\?\.unloadData === "function"/);
   assert.match(source, /recQP4N5acTdK40uZ/);
@@ -244,6 +244,34 @@ test("partial rerun with existing link prefers already-linked path contract", ()
 test("missing required enrollment data still has skipped path", () => {
   assert.match(source, /Missing required Enrollment data/);
   assert.match(source, /CONFIG\.statuses\.skipped/);
+});
+
+test("canonical active enrollment requests immediate level recalculation", () => {
+  assert.match(source, /levelRecalcNeeded:\s*"Level Recalc Needed\?"/);
+  assert.match(source, /function requestLevelRecalculation\(/);
+  assert.match(source, /fieldHasType\(enrollmentsTable, fieldName, \["checkbox"\]\)/);
+  assert.match(source, /await requestLevelRecalculation\(\)/);
+  assert.match(source, /\[fieldName\]: true/);
+  assert.ok(
+    source.indexOf("await updateRecordSafe(enrollmentsTable, recordId, {\n            [CONFIG.enrollments.active]: true") <
+      source.indexOf("await requestLevelRecalculation()"),
+    "recalculation must be requested after activation"
+  );
+});
+
+test("invalid school years skip before any progression request", () => {
+  assert.match(source, /function isValidSchoolYear\(/);
+  assert.match(source, /Skipped: Invalid School Year/);
+  const invalidYearIndex = source.indexOf("Skipped: Invalid School Year");
+  const requestIndex = source.indexOf("await requestLevelRecalculation()");
+  assert.ok(invalidYearIndex > 0 && invalidYearIndex < requestIndex);
+});
+
+test("duplicate guard returns before immediate recalculation", () => {
+  const duplicateIndex = source.indexOf("duplicate-enrollment-blocked");
+  const requestIndex = source.indexOf("await requestLevelRecalculation()");
+  assert.ok(duplicateIndex > 0 && duplicateIndex < requestIndex);
+  assert.match(source, /"Duplicate Enrollment blocked/);
 });
 
 test("field/table/output contracts unchanged", () => {
