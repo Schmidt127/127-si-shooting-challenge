@@ -1,11 +1,11 @@
-# Automation 031 Paste and Test Packet — v4.0 / 076 v8.3 — 2026-08-12
+# Automation 031 Paste and Test Packet — v4.0 / 076 v8.4 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
 - `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v4.0
-- `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.3
+- `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` v8.4
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -25,7 +25,7 @@ This packet documents repository repair status only.
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
 - Repository version in this package: `v4.0`
-- Companion handoff version: `076 v8.3`
+- Companion handoff version: `076 v8.4`
 
 ## Repository repair completed
 
@@ -84,9 +84,9 @@ Result:
 
 - **PASS** (`28/28`)
 
-Companion Automation 076 v8.3 offline verification:
+Companion Automation 076 v8.4 offline verification:
 
-- **PASS** (`8/8`)
+- **PASS** (`11/11`)
 - Covers `Simple Total` and `Detailed Shooting`, normalization, count-zero and
   unsupported-mode skips, deterministic replay, payload numbers, readiness
   clearing, and the no-network contract.
@@ -116,7 +116,7 @@ Covered cases:
 
 ## Paste instructions
 
-Paste order is **076 v8.3 first, then 031 v4.0**. For both automations,
+Paste order is **076 v8.4 first, then 031 v4.0**. For both automations,
 `recordId` must remain dynamically mapped to the Airtable record ID from the
 triggering Submission; never permanently hardcode
 `rec58gdymfPKKeVRI`. The recommended trigger conditions are
@@ -124,14 +124,17 @@ triggering Submission; never permanently hardcode
 Do not configure the trigger to require `Submission Stat Mode = Counted`; if
 mode is included, use an OR group for `Simple Total` and `Detailed Shooting`.
 
-### 076 v8.3
+### 076 v8.4
 
 1. Open the existing Production automation slot for
    `076 - Daily Submission Communications Hub Handoff`.
 2. Copy the script from
    `airtable/automations/shooting-challenge/076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js`.
 3. Paste the full script body, skipping only the GitHub header comment, and save.
-4. Verify `recordId` remains dynamically mapped to the triggering Submission.
+4. Verify the required parent recipient comes from `Enrollments.Parent Email -
+   Cleaned`; raw `Parent Email` must not be used as a fallback. The optional
+   athlete recipient comes from `Athlete Email - Cleaned`.
+5. Verify `recordId` remains dynamically mapped to the triggering Submission.
 
 ### 031 v4.0
 
