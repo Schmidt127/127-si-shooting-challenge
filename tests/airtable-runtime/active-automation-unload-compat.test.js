@@ -36,7 +36,7 @@ const TARGETS = [
   {
     num: "042",
     file: "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
-    versionRe: /Version:\s*3\.2/,
+    versionRe: /Version:\s*3\.4/,
     queryVars: ["zmQuery", "zaQuery"],
   },
   {
@@ -184,7 +184,7 @@ for (const target of TARGETS) {
   test(`${target.num} exists and declares patched version`, () => {
     assert.ok(fs.existsSync(scriptPath), target.file);
     assert.match(source, target.versionRe);
-    assert.match(source, /2026-08-05|2026-08-06|2026-08-07/);
+    assert.match(source, /2026-08-05|2026-08-06|2026-08-07|2026-08-12/);
     assert.match(source, /unloadData|unloadQuerySafe/);
   });
 

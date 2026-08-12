@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 3.3
+ * Version: 3.4
  * Date Written: 2026-06-02
- * Last Updated: 2026-08-08
+ * Last Updated: 2026-08-12
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
@@ -39,6 +39,12 @@ Airtable is the deployed/running copy.
  *   rule silently and fails closed on duplicate applicable rules.
  * - Reads explicit primary-field values for Level and Level Gate Rule labels.
  *   This avoids generic Airtable record labels in logs and gate explanations.
+ *
+ * Version 3.4 (2026-08-12):
+ * - Requires Enrollment.Active? and skips inactive Enrollments before writing
+ *   Level Status = Processing.
+ * - Clears a stale Level Recalc Needed? request without changing historical
+ *   progression fields on inactive Enrollments.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -63,7 +69,7 @@ Airtable is the deployed/running copy.
  * View: 042 - Needs Level Assignment
  *
  * View Filter:
- * Level Recalc Needed? is checked
+ * Level Recalc Needed? is checked AND Active? is checked
  *
  * Required Input Variable:
  * recordId = Airtable record ID from the triggering Enrollment record
@@ -117,7 +123,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "3.3",
+        version: "3.4",
     },
 
     tables: {
@@ -135,6 +141,7 @@ const CONFIG = {
         levelGateRule: "Level Gate Rule",
         levelStatus: "Level Status",
         levelRecalcNeeded: "Level Recalc Needed?",
+        active: "Active?",
 
         totalSubmissions: "Total Submissions",
         totalHomeworkCompletions: "Total Homework Completions",
@@ -186,6 +193,7 @@ const CONFIG = {
         assigned: "Assigned",
         gateBlocked: "Gate Blocked",
         error: "Error",
+        skippedInactive: "skipped_inactive",
     },
 
     input: {
@@ -492,6 +500,7 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
         CONFIG.enrollmentFields.levelGateRule,
         CONFIG.enrollmentFields.levelStatus,
         CONFIG.enrollmentFields.levelRecalcNeeded,
+        CONFIG.enrollmentFields.active,
 
         CONFIG.enrollmentFields.totalSubmissions,
         CONFIG.enrollmentFields.totalHomeworkCompletions,
@@ -815,10 +824,6 @@ async function main() {
     validateSchema(enrollmentsTable, levelsTable, gateRulesTable);
 
     try {
-        await enrollmentsTable.updateRecordAsync(recordId, {
-            [CONFIG.enrollmentFields.levelStatus]: singleSelectValue(CONFIG.statusValues.processing),
-        });
-
         const enrollment = await enrollmentsTable.selectRecordAsync(recordId, {
             fields: [
                 CONFIG.enrollmentFields.lifetimeXpTotal,
@@ -827,6 +832,7 @@ async function main() {
                 CONFIG.enrollmentFields.levelGateRule,
                 CONFIG.enrollmentFields.levelStatus,
                 CONFIG.enrollmentFields.levelRecalcNeeded,
+                CONFIG.enrollmentFields.active,
                 CONFIG.enrollmentFields.totalSubmissions,
                 CONFIG.enrollmentFields.totalHomeworkCompletions,
                 CONFIG.enrollmentFields.totalVideoSubmissions,
@@ -847,6 +853,61 @@ async function main() {
 
             throw new Error(message);
         }
+
+        const enrollmentIsActive = isTruthyFlag(
+            enrollment,
+            CONFIG.enrollmentFields.active
+        );
+
+        if (!enrollmentIsActive) {
+            const message =
+                `Enrollment ${recordId} is inactive; progression fields preserved and stale ` +
+                "recalculation request cleared.";
+
+            await enrollmentsTable.updateRecordAsync(recordId, {
+                [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
+            });
+
+            console.log(
+                JSON.stringify({
+                    ok: true,
+                    automation: CONFIG.automation.name,
+                    version: CONFIG.automation.version,
+                    enrollmentRecordId: recordId,
+                    status: CONFIG.statusValues.skippedInactive,
+                    action: "skipped_inactive",
+                    levelRecalcNeededCleared: true,
+                    progressionFieldsPreserved: true,
+                })
+            );
+
+            setOutputs({
+                status: CONFIG.statusValues.skippedInactive,
+                message,
+                enrollmentRecordId: recordId,
+                lifetimeXp: getNumber(
+                    enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),
+                    0
+                ),
+                currentLevel: getText(
+                    enrollment,
+                    CONFIG.enrollmentFields.currentLevel
+                ),
+                nextLevel: getText(
+                    enrollment,
+                    CONFIG.enrollmentFields.nextLevel
+                ),
+                levelGateRule: getText(
+                    enrollment,
+                    CONFIG.enrollmentFields.levelGateRule
+                ),
+            });
+            return;
+        }
+
+        await enrollmentsTable.updateRecordAsync(recordId, {
+            [CONFIG.enrollmentFields.levelStatus]: singleSelectValue(CONFIG.statusValues.processing),
+        });
 
         const lifetimeXp = getNumber(
             enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),

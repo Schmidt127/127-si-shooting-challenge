@@ -26,12 +26,12 @@ Airtable is the deployed/running copy.
  * AUTOMATION NAME
  * 001 - Enrollment Intake and Setup - Find or Create Athlete and Link Enrollment
  *
- * Version: v5.3
+ * Version: v5.4
  * Date Written: 2026-05-20
- * Date Updated: 2026-08-11
- * Updated Reason: Prevent a repeat form submission from creating a second active Enrollment
- * for the same Athlete + School Year. The earlier Enrollment remains canonical; the repeat row
- * is left inactive and unlinked so its computed Enrollment Key cannot collide downstream.
+ * Date Updated: 2026-08-12
+ * Updated Reason: Request immediate level assignment after a canonical Enrollment is linked and
+ * activated. The v5.3 duplicate guard remains: a repeat form submission cannot create a second
+ * active Enrollment for the same Athlete + School Year.
  * v5.2 retained: unloadData runtime compatibility fix for PROD Enrollment recQP4N5acTdK40uZ.
  *
  * PURPOSE
@@ -84,6 +84,7 @@ const CONFIG = {
         athleteLink: "Athlete",
         schoolYear: "School Year",
         active: "Active?",
+        levelRecalcNeeded: "Level Recalc Needed?",
         athleteMatchStatus: "Athlete Match Status",
     },
 
@@ -263,6 +264,35 @@ function buildAthleteMatchKey(parentEmail, firstName, lastName) {
 
 function valuesEqual(a, b) {
     return String(a || "").trim() === String(b || "").trim();
+}
+
+function isValidSchoolYear(value) {
+    const normalized = String(value || "").trim().replace(/[–—−]/g, "-");
+    const match = normalized.match(/^(\d{4})-(\d{4})$/);
+    return Boolean(match && Number(match[2]) === Number(match[1]) + 1);
+}
+
+async function requestLevelRecalculation() {
+    const fieldName = CONFIG.enrollments.levelRecalcNeeded;
+    if (!fieldExists(enrollmentsTable, fieldName)) {
+        log(`Immediate level recalculation skipped: missing field "${fieldName}".`);
+        return false;
+    }
+
+    if (!fieldHasType(enrollmentsTable, fieldName, ["checkbox"])) {
+        log(`Immediate level recalculation skipped: "${fieldName}" is not a checkbox.`);
+        return false;
+    }
+
+    if (!isWritableField(enrollmentsTable, fieldName)) {
+        log(`Immediate level recalculation skipped: "${fieldName}" is not writable.`);
+        return false;
+    }
+
+    await enrollmentsTable.updateRecordAsync(recordId, {
+        [fieldName]: true,
+    });
+    return true;
 }
 
 function getFirstAvailableText(record, table, fieldNames) {
@@ -645,6 +675,19 @@ async function main() {
             return;
         }
 
+        if (!isValidSchoolYear(schoolYear)) {
+            const message = `Invalid School Year: "${schoolYear}". Expected YYYY-YYYY with consecutive years.`;
+
+            await setEnrollmentStatus(CONFIG.statuses.skipped);
+
+            setOutputSafe("statusOut", CONFIG.statuses.skipped);
+            setOutputSafe("errorOut", message);
+            setOutputSafe("debugStep", "Skipped: Invalid School Year");
+
+            log(message);
+            return;
+        }
+
         if (!athleteMatchKey || athleteMatchKey === "||") {
             const message = "Athlete Match Key could not be built from Enrollment data.";
 
@@ -897,7 +940,12 @@ async function main() {
 
         await setEnrollmentStatus(CONFIG.statuses.linked);
 
-        debugStep = "16 - Outputs";
+        debugStep = "16 - Request Initial Level Recalculation";
+        setOutputSafe("debugStep", debugStep);
+        const levelRecalcRequested = await requestLevelRecalculation();
+        setOutputSafe("levelRecalcRequested", levelRecalcRequested);
+
+        debugStep = "17 - Outputs";
         setOutputSafe("debugStep", debugStep);
 
         setOutputSafe("athleteId", athleteId);
