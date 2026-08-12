@@ -1,10 +1,10 @@
-# Automation 031 Paste and Test Packet — 2026-08-12
+# Automation 031 Paste and Test Packet — v3.7 — 2026-08-12
 
 ## Scope
 
 Focused repository package for issue #96:
 
-- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.6
+- `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js` v3.7
 - offline harness: `tools/testing/tests/run_031_script.mjs`
 - offline regression: `tools/testing/tests/test_031_offline.mjs`
 
@@ -18,11 +18,11 @@ This packet documents repository repair status only.
 - Automation number: `031`
 - Exact Airtable automation name: `031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission`
 - Authoritative script path: `airtable/automations/shooting-challenge/031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js`
-- Repository version in this package: `v3.6`
+- Repository version in this package: `v3.7`
 
 ## Repository repair completed
 
-The v3.6 repair now:
+The v3.7 repair now:
 
 1. validates an existing Submission -> Weekly Athlete Summary link against the current Submission Enrollment + Week + Program Instance + Summary Key;
 2. keeps a valid existing link without churn;
@@ -34,9 +34,22 @@ The v3.6 repair now:
 8. excludes Automation 010-owned Submission Base XP Events using the authoritative `XP Source` single-select option ID `selZw4nOkwMJCgGyR`;
 9. fails closed when Program Instance is missing/ambiguous, no fully valid replacement exists, or multiple fully valid replacements exist;
 10. never creates a Weekly Athlete Summary; a unique canonical record must already exist;
-11. independently validates `Count This Submission?` and `Submission Stat Mode = Counted`;
-12. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
+11. requires `Count This Submission?` to exist but accepts its existing formula type; `isChecked()`
+    reads raw `true`, raw `1`, and checked/true/1 formula text;
+12. validates `Submission Stat Mode` as the existing `singleSelect` readiness input;
+13. requires `Build Daily Email Now?` to remain a writable physical `checkbox`;
+14. checks `Build Daily Email Now?` only after final summary validation succeeds. Automation 031
     is the sole owner of that readiness check; Automation 076 consumes and clears it.
+
+## v3.7 field-type audit
+
+| Field | Role | v3.7 contract |
+|---|---|---|
+| `Submissions -> Count This Submission?` | Formula/read-only readiness input | Required field existence; evaluated through `isChecked()` |
+| `Submissions -> Submission Stat Mode` | Readiness/configuration input | Required `singleSelect`; must evaluate to `Counted` |
+| `Submissions -> Build Daily Email Now?` | Writable readiness output | Required `checkbox` and writable; checked only after final validation |
+
+No Airtable schema or formula changes are included.
 
 ## Offline verification
 
@@ -46,7 +59,7 @@ Command run:
 
 Result:
 
-- **PASS** (`20/20`)
+- **PASS** (`22/22`)
 
 Covered cases:
 
@@ -62,7 +75,10 @@ Covered cases:
 10. wrong Week;
 11. wrong Program Instance;
 12. same athlete/week in another Program Instance;
-13. missing or ambiguous Program Instance.
+13. missing or ambiguous Program Instance;
+14. formula `Count This Submission?` returning `1`;
+15. formula `Count This Submission?` returning `0` without email readiness;
+16. writable-checkbox contract and unchanged readiness on final-validation failure.
 
 ## Paste instructions
 

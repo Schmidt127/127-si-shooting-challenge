@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-10** (067/115 controlled PROD proof reconciliation; PHA-first package and release-readiness closeout) |
+| Last updated | **2026-08-12** (Automation 031 v3.7 formula-readiness hotfix; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -363,6 +363,15 @@ The bucket counts below are the historical **2026-08-06** snapshot. For the affe
 | 043 | Yes | Yes | No native automation found | Not applicable | **Do not recreate** |
 
 **Do not mark isolation Complete** until remaining pastes + controlled Schmidt retests finish. Package: [`docs/prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md`](./prod-completion/2026-08-06/PROGRAM-INSTANCE-ISOLATION-PACKAGE.md).
+
+### Dashboard reconciliation (2026-08-12 — Automation 031 v3.7 formula-readiness hotfix)
+
+| Item | Status | Evidence |
+|------|--------|----------|
+| Automation **031 v3.7** | **Built in Repository; Production replacement pending** | Formula-backed `Count This Submission?` uses required-field existence plus `isChecked()` evaluated-value handling; `Build Daily Email Now?` remains a writable checkbox. No schema/formula or Production Airtable change. [`AUTOMATION-031-PASTE-AND-TEST-PACKET.md`](./prod-completion/2026-08-07/AUTOMATION-031-PASTE-AND-TEST-PACKET.md) · [`PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+| Focused offline regression | **PASS — 22/22** | `node --test tools/testing/tests/test_031_offline.mjs`; Automation 010 **9/9**; 076 canonical reporting **14/14**; syntax, lints, and `git diff --check` pass. The broader email-contract runner retains an unrelated 072 v4.0-v4.1 assertion mismatch. |
+
+Production installation, live testing, and email delivery remain Mike-owned and are not claimed by this repository change.
 
 ### Dashboard reconciliation (2026-08-07 — Automation 031 stale-link repo repair)
 

@@ -29,10 +29,12 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.6
+ * Version: v3.7
  * Date Written: 2026-05-20
  * Last Updated: 2026-08-12
- * Updated Reason: Arm Build Daily Email Now? only after counted/stat-mode validation,
+ * Updated Reason: Treat formula-backed Count This Submission? as a required readiness
+ * field while preserving strict writable-checkbox validation for Build Daily Email Now?;
+ * arm Build Daily Email Now? only after counted/stat-mode validation,
  * canonical summary resolution, eligible XP-link repair, and final summary validation.
  *
  * PURPOSE
@@ -112,7 +114,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.6",
+  version: "v3.7",
 
   tables: {
     submissions: "Submissions",
@@ -704,13 +706,16 @@ requireWritableField(
   "Submissions -> Weekly Athlete Summary"
 );
 
-requireFieldType(
+// Count This Submission? is a formula/read-only readiness input. Its evaluated
+// value is read through isChecked(); do not require the physical field type to
+// be checkbox.
+requireField(
   submissionsTable,
   CONFIG.submissions.countThisSubmission,
-  "checkbox",
   "Submissions -> Count This Submission?"
 );
 
+// Submission Stat Mode is a configuration/readiness input, not a writable output.
 requireFieldType(
   submissionsTable,
   CONFIG.submissions.submissionStatMode,
@@ -718,6 +723,8 @@ requireFieldType(
   "Submissions -> Submission Stat Mode"
 );
 
+// Build Daily Email Now? is the only Submission readiness field this
+// automation writes, so retain both its physical checkbox and writability gates.
 requireFieldType(
   submissionsTable,
   CONFIG.submissions.buildDailyEmailNow,

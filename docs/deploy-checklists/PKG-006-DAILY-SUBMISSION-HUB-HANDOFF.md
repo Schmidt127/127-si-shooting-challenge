@@ -4,6 +4,22 @@ Status: **Repository-ready / promotion pending**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
 
+## Automation 031 v3.7 hotfix
+
+This bounded corrective child scope replaces the repository 031 source version
+from v3.6 to **v3.7**. It fixes the field-type contract only:
+
+- `Submissions -> Count This Submission?` remains the existing formula field;
+  v3.7 requires field existence and reads its evaluated result through
+  `isChecked()`.
+- `Submissions -> Submission Stat Mode` remains a required `singleSelect`.
+- `Submissions -> Build Daily Email Now?` remains a required writable
+  `checkbox` and is still checked only after final summary validation.
+- No schema, formula, Automation 076, Automation 077, Make, Gmail, or email
+  change is included.
+
+Before any Production paste, Mike must complete the DEV test packet for v3.7.
+
 ## Controlled Production promotion order
 
 Production Airtable is the only Airtable environment for this integration.
@@ -39,6 +55,27 @@ Production Airtable is the only Airtable environment for this integration.
    it does not replay the source Event or create another Message/Delivery.
 8. Capture queue, Hub Event, Delivery, Resend id, and replay evidence. Only then
    consider 077 a retirement candidate; it is not retired by this PR.
+
+## 031 v3.7 replacement steps (after DEV PASS and Mike approval)
+
+1. Open the existing Production Automation 031 slot; do not create a new slot.
+2. Replace the full script with the committed v3.7 source, omitting only the
+   GitHub header comment when pasting into Airtable.
+3. Verify the input mapping remains `recordId`.
+4. Verify the existing formula `Count This Submission?` is unchanged and that
+   `Build Daily Email Now?` is still a physical writable checkbox.
+5. Run one controlled counted Submission with `Count This Submission?` evaluating
+   to `1` and `Submission Stat Mode = Counted`; verify 031 checks
+   `Build Daily Email Now?` only after final summary validation.
+6. Run one controlled Submission with `Count This Submission?` evaluating to `0`;
+   verify 031 skips and leaves `Build Daily Email Now?` unchanged.
+7. If any step fails, turn off 031 and restore the prior committed v3.6 source
+   after recording the exact record ID and output/error evidence. Do not change
+   the formula or field type.
+
+This v3.7 hotfix packet authorizes repository replacement instructions only. It
+does not authorize a Production Airtable paste, a live record mutation, a queue
+dispatch, an email send, a Make/Gmail action, or enabling 077.
 
 ## Rollback
 

@@ -131,6 +131,50 @@ test("no existing link selects one fully valid canonical replacement", async () 
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
 });
 
+test("formula Count This Submission? returning 1 passes readiness validation", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Count This Submission?": "1",
+      "Build Daily Email Now?": false,
+    },
+  });
+
+  const countField = base.getTable("Submissions").getField("Count This Submission?");
+  const emailField = base.getTable("Submissions").getField("Build Daily Email Now?");
+  assert.equal(countField.type, "formula");
+  assert.equal(countField.isComputed, true);
+  assert.equal(emailField.type, "checkbox");
+  assert.equal(emailField.isComputed, false);
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.readinessOut, "set");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
+});
+
+test("formula Count This Submission? returning 0 skips without setting email readiness", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Count This Submission?": "0",
+      "Build Daily Email Now?": false,
+    },
+  });
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_uncounted_submission");
+  assert.equal(output.values.readinessOut, "unchanged");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
+  assert.equal(totalWrites(base), 0);
+});
+
 test("uncounted Submission skips without changing email readiness", async () => {
   const base = build031Base({
     submissionCells: {
