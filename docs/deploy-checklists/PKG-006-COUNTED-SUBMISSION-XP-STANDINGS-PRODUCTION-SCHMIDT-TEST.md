@@ -1,6 +1,7 @@
-# PKG-006 — Counted-Submission XP and Standings Production Schmidt Packet
+# PKG-006R — Counted-Submission XP and Standings Production Schmidt Packet
 
 Status: Production-only packet; no DEV Airtable evidence is claimed or required.
+This is distinct from Completion Master `PKG-006` Fillout-intake proof work.
 
 ## Scope and safety
 
@@ -16,12 +17,21 @@ XP statement and is not a failure by itself.
 
 ## Preflight readback
 
-1. Capture the current deployed code/version and trigger conditions for 010,
+1. **Mike only, read-only:** run
+   `audit-counted-submission-xp-standings-reliability.js` in Airtable Scripting
+   and save its JSON before any automation test. Stop on any `error` finding.
+2. Resolve and record the exact eligible Schmidt Enrollment using
+   `docs/online-agents/enrollment-season/SCHMIDT-ENROLLMENT-CONTRACT.md`; stop
+   if more than one candidate is plausible for the selected Submission.
+3. Capture the current deployed code/version, ON/OFF state, and trigger
+   conditions for 010,
    031, 035, 041, and 042. Confirm Automation 043 remains OFF/retired.
-2. Select one existing counted Schmidt Submission; record its Submission,
+4. Select one existing counted Schmidt Submission; record its Submission,
    Enrollment, Week, and current WAS record IDs. Do not hardcode those IDs into
    an automation input.
-3. Preserve any existing Queue row, run history, and error output. Do not
+5. Confirm 076, 079, 072, 074, 118, and 119 cannot create or dispatch an
+   email during this correlation. Preserve any existing Queue row, run history,
+   and error output. Do not
    create a replacement Queue row and do not send email.
 
 ## Correlation checks
@@ -51,8 +61,9 @@ XP statement and is not a failure by itself.
    threshold rule keys, then run only Mike's explicitly approved Automation
    035 test. Verify one event per met 100/125/150 tier, source key
    `WEEKLY_THRESHOLD|{Enrollment ID}|{Week ID}|{Percent}`, correct WAS link,
-   and a replay that creates zero additional events. If readiness is not set,
-   do not force it merely to test 035.
+   and a replay that creates zero additional events. 035 remains OFF unless
+   separately authorized. If readiness is not set, do not force it merely to
+   test 035.
 8. Confirm 041 queues recalculation following the changed lifetime total, then
    confirm 042 clears the queue and assigns Current Level/Next Level from the
    settled value.
@@ -61,6 +72,9 @@ XP statement and is not a failure by itself.
    Order - For Softr, Lifetime XP Total, Total Shots Counted, School Year, and
    Program Instance Name Only. This proves underlying inputs only; Production
    view membership and public rendering remain separate evidence.
+10. Mike verifies the active Enrollment is present in the Production `Web -
+    Leaderboard` view. A public `/shoot` spot-check is optional and outside
+    this packet; the repository audit cannot prove view membership.
 
 ## Replay and evidence
 
