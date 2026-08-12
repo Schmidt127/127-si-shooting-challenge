@@ -27,12 +27,10 @@ OUTPUTS
 - `queueRecordId`, `handoffKey`, `errorOut`, `debugStep`
 
 TRIGGER
-- Use the existing `Build Daily Email Now?` checkbox only after Mike verifies
-  which upstream owner sets it after the 023 → 005 → 007 → 010 → 031 chain.
+- Automation 031 is the sole upstream owner that checks `Build Daily Email Now?`,
+  only after the 023 → 005 → 007 → 010 → 031 chain has settled.
 - `Count This Submission?` and `Submission Stat Mode` remain supporting guards,
-  not proof that downstream ownership and XP/summary processing have settled.
-- The repository does not currently prove an automation owner for the Build
-  checkbox; production enablement is blocked pending that verification.
+  and 076 fail-closes when either is not ready.
 - Clear `Build Daily Email Now?` after an existing or newly created handoff so
   a successful replay cannot retrigger the source signal.
 

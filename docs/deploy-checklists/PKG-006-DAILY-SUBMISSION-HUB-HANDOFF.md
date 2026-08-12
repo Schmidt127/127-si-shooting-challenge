@@ -7,21 +7,15 @@ Production change: **Not applied by Cursor**
 ## Controlled Production promotion order
 
 Production Airtable is the only Airtable environment for this integration.
-Do not require a DEV paste or claim DEV evidence.
 
 1. Mike pastes the exact committed Automation 076 v8.1 source into the
    existing Production `Submissions` automation slot. Do not create a new
    numbered automation or schema field.
-2. Trigger recommendation: use the existing Production
-   `Submissions.Build Daily Email Now?`
-   checkbox as the final source signal, with `Count This Submission?` checked and
-   `Submission Stat Mode` equal to `Counted` as supporting guards. Repository
-   evidence does **not** identify an automation in the 023 → 005 → 007 → 010 →
-   031 chain that sets `Build Daily Email Now?`; the old production inventory
-   identifies it as the legacy 076 input. Mike must verify the actual Airtable
-   owner and that it fires only after Enrollment, Week, duplicate review,
-   counted totals, and the 010/031 downstream processing have settled.
-   Until that is verified, permanent 076 enablement is blocked.
+2. Automation 031 is the sole owner that checks
+   `Submissions.Build Daily Email Now?`, and it does so only after Enrollment,
+   Week, Program Instance, duplicate review, canonical summary linkage, eligible
+   XP-link repair, and final summary validation succeed. Automation 076 consumes
+   and clears the checkbox after queue creation or reuse.
 3. Run one controlled Production test using a Schmidt test Submission and
    Mike's allowlisted email (`mschmidt@fairfield.k12.mt.us`), with `testMode=true`.
    Verify exactly one `Email Handoff Queue` row:
@@ -67,6 +61,6 @@ Do not require a DEV paste or claim DEV evidence.
 This implementation assumes the verified existing `Email Handoff Queue`
 schema. It adds no fields, tables, views, or source writeback field. It clears
 the already-existing `Build Daily Email Now?` checkbox after successful
-reuse/create; it does not claim ownership of who sets that checkbox. Any
+reuse/create; Automation 031 is the sole owner that checks that checkbox. Any
 proposed Submission link/status writeback is deferred and requires Mike
 authorization as a separate schema decision.

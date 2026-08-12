@@ -4,10 +4,11 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-07
+Last GitHub Update: 2026-08-12
 
 Purpose:
-Finds the unique canonical Weekly Athlete Summary for counted submissions and repairs orphan XP links.
+Finds the unique canonical Weekly Athlete Summary for counted submissions,
+repairs orphan XP links, and arms Automation 076 only after final validation.
 
 Trigger:
 Submissions when Count This Submission? is checked and Weekly Athlete Summary is empty,
@@ -17,7 +18,8 @@ Important Tables:
 Submissions, Enrollments, Weeks, Weekly Athlete Summary, XP Events
 
 Important Fields:
-Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Summary Key, XP Source
+Enrollment, Week, Weekly Athlete Summary, Count This Submission?, Submission Stat Mode,
+Build Daily Email Now?, Summary Key, XP Source
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
@@ -27,12 +29,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v3.5
+ * Version: v3.6
  * Date Written: 2026-05-20
- * Last Updated: 2026-08-07
- * Updated Reason: Ignore malformed unrelated summary candidates, repair the Submission and
- * matching XP links to one canonical summary when safe, and fail closed when zero/multiple
- * valid candidates exist.
+ * Last Updated: 2026-08-12
+ * Updated Reason: Arm Build Daily Email Now? only after counted/stat-mode validation,
+ * canonical summary resolution, eligible XP-link repair, and final summary validation.
  *
  * PURPOSE
  * - Runs from one counted Submission record.
@@ -46,6 +47,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
  *   summary or still linked to the stale summary being repaired.
+ * - Automation 031 is the sole owner that checks Submissions.Build Daily Email Now? = true.
+ * - Automation 076 consumes and clears Build Daily Email Now? after queue create/reuse.
+ * - Submission XP may remain pending; Automation 010 retains ownership of Submission Base
+ *   XP Events and 031 continues to exclude them from summary-link repair.
  *
  * IMPORTANT DESIGN RULES
  * - Weekly Athlete Summary is the weekly reporting / rollup table.
@@ -84,6 +89,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * OUTPUTS
  * - statusOut = created | found | skipped | error
  * - actionOut
+ * - readinessOut = set | unchanged | error
  * - errorOut
  * - debugStep
  * - ok
@@ -106,7 +112,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v3.5",
+  version: "v3.6",
 
   tables: {
     submissions: "Submissions",
@@ -121,6 +127,9 @@ const CONFIG = {
     week: "Week",
     activityDate: "Activity Date",
     weeklySummary: "Weekly Athlete Summary",
+    countThisSubmission: "Count This Submission?",
+    submissionStatMode: "Submission Stat Mode",
+    buildDailyEmailNow: "Build Daily Email Now?",
   },
 
   enrollments: {
@@ -311,6 +320,14 @@ function getRaw(record, table, fieldName) {
 function getText(record, table, fieldName) {
   if (!record || !fieldExists(table, fieldName)) return "";
   return String(record.getCellValueAsString(fieldName) || "").trim();
+}
+
+function isChecked(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+  if (raw === true || raw === 1) return true;
+  return ["true", "yes", "checked", "1"].includes(
+    getText(record, table, fieldName).toLowerCase()
+  );
 }
 
 function getLinkedRecordIds(record, table, fieldName) {
@@ -687,6 +704,33 @@ requireWritableField(
   "Submissions -> Weekly Athlete Summary"
 );
 
+requireFieldType(
+  submissionsTable,
+  CONFIG.submissions.countThisSubmission,
+  "checkbox",
+  "Submissions -> Count This Submission?"
+);
+
+requireFieldType(
+  submissionsTable,
+  CONFIG.submissions.submissionStatMode,
+  "singleSelect",
+  "Submissions -> Submission Stat Mode"
+);
+
+requireFieldType(
+  submissionsTable,
+  CONFIG.submissions.buildDailyEmailNow,
+  "checkbox",
+  "Submissions -> Build Daily Email Now?"
+);
+
+requireWritableField(
+  submissionsTable,
+  CONFIG.submissions.buildDailyEmailNow,
+  "Submissions -> Build Daily Email Now?"
+);
+
 requireField(
   enrollmentsTable,
   CONFIG.enrollments.enrollmentKey,
@@ -796,7 +840,37 @@ async function main() {
       return;
     }
 
-    debugStep = "3 - Read Submission Links";
+    debugStep = "3 - Validate Counted Submission Readiness";
+    setOutputSafe("debugStep", debugStep);
+
+    if (!isChecked(submission, submissionsTable, CONFIG.submissions.countThisSubmission)) {
+      setOutputSafe("ok", false);
+      setOutputSafe("recordId", recordId);
+      setOutputSafe("actionTaken", "skipped_uncounted_submission");
+      setOutputSafe("actionOut", "skipped_uncounted_submission");
+      setOutputSafe("readinessOut", "unchanged");
+      setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+      setOutputSafe("errorOut", "");
+      setOutputSafe("debugStep", "Skipped: Submission is not counted");
+      return;
+    }
+
+    if (
+      getText(submission, submissionsTable, CONFIG.submissions.submissionStatMode).toLowerCase() !==
+      "counted"
+    ) {
+      setOutputSafe("ok", false);
+      setOutputSafe("recordId", recordId);
+      setOutputSafe("actionTaken", "skipped_non_counted_stat_mode");
+      setOutputSafe("actionOut", "skipped_non_counted_stat_mode");
+      setOutputSafe("readinessOut", "unchanged");
+      setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+      setOutputSafe("errorOut", "");
+      setOutputSafe("debugStep", "Skipped: Submission Stat Mode is not Counted");
+      return;
+    }
+
+    debugStep = "4 - Read Submission Links";
     setOutputSafe("debugStep", debugStep);
 
     submissionEnrollmentId = getFirstLinkedRecordId(
@@ -826,7 +900,7 @@ async function main() {
       existingSubmissionSummaryId,
     });
 
-    debugStep = "4 - Validate Submission Links";
+    debugStep = "5 - Validate Submission Links";
     setOutputSafe("debugStep", debugStep);
 
     if (!submissionEnrollmentId) {
@@ -845,7 +919,7 @@ async function main() {
       );
     }
 
-    debugStep = "5 - Load Enrollment";
+    debugStep = "6 - Load Enrollment";
     setOutputSafe("debugStep", debugStep);
 
     const enrollment = await enrollmentsTable.selectRecordAsync(submissionEnrollmentId);
@@ -864,7 +938,7 @@ async function main() {
       throw new Error(`Enrollment Key is blank for Enrollment ${submissionEnrollmentId}.`);
     }
 
-    debugStep = "6 - Load Week";
+    debugStep = "7 - Load Week";
     setOutputSafe("debugStep", debugStep);
 
     const weekRecord = await weeksTable.selectRecordAsync(submissionWeekId);
@@ -902,14 +976,14 @@ async function main() {
     const programInstanceId = enrollmentProgramInstanceId;
     targetSummaryKey = `${enrollmentKey}|${resolvedWeekKey}`;
 
-    debugStep = "7 - Load Weekly Athlete Summaries";
+    debugStep = "8 - Load Weekly Athlete Summaries";
     setOutputSafe("debugStep", debugStep);
 
     const summariesQuery = await summariesTable.selectRecordsAsync({
       fields: buildSummaryFieldsToLoad(),
     });
 
-    debugStep = "8 - Find Matching Summary";
+    debugStep = "9 - Find Matching Summary";
     setOutputSafe("debugStep", debugStep);
 
     const matchingSummaries = await findValidCanonicalSummaries(
@@ -929,7 +1003,7 @@ async function main() {
       );
     }
 
-    debugStep = "9 - Find or Create Summary";
+    debugStep = "10 - Find or Create Summary";
     setOutputSafe("debugStep", debugStep);
 
     const existingSummaryRecord = existingSubmissionSummaryId
@@ -989,7 +1063,7 @@ async function main() {
       summaryUpdates
     );
 
-    debugStep = "10 - Link Summary Back to Submission";
+    debugStep = "11 - Link Summary Back to Submission";
     setOutputSafe("debugStep", debugStep);
 
     await updateRecordSafe(submissionsTable, recordId, {
@@ -997,7 +1071,7 @@ async function main() {
     });
 
     if (staleSummaryIdRepaired) {
-      debugStep = "10a - Remove Submission from Stale Summary";
+      debugStep = "11a - Remove Submission from Stale Summary";
       setOutputSafe("debugStep", debugStep);
 
       const staleSummaryRecord = findSummaryRecordById(
@@ -1021,7 +1095,7 @@ async function main() {
       }
     }
 
-    debugStep = "10b - Repair XP Event Summary Links";
+    debugStep = "11b - Repair XP Event Summary Links";
     setOutputSafe("debugStep", debugStep);
 
     const orphanLinkResult = await repairXpEventsForEnrollmentWeek({
@@ -1035,7 +1109,7 @@ async function main() {
 
     log("XP Event summary links repaired", orphanLinkResult);
 
-    debugStep = "11 - Validate Final Summary";
+    debugStep = "12 - Validate Final Summary";
     setOutputSafe("debugStep", debugStep);
 
     const finalSummary = await summariesTable.selectRecordAsync(weeklySummaryId);
@@ -1080,7 +1154,18 @@ async function main() {
       throw new Error("Weekly Athlete Summary is missing the source Submission link.");
     }
 
-    debugStep = "12 - Outputs";
+    debugStep = "13 - Arm Daily Email Readiness";
+    setOutputSafe("debugStep", debugStep);
+
+    const readinessFieldsUpdated = await updateRecordSafe(submissionsTable, recordId, {
+      [CONFIG.submissions.buildDailyEmailNow]: true,
+    });
+
+    updatedFields = [...new Set([...updatedFields, ...readinessFieldsUpdated])];
+    setOutputSafe("readinessOut", "set");
+    setOutputSafe("buildDailyEmailNow", true);
+
+    debugStep = "14 - Outputs";
     setOutputSafe("debugStep", debugStep);
 
     setOutputSafe("ok", true);
@@ -1102,6 +1187,7 @@ async function main() {
       actionTaken,
       updatedFields,
       orphanXpLinkedCount,
+      readinessOut: "set",
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -1115,6 +1201,7 @@ async function main() {
     setOutputSafe("actionTaken", actionTaken);
     setOutputSafe("statusOut", CONFIG.outputStatuses.error);
     setOutputSafe("errorOut", message);
+    setOutputSafe("readinessOut", "error");
     setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
 
     log("Weekly Summary find/create failed", {

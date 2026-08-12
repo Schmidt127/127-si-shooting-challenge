@@ -1174,7 +1174,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **079** | Existing shared dispatcher; no code change required |
 | **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
 | **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
-| **Trigger** | Existing `Build Daily Email Now?` signal plus Counted/Stat Mode guards; repository evidence does not identify its upstream owner or prove it fires after 023 → 005 → 007 → 010 → 031 |
+| **Trigger** | Automation 031 is the sole owner that checks `Build Daily Email Now?` after counted/stat-mode validation, canonical summary linkage, eligible XP-link repair, and final summary validation; 076 consumes and clears it |
 | **Status** | **Repository-ready / controlled Production promotion blocked pending trigger-owner/timing verification** — no Production paste performed |
 | **Promotion** | [`docs/deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
 

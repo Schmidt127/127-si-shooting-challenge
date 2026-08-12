@@ -123,7 +123,126 @@ test("no existing link selects one fully valid canonical replacement", async () 
   assert.equal(error, null, error && error.message);
   assert.equal(output.values.actionTaken, "found_existing_summary");
   assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
+  assert.equal(output.values.readinessOut, "set");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
   assert.deepEqual(submissionSummaryIds(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+});
+
+test("uncounted Submission skips without changing email readiness", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Count This Submission?": false,
+      "Build Daily Email Now?": false,
+    },
+  });
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_uncounted_submission");
+  assert.equal(output.values.readinessOut, "unchanged");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
+  assert.equal(totalWrites(base), 0);
+});
+
+test("non-Counted Submission Stat Mode skips without changing email readiness", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Submission Stat Mode": { id: "selPending", name: "Pending" },
+      "Build Daily Email Now?": false,
+    },
+  });
+
+  const { output, error } = await run031({ base });
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "skipped");
+  assert.equal(output.values.actionOut, "skipped_non_counted_stat_mode");
+  assert.equal(output.values.readinessOut, "unchanged");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
+  assert.equal(totalWrites(base), 0);
+});
+
+test("missing Enrollment or Week fails before readiness is armed", async () => {
+  for (const fieldName of ["Enrollment", "Week"]) {
+    const base = build031Base({
+      submissionCells: {
+        [fieldName]: [],
+        "Build Daily Email Now?": false,
+      },
+    });
+
+    const { output, error } = await run031({ base });
+    assert.ok(error);
+    assert.equal(output.values.statusOut, "error");
+    assert.equal(output.values.readinessOut, "error");
+    assert.equal(
+      base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+      false
+    );
+    assert.equal(totalWrites(base), 0);
+  }
+});
+
+test("pending Submission XP does not block readiness", async () => {
+  const base = build031Base({ xpEvents: [] });
+  const { output, error } = await run031({ base });
+
+  assert.equal(error, null);
+  assert.equal(output.values.readinessOut, "set");
+  assert.equal(output.values.orphanXpLinkedCount, 0);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
+});
+
+test("final summary validation failure leaves readiness unchanged", async () => {
+  const base = build031Base({
+    submissionCells: {
+      "Build Daily Email Now?": false,
+    },
+    summaries: [
+      new MockRecord(IDS.SUMMARY_CANONICAL, {
+        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
+        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
+        Week: [{ id: IDS.WEEK, name: "Early Bird" }],
+        Submissions: [],
+        "Summary Calculation Status": "",
+        Created: "2026-08-07T00:00:00.000Z",
+      }),
+    ],
+  });
+  const summaries = base.getTable("Weekly Athlete Summary");
+  const originalSelect = summaries.selectRecordAsync.bind(summaries);
+  summaries.selectRecordAsync = async (recordId) => {
+    const record = await originalSelect(recordId);
+    if (recordId === IDS.SUMMARY_CANONICAL && summaries.finalRead) {
+      record.cells.Enrollment = [{ id: "recWrongEnrollment031" }];
+    }
+    return record;
+  };
+  const originalUpdate = summaries.updateRecordAsync.bind(summaries);
+  summaries.updateRecordAsync = async (...args) => {
+    await originalUpdate(...args);
+    summaries.finalRead = true;
+  };
+
+  const { output, error } = await run031({ base });
+  assert.ok(error);
+  assert.equal(output.values.statusOut, "error");
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    false
+  );
 });
 
 test("no existing link with zero valid candidates fails closed without writes", async () => {
@@ -281,6 +400,10 @@ test("replay after repair is idempotent", async () => {
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_CANONICAL), [{ id: IDS.SUBMISSION }]);
   assert.deepEqual(summarySubmissionIds(base, IDS.SUMMARY_STALE), []);
   assert.deepEqual(xpSummaryIds(base, IDS.XP_STALE), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.equal(
+    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+    true
+  );
 });
 
 test("ambiguous canonical matches fail closed", async () => {
