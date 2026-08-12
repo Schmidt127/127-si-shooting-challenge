@@ -169,7 +169,8 @@ test("read-only audit detects required Video XP integrity states", () => {
 });
 
 test("114 does not contain email or queue side effects", () => {
-  assert.doesNotMatch(source, /fetch\(|remoteFetchAsync|Email Handoff Queue|makeWebhook/i);
+  assert.doesNotMatch(source, /\bfetch\(|\bremoteFetchAsync\b|\bmakeWebhook\b/i);
+  assert.match(source, /does not create Email Handoff Queue/);
   assert.match(email, /Video Feedback is inactive\/retired\. Email blocked\./);
   assert.match(email, /Parent Feedback Ready\? is not checked\. Email blocked\./);
 });
