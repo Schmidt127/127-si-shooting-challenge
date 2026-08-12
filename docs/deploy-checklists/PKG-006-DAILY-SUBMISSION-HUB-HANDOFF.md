@@ -4,10 +4,10 @@ Status: **Repository-ready / promotion pending**
 Backlog: `PKG-006` daily-submission communications; `PKG-028` Hub migration
 Production change: **Not applied by Cursor**
 
-## Automation 031 v4.0 creator-ownership restoration + Automation 076 v8.4
+## Automation 031 v4.0 creator-ownership restoration + Automation 076 v8.5
 
 This bounded corrective child scope replaces the repository 031 source version
-from v3.9 to **v4.0** while updating 076 to **v8.4**. It restores the already
+from v3.9 to **v4.0** while updating 076 to **v8.5**. It restores the already
 approved 031 normal-athlete-activity creator ownership documented in
 `WAS-CREATOR-RESOLUTION.md`; this is not a new architecture:
 
@@ -19,16 +19,19 @@ approved 031 normal-athlete-activity creator ownership documented in
   evaluated text equal to `Simple Total` or `Detailed Shooting`.
 - `Submissions -> Build Daily Email Now?` remains a required writable
   `checkbox` and is still checked only after final summary validation.
-- Automation 076 v8.4 applies the same count/mode guard before queue work,
+- Automation 076 v8.5 applies the same count/mode guard before queue work,
   preserves deterministic Draft/recheck/Ready behavior, and clears the
   readiness checkbox only after successful queue create/reuse.
-- Automation 076 v8.4 uses the verified Production table `Program Instance -
+- Automation 076 v8.5 uses the verified Production table `Program Instance -
   Sync` for Program Instance lookup. The Submission field `Program Instance -
   Synced` is a separate field and remains unchanged.
-- Automation 076 v8.4 requires `Enrollments.Parent Email - Cleaned` as the
+- Automation 076 v8.5 requires `Enrollments.Parent Email - Cleaned` as the
   authoritative parent recipient. It may include
   `Enrollments.Athlete Email - Cleaned` when valid, deduplicated
   case-insensitively. Raw `Parent Email` is never used as a fallback.
+- Automation 076 v8.5 writes the queue `Event Type` and `Status` single-select
+  fields with Airtable-compatible `{ name: ... }` objects, including
+  `DAILY_SUBMISSION`, `Draft`, `Ready`, and `Needs Review`.
 - When zero fully valid canonical summaries exist, 031 creates one with the
   Submission Enrollment and Week plus `Complete` status when writable; it never
   writes formula `Summary Key`, requeries after creation, and stops on any
@@ -37,7 +40,7 @@ approved 031 normal-athlete-activity creator ownership documented in
   email change is included.
 
 Before any Production replacement, Mike must complete the controlled Production
-test packet for v4.0/v8.4 using the existing valid Schmidt Submission and Mike's
+test packet for v4.0/v8.5 using the existing valid Schmidt Submission and Mike's
 allowlisted email. No DEV Airtable evidence is required or claimed.
 
 Recommended Production trigger conditions:
@@ -49,11 +52,11 @@ Do not require `Submission Stat Mode = Counted`. The scripts remain the final
 guard and accept only `Simple Total` or `Detailed Shooting`. If the trigger
 also filters on mode, configure an OR group for those two values.
 
-## 076 v8.4 Production replacement and controlled test
+## 076 v8.5 Production replacement and controlled test
 
 1. Open the existing Production Automation 076 slot; do not create a new
    automation, table, or field.
-2. Replace the full script with the committed v8.4 source, omitting only the
+2. Replace the full script with the committed v8.5 source, omitting only the
    GitHub header comment when pasting into Airtable.
 3. Confirm the script uses the existing Production table
    `Program Instance - Sync` (table ID `tblMfALZa4YYUy70P`, display field
@@ -78,7 +81,7 @@ also filters on mode, configure an OR group for those two values.
 
 Production Airtable is the only Airtable environment for this integration.
 
-1. Mike pastes the exact committed Automation 076 v8.4 source first into the
+1. Mike pastes the exact committed Automation 076 v8.5 source first into the
    existing Production `Submissions` automation slot. Do not create a new
    numbered automation or schema field.
 2. Automation 031 is the sole owner that checks
@@ -137,7 +140,7 @@ Production Airtable is the only Airtable environment for this integration.
    type. Do not restore v3.6 or v3.7; leave 031 OFF until a corrected repository
    version is approved.
 
-This v4.0/v8.4 hotfix packet authorizes repository replacement instructions only. It
+This v4.0/v8.5 hotfix packet authorizes repository replacement instructions only. It
 does not authorize a Production Airtable paste, a live record mutation, a queue
 dispatch, an email send, a Make/Gmail action, or enabling 077.
 
@@ -148,9 +151,9 @@ dispatch, an email send, a Make/Gmail action, or enabling 077.
 - Do not change either Airtable formula or field type.
 - Do not restore Automation 031 v3.6 or v3.7; leave 031 OFF until a corrected
   repository version is approved.
-- Do not restore superseded 031 v3.8/v3.9 as the creator correction; 076 v8.4
+- Do not restore superseded 031 v3.8/v3.9 as the creator correction; 076 v8.5
   remains unchanged unless separately approved.
-- Do not treat or restore the superseded 031 v3.8 or 076 v8.3 versions as the
+- Do not treat or restore the superseded 031 v3.8 or 076 v8.4 versions as the
   corrected Production pair.
 - Do not enable 077 or Make/Gmail as a rollback.
 - Stop arming new `Email Handoff Queue` rows and disable the 076 trigger if

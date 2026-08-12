@@ -2,7 +2,7 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.4
+Version: v8.5
 Date Written: 2026-05-29
 Last Updated: 2026-08-12
 
@@ -44,7 +44,7 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.4", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.5", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
   tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Sync", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
@@ -81,7 +81,7 @@ const dateText = (value) => { const date = value instanceof Date ? value : new D
 const pct = (value, target) => Number(target) > 0 ? Math.round((Number(value) / Number(target)) * 100) : 0;
 const setOutput = (name, value) => { try { output.set(name, value); } catch {} };
 const debug = (value) => setOutput("debugStep", value);
-const selectValue = (t, name, value) => { const field = t.getField(name); if (field.type !== "singleSelect") return value; const choice = field.options.choices.find((item) => item.name.toLowerCase() === value.toLowerCase()); if (!choice) throw new Error(`Missing option ${value} on ${t.name}.${name}`); return { id: choice.id }; };
+const selectValue = (t, name, value) => { const field = t.getField(name); if (field.type !== "singleSelect") return value; const choice = field.options.choices.find((item) => item.name.toLowerCase() === value.toLowerCase()); if (!choice) throw new Error(`Missing option ${value} on ${t.name}.${name}`); return { name: choice.name }; };
 const formula = (field, value) => `{${field}}='${String(value).replace(/\\/g, "\\\\").replace(/'/g, "\\'")}'`;
 const load = (t, fields) => t.selectRecordsAsync({ fields: fields.filter((name) => exists(t, name)) });
 const slot = (value) => String(value || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
@@ -157,7 +157,7 @@ async function main() {
   if (payload.makes > payload.shots) throw new Error("Total Makes Counted cannot exceed Total Shots Counted.");
   const queueData = queueFields(queueT, {
     [CONFIG.fields.queue.key]: handoffKey, [CONFIG.fields.queue.status]: selectValue(queueT, CONFIG.fields.queue.status, CONFIG.statuses.draft),
-    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: "DAILY_SUBMISSION", [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
+    [CONFIG.fields.queue.sourceTable]: CONFIG.tables.sub, [CONFIG.fields.queue.eventType]: selectValue(queueT, CONFIG.fields.queue.eventType, "DAILY_SUBMISSION"), [CONFIG.fields.queue.template]: "DAILY_SUBMISSION",
     [CONFIG.fields.queue.source]: recordId, [CONFIG.fields.queue.enrollment]: enrollmentId, [CONFIG.fields.queue.pi]: programId,
     [CONFIG.fields.queue.recipients]: JSON.stringify(recipients), [CONFIG.fields.queue.payload]: JSON.stringify(payload),
     [CONFIG.fields.queue.testMode]: cfg.testMode === undefined ? true : Boolean(cfg.testMode), [CONFIG.fields.queue.attempts]: 0,

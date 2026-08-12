@@ -122,7 +122,7 @@ function build076Base(
       { name: "Handoff Key", type: "singleLineText" },
       singleSelect("Status", ["Draft", "Ready", "Needs Review"]),
       { name: "Source Table", type: "singleLineText" },
-      { name: "Event Type", type: "singleLineText" },
+      singleSelect("Event Type", ["DAILY_SUBMISSION"]),
       { name: "Payload JSON", type: "multilineText" },
       { name: "Attempt Count", type: "number" },
       { name: "Program Instance Record ID", type: "singleLineText" },
@@ -195,7 +195,7 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   const submission = base.getTable("Submissions").records.get(SUBMISSION_ID);
   assert.equal(queue.records.size, 1);
   assert.equal(queue.records.values().next().value.cells["Handoff Key"], `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}`);
-  assert.equal(queue.records.values().next().value.cells.Status.id, "Ready");
+  assert.equal(queue.records.values().next().value.cells.Status, "Ready");
   const payload = JSON.parse(queue.records.values().next().value.cells["Payload JSON"]);
   const recipients = JSON.parse(queue.records.values().next().value.cells["Recipients JSON"]);
   assert.equal(payload.shots, 20);
@@ -207,6 +207,22 @@ test("076 creates one deterministic queue row from a valid cleaned parent email"
   }]);
   assert.equal(submission.cells["Build Daily Email Now?"], false);
   assert.equal(result.output.values.actionOut, "created_handoff");
+});
+
+test("076 writes Event Type and Status as Airtable-compatible single-select objects", async () => {
+  const base = build076Base();
+  const queue = base.getTable("Email Handoff Queue");
+  const originalCreate = queue.createRecordAsync.bind(queue);
+  queue.createRecordAsync = async (payload) => {
+    assert.deepEqual(payload["Event Type"], { name: "DAILY_SUBMISSION" });
+    assert.deepEqual(payload.Status, { name: "Draft" });
+    return originalCreate(payload);
+  };
+
+  const result = await run076({ base });
+
+  assert.equal(result.error, null, result.error?.message);
+  assert.deepEqual(queue.updates.at(-1).fields.Status, { name: "Ready" });
 });
 
 test("076 reuses the deterministic queue row and clears the readiness checkbox on replay", async () => {
