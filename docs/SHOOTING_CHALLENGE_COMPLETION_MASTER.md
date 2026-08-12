@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 076 v8.5 single-select write hotfix; no Production change) |
+| Last updated | **2026-08-12** (Automation 079 v2.0 shared dispatcher; no Production change) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -1141,17 +1141,17 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 | Field | Value |
 |-------|--------|
-| **Scope** | Shooting Challenge enrollment **WELCOME** email handoff to **Communications Hub** (not Make.com) |
-| **PROD flow** | `Email Handoff Queue` → Automation **079** → Communications Hub → Resend → **Delivery** audit record |
+| **Scope** | Shooting Challenge enrollment **WELCOME** and counted Submission **DAILY_SUBMISSION** handoffs to **Communications Hub** (not Make.com) |
+| **PROD flow** | `Email Handoff Queue` → shared Automation **079** → Communications Hub → Resend → **Delivery** audit record |
 | **Make.com** | **OFF** — must remain off for welcome delivery |
 | **Controlled test** | **Live Tested in PROD** — end-to-end handoff, Hub dedupe (parent/athlete same email → one Delivery), replay protection (same Handoff Key → no duplicate send) |
 | **Participant sends** | **Not authorized** — **Test Mode?** + allowlist only |
 | **Hub content** | Hub **WELCOME** template renders subject/HTML from `templateKey: WELCOME` + Payload JSON (`athleteName`, `programName`, `message`) — final approved design pending |
-| **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode` |
+| **079 contract** | Queue supplies Event Type, Template Key, Handoff Key, Source Table/ID, Recipients JSON, Payload JSON, **Test Mode?** — **not** subject, HTML, plain-text, or `sendMode`; v2.0 accepts WELCOME plus exact `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` keys |
 | **Accepted vs delivery** | Queue/Hub Event **Accepted** = intake only; success = one Hub **Delivery** in **`Sent`**, provider id, one attempt, no stale error/retry fields |
 | **Source-table issue** | Earlier Hub Event missing source table = **Hub-side mapping omission** — **not** a 079 defect; no 079 change required |
 | **Legacy build** | Automation **075** still builds welcome package on Enrollments — **does not send**; optional input to queue payload |
-| **Repo gap** | Automation **079** script **not yet in GitHub** — export recommended before next code change |
+| **Repo source** | Automation **079 v2.0** is now authoritative in GitHub as the shared WELCOME/DAILY_SUBMISSION dispatcher; Production replacement remains pending |
 | **SC-079 naming** | Completion item SC-079 (*gate blocking*) uses Automation **042** — unrelated to Automation slot **079** |
 | **Docs** | `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` · `docs/deploy-checklists/WELCOME-EMAIL-ACTIVATION-CHECKLIST.md` · `docs/deploy-checklists/WELCOME-EMAIL-CONTROLLED-TEST-RUNBOOK.md` |
 | **Status** | **Installed in PROD + Live Tested (controlled only)** — participant activation blocked on checklist § activation doc |
@@ -1162,6 +1162,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 2. Hub creates Hub Event, sends via Resend, writes Delivery audit.
 3. Duplicate parent/athlete email → one Delivery.
 4. Same Handoff Key replay → no second send.
+5. DAILY_SUBMISSION forwarding is covered offline; no live Hub call or Production rerun is claimed by this repository change.
 
 **Still required before participant welcome emails:**
 
@@ -1180,7 +1181,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 |-------|-------|
 | **Scope** | Automation 076 creates one `DAILY_SUBMISSION` Email Handoff Queue row; Hub owns rendering and delivery |
 | **Handoff key** | `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` |
-| **079** | Existing shared dispatcher; no code change required |
+| **079** | Shared dispatcher v2.0; preserves WELCOME and now accepts exact DAILY_SUBMISSION keys |
 | **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
 | **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
 | **Trigger** | Recommended trigger requires `Build Daily Email Now?` checked plus `Count This Submission?` evaluating `1`; 031 validates `Simple Total`/`Detailed Shooting`, final summary linkage, eligible XP-link repair, and final validation; 076 applies the same guard and consumes/clears the signal |
