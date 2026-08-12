@@ -1,9 +1,54 @@
 # PKG-014 / PKG-016 — Immediate Initial Level Assignment Promotion
 
-**Status:** GitHub implementation ready; DEV validation and Production promotion pending Mike approval  
+**Status:** Production promotion complete; scheduled 041 idempotency observation pending
 **Backlog:** `PKG-014` implementation with `PKG-016` trigger/version verification  
 **Scripts:** Automation 001 v5.4, Automation 041 v4.0, Automation 042 v3.4  
 **Date:** 2026-08-12
+
+## Production closeout record — 2026-08-12
+
+Production promotion was completed under Mike’s explicit Production authorization. DEV validation
+was skipped; this is recorded as an exception and is not represented as DEV proof. Repository
+offline evidence remains listed above.
+
+Installed and verified in Production base `appn84sqPw03zEbTT`:
+
+- Automation 001 v5.4
+- Automation 041 v4.0, scheduled and ON, optional `recordId` blank
+- Automation 042 v3.4, ON, with the existing view-entry trigger and dynamic triggering-record
+  `recordId`
+- Automation 043 remains retired/not deployed
+- View `042 - Needs Level Assignment`: `Level Recalc Needed?` checked and `Active?` checked
+
+Configuration verified:
+
+- Exactly one active zero-XP Level: `Beginner`
+- `Rookie Shooter`: 200 XP
+- Active `2026-2027` Level 2 Gate exists
+
+Controlled registration:
+
+- Athlete: `RADON Schmidt`
+- Enrollment: `recqOR0A3RGjFjI3u` (`Schmidt, RADON - 2026-2027`)
+- Created: 2026-08-12 (exact registration/run timestamps were not supplied)
+- Active: checked
+- School Year: `2026-2027`
+- Program Instance: `Shooting Challenge | 2026-2027`
+- Grade Band: `5-6`
+- Lifetime XP: `0`
+- Current Level / public display: `Beginner`
+- Next Level: `Rookie Shooter`
+- Level Gate Rule: `Level 2 Gate`
+- Level Status: `Assigned`
+- Automation 001 checked `Level Recalc Needed?`; Automation 042 cleared it
+- Assignment completed before the next scheduled 041 scan, without manual recalculation
+- Welcome email received once
+- Existing inactive blocked duplicate was absent from the 042 view; it was not manually invoked
+  and no additional duplicate was created
+
+The next scheduled 041 idempotency result remains pending. No claim is made yet about the
+post-test scheduled run. The earlier 041 scheduled scan evidence remains: v4.0, `recordId` blank,
+status `success`, action `queued`, `scannedCount = 7`, and `queuedCount = 7`.
 
 ## Change and safety boundary
 
@@ -76,7 +121,7 @@ Use DEV base `appTetnuCZlCZdTCT` only.
    signature, but it does not cause repeated queue churn or incorrect progression.
 9. Record DEV record IDs, automation run IDs/outputs, timestamps, and the exact versions.
 
-## Production promotion — Mike executes only after DEV proof
+## Production promotion — completed 2026-08-12
 
 Production base: `appn84sqPw03zEbTT`.
 
