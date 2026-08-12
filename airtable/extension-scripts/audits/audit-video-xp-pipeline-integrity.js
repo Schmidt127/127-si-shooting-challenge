@@ -3,8 +3,9 @@ Extension Script: Audit Video XP Pipeline Integrity
 System: 127 SI Shooting Challenge
 Purpose:
   Read-only parity check for Video Feedback rows ready for XP (Automation 114 logic)
-  vs VIDEO_SUBMISSION|{videoFeedbackId} XP Events: missing XP, duplicates, Source Key
-  drift, points mismatch, Award Status gaps, and missing Weekly Athlete Summary on XP.
+  vs VIDEO_SUBMISSION|{videoFeedbackId} XP Events: source identity/readiness,
+  missing or inactive XP, duplicates, mislinks, Source Key drift, points mismatch,
+  Award Status gaps, and missing Weekly Athlete Summary on XP.
 
 Default: read-only (no writes)
 
@@ -19,11 +20,12 @@ const SAMPLE_LIMIT = 25;
 
 const CONFIG = {
   scriptName: "audit-video-xp-pipeline-integrity",
-  version: "v1.1",
+  version: "v1.2",
 
   tables: {
     video: "Video Feedback",
     submissions: "Submissions",
+    enrollments: "Enrollments",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
   },
@@ -43,8 +45,19 @@ const CONFIG = {
   },
 
   submissions: {
+    enrollment: "Enrollment",
     week: "Week",
+    countThisSubmission: "Count This Submission?",
+    activityDate: "Activity Date",
     weeklySummary: "Weekly Athlete Summary",
+  },
+
+  enrollments: {
+    active: "Active?",
+    athlete: "Athlete",
+    programInstance: "Program Instance",
+    schoolYear: "School Year",
+    gradeBand: "Grade Band",
   },
 
   xpEvents: {
@@ -116,7 +129,7 @@ function getNumberish(record, table, fieldName) {
 function getBooleanish(record, table, fieldName) {
   if (!fieldExists(table, fieldName)) return false;
   const raw = record.getCellValue(fieldName);
-  return raw === true || raw === 1 || String(raw).toLowerCase() === "true";
+  return raw === true || raw === 1 || String(raw).trim().toLowerCase() === "true";
 }
 
 function normalizeText(value) {
@@ -211,8 +224,8 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
   const doNotAward =
     fieldExists(videoTable, CONFIG.video.doNotAwardXp) &&
     getBooleanish(videoRecord, videoTable, CONFIG.video.doNotAwardXp);
-  const hasSubmission = getLinkedIds(videoRecord, videoTable, CONFIG.video.submission).length > 0;
-  const hasEnrollment = getLinkedIds(videoRecord, videoTable, CONFIG.video.enrollment).length > 0;
+  const submissionIds = getLinkedIds(videoRecord, videoTable, CONFIG.video.submission);
+  const enrollmentIds = getLinkedIds(videoRecord, videoTable, CONFIG.video.enrollment);
 
   if (doNotAward || awardStatus === "Do Not Award") {
     missing.push("do_not_award_xp");
@@ -228,8 +241,8 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
   // 114 clears Ready for XP Automation? after a successful award — do not require it
   // on rows that are already Awarded with positive XP (historical parity audit path).
   if (awardStatus === CONFIG.values.awardAwarded && totalXp > 0 && !doNotAward) {
-    if (!hasSubmission) missing.push("submission");
-    if (!hasEnrollment) missing.push("enrollment");
+    if (submissionIds.length !== 1) missing.push("submission");
+    if (enrollmentIds.length !== 1) missing.push("enrollment");
     return {
       ready: missing.length === 0,
       missing,
@@ -251,11 +264,11 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
     missing.push("not_ready_for_xp_automation");
   }
 
-  if (!hasSubmission) {
+  if (submissionIds.length !== 1) {
     missing.push("submission");
   }
 
-  if (!hasEnrollment) {
+  if (enrollmentIds.length !== 1) {
     missing.push("enrollment");
   }
 
@@ -273,6 +286,7 @@ function assessVideoXpReadiness(videoRecord, videoTable) {
 async function main() {
   const videoTable = base.getTable(CONFIG.tables.video);
   const submissionsTable = base.getTable(CONFIG.tables.submissions);
+  const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   const xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
   const weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
 
@@ -280,11 +294,15 @@ async function main() {
   const submissionFields = Object.values(CONFIG.submissions).filter(name =>
     fieldExists(submissionsTable, name)
   );
+  const enrollmentFields = Object.values(CONFIG.enrollments).filter(name =>
+    fieldExists(enrollmentsTable, name)
+  );
   const xpFields = Object.values(CONFIG.xpEvents).filter(name => fieldExists(xpEventsTable, name));
 
-  const [videoQuery, submissionQuery, xpQuery, summaryQuery] = await Promise.all([
+  const [videoQuery, submissionQuery, enrollmentQuery, xpQuery, summaryQuery] = await Promise.all([
     videoTable.selectRecordsAsync({ fields: videoFields }),
     submissionsTable.selectRecordsAsync({ fields: submissionFields }),
+    enrollmentsTable.selectRecordsAsync({ fields: enrollmentFields }),
     xpEventsTable.selectRecordsAsync({ fields: xpFields }),
     weeklySummaryTable.selectRecordsAsync({
       fields: Object.values(CONFIG.weeklySummary).filter(name => fieldExists(weeklySummaryTable, name)),
@@ -319,6 +337,11 @@ async function main() {
     xp_points_mismatch: [],
     award_status_gap: [],
     missing_weekly_summary_on_xp: [],
+    invalid_source_identity: [],
+    inactive_or_ineligible_source: [],
+    inactive_xp_event: [],
+    mislinked_xp_event: [],
+    xp_type_mismatch: [],
   };
 
   function bump(issue) {
@@ -356,6 +379,7 @@ async function main() {
     const enrollmentId = getFirstLinkedId(videoRecord, videoTable, CONFIG.video.enrollment);
 
     const submissionRecord = submissionId ? submissionQuery.getRecord(submissionId) : null;
+    const enrollmentRecord = enrollmentId ? enrollmentQuery.getRecord(enrollmentId) : null;
     const weekId = submissionRecord
       ? getFirstLinkedId(submissionRecord, submissionsTable, CONFIG.submissions.week)
       : "";
@@ -370,6 +394,73 @@ async function main() {
     });
 
     let hasIssue = false;
+    const submissionEnrollmentIds = submissionRecord
+      ? getLinkedIds(submissionRecord, submissionsTable, CONFIG.submissions.enrollment)
+      : [];
+    const submissionWeekIds = submissionRecord
+      ? getLinkedIds(submissionRecord, submissionsTable, CONFIG.submissions.week)
+      : [];
+    const enrollmentAthleteIds = enrollmentRecord
+      ? getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.athlete)
+      : [];
+    const enrollmentProgramIds = enrollmentRecord
+      ? getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.programInstance)
+      : [];
+    const enrollmentGradeBandIds = enrollmentRecord
+      ? getLinkedIds(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.gradeBand)
+      : [];
+    const videoGradeBandIds = getLinkedIds(videoRecord, videoTable, "Grade Band");
+    const invalidIdentity = !submissionRecord ||
+      !enrollmentRecord ||
+      submissionEnrollmentIds.length !== 1 ||
+      submissionEnrollmentIds[0] !== enrollmentId ||
+      submissionWeekIds.length !== 1 ||
+      enrollmentAthleteIds.length !== 1 ||
+      enrollmentProgramIds.length !== 1 ||
+      !getText(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.schoolYear);
+
+    if (invalidIdentity) {
+      bump("invalid_source_identity");
+      pushSample("invalid_source_identity", {
+        videoFeedbackId,
+        submissionId,
+        enrollmentId,
+        submissionEnrollmentIds,
+        submissionWeekIds,
+        enrollmentAthleteIds,
+        enrollmentProgramIds,
+        schoolYear: enrollmentRecord
+          ? getText(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.schoolYear)
+          : "",
+        videoGradeBandIds,
+        enrollmentGradeBandIds,
+        recommendedAction: "Repair the canonical Enrollment → Athlete/Program Instance/School Year and Submission → Enrollment/Week links before replaying 114.",
+      });
+      hasIssue = true;
+    }
+
+    const sourceIneligible = !enrollmentRecord ||
+      !getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active) ||
+      !submissionRecord ||
+      !getBooleanish(submissionRecord, submissionsTable, CONFIG.submissions.countThisSubmission);
+
+    if (sourceIneligible) {
+      bump("inactive_or_ineligible_source");
+      pushSample("inactive_or_ineligible_source", {
+        videoFeedbackId,
+        enrollmentActive: enrollmentRecord
+          ? getBooleanish(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active)
+          : null,
+        submissionCountable: submissionRecord
+          ? getBooleanish(submissionRecord, submissionsTable, CONFIG.submissions.countThisSubmission)
+          : null,
+        activityDate: submissionRecord
+          ? getText(submissionRecord, submissionsTable, CONFIG.submissions.activityDate)
+          : "",
+        recommendedAction: "Do not replay 114. Review any existing active XP Event manually before a controlled correction.",
+      });
+      hasIssue = true;
+    }
 
     if (xpIds.length === 0) {
       bump("missing_xp_event");
@@ -411,6 +502,69 @@ async function main() {
     const primaryWasId = primaryXp
       ? getFirstLinkedId(primaryXp, xpEventsTable, CONFIG.xpEvents.weeklySummary)
       : "";
+    const primaryEnrollmentIds = primaryXp
+      ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.enrollment)
+      : [];
+    const primarySubmissionIds = primaryXp
+      ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.submission)
+      : [];
+    const primaryWeekIds = primaryXp
+      ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.week)
+      : [];
+    const primaryVideoIds = primaryXp
+      ? getLinkedIds(primaryXp, xpEventsTable, CONFIG.xpEvents.videoFeedback)
+      : [];
+
+    if (primaryXp && !getBooleanish(primaryXp, xpEventsTable, CONFIG.xpEvents.active)) {
+      bump("inactive_xp_event");
+      pushSample("inactive_xp_event", {
+        videoFeedbackId,
+        xpEventId: primaryXpId,
+        recommendedAction: "Review whether the inactive XP Event reflects an intentional correction before any replay.",
+      });
+      hasIssue = true;
+    }
+
+    if (
+      primaryXp && (
+        primaryEnrollmentIds.length !== 1 || primaryEnrollmentIds[0] !== enrollmentId ||
+        primarySubmissionIds.length !== 1 || primarySubmissionIds[0] !== submissionId ||
+        primaryWeekIds.length !== 1 || primaryWeekIds[0] !== weekId ||
+        !primaryVideoIds.includes(videoFeedbackId)
+      )
+    ) {
+      bump("mislinked_xp_event");
+      pushSample("mislinked_xp_event", {
+        videoFeedbackId,
+        xpEventId: primaryXpId,
+        expected: { enrollmentId, submissionId, weekId, videoFeedbackId },
+        actual: {
+          enrollmentIds: primaryEnrollmentIds,
+          submissionIds: primarySubmissionIds,
+          weekIds: primaryWeekIds,
+          videoFeedbackIds: primaryVideoIds,
+        },
+        recommendedAction: "Manual review only. Do not relink or replay until source ownership is confirmed.",
+      });
+      hasIssue = true;
+    }
+
+    if (
+      primaryXp && (
+        getSelectName(primaryXp, xpEventsTable, CONFIG.xpEvents.xpSource) !== CONFIG.values.xpSourceVideo ||
+        getSelectName(primaryXp, xpEventsTable, CONFIG.xpEvents.xpBucketKey) !== CONFIG.values.xpBucketVideo
+      )
+    ) {
+      bump("xp_type_mismatch");
+      pushSample("xp_type_mismatch", {
+        videoFeedbackId,
+        xpEventId: primaryXpId,
+        xpSource: getSelectName(primaryXp, xpEventsTable, CONFIG.xpEvents.xpSource),
+        xpBucket: getSelectName(primaryXp, xpEventsTable, CONFIG.xpEvents.xpBucketKey),
+        recommendedAction: "Manual review only. The linked record is not a canonical Video Feedback XP Event.",
+      });
+      hasIssue = true;
+    }
 
     if (primarySourceKey !== expectedKey) {
       bump("source_key_mismatch");
@@ -501,8 +655,18 @@ async function main() {
     xpPointsMismatchSample: buckets.xp_points_mismatch,
     awardStatusGapSample: buckets.award_status_gap,
     missingWasSample: buckets.missing_weekly_summary_on_xp,
+    invalidSourceIdentitySample: buckets.invalid_source_identity,
+    inactiveOrIneligibleSourceSample: buckets.inactive_or_ineligible_source,
+    inactiveXpSample: buckets.inactive_xp_event,
+    mislinkedXpSample: buckets.mislinked_xp_event,
+    xpTypeMismatchSample: buckets.xp_type_mismatch,
     notReadySample: buckets.not_ready_for_xp,
     okSample: buckets.ok,
+    limitations: [
+      "Read-only: this audit never creates, updates, activates, deactivates, deletes, queues, or sends.",
+      "A blank formula/rollup is reported as unsettled or missing context, not silently treated as configured.",
+      "This extension cannot prove native automation ON/OFF state, trigger configuration, email delivery, Make behavior, or public-view membership.",
+    ],
   };
 
   console.log("===== VIDEO XP PIPELINE INTEGRITY AUDIT =====");

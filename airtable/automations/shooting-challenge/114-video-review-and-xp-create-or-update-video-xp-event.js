@@ -26,11 +26,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 114 - VIDEO REVIEW AND XP
  * Create or Update Video XP Event
  *
- * Version: v5.9
+ * Version: v6.0
  * Date Written: 2026-05-23
- * Last Updated: 2026-08-05
- * Updated Reason: Airtable runtime compatibility: guard optional QueryResult.unloadData()
- * cleanup so unsupported cleanup cannot fail an otherwise successful automation run.
+ * Last Updated: 2026-08-12
+ * Updated Reason: Reject non-canonical, uncountable, and future-dated source
+ * Submissions before an XP Event can be created or updated.
  *
  * PURPOSE
  * - Runs from one Video Feedback record.
@@ -46,11 +46,15 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Links the XP Event to Weekly Athlete Summary when resolvable from Submission
  *   or by Enrollment + Week lookup.
  * - Marks the Video Feedback record as Awarded after XP Event creation/update.
+ * - Fails closed when the Video Feedback and Submission identity chain is
+ *   incomplete, mismatched, uncountable, or future-dated.
  *
  * IMPORTANT DESIGN RULE
  * - One Video Feedback record = one XP Event.
  * - Do NOT dedupe video feedback by Enrollment or Enrollment + XP Source only.
  * - Source Key must remain: VIDEO_SUBMISSION|recordId
+ * - This is not an email automation and does not create Email Handoff Queue
+ *   records, invoke Make, or dispatch parent email.
  *
  * XP EVENT MATCH ORDER (safest first)
  * 1. XP Event already linked to this exact Video Feedback record ID.
@@ -117,6 +121,7 @@ const CONFIG = {
   tables: {
     videoFeedback: "Video Feedback",
     submissions: "Submissions",
+    enrollments: "Enrollments",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
   },
@@ -135,9 +140,15 @@ const CONFIG = {
   },
 
   submissions: {
+    enrollment: "Enrollment",
     week: "Week",
     activityDate: "Activity Date",
+    countThisSubmission: "Count This Submission?",
     weeklySummary: "Weekly Athlete Summary",
+  },
+
+  enrollments: {
+    active: "Active?",
   },
 
   weeklySummary: {
@@ -177,6 +188,7 @@ const CONFIG = {
 
 let videoTable = null;
 let submissionsTable = null;
+let enrollmentsTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
 let weeklySummaryQueryCache = null;
@@ -430,8 +442,39 @@ function getFirstLinkedId(record, table, fieldName) {
   return ids[0] || "";
 }
 
+function getExactlyOneLinkedId(record, table, fieldName, label) {
+  const ids = uniqueIds(getLinkedIds(record, table, fieldName));
+
+  if (ids.length !== 1) {
+    throw new Error(`${label} must contain exactly one linked record; found ${ids.length}.`);
+  }
+
+  return ids[0];
+}
+
 function uniqueIds(ids) {
   return [...new Set((ids || []).filter(Boolean))];
+}
+
+function parseDate(value) {
+  if (value instanceof Date) {
+    return Number.isNaN(value.getTime()) ? null : value;
+  }
+
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function denverDateKey(value) {
+  const date = parseDate(value);
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
 async function loadWeeklySummaryQuery() {
@@ -961,9 +1004,25 @@ function assertRequiredSchema() {
     requireField(xpEventsTable, fieldName);
   }
 
+  const requiredSubmissionFields = [
+    CONFIG.submissions.enrollment,
+    CONFIG.submissions.week,
+    CONFIG.submissions.activityDate,
+    CONFIG.submissions.countThisSubmission,
+  ];
+
+  for (const fieldName of requiredSubmissionFields) {
+    requireField(submissionsTable, fieldName);
+  }
+
+  requireField(enrollmentsTable, CONFIG.enrollments.active);
+
   requireFieldType(videoTable, CONFIG.videoFeedback.submission, ["multipleRecordLinks"]);
   requireFieldType(videoTable, CONFIG.videoFeedback.enrollment, ["multipleRecordLinks"]);
   requireFieldType(videoTable, CONFIG.videoFeedback.awardStatus, ["singleSelect"]);
+  requireFieldType(submissionsTable, CONFIG.submissions.enrollment, ["multipleRecordLinks"]);
+  requireFieldType(submissionsTable, CONFIG.submissions.week, ["multipleRecordLinks"]);
+  requireFieldType(enrollmentsTable, CONFIG.enrollments.active, ["checkbox"]);
 
   if (fieldExists(videoTable, CONFIG.videoFeedback.xpEvents)) {
     requireFieldType(videoTable, CONFIG.videoFeedback.xpEvents, ["multipleRecordLinks"]);
@@ -1217,6 +1276,7 @@ async function main() {
 
   videoTable = base.getTable(CONFIG.tables.videoFeedback);
   submissionsTable = base.getTable(CONFIG.tables.submissions);
+  enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
   xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
   weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
   weeklySummaryQueryCache = null;
@@ -1260,17 +1320,16 @@ async function main() {
     ? getCheckbox(videoRecord, videoTable, CONFIG.videoFeedback.active)
     : true;
 
-  submissionId = getFirstLinkedId(
-    videoRecord,
-    videoTable,
-    CONFIG.videoFeedback.submission
+  const submissionIds = uniqueIds(
+    getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.submission)
   );
 
-  enrollmentId = getFirstLinkedId(
-    videoRecord,
-    videoTable,
-    CONFIG.videoFeedback.enrollment
+  const enrollmentIds = uniqueIds(
+    getLinkedIds(videoRecord, videoTable, CONFIG.videoFeedback.enrollment)
   );
+
+  submissionId = submissionIds[0] || "";
+  enrollmentId = enrollmentIds[0] || "";
 
   videoFeedbackDisplayKey = fieldExists(videoTable, CONFIG.videoFeedback.videoFeedbackKey)
     ? getText(videoRecord, videoTable, CONFIG.videoFeedback.videoFeedbackKey)
@@ -1370,8 +1429,8 @@ async function main() {
     return;
   }
 
-  if (!submissionId) {
-    setSkippedOutputs("skipped_missing_submission", "Submission is blank.", {
+  if (submissionIds.length !== 1) {
+    setSkippedOutputs("skipped_invalid_submission_link", "Submission must contain exactly one linked record.", {
       debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
@@ -1381,8 +1440,8 @@ async function main() {
     return;
   }
 
-  if (!enrollmentId) {
-    setSkippedOutputs("skipped_missing_enrollment", "Enrollment is blank.", {
+  if (enrollmentIds.length !== 1) {
+    setSkippedOutputs("skipped_invalid_enrollment_link", "Enrollment must contain exactly one linked record.", {
       debugStep,
       sourceKey,
       videoFeedbackDisplayKey,
@@ -1393,40 +1452,121 @@ async function main() {
   }
 
   /* ---------------------------------------------------------
-     5.7 Load Submission / Find Week and XP Source Date
+     5.7 Validate Enrollment and Submission / Find Week and XP Source Date
   --------------------------------------------------------- */
 
-  debugStep = "7 - Load Submission";
+  debugStep = "7 - Validate Enrollment and Submission";
   setOutputSafe("debugStep", debugStep);
 
   let xpSourceDate = null;
 
-  const submissionRecord = await submissionsTable.selectRecordAsync(submissionId);
+  const [enrollmentRecord, submissionRecord] = await Promise.all([
+    enrollmentsTable.selectRecordAsync(enrollmentId),
+    submissionsTable.selectRecordAsync(submissionId),
+  ]);
+
+  if (!enrollmentRecord) {
+    throw new Error(`Linked Enrollment record not found: ${enrollmentId}`);
+  }
 
   if (!submissionRecord) {
     throw new Error(`Linked Submission record not found: ${submissionId}`);
   }
 
-  if (fieldExists(submissionsTable, CONFIG.submissions.week)) {
-    weekId = getFirstLinkedId(
-      submissionRecord,
-      submissionsTable,
-      CONFIG.submissions.week
-    );
+  if (!getCheckbox(enrollmentRecord, enrollmentsTable, CONFIG.enrollments.active)) {
+    setSkippedOutputs("skipped_inactive_enrollment", "Linked Enrollment Active? is unchecked.", {
+      debugStep,
+      sourceKey,
+      videoFeedbackDisplayKey,
+      xpPoints,
+      submissionId,
+      enrollmentId,
+    });
+    return;
   }
 
-  if (fieldExists(submissionsTable, CONFIG.submissions.activityDate)) {
-    xpSourceDate = getRaw(
-      submissionRecord,
-      submissionsTable,
-      CONFIG.submissions.activityDate
-    );
+  const submissionEnrollmentId = getExactlyOneLinkedId(
+    submissionRecord,
+    submissionsTable,
+    CONFIG.submissions.enrollment,
+    "Submission Enrollment"
+  );
 
-    xpSourceDateText = getText(
-      submissionRecord,
-      submissionsTable,
-      CONFIG.submissions.activityDate
+  if (submissionEnrollmentId !== enrollmentId) {
+    setSkippedOutputs(
+      "skipped_submission_enrollment_mismatch",
+      `Submission Enrollment ${submissionEnrollmentId} does not match Video Feedback Enrollment ${enrollmentId}.`,
+      {
+        debugStep,
+        sourceKey,
+        videoFeedbackDisplayKey,
+        xpPoints,
+        submissionId,
+        enrollmentId,
+      }
     );
+    return;
+  }
+
+  weekId = getExactlyOneLinkedId(
+    submissionRecord,
+    submissionsTable,
+    CONFIG.submissions.week,
+    "Submission Week"
+  );
+
+  if (!getCheckbox(submissionRecord, submissionsTable, CONFIG.submissions.countThisSubmission)) {
+    setSkippedOutputs("skipped_submission_not_countable", "Linked Submission Count This Submission? is not checked.", {
+      debugStep,
+      sourceKey,
+      videoFeedbackDisplayKey,
+      xpPoints,
+      submissionId,
+      enrollmentId,
+      weekId,
+    });
+    return;
+  }
+
+  xpSourceDate = getRaw(
+    submissionRecord,
+    submissionsTable,
+    CONFIG.submissions.activityDate
+  );
+  xpSourceDateText = getText(
+    submissionRecord,
+    submissionsTable,
+    CONFIG.submissions.activityDate
+  );
+
+  const sourceDateKey = denverDateKey(xpSourceDate);
+  const todayDenverKey = denverDateKey(new Date());
+
+  if (!sourceDateKey) {
+    setSkippedOutputs("skipped_submission_activity_date_missing", "Linked Submission Activity Date is blank or invalid.", {
+      debugStep,
+      sourceKey,
+      videoFeedbackDisplayKey,
+      xpPoints,
+      submissionId,
+      enrollmentId,
+      weekId,
+    });
+    return;
+  }
+
+  if (sourceDateKey > todayDenverKey) {
+    setSkippedOutputs("skipped_submission_activity_date_future", "Linked Submission Activity Date is in the future.", {
+      debugStep,
+      sourceKey,
+      videoFeedbackDisplayKey,
+      xpPoints,
+      submissionId,
+      enrollmentId,
+      weekId,
+      xpSourceDate: xpSourceDateText,
+    });
+    return;
   }
 
   setOutputSafe("weekIdOut", weekId || "");
