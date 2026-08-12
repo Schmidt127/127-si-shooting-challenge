@@ -1165,6 +1165,17 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 
 **Do not claim:** participant-wide welcome sends enabled; Make.com welcome path active; **Accepted** alone equals delivered email; operator supplies subject/HTML/`sendMode` on the queue row.
 
+### 9M.1. Communications Hub DAILY_SUBMISSION migration — **2026-08-12**
+
+| Field | Value |
+|-------|-------|
+| **Scope** | Automation 076 creates one `DAILY_SUBMISSION` Email Handoff Queue row; Hub owns rendering and delivery |
+| **Handoff key** | `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` |
+| **079** | Existing shared dispatcher; no code change required |
+| **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
+| **Status** | **Repository-ready / promotion pending** — no DEV or Production paste performed |
+| **Promotion** | [`docs/deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md`](./deploy-checklists/PKG-006-DAILY-SUBMISSION-HUB-HANDOFF.md) |
+
 ### 9N. GitHub Issue #116 full audit — **2026-08-08**
 
 The dated audit packet [`docs/prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md`](./prod-completion/2026-08-08/ISSUE-116-FULL-AUDIT.md) is the current repository-wide truth and execution handoff.

@@ -116,9 +116,9 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | **070c** | Email — Verify Async Video Asset Upload | Submission Assets · `Upload Status = Uploaded` · `Writeback Complete?` checked · canonical/hash fields populated · `Upload Error` blank · **repurpose existing slot if at limit** | `070c-email-notifications-and-external-handoffs-verify-async-video-asset-upload.js` (**v1.1** — idempotent; `Send to Make Trigger` optional on trigger) |
 | 073 | Email — Send Video Feedback Parent Email Webhook | *confirm in Airtable* | `073-email-notifications-and-external-handoffs-send-video-feedback-parent-email-webhook.js` |
 | 075 | Email — Build Challenge Welcome Email | *confirm in Airtable* | `075-email-notifications-and-external-handoffs-build-challenge-welcome-email.js` — **build only**; does not send |
-| **079** | Email — Send WELCOME Handoff to Communications Hub | Email Handoff Queue — *confirm trigger in Airtable* | **PROD only** — script not yet in GitHub; see `docs/communications-hub/WELCOME-EMAIL-INTEGRATION.md` |
-| 076 | Email — Build Daily Submission Email Package | *confirm in Airtable* | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` |
-| 077 | Email — Send Daily Submission Email Package to Make | *confirm in Airtable* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` |
+| **079** | Email — Send WELCOME Handoff to Communications Hub | Email Handoff Queue — *confirm trigger in Airtable* | **PROD only** — shared dispatcher; no code change required for DAILY_SUBMISSION |
+| **076** | Email — Create Daily Submission Communications Hub Handoff | Submissions when `Count This Submission?` is checked and `Submission Stat Mode` is Counted — final readiness gates in script | `076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js` (**v8.0** — creates one `DAILY_SUBMISSION` Email Handoff Queue row; Hub owns content) |
+| **077** | Email — Send Daily Submission Email Package to Make | *Retirement candidate pending controlled Hub proof* | `077-email-notifications-and-external-handoffs-send-daily-submission-email-package-to-make.js` (legacy; do not arm) |
 
 ## Video review and XP (112–114) — 111 retired; 112 must stay OFF
 
