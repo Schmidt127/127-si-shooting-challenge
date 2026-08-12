@@ -16,12 +16,14 @@ const SCRIPT_PATH = path.resolve(
 );
 const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
 
-export async function buildAndRun005After023() {
+export async function buildAndRun005After023({
+  activityDate = "2026-08-07",
+} = {}) {
   const base = build023Base({
     includeHistoricalActive: false,
     submissionCells: {
       Week: null,
-      "Activity Date": "2026-08-07",
+      "Activity Date": activityDate,
       "Homework Name 1": null,
       "Homework Name 2": null,
       "Week Assignment Status": "Needs Assignment",

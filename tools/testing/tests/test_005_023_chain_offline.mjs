@@ -22,3 +22,22 @@ test("023 enrollment assignment enables 005 Early Bird date assignment without m
     [{ id: IDS.WEEK_EARLY_BIRD }]
   );
 });
+
+test("005 leaves Week empty when no Program Instance-scoped Week covers Activity Date", async () => {
+  const { base, enrollmentRun, weekRun } = await buildAndRun005After023({
+    activityDate: "2099-01-01",
+  });
+
+  assert.equal(enrollmentRun.output.values.statusOut, "Complete");
+  assert.equal(weekRun.error, null, weekRun.error && weekRun.error.message);
+  assert.equal(weekRun.output.values.statusOut, "Complete");
+  assert.equal(weekRun.output.values.matchedWeekId ?? "", "");
+  assert.match(
+    weekRun.output.values.errorOut,
+    /No Week found from Program Instance-scoped Activity Date/
+  );
+  assert.equal(
+    base.tables.get("Submissions").records.get(IDS.SUBMISSION).getCellValue("Week"),
+    null
+  );
+});
