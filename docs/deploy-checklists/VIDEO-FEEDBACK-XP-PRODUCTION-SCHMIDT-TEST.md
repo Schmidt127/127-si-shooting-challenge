@@ -1,7 +1,7 @@
 # Video Feedback XP — Production Schmidt Test Packet
 
 **Status:** Draft — repository readiness only; Production evidence pending
-**Scope:** `013 → 111 (when Grade Band is blank) → 113 → 114 → rollups → 041 → 042`
+**Scope:** `013 → 113 → 114 → rollups → 041 → 042`
 **Production base:** `appn84sqPw03zEbTT`
 **Owner/executor:** Mike only. Mike alone pastes scripts, changes native Production automations, or initiates this test.
 **Safety boundary:** This packet does not authorize schema, data, view, trigger, deployment, Make, Gmail, or email-queue changes by an agent.
@@ -19,7 +19,7 @@
 | Stage | Owner | Required conditions / result |
 |---|---|---|
 | Video Feedback creation/linking | `013` | Canonical creator/linker from a Submission Asset. `112` is retired/absent or OFF; do not recreate or enable it. |
-| Grade Band preparation | `111` | Preparation only: copies Enrollment `Grade Band` to Video Feedback when VF Grade Band is blank. It is not an XP writer and `113`/`114` do not use Grade Band to calculate XP. |
+| Grade Band context | `013` | Current repository ownership assigns VF create/link and grade-band repair to `013`. Historical `111` only copied Grade Band; it is not an XP writer or XP eligibility rule and must not be re-enabled for this test. |
 | Coach preparation | `113` | Requires active VF, posted nonblank coach feedback, no `Do Not Award XP?`, Enrollment and Submission links, and active `VIDEO_SUBMISSION` XP Reward Rule. It writes Base XP, Pending, and arms `Ready for XP Automation?`. |
 | XP Event | `114 v6.0` | Requires exactly one active VF Enrollment + Submission; active Enrollment; matching canonical Submission Enrollment; exactly one Submission Week; `Count This Submission?`; valid non-future Activity Date; positive Total Video XP; posted feedback; no do-not-award; Ready flag. Creates/updates one active `VIDEO_SUBMISSION|{videoFeedbackRecordId}` event. |
 | Weekly / lifetime contribution | rollups | XP Event must have active status and matching Enrollment + Week; 114 also resolves/links a canonical WAS when one is already resolvable. `XP Earned This Week` and `Lifetime XP Total` are computed values—allow settlement before judging blank/mismatch. |
@@ -45,7 +45,7 @@ Before the positive path, open Production Automations and record the version, tr
 | Automation | Required check |
 |---|---|
 | `013` | Current canonical Video Feedback creator/linker; record input maps to the triggering Submission Asset. |
-| `111` | Only needed if the selected VF's Grade Band is blank. It is a preparer, not an XP eligibility or XP creator. |
+| `111` | Historical/retired; do not enable or recreate it. If VF Grade Band is blank, record the condition and stop for an `013`/identity-chain review; Grade Band is not a 113/114 XP calculation input. |
 | `113 v6.2` | Current script and trigger target the selected Video Feedback review state; never use it to send email. |
 | `114 v6.0` | ON only after Mike pastes the committed script; trigger requires posted feedback, positive Total Video XP, one VF Enrollment and Submission, `Do Not Award XP?` unchecked, XP link empty, and Ready checked. Do not use `Award Status is not Awarded` as a trigger condition. |
 | `041 v4.0` | Scheduled reconciliation remains configured; optional `recordId` is blank except for an intentional controlled action. |
@@ -58,7 +58,7 @@ Before the positive path, open Production Automations and record the version, tr
 
 1. Select one fresh eligible Schmidt Video Feedback row. Use Mike's allowlisted email only if an email field must be viewed; no email automation may be armed or run.
 2. Confirm the preflight identity chain is exact: one active Enrollment with one Athlete, Program Instance, School Year, and Grade Band; one matching Submission Enrollment; exactly one Week; and a countable, non-future Activity Date.
-3. If VF Grade Band is blank, let `111` populate it and verify it exactly matches the Enrollment Grade Band. Do not treat the grade-band write as XP proof.
+3. Record the VF and Enrollment Grade Band values. If the VF Grade Band is blank, do not enable or run `111`; stop for an `013`/identity-chain review. Do not treat Grade Band as XP proof or manually use it to qualify the record.
 4. Complete the coach review on the same row: nonblank Coach Feedback, `Feedback Posted? = checked`, `Do Not Award XP? = unchecked`. Run/allow `113` only if it is the installed preparation step. Record its output and the active `VIDEO_SUBMISSION` XP Reward Rule ID/amount.
 5. Verify `113` produces positive Base/Total Video XP, `Award Status = Pending`, and `Ready for XP Automation? = checked`. If any is absent, stop; do not manually manufacture the event.
 6. Allow the installed `114 v6.0` trigger to process exactly once. Capture its run history/output: `statusOut`, `actionOut`, `sourceKeyOut`, `xpEventIdOut`, `enrollmentIdOut`, `submissionIdOut`, `weekIdOut`, and `weeklySummaryIdOut`.
