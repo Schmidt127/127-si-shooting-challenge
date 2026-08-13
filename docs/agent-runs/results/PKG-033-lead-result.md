@@ -79,7 +79,7 @@ It is not a pass claim.
 |---|---|
 | `node -e "JSON.parse(require('fs').readFileSync('docs/agent-runs/CONTROL.json','utf8'))"` | PASS |
 | `git diff --check` | PASS |
-| `node --check` on 001, 041, 042, 101, 117, counted audit | PASS |
+| `node --check airtable/automations/shooting-challenge/001-enrollment-intake-and-setup-find-or-create-athlete-and-link-enrollment.js && node --check airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js && node --check airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js && node --check airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.js && node --check airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js && node --check airtable/extension-scripts/audits/audit-counted-submission-xp-standings-reliability.js` | PASS |
 | `node tests/enrollment-intake/automation-001-unload-compat.test.js` | PASS — 17 |
 | `node tests/progression/immediate-initial-level-assignment.test.js` | PASS — 7 |
 | `node airtable/automations/shooting-challenge/lib/c025-stage17-zoom-attendance.test.js` | PASS |
@@ -87,7 +87,7 @@ It is not a pass claim.
 | `node airtable/automations/shooting-challenge/lib/c025-stage17-etf-downstream.test.js` | PASS after source-version assertion correction |
 | `node airtable/automations/shooting-challenge/lib/c025-zoom-recording-credit.test.js` | PASS |
 | `node tests/weekly-athlete-summary/pkg-033-was-integrity.test.js` | PASS — 9 |
-| `npm test -- --run lib/data/leaderboard.test.ts` from `web/` | BLOCKED — `vitest` unavailable because `web/node_modules` is not installed; no package files changed |
+| `cd web && npm test -- --run lib/data/leaderboard.test.ts` | BLOCKED — `vitest` unavailable because `web/node_modules` is not installed; no package files changed |
 
 ## Review findings and blockers
 
