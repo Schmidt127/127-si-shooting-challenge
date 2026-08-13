@@ -263,6 +263,12 @@ they require Mike-owned schema or live-system decisions.
 Mike supplied the authoritative Production baseline for the unified operator
 packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md)).
 
+2026-08-13 — Execution matrix IDs advanced: PKG-006R, PKG-036 — repository-only
+operator packet consolidation, active trigger-map correction, and offline
+packet contract coverage added. No Airtable, Production data, automation
+installation/toggle, deployment, package-lock release, or live-proof claim
+occurred.
+
 | Item | Current status | Current truth |
 |------|----------------|---------------|
 | PKG-006R reconciliation fields (12) | **Installed / verified** | Verify exact names and types; do not recreate |
