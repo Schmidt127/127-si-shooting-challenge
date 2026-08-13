@@ -968,9 +968,10 @@ function findMatchingXpEvents(xpRecords, matchContext) {
     }
   }
 
-  const selectedTier = tier1Matches.length
-    ? tier1Matches
-    : tier2Matches;
+  // A direct Video Feedback link is the preferred reuse candidate, but it
+  // cannot hide a second event with the same canonical source key. Preserve
+  // both tiers so the caller fails closed on any duplicate identity.
+  const selectedTier = [...tier1Matches, ...tier2Matches];
 
   for (const record of selectedTier) {
     assertXpEventCompatibleOrThrow(record, matchContext);

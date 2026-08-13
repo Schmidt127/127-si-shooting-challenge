@@ -364,11 +364,13 @@ async function test(name, fn) {
     await assert.rejects(() => createRuntime(wrongOwner).run(script114, "recVideoOne"), /does not belong|conflicts/);
 
     const duplicate = seed([video("recVideoOne")]);
-    duplicate["XP Events"] = ["recDuplicateA", "recDuplicateB"].map((id) => ({
+    duplicate["XP Events"] = ["recDuplicateA", "recDuplicateB"].map((id, index) => ({
       id,
       fields: {
         "Source Key": "VIDEO_SUBMISSION|recVideoOne",
-        "Video Feedback": links(["recVideoOne"]),
+        // The second duplicate is unlinked, which must not be masked by the
+        // direct-link match for the first event.
+        "Video Feedback": index === 0 ? links(["recVideoOne"]) : [],
         Enrollment: links(["recEnrollment"]),
         Submission: links(["recSubmission"]),
         Week: links(["recWeek"]),
