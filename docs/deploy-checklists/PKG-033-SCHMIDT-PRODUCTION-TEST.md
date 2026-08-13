@@ -1,8 +1,8 @@
 # PKG-033 — Schmidt Core Reliability Production Test
 
-**Status:** Test specification only — not executed  
-**Owner:** Mike performs Production actions; Cursor records repository evidence  
-**Scope:** Registration, first participation, WAS, Zoom, progression, standings  
+**Status:** Test specification only — not executed
+**Owner:** Mike performs Production actions; Cursor records repository evidence
+**Scope:** Registration, first participation, WAS, Zoom, progression, standings
 **Out of scope:** Homework/Video implementation, email appearance, website appearance, deployments, schema changes, and daily-submission reversal work
 
 ## Non-negotiable controls
