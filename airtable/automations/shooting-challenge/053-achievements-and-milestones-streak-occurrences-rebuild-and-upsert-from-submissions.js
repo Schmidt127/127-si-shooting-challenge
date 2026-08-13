@@ -24,10 +24,12 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 053 - Achievements and Milestones - Streak Occurrences - Rebuild and Upsert From Submissions
- * Version: 5.3
+ * Version: 5.4
  * Date Written: 2026-06-09
- * Last Updated: 2026-08-06
- * Updated Reason: Program Instance isolation — Week date match scoped to Enrollment PI.
+ * Last Updated: 2026-08-13
+ * Updated Reason: Reconcile the complete Enrollment-owned streak occurrence lifecycle,
+ * including withdrawal and restoration. The downstream 054 automation receives every
+ * positive/restored canonical occurrence through Source Status = Ready for XP.
  *
  * SCRIPT TYPE
  * - Airtable Automation Script
@@ -51,9 +53,12 @@ Airtable is the deployed/running copy.
  *   Program Instance (never date-only across years).
  * - Never create XP Events directly.
  * - Never write to formula fields such as Streak Occurrence Key.
- * - Stale occurrence withdrawal is not inferred here: without a dedicated
- *   transition trigger and source ownership proof, downstream same-event
- *   correction remains explicitly blocked.
+ * - Reconciles all identifiable Enrollment-owned streak occurrences: unsupported
+ *   occurrences are deactivated, and an exact restored occurrence is reactivated.
+ * - Never chooses a canonical record when an occurrence identity is ambiguous.
+ *   Ambiguous candidates are marked Error and no XP ownership is changed.
+ * - Sets every positive/restored canonical occurrence to Ready for XP so 054 can
+ *   create, reactivate, or repair its exact owned XP Event.
  *
  * IMPORTANT FIX IN THIS VERSION
  * - Activity / week date keys use America/Denver (not UTC ISO slice) so
@@ -720,19 +725,6 @@ async function main() {
 
     const validDateKeys = Array.from(validDateSet).sort();
 
-    if (validDateKeys.length === 0) {
-        setOutputs({
-            ok: true,
-            actionOut: "skipped_no_valid_counted_shooting_dates",
-            statusOut: CONFIG.outputs.skipped,
-            errorOut: "",
-            enrollmentId,
-            validDatesProcessed: 0,
-        });
-        return;
-    }
-
-
     /************************************************************************************************
      * SECTION 9 — LOAD ACTIVE STREAK ACHIEVEMENTS
      ************************************************************************************************/
@@ -771,15 +763,8 @@ async function main() {
         });
 
     if (activeStreakAchievements.length === 0) {
-        setOutputs({
-            ok: true,
-            actionOut: "skipped_no_active_streak_achievements",
-            statusOut: CONFIG.outputs.skipped,
-            errorOut: "",
-            enrollmentId,
-            validDatesProcessed: validDateKeys.length,
-        });
-        return;
+        // Continue: every identifiable Enrollment-owned occurrence is unsupported
+        // and must be deactivated by the reconciliation pass below.
     }
 
 
@@ -979,6 +964,37 @@ async function main() {
     const recordsToUpdate = [];
     let canonicalCount = 0;
     let duplicateCount = 0;
+    let deactivatedUnsupportedCount = 0;
+    let ambiguousIdentityCount = 0;
+
+    for (const occurrence of refreshedOccurrencesQuery.records) {
+        const occurrenceEnrollmentId = getLinkedRecordId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.enrollment);
+        if (occurrenceEnrollmentId !== enrollmentId) continue;
+        const achievementId = getLinkedRecordId(occurrence, streakOccurrencesTable, CONFIG.streakOccurrences.achievement);
+        const streakEndDateKey = toDateKey(occurrence.getCellValue(CONFIG.streakOccurrences.streakEndDate));
+
+        if (!achievementId || !streakEndDateKey) {
+            const fields = {};
+            addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
+            addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
+            addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.notes,
+                "053 reconciliation failed closed: missing Achievement or Streak End Date.");
+            if (Object.keys(fields).length > 0) recordsToUpdate.push({ id: occurrence.id, fields });
+            ambiguousIdentityCount++;
+            continue;
+        }
+
+        const occurrenceKey = makeOccurrenceKey(occurrenceEnrollmentId, achievementId, streakEndDateKey);
+        if (targetOccurrencesByKey.has(occurrenceKey)) continue;
+        const fields = {};
+        addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.active, false);
+        addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
+        addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
+        addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.notes,
+            `053 deactivated unsupported streak occurrence: ${occurrenceKey}.`);
+        if (Object.keys(fields).length > 0) recordsToUpdate.push({ id: occurrence.id, fields });
+        deactivatedUnsupportedCount++;
+    }
 
     for (const target of targetOccurrencesByKey.values()) {
         const matchingOccurrences = refreshedByKey.get(target.occurrenceKey) || [];
@@ -987,41 +1003,20 @@ async function main() {
             continue;
         }
 
-        matchingOccurrences.sort((a, b) => {
-            const aHasXp = getLinkedRecordIds(
-                a,
-                streakOccurrencesTable,
-                CONFIG.streakOccurrences.xpEvents
-            ).length > 0;
-
-            const bHasXp = getLinkedRecordIds(
-                b,
-                streakOccurrencesTable,
-                CONFIG.streakOccurrences.xpEvents
-            ).length > 0;
-
-            if (aHasXp && !bHasXp) {
-                return -1;
+        if (matchingOccurrences.length !== 1) {
+            for (const occurrence of matchingOccurrences) {
+                const fields = {};
+                addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusError);
+                addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
+                addWritable(fields, streakOccurrencesTable, CONFIG.streakOccurrences.notes,
+                    `053 reconciliation failed closed: ${matchingOccurrences.length} records share ${target.occurrenceKey}.`);
+                if (Object.keys(fields).length > 0) recordsToUpdate.push({ id: occurrence.id, fields });
             }
-
-            if (!aHasXp && bHasXp) {
-                return 1;
-            }
-
-            return a.id.localeCompare(b.id);
-        });
+            ambiguousIdentityCount++;
+            continue;
+        }
 
         const canonical = matchingOccurrences[0];
-
-        const canonicalXpEventIds = getLinkedRecordIds(
-            canonical,
-            streakOccurrencesTable,
-            CONFIG.streakOccurrences.xpEvents
-        );
-
-        const canonicalStatus = canonicalXpEventIds.length > 0
-            ? CONFIG.values.statusAwarded
-            : CONFIG.values.statusReady;
 
         const canonicalFields = {};
 
@@ -1029,7 +1024,7 @@ async function main() {
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.streakDays, target.streakDays);
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.streakStartDate, dateValue(target.streakStartDateKey));
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.streakEndDate, dateValue(target.streakEndDateKey));
-        addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, canonicalStatus);
+        addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusReady);
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceSubmissionDate, dateValue(target.streakEndDateKey));
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.triggerSubmissionDate, dateValue(target.streakEndDateKey));
         addWritable(canonicalFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
@@ -1047,30 +1042,6 @@ async function main() {
 
         canonicalCount++;
 
-        for (let i = 1; i < matchingOccurrences.length; i++) {
-            const duplicate = matchingOccurrences[i];
-
-            const duplicateFields = {};
-
-            addWritable(duplicateFields, streakOccurrencesTable, CONFIG.streakOccurrences.active, false);
-            addWritable(duplicateFields, streakOccurrencesTable, CONFIG.streakOccurrences.sourceStatus, CONFIG.values.statusDuplicate);
-            addWritable(duplicateFields, streakOccurrencesTable, CONFIG.streakOccurrences.lastEvaluatedAt, nowIso);
-            addWritable(
-                duplicateFields,
-                streakOccurrencesTable,
-                CONFIG.streakOccurrences.notes,
-                `Duplicate streak occurrence. Canonical record: ${canonical.id}`
-            );
-
-            if (Object.keys(duplicateFields).length > 0) {
-                recordsToUpdate.push({
-                    id: duplicate.id,
-                    fields: duplicateFields,
-                });
-            }
-
-            duplicateCount++;
-        }
     }
 
     if (recordsToUpdate.length > 0) {
@@ -1098,7 +1069,9 @@ async function main() {
         recordsUpdated: recordsToUpdate.length,
         canonicalRecords: canonicalCount,
         duplicateRecordsMarked: duplicateCount,
-        sameEventReconciliation: "blocked_no_streak_source_trigger",
+        deactivatedUnsupportedOccurrences: deactivatedUnsupportedCount,
+        ambiguousOccurrenceIdentities: ambiguousIdentityCount,
+        sameEventReconciliation: "054_ready_for_exact_owned_event",
     });
 }
 

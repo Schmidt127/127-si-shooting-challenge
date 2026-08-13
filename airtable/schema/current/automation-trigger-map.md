@@ -84,16 +84,21 @@ does not prove that Production has been configured.
 
 ### Achievements and streaks (053–059, 066)
 
+> **PKG-038 Production hold:** The lifecycle trigger contracts below are
+> repository-ready only. Do not paste, enable, or controlled-test 053, 054,
+> 059, or 066 until Mike explicitly releases both PKG-006R and PKG-036 and
+> confirms no competing lifetime-XP observation window.
+
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| 053 | Submissions / Streak Occurrences | *confirm*; positive rebuild only | `053-...-rebuild-and-upsert-from-submissions.js` | Streak Occurrence rows; stale-source discovery remains blocked |
-| **054** | Streak Occurrences | Source Status = Ready for XP; inactive correction must be wired explicitly | `054-...-create-or-repair-streak-xp-event.js` | **XP Events** (streak); exact-owned inactive event can deactivate/reactivate |
+| 053 | Submissions | Record updated; must watch Enrollment, Activity Date, `Count This Submission?`, and `Total Shots Counted` so positive and correction changes reach reconciliation | `053-...-rebuild-and-upsert-from-submissions.js` (**v5.4**) | Canonical Streak Occurrences; unsupported topology becomes inactive |
+| **054** | Streak Occurrences | Record updated; must watch `Active?`, Source Status, Enrollment, Achievement, Week, Streak End Date, and XP Events | `054-...-create-or-repair-streak-xp-event.js` (**v5.8**) | **XP Events** (streak); exact-owned inactive event deactivates/reactivates |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` | Perfect week flags |
 | 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` | Achievement Unlocks |
-| **059** | Athlete Achievement Unlocks | Pending + Ready for 059 XP | `059-...-create-xp-event-from-achievement-unlock.js` | **XP Events** (achievement); milestone withdrawal fails closed |
-| 066 | Enrollments / Submissions | *confirm* | `066-...-create-shot-milestone-unlocks.js` | Shot milestone unlocks; positive threshold owner only |
+| **059** | Athlete Achievement Unlocks | Lifecycle-reachable record update/create; watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone, Week, and Milestone Source Key; never filter Ready for 059 XP? or Shot Milestone presence | `059-...-create-xp-event-from-achievement-unlock.js` (**v3.6**) | **XP Events** (achievement); corrected-history milestone lifecycle |
+| 066 | Enrollments | `Run Shot Milestone Check?` checked; the upstream reconciliation must re-arm it after counted-total changes | `066-...-create-shot-milestone-unlocks.js` (**v3.7**) | Canonical shot-milestone unlocks; corrected-history lifecycle |
 
 ### Levels (041–043)
 

@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-06 (v3.5 Program Instance Week isolation + v3.4 createRecords fix)
+Last GitHub Update: 2026-08-13 (v3.7 counted-submission lifecycle reconciliation)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,11 +27,14 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.5
+ * Version: v3.7
  * Date Written: 2026-06-17
- * Last Updated: 2026-08-06
+ * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
+ * - v3.7 (2026-08-13): Require formula-backed Count This Submission? before
+ *   current-total milestone eligibility is calculated.
+ * - v3.6 (2026-08-13): Reconcile inactive/restored canonical unlocks.
  * - v3.5 (2026-08-06): Program Instance isolation — Week date match scoped to
  *   Enrollment.Program Instance; throw on ambiguous overlaps inside one PI.
  * - v3.4 (2026-08-06): Defensive createRecordsInBatches — accept raw field maps or
@@ -60,9 +63,9 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Multiple milestones may unlock in the same Week — that is valid (not a duplicate).
  * - Do NOT write Athlete Achievement Unlocks.Unlock Key (computed/formula in this base).
  * - Skip inactive enrollments without error.
- * - Do not infer withdrawal of a prior unlock from a lower aggregate total in
- *   this positive Enrollment-owned trigger; milestone XP correction remains
- *   blocked until the unlock has an observable eligibility transition.
+ * - Reconciles exact Enrollment + Shot Milestone source-key rows on both total
+ *   increases and decreases. Below-threshold rows are deactivated (not deleted);
+ *   restoration reactivates that same unlock and re-arms 059 through Pending.
  * - Grade Band and milestone thresholds come from linked config records — config-over-code.
  * - Grade Band matching: linked record IDs first; normalized display label only as fallback.
  * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver) scoped by
@@ -118,10 +121,10 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.5",
-  versionDate: "2026-08-06",
+  version: "v3.7",
+  versionDate: "2026-08-13",
   originalWrittenDate: "2026-06-17",
-  lastUpdated: "2026-08-06",
+  lastUpdated: "2026-08-13",
   folder: "06 - Achievements and Milestones",
   automationName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
 };
@@ -160,6 +163,7 @@ const CONFIG = {
     enrollment: "Enrollment",
     activityDate: "Activity Date",
     totalShotsCounted: "Total Shots Counted",
+    countThisSubmission: "Count This Submission?",
   },
 
   shotMilestoneFields: {
@@ -186,6 +190,7 @@ const CONFIG = {
     shotMilestone: "Shot Milestone",
     milestoneSourceKey: "Milestone Source Key",
     milestoneActivityDate: "Milestone Activity Date",
+    active: "Active?",
     xpAwardStatus: "XP Award Status",
     unlockKey: "Unlock Key",
     notes: "Notes",
@@ -209,6 +214,7 @@ const CONFIG = {
   actions: {
     created: "created",
     updated: "updated",
+    reconciled: "reconciled",
     skippedInactive: "skipped_inactive",
     skippedNoSubmissions: "skipped_no_submissions",
     skippedNoMilestones: "skipped_no_milestones",
@@ -290,6 +296,16 @@ function requireField(table, fieldName) {
   }
 }
 
+function requireFieldType(table, fieldName, allowedTypes) {
+  requireField(table, fieldName);
+  const field = getFieldSafe(table, fieldName);
+  if (!allowedTypes.includes(field.type)) {
+    throw new Error(
+      `Field ${table.name}.${fieldName} has type "${field.type}" but expected: ${allowedTypes.join(", ")}.`
+    );
+  }
+}
+
 function isWritableField(table, fieldName) {
   const field = getFieldSafe(table, fieldName);
   if (!field) return false;
@@ -354,6 +370,11 @@ function validateRequiredSchema(tables) {
   requireField(tables.submissions, CONFIG.submissionFields.enrollment);
   requireField(tables.submissions, CONFIG.submissionFields.activityDate);
   requireField(tables.submissions, CONFIG.submissionFields.totalShotsCounted);
+  requireFieldType(
+    tables.submissions,
+    CONFIG.submissionFields.countThisSubmission,
+    ["formula"]
+  );
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.gradeBand);
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.milestoneShotCount);
   requireField(tables.unlocks, CONFIG.unlockFields.enrollment);
@@ -361,6 +382,7 @@ function validateRequiredSchema(tables) {
   requireField(tables.unlocks, CONFIG.unlockFields.shotMilestone);
   requireField(tables.unlocks, CONFIG.unlockFields.milestoneSourceKey);
   requireField(tables.unlocks, CONFIG.unlockFields.milestoneActivityDate);
+  requireField(tables.unlocks, CONFIG.unlockFields.active);
   requireField(tables.weeks, CONFIG.weekFields.startDate);
   requireField(tables.weeks, CONFIG.weekFields.endDate);
 
@@ -882,6 +904,7 @@ async function main() {
           CONFIG.submissionFields.enrollment,
           CONFIG.submissionFields.activityDate,
           CONFIG.submissionFields.totalShotsCounted,
+          CONFIG.submissionFields.countThisSubmission,
         ]),
       }),
       weeksTable.selectRecordsAsync({
@@ -900,6 +923,8 @@ async function main() {
           CONFIG.unlockFields.shotMilestone,
           CONFIG.unlockFields.milestoneActivityDate,
           CONFIG.unlockFields.week,
+          CONFIG.unlockFields.active,
+          CONFIG.unlockFields.xpAwardStatus,
         ]),
       }),
       achievementsTable.selectRecordsAsync({
@@ -934,8 +959,17 @@ async function main() {
       record: submission,
       activityDate: getDateValue(submission, CONFIG.submissionFields.activityDate),
       totalShotsCounted: getNumber(submission, CONFIG.submissionFields.totalShotsCounted),
+      countThisSubmission: getBooleanish(
+        submission,
+        CONFIG.submissionFields.countThisSubmission,
+        false
+      ),
     }))
-    .filter((submission) => submission.activityDate && submission.totalShotsCounted > 0)
+    .filter((submission) =>
+      submission.countThisSubmission &&
+      submission.activityDate &&
+      submission.totalShotsCounted > 0
+    )
     .sort((a, b) => {
       const dateDiff = a.activityDate.getTime() - b.activityDate.getTime();
       if (dateDiff !== 0) return dateDiff;
@@ -944,19 +978,6 @@ async function main() {
       if (createdA !== createdB) return createdA - createdB;
       return a.record.id.localeCompare(b.record.id);
     });
-
-  if (enrollmentSubmissions.length === 0) {
-    await updateEnrollment(enrollmentsTable, enrollmentRecord, {
-      [CONFIG.enrollmentFields.runCheck]: false,
-    });
-    setSkippedOutputs({
-      actionOut: CONFIG.actions.skippedNoSubmissions,
-      errorOut: "Skipped: No counted submissions with Activity Date found.",
-      debugStep,
-      enrollmentId,
-    });
-    return;
-  }
 
   const calculatedTotalShots = enrollmentSubmissions.reduce(
     (sum, submission) => sum + submission.totalShotsCounted,
@@ -967,19 +988,6 @@ async function main() {
     enrollmentRecord,
     CONFIG.enrollmentFields.totalShots
   );
-
-  if (!calculatedTotalShots || calculatedTotalShots <= 0) {
-    await updateEnrollment(enrollmentsTable, enrollmentRecord, {
-      [CONFIG.enrollmentFields.runCheck]: false,
-    });
-    setSkippedOutputs({
-      actionOut: CONFIG.actions.skippedZeroTotal,
-      errorOut: "Skipped: Calculated submission total is zero.",
-      debugStep,
-      enrollmentId,
-    });
-    return;
-  }
 
   debugStep = "6 - Resolve Shot Milestone achievement";
   setOutputSafe("debugStep", debugStep);
@@ -1027,6 +1035,12 @@ async function main() {
   for (const unlock of unlockQuery.records) {
     const sourceKey = getText(unlock, CONFIG.unlockFields.milestoneSourceKey);
     if (sourceKey) {
+      if (existingUnlockBySourceKey.has(sourceKey)) {
+        throw new Error(
+          `Duplicate Athlete Achievement Unlock source key ${sourceKey}: ` +
+          `${existingUnlockBySourceKey.get(sourceKey).id}, ${unlock.id}.`
+        );
+      }
       existingUnlockBySourceKey.set(sourceKey, unlock);
     }
   }
@@ -1035,6 +1049,7 @@ async function main() {
   setOutputSafe("debugStep", debugStep);
 
   const eligibleMilestones = [];
+  const activeMilestonesBySourceKey = new Map();
 
   for (const milestone of shotMilestoneQuery.records) {
     const active = fieldExists(shotMilestonesTable, CONFIG.shotMilestoneFields.active)
@@ -1049,11 +1064,13 @@ async function main() {
       CONFIG.shotMilestoneFields.milestoneShotCount
     );
     if (!milestoneShotCount || milestoneShotCount <= 0) continue;
+    const sourceKey = buildMilestoneSourceKey(enrollmentId, milestone.id);
+    activeMilestonesBySourceKey.set(sourceKey, { record: milestone, shotCount: milestoneShotCount });
     if (calculatedTotalShots < milestoneShotCount) continue;
 
     eligibleMilestones.push({
       record: milestone,
-      sourceKey: buildMilestoneSourceKey(enrollmentId, milestone.id),
+      sourceKey,
       shotCount: milestoneShotCount,
       percent: getNumber(milestone, CONFIG.shotMilestoneFields.milestonePercent),
       label: getText(milestone, CONFIG.shotMilestoneFields.label),
@@ -1066,13 +1083,51 @@ async function main() {
     return a.percent - b.percent;
   });
 
+  // Reconcile only exact source-key rows owned by this Enrollment and an active,
+  // grade-matched milestone. Historical/inactive configuration remains untouched.
+  const withdrawalUpdates = [];
+  let deactivatedCount = 0;
+  for (const [sourceKey, existingUnlock] of existingUnlockBySourceKey.entries()) {
+    const milestone = activeMilestonesBySourceKey.get(sourceKey);
+    if (!milestone || calculatedTotalShots >= milestone.shotCount) continue;
+    const unlockEnrollmentIds = getLinkedIds(existingUnlock, CONFIG.unlockFields.enrollment);
+    const unlockMilestoneIds = getLinkedIds(existingUnlock, CONFIG.unlockFields.shotMilestone);
+    if (
+      unlockEnrollmentIds.length !== 1 ||
+      unlockEnrollmentIds[0] !== enrollmentId ||
+      unlockMilestoneIds.length !== 1 ||
+      unlockMilestoneIds[0] !== milestone.record.id
+    ) {
+      throw new Error(`Unlock ${existingUnlock.id} failed exact ownership for ${sourceKey}.`);
+    }
+    const payload = {};
+    addIfWritable(unlocksTable, payload, CONFIG.unlockFields.active, false);
+    if (fieldExists(unlocksTable, CONFIG.unlockFields.xpAwardStatus)) {
+      addIfWritable(
+        unlocksTable,
+        payload,
+        CONFIG.unlockFields.xpAwardStatus,
+        singleSelectValue(unlocksTable, CONFIG.unlockFields.xpAwardStatus, CONFIG.statuses.pending)
+      );
+    }
+    addIfWritable(
+      unlocksTable,
+      payload,
+      CONFIG.unlockFields.notes,
+      `${getText(existingUnlock, CONFIG.unlockFields.notes)}\n066 deactivated below-threshold milestone lifecycle: ${sourceKey}.`
+    );
+    withdrawalUpdates.push({ id: existingUnlock.id, fields: payload });
+    deactivatedCount += 1;
+  }
+
   if (eligibleMilestones.length === 0) {
+    await updateRecordsInBatches(unlocksTable, withdrawalUpdates);
     await updateEnrollment(enrollmentsTable, enrollmentRecord, {
       [CONFIG.enrollmentFields.runCheck]: false,
     });
     setSkippedOutputs({
-      actionOut: CONFIG.actions.skippedNoMilestones,
-      errorOut: "Skipped: No eligible shot milestones for current total.",
+      actionOut: deactivatedCount > 0 ? CONFIG.actions.reconciled : CONFIG.actions.skippedNoMilestones,
+      errorOut: "",
       debugStep,
       enrollmentId,
     });
@@ -1114,7 +1169,7 @@ async function main() {
   let weekWriteCount = 0;
 
   const unlockCreatesPending = [];
-  const unlockUpdatesPending = [];
+  const unlockUpdatesPending = [...withdrawalUpdates];
 
   for (const milestone of eligibleMilestones) {
     const crossing = crossingByMilestoneId.get(milestone.record.id);
@@ -1136,6 +1191,20 @@ async function main() {
     if (existingUnlock) {
       const updatePayload = {};
       let didUpdate = false;
+      const existingActive = getBooleanish(existingUnlock, CONFIG.unlockFields.active, false);
+
+      if (!existingActive) {
+        addIfWritable(unlocksTable, updatePayload, CONFIG.unlockFields.active, true);
+        if (fieldExists(unlocksTable, CONFIG.unlockFields.xpAwardStatus)) {
+          addIfWritable(
+            unlocksTable,
+            updatePayload,
+            CONFIG.unlockFields.xpAwardStatus,
+            singleSelectValue(unlocksTable, CONFIG.unlockFields.xpAwardStatus, CONFIG.statuses.pending)
+          );
+        }
+        didUpdate = true;
+      }
 
       const existingActivityDate = getDateValue(
         existingUnlock,
@@ -1196,6 +1265,7 @@ async function main() {
       { id: milestone.record.id },
     ]);
     addIfWritable(unlocksTable, unlockPayload, CONFIG.unlockFields.milestoneSourceKey, milestone.sourceKey);
+    addIfWritable(unlocksTable, unlockPayload, CONFIG.unlockFields.active, true);
     addIfWritable(
       unlocksTable,
       unlockPayload,
@@ -1276,7 +1346,8 @@ async function main() {
   setOutputSafe("createdUnlocksOut", createdCount);
   setOutputSafe("updatedUnlocksOut", updatedExistingCount);
   setOutputSafe("skippedExistingUnlocksOut", skippedExistingCount);
-  setOutputSafe("milestoneReconciliationOut", "blocked_no_unlock_eligibility_signal");
+  setOutputSafe("deactivatedUnlocksOut", deactivatedCount);
+  setOutputSafe("milestoneReconciliationOut", "active_unlock_lifecycle_reconciled");
 
   console.log(
     JSON.stringify(
@@ -1295,7 +1366,8 @@ async function main() {
         skippedExistingUnlocks: skippedExistingCount,
         missingCrossingDates: missingCrossingDateCount,
         weekWrites: weekWriteCount,
-        milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
+        deactivatedUnlocks: deactivatedCount,
+        milestoneReconciliation: "active_unlock_lifecycle_reconciled",
       },
       null,
       2

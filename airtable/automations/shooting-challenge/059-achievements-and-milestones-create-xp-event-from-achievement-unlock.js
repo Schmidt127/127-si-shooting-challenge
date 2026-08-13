@@ -10,9 +10,8 @@ Purpose:
 Creates one XP Event from one Athlete Achievement Unlock for Perfect Week or Shot Milestone.
 
 Trigger:
-Athlete Achievement Unlocks when record is created and XP Award Status is Pending.
-Do NOT require Shot Milestone (blocks Perfect Week). Do NOT filter Ready for 059 XP
-(formula flips mid-run). See RECOMMENDED TRIGGER.
+Athlete Achievement Unlock lifecycle reconciliation; native configuration must
+reach both Pending award/restoration and Active? withdrawal updates.
 
 Important Tables:
 Athlete Achievement Unlocks, Achievements, XP Reward Rules, XP Events, Shot Milestones, Weeks, Weekly Athlete Summary
@@ -27,9 +26,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 /***************************************************************************************************
  * 059 - Achievements and Milestones - Create XP Event from Achievement Unlock
  *
- * Version: v3.5
+ * Version: v3.6
  * Date Written: 2026-06-05
- * Last Updated: 2026-08-05
+ * Last Updated: 2026-08-13
  *
  * PURPOSE
  * - Creates one XP Event from one Athlete Achievement Unlock.
@@ -47,10 +46,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Uses XP Activity Date, not old XP Source Date.
  * - Uses XP Activity Date Source, not old XP Date Source.
  * - One unlock record -> one XP Event; duplicate protection by Source Key and Achievement Unlock link.
- * - This writer preserves positive creation and same-event replay. It does
- *   not infer milestone withdrawal from a missing/lower threshold signal;
- *   that correction remains fail-closed until the unlock has an observable
- *   eligibility transition.
+ * - For Shot Milestone unlocks only, Active? is the observable lifecycle
+ *   contract: an inactive exact unlock deactivates its same XP Event and a
+ *   restored Pending unlock reactivates it. Perfect Week remains unchanged.
  *
  * FOLDER
  * - 05 - Achievements and Milestones
@@ -62,12 +60,16 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Athlete Achievement Unlocks
  *
  * TRIGGER TYPE
- * - When record matches conditions
+ * - When record updated (or an equivalent native configuration that re-enters
+ *   both award/restoration and inactive-withdrawal updates).
  *
- * RECOMMENDED TRIGGER (Airtable UI - 2026-08-05 Agent 3 lock)
- * - When a record is **created** (preferred; not "matches conditions" on formula fields)
- * - Table: Athlete Achievement Unlocks
- * - XP Award Status is Pending
+ * REQUIRED LIFECYCLE TRIGGER (Airtable UI)
+ * - When a record is updated or created on Athlete Achievement Unlocks.
+ * - Watch Active?, XP Award Status, XP Events, Enrollment, Shot Milestone,
+ *   Week, and Milestone Source Key.
+ * - Dynamic recordId maps to the triggering Athlete Achievement Unlock ID.
+ * - The configuration must reach inactive Shot Milestone withdrawal as well
+ *   as Pending award/restoration.
  * - Do NOT require Shot Milestone not empty — that filter blocks Perfect Week (058) unlocks.
  *   Script routes by Achievement Reward Rule Key (PERFECT_WEEK vs SHOT_MILESTONE).
  * - Do NOT filter on Ready for 059 XP? or XP Events empty — the formula requires
@@ -97,7 +99,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
     scriptName: "059 - Achievements and Milestones - Create XP Event from Achievement Unlock",
-    version: "v3.5",
+    version: "v3.6",
 
     tables: {
         unlocks: "Athlete Achievement Unlocks",
@@ -143,6 +145,7 @@ const CONFIG = {
         xpEvents: "XP Events",
         xpAwardStatus: "XP Award Status",
         xpAwarded: "XP Awarded",
+        active: "Active?",
 
         shotMilestone: "Shot Milestone",
         milestoneSourceKey: "Milestone Source Key",
@@ -215,6 +218,7 @@ const CONFIG = {
         active: "Active?",
         processed: "Processed",
         awardMode: "Award Mode",
+        active: "Active?",
     },
 
     outputStatuses: {
@@ -608,6 +612,7 @@ function buildUnlockFieldsToLoad() {
         unlock.xpEvents,
         unlock.xpAwardStatus,
         unlock.xpAwarded,
+        unlock.active,
 
         unlock.shotMilestone,
         unlock.milestoneSourceKey,
@@ -725,6 +730,7 @@ function assertRequiredSchema() {
         xpEvents: requireFieldOnTable(unlocksTable, CONFIG.unlockFields.xpEvents),
         xpAwardStatus: requireFieldOnTable(unlocksTable, CONFIG.unlockFields.xpAwardStatus),
         xpAwarded: optionalField(unlocksTable, CONFIG.unlockFields.xpAwarded),
+        active: optionalField(unlocksTable, CONFIG.unlockFields.active),
 
         shotMilestone: optionalField(unlocksTable, CONFIG.unlockFields.shotMilestone),
         milestoneSourceKey: optionalField(unlocksTable, CONFIG.unlockFields.milestoneSourceKey),
@@ -904,6 +910,9 @@ async function main() {
             : [];
 
         const awardStatus = getSingleSelectName(unlockRecord, unlock.xpAwardStatus);
+        const unlockActive = unlock.active
+            ? unlockRecord.getCellValue(unlock.active) === true
+            : true;
 
         if (!achievementId) {
             await markUnlockError("059 error: Missing Achievement.", debugStep, "missing_achievement");
@@ -912,6 +921,62 @@ async function main() {
 
         if (!enrollmentId) {
             await markUnlockError("059 error: Missing Enrollment.", debugStep, "missing_enrollment");
+            return;
+        }
+
+        // 066 supplies Active? only for Shot Milestone lifecycle reconciliation.
+        // Perfect Week has no Shot Milestone link and must not enter this branch.
+        if (linkedShotMilestoneId && !unlockActive) {
+            const milestoneSourceKey = getText(unlockRecord, unlock.milestoneSourceKey);
+            if (!milestoneSourceKey) {
+                await markUnlockError("059 error: Inactive Shot Milestone unlock is missing Milestone Source Key.", debugStep);
+                return;
+            }
+            const candidatesQuery = await xpEventsTable.selectRecordsAsync({
+                fields: fieldNames([xp.achievementUnlock, xp.sourceKey, xp.active]),
+            });
+            const candidates = candidatesQuery.records.filter((event) =>
+                getText(event, xp.sourceKey) === milestoneSourceKey ||
+                getLinkedIds(event, xp.achievementUnlock).includes(unlockRecord.id)
+            );
+            if (candidates.length > 1) {
+                await markUnlockError(
+                    `059 error: duplicate XP candidates for inactive milestone unlock: ${candidates.map((event) => event.id).join(", ")}.`,
+                    debugStep
+                );
+                return;
+            }
+            if (candidates.length === 1) {
+                const event = candidates[0];
+                const eventUnlockIds = getLinkedIds(event, xp.achievementUnlock);
+                if (
+                    getText(event, xp.sourceKey) !== milestoneSourceKey ||
+                    eventUnlockIds.length !== 1 ||
+                    eventUnlockIds[0] !== unlockRecord.id
+                ) {
+                    await markUnlockError(`059 error: XP Event ${event.id} failed exact milestone ownership.`, debugStep);
+                    return;
+                }
+                const deactivate = {};
+                addUpdateField(deactivate, xp.active, false);
+                await xpEventsTable.updateRecordAsync(event.id, buildSafeUpdate(deactivate));
+            }
+            const inactiveUpdate = {};
+            addUpdateField(
+                inactiveUpdate,
+                unlock.xpAwardStatus,
+                valueForField(unlock.xpAwardStatus, CONFIG.statuses.skipped, { required: true })
+            );
+            addUpdateField(inactiveUpdate, unlock.notes, "059 deactivated exact Shot Milestone XP lifecycle event.");
+            await updateUnlock(inactiveUpdate);
+            setOutputs({
+                statusOut: CONFIG.outputStatuses.updated,
+                actionOut: candidates.length ? "deactivated_same_milestone_xp_event" : "skipped_no_milestone_xp_event",
+                errorOut: "",
+                unlockId: unlockRecord.id,
+                xpEventId: candidates[0]?.id || "",
+                debugStep,
+            });
             return;
         }
 
@@ -929,6 +994,59 @@ async function main() {
         }
 
         if (existingXpEventIds.length > 0) {
+            if (existingXpEventIds.length !== 1) {
+                await markUnlockError(
+                    `059 error: Achievement Unlock has ambiguous XP Event links: ${existingXpEventIds.join(", ")}.`,
+                    debugStep
+                );
+                return;
+            }
+            // A direct unlock backlink must not hide a second, unlinked event
+            // with the same canonical milestone Source Key.
+            if (linkedShotMilestoneId) {
+                const expectedSourceKey = getText(unlockRecord, unlock.milestoneSourceKey);
+                const candidateQuery = await xpEventsTable.selectRecordsAsync({
+                    fields: fieldNames([xp.achievementUnlock, xp.sourceKey]),
+                });
+                const candidates = candidateQuery.records.filter((event) =>
+                    getText(event, xp.sourceKey) === expectedSourceKey ||
+                    getLinkedIds(event, xp.achievementUnlock).includes(unlockRecord.id)
+                );
+                if (
+                    !expectedSourceKey ||
+                    candidates.length !== 1 ||
+                    candidates[0].id !== existingXpEventIds[0]
+                ) {
+                    await markUnlockError(
+                        `059 error: duplicate or mismatched XP candidates for milestone unlock: ${candidates.map((event) => event.id).join(", ") || "none"}.`,
+                        debugStep
+                    );
+                    return;
+                }
+            }
+            const existingEvent = await xpEventsTable.selectRecordAsync(existingXpEventIds[0], {
+                fields: fieldNames([xp.achievementUnlock, xp.sourceKey, xp.active, xp.xpPoints]),
+            });
+            if (!existingEvent) {
+                await markUnlockError(`059 error: Linked XP Event not found: ${existingXpEventIds[0]}.`, debugStep);
+                return;
+            }
+            if (linkedShotMilestoneId) {
+                const expectedSourceKey = getText(unlockRecord, unlock.milestoneSourceKey);
+                const eventUnlockIds = getLinkedIds(existingEvent, xp.achievementUnlock);
+                if (
+                    !expectedSourceKey ||
+                    getText(existingEvent, xp.sourceKey) !== expectedSourceKey ||
+                    eventUnlockIds.length !== 1 ||
+                    eventUnlockIds[0] !== unlockRecord.id
+                ) {
+                    await markUnlockError(`059 error: Linked XP Event ${existingEvent.id} failed exact milestone ownership.`, debugStep);
+                    return;
+                }
+                const restorePayload = {};
+                addUpdateField(restorePayload, xp.active, true);
+                await xpEventsTable.updateRecordAsync(existingEvent.id, buildSafeUpdate(restorePayload));
+            }
             const weeklySummaryId = await resolveWeeklySummaryId({
                 sourceWeeklySummaryIds: weeklySummaryIds,
                 enrollmentId,
@@ -1242,31 +1360,37 @@ async function main() {
                 xp.achievementUnlock,
                 xp.sourceKey,
                 xp.xpPoints,
+                xp.active,
             ]),
         });
 
-        let duplicateXpEvent = null;
-        let duplicateXpPoints = 0;
-
-        for (const xpEvent of xpQuery.records) {
-            const existingSourceKey = getText(xpEvent, xp.sourceKey);
-
-            if (existingSourceKey && existingSourceKey === sourceKey) {
-                duplicateXpEvent = xpEvent;
-                duplicateXpPoints = getNumber(xpEvent, xp.xpPoints);
-                break;
-            }
-
-            const existingUnlockId = getFirstLinkedId(xpEvent, xp.achievementUnlock);
-
-            if (existingUnlockId === unlockRecord.id) {
-                duplicateXpEvent = xpEvent;
-                duplicateXpPoints = getNumber(xpEvent, xp.xpPoints);
-                break;
-            }
+        const duplicateCandidates = xpQuery.records.filter((xpEvent) =>
+            getText(xpEvent, xp.sourceKey) === sourceKey ||
+            getLinkedIds(xpEvent, xp.achievementUnlock).includes(unlockRecord.id)
+        );
+        if (duplicateCandidates.length > 1) {
+            await markUnlockError(
+                `059 error: Duplicate XP Event candidates for ${sourceKey}: ${duplicateCandidates.map((event) => event.id).join(", ")}.`,
+                debugStep
+            );
+            return;
         }
+        const duplicateXpEvent = duplicateCandidates[0] || null;
+        const duplicateXpPoints = duplicateXpEvent ? getNumber(duplicateXpEvent, xp.xpPoints) : 0;
 
         if (duplicateXpEvent) {
+            const candidateUnlockIds = getLinkedIds(duplicateXpEvent, xp.achievementUnlock);
+            if (
+                getText(duplicateXpEvent, xp.sourceKey) !== sourceKey ||
+                candidateUnlockIds.length !== 1 ||
+                candidateUnlockIds[0] !== unlockRecord.id
+            ) {
+                await markUnlockError(
+                    `059 error: XP Event ${duplicateXpEvent.id} failed exact ownership for ${sourceKey}.`,
+                    debugStep
+                );
+                return;
+            }
             const weeklySummaryId = await resolveWeeklySummaryId({
                 sourceWeeklySummaryIds: weeklySummaryIds,
                 enrollmentId,
@@ -1274,6 +1398,9 @@ async function main() {
             });
 
             await ensureXpEventWeeklySummaryLink(duplicateXpEvent.id, weeklySummaryId);
+            const reactivate = {};
+            addUpdateField(reactivate, xp.active, true);
+            await xpEventsTable.updateRecordAsync(duplicateXpEvent.id, buildSafeUpdate(reactivate));
 
             const duplicateUpdate = {};
 
@@ -1381,9 +1508,21 @@ async function main() {
             );
         }
 
-        debugStep = "12 - Create XP Event";
+        debugStep = "12 - Recheck and Create XP Event";
         setOutputSafe("debugStep", debugStep);
 
+        const recheckQuery = await xpEventsTable.selectRecordsAsync({
+            fields: fieldNames([xp.achievementUnlock, xp.sourceKey, xp.active]),
+        });
+        const recheckCandidates = recheckQuery.records.filter((event) =>
+            getText(event, xp.sourceKey) === sourceKey ||
+            getLinkedIds(event, xp.achievementUnlock).includes(unlockRecord.id)
+        );
+        if (recheckCandidates.length > 0) {
+            throw new Error(
+                `059 create recheck found candidate(s) for ${sourceKey}: ${recheckCandidates.map((event) => event.id).join(", ")}. Retry to reconcile exact ownership.`
+            );
+        }
         const newXpEventId = await xpEventsTable.createRecordAsync(xpPayload);
 
         await ensureXpEventWeeklySummaryLink(newXpEventId, weeklySummaryId);
