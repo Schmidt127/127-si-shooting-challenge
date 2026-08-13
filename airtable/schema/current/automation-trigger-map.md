@@ -20,6 +20,11 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 ### Submission intake → XP (005–010, 021–023)
 
+PKG-006R schema prerequisite and exact field creation order:
+[daily-submission-xp-reconciliation-fields.md](./daily-submission-xp-reconciliation-fields.md).
+The trigger wording below is the approved target contract; repository text
+does not prove that Production has been configured.
+
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
 | 023 | Submissions | *confirm* | `023-...-assign-enrollment-to-submission.js` | Enrollment link |
@@ -28,7 +33,7 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 | 006 | Submissions | *confirm* | `006-...-set-video-count.js` | Video count fields |
 | 021 | Submissions | *confirm* | `021-...-set-attachment-upload-status.js` | Upload status |
 | 009 | Submissions | *confirm* | `009-submission-intake-create-submission-assets.js` | Submission Assets |
-| **010** | Submissions | `Count This Submission?` + XP eligible | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE), WAS link; later exclusion reversal remains unproven |
+| **010** | Submissions | `Reconciliation Needed? = 1`; dynamic `recordId` | `010-submission-intake-create-xp-event.js` | **XP Events** (SHOOTING_BASE); positive and correction branches, exact-key recheck, same-event deactivate/reactivate, bounded settlement, latch acknowledgement |
 
 ### Weekly summary chain (030–034)
 
@@ -81,14 +86,14 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| 053 | Submissions / Streak Occurrences | *confirm* | `053-...-rebuild-and-upsert-from-submissions.js` | Streak Occurrence rows |
-| **054** | Streak Occurrences | Source Status = Ready for XP | `054-...-create-or-repair-streak-xp-event.js` | **XP Events** (streak) |
+| 053 | Submissions / Streak Occurrences | *confirm*; positive rebuild only | `053-...-rebuild-and-upsert-from-submissions.js` | Streak Occurrence rows; stale-source discovery remains blocked |
+| **054** | Streak Occurrences | Source Status = Ready for XP; inactive correction must be wired explicitly | `054-...-create-or-repair-streak-xp-event.js` | **XP Events** (streak); exact-owned inactive event can deactivate/reactivate |
 | 055 | Submissions | *confirm* | `055-...-recalculate-current-shooting-streak-from-submission.js` | Streak rollups |
 | 056 | Enrollments | *scheduled* | `056-...-refresh-current-shooting-streaks-daily.js` | Streak refresh |
 | 057 | Weekly Athlete Summary | *confirm* | `057-...-calculate-perfect-week-eligibility.js` | Perfect week flags |
 | 058 | Weekly Athlete Summary | *confirm* | `058-...-create-perfect-week-unlock.js` | Achievement Unlocks |
-| **059** | Athlete Achievement Unlocks | Pending + Ready for 059 XP | `059-...-create-xp-event-from-achievement-unlock.js` | **XP Events** (achievement) |
-| 066 | Enrollments / Submissions | *confirm* | `066-...-create-shot-milestone-unlocks.js` | Shot milestone unlocks |
+| **059** | Athlete Achievement Unlocks | Pending + Ready for 059 XP | `059-...-create-xp-event-from-achievement-unlock.js` | **XP Events** (achievement); milestone withdrawal fails closed |
+| 066 | Enrollments / Submissions | *confirm* | `066-...-create-shot-milestone-unlocks.js` | Shot milestone unlocks; positive threshold owner only |
 
 ### Levels (041–043)
 

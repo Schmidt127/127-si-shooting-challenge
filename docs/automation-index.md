@@ -38,7 +38,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 | 006 | Submission Intake — Set Video Count | *confirm in Airtable* | `006-submission-intake-and-asset-creation-set-video-count.js` |
 | 007 | Submission Intake — Duplicate Checker for Submissions | *confirm in Airtable* | `007-submission-intake-and-asset-creation-duplicate-checker-for-submissions.js` |
 | 009 | Submission Intake — Create Submission Assets | *confirm in Airtable* | `009-submission-intake-create-submission-assets.js` |
-| **010** | Submission Intake — Create XP Event from Submission | Submissions when `Count This Submission?` checked and XP should be awarded | `010-submission-intake-create-xp-event.js` |
+| **010** | Submission Intake — Create/Reconcile XP Event from Submission | Submissions when `Reconciliation Needed? = 1`, dynamic `recordId` | `010-submission-intake-create-xp-event.js` — positive/correction branches, exact-key recheck, same-event state, bounded latch acknowledgement |
 | **013** | Submission Intake — Create or Link Video Feedback | Submission Assets when video asset ready for Video Feedback prep | `013-submission-intake-create-or-link-video-feedback.js` |
 | 021 | Submission Intake — Set Attachment Upload Status | *confirm in Airtable* | `021-submission-intake-and-asset-creation-set-attachment-upload-status.js` |
 | **022** | Submission Intake — Sync Child Upload Writeback | Submission Assets when Upload Status is Uploaded/Processing/Error and child linked | `022-submission-intake-sync-child-upload-writeback-from-submission-asset.js` |
@@ -81,14 +81,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 053 | Achievements — Streak Occurrences Rebuild from Submissions | *confirm in Airtable* | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` |
-| **054** | Achievements — Create or Repair Streak XP Event | Streak Occurrences when Source Status is Ready for XP | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
+| 053 | Achievements — Streak Occurrences Rebuild from Submissions | *confirm in Airtable*; positive rebuild only | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` |
+| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences when Source Status is Ready for XP; inactive correction requires explicit reachability | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
 | 055 | Achievements — Recalculate Current Shooting Streak from Submission | *confirm in Airtable* | `055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js` |
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc — **ON** (PROD **v1.5**, 2026-08-05) | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.5** — repo matches PROD; live cross-boundary fixtures still open — `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`) |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
-| **059** | Achievements — Create XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, Shot Milestone not empty, XP Award Status = Pending — **Do NOT filter on Ready for 059 XP** (formula flips mid-run) | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.4** on `master` via PR #88 — **PROD paste required**; natural path failed on v3.3 `fields` contract; [paste checklist](./deploy-checklists/2026-08-06-FINAL-AIRTABLE-PASTE-AND-VERIFY.md)) |
+| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, XP Award Status = Pending; milestone withdrawal fails closed without eligibility transition | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.5** positive threshold owner; milestone withdrawal explicitly fails closed) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 

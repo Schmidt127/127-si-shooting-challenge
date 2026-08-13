@@ -1,7 +1,7 @@
 # PKG-006R — Daily Submission XP reversal architecture
 
-**Status:** Draft implementation package; automatic correction is blocked pending an approved observable trigger/schema design.
-**Baseline:** `master` / `2f8188bc22b4075fdf24b5d6ed80fc175aa16f72`
+**Status:** Approved Phase 3 repository contract; schema installation and Production proof remain Mike-owned.
+**Baseline:** `master` / `2b43ebcc8d7efe18da2f2c33459ea77f29bbfa66`
 **Scope:** Submission Base XP, shot milestones, streak XP, Weekly Athlete Summary, lifetime XP, progression, and standings inputs. Email is out of scope.
 
 ## Evidence boundary
@@ -13,36 +13,52 @@ This is repository evidence only. No agent accessed Airtable or Production. The 
 | Stage | Canonical owner | Canonical identity | Current correction state |
 |---|---|---|---|
 | Countability / Week | formula + 005/007 | Submission ID | Formula changes can make an existing award invalid; no reversal trigger is evidenced |
-| Submission Base XP | 010 | `SUBMISSION_XP\|{Submission ID}` | Positive create/replay only; existing event is not deactivated when countability becomes false |
+| Submission Base XP | 010 | `SUBMISSION_XP\|{Submission ID}` | Phase 3 writer now owns positive/correction reconciliation, exact-key recheck, same-event state, latch settlement |
 | Weekly Athlete Summary | 031, with competing 101/118 creation paths | Enrollment + Week | Requery/fail-closed behavior exists, but a uniqueness race remains possible |
-| Shot milestones | 066 unlock → 059 XP | `SHOT_MILESTONE\|{Enrollment ID}\|{Milestone ID}` | Rebuild/positive threshold path exists; later threshold loss has no complete event lifecycle |
-| Streaks | 053 occurrence → 054 XP | `STREAK_XP\|{Enrollment ID}\|{Achievement ID}\|{Streak End Date}` | Positive rebuild/repair exists; stale occurrences and backdated key changes remain open |
+| Shot milestones | 066 unlock → 059 XP | `SHOT_MILESTONE\|{Enrollment ID}\|{Milestone ID}` | Positive threshold path remains canonical; 066/059 explicitly fail closed because no observable unlock eligibility transition is owned |
+| Streaks | 053 occurrence → 054 XP | `STREAK_XP\|{Enrollment ID}\|{Achievement ID}\|{Streak End Date}` | 054 can deactivate an exactly owned inactive occurrence event; 053 has no safe source transition trigger for automatic stale-occurrence discovery |
 | Lifetime XP | Airtable rollups | Enrollment-linked active XP | Depends on upstream Active? correction and formula settlement |
 | Progression | 041 → 042 | Enrollment recalculation signature | No direct XP writer; can settle only after upstream events are corrected |
 | Standings | Airtable view + web query | active Enrollment and view inputs | View membership is not provable from repository code |
 
 Identical display names are not duplicate proof. Duplicate review must use Source Key, canonical source links, Enrollment, Week, Active?, and ownership.
 
+## Approved observable trigger contract
+
+The approved multi-field signature chain is documented in
+[`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md).
+Its creation order is Enrollments signature, Weeks signature, XP Events
+signature, Submission lookups, Submission current signature, writable latch,
+then numeric `Reconciliation Needed?`. Automation 010 owns the dynamic
+Submission `recordId` trigger when that formula equals `1`, both positive and
+correction branches, exact-key recheck, fail-closed cardinality/ownership,
+same-event deactivate/reactivate, bounded formula settlement, and post-write
+latch acknowledgement.
+
+This package does not install fields or claim native trigger proof because no
+live schema export or controlled Production trigger test is available in the
+repository-only environment. The contract is explicit so the canonical writer
+can be implemented and tested against the approved field names without
+inventing installed IDs.
+
 ## Defect list
 
-1. **P0 — Submission reversal is unreachable.** Automation 010 is positively filtered on `Count This Submission?`; it cannot reliably run when a counted Submission later becomes excluded, invalid, future-dated, or loses its Week.
+1. **P0 — Installed trigger/schema status is unverified.** The repository writer now implements the approved contract, but repository text cannot prove that fields and the dynamic trigger are installed.
 2. **P1 — Milestone reversal is incomplete.** 066/059 do not fully reconcile a previously earned threshold after counted shots fall.
-3. **P1 — Streak reversal is incomplete.** 053/054 do not fully deactivate stale occurrence XP, and backdated repairs can change the end-date key.
-4. **P1 — Trigger/schema evidence is missing.** Unlike PKG-007, no Mike-approved writable reconciliation signal exists for Submissions. Existing formula/lookups are not safe command fields.
+3. **P1 — Streak reversal remains trigger-blocked.** 054 deactivates an exact owned event when invoked on an inactive occurrence, but 053 does not have an observable source transition that safely discovers every stale occurrence; restoration requires 053 to re-arm 054.
+4. **P1 — Trigger/schema installation evidence is missing.** The repository now records the approved signal, but no agent may create fields, enable the trigger, or claim natural-trigger proof.
 5. **P1 — Summary concurrency remains possible.** 031, 101, and 118 use check-then-create patterns. They detect conflicts after the fact but cannot provide Airtable uniqueness.
 6. **P2 — Formula lag can be mistaken for zero.** 041/042 and rollups need settled rereads before progression conclusions.
 7. **P2 — Inactive Enrollment behavior is not globally reconciled.** Downstream correction must deactivate awards when policy says an Enrollment is no longer eligible.
 
 ## Safe draft package
 
-The current draft adds only read-only audit and offline lifecycle coverage plus a Mike-only Production packet. It deliberately leaves 010, 053, 054, 059, and 066 positive writers unchanged. An audit or manual backfill is not presented as automatic app correctness.
-
-The future correction package may be implemented only after Mike approves:
-
-1. A writable, transition-based reconciliation signal on Submissions (or an equivalent existing field proven to observe all relevant linked/formula changes).
-2. Trigger semantics that reach both eligible restoration and ineligible withdrawal without positive-only filtering or scheduled polling.
-3. Exact ownership and duplicate policy for Submission, milestone, and streak events.
-4. Controlled Production-only validation performed manually by Mike, using existing Schmidt test records and Mike's email where relevant, with exact preflight, stop conditions, evidence capture, and rollback. Offline tests do not prove installed Production triggers.
+This Phase 3 package adds the approved schema contract, the 010 canonical
+writer, bounded 054 same-event correction handling, explicit 053/066/059
+fail-closed boundaries, read-only audit coverage, offline lifecycle/
+concurrency coverage, and a Mike-only Production packet. Offline orchestration
+tests are contract evidence only; they are not proof of installed Airtable
+triggers.
 
 Conditional writer order after that approval is `010` → `053`/`066` → `054`/`059`, followed by 041/042 settlement. No current Production paste order exists for correction writers.
 
@@ -58,7 +74,7 @@ Conditional writer order after that approval is `010` → `053`/`066` → `054`/
 
 ## Open decisions / evidence Mike must provide
 
-- Approved Submission reconciliation field/trigger design and exact field creation order.
+- Mike's field creation and trigger installation using the exact approved order.
 - Mike's approved Production-only schema/trigger decision and manually captured natural-trigger evidence for linked/formula transitions; offline tests are not proof of installed Production triggers.
 - Installed versions/triggers for 010, 053, 054, 059, 066, 041, and 042.
 - Controlled Schmidt evidence for positive create, exclusion withdrawal, milestone/streak reversal, and same-event restoration.

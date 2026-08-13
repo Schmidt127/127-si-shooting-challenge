@@ -1,27 +1,48 @@
 # PKG-006R — Daily Submission reversal Production Schmidt packet
 
-**Status:** Draft, Production-only operator packet; no Production action was performed.
+**Status:** Mike-only Production packet; no Production action was performed.
 **Owner:** Mike performs every Production step.
 **Scope:** Submission XP, milestones, streaks, WAS/lifetime settlement, progression, and standings. Email testing is excluded.
 
 ## Hard stops
 
 - Do not access Production through an agent.
-- Do not create fields, change formulas, alter triggers, enable/disable automations, or delete records under this draft.
+- Agents do not create fields, change formulas, alter triggers, enable/disable automations, or delete records.
 - Do not delete XP Events, unlocks, streak occurrences, or WAS rows.
 - Stop on duplicate canonical keys, ambiguous ownership, wrong Enrollment/Week/WAS, formula timeout, or unexpected email activity.
 - This packet is not proof that the current positive-only writers can automatically reverse awards.
+
+## Approved schema and trigger prerequisite
+
+Mike creates the fields in the exact order in
+[`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md):
+
+1. Enrollments/Reconciliation Source Signature
+2. Weeks/Reconciliation Source Signature
+3. XP Events/Reconciliation Source Signature
+4. Submission linked-signature/cardinality/ownership lookups
+5. Submission/Current Reconciliation Signature
+6. Submission/Last Reconciled Signature (writable text)
+7. Submission/Reconciliation Needed? (numeric 1/0)
+
+After formulas settle, Automation 010 must be configured on Submissions with
+the dynamic triggering `recordId` and `Reconciliation Needed? = 1`. The
+positive and correction branches must recheck the exact key, fail closed on
+ambiguous cardinality or ownership, deactivate/reactivate the same event,
+settle formulas within a bounded reread, and acknowledge the latch only after
+the expected state is visible. This is a prerequisite, not a claim that it is
+installed.
 
 ## Current repository versions and ownership
 
 | Function | Repository owner | Current repository state |
 |---|---|---|
-| Submission Base XP | 010 | Positive creation/replay; reversal reachability unresolved |
-| Streak rebuild / XP | 053 → 054 | Positive rebuild/repair; stale reversal unresolved |
-| Shot milestone / XP | 066 → 059 | Positive threshold path; threshold-loss reversal unresolved |
+| Submission Base XP | 010 | Canonical positive/correction writer; installation and trigger proof pending |
+| Streak rebuild / XP | 053 → 054 | 054 exact-owned inactive-event correction; 053 transition reachability remains blocked |
+| Shot milestone / XP | 066 → 059 | Positive threshold path; explicit fail-closed threshold-loss boundary |
 | WAS | 031 (with 101/118 competing creation paths) | Exact candidate validation/requery; concurrency evidence required |
 | Progression | 041 → 042 | Downstream recalculation only |
-| Read-only audit | `audit-counted-submission-xp-standings-reliability.js` | No writes |
+| Read-only audit | `audit-counted-submission-xp-standings-reliability.js` | No writes; does not claim trigger proof |
 
 Confirm installed Production versions and triggers in Airtable before testing. Repository text does not prove live configuration.
 
@@ -44,12 +65,16 @@ Confirm installed Production versions and triggers in Airtable before testing. R
 
 ## Reversal and restoration proof
 
-This section is currently blocked until Mike approves a reachable transition-based correction trigger/schema design. Any resulting validation is controlled Production-only work performed manually by Mike, using existing Schmidt test records and Mike's email where relevant; no offline test proves that an installed Production trigger fires.
+This section remains Mike-only and requires the schema/trigger prerequisite
+above. Automation 010 now contains the repository canonical writer. Any
+validation is controlled Production-only work performed manually by Mike using
+existing Schmidt test records; no offline test proves that an installed
+Production trigger fires.
 
 When that prerequisite is approved:
 
 1. Make the Submission uncountable using an approved controlled condition (duplicate review, invalid stats, future date, or removed Week).
-2. Require the same canonical Submission XP Event, milestone XP, and streak XP to become inactive where no longer earned; no replacement or deletion.
+2. Require the same canonical Submission XP Event to become inactive where no longer earned; no replacement or deletion. For milestone/streak rows, stop if the installed source transition does not reach 053/054 or 066/059; the repository explicitly fails closed rather than choosing a replacement.
 3. Confirm weekly/lifetime totals settle downward and 041 → 042 recalculates.
 4. Restore the exact Submission identity and require the same event IDs and Source Keys to reactivate.
 5. Repeat with an independent later Submission that still supports a milestone or streak; require that independent support to remain active.
@@ -75,3 +100,7 @@ Stop and preserve evidence for: duplicate Submission XP key, duplicate WAS, wron
 - Same-event withdrawal/restoration proof.
 - Production `Web - Leaderboard` membership.
 - Any approved Submission reconciliation schema and trigger design.
+- Evidence that 053 discovers stale streak occurrences and re-arms 054 for
+  restoration, or an approved follow-up trigger for that transition.
+- Evidence that 066/059 receive an observable milestone eligibility transition;
+  absent that evidence, milestone withdrawal remains blocked.

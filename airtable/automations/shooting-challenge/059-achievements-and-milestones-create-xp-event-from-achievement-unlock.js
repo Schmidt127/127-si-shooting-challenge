@@ -47,6 +47,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Uses XP Activity Date, not old XP Source Date.
  * - Uses XP Activity Date Source, not old XP Date Source.
  * - One unlock record -> one XP Event; duplicate protection by Source Key and Achievement Unlock link.
+ * - This writer preserves positive creation and same-event replay. It does
+ *   not infer milestone withdrawal from a missing/lower threshold signal;
+ *   that correction remains fail-closed until the unlock has an observable
+ *   eligibility transition.
  *
  * FOLDER
  * - 05 - Achievements and Milestones
@@ -919,6 +923,7 @@ async function main() {
                 result: `Skipped: XP Award Status is "${awardStatus || "blank"}", not Pending.`,
                 unlockId: unlockRecord.id,
                 debugStep,
+                milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
             });
             return;
         }
@@ -965,6 +970,7 @@ async function main() {
                 xpEventId: existingXpEventIds[0],
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
+                milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
             }));
 
             return;
@@ -1301,6 +1307,7 @@ async function main() {
                 sourceKey,
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
+                milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
             });
 
             console.log(JSON.stringify({
@@ -1313,6 +1320,7 @@ async function main() {
                 sourceKey,
                 weeklySummaryId: weeklySummaryId || "",
                 debugStep,
+                milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
             }));
 
             return;
@@ -1430,6 +1438,7 @@ async function main() {
             xpActivityDate: xpActivityDate ? xpActivityDate.toISOString() : "",
             xpActivityDateSource: xpActivityDateSourceValue,
             debugStep,
+            milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
         });
 
         console.log(JSON.stringify({
@@ -1442,6 +1451,7 @@ async function main() {
             sourceKey,
             weeklySummaryId: weeklySummaryId || "",
             debugStep,
+            milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
         }));
     } catch (error) {
         log("059 error", {

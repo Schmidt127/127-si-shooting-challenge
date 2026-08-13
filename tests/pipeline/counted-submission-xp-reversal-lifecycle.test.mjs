@@ -13,10 +13,16 @@ const KEY = `SUBMISSION_XP|${SUBMISSION}`;
 
 function state() {
   return {
-    submission: { id: SUBMISSION, countable: true, enrollmentId: ENROLLMENT, weekId: WEEK, wasId: WAS, activityDate: "2026-08-12" },
+    submission: {
+      id: SUBMISSION, countable: true, enrollmentId: ENROLLMENT, weekId: WEEK, wasId: WAS,
+      enrollmentIds: [ENROLLMENT], weekIds: [WEEK], wasIds: [WAS],
+      duplicateReview: false, activityDate: "2026-08-12",
+    },
     enrollment: { id: ENROLLMENT, active: true, lifetimeXp: 0 },
     wasCandidates: [WAS],
     events: [],
+    emailActions: [],
+    makeActions: [],
   };
 }
 
@@ -24,15 +30,21 @@ function reconcile(s) {
   const candidates = s.events.filter((event) => event.sourceKey === KEY);
   assert.ok(candidates.length <= 1, "ambiguous canonical key must fail closed");
   const event = candidates[0];
+  const enrollmentIds = s.submission.enrollmentIds || [s.submission.enrollmentId];
+  const weekIds = s.submission.weekIds || [s.submission.weekId];
+  const wasIds = s.submission.wasIds || [s.submission.wasId];
   const identity =
-    s.submission.enrollmentId === ENROLLMENT
+    enrollmentIds.length === 1 && enrollmentIds[0] === ENROLLMENT
+    && weekIds.length === 1 && weekIds[0] === WEEK
+    && wasIds.length === 1 && wasIds[0] === WAS
+    && s.submission.enrollmentId === ENROLLMENT
     && s.submission.weekId === WEEK
     && s.submission.wasId === WAS
     && s.wasCandidates.length === 1
     && s.wasCandidates[0] === WAS
     && s.enrollment.active
     && s.submission.activityDate <= "2026-08-12";
-  if (!identity || !s.submission.countable) {
+  if (!identity || !s.submission.countable || s.submission.duplicateReview) {
     if (event) event.active = false;
     return { action: event ? "deactivated_same_event" : "skipped_ineligible" };
   }
@@ -177,4 +189,93 @@ test("formula and rollup settlement is a distinct state before progression", () 
   settle(s);
   assert.equal(s.enrollment.lifetimeXp, 20);
   assert.equal(s.events.filter((event) => event.active).length, 1);
+});
+
+test("future-date withdrawal preserves the same inactive event", () => {
+  const s = state();
+  reconcile(s);
+  const originalId = s.events[0].id;
+  s.submission.activityDate = "2099-01-01";
+  assert.deepEqual(reconcile(s), { action: "deactivated_same_event" });
+  assert.equal(s.events.length, 1);
+  assert.equal(s.events[0].id, originalId);
+  assert.equal(s.events[0].active, false);
+});
+
+test("duplicate-review exclusion and restoration never create a replacement", () => {
+  const s = state();
+  reconcile(s);
+  const originalId = s.events[0].id;
+  s.submission.duplicateReview = true;
+  assert.deepEqual(reconcile(s), { action: "deactivated_same_event" });
+  s.submission.duplicateReview = false;
+  assert.deepEqual(reconcile(s), { action: "reactivated_same_event" });
+  assert.equal(s.events.length, 1);
+  assert.equal(s.events[0].id, originalId);
+});
+
+test("inactive Enrollment withdrawal and restoration preserve the canonical key", () => {
+  const s = state();
+  reconcile(s);
+  s.enrollment.active = false;
+  assert.deepEqual(reconcile(s), { action: "deactivated_same_event" });
+  s.enrollment.active = true;
+  assert.deepEqual(reconcile(s), { action: "reactivated_same_event" });
+  assert.equal(s.events[0].sourceKey, KEY);
+  assert.equal(s.events.length, 1);
+});
+
+test("wrong or multiple Enrollment and Week links fail closed", () => {
+  for (const change of [
+    (s) => { s.submission.enrollmentIds = ["recWrongEnrollment"]; },
+    (s) => { s.submission.enrollmentIds = [ENROLLMENT, "recEnrollmentTwo"]; },
+    (s) => { s.submission.weekIds = ["recWrongWeek"]; },
+    (s) => { s.submission.weekIds = [WEEK, "recWeekTwo"]; },
+  ]) {
+    const s = state();
+    change(s);
+    assert.deepEqual(reconcile(s), { action: "skipped_ineligible" });
+    assert.equal(s.events.length, 0);
+  }
+});
+
+test("zero or multiple WAS links fail closed before any XP event is minted", () => {
+  for (const wasIds of [[], [WAS, "recWasTwo"]]) {
+    const s = state();
+    s.submission.wasIds = wasIds;
+    assert.deepEqual(reconcile(s), { action: "skipped_ineligible" });
+    assert.equal(s.events.length, 0);
+  }
+});
+
+test("same-event withdrawal never deletes independent downstream records or sends email", () => {
+  const s = state();
+  reconcile(s);
+  s.downstream = [
+    { id: "recMilestoneXp", sourceKey: "SHOT_MILESTONE|x", active: true },
+    { id: "recStreakXp", sourceKey: "STREAK_XP|x", active: true },
+  ];
+  s.emailActions = [];
+  s.makeActions = [];
+  s.submission.countable = false;
+  reconcile(s);
+  assert.equal(s.events.length, 1);
+  assert.equal(s.downstream.length, 2);
+  assert.deepEqual(s.emailActions, []);
+  assert.deepEqual(s.makeActions, []);
+});
+
+test("partial failure leaves the canonical event available for a deterministic retry", () => {
+  const s = state();
+  reconcile(s);
+  s.submission.countable = false;
+  const originalId = s.events[0].id;
+  assert.throws(() => {
+    const event = s.events.find((row) => row.sourceKey === KEY);
+    event.active = false;
+    throw new Error("partial failure");
+  }, /partial failure/);
+  s.submission.countable = true;
+  assert.deepEqual(reconcile(s), { action: "reactivated_same_event" });
+  assert.equal(s.events[0].id, originalId);
 });

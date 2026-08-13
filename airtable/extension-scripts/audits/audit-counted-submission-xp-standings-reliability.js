@@ -11,7 +11,13 @@ const SCHEMA_SNAPSHOT = "20260629_045741";
 const CONFIG = {
   tables: { submissions: "Submissions", xp: "XP Events", was: "Weekly Athlete Summary", enrollments: "Enrollments" },
   f: {
-    sub: { count: "Count This Submission?", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activityDate: "Activity Date" },
+    sub: {
+      count: "Count This Submission?", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activityDate: "Activity Date",
+      currentSignature: "Current Reconciliation Signature", lastSignature: "Last Reconciled Signature", needed: "Reconciliation Needed?",
+      enrollmentSignature: "Reconciliation Enrollment Signature - Lkp", weekSignature: "Reconciliation Week Signature - Lkp",
+      xpSignatures: "Reconciliation XP Event Signatures - Lkp", xpKeys: "Reconciliation XP Event Source Keys - Lkp",
+      xpSubmissionIds: "Reconciliation XP Event Submission IDs - Lkp", xpEnrollmentIds: "Reconciliation XP Event Enrollment IDs - Lkp",
+    },
     xp: { key: "Source Key", active: "Active?", points: "XP Points", activePoints: "Active XP Points", submission: "Submission", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
     was: { enrollment: "Enrollment", week: "Week", goalRecord: "Goal Record", goalLookup: "Goal Shots Target", weeklyGoal: "Weekly Goal Shots Target", weeklyXp: "XP Earned This Week" },
     enr: { active: "Active?", xp: "Lifetime XP Total", manual: "Lifetime XP Manual Adjustments", recalc: "Level Recalc Needed?", status: "Level Status", current: "Current Level", sort: "Level Sort Order - For Softr", program: "Program Instance", schoolYear: "School Year" },
@@ -69,6 +75,21 @@ async function main() {
   }
   for (const sub of subs.records) {
     if (!yes(sub, subT, CONFIG.f.sub.count)) continue;
+    if (field(subT, CONFIG.f.sub.currentSignature) && field(subT, CONFIG.f.sub.lastSignature)) {
+      const current = text(sub, subT, CONFIG.f.sub.currentSignature);
+      const last = text(sub, subT, CONFIG.f.sub.lastSignature);
+      const needed = numberState(sub, subT, CONFIG.f.sub.needed);
+      if (current !== last && (needed.kind !== "number" || needed.value !== 1))
+        add("reconciliation_latch_mismatch", "error", sub, { needed: needed.value, currentSignaturePresent: Boolean(current), lastSignaturePresent: Boolean(last) }, "Inspect the formula chain; do not acknowledge manually.");
+      if (current === last && needed.kind === "number" && needed.value !== 0)
+        add("reconciliation_latch_stale", "warn", sub, { needed: needed.value }, "Reread after formula settlement; inspect the latch formula if persistent.");
+    }
+    for (const lookup of [
+      CONFIG.f.sub.enrollmentSignature, CONFIG.f.sub.weekSignature,
+      CONFIG.f.sub.xpSignatures, CONFIG.f.sub.xpKeys,
+      CONFIG.f.sub.xpSubmissionIds, CONFIG.f.sub.xpEnrollmentIds,
+    ]) if (field(subT, lookup) && raw(sub, subT, lookup) === null)
+      add("reconciliation_lookup_unavailable", "warn", sub, { field: lookup }, "Confirm the approved lookup field exists and has settled; do not infer ownership from blank text.");
     const enrollmentId = one(sub, subT, CONFIG.f.sub.enrollment), weekId = one(sub, subT, CONFIG.f.sub.week);
     if (!enrollmentId || !weekId) { add("counted_submission_missing_identity", "error", sub, { enrollmentId, weekId }, "Repair intake links before XP replay."); continue; }
     const canonicalWas = wasByPair.get(`${enrollmentId}|${weekId}`) || [];

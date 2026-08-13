@@ -51,6 +51,9 @@ Airtable is the deployed/running copy.
  *   Program Instance (never date-only across years).
  * - Never create XP Events directly.
  * - Never write to formula fields such as Streak Occurrence Key.
+ * - Stale occurrence withdrawal is not inferred here: without a dedicated
+ *   transition trigger and source ownership proof, downstream same-event
+ *   correction remains explicitly blocked.
  *
  * IMPORTANT FIX IN THIS VERSION
  * - Activity / week date keys use America/Denver (not UTC ISO slice) so
@@ -1095,6 +1098,7 @@ async function main() {
         recordsUpdated: recordsToUpdate.length,
         canonicalRecords: canonicalCount,
         duplicateRecordsMarked: duplicateCount,
+        sameEventReconciliation: "blocked_no_streak_source_trigger",
     });
 }
 
