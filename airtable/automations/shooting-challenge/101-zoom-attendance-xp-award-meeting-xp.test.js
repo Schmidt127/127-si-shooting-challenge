@@ -1,5 +1,5 @@
 /**
- * Automation 101 v6.1 executable runtime fixtures.
+ * Automation 101 v6.3 executable runtime fixtures.
  *
  * Run:
  *   node airtable/automations/shooting-challenge/101-zoom-attendance-xp-award-meeting-xp.test.js
@@ -419,7 +419,7 @@ async function test(name, fn) {
     assert.strictEqual(fixture.createdEventCount, 0);
   });
 
-  console.log("\nAutomation 101 v6.1 runtime fixtures passed.");
+  console.log("\nAutomation 101 v6.3 runtime fixtures passed.");
 })().catch(error => {
   console.error(error);
   process.exitCode = 1;

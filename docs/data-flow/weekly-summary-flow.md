@@ -13,7 +13,7 @@ How **Weekly Athlete Summary** rows are ensured, packaged, and emailed to parent
 
 | Step | Automation / system | Role |
 |------|---------------------|------|
-| Ensure + arm build | **118** (Sun 5:00 AM Denver; **ON**) | Create/find WAS; set `Build Weekly Email Now?` |
+| Resolve + arm build | **118** (Sun 5:00 AM Denver) | Resolve exactly one existing canonical WAS; set `Build Weekly Email Now?` |
 | Build package | **072 v4.0** | Recipients, subject, HTML/text/payload, Ready?; empty-week policy |
 | Arm send | **119** (Sun 10:00 AM Denver; **ON**) | Set `Send to Make?` when Ready && !Sent |
 | Webhook handoff | **074** (ON) | POST to Make; clear `Send to Make?`; does **not** mark Sent? |
@@ -26,6 +26,9 @@ How **Weekly Athlete Summary** rows are ensured, packaged, and emailed to parent
 - **072 owns empty-week policy** (`send_short` / `send_normal` / `suppress`).
 - **Make owns final Gmail-success writeback** (Live branch).
 - Do **not** use Make scenario `Weekly Athlete Summary Updated` as the email sender.
+- **031 is the sole create-capable WAS owner.** 118 never creates a WAS:
+  eligible missing or ambiguous WAS identity stops safely, while excluded/inactive
+  enrollments are filtered before strict validation.
 
 ## Tables
 

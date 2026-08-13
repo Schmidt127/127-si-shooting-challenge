@@ -4,6 +4,62 @@
 **Repository baseline:** `b10c93432a7e7bc0a04ada2c39aeca7e8f49e8db` plus the PKG-039 PR head
 **Production boundary:** No record, schema, automation, trigger, email, or lock change was made while preparing this packet.
 
+## Exact target scripts, OFF/ON sequence, and schema change
+
+This is a Mike-operated Production packet only after the same committed files
+pass the listed DEV proofs. Repository tests do not constitute Production proof.
+
+| Paste order | Automation | Target version | Required trigger/input |
+|---:|---|---|---|
+| 1 | 031 | v4.1 | Counted `Submissions`; dynamic `recordId` |
+| 2 | 032 | v3.4 | Eligible `Weekly Athlete Summary`; dynamic `recordId` |
+| 3 | 057 | v1.7 | Perfect Week recalculation; dynamic `recordId` |
+| 4 | 058 | v1.1 | Perfect Week Eligible + Ready; dynamic `recordId` |
+| 5 | 076 | v8.6 | `Build Daily Email Now?` checked; dynamic `recordId` |
+| 6 | 101 | v6.3 | `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId` |
+| 7 | 118 | v1.9 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
+
+1. Capture the current ON/OFF state and trigger/input screenshots. Turn **OFF**
+   031, 032, 057, 058, 076, 101, and 118 before pasting; leave 068 OFF.
+2. For isolated DEV proof, also turn OFF 072, 079, 119, 074, and the relevant
+   Make scenarios. Do not clear readiness checkboxes as cleanup.
+3. Paste each committed script in the listed order (from docblock through end;
+   omit its GitHub header), confirm the exact trigger/input, then leave it OFF
+   until its preceding proof passes.
+4. Enable only 031 then 032 for canonical WAS/goal proof; enable 057 then 058
+   for Perfect Week proof; enable 076 and 101 only for their isolated fixtures;
+   enable 118 last, first with `dryRun=true`. Restore the captured ON/OFF state
+   only after all stop conditions remain clear. Production activation is
+   Mike-only after DEV evidence and approval.
+
+### Required `Target Goal Shots.Program Instance` field
+
+In DEV first, create **`Program Instance`** on table **`Target Goal Shots`
+(`tbleCfuAt3rY8unU3`)** as a **linked-record** field to **`Program Instance -
+Sync` (`tblMfALZa4YYUy70P`)**. Allow multiple links at the Airtable field level
+only if the UI requires it; the contract requires exactly one link for every
+active usable goal. Do not alter the two formula fields until their existing
+formula text has been exported. Update the canonical `Goal Key` formula so its
+identity includes the linked Program Instance record identity and Grade Band
+record identity; it must not depend solely on display names. Re-read the
+formula/lookup fields after settling before enabling a consumer.
+
+### Exact Production-safe goal linking plan
+
+After the read-only audit confirms the field type and the target Program
+Instance, link **only** these active goal records to
+`rec5mEM0YPqPqq0hZ` (`Shooting Challenge | 2026-2027`):
+
+- `reczG19bSB6Aa3VbV` (K-2 / 2,000)
+- `recQJRxpaBgwN42Un` (3-4 / 5,000)
+- `rec8PrnFaiKaCKtAb` (5-6 / 8,000)
+- `rechFso6HRLhqalFa` (7-8 / 10,000)
+- `recHE7FhreD1jqfXm` (9-12 / 12,000)
+
+Keep `recm56DTvRRfDuZUN` and `recFTY07yug9AC1YM` inactive. Do not link,
+reactivate, or otherwise alter either historical variant without a separately
+approved change.
+
 ## Evidence boundary and known warnings
 
 Repository source and dated packets do not prove the current Production cause of
@@ -34,14 +90,14 @@ year, week, grade band, inactive goals, and multiple candidates are ineligible.
 | Non-Submission-Base XP/WAS backlink repair | `031` | Exact Enrollment + Week; blank or precisely proven stale link only. |
 | Threshold XP / goal consumer | `035` | Consumes settled WAS goal state; does not configure a goal. |
 | Perfect Week eligibility/unlock | `057` / `058` | Consumers only; no WAS create. |
-| Zoom XP | `101` | May create/find WAS for Zoom; must use exact identity and fail closed. |
+| Zoom XP | `101` | Resolves/links one existing canonical WAS for Zoom; never creates a WAS. |
 | Video XP | `114` | XP owner; requires exact Video Feedback identity; no WAS create. |
-| Weekly email schedule | `118` | Legitimate empty-week WAS creator; exact Enrollment + Week and post-create recheck. |
+| Weekly email schedule | `118` | Filters excluded/inactive rows, then resolves/arms one existing canonical WAS; never creates a WAS. |
 | Weekly email builder | `072` | Consumer only. Does not create WAS or send Make webhook. |
 | Daily email readiness | `031` → `076` | `031` only arms after final WAS validation; `076` consumes/clears. |
 
-`068` is retired and must remain OFF. No other automation may be reactivated as
-a WAS writer. The canonical identity is exactly one `Weekly Athlete Summary`
+`068` is retired and must remain OFF. **031 is the only create-capable WAS
+writer.** The canonical identity is exactly one `Weekly Athlete Summary`
 per **Enrollment record ID + Week record ID**; both records must resolve to the
 same Program Instance and the Enrollment must be in its correct School Year.
 `Summary Key` is a formula verification signal, never a writable substitute for

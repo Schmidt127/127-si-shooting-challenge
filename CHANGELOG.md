@@ -65,6 +65,15 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-039 WAS and weekly-goal reliability (2026-08-13)** — Automation 031
+  remains the sole create-capable Weekly Athlete Summary (WAS) owner. 101 and
+  118 now resolve only one existing canonical WAS; 118 filters excluded and
+  inactive enrollments before strict validation. 032, 057, 058, and 076 require
+  an exact active `Program Instance + Grade Band` goal with an explicitly
+  numeric, settled target; zero remains valid only when that configuration is
+  unique. Added the Mike-operated DEV/Production field, link, paste, settlement,
+  stop-condition, and rollback packet. No Airtable, email, Make, or Production
+  action occurred from this repository change.
 - **PKG-006R-HF-001 Automation 010 v10.8 (2026-08-13)** — Production blocker: 010 v10.7 failed on Submission `recY0o5tpqMfvlCCa` when a legitimate `HOMEWORK_XP` event was also linked. v10.8 scopes duplicate detection to Submission Base identity (`SUBMISSION_XP|{Submission ID}` and approved legacy Submission Base markers), ignores unrelated XP families, appends the Submission XP link without unlinking Homework or other events, and preserves reconciliation latch / withdrawal / restoration behavior. Added offline regression `tests/pipeline/010-submission-base-multi-family.test.mjs`. **010 is OFF in Production; paste v10.8 before re-enable.** No Production Airtable access from agents.
 - **PKG-006R daily submission XP reconciliation (2026-08-13)** — Automation **010 v10.7** installed and **ON** in Production per Mike-supplied baseline. All 12 reconciliation fields verified installed. Lifecycle proof (backlog review, replay, withdrawal/restoration, natural-trigger runs, settled totals) remains pending. Automation **077** deleted from Airtable (retired Make/Gmail slot); GitHub source archived. `Enrollments.Progression Last Reconciled Signature` created. **041 v5.0 / 042 v4.0 paste deferred** until PKG-006R lock release. Unified operator packet: [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./docs/deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md).
 - **PKG-034 Production installation closeout (2026-08-13)** — Mike supplied
