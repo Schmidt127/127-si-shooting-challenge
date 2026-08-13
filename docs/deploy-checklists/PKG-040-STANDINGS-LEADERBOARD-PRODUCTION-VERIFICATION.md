@@ -1,8 +1,8 @@
 # PKG-040 — Standings and Leaderboard Production Verification
 
 Status: Repository-ready only — **do not execute while PKG-006R / PKG-036
-coordination locks are active**.  
-Owner: Mike (Production operator)  
+coordination locks are active**.
+Owner: Mike (Production operator)
 Repository boundary: This packet performs read-only inspection and public
 readback only. It does not change Airtable records, fields, views,
 automations, configuration, XP, emails, or deployments.
