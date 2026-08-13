@@ -24,7 +24,7 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.1
+ * Version: 1.2
  * Date written: 2026-05-30
  * Last updated: 2026-08-13
  *
@@ -38,10 +38,11 @@ Airtable is the deployed/running copy.
  *
  * Trigger:
  * Table: Weekly Athlete Summary
- * Conditions:
- * - Perfect Week Eligible? = 1
- * - Perfect Week Unlock is empty
- * - Perfect Week Automation Status = Ready
+ * Lifecycle trigger contract:
+ * - Trigger on record updates that include Perfect Week Eligible?, Perfect Week
+ *   Automation Status, Enrollment, Week, Goal Record, and Perfect Week Unlock.
+ * - Do not use positive-only eligibility or empty-unlock conditions: they block
+ *   withdrawal and same-unlock restoration.
  *
  * Required input variable:
  * - recordId = Airtable record ID from triggering Weekly Athlete Summary record
@@ -104,6 +105,7 @@ const CONFIG = {
     enrollment: "Enrollment",
     week: "Week",
     achievement: "Achievement",
+    active: "Active?",
     sourceStatus: "Source Status",
     xpAwardStatus: "XP Award Status",
     sourceKey: "Source Key",
@@ -114,12 +116,6 @@ const CONFIG = {
 /***************************************************************************************************
  * 2. Helper Functions
  ***************************************************************************************************/
-
-function getFirstLinkedId(record, fieldName) {
-  const value = record.getCellValue(fieldName);
-  if (!Array.isArray(value) || value.length === 0) return null;
-  return value[0].id;
-}
 
 function getExactlyOneLinkedId(record, fieldName, label) {
   const values = [...new Set(getLinkedIds(record, fieldName).filter(Boolean))];
@@ -133,6 +129,23 @@ function getLinkedIds(record, fieldName) {
   const value = record.getCellValue(fieldName);
   if (!Array.isArray(value)) return [];
   return value.map((item) => item.id);
+}
+
+function isExactOwnedUnlock(unlock, {
+  sourceKey,
+  enrollmentId,
+  weekId,
+  achievementId,
+}) {
+  return (
+    getText(unlock, CONFIG.unlockFields.sourceKey) === sourceKey &&
+    getLinkedIds(unlock, CONFIG.unlockFields.enrollment).length === 1 &&
+    getLinkedIds(unlock, CONFIG.unlockFields.enrollment)[0] === enrollmentId &&
+    getLinkedIds(unlock, CONFIG.unlockFields.week).length === 1 &&
+    getLinkedIds(unlock, CONFIG.unlockFields.week)[0] === weekId &&
+    getLinkedIds(unlock, CONFIG.unlockFields.achievement).length === 1 &&
+    getLinkedIds(unlock, CONFIG.unlockFields.achievement)[0] === achievementId
+  );
 }
 
 function getSingleSelectName(record, fieldName) {
@@ -208,17 +221,17 @@ try {
   const weekId = getExactlyOneLinkedId(
     weeklyRecord, CONFIG.weeklyFields.week, "Weekly Athlete Summary Week"
   );
-  const gradeBandId = getExactlyOneLinkedId(
-    weeklyRecord, CONFIG.weeklyFields.gradeBand, "Weekly Athlete Summary Grade Band"
-  );
-  const goalRecordId = getExactlyOneLinkedId(
-    weeklyRecord, CONFIG.weeklyFields.goalRecord, "Weekly Athlete Summary Goal Record"
-  );
-  const existingUnlockIds = getLinkedIds(weeklyRecord, CONFIG.weeklyFields.perfectWeekUnlock);
+  const linkedUnlockIds = [...new Set(
+    getLinkedIds(weeklyRecord, CONFIG.weeklyFields.perfectWeekUnlock).filter(Boolean)
+  )];
+  if (linkedUnlockIds.length > 1) {
+    throw new Error(
+      `Weekly Athlete Summary has ambiguous Perfect Week Unlock ownership: ${linkedUnlockIds.join(", ")}.`
+    );
+  }
 
   const eligibleValue = weeklyRecord.getCellValue(CONFIG.weeklyFields.perfectWeekEligible);
   const isEligible = isTruthy(eligibleValue);
-
   const automationStatus = getSingleSelectName(weeklyRecord, CONFIG.weeklyFields.automationStatus);
 
   const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
@@ -226,58 +239,7 @@ try {
   if (!fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active)) {
     throw new Error("Enrollments table is missing required Active? field.");
   }
-  if (!isTruthy(enrollmentRecord.getCellValue(CONFIG.enrollmentFields.active))) {
-    await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: "058 skipped: Enrollment is inactive; no Perfect Week Unlock is permitted.",
-    });
-    return;
-  }
-  const programInstanceId = getExactlyOneLinkedId(
-    enrollmentRecord, CONFIG.enrollmentFields.programInstance, "Enrollment Program Instance"
-  );
-  const goalRecord = await targetGoalsTable.selectRecordAsync(goalRecordId);
-  if (!goalRecord) throw new Error(`Goal Record ${goalRecordId} not found.`);
-  const goalProgramInstanceId = getExactlyOneLinkedId(
-    goalRecord, CONFIG.targetGoalFields.programInstance, "Goal Record Program Instance"
-  );
-  const goalGradeBandId = getExactlyOneLinkedId(
-    goalRecord, CONFIG.targetGoalFields.gradeBand, "Goal Record Grade Band"
-  );
-  const goalTarget = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
-  const settledWeeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
-  if (
-    !isTruthy(goalRecord.getCellValue(CONFIG.targetGoalFields.active)) ||
-    goalProgramInstanceId !== programInstanceId ||
-    goalGradeBandId !== gradeBandId ||
-    goalTarget === null ||
-    settledWeeklyGoal === null ||
-    settledWeeklyGoal !== goalTarget
-  ) {
-    throw new Error(
-      "058 requires one active, exact Program Instance + Grade Band Goal Record and a settled matching Weekly Goal Shots Target."
-    );
-  }
-
-  if (!isEligible) {
-    await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: "058 skipped: Perfect Week Eligible? is not 1.",
-    });
-    return;
-  }
-
-  if (automationStatus !== "Ready") {
-    await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: `058 skipped: Perfect Week Automation Status is '${automationStatus}', not 'Ready'.`,
-    });
-    return;
-  }
-
-  if (existingUnlockIds.length > 0) {
-    await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: "",
-    });
-    return;
-  }
+  const enrollmentIsActive = isTruthy(enrollmentRecord.getCellValue(CONFIG.enrollmentFields.active));
 
   /*************************************************************************************************
    * 5. Find Perfect Week Achievement
@@ -333,74 +295,177 @@ try {
   }
 
   const achievementRecord = matchingAchievements[0];
+  const sourceKey = `PERFECT_WEEK|${enrollmentId}|${weekId}`;
 
   /*************************************************************************************************
-   * 6. Duplicate Protection by Source Key
+   * 6. Resolve Exact-Owned Unlock Candidate
    *************************************************************************************************/
 
-  const sourceKey = `PERFECT_WEEK|${enrollmentId}|${weekId}`;
+  if (!fieldExists(unlocksTable, CONFIG.unlockFields.sourceKey)) {
+    throw new Error("Athlete Achievement Unlocks table is missing required Source Key field.");
+  }
+  if (!fieldExists(unlocksTable, CONFIG.unlockFields.active)) {
+    throw new Error("Athlete Achievement Unlocks table is missing required Active? field.");
+  }
 
   const unlockFieldsToQuery = [
     CONFIG.unlockFields.enrollment,
     CONFIG.unlockFields.week,
     CONFIG.unlockFields.achievement,
+    CONFIG.unlockFields.sourceKey,
+    CONFIG.unlockFields.active,
+    CONFIG.unlockFields.xpAwardStatus,
   ];
-
-  if (fieldExists(unlocksTable, CONFIG.unlockFields.sourceKey)) {
-    unlockFieldsToQuery.push(CONFIG.unlockFields.sourceKey);
-  }
 
   const unlockQuery = await unlocksTable.selectRecordsAsync({
     fields: unlockFieldsToQuery,
   });
 
-  let duplicateUnlock = null;
-
+  const unlockCandidates = new Map();
   for (const unlock of unlockQuery.records) {
-    if (fieldExists(unlocksTable, CONFIG.unlockFields.sourceKey)) {
-      const existingSourceKey = getText(unlock, CONFIG.unlockFields.sourceKey);
-      if (existingSourceKey && existingSourceKey === sourceKey) {
-        duplicateUnlock = unlock;
-        break;
-      }
-    }
-
-    const unlockEnrollmentId = getFirstLinkedId(unlock, CONFIG.unlockFields.enrollment);
-    const unlockWeekId = getFirstLinkedId(unlock, CONFIG.unlockFields.week);
-    const unlockAchievementId = getFirstLinkedId(unlock, CONFIG.unlockFields.achievement);
-
+    const existingSourceKey = getText(unlock, CONFIG.unlockFields.sourceKey);
     if (
-      unlockEnrollmentId === enrollmentId &&
-      unlockWeekId === weekId &&
-      unlockAchievementId === achievementRecord.id
+      existingSourceKey === sourceKey ||
+      linkedUnlockIds.includes(unlock.id)
     ) {
-      duplicateUnlock = unlock;
-      break;
+      unlockCandidates.set(unlock.id, unlock);
     }
   }
 
-  if (duplicateUnlock) {
-    await updateWeekly({
-      [CONFIG.weeklyFields.perfectWeekUnlock]: [{ id: duplicateUnlock.id }],
-      [CONFIG.weeklyFields.automationError]: "",
-    });
+  const candidateUnlocks = [...unlockCandidates.values()].sort((a, b) => a.id.localeCompare(b.id));
+  if (candidateUnlocks.length > 1) {
+    throw new Error(
+      `Duplicate or ambiguous Perfect Week Unlock candidates for ${sourceKey}: ${candidateUnlocks.map((unlock) => unlock.id).join(", ")}.`
+    );
+  }
 
-    return;
+  const existingUnlock = candidateUnlocks[0] || null;
+  if (existingUnlock && !isExactOwnedUnlock(existingUnlock, {
+    sourceKey,
+    enrollmentId,
+    weekId,
+    achievementId: achievementRecord.id,
+  })) {
+    throw new Error(
+      `Perfect Week Unlock ${existingUnlock.id} failed exact ownership for ${sourceKey}.`
+    );
   }
 
   /*************************************************************************************************
-   * 7. Create Unlock
+   * 7. Reconcile Withdrawal or Eligibility Configuration
    *************************************************************************************************/
+
+  const mayQualify = enrollmentIsActive && isEligible && automationStatus === "Ready";
+  if (!mayQualify) {
+    if (existingUnlock && isTruthy(existingUnlock.getCellValue(CONFIG.unlockFields.active))) {
+      await unlocksTable.updateRecordAsync(existingUnlock.id, {
+        [CONFIG.unlockFields.active]: false,
+      });
+    }
+
+    const reason = !enrollmentIsActive
+      ? "Enrollment is inactive"
+      : !isEligible
+        ? "Perfect Week Eligible? is not 1"
+        : `Perfect Week Automation Status is '${automationStatus}', not 'Ready'`;
+    await updateWeekly({
+      [CONFIG.weeklyFields.automationError]: `058 skipped: ${reason}.`,
+    });
+    return;
+  }
+
+  const gradeBandId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.gradeBand, "Weekly Athlete Summary Grade Band"
+  );
+  const goalRecordId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.goalRecord, "Weekly Athlete Summary Goal Record"
+  );
+  const programInstanceId = getExactlyOneLinkedId(
+    enrollmentRecord, CONFIG.enrollmentFields.programInstance, "Enrollment Program Instance"
+  );
+  const goalRecord = await targetGoalsTable.selectRecordAsync(goalRecordId);
+  if (!goalRecord) throw new Error(`Goal Record ${goalRecordId} not found.`);
+  const goalProgramInstanceId = getExactlyOneLinkedId(
+    goalRecord, CONFIG.targetGoalFields.programInstance, "Goal Record Program Instance"
+  );
+  const goalGradeBandId = getExactlyOneLinkedId(
+    goalRecord, CONFIG.targetGoalFields.gradeBand, "Goal Record Grade Band"
+  );
+  const goalTarget = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
+  const settledWeeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  if (
+    !isTruthy(goalRecord.getCellValue(CONFIG.targetGoalFields.active)) ||
+    goalProgramInstanceId !== programInstanceId ||
+    goalGradeBandId !== gradeBandId ||
+    goalTarget === null ||
+    settledWeeklyGoal === null ||
+    settledWeeklyGoal !== goalTarget
+  ) {
+    throw new Error(
+      "058 requires one active, exact Program Instance + Grade Band Goal Record and a settled matching Weekly Goal Shots Target."
+    );
+  }
+
+  /*************************************************************************************************
+   * 8. Restore Exact-Owned Unlock or Create One
+   *************************************************************************************************/
+
+  if (existingUnlock) {
+    const unlockUpdate = {};
+    if (!isTruthy(existingUnlock.getCellValue(CONFIG.unlockFields.active))) {
+      unlockUpdate[CONFIG.unlockFields.active] = true;
+    }
+    if (fieldExists(unlocksTable, CONFIG.unlockFields.xpAwardStatus)) {
+      unlockUpdate[CONFIG.unlockFields.xpAwardStatus] = { name: "Pending" };
+    }
+    if (Object.keys(unlockUpdate).length > 0) {
+      await unlocksTable.updateRecordAsync(existingUnlock.id, unlockUpdate);
+    }
+    await updateWeekly({
+      [CONFIG.weeklyFields.perfectWeekUnlock]: [{ id: existingUnlock.id }],
+      [CONFIG.weeklyFields.automationError]: "",
+    });
+    return;
+  }
+
+  // Last-chance recheck avoids creating a replacement unlock during a concurrent retry.
+  const recheck = await unlocksTable.selectRecordsAsync({
+    fields: unlockFieldsToQuery,
+  });
+  const recheckCandidates = recheck.records.filter(
+    (unlock) => getText(unlock, CONFIG.unlockFields.sourceKey) === sourceKey
+  );
+  if (recheckCandidates.length > 1) {
+    throw new Error(
+      `Duplicate Perfect Week Unlocks found during create recheck for ${sourceKey}: ${recheckCandidates.map((unlock) => unlock.id).join(", ")}.`
+    );
+  }
+  if (recheckCandidates.length === 1) {
+    const recheckedUnlock = recheckCandidates[0];
+    if (!isExactOwnedUnlock(recheckedUnlock, {
+      sourceKey,
+      enrollmentId,
+      weekId,
+      achievementId: achievementRecord.id,
+    })) {
+      throw new Error(
+        `Perfect Week Unlock ${recheckedUnlock.id} failed exact ownership during create recheck for ${sourceKey}.`
+      );
+    }
+    await updateWeekly({
+      [CONFIG.weeklyFields.perfectWeekUnlock]: [{ id: recheckedUnlock.id }],
+      [CONFIG.weeklyFields.automationError]: "",
+    });
+    return;
+  }
 
   const unlockPayload = {
     [CONFIG.unlockFields.enrollment]: [{ id: enrollmentId }],
     [CONFIG.unlockFields.week]: [{ id: weekId }],
     [CONFIG.unlockFields.achievement]: [{ id: achievementRecord.id }],
+    [CONFIG.unlockFields.active]: true,
+    [CONFIG.unlockFields.sourceKey]: sourceKey,
   };
-
-  if (fieldExists(unlocksTable, CONFIG.unlockFields.sourceKey)) {
-    unlockPayload[CONFIG.unlockFields.sourceKey] = sourceKey;
-  }
 
   if (fieldExists(unlocksTable, CONFIG.unlockFields.sourceStatus)) {
     unlockPayload[CONFIG.unlockFields.sourceStatus] = { name: "Ready for XP" };
@@ -418,7 +483,7 @@ try {
   const newUnlockId = await unlocksTable.createRecordAsync(unlockPayload);
 
   /*************************************************************************************************
-   * 8. Write Unlock Back to Weekly Athlete Summary
+   * 9. Write Unlock Back to Weekly Athlete Summary
    *************************************************************************************************/
 
   await updateWeekly({
