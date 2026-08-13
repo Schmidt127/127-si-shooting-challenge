@@ -197,7 +197,7 @@
         "PKG-014",
         "PKG-015"
       ],
-      "state": "IN_PROGRESS",
+      "state": "READY_FOR_REVIEW",
       "priority": 0,
       "depends_on": [
         "PKG-006",
@@ -230,7 +230,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Run PKG-033 five-lane repository evidence audit; keep Production actions Mike-owned and do not overlap PKG-006 daily-submission reversal, PKG-007 Homework/Video implementation, or communications drafts #161/#162.",
+  "next_action": "Mike reviews draft PR #167 and supplies live version/schema/Schmidt evidence; keep Production actions Mike-owned and do not overlap PKG-006 daily-submission reversal, PKG-007 Homework/Video implementation, or communications drafts #161/#162.",
   "stop_reason": null,
   "merge_order": [
     "research",
