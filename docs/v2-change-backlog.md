@@ -162,6 +162,7 @@ Primary doc: [v2-014-automation-modernization-roadmap.md](./v2-014-automation-mo
 | ID | Request | Detail | Depends on | Status |
 |----|---------|--------|------------|--------|
 | **C-010** | Harden `Active?` on Enrollments | Inactive = fully out of XP, emails, summaries, streaks — not just leaderboard | V2-013 partial | queued |
+| **PKG-036** | Progression configuration and bidirectional recalculation reliability | Harden 041 queue reachability and 042 assignment/retry behavior across XP corrections, Level/Gate configuration changes, formula settlement, lifecycle changes, and maximum-level handling. 041 remains queue-only; 042 remains the sole progression assignment writer; 043 remains retired. Production-only exception authorized by Mike because no DEV Airtable exists; no production proof is claimed until the controlled packet is executed. | C-025 complete; V2-013 partial | **in progress — repository implementation** |
 | **C-011** | Fully automatic weekly parent emails | No `Build Weekly Email Now?` / `Send to Make?`; scheduled 072→074 | C-010, C-022 | queued |
 | **C-006** | 090F duplicate unlock prevention | Root cause was audit dedupe key — **fixed in H-001**; **066** v3.1 prevents empty Week going forward | H-002 | **done** |
 

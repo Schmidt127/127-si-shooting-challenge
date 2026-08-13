@@ -804,6 +804,144 @@ function selectYearAwareGateRules(gateRules = [], enrollmentSchoolYear = "") {
 }
 
 /**
+ * PKG-036 configuration contract. The live 042 script performs the same
+ * fail-closed checks against Airtable records; this pure form is used by the
+ * executable offline harness.
+ */
+function validateProgressionLevels(levels = []) {
+  const active = (levels || [])
+    .filter((level) => level && level.active !== false)
+    .map((level) => ({
+      ...level,
+      name: String(level.name || "").trim(),
+      xpRequired: Number(level.xpRequired),
+    }))
+    .sort((a, b) => a.xpRequired - b.xpRequired);
+
+  if (active.length === 0) {
+    throw new Error("No active Levels found.");
+  }
+
+  const thresholds = new Map();
+  for (const level of active) {
+    if (!level.name) throw new Error(`Active Level ${level.id || "(unknown)"} is missing Level Name.`);
+    if (!Number.isFinite(level.xpRequired) || level.xpRequired < 0) {
+      throw new Error(`Invalid active level threshold for "${level.name}".`);
+    }
+    if (thresholds.has(level.xpRequired)) {
+      throw new Error(`Duplicate active level threshold found: ${level.xpRequired}.`);
+    }
+    thresholds.set(level.xpRequired, level.id);
+  }
+
+  if (active.filter((level) => level.xpRequired === 0).length !== 1) {
+    throw new Error("Expected exactly one active initial Level at 0 XP.");
+  }
+
+  return active;
+}
+
+function selectCompleteProgressionGateRules({
+  levels = [],
+  gateRules = [],
+  schoolYear = "",
+} = {}) {
+  const activeLevels = validateProgressionLevels(levels);
+  const numericGateFields = [
+    "minimumSubmissions",
+    "minimumHomework",
+    "minimumVideos",
+    "minimumZoomMeetings",
+    "minimumStreakDays",
+  ];
+  const activeLevelIds = new Set(activeLevels.map((level) => level.id));
+  for (const rule of gateRules || []) {
+    if (!rule || rule.active === false) continue;
+    if (!activeLevelIds.has(rule.levelId)) {
+      throw new Error(`Active gate rule ${rule.name || rule.id || "(unnamed)"} points to an inactive or unknown Level.`);
+    }
+    for (const field of numericGateFields) {
+      const raw = rule[field];
+      const isNumericPrimitive =
+        (typeof raw === "number" && Number.isFinite(raw)) ||
+        (typeof raw === "string" && raw.trim() !== "" && Number.isFinite(Number(raw)));
+      const value = Number(raw);
+      if (!isNumericPrimitive || value < 0) {
+        throw new Error(`Invalid numeric configuration "${rule.name || rule.id || "(unnamed)"}.${field}".`);
+      }
+    }
+  }
+  const selected = selectYearAwareGateRules(gateRules, schoolYear);
+  for (const level of activeLevels) {
+    if (!selected.has(level.id)) {
+      throw new Error(`No active gate rule for level ${level.id} and school year ${schoolYear}.`);
+    }
+  }
+  return selected;
+}
+
+function progressionAssignmentFingerprint({
+  enrollmentId,
+  lifetimeXp,
+  lifetimeXpManualAdjustments = 0,
+  stats = {},
+  active = true,
+  schoolYear = "",
+  programInstanceIds = [],
+  levels = [],
+  gateRules = [],
+  outputs = {},
+} = {}) {
+  return JSON.stringify({
+    version: 2,
+    enrollmentId: String(enrollmentId || ""),
+    enrollment: {
+      lifetimeXp: Number(lifetimeXp) || 0,
+          lifetimeXpManualAdjustments: Number(lifetimeXpManualAdjustments) || 0,
+      stats: {
+        totalSubmissions: Number(stats.totalSubmissions) || 0,
+        totalHomeworkCompletions: Number(stats.totalHomeworkCompletions) || 0,
+        totalVideoSubmissions: Number(stats.totalVideoSubmissions) || 0,
+        totalZoomAttendances: Number(stats.totalZoomAttendances) || 0,
+        longestStreakDays: Number(stats.longestStreakDays) || 0,
+      },
+      active: Boolean(active),
+      schoolYear: String(schoolYear || "").trim(),
+    },
+    programInstanceIds: [...new Set(programInstanceIds)].sort(),
+    levels: [...levels]
+      .map((level) => ({
+        id: level.id,
+        name: String(level.name || "").trim(),
+        xpRequired: Number(level.xpRequired),
+        active: level.active !== false,
+        sortOrder: Number(level.sortOrder) || 0,
+      }))
+      .sort((a, b) => String(a.id).localeCompare(String(b.id))),
+    gateRules: [...gateRules]
+      .map((rule) => ({
+        id: rule.id,
+        levelId: rule.levelId,
+        schoolYear: String(rule.schoolYear || "").trim(),
+        active: rule.active !== false,
+        gateEnabled: Boolean(rule.gateEnabled),
+        minimumSubmissions: Number(rule.minimumSubmissions) || 0,
+        minimumHomework: Number(rule.minimumHomework) || 0,
+        minimumVideos: Number(rule.minimumVideos) || 0,
+        minimumZoomMeetings: Number(rule.minimumZoomMeetings) || 0,
+        minimumStreakDays: Number(rule.minimumStreakDays) || 0,
+      }))
+      .sort((a, b) => String(a.id).localeCompare(String(b.id))),
+    outputs: {
+      currentLevelId: outputs.currentLevelId || "",
+      nextLevelId: outputs.nextLevelId || "",
+      levelGateRuleId: outputs.levelGateRuleId || "",
+      levelStatus: outputs.levelStatus || "",
+    },
+  });
+}
+
+/**
  * Select exactly one active XP Reward Rule for the given allowed rule keys.
  * Mirrors 059's duplicate-active throw / 054's intended hardening:
  * - missing → { status: "missing", rule: null, matches: [] }
@@ -1754,6 +1892,9 @@ module.exports = {
   evaluateGate,
   buildGateRuleMap,
   selectYearAwareGateRules,
+  validateProgressionLevels,
+  selectCompleteProgressionGateRules,
+  progressionAssignmentFingerprint,
   selectActiveXpRewardRule,
   normalizeGradeBandLabel,
   gradeBandsMatch,

@@ -24,9 +24,9 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 3.4
+ * Version: 4.0
  * Date Written: 2026-06-02
- * Last Updated: 2026-08-12
+ * Last Updated: 2026-08-13
  *
  * Purpose:
  * Recalculates an Enrollment's Current Level and Next Level based on Lifetime XP Total,
@@ -41,10 +41,15 @@ Airtable is the deployed/running copy.
  *   This avoids generic Airtable record labels in logs and gate explanations.
  *
  * Version 3.4 (2026-08-12):
- * - Requires Enrollment.Active? and skips inactive Enrollments before writing
- *   Level Status = Processing.
- * - Clears a stale Level Recalc Needed? request without changing historical
- *   progression fields on inactive Enrollments.
+ * Version 4.0 (PKG-036, 2026-08-13):
+ * - Reads until Lifetime XP and gate-stat formulas are stable before assignment.
+ * - Validates the active level ladder, including one nonnegative 0-XP initial
+ *   level, unique thresholds, names, and a deterministic maximum.
+ * - Requires exactly one applicable active gate rule for every active level.
+ * - Verifies the complete post-write state before acknowledging the queue.
+ * - Preserves Level Recalc Needed? on every error so the same Enrollment is
+ *   automatically retryable.
+ * - Writes Progression Last Reconciled Signature only after verified success.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -123,7 +128,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "3.4",
+        version: "4.0",
     },
 
     tables: {
@@ -135,12 +140,14 @@ const CONFIG = {
     },
 
     enrollmentFields: {
+        lifetimeXpManualAdjustments: "Lifetime XP Manual Adjustments",
         lifetimeXpTotal: "Lifetime XP Total",
         currentLevel: "Current Level",
         nextLevel: "Next Level",
         levelGateRule: "Level Gate Rule",
         levelStatus: "Level Status",
         levelRecalcNeeded: "Level Recalc Needed?",
+        lastReconciledSignature: "Progression Last Reconciled Signature",
         active: "Active?",
 
         totalSubmissions: "Total Submissions",
@@ -149,12 +156,14 @@ const CONFIG = {
         totalZoomAttendances: "Total Zoom Attendances",
         longestStreakDays: "Longest Streak Days",
         schoolYear: "School Year",
+        programInstance: "Program Instance",
     },
 
     levelFields: {
         name: "Level Name",
         xpRequired: "XP Required (Cumulative)",
         active: "Active?",
+        sortOrder: "Sort Order",
     },
 
     gateFields: {
@@ -224,6 +233,10 @@ function cleanString(value) {
 }
 
 function getNumber(value, fallback = 0) {
+    if (value === null || value === undefined || value === "") {
+        return fallback;
+    }
+
     if (typeof value === "number" && Number.isFinite(value)) {
         return value;
     }
@@ -255,6 +268,18 @@ function getNumber(value, fallback = 0) {
     return fallback;
 }
 
+function getRequiredNonnegativeNumber(record, fieldName, label) {
+    const raw = record.getCellValue(fieldName);
+    if (raw === null || raw === undefined || raw === "") {
+        throw new Error(`Missing numeric configuration "${label}".`);
+    }
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value < 0) {
+        throw new Error(`Invalid numeric configuration "${label}": ${raw}.`);
+    }
+    return value;
+}
+
 function fieldExists(table, fieldName) {
     return table.fields.some((field) => field.name === fieldName);
 }
@@ -262,7 +287,12 @@ function fieldExists(table, fieldName) {
 function getLinkedIds(record, fieldName) {
     const value = record.getCellValue(fieldName);
     if (!value) return [];
-    if (Array.isArray(value)) return value.map((x) => (x && x.id) || x).filter(Boolean);
+    if (Array.isArray(value)) {
+        return value
+            .map((x) => (x && x.id) || x)
+            .filter(Boolean)
+            .sort();
+    }
     if (value.id) return [value.id];
     return [];
 }
@@ -420,7 +450,7 @@ function firstLinkedRecordId(value) {
 }
 
 function booleanValue(value) {
-    return value === true;
+    return value === true || value === 1 || value === "1";
 }
 
 function normalizeSchoolYear(value) {
@@ -443,6 +473,177 @@ function isSharedSchoolYear(value) {
         normalized === "default" ||
         normalized === "all years"
     );
+}
+
+function sleep(milliseconds) {
+    return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function getEnrollmentReadFields() {
+    return [
+        CONFIG.enrollmentFields.lifetimeXpTotal,
+        CONFIG.enrollmentFields.lifetimeXpManualAdjustments,
+        CONFIG.enrollmentFields.currentLevel,
+        CONFIG.enrollmentFields.nextLevel,
+        CONFIG.enrollmentFields.levelGateRule,
+        CONFIG.enrollmentFields.levelStatus,
+        CONFIG.enrollmentFields.levelRecalcNeeded,
+        CONFIG.enrollmentFields.lastReconciledSignature,
+        CONFIG.enrollmentFields.active,
+        CONFIG.enrollmentFields.totalSubmissions,
+        CONFIG.enrollmentFields.totalHomeworkCompletions,
+        CONFIG.enrollmentFields.totalVideoSubmissions,
+        CONFIG.enrollmentFields.totalZoomAttendances,
+        CONFIG.enrollmentFields.longestStreakDays,
+        CONFIG.enrollmentFields.schoolYear,
+        CONFIG.enrollmentFields.programInstance,
+    ];
+}
+
+function buildSettlementFingerprint(enrollment) {
+    return JSON.stringify({
+        lifetimeXp: enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),
+        totalSubmissions: enrollment.getCellValue(CONFIG.enrollmentFields.totalSubmissions),
+        totalHomeworkCompletions: enrollment.getCellValue(CONFIG.enrollmentFields.totalHomeworkCompletions),
+        totalVideoSubmissions: enrollment.getCellValue(CONFIG.enrollmentFields.totalVideoSubmissions),
+        totalZoomAttendances: enrollment.getCellValue(CONFIG.enrollmentFields.totalZoomAttendances),
+        longestStreakDays: enrollment.getCellValue(CONFIG.enrollmentFields.longestStreakDays),
+        schoolYear: getText(enrollment, CONFIG.enrollmentFields.schoolYear),
+        programInstance: getLinkedIds(enrollment, CONFIG.enrollmentFields.programInstance),
+        active: isTruthyFlag(enrollment, CONFIG.enrollmentFields.active),
+    });
+}
+
+async function readSettledEnrollment(table, recordId, fields) {
+    let previousFingerprint = "";
+    let stableReads = 0;
+
+    for (let attempt = 1; attempt <= 4; attempt += 1) {
+        const enrollment = await table.selectRecordAsync(recordId, { fields });
+        if (!enrollment) {
+            throw new Error(`Enrollment record not found: ${recordId}`);
+        }
+
+        const fingerprint = buildSettlementFingerprint(enrollment);
+        if (fingerprint === previousFingerprint) {
+            stableReads += 1;
+        } else {
+            stableReads = 1;
+            previousFingerprint = fingerprint;
+        }
+
+        if (stableReads >= 2) {
+            return enrollment;
+        }
+
+        if (attempt < 4) {
+            await sleep(750);
+        }
+    }
+
+    throw new Error(
+        `Formula/rollup values did not settle within the bounded read window for Enrollment ${recordId}.`
+    );
+}
+
+function buildConfigurationFingerprint(levels, gateRules) {
+    return JSON.stringify({
+        levels: levels
+            .map((level) => ({
+                id: level.id,
+                name: getRecordLabel(level, CONFIG.levelFields.name, ""),
+                xpRequired: level.getCellValue(CONFIG.levelFields.xpRequired),
+                active: booleanValue(level.getCellValue(CONFIG.levelFields.active)),
+                sortOrder: level.getCellValue(CONFIG.levelFields.sortOrder),
+            }))
+            .sort((a, b) => a.id.localeCompare(b.id)),
+        gateRules: gateRules
+            .map((rule) => ({
+                id: rule.id,
+                level: getLinkedIds(rule, CONFIG.gateFields.level),
+                schoolYear: getText(rule, CONFIG.gateFields.schoolYear),
+                versionActive: booleanValue(rule.getCellValue(CONFIG.gateFields.versionActive)),
+                gateEnabled: booleanValue(rule.getCellValue(CONFIG.gateFields.gateEnabled)),
+                minimumSubmissions: rule.getCellValue(CONFIG.gateFields.minimumSubmissions),
+                minimumHomework: rule.getCellValue(CONFIG.gateFields.minimumHomework),
+                minimumVideos: rule.getCellValue(CONFIG.gateFields.minimumVideos),
+                minimumZoomMeetings: rule.getCellValue(CONFIG.gateFields.minimumZoomMeetings),
+                minimumStreakDays: rule.getCellValue(CONFIG.gateFields.minimumStreakDays),
+            }))
+            .sort((a, b) => a.id.localeCompare(b.id)),
+    });
+}
+
+function buildReconciledSignature(enrollment, levels, gateRules) {
+    const levelValues = levels
+        .map((level) => ({
+            id: level.id,
+            name: getRecordLabel(level, CONFIG.levelFields.name, ""),
+            xpRequired: getNumber(level.getCellValue(CONFIG.levelFields.xpRequired), null),
+            active: booleanValue(level.getCellValue(CONFIG.levelFields.active)),
+            sortOrder: getNumber(level.getCellValue(CONFIG.levelFields.sortOrder), 0),
+        }))
+        .sort((a, b) => a.id.localeCompare(b.id));
+    const gateRuleValues = gateRules
+        .map((rule) => ({
+            id: rule.id,
+            level: getLinkedIds(rule, CONFIG.gateFields.level),
+            schoolYearRuleSet: getText(rule, CONFIG.gateFields.schoolYear),
+            versionActive: booleanValue(rule.getCellValue(CONFIG.gateFields.versionActive)),
+            gateEnabled: booleanValue(rule.getCellValue(CONFIG.gateFields.gateEnabled)),
+            minimumSubmissions: getNumber(rule.getCellValue(CONFIG.gateFields.minimumSubmissions), 0),
+            minimumHomework: getNumber(rule.getCellValue(CONFIG.gateFields.minimumHomework), 0),
+            minimumVideos: getNumber(rule.getCellValue(CONFIG.gateFields.minimumVideos), 0),
+            minimumZoomMeetings: getNumber(rule.getCellValue(CONFIG.gateFields.minimumZoomMeetings), 0),
+            minimumStreakDays: getNumber(rule.getCellValue(CONFIG.gateFields.minimumStreakDays), 0),
+        }))
+        .sort((a, b) => a.id.localeCompare(b.id));
+
+    return JSON.stringify({
+        version: 2,
+        enrollmentId: enrollment.id,
+        enrollment: {
+            "Lifetime XP Total": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),
+                0
+            ),
+            "Lifetime XP Manual Adjustments": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpManualAdjustments),
+                0
+            ),
+            "Total Submissions": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.totalSubmissions),
+                0
+            ),
+            "Total Homework Completions": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.totalHomeworkCompletions),
+                0
+            ),
+            "Total Video Submissions": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.totalVideoSubmissions),
+                0
+            ),
+            "Total Zoom Attendances": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.totalZoomAttendances),
+                0
+            ),
+            "Longest Streak Days": getNumber(
+                enrollment.getCellValue(CONFIG.enrollmentFields.longestStreakDays),
+                0
+            ),
+            "School Year": getText(enrollment, CONFIG.enrollmentFields.schoolYear),
+            "Active?": isTruthyFlag(enrollment, CONFIG.enrollmentFields.active),
+        },
+        outputs: {
+            currentLevel: getLinkedIds(enrollment, CONFIG.enrollmentFields.currentLevel),
+            nextLevel: getLinkedIds(enrollment, CONFIG.enrollmentFields.nextLevel),
+            levelGateRule: getLinkedIds(enrollment, CONFIG.enrollmentFields.levelGateRule),
+            levelStatus: getText(enrollment, CONFIG.enrollmentFields.levelStatus),
+        },
+        programInstance: getLinkedIds(enrollment, CONFIG.enrollmentFields.programInstance),
+        levels: levelValues,
+        gateRules: gateRuleValues,
+    });
 }
 
 function setOutputs({
@@ -478,6 +679,7 @@ function setOutputs({
 async function markEnrollmentError(enrollmentsTable, recordId, message) {
     await enrollmentsTable.updateRecordAsync(recordId, {
         [CONFIG.enrollmentFields.levelStatus]: singleSelectValue(CONFIG.statusValues.error),
+        [CONFIG.enrollmentFields.levelRecalcNeeded]: true,
     });
 
     setOutputs({
@@ -494,12 +696,14 @@ async function markEnrollmentError(enrollmentsTable, recordId, message) {
 
 function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
     const enrollmentRequiredFields = [
+        CONFIG.enrollmentFields.lifetimeXpManualAdjustments,
         CONFIG.enrollmentFields.lifetimeXpTotal,
         CONFIG.enrollmentFields.currentLevel,
         CONFIG.enrollmentFields.nextLevel,
         CONFIG.enrollmentFields.levelGateRule,
         CONFIG.enrollmentFields.levelStatus,
         CONFIG.enrollmentFields.levelRecalcNeeded,
+        CONFIG.enrollmentFields.lastReconciledSignature,
         CONFIG.enrollmentFields.active,
 
         CONFIG.enrollmentFields.totalSubmissions,
@@ -508,16 +712,20 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
         CONFIG.enrollmentFields.totalZoomAttendances,
         CONFIG.enrollmentFields.longestStreakDays,
         CONFIG.enrollmentFields.schoolYear,
+        CONFIG.enrollmentFields.programInstance,
     ];
 
     const levelRequiredFields = [
         CONFIG.levelFields.name,
         CONFIG.levelFields.xpRequired,
+        CONFIG.levelFields.active,
+        CONFIG.levelFields.sortOrder,
     ];
 
     const gateRequiredFields = [
         CONFIG.gateFields.name,
         CONFIG.gateFields.level,
+        CONFIG.gateFields.versionActive,
         CONFIG.gateFields.gateEnabled,
         CONFIG.gateFields.minimumSubmissions,
         CONFIG.gateFields.minimumHomework,
@@ -546,8 +754,6 @@ function validateSchema(enrollmentsTable, levelsTable, gateRulesTable) {
  ************************************************************************************************/
 
 function buildLevelList(levelRecords, levelsTable) {
-    const activeFieldExists = fieldExists(levelsTable, CONFIG.levelFields.active);
-
     const levels = levelRecords
         .map((levelRecord) => {
             const xpRequired = getNumber(
@@ -555,23 +761,21 @@ function buildLevelList(levelRecords, levelsTable) {
                 null
             );
 
-            const activeValue = activeFieldExists
-                ? levelRecord.getCellValue(CONFIG.levelFields.active)
-                : true;
+            const activeValue = levelRecord.getCellValue(CONFIG.levelFields.active);
+            const name = getRecordLabel(
+                levelRecord,
+                CONFIG.levelFields.name,
+                ""
+            );
 
             return {
                 id: levelRecord.id,
-                name: getRecordLabel(
-                    levelRecord,
-                    CONFIG.levelFields.name,
-                    `Level ${levelRecord.id}`
-                ),
+                name,
                 xpRequired,
-                active: Boolean(activeValue),
+                active: booleanValue(activeValue),
             };
         })
         .filter((level) => level.active)
-        .filter((level) => typeof level.xpRequired === "number" && Number.isFinite(level.xpRequired))
         .sort((a, b) => a.xpRequired - b.xpRequired);
 
     if (levels.length === 0) {
@@ -581,6 +785,19 @@ function buildLevelList(levelRecords, levelsTable) {
     const seenThresholds = new Map();
 
     for (const level of levels) {
+        if (!level.name) {
+            throw new Error(`Active Level ${level.id} is missing Level Name.`);
+        }
+
+        if (
+            !Number.isFinite(level.xpRequired) ||
+            level.xpRequired < 0
+        ) {
+            throw new Error(
+                `Invalid active level threshold for "${level.name}": expected a finite nonnegative XP value.`
+            );
+        }
+
         if (seenThresholds.has(level.xpRequired)) {
             const existingLevelName = seenThresholds.get(level.xpRequired);
 
@@ -592,10 +809,17 @@ function buildLevelList(levelRecords, levelsTable) {
         seenThresholds.set(level.xpRequired, level.name);
     }
 
+    const initialLevels = levels.filter((level) => level.xpRequired === 0);
+    if (initialLevels.length !== 1) {
+        throw new Error(
+            `Expected exactly one active initial Level at 0 XP; found ${initialLevels.length}.`
+        );
+    }
+
     return levels;
 }
 
-function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear) {
+function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear, activeLevels) {
     const versionActiveFieldExists = fieldExists(gateRulesTable, CONFIG.gateFields.versionActive);
     const targetSchoolYear = normalizeSchoolYear(enrollmentSchoolYear);
     if (!targetSchoolYear) {
@@ -613,7 +837,13 @@ function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear) {
             continue;
         }
 
-        const linkedLevelId = firstLinkedRecordId(gateRecord.getCellValue(CONFIG.gateFields.level));
+        const linkedLevelIds = getLinkedIds(gateRecord, CONFIG.gateFields.level);
+        if (linkedLevelIds.length !== 1) {
+            throw new Error(
+                `Gate rule "${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}" must link exactly one Level.`
+            );
+        }
+        const linkedLevelId = linkedLevelIds[0];
 
         if (!linkedLevelId) {
             continue;
@@ -634,11 +864,31 @@ function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear) {
             levelId: linkedLevelId,
             schoolYear,
             gateEnabled: booleanValue(gateRecord.getCellValue(CONFIG.gateFields.gateEnabled)),
-            minimumSubmissions: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumSubmissions), 0),
-            minimumHomework: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumHomework), 0),
-            minimumVideos: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumVideos), 0),
-            minimumZoomMeetings: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumZoomMeetings), 0),
-            minimumStreakDays: getNumber(gateRecord.getCellValue(CONFIG.gateFields.minimumStreakDays), 0),
+            minimumSubmissions: getRequiredNonnegativeNumber(
+                gateRecord,
+                CONFIG.gateFields.minimumSubmissions,
+                `${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}.Minimum Submissions`
+            ),
+            minimumHomework: getRequiredNonnegativeNumber(
+                gateRecord,
+                CONFIG.gateFields.minimumHomework,
+                `${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}.Minimum Homework`
+            ),
+            minimumVideos: getRequiredNonnegativeNumber(
+                gateRecord,
+                CONFIG.gateFields.minimumVideos,
+                `${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}.Minimum Videos`
+            ),
+            minimumZoomMeetings: getRequiredNonnegativeNumber(
+                gateRecord,
+                CONFIG.gateFields.minimumZoomMeetings,
+                `${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}.Minimum Zoom Meetings`
+            ),
+            minimumStreakDays: getRequiredNonnegativeNumber(
+                gateRecord,
+                CONFIG.gateFields.minimumStreakDays,
+                `${getRecordLabel(gateRecord, CONFIG.gateFields.name, gateRecord.id)}.Minimum Streak Days`
+            ),
         };
 
         if (!candidatesByLevel.has(linkedLevelId)) {
@@ -647,8 +897,17 @@ function buildGateRuleMap(gateRecords, gateRulesTable, enrollmentSchoolYear) {
         candidatesByLevel.get(linkedLevelId).push(rule);
     }
 
+    const activeLevelIds = new Set(activeLevels.map((level) => level.id));
+    for (const [levelId] of candidatesByLevel) {
+        if (!activeLevelIds.has(levelId)) {
+            throw new Error(`Active gate rule points to inactive or unknown Level "${levelId}".`);
+        }
+    }
+
     const gateRuleMap = new Map();
-    for (const [levelId, candidates] of candidatesByLevel.entries()) {
+    for (const level of activeLevels) {
+        const levelId = level.id;
+        const candidates = candidatesByLevel.get(levelId) || [];
         const exact = candidates.filter(
             (candidate) =>
                 !isSharedSchoolYear(candidate.schoolYear) &&
@@ -822,37 +1081,18 @@ async function main() {
     const gateRulesTable = base.getTable(CONFIG.tables.levelGateRules);
 
     validateSchema(enrollmentsTable, levelsTable, gateRulesTable);
+    requireWritableField(
+        enrollmentsTable,
+        CONFIG.enrollmentFields.lastReconciledSignature,
+        "Enrollments -> Progression Last Reconciled Signature"
+    );
 
     try {
-        const enrollment = await enrollmentsTable.selectRecordAsync(recordId, {
-            fields: [
-                CONFIG.enrollmentFields.lifetimeXpTotal,
-                CONFIG.enrollmentFields.currentLevel,
-                CONFIG.enrollmentFields.nextLevel,
-                CONFIG.enrollmentFields.levelGateRule,
-                CONFIG.enrollmentFields.levelStatus,
-                CONFIG.enrollmentFields.levelRecalcNeeded,
-                CONFIG.enrollmentFields.active,
-                CONFIG.enrollmentFields.totalSubmissions,
-                CONFIG.enrollmentFields.totalHomeworkCompletions,
-                CONFIG.enrollmentFields.totalVideoSubmissions,
-                CONFIG.enrollmentFields.totalZoomAttendances,
-                CONFIG.enrollmentFields.longestStreakDays,
-                CONFIG.enrollmentFields.schoolYear,
-            ],
-        });
-
-        if (!enrollment) {
-            const message = `Enrollment record not found: ${recordId}`;
-
-            setOutputs({
-                status: "error",
-                message,
-                enrollmentRecordId: recordId,
-            });
-
-            throw new Error(message);
-        }
+        const enrollment = await readSettledEnrollment(
+            enrollmentsTable,
+            recordId,
+            getEnrollmentReadFields()
+        );
 
         const enrollmentIsActive = isTruthyFlag(
             enrollment,
@@ -905,10 +1145,6 @@ async function main() {
             return;
         }
 
-        await enrollmentsTable.updateRecordAsync(recordId, {
-            [CONFIG.enrollmentFields.levelStatus]: singleSelectValue(CONFIG.statusValues.processing),
-        });
-
         const lifetimeXp = getNumber(
             enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),
             0
@@ -923,15 +1159,14 @@ async function main() {
         const levelFieldsToSelect = [
             CONFIG.levelFields.name,
             CONFIG.levelFields.xpRequired,
+            CONFIG.levelFields.active,
+            CONFIG.levelFields.sortOrder,
         ];
-
-        if (fieldExists(levelsTable, CONFIG.levelFields.active)) {
-            levelFieldsToSelect.push(CONFIG.levelFields.active);
-        }
 
         const gateFieldsToSelect = [
             CONFIG.gateFields.name,
             CONFIG.gateFields.level,
+            CONFIG.gateFields.versionActive,
             CONFIG.gateFields.gateEnabled,
             CONFIG.gateFields.minimumSubmissions,
             CONFIG.gateFields.minimumHomework,
@@ -940,10 +1175,6 @@ async function main() {
             CONFIG.gateFields.minimumStreakDays,
             CONFIG.gateFields.schoolYear,
         ];
-
-        if (fieldExists(gateRulesTable, CONFIG.gateFields.versionActive)) {
-            gateFieldsToSelect.push(CONFIG.gateFields.versionActive);
-        }
 
         const levelsQuery = await levelsTable.selectRecordsAsync({
             fields: levelFieldsToSelect,
@@ -961,7 +1192,8 @@ async function main() {
         const gateRuleMap = buildGateRuleMap(
             gateRulesQuery.records,
             gateRulesTable,
-            enrollmentSchoolYear
+            enrollmentSchoolYear,
+            levels
         );
 
         const result = determineAllowedLevelWithGateBlocking(
@@ -971,7 +1203,41 @@ async function main() {
             stats
         );
 
+        const configurationFingerprint = buildConfigurationFingerprint(
+            levelsQuery.records,
+            gateRulesQuery.records
+        );
+        const freshLevelsQuery = await levelsTable.selectRecordsAsync({
+            fields: levelFieldsToSelect,
+        });
+        const freshGateRulesQuery = await gateRulesTable.selectRecordsAsync({
+            fields: gateFieldsToSelect,
+        });
+        const freshLevels = buildLevelList(freshLevelsQuery.records, levelsTable);
+        buildGateRuleMap(
+            freshGateRulesQuery.records,
+            gateRulesTable,
+            enrollmentSchoolYear,
+            freshLevels
+        );
+        if (
+            buildConfigurationFingerprint(
+                freshLevelsQuery.records,
+                freshGateRulesQuery.records
+            ) !== configurationFingerprint
+        ) {
+            throw new Error(
+                `Level or gate configuration changed during calculation; preserving the queue for retry.`
+            );
+        }
+
         const fieldsToUpdate = {
+            [CONFIG.enrollmentFields.levelStatus]: singleSelectValue(CONFIG.statusValues.processing),
+        };
+
+        await enrollmentsTable.updateRecordAsync(recordId, fieldsToUpdate);
+
+        const assignmentFields = {
             [CONFIG.enrollmentFields.currentLevel]: linkedRecordValue(result.currentLevel.id),
 
             [CONFIG.enrollmentFields.nextLevel]: result.nextLevel
@@ -987,7 +1253,69 @@ async function main() {
             [CONFIG.enrollmentFields.levelRecalcNeeded]: false,
         };
 
-        await enrollmentsTable.updateRecordAsync(recordId, fieldsToUpdate);
+        await enrollmentsTable.updateRecordAsync(recordId, assignmentFields);
+
+        const finalEnrollment = await enrollmentsTable.selectRecordAsync(recordId, {
+            fields: getEnrollmentReadFields(),
+        });
+        if (!finalEnrollment) {
+            throw new Error(`Enrollment disappeared during assignment: ${recordId}`);
+        }
+        if (buildSettlementFingerprint(finalEnrollment) !== buildSettlementFingerprint(enrollment)) {
+            throw new Error(
+                `Canonical Enrollment inputs changed during assignment; preserving the queue for retry.`
+            );
+        }
+
+        const finalCurrentLevelId = getFirstLinkedId(
+            finalEnrollment,
+            CONFIG.enrollmentFields.currentLevel
+        );
+        const finalNextLevelId = getFirstLinkedId(
+            finalEnrollment,
+            CONFIG.enrollmentFields.nextLevel
+        );
+        const finalGateRuleId = getFirstLinkedId(
+            finalEnrollment,
+            CONFIG.enrollmentFields.levelGateRule
+        );
+        if (
+            finalCurrentLevelId !== result.currentLevel.id ||
+            finalNextLevelId !== (result.nextLevel ? result.nextLevel.id : "") ||
+            finalGateRuleId !== (result.levelGateRule ? result.levelGateRule.id : "") ||
+            getText(finalEnrollment, CONFIG.enrollmentFields.levelStatus) !== result.status ||
+            isTruthyFlag(finalEnrollment, CONFIG.enrollmentFields.levelRecalcNeeded)
+        ) {
+            throw new Error(
+                `Post-write progression verification failed for Enrollment ${recordId}; preserving the queue for retry.`
+            );
+        }
+
+        const finalLevelsQuery = await levelsTable.selectRecordsAsync({
+            fields: levelFieldsToSelect,
+        });
+        const finalGateRulesQuery = await gateRulesTable.selectRecordsAsync({
+            fields: gateFieldsToSelect,
+        });
+        if (
+            buildConfigurationFingerprint(
+                finalLevelsQuery.records,
+                finalGateRulesQuery.records
+            ) !== configurationFingerprint
+        ) {
+            throw new Error(
+                `Level or gate configuration changed during write verification; preserving the queue for retry.`
+            );
+        }
+
+        const reconciledSignature = buildReconciledSignature(
+            finalEnrollment,
+            finalLevelsQuery.records,
+            finalGateRulesQuery.records
+        );
+        await enrollmentsTable.updateRecordAsync(recordId, {
+            [CONFIG.enrollmentFields.lastReconciledSignature]: reconciledSignature,
+        });
 
         const message = result.gateBlocked
             ? `Level assignment blocked for Enrollment ${recordId}: ${result.gateReason}`

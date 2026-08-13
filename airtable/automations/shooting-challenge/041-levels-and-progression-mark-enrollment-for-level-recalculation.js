@@ -1,9 +1,9 @@
 /*
 GitHub source: 041-levels-and-progression-mark-enrollment-for-level-recalculation.js
 
-Version: 4.0
+Version: 5.0
 Date Written: 2026-08-08
-Last Updated: 2026-08-08
+Last Updated: 2026-08-13
 
 PURPOSE
 Queue Enrollment recalculation whenever an authoritative progression input
@@ -14,11 +14,15 @@ IMPORTANT DESIGN RULES
 - This is a queue/request mechanism only. It never writes progression outputs.
 - Automation 042 remains the only writer of Current Level, Next Level,
   Level Gate Rule, Level Status, and the queue checkbox after processing.
-- The scheduled trigger scans the authoritative Enrollment and Level Gate Rules
-  inputs. A controlled recordId input may be used for a single-record proof.
+- The scheduled trigger scans the authoritative Enrollment, Levels, and Level
+  Gate Rules inputs. A controlled recordId input may be used for a single-record
+  proof.
 - Progression Last Queued Signature is additive state used to make replay
-  idempotent. 042 may clear the queue checkbox without causing unchanged-input
-  churn because the signature remains equal until an input changes.
+  idempotent. Progression Last Reconciled Signature is written only by 042;
+  queueing compares the current input/output state to that acknowledged state.
+- Inactive enrollments are not queued, but their signature state is advanced.
+  This makes a later deactivation/reactivation observable without assigning
+  progression while inactive.
 - Do not close Issue #98 or this package until the PROD field, trigger, paste,
   and controlled Schmidt proof are recorded.
 
@@ -40,6 +44,7 @@ TRIGGER
 
 REQUIRED PROD ADDITIVE FIELD
 - Enrollments.Progression Last Queued Signature (single line text, writable)
+- Enrollments.Progression Last Reconciled Signature (single line text, writable)
 
 FOLDER
 - 04 - Levels and Progression
@@ -47,10 +52,10 @@ FOLDER
 
 const SCRIPT = {
     scriptName: "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
-    version: "4.0",
+    version: "5.0",
     versionDate: "2026-08-08",
     originalWrittenDate: "2026-05-28",
-    lastUpdated: "2026-08-08",
+    lastUpdated: "2026-08-13",
     folder: "04 - Levels and Progression",
     automationName: "041 - Levels and Progression - Mark Enrollment for Level Recalculation",
 };
@@ -59,6 +64,7 @@ const CONFIG = {
     tables: {
         enrollments: "Enrollments",
         levelGateRules: "Level Gate Rules",
+        levels: "Levels",
     },
     enrollmentFields: {
         active: "Active?",
@@ -70,6 +76,7 @@ const CONFIG = {
         totalZoomAttendances: "Total Zoom Attendances",
         longestStreakDays: "Longest Streak Days",
         schoolYear: "School Year",
+        programInstance: "Program Instance",
         gateDebugSummary: "Gate Debug Summary",
         currentLevel: "Current Level",
         nextLevel: "Next Level",
@@ -77,6 +84,7 @@ const CONFIG = {
         levelStatus: "Level Status",
         levelRecalcNeeded: "Level Recalc Needed?",
         lastQueuedSignature: "Progression Last Queued Signature",
+        lastReconciledSignature: "Progression Last Reconciled Signature",
     },
     gateRuleFields: {
         level: "Level",
@@ -88,6 +96,12 @@ const CONFIG = {
         minimumVideos: "Minimum Videos",
         minimumZoomMeetings: "Minimum Zoom Meetings",
         minimumStreakDays: "Minimum Streak Days",
+    },
+    levelFields: {
+        name: "Level Name",
+        xpRequired: "XP Required (Cumulative)",
+        active: "Active?",
+        sortOrder: "Sort Order",
     },
     outputs: {
         status: "statusOut",
@@ -135,7 +149,12 @@ function getText(record, fieldName) {
 }
 
 function getLinkedIds(record, fieldName) {
-    const value = record.getCellValue(fieldName);
+    let value;
+    try {
+        value = record.getCellValue(fieldName);
+    } catch (error) {
+        return [];
+    }
     if (!Array.isArray(value)) return [];
     return value.map((item) => cleanString(item?.id)).filter(Boolean).sort();
 }
@@ -224,15 +243,40 @@ function getGateRuleSignature(record) {
     };
 }
 
-function buildProgressionSignature(enrollment, gateRules) {
+function getLevelSignature(record) {
+    return {
+        id: record.id,
+        name: getText(record, CONFIG.levelFields.name),
+        xpRequired: normalizeNumber(record.getCellValue(CONFIG.levelFields.xpRequired)),
+        active: getBoolean(record, CONFIG.levelFields.active),
+        sortOrder: normalizeNumber(record.getCellValue(CONFIG.levelFields.sortOrder)),
+    };
+}
+
+function getOutputSignatureValues(record) {
+    return {
+        currentLevel: getLinkedIds(record, CONFIG.enrollmentFields.currentLevel),
+        nextLevel: getLinkedIds(record, CONFIG.enrollmentFields.nextLevel),
+        levelGateRule: getLinkedIds(record, CONFIG.enrollmentFields.levelGateRule),
+        levelStatus: getText(record, CONFIG.enrollmentFields.levelStatus),
+    };
+}
+
+function buildProgressionSignature(enrollment, gateRules, levels) {
     const gateRuleValues = gateRules
         .map(getGateRuleSignature)
         .sort((a, b) => a.id.localeCompare(b.id));
+    const levelValues = levels
+        .map(getLevelSignature)
+        .sort((a, b) => a.id.localeCompare(b.id));
 
     return JSON.stringify({
-        version: 1,
+        version: 2,
         enrollmentId: enrollment.id,
         enrollment: getEnrollmentSignatureValues(enrollment),
+        outputs: getOutputSignatureValues(enrollment),
+        programInstance: getLinkedIds(enrollment, CONFIG.enrollmentFields.programInstance),
+        levels: levelValues,
         gateRules: gateRuleValues,
     });
 }
@@ -242,18 +286,18 @@ function shouldQueue(enrollment, currentSignature) {
         return { queue: false, reason: "already_pending" };
     }
 
-    const lastQueuedSignature = getText(
+    const lastReconciledSignature = getText(
         enrollment,
-        CONFIG.enrollmentFields.lastQueuedSignature
+        CONFIG.enrollmentFields.lastReconciledSignature
     );
 
-    if (lastQueuedSignature === currentSignature) {
+    if (lastReconciledSignature === currentSignature) {
         return { queue: false, reason: "unchanged_signature" };
     }
 
     return {
         queue: true,
-        reason: lastQueuedSignature ? "signature_changed" : "initial_signature",
+        reason: lastReconciledSignature ? "signature_changed" : "initial_signature",
     };
 }
 
@@ -272,6 +316,7 @@ async function main() {
     const requestedRecordId = cleanString(inputConfig.recordId);
     const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
     const gateRulesTable = base.getTable(CONFIG.tables.levelGateRules);
+    const levelsTable = base.getTable(CONFIG.tables.levels);
 
     const requiredEnrollmentFields = [
         ...NUMBER_FIELDS,
@@ -279,13 +324,21 @@ async function main() {
         CONFIG.enrollmentFields.active,
         CONFIG.enrollmentFields.levelRecalcNeeded,
         CONFIG.enrollmentFields.lastQueuedSignature,
+        CONFIG.enrollmentFields.lastReconciledSignature,
+        CONFIG.enrollmentFields.currentLevel,
+        CONFIG.enrollmentFields.nextLevel,
+        CONFIG.enrollmentFields.levelGateRule,
+        CONFIG.enrollmentFields.levelStatus,
+        CONFIG.enrollmentFields.programInstance,
     ];
     const requiredGateRuleFields = Object.values(CONFIG.gateRuleFields);
+    const requiredLevelFields = Object.values(CONFIG.levelFields);
 
     try {
         setOutputSafe(CONFIG.outputs.debugStep, "01 - Validate schema");
         requireFields(enrollmentsTable, requiredEnrollmentFields);
         requireFields(gateRulesTable, requiredGateRuleFields);
+        requireFields(levelsTable, requiredLevelFields);
 
         setOutputSafe(CONFIG.outputs.debugStep, "02 - Load gate rules");
         const gateRuleQuery = await gateRulesTable.selectRecordsAsync({
@@ -293,27 +346,45 @@ async function main() {
         });
         const gateRules = gateRuleQuery.records;
 
-        setOutputSafe(CONFIG.outputs.debugStep, "03 - Load enrollments");
+        setOutputSafe(CONFIG.outputs.debugStep, "03 - Load levels");
+        const levelQuery = await levelsTable.selectRecordsAsync({
+            fields: requiredLevelFields,
+        });
+        const levels = levelQuery.records;
+
+        setOutputSafe(CONFIG.outputs.debugStep, "04 - Load enrollments");
         const enrollmentQuery = await enrollmentsTable.selectRecordsAsync({
             fields: requiredEnrollmentFields,
         });
         const enrollments = requestedRecordId
             ? enrollmentQuery.records.filter(
-                  (record) =>
-                      record.id === requestedRecordId &&
-                      getBoolean(record, CONFIG.enrollmentFields.active)
+                  (record) => record.id === requestedRecordId
               )
-            : enrollmentQuery.records.filter((record) =>
-                  getBoolean(record, CONFIG.enrollmentFields.active)
-              );
+            : enrollmentQuery.records;
 
         const updates = [];
+        const signatureOnlyUpdates = [];
         let skippedPending = 0;
         let skippedUnchanged = 0;
 
         for (const enrollment of enrollments) {
-            const signature = buildProgressionSignature(enrollment, gateRules);
+            const signature = buildProgressionSignature(enrollment, gateRules, levels);
             const decision = shouldQueue(enrollment, signature);
+
+            if (!getBoolean(enrollment, CONFIG.enrollmentFields.active)) {
+                if (
+                    decision.reason !== "already_pending" &&
+                    getText(enrollment, CONFIG.enrollmentFields.lastQueuedSignature) !== signature
+                ) {
+                    signatureOnlyUpdates.push({
+                        id: enrollment.id,
+                        fields: {
+                            [CONFIG.enrollmentFields.lastQueuedSignature]: signature,
+                        },
+                    });
+                }
+                continue;
+            }
 
             if (!decision.queue) {
                 if (decision.reason === "already_pending") skippedPending += 1;
@@ -330,12 +401,18 @@ async function main() {
             });
         }
 
-        setOutputSafe(CONFIG.outputs.debugStep, "04 - Queue changed enrollments");
+        setOutputSafe(CONFIG.outputs.debugStep, "05 - Queue changed enrollments");
+        for (let index = 0; index < signatureOnlyUpdates.length; index += 50) {
+            await enrollmentsTable.updateRecordsAsync(
+                signatureOnlyUpdates.slice(index, index + 50)
+            );
+        }
         for (let index = 0; index < updates.length; index += 50) {
             await enrollmentsTable.updateRecordsAsync(updates.slice(index, index + 50));
         }
 
         unloadQuerySafe(gateRuleQuery);
+        unloadQuerySafe(levelQuery);
         unloadQuerySafe(enrollmentQuery);
 
         const message = `Scanned ${enrollments.length}; queued ${updates.length}; skipped ${skippedPending} pending and ${skippedUnchanged} unchanged.`;
@@ -353,7 +430,7 @@ async function main() {
         setOutputs({
             status: updates.length ? "success" : "skipped",
             action: updates.length ? "queued" : "skipped_unchanged",
-            debugStep: "05 - Complete",
+            debugStep: "06 - Complete",
             queuedCount: updates.length,
             scannedCount: enrollments.length,
         });
