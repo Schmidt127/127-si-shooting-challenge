@@ -11,7 +11,7 @@ there is no competing lifetime-XP observation window.
 | Submission Base XP | 010 (unchanged) |
 | Streak occurrence topology | 053 v5.4 |
 | Streak XP Event | 054 v5.8 |
-| Shot milestone unlock eligibility | 066 v3.6 |
+| Shot milestone unlock eligibility | 066 v3.7 |
 | Shot milestone XP Event | 059 v3.6 |
 | Progression | 041 queues; 042 assigns |
 
@@ -56,7 +56,7 @@ Every action input is the dynamic triggering Airtable record ID, never a fixed
 
 ## Paste and controlled proof order
 
-1. Paste 053 v5.4, then 054 v5.8, then 066 v3.6, then 059 v3.6. Leave
+1. Paste 053 v5.4, then 054 v5.8, then 066 v3.7, then 059 v3.6. Leave
    010/041/042 unchanged.
 2. Confirm ON/OFF state only after each matching trigger is recorded.
 3. Run read-only preflight again.

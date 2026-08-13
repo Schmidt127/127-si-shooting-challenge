@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-06 (v3.5 Program Instance Week isolation + v3.4 createRecords fix)
+Last GitHub Update: 2026-08-13 (v3.7 counted-submission lifecycle reconciliation)
 
 Purpose:
 Creates Athlete Achievement Unlock rows when an Enrollment crosses configured Shot Milestone thresholds.
@@ -27,11 +27,14 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * 066 - ACHIEVEMENTS AND MILESTONES
  * Create Shot Milestone Unlocks
  *
- * Version: v3.6
+ * Version: v3.7
  * Date Written: 2026-06-17
  * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
+ * - v3.7 (2026-08-13): Require formula-backed Count This Submission? before
+ *   current-total milestone eligibility is calculated.
+ * - v3.6 (2026-08-13): Reconcile inactive/restored canonical unlocks.
  * - v3.5 (2026-08-06): Program Instance isolation — Week date match scoped to
  *   Enrollment.Program Instance; throw on ambiguous overlaps inside one PI.
  * - v3.4 (2026-08-06): Defensive createRecordsInBatches — accept raw field maps or
@@ -118,7 +121,7 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
 
 const SCRIPT = {
   scriptName: "066 - Achievements and Milestones - Create Shot Milestone Unlocks",
-  version: "v3.6",
+  version: "v3.7",
   versionDate: "2026-08-13",
   originalWrittenDate: "2026-06-17",
   lastUpdated: "2026-08-13",
@@ -160,6 +163,7 @@ const CONFIG = {
     enrollment: "Enrollment",
     activityDate: "Activity Date",
     totalShotsCounted: "Total Shots Counted",
+    countThisSubmission: "Count This Submission?",
   },
 
   shotMilestoneFields: {
@@ -356,6 +360,7 @@ function validateRequiredSchema(tables) {
   requireField(tables.submissions, CONFIG.submissionFields.enrollment);
   requireField(tables.submissions, CONFIG.submissionFields.activityDate);
   requireField(tables.submissions, CONFIG.submissionFields.totalShotsCounted);
+  requireField(tables.submissions, CONFIG.submissionFields.countThisSubmission);
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.gradeBand);
   requireField(tables.shotMilestones, CONFIG.shotMilestoneFields.milestoneShotCount);
   requireField(tables.unlocks, CONFIG.unlockFields.enrollment);
@@ -885,6 +890,7 @@ async function main() {
           CONFIG.submissionFields.enrollment,
           CONFIG.submissionFields.activityDate,
           CONFIG.submissionFields.totalShotsCounted,
+          CONFIG.submissionFields.countThisSubmission,
         ]),
       }),
       weeksTable.selectRecordsAsync({
@@ -939,8 +945,17 @@ async function main() {
       record: submission,
       activityDate: getDateValue(submission, CONFIG.submissionFields.activityDate),
       totalShotsCounted: getNumber(submission, CONFIG.submissionFields.totalShotsCounted),
+      countThisSubmission: getBooleanish(
+        submission,
+        CONFIG.submissionFields.countThisSubmission,
+        false
+      ),
     }))
-    .filter((submission) => submission.activityDate && submission.totalShotsCounted > 0)
+    .filter((submission) =>
+      submission.countThisSubmission &&
+      submission.activityDate &&
+      submission.totalShotsCounted > 0
+    )
     .sort((a, b) => {
       const dateDiff = a.activityDate.getTime() - b.activityDate.getTime();
       if (dateDiff !== 0) return dateDiff;
