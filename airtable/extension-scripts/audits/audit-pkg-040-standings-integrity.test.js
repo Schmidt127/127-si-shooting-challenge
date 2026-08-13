@@ -42,6 +42,7 @@ function enrollment(id, overrides = {}) {
     "Level Sort Order - For Softr": 2,
     "Level Status": { name: "Assigned" },
     "Lifetime XP Total": 100,
+    "Lifetime XP Manual Adjustments": 0,
     "Total Shots Counted": 25,
     "XP Events": [{ id: `xp-${id}` }],
     "Full Athlete Name": `Athlete ${id}`,
@@ -50,7 +51,7 @@ function enrollment(id, overrides = {}) {
 }
 
 function run({ enrollments = [enrollment("one")], levels, xpEvents } = {}) {
-  const activeLevels = levels || [record("level-2", { "Active?": true, "Sort Order": 2, "Level Name": "Level 2" })];
+  const activeLevels = levels || [record("level-2", { "Active?": true, "Sort Order": 2, "Level Name": "Level 2", "XP Required (Cumulative)": 0 })];
   const events = xpEvents || [record("xp-one", { "Active?": true, Enrollment: [{ id: "one" }], "Active XP Points": 100 })];
   const { analyze } = loadHelpers();
   return analyze({
@@ -110,15 +111,31 @@ test("audit catches inactive XP links, inactive levels, and duplicate ranks", ()
   const report = run({
     enrollments: [row],
     levels: [
-      record("level-2", { "Active?": false, "Sort Order": 2 }),
-      record("level-other", { "Active?": true, "Sort Order": 2 }),
-      record("level-other-2", { "Active?": true, "Sort Order": 2 }),
+      record("level-2", { "Active?": false, "Sort Order": 2, "XP Required (Cumulative)": 0 }),
+      record("level-other", { "Active?": true, "Sort Order": 2, "XP Required (Cumulative)": 0 }),
+      record("level-other-2", { "Active?": true, "Sort Order": 2, "XP Required (Cumulative)": 0 }),
     ],
     xpEvents: [record("xp-inactive", { "Active?": false, Enrollment: [{ id: "one" }], "Active XP Points": 100 })],
   });
   assert.strictEqual(report.issueCounts.inactive_xp_event_linked, 1);
   assert.strictEqual(report.issueCounts.current_level_inactive, 1);
   assert.strictEqual(report.issueCounts.duplicate_level_rank, 1);
+});
+
+test("audit handles manual XP and detects non-settled/downward progression state", () => {
+  const adjusted = enrollment("adjusted", {
+    "Lifetime XP Total": 110,
+    "Lifetime XP Manual Adjustments": 10,
+    "Level Status": { name: "Processing" },
+  });
+  const report = run({
+    enrollments: [adjusted],
+    levels: [record("level-2", { "Active?": true, "Sort Order": 2, "XP Required (Cumulative)": 200 })],
+    xpEvents: [record("xp-adjusted", { "Active?": true, Enrollment: [{ id: "adjusted" }], "Active XP Points": 100 })],
+  });
+  assert.strictEqual(report.issueCounts.lifetime_xp_mismatch, 0);
+  assert.strictEqual(report.issueCounts.non_settled_level_status, 1);
+  assert.strictEqual(report.issueCounts.xp_below_current_level, 1);
 });
 
 console.log("\nAll PKG-040 standings audit tests passed.");

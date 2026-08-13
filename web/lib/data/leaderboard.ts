@@ -8,6 +8,7 @@ import { isValidPublicSlug, normalizeProfileSlug } from "./public-athlete-profil
 export type EnrollmentLeaderboardFields = {
   "Active?"?: unknown;
   Athlete?: unknown;
+  "Athlete ID Lookup"?: unknown;
   "Program Instance"?: unknown;
   "Full Athlete Name"?: unknown;
   "School Name Lookup"?: unknown;
@@ -28,6 +29,7 @@ export type EnrollmentLeaderboardFields = {
 export type LeaderboardScope = {
   schoolYear: string;
   programInstanceName: string;
+  activeLevelsByName: ReadonlyMap<string, number>;
 };
 
 type LeaderboardRecord = { id: string; fields: EnrollmentLeaderboardFields };
@@ -149,7 +151,12 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
       throw new LeaderboardIntegrityError(`Enrollment ${record.id} is inactive but was returned by standings.`);
     }
 
-    const athlete = requireExactlyOneLinkedToken(fields.Athlete, "Athlete link", record.id);
+    requireExactlyOneLinkedToken(fields.Athlete, "Athlete link", record.id);
+    const athlete = requireExactlyOneLinkedToken(
+      fields["Athlete ID Lookup"],
+      "Athlete ID Lookup",
+      record.id,
+    );
     const programInstance = requireExactlyOneLinkedToken(
       fields["Program Instance"],
       "Program Instance link",
@@ -172,15 +179,38 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
     }
     canonicalIdentities.set(identity, record.id);
 
-    requireExactlyOneLinkedToken(fields["Current Level"], "Current Level", record.id);
+    const currentLevel = requireExactlyOneLinkedToken(
+      fields["Current Level"],
+      "Current Level",
+      record.id,
+    );
     const status = requireText(fields["Level Status"], "Level Status", record.id);
     if (status !== "Assigned" && status !== "Gate Blocked") {
       throw new LeaderboardIntegrityError(
         `Enrollment ${record.id} has non-settled Level Status "${status}".`,
       );
     }
-    requireText(fields["Current Level - Public Facing Display"], "Current Level display", record.id);
-    requiredNonNegativeNumber(fields["Level Sort Order - For Softr"], "Level Rank", record.id);
+    const publicLevel = requireText(
+      fields["Current Level - Public Facing Display"],
+      "Current Level display",
+      record.id,
+    );
+    if (publicLevel !== currentLevel) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has mismatched Current Level display and link.`,
+      );
+    }
+    const levelRank = requiredNonNegativeNumber(
+      fields["Level Sort Order - For Softr"],
+      "Level Rank",
+      record.id,
+    );
+    const activeLevelRank = scope.activeLevelsByName.get(currentLevel);
+    if (activeLevelRank === undefined || activeLevelRank !== levelRank) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
+      );
+    }
     requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
     requiredNonNegativeNumber(fields["Total Shots Counted"], "Total Shots Counted", record.id);
   }
@@ -202,7 +232,7 @@ export function mapEnrollmentToLeaderboardEntry(
 ): LeaderboardEntry {
   const fields = record.fields;
   const sortKeys = getLeaderboardSortKeys(fields);
-  const headshot = mapAttachments(fields["Athlete Headshot"]);
+  const headshot = mapAttachments(fields["Athlete Headshot"])[0];
 
   return {
     rank,
@@ -210,8 +240,7 @@ export function mapEnrollmentToLeaderboardEntry(
     school: asText(fields["School Name Lookup"]),
     grade: asText(fields.Grade),
     level: asText(fields["Current Level - Public Facing Display"]),
-    levelSortOrder: sortKeys.levelSortOrder,
-    headshot: headshot[0] ?? null,
+    headshot: headshot?.url ? { url: headshot.url } : null,
     xp: sortKeys.xp,
     totalShots: sortKeys.totalShots,
     publicProfileSlug: resolvePublicProfileSlug(fields),

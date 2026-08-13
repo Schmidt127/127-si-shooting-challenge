@@ -93,6 +93,7 @@ export const AIRTABLE_TABLES = {
 export const LEADERBOARD_FIELDS = [
   "Active?",
   "Athlete",
+  "Athlete ID Lookup",
   "Program Instance",
   "Full Athlete Name",
   "School Name Lookup",
@@ -120,12 +121,18 @@ const PROGRAM_INSTANCE_SCOPE_FIELDS = [
   "School Year - Linked",
   "Record Id",
 ] as const;
+const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "Active?"] as const;
 
 type StandingsConfigFields = { "Active School Year"?: unknown };
 type ProgramInstanceScopeFields = {
   "Name - Program Instance"?: unknown;
   "School Year - Linked"?: unknown;
   "Record Id"?: unknown;
+};
+type StandingsLevelFields = {
+  "Level Name"?: unknown;
+  "Sort Order"?: unknown;
+  "Active?"?: unknown;
 };
 
 /**
@@ -269,7 +276,11 @@ function exactText(value: unknown): string {
  * Airtable's public REST linked-record response contains display values only, so
  * returned rows are additionally checked against this resolved canonical name.
  */
-async function getStandingsScope(): Promise<{ schoolYear: string; programInstanceName: string }> {
+async function getStandingsScope(): Promise<{
+  schoolYear: string;
+  programInstanceName: string;
+  activeLevelsByName: ReadonlyMap<string, number>;
+}> {
   const config = await listAirtableRecords<StandingsConfigFields>({
     tableName: STANDINGS_CONFIG_TABLE,
     fields: [...STANDINGS_CONFIG_FIELDS],
@@ -304,7 +315,24 @@ async function getStandingsScope(): Promise<{ schoolYear: string; programInstanc
   if (!programInstanceName) {
     throw new Error("Current standings Program Instance has no canonical name.");
   }
-  return { schoolYear, programInstanceName };
+  const levelResponse = await listAirtableRecords<StandingsLevelFields>({
+    tableName: AIRTABLE_TABLES.levels,
+    fields: [...STANDINGS_LEVEL_FIELDS],
+    filterByFormula: "{Active?}=1",
+    revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
+  });
+  const activeLevelsByName = new Map<string, number>();
+  for (const level of levelResponse.records) {
+    const name = exactText(level.fields["Level Name"]);
+    const rawRank = level.fields["Sort Order"];
+    const rank = typeof rawRank === "number" ? rawRank : Number(rawRank);
+    if (!name || !Number.isFinite(rank) || rank < 0 || activeLevelsByName.has(name)) {
+      throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || level.id}".`);
+    }
+    activeLevelsByName.set(name, rank);
+  }
+  if (activeLevelsByName.size === 0) throw new Error("Standings require at least one active Level.");
+  return { schoolYear, programInstanceName, activeLevelsByName };
 }
 
 /**

@@ -56,11 +56,8 @@ describe("leaderboard mapping", () => {
       school: "Test High",
       grade: "8",
       level: "Level 3",
-      levelSortOrder: 3,
       headshot: {
-        id: "att1",
         url: "https://example.com/headshot.jpg",
-        filename: "headshot.jpg",
       },
       xp: 1500,
       totalShots: 900,
@@ -197,6 +194,7 @@ describe("leaderboard eligibility contract", () => {
   const scope = {
     schoolYear: "2026-2027",
     programInstanceName: "Shooting Challenge | 2026-2027",
+    activeLevelsByName: new Map([["Level 2", 2]]),
   };
 
   function validRecord(id: string, overrides: Record<string, unknown> = {}) {
@@ -205,6 +203,7 @@ describe("leaderboard eligibility contract", () => {
       fields: {
         "Active?": true,
         Athlete: [{ name: `Athlete ${id}` }],
+        "Athlete ID Lookup": [`athlete-${id}`],
         "Program Instance": [{ name: scope.programInstanceName }],
         "School Year": scope.schoolYear,
         "Current Level": [{ name: "Level 2" }],
@@ -228,6 +227,7 @@ describe("leaderboard eligibility contract", () => {
     ["wrong program instance", { "Program Instance": [{ name: "Other | 2026-2027" }] }],
     ["missing athlete", { Athlete: [] }],
     ["multiple athletes", { Athlete: [{ name: "A" }, { name: "B" }] }],
+    ["missing stable athlete identity", { "Athlete ID Lookup": [] }],
     ["missing current level", { "Current Level": [] }],
     ["inactive level status", { "Level Status": "Error" }],
     ["blank XP", { "Lifetime XP Total": "" }],
@@ -239,8 +239,14 @@ describe("leaderboard eligibility contract", () => {
   });
 
   it("rejects duplicate canonical Athlete + Program Instance + School Year identities", () => {
-    const first = validRecord("rec1", { Athlete: [{ name: "Same Athlete" }] });
-    const second = validRecord("rec2", { Athlete: [{ name: "Same Athlete" }] });
+    const first = validRecord("rec1", { "Athlete ID Lookup": ["same-athlete"] });
+    const second = validRecord("rec2", { "Athlete ID Lookup": ["same-athlete"] });
     expect(() => requireEligibleLeaderboardRecords([first, second], scope)).toThrow(/Duplicate canonical/);
+  });
+
+  it("rejects an inactive or rank-mismatched Current Level", () => {
+    expect(() => requireEligibleLeaderboardRecords([
+      validRecord("rec1", { "Level Sort Order - For Softr": 3 }),
+    ], scope)).toThrow(/inactive or mismatched/);
   });
 });

@@ -39,7 +39,7 @@ Instance scope from Airtable's public linked-record response.
 
 **Fields read:**
 
-- `Active?`, `Athlete`, `Program Instance`, `School Year`
+- `Active?`, `Athlete`, `Athlete ID Lookup`, `Program Instance`, `School Year`
 - `Current Level`, `Current Level - Public Facing Display`, `Level Status`, `Level Sort Order - For Softr`
 - `Full Athlete Name`, `School Name Lookup`, `Grade`
 - `Athlete Headshot`, `Lifetime XP Total`, `Total Shots Counted`, `School Year`

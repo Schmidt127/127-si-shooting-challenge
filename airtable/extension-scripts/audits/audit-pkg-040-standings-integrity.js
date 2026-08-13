@@ -19,9 +19,9 @@ const CONFIG = {
     currentLevel: "Current Level", levelRank: "Level Sort Order - For Softr",
     levelStatus: "Level Status", lifetimeXp: "Lifetime XP Total", shots: "Total Shots Counted",
     xpEvents: "XP Events", programName: "Program Instance Name Only", fullName: "Full Athlete Name",
-    recalc: "Level Recalc Needed?",
+    recalc: "Level Recalc Needed?", manualXp: "Lifetime XP Manual Adjustments",
   },
-  level: { active: "Active?", sortOrder: "Sort Order", name: "Level Name" },
+  level: { active: "Active?", sortOrder: "Sort Order", name: "Level Name", threshold: "XP Required (Cumulative)" },
   xp: { active: "Active?", enrollment: "Enrollment", activePoints: "Active XP Points" },
   knownIssueTypes: [
     "missing_required_field", "inactive_enrollment", "missing_athlete_link", "multiple_athlete_links",
@@ -30,7 +30,8 @@ const CONFIG = {
     "duplicate_level_rank", "invalid_level_rank", "lifetime_xp_blank", "lifetime_xp_invalid",
     "lifetime_xp_negative", "lifetime_xp_unsettled", "counted_shots_blank", "counted_shots_invalid",
     "counted_shots_negative", "counted_shots_unsettled", "inactive_xp_event_linked", "lifetime_xp_mismatch",
-    "progression_recalc_pending", "level_xp_inconsistency", "test_athlete_name_match",
+    "progression_recalc_pending", "non_settled_level_status", "level_xp_inconsistency",
+    "xp_below_current_level", "test_athlete_name_match",
     "view_membership_unobservable", "formula_timing_limitation", "public_view_contract",
   ],
 };
@@ -124,6 +125,10 @@ function analyze({ enrollments, levels, xpEvents, enrollmentTable, levelTable, x
     if (current.length === 1 && !bool(levelById.get(current[0]), CONFIG.level.active)) {
       addIssue(report, "current_level_inactive", "error", { recordId: id, levelId: current[0] });
     }
+    const levelStatus = text(enrollment, CONFIG.enrollment.levelStatus);
+    if (levelStatus !== "Assigned" && levelStatus !== "Gate Blocked") {
+      addIssue(report, "non_settled_level_status", "error", { recordId: id, levelStatus });
+    }
     const rank = numericState(enrollment, CONFIG.enrollment.levelRank);
     if (rank.kind === "blank") addIssue(report, "missing_level_rank", "error", { recordId: id });
     else if (rank.kind === "invalid") addIssue(report, "invalid_level_rank", "error", { recordId: id });
@@ -149,17 +154,23 @@ function analyze({ enrollments, levels, xpEvents, enrollmentTable, levelTable, x
       }
     }
     if (xp.kind === "number") {
+      const manual = numericState(enrollment, CONFIG.enrollment.manualXp);
       const expected = activeXp.reduce((sum, event) => {
         const value = numericState(event, CONFIG.xp.activePoints);
         return sum + (value.kind === "number" ? value.value : 0);
-      }, 0);
+      }, 0) + (manual.kind === "number" ? manual.value : 0);
       if (xp.value !== expected) addIssue(report, "lifetime_xp_mismatch", "error", { recordId: id, expected, actual: xp.value });
     }
     if (bool(enrollment, CONFIG.enrollment.recalc)) addIssue(report, "progression_recalc_pending", "warning", { recordId: id });
     if (current.length === 1 && xp.kind === "number") {
-      const levelRank = numericState(levelById.get(current[0]), CONFIG.level.sortOrder);
+      const currentLevel = levelById.get(current[0]);
+      const levelRank = numericState(currentLevel, CONFIG.level.sortOrder);
       if (levelRank.kind !== "number" || rank.kind !== "number" || levelRank.value !== rank.value) {
         addIssue(report, "level_xp_inconsistency", "error", { recordId: id, currentLevelId: current[0] });
+      }
+      const threshold = numericState(currentLevel, CONFIG.level.threshold);
+      if (threshold.kind !== "number" || xp.value < threshold.value) {
+        addIssue(report, "xp_below_current_level", "error", { recordId: id, currentLevelId: current[0], xp: xp.value, threshold: threshold.value });
       }
     }
     if (/test|fixture|schmidt/i.test(text(enrollment, CONFIG.enrollment.fullName))) {

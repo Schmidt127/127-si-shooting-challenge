@@ -98,6 +98,19 @@ describe("privacy-safe fields", () => {
       }
     }
   });
+
+  it("reduces Airtable attachment metadata to a public URL only", () => {
+    const data = buildLeaderboardData([{
+      id: "recX00000000000002",
+      fields: {
+        ...leaderboardFields("Any Athlete", 1, 10, 0),
+        "Athlete Headshot": [{ id: "attPrivate", filename: "private-name.jpg", url: "https://example.com/a.jpg" }],
+      },
+    }]);
+    expect(data.entries[0].headshot).toEqual({ url: "https://example.com/a.jpg" });
+    expect(JSON.stringify(data.entries[0])).not.toContain("attPrivate");
+    expect(JSON.stringify(data.entries[0])).not.toContain("private-name.jpg");
+  });
 });
 
 describe("deterministic tie ordering", () => {

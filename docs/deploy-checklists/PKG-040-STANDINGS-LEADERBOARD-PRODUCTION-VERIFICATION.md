@@ -1,7 +1,8 @@
 # PKG-040 — Standings and Leaderboard Production Verification
 
-Status: Repository-ready only — **do not execute while PKG-006R / PKG-036
-coordination locks are active**.
+Status: Repository-ready only — the read-only inventory/audit may run while
+PKG-006R / PKG-036 locks are active, but **no correction observation or data
+manipulation may begin until the relevant lock owner releases it**.
 Owner: Mike (Production operator)
 Repository boundary: This packet performs read-only inspection and public
 readback only. It does not change Airtable records, fields, views,
@@ -75,10 +76,12 @@ Record Enrollment record IDs privately in the worksheet; do not publish them.
 6. **Duplicate stop:** if the audit reports a duplicate Athlete + Program
    Instance + School Year, stop. Do not choose a winner, deactivate a row, or
    alter links under this package.
-7. **XP correction:** only during the already-authorized PKG-006R flow,
-   observe an approved XP increase then withdrawal/downward correction through
+7. **XP correction:** after the PKG-006R owner explicitly releases its
+   observation window, hand this worksheet to that package’s operator and
+   observe its approved XP increase then withdrawal/downward correction through
    settled `Lifetime XP Total`, 041, 042, the view, and public readback.
-8. **Level correction:** only during the already-authorized PKG-036 flow,
+8. **Level correction:** after the PKG-036 owner explicitly releases its
+   observation window, hand this worksheet to that package’s operator and
    observe Current Level / Level Rank move upward and downward after 041/042
    settlement. Never edit Current Level directly.
 9. **Shot correction:** observe an existing authorized counted-shot correction

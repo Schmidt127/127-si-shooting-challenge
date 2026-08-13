@@ -22,6 +22,7 @@ function enrollment(
     fields: {
       "Active?": true,
       Athlete: [{ name: athlete }],
+      "Athlete ID Lookup": [`athlete-${id}`],
       "Program Instance": [{ name: PROGRAM_INSTANCE }],
       "Full Athlete Name": athlete,
       "Current Level": [{ name: "Level 2" }],
@@ -50,6 +51,14 @@ function installQueryMock(records: ReturnType<typeof enrollment>[]) {
             "School Year - Linked": SCHOOL_YEAR,
             "Record Id": "recProgram",
           },
+        }],
+      };
+    }
+    if (params.tableName === "Levels") {
+      return {
+        records: [{
+          id: "recLevel2",
+          fields: { "Level Name": "Level 2", "Sort Order": 2, "Active?": true },
         }],
       };
     }
@@ -82,6 +91,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
     expect(enrollmentCall.fields).toEqual(expect.arrayContaining([
       "Active?",
       "Athlete",
+      "Athlete ID Lookup",
       "Program Instance",
       "Current Level",
       "Level Status",
@@ -97,12 +107,15 @@ describe("fetchLeaderboard Airtable adapter", () => {
       if (params.tableName === "Program Instance - Synced") {
         return { records: [{ id: "recProgram", fields: { "Name - Program Instance": PROGRAM_INSTANCE } }] };
       }
+      if (params.tableName === "Levels") {
+        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "Active?": true } }] };
+      }
       throw new AirtableApiError(422, JSON.stringify({ error: { type: "VIEW_NAME_NOT_FOUND" } }));
     });
 
     await expect(fetchLeaderboard()).rejects.toThrow(/VIEW_NAME_NOT_FOUND/);
-    expect(listAirtableRecordsMock).toHaveBeenCalledTimes(3);
-    expect(listAirtableRecordsMock.mock.calls[2][0].filterByFormula).toBeUndefined();
+    expect(listAirtableRecordsMock).toHaveBeenCalledTimes(4);
+    expect(listAirtableRecordsMock.mock.calls[3][0].filterByFormula).toBeUndefined();
   });
 
   it("reflects upward and downward corrected values on the next revalidated adapter read", async () => {
