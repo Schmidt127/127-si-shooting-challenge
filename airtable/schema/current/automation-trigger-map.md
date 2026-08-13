@@ -117,7 +117,7 @@ does not prove that Production has been configured.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | `Create XP Events` + ready | `101-zoom-attendance-xp-award-meeting-xp.js` | **XP Events** (meeting) |
+| **101** | Zoom Meetings | `Zoom XP Reconciliation Needed? = 1` | `101-zoom-attendance-xp-award-meeting-xp.js` v6.0 | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
 
 ### Asset reuse review (116)
 
