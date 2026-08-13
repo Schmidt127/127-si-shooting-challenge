@@ -60,6 +60,9 @@ First automation upgraded to V2 Automation Standard (2026-07-05).
  * - Multiple milestones may unlock in the same Week — that is valid (not a duplicate).
  * - Do NOT write Athlete Achievement Unlocks.Unlock Key (computed/formula in this base).
  * - Skip inactive enrollments without error.
+ * - Do not infer withdrawal of a prior unlock from a lower aggregate total in
+ *   this positive Enrollment-owned trigger; milestone XP correction remains
+ *   blocked until the unlock has an observable eligibility transition.
  * - Grade Band and milestone thresholds come from linked config records — config-over-code.
  * - Grade Band matching: linked record IDs first; normalized display label only as fallback.
  * - Week resolution uses Weeks.Start Date / End Date ranges (America/Denver) scoped by
@@ -1273,6 +1276,7 @@ async function main() {
   setOutputSafe("createdUnlocksOut", createdCount);
   setOutputSafe("updatedUnlocksOut", updatedExistingCount);
   setOutputSafe("skippedExistingUnlocksOut", skippedExistingCount);
+  setOutputSafe("milestoneReconciliationOut", "blocked_no_unlock_eligibility_signal");
 
   console.log(
     JSON.stringify(
@@ -1291,6 +1295,7 @@ async function main() {
         skippedExistingUnlocks: skippedExistingCount,
         missingCrossingDates: missingCrossingDateCount,
         weekWrites: weekWriteCount,
+        milestoneReconciliation: "blocked_no_unlock_eligibility_signal",
       },
       null,
       2

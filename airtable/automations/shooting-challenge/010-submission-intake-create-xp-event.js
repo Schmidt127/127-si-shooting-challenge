@@ -4,50 +4,53 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-22
+Last GitHub Update: 2026-08-13
 
 Purpose:
-Creates or repairs Submission Base XP Events from counted shooting submissions.
+Reconcile one Submission's canonical Submission Base XP Event.
 
 Trigger:
-Submissions when Count This Submission? is checked and XP should be awarded.
+Submissions when Reconciliation Needed? = 1; pass the dynamic recordId.
 
 Important Tables:
-Submissions, XP Events, XP Reward Rules, Enrollments, Weekly Athlete Summary
+Submissions, XP Events, XP Reward Rules, Enrollments, Weeks,
+Weekly Athlete Summary
 
 Important Fields:
-Count This Submission?, Total Shots Counted, XP Events, Weekly Athlete Summary, XP Award Status
+Reconciliation signature chain, Count This Submission?, Total Shots Counted,
+Enrollment, Week, Weekly Athlete Summary, XP Events, Active?, Source Key
 
 Notes:
 GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
+This automation does not write milestone/streak XP directly. 053/054 and
+066/059 remain their canonical owners and fail closed when their source
+ownership cannot be proven.
 */
 
-/************************************************************************************************
- * 010 - Submission Intake and Asset Creation - Create XP Event from Submission
+/************************************************************
+ * 010 - SUBMISSION INTAKE AND ASSET CREATION
+ * Create/Reconcile Submission Base XP Event
  *
- * Version: 10.6
+ * Version: v10.7
  * Date Written: 2026-06-06
- * Last Updated: 2026-08-07
+ * Last Updated: 2026-08-13
  *
  * PURPOSE
- * - Reads one Submission record.
- * - Confirms the Submission should receive daily shooting submission XP.
- * - Uses Total Shots Counted so both Simple Total and Detailed Shooting entries are supported.
- * - Prevents excluded, duplicate-review, homework-only, video-only, and zero-shot submissions
- *   from receiving daily shooting submission XP.
- * - Finds the active XP Reward Rule for SHOOTING_BASE.
- * - Finds an existing daily shooting XP Event using duplicate-safe checks.
- * - Repairs the existing XP Event when found.
- * - Creates a new XP Event only when no valid existing XP Event is found.
- * - Writes a simple public-facing reason to XP Reason Public.
- * - Writes technical audit wording to XP Reason Debug.
- * - Writes the XP activity/source date when a writable date field exists.
- * - Writes the XP activity/source date label when a writable select/text field exists.
- * - Links the XP Event back to the Submission.
- * - Links the XP Event to Weekly Athlete Summary when resolvable from the Submission
- *   or by Enrollment + Week lookup, with a repair pass after create/update.
- * - Marks Submission XP Award Status as Awarded.
- * - Re-arms Shot Milestone checking on the linked Enrollment after successful counted-shot XP processing.
+ * - Reconcile one Submission after the approved signature formula changes.
+ * - Preserve positive counted-shot XP creation and replay behavior.
+ * - Deactivate or reactivate only the exact owned Submission XP Event.
+ *
+ * IMPORTANT DESIGN RULES
+ * - Source Key is exactly SUBMISSION_XP|{Submission Record ID}.
+ * - XP Events are append-only; no XP Event is deleted.
+ * - Exact Enrollment, Week, WAS, and event ownership are required.
+ * - Zero/multiple links, duplicate keys, future dates, inactive Enrollment,
+ *   formula lag, and partial writes fail closed.
+ * - Airtable has no atomic uniqueness; the final recheck is mandatory.
+ * - Last Reconciled Signature is written only after the expected Active? state
+ *   is visible and Reconciliation Needed? rereads as 0.
+ * - This is not the milestone/streak XP writer; 041/042 remain progression
+ *   owners and are never called as XP writers.
  *
  * FOLDER
  * - 01 - Submission Intake and Asset Creation
@@ -58,1556 +61,596 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * TRIGGER TABLE
  * - Submissions
  *
- * TRIGGER TYPE
- * - When record matches conditions
+ * RECOMMENDED TRIGGER CONDITIONS
+ * - Reconciliation Needed? = 1
+ * - Input variable recordId = triggering Submission record ID
  *
- * REQUIRED INPUT
+ * DO NOT USE THIS TRIGGER CONDITION
+ * - Count This Submission? alone; that positive-only filter cannot observe
+ *   later exclusion, future-date, link, or Enrollment changes.
+ *
+ * REQUIRED INPUT VARIABLES
  * - recordId = triggering Submission record ID
  *
- * REQUIRED BUSINESS RULE
- * - Daily shooting submission XP is awarded only when:
- *      Count This Submission? = 1
- *      Total Shots Counted > 0
+ * OUTPUTS (automation script action outputs)
+ * - statusOut = success | skipped | error
+ * - actionOut = created | reactivated_same_event | repaired_same_event |
+ *   deactivated_same_event | skipped_ineligible | skipped_already_reconciled |
+ *   blocked_* | error
+ * - errorOut = message or empty
+ * - debugStep = last step reached
+ * - reconciliationAcknowledged = true only after post-write latch proof
+ * - milestoneStreakReconciliation = requested | blocked_no_canonical_owner
  *
- * IMPORTANT FIELD STANDARD
- * - XP Events -> XP Source = Submission Base
- * - XP Events -> XP Bucket = Shooting Base
- * - XP Reward Rules -> Rule Key = SHOOTING_BASE
- *
- * IMPORTANT DATE STANDARD
- * - Daily shooting submission XP uses Submissions -> Activity Date.
+ * PRIMARY TABLES USED
+ * - Submissions, XP Events, XP Reward Rules, Enrollments, Weeks,
+ *   Weekly Athlete Summary
  *
  * OUTPUT / WRITEBACK FIELDS
- * - Submissions -> XP Events = linked XP Event
- * - Submissions -> XP Award Status = Awarded
- * - XP Events -> Enrollment, Week, Submission, Weekly Athlete Summary, XP Source, XP Bucket,
- *   XP Points, XP Reason Public, XP Reason Debug, Active?, Source Key, optional date fields
- * - Enrollments -> Run Shot Milestone Check? = checked after successful XP processing
- *
- * REQUIRED OUTPUTS
- * - statusOut = created | updated | skipped | error
- * - actionOut
- * - errorOut
- * - debugStep
- *
- * IMPORTANT
- * - This script does not skip a record solely because XP Award Status is already Awarded.
- *   This allows a manual rerun to repair an existing XP Event.
- ************************************************************************************************/
+ * - Submission → XP Events, XP Award Status, Last Reconciled Signature
+ * - XP Event → exact owned fields and Active?
+ * - Enrollment → Run Shot Milestone Check? after a successful reconciliation
+ ************************************************************/
 
 // @ts-nocheck
 
-/************************************************************************************************
- * SECTION 1 — CONFIGURATION
- ************************************************************************************************/
+/* =========================================================
+   SECTION 1: SCRIPT METADATA
+========================================================= */
 
-const CONFIG = {
-    scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
-    version: "10.6",
-
-    tables: {
-        submissions: "Submissions",
-        xpEvents: "XP Events",
-        xpRules: "XP Reward Rules",
-        enrollments: "Enrollments",
-        weeks: "Weeks",
-        weeklySummary: "Weekly Athlete Summary",
-    },
-
-    submissions: {
-        enrollment: "Enrollment",
-        week: "Week",
-        weeklySummary: "Weekly Athlete Summary",
-        submissionKey: "Submission Key",
-        activityDate: "Activity Date",
-
-        totalShotsCounted: "Total Shots Counted",
-        countThisSubmission: "Count This Submission?",
-
-        xpAwardStatus: "XP Award Status",
-        xpEvents: "XP Events",
-    },
-
-    weeklySummary: {
-        enrollment: "Enrollment",
-        week: "Week",
-        summaryKey: "Summary Key",
-    },
-
-    enrollments: {
-        runShotMilestoneCheck: "Run Shot Milestone Check?",
-        programInstance: "Program Instance",
-        enrollmentKey: "Enrollment Key",
-    },
-
-    weeks: {
-        programInstance: "Program Instance",
-        weekKey: "Week Key",
-    },
-
-    xpRules: {
-        ruleKey: "Rule Key",
-        xpAmount: "XP Amount",
-        active: "Active?",
-    },
-
-    xpEvents: {
-        enrollment: "Enrollment",
-        submission: "Submission",
-        week: "Week",
-        weeklySummary: "Weekly Athlete Summary",
-
-        xpSource: "XP Source",
-        xpBucket: "XP Bucket",
-        xpPoints: "XP Points",
-
-        xpReasonPublic: "XP Reason Public",
-        xpReasonDebug: "XP Reason Debug",
-
-        active: "Active?",
-        sourceKey: "Source Key",
-
-        xpDateFieldCandidates: [
-            "XP Source Date",
-            "XP Activity Date",
-        ],
-
-        xpDateSourceFieldCandidates: [
-            "XP Date Source",
-            "XP Activity Date Source",
-        ],
-
-        xpDedupeKey: "XP Dedupe Key",
-        xpDedupeKeyNormalized: "XP Dedupe Key Normalized",
-        weeklySummaryKey: "Weekly Summary Key",
-        streakOccurrenceKey: "Streak Occurrence Key",
-    },
-
-    values: {
-        ruleKeyDailyShootingBase: "SHOOTING_BASE",
-
-        xpSourceSubmissionBase: "Submission Base",
-        xpBucketShootingBase: "Shooting Base",
-
-        xpDateSourceSubmissionActivity: "Submission Activity Date",
-
-        publicReason: "Shooting submission completed.",
-
-        sourceKeyPrefix: "SUBMISSION_XP|",
-
-        statusAwarded: "Awarded",
-        statusError: "Error",
-    },
-
-    outputStatuses: {
-        created: "created",
-        updated: "updated",
-        skipped: "skipped",
-        error: "error",
-    },
-
-    debug: {
-        logToConsole: true,
-    },
+const SCRIPT = {
+  scriptName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
+  version: "v10.7",
+  versionDate: "2026-08-13",
+  originalWrittenDate: "2026-06-06",
+  lastUpdated: "2026-08-13",
+  folder: "01 - Submission Intake and Asset Creation",
+  automationName: "010 - Submission Intake and Asset Creation - Create XP Event from Submission",
 };
 
+/* =========================================================
+   SECTION 2: CONFIGURATION
+========================================================= */
 
-let submissionsTable = null;
-let xpEventsTable = null;
-let xpRulesTable = null;
-let enrollmentsTable = null;
-let weeksTable = null;
-let weeklySummaryTable = null;
-let weeklySummaryQueryCache = null;
-let writableXpDateField = "";
-let writableXpDateSourceField = "";
+const CONFIG = {
+  timeZone: "America/Denver",
+  formulaSettlementAttempts: 5,
+  formulaSettlementDelayMs: 250,
+  tables: {
+    submissions: "Submissions",
+    xpEvents: "XP Events",
+    xpRules: "XP Reward Rules",
+    enrollments: "Enrollments",
+    weeks: "Weeks",
+    weeklySummary: "Weekly Athlete Summary",
+  },
+  submissions: {
+    enrollment: "Enrollment",
+    week: "Week",
+    weeklySummary: "Weekly Athlete Summary",
+    xpEvents: "XP Events",
+    activityDate: "Activity Date",
+    totalShotsCounted: "Total Shots Counted",
+    countThisSubmission: "Count This Submission?",
+    xpAwardStatus: "XP Award Status",
+    currentSignature: "Current Reconciliation Signature",
+    lastSignature: "Last Reconciled Signature",
+    needed: "Reconciliation Needed?",
+  },
+  enrollments: {
+    active: "Active?",
+    programInstance: "Program Instance",
+    runShotMilestoneCheck: "Run Shot Milestone Check?",
+  },
+  weeks: {
+    programInstance: "Program Instance",
+    startDate: "Start Date",
+    endDate: "End Date",
+  },
+  weeklySummary: {
+    enrollment: "Enrollment",
+    week: "Week",
+  },
+  xpRules: { ruleKey: "Rule Key", xpAmount: "XP Amount", active: "Active?" },
+  xpEvents: {
+    active: "Active?",
+    sourceKey: "Source Key",
+    submission: "Submission",
+    enrollment: "Enrollment",
+    week: "Week",
+    weeklySummary: "Weekly Athlete Summary",
+    xpSource: "XP Source",
+    xpBucket: "XP Bucket",
+    xpPoints: "XP Points",
+    xpReasonPublic: "XP Reason Public",
+    xpReasonDebug: "XP Reason Debug",
+    xpActivityDate: "XP Activity Date",
+    xpActivityDateSource: "XP Activity Date Source",
+  },
+  values: {
+    sourceKeyPrefix: "SUBMISSION_XP|",
+    ruleKey: "SHOOTING_BASE",
+    xpSource: "Submission Base",
+    xpBucket: "Shooting Base",
+    dateSource: "Submission Activity Date",
+    awardStatus: "Awarded",
+    errorStatus: "Error",
+  },
+};
 
+/* =========================================================
+   SECTION 3: OUTPUT AND FIELD HELPERS
+========================================================= */
 
-/************************************************************************************************
- * SECTION 2 — HELPERS
- ************************************************************************************************/
+let debugStep = "0 - Start";
+let submissionsTable;
+let xpEventsTable;
+let xpRulesTable;
+let enrollmentsTable;
+let weeksTable;
+let weeklySummaryTable;
 
-function log(message, data = null) {
-    if (!CONFIG.debug.logToConsole) {
-        return;
-    }
-
-    if (data === null || data === undefined) {
-        console.log(message);
-    } else {
-        console.log(message, JSON.stringify(data, null, 2));
-    }
-}
-
-function setOutputSafe(key, value) {
-    try {
-        output.set(key, value);
-    } catch {
-        // Ignore output errors where output is unavailable.
-    }
+function setOutputSafe(name, value) {
+  try { output.set(name, value); } catch { /* unmapped outputs are non-fatal */ }
 }
 
 function setOutputs(values) {
-    for (const [key, value] of Object.entries(values)) {
-        setOutputSafe(key, value);
-    }
+  for (const [name, value] of Object.entries(values)) setOutputSafe(name, value);
 }
 
-function getFieldSafe(table, fieldName) {
-    if (!table || !fieldName) {
-        return null;
-    }
-
-    try {
-        return table.getField(fieldName);
-    } catch {
-        return null;
-    }
+function step(name) {
+  debugStep = name;
+  setOutputSafe("debugStep", name);
 }
 
-function fieldExists(table, fieldName) {
-    return Boolean(getFieldSafe(table, fieldName));
+function field(table, name) {
+  try { return table.getField(name); } catch { return null; }
 }
 
-function isWritableField(table, fieldName) {
-    const field = getFieldSafe(table, fieldName);
-
-    if (!field) {
-        return false;
-    }
-
-    if (field.isComputed === true) {
-        return false;
-    }
-
-    const nonWritableTypes = new Set([
-        "formula",
-        "rollup",
-        "count",
-        "lookup",
-        "multipleLookupValues",
-        "createdTime",
-        "lastModifiedTime",
-        "createdBy",
-        "lastModifiedBy",
-        "autoNumber",
-        "button",
-        "aiText",
-        "externalSyncSource",
-    ]);
-
-    return !nonWritableTypes.has(field.type);
+function requireField(table, name, writable = false) {
+  const found = field(table, name);
+  if (!found) throw new Error(`Missing required field: ${table.name} -> ${name}`);
+  if (writable && !isWritable(found)) {
+    throw new Error(`Required field is not writable: ${table.name} -> ${name}`);
+  }
+  return found;
 }
 
-function requireField(table, fieldName, label = fieldName) {
-    if (!fieldExists(table, fieldName)) {
-        throw new Error(
-            `Missing required field: ${label} (${table.name} -> ${fieldName})`
-        );
-    }
+function isWritable(found) {
+  return Boolean(found) && found.isComputed !== true && !new Set([
+    "formula", "rollup", "count", "lookup", "multipleLookupValues",
+    "createdTime", "lastModifiedTime", "createdBy", "lastModifiedBy",
+    "autoNumber", "button", "aiText", "externalSyncSource",
+  ]).has(found.type);
 }
 
-function requireWritableField(table, fieldName, label = fieldName) {
-    requireField(table, fieldName, label);
-
-    if (!isWritableField(table, fieldName)) {
-        throw new Error(
-            `Required field is not writable: ${label} (${table.name} -> ${fieldName})`
-        );
-    }
+function raw(record, table, name) {
+  return field(table, name) ? record.getCellValue(name) : null;
 }
 
-function getFirstWritableFieldName(table, fieldNames) {
-    for (const fieldName of fieldNames) {
-        if (fieldExists(table, fieldName) && isWritableField(table, fieldName)) {
-            return fieldName;
-        }
-    }
-
-    return "";
+function text(record, table, name) {
+  if (!field(table, name)) return "";
+  const value = raw(record, table, name);
+  if (value === null || value === undefined) return "";
+  if (typeof value === "object" && !Array.isArray(value) && value.name) return String(value.name).trim();
+  return String(record.getCellValueAsString(name) || "").trim();
 }
 
-function getExistingFieldNames(table, fieldNames) {
-    return fieldNames.filter((fieldName) => fieldExists(table, fieldName));
+function number(record, table, name) {
+  const value = raw(record, table, name);
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  const parsed = Number(String(record?.getCellValueAsString(name) || value || "").replace(/,/g, ""));
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
-function getRaw(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) {
-        return null;
-    }
-
-    return record.getCellValue(fieldName);
+function booleanish(record, table, name) {
+  const value = raw(record, table, name);
+  if (value === true || value === 1) return true;
+  if (value === false || value === 0 || value === null || value === undefined) return false;
+  return ["true", "1", "yes", "checked", "active"].includes(String(value).toLowerCase().trim());
 }
 
-function getText(record, table, fieldName) {
-    if (!record || !fieldExists(table, fieldName)) {
-        return "";
-    }
-
-    const raw = record.getCellValue(fieldName);
-
-    if (raw === null || raw === undefined) {
-        return "";
-    }
-
-    if (typeof raw === "string") {
-        return raw.trim();
-    }
-
-    if (typeof raw === "number") {
-        return String(raw);
-    }
-
-    if (typeof raw === "object" && raw.name) {
-        return String(raw.name).trim();
-    }
-
-    return String(record.getCellValueAsString(fieldName) || "").trim();
+function ids(record, table, name) {
+  const value = raw(record, table, name);
+  return Array.isArray(value) ? value.map((item) => item?.id).filter(Boolean) : [];
 }
 
-function getNumber(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-
-    if (raw === null || raw === undefined || raw === "") {
-        return null;
-    }
-
-    if (typeof raw === "number" && Number.isFinite(raw)) {
-        return raw;
-    }
-
-    if (Array.isArray(raw)) {
-        const numericValue = raw.find(
-            (item) => typeof item === "number" && Number.isFinite(item)
-        );
-
-        if (numericValue !== undefined) {
-            return numericValue;
-        }
-    }
-
-    const text = String(record.getCellValueAsString(fieldName) || "")
-        .replace(/,/g, "")
-        .trim();
-
-    const parsed = Number(text);
-
-    return Number.isFinite(parsed) ? parsed : null;
+function one(record, table, name) {
+  const values = ids(record, table, name);
+  return values.length === 1 ? values[0] : "";
 }
 
-function getBooleanish(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-
-    if (raw === true || raw === 1) {
-        return true;
-    }
-
-    if (raw === false || raw === 0 || raw === null || raw === undefined) {
-        return false;
-    }
-
-    if (typeof raw === "object" && raw.name) {
-        return ["1", "true", "yes", "checked", "active"].includes(
-            String(raw.name).trim().toLowerCase()
-        );
-    }
-
-    const text = String(record.getCellValueAsString(fieldName) || "")
-        .trim()
-        .toLowerCase();
-
-    return ["1", "true", "yes", "checked", "active"].includes(text);
+function linked(id) {
+  return id ? [{ id }] : [];
 }
 
-function getLinkedRecordIds(record, table, fieldName) {
-    const raw = getRaw(record, table, fieldName);
-
-    if (!Array.isArray(raw)) {
-        return [];
-    }
-
-    return raw
-        .map((item) => item?.id)
-        .filter(Boolean);
+function selectValue(table, name, value) {
+  const found = field(table, name);
+  if (!found) throw new Error(`Missing field: ${table.name} -> ${name}`);
+  if (found.type !== "singleSelect") return value;
+  const choice = (found.options?.choices || []).find((item) => item.name === value);
+  if (!choice) throw new Error(`Missing single-select option "${value}" on ${table.name} -> ${name}`);
+  return { id: choice.id };
 }
 
-function getFirstLinkedRecordId(record, table, fieldName) {
-    return getLinkedRecordIds(record, table, fieldName)[0] || "";
+function addWritable(payload, table, name, value) {
+  if (value === undefined || value === null || !isWritable(field(table, name))) return;
+  payload[name] = value;
 }
 
-function uniqueIds(ids) {
-    return [...new Set((ids || []).filter(Boolean))];
+function dateKey(value) {
+  const textValue = String(value || "").trim();
+  const iso = textValue.match(/^(\d{4}-\d{2}-\d{2})/);
+  if (iso) return iso[1];
+  const local = textValue.match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})/);
+  return local ? `${local[3]}-${local[1].padStart(2, "0")}-${local[2].padStart(2, "0")}` : "";
 }
 
-function linkedCell(ids) {
-    return uniqueIds(ids).map((id) => ({ id }));
+function todayKey() {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: CONFIG.timeZone, year: "numeric", month: "2-digit", day: "2-digit",
+  }).format(new Date());
 }
 
-async function loadWeeklySummaryQuery() {
-    if (weeklySummaryQueryCache) {
-        return weeklySummaryQueryCache;
-    }
-
-    weeklySummaryQueryCache = await weeklySummaryTable.selectRecordsAsync({
-        fields: [
-            CONFIG.weeklySummary.enrollment,
-            CONFIG.weeklySummary.week,
-            CONFIG.weeklySummary.summaryKey,
-        ],
-    });
-
-    return weeklySummaryQueryCache;
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-async function getProgramInstanceContext(enrollmentId, weekId) {
-    const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId);
-    const week = await weeksTable.selectRecordAsync(weekId);
+/* =========================================================
+   SECTION 4: RECONCILIATION HELPERS
+========================================================= */
 
-    if (!enrollment) {
-        throw new Error(`Enrollment not found: ${enrollmentId}`);
-    }
-
-    if (!week) {
-        throw new Error(`Week not found: ${weekId}`);
-    }
-
-    const enrollmentProgramInstances = getLinkedRecordIds(
-        enrollment,
-        enrollmentsTable,
-        CONFIG.enrollments.programInstance
-    );
-    const weekProgramInstances = getLinkedRecordIds(
-        week,
-        weeksTable,
-        CONFIG.weeks.programInstance
-    );
-
-    if (enrollmentProgramInstances.length !== 1) {
-        throw new Error(
-            `Enrollment ${enrollmentId} must have exactly one Program Instance; found ${enrollmentProgramInstances.length}.`
-        );
-    }
-
-    if (weekProgramInstances.length !== 1) {
-        throw new Error(
-            `Week ${weekId} must have exactly one Program Instance; found ${weekProgramInstances.length}.`
-        );
-    }
-
-    if (enrollmentProgramInstances[0] !== weekProgramInstances[0]) {
-        throw new Error(
-            `Enrollment ${enrollmentId} and Week ${weekId} belong to different Program Instances.`
-        );
-    }
-
-    const enrollmentKey = getText(
-        enrollment,
-        enrollmentsTable,
-        CONFIG.enrollments.enrollmentKey
-    );
-    const weekKey = getText(week, weeksTable, CONFIG.weeks.weekKey);
-
-    if (!enrollmentKey || !weekKey) {
-        throw new Error(
-            `Cannot derive canonical Summary Key for Enrollment ${enrollmentId} + Week ${weekId}.`
-        );
-    }
-
-    return {
-        enrollmentProgramInstanceId: enrollmentProgramInstances[0],
-        weekProgramInstanceId: weekProgramInstances[0],
-        programInstanceId: enrollmentProgramInstances[0],
-        canonicalSummaryKey: `${enrollmentKey}|${weekKey}`,
-    };
+function sourceKey(submissionId) {
+  return `${CONFIG.values.sourceKeyPrefix}${submissionId}`;
 }
 
-async function validateWeeklySummary(summaryRecord, {
-    enrollmentId,
-    weekId,
-    programInstanceId,
-    canonicalSummaryKey,
-}) {
-    if (!summaryRecord) {
-        return false;
-    }
-
-    const summaryEnrollmentIds = getLinkedRecordIds(
-        summaryRecord,
-        weeklySummaryTable,
-        CONFIG.weeklySummary.enrollment
-    );
-    const summaryWeekIds = getLinkedRecordIds(
-        summaryRecord,
-        weeklySummaryTable,
-        CONFIG.weeklySummary.week
-    );
-    const summaryKey = getText(
-        summaryRecord,
-        weeklySummaryTable,
-        CONFIG.weeklySummary.summaryKey
-    );
-
-    if (
-        summaryEnrollmentIds.length !== 1 ||
-        summaryWeekIds.length !== 1 ||
-        summaryEnrollmentIds[0] !== enrollmentId ||
-        summaryWeekIds[0] !== weekId ||
-        summaryKey !== canonicalSummaryKey
-    ) {
-        return false;
-    }
-
-    const summaryProgramInstance = await getProgramInstanceContext(
-        summaryEnrollmentIds[0],
-        summaryWeekIds[0]
-    );
-
-    return summaryProgramInstance.programInstanceId === programInstanceId;
+function validateSchema() {
+  for (const name of Object.values(CONFIG.submissions)) {
+    if (name === CONFIG.submissions.lastSignature) requireField(submissionsTable, name, true);
+    else requireField(submissionsTable, name);
+  }
+  for (const name of Object.values(CONFIG.enrollments)) requireField(enrollmentsTable, name);
+  for (const name of Object.values(CONFIG.weeks)) requireField(weeksTable, name);
+  for (const name of Object.values(CONFIG.weeklySummary)) requireField(weeklySummaryTable, name);
+  for (const name of ["active", "sourceKey", "submission", "enrollment", "week", "weeklySummary", "xpSource", "xpBucket", "xpPoints", "xpReasonPublic", "xpReasonDebug"]) {
+    requireField(xpEventsTable, CONFIG.xpEvents[name], name === "active" || name === "sourceKey" || name === "submission" || name === "enrollment" || name === "week" || name === "weeklySummary" || name === "xpSource" || name === "xpBucket" || name === "xpPoints" || name === "xpReasonPublic" || name === "xpReasonDebug");
+  }
+  for (const name of Object.values(CONFIG.xpRules)) requireField(xpRulesTable, name);
 }
 
-async function findValidWeeklySummaryIds(
-    enrollmentId,
-    weekId,
-    programInstanceId,
-    canonicalSummaryKey
-) {
-    const query = await loadWeeklySummaryQuery();
-    const validIds = [];
-
-    for (const record of query.records) {
-        if (
-            await validateWeeklySummary(record, {
-                enrollmentId,
-                weekId,
-                programInstanceId,
-                canonicalSummaryKey,
-            })
-        ) {
-            validIds.push(record.id);
-        }
-    }
-
-    return validIds;
+async function validWasIds(enrollmentId, weekId) {
+  const query = await weeklySummaryTable.selectRecordsAsync({
+    fields: [CONFIG.weeklySummary.enrollment, CONFIG.weeklySummary.week],
+  });
+  return query.records
+    .filter((row) => one(row, weeklySummaryTable, CONFIG.weeklySummary.enrollment) === enrollmentId
+      && one(row, weeklySummaryTable, CONFIG.weeklySummary.week) === weekId)
+    .map((row) => row.id);
 }
 
-async function findWeeklySummaryRecordById(summaryId) {
-    const cleanSummaryId = String(summaryId || "").trim();
-
-    if (!cleanSummaryId) {
-        return null;
-    }
-
-    const query = await loadWeeklySummaryQuery();
-    return query.records.find((record) => record.id === cleanSummaryId) || null;
+async function loadXpEvents() {
+  return xpEventsTable.selectRecordsAsync({
+    fields: Object.values(CONFIG.xpEvents).filter((name) => field(xpEventsTable, name)),
+  });
 }
 
-async function resolveWeeklySummaryContext({
-    sourceWeeklySummaryIds = [],
-    enrollmentId = "",
-    weekId = "",
-    programInstanceId = "",
-    canonicalSummaryKey = "",
-}) {
-    const fromSource = uniqueIds(sourceWeeklySummaryIds);
-
-    if (fromSource.length > 1) {
-        throw new Error(
-            `Source record has multiple Weekly Athlete Summary links: ${fromSource.join(", ")}`
-        );
-    }
-
-    if (fromSource.length === 1) {
-        const sourceWeeklySummaryId = fromSource[0];
-        const sourceSummaryRecord = await findWeeklySummaryRecordById(sourceWeeklySummaryId);
-
-        if (
-            sourceSummaryRecord &&
-            await validateWeeklySummary(sourceSummaryRecord, {
-                enrollmentId,
-                weekId,
-                programInstanceId,
-                canonicalSummaryKey,
-            })
-        ) {
-            return {
-                weeklySummaryId: sourceWeeklySummaryId,
-                resolutionSource: "source_valid",
-                repairedStaleLink: false,
-            };
-        }
-
-        const validCanonicalSummaryIds = await findValidWeeklySummaryIds(
-            enrollmentId,
-            weekId,
-            programInstanceId,
-            canonicalSummaryKey
-        );
-
-        if (validCanonicalSummaryIds.length !== 1) {
-            const problem = sourceSummaryRecord
-                ? `does not match Enrollment ${enrollmentId} + Week ${weekId} + Program Instance ${programInstanceId}`
-                : "references a missing Weekly Athlete Summary record";
-            throw new Error(
-                `Submission Weekly Athlete Summary ${sourceWeeklySummaryId} ${problem}; expected exactly one valid canonical summary, found ${validCanonicalSummaryIds.length}.`
-            );
-        }
-
-        return {
-            weeklySummaryId: validCanonicalSummaryIds[0],
-            resolutionSource: "source_repaired_to_canonical",
-            repairedStaleLink: validCanonicalSummaryIds[0] !== sourceWeeklySummaryId,
-        };
-    }
-
-    const validCanonicalSummaryIds = await findValidWeeklySummaryIds(
-        enrollmentId,
-        weekId,
-        programInstanceId,
-        canonicalSummaryKey
-    );
-
-    if (validCanonicalSummaryIds.length !== 1) {
-        throw new Error(
-            `Expected exactly one valid canonical Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekId} + Program Instance ${programInstanceId}; found ${validCanonicalSummaryIds.length}.`
-        );
-    }
-
-    return {
-        weeklySummaryId: validCanonicalSummaryIds[0],
-        resolutionSource: "lookup_enrollment_week",
-        repairedStaleLink: false,
-    };
+function eventOwned(event, submissionId, enrollmentId, weekId, wasId) {
+  return one(event, xpEventsTable, CONFIG.xpEvents.submission) === submissionId
+    && one(event, xpEventsTable, CONFIG.xpEvents.enrollment) === enrollmentId
+    && one(event, xpEventsTable, CONFIG.xpEvents.week) === weekId
+    && ids(event, xpEventsTable, CONFIG.xpEvents.weeklySummary).length === 1
+    && one(event, xpEventsTable, CONFIG.xpEvents.weeklySummary) === wasId
+    && text(event, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId);
 }
 
-function addWeeklySummaryLink(payload, table, fieldName, weeklySummaryId) {
-    if (!weeklySummaryId) {
-        return payload;
-    }
-
-    if (!fieldExists(table, fieldName) || !isWritableField(table, fieldName)) {
-        return payload;
-    }
-
-    payload[fieldName] = linkedCell([weeklySummaryId]);
-    return payload;
+async function findExactEvent(submissionId, enrollmentId, weekId, wasId) {
+  const query = await loadXpEvents();
+  const exactKey = query.records.filter((row) => text(row, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId));
+  if (exactKey.length > 1) throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
+  const linked = query.records.filter((row) => ids(row, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId));
+  if (linked.some((row) => !eventOwned(row, submissionId, enrollmentId, weekId, wasId))) {
+    throw new Error(`Submission ${submissionId} has an XP Event with wrong ownership or links.`);
+  }
+  if (exactKey[0] && !eventOwned(exactKey[0], submissionId, enrollmentId, weekId, wasId)) {
+    throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
+  }
+  if (linked.length > 1) throw new Error(`Multiple XP Events are linked to Submission ${submissionId}.`);
+  return exactKey[0] || linked[0] || null;
 }
 
-async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
-    if (!xpEventId || !weeklySummaryId) {
-        return false;
-    }
+async function findCanonicalKeyEvent(submissionId) {
+  const query = await loadXpEvents();
+  const matches = query.records.filter(
+    (row) => text(row, xpEventsTable, CONFIG.xpEvents.sourceKey) === sourceKey(submissionId),
+  );
+  if (matches.length > 1) {
+    throw new Error(`Duplicate canonical Source Key: ${sourceKey(submissionId)}`);
+  }
+  const linked = query.records.filter((row) =>
+    ids(row, xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId)
+  );
+  if (linked.length > 1) {
+    throw new Error(`Multiple XP Events are linked to Submission ${submissionId}.`);
+  }
+  if (
+    linked[0] &&
+    text(linked[0], xpEventsTable, CONFIG.xpEvents.sourceKey) !== sourceKey(submissionId)
+  ) {
+    throw new Error(`Submission ${submissionId} has an XP Event with a non-canonical Source Key.`);
+  }
+  if (matches[0] && !ids(matches[0], xpEventsTable, CONFIG.xpEvents.submission).includes(submissionId)) {
+    throw new Error(`Canonical XP Event ownership mismatch for ${sourceKey(submissionId)}.`);
+  }
+  return matches[0] || null;
+}
 
-    const payload = {};
-    addWeeklySummaryLink(
-        payload,
+async function findRule() {
+  const query = await xpRulesTable.selectRecordsAsync({
+    fields: [CONFIG.xpRules.ruleKey, CONFIG.xpRules.xpAmount, CONFIG.xpRules.active],
+  });
+  const matches = query.records.filter((row) => text(row, xpRulesTable, CONFIG.xpRules.ruleKey) === CONFIG.values.ruleKey
+    && booleanish(row, xpRulesTable, CONFIG.xpRules.active));
+  if (matches.length !== 1) throw new Error(`Expected exactly one active ${CONFIG.values.ruleKey} XP Reward Rule; found ${matches.length}.`);
+  const points = number(matches[0], xpRulesTable, CONFIG.xpRules.xpAmount);
+  if (!points || points <= 0) throw new Error("SHOOTING_BASE XP Amount must be positive.");
+  return points;
+}
+
+async function acknowledgeAfterSettlement(recordId, expectedActive, priorSignature, expectedXpEventId = "") {
+  for (let attempt = 1; attempt <= CONFIG.formulaSettlementAttempts; attempt += 1) {
+    const refreshed = await submissionsTable.selectRecordAsync(recordId);
+    const current = text(refreshed, submissionsTable, CONFIG.submissions.currentSignature);
+    const needed = number(refreshed, submissionsTable, CONFIG.submissions.needed);
+    const signatureChanged = Boolean(current) && current !== priorSignature;
+    const expectedEventState = expectedXpEventId
+      ? booleanish(
+        await xpEventsTable.selectRecordAsync(expectedXpEventId),
         xpEventsTable,
-        CONFIG.xpEvents.weeklySummary,
-        weeklySummaryId
-    );
-
-    if (Object.keys(payload).length === 0) {
-        return false;
-    }
-
-    await xpEventsTable.updateRecordAsync(xpEventId, payload);
-    return true;
-}
-
-function buildCellValueForField(table, fieldName, value) {
-    const field = getFieldSafe(table, fieldName);
-
-    if (!field) {
-        throw new Error(`Field not found: ${table.name} -> ${fieldName}`);
-    }
-
-    if (field.type === "singleSelect") {
-        return { name: value };
-    }
-
-    if (field.type === "multipleSelects") {
-        return [{ name: value }];
-    }
-
-    return value;
-}
-
-function buildSubmissionSourceKey(submissionId) {
-    return `${CONFIG.values.sourceKeyPrefix}${submissionId}`;
-}
-
-function normalizeKeyPart(value) {
-    return String(value || "").trim().toLowerCase();
-}
-
-function buildSubmissionNormalizedDedupeKey({
-    enrollmentId,
-    submissionId,
-    xpSource,
-}) {
-    if (!enrollmentId || !submissionId || !xpSource) {
-        return "";
-    }
-
-    return [
-        normalizeKeyPart(enrollmentId),
-        normalizeKeyPart(submissionId),
-        normalizeKeyPart(xpSource),
-    ].join("|");
-}
-
-function buildSubmissionDedupeKey({
-    enrollmentId,
-    submissionId,
-    xpSource,
-}) {
-    if (!enrollmentId || !submissionId || !xpSource) {
-        return "";
-    }
-
-    return [
-        enrollmentId,
-        submissionId,
-        xpSource,
-    ].join("|");
-}
-
-function buildPublicReason() {
-    return CONFIG.values.publicReason;
-}
-
-function buildDebugReason({
-    ruleKey,
-    xpPoints,
-    submissionId,
-    submissionKey,
-    xpSource,
-    xpBucket,
-    xpDateSource,
-}) {
-    return [
-        `Daily shooting submission XP awarded from XP Reward Rule: ${ruleKey}.`,
-        `XP Source: ${xpSource}.`,
-        `XP Bucket: ${xpBucket}.`,
-        `XP Points: ${xpPoints}.`,
-        `XP Date Source: ${xpDateSource}.`,
-        `Submission Record ID: ${submissionId}.`,
-        submissionKey ? `Submission Key: ${submissionKey}.` : "",
-    ]
-        .filter(Boolean)
-        .join(" ");
-}
-
-function buildSubmissionFieldsToLoad() {
-    const fields = [
-        CONFIG.submissions.enrollment,
-        CONFIG.submissions.week,
-        CONFIG.submissions.submissionKey,
-        CONFIG.submissions.activityDate,
-        CONFIG.submissions.totalShotsCounted,
-        CONFIG.submissions.countThisSubmission,
-        CONFIG.submissions.xpAwardStatus,
-        CONFIG.submissions.xpEvents,
-    ];
-
-    if (fieldExists(submissionsTable, CONFIG.submissions.weeklySummary)) {
-        fields.push(CONFIG.submissions.weeklySummary);
-    }
-
-    return fields;
-}
-
-function buildXpRuleFieldsToLoad() {
-    return [
-        CONFIG.xpRules.ruleKey,
-        CONFIG.xpRules.xpAmount,
-        CONFIG.xpRules.active,
-    ];
-}
-
-function buildXpEventFieldsToLoad() {
-    const fields = [
-        CONFIG.xpEvents.enrollment,
-        CONFIG.xpEvents.submission,
-        CONFIG.xpEvents.week,
-        CONFIG.xpEvents.xpSource,
-        CONFIG.xpEvents.xpBucket,
-        CONFIG.xpEvents.xpPoints,
-        CONFIG.xpEvents.xpReasonPublic,
-        CONFIG.xpEvents.xpReasonDebug,
         CONFIG.xpEvents.active,
-        CONFIG.xpEvents.sourceKey,
-    ];
-
-    const dateFields = getExistingFieldNames(
-        xpEventsTable,
-        CONFIG.xpEvents.xpDateFieldCandidates
-    );
-
-    const dateSourceFields = getExistingFieldNames(
-        xpEventsTable,
-        CONFIG.xpEvents.xpDateSourceFieldCandidates
-    );
-
-    const optionalFields = [
-        ...dateFields,
-        ...dateSourceFields,
-        CONFIG.xpEvents.xpDedupeKey,
-        CONFIG.xpEvents.xpDedupeKeyNormalized,
-        CONFIG.xpEvents.weeklySummaryKey,
-        CONFIG.xpEvents.streakOccurrenceKey,
-    ];
-
-    for (const optionalField of optionalFields) {
-        if (fieldExists(xpEventsTable, optionalField) && !fields.includes(optionalField)) {
-            fields.push(optionalField);
-        }
-    }
-
-    return fields;
-}
-
-async function rearmShotMilestoneCheck(enrollmentId) {
-    if (!enrollmentId) {
-        return false;
-    }
-
-    const fieldName = CONFIG.enrollments.runShotMilestoneCheck;
-
-    if (!fieldExists(enrollmentsTable, fieldName)) {
-        log("Shot milestone re-arm skipped because field is missing", {
-            table: CONFIG.tables.enrollments,
-            fieldName,
-            enrollmentId,
+      ) === expectedActive
+      : !expectedActive;
+    if (signatureChanged && expectedEventState && needed === 1) {
+      const preAckEnrollmentIds = ids(refreshed, submissionsTable, CONFIG.submissions.enrollment);
+      const preAckWeekIds = ids(refreshed, submissionsTable, CONFIG.submissions.week);
+      const preAckWasIds = ids(refreshed, submissionsTable, CONFIG.submissions.weeklySummary);
+      const preAckEvent = expectedXpEventId
+        ? await xpEventsTable.selectRecordAsync(expectedXpEventId)
+        : null;
+      const ownershipBeforeAck = !expectedXpEventId
+        || (preAckEnrollmentIds.length === 1
+          && preAckWeekIds.length === 1
+          && preAckWasIds.length === 1
+          && eventOwned(
+            preAckEvent,
+            recordId,
+            preAckEnrollmentIds[0],
+            preAckWeekIds[0],
+            preAckWasIds[0],
+          ));
+      if (!ownershipBeforeAck) {
+        throw new Error("XP Event ownership changed before latch acknowledgement.");
+      }
+      await submissionsTable.updateRecordAsync(recordId, {
+        [CONFIG.submissions.lastSignature]: current,
+      });
+      const acknowledged = await submissionsTable.selectRecordAsync(recordId);
+      const enrollmentIds = ids(acknowledged, submissionsTable, CONFIG.submissions.enrollment);
+      const weekIds = ids(acknowledged, submissionsTable, CONFIG.submissions.week);
+      const wasIds = ids(acknowledged, submissionsTable, CONFIG.submissions.weeklySummary);
+      const acknowledgedEvent = expectedXpEventId
+        ? await xpEventsTable.selectRecordAsync(expectedXpEventId)
+        : null;
+      const ownershipStillExact = !expectedXpEventId
+        || (enrollmentIds.length === 1
+          && weekIds.length === 1
+          && wasIds.length === 1
+          && eventOwned(
+            acknowledgedEvent,
+            recordId,
+            enrollmentIds[0],
+            weekIds[0],
+            wasIds[0],
+          ));
+      if (number(acknowledged, submissionsTable, CONFIG.submissions.needed) === 0 && ownershipStillExact) {
+        return current;
+      }
+      if (!ownershipStillExact) {
+        await submissionsTable.updateRecordAsync(recordId, {
+          [CONFIG.submissions.lastSignature]: priorSignature,
         });
-        return false;
+        throw new Error("Post-write XP Event ownership changed; reconciliation was not acknowledged.");
+      }
     }
-
-    if (!isWritableField(enrollmentsTable, fieldName)) {
-        log("Shot milestone re-arm skipped because field is not writable", {
-            table: CONFIG.tables.enrollments,
-            fieldName,
-            enrollmentId,
-        });
-        return false;
-    }
-
-    await enrollmentsTable.updateRecordAsync(enrollmentId, {
-        [fieldName]: true,
-    });
-
-    return true;
+    if (attempt < CONFIG.formulaSettlementAttempts) await sleep(CONFIG.formulaSettlementDelayMs);
+  }
+  throw new Error("Formula settlement timeout; Last Reconciled Signature was not acknowledged.");
 }
 
-async function markSubmissionStatus(submissionRecordId, statusName) {
-    if (!isWritableField(submissionsTable, CONFIG.submissions.xpAwardStatus)) {
-        return;
-    }
-
-    await submissionsTable.updateRecordAsync(submissionRecordId, {
-        [CONFIG.submissions.xpAwardStatus]: buildCellValueForField(
-            submissionsTable,
-            CONFIG.submissions.xpAwardStatus,
-            statusName
-        ),
-    });
+async function requestDownstreamRecalculation(enrollmentId) {
+  if (!isWritable(field(enrollmentsTable, CONFIG.enrollments.runShotMilestoneCheck))) return false;
+  await enrollmentsTable.updateRecordAsync(enrollmentId, {
+    [CONFIG.enrollments.runShotMilestoneCheck]: true,
+  });
+  return true;
 }
 
-
-function assertRequiredSchema() {
-    for (const fieldName of buildSubmissionFieldsToLoad()) {
-        requireField(submissionsTable, fieldName);
-    }
-
-    requireWritableField(
-        submissionsTable,
-        CONFIG.submissions.xpAwardStatus
-    );
-
-    requireWritableField(
-        submissionsTable,
-        CONFIG.submissions.xpEvents
-    );
-
-    requireWritableField(
-        submissionsTable,
-        CONFIG.submissions.weeklySummary
-    );
-
-    requireWritableField(
-        weeklySummaryTable,
-        CONFIG.weeklySummary.enrollment
-    );
-
-    requireWritableField(
-        weeklySummaryTable,
-        CONFIG.weeklySummary.week
-    );
-
-    requireField(
-        weeklySummaryTable,
-        CONFIG.weeklySummary.summaryKey
-    );
-
-    requireField(
-        enrollmentsTable,
-        CONFIG.enrollments.programInstance
-    );
-
-    requireField(
-        enrollmentsTable,
-        CONFIG.enrollments.enrollmentKey
-    );
-
-    requireField(
-        weeksTable,
-        CONFIG.weeks.programInstance
-    );
-
-    requireField(
-        weeksTable,
-        CONFIG.weeks.weekKey
-    );
-
-    requireWritableField(
-        enrollmentsTable,
-        CONFIG.enrollments.runShotMilestoneCheck,
-        "Run Shot Milestone Check?"
-    );
-
-    for (const fieldName of buildXpRuleFieldsToLoad()) {
-        requireField(xpRulesTable, fieldName);
-    }
-
-    for (const fieldName of [
-        CONFIG.xpEvents.enrollment,
-        CONFIG.xpEvents.submission,
-        CONFIG.xpEvents.week,
-        CONFIG.xpEvents.xpSource,
-        CONFIG.xpEvents.xpBucket,
-        CONFIG.xpEvents.xpPoints,
-        CONFIG.xpEvents.xpReasonPublic,
-        CONFIG.xpEvents.xpReasonDebug,
-        CONFIG.xpEvents.active,
-        CONFIG.xpEvents.sourceKey,
-    ]) {
-        requireWritableField(xpEventsTable, fieldName);
-    }
-
-    writableXpDateField = getFirstWritableFieldName(
-        xpEventsTable,
-        CONFIG.xpEvents.xpDateFieldCandidates
-    );
-
-    writableXpDateSourceField = getFirstWritableFieldName(
-        xpEventsTable,
-        CONFIG.xpEvents.xpDateSourceFieldCandidates
-    );
-
-    log("Resolved optional XP date fields", {
-        writableXpDateField: writableXpDateField || "none",
-        writableXpDateSourceField: writableXpDateSourceField || "none",
-    });
+function debugReason(recordId, points, action) {
+  return [
+    `${SCRIPT.scriptName} ${SCRIPT.version}.`,
+    `Action: ${action}.`,
+    `Submission: ${recordId}.`,
+    `Source Key: ${sourceKey(recordId)}.`,
+    `XP Points: ${points}.`,
+  ].join(" ");
 }
 
-
-/************************************************************************************************
- * SECTION 3 — MAIN
- ************************************************************************************************/
+/* =========================================================
+   SECTION 5: MAIN
+========================================================= */
 
 async function main() {
-    let submission = null;
-    let debugStep = "1 - Start";
-    let recordId = "";
-    let writeStarted = false;
-
-    try {
-        setOutputSafe("debugStep", debugStep);
-
-        debugStep = "2 - Read Input";
-        setOutputSafe("debugStep", debugStep);
-
-        const inputConfig = input.config();
-        recordId = String(inputConfig.recordId || "").trim();
-
-        if (!recordId) {
-            throw new Error("Missing required input variable: recordId");
-        }
-
-        if (!recordId.startsWith("rec")) {
-            throw new Error(`Invalid Submission recordId input: ${recordId}`);
-        }
-
-        debugStep = "3 - Load Tables";
-        setOutputSafe("debugStep", debugStep);
-
-        submissionsTable = base.getTable(CONFIG.tables.submissions);
-        xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
-        xpRulesTable = base.getTable(CONFIG.tables.xpRules);
-        enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
-        weeksTable = base.getTable(CONFIG.tables.weeks);
-        weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
-        weeklySummaryQueryCache = null;
-
-        debugStep = "4 - Validate Schema";
-        setOutputSafe("debugStep", debugStep);
-        assertRequiredSchema();
-
-        debugStep = "5 - Load Submission";
-        setOutputSafe("debugStep", debugStep);
-
-        submission = await submissionsTable.selectRecordAsync(recordId, {
-            fields: buildSubmissionFieldsToLoad(),
-        });
-
-        if (!submission) {
-            throw new Error(`Submission not found: ${recordId}`);
-        }
-
-        debugStep = "6 - Read Submission Values";
-        setOutputSafe("debugStep", debugStep);
-
-        const enrollmentId = getFirstLinkedRecordId(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.enrollment
-        );
-
-        const weekId = getFirstLinkedRecordId(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.week
-        );
-
-        const submissionKey = getText(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.submissionKey
-        );
-
-        const activityDate = getRaw(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.activityDate
-        );
-
-        const totalShotsCounted = getNumber(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.totalShotsCounted
-        );
-
-        const countThisSubmission = getBooleanish(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.countThisSubmission
-        );
-
-        const existingXpEventIds = getLinkedRecordIds(
-            submission,
-            submissionsTable,
-            CONFIG.submissions.xpEvents
-        );
-
-        const sourceKey = buildSubmissionSourceKey(recordId);
-        const legacySourceKey = submissionKey;
-
-        const dedupeKey = buildSubmissionDedupeKey({
-            enrollmentId,
-            submissionId: recordId,
-            xpSource: CONFIG.values.xpSourceSubmissionBase,
-        });
-
-        const normalizedDedupeKey = buildSubmissionNormalizedDedupeKey({
-            enrollmentId,
-            submissionId: recordId,
-            xpSource: CONFIG.values.xpSourceSubmissionBase,
-        });
-
-        log("Submission XP input", {
-            submissionId: recordId,
-            submissionKey,
-            enrollmentId,
-            weekId,
-            activityDate,
-            totalShotsCounted,
-            countThisSubmission,
-            existingXpEventIds,
-            sourceKey,
-            legacySourceKey,
-            dedupeKey,
-            normalizedDedupeKey,
-            expectedXpSource: CONFIG.values.xpSourceSubmissionBase,
-            expectedXpBucket: CONFIG.values.xpBucketShootingBase,
-            expectedRuleKey: CONFIG.values.ruleKeyDailyShootingBase,
-        });
-
-        debugStep = "7 - Validate Submission";
-        setOutputSafe("debugStep", debugStep);
-
-        if (!enrollmentId) {
-            throw new Error(`Submission ${recordId} is missing Enrollment.`);
-        }
-
-        if (!weekId) {
-            throw new Error(`Submission ${recordId} is missing Week.`);
-        }
-
-        const programInstanceContext = await getProgramInstanceContext(
-            enrollmentId,
-            weekId
-        );
-
-        if (!submissionKey) {
-            throw new Error(`Submission ${recordId} has a blank Submission Key.`);
-        }
-
-        if (!activityDate) {
-            throw new Error(`Submission ${recordId} is missing Activity Date.`);
-        }
-
-        if (!countThisSubmission) {
-            setOutputs({
-                ok: true,
-                statusOut: CONFIG.outputStatuses.skipped,
-                actionOut: "skipped_submission_not_counted",
-                errorOut: "",
-                debugStep: "Skipped: Count This Submission? is false or blank",
-                submissionId: recordId,
-                submissionKey,
-                enrollmentId,
-                weekId,
-                totalShotsCounted: totalShotsCounted ?? "",
-            });
-
-            return;
-        }
-
-        if (totalShotsCounted === null || totalShotsCounted <= 0) {
-            setOutputs({
-                ok: true,
-                statusOut: CONFIG.outputStatuses.skipped,
-                actionOut: "skipped_no_counted_shots",
-                errorOut: "",
-                debugStep: "Skipped: Total Shots Counted is zero or blank",
-                submissionId: recordId,
-                submissionKey,
-                enrollmentId,
-                weekId,
-                totalShotsCounted: totalShotsCounted ?? "",
-            });
-
-            return;
-        }
-
-        debugStep = "8 - Load XP Reward Rule";
-        setOutputSafe("debugStep", debugStep);
-
-        const xpRuleQuery = await xpRulesTable.selectRecordsAsync({
-            fields: buildXpRuleFieldsToLoad(),
-        });
-
-        const matchingRules = xpRuleQuery.records.filter((rule) => {
-            const ruleKey = getText(
-                rule,
-                xpRulesTable,
-                CONFIG.xpRules.ruleKey
-            );
-
-            const isActive = getBooleanish(
-                rule,
-                xpRulesTable,
-                CONFIG.xpRules.active
-            );
-
-            return (
-                ruleKey === CONFIG.values.ruleKeyDailyShootingBase &&
-                isActive
-            );
-        });
-
-        if (matchingRules.length === 0) {
-            throw new Error(
-                `No active XP Reward Rule found for Rule Key: ${CONFIG.values.ruleKeyDailyShootingBase}`
-            );
-        }
-
-        if (matchingRules.length > 1) {
-            const duplicateRuleIds = matchingRules
-                .map((rule) => rule.id)
-                .join(", ");
-
-            throw new Error(
-                `Multiple active XP Reward Rules found for Rule Key ${CONFIG.values.ruleKeyDailyShootingBase}: ${duplicateRuleIds}`
-            );
-        }
-
-        const baseRule = matchingRules[0];
-
-        const xpPoints = getNumber(
-            baseRule,
-            xpRulesTable,
-            CONFIG.xpRules.xpAmount
-        );
-
-        if (xpPoints === null || xpPoints <= 0) {
-            throw new Error(
-                `XP Amount is blank, invalid, or not positive for Rule Key: ${CONFIG.values.ruleKeyDailyShootingBase}`
-            );
-        }
-
-        debugStep = "9 - Load XP Events";
-        setOutputSafe("debugStep", debugStep);
-
-        const xpEventQuery = await xpEventsTable.selectRecordsAsync({
-            fields: buildXpEventFieldsToLoad(),
-        });
-
-        debugStep = "10 - Find Existing Daily Shooting XP Event";
-        setOutputSafe("debugStep", debugStep);
-
-        const existingXpEventIdSet = new Set(existingXpEventIds);
-
-        const candidateEvents = xpEventQuery.records.filter((event) => {
-            const eventId = event.id;
-
-            const eventXpSource = getText(
-                event,
-                xpEventsTable,
-                CONFIG.xpEvents.xpSource
-            );
-
-            const eventXpBucket = getText(
-                event,
-                xpEventsTable,
-                CONFIG.xpEvents.xpBucket
-            );
-
-            const eventSourceKey = getText(
-                event,
-                xpEventsTable,
-                CONFIG.xpEvents.sourceKey
-            );
-
-            const eventSubmissionIds = getLinkedRecordIds(
-                event,
-                xpEventsTable,
-                CONFIG.xpEvents.submission
-            );
-
-            const eventDedupeKey = fieldExists(
-                xpEventsTable,
-                CONFIG.xpEvents.xpDedupeKey
-            )
-                ? getText(
-                    event,
-                    xpEventsTable,
-                    CONFIG.xpEvents.xpDedupeKey
-                )
-                : "";
-
-            const eventNormalizedDedupeKey = fieldExists(
-                xpEventsTable,
-                CONFIG.xpEvents.xpDedupeKeyNormalized
-            )
-                ? getText(
-                    event,
-                    xpEventsTable,
-                    CONFIG.xpEvents.xpDedupeKeyNormalized
-                )
-                : "";
-
-            const isDailyShootingEvent =
-                eventXpSource === CONFIG.values.xpSourceSubmissionBase ||
-                eventXpBucket === CONFIG.values.xpBucketShootingBase ||
-                eventSourceKey.startsWith(CONFIG.values.sourceKeyPrefix);
-
-            if (!isDailyShootingEvent) {
-                return false;
-            }
-
-            const sourceKeyMatches =
-                eventSourceKey === sourceKey ||
-                Boolean(
-                    legacySourceKey &&
-                    eventSourceKey === legacySourceKey
-                );
-
-            const submissionLinkMatches =
-                eventSubmissionIds.includes(recordId);
-
-            const directSubmissionLinkedMatch =
-                existingXpEventIdSet.has(eventId);
-
-            const dedupeKeyMatches =
-                Boolean(dedupeKey) &&
-                eventDedupeKey === dedupeKey;
-
-            const normalizedKeyMatches =
-                Boolean(normalizedDedupeKey) &&
-                eventNormalizedDedupeKey === normalizedDedupeKey;
-
-            return (
-                sourceKeyMatches ||
-                submissionLinkMatches ||
-                directSubmissionLinkedMatch ||
-                dedupeKeyMatches ||
-                normalizedKeyMatches
-            );
-        });
-
-        log("Daily shooting XP Event candidates", {
-            submissionId: recordId,
-            dedupeKey,
-            normalizedDedupeKey,
-            candidateEventCount: candidateEvents.length,
-            candidateEventIds: candidateEvents.map((event) => event.id),
-        });
-
-        if (candidateEvents.length > 1) {
-            const candidateIds = candidateEvents
-                .map((event) => event.id)
-                .join(", ");
-
-            throw new Error(
-                `Multiple daily shooting XP Events matched Submission ${recordId}. Review duplicates before continuing. XP Event IDs: ${candidateIds}`
-            );
-        }
-
-        debugStep = "11 - Build XP Event Values";
-        setOutputSafe("debugStep", debugStep);
-
-        const submissionWeeklySummaryIds = fieldExists(
-            submissionsTable,
-            CONFIG.submissions.weeklySummary
-        )
-            ? getLinkedRecordIds(
-                submission,
-                submissionsTable,
-                CONFIG.submissions.weeklySummary
-            )
-            : [];
-
-        const weeklySummaryContext = await resolveWeeklySummaryContext({
-            sourceWeeklySummaryIds: submissionWeeklySummaryIds,
-            enrollmentId,
-            weekId,
-            programInstanceId: programInstanceContext.programInstanceId,
-            canonicalSummaryKey: programInstanceContext.canonicalSummaryKey,
-        });
-        const weeklySummaryId = weeklySummaryContext.weeklySummaryId;
-
-        log("Weekly Athlete Summary resolution", {
-            submissionWeeklySummaryIds,
-            weeklySummaryId: weeklySummaryId || "",
-            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
-            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
-            enrollmentId,
-            weekId,
-            programInstanceId: programInstanceContext.programInstanceId,
-            canonicalSummaryKey: programInstanceContext.canonicalSummaryKey,
-        });
-
-        const publicReason = buildPublicReason();
-
-        const debugReason = buildDebugReason({
-            ruleKey: CONFIG.values.ruleKeyDailyShootingBase,
-            xpPoints,
-            submissionId: recordId,
-            submissionKey,
-            xpSource: CONFIG.values.xpSourceSubmissionBase,
-            xpBucket: CONFIG.values.xpBucketShootingBase,
-            xpDateSource: CONFIG.values.xpDateSourceSubmissionActivity,
-        });
-
-        const xpEventFields = {
-            [CONFIG.xpEvents.enrollment]: linkedCell([enrollmentId]),
-
-            [CONFIG.xpEvents.submission]: linkedCell([recordId]),
-
-            [CONFIG.xpEvents.week]: linkedCell([weekId]),
-
-            [CONFIG.xpEvents.xpSource]: buildCellValueForField(
-                xpEventsTable,
-                CONFIG.xpEvents.xpSource,
-                CONFIG.values.xpSourceSubmissionBase
-            ),
-
-            [CONFIG.xpEvents.xpBucket]: buildCellValueForField(
-                xpEventsTable,
-                CONFIG.xpEvents.xpBucket,
-                CONFIG.values.xpBucketShootingBase
-            ),
-
-            [CONFIG.xpEvents.xpPoints]: xpPoints,
-
-            [CONFIG.xpEvents.xpReasonPublic]: publicReason,
-
-            [CONFIG.xpEvents.xpReasonDebug]: debugReason,
-
-            [CONFIG.xpEvents.active]: true,
-
-            [CONFIG.xpEvents.sourceKey]: sourceKey,
-        };
-
-        if (writableXpDateField) {
-            xpEventFields[writableXpDateField] = activityDate;
-        }
-
-        if (writableXpDateSourceField) {
-            xpEventFields[writableXpDateSourceField] = buildCellValueForField(
-                xpEventsTable,
-                writableXpDateSourceField,
-                CONFIG.values.xpDateSourceSubmissionActivity
-            );
-        }
-
-        addWeeklySummaryLink(
-            xpEventFields,
-            xpEventsTable,
-            CONFIG.xpEvents.weeklySummary,
-            weeklySummaryId
-        );
-
-        debugStep = "12 - Create or Update XP Event";
-        setOutputSafe("debugStep", debugStep);
-
-        let xpEventId = "";
-        let actionOut = "";
-        let statusOut = "";
-
-        if (candidateEvents.length === 1) {
-            xpEventId = candidateEvents[0].id;
-
-            writeStarted = true;
-            await xpEventsTable.updateRecordAsync(
-                xpEventId,
-                xpEventFields
-            );
-
-            actionOut = "updated_existing_xp_event";
-            statusOut = CONFIG.outputStatuses.updated;
-        } else {
-            writeStarted = true;
-            xpEventId = await xpEventsTable.createRecordAsync(
-                xpEventFields
-            );
-
-            actionOut = "created_new_xp_event";
-            statusOut = CONFIG.outputStatuses.created;
-        }
-
-        await ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId);
-
-        debugStep = "13 - Link XP Event to Submission";
-        setOutputSafe("debugStep", debugStep);
-
-        const mergedXpEventIds = uniqueIds([
-            ...existingXpEventIds,
-            xpEventId,
-        ]);
-
-        await submissionsTable.updateRecordAsync(recordId, {
-            [CONFIG.submissions.xpEvents]: linkedCell(mergedXpEventIds),
-
-            [CONFIG.submissions.xpAwardStatus]: buildCellValueForField(
-                submissionsTable,
-                CONFIG.submissions.xpAwardStatus,
-                CONFIG.values.statusAwarded
-            ),
-        });
-
-        debugStep = "14 - Re-arm Shot Milestone Check";
-        setOutputSafe("debugStep", debugStep);
-
-        const shotMilestoneRearmed = await rearmShotMilestoneCheck(enrollmentId);
-
-        debugStep = "15 - Complete";
-        setOutputSafe("debugStep", debugStep);
-
-        setOutputs({
-            ok: true,
-            statusOut,
-            actionOut,
-            errorOut: "",
-            debugStep,
-
-            submissionId: recordId,
-            submissionKey,
-            enrollmentId,
-            weekId,
-
-            totalShotsCounted,
-            xpPoints,
-
-            xpEventId,
-            weeklySummaryId: weeklySummaryId || "",
-            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
-            repairedSubmissionSummaryLink: false,
-            submissionSummaryLinkNeedsRepair: weeklySummaryContext.repairedStaleLink,
-            sourceKey,
-            dedupeKey,
-            normalizedDedupeKey,
-
-            xpSource: CONFIG.values.xpSourceSubmissionBase,
-            xpBucket: CONFIG.values.xpBucketShootingBase,
-            ruleKey: CONFIG.values.ruleKeyDailyShootingBase,
-
-            xpDateFieldUsed: writableXpDateField || "",
-            xpDateSourceFieldUsed: writableXpDateSourceField || "",
-
-            publicReason,
-            debugReason,
-
-            candidateEventCount: candidateEvents.length,
-            shotMilestoneRearmed,
-        });
-
-        console.log(JSON.stringify({
-            automation: CONFIG.scriptName,
-            version: CONFIG.version,
-            statusOut,
-            actionOut,
-            submissionId: recordId,
-            xpEventId,
-            weeklySummaryId: weeklySummaryId || "",
-            weeklySummaryResolution: weeklySummaryContext.resolutionSource,
-            sourceKey,
-            debugStep,
-        }));
-    } catch (error) {
-        log("Automation 010 error", {
-            submissionId: recordId,
-            debugStep,
-            error: error.message,
-        });
-
-        if (submission && writeStarted) {
-            try {
-                await markSubmissionStatus(recordId, CONFIG.values.statusError);
-            } catch (statusError) {
-                log("Could not mark Submission XP Award Status as Error", {
-                    submissionId: recordId,
-                    statusError: statusError.message,
-                });
-            }
-        }
-
-        setOutputs({
-            ok: false,
-            statusOut: CONFIG.outputStatuses.error,
-            actionOut: "error",
-            errorOut: error.message,
-            debugStep,
-            submissionId: recordId,
-        });
-
-        throw error;
+  let recordId = "";
+  let submission = null;
+  let priorSignature = "";
+  try {
+    step("1 - Validate recordId");
+    recordId = String(input.config().recordId || "").trim();
+    if (!recordId || !recordId.startsWith("rec")) throw new Error("A valid Submission recordId is required.");
+
+    step("2 - Load tables");
+    submissionsTable = base.getTable(CONFIG.tables.submissions);
+    xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
+    xpRulesTable = base.getTable(CONFIG.tables.xpRules);
+    enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+    weeksTable = base.getTable(CONFIG.tables.weeks);
+    weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
+
+    step("3 - Validate approved reconciliation schema");
+    validateSchema();
+
+    step("4 - Load Submission");
+    submission = await submissionsTable.selectRecordAsync(recordId);
+    if (!submission) throw new Error(`Submission not found: ${recordId}`);
+    priorSignature = text(submission, submissionsTable, CONFIG.submissions.lastSignature);
+
+    const enrollmentIds = ids(submission, submissionsTable, CONFIG.submissions.enrollment);
+    const weekIds = ids(submission, submissionsTable, CONFIG.submissions.week);
+    const wasIds = ids(submission, submissionsTable, CONFIG.submissions.weeklySummary);
+    if (enrollmentIds.length > 1 || weekIds.length > 1 || wasIds.length > 1) {
+      throw new Error(`Submission ${recordId} has ambiguous Enrollment, Week, or WAS links.`);
     }
+    const enrollmentId = enrollmentIds[0] || "";
+    const weekId = weekIds[0] || "";
+    const wasCandidates = enrollmentId && weekId ? await validWasIds(enrollmentId, weekId) : [];
+    const wasId = wasCandidates.length === 1 ? wasCandidates[0] : "";
+    const canonicalKeyEvent = await findCanonicalKeyEvent(recordId);
+    const enrollment = enrollmentId ? await enrollmentsTable.selectRecordAsync(enrollmentId) : null;
+    const week = weekId ? await weeksTable.selectRecordAsync(weekId) : null;
+    const activityDate = dateKey(raw(submission, submissionsTable, CONFIG.submissions.activityDate));
+    const eligible = Boolean(
+      enrollment && week && enrollmentIds.length === 1 && weekIds.length === 1
+      && wasCandidates.length === 1 && wasIds.length <= 1 && wasId
+      && (wasIds.length === 0 || wasIds[0] === wasId)
+      && booleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active)
+      && booleanish(submission, submissionsTable, CONFIG.submissions.countThisSubmission)
+      && (number(submission, submissionsTable, CONFIG.submissions.totalShotsCounted) || 0) > 0
+      && activityDate && activityDate <= todayKey()
+      && activityDate >= dateKey(raw(week, weeksTable, CONFIG.weeks.startDate))
+      && activityDate <= dateKey(raw(week, weeksTable, CONFIG.weeks.endDate))
+      && one(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance)
+      && one(week, weeksTable, CONFIG.weeks.programInstance) === one(enrollment, enrollmentsTable, CONFIG.enrollments.programInstance),
+    );
+
+    if (!eligible) {
+      step("5 - Correction or safe ineligible skip");
+      if (!enrollmentId || !weekId || wasCandidates.length !== 1 || !wasId || wasIds.length > 1) {
+        throw new Error(
+          `Submission ${recordId} is ineligible with incomplete or ambiguous canonical identity; ` +
+          "the existing XP Event remains unacknowledged.",
+        );
+      }
+      const correctionEvent = canonicalKeyEvent
+        && eventOwned(canonicalKeyEvent, recordId, enrollmentId, weekId, wasId)
+        ? canonicalKeyEvent
+        : null;
+      if (canonicalKeyEvent && !correctionEvent) {
+        throw new Error(
+          `Submission ${recordId} has a canonical XP Event with ownership mismatch; no event was changed.`,
+        );
+      }
+      if (correctionEvent) {
+        await xpEventsTable.updateRecordAsync(correctionEvent.id, {
+          [CONFIG.xpEvents.active]: false,
+        });
+        await requestDownstreamRecalculation(enrollmentId);
+        const signature = await acknowledgeAfterSettlement(recordId, false, priorSignature, correctionEvent.id);
+        setOutputs({
+          ok: true, statusOut: "success", actionOut: "deactivated_same_event", errorOut: "", debugStep,
+          submissionId: recordId, xpEventId: correctionEvent.id, sourceKey: sourceKey(recordId),
+          reconciliationAcknowledged: true, reconciledSignature: signature,
+          milestoneStreakReconciliation: "blocked_no_canonical_owner",
+          downstreamRecalculationRequested: Boolean(enrollmentId),
+        });
+      } else {
+        const signature = await acknowledgeAfterSettlement(recordId, false, priorSignature);
+        setOutputs({
+          ok: true, statusOut: "skipped", actionOut: "skipped_ineligible", errorOut: "", debugStep,
+          submissionId: recordId, reconciliationAcknowledged: true, reconciledSignature: signature,
+          milestoneStreakReconciliation: "blocked_no_canonical_owner",
+        });
+      }
+      return;
+    }
+
+    step("6 - Load SHOOTING_BASE rule and build canonical payload");
+    const xpPoints = await findRule();
+    const payload = {
+      [CONFIG.xpEvents.enrollment]: linked(enrollmentId),
+      [CONFIG.xpEvents.submission]: linked(recordId),
+      [CONFIG.xpEvents.week]: linked(weekId),
+      [CONFIG.xpEvents.weeklySummary]: linked(wasId),
+      [CONFIG.xpEvents.xpSource]: selectValue(xpEventsTable, CONFIG.xpEvents.xpSource, CONFIG.values.xpSource),
+      [CONFIG.xpEvents.xpBucket]: selectValue(xpEventsTable, CONFIG.xpEvents.xpBucket, CONFIG.values.xpBucket),
+      [CONFIG.xpEvents.xpPoints]: xpPoints,
+      [CONFIG.xpEvents.xpReasonPublic]: "Shooting submission completed.",
+      [CONFIG.xpEvents.xpReasonDebug]: debugReason(recordId, xpPoints, canonicalKeyEvent ? "reactivated_or_repaired" : "created"),
+      [CONFIG.xpEvents.active]: true,
+      [CONFIG.xpEvents.sourceKey]: sourceKey(recordId),
+    };
+    if (isWritable(field(xpEventsTable, CONFIG.xpEvents.xpActivityDate))) payload[CONFIG.xpEvents.xpActivityDate] = raw(submission, submissionsTable, CONFIG.submissions.activityDate);
+    if (isWritable(field(xpEventsTable, CONFIG.xpEvents.xpActivityDateSource))) payload[CONFIG.xpEvents.xpActivityDateSource] = selectValue(xpEventsTable, CONFIG.xpEvents.xpActivityDateSource, CONFIG.values.dateSource);
+
+    step("7 - Exact-key last-chance recheck and write");
+    const lastChance = await findExactEvent(recordId, enrollmentId, weekId, wasId);
+    let xpEventId;
+    let actionOut;
+    if (lastChance) {
+      await xpEventsTable.updateRecordAsync(lastChance.id, payload);
+      xpEventId = lastChance.id;
+      actionOut = !booleanish(lastChance, xpEventsTable, CONFIG.xpEvents.active)
+        ? "reactivated_same_event"
+        : "repaired_same_event";
+    } else {
+      xpEventId = await xpEventsTable.createRecordAsync(payload);
+      actionOut = "created";
+    }
+    const currentLinks = ids(submission, submissionsTable, CONFIG.submissions.xpEvents);
+    const submissionUpdate = {};
+    if (!currentLinks.includes(xpEventId)) submissionUpdate[CONFIG.submissions.xpEvents] = linked(xpEventId);
+    if (wasIds.length === 0) submissionUpdate[CONFIG.submissions.weeklySummary] = linked(wasId);
+    submissionUpdate[CONFIG.submissions.xpAwardStatus] = selectValue(
+      submissionsTable,
+      CONFIG.submissions.xpAwardStatus,
+      CONFIG.values.awardStatus,
+    );
+    await submissionsTable.updateRecordAsync(recordId, submissionUpdate);
+
+    step("8 - Request downstream recalculation");
+    const downstreamRequested = await requestDownstreamRecalculation(enrollmentId);
+    step("9 - Settle formulas and acknowledge latch");
+    const signature = await acknowledgeAfterSettlement(recordId, true, priorSignature, xpEventId);
+    setOutputs({
+      ok: true, statusOut: "success", actionOut, errorOut: "", debugStep,
+      submissionId: recordId, enrollmentId, weekId, weeklySummaryId: wasId, xpEventId,
+      sourceKey: sourceKey(recordId), xpPoints, reconciliationAcknowledged: true,
+      reconciledSignature: signature, downstreamRecalculationRequested: downstreamRequested,
+      milestoneStreakReconciliation: "blocked_no_canonical_owner",
+    });
+    console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "success", actionOut, submissionId: recordId, xpEventId, sourceKey: sourceKey(recordId), debugStep }));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    setOutputs({
+      ok: false, statusOut: "error", actionOut: "error", errorOut: `FAILED AT: ${debugStep} — ${message}`,
+      debugStep, submissionId: recordId, reconciliationAcknowledged: false,
+      milestoneStreakReconciliation: "blocked_no_canonical_owner",
+    });
+    console.log(JSON.stringify({ automation: SCRIPT.scriptName, version: SCRIPT.version, statusOut: "error", actionOut: "error", errorOut: message, submissionId: recordId, debugStep }));
+    throw error;
+  }
 }
 
-
-/************************************************************************************************
- * SECTION 4 — RUN
- ************************************************************************************************/
-
-await main();
+try {
+  await main();
+} catch (error) {
+  throw error;
+}
