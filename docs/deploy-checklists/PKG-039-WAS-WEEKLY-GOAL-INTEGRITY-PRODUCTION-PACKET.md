@@ -1,7 +1,7 @@
 # PKG-039 — Weekly Athlete Summary and Weekly Goal Integrity
 
-**Status:** Mike-only DEV-first and Production packet — not executed by this package  
-**Repository baseline:** `b10c93432a7e7bc0a04ada2c39aeca7e8f49e8db` plus the PKG-039 PR head  
+**Status:** Mike-only DEV-first and Production packet — not executed by this package
+**Repository baseline:** `b10c93432a7e7bc0a04ada2c39aeca7e8f49e8db` plus the PKG-039 PR head
 **Production boundary:** No record, schema, automation, trigger, email, or lock change was made while preparing this packet.
 
 ## Evidence boundary and known warnings
@@ -28,7 +28,7 @@ year, week, grade band, inactive goals, and multiple candidates are ineligible.
 | Submission Week | `005` | Exact Enrollment Program Instance and date-derived Week. |
 | Canonical WAS create/link/Submission backlink | `031` | Exact one Submission Enrollment + Week; exact Program Instance; formula Summary Key; post-create recheck. |
 | Grade Band | `030` | Supporting WAS context writer; does not create WAS. |
-| Goal link | `032` | Exactly one active, explicit numeric Target Goal Shots record for the WAS Grade Band. Challenge-wide: no Week match. |
+| Goal link | `032` | Exactly one active, explicit numeric Target Goal Shots record for the WAS Enrollment Program Instance + Grade Band. No Week match. |
 | Homework and Homework Completion backlink | `033` | Exact WAS Enrollment + Week + Program Instance; absorbs retired `068`. |
 | Submission Base XP / its WAS link | `010` | Source key `SUBMISSION_XP|{Submission}`; not repaired by `031`. |
 | Non-Submission-Base XP/WAS backlink repair | `031` | Exact Enrollment + Week; blank or precisely proven stale link only. |
