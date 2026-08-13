@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-20
-Last GitHub Update: 2026-08-12
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Finds the unique canonical Weekly Athlete Summary for counted submissions,
@@ -29,10 +29,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * 031 - WEEKLY SUMMARY AND GOAL LOGIC
  * Resolve Canonical Weekly Athlete Summary from Submission
  *
- * Version: v4.0
+ * Version: v4.1
  * Date Written: 2026-05-20
- * Last Updated: 2026-08-12
- * Updated Reason: Restore authoritative Weekly Athlete Summary find-or-create behavior
+ * Last Updated: 2026-08-13
+ * Updated Reason: Require exact Submission and final WAS Enrollment/Week cardinality;
+ * no first linked identity is accepted under an ambiguous owner state. Restore authoritative Weekly Athlete Summary find-or-create behavior
  * when no fully valid canonical summary exists, while preserving formula-backed
  * readiness inputs, strict writable-checkbox validation, and post-create concurrency
  * revalidation before arming Build Daily Email Now?;
@@ -116,7 +117,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 const CONFIG = {
   scriptName:
     "031 - Weekly Summary and Goal Logic - Find or Create Weekly Athlete Summary from Submission",
-  version: "v4.0",
+  version: "v4.1",
 
   tables: {
     submissions: "Submissions",
@@ -932,16 +933,18 @@ async function main() {
     debugStep = "4 - Read Submission Links";
     setOutputSafe("debugStep", debugStep);
 
-    submissionEnrollmentId = getFirstLinkedRecordId(
+    submissionEnrollmentId = getExactlyOneLinkedRecordId(
       submission,
       submissionsTable,
-      CONFIG.submissions.enrollment
+      CONFIG.submissions.enrollment,
+      `Submission ${recordId}`
     );
 
-    submissionWeekId = getFirstLinkedRecordId(
+    submissionWeekId = getExactlyOneLinkedRecordId(
       submission,
       submissionsTable,
-      CONFIG.submissions.week
+      CONFIG.submissions.week,
+      `Submission ${recordId}`
     );
 
     existingSubmissionSummaryIds = getLinkedRecordIds(
@@ -961,16 +964,6 @@ async function main() {
 
     debugStep = "5 - Validate Submission Links";
     setOutputSafe("debugStep", debugStep);
-
-    if (!submissionEnrollmentId) {
-      throw new Error(`Submission ${recordId} is missing Enrollment link.`);
-    }
-
-    if (!submissionWeekId) {
-      throw new Error(
-        `Submission ${recordId} is missing Week link. Run the Week assignment automation before this automation.`
-      );
-    }
 
     if (existingSubmissionSummaryIds.length > 1) {
       throw new Error(
@@ -1208,16 +1201,18 @@ async function main() {
       );
     }
 
-    const finalEnrollmentId = getFirstLinkedRecordId(
+    const finalEnrollmentId = getExactlyOneLinkedRecordId(
       finalSummary,
       summariesTable,
-      CONFIG.summaries.enrollment
+      CONFIG.summaries.enrollment,
+      `Weekly Athlete Summary ${weeklySummaryId}`
     );
 
-    const finalWeekId = getFirstLinkedRecordId(
+    const finalWeekId = getExactlyOneLinkedRecordId(
       finalSummary,
       summariesTable,
-      CONFIG.summaries.week
+      CONFIG.summaries.week,
+      `Weekly Athlete Summary ${weeklySummaryId}`
     );
 
     const finalSubmissionIds = getLinkedRecordIds(

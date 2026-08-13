@@ -297,6 +297,28 @@ test("missing Enrollment or Week fails before readiness is armed", async () => {
   }
 });
 
+test("multiple Submission Enrollment or Week links fail closed before creation", async () => {
+  for (const fieldName of ["Enrollment", "Week"]) {
+    const base = build031Base({
+      submissionCells: {
+        [fieldName]: [
+          { id: fieldName === "Enrollment" ? IDS.ENROLLMENT : IDS.WEEK },
+          { id: "recAmbiguous031Identity" },
+        ],
+        "Build Daily Email Now?": false,
+      },
+    });
+    const result = await run031({ base });
+    assert.ok(result.error);
+    assert.match(String(result.error.message), /must have exactly one linked/i);
+    assert.equal(base.getTable("Weekly Athlete Summary").createdPayloads.length, 0);
+    assert.equal(
+      base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Build Daily Email Now?"),
+      false
+    );
+  }
+});
+
 test("pending Submission XP does not block readiness", async () => {
   const base = build031Base({ xpEvents: [] });
   const { output, error } = await run031({ base });
