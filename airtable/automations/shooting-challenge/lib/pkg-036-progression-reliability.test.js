@@ -13,6 +13,7 @@ const path = require("path");
 const {
   determineAllowedLevelWithGateBlocking,
   progressionAssignmentFingerprint,
+  selectRelevantProgressionConfiguration,
   selectCompleteProgressionGateRules,
   validateProgressionLevels,
 } = require("./v2-engine-contracts");
@@ -218,6 +219,52 @@ test("progression signature observes level and gate configuration changes", () =
   assert.notStrictEqual(progressionAssignmentFingerprint(base), progressionAssignmentFingerprint({ ...base, gateRules: GATES.map((rule) => rule.id === "recG2" ? { ...rule, minimumSubmissions: 4 } : rule) }));
 });
 
+test("unrelated level configuration does not churn an unaffected Enrollment", () => {
+  const base = {
+    enrollmentId: "recE1",
+    lifetimeXp: 100,
+    stats: PASS,
+    schoolYear: "2026-2027",
+    levels: LEVELS,
+    gateRules: GATES,
+    outputs: { currentLevelId: "recL2", nextLevelId: "recL3" },
+  };
+  const unrelatedLevels = LEVELS.map((level) =>
+    level.id === "recL4"
+      ? { ...level, xpRequired: 350, name: "Unrelated Future Level" }
+      : level
+  );
+  assert.strictEqual(
+    progressionAssignmentFingerprint(base),
+    progressionAssignmentFingerprint({ ...base, levels: unrelatedLevels })
+  );
+  assert.strictEqual(
+    progressionAssignmentFingerprint(base),
+    progressionAssignmentFingerprint({
+      ...base,
+      gateRules: [
+        ...GATES,
+        { ...GATES[1], id: "recFutureGate", schoolYear: "2027-2028", minimumSubmissions: 999 },
+      ],
+    })
+  );
+});
+
+test("configuration reachability includes the current and next ladder rows", () => {
+  const relevant = selectRelevantProgressionConfiguration({
+    lifetimeXp: 100,
+    currentLevelIds: ["recL2"],
+    nextLevelIds: ["recL3"],
+    levels: LEVELS,
+    gateRules: GATES,
+  });
+  assert.deepStrictEqual(
+    relevant.levels.map((level) => level.id),
+    ["recL1", "recL2", "recL3"]
+  );
+  assert.ok(relevant.gateRules.every((rule) => ["recL1", "recL2", "recL3"].includes(rule.levelId)));
+});
+
 test("progression signature observes Program Instance, enrollment lifecycle, and output repair state", () => {
   const base = { enrollmentId: "recE1", lifetimeXp: 0, stats: ZERO, schoolYear: "2026-2027", programInstanceIds: ["recPI1"], levels: LEVELS, gateRules: GATES, outputs: { currentLevelId: "recL1", levelStatus: "Assigned" } };
   assert.notStrictEqual(progressionAssignmentFingerprint(base), progressionAssignmentFingerprint({ ...base, programInstanceIds: ["recPI2"] }));
@@ -230,6 +277,7 @@ test("source ownership contract keeps 041 queue-only, 042 assignment-only, and 0
   const source042 = fs.readFileSync(path.join(__dirname, "..", "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js"), "utf8");
   const source043 = fs.readFileSync(path.join(__dirname, "..", "043-levels-and-progression-set-level-gate-rule-from-next-level.js"), "utf8");
   assert.ok(source041.includes("This is a queue/request mechanism only"));
+  assert.ok(source041.includes("buildRelevantConfiguration"));
   assert.ok(!source041.includes("Current Level]: linkedRecordValue"));
   assert.ok(source042.includes("Progression Last Reconciled Signature"));
   assert.ok(source042.includes("sortOrder"));

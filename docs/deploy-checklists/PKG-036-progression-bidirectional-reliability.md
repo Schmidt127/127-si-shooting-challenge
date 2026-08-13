@@ -7,12 +7,15 @@
 
 ## Current Production orientation (read-only, 2026-08-13)
 
-- Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes, started `2026-08-08T16:00:00Z`; current deployed version observed as 4.0.
-- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; current deployed version observed as 3.4.
+- Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes, started `2026-08-08T16:00:00Z`; installed script is v4.0.
+- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4.
 - Automation 043: absent from the Production automation inventory. It must not be recreated.
-- Active Levels: 12; thresholds are unique and span 0 through 2200 XP; active names and thresholds were read successfully.
+- Active Levels: 12; thresholds are unique and span 0 through 2200 XP; active names, thresholds, and sort order were read successfully.
 - Active 2026–2027 Gate Rules: 12; one observed rule per Level, with Level 1 disabled and Levels 2–12 enabled.
+- Production `Level Gate Rules` has no `Program Instance` link field. Gate selection is therefore school-year/rule-set scoped only; the target 042 requires exactly one Program Instance on each Enrollment and must stop if that link is blank or ambiguous. Multi-program same-year gate isolation requires a separately approved schema change.
 - Active Schmidt orientation records observed: `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qWP`, and `recwuMDL6dqIVfvqH`.
+- Existing queued-signature field: `Enrollments.Progression Last Queued Signature` (`fldw2p0bfT54vk6ag`, single-line text).
+- Missing target field: `Enrollments.Progression Last Reconciled Signature` (not present in Production; do not confuse it with `Last Reconciled Signature` on another table).
 - No Production records were modified during orientation.
 
 ## Repository changes
@@ -34,19 +37,26 @@ Create this field on `Enrollments` before pasting the scripts:
 
 The existing field `Progression Last Queued Signature` remains owned by 041. Do not rename, delete, or convert either field.
 
+The target 041 v5.0 configuration fingerprint is scoped to the Enrollment's
+current/next ladder and all thresholds up to the next active level. An edit to
+an unrelated future Level or Gate Rule therefore does not queue an unaffected
+Enrollment, while a changed threshold, active state, gate rule, lifecycle,
+Program Instance, or assignment output in that Enrollment's relevant ladder
+does.
+
 ## Installation order
 
 1. Confirm PKG-034 is no longer testing Production progression. It is currently merged; recheck live coordination before execution.
 2. Preserve the current 041/042 scripts, trigger configuration, enablement, and recent run history in the Airtable UI.
-3. Turn 041 and 042 OFF.
-4. Create `Enrollments.Progression Last Reconciled Signature` as a writable single-line text field. Do not add a formula, lookup, or rollup.
+3. Turn 041 and 042 OFF. Do not alter Automation 010, 101, or any XP pipeline.
+4. Create `Enrollments.Progression Last Reconciled Signature` as a writable single-line text field. Do not add a formula, lookup, or rollup. Confirm the newly created field ID in the operator log.
 5. Wait for the field to settle and verify the field name/type.
-6. Paste the committed 041 v5.0 script and configure its existing cron trigger. Leave the optional `recordId` input blank for the scheduled path.
-7. Paste the committed 042 v4.0 script and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
+6. Paste the committed 041 v5.0 script into automation `wflCRvaopntNPsc64` and configure its existing 15-minute cron trigger. Leave the optional `recordId` input blank for the scheduled path.
+7. Paste the committed 042 v4.0 script into automation `wfl3aiiK8vI2tz0HA` and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
 8. Preserve the existing 042 view filter: `Level Recalc Needed?` checked and `Active?` checked.
 9. Confirm 043 remains absent/OFF.
-10. Keep 041 and 042 OFF while saving, then run controlled manual actions on one Schmidt Enrollment.
-11. Enable 042, then 041 after preflight succeeds.
+10. Keep 041 and 042 OFF while saving, then run controlled manual actions on one approved Schmidt Enrollment.
+11. Enable 042, then 041 after preflight succeeds; 042 must be enabled before 041.
 12. Run the read-only PKG-036 audit and preserve the JSON output.
 
 ## Controlled Schmidt proof

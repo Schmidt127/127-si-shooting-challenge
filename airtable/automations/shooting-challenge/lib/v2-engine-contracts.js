@@ -880,6 +880,45 @@ function selectCompleteProgressionGateRules({
   return selected;
 }
 
+function selectRelevantProgressionConfiguration({
+  lifetimeXp = 0,
+  currentLevelIds = [],
+  nextLevelIds = [],
+  schoolYear = "",
+  levels = [],
+  gateRules = [],
+} = {}) {
+  const relevantLevelIds = new Set([
+    ...(currentLevelIds || []),
+    ...(nextLevelIds || []),
+  ]);
+  const activeLevels = (levels || [])
+    .filter((level) => level && level.active !== false)
+    .map((level) => ({ ...level, xpRequired: Number(level.xpRequired) }))
+    .filter((level) => Number.isFinite(level.xpRequired))
+    .sort((a, b) => a.xpRequired - b.xpRequired);
+
+  for (const level of activeLevels) {
+    relevantLevelIds.add(level.id);
+    if (level.xpRequired > Number(lifetimeXp || 0)) break;
+  }
+
+  return {
+    levels: (levels || []).filter((level) => relevantLevelIds.has(level.id)),
+    gateRules: (gateRules || []).filter((rule) => {
+      const year = String(rule.schoolYear || "").trim().replace(/[–—−]/g, "-").toLowerCase();
+      const targetYear = String(schoolYear || "").trim().replace(/[–—−]/g, "-").toLowerCase();
+      const shared = ["", "shared", "default", "all years"].includes(year);
+      return (
+        (rule.levelId ? [rule.levelId] : rule.levelIds || []).some((id) =>
+          relevantLevelIds.has(id)
+        ) &&
+        (shared || year === targetYear)
+      );
+    }),
+  };
+}
+
 function progressionAssignmentFingerprint({
   enrollmentId,
   lifetimeXp,
@@ -892,6 +931,15 @@ function progressionAssignmentFingerprint({
   gateRules = [],
   outputs = {},
 } = {}) {
+  const relevant = selectRelevantProgressionConfiguration({
+    lifetimeXp,
+    schoolYear,
+    currentLevelIds: outputs.currentLevelId ? [outputs.currentLevelId] : [],
+    nextLevelIds: outputs.nextLevelId ? [outputs.nextLevelId] : [],
+    levels,
+    gateRules,
+  });
+
   return JSON.stringify({
     version: 2,
     enrollmentId: String(enrollmentId || ""),
@@ -909,7 +957,7 @@ function progressionAssignmentFingerprint({
       schoolYear: String(schoolYear || "").trim(),
     },
     programInstanceIds: [...new Set(programInstanceIds)].sort(),
-    levels: [...levels]
+    levels: [...relevant.levels]
       .map((level) => ({
         id: level.id,
         name: String(level.name || "").trim(),
@@ -918,7 +966,7 @@ function progressionAssignmentFingerprint({
         sortOrder: Number(level.sortOrder) || 0,
       }))
       .sort((a, b) => String(a.id).localeCompare(String(b.id))),
-    gateRules: [...gateRules]
+    gateRules: [...relevant.gateRules]
       .map((rule) => ({
         id: rule.id,
         levelId: rule.levelId,
@@ -1894,6 +1942,7 @@ module.exports = {
   selectYearAwareGateRules,
   validateProgressionLevels,
   selectCompleteProgressionGateRules,
+  selectRelevantProgressionConfiguration,
   progressionAssignmentFingerprint,
   selectActiveXpRewardRule,
   normalizeGradeBandLabel,

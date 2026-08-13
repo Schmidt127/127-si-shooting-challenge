@@ -232,6 +232,15 @@ function cleanString(value) {
     return String(value || "").trim();
 }
 
+function assertRecordId(recordId) {
+    if (!recordId || !recordId.startsWith("rec")) {
+        throw new Error(
+            `Invalid recordId: expected a non-empty Airtable record ID starting with "rec".`
+        );
+    }
+    return recordId;
+}
+
 function getNumber(value, fallback = 0) {
     if (value === null || value === undefined || value === "") {
         return fallback;
@@ -1063,7 +1072,9 @@ function determineAllowedLevelWithGateBlocking(levels, gateRuleMap, lifetimeXp, 
 
 async function main() {
     const inputConfig = input.config();
-    const recordId = cleanString(inputConfig[CONFIG.input.recordId]);
+    const recordId = assertRecordId(
+        cleanString(inputConfig[CONFIG.input.recordId])
+    );
 
     if (!recordId) {
         const message = "Missing required input variable: recordId.";
@@ -1093,6 +1104,16 @@ async function main() {
             recordId,
             getEnrollmentReadFields()
         );
+
+        const programInstanceIds = getLinkedIds(
+            enrollment,
+            CONFIG.enrollmentFields.programInstance
+        );
+        if (programInstanceIds.length !== 1) {
+            throw new Error(
+                `Enrollment ${recordId} must link exactly one Program Instance; found ${programInstanceIds.length}.`
+            );
+        }
 
         const enrollmentIsActive = isTruthyFlag(
             enrollment,

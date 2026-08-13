@@ -30,7 +30,7 @@ const F = {
     gateEnabled: "Gate Enabled?",
     gateYear: "School Year / Rule Set",
     minimumSubmissions: "Minimum Submissions",
-    minimumHomework: "Minimum Homework Completions",
+    minimumHomework: "Minimum Homework",
     minimumVideos: "Minimum Video Submissions",
     minimumZoomMeetings: "Minimum Zoom Meetings",
     minimumStreakDays: "Minimum Streak Days",

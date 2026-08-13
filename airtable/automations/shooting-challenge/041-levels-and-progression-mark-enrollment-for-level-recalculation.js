@@ -131,6 +131,13 @@ function cleanString(value) {
     return String(value ?? "").trim();
 }
 
+function assertOptionalRecordId(recordId) {
+    if (recordId && !recordId.startsWith("rec")) {
+        throw new Error(`Invalid recordId: expected an Airtable record ID starting with "rec".`);
+    }
+    return recordId;
+}
+
 function normalizeNumber(value) {
     const number = Number(value);
     return Number.isFinite(number) ? number : 0;
@@ -161,6 +168,16 @@ function getLinkedIds(record, fieldName) {
 
 function getBoolean(record, fieldName) {
     return normalizeBoolean(record.getCellValue(fieldName));
+}
+
+function isSharedSchoolYear(value) {
+    const normalized = cleanString(value).toLowerCase();
+    return (
+        normalized === "" ||
+        normalized === "shared" ||
+        normalized === "default" ||
+        normalized === "all years"
+    );
 }
 
 function setOutputSafe(name, value) {
@@ -262,11 +279,72 @@ function getOutputSignatureValues(record) {
     };
 }
 
+function buildRelevantConfiguration(enrollment, gateRules, levels) {
+    const lifetimeXp = normalizeNumber(
+        enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal)
+    );
+    const currentLevelIds = getLinkedIds(
+        enrollment,
+        CONFIG.enrollmentFields.currentLevel
+    );
+    const nextLevelIds = getLinkedIds(
+        enrollment,
+        CONFIG.enrollmentFields.nextLevel
+    );
+    const relevantLevelIds = new Set([...currentLevelIds, ...nextLevelIds]);
+    const activeLevels = levels
+        .map((level) => ({
+            record: level,
+            threshold: normalizeNumber(
+                level.getCellValue(CONFIG.levelFields.xpRequired)
+            ),
+            active: getBoolean(level, CONFIG.levelFields.active),
+        }))
+        .filter((level) => level.active)
+        .sort((a, b) => a.threshold - b.threshold);
+
+    for (const level of activeLevels) {
+        if (level.threshold <= lifetimeXp) {
+            relevantLevelIds.add(level.record.id);
+            continue;
+        }
+        relevantLevelIds.add(level.record.id);
+        break;
+    }
+
+    const relevantLevels = levels.filter((level) =>
+        relevantLevelIds.has(level.id)
+    );
+    const enrollmentSchoolYear = getText(
+        enrollment,
+        CONFIG.enrollmentFields.schoolYear
+    ).replace(/[–—−]/g, "-");
+    const relevantGateRules = gateRules.filter((rule) =>
+        getLinkedIds(rule, CONFIG.gateRuleFields.level).some((levelId) =>
+            relevantLevelIds.has(levelId)
+        ) &&
+        (isSharedSchoolYear(
+            getText(rule, CONFIG.gateRuleFields.schoolYearRuleSet)
+        ) ||
+            getText(rule, CONFIG.gateRuleFields.schoolYearRuleSet).replace(
+                /[–—−]/g,
+                "-"
+            ) === enrollmentSchoolYear)
+    );
+
+    return { relevantLevels, relevantGateRules };
+}
+
 function buildProgressionSignature(enrollment, gateRules, levels) {
-    const gateRuleValues = gateRules
+    const { relevantLevels, relevantGateRules } = buildRelevantConfiguration(
+        enrollment,
+        gateRules,
+        levels
+    );
+    const gateRuleValues = relevantGateRules
         .map(getGateRuleSignature)
         .sort((a, b) => a.id.localeCompare(b.id));
-    const levelValues = levels
+    const levelValues = relevantLevels
         .map(getLevelSignature)
         .sort((a, b) => a.id.localeCompare(b.id));
 
@@ -313,7 +391,9 @@ function unloadQuerySafe(query) {
 
 async function main() {
     const inputConfig = input.config();
-    const requestedRecordId = cleanString(inputConfig.recordId);
+    const requestedRecordId = assertOptionalRecordId(
+        cleanString(inputConfig.recordId)
+    );
     const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
     const gateRulesTable = base.getTable(CONFIG.tables.levelGateRules);
     const levelsTable = base.getTable(CONFIG.tables.levels);
