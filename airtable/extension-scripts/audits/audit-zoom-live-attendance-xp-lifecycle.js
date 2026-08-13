@@ -312,8 +312,8 @@ async function main() {
         if (eventWasIds.length !== 1 || (wasMatches.length === 1 && eventWasIds[0] !== wasMatches[0].id)) {
           addIssue(report, "blank_or_wrong_was_backlink", { eventId: event.id, eventWasIds, expectedWasIds: wasMatches.map((row) => row.id) });
         }
-        if (!booleanish(event, xpTable, CONFIG.xp.active) && completed) addIssue(report, "eligible_inactive_xp", { eventId: event.id, meetingId: meeting.id, enrollmentId });
-        if (booleanish(event, xpTable, CONFIG.xp.active) && (!completed || !booleanish(enrollment, enrollmentTable, CONFIG.enrollment.active))) {
+        if (!booleanish(event, xpTable, CONFIG.xp.active) && scopeEligible) addIssue(report, "eligible_inactive_xp", { eventId: event.id, meetingId: meeting.id, enrollmentId });
+        if (booleanish(event, xpTable, CONFIG.xp.active) && !scopeEligible) {
           addIssue(report, "ineligible_active_xp", { eventId: event.id, meetingId: meeting.id, enrollmentId });
         }
       }
