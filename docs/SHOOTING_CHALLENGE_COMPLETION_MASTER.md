@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-12** (Automation 079 v2.0 shared dispatcher; no Production change) |
+| Last updated | **2026-08-13** (PKG-007 Homework XP Production evidence closeout; PKG-006R reversal draft) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -100,6 +100,12 @@ overlay.
 - Automation 115 v2.1 controlled PROD proof passed twice. Each explicit checked
   request intentionally created one distinct Submission.
 - Testing Scenarios.Homework Assignment links **Program Homework Assignments**.
+- Mike supplied Production evidence that Homework XP 020 v3.5, 064 v12.2,
+  and 065 v10.1 were installed with 064/065 ON and 071 OFF; 063/068 were
+  absent/retired. Completion `rec3FDdZXlXjhcTj4` created, withdrew, and
+  restored the same canonical event `recJGcfipFyKwiSC5` with Source Key
+  `HOMEWORK_XP|rec3FDdZXlXjhcTj4`. Cursor did not independently access
+  Airtable.
 - The `/shoot` web release includes PR #138 imagery and retains the approved
   pre-launch `noindex, nofollow` policy. Deployment state must still be verified
   in Vercel.
@@ -110,6 +116,13 @@ overlay.
   Make/S3, email, or full season behavior.
 - Controlled automation-action tests do not prove natural-trigger behavior.
 - Offline tests do not prove controlled PROD behavior.
+- The supplied Homework evidence proves creation, automatic withdrawal, and
+  same-event restoration for that controlled lifecycle only; it does not prove
+  every Homework path, progression rollup, standings path, or full-season
+  behavior.
+- Daily-submission XP reversal is a separate P0 concern. Repository evidence
+  shows positive-only correction reachability gaps for Submission Base XP,
+  streak XP, and shot-milestone XP; no Production correction claim is made.
 - Repository text does not prove current Airtable, Fillout, Make, Gmail, or
   Vercel configuration.
 
@@ -209,7 +222,7 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-004` | Establish field ownership and dedupe-key contracts before new schema/features | `blocked` | §4 C-012, C-024; backlog Wave 2 | V2-013 architecture boundary and Mike schema authority | Cursor; Mike | Ownership matrix, one-writer decisions, key contract, safe rerun tests, and approved schema scope | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Keep as a gate for schema work; do not modify Airtable schema here | 4 |
 | `PKG-005` | Add Learning Activities catalog, response routing, and `countsAsHomework` behavior without a second XP pipeline | `Mike decision` | §4 SC-018–SC-020; backlog C-009 / LA-000–002 | `PKG-004`; Mike authorization for schema | Cursor; Mike | Approved schema, seed/readback evidence, routing tests, Fillout/web mapping, and coach-view proof | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Fillout; Mike | Mike approves schema direction; then implement repo contract before any base change | 5 |
 | `PKG-006` | Prove natural Fillout-shaped intake from identity through Submission, Enrollment, Week, and PHA | `needs live proof` | §4 SC-001, SC-004, SC-060, SC-064, SC-069 | `PKG-004`; valid 2027/Testing Weeks; Fillout availability decision | Mike; Cursor | Controlled Fillout-shaped run, identity/no-duplicate evidence, date-boundary proof, and natural-trigger evidence | 2026-08-11 — Execution matrix IDs advanced: PKG-006 — controlled-proof specification `docs/investigations/CONTROLLED-PROOF-SPECIFICATION-PKG-006-015.md` provides repository-only evidence design supporting PKG-007 through PKG-015; no live proof or completion claim | Airtable; Fillout; Mike | Prepare a Schmidt-only proof card; do not reopen intake from this PR | 6 |
-| `PKG-007` | Prove homework, video, written, multi-file, HC reuse, and post-review XP positive paths | `needs live proof` | §4 SC-010–SC-016, SC-071–SC-072; [Authority Map](./AUTHORITY-MAP.md) | `PKG-005` where Learning Activities are used; `PKG-006` intake | Mike; Cursor | One controlled run per path, correct HC/asset/XP identity, no duplicate, and explicit Make/S3/email boundaries | 2026-08-12 — Video lifecycle preserves exact `VIDEO_SUBMISSION|{VF ID}` through reversals. Homework child package adds exact `HOMEWORK_XP|{HC ID}` create/replay/correction, PHA-first validation including slot, duplicate-HC fail-closed behavior, authoritative audit, lifecycle suite, and Production-only Schmidt packet. Approved additive signature/lookup schema wakes the existing 065 slot for local, Enrollment, PHA, and XP Event changes without polling; Production field creation and live proof remain pending. | Airtable; Fillout; Make; Mike | Create documented signature fields, paste 065 v10.1, then execute separate Schmidt-only Video and Homework cards | 7 |
+| `PKG-007` | Prove homework, video, written, multi-file, HC reuse, and post-review XP positive paths | `needs live proof` | §4 SC-010–SC-016, SC-071–SC-072; [Authority Map](./AUTHORITY-MAP.md) | `PKG-005` where Learning Activities are used; `PKG-006` intake | Mike; Cursor | One controlled run per path, correct HC/asset/XP identity, no duplicate, and explicit Make/S3/email boundaries | 2026-08-13 — Mike supplied Production evidence for the Homework XP child lifecycle: 020 v3.5, 064 v12.2, and 065 v10.1 installed; 064/065 ON; 071 OFF; 063/068 absent/retired. Audit dry-run checked 0 with 0 issues before the test. Completion `rec3FDdZXlXjhcTj4` created 35-point canonical event `recJGcfipFyKwiSC5` with `HOMEWORK_XP|rec3FDdZXlXjhcTj4`, deactivated it when Satisfactory was withdrawn, and restored the same event on recheck with no duplicate. Cursor did not access Airtable. This closes only the supplied Homework XP lifecycle evidence; broader Homework/video/written/multi-file/HC-reuse and progression/standings paths remain unproven. | Airtable; Fillout; Make; Mike | Preserve this evidence and continue separate PKG-006R daily-submission reversal work; do not claim full PKG-007 completion. | 7 |
 | `PKG-008` | Prove weekly summary build/send positive branches and retry/failure behavior | `needs live proof` | §4 SC-031, SC-035–SC-037, SC-041, SC-045 | Eligible completed Week/package; `PKG-006` | Mike; Cursor | `build_armed` and send-arm results, WAS uniqueness, 072→119→074/Make evidence, and no-target safety | 2026-08-11 — Supporting proof design in PKG-006’s controlled-proof specification defines the positive send, retry, Make/Gmail, writeback, and replay evidence required; no live proof or completion claim | Airtable; Make; Gmail; Mike | Wait for an eligible package, then run bounded live proof with Schmidt-only recipients | 8 |
 | `PKG-009` | Reconcile Airtable Weeks and prepare final 2027 season activation package | `Mike decision` | §2A 2027 season authority; §4 SC-032, SC-065, SC-146 | Mike-maintained Weeks; `PKG-006`; final launch approval | Mike; Cursor | Weeks export/UI attestation for May 1–June 30, Early Bird Apr 25–May 1, Week 1 May 2, no fixed count, and temporary-fixture cleanup | 2026-08-11 — Supporting proof design in PKG-006’s controlled-proof specification defines the 2027 Weeks, Config, Fillout mapping, preflight, and activation evidence needed; no live proof or activation claim | Airtable; Fillout; Mike | Mike verifies Weeks and fixture; Cursor records the approved activation checklist only | 9 |
 | `PKG-010` | Decide the future Zoom recording-credit writer without taking the email slot or writing Attendees | `Mike decision` | §4 SC-074, SC-086; C-025 | C-024 dedupe contract; C-025 email ownership | Mike; Cursor | Written product decision, slot/owner contract, rollback, and no-double-credit test plan | 2026-08-11 — Supporting proof design in PKG-006’s controlled-proof specification separates live attendance, recording approval email, and recording-credit ownership; no product decision or live proof claim | Repo; Airtable; Make; Mike | Choose dedicated future writer or retain email-only 117; do not revive Stage 16/117a alternatives | 10 |

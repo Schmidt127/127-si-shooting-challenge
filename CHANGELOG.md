@@ -9,6 +9,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **PKG-007 Production Homework XP closeout (2026-08-13)** — Mike supplied
+  Production evidence for 020 v3.5, 064 v12.2, and 065 v10.1: 064/065 ON,
+  071 OFF, and 063/068 absent or retired. The nine-field signature chain was
+  installed; the historical initializer was correctly skipped because
+  Homework Completions and XP Events were empty. Controlled Schmidt completion
+  `rec3FDdZXlXjhcTj4` created 35 points in canonical event
+  `recJGcfipFyKwiSC5`, automatically deactivated it on review withdrawal, and
+  restored the same event on recheck with no duplicate. Evidence was supplied
+  by Mike; Cursor did not access Airtable. This is not a claim that every
+  Homework, progression, standings, or season path is proven. Daily-submission
+  reversal remains a separate P0 item.
 - **PKG-007 Homework XP reliability (2026-08-12)** — Automation 020 now fails closed on multiple canonical Homework Completion candidates. Retired 063 has an explicit runtime stop; 068 remains retired. Automation 064 v12.2 requires exactly one Enrollment/Homework/Week and re-arms Award Status Pending when existing Base XP must be restored. Automation 065 v10.1 owns exact `HOMEWORK_XP|<Homework Completion ID>` create/replay/correction, validates PHA-first ownership including canonical Item/Homework Slot, deactivates the canonical event when review, Enrollment, or PHA eligibility is withdrawn, and reuses/reactivates that same row. A documented nine-field formula/lookup signature chain automatically wakes the existing 065 slot for linked changes without polling. Multiple resubmissions remain a documented identity boundary: an existing event may retain one owned Submission; a new event with multiple candidate Submissions fails closed. Added authoritative read-only audit, offline lifecycle, and Production-only Schmidt packet. 071 email is unchanged/out of scope. No Production Airtable change or live proof is claimed.
 - **Source-of-truth reconciliation (2026-08-10)** — Added the authority map,
   reconciled the Completion Master and CONTROL release metadata to merged
