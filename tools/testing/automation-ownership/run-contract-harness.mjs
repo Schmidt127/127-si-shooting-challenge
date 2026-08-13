@@ -400,6 +400,41 @@ function checkLegacyHomeworkCompletionUsage() {
   return findings;
 }
 
+export function evaluateWasOwnership({ automation, text, fileName = "" }) {
+  const role = automation === "031" ? "create_capable_owner" : "find_only_consumer";
+  const lookupPatterns = {
+    "031": /findValidCanonicalSummaries|loadCanonicalSummaries|matchingSummaries/,
+    "101": /findWeeklySummaryId|wasMatches|resolveExistingWeeklySummaryId/,
+    "118": /wasBySummaryKey|expectedSummaryKey|candidates/,
+  };
+  const createPatterns = {
+    "031": /summariesTable\.createRecordAsync\s*\(/,
+    "101": /weeklySummaryTable\.createRecordAsync\s*\(/,
+    "118": /wasTable\.createRecordAsync\s*\(/,
+  };
+  const hasLookup = Boolean(lookupPatterns[automation]?.test(text));
+  const hasCreate = Boolean(createPatterns[automation]?.test(text));
+  const findOnly = role === "find_only_consumer" && hasLookup && !hasCreate;
+  const findings = [];
+
+  if (!hasLookup || (role === "create_capable_owner" && !hasCreate) || (role === "find_only_consumer" && hasCreate)) {
+    findings.push({
+      severity: "fail",
+      code: "was_ownership_contract_failed",
+      automation,
+      detail: `role=${role} lookup=${hasLookup} create=${hasCreate} findOnly=${findOnly} file=${fileName}`,
+    });
+  } else {
+    findings.push({
+      severity: "pass",
+      code: role === "create_capable_owner" ? "was_create_owner_verified" : "was_find_only_consumer_verified",
+      automation,
+      detail: `role=${role} lookup=${hasLookup} create=${hasCreate} findOnly=${findOnly} file=${fileName}`,
+    });
+  }
+  return { role, hasLookup, hasCreate, findOnly, findings };
+}
+
 function checkWasUniquenessGuards() {
   const findings = [];
   for (const num of ["031", "101", "118"]) {
@@ -414,36 +449,16 @@ function checkWasUniquenessGuards() {
       continue;
     }
     const text = readScript(filePath);
-    const hasLookup =
-      /findWeeklySummary|findOrCreateWeeklySummary|wasBySummaryKey|wasByEnrollment|targetSummaryKey|Summary Key/.test(
-        text
-      );
-    const hasCreate = /createRecordAsync/.test(text);
+    const ownership = evaluateWasOwnership({
+      automation: num,
+      text,
+      fileName: path.basename(filePath),
+    });
     const writesSummaryKey =
       /createFields\[[^\]]*summaryKey\s*\]\s*=/.test(text) ||
       /createFields\[CONFIG\.[^\]]*summaryKey\]/.test(text);
 
-    const noCreateFailClosed = num === "031" && !hasCreate;
-
-    if (!hasLookup || (!hasCreate && !noCreateFailClosed)) {
-      findings.push({
-        severity: "fail",
-        code: "was_missing_uniqueness_guard",
-        automation: num,
-        detail: `lookup=${hasLookup} create=${hasCreate} findOnly=${findOnly}`,
-      });
-    } else {
-      findings.push({
-        severity: "pass",
-        code: noCreateFailClosed
-          ? "was_has_lookup_and_fail_closed_without_create"
-          : "was_has_lookup_before_create",
-        automation: num,
-        detail: noCreateFailClosed
-          ? `${path.basename(filePath)}; no summary creation path`
-          : path.basename(filePath),
-      });
-    }
+    findings.push(...ownership.findings);
     if (writesSummaryKey) {
       findings.push({
         severity: "fail",

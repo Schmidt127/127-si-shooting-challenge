@@ -8,7 +8,10 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { runHarness } from "../../tools/testing/automation-ownership/run-contract-harness.mjs";
+import {
+  evaluateWasOwnership,
+  runHarness,
+} from "../../tools/testing/automation-ownership/run-contract-harness.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DOCS = path.resolve(__dirname, "../../docs/next-wave/automation-ownership");
@@ -84,6 +87,25 @@ check("WAS identity contract doc states Enrollment + Week", () => {
   assert.match(text, /Enrollment \+ Week/);
   assert.match(text, /Never write/);
 });
+
+for (const [name, input, expectedPass] of [
+  ["031 owner with lookup and WAS create", { automation: "031", text: "findValidCanonicalSummaries(); summariesTable.createRecordAsync({});" }, true],
+  ["031 owner missing lookup", { automation: "031", text: "summariesTable.createRecordAsync({});" }, false],
+  ["031 owner missing WAS create", { automation: "031", text: "findValidCanonicalSummaries();" }, false],
+  ["101 find-only consumer", { automation: "101", text: "findWeeklySummaryId();" }, true],
+  ["118 find-only consumer", { automation: "118", text: "wasBySummaryKey.get(expectedSummaryKey);" }, true],
+  ["101 cannot create WAS", { automation: "101", text: "findWeeklySummaryId(); weeklySummaryTable.createRecordAsync({});" }, false],
+  ["118 cannot create WAS", { automation: "118", text: "wasBySummaryKey.get(); wasTable.createRecordAsync({});" }, false],
+  ["101 requires lookup", { automation: "101", text: "" }, false],
+  ["118 requires lookup", { automation: "118", text: "" }, false],
+]) {
+  check(`WAS ownership: ${name}`, () => {
+    const result = evaluateWasOwnership(input);
+    assert.equal(result.findings.some((finding) => finding.severity === "fail"), !expectedPass);
+    assert.equal(result.role, input.automation === "031" ? "create_capable_owner" : "find_only_consumer");
+    assert.equal(typeof result.findOnly, "boolean");
+  });
+}
 
 check("harness reports ok with zero fails", () => {
   const result = runHarness();
