@@ -4,19 +4,19 @@ PKG-007 adds the following computed signature chain so linked Enrollment, Progra
 
 ## Source signatures
 
-1. **Enrollments → `Homework XP Enrollment Signature`** — formula, single-line text:
+1. **Enrollments → `Homework XP Enrollment Signature`** (`fldiK2yAyNk2LFSgY`) — formula, single-line text:
 
 ```text
 RECORD_ID() & "|" & IF({Active?}, "ACTIVE", "INACTIVE") & "|PI=" & ARRAYJOIN({Program Instance})
 ```
 
-2. **Program Homework Assignments → `Homework XP PHA Signature`** — formula, single-line text:
+2. **Program Homework Assignments → `Homework XP PHA Signature`** (`fld49nopTelauF5d2`) — formula, single-line text:
 
 ```text
 RECORD_ID() & "|" & IF({Active?}, "ACTIVE", "INACTIVE") & "|HW=" & ARRAYJOIN({Homework Assignment}) & "|PI=" & ARRAYJOIN({Program Instance}) & "|WEEK=" & ARRAYJOIN({Week}) & "|SLOT=" & {Homework Slot}
 ```
 
-3. **XP Events → `Homework XP Event Signature`** — formula, single-line text:
+3. **XP Events → `Homework XP Event Signature`** (`fldDDgmXynjnMLWAg`) — formula, single-line text:
 
 ```text
 RECORD_ID() & "|" & IF({Active?}, "ACTIVE", "INACTIVE") & "|KEY=" & {Source Key} & "|HC=" & ARRAYJOIN({Homework Completion}) & "|ENR=" & ARRAYJOIN({Enrollment}) & "|SUB=" & ARRAYJOIN({Submission}) & "|WEEK=" & ARRAYJOIN({Week}) & "|WAS=" & ARRAYJOIN({Weekly Athlete Summary}) & "|SOURCE=" & {XP Source} & "|BUCKET=" & {XP Bucket} & "|POINTS=" & {XP Points}
@@ -24,17 +24,17 @@ RECORD_ID() & "|" & IF({Active?}, "ACTIVE", "INACTIVE") & "|KEY=" & {Source Key}
 
 ## Homework Completion helpers
 
-4. `Homework XP Enrollment Signature - Lkp` — lookup through `Enrollment` to `Homework XP Enrollment Signature`.
-5. `Homework XP PHA Signature - Lkp` — lookup through `Program Homework Assignment` to `Homework XP PHA Signature`.
-6. `Homework XP Event Signature - Lkp` — lookup through `XP Events` to `Homework XP Event Signature`.
-7. `Homework XP Current Signature` — formula, single-line text:
+4. `Homework XP Enrollment Signature - Lkp` (`fldLsp9LpWsuKkoq9`) — lookup through `Enrollment` to `Homework XP Enrollment Signature`.
+5. `Homework XP PHA Signature - Lkp` (`fldTLYHIvjqJKT7IP`) — lookup through `Program Homework Assignment` to `Homework XP PHA Signature`.
+6. `Homework XP Event Signature - Lkp` (`fldbbuLny0aBTNQJk`) — lookup through `XP Events` to `Homework XP Event Signature`.
+7. `Homework XP Current Signature` (`fldZVNIZGkCQJg0ri`) — formula, single-line text:
 
 ```text
 RECORD_ID() & "|SAT=" & IF({Satisfactory?},1,0) & "|REVIEW=" & IF({Review Complete},1,0) & "|FEEDBACK=" & IF({Coach Feedback},1,0) & "|XP=" & {Total Homework XP Awarded} & "|ENR=" & ARRAYJOIN({Homework XP Enrollment Signature - Lkp}) & "|PHA=" & ARRAYJOIN({Homework XP PHA Signature - Lkp}) & "|HW=" & ARRAYJOIN({Homework}) & "|WEEK=" & ARRAYJOIN({Week}) & "|SLOT=" & {Item Slot} & "|SUB=" & ARRAYJOIN({Submissions - Linked}) & "|EVENT=" & ARRAYJOIN({Homework XP Event Signature - Lkp})
 ```
 
-8. `Last Homework XP Reconciled Signature` — writable single-line text. Automation 065 is the sole writer.
-9. `Homework XP Reconciliation Needed?` — formula, numeric 1/0:
+8. `Last Homework XP Reconciled Signature` (`fldNEGMouVy1slkUz`) — writable single-line text. Automation 065 is the sole writer.
+9. `Homework XP Reconciliation Needed?` (`fldNfgScUEeClwGUg`) — formula, numeric 1/0:
 
 ```text
 IF(AND({Homework XP Current Signature}, {Homework XP Current Signature} != {Last Homework XP Reconciled Signature}), 1, 0)
