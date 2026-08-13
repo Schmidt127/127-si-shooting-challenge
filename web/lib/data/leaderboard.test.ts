@@ -95,6 +95,8 @@ describe("leaderboard mapping", () => {
           "Full Athlete Name": "Plain Athlete",
           "Public Profile Enabled": false,
           "Public Profile Slug": "should-not-link",
+          "Lifetime XP Total": 0,
+          "Total Shots Counted": 0,
         },
       },
       3,

@@ -141,7 +141,7 @@ function TopThreePreview({ entries }: { entries: LeaderboardEntry[] }) {
     <div className="grid gap-3 sm:grid-cols-3">
       {entries.map((entry) => (
         <Card
-          key={entry.id}
+          key={entry.rank}
           size="sm"
           className={`rounded-lg shadow-site-sm ${
             entry.rank === 1 ? "ring-brand-orange/45" : "ring-border"
