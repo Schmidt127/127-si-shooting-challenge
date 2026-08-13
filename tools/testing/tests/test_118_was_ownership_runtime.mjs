@@ -74,3 +74,14 @@ test("118 filters inactive and excluded rows before malformed WAS identity can b
   assert.equal(was.createdPayloads.length, 0);
   assert.equal(was.records.get(IDS.was).getCellValue("Build Weekly Email Now?"), true);
 });
+
+test("118 does not arm an existing WAS while its Summary Key formula is unsettled", async () => {
+  const base = buildBase();
+  const was = base.getTable("Weekly Athlete Summary");
+  was.records.get(IDS.was).cells["Summary Key"] = "";
+  const { output, error } = await run(base);
+  assert.equal(error, null);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(was.createdPayloads.length, 0);
+  assert.equal(was.records.get(IDS.was).getCellValue("Build Weekly Email Now?"), false);
+});

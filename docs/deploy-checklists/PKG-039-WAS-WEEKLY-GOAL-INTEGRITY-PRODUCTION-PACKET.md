@@ -17,7 +17,7 @@ pass the listed DEV proofs. Repository tests do not constitute Production proof.
 | 4 | 058 | v1.1 | Perfect Week Eligible + Ready; dynamic `recordId` |
 | 5 | 076 | v8.6 | `Build Daily Email Now?` checked; dynamic `recordId` |
 | 6 | 101 | v6.3 | `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId` |
-| 7 | 118 | v1.9 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
+| 7 | 118 | v2.0 | Scheduled Sunday 05:00 America/Denver; inputs `dryRun`, `sendMode`, `excludedEnrollmentIds`, `includeSchmidt`, `emptyWeekPolicy` |
 
 1. Capture the current ON/OFF state and trigger/input screenshots. Turn **OFF**
    031, 032, 057, 058, 076, 101, and 118 before pasting; leave 068 OFF.

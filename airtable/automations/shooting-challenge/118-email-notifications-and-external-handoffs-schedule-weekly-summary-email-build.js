@@ -22,11 +22,14 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.9
+ * Version: v2.0
  * Date Written: 2026-07-16
  * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
+ * - v2.0 (2026-08-13): Requires a settled exact Summary Key as well as exact
+ *   Enrollment + Week before arming an eligible WAS; formula lag now stops
+ *   safely instead of permitting an email handoff.
  * - v1.9 (2026-08-13): 031 is the sole Weekly Athlete Summary creator.
  *   This scheduler filters excluded/inactive enrollments before strict
  *   validation and only resolves one existing canonical WAS; it never creates
@@ -109,7 +112,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.9",
+  version: "v2.0",
   timeZone: "America/Denver",
   // Exclude both historical and current Schmidt test enrollments by default.
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
@@ -477,14 +480,19 @@ async function main() {
         : "";
       const expectedSummaryKey =
         enrollmentKey && weekKey ? `${enrollmentKey}|${weekKey}` : "";
+      if (!expectedSummaryKey) {
+        skipped += 1;
+        console.log(
+          `118 skipped unsettled canonical Summary Key for eligible Enrollment ${enr.id} + Week ${targetWeek.id}.`
+        );
+        continue;
+      }
 
-      const keyMatches = expectedSummaryKey
-        ? (wasBySummaryKey.get(expectedSummaryKey) || []).filter(
-          row => exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
-        )
-        : [];
-      const enrollmentMatches = wasByEnrollment.get(enr.id) || [];
-      const candidates = [...new Map([...keyMatches, ...enrollmentMatches].map(row => [row.id, row])).values()];
+      const candidates = (wasBySummaryKey.get(expectedSummaryKey) || []).filter(
+        row =>
+          exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
+          && exactlyOneLinkedId(row, CONFIG.was.week) === targetWeek.id
+      );
       if (candidates.length > 1) {
         duplicateWasSkipped += 1;
         skipped += 1;

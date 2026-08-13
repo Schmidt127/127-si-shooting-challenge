@@ -105,7 +105,7 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger / schedule | File / notes |
 |---|--------------------------|--------------------|--------------|
-| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver | `118-…-schedule-weekly-summary-email-build.js` (**v1.9**) — resolves and arms one existing canonical WAS only; excludes/inactive rows are filtered before strict validation; it never creates a WAS, builds HTML, or calls Make |
+| **118** | Email — Schedule Weekly Summary Email Build | Sunday **5:00 AM** America/Denver | `118-…-schedule-weekly-summary-email-build.js` (**v2.0**) — resolves and arms one existing canonical WAS only after its Summary Key settles to the exact expected identity; excludes/inactive rows are filtered before strict validation; it never creates a WAS, builds HTML, or calls Make |
 | **072** | Email — Build Weekly Summary Email Package | WAS when `Build Weekly Email Now?` checked | `072-…-build-weekly-summary-email-package.js` (**v4.0**) — owns **`emptyWeekPolicy`** (`send_short` default); does **not** call Make |
 | **119** | Email — Schedule Weekly Summary Email Send | Sunday **10:00 AM** America/Denver — **ON** (verified PROD) | `119-…-schedule-weekly-summary-email-send.js` (**v1.5**) — arms **`Send to Make?` only**; does **not** post webhook |
 | **074** | Email — Send Weekly Summary Email Package to Make | WAS Ready? + !Sent? + Send to Make? + package fields | `074-…-send-weekly-summary-email-package-to-make.js` (**v2.1**) — **posts webhook**; does **not** mark Sent?; **ON**; PROD **sendMode=Live** (or blank+WAS Live) — **never** fixed Test |

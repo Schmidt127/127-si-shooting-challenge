@@ -1917,6 +1917,11 @@ function assertRequiredSchema() {
     "Program Instance - Sync -> School Year - Linked"
   );
   requireField(
+    enrollmentsTable,
+    CONFIG.enrollments.active,
+    "Enrollments -> Active?"
+  );
+  requireField(
     xpEventsTable,
     CONFIG.lifecycle.eventSignature,
     "XP Events -> Zoom XP Event Signature"

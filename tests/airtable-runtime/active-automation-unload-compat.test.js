@@ -54,7 +54,7 @@ const TARGETS = [
   {
     num: "118",
     file: "118-email-notifications-and-external-handoffs-schedule-weekly-summary-email-build.js",
-    versionRe: /Version:\s*v1\.9/,
+    versionRe: /Version:\s*v2\.0/,
     queryVars: ["enrollmentsQuery", "weeksQuery", "wasQuery"],
   },
   {

@@ -223,10 +223,10 @@ try {
 
   const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
   if (!enrollmentRecord) throw new Error(`Enrollment ${enrollmentId} not found.`);
-  if (
-    fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active) &&
-    !isTruthy(enrollmentRecord.getCellValue(CONFIG.enrollmentFields.active))
-  ) {
+  if (!fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active)) {
+    throw new Error("Enrollments table is missing required Active? field.");
+  }
+  if (!isTruthy(enrollmentRecord.getCellValue(CONFIG.enrollmentFields.active))) {
     await updateWeekly({
       [CONFIG.weeklyFields.automationError]: "058 skipped: Enrollment is inactive; no Perfect Week Unlock is permitted.",
     });
