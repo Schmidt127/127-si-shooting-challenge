@@ -26,7 +26,7 @@ const SOURCE_PATH = resolve(
 );
 const SOURCE = readFileSync(SOURCE_PATH, "utf8");
 
-const IDs = {
+const IDS = {
   submission: "recSUBMISSION0001",
   enrollment: "recENROLLMENT001",
   week: "recWEEKRECORD0001",
