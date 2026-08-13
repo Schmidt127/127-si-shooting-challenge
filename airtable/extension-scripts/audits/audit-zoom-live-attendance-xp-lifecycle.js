@@ -73,8 +73,8 @@ const CONFIG = {
   sourcePrefixes: ["ZOOM_ATTEND_BASE|", "ZOOM_ATTEND_BONUS_2|", "ZOOM_ATTEND_BONUS_3|"],
   supportedRuleKeys: ["ZOOM_ATTEND_BASE", "ZOOM_ATTEND_BONUS_2", "ZOOM_ATTEND_BONUS_3"],
   bonusSourceFallbacks: {
-    bonus2: "Zoom Attendance Bonus 2",
-    bonus3: "Zoom Attendance Bonus 3",
+    bonus2: "Zoom Attendance: Bonus 2",
+    bonus3: "Zoom Attendance: Bonus 3",
   },
 };
 
@@ -156,6 +156,9 @@ function resolveStartField(zoomTable) {
 
 function dateKey(record, zoomTable, startField) {
   const value = raw(record, zoomTable, startField);
+  if (typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value.trim())) {
+    return value.trim();
+  }
   const date = new Date(value);
   if (!startField || Number.isNaN(date.getTime())) return "";
   const parts = new Intl.DateTimeFormat("en-US", {
@@ -298,11 +301,12 @@ async function main() {
   const qualifyingByEnrollment = new Map();
   for (const meeting of zoomQuery.records) {
     const meetingKey = text(meeting, zoomTable, CONFIG.zoom.key);
-    const dateKeyValue = dateKey(meeting, zoomTable, startField) || meeting.id;
+    const dateKeyValue = dateKey(meeting, zoomTable, startField);
     const weekIds = ids(meeting, zoomTable, CONFIG.zoom.week);
     const week = weekIds.length === 1 ? weeks.get(weekIds[0]) : null;
     if (
       !meetingKey ||
+      !dateKeyValue ||
       text(meeting, zoomTable, CONFIG.zoom.status).toLowerCase() !== "completed" ||
       !week ||
       ids(week, weekTable, CONFIG.week.programInstance).length !== 1
