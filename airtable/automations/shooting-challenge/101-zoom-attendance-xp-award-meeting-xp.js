@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.2
+ * Version: v6.3
  * Date Written: 2026-05-28
  * Last Updated: 2026-08-13
  *
@@ -94,6 +94,8 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Enrollment/roster withdrawal deactivates an exactly owned event
  * - Restoration reactivates that same event
  * - Recording watchers must never be added to live Attendees by this script
+ * - Automation 031 is the sole create-capable Weekly Athlete Summary owner.
+ *   This automation only resolves one existing canonical summary.
  ************************************************************/
 
 // @ts-nocheck
@@ -558,51 +560,16 @@ function buildSingleSelectValue(table, fieldName, optionName) {
   return match ? { id: match.id } : undefined;
 }
 
-function buildSummaryCreateFields(enrollmentId, weekId) {
-  const fields = {
-    [CONFIG.weeklySummary.enrollment]: linkedCell([enrollmentId]),
-    [CONFIG.weeklySummary.week]: linkedCell([weekId]),
-  };
-
-  const statusValue = buildSingleSelectValue(
-    weeklySummaryTable,
-    CONFIG.weeklySummary.summaryCalculationStatus,
-    CONFIG.summaryStatusValues.complete
-  );
-
-  if (statusValue !== undefined) {
-    fields[CONFIG.weeklySummary.summaryCalculationStatus] = statusValue;
-  }
-
-  return safeUpdatePayload(weeklySummaryTable, fields);
-}
-
-async function findOrCreateWeeklySummaryId({ enrollmentId = "", weekId = "" }) {
+async function resolveExistingWeeklySummaryId({ enrollmentId = "", weekId = "" }) {
   await validateWeeklySummaryProgramInstance({ enrollmentId, weekId });
-  const existingId = await findWeeklySummaryId(enrollmentId, weekId);
-  if (existingId) {
-    return existingId;
-  }
-
-  const createFields = buildSummaryCreateFields(enrollmentId, weekId);
-
-  if (Object.keys(createFields).length === 0) {
+  const existingWeeklySummaryId = await findWeeklySummaryId(enrollmentId, weekId);
+  if (!existingWeeklySummaryId) {
     throw new Error(
-      `No writable fields available to create Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekId}.`
+      `No canonical Weekly Athlete Summary exists for Enrollment ${enrollmentId} + Week ${weekId}. ` +
+      "Automation 031 is the sole creator; stop safely until it creates the summary."
     );
   }
-
-  const createdId = await weeklySummaryTable.createRecordAsync(createFields);
-  weeklySummaryQueryCache = null;
-
-  const postCreateId = await findWeeklySummaryId(enrollmentId, weekId);
-  if (postCreateId !== createdId) {
-    throw new Error(
-      `Weekly Athlete Summary create conflict for Enrollment ${enrollmentId} + Week ${weekId}; created ${createdId}, resolved ${postCreateId || "(none)"}. Airtable has no unique constraint; stop for review.`
-    );
-  }
-
-  return createdId;
+  return existingWeeklySummaryId;
 }
 
 async function ensureXpEventWeeklySummaryLink(xpEventId, weeklySummaryId) {
@@ -1807,7 +1774,7 @@ async function createOrUpdateXpEvent({
   allowMeetingEnrollmentFallback = false,
   skipIfExists = false,
 }) {
-  const weeklySummaryId = await findOrCreateWeeklySummaryId({
+  const weeklySummaryId = await resolveExistingWeeklySummaryId({
     enrollmentId,
     weekId,
   });

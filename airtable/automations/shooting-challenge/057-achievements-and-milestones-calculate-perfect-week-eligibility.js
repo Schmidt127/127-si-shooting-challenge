@@ -24,7 +24,7 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 057 - Achievements and Milestones - Calculate Perfect Week Eligibility
- * Version: 1.6
+ * Version: 1.7
  * Date written: 2026-05-30
  * Last updated: 2026-08-13
  *
@@ -40,6 +40,12 @@ Airtable is the deployed/running copy.
  *   Enrollment Program Instance + Grade Band before any Perfect Week state can
  *   become ready. Missing, ambiguous, inactive, wrong-owner, and formula-lag
  *   goal states remain distinct from explicit numeric zero.
+ *
+ * Version 1.7 updates (PKG-039):
+ * - Stops positive Perfect Week work for inactive Enrollments.
+ * - Requires the linked Goal Record to be the sole active, exact Program
+ *   Instance + Grade Band configuration and requires the WAS lookup to settle
+ *   to that record's numeric target (including explicit zero).
  *
  * Version 1.4 updates (SC-021 date normalization):
  * - getDateKeyFromDateOnly uses America/Denver via Intl (not UTC ISO slice).
@@ -124,6 +130,7 @@ const CONFIG = {
   },
   enrollmentFields: {
     programInstance: "Program Instance",
+    active: "Active?",
   },
   targetGoalFields: {
     programInstance: "Program Instance",
@@ -184,6 +191,14 @@ function getFirstLinkedId(record, fieldName) {
   const value = record.getCellValue(fieldName);
   if (!Array.isArray(value) || value.length === 0) return null;
   return value[0].id;
+}
+
+function getExactlyOneLinkedId(record, fieldName, label) {
+  const values = uniqueArray(getLinkedIds(record, fieldName));
+  if (values.length !== 1) {
+    throw new Error(`${label} must have exactly one linked record; found ${values.length}.`);
+  }
+  return values[0];
 }
 
 function getLinkedIds(record, fieldName) {
@@ -373,8 +388,12 @@ if (!weeklyRecord) {
  ***************************************************************************************************/
 
 try {
-  const enrollmentId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.enrollment);
-  const weekId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.week);
+  const enrollmentId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.enrollment, "Weekly Athlete Summary Enrollment"
+  );
+  const weekId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.week, "Weekly Athlete Summary Week"
+  );
   const gradeBandIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.gradeBand));
   const goalRecordIds = uniqueArray(getLinkedIds(weeklyRecord, CONFIG.weeklyFields.goalRecord));
 
@@ -405,6 +424,19 @@ try {
   const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
   if (!enrollmentRecord) {
     throw new Error(`Enrollment ${enrollmentId} could not be loaded for goal validation.`);
+  }
+  if (
+    fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active) &&
+    !isTruthyFlag(enrollmentRecord, CONFIG.enrollmentFields.active)
+  ) {
+    await updateWeekly({
+      [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
+      [CONFIG.weeklyFields.dailyDetail]: "Enrollment is inactive; Perfect Week eligibility is not calculated.",
+      [CONFIG.weeklyFields.dailyMet]: false,
+      [CONFIG.weeklyFields.automationStatus]: { name: "Error" },
+      [CONFIG.weeklyFields.automationError]: "Enrollment is inactive; no Perfect Week positive work is permitted.",
+    });
+    return;
   }
   const enrollmentProgramInstanceIds = uniqueArray(
     getLinkedIds(enrollmentRecord, CONFIG.enrollmentFields.programInstance)
@@ -437,6 +469,35 @@ try {
   ) {
     throw new Error(
       `Goal Record ${goalRecord.id} is not one exact active numeric configuration for Enrollment Program Instance + Grade Band.`
+    );
+  }
+  const goalQuery = await targetGoalShotsTable.selectRecordsAsync({
+    fields: [
+      CONFIG.targetGoalFields.programInstance,
+      CONFIG.targetGoalFields.gradeBand,
+      CONFIG.targetGoalFields.totalShotTarget,
+      CONFIG.targetGoalFields.active,
+    ],
+  });
+  const matchingActiveGoals = goalQuery.records.filter((candidate) => {
+    const candidateProgramIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.programInstance)
+    );
+    const candidateGradeBandIds = uniqueArray(
+      getLinkedIds(candidate, CONFIG.targetGoalFields.gradeBand)
+    );
+    return (
+      candidateProgramIds.length === 1 &&
+      candidateProgramIds[0] === enrollmentProgramInstanceIds[0] &&
+      candidateGradeBandIds.length === 1 &&
+      candidateGradeBandIds[0] === gradeBandIds[0] &&
+      isTruthyFlag(candidate, CONFIG.targetGoalFields.active) &&
+      getOptionalNumber(candidate, CONFIG.targetGoalFields.totalShotTarget) !== null
+    );
+  });
+  if (matchingActiveGoals.length !== 1 || matchingActiveGoals[0].id !== goalRecord.id) {
+    throw new Error(
+      `Goal configuration must resolve to exactly one active Program Instance + Grade Band record; found ${matchingActiveGoals.length}.`
     );
   }
 
@@ -489,13 +550,13 @@ try {
   if (
     weeklyGoal === null ||
     weeklyGoal < 0 ||
-    (weeklyGoal === 0 && goalRecordIds.length !== 1)
+    weeklyGoal !== configuredGoal
   ) {
     const reason = weeklyGoal === null
       ? "Weekly goal formula/lookup is unsettled or invalid; rereun after settlement."
       : weeklyGoal < 0
         ? "Weekly shot goal is negative."
-        : "A zero weekly goal requires exactly one linked Goal Record.";
+        : "Weekly goal formula/lookup has not settled to the linked active goal target.";
     await updateWeekly({
       [CONFIG.weeklyFields.dailyStatus]: { name: "Needs Review" },
       [CONFIG.weeklyFields.dailyDetail]: reason,

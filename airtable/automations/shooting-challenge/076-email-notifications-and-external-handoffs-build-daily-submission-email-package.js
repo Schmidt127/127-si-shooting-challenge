@@ -2,9 +2,9 @@
 GitHub header
 Automation: 076 - Daily Submission Communications Hub Handoff
 System: 127 SI Shooting Challenge
-Version: v8.5
+Version: v8.6
 Date Written: 2026-05-29
-Last Updated: 2026-08-12
+Last Updated: 2026-08-13
 
 PURPOSE
 - Validate a fully processed Submission and create exactly one Ready Email Handoff Queue row.
@@ -16,6 +16,9 @@ IMPORTANT DESIGN RULES
 - One Submission maps to `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}`.
 - Active XP only; missing Submission XP is represented as null plus pending status.
 - Program Instance, Enrollment, Week, Weekly Athlete Summary, and PHA ownership are fail-closed.
+- The WAS must resolve one active, exact Program Instance + Grade Band goal and
+  a settled numeric weekly target. Explicit configured zero is valid; blank,
+  unconfigured, or lagged zero never produces a daily email.
 - Enrollment `Parent Email - Cleaned` is the authoritative parent recipient;
   raw `Parent Email` is never used as a fallback.
 - 077 is retired as a pending retirement candidate and is never armed by this script.
@@ -44,14 +47,15 @@ FOLDER
 */
 
 // @ts-nocheck
-const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.5", versionDate: "2026-08-12", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-12", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
+const SCRIPT = { scriptName: "076 - Daily Submission Communications Hub Handoff", version: "v8.6", versionDate: "2026-08-13", originalWrittenDate: "2026-05-29", lastUpdated: "2026-08-13", folder: "07 - Email, Notifications, and External Handoffs", automationName: "076 - Daily Submission Communications Hub Handoff" };
 const CONFIG = {
-  tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", week: "Weeks", pi: "Program Instance - Sync", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
+  tables: { sub: "Submissions", enr: "Enrollments", was: "Weekly Athlete Summary", goals: "Target Goal Shots", week: "Weeks", pi: "Program Instance - Sync", xp: "XP Events", hc: "Homework Completions", pha: "Program Homework Assignments", curr: "Homework Library", queue: "Email Handoff Queue" },
   statuses: { draft: "Draft", ready: "Ready", needsReview: "Needs Review" },
   fields: {
     sub: { enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activity: "Activity Date", build: "Build Daily Email Now?", count: "Count This Submission?", mode: "Submission Stat Mode", shots: "Total Shots Counted", makes: "Total Makes Counted", hw1: "HW Sub 1", hw2: "HW Sub 2", video: "Video Upload", hcs: "Homework Completions" },
     enr: { active: "Active?", program: "Program Instance", grade: "Grade Band", parent: "Parent Email - Cleaned", athlete: "Athlete Email - Cleaned", name: "Full Athlete Name", first: "Athlete First Name", streak: "Current Shooting Streak", currentLevel: "Current Level", nextLevel: "Next Level" },
-    was: { enrollment: "Enrollment", week: "Week", hcs: "Homework Completions Link", xps: "XP Events", shots: "Total Shots This Week", goal: "Weekly Goal Shots Target", weekName: "Week - Display" },
+    was: { enrollment: "Enrollment", week: "Week", goalRecord: "Goal Record", hcs: "Homework Completions Link", xps: "XP Events", shots: "Total Shots This Week", goal: "Weekly Goal Shots Target", weekName: "Week - Display" },
+    goals: { active: "Active?", program: "Program Instance", grade: "Grade Band", target: "Total Shot Target" },
     week: { name: "Week Name", start: "Start Date", end: "End Date", program: "Program Instance" },
     pi: { name: "Name - Program Instance" },
     xp: { active: "Active?", points: "XP Points", enrollment: "Enrollment", week: "Week", submission: "Submission" },
@@ -68,6 +72,7 @@ const text = (r, t, name) => r && exists(t, name) ? String(r.getCellValueAsStrin
 const ids = (r, t, name) => Array.isArray(raw(r, t, name)) ? raw(r, t, name).map((v) => v?.id).filter(Boolean) : [];
 const num = (r, t, name, fallback = 0) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/[$,%]/g, "").replace(/,/g, "").trim()); return Number.isFinite(n) ? n : fallback; };
 const nonnegativeInteger = (r, t, name) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/,/g, "").trim()); if (v === null || v === undefined || v === "" || !Number.isInteger(n) || n < 0) throw new Error(`${name} must be a settled nonnegative integer.`); return n; };
+const settledNonnegativeNumber = (r, t, name) => { const v = raw(r, t, name); const n = typeof v === "number" ? v : Number(String(v ?? "").replace(/,/g, "").trim()); if (v === null || v === undefined || v === "" || !Number.isFinite(n) || n < 0) throw new Error(`${name} must be a settled nonnegative numeric value.`); return n; };
 const bool = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; if (v === false || v === 0) return false; return ["true", "yes", "checked", "1", "counted", "count"].includes(text(r, t, name).toLowerCase()); };
 const checkedReadiness = (r, t, name) => { const v = raw(r, t, name); if (v === true || v === 1) return true; return ["true", "yes", "checked", "1"].includes(text(r, t, name).toLowerCase()); };
 const normalizedStatMode = (r, t, name) => text(r, t, name).toLowerCase();
@@ -95,7 +100,7 @@ async function main() {
   const cfg = input.config();
   const recordId = String(cfg.recordId || "").trim();
   if (!/^rec[A-Za-z0-9]{14}$/.test(recordId)) throw new Error("recordId must be a valid Airtable record ID.");
-  const subT = table(CONFIG.tables.sub), enrT = table(CONFIG.tables.enr), wasT = table(CONFIG.tables.was), weekT = table(CONFIG.tables.week), piT = table(CONFIG.tables.pi), xpT = table(CONFIG.tables.xp), phaT = table(CONFIG.tables.pha), currT = table(CONFIG.tables.curr), queueT = table(CONFIG.tables.queue);
+  const subT = table(CONFIG.tables.sub), enrT = table(CONFIG.tables.enr), wasT = table(CONFIG.tables.was), goalsT = table(CONFIG.tables.goals), weekT = table(CONFIG.tables.week), piT = table(CONFIG.tables.pi), xpT = table(CONFIG.tables.xp), phaT = table(CONFIG.tables.pha), currT = table(CONFIG.tables.curr), queueT = table(CONFIG.tables.queue);
   const sub = await subT.selectRecordAsync(recordId);
   if (!sub) throw new Error(`Submission not found: ${recordId}`);
   const handoffKey = `DAILY_SUBMISSION|SUBMISSIONS|${recordId}`;
@@ -118,14 +123,31 @@ async function main() {
   if (wasIds.length > 1) throw new Error("Submission links multiple Weekly Athlete Summaries.");
   const was = wasIds.length ? await wasT.selectRecordAsync(wasIds[0]) : null;
   if (was && (!same(ids(was, wasT, CONFIG.fields.was.enrollment), [enrollmentId]) || !same(ids(was, wasT, CONFIG.fields.was.week), [weekId]))) throw new Error("Weekly Athlete Summary is not canonical for Enrollment + Week.");
+  if (!was) throw new Error("Weekly Athlete Summary is required before Daily Submission email preparation.");
+  const goalIds = ids(was, wasT, CONFIG.fields.was.goalRecord);
+  if (goalIds.length !== 1) throw new Error("Weekly Athlete Summary must link exactly one Goal Record before Daily Submission email preparation.");
+  const goal = await goalsT.selectRecordAsync(goalIds[0]);
+  if (!goal) throw new Error("Linked Target Goal Shots record was not found.");
+  const goalProgramIds = ids(goal, goalsT, CONFIG.fields.goals.program);
+  const goalGradeIds = ids(goal, goalsT, CONFIG.fields.goals.grade);
+  const enrollmentGradeIds = ids(enrollment, enrT, CONFIG.fields.enr.grade);
+  const goalTarget = settledNonnegativeNumber(goal, goalsT, CONFIG.fields.goals.target);
+  const settledWeeklyGoal = settledNonnegativeNumber(was, wasT, CONFIG.fields.was.goal);
+  if (
+    !bool(goal, goalsT, CONFIG.fields.goals.active) ||
+    !same(goalProgramIds, [programId]) ||
+    enrollmentGradeIds.length !== 1 ||
+    !same(goalGradeIds, enrollmentGradeIds) ||
+    settledWeeklyGoal !== goalTarget
+  ) throw new Error("Weekly goal configuration is missing, ambiguous, wrong-scope, inactive, or unsettled; Daily Submission email is not prepared.");
   debug("02 - Reconcile active XP and weekly summary");
   const xpQuery = await load(xpT, Object.values(CONFIG.fields.xp));
   const activeXp = xpQuery.records.filter((row) => bool(row, xpT, CONFIG.fields.xp.active) && same(ids(row, xpT, CONFIG.fields.xp.enrollment), [enrollmentId]) && same(ids(row, xpT, CONFIG.fields.xp.week), [weekId]));
   const submissionXpRows = activeXp.filter((row) => ids(row, xpT, CONFIG.fields.xp.submission).includes(recordId));
   const submissionXp = submissionXpRows.length ? submissionXpRows.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0) : null;
   const weeklyXp = activeXp.reduce((sum, row) => sum + num(row, xpT, CONFIG.fields.xp.points), 0);
-  const weeklyShots = was ? num(was, wasT, CONFIG.fields.was.shots) : 0;
-  const weeklyGoal = was ? num(was, wasT, CONFIG.fields.was.goal) : 0;
+  const weeklyShots = num(was, wasT, CONFIG.fields.was.shots);
+  const weeklyGoal = settledWeeklyGoal;
   debug("03 - Resolve PHA-first homework context");
   const phaQuery = await load(phaT, Object.values(CONFIG.fields.pha));
   const phaRows = phaQuery.records.filter((row) => bool(row, phaT, CONFIG.fields.pha.active) && same(ids(row, phaT, CONFIG.fields.pha.program), [programId]) && same(ids(row, phaT, CONFIG.fields.pha.week), [weekId]) && (!gradeId || same(ids(row, phaT, CONFIG.fields.pha.grade), [gradeId])));

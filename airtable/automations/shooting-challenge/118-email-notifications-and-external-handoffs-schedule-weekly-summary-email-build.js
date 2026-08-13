@@ -22,15 +22,16 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 /************************************************************
  * 118 - Email - Schedule Weekly Summary Email Build
  *
- * Version: v1.8
+ * Version: v1.9
  * Date Written: 2026-07-16
  * Last Updated: 2026-08-13
  *
  * VERSION HISTORY
- * - v1.8 (2026-08-13): Exact WAS owner identity hardening — malformed or
- *   ambiguous Enrollment/Week links and competing candidate summaries fail
- *   closed; post-create requery must prove this writer created the sole
- *   Enrollment + Week summary before it can arm an email build.
+ * - v1.9 (2026-08-13): 031 is the sole Weekly Athlete Summary creator.
+ *   This scheduler filters excluded/inactive enrollments before strict
+ *   validation and only resolves one existing canonical WAS; it never creates
+ *   a summary. Missing or ambiguous eligible identities stop safely.
+ * - v1.8 (2026-08-13): Exact WAS owner identity hardening.
  * - v1.7 (2026-08-06): Program Instance isolation — Week End Date match rejects
  *   multi-PI collisions; enrollments armed only when Enrollment.Program Instance
  *   matches the target Week. Exclude both Schmidt test enrollment RIDs.
@@ -61,7 +62,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  *
  * PURPOSE
  * - Resolve prior ended Week (Saturday just ended at Sunday 05:00 Denver).
- * - For each Active? enrollment (excluding Schmidt), ensure WAS exists.
+ * - For each Active? enrollment (excluding Schmidt), resolve one existing WAS.
  * - Skip if Weekly Email Sent? or no cleaned email.
  * - Set Build Weekly Email Now? = true and WAS sendMode from input when dryRun=false.
  *
@@ -74,8 +75,9 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
  *   (override only via includeSchmidt=true for controlled Test-mode runs)
  * - Never combine includeSchmidt=true with sendMode=Live.
  * - Scheduled date key = prior Saturday Week End (America/Denver).
+ * - Automation 031 is the sole create-capable Weekly Athlete Summary owner.
  * - Idempotent only when exactly one canonical WAS identity is provable;
- *   ambiguity fails closed rather than selecting a first record.
+ *   ambiguity or absence fails closed rather than selecting or creating one.
  *
  * FOLDER
  * - 07 - Email, Notifications, and External Handoffs
@@ -107,7 +109,7 @@ PROD season: dryRun=false + sendMode=Live (never Live+includeSchmidt).
 
 const CONFIG = {
   scriptName: "118 - Email - Schedule Weekly Summary Email Build",
-  version: "v1.8",
+  version: "v1.9",
   timeZone: "America/Denver",
   // Exclude both historical and current Schmidt test enrollments by default.
   schmidtEnrollmentId: "recCyFEPeATOVNlr9",
@@ -433,22 +435,6 @@ async function main() {
     }
     wasByEnrollment.set(eId, [...(wasByEnrollment.get(eId) || []), row]);
   }
-  for (const [enrollmentId, rows] of wasByEnrollment) {
-    if (rows.length > 1) {
-      throw new Error(
-        `Ambiguous WAS identity before weekly-email arming for Enrollment ${enrollmentId} + Week ${targetWeek.id}: ${rows.map(row => row.id).join(", ")}`
-      );
-    }
-  }
-  for (const [summaryKey, rows] of wasBySummaryKey) {
-    const ownerIds = [...new Set(rows.map(row => exactlyOneLinkedId(row, CONFIG.was.enrollment)))];
-    if (rows.length > 1 || ownerIds.length !== 1) {
-      throw new Error(
-        `Ambiguous Summary Key before weekly-email arming for Week ${targetWeek.id}: ${summaryKey} -> ${rows.map(row => row.id).join(", ")}`
-      );
-    }
-  }
-
   let armed = 0;
   let skipped = 0;
   let createdWas = 0;
@@ -507,32 +493,11 @@ async function main() {
       }
       let wasRow = candidates[0];
       if (!wasRow) {
-        if (dryRun) {
-          createdWas += 1;
-          armed += 1;
-          continue;
-        }
-        const createFields = {};
-        createFields[CONFIG.was.enrollment] = [{ id: enr.id }];
-        createFields[CONFIG.was.week] = [{ id: targetWeek.id }];
-        const newId = await wasTable.createRecordAsync(createFields);
-        // Airtable does not enforce a unique Enrollment + Week constraint.
-        // Re-query and require that this writer's candidate is now the sole
-        // canonical identity before any weekly-email build can be armed.
-        wasQuery = await wasTable.selectRecordsAsync({ fields: wasFields });
-        const postCreate = wasQuery.records.filter(row =>
-          exactlyOneLinkedId(row, CONFIG.was.enrollment) === enr.id
-          && exactlyOneLinkedId(row, CONFIG.was.week) === targetWeek.id
+        skipped += 1;
+        console.log(
+          `118 skipped missing canonical WAS for eligible Enrollment ${enr.id} + Week ${targetWeek.id}; 031 is the sole WAS creator.`
         );
-        if (postCreate.length !== 1 || postCreate[0].id !== newId) {
-          throw new Error(
-            `WAS create conflict for Enrollment ${enr.id} + Week ${targetWeek.id}; created ${newId}, found ${postCreate.map(row => row.id).join(", ") || "(none)"}.`
-          );
-        }
-        wasRow = postCreate[0];
-        createdWas += 1;
-        wasByEnrollment.set(enr.id, [wasRow]);
-        if (expectedSummaryKey) wasBySummaryKey.set(expectedSummaryKey, [wasRow]);
+        continue;
       } else if (booleanish(wasRow, CONFIG.was.sent)) {
         skipped += 1;
         continue;

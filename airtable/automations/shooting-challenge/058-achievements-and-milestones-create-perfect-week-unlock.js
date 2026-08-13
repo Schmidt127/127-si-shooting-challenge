@@ -24,8 +24,9 @@ Airtable is the deployed/running copy.
 
 /***************************************************************************************************
  * 058 - Achievements and Milestones - Create Perfect Week Unlock
- * Version: 1.0
+ * Version: 1.1
  * Date written: 2026-05-30
+ * Last updated: 2026-08-13
  *
  * Purpose:
  * Creates one Athlete Achievement Unlock when a Weekly Athlete Summary record qualifies
@@ -44,6 +45,12 @@ Airtable is the deployed/running copy.
  *
  * Required input variable:
  * - recordId = Airtable record ID from triggering Weekly Athlete Summary record
+ *
+ * PKG-039 safety boundary:
+ * - An inactive Enrollment never creates or replays a Perfect Week Unlock.
+ * - The linked Goal Record must be the one active, exact Program Instance +
+ *   Grade Band configuration with an explicit numeric target. Blank/unsettled
+ *   goal state never qualifies as configured zero.
  ***************************************************************************************************/
 
 /***************************************************************************************************
@@ -53,6 +60,8 @@ Airtable is the deployed/running copy.
 const CONFIG = {
   tables: {
     weekly: "Weekly Athlete Summary",
+    enrollments: "Enrollments",
+    targetGoals: "Target Goal Shots",
     achievements: "Achievements",
     unlocks: "Athlete Achievement Unlocks",
   },
@@ -65,10 +74,23 @@ const CONFIG = {
   weeklyFields: {
     enrollment: "Enrollment",
     week: "Week",
+    gradeBand: "Grade Band",
+    goalRecord: "Goal Record",
+    weeklyGoal: "Weekly Goal Shots Target",
     perfectWeekEligible: "Perfect Week Eligible?",
     perfectWeekUnlock: "Perfect Week Unlock",
     automationStatus: "Perfect Week Automation Status",
     automationError: "Perfect Week Automation Error",
+  },
+  enrollmentFields: {
+    active: "Active?",
+    programInstance: "Program Instance",
+  },
+  targetGoalFields: {
+    active: "Active?",
+    programInstance: "Program Instance",
+    gradeBand: "Grade Band",
+    totalShotTarget: "Total Shot Target",
   },
 
   achievementFields: {
@@ -99,6 +121,14 @@ function getFirstLinkedId(record, fieldName) {
   return value[0].id;
 }
 
+function getExactlyOneLinkedId(record, fieldName, label) {
+  const values = [...new Set(getLinkedIds(record, fieldName).filter(Boolean))];
+  if (values.length !== 1) {
+    throw new Error(`${label} must have exactly one linked record; found ${values.length}.`);
+  }
+  return values[0];
+}
+
 function getLinkedIds(record, fieldName) {
   const value = record.getCellValue(fieldName);
   if (!Array.isArray(value)) return [];
@@ -116,6 +146,18 @@ function getText(record, fieldName) {
 
 function isTruthy(value) {
   return value === true || value === 1 || value === "1";
+}
+
+function getOptionalNumber(record, fieldName) {
+  const value = record.getCellValue(fieldName);
+  if (value === null || value === undefined || value === "") return null;
+  if (Array.isArray(value)) {
+    if (value.length !== 1) return null;
+    const parsed = typeof value[0] === "number" ? value[0] : Number(value[0]);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+  const parsed = typeof value === "number" ? value : Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 function fieldExists(table, fieldName) {
@@ -144,6 +186,8 @@ if (!recordId) {
 }
 
 const weeklyTable = base.getTable(CONFIG.tables.weekly);
+const enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+const targetGoalsTable = base.getTable(CONFIG.tables.targetGoals);
 const achievementsTable = base.getTable(CONFIG.tables.achievements);
 const unlocksTable = base.getTable(CONFIG.tables.unlocks);
 
@@ -158,8 +202,18 @@ if (!weeklyRecord) {
  ***************************************************************************************************/
 
 try {
-  const enrollmentId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.enrollment);
-  const weekId = getFirstLinkedId(weeklyRecord, CONFIG.weeklyFields.week);
+  const enrollmentId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.enrollment, "Weekly Athlete Summary Enrollment"
+  );
+  const weekId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.week, "Weekly Athlete Summary Week"
+  );
+  const gradeBandId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.gradeBand, "Weekly Athlete Summary Grade Band"
+  );
+  const goalRecordId = getExactlyOneLinkedId(
+    weeklyRecord, CONFIG.weeklyFields.goalRecord, "Weekly Athlete Summary Goal Record"
+  );
   const existingUnlockIds = getLinkedIds(weeklyRecord, CONFIG.weeklyFields.perfectWeekUnlock);
 
   const eligibleValue = weeklyRecord.getCellValue(CONFIG.weeklyFields.perfectWeekEligible);
@@ -167,18 +221,41 @@ try {
 
   const automationStatus = getSingleSelectName(weeklyRecord, CONFIG.weeklyFields.automationStatus);
 
-  if (!enrollmentId) {
+  const enrollmentRecord = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  if (!enrollmentRecord) throw new Error(`Enrollment ${enrollmentId} not found.`);
+  if (
+    fieldExists(enrollmentsTable, CONFIG.enrollmentFields.active) &&
+    !isTruthy(enrollmentRecord.getCellValue(CONFIG.enrollmentFields.active))
+  ) {
     await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: "058 skipped: Missing Enrollment.",
+      [CONFIG.weeklyFields.automationError]: "058 skipped: Enrollment is inactive; no Perfect Week Unlock is permitted.",
     });
     return;
   }
-
-  if (!weekId) {
-    await updateWeekly({
-      [CONFIG.weeklyFields.automationError]: "058 skipped: Missing Week.",
-    });
-    return;
+  const programInstanceId = getExactlyOneLinkedId(
+    enrollmentRecord, CONFIG.enrollmentFields.programInstance, "Enrollment Program Instance"
+  );
+  const goalRecord = await targetGoalsTable.selectRecordAsync(goalRecordId);
+  if (!goalRecord) throw new Error(`Goal Record ${goalRecordId} not found.`);
+  const goalProgramInstanceId = getExactlyOneLinkedId(
+    goalRecord, CONFIG.targetGoalFields.programInstance, "Goal Record Program Instance"
+  );
+  const goalGradeBandId = getExactlyOneLinkedId(
+    goalRecord, CONFIG.targetGoalFields.gradeBand, "Goal Record Grade Band"
+  );
+  const goalTarget = getOptionalNumber(goalRecord, CONFIG.targetGoalFields.totalShotTarget);
+  const settledWeeklyGoal = getOptionalNumber(weeklyRecord, CONFIG.weeklyFields.weeklyGoal);
+  if (
+    !isTruthy(goalRecord.getCellValue(CONFIG.targetGoalFields.active)) ||
+    goalProgramInstanceId !== programInstanceId ||
+    goalGradeBandId !== gradeBandId ||
+    goalTarget === null ||
+    settledWeeklyGoal === null ||
+    settledWeeklyGoal !== goalTarget
+  ) {
+    throw new Error(
+      "058 requires one active, exact Program Instance + Grade Band Goal Record and a settled matching Weekly Goal Shots Target."
+    );
   }
 
   if (!isEligible) {
