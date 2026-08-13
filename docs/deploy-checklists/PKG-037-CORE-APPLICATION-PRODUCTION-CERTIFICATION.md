@@ -109,12 +109,17 @@ Capture every result in the worksheet. Stop before test data changes if any
 condition fails.
 
 1. Record `origin/master` SHA and the local committed source versions:
-   001 v5.4, 010 v10.8, 020 v3.5, 064 v12.2, 065 v10.1, 101 v6.1,
-   113 v6.4, 114 v6.1, 041 v5.0, 042 v4.0, 076 v8.5, and 079 v2.0.
+   001 v5.4; current committed headers for 023, 005, 007, and 031; 010 v10.8;
+   020 v3.5; 064 v12.2; 065 v10.1; 101 v6.1; 113 v6.4; 114 v6.1;
+   041 v5.0; 042 v4.0; 076 v8.5; and 079 v2.0.
 2. In Airtable, record installed script headers, ON/OFF state, trigger table,
    condition, dynamic `recordId`, and latest run ID for all rows above.
    “Repository version” is not an installed-version proof.
 3. Confirm:
+   - 023, 005, 007, and 031 have their installed version/trigger/input
+     mappings captured before the Submission is created. If their current
+     headers, trigger, or dynamic inputs differ from committed source, stop:
+     their natural runs are required upstream certification evidence.
    - 010 trigger is `Submissions.Reconciliation Needed? = 1`, dynamic
      Submission `recordId`, and only enable it after the v10.8 requirement is
      met.
@@ -141,7 +146,10 @@ condition fails.
    - one active Program Instance, exact School Year, one applicable Week for
      the selected activity date, and exactly one active canonical zero-XP
      Beginner Level;
-   - one matching next Level and gate rule for the test Enrollment;
+   - a complete, unambiguous active mapping of every active Level to its
+     applicable active School Year / Rule Set gate rule, including the test
+     Enrollment’s next Level. 042 validates the complete mapping, so a
+     next-level-only check is insufficient;
    - active exact reward rules for submission, homework, video, and
      `ZOOM_ATTEND_BASE` (60), `ZOOM_ATTEND_BONUS_2` (30), and
      `ZOOM_ATTEND_BONUS_3` (40), with no duplicate active exact keys;
@@ -211,8 +219,11 @@ multiple canonical WAS, unexpected inactive/future/excluded award, unexpected
 email path, partial write, stale settlement, or discrepancy between ledger and
 totals.
 
-1. Turn **OFF only the automation that failed**. Do not blanket-disable the
-   pipeline.
+1. Stop further test writes. Turn OFF only the failing automation when the
+   behavior is unsafe (duplicate/incorrect award, ownership loss, unexpected
+   communication, partial write, or continuing harmful trigger); otherwise
+   preserve the run and wait for Mike’s explicit incident decision. Do not
+   blanket-disable the pipeline.
 2. Preserve source records, XP Events, run IDs, queue/delivery rows, baseline,
    and audit JSON.
 3. Do not delete an XP Event. Correct only by the owner’s same-event
@@ -289,6 +300,8 @@ node --test tests/pipeline/core-certification-orchestration.test.mjs
 node --test tests/pipeline/counted-submission-xp-standings-orchestration.test.mjs
 node --test tests/pipeline/counted-submission-xp-reversal-lifecycle.test.mjs
 node --test tests/pipeline/010-submission-base-multi-family.test.mjs
+node --test tests/email/automation-076-offline.test.mjs
+node --test tests/email/automation-079-offline.test.mjs
 node tests/progression/immediate-initial-level-assignment.test.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 ```

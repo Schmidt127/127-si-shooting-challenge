@@ -5,7 +5,18 @@
  * Airtable trigger configuration nor formula/rollup timing in Production.
  */
 import assert from "node:assert/strict";
+import { createRequire } from "node:module";
 import test from "node:test";
+
+const require = createRequire(import.meta.url);
+const {
+  buildSubmissionXpSourceKey,
+  buildHomeworkXpSourceKey,
+  buildVideoXpSourceKey,
+  buildZoomAttendBaseSourceKey,
+  buildZoomAttendBonus2SourceKey,
+  buildZoomAttendBonus3SourceKey,
+} = require("../../airtable/automations/shooting-challenge/lib/v2-engine-contracts.js");
 
 const ENROLLMENT = "recCertificationEnrollment";
 const WEEK = "recCertificationWeek";
@@ -16,12 +27,12 @@ const VIDEO = "recCertificationVideo";
 const MEETING = "recCertificationMeeting";
 
 const keys = {
-  submission: `SUBMISSION_XP|${SUBMISSION}`,
-  homework: `HOMEWORK_XP|${HOMEWORK}`,
-  video: `VIDEO_SUBMISSION|${VIDEO}`,
-  zoomBase: `ZOOM_ATTEND_BASE|${MEETING}|${ENROLLMENT}`,
-  zoomBonus2: `ZOOM_ATTEND_BONUS_2|${ENROLLMENT}`,
-  zoomBonus3: `ZOOM_ATTEND_BONUS_3|${ENROLLMENT}`,
+  submission: buildSubmissionXpSourceKey(SUBMISSION),
+  homework: buildHomeworkXpSourceKey(HOMEWORK),
+  video: buildVideoXpSourceKey(VIDEO),
+  zoomBase: buildZoomAttendBaseSourceKey(MEETING, ENROLLMENT),
+  zoomBonus2: buildZoomAttendBonus2SourceKey(ENROLLMENT),
+  zoomBonus3: buildZoomAttendBonus3SourceKey(ENROLLMENT),
 };
 
 function state() {
@@ -112,7 +123,7 @@ test("one certification athlete supports mixed XP families without cross-family 
   assert.equal(s.enrollment.nextLevel, "Rookie Shooter");
 });
 
-test("full-path replay keeps exact event IDs, source keys, totals, and no duplicate handoff", () => {
+test("full-path replay keeps exact event IDs, source keys, and totals", () => {
   const s = state();
   for (const [sourceKey, sourceId, points, family] of [
     [keys.submission, SUBMISSION, 20, "submission"],
@@ -121,8 +132,6 @@ test("full-path replay keeps exact event IDs, source keys, totals, and no duplic
     [keys.zoomBase, MEETING, 60, "zoom"],
   ]) reconcile(s, { sourceKey, sourceId, points, family });
   const before = Object.fromEntries(s.events.map((event) => [event.sourceKey, event.id]));
-  s.emailHandoffs.push({ key: `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION}`, status: "Ready" });
-
   for (const event of [...s.events]) {
     const replay = reconcile(s, event);
     assert.equal(replay.action, "reused_or_reactivated_same_event");
@@ -131,7 +140,6 @@ test("full-path replay keeps exact event IDs, source keys, totals, and no duplic
   settleAndProgress(s);
   assert.equal(s.events.length, 4);
   assertCanonicalRelationships(s);
-  assert.equal(s.emailHandoffs.length, 1, "daily handoff is a secondary, idempotent record");
   assert.equal(s.enrollment.lifetimeXp, 140);
 });
 
