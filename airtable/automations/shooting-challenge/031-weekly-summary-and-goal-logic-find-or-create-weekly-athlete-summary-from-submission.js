@@ -45,8 +45,10 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Builds the target Summary Key from Enrollment Key + Week Key.
  * - Validates any pre-existing Submission -> Weekly Athlete Summary link against the
  *   current Submission Enrollment + Week + Summary Key.
- * - Finds exactly one fully valid matching Weekly Athlete Summary record.
- * - Fails closed when zero or multiple fully valid candidates exist; it never creates one.
+ * - Reuses exactly one fully valid matching Weekly Athlete Summary record.
+ * - Creates one canonical summary only when no valid candidate exists, then re-queries
+ *   and fails closed unless the record it created is the sole valid candidate.
+ * - Fails closed when multiple fully valid candidates exist; it never picks a winner.
  * - Links the Submission to the Weekly Athlete Summary.
  * - Links the Weekly Athlete Summary back to the Submission.
  * - Repairs matching XP Events for the same Enrollment + Week when they are missing a
