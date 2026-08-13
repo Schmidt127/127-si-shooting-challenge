@@ -1,5 +1,10 @@
 # Automation 043 — Retirement Plan (superseded by 042)
 
+> **Historical plan — do not execute its soak, disable, delete, or rollback
+> steps.** Automation 043 is now retired and absent from Production. It must
+> not be recreated or enabled; 042 is the sole progression-output writer. Use
+> the Completion Master and current PKG-006R/PKG-036 operator packet.
+
 **Status:** Plan only — **do not disable or delete** without Mike · live ON/OFF **live-blocked**  
 **Base:** Document for DEV soak → Mike-approved maintenance window  
 **Inventory:** [DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md](./DEV_FIELD_TRIGGER_INVENTORY_2026-07-16.md)  

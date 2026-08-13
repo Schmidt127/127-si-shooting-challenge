@@ -4,7 +4,11 @@
 **Status:** Installed and verified in Production (Mike-supplied 2026-08-13). Use this document to **verify** exact field names, types, and formulas — do not recreate existing fields.
 **Owner:** Mike verifies fields in the approved base. Field IDs are intentionally omitted until a real schema export exists.
 
-Verify the fields in this exact order before lifecycle testing. Automation 010 v10.7 is installed and ON; inspect run history and reconciliation backlog before modifying records.
+Verify the fields in this exact order before lifecycle testing. Automation 010
+v10.7 is installed and **OFF** after HF-001; paste and prove v10.8 before
+re-enabling. Inspect run history and reconciliation backlog before modifying
+records. The current execution authority is
+`docs/deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`.
 
 ## 1. Source signatures
 
