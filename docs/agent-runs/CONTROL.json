@@ -1,13 +1,13 @@
 {
   "schema_version": 1,
   "updated_at": "2026-08-13T00:00:00Z",
-  "mode": "controlled-four-agent",
+  "mode": "controlled-expanded-workflow",
   "canonical": {
     "branch": "master",
     "sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
     "remote_sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
     "match": true,
-    "note": "Execution-control baseline synchronized after merged PR #166; unrelated open drafts #161 and #162 remain untouched."
+    "note": "PKG-033 registration baseline refreshed from origin/master; PKG-006R remains a draft package; unrelated open drafts #161 and #162 remain untouched."
   },
   "release_control": {
     "backlog_id": "SCV2-MASTER-PLAN-TRACEABILITY-001",
@@ -47,11 +47,61 @@
     "base_branch_for_prs": "master",
     "merge_to_main_requires": "explicit Mike approval"
   },
+  "approved_packages": {
+    "PKG-033": {
+      "title": "Core App Reliability and End-to-End Production Readiness",
+      "state": "approved-planning",
+      "scope": [
+        "registration-to-participation readiness",
+        "Weekly Athlete Summary integrity",
+        "Zoom attendance and Zoom XP",
+        "progression and level reconciliation",
+        "standings and leaderboard correctness",
+        "consolidated end-to-end Production test specification"
+      ],
+      "dependencies": [
+        "PKG-006 daily submission/core participation ownership",
+        "PKG-014 progression/levels ownership",
+        "PKG-015 Zoom and public integration proof boundaries",
+        "merged PR #166 Homework XP",
+        "merged PR #165 Video XP"
+      ],
+      "exclusions": [
+        "active daily-submission reversal implementation",
+        "Homework XP implementation",
+        "Video XP implementation",
+        "Communications Hub and email appearance",
+        "public website appearance",
+        "Production Airtable changes",
+        "deployments and merges",
+        "Airtable schema changes"
+      ],
+      "acceptance_criteria": [
+        "Five evidence lanes return exact ownership, defects, evidence gaps, and offline test requirements.",
+        "A consolidated Schmidt Production journey specifies preconditions, versions, triggers, evidence, stop conditions, rollback, and email-disabled boundaries.",
+        "Only evidence-justified bounded repository changes receive serialized implementation scope and independent review.",
+        "Offline evidence is never represented as Production proof."
+      ],
+      "workflow": {
+        "parallel_lanes": [
+          "registration",
+          "weekly-athlete-summary",
+          "zoom-attendance-xp",
+          "progression-levels-standings",
+          "end-to-end-test-specification"
+        ],
+        "independent_review": true,
+        "implementation": "serialized by package on isolated branches",
+        "shared_document_owner": "lead",
+        "production_owner": "Mike"
+      }
+    }
+  },
   "run": {
     "state": "in_progress",
-    "package_id": "PKG-007-closeout-PKG-006R",
+    "package_id": "PKG-033",
     "started_at": "2026-08-13T00:00:00Z",
-    "stage_id": "architecture-and-closeout"
+    "stage_id": "baseline-registration"
   },
   "roles": {
     "lead": {
@@ -78,6 +128,18 @@
       "title": "Research and Documentation Worker",
       "doc": "docs/agent-runs/04-RESEARCH.md",
       "may_merge": false
+    },
+    "orchestrator": {
+      "id": "orchestrator",
+      "title": "End-to-End Test Orchestrator",
+      "doc": "docs/agent-runs/04-RESEARCH.md",
+      "may_merge": false
+    },
+    "independent_review": {
+      "id": "independent_review",
+      "title": "Independent Architecture Reviewer",
+      "doc": "docs/agent-runs/03-TESTING.md",
+      "may_merge": false
     }
   },
   "lanes": {
@@ -85,7 +147,13 @@
     "available": [
       "implementation",
       "testing",
-      "research"
+      "research",
+      "registration",
+      "weekly-athlete-summary",
+      "zoom-attendance-xp",
+      "progression-levels-standings",
+      "end-to-end-test-specification",
+      "independent-review"
     ]
   },
   "claims": [],
@@ -120,6 +188,34 @@
         "implementation": "9c78b7be3db6a77d7231171183eb2b7dcb516631",
         "testing": "20e928237f90d6ac2fa41cbf8259683cb9dc4de1"
       }
+    },
+    {
+      "id": "PKG-033",
+      "backlog_refs": [
+        "PKG-033",
+        "PKG-006",
+        "PKG-014",
+        "PKG-015"
+      ],
+      "state": "READY_FOR_REVIEW",
+      "priority": 0,
+      "depends_on": [
+        "PKG-006",
+        "PKG-014",
+        "PKG-015"
+      ],
+      "auth": "mike-approved-2026-08-13",
+      "summary": "Cross-pipeline repository evidence audit and bounded Production-readiness packet; no Production access, schema changes, deployment, or merge.",
+      "base_sha": "2f8188bc22b4075fdf24b5d6ed80fc175aa16f72",
+      "lane_model": "five parallel evidence lanes plus independent review; serialized implementation",
+      "exclusions": [
+        "PKG-006 daily-submission reversal",
+        "PKG-007 Homework/Video implementation",
+        "Communications Hub/email appearance",
+        "public website appearance",
+        "Production Airtable changes",
+        "deployments and merges"
+      ]
     }
   ],
   "hard_stops": [
@@ -134,7 +230,7 @@
     "No live Airtable access unless Mike authorizes a named DEV check"
   ],
   "pending_approvals": [],
-  "next_action": "Complete PKG-007 evidence closeout and prepare PKG-006R daily-submission reversal package; keep all Production actions Mike-owned.",
+  "next_action": "Mike reviews PKG-033 evidence and separately approves the PKG-006R observable reconciliation schema/trigger design; keep all Production actions Mike-owned and do not overlap communications drafts #161/#162.",
   "stop_reason": null,
   "merge_order": [
     "research",
