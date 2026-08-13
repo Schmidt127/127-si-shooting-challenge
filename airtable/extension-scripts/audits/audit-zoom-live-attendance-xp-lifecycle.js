@@ -277,6 +277,15 @@ async function main() {
       const weekPi = week ? ids(week, weekTable, CONFIG.week.programInstance) : [];
       const enrollmentYear = text(enrollment, enrollmentTable, CONFIG.enrollment.schoolYear);
       const weekYear = week ? text(week, weekTable, CONFIG.week.schoolYear) : "";
+      const scopeEligible =
+        completed &&
+        booleanish(enrollment, enrollmentTable, CONFIG.enrollment.active) &&
+        enrollmentPi.length === 1 &&
+        weekPi.length === 1 &&
+        enrollmentPi[0] === weekPi[0] &&
+        enrollmentYear &&
+        weekYear &&
+        enrollmentYear === weekYear;
       if (enrollmentPi.length !== 1 || weekPi.length !== 1 || enrollmentPi[0] !== weekPi[0]) {
         addIssue(report, "wrong_program_instance", { meetingId: meeting.id, enrollmentId, enrollmentPi, weekPi });
       }
@@ -286,7 +295,7 @@ async function main() {
 
       const baseKey = meetingKey ? `ZOOM_ATTEND_BASE|${meetingKey}|${enrollmentId}` : "";
       const baseEvents = baseKey ? (xpByKey.get(baseKey) || []) : [];
-      if (completed && baseEvents.length === 0) addIssue(report, "eligible_attendance_missing_xp", { meetingId: meeting.id, enrollmentId, sourceKey: baseKey });
+      if (scopeEligible && baseEvents.length === 0) addIssue(report, "eligible_attendance_missing_xp", { meetingId: meeting.id, enrollmentId, sourceKey: baseKey });
       if (baseEvents.length > 1) addIssue(report, "duplicate_canonical_key", { meetingId: meeting.id, enrollmentId, sourceKey: baseKey, xpEventIds: baseEvents.map((event) => event.id) });
 
       for (const event of baseEvents) {

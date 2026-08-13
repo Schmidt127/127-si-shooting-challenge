@@ -995,11 +995,15 @@ async function runLiveLifecycleReconciliation(recordId) {
           throw new Error(`XP Event ${bonusEvents[0].id} has wrong owner for Source Key ${bonus.sourceKey}.`);
         }
         if (bonusEvents.length === 1 && getBooleanish(bonusEvents[0], xpEventsTable, CONFIG.xpEvents.active)) {
-          await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
-            [CONFIG.xpEvents.active]: false,
-            [CONFIG.xpEvents.error]: "",
-          });
-          bonusEventsDeactivated += 1;
+          try {
+            await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
+              [CONFIG.xpEvents.active]: false,
+              [CONFIG.xpEvents.error]: "",
+            });
+            bonusEventsDeactivated += 1;
+          } catch (error) {
+            eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} deactivation failed: ${error.message || error}`);
+          }
         }
       }
       continue;
@@ -1028,11 +1032,15 @@ async function runLiveLifecycleReconciliation(recordId) {
       }
       if (!bonusEligible) {
         if (bonusEvents.length === 1 && getBooleanish(bonusEvents[0], xpEventsTable, CONFIG.xpEvents.active)) {
-          await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
-            [CONFIG.xpEvents.active]: false,
-            [CONFIG.xpEvents.error]: "",
-          });
-          bonusEventsDeactivated += 1;
+          try {
+            await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
+              [CONFIG.xpEvents.active]: false,
+              [CONFIG.xpEvents.error]: "",
+            });
+            bonusEventsDeactivated += 1;
+          } catch (error) {
+            eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} deactivation failed: ${error.message || error}`);
+          }
         }
         continue;
       }
@@ -1060,8 +1068,12 @@ async function runLiveLifecycleReconciliation(recordId) {
         activityDateKey: meetingDateKey,
       });
       if (bonusEvents.length === 1) {
-        await updateRecordSafe(xpEventsTable, bonusEvents[0].id, bonusPayload);
-        bonusEventsUpdated += 1;
+        try {
+          await updateRecordSafe(xpEventsTable, bonusEvents[0].id, bonusPayload);
+          bonusEventsUpdated += 1;
+        } catch (error) {
+          eventWarnings.push(`Bonus XP Event ${bonus.sourceKey} update failed: ${error.message || error}`);
+        }
       } else {
         try {
           const createdBonusId = await xpEventsTable.createRecordAsync(bonusPayload);
@@ -1124,12 +1136,16 @@ async function runLiveLifecycleReconciliation(recordId) {
         if (ownedLastChance.length !== 1) {
           throw new Error(`Concurrent XP Event has wrong owner for Source Key ${sourceKey}.`);
         }
-        await updateRecordSafe(xpEventsTable, ownedLastChance[0].id, {
-          [CONFIG.xpEvents.active]: true,
-          [CONFIG.xpEvents.weeklySummary]: linkedCell([wasMatches[0].id]),
-        });
-        baseEventsUpdated += 1;
-        lifecycleAction = "reused_last_chance_event";
+        try {
+          await updateRecordSafe(xpEventsTable, ownedLastChance[0].id, {
+            [CONFIG.xpEvents.active]: true,
+            [CONFIG.xpEvents.weeklySummary]: linkedCell([wasMatches[0].id]),
+          });
+          baseEventsUpdated += 1;
+          lifecycleAction = "reused_last_chance_event";
+        } catch (error) {
+          eventWarnings.push(`XP Event ${sourceKey} last-chance reuse failed: ${error.message || error}`);
+        }
       } else {
         const payload = buildXpEventPayload({
           enrollmentId,
@@ -1152,13 +1168,13 @@ async function runLiveLifecycleReconciliation(recordId) {
           zoomMeetingId: recordId,
           activityDateKey: meetingDateKey,
         });
-        const createdId = await xpEventsTable.createRecordAsync(payload);
-        baseEventsCreated += 1;
-        lifecycleAction = "created_owned_event";
         try {
+          const createdId = await xpEventsTable.createRecordAsync(payload);
+          baseEventsCreated += 1;
+          lifecycleAction = "created_owned_event";
           await ensureXpEventWeeklySummaryLink(createdId, wasMatches[0].id);
         } catch (error) {
-          eventWarnings.push(`XP Event ${createdId} Weekly Athlete Summary backlink failed: ${error.message || error}`);
+          eventWarnings.push(`XP Event ${sourceKey} create/writeback failed: ${error.message || error}`);
         }
       }
     }
@@ -1181,19 +1197,26 @@ async function runLiveLifecycleReconciliation(recordId) {
     zoomTable,
     CONFIG.lifecycle.reconciliationNeeded
   );
+  if (eventWarnings.length) {
+    throw new Error(`Partial writeback warning: ${eventWarnings.join(" | ")}`);
+  }
   if (!freshSignature || freshSignature === startingSignature || freshNeeded !== 0) {
     throw new Error("Zoom XP formula signature did not settle to Needed = 0; reconciliation was not acknowledged.");
   }
-  await updateRecordSafe(zoomTable, recordId, {
-    [CONFIG.lifecycle.lastSignature]: freshSignature,
-    [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
-      zoomTable,
-      CONFIG.zoom.xpAwardStatus,
-      CONFIG.statuses.awarded
-    ),
-    [CONFIG.zoom.createXpEvents]: false,
-    [CONFIG.zoom.xpAwardError]: eventWarnings.join("\n"),
-  });
+  try {
+    await updateRecordSafe(zoomTable, recordId, {
+      [CONFIG.lifecycle.lastSignature]: freshSignature,
+      [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
+        zoomTable,
+        CONFIG.zoom.xpAwardStatus,
+        CONFIG.statuses.awarded
+      ),
+      [CONFIG.zoom.createXpEvents]: false,
+      [CONFIG.zoom.xpAwardError]: "",
+    });
+  } catch (error) {
+    throw new Error(`Partial writeback warning: Zoom Meeting acknowledgement failed: ${error.message || error}`);
+  }
 
   setFinalOutputs({
     ok: true,
