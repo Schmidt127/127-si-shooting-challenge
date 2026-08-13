@@ -121,7 +121,7 @@ const PROGRAM_INSTANCE_SCOPE_FIELDS = [
   "School Year - Linked",
   "Record Id",
 ] as const;
-const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "Active?"] as const;
+const STANDINGS_LEVEL_FIELDS = ["Level Name", "Sort Order", "XP Required (Cumulative)", "Active?"] as const;
 
 type StandingsConfigFields = { "Active School Year"?: unknown };
 type ProgramInstanceScopeFields = {
@@ -132,6 +132,7 @@ type ProgramInstanceScopeFields = {
 type StandingsLevelFields = {
   "Level Name"?: unknown;
   "Sort Order"?: unknown;
+  "XP Required (Cumulative)"?: unknown;
   "Active?"?: unknown;
 };
 
@@ -279,7 +280,7 @@ function exactText(value: unknown): string {
 async function getStandingsScope(): Promise<{
   schoolYear: string;
   programInstanceName: string;
-  activeLevelsByName: ReadonlyMap<string, number>;
+  activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
 }> {
   const config = await listAirtableRecords<StandingsConfigFields>({
     tableName: STANDINGS_CONFIG_TABLE,
@@ -321,15 +322,17 @@ async function getStandingsScope(): Promise<{
     filterByFormula: "{Active?}=1",
     revalidateSeconds: LEADERBOARD_REVALIDATE_SECONDS,
   });
-  const activeLevelsByName = new Map<string, number>();
+  const activeLevelsByName = new Map<string, { rank: number; xpRequired: number }>();
   for (const level of levelResponse.records) {
     const name = exactText(level.fields["Level Name"]);
     const rawRank = level.fields["Sort Order"];
     const rank = typeof rawRank === "number" ? rawRank : Number(rawRank);
-    if (!name || !Number.isFinite(rank) || rank < 0 || activeLevelsByName.has(name)) {
+    const rawThreshold = level.fields["XP Required (Cumulative)"];
+    const xpRequired = typeof rawThreshold === "number" ? rawThreshold : Number(rawThreshold);
+    if (!name || !Number.isFinite(rank) || rank < 0 || !Number.isFinite(xpRequired) || xpRequired < 0 || activeLevelsByName.has(name)) {
       throw new Error(`Standings found an invalid or duplicate active Level contract for "${name || level.id}".`);
     }
-    activeLevelsByName.set(name, rank);
+    activeLevelsByName.set(name, { rank, xpRequired });
   }
   if (activeLevelsByName.size === 0) throw new Error("Standings require at least one active Level.");
   return { schoolYear, programInstanceName, activeLevelsByName };

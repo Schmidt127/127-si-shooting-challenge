@@ -58,7 +58,7 @@ function installQueryMock(records: ReturnType<typeof enrollment>[]) {
       return {
         records: [{
           id: "recLevel2",
-          fields: { "Level Name": "Level 2", "Sort Order": 2, "Active?": true },
+          fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true },
         }],
       };
     }
@@ -108,7 +108,7 @@ describe("fetchLeaderboard Airtable adapter", () => {
         return { records: [{ id: "recProgram", fields: { "Name - Program Instance": PROGRAM_INSTANCE } }] };
       }
       if (params.tableName === "Levels") {
-        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "Active?": true } }] };
+        return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 0, "Active?": true } }] };
       }
       throw new AirtableApiError(422, JSON.stringify({ error: { type: "VIEW_NAME_NOT_FOUND" } }));
     });
@@ -138,5 +138,16 @@ describe("fetchLeaderboard Airtable adapter", () => {
       enrollment("recB", "Avery", { "Athlete ID Lookup": ["same-athlete"] }),
     ]);
     await expect(fetchLeaderboard()).rejects.toThrow(/Duplicate canonical Enrollment identity/);
+  });
+
+  it("rejects a stale level after a downward XP correction", async () => {
+    installQueryMock([enrollment("recA", "Avery", { "Lifetime XP Total": 100 })]);
+    listAirtableRecordsMock.mockImplementation(async (params: { tableName: string }) => {
+      if (params.tableName === "Config") return { records: [{ id: "recConfig", fields: { "Active School Year": SCHOOL_YEAR } }] };
+      if (params.tableName === "Program Instance - Synced") return { records: [{ id: "recProgram", fields: { "Name - Program Instance": PROGRAM_INSTANCE } }] };
+      if (params.tableName === "Levels") return { records: [{ id: "recLevel2", fields: { "Level Name": "Level 2", "Sort Order": 2, "XP Required (Cumulative)": 200, "Active?": true } }] };
+      return { records: [enrollment("recA", "Avery", { "Lifetime XP Total": 100 })] };
+    });
+    await expect(fetchLeaderboard()).rejects.toThrow(/below its assigned Current Level threshold/);
   });
 });

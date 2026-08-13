@@ -29,7 +29,7 @@ export type EnrollmentLeaderboardFields = {
 export type LeaderboardScope = {
   schoolYear: string;
   programInstanceName: string;
-  activeLevelsByName: ReadonlyMap<string, number>;
+  activeLevelsByName: ReadonlyMap<string, { rank: number; xpRequired: number }>;
 };
 
 type LeaderboardRecord = { id: string; fields: EnrollmentLeaderboardFields };
@@ -205,13 +205,18 @@ export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
       "Level Rank",
       record.id,
     );
-    const activeLevelRank = scope.activeLevelsByName.get(currentLevel);
-    if (activeLevelRank === undefined || activeLevelRank !== levelRank) {
+    const activeLevel = scope.activeLevelsByName.get(currentLevel);
+    if (activeLevel === undefined || activeLevel.rank !== levelRank) {
       throw new LeaderboardIntegrityError(
         `Enrollment ${record.id} has an inactive or mismatched Current Level rank.`,
       );
     }
-    requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
+    const xp = requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
+    if (xp < activeLevel.xpRequired) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has XP below its assigned Current Level threshold.`,
+      );
+    }
     requiredNonNegativeNumber(fields["Total Shots Counted"], "Total Shots Counted", record.id);
   }
 

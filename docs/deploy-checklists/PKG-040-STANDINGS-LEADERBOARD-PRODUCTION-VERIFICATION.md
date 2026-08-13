@@ -29,7 +29,7 @@ view, or stale response beyond the cache window as a stop condition.
 | Enrollments | Public candidate identity is exactly one `Athlete`, one `Program Instance`, and one `School Year`; active only. |
 | `Web - Leaderboard` | Required, scoped public view. A missing/renamed view fails closed; there is no table-wide public fallback. |
 | Web adapter | Resolves one active Config School Year and one `Shooting Challenge | <year>` Program Instance, validates every view row, sorts Level Rank → XP → shots → public name → Enrollment record id, then removes record ids from the public model. |
-| Cache | Airtable fetch, `/leaderboard`, and `/public-display` use 120-second revalidation. A correction is expected after upstream formula settlement plus one revalidation window; no manual cache purge is part of this package. |
+| Cache | Airtable fetch uses the sole 120-second standings cache. `/leaderboard`, `/public-display`, and the home standings preview are dynamic so route ISR cannot add a second stale window. A correction is expected after upstream formula settlement plus one data-cache window; no manual cache purge is part of this package. |
 
 The current schema snapshot demonstrates that `Program Instance` and `Athlete`
 are linked fields, `School Year` is a select, `Current Level` is a link,

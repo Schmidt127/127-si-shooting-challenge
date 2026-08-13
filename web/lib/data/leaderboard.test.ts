@@ -194,7 +194,7 @@ describe("leaderboard eligibility contract", () => {
   const scope = {
     schoolYear: "2026-2027",
     programInstanceName: "Shooting Challenge | 2026-2027",
-    activeLevelsByName: new Map([["Level 2", 2]]),
+    activeLevelsByName: new Map([["Level 2", { rank: 2, xpRequired: 0 }]]),
   };
 
   function validRecord(id: string, overrides: Record<string, unknown> = {}) {
@@ -248,5 +248,15 @@ describe("leaderboard eligibility contract", () => {
     expect(() => requireEligibleLeaderboardRecords([
       validRecord("rec1", { "Level Sort Order - For Softr": 3 }),
     ], scope)).toThrow(/inactive or mismatched/);
+  });
+
+  it("rejects a stale Current Level after a downward XP correction", () => {
+    const thresholdScope = {
+      ...scope,
+      activeLevelsByName: new Map([["Level 2", { rank: 2, xpRequired: 200 }]]),
+    };
+    expect(() => requireEligibleLeaderboardRecords([
+      validRecord("rec1", { "Lifetime XP Total": 199 }),
+    ], thresholdScope)).toThrow(/below its assigned Current Level threshold/);
   });
 });

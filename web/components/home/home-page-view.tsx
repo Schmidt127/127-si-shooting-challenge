@@ -314,3 +314,15 @@ export function HomePageView({ topEntries }: HomePageViewProps) {
 export function HomePageFallback() {
   return <HomePageView topEntries={[]} />;
 }
+
+/** Used only when the server-side standings contract fails closed. */
+export function HomePageStandingsError() {
+  return (
+    <div className="mx-auto max-w-3xl px-6 py-16" role="alert">
+      <h1 className="text-2xl font-bold text-foreground">Live standings are temporarily unavailable</h1>
+      <p className="mt-3 text-muted">
+        The standings data is being verified. Please check the leaderboard again shortly.
+      </p>
+    </div>
+  );
+}
