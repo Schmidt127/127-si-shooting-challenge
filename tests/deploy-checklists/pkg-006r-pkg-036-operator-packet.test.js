@@ -67,7 +67,7 @@ test("contains an evidence worksheet and offline command coverage", () => {
     "errorOut",
     "Progression Last Queued Signature",
     "Progression Last Reconciled Signature",
-    "audit JSON filename",
+    "Audit JSON filename",
     "test_041_recalculation_coverage",
     "source-key-registry",
     "active-automation-unload-compat",
