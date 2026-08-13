@@ -196,7 +196,10 @@ test("041 remains idempotent scheduled reconciliation without output ownership",
   const first = progressionSignature(enrollment, rules);
   const second = progressionSignature(enrollment, rules);
   assert.strictEqual(first, second);
-  assert.match(source041, /getBoolean\(record, CONFIG\.enrollmentFields\.active\)/);
+  assert.match(
+    source041,
+    /getBoolean\(\s*record,\s*CONFIG\.enrollmentFields\.active\s*\)/,
+  );
   assert.match(source041, /reason: "unchanged_signature"/);
   assert.doesNotMatch(source041, /Current Level\].*updateRecordAsync/s);
 });
