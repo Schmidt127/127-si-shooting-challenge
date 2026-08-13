@@ -1,14 +1,14 @@
 # PKG-037 — Core Application Production Certification Packet
 
 **Status:** Repository-ready; **BLOCKED** pending the prerequisite package
-evidence listed below.  
+evidence listed below.
 **Authority:** This is the one executable core-certification packet after its
 prerequisites are individually installed and proven. It does not replace their
-packets or make a Production claim from repository text.  
+packets or make a Production claim from repository text.
 **Production operator:** Mike only. Agents must not access or alter Production
-Airtable, automation state, configuration, email, or forms.  
+Airtable, automation state, configuration, email, or forms.
 **Repository baseline:** record `git rev-parse origin/master` immediately
-before execution.  
+before execution.
 **Scope:** Registration through canonical Enrollment, Submission, Week/WAS, XP
 ledger, formula settlement, progression, and standings. Daily communications is
 an observed secondary handoff only; no visual or delivery-design evaluation.
