@@ -107,7 +107,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.2",
+  version: "v6.3",
 
   timeZone: "America/Denver",
   formulaSettlementAttempts: 5,

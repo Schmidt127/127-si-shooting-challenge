@@ -66,7 +66,8 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 
 #### Changed
 - **PKG-039 WAS and weekly-goal reliability (2026-08-13)** — Automation 031
-  remains the sole create-capable Weekly Athlete Summary (WAS) owner. 101 and
+  remains the sole create-capable Weekly Athlete Summary (WAS) owner. 101
+  **v6.3** and
   118 now resolve only one existing canonical WAS; 118 filters excluded and
   inactive enrollments before strict validation. 032, 057, 058, and 076 require
   an exact active `Program Instance + Grade Band` goal with an explicitly

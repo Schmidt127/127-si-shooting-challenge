@@ -325,6 +325,9 @@ async function test(name, fn) {
 }
 
 (async () => {
+  await test("committed source declares CONFIG.version v6.3", async () => {
+    assert(source.includes('version: "v6.3"'));
+  });
   await test("actual source acknowledges unchanged empty roster without XP creation", async () => {
     const fixture = makeFixture();
     const result = await runAutomation(fixture);
