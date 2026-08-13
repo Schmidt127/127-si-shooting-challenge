@@ -142,6 +142,7 @@ const CONFIG = {
   enrollments: {
     enrollmentKey: "Enrollment Key",
     programInstance: "Program Instance",
+    active: "Active?",
   },
 
   weeks: {
@@ -385,6 +386,11 @@ function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
   }
 
   return ids[0];
+}
+
+function getExactlyOneLinkedRecordIdOrEmpty(record, table, fieldName) {
+  const ids = uniqueIds(getLinkedRecordIds(record, table, fieldName));
+  return ids.length === 1 ? ids[0] : "";
 }
 
 function uniqueIds(ids) {
@@ -670,24 +676,29 @@ async function repairXpEventsForEnrollmentWeek({
 
   try {
     for (const xpRecord of xpQuery.records) {
-      const xpEnrollmentId = getFirstLinkedRecordId(
+      const xpEnrollmentId = getExactlyOneLinkedRecordIdOrEmpty(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.enrollment
       );
-      const xpWeekId = getFirstLinkedRecordId(
+      const xpWeekId = getExactlyOneLinkedRecordIdOrEmpty(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.week
       );
-      const xpSummaryId = getFirstLinkedRecordId(
+      const xpSummaryIds = uniqueIds(getLinkedRecordIds(
         xpRecord,
         xpEventsTable,
         CONFIG.xpEvents.weeklySummary
-      );
+      ));
 
       if (xpEnrollmentId !== enrollmentId || xpWeekId !== weekId) continue;
       if (isSubmissionBaseXpEvent(xpRecord)) continue;
+      // An XP Event may be repaired only when it has an exact owner identity and
+      // no WAS link, or the one stale WAS link proven by this invocation. Never
+      // select a first link from an ambiguous or wrong-owner event.
+      if (xpSummaryIds.length > 1) continue;
+      const xpSummaryId = xpSummaryIds[0] || "";
       if (xpSummaryId && xpSummaryId !== staleSummaryId) continue;
       if (xpSummaryId === weeklySummaryId) continue;
 
@@ -792,6 +803,12 @@ requireField(
   enrollmentsTable,
   CONFIG.enrollments.programInstance,
   "Enrollments -> Program Instance"
+);
+
+requireField(
+  enrollmentsTable,
+  CONFIG.enrollments.active,
+  "Enrollments -> Active?"
 );
 
 // Week Key is a required read-only/formula input; Program Instance is a
@@ -987,6 +1004,22 @@ async function main() {
       enrollmentsTable,
       CONFIG.enrollments.enrollmentKey
     );
+
+    if (!isChecked(enrollment, enrollmentsTable, CONFIG.enrollments.active)) {
+      setOutputSafe("ok", false);
+      setOutputSafe("recordId", recordId);
+      setOutputSafe("weeklySummaryId", "");
+      setOutputSafe("summaryKeyOut", "");
+      setOutputSafe("weekId", submissionWeekId);
+      setOutputSafe("weekName", "");
+      setOutputSafe("actionTaken", "skipped_inactive_enrollment");
+      setOutputSafe("actionOut", "skipped_inactive_enrollment");
+      setOutputSafe("readinessOut", "unchanged");
+      setOutputSafe("statusOut", CONFIG.outputStatuses.skipped);
+      setOutputSafe("errorOut", "Enrollment is inactive; no Weekly Athlete Summary or daily-email readiness is changed.");
+      setOutputSafe("debugStep", "Skipped: Enrollment is inactive");
+      return;
+    }
 
     if (!enrollmentKey) {
       throw new Error(`Enrollment Key is blank for Enrollment ${submissionEnrollmentId}.`);

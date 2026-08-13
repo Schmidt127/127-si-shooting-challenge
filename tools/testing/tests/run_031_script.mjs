@@ -55,6 +55,7 @@ function enrollmentsFields() {
   return [
     { name: "Enrollment Key", type: "formula", isComputed: true },
     { name: "Program Instance", type: "multipleRecordLinks" },
+    { name: "Active?", type: "checkbox" },
   ];
 }
 
@@ -170,6 +171,7 @@ export function build031Base(opts = {}) {
     new MockRecord(IDS.ENROLLMENT, {
       "Enrollment Key": "ENR-2026-2027",
       "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
+      "Active?": true,
     }),
   ]);
 
