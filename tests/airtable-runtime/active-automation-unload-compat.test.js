@@ -24,7 +24,7 @@ const TARGETS = [
   {
     num: "031",
     file: "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
-    versionRe: /Version:\s*v4\.0/,
+    versionRe: /Version:\s*v4\.1/,
     queryVars: ["xpQuery"],
   },
   {
