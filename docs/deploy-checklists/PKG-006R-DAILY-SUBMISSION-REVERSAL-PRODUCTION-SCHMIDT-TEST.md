@@ -44,7 +44,7 @@ Confirm installed Production versions and triggers in Airtable before testing. R
 
 ## Reversal and restoration proof
 
-This section is currently blocked until Mike approves and installs a reachable transition-based correction trigger in DEV and then Production.
+This section is currently blocked until Mike approves a reachable transition-based correction trigger/schema design. Any resulting validation is controlled Production-only work performed manually by Mike, using existing Schmidt test records and Mike's email where relevant; no offline test proves that an installed Production trigger fires.
 
 When that prerequisite is approved:
 

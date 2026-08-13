@@ -42,7 +42,7 @@ The future correction package may be implemented only after Mike approves:
 1. A writable, transition-based reconciliation signal on Submissions (or an equivalent existing field proven to observe all relevant linked/formula changes).
 2. Trigger semantics that reach both eligible restoration and ineligible withdrawal without positive-only filtering or scheduled polling.
 3. Exact ownership and duplicate policy for Submission, milestone, and streak events.
-4. DEV schema/test proof before any Production paste.
+4. Controlled Production-only validation performed manually by Mike, using existing Schmidt test records and Mike's email where relevant, with exact preflight, stop conditions, evidence capture, and rollback. Offline tests do not prove installed Production triggers.
 
 Conditional writer order after that approval is `010` → `053`/`066` → `054`/`059`, followed by 041/042 settlement. No current Production paste order exists for correction writers.
 
@@ -59,7 +59,7 @@ Conditional writer order after that approval is `010` → `053`/`066` → `054`/
 ## Open decisions / evidence Mike must provide
 
 - Approved Submission reconciliation field/trigger design and exact field creation order.
-- DEV schema and natural-trigger proof for linked/formula transitions.
+- Mike's approved Production-only schema/trigger decision and manually captured natural-trigger evidence for linked/formula transitions; offline tests are not proof of installed Production triggers.
 - Installed versions/triggers for 010, 053, 054, 059, 066, 041, and 042.
 - Controlled Schmidt evidence for positive create, exclusion withdrawal, milestone/streak reversal, and same-event restoration.
 - Current formula/rollup settlement behavior and Production `Web - Leaderboard` membership.
