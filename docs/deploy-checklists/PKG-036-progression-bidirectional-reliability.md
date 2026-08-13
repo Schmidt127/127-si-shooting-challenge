@@ -1,6 +1,7 @@
 # PKG-036 — Progression configuration and bidirectional recalculation reliability
 
 **Status:** Draft — repository implementation complete; Production installation and natural-trigger proof pending  
+**Unified sequence:** Use [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md) as the single current operator source. Do not start until PKG-006R lock is released.
 **Backlog:** PKG-036  
 **Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)  
 **Environment exception:** Mike authorized this package's Production-only path because no DEV Airtable exists. Offline tests are not Production proof.
@@ -56,8 +57,8 @@ does.
 8. Preserve the existing 042 view filter: `Level Recalc Needed?` checked and `Active?` checked.
 9. Confirm 043 remains absent/OFF.
 10. Keep 041 and 042 OFF while saving, then run controlled manual actions on one approved Schmidt Enrollment.
-11. Enable 042, then 041 after preflight succeeds; 042 must be enabled before 041.
-12. Run the read-only PKG-036 audit and preserve the JSON output.
+11. Enable 042 first, then 041 after preflight succeeds; 042 must be enabled before 041.
+12. After enablement, re-run the read-only PKG-036 audit and preserve the JSON output.
 
 ## Controlled Schmidt proof
 

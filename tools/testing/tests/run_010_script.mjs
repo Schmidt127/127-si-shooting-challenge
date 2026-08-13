@@ -1,5 +1,6 @@
 /**
  * Loads and executes the REAL Automation 010 script inside the mock environment.
+ * Updated for v10.7 PKG-006R reconciliation schema.
  */
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -31,6 +32,8 @@ export const IDS = {
   XP_RULE: "recXpRule01000001",
 };
 
+export const CURRENT_SIGNATURE = "SIG-010-OFFLINE-CURRENT";
+
 function submissionsFields() {
   return [
     { name: "Enrollment", type: "multipleRecordLinks" },
@@ -46,6 +49,9 @@ function submissionsFields() {
       options: { choices: [{ name: "Awarded" }, { name: "Error" }] },
     },
     { name: "XP Events", type: "multipleRecordLinks" },
+    { name: "Current Reconciliation Signature", type: "formula", isComputed: true },
+    { name: "Last Reconciled Signature", type: "singleLineText" },
+    { name: "Reconciliation Needed?", type: "formula", isComputed: true },
   ];
 }
 
@@ -70,9 +76,9 @@ function xpEventsFields() {
     { name: "XP Reason Debug", type: "multilineText" },
     { name: "Active?", type: "checkbox" },
     { name: "Source Key", type: "singleLineText" },
-    { name: "XP Source Date", type: "dateTime" },
+    { name: "XP Activity Date", type: "dateTime" },
     {
-      name: "XP Date Source",
+      name: "XP Activity Date Source",
       type: "singleSelect",
       options: { choices: [{ name: "Submission Activity Date" }] },
     },
@@ -93,6 +99,7 @@ function xpRulesFields() {
 
 function enrollmentsFields() {
   return [
+    { name: "Active?", type: "checkbox" },
     { name: "Run Shot Milestone Check?", type: "checkbox" },
     { name: "Enrollment Key", type: "formula", isComputed: true },
     { name: "Program Instance", type: "multipleRecordLinks" },
@@ -103,6 +110,8 @@ function weeksFields() {
   return [
     { name: "Week Key", type: "formula", isComputed: true },
     { name: "Program Instance", type: "multipleRecordLinks" },
+    { name: "Start Date", type: "dateTime" },
+    { name: "End Date", type: "dateTime" },
   ];
 }
 
@@ -114,24 +123,46 @@ function weeklySummaryFields() {
   ];
 }
 
+function applyReconciliationLatch(record) {
+  const last = String(record.cells["Last Reconciled Signature"] || "").trim();
+  record.cells["Current Reconciliation Signature"] = CURRENT_SIGNATURE;
+  record.cells["Reconciliation Needed?"] = CURRENT_SIGNATURE && CURRENT_SIGNATURE !== last ? 1 : 0;
+}
+
+class ReconciliationSubmissionsTable extends MockTable {
+  async selectRecordAsync(recordId, opts) {
+    const record = await super.selectRecordAsync(recordId, opts);
+    if (record) applyReconciliationLatch(record);
+    return record;
+  }
+
+  async updateRecordAsync(recordId, fields) {
+    await super.updateRecordAsync(recordId, fields);
+    const record = this.records.get(recordId);
+    if (record) applyReconciliationLatch(record);
+  }
+}
+
 export function build010Base(opts = {}) {
   const {
     submissionCells = {},
     xpEventCells = {},
     weeklySummaries = [],
+    xpEventActive = true,
   } = opts;
 
-  const submissions = new MockTable("Submissions", submissionsFields(), [
+  const submissions = new ReconciliationSubmissionsTable("Submissions", submissionsFields(), [
     new MockRecord(IDS.SUBMISSION, {
       Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
-      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+      "Weekly Athlete Summary": [],
       "Submission Key": "SUBMISSION-010-KEY",
       "Activity Date": "2026-08-07",
       "Total Shots Counted": 150,
       "Count This Submission?": true,
       "XP Award Status": "",
       "XP Events": [{ id: IDS.XP_EVENT, name: "Submission XP" }],
+      "Last Reconciled Signature": "",
       ...submissionCells,
     }),
   ]);
@@ -141,16 +172,16 @@ export function build010Base(opts = {}) {
       Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
       Submission: [{ id: IDS.SUBMISSION, name: "Submission" }],
       Week: [{ id: IDS.WEEK, name: "Early Bird" }],
-      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
       "XP Source": { name: "Submission Base" },
       "XP Bucket": { name: "Shooting Base" },
       "XP Points": 20,
       "XP Reason Public": "",
       "XP Reason Debug": "",
-      "Active?": true,
+      "Active?": xpEventActive,
       "Source Key": `SUBMISSION_XP|${IDS.SUBMISSION}`,
-      "XP Source Date": "2026-08-07",
-      "XP Date Source": { name: "Submission Activity Date" },
+      "XP Activity Date": "2026-08-07",
+      "XP Activity Date Source": { name: "Submission Activity Date" },
       "XP Dedupe Key": `${IDS.ENROLLMENT}|${IDS.SUBMISSION}|Submission Base`,
       "XP Dedupe Key Normalized": `${IDS.ENROLLMENT.toLowerCase()}|${IDS.SUBMISSION.toLowerCase()}|submission base`,
       "Weekly Summary Key": "",
@@ -169,6 +200,7 @@ export function build010Base(opts = {}) {
 
   const enrollments = new MockTable("Enrollments", enrollmentsFields(), [
     new MockRecord(IDS.ENROLLMENT, {
+      "Active?": true,
       "Run Shot Milestone Check?": false,
       "Enrollment Key": "ENR-2026-2027",
       "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
@@ -179,6 +211,8 @@ export function build010Base(opts = {}) {
     new MockRecord(IDS.WEEK, {
       "Week Key": "WEEK-EARLY-BIRD",
       "Program Instance": [{ id: "recPI2026", name: "2026-2027" }],
+      "Start Date": "2026-08-01",
+      "End Date": "2026-08-31",
     }),
   ]);
 
@@ -188,12 +222,7 @@ export function build010Base(opts = {}) {
         new MockRecord(IDS.SUMMARY_CANONICAL, {
           Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
           Week: [{ id: IDS.WEEK, name: "Early Bird" }],
-        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
-        }),
-        new MockRecord(IDS.SUMMARY_STALE, {
-          Enrollment: [{ id: "recWrongEnrollment0001", name: "Wrong Enrollment" }],
-          Week: [{ id: "recWrongWeek0000001", name: "Wrong Week" }],
-        "Summary Key": "ENR-OLD|WEEK-OLD",
+          "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
         }),
       ];
 

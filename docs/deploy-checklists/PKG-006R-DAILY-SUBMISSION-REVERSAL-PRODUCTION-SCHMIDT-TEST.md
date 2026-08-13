@@ -1,6 +1,7 @@
 # PKG-006R — Daily Submission reversal Production Schmidt packet
 
 **Status:** Mike-only Production packet; no Production action was performed.
+**Unified sequence:** Use [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md) as the single current operator source. This file retains PKG-006R detail only.
 **Owner:** Mike performs every Production step.
 **Scope:** Submission XP, milestones, streaks, WAS/lifetime settlement, progression, and standings. Email testing is excluded.
 
