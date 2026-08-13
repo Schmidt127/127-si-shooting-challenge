@@ -3,6 +3,9 @@ Extension Script: Counted Submission XP and Standings Reliability Audit
 System: 127 SI Shooting Challenge
 Purpose: Read-only reconciliation for counted Submission -> Submission Base XP ->
 canonical WAS -> Enrollment totals -> progression/standings inputs.
+Duplicate detection is scoped to the canonical SUBMISSION_XP|{Submission ID} family;
+multiple linked XP Events alone (for example HOMEWORK_XP on the same Submission)
+are not treated as Submission Base duplicates.
 Default: read-only. This script never creates, updates, deletes, or sends.
 */
 // @ts-nocheck

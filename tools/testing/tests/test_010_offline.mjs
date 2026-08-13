@@ -1,5 +1,5 @@
 /**
- * Offline regression tests for Automation 010 v10.7 reconciliation writer.
+ * Offline regression tests for Automation 010 v10.8 reconciliation writer.
  * Run: node --test tools/testing/tests/test_010_offline.mjs
  */
 import test from "node:test";
@@ -48,9 +48,8 @@ test("creates a canonical XP Event when none exists", async () => {
       "XP Events": [],
       "Last Reconciled Signature": "",
     },
-    xpEventCells: null,
+    xpEvents: [],
   });
-  base.getTable("XP Events").records.clear();
 
   const { output, error } = await run010({ base });
   assert.equal(error, null, error && error.message);
@@ -86,8 +85,8 @@ test("fails closed when no canonical Weekly Athlete Summary exists", async () =>
     submissionCells: {
       "XP Events": [],
     },
+    xpEvents: [],
   });
-  base.getTable("XP Events").records.clear();
 
   const { error } = await run010({ base });
   assert.ok(error);

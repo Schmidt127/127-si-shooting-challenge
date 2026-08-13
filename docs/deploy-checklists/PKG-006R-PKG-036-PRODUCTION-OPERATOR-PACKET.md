@@ -1,13 +1,24 @@
 # PKG-006R + PKG-036 — Unified Production operator packet
 
-**Date:** 2026-08-13 (amended with Mike-supplied Production baseline)
+**Date:** 2026-08-13 (amended with Mike-supplied Production baseline; **PKG-006R-HF-001** hotfix 2026-08-13)
 **Repository SHA:** verify `origin/master` before execution (`git rev-parse origin/master`)
 **Base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Owner:** Mike performs every Production step. Agents do not access Production.
 
 ## Evidence boundary
 
-Repository text and offline tests are not Production proof. Historical packets that cite **010 v10.6** replay proof describe prior evidence only. **Lifecycle proof for 010 v10.7** (backlog clearance, natural-trigger runs, withdrawal/restoration, settled totals) remains pending even though the script is installed and ON.
+Repository text and offline tests are not Production proof. Historical packets that cite **010 v10.6** replay proof describe prior evidence only. **Lifecycle proof for 010 v10.8** (backlog clearance, natural-trigger runs, withdrawal/restoration, settled totals) remains pending. **010 v10.7 is OFF in Production** after a multi-family XP lookup failure; paste **v10.8** before re-enabling.
+
+### PKG-006R-HF-001 — Production blocker (2026-08-13)
+
+| Item | State |
+|---|---|
+| Failure | Submission `recY0o5tpqMfvlCCa` — `Multiple XP Events are linked to Submission` |
+| Legitimate events | Submission Base `recacQfNbArf2ygT2` (`SUBMISSION_XP\|recY0o5tpqMfvlCCa`); Homework `recJGcfipFyKwiSC5` (`HOMEWORK_XP` family) |
+| Root cause | 010 v10.7 treated any second linked XP Event as a duplicate instead of scoping duplicate detection to Submission Base identity only |
+| Hotfix | **010 v10.8** — family-scoped lookup; ignore unrelated `HOMEWORK_XP`, `VIDEO_SUBMISSION`, milestone, streak, and Zoom families; append Submission XP link without unlinking unrelated events |
+| Production now | **010 OFF**; both XP Events unchanged; PKG-006R and PKG-036 locks remain active |
+| Backlog ID | `PKG-006R-HF-001` |
 
 ---
 
@@ -15,7 +26,7 @@ Repository text and offline tests are not Production proof. Historical packets t
 
 | Automation | Target version | File | Ownership |
 |---|---|---|---|
-| **010** | **v10.7** | `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` | Sole writer of Submission Base XP (`SUBMISSION_XP\|{Submission ID}`); positive create/replay, correction deactivate/reactivate same event, latch acknowledgement |
+| **010** | **v10.8** | `airtable/automations/shooting-challenge/010-submission-intake-create-xp-event.js` | Sole writer of Submission Base XP (`SUBMISSION_XP\|{Submission ID}`); positive create/replay, correction deactivate/reactivate same event, latch acknowledgement; ignores unrelated XP families linked to the same Submission |
 | **041** | **v5.0** | `airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js` | Queue/request only — sets `Level Recalc Needed?` and `Progression Last Queued Signature` |
 | **042** | **v4.0** | `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | Sole writer of `Current Level`, `Next Level`, `Level Gate Rule`, `Level Status`, `Progression Last Reconciled Signature` |
 | **043** | **Retired / absent** | Historical source only — **do not recreate or enable** | No downstream writer |
@@ -34,7 +45,7 @@ Record screenshots/exports before any change.
 | Item | Current Production state | Remaining work |
 |---|---|---|
 | PKG-006R reconciliation fields (12) | **Installed and verified** | Verify exact names/types before testing; do not recreate |
-| Automation **010 v10.7** | **Installed and ON** | Inspect run history and reconciliation backlog; complete lifecycle proof |
+| Automation **010** | **v10.7 installed; OFF after HF-001 failure** | Paste **v10.8** from GitHub; re-test `recY0o5tpqMfvlCCa` and backlog; complete lifecycle proof before re-enabling |
 | Automation **041** | `wflCRvaopntNPsc64`; cron every **15 min**; installed **v4.0** | Paste **v5.0** deferred until PKG-006R lock release |
 | Automation **042** | `wfl3aiiK8vI2tz0HA`; view `viwm9OgwkPKI2bii3`; installed **v3.4** | Paste **v4.0** deferred until PKG-006R lock release |
 | Automation **043** | Absent from automation inventory | Remain absent |
@@ -52,9 +63,9 @@ Approved Schmidt orientation Enrollments: `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qW
 
 **Before modifying any records:**
 
-1. Open Automation **010** in Production → inspect **recent run history** (success/error/skipped, run IDs, timestamps, `actionOut` where visible).
-2. Open **Submissions** → filter or view rows where `Reconciliation Needed? = 1` → record the **current reconciliation backlog** (count, record IDs, whether backlog is expected or indicates a stuck latch).
-3. Only after backlog review → proceed to Phase A controlled testing. Do not paste, enable, or disable automations as part of this first step.
+1. Confirm Automation **010** is **OFF** (rollback state after HF-001 failure).
+2. Open **Submissions** → filter or view rows where `Reconciliation Needed? = 1` → record the **current reconciliation backlog** (count, record IDs, whether backlog is expected or indicates a stuck latch). Include `recY0o5tpqMfvlCCa` if still present.
+3. Only after backlog review → paste **010 v10.8**, run controlled HF-001 proof, then proceed to Phase A lifecycle testing. Do not re-enable 010 until v10.8 proof passes.
 
 ---
 
@@ -84,18 +95,20 @@ Verify each field exists with the exact name and type per [`airtable/schema/curr
 
 Stop if any field is missing, misnamed, or wrong type. Do not recreate fields that already exist.
 
-### A3. Verify Automation 010 v10.7 (installed ON — do not repaste unless repair required)
+### A3. Install Automation 010 v10.8 (010 is OFF — paste before re-enable)
 
 | Setting | Expected value |
 |---|---|
 | Automation | 010 — Submission Intake and Asset Creation — Create XP Event from Submission |
-| Installed script | **v10.7** |
-| Enablement | **ON** (verify; do not toggle without cause) |
+| Installed script | **v10.8** (replaces v10.7) |
+| Enablement | **OFF** until HF-001 proof and backlog replay pass |
 | Table | Submissions |
 | Trigger | When record matches conditions: `Reconciliation Needed? = 1` |
 | Input `recordId` | Dynamic — Airtable record ID from triggering Submission |
 
-**010 does not write progression fields.** It may set `Run Shot Milestone Check?` after successful reconciliation.
+**HF-001 proof row:** Submission `recY0o5tpqMfvlCCa` must reconcile without error while preserving Homework XP `recJGcfipFyKwiSC5` and reusing Submission Base XP `recacQfNbArf2ygT2`.
+
+**010 does not write progression fields.** It may set `Run Shot Milestone Check?` after successful reconciliation. It must not unlink, modify, deactivate, or delete unrelated XP Events.
 
 If trigger or version does not match, capture evidence and stop. Repaste only from committed `010-submission-intake-create-xp-event.js` after turning OFF, saving, and restoring from capture on rollback.
 
@@ -115,7 +128,7 @@ Work through backlog and lifecycle proof in this order:
 
 PKG-006R does not close until Mike captures all of:
 
-- Natural-trigger run IDs for **010 v10.7**
+- Natural-trigger run IDs for **010 v10.8**
 - Reconciliation backlog cleared or explained with per-record evidence
 - Replay proof (same event ID, no duplicate key)
 - Withdrawal and restoration proof (same event ID)
@@ -260,6 +273,7 @@ git diff --check
 node --test tests/pipeline/counted-submission-xp-standings-orchestration.test.mjs
 node --test tests/pipeline/counted-submission-xp-reversal-lifecycle.test.mjs
 node --test tools/testing/tests/test_010_offline.mjs
+node --test tests/pipeline/010-submission-base-multi-family.test.mjs
 node airtable/automations/shooting-challenge/lib/pkg-036-progression-reliability.test.js
 node airtable/automations/shooting-challenge/lib/v2-engine-contracts.test.js
 node airtable/automations/shooting-challenge/lib/042-school-year-gate-rules.test.js
@@ -275,7 +289,7 @@ node --test tests/data-model/field-contracts.test.js
 |---|---|
 | `docs/prod-completion/2026-08-13/PKG-036-PRODUCTION-PREFLIGHT-REPORT.md` missing-field rows | Field now created per Mike; verify instead |
 | `docs/deploy-checklists/2026-08-06-PROGRAM-INSTANCE-ISOLATION-PASTE.md` step 6 "043 if Live" | 043 retired; do not paste |
-| `docs/prod-completion/2026-08-08/*` 010 v10.6 replay proof | Historical; v10.7 installed — new lifecycle proof required |
+| `docs/prod-completion/2026-08-08/*` 010 v10.6 replay proof | Historical; paste **v10.8** after HF-001 — new lifecycle proof required |
 | Incomplete three-enrollment OMNI orientation samples | Full ladder is 12 Levels + 12 gate rules |
 
 ---
