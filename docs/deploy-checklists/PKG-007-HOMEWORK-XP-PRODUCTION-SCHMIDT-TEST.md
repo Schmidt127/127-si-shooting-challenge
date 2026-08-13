@@ -1,6 +1,7 @@
 # PKG-007 Homework XP — Production Schmidt Test
 
-**Status:** Production installed; controlled Schmidt lifecycle proof passed
+**Status:** Partial — Production installed; controlled Schmidt Homework XP
+lifecycle proof passed; full PKG-007 scope remains open
 **Environment:** Production Airtable only; no DEV claim
 **Evidence source:** Mike supplied the Production installation and run evidence. Cursor did not independently access Airtable.
 
@@ -14,7 +15,8 @@ Homework lifecycle proof.
 ## Paste scope
 
 Mike installed Automation 020 v3.5, 064 v12.2, and 065 v10.1. Automation
-063 and 068 are absent/retired; 071 is OFF. The nine fields were created in
+063 is deleted from Production and 068 is retired; neither may be recreated or
+enabled. 071 is OFF. The nine fields were created in
 the documented order in [`airtable/schema/current/homework-xp-reconciliation-fields.md`](../../airtable/schema/current/homework-xp-reconciliation-fields.md).
 The historical signature initializer was correctly skipped because Production
 Homework Completions and XP Events were empty before this controlled test.
@@ -64,4 +66,4 @@ A Homework Completion may collect multiple legitimate Submissions. An existing X
 
 ## Rollback
 
-On failure, turn 065 OFF first and preserve records, audit JSON, and run outputs. Restore the prior 065 source/trigger if necessary. The nine additive fields may remain inert; remove them only after 065 is OFF and dependency review confirms nothing consumes them. Do not delete or clone XP Events. Keep 063/068 OFF. Airtable has no atomic uniqueness constraint; the recheck and audit detect rather than claim impossible simultaneous duplicates.
+On failure, turn 065 OFF first and preserve records, audit JSON, and run outputs. Restore the prior 065 source/trigger if necessary. The nine additive fields may remain inert; remove them only after 065 is OFF and dependency review confirms nothing consumes them. Do not delete or clone XP Events. Do not recreate or enable 063/068. Airtable has no atomic uniqueness constraint; the recheck and audit detect rather than claim impossible simultaneous duplicates.

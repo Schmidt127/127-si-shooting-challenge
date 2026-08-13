@@ -19,11 +19,12 @@ Mike has installed and verified the 12 PKG-006R reconciliation fields per
 [`airtable/schema/current/daily-submission-xp-reconciliation-fields.md`](../../airtable/schema/current/daily-submission-xp-reconciliation-fields.md).
 **Verify** exact field names and types before testing; do not recreate.
 
-Automation **010 v10.7** is installed and **ON** with `Reconciliation Needed? = 1`
-and dynamic `recordId`. **First action:** inspect 010 run history and the
+Automation **010 v10.7** is installed and **OFF** after HF-001. Paste and
+prove **v10.8** before re-enabling the `Reconciliation Needed? = 1` trigger
+with dynamic `recordId`. **First action:** inspect 010 run history and the
 current reconciliation backlog before modifying records. Lifecycle proof
 (replay, withdrawal/restoration, settled totals, natural-trigger evidence)
-remains pending.
+remains pending. The unified operator packet is authoritative for this state.
 
 ## Current repository versions and ownership
 

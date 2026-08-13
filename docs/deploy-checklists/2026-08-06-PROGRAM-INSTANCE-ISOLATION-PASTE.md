@@ -1,5 +1,10 @@
 # Deploy checklist — Program Instance isolation (2026-08-06)
 
+> **Historical evidence only — do not execute this paste order.** The current
+> operator authority is the Completion Master and
+> `PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`. Automation 043 is retired,
+> absent from Production, and must not be recreated or enabled.
+
 **PROD base:** `appn84sqPw03zEbTT`  
 **Repo:** GitHub is canonical; Airtable is runtime.
 
@@ -12,7 +17,8 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 3. **053** Streak occurrences ← **NEXT**
 4. **066** Shot milestones (v3.5 includes v3.4 createRecords fix)
 5. **118** / **119** Weekly email schedules
-6. **043** only if still Live in PROD (otherwise skip)
+6. ~~**043** only if still Live in PROD (otherwise skip)~~ — **superseded;
+   retired and absent from Production**
 
 ## Status matrix
 
@@ -24,7 +30,7 @@ For every automation below: **Repository updated ≠ PROD updated** until paste 
 | 066 v3.5 | Yes | Yes | No | No | — |
 | 118 v1.7 | Yes | Yes | No | No | — |
 | 119 v1.7 | Yes | Yes | No | No | — |
-| 043 v2.1 | Yes | Yes | TBD | TBD | — |
+| 043 v2.1 | Historical only | Historical only | **Absent** | **Do not test** | **Retired; do not recreate** |
 
 ### 023 live PROD status
 
@@ -145,14 +151,14 @@ Result: PASS
 | Version | **v1.7** |
 | Expected | Multi End Date Week collision throws; Schmidt RIDs `recCyFEPeATOVNlr9` + `recgP9qZYjAhE7NXm` excluded by default; 118 arms only enrollments whose PI matches target Week; keep `dryRun=true` for first test |
 
-### 043 — Level Gate Rule (if Live)
+### 043 — Level Gate Rule (historical; do not paste)
 
 | | |
 |--|--|
 | File | `airtable/automations/shooting-challenge/043-levels-and-progression-set-level-gate-rule-from-next-level.js` |
 | Version | **v2.1** |
 | Expected | Prefers `School Year / Rule Set` match when populated |
-| If not Live | `PROD deployment: Not applicable — Automation not active` |
+| Current disposition | `PROD deployment: Not applicable — retired and absent; do not recreate` |
 
 ## Fixture cleanup
 
