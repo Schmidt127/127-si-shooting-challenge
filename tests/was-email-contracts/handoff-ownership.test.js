@@ -58,10 +58,11 @@ test("119 v1.7 only arms Send to Make? and does not post webhook", () => {
   assert.ok(/send_short/.test(s119));
 });
 
-test("118 v1.8 does not build HTML or post webhook; arms sendMode from input", () => {
-  assert.ok(/version:\s*"v1\.8"/.test(s118));
+test("118 v1.9 does not create WAS, build HTML, or post webhook; arms sendMode from input", () => {
+  assert.ok(/version:\s*"v1\.9"/.test(s118));
   assert.ok(/Build Weekly Email Now\?/.test(s118) || /buildNow/.test(s118));
   assert.ok(!/\bfetch\s*\(/.test(s118));
+  assert.ok(!/wasTable\.createRecordAsync/.test(s118), "118 must never create a WAS");
   assert.ok(!/emptyWeekPolicy recorded but not enforced/.test(s118));
   assert.ok(/refuses sendMode=Live when includeSchmidt=true/.test(s118));
   assert.ok(/update\[CONFIG\.was\.sendMode\]\s*=\s*\{\s*name:\s*sendMode\s*\}/.test(s118));
