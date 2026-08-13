@@ -314,7 +314,7 @@ settlement, email delivery, or Production data correctness.
 Current blockers:
 
 1. PKG-006R v10.8 must be installed and its lock explicitly released.
-2. PKG-036 v5.0/v4.0 must remain deferred until that release, then be
+2. PKG-036 v5.0/v4.1 must remain deferred until that release, then be
    installed and individually proven.
 3. PKG-034 live-attendee lifecycle and downstream proof remain pending despite
    101 v6.1 installation/empty-roster evidence.

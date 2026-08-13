@@ -38,7 +38,7 @@ Do not execute until PKG-006R lifecycle proof is complete and Mike explicitly re
 2. Turn off only 041 (`wflCRvaopntNPsc64`) and 042 (`wfl3aiiK8vI2tz0HA`). Do not alter 010, 101, XP pipelines, standings inputs, Levels, or Gate Rules.
 3. **Verify** `Enrollments.Progression Last Reconciled Signature` is writable single-line text. Record field ID. Do not recreate.
 4. Paste committed Automation 041 v5.0 into `wflCRvaopntNPsc64`; preserve the 15-minute cron and leave optional `recordId` blank.
-5. Paste committed Automation 042 v4.0 into `wfl3aiiK8vI2tz0HA`; preserve the dynamic trigger `recordId` mapping, view `viwm9OgwkPKI2bii3`, and filters `Level Recalc Needed? = checked` plus `Active? = checked`.
+5. Paste committed Automation 042 v4.1 into `wfl3aiiK8vI2tz0HA`; v4.0 is superseded because its acknowledgement signature could churn the 15-minute 041 scan. Preserve the dynamic trigger `recordId` mapping, view `viwm9OgwkPKI2bii3`, and filters `Level Recalc Needed? = checked` plus `Active? = checked`.
 6. Confirm 043 remains absent/OFF.
 7. Save both automations while OFF. Run the read-only audit and stop if the field is not writable or any required field is missing.
 8. Enable 042 first, then 041. Preserve run IDs and outputs.
