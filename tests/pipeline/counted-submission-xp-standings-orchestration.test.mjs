@@ -1,13 +1,9 @@
 /**
- * Offline contract harness for the counted-submission reliability path.
+ * Offline PKG-006R orchestration contract.
  *
- * This models Airtable's eventually-consistent links/rollups deliberately:
- * source scripts are separately tested in their own runtime mocks.  It proves
- * the required durable ledger, summary, progression, and standings result for
- * both meaningful execution orders without treating a pending receipt as an
- * error.
- *
- * Run: node --test tests/pipeline/counted-submission-xp-standings-orchestration.test.mjs
+ * This is deliberately an in-memory model, not Airtable proof. It exercises
+ * the approved 010 lifecycle and downstream settlement without changing the
+ * existing production writer in this bounded package.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -17,163 +13,353 @@ import test from "node:test";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 const source = (name) => readFileSync(path.join(ROOT, "airtable/automations/shooting-challenge", name), "utf8");
-const auditSource = () => readFileSync(
-  path.join(ROOT, "airtable/extension-scripts/audits/audit-counted-submission-xp-standings-reliability.js"),
-  "utf8",
-);
-const SUBMISSION_ID = "recPipelineSubmission01";
-const ENROLLMENT_ID = "recPipelineEnrollment1";
-const WEEK_ID = "recPipelineWeek00001";
-const SUMMARY_ID = "recPipelineSummary01";
-const XP_KEY = `SUBMISSION_XP|${SUBMISSION_ID}`;
+const auditSource = () => readFileSync(path.join(ROOT, "airtable/extension-scripts/audits/audit-counted-submission-xp-standings-reliability.js"), "utf8");
+const E = "recEnrollmentR", W = "recWeekR", WAS = "recWasR";
+const submission = (id, date = "2026-08-12") => ({
+  id, enrollmentId: E, weekId: W, wasIds: [WAS], countable: true, date, shots: 150,
+  duplicateReview: false, multipleEnrollmentLinks: false, multipleWeekLinks: false,
+});
+const key = (id) => `SUBMISSION_XP|${id}`;
 
-function pipeline() {
+function makeState() {
   return {
-    submission: { id: SUBMISSION_ID, enrollmentId: "", weekId: "", summaryId: "", count: true, shots: 150 },
-    enrollment: { id: ENROLLMENT_ID, active: true, lifetimeXp: 0, recalcNeeded: false, currentLevel: "", nextLevel: "", levelSort: 0 },
-    week: { id: WEEK_ID },
-    summaries: [],
-    xpEvents: [],
-    handoffs: [],
+    submissions: [submission("recSubmissionR")],
+    enrollment: { id: E, active: true, lifetimeXp: 0, level: "Beginner", next: "Rookie Shooter", recalc: false },
+    weeks: [{ id: W, enrollmentIds: [E] }],
+    was: [{ id: WAS, enrollmentId: E, weekId: W, xp: 0 }],
+    events: [],
+    milestones: [{ key: `SHOT_MILESTONE|${E}|recMilestoneR`, active: true, support: ["recSubmissionR"] }],
+    streaks: [{ key: `STREAK_XP|${E}|recAchievementR|2026-08-12`, active: true, support: ["recSubmissionR"] }],
+    emailActions: [], makeActions: [], standingsEligible: false, levelQueue: [], latchAcknowledged: false,
   };
 }
-function step023(state) { state.submission.enrollmentId = ENROLLMENT_ID; }
-function step005(state) { state.submission.weekId = WEEK_ID; }
-function canonicalSummary(state) {
-  let summary = state.summaries.find((row) => row.enrollmentId === ENROLLMENT_ID && row.weekId === WEEK_ID);
-  if (!summary) {
-    summary = { id: SUMMARY_ID, enrollmentId: ENROLLMENT_ID, weekId: WEEK_ID, goal: 500, xp: 0 };
-    state.summaries.push(summary);
+function candidates(s, sub) {
+  return s.was.filter((row) => row.enrollmentId === sub.enrollmentId && row.weekId === sub.weekId);
+}
+function eligible(s, sub, now = "2026-08-13") {
+  return sub.countable && !sub.duplicateReview && !sub.multipleEnrollmentLinks
+    && !sub.multipleWeekLinks && sub.shots > 0 && s.enrollment.active && sub.date <= now
+    && sub.enrollmentId === E && sub.weekId === W && sub.wasIds.length === 1
+    && sub.wasIds[0] === WAS && candidates(s, sub).length === 1;
+}
+function assertPostWriteOwnership(s, id) {
+  const matches = s.events.filter((event) => event.sourceKey === key(id));
+  if (matches.length !== 1) throw new Error("post-write canonical event cardinality changed");
+  const [event] = matches;
+  if (event.submissionId !== id || event.weekId !== W || event.wasId !== WAS) {
+    throw new Error("post-write canonical event ownership changed before acknowledgement");
   }
-  state.submission.summaryId = summary.id;
-  return summary;
 }
-function step031(state) { canonicalSummary(state); }
-function step010(state) {
-  const summary = canonicalSummary(state);
-  const existing = state.xpEvents.filter((row) => row.sourceKey === XP_KEY);
-  if (!existing.length) {
-    state.xpEvents.push({
-      sourceKey: XP_KEY, active: true, points: 20, submissionId: SUBMISSION_ID,
-      enrollmentId: ENROLLMENT_ID, weekId: WEEK_ID, summaryId: summary.id,
-    });
+function acknowledge(s, formulaSettled) {
+  if (formulaSettled) s.latchAcknowledged = true;
+}
+function reconcile(s, id, { formulaSettled = true, failAfterDeactivate = false, beforeAcknowledge } = {}) {
+  const sub = s.submissions.find((row) => row.id === id);
+  assert.ok(sub, "trigger record must exist");
+  const exact = s.events.filter((row) => row.sourceKey === key(id));
+  if (exact.length > 1) throw new Error("ambiguous canonical key");
+  const eventWasIds = exact[0]?.wasIds || (exact[0] ? [exact[0].wasId] : []);
+  const owned = exact[0] && exact[0].submissionId === id && exact[0].enrollmentId === sub.enrollmentId
+    && exact[0].weekId === sub.weekId && eventWasIds.length === 1 && eventWasIds[0] === sub.wasIds[0];
+  if (exact[0] && !owned) throw new Error("event ownership mismatch");
+  const shouldBeActive = eligible(s, sub);
+  if (!shouldBeActive) {
+    if (!exact[0]) return { action: "skipped_ineligible", acknowledged: true };
+    exact[0].active = false;
+    if (failAfterDeactivate) throw new Error("partial failure");
+    beforeAcknowledge?.(s, exact[0]);
+    assertPostWriteOwnership(s, id);
+    acknowledge(s, formulaSettled);
+    if (!formulaSettled) return { action: "deactivated_pending_formula", acknowledged: false };
+    return { action: "deactivated_same_event", acknowledged: true };
   }
-  assert.equal(state.xpEvents.filter((row) => row.sourceKey === XP_KEY).length, 1);
+  if (!exact[0]) {
+    s.events.push({ id: `recXp${id}`, sourceKey: key(id), active: true, points: 20, submissionId: id, enrollmentId: E, weekId: W, wasId: WAS });
+    beforeAcknowledge?.(s, s.events[s.events.length - 1]);
+    assertPostWriteOwnership(s, id);
+    acknowledge(s, formulaSettled);
+    return { action: "created", acknowledged: formulaSettled };
+  }
+  exact[0].active = true;
+  beforeAcknowledge?.(s, exact[0]);
+  assertPostWriteOwnership(s, id);
+  acknowledge(s, formulaSettled);
+  return { action: "reactivated_same_event", acknowledged: formulaSettled };
 }
-function step076(state) {
-  const summary = state.summaries.find((row) => row.id === state.submission.summaryId);
-  const active = state.xpEvents.filter((row) => row.active && row.enrollmentId === ENROLLMENT_ID && row.weekId === WEEK_ID);
-  const submission = active.filter((row) => row.submissionId === SUBMISSION_ID);
-  const payload = {
-    submissionXp: submission.length ? submission.reduce((n, row) => n + row.points, 0) : null,
-    weeklyXp: active.reduce((n, row) => n + row.points, 0),
-    weeklyGoal: summary?.goal ?? 0,
-  };
-  const existing = state.handoffs.find((row) => row.key === `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}`);
-  if (!existing) state.handoffs.push({ key: `DAILY_SUBMISSION|SUBMISSIONS|${SUBMISSION_ID}`, payload });
-  return payload;
+function settle(s) {
+  for (const row of s.was) row.xp = s.events.filter((e) => e.active && e.weekId === row.weekId).reduce((n, e) => n + e.points, 0);
+  s.enrollment.lifetimeXp = s.events.filter((e) => e.active && e.enrollmentId === E).reduce((n, e) => n + e.points, 0);
+  s.enrollment.recalc = true;
+  s.levelQueue.push({ xp: s.enrollment.lifetimeXp, direction: s.enrollment.lifetimeXp === 0 ? "downward" : "upward" });
+  s.enrollment.level = s.enrollment.lifetimeXp >= 100 ? "Rookie Shooter" : "Beginner";
+  s.enrollment.next = s.enrollment.lifetimeXp >= 100 ? "Developing Shooter" : "Rookie Shooter";
+  s.enrollment.recalc = false;
+  s.standingsEligible = s.enrollment.active && Boolean(s.enrollment.level);
 }
-function settle(state) {
-  const summary = canonicalSummary(state);
-  summary.xp = state.xpEvents.filter((row) => row.active && row.summaryId === summary.id).reduce((n, row) => n + row.points, 0);
-  state.enrollment.lifetimeXp = state.xpEvents.filter((row) => row.active && row.enrollmentId === ENROLLMENT_ID).reduce((n, row) => n + row.points, 0);
-}
-function step041(state) { if (state.enrollment.active) state.enrollment.recalcNeeded = true; }
-function step042(state) {
-  assert.equal(state.enrollment.recalcNeeded, true);
-  state.enrollment.currentLevel = state.enrollment.lifetimeXp >= 100 ? "Rookie Shooter" : "Beginner";
-  state.enrollment.nextLevel = state.enrollment.lifetimeXp >= 100 ? "Developing Shooter" : "Rookie Shooter";
-  state.enrollment.levelSort = state.enrollment.currentLevel === "Beginner" ? 1 : 2;
-  state.enrollment.recalcNeeded = false;
-}
-function assertFinal(state) {
-  const xp = state.xpEvents.filter((row) => row.sourceKey === XP_KEY);
-  assert.equal(xp.length, 1);
-  assert.deepEqual(xp[0], { sourceKey: XP_KEY, active: true, points: 20, submissionId: SUBMISSION_ID, enrollmentId: ENROLLMENT_ID, weekId: WEEK_ID, summaryId: SUMMARY_ID });
-  assert.equal(state.summaries.filter((row) => row.enrollmentId === ENROLLMENT_ID && row.weekId === WEEK_ID).length, 1);
-  assert.equal(state.summaries[0].xp, 20);
-  assert.equal(state.enrollment.lifetimeXp, 20);
-  assert.equal(state.enrollment.currentLevel, "Beginner");
-  assert.equal(state.enrollment.nextLevel, "Rookie Shooter");
-  assert.equal(state.enrollment.levelSort, 1);
-  assert.equal(state.handoffs.length, 1);
+function downstream(s, id, active) {
+  for (const row of [...s.milestones, ...s.streaks]) {
+    if (row.support.includes(id)) {
+      row.support = row.support.filter((supportId) => supportId !== id);
+      if (active) row.support.push(id);
+      row.active = row.support.length > 0;
+    }
+  }
 }
 
-test("source contracts preserve the approved pending-XP receipt behavior", () => {
+test("source contracts preserve positive ownership and progression-only 041/042", () => {
   for (const file of [
-    "023-submission-intake-and-asset-creation-assign-enrollment-to-submission.js",
-    "005-submission-intake-and-asset-creation-assign-week-to-submission-homework-first.js",
     "010-submission-intake-create-xp-event.js",
-    "031-weekly-summary-and-goal-logic-find-or-create-weekly-athlete-summary-from-submission.js",
     "041-levels-and-progression-mark-enrollment-for-level-recalculation.js",
     "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
   ]) assert.ok(source(file).length > 1000, file);
   const s010 = source("010-submission-intake-create-xp-event.js");
-  const s076 = source("076-email-notifications-and-external-handoffs-build-daily-submission-email-package.js");
   assert.match(s010, /SUBMISSION_XP\|/);
-  assert.match(s076, /submissionXp === null/);
-  assert.match(s076, /Pending \/ not yet awarded/);
+  for (const fieldName of [
+    "Current Reconciliation Signature",
+    "Last Reconciled Signature",
+    "Reconciliation Needed?",
+  ]) assert.match(s010, new RegExp(fieldName.replace(/[?]/g, "\\$&")));
+  assert.match(s010, /findExactEvent/);
+  assert.match(s010, /acknowledgeAfterSettlement/);
+  assert.match(source("053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js"), /blocked_no_streak_source_trigger/);
+  assert.match(source("054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js"), /deactivated_same_event/);
+  assert.match(source("066-achievements-and-milestones-create-shot-milestone-unlocks.js"), /blocked_no_unlock_eligibility_signal/);
+  assert.match(source("059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js"), /blocked_no_unlock_eligibility_signal/);
+  assert.doesNotMatch(source("041-levels-and-progression-mark-enrollment-for-level-recalculation.js"), /XP Events.*create/i);
+  assert.doesNotMatch(source("042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js"), /createRecordsAsync/);
 });
 
-test("audit includes checked checkbox Submissions and excludes unchecked ones", () => {
-  const priorNumericOnlyGate = (value) => Number(String(value)) === 1;
-  const checkboxGate = (value) => value === true || value === 1 || String(value).toLowerCase() === "true";
-
-  assert.equal(priorNumericOnlyGate(true), false, "regression: prior gate skips Airtable checkbox true");
-  assert.equal(checkboxGate(true), true);
-  assert.equal(checkboxGate(false), false);
-  assert.match(
-    auditSource(),
-    /if \(!yes\(sub, subT, CONFIG\.f\.sub\.count\)\) continue;/,
-    "audit must use the boolean checkbox helper, not numberState",
-  );
+test("base XP create, replay, withdrawal, restoration, settlement, and no email action", () => {
+  const s = makeState();
+  assert.deepEqual(reconcile(s, "recSubmissionR"), { action: "created", acknowledged: true });
+  const original = s.events[0].id;
+  assert.deepEqual(reconcile(s, "recSubmissionR"), { action: "reactivated_same_event", acknowledged: true });
+  s.submissions[0].countable = false;
+  assert.deepEqual(reconcile(s, "recSubmissionR"), { action: "deactivated_same_event", acknowledged: true });
+  downstream(s, "recSubmissionR", false); settle(s);
+  assert.equal(s.events.length, 1); assert.equal(s.events[0].id, original); assert.equal(s.enrollment.lifetimeXp, 0);
+  s.submissions[0].countable = true;
+  assert.deepEqual(reconcile(s, "recSubmissionR"), { action: "reactivated_same_event", acknowledged: true });
+  downstream(s, "recSubmissionR", true); settle(s);
+  assert.equal(s.events[0].id, original); assert.equal(s.was[0].xp, 20); assert.equal(s.enrollment.lifetimeXp, 20);
+  assert.equal(s.standingsEligible, true);
+  assert.deepEqual(s.emailActions, []);
+  assert.deepEqual(s.makeActions, []);
 });
 
-test("audit lookup parsing distinguishes blank, one-value, and multi-value states", () => {
-  const numberState = (value) => {
-    let current = value;
-    if (Array.isArray(current)) {
-      if (current.length === 0) return { kind: "blank", value: null };
-      if (current.length !== 1) return { kind: "invalid", value: null };
-      [current] = current;
-    }
-    if (current === null || current === undefined || current === "") return { kind: "blank", value: null };
-    const parsed = typeof current === "number" ? current : Number(String(current).replace(/,/g, ""));
-    return Number.isFinite(parsed) ? { kind: "number", value: parsed } : { kind: "invalid", value: null };
-  };
-  const goalState = (lookup, formula) => {
-    if (lookup.kind === "blank") return "blank_lookup";
-    if (lookup.value === 0 && formula.kind === "number" && formula.value === 0) return "configured_zero";
-    if (lookup.value > 0 && formula.kind === "number" && formula.value === 0) return "persistent_formula_mismatch";
-    return "other";
-  };
-
-  assert.deepEqual(numberState([]), { kind: "blank", value: null });
-  assert.deepEqual(numberState([500]), { kind: "number", value: 500 });
-  assert.deepEqual(numberState([0]), { kind: "number", value: 0 });
-  assert.deepEqual(numberState([500, 600]), { kind: "invalid", value: null });
-  assert.equal(goalState(numberState([]), numberState([0])), "blank_lookup");
-  assert.equal(goalState(numberState([0]), numberState([0])), "configured_zero");
-  assert.equal(goalState(numberState([500]), numberState([0])), "persistent_formula_mismatch");
-  assert.match(auditSource(), /if \(v\.length !== 1\) return \{ kind: "invalid", value: null \};/);
+test("future date, exclusion, inactive Enrollment, and missing or multiple links fail closed", () => {
+  const cases = [
+    (s) => { s.submissions[0].date = "2099-01-01"; },
+    (s) => { s.submissions[0].countable = false; },
+    (s) => { s.enrollment.active = false; },
+    (s) => { s.submissions[0].enrollmentId = ""; },
+    (s) => { s.submissions[0].wasIds = [WAS, "recWasOther"]; },
+    (s) => { s.was.push({ id: "recWasDuplicate", enrollmentId: E, weekId: W, xp: 0 }); },
+  ];
+  for (const change of cases) { const s = makeState(); change(s); assert.equal(reconcile(s, "recSubmissionR").action, "skipped_ineligible"); assert.equal(s.events.length, 0); }
 });
 
-test("010 before 031/076 settles one XP event, one WAS, progression, and standings inputs", () => {
-  const state = pipeline();
-  step023(state); step005(state); canonicalSummary(state); step010(state); step031(state);
-  const receipt = step076(state);
-  assert.deepEqual(receipt, { submissionXp: 20, weeklyXp: 20, weeklyGoal: 500 });
-  settle(state); step041(state); step042(state); step010(state); step076(state);
-  assertFinal(state);
+test("wrong Week, WAS, XP links and duplicate canonical keys never choose a winner", () => {
+  const s = makeState(); s.submissions[0].weekId = "recWrongWeek";
+  assert.equal(reconcile(s, "recSubmissionR").action, "skipped_ineligible");
+  const wrongEnrollment = makeState(); wrongEnrollment.submissions[0].enrollmentId = "recWrongEnrollment";
+  assert.equal(reconcile(wrongEnrollment, "recSubmissionR").action, "skipped_ineligible");
+  const wrongWas = makeState(); wrongWas.submissions[0].wasIds = ["recWrongWas"];
+  assert.equal(reconcile(wrongWas, "recSubmissionR").action, "skipped_ineligible");
+  const t = makeState(); t.events.push({ id: "recWrongOwner", sourceKey: key("recSubmissionR"), active: true, submissionId: "recOther", enrollmentId: E, weekId: W, wasId: WAS, points: 20 });
+  assert.throws(() => reconcile(t, "recSubmissionR"), /ownership/);
+  const wrongLink = makeState(); wrongLink.events.push({ id: "recWrongLink", sourceKey: key("recSubmissionR"), active: true, submissionId: "recSubmissionR", enrollmentId: E, weekId: "recWrongWeek", wasId: WAS, points: 20 });
+  assert.throws(() => reconcile(wrongLink, "recSubmissionR"), /ownership/);
+  const d = makeState(); reconcile(d, "recSubmissionR"); d.events.push({ ...d.events[0], id: "recDuplicate" });
+  assert.throws(() => reconcile(d, "recSubmissionR"), /ambiguous/);
 });
 
-test("031/076 may issue a pending receipt before 010, then the durable state settles without replay duplicates", () => {
-  const state = pipeline();
-  step023(state); step005(state); step031(state);
-  const pending = step076(state);
-  assert.deepEqual(pending, { submissionXp: null, weeklyXp: 0, weeklyGoal: 500 });
-  step010(state); settle(state); step041(state); step042(state);
-  step010(state); step076(state);
-  assertFinal(state);
-  assert.deepEqual(state.handoffs[0].payload, pending, "receipt remains historical, not rewritten after settlement");
+test("concurrent exact-key recheck, partial failure, and formula lag are retry-safe", () => {
+  const s = makeState();
+  const first = reconcile(s, "recSubmissionR"); const second = reconcile(s, "recSubmissionR");
+  assert.equal(first.action, "created"); assert.equal(second.action, "reactivated_same_event"); assert.equal(s.events.length, 1);
+  const lag = makeState(); assert.deepEqual(reconcile(lag, "recSubmissionR", { formulaSettled: false }), { action: "created", acknowledged: false });
+  assert.deepEqual(reconcile(lag, "recSubmissionR"), { action: "reactivated_same_event", acknowledged: true });
+  const partial = makeState(); reconcile(partial, "recSubmissionR");
+  partial.submissions[0].countable = false;
+  assert.throws(() => reconcile(partial, "recSubmissionR", { failAfterDeactivate: true }), /partial/);
+  assert.equal(partial.events[0].active, false); assert.equal(partial.events.length, 1);
+});
+
+test("milestone and streak support are independent across middle, first, and latest dates", () => {
+  const s = makeState();
+  s.submissions.push(submission("recFirst", "2026-08-10"), submission("recLatest", "2026-08-13"));
+  s.streaks[0].support = ["recFirst", "recSubmissionR", "recLatest"];
+  for (const id of ["recFirst", "recSubmissionR", "recLatest"]) reconcile(s, id, { formulaSettled: true });
+  downstream(s, "recSubmissionR", false);
+  assert.equal(s.milestones[0].active, false);
+  assert.deepEqual(s.milestones[0].support, []);
+  assert.deepEqual(s.streaks[0].support, ["recFirst", "recLatest"]);
+  assert.equal(s.streaks[0].active, true);
+  s.submissions.find((row) => row.id === "recSubmissionR").countable = true;
+  s.milestones[0].support.push("recSubmissionR");
+  s.streaks[0].support.push("recSubmissionR");
+  downstream(s, "recSubmissionR", true);
+  assert.equal(s.milestones[0].active, true); assert.equal(s.streaks[0].active, true);
+  assert.equal(s.events.length, 3);
+});
+
+test("duplicate-review exclusion withdraws and restores the same base XP event", () => {
+  const s = makeState();
+  reconcile(s, "recSubmissionR");
+  const eventId = s.events[0].id;
+  s.submissions[0].duplicateReview = true;
+  assert.equal(reconcile(s, "recSubmissionR").action, "deactivated_same_event");
+  assert.equal(s.events[0].active, false);
+  s.submissions[0].duplicateReview = false;
+  assert.equal(reconcile(s, "recSubmissionR").action, "reactivated_same_event");
+  assert.equal(s.events[0].id, eventId);
+});
+
+test("inactive Enrollment withdrawal and restoration preserve event identity", () => {
+  const s = makeState();
+  reconcile(s, "recSubmissionR");
+  const eventId = s.events[0].id;
+  s.enrollment.active = false;
+  assert.equal(reconcile(s, "recSubmissionR").action, "deactivated_same_event");
+  s.enrollment.active = true;
+  assert.equal(reconcile(s, "recSubmissionR").action, "reactivated_same_event");
+  assert.equal(s.events[0].id, eventId);
+});
+
+test("wrong and multiple Enrollment or Week links never create XP", () => {
+  for (const change of [
+    (s) => { s.submissions[0].enrollmentId = "recWrongEnrollment"; },
+    (s) => { s.submissions[0].multipleEnrollmentLinks = true; },
+    (s) => { s.submissions[0].weekId = "recWrongWeek"; },
+    (s) => { s.submissions[0].multipleWeekLinks = true; },
+  ]) {
+    const s = makeState();
+    change(s);
+    assert.equal(reconcile(s, "recSubmissionR").action, "skipped_ineligible");
+    assert.equal(s.events.length, 0);
+  }
+});
+
+test("zero and multiple WAS candidates fail closed without changing ledger state", () => {
+  for (const wasIds of [[], [WAS, "recWasDuplicate"]]) {
+    const s = makeState();
+    s.submissions[0].wasIds = wasIds;
+    if (wasIds.length > 1) s.was.push({ id: wasIds[1], enrollmentId: E, weekId: W, xp: 0 });
+    assert.equal(reconcile(s, "recSubmissionR").action, "skipped_ineligible");
+    assert.deepEqual(s.events, []);
+  }
+});
+
+test("wrong, missing, and multiple XP Event WAS links fail closed", () => {
+  for (const eventShape of [
+    { wasId: "recWrongWas" },
+    { wasIds: [] },
+    { wasIds: [WAS, "recWasDuplicate"] },
+  ]) {
+    const s = makeState();
+    s.events.push({
+      id: "recExistingXp", sourceKey: key("recSubmissionR"), active: true,
+      submissionId: "recSubmissionR", enrollmentId: E, weekId: W, wasId: WAS, points: 20,
+      ...eventShape,
+    });
+    assert.throws(() => reconcile(s, "recSubmissionR"), /ownership/);
+    assert.equal(s.events.length, 1);
+    assert.equal(s.events[0].active, true);
+  }
+});
+
+test("source-key-only event with missing backlink cannot be stolen or reused", () => {
+  const s = makeState();
+  s.events.push({
+    id: "recSourceKeyOnly", sourceKey: key("recSubmissionR"), active: true,
+    submissionId: "", enrollmentId: E, weekId: W, wasId: WAS, points: 20,
+  });
+  assert.throws(() => reconcile(s, "recSubmissionR"), /ownership/);
+  assert.equal(s.events[0].active, true);
+  assert.equal(s.events.length, 1);
+});
+
+test("041 queues downward and upward recalculation while 042 settles lower and restored levels", () => {
+  const s = makeState();
+  reconcile(s, "recSubmissionR");
+  settle(s);
+  assert.equal(s.enrollment.level, "Beginner");
+  s.events[0].points = 120;
+  settle(s);
+  assert.equal(s.enrollment.level, "Rookie Shooter");
+  s.events[0].active = false;
+  settle(s);
+  assert.equal(s.enrollment.level, "Beginner");
+  assert.deepEqual(s.levelQueue.map((row) => row.direction), ["upward", "upward", "downward"]);
+});
+
+test("WAS, lifetime XP, and standings values settle down then back up", () => {
+  const s = makeState();
+  reconcile(s, "recSubmissionR");
+  settle(s);
+  assert.deepEqual({ was: s.was[0].xp, lifetime: s.enrollment.lifetimeXp, standings: s.standingsEligible }, { was: 20, lifetime: 20, standings: true });
+  s.events[0].active = false;
+  settle(s);
+  assert.deepEqual({ was: s.was[0].xp, lifetime: s.enrollment.lifetimeXp, standings: s.standingsEligible }, { was: 0, lifetime: 0, standings: true });
+  s.events[0].active = true;
+  settle(s);
+  assert.equal(s.enrollment.lifetimeXp, 20);
+});
+
+test("partial correction failure preserves one inactive event and retry restores it", () => {
+  const s = makeState();
+  reconcile(s, "recSubmissionR");
+  s.submissions[0].countable = false;
+  assert.throws(() => reconcile(s, "recSubmissionR", { failAfterDeactivate: true }), /partial/);
+  assert.equal(s.events.length, 1);
+  s.submissions[0].countable = true;
+  assert.equal(reconcile(s, "recSubmissionR").action, "reactivated_same_event");
+  assert.equal(s.events.length, 1);
+});
+
+test("post-write Week/WAS/Submission mutation fails closed before latch acknowledgement", () => {
+  const mutations = [
+    (event) => { event.weekId = "recWrongWeekAfterWrite"; },
+    (event) => { event.wasId = "recWrongWasAfterWrite"; },
+    (event) => { event.submissionId = "recStolenSubmissionAfterWrite"; },
+  ];
+  for (const mutate of mutations) {
+    const s = makeState();
+    assert.throws(
+      () => reconcile(s, "recSubmissionR", { beforeAcknowledge: (_state, event) => mutate(event) }),
+      /post-write canonical event ownership changed/,
+    );
+    assert.equal(s.latchAcknowledged, false);
+    assert.equal(s.events.length, 1);
+    assert.equal(s.events[0].sourceKey, key("recSubmissionR"));
+    assert.equal(s.events[0].active, true);
+    assert.notEqual(s.events[0].id, "recStolenSubmissionAfterWrite");
+  }
+});
+
+test("streak first, middle, and latest support restoration keeps independent downstream rows", () => {
+  const s = makeState();
+  s.submissions.push(submission("recFirstDay", "2026-08-10"), submission("recLatestDay", "2026-08-13"));
+  s.streaks[0].support = ["recFirstDay", "recSubmissionR", "recLatestDay"];
+  for (const id of ["recFirstDay", "recSubmissionR", "recLatestDay"]) reconcile(s, id);
+  downstream(s, "recFirstDay", false);
+  assert.equal(s.streaks[0].active, true);
+  downstream(s, "recSubmissionR", false);
+  assert.equal(s.streaks[0].active, true);
+  downstream(s, "recLatestDay", false);
+  assert.equal(s.streaks[0].active, false);
+  downstream(s, "recMiddleDay", true);
+  assert.equal(s.streaks[0].active, false);
+  s.streaks[0].support.push("recSubmissionR");
+  downstream(s, "recSubmissionR", true);
+  assert.equal(s.streaks[0].active, true);
+});
+
+test("audit remains read-only and explicitly reports the approved limitations", () => {
+  const audit = auditSource();
+  assert.match(audit, /readOnly: true/);
+  assert.match(audit, /active_xp_for_uncounted_submission/);
+  assert.match(audit, /Standings view membership/);
+  assert.doesNotMatch(audit, /updateRecordAsync|createRecordAsync|deleteRecordAsync/);
 });

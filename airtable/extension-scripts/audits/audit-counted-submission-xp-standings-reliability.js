@@ -11,7 +11,13 @@ const SCHEMA_SNAPSHOT = "20260629_045741";
 const CONFIG = {
   tables: { submissions: "Submissions", xp: "XP Events", was: "Weekly Athlete Summary", enrollments: "Enrollments" },
   f: {
-    sub: { count: "Count This Submission?", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
+    sub: {
+      count: "Count This Submission?", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary", activityDate: "Activity Date",
+      currentSignature: "Current Reconciliation Signature", lastSignature: "Last Reconciled Signature", needed: "Reconciliation Needed?",
+      enrollmentSignature: "Reconciliation Enrollment Signature - Lkp", weekSignature: "Reconciliation Week Signature - Lkp",
+      xpSignatures: "Reconciliation XP Event Signatures - Lkp", xpKeys: "Reconciliation XP Event Source Keys - Lkp",
+      xpSubmissionIds: "Reconciliation XP Event Submission IDs - Lkp", xpEnrollmentIds: "Reconciliation XP Event Enrollment IDs - Lkp",
+    },
     xp: { key: "Source Key", active: "Active?", points: "XP Points", activePoints: "Active XP Points", submission: "Submission", enrollment: "Enrollment", week: "Week", was: "Weekly Athlete Summary" },
     was: { enrollment: "Enrollment", week: "Week", goalRecord: "Goal Record", goalLookup: "Goal Shots Target", weeklyGoal: "Weekly Goal Shots Target", weeklyXp: "XP Earned This Week" },
     enr: { active: "Active?", xp: "Lifetime XP Total", manual: "Lifetime XP Manual Adjustments", recalc: "Level Recalc Needed?", status: "Level Status", current: "Current Level", sort: "Level Sort Order - For Softr", program: "Program Instance", schoolYear: "School Year" },
@@ -36,6 +42,12 @@ const numberState = (r, t, n) => {
   return Number.isFinite(value) ? { kind: "number", value } : { kind: "invalid", value: null };
 };
 const sameOne = (actual, expected) => actual.length === 1 && actual[0] === expected;
+const dateKey = (value) => {
+  const match = String(value || "").trim().match(/^(\d{1,2})[/-](\d{1,2})[/-](\d{4})$/);
+  if (match) return `${match[3]}-${match[1].padStart(2, "0")}-${match[2].padStart(2, "0")}`;
+  const iso = String(value || "").trim().match(/^(\d{4}-\d{2}-\d{2})/);
+  return iso ? iso[1] : "";
+};
 
 async function main() {
   const subT = base.getTable(CONFIG.tables.submissions), xpT = base.getTable(CONFIG.tables.xp);
@@ -48,7 +60,9 @@ async function main() {
     counts[code] = (counts[code] || 0) + 1;
     if (findings.length < SAMPLE_LIMIT) findings.push({ code, severity, recordId: record?.id || "", detail, recommendedAction: action });
   };
-  const wasByPair = new Map(), xpByKey = new Map(), activeXpByEnrollment = new Map();
+  const wasByPair = new Map(), xpByKey = new Map(), activeXpByEnrollment = new Map(), subById = new Map(), enrollmentById = new Map();
+  for (const sub of subs.records) subById.set(sub.id, sub);
+  for (const enrollment of enrollments.records) enrollmentById.set(enrollment.id, enrollment);
   for (const was of summaries.records) {
     const e = one(was, wasT, CONFIG.f.was.enrollment), w = one(was, wasT, CONFIG.f.was.week);
     if (e && w) { const key = `${e}|${w}`; wasByPair.set(key, [...(wasByPair.get(key) || []), was]); }
@@ -61,6 +75,21 @@ async function main() {
   }
   for (const sub of subs.records) {
     if (!yes(sub, subT, CONFIG.f.sub.count)) continue;
+    if (field(subT, CONFIG.f.sub.currentSignature) && field(subT, CONFIG.f.sub.lastSignature)) {
+      const current = text(sub, subT, CONFIG.f.sub.currentSignature);
+      const last = text(sub, subT, CONFIG.f.sub.lastSignature);
+      const needed = numberState(sub, subT, CONFIG.f.sub.needed);
+      if (current !== last && (needed.kind !== "number" || needed.value !== 1))
+        add("reconciliation_latch_mismatch", "error", sub, { needed: needed.value, currentSignaturePresent: Boolean(current), lastSignaturePresent: Boolean(last) }, "Inspect the formula chain; do not acknowledge manually.");
+      if (current === last && needed.kind === "number" && needed.value !== 0)
+        add("reconciliation_latch_stale", "warn", sub, { needed: needed.value }, "Reread after formula settlement; inspect the latch formula if persistent.");
+    }
+    for (const lookup of [
+      CONFIG.f.sub.enrollmentSignature, CONFIG.f.sub.weekSignature,
+      CONFIG.f.sub.xpSignatures, CONFIG.f.sub.xpKeys,
+      CONFIG.f.sub.xpSubmissionIds, CONFIG.f.sub.xpEnrollmentIds,
+    ]) if (field(subT, lookup) && raw(sub, subT, lookup) === null)
+      add("reconciliation_lookup_unavailable", "warn", sub, { field: lookup }, "Confirm the approved lookup field exists and has settled; do not infer ownership from blank text.");
     const enrollmentId = one(sub, subT, CONFIG.f.sub.enrollment), weekId = one(sub, subT, CONFIG.f.sub.week);
     if (!enrollmentId || !weekId) { add("counted_submission_missing_identity", "error", sub, { enrollmentId, weekId }, "Repair intake links before XP replay."); continue; }
     const canonicalWas = wasByPair.get(`${enrollmentId}|${weekId}`) || [];
@@ -75,6 +104,47 @@ async function main() {
       if (!sameOne(links(xp, xpT, CONFIG.f.xp.enrollment), enrollmentId)) add("submission_xp_wrong_enrollment_link", "error", xp, { expected: enrollmentId }, "Repair via Automation 010.");
       if (!sameOne(links(xp, xpT, CONFIG.f.xp.week), weekId)) add("submission_xp_wrong_week_link", "error", xp, { expected: weekId }, "Repair via Automation 010.");
       if (canonicalWas.length === 1 && !sameOne(links(xp, xpT, CONFIG.f.xp.was), canonicalWas[0].id)) add("submission_xp_wrong_was_link", "error", xp, { expected: canonicalWas[0].id }, "Repair via Automation 010; 031 excludes Submission Base XP.");
+    }
+  }
+  for (const xp of xps.records) {
+    const key = text(xp, xpT, CONFIG.f.xp.key);
+    if (!key.startsWith(CONFIG.prefix) || !yes(xp, xpT, CONFIG.f.xp.active)) continue;
+    const submissionIds = links(xp, xpT, CONFIG.f.xp.submission);
+    if (submissionIds.length !== 1) {
+      add("active_submission_xp_missing_or_ambiguous_submission", "error", xp, { sourceKey: key, submissionIds }, "Stop and resolve ownership manually; do not deactivate a duplicate automatically.");
+      continue;
+    }
+    const submission = subById.get(submissionIds[0]);
+    if (!submission) {
+      add("active_submission_xp_missing_source_submission", "error", xp, { sourceKey: key, submissionId: submissionIds[0] }, "Stop and preserve the event; source ownership cannot be reconstructed safely.");
+      continue;
+    }
+    const expectedKey = `${CONFIG.prefix}${submission.id}`;
+    if (key !== expectedKey) add("active_submission_xp_source_key_mismatch", "error", xp, { sourceKey: key, expectedKey }, "Stop; do not rewrite or steal the event.");
+    const enrollmentId = one(submission, subT, CONFIG.f.sub.enrollment);
+    const weekId = one(submission, subT, CONFIG.f.sub.week);
+    if (!yes(submission, subT, CONFIG.f.sub.count)) {
+      add("active_xp_for_uncounted_submission", "error", xp, { submissionId: submission.id, sourceKey: key }, "A later exclusion has no reachable correction in the current positive-only 010 trigger; preserve and review.");
+    }
+    const enrollment = enrollmentById.get(enrollmentId);
+    if (enrollment && !yes(enrollment, enrT, CONFIG.f.enr.active)) {
+      add("active_submission_xp_for_inactive_enrollment", "error", xp, { submissionId: submission.id, enrollmentId }, "Policy review required; preserve the canonical event and do not create a replacement.");
+    }
+    const activityDate = text(submission, subT, CONFIG.f.sub.activityDate);
+    const activityDateKey = dateKey(activityDate);
+    const todayKey = new Intl.DateTimeFormat("en-CA", { timeZone: "America/Denver", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
+    if (activityDateKey && activityDateKey > todayKey) {
+      add("active_submission_xp_future_activity_date", "error", xp, { submissionId: submission.id, activityDate, activityDateKey }, "Verify the live countability policy and preserve the event until an approved correction path runs.");
+    }
+    if (!enrollmentId || !weekId) {
+      add("active_submission_xp_missing_identity", "error", xp, { submissionId: submission.id, enrollmentId, weekId }, "Stop; do not cross-link the event to a guessed Enrollment or Week.");
+      continue;
+    }
+    const canonicalWas = wasByPair.get(`${enrollmentId}|${weekId}`) || [];
+    if (!canonicalWas.length) add("active_submission_xp_missing_was", "error", xp, { submissionId: submission.id, enrollmentId, weekId }, "Do not repair automatically without one canonical WAS.");
+    if (canonicalWas.length > 1) add("active_submission_xp_ambiguous_was", "error", xp, { submissionId: submission.id, wasIds: canonicalWas.map((row) => row.id) }, "Manual review; do not choose a WAS winner.");
+    if (canonicalWas.length === 1 && !sameOne(links(xp, xpT, CONFIG.f.xp.was), canonicalWas[0].id)) {
+      add("active_submission_xp_wrong_was", "error", xp, { submissionId: submission.id, expectedWasId: canonicalWas[0].id }, "Repair only through an approved canonical owner; 031 does not own Submission Base XP links.");
     }
   }
   for (const was of summaries.records) {
