@@ -271,6 +271,13 @@ packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/P
 
 **PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.0 installation deferred** until explicit lock release.
 
+**PKG-007-RDY-001 coordination hold:** Per the approved Video XP readiness
+package, do not paste, configure, enable, disable, or controlled-test Video XP
+Automations 113/114 in Production until Mike explicitly releases both the
+PKG-006R and PKG-036 coordination locks. This is a scheduling hold for the
+Video proof package; it does not alter the existing 041/042 ownership or
+release criteria.
+
 ---
 
 ### PKG-034 Production installation closeout — 2026-08-13

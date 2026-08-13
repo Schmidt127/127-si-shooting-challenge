@@ -4,7 +4,7 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-21
-Last GitHub Update: 2026-06-21
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Creates or updates Video Submission XP Events from Video Feedback records.
@@ -80,20 +80,18 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * TRIGGER TABLE
  * - Video Feedback
  *
- * RECOMMENDED TRIGGER CONDITIONS
- * - Feedback Posted? is checked
- * - Total Video XP Awarded > 0
- * - Enrollment is not empty
- * - Submission is not empty
- * - Do Not Award XP? is unchecked
- * - XP Events is empty
- * - Ready for XP Automation? is checked
+ * REQUIRED LIFECYCLE TRIGGER CONTRACT
+ * - Trigger table: Video Feedback; type: When record updated.
+ * - Watch Active?, Feedback Posted?, Do Not Award XP?,
+ *   Ready for XP Automation?, Total Video XP Awarded, Enrollment, Submission,
+ *   and XP Events.
+ * - Input recordId must dynamically map to the triggering Video Feedback ID.
+ * - The trigger must reach both positive and withdrawal updates.
  *
- * OPTIONAL TRIGGER CONDITIONS
- * - Active? is checked
- *
- * DO NOT USE THIS TRIGGER CONDITION
- * - Award Status is not Awarded
+ * DO NOT USE POSITIVE-ONLY TRIGGER CONDITIONS
+ * - Feedback Posted? is checked, Active? is checked, Do Not Award XP? is
+ *   unchecked, XP Events is empty, Award Status is not Awarded, or a
+ *   positive-XP condition. Any of them can suppress required deactivation.
  *
  * REQUIRED INPUT VARIABLES
  * - recordId = Airtable record ID from the triggering Video Feedback record
