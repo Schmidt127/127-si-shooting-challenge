@@ -270,8 +270,8 @@ await test("positive settled goal creates one Ready queue handoff and clears rea
   assert.equal(queue.createdPayloads.length, 1);
   assert.equal(queue.records.size, 1);
   assert.equal(queue.createdPayloads[0].payload["Handoff Key"], key);
-  assert.deepEqual(queue.createdPayloads[0].payload.Status, { name: "Draft" });
-  assert.deepEqual(queue.createdPayloads[0].payload["Event Type"], { name: "DAILY_SUBMISSION" });
+  assert.equal(queue.createdPayloads[0].payload.Status.name, "Draft");
+  assert.equal(queue.createdPayloads[0].payload["Event Type"].name, "DAILY_SUBMISSION");
   assert.equal(queue.records.values().next().value.getCellValue("Status"), "Ready");
   assert.equal(submission.getCellValue("Build Daily Email Now?"), false);
   assert.equal(result.output.values.statusOut, "success");
