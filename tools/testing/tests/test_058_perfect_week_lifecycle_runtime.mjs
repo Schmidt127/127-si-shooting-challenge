@@ -31,6 +31,11 @@ const IDS = {
   wrongUnlock: "recUnlock058Wrong",
 };
 
+test("loads committed Automation 058 v1.3 source", () => {
+  const source = readFileSync(SCRIPT, "utf8");
+  assert.match(source, /Version:\s*1\.3/);
+});
+
 const sourceKey = `PERFECT_WEEK|${IDS.enrollment}|${IDS.week}`;
 
 function unlockRecord(id, overrides = {}) {
