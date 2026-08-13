@@ -1,7 +1,9 @@
 # PKG-034 — Production-only Schmidt test packet
 
 **Owner:** Mike
-**Agent boundary:** Cursor performed read-only Production schema, automation,
+**Agent boundary:** Cursor performed no Airtable access. This packet contains
+repository-only promotion and controlled-test instructions; Mike owns all
+Development and Production Airtable actions.
 reward-rule, and meeting inspection. Cursor has not created or modified fields,
 pasted scripts, changed the Automation 101 trigger/state, sent email, deployed,
 or merged.
@@ -46,11 +48,23 @@ XP Event RID: ___________________________
    wrong PI/SY, inactive Enrollment, and backlink issue before initialization.
 5. Initialize accepted historical signatures using the separately reviewed
    initializer; require Needed = numeric 0.
-6. Paste committed Automation 101 v6.0 from this branch.
+6. Paste committed Automation 101 v6.1 from this branch.
 7. Configure `When record matches conditions` on Zoom Meetings:
    `Zoom XP Reconciliation Needed? = 1`.
 8. Map `recordId` to the triggering Zoom Meetings record ID.
 9. Enable 101 only after the audit and initialization gates pass.
+
+Automation 101 `XP Award Status` choices available for this package are
+`Pending` and `Awarded`. Do not add an `Error` single-select option. The
+script treats `Error` as optional and preserves the original exception if
+error-status writeback is unavailable.
+
+For an empty roster, v6.1 must acknowledge a valid nonblank Current Signature
+even when it equals the starting signature, write that exact value to Last
+Zoom XP Reconciled Signature, keep Create XP Events unchecked, create no XP
+Event, and verify Reconciliation Needed? is numeric `0`. Duplicate or
+wrong-owner canonical events remain fail-closed and must report their exact
+record IDs.
 
 Do not add a scheduled poll, new automation slot, or recording-XP step.
 

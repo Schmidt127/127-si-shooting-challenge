@@ -143,14 +143,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP (**v6.0**) | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1` (**live Attendees only; positive and correction lifecycle**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
+| **101** | Zoom Attendance XP — Award Meeting XP (**v6.1**) | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1` (**live Attendees only; positive and correction lifecycle**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
 | **117** | Zoom — Send Recording Approval Email to Make (**v1.1**) | Zoom Attendance · Satisfactory recording path · inputs `webhookUrl`, `recordId`, `enrollmentRid`, `zoomMeetingRid` · payload `automationNumber=117f` · send key `ZOOM_REC_EMAIL\|…\|…\|…` · **writes no Airtable records** | `117-zoom-send-recording-approval-email-to-make.js` · [deploy runbook](./deploy-checklists/117-zoom-recording-approval-email.md) · [go-live one-pager](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md) · [PROD Make workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) · offline suite `tools/testing/tests/test_117_email_handoff_offline.mjs` |
 | **117f** | **Make** workflow identifier only (not an Airtable automation slot) | Receives Airtable 117 payload; Gmail send + Data Store dedupe (`sent` / `already_sent`) | Make: `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1` |
 | **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
 
 **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
 
-Live attendance XP remains **101** only. Automation 101 v6.0 is the
+Live attendance XP remains **101** only. Automation 101 v6.1 is the
 repository-ready reconciliation owner; Production installation and controlled
 proof remain pending. Gate Applied? / Perfect Week Applied? remain **042** /
 **057**. Recording `ZOOM_CREDIT` XP has **no** currently deployed Airtable

@@ -31,6 +31,16 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-034-HF-002 Automation 101 v6.1 (2026-08-13)** — Empty-roster
+  reconciliation now accepts a valid unchanged Current Signature when no
+  owned event data changes, writes that exact signature to Last Zoom XP
+  Reconciled Signature, keeps Create XP Events false, and verifies
+  Reconciliation Needed? returns to numeric 0. Exact active owned events are
+  soft-deactivated before bounded formula settlement; inactive events are
+  acknowledged without replacement. Duplicate and wrong-owner events fail
+  closed with IDs. XP Award Status `Error` remains optional; available
+  Production choices are `Pending` and `Awarded`. No Airtable, Production,
+  Automation 010/041/042, schema, email, or deployment change was made.
 - **PKG-034 Zoom live-attendance lifecycle reliability (2026-08-13)** —
   Automation 101 v6.0 now owns formula-backed positive, withdrawal, and
   restoration reconciliation for live attendance XP, including cumulative

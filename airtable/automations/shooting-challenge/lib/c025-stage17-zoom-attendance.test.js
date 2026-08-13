@@ -533,10 +533,10 @@ test("Conflict detection: live and recording evidence cannot double-count", () =
   assert(conflict.action === "deactivated_on_conflict", "soft-void recording on conflict");
 });
 
-test("101 CONFIG version matches header v6.0", () => {
+test("101 CONFIG version matches header v6.1", () => {
   const src = fs.readFileSync(path.join(root, "101-zoom-attendance-xp-award-meeting-xp.js"), "utf8");
-  assert(src.includes("* Version: v6.0"), "header");
-  assert(src.includes('version: "v6.0"'), "config");
+  assert(src.includes("* Version: v6.1"), "header");
+  assert(src.includes('version: "v6.1"'), "config");
 });
 
 console.log("\nAll c025-stage17-zoom-attendance tests passed.");
