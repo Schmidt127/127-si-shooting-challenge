@@ -81,14 +81,14 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| 053 | Achievements — Streak Occurrences Rebuild from Submissions | *confirm in Airtable*; positive rebuild only | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` |
-| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences when Source Status is Ready for XP; inactive correction requires explicit reachability | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` |
+| 053 | Achievements — Streak Occurrences Rebuild from Submissions | Submissions updated; exact trigger must cover eligibility/identity corrections | `053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js` (**v5.4** — corrected canonical topology) |
+| **054** | Achievements — Create or Reconcile Streak XP Event | Streak Occurrences updated; exact trigger must cover Active? withdrawal and Ready/restoration | `054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js` (**v5.8** — exact same-event lifecycle) |
 | 055 | Achievements — Recalculate Current Shooting Streak from Submission | *confirm in Airtable* | `055-achievements-and-milestones-recalculate-current-shooting-streak-from-submission.js` |
 | 056 | Achievements — Refresh Current Shooting Streaks Daily | *confirm in Airtable (scheduled)* | `056-achievements-and-milestones-refresh-current-shooting-streaks-daily.js` |
 | **057** | Achievements — Calculate Perfect Week Eligibility | WAS Perfect Week recalc — **ON** (PROD **v1.5**, 2026-08-05) | `057-achievements-and-milestones-calculate-perfect-week-eligibility.js` (**v1.5** — repo matches PROD; live cross-boundary fixtures still open — `docs/deploy-checklists/057-perfect-week-v1.5-live-verification.md`) |
 | 058 | Achievements — Create Perfect Week Unlock | *confirm in Airtable* | `058-achievements-and-milestones-create-perfect-week-unlock.js` |
-| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | **Recommended:** Athlete Achievement Unlocks when record is **created**, XP Award Status = Pending; milestone withdrawal fails closed without eligibility transition | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.5**) |
-| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.5** positive threshold owner; milestone withdrawal explicitly fails closed) |
+| **059** | Achievements — Create/Reconcile XP Event from Achievement Unlock | Athlete Achievement Unlock lifecycle; never filter `Ready for 059 XP?` or Shot Milestone presence | `059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js` (**v3.6** — corrected-history milestone lifecycle; Perfect Week preserved) |
+| 066 | Achievements — Create Shot Milestone Unlocks | Enrollments · Run Shot Milestone Check? | `066-achievements-and-milestones-create-shot-milestone-unlocks.js` (**v3.7** — counted-submission totals and corrected-history unlock lifecycle) |
 
 ## Email and Make handoffs (070b, 070c, 072–077, 118–119)
 
