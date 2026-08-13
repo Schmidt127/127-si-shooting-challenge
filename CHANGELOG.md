@@ -9,6 +9,17 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Docs
 
 #### Changed
+- **PKG-038 streak and shot-milestone corrected-history lifecycle (2026-08-13)** —
+  053 v5.4 now rebuilds current canonical streak occurrences, deactivates
+  unsupported topology, and re-arms exact restored occurrences; 054 v5.8
+  deactivates/reactivates only exact-owned `STREAK_XP` events, rejects
+  ambiguity, and rechecks before create. 066 v3.7 calculates milestone totals
+  from `Count This Submission?` rows only and reconciles canonical unlock
+  active state; 059 v3.6 reconciles exact `SHOT_MILESTONE` XP lifecycle while
+  preserving Perfect Week behavior. The Stage I audit now reports lifecycle,
+  ownership, backlink, WAS, prefix, and duplicate-key drift with executable
+  read-only coverage. Production installation and proof remain blocked by
+  PKG-006R and PKG-036; no Airtable change was made.
 - **PKG-007 Video XP final readiness reconciliation (2026-08-13)** —
   Automation **114 v6.1** now includes `XP Events.Active?` in its exact-event
   lookup, so the actual selected-field Airtable runtime can deactivate the
