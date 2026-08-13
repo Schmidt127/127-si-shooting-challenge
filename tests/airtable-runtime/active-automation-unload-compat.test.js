@@ -36,7 +36,7 @@ const TARGETS = [
   {
     num: "042",
     file: "042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js",
-    versionRe: /Version:\s*4\.0/,
+    versionRe: /Version:\s*4\.1/,
     queryVars: ["zmQuery", "zaQuery"],
   },
   {
