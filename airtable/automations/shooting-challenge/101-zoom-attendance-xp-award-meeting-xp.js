@@ -4,13 +4,13 @@ System: 127 SI Shooting Challenge
 Source: Airtable Automation
 Status: GitHub Source of Truth
 Last Synced From Airtable: 2026-06-22
-Last GitHub Update: 2026-07-18
+Last GitHub Update: 2026-08-13
 
 Purpose:
 Awards Zoom attendance XP to all linked attendees for one completed meeting.
 
 Trigger:
-Zoom Meetings when Create XP Events is checked and meeting is ready to award.
+Zoom Meetings when Zoom XP Reconciliation Needed? equals numeric 1.
 
 Important Tables:
 Zoom Meetings, Enrollments, XP Reward Rules, XP Events, Weekly Athlete Summary
@@ -24,9 +24,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v5.5
+ * Version: v6.0
  * Date Written: 2026-05-28
- * Last Updated: 2026-07-18
+ * Last Updated: 2026-08-13
  *
  * PURPOSE
  * - Runs from one Zoom Meetings record.
@@ -37,10 +37,9 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - Awards one-time bonus XP when an attendee reaches meeting #3.
  * - Writes XP Activity Date / Activity Date from meeting start (America/Denver)
  *   when those fields exist and are writable.
- * - Supports supplemental re-runs when Create XP Events is checked again after
- *   XP Award Status is already Awarded (for example, add recording watchers).
- * - Supplemental re-runs only create XP for attendees who do not already have
- *   base attendance XP for this exact Zoom Meeting.
+ * - Reconciles the canonical live-attendance event from the formula-backed
+ *   Zoom XP Reconciliation Needed? trigger. Withdrawal and restoration reuse
+ *   the same XP Event ID; no XP Event is deleted or replaced.
  *
  * IMPORTANT DESIGN RULES
  * - Uses shared XP Reward Rules only:
@@ -72,11 +71,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * Trigger: When record matches conditions
  *
  * Recommended Conditions:
- * - Create XP Events is checked
- * - Attendees is not empty
- * - Week is not empty
- * - Zoom Meeting Key is not empty
- * - Meeting Status is Completed
+ * - Zoom XP Reconciliation Needed? equals 1
  *
  * REQUIRED INPUT VARIABLE
  * - recordId = Airtable record ID from the triggering Zoom Meetings record
@@ -88,18 +83,17 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
  * - debugStep
  *
  * WRITES
- * - Creates Weekly Athlete Summary when none exists for attendee Enrollment + Week
- * - XP Events records linked to Weekly Athlete Summary when resolvable by Enrollment + Week
+ * - Requires exactly one existing Weekly Athlete Summary for positive live XP
+ * - XP Events link to that exact Weekly Athlete Summary after ownership checks
  * - Zoom Meetings.XP Award Status = Awarded
  * - Zoom Meetings.Create XP Events = unchecked
  * - Zoom Meetings.XP Awarded At, if field exists
  * - Zoom Meetings.XP Award Error, if field exists
  *
- * SUPPLEMENTAL RE-RUN (recording watchers)
- * - Leave XP Award Status = Awarded
- * - Add new Attendees links
- * - Check Create XP Events again
- * - Script awards only attendees missing base XP for this meeting
+ * RECONCILIATION
+ * - Enrollment/roster withdrawal deactivates an exactly owned event
+ * - Restoration reactivates that same event
+ * - Recording watchers must never be added to live Attendees by this script
  ************************************************************/
 
 // @ts-nocheck
@@ -111,13 +105,14 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v5.5",
+  version: "v6.0",
 
   timeZone: "America/Denver",
 
   tables: {
     zoomMeetings: "Zoom Meetings",
     enrollments: "Enrollments",
+    weeks: "Weeks",
     xpRewardRules: "XP Reward Rules",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
@@ -229,11 +224,24 @@ const CONFIG = {
   summaryStatusValues: {
     complete: "Complete",
   },
+
+  lifecycle: {
+    currentSignature: "Zoom XP Current Signature",
+    lastSignature: "Last Zoom XP Reconciled Signature",
+    reconciliationNeeded: "Zoom XP Reconciliation Needed?",
+    enrollmentSignatureLookup: "Zoom XP Enrollment Signature - Lkp",
+    weekSignatureLookup: "Zoom XP Week Signature - Lkp",
+    eventSignatureLookup: "Zoom XP Event Signature - Lkp",
+    enrollmentSignature: "Zoom XP Enrollment Signature",
+    weekSignature: "Zoom XP Week Signature",
+    eventSignature: "Zoom XP Event Signature",
+  },
 };
 
 
 let zoomTable = null;
 let enrollmentsTable = null;
+let weeksTable = null;
 let rulesTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
@@ -679,6 +687,509 @@ async function updateRecordSafe(table, targetRecordId, updates) {
   return Object.keys(payload);
 }
 
+function uniqueIds(ids) {
+  return [...new Set((ids || []).filter(Boolean))];
+}
+
+function exactLinkedIds(record, table, fieldName, label) {
+  const values = uniqueIds(getLinkedRecordIds(record, table, fieldName));
+  if (values.length !== 1) {
+    throw new Error(`${label} must contain exactly one linked record; found ${values.length}.`);
+  }
+  return values;
+}
+
+function activeRuleIndexOrThrow(ruleRecords) {
+  const index = indexActiveRulesByKey(ruleRecords);
+  return {
+    base: findRequiredRule(index, CONFIG.ruleKeys.base, "Base"),
+    bonus2: findRequiredRule(index, CONFIG.ruleKeys.bonus2, "Bonus 2"),
+    bonus3: findRequiredRule(index, CONFIG.ruleKeys.bonus3, "Bonus 3"),
+  };
+}
+
+function eventMatchesExactOwnership(record, {
+  sourceKey,
+  enrollmentId,
+  weekId,
+  zoomMeetingId,
+}) {
+  return (
+    normalizeKey(getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey)) === normalizeKey(sourceKey) &&
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.enrollment)).length === 1 &&
+    getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.enrollment) === enrollmentId &&
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.week)).length === 1 &&
+    getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.week) === weekId &&
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting)).length === 1 &&
+    getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting) === zoomMeetingId
+  );
+}
+
+function eventMatchesBonusOwnership(record, enrollmentId, weekId) {
+  return (
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.enrollment)).length === 1 &&
+    getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.enrollment) === enrollmentId &&
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.week)).length === 1 &&
+    getFirstLinkedRecordId(record, xpEventsTable, CONFIG.xpEvents.week) === weekId &&
+    uniqueIds(getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting)).length === 1
+  );
+}
+
+function findExactOwnedEvents(records, expected) {
+  return records.filter(record => eventMatchesExactOwnership(record, expected));
+}
+
+function findSourceKeyEvents(records, sourceKey) {
+  return records.filter(record =>
+    normalizeKey(getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey)) === normalizeKey(sourceKey)
+  );
+}
+
+function getNumericValue(record, table, fieldName) {
+  const raw = getRaw(record, table, fieldName);
+  if (typeof raw === "number" && Number.isFinite(raw)) return raw;
+  const parsed = Number(String(raw ?? "").replace(/,/g, "").trim());
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+async function runLiveLifecycleReconciliation(recordId) {
+  const zoomRecord = await zoomTable.selectRecordAsync(recordId, {
+    fields: buildFieldsToLoad(zoomTable, [
+      CONFIG.zoom.meetingName,
+      zoomStartField,
+      CONFIG.zoom.week,
+      CONFIG.zoom.attendees,
+      CONFIG.zoom.xpAwardStatus,
+      CONFIG.zoom.zoomMeetingKey,
+      CONFIG.zoom.meetingStatus,
+      CONFIG.lifecycle.currentSignature,
+      CONFIG.lifecycle.lastSignature,
+      CONFIG.lifecycle.reconciliationNeeded,
+    ]),
+  });
+
+  if (!zoomRecord) throw new Error(`Zoom Meeting record not found: ${recordId}`);
+
+  const startingSignature = getText(
+    zoomRecord,
+    zoomTable,
+    CONFIG.lifecycle.currentSignature
+  );
+  const needed = getNumericValue(
+    zoomRecord,
+    zoomTable,
+    CONFIG.lifecycle.reconciliationNeeded
+  );
+
+  if (needed !== 1) {
+    setFinalOutputs({
+      ok: true,
+      actionOut: "skipped_reconciliation_not_needed",
+      statusOut: CONFIG.outputStatuses.skipped,
+      debugStep: "lifecycle_gate",
+      zoomMeetingId: recordId,
+    });
+    return;
+  }
+
+  const weekIds = exactLinkedIds(
+    zoomRecord,
+    zoomTable,
+    CONFIG.zoom.week,
+    "Zoom Meeting Week"
+  );
+  const attendeeIds = uniqueIds(
+    getLinkedRecordIds(zoomRecord, zoomTable, CONFIG.zoom.attendees)
+  );
+  const meetingKey = getText(zoomRecord, zoomTable, CONFIG.zoom.zoomMeetingKey);
+  const meetingStatus = getText(zoomRecord, zoomTable, CONFIG.zoom.meetingStatus);
+  const meetingDateKey = dateToDateKey(getRaw(zoomRecord, zoomTable, zoomStartField));
+
+  if (!meetingKey) throw new Error("Zoom Meeting Key is blank.");
+  if (!meetingDateKey) throw new Error(`Zoom Meeting is missing a valid date in field "${zoomStartField}".`);
+
+  const [enrollmentQuery, weekQuery, ruleQuery, xpQuery, wasQuery, zoomHistoryQuery] = await Promise.all([
+    enrollmentsTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(enrollmentsTable, [
+        CONFIG.enrollments.active,
+        CONFIG.enrollments.fullName,
+        "Program Instance",
+        "School Year",
+      ]),
+    }),
+    weeksTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(weeksTable, [
+        "Program Instance",
+        "School Year",
+      ]),
+    }),
+    rulesTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(rulesTable, [
+        CONFIG.xpRewardRules.ruleKey,
+        CONFIG.xpRewardRules.xpAmount,
+        CONFIG.xpRewardRules.xpSourceLabel,
+        CONFIG.xpRewardRules.active,
+      ]),
+    }),
+    xpEventsTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(xpEventsTable, [
+        CONFIG.xpEvents.enrollment,
+        CONFIG.xpEvents.week,
+        CONFIG.xpEvents.weeklySummary,
+        CONFIG.xpEvents.xpSource,
+        CONFIG.xpEvents.xpBucketKey,
+        CONFIG.xpEvents.xpPoints,
+        CONFIG.xpEvents.xpReason,
+        CONFIG.xpEvents.active,
+        CONFIG.xpEvents.sourceKey,
+        CONFIG.xpEvents.zoomMeeting,
+        CONFIG.xpEvents.error,
+      ]),
+    }),
+    weeklySummaryTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(weeklySummaryTable, [
+        CONFIG.weeklySummary.enrollment,
+        CONFIG.weeklySummary.week,
+      ]),
+    }),
+    zoomTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(zoomTable, [
+        CONFIG.zoom.zoomMeetingKey,
+        CONFIG.zoom.attendees,
+        CONFIG.zoom.meetingStatus,
+        zoomStartField,
+        CONFIG.zoom.week,
+      ]),
+    }),
+  ]);
+
+  const enrollmentById = new Map(enrollmentQuery.records.map(record => [record.id, record]));
+  const weekRecord = weekQuery.records.find(record => record.id === weekIds[0]);
+  if (!weekRecord) throw new Error(`Week record not found: ${weekIds[0]}`);
+  const weekProgramIds = exactLinkedIds(
+    weekRecord,
+    weeksTable,
+    "Program Instance",
+    "Week Program Instance"
+  );
+  const weekSchoolYear = getText(weekRecord, weeksTable, "School Year");
+  if (!weekSchoolYear) throw new Error("Week School Year is blank.");
+
+  const rules = activeRuleIndexOrThrow(ruleQuery.records);
+  let lifecycleAction = "reconciled";
+  let eventWarnings = [];
+  let baseEventsCreated = 0;
+  let baseEventsUpdated = 0;
+  let baseEventsDeactivated = 0;
+  let attendeesProcessed = 0;
+  let bonusEventsCreated = 0;
+  let bonusEventsUpdated = 0;
+  let bonusEventsDeactivated = 0;
+
+  const priorMeetingEnrollmentIds = xpQuery.records
+    .filter(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting).includes(recordId))
+    .flatMap(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.enrollment));
+  const lifecycleEnrollmentIds = uniqueIds([...attendeeIds, ...priorMeetingEnrollmentIds]);
+
+  for (const enrollmentId of lifecycleEnrollmentIds) {
+    const enrollment = enrollmentById.get(enrollmentId);
+    if (!enrollment) throw new Error(`Enrollment record not found: ${enrollmentId}`);
+
+    const enrollmentProgramIds = uniqueIds(
+      getLinkedRecordIds(enrollment, enrollmentsTable, "Program Instance")
+    );
+    const enrollmentSchoolYear = getText(enrollment, enrollmentsTable, "School Year");
+    const eligible =
+      normalizeText(meetingStatus) === normalizeText(CONFIG.statuses.completed) &&
+      attendeeIds.includes(enrollmentId) &&
+      getBooleanish(enrollment, enrollmentsTable, CONFIG.enrollments.active) &&
+      enrollmentProgramIds.length === 1 &&
+      enrollmentProgramIds[0] === weekProgramIds[0] &&
+      enrollmentSchoolYear &&
+      enrollmentSchoolYear === weekSchoolYear;
+    const sourceKey = buildBaseSourceKey(meetingKey, enrollmentId);
+    const expected = {
+      sourceKey,
+      enrollmentId,
+      weekId: weekIds[0],
+      zoomMeetingId: recordId,
+    };
+    const matching = findExactOwnedEvents(xpQuery.records, expected);
+    const sameKey = findSourceKeyEvents(xpQuery.records, sourceKey);
+
+    if (sameKey.length > 1) {
+      throw new Error(`Multiple canonical XP Events found for Source Key ${sourceKey}.`);
+    }
+    if (sameKey.length === 1 && matching.length !== 1) {
+      throw new Error(`XP Event ${sameKey[0].id} has wrong owner for Source Key ${sourceKey}.`);
+    }
+    if (matching.length > 1) {
+      throw new Error(`Multiple exactly-owned XP Events found for Source Key ${sourceKey}.`);
+    }
+
+    const qualifyingMeetingKeys = new Set(
+      zoomHistoryQuery.records
+        .filter(record => {
+          const historicalKey = getText(record, zoomTable, CONFIG.zoom.zoomMeetingKey);
+          const historicalDate = dateToDateKey(getRaw(record, zoomTable, zoomStartField));
+          const historicalStatus = getText(record, zoomTable, CONFIG.zoom.meetingStatus);
+          return (
+            historicalKey &&
+            historicalDate &&
+            compareDateKeys(historicalDate, meetingDateKey) <= 0 &&
+            normalizeText(historicalStatus) === normalizeText(CONFIG.statuses.completed) &&
+            getLinkedRecordIds(record, zoomTable, CONFIG.zoom.attendees).includes(enrollmentId)
+          );
+        })
+        .map(record => getText(record, zoomTable, CONFIG.zoom.zoomMeetingKey))
+    );
+
+    const bonusSpecs = [
+      {
+        count: CONFIG.bonusMeetingCounts.bonus2,
+        sourceKey: buildBonus2SourceKey(enrollmentId),
+        rule: rules.bonus2,
+        label: "Meeting Count 2 Bonus",
+      },
+      {
+        count: CONFIG.bonusMeetingCounts.bonus3,
+        sourceKey: buildBonus3SourceKey(enrollmentId),
+        rule: rules.bonus3,
+        label: "Meeting Count 3 Bonus",
+      },
+    ];
+
+    if (!eligible) {
+      if (matching.length === 1 && getBooleanish(matching[0], xpEventsTable, CONFIG.xpEvents.active)) {
+        try {
+          await updateRecordSafe(xpEventsTable, matching[0].id, {
+            [CONFIG.xpEvents.active]: false,
+            [CONFIG.xpEvents.error]: "",
+          });
+          baseEventsDeactivated += 1;
+          lifecycleAction = "deactivated_owned_event";
+        } catch (error) {
+          eventWarnings.push(`XP Event ${matching[0].id} deactivation failed: ${error.message || error}`);
+        }
+      }
+      for (const bonus of bonusSpecs) {
+        const bonusEvents = findSourceKeyEvents(xpQuery.records, bonus.sourceKey);
+        if (bonusEvents.length > 1) throw new Error(`Multiple canonical XP Events found for Source Key ${bonus.sourceKey}.`);
+        if (bonusEvents.length === 1 && !eventMatchesBonusOwnership(bonusEvents[0], enrollmentId, weekIds[0])) {
+          throw new Error(`XP Event ${bonusEvents[0].id} has wrong owner for Source Key ${bonus.sourceKey}.`);
+        }
+        if (bonusEvents.length === 1 && getBooleanish(bonusEvents[0], xpEventsTable, CONFIG.xpEvents.active)) {
+          await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
+            [CONFIG.xpEvents.active]: false,
+            [CONFIG.xpEvents.error]: "",
+          });
+          bonusEventsDeactivated += 1;
+        }
+      }
+      continue;
+    }
+
+    const wasMatches = wasQuery.records.filter(record =>
+      getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.enrollment) === enrollmentId &&
+      getFirstLinkedRecordId(record, weeklySummaryTable, CONFIG.weeklySummary.week) === weekIds[0]
+    );
+    if (wasMatches.length !== 1) {
+      throw new Error(
+        `Expected exactly one Weekly Athlete Summary for Enrollment ${enrollmentId} + Week ${weekIds[0]}; found ${wasMatches.length}.`
+      );
+    }
+
+    for (const bonus of bonusSpecs) {
+      const bonusEligible = qualifyingMeetingKeys.size === bonus.count;
+      const bonusEvents = findSourceKeyEvents(xpQuery.records, bonus.sourceKey);
+      if (bonusEvents.length > 1) {
+        throw new Error(`Multiple canonical XP Events found for Source Key ${bonus.sourceKey}.`);
+      }
+      if (bonusEvents.length === 1 && !eventMatchesBonusOwnership(bonusEvents[0], enrollmentId, weekIds[0])) {
+        throw new Error(`XP Event ${bonusEvents[0].id} has wrong owner for Source Key ${bonus.sourceKey}.`);
+      }
+      if (!bonusEligible) {
+        if (bonusEvents.length === 1 && getBooleanish(bonusEvents[0], xpEventsTable, CONFIG.xpEvents.active)) {
+          await updateRecordSafe(xpEventsTable, bonusEvents[0].id, {
+            [CONFIG.xpEvents.active]: false,
+            [CONFIG.xpEvents.error]: "",
+          });
+          bonusEventsDeactivated += 1;
+        }
+        continue;
+      }
+      const bonusPayload = buildXpEventPayload({
+        enrollmentId,
+        weekId: weekIds[0],
+        weeklySummaryId: wasMatches[0].id,
+        source: bonus.rule.xpSourceLabel || (bonus.count === 2
+          ? CONFIG.xpLabels.bonus2SourceFallback
+          : CONFIG.xpLabels.bonus3SourceFallback),
+        bucketKey: CONFIG.xpLabels.bucketKey,
+        points: bonus.rule.xpAmount,
+        reason: buildXpReason({
+          meetingName: getText(zoomRecord, zoomTable, CONFIG.zoom.meetingName) || zoomRecord.name,
+          zoomMeetingKey: meetingKey,
+          enrollmentId,
+          attendeeName: getText(enrollment, enrollmentsTable, CONFIG.enrollments.fullName),
+          attendanceCount: qualifyingMeetingKeys.size,
+          ruleKey: bonus.rule.ruleKey,
+          xpPoints: bonus.rule.xpAmount,
+          xpType: bonus.label,
+        }),
+        sourceKey: bonus.sourceKey,
+        zoomMeetingId: recordId,
+        activityDateKey: meetingDateKey,
+      });
+      if (bonusEvents.length === 1) {
+        await updateRecordSafe(xpEventsTable, bonusEvents[0].id, bonusPayload);
+        bonusEventsUpdated += 1;
+      } else {
+        const createdBonusId = await xpEventsTable.createRecordAsync(bonusPayload);
+        await ensureXpEventWeeklySummaryLink(createdBonusId, wasMatches[0].id);
+        bonusEventsCreated += 1;
+      }
+    }
+
+    const existing = matching[0] || null;
+    if (existing) {
+      const payload = buildXpEventPayload({
+        enrollmentId,
+        weekId: weekIds[0],
+        weeklySummaryId: wasMatches[0].id,
+        source: rules.base.xpSourceLabel || CONFIG.xpLabels.baseSourceFallback,
+        bucketKey: CONFIG.xpLabels.bucketKey,
+        points: rules.base.xpAmount,
+        reason: buildXpReason({
+          meetingName: getText(zoomRecord, zoomTable, CONFIG.zoom.meetingName) || zoomRecord.name,
+          zoomMeetingKey: meetingKey,
+          enrollmentId,
+          attendeeName: getText(enrollment, enrollmentsTable, CONFIG.enrollments.fullName),
+          attendanceCount: null,
+          ruleKey: rules.base.ruleKey,
+          xpPoints: rules.base.xpAmount,
+          xpType: "Base Attendance",
+        }),
+        sourceKey,
+        zoomMeetingId: recordId,
+        activityDateKey: meetingDateKey,
+      });
+      try {
+        await updateRecordSafe(xpEventsTable, existing.id, payload);
+        baseEventsUpdated += 1;
+        lifecycleAction = getBooleanish(existing, xpEventsTable, CONFIG.xpEvents.active)
+          ? "repaired_owned_event"
+          : "reactivated_owned_event";
+      } catch (error) {
+        eventWarnings.push(`XP Event ${existing.id} update failed: ${error.message || error}`);
+      }
+    } else {
+      const lastChanceQuery = await xpEventsTable.selectRecordsAsync({
+        fields: buildFieldsToLoad(xpEventsTable, [
+          CONFIG.xpEvents.enrollment,
+          CONFIG.xpEvents.week,
+          CONFIG.xpEvents.zoomMeeting,
+          CONFIG.xpEvents.sourceKey,
+          CONFIG.xpEvents.active,
+        ]),
+      });
+      const lastChance = findSourceKeyEvents(lastChanceQuery.records, sourceKey);
+      if (lastChance.length > 1) {
+        throw new Error(`Concurrent duplicate canonical XP Events found for Source Key ${sourceKey}.`);
+      }
+      if (lastChance.length === 1) {
+        const ownedLastChance = findExactOwnedEvents(lastChanceQuery.records, expected);
+        if (ownedLastChance.length !== 1) {
+          throw new Error(`Concurrent XP Event has wrong owner for Source Key ${sourceKey}.`);
+        }
+        await updateRecordSafe(xpEventsTable, ownedLastChance[0].id, {
+          [CONFIG.xpEvents.active]: true,
+          [CONFIG.xpEvents.weeklySummary]: linkedCell([wasMatches[0].id]),
+        });
+        baseEventsUpdated += 1;
+        lifecycleAction = "reused_last_chance_event";
+      } else {
+        const payload = buildXpEventPayload({
+          enrollmentId,
+          weekId: weekIds[0],
+          weeklySummaryId: wasMatches[0].id,
+          source: rules.base.xpSourceLabel || CONFIG.xpLabels.baseSourceFallback,
+          bucketKey: CONFIG.xpLabels.bucketKey,
+          points: rules.base.xpAmount,
+          reason: buildXpReason({
+            meetingName: getText(zoomRecord, zoomTable, CONFIG.zoom.meetingName) || zoomRecord.name,
+            zoomMeetingKey: meetingKey,
+            enrollmentId,
+            attendeeName: getText(enrollment, enrollmentsTable, CONFIG.enrollments.fullName),
+            attendanceCount: null,
+            ruleKey: rules.base.ruleKey,
+            xpPoints: rules.base.xpAmount,
+            xpType: "Base Attendance",
+          }),
+          sourceKey,
+          zoomMeetingId: recordId,
+          activityDateKey: meetingDateKey,
+        });
+        const createdId = await xpEventsTable.createRecordAsync(payload);
+        baseEventsCreated += 1;
+        lifecycleAction = "created_owned_event";
+        try {
+          await ensureXpEventWeeklySummaryLink(createdId, wasMatches[0].id);
+        } catch (error) {
+          eventWarnings.push(`XP Event ${createdId} Weekly Athlete Summary backlink failed: ${error.message || error}`);
+        }
+      }
+    }
+    attendeesProcessed += 1;
+  }
+
+  const freshZoomRecord = await zoomTable.selectRecordAsync(recordId, {
+    fields: buildFieldsToLoad(zoomTable, [
+      CONFIG.lifecycle.currentSignature,
+      CONFIG.lifecycle.reconciliationNeeded,
+    ]),
+  });
+  const freshSignature = getText(
+    freshZoomRecord,
+    zoomTable,
+    CONFIG.lifecycle.currentSignature
+  );
+  const freshNeeded = getNumericValue(
+    freshZoomRecord,
+    zoomTable,
+    CONFIG.lifecycle.reconciliationNeeded
+  );
+  if (!freshSignature || freshSignature === startingSignature || freshNeeded !== 0) {
+    throw new Error("Zoom XP formula signature did not settle to Needed = 0; reconciliation was not acknowledged.");
+  }
+  await updateRecordSafe(zoomTable, recordId, {
+    [CONFIG.lifecycle.lastSignature]: freshSignature,
+    [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
+      zoomTable,
+      CONFIG.zoom.xpAwardStatus,
+      CONFIG.statuses.awarded
+    ),
+    [CONFIG.zoom.createXpEvents]: false,
+    [CONFIG.zoom.xpAwardError]: eventWarnings.join("\n"),
+  });
+
+  setFinalOutputs({
+    ok: true,
+    actionOut: lifecycleAction,
+    statusOut: eventWarnings.length ? CONFIG.outputStatuses.updated : CONFIG.outputStatuses.created,
+    errorOut: eventWarnings.join("\n"),
+    debugStep: "lifecycle_acknowledged",
+    zoomMeetingId: recordId,
+    zoomMeetingKey: meetingKey,
+    weekId: weekIds[0],
+    attendeeCount: attendeeIds.length,
+    attendeesProcessed,
+    baseEventsCreated,
+    baseEventsUpdated,
+    baseEventsSkippedExisting: 0,
+  });
+}
+
 function indexActiveRulesByKey(ruleRecords) {
   const index = new Map();
 
@@ -1047,6 +1558,47 @@ function assertRequiredSchema() {
   requireField(zoomTable, CONFIG.zoom.createXpEvents, "Zoom Meetings -> Create XP Events");
   requireField(zoomTable, CONFIG.zoom.xpAwardStatus, "Zoom Meetings -> XP Award Status");
   requireField(zoomTable, CONFIG.zoom.zoomMeetingKey, "Zoom Meetings -> Zoom Meeting Key");
+  requireField(zoomTable, CONFIG.lifecycle.currentSignature, "Zoom Meetings -> Zoom XP Current Signature");
+  requireWritableField(
+    zoomTable,
+    CONFIG.lifecycle.lastSignature,
+    "Zoom Meetings -> Last Zoom XP Reconciled Signature"
+  );
+  requireField(
+    zoomTable,
+    CONFIG.lifecycle.reconciliationNeeded,
+    "Zoom Meetings -> Zoom XP Reconciliation Needed?"
+  );
+  requireField(
+    zoomTable,
+    CONFIG.lifecycle.enrollmentSignatureLookup,
+    "Zoom Meetings -> Zoom XP Enrollment Signature - Lkp"
+  );
+  requireField(
+    zoomTable,
+    CONFIG.lifecycle.weekSignatureLookup,
+    "Zoom Meetings -> Zoom XP Week Signature - Lkp"
+  );
+  requireField(
+    zoomTable,
+    CONFIG.lifecycle.eventSignatureLookup,
+    "Zoom Meetings -> Zoom XP Event Signature - Lkp"
+  );
+  requireField(
+    enrollmentsTable,
+    CONFIG.lifecycle.enrollmentSignature,
+    "Enrollments -> Zoom XP Enrollment Signature"
+  );
+  requireField(
+    weeksTable,
+    CONFIG.lifecycle.weekSignature,
+    "Weeks -> Zoom XP Week Signature"
+  );
+  requireField(
+    xpEventsTable,
+    CONFIG.lifecycle.eventSignature,
+    "XP Events -> Zoom XP Event Signature"
+  );
 
   requireField(rulesTable, CONFIG.xpRewardRules.ruleKey, "XP Reward Rules -> Rule Key");
   requireField(rulesTable, CONFIG.xpRewardRules.xpAmount, "XP Reward Rules -> XP Amount");
@@ -1104,6 +1656,7 @@ async function main() {
 
     zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
     enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
+    weeksTable = base.getTable(CONFIG.tables.weeks);
     rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
     xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
     weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);
@@ -1112,6 +1665,11 @@ async function main() {
     debugStep = "4 - Validate Schema";
     setOutputSafe("debugStep", debugStep);
     assertRequiredSchema();
+
+    debugStep = "4b - Reconcile Live Attendance Lifecycle";
+    setOutputSafe("debugStep", debugStep);
+    await runLiveLifecycleReconciliation(recordId);
+    return;
 
     debugStep = "5 - Load Zoom Meeting";
     setOutputSafe("debugStep", debugStep);
