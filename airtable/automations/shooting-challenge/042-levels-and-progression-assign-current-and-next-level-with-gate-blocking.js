@@ -116,8 +116,8 @@ Airtable is the deployed/running copy.
  * 042 = Assign Current and Next Level with Gate Blocking
  *
  * Important:
- * After this script is tested successfully, Automation 043 should be turned off because
- * this script directly assigns the correct Level Gate Rule.
+ * Automation 043 is retired and absent from Production. Do not recreate or
+ * enable it; this script is the sole progression-output writer.
  ************************************************************************************************/
 
 
