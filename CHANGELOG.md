@@ -56,6 +56,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
   closed with IDs. XP Award Status `Error` remains optional; available
   Production choices are `Pending` and `Awarded`. No Airtable, Production,
   Automation 010/041/042, schema, email, or deployment change was made.
+- **PKG-036 progression configuration and bidirectional recalculation reliability (2026-08-13)** — Repository-ready Automation **041 v5.0** remains queue-only and fingerprints each Enrollment's relevant current/next ladder, XP/gate inputs, lifecycle, Program Instance, and assignment outputs without churning unrelated future configuration. Automation **042 v4.0** now waits for settled formula/rollup inputs, validates the active ladder and complete year-scoped gate configuration, requires exactly one Enrollment Program Instance, rechecks configuration during the write window, verifies all assignment outputs before acknowledgement, preserves the queue on errors, and records a post-success reconciliation signature. Added a read-only progression integrity audit, executable offline harness, and Production-only promotion packet. **No Production Airtable schema, automation, trigger, XP Event, email, 010, Homework, Video, 101, or 043 change has been made.**
 - **PKG-034 Zoom live-attendance lifecycle reliability (2026-08-13)** —
   Automation 101 v6.0 now owns formula-backed positive, withdrawal, and
   restoration reconciliation for live attendance XP, including cumulative
