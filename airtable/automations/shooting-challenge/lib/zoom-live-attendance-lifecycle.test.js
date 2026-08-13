@@ -228,4 +228,81 @@ test("recording source family is not live attendance", () => {
   assert.strictEqual(c.parseLiveSourceKey(expected().sourceKey).meetingKey, "recMeeting");
 });
 
+test("cumulative bonuses follow thresholds 0, 1, 2, 3, and above 3", () => {
+  for (const count of [0, 1]) {
+    const state = c.cumulativeBonusState(count);
+    assert.strictEqual(state.bonus2Active, false);
+    assert.strictEqual(state.bonus3Active, false);
+  }
+  assert.strictEqual(c.cumulativeBonusState(2).bonus2Active, true);
+  assert.strictEqual(c.cumulativeBonusState(2).bonus3Active, false);
+  assert.deepStrictEqual(c.cumulativeBonusState(3), {
+    count: 3,
+    bonus2Active: true,
+    bonus3Active: true,
+  });
+  assert.strictEqual(c.cumulativeBonusState(4).bonus2Active, true);
+  assert.strictEqual(c.cumulativeBonusState(4).bonus3Active, true);
+});
+
+test("bonus canonical meeting is the deterministic nth qualifying meeting", () => {
+  const meetings = [
+    { id: "recB", meetingKey: "B", dateKey: "2026-02-01", qualifies: true },
+    { id: "recA", meetingKey: "A", dateKey: "2026-01-01", qualifies: true },
+    { id: "recC", meetingKey: "C", dateKey: "2026-03-01", qualifies: true },
+  ];
+  assert.strictEqual(c.selectCanonicalBonusMeeting(meetings, 2).id, "recB");
+  assert.strictEqual(c.selectCanonicalBonusMeeting(meetings, 3).id, "recC");
+});
+
+test("bonus upward and downward transitions preserve lower thresholds", () => {
+  const second = { id: "recBonus2", active: true };
+  const third = { id: "recBonus3", active: true };
+  assert.strictEqual(c.planCumulativeBonus({
+    threshold: 2,
+    qualifyingMeetings: [{ qualifies: true }, { qualifies: true }, { qualifies: true }],
+    existingEvent: second,
+  }).action, "repair_same_event");
+  assert.strictEqual(c.planCumulativeBonus({
+    threshold: 3,
+    qualifyingMeetings: [{ qualifies: true }, { qualifies: true }],
+    existingEvent: third,
+  }).action, "deactivate_same_event");
+  assert.strictEqual(c.planCumulativeBonus({
+    threshold: 2,
+    qualifyingMeetings: [{ qualifies: true }, { qualifies: true }],
+    existingEvent: second,
+  }).action, "repair_same_event");
+});
+
+test("empty roster reconciles no-award, withdrawal, duplicate, and formula-lag states", () => {
+  const none = c.planEmptyRosterReconciliation({
+    priorOwnedEvents: [],
+    freshSignature: "fresh",
+    startingSignature: "start",
+    needed: 0,
+  });
+  assert.strictEqual(none.action, "reconciled_empty_roster_no_award");
+  const withdrawn = c.planEmptyRosterReconciliation({
+    priorOwnedEvents: [{ id: "recXp", active: true }],
+    freshSignature: "fresh",
+    startingSignature: "start",
+    needed: 0,
+  });
+  assert.strictEqual(withdrawn.action, "deactivated_empty_roster_events");
+  assert.strictEqual(c.planEmptyRosterReconciliation({
+    priorOwnedEvents: [{ id: "recXp1", active: true }, { id: "recXp2", active: true }],
+    duplicate: true,
+    freshSignature: "fresh",
+    startingSignature: "start",
+    needed: 0,
+  }).ok, false);
+  assert.strictEqual(c.planEmptyRosterReconciliation({
+    priorOwnedEvents: [],
+    freshSignature: "start",
+    startingSignature: "start",
+    needed: 1,
+  }).action, "pending_formula_settlement");
+});
+
 console.log("\nAll PKG-034 offline lifecycle tests passed.");

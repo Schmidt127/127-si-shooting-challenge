@@ -131,6 +131,19 @@ function sourceType(sourceKey) {
   return "";
 }
 
+function bonusThreshold(type) {
+  return type === "bonus2" ? 2 : type === "bonus3" ? 3 : 0;
+}
+
+function canonicalBonusMeeting(meetings, threshold) {
+  return [...meetings]
+    .sort((left, right) =>
+      left.dateKey.localeCompare(right.dateKey) ||
+      left.meetingKey.localeCompare(right.meetingKey) ||
+      left.id.localeCompare(right.id)
+    )[threshold - 1] || null;
+}
+
 function exactRuleMap(ruleRecords, rulesTable) {
   const map = new Map();
   for (const record of ruleRecords) {
@@ -161,6 +174,7 @@ async function main() {
     counts: {},
     rewardRules: {},
     unsupportedRecordingXpEvents: [],
+    deferredRecordingXpEvents: [],
     backlinkGaps: [],
     lifecycleStateMismatches: [],
   };
@@ -208,7 +222,11 @@ async function main() {
   for (const event of xpQuery.records) {
     const key = text(event, xpTable, CONFIG.xp.sourceKey);
     const type = sourceType(key);
-    if (type === "unsupported_recording") report.unsupportedRecordingXpEvents.push({ id: event.id, sourceKey: key });
+    if (type === "unsupported_recording") {
+      const deferred = { id: event.id, sourceKey: key, scope: "unsupported_recording_deferred" };
+      report.unsupportedRecordingXpEvents.push(deferred);
+      report.deferredRecordingXpEvents.push(deferred);
+    }
     if (!type || type === "unsupported_recording") continue;
     if (!xpByKey.has(key)) xpByKey.set(key, []);
     xpByKey.get(key).push(event);
@@ -250,6 +268,78 @@ async function main() {
   }
   for (const [key, recordIds] of duplicateMeetingKeys) {
     if (recordIds.length > 1) addIssue(report, "duplicate_attendance_import", { meetingKey: key, recordIds });
+  }
+
+  const qualifyingByEnrollment = new Map();
+  for (const meeting of zoomQuery.records) {
+    const meetingKey = text(meeting, zoomTable, CONFIG.zoom.key);
+    const dateKey = text(meeting, zoomTable, "Meeting Date") || meeting.id;
+    const weekIds = ids(meeting, zoomTable, CONFIG.zoom.week);
+    const week = weekIds.length === 1 ? weeks.get(weekIds[0]) : null;
+    if (
+      !meetingKey ||
+      text(meeting, zoomTable, CONFIG.zoom.status).toLowerCase() !== "completed" ||
+      !week ||
+      ids(week, weekTable, CONFIG.week.programInstance).length !== 1
+    ) continue;
+    for (const enrollmentId of ids(meeting, zoomTable, CONFIG.zoom.attendees)) {
+      const enrollment = enrollments.get(enrollmentId);
+      if (!enrollment || !booleanish(enrollment, enrollmentTable, CONFIG.enrollment.active)) continue;
+      const enrollmentPi = ids(enrollment, enrollmentTable, CONFIG.enrollment.programInstance);
+      const weekPi = ids(week, weekTable, CONFIG.week.programInstance);
+      if (
+        enrollmentPi.length !== 1 ||
+        enrollmentPi[0] !== weekPi[0] ||
+        !text(enrollment, enrollmentTable, CONFIG.enrollment.schoolYear) ||
+        text(enrollment, enrollmentTable, CONFIG.enrollment.schoolYear) !== text(week, weekTable, CONFIG.week.schoolYear)
+      ) continue;
+      if (!qualifyingByEnrollment.has(enrollmentId)) qualifyingByEnrollment.set(enrollmentId, []);
+      qualifyingByEnrollment.get(enrollmentId).push({
+        id: meeting.id,
+        meetingKey,
+        dateKey,
+        weekId: weekIds[0],
+        programInstanceId: weekPi[0],
+        schoolYear: text(week, weekTable, CONFIG.week.schoolYear),
+      });
+    }
+  }
+
+  for (const [enrollmentId, qualifyingMeetings] of qualifyingByEnrollment) {
+    for (const type of ["bonus2", "bonus3"]) {
+      const threshold = bonusThreshold(type);
+      const prefix = type === "bonus2" ? "ZOOM_ATTEND_BONUS_2|" : "ZOOM_ATTEND_BONUS_3|";
+      const sourceKey = `${prefix}${enrollmentId}`;
+      const events = xpByKey.get(sourceKey) || [];
+      const canonical = canonicalBonusMeeting(qualifyingMeetings, threshold);
+      if (qualifyingMeetings.length >= threshold && events.length === 0) {
+        addIssue(report, "bonus_missing_canonical_event", { enrollmentId, type, sourceKey, threshold });
+      }
+      if (events.length > 1) {
+        addIssue(report, "bonus_duplicate_canonical_key", { enrollmentId, type, sourceKey, xpEventIds: events.map((event) => event.id) });
+      }
+      const ruleRows = rules.get(type === "bonus2" ? "ZOOM_ATTEND_BONUS_2" : "ZOOM_ATTEND_BONUS_3") || [];
+      const expectedPoints = ruleRows.length === 1 ? numberValue(ruleRows[0], rulesTable, CONFIG.rule.amount) : null;
+      for (const event of events) {
+        const active = booleanish(event, xpTable, CONFIG.xp.active);
+        const meetingIds = ids(event, xpTable, CONFIG.xp.meeting);
+        const eventWeekIds = ids(event, xpTable, CONFIG.xp.week);
+        const eventEnrollmentIds = ids(event, xpTable, CONFIG.xp.enrollment);
+        const eventWasIds = ids(event, xpTable, CONFIG.xp.was);
+        const expectedActive = qualifyingMeetings.length >= threshold;
+        if (active && !expectedActive) addIssue(report, "bonus_active_below_threshold", { eventId: event.id, enrollmentId, type, count: qualifyingMeetings.length, threshold });
+        if (!active && expectedActive) addIssue(report, "bonus_inactive_threshold_met", { eventId: event.id, enrollmentId, type, count: qualifyingMeetings.length, threshold });
+        if (meetingIds.length !== 1) addIssue(report, "bonus_meeting_link_cardinality", { eventId: event.id, enrollmentId, type, meetingIds });
+        if (eventEnrollmentIds.length !== 1 || eventEnrollmentIds[0] !== enrollmentId) addIssue(report, "bonus_enrollment_link_ownership", { eventId: event.id, enrollmentId, type, eventEnrollmentIds });
+        const expectedWeekId = canonical?.weekId || "";
+        if (eventWeekIds.length !== 1 || (expectedActive && eventWeekIds[0] !== expectedWeekId)) addIssue(report, "bonus_week_link_ownership", { eventId: event.id, enrollmentId, type, eventWeekIds, expectedWeekId });
+        const expectedWas = expectedWeekId ? wasByPair.get(`${enrollmentId}|${expectedWeekId}`) || [] : [];
+        if (eventWasIds.length !== 1 || (expectedActive && (expectedWas.length !== 1 || eventWasIds[0] !== expectedWas[0].id))) addIssue(report, "bonus_was_link_ownership", { eventId: event.id, enrollmentId, type, eventWasIds, expectedWasIds: expectedWas.map((row) => row.id) });
+        if (meetingIds.length === 1 && (!canonical || meetingIds[0] !== canonical.id)) addIssue(report, "bonus_wrong_canonical_meeting", { eventId: event.id, enrollmentId, type, meetingIds, expectedMeetingId: canonical?.id || "" });
+        if (expectedPoints !== null && numberValue(event, xpTable, CONFIG.xp.points) !== expectedPoints) addIssue(report, "bonus_wrong_points_or_rule", { eventId: event.id, enrollmentId, type, expectedPoints, actualPoints: numberValue(event, xpTable, CONFIG.xp.points) });
+        if (text(event, xpTable, CONFIG.xp.bucket) !== "Zoom Attendance") addIssue(report, "bonus_wrong_source_or_bucket", { eventId: event.id, enrollmentId, type, bucket: text(event, xpTable, CONFIG.xp.bucket) });
+      }
+    }
   }
 
   for (const meeting of zoomQuery.records) {
@@ -337,6 +427,12 @@ async function main() {
   for (const event of xpQuery.records) {
     const sourceKey = text(event, xpTable, CONFIG.xp.sourceKey);
     if (!sourceType(sourceKey) || sourceType(sourceKey) === "unsupported_recording") continue;
+    if (sourceType(sourceKey) !== "base") {
+      const enrollmentId = sourceKey.split("|")[1] || "";
+      if (!qualifyingByEnrollment.has(enrollmentId)) {
+        addIssue(report, "bonus_orphan_or_stolen_event", { eventId: event.id, sourceKey, enrollmentId });
+      }
+    }
     const meetingIds = ids(event, xpTable, CONFIG.xp.meeting);
     if (meetingIds.length !== 1 || !zooms.has(meetingIds[0])) addIssue(report, "orphan_zoom_xp_event", { eventId: event.id, sourceKey, meetingIds });
   }

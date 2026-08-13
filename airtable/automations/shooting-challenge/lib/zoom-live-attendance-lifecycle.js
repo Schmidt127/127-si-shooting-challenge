@@ -49,6 +49,83 @@ function buildBonus3SourceKey(enrollmentId) {
   return `${BONUS_3_PREFIX}|${clean(enrollmentId)}`;
 }
 
+function cumulativeBonusState(qualifyingMeetingCount) {
+  const count = Number(qualifyingMeetingCount) || 0;
+  return {
+    count,
+    bonus2Active: count >= 2,
+    bonus3Active: count >= 3,
+  };
+}
+
+function selectCanonicalBonusMeeting(meetings, threshold) {
+  const ordered = [...(meetings || [])]
+    .filter((meeting) => meeting && meeting.qualifies)
+    .sort((left, right) =>
+      clean(left.dateKey).localeCompare(clean(right.dateKey)) ||
+      clean(left.meetingKey).localeCompare(clean(right.meetingKey)) ||
+      clean(left.id).localeCompare(clean(right.id))
+    );
+  return ordered[Number(threshold) - 1] || null;
+}
+
+function planCumulativeBonus({
+  threshold,
+  qualifyingMeetings,
+  existingEvent,
+}) {
+  const state = cumulativeBonusState(qualifyingMeetings?.length || 0);
+  const supported = state.count >= Number(threshold);
+  if (!supported) {
+    return existingEvent?.active
+      ? { action: "deactivate_same_event", supported: false, eventId: existingEvent.id }
+      : { action: "already_inactive", supported: false, eventId: existingEvent?.id || "" };
+  }
+  const canonicalMeeting = selectCanonicalBonusMeeting(qualifyingMeetings, threshold);
+  if (!canonicalMeeting) {
+    return { action: "error_missing_canonical_meeting", supported: true, ok: false };
+  }
+  return existingEvent
+    ? {
+      action: existingEvent.active ? "repair_same_event" : "reactivate_same_event",
+      supported: true,
+      eventId: existingEvent.id,
+      canonicalMeetingId: canonicalMeeting.id,
+    }
+    : {
+      action: "create_after_last_chance_recheck",
+      supported: true,
+      canonicalMeetingId: canonicalMeeting.id,
+    };
+}
+
+function planEmptyRosterReconciliation({
+  priorOwnedEvents = [],
+  duplicate = false,
+  wrongOwner = false,
+  freshSignature,
+  startingSignature,
+  needed,
+}) {
+  if (duplicate || wrongOwner) {
+    return { ok: false, action: "error_duplicate_or_wrong_owner" };
+  }
+  const active = priorOwnedEvents.filter((event) => event.active);
+  const settled = settleSignature({
+    currentSignature: freshSignature,
+    startingSignature,
+    freshSignature,
+    needed,
+  });
+  if (!settled.ok) return { ok: false, action: "pending_formula_settlement" };
+  return {
+    ok: true,
+    action: active.length ? "deactivated_empty_roster_events" : "reconciled_empty_roster_no_award",
+    eventIds: priorOwnedEvents.map((event) => event.id),
+    signature: settled.signature,
+  };
+}
+
 function parseLiveSourceKey(sourceKey) {
   const parts = clean(sourceKey).split("|");
   if (parts.length !== 3 || parts[0] !== LIVE_PREFIX || !parts[1] || !parts[2]) {
@@ -257,6 +334,10 @@ module.exports = {
   buildLiveSourceKey,
   buildBonus2SourceKey,
   buildBonus3SourceKey,
+  cumulativeBonusState,
+  selectCanonicalBonusMeeting,
+  planCumulativeBonus,
+  planEmptyRosterReconciliation,
   parseLiveSourceKey,
   isLiveSourceKey,
   validateMeetingContext,

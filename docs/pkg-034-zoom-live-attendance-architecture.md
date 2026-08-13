@@ -1,7 +1,7 @@
 # PKG-034 — Zoom Live-Attendance XP Lifecycle Reliability
 
 **Status:** Phase 3 repository package prepared; Production installation pending Mike
-**Base:** `origin/master` `2b43ebcc8d7efe18da2f2c33459ea77f29bbfa66`
+**Base:** `origin/master` `c9b4232c2f890c4cfb759deaf2993856b4c56b92`
 **Production access:** None by Cursor
 **Scope:** Live attendance only. Recording XP is explicitly excluded.
 
@@ -31,6 +31,15 @@ The first family is meeting-specific. The bonus families remain the existing
 Automation 101 families. No display-name fallback is permitted for rule
 identity, and `ZOOM_CREDIT|...` / `ZOOM_RECORDING|...` are not live keys.
 
+Bonus 2 and Bonus 3 are cumulative thresholds, not mutually exclusive states.
+Automation 101 orders qualifying completed meetings for the same Enrollment,
+Program Instance, School Year, and lifecycle scope by meeting date, then
+Zoom Meeting Key, then Airtable record ID. Bonus 2 is anchored to the second
+qualifying meeting; Bonus 3 is anchored to the third. Counts above three keep
+both lower-threshold events active. A downward transition deactivates only an
+event whose threshold is no longer supported, and restoration reuses that
+event's ID after exact ownership validation.
+
 ## Proven defects corrected
 
 1. Automation 101 is upgraded from v5.5 to v6.0.
@@ -46,8 +55,9 @@ identity, and `ZOOM_CREDIT|...` / `ZOOM_RECORDING|...` are not live keys.
    requiring a WAS.
 9. Restoration reactivates the same event ID.
 10. Formula settlement is reread after writes. The fresh signature must differ
-    from the starting signature and Needed must read numeric zero before the
-    run acknowledges.
+    from the starting signature; Automation 101 writes that fresh signature to
+    the acknowledgement field, then rereads the formula and requires
+    `Reconciliation Needed?` to be numeric zero before completing.
 11. Partial writeback warnings are returned; XP Events are never deleted.
 
 ## Trigger configuration
