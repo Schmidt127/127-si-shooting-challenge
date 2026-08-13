@@ -1,5 +1,9 @@
 # Public Standings Audit — Schmidt visibility + privacy
 
+> Historical reference (superseded for executable standings behavior by
+> `web/docs/airtable-views.md` and PKG-040). The former broad-fallback and
+> 200-record-cap claims are no longer valid.
+
 **Agent 6 overnight audit** · 2026-07-23 · Routes: `/shoot/leaderboard`, `/shoot/public-display`
 
 ---

@@ -117,7 +117,7 @@ export function LeaderboardPodium({ entries }: LeaderboardPodiumProps) {
     <section aria-label="Top three athletes" className="mb-12">
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 sm:items-end sm:gap-4">
         {podium.map((entry) => (
-          <PodiumCard key={entry.id} entry={entry} />
+          <PodiumCard key={entry.rank} entry={entry} />
         ))}
       </div>
     </section>

@@ -6,6 +6,7 @@ import {
   compareLeaderboardSortKeys,
   inferSeasonLabel,
   mapEnrollmentToLeaderboardEntry,
+  requireEligibleLeaderboardRecords,
   sortLeaderboardRecords,
 } from "@/lib/data/leaderboard";
 
@@ -31,10 +32,16 @@ describe("leaderboard mapping", () => {
       {
         id: "recTEST",
         fields: {
+          "Active?": true,
+          Athlete: [{ name: "Jordan Athlete" }],
+          "Program Instance": [{ name: "Shooting Challenge | 2026-2027" }],
           "Full Athlete Name": "Jordan S.",
           "School Name Lookup": "Test High",
           Grade: "8",
+          "Current Level": [{ name: "Level 3" }],
           "Current Level - Public Facing Display": "Level 3",
+          "Level Sort Order - For Softr": 3,
+          "Level Status": "Assigned",
           "Athlete Headshot": [{ id: "att1", url: "https://example.com/headshot.jpg", filename: "headshot.jpg" }],
           "Lifetime XP Total": 1500,
           "Total Shots Counted": 900,
@@ -44,13 +51,12 @@ describe("leaderboard mapping", () => {
     );
 
     expect(entry).toMatchObject({
-      id: "recTEST",
       rank: 1,
       displayName: "Jordan S.",
       school: "Test High",
       grade: "8",
       level: "Level 3",
-      levelSortOrder: 0,
+      levelSortOrder: 3,
       headshot: {
         id: "att1",
         url: "https://example.com/headshot.jpg",
@@ -67,6 +73,7 @@ describe("leaderboard mapping", () => {
       {
         id: "recTEST2",
         fields: {
+          "Level Sort Order - For Softr": 1,
           "Full Athlete Name": "Testing Schmidt",
           "Public Profile Enabled": true,
           "Public Profile Slug": "testing-schmidt",
@@ -84,6 +91,7 @@ describe("leaderboard mapping", () => {
       {
         id: "recTEST3",
         fields: {
+          "Level Sort Order - For Softr": 1,
           "Full Athlete Name": "Plain Athlete",
           "Public Profile Enabled": false,
           "Public Profile Slug": "should-not-link",
@@ -180,5 +188,57 @@ describe("leaderboard mapping", () => {
   it("defaults season label to Current Season when omitted", () => {
     const data = buildLeaderboardData([]);
     expect(data.seasonLabel).toBe("Current Season");
+  });
+});
+
+describe("leaderboard eligibility contract", () => {
+  const scope = {
+    schoolYear: "2026-2027",
+    programInstanceName: "Shooting Challenge | 2026-2027",
+  };
+
+  function validRecord(id: string, overrides: Record<string, unknown> = {}) {
+    return {
+      id,
+      fields: {
+        "Active?": true,
+        Athlete: [{ name: `Athlete ${id}` }],
+        "Program Instance": [{ name: scope.programInstanceName }],
+        "School Year": scope.schoolYear,
+        "Current Level": [{ name: "Level 2" }],
+        "Current Level - Public Facing Display": "Level 2",
+        "Level Sort Order - For Softr": 2,
+        "Level Status": "Assigned",
+        "Lifetime XP Total": 50,
+        "Total Shots Counted": 20,
+        ...overrides,
+      },
+    };
+  }
+
+  it("accepts only complete, scoped active enrollment rows", () => {
+    expect(requireEligibleLeaderboardRecords([validRecord("rec1")], scope)).toHaveLength(1);
+  });
+
+  it.each([
+    ["inactive enrollment", { "Active?": false }],
+    ["prior school year", { "School Year": "2025-2026" }],
+    ["wrong program instance", { "Program Instance": [{ name: "Other | 2026-2027" }] }],
+    ["missing athlete", { Athlete: [] }],
+    ["multiple athletes", { Athlete: [{ name: "A" }, { name: "B" }] }],
+    ["missing current level", { "Current Level": [] }],
+    ["inactive level status", { "Level Status": "Error" }],
+    ["blank XP", { "Lifetime XP Total": "" }],
+    ["negative XP", { "Lifetime XP Total": -1 }],
+    ["blank shots", { "Total Shots Counted": "" }],
+    ["negative shots", { "Total Shots Counted": -1 }],
+  ])("fails closed for %s", (_label, overrides) => {
+    expect(() => requireEligibleLeaderboardRecords([validRecord("rec1", overrides)], scope)).toThrow();
+  });
+
+  it("rejects duplicate canonical Athlete + Program Instance + School Year identities", () => {
+    const first = validRecord("rec1", { Athlete: [{ name: "Same Athlete" }] });
+    const second = validRecord("rec2", { Athlete: [{ name: "Same Athlete" }] });
+    expect(() => requireEligibleLeaderboardRecords([first, second], scope)).toThrow(/Duplicate canonical/);
   });
 });

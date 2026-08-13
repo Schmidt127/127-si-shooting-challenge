@@ -1,16 +1,21 @@
 import type { LeaderboardData, LeaderboardEntry } from "@/types/leaderboard";
 
-import { asBoolean, asNumber, asText } from "./airtable-values";
+import { asBoolean, asText } from "./airtable-values";
 import { mapAttachments } from "./homework";
 import { isValidPublicSlug, normalizeProfileSlug } from "./public-athlete-profile";
 
 /** Raw Enrollments fields consumed by the public leaderboard. */
 export type EnrollmentLeaderboardFields = {
+  "Active?"?: unknown;
+  Athlete?: unknown;
+  "Program Instance"?: unknown;
   "Full Athlete Name"?: unknown;
   "School Name Lookup"?: unknown;
   Grade?: unknown;
+  "Current Level"?: unknown;
   "Current Level - Public Facing Display"?: unknown;
   "Level Sort Order - For Softr"?: unknown;
+  "Level Status"?: unknown;
   "Athlete Headshot"?: unknown;
   "Lifetime XP Total"?: unknown;
   "Total Shots Counted"?: unknown;
@@ -19,6 +24,67 @@ export type EnrollmentLeaderboardFields = {
   "Public Profile Enabled"?: unknown;
   "Public Profile Slug"?: unknown;
 };
+
+export type LeaderboardScope = {
+  schoolYear: string;
+  programInstanceName: string;
+};
+
+type LeaderboardRecord = { id: string; fields: EnrollmentLeaderboardFields };
+
+/** A source row is incomplete or ambiguous and must not be published. */
+export class LeaderboardIntegrityError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "LeaderboardIntegrityError";
+  }
+}
+
+function linkedTokens(value: unknown): string[] {
+  if (!Array.isArray(value)) return [];
+  return value
+    .map((entry) => {
+      if (typeof entry === "string") return entry.trim();
+      if (typeof entry === "object" && entry !== null && "name" in entry) {
+        const name = (entry as { name?: unknown }).name;
+        return typeof name === "string" ? name.trim() : "";
+      }
+      return "";
+    })
+    .filter(Boolean);
+}
+
+function requiredNonNegativeNumber(value: unknown, fieldName: string, recordId: string): number {
+  if (typeof value === "number" && Number.isFinite(value) && value >= 0) return value;
+  if (typeof value === "string" && value.trim() !== "") {
+    const parsed = Number(value.replace(/,/g, ""));
+    if (Number.isFinite(parsed) && parsed >= 0) return parsed;
+  }
+  throw new LeaderboardIntegrityError(
+    `Enrollment ${recordId} has missing or invalid ${fieldName}; standings remain unavailable until it settles.`,
+  );
+}
+
+function requireExactlyOneLinkedToken(value: unknown, fieldName: string, recordId: string): string {
+  const values = linkedTokens(value);
+  if (values.length !== 1) {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${recordId} requires exactly one ${fieldName}; found ${values.length}.`,
+    );
+  }
+  return values[0];
+}
+
+function requireText(value: unknown, fieldName: string, recordId: string): string {
+  const text = asText(value, "");
+  if (!text || text === "—") {
+    throw new LeaderboardIntegrityError(
+      `Enrollment ${recordId} has missing ${fieldName}; standings remain unavailable until it settles.`,
+    );
+  }
+  return text;
+}
+
 export type LeaderboardSortKeys = {
   levelSortOrder: number;
   xp: number;
@@ -27,9 +93,17 @@ export type LeaderboardSortKeys = {
 
 export function getLeaderboardSortKeys(fields: EnrollmentLeaderboardFields): LeaderboardSortKeys {
   return {
-    levelSortOrder: asNumber(fields["Level Sort Order - For Softr"]),
-    xp: asNumber(fields["Lifetime XP Total"]),
-    totalShots: asNumber(fields["Total Shots Counted"]),
+    levelSortOrder: requiredNonNegativeNumber(
+      fields["Level Sort Order - For Softr"],
+      "Level Sort Order - For Softr",
+      "unknown",
+    ),
+    xp: requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", "unknown"),
+    totalShots: requiredNonNegativeNumber(
+      fields["Total Shots Counted"],
+      "Total Shots Counted",
+      "unknown",
+    ),
   };
 }
 
@@ -41,9 +115,7 @@ export function compareLeaderboardSortKeys(a: LeaderboardSortKeys, b: Leaderboar
   return 0;
 }
 
-export function sortLeaderboardRecords<
-  T extends { id: string; fields: EnrollmentLeaderboardFields },
->(records: T[]): T[] {
+export function sortLeaderboardRecords<T extends LeaderboardRecord>(records: T[]): T[] {
   return [...records].sort((left, right) => {
     const byKeys = compareLeaderboardSortKeys(
       getLeaderboardSortKeys(left.fields),
@@ -60,6 +132,62 @@ export function sortLeaderboardRecords<
   });
 }
 
+/**
+ * The public query uses a named Airtable view as its primary scope, then checks
+ * each returned row again. A broken view therefore fails closed instead of
+ * publishing an inactive, prior-year, wrong-program, duplicate, or unsettled row.
+ */
+export function requireEligibleLeaderboardRecords<T extends LeaderboardRecord>(
+  records: T[],
+  scope: LeaderboardScope,
+): T[] {
+  const canonicalIdentities = new Map<string, string>();
+
+  for (const record of records) {
+    const { fields } = record;
+    if (!asBoolean(fields["Active?"])) {
+      throw new LeaderboardIntegrityError(`Enrollment ${record.id} is inactive but was returned by standings.`);
+    }
+
+    const athlete = requireExactlyOneLinkedToken(fields.Athlete, "Athlete link", record.id);
+    const programInstance = requireExactlyOneLinkedToken(
+      fields["Program Instance"],
+      "Program Instance link",
+      record.id,
+    );
+    const schoolYear = requireText(fields["School Year"], "School Year", record.id);
+
+    if (schoolYear !== scope.schoolYear || programInstance !== scope.programInstanceName) {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} is outside the configured standings scope (${schoolYear} / ${programInstance}).`,
+      );
+    }
+
+    const identity = `${athlete}|${programInstance}|${schoolYear}`;
+    const duplicate = canonicalIdentities.get(identity);
+    if (duplicate) {
+      throw new LeaderboardIntegrityError(
+        `Duplicate canonical Enrollment identity ${identity}: ${duplicate} and ${record.id}.`,
+      );
+    }
+    canonicalIdentities.set(identity, record.id);
+
+    requireExactlyOneLinkedToken(fields["Current Level"], "Current Level", record.id);
+    const status = requireText(fields["Level Status"], "Level Status", record.id);
+    if (status !== "Assigned" && status !== "Gate Blocked") {
+      throw new LeaderboardIntegrityError(
+        `Enrollment ${record.id} has non-settled Level Status "${status}".`,
+      );
+    }
+    requireText(fields["Current Level - Public Facing Display"], "Current Level display", record.id);
+    requiredNonNegativeNumber(fields["Level Sort Order - For Softr"], "Level Rank", record.id);
+    requiredNonNegativeNumber(fields["Lifetime XP Total"], "Lifetime XP Total", record.id);
+    requiredNonNegativeNumber(fields["Total Shots Counted"], "Total Shots Counted", record.id);
+  }
+
+  return records;
+}
+
 function resolvePublicProfileSlug(fields: EnrollmentLeaderboardFields): string | null {
   if (!asBoolean(fields["Public Profile Enabled"])) return null;
   const raw = asText(fields["Public Profile Slug"], "");
@@ -69,7 +197,7 @@ function resolvePublicProfileSlug(fields: EnrollmentLeaderboardFields): string |
 }
 
 export function mapEnrollmentToLeaderboardEntry(
-  record: { id: string; fields: EnrollmentLeaderboardFields },
+  record: LeaderboardRecord,
   rank: number,
 ): LeaderboardEntry {
   const fields = record.fields;
@@ -77,7 +205,6 @@ export function mapEnrollmentToLeaderboardEntry(
   const headshot = mapAttachments(fields["Athlete Headshot"]);
 
   return {
-    id: record.id,
     rank,
     displayName: asText(fields["Full Athlete Name"], "Unknown Athlete"),
     school: asText(fields["School Name Lookup"]),
@@ -92,7 +219,7 @@ export function mapEnrollmentToLeaderboardEntry(
 }
 
 export function buildLeaderboardData(
-  records: Array<{ id: string; fields: EnrollmentLeaderboardFields }>,
+  records: LeaderboardRecord[],
   seasonLabel = "Current Season",
 ): LeaderboardData {
   const sorted = sortLeaderboardRecords(records);

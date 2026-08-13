@@ -3,7 +3,6 @@ import type { CatalogAttachment } from "@/types/levels";
 /** Leaderboard row mapped from Airtable Enrollments. */
 
 export type LeaderboardEntry = {
-  id: string;
   rank: number;
   displayName: string;
   school: string;
