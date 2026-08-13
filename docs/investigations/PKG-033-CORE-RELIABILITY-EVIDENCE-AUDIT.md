@@ -62,6 +62,11 @@ Primary sources: `001`, `002`, `003`, `023`, `005`, `041`, `042`,
    participation gate. Welcome must remain non-blocking, while exact
    Enrollment, Program Instance, School Year, and Week context must remain
    blocking.
+7. The current `001` source blocks and deactivates a new same-Athlete/
+   same-School-Year Enrollment rather than linking it to the existing
+   canonical Enrollment. Its duplicate identity also omits Program Instance.
+   This is a source-level candidate for a separate implementation package,
+   subject to Mike’s multi-Program Instance policy and live evidence.
 
 ### Severity and evidence gaps
 
@@ -75,20 +80,27 @@ Primary sources: `001`, `002`, `003`, `023`, `005`, `041`, `042`,
 
 ### Modification decision
 
-No registration automation change is justified by repository evidence alone.
-`001`, `041`, and `042` require live trigger/version/schema attestation before
-any change. A read-only audit and offline recovery fixtures are justified.
+The Enrollment reuse and Program Instance-aware dedupe behavior is a justified
+follow-up candidate, but not a Production-ready fix. `001`, `041`, and `042`
+require live trigger/version/schema attestation and a focused approved
+implementation package before any change. Read-only audits and offline
+recovery fixtures are justified now.
 
 ## Lane 2 — Weekly Athlete Summary integrity
 
 ### Ownership map and identity contract
 
-`031` is the canonical WAS creator/linker for a counted Submission. Its
-identity is the exact Enrollment + Week relationship, represented through
-Enrollment Key + Week Key and the formula-driven Summary Key. `031` links the
-Submission to the WAS and links the WAS back to the Submission. `010` owns
-Submission Base XP Event creation and does not surrender that ownership to
-`031`; `031` may repair eligible non-Submission-Base XP summary links.
+`031` is the primary counted-Submission WAS creator/linker. `101` can create a
+WAS as a Zoom XP side effect, and `118` can create an empty-week WAS for the
+scheduled weekly path. The logical identity is the exact Enrollment + Week
+relationship, represented through Enrollment Key + Week Key and the
+formula-driven Summary Key. Airtable has no unique constraint, so the three
+create-capable paths can race.
+
+`031` links the Submission to the WAS and links the WAS back to the
+Submission. `010` owns Submission Base XP Event creation and does not
+surrender that ownership to `031`; `031` may repair eligible
+non-Submission-Base XP summary links.
 
 `032`, `033`, `030`, and `034` are supporting WAS context writers. `057` and
 `058` consume WAS state for Perfect Week eligibility/unlock. `072` is an email
@@ -120,6 +132,9 @@ Primary sources: `031`, `010`, `030`, `032`, `033`, `034`, `057`, `058`,
 6. Weekly goal and derived totals are downstream of Week, Enrollment,
    Challenge Goal, Submission, and XP links. A summary record existing is not
    sufficient proof that totals have settled.
+7. `101` and `118` are additional create-capable writers. Existing
+   documentation must say “intended logical uniqueness with fail-closed
+   duplicate detection,” not atomic uniqueness or sole-creator guarantees.
 
 ### Failure matrix
 
@@ -138,9 +153,10 @@ Primary sources: `031`, `010`, `030`, `032`, `033`, `034`, `057`, `058`,
 ### Modification decision
 
 The authoritative read-only WAS audit and offline first-create/replay/
-concurrency/repair harness are justified. No WAS creator rewrite is justified
-until the audit identifies a reproducible source defect rather than a live
-configuration gap.
+concurrency/repair harness are justified. A shared resolver or link-only
+conversion for `031`, `101`, and `118` is a separate implementation candidate;
+no creator rewrite is included in PKG-033 without a bounded architecture
+decision and live trigger evidence.
 
 ## Lane 3 — Zoom attendance and Zoom XP
 
@@ -179,6 +195,16 @@ current Stage 17 helper contract forbids writing `Zoom Meetings.Attendees`.
    though current ownership and completion evidence say `043` is retired.
    This is a documentation/trigger-inventory defect requiring a bounded
    registry correction, not a recreation of `043`.
+7. The source-key registry describes live Zoom keys with `{meetingId}`, while
+   `101` constructs them from `Zoom Meeting Key`; terminology must be
+   reconciled before any migration or audit repair.
+8. `101` creates/repairs WAS records but does not independently validate that
+   attendee Enrollment and meeting Week share a Program Instance. It also has
+   no canonical live-attendance withdrawal lifecycle when an attendee is
+   removed later.
+9. `117` is email-only and there is no deployed recording-XP writer. Any
+   withdrawal/restoration or `ZOOM_CREDIT` test must be skipped until PKG-010
+   names an owner and version.
 
 ### Modification decision
 
@@ -212,27 +238,34 @@ shots descending, then name and record ID for deterministic ties.
    homework/video totals, Zoom/streak inputs, active state, and gate-rule
    configuration in its signature. It can detect changes on scheduled scans
    after Airtable values settle.
-2. Current `042 v3.4` validates active Enrollment, school-year/rule-set gate
+2. The signature does not include the `Levels` table’s XP thresholds or
+   `Active?` configuration. A level threshold or level activation change may
+   leave Current Level and Next Level stale until another input changes.
+3. `042` leaves the recalculation request on its error path; with a “record
+   enters view” trigger, retry behavior when the record remains in the view
+   requires explicit proof.
+4. Current `042 v3.4` validates active Enrollment, school-year/rule-set gate
    selection, duplicate applicable rules, zero-XP configuration, and maximum
    level behavior in source/tests. It preserves inactive historical fields
    while clearing a stale request.
-3. Historical level and gate defects are retained as dated evidence; current
+5. Historical level and gate defects are retained as dated evidence; current
    source remediation is present but its live paste, trigger, required field,
    and controlled Schmidt proof are not confirmed in this package.
-4. Rollup/formula delay can allow 042 to process a stale Lifetime XP or gate
+6. Rollup/formula delay can allow 042 to process a stale Lifetime XP or gate
    input. A false settled success must be avoided; test packets must capture
    before/after values and timestamps.
-5. Leaderboard sort keys are deterministic after the documented level, XP,
+7. Leaderboard sort keys are deterministic after the documented level, XP,
    and shot keys, but this is a web/read-model contract. Current Airtable view
    membership, school-year filter, and test-record exclusion remain live
    evidence questions.
 
 ### Modification decision
 
-No progression owner rewrite is justified. Justified work is focused offline
-threshold increase/decrease/replay coverage, a read-only configuration audit,
-and a standings contract test for inactive/school-year/tie behavior. Any
-required live field or trigger change is Mike-owned and outside this package.
+No immediate progression owner rewrite is justified. A focused follow-up
+package should cover `Levels` threshold/activation changes and 042 retry
+re-entry. Current justified work remains offline threshold increase/decrease/
+replay coverage, a read-only configuration audit, and standings contract tests.
+Any live field or trigger change is Mike-owned and outside this package.
 
 ## Lane 5 — consolidated E2E readiness
 
@@ -267,6 +300,20 @@ Make, and public appearance are disabled or separately observed boundaries.
 - Any Production trigger, paste, enablement, record repair, XP change, or
   live test.
 - Any communications, email appearance, or public website change.
+
+## Follow-up candidates from independent lane review
+
+These are not Production fixes in PKG-033 and require separate bounded
+packages after Mike’s decisions:
+
+| Candidate | Reason for separation | Disposition |
+|---|---|---|
+| `001` canonical Enrollment reuse and Program Instance-aware dedupe | Changes registration identity semantics and multi-program behavior | Candidate; policy and live evidence required |
+| Shared WAS resolver for `031`, `101`, and `118` | Changes multiple creators and concurrency behavior | Candidate; Airtable has no atomic uniqueness |
+| `041` signature includes active `Levels` configuration | Changes progression queue inputs | Candidate; threshold/activation tests first |
+| `042` retry-safe failure re-entry | Changes trigger/retry semantics | Candidate; preserve queue on failure and prove retry |
+| `101` Program Instance validation and live-attendance withdrawal | Changes Zoom XP correction lifecycle | Candidate; product policy first |
+| Zoom source-key terminology reconciliation | Could affect audit/migration identity | Documentation decision before code |
 
 ## Required Mike evidence
 

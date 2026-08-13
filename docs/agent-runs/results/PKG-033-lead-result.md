@@ -37,18 +37,19 @@ Production or DEV Airtable system was accessed.
 Current source and tests support same-year duplicate blocking, identity reuse,
 Program Instance/Week fail-closed boundaries, immediate initial recalculation,
 and non-blocking welcome side effects. Exact Fillout mappings, live trigger
-versions, and formula timing remain unverified. No registration automation
-change is justified.
+versions, and formula timing remain unverified. Independent review identified
+a separate source-level candidate: 001 blocks/deactivates a new duplicate row
+instead of linking it to the canonical Enrollment, and its dedupe identity
+omits Program Instance. This requires a separate approved package.
 
 ### Weekly Athlete Summary
 
-`031` is the canonical creator/linker with exact Enrollment + Week identity,
-duplicate fail-closed behavior, post-create revalidation, and bounded repair
-ownership. Existing read-only audits cover counted Submission/XP/WAS/Enrollment
-parity. The new offline harness covers duplicate ambiguity, wrong ownership,
-formula lag, backlink repair, owner-specific XP repair, and replay stability. A
-current live duplicate audit and formula-settling evidence remain required. No
-creator rewrite is justified.
+`031` is the primary counted-Submission creator/linker, but `101` and `118`
+also have create-capable WAS paths. Airtable has no atomic uniqueness. The new
+offline harness covers duplicate ambiguity, wrong ownership, formula lag,
+backlink repair, owner-specific XP repair, and replay stability. A shared
+resolver or link-only architecture is a separate candidate; no creator rewrite
+is included.
 
 ### Zoom
 
@@ -64,7 +65,9 @@ v1.9 while source is v2.1; the assertion and test label were corrected.
 progression-output writer with active/school-year/rule-set safeguards; `043`
 remains retired. Leaderboard sorting is deterministic after level, XP, shots,
 name, and record ID. Live schema/trigger/view settlement and test-record
-exclusion remain unverified. No progression owner rewrite is justified.
+exclusion remain unverified. Independent review found that 041’s signature does
+not include `Levels` XP thresholds/activation and that 042 retry behavior after
+an error needs proof; these are separate follow-up candidates.
 
 ### End-to-end specification
 
@@ -103,6 +106,9 @@ It is not a pass claim.
    live configuration evidence and a narrower approved implementation package.
 5. Web unit-test execution is environment-blocked because dependencies are not
    installed; this package did not alter web code.
+6. Independent lane review identified Zoom source-key terminology drift,
+   missing 101 Program Instance validation/withdrawal lifecycle, and no
+   deployed recording-XP writer. Recording stages remain conditional on PKG-010.
 
 ## Recommended next step
 
