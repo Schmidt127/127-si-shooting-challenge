@@ -34,14 +34,13 @@ pass the listed DEV proofs. Repository tests do not constitute Production proof.
 
 ### Required `Target Goal Shots.Program Instance` field
 
-In DEV first, create **`Program Instance`** on table **`Target Goal Shots`
-(`tbleCfuAt3rY8unU3`)** as a **linked-record** field to **`Program Instance -
-Sync` (`tblMfALZa4YYUy70P`)**. Allow multiple links at the Airtable field level
-only if the UI requires it; the contract requires exactly one link for every
-active usable goal. Do not alter the two formula fields until their existing
-formula text has been exported. Update the canonical `Goal Key` formula so its
-identity includes the linked Program Instance record identity and Grade Band
-record identity; it must not depend solely on display names. Re-read the
+`Target Goal Shots.Program Instance` is installed in Production as field
+`fldmgJgCQTIHKqhD6`, a linked-record field to `Program Instance - Sync`
+(`tblMfALZa4YYUy70P`). The contract requires exactly one link for every active
+usable goal. Do not alter the two formula fields until their existing formula
+text has been exported. Update the canonical `Goal Key` formula so its identity
+includes the linked Program Instance record identity and Grade Band record
+identity; it must not depend solely on display names. Re-read the
 formula/lookup fields after settling before enabling a consumer.
 
 ### Exact Production-safe goal linking plan
