@@ -31,6 +31,7 @@ Notable changes to scripts, schema documentation, Make.com blueprints, audit too
 ### Airtable
 
 #### Changed
+- **PKG-006R daily submission XP reconciliation (2026-08-13)** — Automation **010 v10.7** installed and **ON** in Production per Mike-supplied baseline. All 12 reconciliation fields verified installed. Lifecycle proof (backlog review, replay, withdrawal/restoration, natural-trigger runs, settled totals) remains pending. Automation **077** deleted from Airtable (retired Make/Gmail slot); GitHub source archived. `Enrollments.Progression Last Reconciled Signature` created. **041 v5.0 / 042 v4.0 paste deferred** until PKG-006R lock release. Unified operator packet: [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./docs/deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md).
 - **PKG-034 Production installation closeout (2026-08-13)** — Mike supplied
   authoritative Production evidence for Automation 101 v6.1 in
   `appn84sqPw03zEbTT`: all nine reconciliation fields exist, the sole trigger

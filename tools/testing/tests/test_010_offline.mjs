@@ -1,18 +1,18 @@
 /**
- * Offline regression tests for Automation 010 stale Weekly Summary repair.
+ * Offline regression tests for Automation 010 v10.7 reconciliation writer.
  * Run: node --test tools/testing/tests/test_010_offline.mjs
  */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { MockRecord } from "./airtable_mock.mjs";
-import { build010Base, run010, IDS } from "./run_010_script.mjs";
+import { build010Base, run010, IDS, CURRENT_SIGNATURE } from "./run_010_script.mjs";
 
-function submissionWeeklySummary(base) {
-  return base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("Weekly Athlete Summary");
+function submissionRecord(base) {
+  return base.getTable("Submissions").records.get(IDS.SUBMISSION);
 }
 
-function xpEventWeeklySummary(base) {
-  return base.getTable("XP Events").records.get(IDS.XP_EVENT).getCellValue("Weekly Athlete Summary");
+function xpEventRecord(base) {
+  return base.getTable("XP Events").records.get(IDS.XP_EVENT);
 }
 
 function totalWrites(base) {
@@ -22,81 +22,80 @@ function totalWrites(base) {
   );
 }
 
-test("keeps a stale Submission summary link unchanged while linking the XP Event canonically", async () => {
+test("repairs an owned XP Event and acknowledges the reconciliation latch", async () => {
   const base = build010Base();
+  const { output, error } = await run010({ base });
+
+  assert.equal(error, null, error && error.message);
+  assert.equal(output.values.statusOut, "success");
+  assert.match(output.values.actionOut, /reactivated_same_event|repaired_same_event/);
+  assert.equal(output.values.reconciliationAcknowledged, true);
+  assert.equal(output.values.reconciledSignature, CURRENT_SIGNATURE);
+  assert.equal(
+    submissionRecord(base).getCellValue("Last Reconciled Signature"),
+    CURRENT_SIGNATURE
+  );
+  assert.equal(submissionRecord(base).getCellValue("Reconciliation Needed?"), 0);
+  assert.deepEqual(
+    xpEventRecord(base).getCellValue("Weekly Athlete Summary"),
+    [{ id: IDS.SUMMARY_CANONICAL }]
+  );
+});
+
+test("creates a canonical XP Event when none exists", async () => {
+  const base = build010Base({
+    submissionCells: {
+      "XP Events": [],
+      "Last Reconciled Signature": "",
+    },
+    xpEventCells: null,
+  });
+  base.getTable("XP Events").records.clear();
 
   const { output, error } = await run010({ base });
   assert.equal(error, null, error && error.message);
-  assert.equal(output.values.statusOut, "updated");
-  assert.equal(output.values.actionOut, "updated_existing_xp_event");
-  assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
-  assert.equal(output.values.weeklySummaryResolution, "source_repaired_to_canonical");
-  assert.equal(output.values.repairedSubmissionSummaryLink, false);
-  assert.equal(output.values.submissionSummaryLinkNeedsRepair, true);
-
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
-  assert.deepEqual(xpEventWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "created");
+  assert.equal(base.getTable("XP Events").records.size, 1);
 });
 
-test("fails closed when a stale source summary exists but no canonical replacement exists", async () => {
-  const base = build010Base({
-    weeklySummaries: [
-      new MockRecord(IDS.SUMMARY_STALE, {
-        Enrollment: [{ id: "recWrongEnrollment0001", name: "Wrong Enrollment" }],
-        Week: [{ id: "recWrongWeek0000001", name: "Wrong Week" }],
-        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
-      }),
-    ],
-  });
-
-  const { output, error } = await run010({ base });
-  assert.ok(error);
-  assert.match(
-    String(error.message),
-    /expected exactly one valid canonical summary, found 0/i
-  );
-  assert.equal(output.values.statusOut, "error");
-  assert.equal(totalWrites(base), 0);
-  assert.equal(
-    base.getTable("Submissions").records.get(IDS.SUBMISSION).getCellValue("XP Award Status"),
-    ""
-  );
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
-  assert.deepEqual(xpEventWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
-});
-
-test("no existing Submission summary link requires one valid replacement", async () => {
+test("deactivates the exact owned XP Event when the Submission becomes ineligible", async () => {
   const base = build010Base({
     submissionCells: {
-      "Weekly Athlete Summary": [],
+      "Count This Submission?": false,
+      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
     },
   });
 
   const { output, error } = await run010({ base });
   assert.equal(error, null, error && error.message);
-  assert.equal(output.values.weeklySummaryId, IDS.SUMMARY_CANONICAL);
-  assert.deepEqual(submissionWeeklySummary(base), []);
-  assert.deepEqual(xpEventWeeklySummary(base), [{ id: IDS.SUMMARY_CANONICAL }]);
+  assert.equal(output.values.statusOut, "success");
+  assert.equal(output.values.actionOut, "deactivated_same_event");
+  assert.equal(xpEventRecord(base).getCellValue("Active?"), false);
 });
 
-test("zero valid candidates fails closed before XP writes", async () => {
+test("fails closed when no canonical Weekly Athlete Summary exists", async () => {
   const base = build010Base({
     weeklySummaries: [
       new MockRecord(IDS.SUMMARY_STALE, {
-        Enrollment: [{ id: "recOtherEnrollment", name: "Other Enrollment" }],
-        Week: [{ id: "recOtherWeek", name: "Other Week" }],
-        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
+        Enrollment: [{ id: "recWrongEnrollment0001", name: "Wrong Enrollment" }],
+        Week: [{ id: "recWrongWeek0000001", name: "Wrong Week" }],
+        "Summary Key": "ENR-OLD|WEEK-OLD",
       }),
     ],
+    submissionCells: {
+      "XP Events": [],
+    },
   });
+  base.getTable("XP Events").records.clear();
 
   const { error } = await run010({ base });
   assert.ok(error);
+  assert.match(String(error.message), /incomplete or ambiguous canonical identity/i);
   assert.equal(totalWrites(base), 0);
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
 });
 
-test("multiple valid candidates fails closed before XP writes", async () => {
+test("multiple valid Weekly Athlete Summary candidates fail closed", async () => {
   const base = build010Base({
     weeklySummaries: [
       new MockRecord(IDS.SUMMARY_CANONICAL, {
@@ -114,85 +113,54 @@ test("multiple valid candidates fails closed before XP writes", async () => {
 
   const { error } = await run010({ base });
   assert.ok(error);
-  assert.match(String(error.message), /exactly one valid canonical/i);
+  assert.match(String(error.message), /incomplete or ambiguous canonical identity/i);
   assert.equal(totalWrites(base), 0);
 });
 
-test("correct key with wrong Enrollment, Week, or Program Instance fails closed without writes", async () => {
+test("ambiguous Enrollment links fail closed before any writes", async () => {
   const base = build010Base({
-    weeklySummaries: [
-      new MockRecord(IDS.SUMMARY_CANONICAL, {
-        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
-        Week: [{ id: "recOtherWeek", name: "Early Bird" }],
-        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
-      }),
-    ],
+    submissionCells: {
+      Enrollment: [
+        { id: IDS.ENROLLMENT, name: "Schmidt Enrollment" },
+        { id: "recOtherEnrollment", name: "Other Enrollment" },
+      ],
+    },
   });
-  base.getTable("Weeks").records.set(
-    "recOtherWeek",
-    new MockRecord("recOtherWeek", {
-      "Week Key": "WEEK-EARLY-BIRD",
-      "Program Instance": [{ id: "recPI2025", name: "2025-2026" }],
-    })
-  );
 
   const { error } = await run010({ base });
   assert.ok(error);
+  assert.match(String(error.message), /ambiguous Enrollment, Week, or WAS links/i);
   assert.equal(totalWrites(base), 0);
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
 });
 
-test("same athlete and week labels in another Program Instance are rejected", async () => {
-  const base = build010Base({
-    weeklySummaries: [
-      new MockRecord(IDS.SUMMARY_CANONICAL, {
-        Enrollment: [{ id: IDS.ENROLLMENT, name: "Schmidt Enrollment" }],
-        Week: [{ id: "recOtherWeek", name: "Early Bird" }],
-        "Summary Key": "ENR-2026-2027|WEEK-EARLY-BIRD",
-      }),
-    ],
-  });
-  base.getTable("Weeks").records.set(
-    "recOtherWeek",
-    new MockRecord("recOtherWeek", {
-      "Week Key": "WEEK-EARLY-BIRD",
-      "Program Instance": [{ id: "recPI2025", name: "2025-2026" }],
-    })
-  );
-
-  const { error } = await run010({ base });
-  assert.ok(error);
-  assert.equal(totalWrites(base), 0);
-  assert.deepEqual(submissionWeeklySummary(base), [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }]);
-});
-
-test("missing or ambiguous Program Instance fails before any writes", async () => {
-  const missingPiBase = build010Base();
-  missingPiBase.getTable("Enrollments").records.get(IDS.ENROLLMENT).cells[
-    "Program Instance"
-  ] = [];
-  const missing = await run010({ base: missingPiBase });
-  assert.ok(missing.error);
-  assert.equal(totalWrites(missingPiBase), 0);
-
-  const ambiguousPiBase = build010Base();
-  ambiguousPiBase.getTable("Weeks").records.get(IDS.WEEK).cells[
-    "Program Instance"
-  ] = [{ id: "recPI2026" }, { id: "recPI2025" }];
-  const ambiguous = await run010({ base: ambiguousPiBase });
-  assert.ok(ambiguous.error);
-  assert.equal(totalWrites(ambiguousPiBase), 0);
-});
-
-test("replay preserves XP Event and summary record counts", async () => {
+test("replay preserves XP Event count and acknowledges without duplicate creation", async () => {
   const base = build010Base();
   const first = await run010({ base });
   const xpCountAfterFirst = base.getTable("XP Events").records.size;
-  const second = await run010({ base });
-  const xpCountAfterReplay = base.getTable("XP Events").records.size;
 
+  submissionRecord(base).cells["Last Reconciled Signature"] = "";
+  submissionRecord(base).cells["Reconciliation Needed?"] = 1;
+
+  const second = await run010({ base });
   assert.equal(first.error, null, first.error && first.error.message);
   assert.equal(second.error, null, second.error && second.error.message);
-  assert.equal(xpCountAfterReplay, xpCountAfterFirst);
-  assert.equal(base.getTable("Weekly Athlete Summary").records.size, 2);
+  assert.equal(base.getTable("XP Events").records.size, xpCountAfterFirst);
+  assert.match(second.output.values.actionOut, /reactivated_same_event|repaired_same_event/);
+});
+
+test("ownership mismatch on an existing canonical XP Event fails closed", async () => {
+  const base = build010Base({
+    xpEventCells: {
+      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_STALE, name: "Stale Summary" }],
+    },
+    submissionCells: {
+      "Count This Submission?": false,
+      "Weekly Athlete Summary": [{ id: IDS.SUMMARY_CANONICAL, name: "Canonical Summary" }],
+    },
+  });
+
+  const { error } = await run010({ base });
+  assert.ok(error);
+  assert.match(String(error.message), /ownership mismatch/i);
+  assert.equal(totalWrites(base), 0);
 });

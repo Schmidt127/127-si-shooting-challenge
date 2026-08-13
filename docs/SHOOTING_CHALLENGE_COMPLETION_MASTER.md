@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-13** (PKG-034 Production installation closeout; PKG-007 Homework XP evidence; PKG-006R reversal draft) |
+| Last updated | **2026-08-13** (PKG-006R/036 Production baseline; 010 v10.7 installed ON; 077 deleted; progression field created) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -61,8 +61,8 @@ These rules apply to this reconciliation and future release-status maintenance.
 | Recording approval email handoff | Automation **117** | Yes |
 | Make/Gmail email send + dedupe | Make workflow **117f** | No Airtable slot |
 
-Canonical file for Automation 117: `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js`.  
-Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.  
+Canonical file for Automation 117: `airtable/automations/shooting-challenge/117-zoom-send-recording-approval-email-to-make.js`.
+Runbook: `docs/deploy-checklists/117-zoom-recording-approval-email.md`.
 **Do not** paste the Stage 17 orchestrator into PROD Automation 117. **Do not** create 117a/117b/117c Airtable slots.
 
 ## 2. Status Definitions
@@ -250,6 +250,28 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-032` | Low-priority deferred cleanup: Drive/attachment retirement, archive/clone rollover, Award Recipients scope, duplicate award bucket, conquered-goal lookup, repo-health follow-ups, and multi-challenge vision | `deferred` | §4 SC-100, SC-125, SC-127–SC-129, SC-143, SC-145; backlog V2-001, H-003, H-004, H-006 | Core 2027 launch and higher-priority reliability work | Mike; Cursor | Explicit reactivation request, narrow scope, impact review, and independent evidence package | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Leave deferred; do not let these items compete with season launch or core proof | 32 |
 | `PKG-033` | Core App Reliability and End-to-End Production Readiness: registration-to-participation, Weekly Athlete Summary, Zoom attendance/XP, progression/levels, standings, and one consolidated Production test specification | `needs live proof` | §4 SC-001–SC-004, SC-024, SC-031, SC-035–SC-037, SC-073–SC-093; PKG-006, PKG-014, PKG-015 | PKG-006 daily-submission/core participation ownership; PKG-014 progression/levels ownership; PKG-015 Zoom/public integration proof boundaries; merged PR #166 Homework XP and PR #165 Video XP | Mike; Cursor | Five repository evidence lanes, independent review, offline lifecycle/concurrency tests where justified, exact ownership/evidence-gap maps, and a plain-language Schmidt Production journey; no offline result may be called Production proof | 2026-08-13 — repository evidence, WAS harness, retired-043 inventory correction, and Mike-only Schmidt packet prepared in draft PR #167; this is not implementation completion; independent review YES for draft publication; current live versions/triggers/schema/formula settling and controlled Production proof remain pending | Repo; Airtable evidence supplied by Mike; Fillout; Vercel readback only if separately approved | Mike reviews draft PR #167 and supplies live evidence; serialize any later source repair as a separate independently reviewed package | 33 |
 | `PKG-034` | Zoom live-attendance XP lifecycle reliability: formula-backed reconciliation, base XP, cumulative bonuses, withdrawal, restoration, ownership guards, and downstream readback | `needs live proof` | §4 SC-073–SC-093; PKG-033 | Automation 101 sole live-attendance XP writer; recording XP and Automation 117 email remain out of scope | Mike; Cursor | Repository implementation, independent review, exact nine-field Production contract, controlled Schmidt-only lifecycle proof, same-event restoration, and settled WAS/lifetime/progression/standings evidence; offline results are not Production proof | 2026-08-13 — Mike supplied evidence that all nine fields are installed in `appn84sqPw03zEbTT`, Automation 101 v6.1 is ON with the sole `Zoom XP Reconciliation Needed? = 1` trigger and dynamic `recordId`, and the final read-only audit checked 2 meetings / 16 XP Events with 0 Zoom XP Events, 0 unsupported recording XP Events, and 0 duplicate/rule/ownership/backlink/lifecycle errors. Introduction `recMFP2x5LDqea9ax` and Motivation `recb9EjQIJVzaRpZa` both acknowledged empty rosters with `reconciled_empty_roster_no_award`, Needed = 0, and no XP Event. Two missing-enrollment warnings are the intentional empty rosters; Mike manually deleted unused meetings `rec3ToANr5pcs2SRG` and `reczeUT0AJUWMmEOb`. Installation and empty-roster acknowledgement are documented; live-attendee XP and downstream lifecycle proof remain pending. Cursor did not access Production. | Repo; Airtable; Mike-controlled Production UI | Retain pending live-attendance, bonus, withdrawal/restoration, progression, standings, and recording-XP proof; do not repeat installation; recording XP remains deferred | 34 |
+
+### PKG-006R / PKG-036 Production baseline — 2026-08-13
+
+Mike supplied the authoritative Production baseline for the unified operator
+packet ([`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./deploy-checklists/PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md)).
+
+| Item | Current status | Current truth |
+|------|----------------|---------------|
+| PKG-006R reconciliation fields (12) | **Installed / verified** | Verify exact names and types; do not recreate |
+| Automation **010 v10.7** | **Installed in PROD / ON** | Inspect run history and reconciliation backlog before record changes; lifecycle proof (replay, withdrawal/restoration, natural-trigger, settled totals) pending |
+| Automation **041 v4.0** | **Installed in PROD** | 15-minute cron ON; **v5.0 paste deferred** until PKG-006R lock release |
+| Automation **042 v3.4** | **Installed in PROD** | View-entry trigger preserved; **v4.0 paste deferred** until PKG-006R lock release |
+| `Progression Last Reconciled Signature` | **Created** | Verify writable single-line text and field ID |
+| `Progression Last Queued Signature` | **Present** | Unchanged (`fldw2p0bfT54vk6ag`) |
+| Levels / Gate Rules | **12 active Levels; 12 school-year gate rules (Level 1–12)** | School Year / Rule Set scope; one Program Instance per school year |
+| Levels inverse links | **Renamed (PR #177)** | `Enrollments — Current Level`, `Enrollments — Next Level` |
+| Automation **043** | **Retired / absent** | Do not recreate |
+| Automation **077** | **Deleted from Airtable** | Retired Make/Gmail path; GitHub source archived; slot recovered |
+
+**PKG-006R lock:** active until backlog review, replay, withdrawal/restoration, audit, totals, and natural-trigger evidence are complete. **041 v5.0 / 042 v4.0 installation deferred** until explicit lock release.
+
+---
 
 ### PKG-034 Production installation closeout — 2026-08-13
 
@@ -737,10 +759,10 @@ Baseline before go-live (`a8f3b00`): Total **146** · Complete **10** · Live Te
 
 Columns:
 
-- **Mike’s Goal** — what success looks like in plain language  
-- **What Already Exists** — evidence in repo / prior PROD work  
-- **What Is Still Needed** — remaining work  
-- **Evidence** — old IDs and key doc/script paths for traceability  
+- **Mike’s Goal** — what success looks like in plain language
+- **What Already Exists** — evidence in repo / prior PROD work
+- **What Is Still Needed** — remaining work
+- **Evidence** — old IDs and key doc/script paths for traceability
 
 | ID | Area | Mike’s Goal | Current Status | What Already Exists | What Is Still Needed | Dependencies | PROD Safety/Dependency Notes | Evidence | Mike Decision | Priority | Last Updated |
 |----|------|-------------|----------------|---------------------|----------------------|--------------|------------------------------|----------|---------------|----------|--------------|
@@ -1124,8 +1146,8 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | SCN-027/028 quiz fixtures | **Built** |
 | Access blocker doc | Historical — PAT available for Package 02 |
 
-**Not claimed Complete / season-enabled for 035:** Automation remains **OFF** until Mike enables.  
-**067:** Live Tested Option B (SC-013/014). **057 v1.4:** Still Ready for PROD Paste.  
+**Not claimed Complete / season-enabled for 035:** Automation remains **OFF** until Mike enables.
+**067:** Live Tested Option B (SC-013/014). **057 v1.4:** Still Ready for PROD Paste.
 **Next:** Paste **057 v1.4** → Schmidt Denver Perfect Week boundary → enable 035 only when approved → SC-075/076 → SC-077.
 
 ### 9F. Landing domain / navigation branding audit — **2026-08-04** (SC-149)
@@ -1224,7 +1246,7 @@ Key corrections applied: Config year registry (no collapse); 063/111 supersessio
 | **Scope** | Automation 076 creates one `DAILY_SUBMISSION` Email Handoff Queue row; Hub owns rendering and delivery |
 | **Handoff key** | `DAILY_SUBMISSION|SUBMISSIONS|{Submission Record ID}` |
 | **079** | Shared dispatcher v2.0; preserves WELCOME and now accepts exact DAILY_SUBMISSION keys |
-| **077** | Retirement candidate pending controlled Hub proof; not retired by repository work |
+| **077** | **Deleted from Production** (2026-08-13) | Retired Make/Gmail daily-submission path; automation slot recovered. GitHub source archived. Daily email uses Hub path (076 → 079). |
 | **Payload** | Required: `athleteName`, `activityDate`, `weekName`, `shots`, `makes`; optional: `submissionXp`, `submissionXpStatus`, `programName`, `message`, `shootingPercentage`, `weeklyShots`, `weeklyGoal`, `weeklyGoalPercentage`, `weeklyXp`, `currentStreak`, `currentLevel`, `nextLevel`, `homeworkSubmitted`, `homeworkAssignments`, `homeworkReviewStatus` |
 | **Trigger** | Recommended trigger requires `Build Daily Email Now?` checked plus `Count This Submission?` evaluating `1`; 031 validates `Simple Total`/`Detailed Shooting`, final summary linkage, eligible XP-link repair, and final validation; 076 applies the same guard and consumes/clears the signal |
 | **Status** | **Repository-ready / controlled Production promotion blocked pending trigger-owner/timing verification** — 076 v8.5 single-select write correction complete; no Production paste performed |
@@ -1370,9 +1392,9 @@ test, completing PKG-006, or finishing the app.
 
 When finishing an SC item:
 
-1. Update **Current Status**, **What Is Still Needed**, **Last Updated**, and dashboard counts.  
-2. Add evidence links (deploy checklist, record IDs, commit SHA).  
-3. Mark Complete only when repo + PROD install + live PROD test are all true (where applicable).  
+1. Update **Current Status**, **What Is Still Needed**, **Last Updated**, and dashboard counts.
+2. Add evidence links (deploy checklist, record IDs, commit SHA).
+3. Mark Complete only when repo + PROD install + live PROD test are all true (where applicable).
 4. Prefer editing this file over reopening parallel status in the old backlog.
 
 ---

@@ -1,22 +1,24 @@
 # PKG-036 — Progression configuration and bidirectional recalculation reliability
 
-**Status:** Draft — repository implementation complete; Production installation and natural-trigger proof pending  
-**Backlog:** PKG-036  
-**Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)  
+**Status:** Draft — repository implementation complete; Production installation and natural-trigger proof pending
+**Unified sequence:** Use [`PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md`](./PKG-006R-PKG-036-PRODUCTION-OPERATOR-PACKET.md) as the single current operator source. Do not start until PKG-006R lock is released.
+**Backlog:** PKG-036
+**Production base:** `127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026` (`appn84sqPw03zEbTT`)
 **Environment exception:** Mike authorized this package's Production-only path because no DEV Airtable exists. Offline tests are not Production proof.
 
-## Current Production orientation (read-only, 2026-08-13)
+## Current Production orientation (Mike-supplied 2026-08-13)
 
-- Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes, started `2026-08-08T16:00:00Z`; installed script is v4.0.
-- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4.
+- Automation 010: **v10.7 installed and ON**; inspect run history and reconciliation backlog before record changes. Lifecycle proof pending.
+- Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes; installed script is v4.0. **v5.0 paste deferred** until PKG-006R lock release.
+- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4. **v4.0 paste deferred** until PKG-006R lock release.
 - Automation 043: absent from the Production automation inventory. It must not be recreated.
-- Active Levels: 12; thresholds are unique and span 0 through 2200 XP; active names, thresholds, and sort order were read successfully.
-- Active 2026–2027 Gate Rules: 12; one observed rule per Level, with Level 1 disabled and Levels 2–12 enabled.
-- Production `Level Gate Rules` has no `Program Instance` link field. Gate selection is therefore school-year/rule-set scoped only; the target 042 requires exactly one Program Instance on each Enrollment and must stop if that link is blank or ambiguous. Multi-program same-year gate isolation requires a separately approved schema change.
-- Active Schmidt orientation records observed: `recCrNNAdVmQ4Y8fL`, `reclc46bQM8Wx0qWP`, and `recwuMDL6dqIVfvqH`.
-- Existing queued-signature field: `Enrollments.Progression Last Queued Signature` (`fldw2p0bfT54vk6ag`, single-line text).
-- Missing target field: `Enrollments.Progression Last Reconciled Signature` (not present in Production; do not confuse it with `Last Reconciled Signature` on another table).
-- No Production records were modified during orientation.
+- Automation 077: **deleted** from Airtable (retired Make/Gmail path); GitHub source archived only.
+- Active Levels: **12**; thresholds unique and span 0 through 2200 XP.
+- Active school-year Gate Rules: **12** — one rule per Level (Level 1–12). School Year / Rule Set is the approved scope. Mike operates one Program Instance per school year.
+- Production `Level Gate Rules` has no `Program Instance` link field. Gate selection is school-year/rule-set scoped; each Enrollment must have exactly one Program Instance.
+- `Enrollments.Progression Last Queued Signature` (`fldw2p0bfT54vk6ag`, single-line text): present and unchanged.
+- `Enrollments.Progression Last Reconciled Signature`: **created** — verify writable single-line text and record field ID (not interchangeable with `Last Reconciled Signature` on another table).
+- PKG-006R reconciliation fields (12): **installed and verified** — verify names/types; do not recreate.
 
 ## Repository changes
 
@@ -29,7 +31,7 @@
 
 ## Required Production schema
 
-Create this field on `Enrollments` before pasting the scripts:
+**Verify** (do not create) these fields before pasting scripts after PKG-006R lock release:
 
 | Field | Type | Writable | Purpose |
 |---|---|---|---|
@@ -46,18 +48,19 @@ does.
 
 ## Installation order
 
-1. Confirm PKG-034 is no longer testing Production progression. It is currently merged; recheck live coordination before execution.
+**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.0 before Mike signs off Phase A evidence.
+
+1. Confirm PKG-006R lifecycle proof is complete and the progression lock is explicitly released.
 2. Preserve the current 041/042 scripts, trigger configuration, enablement, and recent run history in the Airtable UI.
 3. Turn 041 and 042 OFF. Do not alter Automation 010, 101, or any XP pipeline.
-4. Create `Enrollments.Progression Last Reconciled Signature` as a writable single-line text field. Do not add a formula, lookup, or rollup. Confirm the newly created field ID in the operator log.
-5. Wait for the field to settle and verify the field name/type.
-6. Paste the committed 041 v5.0 script into automation `wflCRvaopntNPsc64` and configure its existing 15-minute cron trigger. Leave the optional `recordId` input blank for the scheduled path.
-7. Paste the committed 042 v4.0 script into automation `wfl3aiiK8vI2tz0HA` and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
+4. **Verify** `Enrollments.Progression Last Reconciled Signature` is writable single-line text. Record field ID. Do not recreate.
+5. Paste the committed 041 v5.0 script into automation `wflCRvaopntNPsc64` and preserve the **15-minute** cron trigger. Leave optional `recordId` blank for the scheduled path.
+6. Paste the committed 042 v4.0 script into automation `wfl3aiiK8vI2tz0HA` and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
 8. Preserve the existing 042 view filter: `Level Recalc Needed?` checked and `Active?` checked.
 9. Confirm 043 remains absent/OFF.
 10. Keep 041 and 042 OFF while saving, then run controlled manual actions on one approved Schmidt Enrollment.
-11. Enable 042, then 041 after preflight succeeds; 042 must be enabled before 041.
-12. Run the read-only PKG-036 audit and preserve the JSON output.
+11. Enable 042 first, then 041 after preflight succeeds; 042 must be enabled before 041.
+12. After enablement, re-run the read-only PKG-036 audit and preserve the JSON output.
 
 ## Controlled Schmidt proof
 
