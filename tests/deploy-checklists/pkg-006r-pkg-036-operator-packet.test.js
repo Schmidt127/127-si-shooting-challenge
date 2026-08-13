@@ -25,7 +25,7 @@ function test(name, fn) {
 test("identifies exact source versions and paths", () => {
   assert.match(packet, /010.*v10\.8/);
   assert.match(packet, /041.*v5\.0/);
-  assert.match(packet, /042.*v4\.0/);
+  assert.match(packet, /042.*v4\.1/);
   for (const file of [
     "010-submission-intake-create-xp-event.js",
     "041-levels-and-progression-mark-enrollment-for-level-recalculation.js",
