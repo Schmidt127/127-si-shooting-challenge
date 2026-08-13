@@ -313,8 +313,8 @@ function writebackResult({ eventWrite, wasWrite, meetingWrite }) {
 }
 
 function settleSignature({ currentSignature, startingSignature, freshSignature, needed }) {
-  if (!freshSignature || freshSignature === startingSignature) {
-    return { ok: false, acknowledged: false, error: "Fresh post-write signature did not settle." };
+  if (!freshSignature) {
+    return { ok: false, acknowledged: false, error: "Fresh post-write signature is blank." };
   }
   if (currentSignature !== freshSignature || Number(needed) !== 0) {
     return { ok: false, acknowledged: false, error: "Reconciliation Needed? did not return to numeric 0." };

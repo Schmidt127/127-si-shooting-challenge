@@ -206,7 +206,7 @@ test("partial writeback is surfaced and XP Events are never deleted", () => {
   assert.strictEqual(automationSource.includes("deleteRecordAsync"), false);
 });
 
-test("formula lag does not acknowledge the starting signature", () => {
+test("formula lag does not acknowledge the starting signature until Needed is zero", () => {
   const unsettled = c.settleSignature({
     currentSignature: "fresh",
     startingSignature: "start",
@@ -214,6 +214,13 @@ test("formula lag does not acknowledge the starting signature", () => {
     needed: 1,
   });
   assert.strictEqual(unsettled.acknowledged, false);
+  const unchangedButSettled = c.settleSignature({
+    currentSignature: "start",
+    startingSignature: "start",
+    freshSignature: "start",
+    needed: 0,
+  });
+  assert.strictEqual(unchangedButSettled.acknowledged, true);
   const settled = c.settleSignature({
     currentSignature: "fresh",
     startingSignature: "start",
@@ -297,6 +304,12 @@ test("empty roster reconciles no-award, withdrawal, duplicate, and formula-lag s
     startingSignature: "start",
     needed: 0,
   }).ok, false);
+  assert.strictEqual(c.planEmptyRosterReconciliation({
+    priorOwnedEvents: [],
+    freshSignature: "start",
+    startingSignature: "start",
+    needed: 0,
+  }).action, "reconciled_empty_roster_no_award");
   assert.strictEqual(c.planEmptyRosterReconciliation({
     priorOwnedEvents: [],
     freshSignature: "start",

@@ -42,7 +42,7 @@ event's ID after exact ownership validation.
 
 ## Proven defects corrected
 
-1. Automation 101 is upgraded from v5.5 to v6.0.
+1. Automation 101 is upgraded from v5.5 to v6.1.
 2. Live reconciliation is driven by numeric `Zoom XP Reconciliation Needed? = 1`.
 3. Enrollment, Program Instance, School Year, Week, Meeting identity, and WAS
    are validated before positive creation/reactivation.
@@ -54,11 +54,15 @@ event's ID after exact ownership validation.
 8. Withdrawal and inactive Enrollment deactivate an exactly owned event without
    requiring a WAS.
 9. Restoration reactivates the same event ID.
-10. Formula settlement is reread after writes. The fresh signature must differ
-    from the starting signature; Automation 101 writes that fresh signature to
-    the acknowledgement field, then rereads the formula and requires
+10. Formula settlement is reread after writes. A changed signature is required
+    when an owned event write should change the event-signature lookup, while a
+    valid unchanged signature is accepted when reconciliation makes no data
+    change. Automation 101 writes the exact current signature to the
+    acknowledgement field, then rereads the formula and requires
     `Reconciliation Needed?` to be numeric zero before completing.
-11. Partial writeback warnings are returned; XP Events are never deleted.
+11. Empty-roster reconciliation creates no XP Event; duplicate and wrong-owner
+    canonical events fail closed with exact record IDs.
+12. Partial writeback warnings are returned; XP Events are never deleted.
 
 ## Trigger configuration
 

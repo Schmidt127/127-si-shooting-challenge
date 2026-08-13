@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.0
+ * Version: v6.1
  * Date Written: 2026-05-28
  * Last Updated: 2026-08-13
  *
@@ -105,9 +105,11 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.0",
+  version: "v6.1",
 
   timeZone: "America/Denver",
+  formulaSettlementAttempts: 5,
+  formulaSettlementDelayMs: 250,
 
   tables: {
     zoomMeetings: "Zoom Meetings",
@@ -790,6 +792,53 @@ function getNumericValue(record, table, fieldName) {
   return Number.isFinite(parsed) ? parsed : null;
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function readFormulaSettlement(
+  recordId,
+  startingSignature,
+  { requireChangedSignature = false } = {}
+) {
+  for (let attempt = 1; attempt <= CONFIG.formulaSettlementAttempts; attempt += 1) {
+    const refreshed = await zoomTable.selectRecordAsync(recordId, {
+      fields: buildFieldsToLoad(zoomTable, [
+        CONFIG.lifecycle.currentSignature,
+        CONFIG.lifecycle.reconciliationNeeded,
+      ]),
+    });
+    const currentSignature = getText(
+      refreshed,
+      zoomTable,
+      CONFIG.lifecycle.currentSignature
+    );
+    const needed = getNumericValue(
+      refreshed,
+      zoomTable,
+      CONFIG.lifecycle.reconciliationNeeded
+    );
+
+    if (
+      currentSignature &&
+      [0, 1].includes(needed) &&
+      (!requireChangedSignature || currentSignature !== startingSignature)
+    ) {
+      return { currentSignature, needed };
+    }
+
+    if (attempt < CONFIG.formulaSettlementAttempts) {
+      await sleep(CONFIG.formulaSettlementDelayMs);
+    }
+  }
+
+  throw new Error(
+    requireChangedSignature
+      ? "Formula settlement timeout; event-signature lookup did not produce a fresh state."
+      : "Formula settlement timeout; Current Signature or Reconciliation Needed? did not settle."
+  );
+}
+
 async function runLiveLifecycleReconciliation(recordId) {
   const zoomRecord = await zoomTable.selectRecordAsync(recordId, {
     fields: buildFieldsToLoad(zoomTable, [
@@ -951,34 +1000,23 @@ async function runLiveLifecycleReconciliation(recordId) {
 
   const priorMeetingEnrollmentIds = xpQuery.records
     .filter(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.zoomMeeting).includes(recordId))
-    .flatMap(record => getLinkedRecordIds(record, xpEventsTable, CONFIG.xpEvents.enrollment));
+    .flatMap(record => {
+      const linkedEnrollmentIds = getLinkedRecordIds(
+        record,
+        xpEventsTable,
+        CONFIG.xpEvents.enrollment
+      );
+      const sourceKey = getText(record, xpEventsTable, CONFIG.xpEvents.sourceKey);
+      const sourcePrefix = `${CONFIG.sourceKeys.basePrefix}|${meetingKey}|`;
+      const sourceEnrollmentId = sourceKey.startsWith(sourcePrefix)
+        ? sourceKey.slice(sourcePrefix.length).trim()
+        : "";
+      return [...linkedEnrollmentIds, sourceEnrollmentId].filter(Boolean);
+    });
   const lifecycleEnrollmentIds = uniqueIds([...attendeeIds, ...priorMeetingEnrollmentIds]);
   if (lifecycleEnrollmentIds.length === 0) {
-    const freshEmptyRoster = await zoomTable.selectRecordAsync(recordId, {
-      fields: buildFieldsToLoad(zoomTable, [
-        CONFIG.lifecycle.currentSignature,
-        CONFIG.lifecycle.reconciliationNeeded,
-      ]),
-    });
-    const freshEmptySignature = getText(
-      freshEmptyRoster,
-      zoomTable,
-      CONFIG.lifecycle.currentSignature
-    );
-    const freshEmptyNeeded = getNumericValue(
-      freshEmptyRoster,
-      zoomTable,
-      CONFIG.lifecycle.reconciliationNeeded
-    );
-    if (
-      !freshEmptySignature ||
-      freshEmptySignature === startingSignature ||
-      ![0, 1].includes(freshEmptyNeeded)
-    ) {
-      throw new Error(
-        "Empty-roster reconciliation produced an invalid formula state; no XP Event was created."
-      );
-    }
+    const { currentSignature: freshEmptySignature } =
+      await readFormulaSettlement(recordId, startingSignature);
     try {
       await updateRecordSafe(zoomTable, recordId, {
         [CONFIG.lifecycle.lastSignature]: freshEmptySignature,
@@ -1040,13 +1078,19 @@ async function runLiveLifecycleReconciliation(recordId) {
     const sameKey = findSourceKeyEvents(xpQuery.records, sourceKey);
 
     if (sameKey.length > 1) {
-      throw new Error(`Multiple canonical XP Events found for Source Key ${sourceKey}.`);
+      throw new Error(
+        `Multiple canonical XP Events found for Source Key ${sourceKey}. Record IDs: ${sameKey.map(record => record.id).join(", ")}`
+      );
     }
     if (sameKey.length === 1 && matching.length !== 1) {
-      throw new Error(`XP Event ${sameKey[0].id} has wrong owner for Source Key ${sourceKey}.`);
+      throw new Error(
+        `XP Event ${sameKey[0].id} has wrong owner for Source Key ${sourceKey}.`
+      );
     }
     if (matching.length > 1) {
-      throw new Error(`Multiple exactly-owned XP Events found for Source Key ${sourceKey}.`);
+      throw new Error(
+        `Multiple exactly-owned XP Events found for Source Key ${sourceKey}. Record IDs: ${matching.map(record => record.id).join(", ")}`
+      );
     }
 
     const qualifyingMeetings = zoomHistoryQuery.records
@@ -1125,7 +1169,11 @@ async function runLiveLifecycleReconciliation(recordId) {
       }
       for (const bonus of bonusSpecs) {
         const bonusEvents = findSourceKeyEvents(xpQuery.records, bonus.sourceKey);
-        if (bonusEvents.length > 1) throw new Error(`Multiple canonical XP Events found for Source Key ${bonus.sourceKey}.`);
+        if (bonusEvents.length > 1) {
+          throw new Error(
+            `Multiple canonical XP Events found for Source Key ${bonus.sourceKey}. Record IDs: ${bonusEvents.map(record => record.id).join(", ")}`
+          );
+        }
         if (bonusEvents.length === 1 && !eventMatchesBonusStructuralOwnership(bonusEvents[0], {
           sourceKey: bonus.sourceKey,
           enrollmentId,
@@ -1169,7 +1217,9 @@ async function runLiveLifecycleReconciliation(recordId) {
       const canonicalBonusMeeting = qualifyingMeetings[bonus.count - 1] || null;
       const bonusEvents = findSourceKeyEvents(xpQuery.records, bonus.sourceKey);
       if (bonusEvents.length > 1) {
-        throw new Error(`Multiple canonical XP Events found for Source Key ${bonus.sourceKey}.`);
+        throw new Error(
+          `Multiple canonical XP Events found for Source Key ${bonus.sourceKey}. Record IDs: ${bonusEvents.map(record => record.id).join(", ")}`
+        );
       }
       let bonusWeekId = "";
       let bonusWasId = "";
@@ -1326,12 +1376,16 @@ async function runLiveLifecycleReconciliation(recordId) {
       });
       const lastChance = findSourceKeyEvents(lastChanceQuery.records, sourceKey);
       if (lastChance.length > 1) {
-        throw new Error(`Concurrent duplicate canonical XP Events found for Source Key ${sourceKey}.`);
+        throw new Error(
+          `Concurrent duplicate canonical XP Events found for Source Key ${sourceKey}. Record IDs: ${lastChance.map(record => record.id).join(", ")}`
+        );
       }
       if (lastChance.length === 1) {
         const ownedLastChance = findExactOwnedEvents(lastChanceQuery.records, expected);
         if (ownedLastChance.length !== 1) {
-          throw new Error(`Concurrent XP Event has wrong owner for Source Key ${sourceKey}.`);
+          throw new Error(
+            `Concurrent XP Event has wrong owner for Source Key ${sourceKey}. Record IDs: ${lastChance.map(record => record.id).join(", ")}`
+          );
         }
         try {
           await updateRecordSafe(xpEventsTable, ownedLastChance[0].id, {
@@ -1378,27 +1432,19 @@ async function runLiveLifecycleReconciliation(recordId) {
     attendeesProcessed += 1;
   }
 
-  const freshZoomRecord = await zoomTable.selectRecordAsync(recordId, {
-    fields: buildFieldsToLoad(zoomTable, [
-      CONFIG.lifecycle.currentSignature,
-      CONFIG.lifecycle.reconciliationNeeded,
-    ]),
-  });
-  const freshSignature = getText(
-    freshZoomRecord,
-    zoomTable,
-    CONFIG.lifecycle.currentSignature
-  );
-  const freshNeeded = getNumericValue(
-    freshZoomRecord,
-    zoomTable,
-    CONFIG.lifecycle.reconciliationNeeded
-  );
+  const { currentSignature: freshSignature } =
+    await readFormulaSettlement(recordId, startingSignature, {
+      requireChangedSignature:
+        baseEventsCreated +
+        baseEventsUpdated +
+        baseEventsDeactivated +
+        bonusEventsCreated +
+        bonusEventsUpdated +
+        bonusEventsDeactivated >
+        0,
+    });
   if (eventWarnings.length) {
     throw new Error(`Partial writeback warning: ${eventWarnings.join(" | ")}`);
-  }
-  if (!freshSignature || freshSignature === startingSignature || ![0, 1].includes(freshNeeded)) {
-    throw new Error("Zoom XP formula signature did not produce a valid fresh state; reconciliation was not acknowledged.");
   }
   try {
     await updateRecordSafe(zoomTable, recordId, {
@@ -2441,14 +2487,23 @@ async function main() {
 
     setOutputSafe("debugStep", `FAILED AT: ${debugStep}`);
 
-    await updateRecordSafe(zoomTable, recordId, {
-      [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
-        zoomTable,
-        CONFIG.zoom.xpAwardStatus,
-        CONFIG.statuses.error
-      ),
-      [CONFIG.zoom.xpAwardError]: message,
-    });
+    try {
+      await updateRecordSafe(zoomTable, recordId, {
+        [CONFIG.zoom.xpAwardStatus]: buildSingleSelectValueOptional(
+          zoomTable,
+          CONFIG.zoom.xpAwardStatus,
+          CONFIG.statuses.error
+        ),
+        [CONFIG.zoom.xpAwardError]: message,
+      });
+    } catch (writebackError) {
+      log("Automation 101 error diagnostics writeback failed", {
+        recordId,
+        error: writebackError instanceof Error
+          ? writebackError.message
+          : String(writebackError),
+      });
+    }
 
     setFinalOutputs({
       ok: false,
