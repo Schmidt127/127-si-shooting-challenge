@@ -1,7 +1,7 @@
 # PKG-006R — Daily Submission reversal Production Schmidt packet
 
-**Status:** Draft, Production-only operator packet; no Production action was performed.  
-**Owner:** Mike performs every Production step.  
+**Status:** Draft, Production-only operator packet; no Production action was performed.
+**Owner:** Mike performs every Production step.
 **Scope:** Submission XP, milestones, streaks, WAS/lifetime settlement, progression, and standings. Email testing is excluded.
 
 ## Hard stops

@@ -1,7 +1,7 @@
 # PKG-006R — Daily Submission XP reversal architecture
 
-**Status:** Draft implementation package; automatic correction is blocked pending an approved observable trigger/schema design.  
-**Baseline:** `master` / `2f8188bc22b4075fdf24b5d6ed80fc175aa16f72`  
+**Status:** Draft implementation package; automatic correction is blocked pending an approved observable trigger/schema design.
+**Baseline:** `master` / `2f8188bc22b4075fdf24b5d6ed80fc175aa16f72`
 **Scope:** Submission Base XP, shot milestones, streak XP, Weekly Athlete Summary, lifetime XP, progression, and standings inputs. Email is out of scope.
 
 ## Evidence boundary
