@@ -113,6 +113,7 @@ const CONFIG = {
     zoomMeetings: "Zoom Meetings",
     enrollments: "Enrollments",
     weeks: "Weeks",
+    programInstances: "Program Instance - Sync",
     xpRewardRules: "XP Reward Rules",
     xpEvents: "XP Events",
     weeklySummary: "Weekly Athlete Summary",
@@ -242,6 +243,7 @@ const CONFIG = {
 let zoomTable = null;
 let enrollmentsTable = null;
 let weeksTable = null;
+let programInstancesTable = null;
 let rulesTable = null;
 let xpEventsTable = null;
 let weeklySummaryTable = null;
@@ -844,7 +846,15 @@ async function runLiveLifecycleReconciliation(recordId) {
   if (!meetingKey) throw new Error("Zoom Meeting Key is blank.");
   if (!meetingDateKey) throw new Error(`Zoom Meeting is missing a valid date in field "${zoomStartField}".`);
 
-  const [enrollmentQuery, weekQuery, ruleQuery, xpQuery, wasQuery, zoomHistoryQuery] = await Promise.all([
+  const [
+    enrollmentQuery,
+    weekQuery,
+    programInstanceQuery,
+    ruleQuery,
+    xpQuery,
+    wasQuery,
+    zoomHistoryQuery,
+  ] = await Promise.all([
     enrollmentsTable.selectRecordsAsync({
       fields: buildFieldsToLoad(enrollmentsTable, [
         CONFIG.enrollments.active,
@@ -856,7 +866,11 @@ async function runLiveLifecycleReconciliation(recordId) {
     weeksTable.selectRecordsAsync({
       fields: buildFieldsToLoad(weeksTable, [
         "Program Instance",
-        "School Year",
+      ]),
+    }),
+    programInstancesTable.selectRecordsAsync({
+      fields: buildFieldsToLoad(programInstancesTable, [
+        "School Year - Linked",
       ]),
     }),
     rulesTable.selectRecordsAsync({
@@ -900,6 +914,9 @@ async function runLiveLifecycleReconciliation(recordId) {
   ]);
 
   const enrollmentById = new Map(enrollmentQuery.records.map(record => [record.id, record]));
+  const programInstanceById = new Map(
+    programInstanceQuery.records.map(record => [record.id, record])
+  );
   const weekRecord = weekQuery.records.find(record => record.id === weekIds[0]);
   if (!weekRecord) throw new Error(`Week record not found: ${weekIds[0]}`);
   const weekProgramIds = exactLinkedIds(
@@ -908,8 +925,18 @@ async function runLiveLifecycleReconciliation(recordId) {
     "Program Instance",
     "Week Program Instance"
   );
-  const weekSchoolYear = getText(weekRecord, weeksTable, "School Year");
-  if (!weekSchoolYear) throw new Error("Week School Year is blank.");
+  const weekProgramInstance = programInstanceById.get(weekProgramIds[0]);
+  if (!weekProgramInstance) {
+    throw new Error(`Program Instance record not found: ${weekProgramIds[0]}`);
+  }
+  const weekSchoolYear = getText(
+    weekProgramInstance,
+    programInstancesTable,
+    "School Year - Linked"
+  );
+  if (!weekSchoolYear) {
+    throw new Error("Week Program Instance School Year is blank.");
+  }
 
   const rules = activeRuleIndexOrThrow(ruleQuery.records);
   let lifecycleAction = "reconciled";
@@ -1034,8 +1061,15 @@ async function runLiveLifecycleReconciliation(recordId) {
         const historicalProgramIds = historicalWeek
           ? uniqueIds(getLinkedRecordIds(historicalWeek, weeksTable, "Program Instance"))
           : [];
-        const historicalSchoolYear = historicalWeek
-          ? getText(historicalWeek, weeksTable, "School Year")
+        const historicalProgramInstance = historicalWeek
+          ? programInstanceById.get(historicalProgramIds[0])
+          : null;
+        const historicalSchoolYear = historicalProgramInstance
+          ? getText(
+            historicalProgramInstance,
+            programInstancesTable,
+            "School Year - Linked"
+          )
           : "";
         const qualifies = Boolean(
           historicalKey &&
@@ -1820,6 +1854,11 @@ function assertRequiredSchema() {
     "Weeks -> Zoom XP Week Signature"
   );
   requireField(
+    programInstancesTable,
+    "School Year - Linked",
+    "Program Instance - Sync -> School Year - Linked"
+  );
+  requireField(
     xpEventsTable,
     CONFIG.lifecycle.eventSignature,
     "XP Events -> Zoom XP Event Signature"
@@ -1882,6 +1921,7 @@ async function main() {
     zoomTable = base.getTable(CONFIG.tables.zoomMeetings);
     enrollmentsTable = base.getTable(CONFIG.tables.enrollments);
     weeksTable = base.getTable(CONFIG.tables.weeks);
+    programInstancesTable = base.getTable(CONFIG.tables.programInstances);
     rulesTable = base.getTable(CONFIG.tables.xpRewardRules);
     xpEventsTable = base.getTable(CONFIG.tables.xpEvents);
     weeklySummaryTable = base.getTable(CONFIG.tables.weeklySummary);

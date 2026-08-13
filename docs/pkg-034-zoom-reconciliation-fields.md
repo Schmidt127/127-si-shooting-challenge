@@ -1,7 +1,8 @@
 # PKG-034 — Zoom reconciliation field package
 
-These are exact Production field instructions for Mike. Cursor did not create
-or inspect Production fields. The package intentionally uses nine fields so
+These are exact Production field instructions for Mike. Cursor performed a
+read-only Production schema inspection and did not create or modify fields.
+The package intentionally uses nine fields so
 linked Enrollment, Week, and XP Event changes can wake the existing Automation
 101 slot without scheduled polling or a new automation.
 
@@ -22,8 +23,16 @@ RECORD_ID() & "|ACTIVE=" & IF({Active?},1,0) & "|PI=" & ARRAYJOIN({Program Insta
 `Zoom XP Week Signature` — Formula, single-line text:
 
 ```text
-RECORD_ID() & "|PI=" & ARRAYJOIN({Program Instance}) & "|SY=" & {School Year} & "|START=" & {Start Date} & "|END=" & {End Date}
+RECORD_ID() & "|PI=" & ARRAYJOIN({Program Instance}) & "|START=" & {Start Date} & "|END=" & {End Date}
 ```
+
+Production `Weeks` has no native `School Year` field. The exact School Year
+check is therefore performed by Automation 101 through the Week's single
+`Program Instance` link to `Program Instance - Sync`.`School Year - Linked`,
+matched against the Enrollment's `School Year`. The Zoom Meeting signature
+still includes the linked Enrollment signature, so Enrollment-side School Year
+or Program Instance changes remain observable without inventing a second Week
+lookup field.
 
 ### XP Events
 
