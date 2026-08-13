@@ -143,19 +143,22 @@ Trigger map (downstream effects): [../airtable/schema/current/automation-trigger
 
 | # | Airtable automation name | Trigger | File |
 |---|--------------------------|---------|------|
-| **101** | Zoom Attendance XP — Award Meeting XP (**v6.1**) | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1` (**live Attendees only; positive and correction lifecycle**) | `101-zoom-attendance-xp-award-meeting-xp.js` |
+| **101** | Zoom Attendance XP — Award Meeting XP (**v6.1 installed in PROD; empty-roster acknowledgement proven only**) | Zoom Meetings when `Zoom XP Reconciliation Needed? = 1`; dynamic `recordId`; no Create XP Events, Attendees, or Completed condition | `101-zoom-attendance-xp-award-meeting-xp.js` |
 | **117** | Zoom — Send Recording Approval Email to Make (**v1.1**) | Zoom Attendance · Satisfactory recording path · inputs `webhookUrl`, `recordId`, `enrollmentRid`, `zoomMeetingRid` · payload `automationNumber=117f` · send key `ZOOM_REC_EMAIL\|…\|…\|…` · **writes no Airtable records** | `117-zoom-send-recording-approval-email-to-make.js` · [deploy runbook](./deploy-checklists/117-zoom-recording-approval-email.md) · [go-live one-pager](./deploy-checklists/117-ZOOM-APPROVAL-GO-LIVE.md) · [PROD Make workflow](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md) · offline suite `tools/testing/tests/test_117_email_handoff_offline.mjs` |
 | **117f** | **Make** workflow identifier only (not an Airtable automation slot) | Receives Airtable 117 payload; Gmail send + Data Store dedupe (`sent` / `already_sent`) | Make: `Shooting Challenge - PROD - Zoom Recording Approval Email - 117f - v1` |
 | **Stage 17 modular / orchestrator** | Repository design alternatives — **not** PROD Airtable automations | Prefer consolidated paths; do **not** create 117a–e slots (automation-count limit) | `_design-alternatives/stage17-modular-reference/` · [numbering note](./deploy-checklists/C-025-117-numbering.md) |
 
 **Airtable automation-count constraint:** Use consolidated automations where practical. Repository-only modular alternatives must not be represented as active PROD automations. The active canonical automation directory must distinguish deployed scripts from archived/design alternatives.
 
-Live attendance XP remains **101** only. Automation 101 v6.1 is the
-repository-ready reconciliation owner; Production installation and controlled
-proof remain pending. Gate Applied? / Perfect Week Applied? remain **042** /
-**057**. Recording `ZOOM_CREDIT` XP has **no** currently deployed Airtable
-writer (orchestrator/117c are design-only). Do **not** paste the Stage 17
-orchestrator over PROD Automation 117.
+Live attendance XP remains **101** only. Mike supplied evidence that v6.1 is
+installed and ON in Production with the reconciliation trigger configured.
+The Introduction and Motivation future meetings both safely acknowledged empty
+rosters with no XP Event and Needed = 0. This is installation plus
+empty-roster proof only; live-attendee XP, withdrawal, bonuses, progression,
+standings, and recording XP remain pending. Gate Applied? / Perfect Week
+Applied? remain **042** / **057**. Recording `ZOOM_CREDIT` XP has **no**
+currently deployed Airtable writer (orchestrator/117c are design-only). Do
+**not** paste the Stage 17 orchestrator over PROD Automation 117.
 
 C-025 historical Stage 17 packets: [deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md](./deploy-checklists/C-025-stage17-zoom-recording-dev-installation-packet.md). Architecture history: [v2/C025_ARCHITECTURE_RECONCILIATION.md](./v2/C025_ARCHITECTURE_RECONCILIATION.md). Downstream ETF scenario: [C-025-stage17-etf-downstream-dev-packet.md](./deploy-checklists/C-025-stage17-etf-downstream-dev-packet.md). PROD approval-email Make path: [C-025-117f-prod-zoom-recording-approval-email.md](./deploy-checklists/C-025-117f-prod-zoom-recording-approval-email.md).
 

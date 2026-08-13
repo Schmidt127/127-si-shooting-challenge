@@ -1,7 +1,7 @@
 # PKG-034 — Zoom Live-Attendance XP Lifecycle Reliability
 
-**Status:** Phase 3 repository package prepared; Production installation pending Mike
-**Base:** `origin/master` `c9b4232c2f890c4cfb759deaf2993856b4c56b92`
+**Status:** Production installation closeout documented; behavioral live-attendance proof remains pending
+**Base:** `origin/master` `1b2c3d14bcf055d80954cfe91fd176b1b44ca426`
 **Production access:** None by Cursor
 **Scope:** Live attendance only. Recording XP is explicitly excluded.
 
@@ -83,12 +83,27 @@ Do not retain the former trigger as the primary condition
 the transition observer for roster, Enrollment, Week, Program Instance, School
 Year, and XP Event backlink changes.
 
-## Current evidence gaps
+## Production installation evidence — 2026-08-13
 
-Repository text does not prove the currently pasted Production version,
-trigger, schema, formula timing, active reward-rule rows, or natural-trigger
-behavior. Mike must attest those items in the Production packet. Offline tests
-are not Production proof.
+Mike supplied evidence that all nine reconciliation fields are installed in
+`appn84sqPw03zEbTT`, Automation 101 v6.1 is ON, and the trigger is
+`When record matches conditions` on `Zoom Meetings` with the sole condition
+`Zoom XP Reconciliation Needed? = 1` and dynamic `recordId`. There are no
+`Create XP Events`, `Attendees`, or `Completed` trigger conditions.
+
+The final read-only audit checked 2 meetings and 16 XP Events with 0 Zoom XP
+Events, 0 unsupported recording XP Events, and 0 duplicate/rule/ownership/
+backlink/lifecycle errors. Two `missing_enrollment_links` warnings correspond
+to the intentionally empty future rosters. Introduction
+`recMFP2x5LDqea9ax` and Motivation `recb9EjQIJVzaRpZa` both reached Needed = 0
+with `reconciled_empty_roster_no_award` and no XP Event. Mike manually deleted
+`rec3ToANr5pcs2SRG` and `reczeUT0AJUWMmEOb` before the audit; Cursor did not
+perform or reverse that deletion.
+
+This is installation and empty-roster proof only. Live-attendee Base XP,
+replay/deduplication, bonuses, withdrawal/restoration, inactive Enrollment
+correction, WAS/lifetime XP, progression, standings, and recording XP remain
+unproven and pending. Offline tests are not Production proof.
 
 ## Recording-XP dependency
 

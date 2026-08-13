@@ -3,26 +3,63 @@
 **Owner:** Mike
 **Agent boundary:** Cursor performed no Airtable access. This packet contains
 repository-only promotion and controlled-test instructions; Mike owns all
-Development and Production Airtable actions.
-reward-rule, and meeting inspection. Cursor has not created or modified fields,
+Development and Production Airtable actions. Cursor has not created or
+modified fields,
 pasted scripts, changed the Automation 101 trigger/state, sent email, deployed,
 or merged.
 **Important:** This packet is controlled Production work because no DEV
 Airtable environment is available. Offline repository tests are not
 Production proof.
 
-## Preflight — stop if any item is missing
+## Production installation closeout — 2026-08-13
 
-- [ ] Export or capture the current Production schema for Zoom Meetings,
+Mike supplied the authoritative Production evidence for base
+`127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026`
+(`appn84sqPw03zEbTT`). Cursor did not access Airtable or perform the
+Production changes.
+
+- Automation 101 v6.1 is installed and **ON**.
+- Trigger: `When record matches conditions` on `Zoom Meetings`, sole
+  condition `Zoom XP Reconciliation Needed? = 1`.
+- `recordId` maps to the dynamic triggering Zoom Meeting record ID.
+- There is no `Create XP Events`, `Attendees`, or `Completed` trigger
+  condition.
+- All nine reconciliation fields are installed; exact field IDs are recorded
+  in [`pkg-034-zoom-reconciliation-fields.md`](../pkg-034-zoom-reconciliation-fields.md).
+- Active exact reward rules are `ZOOM_ATTEND_BASE` = 60 XP,
+  `ZOOM_ATTEND_BONUS_2` = 30 XP, and `ZOOM_ATTEND_BONUS_3` = 40 XP.
+- Mike manually deleted unused 2025–2026 meetings
+  `rec3ToANr5pcs2SRG` and `reczeUT0AJUWMmEOb`. Cursor did not perform,
+  restore, or further modify those records.
+- The final read-only audit checked 2 meetings and 16 XP Events: 0 Zoom XP
+  Events, 0 unsupported recording XP Events, and 0 duplicate/rule/ownership/
+  backlink/lifecycle errors. The 2 `missing_enrollment_links` warnings are
+  the intentionally empty future rosters.
+
+Baseline acknowledgements:
+
+- Introduction `recMFP2x5LDqea9ax` / Week `rec2Rewxt21z7dI9f`: successful
+  `reconciled_empty_roster_no_award`, no XP Event, Needed = `0`.
+- Motivation `recb9EjQIJVzaRpZa` / Week `recW3irij491AIPrl`: successful
+  `reconciled_empty_roster_no_award`, no XP Event, Needed = `0`.
+
+This closeout records installation and safe empty-roster acknowledgement
+only. It does not prove live-attendee XP, replay/deduplication, bonuses,
+withdrawal/restoration, inactive Enrollment correction, WAS/lifetime XP,
+041→042 progression, standings, or recording XP.
+
+## Historical preflight — completed by Mike; do not repeat
+
+- [x] Export or capture the current Production schema for Zoom Meetings,
       Enrollments, Weeks, XP Reward Rules, XP Events, and Weekly Athlete Summary.
-- [ ] Attest the currently pasted Automation 101 version and trigger.
-- [ ] Attest Automation 117 is the email/Make handoff and is not an XP writer.
-- [ ] Attest 101, 041, and 042 ownership; do not change 041/042 scripts.
-- [ ] Confirm active exact Rule Keys and amounts:
+- [x] Attest the currently pasted Automation 101 version and trigger.
+- [x] Attest Automation 117 is the email/Make handoff and is not an XP writer.
+- [x] Attest 101, 041, and 042 ownership; do not change 041/042 scripts.
+- [x] Confirm active exact Rule Keys and amounts:
       `ZOOM_ATTEND_BASE`, `ZOOM_ATTEND_BONUS_2`, `ZOOM_ATTEND_BONUS_3`.
-- [ ] Confirm no duplicate active exact Rule Key rows.
-- [ ] Turn Automation 101 OFF before field creation.
-- [ ] Keep Communications Hub/email automations out of the test path.
+- [x] Confirm no duplicate active exact Rule Key rows.
+- [x] Turn Automation 101 OFF before field creation.
+- [x] Keep Communications Hub/email automations out of the test path.
 
 Record live IDs dynamically; never reuse the historical fixture blindly:
 
@@ -37,7 +74,7 @@ WAS RID: ________________________________
 XP Event RID: ___________________________
 ```
 
-## Install order
+## Historical install order (completed; do not repeat)
 
 1. With 101 OFF, create the nine fields in
    `docs/pkg-034-zoom-reconciliation-fields.md`.

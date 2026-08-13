@@ -16,7 +16,7 @@ state, the named live system wins.
 | Field | Value |
 |-------|--------|
 | Created | 2026-07-23 |
-| Last updated | **2026-08-13** (PKG-007 Homework XP Production evidence closeout; PKG-006R reversal draft) |
+| Last updated | **2026-08-13** (PKG-034 Production installation closeout; PKG-007 Homework XP evidence; PKG-006R reversal draft) |
 | Environment | **PROD Airtable base is the active construction and testing base** (`appn84sqPw03zEbTT`) |
 | Scope | Controlling completion plan (updated by Foundation Reset Pack 2026-07-23) |
 
@@ -249,7 +249,34 @@ they require Mike-owned schema or live-system decisions.
 | `PKG-031` | Future communications/message-center and media-kit platform work | `deferred` | §4 SC-131, SC-133; backlog V2-014b, V2-028 | Manual 2025–26 kits and current email paths; `PKG-008`, `PKG-011`, `PKG-021` | Mike; Cursor | Product scope, templates, config model, delivery/dedupe evidence, and separate activation approval | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Make; Mike | Do not expand scope during season launch; revisit after core proof | 31 |
 | `PKG-032` | Low-priority deferred cleanup: Drive/attachment retirement, archive/clone rollover, Award Recipients scope, duplicate award bucket, conquered-goal lookup, repo-health follow-ups, and multi-challenge vision | `deferred` | §4 SC-100, SC-125, SC-127–SC-129, SC-143, SC-145; backlog V2-001, H-003, H-004, H-006 | Core 2027 launch and higher-priority reliability work | Mike; Cursor | Explicit reactivation request, narrow scope, impact review, and independent evidence package | 2026-08-10 — queued; no package evidence yet | Repo; Airtable; Mike | Leave deferred; do not let these items compete with season launch or core proof | 32 |
 | `PKG-033` | Core App Reliability and End-to-End Production Readiness: registration-to-participation, Weekly Athlete Summary, Zoom attendance/XP, progression/levels, standings, and one consolidated Production test specification | `needs live proof` | §4 SC-001–SC-004, SC-024, SC-031, SC-035–SC-037, SC-073–SC-093; PKG-006, PKG-014, PKG-015 | PKG-006 daily-submission/core participation ownership; PKG-014 progression/levels ownership; PKG-015 Zoom/public integration proof boundaries; merged PR #166 Homework XP and PR #165 Video XP | Mike; Cursor | Five repository evidence lanes, independent review, offline lifecycle/concurrency tests where justified, exact ownership/evidence-gap maps, and a plain-language Schmidt Production journey; no offline result may be called Production proof | 2026-08-13 — repository evidence, WAS harness, retired-043 inventory correction, and Mike-only Schmidt packet prepared in draft PR #167; this is not implementation completion; independent review YES for draft publication; current live versions/triggers/schema/formula settling and controlled Production proof remain pending | Repo; Airtable evidence supplied by Mike; Fillout; Vercel readback only if separately approved | Mike reviews draft PR #167 and supplies live evidence; serialize any later source repair as a separate independently reviewed package | 33 |
-| `PKG-034` | Zoom live-attendance XP lifecycle reliability: formula-backed reconciliation, base XP, cumulative bonuses, withdrawal, restoration, ownership guards, and downstream readback | `needs live proof` | §4 SC-073–SC-093; PKG-033 | Automation 101 sole live-attendance XP writer; recording XP and Automation 117 email remain out of scope | Mike; Cursor | Repository implementation, independent review, exact nine-field Production contract, controlled Schmidt-only lifecycle proof, same-event restoration, and settled WAS/lifetime/progression/standings evidence; offline results are not Production proof | 2026-08-13 — Automation 101 v6.0, read-only audit, lifecycle tests, nine-field schema contract, and Production packet are repository-ready; Production field creation, Automation 101 replacement/trigger update, and controlled proof remain pending | Repo; Airtable; Mike-controlled Production UI | Install only after Automation 101 is OFF, formulas are verified, audit is clean, and the controlled rollback path is preserved; recording XP remains deferred | 34 |
+| `PKG-034` | Zoom live-attendance XP lifecycle reliability: formula-backed reconciliation, base XP, cumulative bonuses, withdrawal, restoration, ownership guards, and downstream readback | `needs live proof` | §4 SC-073–SC-093; PKG-033 | Automation 101 sole live-attendance XP writer; recording XP and Automation 117 email remain out of scope | Mike; Cursor | Repository implementation, independent review, exact nine-field Production contract, controlled Schmidt-only lifecycle proof, same-event restoration, and settled WAS/lifetime/progression/standings evidence; offline results are not Production proof | 2026-08-13 — Mike supplied evidence that all nine fields are installed in `appn84sqPw03zEbTT`, Automation 101 v6.1 is ON with the sole `Zoom XP Reconciliation Needed? = 1` trigger and dynamic `recordId`, and the final read-only audit checked 2 meetings / 16 XP Events with 0 Zoom XP Events, 0 unsupported recording XP Events, and 0 duplicate/rule/ownership/backlink/lifecycle errors. Introduction `recMFP2x5LDqea9ax` and Motivation `recb9EjQIJVzaRpZa` both acknowledged empty rosters with `reconciled_empty_roster_no_award`, Needed = 0, and no XP Event. Two missing-enrollment warnings are the intentional empty rosters; Mike manually deleted unused meetings `rec3ToANr5pcs2SRG` and `reczeUT0AJUWMmEOb`. Installation and empty-roster acknowledgement are documented; live-attendee XP and downstream lifecycle proof remain pending. Cursor did not access Production. | Repo; Airtable; Mike-controlled Production UI | Retain pending live-attendance, bonus, withdrawal/restoration, progression, standings, and recording-XP proof; do not repeat installation; recording XP remains deferred | 34 |
+
+### PKG-034 Production installation closeout — 2026-08-13
+
+Mike supplied the authoritative evidence for Production base
+`127SI - SHOOTING CHALLENGE GAME - NEW 5_1_2026`
+(`appn84sqPw03zEbTT`). Automation 101 v6.1 is installed and ON with a
+`When record matches conditions` trigger on `Zoom Meetings`, sole condition
+`Zoom XP Reconciliation Needed? = 1`, and dynamic `recordId`. No
+`Create XP Events`, `Attendees`, or `Completed` trigger condition is present.
+The nine field IDs are recorded in
+[`pkg-034-zoom-reconciliation-fields.md`](pkg-034-zoom-reconciliation-fields.md).
+
+After Mike manually deleted unused 2025–2026 meetings
+`rec3ToANr5pcs2SRG` and `reczeUT0AJUWMmEOb`, the final read-only
+`audit-zoom-live-attendance-xp-lifecycle` v1.0 checked 2 meetings and 16 XP
+Events: 0 Zoom XP Events, 0 unsupported recording XP Events, and 0
+duplicate/reward-rule/ownership/backlink/lifecycle errors. The 2
+`missing_enrollment_links` warnings correspond to the two intentionally empty
+future rosters. Introduction `recMFP2x5LDqea9ax` and Motivation
+`recb9EjQIJVzaRpZa` both reached Needed = 0 with
+`reconciled_empty_roster_no_award` and no XP Event.
+
+This is installation and empty-roster Production proof only. Live-attendee
+Base XP creation, replay/deduplication, Bonus 2, Bonus 3, fourth-meeting
+preservation, withdrawal, same-event restoration, inactive Enrollment
+correction, WAS/lifetime XP, 041→042 progression, standings, and recording XP
+remain pending. Cursor did not access or modify Production.
 
 The immediate-initial-assignment child scope of `PKG-014` is complete in
 Production; the broader level-progression, blocked-gate-clear, replay, and

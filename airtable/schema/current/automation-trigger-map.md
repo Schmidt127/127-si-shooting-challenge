@@ -117,7 +117,17 @@ does not prove that Production has been configured.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| **101** | Zoom Meetings | `Zoom XP Reconciliation Needed? = 1` | `101-zoom-attendance-xp-award-meeting-xp.js` v6.0 | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
+| **101** | Zoom Meetings | **When record matches conditions:** sole condition `Zoom XP Reconciliation Needed? = 1`; dynamic triggering Zoom Meeting `recordId` | `101-zoom-attendance-xp-award-meeting-xp.js` **v6.1 installed in PROD** | **XP Events** (live attendance base + cumulative bonuses; correction/restoration) |
+
+### PKG-034 Production evidence (Mike-supplied, 2026-08-13)
+
+Automation 101 is **ON** in Production base `appn84sqPw03zEbTT`. The live
+trigger has no `Create XP Events`, `Attendees`, or `Completed` condition. The
+nine installed reconciliation fields are documented in
+[`docs/pkg-034-zoom-reconciliation-fields.md`](../../../docs/pkg-034-zoom-reconciliation-fields.md)
+with their Production field IDs. This evidence proves installation and safe
+empty-roster acknowledgement only; live-attendee XP and downstream lifecycle
+proof remain pending.
 
 ### Asset reuse review (116)
 
