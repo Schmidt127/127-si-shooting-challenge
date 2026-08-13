@@ -24,7 +24,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 /************************************************************
  * 101 - Zoom Attendance XP - Award Meeting XP
- * Version: v6.1
+ * Version: v6.2
  * Date Written: 2026-05-28
  * Last Updated: 2026-08-13
  *
@@ -105,7 +105,7 @@ GitHub is the source-of-truth copy. Airtable is the deployed/running copy.
 
 const CONFIG = {
   scriptName: "101 - Zoom Attendance XP - Award Meeting XP",
-  version: "v6.1",
+  version: "v6.2",
 
   timeZone: "America/Denver",
   formulaSettlementAttempts: 5,
@@ -142,6 +142,11 @@ const CONFIG = {
   enrollments: {
     active: "Active?",
     fullName: "Full Athlete Name",
+    programInstance: "Program Instance",
+  },
+
+  weeks: {
+    programInstance: "Program Instance",
   },
 
   xpRewardRules: {
@@ -430,6 +435,14 @@ function getFirstLinkedRecordId(record, table, fieldName) {
   return getLinkedRecordIds(record, table, fieldName)[0] || "";
 }
 
+function getExactlyOneLinkedRecordId(record, table, fieldName, label) {
+  const ids = [...new Set(getLinkedRecordIds(record, table, fieldName))];
+  if (ids.length !== 1) {
+    throw new Error(`${label} must have exactly one ${fieldName} link; found ${ids.length}.`);
+  }
+  return ids[0];
+}
+
 function linkedCell(ids) {
   return [...new Set((ids || []).filter(Boolean))].map(id => ({ id }));
 }
@@ -460,16 +473,20 @@ async function findWeeklySummaryId(enrollmentId, weekId) {
   const query = await loadWeeklySummaryQuery();
 
   const matches = query.records.filter((record) => {
-    const summaryEnrollmentId = getFirstLinkedRecordId(
-      record,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.enrollment
-    );
-    const summaryWeekId = getFirstLinkedRecordId(
-      record,
-      weeklySummaryTable,
-      CONFIG.weeklySummary.week
-    );
+    let summaryEnrollmentId = "";
+    let summaryWeekId = "";
+    try {
+      summaryEnrollmentId = getExactlyOneLinkedRecordId(
+        record, weeklySummaryTable, CONFIG.weeklySummary.enrollment,
+        `Weekly Athlete Summary ${record.id}`
+      );
+      summaryWeekId = getExactlyOneLinkedRecordId(
+        record, weeklySummaryTable, CONFIG.weeklySummary.week,
+        `Weekly Athlete Summary ${record.id}`
+      );
+    } catch {
+      return false;
+    }
 
     return (
       summaryEnrollmentId === cleanEnrollmentId &&
@@ -484,6 +501,26 @@ async function findWeeklySummaryId(enrollmentId, weekId) {
   }
 
   return matches.length === 1 ? matches[0].id : "";
+}
+
+async function validateWeeklySummaryProgramInstance({ enrollmentId, weekId }) {
+  const enrollment = await enrollmentsTable.selectRecordAsync(enrollmentId);
+  const week = await weeksTable.selectRecordAsync(weekId);
+  if (!enrollment || !week) {
+    throw new Error(`Cannot validate Weekly Athlete Summary owner: Enrollment=${enrollmentId}, Week=${weekId}.`);
+  }
+  const enrollmentProgramInstanceId = getExactlyOneLinkedRecordId(
+    enrollment, enrollmentsTable, CONFIG.enrollments.programInstance,
+    `Enrollment ${enrollmentId}`
+  );
+  const weekProgramInstanceId = getExactlyOneLinkedRecordId(
+    week, weeksTable, CONFIG.weeks.programInstance, `Week ${weekId}`
+  );
+  if (enrollmentProgramInstanceId !== weekProgramInstanceId) {
+    throw new Error(
+      `Weekly Athlete Summary owner has Program Instance mismatch: Enrollment ${enrollmentId} (${enrollmentProgramInstanceId}) vs Week ${weekId} (${weekProgramInstanceId}).`
+    );
+  }
 }
 
 async function resolveWeeklySummaryId({
@@ -541,6 +578,7 @@ function buildSummaryCreateFields(enrollmentId, weekId) {
 }
 
 async function findOrCreateWeeklySummaryId({ enrollmentId = "", weekId = "" }) {
+  await validateWeeklySummaryProgramInstance({ enrollmentId, weekId });
   const existingId = await findWeeklySummaryId(enrollmentId, weekId);
   if (existingId) {
     return existingId;
@@ -556,6 +594,13 @@ async function findOrCreateWeeklySummaryId({ enrollmentId = "", weekId = "" }) {
 
   const createdId = await weeklySummaryTable.createRecordAsync(createFields);
   weeklySummaryQueryCache = null;
+
+  const postCreateId = await findWeeklySummaryId(enrollmentId, weekId);
+  if (postCreateId !== createdId) {
+    throw new Error(
+      `Weekly Athlete Summary create conflict for Enrollment ${enrollmentId} + Week ${weekId}; created ${createdId}, resolved ${postCreateId || "(none)"}. Airtable has no unique constraint; stop for review.`
+    );
+  }
 
   return createdId;
 }
