@@ -4,7 +4,7 @@
 
 - Role: Lead / Integrator
 - Branch: `cursor/pkg-033-core-reliability-cc64`
-- Tip SHA at artifact creation: `bd5418f`
+- Branch tip: recorded by `git rev-parse HEAD` at final handoff
 - Started: 2026-08-13
 - Assignment: PKG-033 approved plan
 
