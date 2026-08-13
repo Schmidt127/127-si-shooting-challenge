@@ -24,7 +24,7 @@ Airtable is the deployed/running copy.
 
 /************************************************************************************************
  * 042 - Levels and Progression - Assign Current and Next Level with Gate Blocking
- * Version: 4.0
+ * Version: 4.1
  * Date Written: 2026-06-02
  * Last Updated: 2026-08-13
  *
@@ -50,6 +50,10 @@ Airtable is the deployed/running copy.
  * - Preserves Level Recalc Needed? on every error so the same Enrollment is
  *   automatically retryable.
  * - Writes Progression Last Reconciled Signature only after verified success.
+ *
+ * Version 4.1 (PKG-036, 2026-08-13):
+ * - Acknowledges the same reachable level and school-year gate-rule signature
+ *   that 041 uses to queue an Enrollment, preventing lower-level requeue churn.
  *
  * Version 3.2 (2026-08-05):
  * - Airtable runtime compatibility: guard optional QueryResult.unloadData() cleanup
@@ -116,8 +120,8 @@ Airtable is the deployed/running copy.
  * 042 = Assign Current and Next Level with Gate Blocking
  *
  * Important:
- * After this script is tested successfully, Automation 043 should be turned off because
- * this script directly assigns the correct Level Gate Rule.
+ * Automation 043 is retired and absent from Production. Do not recreate or
+ * enable it; this script is the sole progression-output writer.
  ************************************************************************************************/
 
 
@@ -128,7 +132,7 @@ Airtable is the deployed/running copy.
 const CONFIG = {
     automation: {
         name: "042 - Levels and Progression - Assign Current and Next Level with Gate Blocking",
-        version: "4.0",
+        version: "4.1",
     },
 
     tables: {
@@ -583,8 +587,68 @@ function buildConfigurationFingerprint(levels, gateRules) {
     });
 }
 
+function buildRelevantConfiguration(enrollment, gateRules, levels) {
+    const lifetimeXp = getNumber(
+        enrollment.getCellValue(CONFIG.enrollmentFields.lifetimeXpTotal),
+        0
+    );
+    const currentLevelIds = getLinkedIds(
+        enrollment,
+        CONFIG.enrollmentFields.currentLevel
+    );
+    const nextLevelIds = getLinkedIds(
+        enrollment,
+        CONFIG.enrollmentFields.nextLevel
+    );
+    const relevantLevelIds = new Set([...currentLevelIds, ...nextLevelIds]);
+    const activeLevels = levels
+        .map((level) => ({
+            record: level,
+            threshold: getNumber(
+                level.getCellValue(CONFIG.levelFields.xpRequired),
+                0
+            ),
+            active: booleanValue(level.getCellValue(CONFIG.levelFields.active)),
+        }))
+        .filter((level) => level.active)
+        .sort((a, b) => a.threshold - b.threshold);
+
+    for (const level of activeLevels) {
+        if (level.threshold <= lifetimeXp) {
+            relevantLevelIds.add(level.record.id);
+            continue;
+        }
+        relevantLevelIds.add(level.record.id);
+        break;
+    }
+
+    const enrollmentSchoolYear = getText(
+        enrollment,
+        CONFIG.enrollmentFields.schoolYear
+    ).replace(/[–—−]/g, "-");
+    return {
+        relevantLevels: levels.filter((level) => relevantLevelIds.has(level.id)),
+        relevantGateRules: gateRules.filter(
+            (rule) =>
+                getLinkedIds(rule, CONFIG.gateFields.level).some((levelId) =>
+                    relevantLevelIds.has(levelId)
+                ) &&
+                (isSharedSchoolYear(getText(rule, CONFIG.gateFields.schoolYear)) ||
+                    getText(rule, CONFIG.gateFields.schoolYear).replace(
+                        /[–—−]/g,
+                        "-"
+                    ) === enrollmentSchoolYear)
+        ),
+    };
+}
+
 function buildReconciledSignature(enrollment, levels, gateRules) {
-    const levelValues = levels
+    const { relevantLevels, relevantGateRules } = buildRelevantConfiguration(
+        enrollment,
+        gateRules,
+        levels
+    );
+    const levelValues = relevantLevels
         .map((level) => ({
             id: level.id,
             name: getRecordLabel(level, CONFIG.levelFields.name, ""),
@@ -593,7 +657,7 @@ function buildReconciledSignature(enrollment, levels, gateRules) {
             sortOrder: getNumber(level.getCellValue(CONFIG.levelFields.sortOrder), 0),
         }))
         .sort((a, b) => a.id.localeCompare(b.id));
-    const gateRuleValues = gateRules
+    const gateRuleValues = relevantGateRules
         .map((rule) => ({
             id: rule.id,
             level: getLinkedIds(rule, CONFIG.gateFields.level),

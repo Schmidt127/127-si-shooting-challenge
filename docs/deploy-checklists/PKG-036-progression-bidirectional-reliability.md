@@ -14,7 +14,7 @@ proof.
   v10.8 before re-enabling; inspect run history and reconciliation backlog
   before record changes. The unified packet is authoritative.
 - Automation 041: deployed; `wflCRvaopntNPsc64`; cron trigger every 15 minutes; installed script is v4.0. **v5.0 paste deferred** until PKG-006R lock release.
-- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4. **v4.0 paste deferred** until PKG-006R lock release.
+- Automation 042: deployed; `wfl3aiiK8vI2tz0HA`; `Enrollments` record-enters-view trigger on view `viwm9OgwkPKI2bii3`; installed script is v3.4. **v4.1 paste deferred** until PKG-006R lock release.
 - Automation 043: absent from the Production automation inventory. It must not be recreated.
 - Automation 077: **deleted** from Airtable (retired Make/Gmail path); GitHub source archived only.
 - Active Levels: **12**; thresholds unique and span 0 through 2200 XP.
@@ -29,7 +29,7 @@ proof.
 | Artifact | Version / path | Ownership |
 |---|---|---|
 | Automation 041 | v5.0 — `airtable/automations/shooting-challenge/041-levels-and-progression-mark-enrollment-for-level-recalculation.js` | Queue/request only |
-| Automation 042 | v4.0 — `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | Sole writer of progression assignment fields |
+| Automation 042 | v4.1 — `airtable/automations/shooting-challenge/042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js` | Sole writer of progression assignment fields |
 | Read-only audit | `airtable/extension-scripts/audits/audit-pkg-036-progression-integrity.js` | Audit only; no writes |
 | Offline harness | `airtable/automations/shooting-challenge/lib/pkg-036-progression-reliability.test.js` | Repository evidence only |
 
@@ -52,7 +52,7 @@ does.
 
 ## Installation order
 
-**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.0 before Mike signs off Phase A evidence.
+**Deferred until PKG-006R lock release.** Do not paste 041 v5.0 or 042 v4.1 before Mike signs off Phase A evidence.
 **Detail appendix only:** Execute the unified packet's Phase B rather than this
 duplicated sequence if any wording differs.
 
@@ -61,7 +61,7 @@ duplicated sequence if any wording differs.
 3. Turn 041 and 042 OFF. Do not alter Automation 010, 101, or any XP pipeline.
 4. **Verify** `Enrollments.Progression Last Reconciled Signature` is writable single-line text. Record field ID. Do not recreate.
 5. Paste the committed 041 v5.0 script into automation `wflCRvaopntNPsc64` and preserve the **15-minute** cron trigger. Leave optional `recordId` blank for the scheduled path.
-6. Paste the committed 042 v4.0 script into automation `wfl3aiiK8vI2tz0HA` and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
+6. Paste the committed 042 v4.1 script into automation `wfl3aiiK8vI2tz0HA` and preserve the dynamic `recordId` mapping from the triggering Enrollment record.
 7. Preserve the existing 042 view filter: `Level Recalc Needed?` checked and `Active?` checked.
 8. Confirm 043 remains absent/OFF.
 9. Keep 041 and 042 OFF while saving, then run controlled manual actions on one approved Schmidt Enrollment.

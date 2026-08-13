@@ -20,10 +20,11 @@ Maps Airtable automations and extension scripts to triggers, tables, and downstr
 
 ### Submission intake → XP (005–010, 021–023)
 
-PKG-006R schema prerequisite and exact field creation order:
-[daily-submission-xp-reconciliation-fields.md](./daily-submission-xp-reconciliation-fields.md).
-The trigger wording below is the approved target contract; repository text
-does not prove that Production has been configured.
+PKG-006R reconciliation fields are installed per Mike's 2026-08-13
+attestation. Verify, rather than create or recreate, the exact field contract
+in [daily-submission-xp-reconciliation-fields.md](./daily-submission-xp-reconciliation-fields.md).
+The trigger wording below is the committed target contract; current Production
+version/state/mapping must still be confirmed in the Airtable UI.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
@@ -104,8 +105,8 @@ does not prove that Production has been configured.
 
 | # | Table | Trigger | Script | Downstream |
 |---|-------|---------|--------|------------|
-| 041 | XP Events / Enrollments | *confirm* | `041-...-mark-enrollment-for-level-recalculation.js` | Recalc flag |
-| 042 | Enrollments | *confirm* | `042-...-assign-current-and-next-level-with-gate-blocking.js` | Current/Next Level |
+| **041** | Enrollments / Levels / Level Gate Rules | Scheduled every **15 minutes**; optional `recordId` only for a controlled single-Enrollment proof; scheduled mapping blank | `041-...-mark-enrollment-for-level-recalculation.js` **v5.0 target**; paste deferred until PKG-006R lock release | Queue only: `Level Recalc Needed?`, `Progression Last Queued Signature` |
+| **042** | Enrollments | When record enters view `042 - Needs Level Assignment` (`viwm9OgwkPKI2bii3`); filters `Level Recalc Needed?` checked + `Active?` checked; dynamic `recordId` from triggering Enrollment | `042-...-assign-current-and-next-level-with-gate-blocking.js` **v4.1 target**; paste deferred until PKG-006R lock release | Current/Next Level, Gate Rule, Status, reconciled signature |
 | 043 | Levels | **Retired — do not enable or recreate** | `043-...-set-level-gate-rule-from-next-level.js` (historical source only) | No downstream writer; `042` owns `Level Gate Rule` |
 
 ### Email packages (072, 074–077, 075)
@@ -116,7 +117,7 @@ does not prove that Production has been configured.
 | 074 | Weekly Athlete Summary | *confirm* | `074-...-send-weekly-summary-email-package-to-make.js` | **Make** weekly email |
 | 075 | Enrollments | *confirm* | `075-...-build-challenge-welcome-email.js` | Welcome email package |
 | 076 | Submissions / Enrollments | *confirm* | `076-...-build-daily-submission-email-package.js` | Daily email package |
-| 077 | Submissions / Enrollments | *confirm* | `077-...-send-daily-submission-email-package-to-make.js` | **Make** daily email |
+| 077 | — | **Retired / deleted from Airtable — do not recreate** | `077-...-send-daily-submission-email-package-to-make.js` (GitHub historical source only) | No active native automation; daily-email Hub boundary is 076 → 079 |
 
 ### Zoom (101)
 
@@ -153,7 +154,7 @@ proof remain pending.
 | 071 | Homework parent feedback | homework completion, parent email fields |
 | 073 | Video parent feedback | video feedback, parent email fields |
 | 074 | Weekly summary email | WAS package, athlete, week |
-| 077 | Daily submission email | daily package, athlete |
+| 077 | Historical only — deleted from Airtable; do not recreate | — |
 
 Blueprint: [../../../make/blueprints/upload-asset-engine-v1.json](../../../make/blueprints/upload-asset-engine-v1.json)
 
