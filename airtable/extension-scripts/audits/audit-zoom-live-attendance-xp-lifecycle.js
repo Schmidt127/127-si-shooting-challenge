@@ -89,6 +89,13 @@ function fieldExists(table, fieldName) {
   }
 }
 
+function fieldNames(values) {
+  return [...new Set(
+    values.flatMap((value) => Array.isArray(value) ? value : [value])
+      .filter((value) => typeof value === "string" && value.trim()),
+  )];
+}
+
 function raw(record, table, fieldName) {
   return fieldExists(table, fieldName) ? record.getCellValue(fieldName) : null;
 }
@@ -208,12 +215,12 @@ async function main() {
     lifecycleStateMismatches: [],
   };
 
-  const zoomFields = Object.values(CONFIG.zoom).filter((fieldName) => fieldExists(zoomTable, fieldName));
-  const enrollmentFields = Object.values(CONFIG.enrollment).filter((fieldName) => fieldExists(enrollmentTable, fieldName));
-  const weekFields = Object.values(CONFIG.week).filter((fieldName) => fieldExists(weekTable, fieldName));
-  const xpFields = Object.values(CONFIG.xp).filter((fieldName) => fieldExists(xpTable, fieldName));
-  const wasFields = Object.values(CONFIG.was).filter((fieldName) => fieldExists(wasTable, fieldName));
-  const ruleFields = Object.values(CONFIG.rule).filter((fieldName) => fieldExists(rulesTable, fieldName));
+  const zoomFields = fieldNames(Object.values(CONFIG.zoom)).filter((fieldName) => fieldExists(zoomTable, fieldName));
+  const enrollmentFields = fieldNames(Object.values(CONFIG.enrollment)).filter((fieldName) => fieldExists(enrollmentTable, fieldName));
+  const weekFields = fieldNames(Object.values(CONFIG.week)).filter((fieldName) => fieldExists(weekTable, fieldName));
+  const xpFields = fieldNames(Object.values(CONFIG.xp)).filter((fieldName) => fieldExists(xpTable, fieldName));
+  const wasFields = fieldNames(Object.values(CONFIG.was)).filter((fieldName) => fieldExists(wasTable, fieldName));
+  const ruleFields = fieldNames(Object.values(CONFIG.rule)).filter((fieldName) => fieldExists(rulesTable, fieldName));
 
   const missingReconciliationFields = [
     CONFIG.zoom.currentSignature,
