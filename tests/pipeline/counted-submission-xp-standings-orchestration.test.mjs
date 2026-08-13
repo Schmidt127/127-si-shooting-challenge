@@ -106,7 +106,7 @@ function downstream(s, id, active) {
   }
 }
 
-test("source contracts preserve positive ownership and progression-only 041/042", () => {
+test("source contracts preserve lifecycle ownership and progression-only 041/042", () => {
   for (const file of [
     "010-submission-intake-create-xp-event.js",
     "041-levels-and-progression-mark-enrollment-for-level-recalculation.js",
@@ -121,10 +121,10 @@ test("source contracts preserve positive ownership and progression-only 041/042"
   ]) assert.match(s010, new RegExp(fieldName.replace(/[?]/g, "\\$&")));
   assert.match(s010, /findExactEvent/);
   assert.match(s010, /acknowledgeAfterSettlement/);
-  assert.match(source("053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js"), /blocked_no_streak_source_trigger/);
+  assert.match(source("053-achievements-and-milestones-streak-occurrences-rebuild-and-upsert-from-submissions.js"), /054_ready_for_exact_owned_event/);
   assert.match(source("054-achievements-and-milestones-streak-occurrences-create-or-repair-streak-xp-event.js"), /deactivated_same_event/);
-  assert.match(source("066-achievements-and-milestones-create-shot-milestone-unlocks.js"), /blocked_no_unlock_eligibility_signal/);
-  assert.match(source("059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js"), /blocked_no_unlock_eligibility_signal/);
+  assert.match(source("066-achievements-and-milestones-create-shot-milestone-unlocks.js"), /active_unlock_lifecycle_reconciled/);
+  assert.match(source("059-achievements-and-milestones-create-xp-event-from-achievement-unlock.js"), /deactivated_same_milestone_xp_event/);
   assert.doesNotMatch(source("041-levels-and-progression-mark-enrollment-for-level-recalculation.js"), /XP Events.*create/i);
   assert.doesNotMatch(source("042-levels-and-progression-assign-current-and-next-level-with-gate-blocking.js"), /createRecordsAsync/);
 });
