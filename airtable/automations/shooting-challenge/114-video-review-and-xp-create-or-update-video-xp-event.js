@@ -10,7 +10,8 @@ Purpose:
 Creates or updates Video Submission XP Events from Video Feedback records.
 
 Trigger:
-Video Feedback when feedback is posted, XP is positive, and Ready for XP Automation? is checked.
+Video Feedback lifecycle reconciliation; the native trigger must reach both
+positive award/reactivation and withdrawal/deactivation updates.
 
 Important Tables:
 Video Feedback, Submissions, XP Events, Weekly Athlete Summary
